@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<link type="text/css" rel="stylesheet" media="screen" href="/public/css/style.css" />
+
+<link rel="shortcut icon" href="http://stage.tdl.org/utmb-etd/themes//public/images/favicon.ico" />
+
+<script type="text/javascript">
+				//Clear default text of emty text areas on focus
+				function tFocus(element)
+				{
+					if (element.value == ' '){element.value='';}
+				}
+				//Clear default text of emty text areas on submit
+				function tSubmit(form)
+				{
+					var defaultedElements = document.getElementsByTagName("textarea");
+					for (var i=0; i != defaultedElements.length; i++){
+						if (defaultedElements[i].value == ' '){
+							defaultedElements[i].value='';}}
+				}
+				//Disable pressing 'enter' key to submit a form (otherwise pressing 'enter' causes a submission to start over)
+				function disableEnterKey(e)
+				{
+				     var key;
+				
+				     if(window.event)
+				          key = window.event.keyCode;     //Internet Explorer
+				     else
+				          key = e.which;     //Firefox and Netscape
+				
+				     if(key == 13)  //if "Enter" pressed, then disable!
+				          return false;
+				     else
+				          return true;
+				}
+            </script>
+<script type="text/javascript" src="/public/images/jscript.js">
+                </script>
+<script type="text/javascript" src="/public/images/jquery-packed.js">
+                </script>
+<script type="text/javascript" src="/public/images/css.js">
+                </script>
+<script type="text/javascript" src="/public/images/jquery.bgiframe.js">
+                </script>
+<script type="text/javascript" src="/public/images/jquery.dimensions.js">
+                </script>
+<script type="text/javascript" src="/public/images/jquery.tooltip.js">
+                </script>
+<title>Document Information</title>
+</head>
+<body>
+<div id="ds-main">
+<script type="text/javascript">var contextPath="/utmb-etd";</script>
+<div id="ds-header">
+<a title="Texas Digital Library Home" href="http://www.tdl.org/" id="tdl_logo">&nbsp;</a>
+<div id="contact_us">
+<a class="contact_us" href="mailto:info@tdl.org">contact us</a>
+                | 
+                admin admin | <a href="http://stage.tdl.org/utmb-etd/logout">Logout</a>
+</div>
+</div>
+<div id="ds-body">
+<div id="aspect_vireo_submit_DocumentMetaData_div_main" class="ds-static-div vireo-main">
+<form id="aspect_vireo_submit_DocumentMetaData_div_documentInformation" class="ds-interactive-div vireo-form" action="/submitDocInfo" method="post" onsubmit="javascript:tSubmit(this);">
+<ul id="aspect_vireo_submit_DocumentMetaData_list_nav_items" class="ds-progress-list vireo_nav_list">
+<li class=" first button">
+<input id="aspect_vireo_submit_DocumentMetaData_field_step_one" class="ds-button-field vireo_step one" name="step_one" type="image" alt="Verify User Data: Viewed Step" title="Verify User Data: Viewed Step" src="/public/images/step1.gif" onmouseover="imageHover(this,&#39;/utmb-etd/themes/public/images/step1_current.gif&#39;);" onmouseout="imageHover(this,&#39;/utmb-etd/themes/public/images/step1.gif&#39;);" value="Verify Info"/>
+</li>
+<li class=" button">
+<input id="aspect_vireo_submit_DocumentMetaData_field_step_two" class="ds-button-field vireo_step two" name="step_two" type="image" alt="License Agreement: Viewed Step" title="License Agreement: Viewed Step" src="/public/images/step2.gif" onmouseover="imageHover(this,&#39;/utmb-etd/themes/public/images/step2_current.gif&#39;);" onmouseout="imageHover(this,&#39;/utmb-etd/themes/public/images/step2.gif&#39;);" value="License Agreement"/>
+</li>
+<li class=" button">
+<input id="aspect_vireo_submit_DocumentMetaData_field_step_three" class="ds-button-field vireo_step three current" name="step_three" type="image" alt="Document Information: Current Step" title="Document Information: Current Step" src="/public/images/step3_current.gif" onmouseover="imageHover(this,&#39;/utmb-etd/themes/public/images/step3_current.gif&#39;);" onmouseout="imageHover(this,&#39;/utmb-etd/themes/public/images/step3_current.gif&#39;);" value="Document Info">
+</li>
+<li class=" button">
+<input id="aspect_vireo_submit_DocumentMetaData_field_step_four" class="ds-button-field vireo_step fourdisabled" name="step_four" type="image" alt="Upload Your Files: Future Step" title="Upload Your Files: Future Step" src="/public/images/step4_disabled.gif" value="Upload Files">
+</li>
+<li class=" button last">
+<input id="aspect_vireo_submit_DocumentMetaData_field_step_five" class="ds-button-field vireo_step five disableddisabled" disabled="disabled" name="step_five" type="image" alt="Confirm and Submit: Future Step" title="Confirm and Submit: Future Step" src="/public/images/step5_disabled.gif" value="Confirm &amp; Submit">
+</li>
+</ul>
+<h3 style="font-size: 120%;" class="ds-div-head">Document Information</h3>
+<div id="aspect_vireo_submit_DocumentMetaData_div_pageTitle" class="ds-static-div pageTitle">
+<p class="ds-paragraph"> </p>
+</div>
+<div id="aspect_vireo_submit_DocumentMetaData_div_instructions" class="ds-static-div inline-help">
+<div id="aspect_vireo_submit_DocumentMetaData_div_inst0" class="ds-static-div help">
+<p class="ds-paragraph">For the degree date, enter the semester in which your degree will be conferred (typically your graduation semester).</p>
+</div>
+<div id="aspect_vireo_submit_DocumentMetaData_div_inst1" class="ds-static-div help">
+<p class="ds-paragraph">You can use Unicode characters (like accents and diacritics) in these fields.</p>
+</div>
+<div id="aspect_vireo_submit_DocumentMetaData_div_inst2" class="ds-static-div help">
+<p class="ds-paragraph">You can enter multiple keywords. Use semi-colons ( ; ) to separate the entries.</p>
+</div>
+<div id="aspect_vireo_submit_DocumentMetaData_div_inst3" class="ds-static-div help">
+<p class="ds-paragraph">Enter the names of each member of your committee, and use the checkboxes to indicate which one is the committee chair (check two if you have co-chairs).</p>
+</div>
+<div id="aspect_vireo_submit_DocumentMetaData_div_inst4" class="ds-static-div help">
+<p class="ds-paragraph">Please enter an email address that can be used to contact your committee chair. If you have co-chairs, please choose only one address. </p>
+</div>
+<div id="aspect_vireo_submit_DocumentMetaData_div_inst5" class="ds-static-div help">
+<p class="ds-paragraph">If you don't know if you need an embargo, then you should check with your advisor. This option is typically only used for situations like patent holds or a request by a publisher if content from the document is pending publication.</p>
+</div>
+</div>
+<div id="aspect_vireo_submit_DocumentMetaData_div_container" class="ds-static-div form_container">
+<div id="aspect_vireo_submit_DocumentMetaData_div_inputs" class="ds-static-div vireo_form_inputs">
+<p class="ds-paragraph">In this step you describe your thesis or dissertation.  Please make sure that the information entered below matches the information contained in your document.</p>
+<fieldset id="aspect_vireo_submit_DocumentMetaData_list_form" class="ds-form-list vireo_form_items main-step-form-list">
+<legend>Describe your work</legend>
+<ol>
+<li>
+<fieldset id="aspect_vireo_submit_DocumentMetaData_list_documentInfo" class="ds-form-sublist thick">
+<legend>Document Information</legend>
+<ol>
+<li class="ds-form-item odd">
+<label class="ds-form-label required" for="aspect_vireo_submit_DocumentMetaData_field_title">* Title:</label>
+<div class="ds-form-content">
+<input id="aspect_vireo_submit_DocumentMetaData_field_title" class="ds-text-field" name="title" type="text" value="">
+</div>
+</li>
+<li class="ds-form-item even">
+<label class="ds-form-label required" for="aspect_vireo_submit_DocumentMetaData_field_thesisMonth">* Degree Date:</label>
+<div class="ds-form-content">
+<select id="aspect_vireo_submit_DocumentMetaData_field_thesisMonth" class="ds-select-field thesisMonth" name="thesisMonth">
+<option value="">...choose</option>
+<option value="May">May</option>
+<option value="August">August</option>
+<option value="December">December</option>
+</select>
+<select id="aspect_vireo_submit_DocumentMetaData_field_thesisYear" class="ds-select-field thesisYear" name="thesisYear" title="Example: May 2008">
+<option value="">...choose</option>
+<option value="2011">2011</option>
+<option value="2012">2012</option>
+<option value="2013">2013</option>
+</select><img class="tooltipbutton" style="cursor:help" src="/public/images/verio-tooltip-button.gif" alt="">
+<span class="field-help" style="display: none; ">Example: May 2008</span>
+</div>
+</li>
+<li class="ds-form-item odd">
+<label class="ds-form-label required" for="aspect_vireo_submit_DocumentMetaData_field_degreeType">* Document Type:</label>
+<div class="ds-form-content">
+<select id="aspect_vireo_submit_DocumentMetaData_field_degreeType" class="ds-select-field" name="degreeType">
+<option value="">...choose</option>
+<option value="Dissertation (Doctoral)">Dissertation (Doctoral)</option>
+<option value="Thesis (Doctoral)">Thesis (Doctoral)</option>
+</select>
+</div>
+</li>
+<li class="ds-form-item even">
+<label class="ds-form-label required" for="aspect_vireo_submit_DocumentMetaData_field_abstract">* Abstract:</label>
+<div class="ds-form-content">
+<textarea id="aspect_vireo_submit_DocumentMetaData_field_abstract" class="ds-textarea-field" name="abstract" onfocus="javascript:tFocus(this);" cols="35" rows="10"> </textarea>
+</div>
+</li>
+<li class="ds-form-item odd">
+<label class="ds-form-label required" for="aspect_vireo_submit_DocumentMetaData_field_keywords">* Keywords:</label>
+<div class="ds-form-content">
+<textarea id="aspect_vireo_submit_DocumentMetaData_field_keywords" class="ds-textarea-field subtle" name="keywords" onfocus="javascript:tFocus(this);" cols="35" rows="6" title="You can enter multiple keywords. Use semi-colons ( ; ) to separate the entries.">Keyword 1; Key Phrase One; Keyword 2; Key Phrase Two</textarea><img class="tooltipbutton" style="cursor:help" src="/public/images/verio-tooltip-button.gif" alt="">
+<span class="field-help" style="display: none; ">You can enter multiple keywords. Use semi-colons ( ; ) to separate the entries.</span>
+</div>
+</li>
+</ol>
+</fieldset>
+</li>
+<li>
+<fieldset id="aspect_vireo_submit_DocumentMetaData_list_committee" class="ds-form-sublist thick">
+<legend>Your Committee</legend>
+<ol>
+<li class="ds-form-item odd">&nbsp;
+		            <div class="ds-form-content">
+<label class="ds-composite-component">
+<input id="aspect_vireo_submit_DocumentMetaData_field_firstName1" class="ds-text-field" name="firstName1" type="text" value="" title="First Name">
+<br>First Name</label>
+<label class="ds-composite-component">
+<input id="aspect_vireo_submit_DocumentMetaData_field_middleInitial1" class="ds-text-field" name="middleInitial1" type="text" value="" maxlength="1" size="2" title="Initial">
+<br>MI</label>
+<label class="ds-composite-component">
+<input id="aspect_vireo_submit_DocumentMetaData_field_lastName1" class="ds-text-field" name="lastName1" type="text" value="" title="Last Name">
+<br>Last Name</label>
+<fieldset id="N10166" class="ds-checkbox-field" title="Check if this committee member is a chair">
+<label>
+<input name="chair1" type="checkbox" value="yes">Chair</label>
+</fieldset>
+<br>
+<div class="spacer">&nbsp;</div>
+</div>
+</li>
+<li class="ds-form-item even">&nbsp;
+		            <div class="ds-form-content">
+<label class="ds-composite-component">
+<input id="aspect_vireo_submit_DocumentMetaData_field_firstName2" class="ds-text-field" name="firstName2" type="text" value="" title="First Name">
+<br>First Name</label>
+<label class="ds-composite-component">
+<input id="aspect_vireo_submit_DocumentMetaData_field_middleInitial2" class="ds-text-field" name="middleInitial2" type="text" value="" maxlength="1" size="2" title="Initial">
+<br>MI</label>
+<label class="ds-composite-component">
+<input id="aspect_vireo_submit_DocumentMetaData_field_lastName2" class="ds-text-field" name="lastName2" type="text" value="" title="Last Name">
+<br>Last Name</label>
+<fieldset id="N101A9" class="ds-checkbox-field" title="Check if this committee member is a chair">
+<label>
+<input name="chair2" type="checkbox" value="yes">Chair</label>
+</fieldset>
+<br>
+<div class="spacer">&nbsp;</div>
+</div>
+</li>
+<li class="ds-form-item odd">&nbsp;
+		            <div class="ds-form-content">
+<label class="ds-composite-component">
+<input id="aspect_vireo_submit_DocumentMetaData_field_firstName3" class="ds-text-field" name="firstName3" type="text" value="" title="First Name">
+<br>First Name</label>
+<label class="ds-composite-component">
+<input id="aspect_vireo_submit_DocumentMetaData_field_middleInitial3" class="ds-text-field" name="middleInitial3" type="text" value="" maxlength="1" size="2" title="Initial">
+<br>MI</label>
+<label class="ds-composite-component">
+<input id="aspect_vireo_submit_DocumentMetaData_field_lastName3" class="ds-text-field" name="lastName3" type="text" value="" title="Last Name">
+<br>Last Name</label>
+<fieldset id="N101EC" class="ds-checkbox-field" title="Check if this committee member is a chair">
+<label>
+<input name="chair3" type="checkbox" value="yes">Chair</label>
+</fieldset>
+<br>
+<div class="spacer">&nbsp;</div>
+</div>
+</li>
+<li class="ds-form-item even">&nbsp;
+		            <div class="ds-form-content">
+<label class="ds-composite-component">
+<input id="aspect_vireo_submit_DocumentMetaData_field_firstName4" class="ds-text-field" name="firstName4" type="text" value="" title="First Name">
+<br>First Name</label>
+<label class="ds-composite-component">
+<input id="aspect_vireo_submit_DocumentMetaData_field_middleInitial4" class="ds-text-field" name="middleInitial4" type="text" value="" maxlength="1" size="2" title="Initial">
+<br>MI</label>
+<label class="ds-composite-component">
+<input id="aspect_vireo_submit_DocumentMetaData_field_lastName4" class="ds-text-field" name="lastName4" type="text" value="" title="Last Name">
+<br>Last Name</label>
+<fieldset id="N1022F" class="ds-checkbox-field" title="Check if this committee member is a chair">
+<label>
+<input name="chair4" type="checkbox" value="yes">Chair</label>
+</fieldset>
+<br>
+<div class="spacer">&nbsp;</div>
+</div>
+</li>
+<li class="ds-form-item odd">&nbsp;
+		            <div class="ds-form-content">
+<label class="ds-composite-component">
+<input id="aspect_vireo_submit_DocumentMetaData_field_firstName5" class="ds-text-field" name="firstName5" type="text" value="" title="First Name">
+<br>First Name</label>
+<label class="ds-composite-component">
+<input id="aspect_vireo_submit_DocumentMetaData_field_middleInitial5" class="ds-text-field" name="middleInitial5" type="text" value="" maxlength="1" size="2" title="Initial">
+<br>MI</label>
+<label class="ds-composite-component">
+<input id="aspect_vireo_submit_DocumentMetaData_field_lastName5" class="ds-text-field" name="lastName5" type="text" value="" title="Last Name">
+<br>Last Name</label>
+<fieldset id="N10272" class="ds-checkbox-field" title="Check if this committee member is a chair">
+<label>
+<input name="chair5" type="checkbox" value="yes">Chair</label>
+</fieldset>
+<br>
+<div class="spacer">&nbsp;</div>
+</div>
+</li>
+<li id="aspect_vireo_submit_DocumentMetaData_item_addCommitteeItem" class="ds-form-item even centered">&nbsp;
+		            <div class="ds-form-content">
+<input id="aspect_vireo_submit_DocumentMetaData_field_addCommittee" class="ds-button-field committee-add" name="addCommittee" type="submit" value="Add Additional Member">
+</div>
+</li>
+</ol>
+</fieldset>
+</li>
+<li>
+<fieldset id="aspect_vireo_submit_DocumentMetaData_list_committee_contact" class="ds-form-sublist">
+<legend>Chair's Contact Email</legend>
+<ol>
+<li class="ds-form-item odd">
+<label class="ds-form-label required" for="aspect_vireo_submit_DocumentMetaData_field_committee-email">* Committee Chair Email:</label>
+<div class="ds-form-content">
+<input id="aspect_vireo_submit_DocumentMetaData_field_committee-email" class="ds-text-field" name="committee-email" type="text" value="" title="Enter an email address for your committee chair"><img class="tooltipbutton" style="cursor:help" src="/public/images/verio-tooltip-button.gif" alt="">
+<span class="field-help" style="display: none; ">Enter an email address for your committee chair</span>
+</div>
+</li>
+</ol>
+</fieldset>
+</li>
+<li>
+<fieldset id="aspect_vireo_submit_DocumentMetaData_list_embargoInfo" class="ds-form-sublist thick">
+<legend>Embargo Options</legend>
+<ol>
+<li class="ds-form-item odd">
+<div class="ds-form-content">With your advisor's approval you may request a delay in the publication (embargo) of your work.</div>
+</li>
+<li class="ds-form-item even">
+<label class="ds-form-label" for="aspect_vireo_submit_DocumentMetaData_field_embargoType">None:</label>
+<div class="ds-form-content">
+<fieldset id="N102B1" class="ds-radio-field" title="None">
+<label>
+<input name="embargoType" type="radio" value="0" checked="checked">The work will be published after approval.</label>
+</fieldset>
+<span class="field-help" style="display: none; ">None</span>
+</div>
+</li>
+<li class="ds-form-item odd">
+<label class="ds-form-label" for="aspect_vireo_submit_DocumentMetaData_field_embargoType">Journal Hold:</label>
+<div class="ds-form-content">
+<fieldset id="N102C1" class="ds-radio-field" title="Journal Hold">
+<label>
+<input name="embargoType" type="radio" value="1">The work will be delayed for publication by one year because of a restriction from publication in an academic journal.</label>
+</fieldset>
+<span class="field-help" style="display: none; ">Journal Hold</span>
+</div>
+</li>
+<li class="ds-form-item even">
+<label class="ds-form-label" for="aspect_vireo_submit_DocumentMetaData_field_embargoType">Patent Hold:</label>
+<div class="ds-form-content">
+<fieldset id="N102CE" class="ds-radio-field" title="Patent Hold">
+<label>
+<input name="embargoType" type="radio" value="2">The work will be delayed for publication by two years because of patent related activities.</label>
+</fieldset>
+<span class="field-help" style="display: none; ">Patent Hold</span>
+</div>
+</li>
+<li class="ds-form-item odd">
+<label class="ds-form-label" for="aspect_vireo_submit_DocumentMetaData_field_embargoType">Other Embargo Period:</label>
+<div class="ds-form-content">
+<fieldset id="N102DB" class="ds-radio-field" title="Other Embargo Period">
+<label>
+<input name="embargoType" type="radio" value="3">The work will be delayed for publication by an indefinite amount of time.</label>
+</fieldset>
+<span class="field-help" style="display: none; ">Other Embargo Period</span>
+</div>
+</li>
+</ol>
+</fieldset>
+</li>
+<li id="aspect_vireo_submit_DocumentMetaData_item_saveAndContinueItem" class="ds-form-item centered">&nbsp;
+		            <div class="ds-form-content">
+<input id="aspect_vireo_submit_DocumentMetaData_field_saveAndContinue" class="ds-button-field" name="saveAndContinue" type="submit" value="Save and Continue &gt;&gt;">
+<input id="aspect_vireo_submit_DocumentMetaData_field_applicationID" class="ds-hidden-field" name="applicationID" type="hidden" value="99">
+<input id="aspect_vireo_submit_DocumentMetaData_field_application-continue" class="ds-hidden-field" name="application-continue" type="hidden" value="832355462d136704016681686e7470335c1d7d63">
+</div>
+</li>
+</ol>
+</fieldset>
+</div>
+</div>
+</form>
+</div>
+</div>
+
+
+<div class="spacer">
+        	&nbsp;
+        </div>
+<div id="ds-footer">
+<p id="footer_left">
+                Vireo 1.2.1  Â© 2012 <a href="http://www.tdl.org/">Texas Digital Library</a>. All Rights Reserved.
+            </p>
+<p id="footer_right">
+                Valid <a href="http://validator.w3.org/check/referer">XHTML&nbsp;1.0</a>,
+                <a href="http://jigsaw.w3.org/css-validator/check/referer">CSS</a>. 
+                <a title="Section 508 Compliant" href="http://wave.webaim.org/refer">Section 508 Compliant.</a>
+</p>
+</div>
+</div>
+
+
+<div id="tooltip" style="display: none; "><div class="content"><span></span></div><div class="bottom"></div><div class="body"></div><div class="url"></div></div></body></html>
