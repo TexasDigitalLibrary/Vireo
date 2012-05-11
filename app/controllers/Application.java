@@ -6,8 +6,6 @@ import play.mvc.Http.Header;
 
 import java.util.*;
 
-import models.*;
-
 public class Application extends Controller {
 
     public static void index() {
@@ -44,7 +42,7 @@ public class Application extends Controller {
     
     private static void dumpHeaders() {
        	Logger.info("Headers ------------------");
-       	Logger.info(response.toString());
+       	Logger.info(request.toString());
        	Logger.info(session.toString());
        	Map<String, Header> rsp = response.headers;
     	for (Map.Entry<String, Header> entry : rsp.entrySet())    	{
