@@ -1,0 +1,61 @@
+package org.tdl.vireo.model;
+
+/**
+ * A member of a student's degree committee.
+ * 
+ * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
+ */
+public interface CommitteeMember extends AbstractOrderedModel {
+
+	/**
+	 * @return the submission this committee member belongs too.
+	 */
+	public Submission getSubmission();
+
+	/**
+	 * @return The first name of the committee member
+	 */
+	public String getFirstName();
+
+	/**
+	 * @param firstName
+	 *            The new first name of the committee member
+	 */
+	public void setFirstName(String firstName);
+
+	/**
+	 * @return The last name of the committee member.
+	 */
+	public String getLastName();
+
+	/**
+	 * @param lastName
+	 *            The new last name of the committee member.
+	 */
+	public void setLastName(String lastName);
+
+	/**
+	 * @return The middle initial of the committee member.
+	 */
+	public String getMiddleInitial();
+
+	/**
+	 * @param middleInitial
+	 *            The new middle initial of the committee member.
+	 */
+	public void setMiddleInitial(String middleInitial);
+
+	/**
+	 * @return True if this committee member is a chair or co-chair of the
+	 *         student's degree committee.
+	 */
+	public boolean isCommitteeChair();
+
+	/**
+	 * @param chair
+	 *            Set weather this committee member is a chair or co-chair of the
+	 *            student's degree committee.
+	 */
+	public void setCommitteeChair(boolean chair);
+
+}
