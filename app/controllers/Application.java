@@ -5,15 +5,19 @@ import play.mvc.*;
 import play.mvc.Http.Header;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 public class Application extends Controller {
 
     public static void index() {
-        render("login.html");
+	dumpRequestHeaders();
+	dumpConfiguration();
+	render("login.html");
     }
     
     public static void dump() {
-    	dumpHeaders();
+	dumpRequestHeaders();
+	dumpConfiguration();
     	render("v1.html");
     }
     
@@ -40,11 +44,15 @@ public class Application extends Controller {
         render("v5.html");
     }    
     
-    private static void dumpHeaders() {
+    private static void dumpConfiguration(){
+	Logger.info(play.Play.configuration.toString());
+    }
+    
+    private static void dumpRequestHeaders() {
        	Logger.info("Headers ------------------");
        	Logger.info(request.toString());
        	Logger.info(session.toString());
-       	Map<String, Header> rsp = response.headers;
+       	Map<String, Header> rsp = request.headers;
     	for (Map.Entry<String, Header> entry : rsp.entrySet())    	{
     	    Logger.info(entry.getKey() + "= {" + entry.getValue() + "}");
     	}
