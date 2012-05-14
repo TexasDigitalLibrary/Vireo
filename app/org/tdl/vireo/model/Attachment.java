@@ -14,6 +14,11 @@ import java.io.File;
 public interface Attachment extends AbstractModel {
 
 	/**
+	 * @return The submission this attachment belongs too.
+	 */
+	public Submission getSubmission();
+	
+	/**
 	 * The name of the file will be how the file is named on disk with an
 	 * extension following the normal conventions of file names. Some examples
 	 * are: "myresearch.pdf", "survey_data.xsls", etc...
@@ -43,12 +48,6 @@ public interface Attachment extends AbstractModel {
 	 * @return The mimetype of the file.
 	 */
 	public String getMimeType();
-
-	/**
-	 * @param mimeType
-	 *            The new mimetype of the file.
-	 */
-	public void setMimeType(String mimeType);
 
 	/**
 	 * @return The file size measured in bytes.

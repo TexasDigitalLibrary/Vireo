@@ -37,10 +37,10 @@ public interface ActionLog extends AbstractModel {
 	public Date getWhen();
 
 	/**
-	 * @return If this action affected a document then the document is returned,
+	 * @return If this action affected a attachment then the attachment is returned,
 	 *         otherwise null is returned.
 	 */
-	public Attachment getDocument();
+	public Attachment getAttachment();
 
 	/**
 	 * @return An English description of the action.

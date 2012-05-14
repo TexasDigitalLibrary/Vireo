@@ -36,8 +36,8 @@ public interface EmbargoType extends AbstractOrderedModel {
 
 	/**
 	 * @return Return the static duration for this embargo type measured in
-	 *         milliseconds. If there is no predefined duration then -1 is
-	 *         returned.
+	 *         milliseconds. If there is no predefined duration then null is
+	 *         returned. Negative or zero durations are not permitted.
 	 */
 	public Long getDuration();
 

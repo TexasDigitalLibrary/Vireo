@@ -1,6 +1,7 @@
 package org.tdl.vireo.model;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -86,13 +87,13 @@ public interface Submission extends AbstractModel {
 	 * 
 	 * @return The list of attachments who's type is SUPPLEMENTAL
 	 */
-	public List<Attachment> getSupplementalDocuments();
+	public Set<Attachment> getSupplementalDocuments();
 
 	/**
 	 *
 	 * @return The list of all attachments.
 	 */
-	public List<Attachment> getAttachments();
+	public Set<Attachment> getAttachments();
 
 	/**
 	 * Add a new attachment.
@@ -100,7 +101,7 @@ public interface Submission extends AbstractModel {
 	 * @param type The type of the attachment.
 	 * @return The newly created attachment.
 	 */
-	public Attachment addAttachment(File file, AttachmentType type);
+	public Attachment addAttachment(File file, AttachmentType type) throws IOException;
 
 	/**
 	 * 
@@ -110,14 +111,14 @@ public interface Submission extends AbstractModel {
 
 	/**
 	 * Add a new committeeMember
-	 * @param fistName The first name of the new member.
+	 * @param firstName The first name of the new member.
 	 * @param lastName The last name of the new member.
 	 * @param middleInitial The middle initial of the new member.
 	 * @param chair Weather this member is the chair or a co-chair.
 	 * @return The newly created member.
 	 */
-	public CommitteeMember addCommitteeMember(String fistName, String lastName,
-			String middleInitial, boolean chair);
+	public CommitteeMember addCommitteeMember(String firstName, String lastName,
+			String middleInitial, Boolean chair);
 
 	/**
 	 * 
@@ -326,13 +327,13 @@ public interface Submission extends AbstractModel {
 	 * 
 	 * @return Weather the student has selected to release this submission to UMI.
 	 */
-	public boolean getUMIRelease();
+	public Boolean getUMIRelease();
 
 	/**
 	 * 
 	 * @param umiRelease The new UMI release status.
 	 */
-	public void setUMIRelease(boolean umiRelease);
+	public void setUMIRelease(Boolean umiRelease);
 
 	/**
 	 * 
@@ -342,11 +343,11 @@ public interface Submission extends AbstractModel {
 
 	/**
 	 * Add a new custom action.
-	 * @param action The custom action definition.
+	 * @param definition The custom action definition.
 	 * @param value The vaule of the custom action.
 	 * @return The newly created custom action value.
 	 */
-	public CustomActionValue addCustomAction(CustomActionDefinition action,
-			boolean value);
+	public CustomActionValue addCustomAction(CustomActionDefinition definition,
+			Boolean value);
 
 }

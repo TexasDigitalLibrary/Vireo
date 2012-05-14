@@ -4,207 +4,15 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * The Vireo persistent repository. This object follows the spring repository
- * pattern, where this is the source for creating and locating all persistent
- * model objects. It is intended that this object will be injected into all
- * other spring beans that need access to the Vireo persistence layer.
+ * The Vireo persistent repository for application-level settings. This object
+ * follows the spring repository pattern, where this is the source for creating
+ * and locating all persistent model objects. It is intended that this object
+ * will be injected into all other spring beans that need access application
+ * settings.
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
-public interface VireoRepository {
-
-	// //////////////
-	// Person Model
-	// //////////////
-
-	/**
-	 * Create a new person model.
-	 * 
-	 * @param netId
-	 *            The unique netid of the person.
-	 * @param email
-	 *            The unique email address of the person.
-	 * @param firstName
-	 *            The person's first name.
-	 * @param lastName
-	 *            The person's last name.
-	 * @return A new person model.
-	 */
-	public Person createPerson(String netId, String email, String firstName,
-			String lastName);
-
-	/**
-	 * Find a person based upon their unique id.
-	 * 
-	 * @param id
-	 *            Person's id.
-	 * @return The person object or null if not found.
-	 */
-	public Person findPerson(Long id);
-
-	/**
-	 * Find a person based upon their unique email address.
-	 * 
-	 * @param email
-	 *            The person's email adress.
-	 * @return The person object or null if not found.
-	 */
-	public Person findPersonByEmail(String email);
-
-	/**
-	 * Find a person based upon their unique netid.
-	 * 
-	 * @param netId
-	 *            The person's netid
-	 * @return The person object or null if not found.
-	 */
-	public Person findPersonByNetId(String netId);
-
-	/**
-	 * @return All person objects
-	 */
-	public Set<Person> findAllPersons();
-
-	// ///////////////////////////
-	// Personal Preference Model
-	// ///////////////////////////
-
-	/**
-	 * Create a new preference setting.
-	 * 
-	 * @param who
-	 *            Who's preference.
-	 * @param name
-	 *            The unique name of the preference.
-	 * @param value
-	 *            The value of the preference.
-	 * @return A new preference object.
-	 */
-	public Preference createPreference(Person who, String name, String value);
-
-	/**
-	 * Find a preference object
-	 * 
-	 * @param id
-	 *            The unique id
-	 * @return The preference object or null if not found.
-	 */
-	public Preference findPreference(Long id);
-
-	/**
-	 * Find a preference object by person and name.
-	 * 
-	 * @param who
-	 *            Who the preference is applicable for.
-	 * @param name
-	 *            The name of the preference.
-	 * @return The preference object or null if not found.
-	 */
-	public Preference findPreference(Person who, String name);
-
-	/**
-	 * Find all preferences for a particular person.
-	 * 
-	 * @param who
-	 *            The person.
-	 * @return The set of all preferences for the person, if there are none an
-	 *         empty set will be returned.
-	 */
-	public Set<Preference> findPreferences(Person who);
-
-	// //////////////////
-	// Submission Model
-	// //////////////////
-
-	/**
-	 * Start a brand new submission for this submitter.
-	 * 
-	 * @param submitter
-	 *            The submitter of the submission.
-	 * @return A new submission.
-	 */
-	public Submission createSubmission(Person submitter);
-
-	/**
-	 * Find a submission by id.
-	 * 
-	 * @param id
-	 *            The unique id of the submission.
-	 * @return The submission object or null if not found.
-	 */
-	public Submission findSubmission(Long id);
-
-	/**
-	 * Find a submission by email hash
-	 * 
-	 * @param id
-	 *            The email hash of the submission.
-	 * @return The submission object or null if not found.
-	 */
-	public Submission findSubmissionByEmailHash(String emailHash);
-
-	/**
-	 * Find all submissions for a particular submitter.
-	 * 
-	 * @param Submitter
-	 *            The submitter
-	 * @return A set of all submissions for the submitter, or an empty set if
-	 *         there are none.
-	 */
-	public Set<Submission> findSubmission(Person Submitter);
-
-	// //////////////////////////////////////////////////////////////
-	// Attachment, Committee Member, and Custom Action Value Models
-	// //////////////////////////////////////////////////////////////
-
-	/**
-	 * Find an attachment by id.
-	 * 
-	 * @param id
-	 *            The unique id of the attachment.
-	 * @return The attachment object or null if not found.
-	 */
-	public Attachment findAttachment(Long id);
-
-	/**
-	 * Find an committee member by id.
-	 * 
-	 * @param id
-	 *            The unique id of the committee member.
-	 * @return The committee member object or null if not found.
-	 */
-	public CommitteeMember findCommitteeMember(Long id);
-
-	/**
-	 * Find an custom action value by id.
-	 * 
-	 * @param id
-	 *            The unique id of the custom action value.
-	 * @return The custom action value object or null if not found.
-	 */
-	public CustomActionValue findCustomActionValue(Long id);
-
-	// //////////////////
-	// Action Log Model
-	// //////////////////
-
-	/**
-	 * Find an action log by unique id.
-	 * 
-	 * @param id
-	 *            The id of the action log.
-	 * @return The action log or null if not found.
-	 */
-	public ActionLog findActionLog(Long id);
-
-	/**
-	 * Find all action logs for a particular submission order by date.
-	 * 
-	 * @param submission
-	 *            The submission
-	 * @return A list of action logs, or an empty list of none or found.
-	 */
-	public List<ActionLog> findActionLog(Submission submission);
+public interface SettingsRepository {
 
 	// ///////////////////////////////////////////////
 	// Degree, Major, College, and Department Models
@@ -369,7 +177,7 @@ public interface VireoRepository {
 	 * @return A new embargo type.
 	 */
 	public EmbargoType createEmbargoType(boolean active, String description,
-			long duration);
+			Long duration);
 
 	/**
 	 * Find embargo type by id.

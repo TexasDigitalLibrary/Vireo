@@ -1,5 +1,7 @@
 package org.tdl.vireo.model;
 
+import java.util.Set;
+
 /**
  * The person object is used for both students, reviewers, and administrators
  * and is the central authentication object for Vireo. When one of these types
@@ -102,13 +104,13 @@ public interface Person extends AbstractModel {
 	 * 
 	 * @return The birth year for the person.
 	 */
-	public int getBirthYear();
+	public Integer getBirthYear();
 
 	/**
 	 * @param year
 	 *            The new birth year for the person.
 	 */
-	public void setBirthYear(int year);
+	public void setBirthYear(Integer year);
 
 	// Note: Vireo1 has this field in it's data model but the field is not used
 	// anywhere. So we will leave it out of this version.
@@ -246,15 +248,29 @@ public interface Person extends AbstractModel {
 	 * 
 	 * @return The current non-controlled graduation month.
 	 */
-	public int getCurrentGraduationMonth();
+	public Integer getCurrentGraduationMonth();
 
 	/**
 	 * 
 	 * @param month
 	 *            The new graduation month.
 	 */
-	public void setCurrentGraduationMonth(int month);
+	public void setCurrentGraduationMonth(Integer month);
 
+	/**
+	 * @return return all the preferences for this person.
+	 */
+	public Set<Preference> getPreferences();
+	
+	/**
+	 * Create a new preference for this person.
+	 * @param name The name of the new preference.
+	 * @param value The value of the new preference.
+	 * @return The new preference object for convenience.
+	 */
+	public Preference addPreference(String name, String value);
+	
+	
 	/**
 	 * 
 	 * @return Return the vireo role of this person.
