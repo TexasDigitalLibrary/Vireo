@@ -61,6 +61,9 @@ public class JpaCustomActionValueImpl extends Model implements
 
 	@Override
 	public JpaCustomActionValueImpl delete() {
+		
+		// TODO: Callback to submission and tell it that this value is being deleted.
+		
 		return super.delete();
 	}
 

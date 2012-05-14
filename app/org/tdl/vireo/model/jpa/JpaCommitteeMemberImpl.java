@@ -67,6 +67,9 @@ public class JpaCommitteeMemberImpl extends Model implements CommitteeMember {
 
 	@Override
 	public JpaCommitteeMemberImpl delete() {
+		
+		// TODO: Call back to submission and tell it that this member is being deleted.
+		
 		return super.delete();
 	}
 

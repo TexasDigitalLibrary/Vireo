@@ -54,6 +54,9 @@ public class JpaPreferenceImpl extends Model implements Preference {
 
 	@Override
 	public JpaPreferenceImpl delete() {
+		
+		// TODO: callback to the owner at tell them the preference has been deleted.
+		
 		return super.delete();
 	}
 

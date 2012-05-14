@@ -76,6 +76,8 @@ public class JpaAttachmentImpl extends Model implements Attachment {
 	@Override
 	public JpaAttachmentImpl delete() {
 
+		// TODO: Call back to submission and tell it that this attachment is being deleted.
+		
 		if (this.data.exists())
 			this.data.getFile().delete();
 
