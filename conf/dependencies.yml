@@ -2,3 +2,4 @@
 
 require:
     - play
+    - play -> spring 1.0.3

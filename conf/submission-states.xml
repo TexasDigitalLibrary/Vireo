@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+
+	<!-- This spring configuration file only contains State related beans. It 
+		defines all the possible vireo states and the available transitions between 
+		those states. -->
+
+
+	<!-- Vireo State Manager -->
+	<bean id="StateManager" class="org.tdl.vireo.state.simple.StateManagerImpl"
+		scope="singleton" autowire="byType">
+		<property name="initialState" ref="InProgress" />
+		<!-- List of all states will be autowired -->
+	</bean>
+
+
+	<!-- Vireo 1.x States -->
+	<!-- These states listed below are a direct translation of the vireo 1.x states -->
+	
+	<bean id="InProgress" class="org.tdl.vireo.state.simple.StateImpl"
+		scope="singleton">
+		<property name="displayName" value="In Progress" />
+		<property name="inProgress" value="true" />
+		<property name="transitions">
+			<list xmlns="http://www.springframework.org/schema/util"
+				list-class="java.util.ArrayList" value-type="org.tdl.vireo.state.State">
+				<ref bean="Submitted" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="Submitted" class="org.tdl.vireo.state.simple.StateImpl"
+		scope="singleton">
+		<property name="displayName" value="Submitted" />
+		<property name="active" value="true" />
+		<property name="editableByReviewer" value="true" />
+		<property name="transitions">
+			<list xmlns="http://www.springframework.org/schema/util"
+				list-class="java.util.ArrayList" value-type="org.tdl.vireo.state.State">
+				<ref bean="InReview" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="InReview" class="org.tdl.vireo.state.simple.StateImpl"
+		scope="singleton">
+		<property name="displayName" value="Under Review" />
+		<property name="active" value="true" />
+		<property name="editableByReviewer" value="true" />
+		<property name="transitions">
+			<list xmlns="http://www.springframework.org/schema/util"
+				list-class="java.util.ArrayList" value-type="org.tdl.vireo.state.State">
+				<ref bean="NeedsCorrection" />
+				<ref bean="WaitingOnRequirements" />
+				<ref bean="Approved" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="NeedsCorrection" class="org.tdl.vireo.state.simple.StateImpl"
+		scope="singleton">
+		<property name="displayName" value="Needs Correction" />
+		<property name="active" value="true" />
+		<property name="editableByReviewer" value="true" />
+		<property name="editableByStudent" value="true" />
+		<property name="transitions">
+			<list xmlns="http://www.springframework.org/schema/util"
+				list-class="java.util.ArrayList" value-type="org.tdl.vireo.state.State">
+				<ref bean="InReview" />
+				<ref bean="WaitingOnRequirements" />
+				<ref bean="Approved" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="WaitingOnRequirements" class="org.tdl.vireo.state.simple.StateImpl"
+		scope="singleton">
+		<property name="displayName" value="Waiting On Requirements" />
+		<property name="active" value="true" />
+		<property name="editableByReviewer" value="true" />
+		<property name="transitions">
+			<list xmlns="http://www.springframework.org/schema/util"
+				list-class="java.util.ArrayList" value-type="org.tdl.vireo.state.State">
+				<ref bean="InReview" />
+				<ref bean="Approved" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="Approved" class="org.tdl.vireo.state.simple.StateImpl"
+		scope="singleton">
+		<property name="displayName" value="Approved" />
+		<property name="active" value="true" />
+		<property name="editableByReviewer" value="true" />
+		<property name="transitions">
+			<list xmlns="http://www.springframework.org/schema/util"
+				list-class="java.util.ArrayList" value-type="org.tdl.vireo.state.State">
+				<ref bean="PendingPublication" />
+			</list>
+		</property>
+		<property name="embargoTransitions">
+			<list xmlns="http://www.springframework.org/schema/util"
+				list-class="java.util.ArrayList" value-type="org.tdl.vireo.state.State">
+				<ref bean="OnHold" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="PendingPublication" class="org.tdl.vireo.state.simple.StateImpl"
+		scope="singleton">
+		<property name="displayName" value="Pending Publication" />
+		<property name="archived" value="true" />
+		<property name="editableByReviewer" value="true" />
+		<property name="transitions">
+			<list xmlns="http://www.springframework.org/schema/util"
+				list-class="java.util.ArrayList" value-type="org.tdl.vireo.state.State">
+				<ref bean="Published" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="Published" class="org.tdl.vireo.state.simple.StateImpl"
+		scope="singleton">
+		<property name="displayName" value="Published" />
+		<property name="archived" value="true" />
+		<property name="editableByReviewer" value="true" />
+		<property name="transitions">
+			<list xmlns="http://www.springframework.org/schema/util"
+				list-class="java.util.ArrayList" value-type="org.tdl.vireo.state.State">
+				<ref bean="PendingPublication" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- Out of Workflow states -->
+
+	<bean id="OnHold" class="org.tdl.vireo.state.simple.StateImpl"
+		scope="singleton">
+		<property name="displayName" value="On Hold" />
+		<property name="archived" value="true" />
+		<property name="editableByReviewer" value="true" />
+	</bean>
+
+	<bean id="Withdrawn" class="org.tdl.vireo.state.simple.StateImpl"
+		scope="singleton">
+		<property name="displayName" value="Withdrawn" />
+		<property name="archived" value="true" />
+		<property name="editableByReviewer" value="true" />
+	</bean>
+
+	<bean id="Cancelled" class="org.tdl.vireo.state.simple.StateImpl"
+		scope="singleton">
+		<property name="displayName" value="Cancelled" />
+		<property name="archived" value="true" />
+		<property name="editableByReviewer" value="true" />
+	</bean>
+
+</beans>
