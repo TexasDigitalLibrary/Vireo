@@ -8,7 +8,7 @@ POST    /submitIndex                            Application.submitIndex
 POST    /submitLicense                          Application.submitLicense 
 POST    /submitDocInfo                          Application.submitDocInfo 
 POST    /submitFileUpload                       Application.submitFileUpload 
-GET     /dump                       			Application.dump 
+GET     /shibboleth-login              			Application.dump 
 
 
 # Ignore favicon requests
