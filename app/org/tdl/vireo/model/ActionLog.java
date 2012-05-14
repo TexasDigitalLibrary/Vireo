@@ -2,6 +2,8 @@ package org.tdl.vireo.model;
 
 import java.util.Date;
 
+import org.tdl.vireo.state.State;
+
 /**
  * Each action log represents a discrete change to a submission. Taken together
  * all action logs list the chronologically all the changes that have occurred.
@@ -20,11 +22,11 @@ public interface ActionLog extends AbstractModel {
 	public Submission getSubmission();
 
 	/**
-	 * @return The status of this submission, if the submission changed status
-	 *         during the event covered by this action log then the new status
+	 * @return The state of this submission, if the submission changed state
+	 *         during the event covered by this action log then the new state
 	 *         of the submission is returned.
 	 */
-	public String getSubmissionStatus();
+	public State getSubmissionState();
 
 	/**
 	 * @return The person who made or is responsible for the the change.

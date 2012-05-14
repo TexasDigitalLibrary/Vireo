@@ -27,14 +27,15 @@ import org.tdl.vireo.model.SearchOrder;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.SubmissionRepository;
+import org.tdl.vireo.state.StateManager;
 
 /**
  * Jpa specific implementation of the Vireo Submission Repository interface.
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
-public class JpaSubmissionRepository implements SubmissionRepository {
-
+public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
+	
 	// //////////////////
 	// Submission Model
 	// //////////////////

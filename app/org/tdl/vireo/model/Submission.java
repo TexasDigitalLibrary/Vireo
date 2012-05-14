@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.tdl.vireo.state.State;
+
 /**
  * The submission object is really the heart of the vireo workflow data model.
  * It represents the student's ETD application.  The only absolutely required
@@ -301,15 +303,15 @@ public interface Submission extends AbstractModel {
 
 	/**
 	 * 
-	 * @return The name of the spring bean representing the state of this application.
+	 * @return The current application's state
 	 */
-	public String getStatus();
+	public State getState();
 
 	/**
 	 * 
-	 * @param status The new spring bean representing the state of this application.
+	 * @param state The new state of this submission
 	 */
-	public void setStatus(String status);
+	public void setState(State state);
 
 	/**
 	 * 

@@ -17,11 +17,14 @@ import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.state.State;
+import org.tdl.vireo.state.StateManager;
 
 import com.sun.xml.internal.txw2.IllegalAnnotationException;
 
 import play.data.validation.Required;
 import play.db.jpa.Model;
+import play.modules.spring.Spring;
 
 /**
  * Jpa specific implementation of Vireo's Action log.
@@ -36,7 +39,7 @@ public class JpaActionLogImpl extends Model implements ActionLog {
 	public Submission submission;
 
 	@Column(nullable = false)
-	public String submissionStatus;
+	public String submissionState;
 
 	@ManyToOne(targetEntity=JpaPersonImpl.class, optional = false)
 	public Person person;
@@ -59,8 +62,8 @@ public class JpaActionLogImpl extends Model implements ActionLog {
 	 * 
 	 * @param submission
 	 *            The submission this action log affects.
-	 * @param submissionStatus
-	 *            The status of the submission after the action log.
+	 * @param submissionState
+	 *            The state of the submission after the action log.
 	 * @param person
 	 *            The person who made the change.
 	 * @param when
@@ -72,14 +75,14 @@ public class JpaActionLogImpl extends Model implements ActionLog {
 	 * @param privateFlag
 	 *            Weather the action should be published publicly viewable.
 	 */
-	protected JpaActionLogImpl(Submission submission, String submissionStatus,
+	protected JpaActionLogImpl(Submission submission, State submissionState,
 			Person person, Date when, Attachment attachment, String entry,
 			boolean privateFlag) {
 
 		// TODO: Check that all the parameters are not null, good, etc...
 
 		this.submission = submission;
-		this.submissionStatus = submissionStatus;
+		this.submissionState = submissionState.getBeanName();
 		this.person = person;
 		this.when = when;
 		this.attachment = attachment;
@@ -115,8 +118,8 @@ public class JpaActionLogImpl extends Model implements ActionLog {
 	}
 
 	@Override
-	public String getSubmissionStatus() {
-		return submissionStatus;
+	public State getSubmissionState() {
+		return Spring.getBeanOfType(StateManager.class).getState(submissionState);
 	}
 
 	@Override

@@ -35,8 +35,11 @@ import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.Major;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.state.State;
+import org.tdl.vireo.state.StateManager;
 
 import play.db.jpa.Model;
+import play.modules.spring.Spring;
 
 /**
  * Jpa specefic implementation of Vireo's Submission interface.
@@ -100,7 +103,7 @@ public class JpaSubmissionImpl extends Model implements Submission {
 	@OneToOne(targetEntity = JpaGraduationMonthImpl.class)
 	public GraduationMonth graduationMonth;
 
-	public String status;
+	public String state;
 
 	@OneToOne(targetEntity = JpaGraduationMonthImpl.class)
 	public Person assignee;
@@ -392,13 +395,16 @@ public class JpaSubmissionImpl extends Model implements Submission {
 	}
 
 	@Override
-	public String getStatus() {
-		return status;
+	public State getState() {
+		return Spring.getBeanOfType(StateManager.class).getState(state);
 	}
 
 	@Override
-	public void setStatus(String status) {
-		this.status = status;
+	public void setState(State state) {
+		
+		// TODO: check that the state is valid.
+		
+		this.state = state.getBeanName();
 	}
 
 	@Override

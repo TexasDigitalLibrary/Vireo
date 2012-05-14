@@ -29,7 +29,7 @@ import org.tdl.vireo.model.SettingsRepository;
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
-public class JpaSettingRepositoryImpl implements SettingsRepository {
+public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	
 	// ///////////////////////////////////////////////
 	// Degree, Major, College, and Department Models
