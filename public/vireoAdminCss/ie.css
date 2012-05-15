@@ -1,0 +1,33 @@
+/*******************************************************************************
+	 				Jeremy's CSS Fixes for Vireo Admin
+
+ 							IE SPECIFIC CSS
+********************************************************************************/
+
+
+
+
+
+
+/*******************************************************************************
+								ADMIN CSS
+********************************************************************************
+/* layout for pg content - fixed width left colum, fluid right column */
+body {
+	min-width: 1200px;
+}
+
+/*
+ * hide blue underline dots below header nav tabs in IE
+ */
+#main-menu li a {
+	text-decoration: none;
+}
+
+
+/*
+ * Fix the 'remove' list items spacing problems in IE
+ */
+.ds-static-div .ds-simple-list li,.ds-static-div .childFilterList li {
+	min-height: 20px;
+}

@@ -9,6 +9,8 @@ POST    /submitLicense                          Application.submitLicense
 POST    /submitDocInfo                          Application.submitDocInfo 
 POST    /submitFileUpload                       Application.submitFileUpload 
 GET     /shibboleth-login              			Application.dump 
+GET     /vireoAdmin		              			Application.vireoAdmin 
+GET     /settings		              			Application.settings 
 
 
 # Ignore favicon requests

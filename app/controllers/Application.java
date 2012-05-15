@@ -44,6 +44,16 @@ public class Application extends Controller {
         render("v5.html");
     }    
     
+    public static void vireoAdmin() {
+    	dumpParams();  
+        render("va1.html");
+    } 
+    
+    public static void settings() {
+    	dumpParams();  
+        render("vaSettings.html");
+    } 
+    
     private static void dumpConfiguration(){
 	Logger.info(play.Play.configuration.toString());
     }
