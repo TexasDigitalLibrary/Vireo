@@ -25,7 +25,7 @@ import play.db.jpa.Model;
 public class JpaCommitteeMemberImpl extends Model implements CommitteeMember {
 
 	@Column(nullable = false)
-	public int order;
+	public int displayOrder;
 
 	@ManyToOne(targetEntity=JpaSubmissionImpl.class, optional=false)
 	public Submission submission;
@@ -54,6 +54,7 @@ public class JpaCommitteeMemberImpl extends Model implements CommitteeMember {
 
 		// TODO: Check that the arguments are valid.
 
+	    this.displayOrder = 0;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.middleInitial = middleInitial;
@@ -83,15 +84,15 @@ public class JpaCommitteeMemberImpl extends Model implements CommitteeMember {
 		return super.merge();
 	}
 
-	@Override
-	public int getOrder() {
-		return order;
-	}
+    @Override
+    public int getDisplayOrder() {
+        return displayOrder;
+    }
 
-	@Override
-	public void setOrder(int order) {
-		this.order = order;
-	}
+    @Override
+    public void setDisplayOrder(int displayOrder) {
+        this.displayOrder = displayOrder;
+    }
 
 	@Override
 	public Submission getSubmission() {

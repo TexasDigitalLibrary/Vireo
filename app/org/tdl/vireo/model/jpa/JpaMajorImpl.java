@@ -19,7 +19,7 @@ import play.db.jpa.Model;
 public class JpaMajorImpl extends Model implements Major {
 
 	@Column(nullable = false)
-	public int order;
+	public int displayOrder;
 
 	@Column(nullable = false, unique = true)
 	public String name;
@@ -33,7 +33,7 @@ public class JpaMajorImpl extends Model implements Major {
 	protected JpaMajorImpl(String name) {
 		// TODO: Check arguments
 
-		this.order = 0;
+		this.displayOrder = 0;
 		this.name = name;
 	}
 
@@ -57,15 +57,15 @@ public class JpaMajorImpl extends Model implements Major {
 		return super.merge();
 	}
 
-	@Override
-	public int getOrder() {
-		return order;
-	}
+    @Override
+    public int getDisplayOrder() {
+        return displayOrder;
+    }
 
-	@Override
-	public void setOrder(int order) {
-		this.order = order;
-	}
+    @Override
+    public void setDisplayOrder(int displayOrder) {
+        this.displayOrder = displayOrder;
+    }
 
 	@Override
 	public String getName() {

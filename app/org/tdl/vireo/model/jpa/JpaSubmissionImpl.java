@@ -42,7 +42,7 @@ import play.db.jpa.Model;
 import play.modules.spring.Spring;
 
 /**
- * Jpa specefic implementation of Vireo's Submission interface.
+ * JPA specific implementation of Vireo's Submission interface.
  * 
  * TODO: Create actionLog items when the submission is changed.
  * 
@@ -71,7 +71,7 @@ public class JpaSubmissionImpl extends Model implements Submission {
 	public String committeeEmailHash;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	public Date committeeApporvalDate;
+	public Date committeeApprovalDate;
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date committeeEmbargoApprovalDate;
 	public String committeeDisposition;
@@ -208,7 +208,7 @@ public class JpaSubmissionImpl extends Model implements Submission {
 
 	@Override
 	public Set<Attachment> getSupplementalDocuments() {
-		// TODO: return all attacments with type= suplemental types.
+		// TODO: return all attachments with type= supplemental types.
 
 		return attachments;
 	}
@@ -266,12 +266,12 @@ public class JpaSubmissionImpl extends Model implements Submission {
 
 	@Override
 	public Date getCommitteeApprovalDate() {
-		return committeeApporvalDate;
+		return committeeApprovalDate;
 	}
 
 	@Override
 	public void setCommitteeApprovalDate(Date date) {
-		this.committeeApporvalDate = date;
+		this.committeeApprovalDate = date;
 	}
 
 	@Override

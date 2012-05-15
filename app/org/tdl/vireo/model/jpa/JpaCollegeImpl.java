@@ -20,7 +20,7 @@ import play.db.jpa.Model;
 public class JpaCollegeImpl extends Model implements College {
 
 	@Column(nullable = false)
-	public int order;
+	public int displayOrder;
 
 	@Column(nullable = false, unique = true)
 	public String name;
@@ -33,9 +33,9 @@ public class JpaCollegeImpl extends Model implements College {
 	 */
 	protected JpaCollegeImpl(String name) {
 
-		// TODO: check incomming parameters;
+		// TODO: check incoming parameters;
 
-		this.order = 0;
+		this.displayOrder = 0;
 		this.name = name;
 	}
 
@@ -60,13 +60,13 @@ public class JpaCollegeImpl extends Model implements College {
 	}
 
 	@Override
-	public int getOrder() {
-		return order;
+	public int getDisplayOrder() {
+		return displayOrder;
 	}
 
 	@Override
-	public void setOrder(int order) {
-		this.order = order;
+	public void setDisplayOrder(int displayOrder) {
+		this.displayOrder = displayOrder;
 	}
 
 	@Override

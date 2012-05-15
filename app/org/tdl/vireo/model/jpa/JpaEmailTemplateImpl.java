@@ -19,7 +19,7 @@ import play.db.jpa.Model;
 public class JpaEmailTemplateImpl extends Model implements EmailTemplate {
 
 	@Column(nullable = false)
-	public int order;
+	public int displayOrder;
 
 	@Column(nullable = false, unique = true)
 	public String subject;
@@ -37,7 +37,8 @@ public class JpaEmailTemplateImpl extends Model implements EmailTemplate {
 	 */
 	protected JpaEmailTemplateImpl(String subject, String message) {
 		// TODO: check arguments
-
+	    
+	    this.displayOrder = 0;
 		this.subject = subject;
 		this.message = message;
 	}
@@ -62,15 +63,15 @@ public class JpaEmailTemplateImpl extends Model implements EmailTemplate {
 		return super.merge();
 	}
 
-	@Override
-	public int getOrder() {
-		return order;
-	}
+    @Override
+    public int getDisplayOrder() {
+        return displayOrder;
+    }
 
-	@Override
-	public void setOrder(int order) {
-		this.order = order;
-	}
+    @Override
+    public void setDisplayOrder(int displayOrder) {
+        this.displayOrder = displayOrder;
+    }
 
 	@Override
 	public String getSubject() {

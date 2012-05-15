@@ -19,7 +19,7 @@ import play.db.jpa.Model;
 public class JpaGraduationMonthImpl extends Model implements GraduationMonth {
 
 	@Column(nullable = false)
-	public int order;
+	public int displayOrder;
 
 	@Column(nullable = false)
 	public int month;
@@ -34,7 +34,7 @@ public class JpaGraduationMonthImpl extends Model implements GraduationMonth {
 
 		// TODO: check the arguments
 
-		this.order = 0;
+		this.displayOrder = 0;
 		this.month = month;
 	}
 
@@ -58,15 +58,15 @@ public class JpaGraduationMonthImpl extends Model implements GraduationMonth {
 		return super.merge();
 	}
 
-	@Override
-	public int getOrder() {
-		return order;
-	}
+    @Override
+    public int getDisplayOrder() {
+        return displayOrder;
+    }
 
-	@Override
-	public void setOrder(int order) {
-		this.order = order;
-	}
+    @Override
+    public void setDisplayOrder(int displayOrder) {
+        this.displayOrder = displayOrder;
+    }
 
 	@Override
 	public int getMonth() {

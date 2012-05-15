@@ -19,7 +19,7 @@ import play.db.jpa.Model;
 public class JpaEmbargoTypeImpl extends Model implements EmbargoType {
 
 	@Column(nullable = false)
-	public int order;
+	public int displayOrder;
 
 	@Column(nullable = false)
 	public boolean active;
@@ -45,7 +45,7 @@ public class JpaEmbargoTypeImpl extends Model implements EmbargoType {
 
 		// TODO: check arguments
 
-		this.order = 0;
+		this.displayOrder = 0;
 		this.active = active;
 		this.description = description;
 		this.duration = duration;
@@ -71,15 +71,15 @@ public class JpaEmbargoTypeImpl extends Model implements EmbargoType {
 		return super.merge();
 	}
 
-	@Override
-	public int getOrder() {
-		return order;
-	}
+    @Override
+    public int getDisplayOrder() {
+        return displayOrder;
+    }
 
-	@Override
-	public void setOrder(int order) {
-		this.order = order;
-	}
+    @Override
+    public void setDisplayOrder(int displayOrder) {
+        this.displayOrder = displayOrder;
+    }
 
 	@Override
 	public boolean isActive() {

@@ -34,9 +34,9 @@ public interface ActionLog extends AbstractModel {
 	public Person getPerson();
 
 	/**
-	 * @return When this action was performed.
+	 * @return Date this action was performed.
 	 */
-	public Date getWhen();
+	public Date getActionDate();
 
 	/**
 	 * @return If this action affected a attachment then the attachment is returned,

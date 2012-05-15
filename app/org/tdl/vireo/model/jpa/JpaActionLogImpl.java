@@ -27,7 +27,7 @@ import play.db.jpa.Model;
 import play.modules.spring.Spring;
 
 /**
- * Jpa specific implementation of Vireo's Action log.
+ * JPA specific implementation of Vireo's Action log.
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
@@ -44,9 +44,8 @@ public class JpaActionLogImpl extends Model implements ActionLog {
 	@ManyToOne(targetEntity=JpaPersonImpl.class, optional = false)
 	public Person person;
 
-	@Column(nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
-	public Date when;
+	public Date actionDate;
 
 	@ManyToOne(targetEntity=JpaAttachmentImpl.class)
 	public Attachment attachment;
@@ -66,17 +65,17 @@ public class JpaActionLogImpl extends Model implements ActionLog {
 	 *            The state of the submission after the action log.
 	 * @param person
 	 *            The person who made the change.
-	 * @param when
-	 *            When the action occured.
+	 * @param actionDate
+	 *            Date the action occurred.
 	 * @param attachment
 	 *            The attachment affected, may be null.
 	 * @param entry
-	 *            An english description of the action.
+	 *            An English description of the action.
 	 * @param privateFlag
 	 *            Weather the action should be published publicly viewable.
 	 */
 	protected JpaActionLogImpl(Submission submission, State submissionState,
-			Person person, Date when, Attachment attachment, String entry,
+			Person person, Date actionDate, Attachment attachment, String entry,
 			boolean privateFlag) {
 
 		// TODO: Check that all the parameters are not null, good, etc...
@@ -84,7 +83,7 @@ public class JpaActionLogImpl extends Model implements ActionLog {
 		this.submission = submission;
 		this.submissionState = submissionState.getBeanName();
 		this.person = person;
-		this.when = when;
+		this.actionDate = actionDate;
 		this.attachment = attachment;
 		this.entry = entry;
 		this.privateFlag = privateFlag;
@@ -128,8 +127,8 @@ public class JpaActionLogImpl extends Model implements ActionLog {
 	}
 
 	@Override
-	public Date getWhen() {
-		return when;
+	public Date getActionDate() {
+		return actionDate;
 	}
 
 	@Override
