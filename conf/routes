@@ -12,6 +12,7 @@ GET     /shibboleth-login              			Application.dump
 GET     /vireoAdmin		              			Application.vireoAdmin 
 GET     /settings		              			Application.settings 
 POST    /settings/vireo/admin/settings			Application.postSettings
+*		/admin              					module:crud
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

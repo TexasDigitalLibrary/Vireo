@@ -78,7 +78,20 @@ public class JpaPersonImpl extends Model implements Person {
 	protected JpaPersonImpl(String netid, String email, String firstName,
 			String lastName, RoleType role) {
 
-		// TODO: check arguments
+		if (netid == null || netid.length() == 0)
+			throw new IllegalArgumentException("Netid is required");
+		
+		if (email == null || email.length() == 0)
+			throw new IllegalArgumentException("Email is required");
+		
+		if (firstName == null || firstName.length() == 0)
+			throw new IllegalArgumentException("FirstName is required");
+		
+		if (lastName == null || lastName.length() == 0)
+			throw new IllegalArgumentException("lastName is required");
+		
+		if (role == null )
+			throw new IllegalArgumentException("Role is required");
 
 		this.netid = netid;
 		this.email = email;
@@ -115,8 +128,8 @@ public class JpaPersonImpl extends Model implements Person {
 
 	@Override
 	public void setNetId(String netid) {
-		
-		// TODO: check that netid is unique
+		if (netid == null || netid.length() == 0)
+			throw new IllegalArgumentException("Netid is required");
 		
 		this.netid = netid;
 	}
@@ -128,8 +141,8 @@ public class JpaPersonImpl extends Model implements Person {
 
 	@Override
 	public void setEmail(String email) {
-		
-		// TODO: check that email is valid, and unique.
+		if (email == null || email.length() == 0)
+			throw new IllegalArgumentException("Email is required");
 		this.email = email;
 	}
 
@@ -141,8 +154,8 @@ public class JpaPersonImpl extends Model implements Person {
 	@Override
 	public void setFirstName(String firstName) {
 		
-		// TODO: check firstName
-		
+		if (firstName == null || firstName.length() == 0)
+			throw new IllegalArgumentException("firstName is required");
 		this.firstName = firstName;
 	}
 
@@ -164,7 +177,8 @@ public class JpaPersonImpl extends Model implements Person {
 	@Override
 	public void setLastName(String lastName) {
 		
-		//TODO: check lastName
+		if (lastName == null || lastName.length() == 0)
+			throw new IllegalArgumentException("lastName is required");
 		
 		this.lastName = lastName;
 	}
@@ -296,6 +310,10 @@ public class JpaPersonImpl extends Model implements Person {
 
 	@Override
 	public void setCurrentGraduationMonth(Integer month) {
+		if (month != null && ( month > 11 || month < 0)) {
+			throw new IllegalArgumentException("Graduation month is out of bounds.");
+		}
+		
 		this.currentGraduationMonth = month;
 	}
 
@@ -318,6 +336,8 @@ public class JpaPersonImpl extends Model implements Person {
 
 	@Override
 	public void setRole(RoleType role) {
+		if (role == null )
+			throw new IllegalArgumentException("Role is required");
 		this.role = role;
 	}
 
