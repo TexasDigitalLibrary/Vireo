@@ -1,0 +1,223 @@
+/* ----------------------------------------------------------------------------------------------------------------*/
+/* ---------->>> global settings needed for thickbox <<<-----------------------------------------------------------*/
+/* ----------------------------------------------------------------------------------------------------------------*/
+*{padding: 0; margin: 0;}
+/* ----------------------------------------------------------------------------------------------------------------*/
+/* ---------->>> thickbox specific link and font settings <<<------------------------------------------------------*/
+/* ----------------------------------------------------------------------------------------------------------------*/
+#TB_window {
+  font-family:"Lucida Grande","Bitstream Vera Sans",Verdana,Arial,sans-serif; font-size: 95%; color:#333; background: #fff; 
+}
+#TB_secondLine {
+  font: 10px Arial, Helvetica, sans-serif;
+  color:#666666;
+}
+#TB_window a:link {color: #666666;}
+#TB_window a:visited {color: #666666;}
+#TB_window a:hover {color: #000;}
+#TB_window a:active {color: #666666;}
+#TB_window a:focus{color: #666666;}
+/* ----------------------------------------------------------------------------------------------------------------*/
+/* ---------->>> thickbox settings <<<-----------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------------------------------------------------------*/
+#TB_overlay {
+  position: fixed;
+  z-index:100;
+  top: 0px;
+  left: 0px;
+  height:100%;
+  width:100%;
+}
+.TB_overlayMacFFBGHack {background: url(../images/macFFBgHack.png) repeat;}
+.TB_overlayBG {
+  background-color:#000;
+  filter:alpha(opacity=75);
+  -moz-opacity: 0.75;
+  opacity: 0.75;
+}
+* html #TB_overlay { /* ie6 hack */
+     position: absolute;
+     height: expression(document.body.scrollHeight > document.body.offsetHeight ? document.body.scrollHeight : document.body.offsetHeight + 'px');
+}
+#TB_window {
+  position: fixed;
+  background: #ffffff;
+  z-index: 102;
+  color:#000000;
+  display:none;
+  border: 13px solid #666;
+  text-align:left;
+  top:50%;
+  left:50%;
+}
+* html #TB_window { /* ie6 hack */
+position: absolute;
+margin-top: expression(0 - parseInt(this.offsetHeight / 2) + (TBWindowMargin = document.documentElement && document.documentElement.scrollTop || document.body.scrollTop) + 'px');
+}
+#TB_window img#TB_Image {
+  display:block;
+  margin: 15px 0 0 15px;
+  border-right: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #666;
+  border-left: 1px solid #666;
+}
+#TB_caption{
+  height:25px;
+  padding:7px 30px 10px 25px;
+  float:left;
+}
+#TB_closeWindow{
+  height:5px;
+  padding:11px 25px 10px 0;
+  float:right;
+  
+}
+#TB_closeAjaxWindow{
+  padding:7px 10px 5px 0;
+  margin-bottom:1px;
+  text-align:right;
+  float:right;
+  font-size: 85%;
+}
+#TB_ajaxWindowTitle{
+	float:left;
+	font-weight: bold;
+	font-size: 150%;
+	color: white;
+	padding: 6px 10px 0;	
+	margin: 0px;
+}
+#TB_title{
+	height:35px;
+	border-bottom: 1px solid #ccc;
+	background-color: #193340;
+	color: white;
+	font-size:12px;
+}
+#TB_ajaxContent{
+  clear:both;
+  padding:15px 15px 15px 15px;
+  overflow:auto;
+  text-align:left;
+  font-size: 95%;
+  background-color: white; 
+  background:transparent url(../images/commentb.gif) repeat-x top left;
+}
+#TB_ajaxContent.TB_modal{
+  padding:15px;
+}
+#TB_ajaxContent p{
+  padding:5px 0px 5px 0px;
+}
+
+#TB_load{
+  position: fixed;
+  display:none;
+  height:13px;
+  width:208px;
+  z-index:103;
+  top: 50%;
+  left: 50%;
+  margin: -6px 0 0 -104px; /* -height/2 0 0 -width/2 */
+}
+* html #TB_load { /* ie6 hack */
+position: absolute;
+margin-top: expression(0 - parseInt(this.offsetHeight / 2) + (TBWindowMargin = document.documentElement && document.documentElement.scrollTop || document.body.scrollTop) + 'px');
+}
+#TB_HideSelect{
+  z-index:99;
+  position:fixed;
+  top: 0;
+  left: 0;
+  background-color:#fff;
+  border:none;
+  filter:alpha(opacity=0);
+  -moz-opacity: 0;
+  opacity: 0;
+  height:100%;
+  width:100%;
+}
+* html #TB_HideSelect { /* ie6 hack */
+     position: absolute;
+     height: expression(document.body.scrollHeight > document.body.offsetHeight ? document.body.scrollHeight : document.body.offsetHeight + 'px');
+}
+#TB_iframeContent{
+  clear:both;
+  border:none;
+  margin-bottom:-1px;
+  margin-top:1px;
+  _margin-bottom:1px;
+}
+
+#TB_ajaxContent .ds-div-head {margin-bottom: 5px; color: #183440;}
+#TB_ajaxContent .ds-form-list {border: 0px;}
+#TB_ajaxContent .ds-form-list legend {display: none;}
+#TB_ajaxContent .ds-form-list ol {float: left; clear: both; list-style-type: none;}
+#TB_ajaxContent .ds-form-item {float: left; clear:both; width: 100%; padding: 3px;}
+#TB_ajaxContent .ds-form-label {float: left; clear: left; width: 90px; padding: 0 5px 0 30px; margin: 0 0 3px;}
+#TB_ajaxContent .ds-checkbox-field {float: left; clear: left; width: 90px; padding: 0 5px 0 30px; margin: 0 0 3px;}
+#TB_ajaxContent .ds-form-content {float: left; clear: right; margin-bottom: 3px;}
+#TB_ajaxContent .ds-form-content a.view-link-submit-thickbox {padding: 0 0 0 30px;}
+
+#TB_ajaxContent .other-status-label {margin-top: 80px; font-weight: bolder;}
+#TB_ajaxContent fieldset.available-options {border: 0px; margin-top: 6px;}
+#TB_ajaxContent fieldset.available-options ol {list-style-type: none;}
+
+#TB_window li.ds-form-item.noteArea {width: 100% !important; margin: 20px 0 6px;}
+#TB_window li.ds-form-item.noteArea div.ds-form-content {width: 100% !important;}
+#TB_window .ds-form-list ol{width: 97% !important;}
+#TB_window.abstract #TB_ajaxContent legend {display: none;}
+#TB_window.abstract #TB_ajaxContent textarea.abstract {border: 1px solid silver; height: 478px; width: 490px;}
+#TB_window.abstract ol {width: 100%;}
+#TB_window.abstract ol li.ds-form-item {width: 100%;}
+#TB_window.abstract ol li.ds-form-item label{display: none; }
+#TB_window.abstract ol li.ds-form-item div.ds-form-content{width: 80% !important;}
+#TB_window.abstract ol li.ds-form-item textarea{width: 100%;}
+
+#TB_footer{background-color: #CCCCCC; height: 40px; text-align: right; }
+#TB_footer div.ds-form-content {vertical-align: middle; padding-top: 5px; padding-right: 10px; float: none; clear: both;}
+#TB_footer div.ds-form-content input,
+#TB_footer input {font-size: 95%; font-weight:bold; background:white url("../images/button_bg.png") no-repeat scroll left bottom; border:1px solid #999999; margin: 0 2px; padding: 3px 8px; }
+
+#TB_ajaxContent form.update-notes {padding: 0px; margin: 0px;}
+#TB_ajaxContent form.update-notes fieldset {border: 0px; margin: 0px; padding: 0px;}
+#TB_ajaxContent form.update-notes fieldset ol{list-style-type: none; padding: 0px; margin: 0px;}
+#TB_ajaxContent form.update-notes fieldset ol li.ds-form-item.last {height: 20px; width: 100%;}
+#TB_ajaxContent form.update-notes ol ol {margin-left: 30px;}
+#TB_ajaxContent textarea.note-textarea {height: 220px; width: 100% !important; }
+
+#aspect_vireo_admin_View_list_publicOptions ol li {padding: 0;}
+#aspect_vireo_admin_View_list_note-options li.noteArea {margin-top: 5px !important;}
+
+form.update-files{padding: 0px; margin: 0px;}
+form.update-files fieldset{border: 0px; margin: 0px; padding: 0px;}
+form.update-files fieldset ol{list-style-type: none; padding: 0px; margin: 0px;}
+
+
+#TB_ajaxContent div.pagination { margin: 10px 0 0; }
+#TB_ajaxContent div.pagination a.previous-page-link,
+#TB_ajaxContent div.pagination a.next-page-link,
+#TB_ajaxContent div.pagination p.pagination-info {
+	border: 1px solid silver;
+	padding: 4px 8px;
+	font-size: 75%;
+	background-color: #eee;
+	text-decoration: none;
+}
+#TB_ajaxContent div.pagination p.pagination-info { color: #666; background-color: white; display: inline; }
+#TB_ajaxContent #aspect_vireo_admin_Settings_item_searchMemItem .ds-form-label { padding: 0 10px 0 0; width: none; }
+#TB_ajaxContent #aspect_vireo_admin_Settings_div_results { margin-top: 15px; }
+
+#TB_ajaxContent div.embargo-expiration {
+	border: 1px solid silver;
+	margin: 0.5em 0em;
+	padding: 0.5em;
+}
+
+#TB_ajaxContent fieldset.ds-form-list ol li div fieldset label{display:block; width: 210px; float: left; height: 30px;}
+
+#TB_ajaxContent input.embargo-type {
+	width: 25em;
+}
+
