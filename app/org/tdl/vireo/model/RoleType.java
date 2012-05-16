@@ -1,13 +1,14 @@
 package org.tdl.vireo.model;
 
 /**
- * The possible degree levels supported by vireo.
+ * The possible roles a person may be within vireo.
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 public enum RoleType {
 	NONE,
-	UNDERGRADUATE,
-	MASTERS,
-	DOCTORAL
+	STUDENT,
+	REVIEWER,
+	MANAGER,
+	ADMINISTRATOR
 }
