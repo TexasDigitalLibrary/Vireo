@@ -4,9 +4,10 @@ curl http://download.playframework.org/releases/play-1.2.5-RC3.zip -o /tmp/play-
 unzip /tmp/play-1.2.5-RC3.zip -d /tmp
 export PLAY_HOME=/tmp/play-1.2.5-RC3
 export PATH=$PATH:$PLAY_HOME
-sudo yum -y install git
-git clone https://TDLVireo:Vireo20@github.com/TexasDigitalLibrary/Vireo.git Vireo
-cd Vireo
+curl -L -k -u TDLVireo:Vireo20 https://github.com/TexasDigitalLibrary/Vireo/zipball/master -o vireo.zip
+unzip vireo.zip
+mv cd TexasDigitalLibrary-Vireo-* vireo
+cd vireo
 play dependencies
 play auto-test
 play war
