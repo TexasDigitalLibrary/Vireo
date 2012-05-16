@@ -11,7 +11,7 @@ POST    /submitFileUpload                       Application.submitFileUpload
 GET     /shibboleth-login              			Application.dump 
 GET     /vireoAdmin		              			Application.vireoAdmin 
 GET     /settings		              			Application.settings 
-
+POST    /settings/vireo/admin/settings			Application.postSettings
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

@@ -51,6 +51,24 @@ public class Application extends Controller {
     
     public static void settings() {
     	dumpParams();  
+    	String page = params.get("page");
+    	
+    	if (page == null)
+    		render("vaSettings.html");
+    	
+    	if (page.equals("admin")) {
+    		Logger.info("Going to admin page");
+    		render("vaSettingsAdmin.html");
+    	}
+        render("vaSettings.html");
+    } 
+    
+    // When a setting changes - we get the symbol that changed:
+    // LIST_GRADUATION_SEM= false
+    // We should set this in the DB and then just re-render/send the page
+    
+    public static void postSettings() {
+    	dumpParams();  
         render("vaSettings.html");
     } 
     
