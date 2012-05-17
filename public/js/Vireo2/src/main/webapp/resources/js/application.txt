@@ -1,7 +1,0 @@
-FILE QUARANTINED
-
-Microsoft Forefront Protection for Exchange Server removed a file since it was found to match a filter.
-File name: "v2.tar.gz->v2.tar->Vireo2/src/main/webapp/resources/js/application.js"
-Filter name: "FILE FILTER= Forbidden File Types: *.js"
-Mailbox Realtime - Scanned on AEMS MBX server EXMBX03.
-For information about the blocking of specific attachments, see http://www.utexas.edu/its/messaging/answers/no-attachments.php
