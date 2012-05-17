@@ -263,6 +263,14 @@ public interface Person extends AbstractModel {
 	public Set<Preference> getPreferences();
 	
 	/**
+	 * Find the preference with the given name for this user.
+	 * 
+	 * @param name The name of the preference
+	 * @return The preference
+	 */
+	public Preference getPreference(String name);
+	
+	/**
 	 * Create a new preference for this person.
 	 * @param name The name of the new preference.
 	 * @param value The value of the new preference.

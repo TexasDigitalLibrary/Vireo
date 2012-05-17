@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.Person;
@@ -18,7 +19,8 @@ import play.db.jpa.Model;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 @Entity
-@Table(name = "Preference")
+@Table(name = "Preference",
+		uniqueConstraints = { @UniqueConstraint( columnNames = { "person_id", "name" } ) } )
 public class JpaPreferenceImpl extends Model implements Preference {
 
 	@ManyToOne(targetEntity = JpaPersonImpl.class, optional=false)
@@ -40,8 +42,13 @@ public class JpaPreferenceImpl extends Model implements Preference {
 	 *            The value of the preference.
 	 */
 	protected JpaPreferenceImpl(Person person, String name, String value) {
-		// TODO: check arguments
-
+		
+		if (person == null)
+			throw new IllegalArgumentException("All preferences must be associated with a person.");
+		
+		if (name == null || name.length() == 0)
+			throw new IllegalArgumentException("Preference name's are required");
+		
 		this.person = person;
 		this.name = name;
 		this.value = value;
@@ -55,7 +62,8 @@ public class JpaPreferenceImpl extends Model implements Preference {
 	@Override
 	public JpaPreferenceImpl delete() {
 		
-		// TODO: callback to the owner at tell them the preference has been deleted.
+		// Tell our owner we are being deleted.
+		((JpaPersonImpl)person).removePreference(this);
 		
 		return super.delete();
 	}
@@ -83,7 +91,8 @@ public class JpaPreferenceImpl extends Model implements Preference {
 	@Override
 	public void setName(String name) {
 		
-		// TODO: check that name is not null or empty
+		if (name == null || name.length() == 0)
+			throw new IllegalArgumentException("Preference name's are required");
 		
 		this.name = name;
 	}
