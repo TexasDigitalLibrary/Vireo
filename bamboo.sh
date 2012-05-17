@@ -1,17 +1,16 @@
 #!/bin/bash -v
 
 rm -rf /tmp/play/
-rm /tmp/play.zip
+rm -f /tmp/play.zip
 curl http://download.playframework.org/releases/play-1.2.5-RC3.zip -o /tmp/play.zip
-#curl -L -k https://github.com/playframework/play/zipball/master -o /tmp/play.zip
-unzip /tmp/play.zip -d /tmp/
-mv /tmp/play* /tmp/play
-export PATH=$PATH:/tmp/play
+unzip -qq -o /tmp/play.zip -d /tmp/
+export PATH=/tmp/play-1.2.5rc3/:$PATH
+sed -i.orig s/Go\ to\ /Listening\ for\ HTTP/ /tmp/play-1.2.5rc3/framework/pym/play/commands/base.py
 rm -rf ./vireo/
-rm ./vireo.zip
+rm -f ./vireo.zip
 curl -L -k -u TDLVireo:Vireo20 https://github.com/TexasDigitalLibrary/Vireo/zipball/master -o ./vireo.zip
-unzip ./vireo.zip
+unzip -qq -o ./vireo.zip -d ./
 mv ./TexasDigitalLibrary-Vireo-* ./vireo
 cd ./vireo
-/tmp/play/play dependencies
-/tmp/play/play auto-test
+/tmp/play-1.2.5rc3/play dependencies
+/tmp/play-1.2.5rc3/play auto-test
