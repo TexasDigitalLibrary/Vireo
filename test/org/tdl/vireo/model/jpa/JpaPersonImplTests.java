@@ -386,7 +386,9 @@ public class JpaPersonImplTests extends UnitTest {
 	@Test
 	public void testPersistance() {
 		
-		// Commit and reopen a new transaction because some of the other tests may have caused exceptions which set the transaction to be rolled back.
+		// Commit and reopen a new transaction because some of the other tests
+		// may have caused exceptions which set the transaction to be rolled
+		// back.
 		if (JPA.em().getTransaction().getRollbackOnly())
 			JPA.em().getTransaction().rollback();
 		else

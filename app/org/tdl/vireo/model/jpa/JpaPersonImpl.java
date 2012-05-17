@@ -318,6 +318,11 @@ public class JpaPersonImpl extends Model implements Person {
 	}
 
 	@Override
+	public Preference getPreference(String name) {
+		return JpaPreferenceImpl.find("person = ? and name = ?", this,name).first();
+	}
+	
+	@Override
 	public Set<Preference> getPreferences() {
 		return preferences;
 	}
@@ -327,6 +332,16 @@ public class JpaPersonImpl extends Model implements Person {
 		Preference preference = new JpaPreferenceImpl(this, name, value);
 		this.preferences.add(preference);
 		return preference;
+	}
+	
+	/**
+	 * Protected call back to remove a deleted preference.
+	 * 
+	 * @param preference
+	 *            The preference to delete.
+	 */
+	protected void removePreference(Preference preference) {
+		this.preferences.remove(preference);
 	}
 	
 	@Override

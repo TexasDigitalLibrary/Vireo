@@ -1,7 +1,7 @@
 package org.tdl.vireo.model;
 
 /**
- * A personal prefrence associated with a single person.
+ * A personal preference associated with a single person.
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
