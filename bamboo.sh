@@ -2,8 +2,8 @@
 
 rm -rf /tmp/play/
 rm /tmp/play.zip
-curl http://download.playframework.org/releases/play-1.2.5-RC3.zip -o /tmp/play.zip
-#curl -L -k https://github.com/playframework/play/zipball/master -o /tmp/play.zip
+#curl http://download.playframework.org/releases/play-1.2.5-RC3.zip -o /tmp/play.zip
+curl http://download.playframework.org/releases/play-1.2.4.zip -o /tmp/play.zip
 unzip /tmp/play.zip -d /tmp/
 mv /tmp/play* /tmp/play
 export PATH=$PATH:/tmp/play
