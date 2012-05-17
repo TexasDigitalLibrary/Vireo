@@ -12,7 +12,7 @@ public class Application extends Controller {
     public static void index() {
 	dumpRequestHeaders();
 	dumpConfiguration();
-	render("login.html");
+	render();
     }
     
     public static void dump() {
