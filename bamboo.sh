@@ -14,4 +14,7 @@ mv ./TexasDigitalLibrary-Vireo-* ./vireo
 cd ./vireo
 /tmp/play-1.2.5rc3/play dependencies
 /tmp/play-1.2.5rc3/play auto-test
+rm -f /tmp/vireo.war
+rm -f ./vireo.war
 /tmp/play-1.2.5rc3/play war -o /tmp/vireo --zip
+mv /tmp/vireo.war ./
