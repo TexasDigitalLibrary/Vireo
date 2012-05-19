@@ -12,7 +12,7 @@ import play.modules.spring.Spring;
 import play.test.UnitTest;
 
 /**
- * Test the personal preferencs class.
+ * Test the personal preference class.
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */

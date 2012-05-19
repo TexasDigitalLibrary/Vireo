@@ -83,25 +83,14 @@ public class JpaSubmissionImpl extends Model implements Submission {
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date licenseAgreementDate;
 
-	@OneToOne(targetEntity = JpaDegreeImpl.class)
-	public Degree degree;
-
-	@OneToOne(targetEntity = JpaDepartmentImpl.class)
-	public Department department;
-
-	@OneToOne(targetEntity = JpaCollegeImpl.class)
-	public College college;
-
-	@OneToOne(targetEntity = JpaMajorImpl.class)
-	public Major major;
-
-	@OneToOne(targetEntity = JpaDocumentTypeImpl.class)
-	public DocumentType documentType;
+	public String degree;
+	public String department;
+	public String college;
+	public String major;
+	public String documentType;
 
 	public Integer graduationYear;
-
-	@OneToOne(targetEntity = JpaGraduationMonthImpl.class)
-	public GraduationMonth graduationMonth;
+	public Integer graduationMonth;
 
 	public String state;
 
@@ -120,7 +109,8 @@ public class JpaSubmissionImpl extends Model implements Submission {
 	 */
 	protected JpaSubmissionImpl(Person submitter) {
 
-		// TODO: check arguments
+		if (submitter == null)
+			throw new IllegalArgumentException("Submissions require a submitter");
 
 		this.submitter = submitter;
 		this.attachments = new HashSet<Attachment>();
@@ -174,19 +164,13 @@ public class JpaSubmissionImpl extends Model implements Submission {
 	}
 
 	@Override
-	public List<String> getDocumentKeywords() {
-
-		// TODO: Split the string documentKeywords into a list and return it.
-
-		return null;
+	public String getDocumentKeywords() {
+		return documentKeywords;
 	}
 
 	@Override
-	public void setDocumentKeywords(List<String> keywords) {
-
-		// TODO: Combine the list of keywords into a single string value.
-
-		this.documentKeywords = null;
+	public void setDocumentKeywords(String keywords) {
+		this.documentKeywords = keywords;
 	}
 
 	@Override
@@ -247,10 +231,7 @@ public class JpaSubmissionImpl extends Model implements Submission {
 	}
 
 	@Override
-	public void setCommitteeContactEmail(String email) {
-		
-		// TODO: check that the email address is valid.
-		
+	public void setCommitteeContactEmail(String email) {		
 		this.committeeContactEmail = email;
 	}
 
@@ -325,72 +306,76 @@ public class JpaSubmissionImpl extends Model implements Submission {
 	}
 
 	@Override
-	public Degree getDegree() {
+	public String getDegree() {
 		return degree;
 	}
 
 	@Override
-	public void setDegree(Degree degree) {
+	public void setDegree(String degree) {
 		this.degree = degree;
 	}
 
 	@Override
-	public Department getDepartment() {
+	public String getDepartment() {
 		return department;
 	}
 
 	@Override
-	public void setDepartment(Department department) {
+	public void setDepartment(String department) {
 		this.department = department;
 	}
 
 	@Override
-	public College getCollege() {
+	public String getCollege() {
 		return college;
 	}
 
 	@Override
-	public void setCollege(College college) {
+	public void setCollege(String college) {
 		this.college = college;
 	}
 
 	@Override
-	public Major getMajor() {
+	public String getMajor() {
 		return major;
 	}
 
 	@Override
-	public void setMajor(Major major) {
+	public void setMajor(String major) {
 		this.major = major;
 	}
 
 	@Override
-	public DocumentType getDocumentType() {
+	public String getDocumentType() {
 		return documentType;
 	}
 
 	@Override
-	public void setDocumentType(DocumentType documentType) {
+	public void setDocumentType(String documentType) {
 		this.documentType = documentType;
 	}
 
 	@Override
-	public int getGraduationYear() {
+	public Integer getGraduationYear() {
 		return graduationYear;
 	}
 
 	@Override
-	public void setGraduationYear(int year) {
+	public void setGraduationYear(Integer year) {
 		this.graduationYear = year;
 	}
 
 	@Override
-	public GraduationMonth getGraduationMonth() {
+	public Integer getGraduationMonth() {
 		return graduationMonth;
 	}
 
 	@Override
-	public void setGraduationMonth(GraduationMonth month) {
+	public void setGraduationMonth(Integer month) {
+		
+		if (month != null && (month < 0 || month > 11))
+			throw new IllegalArgumentException("Month is out of bounds.");
+		
 		this.graduationMonth = month;
 	}
 
@@ -402,9 +387,10 @@ public class JpaSubmissionImpl extends Model implements Submission {
 	@Override
 	public void setState(State state) {
 		
-		// TODO: check that the state is valid.
-		
-		this.state = state.getBeanName();
+		if (state == null)
+			this.state = null;
+		else 
+			this.state = state.getBeanName();
 	}
 
 	@Override

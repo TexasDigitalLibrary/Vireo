@@ -59,13 +59,13 @@ public interface Submission extends AbstractModel {
 	 * 
 	 * @return A list of document keywords
 	 */
-	public List<String> getDocumentKeywords();
+	public String getDocumentKeywords();
 
 	/**
 	 * 
 	 * @param keywords A new list of document keywords
 	 */
-	public void setDocumentKeywords(List<String> keywords);
+	public void setDocumentKeywords(String keywords);
 
 	/**
 	 * 
@@ -221,85 +221,85 @@ public interface Submission extends AbstractModel {
 	 * 
 	 * @return The degree for this submission.
 	 */
-	public Degree getDegree();
+	public String getDegree();
 
 	/**
 	 * 
 	 * @param degree The new degree for this submission.
 	 */
-	public void setDegree(Degree degree);
+	public void setDegree(String degree);
 
 	/**
 	 * 
 	 * @return The degree department that will award this degree.
 	 */
-	public Department getDepartment();
+	public String getDepartment();
 
 	/**
 	 * 
 	 * @param department The new department.
 	 */
-	public void setDepartment(Department department);
+	public void setDepartment(String department);
 
 	/**
 	 * 
 	 * @return The college that will award this degree.
 	 */
-	public College getCollege();
+	public String getCollege();
 
 	/**
 	 * 
 	 * @param college The new college.
 	 */
-	public void setCollege(College college);
+	public void setCollege(String college);
 
 	/**
 	 * 
 	 * @return The major that will award this degree.
 	 */
-	public Major getMajor();
+	public String getMajor();
 
 	/**
 	 * 
 	 * @param major The new major.
 	 */
-	public void setMajor(Major major);
+	public void setMajor(String major);
 
 	/**
 	 * 
 	 * @return The document type for this submission.
 	 */
-	public DocumentType getDocumentType();
+	public String getDocumentType();
 
 	/**
 	 * 
 	 * @param documentType The new document type.
 	 */
-	public void setDocumentType(DocumentType documentType);
+	public void setDocumentType(String documentType);
 
 	/**
 	 * 
 	 * @return The graduation year
 	 */
-	public int getGraduationYear();
+	public Integer getGraduationYear();
 
 	/**
 	 * 
 	 * @param year The new graduation year
 	 */
-	public void setGraduationYear(int year);
+	public void setGraduationYear(Integer year);
 
 	/**
 	 * 
 	 * @return The graduation month
 	 */
-	public GraduationMonth getGraduationMonth();
+	public Integer getGraduationMonth();
 
 	/**
 	 * 
 	 * @param month The new graduation month.
 	 */
-	public void setGraduationMonth(GraduationMonth month);
+	public void setGraduationMonth(Integer month);
 
 	/**
 	 * 
