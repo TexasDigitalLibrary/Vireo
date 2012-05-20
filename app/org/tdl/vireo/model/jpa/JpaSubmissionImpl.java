@@ -66,6 +66,7 @@ public class JpaSubmissionImpl extends Model implements Submission {
 	public Set<Attachment> attachments;
 
 	@OneToMany(targetEntity = JpaCommitteeMemberImpl.class, mappedBy = "submission", cascade = CascadeType.ALL)
+	@OrderBy("displayOrder")
 	public List<CommitteeMember> committeeMembers;
 	public String committeeContactEmail;
 	public String committeeEmailHash;
@@ -223,6 +224,14 @@ public class JpaSubmissionImpl extends Model implements Submission {
 				lastName, middleInitial, chair);
 		committeeMembers.add(member);
 		return member;
+	}
+	
+	/**
+	 * Internal call back for when a committee member has been deleted, so that it will be removed from the list.
+	 * @param member The member to remove.
+	 */
+	protected void removeCommitteeMember(CommitteeMember member) {
+		this.committeeMembers.remove(member);
 	}
 
 	@Override

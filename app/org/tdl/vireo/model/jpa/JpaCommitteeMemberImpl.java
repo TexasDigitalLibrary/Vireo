@@ -52,8 +52,16 @@ public class JpaCommitteeMemberImpl extends Model implements CommitteeMember {
 	protected JpaCommitteeMemberImpl(Submission submission, String firstName,
 			String lastName, String middleInitial, boolean chair) {
 
-		// TODO: Check that the arguments are valid.
-
+		if (submission == null)
+			throw new IllegalArgumentException("Submissions are required");
+		
+		if (firstName == null || firstName.length() == 0)
+			throw new IllegalArgumentException("First name is required");
+		
+		if (lastName == null || lastName.length() == 0)
+			throw new IllegalArgumentException("Last name is required");
+		
+		this.submission = submission;
 	    this.displayOrder = 0;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -69,8 +77,7 @@ public class JpaCommitteeMemberImpl extends Model implements CommitteeMember {
 	@Override
 	public JpaCommitteeMemberImpl delete() {
 		
-		// TODO: Call back to submission and tell it that this member is being deleted.
-		
+		((JpaSubmissionImpl) submission).removeCommitteeMember(this);
 		return super.delete();
 	}
 
