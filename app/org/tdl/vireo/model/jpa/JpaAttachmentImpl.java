@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.apache.commons.io.FileUtils;
 import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.AttachmentType;
@@ -56,16 +57,32 @@ public class JpaAttachmentImpl extends Model implements Attachment {
 	protected JpaAttachmentImpl(Submission submission, AttachmentType type,
 			File file) throws IOException {
 
-		// TODO: check parameters for null, file exists, etc...
+		if (submission == null)
+			throw new IllegalArgumentException("Submission is required");
+		
+		if (type == null)
+			throw new IllegalArgumentException("Attachment type is required");
+		
+		if (AttachmentType.PRIMARY == type) {
+			// Check that there is not allready a primary document.	
+			if (submission.getPrimaryDocument() != null)
+				throw new IllegalArgumentException("There can only be one primary document associated with a submission. You must remove the current primary document before adding another.");
+		}
 
-		// TODO: check that if the type is primary document that there is no
-		// other attachments with that type because there can only be one.
-
+		if (file == null)
+			throw new IllegalArgumentException("File is required");
+		
+		if (!file.exists())
+			throw new IllegalArgumentException("File does not exist");
+		
+		if (!file.canRead())
+			throw new IllegalArgumentException("File is not readable");
+		
 		this.submission = submission;
 		this.name = file.getName();
 		this.type = type;
-		this.data
-				.set(new FileInputStream(file), MimeTypes.getContentType(name));
+		this.data = new Blob();
+		this.data.set(new FileInputStream(file), MimeTypes.getContentType(name));
 	}
 
 	@Override
@@ -76,7 +93,7 @@ public class JpaAttachmentImpl extends Model implements Attachment {
 	@Override
 	public JpaAttachmentImpl delete() {
 
-		// TODO: Call back to submission and tell it that this attachment is being deleted.
+		((JpaSubmissionImpl) submission).removeAttachment(this);
 		
 		if (this.data.exists())
 			this.data.getFile().delete();
@@ -107,8 +124,9 @@ public class JpaAttachmentImpl extends Model implements Attachment {
 	@Override
 	public void setName(String name) {
 		
-		// TODO: check name
-		
+		if (name == null || name.length() == 0)
+			throw new IllegalArgumentException("Attachment name may not be blank or null.");
+
 		this.name = name;
 	}
 
@@ -120,8 +138,14 @@ public class JpaAttachmentImpl extends Model implements Attachment {
 	@Override
 	public void setType(AttachmentType type) {
 
-		// TODO: If the type is PRIMARY document then check that there is not
-		// currently a primary document because there can only be one.
+		if (type == null)
+			throw new IllegalArgumentException("Attachment type is required");
+		
+		if (AttachmentType.PRIMARY == type) {
+			// Check that there is not allready a primary document.	
+			if (submission.getPrimaryDocument() != null)
+				throw new IllegalArgumentException("There can only be one primary document associated with a submission. You must remove the current primary document before adding another.");
+		}
 
 		this.type = type;
 	}
@@ -138,8 +162,8 @@ public class JpaAttachmentImpl extends Model implements Attachment {
 
 	@Override
 	public String getDisplaySize() {
-		// TODO Generate a pretty display for the size of the file.
-		return null;
+
+		return FileUtils.byteCountToDisplaySize(this.data.getFile().length());
 	}
 
 	@Override

@@ -415,6 +415,8 @@ public class JpaPersonImplTests extends UnitTest {
 		assertEquals(RoleType.NONE, person.getRole());
 		
 		person.delete();
-		
+		// Commit and reopen a new transaction.
+		JPA.em().getTransaction().commit();
+		JPA.em().getTransaction().begin();
 	}
 }

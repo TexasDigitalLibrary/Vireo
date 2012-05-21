@@ -341,6 +341,16 @@ public class JpaPersonImpl extends Model implements Person {
 	 *            The preference to delete.
 	 */
 	protected void removePreference(Preference preference) {
+		
+		// There is a problem with HashSet and JPA. Items are hashed based upon
+		// their id, but the id can change. Originally it is null until it is
+		// saved, and after that it's the unique id from the database. However
+		// if you try and remove the new object after it has been saved while
+		// still on the original instance of the parent object the remove will
+		// silently fail because the hashcode of the object has changed. To
+		// solve this problem we rehash the set just before moving. This is a
+		// database expensive operation.
+		this.preferences = new HashSet<Preference>(preferences);
 		this.preferences.remove(preference);
 	}
 	

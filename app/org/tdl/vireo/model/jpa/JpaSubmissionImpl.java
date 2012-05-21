@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -126,6 +127,13 @@ public class JpaSubmissionImpl extends Model implements Submission {
 
 	@Override
 	public JpaSubmissionImpl delete() {
+		
+		// Don't rely on the cascade for deleting attachments because the files need to be deleted on disk.
+		List<Attachment> attachmentsCopy = new ArrayList<Attachment>(attachments);
+		for (Attachment attachment : attachmentsCopy) {
+			attachment.delete();
+		}
+
 		return super.delete();
 	}
 
@@ -186,21 +194,50 @@ public class JpaSubmissionImpl extends Model implements Submission {
 
 	@Override
 	public Attachment getPrimaryDocument() {
-		// TODO: search the attachments for the one with type = primary
-		// document.
+		for (Attachment attachment : attachments) {
+			if (AttachmentType.PRIMARY == attachment.getType())
+				return attachment;
+		}
+		
 		return null;
 	}
 
 	@Override
 	public Set<Attachment> getSupplementalDocuments() {
-		// TODO: return all attachments with type= supplemental types.
-
-		return attachments;
+		
+		
+		Set<Attachment> supplemental = new HashSet<Attachment>();
+		for (Attachment attachment : attachments) {
+			if (AttachmentType.SUPPLEMENTAL == attachment.getType())
+				supplemental.add(attachment);
+		}
+		
+		return supplemental;
 	}
 
 	@Override
 	public Set<Attachment> getAttachments() {
 		return attachments;
+	}
+
+	/**
+	 * Internal call back method when an attachment has been deleted.
+	 * 
+	 * @param attachment
+	 *            The attachment to remove.
+	 */
+	protected void removeAttachment(Attachment attachment) {
+		
+		// There is a problem with HashSet and JPA. Items are hashed based upon
+		// their id, but the id can change. Originally it is null until it is
+		// saved, and after that it's the unique id from the database. However
+		// if you try and remove the new object after it has been saved while
+		// still on the original instance of the parent object the remove will
+		// silently fail because the hashcode of the object has changed. To
+		// solve this problem we rehash the set just before moving. This is a
+		// database expensive operation.
+		attachments = new HashSet<Attachment>(attachments);
+		attachments.remove(attachment);
 	}
 
 	@Override
@@ -225,10 +262,13 @@ public class JpaSubmissionImpl extends Model implements Submission {
 		committeeMembers.add(member);
 		return member;
 	}
-	
+
 	/**
-	 * Internal call back for when a committee member has been deleted, so that it will be removed from the list.
-	 * @param member The member to remove.
+	 * Internal call back for when a committee member has been deleted, so that
+	 * it will be removed from the list.
+	 * 
+	 * @param member
+	 *            The member to remove.
 	 */
 	protected void removeCommitteeMember(CommitteeMember member) {
 		this.committeeMembers.remove(member);
