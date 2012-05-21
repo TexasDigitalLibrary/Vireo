@@ -186,21 +186,40 @@ public class JpaSubmissionImpl extends Model implements Submission {
 
 	@Override
 	public Attachment getPrimaryDocument() {
-		// TODO: search the attachments for the one with type = primary
-		// document.
+		for (Attachment attachment : attachments) {
+			if (AttachmentType.PRIMARY == attachment.getType())
+				return attachment;
+		}
+		
 		return null;
 	}
 
 	@Override
 	public Set<Attachment> getSupplementalDocuments() {
-		// TODO: return all attachments with type= supplemental types.
-
-		return attachments;
+		
+		
+		Set<Attachment> supplemental = new HashSet<Attachment>();
+		for (Attachment attachment : attachments) {
+			if (AttachmentType.SUPPLEMENTAL == attachment.getType())
+				supplemental.add(attachment);
+		}
+		
+		return supplemental;
 	}
 
 	@Override
 	public Set<Attachment> getAttachments() {
 		return attachments;
+	}
+
+	/**
+	 * Internal call back method when an attachment has been deleted.
+	 * 
+	 * @param attachment
+	 *            The attachment to remove.
+	 */
+	protected void removeAttachment(Attachment attachment) {
+		attachments.remove(attachment);
 	}
 
 	@Override
@@ -225,10 +244,13 @@ public class JpaSubmissionImpl extends Model implements Submission {
 		committeeMembers.add(member);
 		return member;
 	}
-	
+
 	/**
-	 * Internal call back for when a committee member has been deleted, so that it will be removed from the list.
-	 * @param member The member to remove.
+	 * Internal call back for when a committee member has been deleted, so that
+	 * it will be removed from the list.
+	 * 
+	 * @param member
+	 *            The member to remove.
 	 */
 	protected void removeCommitteeMember(CommitteeMember member) {
 		this.committeeMembers.remove(member);

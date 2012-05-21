@@ -45,15 +45,11 @@ public class JpaCommitteeMemberImplTests extends UnitTest {
 	 */
 	@After
 	public void cleanup() {
-		try {
 		if (sub != null)
 			subRepo.findSubmission(sub.getId()).delete();
 		
 		if (person != null)
 			personRepo.findPerson(person.getId()).delete();
-		} catch (RuntimeException re) {
-			
-		}
 	}
 	
 	/**
@@ -144,6 +140,9 @@ public class JpaCommitteeMemberImplTests extends UnitTest {
 		
 		subRepo.findSubmission(sub.getId()).delete();
 		personRepo.findPerson(person.getId()).delete();
+		
+		sub = null;
+		person = null;
 		
 		// Commit and reopen a new transaction.
 		JPA.em().getTransaction().commit();
