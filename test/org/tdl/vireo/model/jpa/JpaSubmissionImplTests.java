@@ -331,7 +331,9 @@ public class JpaSubmissionImplTests extends UnitTest {
 		} catch (RuntimeException re) {
 			/* yay */
 		}
-		
+
+		JPA.em().clear();
+
 		subRepo.findSubmission(sub.getId()).delete();
 		personRepo.findPerson(person.getId()).delete();
 	}
