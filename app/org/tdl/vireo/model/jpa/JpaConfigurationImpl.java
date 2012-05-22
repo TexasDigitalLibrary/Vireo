@@ -19,7 +19,7 @@ import play.db.jpa.Model;
 @Table(name = "Configuration")
 public class JpaConfigurationImpl extends Model implements Configuration {
 
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	public String name;
 
 	public String value;
@@ -33,7 +33,9 @@ public class JpaConfigurationImpl extends Model implements Configuration {
 	 *            The value of the configuration parameter.
 	 */
 	protected JpaConfigurationImpl(String name, String value) {
-		// TODO: check the arguments
+	
+		if (name == null || name.length() == 0)
+			throw new IllegalArgumentException("Name is required");
 
 		this.name = name;
 		this.value = value;
@@ -67,7 +69,8 @@ public class JpaConfigurationImpl extends Model implements Configuration {
 	@Override
 	public void setName(String name) {
 		
-		// TODO: check name
+		if (name == null || name.length() == 0)
+			throw new IllegalArgumentException("Name is required");
 		
 		this.name = name;
 	}

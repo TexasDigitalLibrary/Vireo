@@ -213,7 +213,7 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 
 	@Override
 	public Configuration findConfigurationByName(String name) {
-		return JpaDocumentTypeImpl.find("name = ?", name).first();
+		return JpaConfigurationImpl.find("name = ?", name).first();
 	}
 
 	@Override
