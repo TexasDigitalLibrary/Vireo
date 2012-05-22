@@ -125,9 +125,9 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	// ////////////////////
 	
 	@Override
-	public EmbargoType createEmbargoType(boolean active, String description,
-			Long duration) {
-		return new JpaEmbargoTypeImpl(active, description, duration);
+	public EmbargoType createEmbargoType(String name, String description,
+			Long duration, boolean active) {
+		return new JpaEmbargoTypeImpl(name, description, duration, active);
 	}
 
 	@Override
@@ -137,7 +137,7 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 
 	@Override
 	public List<EmbargoType> findAllEmbargoTypes() {
-		return (List) JpaEmbargoTypeImpl.findAll();
+		return (List) JpaEmbargoTypeImpl.find("order by displayOrder").fetch();
 	}
 
 	// ////////////////////////

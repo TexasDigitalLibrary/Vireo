@@ -168,16 +168,18 @@ public interface SettingsRepository {
 	/**
 	 * Create a new embargo type.
 	 * 
-	 * @param active
-	 *            Weather the embargo is currently active.
+	 * @param name
+	 *            The unique name of the embargo type
 	 * @param description
 	 *            A description of the embargo.
 	 * @param duration
 	 *            How long the embargo should last, or -1 for indeterminate.
+	 * @param active
+	 *            Weather the embargo is currently active.
 	 * @return A new embargo type.
 	 */
-	public EmbargoType createEmbargoType(boolean active, String description,
-			Long duration);
+	public EmbargoType createEmbargoType(String name, String description,
+			Long duration, boolean active );
 
 	/**
 	 * Find embargo type by id.

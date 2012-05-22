@@ -226,7 +226,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 	@Test
 	public void testEmbargoType() {
 		Submission sub = subRepo.createSubmission(person);
-		EmbargoType embargo = settingRepo.createEmbargoType(true, "embargo", 12L).save();
+		EmbargoType embargo = settingRepo.createEmbargoType("embargo", "embargo description", 12L, true).save();
 		
 		sub.setEmbargoType(embargo);
 		sub.save();
