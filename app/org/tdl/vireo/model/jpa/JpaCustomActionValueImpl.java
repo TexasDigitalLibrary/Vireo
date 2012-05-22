@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.CustomActionDefinition;
@@ -22,7 +23,8 @@ import play.db.jpa.Model;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 @Entity
-@Table(name = "CustomActionValue")
+@Table(name = "CustomActionValue",
+	   uniqueConstraints = { @UniqueConstraint( columnNames = { "submission_id", "definition_id" } ) } )
 public class JpaCustomActionValueImpl extends Model implements
 		CustomActionValue {
 
@@ -47,7 +49,11 @@ public class JpaCustomActionValueImpl extends Model implements
 	protected JpaCustomActionValueImpl(Submission submission,
 			CustomActionDefinition definition, boolean value) {
 
-		// TODO: check arguments
+		if (submission == null)
+			throw new IllegalArgumentException("Submission is required.");
+		
+		if (definition == null)
+			throw new IllegalArgumentException("Custom action definition is required");
 
 		this.submission = submission;
 		this.definition = definition;
@@ -61,8 +67,8 @@ public class JpaCustomActionValueImpl extends Model implements
 
 	@Override
 	public JpaCustomActionValueImpl delete() {
-		
-		// TODO: Callback to submission and tell it that this value is being deleted.
+
+		((JpaSubmissionImpl) submission).removeCustomAction(this);
 		
 		return super.delete();
 	}

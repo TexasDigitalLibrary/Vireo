@@ -342,6 +342,14 @@ public interface Submission extends AbstractModel {
 	 * @return A set of all custom action values.
 	 */
 	public Set<CustomActionValue> getCustomActions();
+	
+	/**
+	 * @param definition
+	 *            The definition of the single action to return.
+	 * @return The value for the provided custom action definition, otherwise
+	 *         null if no value found for the definition.
+	 */
+	public CustomActionValue getCustomAction(CustomActionDefinition definition);
 
 	/**
 	 * Add a new custom action.

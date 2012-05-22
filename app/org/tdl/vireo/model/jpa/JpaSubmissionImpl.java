@@ -466,6 +466,32 @@ public class JpaSubmissionImpl extends Model implements Submission {
 	public Set<CustomActionValue> getCustomActions() {
 		return customActions;
 	}
+	
+	@Override
+	public CustomActionValue getCustomAction(CustomActionDefinition definition) {
+		
+		Iterator<CustomActionValue> valueItr = customActions.iterator();
+		while (valueItr.hasNext()) {
+			CustomActionValue value = valueItr.next();
+			if (value.getDefinition().equals(definition))
+				return value;
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Internal call back to notify the parent submission when a custom action
+	 * value has been deleted.
+	 * 
+	 * @param value
+	 *            The value being deleted.
+	 */
+	protected void removeCustomAction(CustomActionValue value) {
+		
+		this.customActions = new HashSet<CustomActionValue>(customActions);
+		this.customActions.remove(value);
+	}
 
 	@Override
 	public CustomActionValue addCustomAction(CustomActionDefinition definition,
