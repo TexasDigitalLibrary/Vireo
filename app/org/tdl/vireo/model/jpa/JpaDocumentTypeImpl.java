@@ -3,6 +3,7 @@ package org.tdl.vireo.model.jpa;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.DegreeLevel;
@@ -17,7 +18,8 @@ import play.db.jpa.Model;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 @Entity
-@Table(name = "DocumentType")
+@Table(name = "DocumentType",
+       uniqueConstraints = { @UniqueConstraint( columnNames = { "name", "level" } ) } )
 public class JpaDocumentTypeImpl extends Model implements DocumentType {
 
 	@Column(nullable = false)
@@ -39,7 +41,11 @@ public class JpaDocumentTypeImpl extends Model implements DocumentType {
 	 */
 	protected JpaDocumentTypeImpl(String name, DegreeLevel level) {
 
-		// TODO: Check the arguments;
+		if (name == null || name.length() == 0)
+			throw new IllegalArgumentException("Name is required");
+		
+		if (level == null)
+			throw new IllegalArgumentException("Degree level is required");
 		
 	    this.displayOrder = 0;
 		this.name = name;
@@ -84,7 +90,8 @@ public class JpaDocumentTypeImpl extends Model implements DocumentType {
 	@Override
 	public void setName(String name) {
 		
-		// TODO: check name
+		if (name == null || name.length() == 0)
+			throw new IllegalArgumentException("Name is required");
 		
 		this.name = name;
 	}
@@ -97,7 +104,8 @@ public class JpaDocumentTypeImpl extends Model implements DocumentType {
 	@Override
 	public void setLevel(DegreeLevel level) {
 		
-		// TODO: check level
+		if (level == null)
+			throw new IllegalArgumentException("Degree level is required");
 		
 		this.level = level;
 	}

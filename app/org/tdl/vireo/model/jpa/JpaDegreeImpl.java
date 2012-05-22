@@ -3,6 +3,7 @@ package org.tdl.vireo.model.jpa;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.Degree;
@@ -17,7 +18,8 @@ import play.db.jpa.Model;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 @Entity
-@Table(name = "Degree")
+@Table(name = "Degree",
+       uniqueConstraints = { @UniqueConstraint( columnNames = { "name", "level" } ) } )
 public class JpaDegreeImpl extends Model implements Degree {
 
 	@Column(nullable = false)
@@ -39,8 +41,12 @@ public class JpaDegreeImpl extends Model implements Degree {
 	 */
 	protected JpaDegreeImpl(String name, DegreeLevel level) {
 
-		// TODO: check arguments
-
+		if (name == null || name.length() == 0)
+			throw new IllegalArgumentException("Name is required");
+		
+		if (level == null)
+			throw new IllegalArgumentException("Degree level is required");
+		
 		this.displayOrder = 0;
 		this.name = name;
 		this.level = level;
@@ -84,7 +90,8 @@ public class JpaDegreeImpl extends Model implements Degree {
 	@Override
 	public void setName(String name) {
 		
-		// Check name
+		if (name == null || name.length() == 0)
+			throw new IllegalArgumentException("Name is required");
 		
 		this.name = name;
 	}
@@ -97,7 +104,8 @@ public class JpaDegreeImpl extends Model implements Degree {
 	@Override
 	public void setLevel(DegreeLevel level) {
 		
-		// Check level
+		if (level == null)
+			throw new IllegalArgumentException("Degree level is required");
 		
 		this.level = level;
 	}

@@ -168,6 +168,16 @@ public class JpaCustomActionValueImplTest extends UnitTest {
 	 */
 	@Test
 	public void testPersistance() {
+		
+		if (sub.getId() != null)
+			sub.delete();
+		
+		if (person.getId() != null)
+			person.delete();
+		
+		if (def.getId() != null)
+			def.delete();
+		
 		// Commit and reopen a new transaction because some of the other tests
 		// may have caused exceptions which set the transaction to be rolled
 		// back.
@@ -178,6 +188,10 @@ public class JpaCustomActionValueImplTest extends UnitTest {
 		JPA.em().clear();
 		JPA.em().getTransaction().begin();
 		
+		person = personRepo.createPerson("netid", "email@email.com", "first", "last", RoleType.NONE).save();
+		sub = subRepo.createSubmission(person).save();
+		def = settingRepo.createCustomActionDefinition("custom action").save();
+
 		CustomActionValue value = sub.addCustomAction(def, true);
 		value.save();
 		

@@ -117,7 +117,7 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 
 	@Override
 	public List<DocumentType> findAllDocumentTypes() {
-		return (List) JpaDocumentTypeImpl.findAll();
+		return (List) JpaDocumentTypeImpl.find("order by displayOrder").fetch();
 	}
 
 	// ////////////////////
