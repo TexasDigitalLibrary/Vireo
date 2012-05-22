@@ -1,5 +1,7 @@
 package org.tdl.vireo.model.jpa;
 
+import java.text.DateFormatSymbols;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -21,7 +23,7 @@ public class JpaGraduationMonthImpl extends Model implements GraduationMonth {
 	@Column(nullable = false)
 	public int displayOrder;
 
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	public int month;
 
 	/**
@@ -32,7 +34,8 @@ public class JpaGraduationMonthImpl extends Model implements GraduationMonth {
 	 */
 	protected JpaGraduationMonthImpl(int month) {
 
-		// TODO: check the arguments
+		if (month < 0 || month > 11)
+			throw new IllegalArgumentException("Month value is out of range");
 
 		this.displayOrder = 0;
 		this.month = month;
@@ -75,14 +78,14 @@ public class JpaGraduationMonthImpl extends Model implements GraduationMonth {
 
 	@Override
 	public String getMonthName() {
-		// TODO: translate month number into string.
-		return null;
+		return new DateFormatSymbols().getMonths()[month];
 	}
 
 	@Override
 	public void setMonth(int month) {
 		
-		// TODO: check month
+		if (month < 0 || month > 11)
+			throw new IllegalArgumentException("Month value is out of range");
 		
 		this.month = month;
 	}

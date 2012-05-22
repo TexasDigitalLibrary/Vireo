@@ -156,7 +156,7 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 
 	@Override
 	public List<GraduationMonth> findAllGraduationMonths() {
-		return (List) JpaGraduationMonthImpl.findAll();
+		return (List) JpaGraduationMonthImpl.find("order by displayOrder").fetch();
 	}
 
 	// //////////////////////
