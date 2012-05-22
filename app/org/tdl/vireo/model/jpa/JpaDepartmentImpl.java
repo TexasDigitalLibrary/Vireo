@@ -34,7 +34,8 @@ public class JpaDepartmentImpl extends Model implements Department {
 	 */
 	protected JpaDepartmentImpl(String name) {
 
-		// TODO: check arguments
+		if (name == null || name.length() == 0)
+			throw new IllegalArgumentException("Name is required");
 
 		this.displayOrder = 0;
 		this.name = name;
@@ -78,7 +79,8 @@ public class JpaDepartmentImpl extends Model implements Department {
 	@Override
 	public void setName(String name) {
 		
-		// TODO: check name
+		if (name == null || name.length() == 0)
+			throw new IllegalArgumentException("Name is required");
 		
 		this.name = name;
 	}

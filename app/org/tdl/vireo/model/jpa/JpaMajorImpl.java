@@ -31,8 +31,10 @@ public class JpaMajorImpl extends Model implements Major {
 	 *            The name of the new major.
 	 */
 	protected JpaMajorImpl(String name) {
-		// TODO: Check arguments
 
+		if (name == null || name.length() == 0)
+			throw new IllegalArgumentException("Name is required");
+		
 		this.displayOrder = 0;
 		this.name = name;
 	}
@@ -75,7 +77,8 @@ public class JpaMajorImpl extends Model implements Major {
 	@Override
 	public void setName(String name) {
 		
-		// TODO: check name
+		if (name == null || name.length() == 0)
+			throw new IllegalArgumentException("Name is required");
 		
 		this.name = name;
 	}

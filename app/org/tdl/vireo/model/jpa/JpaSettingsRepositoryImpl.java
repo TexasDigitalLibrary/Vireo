@@ -47,7 +47,7 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 
 	@Override
 	public List<Degree> findAllDegrees() {
-		return (List) JpaDegreeImpl.findAll();
+		return (List) JpaDegreeImpl.find("order by displayOrder").fetch();
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 
 	@Override
 	public List<Major> findAllMajors() {
-		return (List) JpaMajorImpl.findAll();
+		return (List) JpaMajorImpl.find("order by displayOrder").fetch();
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 
 	@Override
 	public List<College> findAllColleges() {
-		return (List) JpaCollegeImpl.findAll();
+		return (List) JpaCollegeImpl.find("order by displayOrder").fetch();
 	}
 
 	@Override
@@ -93,7 +93,7 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 
 	@Override
 	public List<Department> findAllDepartments() {
-		return (List) JpaDepartmentImpl.findAll();
+		return (List) JpaDepartmentImpl.find("order by displayOrder").fetch();
 	}
 
 	// /////////////////////

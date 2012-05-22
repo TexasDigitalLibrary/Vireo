@@ -3,6 +3,7 @@ package org.tdl.vireo.model.jpa;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.College;
@@ -33,7 +34,8 @@ public class JpaCollegeImpl extends Model implements College {
 	 */
 	protected JpaCollegeImpl(String name) {
 
-		// TODO: check incoming parameters;
+		if (name == null || name.length() == 0)
+			throw new IllegalArgumentException("Name is required");
 
 		this.displayOrder = 0;
 		this.name = name;
@@ -77,7 +79,8 @@ public class JpaCollegeImpl extends Model implements College {
 	@Override
 	public void setName(String name) {
 		
-		// TODO: check name
+		if (name == null || name.length() == 0)
+			throw new IllegalArgumentException("Name is required");
 		
 		this.name = name;
 	}
