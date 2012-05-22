@@ -194,7 +194,7 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 
 	@Override
 	public List<CustomActionDefinition> findAllCustomActionDefinition() {
-		return (List) JpaCustomActionDefinitionImpl.findAll();
+		return (List) JpaCustomActionDefinitionImpl.find("order by displayOrder").fetch();
 	}
 
 	// ///////////////////////////

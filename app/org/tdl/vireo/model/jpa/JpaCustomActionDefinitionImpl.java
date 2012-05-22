@@ -33,7 +33,9 @@ public class JpaCustomActionDefinitionImpl extends Model implements
 	 *            The new label for this action definition
 	 */
 	protected JpaCustomActionDefinitionImpl(String label) {
-		// TODO: check the arguments.
+		
+		if (label == null || label.length() == 0)
+			throw new IllegalArgumentException("Label is required");
 
 		this.displayOrder = 0;
 		this.label = label;
@@ -46,6 +48,14 @@ public class JpaCustomActionDefinitionImpl extends Model implements
 
 	@Override
 	public JpaCustomActionDefinitionImpl delete() {
+		
+		// Delete all values associated with this definition
+		em().createQuery(
+			"DELETE FROM JpaCustomActionValueImpl " +
+					"WHERE Definition_Id = ? " 
+			).setParameter(1, this.getId())
+			.executeUpdate();
+		
 		return super.delete();
 	}
 
@@ -77,7 +87,8 @@ public class JpaCustomActionDefinitionImpl extends Model implements
 	@Override
 	public void setLabel(String label) {
 		
-		// TODO: check label
+		if (label == null || label.length() == 0)
+			throw new IllegalArgumentException("Label is required");
 		
 		this.label = label;
 	}
