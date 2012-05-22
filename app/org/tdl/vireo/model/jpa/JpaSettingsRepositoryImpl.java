@@ -175,7 +175,7 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 
 	@Override
 	public List<EmailTemplate> findAllEmailTemplates() {
-		return (List) JpaEmailTemplateImpl.findAll();
+		return (List) JpaEmailTemplateImpl.find("order by displayOrder").fetch();
 	}
 
 	// ///////////////////////////

@@ -36,7 +36,12 @@ public class JpaEmailTemplateImpl extends Model implements EmailTemplate {
 	 *            The new template's message
 	 */
 	protected JpaEmailTemplateImpl(String subject, String message) {
-		// TODO: check arguments
+		
+		if (subject == null || subject.length() == 0)
+			throw new IllegalArgumentException("Subject is required");
+		
+		if (message == null || message.length() == 0)
+			throw new IllegalArgumentException("Message is required");
 	    
 	    this.displayOrder = 0;
 		this.subject = subject;
@@ -81,7 +86,8 @@ public class JpaEmailTemplateImpl extends Model implements EmailTemplate {
 	@Override
 	public void setSubject(String subject) {
 		
-		// TODO: check subject
+		if (subject == null || subject.length() == 0)
+			throw new IllegalArgumentException("Subject is required");
 		
 		this.subject = subject;
 	}
@@ -92,9 +98,10 @@ public class JpaEmailTemplateImpl extends Model implements EmailTemplate {
 	}
 
 	@Override
-	public void getMessage(String message) {
+	public void setMessage(String message) {
 		
-		// TODO: check message
+		if (message == null || message.length() == 0)
+			throw new IllegalArgumentException("Message is required");
 		
 		this.message = message;
 	}

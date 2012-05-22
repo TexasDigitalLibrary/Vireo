@@ -29,5 +29,5 @@ public interface EmailTemplate extends AbstractOrderedModel {
 	 * @param message
 	 *            The new message of this email template.
 	 */
-	public void getMessage(String message);
+	public void setMessage(String message);
 }

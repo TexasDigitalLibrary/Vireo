@@ -3,7 +3,6 @@ package org.tdl.vireo.model.jpa;
 import java.util.List;
 
 import org.junit.Test;
-import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.GraduationMonth;
 
 import play.db.jpa.JPA;
@@ -101,10 +100,10 @@ public class JpaGraduationMonthImplTest extends UnitTest {
 	}
 	
 	/**
-	 * Test retrieving all colleges
+	 * Test retrieving all months
 	 */
 	@Test
-	public void testFindAllColleges() {
+	public void testFindAllMonths() {
 
 		int initialSize = settingRepo.findAllGraduationMonths().size();
 		
@@ -192,7 +191,7 @@ public class JpaGraduationMonthImplTest extends UnitTest {
 	}
 	
 	/**
-	 * Test that the college is persistence
+	 * Test that the grad month is persistence
 	 */
 	@Test
 	public void testPersistance() {
