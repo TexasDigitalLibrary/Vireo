@@ -20,6 +20,7 @@ import play.db.jpa.JPA;
 import play.modules.spring.Spring;
 import play.test.UnitTest;
 
+
 /**
  * Test the Jpa specefic implementation of the Attachment interface
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
@@ -125,7 +126,6 @@ public class JpaAttachmentImplTest extends UnitTest {
 	
 	/**
 	 * Test that attachments have ids
-	 * @throws IOException
 	 */
 	@Test
 	public void testId() throws IOException {
@@ -462,8 +462,6 @@ public class JpaAttachmentImplTest extends UnitTest {
 		Set<Attachment> attachments = sub.getAttachments();
 		assertEquals(0,attachments.size());
 	}
-	
-	
 	
 	/**
 	 * Private method to create a new file with the given content.

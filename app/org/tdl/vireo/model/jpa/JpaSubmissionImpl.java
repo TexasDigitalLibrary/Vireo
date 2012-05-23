@@ -226,8 +226,7 @@ public class JpaSubmissionImpl extends Model implements Submission {
 	 * @param attachment
 	 *            The attachment to remove.
 	 */
-	protected void removeAttachment(Attachment attachment) {
-		
+	protected void removeAttachment(Attachment attachment) {		
 		// There is a problem with HashSet and JPA. Items are hashed based upon
 		// their id, but the id can change. Originally it is null until it is
 		// saved, and after that it's the unique id from the database. However
