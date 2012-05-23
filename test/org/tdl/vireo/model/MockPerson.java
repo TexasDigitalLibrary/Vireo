@@ -227,7 +227,7 @@ public class MockPerson extends AbstractMock implements Person {
 	}
 
 	@Override
-	public int getCurrentGraduationYear() {
+	public Integer getCurrentGraduationYear() {
 		return currentGraduationYear;
 	}
 

@@ -294,7 +294,7 @@ public class JpaPersonImpl extends Model implements Person {
 	}
 
 	@Override
-	public int getCurrentGraduationYear() {
+	public Integer getCurrentGraduationYear() {
 		return currentGraduationYear;
 	}
 
