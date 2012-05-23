@@ -14,5 +14,9 @@
    <bean id="PersonRepository" class="org.tdl.vireo.model.jpa.JpaPersonRepositoryImpl" scope="singleton"/>
    <bean id="SubmissionRepository" class="org.tdl.vireo.model.jpa.JpaSubmissionRepositoryImpl" scope="singleton"/>
    <bean id="SettingsRepository" class="org.tdl.vireo.model.jpa.JpaSettingsRepositoryImpl" scope="singleton"/>
+   
+   <!-- Security Context -->
+   <bean id="SecurityContext" class="org.tdl.vireo.security.simple.SecurityContextImpl" scope="singleton"/>
+   
   
 </beans>

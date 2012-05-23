@@ -236,13 +236,13 @@ public interface Person extends AbstractModel {
 	 * 
 	 * @return The current graduation year.
 	 */
-	public int getCurrentGraduationYear();
+	public Integer getCurrentGraduationYear();
 
 	/**
 	 * @param year
 	 *            The new graduation year.
 	 */
-	public void setCurrentGraduationYear(int year);
+	public void setCurrentGraduationYear(Integer year);
 
 	/**
 	 * 

@@ -340,7 +340,7 @@ public class JpaPersonImplTests extends UnitTest {
 		assertEquals("department",person.getCurrentDepartment());
 		assertEquals("college",person.getCurrentCollege());
 		assertEquals("major",person.getCurrentMajor());
-		assertEquals(2005,person.getCurrentGraduationYear());
+		assertEquals(Integer.valueOf(2005),person.getCurrentGraduationYear());
 		assertEquals(Integer.valueOf(5),person.getCurrentGraduationMonth());
 		assertEquals(RoleType.ADMINISTRATOR,person.getRole());
 		

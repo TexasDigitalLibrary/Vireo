@@ -1,124 +1,69 @@
-package org.tdl.vireo.model.jpa;
+package org.tdl.vireo.model;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Preference;
 import org.tdl.vireo.model.RoleType;
 
-import play.db.jpa.Model;
-
 /**
- * Jpa specific implementation of Vireo's Person interface.
+ * This is a simple mock person class that may be useful for testing. Feel free
+ * to extend this to add in extra parameters that you feel appropriate.
+ * 
+ * The basic concept is all properties are public so you can create the mock
+ * object and then set whatever relevant properties are needed for your
+ * particular test.
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
-@Entity
-@Table(name = "Person")
-public class JpaPersonImpl extends Model implements Person {
+public class MockPerson extends AbstractMock implements Person {
 
-	@Column(nullable = false, unique = true)
+	/* Person Properties */
 	public String netid;
-
-	@Column(nullable = false, unique = true)
 	public String email;
-
-	@Column(nullable = false)
 	public String firstName;
-
-	@Column(nullable = false)
 	public String lastName;
 	public String middleInitial;
 	public String displayName;
-
 	public Integer birthYear;
-
 	public String currentPhoneNumber;
 	public String currentPostalAddress;
 	public String currentEmailAddress;
-
 	public String permanentPhoneNumber;
 	public String permanentPostalAddress;
 	public String permanentEmailAddress;
-
 	public String currentDepartment;
 	public String currentCollege;
 	public String currentMajor;
 	public Integer currentGraduationYear;
 	public Integer currentGraduationMonth;
-
-	@OneToMany(targetEntity=JpaPreferenceImpl.class, mappedBy="person", cascade=CascadeType.ALL)
-	public Set<Preference> preferences;
-	
-	@Column(nullable = false)
+	public Set<Preference> preferences = new HashSet<Preference>();
 	public RoleType role;
-
-	/**
-	 * Create a new JpaPersonImpl
-	 * 
-	 * @param netid
-	 *            The netid of the new person.
-	 * @param email
-	 *            The email of the new person.
-	 * @param firstName
-	 *            The first name of the new person.
-	 * @param lastName
-	 *            The last name of the new person.
-	 * @param role
-	 *            The role for the new person.
-	 */
-	protected JpaPersonImpl(String netid, String email, String firstName,
-			String lastName, RoleType role) {
-
-		if (netid == null || netid.length() == 0)
-			throw new IllegalArgumentException("Netid is required");
-		
-		if (email == null || email.length() == 0)
-			throw new IllegalArgumentException("Email is required");
-		
-		if (firstName == null || firstName.length() == 0)
-			throw new IllegalArgumentException("FirstName is required");
-		
-		if (lastName == null || lastName.length() == 0)
-			throw new IllegalArgumentException("lastName is required");
-		
-		if (role == null )
-			throw new IllegalArgumentException("Role is required");
-
-		this.netid = netid;
-		this.email = email;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.preferences = new HashSet<Preference>();
-		this.role = role;
+	
+	@Override
+	public MockPerson save() {
+		return this;
 	}
 
 	@Override
-	public JpaPersonImpl save() {
-		return super.save();
+	public MockPerson delete() {
+		return this;
 	}
 
 	@Override
-	public JpaPersonImpl delete() {
-		return super.delete();
+	public MockPerson refresh() {
+		return this;
 	}
 
 	@Override
-	public JpaPersonImpl refresh() {
-		return super.refresh();
-	}
-
-	@Override
-	public JpaPersonImpl merge() {
-		return super.merge();
+	public MockPerson merge() {
+		return this;
 	}
 
 	@Override
@@ -128,9 +73,6 @@ public class JpaPersonImpl extends Model implements Person {
 
 	@Override
 	public void setNetId(String netid) {
-		if (netid == null || netid.length() == 0)
-			throw new IllegalArgumentException("Netid is required");
-		
 		this.netid = netid;
 	}
 
@@ -141,8 +83,6 @@ public class JpaPersonImpl extends Model implements Person {
 
 	@Override
 	public void setEmail(String email) {
-		if (email == null || email.length() == 0)
-			throw new IllegalArgumentException("Email is required");
 		this.email = email;
 	}
 
@@ -153,9 +93,6 @@ public class JpaPersonImpl extends Model implements Person {
 
 	@Override
 	public void setFirstName(String firstName) {
-		
-		if (firstName == null || firstName.length() == 0)
-			throw new IllegalArgumentException("firstName is required");
 		this.firstName = firstName;
 	}
 
@@ -176,10 +113,6 @@ public class JpaPersonImpl extends Model implements Person {
 
 	@Override
 	public void setLastName(String lastName) {
-		
-		if (lastName == null || lastName.length() == 0)
-			throw new IllegalArgumentException("lastName is required");
-		
 		this.lastName = lastName;
 	}
 
@@ -225,7 +158,7 @@ public class JpaPersonImpl extends Model implements Person {
 
 	@Override
 	public String getCurrentEmailAddress() {
-		return currentEmailAddress;
+		return this.currentEmailAddress;
 	}
 
 	@Override
@@ -235,7 +168,7 @@ public class JpaPersonImpl extends Model implements Person {
 
 	@Override
 	public String getPermanentPhoneNumber() {
-		return permanentPhoneNumber;
+		return this.permanentPhoneNumber;
 	}
 
 	@Override
@@ -310,50 +243,33 @@ public class JpaPersonImpl extends Model implements Person {
 
 	@Override
 	public void setCurrentGraduationMonth(Integer month) {
-		if (month != null && ( month > 11 || month < 0)) {
-			throw new IllegalArgumentException("Graduation month is out of bounds.");
-		}
-		
 		this.currentGraduationMonth = month;
 	}
 
-	@Override
-	public Preference getPreference(String name) {
-		return JpaPreferenceImpl.find("person = ? and name = ?", this,name).first();
-	}
-	
 	@Override
 	public Set<Preference> getPreferences() {
 		return preferences;
 	}
 
 	@Override
+	public Preference getPreference(String name) {
+		for (Preference preference : preferences){
+			if (name.equals(preference.getName()))
+				return preference;
+		}
+		return null;
+	}
+
+	@Override
 	public Preference addPreference(String name, String value) {
-		Preference preference = new JpaPreferenceImpl(this, name, value);
-		this.preferences.add(preference);
-		return preference;
+		MockPreference mockPref = new MockPreference();
+		mockPref.person = this;
+		mockPref.name = name;
+		mockPref.value = value;
+		preferences.add(mockPref);
+		return mockPref;
 	}
-	
-	/**
-	 * Protected call back to remove a deleted preference.
-	 * 
-	 * @param preference
-	 *            The preference to delete.
-	 */
-	protected void removePreference(Preference preference) {
-		
-		// There is a problem with HashSet and JPA. Items are hashed based upon
-		// their id, but the id can change. Originally it is null until it is
-		// saved, and after that it's the unique id from the database. However
-		// if you try and remove the new object after it has been saved while
-		// still on the original instance of the parent object the remove will
-		// silently fail because the hashcode of the object has changed. To
-		// solve this problem we rehash the set just before moving. This is a
-		// database expensive operation.
-		this.preferences = new HashSet<Preference>(preferences);
-		this.preferences.remove(preference);
-	}
-	
+
 	@Override
 	public RoleType getRole() {
 		return role;
@@ -361,8 +277,6 @@ public class JpaPersonImpl extends Model implements Person {
 
 	@Override
 	public void setRole(RoleType role) {
-		if (role == null )
-			throw new IllegalArgumentException("Role is required");
 		this.role = role;
 	}
 

@@ -1,150 +1,86 @@
-package org.tdl.vireo.model.jpa;
+package org.tdl.vireo.model;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
-import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.hibernate.annotations.Cascade;
-import org.tdl.vireo.model.AbstractModel;
-import org.tdl.vireo.model.Attachment;
-import org.tdl.vireo.model.AttachmentType;
-import org.tdl.vireo.model.College;
-import org.tdl.vireo.model.CommitteeMember;
-import org.tdl.vireo.model.CustomActionDefinition;
-import org.tdl.vireo.model.CustomActionValue;
-import org.tdl.vireo.model.Degree;
-import org.tdl.vireo.model.Department;
-import org.tdl.vireo.model.DocumentType;
-import org.tdl.vireo.model.EmbargoType;
-import org.tdl.vireo.model.GraduationMonth;
-import org.tdl.vireo.model.Major;
-import org.tdl.vireo.model.Person;
-import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.model.jpa.JpaAttachmentImpl;
+import org.tdl.vireo.model.jpa.JpaCommitteeMemberImpl;
+import org.tdl.vireo.model.jpa.JpaCustomActionValueImpl;
+import org.tdl.vireo.model.jpa.JpaEmbargoTypeImpl;
+import org.tdl.vireo.model.jpa.JpaGraduationMonthImpl;
+import org.tdl.vireo.model.jpa.JpaPersonImpl;
 import org.tdl.vireo.state.State;
-import org.tdl.vireo.state.StateManager;
-
-import play.db.jpa.Model;
-import play.modules.spring.Spring;
 
 /**
- * JPA specific implementation of Vireo's Submission interface.
+ * This is a simple mock submission class that may be useful for testing. Feel
+ * free to extend this to add in extra parameters that you feel appropriate.
  * 
- * TODO: Create actionLog items when the submission is changed.
+ * The basic concept is all properties are public so you can create the mock
+ * object and then set whatever relevant properties are needed for your
+ * particular test.
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
-@Entity
-@Table(name = "Submission")
-public class JpaSubmissionImpl extends Model implements Submission {
+public class MockSubmission extends AbstractMock implements Submission {
 
-	@OneToOne(optional = false, targetEntity = JpaPersonImpl.class)
+	/* Submission Properties */
 	public Person submitter;
-
 	public String documentTitle;
 	public String documentAbstract;
 	public String documentKeywords;
-
-	@OneToOne(targetEntity = JpaEmbargoTypeImpl.class)
 	public EmbargoType embargoType;
-
-	@OneToMany(targetEntity = JpaAttachmentImpl.class, mappedBy = "submission", cascade = CascadeType.ALL)
-	public Set<Attachment> attachments;
-
-	@OneToMany(targetEntity = JpaCommitteeMemberImpl.class, mappedBy = "submission", cascade = CascadeType.ALL)
-	@OrderBy("displayOrder")
-	public List<CommitteeMember> committeeMembers;
+	public Set<Attachment> attachments = new HashSet<Attachment>();
+	public List<CommitteeMember> committeeMembers = new ArrayList<CommitteeMember>();
 	public String committeeContactEmail;
 	public String committeeEmailHash;
-
-	@Temporal(TemporalType.TIMESTAMP)
 	public Date committeeApprovalDate;
-	@Temporal(TemporalType.TIMESTAMP)
 	public Date committeeEmbargoApprovalDate;
 	public String committeeDisposition;
-
-	@Temporal(TemporalType.TIMESTAMP)
 	public Date submissionDate;
-	@Temporal(TemporalType.TIMESTAMP)
 	public Date approvalDate;
-	@Temporal(TemporalType.TIMESTAMP)
 	public Date licenseAgreementDate;
-
 	public String degree;
 	public String department;
 	public String college;
 	public String major;
 	public String documentType;
-
 	public Integer graduationYear;
 	public Integer graduationMonth;
-
-	public String state;
-
-	@OneToOne(targetEntity = JpaGraduationMonthImpl.class)
+	public State state;
 	public Person assignee;
 	public Boolean UMIRelease;
+	public Set<CustomActionValue> customActions = new HashSet<CustomActionValue>();
 
-	@OneToMany(targetEntity = JpaCustomActionValueImpl.class, mappedBy = "submission", cascade = CascadeType.ALL)
-	public Set<CustomActionValue> customActions;
-
-	/**
-	 * Construct a new JpaSubmissionImpl
-	 * 
-	 * @param submitter
-	 *            The student submitting this submission.
-	 */
-	protected JpaSubmissionImpl(Person submitter) {
-
-		if (submitter == null)
-			throw new IllegalArgumentException("Submissions require a submitter");
-
-		this.submitter = submitter;
-		this.attachments = new HashSet<Attachment>();
-		this.committeeMembers = new ArrayList<CommitteeMember>();
-		this.customActions = new HashSet<CustomActionValue>();
+	@Override
+	public MockSubmission save() {
+		return this;
 	}
 
 	@Override
-	public JpaSubmissionImpl save() {
-		return super.save();
+	public MockSubmission delete() {
+		return this;
 	}
 
 	@Override
-	public JpaSubmissionImpl delete() {
-		
-		// Don't rely on the cascade for deleting attachments because the files need to be deleted on disk.
-		List<Attachment> attachmentsCopy = new ArrayList<Attachment>(attachments);
-		for (Attachment attachment : attachmentsCopy) {
-			attachment.delete();
-		}
-
-		return super.delete();
+	public MockSubmission refresh() {
+		return this;
 	}
 
 	@Override
-	public JpaSubmissionImpl refresh() {
-		return super.refresh();
-	}
-
-	@Override
-	public JpaSubmissionImpl merge() {
-		return super.merge();
+	public MockSubmission merge() {
+		return this;
 	}
 
 	@Override
@@ -170,6 +106,7 @@ public class JpaSubmissionImpl extends Model implements Submission {
 	@Override
 	public void setDocumentAbstract(String docAbstract) {
 		this.documentAbstract = docAbstract;
+
 	}
 
 	@Override
@@ -195,23 +132,20 @@ public class JpaSubmissionImpl extends Model implements Submission {
 	@Override
 	public Attachment getPrimaryDocument() {
 		for (Attachment attachment : attachments) {
-			if (AttachmentType.PRIMARY == attachment.getType())
+			if (attachment.getType() == AttachmentType.PRIMARY)
 				return attachment;
 		}
-		
 		return null;
 	}
 
 	@Override
 	public Set<Attachment> getSupplementalDocuments() {
-		
-		
 		Set<Attachment> supplemental = new HashSet<Attachment>();
+
 		for (Attachment attachment : attachments) {
-			if (AttachmentType.SUPPLEMENTAL == attachment.getType())
+			if (attachment.getType() == AttachmentType.PRIMARY)
 				supplemental.add(attachment);
 		}
-		
 		return supplemental;
 	}
 
@@ -220,30 +154,12 @@ public class JpaSubmissionImpl extends Model implements Submission {
 		return attachments;
 	}
 
-	/**
-	 * Internal call back method when an attachment has been deleted.
-	 * 
-	 * @param attachment
-	 *            The attachment to remove.
-	 */
-	protected void removeAttachment(Attachment attachment) {		
-		// There is a problem with HashSet and JPA. Items are hashed based upon
-		// their id, but the id can change. Originally it is null until it is
-		// saved, and after that it's the unique id from the database. However
-		// if you try and remove the new object after it has been saved while
-		// still on the original instance of the parent object the remove will
-		// silently fail because the hashcode of the object has changed. To
-		// solve this problem we rehash the set just before moving. This is a
-		// database expensive operation.
-		attachments = new HashSet<Attachment>(attachments);
-		attachments.remove(attachment);
-	}
-
 	@Override
 	public Attachment addAttachment(File file, AttachmentType type)
 			throws IOException {
-
-		Attachment attachment = new JpaAttachmentImpl(this, type, file);
+		MockAttachment attachment = new MockAttachment();
+		attachment.file = file;
+		attachment.type = type;
 		attachments.add(attachment);
 		return attachment;
 	}
@@ -256,21 +172,13 @@ public class JpaSubmissionImpl extends Model implements Submission {
 	@Override
 	public CommitteeMember addCommitteeMember(String firstName,
 			String lastName, String middleInitial, Boolean chair) {
-		CommitteeMember member = new JpaCommitteeMemberImpl(this, firstName,
-				lastName, middleInitial, chair);
+		MockCommitteeMember member = new MockCommitteeMember();
+		member.firstName = firstName;
+		member.lastName = lastName;
+		member.middleInitial = middleInitial;
+		member.chair = chair;
 		committeeMembers.add(member);
 		return member;
-	}
-
-	/**
-	 * Internal call back for when a committee member has been deleted, so that
-	 * it will be removed from the list.
-	 * 
-	 * @param member
-	 *            The member to remove.
-	 */
-	protected void removeCommitteeMember(CommitteeMember member) {
-		this.committeeMembers.remove(member);
 	}
 
 	@Override
@@ -279,7 +187,7 @@ public class JpaSubmissionImpl extends Model implements Submission {
 	}
 
 	@Override
-	public void setCommitteeContactEmail(String email) {		
+	public void setCommitteeContactEmail(String email) {
 		this.committeeContactEmail = email;
 	}
 
@@ -420,25 +328,17 @@ public class JpaSubmissionImpl extends Model implements Submission {
 
 	@Override
 	public void setGraduationMonth(Integer month) {
-		
-		if (month != null && (month < 0 || month > 11))
-			throw new IllegalArgumentException("Month is out of bounds.");
-		
 		this.graduationMonth = month;
 	}
 
 	@Override
 	public State getState() {
-		return Spring.getBeanOfType(StateManager.class).getState(state);
+		return state;
 	}
 
 	@Override
 	public void setState(State state) {
-		
-		if (state == null)
-			this.state = null;
-		else 
-			this.state = state.getBeanName();
+		this.state = state;
 	}
 
 	@Override
@@ -465,40 +365,25 @@ public class JpaSubmissionImpl extends Model implements Submission {
 	public Set<CustomActionValue> getCustomActions() {
 		return customActions;
 	}
-	
+
 	@Override
 	public CustomActionValue getCustomAction(CustomActionDefinition definition) {
-		
-		Iterator<CustomActionValue> valueItr = customActions.iterator();
-		while (valueItr.hasNext()) {
-			CustomActionValue value = valueItr.next();
-			if (value.getDefinition().equals(definition))
+		for (CustomActionValue value : customActions) {
+			if (value.getDefinition() == definition)
 				return value;
 		}
-		
 		return null;
-	}
-	
-	/**
-	 * Internal call back to notify the parent submission when a custom action
-	 * value has been deleted.
-	 * 
-	 * @param value
-	 *            The value being deleted.
-	 */
-	protected void removeCustomAction(CustomActionValue value) {
-		
-		this.customActions = new HashSet<CustomActionValue>(customActions);
-		this.customActions.remove(value);
 	}
 
 	@Override
 	public CustomActionValue addCustomAction(CustomActionDefinition definition,
 			Boolean value) {
-		CustomActionValue customAction = new JpaCustomActionValueImpl(this,
-				definition, value);
-		customActions.add(customAction);
-		return customAction;
+		MockCustomActionValue action = new MockCustomActionValue();
+		action.submission = this;
+		action.definition = definition;
+		action.value = value;
+		customActions.add(action);
+		return action;
 	}
 
 }
