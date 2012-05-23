@@ -299,7 +299,7 @@ public class JpaPersonImpl extends Model implements Person {
 	}
 
 	@Override
-	public void setCurrentGraduationYear(int year) {
+	public void setCurrentGraduationYear(Integer year) {
 		this.currentGraduationYear = year;
 	}
 
