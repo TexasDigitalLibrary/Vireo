@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import org.apache.ivy.plugins.parser.AbstractModuleDescriptorParser;
 import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.GraduationMonth;
 
@@ -18,7 +19,7 @@ import play.db.jpa.Model;
  */
 @Entity
 @Table(name = "GraduationMonth")
-public class JpaGraduationMonthImpl extends Model implements GraduationMonth {
+public class JpaGraduationMonthImpl extends JpaAbstractModel<JpaGraduationMonthImpl> implements GraduationMonth {
 
 	@Column(nullable = false)
 	public int displayOrder;
@@ -39,26 +40,6 @@ public class JpaGraduationMonthImpl extends Model implements GraduationMonth {
 
 		this.displayOrder = 0;
 		this.month = month;
-	}
-
-	@Override
-	public JpaGraduationMonthImpl save() {
-		return super.save();
-	}
-
-	@Override
-	public JpaGraduationMonthImpl delete() {
-		return super.delete();
-	}
-
-	@Override
-	public JpaGraduationMonthImpl refresh() {
-		return super.refresh();
-	}
-
-	@Override
-	public JpaGraduationMonthImpl merge() {
-		return super.merge();
 	}
 
     @Override

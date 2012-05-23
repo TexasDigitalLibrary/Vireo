@@ -16,7 +16,7 @@ import play.db.jpa.Model;
  */
 @Entity
 @Table(name = "EmailTemplate")
-public class JpaEmailTemplateImpl extends Model implements EmailTemplate {
+public class JpaEmailTemplateImpl extends JpaAbstractModel<JpaEmailTemplateImpl> implements EmailTemplate {
 
 	@Column(nullable = false)
 	public int displayOrder;
@@ -46,26 +46,6 @@ public class JpaEmailTemplateImpl extends Model implements EmailTemplate {
 	    this.displayOrder = 0;
 		this.subject = subject;
 		this.message = message;
-	}
-
-	@Override
-	public JpaEmailTemplateImpl save() {
-		return super.save();
-	}
-
-	@Override
-	public JpaEmailTemplateImpl delete() {
-		return super.delete();
-	}
-
-	@Override
-	public JpaEmailTemplateImpl refresh() {
-		return super.refresh();
-	}
-
-	@Override
-	public JpaEmailTemplateImpl merge() {
-		return super.merge();
 	}
 
     @Override

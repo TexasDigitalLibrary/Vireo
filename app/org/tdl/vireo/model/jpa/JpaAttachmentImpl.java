@@ -30,7 +30,7 @@ import play.libs.MimeTypes;
  */
 @Entity
 @Table(name = "Attachment")
-public class JpaAttachmentImpl extends Model implements Attachment {
+public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> implements Attachment {
 
 	@ManyToOne(targetEntity=JpaSubmissionImpl.class, optional=false)
 	public Submission submission;
@@ -86,11 +86,6 @@ public class JpaAttachmentImpl extends Model implements Attachment {
 	}
 
 	@Override
-	public JpaAttachmentImpl save() {
-		return super.save();
-	}
-
-	@Override
 	public JpaAttachmentImpl delete() {
 
 		((JpaSubmissionImpl) submission).removeAttachment(this);
@@ -99,16 +94,6 @@ public class JpaAttachmentImpl extends Model implements Attachment {
 			this.data.getFile().delete();
 
 		return super.delete();
-	}
-
-	@Override
-	public JpaAttachmentImpl refresh() {
-		return super.refresh();
-	}
-
-	@Override
-	public JpaAttachmentImpl merge() {
-		return super.merge();
 	}
 
 	@Override

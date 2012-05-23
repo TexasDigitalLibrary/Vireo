@@ -21,7 +21,7 @@ import play.db.jpa.Model;
 @Entity
 @Table(name = "Preference",
 		uniqueConstraints = { @UniqueConstraint( columnNames = { "person_id", "name" } ) } )
-public class JpaPreferenceImpl extends Model implements Preference {
+public class JpaPreferenceImpl extends JpaAbstractModel<JpaPreferenceImpl> implements Preference {
 
 	@ManyToOne(targetEntity = JpaPersonImpl.class, optional=false)
 	public Person person;
@@ -55,27 +55,12 @@ public class JpaPreferenceImpl extends Model implements Preference {
 	}
 
 	@Override
-	public JpaPreferenceImpl save() {
-		return super.save();
-	}
-
-	@Override
 	public JpaPreferenceImpl delete() {
 		
 		// Tell our owner we are being deleted.
 		((JpaPersonImpl)person).removePreference(this);
 		
 		return super.delete();
-	}
-
-	@Override
-	public JpaPreferenceImpl refresh() {
-		return super.refresh();
-	}
-
-	@Override
-	public JpaPreferenceImpl merge() {
-		return super.merge();
 	}
 
 	@Override

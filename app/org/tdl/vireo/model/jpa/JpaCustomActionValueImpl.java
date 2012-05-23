@@ -25,7 +25,7 @@ import play.db.jpa.Model;
 @Entity
 @Table(name = "CustomActionValue",
 	   uniqueConstraints = { @UniqueConstraint( columnNames = { "submission_id", "definition_id" } ) } )
-public class JpaCustomActionValueImpl extends Model implements
+public class JpaCustomActionValueImpl extends JpaAbstractModel<JpaCustomActionValueImpl> implements
 		CustomActionValue {
 
 	@ManyToOne(targetEntity=JpaSubmissionImpl.class, optional=false)
@@ -61,26 +61,11 @@ public class JpaCustomActionValueImpl extends Model implements
 	}
 
 	@Override
-	public JpaCustomActionValueImpl save() {
-		return super.save();
-	}
-
-	@Override
 	public JpaCustomActionValueImpl delete() {
 
 		((JpaSubmissionImpl) submission).removeCustomAction(this);
 		
 		return super.delete();
-	}
-
-	@Override
-	public JpaCustomActionValueImpl refresh() {
-		return super.refresh();
-	}
-
-	@Override
-	public JpaCustomActionValueImpl merge() {
-		return super.merge();
 	}
 
 	@Override

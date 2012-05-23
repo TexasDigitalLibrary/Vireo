@@ -22,7 +22,7 @@ import play.db.jpa.Model;
  */
 @Entity
 @Table(name = "CommitteeMember")
-public class JpaCommitteeMemberImpl extends Model implements CommitteeMember {
+public class JpaCommitteeMemberImpl extends JpaAbstractModel<JpaCommitteeMemberImpl> implements CommitteeMember {
 
 	@Column(nullable = false)
 	public int displayOrder;
@@ -70,27 +70,12 @@ public class JpaCommitteeMemberImpl extends Model implements CommitteeMember {
 	}
 
 	@Override
-	public JpaCommitteeMemberImpl save() {
-		return super.save();
-	}
-
-	@Override
 	public JpaCommitteeMemberImpl delete() {
 		
 		((JpaSubmissionImpl) submission).removeCommitteeMember(this);
 		return super.delete();
 	}
-
-	@Override
-	public JpaCommitteeMemberImpl refresh() {
-		return super.refresh();
-	}
-
-	@Override
-	public JpaCommitteeMemberImpl merge() {
-		return super.merge();
-	}
-
+	
     @Override
     public int getDisplayOrder() {
         return displayOrder;

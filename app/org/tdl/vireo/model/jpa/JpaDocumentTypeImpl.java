@@ -20,7 +20,7 @@ import play.db.jpa.Model;
 @Entity
 @Table(name = "DocumentType",
        uniqueConstraints = { @UniqueConstraint( columnNames = { "name", "level" } ) } )
-public class JpaDocumentTypeImpl extends Model implements DocumentType {
+public class JpaDocumentTypeImpl extends JpaAbstractModel<JpaDocumentTypeImpl> implements DocumentType {
 
 	@Column(nullable = false)
 	public int displayOrder;
@@ -50,26 +50,6 @@ public class JpaDocumentTypeImpl extends Model implements DocumentType {
 	    this.displayOrder = 0;
 		this.name = name;
 		this.level = level;
-	}
-
-	@Override
-	public JpaDocumentTypeImpl save() {
-		return super.save();
-	}
-
-	@Override
-	public JpaDocumentTypeImpl delete() {
-		return super.delete();
-	}
-
-	@Override
-	public JpaDocumentTypeImpl refresh() {
-		return super.refresh();
-	}
-
-	@Override
-	public JpaDocumentTypeImpl merge() {
-		return super.merge();
 	}
 
     @Override

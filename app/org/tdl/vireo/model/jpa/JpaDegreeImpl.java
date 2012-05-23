@@ -20,7 +20,7 @@ import play.db.jpa.Model;
 @Entity
 @Table(name = "Degree",
        uniqueConstraints = { @UniqueConstraint( columnNames = { "name", "level" } ) } )
-public class JpaDegreeImpl extends Model implements Degree {
+public class JpaDegreeImpl extends JpaAbstractModel<JpaDegreeImpl> implements Degree {
 
 	@Column(nullable = false)
 	public int displayOrder;
@@ -50,26 +50,6 @@ public class JpaDegreeImpl extends Model implements Degree {
 		this.displayOrder = 0;
 		this.name = name;
 		this.level = level;
-	}
-
-	@Override
-	public JpaDegreeImpl save() {
-		return super.save();
-	}
-
-	@Override
-	public JpaDegreeImpl delete() {
-		return super.delete();
-	}
-
-	@Override
-	public JpaDegreeImpl refresh() {
-		return super.refresh();
-	}
-
-	@Override
-	public JpaDegreeImpl merge() {
-		return super.merge();
 	}
 
     @Override

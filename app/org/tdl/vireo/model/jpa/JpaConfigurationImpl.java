@@ -17,7 +17,7 @@ import play.db.jpa.Model;
  */
 @Entity
 @Table(name = "Configuration")
-public class JpaConfigurationImpl extends Model implements Configuration {
+public class JpaConfigurationImpl extends JpaAbstractModel<JpaConfigurationImpl> implements Configuration {
 
 	@Column(nullable = false, unique = true)
 	public String name;
@@ -39,26 +39,6 @@ public class JpaConfigurationImpl extends Model implements Configuration {
 
 		this.name = name;
 		this.value = value;
-	}
-
-	@Override
-	public JpaConfigurationImpl save() {
-		return super.save();
-	}
-
-	@Override
-	public JpaConfigurationImpl delete() {
-		return super.delete();
-	}
-
-	@Override
-	public JpaConfigurationImpl refresh() {
-		return super.refresh();
-	}
-
-	@Override
-	public JpaConfigurationImpl merge() {
-		return super.merge();
 	}
 
 	@Override

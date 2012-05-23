@@ -18,7 +18,7 @@ import play.db.jpa.Model;
  */
 @Entity
 @Table(name = "College")
-public class JpaCollegeImpl extends Model implements College {
+public class JpaCollegeImpl extends JpaAbstractModel<JpaCollegeImpl> implements College {
 
 	@Column(nullable = false)
 	public int displayOrder;
@@ -39,26 +39,6 @@ public class JpaCollegeImpl extends Model implements College {
 
 		this.displayOrder = 0;
 		this.name = name;
-	}
-
-	@Override
-	public JpaCollegeImpl save() {
-		return super.save();
-	}
-
-	@Override
-	public JpaCollegeImpl delete() {
-		return super.delete();
-	}
-
-	@Override
-	public JpaCollegeImpl refresh() {
-		return super.refresh();
-	}
-
-	@Override
-	public JpaCollegeImpl merge() {
-		return super.merge();
 	}
 
 	@Override

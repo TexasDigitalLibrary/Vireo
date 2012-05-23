@@ -23,7 +23,7 @@ import play.db.jpa.Model;
  */
 @Entity
 @Table(name = "Person")
-public class JpaPersonImpl extends Model implements Person {
+public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Person {
 
 	@Column(nullable = false, unique = true)
 	public String netid;
@@ -99,26 +99,6 @@ public class JpaPersonImpl extends Model implements Person {
 		this.lastName = lastName;
 		this.preferences = new HashSet<Preference>();
 		this.role = role;
-	}
-
-	@Override
-	public JpaPersonImpl save() {
-		return super.save();
-	}
-
-	@Override
-	public JpaPersonImpl delete() {
-		return super.delete();
-	}
-
-	@Override
-	public JpaPersonImpl refresh() {
-		return super.refresh();
-	}
-
-	@Override
-	public JpaPersonImpl merge() {
-		return super.merge();
 	}
 
 	@Override

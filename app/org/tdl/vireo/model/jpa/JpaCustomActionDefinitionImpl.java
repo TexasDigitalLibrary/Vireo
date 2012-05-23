@@ -17,7 +17,7 @@ import play.db.jpa.Model;
  */
 @Entity
 @Table(name = "CustomActionDefinition")
-public class JpaCustomActionDefinitionImpl extends Model implements
+public class JpaCustomActionDefinitionImpl extends JpaAbstractModel<JpaCustomActionDefinitionImpl> implements
 		CustomActionDefinition {
 
 	@Column(nullable = false)
@@ -42,11 +42,6 @@ public class JpaCustomActionDefinitionImpl extends Model implements
 	}
 
 	@Override
-	public JpaCustomActionDefinitionImpl save() {
-		return super.save();
-	}
-
-	@Override
 	public JpaCustomActionDefinitionImpl delete() {
 		
 		// Delete all values associated with this definition
@@ -57,16 +52,6 @@ public class JpaCustomActionDefinitionImpl extends Model implements
 			.executeUpdate();
 		
 		return super.delete();
-	}
-
-	@Override
-	public JpaCustomActionDefinitionImpl refresh() {
-		return super.refresh();
-	}
-
-	@Override
-	public JpaCustomActionDefinitionImpl merge() {
-		return super.merge();
 	}
 
     @Override

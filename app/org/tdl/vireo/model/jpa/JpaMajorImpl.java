@@ -16,7 +16,7 @@ import play.db.jpa.Model;
  */
 @Entity
 @Table(name = "Major")
-public class JpaMajorImpl extends Model implements Major {
+public class JpaMajorImpl extends JpaAbstractModel<JpaMajorImpl> implements Major {
 
 	@Column(nullable = false)
 	public int displayOrder;
@@ -37,26 +37,6 @@ public class JpaMajorImpl extends Model implements Major {
 		
 		this.displayOrder = 0;
 		this.name = name;
-	}
-
-	@Override
-	public JpaMajorImpl save() {
-		return super.save();
-	}
-
-	@Override
-	public JpaMajorImpl delete() {
-		return super.delete();
-	}
-
-	@Override
-	public JpaMajorImpl refresh() {
-		return super.refresh();
-	}
-
-	@Override
-	public JpaMajorImpl merge() {
-		return super.merge();
 	}
 
     @Override

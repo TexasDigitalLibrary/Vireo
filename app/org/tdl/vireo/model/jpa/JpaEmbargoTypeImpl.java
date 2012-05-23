@@ -16,7 +16,7 @@ import play.db.jpa.Model;
  */
 @Entity
 @Table(name = "EmbargoType")
-public class JpaEmbargoTypeImpl extends Model implements EmbargoType {
+public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> implements EmbargoType {
 	
 	@Column(nullable = false)
 	public int displayOrder;
@@ -61,26 +61,6 @@ public class JpaEmbargoTypeImpl extends Model implements EmbargoType {
 		this.description = description;
 		this.duration = duration;
 		this.active = active;
-	}
-
-	@Override
-	public JpaEmbargoTypeImpl save() {
-		return super.save();
-	}
-
-	@Override
-	public JpaEmbargoTypeImpl delete() {
-		return super.delete();
-	}
-
-	@Override
-	public JpaEmbargoTypeImpl refresh() {
-		return super.refresh();
-	}
-
-	@Override
-	public JpaEmbargoTypeImpl merge() {
-		return super.merge();
 	}
 
     @Override

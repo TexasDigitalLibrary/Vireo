@@ -51,7 +51,7 @@ import play.modules.spring.Spring;
  */
 @Entity
 @Table(name = "Submission")
-public class JpaSubmissionImpl extends Model implements Submission {
+public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> implements Submission {
 
 	@OneToOne(optional = false, targetEntity = JpaPersonImpl.class)
 	public Person submitter;
@@ -121,11 +121,6 @@ public class JpaSubmissionImpl extends Model implements Submission {
 	}
 
 	@Override
-	public JpaSubmissionImpl save() {
-		return super.save();
-	}
-
-	@Override
 	public JpaSubmissionImpl delete() {
 		
 		// Don't rely on the cascade for deleting attachments because the files need to be deleted on disk.
@@ -135,16 +130,6 @@ public class JpaSubmissionImpl extends Model implements Submission {
 		}
 
 		return super.delete();
-	}
-
-	@Override
-	public JpaSubmissionImpl refresh() {
-		return super.refresh();
-	}
-
-	@Override
-	public JpaSubmissionImpl merge() {
-		return super.merge();
 	}
 
 	@Override
