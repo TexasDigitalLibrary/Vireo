@@ -157,9 +157,9 @@ public class JpaDegreeImplTest extends UnitTest {
 			/* yay */
 		}
 		
-		test.refresh();
-		test.delete();
-		degree.delete();
+		JPA.em().clear();
+		settingRepo.findDegree(test.getId()).delete();
+		settingRepo.findDegree(degree.getId()).delete();
 	}
 	
 	/**

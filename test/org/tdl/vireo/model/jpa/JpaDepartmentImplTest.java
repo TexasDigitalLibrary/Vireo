@@ -146,10 +146,10 @@ public class JpaDepartmentImplTest extends UnitTest {
 		} catch(RuntimeException re) {
 			/* yay */
 		}
-		
-		test.refresh();
-		test.delete();
-		department.delete();
+
+		JPA.em().clear();
+		settingRepo.findDepartment(test.getId()).delete();
+		settingRepo.findDepartment(department.getId()).delete();
 	}
 	
 	/**

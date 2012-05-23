@@ -174,9 +174,9 @@ public class JpaConfigurationImplTest extends UnitTest {
 			/* yay */
 		}
 		
-		test.refresh();
-		test.delete();
-		config.delete();
+		JPA.em().clear();
+		settingRepo.findConfiguration(test.getId()).delete();
+		settingRepo.findConfiguration(config.getId()).delete();
 	}
 	
 	/**

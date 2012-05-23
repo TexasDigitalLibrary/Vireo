@@ -147,9 +147,9 @@ public class JpaMajorImplTest extends UnitTest {
 			/* yay */
 		}
 		
-		test.refresh();
-		test.delete();
-		major.delete();
+		JPA.em().clear();
+		settingRepo.findMajor(test.getId()).delete();
+		settingRepo.findMajor(major.getId()).delete();
 	}
 	
 	/**

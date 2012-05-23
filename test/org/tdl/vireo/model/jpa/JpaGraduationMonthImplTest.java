@@ -147,10 +147,10 @@ public class JpaGraduationMonthImplTest extends UnitTest {
 		} catch(RuntimeException re) {
 			/* yay */
 		}
-		
-		test.refresh();
-		test.delete();
-		january.delete();
+	
+		JPA.em().clear();
+		settingRepo.findGraduationMonth(test.getId()).delete();
+		settingRepo.findGraduationMonth(january.getId()).delete();
 	}
 	
 	/**

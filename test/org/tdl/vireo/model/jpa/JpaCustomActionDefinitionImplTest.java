@@ -152,9 +152,9 @@ public class JpaCustomActionDefinitionImplTest extends UnitTest {
 			/* yay */
 		}
 		
-		test.refresh();
-		test.delete();
-		def.delete();
+		JPA.em().clear();
+		settingRepo.findCustomActionDefinition(test.getId()).delete();
+		settingRepo.findCustomActionDefinition(def.getId()).delete();
 	}
 	
 	/**

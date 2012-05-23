@@ -157,9 +157,9 @@ public class JpaDocumentTypeImplTest extends UnitTest {
 			/* yay */
 		}
 		
-		test.refresh();
-		test.delete();
-		type.delete();
+		JPA.em().clear();
+		settingRepo.findDocumentType(test.getId()).delete();
+		settingRepo.findDocumentType(type.getId()).delete();
 	}
 	
 	/**

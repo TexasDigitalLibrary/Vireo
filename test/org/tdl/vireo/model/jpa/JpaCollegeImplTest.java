@@ -147,9 +147,9 @@ public class JpaCollegeImplTest extends UnitTest {
 			/* yay */
 		}
 		
-		test.refresh();
-		test.delete();
-		college.delete();
+		JPA.em().clear();
+		settingRepo.findCollege(test.getId()).delete();
+		settingRepo.findCollege(college.getId()).delete();
 	}
 	
 	/**

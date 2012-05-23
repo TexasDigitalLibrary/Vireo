@@ -182,9 +182,9 @@ public class JpaEmailTemplateImplTest extends UnitTest {
 			/* yay */
 		}
 		
-		test.refresh();
-		test.delete();
-		template.delete();
+		JPA.em().clear();
+		settingRepo.findEmailTemplate(test.getId()).delete();
+		settingRepo.findEmailTemplate(template.getId()).delete();
 	}
 	
 	/**

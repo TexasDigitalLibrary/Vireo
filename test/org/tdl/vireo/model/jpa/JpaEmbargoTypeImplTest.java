@@ -194,10 +194,10 @@ public class JpaEmbargoTypeImplTest extends UnitTest {
 		} catch(RuntimeException re) {
 			/* yay */
 		}
-		
-		test.refresh();
-		test.delete();
-		type.delete();
+
+		JPA.em().clear();
+		settingRepo.findEmbargoType(test.getId()).delete();
+		settingRepo.findEmbargoType(type.getId()).delete();
 	}
 	
 	/**
