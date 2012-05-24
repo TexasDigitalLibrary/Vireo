@@ -87,15 +87,15 @@ public interface Submission extends AbstractModel {
 
 	/**
 	 * 
-	 * @return The list of attachments who's type is SUPPLEMENTAL
+	 * @return The unordered list of attachments who's type is SUPPLEMENTAL
 	 */
-	public Set<Attachment> getSupplementalDocuments();
+	public List<Attachment> getSupplementalDocuments();
 
 	/**
 	 *
-	 * @return The list of all attachments.
+	 * @return The unordered list of all attachments.
 	 */
-	public Set<Attachment> getAttachments();
+	public List<Attachment> getAttachments();
 
 	/**
 	 * Add a new attachment.
@@ -339,9 +339,9 @@ public interface Submission extends AbstractModel {
 
 	/**
 	 * 
-	 * @return A set of all custom action values.
+	 * @return An unordered list of all custom action values.
 	 */
-	public Set<CustomActionValue> getCustomActions();
+	public List<CustomActionValue> getCustomActions();
 	
 	/**
 	 * @param definition

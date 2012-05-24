@@ -1,6 +1,8 @@
 package org.tdl.vireo.model;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -49,7 +51,7 @@ public class MockPerson extends AbstractMock implements Person {
 	public String currentMajor;
 	public Integer currentGraduationYear;
 	public Integer currentGraduationMonth;
-	public Set<Preference> preferences = new HashSet<Preference>();
+	public List<Preference> preferences = new ArrayList<Preference>();
 	public RoleType role;
 	
 	/**
@@ -317,7 +319,7 @@ public class MockPerson extends AbstractMock implements Person {
 	}
 
 	@Override
-	public Set<Preference> getPreferences() {
+	public List<Preference> getPreferences() {
 		return preferences;
 	}
 

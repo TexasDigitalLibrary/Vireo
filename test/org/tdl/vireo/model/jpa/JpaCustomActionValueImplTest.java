@@ -1,5 +1,6 @@
 package org.tdl.vireo.model.jpa;
 
+import java.util.List;
 import java.util.Set;
 
 import org.junit.After;
@@ -142,7 +143,7 @@ public class JpaCustomActionValueImplTest extends UnitTest {
 	public void findCustomActionSet() {
 		CustomActionValue value = sub.addCustomAction(def, true);
 
-		Set<CustomActionValue> actions = sub.getCustomActions();
+		List<CustomActionValue> actions = sub.getCustomActions();
 		assertEquals(1,actions.size());
 		assertEquals(value.getId(),actions.iterator().next().getId());
 	}

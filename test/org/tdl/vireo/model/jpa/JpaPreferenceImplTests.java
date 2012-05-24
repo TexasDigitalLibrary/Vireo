@@ -1,5 +1,6 @@
 package org.tdl.vireo.model.jpa;
 
+import java.util.List;
 import java.util.Set;
 
 import org.junit.After;
@@ -166,7 +167,7 @@ public class JpaPreferenceImplTests extends UnitTest {
 		Preference pref3 = person.addPreference("pref3","value3").save();
 		Preference pref4 = person.addPreference("pref4","value4").save();
 		
-		Set<Preference> preferences = person.getPreferences();
+		List<Preference> preferences = person.getPreferences();
 		
 		assertEquals(4, preferences.size());
 		

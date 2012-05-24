@@ -205,7 +205,7 @@ public class JpaAttachmentImplTest extends UnitTest {
 		Attachment a2 = sub.addAttachment(file2, AttachmentType.SUPPLEMENTAL).save();
 		Attachment a3 = sub.addAttachment(file3, AttachmentType.SUPPLEMENTAL).save();
 		
-		Set<Attachment> supplemental = sub.getSupplementalDocuments();
+		List<Attachment> supplemental = sub.getSupplementalDocuments();
 		
 		boolean foundA2 = false;
 		boolean foundA3 = false;
@@ -241,7 +241,7 @@ public class JpaAttachmentImplTest extends UnitTest {
 		Attachment a2 = sub.addAttachment(file1, AttachmentType.SUPPLEMENTAL).save();
 		Attachment a3 = sub.addAttachment(file1, AttachmentType.SUPPLEMENTAL).save();
 		
-		Set<Attachment> attachments = sub.getAttachments();
+		List<Attachment> attachments = sub.getAttachments();
 		
 		boolean foundA1 = false;
 		boolean foundA2 = false;
@@ -464,7 +464,7 @@ public class JpaAttachmentImplTest extends UnitTest {
 		assertFalse(attachmentFile.exists());
 		
 		// Check the list of attachments
-		Set<Attachment> attachments = sub.getAttachments();
+		List<Attachment> attachments = sub.getAttachments();
 		assertEquals(0,attachments.size());
 	}
 	
@@ -473,23 +473,29 @@ public class JpaAttachmentImplTest extends UnitTest {
 	 */
 	@Test
 	public void testAccess() throws IOException {
-		File file = createRandomFile(10L);
+		File file1 = createRandomFile(10L);
+		File file2 = createRandomFile(10L);
+		File file3 = createRandomFile(10L);
+
+		
 		
 		// Test that the owner can add an attachment
 
 		context.login(person);
-		Attachment a1 = sub.addAttachment(file, AttachmentType.SUPPLEMENTAL).save();
+		Attachment a1 = sub.addAttachment(file1, AttachmentType.SUPPLEMENTAL).save();
 		a1.setName("changed");
+		a1.save();
 		
 		// Test that a reviewer can add an attachment
 		context.login(MockPerson.getReviewer());
-		Attachment a2 = sub.addAttachment(file, AttachmentType.SUPPLEMENTAL).save();
+		Attachment a2 = sub.addAttachment(file2, AttachmentType.SUPPLEMENTAL).save();
 		a2.setName("changed");
+		a2.save();
 
 		// Test that a someone else can not add an attachment.
 		context.login(MockPerson.getStudent());
 		try {
-			sub.addAttachment(file, AttachmentType.SUPPLEMENTAL).save();
+			sub.addAttachment(file3, AttachmentType.SUPPLEMENTAL).save();
 			fail("Someone else was able to add an attachment to a submission.");
 		} catch (SecurityException se) {
 			/* yay */
@@ -497,6 +503,9 @@ public class JpaAttachmentImplTest extends UnitTest {
 		
 		context.login(MockPerson.getAdministrator());
 
+		file1.delete();
+		file2.delete();
+		file3.delete();
 	}
 	
 	/**

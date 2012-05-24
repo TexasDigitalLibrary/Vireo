@@ -1,6 +1,9 @@
 package org.tdl.vireo.model.jpa;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -10,6 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.tdl.vireo.model.AbstractModel;
+import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Preference;
 import org.tdl.vireo.model.RoleType;
@@ -56,7 +60,7 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 	public Integer currentGraduationMonth;
 
 	@OneToMany(targetEntity=JpaPreferenceImpl.class, mappedBy="person", cascade=CascadeType.ALL)
-	public Set<Preference> preferences;
+	public List<Preference> preferences;
 	
 	@Column(nullable = false)
 	public RoleType role;
@@ -101,7 +105,7 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 		this.email = email;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.preferences = new HashSet<Preference>();
+		this.preferences = new ArrayList<Preference>();
 		this.role = role;
 	}
 	
@@ -374,7 +378,7 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 	}
 	
 	@Override
-	public Set<Preference> getPreferences() {
+	public List<Preference> getPreferences() {
 		return preferences;
 	}
 
@@ -397,16 +401,7 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 		
 		assertAdministratorOrOwner(this);
 		
-		// There is a problem with HashSet and JPA. Items are hashed based upon
-		// their id, but the id can change. Originally it is null until it is
-		// saved, and after that it's the unique id from the database. However
-		// if you try and remove the new object after it has been saved while
-		// still on the original instance of the parent object the remove will
-		// silently fail because the hashcode of the object has changed. To
-		// solve this problem we rehash the set just before moving. This is a
-		// database expensive operation.
-		this.preferences = new HashSet<Preference>(preferences);
-		this.preferences.remove(preference);
+		preferences.remove(preference);
 	}
 	
 	@Override

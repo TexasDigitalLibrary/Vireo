@@ -1,5 +1,6 @@
 package org.tdl.vireo.model;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -260,7 +261,7 @@ public interface Person extends AbstractModel {
 	/**
 	 * @return return all the preferences for this person.
 	 */
-	public Set<Preference> getPreferences();
+	public List<Preference> getPreferences();
 	
 	/**
 	 * Find the preference with the given name for this user.

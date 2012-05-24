@@ -41,7 +41,7 @@ public class MockSubmission extends AbstractMock implements Submission {
 	public String documentAbstract;
 	public String documentKeywords;
 	public EmbargoType embargoType;
-	public Set<Attachment> attachments = new HashSet<Attachment>();
+	public List<Attachment> attachments = new ArrayList<Attachment>();
 	public List<CommitteeMember> committeeMembers = new ArrayList<CommitteeMember>();
 	public String committeeContactEmail;
 	public String committeeEmailHash;
@@ -61,7 +61,7 @@ public class MockSubmission extends AbstractMock implements Submission {
 	public State state;
 	public Person assignee;
 	public Boolean UMIRelease;
-	public Set<CustomActionValue> customActions = new HashSet<CustomActionValue>();
+	public List<CustomActionValue> customActions = new ArrayList<CustomActionValue>();
 
 	@Override
 	public MockSubmission save() {
@@ -139,8 +139,8 @@ public class MockSubmission extends AbstractMock implements Submission {
 	}
 
 	@Override
-	public Set<Attachment> getSupplementalDocuments() {
-		Set<Attachment> supplemental = new HashSet<Attachment>();
+	public List<Attachment> getSupplementalDocuments() {
+		List<Attachment> supplemental = new ArrayList<Attachment>();
 
 		for (Attachment attachment : attachments) {
 			if (attachment.getType() == AttachmentType.PRIMARY)
@@ -150,7 +150,7 @@ public class MockSubmission extends AbstractMock implements Submission {
 	}
 
 	@Override
-	public Set<Attachment> getAttachments() {
+	public List<Attachment> getAttachments() {
 		return attachments;
 	}
 
@@ -362,7 +362,7 @@ public class MockSubmission extends AbstractMock implements Submission {
 	}
 
 	@Override
-	public Set<CustomActionValue> getCustomActions() {
+	public List<CustomActionValue> getCustomActions() {
 		return customActions;
 	}
 

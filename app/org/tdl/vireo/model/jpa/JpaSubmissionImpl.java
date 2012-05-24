@@ -64,7 +64,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	public EmbargoType embargoType;
 
 	@OneToMany(targetEntity = JpaAttachmentImpl.class, mappedBy = "submission", cascade = CascadeType.ALL)
-	public Set<Attachment> attachments;
+	public List<Attachment> attachments;
 
 	@OneToMany(targetEntity = JpaCommitteeMemberImpl.class, mappedBy = "submission", cascade = CascadeType.ALL)
 	@OrderBy("displayOrder")
@@ -101,7 +101,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	public Boolean UMIRelease;
 
 	@OneToMany(targetEntity = JpaCustomActionValueImpl.class, mappedBy = "submission", cascade = CascadeType.ALL)
-	public Set<CustomActionValue> customActions;
+	public List<CustomActionValue> customActions;
 
 	/**
 	 * Construct a new JpaSubmissionImpl
@@ -117,9 +117,9 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		assertReviewerOrOwner(submitter);
 		
 		this.submitter = submitter;
-		this.attachments = new HashSet<Attachment>();
+		this.attachments = new ArrayList<Attachment>();
 		this.committeeMembers = new ArrayList<CommitteeMember>();
-		this.customActions = new HashSet<CustomActionValue>();
+		this.customActions = new ArrayList<CustomActionValue>();
 	}
 
 	@Override
@@ -135,7 +135,8 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		
 		assertReviewerOrOwner(submitter);
 		
-		// Don't rely on the cascade for deleting attachments because the files need to be deleted on disk.
+		// Don't rely on the cascade for deleting attachments because the files
+		// need to be deleted on disk.
 		List<Attachment> attachmentsCopy = new ArrayList<Attachment>(attachments);
 		for (Attachment attachment : attachmentsCopy) {
 			attachment.delete();
@@ -208,10 +209,10 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	}
 
 	@Override
-	public Set<Attachment> getSupplementalDocuments() {
+	public List<Attachment> getSupplementalDocuments() {
 		
 		
-		Set<Attachment> supplemental = new HashSet<Attachment>();
+		List<Attachment> supplemental = new ArrayList<Attachment>();
 		for (Attachment attachment : attachments) {
 			if (AttachmentType.SUPPLEMENTAL == attachment.getType())
 				supplemental.add(attachment);
@@ -221,7 +222,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	}
 
 	@Override
-	public Set<Attachment> getAttachments() {
+	public List<Attachment> getAttachments() {
 		return attachments;
 	}
 
@@ -231,16 +232,8 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	 * @param attachment
 	 *            The attachment to remove.
 	 */
-	protected void removeAttachment(Attachment attachment) {		
-		// There is a problem with HashSet and JPA. Items are hashed based upon
-		// their id, but the id can change. Originally it is null until it is
-		// saved, and after that it's the unique id from the database. However
-		// if you try and remove the new object after it has been saved while
-		// still on the original instance of the parent object the remove will
-		// silently fail because the hashcode of the object has changed. To
-		// solve this problem we rehash the set just before moving. This is a
-		// database expensive operation.
-		attachments = new HashSet<Attachment>(attachments);
+	protected void removeAttachment(Attachment attachment) {
+		
 		attachments.remove(attachment);
 	}
 
@@ -490,7 +483,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	}
 
 	@Override
-	public Set<CustomActionValue> getCustomActions() {
+	public List<CustomActionValue> getCustomActions() {
 		return customActions;
 	}
 	
@@ -515,9 +508,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	 *            The value being deleted.
 	 */
 	protected void removeCustomAction(CustomActionValue value) {
-		
-		this.customActions = new HashSet<CustomActionValue>(customActions);
-		this.customActions.remove(value);
+		customActions.remove(value);
 	}
 
 	@Override
