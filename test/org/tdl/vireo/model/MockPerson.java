@@ -24,6 +24,12 @@ import org.tdl.vireo.model.RoleType;
  */
 public class MockPerson extends AbstractMock implements Person {
 
+	/* Cached copies of mocked person types */
+	public static MockPerson cachedAdministrator = getAdministrator();
+	public static MockPerson cachedManager = getManager();
+	public static MockPerson cachedReviewer = getReviewer();
+	public static MockPerson cachedStudent = getStudent();
+
 	/* Person Properties */
 	public String netid;
 	public String email;
@@ -45,6 +51,70 @@ public class MockPerson extends AbstractMock implements Person {
 	public Integer currentGraduationMonth;
 	public Set<Preference> preferences = new HashSet<Preference>();
 	public RoleType role;
+	
+	/**
+	 * @return A new mock person with the role ADMINISTRATOR.
+	 */
+	public static MockPerson getAdministrator() {
+		
+		if (cachedAdministrator != null)
+			return cachedAdministrator;
+		
+		MockPerson person = new MockPerson();
+		person.firstName="Mock";
+		person.lastName="Administrator";
+		person.email="test-admin@vireo.tdl.org";
+		person.role=RoleType.ADMINISTRATOR;
+		return person;
+	}
+
+	/**
+	 * @return A new mock person with the role MANAGER.
+	 */
+	public static MockPerson getManager() {
+		
+		if (cachedManager != null)
+			return cachedManager;
+		
+		MockPerson person = new MockPerson();
+		person.firstName="Mock";
+		person.lastName="Manager";
+		person.email="test-manager@vireo.tdl.org";
+		person.role=RoleType.MANAGER;
+		return person;
+	}
+	
+	/**
+	 * @return A new mock person with the role REVIEWER.
+	 */
+	public static MockPerson getReviewer() {
+		
+		if (cachedReviewer != null)
+			return cachedReviewer;
+		
+		MockPerson person = new MockPerson();
+		person.firstName="Mock";
+		person.lastName="Reviewer";
+		person.email="test-reviewer@vireo.tdl.org";
+		person.role=RoleType.REVIEWER;
+		return person;
+	}
+	
+	/**
+	 * @return A new mock person with the role STUDENT.
+	 */
+	public static MockPerson getStudent() {
+		
+		if (cachedStudent != null)
+			return cachedStudent;
+		
+		MockPerson person = new MockPerson();
+		person.firstName="Mock";
+		person.lastName="Student";
+		person.email="test-student@vireo.tdl.org";
+		person.role=RoleType.STUDENT;
+		return person;
+	}
 	
 	@Override
 	public MockPerson save() {

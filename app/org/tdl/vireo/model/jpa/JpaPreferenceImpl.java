@@ -49,13 +49,24 @@ public class JpaPreferenceImpl extends JpaAbstractModel<JpaPreferenceImpl> imple
 		if (name == null || name.length() == 0)
 			throw new IllegalArgumentException("Preference name's are required");
 		
+		assertAdministratorOrOwner(person);
+		
 		this.person = person;
 		this.name = name;
 		this.value = value;
 	}
 
 	@Override
+	public JpaPreferenceImpl save() {
+		assertAdministratorOrOwner(person);
+
+		return super.save();
+	}
+	
+	@Override
 	public JpaPreferenceImpl delete() {
+		
+		assertAdministratorOrOwner(person);
 		
 		// Tell our owner we are being deleted.
 		((JpaPersonImpl)person).removePreference(this);
@@ -79,6 +90,8 @@ public class JpaPreferenceImpl extends JpaAbstractModel<JpaPreferenceImpl> imple
 		if (name == null || name.length() == 0)
 			throw new IllegalArgumentException("Preference name's are required");
 		
+		assertAdministratorOrOwner(person);
+		
 		this.name = name;
 	}
 
@@ -89,6 +102,9 @@ public class JpaPreferenceImpl extends JpaAbstractModel<JpaPreferenceImpl> imple
 
 	@Override
 	public void setValue(String value) {
+		
+		assertAdministratorOrOwner(person);
+		
 		this.value = value;
 	}
 

@@ -37,8 +37,24 @@ public class JpaCollegeImpl extends JpaAbstractModel<JpaCollegeImpl> implements 
 		if (name == null || name.length() == 0)
 			throw new IllegalArgumentException("Name is required");
 
+		assertManager();
+		
 		this.displayOrder = 0;
 		this.name = name;
+	}
+	
+	@Override
+	public JpaCollegeImpl save() {
+		assertManager();
+
+		return super.save();
+	}
+	
+	@Override
+	public JpaCollegeImpl delete() {
+		assertManager();
+
+		return super.delete();
 	}
 
 	@Override
@@ -48,6 +64,8 @@ public class JpaCollegeImpl extends JpaAbstractModel<JpaCollegeImpl> implements 
 
 	@Override
 	public void setDisplayOrder(int displayOrder) {
+		
+		assertManager();
 		this.displayOrder = displayOrder;
 	}
 
@@ -61,7 +79,8 @@ public class JpaCollegeImpl extends JpaAbstractModel<JpaCollegeImpl> implements 
 		
 		if (name == null || name.length() == 0)
 			throw new IllegalArgumentException("Name is required");
-		
+		assertManager();
+
 		this.name = name;
 	}
 

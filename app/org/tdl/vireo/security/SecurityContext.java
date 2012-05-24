@@ -36,11 +36,11 @@ public interface SecurityContext {
 	 *            The authenticated person.
 	 */
 	public void login(Person person);
-
+	
 	/**
 	 * Logout the current user, effectively resetting the security context.
 	 */
-	public void logout();
+	public void logout();	
 
 	/**
 	 * @return The currently authenticated person, or null if none one is
@@ -72,4 +72,21 @@ public interface SecurityContext {
 	 * @return true if there is a currently authenticated person.
 	 */
 	public boolean isAuthenticated();
+	
+	/**
+	 * Turn off the authorization system. The caller *must* always pair this
+	 * call with a restoration of authorization.
+	 */
+	public void turnOffAuthorization();
+
+	/**
+	 * Restore the authorization state to it's original state before the paired
+	 * turnOffAuthorizations was called.
+	 */
+	public void restoreAuthorization();
+
+	/**
+	 * @return whether authorization checks have been deactivated.
+	 */
+	public boolean isAuthorizationActive();
 }

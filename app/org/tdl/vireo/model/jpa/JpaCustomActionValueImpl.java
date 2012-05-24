@@ -55,13 +55,25 @@ public class JpaCustomActionValueImpl extends JpaAbstractModel<JpaCustomActionVa
 		if (definition == null)
 			throw new IllegalArgumentException("Custom action definition is required");
 
+		assertReviewerOrOwner(submission.getSubmitter());
+		
 		this.submission = submission;
 		this.definition = definition;
 		this.value = value;
 	}
 
 	@Override
+	public JpaCustomActionValueImpl save() {
+		
+		assertReviewerOrOwner(submission.getSubmitter());
+
+		return super.save();
+	}
+	
+	@Override
 	public JpaCustomActionValueImpl delete() {
+
+		assertReviewerOrOwner(submission.getSubmitter());
 
 		((JpaSubmissionImpl) submission).removeCustomAction(this);
 		
@@ -85,6 +97,7 @@ public class JpaCustomActionValueImpl extends JpaAbstractModel<JpaCustomActionVa
 
 	@Override
 	public void setValue(boolean value) {
+		assertReviewerOrOwner(submission.getSubmitter());
 		this.value = value;
 	}
 

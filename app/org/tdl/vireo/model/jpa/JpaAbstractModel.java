@@ -44,4 +44,85 @@ public abstract class JpaAbstractModel<T extends JpaAbstractModel> extends Model
 	public T merge() {
 		return super.merge();
 	}
+	
+	
+	/**
+	 * Assert that the current user is an administrator, if not then a Security
+	 * Exception will be thrown.
+	 */
+	public void assertAdministrator() {
+		SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
+		
+		if (context.isAuthorizationActive() && !context.isAdministrator())
+			throw new SecurityException("This operation requires administrative level access.");
+	}
+	
+	/**
+	 * Assert that the current user is an manager or above, if not then a Security
+	 * Exception will be thrown.
+	 */
+	public void assertManager() {
+		SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
+		
+		if (context.isAuthorizationActive() && !context.isManager())
+			throw new SecurityException("This operation requires manager level access.");
+	}
+	
+	/**
+	 * Assert that the current user is an reviewer or above, if not then a Security
+	 * Exception will be thrown.
+	 */
+	public void assertReviewer() {
+		SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
+		
+		if (context.isAuthorizationActive() && !context.isReviewer())
+			throw new SecurityException("This operation requires reviewer level access.");
+		
+	}
+	
+	/**
+	 * Assert that the current user is an administrator or the supplied person.
+	 * If not then a Security Exception will be thrown.
+	 * 
+	 * @param owner
+	 *            The owner of the object being asserted.
+	 */
+	public void assertAdministratorOrOwner(Person owner) {
+		SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
+
+		if (context.isAuthorizationActive() && !(owner.equals(context.getPerson()) || context.isAdministrator()))
+			throw new SecurityException("This operation requires administrative level access, or you must be the owner of this object.");
+
+	}
+	
+	/**
+	 * Assert that the current user is an manager or above, or the supplied person.
+	 * If not then a Security Exception will be thrown.
+	 * 
+	 * @param owner
+	 *            The owner of the object being asserted.
+	 */
+	public void assertManagerOrOwner(Person owner) {
+		SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
+
+		if (context.isAuthorizationActive() && !(owner.equals(context.getPerson()) || context.isManager()))
+			throw new SecurityException("This operation requires manager level access, or you must be the owner of this object.");
+
+	}
+	
+	/**
+	 * Assert that the current user is an reviewer or above, or the supplied person.
+	 * If not then a Security Exception will be thrown.
+	 * 
+	 * @param owner
+	 *            The owner of the object being asserted.
+	 */
+	public void assertReviewerOrOwner(Person owner) {
+		
+		SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
+
+		if (context.isAuthorizationActive() && !(owner.equals(context.getPerson()) || context.isReviewer()))
+			throw new SecurityException("This operation requires reviewer level access, or you must be the owner of this object.");
+		
+	}
 }

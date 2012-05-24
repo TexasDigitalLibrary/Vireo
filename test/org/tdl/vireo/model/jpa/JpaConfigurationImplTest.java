@@ -2,9 +2,13 @@ package org.tdl.vireo.model.jpa;
 
 import java.util.List;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.Configuration;
+import org.tdl.vireo.model.MockPerson;
+import org.tdl.vireo.security.SecurityContext;
 
 import play.db.jpa.JPA;
 import play.modules.spring.Spring;
@@ -17,7 +21,19 @@ import play.test.UnitTest;
  */
 public class JpaConfigurationImplTest extends UnitTest {
 	
-	JpaSettingsRepositoryImpl settingRepo = Spring.getBeanOfType(JpaSettingsRepositoryImpl.class);
+	// Repositories
+	public static SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
+	public static JpaSettingsRepositoryImpl settingRepo = Spring.getBeanOfType(JpaSettingsRepositoryImpl.class);
+	
+	@Before
+	public void setup() {
+		context.login(MockPerson.getAdministrator());
+	}
+	
+	@After
+	public void cleanup() {
+		context.logout();
+	}
 	
 	/**
 	 * Test creating a configuration
@@ -213,6 +229,25 @@ public class JpaConfigurationImplTest extends UnitTest {
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();
 		JPA.em().getTransaction().begin();
+	}
+	
+	/**
+	 * Test that managers have access and other don't.
+	 */
+	@Test
+	public void testAccess() {
+		
+		context.login(MockPerson.getManager());
+		settingRepo.createConfiguration("config","value").save().delete();
+		
+		try {
+			context.login(MockPerson.getReviewer());
+			settingRepo.createConfiguration("config","value").save();
+			fail("A reviewer was able to create a new object.");
+		} catch (SecurityException se) {
+			/* yay */
+		}
+		context.logout();
 	}
 	
 }

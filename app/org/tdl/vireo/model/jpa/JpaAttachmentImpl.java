@@ -78,6 +78,8 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 		if (!file.canRead())
 			throw new IllegalArgumentException("File is not readable");
 		
+		assertReviewerOrOwner(submission.getSubmitter());
+		
 		this.submission = submission;
 		this.name = file.getName();
 		this.type = type;
@@ -86,8 +88,18 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 	}
 
 	@Override
+	public JpaAttachmentImpl save() {
+		
+		assertReviewerOrOwner(submission.getSubmitter());
+
+		return super.save();
+	}
+	
+	@Override
 	public JpaAttachmentImpl delete() {
 
+		assertReviewerOrOwner(submission.getSubmitter());
+		
 		((JpaSubmissionImpl) submission).removeAttachment(this);
 		
 		if (this.data.exists())
@@ -108,10 +120,11 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 
 	@Override
 	public void setName(String name) {
-		
 		if (name == null || name.length() == 0)
 			throw new IllegalArgumentException("Attachment name may not be blank or null.");
 
+		assertReviewerOrOwner(submission.getSubmitter());
+		
 		this.name = name;
 	}
 
@@ -131,6 +144,8 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 			if (submission.getPrimaryDocument() != null)
 				throw new IllegalArgumentException("There can only be one primary document associated with a submission. You must remove the current primary document before adding another.");
 		}
+		
+		assertReviewerOrOwner(submission.getSubmitter());
 
 		this.type = type;
 	}

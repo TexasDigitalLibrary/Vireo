@@ -38,10 +38,26 @@ public class JpaGraduationMonthImpl extends JpaAbstractModel<JpaGraduationMonthI
 		if (month < 0 || month > 11)
 			throw new IllegalArgumentException("Month value is out of range");
 
+		assertManager();
+		
 		this.displayOrder = 0;
 		this.month = month;
 	}
 
+	@Override
+	public JpaGraduationMonthImpl save() {
+		assertManager();
+
+		return super.save();
+	}
+	
+	@Override
+	public JpaGraduationMonthImpl delete() {
+		assertManager();
+
+		return super.delete();
+	}
+	
     @Override
     public int getDisplayOrder() {
         return displayOrder;
@@ -49,6 +65,8 @@ public class JpaGraduationMonthImpl extends JpaAbstractModel<JpaGraduationMonthI
 
     @Override
     public void setDisplayOrder(int displayOrder) {
+    	
+    	assertManager();
         this.displayOrder = displayOrder;
     }
 
@@ -68,6 +86,7 @@ public class JpaGraduationMonthImpl extends JpaAbstractModel<JpaGraduationMonthI
 		if (month < 0 || month > 11)
 			throw new IllegalArgumentException("Month value is out of range");
 		
+		assertManager();
 		this.month = month;
 	}
 

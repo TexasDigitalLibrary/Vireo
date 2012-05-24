@@ -37,8 +37,24 @@ public class JpaDepartmentImpl extends JpaAbstractModel<JpaDepartmentImpl> imple
 		if (name == null || name.length() == 0)
 			throw new IllegalArgumentException("Name is required");
 
+		assertManager();
+		
 		this.displayOrder = 0;
 		this.name = name;
+	}
+	
+	@Override
+	public JpaDepartmentImpl save() {
+		assertManager();
+
+		return super.save();
+	}
+	
+	@Override
+	public JpaDepartmentImpl delete() {
+		assertManager();
+
+		return super.delete();
 	}
 
     @Override
@@ -48,6 +64,8 @@ public class JpaDepartmentImpl extends JpaAbstractModel<JpaDepartmentImpl> imple
 
     @Override
     public void setDisplayOrder(int displayOrder) {
+    	
+    	assertManager();
         this.displayOrder = displayOrder;
     }
 
@@ -61,6 +79,8 @@ public class JpaDepartmentImpl extends JpaAbstractModel<JpaDepartmentImpl> imple
 		
 		if (name == null || name.length() == 0)
 			throw new IllegalArgumentException("Name is required");
+		
+		assertManager();
 		
 		this.name = name;
 	}

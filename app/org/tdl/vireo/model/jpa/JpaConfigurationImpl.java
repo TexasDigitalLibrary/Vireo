@@ -37,8 +37,24 @@ public class JpaConfigurationImpl extends JpaAbstractModel<JpaConfigurationImpl>
 		if (name == null || name.length() == 0)
 			throw new IllegalArgumentException("Name is required");
 
+		assertManager();
+		
 		this.name = name;
 		this.value = value;
+	}
+	
+	@Override
+	public JpaConfigurationImpl save() {
+		assertManager();
+
+		return super.save();
+	}
+	
+	@Override
+	public JpaConfigurationImpl delete() {
+		assertManager();
+
+		return super.delete();
 	}
 
 	@Override
@@ -52,6 +68,8 @@ public class JpaConfigurationImpl extends JpaAbstractModel<JpaConfigurationImpl>
 		if (name == null || name.length() == 0)
 			throw new IllegalArgumentException("Name is required");
 		
+		assertManager();
+		
 		this.name = name;
 	}
 
@@ -62,6 +80,8 @@ public class JpaConfigurationImpl extends JpaAbstractModel<JpaConfigurationImpl>
 
 	@Override
 	public void setValue(String value) {
+		
+		assertManager();
 		this.value = value;
 	}
 

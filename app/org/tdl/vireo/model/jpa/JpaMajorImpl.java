@@ -35,10 +35,26 @@ public class JpaMajorImpl extends JpaAbstractModel<JpaMajorImpl> implements Majo
 		if (name == null || name.length() == 0)
 			throw new IllegalArgumentException("Name is required");
 		
+		assertManager();
+		
 		this.displayOrder = 0;
 		this.name = name;
 	}
 
+	@Override
+	public JpaMajorImpl save() {
+		assertManager();
+
+		return super.save();
+	}
+	
+	@Override
+	public JpaMajorImpl delete() {
+		assertManager();
+
+		return super.delete();
+	}
+	
     @Override
     public int getDisplayOrder() {
         return displayOrder;
@@ -46,6 +62,8 @@ public class JpaMajorImpl extends JpaAbstractModel<JpaMajorImpl> implements Majo
 
     @Override
     public void setDisplayOrder(int displayOrder) {
+    	
+    	assertManager();
         this.displayOrder = displayOrder;
     }
 
@@ -60,6 +78,7 @@ public class JpaMajorImpl extends JpaAbstractModel<JpaMajorImpl> implements Majo
 		if (name == null || name.length() == 0)
 			throw new IllegalArgumentException("Name is required");
 		
+		assertManager();
 		this.name = name;
 	}
 

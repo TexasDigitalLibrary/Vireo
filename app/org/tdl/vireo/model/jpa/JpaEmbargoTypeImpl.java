@@ -56,6 +56,8 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 		if (duration != null && duration < 0)
 			throw new IllegalArgumentException("Duration must be positive, or null");
 
+		assertManager();
+		
 		this.displayOrder = 0;
 		this.name = name;
 		this.description = description;
@@ -63,6 +65,20 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 		this.active = active;
 	}
 
+	@Override
+	public JpaEmbargoTypeImpl save() {
+		assertManager();
+
+		return super.save();
+	}
+	
+	@Override
+	public JpaEmbargoTypeImpl delete() {
+		assertManager();
+
+		return super.delete();
+	}
+	
     @Override
     public int getDisplayOrder() {
         return displayOrder;
@@ -70,6 +86,9 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 
     @Override
     public void setDisplayOrder(int displayOrder) {
+    	
+    	assertManager();
+    	
         this.displayOrder = displayOrder;
     }
 
@@ -83,6 +102,8 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 		
 		if (name == null || name.length() == 0)
 			throw new IllegalArgumentException("Name is required");
+		
+		assertManager();
 		
 		this.name = name;
 	}
@@ -98,6 +119,7 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 		if (description == null || description.length() == 0)
 			throw new IllegalArgumentException("Description is required");
 		
+		assertManager();
 		this.description = description;
 	}
 
@@ -112,6 +134,7 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 		if (duration != null && duration < 0)
 			throw new IllegalArgumentException("Duration must be positive, or null");
 		
+		assertManager();
 		this.duration = duration;
 	}
 	
@@ -122,6 +145,8 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 
 	@Override
 	public void setActive(boolean active) {
+		
+		assertManager();
 		this.active = active;
 	}
 

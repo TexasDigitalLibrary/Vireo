@@ -43,11 +43,27 @@ public class JpaEmailTemplateImpl extends JpaAbstractModel<JpaEmailTemplateImpl>
 		if (message == null || message.length() == 0)
 			throw new IllegalArgumentException("Message is required");
 	    
+		assertManager();
+		
 	    this.displayOrder = 0;
 		this.subject = subject;
 		this.message = message;
 	}
 
+	@Override
+	public JpaEmailTemplateImpl save() {
+		assertManager();
+
+		return super.save();
+	}
+	
+	@Override
+	public JpaEmailTemplateImpl delete() {
+		assertManager();
+
+		return super.delete();
+	}
+	
     @Override
     public int getDisplayOrder() {
         return displayOrder;
@@ -55,6 +71,8 @@ public class JpaEmailTemplateImpl extends JpaAbstractModel<JpaEmailTemplateImpl>
 
     @Override
     public void setDisplayOrder(int displayOrder) {
+    	
+    	assertManager();
         this.displayOrder = displayOrder;
     }
 
@@ -69,6 +87,8 @@ public class JpaEmailTemplateImpl extends JpaAbstractModel<JpaEmailTemplateImpl>
 		if (subject == null || subject.length() == 0)
 			throw new IllegalArgumentException("Subject is required");
 		
+		assertManager();
+		
 		this.subject = subject;
 	}
 
@@ -82,6 +102,8 @@ public class JpaEmailTemplateImpl extends JpaAbstractModel<JpaEmailTemplateImpl>
 		
 		if (message == null || message.length() == 0)
 			throw new IllegalArgumentException("Message is required");
+		
+		assertManager();
 		
 		this.message = message;
 	}

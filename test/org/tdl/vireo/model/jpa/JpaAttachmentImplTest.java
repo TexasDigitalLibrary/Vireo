@@ -12,9 +12,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.AttachmentType;
+import org.tdl.vireo.model.MockPerson;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.security.SecurityContext;
 
 import play.db.jpa.JPA;
 import play.modules.spring.Spring;
@@ -28,6 +30,7 @@ import play.test.UnitTest;
 public class JpaAttachmentImplTest extends UnitTest {
 
 	// Persistence repositories
+	public static SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
 	public static JpaPersonRepositoryImpl personRepo = Spring.getBeanOfType(JpaPersonRepositoryImpl.class);
 	public static JpaSubmissionRepositoryImpl subRepo = Spring.getBeanOfType(JpaSubmissionRepositoryImpl.class);
 	
@@ -40,6 +43,7 @@ public class JpaAttachmentImplTest extends UnitTest {
 	 */
 	@Before
 	public void setup() {
+		context.login(MockPerson.getAdministrator());
 		person = personRepo.createPerson("netid", "email@email.com", "first", "last", RoleType.NONE).save();
 		sub = subRepo.createSubmission(person).save();
 	}
@@ -54,6 +58,7 @@ public class JpaAttachmentImplTest extends UnitTest {
 		
 		if (person != null)
 			personRepo.findPerson(person.getId()).delete();
+		context.logout();
 	}
 	
 	/**
@@ -461,6 +466,37 @@ public class JpaAttachmentImplTest extends UnitTest {
 		// Check the list of attachments
 		Set<Attachment> attachments = sub.getAttachments();
 		assertEquals(0,attachments.size());
+	}
+	
+	/**
+	 * Test who has access to add/modify/delete attachments.
+	 */
+	@Test
+	public void testAccess() throws IOException {
+		File file = createRandomFile(10L);
+		
+		// Test that the owner can add an attachment
+
+		context.login(person);
+		Attachment a1 = sub.addAttachment(file, AttachmentType.SUPPLEMENTAL).save();
+		a1.setName("changed");
+		
+		// Test that a reviewer can add an attachment
+		context.login(MockPerson.getReviewer());
+		Attachment a2 = sub.addAttachment(file, AttachmentType.SUPPLEMENTAL).save();
+		a2.setName("changed");
+
+		// Test that a someone else can not add an attachment.
+		context.login(MockPerson.getStudent());
+		try {
+			sub.addAttachment(file, AttachmentType.SUPPLEMENTAL).save();
+			fail("Someone else was able to add an attachment to a submission.");
+		} catch (SecurityException se) {
+			/* yay */
+		}
+		
+		context.login(MockPerson.getAdministrator());
+
 	}
 	
 	/**

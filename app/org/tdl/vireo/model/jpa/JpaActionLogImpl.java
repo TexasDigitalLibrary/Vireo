@@ -33,7 +33,7 @@ import play.modules.spring.Spring;
  */
 @Entity
 @Table(name = "ActionLog")
-public class JpaActionLogImpl extends Model implements ActionLog {
+public class JpaActionLogImpl extends JpaAbstractModel<JpaActionLogImpl> implements ActionLog {
 
 	@ManyToOne(targetEntity=JpaSubmissionImpl.class, optional = false)
 	public Submission submission;
@@ -79,7 +79,8 @@ public class JpaActionLogImpl extends Model implements ActionLog {
 			boolean privateFlag) {
 
 		// TODO: Check that all the parameters are not null, good, etc...
-
+		assertReviewerOrOwner(submission.getSubmitter());
+		
 		this.submission = submission;
 		this.submissionState = submissionState.getBeanName();
 		this.person = person;
@@ -91,6 +92,9 @@ public class JpaActionLogImpl extends Model implements ActionLog {
 
 	@Override
 	public JpaActionLogImpl save() {
+
+		assertReviewerOrOwner(submission.getSubmitter());
+		
 		return super.save();
 	}
 
@@ -99,16 +103,6 @@ public class JpaActionLogImpl extends Model implements ActionLog {
 		// You can not delete action logs... at least not right now.
 		throw new IllegalStateException("Action Logs may not be deleted.");
 		// return super.delete();
-	}
-
-	@Override
-	public JpaActionLogImpl refresh() {
-		return super.refresh();
-	}
-
-	@Override
-	public JpaActionLogImpl merge() {
-		return super.merge();
 	}
 
 	@Override
@@ -148,6 +142,8 @@ public class JpaActionLogImpl extends Model implements ActionLog {
 
 	@Override
 	public void setPrivate(boolean privateFlag) {
+		
+		assertReviewerOrOwner(submission.getSubmitter());
 		this.privateFlag = privateFlag;
 	}
 }

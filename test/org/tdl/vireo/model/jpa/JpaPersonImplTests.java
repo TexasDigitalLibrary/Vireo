@@ -2,9 +2,13 @@ package org.tdl.vireo.model.jpa;
 
 import java.util.List;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+import org.tdl.vireo.model.MockPerson;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
+import org.tdl.vireo.security.SecurityContext;
 
 import play.db.jpa.JPA;
 import play.modules.spring.Spring;
@@ -17,7 +21,21 @@ import play.test.UnitTest;
  */
 public class JpaPersonImplTests extends UnitTest {
 	
+	// Repositories
+	public static SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
 	public static JpaPersonRepositoryImpl repo = Spring.getBeanOfType(JpaPersonRepositoryImpl.class);
+	
+	
+	@Before
+	public void setup() {
+		context.login(MockPerson.getAdministrator());
+	}
+	
+	@After
+	public void cleanup() {
+		context.logout();
+	}
+	
 	
 	/**
 	 * Test creating a person
@@ -418,5 +436,76 @@ public class JpaPersonImplTests extends UnitTest {
 		// Commit and reopen a new transaction.
 		JPA.em().getTransaction().commit();
 		JPA.em().getTransaction().begin();
+	}
+	
+	@Test
+	public void testAccess() {
+		
+//		Person person;
+//
+//		// Test that anyone is not able to create a reviewer.
+//		try {
+//			context.logout();
+//			person = repo.createPerson("netid", "email@email.com", "first", "last", RoleType.REVIEWER);
+//			person.save();
+//			fail("Anonymous was able to create a new reviewer.");
+//		} catch (SecurityException se) {
+//			/* yay */
+//		}
+//		
+//		// Test that a manager can not create an administrator
+//		context.login(MockPerson.getManager());
+//		try {
+//			person = repo.createPerson("netid", "email@email.com", "first", "last", RoleType.ADMINISTRATOR);
+//			person.save();
+//			fail("Manager was able to create a new administrator.");
+//		} catch (SecurityException se) {
+//			/* yay */
+//		}
+		
+		// Test that with authorizations turned off that we can create a new person object.
+		context.logout();
+		context.turnOffAuthorization();
+		Person person = repo.createPerson("netid", "email@email.com", "first", "last", RoleType.STUDENT);
+		person.save();
+		context.restoreAuthorization();
+		
+		// That someone else is not able to modify the student object.
+		try {
+			context.login(MockPerson.getStudent());
+			
+			person.setLastName("Changed");
+			person.setFirstName("Changed");
+			person.save();
+			fail("Able to modify someone elses person object");
+				
+		} catch (SecurityException se) {
+			/* yay */
+		}
+		
+		// Test that an administrator is able to modify the student object.
+		context.login(MockPerson.getAdministrator());
+		person.setLastName("Changed");
+		person.setFirstName("Changed");
+		person.save();
+		
+		// Test that a manager is able to upgrade the student to a reviwer.
+		context.login(MockPerson.getManager());
+		person.setRole(RoleType.REVIEWER);
+		person.save();
+		person.setRole(RoleType.MANAGER);
+		person.save();
+		
+		// but not administrator.
+		try {
+			person.setRole(RoleType.REVIEWER);
+			person.save();
+		} catch (SecurityException se) {
+			/* yay */
+		}
+		
+		context.login(MockPerson.getAdministrator());
+		person.delete();
+		context.logout();
 	}
 }

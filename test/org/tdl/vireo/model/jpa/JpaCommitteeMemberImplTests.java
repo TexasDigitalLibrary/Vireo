@@ -6,9 +6,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.tdl.vireo.model.CommitteeMember;
+import org.tdl.vireo.model.MockPerson;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.StateManager;
 import org.tdl.vireo.state.simple.StateManagerImpl;
 
@@ -24,6 +26,7 @@ import play.test.UnitTest;
 public class JpaCommitteeMemberImplTests extends UnitTest {
 
 	// Persistence repositories
+	public static SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
 	public static JpaPersonRepositoryImpl personRepo = Spring.getBeanOfType(JpaPersonRepositoryImpl.class);
 	public static JpaSubmissionRepositoryImpl subRepo = Spring.getBeanOfType(JpaSubmissionRepositoryImpl.class);
 	
@@ -36,6 +39,7 @@ public class JpaCommitteeMemberImplTests extends UnitTest {
 	 */
 	@Before
 	public void setup() {
+		context.login(MockPerson.getAdministrator());
 		person = personRepo.createPerson("netid", "email@email.com", "first", "last", RoleType.NONE).save();
 		sub = subRepo.createSubmission(person).save();
 	}
@@ -50,6 +54,8 @@ public class JpaCommitteeMemberImplTests extends UnitTest {
 		
 		if (person != null)
 			personRepo.findPerson(person.getId()).delete();
+		
+		context.logout();
 	}
 	
 	/**
@@ -207,6 +213,32 @@ public class JpaCommitteeMemberImplTests extends UnitTest {
 		assertEquals(member2.getId(),members.get(1).getId());
 		assertEquals(member3.getId(),members.get(2).getId());
 		assertEquals(member4.getId(),members.get(3).getId());
+	}
+	
+	/**
+	 * Test who has access to add/modify/delete members.
+	 */
+	@Test
+	public void testAccess() {		
+		// Test that the owner can add a member
+		context.login(person);
+		CommitteeMember member1 = sub.addCommitteeMember("first", "last", "middle", false).save();
+		member1.setFirstName("changed");
+		
+		// Test that a reviewer can add a member
+		context.login(MockPerson.getReviewer());
+		CommitteeMember member2 = sub.addCommitteeMember("first", "last", "middle", false).save();
+		member2.setFirstName("changed");
+
+		// Test that a someone else can not add a member.
+		context.login(MockPerson.getStudent());
+		try {
+			sub.addCommitteeMember("first", "last", "middle", false).save();
+			fail("Someone else was able to add a member to a submission.");
+		} catch (SecurityException se) {
+			/* yay */
+		}	
+		context.login(MockPerson.getAdministrator());
 	}
 	
 	

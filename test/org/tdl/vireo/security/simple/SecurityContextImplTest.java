@@ -99,5 +99,32 @@ public class SecurityContextImplTest extends UnitTest {
 		assertFalse(context.isStudent());
 		assertFalse(context.isAuthenticated());
 	}
+	
+	/**
+	 * Test that we can turn off authorizations and restore them.
+	 */
+	@Test
+	public void testTurningOffAuthorizationSystem() {
+		
+		context.logout();
+		assertTrue(context.isAuthorizationActive());		
+		context.turnOffAuthorization();
+		assertFalse(context.isAuthorizationActive());
+		context.turnOffAuthorization();
+		assertFalse(context.isAuthorizationActive());
+		context.restoreAuthorization();
+		assertFalse(context.isAuthorizationActive());
+		context.restoreAuthorization();
+		assertTrue(context.isAuthorizationActive());	
+		
+		
+		// Test that the authoziation state is reset after a login.
+		context.turnOffAuthorization();
+		assertFalse(context.isAuthorizationActive());
+		context.login(MockPerson.getStudent());
+		assertTrue(context.isAuthorizationActive());
+		
+		
+	}
 
 }

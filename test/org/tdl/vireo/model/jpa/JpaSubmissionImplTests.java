@@ -9,10 +9,12 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.tdl.vireo.model.EmbargoType;
+import org.tdl.vireo.model.MockPerson;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
 import org.tdl.vireo.state.simple.StateManagerImpl;
@@ -30,6 +32,7 @@ import play.test.UnitTest;
 public class JpaSubmissionImplTests extends UnitTest {
 
 	// All the repositories
+	public static SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
 	public static JpaPersonRepositoryImpl personRepo = Spring.getBeanOfType(JpaPersonRepositoryImpl.class);
 	public static JpaSubmissionRepositoryImpl subRepo = Spring.getBeanOfType(JpaSubmissionRepositoryImpl.class);
 	public static JpaSettingsRepositoryImpl settingRepo = Spring.getBeanOfType(JpaSettingsRepositoryImpl.class);
@@ -44,6 +47,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 	 */
 	@Before
 	public void setup() {
+		context.login(MockPerson.getAdministrator());
 		person = personRepo.createPerson("netid", "email@email.com", "first", "last", RoleType.NONE).save();
 	}
 	
@@ -54,6 +58,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 	public void cleanup() {
 		if (person != null)
 			personRepo.findPerson(person.getId()).delete();
+		context.logout();
 	}
 	
 	/**
@@ -336,5 +341,37 @@ public class JpaSubmissionImplTests extends UnitTest {
 
 		subRepo.findSubmission(sub.getId()).delete();
 		personRepo.findPerson(person.getId()).delete();
+	}
+	
+	/**
+	 * Test who has access to the submission, and who does not.
+	 */
+	@Test
+	public void testAccess() {
+
+		// Test that the owner can edit their submission.
+		context.login(person);
+		Submission sub = subRepo.createSubmission(person).save();
+		sub.setDocumentTitle("changed");
+		sub.save();
+
+		
+		// Test that a reviewer can edit a submission
+		context.login(MockPerson.getReviewer());
+		sub.setDocumentAbstract("changed");
+		sub.save();
+		
+		// Test that someone else can not.
+		try {
+			context.login(MockPerson.getStudent());
+			sub.setDocumentKeywords("changed");
+			sub.save();
+			fail("Someone else was able to modify a submission.");
+		} catch (SecurityException se) {
+			/* yay */
+		}
+		
+		context.login(MockPerson.getAdministrator());
+		sub.delete();
 	}
 }

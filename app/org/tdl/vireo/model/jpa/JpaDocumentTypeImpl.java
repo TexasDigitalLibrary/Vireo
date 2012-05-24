@@ -47,11 +47,27 @@ public class JpaDocumentTypeImpl extends JpaAbstractModel<JpaDocumentTypeImpl> i
 		if (level == null)
 			throw new IllegalArgumentException("Degree level is required");
 		
+		assertManager();
+		
 	    this.displayOrder = 0;
 		this.name = name;
 		this.level = level;
 	}
 
+	@Override
+	public JpaDocumentTypeImpl save() {
+		assertManager();
+
+		return super.save();
+	}
+	
+	@Override
+	public JpaDocumentTypeImpl delete() {
+		assertManager();
+
+		return super.delete();
+	}
+	
     @Override
     public int getDisplayOrder() {
         return displayOrder;
@@ -59,6 +75,8 @@ public class JpaDocumentTypeImpl extends JpaAbstractModel<JpaDocumentTypeImpl> i
 
     @Override
     public void setDisplayOrder(int displayOrder) {
+    	
+    	assertManager();
         this.displayOrder = displayOrder;
     }
 
@@ -73,6 +91,8 @@ public class JpaDocumentTypeImpl extends JpaAbstractModel<JpaDocumentTypeImpl> i
 		if (name == null || name.length() == 0)
 			throw new IllegalArgumentException("Name is required");
 		
+		assertManager();
+		
 		this.name = name;
 	}
 
@@ -86,6 +106,8 @@ public class JpaDocumentTypeImpl extends JpaAbstractModel<JpaDocumentTypeImpl> i
 		
 		if (level == null)
 			throw new IllegalArgumentException("Degree level is required");
+		
+		assertManager();
 		
 		this.level = level;
 	}

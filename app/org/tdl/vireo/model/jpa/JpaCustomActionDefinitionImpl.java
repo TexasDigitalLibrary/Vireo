@@ -37,12 +37,23 @@ public class JpaCustomActionDefinitionImpl extends JpaAbstractModel<JpaCustomAct
 		if (label == null || label.length() == 0)
 			throw new IllegalArgumentException("Label is required");
 
+		assertManager();
+		
 		this.displayOrder = 0;
 		this.label = label;
+	}
+	
+	@Override
+	public JpaCustomActionDefinitionImpl save() {
+		assertManager();
+
+		return super.save();
 	}
 
 	@Override
 	public JpaCustomActionDefinitionImpl delete() {
+		
+		assertManager();
 		
 		// Delete all values associated with this definition
 		em().createQuery(
@@ -61,6 +72,8 @@ public class JpaCustomActionDefinitionImpl extends JpaAbstractModel<JpaCustomAct
 
     @Override
     public void setDisplayOrder(int displayOrder) {
+    	
+    	assertManager();
         this.displayOrder = displayOrder;
     }
 
@@ -74,6 +87,8 @@ public class JpaCustomActionDefinitionImpl extends JpaAbstractModel<JpaCustomAct
 		
 		if (label == null || label.length() == 0)
 			throw new IllegalArgumentException("Label is required");
+		
+		assertManager();
 		
 		this.label = label;
 	}

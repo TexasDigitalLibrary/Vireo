@@ -2,10 +2,14 @@ package org.tdl.vireo.model.jpa;
 
 import java.util.Set;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+import org.tdl.vireo.model.MockPerson;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Preference;
 import org.tdl.vireo.model.RoleType;
+import org.tdl.vireo.security.SecurityContext;
 
 import play.db.jpa.JPA;
 import play.modules.spring.Spring;
@@ -18,7 +22,19 @@ import play.test.UnitTest;
  */
 public class JpaPreferenceImplTests extends UnitTest {
 
+	// Repositories
+	public static SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
 	public static JpaPersonRepositoryImpl repo = Spring.getBeanOfType(JpaPersonRepositoryImpl.class);
+	
+	@Before
+	public void setup() {
+		context.login(MockPerson.getAdministrator());
+	}
+	
+	@After
+	public void cleanup() {
+		context.logout();
+	}
 	
 	/**
 	 * Test creating a preference
@@ -345,6 +361,25 @@ public class JpaPreferenceImplTests extends UnitTest {
 		assertEquals(1,person.getPreferences().size());
 		assertEquals(pref1.getId(),person.getPreferences().iterator().next().getId());
 		
+		person.delete();
+	}
+	
+	@Test
+	public void testAccess() {
+		
+		Person person = repo.createPerson("netid", "email@email.com", "first", "last", RoleType.NONE).save();
+		context.login(person);
+		Preference pref1 = person.addPreference("pref1", "value").save();
+		
+		try {
+			context.login(MockPerson.getStudent());
+			person.addPreference("pref1", "value").save();
+			fail("A non-administrator was able to add a preference to someone else person.");
+		} catch (SecurityException se) { 
+			/* yay */
+		}
+		
+		context.login(MockPerson.getAdministrator());
 		person.delete();
 	}
 	

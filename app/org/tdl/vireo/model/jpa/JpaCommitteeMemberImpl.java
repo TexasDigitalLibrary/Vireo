@@ -61,6 +61,8 @@ public class JpaCommitteeMemberImpl extends JpaAbstractModel<JpaCommitteeMemberI
 		if (lastName == null || lastName.length() == 0)
 			throw new IllegalArgumentException("Last name is required");
 		
+		assertReviewerOrOwner(submission.getSubmitter());
+		
 		this.submission = submission;
 	    this.displayOrder = 0;
 		this.firstName = firstName;
@@ -70,7 +72,17 @@ public class JpaCommitteeMemberImpl extends JpaAbstractModel<JpaCommitteeMemberI
 	}
 
 	@Override
+	public JpaCommitteeMemberImpl save() {
+		
+		assertReviewerOrOwner(submission.getSubmitter());
+
+		return super.save();
+	}
+	
+	@Override
 	public JpaCommitteeMemberImpl delete() {
+		
+		assertReviewerOrOwner(submission.getSubmitter());
 		
 		((JpaSubmissionImpl) submission).removeCommitteeMember(this);
 		return super.delete();
@@ -83,6 +95,8 @@ public class JpaCommitteeMemberImpl extends JpaAbstractModel<JpaCommitteeMemberI
 
     @Override
     public void setDisplayOrder(int displayOrder) {
+    	
+		assertReviewerOrOwner(submission.getSubmitter());
         this.displayOrder = displayOrder;
     }
 
@@ -98,6 +112,8 @@ public class JpaCommitteeMemberImpl extends JpaAbstractModel<JpaCommitteeMemberI
 
 	@Override
 	public void setFirstName(String firstName) {
+		
+		assertReviewerOrOwner(submission.getSubmitter());
 		this.firstName = firstName;
 	}
 
@@ -108,6 +124,8 @@ public class JpaCommitteeMemberImpl extends JpaAbstractModel<JpaCommitteeMemberI
 
 	@Override
 	public void setLastName(String lastName) {
+		
+		assertReviewerOrOwner(submission.getSubmitter());
 		this.lastName = lastName;
 	}
 
@@ -118,6 +136,8 @@ public class JpaCommitteeMemberImpl extends JpaAbstractModel<JpaCommitteeMemberI
 
 	@Override
 	public void setMiddleInitial(String middleInitial) {
+		
+		assertReviewerOrOwner(submission.getSubmitter());
 		this.middleInitial = middleInitial;
 	}
 
@@ -128,6 +148,8 @@ public class JpaCommitteeMemberImpl extends JpaAbstractModel<JpaCommitteeMemberI
 
 	@Override
 	public void setCommitteeChair(boolean chair) {
+		
+		assertReviewerOrOwner(submission.getSubmitter());
 		this.chair = chair;
 	}
 

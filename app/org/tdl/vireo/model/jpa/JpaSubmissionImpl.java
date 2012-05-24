@@ -114,6 +114,8 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		if (submitter == null)
 			throw new IllegalArgumentException("Submissions require a submitter");
 
+		assertReviewerOrOwner(submitter);
+		
 		this.submitter = submitter;
 		this.attachments = new HashSet<Attachment>();
 		this.committeeMembers = new ArrayList<CommitteeMember>();
@@ -121,7 +123,17 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	}
 
 	@Override
+	public JpaSubmissionImpl save() {
+		
+		assertReviewerOrOwner(submitter);
+		
+		return super.save();
+	}
+	
+	@Override
 	public JpaSubmissionImpl delete() {
+		
+		assertReviewerOrOwner(submitter);
 		
 		// Don't rely on the cascade for deleting attachments because the files need to be deleted on disk.
 		List<Attachment> attachmentsCopy = new ArrayList<Attachment>(attachments);
@@ -144,6 +156,8 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 
 	@Override
 	public void setDocumentTitle(String title) {
+		
+		assertReviewerOrOwner(submitter);
 		this.documentTitle = title;
 	}
 
@@ -154,6 +168,8 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 
 	@Override
 	public void setDocumentAbstract(String docAbstract) {
+		
+		assertReviewerOrOwner(submitter);
 		this.documentAbstract = docAbstract;
 	}
 
@@ -164,6 +180,8 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 
 	@Override
 	public void setDocumentKeywords(String keywords) {
+		
+		assertReviewerOrOwner(submitter);
 		this.documentKeywords = keywords;
 	}
 
@@ -174,6 +192,8 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 
 	@Override
 	public void setEmbargoType(EmbargoType embargo) {
+		
+		assertReviewerOrOwner(submitter);
 		this.embargoType = embargo;
 	}
 
@@ -264,7 +284,8 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	}
 
 	@Override
-	public void setCommitteeContactEmail(String email) {		
+	public void setCommitteeContactEmail(String email) {
+		assertReviewerOrOwner(submitter);
 		this.committeeContactEmail = email;
 	}
 
@@ -275,6 +296,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 
 	@Override
 	public void setCommitteeEmailHash(String hash) {
+		assertReviewerOrOwner(submitter);
 		this.committeeEmailHash = hash;
 	}
 
@@ -285,6 +307,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 
 	@Override
 	public void setCommitteeApprovalDate(Date date) {
+		assertReviewerOrOwner(submitter);
 		this.committeeApprovalDate = date;
 	}
 
@@ -295,6 +318,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 
 	@Override
 	public void setCommitteeEmbargoApprovalDate(Date date) {
+		assertReviewerOrOwner(submitter);
 		this.committeeEmbargoApprovalDate = date;
 	}
 
@@ -305,6 +329,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 
 	@Override
 	public void setCommitteeDisposition(String disposition) {
+		assertReviewerOrOwner(submitter);
 		this.committeeDisposition = disposition;
 	}
 
@@ -315,6 +340,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 
 	@Override
 	public void setSubmissionDate(Date date) {
+		assertReviewerOrOwner(submitter);
 		this.submissionDate = date;
 	}
 
@@ -325,6 +351,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 
 	@Override
 	public void setApprovalDate(Date date) {
+		assertReviewerOrOwner(submitter);
 		this.approvalDate = date;
 	}
 
@@ -335,6 +362,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 
 	@Override
 	public void setLicenseAgreementDate(Date date) {
+		assertReviewerOrOwner(submitter);
 		this.licenseAgreementDate = date;
 	}
 
@@ -345,6 +373,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 
 	@Override
 	public void setDegree(String degree) {
+		assertReviewerOrOwner(submitter);
 		this.degree = degree;
 	}
 
@@ -355,6 +384,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 
 	@Override
 	public void setDepartment(String department) {
+		assertReviewerOrOwner(submitter);
 		this.department = department;
 	}
 
@@ -365,6 +395,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 
 	@Override
 	public void setCollege(String college) {
+		assertReviewerOrOwner(submitter);
 		this.college = college;
 	}
 
@@ -375,6 +406,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 
 	@Override
 	public void setMajor(String major) {
+		assertReviewerOrOwner(submitter);
 		this.major = major;
 	}
 
@@ -385,6 +417,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 
 	@Override
 	public void setDocumentType(String documentType) {
+		assertReviewerOrOwner(submitter);
 		this.documentType = documentType;
 	}
 
@@ -395,6 +428,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 
 	@Override
 	public void setGraduationYear(Integer year) {
+		assertReviewerOrOwner(submitter);
 		this.graduationYear = year;
 	}
 
@@ -409,6 +443,8 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		if (month != null && (month < 0 || month > 11))
 			throw new IllegalArgumentException("Month is out of bounds.");
 		
+		assertReviewerOrOwner(submitter);
+		
 		this.graduationMonth = month;
 	}
 
@@ -419,6 +455,8 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 
 	@Override
 	public void setState(State state) {
+		
+		assertReviewer();
 		
 		if (state == null)
 			this.state = null;
@@ -433,6 +471,9 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 
 	@Override
 	public void setAssignee(Person assignee) {
+		
+		assertReviewer();
+		
 		this.assignee = assignee;
 	}
 
@@ -443,6 +484,8 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 
 	@Override
 	public void setUMIRelease(Boolean umiRelease) {
+		
+		assertReviewerOrOwner(submitter);
 		this.UMIRelease = umiRelease;
 	}
 
