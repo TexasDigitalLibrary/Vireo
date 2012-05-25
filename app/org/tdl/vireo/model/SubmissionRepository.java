@@ -145,5 +145,48 @@ public interface SubmissionRepository {
 	public List<ActionLog> filterSearchActionLogs(SearchFilter filter,
 			SearchOrder orderBy, SearchDirection direction, int offset,
 			int limit);
+	
+	// //////////////////
+	// Filter Search
+	// //////////////////
 
+	/**
+	 * Create a brand new search filter.
+	 * 
+	 * @param creator
+	 *            The person who is creating and owns this search filter.
+	 * @param name
+	 *            A unique name for the filter.
+	 * @return The new filter.
+	 */
+	public SearchFilter createSearchFilter(Person creator, String name);
+
+	/**
+	 * Find a search filter by unique id.
+	 * 
+	 * @param id
+	 *            The id of the search filter.
+	 * @return The search filter, or null if not found.
+	 */
+	public SearchFilter findSearchFilter(Long id);
+
+	/**
+	 * Find all search filters that are either owned by this user, or are
+	 * flagged as public.
+	 * 
+	 * @param creator
+	 *            The potential creator, may be null. In this case all public
+	 *            filters are returned.
+	 * @return The unordered list of search filters.
+	 */
+	public List<SearchFilter> findSearchFilterByCreatorOrPublic(Person creator);
+
+	/**
+	 * Find all search filters regardless of who they owned by or whether they
+	 * are flagged as public.
+	 * 
+	 * @return
+	 */
+	public List<SearchFilter> findAllSearchFilters();
+	
 }

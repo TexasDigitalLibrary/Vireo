@@ -77,7 +77,7 @@ public interface SearchFilter extends AbstractModel {
 	/**
 	 * @return The list of assignees to filter for.
 	 */
-	public List<Person> getAssigned();
+	public List<Person> getAssignees();
 
 	/**
 	 * @param assignee
@@ -111,108 +111,108 @@ public interface SearchFilter extends AbstractModel {
 	/**
 	 * @return The list of graduation months
 	 */
-	public List<GraduationMonth> getGraduationMonths();
+	public List<Integer> getGraduationMonths();
 
 	/**
 	 * @param month
 	 *            Add a new graduation month to the filter
 	 */
-	public void addGraduationMonth(GraduationMonth month);
+	public void addGraduationMonth(Integer month);
 
 	/**
 	 * @param month
 	 *            Remove a graduation month from the filter.
 	 */
-	public void removeGraduationMonth(GraduationMonth month);
+	public void removeGraduationMonth(Integer month);
 
 	/**
 	 * @return The list of degrees
 	 */
-	public List<Degree> getDegrees();
+	public List<String> getDegrees();
 
 	/**
 	 * @param degree
 	 *            A a new degree to the filter.
 	 */
-	public void addDegree(Degree degree);
+	public void addDegree(String degree);
 
 	/**
 	 * @param degree
 	 *            Remove a degree from the filter.
 	 */
-	public void removeDegree(Degree degree);
+	public void removeDegree(String degree);
 
 	/**
 	 * @return The list of departments.
 	 */
-	public List<Department> getDepartment();
+	public List<String> getDepartment();
 
 	/**
 	 * @param department
 	 *            Add a new department to the filter.
 	 */
-	public void addDepartment(Department department);
+	public void addDepartment(String department);
 
 	/**
 	 * @param department
 	 *            remove a department from the filter.
 	 */
-	public void removeDepartment(Department department);
+	public void removeDepartment(String department);
 
 	/**
 	 * @return The list of colleges
 	 */
-	public List<College> getColleges();
+	public List<String> getColleges();
 
 	/**
 	 * 
 	 * @param college
 	 *            Add a new college to the filter.
 	 */
-	public void addCollege(College college);
+	public void addCollege(String college);
 
 	/**
 	 * 
 	 * @param college
 	 *            Remove a college from the filter.
 	 */
-	public void removeCollege(College college);
+	public void removeCollege(String college);
 
 	/**
 	 * 
 	 * @return The list of majors
 	 */
-	public List<Major> getMajors();
+	public List<String> getMajors();
 
 	/**
 	 * @param major
 	 *            Add a new major to the filter.
 	 */
-	public void addMajor(Major major);
+	public void addMajor(String major);
 
 	/**
 	 * @param major
 	 *            Remove a major from the filter.
 	 */
-	public void removeMajor(Major major);
+	public void removeMajor(String major);
 
 	/**
 	 * @return The list of document types
 	 */
-	public List<DocumentType> getDocumentTypes();
+	public List<String> getDocumentTypes();
 
 	/**
 	 * 
 	 * @param documentType
 	 *            add a new documentType to the filter.
 	 */
-	public void addDocumentType(DocumentType documentType);
+	public void addDocumentType(String documentType);
 
 	/**
 	 * @param documentType
 	 *            Remove a document type from the filter.
 	 */
-	public void removeDocumentType(DocumentType documentType);
+	public void removeDocumentType(String documentType);
 
 	/**
 	 * True -> applications are set to be released to UMI False -> applications

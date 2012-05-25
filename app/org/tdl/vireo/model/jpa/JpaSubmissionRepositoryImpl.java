@@ -110,4 +110,28 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 		// TODO Implement this method.
 		return null;
 	}
+	
+	// //////////////////
+	// Filter Search
+	// //////////////////
+	
+	@Override
+	public SearchFilter createSearchFilter(Person creator, String name) {
+		return new JpaSearchFilterImpl(creator, name);
+	}
+
+	@Override
+	public SearchFilter findSearchFilter(Long id) {
+		return (SearchFilter) JpaSearchFilterImpl.findById(id);
+	}
+
+	@Override
+	public List<SearchFilter> findSearchFilterByCreatorOrPublic(Person creator) {
+		return (List) JpaSearchFilterImpl.find("creator = ? OR publicFlag = true order by id").fetch();
+	}
+
+	@Override
+	public List<SearchFilter> findAllSearchFilters() {
+		return (List) JpaSearchFilterImpl.find("order by id").fetch();
+	}
 }
