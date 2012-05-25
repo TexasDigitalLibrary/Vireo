@@ -90,6 +90,14 @@ public class MockCommitteeMember extends AbstractMock implements CommitteeMember
 	public void setMiddleInitial(String middleInitial) {
 		this.middleInitial = middleInitial;
 	}
+	
+	@Override
+	public String getFullName() {
+		if (middleInitial == null)
+			return firstName + " " + lastName;
+		else
+			return firstName + " " + middleInitial + " " + lastName;
+	}
 
 	@Override
 	public boolean isCommitteeChair() {

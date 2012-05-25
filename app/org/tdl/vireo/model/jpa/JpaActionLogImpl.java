@@ -41,7 +41,7 @@ public class JpaActionLogImpl extends JpaAbstractModel<JpaActionLogImpl> impleme
 	@Column(nullable = false)
 	public String submissionState;
 
-	@ManyToOne(targetEntity=JpaPersonImpl.class, optional = false)
+	@ManyToOne(targetEntity=JpaPersonImpl.class)
 	public Person person;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -80,6 +80,13 @@ public class JpaActionLogImpl extends JpaAbstractModel<JpaActionLogImpl> impleme
 
 		// TODO: Check that all the parameters are not null, good, etc...
 		assertReviewerOrOwner(submission.getSubmitter());
+		
+		// If the person operating is not a persistant person, a mock or
+		// otherwise then don't record the link. The person's name might be in
+		// the entry text.
+		if (person != null && !person.getClass().isAnnotationPresent(Entity.class))
+			person = null;
+		
 		
 		this.submission = submission;
 		this.submissionState = submissionState.getBeanName();

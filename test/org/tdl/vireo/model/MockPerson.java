@@ -187,6 +187,11 @@ public class MockPerson extends AbstractMock implements Person {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
+	
+	@Override
+	public String getFullName() {
+		return firstName + " "+ lastName;
+	}
 
 	@Override
 	public String getDisplayName() {

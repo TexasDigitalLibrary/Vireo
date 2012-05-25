@@ -9,14 +9,14 @@ import javax.persistence.Table;
 import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.CommitteeMember;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.state.StateManager;
 
 import play.data.validation.Required;
 import play.db.jpa.Model;
+import play.modules.spring.Spring;
 
 /**
  * Jpa specific implementation of Vireo's CommitteeMember interface
- * 
- * TODO: Create actionLog items when the submission is changed.
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
@@ -75,8 +75,32 @@ public class JpaCommitteeMemberImpl extends JpaAbstractModel<JpaCommitteeMemberI
 	public JpaCommitteeMemberImpl save() {
 		
 		assertReviewerOrOwner(submission.getSubmitter());
+		
+		boolean newObject = false;
+		if (id == null)
+			newObject = true;
+		
+		super.save();
+		
+		// Ignore the log message if the submission is in the initial state.
+		StateManager manager = Spring.getBeanOfType(StateManager.class);
+		if (manager.getInitialState() != submission.getState()) {
+				if (newObject) {
+					
+				// We're a new object so log the addition.
+				String entry = "Committee member '"+this.getFullName()+"'"+(this.isCommitteeChair() ? " as chair" : "")+" added";
+				submission.logAction(entry).save();
+	
+			} else {
+				
+				// We've been updated so log the change.
+				String entry = "Committee member '"+this.getFullName()+"'"+(this.isCommitteeChair() ? " as chair" : "")+" modified";
+				submission.logAction(entry).save();
+			}
+		}
 
-		return super.save();
+		
+		return this;
 	}
 	
 	@Override
@@ -85,7 +109,18 @@ public class JpaCommitteeMemberImpl extends JpaAbstractModel<JpaCommitteeMemberI
 		assertReviewerOrOwner(submission.getSubmitter());
 		
 		((JpaSubmissionImpl) submission).removeCommitteeMember(this);
-		return super.delete();
+
+		super.delete();
+		
+		// Ignore the log message if the submission is in the initial state.
+		StateManager manager = Spring.getBeanOfType(StateManager.class);
+		if (manager.getInitialState() != submission.getState()) {
+			
+			String entry = "Committee member '"+this.getFullName()+"'"+(this.isCommitteeChair() ? " as chair" : "")+" removed";
+			submission.logAction(entry).save();
+		}
+		
+		return this;
 	}
 	
     @Override
@@ -139,6 +174,15 @@ public class JpaCommitteeMemberImpl extends JpaAbstractModel<JpaCommitteeMemberI
 		
 		assertReviewerOrOwner(submission.getSubmitter());
 		this.middleInitial = middleInitial;
+	}
+	
+	@Override
+	public String getFullName() {
+		
+		if (middleInitial == null)
+			return firstName + " " + lastName;
+		else
+			return firstName + " " + middleInitial + " " + lastName;
 	}
 
 	@Override

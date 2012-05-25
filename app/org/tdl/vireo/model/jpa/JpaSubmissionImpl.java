@@ -2,6 +2,7 @@ package org.tdl.vireo.model.jpa;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -19,9 +20,11 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Cascade;
 import org.tdl.vireo.model.AbstractModel;
+import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.College;
@@ -36,6 +39,7 @@ import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.Major;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
 
@@ -44,8 +48,6 @@ import play.modules.spring.Spring;
 
 /**
  * JPA specific implementation of Vireo's Submission interface.
- * 
- * TODO: Create actionLog items when the submission is changed.
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
@@ -94,7 +96,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	public Integer graduationYear;
 	public Integer graduationMonth;
 
-	public String state;
+	public String stateName;
 
 	@OneToOne(targetEntity = JpaGraduationMonthImpl.class)
 	public Person assignee;
@@ -102,6 +104,9 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 
 	@OneToMany(targetEntity = JpaCustomActionValueImpl.class, mappedBy = "submission", cascade = CascadeType.ALL)
 	public List<CustomActionValue> customActions;
+	
+	@Transient
+	protected List<ActionLog> pendingLogs = new ArrayList<ActionLog>();
 
 	/**
 	 * Construct a new JpaSubmissionImpl
@@ -120,6 +125,9 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		this.attachments = new ArrayList<Attachment>();
 		this.committeeMembers = new ArrayList<CommitteeMember>();
 		this.customActions = new ArrayList<CustomActionValue>();
+		this.stateName = (Spring.getBeanOfType(StateManager.class).getInitialState()).getBeanName();
+		
+		generateLog("Submission created", true);
 	}
 
 	@Override
@@ -127,7 +135,14 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		
 		assertReviewerOrOwner(submitter);
 		
-		return super.save();
+		super.save();
+		
+		// After saving save all pending actionlogs
+		for(ActionLog log : pendingLogs)
+			log.save();
+		pendingLogs.clear();
+		
+		return this;
 	}
 	
 	@Override
@@ -141,6 +156,13 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		for (Attachment attachment : attachmentsCopy) {
 			attachment.delete();
 		}
+		
+		// Delete all action logs associated with this submission
+		em().createQuery(
+			"DELETE FROM JpaActionLogImpl " +
+					"WHERE Submission_Id = ? " 
+			).setParameter(1, this.getId())
+			.executeUpdate();
 
 		return super.delete();
 	}
@@ -160,6 +182,8 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		
 		assertReviewerOrOwner(submitter);
 		this.documentTitle = title;
+		
+		generateChangeLog("Document title", title, false);
 	}
 
 	@Override
@@ -172,6 +196,8 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		
 		assertReviewerOrOwner(submitter);
 		this.documentAbstract = docAbstract;
+		
+		generateChangeLog("Document abstract", docAbstract, false);
 	}
 
 	@Override
@@ -184,6 +210,8 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		
 		assertReviewerOrOwner(submitter);
 		this.documentKeywords = keywords;
+		
+		generateChangeLog("Document keywords", keywords, false);
 	}
 
 	@Override
@@ -196,6 +224,8 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		
 		assertReviewerOrOwner(submitter);
 		this.embargoType = embargo;
+		
+		generateChangeLog("Embargo type",embargo.getName(), false);
 	}
 
 	@Override
@@ -280,6 +310,8 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	public void setCommitteeContactEmail(String email) {
 		assertReviewerOrOwner(submitter);
 		this.committeeContactEmail = email;
+		
+		generateChangeLog("Committee contact email address", email, false);
 	}
 
 	@Override
@@ -291,6 +323,8 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	public void setCommitteeEmailHash(String hash) {
 		assertReviewerOrOwner(submitter);
 		this.committeeEmailHash = hash;
+		
+		generateLog("New committee email hash generated", false);
 	}
 
 	@Override
@@ -302,6 +336,11 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	public void setCommitteeApprovalDate(Date date) {
 		assertReviewerOrOwner(submitter);
 		this.committeeApprovalDate = date;
+		
+		if (date == null)
+			generateLog("Committee approval of submission cleared",false);
+		else
+			generateLog("Committee approval of submission set",false);
 	}
 
 	@Override
@@ -313,6 +352,11 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	public void setCommitteeEmbargoApprovalDate(Date date) {
 		assertReviewerOrOwner(submitter);
 		this.committeeEmbargoApprovalDate = date;
+		
+		if (date == null)
+			generateLog("Committee approval of embargo cleared",false);
+		else
+			generateLog("Committee approval of embargo set",false);
 	}
 
 	@Override
@@ -324,6 +368,8 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	public void setCommitteeDisposition(String disposition) {
 		assertReviewerOrOwner(submitter);
 		this.committeeDisposition = disposition;
+		
+		generateChangeLog("Committee disposition",disposition,false);
 	}
 
 	@Override
@@ -335,6 +381,11 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	public void setSubmissionDate(Date date) {
 		assertReviewerOrOwner(submitter);
 		this.submissionDate = date;
+		
+		if (date == null)
+			generateLog("Submission date cleared",true);
+		else
+			generateLog("Submission date set",true);
 	}
 
 	@Override
@@ -346,6 +397,11 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	public void setApprovalDate(Date date) {
 		assertReviewerOrOwner(submitter);
 		this.approvalDate = date;
+		
+		if (date == null)
+			generateLog("Submission approval cleared",true);
+		else
+			generateLog("Submission approval set",true);
 	}
 
 	@Override
@@ -357,6 +413,11 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	public void setLicenseAgreementDate(Date date) {
 		assertReviewerOrOwner(submitter);
 		this.licenseAgreementDate = date;
+		
+		if (date == null)
+			generateLog("Submission license agreement cleared",true);
+		else
+			generateLog("Submission license agreement set",true);
 	}
 
 	@Override
@@ -368,6 +429,8 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	public void setDegree(String degree) {
 		assertReviewerOrOwner(submitter);
 		this.degree = degree;
+		
+		generateChangeLog("Degree",degree,false);
 	}
 
 	@Override
@@ -379,6 +442,8 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	public void setDepartment(String department) {
 		assertReviewerOrOwner(submitter);
 		this.department = department;
+		
+		generateChangeLog("Department",department,false);
 	}
 
 	@Override
@@ -390,6 +455,8 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	public void setCollege(String college) {
 		assertReviewerOrOwner(submitter);
 		this.college = college;
+		
+		generateChangeLog("College",college,false);
 	}
 
 	@Override
@@ -401,17 +468,22 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	public void setMajor(String major) {
 		assertReviewerOrOwner(submitter);
 		this.major = major;
+		
+		generateChangeLog("Major",major,false);
 	}
 
 	@Override
 	public String getDocumentType() {
 		return documentType;
+		
 	}
 
 	@Override
 	public void setDocumentType(String documentType) {
 		assertReviewerOrOwner(submitter);
 		this.documentType = documentType;
+		
+		generateChangeLog("Document type",documentType,false);
 	}
 
 	@Override
@@ -423,6 +495,11 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	public void setGraduationYear(Integer year) {
 		assertReviewerOrOwner(submitter);
 		this.graduationYear = year;
+		
+		if (year == null)
+			generateChangeLog("Graduation year", null,false);
+		else
+			generateChangeLog("Graduation year", String.valueOf(year),false);
 	}
 
 	@Override
@@ -439,22 +516,29 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		assertReviewerOrOwner(submitter);
 		
 		this.graduationMonth = month;
+		
+		if (month == null)
+			generateChangeLog("Graduation month", null,false);
+		else
+			generateChangeLog("Graduation month", new DateFormatSymbols().getMonths()[month],false);
 	}
 
 	@Override
 	public State getState() {
-		return Spring.getBeanOfType(StateManager.class).getState(state);
+		return Spring.getBeanOfType(StateManager.class).getState(stateName);
 	}
 
 	@Override
 	public void setState(State state) {
 		
+		if (state == null)
+			throw new IllegalArgumentException("State is required");
+		
 		assertReviewer();
 		
-		if (state == null)
-			this.state = null;
-		else 
-			this.state = state.getBeanName();
+		this.stateName = state.getBeanName();
+		
+		generateChangeLog("Submission status",state.getDisplayName(),true);
 	}
 
 	@Override
@@ -468,6 +552,11 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		assertReviewer();
 		
 		this.assignee = assignee;
+		
+		if (assignee == null)
+			generateChangeLog("Assignee", null,true);
+		else
+			generateChangeLog("Assignee",assignee.getFullName(),true);
 	}
 
 	@Override
@@ -480,6 +569,13 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		
 		assertReviewerOrOwner(submitter);
 		this.UMIRelease = umiRelease;
+		
+		if (umiRelease == null)
+			generateLog("UMI Release cleared",false);
+		else if (umiRelease == true)
+			generateChangeLog("UMI Release","Yes",false);
+		else
+			generateChangeLog("UMI Release","No",false);
 	}
 
 	@Override
@@ -519,5 +615,94 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		customActions.add(customAction);
 		return customAction;
 	}
+	
+	
+	@Override
+	public ActionLog logAction(String entry) {
+		return logAction(entry, null);
+	}
+	
+	/**
+	 * Create an action log entry about this submission. This is method is not
+	 * included in the public interface at the present time. Maybe in the future
+	 * we will move it up there. This method operates exactly the same as the
+	 * "logAction" method, which is defined in the public interface, but accepts
+	 * an attachment object. The action log object generated will be associated
+	 * with the attachment object present.
+	 * 
+	 * @param entry
+	 *            The entry text to be saved, note " by User" will be appended
+	 *            to the end of this entry text recording who made the action.
+	 * @param attachment
+	 *            The attachment this action log item is associated with (may be
+	 *            null).
+	 * @return The unsaved action log object.
+	 */
+	public ActionLog logAction(String entry, Attachment attachment) {
+		
+		SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
+		
+		Person actor = context.getPerson();
+		String actorName = "an unknown user";
+		if (actor != null)
+			actorName = actor.getFullName();
+		
+		entry = entry + " by " + actorName;
+		
+		return new JpaActionLogImpl(this, this.getState(), actor, new Date(), attachment, entry, false);
+	}
+
+	/**
+	 * Internal method for generating log events.
+	 * 
+	 * This will create an ActionLog entry and append it to a list of pending
+	 * changes. Then when this object is saved() those logs will be persisted in
+	 * the database.
+	 * 
+	 * @param entry
+	 *            The log entry (note, "by User" will be appended to the end of
+	 *            the log entry)
+	 * @param always
+	 * 			  This log message should be generated no matter what state the submission is currently in.
+	 */
+	protected void generateLog(String entry, boolean always) {
+		
+		if (!always) {
+			// Ignore if the submission is in the initial state.
+			StateManager manager = Spring.getBeanOfType(StateManager.class);
+			if (manager.getInitialState() == this.getState())
+				return;
+		}
+		
+		pendingLogs.add(logAction(entry));
+	}
+	
+	/**
+	 * Internal method for generating log events.
+	 * 
+	 * This will create a preformatted action log entry for a field change. The
+	 * log will then be appended to the list of pending changes which will be
+	 * persisted when the submission object is saved.
+	 * 
+	 * @param fieldName
+	 *            The name of the field being updated.
+	 * @param newValue
+	 *            The new value of the field. (may be null)
+	 * @param always
+	 * 			  This log message should be generated no matter what state the submission is currently in.
+	 */
+	protected void generateChangeLog(String fieldName, String newValue, boolean always) {
+		String entry;
+		if (newValue == null)
+			entry = fieldName + " cleared";
+		else
+			entry = String.format(
+				"%s changed to '%s'",
+				fieldName,
+				newValue);
+		
+		generateLog(entry,always);
+	}
+	
 
 }

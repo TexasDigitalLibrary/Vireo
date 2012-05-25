@@ -1,16 +1,19 @@
 package org.tdl.vireo.model.jpa;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.CommitteeMember;
 import org.tdl.vireo.model.MockPerson;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.security.SecurityContext;
+import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
 import org.tdl.vireo.state.simple.StateManagerImpl;
 
@@ -27,6 +30,7 @@ public class JpaCommitteeMemberImplTests extends UnitTest {
 
 	// Persistence repositories
 	public static SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
+	public static StateManager stateManager = Spring.getBeanOfType(StateManager.class);
 	public static JpaPersonRepositoryImpl personRepo = Spring.getBeanOfType(JpaPersonRepositoryImpl.class);
 	public static JpaSubmissionRepositoryImpl subRepo = Spring.getBeanOfType(JpaSubmissionRepositoryImpl.class);
 	
@@ -113,6 +117,37 @@ public class JpaCommitteeMemberImplTests extends UnitTest {
 		CommitteeMember retrieved = subRepo.findCommitteeMember(member.getId());
 		
 		assertEquals(member.getId(), retrieved.getId());
+	}
+	
+	/**
+	 * Test that action logs are generated appropriately.
+	 */
+	@Test
+	public void testActionLogGeneration() {
+
+		State initialState = stateManager.getInitialState();
+		State nextState = initialState.getTransitions(sub).get(0);
+		sub.setState(nextState);
+		sub.save();
+		
+		CommitteeMember member = sub.addCommitteeMember("First", "Last", "Middle", true).save();
+		member.setFirstName("Changed");
+		member.setCommitteeChair(false);
+		member.save();
+		member.delete();
+		
+		List<ActionLog> logs = subRepo.findActionLog(sub);
+		Iterator<ActionLog> logItr = logs.iterator();
+		
+		sub.delete();
+		sub = null;
+		
+		assertEquals("Submission created by Mock Administrator",logItr.next().getEntry());
+		assertEquals("Submission status changed to 'Submitted' by Mock Administrator",logItr.next().getEntry());
+		assertEquals("Committee member 'First Middle Last' as chair added by Mock Administrator", logItr.next().getEntry());
+		assertEquals("Committee member 'Changed Middle Last' modified by Mock Administrator", logItr.next().getEntry());
+		assertEquals("Committee member 'Changed Middle Last' removed by Mock Administrator", logItr.next().getEntry());
+		assertFalse(logItr.hasNext());
 	}
 	
 	/**

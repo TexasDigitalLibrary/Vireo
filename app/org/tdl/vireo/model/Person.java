@@ -90,6 +90,12 @@ public interface Person extends AbstractModel {
 	public void setLastName(String lastName);
 
 	/**
+	 * @return Return the full name of this person composed of their first and
+	 *         last names.
+	 */
+	public String getFullName();
+	
+	/**
 	 * @return The preferred display name for the person.
 	 */
 	public String getDisplayName();

@@ -11,14 +11,14 @@ import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.state.StateManager;
 
 import play.data.validation.Required;
 import play.db.jpa.Model;
+import play.modules.spring.Spring;
 
 /**
  * Jpa specific implementation of Vireo's Custom Action Value interface.
- * 
- * TODO: Create actionLog items when the submission is changed.
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
@@ -66,8 +66,17 @@ public class JpaCustomActionValueImpl extends JpaAbstractModel<JpaCustomActionVa
 	public JpaCustomActionValueImpl save() {
 		
 		assertReviewerOrOwner(submission.getSubmitter());
-
-		return super.save();
+		
+		super.save();
+		
+		// Ignore the log message if the submission is in the initial state.
+		StateManager manager = Spring.getBeanOfType(StateManager.class);
+		if (manager.getInitialState() != submission.getState()) {
+			String entry = "Custom action "+definition.getLabel()+" " + (value ? "set" : "unset");
+			submission.logAction(entry).save();
+		}
+		
+		return this;
 	}
 	
 	@Override
@@ -76,6 +85,13 @@ public class JpaCustomActionValueImpl extends JpaAbstractModel<JpaCustomActionVa
 		assertReviewerOrOwner(submission.getSubmitter());
 
 		((JpaSubmissionImpl) submission).removeCustomAction(this);
+		
+		// Ignore log message if the submission is in the initial state.
+		StateManager manager = Spring.getBeanOfType(StateManager.class);
+		if (manager.getInitialState() != submission.getState()) {
+			String entry = "Custom action "+definition.getLabel()+" unset";
+			submission.logAction(entry).save();
+		}
 		
 		return super.delete();
 	}

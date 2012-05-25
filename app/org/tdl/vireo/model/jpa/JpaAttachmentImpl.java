@@ -12,6 +12,7 @@ import javax.persistence.Table;
 
 import org.apache.commons.io.FileUtils;
 import org.tdl.vireo.model.AbstractModel;
+import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.Submission;
@@ -23,8 +24,6 @@ import play.libs.MimeTypes;
 
 /**
  * Jpa specific implementation of Vireo's Attachment interface
- * 
- * TODO: Create actionLog items when the submission is changed.
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
@@ -89,10 +88,38 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 
 	@Override
 	public JpaAttachmentImpl save() {
-		
+
 		assertReviewerOrOwner(submission.getSubmitter());
 
-		return super.save();
+		boolean newObject = false;
+		if (id == null)
+			newObject = true;
+
+		super.save();
+
+		if (newObject) {
+			
+			// We're a new object so log the addition.
+			String entry = String.format(
+					"%s file '%s' (%s) uploaded", 
+					this.getType().name(), 
+					this.getName(), 
+					this.getDisplaySize()
+			);
+			((JpaSubmissionImpl) submission).logAction(entry,this).save();
+
+		} else {
+			
+			// We've been updated so log the change.
+			String entry = String.format(
+					"%s file '%s' modified",
+					this.getType().name(),
+					this.getName()
+			);
+			((JpaSubmissionImpl) submission).logAction(entry,this).save();
+		}
+
+		return this;
 	}
 	
 	@Override
@@ -102,10 +129,31 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 		
 		((JpaSubmissionImpl) submission).removeAttachment(this);
 		
+		
+		String displaySize = this.getDisplaySize();
 		if (this.data.exists())
 			this.data.getFile().delete();
+		
 
-		return super.delete();
+		// Scrub the actionlog of references to this file. The entries will
+		// still exist, but it won't have a foriegn key reference.
+		em().createQuery(
+				"UPDATE JpaActionLogImpl " +
+				"SET Attachment_Id = null " +
+				"WHERE Attachment_Id = ? " 
+				).setParameter(1, this.getId())
+				.executeUpdate();
+		
+		super.delete();
+		
+		String entry = String.format(
+				"%s file '%s' (%s) removed",
+				this.getType().name(),
+				this.getName(),
+				displaySize);
+		((JpaSubmissionImpl) submission).logAction(entry).save();
+		
+		return this;
 	}
 
 	@Override

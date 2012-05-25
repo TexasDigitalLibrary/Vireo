@@ -46,6 +46,12 @@ public interface CommitteeMember extends AbstractOrderedModel {
 	public void setMiddleInitial(String middleInitial);
 
 	/**
+	 * @return the full name (first, middle, and last names) of this committee
+	 *         member.
+	 */
+	public String getFullName();
+	
+	/**
 	 * @return True if this committee member is a chair or co-chair of the
 	 *         student's degree committee.
 	 */

@@ -316,6 +316,17 @@ public class JpaPersonImplTests extends UnitTest {
 		person.delete();
 	}
 	
+	/** 
+	 * Test the fullName method.
+	 */
+	@Test
+	public void testFullName() {
+		Person person = repo.createPerson("netid", "email@email.com", "First", "Last", RoleType.NONE);
+	
+		assertEquals("First Last", person.getFullName());
+		person.delete();
+	}
+	
 	/**
 	 * test that you can get/set all the parameters.
 	 */

@@ -386,4 +386,14 @@ public class MockSubmission extends AbstractMock implements Submission {
 		return action;
 	}
 
+	@Override
+	public ActionLog logAction(String entry) {
+		MockActionLog log = new MockActionLog();
+		log.entry = entry;
+		log.submission = this;
+		log.actionDate = new Date();
+		log.privateFlag = false;
+		return log;
+	}
+
 }

@@ -353,11 +353,24 @@ public interface Submission extends AbstractModel {
 
 	/**
 	 * Add a new custom action.
-	 * @param definition The custom action definition.
-	 * @param value The vaule of the custom action.
+	 * 
+	 * @param definition
+	 *            The custom action definition.
+	 * @param value
+	 *            The value of the custom action.
 	 * @return The newly created custom action value.
 	 */
 	public CustomActionValue addCustomAction(CustomActionDefinition definition,
 			Boolean value);
+	
+	/**
+	 * Create an action log entry about this submission.
+	 * 
+	 * @param entry
+	 *            The entry text to be saved, note " by User" will be appended
+	 *            to the end of this entry text recording who made the action.
+	 * @return The unsaved action log object.
+	 */
+	public ActionLog logAction(String entry);
 
 }

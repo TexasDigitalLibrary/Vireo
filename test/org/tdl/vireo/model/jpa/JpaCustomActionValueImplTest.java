@@ -1,11 +1,13 @@
 package org.tdl.vireo.model.jpa;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.CommitteeMember;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.CustomActionValue;
@@ -14,6 +16,8 @@ import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.security.SecurityContext;
+import org.tdl.vireo.state.State;
+import org.tdl.vireo.state.StateManager;
 
 import play.db.jpa.JPA;
 import play.modules.spring.Spring;
@@ -29,6 +33,7 @@ public class JpaCustomActionValueImplTest extends UnitTest {
 
 	// Persistence repositories
 	public static SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
+	public static StateManager stateManager = Spring.getBeanOfType(StateManager.class);
 	public static JpaPersonRepositoryImpl personRepo = Spring.getBeanOfType(JpaPersonRepositoryImpl.class);
 	public static JpaSubmissionRepositoryImpl subRepo = Spring.getBeanOfType(JpaSubmissionRepositoryImpl.class);
 	public static JpaSettingsRepositoryImpl settingRepo = Spring.getBeanOfType(JpaSettingsRepositoryImpl.class);
@@ -170,6 +175,37 @@ public class JpaCustomActionValueImplTest extends UnitTest {
 		
 		assertEquals(false,value.getValue());
 	}
+	
+	/**
+	 * Test that action logs are generated appropriately.
+	 */
+	@Test
+	public void testActionLogGeneration() {
+
+		State initialState = stateManager.getInitialState();
+		State nextState = initialState.getTransitions(sub).get(0);
+		sub.setState(nextState);
+		sub.save();
+		
+		CustomActionValue value = sub.addCustomAction(def, true).save();
+		value.setValue(false);
+		value.save();
+		value.delete();
+		
+		List<ActionLog> logs = subRepo.findActionLog(sub);
+		Iterator<ActionLog> logItr = logs.iterator();
+		
+		sub.delete();
+		sub = null;
+		
+		assertEquals("Submission created by Mock Administrator",logItr.next().getEntry());
+		assertEquals("Submission status changed to 'Submitted' by Mock Administrator",logItr.next().getEntry());
+		assertEquals("Custom action "+def.getLabel()+" set by Mock Administrator", logItr.next().getEntry());
+		assertEquals("Custom action "+def.getLabel()+" unset by Mock Administrator", logItr.next().getEntry());
+		assertEquals("Custom action "+def.getLabel()+" unset by Mock Administrator", logItr.next().getEntry());
+		assertFalse(logItr.hasNext());
+	}
+	
 	
 	/**
 	 * Test the persistence of values.

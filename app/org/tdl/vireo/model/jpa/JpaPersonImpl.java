@@ -199,6 +199,11 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 		
 		this.lastName = lastName;
 	}
+	
+	@Override
+	public String getFullName() {
+		return firstName + " " + lastName;
+	}
 
 	@Override
 	public String getDisplayName() {
