@@ -32,7 +32,11 @@ public class JpaConfigurationImplTest extends UnitTest {
 	
 	@After
 	public void cleanup() {
+		JPA.em().clear();
 		context.logout();
+		
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**
@@ -94,8 +98,10 @@ public class JpaConfigurationImplTest extends UnitTest {
 		} catch (RuntimeException re) {
 			/* yay */
 		}
-		JPA.em().clear();
-		settingRepo.findConfiguration(config.getId()).delete();
+		
+		// Recover the transaction after a failure.
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**
@@ -190,9 +196,9 @@ public class JpaConfigurationImplTest extends UnitTest {
 			/* yay */
 		}
 		
-		JPA.em().clear();
-		settingRepo.findConfiguration(test.getId()).delete();
-		settingRepo.findConfiguration(config.getId()).delete();
+		// Recover the transaction after a failure.
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**

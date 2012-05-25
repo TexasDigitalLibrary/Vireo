@@ -59,12 +59,16 @@ public class JpaAttachmentImplTest extends UnitTest {
 	 */
 	@After
 	public void cleanup() {
+		JPA.em().clear();
 		if (sub != null)
 			subRepo.findSubmission(sub.getId()).delete();
 		
 		if (person != null)
 			personRepo.findPerson(person.getId()).delete();
 		context.logout();
+		
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**
@@ -81,6 +85,7 @@ public class JpaAttachmentImplTest extends UnitTest {
 		assertEquals(file.getName(),attachment.getName());
 		assertEquals(AttachmentType.PRIMARY,attachment.getType());
 	
+		attachment.delete();
 		file.delete();
 	}
 	
@@ -148,6 +153,7 @@ public class JpaAttachmentImplTest extends UnitTest {
 		assertNotNull(attachment);
 		assertNotNull(attachment.getId());
 		
+		file.delete();
 	}
 	
 	/**
@@ -169,6 +175,8 @@ public class JpaAttachmentImplTest extends UnitTest {
 		String retrievedContent = FileUtils.readFileToString(retrieved.getFile());
 		
 		assertEquals(originalContent,retrievedContent);
+		
+		file.delete();
 		
 	}
 	
@@ -301,6 +309,8 @@ public class JpaAttachmentImplTest extends UnitTest {
 		} catch (IllegalArgumentException iae) {
 			/* yay */
 		}
+		
+		file.delete();
 	}
 	
 	/**
@@ -432,6 +442,8 @@ public class JpaAttachmentImplTest extends UnitTest {
 		assertEquals("SUPPLEMENTAL file 'newPDF.pdf' modified by Mock Administrator", logItr.next().getEntry());
 		assertEquals("SUPPLEMENTAL file 'newPDF.pdf' (10 bytes) removed by Mock Administrator", logItr.next().getEntry());
 		assertFalse(logItr.hasNext());
+		
+		file.delete();
 	}
 	
 	
@@ -508,6 +520,8 @@ public class JpaAttachmentImplTest extends UnitTest {
 		// Check the list of attachments
 		List<Attachment> attachments = sub.getAttachments();
 		assertEquals(0,attachments.size());
+		
+		file1.delete();
 	}
 	
 	/**

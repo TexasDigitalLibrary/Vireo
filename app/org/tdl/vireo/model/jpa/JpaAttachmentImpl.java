@@ -40,7 +40,6 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 	@Column(nullable = false)
 	public AttachmentType type;
 
-	@Column(nullable = false)
 	public Blob data;
 
 	/**

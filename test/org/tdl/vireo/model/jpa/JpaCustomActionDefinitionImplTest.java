@@ -36,7 +36,11 @@ public class JpaCustomActionDefinitionImplTest extends UnitTest {
 	
 	@After
 	public void cleanup() {
+		JPA.em().clear();
 		context.logout();
+		
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**
@@ -45,7 +49,7 @@ public class JpaCustomActionDefinitionImplTest extends UnitTest {
 	@Test
 	public void testCreate() {
 		
-		CustomActionDefinition def = settingRepo.createCustomActionDefinition("label");
+		CustomActionDefinition def = settingRepo.createCustomActionDefinition("label").save();
 		
 		assertNotNull(def);
 		assertEquals("label",def.getLabel());
@@ -87,8 +91,10 @@ public class JpaCustomActionDefinitionImplTest extends UnitTest {
 		} catch (RuntimeException re) {
 			/* yay */
 		}
-		JPA.em().clear();
-		settingRepo.findCustomActionDefinition(def.getId()).delete();
+		
+		// Recover the transaction after a failure.
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**
@@ -168,9 +174,9 @@ public class JpaCustomActionDefinitionImplTest extends UnitTest {
 			/* yay */
 		}
 		
-		JPA.em().clear();
-		settingRepo.findCustomActionDefinition(test.getId()).delete();
-		settingRepo.findCustomActionDefinition(def.getId()).delete();
+		// Recover the transaction after a failure.
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**

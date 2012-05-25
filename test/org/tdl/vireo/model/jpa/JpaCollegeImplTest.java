@@ -31,7 +31,11 @@ public class JpaCollegeImplTest extends UnitTest {
 	
 	@After
 	public void cleanup() {
+		JPA.em().clear();
 		context.logout();
+		
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**
@@ -74,7 +78,7 @@ public class JpaCollegeImplTest extends UnitTest {
 	@Test
 	public void testCreateDuplicate() {
 		
-		College college = settingRepo.createCollege("college").save();
+		settingRepo.createCollege("college").save();
 		
 		try {
 			settingRepo.createCollege("college").save();
@@ -82,8 +86,9 @@ public class JpaCollegeImplTest extends UnitTest {
 		} catch (RuntimeException re) {
 			/* yay */
 		}
-		JPA.em().clear();
-		settingRepo.findCollege(college.getId()).delete();
+		// Recover the transaction after a failure.
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**
@@ -163,9 +168,9 @@ public class JpaCollegeImplTest extends UnitTest {
 			/* yay */
 		}
 		
-		JPA.em().clear();
-		settingRepo.findCollege(test.getId()).delete();
-		settingRepo.findCollege(college.getId()).delete();
+		// Recover the transaction after a failure.
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**

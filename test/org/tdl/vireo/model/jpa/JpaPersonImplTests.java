@@ -33,7 +33,11 @@ public class JpaPersonImplTests extends UnitTest {
 	
 	@After
 	public void cleanup() {
+		JPA.em().clear();
 		context.logout();
+		
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
 	}
 	
 	
@@ -118,9 +122,7 @@ public class JpaPersonImplTests extends UnitTest {
 	 */
 	@Test
 	public void testCreateDuplicate() {
-		Person person = repo.createPerson("netid", "email@email.com", "first", "last", RoleType.NONE);
-		person.save();
-		long personId = person.getId();
+		repo.createPerson("netid", "email@email.com", "first", "last", RoleType.NONE).save();
 		
 		// Duplicate netid
 		try {
@@ -129,7 +131,11 @@ public class JpaPersonImplTests extends UnitTest {
 			// Some exception needs to be thrown either at creation time or at save() time.
 		} 
 		
-		JPA.em().clear();
+		// Recover the transaction after a failure.
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
+		
+		repo.createPerson("netid", "email@email.com", "first", "last", RoleType.NONE).save();
 		
 		// Duplicate email
 		try {
@@ -138,7 +144,9 @@ public class JpaPersonImplTests extends UnitTest {
 			// Some exception needs to be thrown either at creation time or at save() time.
 		} 
 		
-		repo.findPerson(personId).delete();
+		// Recover the transaction after a failure.
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**
@@ -383,8 +391,7 @@ public class JpaPersonImplTests extends UnitTest {
 	@Test
 	public void testChangeToDuplicate() {
 		
-		Person person = repo.createPerson("netid", "email@email.com", "first", "last", RoleType.NONE);
-		person.save();
+		repo.createPerson("netid", "email@email.com", "first", "last", RoleType.NONE).save();
 		
 		Person otherPerson = repo.createPerson("other", "other@email.com", "other", "other", RoleType.NONE);
 		otherPerson.save();
@@ -395,18 +402,24 @@ public class JpaPersonImplTests extends UnitTest {
 			fail("Able to create duplicate netids.");
 		} catch (RuntimeException re) { /* yay */ }
 		
-		JPA.em().clear();
+		// Recover the transaction after a failure.
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
+		
+		repo.createPerson("netid", "email@email.com", "first", "last", RoleType.NONE).save();
+		
+		otherPerson = repo.createPerson("other", "other@email.com", "other", "other", RoleType.NONE);
+		otherPerson.save();
 		
 		try {
-			otherPerson.setEmail("other@email.com");
+			otherPerson.setEmail("email@email.com");
 			otherPerson.save();
 			fail("Able to create duplicate emails.");
 		} catch (RuntimeException re) { /* yay */ }
 		
-		JPA.em().clear();
-		
-		repo.findPerson(person.getId()).delete();
-		repo.findPerson(otherPerson.getId()).delete();
+		// Recover the transaction after a failure.
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**
@@ -451,28 +464,6 @@ public class JpaPersonImplTests extends UnitTest {
 	
 	@Test
 	public void testAccess() {
-		
-//		Person person;
-//
-//		// Test that anyone is not able to create a reviewer.
-//		try {
-//			context.logout();
-//			person = repo.createPerson("netid", "email@email.com", "first", "last", RoleType.REVIEWER);
-//			person.save();
-//			fail("Anonymous was able to create a new reviewer.");
-//		} catch (SecurityException se) {
-//			/* yay */
-//		}
-//		
-//		// Test that a manager can not create an administrator
-//		context.login(MockPerson.getManager());
-//		try {
-//			person = repo.createPerson("netid", "email@email.com", "first", "last", RoleType.ADMINISTRATOR);
-//			person.save();
-//			fail("Manager was able to create a new administrator.");
-//		} catch (SecurityException se) {
-//			/* yay */
-//		}
 		
 		// Test that with authorizations turned off that we can create a new person object.
 		context.logout();

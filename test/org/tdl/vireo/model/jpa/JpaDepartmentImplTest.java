@@ -32,7 +32,11 @@ public class JpaDepartmentImplTest extends UnitTest {
 	
 	@After
 	public void cleanup() {
+		JPA.em().clear();
 		context.logout();
+		
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**
@@ -83,8 +87,10 @@ public class JpaDepartmentImplTest extends UnitTest {
 		} catch (RuntimeException re) {
 			/* yay */
 		}
-		JPA.em().clear();
-		settingRepo.findDepartment(department.getId()).delete();
+		
+		// Recover the transaction after a failure.
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**
@@ -164,9 +170,9 @@ public class JpaDepartmentImplTest extends UnitTest {
 			/* yay */
 		}
 
-		JPA.em().clear();
-		settingRepo.findDepartment(test.getId()).delete();
-		settingRepo.findDepartment(department.getId()).delete();
+		// Recover the transaction after a failure.
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**

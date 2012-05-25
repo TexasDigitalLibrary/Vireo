@@ -31,7 +31,11 @@ public class JpaGraduationMonthImplTest extends UnitTest {
 	
 	@After
 	public void cleanup() {
+		JPA.em().clear();
 		context.logout();
+		
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**
@@ -83,8 +87,10 @@ public class JpaGraduationMonthImplTest extends UnitTest {
 		} catch (RuntimeException re) {
 			/* yay */
 		}
-		JPA.em().clear();
-		settingRepo.findGraduationMonth(month.getId()).delete();
+		
+		// Recover the transaction after a failure.
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**
@@ -164,9 +170,9 @@ public class JpaGraduationMonthImplTest extends UnitTest {
 			/* yay */
 		}
 	
-		JPA.em().clear();
-		settingRepo.findGraduationMonth(test.getId()).delete();
-		settingRepo.findGraduationMonth(january.getId()).delete();
+		// Recover the transaction after a failure.
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**

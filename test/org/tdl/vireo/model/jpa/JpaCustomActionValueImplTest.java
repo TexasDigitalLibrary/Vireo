@@ -59,6 +59,7 @@ public class JpaCustomActionValueImplTest extends UnitTest {
 	 */
 	@After
 	public void cleanup() {
+		JPA.em().clear();
 		if (sub != null)
 			subRepo.findSubmission(sub.getId()).delete();
 		
@@ -69,6 +70,8 @@ public class JpaCustomActionValueImplTest extends UnitTest {
 			settingRepo.findCustomActionDefinition(def.getId()).delete();
 		
 		context.logout();
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**
@@ -112,8 +115,13 @@ public class JpaCustomActionValueImplTest extends UnitTest {
 			/* yay */
 		}
 		
-		JPA.em().clear();
+		sub = null;
+		person = null;
+		def = null;
 		
+		// Recover the transaction after a failure.
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**

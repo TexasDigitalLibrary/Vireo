@@ -58,9 +58,13 @@ public class JpaSubmissionImplTests extends UnitTest {
 	 */
 	@After
 	public void cleanup() {
+		JPA.em().clear();
 		if (person != null)
 			personRepo.findPerson(person.getId()).delete();
 		context.logout();
+		
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**
@@ -69,7 +73,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 	@Test
 	public void testCreateSubmission() {
 		
-		Submission sub = subRepo.createSubmission(person);
+		Submission sub = subRepo.createSubmission(person).save();
 
 		assertNotNull(sub);
 		assertEquals(person,sub.getSubmitter());
@@ -186,7 +190,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 	@Test
 	public void testGradMonth() {
 		
-		Submission sub = subRepo.createSubmission(person);
+		Submission sub = subRepo.createSubmission(person).save();
 		
 		sub.setGraduationMonth(0);
 		assertEquals(Integer.valueOf(0),sub.getGraduationMonth());
@@ -216,7 +220,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 	@Test
 	public void testEmailHash() {
 		
-		Submission sub1 = subRepo.createSubmission(person);
+		Submission sub1 = subRepo.createSubmission(person).save();
 		
 		sub1.setCommitteeEmailHash("hash");
 		assertEquals("hash",sub1.getCommitteeEmailHash());
@@ -232,10 +236,10 @@ public class JpaSubmissionImplTests extends UnitTest {
 			/* yay */
 		}
 		
-		JPA.em().clear();
-		
-		sub1 = subRepo.findSubmission(sub1.getId());
-		sub1.delete();
+		// Recover the transaction after a failure.
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
+		person = null;
 	}
 	
 	/**
@@ -459,11 +463,10 @@ public class JpaSubmissionImplTests extends UnitTest {
 		} catch (RuntimeException re) {
 			/* yay */
 		}
-
-		JPA.em().clear();
-
-		subRepo.findSubmission(sub.getId()).delete();
-		personRepo.findPerson(person.getId()).delete();
+		// Recover the transaction after a failure.
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
+		this.person = null;
 	}
 	
 	/**

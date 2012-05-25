@@ -32,7 +32,11 @@ public class JpaDegreeImplTest extends UnitTest {
 	
 	@After
 	public void cleanup() {
+		JPA.em().clear();
 		context.logout();
+		
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
 	}
 	
 	
@@ -92,8 +96,11 @@ public class JpaDegreeImplTest extends UnitTest {
 		} catch (RuntimeException re) {
 			/* yay */
 		}
-		JPA.em().clear();
-		settingRepo.findDegree(degree.getId()).delete();
+		
+		
+		// Recover the transaction after a failure.
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**
@@ -174,9 +181,9 @@ public class JpaDegreeImplTest extends UnitTest {
 			/* yay */
 		}
 		
-		JPA.em().clear();
-		settingRepo.findDegree(test.getId()).delete();
-		settingRepo.findDegree(degree.getId()).delete();
+		// Recover the transaction after a failure.
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**

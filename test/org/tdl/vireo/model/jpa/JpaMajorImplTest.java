@@ -31,7 +31,12 @@ public class JpaMajorImplTest extends UnitTest {
 	
 	@After
 	public void cleanup() {
+		JPA.em().clear();
 		context.logout();
+		
+		// Recover the transaction after a failure.
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**
@@ -82,8 +87,10 @@ public class JpaMajorImplTest extends UnitTest {
 		} catch (RuntimeException re) {
 			/* yay */
 		}
-		JPA.em().clear();
-		settingRepo.findMajor(major.getId()).delete();
+		
+		// Recover the transaction after a failure.
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**
@@ -163,9 +170,9 @@ public class JpaMajorImplTest extends UnitTest {
 			/* yay */
 		}
 		
-		JPA.em().clear();
-		settingRepo.findMajor(test.getId()).delete();
-		settingRepo.findMajor(major.getId()).delete();
+		// Recover the transaction after a failure.
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**

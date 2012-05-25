@@ -53,6 +53,7 @@ public class JpaCommitteeMemberImplTests extends UnitTest {
 	 */
 	@After
 	public void cleanup() {
+		JPA.em().clear();
 		if (sub != null)
 			subRepo.findSubmission(sub.getId()).delete();
 		
@@ -60,6 +61,9 @@ public class JpaCommitteeMemberImplTests extends UnitTest {
 			personRepo.findPerson(person.getId()).delete();
 		
 		context.logout();
+		
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**

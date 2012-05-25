@@ -34,7 +34,11 @@ public class JpaPreferenceImplTests extends UnitTest {
 	
 	@After
 	public void cleanup() {
+		JPA.em().clear();
 		context.logout();
+		
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**
@@ -99,9 +103,9 @@ public class JpaPreferenceImplTests extends UnitTest {
 			fail("able to create duplicate preferences");
 		} catch (RuntimeException re) { /* */ }
 		
-		JPA.em().clear();
-		person = repo.findPerson(person.getId());
-		person.delete();
+		// Recover the transaction after a failure.
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**
@@ -239,9 +243,9 @@ public class JpaPreferenceImplTests extends UnitTest {
 			fail("Able to create duplicate preference");
 		} catch (RuntimeException re) { /* */ }
 		
-		JPA.em().clear();
-		person = repo.findPerson(person.getId());
-		person.delete();
+		// Recover the transaction after a failure.
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**

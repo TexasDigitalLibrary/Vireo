@@ -31,7 +31,11 @@ public class JpaEmbargoTypeImplTest extends UnitTest {
 	
 	@After
 	public void cleanup() {
+		JPA.em().clear();
 		context.logout();
+		
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
 	}
 	
 	
@@ -106,8 +110,9 @@ public class JpaEmbargoTypeImplTest extends UnitTest {
 			/* yay */
 		}
 		
-		JPA.em().clear();
-		settingRepo.findEmbargoType(type.getId()).delete();
+		// Recover the transaction after a failure.
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**
@@ -208,9 +213,9 @@ public class JpaEmbargoTypeImplTest extends UnitTest {
 			/* yay */
 		}
 
-		JPA.em().clear();
-		settingRepo.findEmbargoType(test.getId()).delete();
-		settingRepo.findEmbargoType(type.getId()).delete();
+		// Recover the transaction after a failure.
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**
