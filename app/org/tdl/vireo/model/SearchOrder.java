@@ -38,7 +38,7 @@ public enum SearchOrder {
 	GRADUATION_MONTH,
 	GRADUATION_DATE,
 	
-	STATUS,
+	STATE,
 	
 	ASSGINEE,
 	

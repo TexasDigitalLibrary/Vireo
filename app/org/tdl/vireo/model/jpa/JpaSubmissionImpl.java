@@ -107,6 +107,10 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@OneToMany(targetEntity = JpaCustomActionValueImpl.class, mappedBy = "submission", cascade = CascadeType.ALL)
 	public List<CustomActionValue> customActions;
 	
+	// This is not publicly available, only present for queries.
+	@OneToMany(targetEntity = JpaActionLogImpl.class, mappedBy = "submission")
+	public List<ActionLog> actionLogs;
+	
 	@Transient
 	protected List<ActionLog> pendingLogs = new ArrayList<ActionLog>();
 
@@ -127,6 +131,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		this.attachments = new ArrayList<Attachment>();
 		this.committeeMembers = new ArrayList<CommitteeMember>();
 		this.customActions = new ArrayList<CustomActionValue>();
+		this.actionLogs = new ArrayList<ActionLog>();
 		this.stateName = (Spring.getBeanOfType(StateManager.class).getInitialState()).getBeanName();
 		
 		generateLog("Submission created", true);

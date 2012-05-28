@@ -1,6 +1,7 @@
 package org.tdl.vireo.model.jpa;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import javax.persistence.TypedQuery;
 
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Attachment;
+import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.CommitteeMember;
 import org.tdl.vireo.model.Configuration;
@@ -54,47 +56,50 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 		// 3) Custom Actions
 		// 4) Action Log Table for last event time.
 		
-		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.ID.ordinal()] = "sub.id";
-		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.SUBMITTER.ordinal()] = "sub.submitter.lastName, sub.submitter.firstName, sub.id";
+		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.ID.ordinal()] = "sub.id %";
+		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.SUBMITTER.ordinal()] = "submitter.lastName %, submitter.firstName %, sub.id %";
 		
-		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.DOCUMENT_TITLE.ordinal()] = "sub.documentTitle, sub.id";
-		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.DOCUMENT_ABSTRACT.ordinal()] = "sub.documentAbstract, sub.id";
-		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.DOCUMENT_KEYWORDS.ordinal()] = "sub.documentKeywords, sub.id";
+		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.DOCUMENT_TITLE.ordinal()] = "sub.documentTitle %, sub.id %";
+		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.DOCUMENT_ABSTRACT.ordinal()] = "sub.documentAbstract %, sub.id %";
+		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.DOCUMENT_KEYWORDS.ordinal()] = "sub.documentKeywords %, sub.id %";
 		
-		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.EMBARGO_TYPE.ordinal()] = "sub.embargoType_id, sub.id";
+		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.EMBARGO_TYPE.ordinal()] = "embargo.displayOrder %, sub.id %";
 		
-		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.PRIMARY_DOCUMENT.ordinal()] = null;
+		// Note: HQL does not support nulls first/last it depends upon the database implementation.
+		// https://hibernate.onjira.com/browse/HHH-465
+		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.PRIMARY_DOCUMENT.ordinal()] = "primary.name %, sub.id %";
 		
-		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.COMMITTEE_MEMBERS.ordinal()] = null;
-		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.COMMITTEE_CONTACT_EMAIL.ordinal()] = "sub.committeeContactEmail, sub.id";
-		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.COMMITTEE_APPROVAL_DATE.ordinal()] = "sub.committeeApprovalDate, sub.id";
-		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.COMMITTEE_EMBARGO_APPROVAL_DATE.ordinal()] = "sub.committeeEmbargoApprovalDate, sub.id";
-		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.COMMITTEE_DISPOSITION.ordinal()] = "sub.committeeDisposition, sub.id";
+		// Meh, sorts by the number of committee members? Probably not what people expect.
+		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.COMMITTEE_MEMBERS.ordinal()] = "COUNT(committees.id) %, sub.id %";
+		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.COMMITTEE_CONTACT_EMAIL.ordinal()] = "sub.committeeContactEmail %, sub.id %";
+		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.COMMITTEE_APPROVAL_DATE.ordinal()] = "sub.committeeApprovalDate %, sub.id %";
+		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.COMMITTEE_EMBARGO_APPROVAL_DATE.ordinal()] = "sub.committeeEmbargoApprovalDate %, sub.id %";
+		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.COMMITTEE_DISPOSITION.ordinal()] = "sub.committeeDisposition %, sub.id %";
 		
-		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.SUBMISSION_DATE.ordinal()] = "sub.submissionDate, sub.id";
-		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.APPROVAL_DATE.ordinal()] = "sub.approvalDate, sub.id";
-		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.LICENSE_AGREEMENT_DATE.ordinal()] = "sub.licenseAgreementDate, sub.id";
+		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.SUBMISSION_DATE.ordinal()] = "sub.submissionDate %, sub.id %";
+		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.APPROVAL_DATE.ordinal()] = "sub.approvalDate %, sub.id %";
+		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.LICENSE_AGREEMENT_DATE.ordinal()] = "sub.licenseAgreementDate %, sub.id %";
 		
-		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.DEGREE.ordinal()] = "sub.degree, sub.id";
-		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.DEPARTMENT.ordinal()] = "sub.department, sub.id";
-		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.COLLEGE.ordinal()] = "sub.college, sub.id";
-		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.MAJOR.ordinal()] = "sub.major, sub.id";
+		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.DEGREE.ordinal()] = "sub.degree %, sub.id %";
+		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.DEPARTMENT.ordinal()] = "sub.department %, sub.id %";
+		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.COLLEGE.ordinal()] = "sub.college %, sub.id %";
+		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.MAJOR.ordinal()] = "sub.major %, sub.id %";
 		
-		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.DOCUMENT_TYPE.ordinal()] = "sub.documentType, sub.id";
-		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.GRADUATION_YEAR.ordinal()] = "sub.graduationYear, sub.graduationMonth, sub.id";
-		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.GRADUATION_MONTH.ordinal()] = "sub.graduationMonth, sub.id";
-		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.GRADUATION_DATE.ordinal()] = "sub.graduationYear, sub.graduationMonth, sub.id";
+		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.DOCUMENT_TYPE.ordinal()] = "sub.documentType %, sub.id %";
+		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.GRADUATION_YEAR.ordinal()] = "sub.graduationYear %, sub.graduationMonth %, sub.id %";
+		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.GRADUATION_MONTH.ordinal()] = "sub.graduationMonth %, sub.id %";
+		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.GRADUATION_DATE.ordinal()] = "sub.graduationYear %, sub.graduationMonth %, sub.id %";
 		
-		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.STATUS.ordinal()] = "sub.stateName, sub.id";
+		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.STATE.ordinal()] = "sub.stateName %, sub.id %";
 		
-		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.ASSGINEE.ordinal()] = "sub.assignee_id, sub.id";
+		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.ASSGINEE.ordinal()] = "assignee.lastName %, assignee.firstName %, sub.id %";
 		
-		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.UMI_RELEASE.ordinal()] = "sub.umiRelease, sub.id";
+		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.UMI_RELEASE.ordinal()] = "sub.UMIRelease %, sub.id %";
 		
-		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.CUSTOM_ACTIONS.ordinal()] = null;
+		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.CUSTOM_ACTIONS.ordinal()] = "COUNT(actions.id) %, sub.id %";
 		
-		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.LAST_EVENT_ENTRY.ordinal()] = null;
-		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.LAST_EVENT_TIME.ordinal()] = null;
+		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.LAST_EVENT_ENTRY.ordinal()] = "MAX(logs.actionDate) %, sub.id %";
+		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.LAST_EVENT_TIME.ordinal()] = "MAX(logs.actionDate) %, sub.id %";
 	}
 	
 	
@@ -243,19 +248,41 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 			}
 		}
 		
-		// TODO: Add date range search filter.
+		// Date range Filter
+		if (filter.getDateRangeStart() != null && filter.getDateRangeEnd() != null) {
+			Date start = filter.getDateRangeStart();
+			Date end = filter.getDateRangeEnd();
+			
+			andList.add(new Statement("sub.submissionDate > :startDate"+paramIndex));
+			andList.add(new Statement("sub.submissionDate < :endDate"+(paramIndex+1)));
+			
+			params.put("startDate"+(paramIndex++), start);
+			params.put("endDate"+(paramIndex++), end);			
+		}
 		
 		StringBuilder queryText = new StringBuilder();
 		queryText.append("SELECT sub ");
 		queryText.append("FROM JpaSubmissionImpl AS sub ");
+		queryText.append("LEFT OUTER JOIN sub.submitter AS submitter ");
+		queryText.append("LEFT OUTER JOIN sub.assignee AS assignee ");
+		queryText.append("LEFT OUTER JOIN sub.embargoType AS embargo ");
+		queryText.append("LEFT OUTER JOIN sub.attachments AS primary WITH primary.type = :primaryDocument ");
+		queryText.append("LEFT OUTER JOIN sub.committeeMembers AS committees ");
+		queryText.append("LEFT OUTER JOIN sub.customActions AS actions ");
+		queryText.append("LEFT OUTER JOIN sub.actionLogs AS logs ");
+
+
+		params.put("primaryDocument", AttachmentType.PRIMARY);
 		queryText.append("WHERE ");
 		andList.buildClause(queryText);
 		queryText.append(" ");
-		queryText.append("ORDER BY "+SUBMISSION_ORDER_BY_COLUMNS[orderBy.ordinal()]);
+		queryText.append("GROUP BY sub ");
+		String orderByClause = SUBMISSION_ORDER_BY_COLUMNS[orderBy.ordinal()];
 		if (direction == SearchDirection.DESCENDING)
-			queryText.append(" DESC ");
+			orderByClause = orderByClause.replaceAll("%", "DESC");
 		else
-			queryText.append(" ASC ");
+			orderByClause = orderByClause.replaceAll("%", "ASC");
+		queryText.append("ORDER BY "+orderByClause);
 		
 		if (Logger.isDebugEnabled()) {
 			String message = "Filter '"+filter.getName()+"' query = '"+queryText.toString()+"'\n";
