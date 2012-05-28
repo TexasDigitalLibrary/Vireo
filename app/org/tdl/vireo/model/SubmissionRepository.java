@@ -68,9 +68,9 @@ public interface SubmissionRepository {
 	 *            What index to off set the list into.
 	 * @param limit
 	 *            How many submissions to returned.
-	 * @return The list of submissions.
+	 * @return The result containing the list of submissions.
 	 */
-	public List<Submission> filterSearchSubmissions(SearchFilter filter,
+	public SearchResult<Submission> filterSearchSubmissions(SearchFilter filter,
 			SearchOrder orderBy, SearchDirection direction, int offset,
 			int limit);
 
@@ -140,9 +140,9 @@ public interface SubmissionRepository {
 	 *            What index to off set the list into.
 	 * @param limit
 	 *            How many logs to returned.
-	 * @return The list of action logs.
+	 * @return The result object containing the list of action logs.
 	 */
-	public List<ActionLog> filterSearchActionLogs(SearchFilter filter,
+	public SearchResult<ActionLog> filterSearchActionLogs(SearchFilter filter,
 			SearchOrder orderBy, SearchDirection direction, int offset,
 			int limit);
 	

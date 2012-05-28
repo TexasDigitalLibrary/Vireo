@@ -9,6 +9,7 @@ import java.util.Set;
 
 import javax.persistence.TypedQuery;
 
+import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.AttachmentType;
@@ -31,6 +32,7 @@ import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.SearchDirection;
 import org.tdl.vireo.model.SearchFilter;
 import org.tdl.vireo.model.SearchOrder;
+import org.tdl.vireo.model.SearchResult;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.SubmissionRepository;
@@ -140,7 +142,7 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 	}
 	
 	@Override
-	public List<Submission> filterSearchSubmissions(SearchFilter filter,
+	public SearchResult<Submission> filterSearchSubmissions(SearchFilter filter,
 			SearchOrder orderBy, SearchDirection direction, int offset,
 			int limit) {
 		
@@ -303,13 +305,28 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 			Logger.debug(message);
 		}
 		
-		TypedQuery<JpaSubmissionImpl> query = JPA.em().createQuery(queryText.toString(), JpaSubmissionImpl.class);
-		query.setFirstResult(offset);
-		query.setMaxResults(limit);
+		TypedQuery<JpaSubmissionImpl> limittedQuery = JPA.em().createQuery(queryText.toString(), JpaSubmissionImpl.class);
+		limittedQuery.setFirstResult(offset);
+		limittedQuery.setMaxResults(limit);
 		for(String key : params.keySet()) 
-			query.setParameter(key, params.get(key));
+			limittedQuery.setParameter(key, params.get(key));
 		
-		return (List) query.getResultList();
+		
+		TypedQuery<JpaSubmissionImpl> fullQuery = JPA.em().createQuery(queryText.toString(), JpaSubmissionImpl.class);
+		for(String key : params.keySet()) 
+			fullQuery.setParameter(key, params.get(key));
+		
+		JpaSearchResultsImpl<Submission> result = 
+				new JpaSearchResultsImpl(
+						filter, 
+						direction, 
+						orderBy, 
+						offset, 
+						limit, 
+						(List) limittedQuery.getResultList(), 
+						fullQuery.getResultList().size());
+		
+		return result;
 	}
 
 	// //////////////////////////////////////////////////////////////
@@ -347,7 +364,7 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 	}
 
 	@Override
-	public List<ActionLog> filterSearchActionLogs(SearchFilter filter,
+	public SearchResult<ActionLog> filterSearchActionLogs(SearchFilter filter,
 			SearchOrder orderBy, SearchDirection direction, int offset,
 			int limit) {
 		// We will store all the supplied parameters in this map, which will be
@@ -499,13 +516,29 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 			Logger.debug(message);
 		}
 		
+		// Get limited query
+		TypedQuery<JpaActionLogImpl> limittedQuery = JPA.em().createQuery(queryText.toString(), JpaActionLogImpl.class);
+		limittedQuery.setFirstResult(offset);
+		limittedQuery.setMaxResults(limit);
+		for(String key : params.keySet()) 
+			limittedQuery.setParameter(key, params.get(key));
+		
+		// Get the total number of matched records.
 		TypedQuery<JpaActionLogImpl> query = JPA.em().createQuery(queryText.toString(), JpaActionLogImpl.class);
-		query.setFirstResult(offset);
-		query.setMaxResults(limit);
 		for(String key : params.keySet()) 
 			query.setParameter(key, params.get(key));
 		
-		return (List) query.getResultList();
+		JpaSearchResultsImpl<ActionLog> result = 
+				new JpaSearchResultsImpl(
+						filter, 
+						direction, 
+						orderBy, 
+						offset, 
+						limit, 
+						(List) limittedQuery.getResultList(), 
+						query.getResultList().size());
+		
+		return result;
 
 	}
 	
@@ -534,6 +567,64 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 	}
 	
 	
+	
+	public static class JpaSearchResultsImpl<T extends AbstractModel> implements SearchResult<T> {
+
+		public final SearchFilter filter;
+		public final SearchDirection direction;
+		public final SearchOrder orderBy;
+		public final int offset;
+		public final int limit;
+		public final List<T> results;
+		public final int total;
+		
+		public JpaSearchResultsImpl(SearchFilter filter, SearchDirection direction, SearchOrder orderBy, int offset, int limit, List<T> results, int total) {
+			this.filter = filter;
+			this.direction = direction;
+			this.orderBy = orderBy;
+			this.offset = offset;
+			this.limit = limit;
+			this.results = results;
+			this.total = total;
+		}
+		
+		
+		@Override
+		public SearchFilter getFilter() {
+			return filter;
+		}
+
+		@Override
+		public SearchDirection getDirection() {
+			return direction;
+		}
+
+		@Override
+		public SearchOrder getOrderBy() {
+			return orderBy;
+		}
+
+		@Override
+		public int getOffset() {
+			return offset;
+		}
+
+		@Override
+		public int getLimit() {
+			return limit;
+		}
+
+		@Override
+		public List<T> getResults() {
+			return results;
+		}
+
+		@Override
+		public int getTotal() {
+			return total;
+		}
+		
+	}
 	
 	
 	/**
