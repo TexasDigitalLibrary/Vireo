@@ -39,7 +39,7 @@ public class JpaSearchFilterImpl extends JpaAbstractModel<JpaSearchFilterImpl> i
 	public List<String> searchText;
 	
 	@ElementCollection
-	public List<String> statuses;
+	public List<String> states;
 	
 	@OneToMany(targetEntity=JpaPersonImpl.class)
 	public List<Person> assignees;
@@ -84,9 +84,9 @@ public class JpaSearchFilterImpl extends JpaAbstractModel<JpaSearchFilterImpl> i
 		
 		this.creator = creator;
 		this.name = name;
-		this.publicFlag = true;
+		this.publicFlag = false;
 		this.searchText = new ArrayList<String>();
-		this.statuses = new ArrayList<String>();
+		this.states = new ArrayList<String>();
 		this.assignees = new ArrayList<Person>();
 		this.graduationYears = new ArrayList<Integer>();
 		this.graduationMonths = new ArrayList<Integer>();
@@ -157,21 +157,21 @@ public class JpaSearchFilterImpl extends JpaAbstractModel<JpaSearchFilterImpl> i
 	}
 
 	@Override
-	public List<String> getStatus() {
-		return statuses;
+	public List<String> getStates() {
+		return states;
 	}
 
 	@Override
-	public void addStatus(String status) {
+	public void addState(String state) {
 		
 		assertManagerOrOwner(creator);
-		statuses.add(status);
+		states.add(state);
 	}
 
 	@Override
-	public void removeStatus(String status) {
+	public void removeState(String state) {
 		assertManagerOrOwner(creator);
-		statuses.remove(status);
+		states.remove(state);
 	}
 
 	@Override
@@ -244,7 +244,7 @@ public class JpaSearchFilterImpl extends JpaAbstractModel<JpaSearchFilterImpl> i
 	}
 
 	@Override
-	public List<String> getDepartment() {
+	public List<String> getDepartments() {
 		return departments;
 	}
 

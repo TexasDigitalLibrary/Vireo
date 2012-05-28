@@ -179,7 +179,7 @@ public interface SubmissionRepository {
 	 *            filters are returned.
 	 * @return The unordered list of search filters.
 	 */
-	public List<SearchFilter> findSearchFilterByCreatorOrPublic(Person creator);
+	public List<SearchFilter> findSearchFiltersByCreatorOrPublic(Person creator);
 
 	/**
 	 * Find all search filters regardless of who they owned by or whether they

@@ -9,8 +9,12 @@ import org.junit.Test;
 import org.tdl.vireo.model.MockPerson;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
+import org.tdl.vireo.model.SearchDirection;
 import org.tdl.vireo.model.SearchFilter;
+import org.tdl.vireo.model.SearchOrder;
+import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.security.SecurityContext;
+import org.tdl.vireo.state.StateManager;
 
 import play.db.jpa.JPA;
 import play.modules.spring.Spring;
@@ -25,6 +29,7 @@ public class JpaSearchFilterImplTest extends UnitTest {
 	
 	// Repositories
 	public static SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
+	public static StateManager stateManager = Spring.getBeanOfType(StateManager.class);
 	public static JpaPersonRepositoryImpl personRepo = Spring.getBeanOfType(JpaPersonRepositoryImpl.class);
 	public static JpaSubmissionRepositoryImpl subRepo = Spring.getBeanOfType(JpaSubmissionRepositoryImpl.class);
 	public static JpaSettingsRepositoryImpl settingRepo = Spring.getBeanOfType(JpaSettingsRepositoryImpl.class);
@@ -53,263 +58,204 @@ public class JpaSearchFilterImplTest extends UnitTest {
 		JPA.em().getTransaction().begin();
 	}
 	
+
+
+	
+
 	/**
-	 * Test creating a search filter
+	 * Okay, there is almost literally is an infinite number of search filters
+	 * that we could test. Instead of testing each combination I'm just going to
+	 * test the currently implemented clauses and then when we find bugs we'll
+	 * add individual tests for those bugs.
 	 */
 	@Test
-	public void testCreate() {
+	public void testSubmissionFilterSearch() {
+		Person otherPerson = personRepo.createPerson("other-netid", "other@email.com", "first", "last", RoleType.REVIEWER).save();
 		
-		SearchFilter filter = subRepo.createSearchFilter(person, "filter").save();
+		Submission sub1 = createSubmission("B Title", "This is really important work", "One; Two; Three;", 
+				"committee@email.com", "I approve this ETD", "degree", "department", "college", "major",
+				"documentType", 2002, 5, true);
+		sub1.setAssignee(otherPerson);
+		sub1.save();
+		Submission sub2 = createSubmission("A Title", "I really like this work", "One; Four; Five;", 
+				"anotherCommittee@email.com", "I reject this ETD", "another", "another", "another", "another",
+				"another", 2003, 6, null).save();
 		
-		assertNotNull(filter);
-		assertEquals("filter",filter.getName());
 		
+		// Search Text Filter
+		SearchFilter filter = subRepo.createSearchFilter(person, "test1");
+		filter.addSearchText("I really%this work");
+		filter.save();
+		
+		List<Submission> submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10);
+		
+		assertEquals(sub2.getId(),submissions.get(0).getId());
+		assertEquals(1,submissions.size());
 		filter.delete();
-	}
-	
-	/**
-	 * Test filters without required parameters
-	 */
-	@Test
-	public void testBadCreate() {
-		try {
-			subRepo.createSearchFilter(null, "filter");
-			fail("Able to create search without an owner.");
-		} catch (IllegalArgumentException iae) {
-			/* yay */
-		}
 		
-		try {
-			subRepo.createSearchFilter(person, null);
-			fail("Able to create search filter with null name.");
-		} catch (IllegalArgumentException iae) {
-			/* yay */
-		}
+		// State Filter
+		filter = subRepo.createSearchFilter(person, "test2");
+		filter.addState(stateManager.getInitialState().getBeanName());
+		filter.save();
 		
-		try {
-			subRepo.createSearchFilter(person, "");
-			fail("Able to create search filter with blank name.");
-		} catch (IllegalArgumentException iae) {
-			/* yay */
-		}
-	}
-	
-	/**
-	 * Test creating a duplicate filter
-	 */
-	@Test
-	public void testCreateDuplicate() {
+		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10);
 		
-		SearchFilter filter = subRepo.createSearchFilter(person, "filter").save();
-		
-		try {
-			subRepo.createSearchFilter(person, "filter").save();
-			fail("Able to create duplicate search filter");
-		} catch (RuntimeException re) {
-			/* yay */
-		}
-		// Recover the transaction after a failure.
-		JPA.em().getTransaction().rollback();
-		JPA.em().getTransaction().begin();
-		person = null;
-	}
-	
-	/**
-	 * Test the id.
-	 */
-	@Test
-	public void testId() {
-		
-		SearchFilter filter = subRepo.createSearchFilter(person, "filter").save();
-		
-		assertNotNull(filter.getId());
-		
+		assertEquals(sub1.getId(),submissions.get(0).getId());
+		assertEquals(sub2.getId(),submissions.get(1).getId());
+		assertEquals(2,submissions.size());
 		filter.delete();
-	}
-	
-	/**
-	 * Test retrieval by id.
-	 */
-	@Test
-	public void testFindById() {
-		SearchFilter filter = subRepo.createSearchFilter(person, "filter").save();
-
-		SearchFilter retrieved = subRepo.findSearchFilter(filter.getId());
 		
-		assertEquals(filter.getName(), retrieved.getName());
-		
-		retrieved.delete();
-	}
-	
-	/**
-	 * Test retrieving all filters
-	 */
-	@Test
-	public void testFindAllFilters() {
-
-		int initialSize = subRepo.findAllSearchFilters().size();
-		
-		SearchFilter filter1 = subRepo.createSearchFilter(person, "filter1").save();
-		SearchFilter filter2 = subRepo.createSearchFilter(person, "filter2").save();
-
-		int postSize = subRepo.findAllSearchFilters().size();
-		
-		assertEquals(initialSize +2, postSize);
-		
-		filter1.delete();
-		filter2.delete();
-	}
-	
-	/**
-	 * Test the validation when modifying the name
-	 */
-	@Test 
-	public void testNameValidation() {
-		SearchFilter filter = subRepo.createSearchFilter(person, "filter").save();
-		SearchFilter test = subRepo.createSearchFilter(person, "test").save();
-		
-		try {
-			test.setName(null);
-			fail("Able to change name to null");
-		} catch (IllegalArgumentException iae) {
-			/* yay */
-		}
-		
-		try {
-			test.setName("");
-			fail("Able to change name to blank");
-		} catch (IllegalArgumentException iae) {
-			/* yay */
-		}
-		
-		try {
-			test.setName("filter");
-			test.save();
-			fail("Able to modify object into duplicate.");
-		} catch(RuntimeException re) {
-			/* yay */
-		}
-		
-		// Recover the transaction after a failure.
-		JPA.em().getTransaction().rollback();
-		JPA.em().getTransaction().begin();
-		person = null;
-	}
-
-	/**
-	 * Test that the filter search is persistence.
-	 * 
-	 * Okay, I admit it I went overboard on this test. I've never used the @ElementCollection
-	 * annotation before so I wanted to make doubly sure that it works the way I
-	 * think it does.
-	 */
-	@Test
-	public void testPersistance() {
-		Person otherPerson = personRepo.createPerson("other-netid", "other@email.com", "first", "last", RoleType.NONE).save();
-
-		SearchFilter filter = subRepo.createSearchFilter(person, "filter").save();
-		filter.setPublic(false);
-		filter.addSearchText("text1");
-		filter.addSearchText("text2");
-		filter.addStatus("status1");
-		filter.addStatus("status2");
-		filter.addAssignee(person);
+		// Assignee Filter
+		filter = subRepo.createSearchFilter(person, "test3");
 		filter.addAssignee(otherPerson);
+		filter.save();
+		
+		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10);
+		
+		assertEquals(sub1.getId(),submissions.get(0).getId());
+		assertEquals(1,submissions.size());
+		filter.delete();
+		
+		// Graduation Year Filter
+		filter = subRepo.createSearchFilter(person, "test4");
 		filter.addGraduationYear(2002);
 		filter.addGraduationYear(2003);
-		filter.addGraduationMonth(0);
-		filter.addGraduationMonth(11);
-		filter.addDegree("degree1");
-		filter.addDegree("degree2");
-		filter.addDepartment("dept1");
-		filter.addDepartment("dept2");
-		filter.addCollege("college1");
-		filter.addCollege("college2");
-		filter.addMajor("major1");
-		filter.addMajor("major2");
-		filter.addDocumentType("docType1");
-		filter.addDocumentType("docType2");
-		filter.setUMIRelease(true);
-		filter.setDateRange(new Date(), new Date());
+		filter.save();
+		
+		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10);
+		
+		assertEquals(sub1.getId(),submissions.get(0).getId());
+		assertEquals(sub2.getId(),submissions.get(1).getId());
+		assertEquals(2,submissions.size());
+		filter.delete();
+		
+		// Graduation Month Filter
+		filter = subRepo.createSearchFilter(person, "test5");
+		filter.addGraduationMonth(5);
 		filter.save();
 
-		// Commit and reopen a new transaction.
-		JPA.em().getTransaction().commit();
-		JPA.em().clear();
-		JPA.em().getTransaction().begin();
+		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10);
 		
-		SearchFilter retrieved = subRepo.findSearchFilter(filter.getId());
+		assertEquals(sub1.getId(),submissions.get(0).getId());
+		assertEquals(1,submissions.size());
+		filter.delete();
 		
-		//assertFalse(retrieved.isPublic());
-		assertTrue(retrieved.getSearchText().contains("text1"));
-		assertTrue(retrieved.getSearchText().contains("text2"));
-		assertFalse(retrieved.getSearchText().contains("text3"));
-		assertTrue(retrieved.getStatus().contains("status1"));
-		assertTrue(retrieved.getStatus().contains("status2"));
-		assertFalse(retrieved.getStatus().contains("status3"));
-		assertTrue(retrieved.getAssignees().contains(person));
-		assertTrue(retrieved.getAssignees().contains(otherPerson));
-		assertTrue(retrieved.getGraduationYears().contains(2002));
-		assertTrue(retrieved.getGraduationYears().contains(2003));
-		assertFalse(retrieved.getGraduationYears().contains(2004));
-		assertTrue(retrieved.getGraduationMonths().contains(0));
-		assertTrue(retrieved.getGraduationMonths().contains(11));
-		assertFalse(retrieved.getGraduationMonths().contains(5));
-		assertTrue(retrieved.getDegrees().contains("degree1"));
-		assertTrue(retrieved.getDegrees().contains("degree2"));
-		assertFalse(retrieved.getDegrees().contains("degree3"));
-		assertTrue(retrieved.getDepartment().contains("dept1"));
-		assertTrue(retrieved.getDepartment().contains("dept2"));
-		assertFalse(retrieved.getDepartment().contains("dept3"));
-		assertTrue(retrieved.getColleges().contains("college1"));
-		assertTrue(retrieved.getColleges().contains("college2"));
-		assertFalse(retrieved.getColleges().contains("college3"));
-		assertTrue(retrieved.getMajors().contains("major1"));
-		assertTrue(retrieved.getMajors().contains("major2"));
-		assertFalse(retrieved.getMajors().contains("major3"));
-		assertTrue(retrieved.getDocumentTypes().contains("docType1"));
-		assertTrue(retrieved.getDocumentTypes().contains("docType2"));
-		assertFalse(retrieved.getDocumentTypes().contains("docType3"));
-		assertTrue(retrieved.getUMIRelease());
-		assertNotNull(retrieved.getDateRangeStart());
-		assertNotNull(retrieved.getDateRangeEnd());
 		
-		retrieved.delete();
-		personRepo.findPerson(otherPerson.getId()).delete();
-		personRepo.findPerson(person.getId()).delete();
-		person = null;
+		// Degree Filter
+		filter = subRepo.createSearchFilter(person, "test6");
+		filter.addDegree("degree");
+		filter.save();
+
+		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10);
 		
-		// Commit and reopen a new transaction.
-		JPA.em().getTransaction().commit();
-		JPA.em().clear();
-		JPA.em().getTransaction().begin();
+		assertEquals(sub1.getId(),submissions.get(0).getId());
+		assertEquals(1,submissions.size());
+		filter.delete();
+		
+		// Department Filter
+		filter = subRepo.createSearchFilter(person, "test7");
+		filter.addDepartment("department");
+		filter.save();
+
+		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10);
+		
+		assertEquals(sub1.getId(),submissions.get(0).getId());
+		assertEquals(1,submissions.size());
+		filter.delete();
+		
+		
+		// College Filter
+		filter = subRepo.createSearchFilter(person, "test8");
+		filter.addCollege("college");
+		filter.save();
+
+		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10);
+		
+		assertEquals(sub1.getId(),submissions.get(0).getId());
+		assertEquals(1,submissions.size());
+		filter.delete();
+		
+		// Major Filter
+		filter = subRepo.createSearchFilter(person, "test9");
+		filter.addMajor("major");
+		filter.save();
+
+		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10);
+		
+		assertEquals(sub1.getId(),submissions.get(0).getId());
+		assertEquals(1,submissions.size());
+		filter.delete();
+		
+		// Document Type Filter
+		filter = subRepo.createSearchFilter(person, "test10");
+		filter.addDocumentType("documentType");
+		filter.save();
+
+		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10);
+		
+		assertEquals(sub1.getId(),submissions.get(0).getId());
+		assertEquals(1,submissions.size());
+		filter.delete();
+		
+		// UMI Release Filter
+		filter = subRepo.createSearchFilter(person, "test11");
+		filter.setUMIRelease(true);
+		filter.save();
+
+		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10);
+		
+		assertEquals(sub1.getId(),submissions.get(0).getId());
+		assertEquals(1,submissions.size());
+		filter.delete();
+		
+		// Test a different sort order.
+		filter = subRepo.createSearchFilter(person, "test12");
+		filter.addSearchText("Title"); // should match both titles
+		filter.save();
+		
+		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.DOCUMENT_TITLE, SearchDirection.DESCENDING, 0, 10);
+		
+		assertEquals(sub2.getId(),submissions.get(0).getId());
+		assertEquals(sub1.getId(),submissions.get(1).getId());
+
+		assertEquals(2,submissions.size());
+		filter.delete();
+		
+		sub1.delete();
+		sub2.delete();
+		otherPerson.delete();
 	}
 	
 	/**
-	 * Test that managers can make filters public, others can't
+	 * A short cut method for creating a submission.
 	 */
-	@Test
-	public void testAccess() {
+	private Submission createSubmission(String title, String docAbstract,
+			String keywords, String committeeEmail,
+			String committeeDisposition, String degree, String department,
+			String college, String major, String documentType,
+			Integer gradYear, Integer gradMonth, Boolean UMIRelease) {
+	
+		Submission sub = subRepo.createSubmission(person);
 		
-		context.login(MockPerson.getManager());
-		SearchFilter filter = subRepo.createSearchFilter(person, "filter").save();
-		filter.setPublic(true);
-		filter.save();
-		filter.delete();
+		sub.setDocumentTitle(title);
+		sub.setDocumentAbstract(docAbstract);
+		sub.setDocumentKeywords(keywords);
+		sub.setCommitteeContactEmail(committeeEmail);
+		sub.setCommitteeApprovalDate(new Date());
+		sub.setCommitteeDisposition(committeeDisposition);
+		sub.setDegree(degree);
+		sub.setDepartment(department);
+		sub.setCollege(college);
+		sub.setMajor(major);
+		sub.setDocumentType(documentType);
+		sub.setGraduationYear(gradYear);
+		sub.setGraduationMonth(gradMonth);
+		sub.setUMIRelease(UMIRelease);
 		
-		try {
-			context.login(MockPerson.getReviewer());
-			SearchFilter other = subRepo.createSearchFilter(person, "other").save();
-			other.setPublic(true);
-			other.save();
-			fail("A reviewer was able to make a filter public");
-		} catch (SecurityException se) {
-			/* yay */
-		}
-		
-		JPA.em().getTransaction().rollback();
-		JPA.em().getTransaction().begin();
-		context.logout();
+		return sub;
 	}
+	
+	
+	
 	
 }

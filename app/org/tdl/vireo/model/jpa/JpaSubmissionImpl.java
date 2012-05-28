@@ -55,7 +55,7 @@ import play.modules.spring.Spring;
 @Table(name = "Submission")
 public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> implements Submission {
 
-	@OneToOne(optional = false, targetEntity = JpaPersonImpl.class)
+	@ManyToOne(optional = false, targetEntity = JpaPersonImpl.class)
 	public Person submitter;
 
 	public String documentTitle;
@@ -72,6 +72,8 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@OrderBy("displayOrder")
 	public List<CommitteeMember> committeeMembers;
 	public String committeeContactEmail;
+	
+	@Column(unique = true)
 	public String committeeEmailHash;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -98,7 +100,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 
 	public String stateName;
 
-	@OneToOne(targetEntity = JpaGraduationMonthImpl.class)
+	@OneToOne(targetEntity = JpaPersonImpl.class)
 	public Person assignee;
 	public Boolean UMIRelease;
 

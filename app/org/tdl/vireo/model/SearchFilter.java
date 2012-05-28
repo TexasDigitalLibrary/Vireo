@@ -3,6 +3,8 @@ package org.tdl.vireo.model;
 import java.util.Date;
 import java.util.List;
 
+import org.tdl.vireo.state.State;
+
 /**
  * A filter search is a set of parameters to search for a set of Vireo
  * submission. The object is used by the SubmissionRepository to filter the set
@@ -60,19 +62,19 @@ public interface SearchFilter extends AbstractModel {
 	/**
 	 * @return The list of all submission states to search for.
 	 */
-	public List<String> getStatus();
+	public List<String> getStates();
 
 	/**
 	 * @param status
-	 *            The new status to add to the filter.
+	 *            The new state to add to the filter.
 	 */
-	public void addStatus(String status);
+	public void addState(String state);
 
 	/**
 	 * @param status
-	 *            Remove the status from the filter.
+	 *            Remove the state from the filter.
 	 */
-	public void removeStatus(String status);
+	public void removeState(String state);
 
 	/**
 	 * @return The list of assignees to filter for.
@@ -145,7 +147,7 @@ public interface SearchFilter extends AbstractModel {
 	/**
 	 * @return The list of departments.
 	 */
-	public List<String> getDepartment();
+	public List<String> getDepartments();
 
 	/**
 	 * @param department
