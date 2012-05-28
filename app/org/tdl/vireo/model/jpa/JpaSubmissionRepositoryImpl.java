@@ -48,6 +48,8 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 	
 	// Define sorting syntax for individual fields.
 	public static final String[] SUBMISSION_ORDER_BY_COLUMNS = new String[SearchOrder.values().length];
+	public static final String[] ACTION_LOG_ORDER_BY_COLUMNS = new String[SearchOrder.values().length];
+
 	{
 		// Static block to define sorting columns.
 		// TODO: Pull in the following tables to support sorting by others types:
@@ -100,6 +102,15 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 		
 		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.LAST_EVENT_ENTRY.ordinal()] = "MAX(logs.actionDate) %, sub.id %";
 		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.LAST_EVENT_TIME.ordinal()] = "MAX(logs.actionDate) %, sub.id %";
+		
+		// Copy everything over to the action log order.
+		for( int i = 0 ; i <SUBMISSION_ORDER_BY_COLUMNS.length; i++) {
+			ACTION_LOG_ORDER_BY_COLUMNS[i] = SUBMISSION_ORDER_BY_COLUMNS[i].replaceAll(" sub.id ", " log.id ");
+		}
+		// And then make a few exceptions.
+		ACTION_LOG_ORDER_BY_COLUMNS[SearchOrder.ID.ordinal()] = "log.id %";
+		ACTION_LOG_ORDER_BY_COLUMNS[SearchOrder.LAST_EVENT_ENTRY.ordinal()] = "log.actionDate %, sub.id %";
+		ACTION_LOG_ORDER_BY_COLUMNS[SearchOrder.LAST_EVENT_TIME.ordinal()] = "log.actionDate %, sub.id %";
 	}
 	
 	
@@ -339,8 +350,163 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 	public List<ActionLog> filterSearchActionLogs(SearchFilter filter,
 			SearchOrder orderBy, SearchDirection direction, int offset,
 			int limit) {
-		// TODO Implement this method.
-		return null;
+		// We will store all the supplied parameters in this map, which will be
+		// added to the query near the end. This prevents SQL injection attacks
+		// and makes the query execute quicker in some circumstances. Each
+		// paramater will be labeled based upon how it is being used, i.e.
+		// searchText, degree, college, etc. But then will have a unique id
+		// appended to the in to the end to make sure that all names are
+		// globally unique across the entire query.
+		int paramIndex = 1;
+		Map<String, Object> params = new HashMap<String, Object>();
+		
+		// The query consists of a set of AND clauses, containing possibly a set
+		// of OR clauses. Each of these are stored in these ANDList / ORList
+		// data structure defined at static inner classes here. They just make
+		// it easy to manipulate the query string so we don't have to manually
+		// place AND or ORs everywhere with proper spacing and scoping.
+		
+		// Search Text Filter
+		ANDList andList = new ANDList();
+		ORList orList = new ORList();
+		for(String searchText : filter.getSearchText()) {	
+			orList.add(new Statement("log.entry LIKE :searchText"+paramIndex));
+			params.put("searchText"+(paramIndex++), "%"+searchText+"%");
+		}
+		andList.add(orList);
+		
+		// Status Filter
+		orList = new ORList();
+		for(String stateName : filter.getStates()) {
+			orList.add(new Statement("log.submissionState = :stateName"+paramIndex));
+			params.put("stateName"+(paramIndex++), stateName);
+		}
+		andList.add(orList);
+		
+		// Assignee Filter
+		orList = new ORList();
+		for(Person assignee : filter.getAssignees()) {
+			orList.add(new Statement("log.person = :assignee"+paramIndex));
+			params.put("assignee"+(paramIndex++), assignee);
+		}
+		andList.add(orList);
+		
+		// Graduation Years Filter
+		orList = new ORList();
+		for(Integer year : filter.getGraduationYears()) {
+			orList.add(new Statement("sub.graduationYear = :graduationYear"+paramIndex));
+			params.put("graduationYear"+(paramIndex++), year);
+		}
+		andList.add(orList);
+		
+		// Graduation Months Filter
+		orList = new ORList();
+		for(Integer month : filter.getGraduationMonths()) {
+			orList.add(new Statement("sub.graduationMonth = :graduationMonth"+paramIndex));
+			params.put("graduationMonth"+(paramIndex++), month);
+		}
+		andList.add(orList);
+		
+		// Degree Filter
+		orList = new ORList();
+		for(String degree : filter.getDegrees()) {
+			orList.add(new Statement("sub.degree = :degree"+paramIndex));
+			params.put("degree"+(paramIndex++), degree);
+		}
+		andList.add(orList);
+		
+		// Department Filter
+		orList = new ORList();
+		for(String department : filter.getDepartments()) {
+			orList.add(new Statement("sub.department = :department"+paramIndex));
+			params.put("department"+(paramIndex++), department);
+		}
+		andList.add(orList);
+		
+		// College Filter
+		orList = new ORList();
+		for(String college : filter.getColleges()) {
+			orList.add(new Statement("sub.college = :college"+paramIndex));
+			params.put("college"+(paramIndex++), college);
+		}
+		andList.add(orList);
+		
+		// Major Filter
+		orList = new ORList();
+		for(String major : filter.getMajors()) {
+			orList.add(new Statement("sub.major = :major"+paramIndex));
+			params.put("major"+(paramIndex++), major);
+		}
+		andList.add(orList);
+		
+		// Document Type Filter
+		orList = new ORList();
+		for(String docType : filter.getDocumentTypes()) {
+			orList.add(new Statement("sub.documentType = :docType"+paramIndex));
+			params.put("docType"+(paramIndex++), docType);
+		}
+		andList.add(orList);
+		
+		// UMI release
+		if (filter.getUMIRelease() != null) {
+			
+			if (filter.getUMIRelease()) {
+				andList.add(new Statement("umiRelease = true"));
+			} else {
+				andList.add(new Statement("umiRelease = false"));
+			}
+		}
+		
+		// Date range Filter
+		if (filter.getDateRangeStart() != null && filter.getDateRangeEnd() != null) {
+			Date start = filter.getDateRangeStart();
+			Date end = filter.getDateRangeEnd();
+			
+			andList.add(new Statement("sub.submissionDate > :startDate"+paramIndex));
+			andList.add(new Statement("sub.submissionDate < :endDate"+(paramIndex+1)));
+			
+			params.put("startDate"+(paramIndex++), start);
+			params.put("endDate"+(paramIndex++), end);			
+		}
+		
+		StringBuilder queryText = new StringBuilder();
+		queryText.append("SELECT log ");
+		queryText.append("FROM JpaActionLogImpl AS log ");
+		queryText.append("LEFT OUTER JOIN log.submission AS sub ");
+		queryText.append("LEFT OUTER JOIN sub.submitter AS submitter ");
+		queryText.append("LEFT OUTER JOIN sub.assignee AS assignee ");
+		queryText.append("LEFT OUTER JOIN sub.embargoType AS embargo ");
+		queryText.append("LEFT OUTER JOIN sub.attachments AS primary WITH primary.type = :primaryDocument ");
+		queryText.append("LEFT OUTER JOIN sub.committeeMembers AS committees ");
+		queryText.append("LEFT OUTER JOIN sub.customActions AS actions ");
+		params.put("primaryDocument", AttachmentType.PRIMARY);
+		queryText.append("WHERE ");
+		andList.buildClause(queryText);
+		queryText.append(" ");
+		queryText.append("GROUP BY log ");
+		String orderByClause = ACTION_LOG_ORDER_BY_COLUMNS[orderBy.ordinal()];
+		if (direction == SearchDirection.DESCENDING)
+			orderByClause = orderByClause.replaceAll("%", "DESC");
+		else
+			orderByClause = orderByClause.replaceAll("%", "ASC");
+		queryText.append("ORDER BY "+orderByClause);
+		
+		if (Logger.isDebugEnabled()) {
+			String message = "Filter '"+filter.getName()+"' query = '"+queryText.toString()+"'\n";
+			for(String key : params.keySet()) {
+				message += "   ':"+key+"' = '"+params.get(key)+"'\n";
+			}
+			Logger.debug(message);
+		}
+		
+		TypedQuery<JpaActionLogImpl> query = JPA.em().createQuery(queryText.toString(), JpaActionLogImpl.class);
+		query.setFirstResult(offset);
+		query.setMaxResults(limit);
+		for(String key : params.keySet()) 
+			query.setParameter(key, params.get(key));
+		
+		return (List) query.getResultList();
+
 	}
 	
 	// //////////////////

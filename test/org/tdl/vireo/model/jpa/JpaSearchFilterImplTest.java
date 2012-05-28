@@ -9,6 +9,7 @@ import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.DegreeLevel;
@@ -779,6 +780,166 @@ public class JpaSearchFilterImplTest extends UnitTest {
 		otherPerson.delete();
 		
 	}
+	
+	/**
+	 * Creating searching for action logs.
+	 */
+	@Test
+	public void testActionLogFilterSearch() {
+		
+		Person otherPerson = personRepo.createPerson("other-netid", "other@email.com", "first", "last", RoleType.ADMINISTRATOR).save();
+		context.login(otherPerson);
+		
+		Submission sub1 = subRepo.createSubmission(person);
+		createSubmission(sub1, "B Title", "This is really important work", "One; Two; Three;", 
+				"committee@email.com", "I approve this ETD", "degree", "department", "college", "major",
+				"documentType", 2002, 5, true);
+		sub1.setAssignee(otherPerson);
+		sub1.setSubmissionDate(new Date(2012,5,1));
+		sub1.save();
+		
+		Submission sub2 = subRepo.createSubmission(person);
+		createSubmission(sub2, "A Title", "I really like this work", "One; Four; Five;", 
+				"anotherCommittee@email.com", "I reject this ETD", "another", "another", "another", "another",
+				"another", 2003, 6, null);
+		sub2.setSubmissionDate(new Date(2005,5,1));
+		sub2.save();
+		
+		
+		List<ActionLog> logs;
+		SearchFilter filter;
+		
+		// Search Text Filter
+		filter = subRepo.createSearchFilter(otherPerson, "test1");
+		filter.addSearchText("created");
+		filter.save();
+		
+		logs = subRepo.filterSearchActionLogs(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10);
+		
+		assertEquals(sub1,logs.get(0).getSubmission());
+		assertEquals("Submission created by first last", logs.get(0).getEntry());
+		filter.delete();
+		
+		// State Filter
+		filter = subRepo.createSearchFilter(otherPerson, "test2");
+		filter.addState(stateManager.getInitialState().getBeanName());
+		filter.save();
+		
+		logs = subRepo.filterSearchActionLogs(filter, SearchOrder.ID, SearchDirection.DESCENDING, 0, 10);
+		
+		assertEquals(sub2,logs.get(0).getSubmission());
+		assertEquals("Submission date set by first last", logs.get(0).getEntry());
+		filter.delete();
+		
+		// Assignee Filter
+		filter = subRepo.createSearchFilter(person, "test3");
+		filter.addAssignee(otherPerson);
+		filter.save();
+		
+		logs = subRepo.filterSearchActionLogs(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10);
+		
+		assertEquals(sub1,logs.get(0).getSubmission());
+		assertEquals("Submission created by first last", logs.get(0).getEntry());
+		filter.delete();
+		
+		// Graduation Year Filter
+		filter = subRepo.createSearchFilter(person, "test4");
+		filter.addGraduationYear(2002);
+		filter.addGraduationYear(2003);
+		filter.save();
+		
+		logs = subRepo.filterSearchActionLogs(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10);
+		
+		assertEquals(sub1.getId(),logs.get(0).getSubmission().getId());
+		filter.delete();
+		
+		// Graduation Month Filter
+		filter = subRepo.createSearchFilter(person, "test5");
+		filter.addGraduationMonth(5);
+		filter.save();
+
+		logs = subRepo.filterSearchActionLogs(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10);
+		
+		assertEquals(sub1.getId(),logs.get(0).getSubmission().getId());
+		filter.delete();
+		
+		
+		// Degree Filter
+		filter = subRepo.createSearchFilter(person, "test6");
+		filter.addDegree("degree");
+		filter.save();
+
+		logs = subRepo.filterSearchActionLogs(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10);
+		
+		assertEquals(sub1.getId(),logs.get(0).getSubmission().getId());
+		filter.delete();
+		
+		// Department Filter
+		filter = subRepo.createSearchFilter(person, "test7");
+		filter.addDepartment("department");
+		filter.save();
+
+		logs = subRepo.filterSearchActionLogs(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10);
+		
+		assertEquals(sub1.getId(),logs.get(0).getSubmission().getId());
+		filter.delete();
+		
+		
+		// College Filter
+		filter = subRepo.createSearchFilter(person, "test8");
+		filter.addCollege("college");
+		filter.save();
+
+		logs = subRepo.filterSearchActionLogs(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10);
+		
+		assertEquals(sub1.getId(),logs.get(0).getSubmission().getId());
+		filter.delete();
+		
+		// Major Filter
+		filter = subRepo.createSearchFilter(person, "test9");
+		filter.addMajor("major");
+		filter.save();
+
+		logs = subRepo.filterSearchActionLogs(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10);
+		
+		assertEquals(sub1.getId(),logs.get(0).getSubmission().getId());
+		filter.delete();
+		
+		// Document Type Filter
+		filter = subRepo.createSearchFilter(person, "test10");
+		filter.addDocumentType("documentType");
+		filter.save();
+
+		logs = subRepo.filterSearchActionLogs(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10);
+		
+		assertEquals(sub1.getId(),logs.get(0).getSubmission().getId());
+		filter.delete();
+		
+		// UMI Release Filter
+		filter = subRepo.createSearchFilter(person, "test11");
+		filter.setUMIRelease(true);
+		filter.save();
+
+		logs = subRepo.filterSearchActionLogs(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10);
+		
+		assertEquals(sub1.getId(),logs.get(0).getSubmission().getId());
+		filter.delete();
+		
+		// Date Range Filter
+		filter = subRepo.createSearchFilter(person, "test12");
+		filter.setDateRange(new Date(2000,1,1), new Date(2006,1,1));
+		filter.save();
+
+		logs = subRepo.filterSearchActionLogs(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10);
+		
+		assertEquals(sub2.getId(),logs.get(0).getSubmission().getId());
+		filter.delete();
+		
+		sub1.delete();
+		sub2.delete();
+		otherPerson.delete();
+	}
+	
 	
 	
 	
