@@ -15,7 +15,7 @@ import play.db.jpa.Model;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 @Entity
-@Table(name = "EmailTemplate")
+@Table(name = "email_template")
 public class JpaEmailTemplateImpl extends JpaAbstractModel<JpaEmailTemplateImpl> implements EmailTemplate {
 
 	@Column(nullable = false)

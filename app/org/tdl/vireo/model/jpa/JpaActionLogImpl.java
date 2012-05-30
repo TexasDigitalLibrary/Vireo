@@ -32,7 +32,7 @@ import play.modules.spring.Spring;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 @Entity
-@Table(name = "ActionLog")
+@Table(name = "actionlog")
 public class JpaActionLogImpl extends JpaAbstractModel<JpaActionLogImpl> implements ActionLog {
 
 	@ManyToOne(targetEntity=JpaSubmissionImpl.class, optional = false)

@@ -534,7 +534,7 @@ public class JpaSearchFilterImplTest extends UnitTest {
 	public void testSubmissionFilterSearchOrdering() throws IOException {
 		
 		// Setup some other objects to be used, like embargo types, other people, file attachments.
-		Person otherPerson = personRepo.createPerson("nother-netid", "other@email.com", "ZZZZZ", "ZZZZZ", RoleType.REVIEWER).save();
+		Person otherPerson = personRepo.createPerson("another-netid", "other@email.com", "zzzz", "zzzz", RoleType.REVIEWER).save();
 		EmbargoType e1 = settingRepo.createEmbargoType("Embargo One", "one", null, true);
 		e1.setDisplayOrder(100);
 		e1.save();
@@ -604,8 +604,9 @@ public class JpaSearchFilterImplTest extends UnitTest {
 		
 		// Submitter
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.SUBMITTER, SearchDirection.ASCENDING, 0, 10).getResults();
-		assertEquals(sub2.getId(),submissions.get(0).getId());
-		assertEquals(sub1.getId(),submissions.get(1).getId());
+
+		assertEquals(sub1.getId(),submissions.get(0).getId());
+		assertEquals(sub2.getId(),submissions.get(1).getId());
 		assertEquals(2,submissions.size());
 		
 		// Document Title

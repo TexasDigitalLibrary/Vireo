@@ -18,7 +18,7 @@ import play.db.jpa.Model;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 @Entity
-@Table(name = "DocumentType",
+@Table(name = "document_type",
        uniqueConstraints = { @UniqueConstraint( columnNames = { "name", "level" } ) } )
 public class JpaDocumentTypeImpl extends JpaAbstractModel<JpaDocumentTypeImpl> implements DocumentType {
 

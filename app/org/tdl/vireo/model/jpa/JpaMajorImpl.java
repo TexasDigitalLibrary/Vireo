@@ -15,7 +15,7 @@ import play.db.jpa.Model;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 @Entity
-@Table(name = "Major")
+@Table(name = "major")
 public class JpaMajorImpl extends JpaAbstractModel<JpaMajorImpl> implements Major {
 
 	@Column(nullable = false)

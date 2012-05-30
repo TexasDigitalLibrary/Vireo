@@ -21,7 +21,7 @@ import play.modules.spring.Spring;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 @Entity
-@Table(name = "CommitteeMember")
+@Table(name = "committee_member")
 public class JpaCommitteeMemberImpl extends JpaAbstractModel<JpaCommitteeMemberImpl> implements CommitteeMember {
 
 	@Column(nullable = false)

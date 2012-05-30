@@ -17,7 +17,7 @@ import play.db.jpa.Model;
  * 
  */
 @Entity
-@Table(name = "Department")
+@Table(name = "department")
 public class JpaDepartmentImpl extends JpaAbstractModel<JpaDepartmentImpl> implements Department {
 
 	@Column(nullable = false)

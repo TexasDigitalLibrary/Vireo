@@ -19,7 +19,7 @@ import play.db.jpa.Model;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 @Entity
-@Table(name = "Preference",
+@Table(name = "preference",
 		uniqueConstraints = { @UniqueConstraint( columnNames = { "person_id", "name" } ) } )
 public class JpaPreferenceImpl extends JpaAbstractModel<JpaPreferenceImpl> implements Preference {
 

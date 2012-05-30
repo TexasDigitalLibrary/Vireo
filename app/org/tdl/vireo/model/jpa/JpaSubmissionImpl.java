@@ -52,7 +52,7 @@ import play.modules.spring.Spring;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 @Entity
-@Table(name = "Submission")
+@Table(name = "submission")
 public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> implements Submission {
 
 	@ManyToOne(optional = false, targetEntity = JpaPersonImpl.class)
@@ -145,10 +145,11 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		super.save();
 		
 		// After saving save all pending actionlogs
-		for(ActionLog log : pendingLogs)
+		for(ActionLog log : pendingLogs) {
 			log.save();
+		}
 		pendingLogs.clear();
-		
+				
 		return this;
 	}
 	

@@ -28,7 +28,7 @@ import play.libs.MimeTypes;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 @Entity
-@Table(name = "Attachment")
+@Table(name = "attachment")
 public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> implements Attachment {
 
 	@ManyToOne(targetEntity=JpaSubmissionImpl.class, optional=false)

@@ -26,7 +26,7 @@ import play.db.jpa.Model;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 @Entity
-@Table(name = "Person")
+@Table(name = "person")
 public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Person {
 
 	@Column(nullable = false, unique = true)

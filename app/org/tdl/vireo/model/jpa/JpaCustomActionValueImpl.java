@@ -23,7 +23,7 @@ import play.modules.spring.Spring;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 @Entity
-@Table(name = "CustomActionValue",
+@Table(name = "custom_action_value",
 	   uniqueConstraints = { @UniqueConstraint( columnNames = { "submission_id", "definition_id" } ) } )
 public class JpaCustomActionValueImpl extends JpaAbstractModel<JpaCustomActionValueImpl> implements
 		CustomActionValue {

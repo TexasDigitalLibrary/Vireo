@@ -16,7 +16,7 @@ import play.db.jpa.Model;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 @Entity
-@Table(name = "CustomActionDefinition")
+@Table(name = "custom_action_definition")
 public class JpaCustomActionDefinitionImpl extends JpaAbstractModel<JpaCustomActionDefinitionImpl> implements
 		CustomActionDefinition {
 

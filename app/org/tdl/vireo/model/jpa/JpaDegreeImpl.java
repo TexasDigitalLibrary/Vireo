@@ -18,7 +18,7 @@ import play.db.jpa.Model;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 @Entity
-@Table(name = "Degree",
+@Table(name = "degree",
        uniqueConstraints = { @UniqueConstraint( columnNames = { "name", "level" } ) } )
 public class JpaDegreeImpl extends JpaAbstractModel<JpaDegreeImpl> implements Degree {
 

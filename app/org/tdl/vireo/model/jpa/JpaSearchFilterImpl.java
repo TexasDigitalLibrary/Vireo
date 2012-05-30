@@ -24,7 +24,7 @@ import org.tdl.vireo.model.SearchFilter;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 @Entity
-@Table(name = "SearchFilter")
+@Table(name = "search_filter")
 public class JpaSearchFilterImpl extends JpaAbstractModel<JpaSearchFilterImpl> implements SearchFilter{
 	
 	@ManyToOne(targetEntity=JpaPersonImpl.class, optional=false)

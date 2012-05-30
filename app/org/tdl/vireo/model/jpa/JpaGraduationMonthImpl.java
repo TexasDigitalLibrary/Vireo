@@ -18,7 +18,7 @@ import play.db.jpa.Model;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 @Entity
-@Table(name = "GraduationMonth")
+@Table(name = "graduation_month")
 public class JpaGraduationMonthImpl extends JpaAbstractModel<JpaGraduationMonthImpl> implements GraduationMonth {
 
 	@Column(nullable = false)
