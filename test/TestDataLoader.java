@@ -9,6 +9,7 @@ import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.SettingsRepository;
+import org.tdl.vireo.security.SecurityContext;
 
 import play.Logger;
 import play.db.jpa.JPA;
@@ -16,18 +17,19 @@ import play.jobs.*;
 import play.modules.spring.Spring;
 
 /**
+ * When running in a test environment pre-load some configuration and test data
+ * just to make things easier.
+ * 
  * 
  * @author Micah Cooper
- *
+ * 
  */
-
 @OnApplicationStart
 public class TestDataLoader extends Job {
 
 	/**
 	 * Initial Persons to create
 	 */
-	
 	private static final PersonsArray[] PERSONS_DEFINITIONS = {
 		new PersonsArray("000000001", "bthornton@gmail.com", "Billy", "Thornton", RoleType.ADMINISTRATOR),
 		new PersonsArray("000000002", "mdriver@gmail.com", "Minnie", "Driver", RoleType.MANAGER),
@@ -292,7 +294,7 @@ public class TestDataLoader extends Job {
 	 */
 	
 	private static final int[] GRAD_MONTHS_DEFINITIONS = {
-		5, 8, 12
+		4, 7, 11 // 0 = january, 11 = december
 	};	
 		
 	/**
@@ -304,40 +306,49 @@ public class TestDataLoader extends Job {
 	public void doJob() {
 		try {
 			
+		
+			SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
 			PersonRepository personRepo = Spring.getBeanOfType(PersonRepository.class);
 			SettingsRepository settingsRepo = Spring.getBeanOfType(SettingsRepository.class);
 			
-			// Create all persons
-			for(PersonsArray personDefinition : PERSONS_DEFINITIONS) {
-				personRepo.createPerson(personDefinition.netId, personDefinition.email, personDefinition.firstName, personDefinition.lastName, personDefinition.role).save();
-			}			
-			
-			for(String collegeDefinition : COLLEGES_DEFINITIONS) {
-				settingsRepo.createCollege(collegeDefinition).save();
+			// Turn off authorizations.
+			context.turnOffAuthorization(); 
+			try {
+				
+				// Create all persons
+				for(PersonsArray personDefinition : PERSONS_DEFINITIONS) {
+					personRepo.createPerson(personDefinition.netId, personDefinition.email, personDefinition.firstName, personDefinition.lastName, personDefinition.role).save();
+				}			
+				
+				for(String collegeDefinition : COLLEGES_DEFINITIONS) {
+					settingsRepo.createCollege(collegeDefinition).save();
+				}
+				
+				for(String departmentDefinition : DEPARTMENTS_DEFINITIONS) {
+					settingsRepo.createDepartment(departmentDefinition).save();
+				}
+				
+				for(String majorDefinition : MAJORS_DEFINITIONS) {
+					settingsRepo.createMajor(majorDefinition).save();
+				}
+				
+				for(DegreeLevelArray degreeDefinition : DEGREES_DEFINITIONS) {
+					settingsRepo.createDegree(degreeDefinition.name, degreeDefinition.degreeLevel).save();
+				}
+				
+				for(DegreeLevelArray docTypeDefinition : DOCTYPES_DEFINITIONS) {
+					settingsRepo.createDocumentType(docTypeDefinition.name, docTypeDefinition.degreeLevel).save();
+				}
+				
+				for(int gradMonthDefinition : GRAD_MONTHS_DEFINITIONS) {
+					settingsRepo.createGraduationMonth(gradMonthDefinition).save();
+				}
+				
+				// Save the database state
+				JPA.em().flush();
+			} finally {
+				context.restoreAuthorization();
 			}
-			
-			for(String departmentDefinition : DEPARTMENTS_DEFINITIONS) {
-				settingsRepo.createDepartment(departmentDefinition).save();
-			}
-			
-			for(String majorDefinition : MAJORS_DEFINITIONS) {
-				settingsRepo.createMajor(majorDefinition).save();
-			}
-			
-			for(DegreeLevelArray degreeDefinition : DEGREES_DEFINITIONS) {
-				settingsRepo.createDegree(degreeDefinition.name, degreeDefinition.degreeLevel).save();
-			}
-			
-			for(DegreeLevelArray docTypeDefinition : DOCTYPES_DEFINITIONS) {
-				settingsRepo.createDocumentType(docTypeDefinition.name, docTypeDefinition.degreeLevel).save();
-			}
-			
-			for(int gradMonthDefinition : GRAD_MONTHS_DEFINITIONS) {
-				settingsRepo.createGraduationMonth(gradMonthDefinition).save();
-			}
-			
-			// Save the database state
-			JPA.em().flush();
 			
 		} catch (Exception e) {Logger.error(e, "Unable to load test data.");}
 	}
