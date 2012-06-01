@@ -26,5 +26,16 @@
         <property name="personRepository" ref="PersonRepository"/>
         <property name="securityContext" ref="SecurityContext"/>
 	</bean>
+	
+	<bean id="PasswordAuthentication2" class="org.tdl.vireo.security.PasswordAuthenticationMethodImpl" scope="singleton">
+        <property name="enabled" value="true"/>
+        <property name="displayName" value="Something else"/>
+        <property name="displayDescription" value="Users &lt;em&gt;who&lt;/em&gt; are not able to use the other &lt;a href=&quot;http://github.com/&quot;/&gt;options&lt;/a&gt; should default to this authentication option."/>
+        <property name="allowNewRegistration" value="true"/>
+        <property name="allowUpdatePassword" value="true"/>
+        <property name="allowUpdateProfile" value="true"/>
+        <property name="personRepository" ref="PersonRepository"/>
+        <property name="securityContext" ref="SecurityContext"/>
+    </bean>
 
 </beans>

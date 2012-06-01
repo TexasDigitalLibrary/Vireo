@@ -1,0 +1,14 @@
+#{extends 'main.html' /}
+#{set title:'${method.getDisplayName()} Authentication Failure' /}
+
+<h1>${method.getDisplayName()} Authentication Failure</h1>
+
+#{if AuthenticationResult.MISSING_CREDENTIALS == result }
+<p>Your Identity Provider was unable to provide any credentials about you. Because of this we are unable to log you into Vireo. Please contact your system administrator for more assistance.</p>
+#{/if}
+#{elseif AuthenticationResult.BAD_CREDENTIALS == result }
+<p>You ale not authorized to access this service. If you please this is in correct, please contact your system administrator for more assistance.</p>
+#{/elseif}
+#{else}
+<p>Unfortunately authentication failed for an unknown reason. </p>
+#{/elseif}

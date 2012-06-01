@@ -1,0 +1,13 @@
+#{extends 'main.html' /}
+#{set title:'Select an Authentication Method' /}
+
+
+<h1>Please select an authentication method</h1>
+<ul>
+#{list items:enabledMethods, as:'method'}
+    <li>
+        <a href="@@{Authentication.loginMethod(method.getBeanName())}">${method.getDisplayName()}</a>
+        <p>#{verbatim}${method.getDisplayDescription()}#{/verbatim}</p>
+    </li>
+#{/list}
+</ul>

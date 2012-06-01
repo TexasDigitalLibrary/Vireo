@@ -4,11 +4,21 @@
 
 # Home page
 GET     /                                       Application.index
+*       /login                                  Authentication.loginList
+*       /login/{methodName}                     Authentication.loginMethod
+*       /login/{methodName}/return              Authentication.loginReturn
+
+
+
+
+*       /logout                                 Authentication.logout
+*       /register                               Authentication.register
+*       /profile                                Authentication.profile
+
 POST    /submitIndex                            Application.submitIndex
 POST    /submitLicense                          Application.submitLicense 
 POST    /submitDocInfo                          Application.submitDocInfo 
 POST    /submitFileUpload                       Application.submitFileUpload 
-GET     /shibboleth-login              			Application.dump 
 GET     /vireoAdmin		              			Application.vireoAdmin 
 GET     /settings		              			Application.settings 
 POST    /settings/vireo/admin/settings			Application.postSettings
@@ -20,4 +30,4 @@ GET     /favicon.ico                            404
 GET     /public/                                staticDir:public
 
 # Catch all
-*       /{controller}/{action}                  {controller}.{action}
+#*       /{controller}/{action}                  {controller}.{action}

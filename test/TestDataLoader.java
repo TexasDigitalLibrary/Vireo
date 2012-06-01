@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 
 import org.tdl.vireo.model.Degree;
 import org.tdl.vireo.model.DegreeLevel;
+import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.SettingsRepository;
@@ -31,12 +32,12 @@ public class TestDataLoader extends Job {
 	 * Initial Persons to create
 	 */
 	private static final PersonsArray[] PERSONS_DEFINITIONS = {
-		new PersonsArray("000000001", "bthornton@gmail.com", "Billy", "Thornton", RoleType.ADMINISTRATOR),
-		new PersonsArray("000000002", "mdriver@gmail.com", "Minnie", "Driver", RoleType.MANAGER),
-		new PersonsArray("000000003", "jdimaggio@gmail.com", "John", "Di Maggio", RoleType.REVIEWER),
-		new PersonsArray("000000004", "cdanes@gmail.com", "Claire", "Danes", RoleType.STUDENT),
-		new PersonsArray("000000005", "bcrudup@gmail.com", "Billy", "Crudup", RoleType.STUDENT),
-		new PersonsArray("000000006", "ganderson@gmail.com", "Gillian", "Anderson", RoleType.STUDENT)
+		new PersonsArray("000000001", "bthornton@gmail.com", "Billy", "Thornton", "password",  RoleType.ADMINISTRATOR),
+		new PersonsArray("000000002", "mdriver@gmail.com", "Minnie", "Driver", "password", RoleType.MANAGER),
+		new PersonsArray("000000003", "jdimaggio@gmail.com", "John", "Di Maggio", "password", RoleType.REVIEWER),
+		new PersonsArray("000000004", "cdanes@gmail.com", "Claire", "Danes", "password", RoleType.STUDENT),
+		new PersonsArray("000000005", "bcrudup@gmail.com", "Billy", "Crudup", "password", RoleType.STUDENT),
+		new PersonsArray("000000006", "ganderson@gmail.com", "Gillian", "Anderson", "password", RoleType.STUDENT)
 	};
 	
 	/**
@@ -317,7 +318,9 @@ public class TestDataLoader extends Job {
 				
 				// Create all persons
 				for(PersonsArray personDefinition : PERSONS_DEFINITIONS) {
-					personRepo.createPerson(personDefinition.netId, personDefinition.email, personDefinition.firstName, personDefinition.lastName, personDefinition.role).save();
+					Person person = personRepo.createPerson(personDefinition.netId, personDefinition.email, personDefinition.firstName, personDefinition.lastName, personDefinition.role);
+					person.setPassword(personDefinition.password);
+					person.save();
 				}			
 				
 				for(String collegeDefinition : COLLEGES_DEFINITIONS) {
@@ -368,13 +371,15 @@ public class TestDataLoader extends Job {
 		String email;
 		String firstName;
 		String lastName;
+		String password;
 		RoleType role;
 		
-		PersonsArray(String netId, String email, String firstName, String lastName, RoleType role) {
+		PersonsArray(String netId, String email, String firstName, String lastName, String password, RoleType role) {
 			this.netId = netId;
 			this.email = email;
 			this.firstName = firstName;
 			this.lastName = lastName;
+			this.password = password;
 			this.role = role;
 		}
 	}
