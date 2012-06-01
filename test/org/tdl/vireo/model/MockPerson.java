@@ -166,7 +166,10 @@ public class MockPerson extends AbstractMock implements Person {
 
 	@Override
 	public boolean validatePassword(String password) {
-		return true; // always valid in mock land.
+		if (this.password == null || password == null)
+			return false;
+		
+		return this.password.equals(password);
 	}
 
 	@Override

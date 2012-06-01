@@ -1,9 +1,10 @@
-package org.tdl.vireo.security.simple;
+package org.tdl.vireo.security;
 
 import org.junit.Test;
 import org.tdl.vireo.model.MockPerson;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
+import org.tdl.vireo.security.SecurityContextImpl;
 
 import play.modules.spring.Spring;
 import play.test.UnitTest;
