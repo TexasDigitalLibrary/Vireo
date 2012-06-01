@@ -247,6 +247,46 @@ public class JpaPersonImplTests extends UnitTest {
 	}
 	
 	/**
+	 * Test validation of passwords.
+	 */
+	@Test
+	public void testPasswords() {
+		
+		Person person = repo.createPerson("netid", "email@email.com", "first", "last", RoleType.NONE);
+		
+		// With no password set everything fails.
+		assertFalse(person.validatePassword(null));
+		assertFalse(person.validatePassword(""));
+		assertFalse(person.validatePassword("something else"));
+		assertFalse(person.validatePassword("password"));
+		
+		// Test setting the password.
+		person.setPassword("password");
+		assertFalse(person.validatePassword(null));
+		assertFalse(person.validatePassword(""));
+		assertFalse(person.validatePassword("something else"));
+		assertTrue(person.validatePassword("password"));
+		
+		// Set the password to something else.
+		person.setPassword("something else");
+		assertFalse(person.validatePassword(null));
+		assertFalse(person.validatePassword(""));
+		assertTrue(person.validatePassword("something else"));
+		assertFalse(person.validatePassword("password"));
+
+		
+		// Test setting the password back to null.
+		person.setPassword(null);
+		assertFalse(person.validatePassword(null));
+		assertFalse(person.validatePassword(""));
+		assertFalse(person.validatePassword("something else"));
+		assertFalse(person.validatePassword("password"));
+
+		person.delete();
+	}
+	
+	
+	/**
 	 * Test that none of the required properties can be set to null or blank.
 	 */
 	@Test

@@ -1,5 +1,7 @@
 package org.tdl.vireo.model.jpa;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -29,11 +31,21 @@ import play.db.jpa.Model;
 @Table(name = "person")
 public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Person {
 
+	/*
+	 * The hash algorithm to use for generating password hashes. See the url
+	 * below for a list of available algorithms.
+	 * 
+	 * http://docs.oracle.com/javase/1.4.2/docs/guide/security/CryptoSpec.html#AppA
+	 */
+	public static final String HASH_ALGORITHM = "SHA-256";
+	
 	@Column(nullable = false, unique = true)
 	public String netid;
 
 	@Column(nullable = false, unique = true)
 	public String email;
+	
+	public String passwordHash;
 
 	@Column(nullable = false)
 	public String firstName;
@@ -156,6 +168,25 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 		assertAdministratorOrOwner(this);
 
 		this.email = email;
+	}
+	
+	@Override
+	public void setPassword(String password) {
+		
+		assertAdministratorOrOwner(this);
+		
+		if (password == null)
+			this.passwordHash = null;
+		else
+			this.passwordHash = generateHash(password);
+	}
+
+	@Override
+	public boolean validatePassword(String password) {
+		if (passwordHash == null || password == null)
+			return false;
+		
+		return passwordHash.equals(generateHash(password));
 	}
 
 	@Override
@@ -430,6 +461,39 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 		}
 		
 		this.role = role;
+	}
+	
+	/**
+	 * Internal method to generate a password hash.
+	 * 
+	 * This method uses the MessageDigest facilities from Java for generating a
+	 * hash. The algorithm used in predifend in HASH_ALGORITHM.
+	 * 
+	 * @param message
+	 *            The raw password to be hashed.
+	 * @return The generated hash, in hex notation encoded as a simple string.
+	 */
+	protected String generateHash(String message) {
+		try {
+			// Generate the hash using the pre-defined algorithm.
+			MessageDigest md = MessageDigest.getInstance(HASH_ALGORITHM);
+			byte[] byteHash = md.digest(message.getBytes());
+
+			// Convert the hash to hex values for easy storage and portability.
+			StringBuffer hash = new StringBuffer();
+			for (int i = 0; i < byteHash.length; i++) {
+				hash.append(Integer.toString((byteHash[i] & 0xff) + 0x100, 16)
+						.substring(1));
+			}
+			
+			// Retun the hash.
+			return hash.toString();
+		} catch (NoSuchAlgorithmException nsae) {
+			throw new IllegalStateException(
+					"Unable to generate password hash because no such algorithm exists for: "
+							+ HASH_ALGORITHM, nsae);
+		}
+
 	}
 
 }

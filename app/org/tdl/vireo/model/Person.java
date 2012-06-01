@@ -54,6 +54,26 @@ public interface Person extends AbstractModel {
 	 *            this person.
 	 */
 	public void setEmail(String email);
+	
+	/**
+	 * It is highly recommended that all implementations store the password as a
+	 * hash in any persistent storage mechanism.
+	 * 
+	 * @param password
+	 *            Update this person's password to the new password. Or null to
+	 *            remove a password from this person.
+	 */
+	public void setPassword(String password);
+
+	/**
+	 * @param password
+	 *            The password to validate.
+	 * @return True if the provided password matches the stored password for
+	 *         this person. If the person's current password is null, then this
+	 *         method will always return false.
+	 */
+	public boolean validatePassword(String password);
+	
 
 	/**
 	 * @return The first name of the person.

@@ -35,6 +35,7 @@ public class MockPerson extends AbstractMock implements Person {
 	/* Person Properties */
 	public String netid;
 	public String email;
+	public String password;
 	public String firstName;
 	public String lastName;
 	public String middleInitial;
@@ -156,6 +157,16 @@ public class MockPerson extends AbstractMock implements Person {
 	@Override
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+	@Override
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	@Override
+	public boolean validatePassword(String password) {
+		return true; // always valid in mock land.
 	}
 
 	@Override
