@@ -1,5 +1,6 @@
 #!/bin/bash -v
 
+# Change to test git trigger of bamboo build
 rm -rf /tmp/play/
 rm -f /tmp/play.zip
 curl -s http://download.playframework.org/releases/play-1.2.5-RC4.zip -o /tmp/play.zip
