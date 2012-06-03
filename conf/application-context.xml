@@ -18,7 +18,7 @@
 	<bean id="SecurityContext" class="org.tdl.vireo.security.SecurityContextImpl" scope="singleton" />
 	<bean id="PasswordAuthentication" class="org.tdl.vireo.security.PasswordAuthenticationMethodImpl" scope="singleton">
         <property name="enabled" value="true"/>
-        <property name="displayName" value="Local Vireo Account"/>
+        <property name="displayName" value="Local Password Authentication"/>
         <property name="displayDescription" value="Users &lt;em&gt;who&lt;/em&gt; are not able to use the other &lt;a href=&quot;http://github.com/&quot;/&gt;options&lt;/a&gt; should default to this authentication option."/>
         <property name="allowNewRegistration" value="true"/>
         <property name="allowUpdatePassword" value="true"/>
@@ -36,6 +36,69 @@
         <property name="allowUpdateProfile" value="true"/>
         <property name="personRepository" ref="PersonRepository"/>
         <property name="securityContext" ref="SecurityContext"/>
+    </bean>
+    <bean id="ShibbolethAuthentication" class="org.tdl.vireo.security.ShibbolethAuthenticationMethodImpl" scope="singleton">
+        <property name="enabled" value="true"/>
+        <property name="displayName" value="Shibboleth Authentication"/>
+        <property name="displayDescription" value="Une one of a federated set of Identity Providers to securely authenticate and provide institutional attributes about the user."/>
+        <property name="allowNewRegistration" value="false"/>
+        <property name="allowUpdatePassword" value="false"/>
+        <property name="allowUpdateProfile" value="false"/>
+        <property name="personRepository" ref="PersonRepository"/>
+        <property name="securityContext" ref="SecurityContext"/>
+        <property name="mock" value="true"/>
+        <property name="loginURL" value="/Shibboleth.sso/Login?target=%1s"/>
+        <property name="primaryIdentifier" value="netid"/>
+        <property name="attributeMap">
+        	<util:map>
+        		<!-- Required -->
+        		<entry key="netId" value="SHIB_netid"/>
+        		<entry key="email" value="SHIB_mail"/>
+        		<entry key="firstName" value="SHIB_givenName"/>
+        		<entry key="lastName" value="SHIB_surName"/>
+        		
+        		<!-- Optional -->
+        		<entry key="middleInitial" value="SHIB_initials"/>
+        		<entry key="displayName" value="SHIB_cn"/>
+        		<entry key="birthYear" value="SHIB_birthYear"/>
+        		<entry key="currentPhoneNumber" value="SHIB_phone"/>
+        		<entry key="currentPostalAddress" value="SHIB_postal"/>
+        		<entry key="currentEmailAddress" value="SHIB_mail"/>
+        		<entry key="permanentPhoneNumber" value="SHIB_permanentPhone"/>
+        		<entry key="permanentPostalAddress" value="SHIB_permanentPostal"/>
+        		<entry key="permanentEmailAddress" value="SHIB_permanentEmail"/>
+        		<entry key="currentDepartment" value="SHIB_department"/>
+        		<entry key="currentCollege" value="SHIB_college"/>
+        		<entry key="currentMajor" value="SHIB_major"/>
+        		<entry key="currentGraduationYear" value="SHIB_gradYear"/>
+        		<entry key="currentGRaduationMonth" value="SHIB_gradMonth"/>
+        	</util:map>
+        </property>
+        <property name="mockAttributes">
+            <util:map>
+        		<!-- Required -->
+        		<entry key="SHIB_netid" value="000000001"/>
+        		<entry key="SHIB_mail" value="bthornton@gmail.com"/>
+        		<entry key="SHIB_givenName" value="Billy"/>
+        		<entry key="SHIB_surName" value="Thornton"/>
+        		
+        		<!-- Optional -->
+        		<entry key="SHIB_initials" value="Bob"/>
+        		<entry key="SHIB_cn" value="Billy Bob"/>
+        		<entry key="SHIB_birthYear" value="1955"/>
+        		<entry key="SHIB_phone" value="555-555-1931"/>
+        		<entry key="SHIB_postal" value="University Town, Texas 77835"/>
+        		<entry key="SHIB_permanentPhone" value="555-555-1932"/>
+        		<entry key="SHIB_permanentPostal" value="Hot Springs, Arkansas 73424"/>
+        		<entry key="SHIB_permanentEmail" value="bthornton@yahoo.com"/>
+        		<entry key="SHIB_department" value="Performance Studies"/>
+        		<entry key="SHIB_college" value="College of Liberal Arts"/>
+        		<entry key="SHIB_major" value="Performance Studies"/>
+        		<entry key="SHIB_gradYear" value="2012"/>
+        		<entry key="SHIB_gradMonth" value="04"/>
+        	</util:map>
+        </property>
+        
     </bean>
 
 </beans>

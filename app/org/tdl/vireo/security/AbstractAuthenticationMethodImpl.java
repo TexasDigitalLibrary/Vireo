@@ -159,22 +159,4 @@ public abstract class AbstractAuthenticationMethodImpl implements
 		// Do nothing
 	}
 
-	public AuthenticationResult authenticate(String username, String password,
-			Request request) {
-		// If you're implementing an explicit method you must provide an implementation.
-		
-		throw new SecurityException("Explicit authentication is not supported by this method.");
-	}
-
-	public String startAuthentication(Request request, String returnURL) {
-		// If you're implementing an implicit method you must provide an implementation.
-
-		throw new SecurityException("Implicit authentication is not supported by this method.");
-	}
-
-	public AuthenticationResult authenticate(Request request) {
-		// If you're implementing an implicit method you must provide an implementation.
-		
-		throw new SecurityException("Implicit authentication is not supported by this method.");
-	}
 }

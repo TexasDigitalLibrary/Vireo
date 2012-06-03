@@ -62,11 +62,6 @@ public class JpaPersonImplTests extends UnitTest {
 	 */
 	@Test
 	public void testBadCreatePerson() {
-		// Create with null netid
-		try {
-			repo.createPerson(null, "email@email.com", "first", "last", RoleType.NONE);
-			fail("Able to create person with null netid");
-		} catch (IllegalArgumentException iae) {/* yay */}
 		
 		// create with null email
 		try {
@@ -90,12 +85,6 @@ public class JpaPersonImplTests extends UnitTest {
 		try {
 			repo.createPerson("netid", "email@email.com", "first", "last", null);
 			fail("Able to create person with null role");
-		} catch (IllegalArgumentException iae) {/* yay */}
-		
-		// Create with blank netid
-		try {
-			repo.createPerson("", "email@email.com", "first", "last", RoleType.NONE);
-			fail("Able to create person with blank netid");
 		} catch (IllegalArgumentException iae) {/* yay */}
 		
 		// create with blank email
@@ -247,6 +236,24 @@ public class JpaPersonImplTests extends UnitTest {
 	}
 	
 	/**
+	 * Test that netids are optional, but when pressent must be unique.
+	 */
+	@Test
+	public void testNetIds() {
+		
+		Person person1 = repo.createPerson("netid", "email1@email.com", "first", "last", RoleType.NONE).save();
+		Person person2 = repo.createPerson(null, "email2@email.com", "first", "last", RoleType.NONE).save();
+		Person person3 = repo.createPerson(null, "email3@email.com", "first", "last", RoleType.NONE).save();
+		Person person4 = repo.createPerson(null, "email4@email.com", "first", "last", RoleType.NONE).save();
+		
+		person1.delete();
+		person2.delete();
+		person3.delete();
+		person4.delete();
+	}
+	
+	
+	/**
 	 * Test validation of passwords.
 	 */
 	@Test
@@ -295,12 +302,6 @@ public class JpaPersonImplTests extends UnitTest {
 		Person person = repo.createPerson("netid", "email@email.com", "first", "last", RoleType.NONE);
 		person.save();
 		
-		// Netid to null
-		try {
-			person.setNetId(null);
-			fail("able to set netid to null");
-		} catch (IllegalArgumentException iae) { /* yay */ }
-		
 		// Email to null
 		try {
 			person.setEmail(null);
@@ -323,12 +324,6 @@ public class JpaPersonImplTests extends UnitTest {
 		try {
 			person.setRole(null);
 			fail("able to set role to null");
-		} catch (IllegalArgumentException iae) { /* yay */ }
-		
-		// Netid to blank
-		try {
-			person.setNetId("");
-			fail("able to set netid to blank");
 		} catch (IllegalArgumentException iae) { /* yay */ }
 		
 		// Email to blank

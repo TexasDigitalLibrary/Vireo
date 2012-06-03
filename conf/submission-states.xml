@@ -28,10 +28,9 @@
 		<property name="displayName" value="In Progress" />
 		<property name="inProgress" value="true" />
 		<property name="transitions">
-			<list xmlns="http://www.springframework.org/schema/util"
-				list-class="java.util.ArrayList" value-type="org.tdl.vireo.state.State">
+			<util:list list-class="java.util.ArrayList" value-type="org.tdl.vireo.state.State">
 				<ref bean="Submitted" />
-			</list>
+			</util:list>
 		</property>
 	</bean>
 
@@ -41,10 +40,9 @@
 		<property name="active" value="true" />
 		<property name="editableByReviewer" value="true" />
 		<property name="transitions">
-			<list xmlns="http://www.springframework.org/schema/util"
-				list-class="java.util.ArrayList" value-type="org.tdl.vireo.state.State">
+			<util:list list-class="java.util.ArrayList" value-type="org.tdl.vireo.state.State">
 				<ref bean="InReview" />
-			</list>
+			</util:list>
 		</property>
 	</bean>
 
@@ -54,12 +52,11 @@
 		<property name="active" value="true" />
 		<property name="editableByReviewer" value="true" />
 		<property name="transitions">
-			<list xmlns="http://www.springframework.org/schema/util"
-				list-class="java.util.ArrayList" value-type="org.tdl.vireo.state.State">
+			<util:list list-class="java.util.ArrayList" value-type="org.tdl.vireo.state.State">
 				<ref bean="NeedsCorrection" />
 				<ref bean="WaitingOnRequirements" />
 				<ref bean="Approved" />
-			</list>
+			</util:list>
 		</property>
 	</bean>
 
@@ -70,12 +67,12 @@
 		<property name="editableByReviewer" value="true" />
 		<property name="editableByStudent" value="true" />
 		<property name="transitions">
-			<list xmlns="http://www.springframework.org/schema/util"
+			<util:list
 				list-class="java.util.ArrayList" value-type="org.tdl.vireo.state.State">
 				<ref bean="InReview" />
 				<ref bean="WaitingOnRequirements" />
 				<ref bean="Approved" />
-			</list>
+			</util:list>
 		</property>
 	</bean>
 
@@ -85,11 +82,10 @@
 		<property name="active" value="true" />
 		<property name="editableByReviewer" value="true" />
 		<property name="transitions">
-			<list xmlns="http://www.springframework.org/schema/util"
-				list-class="java.util.ArrayList" value-type="org.tdl.vireo.state.State">
+			<util:list list-class="java.util.ArrayList" value-type="org.tdl.vireo.state.State">
 				<ref bean="InReview" />
 				<ref bean="Approved" />
-			</list>
+			</util:list>
 		</property>
 	</bean>
 
@@ -99,16 +95,14 @@
 		<property name="active" value="true" />
 		<property name="editableByReviewer" value="true" />
 		<property name="transitions">
-			<list xmlns="http://www.springframework.org/schema/util"
-				list-class="java.util.ArrayList" value-type="org.tdl.vireo.state.State">
+			<util:list list-class="java.util.ArrayList" value-type="org.tdl.vireo.state.State">
 				<ref bean="PendingPublication" />
-			</list>
+			</util:list>
 		</property>
 		<property name="embargoTransitions">
-			<list xmlns="http://www.springframework.org/schema/util"
-				list-class="java.util.ArrayList" value-type="org.tdl.vireo.state.State">
+			<util:list list-class="java.util.ArrayList" value-type="org.tdl.vireo.state.State">
 				<ref bean="OnHold" />
-			</list>
+			</util:list>
 		</property>
 	</bean>
 
@@ -118,10 +112,9 @@
 		<property name="archived" value="true" />
 		<property name="editableByReviewer" value="true" />
 		<property name="transitions">
-			<list xmlns="http://www.springframework.org/schema/util"
-				list-class="java.util.ArrayList" value-type="org.tdl.vireo.state.State">
+			<util:list list-class="java.util.ArrayList" value-type="org.tdl.vireo.state.State">
 				<ref bean="Published" />
-			</list>
+			</util:list>
 		</property>
 	</bean>
 
@@ -131,10 +124,9 @@
 		<property name="archived" value="true" />
 		<property name="editableByReviewer" value="true" />
 		<property name="transitions">
-			<list xmlns="http://www.springframework.org/schema/util"
-				list-class="java.util.ArrayList" value-type="org.tdl.vireo.state.State">
+			<util:list list-class="java.util.ArrayList" value-type="org.tdl.vireo.state.State">
 				<ref bean="PendingPublication" />
-			</list>
+			</util:list>
 		</property>
 	</bean>
 

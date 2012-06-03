@@ -39,7 +39,7 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 	 */
 	public static final String HASH_ALGORITHM = "SHA-256";
 	
-	@Column(nullable = false, unique = true)
+	@Column(unique = true)
 	public String netid;
 
 	@Column(nullable = false, unique = true)
@@ -93,9 +93,6 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 	 */
 	protected JpaPersonImpl(String netid, String email, String firstName,
 			String lastName, RoleType role) {
-
-		if (netid == null || netid.length() == 0)
-			throw new IllegalArgumentException("Netid is required");
 		
 		if (email == null || email.length() == 0)
 			throw new IllegalArgumentException("Email is required");
@@ -147,8 +144,6 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 
 	@Override
 	public void setNetId(String netid) {
-		if (netid == null || netid.length() == 0)
-			throw new IllegalArgumentException("Netid is required");
 		
 		assertAdministratorOrOwner(this);
 		
