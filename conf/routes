@@ -4,6 +4,7 @@
 
 # Home page
 GET     /                                       Application.index
+GET     /vireo                                  Application.vireo
 POST    /submitIndex                            Application.submitIndex
 POST    /submitLicense                          Application.submitLicense 
 POST    /submitDocInfo                          Application.submitDocInfo 
