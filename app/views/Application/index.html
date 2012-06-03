@@ -1,4 +1,62 @@
 #{extends 'main.html' /}
 #{set title:'Home' /}
 
-#{welcome /}
+<div class="container">
+	<br/>
+	<div class="hero-unit">
+		<br/>
+		<h1>Welcome to Vireo 1.8!</h1>
+		<p>
+			This is the initial wiring of the <a href="http://twitter.github.com/bootstrap/" target="_bootstrap">Twitter Bootstrap</a> UI package (v2.0.4).
+		</p>
+		<p>
+			It wires <code>/public/stylesheets/bootstrap.css</code> into <code>main.html</code>, and copies the following files into the public folder...
+		</p>
+		
+		<br/>
+		
+		<h2>Stylesheets</h2>
+		<ul>
+			<li>/public/stylesheets/bootstrap-responsive.css</li>
+			<li>/public/stylesheets/bootstrap-responsive-min.css</li>
+			<li>/public/stylesheets/bootstrap.css</li>
+			<li>/public/stylesheets/bootstrap.min.css</li>
+		</ul>
+		<h2>Javascript</h2>
+			<ul>
+				<li>/public/javascripts/bootstrap.js</li>
+				<li>/public/javascripts/bootstrap.min.js</li>
+			</ul>
+		</h2>
+		<h2>Images</h2>
+			<ul>
+				<li>/public/images/glyphicons-halflings-white.png</li>
+				<li>/public/images/glyphicons-halflings.png</li>
+			</ul>
+		</h2>
+
+		<br/>
+		<br/>
+		
+		<p>
+			I'm not sure what we'll ultimately use from these, but they are the boiler-plate from Bootstrap, so I've included them to start.
+			Feel free to delete or modify any of this work.  I've also included them unconditionally in the main template.  I can imagine that 
+			we'll want to include or exclude some files depending on what part of the application the user is accessing, but for now, they
+			are global.
+		</p>
+
+		<br/>
+		<br/>
+
+		<i class="icon-user"></i> <a href="http://www.sandsfish.com">Sands</a>
+
+		<br/>
+		<br/>
+
+		<p>
+			P.S. - The only adjustment that I had to make to the Bootstrap files was to the hard-coded relative path to the glyph icons images,
+			which does not match the Play framework's directory structure.  We may not even end up using them, but I figured I'd mention it.
+		</p>
+
+	</div>
+</div>
