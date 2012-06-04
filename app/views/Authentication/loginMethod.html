@@ -1,5 +1,5 @@
 #{extends 'main.html' /}
-#{set title:'${method.getDisplayName()} Login' /}
+#{set title:"${method.getDisplayName()} Login" /}
 
 #{form @@Authentication.loginMethod(method.getBeanName())}
 <h1>${method.getDisplayName()} Login</h1>

@@ -1,0 +1,8 @@
+#{extends 'main.html' /}
+#{set title:'Profile' /}
+
+
+<h1>Profile</h1>
+<p>Person ID: ${session.get("personId")}</p>
+<p>First Name: ${session.get("firstName")}</p>
+<p>Last Name: ${session.get("lastName")}</p>

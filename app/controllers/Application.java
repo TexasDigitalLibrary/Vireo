@@ -7,6 +7,9 @@ import play.mvc.Http.Header;
 import java.util.*;
 import java.util.Map.Entry;
 
+import org.tdl.vireo.model.RoleType;
+
+
 public class Application extends Controller {
 
     public static void index() {

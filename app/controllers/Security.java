@@ -17,5 +17,5 @@ import org.tdl.vireo.model.RoleType;
 public @interface Security {
 
 	/* The role type to restrict access to */
-    RoleType[] value();
+    RoleType value();
 }
