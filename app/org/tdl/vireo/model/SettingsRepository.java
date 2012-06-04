@@ -234,13 +234,15 @@ public interface SettingsRepository {
 	/**
 	 * Create a new email template
 	 * 
+	 * @param name
+	 * 			  The template's name
 	 * @param subject
 	 *            The template's subject
 	 * @param message
 	 *            The template's messages
 	 * @return A new email template object.
 	 */
-	public EmailTemplate createEmailTemplate(String subject, String message);
+	public EmailTemplate createEmailTemplate(String name, String subject, String message);
 
 	/**
 	 * Find an email template by id.
@@ -250,6 +252,15 @@ public interface SettingsRepository {
 	 * @return The email template object, or null if not found.
 	 */
 	public EmailTemplate findEmailTemplate(Long id);
+	
+	/**
+	 * Find an email template by it's name.
+	 * 
+	 * @param name
+	 *            The name of the template.
+	 * @return The email template found, or null if not found.
+	 */
+	public EmailTemplate findEmailTemplateByName(String name);
 
 	/**
 	 * Find all email templates in order.
