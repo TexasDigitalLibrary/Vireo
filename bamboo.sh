@@ -13,9 +13,7 @@ curl -s -L -k https://github.com/TexasDigitalLibrary/Vireo/zipball/master -o ./v
 unzip -qq -o ./vireo.zip -d ./
 mv ./TexasDigitalLibrary-Vireo-* ./vireo
 cd ./vireo
-/tmp/play-1.2.5rc4/play dependencies
+/tmp/play-1.2.5rc4/play deps --@test --sync
 /tmp/play-1.2.5rc4/play auto-test
 rm -f /tmp/vireo.war
-rm -f ./vireo.war
 /tmp/play-1.2.5rc4/play war -o /tmp/vireo --zip
-mv /tmp/vireo.war ./
