@@ -17,3 +17,4 @@ cd ./vireo
 /tmp/play-1.2.5rc4/play auto-test
 rm -f /tmp/vireo.war
 /tmp/play-1.2.5rc4/play war -o /tmp/vireo --zip
+mv /tmp/vireo.war ../
