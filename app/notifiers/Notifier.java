@@ -11,14 +11,17 @@ public class Notifier extends Mailer{
 	
 	public static void review(Person person) {
 		setContentType("text/html");
+		setFrom("Vireo No Reply <noreply@tdl.org>");
+		setReplyTo("Admin <admin@anontdldomain.org>");
 		setSubject("Welcome %s", person.getFullName());
 		addRecipient(person.getEmail());
-		setFrom("Admin <noreply@tdl.org>");
 		send(person);
 	}
 
 	public static void lostPassword(Person person) {
-		setFrom("Admin <noreply@tdl.org>");
+		setContentType("text/html");
+		setFrom("Vireo No Reply <noreply@tdl.org>");
+		setReplyTo("Admin <admin@anontdldomain.org>");
 		setSubject("Your password has been reset");
 		addRecipient(person.getEmail());
 		send(person, "newpassword");
