@@ -10,7 +10,6 @@ GET     /                                       Application.index
 *       /logout                                 Authentication.logout
 *       /register                               Authentication.register
 *       /profile                                Authentication.profile
-
 GET     /vireo                                  Application.vireo
 POST    /submitIndex                            Application.submitIndex
 POST    /submitLicense                          Application.submitLicense 
