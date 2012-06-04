@@ -12,6 +12,7 @@ import org.tdl.vireo.model.RoleType;
 
 import play.Logger;
 import play.Play;
+import play.Play.Mode;
 import play.mvc.Router;
 import play.mvc.Http.Header;
 import play.mvc.Http.Request;
@@ -30,7 +31,7 @@ public class ShibbolethAuthenticationMethodImpl extends
 	/* Injected configuration */
 	
 	// Weather shibboleth will be mocked or real.
-	public boolean mock = false;
+	public boolean mock = (Play.mode == Mode.DEV);
 	
 	// The location to start a shibboleth session.
 	public String loginURL = "/Shibboleth.sso/Login?target=%1s";

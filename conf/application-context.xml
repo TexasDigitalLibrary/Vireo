@@ -17,9 +17,9 @@
 	<!-- Security & Authentication -->
 	<bean id="SecurityContext" class="org.tdl.vireo.security.SecurityContextImpl" scope="singleton" />
 	<bean id="PasswordAuthentication" class="org.tdl.vireo.security.PasswordAuthenticationMethodImpl" scope="singleton">
-        <property name="enabled" value="true"/>
-        <property name="displayName" value="Local Password Authentication"/>
-        <property name="displayDescription" value="Users &lt;em&gt;who&lt;/em&gt; are not able to use the other &lt;a href=&quot;http://github.com/&quot;/&gt;options&lt;/a&gt; should default to this authentication option."/>
+        <property name="enabled" value="${auth.pass.enabled}"/>
+        <property name="displayName" value="${auth.pass.name}"/>
+        <property name="displayDescription" value="${auth.pass.description}"/>
         <property name="allowNewRegistration" value="true"/>
         <property name="allowUpdatePassword" value="true"/>
         <property name="allowUpdateProfile" value="true"/>
@@ -28,64 +28,63 @@
 	</bean>
 
     <bean id="ShibbolethAuthentication" class="org.tdl.vireo.security.ShibbolethAuthenticationMethodImpl" scope="singleton">
-        <property name="enabled" value="true"/>
-        <property name="displayName" value="Shibboleth Authentication"/>
-        <property name="displayDescription" value="Une one of a federated set of Identity Providers to securely authenticate and provide institutional attributes about the user."/>
+        <property name="enabled" value="${auth.shib.enabled}"/>
+        <property name="displayName" value="${auth.shib.name}"/>
+        <property name="displayDescription" value="${auth.shib.description}"/>
         <property name="allowNewRegistration" value="false"/>
         <property name="allowUpdatePassword" value="false"/>
         <property name="allowUpdateProfile" value="false"/>
         <property name="personRepository" ref="PersonRepository"/>
         <property name="securityContext" ref="SecurityContext"/>
-        <property name="mock" value="true"/>
-        <property name="loginURL" value="/Shibboleth.sso/Login?target=%1s"/>
-        <property name="primaryIdentifier" value="netid"/>
+        <property name="loginURL" value="${auth.shib.login}"/>
+        <property name="primaryIdentifier" value="${auth.shib.primaryIdentifier}"/>
         <property name="attributeMap">
         	<util:map>
         		<!-- Required -->
-        		<entry key="netId" value="SHIB_netid"/>
-        		<entry key="email" value="SHIB_mail"/>
-        		<entry key="firstName" value="SHIB_givenName"/>
-        		<entry key="lastName" value="SHIB_surName"/>
+        		<entry key="netId" value="${auth.shib.attribute.netid}"/>
+        		<entry key="email" value="${auth.shib.attribute.email}"/>
+        		<entry key="firstName" value="${auth.shib.attribute.firstName}"/>
+        		<entry key="lastName" value="${auth.shib.attribute.lastName}"/>
         		
         		<!-- Optional -->
-        		<entry key="middleInitial" value="SHIB_initials"/>
-        		<entry key="displayName" value="SHIB_cn"/>
-        		<entry key="birthYear" value="SHIB_birthYear"/>
-        		<entry key="currentPhoneNumber" value="SHIB_phone"/>
-        		<entry key="currentPostalAddress" value="SHIB_postal"/>
-        		<entry key="currentEmailAddress" value="SHIB_mail"/>
-        		<entry key="permanentPhoneNumber" value="SHIB_permanentPhone"/>
-        		<entry key="permanentPostalAddress" value="SHIB_permanentPostal"/>
-        		<entry key="permanentEmailAddress" value="SHIB_permanentEmail"/>
-        		<entry key="currentDepartment" value="SHIB_department"/>
-        		<entry key="currentCollege" value="SHIB_college"/>
-        		<entry key="currentMajor" value="SHIB_major"/>
-        		<entry key="currentGraduationYear" value="SHIB_gradYear"/>
-        		<entry key="currentGRaduationMonth" value="SHIB_gradMonth"/>
+        		<entry key="middleInitial" value="${auth.shib.attribute.middleInitial}"/>
+        		<entry key="displayName" value="${auth.shib.attribute.displayName}"/>
+        		<entry key="birthYear" value="${auth.shib.attribute.birthYear}"/>
+        		<entry key="currentPhoneNumber" value="${auth.shib.attribute.currentPhoneNumber}"/>
+        		<entry key="currentPostalAddress" value="${auth.shib.attribute.currentPostalAddress}"/>
+        		<entry key="currentEmailAddress" value="${auth.shib.attribute.currentEmailAddress}"/>
+        		<entry key="permanentPhoneNumber" value="${auth.shib.attribute.permanentPhoneNumber}"/>
+        		<entry key="permanentPostalAddress" value="${auth.shib.attribute.permanentPostalAddress}"/>
+        		<entry key="permanentEmailAddress" value="${auth.shib.attribute.permanentEmailAddress}"/>
+        		<entry key="currentDepartment" value="${auth.shib.attribute.currentDepartment}"/>
+        		<entry key="currentCollege" value="${auth.shib.attribute.currentCollege}"/>
+        		<entry key="currentMajor" value="${auth.shib.attribute.currentMajor}"/>
+        		<entry key="currentGraduationYear" value="${auth.shib.attribute.currentGraduationYear}"/>
+        		<entry key="currentGRaduationMonth" value="${auth.shib.attribute.currentGraduationMonth}"/>
         	</util:map>
         </property>
         <property name="mockAttributes">
             <util:map>
         		<!-- Required -->
-        		<entry key="SHIB_netid" value="000000001"/>
-        		<entry key="SHIB_mail" value="bthornton@gmail.com"/>
-        		<entry key="SHIB_givenName" value="Billy"/>
-        		<entry key="SHIB_surName" value="Thornton"/>
+        		<entry key="${auth.shib.attribute.netid}" value="000000001"/>
+        		<entry key="${auth.shib.attribute.email}" value="bthornton@gmail.com"/>
+        		<entry key="${auth.shib.attribute.firstName}" value="Billy"/>
+        		<entry key="${auth.shib.attribute.lastName}" value="Thornton"/>
         		
         		<!-- Optional -->
-        		<entry key="SHIB_initials" value="Bob"/>
-        		<entry key="SHIB_cn" value="Billy Bob"/>
-        		<entry key="SHIB_birthYear" value="1955"/>
-        		<entry key="SHIB_phone" value="555-555-1931"/>
-        		<entry key="SHIB_postal" value="University Town, Texas 77835"/>
-        		<entry key="SHIB_permanentPhone" value="555-555-1932"/>
-        		<entry key="SHIB_permanentPostal" value="Hot Springs, Arkansas 73424"/>
-        		<entry key="SHIB_permanentEmail" value="bthornton@yahoo.com"/>
-        		<entry key="SHIB_department" value="Performance Studies"/>
-        		<entry key="SHIB_college" value="College of Liberal Arts"/>
-        		<entry key="SHIB_major" value="Performance Studies"/>
-        		<entry key="SHIB_gradYear" value="2012"/>
-        		<entry key="SHIB_gradMonth" value="04"/>
+        		<entry key="${auth.shib.attribute.middleInitial}" value="Bob"/>
+        		<entry key="${auth.shib.attribute.displayName}" value="Billy Bob"/>
+        		<entry key="${auth.shib.attribute.birthYear}" value="1955"/>
+        		<entry key="${auth.shib.attribute.currentPhoneNumber}" value="555-555-1931"/>
+        		<entry key="${auth.shib.attribute.currentPostalAddress}" value="University Town, Texas 77835"/>
+        		<entry key="${auth.shib.attribute.permanentPhoneNumber}" value="555-555-1932"/>
+        		<entry key="${auth.shib.attribute.permanentPostalAddress}" value="Hot Springs, Arkansas 73424"/>
+        		<entry key="${auth.shib.attribute.permanentEmailAddress}" value="bthornton@yahoo.com"/>
+        		<entry key="${auth.shib.attribute.currentDepartment}" value="Performance Studies"/>
+        		<entry key="${auth.shib.attribute.currentCollege}" value="College of Liberal Arts"/>
+        		<entry key="${auth.shib.attribute.currentMajor}" value="Performance Studies"/>
+        		<entry key="${auth.shib.attribute.currentGraduationYear}" value="2012"/>
+        		<entry key="${auth.shib.attribute.currentGraduationMonth}" value="04"/>
         	</util:map>
         </property>
         

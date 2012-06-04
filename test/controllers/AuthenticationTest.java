@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import play.Play;
 import play.mvc.Http.Response;
 import play.mvc.Router;
 import play.test.FunctionalTest;
@@ -33,7 +34,7 @@ public class AuthenticationTest extends FunctionalTest {
 		// Step 1: Visit the login page to get a list of methods available.
 		Response response = GET(LOGIN_LIST_URL);
 		assertIsOk(response);
-		assertContentMatch("Local Password Authentication", response);
+		assertContentMatch(Play.configuration.getProperty("auth.pass.name"), response);
 		assertContentMatch(LOGIN_PASSWORD_URL,response);
 		
 		// Step 2: Go to the login page for password
@@ -95,6 +96,10 @@ public class AuthenticationTest extends FunctionalTest {
 	 */
 	@Test
 	public void testShibbolethLogin() {
+		
+		System.out.println("SHIB: testShibbolethLogin() ");
+
+		
 		// Get all our URLs
 		final String INDEX_URL = Router.reverse("Application.index").url;
 		final String LOGIN_LIST_URL = Router.reverse("Authentication.loginList").url;
@@ -107,7 +112,7 @@ public class AuthenticationTest extends FunctionalTest {
 		// Step 1: Visit the login page to get a list of methods available
 		Response response = GET(LOGIN_LIST_URL);
 		assertIsOk(response);
-		assertContentMatch("Shibboleth Authentication", response);
+		assertContentMatch(Play.configuration.getProperty("auth.shib.name"), response);
 		assertContentMatch(LOGIN_SHIB_URL,response);
 		
 		// Step 2: Click on the shibboleth URL
@@ -115,6 +120,7 @@ public class AuthenticationTest extends FunctionalTest {
 		assertHeaderEquals("Location", LOGIN_SHIB_RETURN_URL, response);
 		response = GET(LOGIN_SHIB_RETURN_URL);
 		assertHeaderEquals("Location", INDEX_URL, response);
+		System.out.println(response.cookies.get("PLAY_SESSION").value);
 		assertTrue(response.cookies.get("PLAY_SESSION").value.contains("Billy"));
 		assertTrue(response.cookies.get("PLAY_SESSION").value.contains("Thornton"));
 		
@@ -169,7 +175,7 @@ public class AuthenticationTest extends FunctionalTest {
 		// Step 2: Follow the redirect.
 		response = GET(LOGIN_LIST_URL);
 		assertIsOk(response);
-		assertContentMatch("Local Password Authentication", response);
+		assertContentMatch(Play.configuration.getProperty("auth.pass.name"), response);
 		assertContentMatch(LOGIN_PASSWORD_URL,response);
 		
 		// Step 2: Go to the login page for password

@@ -22,9 +22,43 @@ import play.mvc.Finally;
 import play.mvc.Router;
 import play.mvc.Router.ActionDefinition;
 
+/**
+ * Authentication controller provides, you guessed it, user authentication!
+ * Tada! In addition to the normal login and logout stuff the controller also
+ * provides new user registration, profile management, and forgot password
+ * facilities.
+ * 
+ * The authentication facilities use Vireo's AuthenticationMethod interface to
+ * provide plugable authentication mechanisms. You can have just method, or you
+ * can optionally provide multiple methods from which the user must pick the
+ * best one for them. The methods are broken down into two types: Implicit or
+ * Explicit. Implicit authentication methods use an external service such as
+ * Shibboleth or CAS while Explicit authentication methods are the traditional
+ * username/password just as local accounts or LDAP. This controller supports
+ * both types of methods.
+ * 
+ * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
+ */
 public class Authentication extends Controller {
-
 	
+	/**
+	 * This method is run before every action in any controller (with the
+	 * @With() annotation!). This method checks to see if someone has been
+	 * previously authenticated and if so logs them in to the current security
+	 * context. When someone is logged in their unique person id will be stored
+	 * on the session as "personId". So this method simply checks that parameter
+	 * and looks the user in the corresponding repository.
+	 * 
+	 * In addition if the action is annotated with a @Security() annotation then
+	 * this method will perform those minimal security checks. So if the
+	 * annotation says that to access the action all users must be at least a
+	 * REVIEWER then this method will check that. There are two resulting
+	 * conditions, either there is no currently authenticated user or they do
+	 * not meet the required access level. In the first case the user would be
+	 * sent off to login, remembering where to go after completing
+	 * authentication. For the other case where they are already logged in but
+	 * don't meet the conditions then they will receive an unauthorized message.
+	 */
 	@Before(unless = { "loginList", "loginMethod", "loginReturn" })
 	public static void securityCheck() {
 		
@@ -65,7 +99,11 @@ public class Authentication extends Controller {
 				forbidden();
 		}
 	}
-	
+
+	/**
+	 * This just makes sure that the user is logged out of the current thread in
+	 * all cases. Even if there is an exception the thread is closed.
+	 */
 	@Finally
 	public static void securityCleanup() {
 		SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
@@ -73,7 +111,11 @@ public class Authentication extends Controller {
 	}
 	
 	
-	
+	/**
+	 * Provide a list of authentication methods for the user to choose. If there
+	 * is only one login method configured then the user is shuttled off to that
+	 * authentication method without any fuss.
+	 */
 	public static void loginList() {
 		flash.keep("url");	
 		
@@ -99,7 +141,17 @@ public class Authentication extends Controller {
 		render(enabledMethods);
 	}
 	
-	
+	/**
+	 * This is the login page for a particular authentication method. The user
+	 * will arrive from the loginList method above. There are two cases for this
+	 * method either the method is Implicit or Explicit. In the Explicit case
+	 * the user is presented with a login screen and when they provide a correct
+	 * username/password pair they are logged in. In the Implicit case the user
+	 * is redirected to authenticate via an external service.
+	 * 
+	 * @param methodName
+	 *            The spring bean name of the authentication method.
+	 */
 	public static void loginMethod(String methodName) {
 		flash.keep("url");	
 		
@@ -182,6 +234,14 @@ public class Authentication extends Controller {
 		error("Authentication method '"+methodName+"' is invalid because it is not implicit or explicit.");
 	}
 	
+	/**
+	 * This handles returning from external authentication methods which are
+	 * implicit (such as shibboleth or cas). If the credentials are valid the
+	 * user is logged in, otherwise they are shuttled to another page.
+	 * 
+	 * @param methodName
+	 *            The spring bean name of the implicit authentication method
+	 */
 	public static void loginReturn(String methodName) {
 		flash.keep("url");	
 		notFoundIfNull(methodName);
@@ -239,6 +299,10 @@ public class Authentication extends Controller {
 		render();
 	}
 	
+	/**
+	 * Logged the user out by clearing their session and sending them to the
+	 * application's index page.
+	 */
 	public static void logout() {
 		session.clear();
 		Application.index();

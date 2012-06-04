@@ -59,6 +59,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 	public String originalHeaderCurrentMajor;
 	public String originalHeaderCurrentGraduationYear;
 	public String originalHeaderCurrentGraduationMonth;
+	public Map<String,String> originalMockAttributes;
 	
 	/**
 	 * Setup for a test by doing three things:
@@ -98,6 +99,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		originalHeaderCurrentMajor = method.headerCurrentMajor;
 		originalHeaderCurrentGraduationYear = method.headerCurrentGraduationYear;
 		originalHeaderCurrentGraduationMonth = method.headerCurrentGraduationMonth;
+		originalMockAttributes = method.mockAttributes;
 		
 		// Set the method's state to what the test expect.
 		method.headerNetId = "SHIB_netid";
@@ -154,6 +156,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		method.headerCurrentMajor = originalHeaderCurrentMajor;
 		method.headerCurrentGraduationYear = originalHeaderCurrentGraduationYear;
 		method.headerCurrentGraduationMonth = originalHeaderCurrentGraduationMonth;
+		method.mockAttributes = originalMockAttributes;
 
 		context.turnOffAuthorization();
 		personRepo.findPerson(person1.getId()).delete();
