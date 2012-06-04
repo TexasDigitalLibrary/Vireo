@@ -87,7 +87,9 @@
         		<entry key="${auth.shib.attribute.currentGraduationMonth}" value="04"/>
         	</util:map>
         </property>
-        
     </bean>
+    
+    <!-- Services -->
+    <bean id="EmailService" class="org.tdl.vireo.services.impl.EmailServiceImpl" scope="singleton"/>
 
 </beans>
