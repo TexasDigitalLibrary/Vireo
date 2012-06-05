@@ -51,6 +51,7 @@ public class EmailServiceImplTest extends UnitTest {
 		template.message += "Graduation Semester: {GRAD_SEMESTER} \n"; 
 		template.message += "Student URL: {STUDENT_URL} \n"; 
 		template.message += "Advisor URL: {ADVISOR_URL} \n"; 
+		template.message += "Registration URL: {REGISTRATION_URL} \n"; 
 		template.message += "Submission Status: {SUBMISSION_STATUS} \n"; 
 		template.message += "Assigned To: {SUBMISSION_ASSIGNED_TO} \n";
 		
@@ -84,6 +85,7 @@ public class EmailServiceImplTest extends UnitTest {
 		TemplateParameters params = new TemplateParameters(submission);
 		params.STUDENT_URL = "http://studenturl/";
 		params.ADVISOR_URL = "http://advisorurl/";
+		params.REGISTRATION_URL = "http://registerurl/";
 		emailService.sendEmail(template, params, recipients, "noreply@email.com");
 		
 		// Wait for the email thread to send the email.
@@ -111,6 +113,7 @@ public class EmailServiceImplTest extends UnitTest {
 		assertTrue(recieved.contains("Graduation Semester: May, 2012 \n"));
 		assertTrue(recieved.contains("Student URL: http://studenturl/ \n"));
 		assertTrue(recieved.contains("Advisor URL: http://advisorurl/ \n"));
+		assertTrue(recieved.contains("Registration URL: http://registerurl/ \n"));
 		assertTrue(recieved.contains("Submission Status: "+stateManager.getInitialState().getDisplayName()));
 		assertTrue(recieved.contains("Assigned To: Staff Reviewer \n"));
 	}
