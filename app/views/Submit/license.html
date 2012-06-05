@@ -1,0 +1,24 @@
+#{extends 'main.html' /}
+#{set title:'License Agreement' /}
+				
+#{form @@Submit.licenseAgreement(method.getBeanName())}
+<h3 class="ds-div-head">
+	License Agreement
+</h3>
+<div>
+	<p>
+		You must agree to the non-exclusive license below in order to continue. You retain full copyright of your work, and are only granting IDEALS the right to distribute and preserve your work. See the Graduate College <a href="http://www.grad.illinois.edu/thesis-faqs" onclick="window.open(this.href); return false;" onkeypress="window.open(this.href); return false;">Electronic Thesis &amp; Dissertation FAQ</a> for more information about IDEALS.
+	</p>
+</div>
+<div>
+	<p>$licenseText</p>
+</div>
+<div>
+	<fieldset>
+		<label><input name="agree" type="checkbox" value="agree" checked="checked" disabled="disabled">By checking here you agree to the above license in its entirety. You understand<br>
+		that you retain your copyright and have granted a non-exclusive license to the University.</label>
+	</fieldset>
+
+	<input id="aspect_vireo_submit_LicenseAgreement_field_saveAndContinue" class="ds-button-field" name="saveAndContinue" type="submit" value="Continue &gt;&gt;"> 
+</div>
+#{/form}
