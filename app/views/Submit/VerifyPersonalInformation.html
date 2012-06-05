@@ -1,260 +1,140 @@
-#{extends 'main.html' /}
+#{extends 'submitSteps.html' /}
 #{set title:'Verify Personal Information' /}
 
-<div>
-  <form action="/submit/license" method="post">
-    <h3>Verify Your Information</h3>
-
-    <div>
-      <div>
-        <p>Your name should appear as it does on your title
-        page. You can use Unicode characters, if your computer supports them.</p>
-      </div>
-
-      <div>
-        <p>Select the degree and major that are listed on your
-        title page.</p>
-      </div>
-
-      <div>
-        <p>You must enter a permanent, long-term address. If
-        your present address is different, use the Current Address field.</p>
-      </div>
-    </div>
-
-    <div>
-      <div>
-        <p>Please verify all of your personal information.
-        Some of the information has been provided by your school; if this
-        information is in error, you will need to correct it through the
-        appropriate office at your school.</p>
-
-        <p>Required fields are indicated with an asterisk.</p>
-
-        <fieldset>
-          <legend>Verify your personal information</legend>
-
-          <ol>
-            <li>
-              <fieldset>
-                <legend>Personal Information</legend>
-
-                <ol>
-                  <li>
-                    <span>* First Name:</span>
-
-                    <div>
-                      admin
-                    </div>
-                  </li>
-
-                  <li>
-                    <label>
-                    Middle Initial:</label>
-
-                    <div>
-                      <input name="middleInitial" type="text" value=
-                      "" title="Enter the first letter of your middle name." /> <span>Enter the first letter of your middle
-                      name.</span>
-                    </div>
-                  </li>
-
-                  <li>
-                    <span>* Last Name:</span>
-
-                    <div>
-                      admin
-                    </div>
-                  </li>
-
-                  <li>
-                    <span>* Email:</span>
-
-                    <div>
-                      admin@utmb.edu
-                    </div>
-                  </li>
-
-                  <li>
-                    <label>
-                    Year of Birth:</label>
-
-                    <div>
-                      <input name="yearOfBirth" type="text" value=
-                      "1944" title="Enter the full year in which you were born. For example 1985." />
-                      <span>Enter the full year in which you
-                      were born. For example 1985.</span>
-                    </div>
-                  </li>
-                </ol>
-              </fieldset>
-            </li>
-
-            <li>
-              <fieldset>
-                <legend>Affiliation</legend>
-
-                <ol>
-                  <li>
-                    <span>* School:</span>
-
-                    <div>
-                      University of Texas Medical Branch at Galveston
-                    </div>
-                  </li>
-
-                  <li>
-                    <label>
-                    * Department:</label>
-
-                    <div>
-                      <select name="department"
-                      title="Enter the department you belong to.">
-                        <option value="">
-                          ... choose
-                        </option>
-
-                        <option value="Biochemistry and Molecular Biology">
-                          Biochemistry and Molecular Biology
-                        </option>
-
-                        <option value="Cell Biology">
-                          Cell Biology
-                        </option>
-                      </select> <span>Enter the department you
-                      belong to.</span>
-                    </div>
-                  </li>
-
-                  <li>
-                    <label>*
-                    Degree:</label>
-
-                    <div>
-                      <select name="degree" title=
-                      "Choose the type of degree you are seeking">
-                        <option value="">
-                          ... choose
-                        </option>
-
-                        <option value="">
-                          Doctoral degrees
-                        </option>
-
-                        <option value=
-                        "Biochemistry and Molecular Biology (Doctoral)">
-                          + Biochemistry and Molecular Biology (Doctoral)
-                        </option>
-
-                        <option value="Cell Biology (Doctoral)" selected=
-                        "selected">
-                          + Cell Biology (Doctoral)
-                        </option>
-                      </select> <span>Choose the type of degree
-                      you are seeking</span>
-                    </div>
-                  </li>
-
-                  <li>
-                    <label>
-                    * Major:</label>
-
-                    <div>
-                      <input name="discipline" type="text" value=
-                      "xx" title="Enter the discipline you specialized in." />
-                      <span>Enter the discipline you specialized
-                      in.</span>
-                    </div>
-                  </li>
-                </ol>
-              </fieldset>
-            </li>
-
-            <li>
-              <fieldset>
-                <legend>Phone &amp; Address</legend>
-
-                <ol>
-                  <li>
-                    <label>
-                    * Permanent Phone:</label>
-
-                    <div>
-                      <input name="permPhone" type="text" value=
-                      "5551212" title=
-                      "Enter a phone number where you can be reached even after you have left school." />
-                      <span>Enter a phone number where you can
-                      be reached even after you have left school.</span>
-                    </div>
-                  </li>
-
-                  <li>
-                    <label>
-                    * Permanent Address:</label>
-
-                    <div>
-                      <textarea name="permAddress" title="Enter an address where you can be reached even after you complete and leave school.">
-
-x
-</textarea> <span>Enter an address where you can be reached even after
-you complete and leave school.</span>
-                          </div>
-                        </li>
-
-                        <li>
-                          <label>
-                          Permanent Email:</label>
-
-                          <div>
-                            <input name="permEmail" type="text" value=""
-                            title="Enter an email address you will always have." />
-                            <span class="field-help">Enter an email address you will
-                            always have.</span>
-                          </div>
-                        </li>
-
-                        <li>
-                          <label>
-                          Current Phone:</label>
-
-                          <div>
-                            <input name="currentPhone" type="text" value=
-                            "" title="Enter a phone number where you can be reached." />
-                            <span>Enter a phone number where you can
-                            be reached.</span>
-                          </div>
-                        </li>
-
-                        <li>
-                          <label>
-                          Current Address:</label>
-
-                          <div>
-                            <textarea name="currentAddress" title=
-                            "Enter an address where you can be reached.">
-</textarea> <span>Enter an address where you can be reached.</span>
-                          </div>
-                        </li>
-                      </ol>
-                    </fieldset>
-                  </li>
-
-                  <li>
-                    <div>
-                      <input name="saveAndContinue" type="submit" value=
-                      "Save and Continue &raquo;" /> <input name="applicationID" type="hidden" value=
-                      "99" /> <input name="application-continue" type="hidden"
-                      value="2662486678473a590f11747f75683c177d722721" />
-                    </div>
-                  </li>
-                </ol>
-              </fieldset>
-            </div>
-          </div>
-
-          <p ><input name="firstName" type="hidden" value="admin" />
-			<input name="lastName" type="hidden" value="admin" />
-			<input name="email" type="hidden" value="admin@utmb.edu" />
-          <input name="school" type="hidden" value="University of Texas Medical Branch at Galveston" /></p>
-        </form>
-      </div>
+<br />
+<div class="row pageHead">
+	<h3 class="span11">Verify Your Information</h3>
+</div>
+<br />
+<div class="row">
+<div class="span7">
+<p>Please verify all of your personal information. Some of the information has been provided by your school; if this information is in error, you will need to correct it through the appropriate office at your school.</p>
+<p>Required fields are indicated with an asterisk.</p>
+  <form action="submitIndex" method="post" class="form-horizontal">
+		
+	<fieldset>
+		<legend>Personal Information</legend>
+		<div class="control-group">
+			<label class="control-label" for="firstName"><b>* First Name</b></label>
+			<div class="controls">
+				<p>Claire</p>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="middleInitial">Middle Initial</label>
+			<div class="controls">
+				<input type="text" class="span1" id="middleInitial">
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="lastName"><b>* Last Name</b></label>
+			<div class="controls">
+				Danes
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="email"><b>* Email</b></label>
+			<div class="controls">
+				cdanes@gmail.com
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="yearOfBirth">Year of Birth</label>
+			<div class="controls">
+				<input type="text" class="span3" id="yearOfBirth">
+			</div>
+		</div>
+	</fieldset>
+	
+	<fieldset>
+		<legend>Affiliation</legend>
+		<div class="control-group">
+			<label class="control-label" for="school"><b>* School</b></label>
+			<div class="controls">
+				<p>Texas A&M University at College Station</p>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="department"><b>* Department</b></label>
+			<div class="controls">
+				<select id="department">
+					<option>...choose</option>
+					<option value="1">Accounting</option>
+					<option value="2">Aerospace Engineering</option>
+					<option value="3">Agricultural Economics</option>
+				</select>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="degree"><b>* Degree</b></label>
+			<div class="controls">
+				<select id="degree">
+					<option>...choose</option>
+					<option value="1">Doctor of Philosophy</option>
+					<option value="2">Master of Arts</option>
+					<option value="3">Bachelor of Science</option>
+				</select>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="major"><b>* Major</b></label>
+			<div class="controls">
+				<select id="major">
+					<option>...choose</option>
+					<option value="1">Biochemistry</option>
+					<option value="2">Horticulture</option>
+					<option value="3">Zoology</option>
+				</select>
+			</div>
+		</div>
+	</fieldset>
+	
+	<fieldset>
+		<legend>Phone &amp; Address</legend>
+		<div class="control-group">
+			<label class="control-label" for="permPhone"><b>* Permanent Phone:</b></label>
+			<div class="controls">
+				<input type="text" class="span3" id="permPhone">
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="permAddress"><b>* Permanent Address:</b></label>
+			<div class="controls">
+				<textarea class="span5" id="permAddress"></textarea>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="permEmail">Permanent Email:</label>
+			<div class="controls">
+				<input type="text" class="span3" id="permEmail">
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="currentPhone">Current Email:</label>
+			<div class="controls">
+				<input type="text" class="span3" id="currentPhone">
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="currentAddress">Current Address:</label>
+			<div class="controls">
+				<textarea class="span5" id="currentAddress"></textarea>
+			</div>
+		</div>
+	</fieldset>
+	<div class="span10 center">
+		<input type="submit" value="Save and Continue >>" id="submit">
+	</div>
+</form>            
+</div>
+	<div id="stickyNotes" class="span3">
+		<div class="sticky-top"></div>
+		<div class="sticky-bottom">Your name should appear as it does on your title page. You can use Unicode characters, if your computer supports them.</div>
+		
+		<div class="sticky-top"></div>
+		<div class="sticky-bottom">Select the degree and major that are listed on your title page.</div>
+		
+		<div class="sticky-top"></div>
+		<div class="sticky-bottom">You must enter a permanent, long-term address. If your present address is different, use the Current Address field.</div>
+	</div>
+</div>
