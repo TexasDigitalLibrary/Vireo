@@ -10,14 +10,17 @@ GET     /                                       Application.index
 *       /logout                                 Authentication.logout
 *       /register                               Authentication.register
 *       /profile                                Authentication.profile
-GET     /VerifyPersonalInformation              Submit.VerifyPersonalInformation
-POST    /submitIndex                            Application.submitIndex
-POST    /submitLicense                          Application.submitLicense 
-POST    /submitDocInfo                          Application.submitDocInfo 
-POST    /submitFileUpload                       Application.submitFileUpload 
-GET     /vireoAdmin		              			Application.vireoAdmin 
-GET     /settings		              			Application.settings 
-POST    /settings/vireo/admin/settings			Application.postSettings
+*       /vireo                                  Submit.verifyPersonalInformation
+*       /submit                                 Submit.verifyPersonalInformation
+*       /submit/verifyinfo                      Submit.verifyPersonalInformation
+POST    /submit/license                         Submit.license
+POST    /submit/docinfo                         Submit.docInfo
+POST    /submit/upload                          Submit.fileUpload
+POST    /submit/confirm                         Submit.confirmAndSubmit
+POST    /submit/review                          Submit.review
+GET     /vireoAdmin                             Application.vireoAdmin
+GET     /settings                               Application.settings
+POST    /settings/vireo/admin/settings          Application.postSettings
 
 # Ignore favicon requests
 GET     /favicon.ico                            404
@@ -26,4 +29,4 @@ GET     /favicon.ico                            404
 GET     /public/                                staticDir:public
 
 # Catch all
-#*       /{controller}/{action}                  {controller}.{action}
+#*       /{controller}/{action}                 {controller}.{action}

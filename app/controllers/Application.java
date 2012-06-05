@@ -17,36 +17,7 @@ public class Application extends Controller {
 	dumpConfiguration();
 	render();
     }
-    
-    public static void dump() {
-	dumpRequestHeaders();
-	dumpConfiguration();
-    	render("v1.html");
-    }
-    
-    public static void vireo() {
-        render("v1.html");
-    }
-    
-    public static void submitIndex() {   
-    	dumpParams();    	
-        render("v2.html");
-    }
-    
-    public static void submitLicense() {
-    	dumpParams();  
-        render("v3.html");
-    }
-    
-    public static void submitDocInfo() {
-    	dumpParams();  
-        render("v4.html");
-    }
-    public static void submitFileUpload() {
-    	dumpParams();  
-        render("v5.html");
-    }    
-    
+        
     public static void vireoAdmin() {
     	dumpParams();  
         render("va1.html");
