@@ -27,7 +27,7 @@ public class JpaEmailTemplateImpl extends JpaAbstractModel<JpaEmailTemplateImpl>
 	@Column(nullable = false)
 	public String subject;
 
-	@Column(nullable = false)
+	@Column(nullable = false, length=32768) // 2^15
 	public String message;
 
 	/**

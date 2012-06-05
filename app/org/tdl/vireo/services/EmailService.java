@@ -36,7 +36,6 @@ public interface EmailService {
 	 */
 	public void sendEmail(EmailTemplate template, TemplateParameters params, List<String> recipients, String replyTo);
 	
-	
 	/**
 	 * Manage a list of variable substitutions that may be used.
 	 */

@@ -91,5 +91,9 @@
     
     <!-- Services -->
     <bean id="EmailService" class="org.tdl.vireo.services.impl.EmailServiceImpl" scope="singleton"/>
+    <bean id="SystemEmailTemplateService" class="org.tdl.vireo.services.impl.SystemEmailTemplateServiceImpl" scope="singleton">
+    	<property name="settingsRepository" ref="SettingsRepository"/>
+    	<property name="securityContext" ref="SecurityContext"/>
+    </bean>
 
 </beans>
