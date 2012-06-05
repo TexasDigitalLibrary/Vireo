@@ -11,38 +11,56 @@ import org.tdl.vireo.model.RoleType;
 
 @With(Authentication.class)
 public class Submit extends Controller {
- 
-    @Security(RoleType.STUDENT)
-    public static void verifyPersonalInformation() {
-        render("Submit/VerifyPersonalInformation.html");
-    }
-    
-    @Security(RoleType.STUDENT)
-    public static void license() {
-        render("Submit/License.html");
-    }
-    
-    @Security(RoleType.STUDENT)
-    public static void docInfo() {
-        render("Submit/DocInfo.html");
-    }
 
-    @Security(RoleType.STUDENT)
-    public static void fileUpload() {
-        render("Submit/FileUpload.html");
-    }
+	@Security(RoleType.STUDENT)
+	public static void verifyPersonalInformation() {
+		render("Submit/VerifyPersonalInformation.html");
+	}
 
-    @Security(RoleType.STUDENT)
-    public static void confirmAndSubmit() {
-        render("Submit/ConfirmAndSubmit.html");
-    }
+	@Security(RoleType.STUDENT)
+	public static void license() {
 
-    @Security(RoleType.STUDENT)
-    public static void review() {
-        render("Submit/Review.html");
-    }
+		dumpParams();
+		render("Submit/License.html");
+	}
 
-    public static void dump() {
-        render("Submit/VerifyPersonalInformation.html");
-    }
+	@Security(RoleType.STUDENT)
+	public static void docInfo() {
+		render("Submit/DocInfo.html");
+	}
+
+	@Security(RoleType.STUDENT)
+	public static void fileUpload() {
+		render("Submit/FileUpload.html");
+	}
+
+	@Security(RoleType.STUDENT)
+	public static void confirmAndSubmit() {
+		render("Submit/ConfirmAndSubmit.html");
+	}
+
+	@Security(RoleType.STUDENT)
+	public static void review() {
+		render("Submit/Review.html");
+	}
+
+	public static void dump() {
+		render("Submit/VerifyPersonalInformation.html");
+	}
+
+
+
+	private static void dumpParams() {
+
+		Map<String, String> names = params.allSimple();
+
+		Logger.info("Session: " + session.toString());
+
+		Logger.info("Params:");
+		
+		for (Map.Entry<String, String> entry : names.entrySet())        {
+			Logger.info(entry.getKey() + "= {" + entry.getValue() + "}");
+		}
+	}
+
 }
