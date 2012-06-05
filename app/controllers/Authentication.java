@@ -1,20 +1,40 @@
 package controllers;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.RoleType;
+import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.security.AuthenticationMethod;
 import org.tdl.vireo.security.AuthenticationResult;
 import org.tdl.vireo.security.SecurityContext;
+import org.tdl.vireo.services.EmailService;
+import org.tdl.vireo.services.EmailService.TemplateParameters;
+import org.tdl.vireo.services.SystemEmailTemplateService;
+import org.tdl.vireo.services.impl.SystemEmailTemplateServiceImpl;
 
 import play.Logger;
 import play.Play;
+import play.libs.Codec;
+import play.libs.Crypto;
 import play.modules.spring.Spring;
 import play.mvc.Before;
 import play.mvc.Controller;
@@ -40,6 +60,17 @@ import play.mvc.Router.ActionDefinition;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 public class Authentication extends Controller {
+	
+	// Spring dependencies
+	public static SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
+	public static EmailService emailService = Spring.getBeanOfType(EmailService.class);
+	public static SystemEmailTemplateService systemEmailService = Spring.getBeanOfType(SystemEmailTemplateService.class);
+	
+	public static PersonRepository personRepo = Spring.getBeanOfType(PersonRepository.class);
+	public static SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
+	
+	// Constants
+	public static final String REGISTRATION_TEMPLATE = "SYSTEM New User Registration";
 	
 	/**
 	 * This method is run before every action in any controller (with the
@@ -71,10 +102,7 @@ public class Authentication extends Controller {
 		// Log the current user in for this web request.
 		Person person = null;
 		if (personId != null) {
-			PersonRepository personRepo = Spring.getBeanOfType(PersonRepository.class);
-			person = personRepo.findPerson(personId);
-			
-			SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
+			person = personRepo.findPerson(personId);			
 			context.login(person);
 		}
 		
@@ -106,7 +134,6 @@ public class Authentication extends Controller {
 	 */
 	@Finally
 	public static void securityCleanup() {
-		SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
 		context.logout();
 	}
 	
@@ -120,12 +147,7 @@ public class Authentication extends Controller {
 		flash.keep("url");	
 		
 		// Get the list of all our authentication methods
-		Map<String,AuthenticationMethod> methodMap = Spring.getBeansOfType(AuthenticationMethod.class);
-		List<AuthenticationMethod> enabledMethods = new ArrayList<AuthenticationMethod>();
-		for(AuthenticationMethod method : methodMap.values()) {
-			if (method.isEnabled())
-				enabledMethods.add(method);
-		}
+		List<AuthenticationMethod> enabledMethods = getEnabledAuthenticationMethods();
 		
 		// Fail if the admin forgot to define ANY authentication methods.
 		if (enabledMethods.size() == 0)
@@ -203,7 +225,6 @@ public class Authentication extends Controller {
 				
 				AuthenticationResult result = explicitMethod.authenticate(username, password, request);
 
-				SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
 				if (AuthenticationResult.SUCCESSFULL == result && context.getPerson() != null) {
 					// Log the person in.
 					Person person = context.getPerson();
@@ -258,7 +279,6 @@ public class Authentication extends Controller {
 		
 		AuthenticationResult result = method.authenticate(request);
 		
-		SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
 		if (AuthenticationResult.SUCCESSFULL == result && context.getPerson() != null) {
 			// Log the person in.
 			Person person = context.getPerson();
@@ -287,7 +307,67 @@ public class Authentication extends Controller {
 	}
 	
 	public static void register() {
-		todo();
+		
+		if (!isRegistrationEnabled())
+			notFound();
+		
+		if (params.get("token") != null) {
+			String token = params.get("token");
+			
+			String email = validateToken(token, "reg");
+			
+			if (email == null)
+				renderTemplate("Authentication/invalidToken.html");
+			
+		}
+		
+		if (params.get("submit_register") != null) {
+			
+			String email = params.get("email");
+			
+			if (email == null || email.trim().length() == 0)
+				validation.addError("email", "An email address is required.");
+			
+			// Check if the address is valid.
+			try {
+				InternetAddress ia = new InternetAddress(email);
+				ia.validate();
+			} catch (AddressException ae) {
+				validation.addError("email", ae.getMessage());
+			}
+			
+			// Check if the account allready exists
+			Person person = personRepo.findPersonByEmail(email);
+			if (person != null)
+				validation.addError("email", "An account with this email address allready exists.");
+			
+			if (!validation.hasErrors()) {
+				// We're good let's send this off.
+				systemEmailService.generateAllSystemEmailTemplates();
+				EmailTemplate template = settingRepo.findEmailTemplateByName(REGISTRATION_TEMPLATE);
+				
+				ActionDefinition action = Router.reverse("Authentication.register");
+				action.absolute();
+				String token = generateToken(email, "reg");
+				
+				TemplateParameters params = new TemplateParameters();
+				params.REGISTRATION_URL = action.url + "?token="+token;
+				
+				List<String> recipients = new ArrayList<String>();
+				recipients.add(email);
+				
+				emailService.sendEmail(template, params, recipients, null);
+				
+				renderTemplate("Authentication/registerSent.html",email);
+			}
+			
+			renderTemplate("Authentication/registerStart.html",email);
+		}
+		renderTemplate("Authentication/registerStart.html");
+	}
+	
+	public static void registerReturn() {
+		
 	}
 	
 	public static void forgot() {
@@ -310,5 +390,152 @@ public class Authentication extends Controller {
 	
 	
 	
+	
+	
+	/**
+	 * Generate a secure token of an email address. The email address will be
+	 * encrypted in a specific format to be decrypted by the validateToken
+	 * below. When validated the email address will be returned this allows for
+	 * the UI to validate a particular email address.
+	 * 
+	 * @param emailAddress
+	 *            The email address to be validated. It can contain any
+	 *            character other than the ":".
+	 * @param type
+	 *            The purpose of for this token. This same string is needed for
+	 *            validating.
+	 * @return A base64 encoded token.
+	 */
+	private static String generateToken(String emailAddress, String type) {
+		
+		if (emailAddress.contains(":"))
+			throw new IllegalArgumentException("Email Addresses may not contain a colon: "+emailAddress);
+		
+		Date now = new Date();
+		int date = now.getYear() + now.getMonth() + now.getDate();
+		String rawToken = date+":"+emailAddress+":"+type;
+		
+		
+		// Encrypt the raw token address & base64 encode the result.
+		try {
+			String privateKey = Play.configuration.getProperty("application.secret").substring(0, 16);
+			byte[] raw = privateKey.getBytes();
+	        SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+	        Cipher cipher = Cipher.getInstance("AES");
+	        cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
+	        return Base64.encodeBase64URLSafeString(cipher.doFinal(rawToken.getBytes()));
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+	}
+	
+	/**
+	 * Decrypt and validate a token. The embedded email address encoded in the
+	 * token will be returned. The same type string that was used when producing
+	 * the token must be used, typically either "register" or "forgot".
+	 * 
+	 * @param token
+	 *            The base64 encoded token.
+	 * @param type
+	 *            The purpose of this token. The same string is needed that
+	 *            generated the token.
+	 * @return The embedded email address.
+	 */
+	private static String validateToken(String token, String type) {
+
+		String rawToken = null;
+		try {
+			String privateKey = Play.configuration.getProperty("application.secret").substring(0, 16);
+	        byte[] raw = privateKey.getBytes();
+	        SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+	        Cipher cipher = Cipher.getInstance("AES");
+	        cipher.init(Cipher.DECRYPT_MODE, skeySpec);
+	        rawToken = new String(cipher.doFinal(Base64.decodeBase64(token)));
+		} catch (Exception e) {
+			// Any error should just return null. 
+			return null;
+		}
+	    
+		// Check that we were able to decrypt something.
+		if (rawToken == null)
+			return null;
+		
+		// Check that we have the three parts of the rawToken.
+        String[] parts = rawToken.split(":");
+        if (parts.length != 3)
+        	return null;
+        
+        // Check that the token was generated today or yesterday.
+		Date now = new Date();
+		int date = now.getYear() + now.getMonth() + now.getDate();
+		if (!(String.valueOf(date).equals(parts[0]) ||
+			String.valueOf(date-1).equals(parts[0])))
+			return null;
+		
+		// Check that the token is of the expected type.
+		if (!type.equals(parts[2]))
+			return null;
+		
+		// All checks passed, return the email address.
+		return parts[1];
+	}
+	
+	/**
+	 * @return The list of all enabled authenticationMethods.
+	 */
+	private static List<AuthenticationMethod> getEnabledAuthenticationMethods() {
+		Map<String,AuthenticationMethod> methodMap = Spring.getBeansOfType(AuthenticationMethod.class);
+		List<AuthenticationMethod> enabledMethods = new ArrayList<AuthenticationMethod>();
+		for(AuthenticationMethod method : methodMap.values()) {
+			if (method.isEnabled())
+				enabledMethods.add(method);
+		}
+		return enabledMethods;
+	}
+	
+	/**
+	 * @return If the registration is enabled by any authentication method.
+	 */
+	private static boolean isRegistrationEnabled() {
+		
+		List<AuthenticationMethod> enabledMethods = getEnabledAuthenticationMethods();
+		for (AuthenticationMethod method : enabledMethods) {
+			if (method.getAllowNewRegistration())
+				return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * @param person
+	 *            The person to update their profile.
+	 * 
+	 * @return If this person may update their profile information.
+	 */
+	private static boolean isUpdateProfileEnabled(Person person) {
+	
+		List<AuthenticationMethod> enabledMethods = getEnabledAuthenticationMethods();
+		for (AuthenticationMethod method : enabledMethods) {
+			if (method.getAllowUpdateProfile(request, person))
+				return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * @param person
+	 *            The person to update their password.
+	 * @return If this person may update their password.
+	 */
+	private static boolean isUpdatePasswordEnabled(Person person) {
+		
+		List<AuthenticationMethod> enabledMethods = getEnabledAuthenticationMethods();
+		for (AuthenticationMethod method : enabledMethods) {
+			if (method.getAllowUpdatePassword(request, person))
+				return true;
+		}
+		return false;
+	}
 	
 }

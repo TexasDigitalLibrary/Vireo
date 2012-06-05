@@ -1,0 +1,15 @@
+#{extends 'main.html' /}
+#{set title:"New User Registration" /}
+
+
+#{form @@Authentication.register()}
+<h1>New User Registration</h1>
+<p>Begin by providing your email address. We will then send you an email with a special token, click on the token to come back to Vireo where you will be able to complete your account registration. </p>
+<p>Email Address: <input type="text" name="email" value="${email}" #{ifError 'email'}class='error'#{/ifError}/>
+#{ifError 'email'}<span class='error'>#{error 'email'/}</span>#{/ifError}
+</p>
+<p>
+<input type="submit" name="submit_cancel" value="Cancel">
+<input type="submit" name="submit_register" value="Register">
+</p>
+#{/form}

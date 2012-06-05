@@ -1,0 +1,17 @@
+#{extends 'main.html' /}
+#{set title:"Invalid Token" /}
+
+<h1>Invalid Token</h1>
+
+<p>The URL you provided is invalid. The URL may have been broken across multiple lines in your email client, like this:</p>
+
+<pre>
+ @@{Authentication.register}?token=LRdwGrXgGA75fln5Ih1O_EFFlk6OhjT3A
+ xYzVkFg1nvWQ
+</pre>
+
+<p>If so, copy and paste the entire URL directly into your browser's address bar, rather than simply clicking on the link. The address bar should then contain something like:</p>
+
+<pre>
+ @@{Authentication.register}?token=LRdwGrXgGA75fln5Ih1O_EFFlk6OhjT3AxYzVkFg1nvWQ
+</pre>
