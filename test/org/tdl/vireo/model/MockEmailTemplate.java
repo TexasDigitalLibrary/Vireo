@@ -15,6 +15,7 @@ public class MockEmailTemplate extends AbstractMock implements EmailTemplate {
 
 	/* Email Template Properties */
 	public int displayOrder;
+	public String name;
 	public String subject;
 	public String message;
 
@@ -48,6 +49,16 @@ public class MockEmailTemplate extends AbstractMock implements EmailTemplate {
 		this.displayOrder = displayOrder;
 	}
 
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 	@Override
 	public String getSubject() {
 		return subject;

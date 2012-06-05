@@ -22,6 +22,9 @@ public class JpaEmailTemplateImpl extends JpaAbstractModel<JpaEmailTemplateImpl>
 	public int displayOrder;
 
 	@Column(nullable = false, unique = true)
+	public String name;
+	
+	@Column(nullable = false)
 	public String subject;
 
 	@Column(nullable = false)
@@ -30,12 +33,17 @@ public class JpaEmailTemplateImpl extends JpaAbstractModel<JpaEmailTemplateImpl>
 	/**
 	 * Create a new JpaEmailTemplateImpl
 	 * 
+	 * @param name
+	 * 			  The new template's name.
 	 * @param subject
 	 *            The new template's subject.
 	 * @param message
 	 *            The new template's message
 	 */
-	protected JpaEmailTemplateImpl(String subject, String message) {
+	protected JpaEmailTemplateImpl(String name, String subject, String message) {
+
+		if (name == null || name.length() == 0)
+			throw new IllegalArgumentException("Name is required");
 		
 		if (subject == null || subject.length() == 0)
 			throw new IllegalArgumentException("Subject is required");
@@ -46,6 +54,7 @@ public class JpaEmailTemplateImpl extends JpaAbstractModel<JpaEmailTemplateImpl>
 		assertManager();
 		
 	    this.displayOrder = 0;
+	    this.name = name;
 		this.subject = subject;
 		this.message = message;
 	}
@@ -76,6 +85,23 @@ public class JpaEmailTemplateImpl extends JpaAbstractModel<JpaEmailTemplateImpl>
         this.displayOrder = displayOrder;
     }
 
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public void setName(String name) {
+		
+		if (name == null || name.length() == 0)
+			throw new IllegalArgumentException("Name is required");
+		
+		assertManager();
+		
+		this.name = name;
+	}
+
+    
 	@Override
 	public String getSubject() {
 		return subject;

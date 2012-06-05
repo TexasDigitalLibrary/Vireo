@@ -164,13 +164,18 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	// //////////////////////
 	
 	@Override
-	public EmailTemplate createEmailTemplate(String subject, String message) {
-		return new JpaEmailTemplateImpl(subject, message);
+	public EmailTemplate createEmailTemplate(String name, String subject, String message) {
+		return new JpaEmailTemplateImpl(name, subject, message);
 	}
 
 	@Override
 	public EmailTemplate findEmailTemplate(Long id) {
 		return (EmailTemplate) JpaEmailTemplateImpl.findById(id);
+	}
+	
+	@Override
+	public EmailTemplate findEmailTemplateByName(String name) {
+		return JpaEmailTemplateImpl.find("name = ?", name).first();
 	}
 
 	@Override

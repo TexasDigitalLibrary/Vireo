@@ -10,6 +10,17 @@ package org.tdl.vireo.model;
 public interface EmailTemplate extends AbstractOrderedModel {
 
 	/**
+	 * @return Return the unique name of this email template.
+	 */
+	public String getName();
+	
+	/**
+	 * @param name The new name of this email template.
+	 */
+	public void setName(String name);
+	
+	
+	/**
 	 * @return The subject of this email template.
 	 */
 	public String getSubject();

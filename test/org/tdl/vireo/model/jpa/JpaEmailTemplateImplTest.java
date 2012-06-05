@@ -46,9 +46,10 @@ public class JpaEmailTemplateImplTest extends UnitTest {
 	@Test
 	public void testCreate() {
 		
-		EmailTemplate template = settingRepo.createEmailTemplate("subject", "body");
+		EmailTemplate template = settingRepo.createEmailTemplate("name","subject", "body");
 		
 		assertNotNull(template);
+		assertEquals("name",template.getName());
 		assertEquals("subject",template.getSubject());
 		assertEquals("body",template.getMessage());
 
@@ -62,28 +63,42 @@ public class JpaEmailTemplateImplTest extends UnitTest {
 	public void testBadCreate() {
 		
 		try {
-			settingRepo.createEmailTemplate(null,"body");
+			settingRepo.createEmailTemplate(null,"subject","body");
+			fail("Able to create null name");
+		} catch (IllegalArgumentException iae) {
+			/* yay */
+		}
+		
+		try {
+			settingRepo.createEmailTemplate("","subject","body");
+			fail("Able to create blank name");
+		} catch (IllegalArgumentException iae) {
+			/* yay */
+		}
+		
+		try {
+			settingRepo.createEmailTemplate("name",null,"body");
 			fail("Able to create null subject");
 		} catch (IllegalArgumentException iae) {
 			/* yay */
 		}
 		
 		try {
-			settingRepo.createEmailTemplate("","body");
+			settingRepo.createEmailTemplate("name","","body");
 			fail("Able to create blank subject");
 		} catch (IllegalArgumentException iae) {
 			/* yay */
 		}
 		
 		try {
-			settingRepo.createEmailTemplate("subject",null);
+			settingRepo.createEmailTemplate("name","subject",null);
 			fail("Able to create null message");
 		} catch (IllegalArgumentException iae) {
 			/* yay */
 		}
 		
 		try {
-			settingRepo.createEmailTemplate("subject","");
+			settingRepo.createEmailTemplate("name","subject","");
 			fail("Able to create blank message");
 		} catch (IllegalArgumentException iae) {
 			/* yay */
@@ -98,10 +113,10 @@ public class JpaEmailTemplateImplTest extends UnitTest {
 	@Test
 	public void testCreateDuplicate() {
 		
-		EmailTemplate template = settingRepo.createEmailTemplate("subject","body").save();
+		EmailTemplate template = settingRepo.createEmailTemplate("name","subject","body").save();
 		
 		try {
-			settingRepo.createEmailTemplate("subject","other body").save();
+			settingRepo.createEmailTemplate("name","subject","other body").save();
 			fail("Able to create duplicate email template");
 		} catch (RuntimeException re) {
 			/* yay */
@@ -118,7 +133,7 @@ public class JpaEmailTemplateImplTest extends UnitTest {
 	@Test
 	public void testId() {
 		
-		EmailTemplate template = settingRepo.createEmailTemplate("subject","body").save();
+		EmailTemplate template = settingRepo.createEmailTemplate("name","subject","body").save();
 
 		assertNotNull(template.getId());
 		
@@ -130,7 +145,7 @@ public class JpaEmailTemplateImplTest extends UnitTest {
 	 */
 	@Test
 	public void testFindById() {
-		EmailTemplate template = settingRepo.createEmailTemplate("subject","body").save();
+		EmailTemplate template = settingRepo.createEmailTemplate("name","subject","body").save();
 
 		
 		EmailTemplate retrieved = settingRepo.findEmailTemplate(template.getId());
@@ -142,15 +157,30 @@ public class JpaEmailTemplateImplTest extends UnitTest {
 	}
 	
 	/**
+	 * Test retrieval by name.
+	 */
+	@Test
+	public void testFindByName() {
+		EmailTemplate template = settingRepo.createEmailTemplate("name","subject","body").save();
+		
+		EmailTemplate retrieved = settingRepo.findEmailTemplateByName("name");
+		
+		assertEquals(template.getSubject(),retrieved.getSubject());
+		assertEquals(template.getMessage(),retrieved.getMessage());
+		
+		retrieved.delete();
+	}
+	
+	/**
 	 * Test retrieving all templates
 	 */
 	@Test
-	public void testFindAllColleges() {
+	public void testFindAllTemplates() {
 
 		int initialSize = settingRepo.findAllEmailTemplates().size();
 		
-		EmailTemplate template1 = settingRepo.createEmailTemplate("subject1","body").save();
-		EmailTemplate template2 = settingRepo.createEmailTemplate("subject2","body").save();
+		EmailTemplate template1 = settingRepo.createEmailTemplate("name1","subject","body").save();
+		EmailTemplate template2 = settingRepo.createEmailTemplate("name2","subject","body").save();
 
 		int postSize = settingRepo.findAllEmailTemplates().size();
 		
@@ -165,8 +195,24 @@ public class JpaEmailTemplateImplTest extends UnitTest {
 	 */
 	@Test 
 	public void testModifyingValidation() {
-		EmailTemplate template = settingRepo.createEmailTemplate("subject","body").save();
-		EmailTemplate test = settingRepo.createEmailTemplate("test","body").save();
+		EmailTemplate template = settingRepo.createEmailTemplate("name","subject","body").save();
+		EmailTemplate test = settingRepo.createEmailTemplate("test","test","body").save();
+		
+		
+		try {
+			test.setName(null);
+			fail("Able to set name to null");
+		} catch (IllegalArgumentException iae) {
+			/* yay */
+		}
+		
+		try {
+			test.setName("");
+			fail("Able to set name to blank");
+		} catch (IllegalArgumentException iae) {
+			/* yay */
+		}
+		
 		
 		try {
 			test.setSubject(null);
@@ -198,7 +244,7 @@ public class JpaEmailTemplateImplTest extends UnitTest {
 		
 		
 		try {
-			test.setSubject("subject");
+			test.setName("name");
 			test.save();
 			fail("Able to modify object into duplicate.");
 		} catch(RuntimeException re) {
@@ -215,10 +261,10 @@ public class JpaEmailTemplateImplTest extends UnitTest {
 	 */
 	@Test
 	public void testOrder() {
-		EmailTemplate template4 = settingRepo.createEmailTemplate("subject4","body").save();
-		EmailTemplate template1 = settingRepo.createEmailTemplate("subject1","body").save();
-		EmailTemplate template3 = settingRepo.createEmailTemplate("subject3","body").save();
-		EmailTemplate template2 = settingRepo.createEmailTemplate("subject2","body").save();
+		EmailTemplate template4 = settingRepo.createEmailTemplate("name4","subject","body").save();
+		EmailTemplate template1 = settingRepo.createEmailTemplate("name1","subject","body").save();
+		EmailTemplate template3 = settingRepo.createEmailTemplate("name3","subject","body").save();
+		EmailTemplate template2 = settingRepo.createEmailTemplate("name2","subject","body").save();
 		
 		template1.setDisplayOrder(0);
 		template2.setDisplayOrder(1);
@@ -262,7 +308,7 @@ public class JpaEmailTemplateImplTest extends UnitTest {
 		JPA.em().clear();
 		JPA.em().getTransaction().begin();
 		
-		EmailTemplate template = settingRepo.createEmailTemplate("subject","body").save();
+		EmailTemplate template = settingRepo.createEmailTemplate("name","subject","body").save();
 		
 		// Commit and reopen a new transaction.
 		JPA.em().getTransaction().commit();
@@ -290,11 +336,11 @@ public class JpaEmailTemplateImplTest extends UnitTest {
 	public void testAccess() {
 		
 		context.login(MockPerson.getManager());
-		settingRepo.createEmailTemplate("subject","body").save().delete();
+		settingRepo.createEmailTemplate("name","subject","body").save().delete();
 		
 		try {
 			context.login(MockPerson.getReviewer());
-			settingRepo.createEmailTemplate("subject","body").save();
+			settingRepo.createEmailTemplate("name","subject","body").save();
 			fail("A reviewer was able to create a new object.");
 		} catch (SecurityException se) {
 			/* yay */
