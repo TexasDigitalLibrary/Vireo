@@ -86,6 +86,9 @@ public class EmailServiceImpl implements EmailService {
 		if (params.ADVISOR_URL != null)
 			message = message.replaceAll("\\{ADVISOR_URL\\}",params.ADVISOR_URL);
 		
+		if (params.REGISTRATION_URL != null)
+			message = message.replaceAll("\\{REGISTRATION_URL\\}",params.REGISTRATION_URL);
+		
 		if (params.SUBMISSION_STATUS != null)
 			message = message.replaceAll("\\{SUBMISSION_STATUS\\}",params.SUBMISSION_STATUS);
 		

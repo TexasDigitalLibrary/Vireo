@@ -65,6 +65,9 @@ public interface EmailService {
 		// The URL sent to the student's advisor to request manuscript approval.
 		public String ADVISOR_URL;
 		
+		// The URL sent to complete registration/forgot password.
+		public String REGISTRATION_URL;
+		
 		// The current status of the submission; e.g. 'Approved', 'Needs Corrections', etc.
 		public String SUBMISSION_STATUS;
 		
