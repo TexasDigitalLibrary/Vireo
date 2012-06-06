@@ -43,7 +43,17 @@ public class SubmitTest extends FunctionalTest {
 		 
 		 Map<String,String> verifyArgs = new HashMap<String,String>();
 		 
-		verifyArgs.put("firstName","TestStudentFirstName");
+		 verifyArgs.put("middleName","TestStudentFirstName");
+		 verifyArgs.put("yearOfBirth","1996");
+		 verifyArgs.put("department","science");
+		 verifyArgs.put("degree","bs");
+		 verifyArgs.put("major","computer science");
+		 verifyArgs.put("permPhone","555-1212");
+		 verifyArgs.put("permAddress","2222 Fake Street");
+		 verifyArgs.put("permEmail","noreply@noreply.org");
+		 verifyArgs.put("currentPhone","555-1212");
+		 verifyArgs.put("currentAddress","2222 Fake Street");
+
 			
 		 Response response = POST(LICENSE_URL, verifyArgs);
 		 
