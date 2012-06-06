@@ -47,6 +47,7 @@
         		<entry key="lastName" value="${auth.shib.attribute.lastName}"/>
         		
         		<!-- Optional -->
+        		<entry key="institutionalIdentifier" value="${auth.shib.attribute.institutionalIdentifier}"/>
         		<entry key="middleName" value="${auth.shib.attribute.middleName}"/>
         		<entry key="displayName" value="${auth.shib.attribute.displayName}"/>
         		<entry key="birthYear" value="${auth.shib.attribute.birthYear}"/>
@@ -56,6 +57,7 @@
         		<entry key="permanentPhoneNumber" value="${auth.shib.attribute.permanentPhoneNumber}"/>
         		<entry key="permanentPostalAddress" value="${auth.shib.attribute.permanentPostalAddress}"/>
         		<entry key="permanentEmailAddress" value="${auth.shib.attribute.permanentEmailAddress}"/>
+        		<entry key="currentDegree" value="${auth.shib.attribute.currentDegree}"/>
         		<entry key="currentDepartment" value="${auth.shib.attribute.currentDepartment}"/>
         		<entry key="currentCollege" value="${auth.shib.attribute.currentCollege}"/>
         		<entry key="currentMajor" value="${auth.shib.attribute.currentMajor}"/>
@@ -72,6 +74,7 @@
         		<entry key="${auth.shib.attribute.lastName}" value="Thornton"/>
         		
         		<!-- Optional -->
+        		<entry key="${auth.shib.attribute.institutionalIdentifier}" value="123456789"/>
         		<entry key="${auth.shib.attribute.middleName}" value="Bob"/>
         		<entry key="${auth.shib.attribute.displayName}" value="Billy Bob"/>
         		<entry key="${auth.shib.attribute.birthYear}" value="1955"/>
@@ -80,6 +83,7 @@
         		<entry key="${auth.shib.attribute.permanentPhoneNumber}" value="555-555-1932"/>
         		<entry key="${auth.shib.attribute.permanentPostalAddress}" value="Hot Springs, Arkansas 73424"/>
         		<entry key="${auth.shib.attribute.permanentEmailAddress}" value="bthornton@yahoo.com"/>
+        		<entry key="${auth.shib.attribute.currentDegree}" value="Bachelor of Science"/>
         		<entry key="${auth.shib.attribute.currentDepartment}" value="Performance Studies"/>
         		<entry key="${auth.shib.attribute.currentCollege}" value="College of Liberal Arts"/>
         		<entry key="${auth.shib.attribute.currentMajor}" value="Performance Studies"/>

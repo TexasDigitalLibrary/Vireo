@@ -378,6 +378,7 @@ public class JpaPersonImplTests extends UnitTest {
 		Person person = repo.createPerson("netid", "email@email.com", "other", "other", RoleType.NONE);
 		person.save();
 		
+		person.setInstitutionalIdentifier("identifier");
 		person.setFirstName("first");
 		person.setMiddleName("middle");
 		person.setLastName("last");
@@ -389,6 +390,7 @@ public class JpaPersonImplTests extends UnitTest {
 		person.setPermanentPhoneNumber("PermanentPhone");
 		person.setPermanentPostalAddress("PermanentPostal");
 		person.setPermanentEmailAddress("PermanentEmail");
+		person.setCurrentDegree("degree");
 		person.setCurrentDepartment("department");
 		person.setCurrentCollege("college");
 		person.setCurrentMajor("major");
@@ -398,6 +400,7 @@ public class JpaPersonImplTests extends UnitTest {
 		person.save();
 		
 		
+		assertEquals("identifier",person.getInstitutionalIdentifier());
 		assertEquals("first",person.getFirstName());
 		assertEquals("middle",person.getMiddleName());
 		assertEquals("last",person.getLastName());
@@ -409,6 +412,7 @@ public class JpaPersonImplTests extends UnitTest {
 		assertEquals("PermanentPhone",person.getPermanentPhoneNumber());
 		assertEquals("PermanentPostal",person.getPermanentPostalAddress());
 		assertEquals("PermanentEmail",person.getPermanentEmailAddress());
+		assertEquals("degree",person.getCurrentDegree());
 		assertEquals("department",person.getCurrentDepartment());
 		assertEquals("college",person.getCurrentCollege());
 		assertEquals("major",person.getCurrentMajor());

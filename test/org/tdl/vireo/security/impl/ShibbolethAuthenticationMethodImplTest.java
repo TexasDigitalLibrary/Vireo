@@ -46,6 +46,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 	public boolean originalUseNetIdAsIdentifier;
 	public String originalHeaderNetId;
 	public String originalHeaderEmail;
+	public String originalHeaderInstitutionalIdentifier;
 	public String originalHeaderFirstName;
 	public String originalHeaderMiddleName;
 	public String originalHeaderLastName;
@@ -57,6 +58,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 	public String originalHeaderPermanentPhoneNumber;
 	public String originalHeaderPermanentPostalAddress;
 	public String originalHeaderPermanentEmailAddress;
+	public String originalHeaderCurrentDegree;
 	public String originalHeaderCurrentDepartment;
 	public String originalHeaderCurrentCollege;
 	public String originalHeaderCurrentMajor;
@@ -86,6 +88,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		originalUseNetIdAsIdentifier = method.useNetIdAsIdentifier;
 		originalHeaderNetId = method.headerNetId;
 		originalHeaderEmail = method.headerEmail;
+		originalHeaderInstitutionalIdentifier = method.headerInstitutionalIdentifier;
 		originalHeaderFirstName = method.headerFirstName;
 		originalHeaderMiddleName = method.headerMiddleName;
 		originalHeaderLastName = method.headerLastName;
@@ -97,6 +100,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		originalHeaderPermanentPhoneNumber = method.headerPermanentPhoneNumber;
 		originalHeaderPermanentPostalAddress = method.headerPermanentPostalAddress;
 		originalHeaderPermanentEmailAddress = method.headerPermanentEmailAddress;
+		originalHeaderCurrentDegree = method.headerCurrentDegree;
 		originalHeaderCurrentDepartment = method.headerCurrentDepartment;
 		originalHeaderCurrentCollege = method.headerCurrentCollege;
 		originalHeaderCurrentMajor = method.headerCurrentMajor;
@@ -107,6 +111,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		// Set the method's state to what the test expect.
 		method.headerNetId = "SHIB_netid";
 		method.headerEmail = "SHIB_mail";
+		method.headerInstitutionalIdentifier = "SHIB_uin";
 		method.headerFirstName = "SHIB_givenName";
 		method.headerMiddleName = "SHIB_initials"; 
 		method.headerLastName = "SHIB_sn"; 
@@ -118,6 +123,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		method.headerPermanentPhoneNumber = "SHIB_permanentPhone";
 		method.headerPermanentPostalAddress = "SHIB_permanentPostal";
 		method.headerPermanentEmailAddress = "SHIB_permanentMail";
+		method.headerCurrentDegree = "SHIB_degree";
 		method.headerCurrentDepartment = "SHIB_department";
 		method.headerCurrentCollege = "SHIB_college";
 		method.headerCurrentMajor = "SHIB_major";
@@ -143,6 +149,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		method.useNetIdAsIdentifier = originalUseNetIdAsIdentifier;
 		method.headerNetId = originalHeaderNetId;
 		method.headerEmail = originalHeaderEmail;
+		method.headerInstitutionalIdentifier = originalHeaderInstitutionalIdentifier;
 		method.headerFirstName = originalHeaderFirstName;
 		method.headerMiddleName = originalHeaderMiddleName;
 		method.headerLastName = originalHeaderLastName;
@@ -154,6 +161,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		method.headerPermanentPhoneNumber = originalHeaderPermanentPhoneNumber;
 		method.headerPermanentPostalAddress = originalHeaderPermanentPostalAddress;
 		method.headerPermanentEmailAddress = originalHeaderPermanentEmailAddress;
+		method.headerCurrentDegree = originalHeaderCurrentDegree;
 		method.headerCurrentDepartment = originalHeaderCurrentDepartment;
 		method.headerCurrentCollege = originalHeaderCurrentCollege;
 		method.headerCurrentMajor = originalHeaderCurrentMajor;
@@ -185,6 +193,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		Map<String,String> headers = new HashMap<String,String>();
 		headers.put("SHIB_netid","netid");
 		headers.put("SHIB_mail", "updatedemail@email.com");
+		headers.put("SHIB_uin","123456789");
 		headers.put("SHIB_givenName", "updatedfirst");
 		headers.put("SHIB_sn","updatedlast");
 		headers.put("SHIB_initials","initials");
@@ -195,6 +204,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		headers.put("SHIB_permanentPhone","permanentPhone");
 		headers.put("SHIB_permanentPostal","permanentPostal");
 		headers.put("SHIB_permanentMail","permanentEmail");
+		headers.put("SHIB_degree","degree");
 		headers.put("SHIB_department","department");
 		headers.put("SHIB_college","college");
 		headers.put("SHIB_major","major");
@@ -210,6 +220,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		
 		// Assert that all the header were matched over and setup correctly.
 		assertEquals("updatedemail@email.com",person1.getEmail());
+		assertEquals("123456789",person1.getInstitutionalIdentifier());
 		assertEquals("updatedfirst",person1.getFirstName());
 		assertEquals("updatedlast",person1.getLastName());
 		assertEquals("initials",person1.getMiddleName());
@@ -220,6 +231,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		assertEquals("permanentPhone",person1.getPermanentPhoneNumber());
 		assertEquals("permanentPostal",person1.getPermanentPostalAddress());
 		assertEquals("permanentEmail",person1.getPermanentEmailAddress());
+		assertEquals("degree",person1.getCurrentDegree());
 		assertEquals("college",person1.getCurrentCollege());
 		assertEquals("department",person1.getCurrentDepartment());
 		assertEquals("major",person1.getCurrentMajor());
@@ -239,6 +251,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		Map<String,String> mockAttributes = new HashMap<String,String>();
 		mockAttributes.put("SHIB_netid","netid");
 		mockAttributes.put("SHIB_mail", "updatedemail@email.com");
+		mockAttributes.put("SHIB_uin","123456789");
 		mockAttributes.put("SHIB_givenName", "updatedfirst");
 		mockAttributes.put("SHIB_sn","updatedlast");
 		mockAttributes.put("SHIB_initials","initials");
@@ -249,6 +262,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		mockAttributes.put("SHIB_permanentPhone","permanentPhone");
 		mockAttributes.put("SHIB_permanentPostal","permanentPostal");
 		mockAttributes.put("SHIB_permanentMail","permanentEmail");
+		mockAttributes.put("SHIB_degree","degree");
 		mockAttributes.put("SHIB_department","department");
 		mockAttributes.put("SHIB_college","college");
 		mockAttributes.put("SHIB_major","major");
@@ -266,6 +280,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		
 		// Assert that all the header were matched over and setup correctly.
 		assertEquals("updatedemail@email.com",person1.getEmail());
+		assertEquals("123456789",person1.getInstitutionalIdentifier());
 		assertEquals("updatedfirst",person1.getFirstName());
 		assertEquals("updatedlast",person1.getLastName());
 		assertEquals("initials",person1.getMiddleName());
@@ -276,6 +291,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		assertEquals("permanentPhone",person1.getPermanentPhoneNumber());
 		assertEquals("permanentPostal",person1.getPermanentPostalAddress());
 		assertEquals("permanentEmail",person1.getPermanentEmailAddress());
+		assertEquals("degree",person1.getCurrentDegree());
 		assertEquals("college",person1.getCurrentCollege());
 		assertEquals("department",person1.getCurrentDepartment());
 		assertEquals("major",person1.getCurrentMajor());

@@ -36,6 +36,7 @@ public class MockPerson extends AbstractMock implements Person {
 	public String netid;
 	public String email;
 	public String password;
+	public String institutionalIdentifier;
 	public String firstName;
 	public String lastName;
 	public String middleName;
@@ -47,6 +48,7 @@ public class MockPerson extends AbstractMock implements Person {
 	public String permanentPhoneNumber;
 	public String permanentPostalAddress;
 	public String permanentEmailAddress;
+	public String currentDegree;
 	public String currentDepartment;
 	public String currentCollege;
 	public String currentMajor;
@@ -171,6 +173,16 @@ public class MockPerson extends AbstractMock implements Person {
 		
 		return this.password.equals(password);
 	}
+	
+	@Override
+	public String getInstitutionalIdentifier() {
+		return institutionalIdentifier;
+	}
+	
+	@Override
+	public void setInstitutionalIdentifier(String identifier) {
+		this.institutionalIdentifier = identifier;
+	}
 
 	@Override
 	public String getFirstName() {
@@ -287,6 +299,16 @@ public class MockPerson extends AbstractMock implements Person {
 		this.permanentEmailAddress = email;
 	}
 
+	@Override
+	public String getCurrentDegree() {
+		return currentDegree;
+	}
+
+	@Override
+	public void setCurrentDegree(String degree) {
+		this.currentDegree = degree;
+	}
+	
 	@Override
 	public String getCurrentDepartment() {
 		return currentDepartment;
