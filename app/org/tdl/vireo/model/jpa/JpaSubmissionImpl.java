@@ -58,6 +58,11 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@ManyToOne(optional = false, targetEntity = JpaPersonImpl.class)
 	public Person submitter;
 
+	public String studentFirstName;
+	public String studentLastName;
+	public String studentMiddleName;
+	public Integer studentBirthYear;
+	
 	public String documentTitle;
 	public String documentAbstract;
 	public String documentKeywords;
@@ -178,6 +183,68 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@Override
 	public Person getSubmitter() {
 		return submitter;
+	}
+	
+	@Override
+	public String getStudentFirstName(){
+		return studentFirstName;
+	}
+
+	@Override
+	public void setStudentFirstName(String firstName) {
+		
+		assertReviewerOrOwner(submitter);
+
+		this.studentFirstName = firstName;
+		
+		generateChangeLog("Student first name", firstName, false);
+	}
+
+	@Override
+	public String getStudentLastName() {
+		return studentLastName;
+	}
+
+	@Override
+	public void setStudentLastName(String lastName) {
+		
+		assertReviewerOrOwner(submitter);
+
+		this.studentLastName = lastName;
+		
+		generateChangeLog("Student last name", lastName, false);
+	}
+
+	@Override
+	public String getStudentMiddleName() {
+		return studentMiddleName;
+	}
+
+	public void setStudentMiddleName(String middleName) {
+		
+		assertReviewerOrOwner(submitter);
+
+		this.studentMiddleName = middleName;
+		
+		generateChangeLog("Student middle name", middleName, false);
+	}
+
+	@Override
+	public Integer getStudentBirthYear() {
+		return studentBirthYear;
+	}
+
+	@Override
+	public void setStudentBirthYear(Integer year) {
+		
+		assertReviewerOrOwner(submitter);
+
+		this.studentBirthYear = year;
+
+		if (year == null)
+			generateChangeLog("Student birth year", null,false);
+		else
+			generateChangeLog("Student birth year", String.valueOf(year),false);
 	}
 
 	@Override

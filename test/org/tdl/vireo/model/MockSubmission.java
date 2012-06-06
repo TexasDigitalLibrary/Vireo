@@ -37,6 +37,10 @@ public class MockSubmission extends AbstractMock implements Submission {
 
 	/* Submission Properties */
 	public Person submitter;
+	public String studentFirstName;
+	public String studentLastName;
+	public String studentMiddleName;
+	public Integer studentBirthYear;
 	public String documentTitle;
 	public String documentAbstract;
 	public String documentKeywords;
@@ -86,6 +90,45 @@ public class MockSubmission extends AbstractMock implements Submission {
 	@Override
 	public Person getSubmitter() {
 		return submitter;
+	}
+	
+	@Override
+	public String getStudentFirstName(){
+		return studentFirstName;
+	}
+
+	@Override
+	public void setStudentFirstName(String firstName) {
+		this.studentFirstName = firstName;
+	}
+
+	@Override
+	public String getStudentLastName() {
+		return studentLastName;
+	}
+
+	@Override
+	public void setStudentLastName(String lastName) {
+		this.studentLastName = lastName;
+	}
+
+	@Override
+	public String getStudentMiddleName() {
+		return studentMiddleName;
+	}
+
+	public void setStudentMiddleName(String middleName) {
+		this.studentMiddleName = middleName;
+	}
+
+	@Override
+	public Integer getStudentBirthYear() {
+		return studentBirthYear;
+	}
+
+	@Override
+	public void setStudentBirthYear(Integer year) {
+		this.studentBirthYear = year;
 	}
 
 	@Override
