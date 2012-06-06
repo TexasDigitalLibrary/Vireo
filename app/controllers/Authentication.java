@@ -179,7 +179,7 @@ public class Authentication extends Controller {
 		
 		notFoundIfNull(methodName);
 		if (params.get("submit_cancel") != null)
-			redirect("Application.index");
+			Application.index();
 		
 		// Look up the authentication method and make sure it's valid.
 		AuthenticationMethod method = null;
@@ -306,21 +306,96 @@ public class Authentication extends Controller {
 		render(method, result, missing, bad, unknown);
 	}
 	
+	/**
+	 * Handle new account registration. This action has several different parts
+	 * to complete the registration process. By design it is very similar to
+	 * DSpace's registration process.
+	 * 
+	 * 1) Display the initial form where a user supplies their email address. If
+	 * it's valid and not already used we send an email token to it.
+	 * 
+	 * 2) Display an email sent message after sending the verification email.
+	 * 
+	 * 3) Upon return from a link in email ask the user for the required
+	 * information: first and last names along with a password. Once validated
+	 * create the account.
+	 * 
+	 * 4) If the return link is not valid, then display a pretty error page
+	 * explaining common problems.
+	 */
 	public static void register() {
-		
+		// Bail if we don't allow registration
 		if (!isRegistrationEnabled())
 			notFound();
 		
+		// Bail if someone is already logged in.
+		if (context.getPerson() != null)
+			Authentication.profile();
+		
+		// Bail if they've clicked cancel.
+		if (params.get("submit_cancel") != null)
+			Application.index();
+		
+		// Handle returning after email verification.
 		if (params.get("token") != null) {
 			String token = params.get("token");
 			
 			String email = validateToken(token, "reg");
-			
 			if (email == null)
 				renderTemplate("Authentication/invalidToken.html");
 			
+			String firstName = params.get("firstname");
+			String lastName = params.get("lastname");
+			String password1 = params.get("password1");
+			String password2 = params.get("password2");
+			
+			if (params.get("submit_register") != null) {
+				
+				if (firstName == null || firstName.trim().length() == 0)
+					validation.addError("firstname", "First name is required.");
+				
+				if (lastName == null || lastName.trim().length() == 0)
+					validation.addError("lastname", "Last name is required.");
+				
+				if (password1 == null || password1.trim().length() == 0)
+					validation.addError("password1", "Please pick a password.");
+				
+				if (password1 != null && !password1.equals(password2)) 
+					validation.addError("password2", "The passwords do not match.");
+				
+				if (password1 != null && password1.trim().length() < 6)
+					validation.addError("password1", "Please pick a password longer than 6 characters.");
+				
+				if (!validation.hasErrors()) {
+					
+					// Create the account.
+					context.turnOffAuthorization();
+					Person person = personRepo.createPerson(null, email, firstName, lastName, RoleType.STUDENT);
+					person.setPassword(password1);
+					person.save();
+					context.turnOffAuthorization();
+					context.login(person);
+					
+					// Notify all the authentication methods of the new user.
+					List<AuthenticationMethod> methods = getEnabledAuthenticationMethods();
+					for (AuthenticationMethod method : methods) 
+						method.personCreated(request, person);
+					
+					// Log the person in
+					session.put("personId", person.getId());
+					session.put("firstName", person.getFirstName());
+					session.put("lastName", person.getLastName());
+					session.put("displayName", person.getDisplayName());
+							
+					// Go to the index page.
+					Application.index();
+				}
+			}
+			
+			renderTemplate("Authentication/registerReturn.html", token, email, firstName, lastName, password1, password2);
 		}
 		
+		// Otherwise handle sending the email verification.
 		if (params.get("submit_register") != null) {
 			
 			String email = params.get("email");
@@ -330,8 +405,10 @@ public class Authentication extends Controller {
 			
 			// Check if the address is valid.
 			try {
-				InternetAddress ia = new InternetAddress(email);
-				ia.validate();
+				if (email != null) {
+					InternetAddress ia = new InternetAddress(email);
+					ia.validate();
+				}
 			} catch (AddressException ae) {
 				validation.addError("email", ae.getMessage());
 			}
