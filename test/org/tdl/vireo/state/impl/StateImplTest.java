@@ -1,4 +1,4 @@
-package org.tdl.vireo.state.simple;
+package org.tdl.vireo.state.impl;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +25,7 @@ import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.state.State;
+import org.tdl.vireo.state.impl.StateImpl;
 
 import play.Play;
 import play.modules.spring.Spring;

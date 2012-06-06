@@ -28,10 +28,60 @@ import org.tdl.vireo.state.State;
 public interface Submission extends AbstractModel {
 
 	/**
-	 * @return The submitter of this submission.
+	 * @return The original submitter who created this submission. This may not
+	 *         necessarily the graduating student. In cases where the submission
+	 *         is being made by a proxy like by a staff member then the
+	 *         submitter would be the person object for the staff member who
+	 *         original created the submission.
 	 */
 	public Person getSubmitter();
 
+	/**
+	 * @return The first name of the student who authored this submission.
+	 */
+	public String getStudentFirstName();
+
+	/**
+	 * @param firstName
+	 *            The new first name of the student.
+	 */
+	public void setStudentFirstName(String firstName);
+
+	/**
+	 * @return The last name of the student who authored this submission.
+	 */
+	public String getStudentLastName();
+
+	/**
+	 * @param lastName
+	 *            The new last name of the student.
+	 */
+	public void setStudentLastName(String lastName);
+
+	/**
+	 * @return The middle name of the student who authored this submission.
+	 */
+	public String getStudentMiddleName();
+
+	/**
+	 * @param middleName
+	 *            The new middle name of the student.
+	 */
+	public void setStudentMiddleName(String middleName);
+
+	/**
+	 * 
+	 * @return The birth year for the student woh authored this submission.
+	 */
+	public Integer getStudentBirthYear();
+
+	/**
+	 * @param year
+	 *            The new birth year for the student.
+	 */
+	public void setStudentBirthYear(Integer year);
+	
+	
 	/**
 	 * @return The document title.
 	 */
@@ -115,12 +165,12 @@ public interface Submission extends AbstractModel {
 	 * Add a new committeeMember
 	 * @param firstName The first name of the new member.
 	 * @param lastName The last name of the new member.
-	 * @param middleInitial The middle initial of the new member.
+	 * @param middleName The middle name of the new member.
 	 * @param chair Weather this member is the chair or a co-chair.
 	 * @return The newly created member.
 	 */
 	public CommitteeMember addCommitteeMember(String firstName, String lastName,
-			String middleInitial, Boolean chair);
+			String middleName, Boolean chair);
 
 	/**
 	 * 

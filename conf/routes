@@ -10,12 +10,13 @@ GET     /                                       Application.index
 *       /logout                                 Authentication.logout
 *       /register                               Authentication.register
 *       /profile                                Authentication.profile
-*       /vireo                                  Submit.verifyPersonalInformation
 *       /submit                                 Submit.verifyPersonalInformation
 *       /submit/verifyinfo                      Submit.verifyPersonalInformation
+GET     /submit/verifyinfo                      Submit.verifyPersonalInformation
+POST    /submit/verifyinfo                      Submit.doVerifyPersonalInformation
 GET	    /submit/license                         Submit.license
 POST    /submit/license                         Submit.license
-GET    /submit/docinfo                         Submit.docInfo
+GET   	/submit/docinfo                         Submit.docInfo
 POST    /submit/docinfo                         Submit.docInfo
 GET	    /submit/upload                          Submit.fileUpload
 POST    /submit/upload                          Submit.fileUpload

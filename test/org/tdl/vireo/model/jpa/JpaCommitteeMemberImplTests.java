@@ -15,7 +15,7 @@ import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
-import org.tdl.vireo.state.simple.StateManagerImpl;
+import org.tdl.vireo.state.impl.StateManagerImpl;
 
 import play.db.jpa.JPA;
 import play.modules.spring.Spring;
@@ -74,13 +74,13 @@ public class JpaCommitteeMemberImplTests extends UnitTest {
 		CommitteeMember member = sub.addCommitteeMember("first", "last", "middle", false);
 		assertEquals("first",member.getFirstName());
 		assertEquals("last",member.getLastName());
-		assertEquals("middle",member.getMiddleInitial());
+		assertEquals("middle",member.getMiddleName());
 		assertFalse(member.isCommitteeChair());
 		
 		member = sub.addCommitteeMember("first", "last", null, true);
 		assertEquals("first",member.getFirstName());
 		assertEquals("last",member.getLastName());
-		assertNull(member.getMiddleInitial());
+		assertNull(member.getMiddleName());
 		assertTrue(member.isCommitteeChair());
 	}
 	
@@ -179,7 +179,7 @@ public class JpaCommitteeMemberImplTests extends UnitTest {
 		member = subRepo.findCommitteeMember(member.getId());
 		assertEquals("first",member.getFirstName());
 		assertEquals("last",member.getLastName());
-		assertEquals("middle",member.getMiddleInitial());
+		assertEquals("middle",member.getMiddleName());
 		assertFalse(member.isCommitteeChair());
 		
 		

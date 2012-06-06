@@ -8,13 +8,30 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import org.tdl.vireo.model.RoleType;
+/**
+ * Submit controller
+ * This controller manages the student submission forms for Vireo 
+ * 
+ * @author Dan Galewsky</a>
+ */
 
 @With(Authentication.class)
 public class Submit extends Controller {
 
+	// Return the VerifyPersonalInformation form
+	
 	@Security(RoleType.STUDENT)
 	public static void verifyPersonalInformation() {
 		render("Submit/VerifyPersonalInformation.html");
+	}
+	
+	
+	// Process the verifyPersonalInformation form
+	
+	@Security(RoleType.STUDENT)
+	public static void doVerifyPersonalInformation() {
+		dumpParams();
+		render("Submit/License.html");
 	}
 
 	@Security(RoleType.STUDENT)

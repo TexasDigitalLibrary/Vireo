@@ -1,10 +1,11 @@
-package org.tdl.vireo.security;
+package org.tdl.vireo.security.impl;
 
 import java.util.EmptyStackException;
 import java.util.Stack;
 
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
+import org.tdl.vireo.security.SecurityContext;
 
 /**
  * Simple ThreadLocal-backed Security context.

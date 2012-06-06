@@ -2,10 +2,19 @@ package controllers;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.junit.Test;
+import org.tdl.vireo.model.Person;
+import org.tdl.vireo.model.PersonRepository;
+import org.tdl.vireo.model.jpa.JpaEmailTemplateImpl;
+import org.tdl.vireo.security.SecurityContext;
 
 import play.Play;
+import play.db.jpa.JPA;
+import play.libs.Mail;
+import play.modules.spring.Spring;
 import play.mvc.Http.Response;
 import play.mvc.Router;
 import play.test.FunctionalTest;
@@ -17,6 +26,9 @@ import play.test.FunctionalTest;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 public class AuthenticationTest extends FunctionalTest {
+	
+	public static SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
+	public static PersonRepository personRepo = Spring.getBeanOfType(PersonRepository.class);
 	
 	/**
 	 * Test logging in with a password.
@@ -96,10 +108,6 @@ public class AuthenticationTest extends FunctionalTest {
 	 */
 	@Test
 	public void testShibbolethLogin() {
-		
-		System.out.println("SHIB: testShibbolethLogin() ");
-
-		
 		// Get all our URLs
 		final String INDEX_URL = Router.reverse("Application.index").url;
 		final String LOGIN_LIST_URL = Router.reverse("Authentication.loginList").url;
@@ -120,7 +128,6 @@ public class AuthenticationTest extends FunctionalTest {
 		assertHeaderEquals("Location", LOGIN_SHIB_RETURN_URL, response);
 		response = GET(LOGIN_SHIB_RETURN_URL);
 		assertHeaderEquals("Location", INDEX_URL, response);
-		System.out.println(response.cookies.get("PLAY_SESSION").value);
 		assertTrue(response.cookies.get("PLAY_SESSION").value.contains("Billy"));
 		assertTrue(response.cookies.get("PLAY_SESSION").value.contains("Thornton"));
 		
@@ -193,6 +200,96 @@ public class AuthenticationTest extends FunctionalTest {
 		assertHeaderEquals("Location", PROFILE_URL, response);
 		assertTrue(response.cookies.get("PLAY_SESSION").value.contains("Billy"));
 		assertTrue(response.cookies.get("PLAY_SESSION").value.contains("Thornton"));
+	}
+	
+	
+	//public static Pattern EMAIL_TOKEN = Pattern.compile("http://localhost:9000/[a-z]+\\?token=([a-zA-Z0-9\\-_]+)[\\n\\r]{1}");
+	
+	public static Pattern EMAIL_TOKEN = Pattern.compile("http://[^/]*/[a-z]+\\?token=([a-zA-Z0-9\\-_]+)[\\n\\r]{1}");
+	
+	
+	/**
+	 * This is one big test through the whole process. From email verification
+	 * to completed the registration process.
+	 */
+	@Test
+	public void testUserRegistration() throws InterruptedException {
+		
+		// Clear out the mail queues.
+		Mail.Mock.reset();
+		
+		// Get all our URLS
+		final String INDEX_URL = Router.reverse("Application.index").url;
+		final String REGISTER_URL = Router.reverse("Authentication.register").url;
+		final String PROFILE_URL = Router.reverse("Authentication.profile").url;
+		
+		// Step 1: Visit the registration page
+		Response response = GET(REGISTER_URL);
+		assertIsOk(response);
+		assertContentMatch("New User Registration",response);
+		
+		// Step 2: Fill out the registration form to verify email address.
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("email", "newregistration@email.com");
+		params.put("submit_register", "Register");
+		response = POST(REGISTER_URL,params);
+		assertIsOk(response);
+		assertContentMatch("Registration Email Sent",response);
+		
+		// Step 2: Wait for the email and the token.
+		String recieved = null;
+		for (int i = 0; i < 1000; i++) {
+			Thread.yield();
+			Thread.sleep(100);
+			recieved = Mail.Mock.getLastMessageReceivedBy("newregistration@email.com");
+			if (recieved != null)
+				break;
+		}
+		assertNotNull(recieved);
+		assertTrue(recieved.contains("Subject: Vireo Account Registration"));
+		Matcher tokenMatcher = EMAIL_TOKEN.matcher(recieved);
+		assertTrue(tokenMatcher.find());
+		String token = tokenMatcher.group(1);
+		assertNotNull(token);
+		assertTrue(token.length() > 5);
+		
+		// Step 3: View the page to complete the registration process
+		response = GET(REGISTER_URL+"?token="+token);
+		assertIsOk(response);
+		assertContentMatch("Your email address has been verified.",response);
+		assertContentMatch("name=\"email\"\\s+value=\"newregistration@email.com\"",response);
+		
+		// Step 4: Complete the registration process
+		params.clear();
+		params.put("token",token);
+		params.put("firstname","first");
+		params.put("lastname", "last");
+		params.put("password1", "password1");
+		params.put("password2", "password1");
+		params.put("submit_register","Register");
+		response = POST(REGISTER_URL,params);
+		System.out.println(getContent(response));
+		assertHeaderEquals("Location", INDEX_URL, response);
+		assertTrue(response.cookies.get("PLAY_SESSION").value.contains("first"));
+		assertTrue(response.cookies.get("PLAY_SESSION").value.contains("last"));
+		
+		// Step 5: Verify that we are logged in.
+		response = GET(PROFILE_URL);
+		assertIsOk(response);
+		assertContentMatch("first",response); // first name
+		assertContentMatch("last",response); // last name
+		
+		// cleanup the user we created.
+		context.turnOffAuthorization();
+		Person person = personRepo.findPersonByEmail("newregistration@email.com");
+		assertNotNull(person);
+		assertEquals("first",person.getFirstName());
+		assertEquals("last",person.getLastName());
+		person.delete();
+		context.restoreAuthorization();
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().getTransaction().begin();
 	}
 
 }

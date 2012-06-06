@@ -38,7 +38,7 @@ public class MockPerson extends AbstractMock implements Person {
 	public String password;
 	public String firstName;
 	public String lastName;
-	public String middleInitial;
+	public String middleName;
 	public String displayName;
 	public Integer birthYear;
 	public String currentPhoneNumber;
@@ -183,13 +183,13 @@ public class MockPerson extends AbstractMock implements Person {
 	}
 
 	@Override
-	public String getMiddleInitial() {
-		return middleInitial;
+	public String getMiddleName() {
+		return middleName;
 	}
 
 	@Override
-	public void setMiddleInitial(String middleInitial) {
-		this.middleInitial = middleInitial;
+	public void setMiddleName(String middleName) {
+		this.middleName = middleName;
 	}
 
 	@Override
