@@ -379,7 +379,7 @@ public class JpaPersonImplTests extends UnitTest {
 		person.save();
 		
 		person.setFirstName("first");
-		person.setMiddleInitial("middle");
+		person.setMiddleName("middle");
 		person.setLastName("last");
 		person.setDisplayName("display");
 		person.setBirthYear(1945);
@@ -399,7 +399,7 @@ public class JpaPersonImplTests extends UnitTest {
 		
 		
 		assertEquals("first",person.getFirstName());
-		assertEquals("middle",person.getMiddleInitial());
+		assertEquals("middle",person.getMiddleName());
 		assertEquals("last",person.getLastName());
 		assertEquals("display",person.getDisplayName());
 		assertEquals(Integer.valueOf(1945),person.getBirthYear());

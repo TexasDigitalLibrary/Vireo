@@ -32,7 +32,7 @@ public class JpaCommitteeMemberImpl extends JpaAbstractModel<JpaCommitteeMemberI
 
 	public String firstName;
 	public String lastName;
-	public String middleInitial;
+	public String middleName;
 	public boolean chair;
 
 	/**
@@ -44,13 +44,13 @@ public class JpaCommitteeMemberImpl extends JpaAbstractModel<JpaCommitteeMemberI
 	 *            The first name of the member.
 	 * @param lastName
 	 *            The last name of the member.
-	 * @param middleInitial
-	 *            The middle initial of the member.
+	 * @param middleName
+	 *            The middle name of the member.
 	 * @param chair
 	 *            Weather this member is a chair or co-chair.
 	 */
 	protected JpaCommitteeMemberImpl(Submission submission, String firstName,
-			String lastName, String middleInitial, boolean chair) {
+			String lastName, String middleName, boolean chair) {
 
 		if (submission == null)
 			throw new IllegalArgumentException("Submissions are required");
@@ -67,7 +67,7 @@ public class JpaCommitteeMemberImpl extends JpaAbstractModel<JpaCommitteeMemberI
 	    this.displayOrder = 0;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.middleInitial = middleInitial;
+		this.middleName = middleName;
 		this.chair = chair;
 	}
 
@@ -165,24 +165,24 @@ public class JpaCommitteeMemberImpl extends JpaAbstractModel<JpaCommitteeMemberI
 	}
 
 	@Override
-	public String getMiddleInitial() {
-		return this.middleInitial;
+	public String getMiddleName() {
+		return this.middleName;
 	}
 
 	@Override
-	public void setMiddleInitial(String middleInitial) {
+	public void setMiddleName(String middleName) {
 		
 		assertReviewerOrOwner(submission.getSubmitter());
-		this.middleInitial = middleInitial;
+		this.middleName = middleName;
 	}
 	
 	@Override
 	public String getFullName() {
 		
-		if (middleInitial == null)
+		if (middleName == null)
 			return firstName + " " + lastName;
 		else
-			return firstName + " " + middleInitial + " " + lastName;
+			return firstName + " " + middleName + " " + lastName;
 	}
 
 	@Override

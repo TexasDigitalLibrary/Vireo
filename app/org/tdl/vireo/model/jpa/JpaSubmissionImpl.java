@@ -291,9 +291,9 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 
 	@Override
 	public CommitteeMember addCommitteeMember(String firstName,
-			String lastName, String middleInitial, Boolean chair) {
+			String lastName, String middleName, Boolean chair) {
 		CommitteeMember member = new JpaCommitteeMemberImpl(this, firstName,
-				lastName, middleInitial, chair);
+				lastName, middleName, chair);
 		committeeMembers.add(member);
 		return member;
 	}

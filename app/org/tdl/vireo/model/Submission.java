@@ -115,12 +115,12 @@ public interface Submission extends AbstractModel {
 	 * Add a new committeeMember
 	 * @param firstName The first name of the new member.
 	 * @param lastName The last name of the new member.
-	 * @param middleInitial The middle initial of the new member.
+	 * @param middleName The middle name of the new member.
 	 * @param chair Weather this member is the chair or a co-chair.
 	 * @return The newly created member.
 	 */
 	public CommitteeMember addCommitteeMember(String firstName, String lastName,
-			String middleInitial, Boolean chair);
+			String middleName, Boolean chair);
 
 	/**
 	 * 

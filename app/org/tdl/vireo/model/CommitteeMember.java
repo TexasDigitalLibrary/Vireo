@@ -35,15 +35,15 @@ public interface CommitteeMember extends AbstractOrderedModel {
 	public void setLastName(String lastName);
 
 	/**
-	 * @return The middle initial of the committee member.
+	 * @return The middle name of the committee member.
 	 */
-	public String getMiddleInitial();
+	public String getMiddleName();
 
 	/**
-	 * @param middleInitial
-	 *            The new middle initial of the committee member.
+	 * @param middleName
+	 *            The new middle name of the committee member.
 	 */
-	public void setMiddleInitial(String middleInitial);
+	public void setMiddleName(String middleName);
 
 	/**
 	 * @return the full name (first, middle, and last names) of this committee
