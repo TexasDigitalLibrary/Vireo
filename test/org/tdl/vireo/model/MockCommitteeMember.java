@@ -23,7 +23,7 @@ public class MockCommitteeMember extends AbstractMock implements CommitteeMember
 	public Submission submission;
 	public String firstName;
 	public String lastName;
-	public String middleInitial;
+	public String middleName;
 	public boolean chair;
 
 	@Override
@@ -82,21 +82,21 @@ public class MockCommitteeMember extends AbstractMock implements CommitteeMember
 	}
 
 	@Override
-	public String getMiddleInitial() {
-		return middleInitial;
+	public String getMiddleName() {
+		return middleName;
 	}
 
 	@Override
-	public void setMiddleInitial(String middleInitial) {
-		this.middleInitial = middleInitial;
+	public void setMiddleName(String middleName) {
+		this.middleName = middleName;
 	}
 	
 	@Override
 	public String getFullName() {
-		if (middleInitial == null)
+		if (middleName == null)
 			return firstName + " " + lastName;
 		else
-			return firstName + " " + middleInitial + " " + lastName;
+			return firstName + " " + middleName + " " + lastName;
 	}
 
 	@Override

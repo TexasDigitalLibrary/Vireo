@@ -43,7 +43,7 @@ public class ShibbolethAuthenticationMethodImpl extends
 	public String headerNetId = "SHIB_netid";
 	public String headerEmail = "SHIB_mail";
 	public String headerFirstName = "SHIB_givenname";
-	public String headerMiddleInitial = "SHIB_initials"; 
+	public String headerMiddleName = "SHIB_initials"; 
 	public String headerLastName = "SHIB_sn"; 
 	public String headerDisplayName = "SHIB_cn"; 
 	public String headerBirthYear = "SHIB_dateOfBirth"; 
@@ -128,7 +128,7 @@ public class ShibbolethAuthenticationMethodImpl extends
 	 * 
 	 * Required Mappings: netId*, email, firstName, lastName.
 	 * 
-	 * Optional Mappings: middleInitial, displayName, birthYear,
+	 * Optional Mappings: middleName, displayName, birthYear,
 	 * currentPhoneNumber, currentPostalAddress, currentEmailAddress,
 	 * permanentPhoneNumber, permanentPostalAddress, permanentEmailAddress,
 	 * currentDepartment, currentCollege, currentMajor, currentGraduationYear,
@@ -151,7 +151,7 @@ public class ShibbolethAuthenticationMethodImpl extends
 		}
 		
 		// Store all the optional attributes.
-		headerMiddleInitial = attributeMap.get("middleInitial");
+		headerMiddleName = attributeMap.get("middleName");
 		headerDisplayName = attributeMap.get("displayName");
 		headerBirthYear = attributeMap.get("birthYear");
 		headerCurrentPhoneNumber = attributeMap.get("currentPhoneNumber");
@@ -242,9 +242,9 @@ public class ShibbolethAuthenticationMethodImpl extends
 			}
 
 			// 4. Update Optional attributes:
-			if (headerMiddleInitial != null) {
-				String middleInitial = getSingleAttribute(request, headerMiddleInitial);
-				person.setMiddleInitial(middleInitial);
+			if (headerMiddleName != null) {
+				String middleName = getSingleAttribute(request, headerMiddleName);
+				person.setMiddleName(middleName);
 			}
 			if (headerDisplayName != null) {
 				String displayName = getSingleAttribute(request, headerDisplayName);

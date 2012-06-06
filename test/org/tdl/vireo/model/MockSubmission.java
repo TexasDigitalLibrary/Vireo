@@ -171,11 +171,11 @@ public class MockSubmission extends AbstractMock implements Submission {
 
 	@Override
 	public CommitteeMember addCommitteeMember(String firstName,
-			String lastName, String middleInitial, Boolean chair) {
+			String lastName, String middleName, Boolean chair) {
 		MockCommitteeMember member = new MockCommitteeMember();
 		member.firstName = firstName;
 		member.lastName = lastName;
-		member.middleInitial = middleInitial;
+		member.middleName = middleName;
 		member.chair = chair;
 		committeeMembers.add(member);
 		return member;

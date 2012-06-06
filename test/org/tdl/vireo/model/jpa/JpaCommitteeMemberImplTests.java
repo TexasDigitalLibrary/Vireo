@@ -74,13 +74,13 @@ public class JpaCommitteeMemberImplTests extends UnitTest {
 		CommitteeMember member = sub.addCommitteeMember("first", "last", "middle", false);
 		assertEquals("first",member.getFirstName());
 		assertEquals("last",member.getLastName());
-		assertEquals("middle",member.getMiddleInitial());
+		assertEquals("middle",member.getMiddleName());
 		assertFalse(member.isCommitteeChair());
 		
 		member = sub.addCommitteeMember("first", "last", null, true);
 		assertEquals("first",member.getFirstName());
 		assertEquals("last",member.getLastName());
-		assertNull(member.getMiddleInitial());
+		assertNull(member.getMiddleName());
 		assertTrue(member.isCommitteeChair());
 	}
 	
@@ -179,7 +179,7 @@ public class JpaCommitteeMemberImplTests extends UnitTest {
 		member = subRepo.findCommitteeMember(member.getId());
 		assertEquals("first",member.getFirstName());
 		assertEquals("last",member.getLastName());
-		assertEquals("middle",member.getMiddleInitial());
+		assertEquals("middle",member.getMiddleName());
 		assertFalse(member.isCommitteeChair());
 		
 		

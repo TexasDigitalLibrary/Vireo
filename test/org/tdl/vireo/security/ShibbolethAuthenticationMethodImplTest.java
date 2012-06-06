@@ -44,7 +44,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 	public String originalHeaderNetId;
 	public String originalHeaderEmail;
 	public String originalHeaderFirstName;
-	public String originalHeaderMiddleInitial;
+	public String originalHeaderMiddleName;
 	public String originalHeaderLastName;
 	public String originalHeaderDisplayName;
 	public String originalHeaderBirthYear;
@@ -84,7 +84,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		originalHeaderNetId = method.headerNetId;
 		originalHeaderEmail = method.headerEmail;
 		originalHeaderFirstName = method.headerFirstName;
-		originalHeaderMiddleInitial = method.headerMiddleInitial;
+		originalHeaderMiddleName = method.headerMiddleName;
 		originalHeaderLastName = method.headerLastName;
 		originalHeaderDisplayName = method.headerDisplayName;
 		originalHeaderBirthYear = method.headerBirthYear;
@@ -105,7 +105,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		method.headerNetId = "SHIB_netid";
 		method.headerEmail = "SHIB_mail";
 		method.headerFirstName = "SHIB_givenName";
-		method.headerMiddleInitial = "SHIB_initials"; 
+		method.headerMiddleName = "SHIB_initials"; 
 		method.headerLastName = "SHIB_sn"; 
 		method.headerDisplayName = "SHIB_cn"; 
 		method.headerBirthYear = "SHIB_birthYear"; 
@@ -141,7 +141,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		method.headerNetId = originalHeaderNetId;
 		method.headerEmail = originalHeaderEmail;
 		method.headerFirstName = originalHeaderFirstName;
-		method.headerMiddleInitial = originalHeaderMiddleInitial;
+		method.headerMiddleName = originalHeaderMiddleName;
 		method.headerLastName = originalHeaderLastName;
 		method.headerDisplayName = originalHeaderDisplayName;
 		method.headerBirthYear = originalHeaderBirthYear;
@@ -209,7 +209,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		assertEquals("updatedemail@email.com",person1.getEmail());
 		assertEquals("updatedfirst",person1.getFirstName());
 		assertEquals("updatedlast",person1.getLastName());
-		assertEquals("initials",person1.getMiddleInitial());
+		assertEquals("initials",person1.getMiddleName());
 		assertEquals("cn",person1.getDisplayName());
 		assertEquals(Integer.valueOf(1950),person1.getBirthYear());
 		assertEquals("phone",person1.getCurrentPhoneNumber());
@@ -265,7 +265,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		assertEquals("updatedemail@email.com",person1.getEmail());
 		assertEquals("updatedfirst",person1.getFirstName());
 		assertEquals("updatedlast",person1.getLastName());
-		assertEquals("initials",person1.getMiddleInitial());
+		assertEquals("initials",person1.getMiddleName());
 		assertEquals("cn",person1.getDisplayName());
 		assertEquals(Integer.valueOf(1950),person1.getBirthYear());
 		assertEquals("phone",person1.getCurrentPhoneNumber());

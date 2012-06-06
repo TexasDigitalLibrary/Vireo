@@ -87,15 +87,15 @@ public interface Person extends AbstractModel {
 	public void setFirstName(String firstName);
 
 	/**
-	 * @return The middle initial of the person.
+	 * @return The middle name of the person.
 	 */
-	public String getMiddleInitial();
+	public String getMiddleName();
 
 	/**
-	 * @param middleInitial
-	 *            The new middle initial of the person.
+	 * @param middleName
+	 *            The new middle name of the person.
 	 */
-	public void setMiddleInitial(String middleInitial);
+	public void setMiddleName(String middleName);
 
 	/**
 	 * @return The last name of the person.

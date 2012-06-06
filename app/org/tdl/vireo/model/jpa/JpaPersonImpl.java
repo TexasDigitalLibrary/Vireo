@@ -52,7 +52,7 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 
 	@Column(nullable = false)
 	public String lastName;
-	public String middleInitial;
+	public String middleName;
 	public String displayName;
 
 	public Integer birthYear;
@@ -201,13 +201,13 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 	}
 
 	@Override
-	public String getMiddleInitial() {
-		return middleInitial;
+	public String getMiddleName() {
+		return middleName;
 	}
 
 	@Override
-	public void setMiddleInitial(String middleInitial) {
-		this.middleInitial = middleInitial;
+	public void setMiddleName(String middleName) {
+		this.middleName = middleName;
 	}
 
 	@Override

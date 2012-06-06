@@ -47,7 +47,7 @@
         		<entry key="lastName" value="${auth.shib.attribute.lastName}"/>
         		
         		<!-- Optional -->
-        		<entry key="middleInitial" value="${auth.shib.attribute.middleInitial}"/>
+        		<entry key="middleName" value="${auth.shib.attribute.middleName}"/>
         		<entry key="displayName" value="${auth.shib.attribute.displayName}"/>
         		<entry key="birthYear" value="${auth.shib.attribute.birthYear}"/>
         		<entry key="currentPhoneNumber" value="${auth.shib.attribute.currentPhoneNumber}"/>
@@ -72,7 +72,7 @@
         		<entry key="${auth.shib.attribute.lastName}" value="Thornton"/>
         		
         		<!-- Optional -->
-        		<entry key="${auth.shib.attribute.middleInitial}" value="Bob"/>
+        		<entry key="${auth.shib.attribute.middleName}" value="Bob"/>
         		<entry key="${auth.shib.attribute.displayName}" value="Billy Bob"/>
         		<entry key="${auth.shib.attribute.birthYear}" value="1955"/>
         		<entry key="${auth.shib.attribute.currentPhoneNumber}" value="555-555-1931"/>
