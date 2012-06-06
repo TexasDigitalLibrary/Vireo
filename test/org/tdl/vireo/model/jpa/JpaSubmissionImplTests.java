@@ -273,6 +273,10 @@ public class JpaSubmissionImplTests extends UnitTest {
 		sub.setState(nextState);
 		
 		// Okay, we should start generating action log messages now.
+		sub.setStudentFirstName("first");
+		sub.setStudentLastName("last");
+		sub.setStudentMiddleName("middle");
+		sub.setStudentBirthYear(2002);
 		sub.setDocumentTitle("docTitle");
 		sub.setDocumentAbstract("docAbstract");
 		sub.setDocumentKeywords("docKeywords");
@@ -326,6 +330,10 @@ public class JpaSubmissionImplTests extends UnitTest {
 		
 		assertEquals("Submission created by Mock Administrator",logItr.next().getEntry());
 		assertEquals("Submission status changed to 'Submitted' by Mock Administrator",logItr.next().getEntry());
+		assertEquals("Student first name changed to 'first' by Mock Administrator",logItr.next().getEntry());
+		assertEquals("Student last name changed to 'last' by Mock Administrator",logItr.next().getEntry());
+		assertEquals("Student middle name changed to 'middle' by Mock Administrator",logItr.next().getEntry());
+		assertEquals("Student birth year changed to '2002' by Mock Administrator",logItr.next().getEntry());
 		assertEquals("Document title changed to 'docTitle' by Mock Administrator", logItr.next().getEntry());
 		assertEquals("Document abstract changed to 'docAbstract' by Mock Administrator", logItr.next().getEntry());
 		assertEquals("Document keywords changed to 'docKeywords' by Mock Administrator", logItr.next().getEntry());
