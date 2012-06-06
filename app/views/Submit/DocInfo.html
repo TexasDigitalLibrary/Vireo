@@ -1,12 +1,204 @@
-#{extends 'main.html' /}
+#{extends 'submitSteps.html' /}
 #{set title:'Document Info' /}
 
-<div>
-	<h3>Document Info</h3>
-
-	<br/>
-
-  	<form action="/submit/upload" method="post">
-    	<input name="saveAndContinue" type="submit" value="Save and Continue &raquo;" />
+<br />
+<div class="row pageHead">
+	<h3 class="span11">Document Information</h3>
+</div>
+<br />
+<div class="row">
+<div class="span7">
+<p>In this step you describe your thesis or dissertation. Please make sure that the information entered below matches the information contained in your document.</p>
+	<form action="submitIndex" method="post">
+	
+	<fieldset class="form-horizontal">
+		<legend>Document Information</legend>
+		<div class="control-group">
+			<label class="control-label" for="title"><b>* Title</b></label>
+			<div class="controls">
+				<input type="text" class="span5" id="title">
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="degreeDate"><b>* Degree Date</b></label>
+			<div class="controls row">
+				<select class="span2" id="degreeMonth">
+					<option>...choose</option>
+					<option value="4">May</option>
+					<option value="11">December</option>
+				</select>
+				<select class="span2" id="degreeYear">
+					<option>...choose</option>
+					<option value="2013">2013</option>
+					<option value="2014">2014</option>
+				</select>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="docType"><b>* Document Type</b></label>
+			<div class="controls">
+				<p>Dissertation</p>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="abstract"><b>* Abstract</b></label>
+			<div class="controls">
+				<textarea class="span5" id="abstract"></textarea>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="keywords"><b>* Keywords</b></label>
+			<div class="controls">
+				<textarea class="span5" id="keywords">Keyword 1; Key Phrase One; Keyword 2; Key Phrase Two</textarea>
+			</div>
+		</div>
+	</fieldset>
+	
+	<fieldset class="form-inline">
+		<legend>Your Committee</legend>
+		<table>
+		<tr>
+			<td><input type="text" class="input-medium" id="committeFirstName"></td>
+			<td><input type="text" class="span1" id="committeMiddleInitial"></td>
+			<td><input type="text" class="input-medium" id="committeeLastName"></td>
+			<td><label class="checkbox"><input type="checkbox" id="chairFlag" class="inline"> Chair</label></td>
+		</tr>
+		<tr>
+			<td><label class="span2">First Name</label></td>
+			<td><label class="span1">MI</label></td>
+			<td><label class="span2">Last Name</label></td>
+			<td></td>
+		</tr>
+		</table>
+		<table>
+		<tr>
+			<td><input type="text" class="input-medium" id="committeFirstName"></td>
+			<td><input type="text" class="span1" id="committeMiddleInitial"></td>
+			<td><input type="text" class="input-medium" id="committeeLastName"></td>
+			<td><label class="checkbox"><input type="checkbox" id="chairFlag" class="inline"> Chair</label></td>
+		</tr>
+		<tr>
+			<td><label class="span2">First Name</label></td>
+			<td><label class="span1">MI</label></td>
+			<td><label class="span2">Last Name</label></td>
+			<td></td>
+		</tr>
+		</table>
+		<table>
+		<tr>
+			<td><input type="text" class="input-medium" id="committeFirstName"></td>
+			<td><input type="text" class="span1" id="committeMiddleInitial"></td>
+			<td><input type="text" class="input-medium" id="committeeLastName"></td>
+			<td><label class="checkbox"><input type="checkbox" id="chairFlag" class="inline"> Chair</label></td>
+		</tr>
+		<tr>
+			<td><label class="span2">First Name</label></td>
+			<td><label class="span1">MI</label></td>
+			<td><label class="span2">Last Name</label></td>
+			<td></td>
+		</tr>
+		</table>
+		<table>
+		<tr>
+			<td><input type="text" class="input-medium" id="committeFirstName"></td>
+			<td><input type="text" class="span1" id="committeMiddleInitial"></td>
+			<td><input type="text" class="input-medium" id="committeeLastName"></td>
+			<td><label class="checkbox"><input type="checkbox" id="chairFlag" class="inline"> Chair</label></td>
+		</tr>
+		<tr>
+			<td><label class="span2">First Name</label></td>
+			<td><label class="span1">MI</label></td>
+			<td><label class="span2">Last Name</label></td>
+			<td></td>
+		</tr>
+		</table>
+		<table>
+		<tr>
+			<td><input type="text" class="input-medium" id="committeFirstName"></td>
+			<td><input type="text" class="span1" id="committeMiddleInitial"></td>
+			<td><input type="text" class="input-medium" id="committeeLastName"></td>
+			<td><label class="checkbox"><input type="checkbox" id="chairFlag" class="inline"> Chair</label></td>
+		</tr>
+		<tr>
+			<td><label class="span2">First Name</label></td>
+			<td><label class="span1">MI</label></td>
+			<td><label class="span2">Last Name</label></td>
+			<td></td>
+		</tr>
+		</table>
+		<div class="row center">
+			<button>Add Additional Member</button>
+		</div>		
+	</fieldset>
+	
+	<fieldset class="form-horizontal">
+		<legend>Chair's Contact Email</legend>
+		<div class="control-group">
+			<label class="control-label" for="chairEmail"><b>* Committee<br />Chair Email:</b></label>
+			<div class="controls">
+				<input type="text" class="span4" id="chairEmail">
+			</div>
+		</div>
+	</fieldset>
+	
+	<fieldset class="form-horizontal">
+		<legend>Embargo Options</legend>
+		<p>With your advisor's approval you may request a delay in the publication (embargo) of your work.</p>
+		<div class="control-group">
+			<label class="control-label">None:</label>
+			<div class="controls">
+				<label class="radio">
+					<input type="radio" id="embargo" name="embargo" selected="selected" value="1"> The work will be published after approval.
+				</label>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">Journal Hold:</label>
+			<div class="controls">
+				<label class="radio">
+					<input type="radio" id="embargo" name="embargo" value="2"> The work will be delayed for publication by one year because of a restriction from publication in an academic journal.
+				</label>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">Patent Hold:</label>
+			<div class="controls">
+				<label class="radio">
+					<input type="radio" id="embargo" name="embargo" value="3"> The work will be delayed for publication by two years because of patent related activities.
+				</label>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">Other Embargo Period:</label>
+			<div class="controls">
+				<label class="radio">
+					<input type="radio" id="embargo" name="embargo" value="4"> The work will be delayed for publication by an indefinite amount of time.
+				</label>
+			</div>
+		</div>
+	</fieldset>
+	<div class="span10 center">
+		<input type="submit" value="Save and Continue >>" id="submit">
+	</div>
 	</form>
+</div>
+<div id="stickyNotes" class="span3">
+	<div class="sticky-top"></div>
+	<div class="sticky-bottom">For the degree date, enter the semester in which your degree will be conferred (typically your graduation semester).</div>
+	
+	<div class="sticky-top"></div>
+	<div class="sticky-bottom">You can use Unicode characters (like accents and diacritics) in these fields.</div>
+	
+	<div class="sticky-top"></div>
+	<div class="sticky-bottom">You can enter multiple keywords. Use semi-colons ( ; ) to separate the entries.</div>
+	
+	<div class="sticky-top"></div>
+	<div class="sticky-bottom">Enter the names of each member of your committee, and use the checkboxes to indicate which one is the committee chair (check two if you have co-chairs).</div>
+
+	<div class="sticky-top"></div>
+	<div class="sticky-bottom">Please enter an email address that can be used to contact your committee chair. If you have co-chairs, please choose only one address. </div>
+
+	<div class="sticky-top"></div>
+	<div class="sticky-bottom">If you don't know if you need an embargo, then you should check with your advisor. This option is typically only used for situations like patent holds or a request by a publisher if content from the document is pending publication.</div>
+</div>
 </div>

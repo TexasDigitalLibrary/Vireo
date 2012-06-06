@@ -32,16 +32,31 @@ public class SubmitTest extends FunctionalTest {
 	 }
 	 
 	 // Test posting VerifyPersonalInformation to the license page
+	 
 	 @Test
 	 public void testPostVerifyInfo(){
 		 
 		 shibLogin();
 		 
 		 final String LICENSE_URL = Router
-				 .reverse("Submit.license").url;
+				 .reverse("Submit.doVerifyPersonalInformation").url;
+		 
 		 Map<String,String> verifyArgs = new HashMap<String,String>();
-			verifyArgs.put("firstName","FosterThePeople");
+		 
+		 verifyArgs.put("middleName","TestStudentFirstName");
+		 verifyArgs.put("yearOfBirth","1996");
+		 verifyArgs.put("department","science");
+		 verifyArgs.put("degree","bs");
+		 verifyArgs.put("major","computer science");
+		 verifyArgs.put("permPhone","555-1212");
+		 verifyArgs.put("permAddress","2222 Fake Street");
+		 verifyArgs.put("permEmail","noreply@noreply.org");
+		 verifyArgs.put("currentPhone","555-1212");
+		 verifyArgs.put("currentAddress","2222 Fake Street");
+
+			
 		 Response response = POST(LICENSE_URL, verifyArgs);
+		 
 		 assertStatus(200, response);
 	 }
 	 
