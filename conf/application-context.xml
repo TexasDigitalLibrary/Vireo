@@ -15,8 +15,8 @@
 	<bean id="SettingsRepository" class="org.tdl.vireo.model.jpa.JpaSettingsRepositoryImpl" scope="singleton" />
 
 	<!-- Security & Authentication -->
-	<bean id="SecurityContext" class="org.tdl.vireo.security.SecurityContextImpl" scope="singleton" />
-	<bean id="PasswordAuthentication" class="org.tdl.vireo.security.PasswordAuthenticationMethodImpl" scope="singleton">
+	<bean id="SecurityContext" class="org.tdl.vireo.security.impl.SecurityContextImpl" scope="singleton" />
+	<bean id="PasswordAuthentication" class="org.tdl.vireo.security.impl.PasswordAuthenticationMethodImpl" scope="singleton">
         <property name="enabled" value="${auth.pass.enabled}"/>
         <property name="displayName" value="${auth.pass.name}"/>
         <property name="displayDescription" value="${auth.pass.description}"/>
@@ -27,7 +27,7 @@
         <property name="securityContext" ref="SecurityContext"/>
 	</bean>
 
-    <bean id="ShibbolethAuthentication" class="org.tdl.vireo.security.ShibbolethAuthenticationMethodImpl" scope="singleton">
+    <bean id="ShibbolethAuthentication" class="org.tdl.vireo.security.impl.ShibbolethAuthenticationMethodImpl" scope="singleton">
         <property name="enabled" value="${auth.shib.enabled}"/>
         <property name="displayName" value="${auth.shib.name}"/>
         <property name="displayDescription" value="${auth.shib.description}"/>

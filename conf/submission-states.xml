@@ -13,7 +13,7 @@
 
 
 	<!-- Vireo State Manager -->
-	<bean id="StateManager" class="org.tdl.vireo.state.simple.StateManagerImpl"
+	<bean id="StateManager" class="org.tdl.vireo.state.impl.StateManagerImpl"
 		scope="singleton" autowire="byType">
 		<property name="initialState" ref="InProgress" />
 		<!-- List of all states will be autowired -->
@@ -23,7 +23,7 @@
 	<!-- Vireo 1.x States -->
 	<!-- These states listed below are a direct translation of the vireo 1.x states -->
 	
-	<bean id="InProgress" class="org.tdl.vireo.state.simple.StateImpl"
+	<bean id="InProgress" class="org.tdl.vireo.state.impl.StateImpl"
 		scope="singleton">
 		<property name="displayName" value="In Progress" />
 		<property name="inProgress" value="true" />
@@ -34,7 +34,7 @@
 		</property>
 	</bean>
 
-	<bean id="Submitted" class="org.tdl.vireo.state.simple.StateImpl"
+	<bean id="Submitted" class="org.tdl.vireo.state.impl.StateImpl"
 		scope="singleton">
 		<property name="displayName" value="Submitted" />
 		<property name="active" value="true" />
@@ -46,7 +46,7 @@
 		</property>
 	</bean>
 
-	<bean id="InReview" class="org.tdl.vireo.state.simple.StateImpl"
+	<bean id="InReview" class="org.tdl.vireo.state.impl.StateImpl"
 		scope="singleton">
 		<property name="displayName" value="Under Review" />
 		<property name="active" value="true" />
@@ -60,7 +60,7 @@
 		</property>
 	</bean>
 
-	<bean id="NeedsCorrection" class="org.tdl.vireo.state.simple.StateImpl"
+	<bean id="NeedsCorrection" class="org.tdl.vireo.state.impl.StateImpl"
 		scope="singleton">
 		<property name="displayName" value="Needs Correction" />
 		<property name="active" value="true" />
@@ -76,7 +76,7 @@
 		</property>
 	</bean>
 
-	<bean id="WaitingOnRequirements" class="org.tdl.vireo.state.simple.StateImpl"
+	<bean id="WaitingOnRequirements" class="org.tdl.vireo.state.impl.StateImpl"
 		scope="singleton">
 		<property name="displayName" value="Waiting On Requirements" />
 		<property name="active" value="true" />
@@ -89,7 +89,7 @@
 		</property>
 	</bean>
 
-	<bean id="Approved" class="org.tdl.vireo.state.simple.StateImpl"
+	<bean id="Approved" class="org.tdl.vireo.state.impl.StateImpl"
 		scope="singleton">
 		<property name="displayName" value="Approved" />
 		<property name="active" value="true" />
@@ -106,7 +106,7 @@
 		</property>
 	</bean>
 
-	<bean id="PendingPublication" class="org.tdl.vireo.state.simple.StateImpl"
+	<bean id="PendingPublication" class="org.tdl.vireo.state.impl.StateImpl"
 		scope="singleton">
 		<property name="displayName" value="Pending Publication" />
 		<property name="archived" value="true" />
@@ -118,7 +118,7 @@
 		</property>
 	</bean>
 
-	<bean id="Published" class="org.tdl.vireo.state.simple.StateImpl"
+	<bean id="Published" class="org.tdl.vireo.state.impl.StateImpl"
 		scope="singleton">
 		<property name="displayName" value="Published" />
 		<property name="archived" value="true" />
@@ -132,21 +132,21 @@
 
 	<!-- Out of Workflow states -->
 
-	<bean id="OnHold" class="org.tdl.vireo.state.simple.StateImpl"
+	<bean id="OnHold" class="org.tdl.vireo.state.impl.StateImpl"
 		scope="singleton">
 		<property name="displayName" value="On Hold" />
 		<property name="archived" value="true" />
 		<property name="editableByReviewer" value="true" />
 	</bean>
 
-	<bean id="Withdrawn" class="org.tdl.vireo.state.simple.StateImpl"
+	<bean id="Withdrawn" class="org.tdl.vireo.state.impl.StateImpl"
 		scope="singleton">
 		<property name="displayName" value="Withdrawn" />
 		<property name="archived" value="true" />
 		<property name="editableByReviewer" value="true" />
 	</bean>
 
-	<bean id="Cancelled" class="org.tdl.vireo.state.simple.StateImpl"
+	<bean id="Cancelled" class="org.tdl.vireo.state.impl.StateImpl"
 		scope="singleton">
 		<property name="displayName" value="Cancelled" />
 		<property name="archived" value="true" />

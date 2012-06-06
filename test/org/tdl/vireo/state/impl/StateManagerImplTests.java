@@ -1,10 +1,11 @@
-package org.tdl.vireo.state.simple;
+package org.tdl.vireo.state.impl;
 
 import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
 import org.tdl.vireo.state.State;
+import org.tdl.vireo.state.impl.StateManagerImpl;
 
 import play.modules.spring.Spring;
 import play.test.UnitTest;

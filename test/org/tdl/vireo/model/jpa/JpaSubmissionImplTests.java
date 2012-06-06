@@ -19,7 +19,7 @@ import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
-import org.tdl.vireo.state.simple.StateManagerImpl;
+import org.tdl.vireo.state.impl.StateManagerImpl;
 
 import play.Logger;
 import play.db.jpa.JPA;
