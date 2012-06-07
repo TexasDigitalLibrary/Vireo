@@ -9,6 +9,7 @@ GET     /                                       Application.index
 *       /login/{methodName}/return              Authentication.loginReturn
 *       /logout                                 Authentication.logout
 *       /register                               Authentication.register
+*       /forgot                                 Authentication.recover
 *       /profile                                Authentication.profile
 *       /submit                                 Submit.verifyPersonalInformation
 *       /submit/verifyinfo                      Submit.verifyPersonalInformation

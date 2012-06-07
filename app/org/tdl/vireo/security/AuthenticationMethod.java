@@ -79,6 +79,18 @@ public interface AuthenticationMethod {
 	 * @return True if this method allows new user registrations.
 	 */
 	public boolean getAllowNewRegistration();
+	
+	/**
+	 * Some authentication methods allow for existing users to recover their
+	 * password based upon an email verification. If this is allowed then users
+	 * will be able to change their password after verifying their identity
+	 * based upon email.
+	 * 
+	 * 
+	 * @return True if this method allows users to recover their password via
+	 *         email.
+	 */
+	public boolean getAllowPasswordRecovery();
 
 	/**
 	 * Does this authentication method allow for users to update their password?

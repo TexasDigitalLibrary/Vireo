@@ -28,6 +28,7 @@ public abstract class AbstractAuthenticationMethodImpl implements
 	protected String displayName;
 	protected String displayDescription;
 	protected boolean allowNewRegistration = false;
+	protected boolean allowPasswordRecovery = false;
 	protected boolean allowUpdatePassword = false;
 	protected boolean allowUpdateProfile = false;
 	
@@ -103,6 +104,20 @@ public abstract class AbstractAuthenticationMethodImpl implements
 	 */
 	public void setAllowNewRegistration(boolean allow) {
 		this.allowNewRegistration = allow;
+	}
+	
+	@Override
+	public boolean getAllowPasswordRecovery() {
+		return allowPasswordRecovery;
+	}
+
+	/**
+	 * 
+	 * @param allow
+	 *            Whether to allow users to recover their password via email.
+	 */
+	public void setAllowPasswordRecovery(boolean allow) {
+		this.allowPasswordRecovery = allow;
 	}
 
 	@Override

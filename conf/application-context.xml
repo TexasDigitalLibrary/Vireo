@@ -21,6 +21,7 @@
         <property name="displayName" value="${auth.pass.name}"/>
         <property name="displayDescription" value="${auth.pass.description}"/>
         <property name="allowNewRegistration" value="true"/>
+        <property name="allowPasswordRecovery" value="true"/>
         <property name="allowUpdatePassword" value="true"/>
         <property name="allowUpdateProfile" value="true"/>
         <property name="personRepository" ref="PersonRepository"/>
@@ -32,6 +33,7 @@
         <property name="displayName" value="${auth.shib.name}"/>
         <property name="displayDescription" value="${auth.shib.description}"/>
         <property name="allowNewRegistration" value="false"/>
+        <property name="allowPasswordRecovery" value="false"/>
         <property name="allowUpdatePassword" value="false"/>
         <property name="allowUpdateProfile" value="false"/>
         <property name="personRepository" ref="PersonRepository"/>
