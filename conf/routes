@@ -10,7 +10,11 @@ GET     /                                       Application.index
 *       /logout                                 Authentication.logout
 *       /register                               Authentication.register
 *       /forgot                                 Authentication.recover
-*       /profile                                Authentication.profile
+GET     /profile                                Authentication.profile
+*       /profile/update                         Authentication.updateProfile
+*       /profile/password                       Authentication.updatePassword
+
+
 *       /submit                                 Submit.verifyPersonalInformation
 *       /submit/verifyinfo                      Submit.verifyPersonalInformation
 GET     /submit/verifyinfo                      Submit.verifyPersonalInformation
