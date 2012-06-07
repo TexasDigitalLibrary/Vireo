@@ -1,6 +1,7 @@
 package controllers;
 
 import play.*;
+import play.modules.spring.Spring;
 import play.mvc.*;
 import play.mvc.Http.Header;
 
@@ -8,6 +9,9 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import org.tdl.vireo.model.RoleType;
+import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.model.jpa.JpaSubmissionRepositoryImpl;
+import org.tdl.vireo.security.impl.SecurityContextImpl;
 /**
  * Submit controller
  * This controller manages the student submission forms for Vireo 
@@ -52,8 +56,19 @@ public class Submit extends Controller {
 	}
 
 	@Security(RoleType.STUDENT)
-	public static void confirmAndSubmit() {
-		render("Submit/ConfirmAndSubmit.html");
+	public static void confirmAndSubmit(Long id) {
+		SecurityContextImpl context = Spring
+				.getBeanOfType(SecurityContextImpl.class);
+		JpaSubmissionRepositoryImpl submissions = Spring
+				.getBeanOfType(JpaSubmissionRepositoryImpl.class);
+		
+		if(id!=null){
+			Submission submission = submissions.findSubmission(id);
+			render(context, submission);
+		} else {
+			render(context);
+		}
+		
 	}
 
 	@Security(RoleType.STUDENT)

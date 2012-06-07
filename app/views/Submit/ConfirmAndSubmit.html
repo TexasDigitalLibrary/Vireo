@@ -1,12 +1,166 @@
-#{extends 'main.html' /}
+#{extends 'submitSteps.html' /}
 #{set title:'Confirm & Submit' /}
 
+<br />
+<div class="row pageHead">
+	<h3 class="span11">Confirm & Submit</h3>
+</div>
+<br />
+<div id="confirmSubmit" class="row">
+<form action="submit" method="post" class="form-horizontal">
+	<legend>About You</legend>
+	<div class="control-group">
+		<label class="control-label"><b>Name:</b></label>
+		<div class="controls">
+			<p>${context.getPerson().getFullName()}</p>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"><b>Email:</b></label>
+		<div class="controls">
+			<p>cdanes@gmail.com</p>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"><b>Year of Birth:</b></label>
+		<div class="controls">
+			<p>1982</p>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"><b>Phone:</b></label>
+		<div class="controls">
+			<p>979-458-5857</p>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"><b>Address:</b></label>
+		<div class="controls">
+			<p>5000 Mononoke Blvd.<br />Hollywood, CA 83949</p>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"></label>
+		<div class="controls">
+			<p><a href="@{Submit.verifyPersonalInformation()}">[edit your personal information]</a></p>
+		</div>
+	</div>
+	
+	<legend>Academic Affiliation</legend>
+	<div class="control-group">
+		<label class="control-label"><b>School:</b></label>
+		<div class="controls">
+			<p>Texas A&M University at College Station</p>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"><b>Degree:</b></label>
+		<div class="controls">
+			<p>Doctor of Philosophy</p>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"><b>Major:</b></label>
+		<div class="controls">
+			<p>Zoology</p>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"></label>
+		<div class="controls">
+			<p><a href="@{Submit.verifyPersonalInformation()}">[edit your personal information]</a></p>
+		</div>
+	</div>
+	
+	<legend>Document Information</legend>
+	<div class="control-group">
+		<label class="control-label"><b>Title:</b></label>
+		<div class="controls">
+			<p>Elephants and Peanuts</p>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"><b>Degree Date:</b></label>
+		<div class="controls">
+			<p>May 2013</p>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"><b>Document Type:</b></label>
+		<div class="controls">
+			<p>Dissertation</p>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"><b>Keywords:</b></label>
+		<div class="controls">
+			<p>Trunk; Tusk; Planters</p>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"><b>Abstract:</b></label>
+		<div class="controls">
+			<p>It's abstract.</p>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"><b>Chair Email Address:</b></label>
+		<div class="controls">
+			<p>jmicah@library.tamu.edu</p>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"><b>Embargo:</b></label>
+		<div class="controls">
+			<p><b>None</b> - The work will be published after approval.</p>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"></label>
+		<div class="controls">
+			<p><a href="@{Submit.docInfo()}">[edit your document information]</a></p>
+		</div>
+	</div>
+	
+	<legend>Uploaded File</legend>
+	<div class="control-group">
+		<label class="control-label"><b>Primary Document:</b></label>
+		<div class="controls">
+			<p><a href="#">jungle.pdf</a> (0.02MB)</p>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"></label>
+		<div class="controls">
+			<p><a href="@{Submit.fileUpload()}">[edit your uploaded files]</a></p>
+		</div>
+	</div>
+	
+	<legend>Final Submission</legend>
+	<p>Please verify all the information displayed below before proceeding. Once you click the button to approve this document, you cannot make any more changes to the form's data without contacting your local thesis office.</p>
+	<div class="span11 center"><input type="submit" value="Submit"></div>
+	
+</form>
+<br />
 <div>
-	<h3>Confirm & Submit</h3>
+	<legend>Application Activity</legend>
+	<br />
+	<table class="span11 table-striped table-bordered">
+		<thead>
+			<tr>
+				<td>Name</td>
+				<td>Action</td>
+				<td>Time</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Claire Danes</td>
+				<td>Primary file 'jungle.pdf' added by Claire Danes: <a href="#">jungle.pdf</a> (0.02MB)</td>
+				<td>06 Jun 2012; 4:21 PM</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
 
-	<br/>
-
-  	<form action="/submit/review" method="post">
-    	<input name="saveAndContinue" type="submit" value="Save and Continue &raquo;" />
-	</form>
 </div>

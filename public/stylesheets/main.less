@@ -1,29 +1,95 @@
+/*******************************
+MAKE CHANGES TO LESS FILES AT ../less/
+*******************************/
 @import "../less/bootstrap.less";
 
-.red{
-	color:@red;
-}
+/****************************
+CUSTOM LESS COLORS
+****************************/
+@backgroundColor:	#43606E;
+@mainColor:			#70706F;
+@borderColor:		#778E9B;
+@stickyNoteColor:	#FAF0A8;
 
+/**********************
+BASICS
+**********************/
 html {
 	background:url("../images/bg.jpg") repeat-x;
-	background-color:#43606E;
+	background-color:@backgroundColor;
 }
 
 body {
 	background:none;
-	color:#70706F;
+	color:@mainColor;
 	font-family:"Trebuchet MS",Verdana,Geneva,Arial,Helvetica,sans-serif;	
 }
 
+/*****************
+FONTS COLORS ETC
+*****************/
+.red{
+	color:@red;
+}
+
+.center{
+	text-align:center;
+}
+
+.large{
+	font-size:1.4em;
+}
+
+/*****************
+TABLES & FORMS
+*****************/
+td{
+	padding:5px;
+}
+
+thead{
+	font-weight:bold;
+}
+
+legend{
+	background:url("../images/hdr_bg.jpg") repeat-x 3px;
+	color:@gray;
+	padding:0 0 0 20px;
+	border:none;
+	margin:0;
+}
+
+fieldset{
+	margin:30px 0;
+}
+
+form table{
+	margin:15px 0;
+}
+	
+form td{
+	padding:0 0 0 10px;
+}
+
+/**********************
+TWITTERBOOTSTRAP OVERIDES
+**********************/
 .container {
-	background:url("../images/header.jpg") repeat-x scroll 0 -10px #ffffff;
-	border-left:1px solid #778E9B;
-	border-right:1px solid #778E9B;
+	background:url("../images/header.jpg") repeat-x scroll 0 -10px @white;
+	border-left:1px solid @borderColor;
+	border-right:1px solid @borderColor;
 }
 .container:after{
 	clear:none;
 }
 
+.controls p{
+	margin-top:5px;
+}
+
+/*********************
+SPECIFIC OVERIDES
+*********************/
 #header{
 	height:95px;
 	background:url("../images/sub_logo_caps.gif") no-repeat scroll 100% 25px transparent;
@@ -53,7 +119,7 @@ body {
 	height:40px;
 	float:left;
 	width:100%;
-	color:#ffffff;
+	color:@white;
 }
 
 #footer p{
@@ -65,9 +131,33 @@ body {
 
 #footer a, #footer a:hover{
 	text-decoration:underline;
-	color:#ffffff;
+	color:@white;
 }
 
+.pageHead h3{
+	font-size:2.2em;
+	font-weight:normal;
+	margin:0;
+}
+
+.pageHead{
+	margin:0;
+	padding:0 0 10px 0;
+	border-bottom:1px solid @grayLighter;
+}
+
+.uploadBtn{
+	height:28px;
+	margin:0 0 0 10px;
+}
+
+#confirmSubmit .control-group{
+	margin-bottom:0;
+}
+
+/********************
+SUBMIT STEP BUTTONS
+********************/
 #submitSteps{
 	margin-left:10px;
 }
@@ -105,66 +195,25 @@ body {
 	background:url("../images/step5.gif") no-repeat scroll 0 0 transparent;	
 }
 
+/********************
+STICKY NOTES
+********************/
 #stickyNotes{
 	float:right;
 	margin:20px 10px 0 0;
 }
 
 .sticky-top{
-	background:url("../images/sticky_top.jpg") no-repeat scroll 0 0 #FAF0A8;
+	background:url("../images/sticky_top.jpg") no-repeat scroll 0 0 @stickyNoteColor;
 	display:block;
 	width:201px;
 	height:27px;
 }
 .sticky-bottom{
-	background:url("../images/sticky_bot.jpg") no-repeat scroll left bottom #FAF0A8;	
+	background:url("../images/sticky_bot.jpg") no-repeat scroll left bottom @stickyNoteColor;	
 	display:block;
 	padding:0 20px 30px;
 	margin:0 0 40px 0;
 	width:161px;
 	font-size:0.9em;
-}
-
-.center{
-	text-align:center;
-}
-
-.large{
-	font-size:1.4em;
-}
-
-.pageHead h3{
-	font-size:2.2em;
-	font-weight:normal;
-	margin:0;
-}
-
-.pageHead{
-	margin:0;
-	padding:0 0 10px 0;
-	border-bottom:1px solid #CCCCCC;
-}
-
-legend{
-	background:url("../images/hdr_bg.jpg") repeat-x 3px;
-	color:#666666;
-	padding:0 0 0 20px;
-	border:none;
-	margin:0;
-}
-fieldset{
-	margin:30px 0;
-}
-
-form table{
-	margin:15px 0;
-}
-	
-form td{
-	padding-left:10px;
-}
-
-.uploadBtn{
-	height:28px;
-	margin:0 0 0 10px;
 }
