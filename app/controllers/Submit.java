@@ -35,16 +35,10 @@ public class Submit extends Controller {
 	@Security(RoleType.STUDENT)
 	public static void verifyPersonalInformation() {
 		
-		Map<String,String> templateArgs = new HashMap<String,String>();
-		
 		SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
 		Person currentPerson = context.getPerson();
 			
-		templateArgs.put("firstName", session.get("firstName"));
-		templateArgs.put("lastName", session.get("lastName"));
-		templateArgs.put("email", currentPerson.getEmail());		
-		
-		render("Submit/VerifyPersonalInformation.html", templateArgs);
+		render(currentPerson);
 	}
 	
 	
