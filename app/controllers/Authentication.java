@@ -577,9 +577,187 @@ public class Authentication extends Controller {
 		renderTemplate("Authentication/recoverStart.html");
 	}
 	
+	/**
+	 * View the current user's profile. This is purly informational. However if
+	 * configured this person will be able to follow links from this page to
+	 * update their profile or their password.
+	 */
 	@Security(RoleType.NONE)
 	public static void profile() {
-		render();
+		
+		// Who's logged in.
+		Person person = context.getPerson();
+		
+		// Person profile information.
+		String fullName = person.getFullName();
+		String email = person.getEmail();
+		String firstName = person.getFirstName();
+		String lastName = person.getLastName();
+		String middleName = person.getMiddleName();
+		
+		String birthYear = "";
+		if (person.getBirthYear() != null)
+			birthYear = String.valueOf(person.getBirthYear());
+		String currentPhoneNumber = person.getCurrentPhoneNumber();
+		String currentPostalAddress = person.getCurrentPostalAddress();
+		String permanentPhoneNumber = person.getPermanentPhoneNumber();
+		String permanentPostalAddress = person.getPermanentPostalAddress();
+		String permanentEmailAddress = person.getPermanentEmailAddress();
+		
+		// Update Controls
+		boolean updateProfile = isUpdateProfileEnabled(person);
+		boolean updatePassword = isUpdatePasswordEnabled(person);
+		
+		
+		renderTemplate("Authentication/profile.html", updateProfile, updatePassword, fullName, firstName, email, lastName, middleName, 
+				birthYear, currentPhoneNumber, currentPostalAddress, permanentPhoneNumber,
+				permanentPostalAddress, permanentEmailAddress);
+	}
+	
+	/**
+	 * Update the current user's profile information. Basically all the
+	 * information other than their password: First, middle, last names,
+	 * addresses, phone numbers, etc.
+	 */
+	@Security(RoleType.NONE)
+	public static void updateProfile() {
+		
+		Person person = context.getPerson();
+		
+		if (!isUpdateProfileEnabled(person))
+			todo(); // Need to display static form.
+		
+		if (params.get("submit_cancel") != null)
+			Authentication.profile();
+		
+		// Static content
+		String fullName = person.getFullName();
+		String email = person.getEmail();
+		
+		// Dynamic fields
+		String firstName = params.get("firstName");
+		String lastName = params.get("lastName");
+		String middleName = params.get("middleName");
+		String birthYear = params.get("birthYear");
+		String currentPhoneNumber = params.get("currentPhoneNumber");
+		String currentPostalAddress = params.get("currentPostalAddress");
+		String permanentPhoneNumber = params.get("permanentPhoneNumber");
+		String permanentPostalAddress = params.get("permanentPostalAddress");
+		String permanentEmailAddress = params.get("permanentEmailAddress");
+		
+		if (params.get("submit_update") != null) {
+			
+			if (firstName == null || firstName.trim().length() == 0)
+				validation.addError("firstName", "First name is required.");
+
+			if (lastName == null || lastName.trim().length() == 0)
+				validation.addError("firstName", "Last name is required.");
+			
+			Integer birthYearInt = null;
+			if (birthYear != null && birthYear.trim().length() > 0) {
+				try {
+					birthYearInt = Integer.valueOf(birthYear);
+					if (birthYearInt < 1900 || birthYearInt > (new Date().getYear() + 1900))
+						validation.addError("birthYear", "Invalid birth year, please use four digits");
+				} catch (NumberFormatException nfe) {
+					validation.addError("birthYear", "Invalid birth year.");
+			}
+			}
+			
+			if (permanentEmailAddress != null && permanentEmailAddress.trim().length() > 0) {
+				try {
+					new InternetAddress(permanentEmailAddress).validate();
+				} catch (AddressException ae) {
+					validation.addError("permanentEmailAddress","Invalid permanent email address.");
+				}
+			}
+			
+			if (!validation.hasErrors()) {
+				person.setFirstName(firstName);
+				person.setLastName(lastName);
+				person.setMiddleName(middleName);
+				person.setBirthYear(birthYearInt);
+				person.setCurrentPhoneNumber(currentPhoneNumber);
+				person.setCurrentPostalAddress(currentPostalAddress);
+				person.setPermanentPhoneNumber(permanentPhoneNumber);
+				person.setPermanentPostalAddress(permanentPostalAddress);
+				person.setPermanentEmailAddress(permanentEmailAddress);
+				person.save();
+				
+				Authentication.profile();
+			}
+		} else {
+			// First time viewing the form fill out information from the person object.
+			firstName = person.getFirstName();
+			lastName = person.getLastName();
+			middleName = person.getMiddleName();
+			if (person.getBirthYear() == null)
+				birthYear = "";
+			else
+				birthYear = String.valueOf(person.getBirthYear());
+			currentPhoneNumber = person.getCurrentPhoneNumber();
+			currentPostalAddress = person.getCurrentPostalAddress();
+			permanentPhoneNumber = person.getPermanentPhoneNumber();
+			permanentPostalAddress = person.getPermanentPostalAddress();
+			permanentEmailAddress = person.getPermanentEmailAddress();
+		}
+		
+		renderTemplate("Authentication/updateProfile.html", fullName, firstName, email, lastName, middleName, 
+				birthYear, currentPhoneNumber, currentPostalAddress, permanentPhoneNumber,
+				permanentPostalAddress, permanentEmailAddress);
+	}
+	
+	/**
+	 * Update a user's password. This assumes they know their current password,
+	 * if they don't then they wouldn't be logged in and could use the forgot
+	 * password mechanism.
+	 */
+	@Security(RoleType.NONE)
+	public static void updatePassword() {
+		Person person = context.getPerson();
+		
+		if (!isUpdatePasswordEnabled(person))
+			Authentication.profile();
+		
+		if (params.get("submit_cancel") != null)
+			Authentication.profile();
+		
+		// Static content
+		String fullName = person.getFullName();
+		
+		// Dynamic fields
+		String current = params.get("current");
+		String password1 = params.get("password1");
+		String password2 = params.get("password2");
+		
+		if (params.get("submit_update") != null) {
+			
+			if (current == null || current.trim().length() == 0)
+				validation.addError("current", "Please provide your current password.");
+			else if (!person.validatePassword(current))
+				validation.addError("current", "Your current password is not correct.");
+			
+			
+			if (password1 == null || password1.trim().length() == 0)
+				validation.addError("password1", "Please pick a new password.");
+			
+			if (password1 != null && !password1.equals(password2)) 
+				validation.addError("password1", "The passwords do not match.");
+			
+			if (password1 != null && password1.trim().length() < 6)
+				validation.addError("password1", "Please pick a new password longer than 6 characters.");
+			
+			
+			if (!validation.hasErrors()) {
+				
+				person.setPassword(password1);
+				person.save();
+				
+				Authentication.profile();
+			}
+		}
+		
+		renderTemplate("Authentication/updatePassword.html", fullName, password1, password2);
 	}
 	
 	/**

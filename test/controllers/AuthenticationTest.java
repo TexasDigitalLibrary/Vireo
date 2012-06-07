@@ -361,7 +361,6 @@ public class AuthenticationTest extends FunctionalTest {
 		params.put("password2", "ChangedPassword");
 		params.put("submit_recover","Reset Password");
 		response = POST(RECOVER_URL,params);
-		System.out.println(getContent(response));
 		assertHeaderEquals("Location", INDEX_URL, response);
 		assertTrue(response.cookies.get("PLAY_SESSION").value.contains("Forgetfull"));
 		assertTrue(response.cookies.get("PLAY_SESSION").value.contains("Person"));
@@ -371,6 +370,163 @@ public class AuthenticationTest extends FunctionalTest {
 		assertIsOk(response);
 		assertContentMatch("Forgetfull",response); // first name
 		assertContentMatch("Person",response); // last name
+		
+		// cleanup the user we created.
+		context.turnOffAuthorization();
+		person = personRepo.findPerson(person.getId());
+		assertNotNull(person);
+		assertTrue(person.validatePassword("ChangedPassword"));
+		person.delete();
+		context.restoreAuthorization();
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().getTransaction().begin();
+	}
+	
+	/**
+	 * Test updating profile information (i.e. everything but the password)
+	 */
+	@Test
+	public void testUpdateProfile() {
+		
+		// Create a user to recover their password.
+		context.turnOffAuthorization();
+		Person person = personRepo.createPerson("updatter", "updatter@email.com", "Updatable", "Person", RoleType.STUDENT);
+		person.setPassword("password");
+		person.save();
+		context.restoreAuthorization();
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
+		// Get all our URLS
+		final String PROFILE_URL = Router.reverse("Authentication.profile").url;
+		final String UPDATE_PROFILE_URL = Router.reverse("Authentication.updateProfile").url;
+		Map<String,Object> routeArgs = new HashMap<String,Object>();
+		routeArgs.put("methodName", "PasswordAuthentication");
+		final String LOGIN_PASSWORD_URL = Router.reverse("Authentication.loginMethod",routeArgs).url;
+
+		// Step 1: Authenticate (With Password)
+		Map<String,String> loginForm = new HashMap<String,String>();
+		loginForm.put("username", "updatter@email.com");
+		loginForm.put("password", "password"); // yeah, the password is password.
+		loginForm.put("submit_login","Login");
+		Response response = POST(LOGIN_PASSWORD_URL,loginForm);
+		assertTrue(response.cookies.get("PLAY_SESSION").value.contains("Updatable"));
+		assertTrue(response.cookies.get("PLAY_SESSION").value.contains("Person"));
+				
+		// Step 2: Visit the profile page
+		response = GET(PROFILE_URL);
+		assertIsOk(response);
+		assertContentMatch("Updatable",response);
+		assertContentMatch("Person",response);
+
+		// Step 3: View the update profile page
+		response = GET(UPDATE_PROFILE_URL);
+		assertIsOk(response);
+		assertContentMatch("name=\"firstName\"\\s+value=\"Updatable\"",response);
+		assertContentMatch("name=\"lastName\"\\s+value=\"Person\"",response);
+
+		// Step 4: Submit update profile
+		Map<String,String> profileForm = new HashMap<String,String>();
+		profileForm.put("firstName","ChangedFirstname");
+		profileForm.put("lastName","ChangedLastName");
+		profileForm.put("middleName","ChangedMiddleName");
+		profileForm.put("birthYear","1902");
+		profileForm.put("currentPhoneNumber","555-555-5555 ex 9");
+		profileForm.put("currentPostalAddress","2807 Barron Bason \nAustin, TX 77802");
+		profileForm.put("permanentPhoneNumber","555-555-5555 ex 8");
+		profileForm.put("permanentPostalAddress","2807 Barron Bason \nCollege Station, TX 77802");
+		profileForm.put("permanentEmailAddress","scott@scottphillips.com");
+		profileForm.put("submit_update","Update Profile");
+		response = POST(UPDATE_PROFILE_URL,profileForm);
+		assertHeaderEquals("Location", PROFILE_URL, response);
+		
+		// Step 5: Confirm updates.
+		response = GET(PROFILE_URL);
+		assertIsOk(response);
+		assertContentMatch("ChangedFirstname",response);
+		assertContentMatch("ChangedLastName",response);
+		assertContentMatch("ChangedMiddleName",response);
+		assertContentMatch("1902",response);
+		assertContentMatch("555-555-5555 ex 9",response);
+		assertContentMatch("Austin, TX 77802",response);
+		assertContentMatch("555-555-5555 ex 8",response);
+		assertContentMatch("College Station, TX 77802",response);
+		assertContentMatch("scott@scottphillips.com",response);
+
+		
+		// cleanup the user we created.
+		context.turnOffAuthorization();
+		person = personRepo.findPerson(person.getId());
+		assertNotNull(person);
+		person.delete();
+		context.restoreAuthorization();
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().getTransaction().begin();
+	}
+	
+	/**
+	 * Test a user changing their password. This is not the password recovery
+	 * tool, so it assumes they know their current password.
+	 */
+	@Test
+	public void testUpdatePassword() {
+
+		// Create a user to recover their password.
+		context.turnOffAuthorization();
+		Person person = personRepo.createPerson("MrChange", "changer@email.com", "Detecated", "Changer", RoleType.STUDENT);
+		person.setPassword("password");
+		person.save();
+		context.restoreAuthorization();
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
+		// Get all our URLS
+		final String PROFILE_URL = Router.reverse("Authentication.profile").url;
+		final String UPDATE_PASSWORD_URL = Router.reverse("Authentication.updatePassword").url;
+		Map<String,Object> routeArgs = new HashMap<String,Object>();
+		routeArgs.put("methodName", "PasswordAuthentication");
+		final String LOGIN_PASSWORD_URL = Router.reverse("Authentication.loginMethod",routeArgs).url;
+
+		// Step 1: Authenticate (With Password)
+		Map<String,String> loginForm = new HashMap<String,String>();
+		loginForm.put("username", "changer@email.com");
+		loginForm.put("password", "password"); // yeah, the password is password.
+		loginForm.put("submit_login","Login");
+		Response response = POST(LOGIN_PASSWORD_URL,loginForm);
+		assertTrue(response.cookies.get("PLAY_SESSION").value.contains("Detecated"));
+		assertTrue(response.cookies.get("PLAY_SESSION").value.contains("Changer"));
+				
+		// Step 2: Visit the profile page
+		response = GET(PROFILE_URL);
+		assertIsOk(response);
+		assertContentMatch("Detecated",response);
+		assertContentMatch("Changer",response);
+
+		// Step 3: View the update profile page
+		response = GET(UPDATE_PASSWORD_URL);
+		assertIsOk(response);
+
+		// Step 4: Submit update profile
+		Map<String,String> passwordForm = new HashMap<String,String>();
+		passwordForm.put("current", "password");
+		passwordForm.put("password1", "ChangedPassword");
+		passwordForm.put("password2", "ChangedPassword");
+		passwordForm.put("submit_update", "Change Password");
+		response = POST(UPDATE_PASSWORD_URL,passwordForm);
+		assertHeaderEquals("Location", PROFILE_URL, response);
+		
+		// Step 5: Confirm updates.
+		response = GET(PROFILE_URL);
+		assertIsOk(response);
+		assertContentMatch("Detecated",response);
+		assertContentMatch("Changer",response);
+
 		
 		// cleanup the user we created.
 		context.turnOffAuthorization();
