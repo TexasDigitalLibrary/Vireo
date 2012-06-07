@@ -15,6 +15,8 @@ import org.tdl.vireo.model.SubmissionRepository;
 
 
 import org.tdl.vireo.model.RoleType;
+
+import com.google.gson.Gson;
 /**
  * Submit controller
  * This controller manages the student submission forms for Vireo 
@@ -30,16 +32,10 @@ public class Submit extends Controller {
 	@Security(RoleType.STUDENT)
 	public static void verifyPersonalInformation() {
 		
-		Map<String,String> templateArgs = new HashMap<String,String>();
-		
 		SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
 		Person currentPerson = context.getPerson();
 			
-		templateArgs.put("firstName", session.get("firstName"));
-		templateArgs.put("lastName", session.get("lastName"));
-		templateArgs.put("email", currentPerson.getEmail());		
-		
-		render("Submit/VerifyPersonalInformation.html", templateArgs);
+		render(currentPerson);
 	}
 	
 	
@@ -70,6 +66,8 @@ public class Submit extends Controller {
 		SubmissionRepository subRepo = Spring.getBeanOfType(SubmissionRepository.class);
 		Submission sub = subRepo.createSubmission(currentPerson);
 
+		// Set values in the submission
+		
 		sub.setStudentFirstName(currentPerson.getFirstName());
 		sub.setStudentLastName(currentPerson.getLastName());
 		sub.setDepartment(department);
@@ -78,18 +76,51 @@ public class Submit extends Controller {
 		sub.setStudentMiddleName(middleName);
 		
 		sub.save();
-		long subId = sub.getId();
+		
+		currentPerson.setPermanentPhoneNumber(permPhone);
+		currentPerson.setPermanentEmailAddress(permEmail);
+		currentPerson.setPermanentPostalAddress(permAddress);
+		currentPerson.setCurrentPhoneNumber(currentPhone);
+		currentPerson.setCurrentPostalAddress(currentAddress);
+		
+		currentPerson.save();
 
+		// Set up the submission id to pass along
+		
+		long subId = sub.getId();
+		
+		Logger.info("Submisson ID: " + String.valueOf(subId));
+		
+		// Just for funsies - render the submission as Json and write to the log.
+		
+		Gson gson = new Gson();
+		
+		Logger.info("Submission" + gson.toJson(sub));
+		
+		Map<String,String> templateArgs = new HashMap<String,String>();
+		templateArgs.put("submissionId", String.valueOf(subId));
 		 
-		render("Submit/License.html");
+		render("Submit/license.html", templateArgs);
 	}
 
 	@Security(RoleType.STUDENT)
 	public static void license() {
 
 		dumpParams();
-		render("Submit/License.html");
+		render();
 	}
+
+	@Security(RoleType.STUDENT)
+	public static void doLicense(String submissionId, String licenseAgreement) {
+
+		dumpParams();
+		
+		Map<String,String> templateArgs = new HashMap<String,String>();
+		templateArgs.put("submissionId", String.valueOf(submissionId));
+		
+		render("Submit/DocInfo.html");
+	}
+	
 
 	@Security(RoleType.STUDENT)
 	public static void docInfo() {

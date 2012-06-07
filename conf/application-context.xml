@@ -7,9 +7,9 @@
         http://www.springframework.org/schema/util
         http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 
-	<import resource="file:conf/submission-states.xml" />
+	<import resource="classpath:submission-states.xml" />
 
-	<!-- Verio Persistence Repositories -->
+	<!-- Vireo Persistence Repositories -->
 	<bean id="PersonRepository" class="org.tdl.vireo.model.jpa.JpaPersonRepositoryImpl" scope="singleton" />
 	<bean id="SubmissionRepository" class="org.tdl.vireo.model.jpa.JpaSubmissionRepositoryImpl" scope="singleton" />
 	<bean id="SettingsRepository" class="org.tdl.vireo.model.jpa.JpaSettingsRepositoryImpl" scope="singleton" />

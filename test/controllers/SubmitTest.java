@@ -38,7 +38,7 @@ public class SubmitTest extends FunctionalTest {
 		 
 		 shibLogin();
 		 
-		 final String LICENSE_URL = Router
+		 final String DO_VERIFY_URL = Router
 				 .reverse("Submit.doVerifyPersonalInformation").url;
 		 
 		 Map<String,String> verifyArgs = new HashMap<String,String>();
@@ -55,7 +55,7 @@ public class SubmitTest extends FunctionalTest {
 		 verifyArgs.put("currentAddress","2222 Fake Street");
 
 			
-		 Response response = POST(LICENSE_URL, verifyArgs);
+		 Response response = POST(DO_VERIFY_URL, verifyArgs);
 		 
 		 assertStatus(200, response);
 	 }

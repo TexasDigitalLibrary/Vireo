@@ -10,14 +10,14 @@
 <div class="span7">
 <p>Please verify all of your personal information. Some of the information has been provided by your school; if this information is in error, you will need to correct it through the appropriate office at your school.</p>
 <p>Required fields are indicated with an asterisk.</p>
-  <form action="submit/verifyinfo" method="post" class="form-horizontal">
+  <form action="submit/doVerifyinfo" method="post" class="form-horizontal">
 		
 	<fieldset>
 		<legend>Personal Information</legend>
 		<div class="control-group">
 			<label class="control-label" for="firstName"><b>* First Name</b></label>
 			<div class="controls">
-				<p>${templateArgs.firstName}</p>
+				<p>${currentPerson.firstName}</p>
 			</div>
 		</div>
 		<div class="control-group">
@@ -29,13 +29,13 @@
 		<div class="control-group">
 			<label class="control-label" for="lastName"><b>* Last Name</b></label>
 			<div class="controls">
-				${templateArgs.lastName}
+				${currentPerson.lastName}
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label" for="email"><b>* Email</b></label>
 			<div class="controls">
-				${templateArgs.email}
+				${currentPerson.email}
 			</div>
 		</div>
 		<div class="control-group">
