@@ -1,0 +1,32 @@
+#{extends 'main.html' /}
+#{set title:'Update Profile' /}
+
+#{form @@Authentication.updateProfile()}
+<h1>Update Profile for ${fullName}</h1>
+
+#{ifErrors}
+<ul id="errors">
+#{errors} <li>${error}</li> #{/errors}
+</ul>
+#{/ifErrors}
+
+<p>Email: <input type="text" name="email" value="${email}" disable="true" #{ifError 'email'}class='error'#{/ifError}/> </p>
+<p>First Name: <input type="text" name="firstName" value="${firstName}" #{ifError 'firstName'}class='error'#{/ifError}/></p>
+<p>Last Name: <input type="text" name="lastName" value="${lastName}" #{ifError 'lastName'}class='error'#{/ifError}/></p>
+<p>Middle Name: <input type="text" name="middleName" value="${middleName}" #{ifError 'middleName'}class='error'#{/ifError}/></p>
+<p>Birth Year: <input type="text" name="birthYear" value="${birthYear}" #{ifError 'birthYear'}class='error'#{/ifError}/></p>
+
+<h2>Current</h2>
+<p>Phone Number: <input type="text" name="currentPhoneNumber" value="${currentPhoneNumber}" #{ifError 'currentPhoneNumber'}class='error'#{/ifError}/></p>
+<p>Postal Address: <textarea name="currentPostalAddress" #{ifError 'currentPostalAddress'}class='error'#{/ifError}>${currentPostalAddress}</textarea></p>
+
+<h2>Permanent</h2>
+<p>Phone Number: <input type="text" name="permanentPhoneNumber" value="${permanentPhoneNumber}" #{ifError 'permanentPhoneNumber'}class='error'#{/ifError}/></p>
+<p>Postal Address: <textarea name="permanentPostalAddress" #{ifError 'permanentPostalAddress'}class='error'#{/ifError}>${permanentPostalAddress}</textarea></p>
+<p>Email: <input type="text" name="permanentEmailAddress" value="${permanentEmailAddress}" #{ifError 'permanentEmailAddress'}class='error'#{/ifError}/></p>
+
+<p>
+<input type="submit" name="submit_cancel" value="Cancel">
+<input type="submit" name="submit_update" value="Update Profile">
+</p>
+#{/form}

@@ -1,0 +1,16 @@
+# Email sent to Vireo users when they forgot their password or
+# when they want to change their email address.
+#
+# Parameters: {REGISTRATION_URL} is expanded to a special URL
+#
+Subject: Verify Email Address
+
+Please click on the link below to verify your email address with 
+Vireo.
+
+  {REGISTRATION_URL}
+
+If you need assistance with your account, please email
+vireo@myuniversity.edu or call us at xxx-555-xxxx.
+
+The Vireo Team

@@ -35,7 +35,7 @@ public class SystemEmailTemplateServiceImplTest extends UnitTest {
 		if (template != null)
 			template.delete();
 		
-		template = settingRepo.findEmailTemplateByName("SYSTEM Change Password");
+		template = settingRepo.findEmailTemplateByName("SYSTEM Verify Email Address");
 		if (template != null)
 			template.delete();
 	}
@@ -72,11 +72,11 @@ public class SystemEmailTemplateServiceImplTest extends UnitTest {
 		template.delete();
 
 		// Change Password Registration
-		template = systemEmailService.generateSystemEmailTemplate("SYSTEM Change Password");
+		template = systemEmailService.generateSystemEmailTemplate("SYSTEM Verify Email Address");
 		
-		assertEquals("SYSTEM Change Password", template.getName());
-		assertEquals("Change Password Request",template.getSubject());
-		assertTrue(template.getMessage().contains("To change the password for your Vireo account, please click the link"));
+		assertEquals("SYSTEM Verify Email Address", template.getName());
+		assertEquals("Verify Email Address",template.getSubject());
+		assertTrue(template.getMessage().contains("Please click on the link below to verify your email address with"));
 		assertTrue(template.getMessage().contains("{REGISTRATION_URL}"));
 		assertTrue(template.getMessage().contains("The Vireo Team"));
 
@@ -114,7 +114,7 @@ public class SystemEmailTemplateServiceImplTest extends UnitTest {
 		
 		assertNotNull(names);
 		assertTrue(names.contains("SYSTEM New User Registration"));
-		assertTrue(names.contains("SYSTEM Change Password"));
+		assertTrue(names.contains("SYSTEM Verify Email Address"));
 		assertEquals(2,names.size());
 
 	}

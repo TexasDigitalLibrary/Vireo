@@ -10,38 +10,38 @@
 <div class="span7">
 <p>Please verify all of your personal information. Some of the information has been provided by your school; if this information is in error, you will need to correct it through the appropriate office at your school.</p>
 <p>Required fields are indicated with an asterisk.</p>
-  <form action="submit/verifyinfo" method="post" class="form-horizontal">
+  <form action="submit/doVerifyinfo" method="post" class="form-horizontal">
 		
 	<fieldset>
 		<legend>Personal Information</legend>
 		<div class="control-group">
 			<label class="control-label" for="firstName"><b>* First Name</b></label>
 			<div class="controls">
-				<p>Claire</p>
+				<p>${templateArgs.firstName}</p>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label" for="middleName">Middle Name</label>
 			<div class="controls">
-				<input type="text" class="span1" id="middleName">
+				<input type="text" class="span1" id="middleName" name="middleName">
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label" for="lastName"><b>* Last Name</b></label>
 			<div class="controls">
-				<p>Danes</p>
+				<p>${templateArgs.lastName}</p>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label" for="email"><b>* Email</b></label>
 			<div class="controls">
-				<p>cdanes@gmail.com</p>
+				<p>${templateArgs.email}</p>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label" for="yearOfBirth">Year of Birth</label>
 			<div class="controls">
-				<input type="text" class="span3" id="yearOfBirth">
+				<input type="text" class="span3" id="yearOfBirth" name="yearOfBirth">
 			</div>
 		</div>
 	</fieldset>
@@ -57,7 +57,7 @@
 		<div class="control-group">
 			<label class="control-label" for="department"><b>* Department</b></label>
 			<div class="controls">
-				<select id="department">
+				<select id="department" name="department">
 					<option>...choose</option>
 					<option value="1">Accounting</option>
 					<option value="2">Aerospace Engineering</option>
@@ -68,7 +68,7 @@
 		<div class="control-group">
 			<label class="control-label" for="degree"><b>* Degree</b></label>
 			<div class="controls">
-				<select id="degree">
+				<select id="degree" name="degree">
 					<option>...choose</option>
 					<option value="1">Doctor of Philosophy</option>
 					<option value="2">Master of Arts</option>
@@ -79,7 +79,7 @@
 		<div class="control-group">
 			<label class="control-label" for="major"><b>* Major</b></label>
 			<div class="controls">
-				<select id="major">
+				<select id="major" name="major">
 					<option>...choose</option>
 					<option value="1">Biochemistry</option>
 					<option value="2">Horticulture</option>
@@ -94,31 +94,31 @@
 		<div class="control-group">
 			<label class="control-label" for="permPhone"><b>* Permanent Phone:</b></label>
 			<div class="controls">
-				<input type="text" class="span3" id="permPhone">
+				<input type="text" class="span3" id="permPhone" name="permPhone">
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label" for="permAddress"><b>* Permanent Address:</b></label>
 			<div class="controls">
-				<textarea class="span5" id="permAddress"></textarea>
+				<textarea class="span5" id="permAddress" name="permAddress"></textarea>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label" for="permEmail">Permanent Email:</label>
 			<div class="controls">
-				<input type="text" class="span3" id="permEmail">
+				<input type="text" class="span3" id="permEmail" name="permEmail">
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label" for="currentPhone">Current Email:</label>
 			<div class="controls">
-				<input type="text" class="span3" id="currentPhone">
+				<input type="text" class="span3" id="currentPhone" name="currentPhone">
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label" for="currentAddress">Current Address:</label>
 			<div class="controls">
-				<textarea class="span5" id="currentAddress"></textarea>
+				<textarea class="span5" id="currentAddress" name="currentAddress"></textarea>
 			</div>
 		</div>
 	</fieldset>

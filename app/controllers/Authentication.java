@@ -71,6 +71,9 @@ public class Authentication extends Controller {
 	
 	// Constants
 	public static final String REGISTRATION_TEMPLATE = "SYSTEM New User Registration";
+	public static final String RECOVER_TEMPLATE = "SYSTEM Verify Email Address";
+
+	
 	
 	/**
 	 * This method is run before every action in any controller (with the
@@ -443,17 +446,318 @@ public class Authentication extends Controller {
 		renderTemplate("Authentication/registerStart.html");
 	}
 	
-	public static void registerReturn() {
+	/**
+	 * Handle recovery of lost accounts. When the user forgets their password
+	 * they can use this facility to reset it after verifying their email
+	 * address. This action has several different parts to complete the recovery
+	 * process. By design it is very similar to DSpace's forgot password
+	 * process.
+	 * 
+	 * 1) Display the initial form where a user supplies their email address. If
+	 * there is an account associated with the email address we send an email to
+	 * the address containing a special verification token.
+	 * 
+	 * 2) Display an email sent message after sending the verification email.
+	 * 
+	 * 3) Upon return from a link in email ask the user to pick a password. for
+	 * the required
+	 * 
+	 * 4) If the return link is not valid, then display a pretty error page
+	 * explaining common problems.
+	 */
+	public static void recover() {
+		// Bail if we don't allow registration
+		if (!isPasswordRecoveryEnabled())
+			notFound();
 		
+		// Bail if someone is already logged in.
+		if (context.getPerson() != null)
+			Authentication.profile();
+		
+		// Bail if they've clicked cancel.
+		if (params.get("submit_cancel") != null)
+			Application.index();
+		
+		// Handle returning after email verification.
+		if (params.get("token") != null) {
+			String token = params.get("token");
+			
+			String email = validateToken(token, "rec");
+			if (email == null)
+				renderTemplate("Authentication/invalidToken.html");
+			Person person = personRepo.findPersonByEmail(email);
+			if (person == null)
+				error("Unable to locate person object for email: "+email);
+			
+			String password1 = params.get("password1");
+			String password2 = params.get("password2");
+			
+			if (params.get("submit_recover") != null) {
+				
+				if (password1 == null || password1.trim().length() == 0)
+					validation.addError("password1", "Please pick a password.");
+				
+				if (password1 != null && !password1.equals(password2)) 
+					validation.addError("password2", "The passwords do not match.");
+				
+				if (password1 != null && password1.trim().length() < 6)
+					validation.addError("password1", "Please pick a password longer than 6 characters.");
+				
+				if (!validation.hasErrors()) {
+					
+					// Update the password
+					context.login(person);
+					person.setPassword(password1);
+					person.save();
+					
+					// Notify all the authentication methods of the change.
+					List<AuthenticationMethod> methods = getEnabledAuthenticationMethods();
+					for (AuthenticationMethod method : methods) 
+						method.personUpdated(request, person);
+					
+					// Log the person in
+					session.put("personId", person.getId());
+					session.put("firstName", person.getFirstName());
+					session.put("lastName", person.getLastName());
+					session.put("displayName", person.getDisplayName());
+							
+					// Go to the index page.
+					Application.index();
+				}
+			}
+			
+			renderTemplate("Authentication/recoverReturn.html", token, email, password1, password2);
+		}
+		
+		// Otherwise handle sending the email verification.
+		if (params.get("submit_recover") != null) {
+			
+			String email = params.get("email");
+			
+			if (email == null || email.trim().length() == 0)
+				validation.addError("email", "An email address is required.");
+			
+			// Check if the address is valid.
+			try {
+				if (email != null) {
+					InternetAddress ia = new InternetAddress(email);
+					ia.validate();
+				}
+			} catch (AddressException ae) {
+				validation.addError("email", ae.getMessage());
+			}
+			
+			// Check if the account allready exists
+			Person person = personRepo.findPersonByEmail(email);
+			if (person == null)
+				validation.addError("email", "No account exists with this email address.");
+			
+			if (!validation.hasErrors()) {
+				// We're good let's send this off.
+				systemEmailService.generateAllSystemEmailTemplates();
+				EmailTemplate template = settingRepo.findEmailTemplateByName(RECOVER_TEMPLATE);
+				
+				ActionDefinition action = Router.reverse("Authentication.recover");
+				action.absolute();
+				String token = generateToken(email, "rec");
+				
+				TemplateParameters params = new TemplateParameters();
+				params.REGISTRATION_URL = action.url + "?token="+token;
+				
+				List<String> recipients = new ArrayList<String>();
+				recipients.add(email);
+				
+				emailService.sendEmail(template, params, recipients, null);
+				
+				renderTemplate("Authentication/recoverSent.html",email);
+			}
+			
+			renderTemplate("Authentication/recoverStart.html",email);
+		}
+		renderTemplate("Authentication/recoverStart.html");
 	}
 	
-	public static void forgot() {
-		todo();
-	}
-	
+	/**
+	 * View the current user's profile. This is purly informational. However if
+	 * configured this person will be able to follow links from this page to
+	 * update their profile or their password.
+	 */
 	@Security(RoleType.NONE)
 	public static void profile() {
-		render();
+		
+		// Who's logged in.
+		Person person = context.getPerson();
+		
+		// Person profile information.
+		String fullName = person.getFullName();
+		String email = person.getEmail();
+		String firstName = person.getFirstName();
+		String lastName = person.getLastName();
+		String middleName = person.getMiddleName();
+		
+		String birthYear = "";
+		if (person.getBirthYear() != null)
+			birthYear = String.valueOf(person.getBirthYear());
+		String currentPhoneNumber = person.getCurrentPhoneNumber();
+		String currentPostalAddress = person.getCurrentPostalAddress();
+		String permanentPhoneNumber = person.getPermanentPhoneNumber();
+		String permanentPostalAddress = person.getPermanentPostalAddress();
+		String permanentEmailAddress = person.getPermanentEmailAddress();
+		
+		// Update Controls
+		boolean updateProfile = isUpdateProfileEnabled(person);
+		boolean updatePassword = isUpdatePasswordEnabled(person);
+		
+		
+		renderTemplate("Authentication/profile.html", updateProfile, updatePassword, fullName, firstName, email, lastName, middleName, 
+				birthYear, currentPhoneNumber, currentPostalAddress, permanentPhoneNumber,
+				permanentPostalAddress, permanentEmailAddress);
+	}
+	
+	/**
+	 * Update the current user's profile information. Basically all the
+	 * information other than their password: First, middle, last names,
+	 * addresses, phone numbers, etc.
+	 */
+	@Security(RoleType.NONE)
+	public static void updateProfile() {
+		
+		Person person = context.getPerson();
+		
+		if (!isUpdateProfileEnabled(person))
+			todo(); // Need to display static form.
+		
+		if (params.get("submit_cancel") != null)
+			Authentication.profile();
+		
+		// Static content
+		String fullName = person.getFullName();
+		String email = person.getEmail();
+		
+		// Dynamic fields
+		String firstName = params.get("firstName");
+		String lastName = params.get("lastName");
+		String middleName = params.get("middleName");
+		String birthYear = params.get("birthYear");
+		String currentPhoneNumber = params.get("currentPhoneNumber");
+		String currentPostalAddress = params.get("currentPostalAddress");
+		String permanentPhoneNumber = params.get("permanentPhoneNumber");
+		String permanentPostalAddress = params.get("permanentPostalAddress");
+		String permanentEmailAddress = params.get("permanentEmailAddress");
+		
+		if (params.get("submit_update") != null) {
+			
+			if (firstName == null || firstName.trim().length() == 0)
+				validation.addError("firstName", "First name is required.");
+
+			if (lastName == null || lastName.trim().length() == 0)
+				validation.addError("firstName", "Last name is required.");
+			
+			Integer birthYearInt = null;
+			if (birthYear != null && birthYear.trim().length() > 0) {
+				try {
+					birthYearInt = Integer.valueOf(birthYear);
+					if (birthYearInt < 1900 || birthYearInt > (new Date().getYear() + 1900))
+						validation.addError("birthYear", "Invalid birth year, please use four digits");
+				} catch (NumberFormatException nfe) {
+					validation.addError("birthYear", "Invalid birth year.");
+			}
+			}
+			
+			if (permanentEmailAddress != null && permanentEmailAddress.trim().length() > 0) {
+				try {
+					new InternetAddress(permanentEmailAddress).validate();
+				} catch (AddressException ae) {
+					validation.addError("permanentEmailAddress","Invalid permanent email address.");
+				}
+			}
+			
+			if (!validation.hasErrors()) {
+				person.setFirstName(firstName);
+				person.setLastName(lastName);
+				person.setMiddleName(middleName);
+				person.setBirthYear(birthYearInt);
+				person.setCurrentPhoneNumber(currentPhoneNumber);
+				person.setCurrentPostalAddress(currentPostalAddress);
+				person.setPermanentPhoneNumber(permanentPhoneNumber);
+				person.setPermanentPostalAddress(permanentPostalAddress);
+				person.setPermanentEmailAddress(permanentEmailAddress);
+				person.save();
+				
+				Authentication.profile();
+			}
+		} else {
+			// First time viewing the form fill out information from the person object.
+			firstName = person.getFirstName();
+			lastName = person.getLastName();
+			middleName = person.getMiddleName();
+			if (person.getBirthYear() == null)
+				birthYear = "";
+			else
+				birthYear = String.valueOf(person.getBirthYear());
+			currentPhoneNumber = person.getCurrentPhoneNumber();
+			currentPostalAddress = person.getCurrentPostalAddress();
+			permanentPhoneNumber = person.getPermanentPhoneNumber();
+			permanentPostalAddress = person.getPermanentPostalAddress();
+			permanentEmailAddress = person.getPermanentEmailAddress();
+		}
+		
+		renderTemplate("Authentication/updateProfile.html", fullName, firstName, email, lastName, middleName, 
+				birthYear, currentPhoneNumber, currentPostalAddress, permanentPhoneNumber,
+				permanentPostalAddress, permanentEmailAddress);
+	}
+	
+	/**
+	 * Update a user's password. This assumes they know their current password,
+	 * if they don't then they wouldn't be logged in and could use the forgot
+	 * password mechanism.
+	 */
+	@Security(RoleType.NONE)
+	public static void updatePassword() {
+		Person person = context.getPerson();
+		
+		if (!isUpdatePasswordEnabled(person))
+			Authentication.profile();
+		
+		if (params.get("submit_cancel") != null)
+			Authentication.profile();
+		
+		// Static content
+		String fullName = person.getFullName();
+		
+		// Dynamic fields
+		String current = params.get("current");
+		String password1 = params.get("password1");
+		String password2 = params.get("password2");
+		
+		if (params.get("submit_update") != null) {
+			
+			if (current == null || current.trim().length() == 0)
+				validation.addError("current", "Please provide your current password.");
+			else if (!person.validatePassword(current))
+				validation.addError("current", "Your current password is not correct.");
+			
+			
+			if (password1 == null || password1.trim().length() == 0)
+				validation.addError("password1", "Please pick a new password.");
+			
+			if (password1 != null && !password1.equals(password2)) 
+				validation.addError("password1", "The passwords do not match.");
+			
+			if (password1 != null && password1.trim().length() < 6)
+				validation.addError("password1", "Please pick a new password longer than 6 characters.");
+			
+			
+			if (!validation.hasErrors()) {
+				
+				person.setPassword(password1);
+				person.save();
+				
+				Authentication.profile();
+			}
+		}
+		
+		renderTemplate("Authentication/updatePassword.html", fullName, password1, password2);
 	}
 	
 	/**
@@ -579,6 +883,19 @@ public class Authentication extends Controller {
 		List<AuthenticationMethod> enabledMethods = getEnabledAuthenticationMethods();
 		for (AuthenticationMethod method : enabledMethods) {
 			if (method.getAllowNewRegistration())
+				return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * @return If the password recovery is enabled by any authentication method.
+	 */
+	private static boolean isPasswordRecoveryEnabled() {
+		
+		List<AuthenticationMethod> enabledMethods = getEnabledAuthenticationMethods();
+		for (AuthenticationMethod method : enabledMethods) {
+			if (method.getAllowPasswordRecovery())
 				return true;
 		}
 		return false;

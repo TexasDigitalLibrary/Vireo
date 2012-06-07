@@ -74,6 +74,15 @@ public interface Person extends AbstractModel {
 	 */
 	public boolean validatePassword(String password);
 	
+	/**
+	 * @return The institutional identifier for this person.
+	 */
+	public String getInstitutionalIdentifier();
+	
+	/**
+	 * @param identifier Set the institutional identifier for this person.
+	 */
+	public void setInstitutionalIdentifier(String identifier);
 
 	/**
 	 * @return The first name of the person.
@@ -222,6 +231,18 @@ public interface Person extends AbstractModel {
 	 */
 	public void setPermanentEmailAddress(String email);
 
+	/**
+	 * @return The current non-controlled degree.
+	 */
+	public String getCurrentDegree();
+
+	/**
+	 * 
+	 * @param department
+	 *            The new degree
+	 */
+	public void setCurrentDegree(String degree);
+	
 	/**
 	 * @return The current non-controlled department.
 	 */

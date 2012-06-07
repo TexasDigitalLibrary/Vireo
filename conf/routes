@@ -9,13 +9,18 @@ GET     /                                       Application.index
 *       /login/{methodName}/return              Authentication.loginReturn
 *       /logout                                 Authentication.logout
 *       /register                               Authentication.register
-*       /profile                                Authentication.profile
+*       /forgot                                 Authentication.recover
+GET     /profile                                Authentication.profile
+*       /profile/update                         Authentication.updateProfile
+*       /profile/password                       Authentication.updatePassword
+
+
 *       /submit                                 Submit.verifyPersonalInformation
 *       /submit/verifyinfo                      Submit.verifyPersonalInformation
 GET     /submit/verifyinfo                      Submit.verifyPersonalInformation
-POST    /submit/verifyinfo                      Submit.doVerifyPersonalInformation
+POST    /submit/doVerifyinfo                    Submit.doVerifyPersonalInformation
 GET	    /submit/license                         Submit.license
-POST    /submit/license                         Submit.license
+POST    /submit/doLicense                       Submit.doLicense
 GET   	/submit/docinfo                         Submit.docInfo
 POST    /submit/docinfo                         Submit.docInfo
 GET	    /submit/upload                          Submit.fileUpload

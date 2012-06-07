@@ -45,6 +45,7 @@ public class ShibbolethAuthenticationMethodImpl extends
 	// All the header names.
 	public String headerNetId = "SHIB_netid";
 	public String headerEmail = "SHIB_mail";
+	public String headerInstitutionalIdentifier = "SHIB_uin";
 	public String headerFirstName = "SHIB_givenname";
 	public String headerMiddleName = "SHIB_initials"; 
 	public String headerLastName = "SHIB_sn"; 
@@ -56,6 +57,7 @@ public class ShibbolethAuthenticationMethodImpl extends
 	public String headerPermanentPhoneNumber = "SHIB_permanentPhone";
 	public String headerPermanentPostalAddress = "SHIB_permanentPostal";
 	public String headerPermanentEmailAddress = "SHIB_permanentMail";
+	public String headerCurrentDegree = "SHIB_degree";
 	public String headerCurrentDepartment = "SHIB_department";
 	public String headerCurrentCollege = "SHIB_college";
 	public String headerCurrentMajor = "SHIB_major";
@@ -154,6 +156,7 @@ public class ShibbolethAuthenticationMethodImpl extends
 		}
 		
 		// Store all the optional attributes.
+		headerInstitutionalIdentifier = attributeMap.get("institutionalIdentifier");
 		headerMiddleName = attributeMap.get("middleName");
 		headerDisplayName = attributeMap.get("displayName");
 		headerBirthYear = attributeMap.get("birthYear");
@@ -163,6 +166,7 @@ public class ShibbolethAuthenticationMethodImpl extends
 		headerPermanentPhoneNumber = attributeMap.get("permanentPhoneNumber");
 		headerPermanentPostalAddress = attributeMap.get("permanentPostalAddress");
 		headerPermanentEmailAddress = attributeMap.get("permanentEmailAddress");
+		headerCurrentDegree = attributeMap.get("currentDegree");
 		headerCurrentDepartment = attributeMap.get("currentDepartment");
 		headerCurrentCollege = attributeMap.get("currentCollege");
 		headerCurrentMajor = attributeMap.get("currentMajor");
@@ -245,6 +249,10 @@ public class ShibbolethAuthenticationMethodImpl extends
 			}
 
 			// 4. Update Optional attributes:
+			if (headerInstitutionalIdentifier != null) {
+				String identifier = getSingleAttribute(request, headerInstitutionalIdentifier);
+				person.setInstitutionalIdentifier(identifier);
+			}
 			if (headerMiddleName != null) {
 				String middleName = getSingleAttribute(request, headerMiddleName);
 				person.setMiddleName(middleName);
@@ -285,6 +293,10 @@ public class ShibbolethAuthenticationMethodImpl extends
 			if (headerPermanentEmailAddress != null) {
 				String permanentEmailAddress = getSingleAttribute(request, headerPermanentEmailAddress);
 				person.setPermanentEmailAddress(permanentEmailAddress);
+			}
+			if (headerCurrentDegree != null) {
+				String currentDegree = getSingleAttribute(request, headerCurrentDegree);
+				person.setCurrentDegree(currentDegree);
 			}
 			if (headerCurrentDepartment != null) {
 				String currentDepartment = getSingleAttribute(request, headerCurrentDepartment);

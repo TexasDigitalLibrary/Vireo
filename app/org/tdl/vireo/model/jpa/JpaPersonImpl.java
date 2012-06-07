@@ -46,6 +46,8 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 	public String email;
 	
 	public String passwordHash;
+	
+	public String institutionalIdentifier;
 
 	@Column(nullable = false)
 	public String firstName;
@@ -65,6 +67,7 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 	public String permanentPostalAddress;
 	public String permanentEmailAddress;
 
+	public String currentDegree;
 	public String currentDepartment;
 	public String currentCollege;
 	public String currentMajor;
@@ -182,6 +185,16 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 			return false;
 		
 		return passwordHash.equals(generateHash(password));
+	}
+	
+	@Override 
+	public String getInstitutionalIdentifier() {
+		return institutionalIdentifier;
+	}
+	
+	@Override
+	public void setInstitutionalIdentifier(String identifier) {
+		this.institutionalIdentifier = identifier;
 	}
 
 	@Override
@@ -335,6 +348,19 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 		this.permanentEmailAddress = email;
 	}
 
+	@Override
+	public String getCurrentDegree() {
+		return currentDegree;
+	}
+	
+	@Override
+	public void setCurrentDegree(String degree) {
+		
+		assertAdministratorOrOwner(this);
+
+		this.currentDegree = degree;
+	}
+	
 	@Override
 	public String getCurrentDepartment() {
 		return currentDepartment;
