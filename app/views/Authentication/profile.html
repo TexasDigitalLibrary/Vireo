@@ -1,8 +1,27 @@
 #{extends 'main.html' /}
 #{set title:'Profile' /}
 
+<h1>Profile for ${fullName}</h1>
 
-<h1>Profile</h1>
-<p>Person ID: ${session.get("personId")}</p>
-<p>First Name: ${session.get("firstName")}</p>
-<p>Last Name: ${session.get("lastName")}</p>
+#{if updateProfile }
+<p><a href="@{Authentication.updateProfile()}">Update profile information</a></p>
+#{/if}
+
+#{if updatePassword }
+<p><a href="@{Authentication.updatePassword()}">Change your password</a></p>
+#{/if}
+
+<p>Email: ${email} </p>
+<p>First Name: ${firstName}</p>
+<p>Last Name: ${lastName}</p>
+<p>Middle Name: ${middleName}</p>
+<p>Birth Year: ${birthYear}</p>
+
+<h2>Current</h2>
+<p>Phone Number: ${currentPhoneNumber}</p>
+<p>Postal Address: ${currentPostalAddress}</p>
+
+<h2>Permanent</h2>
+<p>Phone Number: ${permanentPhoneNumber}</p>
+<p>Postal Address: ${permanentPostalAddress}</p>
+<p>Email: ${permanentEmailAddress}</p>
