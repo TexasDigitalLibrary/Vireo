@@ -15,6 +15,8 @@ import org.tdl.vireo.model.SubmissionRepository;
 
 
 import org.tdl.vireo.model.RoleType;
+
+import com.google.gson.Gson;
 /**
  * Submit controller
  * This controller manages the student submission forms for Vireo 
@@ -79,9 +81,18 @@ public class Submit extends Controller {
 		
 		sub.save();
 		long subId = sub.getId();
+		
+		Logger.info("Submisson ID: " + String.valueOf(subId));
+		
+		Gson gson = new Gson();
+		Logger.info("Submission" + gson.toJson(sub));
+		
+		
+		Map<String,String> templateArgs = new HashMap<String,String>();
+		templateArgs.put("submissionId", String.valueOf(subId));
 
 		 
-		render("Submit/License.html");
+		render("Submit/License.html", templateArgs);
 	}
 
 	@Security(RoleType.STUDENT)
@@ -90,6 +101,18 @@ public class Submit extends Controller {
 		dumpParams();
 		render("Submit/License.html");
 	}
+
+	@Security(RoleType.STUDENT)
+	public static void doLicense(String submissionId, String licenseAgreement) {
+
+		dumpParams();
+		
+		Map<String,String> templateArgs = new HashMap<String,String>();
+		templateArgs.put("submissionId", String.valueOf(submissionId));
+		
+		render("Submit/DocInfo.html");
+	}
+	
 
 	@Security(RoleType.STUDENT)
 	public static void docInfo() {
