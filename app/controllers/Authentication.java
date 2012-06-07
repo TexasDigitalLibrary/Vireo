@@ -293,12 +293,12 @@ public class Authentication extends Controller {
 			
 			// Where to go next? If there were trying to go somethere go
 			// back there, otherwise go to the root.
-			if (flash.get("url") != null) {
+			if (flash.get("url") != null && flash.get("url").trim().length() > 0) {
 				String url = flash.get("url");
 				flash.remove("url");
 				redirect(url);
 			} else {
-				redirect("Application.index");
+				Application.index();
 			}
 		} 
 		
@@ -347,18 +347,24 @@ public class Authentication extends Controller {
 			if (email == null)
 				renderTemplate("Authentication/invalidToken.html");
 			
-			String firstName = params.get("firstname");
-			String lastName = params.get("lastname");
+			// Check if the account exists.
+			Person person = personRepo.findPersonByEmail(email);
+			if (person != null)
+				error("An account for this email address allready exists.");
+			
+			
+			String firstName = params.get("firstName");
+			String lastName = params.get("lastName");
 			String password1 = params.get("password1");
 			String password2 = params.get("password2");
 			
 			if (params.get("submit_register") != null) {
 				
 				if (firstName == null || firstName.trim().length() == 0)
-					validation.addError("firstname", "First name is required.");
+					validation.addError("firstName", "First name is required.");
 				
 				if (lastName == null || lastName.trim().length() == 0)
-					validation.addError("lastname", "Last name is required.");
+					validation.addError("lastName", "Last name is required.");
 				
 				if (password1 == null || password1.trim().length() == 0)
 					validation.addError("password1", "Please pick a password.");
@@ -373,7 +379,7 @@ public class Authentication extends Controller {
 					
 					// Create the account.
 					context.turnOffAuthorization();
-					Person person = personRepo.createPerson(null, email, firstName, lastName, RoleType.STUDENT);
+					person = personRepo.createPerson(null, email, firstName, lastName, RoleType.STUDENT);
 					person.setPassword(password1);
 					person.save();
 					context.turnOffAuthorization();
@@ -409,11 +415,10 @@ public class Authentication extends Controller {
 			// Check if the address is valid.
 			try {
 				if (email != null) {
-					InternetAddress ia = new InternetAddress(email);
-					ia.validate();
+					new InternetAddress(email).validate();
 				}
 			} catch (AddressException ae) {
-				validation.addError("email", ae.getMessage());
+				validation.addError("email", "The email address is invalid.");
 			}
 			
 			// Check if the account allready exists
@@ -500,7 +505,7 @@ public class Authentication extends Controller {
 				if (password1 != null && !password1.equals(password2)) 
 					validation.addError("password2", "The passwords do not match.");
 				
-				if (password1 != null && password1.trim().length() < 6)
+				if (!validation.hasErrors() && password1 != null && password1.trim().length() < 6)
 					validation.addError("password1", "Please pick a password longer than 6 characters.");
 				
 				if (!validation.hasErrors()) {
@@ -538,20 +543,21 @@ public class Authentication extends Controller {
 				validation.addError("email", "An email address is required.");
 			
 			// Check if the address is valid.
-			try {
-				if (email != null) {
-					InternetAddress ia = new InternetAddress(email);
-					ia.validate();
+			if (!validation.hasErrors()){
+				try {
+					new InternetAddress(email).validate();
+				} catch (AddressException ae) {
+					validation.addError("email", "The email address is invalid.");
 				}
-			} catch (AddressException ae) {
-				validation.addError("email", ae.getMessage());
 			}
-			
+
 			// Check if the account allready exists
-			Person person = personRepo.findPersonByEmail(email);
-			if (person == null)
-				validation.addError("email", "No account exists with this email address.");
-			
+			if (!validation.hasErrors()) {
+				Person person = personRepo.findPersonByEmail(email);
+				if (person == null)
+					validation.addError("email", "No account exists with this email address.");
+			}
+
 			if (!validation.hasErrors()) {
 				// We're good let's send this off.
 				systemEmailService.generateAllSystemEmailTemplates();

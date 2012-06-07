@@ -1,32 +1,109 @@
 #{extends 'main.html' /}
 #{set title:'Update Profile' /}
 
-#{form @@Authentication.updateProfile()}
-<h1>Update Profile for ${fullName}</h1>
+
+<div class="row pageHead">
+<h3>Update Profile for ${fullName}</h3>
+</div>
+<br/>
+
 
 #{ifErrors}
-<ul id="errors">
-#{errors} <li>${error}</li> #{/errors}
-</ul>
+<div class="row">
+    <div class="span7 offset1">
+        <ul class="red">
+            #{errors}
+            <li>${error}</li> 
+            #{/errors}
+        </ul>
+    </div>
+</div>
 #{/ifErrors}
 
-<p>Email: <input type="text" name="email" value="${email}" disable="true" #{ifError 'email'}class='error'#{/ifError}/> </p>
-<p>First Name: <input type="text" name="firstName" value="${firstName}" #{ifError 'firstName'}class='error'#{/ifError}/></p>
-<p>Last Name: <input type="text" name="lastName" value="${lastName}" #{ifError 'lastName'}class='error'#{/ifError}/></p>
-<p>Middle Name: <input type="text" name="middleName" value="${middleName}" #{ifError 'middleName'}class='error'#{/ifError}/></p>
-<p>Birth Year: <input type="text" name="birthYear" value="${birthYear}" #{ifError 'birthYear'}class='error'#{/ifError}/></p>
 
-<h2>Current</h2>
-<p>Phone Number: <input type="text" name="currentPhoneNumber" value="${currentPhoneNumber}" #{ifError 'currentPhoneNumber'}class='error'#{/ifError}/></p>
-<p>Postal Address: <textarea name="currentPostalAddress" #{ifError 'currentPostalAddress'}class='error'#{/ifError}>${currentPostalAddress}</textarea></p>
+<form action="@{Authentication.updateProfile()}" method="POST" class="form-horizontal">
 
-<h2>Permanent</h2>
-<p>Phone Number: <input type="text" name="permanentPhoneNumber" value="${permanentPhoneNumber}" #{ifError 'permanentPhoneNumber'}class='error'#{/ifError}/></p>
-<p>Postal Address: <textarea name="permanentPostalAddress" #{ifError 'permanentPostalAddress'}class='error'#{/ifError}>${permanentPostalAddress}</textarea></p>
-<p>Email: <input type="text" name="permanentEmailAddress" value="${permanentEmailAddress}" #{ifError 'permanentEmailAddress'}class='error'#{/ifError}/></p>
-
-<p>
-<input type="submit" name="submit_cancel" value="Cancel">
-<input type="submit" name="submit_update" value="Update Profile">
-</p>
-#{/form}
+<fieldset>
+        <legend>Personal Information</legend>
+        <div class="control-group">
+            <label class="control-label" for="email"><b>Email Address</b>
+            </label>
+            <div class="controls">
+                ${email}
+            </div>
+        </div>
+        <div class="control-group #{ifError 'firstName'}error#{/ifError}">
+            <label class="control-label" for="firstName"><b>*First Name</b>
+            </label>
+            <div class="controls">
+                <input type="text" name="firstName" value="${firstName}"/>
+            </div>
+        </div>  
+        <div class="control-group #{ifError 'middleName'}error#{/ifError}">
+            <label class="control-label" for="middleName">Middle Name
+            </label>
+            <div class="controls">
+                <input type="text" name="middleName" value="${middleName}" class="span1"/>
+            </div>
+        </div> 
+        <div class="control-group #{ifError 'lastName'}error#{/ifError}">
+            <label class="control-label" for="lastName"><b>*Last Name</b>
+            </label>
+            <div class="controls">
+                <input type="text" name="lastName" value="${lastName}"/>
+            </div>
+        </div> 
+        <div class="control-group #{ifError 'birthYear'}error#{/ifError}">
+            <label class="control-label" for="birthYear">Birth Year
+            </label>
+            <div class="controls">
+                <input type="text" name="birthYear" value="${birthYear}"/>
+            </div>
+        </div> 
+</fieldset>
+<fieldset>
+        <legend>Phone & Address</legend>
+        <div class="control-group #{ifError 'permanentPhoneNumber'}error#{/ifError}">
+            <label class="control-label" for="permanentPhoneNumber">Permanent Phone:
+            </label>
+            <div class="controls">
+                <input type="text" name="permanentPhoneNumber" value="${permanentPhoneNumber}"/>
+            </div>
+        </div>
+        <div class="control-group #{ifError 'permanentEmailAddress'}error#{/ifError}">
+            <label class="control-label" for="permanentEmailAddress">Permanent Email:
+            </label>
+            <div class="controls">
+                <input type="text" name="permanentEmailAddress" value="${permanentEmailAddress}"/>
+            </div>
+        </div>
+        <div class="control-group #{ifError 'permanentPostalAddress'}error#{/ifError}">
+            <label class="control-label" for="permanentPostalAddress">Permanent Address:
+            </label>
+            <div class="controls">
+                <textarea name="permanentPostalAddress">${permanentPostalAddress}</textarea>
+            </div>
+        </div>
+        
+        <div class="control-group #{ifError 'currentPhoneNumber'}error#{/ifError}">
+            <label class="control-label" for="currentPhoneNumber">Current Phone:
+            </label>
+            <div class="controls">
+                <input type="text" name="currentPhoneNumber" value="${currentPhoneNumber}"/>
+            </div>
+        </div>
+        <div class="control-group #{ifError 'currentPostalAddress'}error#{/ifError}">
+            <label class="control-label" for="currentPostalAddress">Current Address:
+            </label>
+            <div class="controls">
+                <textarea name="currentPostalAddress">${currentPostalAddress}</textarea>
+            </div>
+        </div>
+</fieldset>
+<fieldset>
+        <div class="form-actions">
+            <input type="submit" class="btn" name="submit_cancel" value="Cancel" />
+            <input type="submit" class="btn btn-primary" name="submit_update" value="Update Profile" />
+        </div>   
+</fieldset>
+</form>

@@ -1,17 +1,42 @@
 #{extends 'main.html' /}
 #{set title:"Forgot Password Recovery" /}
 
+<div class="row pageHead">
+    <h3>Forgot Password Recovery</h3>
+</div>
+<br />
 
-#{form @@Authentication.recover()}
-<h1>Forgot Password Recovery</h1>
+<div class="row">
+    <div class="span7">
+        <p>Please provide the email address used when registering your account. We will send you an email to that address with a special token. Clicking on the token link back to Vireo will allow us to verify your identity. Then you will be able to reset your password.</p>
+    </div>
+</div>
 
-<p>Please provide the email address used when registering your account. We will send you an email to that address with a special token. Clicking on the token link back to Vireo will allow us to verify your identity. Then you will be able to reset your password.</p>
+#{ifErrors}
+<div class="row">
+    <div class="span7 offset1">
+        <ul class="red">
+            #{errors}
+            <li>${error}</li> 
+            #{/errors}
+        </ul>
+    </div>
+</div>
+#{/ifErrors}
 
-<p>Email Address: <input type="text" name="email" value="${email}" #{ifError 'email'}class='error'#{/ifError}/>
-#{ifError 'email'}<span class='error'>#{error 'email'/}</span>#{/ifError}
-</p>
-<p>
-<input type="submit" name="submit_cancel" value="Cancel">
-<input type="submit" name="submit_recover" value="Verify">
-</p>
-#{/form}
+
+<form action="@{Authentication.recover()}" method="POST" class="form-horizontal">
+<fieldset>
+    <div class="control-group #{ifError 'email'}error#{/ifError}">
+        <label class="control-label" for="email"><b>Email Address</b>
+        </label>
+        <div class="controls">
+            <input type="text" name="email" value="${email}" />
+        </div>
+    </div>
+    <div class="form-actions">
+        <input type="submit" class="btn" name="submit_cancel" value="Cancel" />
+        <input type="submit" class="btn btn-primary" name="submit_recover" value="Verify Email Address" />
+    </div>
+</fieldset>
+</form>

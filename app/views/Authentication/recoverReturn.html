@@ -1,20 +1,58 @@
-#{extends 'main.html' /}
-#{set title:"Forgot Password Recovery" /}
+#{extends 'main.html' /} #{set title:"Forgot Password Recovery" /}
 
-<h1>Forgot Password Recovery</h1>
+<div class="row pageHead">
+	<h3>Forgot Password Recovery</h3>
+</div>
+<br />
 
-#{form @@Authentication.recover()}
-<input type="hidden" name="token" value="${token}"/>
+<div class="row">
+	<div class="span7">
+		<p>Your email address has been verified. Please use the form below
+			to reset your password.</p>
+	</div>
+</div>
 
-<p>Your email address has been verified. Please use the form below to reset your password.</p>
+#{ifErrors}
+<div class="row">
+	<div class="span7 offset1">
+		<ul class="red">
+			#{errors}
+			<li>${error}</li> #{/errors}
+		</ul>
+	</div>
+</div>
+#{/ifErrors}
 
-<p>Email Address: <input type="text" name="email" value="${email}" disabled="true"/></p>
-<p>Password: <input type="password" name="password1" value="${password1}" #{ifError 'password1'}class='error'#{/ifError}/>
-#{ifError 'password1'}<span class='error'>#{error 'password1'/}</span>#{/ifError}</p>
-<p>Password, again: <input type="password" name="password2" value="${password2}" #{ifError 'password2'}class='error'#{/ifError}/>
-#{ifError 'password2'}<span class='error'>#{error 'password2'/}</span>#{/ifError}</p>
-<p>
-<input type="submit" name="submit_cancel" value="Cancel">
-<input type="submit" name="submit_recover" value="Reset Password">
-</p>
-#{/form}
+
+
+<form action="@{Authentication.recover()}" method="POST" class="form-horizontal">
+<input type="hidden" name="token" value="${token}" />
+
+<fieldset>
+	<div class="control-group">
+		<label class="control-label" for="email"><b>Email Address</b>
+		</label>
+		<div class="controls">
+			${email}
+		</div>
+	</div>
+	<div class="control-group #{ifError 'password1'}error#{/ifError}">
+		<label class="control-label" for="password1"><b>Password</b>
+		</label>
+		<div class="controls">
+			<input type="password" name="password1" value="${password1}" />
+		</div>
+	</div>
+	<div class="control-group #{ifError 'password2'}error#{/ifError}">
+		<label class="control-label" for="password2"><b>Verify
+				Password</b> </label>
+		<div class="controls">
+			<input type="password" name="password2" value="${password2}" />
+		</div>
+	</div>
+	<div class="form-actions">
+		<input type="submit" class="btn" name="submit_cancel" value="Cancel" />
+		<input type="submit" class="btn btn-primary" name="submit_recover" value="Reset Password" />
+	</div>
+</fieldset>
+</form>

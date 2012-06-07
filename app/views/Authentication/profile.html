@@ -1,27 +1,107 @@
 #{extends 'main.html' /}
 #{set title:'Profile' /}
 
-<h1>Profile for ${fullName}</h1>
+<div class="row pageHead">
+	<h3>Profile for ${fullName}</h3>
+</div>
+<br/>
 
-#{if updateProfile }
-<p><a href="@{Authentication.updateProfile()}">Update profile information</a></p>
+
+#{if updateProfile || updatePassword}
+<div class="row">
+	#{if updateProfile }
+	<div class="span3 offset1">
+		<p>
+			<a href="@{Authentication.updateProfile()}" class="btn btn-primary">Update profile information</a>
+		</p>
+	</div>
+	#{/if} #{if updatePassword}
+	<div class="span3">
+		<p>
+			<a href="@{Authentication.updatePassword()}" class="btn btn-primary">Change your password</a>
+		</p>
+	</div>
+	#{/if}
+</div>
 #{/if}
 
-#{if updatePassword }
-<p><a href="@{Authentication.updatePassword()}">Change your password</a></p>
-#{/if}
+<form action="@{Authentication.updateProfile()}" method="POST" class="form-horizontal">
 
-<p>Email: ${email} </p>
-<p>First Name: ${firstName}</p>
-<p>Last Name: ${lastName}</p>
-<p>Middle Name: ${middleName}</p>
-<p>Birth Year: ${birthYear}</p>
-
-<h2>Current</h2>
-<p>Phone Number: ${currentPhoneNumber}</p>
-<p>Postal Address: ${currentPostalAddress}</p>
-
-<h2>Permanent</h2>
-<p>Phone Number: ${permanentPhoneNumber}</p>
-<p>Postal Address: ${permanentPostalAddress}</p>
-<p>Email: ${permanentEmailAddress}</p>
+<fieldset>
+        <legend>Personal Information</legend>
+        <div class="control-group">
+            <label class="control-label" for="email"><b>Email Address</b>
+            </label>
+            <div class="controls">
+                ${email}
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="firstName"><b>*First Name</b>
+            </label>
+            <div class="controls">
+                ${firstName}
+            </div>
+        </div>  
+        <div class="control-group">
+            <label class="control-label" for="middleName">Middle Name
+            </label>
+            <div class="controls">
+                ${middleName}
+            </div>
+        </div> 
+        <div class="control-group">
+            <label class="control-label" for="lastName"><b>*Last Name</b>
+            </label>
+            <div class="controls">
+                ${lastName}
+            </div>
+        </div> 
+        <div class="control-group">
+            <label class="control-label" for="birthYear">Birth Year
+            </label>
+            <div class="controls">
+                ${birthYear}
+            </div>
+        </div> 
+</fieldset>
+<fieldset>
+        <legend>Phone & Address</legend>
+        <div class="control-group">
+            <label class="control-label" for="permanentPhoneNumber">Permanent Phone:
+            </label>
+            <div class="controls">
+                ${permanentPhoneNumber}
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="permanentEmailAddress">Permanent Email:
+            </label>
+            <div class="controls">
+                ${permanentEmailAddress}
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="permanentPostalAddress">Permanent Address:
+            </label>
+            <div class="controls">
+                ${permanentPostalAddress}
+            </div>
+        </div>
+        
+        <div class="control-group">
+            <label class="control-label" for="currentPhoneNumber">Current Phone:
+            </label>
+            <div class="controls">
+                ${currentPhoneNumber}
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="currentPostalAddress">Current Address:
+            </label>
+            <div class="controls">
+                ${currentPostalAddress}
+            </div>
+        </div>
+</fieldset>
+</form>
