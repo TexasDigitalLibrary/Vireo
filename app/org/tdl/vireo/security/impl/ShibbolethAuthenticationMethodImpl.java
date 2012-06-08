@@ -29,7 +29,7 @@ import play.mvc.Http.Request;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 public class ShibbolethAuthenticationMethodImpl extends
-		AbstractAuthenticationMethodImpl implements AuthenticationMethod.Implicit {
+	AbstractAuthenticationMethodImpl.AbstractImplicitAuthenticationMethod implements AuthenticationMethod.Implicit {
 
 	/* Injected configuration */
 	
@@ -342,7 +342,55 @@ public class ShibbolethAuthenticationMethodImpl extends
 	
 	
 	
-	
+	@Override
+	public String getFailureMessage(Request request, AuthenticationResult result) {
+		
+		StringBuilder msg = new StringBuilder();
+		
+		if (AuthenticationResult.BAD_CREDENTIALS == result ) {
+			msg.append("<p>Shibboleth authentication recieved the required attributes but was unable to create a new account. The most likely cause is because an account with the same netid or email allready exists in the system.</p>");
+		} else {
+			msg.append("<p>Shibboleth authentication failed because it did not recieve enough information from your Shibboleth Identity Provider. Vireo requires four attributes Netid, Email, and your First and Last name. If any of these are missing then authentication will fail. Below is a listing of the attributes we did recieve:</p>");
+		}
+		msg.append("<dl class=\"dl-horizontal\">");
+
+		msg.append("<dt>NetId:</dt>");
+		String netid = getSingleAttribute(request, headerNetId);
+		if (netid != null)
+			msg.append("<dd><code>'"+headerNetId+"' = '"+netid+"'</code></dd>");
+		else 
+			msg.append("<dd><code>'"+headerNetId+"' = null</code></dd>");
+		msg.append("<br/>");
+		
+		msg.append("<dt>Email Address:</dt>");
+		String email = getSingleAttribute(request, headerEmail);
+		if (email != null)
+			msg.append("<dd><code>'"+headerEmail+"' = '"+email+"'</code></dd>");
+		else 
+			msg.append("<dd><code>'"+headerEmail+"' = null</code></dd>");
+		msg.append("<br/>");
+		
+		msg.append("<dt>First Name:</dt>");
+		String firstName = getSingleAttribute(request, headerFirstName);
+		if (firstName != null)
+			msg.append("<dd><code>'"+headerFirstName+"' = '"+firstName+"'</code></dd>");
+		else 
+			msg.append("<dd><code>'"+headerFirstName+"' = null</code></dd>");
+		msg.append("<br/>");
+		
+		msg.append("<dt>Last Name:</dt>");
+		String lastName = getSingleAttribute(request, headerLastName);
+		if (lastName != null)
+			msg.append("<dd><code>'"+headerLastName+"' = '"+lastName+"'</code></dd>");
+		else 
+			msg.append("<dd><code>'"+headerLastName+"' = null</code></dd>");
+		
+		msg.append("</dl>");
+		
+		msg.append("<p>Please contact your university Information Technology support at your local campus for trouble shooting this problem.</p>");
+		
+		return msg.toString();
+	}
 	
 	
 	

@@ -73,7 +73,7 @@
             <util:map>
         		<!-- Required -->
         		<entry key="${auth.shib.attribute.netid}" value="000000001"/>
-        		<entry key="${auth.shib.attribute.email}" value="bthornton@gmail.com"/>
+        		<!-- <entry key="${auth.shib.attribute.email}" value="bthornton@gmail.com"/> -->
         		<entry key="${auth.shib.attribute.firstName}" value="Billy"/>
         		<entry key="${auth.shib.attribute.lastName}" value="Thornton"/>
         		

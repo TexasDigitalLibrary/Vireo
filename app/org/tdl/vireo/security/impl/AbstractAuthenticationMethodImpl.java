@@ -4,6 +4,7 @@ import org.springframework.beans.factory.BeanNameAware;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.security.AuthenticationMethod;
+import org.tdl.vireo.security.AuthenticationResult;
 import org.tdl.vireo.security.SecurityContext;
 
 import play.mvc.Http.Request;
@@ -176,6 +177,20 @@ public abstract class AbstractAuthenticationMethodImpl implements
 		// Do nothing
 	}
 	
+	/**
+	 * An abstract implementation of Implicit authentication method.
+	 */
+	public abstract static class AbstractImplicitAuthenticationMethod extends AbstractAuthenticationMethodImpl implements AuthenticationMethod.Implicit {
+		
+		@Override
+		public String getFailureMessage(Request request, AuthenticationResult result) {
+			return null;
+		}
+	}
+	
+	/**
+	 * An abstract implementation of Explicit authentication method.
+	 */
 	public abstract static class AbstractExplicitAuthenticationMethod extends AbstractAuthenticationMethodImpl implements AuthenticationMethod.Explicit {
 
 		/**

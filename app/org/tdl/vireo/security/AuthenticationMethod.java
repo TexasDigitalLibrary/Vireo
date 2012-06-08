@@ -197,6 +197,26 @@ public interface AuthenticationMethod {
 		 * @return The result of authentication.
 		 */
 		public AuthenticationResult authenticate(Request request);
+		
+		/**
+		 * After an authentication failure from an implicit login an error
+		 * message will be displayed. This message may be customized by the
+		 * authentication method to provide additional details about why the
+		 * error occurred and maybe some hits as to how to fix it.
+		 * 
+		 * For example the shibboleth plugin may list the headers that it
+		 * received aiding the user, vireo administrator, and shibboleth
+		 * administrator in debuging what the problem is.
+		 * 
+		 * If this method returns null then the UI will display a generalized
+		 * message based upon the Authentication Result provided.
+		 * 
+		 * @param request
+		 *            The same request that caused an Authentication failure.
+		 * @return An additional error message, or null if there is none.
+		 */
+		public String getFailureMessage(Request request,
+				AuthenticationResult result);
 
 	}
 
@@ -219,7 +239,8 @@ public interface AuthenticationMethod {
 		 *         username and password. This note can explain any special
 		 *         instructions for using this authentication method. However it
 		 *         should generally ask the user to provide their
-		 *         username/password in the form below.
+		 *         username/password in the form below. The value may contain
+		 *         HTML markup.
 		 */
 		public String getAuthenticationNote();
 		

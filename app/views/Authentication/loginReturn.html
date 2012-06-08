@@ -1,14 +1,31 @@
 #{extends 'main.html' /}
 #{set title:"${method.getDisplayName()} Authentication Failure" /}
 
-<h1>${method.getDisplayName()} Authentication Failure</h1>
+<div class="row pageHead">
+	<h3 class="red">${method.getDisplayName()} Failure</h3>
+</div>
+<br/>
 
-#{if result == missing }
-<p>Your Identity Provider was unable to provide sufficient credentials about you. Because of this we are unable to log you into Vireo. Please contact your system administrator for more assistance.</p>
-#{/if}
-#{elseif result == bad }
-<p>You ale not authorized to access this service. If you please this is in correct, please contact your system administrator for more assistance.</p>
-#{/elseif}
-#{else}
-<p>Unfortunately authentication failed for an unknown reason. </p>
-#{/else}
+<div class="row">
+	<div class="span">
+		#{if failureMessage }
+		  #{verbatim}${failureMessage}#{/verbatim} 
+		#{/if}
+		#{else} 
+			#{if result == missing }
+			<p>Your Identity Provider was unable to provide sufficient
+				credentials about you. Because of this we are unable to log you
+				into Vireo. Please contact your system administrator for more 
+				assistance.</p>
+			#{/if} 
+			#{elseif result == bad }
+			<p>You ale not authorized to access this service. If you please
+				this is in correct, please contact your system administrator
+				for more assistance.</p>
+			#{/elseif} 
+			#{else}
+			<p>Unfortunately authentication failed for an unknown reason.</p>
+			#{/else} 
+		#{/else}
+	</div>
+</div>
