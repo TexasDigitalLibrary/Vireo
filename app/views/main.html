@@ -9,6 +9,19 @@
         <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
         <script src="@{'/public/javascripts/jquery-1.6.4.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
        	<script src="@{'/public/javascripts/less-1.3.0.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+        
+        <script>
+        
+        jQuery(document).ready(function(){
+        	
+        	jQuery("#submitSteps a").click(function(){
+        		jQuery("form").submit();
+        	});
+        	
+        });
+        
+        </script>
+        
         #{get 'moreScripts' /}
     </head>
     <body>
@@ -16,18 +29,7 @@
 	    	<div id="header">	    		
 	    		<a id="tdl-logo" href="http://www.tdl.org" title="Texas Digital Library Home">
 	    		&nbsp;
-	    		</a>
-	    		
-	    		<div id="personal-bar">
-	    		#{if session.get("personId") }
-	    		    <a href="@{Authentication.profile()}">${session.get("firstName")} ${session.get("lastName")}</a> | 
-	    		    <a href="@{Authentication.logout()}">Logout</a>
-	    		#{/if}
-	    		#{else}
-	    		    <a href="@{Authentication.loginList()}">Login</a>
-	    		#{/else}
-	    		</div>
-	    			    	
+	    		</a>	    	
 	    	</div>
 	    	<div id="body">
 	       		#{doLayout /}
