@@ -95,6 +95,8 @@ public class Authentication extends Controller {
 	 */
 	@Before(unless = { "loginList", "loginMethod", "loginReturn" })
 	public static void securityCheck() {
+		// Just to make sure things are reset.
+		context.logout();
 		
 		// Check if we have a personId stored on the session.
 		Long personId = null;
@@ -306,7 +308,9 @@ public class Authentication extends Controller {
 		AuthenticationResult bad = AuthenticationResult.BAD_CREDENTIALS;
 		AuthenticationResult unknown = AuthenticationResult.UNKNOWN_FAILURE;
 		
-		render(method, result, missing, bad, unknown);
+		String failureMessage = method.getFailureMessage(request, result);
+		
+		render(method, result, failureMessage, missing, bad, unknown);
 	}
 	
 	/**
