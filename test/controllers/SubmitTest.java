@@ -3,6 +3,7 @@ package controllers;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import play.Play;
@@ -34,6 +35,7 @@ public class SubmitTest extends FunctionalTest {
 	 // Test posting VerifyPersonalInformation to the license page
 	 
 	 @Test
+	 @Ignore // Scott didn't finish this test.
 	 public void testPostVerifyInfo(){
 		 
 		 shibLogin();
