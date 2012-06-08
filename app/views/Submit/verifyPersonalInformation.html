@@ -10,38 +10,68 @@
 <div class="span7">
 <p>Please verify all of your personal information. Some of the information has been provided by your school; if this information is in error, you will need to correct it through the appropriate office at your school.</p>
 <p>Required fields are indicated with an asterisk.</p>
-  <form action="doVerifyinfo" method="post" class="form-horizontal">
+
+#{ifErrors}
+<ul class="red">
+    #{errors}
+    <li>${error}</li> 
+    #{/errors}
+</ul>
+#{/ifErrors}
+
+  <form action="@{submit.verifyPersonalInformation}" method="post" class="form-horizontal">
+  <input type="hidden" name="subId" value="${subId}"/>
 		
 	<fieldset>
 		<legend>Personal Information</legend>
-		<div class="control-group">
+		<div class="control-group #{ifError 'firstName'}error#{/ifError}">
 			<label class="control-label" for="firstName"><b>* First Name</b></label>
 			<div class="controls">
-				<p>${currentPerson.firstName}</p>
+			    #{if disabledFields.contains("firstName")}
+			    <p>${firstName}</p>
+			    #{/if} 
+		        #{else}
+				<input type="text" name="firstName" value="${firstName}">
+				#{/else}
 			</div>
 		</div>
-		<div class="control-group">
+		<div class="control-group #{ifError 'middleName'}error#{/ifError}">
 			<label class="control-label" for="middleName">Middle Name</label>
 			<div class="controls">
-				<input type="text" class="span1" id="middleName" name="middleName">
+			    #{if disabledFields.contains("middleName")}
+                <p>${middleName}</p>
+                #{/if} 
+                #{else}
+				<input type="text" class="span1" name="middleName" value="${middleName}">
+				#{/else}
 			</div>
 		</div>
-		<div class="control-group">
+		<div class="control-group #{ifError 'lastName'}error#{/ifError}">
 			<label class="control-label" for="lastName"><b>* Last Name</b></label>
 			<div class="controls">
-				<p>${currentPerson.lastName}</p>
+			    #{if disabledFields.contains("lastName")}
+                <p>${lastName}</p>
+                #{/if} 
+                #{else}
+				<input type="text" name="lastName" value="${lastName}">
+				#{/else}
 			</div>
 		</div>
-		<div class="control-group">
+		<div class="control-group #{ifError 'emailName'}error#{/ifError}">
 			<label class="control-label" for="email"><b>* Email</b></label>
 			<div class="controls">
-				<p>${currentPerson.email}</p>
+                <p>${submitter.getEmail()}</p>
 			</div>
 		</div>
-		<div class="control-group">
-			<label class="control-label" for="yearOfBirth">Year of Birth</label>
+		<div class="control-group #{ifError 'birthYear'}error#{/ifError}">
+			<label class="control-label" for="birthYear">Year of Birth</label>
 			<div class="controls">
-				<input type="text" class="span3" id="yearOfBirth" name="yearOfBirth">
+			    #{if disabledFields.contains("birthYear")}
+                <p>${birthYear}</p>
+                #{/if} 
+                #{else}
+				<input type="text" class="span3" name="birthYear" value="${birthYear}">
+				#{/else}
 			</div>
 		</div>
 	</fieldset>
@@ -54,77 +84,120 @@
 				<p>Texas A&M University at College Station</p>
 			</div>
 		</div>
-		<div class="control-group">
+		<div class="control-group #{ifError 'department'}error#{/ifError}">
 			<label class="control-label" for="department"><b>* Department</b></label>
 			<div class="controls">
-				<select id="department" name="department">
-					<option>...choose</option>
-					<option value="1">Accounting</option>
-					<option value="2">Aerospace Engineering</option>
-					<option value="3">Agricultural Economics</option>
-				</select>
+			    #{if disabledFields.contains("department")}
+                <p>${department}</p>
+                #{/if} 
+                #{else}
+			    <select name="department">
+			        <option #{if department == null}selected="true"#{/if}>...choose</option>
+				    #{list items:settingRepo.findAllDepartments(), as:'dept'}
+				    <option #{if department == dept.getName()}selected="true"#{/if} value="${dept.getName()}">${dept.getName()}</option>
+				    #{/list}
+			    </select>
+			    #{/else}
 			</div>
 		</div>
-		<div class="control-group">
+		<div class="control-group #{ifError 'degree'}error#{/ifError}">
 			<label class="control-label" for="degree"><b>* Degree</b></label>
 			<div class="controls">
+			    #{if disabledFields.contains("degree")}
+                <p>${degree}</p>
+                #{/if} 
+                #{else}
 				<select id="degree" name="degree">
-					<option>...choose</option>
-					<option value="1">Doctor of Philosophy</option>
-					<option value="2">Master of Arts</option>
-					<option value="3">Bachelor of Science</option>
+				    <option #{if degree == null}selected="true"#{/if}>...choose</option>
+                    #{list items:settingRepo.findAllDegrees(), as:'degreeObject'}
+                    <option #{if degree == degreeObject.getName()}selected="true"#{/if} value="${degreeObject.getName()}">${degreeObject.getName()}</option>
+                    #{/list}
 				</select>
+				#{/else}
 			</div>
 		</div>
-		<div class="control-group">
+		<div class="control-group #{ifError 'major'}error#{/ifError}">
 			<label class="control-label" for="major"><b>* Major</b></label>
 			<div class="controls">
+			    #{if disabledFields.contains("major")}
+                <p>${major}</p>
+                #{/if} 
+                #{else}
 				<select id="major" name="major">
-					<option>...choose</option>
-					<option value="1">Biochemistry</option>
-					<option value="2">Horticulture</option>
-					<option value="3">Zoology</option>
+				    <option #{if major == null}selected="true"#{/if}>...choose</option>
+                    #{list items:settingRepo.findAllMajors(), as:'majorObject'}
+                    <option #{if major == majorObject.getName()}selected="true"#{/if} value="${majorObject.getName()}">${majorObject.getName()}</option>
+                    #{/list}
 				</select>
+				#{/else}
 			</div>
 		</div>
 	</fieldset>
 	
 	<fieldset>
 		<legend>Phone &amp; Address</legend>
-		<div class="control-group">
+		<div class="control-group #{ifError 'permPhone'}error#{/ifError}">
 			<label class="control-label" for="permPhone"><b>* Permanent Phone:</b></label>
 			<div class="controls">
-				<input type="text" class="span3" id="permPhone" name="permPhone">
+			    #{if disabledFields.contains("permPhone")}
+                <p>${permPhone}</p>
+                #{/if} 
+                #{else}
+				<input type="text" class="span3" name="permPhone" value="${permPhone}">
+				#{/else}
 			</div>
 		</div>
-		<div class="control-group">
+		<div class="control-group #{ifError 'permAddress'}error#{/ifError}">
 			<label class="control-label" for="permAddress"><b>* Permanent Address:</b></label>
 			<div class="controls">
-				<textarea class="span5" id="permAddress" name="permAddress"></textarea>
+			    #{if disabledFields.contains("permAddress")}
+                <p>${permAddress}</p>
+                #{/if} 
+                #{else}
+				<textarea class="span5" name="permAddress">${permAddress}</textarea>
+				#{/else}
 			</div>
 		</div>
-		<div class="control-group">
+		<div class="control-group #{ifError 'permEmail'}error#{/ifError}">
 			<label class="control-label" for="permEmail">Permanent Email:</label>
 			<div class="controls">
-				<input type="text" class="span3" id="permEmail" name="permEmail">
+			    #{if disabledFields.contains("permEmail")}
+                <p>${permEmail}</p>
+                #{/if} 
+                #{else}
+				<input type="text" class="span3" name="permEmail" value="${permEmail}">
+				#{/else}
 			</div>
 		</div>
-		<div class="control-group">
-			<label class="control-label" for="currentPhone">Current Email:</label>
+		<div class="control-group #{ifError 'currentEmail'}error#{/ifError}">
+			<label class="control-label" for="currentEmail">Current Email:</label>
 			<div class="controls">
-				<input type="text" class="span3" id="currentPhone" name="currentPhone">
+			    #{if disabledFields.contains("currentEmail")}
+                <p>${currentEmail}</p>
+                #{/if} 
+                #{else}
+				<input type="text" class="span3" name="currentEmail" value="${currentEmail}">
+				#{/else}
 			</div>
 		</div>
-		<div class="control-group">
+		<div class="control-group #{ifError 'currentAddress'}error#{/ifError}">
 			<label class="control-label" for="currentAddress">Current Address:</label>
 			<div class="controls">
-				<textarea class="span5" id="currentAddress" name="currentAddress"></textarea>
+			    #{if disabledFields.contains("currentAddress")}
+                <p>${currentAddress}</p>
+                #{/if} 
+                #{else}
+				<textarea class="span5" name="currentAddress">${currentAddress}</textarea>
+				#{/else}
 			</div>
 		</div>
 	</fieldset>
-	<div class="span10 center">
-		<input type="submit" value="Save and Continue >>" class="btn btn-primary">
-	</div>
+	<fieldset>
+        <div class="form-actions">
+            <input type="submit" class="btn" name="submit_cancel" value="Cancel" />
+            <input type="submit" class="btn btn-primary" name="submit_next" value="Save and Continue" />
+        </div>   
+    </fieldset>
 </form>            
 </div>
 	<div id="stickyNotes" class="span3">

@@ -84,6 +84,7 @@
         		<entry key="${auth.shib.attribute.birthYear}" value="1955"/>
         		<entry key="${auth.shib.attribute.currentPhoneNumber}" value="555-555-1931"/>
         		<entry key="${auth.shib.attribute.currentPostalAddress}" value="University Town, Texas 77835"/>
+        		<entry key="${auth.shib.attribute.currentEmailAddress}" value="bthornton@gmail.com"/>
         		<entry key="${auth.shib.attribute.permanentPhoneNumber}" value="555-555-1932"/>
         		<entry key="${auth.shib.attribute.permanentPostalAddress}" value="Hot Springs, Arkansas 73424"/>
         		<entry key="${auth.shib.attribute.permanentEmailAddress}" value="bthornton@yahoo.com"/>
