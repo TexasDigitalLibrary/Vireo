@@ -256,18 +256,17 @@ public class AuthenticationTest extends FunctionalTest {
 		response = GET(REGISTER_URL+"?token="+token);
 		assertIsOk(response);
 		assertContentMatch("Your email address has been verified.",response);
-		assertContentMatch("name=\"email\"\\s+value=\"newregistration@email.com\"",response);
+		assertContentMatch("newregistration@email.com",response);
 		
 		// Step 4: Complete the registration process
 		params.clear();
 		params.put("token",token);
-		params.put("firstname","first");
-		params.put("lastname", "last");
+		params.put("firstName","first");
+		params.put("lastName", "last");
 		params.put("password1", "password1");
 		params.put("password2", "password1");
 		params.put("submit_register","Register");
 		response = POST(REGISTER_URL,params);
-		System.out.println(getContent(response));
 		assertHeaderEquals("Location", INDEX_URL, response);
 		assertTrue(response.cookies.get("PLAY_SESSION").value.contains("first"));
 		assertTrue(response.cookies.get("PLAY_SESSION").value.contains("last"));
@@ -329,7 +328,7 @@ public class AuthenticationTest extends FunctionalTest {
 		params.put("submit_recover", "Verify");
 		response = POST(RECOVER_URL,params);
 		assertIsOk(response);
-		assertContentMatch("Recovery Email Sent",response);
+		assertContentMatch("Verification Email Sent",response);
 		
 		// Step 2: Wait for the email and the token.
 		String recieved = null;
@@ -352,7 +351,7 @@ public class AuthenticationTest extends FunctionalTest {
 		response = GET(RECOVER_URL+"?token="+token);
 		assertIsOk(response);
 		assertContentMatch("Your email address has been verified.",response);
-		assertContentMatch("name=\"email\"\\s+value=\"forgetfull@email.com\"",response);
+		assertContentMatch("forgetfull@email.com",response);
 		
 		// Step 4: Complete the registration process
 		params.clear();

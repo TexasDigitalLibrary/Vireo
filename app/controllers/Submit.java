@@ -69,6 +69,8 @@ public class Submit extends Controller {
 		SubmissionRepository subRepo = Spring.getBeanOfType(SubmissionRepository.class);
 		Submission sub = subRepo.createSubmission(currentPerson);
 
+		// Set values in the submission
+		
 		sub.setStudentFirstName(currentPerson.getFirstName());
 		sub.setStudentLastName(currentPerson.getLastName());
 		sub.setDepartment(department);
@@ -77,26 +79,38 @@ public class Submit extends Controller {
 		sub.setStudentMiddleName(middleName);
 		
 		sub.save();
+		
+		currentPerson.setPermanentPhoneNumber(permPhone);
+		currentPerson.setPermanentEmailAddress(permEmail);
+		currentPerson.setPermanentPostalAddress(permAddress);
+		currentPerson.setCurrentPhoneNumber(currentPhone);
+		currentPerson.setCurrentPostalAddress(currentAddress);
+		
+		currentPerson.save();
+
+		// Set up the submission id to pass along
+		
 		long subId = sub.getId();
 		
 		Logger.info("Submisson ID: " + String.valueOf(subId));
 		
-		Gson gson = new Gson();
-		Logger.info("Submission" + gson.toJson(sub));
+		// Just for funsies - render the submission as Json and write to the log.
 		
+		Gson gson = new Gson();
+		
+		Logger.info("Submission" + gson.toJson(sub));
 		
 		Map<String,String> templateArgs = new HashMap<String,String>();
 		templateArgs.put("submissionId", String.valueOf(subId));
-
 		 
-		render("Submit/License.html", templateArgs);
+		render("Submit/license.html", templateArgs);
 	}
 
 	@Security(RoleType.STUDENT)
 	public static void license() {
 
 		dumpParams();
-		render("Submit/License.html");
+		render();
 	}
 
 	@Security(RoleType.STUDENT)

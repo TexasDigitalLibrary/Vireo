@@ -4,10 +4,10 @@
 
 # Home page
 GET     /                                       Application.index
-*       /login                                  Authentication.loginList
+GET     /login/?                                Authentication.loginList
 *       /login/{methodName}                     Authentication.loginMethod
 *       /login/{methodName}/return              Authentication.loginReturn
-*       /logout                                 Authentication.logout
+GET     /logout                                 Authentication.logout
 *       /register                               Authentication.register
 *       /forgot                                 Authentication.recover
 GET     /profile                                Authentication.profile

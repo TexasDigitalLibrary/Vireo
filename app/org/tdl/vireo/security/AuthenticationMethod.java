@@ -208,6 +208,22 @@ public interface AuthenticationMethod {
 	public interface Explicit extends AuthenticationMethod {
 
 		/**
+		 * @return The publicly displayable label for the username field. Some
+		 *         methods will use "Email Address", others may say "NetId", or
+		 *         use local campus terminology that users will recognize.
+		 */
+		public String getUsernameLabel();
+
+		/**
+		 * @return A note to display when asking for the user to provide their
+		 *         username and password. This note can explain any special
+		 *         instructions for using this authentication method. However it
+		 *         should generally ask the user to provide their
+		 *         username/password in the form below.
+		 */
+		public String getAuthenticationNote();
+		
+		/**
 		 * Authenticate these credentials. If valid credentials have been
 		 * presented then the user will be logged into Vireo's SecurityContext,
 		 * and a <em>AuthenticationResult.SUCCESSFULL</em> result.
