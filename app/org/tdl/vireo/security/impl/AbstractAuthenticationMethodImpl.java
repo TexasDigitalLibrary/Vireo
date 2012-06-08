@@ -23,20 +23,20 @@ public abstract class AbstractAuthenticationMethodImpl implements
 	/**
 	 * Spring injected configuration for this authentication method.
 	 */
-	protected String beanName;
-	protected boolean enabled = false;
-	protected String displayName;
-	protected String displayDescription;
-	protected boolean allowNewRegistration = false;
-	protected boolean allowPasswordRecovery = false;
-	protected boolean allowUpdatePassword = false;
-	protected boolean allowUpdateProfile = false;
+	public String beanName;
+	public boolean enabled = false;
+	public String displayName;
+	public String displayDescription;
+	public boolean allowNewRegistration = false;
+	public boolean allowPasswordRecovery = false;
+	public boolean allowUpdatePassword = false;
+	public boolean allowUpdateProfile = false;
 	
 	/**
 	 * Spring injected dependencies
 	 */
-	protected PersonRepository personRepo;
-	protected SecurityContext context;
+	public PersonRepository personRepo;
+	public SecurityContext context;
 
 	@Override
 	public void setBeanName(String beanName) {
@@ -174,6 +174,42 @@ public abstract class AbstractAuthenticationMethodImpl implements
 	@Override
 	public void personUpdated(Request request, Person person) {
 		// Do nothing
+	}
+	
+	public abstract static class AbstractExplicitAuthenticationMethod extends AbstractAuthenticationMethodImpl implements AuthenticationMethod.Explicit {
+
+		/**
+		 * Spring injected configuration
+		 */
+		public String usernameLabel = "Email Address";
+		public String authenticationNote = "Please provide your email address and password to login to the system.";
+
+		@Override
+		public String getUsernameLabel() {
+			return usernameLabel;
+		}
+
+		/**
+		 * @param label
+		 *            Set the username label for this authentication method.
+		 */
+		public void setUsernameLabel(String label) {
+			this.usernameLabel = label;
+		}
+
+		@Override
+		public String getAuthenticationNote() {
+			return authenticationNote;
+		}
+
+		/**
+		 * @param note
+		 *            Set the authentication note for this method.
+		 */
+		public void setAuthenticationNote(String note) {
+			this.authenticationNote = note;
+		}
+		
 	}
 
 }

@@ -28,8 +28,7 @@
 <form action="@{Authentication.recover()}" method="POST" class="form-horizontal">
 <fieldset>
     <div class="control-group #{ifError 'email'}error#{/ifError}">
-        <label class="control-label" for="email"><b>Email Address</b>
-        </label>
+        <label class="control-label" for="email"><b>Email Address:</b></label>
         <div class="controls">
             <input type="text" name="email" value="${email}" />
         </div>

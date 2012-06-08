@@ -24,6 +24,8 @@
         <property name="allowPasswordRecovery" value="true"/>
         <property name="allowUpdatePassword" value="true"/>
         <property name="allowUpdateProfile" value="true"/>
+        <property name="usernameLabel" value="Email Address"/>
+        <property name="authenticationNote" value="Please provide your email address and password to login to the system."/>
         <property name="personRepository" ref="PersonRepository"/>
         <property name="securityContext" ref="SecurityContext"/>
 	</bean>

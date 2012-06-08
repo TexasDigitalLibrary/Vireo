@@ -30,22 +30,19 @@
 
 <fieldset>
 	<div class="control-group">
-		<label class="control-label" for="email"><b>Email Address</b>
-		</label>
+		<label class="control-label" for="email"><b>Email Address:</b></label>
 		<div class="controls">
 			${email}
 		</div>
 	</div>
 	<div class="control-group #{ifError 'password1'}error#{/ifError}">
-		<label class="control-label" for="password1"><b>Password</b>
-		</label>
+		<label class="control-label" for="password1"><b>Password:</b></label>
 		<div class="controls">
 			<input type="password" name="password1" value="${password1}" />
 		</div>
 	</div>
 	<div class="control-group #{ifError 'password2'}error#{/ifError}">
-		<label class="control-label" for="password2"><b>Verify
-				Password</b> </label>
+		<label class="control-label" for="password2"><b>Verify Password:</b></label>
 		<div class="controls">
 			<input type="password" name="password2" value="${password2}" />
 		</div>

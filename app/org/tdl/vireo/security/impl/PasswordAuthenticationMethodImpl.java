@@ -16,7 +16,7 @@ import play.mvc.Http.Request;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 public class PasswordAuthenticationMethodImpl extends
-		AbstractAuthenticationMethodImpl implements
+		AbstractAuthenticationMethodImpl.AbstractExplicitAuthenticationMethod implements
 		AuthenticationMethod.Explicit {
 
 	/**
