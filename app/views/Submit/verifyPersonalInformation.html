@@ -19,7 +19,7 @@
 </ul>
 #{/ifErrors}
 
-  <form action="@{submit.verifyPersonalInformation}" method="post" class="form-horizontal">
+  <form action="@{submit.verifyPersonalInformation(subId)}" method="post" class="form-horizontal">
   <input type="hidden" name="subId" value="${subId}"/>
 		
 	<fieldset>

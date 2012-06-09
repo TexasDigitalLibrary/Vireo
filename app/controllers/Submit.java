@@ -324,7 +324,7 @@ public class Submit extends Controller {
 	public static void license(Long subId) {
 
 		dumpParams();
-		render();
+		render(subId);
 	}
 
 	@Security(RoleType.STUDENT)

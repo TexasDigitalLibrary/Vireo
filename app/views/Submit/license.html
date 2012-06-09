@@ -29,14 +29,12 @@
 <p>I agree to hold TDL, Institution, Department, and their agents harmless for any liability arising from any breach of the above warranties or any claim of intellectual property infringement arising from the exercise of these non-exclusive granted rights.</p>
 </div>
 <div class="row center">
-<form action="doLicense" method="post" class="form-inline">
+<form action="@{Submit.license(subId)}" method="post" class="form-inline">
 	<fieldset style="margin:0 0 10px;">
 		<label class="checkbox">
 			<input type="checkbox" name="licenseAgreement"> By checking here you agree to the above license in its entirety.
 		</label>
 	</fieldset>
-	
-	<input type="hidden" name="submissionId" value=${templateArgs.submissionId}></input>
 	
 	<div class="span10 center">
 		<input type="submit" value="Save and Continue >>" class="btn btn-primary">
