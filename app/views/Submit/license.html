@@ -9,6 +9,15 @@
 <div class="row">
 <p class="span">You must agree to the non-exclusive license below in order to continue:</p>
 </div>
+
+#{ifErrors}
+<ul class="red">
+    #{errors}
+    <li>${error}</li> 
+    #{/errors}
+</ul>
+#{/ifErrors}
+
 <div class="well">
 <p>I grant the Texas Digital Library (hereafter called "TDL"), my home institution (hereafter called "Institution"), and my academic department (hereafter called "Department") the non-exclusive rights to copy, display, perform, distribute and publish the content I submit to this repository (hereafter called "Work") and to make the Work available in any format in perpetuity as part of a TDL, Institution or Department repository communication or distribution effort.</p>
 <p>I understand that once the Work is submitted, a bibliographic citation to the Work can remain visible in perpetuity, even if the Work is updated or removed.</p>
