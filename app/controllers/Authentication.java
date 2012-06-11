@@ -661,7 +661,7 @@ public class Authentication extends Controller {
 				validation.addError("firstName", "First name is required.");
 
 			if (lastName == null || lastName.trim().length() == 0)
-				validation.addError("firstName", "Last name is required.");
+				validation.addError("lastName", "Last name is required.");
 			
 			Integer birthYearInt = null;
 			if (birthYear != null && birthYear.trim().length() > 0) {
