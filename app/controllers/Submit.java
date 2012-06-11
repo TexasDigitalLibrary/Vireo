@@ -205,7 +205,7 @@ public class Submit extends Controller {
 				validation.addError("degree", "Degree is required.");
 			
 			// Major
-			if (!isValidDepartment(major))
+			if (!isValidMajor(major))
 				validation.addError("major", "Major is required.");
 			
 			// Permanent Phone
