@@ -37,32 +37,58 @@ public class ShibbolethAuthenticationMethodImpl extends
 	public boolean mock = (Play.mode == Mode.DEV);
 	
 	// The location to start a shibboleth session.
-	public String loginURL = "/Shibboleth.sso/Login?target=%1s";
+//	public String loginURL = "/vireo/Shibboleth.sso/Login?target=%1s";
+	public String loginURL = Play.configuration.getProperty("auth.shib.login");
 	
 	// Use netid or email adress as primary account identifier.
 	public boolean useNetIdAsIdentifier = true;
+//	Use auth.shib.primaryIdentifier instead
 	
 	// All the header names.
-	public String headerNetId = "SHIB_netid";
-	public String headerEmail = "SHIB_mail";
-	public String headerInstitutionalIdentifier = "SHIB_uin";
-	public String headerFirstName = "SHIB_givenname";
-	public String headerMiddleName = "SHIB_initials"; 
-	public String headerLastName = "SHIB_sn"; 
-	public String headerDisplayName = "SHIB_cn"; 
-	public String headerBirthYear = "SHIB_dateOfBirth"; 
-	public String headerCurrentPhoneNumber = "SHIB_phone";
-	public String headerCurrentPostalAddress = "SHIB_postal";
-	public String headerCurrentEmailAddress = "SHIB_mail";
-	public String headerPermanentPhoneNumber = "SHIB_permanentPhone";
-	public String headerPermanentPostalAddress = "SHIB_permanentPostal";
-	public String headerPermanentEmailAddress = "SHIB_permanentMail";
-	public String headerCurrentDegree = "SHIB_degree";
-	public String headerCurrentDepartment = "SHIB_department";
-	public String headerCurrentCollege = "SHIB_college";
-	public String headerCurrentMajor = "SHIB_major";
-	public String headerCurrentGraduationYear = "SHIB_gradYear";
-	public String headerCurrentGraduationMonth = "SHIB_gradMonth";
+//	public String headerNetId = "SHIB_netid";
+//	public String headerEmail = "SHIB_mail";
+//	public String headerInstitutionalIdentifier = "SHIB_uin";
+//	public String headerFirstName = "SHIB_givenname";
+//	public String headerMiddleName = "SHIB_initials"; 
+//	public String headerLastName = "SHIB_sn"; 
+//	public String headerDisplayName = "SHIB_cn"; 
+//	public String headerBirthYear = "SHIB_dateOfBirth"; 
+//	public String headerCurrentPhoneNumber = "SHIB_phone";
+//	public String headerCurrentPostalAddress = "SHIB_postal";
+//	public String headerCurrentEmailAddress = "TDL-mail";
+//	public String headerPermanentPhoneNumber = "SHIB_permanentPhone";
+//	public String headerPermanentPostalAddress = "SHIB_permanentPostal";
+//	public String headerPermanentEmailAddress = "SHIB_permanentMail";
+//	public String headerCurrentDegree = "SHIB_degree";
+//	public String headerCurrentDepartment = "SHIB_department";
+//	public String headerCurrentCollege = "SHIB_college";
+//	public String headerCurrentMajor = "SHIB_major";
+//	public String headerCurrentGraduationYear = "SHIB_gradYear";
+//	public String headerCurrentGraduationMonth = "SHIB_gradMonth";
+	
+	// Required
+	public String headerNetId = Play.configuration.getProperty("auth.shib.attribute.netid");
+	public String headerEmail = Play.configuration.getProperty("auth.shib.attribute.email");
+	public String headerFirstName = Play.configuration.getProperty("auth.shib.attribute.firstName");
+	public String headerLastName = Play.configuration.getProperty("auth.shib.attribute.lastName"); 
+	
+	// Optional
+	public String headerMiddleName = Play.configuration.getProperty("auth.shib.attribute.middleName");
+	public String headerInstitutionalIdentifier = Play.configuration.getProperty("auth.shib.attribute.institutionalIdentifier");
+	public String headerDisplayName = Play.configuration.getProperty("auth.shib.attribute.displayName");
+	public String headerBirthYear = Play.configuration.getProperty("auth.shib.attribute.birthYear");
+	public String headerCurrentPhoneNumber = Play.configuration.getProperty("auth.shib.attribute.currentPhoneNumber");
+	public String headerCurrentPostalAddress = Play.configuration.getProperty("auth.shib.attribute.currentPostalAddress");
+	public String headerCurrentEmailAddress = Play.configuration.getProperty("auth.shib.attribute.currentEmailAddress");
+	public String headerPermanentPhoneNumber = Play.configuration.getProperty("auth.shib.attribute.permanentPhoneNumber");
+	public String headerPermanentPostalAddress = Play.configuration.getProperty("auth.shib.attribute.permanentPostalAddress");
+	public String headerPermanentEmailAddress = Play.configuration.getProperty("auth.shib.attribute.permanentEmailAddress");
+	public String headerCurrentDegree = Play.configuration.getProperty("auth.shib.attribute.currentDegree");
+	public String headerCurrentDepartment = Play.configuration.getProperty("auth.shib.attribute.currentDepartment");
+	public String headerCurrentCollege = Play.configuration.getProperty("auth.shib.attribute.currentCollege");
+	public String headerCurrentMajor = Play.configuration.getProperty("auth.shib.attribute.currentMajor");
+	public String headerCurrentGraduationYear = Play.configuration.getProperty("auth.shib.attribute.currentGraduationYear");
+	public String headerCurrentGraduationMonth = Play.configuration.getProperty("auth.shib.attribute.currentGraduationMonth");
 	
 	// Map of mock shibboleth attributes
 	public Map<String,String> mockAttributes = new HashMap<String,String>();
