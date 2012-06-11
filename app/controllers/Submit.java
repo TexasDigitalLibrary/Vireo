@@ -1,6 +1,21 @@
 package controllers;
 
-import org.tdl.vireo.model.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+
+import org.tdl.vireo.model.Degree;
+import org.tdl.vireo.model.Department;
+import org.tdl.vireo.model.Major;
+import org.tdl.vireo.model.Person;
+import org.tdl.vireo.model.RoleType;
+import org.tdl.vireo.model.SettingsRepository;
+import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.model.SubmissionRepository;
 import org.tdl.vireo.model.jpa.JpaSubmissionRepositoryImpl;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.security.impl.SecurityContextImpl;
@@ -10,10 +25,6 @@ import play.modules.spring.Spring;
 import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
-
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import java.util.*;
 /**
  * Submit controller
  * This controller manages the student submission forms for Vireo 
@@ -312,8 +323,8 @@ public class Submit extends Controller {
 
         Submission sub = subRepo.findSubmission(subId);
         if (sub == null) {
-            // something is wrong -- start over
-            verifyPersonalInformation(subId);
+            // something is wrong
+            error("Did not receive the expected submission id.");
         } else {
             Person submitter = context.getPerson();
 
@@ -331,6 +342,7 @@ public class Submit extends Controller {
                     validation.addError("laLabel","You must agree to the license agreement before continuing.");
                 } else {
                     // TODO: add license text to the database
+                    sub.setLicenseAgreementDate(new Date());
                     docInfo(subId);
                 }
             }
