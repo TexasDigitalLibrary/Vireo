@@ -341,9 +341,14 @@ public class Submit extends Controller {
                 if (params.get("licenseAgreement") == null) {
                     validation.addError("laLabel","You must agree to the license agreement before continuing.");
                 } else {
+                	
                     // TODO: add license text to the database
-                    sub.setLicenseAgreementDate(new Date());
+                	
+                	// FIX ME - Commented out for Demo
+                	
+// DG                    sub.setLicenseAgreementDate(new Date());
                     docInfo(subId);
+                    
                 }
             }
 
