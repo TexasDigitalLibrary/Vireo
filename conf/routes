@@ -4,6 +4,8 @@
 
 # Home page
 GET     /                                       Application.index
+
+### Authentication URL
 GET     /login/?                                Authentication.loginList
 *       /login/{methodName}                     Authentication.loginMethod
 *       /login/{methodName}/return              Authentication.loginReturn
@@ -14,20 +16,16 @@ GET     /profile                                Authentication.profile
 *       /profile/update                         Authentication.updateProfile
 *       /profile/password                       Authentication.updatePassword
 
+### Student Submissions
+*       /submit/?                               Submit.verifyPersonalInformation
+*       /submit/{subId}/verifyinfo              Submit.verifyPersonalInformation
+*	    /submit/{subId}/license                 Submit.license
+*   	/submit/{subId}/docinfo                 Submit.docInfo
+*	    /submit/{subId}/upload                  Submit.fileUpload
+*	    /submit/{subId}/confirm                 Submit.confirmAndSubmit
+*       /submit/{subId}/review                  Submit.review
 
-*       /submit                                 Submit.verifyPersonalInformation
-*       /submit/verifyinfo                      Submit.verifyPersonalInformation
-GET     /submit/verifyinfo                      Submit.verifyPersonalInformation
-POST    /submit/doVerifyinfo                    Submit.doVerifyPersonalInformation
-GET	    /submit/license                         Submit.license
-POST    /submit/doLicense                       Submit.doLicense
-GET   	/submit/docinfo                         Submit.docInfo
-POST    /submit/docinfo                         Submit.docInfo
-GET	    /submit/upload                          Submit.fileUpload
-POST    /submit/upload                          Submit.fileUpload
-GET	    /submit/confirm                         Submit.confirmAndSubmit
-POST    /submit/confirm                         Submit.confirmAndSubmit
-POST    /submit/review                          Submit.review
+
 GET     /vireoAdmin                             Application.vireoAdmin
 GET     /settings                               Application.settings
 POST    /settings/vireo/admin/settings          Application.postSettings
@@ -37,6 +35,3 @@ GET     /favicon.ico                            404
 
 # Map static resources from the /app/public folder to the /public path
 GET     /public/                                staticDir:public
-
-# Catch all
-#*       /{controller}/{action}                 {controller}.{action}

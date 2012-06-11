@@ -1,4 +1,16 @@
 #{extends 'main.html' /}
+
+#{ifErrors}
+<div class="row">
+    <div class="span7 offset1">
+        <ul class="red">
+            #{errors}
+            <li>${error}</li> #{/errors}
+        </ul>
+    </div>
+</div>
+#{/ifErrors}
+
 <div class="row">
 <p class="center red large">Currently accepting submissions for the May 2013 semester.</p>
 <ul id="submitSteps" class="unstyled span11">

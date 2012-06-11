@@ -9,37 +9,26 @@
 <div class="row">
 <p class="span">You must agree to the non-exclusive license below in order to continue:</p>
 </div>
-<div class="well">
-<p>I grant the Texas Digital Library (hereafter called "TDL"), my home institution (hereafter called "Institution"), and my academic department (hereafter called "Department") the non-exclusive rights to copy, display, perform, distribute and publish the content I submit to this repository (hereafter called "Work") and to make the Work available in any format in perpetuity as part of a TDL, Institution or Department repository communication or distribution effort.</p>
-<p>I understand that once the Work is submitted, a bibliographic citation to the Work can remain visible in perpetuity, even if the Work is updated or removed.</p>
-<p>I understand that the Work's copyright owner(s) will continue to own copyright outside these non-exclusive granted rights.</p>
-<p>I warrant that:</p>
-<ol>
-    <li>I am the copyright owner of the Work, or</li>
-    <li>I am one of the copyright owners and have permission from the other owners to submit the Work, or</li>
-    <li>My Institution or Department is the copyright owner and I have permission to submit the Work, or</li>
-    <li>Another party is the copyright owner and I have permission to submit the Work.</li>
-</ol>
-<p>Based on this, I further warrant to my knowledge:</p>
-<ol>
-    <li>The Work does not infringe any copyright, patent, or trade secrets of any third party,</li>
-    <li>The Work does not contain any libelous matter, nor invade the privacy of any person or third party, and</li>
-    <li>That no right in the Work has been sold, mortgaged, or otherwise disposed of, and is free from all claims.</li>
-</ol>
-<p>I agree to hold TDL, Institution, Department, and their agents harmless for any liability arising from any breach of the above warranties or any claim of intellectual property infringement arising from the exercise of these non-exclusive granted rights.</p>
-</div>
+
+#{ifErrors}
+<ul class="red">
+    #{errors}
+    <li>${error}</li> 
+    #{/errors}
+</ul>
+#{/ifErrors}
+
+<div class="well">#{verbatim}${licenseText}#{/verbatim}</div>
 <div class="row center">
-<form action="doLicense" method="post" class="form-inline">
+<form action="@{Submit.license(subId)}" method="post" class="form-inline">
 	<fieldset style="margin:0 0 10px;">
-		<label class="checkbox">
-			<input type="checkbox" name="licenseAgreement"> By checking here you agree to the above license in its entirety.
+		<label class="checkbox" id="laLabel">
+            <input id="licenseAgreement" type="checkbox" name="licenseAgreement" /> By checking here you agree to the above license in its entirety.
 		</label>
 	</fieldset>
 	
-	<input type="hidden" name="submissionId" value=${templateArgs.submissionId}></input>
-	
 	<div class="span10 center">
-		<input type="submit" value="Save and Continue >>" class="btn btn-primary">
+        <input type="submit" class="btn btn-primary" name="submit_next" value="Save and Continue" />
 	</div>
 </form>
 </div>

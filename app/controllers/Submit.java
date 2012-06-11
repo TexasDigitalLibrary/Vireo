@@ -1,39 +1,26 @@
 package controllers;
 
-import play.*;
+import org.tdl.vireo.model.*;
+import org.tdl.vireo.model.jpa.JpaSubmissionRepositoryImpl;
+import org.tdl.vireo.security.SecurityContext;
+import org.tdl.vireo.security.impl.SecurityContextImpl;
+import play.Logger;
+import play.Play;
 import play.modules.spring.Spring;
-import play.mvc.*;
-import play.mvc.Http.Header;
-
-import java.util.*;
-import java.util.Map.Entry;
+import play.mvc.Before;
+import play.mvc.Controller;
+import play.mvc.With;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
-
-import org.tdl.vireo.security.SecurityContext;
-import org.tdl.vireo.model.Degree;
-import org.tdl.vireo.model.Department;
-import org.tdl.vireo.model.Major;
-import org.tdl.vireo.model.Person;
-import org.tdl.vireo.model.SettingsRepository;
-import org.tdl.vireo.model.Submission;
-
-import org.tdl.vireo.model.SubmissionRepository;
-
-
-import org.tdl.vireo.model.RoleType;
-import org.tdl.vireo.model.Submission;
-import org.tdl.vireo.model.jpa.JpaSubmissionRepositoryImpl;
-import org.tdl.vireo.security.impl.SecurityContextImpl;
-
-import com.google.gson.Gson;
+import java.util.*;
 /**
  * Submit controller
  * This controller manages the student submission forms for Vireo 
  * 
  * @author Dan Galewsky</a>
  * @author <a href="www.scottphillips.com">Scott Phillips</a>
+ * @author <a href="bill-ingram.com">Bill Ingram</a>
  */
 
 @With(Authentication.class)
@@ -323,24 +310,39 @@ public class Submit extends Controller {
 	@Security(RoleType.STUDENT)
 	public static void license(Long subId) {
 
-		dumpParams();
-		render();
-	}
+        Submission sub = subRepo.findSubmission(subId);
+        if (sub == null) {
+            // something is wrong -- start over
+            verifyPersonalInformation(subId);
+        } else {
+            Person submitter = context.getPerson();
 
-	@Security(RoleType.STUDENT)
-	public static void doLicense(String submissionId, String licenseAgreement) {
+            // This is an existing submission so check that we're the student or administrator here.
+            if (sub.getSubmitter() != submitter)
+                unauthorized();
 
-		dumpParams();
-		
-		Map<String,String> templateArgs = new HashMap<String,String>();
-		templateArgs.put("submissionId", String.valueOf(submissionId));
-		
-		render("Submit/DocInfo.html");
-	}
+            // Not too keen on this; seems messy
+            String licenseText = Play.configuration.getProperty("submit.license.text", "");
+
+            // first time here?
+            if (params.get("submit_next") != null) {
+
+                if (params.get("licenseAgreement") == null) {
+                    validation.addError("laLabel","You must agree to the license agreement before continuing.");
+                } else {
+                    // TODO: add license text to the database
+                    docInfo(subId);
+                }
+            }
+
+            render(subId,licenseText);
+        }
+
+    }
 	
 
 	@Security(RoleType.STUDENT)
-	public static void docInfo() {
+	public static void docInfo(Long subId) {
 		render("Submit/DocInfo.html");
 	}
 
