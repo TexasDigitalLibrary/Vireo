@@ -1,55 +1,19 @@
 #{extends 'main.html' /}
 #{set title:'Home' /}
 
-<h1>Welcome to Vireo 1.8!</h1>
-<p>
-	This is the initial wiring of the <a href="http://twitter.github.com/bootstrap/" target="_bootstrap">Twitter Bootstrap</a> UI package (v2.0.4).
-</p>
-<p>
-	It wires <code>/public/stylesheets/bootstrap.css</code> into <code>main.html</code>, and copies the following files into the public folder...
-</p>
+<div class="row">
+<h1>Welcome to the Thesis<br />&amp; Dissertation Submittal System</h1>
+<br />
+<p>Once you have passed the final defense and satisfied the requirements of the committee, you are ready to submit your manuscript to the Thesis Office for review. This submittal process is fully electronic, and is made through an online application developed and maintained by the Texas Digital Library, in conjunction with the Texas A&M University Libraries.</p>
+<p>To get started with your submittal, click the link below. You will be asked to authenticate using your NetID:</p>
+</div>
 
-<br/>
+<div class="form-actions row center">
+	<a href="@{Submit.verifyPersonalInformation}" class="btn btn-primary">Start your submittal</a>
+</div>
 
-<h2>Stylesheets</h2>
-<ul>
-	<li>/public/stylesheets/bootstrap-responsive.css</li>
-	<li>/public/stylesheets/bootstrap-responsive-min.css</li>
-	<li>/public/stylesheets/bootstrap.css</li>
-	<li>/public/stylesheets/bootstrap.min.css</li>
-</ul>
-<h2>Javascript</h2>
-	<ul>
-		<li>/public/javascripts/bootstrap.js</li>
-		<li>/public/javascripts/bootstrap.min.js</li>
-	</ul>
-</h2>
-<h2>Images</h2>
-	<ul>
-		<li>/public/images/glyphicons-halflings-white.png</li>
-		<li>/public/images/glyphicons-halflings.png</li>
-	</ul>
-</h2>
-
-<br/>
-<br/>
-
-<p>
-	I'm not sure what we'll ultimately use from these, but they are the boiler-plate from Bootstrap, so I've included them to start.
-	Feel free to delete or modify any of this work.  I've also included them unconditionally in the main template.  I can imagine that 
-	we'll want to include or exclude some files depending on what part of the application the user is accessing, but for now, they
-	are global.
-</p>
-
-<br/>
-<br/>
-
-<i class="icon-user"></i> <a href="http://www.sandsfish.com">Sands</a>
-
-<br/>
-<br/>
-
-<p>
-	P.S. - The only adjustment that I had to make to the Bootstrap files was to the hard-coded relative path to the glyph icons images,
-	which does not match the Play framework's directory structure.  We may not even end up using them, but I figured I'd mention it.
-</p>
+<div class="row">
+<h3>Your help can make things better</h3>
+<br />
+<p>You feedback is very important to us; it allows us to continue to improve the system. Please feel free to notify us directly at info@tdl.org if you have any suggestions to increase the usability or effectiveness of this application. You can talk to the TAMU Thesis Office regarding any issues that may arise during the submittal process.</p>
+</div>
