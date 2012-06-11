@@ -11,6 +11,7 @@ import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.security.SecurityContext;
+import org.tdl.vireo.security.impl.ShibbolethAuthenticationMethodImpl;
 
 import play.Logger;
 import play.db.jpa.JPA;
@@ -311,6 +312,7 @@ public class TestDataLoader extends Job {
 			SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
 			PersonRepository personRepo = Spring.getBeanOfType(PersonRepository.class);
 			SettingsRepository settingsRepo = Spring.getBeanOfType(SettingsRepository.class);
+			ShibbolethAuthenticationMethodImpl shib = Spring.getBeanOfType(ShibbolethAuthenticationMethodImpl.class);
 			
 			// Turn off authorizations.
 			context.turnOffAuthorization(); 
@@ -321,28 +323,40 @@ public class TestDataLoader extends Job {
 					Person person = personRepo.createPerson(personDefinition.netId, personDefinition.email, personDefinition.firstName, personDefinition.lastName, personDefinition.role);
 					person.setPassword(personDefinition.password);
 					person.save();
-				}			
+				}
+				// Special case. Initialize Billy-bob with all the data defined by the shibboleth authentication. This results in a lot less confusion when the authentitation changes a person's metadat.
 				
+				boolean originalMock = shib.mock;
+				shib.mock = true;
+				shib.authenticate(null);
+				shib.mock = originalMock;
+				
+				// Create all colleges
 				for(String collegeDefinition : COLLEGES_DEFINITIONS) {
 					settingsRepo.createCollege(collegeDefinition).save();
 				}
 				
+				// Create all departments
 				for(String departmentDefinition : DEPARTMENTS_DEFINITIONS) {
 					settingsRepo.createDepartment(departmentDefinition).save();
 				}
 				
+				// Create all majors
 				for(String majorDefinition : MAJORS_DEFINITIONS) {
 					settingsRepo.createMajor(majorDefinition).save();
 				}
 				
+				// Create all degrees
 				for(DegreeLevelArray degreeDefinition : DEGREES_DEFINITIONS) {
 					settingsRepo.createDegree(degreeDefinition.name, degreeDefinition.degreeLevel).save();
 				}
 				
+				// Create all document types
 				for(DegreeLevelArray docTypeDefinition : DOCTYPES_DEFINITIONS) {
 					settingsRepo.createDocumentType(docTypeDefinition.name, docTypeDefinition.degreeLevel).save();
 				}
 				
+				// Create all graduation months
 				for(int gradMonthDefinition : GRAD_MONTHS_DEFINITIONS) {
 					settingsRepo.createGraduationMonth(gradMonthDefinition).save();
 				}
