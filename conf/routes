@@ -25,8 +25,8 @@ GET     /profile                                Authentication.profile
 *	    /submit/{subId}/confirm                 Submit.confirmAndSubmit
 *       /submit/{subId}/review                  Submit.review
 
-
-GET     /vireoAdmin                             Application.vireoAdmin
+### Admin
+*	    /admin/list                             Admin.list
 GET     /settings                               Application.settings
 POST    /settings/vireo/admin/settings          Application.postSettings
 

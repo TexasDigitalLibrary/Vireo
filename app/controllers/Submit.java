@@ -205,7 +205,7 @@ public class Submit extends Controller {
 				validation.addError("degree", "Degree is required.");
 			
 			// Major
-			if (!isValidDepartment(major))
+			if (!isValidMajor(major))
 				validation.addError("major", "Major is required.");
 			
 			// Permanent Phone
@@ -369,19 +369,8 @@ public class Submit extends Controller {
 	}
 
 	@Security(RoleType.STUDENT)
-	public static void confirmAndSubmit(Long id) {
-		SecurityContextImpl context = Spring
-				.getBeanOfType(SecurityContextImpl.class);
-		JpaSubmissionRepositoryImpl submissions = Spring
-				.getBeanOfType(JpaSubmissionRepositoryImpl.class);
-		
-		if(id!=null){
-			Submission submission = submissions.findSubmission(id);
-			render(context, submission);
-		} else {
-			render(context);
-		}
-		
+	public static void confirmAndSubmit(Long subId) {		
+		render(subId);		
 	}
 
 	@Security(RoleType.STUDENT)

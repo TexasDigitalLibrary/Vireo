@@ -18,24 +18,24 @@ public class Application extends Controller {
 	render();
     }
         
-    public static void vireoAdmin() {
-    	dumpParams();  
-        render("va1.html");
-    } 
-    
-    public static void settings() {
-    	dumpParams();  
-    	String page = params.get("page");
-    	
-    	if (page == null)
-    		render("vaSettings.html");
-    	
-    	if (page.equals("admin")) {
-    		Logger.info("Going to admin page");
-    		render("vaSettingsAdmin.html");
-    	}
-        render("vaSettings.html");
-    } 
+//    public static void vireoAdmin() {
+//    	dumpParams();  
+//        render("va1.html");
+//    } 
+//    
+//    public static void settings() {
+//    	dumpParams();  
+//    	String page = params.get("page");
+//    	
+//    	if (page == null)
+//    		render("vaSettings.html");
+//    	
+//    	if (page.equals("admin")) {
+//    		Logger.info("Going to admin page");
+//    		render("vaSettingsAdmin.html");
+//    	}
+//        render("vaSettings.html");
+//    } 
     
     // When a setting changes - we get the symbol that changed:
     // LIST_GRADUATION_SEM= false
