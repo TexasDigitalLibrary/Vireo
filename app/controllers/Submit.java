@@ -359,24 +359,13 @@ public class Submit extends Controller {
 	}
 
 	@Security(RoleType.STUDENT)
-	public static void fileUpload() {
+	public static void fileUpload(Long subId) {
 		render("Submit/FileUpload.html");
 	}
 
 	@Security(RoleType.STUDENT)
-	public static void confirmAndSubmit(Long id) {
-		SecurityContextImpl context = Spring
-				.getBeanOfType(SecurityContextImpl.class);
-		JpaSubmissionRepositoryImpl submissions = Spring
-				.getBeanOfType(JpaSubmissionRepositoryImpl.class);
-		
-		if(id!=null){
-			Submission submission = submissions.findSubmission(id);
-			render(context, submission);
-		} else {
-			render(context);
-		}
-		
+	public static void confirmAndSubmit(Long subId) {		
+		render(subId);		
 	}
 
 	@Security(RoleType.STUDENT)
