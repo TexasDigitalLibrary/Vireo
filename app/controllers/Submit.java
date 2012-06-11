@@ -364,7 +364,7 @@ public class Submit extends Controller {
 	}
 
 	@Security(RoleType.STUDENT)
-	public static void fileUpload() {
+	public static void fileUpload(Long subId) {
 		render("Submit/FileUpload.html");
 	}
 
