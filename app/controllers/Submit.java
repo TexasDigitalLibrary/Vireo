@@ -58,8 +58,13 @@ public class Submit extends AbstractVireoController {
 			Application.index();
 		
 		Person submitter = context.getPerson();
+		
 		// Note: since this is the first step submission may be null.
+		
 		Submission sub = null;
+		
+		// If we already have a subid - then fetch the corresponding submission
+		
 		if (subId != null) {
 			sub = subRepo.findSubmission(subId);
 			
@@ -81,8 +86,10 @@ public class Submit extends AbstractVireoController {
 		String currentPhone = params.get("currentPhone");
 		String currentAddress = params.get("currentAddress");
 		
-		// List of fields which are disabled.
+		// List of fields which are disabled on the form.
 		List<String> disabledFields = new ArrayList<String>();
+		
+		// Prepare to display the form.
 		
 		// Should the personal group be locked.
 		if (isFieldGroupLocked("personal")) {
@@ -153,8 +160,11 @@ public class Submit extends AbstractVireoController {
 			}
 		}
 		
+		// If we got here because the 'Save and Continue' button on the form was clicked - 
+		// then the form was being submitted. Gather arguments, perform validation and 
+		// if all is 'ok' then save the submission.
+		
 		if (params.get("submit_next") != null) {
-			// Form is being submitted
 			
 			// First name
 			if (firstName == null || firstName.trim().length() == 0)
@@ -206,7 +216,11 @@ public class Submit extends AbstractVireoController {
 				}
 			}
 			
+			// If the form passed validation -- then save the submission (and updated submitter)
+			// and then bring up the license page.
+			
 			if (!validation.hasErrors()) {
+				
 				// Save the submission.
 				
 				if (sub == null)
@@ -228,11 +242,15 @@ public class Submit extends AbstractVireoController {
 				sub.save();
 				submitter.save();
 
+				// Display the license -- passing along the submission id
+				
 				license(sub.getId());
 			}
 			
 		} else if (sub != null) {
-			// Initial form display, for an existing submission.
+			
+			// Initial form display, for an existing submission. Fill in all data from the submission record.
+			
 			firstName = sub.getStudentFirstName();
 			middleName = sub.getStudentMiddleName();
 			lastName = sub.getStudentLastName();
@@ -259,7 +277,9 @@ public class Submit extends AbstractVireoController {
 			currentPhone = submitter.getCurrentPhoneNumber();
 			currentAddress = submitter.getCurrentPostalAddress();
 		} else {
-			// Initial form display, with no submission created.
+			
+			// Initial form display, with no submission created. Fill in as much of the form as we know.
+
 			firstName = submitter.getFirstName();
 			middleName = submitter.getMiddleName();
 			lastName = submitter.getLastName();
@@ -286,6 +306,8 @@ public class Submit extends AbstractVireoController {
 			currentPhone = submitter.getCurrentPhoneNumber();
 			currentAddress = submitter.getCurrentPostalAddress();
 		}
+		
+		// Display the for with appropriate values filled in
 		
 		render(submitter,subId,disabledFields,firstName,middleName,lastName,birthYear,department,degree, major, permPhone,permAddress,permEmail,currentPhone,currentAddress);
 	}
