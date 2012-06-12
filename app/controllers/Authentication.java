@@ -121,7 +121,7 @@ public class Authentication extends Controller {
 			
 			if (person == null) {
 				// No one is logged in, so let's save where we are and redirect them to authenticate.
-				flash.put("url", "GET".equals(request.method) ? request.url : null);
+				flash.put("url", request.url);
 				loginList();
 			}
 			
@@ -244,10 +244,11 @@ public class Authentication extends Controller {
 					if (flash.get("url") != null) {
 						String url = flash.get("url");
 						flash.remove("url");
-						redirect(url);
-					} else {
-						redirect("Application.index");
+						if (url != null) {
+							redirect(url);
+						}
 					}
+					Application.index();
 				} 
 				validation.addError("login", "The username and/or password does not exist. Please try again.");
 			
