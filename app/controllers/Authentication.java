@@ -59,15 +59,11 @@ import play.mvc.Router.ActionDefinition;
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
-public class Authentication extends Controller {
+public class Authentication extends AbstractVireoController {
 	
 	// Spring dependencies
-	public static SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
 	public static EmailService emailService = Spring.getBeanOfType(EmailService.class);
 	public static SystemEmailTemplateService systemEmailService = Spring.getBeanOfType(SystemEmailTemplateService.class);
-	
-	public static PersonRepository personRepo = Spring.getBeanOfType(PersonRepository.class);
-	public static SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
 	
 	// Constants
 	public static final String REGISTRATION_TEMPLATE = "SYSTEM New User Registration";

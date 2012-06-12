@@ -10,7 +10,7 @@ import java.util.Map.Entry;
 import org.tdl.vireo.model.RoleType;
 
 
-public class Application extends Controller {
+public class Application extends AbstractVireoController {
 
     public static void index() {
 	dumpRequestHeaders();
@@ -56,17 +56,6 @@ public class Application extends Controller {
        	Logger.info(session.toString());
        	Map<String, Header> rsp = request.headers;
     	for (Map.Entry<String, Header> entry : rsp.entrySet())    	{
-    	    Logger.info(entry.getKey() + "= {" + entry.getValue() + "}");
-    	}
-    }
-    
-    private static void dumpParams() {
-    	
-    	Map<String, String> names = params.allSimple();  	
-    	
-    	Logger.info(session.toString());
-    	
-    	for (Map.Entry<String, String> entry : names.entrySet())    	{
     	    Logger.info(entry.getKey() + "= {" + entry.getValue() + "}");
     	}
     }

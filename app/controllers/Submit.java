@@ -35,23 +35,7 @@ import play.mvc.With;
  */
 
 @With(Authentication.class)
-public class Submit extends Controller {
-
-	// Spring dependencies
-	public static SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
-	public static SubmissionRepository subRepo = Spring.getBeanOfType(SubmissionRepository.class);
-	public static SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
-	
-	/**
-	 * This is run before any submit controller to inject the repositories into
-	 * the template. This way the template can access information from any
-	 * repository without it being explicit put in for each method.
-	 */
-	@Before
-	public static void injectRepositories() {
-		renderArgs.put("settingRepo", settingRepo);
-		renderArgs.put("subRepo", subRepo);
-	}
+public class Submit extends AbstractVireoController {
 	
 	
 	/**
@@ -373,20 +357,6 @@ public class Submit extends Controller {
 		render("Submit/VerifyPersonalInformation.html");
 	}
 
-
-
-	private static void dumpParams() {
-
-		Map<String, String> names = params.allSimple();
-
-		Logger.info("Session: " + session.toString());
-
-		Logger.info("Params:");
-		
-		for (Map.Entry<String, String> entry : names.entrySet())        {
-			Logger.info(entry.getKey() + "= {" + entry.getValue() + "}");
-		}
-	}
 	
 	
 	

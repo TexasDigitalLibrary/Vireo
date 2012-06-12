@@ -12,9 +12,14 @@ import org.tdl.vireo.model.RoleType;
  * 
  * How to use:
  * 
- * 1) On all vireo controllers add the @With(Authentication.class) annotation to the class. This class makes the security annotation actionable. Without that annotation no security contstraints will be imposed by this annotation.
+ * 1) On all vireo controllers add the @With(Authentication.class) annotation
+ *    to the class. This class makes the security annotation actionable. 
+ *    Without that annotation no security contstraints will be imposed by this
+ *    annotation.
  * 
- * 2) On any controller action you need to ensure is only accessed by users with a particular role level or higher, add this annotation with the minimum role requirement.
+ * 2) On any controller action you need to ensure is only accessed by users
+ *    with a particular role level or higher, add this annotation with the
+ *    minimum role requirement.
  * 
  * Example:
  * 
@@ -23,7 +28,8 @@ import org.tdl.vireo.model.RoleType;
  *    // Something cool
  * }
  * 
- * In this example only users who are logged in with a role of either ADMINISTRATOR, MANAGER, or REVIWER are able to access this method.
+ * In this example only users who are logged in with a role of either 
+ * ADMINISTRATOR, MANAGER, or REVIWER are able to access this method.
  * 
  * @Security(RoleType.STUDENT)
  * public void startSubmission() {
