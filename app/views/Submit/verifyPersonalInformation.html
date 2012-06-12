@@ -81,7 +81,7 @@
 		<div class="control-group">
 			<label class="control-label" for="school"><b>* School</b></label>
 			<div class="controls">
-				<p>Texas A&M University at College Station</p>
+				<p>Texas Digital Library</p>
 			</div>
 		</div>
 		<div class="control-group #{ifError 'department'}error#{/ifError}">
@@ -169,14 +169,14 @@
 				#{/else}
 			</div>
 		</div>
-		<div class="control-group #{ifError 'currentEmail'}error#{/ifError}">
-			<label class="control-label" for="currentEmail">Current Email:</label>
+		<div class="control-group #{ifError 'currentPhone'}error#{/ifError}">
+			<label class="control-label" for="currentPhone">Current Phone:</label>
 			<div class="controls">
-			    #{if disabledFields.contains("currentEmail")}
-                <p>${currentEmail}</p>
+			    #{if disabledFields.contains("currentPhone")}
+                <p>${currentPhone}</p>
                 #{/if} 
                 #{else}
-				<input type="text" class="span3" name="currentEmail" value="${currentEmail}">
+				<input type="text" class="span3" name="currentPhone" value="${currentPhone}">
 				#{/else}
 			</div>
 		</div>
@@ -194,8 +194,8 @@
 	</fieldset>
 	<fieldset>
         <div class="form-actions">
-            <input type="submit" class="btn" name="submit_cancel" value="Cancel" />
             <input type="submit" class="btn btn-primary" name="submit_next" value="Save and Continue" />
+            <input type="submit" class="btn" name="submit_cancel" value="Cancel" />            
         </div>   
     </fieldset>
 </form>            

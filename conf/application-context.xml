@@ -83,10 +83,10 @@
         		<entry key="${auth.shib.attribute.displayName}" value="Billy Bob"/>
         		<entry key="${auth.shib.attribute.birthYear}" value="1955"/>
         		<entry key="${auth.shib.attribute.currentPhoneNumber}" value="555-555-1931"/>
-        		<entry key="${auth.shib.attribute.currentPostalAddress}" value="University Town, Texas 77835"/>
+        		<entry key="${auth.shib.attribute.currentPostalAddress}" value="Any City, Any State 12345"/>
         		<entry key="${auth.shib.attribute.currentEmailAddress}" value="bthornton@gmail.com"/>
         		<entry key="${auth.shib.attribute.permanentPhoneNumber}" value="555-555-1932"/>
-        		<entry key="${auth.shib.attribute.permanentPostalAddress}" value="Hot Springs, Arkansas 73424"/>
+        		<entry key="${auth.shib.attribute.permanentPostalAddress}" value="Another City, Another State 54321"/>
         		<entry key="${auth.shib.attribute.permanentEmailAddress}" value="bthornton@yahoo.com"/>
         		<entry key="${auth.shib.attribute.currentDegree}" value="Bachelor of Science"/>
         		<entry key="${auth.shib.attribute.currentDepartment}" value="Performance Studies"/>
