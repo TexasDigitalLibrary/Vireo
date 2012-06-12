@@ -234,6 +234,7 @@ public class Authentication extends Controller {
 					// Log the person in.
 					Person person = context.getPerson();
 					
+					session.put("authenticationMethod", methodName);
 					session.put("personId", person.getId());
 					session.put("firstName", person.getFirstName());
 					session.put("lastName", person.getLastName());
@@ -289,6 +290,7 @@ public class Authentication extends Controller {
 			// Log the person in.
 			Person person = context.getPerson();
 			
+			session.put("authenticationMethod", methodName);
 			session.put("personId", person.getId());
 			session.put("firstName", person.getFirstName());
 			session.put("lastName", person.getLastName());
@@ -776,7 +778,31 @@ public class Authentication extends Controller {
 	 * application's index page.
 	 */
 	public static void logout() {
+
+		// Check to see if the user was logged in via an implecit method.
+		AuthenticationMethod.Implicit method = null;
+		try {
+			String methodName = session.get("authenticationMethod");
+			method = (AuthenticationMethod.Implicit) Spring.getBean(methodName);
+		} catch (RuntimeException re) {
+			// Ignore, the no such bean method, or a cast class exception.
+		}
+	
+		// Clear our session, effectively logging the user out of the application.
 		session.clear();
+		
+		if (method != null) {
+			// If the user was authenticated by an implicit authentication
+			// method then allow them to logout of the external service if
+			// needed.
+			ActionDefinition action = Router.reverse("Application.index");
+			action.absolute();
+			String redirect = method.logout(request, action.url);
+			
+			if (redirect != null )
+				redirect(redirect);
+		}
+		
 		Application.index();
 	}
 	

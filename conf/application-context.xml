@@ -40,8 +40,10 @@
         <property name="allowUpdateProfile" value="false"/>
         <property name="personRepository" ref="PersonRepository"/>
         <property name="securityContext" ref="SecurityContext"/>
-        <property name="loginURL" value="${auth.shib.login}"/>
-        <property name="primaryIdentifier" value="${auth.shib.primaryIdentifier}"/>
+        <property name="loginURL" value="${auth.shib.login.url}"/>
+        <property name="logoutURL" value="${auth.shib.logout.url}"/>
+        <property name="logoutEnabled" value="${auth.shib.logout.enabled}"/>
+        <property name="primaryIdentifier" value="${auth.shib.primaryIdentifier}"/>     
         <property name="attributeMap">
         	<util:map>
         		<!-- Required -->

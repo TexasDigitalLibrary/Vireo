@@ -186,6 +186,11 @@ public abstract class AbstractAuthenticationMethodImpl implements
 		public String getFailureMessage(Request request, AuthenticationResult result) {
 			return null;
 		}
+		
+		@Override
+		public String logout(Request request, String returnURL) {
+			return null;
+		}
 	}
 	
 	/**

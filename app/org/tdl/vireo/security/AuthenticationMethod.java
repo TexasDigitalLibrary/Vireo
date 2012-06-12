@@ -218,6 +218,26 @@ public interface AuthenticationMethod {
 		public String getFailureMessage(Request request,
 				AuthenticationResult result);
 
+		/**
+		 * Logout the user out of this implicit authentication. This may require
+		 * redirecting the user off to an external service to complete the
+		 * logout. If so this method should return the URL to redirect the user
+		 * to, and the included returnURL is where the user should be sent after
+		 * successfully logging out.
+		 * 
+		 * If no redirection is required then null should be returned. This will
+		 * still cause the user to be logged out of the application and their
+		 * session cleared.
+		 * 
+		 * @param request
+		 *            The HTTP request
+		 * @param returnURL
+		 *            The URL where the user should be redirected to back to the
+		 *            Application after logging.
+		 * @return The URL to initiate a logout request, or null if no
+		 *         redirection is required.
+		 */
+		public String logout(Request request, String returnURL);
 	}
 
 	/**

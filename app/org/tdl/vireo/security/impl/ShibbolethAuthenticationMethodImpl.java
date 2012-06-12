@@ -38,9 +38,13 @@ public class ShibbolethAuthenticationMethodImpl extends
 	
 	// The location to start a shibboleth session.
 	public String loginURL = "/Shibboleth.sso/Login?target=%1s";
+	public String logoutURL = "/Shibboleth.sso/Logout?return=%1s";
 	
 	// Use netid or email adress as primary account identifier.
 	public boolean useNetIdAsIdentifier = true;
+	
+	// Weather logout is enabled.
+	public boolean logoutEnabled = false;
 	
 	// All the header names.
 	public String headerNetId = "SHIB_netid";
@@ -75,10 +79,25 @@ public class ShibbolethAuthenticationMethodImpl extends
 	 * intercept this url, and send the request to be authenticated by this
 	 * plugin.
 	 * 
-	 * @param loginURL
+	 * @param loginURL The shibboleth login initiator
 	 */
 	public void setLoginURL(String loginURL) {
 		this.loginURL = loginURL;
+	}
+	
+	/**
+	 * Set the shibboleth logout initaitor url. This is a standard java format
+	 * string, where the first paramater is a string representation of the
+	 * return url. The url is where shibboleth should send the user after
+	 * succesfully logging out.
+	 * 
+	 * Note: for this value to take effect you also need to enable the logout
+	 * feature: setLogoutEnabled(true);
+	 * 
+	 * @param logoutURL The shibboleth logout initiator
+	 */
+	public void setLogoutURL(String logoutURL) {
+		this.logoutURL = logoutURL;
 	}
 	
 	/**
@@ -123,6 +142,17 @@ public class ShibbolethAuthenticationMethodImpl extends
 		} else {
 			throw new IllegalArgumentException("Invalid primary identifier: "+primaryIdentifier+", the only valid options are 'netid' or 'email'.");
 		}
+	}
+
+	/**
+	 * 
+	 * @param enabled
+	 *            True if shibboleth logout should be enabled by this
+	 *            application. If this is enabled make sure to set the logoutURL
+	 *            initator as well.
+	 */
+	public void setLogoutEnabled(boolean enabled) {
+		this.logoutEnabled = enabled;
 	}
 	
 	/**
@@ -392,7 +422,23 @@ public class ShibbolethAuthenticationMethodImpl extends
 		return msg.toString();
 	}
 	
-	
+	@Override
+	public String logout(Request request, String returnURL) {
+		
+		// If we are mocking a shibboleth connection we don't do a full shib logout.
+		if (mock)
+			return null;
+		
+		// Is logout enabled?
+		if (!logoutEnabled)
+			return null;
+		
+		// Generate the URL to initiate a shibboleth session
+		String encodedReturnURL = URLEncoder.encode(returnURL);
+		String completeLoginoutURL = String.format(logoutURL,encodedReturnURL);
+		
+		return completeLoginoutURL;
+	}
 	
 	/**
 	 * Internal method for retrieving a single shibboleth attribute value. If
