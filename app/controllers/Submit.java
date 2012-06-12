@@ -2,6 +2,7 @@ package controllers;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -148,7 +149,7 @@ public class Submit extends AbstractVireoController {
 			}
 			if (submitter.getCurrentPostalAddress() != null) {
 				disabledFields.add("currentAddress");
-				currentAddress = submitter.getCurrentEmailAddress();
+				currentAddress = submitter.getCurrentPostalAddress();
 			}
 		}
 		
@@ -168,7 +169,8 @@ public class Submit extends AbstractVireoController {
 			if (birthYear != null && birthYear.trim().length() > 0) {
 				try {
 					birthYearInt = Integer.valueOf(birthYear);
-					if (birthYearInt < 1900 || birthYearInt > (new Date().getYear() + 1900))
+					
+					if (birthYearInt < 1900 || birthYearInt > Calendar.getInstance().get(Calendar.YEAR) + 1900)
 						validation.addError("birthYear","Your birth year is invalid, please use a four digit year.");
 				} catch (NumberFormatException nfe) {
 					validation.addError("birthYear","Your birth year is invalid.");
@@ -204,13 +206,8 @@ public class Submit extends AbstractVireoController {
 				}
 			}
 			
-			// current Phone
-			if (currentPhone != null && currentPhone.trim().length() > 0) {
-				validation.addError("currentPhone","The current email address you provided is invalid.");
-			}
-			
 			if (!validation.hasErrors()) {
-				// Yay save the submission.
+				// Save the submission.
 				
 				if (sub == null)
 					sub = subRepo.createSubmission(submitter);
@@ -235,7 +232,7 @@ public class Submit extends AbstractVireoController {
 			}
 			
 		} else if (sub != null) {
-			// Intial form display, for an existing submission.
+			// Initial form display, for an existing submission.
 			firstName = sub.getStudentFirstName();
 			middleName = sub.getStudentMiddleName();
 			lastName = sub.getStudentLastName();
