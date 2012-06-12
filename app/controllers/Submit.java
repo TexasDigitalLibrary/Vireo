@@ -93,7 +93,7 @@ public class Submit extends Controller {
 		String permPhone = params.get("permPhone");
 		String permAddress = params.get("permAddress");
 		String permEmail = params.get("permEmail");
-		String currentEmail = params.get("currentEmail");
+		String currentPhone = params.get("currentPhone");
 		String currentAddress = params.get("currentAddress");
 		
 		// List of fields which are disabled.
@@ -158,14 +158,9 @@ public class Submit extends Controller {
 					// Ignore
 				}
 			}
-			if (submitter.getCurrentEmailAddress() != null) {
-				try {
-					new InternetAddress(submitter.getCurrentEmailAddress()).validate();
-					disabledFields.add("currentEmail");
-					currentEmail = submitter.getCurrentEmailAddress();
-				} catch (AddressException ae) {
-					// Ignore
-				}
+			if (submitter.getCurrentPhoneNumber() != null) {
+				disabledFields.add("currentPhone");
+				currentPhone = submitter.getCurrentPhoneNumber();
 			}
 			if (submitter.getCurrentPostalAddress() != null) {
 				disabledFields.add("currentAddress");
@@ -176,7 +171,7 @@ public class Submit extends Controller {
 		if (params.get("submit_next") != null) {
 			// Form is being submitted
 			
-			// Firstname
+			// First name
 			if (firstName == null || firstName.trim().length() == 0)
 				validation.addError("firstName","First name is required.");
 			
@@ -225,13 +220,9 @@ public class Submit extends Controller {
 				}
 			}
 			
-			// current Email
-			if (currentEmail != null && currentEmail.trim().length() > 0) {
-				try {
-					new InternetAddress(currentEmail).validate();
-				} catch (AddressException ae) {
-					validation.addError("currentEmail","The current email address you provided is invalid.");
-				}
+			// current Phone
+			if (currentPhone != null && currentPhone.trim().length() > 0) {
+				validation.addError("currentPhone","The current email address you provided is invalid.");
 			}
 			
 			if (!validation.hasErrors()) {
@@ -250,7 +241,7 @@ public class Submit extends Controller {
 				submitter.setPermanentPhoneNumber(permPhone);
 				submitter.setPermanentPostalAddress(permAddress);
 				submitter.setPermanentEmailAddress(permEmail);
-				submitter.setCurrentEmailAddress(currentEmail);
+				submitter.setCurrentPhoneNumber(currentPhone);
 				submitter.setCurrentPostalAddress(currentAddress);
 				
 				sub.save();
@@ -284,7 +275,7 @@ public class Submit extends Controller {
 			permPhone = submitter.getPermanentPhoneNumber();
 			permAddress = submitter.getPermanentPostalAddress();
 			permEmail = submitter.getPermanentEmailAddress();
-			currentEmail = submitter.getCurrentEmailAddress();
+			currentPhone = submitter.getCurrentPhoneNumber();
 			currentAddress = submitter.getCurrentPostalAddress();
 		} else {
 			// Initial form display, with no submission created.
@@ -311,11 +302,11 @@ public class Submit extends Controller {
 			permPhone = submitter.getPermanentPhoneNumber();
 			permAddress = submitter.getPermanentPostalAddress();
 			permEmail = submitter.getPermanentEmailAddress();
-			currentEmail = submitter.getCurrentEmailAddress();
+			currentPhone = submitter.getCurrentPhoneNumber();
 			currentAddress = submitter.getCurrentPostalAddress();
 		}
 		
-		render(submitter,subId,disabledFields,firstName,middleName,lastName,birthYear,department,degree, major, permPhone,permAddress,permEmail,currentEmail,currentAddress);
+		render(submitter,subId,disabledFields,firstName,middleName,lastName,birthYear,department,degree, major, permPhone,permAddress,permEmail,currentPhone,currentAddress);
 	}
 
 	@Security(RoleType.STUDENT)
