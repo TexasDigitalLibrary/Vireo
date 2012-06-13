@@ -1,5 +1,7 @@
 package controllers;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Calendar;
@@ -9,11 +11,13 @@ import java.util.Map;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
+import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.Degree;
 import org.tdl.vireo.model.Department;
 import org.tdl.vireo.model.Major;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
+import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionRepository;
@@ -58,8 +62,13 @@ public class Submit extends AbstractVireoController {
 			Application.index();
 		
 		Person submitter = context.getPerson();
+		
 		// Note: since this is the first step submission may be null.
+		
 		Submission sub = null;
+		
+		// If we already have a subid - then fetch the corresponding submission
+		
 		if (subId != null) {
 			sub = subRepo.findSubmission(subId);
 			
@@ -81,8 +90,10 @@ public class Submit extends AbstractVireoController {
 		String currentPhone = params.get("currentPhone");
 		String currentAddress = params.get("currentAddress");
 		
-		// List of fields which are disabled.
+		// List of fields which are disabled on the form.
 		List<String> disabledFields = new ArrayList<String>();
+		
+		// Prepare to display the form.
 		
 		// Should the personal group be locked.
 		if (isFieldGroupLocked("personal")) {
@@ -153,8 +164,11 @@ public class Submit extends AbstractVireoController {
 			}
 		}
 		
+		// If we got here because the 'Save and Continue' button on the form was clicked - 
+		// then the form was being submitted. Gather arguments, perform validation and 
+		// if all is 'ok' then save the submission.
+		
 		if (params.get("submit_next") != null) {
-			// Form is being submitted
 			
 			// First name
 			if (firstName == null || firstName.trim().length() == 0)
@@ -206,7 +220,11 @@ public class Submit extends AbstractVireoController {
 				}
 			}
 			
+			// If the form passed validation -- then save the submission (and updated submitter)
+			// and then bring up the license page.
+			
 			if (!validation.hasErrors()) {
+				
 				// Save the submission.
 				
 				if (sub == null)
@@ -228,11 +246,15 @@ public class Submit extends AbstractVireoController {
 				sub.save();
 				submitter.save();
 
+				// Display the license -- passing along the submission id
+				
 				license(sub.getId());
 			}
 			
 		} else if (sub != null) {
-			// Initial form display, for an existing submission.
+			
+			// Initial form display, for an existing submission. Fill in all data from the submission record.
+			
 			firstName = sub.getStudentFirstName();
 			middleName = sub.getStudentMiddleName();
 			lastName = sub.getStudentLastName();
@@ -259,7 +281,9 @@ public class Submit extends AbstractVireoController {
 			currentPhone = submitter.getCurrentPhoneNumber();
 			currentAddress = submitter.getCurrentPostalAddress();
 		} else {
-			// Initial form display, with no submission created.
+			
+			// Initial form display, with no submission created. Fill in as much of the form as we know.
+
 			firstName = submitter.getFirstName();
 			middleName = submitter.getMiddleName();
 			lastName = submitter.getLastName();
@@ -286,6 +310,8 @@ public class Submit extends AbstractVireoController {
 			currentPhone = submitter.getCurrentPhoneNumber();
 			currentAddress = submitter.getCurrentPostalAddress();
 		}
+		
+		// Display the for with appropriate values filled in
 		
 		render(submitter,subId,disabledFields,firstName,middleName,lastName,birthYear,department,degree, major, permPhone,permAddress,permEmail,currentPhone,currentAddress);
 	}
@@ -316,9 +342,8 @@ public class Submit extends AbstractVireoController {
                 	
                     // TODO: add license text to the database
                 	
-                	// FIX ME - Commented out for Demo
                 	
-// DG                    sub.setLicenseAgreementDate(new Date());
+                    sub.setLicenseAgreementDate(new Date());
                     docInfo(subId);
                     
                 }
@@ -328,16 +353,94 @@ public class Submit extends AbstractVireoController {
         }
 
     }
-	
 
-	@Security(RoleType.STUDENT)
-	public static void docInfo(Long subId) {
-		render("Submit/DocInfo.html");
-	}
+    @Security(RoleType.STUDENT)
+    public static void docInfo(Long subId) {
 
+        String title = params.get("title");
+        String degreeMonth = params.get("degreeMonth");
+        String degreeYear = params.get("degreeYear");
+        String committeeFirstName = params.get("committeeFirstName");
+        String committeeMiddleInitial = params.get("committeeMiddleInitial");
+        String committeeLastName = params.get("committeeLastName");
+        String chairFlag = params.get("chairFlag");
+        String chairEmail = params.get("chairEmail");
+        String embargo = params.get("embargo");
+
+        if (params.get("submit_next") != null) {
+
+            // Get currently logged in person 
+            Person currentPerson = context.getPerson();
+            Submission sub = null;
+
+            if (null != subId) {
+                sub = subRepo.findSubmission(subId);
+            } else {
+                // TODO: Are we going to handle this more gracefully in the future?
+                error("Did not receive the expected submission id.");
+            }
+            
+            if(null == title || title.equals("")) {
+                validation.addError("title", "Please enter a thesis title.");
+            }
+            
+            if(null == degreeMonth || degreeMonth.trim().length() == 0 || !isValidDegreeMonth(Integer.parseInt(degreeMonth))) {
+                validation.addError("degreeMonth", "Please select a degree month.");
+            }
+            
+            if(null == degreeYear || !isValidDegreeYear(degreeYear)) {
+               validation.addError("degreeYear", "Please select a degree year");
+            }
+            
+            if(!validation.hasErrors()) {
+                sub.setDocumentTitle(title);
+                sub.setGraduationMonth(Integer.parseInt(degreeMonth));
+                sub.save();
+                
+                fileUpload(subId);
+            }
+        }
+        
+        // List of valid degree years for drop-down population
+        List degreeYears = getDegreeYears();
+
+        render(subId, title, degreeMonth, degreeYear, committeeFirstName, committeeMiddleInitial, committeeLastName, chairFlag, chairEmail, embargo, degreeYears);
+    }
+
+    // Handle File Upload
+    
 	@Security(RoleType.STUDENT)
 	public static void fileUpload(Long subId) {
-		render("Submit/FileUpload.html");
+		
+        Submission sub = null;
+
+        // Get current submission 
+        
+        if (null != subId) {
+            sub = subRepo.findSubmission(subId);
+        } else {
+            error("Did not receive the expected submission id.");
+        }		
+		
+        // If the upload manuscript button is pressed - then add the manuscript as an attachment
+		if (params.get("uploadManuscript") != null) {
+			
+			//Logger.info("Primarydoc " + params.get("primaryDocument"));
+			
+			File primaryDocument = params.get("primaryDocument",File.class);
+
+			if (primaryDocument == null) 
+				Logger.info("Doc is null");
+			else
+				Logger.info("Doc: " + primaryDocument.getClass().getName());
+			
+			try {
+				sub.addAttachment(primaryDocument, AttachmentType.PRIMARY);
+			} catch (IOException e) {
+				error("Error uploading primary document.");
+			}
+	}
+		render(subId);
 	}
 
 	@Security(RoleType.STUDENT)
@@ -354,12 +457,6 @@ public class Submit extends AbstractVireoController {
 		render("Submit/VerifyPersonalInformation.html");
 	}
 
-	
-	
-	
-	
-	
-	
 	/**
 	 * Internal method to determine if a group of information should be locked.
 	 * 
@@ -422,4 +519,50 @@ public class Submit extends AbstractVireoController {
 		return false;
 	}
 
+    /**
+     * @param degreeMonth The month of the degree
+     * @return True if the name is a valid degree month.
+     */
+    private static boolean isValidDegreeMonth(int degreeMonth) {
+        for (GraduationMonth month : settingRepo.findAllGraduationMonths()) {
+            if (degreeMonth == month.getMonth()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * @param degreeYear The year of the degree
+     * @return True if the name is a valid degree year.
+     */
+    private static boolean isValidDegreeYear(String degreeYear) {
+        int year = Integer.parseInt(degreeYear);
+
+        for (Integer y : getDegreeYears()) {
+            if (year == y) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
+     * For now, this method returns the current valid years based on 
+     * the subsequent two years.  This will possible move into a 
+     * configuration setting eventually.
+     * 
+     * @return list of current valid degree years
+     */
+    private static List<Integer> getDegreeYears() {
+        Integer currentYear = Calendar.getInstance().get(Calendar.YEAR);
+        
+        List<Integer> validYears = new ArrayList<Integer>();
+        validYears.add(currentYear - 2);
+        validYears.add(currentYear - 1);
+        validYears.add(currentYear);
+        
+        return validYears;
+    }
 }
