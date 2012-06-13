@@ -52,16 +52,16 @@
 				<p>Dissertation</p>
 			</div>
 		</div>
-		<div class="control-group">
-			<label class="control-label" for="abstract"><b>* Abstract</b></label>
+		<div class="control-group #{ifError 'abstractText'}error#{/ifError}">
+			<label class="control-label" for="abstractText"><b>* Abstract</b></label>
 			<div class="controls">
-				<textarea class="span5" id="abstract"></textarea>
+				<textarea class="span5" id="abstractText" name="abstractText">${abstractText}</textarea>
 			</div>
 		</div>
-		<div class="control-group">
+		<div class="control-group #{ifError 'keywords'}error#{/ifError}">
 			<label class="control-label" for="keywords"><b>* Keywords</b></label>
 			<div class="controls">
-				<textarea class="span5" id="keywords">Keyword 1; Key Phrase One; Keyword 2; Key Phrase Two</textarea>
+				<textarea class="span5" id="keywords" name="keywords">${keywords}</textarea>
 			</div>
 		</div>
 	</fieldset>
@@ -145,10 +145,10 @@
 	
 	<fieldset class="form-horizontal">
 		<legend>Chair's Contact Email</legend>
-		<div class="control-group">
+		<div class="control-group #{ifError 'chairEmail'}error#{/ifError}">
 			<label class="control-label" for="chairEmail"><b>* Committee<br />Chair Email:</b></label>
 			<div class="controls">
-				<input type="text" class="span4" id="chairEmail">
+				<input type="text" class="span4" id="chairEmail" name="chairEmail" value="${chairEmail}">
 			</div>
 		</div>
 	</fieldset>
