@@ -17,6 +17,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
+import javax.persistence.PostLoad;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -118,7 +119,14 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	
 	@Transient
 	protected List<ActionLog> pendingLogs = new ArrayList<ActionLog>();
-
+	
+	// Insure that the pendingLogs list is valid when a submission is fetched from the repository
+	
+	@PostLoad
+	private void onPostLoad() {
+	     pendingLogs = new ArrayList<ActionLog>();
+	}
+	
 	/**
 	 * Construct a new JpaSubmissionImpl
 	 * 

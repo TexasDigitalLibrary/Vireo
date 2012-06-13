@@ -338,9 +338,8 @@ public class Submit extends AbstractVireoController {
                 	
                     // TODO: add license text to the database
                 	
-                	// FIX ME - Commented out for Demo
                 	
-// DG                    sub.setLicenseAgreementDate(new Date());
+                    sub.setLicenseAgreementDate(new Date());
                     docInfo(subId);
                     
                 }
