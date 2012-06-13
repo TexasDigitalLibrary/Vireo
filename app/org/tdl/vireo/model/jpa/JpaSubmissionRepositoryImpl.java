@@ -29,13 +29,14 @@ import org.tdl.vireo.model.Major;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Preference;
 import org.tdl.vireo.model.RoleType;
-import org.tdl.vireo.model.SearchDirection;
-import org.tdl.vireo.model.SearchFilter;
-import org.tdl.vireo.model.SearchOrder;
-import org.tdl.vireo.model.SearchResult;
+import org.tdl.vireo.model.NamedSearchFilter;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.SubmissionRepository;
+import org.tdl.vireo.search.SearchDirection;
+import org.tdl.vireo.search.SearchFilter;
+import org.tdl.vireo.search.SearchOrder;
+import org.tdl.vireo.search.SearchResult;
 import org.tdl.vireo.state.StateManager;
 
 import play.Logger;
@@ -298,7 +299,7 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 		queryText.append("ORDER BY "+orderByClause);
 		
 		if (Logger.isDebugEnabled()) {
-			String message = "Filter '"+filter.getName()+"' query = '"+queryText.toString()+"'\n";
+			String message = "Filter query = '"+queryText.toString()+"'\n";
 			for(String key : params.keySet()) {
 				message += "   ':"+key+"' = '"+params.get(key)+"'\n";
 			}
@@ -509,7 +510,7 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 		queryText.append("ORDER BY "+orderByClause);
 		
 		if (Logger.isDebugEnabled()) {
-			String message = "Filter '"+filter.getName()+"' query = '"+queryText.toString()+"'\n";
+			String message = "Filter query = '"+queryText.toString()+"'\n";
 			for(String key : params.keySet()) {
 				message += "   ':"+key+"' = '"+params.get(key)+"'\n";
 			}
@@ -547,29 +548,29 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 	// //////////////////
 	
 	@Override
-	public SearchFilter createSearchFilter(Person creator, String name) {
-		return new JpaSearchFilterImpl(creator, name);
+	public NamedSearchFilter createSearchFilter(Person creator, String name) {
+		return new JpaNamedSearchFilterImpl(creator, name);
 	}
 
 	@Override
-	public SearchFilter findSearchFilter(Long id) {
-		return (SearchFilter) JpaSearchFilterImpl.findById(id);
+	public NamedSearchFilter findSearchFilter(Long id) {
+		return (NamedSearchFilter) JpaNamedSearchFilterImpl.findById(id);
 	}
 
 	@Override
-	public List<SearchFilter> findSearchFiltersByCreatorOrPublic(Person creator) {
-		return (List) JpaSearchFilterImpl.find("creator = ? OR publicFlag = true order by id", creator).fetch();
+	public List<NamedSearchFilter> findSearchFiltersByCreatorOrPublic(Person creator) {
+		return (List) JpaNamedSearchFilterImpl.find("creator = ? OR publicFlag = true order by id", creator).fetch();
 	}
 	
 	@Override
-	public SearchFilter findSearchFilterByCreatorAndName(Person creator, String name) {
-		return JpaSearchFilterImpl.find("creator = ? AND name = ?", creator, name).first();
+	public NamedSearchFilter findSearchFilterByCreatorAndName(Person creator, String name) {
+		return JpaNamedSearchFilterImpl.find("creator = ? AND name = ?", creator, name).first();
 	}
 	
 
 	@Override
-	public List<SearchFilter> findAllSearchFilters() {
-		return (List) JpaSearchFilterImpl.find("order by id").fetch();
+	public List<NamedSearchFilter> findAllSearchFilters() {
+		return (List) JpaNamedSearchFilterImpl.find("order by id").fetch();
 	}
 	
 	

@@ -1,4 +1,4 @@
-package org.tdl.vireo.model;
+package org.tdl.vireo.search;
 
 /**
  * List of all possible ordering of Vireo submissions.

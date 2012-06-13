@@ -18,10 +18,10 @@ import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.MockPerson;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
-import org.tdl.vireo.model.SearchDirection;
-import org.tdl.vireo.model.SearchFilter;
-import org.tdl.vireo.model.SearchOrder;
+import org.tdl.vireo.model.NamedSearchFilter;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.search.SearchDirection;
+import org.tdl.vireo.search.SearchOrder;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.StateManager;
 
@@ -34,7 +34,7 @@ import play.test.UnitTest;
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
-public class JpaSearchFilterImplTest extends UnitTest {
+public class JpaNamedSearchFilterImplTest extends UnitTest {
 	
 	// Repositories
 	public static SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
@@ -74,7 +74,7 @@ public class JpaSearchFilterImplTest extends UnitTest {
 	@Test
 	public void testCreate() {
 		
-		SearchFilter filter = subRepo.createSearchFilter(person, "filter").save();
+		NamedSearchFilter filter = subRepo.createSearchFilter(person, "filter").save();
 		
 		assertNotNull(filter);
 		assertEquals("filter",filter.getName());
@@ -115,7 +115,7 @@ public class JpaSearchFilterImplTest extends UnitTest {
 	@Test
 	public void testCreateDuplicate() {
 		
-		SearchFilter filter = subRepo.createSearchFilter(person, "filter").save();
+		NamedSearchFilter filter = subRepo.createSearchFilter(person, "filter").save();
 		
 		try {
 			subRepo.createSearchFilter(person, "filter").save();
@@ -135,7 +135,7 @@ public class JpaSearchFilterImplTest extends UnitTest {
 	@Test
 	public void testId() {
 		
-		SearchFilter filter = subRepo.createSearchFilter(person, "filter").save();
+		NamedSearchFilter filter = subRepo.createSearchFilter(person, "filter").save();
 		
 		assertNotNull(filter.getId());
 		
@@ -147,9 +147,9 @@ public class JpaSearchFilterImplTest extends UnitTest {
 	 */
 	@Test
 	public void testFindById() {
-		SearchFilter filter = subRepo.createSearchFilter(person, "filter").save();
+		NamedSearchFilter filter = subRepo.createSearchFilter(person, "filter").save();
 
-		SearchFilter retrieved = subRepo.findSearchFilter(filter.getId());
+		NamedSearchFilter retrieved = subRepo.findSearchFilter(filter.getId());
 		
 		assertEquals(filter.getName(), retrieved.getName());
 		
@@ -164,8 +164,8 @@ public class JpaSearchFilterImplTest extends UnitTest {
 
 		int initialSize = subRepo.findAllSearchFilters().size();
 		
-		SearchFilter filter1 = subRepo.createSearchFilter(person, "filter1").save();
-		SearchFilter filter2 = subRepo.createSearchFilter(person, "filter2").save();
+		NamedSearchFilter filter1 = subRepo.createSearchFilter(person, "filter1").save();
+		NamedSearchFilter filter2 = subRepo.createSearchFilter(person, "filter2").save();
 
 		int postSize = subRepo.findAllSearchFilters().size();
 		
@@ -184,14 +184,14 @@ public class JpaSearchFilterImplTest extends UnitTest {
 		Person otherPerson = personRepo.createPerson("other", "other@email.com", "first", "last", RoleType.NONE).save();
 
 		
-		SearchFilter filter1 = subRepo.createSearchFilter(otherPerson, "public other person").save();
+		NamedSearchFilter filter1 = subRepo.createSearchFilter(otherPerson, "public other person").save();
 		filter1.setPublic(true);
 		filter1.save();
-		SearchFilter filter2 = subRepo.createSearchFilter(otherPerson, "private other person").save();
-		SearchFilter filter3 = subRepo.createSearchFilter(person, "person").save();
+		NamedSearchFilter filter2 = subRepo.createSearchFilter(otherPerson, "private other person").save();
+		NamedSearchFilter filter3 = subRepo.createSearchFilter(person, "person").save();
 		
 		
-		List<SearchFilter> filters = subRepo.findSearchFiltersByCreatorOrPublic(person);
+		List<NamedSearchFilter> filters = subRepo.findSearchFiltersByCreatorOrPublic(person);
 		
 		assertEquals(filter1,filters.get(0));
 		assertEquals(filter3,filters.get(1));
@@ -211,12 +211,12 @@ public class JpaSearchFilterImplTest extends UnitTest {
 		
 		Person otherPerson = personRepo.createPerson("other", "other@email.com", "first", "last", RoleType.NONE).save();
 
-		SearchFilter filter1 = subRepo.createSearchFilter(person, "filter").save();
-		SearchFilter filter2 = subRepo.createSearchFilter(otherPerson, "filter").save();
+		NamedSearchFilter filter1 = subRepo.createSearchFilter(person, "filter").save();
+		NamedSearchFilter filter2 = subRepo.createSearchFilter(otherPerson, "filter").save();
 		
 		
-		SearchFilter retrieved1 = subRepo.findSearchFilterByCreatorAndName(person, "filter");
-		SearchFilter retrieved2 = subRepo.findSearchFilterByCreatorAndName(otherPerson, "filter");
+		NamedSearchFilter retrieved1 = subRepo.findSearchFilterByCreatorAndName(person, "filter");
+		NamedSearchFilter retrieved2 = subRepo.findSearchFilterByCreatorAndName(otherPerson, "filter");
 
 		assertEquals(filter1,retrieved1);
 		assertEquals(filter2,retrieved2);
@@ -232,8 +232,8 @@ public class JpaSearchFilterImplTest extends UnitTest {
 	 */
 	@Test 
 	public void testNameValidation() {
-		SearchFilter filter = subRepo.createSearchFilter(person, "filter").save();
-		SearchFilter test = subRepo.createSearchFilter(person, "test").save();
+		NamedSearchFilter filter = subRepo.createSearchFilter(person, "filter").save();
+		NamedSearchFilter test = subRepo.createSearchFilter(person, "test").save();
 		
 		try {
 			test.setName(null);
@@ -274,7 +274,7 @@ public class JpaSearchFilterImplTest extends UnitTest {
 	public void testPersistance() {
 		Person otherPerson = personRepo.createPerson("other-netid", "other@email.com", "first", "last", RoleType.NONE).save();
 
-		SearchFilter filter = subRepo.createSearchFilter(person, "filter").save();
+		NamedSearchFilter filter = subRepo.createSearchFilter(person, "filter").save();
 		filter.setPublic(false);
 		filter.addSearchText("text1");
 		filter.addSearchText("text2");
@@ -305,7 +305,7 @@ public class JpaSearchFilterImplTest extends UnitTest {
 		JPA.em().clear();
 		JPA.em().getTransaction().begin();
 		
-		SearchFilter retrieved = subRepo.findSearchFilter(filter.getId());
+		NamedSearchFilter retrieved = subRepo.findSearchFilter(filter.getId());
 		
 		//assertFalse(retrieved.isPublic());
 		assertTrue(retrieved.getSearchText().contains("text1"));
@@ -359,14 +359,14 @@ public class JpaSearchFilterImplTest extends UnitTest {
 	public void testAccess() {
 		
 		context.login(MockPerson.getManager());
-		SearchFilter filter = subRepo.createSearchFilter(person, "filter").save();
+		NamedSearchFilter filter = subRepo.createSearchFilter(person, "filter").save();
 		filter.setPublic(true);
 		filter.save();
 		filter.delete();
 		
 		try {
 			context.login(MockPerson.getReviewer());
-			SearchFilter other = subRepo.createSearchFilter(person, "other").save();
+			NamedSearchFilter other = subRepo.createSearchFilter(person, "other").save();
 			other.setPublic(true);
 			other.save();
 			fail("A reviewer was able to make a filter public");
@@ -407,7 +407,7 @@ public class JpaSearchFilterImplTest extends UnitTest {
 		
 		
 		// Search Text Filter
-		SearchFilter filter = subRepo.createSearchFilter(person, "test1");
+		NamedSearchFilter filter = subRepo.createSearchFilter(person, "test1");
 		filter.addSearchText("I really%this work");
 		filter.save();
 		
@@ -613,7 +613,7 @@ public class JpaSearchFilterImplTest extends UnitTest {
 		sub2.save();
 		
 		// Search Text Filter
-		SearchFilter filter = subRepo.createSearchFilter(person, "test1");
+		NamedSearchFilter filter = subRepo.createSearchFilter(person, "test1");
 		filter.addSearchText("Title");
 		filter.save();
 		List<Submission> submissions;
@@ -831,7 +831,7 @@ public class JpaSearchFilterImplTest extends UnitTest {
 		
 		
 		List<ActionLog> logs;
-		SearchFilter filter;
+		NamedSearchFilter filter;
 		
 		// Search Text Filter
 		filter = subRepo.createSearchFilter(otherPerson, "test1");

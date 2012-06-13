@@ -3,6 +3,11 @@ package org.tdl.vireo.model;
 import java.util.List;
 import java.util.Set;
 
+import org.tdl.vireo.search.SearchDirection;
+import org.tdl.vireo.search.SearchFilter;
+import org.tdl.vireo.search.SearchOrder;
+import org.tdl.vireo.search.SearchResult;
+
 /**
  * The Vireo persistent repository for submissions. This object follows the
  * spring repository pattern, where this is the source for creating and locating
@@ -159,7 +164,7 @@ public interface SubmissionRepository {
 	 *            A unique filter name among all those created by this user.
 	 * @return The new filter.
 	 */
-	public SearchFilter createSearchFilter(Person creator, String name);
+	public NamedSearchFilter createSearchFilter(Person creator, String name);
 
 	/**
 	 * Find a search filter by unique id.
@@ -168,7 +173,7 @@ public interface SubmissionRepository {
 	 *            The id of the search filter.
 	 * @return The search filter, or null if not found.
 	 */
-	public SearchFilter findSearchFilter(Long id);
+	public NamedSearchFilter findSearchFilter(Long id);
 
 	/**
 	 * Find all search filters that are either owned by this user, or are
@@ -179,7 +184,7 @@ public interface SubmissionRepository {
 	 *            filters are returned.
 	 * @return The unordered list of search filters.
 	 */
-	public List<SearchFilter> findSearchFiltersByCreatorOrPublic(Person creator);
+	public List<NamedSearchFilter> findSearchFiltersByCreatorOrPublic(Person creator);
 	
 	/**
 	 * Find the named search filter that was created by this user.
@@ -190,7 +195,7 @@ public interface SubmissionRepository {
 	 *            The unique name of the filter
 	 * @return The search filter, or null if not found.
 	 */
-	public SearchFilter findSearchFilterByCreatorAndName(Person creator,
+	public NamedSearchFilter findSearchFilterByCreatorAndName(Person creator,
 			String name);
 
 	/**
@@ -199,6 +204,6 @@ public interface SubmissionRepository {
 	 * 
 	 * @return
 	 */
-	public List<SearchFilter> findAllSearchFilters();
+	public List<NamedSearchFilter> findAllSearchFilters();
 	
 }

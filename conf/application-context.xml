@@ -106,5 +106,9 @@
     	<property name="settingsRepository" ref="SettingsRepository"/>
     	<property name="securityContext" ref="SecurityContext"/>
     </bean>
-
+    
+    <!-- Search -->
+    <bean id="ActiveSearchFilter" class="org.tdl.vireo.search.impl.UriActiveSearchFilterImpl" scope="prototype">
+        <property name="personRepository" ref="PersonRepository"/>
+    </bean>
 </beans>

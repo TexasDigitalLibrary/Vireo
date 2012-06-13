@@ -1,8 +1,9 @@
-package org.tdl.vireo.model;
+package org.tdl.vireo.search;
 
 import java.util.Date;
 import java.util.List;
 
+import org.tdl.vireo.model.Person;
 import org.tdl.vireo.state.State;
 
 /**
@@ -10,37 +11,16 @@ import org.tdl.vireo.state.State;
  * submission. The object is used by the SubmissionRepository to filter the set
  * of all submissions by particular criteria.
  * 
+ * Implementers should pick on of the child interfaces instead of implementing
+ * this interface directly. The two child interfaces are NamedSearchfilter, and
+ * ActiveSearchFilter. The named version is designed to be persisted in the
+ * database, while the active search filter is designed to be serialized to a
+ * cookie value. Both types may be feed to the filter search to produce search
+ * results.
+ * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
-public interface SearchFilter extends AbstractModel {
-
-	/**
-	 * @return The person who created this filter search
-	 */
-	public Person getCreator();
-
-	/**
-	 * @return The user assigned name of this filter search.
-	 */
-	public String getName();
-
-	/**
-	 * @param name
-	 *            The new name of this filter search.
-	 */
-	public void setName(String name);
-
-	/**
-	 * @return Weather this filter search is publicly viewable by all vireo
-	 *         reviewers.
-	 */
-	public boolean isPublic();
-
-	/**
-	 * @param publicFlag
-	 *            Set this filter search as public or not.
-	 */
-	public void setPublic(boolean publicFlag);
+public interface SearchFilter {
 
 	/**
 	 * @return The list of all free-form search parameters
@@ -217,8 +197,11 @@ public interface SearchFilter extends AbstractModel {
 	public void removeDocumentType(String documentType);
 
 	/**
-	 * True -> applications are set to be released to UMI False -> applications
-	 * are not set to be released. Null -> Either released or not.
+	 * True -> applications are set to be released to UMI 
+	 * 
+	 * False -> applications are not set to be released. 
+	 * 
+	 * Null -> Either released or not.
 	 * 
 	 * @return How to filter for UMI release
 	 */

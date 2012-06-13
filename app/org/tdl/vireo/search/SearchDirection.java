@@ -1,4 +1,4 @@
-package org.tdl.vireo.model;
+package org.tdl.vireo.search;
 
 /**
  * The possible directions an ordered set of submissions/actionlogs may be
