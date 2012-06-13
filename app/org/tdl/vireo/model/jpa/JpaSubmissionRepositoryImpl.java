@@ -560,6 +560,12 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 	public List<SearchFilter> findSearchFiltersByCreatorOrPublic(Person creator) {
 		return (List) JpaSearchFilterImpl.find("creator = ? OR publicFlag = true order by id", creator).fetch();
 	}
+	
+	@Override
+	public SearchFilter findSearchFilterByCreatorAndName(Person creator, String name) {
+		return JpaSearchFilterImpl.find("creator = ? AND name = ?", creator, name).first();
+	}
+	
 
 	@Override
 	public List<SearchFilter> findAllSearchFilters() {

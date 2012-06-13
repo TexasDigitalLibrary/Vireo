@@ -156,7 +156,7 @@ public interface SubmissionRepository {
 	 * @param creator
 	 *            The person who is creating and owns this search filter.
 	 * @param name
-	 *            A unique name for the filter.
+	 *            A unique filter name among all those created by this user.
 	 * @return The new filter.
 	 */
 	public SearchFilter createSearchFilter(Person creator, String name);
@@ -180,6 +180,18 @@ public interface SubmissionRepository {
 	 * @return The unordered list of search filters.
 	 */
 	public List<SearchFilter> findSearchFiltersByCreatorOrPublic(Person creator);
+	
+	/**
+	 * Find the named search filter that was created by this user.
+	 * 
+	 * @param creator
+	 *            The filter's creator
+	 * @param name
+	 *            The unique name of the filter
+	 * @return The search filter, or null if not found.
+	 */
+	public SearchFilter findSearchFilterByCreatorAndName(Person creator,
+			String name);
 
 	/**
 	 * Find all search filters regardless of who they owned by or whether they

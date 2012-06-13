@@ -203,6 +203,29 @@ public class JpaSearchFilterImplTest extends UnitTest {
 		otherPerson.delete();
 	}
 	
+	/**
+	 * Test retrieving filters by name.
+	 */
+	@Test
+	public void testFindByCreatorAndName() {
+		
+		Person otherPerson = personRepo.createPerson("other", "other@email.com", "first", "last", RoleType.NONE).save();
+
+		SearchFilter filter1 = subRepo.createSearchFilter(person, "filter").save();
+		SearchFilter filter2 = subRepo.createSearchFilter(otherPerson, "filter").save();
+		
+		
+		SearchFilter retrieved1 = subRepo.findSearchFilterByCreatorAndName(person, "filter");
+		SearchFilter retrieved2 = subRepo.findSearchFilterByCreatorAndName(otherPerson, "filter");
+
+		assertEquals(filter1,retrieved1);
+		assertEquals(filter2,retrieved2);
+		
+		filter1.delete();
+		filter2.delete();
+		otherPerson.delete();
+	}
+	
 	
 	/**
 	 * Test the validation when modifying the name

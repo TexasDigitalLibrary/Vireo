@@ -12,6 +12,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.GraduationMonth;
@@ -24,13 +25,14 @@ import org.tdl.vireo.model.SearchFilter;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 @Entity
-@Table(name = "search_filter")
+@Table(name = "search_filter",
+uniqueConstraints = { @UniqueConstraint( columnNames = { "creator_id", "name" } ) } )
 public class JpaSearchFilterImpl extends JpaAbstractModel<JpaSearchFilterImpl> implements SearchFilter{
 	
 	@ManyToOne(targetEntity=JpaPersonImpl.class, optional=false)
 	public Person creator;
 	
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false)
 	public String name;
 	
 	public boolean publicFlag;
