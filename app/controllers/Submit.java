@@ -14,6 +14,7 @@ import org.tdl.vireo.model.Department;
 import org.tdl.vireo.model.Major;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
+import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionRepository;
@@ -349,12 +350,60 @@ public class Submit extends AbstractVireoController {
         }
 
     }
-	
 
-	@Security(RoleType.STUDENT)
-	public static void docInfo(Long subId) {
-		render("Submit/DocInfo.html");
-	}
+    @Security(RoleType.STUDENT)
+    public static void docInfo(Long subId) {
+
+        String title = params.get("title");
+        String degreeMonth = params.get("degreeMonth");
+        String degreeYear = params.get("degreeYear");
+        String committeeFirstName = params.get("committeeFirstName");
+        String committeeMiddleInitial = params.get("committeeMiddleInitial");
+        String committeeLastName = params.get("committeeLastName");
+        String chairFlag = params.get("chairFlag");
+        String chairEmail = params.get("chairEmail");
+        String embargo = params.get("embargo");
+
+        if (params.get("submit_next") != null) {
+
+            // Get currently logged in person 
+            Person currentPerson = context.getPerson();
+            Submission sub = null;
+
+            if (null != subId) {
+                sub = subRepo.findSubmission(subId);
+            } else {
+                // TODO: Are we going to handle this more gracefully in the future?
+                error("Did not receive the expected submission id.");
+            }
+            
+            if(null == title || title.equals("")) {
+                validation.addError("title", "Please enter a thesis title.");
+            }
+            
+            if(null == degreeMonth || degreeMonth.trim().length() == 0 || !isValidDegreeMonth(Integer.parseInt(degreeMonth))) {
+                validation.addError("degreeMonth", "Please select a degree month.");
+            }
+            
+            if(null == degreeYear || !isValidDegreeYear(degreeYear)) {
+               validation.addError("degreeYear", "Please select a degree year");
+            }
+            
+            if(!validation.hasErrors()) {
+                sub.setDocumentTitle(title);
+                sub.setGraduationMonth(Integer.parseInt(degreeMonth));
+                sub.save();
+                
+                fileUpload(subId);
+            }
+        }
+        
+        // List of valid degree years for drop-down population
+        List degreeYears = getDegreeYears();
+
+        render(subId, title, degreeMonth, degreeYear, committeeFirstName, committeeMiddleInitial, committeeLastName, chairFlag, chairEmail, embargo, degreeYears);
+    }
+
 
 	@Security(RoleType.STUDENT)
 	public static void fileUpload(Long subId) {
@@ -375,12 +424,6 @@ public class Submit extends AbstractVireoController {
 		render("Submit/VerifyPersonalInformation.html");
 	}
 
-	
-	
-	
-	
-	
-	
 	/**
 	 * Internal method to determine if a group of information should be locked.
 	 * 
@@ -443,4 +486,50 @@ public class Submit extends AbstractVireoController {
 		return false;
 	}
 
+    /**
+     * @param degreeMonth The month of the degree
+     * @return True if the name is a valid degree month.
+     */
+    private static boolean isValidDegreeMonth(int degreeMonth) {
+        for (GraduationMonth month : settingRepo.findAllGraduationMonths()) {
+            if (degreeMonth == month.getMonth()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * @param degreeYear The year of the degree
+     * @return True if the name is a valid degree year.
+     */
+    private static boolean isValidDegreeYear(String degreeYear) {
+        int year = Integer.parseInt(degreeYear);
+
+        for (Integer y : getDegreeYears()) {
+            if (year == y) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
+     * For now, this method returns the current valid years based on 
+     * the subsequent two years.  This will possible move into a 
+     * configuration setting eventually.
+     * 
+     * @return list of current valid degree years
+     */
+    private static List<Integer> getDegreeYears() {
+        Integer currentYear = Calendar.getInstance().get(Calendar.YEAR);
+        
+        List<Integer> validYears = new ArrayList<Integer>();
+        validYears.add(currentYear - 2);
+        validYears.add(currentYear - 1);
+        validYears.add(currentYear);
+        
+        return validYears;
+    }
 }

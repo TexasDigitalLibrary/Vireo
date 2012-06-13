@@ -9,28 +9,40 @@
 <div class="row">
 <div class="span7">
 <p>In this step you describe your thesis or dissertation. Please make sure that the information entered below matches the information contained in your document.</p>
-	<form action="@{Submit.fileUpload(1)}" method="post">
+<br/>
+#{ifErrors}
+<ul class="red">
+    #{errors}
+    <li>${error}</li> 
+    #{/errors}
+</ul>
+#{/ifErrors}
+<br/>
+	<form action="@{Submit.docInfo(subId)}" method="post" class="form-inline">
 	
 	<fieldset class="form-horizontal">
 		<legend>Document Information</legend>
-		<div class="control-group">
+		<div class="control-group #{ifError 'title'}error#{/ifError}">
 			<label class="control-label" for="title"><b>* Title</b></label>
 			<div class="controls">
-				<input type="text" class="span5" id="title">
+				<input type="text" class="span5" id="title" name="title" value="${title}">
 			</div>
 		</div>
-		<div class="control-group">
+		<div class="control-group #{ifError 'degreeMonth'}error#{/ifError} #{ifError 'degreeYear'}error#{/ifError}">
 			<label class="control-label" for="degreeDate"><b>* Degree Date</b></label>
 			<div class="controls row">
-				<select class="span2" id="degreeMonth">
-					<option>...choose</option>
-					<option value="4">May</option>
-					<option value="11">December</option>
+				<select class="span2" id="degreeMonth" name="degreeMonth">
+                                    <option #{if null == degreeMonth || Integer.parseInt(degreeMonth) <= 0}selected="true"#{/if} value="0">...choose</option>
+				    #{list items:settingRepo.findAllGraduationMonths(), as:'month'}
+				    <option #{if null != degreeMonth && Integer.parseInt(degreeMonth) == month.getMonth()}selected="true"#{/if} value="${month.getMonth()}">${month.getMonthName()}</option>
+				    #{/list}
 				</select>
-				<select class="span2" id="degreeYear">
-					<option>...choose</option>
-					<option value="2013">2013</option>
-					<option value="2014">2014</option>
+				<select class="span2" id="degreeYear" name="degreeYear">
+
+                                    <option #{if null == degreeYear || Integer.parseInt(degreeYear) <= 0}selected="true"#{/if} value="0">...choose</option>
+				    #{list degreeYears, as:'year'}
+				    <option #{if null != degreeYear && Integer.parseInt(degreeYear) == year}selected="true"#{/if} value="${year}">${year}</option>
+				    #{/list}
 				</select>
 			</div>
 		</div>
@@ -178,7 +190,7 @@
 		</div>
 	</fieldset>
 	<div class="span10 center">
-		<input type="submit" value="Save and Continue >>" class="btn btn-primary">
+		<input type="submit" name="submit_next" value="Save and Continue >>" class="btn btn-primary">
 	</div>
 	</form>
 </div>
