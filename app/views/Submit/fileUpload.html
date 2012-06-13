@@ -9,15 +9,16 @@
 <div class="row">
 <div class="span7">
 	<p>In this step you will upload your thesis or dissertation to the server. Optionally, you may upload additional supplementary files that will be available along with your document after publication.</p>
-	<form action="@{submit.confirmAndSubmit(1)}" method="post" class="form-horizontal">
+
+	<form action="@{submit.fileUpload(1)}" method="POST" class="form-horizontal" enctype="multipart/form-data">
 		
 		<fieldset>
 			<legend>Upload your manuscript</legend>
 			<div class="control-group">
 				<label class="control-label" for="manuscriptFile"><b>* Manuscript in PDF:</b></label>
 				<div class="controls">
-					<input type="file" id="manuscriptFile" class="input-file">
-					<input type="submit" value="Upload" class="uploadBtn btn">
+					<input type="file" id="manuscriptFile" class="input-file" name="primaryDocument">
+					<input type="submit" value="Upload" class="uploadBtn btn" name="uploadManuscript">
 				</div>
 			</div>
 		</fieldset>
@@ -28,7 +29,7 @@
 				<label class="control-label" for="supplementaryFile">Supplementary Files:</label>
 				<div class="controls">
 					<input type="file" id="supplementaryFile" class="input-file">
-					<input type="submit" value="Upload" class="uploadBtn btn">
+					<input type="submit" value="Upload" class="uploadBtn btn" name="uploadSupplementary">
 				</div>
 			</div>
 		</fieldset>

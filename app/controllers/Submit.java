@@ -1,5 +1,7 @@
 package controllers;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Calendar;
@@ -9,6 +11,7 @@ import java.util.Map;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
+import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.Degree;
 import org.tdl.vireo.model.Department;
 import org.tdl.vireo.model.Major;
@@ -434,10 +437,40 @@ public class Submit extends AbstractVireoController {
                 degreeYears);
     }
 
-
+    // Handle File Upload
+    
 	@Security(RoleType.STUDENT)
 	public static void fileUpload(Long subId) {
-		render("Submit/FileUpload.html");
+		
+        Submission sub = null;
+
+        // Get current submission 
+        
+        if (null != subId) {
+            sub = subRepo.findSubmission(subId);
+        } else {
+            error("Did not receive the expected submission id.");
+        }		
+		
+        // If the upload manuscript button is pressed - then add the manuscript as an attachment
+		if (params.get("uploadManuscript") != null) {
+			
+			//Logger.info("Primarydoc " + params.get("primaryDocument"));
+			
+			File primaryDocument = params.get("primaryDocument",File.class);
+
+			if (primaryDocument == null) 
+				Logger.info("Doc is null");
+			else
+				Logger.info("Doc: " + primaryDocument.getClass().getName());
+			
+			try {
+				sub.addAttachment(primaryDocument, AttachmentType.PRIMARY);
+			} catch (IOException e) {
+				error("Error uploading primary document.");
+			}
+	}
+		render(subId);
 	}
 
 	@Security(RoleType.STUDENT)

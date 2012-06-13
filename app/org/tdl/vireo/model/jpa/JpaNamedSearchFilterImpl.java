@@ -12,25 +12,27 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.Person;
-import org.tdl.vireo.model.SearchFilter;
+import org.tdl.vireo.model.NamedSearchFilter;
 
 /**
- * Jpa specific implementation of Vireo's Search Filter interface.
+ * Jpa specific implementation of Vireo's Named Search Filter interface.
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 @Entity
-@Table(name = "search_filter")
-public class JpaSearchFilterImpl extends JpaAbstractModel<JpaSearchFilterImpl> implements SearchFilter{
+@Table(name = "search_filter",
+uniqueConstraints = { @UniqueConstraint( columnNames = { "creator_id", "name" } ) } )
+public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFilterImpl> implements NamedSearchFilter{
 	
 	@ManyToOne(targetEntity=JpaPersonImpl.class, optional=false)
 	public Person creator;
 	
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false)
 	public String name;
 	
 	public boolean publicFlag;
@@ -73,8 +75,15 @@ public class JpaSearchFilterImpl extends JpaAbstractModel<JpaSearchFilterImpl> i
 	@Temporal(TemporalType.DATE)
 	public Date rangeEnd;
 	
-	
-	protected JpaSearchFilterImpl(Person creator, String name) {
+	/**
+	 * Construct a new Named Search Filter
+	 * 
+	 * @param creator
+	 *            The original creator of this filter.
+	 * @param name
+	 *            The unique name (amongst all other filters of this creator)
+	 */
+	protected JpaNamedSearchFilterImpl(Person creator, String name) {
 		
 		if (creator == null)
 			throw new IllegalArgumentException("Creator is required");

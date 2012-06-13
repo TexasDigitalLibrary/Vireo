@@ -1,6 +1,8 @@
-package org.tdl.vireo.model;
+package org.tdl.vireo.search;
 
 import java.util.List;
+
+import org.tdl.vireo.model.AbstractModel;
 
 /**
  * The result of a filter search. This records the parameters that produced the
