@@ -360,6 +360,8 @@ public class Submit extends AbstractVireoController {
         String title = params.get("title");
         String degreeMonth = params.get("degreeMonth");
         String degreeYear = params.get("degreeYear");
+        String abstractText = params.get("abstractText");
+        String keywords = params.get("keywords");
         String committeeFirstName = params.get("committeeFirstName");
         String committeeMiddleInitial = params.get("committeeMiddleInitial");
         String committeeLastName = params.get("committeeLastName");
@@ -392,9 +394,25 @@ public class Submit extends AbstractVireoController {
                validation.addError("degreeYear", "Please select a degree year");
             }
             
+            if(null == abstractText || abstractText.trim().length() == 0) {
+                validation.addError("abstractText", "Please enter an abstract");
+            }
+            
+            if(null == keywords || keywords.trim().length() == 0) {
+                validation.addError("keywords", "Please enter at least one keyword");
+            }
+            
+            if(null == chairEmail || chairEmail.trim().length() == 0) {
+                validation.addError("chairEmail", "Please enter an email address for the committee chair");
+            }
+            
             if(!validation.hasErrors()) {
                 sub.setDocumentTitle(title);
                 sub.setGraduationMonth(Integer.parseInt(degreeMonth));
+                sub.setGraduationYear(Integer.parseInt(degreeYear));
+                sub.setDocumentAbstract(abstractText);
+                sub.setDocumentKeywords(keywords);
+                sub.setCommitteeContactEmail(chairEmail);
                 sub.save();
                 
                 fileUpload(subId);
@@ -404,7 +422,19 @@ public class Submit extends AbstractVireoController {
         // List of valid degree years for drop-down population
         List degreeYears = getDegreeYears();
 
-        render(subId, title, degreeMonth, degreeYear, committeeFirstName, committeeMiddleInitial, committeeLastName, chairFlag, chairEmail, embargo, degreeYears);
+        render( subId, 
+                title, 
+                degreeMonth, 
+                degreeYear, 
+                abstractText, 
+                keywords, 
+                committeeFirstName, 
+                committeeMiddleInitial, 
+                committeeLastName, 
+                chairFlag, 
+                chairEmail, 
+                embargo, 
+                degreeYears);
     }
 
     // Handle File Upload
