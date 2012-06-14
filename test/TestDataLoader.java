@@ -24,6 +24,7 @@ import play.modules.spring.Spring;
  * 
  * 
  * @author Micah Cooper
+ * @author <a herf="www.scottphillips.com">Scott Phillips</a>
  * 
  */
 @OnApplicationStart
@@ -297,7 +298,32 @@ public class TestDataLoader extends Job {
 	
 	private static final int[] GRAD_MONTHS_DEFINITIONS = {
 		4, 7, 11 // 0 = january, 11 = december
-	};	
+	};
+	
+	/**
+	 * Initial Embargo Types to create
+	 */
+	
+	private static final EmbargoArray[] EMBARGO_DEFINTITIONS = {
+		new EmbargoArray("None", "The work will be published after approval.", 0, true),
+		new EmbargoArray("Journal Hold",
+				"The full text of this work will be held/restricted from worldwide access on the internet for one year from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication. For doctoral students, the abstract of the work will be available through ProQuest/UMI during this time.", 
+				12,
+				true),
+		new EmbargoArray("Patent Hold",
+				"The full text of this work will be held/restricted from public access temporarily because of patent related activities or for proprietary purposes. The faculty chair will be contacted on an annual basis, and the work will be released following the chair's approval.",
+				24,
+				true
+				),
+	    new EmbargoArray("Other Embargo Period",
+	    		"The work will be delayed for publication by an indefinite amount of time.",
+	    		null,
+	    		false),
+	    new EmbargoArray("2-year Journal Hold",
+	    		"The full text of this work will be held/restricted from worldwide access on the internet for two years from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication. The abstract of the work will be available through Texas A&M Libraries and, for doctoral students, through ProQuest/UMI during this time.",
+	    		null,
+	    		true)
+	};
 		
 	/**
 	 * Generate Persons, Colleges, Departments, Majors,
@@ -361,6 +387,11 @@ public class TestDataLoader extends Job {
 					settingsRepo.createGraduationMonth(gradMonthDefinition).save();
 				}
 				
+				// Create all embargo types
+				for(EmbargoArray embargoDefinition : EMBARGO_DEFINTITIONS) {
+					settingsRepo.createEmbargoType(embargoDefinition.name, embargoDefinition.description, embargoDefinition.duration, embargoDefinition.active);
+				}
+				
 				// Save the database state
 				JPA.em().flush();
 			} finally {
@@ -396,6 +427,23 @@ public class TestDataLoader extends Job {
 			this.password = password;
 			this.role = role;
 		}
+	}
+	
+	private static class EmbargoArray{
+		
+		String name;
+		String description;
+		Integer duration;
+		boolean active;
+		
+		EmbargoArray(String name, String description, Integer duration, boolean active) {
+			this.name = name;
+			this.description = description;
+			this.duration = duration;
+			this.active = active;
+		}
+		
+		
 	}
 }
 

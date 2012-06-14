@@ -173,13 +173,15 @@ public interface SettingsRepository {
 	 * @param description
 	 *            A description of the embargo.
 	 * @param duration
-	 *            How long the embargo should last, or -1 for indeterminate.
+	 *            How long the embargo should last messured in months. Null for
+	 *            ideterminate, zero for no embargo, and negative numbers are
+	 *            not allowed.
 	 * @param active
 	 *            Weather the embargo is currently active.
 	 * @return A new embargo type.
 	 */
 	public EmbargoType createEmbargoType(String name, String description,
-			Long duration, boolean active );
+			Integer duration, boolean active );
 
 	/**
 	 * Find embargo type by id.

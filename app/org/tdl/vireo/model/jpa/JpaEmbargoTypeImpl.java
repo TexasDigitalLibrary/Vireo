@@ -27,7 +27,7 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 	@Column(nullable = false)
 	public String description;
 
-	public Long duration;
+	public Integer duration;
 	
 	@Column(nullable = false)
 	public boolean active;
@@ -45,7 +45,7 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 	 *            Weather the embargo is active.
 	 */
 	protected JpaEmbargoTypeImpl(String name, String description,
-			Long duration, boolean active) {
+			Integer duration, boolean active) {
 
 		if (name == null || name.length() == 0)
 			throw new IllegalArgumentException("Name is required");
@@ -124,12 +124,12 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 	}
 
 	@Override
-	public Long getDuration() {
+	public Integer getDuration() {
 		return duration;
 	}
 
 	@Override
-	public void setDuration(Long duration) {
+	public void setDuration(Integer duration) {
 		
 		if (duration != null && duration < 0)
 			throw new IllegalArgumentException("Duration must be positive, or null");

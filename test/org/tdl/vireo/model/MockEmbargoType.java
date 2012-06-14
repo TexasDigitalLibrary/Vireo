@@ -18,7 +18,7 @@ public class MockEmbargoType extends AbstractMock implements EmbargoType {
 	public int displayOrder;
 	public String name;
 	public String description;
-	public Long duration;
+	public Integer duration;
 	public boolean active;
 
 	@Override
@@ -72,12 +72,12 @@ public class MockEmbargoType extends AbstractMock implements EmbargoType {
 	}
 
 	@Override
-	public Long getDuration() {
+	public Integer getDuration() {
 		return duration;
 	}
 
 	@Override
-	public void setDuration(Long duration) {
+	public void setDuration(Integer duration) {
 		this.duration = duration;
 	}
 

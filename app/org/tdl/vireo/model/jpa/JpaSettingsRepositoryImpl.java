@@ -126,7 +126,7 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	
 	@Override
 	public EmbargoType createEmbargoType(String name, String description,
-			Long duration, boolean active) {
+			Integer duration, boolean active) {
 		return new JpaEmbargoTypeImpl(name, description, duration, active);
 	}
 

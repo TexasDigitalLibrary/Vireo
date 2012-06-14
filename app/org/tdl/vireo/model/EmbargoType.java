@@ -4,9 +4,9 @@ package org.tdl.vireo.model;
  * Embargoes restrict the release of a submission for a length of time. If an
  * embargo type is active then it may be selected by a student for any new
  * application. Each embargo may have a pre-defined duration before it can be
- * released. The duration is defined in milliseconds, but the interface will
- * typically only allow embargoes in terms of months. If there is no pre-defined
- * embargo duration then the duration will be null.
+ * released. The duration is defined in months. If the type has no 
+ * pre-defined duration then the duration should be set to Null, and a 
+ * duration of zero means no embargo.
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
@@ -36,17 +36,18 @@ public interface EmbargoType extends AbstractOrderedModel {
 
 	/**
 	 * @return Return the static duration for this embargo type measured in
-	 *         milliseconds. If there is no predefined duration then null is
-	 *         returned. Negative durations are not permitted.
+	 *         months. If there is no predefined duration then null is
+	 *         returned. A duration of "zero" means there is no embargo. 
+	 *         Negative durations are not permitted.
 	 */
-	public Long getDuration();
+	public Integer getDuration();
 
 	/**
 	 * @param duration
 	 *            The new duration of this embargo type measured in
-	 *            milliseconds.
+	 *            months.
 	 */
-	public void setDuration(Long duration);
+	public void setDuration(Integer duration);
 	
 	/**
 	 * @return true if this embargo type is active.

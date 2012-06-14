@@ -45,12 +45,12 @@ public class JpaEmbargoTypeImplTest extends UnitTest {
 	@Test
 	public void testCreate() {
 		
-		EmbargoType type = settingRepo.createEmbargoType("name", "description", 12L, true);
+		EmbargoType type = settingRepo.createEmbargoType("name", "description", 12, true);
 		
 		assertNotNull(type);
 		assertTrue(type.isActive());
 		assertEquals("description",type.getDescription());
-		assertEquals(Long.valueOf(12L),type.getDuration());
+		assertEquals(Integer.valueOf(12),type.getDuration());
 		
 		type.delete();
 	}
@@ -61,35 +61,35 @@ public class JpaEmbargoTypeImplTest extends UnitTest {
 	@Test
 	public void testBadCreate() {
 		try {
-			settingRepo.createEmbargoType(null, "description", 12L, true);
+			settingRepo.createEmbargoType(null, "description", 12, true);
 			fail("Able to create null name");
 		} catch (IllegalArgumentException iae) {
 			/* yay */
 		}
 		
 		try {
-			settingRepo.createEmbargoType("", "description", 12L, true);
+			settingRepo.createEmbargoType("", "description", 12, true);
 			fail("Able to create blank name");
 		} catch (IllegalArgumentException iae) {
 			/* yay */
 		}
 		
 		try {
-			settingRepo.createEmbargoType("name", null, 12L, true);
+			settingRepo.createEmbargoType("name", null, 12, true);
 			fail("Able to create null description");
 		} catch (IllegalArgumentException iae) {
 			/* yay */
 		}
 		
 		try {
-			settingRepo.createEmbargoType("name", "", 12L, true);
+			settingRepo.createEmbargoType("name", "", 12, true);
 			fail("Able to create blank description");
 		} catch (IllegalArgumentException iae) {
 			/* yay */
 		}
 		
 		try {
-			settingRepo.createEmbargoType("name", "description", -1L, true);
+			settingRepo.createEmbargoType("name", "description", -1, true);
 			fail("Able to create negative duration");
 		} catch (IllegalArgumentException iae) {
 			/* yay */
@@ -101,10 +101,10 @@ public class JpaEmbargoTypeImplTest extends UnitTest {
 	 */
 	@Test
 	public void testCreateDuplicate() {
-		EmbargoType type = settingRepo.createEmbargoType("name", "description", 12L, true).save();
+		EmbargoType type = settingRepo.createEmbargoType("name", "description", 12, true).save();
 
 		try {
-			settingRepo.createEmbargoType("name", "other description", 13L, false).save();
+			settingRepo.createEmbargoType("name", "other description", 13, false).save();
 			fail("able to create duplicate embargo type");
 		} catch (RuntimeException re) {
 			/* yay */
@@ -121,7 +121,7 @@ public class JpaEmbargoTypeImplTest extends UnitTest {
 	@Test
 	public void testId() {
 		
-		EmbargoType type = settingRepo.createEmbargoType("name", "description", 12L,true).save();
+		EmbargoType type = settingRepo.createEmbargoType("name", "description", 12,true).save();
 
 		assertNotNull(type.getId());
 		
@@ -133,7 +133,7 @@ public class JpaEmbargoTypeImplTest extends UnitTest {
 	 */
 	@Test
 	public void testFindById() {
-		EmbargoType type = settingRepo.createEmbargoType("name", "description", 12L, true).save();
+		EmbargoType type = settingRepo.createEmbargoType("name", "description", 12, true).save();
 
 		
 		EmbargoType retrieved = settingRepo.findEmbargoType(type.getId());
@@ -151,8 +151,8 @@ public class JpaEmbargoTypeImplTest extends UnitTest {
 
 		int initialSize = settingRepo.findAllEmbargoTypes().size();
 		
-		EmbargoType type1 = settingRepo.createEmbargoType("name1", "description", 12L, true).save();
-		EmbargoType type2 = settingRepo.createEmbargoType("name2", "description", 12L, false).save();
+		EmbargoType type1 = settingRepo.createEmbargoType("name1", "description", 12, true).save();
+		EmbargoType type2 = settingRepo.createEmbargoType("name2", "description", 12, false).save();
 
 		int postSize = settingRepo.findAllEmbargoTypes().size();
 		
@@ -167,8 +167,8 @@ public class JpaEmbargoTypeImplTest extends UnitTest {
 	 */
 	@Test 
 	public void testValidation() {
-		EmbargoType type = settingRepo.createEmbargoType("name", "description", 12L, true).save();
-		EmbargoType test = settingRepo.createEmbargoType("test", "description", 12L, false).save();
+		EmbargoType type = settingRepo.createEmbargoType("name", "description", 12, true).save();
+		EmbargoType test = settingRepo.createEmbargoType("test", "description", 12, false).save();
 		
 		try {
 			test.setName(null);
@@ -199,7 +199,7 @@ public class JpaEmbargoTypeImplTest extends UnitTest {
 		}
 		
 		try {
-			test.setDuration(-1L);
+			test.setDuration(-1);
 			fail("Able to change duration to be negative");
 		} catch (IllegalArgumentException iae) {
 			/* yay */
@@ -224,10 +224,10 @@ public class JpaEmbargoTypeImplTest extends UnitTest {
 	@Test
 	public void testOrder() {
 		
-		EmbargoType type4 = settingRepo.createEmbargoType("name4", "description", 12L, true);
-		EmbargoType type1 = settingRepo.createEmbargoType("name1", "description", 12L, true);
-		EmbargoType type3 = settingRepo.createEmbargoType("name3", "description", 12L, true);
-		EmbargoType type2 = settingRepo.createEmbargoType("name2", "description", 12L, true);
+		EmbargoType type4 = settingRepo.createEmbargoType("name4", "description", 12, true);
+		EmbargoType type1 = settingRepo.createEmbargoType("name1", "description", 12, true);
+		EmbargoType type3 = settingRepo.createEmbargoType("name3", "description", 12, true);
+		EmbargoType type2 = settingRepo.createEmbargoType("name2", "description", 12, true);
 		
 		type1.setDisplayOrder(0);
 		type2.setDisplayOrder(1);
@@ -271,7 +271,7 @@ public class JpaEmbargoTypeImplTest extends UnitTest {
 		JPA.em().clear();
 		JPA.em().getTransaction().begin();
 		
-		EmbargoType type = settingRepo.createEmbargoType("name", "description", 12L, true).save();
+		EmbargoType type = settingRepo.createEmbargoType("name", "description", 12, true).save();
 		
 		// Commit and reopen a new transaction.
 		JPA.em().getTransaction().commit();
@@ -302,11 +302,11 @@ public class JpaEmbargoTypeImplTest extends UnitTest {
 	public void testAccess() {
 		
 		context.login(MockPerson.getManager());
-		settingRepo.createEmbargoType("name", "description", 12L, true).save().delete();
+		settingRepo.createEmbargoType("name", "description", 12, true).save().delete();
 		
 		try {
 			context.login(MockPerson.getReviewer());
-			settingRepo.createEmbargoType("name", "description", 12L, true).save();
+			settingRepo.createEmbargoType("name", "description", 12, true).save();
 			fail("A reviewer was able to create a new object.");
 		} catch (SecurityException se) {
 			/* yay */
