@@ -2,7 +2,7 @@ package controllers;
 
 import play.mvc.Controller;
 
-public class Settings extends Controller {
+public class Config extends Controller {
 
 	
 	public static void settings(){

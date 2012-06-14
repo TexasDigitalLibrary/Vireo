@@ -31,7 +31,7 @@ GET     /profile                                Authentication.profile
 *       /admin/log                              Review.log
 
 ### Manager
-*       /admin/settings                         Settings.settings
+*       /admin/settings                         Config.settings
 
 
 
