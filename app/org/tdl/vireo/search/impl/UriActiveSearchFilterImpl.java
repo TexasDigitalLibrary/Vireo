@@ -315,13 +315,10 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 
 			// Handle the single values
 			if ("true".equalsIgnoreCase(split[11])) {
-				System.out.print("1");
 				umiRelease = true;
 			} else if ("false".equalsIgnoreCase(split[11])) {
-				System.out.print("2");
 				umiRelease = false;
 			} else {
-				System.out.print("3");
 				umiRelease = null;
 			}
 
