@@ -46,6 +46,11 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	}
 
 	@Override
+	public Degree findDegreeByName(String name) {
+		return JpaDegreeImpl.find("name = ?", name).first();
+	}
+
+	@Override
 	public List<Degree> findAllDegrees() {
 		return (List) JpaDegreeImpl.find("order by displayOrder").fetch();
 	}

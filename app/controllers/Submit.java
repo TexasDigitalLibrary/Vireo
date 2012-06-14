@@ -6,29 +6,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
-import org.tdl.vireo.model.AttachmentType;
-import org.tdl.vireo.model.Degree;
-import org.tdl.vireo.model.Department;
-import org.tdl.vireo.model.Major;
-import org.tdl.vireo.model.Person;
-import org.tdl.vireo.model.RoleType;
-import org.tdl.vireo.model.GraduationMonth;
-import org.tdl.vireo.model.SettingsRepository;
-import org.tdl.vireo.model.Submission;
-import org.tdl.vireo.model.SubmissionRepository;
-import org.tdl.vireo.model.jpa.JpaSubmissionRepositoryImpl;
-import org.tdl.vireo.security.SecurityContext;
-import org.tdl.vireo.security.impl.SecurityContextImpl;
+import org.tdl.vireo.model.*;
 import play.Logger;
 import play.Play;
-import play.modules.spring.Spring;
-import play.mvc.Before;
-import play.mvc.Controller;
 import play.mvc.With;
 /**
  * Submit controller
@@ -360,6 +344,7 @@ public class Submit extends AbstractVireoController {
         String title = params.get("title");
         String degreeMonth = params.get("degreeMonth");
         String degreeYear = params.get("degreeYear");
+        String docType = params.get("docType");
         String abstractText = params.get("abstractText");
         String keywords = params.get("keywords");
         String committeeFirstName = params.get("committeeFirstName");
@@ -368,19 +353,21 @@ public class Submit extends AbstractVireoController {
         String chairFlag = params.get("chairFlag");
         String chairEmail = params.get("chairEmail");
         String embargo = params.get("embargo");
+        
+        // Get currently logged in person 
+        Person currentPerson = context.getPerson();
+        Submission sub = null;
 
+        if (null != subId) {
+            sub = subRepo.findSubmission(subId);
+        }
+
+        if (null == sub) {
+            // TODO: Are we going to handle this more gracefully in the future?
+            error("Did not receive the expected submission id.");
+        }
+        
         if (params.get("submit_next") != null) {
-
-            // Get currently logged in person 
-            Person currentPerson = context.getPerson();
-            Submission sub = null;
-
-            if (null != subId) {
-                sub = subRepo.findSubmission(subId);
-            } else {
-                // TODO: Are we going to handle this more gracefully in the future?
-                error("Did not receive the expected submission id.");
-            }
             
             if(null == title || title.equals("")) {
                 validation.addError("title", "Please enter a thesis title.");
@@ -392,6 +379,10 @@ public class Submit extends AbstractVireoController {
             
             if(null == degreeYear || !isValidDegreeYear(degreeYear)) {
                validation.addError("degreeYear", "Please select a degree year");
+            }
+            
+            if(null == docType || !isValidDocType(docType)) {
+                validation.addError("docType", "Please select a Document Type");
             }
             
             if(null == abstractText || abstractText.trim().length() == 0) {
@@ -410,6 +401,7 @@ public class Submit extends AbstractVireoController {
                 sub.setDocumentTitle(title);
                 sub.setGraduationMonth(Integer.parseInt(degreeMonth));
                 sub.setGraduationYear(Integer.parseInt(degreeYear));
+                sub.setDocumentType(docType);
                 sub.setDocumentAbstract(abstractText);
                 sub.setDocumentKeywords(keywords);
                 sub.setCommitteeContactEmail(chairEmail);
@@ -420,7 +412,12 @@ public class Submit extends AbstractVireoController {
         }
         
         // List of valid degree years for drop-down population
-        List degreeYears = getDegreeYears();
+        List<Integer> degreeYears = getDegreeYears();
+        renderArgs.put("degreeYears", degreeYears);
+        
+        // Populate the available Document Types based on the Degree Type set in the initial step
+        List<String> docTypes = getValidDocumentTypes(sub);
+        renderArgs.put("docTypes", docTypes);
 
         render( subId, 
                 title, 
@@ -432,9 +429,7 @@ public class Submit extends AbstractVireoController {
                 committeeMiddleInitial, 
                 committeeLastName, 
                 chairFlag, 
-                chairEmail, 
-                embargo, 
-                degreeYears);
+                chairEmail);
     }
 
     // Handle File Upload
@@ -579,6 +574,23 @@ public class Submit extends AbstractVireoController {
     }
     
     /**
+     * 
+     * @param docType
+     * @return 
+     */
+    private static boolean isValidDocType(String docType) {
+        List<DocumentType> docTypes = settingRepo.findAllDocumentTypes();
+        
+        for(DocumentType type : docTypes) {
+            if(docType.equals(type.getName())) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
      * For now, this method returns the current valid years based on 
      * the subsequent two years.  This will possible move into a 
      * configuration setting eventually.
@@ -594,5 +606,25 @@ public class Submit extends AbstractVireoController {
         validYears.add(currentYear);
         
         return validYears;
+    }
+    
+    /**
+     * Returns a list of valid Document Types 
+     * 
+     * @return list of valid document types for this submission's degree
+     * 
+     * TODO: Since this will be applicable on the admin side of things, move this to 
+     *       a SubmissionService along with related concerns.
+     */
+    private static List<String> getValidDocumentTypes(Submission sub) {
+        List<DocumentType> validTypes = settingRepo.findAllDocumentTypes(settingRepo.findDegreeByName(sub.getDegree()).getLevel());
+        List<String> typeNames = new ArrayList<String>();
+        
+        // Gather Document Type names, since we are soft-linking these to Submission
+        for(DocumentType type : validTypes) {
+            typeNames.add(type.getName());
+        }
+        
+        return typeNames;
     }
 }

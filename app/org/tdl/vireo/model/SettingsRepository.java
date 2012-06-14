@@ -39,6 +39,16 @@ public interface SettingsRepository {
 	public Degree findDegree(Long id);
 
 	/**
+	 * Find degree by name.
+	 *
+	 * @param name
+	 *			The name given to the degree.
+	 *
+	 * @return The degree object or null if not found.
+	 */
+	public Degree findDegreeByName(String name);
+
+	/**
 	 * Find all degree objects in order.
 	 * 
 	 * @return A list of all degrees, or an empty list if there are none.

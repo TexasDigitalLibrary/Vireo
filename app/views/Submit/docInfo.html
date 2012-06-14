@@ -46,10 +46,15 @@
 				</select>
 			</div>
 		</div>
-		<div class="control-group">
+		<div class="control-group #{ifError 'docType'}error#{/ifError}">
 			<label class="control-label" for="docType"><b>* Document Type</b></label>
 			<div class="controls">
-				<p>Dissertation</p>
+                            <select class="span4" id="docType" name="docType">
+                                <option #{if null == docType || docType.equals("")}selected="true"#{/if} value="0">...choose</option>
+                                #{list docTypes, as: 'type'}
+                                    <option #{if null != type && docType.equals(type)}selected="true"#{/if} value="${type}">${type}</option>
+                                #{/list}
+                            </select>
 			</div>
 		</div>
 		<div class="control-group #{ifError 'abstractText'}error#{/ifError}">
