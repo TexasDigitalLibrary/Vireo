@@ -25,12 +25,15 @@ GET     /profile                                Authentication.profile
 *	    /submit/{subId}/confirm                 Submit.confirmAndSubmit
 *       /submit/{subId}/review                  Submit.review
 
-### Admin
-*	    /admin/list                             Admin.list
-*		/admin/view								Admin.view
-*		/admin/log								Admin.log
-*		/admin/settings							Admin.settings
-*		/admin/settings/{tab}					Admin.settings
+### Reviewer
+*	    /admin/list                             Review.list
+*       /admin/view                             Review.view
+*       /admin/log                              Review.log
+
+### Manager
+*       /admin/settings                         Config.settings
+
+
 
 # Ignore favicon requests
 GET     /favicon.ico                            404
