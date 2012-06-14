@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <title>#{get 'title' /}</title>
+        <meta charset="${_response_encoding}">
+        <link href="@{'/public/stylesheets/admin.less'}" rel="stylesheet" type="text/css">                       
+        #{get 'moreStyles' /}
+        <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
+        <script src="@{'/public/javascripts/jquery-1.6.4.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>        
+               
+        <script>
+        jQuery(document).ready(function(){
+        		jQuery(".box-head").click(function(){        			
+        			var box = jQuery(this).parent(".side-box");
+        			box.find(".box-body").toggle();
+        			if(jQuery(this).hasClass("expanded")){
+        				jQuery(this).removeClass("expanded");
+        				jQuery(this).find(".expand").html("[+]");
+        			} else {
+        				jQuery(this).addClass("expanded");
+        				jQuery(this).find(".expand").html("[-]");
+        			}
+        		});
+        		
+        		jQuery(".edit-holder .nav a").click(function(){
+        			if(jQuery(this).parent("li").hasClass("active")){
+        				//Do Nothing
+        			} else {
+        				jQuery(".edit-holder .nav li").each(function(){
+        					jQuery(this).removeClass("active");
+        				});
+        				jQuery(this).parent("li").addClass("active");
+        				var name = jQuery(this).attr("class");
+        				jQuery(".edit-box-holder").each(function(){
+        					jQuery(this).addClass("hidden");
+        				});
+        				jQuery(".edit-box-holder[id="+name+"]").removeClass("hidden");
+        			}
+        			
+        		});
+        });
+        </script>
+        
+        #{get 'moreScripts' /}
+        
+    </head>
+    <body>
+    	<div id="mainContainer" class="container-fluid">
+	    	<div id="header">	    		
+	    		<span id="logo">&nbsp;</span>
+	    		
+	    		<div id="personal-bar">
+					#{if session.get("personId") }
+						<a href="@{Authentication.profile()}"><b>${session.get("firstName")} ${session.get("lastName")}</b></a> |
+						<a href="@{Authentication.logout()}">Logout</a>
+					#{/if}
+					#{else}
+					   <a href="@{Authentication.loginList()}">Login</a>
+					#{/else}
+				</div>
+				
+				<div id="tabs" class="pull-right">
+					<ul class="nav nav-tabs">
+						<li><a id="tab-list" href="@{Admin.list}" #{if nav=="list"}class="current"#{/if}>List</a></li>
+						<li><a id="tab-view" href="@{Admin.view}" #{if nav=="view"}class="current"#{/if}>View</a></li>
+						<li><a id="tab-log" href="@{Admin.log}" #{if nav=="log"}class="current"#{/if}>Log</a></li>
+						<li><a id="tab-settings" href="@{Admin.settings}" #{if nav=="settings"}class="current"#{/if}>Settings</a></li>
+					</ul>					
+				</div>
+				  	
+	    	</div>
+	    	<div id="body">
+	       		#{doLayout /}
+	        </div>
+	        <div class="clear"></div>
+	        <div id="footer" class="row">
+	        	<p class="pull-left">Vireo 1.8 &copy; 2012 <a href="#">Texas Digital Library</a>. All Rights Reserved.
+	        	<br />Valid <a href="#">XHTML 1.0</a>, <a href="#">CSS</a>. <a href="#">Section 508 Compliant</a>.</p>
+	        </div>
+    	</div>
+    </body>
+</html>

@@ -1,0 +1,286 @@
+@import "../stylesheets/shared.less";
+
+@headerColor:		#183440;
+@headerLinkColor:	#FFFFCC;
+@grayLightest:		#EEEEEE;
+
+/**********************
+BASICS
+**********************/
+html {
+	background-color:@white;
+}
+
+body {
+	background:none;
+	color:@mainColor;
+	font-family:"Trebuchet MS",Verdana,Geneva,Arial,Helvetica,sans-serif;
+	min-width:1000px;
+}
+
+/*****************
+FONTS COLORS ETC
+*****************/
+.red{
+	color:@red;
+}
+
+.center{
+	text-align:center;
+}
+
+.large{
+	font-size:1.4em;
+}
+
+h1{
+	margin-bottom:15px;
+	border-bottom:solid 1px @grayLighter;
+}
+
+.tl {text-align: left!important;}
+.tr {text-align: right!important;}
+.tc {text-align: center!important;}
+
+/*****************
+TABLES & FORMS
+*****************/
+td.comments{
+	background:url("../images/nav-bg.gif");
+	height:31px;
+	padding-left:15px;
+}
+
+td button, td button.btn, td button.btn-small{
+	height:20px;
+	line-height:9px;
+}
+
+/*****************
+LAYOUT
+*****************/
+#mainContainer{
+	padding:0;
+}
+
+#header{
+	background:url("../images/headerbg.gif") repeat-x scroll 0 0 transparent;
+	color: @headerColor;
+	height:83px;
+	margin:0;
+	padding:0;
+	position:relative;
+}
+
+#header a{
+	color:@headerLinkColor;
+}
+#header a:hover{
+	color:@white;
+	text-decoration:underline;
+}
+
+#logo{
+	background:url("../images/logo.gif") no-repeat scroll 0 2px transparent;
+	display:block;
+	float:left;
+	height:80px;
+	position:relative;
+	top:0;
+	width:450px;
+}
+
+#personal-bar {
+    position: absolute;
+    right: 13px;
+    top: 3px;
+}
+
+#tabs{
+	position:absolute;
+	bottom:0;
+	right:10px;
+}
+
+#tabs ul{
+	border-bottom:none;
+	margin:0;
+}
+
+#tabs li{
+	margin:0;
+}
+
+#tabs a{
+	width:107px;
+	height:55px;
+	padding:0;
+	margin:0;
+	border:none;
+	text-indent:-9999em;
+}
+#tabs a:hover{
+	border:none;
+	text-decoration:none;
+	padding:0;
+	margin:0;
+}
+
+#tab-list{
+	background:url("../images/tab_list.jpg") no-repeat scroll 0 0 transparent;
+}
+#tab-view{
+	background:url("../images/tab_view.jpg") no-repeat scroll 0 0 transparent;
+}
+#tab-log{
+	background:url("../images/tab_log.jpg") no-repeat scroll 0 0 transparent;
+}
+#tab-settings{
+	background:url("../images/tab_settings.jpg") no-repeat scroll 0 0 transparent;	
+}
+
+#tab-list:hover, #tab-list.current{
+	background:url("../images/ftab_list.jpg") no-repeat scroll 0 0 transparent;
+}
+#tab-view:hover, #tab-view.current{
+	background:url("../images/ftab_view.jpg") no-repeat scroll 0 0 transparent;
+}
+#tab-log:hover, #tab-log.current{
+	background:url("../images/ftab_log.jpg") no-repeat scroll 0 0 transparent;
+}
+#tab-settings:hover, #tab-settings.current{
+	background:url("../images/ftab_settings.jpg") no-repeat scroll 0 0 transparent;	
+}
+
+#body{
+	padding:20px 0;
+}
+
+#footer{
+	padding:20px 20px 20px 35px;
+	background-color:@grayLightest;
+	border-top:solid 1px @grayLighter;
+	border-bottom:solid 1px @grayLighter;
+	margin: 0 0 20px 0;
+}
+
+#left-column{
+	width:205px;
+	margin:0 20px;
+	clear:left;
+}
+
+#right-column{
+	clear:right;
+	margin:0 20px 0 255px;
+}
+
+/*
+#right-column .inner{
+	min-height:500px;
+	margin:0 20px 0 255px;
+}
+*/
+
+.nav-tabs{
+	height:35px;
+}
+
+/***********************
+SIDE BOXES
+***********************/
+
+.side-box{
+	margin:0 0 20px 0;
+}
+
+.side-box, .side-box a, .side-box a:hover{
+	color:@black;
+}
+
+.box-head{
+	background:url("../images/box_top.png") no-repeat;
+	position:relative;
+	padding:10px 0 0;
+}
+.box-head:hover{
+	cursor:pointer;
+}
+.box-head .expand{
+	position:absolute;
+	right:5px;
+	color:@grayLighter;
+}
+.side-box .main-heading{
+	text-align:center;
+	font-weight:bold;
+	font-size:1.2em;	
+	border-bottom:solid 1px @grayLighter;
+	padding:0 0 10px;
+}
+.box-body{
+	padding:8px 0 1px;
+}
+.box-body, .side-box .main-heading{
+	background-color:#ECECEC;
+	border-left:1px solid #CFCFCF;
+	border-right:1px solid #CFCFCF;
+}
+.box-body .sub-heading{
+	padding:2px 10px;
+	background-color:@grayLighter;
+	font-weight:bold;
+	font-family:"Lucida Grande","Bitstream Vera Sans";
+	color:#444444;
+	margin:10px 0 0 0;
+}
+.box-body ul, .box-body p{
+	margin:5px 0 0 25px;
+}
+
+.box-body ul.editable{
+	list-style:url("../images/red_x.gif");
+	margin-left:35px;
+}
+.box-footer{
+	background:url("../images/box_bottom.png") no-repeat;
+	height:13px;
+}
+
+/**********************
+EDIT HOLDERS & BOXES
+**********************/
+.edit-holder{
+	margin:0 0 20px 0;
+	width:100%;
+}
+.edit-holder .nav-tabs{
+	margin:0;
+}
+.edit-box-holder{
+	padding:15px;
+	border-bottom:solid 1px #DDDDDD;
+	border-left:solid 1px #DDDDDD;
+	border-right:solid 1px #DDDDDD;
+}
+.edit-box{
+	width:45%;
+}
+.edit-box li{
+	clear:left;
+}
+.edit-box label{
+	width:35%;
+	text-align:right;
+	padding-right:7px;
+	font-weight:bold;
+	float:left;
+}
+.edit-box span{
+	width:55%;
+	text-align:left;
+	float:left;
+}
+.edit-box .empty{
+	color:@grayLighter;
+}

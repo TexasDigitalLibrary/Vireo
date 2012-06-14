@@ -27,8 +27,10 @@ GET     /profile                                Authentication.profile
 
 ### Admin
 *	    /admin/list                             Admin.list
-GET     /settings                               Application.settings
-POST    /settings/vireo/admin/settings          Application.postSettings
+*		/admin/view								Admin.view
+*		/admin/log								Admin.log
+*		/admin/settings							Admin.settings
+*		/admin/settings/{tab}					Admin.settings
 
 # Ignore favicon requests
 GET     /favicon.ico                            404
