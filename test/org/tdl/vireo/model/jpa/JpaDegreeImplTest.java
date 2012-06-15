@@ -130,6 +130,22 @@ public class JpaDegreeImplTest extends UnitTest {
 		
 		retrieved.delete();
 	}
+
+	/**
+	 * Test retrieval by name.
+	 *
+	 */
+	@Test
+	public void testFindByName() {
+		Degree degree = settingRepo.createDegree("named degree",DegreeLevel.DOCTORAL).save();
+
+		Degree retrieved = settingRepo.findDegreeByName("named degree");
+
+		assertNotNull(retrieved);
+		assertEquals(degree.getId(), retrieved.getId());
+
+		retrieved.delete();
+	}
 	
 	/**
 	 * Test retrieving all degrees
