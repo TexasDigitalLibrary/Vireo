@@ -323,10 +323,6 @@ public class Submit extends AbstractVireoController {
                 if (params.get("licenseAgreement") == null) {
                     validation.addError("laLabel","You must agree to the license agreement before continuing.");
                 } else {
-                	
-                    // TODO: add license text to the database
-                	
-                	
                     sub.setLicenseAgreementDate(new Date());
                     docInfo(subId);
                     
@@ -436,36 +432,74 @@ public class Submit extends AbstractVireoController {
     
 	@Security(RoleType.STUDENT)
 	public static void fileUpload(Long subId) {
-		
-        Submission sub = null;
 
-        // Get current submission 
-        
-        if (null != subId) {
-            sub = subRepo.findSubmission(subId);
-        } else {
+        Submission sub = subRepo.findSubmission(subId);
+        if (sub == null) {
+            // something is wrong
             error("Did not receive the expected submission id.");
-        }		
-		
-        // If the upload manuscript button is pressed - then add the manuscript as an attachment
-		if (params.get("uploadManuscript") != null) {
-			
-			//Logger.info("Primarydoc " + params.get("primaryDocument"));
-			
-			File primaryDocument = params.get("primaryDocument",File.class);
+        } else {
+            Person submitter = context.getPerson();
 
-			if (primaryDocument == null) 
-				Logger.info("Doc is null");
-			else
-				Logger.info("Doc: " + primaryDocument.getClass().getName());
-			
-			try {
-				sub.addAttachment(primaryDocument, AttachmentType.PRIMARY);
-			} catch (IOException e) {
-				error("Error uploading primary document.");
-			}
-	}
-		render(subId);
+            // This is an existing submission so check that we're the student or administrator here.
+            if (sub.getSubmitter() != submitter)
+                unauthorized();
+
+            // Initialize variables
+            Attachment primaryAttachment = sub.getPrimaryDocument();
+            List<Attachment> supplementalAttachments = sub.getSupplementalDocuments();
+
+            // If the upload manuscript button is pressed - then add the manuscript as an attachment
+            if (params.get("uploadPrimary") != null) {
+
+                File primaryDocument = params.get("primaryDocument",File.class);
+
+                if (primaryDocument == null)
+                    Logger.info("Doc is null");
+                else
+                    Logger.info("Doc: " + primaryDocument.getClass().getName());
+
+                try {
+                    sub.addAttachment(primaryDocument, AttachmentType.PRIMARY);
+                } catch (IOException e) {
+                    validation.addError("primaryDocument", "Error uploading primary document.");
+                } catch (IllegalArgumentException e) {
+                    validation.addError("primaryDocument","Error uploading primary document.");
+                }
+            }
+
+            // If the upload supplementary button is pressed - then add the manuscript as an attachment
+            if (params.get("uploadSupplementary") != null) {
+
+                File supplementaryDocument = params.get("supplementaryDocument",File.class);
+
+                if (supplementaryDocument == null)
+                    Logger.info("Doc is null");
+                else
+                    Logger.info("Doc: " + supplementaryDocument.getClass().getName());
+
+                try {
+                    sub.addAttachment(supplementaryDocument, AttachmentType.SUPPLEMENTAL);
+                } catch (IOException e) {
+                    validation.addError("supplementaryDocument","Error uploading supplementary document.");
+                } catch (IllegalArgumentException e) {
+                    validation.addError("supplementaryDocument","Error uploading supplementary document.");
+                }
+            }
+
+            // Submit was clicked
+            if (params.get("submit_next") != null) {
+
+                // no files was uploaded
+                if (sub.getPrimaryDocument() == null)
+                    validation.addError("primaryDocument", "A manuscript file must be uploaded.");
+
+                // Finally, if all is well, we can move on
+                if (!validation.hasErrors())
+                    confirmAndSubmit(subId);
+            }
+
+            render(subId, primaryAttachment, supplementalAttachments);
+        }
 	}
 
 	@Security(RoleType.STUDENT)

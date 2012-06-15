@@ -5,37 +5,92 @@
 <div class="row pageHead">
 	<h3 class="span11">Upload Your Files</h3>
 </div>
-<br />
+
+#{ifErrors}
+    <ul class="red">
+        #{errors}
+            <li>${error}</li>
+        #{/errors}
+    </ul>
+#{/ifErrors}
+
+
 <div class="row">
 <div class="span7">
 	<p>In this step you will upload your thesis or dissertation to the server. Optionally, you may upload additional supplementary files that will be available along with your document after publication.</p>
 
 	<form action="@{submit.fileUpload(1)}" method="POST" class="form-horizontal" enctype="multipart/form-data">
 		
-		<fieldset>
+		<fieldset id="primaryFileUpload">
 			<legend>Upload your manuscript</legend>
+
 			<div class="control-group">
-				<label class="control-label" for="manuscriptFile"><b>* Manuscript in PDF:</b></label>
-				<div class="controls">
-					<input type="file" id="manuscriptFile" class="input-file" name="primaryDocument">
-					<input type="submit" value="Upload" class="uploadBtn btn" name="uploadManuscript">
-				</div>
+				<label class="control-label" for="primaryFile"><b>* Manuscript in PDF:</b></label>
+
+                #{if primaryAttachment == null}
+                    <div class="controls">
+                        <input type="file" id="primaryFile" class="input-file" name="primaryDocument">
+                        <input type="submit" value="Upload" class="uploadBtn btn" name="uploadPrimary">
+                    </div>
+                #{/if}
+                #{else}
+                    <div class="controls">
+                        <p>
+                            ${primaryAttachment.getName()}
+                            (${primaryAttachment.getDisplaySize()})
+                        </p>
+                    </div>
+                #{/else}
 			</div>
 		</fieldset>
 		
-		<fieldset>
+		<fieldset id="supplementaryFileUpload">
 			<legend>Upload supplementary files</legend>
+            <p>
+                Upload only supplementary files such as audio, video or data sets.
+                These files must be listed in the appendix of your thesis or dissertation.
+            </p>
 			<div class="control-group">
 				<label class="control-label" for="supplementaryFile">Supplementary Files:</label>
-				<div class="controls">
-					<input type="file" id="supplementaryFile" class="input-file">
-					<input type="submit" value="Upload" class="uploadBtn btn" name="uploadSupplementary">
-				</div>
+
+
+                #{if supplementalAttachments.size() > 0}
+                    <div class="controls">
+                        #{list items:supplementalAttachments, as:"attachment"}
+                            <p>
+                            ${attachment.getName()}
+                                (${attachment.getDisplaySize()})
+                            </p>
+                        #{/list}
+                    </div>
+                #{/if}
+                #{else}
+                    <div class="controls">
+                        <input type="file" id="supplementaryFile" class="input-file" name="supplementaryDocument">
+                        <input type="submit" value="Upload" class="uploadBtn btn" name="uploadSupplementary">
+                    </div>
+                #{/else}
+
 			</div>
 		</fieldset>
+
+        <fieldset id="sourceFileUpload" style="display: none;">
+            <legend>Upload document source files</legend>
+            <p>
+                We encourage you to upload your thesis or dissertation in its original
+                format (such as Microsoft Word or LaTeX) for preservation purposes.
+            </p>
+            <div class="control-group">
+                <label class="control-label" for="sourceFile">Document Source Files:</label>
+                <div class="controls">
+                    <input type="file" id="sourceFile" class="input-file" name="sourceDocument">
+                    <input type="submit" value="Upload" class="uploadBtn btn" name="uploadSource">
+                </div>
+            </div>
+        </fieldset>
 		
 		<div class="pull-right">
-			<input type="submit" value="Save and Continue >>" class="btn btn-primary">
+			<input type="submit" value="Save and Continue >>" class="btn btn-primary" name="submit-next">
 		</div>
 		
 	</form>
