@@ -1,14 +1,17 @@
 #{extends 'main.html' /}
 
+${subId = (subId || 0) ? subId : 0}
+
 <div class="row">
-<p class="center red large">Currently accepting submissions for the May 2013 semester.</p>
-<ul id="submitSteps" class="unstyled span11">
-<li id="step1Btn"><a href="#" class="current"></a></li>
-<li id="step2Btn"><a href="#"></a></li>
-<li id="step3Btn"><a href="#"></a></li>
-<li id="step4Btn"><a href="#"></a></li>
-<li id="step5Btn"><a href="#" class="disabled"></a></li>
-</ul>
+    *{TODO: need to pull submission period from admin configs}*
+    <p class="center red large">Currently accepting submissions for the May 2013 semester.</p>
+    <ul id="submitSteps" class="unstyled span11">
+        <li id="step1Btn"><a href="@{Submit.verifyPersonalInformation(subId)}" ${controllers.Submit.give_current_class_if_equal("verifyPersonalInformation",request.actionMethod)}></a></li>
+        <li id="step2Btn"><a href="@{Submit.license(subId)}" ${controllers.Submit.give_current_class_if_equal("license",request.actionMethod)}></a></li>
+        <li id="step3Btn"><a href="@{Submit.docInfo(subId)}" ${controllers.Submit.give_current_class_if_equal("docInfo",request.actionMethod)}></a></li>
+        <li id="step4Btn"><a href="@{Submit.fileUpload(subId)}" ${controllers.Submit.give_current_class_if_equal("fileUpload",request.actionMethod)}></a></li>
+        <li id="step5Btn"><a href="@{Submit.confirmAndSubmit(subId)}" ${controllers.Submit.give_current_class_if_equal("confirmAndSubmit",request.actionMethod)}></a></li>
+    </ul>
 </div>
 
 #{doLayout /}

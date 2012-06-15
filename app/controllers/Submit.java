@@ -13,6 +13,8 @@ import javax.mail.internet.InternetAddress;
 import org.tdl.vireo.model.*;
 import play.Logger;
 import play.Play;
+import play.mvc.Before;
+import play.mvc.Controller;
 import play.mvc.With;
 /**
  * Submit controller
@@ -25,7 +27,6 @@ import play.mvc.With;
 
 @With(Authentication.class)
 public class Submit extends AbstractVireoController {
-	
 	
 	/**
 	 * The first screen of the submission process which allows the student to
@@ -530,6 +531,17 @@ public class Submit extends AbstractVireoController {
 	public static void dump() {
 		render("Submit/VerifyPersonalInformation.html");
 	}
+
+
+    /**
+     * Helper for assigning <em>class="current"</em> to the nav item
+     * @param name1
+     * @param name2
+     * @return
+     */
+    public static String give_current_class_if_equal(String name1, String name2) {
+        return name1 == name2 ? "class=current" : "";
+    }
 
 	/**
 	 * Internal method to determine if a group of information should be locked.
