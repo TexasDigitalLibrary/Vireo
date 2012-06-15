@@ -209,6 +209,13 @@ public interface SettingsRepository {
 	 */
 	public List<EmbargoType> findAllEmbargoTypes();
 
+	/**
+	 * Find all embargo types objects in order.
+	 * 
+	 * @return A list of all embargo types, or an empty list if there are none.
+	 */
+	public List<EmbargoType> findAllActiveEmbargoTypes();
+
 	// ////////////////////////
 	// Graduation Month Model
 	// ////////////////////////

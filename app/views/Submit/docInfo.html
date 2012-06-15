@@ -161,38 +161,16 @@
 	<fieldset class="form-horizontal">
 		<legend>Embargo Options</legend>
 		<p>With your advisor's approval you may request a delay in the publication (embargo) of your work.</p>
-		<div class="control-group">
-			<label class="control-label">None:</label>
-			<div class="controls">
-				<label class="radio">
-					<input type="radio" id="embargo" name="embargo" selected="selected" value="1"> The work will be published after approval.
-				</label>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">Journal Hold:</label>
-			<div class="controls">
-				<label class="radio">
-					<input type="radio" id="embargo" name="embargo" value="2"> The work will be delayed for publication by one year because of a restriction from publication in an academic journal.
-				</label>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">Patent Hold:</label>
-			<div class="controls">
-				<label class="radio">
-					<input type="radio" id="embargo" name="embargo" value="3"> The work will be delayed for publication by two years because of patent related activities.
-				</label>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">Other Embargo Period:</label>
-			<div class="controls">
-				<label class="radio">
-					<input type="radio" id="embargo" name="embargo" value="4"> The work will be delayed for publication by an indefinite amount of time.
-				</label>
-			</div>
-		</div>
+                #{list embargoTypes, as: 'et'}
+                    <div class="control-group #{ifError 'embargo'}error#{/ifError}">
+                        <label class="control-label">${et.getName()}:</label>
+                        <div class="controls">
+                            <label class="radio">
+                                <input type="radio" id="embargo" name="embargo" selected="selected" value="${et.getId()}">&nbsp;&nbsp;${et.getDescription()}
+                            </label>
+                        </div>
+                    </div>
+                #{/list}                
 	</fieldset>
 	<div class="span10 center">
 		<input type="submit" name="submit_next" value="Save and Continue >>" class="btn btn-primary">

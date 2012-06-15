@@ -145,6 +145,11 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 		return (List) JpaEmbargoTypeImpl.find("order by displayOrder").fetch();
 	}
 
+	@Override
+	public List<EmbargoType> findAllActiveEmbargoTypes() {
+		return (List) JpaEmbargoTypeImpl.find("active = ? order by displayOrder", true).fetch();
+	}
+
 	// ////////////////////////
 	// Graduation Month Model
 	// ////////////////////////
