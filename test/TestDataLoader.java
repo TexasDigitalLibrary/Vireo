@@ -389,7 +389,7 @@ public class TestDataLoader extends Job {
 				
 				// Create all embargo types
 				for(EmbargoArray embargoDefinition : EMBARGO_DEFINTITIONS) {
-					settingsRepo.createEmbargoType(embargoDefinition.name, embargoDefinition.description, embargoDefinition.duration, embargoDefinition.active);
+					settingsRepo.createEmbargoType(embargoDefinition.name, embargoDefinition.description, embargoDefinition.duration, embargoDefinition.active).save();
 				}
 				
 				// Save the database state
