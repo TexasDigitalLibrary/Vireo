@@ -29,6 +29,7 @@ GET     /profile                                Authentication.profile
 *	    /admin/list                             Review.list
 *       /admin/view                             Review.view
 *       /admin/log                              Review.log
+*       /admin/{nav}/filter                     Review.modifyFilter
 
 ### Manager
 *       /admin/settings                         Config.settings

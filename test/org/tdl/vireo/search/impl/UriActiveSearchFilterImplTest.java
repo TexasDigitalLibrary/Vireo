@@ -44,6 +44,7 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		filter.addState("state2");
 		filter.addAssignee(MockPerson.getStudent());
 		filter.addAssignee(MockPerson.getReviewer());
+		filter.addAssignee(null); // unassigned
 		filter.addGraduationYear(2002);
 		filter.addGraduationYear(2003);
 		filter.addGraduationMonth(1);
@@ -69,6 +70,7 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		assertEquals("state2",filter.getStates().get(1));
 		assertEquals(MockPerson.getStudent(),filter.getAssignees().get(0));
 		assertEquals(MockPerson.getReviewer(),filter.getAssignees().get(1));
+		assertEquals(null,filter.getAssignees().get(2));
 		assertEquals(Integer.valueOf(2002),filter.getGraduationYears().get(0));
 		assertEquals(Integer.valueOf(2003),filter.getGraduationYears().get(1));
 		assertEquals(Integer.valueOf(1),filter.getGraduationMonths().get(0));
@@ -111,6 +113,7 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 			filter.addState("state2");
 			filter.addAssignee(person1);
 			filter.addAssignee(person2);
+			filter.addAssignee(null);
 			filter.addGraduationYear(2002);
 			filter.addGraduationYear(2003);
 			filter.addGraduationMonth(1);
@@ -148,6 +151,7 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 			assertEquals("state2",newFilter.getStates().get(1));
 			assertEquals(person1,newFilter.getAssignees().get(0));
 			assertEquals(person2,newFilter.getAssignees().get(1));
+			assertEquals(null,newFilter.getAssignees().get(2));
 			assertEquals(Integer.valueOf(2002),newFilter.getGraduationYears().get(0));
 			assertEquals(Integer.valueOf(2003),newFilter.getGraduationYears().get(1));
 			assertEquals(Integer.valueOf(1),newFilter.getGraduationMonths().get(0));
@@ -217,6 +221,7 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		filter.addState("state2");
 		filter.addAssignee(MockPerson.getStudent());
 		filter.addAssignee(MockPerson.getReviewer());
+		filter.addAssignee(null);
 		filter.addGraduationYear(2002);
 		filter.addGraduationYear(2003);
 		filter.addGraduationMonth(1);
@@ -244,6 +249,7 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		assertEquals("state2",newFilter.getStates().get(1));
 		assertEquals(MockPerson.getStudent(),newFilter.getAssignees().get(0));
 		assertEquals(MockPerson.getReviewer(),newFilter.getAssignees().get(1));
+		assertEquals(null,newFilter.getAssignees().get(2));
 		assertEquals(Integer.valueOf(2002),newFilter.getGraduationYears().get(0));
 		assertEquals(Integer.valueOf(2003),newFilter.getGraduationYears().get(1));
 		assertEquals(Integer.valueOf(1),newFilter.getGraduationMonths().get(0));
@@ -279,6 +285,7 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		filter.addState("state2");
 		filter.addAssignee(MockPerson.getStudent());
 		filter.addAssignee(MockPerson.getReviewer());
+		filter.addAssignee(null);
 		filter.addGraduationYear(2002);
 		filter.addGraduationYear(2003);
 		filter.addGraduationMonth(1);
@@ -306,6 +313,7 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		assertEquals("state2",newFilter.getStates().get(1));
 		assertEquals(MockPerson.getStudent(),newFilter.getAssignees().get(0));
 		assertEquals(MockPerson.getReviewer(),newFilter.getAssignees().get(1));
+		assertEquals(null,newFilter.getAssignees().get(2));
 		assertEquals(Integer.valueOf(2002),newFilter.getGraduationYears().get(0));
 		assertEquals(Integer.valueOf(2003),newFilter.getGraduationYears().get(1));
 		assertEquals(Integer.valueOf(1),newFilter.getGraduationMonths().get(0));

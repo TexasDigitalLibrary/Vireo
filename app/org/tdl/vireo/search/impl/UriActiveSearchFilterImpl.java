@@ -216,7 +216,7 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 
 	@Override
 	public void removeDocumentType(String documentType) {
-		documentTypes.remove(documentTypes);
+		documentTypes.remove(documentType);
 	}
 
 	@Override
@@ -439,9 +439,14 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 					
 				} else if (type == Person.class){
 					// List type is person, just for assignee
-					Long personId = Long.valueOf(raw);
-					Person person = personRepo.findPerson(personId);
-					result.add((T) person);
+					
+					if ("null".equals(raw)) {
+						result.add(null); // unassigned
+					} else {
+						Long personId = Long.valueOf(raw);
+						Person person = personRepo.findPerson(personId);
+						result.add((T) person);
+					}
 				}
 			} catch (RuntimeException re) {
 				// Just log the error but keep on trucking. One legitimate
@@ -478,7 +483,9 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 			else
 				result.append(",");
 			
-			if (value instanceof String) {
+			if (value == null) {
+				result.append("null");
+			} else if (value instanceof String) {
 				// Plain old strings, the most common case.
 				result.append(escape((String)value));
 			

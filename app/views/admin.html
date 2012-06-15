@@ -39,6 +39,21 @@
         			}
         			
         		});
+        		
+        		/**
+        		 * Show more elements.
+        		 *
+        		 * The more class indicates that in the parent of this element 
+        		 * there are hidden children. All those hidden classes will be 
+        		 * removed and this element will also be removed. So hidden is 
+        		 * a one time thing, not a toggle.
+        		 */
+        		jQuery(".more").click(function(){
+        			jQuery(this).parent().find(".hidden").each(function(){
+        				jQuery(this).removeClass("hidden");
+        			});
+        			jQuery(this).remove();
+        		});
         });
         </script>
         

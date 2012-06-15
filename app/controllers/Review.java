@@ -14,6 +14,7 @@ import org.tdl.vireo.search.SearchDirection;
 import org.tdl.vireo.search.SearchFilter;
 import org.tdl.vireo.search.SearchOrder;
 import org.tdl.vireo.search.SearchResult;
+import org.tdl.vireo.state.State;
 
 
 import play.data.binding.As;
@@ -62,55 +63,11 @@ public class Review extends AbstractVireoController {
 		Cookie cookie = request.cookies.get(SUBMISSION_FILTER_COOKIE_NAME);
 		if (cookie != null) {
 			activeFilter.decode(cookie.value);
-		} else {
-			// There is no submission filter cookie, create one.
-			cookie = new Cookie();
-			cookie.name = SUBMISSION_FILTER_COOKIE_NAME;
 		}
-		
-		String action = params.get("action");
-		if ("filterAdd".equals(action))
-			// The user is going to modify the existing active filter by adding a new paramater.
-			doAddFilterParameter(activeFilter);
-		
-		else if ("filterRemove".equals(action)) {
-			// The user is going to modify the existing active filter by removing an existing paramater.
-			doRemoveFilterParamater(activeFilter);
-			
-		} else if ("filterSave".equals(action)) {
-			// The user is going to save the current active filter to the database.
-			String name = params.get("name");
-			NamedSearchFilter newFilter = subRepo.createSearchFilter(person, name);
-			activeFilter.copyTo(newFilter);
-			newFilter.save();
-			
-		} else if ("filterDelete".equals(action)) {
-			// The user is going to delete an existing filter.
-			// TODO: Check privileges
-			Long filterId = params.get("id",Long.class);
-			NamedSearchFilter oldFilter = subRepo.findSearchFilter(filterId);
-			oldFilter.delete();
-			
-		} else if ("filterLoad".equals(action)) {
-			// The user is going to replace the current filter with an existing
-			// filter saved in the database.
-			// TODO: check privileges
-			Long filterId = params.get("id",Long.class);
-			NamedSearchFilter savedFilter = subRepo.findSearchFilter(filterId);
-			activeFilter.copyFrom(savedFilter);
-			
-		} else if ("filterClear".equals(action)) {
-			// Reset the users current filter by clearing it completely.
-			activeFilter = Spring.getBeanOfType(ActiveSearchFilter.class);
-			
-		}
-		
-		// Save the active filter to a cookie
-		cookie.value = activeFilter.encode();
-		response.cookies.put(SUBMISSION_FILTER_COOKIE_NAME, cookie);
 		
 		// Step 2:  Run the current filter search
 		//////////
+		// TODO: we'll probably need to grab these from the session?
 		SearchOrder order = SearchOrder.ID;
 		Integer orderId = params.get("order",Integer.class);
 		if (orderId != null)
@@ -137,6 +94,80 @@ public class Review extends AbstractVireoController {
 		String nav = "list";
 		
 		render(nav, allFilters, activeFilter, results);
+	}
+	
+	@Security(RoleType.REVIEWER)
+	public static void modifyFilter(String nav) {
+		
+		Person person = context.getPerson();
+		
+		// Load the active filter from the cookie
+		ActiveSearchFilter activeFilter = Spring.getBeanOfType(ActiveSearchFilter.class);
+		Cookie cookie = request.cookies.get(SUBMISSION_FILTER_COOKIE_NAME);
+		if (cookie != null) {
+			activeFilter.decode(cookie.value);
+		}
+		
+		String action = params.get("action");
+		if ("add".equals(action)) {
+			System.out.println("add");
+			// The user is going to modify the existing active filter by adding a new paramater.
+			doAddFilterParameter(activeFilter);
+		
+		} else if ("remove".equals(action)) {
+			System.out.println("remove");
+
+			// The user is going to modify the existing active filter by removing an existing paramater.
+			doRemoveFilterParamater(activeFilter);
+			
+		} else if ("save".equals(action)) {
+			System.out.println("save");
+
+			// The user is going to save the current active filter to the database.
+			String name = params.get("name");
+			NamedSearchFilter newFilter = subRepo.createSearchFilter(person, name);
+			activeFilter.copyTo(newFilter);
+			newFilter.save();
+			
+		} else if ("delete".equals(action)) {
+			System.out.println("delete");
+
+			// The user is going to delete an existing filter.
+			// TODO: Check privileges
+			Long filterId = params.get("id",Long.class);
+			NamedSearchFilter oldFilter = subRepo.findSearchFilter(filterId);
+			oldFilter.delete();
+			
+		} else if ("load".equals(action)) {
+			System.out.println("load");
+
+			// The user is going to replace the current filter with an existing
+			// filter saved in the database.
+			// TODO: check privileges
+			Long filterId = params.get("id",Long.class);
+			NamedSearchFilter savedFilter = subRepo.findSearchFilter(filterId);
+			activeFilter.copyFrom(savedFilter);
+			
+		} else if ("clear".equals(action)) {
+			System.out.println("clear");
+
+			// Reset the users current filter by clearing it completely.
+			activeFilter = Spring.getBeanOfType(ActiveSearchFilter.class);
+			
+		} else {
+			error("Unknown filter modification action");
+		}
+		
+		// Save the active filter to a cookie
+		System.out.println("cookie value="+activeFilter.encode());
+		response.setCookie(SUBMISSION_FILTER_COOKIE_NAME, activeFilter.encode());
+		
+		if ("list".equals(nav))
+			list();
+		if ("log".equals(nav))
+			log();
+		
+		error("Unknown list modify navigation controll");
 	}
 	
 	public static void view() {
@@ -181,9 +212,15 @@ public class Review extends AbstractVireoController {
 			activeFilter.addState(value);
 			
 		} else if ("assignee".equals(type)) {
-			Long personId = params.get("value",Long.class);
-			Person person = personRepo.findPerson(personId);
-			activeFilter.addAssignee(person);
+			if ("null".equals(params.get("value"))) {
+				// Unassigned
+				activeFilter.addAssignee(null);
+			} else {
+				// A specific person
+				Long personId = params.get("value",Long.class);
+				Person person = personRepo.findPerson(personId);
+				activeFilter.addAssignee(person);
+			}
 			
 		} else if ("gradYear".equals(type)) {
 			Integer year = params.get("value",Integer.class);
@@ -242,39 +279,45 @@ public class Review extends AbstractVireoController {
 		
 		
 		if ("text".equals(type)) {
-			activeFilter.addSearchText(value);
+			activeFilter.removeSearchText(value);
 			
 		} else if ("state".equals(type)) {
-			activeFilter.addState(value);
+			activeFilter.removeState(value);
 			
 		} else if ("assignee".equals(type)) {
-			Long personId = params.get("value",Long.class);
-			Person person = personRepo.findPerson(personId);
-			activeFilter.addAssignee(null);
+			if ("null".equals(params.get("value"))) {
+				// Unassigned
+				activeFilter.removeAssignee(null);
+			} else {
+				// A specific person
+				Long personId = params.get("value",Long.class);
+				Person person = personRepo.findPerson(personId);
+				activeFilter.removeAssignee(person);
+			}
 		
 		} else if ("gradYear".equals(type)) {
 			Integer year = params.get("value",Integer.class);
-			activeFilter.addGraduationYear(year);
+			activeFilter.removeGraduationYear(year);
 		
 		} else if ("gradMonth".equals(type)) {
 			Integer month = params.get("value",Integer.class);
-			activeFilter.addGraduationMonth(month);
+			activeFilter.removeGraduationMonth(month);
 		
 		} else if ("degree".equals(type)) {
-			activeFilter.addDegree(value);
+			activeFilter.removeDegree(value);
 		
 		} else if ("department".equals(type)) {
-			activeFilter.addDepartment(value);
+			activeFilter.removeDepartment(value);
 		
 		} else if ("college".equals(type)) {
-			activeFilter.addCollege(value);
+			activeFilter.removeCollege(value);
 		
 		} else if ("major".equals(type)) {
-			activeFilter.addMajor(value);
+			activeFilter.removeMajor(value);
 		
 		} else if ("docType".equals(type)) {
-			activeFilter.addDocumentType(value);
-		
+			activeFilter.removeDocumentType(value);
+
 		} else if ("umi".equals(type)) {
 			activeFilter.setUMIRelease(null);
 			

@@ -40,7 +40,8 @@ public interface SearchFilter {
 	public void removeSearchText(String text);
 
 	/**
-	 * @return The list of all submission states to search for.
+	 * @return The list of all submission states to search for. Only valid 
+	 * Spring Bean Names should be included in this list.
 	 */
 	public List<String> getStates();
 

@@ -6,6 +6,7 @@ import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.SubmissionRepository;
 import org.tdl.vireo.security.SecurityContext;
+import org.tdl.vireo.state.StateManager;
 
 import play.Logger;
 import play.modules.spring.Spring;
@@ -28,6 +29,7 @@ public abstract class AbstractVireoController extends Controller {
 	public static PersonRepository personRepo = Spring.getBeanOfType(PersonRepository.class);
 	public static SubmissionRepository subRepo = Spring.getBeanOfType(SubmissionRepository.class);
 	public static SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
+	public static StateManager stateManager = Spring.getBeanOfType(StateManager.class);
 
 	/**
 	 * This is run before any action to inject the repositories into the
@@ -36,9 +38,11 @@ public abstract class AbstractVireoController extends Controller {
 	 */
 	@Before
 	public static void injectRepositories() {
+		renderArgs.put("securityContext",context);
 		renderArgs.put("personRepo",personRepo);
 		renderArgs.put("subRepo", subRepo);
 		renderArgs.put("settingRepo", settingRepo);
+		renderArgs.put("stateManager", stateManager);
 	}
 
 	/**

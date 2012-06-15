@@ -238,10 +238,25 @@ SIDE BOXES
 	margin:5px 0 0 25px;
 }
 
-.box-body ul.editable{
-	list-style:url("../images/red_x.gif");
-	margin-left:35px;
+.box-body a.removable {
+	background: url("../images/red_x.gif") no-repeat left 5px transparent;
+	padding-left: 15px;
 }
+
+.box-body ul.unstyled ul.unstyled {
+    margin-left: 12px;
+    margin-top: 0px;
+}
+
+.box-body .more:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.box-body li.more {
+    font-style: italic;
+}
+
 .box-footer{
 	background:url("../images/box_bottom.png") no-repeat;
 	height:13px;
