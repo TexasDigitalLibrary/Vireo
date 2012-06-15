@@ -324,8 +324,11 @@ public class Submit extends AbstractVireoController {
                     validation.addError("laLabel","You must agree to the license agreement before continuing.");
                 } else {
                     sub.setLicenseAgreementDate(new Date());
-                    //docInfo(subId);
-                    fileUpload(subId);
+
+                    sub.save();
+
+                    docInfo(subId);
+                    //fileUpload(subId);
                 }
             }
 
@@ -444,10 +447,6 @@ public class Submit extends AbstractVireoController {
             if (sub.getSubmitter() != submitter)
                 unauthorized();
 
-            // Initialize variables
-            Attachment primaryAttachment = sub.getPrimaryDocument();
-            List<Attachment> supplementalAttachments = sub.getSupplementalDocuments();
-
             // If the upload manuscript button is pressed - then add the manuscript as an attachment
             if (params.get("uploadPrimary") != null) {
 
@@ -460,6 +459,7 @@ public class Submit extends AbstractVireoController {
 
                 try {
                     sub.addAttachment(primaryDocument, AttachmentType.PRIMARY);
+                    sub.save();
                 } catch (IOException e) {
                     validation.addError("primaryDocument", "Error uploading primary document.");
                 } catch (IllegalArgumentException e) {
@@ -479,6 +479,7 @@ public class Submit extends AbstractVireoController {
 
                 try {
                     sub.addAttachment(supplementaryDocument, AttachmentType.SUPPLEMENTAL);
+                    sub.save();
                 } catch (IOException e) {
                     validation.addError("supplementaryDocument","Error uploading supplementary document.");
                 } catch (IllegalArgumentException e) {
@@ -498,9 +499,9 @@ public class Submit extends AbstractVireoController {
                     confirmAndSubmit(subId);
             }
 
-            // Update variables
-            primaryAttachment = sub.getPrimaryDocument();
-            supplementalAttachments = sub.getSupplementalDocuments();
+            // Initialize variables
+            Attachment primaryAttachment = sub.getPrimaryDocument();
+            List<Attachment> supplementalAttachments = sub.getSupplementalDocuments();
 
             render(subId, primaryAttachment, supplementalAttachments);
         }
