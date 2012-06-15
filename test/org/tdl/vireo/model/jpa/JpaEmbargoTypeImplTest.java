@@ -161,6 +161,26 @@ public class JpaEmbargoTypeImplTest extends UnitTest {
 		type1.delete();
 		type2.delete();
 	}
+
+	@Test
+	public void testFindAllActiveEmbargos() {
+
+		int initialSize = settingRepo.findAllActiveEmbargoTypes().size();
+		
+		EmbargoType type1 = settingRepo.createEmbargoType("name1", "description", 12, true).save();
+		EmbargoType type2 = settingRepo.createEmbargoType("name2", "description", 12, false).save();
+
+		int postSize = settingRepo.findAllActiveEmbargoTypes().size();
+		
+		assertEquals(initialSize + 1, postSize);
+		
+		for(EmbargoType e : settingRepo.findAllActiveEmbargoTypes()) {
+			assertNotNull(e.isActive());
+		}
+
+		type1.delete();
+		type2.delete();
+	}
 	
 	/**
 	 * Test the validation when modifying the name and description

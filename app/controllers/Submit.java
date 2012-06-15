@@ -396,6 +396,10 @@ public class Submit extends AbstractVireoController {
                 validation.addError("chairEmail", "Please enter an email address for the committee chair");
             }
             
+            if(null == embargo) {
+                validation.addError("embargo", "Please choose an embargo option");
+            }
+            
             if(!validation.hasErrors()) {
                 sub.setDocumentTitle(title);
                 sub.setGraduationMonth(Integer.parseInt(degreeMonth));
@@ -404,6 +408,7 @@ public class Submit extends AbstractVireoController {
                 sub.setDocumentAbstract(abstractText);
                 sub.setDocumentKeywords(keywords);
                 sub.setCommitteeContactEmail(chairEmail);
+                sub.setEmbargoType(settingRepo.findEmbargoType(Long.parseLong(embargo)));
                 sub.save();
                 
                 fileUpload(subId);
@@ -414,10 +419,14 @@ public class Submit extends AbstractVireoController {
         List<Integer> degreeYears = getDegreeYears();
         renderArgs.put("degreeYears", degreeYears);
         
-        // Populate the available Document Types based on the Degree Type set in the initial step
+        
         List<String> docTypes = getValidDocumentTypes(sub);
         renderArgs.put("docTypes", docTypes);
-
+        
+        // List of all *active* Embargo Types
+        List<EmbargoType> embargoTypes = settingRepo.findAllActiveEmbargoTypes();
+        renderArgs.put("embargoTypes", embargoTypes);
+        
         render( subId, 
                 title, 
                 degreeMonth, 
@@ -428,7 +437,8 @@ public class Submit extends AbstractVireoController {
                 committeeMiddleInitial, 
                 committeeLastName, 
                 chairFlag, 
-                chairEmail);
+                chairEmail, 
+                embargo);
     }
 
     // Handle File Upload
