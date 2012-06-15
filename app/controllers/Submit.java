@@ -324,8 +324,8 @@ public class Submit extends AbstractVireoController {
                     validation.addError("laLabel","You must agree to the license agreement before continuing.");
                 } else {
                     sub.setLicenseAgreementDate(new Date());
-                    docInfo(subId);
-                    
+                    //docInfo(subId);
+                    fileUpload(subId);
                 }
             }
 
@@ -497,6 +497,10 @@ public class Submit extends AbstractVireoController {
                 if (!validation.hasErrors())
                     confirmAndSubmit(subId);
             }
+
+            // Update variables
+            primaryAttachment = sub.getPrimaryDocument();
+            supplementalAttachments = sub.getSupplementalDocuments();
 
             render(subId, primaryAttachment, supplementalAttachments);
         }
