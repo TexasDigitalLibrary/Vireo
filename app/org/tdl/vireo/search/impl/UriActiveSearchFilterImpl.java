@@ -23,6 +23,7 @@ import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.jpa.JpaPersonImpl;
 import org.tdl.vireo.search.ActiveSearchFilter;
+import org.tdl.vireo.search.GraduationSemester;
 import org.tdl.vireo.search.SearchFilter;
 
 import play.Logger;
@@ -47,8 +48,7 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 	public List<String> states = new ArrayList<String>();
 	public List<Person> assignees = new ArrayList<Person>();
 	public List<EmbargoType> embargos = new ArrayList<EmbargoType>();
-	public List<Integer> graduationYears = new ArrayList<Integer>();
-	public List<Integer> graduationMonths = new ArrayList<Integer>();
+	public List<GraduationSemester> semesters = new ArrayList<GraduationSemester>();
 	public List<String> degrees = new ArrayList<String>();
 	public List<String> departments = new ArrayList<String>();
 	public List<String> colleges = new ArrayList<String>();
@@ -142,35 +142,30 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 	}
 
 	@Override
-	public List<Integer> getGraduationYears() {
-		return graduationYears;
+	public List<GraduationSemester> getGraduationSemesters() {
+		return semesters;
 	}
 
 	@Override
-	public void addGraduationYear(Integer year) {
-		graduationYears.add(year);
+	public void addGraduationSemester(GraduationSemester semester) {
+		semesters.add(semester);
 	}
-
+	
 	@Override
-	public void removeGraduationYear(Integer year) {
-		graduationYears.remove((Object)year);
+	public void removeGraduationSemester(GraduationSemester semester) {
+		semesters.remove(semester);
 	}
-
+	
 	@Override
-	public List<Integer> getGraduationMonths() {
-		return graduationMonths;
+	public void addGraduationSemester(Integer year, Integer month) {
+		addGraduationSemester(new GraduationSemester(year,month));
 	}
-
+	
 	@Override
-	public void addGraduationMonth(Integer month) {
-		graduationMonths.add(month);
+	public void removeGraduationSemester(Integer year, Integer month) {
+		removeGraduationSemester(new GraduationSemester(year,month));
 	}
-
-	@Override
-	public void removeGraduationMonth(Integer month) {
-		graduationMonths.remove((Object)month);
-	}
-
+	
 	@Override
 	public List<String> getDegrees() {
 		return degrees;
@@ -295,8 +290,7 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 		encodeList(result,states);
 		encodeList(result,assignees);
 		encodeList(result,embargos);
-		encodeList(result,graduationYears);
-		encodeList(result,graduationMonths);
+		encodeList(result,semesters);
 		encodeList(result,degrees);
 		encodeList(result,departments);
 		encodeList(result,colleges);
@@ -326,7 +320,7 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 	public void decode(String encoded) {
 		try {
 			String[] split = encoded.split(":",-1);
-			if (split.length != 16)
+			if (split.length != 15)
 				throw new IllegalArgumentException("Unable to decode active search filter because it does not have the 15 expected number of components instead it has "+split.length);
 
 			// Decode all the lists
@@ -334,18 +328,17 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 			states = decodeList(split[2],String.class);
 			assignees = decodeList(split[3],Person.class);
 			embargos = decodeList(split[4],EmbargoType.class);
-			graduationYears = decodeList(split[5],Integer.class);
-			graduationMonths = decodeList(split[6],Integer.class);
-			degrees = decodeList(split[7],String.class);
-			departments = decodeList(split[8],String.class);
-			colleges = decodeList(split[9],String.class);
-			majors = decodeList(split[10],String.class);
-			documentTypes = decodeList(split[11],String.class);
+			semesters = decodeList(split[5],GraduationSemester.class);
+			degrees = decodeList(split[6],String.class);
+			departments = decodeList(split[7],String.class);
+			colleges = decodeList(split[8],String.class);
+			majors = decodeList(split[9],String.class);
+			documentTypes = decodeList(split[10],String.class);
 
 			// Handle the single values
-			if ("true".equalsIgnoreCase(split[12])) {
+			if ("true".equalsIgnoreCase(split[11])) {
 				umiRelease = true;
-			} else if ("false".equalsIgnoreCase(split[12])) {
+			} else if ("false".equalsIgnoreCase(split[11])) {
 				umiRelease = false;
 			} else {
 				umiRelease = null;
@@ -353,19 +346,19 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 
 			if (split[12].length() != 0) {
 				try {
-					rangeStart = new Date(Long.valueOf(split[13]));
+					rangeStart = new Date(Long.valueOf(split[12]));
 				} catch (RuntimeException re) {
-					Logger.warn("Unable to decode value '"+split[13]+"' for rangeStart.");
+					Logger.warn("Unable to decode value '"+split[12]+"' for rangeStart.");
 				}
 			} else {
 				rangeStart = null;
 			}
 
-			if (split[14].length() != 0) {
+			if (split[13].length() != 0) {
 				try {
-					rangeEnd = new Date(Long.valueOf(split[14]));
+					rangeEnd = new Date(Long.valueOf(split[13]));
 				} catch (RuntimeException re) {
-					Logger.warn("Unable to decode value '"+split[14]+"' for rangeEnd.");
+					Logger.warn("Unable to decode value '"+split[13]+"' for rangeEnd.");
 				}
 			} else {
 				rangeEnd = null;
@@ -394,11 +387,8 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 		other.getEmbargoTypes().clear();
 		other.getEmbargoTypes().addAll(this.embargos);
 		
-		other.getGraduationYears().clear();
-		other.getGraduationYears().addAll(this.graduationYears);
-		
-		other.getGraduationMonths().clear();
-		other.getGraduationMonths().addAll(this.graduationMonths);
+		other.getGraduationSemesters().clear();
+		other.getGraduationSemesters().addAll(this.semesters);
 		
 		other.getDegrees().clear();
 		other.getDegrees().addAll(this.degrees);
@@ -426,8 +416,7 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 		this.states = new ArrayList<String>(other.getStates());
 		this.assignees = new ArrayList<Person>(other.getAssignees());
 		this.embargos = new ArrayList<EmbargoType>(other.getEmbargoTypes());
-		this.graduationYears = new ArrayList<Integer>(other.getGraduationYears());
-		this.graduationMonths = new ArrayList<Integer>(other.getGraduationMonths());
+		this.semesters = new ArrayList<GraduationSemester>(other.getGraduationSemesters());
 		this.degrees = new ArrayList<String>(other.getDegrees());
 		this.departments = new ArrayList<String>(other.getDepartments());
 		this.colleges = new ArrayList<String>(other.getColleges());
@@ -486,7 +475,19 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 					EmbargoType embargo = settingRepo.findEmbargoType(embargoId);
 					result.add((T) embargo);
 					
-				}
+				} else if (type == GraduationSemester.class) {
+					// List type is graduation semestens: year/month
+					String[] semesterSplit = raw.split("/");
+
+					GraduationSemester semester = new GraduationSemester();
+					if (!"null".equals(semesterSplit[0]))
+						semester.year = Integer.valueOf(semesterSplit[0]);
+					if (!"null".equals(semesterSplit[1]))
+						semester.month = Integer.valueOf(semesterSplit[1]);
+
+					result.add((T) semester);
+					
+				} 
 			} catch (RuntimeException re) {
 				// Just log the error but keep on trucking. One legitimate
 				// reason why this may fail is if a person has been deleted
@@ -506,7 +507,8 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 	 * URI encoded prior to putting in the list.
 	 * 
 	 * Only three datatypes are supported by this method: String, Integer,
-	 * Person, and EmbargoType. everything else will result in an error.
+	 * Person, EmbargoType, and GraduationSemester. everything else will result
+	 * in an error.
 	 * 
 	 * @param result
 	 *            Where the encoded list will be appended.
@@ -541,6 +543,22 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 				// Full embargo object
 				Long embargoId = ((EmbargoType) value).getId();
 				result.append(String.valueOf(embargoId));
+				
+			} else if (value instanceof GraduationSemester) {
+				// Graduation semester: year/month
+				
+				GraduationSemester semester = (GraduationSemester) value;
+				if (semester.year == null)
+					result.append("null");
+				else
+					result.append(String.valueOf(semester.year));
+				
+				result.append("/");
+				
+				if (semester.month == null)
+					result.append("null");
+				else
+					result.append(String.valueOf(semester.month));
 				
 			} else {
 				throw new IllegalArgumentException("Enable to encode unexpected object type: "+value.getClass().getName());

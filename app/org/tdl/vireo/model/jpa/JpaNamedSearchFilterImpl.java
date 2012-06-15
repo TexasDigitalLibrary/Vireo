@@ -9,9 +9,16 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PostLoad;
+import javax.persistence.PostPersist;
+import javax.persistence.PostUpdate;
+import javax.persistence.PrePersist;
+import javax.persistence.PreRemove;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.model.AbstractModel;
@@ -19,6 +26,7 @@ import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.NamedSearchFilter;
+import org.tdl.vireo.search.GraduationSemester;
 
 /**
  * Jpa specific implementation of Vireo's Named Search Filter interface.
@@ -51,10 +59,10 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	public List<EmbargoType> embargos;
 	
 	@ElementCollection
-	public List<Integer> graduationYears;
+	public List<String> semesters;
 	
-	@ElementCollection
-	public List<Integer> graduationMonths;
+	@Transient
+	public List<GraduationSemester> cachedSemesters;
 	
 	@ElementCollection
 	public List<String> degrees;
@@ -102,8 +110,8 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 		this.states = new ArrayList<String>();
 		this.assignees = new ArrayList<Person>();
 		this.embargos = new ArrayList<EmbargoType>();
-		this.graduationYears = new ArrayList<Integer>();
-		this.graduationMonths = new ArrayList<Integer>();
+		this.semesters = new ArrayList<String>();
+		this.cachedSemesters = new ArrayList<GraduationSemester>();
 		this.degrees = new ArrayList<String>();
 		this.departments = new ArrayList<String>();
 		this.colleges = new ArrayList<String>();
@@ -111,6 +119,61 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 		this.documentTypes = new ArrayList<String>();
 	}
 
+	/**
+	 * Just before being written to the database update the semester's data
+	 * structure with the current state of the cachedSemester's data structure.
+	 * Since while the object is live that is the structure that is manipulated.
+	 */
+	@PrePersist
+	@PreUpdate
+	@PreRemove
+	public void onSave() {
+		
+		semesters.clear();
+		for(GraduationSemester semester : cachedSemesters) {
+			// Format: year/month
+			
+			String value;
+			if (semester.year == null)
+				value = "null";
+			else
+				value = String.valueOf(semester.year);
+			
+			value += "/";
+			
+			if (semester.month == null)
+				value += "null";
+			else
+				value += String.valueOf(semester.month);
+			
+			semesters.add(value);
+		}
+	}
+
+	/**
+	 * After being loaded from the database update our cached copy of the
+	 * semester data structure.
+	 */
+	@PostPersist
+	@PostLoad
+	@PostUpdate
+	public void onLoad() {
+		
+		cachedSemesters = new ArrayList<GraduationSemester>();
+		for(String semesterString : semesters) {
+			
+			String[] split = semesterString.split("/");
+			
+			GraduationSemester semester = new GraduationSemester();
+			if (!"null".equals(split[0]))
+				semester.year = Integer.valueOf(split[0]);
+			if (!"null".equals(split[1]))
+				semester.month = Integer.valueOf(split[1]);
+			
+			cachedSemesters.add(semester);
+		}
+	}
+	
 	@Override
 	public Person getCreator() {
 		return creator;
@@ -224,37 +287,31 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	}
 
 	@Override
-	public List<Integer> getGraduationYears() {
-		return graduationYears;
+	public List<GraduationSemester> getGraduationSemesters() {
+		
+		return cachedSemesters;
 	}
 
 	@Override
-	public void addGraduationYear(Integer year) {
+	public void addGraduationSemester(GraduationSemester semester) {
 		assertManagerOrOwner(creator);
-		graduationYears.add(year);
+		cachedSemesters.add(semester);
 	}
-
+	
 	@Override
-	public void removeGraduationYear(Integer year) {
+	public void removeGraduationSemester(GraduationSemester semester) {
 		assertManagerOrOwner(creator);
-		graduationYears.remove(year);
+		cachedSemesters.remove(semester);
 	}
-
+	
 	@Override
-	public List<Integer> getGraduationMonths() {
-		return graduationMonths;
+	public void addGraduationSemester(Integer year, Integer month) {
+		addGraduationSemester(new GraduationSemester(year,month));
 	}
-
+	
 	@Override
-	public void addGraduationMonth(Integer month) {
-		assertManagerOrOwner(creator);
-		graduationMonths.add(month);
-	}
-
-	@Override
-	public void removeGraduationMonth(Integer month) {
-		assertManagerOrOwner(creator);
-		graduationMonths.remove(month);
+	public void removeGraduationSemester(Integer year, Integer month) {
+		removeGraduationSemester(new GraduationSemester(year,month));
 	}
 
 	@Override

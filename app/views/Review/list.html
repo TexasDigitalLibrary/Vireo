@@ -71,9 +71,6 @@
                 </ul>
                 </li>
                 #{/if}
-                
-                
-                
             </ul>
             #{/if}
             
@@ -91,7 +88,15 @@
             </ul>
             #{/if}
             
-            <!-- TODO: Graduation Semester -->
+            #{if activeFilter.getGraduationSemesters().size() > 0 }
+            <div class="sub-heading">GRADUATION SEMESTER</div>
+            <ul class="unstyled editable">
+                #{list items:activeFilter.getGraduationSemesters(), as:'semester'}
+                %{ String monthName = new java.text.DateFormatSymbols().getMonths()[semester.month]; }%
+                <li><a class="removable" href="@{Review.ModifyFilter(nav)}?action=remove&type=semester&year=${semester.year}&month=${semester.month}">${semester.year} ${monthName}</a></li>
+                #{/list}
+            </ul>
+            #{/if}
             
             #{if activeFilter.getDepartments().size() > 0 }
             <div class="sub-heading">DEPARTMENT</div>
@@ -268,7 +273,19 @@
                 #{/list}
 			</ul>
 			
-			<!-- TODO: Graduation Semester -->
+			<div class="sub-heading">GRADUATION SEMESTER</div>
+            <ul class="unstyled">
+                %{ shown = 0 }%
+                #{list items:subRepo.findAllGraduationSemesters(), as:'semester'}
+                #{if !activeFilter.getGraduationSemesters().contains(semester) }{% shown++ %}
+                #{if shown == 6}
+                <li class="more">more...</li>
+                #{/if}
+                %{ String monthName = new java.text.DateFormatSymbols().getMonths()[semester.month]; }%
+                <li #{if shown >= 6}class="hidden"#{/if}><a href="@{Review.ModifyFilter(nav)}?action=add&type=semester&year=${semester.year}&month=${semester.month}">${semester.year} ${monthName}</a></li>
+                #{/if}
+                #{/list}
+            </ul>
 			
 			<div class="sub-heading">DEPARTMENT</div>
             <ul class="unstyled">

@@ -203,9 +203,8 @@ public class Review extends AbstractVireoController {
 	 * "text", or "state" etc... While value will be the actual value of the new
 	 * parameter to be added.
 	 * 
-	 * There is one special case for date range searching. In this case the
-	 * values should be located in the parameter "startDate" and "endDate" which
-	 * need to be formated as a date.
+	 * There are a few special case for date range searching: startDate, endDate,
+	 *  year, and month.
 	 * 
 	 * @param activeFilter
 	 *            The active filter to modifiy.
@@ -237,14 +236,11 @@ public class Review extends AbstractVireoController {
 			EmbargoType embargo = settingRepo.findEmbargoType(embargoId);
 			activeFilter.addEmbargoType(embargo);
 			
-		} else if ("gradYear".equals(type)) {
-			Integer year = params.get("value",Integer.class);
-			activeFilter.addGraduationYear(year);
-			
-		} else if ("gradMonth".equals(type)) {
-			Integer month = params.get("value",Integer.class);
-			activeFilter.addGraduationMonth(month);
-			
+		} else if ("semester".equals(type)) {
+			Integer year = params.get("year",Integer.class);
+			Integer month = params.get("month",Integer.class);
+			activeFilter.addGraduationSemester(year, month);
+
 		} else if ("degree".equals(type)) {
 			activeFilter.addDegree(value);
 			
@@ -284,6 +280,9 @@ public class Review extends AbstractVireoController {
 	 * "text", or "state" etc... While value will be the actual value of the old
 	 * parameter to be removed.
 	 * 
+	 * There are a few special case for date range searching: startDate, endDate,
+	 * year, and month..
+	 * 
 	 * @param activeFilter
 	 *            The active filter to modifiy.
 	 */
@@ -314,14 +313,14 @@ public class Review extends AbstractVireoController {
 			EmbargoType embargo = settingRepo.findEmbargoType(embargoId);
 			activeFilter.removeEmbargoType(embargo);
 			
-		} else if ("gradYear".equals(type)) {
-			Integer year = params.get("value",Integer.class);
-			activeFilter.removeGraduationYear(year);
-		
-		} else if ("gradMonth".equals(type)) {
-			Integer month = params.get("value",Integer.class);
-			activeFilter.removeGraduationMonth(month);
-		
+		} else if ("semester".equals(type)) {
+			Integer year = params.get("year",Integer.class);
+			Integer month = params.get("month",Integer.class);
+			
+			System.out.println("year:"+year);
+			System.out.println("month:"+month);
+			activeFilter.removeGraduationSemester(year, month);
+
 		} else if ("degree".equals(type)) {
 			activeFilter.removeDegree(value);
 		

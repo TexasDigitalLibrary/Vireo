@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import org.tdl.vireo.model.AbstractModel;
@@ -35,6 +36,7 @@ import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.SubmissionRepository;
 import org.tdl.vireo.search.SearchDirection;
 import org.tdl.vireo.search.SearchFilter;
+import org.tdl.vireo.search.GraduationSemester;
 import org.tdl.vireo.search.SearchOrder;
 import org.tdl.vireo.search.SearchResult;
 import org.tdl.vireo.state.StateManager;
@@ -204,19 +206,23 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 		}
 		andList.add(orList);
 		
-		// Graduation Years Filter
+		// Graduation Semester Filter
 		orList = new ORList();
-		for(Integer year : filter.getGraduationYears()) {
-			orList.add(new Statement("sub.graduationYear = :graduationYear"+paramIndex));
-			params.put("graduationYear"+(paramIndex++), year);
-		}
-		andList.add(orList);
-		
-		// Graduation Months Filter
-		orList = new ORList();
-		for(Integer month : filter.getGraduationMonths()) {
-			orList.add(new Statement("sub.graduationMonth = :graduationMonth"+paramIndex));
-			params.put("graduationMonth"+(paramIndex++), month);
+		for(GraduationSemester semester : filter.getGraduationSemesters()) {
+			ANDList semesterList = new ANDList();
+			
+			if (semester.year != null) {
+				semesterList.add(new Statement("sub.graduationYear = :gradYear"+paramIndex));
+				params.put("gradYear"+(paramIndex++), semester.year);
+			}
+			
+			if (semester.month != null) {
+				semesterList.add(new Statement("sub.graduationMonth = :gradMonth"+paramIndex));
+				params.put("gradMonth"+(paramIndex++), semester.month);
+			}
+			
+			if (semesterList.size() > 0)
+				orList.add(semesterList);
 		}
 		andList.add(orList);
 		
@@ -338,6 +344,14 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 		return result;
 	}
 
+	@Override
+	public List<GraduationSemester> findAllGraduationSemesters() {
+		Query query = JPA.em().createQuery("SELECT DISTINCT new org.tdl.vireo.search.GraduationSemester(sub.graduationYear, sub.graduationMonth) FROM JpaSubmissionImpl AS sub WHERE sub.graduationYear IS NOT NULL AND sub.graduationMonth IS NOT NULL ORDER BY sub.graduationYear, sub.graduationMonth");
+		
+		List<GraduationSemester> results = query.getResultList();
+		return results;
+	}
+	
 	// //////////////////////////////////////////////////////////////
 	// Attachment, Committee Member, and Custom Action Value Models
 	// //////////////////////////////////////////////////////////////
@@ -425,19 +439,23 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 		}
 		andList.add(orList);
 		
-		// Graduation Years Filter
+		// Graduation Semester Filter
 		orList = new ORList();
-		for(Integer year : filter.getGraduationYears()) {
-			orList.add(new Statement("sub.graduationYear = :graduationYear"+paramIndex));
-			params.put("graduationYear"+(paramIndex++), year);
-		}
-		andList.add(orList);
-		
-		// Graduation Months Filter
-		orList = new ORList();
-		for(Integer month : filter.getGraduationMonths()) {
-			orList.add(new Statement("sub.graduationMonth = :graduationMonth"+paramIndex));
-			params.put("graduationMonth"+(paramIndex++), month);
+		for(GraduationSemester semester : filter.getGraduationSemesters()) {
+			ANDList semesterList = new ANDList();
+			
+			if (semester.year != null) {
+				semesterList.add(new Statement("sub.graduationYear = :gradYear"+paramIndex));
+				params.put("gradYear"+(paramIndex++), semester.year);
+			}
+			
+			if (semester.month != null) {
+				semesterList.add(new Statement("sub.graduationMonth = :gradMonth"+paramIndex));
+				params.put("gradMonth"+(paramIndex++), semester.month);
+			}
+			
+			if (semesterList.size() > 0)
+				orList.add(semesterList);
 		}
 		andList.add(orList);
 		

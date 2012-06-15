@@ -16,6 +16,7 @@ import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.search.GraduationSemester;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
@@ -152,6 +153,47 @@ public class JpaSubmissionImplTests extends UnitTest {
 		assertEquals(sub.getId(),retrieved.getId());
 		
 		retrieved.delete();
+	}
+	
+	/**
+	 * Test find all distinct graduation semesters.
+	 */
+	@Test
+	public void testFindAllGradSemesters() {
+		
+		Submission sub2002 = subRepo.createSubmission(person);
+		Submission sub2003 = subRepo.createSubmission(person);
+		Submission sub2005 = subRepo.createSubmission(person);
+		Submission subNull = subRepo.createSubmission(person);
+		
+		sub2002.setGraduationYear(2002);
+		sub2002.setGraduationMonth(05);
+		sub2003.setGraduationYear(2003);
+		sub2003.setGraduationMonth(11);
+		sub2005.setGraduationYear(2005);
+		sub2005.setGraduationMonth(05);
+		
+		sub2002.save();
+		sub2003.save();
+		sub2005.save();
+		subNull.save();
+		
+		
+		List<GraduationSemester> years = subRepo.findAllGraduationSemesters();
+		
+		assertNotNull(years);
+		assertEquals(Integer.valueOf(2002), years.get(0).year);
+		assertEquals(Integer.valueOf(05), years.get(0).month);
+		assertEquals(Integer.valueOf(2003), years.get(1).year);
+		assertEquals(Integer.valueOf(11), years.get(1).month);
+		assertEquals(Integer.valueOf(2005), years.get(2).year);
+		assertEquals(Integer.valueOf(05), years.get(2).month);
+		assertEquals(3,years.size());
+		
+		sub2002.delete();
+		sub2003.delete();
+		sub2005.delete();
+		subNull.delete();
 	}
 	
 	/**
