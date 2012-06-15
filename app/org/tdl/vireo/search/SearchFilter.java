@@ -3,6 +3,7 @@ package org.tdl.vireo.search;
 import java.util.Date;
 import java.util.List;
 
+import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.state.State;
 
@@ -74,6 +75,13 @@ public interface SearchFilter {
 	 */
 	public void removeAssignee(Person assignee);
 
+	public List<EmbargoType> getEmbargoTypes();
+	
+	public void addEmbargoType(EmbargoType type);
+	
+	public void removeEmbargoType(EmbargoType type);
+	
+	
 	/**
 	 * @return The list of graduation years
 	 */

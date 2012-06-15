@@ -4,6 +4,7 @@ import java.lang.annotation.Annotation;
 import java.util.Date;
 import java.util.List;
 
+import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.NamedSearchFilter;
@@ -17,6 +18,7 @@ import org.tdl.vireo.search.SearchResult;
 import org.tdl.vireo.state.State;
 
 
+import play.Logger;
 import play.data.binding.As;
 import play.modules.spring.Spring;
 import play.mvc.Http.Cookie;
@@ -62,7 +64,11 @@ public class Review extends AbstractVireoController {
 		ActiveSearchFilter activeFilter = Spring.getBeanOfType(ActiveSearchFilter.class);
 		Cookie cookie = request.cookies.get(SUBMISSION_FILTER_COOKIE_NAME);
 		if (cookie != null) {
-			activeFilter.decode(cookie.value);
+			try {
+				activeFilter.decode(cookie.value);
+			} catch (RuntimeException re) {
+				Logger.warn(re,"Unable to decode search filter: "+cookie.value);
+			}
 		}
 		
 		// Step 2:  Run the current filter search
@@ -105,7 +111,11 @@ public class Review extends AbstractVireoController {
 		ActiveSearchFilter activeFilter = Spring.getBeanOfType(ActiveSearchFilter.class);
 		Cookie cookie = request.cookies.get(SUBMISSION_FILTER_COOKIE_NAME);
 		if (cookie != null) {
-			activeFilter.decode(cookie.value);
+			try {
+				activeFilter.decode(cookie.value);
+			} catch (RuntimeException re) {
+				Logger.warn(re,"Unable to decode search filter: "+cookie.value);
+			}
 		}
 		
 		String action = params.get("action");
@@ -222,6 +232,11 @@ public class Review extends AbstractVireoController {
 				activeFilter.addAssignee(person);
 			}
 			
+		} else if ("embargo".equals(type)) {
+			Long embargoId = params.get("value",Long.class);
+			EmbargoType embargo = settingRepo.findEmbargoType(embargoId);
+			activeFilter.addEmbargoType(embargo);
+			
 		} else if ("gradYear".equals(type)) {
 			Integer year = params.get("value",Integer.class);
 			activeFilter.addGraduationYear(year);
@@ -294,7 +309,11 @@ public class Review extends AbstractVireoController {
 				Person person = personRepo.findPerson(personId);
 				activeFilter.removeAssignee(person);
 			}
-		
+		} else if ("embargo".equals(type)) {
+			Long embargoId = params.get("value",Long.class);
+			EmbargoType embargo = settingRepo.findEmbargoType(embargoId);
+			activeFilter.removeEmbargoType(embargo);
+			
 		} else if ("gradYear".equals(type)) {
 			Integer year = params.get("value",Integer.class);
 			activeFilter.removeGraduationYear(year);

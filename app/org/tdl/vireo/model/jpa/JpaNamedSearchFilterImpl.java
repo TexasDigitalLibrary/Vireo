@@ -15,6 +15,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.model.AbstractModel;
+import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.NamedSearchFilter;
@@ -45,6 +46,9 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	
 	@OneToMany(targetEntity=JpaPersonImpl.class)
 	public List<Person> assignees;
+
+	@OneToMany(targetEntity=JpaEmbargoTypeImpl.class)
+	public List<EmbargoType> embargos;
 	
 	@ElementCollection
 	public List<Integer> graduationYears;
@@ -97,6 +101,7 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 		this.searchText = new ArrayList<String>();
 		this.states = new ArrayList<String>();
 		this.assignees = new ArrayList<Person>();
+		this.embargos = new ArrayList<EmbargoType>();
 		this.graduationYears = new ArrayList<Integer>();
 		this.graduationMonths = new ArrayList<Integer>();
 		this.degrees = new ArrayList<String>();
@@ -199,6 +204,23 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	public void removeAssignee(Person assignee) {
 		assertManagerOrOwner(creator);
 		assignees.remove(assignee);
+	}
+	
+	@Override
+	public List<EmbargoType> getEmbargoTypes() {
+		return embargos;
+	}
+	
+	@Override
+	public void addEmbargoType(EmbargoType type) {
+		assertManagerOrOwner(creator);
+		embargos.add(type);
+	}
+	
+	@Override
+	public void removeEmbargoType(EmbargoType type) {
+		assertManagerOrOwner(creator);
+		embargos.remove(type);
 	}
 
 	@Override

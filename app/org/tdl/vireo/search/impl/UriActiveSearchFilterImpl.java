@@ -17,8 +17,10 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.apache.commons.codec.net.URLCodec;
+import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
+import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.jpa.JpaPersonImpl;
 import org.tdl.vireo.search.ActiveSearchFilter;
 import org.tdl.vireo.search.SearchFilter;
@@ -38,11 +40,13 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 
 	// Spring injection
 	public PersonRepository personRepo = null;
+	public SettingsRepository settingRepo = null;
 
 	// Danamic variables
 	public List<String> searchText = new ArrayList<String>();
 	public List<String> states = new ArrayList<String>();
 	public List<Person> assignees = new ArrayList<Person>();
+	public List<EmbargoType> embargos = new ArrayList<EmbargoType>();
 	public List<Integer> graduationYears = new ArrayList<Integer>();
 	public List<Integer> graduationMonths = new ArrayList<Integer>();
 	public List<String> degrees = new ArrayList<String>();
@@ -67,6 +71,14 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 	 */
 	public void setPersonRepository(PersonRepository personRepo) {
 		this.personRepo = personRepo;
+	}
+	
+	/**
+	 * @param settingRepo
+	 *            The setting repository to use for looking up embargo types.
+	 */
+	public void setSettingsRepository(SettingsRepository settingRepo) {
+		this.settingRepo = settingRepo;
 	}
 	
 	@Override
@@ -112,6 +124,21 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 	@Override
 	public void removeAssignee(Person assignee) {
 		assignees.remove(assignee);
+	}
+	
+	@Override
+	public List<EmbargoType> getEmbargoTypes() {
+		return embargos;
+	}
+	
+	@Override
+	public void addEmbargoType(EmbargoType type) {
+		embargos.add(type);
+	}
+	
+	@Override
+	public void removeEmbargoType(EmbargoType type) {
+		embargos.remove(type);
 	}
 
 	@Override
@@ -267,6 +294,7 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 		encodeList(result,searchText);
 		encodeList(result,states);
 		encodeList(result,assignees);
+		encodeList(result,embargos);
 		encodeList(result,graduationYears);
 		encodeList(result,graduationMonths);
 		encodeList(result,degrees);
@@ -298,25 +326,26 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 	public void decode(String encoded) {
 		try {
 			String[] split = encoded.split(":",-1);
-			if (split.length != 15)
+			if (split.length != 16)
 				throw new IllegalArgumentException("Unable to decode active search filter because it does not have the 15 expected number of components instead it has "+split.length);
 
 			// Decode all the lists
 			searchText = decodeList(split[1],String.class);
 			states = decodeList(split[2],String.class);
 			assignees = decodeList(split[3],Person.class);
-			graduationYears = decodeList(split[4],Integer.class);
-			graduationMonths = decodeList(split[5],Integer.class);
-			degrees = decodeList(split[6],String.class);
-			departments = decodeList(split[7],String.class);
-			colleges = decodeList(split[8],String.class);
-			majors = decodeList(split[9],String.class);
-			documentTypes = decodeList(split[10],String.class);
+			embargos = decodeList(split[4],EmbargoType.class);
+			graduationYears = decodeList(split[5],Integer.class);
+			graduationMonths = decodeList(split[6],Integer.class);
+			degrees = decodeList(split[7],String.class);
+			departments = decodeList(split[8],String.class);
+			colleges = decodeList(split[9],String.class);
+			majors = decodeList(split[10],String.class);
+			documentTypes = decodeList(split[11],String.class);
 
 			// Handle the single values
-			if ("true".equalsIgnoreCase(split[11])) {
+			if ("true".equalsIgnoreCase(split[12])) {
 				umiRelease = true;
-			} else if ("false".equalsIgnoreCase(split[11])) {
+			} else if ("false".equalsIgnoreCase(split[12])) {
 				umiRelease = false;
 			} else {
 				umiRelease = null;
@@ -324,19 +353,19 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 
 			if (split[12].length() != 0) {
 				try {
-					rangeStart = new Date(Long.valueOf(split[12]));
+					rangeStart = new Date(Long.valueOf(split[13]));
 				} catch (RuntimeException re) {
-					Logger.warn("Unable to decode value '"+split[12]+"' for rangeStart.");
+					Logger.warn("Unable to decode value '"+split[13]+"' for rangeStart.");
 				}
 			} else {
 				rangeStart = null;
 			}
 
-			if (split[13].length() != 0) {
+			if (split[14].length() != 0) {
 				try {
-					rangeEnd = new Date(Long.valueOf(split[13]));
+					rangeEnd = new Date(Long.valueOf(split[14]));
 				} catch (RuntimeException re) {
-					Logger.warn("Unable to decode value '"+split[13]+"' for rangeEnd.");
+					Logger.warn("Unable to decode value '"+split[14]+"' for rangeEnd.");
 				}
 			} else {
 				rangeEnd = null;
@@ -361,6 +390,9 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 		
 		other.getAssignees().clear();
 		other.getAssignees().addAll(this.assignees);
+		
+		other.getEmbargoTypes().clear();
+		other.getEmbargoTypes().addAll(this.embargos);
 		
 		other.getGraduationYears().clear();
 		other.getGraduationYears().addAll(this.graduationYears);
@@ -393,6 +425,7 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 		this.searchText = new ArrayList<String>(other.getSearchText());
 		this.states = new ArrayList<String>(other.getStates());
 		this.assignees = new ArrayList<Person>(other.getAssignees());
+		this.embargos = new ArrayList<EmbargoType>(other.getEmbargoTypes());
 		this.graduationYears = new ArrayList<Integer>(other.getGraduationYears());
 		this.graduationMonths = new ArrayList<Integer>(other.getGraduationMonths());
 		this.degrees = new ArrayList<String>(other.getDegrees());
@@ -418,8 +451,7 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 	 * @return A list of encoded objects
 	 */
 	protected <T> List<T> decodeList(String encoded, Class<T> type) {
-		
-		
+	
 		String[] split = encoded.split(",");
 		
 		List<T> result = new ArrayList<T>();
@@ -447,13 +479,20 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 						Person person = personRepo.findPerson(personId);
 						result.add((T) person);
 					}
+				} else if (type == EmbargoType.class) {
+					// List type is embargo types
+					
+					Long embargoId = Long.valueOf(raw);
+					EmbargoType embargo = settingRepo.findEmbargoType(embargoId);
+					result.add((T) embargo);
+					
 				}
 			} catch (RuntimeException re) {
 				// Just log the error but keep on trucking. One legitimate
 				// reason why this may fail is if a person has been deleted
 				// since this filter was created, thus the person's id would no
 				// longer be valid.
-				Logger.warn("Unable to decode value '"+raw+"' for type "+type.getName());
+				Logger.warn(re,"Unable to decode value '"+raw+"' for type "+type.getName());
 			}
 		}
 		
@@ -466,8 +505,8 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 	 * will end with a trailing ":". If the value type is string then it will be
 	 * URI encoded prior to putting in the list.
 	 * 
-	 * Only three datatypes are supported by this method: String, Integer, and
-	 * Person. everything else will result in an error.
+	 * Only three datatypes are supported by this method: String, Integer,
+	 * Person, and EmbargoType. everything else will result in an error.
 	 * 
 	 * @param result
 	 *            Where the encoded list will be appended.
@@ -497,6 +536,12 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 				// Full person object from assignee
 				Long personId = ((Person) value).getId();
 				result.append(String.valueOf(personId));
+				
+			} else if (value instanceof EmbargoType) {
+				// Full embargo object
+				Long embargoId = ((EmbargoType) value).getId();
+				result.append(String.valueOf(embargoId));
+				
 			} else {
 				throw new IllegalArgumentException("Enable to encode unexpected object type: "+value.getClass().getName());
 			}

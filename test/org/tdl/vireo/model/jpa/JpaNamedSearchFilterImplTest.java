@@ -274,6 +274,9 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 	public void testPersistance() {
 		Person otherPerson = personRepo.createPerson("other-netid", "other@email.com", "first", "last", RoleType.NONE).save();
 
+		EmbargoType embargo1 = settingRepo.createEmbargoType("embargo1", "description", 12, true).save();
+		EmbargoType embargo2 = settingRepo.createEmbargoType("embargo2", "description", 24, true).save();
+		
 		NamedSearchFilter filter = subRepo.createSearchFilter(person, "filter").save();
 		filter.setPublic(false);
 		filter.addSearchText("text1");
@@ -282,6 +285,8 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		filter.addState("status2");
 		filter.addAssignee(person);
 		filter.addAssignee(otherPerson);
+		filter.addEmbargoType(embargo1);
+		filter.addEmbargoType(embargo2);
 		filter.addGraduationYear(2002);
 		filter.addGraduationYear(2003);
 		filter.addGraduationMonth(0);
@@ -316,6 +321,8 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		assertFalse(retrieved.getStates().contains("status3"));
 		assertTrue(retrieved.getAssignees().contains(person));
 		assertTrue(retrieved.getAssignees().contains(otherPerson));
+		assertTrue(retrieved.getEmbargoTypes().contains(embargo1));
+		assertTrue(retrieved.getEmbargoTypes().contains(embargo2));
 		assertTrue(retrieved.getGraduationYears().contains(2002));
 		assertTrue(retrieved.getGraduationYears().contains(2003));
 		assertFalse(retrieved.getGraduationYears().contains(2004));
@@ -342,6 +349,8 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		assertNotNull(retrieved.getDateRangeEnd());
 		
 		retrieved.delete();
+		settingRepo.findEmbargoType(embargo1.getId()).delete();
+		settingRepo.findEmbargoType(embargo2.getId()).delete();
 		personRepo.findPerson(otherPerson.getId()).delete();
 		personRepo.findPerson(person.getId()).delete();
 		person = null;
@@ -390,12 +399,16 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 	public void testSubmissionFilterSearch() {
 		Person otherPerson = personRepo.createPerson("other-netid", "other@email.com", "first", "last", RoleType.REVIEWER).save();
 		
+		EmbargoType embargo1 = settingRepo.createEmbargoType("embargo1", "description", 12, true).save();
+		EmbargoType embargo2 = settingRepo.createEmbargoType("embargo2", "description", 24, true).save();
+		
 		Submission sub1 = subRepo.createSubmission(person);
 		createSubmission(sub1, "B Title", "This is really important work", "One; Two; Three;", 
 				"committee@email.com", "I approve this ETD", "degree", "department", "college", "major",
 				"documentType", 2002, 5, true);
 		sub1.setAssignee(otherPerson);
 		sub1.setSubmissionDate(new Date(2012,5,1));
+		sub1.setEmbargoType(embargo2);
 		sub1.save();
 		
 		Submission sub2 = subRepo.createSubmission(person);
@@ -403,6 +416,7 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 				"anotherCommittee@email.com", "I reject this ETD", "another", "another", "another", "another",
 				"another", 2003, 6, null);
 		sub2.setSubmissionDate(new Date(2005,5,1));
+		sub2.setEmbargoType(embargo1);
 		sub2.save();
 		
 		
@@ -440,8 +454,19 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		assertEquals(1,submissions.size());
 		filter.delete();
 		
-		// Graduation Year Filter
+		// Embargo Filter
 		filter = subRepo.createSearchFilter(person, "test4");
+		filter.addEmbargoType(embargo1);
+		filter.save();
+		
+		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10).getResults();
+		
+		assertEquals(sub2.getId(),submissions.get(0).getId());
+		assertEquals(1,submissions.size());
+		filter.delete();
+		
+		// Graduation Year Filter
+		filter = subRepo.createSearchFilter(person, "test5");
 		filter.addGraduationYear(2002);
 		filter.addGraduationYear(2003);
 		filter.save();
@@ -454,7 +479,7 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		filter.delete();
 		
 		// Graduation Month Filter
-		filter = subRepo.createSearchFilter(person, "test5");
+		filter = subRepo.createSearchFilter(person, "test6");
 		filter.addGraduationMonth(5);
 		filter.save();
 
@@ -466,7 +491,7 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		
 		
 		// Degree Filter
-		filter = subRepo.createSearchFilter(person, "test6");
+		filter = subRepo.createSearchFilter(person, "test7");
 		filter.addDegree("degree");
 		filter.save();
 
@@ -477,7 +502,7 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		filter.delete();
 		
 		// Department Filter
-		filter = subRepo.createSearchFilter(person, "test7");
+		filter = subRepo.createSearchFilter(person, "test8");
 		filter.addDepartment("department");
 		filter.save();
 
@@ -489,7 +514,7 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		
 		
 		// College Filter
-		filter = subRepo.createSearchFilter(person, "test8");
+		filter = subRepo.createSearchFilter(person, "test9");
 		filter.addCollege("college");
 		filter.save();
 
@@ -500,7 +525,7 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		filter.delete();
 		
 		// Major Filter
-		filter = subRepo.createSearchFilter(person, "test9");
+		filter = subRepo.createSearchFilter(person, "test10");
 		filter.addMajor("major");
 		filter.save();
 
@@ -511,7 +536,7 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		filter.delete();
 		
 		// Document Type Filter
-		filter = subRepo.createSearchFilter(person, "test10");
+		filter = subRepo.createSearchFilter(person, "test11");
 		filter.addDocumentType("documentType");
 		filter.save();
 
@@ -522,7 +547,7 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		filter.delete();
 		
 		// UMI Release Filter
-		filter = subRepo.createSearchFilter(person, "test11");
+		filter = subRepo.createSearchFilter(person, "test12");
 		filter.setUMIRelease(true);
 		filter.save();
 
@@ -533,7 +558,7 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		filter.delete();
 		
 		// Date Range Filter
-		filter = subRepo.createSearchFilter(person, "test12");
+		filter = subRepo.createSearchFilter(person, "test13");
 		filter.setDateRange(new Date(2000,1,1), new Date(2006,1,1));
 		filter.save();
 
@@ -545,6 +570,8 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		
 		sub1.delete();
 		sub2.delete();
+		embargo1.delete();
+		embargo2.delete();
 		otherPerson.delete();
 	}
 	
@@ -814,12 +841,16 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		Person otherPerson = personRepo.createPerson("other-netid", "other@email.com", "first", "last", RoleType.ADMINISTRATOR).save();
 		context.login(otherPerson);
 		
+		EmbargoType embargo1 = settingRepo.createEmbargoType("embargo1", "description", 12, true).save();
+		EmbargoType embargo2 = settingRepo.createEmbargoType("embargo2", "description", 24, true).save();
+		
 		Submission sub1 = subRepo.createSubmission(person);
 		createSubmission(sub1, "B Title", "This is really important work", "One; Two; Three;", 
 				"committee@email.com", "I approve this ETD", "degree", "department", "college", "major",
 				"documentType", 2002, 5, true);
 		sub1.setAssignee(otherPerson);
 		sub1.setSubmissionDate(new Date(2012,5,1));
+		sub1.setEmbargoType(embargo2);
 		sub1.save();
 		
 		Submission sub2 = subRepo.createSubmission(person);
@@ -827,6 +858,7 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 				"anotherCommittee@email.com", "I reject this ETD", "another", "another", "another", "another",
 				"another", 2003, 6, null);
 		sub2.setSubmissionDate(new Date(2005,5,1));
+		sub2.setEmbargoType(embargo1);
 		sub2.save();
 		
 		
@@ -866,8 +898,19 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		assertEquals("Submission created by first last", logs.get(0).getEntry());
 		filter.delete();
 		
-		// Graduation Year Filter
+		// Assignee Filter
 		filter = subRepo.createSearchFilter(person, "test4");
+		filter.addEmbargoType(embargo1);
+		filter.save();
+		
+		logs = subRepo.filterSearchActionLogs(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10).getResults();
+		
+		assertEquals(sub2,logs.get(0).getSubmission());
+		assertEquals("Submission created by first last", logs.get(0).getEntry());
+		filter.delete();
+		
+		// Graduation Year Filter
+		filter = subRepo.createSearchFilter(person, "test5");
 		filter.addGraduationYear(2002);
 		filter.addGraduationYear(2003);
 		filter.save();
@@ -878,7 +921,7 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		filter.delete();
 		
 		// Graduation Month Filter
-		filter = subRepo.createSearchFilter(person, "test5");
+		filter = subRepo.createSearchFilter(person, "test6");
 		filter.addGraduationMonth(5);
 		filter.save();
 
@@ -889,7 +932,7 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		
 		
 		// Degree Filter
-		filter = subRepo.createSearchFilter(person, "test6");
+		filter = subRepo.createSearchFilter(person, "test7");
 		filter.addDegree("degree");
 		filter.save();
 
@@ -899,7 +942,7 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		filter.delete();
 		
 		// Department Filter
-		filter = subRepo.createSearchFilter(person, "test7");
+		filter = subRepo.createSearchFilter(person, "test8");
 		filter.addDepartment("department");
 		filter.save();
 
@@ -910,7 +953,7 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		
 		
 		// College Filter
-		filter = subRepo.createSearchFilter(person, "test8");
+		filter = subRepo.createSearchFilter(person, "test9");
 		filter.addCollege("college");
 		filter.save();
 
@@ -920,7 +963,7 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		filter.delete();
 		
 		// Major Filter
-		filter = subRepo.createSearchFilter(person, "test9");
+		filter = subRepo.createSearchFilter(person, "test10");
 		filter.addMajor("major");
 		filter.save();
 
@@ -930,7 +973,7 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		filter.delete();
 		
 		// Document Type Filter
-		filter = subRepo.createSearchFilter(person, "test10");
+		filter = subRepo.createSearchFilter(person, "test11");
 		filter.addDocumentType("documentType");
 		filter.save();
 
@@ -940,7 +983,7 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		filter.delete();
 		
 		// UMI Release Filter
-		filter = subRepo.createSearchFilter(person, "test11");
+		filter = subRepo.createSearchFilter(person, "test12");
 		filter.setUMIRelease(true);
 		filter.save();
 
@@ -950,7 +993,7 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		filter.delete();
 		
 		// Date Range Filter
-		filter = subRepo.createSearchFilter(person, "test12");
+		filter = subRepo.createSearchFilter(person, "test13");
 		filter.setDateRange(new Date(2000,1,1), new Date(2006,1,1));
 		filter.save();
 
@@ -961,6 +1004,8 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		
 		sub1.delete();
 		sub2.delete();
+		embargo1.delete();
+		embargo2.delete();
 		otherPerson.delete();
 	}
 	

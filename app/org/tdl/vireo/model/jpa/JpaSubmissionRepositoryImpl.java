@@ -196,6 +196,14 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 		}
 		andList.add(orList);
 		
+		// Assignee Filter
+		orList = new ORList();
+		for(EmbargoType embargo : filter.getEmbargoTypes()) {
+			orList.add(new Statement("sub.embargoType = :embargo"+paramIndex));
+			params.put("embargo"+(paramIndex++), embargo);
+		}
+		andList.add(orList);
+		
 		// Graduation Years Filter
 		orList = new ORList();
 		for(Integer year : filter.getGraduationYears()) {
@@ -406,6 +414,14 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 		for(Person assignee : filter.getAssignees()) {
 			orList.add(new Statement("log.person = :assignee"+paramIndex));
 			params.put("assignee"+(paramIndex++), assignee);
+		}
+		andList.add(orList);
+		
+		// Embargo Filter
+		orList = new ORList();
+		for(EmbargoType embargo : filter.getEmbargoTypes()) {
+			orList.add(new Statement("sub.embargoType = :embargo"+paramIndex));
+			params.put("embargo"+(paramIndex++), embargo);
 		}
 		andList.add(orList);
 		
