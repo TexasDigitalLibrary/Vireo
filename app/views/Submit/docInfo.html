@@ -1,6 +1,31 @@
 #{extends 'submitSteps.html' /}
 #{set title:'Document Info' /}
 
+<script type="text/javascript">
+    
+    var counter = 0;
+    
+    $(function($) {
+        $("#add").click(function(e) {
+            // Prevent button from submitting form
+            e.preventDefault();
+            
+            // Increment and append counter to name & id attribs
+            counter++;
+            var cln = $('#committee-member').clone(true);
+            cln.id = cln.id + counter;
+            cln.find("[id^='committeeFirstName'], [id^='committeeMiddleInitial'], [id^='committeeLastName'], [id^='chairFlag']").each(function(i, val) {
+                val.id = val.id.match(/^([^0-9]+)[0-9]*$/)[1] + "" + counter;
+            });
+            
+            //Insert at bottom
+            cln.insertAfter('#committee-member');
+            
+            return false;
+        });
+    })
+</script>
+
 <br />
 <div class="row pageHead">
 	<h3 class="span11">Document Information</h3>
@@ -73,78 +98,27 @@
 	
 	<fieldset class="form-inline">
 		<legend>Your Committee</legend>
-		<table>
-		<tr>
-			<td><input type="text" class="input-medium" id="committeFirstName"></td>
-			<td><input type="text" class="span1" id="committeMiddleInitial"></td>
-			<td><input type="text" class="input-medium" id="committeeLastName"></td>
-			<td><label class="checkbox"><input type="checkbox" id="chairFlag" class="inline"> Chair</label></td>
-		</tr>
-		<tr>
-			<td><label class="span2">First Name</label></td>
-			<td><label class="span1">MI</label></td>
-			<td><label class="span2">Last Name</label></td>
-			<td></td>
-		</tr>
-		</table>
-		<table>
-		<tr>
-			<td><input type="text" class="input-medium" id="committeFirstName"></td>
-			<td><input type="text" class="span1" id="committeMiddleInitial"></td>
-			<td><input type="text" class="input-medium" id="committeeLastName"></td>
-			<td><label class="checkbox"><input type="checkbox" id="chairFlag" class="inline"> Chair</label></td>
-		</tr>
-		<tr>
-			<td><label class="span2">First Name</label></td>
-			<td><label class="span1">MI</label></td>
-			<td><label class="span2">Last Name</label></td>
-			<td></td>
-		</tr>
-		</table>
-		<table>
-		<tr>
-			<td><input type="text" class="input-medium" id="committeFirstName"></td>
-			<td><input type="text" class="span1" id="committeMiddleInitial"></td>
-			<td><input type="text" class="input-medium" id="committeeLastName"></td>
-			<td><label class="checkbox"><input type="checkbox" id="chairFlag" class="inline"> Chair</label></td>
-		</tr>
-		<tr>
-			<td><label class="span2">First Name</label></td>
-			<td><label class="span1">MI</label></td>
-			<td><label class="span2">Last Name</label></td>
-			<td></td>
-		</tr>
-		</table>
-		<table>
-		<tr>
-			<td><input type="text" class="input-medium" id="committeFirstName"></td>
-			<td><input type="text" class="span1" id="committeMiddleInitial"></td>
-			<td><input type="text" class="input-medium" id="committeeLastName"></td>
-			<td><label class="checkbox"><input type="checkbox" id="chairFlag" class="inline"> Chair</label></td>
-		</tr>
-		<tr>
-			<td><label class="span2">First Name</label></td>
-			<td><label class="span1">MI</label></td>
-			<td><label class="span2">Last Name</label></td>
-			<td></td>
-		</tr>
-		</table>
-		<table>
-		<tr>
-			<td><input type="text" class="input-medium" id="committeFirstName"></td>
-			<td><input type="text" class="span1" id="committeMiddleInitial"></td>
-			<td><input type="text" class="input-medium" id="committeeLastName"></td>
-			<td><label class="checkbox"><input type="checkbox" id="chairFlag" class="inline"> Chair</label></td>
-		</tr>
-		<tr>
-			<td><label class="span2">First Name</label></td>
-			<td><label class="span1">MI</label></td>
-			<td><label class="span2">Last Name</label></td>
-			<td></td>
-		</tr>
-		</table>
+
+                
+                <table id="committee-member">
+                    <tr>
+                        <td><input type="text" class="input-medium" id="committeeFirstName" name="committeeFirstName"></td>
+                        <td><input type="text" class="span1" id="committeeMiddleInitial" name="committeeMiddleInitial"></td>
+                        <td><input type="text" class="input-medium" id="committeeLastName" name="committeeLastName"></td>
+                        <td><label class="checkbox"><input type="checkbox" id="chairFlag" name="chairFlag" class="inline"> Chair</label></td>
+                    </tr>
+                    <tr>
+                        <td><label class="span2">First Name</label></td>
+                        <td><label class="span1">MI</label></td>
+                        <td><label class="span2">Last Name</label></td>
+                        <td></td>
+                    </tr>
+                </table>
+                
+                
+                
 		<div class="row center">
-			<button class="btn">Add Additional Member</button>
+                    <input class="btn" id="add" name="add" type="submit" value="Add Additional Member" />
 		</div>		
 	</fieldset>
 	
