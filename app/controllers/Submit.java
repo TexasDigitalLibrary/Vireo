@@ -539,7 +539,7 @@ public class Submit extends AbstractVireoController {
      * @param name2
      * @return
      */
-    public static String give_current_class_if_equal(String name1, String name2) {
+    public static String giveCurrentClassIfEqual(String name1, String name2) {
         return name1 == name2 ? "class=current" : "";
     }
 

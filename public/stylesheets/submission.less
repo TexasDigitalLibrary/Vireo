@@ -232,6 +232,17 @@ SUBMIT STEP BUTTONS
 	background:url("../images/step5_current.gif") no-repeat scroll 0 0 transparent;	
 }
 
+// Add disabled state for items in submit steps
+.nav > li.disabled {
+    .opacity(40);
+    pointer-events: none;
+}
+.nav > li.disabled > a:hover {
+    cursor: default;
+    text-decoration: none;
+    background-color: inherit;
+}
+
 /********************
 STICKY NOTES
 ********************/
