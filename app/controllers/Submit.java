@@ -540,20 +540,38 @@ public class Submit extends AbstractVireoController {
         }
 	}
 
+	
+	// Handle the Confirm and Submit form
+	
 	@Security(RoleType.STUDENT)
 	public static void confirmAndSubmit(Long subId) {		
-		render(subId);		
+		
+		// Locate the submission 
+		
+		// TODO -- refactor - all of the methods in this controller have this same code at the beginning
+		
+        Submission sub = subRepo.findSubmission(subId);
+        Person submitter = context.getPerson();
+
+        if (sub == null) {
+            // something is wrong
+            error("Did not receive the expected submission id.");
+        } else {
+
+            // This is an existing submission so check that we're the student or administrator here.
+            
+            if (sub.getSubmitter() != submitter)
+                unauthorized();
+		
+        }
+		
+		render(subId, sub, submitter);		
 	}
 
 	@Security(RoleType.STUDENT)
 	public static void review() {
 		render("Submit/Review.html");
 	}
-
-	public static void dump() {
-		render("Submit/VerifyPersonalInformation.html");
-	}
-
 
     /**
      * Helper for assigning <em>class="current"</em> to the nav item
