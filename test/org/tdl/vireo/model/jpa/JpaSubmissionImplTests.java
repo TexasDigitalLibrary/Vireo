@@ -16,7 +16,7 @@ import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
-import org.tdl.vireo.search.GraduationSemester;
+import org.tdl.vireo.search.Semester;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
@@ -179,7 +179,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		subNull.save();
 		
 		
-		List<GraduationSemester> years = subRepo.findAllGraduationSemesters();
+		List<Semester> years = subRepo.findAllGraduationSemesters();
 		
 		assertNotNull(years);
 		assertEquals(Integer.valueOf(2002), years.get(0).year);

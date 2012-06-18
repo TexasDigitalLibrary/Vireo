@@ -95,19 +95,19 @@ public interface SearchFilter {
 	/**
 	 * @return The graduation semesters
 	 */
-	public List<GraduationSemester> getGraduationSemesters();
+	public List<Semester> getGraduationSemesters();
 
 	/**
 	 * @param semester
 	 *            The graduation semester to add to the filter.
 	 */
-	public void addGraduationSemester(GraduationSemester semester);
+	public void addGraduationSemester(Semester semester);
 
 	/**
 	 * @param semester
 	 *            The graduation semester to remove from the filter.
 	 */
-	public void removeGraduationSemester(GraduationSemester semester);
+	public void removeGraduationSemester(Semester semester);
 
 	/**
 	 * Add a graduation semester with the provided year and month.

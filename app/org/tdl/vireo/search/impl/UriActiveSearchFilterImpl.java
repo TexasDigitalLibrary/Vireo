@@ -23,7 +23,7 @@ import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.jpa.JpaPersonImpl;
 import org.tdl.vireo.search.ActiveSearchFilter;
-import org.tdl.vireo.search.GraduationSemester;
+import org.tdl.vireo.search.Semester;
 import org.tdl.vireo.search.SearchFilter;
 
 import play.Logger;
@@ -48,7 +48,7 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 	public List<String> states = new ArrayList<String>();
 	public List<Person> assignees = new ArrayList<Person>();
 	public List<EmbargoType> embargos = new ArrayList<EmbargoType>();
-	public List<GraduationSemester> semesters = new ArrayList<GraduationSemester>();
+	public List<Semester> semesters = new ArrayList<Semester>();
 	public List<String> degrees = new ArrayList<String>();
 	public List<String> departments = new ArrayList<String>();
 	public List<String> colleges = new ArrayList<String>();
@@ -142,28 +142,28 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 	}
 
 	@Override
-	public List<GraduationSemester> getGraduationSemesters() {
+	public List<Semester> getGraduationSemesters() {
 		return semesters;
 	}
 
 	@Override
-	public void addGraduationSemester(GraduationSemester semester) {
+	public void addGraduationSemester(Semester semester) {
 		semesters.add(semester);
 	}
 	
 	@Override
-	public void removeGraduationSemester(GraduationSemester semester) {
+	public void removeGraduationSemester(Semester semester) {
 		semesters.remove(semester);
 	}
 	
 	@Override
 	public void addGraduationSemester(Integer year, Integer month) {
-		addGraduationSemester(new GraduationSemester(year,month));
+		addGraduationSemester(new Semester(year,month));
 	}
 	
 	@Override
 	public void removeGraduationSemester(Integer year, Integer month) {
-		removeGraduationSemester(new GraduationSemester(year,month));
+		removeGraduationSemester(new Semester(year,month));
 	}
 	
 	@Override
@@ -328,7 +328,7 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 			states = decodeList(split[2],String.class);
 			assignees = decodeList(split[3],Person.class);
 			embargos = decodeList(split[4],EmbargoType.class);
-			semesters = decodeList(split[5],GraduationSemester.class);
+			semesters = decodeList(split[5],Semester.class);
 			degrees = decodeList(split[6],String.class);
 			departments = decodeList(split[7],String.class);
 			colleges = decodeList(split[8],String.class);
@@ -416,7 +416,7 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 		this.states = new ArrayList<String>(other.getStates());
 		this.assignees = new ArrayList<Person>(other.getAssignees());
 		this.embargos = new ArrayList<EmbargoType>(other.getEmbargoTypes());
-		this.semesters = new ArrayList<GraduationSemester>(other.getGraduationSemesters());
+		this.semesters = new ArrayList<Semester>(other.getGraduationSemesters());
 		this.degrees = new ArrayList<String>(other.getDegrees());
 		this.departments = new ArrayList<String>(other.getDepartments());
 		this.colleges = new ArrayList<String>(other.getColleges());
@@ -475,11 +475,11 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 					EmbargoType embargo = settingRepo.findEmbargoType(embargoId);
 					result.add((T) embargo);
 					
-				} else if (type == GraduationSemester.class) {
+				} else if (type == Semester.class) {
 					// List type is graduation semestens: year/month
 					String[] semesterSplit = raw.split("/");
 
-					GraduationSemester semester = new GraduationSemester();
+					Semester semester = new Semester();
 					if (!"null".equals(semesterSplit[0]))
 						semester.year = Integer.valueOf(semesterSplit[0]);
 					if (!"null".equals(semesterSplit[1]))
@@ -544,10 +544,10 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 				Long embargoId = ((EmbargoType) value).getId();
 				result.append(String.valueOf(embargoId));
 				
-			} else if (value instanceof GraduationSemester) {
+			} else if (value instanceof Semester) {
 				// Graduation semester: year/month
 				
-				GraduationSemester semester = (GraduationSemester) value;
+				Semester semester = (Semester) value;
 				if (semester.year == null)
 					result.append("null");
 				else

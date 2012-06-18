@@ -21,7 +21,7 @@ import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.NamedSearchFilter;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.search.SearchDirection;
-import org.tdl.vireo.search.GraduationSemester;
+import org.tdl.vireo.search.Semester;
 import org.tdl.vireo.search.SearchOrder;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.StateManager;
@@ -326,7 +326,7 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		assertTrue(retrieved.getGraduationSemesters().size() == 2);
 		boolean foundSemester1 = false;
 		boolean foundSemester2 = false;
-		for (GraduationSemester semester : retrieved.getGraduationSemesters()) {
+		for (Semester semester : retrieved.getGraduationSemesters()) {
 			if (semester.year == 2002 && semester.month == null)
 				foundSemester2 = true;
 			else if (semester.year == 2002 && semester.month == 5)

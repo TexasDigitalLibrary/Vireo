@@ -26,7 +26,7 @@ import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.NamedSearchFilter;
-import org.tdl.vireo.search.GraduationSemester;
+import org.tdl.vireo.search.Semester;
 
 /**
  * Jpa specific implementation of Vireo's Named Search Filter interface.
@@ -62,7 +62,7 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	public List<String> semesters;
 	
 	@Transient
-	public List<GraduationSemester> cachedSemesters;
+	public List<Semester> cachedSemesters;
 	
 	@ElementCollection
 	public List<String> degrees;
@@ -111,7 +111,7 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 		this.assignees = new ArrayList<Person>();
 		this.embargos = new ArrayList<EmbargoType>();
 		this.semesters = new ArrayList<String>();
-		this.cachedSemesters = new ArrayList<GraduationSemester>();
+		this.cachedSemesters = new ArrayList<Semester>();
 		this.degrees = new ArrayList<String>();
 		this.departments = new ArrayList<String>();
 		this.colleges = new ArrayList<String>();
@@ -130,7 +130,7 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	public void onSave() {
 		
 		semesters.clear();
-		for(GraduationSemester semester : cachedSemesters) {
+		for(Semester semester : cachedSemesters) {
 			// Format: year/month
 			
 			String value;
@@ -159,12 +159,12 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	@PostUpdate
 	public void onLoad() {
 		
-		cachedSemesters = new ArrayList<GraduationSemester>();
+		cachedSemesters = new ArrayList<Semester>();
 		for(String semesterString : semesters) {
 			
 			String[] split = semesterString.split("/");
 			
-			GraduationSemester semester = new GraduationSemester();
+			Semester semester = new Semester();
 			if (!"null".equals(split[0]))
 				semester.year = Integer.valueOf(split[0]);
 			if (!"null".equals(split[1]))
@@ -287,31 +287,31 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	}
 
 	@Override
-	public List<GraduationSemester> getGraduationSemesters() {
+	public List<Semester> getGraduationSemesters() {
 		
 		return cachedSemesters;
 	}
 
 	@Override
-	public void addGraduationSemester(GraduationSemester semester) {
+	public void addGraduationSemester(Semester semester) {
 		assertManagerOrOwner(creator);
 		cachedSemesters.add(semester);
 	}
 	
 	@Override
-	public void removeGraduationSemester(GraduationSemester semester) {
+	public void removeGraduationSemester(Semester semester) {
 		assertManagerOrOwner(creator);
 		cachedSemesters.remove(semester);
 	}
 	
 	@Override
 	public void addGraduationSemester(Integer year, Integer month) {
-		addGraduationSemester(new GraduationSemester(year,month));
+		addGraduationSemester(new Semester(year,month));
 	}
 	
 	@Override
 	public void removeGraduationSemester(Integer year, Integer month) {
-		removeGraduationSemester(new GraduationSemester(year,month));
+		removeGraduationSemester(new Semester(year,month));
 	}
 
 	@Override

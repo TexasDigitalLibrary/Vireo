@@ -8,14 +8,14 @@ package org.tdl.vireo.search;
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
-public class GraduationSemester {
+public class Semester {
 	public Integer year = null;
 	public Integer month = null;
 
 	/**
 	 * Construct a new graduation semester with null values.
 	 */
-	public GraduationSemester() {
+	public Semester() {
 	}
 
 	/**
@@ -26,7 +26,7 @@ public class GraduationSemester {
 	 * @param month
 	 *            The month
 	 */
-	public GraduationSemester(Integer year, Integer month) {
+	public Semester(Integer year, Integer month) {
 		this.year = year;
 		this.month = month;
 	}
@@ -36,9 +36,9 @@ public class GraduationSemester {
 	 */
 	public boolean equals(Object otherObject) {
 
-		if (!(otherObject instanceof GraduationSemester))
+		if (!(otherObject instanceof Semester))
 			return false;
-		GraduationSemester other = (GraduationSemester) otherObject;
+		Semester other = (Semester) otherObject;
 
 		if (this.year == null && other.year != null)
 			return false;

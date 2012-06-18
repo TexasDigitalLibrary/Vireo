@@ -1,7 +1,7 @@
 package org.tdl.vireo.search.impl;
 
 import org.junit.Test;
-import org.tdl.vireo.search.GraduationSemester;
+import org.tdl.vireo.search.Semester;
 
 import play.test.UnitTest;
 
@@ -13,7 +13,7 @@ import play.test.UnitTest;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  * 
  */
-public class GraduationSemesterTests extends UnitTest {
+public class SemesterTests extends UnitTest {
 
 	/**
 	 * Base case, are they equal.
@@ -21,8 +21,8 @@ public class GraduationSemesterTests extends UnitTest {
 	@Test
 	public void testEquals() {
 		
-		GraduationSemester semester1 = new GraduationSemester(2002,05);
-		GraduationSemester semester2 = new GraduationSemester(2002,05);
+		Semester semester1 = new Semester(2002,05);
+		Semester semester2 = new Semester(2002,05);
 		
 		assertTrue(semester1.equals(semester2));
 	}
@@ -33,8 +33,8 @@ public class GraduationSemesterTests extends UnitTest {
 	@Test
 	public void testNotEqualsByMonth() {
 		
-		GraduationSemester semester1 = new GraduationSemester(2002,05);
-		GraduationSemester semester2 = new GraduationSemester(2002,06);
+		Semester semester1 = new Semester(2002,05);
+		Semester semester2 = new Semester(2002,06);
 		
 		assertFalse(semester1.equals(semester2));
 	}
@@ -45,8 +45,8 @@ public class GraduationSemesterTests extends UnitTest {
 	@Test
 	public void testNotEqualsByYear() {
 		
-		GraduationSemester semester1 = new GraduationSemester(2002,05);
-		GraduationSemester semester2 = new GraduationSemester(2003,05);
+		Semester semester1 = new Semester(2002,05);
+		Semester semester2 = new Semester(2003,05);
 		
 		assertFalse(semester1.equals(semester2));
 	}
@@ -57,8 +57,8 @@ public class GraduationSemesterTests extends UnitTest {
 	@Test
 	public void testEqualsWithNullMonth() {
 		
-		GraduationSemester semester1 = new GraduationSemester(2002,null);
-		GraduationSemester semester2 = new GraduationSemester(2002,null);
+		Semester semester1 = new Semester(2002,null);
+		Semester semester2 = new Semester(2002,null);
 		
 		assertTrue(semester1.equals(semester2));
 	}
@@ -69,8 +69,8 @@ public class GraduationSemesterTests extends UnitTest {
 	@Test
 	public void testEqualsWithNullYear() {
 		
-		GraduationSemester semester1 = new GraduationSemester(null,05);
-		GraduationSemester semester2 = new GraduationSemester(null,05);
+		Semester semester1 = new Semester(null,05);
+		Semester semester2 = new Semester(null,05);
 		
 		assertTrue(semester1.equals(semester2));
 	}
@@ -81,8 +81,8 @@ public class GraduationSemesterTests extends UnitTest {
 	@Test
 	public void testNotEqualsEqualsWithNullMonth() {
 		
-		GraduationSemester semester1 = new GraduationSemester(2002,null);
-		GraduationSemester semester2 = new GraduationSemester(2003,null);
+		Semester semester1 = new Semester(2002,null);
+		Semester semester2 = new Semester(2003,null);
 		
 		assertFalse(semester1.equals(semester2));
 	}
@@ -93,8 +93,8 @@ public class GraduationSemesterTests extends UnitTest {
 	@Test
 	public void testNotEqualsEqualsWithNullYear() {
 		
-		GraduationSemester semester1 = new GraduationSemester(null,06);
-		GraduationSemester semester2 = new GraduationSemester(null,05);
+		Semester semester1 = new Semester(null,06);
+		Semester semester2 = new Semester(null,05);
 		
 		assertFalse(semester1.equals(semester2));
 	}
@@ -105,8 +105,8 @@ public class GraduationSemesterTests extends UnitTest {
 	@Test
 	public void testNotEqualsEqualsWithMixedMonth() {
 		
-		GraduationSemester semester1 = new GraduationSemester(2002,05);
-		GraduationSemester semester2 = new GraduationSemester(2003,null);
+		Semester semester1 = new Semester(2002,05);
+		Semester semester2 = new Semester(2003,null);
 		
 		assertFalse(semester1.equals(semester2));
 	}
@@ -117,8 +117,8 @@ public class GraduationSemesterTests extends UnitTest {
 	@Test
 	public void testNotEqualsEqualsWithMixedYear() {
 		
-		GraduationSemester semester1 = new GraduationSemester(null,05);
-		GraduationSemester semester2 = new GraduationSemester(2003,05);
+		Semester semester1 = new Semester(null,05);
+		Semester semester2 = new Semester(2003,05);
 		
 		assertFalse(semester1.equals(semester2));
 	}

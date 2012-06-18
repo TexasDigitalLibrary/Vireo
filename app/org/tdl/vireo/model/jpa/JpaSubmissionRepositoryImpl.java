@@ -36,7 +36,7 @@ import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.SubmissionRepository;
 import org.tdl.vireo.search.SearchDirection;
 import org.tdl.vireo.search.SearchFilter;
-import org.tdl.vireo.search.GraduationSemester;
+import org.tdl.vireo.search.Semester;
 import org.tdl.vireo.search.SearchOrder;
 import org.tdl.vireo.search.SearchResult;
 import org.tdl.vireo.state.StateManager;
@@ -208,7 +208,7 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 		
 		// Graduation Semester Filter
 		orList = new ORList();
-		for(GraduationSemester semester : filter.getGraduationSemesters()) {
+		for(Semester semester : filter.getGraduationSemesters()) {
 			ANDList semesterList = new ANDList();
 			
 			if (semester.year != null) {
@@ -345,10 +345,10 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 	}
 
 	@Override
-	public List<GraduationSemester> findAllGraduationSemesters() {
+	public List<Semester> findAllGraduationSemesters() {
 		Query query = JPA.em().createQuery("SELECT DISTINCT new org.tdl.vireo.search.GraduationSemester(sub.graduationYear, sub.graduationMonth) FROM JpaSubmissionImpl AS sub WHERE sub.graduationYear IS NOT NULL AND sub.graduationMonth IS NOT NULL ORDER BY sub.graduationYear, sub.graduationMonth");
 		
-		List<GraduationSemester> results = query.getResultList();
+		List<Semester> results = query.getResultList();
 		return results;
 	}
 	
@@ -441,7 +441,7 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 		
 		// Graduation Semester Filter
 		orList = new ORList();
-		for(GraduationSemester semester : filter.getGraduationSemesters()) {
+		for(Semester semester : filter.getGraduationSemesters()) {
 			ANDList semesterList = new ANDList();
 			
 			if (semester.year != null) {
