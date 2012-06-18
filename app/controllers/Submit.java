@@ -11,6 +11,9 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import org.tdl.vireo.model.*;
+
+import com.google.gson.Gson;
+
 import play.Logger;
 import play.Play;
 import play.mvc.Before;
@@ -512,7 +515,17 @@ public class Submit extends AbstractVireoController {
             	
                 if (sub.getPrimaryDocument() == null)
                     validation.addError("primaryDocument", "A manuscript file must be uploaded.");
-
+               
+                // For now - print the names of the attachments in the submission
+                
+        		for (Attachment attachment : sub.getAttachments()) {
+        			Logger.info("Attachment for Submission: " + attachment.getName());
+        		}
+        		
+        		
+        		// TODO -- Handle case where a doc has been uploade but not added
+        		// TODO -- Check file type ??
+        		
                 // Finally, if all is well, we can move on
                 
                 if (!validation.hasErrors())
