@@ -447,7 +447,10 @@ public class Submit extends AbstractVireoController {
 	@Security(RoleType.STUDENT)
 	public static void fileUpload(Long subId) {
 
+		// Locate the submission that this upload will be attached to
+		
         Submission sub = subRepo.findSubmission(subId);
+        
         if (sub == null) {
             // something is wrong
             error("Did not receive the expected submission id.");
@@ -455,10 +458,12 @@ public class Submit extends AbstractVireoController {
             Person submitter = context.getPerson();
 
             // This is an existing submission so check that we're the student or administrator here.
+            
             if (sub.getSubmitter() != submitter)
                 unauthorized();
 
             // If the upload manuscript button is pressed - then add the manuscript as an attachment
+            
             if (params.get("uploadPrimary") != null) {
 
                 File primaryDocument = params.get("primaryDocument",File.class);
@@ -479,6 +484,7 @@ public class Submit extends AbstractVireoController {
             }
 
             // If the upload supplementary button is pressed - then add the manuscript as an attachment
+            
             if (params.get("uploadSupplementary") != null) {
 
                 File supplementaryDocument = params.get("supplementaryDocument",File.class);
@@ -499,13 +505,16 @@ public class Submit extends AbstractVireoController {
             }
 
             // Submit was clicked
-            if (params.get("submit_next") != null) {
+            
+            if (params.get("submit-next") != null) {
 
-                // no files was uploaded
+                // No files were uploaded
+            	
                 if (sub.getPrimaryDocument() == null)
                     validation.addError("primaryDocument", "A manuscript file must be uploaded.");
 
                 // Finally, if all is well, we can move on
+                
                 if (!validation.hasErrors())
                     confirmAndSubmit(subId);
             }
