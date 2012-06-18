@@ -1,17 +1,35 @@
 #{extends 'main.html' /}
 
-${subId = (subId || 0) ? subId : 0}
+#{if subId == null}
 
 <div class="row">
     *{TODO: need to pull submission period from admin configs}*
     <p class="center red large">Currently accepting submissions for the May 2013 semester.</p>
-    <ul id="submitSteps" class="unstyled span11">
-        <li id="step1Btn"><a href="@{Submit.verifyPersonalInformation(subId)}" ${controllers.Submit.give_current_class_if_equal("verifyPersonalInformation",request.actionMethod)}></a></li>
-        <li id="step2Btn"><a href="@{Submit.license(subId)}" ${controllers.Submit.give_current_class_if_equal("license",request.actionMethod)}></a></li>
-        <li id="step3Btn"><a href="@{Submit.docInfo(subId)}" ${controllers.Submit.give_current_class_if_equal("docInfo",request.actionMethod)}></a></li>
-        <li id="step4Btn"><a href="@{Submit.fileUpload(subId)}" ${controllers.Submit.give_current_class_if_equal("fileUpload",request.actionMethod)}></a></li>
-        <li id="step5Btn"><a href="@{Submit.confirmAndSubmit(subId)}" ${controllers.Submit.give_current_class_if_equal("confirmAndSubmit",request.actionMethod)}></a></li>
+    <ul id="submitSteps" class="unstyled span11 nav">
+        <li id="step1Btn"><a href="@{Submit.verifyPersonalInformation(subId)}" ${controllers.Submit.giveCurrentClassIfEqual("verifyPersonalInformation",request.actionMethod)}></a></li>
+        <li id="step2Btn" class="disabled"><a></a></li>
+        <li id="step3Btn" class="disabled"><a></a></li>
+        <li id="step4Btn" class="disabled"><a></a></li>
+        <li id="step5Btn" class="disabled"><a></a></li>
     </ul>
 </div>
+
+#{/if}
+
+#{else}
+
+<div class="row">
+*{TODO: need to pull submission period from admin configs}*
+    <p class="center red large">Currently accepting submissions for the May 2013 semester.</p>
+    <ul id="submitSteps" class="unstyled span11">
+        <li id="step1Btn"><a href="@{Submit.verifyPersonalInformation(subId)}" ${controllers.Submit.giveCurrentClassIfEqual("verifyPersonalInformation",request.actionMethod)}></a></li>
+        <li id="step2Btn"><a href="@{Submit.license(subId)}" ${controllers.Submit.giveCurrentClassIfEqual("license",request.actionMethod)}></a></li>
+        <li id="step3Btn"><a href="@{Submit.docInfo(subId)}" ${controllers.Submit.giveCurrentClassIfEqual("docInfo",request.actionMethod)}></a></li>
+        <li id="step4Btn"><a href="@{Submit.fileUpload(subId)}" ${controllers.Submit.giveCurrentClassIfEqual("fileUpload",request.actionMethod)}></a></li>
+        <li id="step5Btn"><a href="@{Submit.confirmAndSubmit(subId)}" ${controllers.Submit.giveCurrentClassIfEqual("confirmAndSubmit",request.actionMethod)}></a></li>
+    </ul>
+</div>
+
+#{/else}
 
 #{doLayout /}

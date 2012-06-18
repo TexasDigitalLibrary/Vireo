@@ -11,6 +11,9 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import org.tdl.vireo.model.*;
+
+import com.google.gson.Gson;
+
 import play.Logger;
 import play.Play;
 import play.mvc.Before;
@@ -447,7 +450,10 @@ public class Submit extends AbstractVireoController {
 	@Security(RoleType.STUDENT)
 	public static void fileUpload(Long subId) {
 
+		// Locate the submission that this upload will be attached to
+		
         Submission sub = subRepo.findSubmission(subId);
+        
         if (sub == null) {
             // something is wrong
             error("Did not receive the expected submission id.");
@@ -455,10 +461,12 @@ public class Submit extends AbstractVireoController {
             Person submitter = context.getPerson();
 
             // This is an existing submission so check that we're the student or administrator here.
+            
             if (sub.getSubmitter() != submitter)
                 unauthorized();
 
             // If the upload manuscript button is pressed - then add the manuscript as an attachment
+            
             if (params.get("uploadPrimary") != null) {
 
                 File primaryDocument = params.get("primaryDocument",File.class);
@@ -479,6 +487,7 @@ public class Submit extends AbstractVireoController {
             }
 
             // If the upload supplementary button is pressed - then add the manuscript as an attachment
+            
             if (params.get("uploadSupplementary") != null) {
 
                 File supplementaryDocument = params.get("supplementaryDocument",File.class);
@@ -499,13 +508,26 @@ public class Submit extends AbstractVireoController {
             }
 
             // Submit was clicked
-            if (params.get("submit_next") != null) {
+            
+            if (params.get("submit-next") != null) {
 
-                // no files was uploaded
+                // No files were uploaded
+            	
                 if (sub.getPrimaryDocument() == null)
                     validation.addError("primaryDocument", "A manuscript file must be uploaded.");
-
+               
+                // For now - print the names of the attachments in the submission
+                
+        		for (Attachment attachment : sub.getAttachments()) {
+        			Logger.info("Attachment for Submission: " + attachment.getName());
+        		}
+        		
+        		
+        		// TODO -- Handle case where a doc has been uploade but not added
+        		// TODO -- Check file type ??
+        		
                 // Finally, if all is well, we can move on
+                
                 if (!validation.hasErrors())
                     confirmAndSubmit(subId);
             }
@@ -518,9 +540,32 @@ public class Submit extends AbstractVireoController {
         }
 	}
 
+	
+	// Handle the Confirm and Submit form
+	
 	@Security(RoleType.STUDENT)
 	public static void confirmAndSubmit(Long subId) {		
-		render(subId);		
+		
+		// Locate the submission 
+		
+		// TODO -- refactor - all of the methods in this controller have this same code at the beginning
+		
+        Submission sub = subRepo.findSubmission(subId);
+        Person submitter = context.getPerson();
+
+        if (sub == null) {
+            // something is wrong
+            error("Did not receive the expected submission id.");
+        } else {
+
+            // This is an existing submission so check that we're the student or administrator here.
+            
+            if (sub.getSubmitter() != submitter)
+                unauthorized();
+		
+        }
+		
+		render(subId, sub, submitter);		
 	}
 
 	@Security(RoleType.STUDENT)
@@ -528,18 +573,13 @@ public class Submit extends AbstractVireoController {
 		render("Submit/Review.html");
 	}
 
-	public static void dump() {
-		render("Submit/VerifyPersonalInformation.html");
-	}
-
-
     /**
      * Helper for assigning <em>class="current"</em> to the nav item
      * @param name1
      * @param name2
      * @return
      */
-    public static String give_current_class_if_equal(String name1, String name2) {
+    public static String giveCurrentClassIfEqual(String name1, String name2) {
         return name1 == name2 ? "class=current" : "";
     }
 

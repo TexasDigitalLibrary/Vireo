@@ -4,8 +4,21 @@
 BASICS
 **********************/
 html {
+	/*
 	background:url("../images/bg.jpg") repeat-x;
 	background-color:@backgroundColor;
+	*/
+	background: #1b333f; /* Old browsers */
+	background: -moz-linear-gradient(top,  #1b333f 0%, #43606e 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#1b333f), color-stop(100%,#43606e)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #1b333f 0%,#43606e 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #1b333f 0%,#43606e 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #1b333f 0%,#43606e 100%); /* IE10+ */
+	background: linear-gradient(top,  #1b333f 0%,#43606e 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1b333f', endColorstr='#43606e',GradientType=0 ); /* IE6-9 */
+	height: 100%;
+	background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
 body {
@@ -230,6 +243,17 @@ SUBMIT STEP BUTTONS
 
 #step5Btn a.current, #step5Btn a:hover{
 	background:url("../images/step5_current.gif") no-repeat scroll 0 0 transparent;	
+}
+
+// Add disabled state for items in submit steps
+.nav > li.disabled {
+    .opacity(40);
+    pointer-events: none;
+}
+.nav > li.disabled > a:hover {
+    cursor: default;
+    text-decoration: none;
+    background-color: inherit;
 }
 
 /********************
