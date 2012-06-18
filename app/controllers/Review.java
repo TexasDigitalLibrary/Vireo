@@ -264,7 +264,7 @@ public class Review extends AbstractVireoController {
 			// Not sure if this works the way I think it should.
 			Date start = params.get("startDate", Date.class);
 			Date end = params.get("endDate", Date.class);
-			activeFilter.setDateRange(start, end);
+			activeFilter.setSubmissionDateRange(start, end);
 			
 		} else {
 			error("Unable to add an unknown filter paramater.");
@@ -340,7 +340,7 @@ public class Review extends AbstractVireoController {
 			activeFilter.setUMIRelease(null);
 			
 		} else if ("date".equals(type)) {
-			activeFilter.setDateRange(null, null);
+			activeFilter.setSubmissionDateRange(null, null);
 		
 		} else {	
 			error("Unable to remove an unknown filter paramater.");

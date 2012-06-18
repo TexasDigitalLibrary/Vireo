@@ -301,7 +301,7 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		filter.addDocumentType("docType1");
 		filter.addDocumentType("docType2");
 		filter.setUMIRelease(true);
-		filter.setDateRange(new Date(), new Date());
+		filter.setSubmissionDateRange(new Date(), new Date());
 		filter.save();
 
 		// Commit and reopen a new transaction.
@@ -350,8 +350,8 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		assertTrue(retrieved.getDocumentTypes().contains("docType2"));
 		assertFalse(retrieved.getDocumentTypes().contains("docType3"));
 		assertTrue(retrieved.getUMIRelease());
-		assertNotNull(retrieved.getDateRangeStart());
-		assertNotNull(retrieved.getDateRangeEnd());
+		assertNotNull(retrieved.getSubmissionDateRangeStart());
+		assertNotNull(retrieved.getSubmissionDateRangeEnd());
 		
 		retrieved.delete();
 		settingRepo.findEmbargoType(embargo1.getId()).delete();
@@ -562,7 +562,7 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		
 		// Date Range Filter
 		filter = subRepo.createSearchFilter(person, "test-range");
-		filter.setDateRange(new Date(2000,1,1), new Date(2006,1,1));
+		filter.setSubmissionDateRange(new Date(2000,1,1), new Date(2006,1,1));
 		filter.save();
 
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10).getResults();
@@ -996,7 +996,7 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		
 		// Date Range Filter
 		filter = subRepo.createSearchFilter(person, "test-range");
-		filter.setDateRange(new Date(2000,1,1), new Date(2006,1,1));
+		filter.setSubmissionDateRange(new Date(2000,1,1), new Date(2006,1,1));
 		filter.save();
 
 		logs = subRepo.filterSearchActionLogs(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10).getResults();

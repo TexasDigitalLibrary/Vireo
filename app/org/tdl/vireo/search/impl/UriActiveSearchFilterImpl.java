@@ -252,17 +252,17 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 	}
 
 	@Override
-	public Date getDateRangeStart() {
+	public Date getSubmissionDateRangeStart() {
 		return rangeStart;
 	}
 
 	@Override
-	public Date getDateRangeEnd() {
+	public Date getSubmissionDateRangeEnd() {
 		return rangeEnd;
 	}
 
 	@Override
-	public void setDateRange(Date start, Date end) {
+	public void setSubmissionDateRange(Date start, Date end) {
 		rangeStart = start;
 		rangeEnd = end;
 	}
@@ -406,7 +406,7 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 		other.getDocumentTypes().addAll(this.documentTypes);
 		
 		other.setUMIRelease(this.umiRelease);
-		other.setDateRange(this.rangeStart, this.rangeEnd);
+		other.setSubmissionDateRange(this.rangeStart, this.rangeEnd);
 	}
 
 	@Override
@@ -423,8 +423,8 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 		this.majors = new ArrayList<String>(other.getMajors());
 		this.documentTypes = new ArrayList<String>(other.getDocumentTypes());
 		this.umiRelease = other.getUMIRelease();
-		this.rangeStart = other.getDateRangeStart();
-		this.rangeEnd = other.getDateRangeEnd();
+		this.rangeStart = other.getSubmissionDateRangeStart();
+		this.rangeEnd = other.getSubmissionDateRangeEnd();
 	}
 	
 	

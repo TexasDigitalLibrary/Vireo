@@ -238,12 +238,12 @@ public interface SearchFilter {
 	/**
 	 * @return The start of the current date range search.
 	 */
-	public Date getDateRangeStart();
+	public Date getSubmissionDateRangeStart();
 
 	/**
 	 * @return The end of the current date range search.
 	 */
-	public Date getDateRangeEnd();
+	public Date getSubmissionDateRangeEnd();
 
 	/**
 	 * Set a new start and end date for a date range search.
@@ -253,6 +253,6 @@ public interface SearchFilter {
 	 * @param end
 	 *            The end date, inclusive.
 	 */
-	public void setDateRange(Date start, Date end);
+	public void setSubmissionDateRange(Date start, Date end);
 
 }

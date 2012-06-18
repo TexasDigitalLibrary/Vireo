@@ -69,7 +69,7 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		filter.addDocumentType("doc1");
 		filter.addDocumentType("doc2");
 		filter.setUMIRelease(true);
-		filter.setDateRange(start,end);
+		filter.setSubmissionDateRange(start,end);
 		
 		// yay, now lets read that back out.
 		
@@ -97,8 +97,8 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		assertEquals("doc1",filter.getDocumentTypes().get(0));
 		assertEquals("doc2",filter.getDocumentTypes().get(1));
 		assertEquals(Boolean.valueOf(true),filter.getUMIRelease());
-		assertEquals(start,filter.getDateRangeStart());
-		assertEquals(end,filter.getDateRangeEnd());
+		assertEquals(start,filter.getSubmissionDateRangeStart());
+		assertEquals(end,filter.getSubmissionDateRangeEnd());
 	}
 	
 	/**
@@ -143,7 +143,7 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 			filter.addDocumentType("doc1");
 			filter.addDocumentType("doc2");
 			filter.setUMIRelease(true);
-			filter.setDateRange(start,end);
+			filter.setSubmissionDateRange(start,end);
 
 			String encoded = filter.encode();
 
@@ -183,8 +183,8 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 			assertEquals("doc1",newFilter.getDocumentTypes().get(0));
 			assertEquals("doc2",newFilter.getDocumentTypes().get(1));
 			assertEquals(Boolean.valueOf(true),newFilter.getUMIRelease());
-			assertEquals(start,newFilter.getDateRangeStart());
-			assertEquals(end,newFilter.getDateRangeEnd());
+			assertEquals(start,newFilter.getSubmissionDateRangeStart());
+			assertEquals(end,newFilter.getSubmissionDateRangeEnd());
 
 		} finally {
 			person1.delete();
@@ -218,8 +218,8 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		assertEquals(0,newFilter.getMajors().size());
 		assertEquals(0,newFilter.getDocumentTypes().size());
 		assertEquals(null,newFilter.getUMIRelease());
-		assertEquals(null,newFilter.getDateRangeStart());
-		assertEquals(null,newFilter.getDateRangeEnd());
+		assertEquals(null,newFilter.getSubmissionDateRangeStart());
+		assertEquals(null,newFilter.getSubmissionDateRangeEnd());
 	}
 	
 	/**
@@ -260,7 +260,7 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		filter.addDocumentType("doc1");
 		filter.addDocumentType("doc2");
 		filter.setUMIRelease(true);
-		filter.setDateRange(start,end);
+		filter.setSubmissionDateRange(start,end);
 		
 		ActiveSearchFilter newFilter = Spring.getBeanOfType(UriActiveSearchFilterImpl.class);
 		filter.copyTo(newFilter);
@@ -290,8 +290,8 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		assertEquals("doc1",newFilter.getDocumentTypes().get(0));
 		assertEquals("doc2",newFilter.getDocumentTypes().get(1));
 		assertEquals(Boolean.valueOf(true),newFilter.getUMIRelease());
-		assertEquals(start,newFilter.getDateRangeStart());
-		assertEquals(end,newFilter.getDateRangeEnd());
+		assertEquals(start,newFilter.getSubmissionDateRangeStart());
+		assertEquals(end,newFilter.getSubmissionDateRangeEnd());
 	}
 	
 	/**
@@ -331,7 +331,7 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		filter.addDocumentType("doc1");
 		filter.addDocumentType("doc2");
 		filter.setUMIRelease(true);
-		filter.setDateRange(start,end);
+		filter.setSubmissionDateRange(start,end);
 		
 		ActiveSearchFilter newFilter = Spring.getBeanOfType(UriActiveSearchFilterImpl.class);
 		newFilter.copyFrom(filter);
@@ -361,8 +361,8 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		assertEquals("doc1",newFilter.getDocumentTypes().get(0));
 		assertEquals("doc2",newFilter.getDocumentTypes().get(1));
 		assertEquals(Boolean.valueOf(true),newFilter.getUMIRelease());
-		assertEquals(start,newFilter.getDateRangeStart());
-		assertEquals(end,newFilter.getDateRangeEnd());
+		assertEquals(start,newFilter.getSubmissionDateRangeStart());
+		assertEquals(end,newFilter.getSubmissionDateRangeEnd());
 	}
 	
 	/**

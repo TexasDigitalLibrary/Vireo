@@ -277,9 +277,9 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 		}
 		
 		// Date range Filter
-		if (filter.getDateRangeStart() != null && filter.getDateRangeEnd() != null) {
-			Date start = filter.getDateRangeStart();
-			Date end = filter.getDateRangeEnd();
+		if (filter.getSubmissionDateRangeStart() != null && filter.getSubmissionDateRangeEnd() != null) {
+			Date start = filter.getSubmissionDateRangeStart();
+			Date end = filter.getSubmissionDateRangeEnd();
 			
 			andList.add(new Statement("sub.submissionDate > :startDate"+paramIndex));
 			andList.add(new Statement("sub.submissionDate < :endDate"+(paramIndex+1)));
@@ -346,7 +346,7 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 
 	@Override
 	public List<Semester> findAllGraduationSemesters() {
-		Query query = JPA.em().createQuery("SELECT DISTINCT new org.tdl.vireo.search.GraduationSemester(sub.graduationYear, sub.graduationMonth) FROM JpaSubmissionImpl AS sub WHERE sub.graduationYear IS NOT NULL AND sub.graduationMonth IS NOT NULL ORDER BY sub.graduationYear, sub.graduationMonth");
+		Query query = JPA.em().createQuery("SELECT DISTINCT new org.tdl.vireo.search.Semester(sub.graduationYear, sub.graduationMonth) FROM JpaSubmissionImpl AS sub WHERE sub.graduationYear IS NOT NULL AND sub.graduationMonth IS NOT NULL ORDER BY sub.graduationYear, sub.graduationMonth");
 		
 		List<Semester> results = query.getResultList();
 		return results;
@@ -510,9 +510,9 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 		}
 		
 		// Date range Filter
-		if (filter.getDateRangeStart() != null && filter.getDateRangeEnd() != null) {
-			Date start = filter.getDateRangeStart();
-			Date end = filter.getDateRangeEnd();
+		if (filter.getSubmissionDateRangeStart() != null && filter.getSubmissionDateRangeEnd() != null) {
+			Date start = filter.getSubmissionDateRangeStart();
+			Date end = filter.getSubmissionDateRangeEnd();
 			
 			andList.add(new Statement("sub.submissionDate > :startDate"+paramIndex));
 			andList.add(new Statement("sub.submissionDate < :endDate"+(paramIndex+1)));
