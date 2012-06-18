@@ -80,11 +80,20 @@ public interface SubmissionRepository {
 			SearchOrder orderBy, SearchDirection direction, int offset,
 			int limit);
 	
+	// //////////////////////////////////////////////////////////////
+	// Submission informational
+	// //////////////////////////////////////////////////////////////
+	
 	/**
 	 * @return A list of all graduation semesters for which there are submissions
 	 *         recorded for.
 	 */
 	public List<Semester> findAllGraduationSemesters();
+	
+	/**
+	 * @return A list of all years for which submissions occured during that year.
+	 */
+	public List<Integer> findAllSubmissionYears();
 
 	// //////////////////////////////////////////////////////////////
 	// Attachment, Committee Member, and Custom Action Value Models

@@ -6,6 +6,7 @@ import java.net.URI;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -255,15 +256,18 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 	public Date getSubmissionDateRangeStart() {
 		return rangeStart;
 	}
+	
+	@Override
+	public void setSubmissionDateRangeStart(Date start) {
+		rangeStart = start;
+	}
 
 	@Override
 	public Date getSubmissionDateRangeEnd() {
 		return rangeEnd;
 	}
-
-	@Override
-	public void setSubmissionDateRange(Date start, Date end) {
-		rangeStart = start;
+	
+	public void setSubmissionDateRangeEnd(Date end) {
 		rangeEnd = end;
 	}
 	
@@ -406,7 +410,8 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 		other.getDocumentTypes().addAll(this.documentTypes);
 		
 		other.setUMIRelease(this.umiRelease);
-		other.setSubmissionDateRange(this.rangeStart, this.rangeEnd);
+		other.setSubmissionDateRangeStart(this.rangeStart);
+		other.setSubmissionDateRangeEnd(this.rangeEnd);
 	}
 
 	@Override

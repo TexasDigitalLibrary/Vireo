@@ -152,9 +152,17 @@
             </ul>
             #{/if}
             
-            <!-- Submission Date -->
-            
-            <!-- Submission Date (Range) -->
+            #{if activeFilter.getSubmissionDateRangeStart() != null || activeFilter.getSubmissionDateRangeEnd() != null }
+            <div class="sub-heading">SUBMISSION DATE</div>
+            <ul class="unstyled editable">
+                #{if activeFilter.getSubmissionDateRangeStart() != null}
+                <li><strong>Before: </strong><a class="removable" href="@{Review.ModifyFilter(nav)}?action=remove&type=rangeStart">${activeFilter.getSubmissionDateRangeStart().format('MM/dd/yyyy')}</a>
+                #{/if}
+                #{if activeFilter.getSubmissionDateRangeEnd() != null}
+                <li><strong>After: </strong><a class="removable" href="@{Review.ModifyFilter(nav)}?action=remove&type=rangeEnd">${activeFilter.getSubmissionDateRangeEnd().format('MM/dd/yyyy')}</a>
+                #{/if}
+            </ul>
+            #{/if}
             
 		</div>
 		<div class="box-footer">
@@ -367,7 +375,67 @@
 			
 			<!-- TODO: Submission Date (Choose) -->
 			
-			<!-- TODO: Submission Date (Range) -->
+			<div class="sub-heading">SUBMISSION DATE (CHOOSE)</div>
+		    <ul class="unstyled">
+		        %{
+		          Date start = activeFilter.getSubmissionDateRangeStart();
+		          Date end = activeFilter.getSubmissionDateRangeEnd();
+		        }%
+		     
+		        #{if start == null && end == null }
+		        #{list items:subRepo.findAllSubmissionYears(), as:'year'}
+		        #{if year_index == 6}
+		        <li class="more">more...</li>
+		        #{/if}
+		        <li #{if year_index >= 6}class="hidden"#{/if}><a href="@{Review.ModifyFilter(nav)}?action=add&type=rangeChoose&year=${year}">${year}</a></li>
+		        #{/list}
+		        #{/if}
+		        *{ If the range is for exactly a year, then allow the user to narrow the date to a month. }*
+		        #{elseif start != null && end != null && start.getYear() == end.getYear() && start.getMonth() == 0 && start.getDate() == 1 && end.getMonth() == 11 && end.getDate() == 31}
+                #{list items:0..11, as:'month'}
+                %{ 
+                String monthName = new java.text.DateFormatSymbols().getMonths()[month]; 
+                int year = start.getYear() + 1900;
+                }%
+                #{if month_index == 6}
+                <li class="more">more...</li>
+                #{/if}
+                <li #{if month_index >= 6}class="hidden"#{/if}><a href="@{Review.ModifyFilter(nav)}?action=add&type=rangeChoose&&year=${year}&month=${month}">${monthName}</a></li>
+                #{/list}
+		        #{/elseif}
+		        #{elseif start != null && end != null && start.getYear() == end.getYear() && start.getMonth() == end.getMonth() && start.getDate() == 1 && end.getDate() >= 28}
+		        %{
+		        int year = start.getYear() + 1900;
+		        int month = start.getMonth();
+		        }%
+		        <li><a href="@{Review.ModifyFilter(nav)}?action=add&type=rangeChoose&&year=${year}&month=${month}&days=1">Days 1-10</a></li>
+		        <li><a href="@{Review.ModifyFilter(nav)}?action=add&type=rangeChoose&&year=${year}&month=${month}&days=11">Days 11-20</a></li>
+		        <li><a href="@{Review.ModifyFilter(nav)}?action=add&type=rangeChoose&&year=${year}&month=${month}&days=21">Days 21-31</a></li>
+		        #{/elseif}
+		    </ul>
+			
+			
+			<div class="sub-heading">SUBMISSION DATE (RANGE)</div>
+			<ul class="unstyled">
+			    #{if activeFilter.getSubmissionDateRangeStart() == null || activeFilter.getSubmissionDateRangeEnd() == null }
+			    <li><form action="@{Review.modifyFilter(nav)}" method="POST" class="form-search">
+                    <input type="hidden" name="type" value="range"/>
+                    <input type="hidden" name="action" value="add"/>
+                    #{if activeFilter.getSubmissionDateRangeStart() == null }
+                    <p class="daterange-label">After:</p>
+                    <input type="text" name="startDate" class="input-small">
+                    <p class="daterange-hint">MM/DD/YYYY</p>
+                    #{/if}
+                    #{if activeFilter.getSubmissionDateRangeEnd() == null }
+                    <p class="daterange-label">Before:</p>
+                    <input type="text" name="endDate" class="input-small">
+                    <p class="daterange-hint">MM/DD/YYYY</p>
+                    #{/if}
+                    <button type="submit" class="btn btn-primary">Go</button>
+                </form></li>
+                #{/if}
+			</ul>
+			
 		</div>
 		<div class="box-footer">
 		

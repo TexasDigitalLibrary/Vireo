@@ -197,6 +197,40 @@ public class JpaSubmissionImplTests extends UnitTest {
 	}
 	
 	/**
+	 * Test find all distinct submission years
+	 */
+	@Test
+	public void testFindAllSubmissionYears() {
+		
+		Submission sub2002 = subRepo.createSubmission(person);
+		Submission sub2003 = subRepo.createSubmission(person);
+		Submission sub2005 = subRepo.createSubmission(person);
+		Submission subNull = subRepo.createSubmission(person);
+		
+		sub2002.setSubmissionDate(new Date(102, 05, 01));
+		sub2003.setSubmissionDate(new Date(103, 06, 28));
+		sub2005.setSubmissionDate(new Date(105, 11, 31));
+		
+		sub2002.save();
+		sub2003.save();
+		sub2005.save();
+		subNull.save();
+				
+		List<Integer> years = subRepo.findAllSubmissionYears();
+		
+		assertNotNull(years);
+		assertEquals(Integer.valueOf(2002), years.get(0));
+		assertEquals(Integer.valueOf(2003), years.get(1));
+		assertEquals(Integer.valueOf(2005), years.get(2));
+		assertEquals(3,years.size());
+		
+		sub2002.delete();
+		sub2003.delete();
+		sub2005.delete();
+		subNull.delete();
+	}
+	
+	/**
 	 * Test getting and setting state.
 	 */
 	@Test

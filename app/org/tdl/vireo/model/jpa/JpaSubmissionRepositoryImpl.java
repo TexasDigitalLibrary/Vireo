@@ -1,5 +1,6 @@
 package org.tdl.vireo.model.jpa;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -9,6 +10,10 @@ import java.util.Set;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Root;
 
 import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.ActionLog;
@@ -344,12 +349,41 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 		return result;
 	}
 
+	// //////////////////////////////////////////////////////////////
+	// Submission informational
+	// //////////////////////////////////////////////////////////////
+	
 	@Override
 	public List<Semester> findAllGraduationSemesters() {
 		Query query = JPA.em().createQuery("SELECT DISTINCT new org.tdl.vireo.search.Semester(sub.graduationYear, sub.graduationMonth) FROM JpaSubmissionImpl AS sub WHERE sub.graduationYear IS NOT NULL AND sub.graduationMonth IS NOT NULL ORDER BY sub.graduationYear, sub.graduationMonth");
 		
 		List<Semester> results = query.getResultList();
 		return results;
+	}
+	
+	@Override
+	public List<Integer> findAllSubmissionYears() {
+		
+		CriteriaBuilder cb = JPA.em().getCriteriaBuilder();
+		CriteriaQuery<Integer> cq = cb.createQuery(Integer.class);
+		
+		// This is what we are selecting from.
+		Root<JpaSubmissionImpl> sub = cq.from(JpaSubmissionImpl.class);
+		
+		// This gets a field name for use other expressions.
+		Expression<Timestamp> subDate = sub.get("submissionDate");
+		
+		// Select District year(subDate)
+		cq.select(cb.function("year", Integer.class, subDate)).distinct(true);
+		
+		// Where subDate is not null
+		cq.where(cb.isNotNull(subDate));
+		
+		// Generate the query from the criteria query.
+		TypedQuery<Integer> query = JPA.em().createQuery(cq);
+		
+		List<Integer> results = query.getResultList();
+		return results;	
 	}
 	
 	// //////////////////////////////////////////////////////////////

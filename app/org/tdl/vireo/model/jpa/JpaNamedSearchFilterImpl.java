@@ -416,18 +416,19 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	public Date getSubmissionDateRangeStart() {
 		return rangeStart;
 	}
+	
+	@Override
+	public void setSubmissionDateRangeStart(Date start) {
+		rangeStart = start;
+	}
 
 	@Override
 	public Date getSubmissionDateRangeEnd() {
 		return rangeEnd;
 	}
-
+	
 	@Override
-	public void setSubmissionDateRange(Date start, Date end) {
-		assertManagerOrOwner(creator);
-		
-		this.rangeStart = start;
-		this.rangeEnd = end;
+	public void setSubmissionDateRangeEnd(Date end) {
+		rangeEnd = end;
 	}
-
 }

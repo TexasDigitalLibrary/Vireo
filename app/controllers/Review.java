@@ -1,6 +1,7 @@
 package controllers;
 
 import java.lang.annotation.Annotation;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -260,12 +261,89 @@ public class Review extends AbstractVireoController {
 			Boolean release = params.get("value",Boolean.class);
 			activeFilter.setUMIRelease(release);
 		
-		} else if ("date".equals(type)) {
+		} else if ("range".equals(type)) {
 			// Not sure if this works the way I think it should.
-			Date start = params.get("startDate", Date.class);
-			Date end = params.get("endDate", Date.class);
-			activeFilter.setSubmissionDateRange(start, end);
+			Date startDate = params.get("startDate", Date.class);
+			Date endDate = params.get("endDate", Date.class);
 			
+			Calendar start = Calendar.getInstance();
+			Calendar end = Calendar.getInstance();
+			
+			start.setTime(startDate);
+			end.setTime(endDate);
+			
+			// Always set the maximal hour, minute, second so that the dates are inclusive.
+			start.set(Calendar.HOUR,end.getActualMinimum(Calendar.HOUR));
+			start.set(Calendar.MINUTE,end.getActualMinimum(Calendar.MINUTE));
+			start.set(Calendar.SECOND,end.getActualMinimum(Calendar.SECOND));
+			end.set(Calendar.HOUR,end.getActualMaximum(Calendar.HOUR));
+			end.set(Calendar.MINUTE,end.getActualMaximum(Calendar.MINUTE));
+			end.set(Calendar.SECOND,end.getActualMaximum(Calendar.SECOND));
+			
+			if (start != null)
+				activeFilter.setSubmissionDateRangeStart(start.getTime());
+
+			if (end != null)
+				activeFilter.setSubmissionDateRangeEnd(end.getTime());
+		} else if ("rangeChoose".equals(type)) {
+			
+			Integer year = params.get("year",Integer.class);
+			Integer month = params.get("month",Integer.class);
+			Integer days = params.get("days",Integer.class);
+			
+			// Generate the start & end dates
+			Calendar start = Calendar.getInstance();
+			Calendar end = Calendar.getInstance();
+
+			start.clear();
+			end.clear();
+			
+			start.set(Calendar.YEAR, year);
+			end.set(Calendar.YEAR, year);
+			
+			// Check if user has chosen down to the month.
+			if (month == null) {
+				start.set(Calendar.MONTH, Calendar.JANUARY);
+				end.set(Calendar.MONTH, Calendar.DECEMBER);
+			} else {
+				start.set(Calendar.MONTH, month);
+				end.set(Calendar.MONTH, month);
+			}
+			
+			// Check if the user has chosen down to the day range.
+			if (days == null) {
+				start.set(Calendar.DAY_OF_MONTH,end.getActualMinimum(Calendar.DAY_OF_MONTH));
+				end.set(Calendar.DAY_OF_MONTH,end.getActualMaximum(Calendar.DAY_OF_MONTH));
+			} else {
+				// Three cases:
+				// 1 = days 1-10 of the current month
+				// 11 = days 11-20 of the current month
+				// 21 = days 21-31 (or whatever is the last day) of the current month.
+				if (days == 1) {
+					start.set(Calendar.DAY_OF_MONTH,1);
+					end.set(Calendar.DAY_OF_MONTH,10);
+				} else if (days == 11) {
+					start.set(Calendar.DAY_OF_MONTH,11);
+					end.set(Calendar.DAY_OF_MONTH,20);
+				} else if (days == 21) {
+					start.set(Calendar.DAY_OF_MONTH,21);
+					end.set(Calendar.DAY_OF_MONTH,end.getActualMaximum(Calendar.DAY_OF_MONTH));
+				}
+				
+			}
+			
+			// Always set the maximal hour, minute, second so that the dates are inclusive.
+			start.set(Calendar.HOUR,end.getActualMinimum(Calendar.HOUR));
+			start.set(Calendar.MINUTE,end.getActualMinimum(Calendar.MINUTE));
+			start.set(Calendar.SECOND,end.getActualMinimum(Calendar.SECOND));
+			end.set(Calendar.HOUR,end.getActualMaximum(Calendar.HOUR));
+			end.set(Calendar.MINUTE,end.getActualMaximum(Calendar.MINUTE));
+			end.set(Calendar.SECOND,end.getActualMaximum(Calendar.SECOND));
+			
+			
+			// Set the range
+			activeFilter.setSubmissionDateRangeStart(start.getTime());
+			activeFilter.setSubmissionDateRangeEnd(end.getTime());			
 		} else {
 			error("Unable to add an unknown filter paramater.");
 		}
@@ -316,9 +394,6 @@ public class Review extends AbstractVireoController {
 		} else if ("semester".equals(type)) {
 			Integer year = params.get("year",Integer.class);
 			Integer month = params.get("month",Integer.class);
-			
-			System.out.println("year:"+year);
-			System.out.println("month:"+month);
 			activeFilter.removeGraduationSemester(year, month);
 
 		} else if ("degree".equals(type)) {
@@ -339,9 +414,12 @@ public class Review extends AbstractVireoController {
 		} else if ("umi".equals(type)) {
 			activeFilter.setUMIRelease(null);
 			
-		} else if ("date".equals(type)) {
-			activeFilter.setSubmissionDateRange(null, null);
+		} else if ("rangeStart".equals(type)) {
+			activeFilter.setSubmissionDateRangeStart(null);
 		
+		} else if ("rangeEnd".equals(type)) {
+			activeFilter.setSubmissionDateRangeEnd(null);
+
 		} else {	
 			error("Unable to remove an unknown filter paramater.");
 		}

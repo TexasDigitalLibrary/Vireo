@@ -69,7 +69,8 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		filter.addDocumentType("doc1");
 		filter.addDocumentType("doc2");
 		filter.setUMIRelease(true);
-		filter.setSubmissionDateRange(start,end);
+		filter.setSubmissionDateRangeStart(start);
+		filter.setSubmissionDateRangeEnd(end);
 		
 		// yay, now lets read that back out.
 		
@@ -143,7 +144,8 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 			filter.addDocumentType("doc1");
 			filter.addDocumentType("doc2");
 			filter.setUMIRelease(true);
-			filter.setSubmissionDateRange(start,end);
+			filter.setSubmissionDateRangeStart(start);
+			filter.setSubmissionDateRangeEnd(end);
 
 			String encoded = filter.encode();
 
@@ -260,7 +262,8 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		filter.addDocumentType("doc1");
 		filter.addDocumentType("doc2");
 		filter.setUMIRelease(true);
-		filter.setSubmissionDateRange(start,end);
+		filter.setSubmissionDateRangeStart(start);
+		filter.setSubmissionDateRangeEnd(end);
 		
 		ActiveSearchFilter newFilter = Spring.getBeanOfType(UriActiveSearchFilterImpl.class);
 		filter.copyTo(newFilter);
@@ -331,7 +334,8 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		filter.addDocumentType("doc1");
 		filter.addDocumentType("doc2");
 		filter.setUMIRelease(true);
-		filter.setSubmissionDateRange(start,end);
+		filter.setSubmissionDateRangeStart(start);
+		filter.setSubmissionDateRangeEnd(end);
 		
 		ActiveSearchFilter newFilter = Spring.getBeanOfType(UriActiveSearchFilterImpl.class);
 		newFilter.copyFrom(filter);
