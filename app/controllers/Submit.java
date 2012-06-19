@@ -19,6 +19,9 @@ import play.Play;
 import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
+import sun.util.logging.resources.logging;
+import java.text.DateFormatSymbols;
+
 /**
  * Submit controller
  * This controller manages the student submission forms for Vireo 
@@ -566,7 +569,9 @@ public class Submit extends AbstractVireoController {
                 unauthorized();
 		
         }
-		
+        
+        Logger.info("Months " + settingRepo.findAllGraduationMonths().toString());
+        settingRepo.findAllGraduationMonths();
 		render(subId, sub, submitter);		
 	}
 
@@ -730,4 +735,11 @@ public class Submit extends AbstractVireoController {
         
         return typeNames;
     }
+    
+    // Return string representation of a month
+    
+    public static String getMonth(int month) {
+        return new DateFormatSymbols().getMonths()[month];
+    }
+    
 }
