@@ -26,7 +26,7 @@ import play.test.FunctionalTest;
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
-public class AuthenticationTest extends FunctionalTest {
+public class AuthenticationTest extends AbstractVireoFunctionalTest {
 	
 	// Constants
 	public static Pattern EMAIL_TOKEN = Pattern.compile("http://[^/]*/[a-z]+\\?token=([a-zA-Z0-9\\-_]+)[\\n\\r]{1}");

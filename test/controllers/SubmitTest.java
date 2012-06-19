@@ -31,7 +31,7 @@ import org.tdl.vireo.model.CommitteeMember;
  * @author Dan Galewsky</a>
  */
 
-public class SubmitTest extends FunctionalTest {
+public class SubmitTest extends AbstractVireoFunctionalTest {
 
 	// Spring dependencies
 	public static SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
@@ -43,7 +43,7 @@ public class SubmitTest extends FunctionalTest {
 	 @Test
 	 public void testGetVerifyInfoPage() {
 
-		 shibLogin();
+		 LOGIN();
 		 
 		 final String VERIFY_URL = Router
 				 .reverse("Submit.verifyPersonalInformation").url;
@@ -57,7 +57,7 @@ public class SubmitTest extends FunctionalTest {
 	 @Ignore // Scott didn't finish this test.
 	 public void testPostVerifyInfo(){
 		 
-		 shibLogin();
+		 LOGIN();
 		 
 		 final String DO_VERIFY_URL = Router
 				 .reverse("Submit.doVerifyPersonalInformation").url;
@@ -85,7 +85,7 @@ public class SubmitTest extends FunctionalTest {
 	 @Test
 	 public void testDocumentInfo() {
 
-	 	shibLogin();
+	 	LOGIN();
 
 	 	context.turnOffAuthorization();
 
@@ -153,16 +153,5 @@ public class SubmitTest extends FunctionalTest {
 		
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();
-	 }
-
-	private void shibLogin() {
-		 Map<String, Object> routeArgs = new HashMap<String, Object>();
-		 routeArgs.put("methodName", "ShibbolethAuthentication");
-		 	 
-		 final String LOGIN_SHIB_RETURN_URL = Router.reverse(
-				 "Authentication.loginReturn", routeArgs).url;
-		 
-		 // Click on the shibboleth URL
-		 Response response = GET(LOGIN_SHIB_RETURN_URL);
 	 }
 }
