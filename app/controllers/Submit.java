@@ -318,6 +318,8 @@ public class Submit extends AbstractVireoController {
             if (sub.getSubmitter() != submitter)
                 unauthorized();
 
+            String checked = sub.getLicenseAgreementDate() != null ? "checked=checked" : "";
+
             // Not too keen on this; seems messy
             String licenseText = Play.configuration.getProperty("submit.license.text", "");
 
@@ -336,7 +338,7 @@ public class Submit extends AbstractVireoController {
                 }
             }
 
-            render(subId,licenseText);
+            render(subId,licenseText,checked);
         }
 
     }
