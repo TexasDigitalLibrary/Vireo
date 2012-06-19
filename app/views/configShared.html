@@ -1,0 +1,58 @@
+#{extends 'admin.html' /}
+
+<div id="left-column" class="pull-left">
+
+	<div class="side-box">
+		<div class="box-head expanded">
+			<div class="expand">[-]</div>
+			<div class="main-heading">Active Document</div>
+		</div>
+		<div class="box-body">			
+			<div class="sub-heading">NAME</div>
+			<ul class="unstyled">
+				<li>Billy Thornton</li>
+			</ul>
+			<div class="sub-heading">EMAIL</div>
+			<ul class="unstyled">
+				<li>bthornton@gmail.com</li>
+			</ul>
+		</div>
+		<div class="box-footer">
+		
+		</div>		
+	</div>
+	
+	<div class="side-box">
+		<div class="box-head expanded">
+			<div class="expand">[-]</div>
+			<div class="main-heading">My Preferences</div>
+		</div>
+		<div class="box-body">			
+			<div class="sub-heading">DISPLAY NAME</div>
+			<ul class="unstyled">
+				<li><input class="input-medium" type="text" value="Billy Bob" /></li>
+			</ul>
+			<div class="sub-heading">PREFERED EMAIL</div>
+			<ul class="unstyled">
+				<li><input class="input-medium" type="text" value="bthornton@gmail.com" /></li>
+				<li><input type="checkbox" class="checkbox"> I want to receive a copy of all emails sent by the system on my behalf.</input></li>
+			</ul>
+		</div>
+		<div class="box-footer">
+		
+		</div>		
+	</div>	
+		
+</div>
+
+<div id="right-column">
+	<div class="inner">
+		<ul class="nav nav-tabs">
+			<li #{if subNav=="user"}class="active"#{/if}><a href="@{Config.userPreferences()}">User Preferences</a></li>
+			<li #{if subNav=="application"}class="active"#{/if}><a href="@{Config.applicationSettings()}">Application Settings</a></li>
+			<li #{if subNav=="email"}class="active"#{/if}><a href="@{Config.emailSettings()}">Email Settings</a></li>
+			<li #{if subNav=="config"}class="active"#{/if}><a href="@{Config.configurableSettings()}">Configurable Settings</a></li>
+		</ul>
+		#{doLayout /}
+	</div>
+</div>

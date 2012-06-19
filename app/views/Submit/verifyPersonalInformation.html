@@ -43,6 +43,8 @@
                 #{/if} 
                 #{else}
 				<input type="text" class="span1" name="middleName" value="${middleName}">
+				<a href="#" class="tooltip-icon" rel="tooltip" title="Enter the first letter of your middle name."><i class="icon-info-sign">				
+				</i></a>
 				#{/else}
 			</div>
 		</div>
@@ -70,7 +72,9 @@
                 <p>${birthYear}</p>
                 #{/if} 
                 #{else}
-				<input type="text" class="span3" name="birthYear" value="${birthYear}">
+				<input type="text" class="span3" name="birthYear" value="${birthYear}">				
+				<a href="#" class="tooltip-icon" rel="tooltip" title="Enter the full year in which you were born. For example 1985."><i class="icon-info-sign">				
+				</i></a>
 				#{/else}
 			</div>
 		</div>
@@ -97,6 +101,8 @@
 				    <option #{if department == dept.getName()}selected="true"#{/if} value="${dept.getName()}">${dept.getName()}</option>
 				    #{/list}
 			    </select>
+				<a href="#" class="tooltip-icon" rel="tooltip" title="Enter the department you belong to."><i class="icon-info-sign">				
+				</i></a>
 			    #{/else}
 			</div>
 		</div>
@@ -113,6 +119,8 @@
                     <option #{if degree == degreeObject.getName()}selected="true"#{/if} value="${degreeObject.getName()}">${degreeObject.getName()}</option>
                     #{/list}
 				</select>
+				<a href="#" class="tooltip-icon" rel="tooltip" title="Choose the type of degree you are seeking."><i class="icon-info-sign">				
+				</i></a>
 				#{/else}
 			</div>
 		</div>
@@ -129,6 +137,8 @@
                     <option #{if major == majorObject.getName()}selected="true"#{/if} value="${majorObject.getName()}">${majorObject.getName()}</option>
                     #{/list}
 				</select>
+				<a href="#" class="tooltip-icon" rel="tooltip" title="Enter the discipline you specialized in."><i class="icon-info-sign">				
+				</i></a>
 				#{/else}
 			</div>
 		</div>
@@ -144,6 +154,8 @@
                 #{/if} 
                 #{else}
 				<input type="text" class="span3" name="permPhone" value="${permPhone}">
+				<a href="#" class="tooltip-icon" rel="tooltip" title="Enter a phone number where you can be reached even after you have left school."><i class="icon-info-sign">				
+				</i></a>
 				#{/else}
 			</div>
 		</div>
@@ -154,7 +166,9 @@
                 <p>${permAddress}</p>
                 #{/if} 
                 #{else}
-				<textarea class="span5" name="permAddress">${permAddress}</textarea>
+				<textarea class="span4" name="permAddress">${permAddress}</textarea>
+				<a href="#" class="tooltip-icon" rel="tooltip" title="Enter an address where you can be reached even after you complete and leave school."><i class="icon-info-sign">				
+				</i></a>
 				#{/else}
 			</div>
 		</div>
@@ -166,6 +180,8 @@
                 #{/if} 
                 #{else}
 				<input type="text" class="span3" name="permEmail" value="${permEmail}">
+				<a href="#" class="tooltip-icon" rel="tooltip" title="Enter an email address you will always have."><i class="icon-info-sign">				
+				</i></a>
 				#{/else}
 			</div>
 		</div>
@@ -177,6 +193,8 @@
                 #{/if} 
                 #{else}
 				<input type="text" class="span3" name="currentPhone" value="${currentPhone}">
+				<a href="#" class="tooltip-icon" rel="tooltip" title="Enter a phone number where you can be reached."><i class="icon-info-sign">				
+				</i></a>
 				#{/else}
 			</div>
 		</div>
@@ -187,7 +205,9 @@
                 <p>${currentAddress}</p>
                 #{/if} 
                 #{else}
-				<textarea class="span5" name="currentAddress">${currentAddress}</textarea>
+				<textarea class="span4" name="currentAddress">${currentAddress}</textarea>
+				<a href="#" class="tooltip-icon" rel="tooltip" title="Enter an address where you can be reached."><i class="icon-info-sign">				
+				</i></a>
 				#{/else}
 			</div>
 		</div>
