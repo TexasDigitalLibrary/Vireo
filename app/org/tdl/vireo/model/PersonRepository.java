@@ -62,6 +62,19 @@ public interface PersonRepository {
 	 * @return The person object or null if not found.
 	 */
 	public Person findPersonByNetId(String netId);
+	
+	/**
+	 * Find all persons with at least the provided role type. For example if
+	 * there were three users A) an administrator, B) a reviewer, and C) a
+	 * student. If queried for the role type of a reviewer then A and B would be
+	 * returned. If queried for just the type administrator then only A would be
+	 * returned.
+	 * 
+	 * @param type
+	 *            The role type to querie for.
+	 * @return A list of all persons which this role or higher.
+	 */
+	public List<Person> findPersonsByRole(RoleType type);
 
 	/**
 	 * @return All person objects

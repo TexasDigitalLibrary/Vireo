@@ -265,13 +265,14 @@
                 </li>
                 #{/if}
 			</ul>
+			
 			<div class="sub-heading">ASSIGNED TO</div>
 			<ul class="unstyled">
 			    #{if !activeFilter.getAssignees().contains(null) }
                 <li><a href="@{Review.ModifyFilter(nav)}?action=add&type=assignee&value=null">Unassigned</a>
                 #{/if}
                 %{ int shown = 1 // because of unassigned }%
-			    #{list items:personRepo.findAllPersons(), as:'person'}
+			    #{list items:personRepo.findPersonsByRole(org.tdl.vireo.model.RoleType.REVIEWER), as:'person'}
 			    #{if !activeFilter.getAssignees().contains(person) }{% shown++ %}
 			    #{if shown == 6}
 			    <li class="more">more...</li>
