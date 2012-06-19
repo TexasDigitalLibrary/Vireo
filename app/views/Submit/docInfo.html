@@ -44,6 +44,8 @@
 				    <option #{if null != degreeYear && Integer.parseInt(degreeYear) == year}selected="true"#{/if} value="${year}">${year}</option>
 				    #{/list}
 				</select>
+				<a href="#" class="tooltip-icon" rel="tooltip" title="Example: May 2008"><i class="icon-info-sign">				
+				</i></a>
 			</div>
 		</div>
 		<div class="control-group #{ifError 'docType'}error#{/ifError}">
@@ -60,13 +62,15 @@
 		<div class="control-group #{ifError 'abstractText'}error#{/ifError}">
 			<label class="control-label" for="abstractText"><b>* Abstract</b></label>
 			<div class="controls">
-				<textarea class="span5" id="abstractText" name="abstractText">${abstractText}</textarea>
+				<textarea class="span4" id="abstractText" name="abstractText">${abstractText}</textarea>
 			</div>
 		</div>
 		<div class="control-group #{ifError 'keywords'}error#{/ifError}">
 			<label class="control-label" for="keywords"><b>* Keywords</b></label>
 			<div class="controls">
-				<textarea class="span5" id="keywords" name="keywords">${keywords}</textarea>
+				<textarea class="span4" id="keywords" name="keywords">${keywords}</textarea>
+				<a href="#" class="tooltip-icon" rel="tooltip" title="You can enter multiple keywords. Use semi-colons ( ; ) to separate the entries."><i class="icon-info-sign">				
+				</i></a>
 			</div>
 		</div>
 	</fieldset>
@@ -154,6 +158,8 @@
 			<label class="control-label" for="chairEmail"><b>* Committee<br />Chair Email:</b></label>
 			<div class="controls">
 				<input type="text" class="span4" id="chairEmail" name="chairEmail" value="${chairEmail}">
+				<a href="#" class="tooltip-icon" rel="tooltip" title="Enter an email address for your committee chair."><i class="icon-info-sign">				
+				</i></a>
 			</div>
 		</div>
 	</fieldset>

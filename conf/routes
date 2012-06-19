@@ -32,7 +32,11 @@ GET     /profile                                Authentication.profile
 *       /admin/{nav}/filter                     Review.modifyFilter
 
 ### Manager
-*       /admin/settings                         Config.settings
+*       /admin/settings/user					Config.userPreferences
+*       /admin/settings							Config.userPreferences
+*       /admin/settings/applications			Config.applicationSettings
+*       /admin/settings/email					Config.emailSettings
+*       /admin/settings/configurable			Config.configurableSettings
 
 
 
