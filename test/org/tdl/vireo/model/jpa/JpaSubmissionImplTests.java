@@ -179,21 +179,19 @@ public class JpaSubmissionImplTests extends UnitTest {
 		subNull.save();
 		
 		
-		List<Semester> years = subRepo.findAllGraduationSemesters();
-		
-		assertNotNull(years);
-		assertEquals(Integer.valueOf(2002), years.get(0).year);
-		assertEquals(Integer.valueOf(05), years.get(0).month);
-		assertEquals(Integer.valueOf(2003), years.get(1).year);
-		assertEquals(Integer.valueOf(11), years.get(1).month);
-		assertEquals(Integer.valueOf(2005), years.get(2).year);
-		assertEquals(Integer.valueOf(05), years.get(2).month);
-		assertEquals(3,years.size());
+		List<Semester> semesters = subRepo.findAllGraduationSemesters();
 		
 		sub2002.delete();
 		sub2003.delete();
 		sub2005.delete();
 		subNull.delete();
+		
+		// Remember there may be other submissions causing other data points.
+		assertNotNull(semesters);
+		assertTrue(semesters.contains(new Semester(2002,05)));
+		assertTrue(semesters.contains(new Semester(2003,11)));
+		assertTrue(semesters.contains(new Semester(2005,05)));
+		assertTrue(semesters.size() >= 3);
 	}
 	
 	/**
@@ -218,16 +216,17 @@ public class JpaSubmissionImplTests extends UnitTest {
 				
 		List<Integer> years = subRepo.findAllSubmissionYears();
 		
-		assertNotNull(years);
-		assertEquals(Integer.valueOf(2002), years.get(0));
-		assertEquals(Integer.valueOf(2003), years.get(1));
-		assertEquals(Integer.valueOf(2005), years.get(2));
-		assertEquals(3,years.size());
-		
 		sub2002.delete();
 		sub2003.delete();
 		sub2005.delete();
 		subNull.delete();
+		
+		// Remember there may be other submissions causing other data points.
+		assertNotNull(years);
+		assertTrue(years.contains(2002));
+		assertTrue(years.contains(2003));
+		assertTrue(years.contains(2005));
+		assertTrue(years.size() >= 3);
 	}
 	
 	/**
