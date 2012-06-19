@@ -19,9 +19,10 @@ import play.db.jpa.Model;
 @Table(name = "configuration")
 public class JpaConfigurationImpl extends JpaAbstractModel<JpaConfigurationImpl> implements Configuration {
 
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false, unique = true, length=32768) // 2^15
 	public String name;
 
+	@Column(length=32768) // 2^15
 	public String value;
 
 	/**

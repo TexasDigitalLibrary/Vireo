@@ -34,7 +34,7 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 	@ManyToOne(targetEntity=JpaSubmissionImpl.class, optional=false)
 	public Submission submission;
 
-	@Column(nullable = false)
+	@Column(nullable = false, length=32768) // 2^15
 	public String name;
 
 	@Column(nullable = false)

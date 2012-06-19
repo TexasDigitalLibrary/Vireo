@@ -23,7 +23,7 @@ public class JpaCollegeImpl extends JpaAbstractModel<JpaCollegeImpl> implements 
 	@Column(nullable = false)
 	public int displayOrder;
 
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false, unique = true, length=32768) // 2^15
 	public String name;
 
 	/**

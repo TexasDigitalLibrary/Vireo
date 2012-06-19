@@ -39,39 +39,55 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 	 */
 	public static final String HASH_ALGORITHM = "SHA-256";
 	
-	@Column(unique = true)
+	@Column(unique = true,length=32768) // 2^15
 	public String netid;
 
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false, unique = true, length=32768) // 2^15
 	public String email;
 	
+	@Column(length=32768) // 2^15
 	public String passwordHash;
 	
+	@Column(length=32768) // 2^15
 	public String institutionalIdentifier;
 
-	@Column(nullable = false)
+	@Column(nullable = false, length=32768) // 2^15
 	public String firstName;
 
-	@Column(nullable = false)
+	@Column(nullable = false, length=32768) // 2^15
 	public String lastName;
+	@Column(length=32768) // 2^15
 	public String middleName;
+	@Column(length=32768) // 2^15
 	public String displayName;
 
 	public Integer birthYear;
 
+	@Column(length=32768) // 2^15
 	public String currentPhoneNumber;
+	@Column(length=32768) // 2^15
 	public String currentPostalAddress;
+	@Column(length=32768) // 2^15
 	public String currentEmailAddress;
-
+	
+	@Column(length=32768) // 2^15
 	public String permanentPhoneNumber;
+	@Column(length=32768) // 2^15
 	public String permanentPostalAddress;
+	@Column(length=32768) // 2^15
 	public String permanentEmailAddress;
 
+	@Column(length=32768) // 2^15
 	public String currentDegree;
+	@Column(length=32768) // 2^15
 	public String currentDepartment;
+	@Column(length=32768) // 2^15
 	public String currentCollege;
+	@Column(length=32768) // 2^15
 	public String currentMajor;
+	@Column(length=32768) // 2^15
 	public Integer currentGraduationYear;
+	@Column(length=32768) // 2^15
 	public Integer currentGraduationMonth;
 
 	@OneToMany(targetEntity=JpaPreferenceImpl.class, mappedBy="person", cascade=CascadeType.ALL)

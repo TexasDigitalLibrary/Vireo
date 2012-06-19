@@ -41,7 +41,7 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	@ManyToOne(targetEntity=JpaPersonImpl.class, optional=false)
 	public Person creator;
 	
-	@Column(nullable = false)
+	@Column(nullable = false, length=32768) // 2^15
 	public String name;
 	
 	public boolean publicFlag;

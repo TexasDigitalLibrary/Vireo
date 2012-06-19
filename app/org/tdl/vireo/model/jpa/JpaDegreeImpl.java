@@ -25,7 +25,7 @@ public class JpaDegreeImpl extends JpaAbstractModel<JpaDegreeImpl> implements De
 	@Column(nullable = false)
 	public int displayOrder;
 
-	@Column(nullable = false)
+	@Column(nullable = false, length=32768) // 2^15
 	public String name;
 
 	@Column(nullable = false)
