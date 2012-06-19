@@ -34,21 +34,28 @@ import play.mvc.With;
 @With(Authentication.class)
 public class Review extends AbstractVireoController {
 
+	// The cookie names where the current active filters are stored for submission and actionlog.
 	public final static String SUBMISSION_FILTER_COOKIE_NAME = "SubmissionFilter";
 	public final static String ACTION_LOG_FILTER_COOKIE_NAME = "ActionLogFilter";
 	
 	/**
 	 * List page
 	 * 
-	 * This page handles the filter search operations for finding submissions. Users are able to use a faceted like browsing experience to tailor a list of submissions.
+	 * This page handles the filter search operations for finding submissions.
+	 * Users are able to use a faceted like browsing experience to tailor a list
+	 * of submissions.
 	 * 
 	 * Here's an overview of the paramaters expected by this controller:
 	 * 
-	 * action: The action to take such add/remove a filter parameter. The valid actions are: filterAdd, filterRemove, filterSave, filterDelete, filterLoad, filterClear.
+	 * action: The action to take such add/remove a filter parameter. The valid
+	 * actions are: filterAdd, filterRemove, filterSave, filterDelete,
+	 * filterLoad, filterClear.
 	 * 
-	 * type: When the action is to add/remove a filter parameter the type parameter is used to identifier the particular type to work with.
+	 * type: When the action is to add/remove a filter parameter the type
+	 * parameter is used to identifier the particular type to work with.
 	 * 
-	 * value: When the action is to add/remove a filter the value paramater is the actual value to add or remove from the filter search.
+	 * value: When the action is to add/remove a filter the value paramater is
+	 * the actual value to add or remove from the filter search.
 	 * 
 	 */
 	@Security(RoleType.REVIEWER)
@@ -121,47 +128,46 @@ public class Review extends AbstractVireoController {
 		
 		String action = params.get("action");
 		if ("add".equals(action)) {
-			System.out.println("add");
 			// The user is going to modify the existing active filter by adding a new paramater.
 			doAddFilterParameter(activeFilter);
 		
 		} else if ("remove".equals(action)) {
-			System.out.println("remove");
-
 			// The user is going to modify the existing active filter by removing an existing paramater.
 			doRemoveFilterParamater(activeFilter);
 			
 		} else if ("save".equals(action)) {
-			System.out.println("save");
-
-			// The user is going to save the current active filter to the database.
 			String name = params.get("name");
-			NamedSearchFilter newFilter = subRepo.createSearchFilter(person, name);
-			activeFilter.copyTo(newFilter);
-			newFilter.save();
+			boolean publicFlag = false;
+			if (params.get("public") != null)
+				publicFlag = true;
 			
-		} else if ("delete".equals(action)) {
-			System.out.println("delete");
-
-			// The user is going to delete an existing filter.
-			// TODO: Check privileges
-			Long filterId = params.get("id",Long.class);
-			NamedSearchFilter oldFilter = subRepo.findSearchFilter(filterId);
-			oldFilter.delete();
+			// Check if a filter allready exsits for the name.
+			NamedSearchFilter namedFilter = subRepo.findSearchFilterByCreatorAndName(person, name);
+			if (namedFilter == null) {
+				namedFilter = subRepo.createSearchFilter(person, name);
+			}
+			
+			namedFilter.setPublic(publicFlag);
+			activeFilter.copyTo(namedFilter);
+			namedFilter.save();
+			
+		} else if ("manage".equals(action)) {
+			String[] removeIds = params.getAll("remove");
+			for (String removeId : removeIds) {	
+				NamedSearchFilter namedFilter = subRepo.findSearchFilter(Long.valueOf(removeId));
+				
+				if (namedFilter.getCreator() == person || person.getRole().ordinal() >= RoleType.MANAGER.ordinal())
+					namedFilter.delete();
+			}			
 			
 		} else if ("load".equals(action)) {
-			System.out.println("load");
-
-			// The user is going to replace the current filter with an existing
-			// filter saved in the database.
-			// TODO: check privileges
-			Long filterId = params.get("id",Long.class);
+			Long filterId = params.get("filter",Long.class);
 			NamedSearchFilter savedFilter = subRepo.findSearchFilter(filterId);
-			activeFilter.copyFrom(savedFilter);
+			
+			if (savedFilter.isPublic() || savedFilter.getCreator() == person)
+				activeFilter.copyFrom(savedFilter);
 			
 		} else if ("clear".equals(action)) {
-			System.out.println("clear");
-
 			// Reset the users current filter by clearing it completely.
 			activeFilter = Spring.getBeanOfType(ActiveSearchFilter.class);
 			
@@ -170,7 +176,7 @@ public class Review extends AbstractVireoController {
 		}
 		
 		// Save the active filter to a cookie
-		System.out.println("cookie value="+activeFilter.encode());
+		//System.out.println("cookie value="+activeFilter.encode());
 		response.setCookie(SUBMISSION_FILTER_COOKIE_NAME, activeFilter.encode());
 		
 		if ("list".equals(nav))

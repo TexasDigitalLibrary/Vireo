@@ -7,8 +7,8 @@
         <link href="@{'/public/stylesheets/admin.less'}" rel="stylesheet" type="text/css">                       
         #{get 'moreStyles' /}
         <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
-        <script src="@{'/public/javascripts/jquery-1.6.4.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>        
-               
+        <script src="@{'/public/javascripts/jquery-1.7.2.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>                               
+        <script src="@{'/public/javascripts/bootstrap.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
         <script>
         jQuery(document).ready(function(){
         		jQuery(".box-head").click(function(){        			
@@ -48,12 +48,29 @@
         		 * removed and this element will also be removed. So hidden is 
         		 * a one time thing, not a toggle.
         		 */
-        		jQuery(".more").click(function(){
+        		jQuery('.more').click(function(){
         			jQuery(this).parent().find(".hidden").each(function(){
         				jQuery(this).removeClass("hidden");
         			});
         			jQuery(this).remove();
         		});
+        		
+        		
+        		/**
+        		 * Confirm a link before following.
+        		 *
+        		 * Upon first click, this will replace the link's text with
+        		 * "Are you sure?". Then upon a second click it will activate
+        		 * the links destination
+        		 */
+        		 jQuery('.confirm').click(function() {
+        			 if (jQuery(this).text().indexOf("Are you sure?") >= 0) {
+        				 return true;
+        			 } else {
+        				 jQuery(this).text("(Are you sure?)");
+        				 return false;
+        			 }
+        		 });
         });
         </script>
         
