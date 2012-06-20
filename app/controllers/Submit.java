@@ -560,7 +560,8 @@ public class Submit extends AbstractVireoController {
 		
         Submission sub = subRepo.findSubmission(subId);
         Person submitter = context.getPerson();
-
+        List<ActionLog> actionLogList = subRepo.findActionLog(sub);
+        
         if (sub == null) {
             // something is wrong
             error("Did not receive the expected submission id.");
@@ -569,12 +570,10 @@ public class Submit extends AbstractVireoController {
             // This is an existing submission so check that we're the student or administrator here.
             
             if (sub.getSubmitter() != submitter)
-                unauthorized();
-		
+                unauthorized();		
         }
         
-                
-		render(subId, sub, submitter);		
+		render(subId, sub, submitter, actionLogList);		
 	}
 
 	@Security(RoleType.STUDENT)
@@ -592,35 +591,6 @@ public class Submit extends AbstractVireoController {
         return name1 == name2 ? "class=current" : "";
     }
 
-    
-    /**
-     * Helper for filling out the Application Activity table in the confirm form
-     * @param sub Submission
-     * @return HTML for rendering as the table body
-     */
-    
-    public static String actionLogTableLines(Submission sub) {
-    	
-    	// Get the list of action log entries for this submission
-    	
-        List<ActionLog> actionLogList = subRepo.findActionLog(sub);
-        
-        StringBuffer htmlVal = new StringBuffer();
-        DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:MM");
-        
-        // Iterate over all action log entries and format
-        
-        for (ActionLog log : actionLogList) {        	
-        	
-			htmlVal.append("<tr>");
-			htmlVal.append("<td>" + log.getPerson().getDisplayName() + "</td>");
-			htmlVal.append("<td>" + log.getEntry() + "</td>");
-			htmlVal.append("<td>" + df.format(log.getActionDate()) + "</td>" );
-			htmlVal.append("</tr>");					
-		}
-		
-    	return htmlVal.toString();
-    }
     
 	/**
 	 * Internal method to determine if a group of information should be locked.

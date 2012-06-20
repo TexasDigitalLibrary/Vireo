@@ -155,7 +155,13 @@
 			</tr>
 		</thead>
 		<tbody>
-				${controllers.Submit.actionLogTableLines(sub).raw()}
+		    #{list items:actionLogList, as:'log'}
+		    <tr>
+			    <td> ${log.getPerson().getDisplayName()} </td>
+				<td> ${log.getEntry()}  </td>
+				<td> ${log.getActionDate().format('dd MMMM yyyy hh:mm')} </td>	    
+		    </tr>
+		    #{/list}				
 		</tbody>
 	</table>
 </div>
