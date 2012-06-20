@@ -368,6 +368,39 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 	}
 	
 	/**
+	 * Test filtering by unassigned.
+	 */
+	@Test
+	public void testUnassigned() {
+
+		NamedSearchFilter filter = subRepo.createSearchFilter(person, "filter").save();
+		filter.addAssignee(person);
+		filter.addAssignee(null);
+		filter.save();
+
+		// Commit and reopen a new transaction.
+		JPA.em().flush();
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
+		NamedSearchFilter retrieved = subRepo.findSearchFilter(filter.getId());
+		
+		assertTrue(retrieved.getAssignees().contains(person));
+		assertTrue(retrieved.getAssignees().contains(null));
+		assertEquals(2,retrieved.getAssignees().size());
+		
+		retrieved.delete();
+		personRepo.findPerson(person.getId()).delete();
+		person = null;
+		
+		// Commit and reopen a new transaction.
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+	}
+	
+	/**
 	 * Test that managers can make filters public, others can't
 	 */
 	@Test

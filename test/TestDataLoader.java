@@ -453,7 +453,7 @@ public class TestDataLoader extends Job {
 		sub1.addCommitteeMember("Frank", "Shipman", null, false);
 		sub1.addCommitteeMember("Andruid", "Kerne", null, false);
 		sub1.setCommitteeContactEmail("committee@tdl.org");
-		sub1.setSubmissionDate(new Date(2005,05,01));
+		sub1.setSubmissionDate(new Date(2005-1900,05,01));
 		sub1.setDegree(DEGREES_DEFINITIONS[0].name);
 		sub1.setDepartment(DEPARTMENTS_DEFINITIONS[0]);
 		sub1.setCollege(COLLEGES_DEFINITIONS[0]);
@@ -475,7 +475,7 @@ public class TestDataLoader extends Job {
 		sub2.addCommitteeMember("Andruid", "Kerne", null, false);
 		sub2.addCommitteeMember("John", "Leggett", null, false);
 		sub2.setCommitteeContactEmail("committee@tdl.org");
-		sub2.setSubmissionDate(new Date(2010,01,01));
+		sub2.setSubmissionDate(new Date(2010-1900,01,01));
 		sub2.setDegree(DEGREES_DEFINITIONS[1].name);
 		sub2.setDepartment(DEPARTMENTS_DEFINITIONS[1]);
 		sub2.setCollege(COLLEGES_DEFINITIONS[1]);
@@ -497,7 +497,7 @@ public class TestDataLoader extends Job {
 		sub3.addCommitteeMember("John", "Leggett", null, false);
 		sub3.addCommitteeMember("Frank", "Shipman", null, false);
 		sub3.setCommitteeContactEmail("committee@tdl.org");
-		sub3.setSubmissionDate(new Date(2011,05,29));
+		sub3.setSubmissionDate(new Date(2011-1900,05,29));
 		sub3.setDegree(DEGREES_DEFINITIONS[2].name);
 		sub3.setDepartment(DEPARTMENTS_DEFINITIONS[2]);
 		sub3.setCollege(COLLEGES_DEFINITIONS[2]);
@@ -518,7 +518,7 @@ public class TestDataLoader extends Job {
 		sub4.addCommitteeMember("Bill", "Gates", "henery", true);
 		sub4.addCommitteeMember("Steve", "Jobs", null, true);
 		sub4.setCommitteeContactEmail("committee@tdl.org");
-		sub4.setSubmissionDate(new Date(2011,05,2));
+		sub4.setSubmissionDate(new Date(2011-1900,05,2));
 		sub4.setDegree(DEGREES_DEFINITIONS[3].name);
 		sub4.setDepartment(DEPARTMENTS_DEFINITIONS[20]);
 		sub4.setCollege(COLLEGES_DEFINITIONS[10]);
@@ -541,7 +541,7 @@ public class TestDataLoader extends Job {
 		sub5.addCommitteeMember("Willow","Shields", null, false);
 		sub5.addCommitteeMember("Johs", "Hutcherson", null, false);
 		sub5.setCommitteeContactEmail("committee@tdl.org");
-		sub5.setSubmissionDate(new Date(2011,05,2));
+		sub5.setSubmissionDate(new Date(2011-1900,05,2));
 		sub5.setDegree(DEGREES_DEFINITIONS[3].name);
 		sub5.setDepartment(DEPARTMENTS_DEFINITIONS[21]);
 		sub5.setCollege(COLLEGES_DEFINITIONS[5]);
@@ -564,7 +564,7 @@ public class TestDataLoader extends Job {
 		sub6.addCommitteeMember("Primrose","Everdeen", null, false);
 		sub6.addCommitteeMember("Hob", "Vendor", null, false);
 		sub6.setCommitteeContactEmail("committee@tdl.org");
-		sub6.setSubmissionDate(new Date(2011,11,2));
+		sub6.setSubmissionDate(new Date(2011-1900,11,2));
 		sub6.setDegree(DEGREES_DEFINITIONS[10].name);
 		sub6.setDepartment(DEPARTMENTS_DEFINITIONS[22]);
 		sub6.setCollege(COLLEGES_DEFINITIONS[5]);
@@ -586,7 +586,7 @@ public class TestDataLoader extends Job {
 		sub7.addCommitteeMember("Frank", "Shipman", null, false);
 		sub7.addCommitteeMember("Andruid", "Kerne", null, false);
 		sub7.setCommitteeContactEmail("committee@tdl.org");
-		sub7.setSubmissionDate(new Date(2011,11,2));
+		sub7.setSubmissionDate(new Date(2011-1900,11,2));
 		sub7.setDegree(DEGREES_DEFINITIONS[11].name);
 		sub7.setDepartment(DEPARTMENTS_DEFINITIONS[22]);
 		sub7.setCollege(COLLEGES_DEFINITIONS[5]);
@@ -608,7 +608,7 @@ public class TestDataLoader extends Job {
 		sub8.addCommitteeMember("Frank", "Shipman", null, false);
 		sub8.addCommitteeMember("Andruid", "Kerne", null, false);
 		sub8.setCommitteeContactEmail("committee@tdl.org");
-		sub8.setSubmissionDate(new Date(2011,11,2));
+		sub8.setSubmissionDate(new Date(2011-1900,11,2));
 		sub8.setDegree(DEGREES_DEFINITIONS[12].name);
 		sub8.setDepartment(DEPARTMENTS_DEFINITIONS[28]);
 		sub8.setCollege(COLLEGES_DEFINITIONS[2]);
@@ -631,7 +631,7 @@ public class TestDataLoader extends Job {
 		sub9.addCommitteeMember("Frank", "Shipman", null, false);
 		sub9.addCommitteeMember("Andruid", "Kerne", null, false);
 		sub9.setCommitteeContactEmail("committee@tdl.org");
-		sub9.setSubmissionDate(new Date(2011,11,2));
+		sub9.setSubmissionDate(new Date(2011-1900,11,2));
 		sub9.setDegree(DEGREES_DEFINITIONS[10].name);
 		sub9.setDepartment(DEPARTMENTS_DEFINITIONS[26]);
 		sub9.setCollege(COLLEGES_DEFINITIONS[8]);

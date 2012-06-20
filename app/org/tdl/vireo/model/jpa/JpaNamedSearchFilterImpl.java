@@ -54,6 +54,7 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	
 	@OneToMany(targetEntity=JpaPersonImpl.class)
 	public List<Person> assignees;
+	public Boolean unassigned;
 
 	@OneToMany(targetEntity=JpaEmbargoTypeImpl.class)
 	public List<EmbargoType> embargos;
@@ -109,6 +110,7 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 		this.searchText = new ArrayList<String>();
 		this.states = new ArrayList<String>();
 		this.assignees = new ArrayList<Person>();
+		this.unassigned = false;
 		this.embargos = new ArrayList<EmbargoType>();
 		this.semesters = new ArrayList<String>();
 		this.cachedSemesters = new ArrayList<Semester>();
@@ -120,15 +122,21 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	}
 
 	/**
-	 * Just before being written to the database update the semester's data
-	 * structure with the current state of the cachedSemester's data structure.
-	 * Since while the object is live that is the structure that is manipulated.
+	 * Just before data is written to the database update some fields for
+	 * saving.
+	 * 
+	 * 1) the semester's data structure with the current state of the
+	 * cachedSemester's data structure. Since while the object is live that is
+	 * the structure that is manipulated.
+	 * 
+	 * 2) Check if the unassigned user has been added to the list, aka (null).
+	 * If so remove it from the list and set the unassigned flag.
 	 */
 	@PrePersist
 	@PreUpdate
 	@PreRemove
 	public void onSave() {
-		
+		// 1) Semester
 		semesters.clear();
 		for(Semester semester : cachedSemesters) {
 			// Format: year/month
@@ -148,17 +156,23 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 			
 			semesters.add(value);
 		}
+		
+		// 2) Unassigned
+		if (assignees.contains(null)) {
+			assignees.remove(null);
+			unassigned = true;
+		} 
 	}
 
 	/**
 	 * After being loaded from the database update our cached copy of the
-	 * semester data structure.
+	 * semester data structure and unassigned assignees.
 	 */
 	@PostPersist
 	@PostLoad
 	@PostUpdate
 	public void onLoad() {
-		
+		// 1) Semesters
 		cachedSemesters = new ArrayList<Semester>();
 		for(String semesterString : semesters) {
 			
@@ -172,6 +186,13 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 			
 			cachedSemesters.add(semester);
 		}
+		
+		// 2) Unassigned
+		if (unassigned) {
+			if (!assignees.contains(null)) {
+				assignees.add(null);
+			}
+		} 
 	}
 	
 	@Override
@@ -260,12 +281,20 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	@Override
 	public void addAssignee(Person assignee) {
 		assertManagerOrOwner(creator);
+		
+		if (assignee == null)
+			unassigned = true;
+		
 		assignees.add(assignee);
 	}
 
 	@Override
 	public void removeAssignee(Person assignee) {
 		assertManagerOrOwner(creator);
+		
+		if (assignee == null)
+			unassigned = false;
+		
 		assignees.remove(assignee);
 	}
 	

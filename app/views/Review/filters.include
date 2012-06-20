@@ -510,7 +510,7 @@ jQuery(document).ready(function() {
             #{if month_index == 6}
             <li class="more">more...</li>
             #{/if}
-            <li #{if month_index >= 6}class="hidden"#{/if}><a href="@{Review.ModifyFilter(nav)}?action=add&type=rangeChoose&&year=${year}&month=${month}">${monthName}</a></li>
+            <li #{if month_index >= 6}class="hidden"#{/if}><a href="@{Review.ModifyFilter(nav)}?action=add&type=rangeChoose&year=${year}&month=${month}">${monthName}</a></li>
             #{/list}
             #{/elseif}
             #{elseif start != null && end != null && start.getYear() == end.getYear() && start.getMonth() == end.getMonth() && start.getDate() == 1 && end.getDate() >= 28}
@@ -518,9 +518,9 @@ jQuery(document).ready(function() {
             int year = start.getYear() + 1900;
             int month = start.getMonth();
             }%
-            <li><a href="@{Review.ModifyFilter(nav)}?action=add&type=rangeChoose&&year=${year}&month=${month}&days=1">Days 1-10</a></li>
-            <li><a href="@{Review.ModifyFilter(nav)}?action=add&type=rangeChoose&&year=${year}&month=${month}&days=11">Days 11-20</a></li>
-            <li><a href="@{Review.ModifyFilter(nav)}?action=add&type=rangeChoose&&year=${year}&month=${month}&days=21">Days 21-31</a></li>
+            <li><a href="@{Review.ModifyFilter(nav)}?action=add&type=rangeChoose&year=${year}&month=${month}&days=1">Days 1-10</a></li>
+            <li><a href="@{Review.ModifyFilter(nav)}?action=add&type=rangeChoose&year=${year}&month=${month}&days=11">Days 11-20</a></li>
+            <li><a href="@{Review.ModifyFilter(nav)}?action=add&type=rangeChoose&year=${year}&month=${month}&days=21">Days 21-31</a></li>
             #{/elseif}
         </ul>
         

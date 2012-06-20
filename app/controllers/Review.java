@@ -268,29 +268,36 @@ public class Review extends AbstractVireoController {
 			activeFilter.setUMIRelease(release);
 		
 		} else if ("range".equals(type)) {
-			// Not sure if this works the way I think it should.
+			
+			// First handle start date
 			Date startDate = params.get("startDate", Date.class);
-			Date endDate = params.get("endDate", Date.class);
-			
-			Calendar start = Calendar.getInstance();
-			Calendar end = Calendar.getInstance();
-			
-			start.setTime(startDate);
-			end.setTime(endDate);
-			
-			// Always set the maximal hour, minute, second so that the dates are inclusive.
-			start.set(Calendar.HOUR,end.getActualMinimum(Calendar.HOUR));
-			start.set(Calendar.MINUTE,end.getActualMinimum(Calendar.MINUTE));
-			start.set(Calendar.SECOND,end.getActualMinimum(Calendar.SECOND));
-			end.set(Calendar.HOUR,end.getActualMaximum(Calendar.HOUR));
-			end.set(Calendar.MINUTE,end.getActualMaximum(Calendar.MINUTE));
-			end.set(Calendar.SECOND,end.getActualMaximum(Calendar.SECOND));
-			
-			if (start != null)
+			if (startDate != null) {
+				Calendar start = Calendar.getInstance();
+				
+				start.setTime(startDate);
+				
+				// Always set the minimal hour, minute, second so that the start date is inclusive.
+				start.set(Calendar.HOUR,start.getActualMinimum(Calendar.HOUR));
+				start.set(Calendar.MINUTE,start.getActualMinimum(Calendar.MINUTE));
+				start.set(Calendar.SECOND,start.getActualMinimum(Calendar.SECOND));
+				
 				activeFilter.setSubmissionDateRangeStart(start.getTime());
-
-			if (end != null)
+			}
+			
+			// Next handle end date
+			Date endDate = params.get("endDate", Date.class);
+			if (endDate != null) {
+				Calendar end = Calendar.getInstance();
+				
+				end.setTime(endDate);
+				
+				// Always set the maximal hour, minute, second so that the dates are inclusive.
+				end.set(Calendar.HOUR,end.getActualMaximum(Calendar.HOUR));
+				end.set(Calendar.MINUTE,end.getActualMaximum(Calendar.MINUTE));
+				end.set(Calendar.SECOND,end.getActualMaximum(Calendar.SECOND));
+				
 				activeFilter.setSubmissionDateRangeEnd(end.getTime());
+			}
 		} else if ("rangeChoose".equals(type)) {
 			
 			Integer year = params.get("year",Integer.class);
@@ -335,7 +342,6 @@ public class Review extends AbstractVireoController {
 					start.set(Calendar.DAY_OF_MONTH,21);
 					end.set(Calendar.DAY_OF_MONTH,end.getActualMaximum(Calendar.DAY_OF_MONTH));
 				}
-				
 			}
 			
 			// Always set the maximal hour, minute, second so that the dates are inclusive.
@@ -345,7 +351,6 @@ public class Review extends AbstractVireoController {
 			end.set(Calendar.HOUR,end.getActualMaximum(Calendar.HOUR));
 			end.set(Calendar.MINUTE,end.getActualMaximum(Calendar.MINUTE));
 			end.set(Calendar.SECOND,end.getActualMaximum(Calendar.SECOND));
-			
 			
 			// Set the range
 			activeFilter.setSubmissionDateRangeStart(start.getTime());
