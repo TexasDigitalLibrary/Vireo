@@ -59,13 +59,19 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@ManyToOne(optional = false, targetEntity = JpaPersonImpl.class)
 	public Person submitter;
 
+	@Column(length=32768) // 2^15
 	public String studentFirstName;
+	@Column(length=32768) // 2^15
 	public String studentLastName;
+	@Column(length=32768) // 2^15
 	public String studentMiddleName;
 	public Integer studentBirthYear;
 	
+	@Column(length=32768) // 2^15
 	public String documentTitle;
+	@Column(length=32768) // 2^15
 	public String documentAbstract;
+	@Column(length=32768) // 2^15
 	public String documentKeywords;
 
 	@OneToOne(targetEntity = JpaEmbargoTypeImpl.class)
@@ -77,9 +83,10 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@OneToMany(targetEntity = JpaCommitteeMemberImpl.class, mappedBy = "submission", cascade = CascadeType.ALL)
 	@OrderBy("displayOrder")
 	public List<CommitteeMember> committeeMembers;
+	@Column(length=32768) // 2^15
 	public String committeeContactEmail;
 	
-	@Column(unique = true)
+	@Column(unique = true, length=32768) // 2^15
 	public String committeeEmailHash;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -94,11 +101,16 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	public Date approvalDate;
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date licenseAgreementDate;
-
+	
+	@Column(length=32768) // 2^15
 	public String degree;
+	@Column(length=32768) // 2^15
 	public String department;
+	@Column(length=32768) // 2^15
 	public String college;
+	@Column(length=32768) // 2^15
 	public String major;
+	@Column(length=32768) // 2^15
 	public String documentType;
 
 	public Integer graduationYear;

@@ -7,10 +7,20 @@
         <link href="@{'/public/stylesheets/admin.less'}" rel="stylesheet" type="text/css">                       
         #{get 'moreStyles' /}
         <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
-        <script src="@{'/public/javascripts/jquery-1.6.4.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>        
-               
-        <script>
+        <script src="@{'/public/javascripts/jquery-1.7.2.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>                               
+        <script src="@{'/public/javascripts/bootstrap.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>     
+        <script>        
         jQuery(document).ready(function(){
+        	
+        		/**
+        		 *	Collapse/Expand Boxes in left Column
+        		 * 
+        		 *	<div class="side-box">
+        		 *		<div class="box-head"></div> (Trigger)
+        		 *		<div class="box-body"></div> (Expand/Collapse Element)
+        		 *	</div>
+        		 **/
+        		 
         		jQuery(".box-head").click(function(){        			
         			var box = jQuery(this).parent(".side-box");
         			box.find(".box-body").toggle();
@@ -23,6 +33,13 @@
         			}
         		});
         		
+        		/**
+        		 * Tab Navigation within the @Review.view page.
+        		 *
+        		 * This function matches the class of the anchor tag
+        		 * with the id of the div with class "edit-box-holder"
+        		 **/
+        		 
         		jQuery(".edit-holder .nav a").click(function(){
         			if(jQuery(this).parent("li").hasClass("active")){
         				//Do Nothing
@@ -48,12 +65,29 @@
         		 * removed and this element will also be removed. So hidden is 
         		 * a one time thing, not a toggle.
         		 */
-        		jQuery(".more").click(function(){
+        		jQuery('.more').click(function(){
         			jQuery(this).parent().find(".hidden").each(function(){
         				jQuery(this).removeClass("hidden");
         			});
         			jQuery(this).remove();
         		});
+        		
+        		
+        		/**
+        		 * Confirm a link before following.
+        		 *
+        		 * Upon first click, this will replace the link's text with
+        		 * "Are you sure?". Then upon a second click it will activate
+        		 * the links destination
+        		 */
+        		 jQuery('.confirm').click(function() {
+        			 if (jQuery(this).text().indexOf("Are you sure?") >= 0) {
+        				 return true;
+        			 } else {
+        				 jQuery(this).text("(Are you sure?)");
+        				 return false;
+        			 }
+        		 });
         });
         </script>
         
@@ -80,7 +114,7 @@
 						<li><a id="tab-list" href="@{Review.list}" #{if nav=="list"}class="current"#{/if}>List</a></li>
 						<li><a id="tab-view" href="@{Review.view}" #{if nav=="view"}class="current"#{/if}>View</a></li>
 						<li><a id="tab-log" href="@{Review.log}" #{if nav=="log"}class="current"#{/if}>Log</a></li>
-						<li><a id="tab-settings" href="@{Config.settings}" #{if nav=="settings"}class="current"#{/if}>Settings</a></li>
+						<li><a id="tab-settings" href="@{Config.userPreferences}" #{if nav=="settings"}class="current"#{/if}>Settings</a></li>
 					</ul>					
 				</div>
 				  	

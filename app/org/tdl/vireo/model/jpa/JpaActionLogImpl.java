@@ -50,7 +50,7 @@ public class JpaActionLogImpl extends JpaAbstractModel<JpaActionLogImpl> impleme
 	@ManyToOne(targetEntity=JpaAttachmentImpl.class)
 	public Attachment attachment;
 
-	@Column(nullable = false)
+	@Column(nullable = false, length=32768) // 2^15
 	public String entry;
 
 	@Column(nullable = false)

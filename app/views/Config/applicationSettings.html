@@ -1,0 +1,82 @@
+#{extends 'configShared.html' /}
+
+<h2>SUBMISSION AVAILABILITY</h2>
+
+<div class="submissionAvailability pull-left wrap">
+	<ul class="unstyled">
+		<li>
+			<label>Submissions are currently:</label>
+			<span><button class="btn">OPEN</button><div class="info">Click to close</div></span>
+			<div class="clear"></div>
+		</li>
+		<li>
+			<label>Current submission semester:</label>
+			<span><input type="text" value="May 2013" /><div class="info">'Month Year' (i.e. May 2006)</div></span>
+			<div class="clear"></div>
+		</li>
+		<li>
+			<label>Allow multiple submissions:</label>
+			<span><button class="btn">YES</button><div class="info">Click to stop allowing multiple submissions</div></span>
+			<div class="clear"></div>
+		</li>
+		<li>
+			<label>Request "College" parameter:</label>
+			<span><button class="btn">NO</button><div class="info">Click to request</div></span>
+			<div class="clear"></div>
+		</li>
+		<li>
+			<label>Offer UMI release option:</label>
+			<span><button class="btn">NO</button><div class="info">Click to offer</div></span>
+			<div class="clear"></div>
+		</li>
+	</ul>
+</div>
+<div class="clear"></div>
+
+<h2>SUBMISSION INSTRUCTIONS</h2>
+
+<div class="wrap">
+	<textarea rows="7" class="span7">
+	</textarea>
+	<div class="span6 info">These instructions will be shown as part of the submission confirmation. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. Newlines are converted to paragraphs automatically.</div>
+	<div class="clear"></div>
+</div>
+
+<h2>CUSTOM ACTIONS CHECKLIST</h2>
+
+<div class="wrap">
+<ol>
+	<li>Passed their classes <a href="#">[Remove]</a></li>
+</ol>
+<a href="#">[ADD NEW]</a>
+</div>
+
+<h2>WHO HAS ACCESS?</h2>
+
+<table class="table table-striped table-bordered table-condensed">
+	<thead>
+		<tr>
+			<td>Remove</td>
+			<td>Name</td>
+			<td>Email</td>
+			<td>Manager</td>			
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><input type="checkbox" class="checkbox" /></td>
+			<td>Gillian Anderson</td>
+			<td>ganderson@gmail.com</td>
+			<td><a href="#" class="manager">&nbsp;</a></td>
+		</tr>
+		<tr>
+			<td><input type="checkbox" class="checkbox" /></td>
+			<td>Claire Danes</td>
+			<td>cdanes@gmail.com</td>
+			<td><a href="#" class="manager">&nbsp;</a></td>
+		</tr>
+		<tr>
+			<td class="comments tr" colspan="4"><button class="btn btn-small">Add Member</button></td>
+		</tr>
+	</tbody>
+</table>

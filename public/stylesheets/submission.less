@@ -4,8 +4,21 @@
 BASICS
 **********************/
 html {
+	/*
 	background:url("../images/bg.jpg") repeat-x;
 	background-color:@backgroundColor;
+	*/
+	background: @bodyGradientBegin; /* Old browsers */
+	background: -moz-linear-gradient(top,  @bodyGradientBegin 0%, @bodyGradientEnd 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,@bodyGradientBegin), color-stop(100%,@bodyGradientEnd)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  @bodyGradientBegin 0%,@bodyGradientEnd 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  @bodyGradientBegin 0%,@bodyGradientEnd 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  @bodyGradientBegin 0%,@bodyGradientEnd 100%); /* IE10+ */
+	background: linear-gradient(top,  @bodyGradientBegin 0%,@bodyGradientEnd 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='@bodyGradientBegin', endColorstr='@bodyGradientEnd',GradientType=0 ); /* IE6-9 */
+	height: 100%;
+	background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
 body {
@@ -64,7 +77,7 @@ form td{
 TWITTERBOOTSTRAP OVERIDES
 **********************/
 .container {
-	background:url("../images/header.jpg") repeat-x scroll 0 -10px @white;
+	background:url("../images/header.jpg") repeat-x scroll 0 0 @white;
 	border-left:1px solid @borderColor;
 	border-right:1px solid @borderColor;
 }
@@ -82,17 +95,26 @@ SPECIFIC OVERIDES
 #header{
     position: relative;
 	height:95px;
-	background:url("../images/sub_logo_caps.gif") no-repeat scroll 100% 25px transparent;
+	background:@headerGradientBegin; /* Old browsers */
+	background:-moz-linear-gradient(top, @headerGradientBegin 0%, @headerGradientEnd 100%); /* FF3.6+ */
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0%,@headerGradientBegin), color-stop(100%,@headerGradientEnd)); /* Chrome,Safari4+ */
+	background:-webkit-linear-gradient(top,  @headerGradientBegin 0%,@headerGradientEnd 100%); /* Chrome10+,Safari5.1+ */
+	background:-o-linear-gradient(top,  @headerGradientBegin 0%,@headerGradientEnd 100%); /* Opera 11.10+ */
+	background:-ms-linear-gradient(top,  @headerGradientBegin 0%,@headerGradientEnd 100%); /* IE10+ */
+	background:linear-gradient(top,  @headerGradientBegin 0%,@headerGradientEnd 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='@headerGradientBegin', endColorstr='@headerGradientEnd',GradientType=0 ); /* IE6-9 */
+	z-index:0;
 }
 
 #tdl-logo{
-	background:url("../images/logo.jpg") no-repeat scroll 0 0 transparent;
-	height:75px;
+	background:url("../images/uiuc-logo.gif") no-repeat scroll 0 0 transparent;
+	height:100px;
 	position:relative;
-	top:0;
-	left:0;
+	top:10px;
+	left:10px;
 	display:block;
 	text-decoration:none;
+	z-index:1;
 }
 
 #personal-bar {
@@ -230,6 +252,17 @@ SUBMIT STEP BUTTONS
 
 #step5Btn a.current, #step5Btn a:hover{
 	background:url("../images/step5_current.gif") no-repeat scroll 0 0 transparent;	
+}
+
+// Add disabled state for items in submit steps
+.nav > li.disabled {
+    .opacity(40);
+    pointer-events: none;
+}
+.nav > li.disabled > a:hover {
+    cursor: default;
+    text-decoration: none;
+    background-color: inherit;
 }
 
 /********************

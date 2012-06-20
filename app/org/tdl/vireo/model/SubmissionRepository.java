@@ -3,6 +3,7 @@ package org.tdl.vireo.model;
 import java.util.List;
 import java.util.Set;
 
+import org.tdl.vireo.search.Semester;
 import org.tdl.vireo.search.SearchDirection;
 import org.tdl.vireo.search.SearchFilter;
 import org.tdl.vireo.search.SearchOrder;
@@ -78,6 +79,21 @@ public interface SubmissionRepository {
 	public SearchResult<Submission> filterSearchSubmissions(SearchFilter filter,
 			SearchOrder orderBy, SearchDirection direction, int offset,
 			int limit);
+	
+	// //////////////////////////////////////////////////////////////
+	// Submission informational
+	// //////////////////////////////////////////////////////////////
+	
+	/**
+	 * @return A list of all graduation semesters for which there are submissions
+	 *         recorded for.
+	 */
+	public List<Semester> findAllGraduationSemesters();
+	
+	/**
+	 * @return A list of all years for which submissions occured during that year.
+	 */
+	public List<Integer> findAllSubmissionYears();
 
 	// //////////////////////////////////////////////////////////////
 	// Attachment, Committee Member, and Custom Action Value Models

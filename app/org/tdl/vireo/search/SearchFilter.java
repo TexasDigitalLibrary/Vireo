@@ -3,6 +3,7 @@ package org.tdl.vireo.search;
 import java.util.Date;
 import java.util.List;
 
+import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.state.State;
 
@@ -40,8 +41,8 @@ public interface SearchFilter {
 	public void removeSearchText(String text);
 
 	/**
-	 * @return The list of all submission states to search for. Only valid 
-	 * Spring Bean Names should be included in this list.
+	 * @return The list of all submission states to search for. Only valid
+	 *         Spring Bean Names should be included in this list.
 	 */
 	public List<String> getStates();
 
@@ -75,38 +76,58 @@ public interface SearchFilter {
 	public void removeAssignee(Person assignee);
 
 	/**
-	 * @return The list of graduation years
+	 * @return The list of embago types to filter for.
 	 */
-	public List<Integer> getGraduationYears();
+	public List<EmbargoType> getEmbargoTypes();
 
 	/**
+	 * @param type
+	 *            The embargo type to add to the filter.
+	 */
+	public void addEmbargoType(EmbargoType type);
+
+	/**
+	 * @param type
+	 *            The embargo type to remove from the filter.
+	 */
+	public void removeEmbargoType(EmbargoType type);
+
+	/**
+	 * @return The graduation semesters
+	 */
+	public List<Semester> getGraduationSemesters();
+
+	/**
+	 * @param semester
+	 *            The graduation semester to add to the filter.
+	 */
+	public void addGraduationSemester(Semester semester);
+
+	/**
+	 * @param semester
+	 *            The graduation semester to remove from the filter.
+	 */
+	public void removeGraduationSemester(Semester semester);
+
+	/**
+	 * Add a graduation semester with the provided year and month.
+	 * 
 	 * @param year
-	 *            Add a year to the filter.
+	 *            The graduation year.
+	 * @param month
+	 *            The graduation month.
 	 */
-	public void addGraduationYear(Integer year);
+	public void addGraduationSemester(Integer year, Integer month);
 
 	/**
+	 * Remove a graduation semester with the provided year and month.
+	 * 
 	 * @param year
-	 *            Remove a year from the filter.
-	 */
-	public void removeGraduationYear(Integer year);
-
-	/**
-	 * @return The list of graduation months
-	 */
-	public List<Integer> getGraduationMonths();
-
-	/**
+	 *            The graduation year.
 	 * @param month
-	 *            Add a new graduation month to the filter
+	 *            The graduation month.
 	 */
-	public void addGraduationMonth(Integer month);
-
-	/**
-	 * @param month
-	 *            Remove a graduation month from the filter.
-	 */
-	public void removeGraduationMonth(Integer month);
+	public void removeGraduationSemester(Integer year, Integer month);
 
 	/**
 	 * @return The list of degrees
@@ -198,9 +219,9 @@ public interface SearchFilter {
 	public void removeDocumentType(String documentType);
 
 	/**
-	 * True -> applications are set to be released to UMI 
+	 * True -> applications are set to be released to UMI
 	 * 
-	 * False -> applications are not set to be released. 
+	 * False -> applications are not set to be released.
 	 * 
 	 * Null -> Either released or not.
 	 * 
@@ -215,23 +236,26 @@ public interface SearchFilter {
 	public void setUMIRelease(Boolean value);
 
 	/**
-	 * @return The start of the current date range search.
+	 * @return The start of the current submission date range search.
 	 */
-	public Date getDateRangeStart();
+	public Date getSubmissionDateRangeStart();
 
 	/**
-	 * @return The end of the current date range search.
-	 */
-	public Date getDateRangeEnd();
-
-	/**
-	 * Set a new start and end date for a date range search.
-	 * 
 	 * @param start
-	 *            The start date, inclusive
-	 * @param end
-	 *            The end date, inclusive.
+	 *            The new start of the submission date range, may be null for
+	 *            infinite.
 	 */
-	public void setDateRange(Date start, Date end);
+	public void setSubmissionDateRangeStart(Date start);
 
+	/**
+	 * @return The end of the current submission date range search.
+	 */
+	public Date getSubmissionDateRangeEnd();
+
+	/**
+	 * @param end
+	 *            The new end of the submission date range, may be null for
+	 *            infinite
+	 */
+	public void setSubmissionDateRangeEnd(Date end);
 }

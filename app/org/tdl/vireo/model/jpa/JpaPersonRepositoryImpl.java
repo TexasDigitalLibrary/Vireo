@@ -3,6 +3,13 @@ package org.tdl.vireo.model.jpa;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.ParameterExpression;
+import javax.persistence.criteria.Root;
+
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.College;
@@ -24,6 +31,8 @@ import org.tdl.vireo.model.Preference;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SettingsRepository;
+
+import play.db.jpa.JPA;
 
 /**
  * Jpa specific implementation of the Vireo Person Repository interface.
@@ -56,6 +65,18 @@ public class JpaPersonRepositoryImpl implements PersonRepository {
 	public Person findPersonByNetId(String netid) {
 		return JpaPersonImpl.find("netid = ?", netid).first();
 
+	}
+	
+	@Override
+	public List<Person> findPersonsByRole(RoleType type) {
+		
+		final String select = "SELECT p FROM JpaPersonImpl AS p WHERE p.role >= :type";
+		TypedQuery<JpaPersonImpl> query = JPA.em().createQuery(select, JpaPersonImpl.class);
+		query.setParameter("type", type);
+		
+		List<JpaPersonImpl> results = query.getResultList();
+
+		return (List) results;
 	}
 
 	@Override

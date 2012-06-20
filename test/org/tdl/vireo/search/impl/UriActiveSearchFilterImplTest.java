@@ -6,10 +6,13 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.tdl.vireo.model.EmbargoType;
+import org.tdl.vireo.model.MockEmbargoType;
 import org.tdl.vireo.model.MockPerson;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.RoleType;
+import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.search.ActiveSearchFilter;
 import org.tdl.vireo.security.SecurityContext;
 
@@ -25,6 +28,7 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 
 	// Spring dependencies
 	public static PersonRepository personRepo = Spring.getBeanOfType(PersonRepository.class);
+	public static SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
 	public static SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
 	
 	/**
@@ -37,6 +41,11 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		Date start = new Date(2002,5,1);
 		Date end = new Date(2010,5,1);
 		
+		MockEmbargoType embargo1 = new MockEmbargoType();
+		embargo1.name = "Embargo 1";
+		MockEmbargoType embargo2 = new MockEmbargoType();
+		embargo2.name = "Embargo 2";
+		
 		ActiveSearchFilter filter = Spring.getBeanOfType(UriActiveSearchFilterImpl.class);
 		filter.addSearchText("text1");
 		filter.addSearchText("text2");
@@ -45,10 +54,10 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		filter.addAssignee(MockPerson.getStudent());
 		filter.addAssignee(MockPerson.getReviewer());
 		filter.addAssignee(null); // unassigned
-		filter.addGraduationYear(2002);
-		filter.addGraduationYear(2003);
-		filter.addGraduationMonth(1);
-		filter.addGraduationMonth(5);
+		filter.addEmbargoType(embargo1);
+		filter.addEmbargoType(embargo2);
+		filter.addGraduationSemester(2002,05);
+		filter.addGraduationSemester(2002,null);
 		filter.addDegree("degree1");
 		filter.addDegree("degree2");
 		filter.addDepartment("dept1");
@@ -60,7 +69,8 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		filter.addDocumentType("doc1");
 		filter.addDocumentType("doc2");
 		filter.setUMIRelease(true);
-		filter.setDateRange(start,end);
+		filter.setSubmissionDateRangeStart(start);
+		filter.setSubmissionDateRangeEnd(end);
 		
 		// yay, now lets read that back out.
 		
@@ -71,10 +81,12 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		assertEquals(MockPerson.getStudent(),filter.getAssignees().get(0));
 		assertEquals(MockPerson.getReviewer(),filter.getAssignees().get(1));
 		assertEquals(null,filter.getAssignees().get(2));
-		assertEquals(Integer.valueOf(2002),filter.getGraduationYears().get(0));
-		assertEquals(Integer.valueOf(2003),filter.getGraduationYears().get(1));
-		assertEquals(Integer.valueOf(1),filter.getGraduationMonths().get(0));
-		assertEquals(Integer.valueOf(5),filter.getGraduationMonths().get(1));
+		assertEquals(embargo1, filter.getEmbargoTypes().get(0));
+		assertEquals(embargo2, filter.getEmbargoTypes().get(1));
+		assertEquals(Integer.valueOf(2002),filter.getGraduationSemesters().get(0).year);
+		assertEquals(Integer.valueOf(05),filter.getGraduationSemesters().get(0).month);
+		assertEquals(Integer.valueOf(2002),filter.getGraduationSemesters().get(1).year);
+		assertNull(filter.getGraduationSemesters().get(1).month);
 		assertEquals("degree1",filter.getDegrees().get(0));
 		assertEquals("degree2",filter.getDegrees().get(1));
 		assertEquals("dept1",filter.getDepartments().get(0));
@@ -86,8 +98,8 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		assertEquals("doc1",filter.getDocumentTypes().get(0));
 		assertEquals("doc2",filter.getDocumentTypes().get(1));
 		assertEquals(Boolean.valueOf(true),filter.getUMIRelease());
-		assertEquals(start,filter.getDateRangeStart());
-		assertEquals(end,filter.getDateRangeEnd());
+		assertEquals(start,filter.getSubmissionDateRangeStart());
+		assertEquals(end,filter.getSubmissionDateRangeEnd());
 	}
 	
 	/**
@@ -103,7 +115,10 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		context.turnOffAuthorization();
 		Person person1 = personRepo.createPerson("person1", "email1@email", "firstName1", "lastName1", RoleType.STUDENT).save();
 		Person person2 = personRepo.createPerson("person2", "email2@email", "firstName2", "lastName2", RoleType.STUDENT).save();
-
+		
+		EmbargoType embargo1 = settingRepo.createEmbargoType("embargo1", "description", 12, true).save();
+		EmbargoType embargo2 = settingRepo.createEmbargoType("embargo2", "description", 24, true).save();
+		
 		try {
 
 			ActiveSearchFilter filter = Spring.getBeanOfType(UriActiveSearchFilterImpl.class);
@@ -114,10 +129,10 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 			filter.addAssignee(person1);
 			filter.addAssignee(person2);
 			filter.addAssignee(null);
-			filter.addGraduationYear(2002);
-			filter.addGraduationYear(2003);
-			filter.addGraduationMonth(1);
-			filter.addGraduationMonth(5);
+			filter.addEmbargoType(embargo1);
+			filter.addEmbargoType(embargo2);
+			filter.addGraduationSemester(2002,05);
+			filter.addGraduationSemester(2002,null);
 			filter.addDegree("degree1");
 			filter.addDegree("degree2");
 			filter.addDepartment("dept1");
@@ -129,7 +144,8 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 			filter.addDocumentType("doc1");
 			filter.addDocumentType("doc2");
 			filter.setUMIRelease(true);
-			filter.setDateRange(start,end);
+			filter.setSubmissionDateRangeStart(start);
+			filter.setSubmissionDateRangeEnd(end);
 
 			String encoded = filter.encode();
 
@@ -139,7 +155,7 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 			assertFalse(encoded.contains("="));
 			assertFalse(encoded.contains("?"));
 			assertFalse(encoded.contains("&"));
-
+			
 			// Restore from the encoded version.
 			ActiveSearchFilter newFilter = Spring.getBeanOfType(UriActiveSearchFilterImpl.class);
 			newFilter.decode(encoded);
@@ -152,10 +168,12 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 			assertEquals(person1,newFilter.getAssignees().get(0));
 			assertEquals(person2,newFilter.getAssignees().get(1));
 			assertEquals(null,newFilter.getAssignees().get(2));
-			assertEquals(Integer.valueOf(2002),newFilter.getGraduationYears().get(0));
-			assertEquals(Integer.valueOf(2003),newFilter.getGraduationYears().get(1));
-			assertEquals(Integer.valueOf(1),newFilter.getGraduationMonths().get(0));
-			assertEquals(Integer.valueOf(5),newFilter.getGraduationMonths().get(1));
+			assertEquals(embargo1,newFilter.getEmbargoTypes().get(0));
+			assertEquals(embargo2,newFilter.getEmbargoTypes().get(1));			
+			assertEquals(Integer.valueOf(2002),filter.getGraduationSemesters().get(0).year);
+			assertEquals(Integer.valueOf(05),filter.getGraduationSemesters().get(0).month);
+			assertEquals(Integer.valueOf(2002),filter.getGraduationSemesters().get(1).year);
+			assertNull(filter.getGraduationSemesters().get(1).month);
 			assertEquals("degree1",newFilter.getDegrees().get(0));
 			assertEquals("degree2",newFilter.getDegrees().get(1));
 			assertEquals("dept1",newFilter.getDepartments().get(0));
@@ -167,12 +185,14 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 			assertEquals("doc1",newFilter.getDocumentTypes().get(0));
 			assertEquals("doc2",newFilter.getDocumentTypes().get(1));
 			assertEquals(Boolean.valueOf(true),newFilter.getUMIRelease());
-			assertEquals(start,newFilter.getDateRangeStart());
-			assertEquals(end,newFilter.getDateRangeEnd());
+			assertEquals(start,newFilter.getSubmissionDateRangeStart());
+			assertEquals(end,newFilter.getSubmissionDateRangeEnd());
 
 		} finally {
 			person1.delete();
 			person2.delete();
+			embargo1.delete();
+			embargo2.delete();
 			context.restoreAuthorization();
 		}
 	}
@@ -192,16 +212,16 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		assertEquals(0,newFilter.getSearchText().size());
 		assertEquals(0,newFilter.getStates().size());
 		assertEquals(0,newFilter.getAssignees().size());
-		assertEquals(0,newFilter.getGraduationYears().size());
-		assertEquals(0,newFilter.getGraduationMonths().size());
+		assertEquals(0,newFilter.getEmbargoTypes().size());
+		assertEquals(0,newFilter.getGraduationSemesters().size());
 		assertEquals(0,newFilter.getDegrees().size());
 		assertEquals(0,newFilter.getDepartments().size());
 		assertEquals(0,newFilter.getColleges().size());
 		assertEquals(0,newFilter.getMajors().size());
 		assertEquals(0,newFilter.getDocumentTypes().size());
 		assertEquals(null,newFilter.getUMIRelease());
-		assertEquals(null,newFilter.getDateRangeStart());
-		assertEquals(null,newFilter.getDateRangeEnd());
+		assertEquals(null,newFilter.getSubmissionDateRangeStart());
+		assertEquals(null,newFilter.getSubmissionDateRangeEnd());
 	}
 	
 	/**
@@ -214,6 +234,11 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		Date start = new Date(2002,5,1);
 		Date end = new Date(2010,5,1);
 		
+		MockEmbargoType embargo1 = new MockEmbargoType();
+		embargo1.name = "Embargo 1";
+		MockEmbargoType embargo2 = new MockEmbargoType();
+		embargo2.name = "Embargo 2";
+		
 		ActiveSearchFilter filter = Spring.getBeanOfType(UriActiveSearchFilterImpl.class);
 		filter.addSearchText("text1");
 		filter.addSearchText("text2");
@@ -222,10 +247,10 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		filter.addAssignee(MockPerson.getStudent());
 		filter.addAssignee(MockPerson.getReviewer());
 		filter.addAssignee(null);
-		filter.addGraduationYear(2002);
-		filter.addGraduationYear(2003);
-		filter.addGraduationMonth(1);
-		filter.addGraduationMonth(5);
+		filter.addEmbargoType(embargo1);
+		filter.addEmbargoType(embargo2);
+		filter.addGraduationSemester(2002,05);
+		filter.addGraduationSemester(2002,null);
 		filter.addDegree("degree1");
 		filter.addDegree("degree2");
 		filter.addDepartment("dept1");
@@ -237,7 +262,8 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		filter.addDocumentType("doc1");
 		filter.addDocumentType("doc2");
 		filter.setUMIRelease(true);
-		filter.setDateRange(start,end);
+		filter.setSubmissionDateRangeStart(start);
+		filter.setSubmissionDateRangeEnd(end);
 		
 		ActiveSearchFilter newFilter = Spring.getBeanOfType(UriActiveSearchFilterImpl.class);
 		filter.copyTo(newFilter);
@@ -250,10 +276,12 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		assertEquals(MockPerson.getStudent(),newFilter.getAssignees().get(0));
 		assertEquals(MockPerson.getReviewer(),newFilter.getAssignees().get(1));
 		assertEquals(null,newFilter.getAssignees().get(2));
-		assertEquals(Integer.valueOf(2002),newFilter.getGraduationYears().get(0));
-		assertEquals(Integer.valueOf(2003),newFilter.getGraduationYears().get(1));
-		assertEquals(Integer.valueOf(1),newFilter.getGraduationMonths().get(0));
-		assertEquals(Integer.valueOf(5),newFilter.getGraduationMonths().get(1));
+		assertEquals(embargo1,newFilter.getEmbargoTypes().get(0));
+		assertEquals(embargo2,newFilter.getEmbargoTypes().get(1));
+		assertEquals(Integer.valueOf(2002),filter.getGraduationSemesters().get(0).year);
+		assertEquals(Integer.valueOf(05),filter.getGraduationSemesters().get(0).month);
+		assertEquals(Integer.valueOf(2002),filter.getGraduationSemesters().get(1).year);
+		assertNull(filter.getGraduationSemesters().get(1).month);
 		assertEquals("degree1",newFilter.getDegrees().get(0));
 		assertEquals("degree2",newFilter.getDegrees().get(1));
 		assertEquals("dept1",newFilter.getDepartments().get(0));
@@ -265,8 +293,8 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		assertEquals("doc1",newFilter.getDocumentTypes().get(0));
 		assertEquals("doc2",newFilter.getDocumentTypes().get(1));
 		assertEquals(Boolean.valueOf(true),newFilter.getUMIRelease());
-		assertEquals(start,newFilter.getDateRangeStart());
-		assertEquals(end,newFilter.getDateRangeEnd());
+		assertEquals(start,newFilter.getSubmissionDateRangeStart());
+		assertEquals(end,newFilter.getSubmissionDateRangeEnd());
 	}
 	
 	/**
@@ -278,6 +306,11 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		Date start = new Date(2002,5,1);
 		Date end = new Date(2010,5,1);
 		
+		MockEmbargoType embargo1 = new MockEmbargoType();
+		embargo1.name = "Embargo 1";
+		MockEmbargoType embargo2 = new MockEmbargoType();
+		embargo2.name = "Embargo 2";
+		
 		ActiveSearchFilter filter = Spring.getBeanOfType(UriActiveSearchFilterImpl.class);
 		filter.addSearchText("text1");
 		filter.addSearchText("text2");
@@ -286,10 +319,10 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		filter.addAssignee(MockPerson.getStudent());
 		filter.addAssignee(MockPerson.getReviewer());
 		filter.addAssignee(null);
-		filter.addGraduationYear(2002);
-		filter.addGraduationYear(2003);
-		filter.addGraduationMonth(1);
-		filter.addGraduationMonth(5);
+		filter.addEmbargoType(embargo1);
+		filter.addEmbargoType(embargo2);
+		filter.addGraduationSemester(2002,05);
+		filter.addGraduationSemester(2002,null);
 		filter.addDegree("degree1");
 		filter.addDegree("degree2");
 		filter.addDepartment("dept1");
@@ -301,7 +334,8 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		filter.addDocumentType("doc1");
 		filter.addDocumentType("doc2");
 		filter.setUMIRelease(true);
-		filter.setDateRange(start,end);
+		filter.setSubmissionDateRangeStart(start);
+		filter.setSubmissionDateRangeEnd(end);
 		
 		ActiveSearchFilter newFilter = Spring.getBeanOfType(UriActiveSearchFilterImpl.class);
 		newFilter.copyFrom(filter);
@@ -314,10 +348,12 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		assertEquals(MockPerson.getStudent(),newFilter.getAssignees().get(0));
 		assertEquals(MockPerson.getReviewer(),newFilter.getAssignees().get(1));
 		assertEquals(null,newFilter.getAssignees().get(2));
-		assertEquals(Integer.valueOf(2002),newFilter.getGraduationYears().get(0));
-		assertEquals(Integer.valueOf(2003),newFilter.getGraduationYears().get(1));
-		assertEquals(Integer.valueOf(1),newFilter.getGraduationMonths().get(0));
-		assertEquals(Integer.valueOf(5),newFilter.getGraduationMonths().get(1));
+		assertEquals(embargo1, newFilter.getEmbargoTypes().get(0));
+		assertEquals(embargo2, newFilter.getEmbargoTypes().get(1));
+		assertEquals(Integer.valueOf(2002),filter.getGraduationSemesters().get(0).year);
+		assertEquals(Integer.valueOf(05),filter.getGraduationSemesters().get(0).month);
+		assertEquals(Integer.valueOf(2002),filter.getGraduationSemesters().get(1).year);
+		assertNull(filter.getGraduationSemesters().get(1).month);
 		assertEquals("degree1",newFilter.getDegrees().get(0));
 		assertEquals("degree2",newFilter.getDegrees().get(1));
 		assertEquals("dept1",newFilter.getDepartments().get(0));
@@ -329,8 +365,8 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		assertEquals("doc1",newFilter.getDocumentTypes().get(0));
 		assertEquals("doc2",newFilter.getDocumentTypes().get(1));
 		assertEquals(Boolean.valueOf(true),newFilter.getUMIRelease());
-		assertEquals(start,newFilter.getDateRangeStart());
-		assertEquals(end,newFilter.getDateRangeEnd());
+		assertEquals(start,newFilter.getSubmissionDateRangeStart());
+		assertEquals(end,newFilter.getSubmissionDateRangeEnd());
 	}
 	
 	/**

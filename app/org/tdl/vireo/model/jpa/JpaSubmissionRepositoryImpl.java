@@ -1,5 +1,6 @@
 package org.tdl.vireo.model.jpa;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -7,7 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Root;
 
 import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.ActionLog;
@@ -35,6 +41,7 @@ import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.SubmissionRepository;
 import org.tdl.vireo.search.SearchDirection;
 import org.tdl.vireo.search.SearchFilter;
+import org.tdl.vireo.search.Semester;
 import org.tdl.vireo.search.SearchOrder;
 import org.tdl.vireo.search.SearchResult;
 import org.tdl.vireo.state.StateManager;
@@ -196,19 +203,31 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 		}
 		andList.add(orList);
 		
-		// Graduation Years Filter
+		// Assignee Filter
 		orList = new ORList();
-		for(Integer year : filter.getGraduationYears()) {
-			orList.add(new Statement("sub.graduationYear = :graduationYear"+paramIndex));
-			params.put("graduationYear"+(paramIndex++), year);
+		for(EmbargoType embargo : filter.getEmbargoTypes()) {
+			orList.add(new Statement("sub.embargoType = :embargo"+paramIndex));
+			params.put("embargo"+(paramIndex++), embargo);
 		}
 		andList.add(orList);
 		
-		// Graduation Months Filter
+		// Graduation Semester Filter
 		orList = new ORList();
-		for(Integer month : filter.getGraduationMonths()) {
-			orList.add(new Statement("sub.graduationMonth = :graduationMonth"+paramIndex));
-			params.put("graduationMonth"+(paramIndex++), month);
+		for(Semester semester : filter.getGraduationSemesters()) {
+			ANDList semesterList = new ANDList();
+			
+			if (semester.year != null) {
+				semesterList.add(new Statement("sub.graduationYear = :gradYear"+paramIndex));
+				params.put("gradYear"+(paramIndex++), semester.year);
+			}
+			
+			if (semester.month != null) {
+				semesterList.add(new Statement("sub.graduationMonth = :gradMonth"+paramIndex));
+				params.put("gradMonth"+(paramIndex++), semester.month);
+			}
+			
+			if (semesterList.size() > 0)
+				orList.add(semesterList);
 		}
 		andList.add(orList);
 		
@@ -263,9 +282,9 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 		}
 		
 		// Date range Filter
-		if (filter.getDateRangeStart() != null && filter.getDateRangeEnd() != null) {
-			Date start = filter.getDateRangeStart();
-			Date end = filter.getDateRangeEnd();
+		if (filter.getSubmissionDateRangeStart() != null && filter.getSubmissionDateRangeEnd() != null) {
+			Date start = filter.getSubmissionDateRangeStart();
+			Date end = filter.getSubmissionDateRangeEnd();
 			
 			andList.add(new Statement("sub.submissionDate > :startDate"+paramIndex));
 			andList.add(new Statement("sub.submissionDate < :endDate"+(paramIndex+1)));
@@ -331,6 +350,43 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 	}
 
 	// //////////////////////////////////////////////////////////////
+	// Submission informational
+	// //////////////////////////////////////////////////////////////
+	
+	@Override
+	public List<Semester> findAllGraduationSemesters() {
+		Query query = JPA.em().createQuery("SELECT DISTINCT new org.tdl.vireo.search.Semester(sub.graduationYear, sub.graduationMonth) FROM JpaSubmissionImpl AS sub WHERE sub.graduationYear IS NOT NULL AND sub.graduationMonth IS NOT NULL ORDER BY sub.graduationYear, sub.graduationMonth");
+		
+		List<Semester> results = query.getResultList();
+		return results;
+	}
+	
+	@Override
+	public List<Integer> findAllSubmissionYears() {
+		
+		CriteriaBuilder cb = JPA.em().getCriteriaBuilder();
+		CriteriaQuery<Integer> cq = cb.createQuery(Integer.class);
+		
+		// This is what we are selecting from.
+		Root<JpaSubmissionImpl> sub = cq.from(JpaSubmissionImpl.class);
+		
+		// This gets a field name for use other expressions.
+		Expression<Timestamp> subDate = sub.get("submissionDate");
+		
+		// Select District year(subDate)
+		cq.select(cb.function("year", Integer.class, subDate)).distinct(true);
+		
+		// Where subDate is not null
+		cq.where(cb.isNotNull(subDate));
+		
+		// Generate the query from the criteria query.
+		TypedQuery<Integer> query = JPA.em().createQuery(cq);
+		
+		List<Integer> results = query.getResultList();
+		return results;	
+	}
+	
+	// //////////////////////////////////////////////////////////////
 	// Attachment, Committee Member, and Custom Action Value Models
 	// //////////////////////////////////////////////////////////////
 	
@@ -361,7 +417,7 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 
 	@Override
 	public List<ActionLog> findActionLog(Submission submission) {
-		return JpaActionLogImpl.find("submission = ? order by actionDate", submission).fetch();
+		return JpaActionLogImpl.find("submission = ? order by actionDate, id", submission).fetch();
 	}
 
 	@Override
@@ -409,19 +465,31 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 		}
 		andList.add(orList);
 		
-		// Graduation Years Filter
+		// Embargo Filter
 		orList = new ORList();
-		for(Integer year : filter.getGraduationYears()) {
-			orList.add(new Statement("sub.graduationYear = :graduationYear"+paramIndex));
-			params.put("graduationYear"+(paramIndex++), year);
+		for(EmbargoType embargo : filter.getEmbargoTypes()) {
+			orList.add(new Statement("sub.embargoType = :embargo"+paramIndex));
+			params.put("embargo"+(paramIndex++), embargo);
 		}
 		andList.add(orList);
 		
-		// Graduation Months Filter
+		// Graduation Semester Filter
 		orList = new ORList();
-		for(Integer month : filter.getGraduationMonths()) {
-			orList.add(new Statement("sub.graduationMonth = :graduationMonth"+paramIndex));
-			params.put("graduationMonth"+(paramIndex++), month);
+		for(Semester semester : filter.getGraduationSemesters()) {
+			ANDList semesterList = new ANDList();
+			
+			if (semester.year != null) {
+				semesterList.add(new Statement("sub.graduationYear = :gradYear"+paramIndex));
+				params.put("gradYear"+(paramIndex++), semester.year);
+			}
+			
+			if (semester.month != null) {
+				semesterList.add(new Statement("sub.graduationMonth = :gradMonth"+paramIndex));
+				params.put("gradMonth"+(paramIndex++), semester.month);
+			}
+			
+			if (semesterList.size() > 0)
+				orList.add(semesterList);
 		}
 		andList.add(orList);
 		
@@ -476,9 +544,9 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 		}
 		
 		// Date range Filter
-		if (filter.getDateRangeStart() != null && filter.getDateRangeEnd() != null) {
-			Date start = filter.getDateRangeStart();
-			Date end = filter.getDateRangeEnd();
+		if (filter.getSubmissionDateRangeStart() != null && filter.getSubmissionDateRangeEnd() != null) {
+			Date start = filter.getSubmissionDateRangeStart();
+			Date end = filter.getSubmissionDateRangeEnd();
 			
 			andList.add(new Statement("sub.submissionDate > :startDate"+paramIndex));
 			andList.add(new Statement("sub.submissionDate < :endDate"+(paramIndex+1)));

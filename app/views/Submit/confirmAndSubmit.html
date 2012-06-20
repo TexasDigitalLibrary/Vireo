@@ -12,31 +12,31 @@
 	<div class="control-group">
 		<label class="control-label"><b>Name:</b></label>
 		<div class="controls">
-			<p>Danes, Claire</p>
+			<p>${submitter.lastName}, ${submitter.firstName}</p>
 		</div>
 	</div>
 	<div class="control-group">
 		<label class="control-label"><b>Email:</b></label>
 		<div class="controls">
-			<p>cdanes@gmail.com</p>
+			<p>${submitter.getEmail()}</p>
 		</div>
 	</div>
 	<div class="control-group">
 		<label class="control-label"><b>Year of Birth:</b></label>
 		<div class="controls">
-			<p>1982</p>
+			<p>${submitter.getBirthYear()}</p>
 		</div>
 	</div>
 	<div class="control-group">
 		<label class="control-label"><b>Phone:</b></label>
 		<div class="controls">
-			<p>979-458-5857</p>
+			<p>${submitter.getCurrentPhoneNumber()}</p>
 		</div>
 	</div>
 	<div class="control-group">
 		<label class="control-label"><b>Address:</b></label>
 		<div class="controls">
-			<p>5000 Mononoke Blvd.<br />Hollywood, CA 83949</p>
+			<p>${submitter.getCurrentPostalAddress()}</p>
 		</div>
 	</div>
 	<div class="control-group">
@@ -56,13 +56,13 @@
 	<div class="control-group">
 		<label class="control-label"><b>Degree:</b></label>
 		<div class="controls">
-			<p>Doctor of Philosophy</p>
+			<p>${submitter.getCurrentDegree()}</p>
 		</div>
 	</div>
 	<div class="control-group">
 		<label class="control-label"><b>Major:</b></label>
 		<div class="controls">
-			<p>Zoology</p>
+			<p>${submitter.getCurrentMajor()}</p>
 		</div>
 	</div>
 	<div class="control-group">
@@ -76,43 +76,44 @@
 	<div class="control-group">
 		<label class="control-label"><b>Title:</b></label>
 		<div class="controls">
-			<p>Elephants and Peanuts</p>
+			<p>${sub.getDocumentTitle()}</p>
 		</div>
 	</div>
+		
 	<div class="control-group">
 		<label class="control-label"><b>Degree Date:</b></label>
 		<div class="controls">
-			<p>May 2013</p>
+			<p>${controllers.Submit.getMonth(sub.getGraduationMonth())} ${sub.getGraduationYear()}</p>
 		</div>
 	</div>
 	<div class="control-group">
 		<label class="control-label"><b>Document Type:</b></label>
 		<div class="controls">
-			<p>Dissertation</p>
+			<p>${sub.getDocumentType()}</p>
 		</div>
 	</div>
 	<div class="control-group">
 		<label class="control-label"><b>Keywords:</b></label>
 		<div class="controls">
-			<p>Trunk; Tusk; Planters</p>
+			<p>${sub.getDocumentKeywords()}</p>
 		</div>
 	</div>
 	<div class="control-group">
 		<label class="control-label"><b>Abstract:</b></label>
 		<div class="controls">
-			<p>It's abstract.</p>
+			<p>${sub.getDocumentAbstract()}</p>
 		</div>
 	</div>
 	<div class="control-group">
 		<label class="control-label"><b>Chair Email Address:</b></label>
 		<div class="controls">
-			<p>jmicah@library.tamu.edu</p>
+			<p>${sub.getCommitteeContactEmail()}</p>
 		</div>
 	</div>
 	<div class="control-group">
 		<label class="control-label"><b>Embargo:</b></label>
 		<div class="controls">
-			<p><b>None</b> - The work will be published after approval.</p>
+			<p>${sub.getEmbargoType().getDescription()}</p>
 		</div>
 	</div>
 	<div class="control-group">
@@ -126,7 +127,7 @@
 	<div class="control-group">
 		<label class="control-label"><b>Primary Document:</b></label>
 		<div class="controls">
-			<p><a href="#">jungle.pdf</a> (0.02MB)</p>
+			<p>${sub.getPrimaryDocument().getName()} ${sub.getPrimaryDocument().getDisplaySize()}</p>
 		</div>
 	</div>
 	<div class="control-group">

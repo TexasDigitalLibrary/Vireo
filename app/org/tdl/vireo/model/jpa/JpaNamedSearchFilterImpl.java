@@ -9,15 +9,24 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PostLoad;
+import javax.persistence.PostPersist;
+import javax.persistence.PostUpdate;
+import javax.persistence.PrePersist;
+import javax.persistence.PreRemove;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.model.AbstractModel;
+import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.NamedSearchFilter;
+import org.tdl.vireo.search.Semester;
 
 /**
  * Jpa specific implementation of Vireo's Named Search Filter interface.
@@ -32,7 +41,7 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	@ManyToOne(targetEntity=JpaPersonImpl.class, optional=false)
 	public Person creator;
 	
-	@Column(nullable = false)
+	@Column(nullable = false, length=32768) // 2^15
 	public String name;
 	
 	public boolean publicFlag;
@@ -45,12 +54,15 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	
 	@OneToMany(targetEntity=JpaPersonImpl.class)
 	public List<Person> assignees;
+
+	@OneToMany(targetEntity=JpaEmbargoTypeImpl.class)
+	public List<EmbargoType> embargos;
 	
 	@ElementCollection
-	public List<Integer> graduationYears;
+	public List<String> semesters;
 	
-	@ElementCollection
-	public List<Integer> graduationMonths;
+	@Transient
+	public List<Semester> cachedSemesters;
 	
 	@ElementCollection
 	public List<String> degrees;
@@ -97,8 +109,9 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 		this.searchText = new ArrayList<String>();
 		this.states = new ArrayList<String>();
 		this.assignees = new ArrayList<Person>();
-		this.graduationYears = new ArrayList<Integer>();
-		this.graduationMonths = new ArrayList<Integer>();
+		this.embargos = new ArrayList<EmbargoType>();
+		this.semesters = new ArrayList<String>();
+		this.cachedSemesters = new ArrayList<Semester>();
 		this.degrees = new ArrayList<String>();
 		this.departments = new ArrayList<String>();
 		this.colleges = new ArrayList<String>();
@@ -106,6 +119,61 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 		this.documentTypes = new ArrayList<String>();
 	}
 
+	/**
+	 * Just before being written to the database update the semester's data
+	 * structure with the current state of the cachedSemester's data structure.
+	 * Since while the object is live that is the structure that is manipulated.
+	 */
+	@PrePersist
+	@PreUpdate
+	@PreRemove
+	public void onSave() {
+		
+		semesters.clear();
+		for(Semester semester : cachedSemesters) {
+			// Format: year/month
+			
+			String value;
+			if (semester.year == null)
+				value = "null";
+			else
+				value = String.valueOf(semester.year);
+			
+			value += "/";
+			
+			if (semester.month == null)
+				value += "null";
+			else
+				value += String.valueOf(semester.month);
+			
+			semesters.add(value);
+		}
+	}
+
+	/**
+	 * After being loaded from the database update our cached copy of the
+	 * semester data structure.
+	 */
+	@PostPersist
+	@PostLoad
+	@PostUpdate
+	public void onLoad() {
+		
+		cachedSemesters = new ArrayList<Semester>();
+		for(String semesterString : semesters) {
+			
+			String[] split = semesterString.split("/");
+			
+			Semester semester = new Semester();
+			if (!"null".equals(split[0]))
+				semester.year = Integer.valueOf(split[0]);
+			if (!"null".equals(split[1]))
+				semester.month = Integer.valueOf(split[1]);
+			
+			cachedSemesters.add(semester);
+		}
+	}
+	
 	@Override
 	public Person getCreator() {
 		return creator;
@@ -200,39 +268,50 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 		assertManagerOrOwner(creator);
 		assignees.remove(assignee);
 	}
-
+	
 	@Override
-	public List<Integer> getGraduationYears() {
-		return graduationYears;
+	public List<EmbargoType> getEmbargoTypes() {
+		return embargos;
 	}
-
+	
 	@Override
-	public void addGraduationYear(Integer year) {
+	public void addEmbargoType(EmbargoType type) {
 		assertManagerOrOwner(creator);
-		graduationYears.add(year);
+		embargos.add(type);
 	}
-
+	
 	@Override
-	public void removeGraduationYear(Integer year) {
+	public void removeEmbargoType(EmbargoType type) {
 		assertManagerOrOwner(creator);
-		graduationYears.remove(year);
+		embargos.remove(type);
 	}
 
 	@Override
-	public List<Integer> getGraduationMonths() {
-		return graduationMonths;
+	public List<Semester> getGraduationSemesters() {
+		
+		return cachedSemesters;
 	}
 
 	@Override
-	public void addGraduationMonth(Integer month) {
+	public void addGraduationSemester(Semester semester) {
 		assertManagerOrOwner(creator);
-		graduationMonths.add(month);
+		cachedSemesters.add(semester);
 	}
-
+	
 	@Override
-	public void removeGraduationMonth(Integer month) {
+	public void removeGraduationSemester(Semester semester) {
 		assertManagerOrOwner(creator);
-		graduationMonths.remove(month);
+		cachedSemesters.remove(semester);
+	}
+	
+	@Override
+	public void addGraduationSemester(Integer year, Integer month) {
+		addGraduationSemester(new Semester(year,month));
+	}
+	
+	@Override
+	public void removeGraduationSemester(Integer year, Integer month) {
+		removeGraduationSemester(new Semester(year,month));
 	}
 
 	@Override
@@ -334,21 +413,22 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	}
 
 	@Override
-	public Date getDateRangeStart() {
+	public Date getSubmissionDateRangeStart() {
 		return rangeStart;
 	}
+	
+	@Override
+	public void setSubmissionDateRangeStart(Date start) {
+		rangeStart = start;
+	}
 
 	@Override
-	public Date getDateRangeEnd() {
+	public Date getSubmissionDateRangeEnd() {
 		return rangeEnd;
 	}
-
+	
 	@Override
-	public void setDateRange(Date start, Date end) {
-		assertManagerOrOwner(creator);
-		
-		this.rangeStart = start;
-		this.rangeEnd = end;
+	public void setSubmissionDateRangeEnd(Date end) {
+		rangeEnd = end;
 	}
-
 }

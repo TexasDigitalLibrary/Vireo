@@ -29,6 +29,10 @@ FONTS COLORS ETC
 	text-align:center;
 }
 
+.indent{
+    margin-left: 2em;
+}
+
 .large{
 	font-size:1.4em;
 }
@@ -48,12 +52,42 @@ TABLES & FORMS
 td.comments{
 	background:url("../images/nav-bg.gif");
 	height:31px;
-	padding-left:15px;
+	padding:0 15px;
+	line-height:28px;
 }
 
 td button, td button.btn, td button.btn-small{
 	height:20px;
 	line-height:9px;
+}
+
+legend.default{
+	border:none;
+	margin:0;
+	padding:0;
+	width:auto;
+	font-size:1.2em;
+	font-weight:bold;
+	color:@grayLight;
+}
+
+fieldset.default{
+	border:solid 1px @grayLight;
+	padding:10px;
+	margin:20px 0 20px 20px;
+}
+
+@inputWidth: 170px;
+.settings div{
+	float:left;
+	width:@inputWidth;
+	font-size:.9em;
+	padding:0 7px;
+	margin:5px 0;
+}
+
+.settings .half{
+	width:@inputWidth/2;
 }
 
 /*****************
@@ -175,15 +209,47 @@ LAYOUT
 	margin:0 20px 0 255px;
 }
 
-/*
-#right-column .inner{
-	min-height:500px;
-	margin:0 20px 0 255px;
-}
-*/
-
 .nav-tabs{
 	height:35px;
+}
+
+.submissionAvailability{
+	width:600px;
+	margin:20px 0;
+}
+
+.submissionAvailability li{
+	padding:10px 0;
+}
+
+.submissionAvailability label{
+	font-size:1.2em;
+	float:left;
+	clear:left;
+	text-align:right;
+	width:40%;
+}
+.submissionAvailability span{
+	float:left;
+	padding-left:10px;
+	clear:right;
+}
+
+.info{
+	color:@grayLight;
+	font-size:0.8em;
+}
+
+.wrap{
+	margin:20px 0;
+}
+
+.manager, .manager:hover{
+	display:block;
+	width:19px;
+	height:17px;
+	background:url("../images/manager.png") no-repeat scroll;
+	text-decoration:none;
 }
 
 /***********************
@@ -235,7 +301,7 @@ SIDE BOXES
 	margin:10px 0 0 0;
 }
 .box-body ul, .box-body p{
-	margin:5px 0 0 25px;
+	margin:5px 10px 0 25px;
 }
 
 .box-body a.removable {
@@ -255,6 +321,17 @@ SIDE BOXES
 
 .box-body li.more {
     font-style: italic;
+}
+
+.box-body .daterange-label {
+    margin-left: 0px;
+    
+}
+
+.box-body .daterange-hint {
+    margin: 0px;
+    color: #999999;
+    font-size: 0.85em;
 }
 
 .box-footer{
@@ -299,3 +376,11 @@ EDIT HOLDERS & BOXES
 .edit-box .empty{
 	color:@grayLighter;
 }
+
+/**********************
+MODAL DIALOG BOXES
+**********************/
+div.modal form {
+    margin: 0px;
+}
+

@@ -139,6 +139,41 @@ public class JpaPersonImplTests extends UnitTest {
 	}
 	
 	/**
+	 * Test that users can be located based upon their roles.
+	 */
+	@Test
+	public void findPersonsByRole() {
+		
+		// This test depends upon data created by the TestDataLoader.
+		Person admin = repo.findPersonByEmail("bthornton@gmail.com");
+		Person manager = repo.findPersonByEmail("mdriver@gmail.com");
+		Person reviewer = repo.findPersonByEmail("jdimaggio@gmail.com");
+		
+		List<Person> persons = repo.findPersonsByRole(RoleType.REVIEWER);
+		
+		assertNotNull(persons);
+		assertTrue(persons.contains(admin));
+		assertTrue(persons.contains(manager));
+		assertTrue(persons.contains(reviewer));
+		assertEquals(3,persons.size());
+		
+		
+		persons = repo.findPersonsByRole(RoleType.MANAGER);
+		
+		assertNotNull(persons);
+		assertTrue(persons.contains(admin));
+		assertTrue(persons.contains(manager));
+		assertEquals(2,persons.size());
+		
+		persons = repo.findPersonsByRole(RoleType.ADMINISTRATOR);
+		
+		assertNotNull(persons);
+		assertTrue(persons.contains(admin));
+		assertEquals(1,persons.size());
+		
+	}
+	
+	/**
 	 * Test that persons are assigned ids.
 	 */
 	@Test

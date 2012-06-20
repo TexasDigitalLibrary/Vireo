@@ -1,9 +1,11 @@
 package controllers;
 
 import java.lang.annotation.Annotation;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.NamedSearchFilter;
@@ -17,6 +19,7 @@ import org.tdl.vireo.search.SearchResult;
 import org.tdl.vireo.state.State;
 
 
+import play.Logger;
 import play.data.binding.As;
 import play.modules.spring.Spring;
 import play.mvc.Http.Cookie;
@@ -31,21 +34,28 @@ import play.mvc.With;
 @With(Authentication.class)
 public class Review extends AbstractVireoController {
 
+	// The cookie names where the current active filters are stored for submission and actionlog.
 	public final static String SUBMISSION_FILTER_COOKIE_NAME = "SubmissionFilter";
 	public final static String ACTION_LOG_FILTER_COOKIE_NAME = "ActionLogFilter";
 	
 	/**
 	 * List page
 	 * 
-	 * This page handles the filter search operations for finding submissions. Users are able to use a faceted like browsing experience to tailor a list of submissions.
+	 * This page handles the filter search operations for finding submissions.
+	 * Users are able to use a faceted like browsing experience to tailor a list
+	 * of submissions.
 	 * 
 	 * Here's an overview of the paramaters expected by this controller:
 	 * 
-	 * action: The action to take such add/remove a filter parameter. The valid actions are: filterAdd, filterRemove, filterSave, filterDelete, filterLoad, filterClear.
+	 * action: The action to take such add/remove a filter parameter. The valid
+	 * actions are: filterAdd, filterRemove, filterSave, filterDelete,
+	 * filterLoad, filterClear.
 	 * 
-	 * type: When the action is to add/remove a filter parameter the type parameter is used to identifier the particular type to work with.
+	 * type: When the action is to add/remove a filter parameter the type
+	 * parameter is used to identifier the particular type to work with.
 	 * 
-	 * value: When the action is to add/remove a filter the value paramater is the actual value to add or remove from the filter search.
+	 * value: When the action is to add/remove a filter the value paramater is
+	 * the actual value to add or remove from the filter search.
 	 * 
 	 */
 	@Security(RoleType.REVIEWER)
@@ -62,7 +72,11 @@ public class Review extends AbstractVireoController {
 		ActiveSearchFilter activeFilter = Spring.getBeanOfType(ActiveSearchFilter.class);
 		Cookie cookie = request.cookies.get(SUBMISSION_FILTER_COOKIE_NAME);
 		if (cookie != null) {
-			activeFilter.decode(cookie.value);
+			try {
+				activeFilter.decode(cookie.value);
+			} catch (RuntimeException re) {
+				Logger.warn(re,"Unable to decode search filter: "+cookie.value);
+			}
 		}
 		
 		// Step 2:  Run the current filter search
@@ -105,52 +119,55 @@ public class Review extends AbstractVireoController {
 		ActiveSearchFilter activeFilter = Spring.getBeanOfType(ActiveSearchFilter.class);
 		Cookie cookie = request.cookies.get(SUBMISSION_FILTER_COOKIE_NAME);
 		if (cookie != null) {
-			activeFilter.decode(cookie.value);
+			try {
+				activeFilter.decode(cookie.value);
+			} catch (RuntimeException re) {
+				Logger.warn(re,"Unable to decode search filter: "+cookie.value);
+			}
 		}
 		
 		String action = params.get("action");
 		if ("add".equals(action)) {
-			System.out.println("add");
 			// The user is going to modify the existing active filter by adding a new paramater.
 			doAddFilterParameter(activeFilter);
 		
 		} else if ("remove".equals(action)) {
-			System.out.println("remove");
-
 			// The user is going to modify the existing active filter by removing an existing paramater.
 			doRemoveFilterParamater(activeFilter);
 			
 		} else if ("save".equals(action)) {
-			System.out.println("save");
-
-			// The user is going to save the current active filter to the database.
 			String name = params.get("name");
-			NamedSearchFilter newFilter = subRepo.createSearchFilter(person, name);
-			activeFilter.copyTo(newFilter);
-			newFilter.save();
+			boolean publicFlag = false;
+			if (params.get("public") != null)
+				publicFlag = true;
 			
-		} else if ("delete".equals(action)) {
-			System.out.println("delete");
-
-			// The user is going to delete an existing filter.
-			// TODO: Check privileges
-			Long filterId = params.get("id",Long.class);
-			NamedSearchFilter oldFilter = subRepo.findSearchFilter(filterId);
-			oldFilter.delete();
+			// Check if a filter allready exsits for the name.
+			NamedSearchFilter namedFilter = subRepo.findSearchFilterByCreatorAndName(person, name);
+			if (namedFilter == null) {
+				namedFilter = subRepo.createSearchFilter(person, name);
+			}
+			
+			namedFilter.setPublic(publicFlag);
+			activeFilter.copyTo(namedFilter);
+			namedFilter.save();
+			
+		} else if ("manage".equals(action)) {
+			String[] removeIds = params.getAll("remove");
+			for (String removeId : removeIds) {	
+				NamedSearchFilter namedFilter = subRepo.findSearchFilter(Long.valueOf(removeId));
+				
+				if (namedFilter.getCreator() == person || person.getRole().ordinal() >= RoleType.MANAGER.ordinal())
+					namedFilter.delete();
+			}			
 			
 		} else if ("load".equals(action)) {
-			System.out.println("load");
-
-			// The user is going to replace the current filter with an existing
-			// filter saved in the database.
-			// TODO: check privileges
-			Long filterId = params.get("id",Long.class);
+			Long filterId = params.get("filter",Long.class);
 			NamedSearchFilter savedFilter = subRepo.findSearchFilter(filterId);
-			activeFilter.copyFrom(savedFilter);
+			
+			if (savedFilter.isPublic() || savedFilter.getCreator() == person)
+				activeFilter.copyFrom(savedFilter);
 			
 		} else if ("clear".equals(action)) {
-			System.out.println("clear");
-
 			// Reset the users current filter by clearing it completely.
 			activeFilter = Spring.getBeanOfType(ActiveSearchFilter.class);
 			
@@ -159,7 +176,7 @@ public class Review extends AbstractVireoController {
 		}
 		
 		// Save the active filter to a cookie
-		System.out.println("cookie value="+activeFilter.encode());
+		//System.out.println("cookie value="+activeFilter.encode());
 		response.setCookie(SUBMISSION_FILTER_COOKIE_NAME, activeFilter.encode());
 		
 		if ("list".equals(nav))
@@ -193,9 +210,8 @@ public class Review extends AbstractVireoController {
 	 * "text", or "state" etc... While value will be the actual value of the new
 	 * parameter to be added.
 	 * 
-	 * There is one special case for date range searching. In this case the
-	 * values should be located in the parameter "startDate" and "endDate" which
-	 * need to be formated as a date.
+	 * There are a few special case for date range searching: startDate, endDate,
+	 *  year, and month.
 	 * 
 	 * @param activeFilter
 	 *            The active filter to modifiy.
@@ -222,14 +238,16 @@ public class Review extends AbstractVireoController {
 				activeFilter.addAssignee(person);
 			}
 			
-		} else if ("gradYear".equals(type)) {
-			Integer year = params.get("value",Integer.class);
-			activeFilter.addGraduationYear(year);
+		} else if ("embargo".equals(type)) {
+			Long embargoId = params.get("value",Long.class);
+			EmbargoType embargo = settingRepo.findEmbargoType(embargoId);
+			activeFilter.addEmbargoType(embargo);
 			
-		} else if ("gradMonth".equals(type)) {
-			Integer month = params.get("value",Integer.class);
-			activeFilter.addGraduationMonth(month);
-			
+		} else if ("semester".equals(type)) {
+			Integer year = params.get("year",Integer.class);
+			Integer month = params.get("month",Integer.class);
+			activeFilter.addGraduationSemester(year, month);
+
 		} else if ("degree".equals(type)) {
 			activeFilter.addDegree(value);
 			
@@ -249,12 +267,89 @@ public class Review extends AbstractVireoController {
 			Boolean release = params.get("value",Boolean.class);
 			activeFilter.setUMIRelease(release);
 		
-		} else if ("date".equals(type)) {
+		} else if ("range".equals(type)) {
 			// Not sure if this works the way I think it should.
-			Date start = params.get("startDate", Date.class);
-			Date end = params.get("endDate", Date.class);
-			activeFilter.setDateRange(start, end);
+			Date startDate = params.get("startDate", Date.class);
+			Date endDate = params.get("endDate", Date.class);
 			
+			Calendar start = Calendar.getInstance();
+			Calendar end = Calendar.getInstance();
+			
+			start.setTime(startDate);
+			end.setTime(endDate);
+			
+			// Always set the maximal hour, minute, second so that the dates are inclusive.
+			start.set(Calendar.HOUR,end.getActualMinimum(Calendar.HOUR));
+			start.set(Calendar.MINUTE,end.getActualMinimum(Calendar.MINUTE));
+			start.set(Calendar.SECOND,end.getActualMinimum(Calendar.SECOND));
+			end.set(Calendar.HOUR,end.getActualMaximum(Calendar.HOUR));
+			end.set(Calendar.MINUTE,end.getActualMaximum(Calendar.MINUTE));
+			end.set(Calendar.SECOND,end.getActualMaximum(Calendar.SECOND));
+			
+			if (start != null)
+				activeFilter.setSubmissionDateRangeStart(start.getTime());
+
+			if (end != null)
+				activeFilter.setSubmissionDateRangeEnd(end.getTime());
+		} else if ("rangeChoose".equals(type)) {
+			
+			Integer year = params.get("year",Integer.class);
+			Integer month = params.get("month",Integer.class);
+			Integer days = params.get("days",Integer.class);
+			
+			// Generate the start & end dates
+			Calendar start = Calendar.getInstance();
+			Calendar end = Calendar.getInstance();
+
+			start.clear();
+			end.clear();
+			
+			start.set(Calendar.YEAR, year);
+			end.set(Calendar.YEAR, year);
+			
+			// Check if user has chosen down to the month.
+			if (month == null) {
+				start.set(Calendar.MONTH, Calendar.JANUARY);
+				end.set(Calendar.MONTH, Calendar.DECEMBER);
+			} else {
+				start.set(Calendar.MONTH, month);
+				end.set(Calendar.MONTH, month);
+			}
+			
+			// Check if the user has chosen down to the day range.
+			if (days == null) {
+				start.set(Calendar.DAY_OF_MONTH,end.getActualMinimum(Calendar.DAY_OF_MONTH));
+				end.set(Calendar.DAY_OF_MONTH,end.getActualMaximum(Calendar.DAY_OF_MONTH));
+			} else {
+				// Three cases:
+				// 1 = days 1-10 of the current month
+				// 11 = days 11-20 of the current month
+				// 21 = days 21-31 (or whatever is the last day) of the current month.
+				if (days == 1) {
+					start.set(Calendar.DAY_OF_MONTH,1);
+					end.set(Calendar.DAY_OF_MONTH,10);
+				} else if (days == 11) {
+					start.set(Calendar.DAY_OF_MONTH,11);
+					end.set(Calendar.DAY_OF_MONTH,20);
+				} else if (days == 21) {
+					start.set(Calendar.DAY_OF_MONTH,21);
+					end.set(Calendar.DAY_OF_MONTH,end.getActualMaximum(Calendar.DAY_OF_MONTH));
+				}
+				
+			}
+			
+			// Always set the maximal hour, minute, second so that the dates are inclusive.
+			start.set(Calendar.HOUR,end.getActualMinimum(Calendar.HOUR));
+			start.set(Calendar.MINUTE,end.getActualMinimum(Calendar.MINUTE));
+			start.set(Calendar.SECOND,end.getActualMinimum(Calendar.SECOND));
+			end.set(Calendar.HOUR,end.getActualMaximum(Calendar.HOUR));
+			end.set(Calendar.MINUTE,end.getActualMaximum(Calendar.MINUTE));
+			end.set(Calendar.SECOND,end.getActualMaximum(Calendar.SECOND));
+			
+			
+			// Set the range
+			activeFilter.setSubmissionDateRangeStart(start.getTime());
+			activeFilter.setSubmissionDateRangeEnd(end.getTime());			
 		} else {
 			error("Unable to add an unknown filter paramater.");
 		}
@@ -268,6 +363,9 @@ public class Review extends AbstractVireoController {
 	 * be a textual representation of the search filter parameter type such as
 	 * "text", or "state" etc... While value will be the actual value of the old
 	 * parameter to be removed.
+	 * 
+	 * There are a few special case for date range searching: startDate, endDate,
+	 * year, and month..
 	 * 
 	 * @param activeFilter
 	 *            The active filter to modifiy.
@@ -294,15 +392,16 @@ public class Review extends AbstractVireoController {
 				Person person = personRepo.findPerson(personId);
 				activeFilter.removeAssignee(person);
 			}
-		
-		} else if ("gradYear".equals(type)) {
-			Integer year = params.get("value",Integer.class);
-			activeFilter.removeGraduationYear(year);
-		
-		} else if ("gradMonth".equals(type)) {
-			Integer month = params.get("value",Integer.class);
-			activeFilter.removeGraduationMonth(month);
-		
+		} else if ("embargo".equals(type)) {
+			Long embargoId = params.get("value",Long.class);
+			EmbargoType embargo = settingRepo.findEmbargoType(embargoId);
+			activeFilter.removeEmbargoType(embargo);
+			
+		} else if ("semester".equals(type)) {
+			Integer year = params.get("year",Integer.class);
+			Integer month = params.get("month",Integer.class);
+			activeFilter.removeGraduationSemester(year, month);
+
 		} else if ("degree".equals(type)) {
 			activeFilter.removeDegree(value);
 		
@@ -321,9 +420,12 @@ public class Review extends AbstractVireoController {
 		} else if ("umi".equals(type)) {
 			activeFilter.setUMIRelease(null);
 			
-		} else if ("date".equals(type)) {
-			activeFilter.setDateRange(null, null);
+		} else if ("rangeStart".equals(type)) {
+			activeFilter.setSubmissionDateRangeStart(null);
 		
+		} else if ("rangeEnd".equals(type)) {
+			activeFilter.setSubmissionDateRangeEnd(null);
+
 		} else {	
 			error("Unable to remove an unknown filter paramater.");
 		}

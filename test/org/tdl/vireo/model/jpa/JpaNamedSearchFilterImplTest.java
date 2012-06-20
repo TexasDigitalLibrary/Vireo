@@ -21,6 +21,7 @@ import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.NamedSearchFilter;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.search.SearchDirection;
+import org.tdl.vireo.search.Semester;
 import org.tdl.vireo.search.SearchOrder;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.StateManager;
@@ -274,6 +275,9 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 	public void testPersistance() {
 		Person otherPerson = personRepo.createPerson("other-netid", "other@email.com", "first", "last", RoleType.NONE).save();
 
+		EmbargoType embargo1 = settingRepo.createEmbargoType("embargo1", "description", 12, true).save();
+		EmbargoType embargo2 = settingRepo.createEmbargoType("embargo2", "description", 24, true).save();
+		
 		NamedSearchFilter filter = subRepo.createSearchFilter(person, "filter").save();
 		filter.setPublic(false);
 		filter.addSearchText("text1");
@@ -282,10 +286,10 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		filter.addState("status2");
 		filter.addAssignee(person);
 		filter.addAssignee(otherPerson);
-		filter.addGraduationYear(2002);
-		filter.addGraduationYear(2003);
-		filter.addGraduationMonth(0);
-		filter.addGraduationMonth(11);
+		filter.addEmbargoType(embargo1);
+		filter.addEmbargoType(embargo2);
+		filter.addGraduationSemester(2002,05);
+		filter.addGraduationSemester(2002,null);
 		filter.addDegree("degree1");
 		filter.addDegree("degree2");
 		filter.addDepartment("dept1");
@@ -297,7 +301,8 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		filter.addDocumentType("docType1");
 		filter.addDocumentType("docType2");
 		filter.setUMIRelease(true);
-		filter.setDateRange(new Date(), new Date());
+		filter.setSubmissionDateRangeStart(new Date());
+		filter.setSubmissionDateRangeEnd(new Date());
 		filter.save();
 
 		// Commit and reopen a new transaction.
@@ -316,12 +321,20 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		assertFalse(retrieved.getStates().contains("status3"));
 		assertTrue(retrieved.getAssignees().contains(person));
 		assertTrue(retrieved.getAssignees().contains(otherPerson));
-		assertTrue(retrieved.getGraduationYears().contains(2002));
-		assertTrue(retrieved.getGraduationYears().contains(2003));
-		assertFalse(retrieved.getGraduationYears().contains(2004));
-		assertTrue(retrieved.getGraduationMonths().contains(0));
-		assertTrue(retrieved.getGraduationMonths().contains(11));
-		assertFalse(retrieved.getGraduationMonths().contains(5));
+		assertTrue(retrieved.getEmbargoTypes().contains(embargo1));
+		assertTrue(retrieved.getEmbargoTypes().contains(embargo2));
+		
+		assertTrue(retrieved.getGraduationSemesters().size() == 2);
+		boolean foundSemester1 = false;
+		boolean foundSemester2 = false;
+		for (Semester semester : retrieved.getGraduationSemesters()) {
+			if (semester.year == 2002 && semester.month == null)
+				foundSemester2 = true;
+			else if (semester.year == 2002 && semester.month == 5)
+				foundSemester1 = true;
+		}
+		assertTrue(foundSemester1);
+		assertTrue(foundSemester2);
 		assertTrue(retrieved.getDegrees().contains("degree1"));
 		assertTrue(retrieved.getDegrees().contains("degree2"));
 		assertFalse(retrieved.getDegrees().contains("degree3"));
@@ -338,10 +351,12 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		assertTrue(retrieved.getDocumentTypes().contains("docType2"));
 		assertFalse(retrieved.getDocumentTypes().contains("docType3"));
 		assertTrue(retrieved.getUMIRelease());
-		assertNotNull(retrieved.getDateRangeStart());
-		assertNotNull(retrieved.getDateRangeEnd());
+		assertNotNull(retrieved.getSubmissionDateRangeStart());
+		assertNotNull(retrieved.getSubmissionDateRangeEnd());
 		
 		retrieved.delete();
+		settingRepo.findEmbargoType(embargo1.getId()).delete();
+		settingRepo.findEmbargoType(embargo2.getId()).delete();
 		personRepo.findPerson(otherPerson.getId()).delete();
 		personRepo.findPerson(person.getId()).delete();
 		person = null;
@@ -390,12 +405,17 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 	public void testSubmissionFilterSearch() {
 		Person otherPerson = personRepo.createPerson("other-netid", "other@email.com", "first", "last", RoleType.REVIEWER).save();
 		
+		EmbargoType embargo1 = settingRepo.createEmbargoType("embargo1", "description", 12, true).save();
+		EmbargoType embargo2 = settingRepo.createEmbargoType("embargo2", "description", 24, true).save();
+		
 		Submission sub1 = subRepo.createSubmission(person);
 		createSubmission(sub1, "B Title", "This is really important work", "One; Two; Three;", 
 				"committee@email.com", "I approve this ETD", "degree", "department", "college", "major",
 				"documentType", 2002, 5, true);
 		sub1.setAssignee(otherPerson);
 		sub1.setSubmissionDate(new Date(2012,5,1));
+		sub1.setEmbargoType(embargo2);
+		sub1.setState(sub1.getState().getTransitions(sub1).get(0));
 		sub1.save();
 		
 		Submission sub2 = subRepo.createSubmission(person);
@@ -403,148 +423,160 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 				"anotherCommittee@email.com", "I reject this ETD", "another", "another", "another", "another",
 				"another", 2003, 6, null);
 		sub2.setSubmissionDate(new Date(2005,5,1));
+		sub2.setEmbargoType(embargo1);
 		sub2.save();
 		
 		
 		// Search Text Filter
-		NamedSearchFilter filter = subRepo.createSearchFilter(person, "test1");
+		NamedSearchFilter filter = subRepo.createSearchFilter(person, "test-text");
 		filter.addSearchText("I really%this work");
 		filter.save();
 		
 		List<Submission> submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10).getResults();
 		
-		assertEquals(sub2.getId(),submissions.get(0).getId());
-		assertEquals(1,submissions.size());
+		assertFalse(submissions.contains(sub1));
+		assertTrue(submissions.contains(sub2));
 		filter.delete();
 		
 		// State Filter
-		filter = subRepo.createSearchFilter(person, "test2");
+		filter = subRepo.createSearchFilter(person, "test-state");
 		filter.addState(stateManager.getInitialState().getBeanName());
 		filter.save();
 		
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10).getResults();
 		
-		assertEquals(sub1.getId(),submissions.get(0).getId());
-		assertEquals(sub2.getId(),submissions.get(1).getId());
-		assertEquals(2,submissions.size());
+		assertFalse(submissions.contains(sub1));
+		assertTrue(submissions.contains(sub2));
 		filter.delete();
 		
 		// Assignee Filter
-		filter = subRepo.createSearchFilter(person, "test3");
+		filter = subRepo.createSearchFilter(person, "test-assignee");
 		filter.addAssignee(otherPerson);
 		filter.save();
 		
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10).getResults();
 		
-		assertEquals(sub1.getId(),submissions.get(0).getId());
-		assertEquals(1,submissions.size());
+		assertTrue(submissions.contains(sub1));
+		assertFalse(submissions.contains(sub2));
 		filter.delete();
 		
-		// Graduation Year Filter
-		filter = subRepo.createSearchFilter(person, "test4");
-		filter.addGraduationYear(2002);
-		filter.addGraduationYear(2003);
+		// Embargo Filter
+		filter = subRepo.createSearchFilter(person, "test-embargo");
+		filter.addEmbargoType(embargo1);
 		filter.save();
 		
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10).getResults();
 		
-		assertEquals(sub1.getId(),submissions.get(0).getId());
-		assertEquals(sub2.getId(),submissions.get(1).getId());
-		assertEquals(2,submissions.size());
+		assertFalse(submissions.contains(sub1));
+		assertTrue(submissions.contains(sub2));
 		filter.delete();
 		
-		// Graduation Month Filter
-		filter = subRepo.createSearchFilter(person, "test5");
-		filter.addGraduationMonth(5);
+		// Graduation Semester Filter
+		filter = subRepo.createSearchFilter(person, "test-gradSemester1");
+		filter.addGraduationSemester(2002,05);
+		filter.save();
+		
+		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10).getResults();
+		
+		assertTrue(submissions.contains(sub1));
+		assertFalse(submissions.contains(sub2));
+		filter.delete();
+		
+		// Graduation Semester without month Filter
+		filter = subRepo.createSearchFilter(person, "test-gradSemester2");
+		filter.addGraduationSemester(2003,null);
 		filter.save();
 
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10).getResults();
 		
-		assertEquals(sub1.getId(),submissions.get(0).getId());
-		assertEquals(1,submissions.size());
+		assertFalse(submissions.contains(sub1));
+		assertTrue(submissions.contains(sub2));
 		filter.delete();
 		
 		
 		// Degree Filter
-		filter = subRepo.createSearchFilter(person, "test6");
+		filter = subRepo.createSearchFilter(person, "test-degree");
 		filter.addDegree("degree");
 		filter.save();
 
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10).getResults();
 		
-		assertEquals(sub1.getId(),submissions.get(0).getId());
-		assertEquals(1,submissions.size());
+		assertTrue(submissions.contains(sub1));
+		assertFalse(submissions.contains(sub2));
 		filter.delete();
 		
 		// Department Filter
-		filter = subRepo.createSearchFilter(person, "test7");
+		filter = subRepo.createSearchFilter(person, "test-department");
 		filter.addDepartment("department");
 		filter.save();
 
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10).getResults();
 		
-		assertEquals(sub1.getId(),submissions.get(0).getId());
-		assertEquals(1,submissions.size());
+		assertTrue(submissions.contains(sub1));
+		assertFalse(submissions.contains(sub2));
 		filter.delete();
 		
 		
 		// College Filter
-		filter = subRepo.createSearchFilter(person, "test8");
+		filter = subRepo.createSearchFilter(person, "test-college");
 		filter.addCollege("college");
 		filter.save();
 
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10).getResults();
 		
-		assertEquals(sub1.getId(),submissions.get(0).getId());
-		assertEquals(1,submissions.size());
+		assertTrue(submissions.contains(sub1));
+		assertFalse(submissions.contains(sub2));
 		filter.delete();
 		
 		// Major Filter
-		filter = subRepo.createSearchFilter(person, "test9");
+		filter = subRepo.createSearchFilter(person, "test-major");
 		filter.addMajor("major");
 		filter.save();
 
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10).getResults();
 		
-		assertEquals(sub1.getId(),submissions.get(0).getId());
-		assertEquals(1,submissions.size());
+		assertTrue(submissions.contains(sub1));
+		assertFalse(submissions.contains(sub2));
 		filter.delete();
 		
 		// Document Type Filter
-		filter = subRepo.createSearchFilter(person, "test10");
+		filter = subRepo.createSearchFilter(person, "test-document");
 		filter.addDocumentType("documentType");
 		filter.save();
 
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10).getResults();
 		
-		assertEquals(sub1.getId(),submissions.get(0).getId());
-		assertEquals(1,submissions.size());
+		assertTrue(submissions.contains(sub1));
+		assertFalse(submissions.contains(sub2));
 		filter.delete();
 		
 		// UMI Release Filter
-		filter = subRepo.createSearchFilter(person, "test11");
+		filter = subRepo.createSearchFilter(person, "test-umi");
 		filter.setUMIRelease(true);
 		filter.save();
 
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10).getResults();
 		
-		assertEquals(sub1.getId(),submissions.get(0).getId());
-		assertEquals(1,submissions.size());
+		assertTrue(submissions.contains(sub1));
+		assertFalse(submissions.contains(sub2));
 		filter.delete();
 		
 		// Date Range Filter
-		filter = subRepo.createSearchFilter(person, "test12");
-		filter.setDateRange(new Date(2000,1,1), new Date(2006,1,1));
+		filter = subRepo.createSearchFilter(person, "test-range");
+		filter.setSubmissionDateRangeStart(new Date(2000,1,1));
+		filter.setSubmissionDateRangeEnd(new Date(2006,1,1));
 		filter.save();
 
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10).getResults();
 		
-		assertEquals(sub2.getId(),submissions.get(0).getId());
-		assertEquals(1,submissions.size());
+		assertFalse(submissions.contains(sub1));
+		assertTrue(submissions.contains(sub2));
 		filter.delete();
 		
 		sub1.delete();
 		sub2.delete();
+		embargo1.delete();
+		embargo2.delete();
 		otherPerson.delete();
 	}
 	
@@ -621,179 +653,178 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		
 		// Submission ID
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10).getResults();
-		assertEquals(sub1.getId(),submissions.get(0).getId());
-		assertEquals(sub2.getId(),submissions.get(1).getId());
-		assertEquals(2,submissions.size());
+		assertTrue(submissions.contains(sub1));
+		assertTrue(submissions.contains(sub2));
+		assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));
 		
 		// Submitter
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.SUBMITTER, SearchDirection.ASCENDING, 0, 10).getResults();
-
-		assertEquals(sub1.getId(),submissions.get(0).getId());
-		assertEquals(sub2.getId(),submissions.get(1).getId());
-		assertEquals(2,submissions.size());
+		assertTrue(submissions.contains(sub1));
+		assertTrue(submissions.contains(sub2));
+		assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));
 		
 		// Document Title
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.DOCUMENT_TITLE, SearchDirection.ASCENDING, 0, 10).getResults();
-		assertEquals(sub2.getId(),submissions.get(0).getId());
-		assertEquals(sub1.getId(),submissions.get(1).getId());
-		assertEquals(2,submissions.size());
+		assertTrue(submissions.contains(sub1));
+		assertTrue(submissions.contains(sub2));
+		assertTrue(submissions.indexOf(sub1) > submissions.indexOf(sub2));
 		
 		// Document Abstract
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.DOCUMENT_ABSTRACT, SearchDirection.ASCENDING, 0, 10).getResults();
-		assertEquals(sub2.getId(),submissions.get(0).getId());
-		assertEquals(sub1.getId(),submissions.get(1).getId());
-		assertEquals(2,submissions.size());
+		assertTrue(submissions.contains(sub1));
+		assertTrue(submissions.contains(sub2));
+		assertTrue(submissions.indexOf(sub1) > submissions.indexOf(sub2));
 		
 		// Document Keywords
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.DOCUMENT_KEYWORDS, SearchDirection.ASCENDING, 0, 10).getResults();
-		assertEquals(sub2.getId(),submissions.get(0).getId());
-		assertEquals(sub1.getId(),submissions.get(1).getId());
-		assertEquals(2,submissions.size());
+		assertTrue(submissions.contains(sub1));
+		assertTrue(submissions.contains(sub2));
+		assertTrue(submissions.indexOf(sub1) > submissions.indexOf(sub2));
 		
 		// Document EmbargoType
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.EMBARGO_TYPE, SearchDirection.ASCENDING, 0, 10).getResults();
-		assertEquals(sub2.getId(),submissions.get(0).getId());
-		assertEquals(sub1.getId(),submissions.get(1).getId());
-		assertEquals(2,submissions.size());
+		assertTrue(submissions.contains(sub1));
+		assertTrue(submissions.contains(sub2));
+		assertTrue(submissions.indexOf(sub1) > submissions.indexOf(sub2));
 		
 		// Primary Attachment
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.PRIMARY_DOCUMENT, SearchDirection.ASCENDING, 0, 10).getResults();
 		// Arg nulls first depending upon database implementation.
-		assertEquals(sub1.getId(),submissions.get(0).getId());
-		assertEquals(sub2.getId(),submissions.get(1).getId());
-		assertEquals(2,submissions.size());
+		assertTrue(submissions.contains(sub1));
+		assertTrue(submissions.contains(sub2));
+		assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));
 		
 		// Committee Members
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.COMMITTEE_MEMBERS, SearchDirection.ASCENDING, 0, 10).getResults();
-		assertEquals(sub2.getId(),submissions.get(0).getId());
-		assertEquals(sub1.getId(),submissions.get(1).getId());
-		assertEquals(2,submissions.size());
+		assertTrue(submissions.contains(sub1));
+		assertTrue(submissions.contains(sub2));
+		assertTrue(submissions.indexOf(sub1) > submissions.indexOf(sub2));
 		
 		// Committee Contact Email
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.COMMITTEE_CONTACT_EMAIL, SearchDirection.ASCENDING, 0, 10).getResults();
-		assertEquals(sub2.getId(),submissions.get(0).getId());
-		assertEquals(sub1.getId(),submissions.get(1).getId());
-		assertEquals(2,submissions.size());
+		assertTrue(submissions.contains(sub1));
+		assertTrue(submissions.contains(sub2));
+		assertTrue(submissions.indexOf(sub1) > submissions.indexOf(sub2));
 		
 		// Committee Approval Date
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.COMMITTEE_APPROVAL_DATE, SearchDirection.ASCENDING, 0, 10).getResults();
-		assertEquals(sub2.getId(),submissions.get(0).getId());
-		assertEquals(sub1.getId(),submissions.get(1).getId());
-		assertEquals(2,submissions.size());
+		assertTrue(submissions.contains(sub1));
+		assertTrue(submissions.contains(sub2));
+		assertTrue(submissions.indexOf(sub1) > submissions.indexOf(sub2));
 		
 		// Committee Embargo Approval Date
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.COMMITTEE_APPROVAL_DATE, SearchDirection.ASCENDING, 0, 10).getResults();
-		assertEquals(sub2.getId(),submissions.get(0).getId());
-		assertEquals(sub1.getId(),submissions.get(1).getId());
-		assertEquals(2,submissions.size());
+		assertTrue(submissions.contains(sub1));
+		assertTrue(submissions.contains(sub2));
+		assertTrue(submissions.indexOf(sub1) > submissions.indexOf(sub2));
 		
 		// Committee Disposition
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.COMMITTEE_DISPOSITION, SearchDirection.ASCENDING, 0, 10).getResults();
-		assertEquals(sub2.getId(),submissions.get(0).getId());
-		assertEquals(sub1.getId(),submissions.get(1).getId());
-		assertEquals(2,submissions.size());
+		assertTrue(submissions.contains(sub1));
+		assertTrue(submissions.contains(sub2));
+		assertTrue(submissions.indexOf(sub1) > submissions.indexOf(sub2));
 		
 		// Submission Date
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.SUBMISSION_DATE, SearchDirection.ASCENDING, 0, 10).getResults();
-		assertEquals(sub2.getId(),submissions.get(0).getId());
-		assertEquals(sub1.getId(),submissions.get(1).getId());
-		assertEquals(2,submissions.size());
+		assertTrue(submissions.contains(sub1));
+		assertTrue(submissions.contains(sub2));
+		assertTrue(submissions.indexOf(sub1) > submissions.indexOf(sub2));
 		
 		// Approval Date
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.APPROVAL_DATE, SearchDirection.ASCENDING, 0, 10).getResults();
-		assertEquals(sub2.getId(),submissions.get(0).getId());
-		assertEquals(sub1.getId(),submissions.get(1).getId());
-		assertEquals(2,submissions.size());
+		assertTrue(submissions.contains(sub1));
+		assertTrue(submissions.contains(sub2));
+		assertTrue(submissions.indexOf(sub1) > submissions.indexOf(sub2));
 
 		// License Agreement Date
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.LICENSE_AGREEMENT_DATE, SearchDirection.ASCENDING, 0, 10).getResults();
-		assertEquals(sub2.getId(),submissions.get(0).getId());
-		assertEquals(sub1.getId(),submissions.get(1).getId());
-		assertEquals(2,submissions.size());
+		assertTrue(submissions.contains(sub1));
+		assertTrue(submissions.contains(sub2));
+		assertTrue(submissions.indexOf(sub1) > submissions.indexOf(sub2));
 
 		// Degree
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.DEGREE, SearchDirection.ASCENDING, 0, 10).getResults();
-		assertEquals(sub2.getId(),submissions.get(0).getId());
-		assertEquals(sub1.getId(),submissions.get(1).getId());
-		assertEquals(2,submissions.size());
-
+		assertTrue(submissions.contains(sub1));
+		assertTrue(submissions.contains(sub2));
+		assertTrue(submissions.indexOf(sub1) > submissions.indexOf(sub2));
+		
 		// Department
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.DEPARTMENT, SearchDirection.ASCENDING, 0, 10).getResults();
-		assertEquals(sub2.getId(),submissions.get(0).getId());
-		assertEquals(sub1.getId(),submissions.get(1).getId());
-		assertEquals(2,submissions.size());
+		assertTrue(submissions.contains(sub1));
+		assertTrue(submissions.contains(sub2));
+		assertTrue(submissions.indexOf(sub1) > submissions.indexOf(sub2));
 		
 		// College
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.COLLEGE, SearchDirection.ASCENDING, 0, 10).getResults();
-		assertEquals(sub2.getId(),submissions.get(0).getId());
-		assertEquals(sub1.getId(),submissions.get(1).getId());
-		assertEquals(2,submissions.size());
+		assertTrue(submissions.contains(sub1));
+		assertTrue(submissions.contains(sub2));
+		assertTrue(submissions.indexOf(sub1) > submissions.indexOf(sub2));
 		
 		// Major
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.MAJOR, SearchDirection.ASCENDING, 0, 10).getResults();
-		assertEquals(sub2.getId(),submissions.get(0).getId());
-		assertEquals(sub1.getId(),submissions.get(1).getId());
-		assertEquals(2,submissions.size());
+		assertTrue(submissions.contains(sub1));
+		assertTrue(submissions.contains(sub2));
+		assertTrue(submissions.indexOf(sub1) > submissions.indexOf(sub2));
 		
 		// DocumentType
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.DOCUMENT_TYPE, SearchDirection.ASCENDING, 0, 10).getResults();
-		assertEquals(sub2.getId(),submissions.get(0).getId());
-		assertEquals(sub1.getId(),submissions.get(1).getId());
-		assertEquals(2,submissions.size());
+		assertTrue(submissions.contains(sub1));
+		assertTrue(submissions.contains(sub2));
+		assertTrue(submissions.indexOf(sub1) > submissions.indexOf(sub2));
 		
 		// Graduation Year
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.GRADUATION_YEAR, SearchDirection.ASCENDING, 0, 10).getResults();
-		assertEquals(sub2.getId(),submissions.get(0).getId());
-		assertEquals(sub1.getId(),submissions.get(1).getId());
-		assertEquals(2,submissions.size());
+		assertTrue(submissions.contains(sub1));
+		assertTrue(submissions.contains(sub2));
+		assertTrue(submissions.indexOf(sub1) > submissions.indexOf(sub2));
 		
 		// Graduation Month
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.GRADUATION_MONTH, SearchDirection.ASCENDING, 0, 10).getResults();
-		assertEquals(sub2.getId(),submissions.get(0).getId());
-		assertEquals(sub1.getId(),submissions.get(1).getId());
-		assertEquals(2,submissions.size());
+		assertTrue(submissions.contains(sub1));
+		assertTrue(submissions.contains(sub2));
+		assertTrue(submissions.indexOf(sub1) > submissions.indexOf(sub2));
 		
 		// Graduation Date
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.GRADUATION_DATE, SearchDirection.ASCENDING, 0, 10).getResults();
-		assertEquals(sub2.getId(),submissions.get(0).getId());
-		assertEquals(sub1.getId(),submissions.get(1).getId());
-		assertEquals(2,submissions.size());
+		assertTrue(submissions.contains(sub1));
+		assertTrue(submissions.contains(sub2));
+		assertTrue(submissions.indexOf(sub1) > submissions.indexOf(sub2));
 		
 		// State
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.STATE, SearchDirection.ASCENDING, 0, 10).getResults();
-		assertEquals(sub1.getId(),submissions.get(0).getId());
-		assertEquals(sub2.getId(),submissions.get(1).getId());
-		assertEquals(2,submissions.size());
+		assertTrue(submissions.contains(sub1));
+		assertTrue(submissions.contains(sub2));
+		assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));
 		
 		// Assignee
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.GRADUATION_DATE, SearchDirection.ASCENDING, 0, 10).getResults();
-		assertEquals(sub2.getId(),submissions.get(0).getId());
-		assertEquals(sub1.getId(),submissions.get(1).getId());
-		assertEquals(2,submissions.size());
+		assertTrue(submissions.contains(sub1));
+		assertTrue(submissions.contains(sub2));
+		assertTrue(submissions.indexOf(sub1) > submissions.indexOf(sub2));
 		
 		// UMI Release
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.UMI_RELEASE, SearchDirection.ASCENDING, 0, 10).getResults();
-		assertEquals(sub2.getId(),submissions.get(0).getId());
-		assertEquals(sub1.getId(),submissions.get(1).getId());
-		assertEquals(2,submissions.size());
+		assertTrue(submissions.contains(sub1));
+		assertTrue(submissions.contains(sub2));
+		assertTrue(submissions.indexOf(sub1) > submissions.indexOf(sub2));
 		
 		// Custom Action
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.CUSTOM_ACTIONS, SearchDirection.ASCENDING, 0, 10).getResults();
-		assertEquals(sub2.getId(),submissions.get(0).getId());
-		assertEquals(sub1.getId(),submissions.get(1).getId());
-		assertEquals(2,submissions.size());
+		assertTrue(submissions.contains(sub1));
+		assertTrue(submissions.contains(sub2));
+		assertTrue(submissions.indexOf(sub1) > submissions.indexOf(sub2));
 		
 		// Last Event Entry
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.LAST_EVENT_ENTRY, SearchDirection.ASCENDING, 0, 10).getResults();
-		assertEquals(sub1.getId(),submissions.get(0).getId());
-		assertEquals(sub2.getId(),submissions.get(1).getId());
-		assertEquals(2,submissions.size());
+		assertTrue(submissions.contains(sub1));
+		assertTrue(submissions.contains(sub2));
+		assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));
 		
 		// Last Event Time
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.LAST_EVENT_TIME, SearchDirection.ASCENDING, 0, 10).getResults();
-		assertEquals(sub1.getId(),submissions.get(0).getId());
-		assertEquals(sub2.getId(),submissions.get(1).getId());
-		assertEquals(2,submissions.size());
+		assertTrue(submissions.contains(sub1));
+		assertTrue(submissions.contains(sub2));
+		assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));
 		
 		// Cleanup
 		filter.delete();
@@ -810,23 +841,29 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 	 */
 	@Test
 	public void testActionLogFilterSearch() {
-		
+		// Everything will be assigned to this person.
 		Person otherPerson = personRepo.createPerson("other-netid", "other@email.com", "first", "last", RoleType.ADMINISTRATOR).save();
 		context.login(otherPerson);
 		
+		EmbargoType embargo1 = settingRepo.createEmbargoType("embargo1", "description", 12, true).save();
+		EmbargoType embargo2 = settingRepo.createEmbargoType("embargo2", "description", 24, true).save();
+		
 		Submission sub1 = subRepo.createSubmission(person);
-		createSubmission(sub1, "B Title", "This is really important work", "One; Two; Three;", 
+		createSubmission(sub1, "B UniqueTitle B", "This is really important work", "One; Two; Three;", 
 				"committee@email.com", "I approve this ETD", "degree", "department", "college", "major",
 				"documentType", 2002, 5, true);
 		sub1.setAssignee(otherPerson);
 		sub1.setSubmissionDate(new Date(2012,5,1));
+		sub1.setEmbargoType(embargo2);
 		sub1.save();
 		
 		Submission sub2 = subRepo.createSubmission(person);
-		createSubmission(sub2, "A Title", "I really like this work", "One; Four; Five;", 
+		createSubmission(sub2, "A UniqueTitle A", "I really like this work", "One; Four; Five;", 
 				"anotherCommittee@email.com", "I reject this ETD", "another", "another", "another", "another",
 				"another", 2003, 6, null);
 		sub2.setSubmissionDate(new Date(2005,5,1));
+		sub2.setEmbargoType(embargo1);
+		sub2.setAssignee(otherPerson);
 		sub2.save();
 		
 		
@@ -834,8 +871,9 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		NamedSearchFilter filter;
 		
 		// Search Text Filter
-		filter = subRepo.createSearchFilter(otherPerson, "test1");
-		filter.addSearchText("created");
+		filter = subRepo.createSearchFilter(otherPerson, "test-text");
+		filter.addAssignee(otherPerson);
+		filter.addSearchText("Submission created by first last");
 		filter.save();
 		
 		logs = subRepo.filterSearchActionLogs(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10).getResults();
@@ -845,18 +883,19 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		filter.delete();
 		
 		// State Filter
-		filter = subRepo.createSearchFilter(otherPerson, "test2");
+		filter = subRepo.createSearchFilter(otherPerson, "test-state");
+		filter.addAssignee(otherPerson);
 		filter.addState(stateManager.getInitialState().getBeanName());
 		filter.save();
 		
 		logs = subRepo.filterSearchActionLogs(filter, SearchOrder.ID, SearchDirection.DESCENDING, 0, 10).getResults();
 		
 		assertEquals(sub2,logs.get(0).getSubmission());
-		assertEquals("Submission date set by first last", logs.get(0).getEntry());
+		assertEquals("Assignee changed to 'first last' by first last", logs.get(0).getEntry());
 		filter.delete();
 		
 		// Assignee Filter
-		filter = subRepo.createSearchFilter(person, "test3");
+		filter = subRepo.createSearchFilter(person, "test-assignee");
 		filter.addAssignee(otherPerson);
 		filter.save();
 		
@@ -866,10 +905,22 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		assertEquals("Submission created by first last", logs.get(0).getEntry());
 		filter.delete();
 		
-		// Graduation Year Filter
-		filter = subRepo.createSearchFilter(person, "test4");
-		filter.addGraduationYear(2002);
-		filter.addGraduationYear(2003);
+		// Embargo Filter
+		filter = subRepo.createSearchFilter(person, "test-embargo");
+		filter.addAssignee(otherPerson);
+		filter.addEmbargoType(embargo1);
+		filter.save();
+		
+		logs = subRepo.filterSearchActionLogs(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10).getResults();
+		
+		assertEquals(sub2,logs.get(0).getSubmission());
+		assertEquals("Submission created by first last", logs.get(0).getEntry());
+		filter.delete();
+		
+		// Graduation Semester Filter
+		filter = subRepo.createSearchFilter(person, "test-semester1");
+		filter.addAssignee(otherPerson);
+		filter.addGraduationSemester(2002,05);
 		filter.save();
 		
 		logs = subRepo.filterSearchActionLogs(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10).getResults();
@@ -877,19 +928,21 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		assertEquals(sub1.getId(),logs.get(0).getSubmission().getId());
 		filter.delete();
 		
-		// Graduation Month Filter
-		filter = subRepo.createSearchFilter(person, "test5");
-		filter.addGraduationMonth(5);
+		// Graduation Semester without month Filter
+		filter = subRepo.createSearchFilter(person, "test-semester2");
+		filter.addAssignee(otherPerson);
+		filter.addGraduationSemester(2003,null);
 		filter.save();
 
 		logs = subRepo.filterSearchActionLogs(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10).getResults();
 		
-		assertEquals(sub1.getId(),logs.get(0).getSubmission().getId());
+		assertEquals(sub2.getId(),logs.get(0).getSubmission().getId());
 		filter.delete();
 		
 		
 		// Degree Filter
-		filter = subRepo.createSearchFilter(person, "test6");
+		filter = subRepo.createSearchFilter(person, "test-degree");
+		filter.addAssignee(otherPerson);
 		filter.addDegree("degree");
 		filter.save();
 
@@ -899,7 +952,8 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		filter.delete();
 		
 		// Department Filter
-		filter = subRepo.createSearchFilter(person, "test7");
+		filter = subRepo.createSearchFilter(person, "test-department");
+		filter.addAssignee(otherPerson);
 		filter.addDepartment("department");
 		filter.save();
 
@@ -910,7 +964,8 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		
 		
 		// College Filter
-		filter = subRepo.createSearchFilter(person, "test8");
+		filter = subRepo.createSearchFilter(person, "test-college");
+		filter.addAssignee(otherPerson);
 		filter.addCollege("college");
 		filter.save();
 
@@ -920,7 +975,8 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		filter.delete();
 		
 		// Major Filter
-		filter = subRepo.createSearchFilter(person, "test9");
+		filter = subRepo.createSearchFilter(person, "test-major");
+		filter.addAssignee(otherPerson);
 		filter.addMajor("major");
 		filter.save();
 
@@ -930,7 +986,8 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		filter.delete();
 		
 		// Document Type Filter
-		filter = subRepo.createSearchFilter(person, "test10");
+		filter = subRepo.createSearchFilter(person, "test-document");
+		filter.addAssignee(otherPerson);
 		filter.addDocumentType("documentType");
 		filter.save();
 
@@ -940,7 +997,8 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		filter.delete();
 		
 		// UMI Release Filter
-		filter = subRepo.createSearchFilter(person, "test11");
+		filter = subRepo.createSearchFilter(person, "test-umi");
+		filter.addAssignee(otherPerson);
 		filter.setUMIRelease(true);
 		filter.save();
 
@@ -950,8 +1008,10 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		filter.delete();
 		
 		// Date Range Filter
-		filter = subRepo.createSearchFilter(person, "test12");
-		filter.setDateRange(new Date(2000,1,1), new Date(2006,1,1));
+		filter = subRepo.createSearchFilter(person, "test-range");
+		filter.addAssignee(otherPerson);
+		filter.setSubmissionDateRangeStart(new Date(2000,1,1));
+		filter.setSubmissionDateRangeEnd(new Date(2006,1,1));
 		filter.save();
 
 		logs = subRepo.filterSearchActionLogs(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 10).getResults();
@@ -961,6 +1021,8 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		
 		sub1.delete();
 		sub2.delete();
+		embargo1.delete();
+		embargo2.delete();
 		otherPerson.delete();
 	}
 	
