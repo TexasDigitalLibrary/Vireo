@@ -20,7 +20,10 @@ import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
 import sun.util.logging.resources.logging;
+
+import java.text.DateFormat;
 import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
 
 /**
  * Submit controller
@@ -570,8 +573,7 @@ public class Submit extends AbstractVireoController {
 		
         }
         
-        Logger.info("Months " + settingRepo.findAllGraduationMonths().toString());
-        settingRepo.findAllGraduationMonths();
+                
 		render(subId, sub, submitter);		
 	}
 
@@ -590,6 +592,36 @@ public class Submit extends AbstractVireoController {
         return name1 == name2 ? "class=current" : "";
     }
 
+    
+    /**
+     * Helper for filling out the Application Activity table in the confirm form
+     * @param sub Submission
+     * @return HTML for rendering as the table body
+     */
+    
+    public static String actionLogTableLines(Submission sub) {
+    	
+    	// Get the list of action log entries for this submission
+    	
+        List<ActionLog> actionLogList = subRepo.findActionLog(sub);
+        
+        StringBuffer htmlVal = new StringBuffer();
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:MM");
+        
+        // Iterate over all action log entries and format
+        
+        for (ActionLog log : actionLogList) {        	
+        	
+			htmlVal.append("<tr>");
+			htmlVal.append("<td>" + log.getPerson().getDisplayName() + "</td>");
+			htmlVal.append("<td>" + log.getEntry() + "</td>");
+			htmlVal.append("<td>" + df.format(log.getActionDate()) + "</td>" );
+			htmlVal.append("</tr>");					
+		}
+		
+    	return htmlVal.toString();
+    }
+    
 	/**
 	 * Internal method to determine if a group of information should be locked.
 	 * 
