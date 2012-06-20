@@ -306,9 +306,11 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 
 
 		params.put("primaryDocument", AttachmentType.PRIMARY);
-		queryText.append("WHERE ");
-		andList.buildClause(queryText);
-		queryText.append(" ");
+		if (andList.size() > 0) {
+			queryText.append("WHERE ");
+			andList.buildClause(queryText);
+			queryText.append(" ");
+		}
 		queryText.append("GROUP BY sub ");
 		String orderByClause = SUBMISSION_ORDER_BY_COLUMNS[orderBy.ordinal()];
 		if (direction == SearchDirection.DESCENDING)
@@ -569,9 +571,11 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 		queryText.append("LEFT OUTER JOIN sub.committeeMembers AS committees ");
 		queryText.append("LEFT OUTER JOIN sub.customActions AS actions ");
 		params.put("primaryDocument", AttachmentType.PRIMARY);
-		queryText.append("WHERE ");
-		andList.buildClause(queryText);
-		queryText.append(" ");
+		if (andList.size() > 0) {
+			queryText.append("WHERE ");
+			andList.buildClause(queryText);
+			queryText.append(" ");
+		}
 		queryText.append("GROUP BY log ");
 		String orderByClause = ACTION_LOG_ORDER_BY_COLUMNS[orderBy.ordinal()];
 		if (direction == SearchDirection.DESCENDING)
