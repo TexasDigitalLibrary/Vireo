@@ -13,10 +13,13 @@ import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.SubmissionRepository;
 import org.tdl.vireo.model.jpa.JpaEmailTemplateImpl;
+import org.tdl.vireo.search.SearchDirection;
+import org.tdl.vireo.search.SearchOrder;
 import org.tdl.vireo.security.SecurityContext;
 
 import play.Play;
 import play.db.jpa.JPA;
+import play.i18n.Messages;
 import play.libs.Mail;
 import play.modules.spring.Spring;
 import play.mvc.Http.Response;
@@ -640,4 +643,43 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 		assertNull(filter);
 		JPA.em().clear();
 	}
+	
+	/**
+	 * Test the submission display by changing sort orders and directions.
+	 */
+	@Test
+	public void testSearchDisplay() {
+		
+		// Get our URLS
+		Map<String,Object> routeArgs = new HashMap<String,Object>();
+		routeArgs.put("nav", "list");
+		final String LIST_URL = Router.reverse("FilterTab.list",routeArgs).url;
+		final String SEARCH_URL = Router.reverse("FilterTab.modifySearch",routeArgs).url;
+		
+		// Login as an administrator
+		LOGIN();
+		
+		// Confirm the default search order.
+		Response response = GET(LIST_URL);
+		
+		assertContentMatch("<th class=\"orderby ascending\">\\s*<a href=\"[^\"]*\\?direction=toggle\">ID</a>",response);
+		
+		for(SearchOrder order : SearchOrder.values()) {
+			// Test each column as ascending and decending
+			GET(SEARCH_URL+"?orderby="+order.getId());
+			
+
+			response = GET(LIST_URL);
+			assertContentMatch("<th class=\"orderby ascending\">\\s*<a href=\"[^\"]*\\?direction=toggle\">"+Messages.get("LIST_COLUMN_"+order.name())+"</a>",response);
+			
+			GET(SEARCH_URL+"?orderby="+order.getId());
+			GET(SEARCH_URL+"?direction=toggle");
+
+			response = GET(LIST_URL);
+			assertContentMatch("<th class=\"orderby descending\">\\s*<a href=\"[^\"]*\\?direction=toggle\">"+Messages.get("LIST_COLUMN_"+order.name())+"</a>",response);
+			
+			GET(SEARCH_URL+"?direction=toggle");
+		}
+	}
+	
 }

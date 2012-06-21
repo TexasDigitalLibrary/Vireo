@@ -280,10 +280,11 @@ public class FilterTab extends AbstractVireoController {
 		response.setCookie(SUBMISSION_FILTER_COOKIE_NAME,"");
 		
 		flash.put("error", throwable.getMessage());
+		
 		String errorLoop = flash.get("errorLoop");
 		flash.put("errorLoop", "maybe");
 		
-		if (errorLoop != null) {
+		if (errorLoop == null) {
 			// Only redirect if no error loop is detected.
 			if ("log".equals(request.routeArgs.get("nav")))
 				FilterTab.log();
