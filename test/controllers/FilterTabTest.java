@@ -24,11 +24,11 @@ import play.mvc.Router;
 import play.test.FunctionalTest;
 
 /**
- * Test the review controller
+ * Test the FilterTab controller
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
-public class ReviewTest extends AbstractVireoFunctionalTest {
+public class FilterTabTest extends AbstractVireoFunctionalTest {
 	
 	// Spring dependencies
 	public static SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
@@ -51,8 +51,8 @@ public class ReviewTest extends AbstractVireoFunctionalTest {
 		// Get our URLS
 		Map<String,Object> routeArgs = new HashMap<String,Object>();
 		routeArgs.put("nav", "list");
-		final String LIST_URL = Router.reverse("Review.list",routeArgs).url;
-		final String FILTER_URL = Router.reverse("Review.modifyFilter",routeArgs).url;
+		final String LIST_URL = Router.reverse("FilterTab.list",routeArgs).url;
+		final String FILTER_URL = Router.reverse("FilterTab.modifyFilter",routeArgs).url;
 		
 		
 		// Login as an administrator
@@ -363,8 +363,8 @@ public class ReviewTest extends AbstractVireoFunctionalTest {
 		// Get our URLS
 		Map<String,Object> routeArgs = new HashMap<String,Object>();
 		routeArgs.put("nav", "list");
-		final String LIST_URL = Router.reverse("Review.list",routeArgs).url;
-		final String FILTER_URL = Router.reverse("Review.modifyFilter",routeArgs).url;
+		final String LIST_URL = Router.reverse("FilterTab.list",routeArgs).url;
+		final String FILTER_URL = Router.reverse("FilterTab.modifyFilter",routeArgs).url;
 
 		// Login as an administrator
 		LOGIN();
@@ -484,8 +484,8 @@ public class ReviewTest extends AbstractVireoFunctionalTest {
 		// Get our URLS
 		Map<String,Object> routeArgs = new HashMap<String,Object>();
 		routeArgs.put("nav", "list");
-		final String LIST_URL = Router.reverse("Review.list",routeArgs).url;
-		final String FILTER_URL = Router.reverse("Review.modifyFilter",routeArgs).url;
+		final String LIST_URL = Router.reverse("FilterTab.list",routeArgs).url;
+		final String FILTER_URL = Router.reverse("FilterTab.modifyFilter",routeArgs).url;
 		
 		// Login as an administrator
 		LOGIN();

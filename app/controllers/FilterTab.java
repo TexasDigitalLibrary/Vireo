@@ -33,7 +33,7 @@ import play.mvc.With;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 @With(Authentication.class)
-public class Review extends AbstractVireoController {
+public class FilterTab extends AbstractVireoController {
 
 	// The cookie names where the current active filters are stored for submission and actionlog.
 	public final static String SUBMISSION_FILTER_COOKIE_NAME = "SubmissionFilter";
@@ -249,11 +249,6 @@ public class Review extends AbstractVireoController {
 		error("Unknown list modify navigation controll");
 	}
 	
-	public static void view() {
-		String nav = "view";
-		render(nav);
-	}
-
 	public static void log() {
 		String nav = "log";
 		render(nav);
@@ -285,11 +280,16 @@ public class Review extends AbstractVireoController {
 		response.setCookie(SUBMISSION_FILTER_COOKIE_NAME,"");
 		
 		flash.put("error", throwable.getMessage());
+		String errorLoop = flash.get("errorLoop");
+		flash.put("errorLoop", "maybe");
 		
-		if ("log".equals(request.routeArgs.get("nav")))
-			Review.log();
-		else
-			Review.list();
+		if (errorLoop != null) {
+			// Only redirect if no error loop is detected.
+			if ("log".equals(request.routeArgs.get("nav")))
+				FilterTab.log();
+			else
+				FilterTab.list();
+		}
 	}
 	
 	

@@ -2,7 +2,7 @@
 
 <div id="left-column" class="pull-left">
 
-	#{include 'Review/filters.include' /}
+	#{include 'FilterTab/filters.include' /}
 	
 	<div class="side-box">
 		<div class="box-head expanded">
@@ -41,12 +41,12 @@
 				#{list items:columns, as:'column'}
 				    #{if orderby == column}
                     <th class="orderby ${ direction == ASCENDING ? "ascending" : "descending" }">
-                        <a href="@{Review.modifySearch(nav)}?direction=toggle">&{'LIST_COLUMN_'+column.name()}</a>
+                        <a href="@{FilterTab.modifySearch(nav)}?direction=toggle">&{'LIST_COLUMN_'+column.name()}</a>
                     </th>
                     #{/if}
                     #{else}
                     <th>
-                        <a href="@{Review.modifySearch(nav)}?orderby=${column.getId()}">&{'LIST_COLUMN_'+column.name()}</a>
+                        <a href="@{FilterTab.modifySearch(nav)}?orderby=${column.getId()}">&{'LIST_COLUMN_'+column.name()}</a>
                     </th>
                     #{/else}
 				#{/list}
@@ -175,7 +175,7 @@
 		    }%
 		    
 		    #{if results.getOffset() - results.getLimit() >= 0 }
-            <li><a href="@{Review.modifySearch(nav)}?offset=${ results.getOffset() - results.getLimit() }">Prev</a></li>
+            <li><a href="@{FilterTab.modifySearch(nav)}?offset=${ results.getOffset() - results.getLimit() }">Prev</a></li>
 		    #{/if}
 		    #{else}
 		    <li class="disabled"><a href="#">Prev</a></li>
@@ -187,7 +187,7 @@
 		    
 		    #{list items:pagination, as:'page'}
 		    <li #{if page.current == true}class="active"#{/if}>
-		      <a href="@{Review.modifySearch(nav)}?offset=${ page.offset }">${page.pageNumber}</a>
+		      <a href="@{FilterTab.modifySearch(nav)}?offset=${ page.offset }">${page.pageNumber}</a>
 		    </li>
 		    #{/list}
 		    
@@ -196,7 +196,7 @@
             #{/if}
 		    
 		    #{if results.getOffset() + results.getLimit() < results.getTotal() }
-		    <li><a href="@{Review.modifySearch(nav)}?offset=${ results.getOffset() + results.getLimit() }">Next</a></li>
+		    <li><a href="@{FilterTab.modifySearch(nav)}?offset=${ results.getOffset() + results.getLimit() }">Next</a></li>
 		    #{/if}
 		    #{else}
             <li class="disabled"><a href="#">Next</a></li>
