@@ -22,6 +22,7 @@ import org.tdl.vireo.state.State;
 import play.Logger;
 import play.data.binding.As;
 import play.modules.spring.Spring;
+import play.mvc.Catch;
 import play.mvc.Http.Cookie;
 import play.mvc.With;
 
@@ -41,26 +42,14 @@ public class Review extends AbstractVireoController {
 	/**
 	 * List page
 	 * 
-	 * This page handles the filter search operations for finding submissions.
-	 * Users are able to use a faceted like browsing experience to tailor a list
-	 * of submissions.
-	 * 
-	 * Here's an overview of the paramaters expected by this controller:
-	 * 
-	 * action: The action to take such add/remove a filter parameter. The valid
-	 * actions are: filterAdd, filterRemove, filterSave, filterDelete,
-	 * filterLoad, filterClear.
-	 * 
-	 * type: When the action is to add/remove a filter parameter the type
-	 * parameter is used to identifier the particular type to work with.
-	 * 
-	 * value: When the action is to add/remove a filter the value paramater is
-	 * the actual value to add or remove from the filter search.
+	 * This controller will run the currently active filter and then display the
+	 * results. This method does not change any state, instead the
+	 * modifyFilter() and modifySearch() methods will handle those modifications
+	 * and then redirect back to this method to display the results.
 	 * 
 	 */
 	@Security(RoleType.REVIEWER)
 	public static void list() {
-		
 		// Get current parameters
 		Person person = context.getPerson();
 		
@@ -71,8 +60,9 @@ public class Review extends AbstractVireoController {
 		// Load the acive filter from the cookie
 		ActiveSearchFilter activeFilter = Spring.getBeanOfType(ActiveSearchFilter.class);
 		Cookie cookie = request.cookies.get(SUBMISSION_FILTER_COOKIE_NAME);
-		if (cookie != null) {
+		if (cookie != null && cookie.value != null && cookie.value.trim().length() > 0) {
 			try {
+				System.out.println("Recieved Cookie: "+cookie.value);
 				activeFilter.decode(cookie.value);
 			} catch (RuntimeException re) {
 				Logger.warn(re,"Unable to decode search filter: "+cookie.value);
@@ -81,25 +71,22 @@ public class Review extends AbstractVireoController {
 		
 		// Step 2:  Run the current filter search
 		//////////
-		// TODO: we'll probably need to grab these from the session?
-		SearchOrder order = SearchOrder.ID;
-		Integer orderId = params.get("order",Integer.class);
-		if (orderId != null)
-			order = SearchOrder.find(orderId);
+		SearchOrder orderby = SearchOrder.ID;
+		if (session.get("orderby") != null) 
+			orderby = SearchOrder.find(Integer.valueOf(session.get("orderby")));
 		
 		SearchDirection direction = SearchDirection.ASCENDING;
-		Integer directionId = params.get("direction",Integer.class);
-		if (directionId != null)
-			direction = SearchDirection.find(directionId);
+		if (session.get("direction") != null) 
+			direction = SearchDirection.find(Integer.valueOf(session.get("direction")));
 		
-		Integer offset = params.get("offset",Integer.class);
-		if (offset == null)
-			offset = 0;
+		Integer offset = 0;
+		if (session.get("offset") != null)
+			offset = Integer.valueOf(session.get("offset"));
 		
 		// TODO: Look up the limit based upon the user's preferences.
 		Integer limit = 100;
 		
-		SearchResult<Submission> results = null;//subRepo.filterSearchSubmissions(activeFilter,order, direction, offset, limit);
+		SearchResult<Submission> results = subRepo.filterSearchSubmissions(activeFilter,orderby, direction, offset, limit);
 		
 
 		// Step 3: Prepare any variables for display
@@ -107,9 +94,84 @@ public class Review extends AbstractVireoController {
 		List<NamedSearchFilter> allFilters = subRepo.findSearchFiltersByCreatorOrPublic(person);
 		String nav = "list";
 		
-		render(nav, allFilters, activeFilter, results);
+		// Get a list of columns to display
+		// TODO: Make it dynamic which columns to display.
+		SearchOrder[] columns = SearchOrder.values();
+		
+		// Add all search directions to the view
+		for (SearchOrder order2 : SearchOrder.values())
+			renderArgs.put(order2.name(), order2);
+		
+	    // Add ASCENDING and DECENDING to the view
+		renderArgs.put(SearchDirection.ASCENDING.name(), SearchDirection.ASCENDING);
+		renderArgs.put(SearchDirection.DESCENDING.name(), SearchDirection.DESCENDING);
+		
+		render(nav, allFilters, activeFilter, results, orderby, columns, direction);
 	}
 	
+	/**
+	 * Modify the current search parameters.
+	 * 
+	 * This includes things like the sort column, direction, and pagination
+	 * offset. These parameters are received and updated in the session before
+	 * being redirected back to the list() or log() methods.
+	 * 
+	 * @param nav
+	 *            The current mode: list or log.
+	 */
+	@Security(RoleType.REVIEWER)
+	public static void modifySearch(String nav) {
+		
+		String direction = params.get("direction");
+		Integer orderby = params.get("orderby",Integer.class);
+		Integer offset = params.get("offset", Integer.class);
+		
+		if (direction != null) {
+			// Toggle the current direction.
+			if (String.valueOf(SearchDirection.DESCENDING.getId()).equals(session.get("direction"))) {
+				session.put("direction",SearchDirection.ASCENDING.getId());
+			} else {
+				session.put("direction",SearchDirection.DESCENDING.getId());
+			}
+			session.remove("offset");
+		}
+		
+		if (orderby != null && SearchOrder.find(orderby) != null) {
+			session.put("orderby", orderby);
+			session.remove("offset");
+		}
+		
+		if (offset != null)
+			session.put("offset", offset);
+	
+		if ("list".equals(nav))
+			list();
+		if ("log".equals(nav))
+			log();
+	}
+	
+	/**
+	 * Modify the current active filter.
+	 * 
+	 * Operations supported are:
+	 * 
+	 * ADD: Add a new parameter of any type to the currently active filter.
+	 * 
+	 * REMOVE: Remove a parameter of any type from the currently active filter.
+	 * 
+	 * SAVE: Save the currently active filter into the database as a named
+	 * filter.
+	 * 
+	 * MANAGE: Permanently remove saved filters from the database.
+	 * 
+	 * LOAD: Load a saved filter from the database as the currently active
+	 * filter.
+	 * 
+	 * CLEAR: Clear out the currently active filter.
+	 * 
+	 * @param nav
+	 *            The current mode: list or log
+	 */
 	@Security(RoleType.REVIEWER)
 	public static void modifyFilter(String nav) {
 		
@@ -176,8 +238,8 @@ public class Review extends AbstractVireoController {
 		}
 		
 		// Save the active filter to a cookie
-		//System.out.println("cookie value="+activeFilter.encode());
 		response.setCookie(SUBMISSION_FILTER_COOKIE_NAME, activeFilter.encode());
+		session.remove("offset");
 		
 		if ("list".equals(nav))
 			list();
@@ -197,8 +259,38 @@ public class Review extends AbstractVireoController {
 		render(nav);
 	}
 
-
-	
+	/**
+	 * When an error occurs it is very likely related to the current
+	 * configuration which is saved in cookies, such as the current filter
+	 * search, offset, etc... To prevent the user from being trapped in an
+	 * endless loop we will record the error in the logs, then clear the current
+	 * state and send them back to the list or log pages with a clean slate.
+	 * 
+	 * The views know to show the error message indicating that the state has 
+	 * been cleared.
+	 * 
+	 * @param throwable
+	 */
+	@Catch(RuntimeException.class)
+	public static void handleError(Throwable throwable) {
+		
+		// When an error occurs, clear the current state so the user is not
+		// trapped in an endless loop they can't recover from without
+		// clearing their cookies. Then save the error message on the flash
+		// and report it to the user on their next page view.
+		session.remove("direction");
+		session.remove("orderby");
+		session.remove("offset");
+		
+		response.setCookie(SUBMISSION_FILTER_COOKIE_NAME,"");
+		
+		flash.put("error", throwable.getMessage());
+		
+		if ("log".equals(request.routeArgs.get("nav")))
+			Review.log();
+		else
+			Review.list();
+	}
 	
 	
 	/**

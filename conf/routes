@@ -30,6 +30,7 @@ GET     /profile                                Authentication.profile
 *       /admin/view                             Review.view
 *       /admin/log                              Review.log
 *       /admin/{nav}/filter                     Review.modifyFilter
+*       /admin/{nav}/search                     Review.modifySearch
 
 ### Manager
 *       /admin/settings/user					Config.userPreferences

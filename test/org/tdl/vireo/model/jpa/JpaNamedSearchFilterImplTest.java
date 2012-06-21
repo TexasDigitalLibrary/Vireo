@@ -813,18 +813,6 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		assertTrue(submissions.contains(sub2));
 		assertTrue(submissions.indexOf(sub1) > submissions.indexOf(sub2));
 		
-		// Graduation Year
-		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.GRADUATION_YEAR, SearchDirection.ASCENDING, 0, 20).getResults();
-		assertTrue(submissions.contains(sub1));
-		assertTrue(submissions.contains(sub2));
-		assertTrue(submissions.indexOf(sub1) > submissions.indexOf(sub2));
-		
-		// Graduation Month
-		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.GRADUATION_MONTH, SearchDirection.ASCENDING, 0, 20).getResults();
-		assertTrue(submissions.contains(sub1));
-		assertTrue(submissions.contains(sub2));
-		assertTrue(submissions.indexOf(sub1) > submissions.indexOf(sub2));
-		
 		// Graduation Date
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.GRADUATION_DATE, SearchDirection.ASCENDING, 0, 20).getResults();
 		assertTrue(submissions.contains(sub1));

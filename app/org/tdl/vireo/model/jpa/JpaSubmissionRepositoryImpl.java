@@ -98,8 +98,6 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.MAJOR.ordinal()] = "sub.major %, sub.id %";
 		
 		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.DOCUMENT_TYPE.ordinal()] = "sub.documentType %, sub.id %";
-		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.GRADUATION_YEAR.ordinal()] = "sub.graduationYear %, sub.graduationMonth %, sub.id %";
-		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.GRADUATION_MONTH.ordinal()] = "sub.graduationMonth %, sub.id %";
 		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.GRADUATION_DATE.ordinal()] = "sub.graduationYear %, sub.graduationMonth %, sub.id %";
 		
 		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.STATE.ordinal()] = "sub.stateName %, sub.id %";
@@ -704,6 +702,37 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 		@Override
 		public int getTotal() {
 			return total;
+		}
+		
+		@Override
+		public List<Pagination> getPagination(int windowSize) {
+			
+			List<Pagination> pagination = new ArrayList<Pagination>();
+			
+			// Create the backwards entries
+			for( int i = -((windowSize-1)/2); i < 0; i++) {
+				
+				int offset = getOffset() + (i * getLimit());
+				int page = (getOffset() / getLimit()) + i + 1;
+				
+				if (offset >= 0) 
+					pagination.add(new Pagination(page, offset, false));
+			}
+			
+		    // Add the current entry
+			pagination.add(new Pagination( (getOffset() / limit) +1, getOffset(), true));
+				
+		    // Create the forward entries
+			for( int i = 1; i <= windowSize; i++) {
+				
+				int offset = getOffset() + (i * getLimit());
+				int page = (getOffset() / getLimit()) + i + 1;
+				
+				if (offset < getTotal() && pagination.size() < windowSize )
+					pagination.add(new Pagination(page, offset, false));
+			}
+			
+			return pagination;
 		}
 		
 	}
