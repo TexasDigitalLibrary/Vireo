@@ -20,7 +20,10 @@ import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
 import sun.util.logging.resources.logging;
+
+import java.text.DateFormat;
 import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
 
 /**
  * Submit controller
@@ -557,7 +560,8 @@ public class Submit extends AbstractVireoController {
 		
         Submission sub = subRepo.findSubmission(subId);
         Person submitter = context.getPerson();
-
+        List<ActionLog> actionLogList = subRepo.findActionLog(sub);
+        
         if (sub == null) {
             // something is wrong
             error("Did not receive the expected submission id.");
@@ -566,13 +570,10 @@ public class Submit extends AbstractVireoController {
             // This is an existing submission so check that we're the student or administrator here.
             
             if (sub.getSubmitter() != submitter)
-                unauthorized();
-		
+                unauthorized();		
         }
         
-        Logger.info("Months " + settingRepo.findAllGraduationMonths().toString());
-        settingRepo.findAllGraduationMonths();
-		render(subId, sub, submitter);		
+		render(subId, sub, submitter, actionLogList);		
 	}
 
 	@Security(RoleType.STUDENT)
@@ -590,6 +591,7 @@ public class Submit extends AbstractVireoController {
         return name1 == name2 ? "class=current" : "";
     }
 
+    
 	/**
 	 * Internal method to determine if a group of information should be locked.
 	 * 
