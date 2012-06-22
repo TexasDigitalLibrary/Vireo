@@ -49,8 +49,13 @@ h1{
 /*****************
 TABLES & FORMS
 *****************/
+
+th {
+    background: url(../images/nav-bg.gif) repeat-x left bottom transparent;
+}
+
 td.comments{
-	background:url("../images/nav-bg.gif");
+	background:url("../images/nav-bg.gif") repeat-x left top #E0E0E0;
 	height:31px;
 	padding:0 15px;
 	line-height:28px;
@@ -88,6 +93,20 @@ fieldset.default{
 
 .settings .half{
 	width:@inputWidth/2;
+}
+
+th.orderby {
+    background:url("../images/nav-bg.gif") repeat-x left top #E0E0E0;    
+}
+
+th.orderby.ascending a {
+    background: url("../images/arrow-down.gif") no-repeat right 5px transparent;
+    padding-right: 13px;
+}
+
+th.orderby.descending a {
+    background: url("../images/arrow-up.gif") no-repeat right 5px transparent;
+    padding-right: 13px;
 }
 
 /*****************

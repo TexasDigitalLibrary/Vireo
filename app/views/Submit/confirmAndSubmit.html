@@ -7,7 +7,7 @@
 </div>
 <br />
 <div id="confirmSubmit" class="row">
-<form action="submit" method="post" class="form-horizontal">
+<form action="@{Submit.submitETD(subId)}" method="post" class="form-horizontal">
 	<legend>About You</legend>
 	<div class="control-group">
 		<label class="control-label"><b>Name:</b></label>
@@ -155,11 +155,13 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr>
-				<td>Claire Danes</td>
-				<td>Primary file 'jungle.pdf' added by Claire Danes: <a href="#">jungle.pdf</a> (0.02MB)</td>
-				<td>06 Jun 2012; 4:21 PM</td>
-			</tr>
+		    #{list items:actionLogList, as:'log'}
+		    <tr>
+			    <td> ${log.getPerson().getFullName()} </td>
+				<td> ${log.getEntry()}  </td>
+				<td> ${log.getActionDate().format('dd MMMM yyyy hh:mm')} </td>	    
+		    </tr>
+		    #{/list}				
 		</tbody>
 	</table>
 </div>

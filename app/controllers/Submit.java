@@ -11,6 +11,7 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import org.tdl.vireo.model.*;
+import org.tdl.vireo.state.State;
 
 import com.google.gson.Gson;
 
@@ -20,7 +21,10 @@ import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
 import sun.util.logging.resources.logging;
+
+import java.text.DateFormat;
 import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
 
 /**
  * Submit controller
@@ -557,7 +561,8 @@ public class Submit extends AbstractVireoController {
 		
         Submission sub = subRepo.findSubmission(subId);
         Person submitter = context.getPerson();
-
+        List<ActionLog> actionLogList = subRepo.findActionLog(sub);
+        
         if (sub == null) {
             // something is wrong
             error("Did not receive the expected submission id.");
@@ -566,17 +571,31 @@ public class Submit extends AbstractVireoController {
             // This is an existing submission so check that we're the student or administrator here.
             
             if (sub.getSubmitter() != submitter)
-                unauthorized();
-		
+                unauthorized();		
         }
         
-        Logger.info("Months " + settingRepo.findAllGraduationMonths().toString());
-        settingRepo.findAllGraduationMonths();
-		render(subId, sub, submitter);		
+		render(subId, sub, submitter, actionLogList);		
 	}
-
+	
+	// Submit the ETD
+	
 	@Security(RoleType.STUDENT)
-	public static void review() {
+	public static void submitETD(Long subId) {		
+        Submission sub = subRepo.findSubmission(subId);
+    
+        State currentState = sub.getState();
+        List<State> stateList = currentState.getTransitions(sub);
+        
+        Logger.info("Next State: " + stateList.get(0).getDisplayName());
+        
+        sub.setState(stateList.get(0));
+        
+        review(subId);     
+        
+	}
+	
+	@Security(RoleType.STUDENT)
+	public static void review(Long subId) {
 		render("Submit/Review.html");
 	}
 
@@ -590,6 +609,7 @@ public class Submit extends AbstractVireoController {
         return name1 == name2 ? "class=current" : "";
     }
 
+    
 	/**
 	 * Internal method to determine if a group of information should be locked.
 	 * 
