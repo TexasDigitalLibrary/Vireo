@@ -439,8 +439,6 @@ public class TestDataLoader extends Job {
 		
 		List<EmbargoType> embargos = settingRepo.findAllEmbargoTypes();
 		context.restoreAuthorization();
-
-		
 		
 		Submission sub1 = subRepo.createSubmission(student1);
 		sub1.setStudentFirstName("Student");
@@ -642,7 +640,9 @@ public class TestDataLoader extends Job {
 		sub9.setUMIRelease(true);
 		sub9.save();
 
-		
+		Submission sub10 = subRepo.createSubmission(student1);
+		// Everything is null on sub10
+		sub10.save();
 		
 	}
 	
