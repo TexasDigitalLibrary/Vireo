@@ -11,6 +11,7 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import org.tdl.vireo.model.*;
+import org.tdl.vireo.state.State;
 
 import com.google.gson.Gson;
 
@@ -575,9 +576,26 @@ public class Submit extends AbstractVireoController {
         
 		render(subId, sub, submitter, actionLogList);		
 	}
-
+	
+	// Submit the ETD
+	
 	@Security(RoleType.STUDENT)
-	public static void review() {
+	public static void submitETD(Long subId) {		
+        Submission sub = subRepo.findSubmission(subId);
+    
+        State currentState = sub.getState();
+        List<State> stateList = currentState.getTransitions(sub);
+        
+        Logger.info("Next State: " + stateList.get(0).getDisplayName());
+        
+        sub.setState(stateList.get(0));
+        
+        review(subId);     
+        
+	}
+	
+	@Security(RoleType.STUDENT)
+	public static void review(Long subId) {
 		render("Submit/Review.html");
 	}
 
