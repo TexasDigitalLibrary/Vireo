@@ -84,20 +84,80 @@
 			<div id="personalInfo" class="edit-box-holder">
 			<div class="edit-box pull-left">
 				<ul class="unstyled">
-					<li><label>First Name:</label><span id="firstName">Billy</span></li>
-					<li><label>Middle Name:</label><span id="middleName">Bob</span></li>
-					<li><label>Last Name:</label><span id="lastName">Thornton</span></li>
-					<li><label>Email:</label><span id="email">bthornton@gmail.com</span></li>
-					<li><label>Year of Birth:</label><span id="birthYear" class="empty">none</span></li>
+					<li><label>First Name:</label><span id="firstName"
+						#{if submission.getStudentFirstName()}
+							>${submission.getStudentFirstName()}
+						#{/if}#{else}
+							class="empty">none
+						#{/else}
+						</span></li>
+					<li><label>Middle Name:</label><span id="middleName"
+						#{if submission.getStudentMiddleName()}
+							>${submission.getStudentMiddleName()}
+						#{/if}#{else}
+							class="empty">none
+						#{/else}
+						</span></li>							
+					<li><label>Last Name:</label><span id="lastName"
+						#{if submission.getStudentLastName()}
+							>${submission.getStudentLastName()}
+						#{/if}#{else}
+							class="empty">none
+						#{/else}
+						</span></li>
+					<li><label>Email:</label><span id="email"
+						#{if submitter.getEmail()}
+							>${submitter.getEmail()}
+						#{/if}#{else}
+							class="empty">none
+						#{/else}
+						</span></li>
+					<li><label>Year of Birth:</label><span id="birthYear"
+						#{if submission.getStudentBirthYear()}
+							>${submission.getStudentBirthYear()}
+						#{/if}#{else}
+							class="empty">none
+						#{/else}
+					</span></li>
 				</ul>
 			</div>
 			<div class="edit-box pull-left">
 				<ul class="unstyled">
-					<li><label>Permanent Phone:</label><span id="permPhone">877-555-1234</span></li>
-					<li><label>Permanent Email:</label><span id="permEmail" class="empty">none</span></li>
-					<li><label>Permanent Address:</label><span id="permAddress">200 Street Name<br />University City, NY 85425</span></li>
-					<li><label>Current Phone:</label><span id="currentPhone" class="empty">none</span></li>
-					<li><label>Current Address:</label><span id="currentAddress" class="empty">none</span></li>
+					<li><label>Permanent Phone:</label><span id="permPhone"
+						#{if submitter.getPermanentPhoneNumber()}
+							>${submitter.getPermanentPhoneNumber()}
+						#{/if}#{else}
+							class="empty">none
+						#{/else}
+						</span></li>
+					<li><label>Permanent Email:</label><span id="permEmail"
+						#{if submitter.getPermanentEmailAddress()}
+							>${submitter.getPermanentEmailAddress()}
+						#{/if}#{else}
+							class="empty">none
+						#{/else}
+						</span></li>
+					<li><label>Permanent Address:</label><span id="permAddress"
+						#{if submitter.getPermanentPostalAddress()}
+							>${submitter.getPermanentPostalAddress()}
+						#{/if}#{else}
+							class="empty">none
+						#{/else}
+						</span></li>
+					<li><label>Current Phone:</label><span id="currentPhone"
+						#{if submitter.getCurrentPhoneNumber()}
+							>${submitter.getCurrentPhoneNumber()}
+						#{/if}#{else}
+							class="empty">none
+						#{/else}
+						</span></li>
+					<li><label>Current Address:</label><span id="currentAddress"
+						#{if submitter.getCurrentPostalAddress()}
+							>${submitter.getCurrentPostalAddress()}
+						#{/if}#{else}
+							class="empty">none
+						#{/else}
+					</span></li>
 				</ul>
 			</div>
 			<div class="clear"></div>
@@ -106,16 +166,52 @@
 			<div id="docInfo" class="edit-box-holder hidden">
 			<div class="edit-box pull-left">
 				<ul class="unstyled">
-					<li><label>Title:</label><span id="title">My Aswesome Title</span></li>
-					<li><label>Embargo:</label><span id="embargo">Journal Hold</span></li>
-					<li><label>UMI Release:</label><span id="umiRelease">True</span></li>
-					<li><label>Document Type:</label><span id="docType">Dissertation</span></li>
-					<li><label>Keywords:</label><span id="keywords">awesome; jungle; elephant; guns; roses;</span></li>
+					<li><label>Title:</label><span id="title"
+						#{if submission.getDocumentTitle()}
+							>${submission.getDocumentTitle()}
+						#{/if}#{else}
+							class="empty">none
+						#{/else}
+						</span></li>
+					<li><label>Embargo:</label><span id="embargo"
+						#{if submission.getEmbargoType()}
+							>${submission.getEmbargoType().getName()}
+						#{/if}#{else}
+							class="empty">none
+						#{/else}
+						</span></li>
+					<li><label>UMI Release:</label><span id="umiRelease"
+						#{if submission.getUMIRelease()}
+							>${submission.getUMIRelease()}
+						#{/if}#{else}
+							class="empty">none
+						#{/else}
+						</span></li>
+					<li><label>Document Type:</label><span id="docType"
+						#{if submission.getDocumentType()}
+							>${submission.getDocumentType()}
+						#{/if}#{else}
+							class="empty">none
+						#{/else}
+						</span></li>
+					<li><label>Keywords:</label><span id="keywords"
+						#{if submission.getDocumentKeywords()}
+							>${submission.getDocumentKeywords()}
+						#{/if}#{else}
+							class="empty">none
+						#{/else}
+					</span></li>
 				</ul>
 			</div>
 			<div class="edit-box pull-left">
 				<ul class="unstyled">
-					<li><label>Abstract:</label><span id="abstract">Bacon ipsum dolor sit amet ham hock ball tip beef ribs turducken, speck kielbasa bresaola boudin. Ham hock prosciutto pancetta shoulder pastrami.</span></li>
+					<li><label>Abstract:</label><span id="abstract"
+						#{if submission.getDocumentAbstract()}
+							>${submission.getDocumentAbstract()}
+						#{/if}#{else}
+							class="empty">none
+						#{/else}
+					</span></li>
 				</ul>
 			</div>
 			<div class="clear"></div>
@@ -124,23 +220,71 @@
 			<div id="degreeInfo" class="edit-box-holder hidden">
 			<div class="edit-box pull-left">
 				<ul class="unstyled">
-					<li><label>School:</label><span id="school">Texas A&M University at College Station</span></li>
-					<li><label>Department:</label><span id="department">Department</span></li>
-					<li><label>Degree:</label><span id="degree">PhD</span></li>
-					<li><label>Degree Level:</label><span id="degreeLevel">Doctoral</span></li>
-					<li><label>Major:</label><span id="major">Major</span></li>
-					<li><label>Graduation Semester:</label><span id="gradSemester">May 2013</span></li>
-					<li><label>Advisor Email:</label><span id="advisorEmail">ganderson@gmail.com</span></li>
+					<li><label>School:</label><span id="school"
+						#{if submission.getCollege()}
+							>${submission.getCollege()}
+						#{/if}#{else}
+							class="empty">none
+						#{/else}
+						</span></li>
+					<li><label>Department:</label><span id="department"
+						#{if submission.getDepartment()}
+							>${submission.getDepartment()}
+						#{/if}#{else}
+							class="empty">none
+						#{/else}
+						</span></li>
+					<li><label>Degree:</label><span id="degree"
+						#{if submission.getDegree()}
+							>${submission.getDegree()}
+						#{/if}#{else}
+							class="empty">none
+						#{/else}
+						</span></li>
+					<li><label>Degree Level:</label><span id="degreeLevel"
+						#{if submission.getDegree()}
+							>${degreeLevel}
+						#{/if}#{else}
+							class="empty">none
+						#{/else}
+						</span></li>
+					<li><label>Major:</label><span id="major"
+						#{if submission.getMajor()}
+							>${submission.getMajor()}
+						#{/if}#{else}
+							class="empty">none
+						#{/else}
+						</span></li>
+					<li><label>Graduation Semester:</label><span id="gradSemester"
+						#{if submission.getGraduationMonth() && submission.getGraduationYear()}
+							>${gradMonth} ${submission.getGraduationYear()}
+						#{/if}#{else}
+							class="empty">none
+						#{/else}
+						</span></li>
+					<li><label>Advisor Email:</label><span id="advisorEmail"
+						#{if submission.getCommitteeContactEmail()}
+							>${submission.getCommitteeContactEmail()}
+						#{/if}#{else}
+							class="empty">none
+						#{/else}
+						</span></li>
 					<li><label></label><span><button class="btn">Send Advisor Approval Email</button></span></li>
 				</ul>				
 			</div>
 			<div class="edit-box pull-left">				
 				<ul class="unstyled">
 					<li><label><h4>Committee Members</h4></label><span></span></li>
-					<li><label>Anderson, Gillian</label><input type="checkbox" class="checkbox" checked="checked"> Chair</input></li>
-					<li><label>Danes, Claire</label><input type="checkbox" class="checkbox"> Chair</input></li>
-					<li><label class="empty">none</label><input type="checkbox" class="checkbox"> Chair</input></li>
+					#{if submission.getCommitteeMembers()}
+					#{list items:submission.getCommitteeMembers(), as:'value'}
+						<li><label>${value.getLastName()}, ${value.getFirstName()}</label><input type="checkbox" class="checkbox" 
+							#{if value.isCommitteeChair()}checked="checked"#{/if}
+						> Chair</input></li>
+					#{/list}
 					<li><label></label><span><button class="btn">Update Committee Members</button></span></li>
+					#{/if}#{else}
+					<li class="empty">none</li>
+					#{/else}
 				</ul>				
 			</div>
 			<div class="clear"></div>

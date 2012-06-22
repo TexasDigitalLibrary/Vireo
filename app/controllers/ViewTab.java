@@ -28,7 +28,7 @@ public class ViewTab extends AbstractVireoController {
 		String gradMonth = new DateFormatSymbols().getMonths()[submission.getGraduationMonth()];
 		
 		String nav = "view";
-		render("Review/view.html", nav, submission, submitter, degreeLevel, gradMonth);
+		render(nav, submission, submitter, degreeLevel, gradMonth);
 	}
-	
+
 }
