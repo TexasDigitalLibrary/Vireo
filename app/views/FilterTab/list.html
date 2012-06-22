@@ -163,7 +163,7 @@
 				#{/list}
 				<tr>
 					<td class="comments" colspan="${columns.length}">
-					   ${results.getTotal()} matching records displayed on ${(int) (results.getTotal() / results.getLimit())} pages.
+					   ${results.getTotal()} matching records displayed on ${(int) ((results.getTotal() / results.getLimit()) +1)} pages.
 					</td>
 				</tr>
 			</tbody>

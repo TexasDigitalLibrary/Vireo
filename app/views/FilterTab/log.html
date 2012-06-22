@@ -2,129 +2,188 @@
 
 <div id="left-column" class="pull-left">
 
-	<div class="side-box">
-		<div class="box-head expanded">
-			<div class="expand">[-]</div>
-			<div class="main-heading">Now filtering By:</div>
-		</div>
-		<div class="box-body">
-			<div class="sub-heading">SEARCH BOX</div>
-			<ul class="unstyled editable">
-				<a href="#"><li>search one</li></a>
-				<a href="#"><li>search two</li></a>
-			</ul>
-		</div>
-		<div class="box-footer">
-		
-		</div>		
-	</div>
-	
-	<div class="side-box">
-		<div class="box-head expanded">
-			<div class="expand">[-]</div>
-			<div class="main-heading">Filter Options:</div>
-		</div>
-		<div class="box-body">
-			<div class="sub-heading">MANAGE FILTERS</div>
-			<ul class="unstyled">
-				<li>Clear current filter</li>
-				<li>Save or edit filters</li>
-			</ul>
-		</div>
-		<div class="box-footer">
-		
-		</div>		
-	</div>
-	
-	<div class="side-box">
-		<div class="box-head expanded">
-			<div class="expand">[-]</div>
-			<div class="main-heading">Filter Further By:</div>
-		</div>
-		<div class="box-body">
-			<div class="sub-heading">SEARCH BOX</div>
-			<ul class="unstyled">
-				<li><form class="form-search">
-					<input type="text" class="input-small">
-					<button type="submit" class="btn btn-primary">Go</button>
-				</form></li>
-			</ul>
-			<div class="sub-heading">STATUS</div>
-			<ul class="unstyled">
-				<li>Active</li>
-				<li>Archived</li>
-			</ul>
-			<div class="sub-heading">ASSIGNED TO</div>
-			<ul class="unstyled">
-				<li>Unassigned</li>
-				<li>Claire Danes</li>
-				<li>Gillian Anderson</li>
-			</ul>
-			<div class="sub-heading">DOCUMENT TYPE</div>
-			<ul class="unstyled">
-				<li>Thesis</li>
-				<li>Dissertation</li>
-			</ul>
-			<div class="sub-heading">SUBMISSION DATE<br />(CHOOSE)</div>
-			<ul class="unstyled">
-				<li>2013</li>
-			</ul>
-		</div>
-		<div class="box-footer">
-		
-		</div>		
-	</div>
-	
-	<div class="side-box">
-		<div class="box-head expanded">
-			<div class="expand">[-]</div>
-			<div class="main-heading">Advanced Features:</div>
-		</div>
-		<div class="box-body">
-			<div class="sub-heading">EXPORT FUNCTIONS</div>
-			<ul class="unstyled">
-				<li>Export Items</li>
-				<li>Export MARCXML Records</li>
-				<li>Export MODS Records</li>
-			</ul>
-		</div>
-		<div class="box-footer">
-		
-		</div>		
-	</div>
+    #{include 'FilterTab/filters.include' /}
 
 </div>
 <div id="right-column">
 	<div class="inner">
+        #{if flash.get("error") != null}
+        <div class="alert alert-error">
+            <button class="close" data-dismiss="alert" type="button">×</button>
+            <p><strong>Ops, an error occurred: </strong> ${flash.get("error")}</p>
+            <p>Your filter has been reset.</p>
+        </div>
+        #{/if}
 		<h1>Action Log</h1>
 		<table class="table table-striped table-bordered table-condensed">
 			<thead>
 				<tr>
-					<td>Action by</td>
-					<td>Action / Comment</td>
-					<td>Time</td>
-				</tr>
+                #{list items:columns, as:'column'}
+                    #{if orderby == column}
+                    <th class="orderby ${ direction == ASCENDING ? "ascending" : "descending" }">
+                        <a href="@{FilterTab.modifySearch(nav)}?direction=toggle">&{'LOG_COLUMN_'+column.name()}</a>
+                    </th>
+                    #{/if}
+                    #{else}
+                    <th>
+                        <a href="@{FilterTab.modifySearch(nav)}?orderby=${column.getId()}">&{'LOG_COLUMN_'+column.name()}</a>
+                    </th>
+                    #{/else}
+                #{/list}
+                </tr>
 			</thead>
 			<tbody>
+                #{list items:results.getResults(), as:'log' }
+                %{ org.tdl.vireo.model.Submission sub = log.getSubmission() }%
+                    <tr>
+                        #{list items:columns, as:'column'}
+                        #{if column == ID}
+                        <td>${log.getId()}</td>
+                        #{/if}
+                        #{elseif column == SUBMITTER}
+                        <td>${sub.getStudentLastName()}, ${sub.getStudentFirstName()} ${sub.getStudentMiddleName()}</td>
+                        #{/elseif}
+                        #{elseif column == STATE}
+                        <td>${log.getSubmissionState().getDisplayName()}</td>
+                        #{/elseif}
+                        #{elseif column == ASSGINEE}
+                        <td>${log.getPerson()?.getFullName()}</td>
+                        #{/elseif}
+                        #{elseif column == DOCUMENT_TITLE}
+                        <td>${sub.getDocumentTitle()}</td>
+                        #{/elseif}
+                        #{elseif column == DOCUMENT_ABSTRACT}
+                        <td>${sub.getDocumentAbstract()?.substring(0,25)}...</td>
+                        #{/elseif}
+                        #{elseif column == DOCUMENT_KEYWORDS}
+                        <td>${sub.getDocumentKeywords()}</td>
+                        #{/elseif}
+                        #{elseif column == PRIMARY_DOCUMENT}
+                        <td>${sub.getPrimaryDocument()?.getName()}</td>
+                        #{/elseif}
+                        #{elseif column == GRADUATION_DATE}
+                        %{ String monthName = new java.text.DateFormatSymbols().getMonths()[sub.getGraduationMonth()]; }%
+                        <td>${sub.getGraduationYear()} ${monthName}</td>
+                        #{/elseif}
+                        #{elseif column == SUBMISSION_DATE}
+                        <td>${sub.getSubmissionDate()?.format('MM/dd/yyyy')}</td>
+                        #{/elseif}
+                        #{elseif column == LICENSE_AGREEMENT_DATE}
+                        <td>${sub.getLicenseAgreementDate()?.format('MM/dd/yyyy')}</td>
+                        #{/elseif}
+                        #{elseif column == APPROVAL_DATE}
+                        <td>${sub.getApprovalDate()?.format('MM/dd/yyyy')}</td>
+                        #{/elseif}
+                        #{elseif column == COMMITTEE_APPROVAL_DATE}
+                        <td>${sub.getCommitteeApprovalDate()?.format('MM/dd/yyyy')}</td>
+                        #{/elseif}
+                        #{elseif column == COMMITTEE_EMBARGO_APPROVAL_DATE}
+                        <td>${sub.getCommitteeEmbargoApprovalDate()?.format('MM/dd/yyyy')}</td>
+                        #{/elseif}
+                        #{elseif column == COMMITTEE_MEMBERS}
+                        <td>
+                          #{if sub.getCommitteeMembers().size() == 0}
+                          None
+                          #{/if}
+                          #{elseif sub.getCommitteeMembers().size() == 1}
+                          ${sub.getCommitteeMembers()?.get(0).getFullName()}
+                          #{/elseif}
+                          #{else}
+                          ${sub.getCommitteeMembers()?.get(0).getFullName()}, et al.
+                          #{/else} 
+                        </td>
+                        #{/elseif}
+                        #{elseif column == COMMITTEE_CONTACT_EMAIL}
+                        <td>${sub.getCommitteeContactEmail()}</td>
+                        #{/elseif}
+                        #{elseif column == COMMITTEE_DISPOSITION}
+                        <td>${sub.getCommitteeDisposition()}</td>
+                        #{/elseif}
+                        #{elseif column == DEGREE}
+                        <td>${sub.getDegree()}</td>
+                        #{/elseif}
+                        #{elseif column == COLLEGE}
+                        <td>${sub.getCollege()}</td>
+                        #{/elseif}
+                        #{elseif column == DEPARTMENT}
+                        <td>${sub.getDepartment()}</td>
+                        #{/elseif}
+                        #{elseif column == MAJOR}
+                        <td>${sub.getMajor()}</td>
+                        #{/elseif}
+                        #{elseif column == EMBARGO_TYPE}
+                        <td>${sub.getEmbargoType()?.getName()}</td>
+                        #{/elseif}
+                        #{elseif column == DOCUMENT_TYPE}
+                        <td>${sub.getDocumentType()}</td>
+                        #{/elseif}
+                        #{elseif column == UMI_RELEASE}
+                        <td>
+                           #{if sub.getUMIRelease() == null}
+                               N/A
+                           #{/if}
+                           #{elseif sub.getUMIRelease() == true}
+                               No
+                           #{/elseif}
+                           #{else}
+                               Yes
+                           #{/else}
+                        </td>
+                        #{/elseif}
+                        #{elseif column == CUSTOM_ACTIONS}
+                        <td>${sub.getCustomActions()?.size()}</td>
+                        #{/elseif}
+                        #{elseif column == LAST_EVENT_ENTRY}
+                        <td>${log.getEntry()}</td>
+                        #{/elseif}
+                        #{elseif column == LAST_EVENT_TIME}
+                        <td>${log.getActionDate()?.format("MM/dd/yyyy hh:mm:ss")}</td>
+                        #{/elseif}             
+                        #{/list}
+                       </tr>
+                #{/list}
 				<tr>
-					<td>Gillian Anderson</td>
-					<td>Document type changed 'Dissertation' by Gillian Anderson</td>
-					<td>23 May 2012; 12:23 PM</td>
-				</tr>
-				<tr>
-					<td>Gillian Anderson</td>
-					<td>Submission degree name changed 'PhD' by Gillian Anderson</td>
-					<td>23 May 2012; 12:23 PM</td>
-				</tr>
-				<tr>
-					<td>Gillian Anderson</td>
-					<td>Submission status changed 'Under Review' by Gillian Anderson</td>
-					<td>13 May 2012; 08:23 AM</td>
-				</tr>
-				<tr>
-					<td class="comments" colspan="3">3 matching records displayed on 1 page</td>
-				</tr>
+                    <td class="comments" colspan="${columns.length}">
+                       ${results.getTotal()} matching records displayed on ${(int) ((results.getTotal() / results.getLimit())+1)} pages.
+                    </td>
+                </tr>
 			</tbody>
 		</table>
+		<div class="pagination">
+          <ul>
+            %{
+              List pagination = results.getPagination(7);
+            }%
+            
+            #{if results.getOffset() - results.getLimit() >= 0 }
+            <li><a href="@{FilterTab.modifySearch(nav)}?offset=${ results.getOffset() - results.getLimit() }">Prev</a></li>
+            #{/if}
+            #{else}
+            <li class="disabled"><a href="#">Prev</a></li>
+            #{/else}
+            
+            #{if pagination.get(0).pageNumber > 1}
+            <li class="disabled"><a href="#">...</a></li>
+            #{/if}
+            
+            #{list items:pagination, as:'page'}
+            <li #{if page.current == true}class="active"#{/if}>
+              <a href="@{FilterTab.modifySearch(nav)}?offset=${ page.offset }">${page.pageNumber}</a>
+            </li>
+            #{/list}
+            
+             #{if pagination.get(pagination.size()-1).pageNumber < results.getTotal() / results.getLimit() }
+            <li class="disabled"><a href="#">...</a></li>
+            #{/if}
+            
+            #{if results.getOffset() + results.getLimit() < results.getTotal() }
+            <li><a href="@{FilterTab.modifySearch(nav)}?offset=${ results.getOffset() + results.getLimit() }">Next</a></li>
+            #{/if}
+            #{else}
+            <li class="disabled"><a href="#">Next</a></li>
+            #{/else}
+            
+             </ul>
+        </div>
 	</div>
 </div>

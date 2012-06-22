@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
@@ -35,9 +36,38 @@ import play.mvc.With;
 @With(Authentication.class)
 public class FilterTab extends AbstractVireoController {
 
-	// The cookie names where the current active filters are stored for submission and actionlog.
-	public final static String SUBMISSION_FILTER_COOKIE_NAME = "SubmissionFilter";
-	public final static String ACTION_LOG_FILTER_COOKIE_NAME = "ActionLogFilter";
+	// Store the cookie and session names in an easy to lookup two dimensional
+	// array, so that modifySearch() and modifyFilter() can be easily coded to
+	// support both sets of names. This allows you to do:
+	// NAMES[SUBMISSION][ACTIVE_FILTER] to get the name of the cookie for the
+	// submission list's active filter. Or easily switch that to lookup the same
+	// name for the action log.
+	public final static String[][] NAMES = {
+		{
+			"SubmissionFilter",
+			"SubmissionDirection",
+			"SubmissionOrderBy",
+			"SubmissionOffset"
+		},
+		{
+			"ActionLogFilter",
+			"ActionLogDirection",
+			"ActionLogOrderBy",
+			"ActionLogOffset"
+		}
+	};
+	
+	// Static index lookups into the NAMES array for name sets.
+	public final static int SUBMISSION = 0;
+	public final static int ACTION_LOG = 1;
+	
+	// Static index lookups into the NAMES array for particular names.
+	public final static int ACTIVE_FILTER = 0;
+	public final static int DIRECTION = 1;
+	public final static int ORDERBY = 2;
+	public final static int OFFSET = 3;
+	
+	
 	
 	/**
 	 * List page
@@ -53,16 +83,14 @@ public class FilterTab extends AbstractVireoController {
 		// Get current parameters
 		Person person = context.getPerson();
 		
-		
 		// Step 1: Update the active filter
 		//////////
 		
 		// Load the acive filter from the cookie
 		ActiveSearchFilter activeFilter = Spring.getBeanOfType(ActiveSearchFilter.class);
-		Cookie cookie = request.cookies.get(SUBMISSION_FILTER_COOKIE_NAME);
+		Cookie cookie = request.cookies.get(NAMES[SUBMISSION][ACTIVE_FILTER]);
 		if (cookie != null && cookie.value != null && cookie.value.trim().length() > 0) {
 			try {
-				System.out.println("Recieved Cookie: "+cookie.value);
 				activeFilter.decode(cookie.value);
 			} catch (RuntimeException re) {
 				Logger.warn(re,"Unable to decode search filter: "+cookie.value);
@@ -72,16 +100,16 @@ public class FilterTab extends AbstractVireoController {
 		// Step 2:  Run the current filter search
 		//////////
 		SearchOrder orderby = SearchOrder.ID;
-		if (session.get("orderby") != null) 
-			orderby = SearchOrder.find(Integer.valueOf(session.get("orderby")));
+		if (session.get(NAMES[SUBMISSION][ORDERBY]) != null) 
+			orderby = SearchOrder.find(Integer.valueOf(session.get(NAMES[SUBMISSION][ORDERBY])));
 		
 		SearchDirection direction = SearchDirection.ASCENDING;
-		if (session.get("direction") != null) 
-			direction = SearchDirection.find(Integer.valueOf(session.get("direction")));
+		if (session.get(NAMES[SUBMISSION][DIRECTION]) != null) 
+			direction = SearchDirection.find(Integer.valueOf(session.get(NAMES[SUBMISSION][DIRECTION])));
 		
 		Integer offset = 0;
-		if (session.get("offset") != null)
-			offset = Integer.valueOf(session.get("offset"));
+		if (session.get(NAMES[SUBMISSION][OFFSET]) != null)
+			offset = Integer.valueOf(session.get(NAMES[SUBMISSION][OFFSET]));
 		
 		// TODO: Look up the limit based upon the user's preferences.
 		Integer limit = 100;
@@ -93,6 +121,73 @@ public class FilterTab extends AbstractVireoController {
 		//////////
 		List<NamedSearchFilter> allFilters = subRepo.findSearchFiltersByCreatorOrPublic(person);
 		String nav = "list";
+		
+		// Get a list of columns to display
+		// TODO: Make it dynamic which columns to display.
+		SearchOrder[] columns = SearchOrder.values();
+		
+		// Add all search directions to the view
+		for (SearchOrder order2 : SearchOrder.values())
+			renderArgs.put(order2.name(), order2);
+		
+	    // Add ASCENDING and DECENDING to the view
+		renderArgs.put(SearchDirection.ASCENDING.name(), SearchDirection.ASCENDING);
+		renderArgs.put(SearchDirection.DESCENDING.name(), SearchDirection.DESCENDING);
+		
+		render(nav, allFilters, activeFilter, results, orderby, columns, direction);
+	}
+	
+	/**
+	 * Log page
+	 * 
+	 * This controller will run the currently active filter and then display the
+	 * results. This method does not change any state, instead the
+	 * modifyFilter() and modifySearch() methods will handle those modifications
+	 * and then redirect back to this method to display the results.
+	 */
+	@Security(RoleType.REVIEWER)
+	public static void log() {
+		// Get current parameters
+		Person person = context.getPerson();
+		
+		// Step 1: Update the active filter
+		//////////
+		
+		// Load the acive filter from the cookie
+		ActiveSearchFilter activeFilter = Spring.getBeanOfType(ActiveSearchFilter.class);
+		Cookie cookie = request.cookies.get(NAMES[ACTION_LOG][ACTIVE_FILTER]);
+		if (cookie != null && cookie.value != null && cookie.value.trim().length() > 0) {
+			try {
+				activeFilter.decode(cookie.value);
+			} catch (RuntimeException re) {
+				Logger.warn(re,"Unable to decode search filter: "+cookie.value);
+			}
+		}
+		
+		// Step 2:  Run the current filter search
+		//////////
+		SearchOrder orderby = SearchOrder.ID;
+		if (session.get(NAMES[ACTION_LOG][ORDERBY]) != null) 
+			orderby = SearchOrder.find(Integer.valueOf(session.get(NAMES[ACTION_LOG][ORDERBY])));
+		
+		SearchDirection direction = SearchDirection.ASCENDING;
+		if (session.get(NAMES[ACTION_LOG][DIRECTION]) != null) 
+			direction = SearchDirection.find(Integer.valueOf(session.get(NAMES[ACTION_LOG][DIRECTION])));
+		
+		Integer offset = 0;
+		if (session.get(NAMES[ACTION_LOG][OFFSET]) != null)
+			offset = Integer.valueOf(session.get(NAMES[ACTION_LOG][OFFSET]));
+		
+		// TODO: Look up the limit based upon the user's preferences.
+		Integer limit = 100;
+		
+		SearchResult<ActionLog> results = subRepo.filterSearchActionLogs(activeFilter,orderby, direction, offset, limit);
+		
+
+		// Step 3: Prepare any variables for display
+		//////////
+		List<NamedSearchFilter> allFilters = subRepo.findSearchFiltersByCreatorOrPublic(person);
+		String nav = "log";
 		
 		// Get a list of columns to display
 		// TODO: Make it dynamic which columns to display.
@@ -122,28 +217,32 @@ public class FilterTab extends AbstractVireoController {
 	@Security(RoleType.REVIEWER)
 	public static void modifySearch(String nav) {
 		
+		int type = SUBMISSION;
+		if ("log".equals(nav))
+			type = ACTION_LOG;
+				
 		String direction = params.get("direction");
 		Integer orderby = params.get("orderby",Integer.class);
 		Integer offset = params.get("offset", Integer.class);
 		
 		if (direction != null) {
 			// Toggle the current direction.
-			if (String.valueOf(SearchDirection.DESCENDING.getId()).equals(session.get("direction"))) {
-				session.put("direction",SearchDirection.ASCENDING.getId());
+			if (String.valueOf(SearchDirection.DESCENDING.getId()).equals(session.get(NAMES[type][DIRECTION]))) {
+				session.put(NAMES[type][DIRECTION],SearchDirection.ASCENDING.getId());
 			} else {
-				session.put("direction",SearchDirection.DESCENDING.getId());
+				session.put(NAMES[type][DIRECTION],SearchDirection.DESCENDING.getId());
 			}
-			session.remove("offset");
+			session.remove(NAMES[type][OFFSET]);
 		}
 		
 		if (orderby != null && SearchOrder.find(orderby) != null) {
-			session.put("orderby", orderby);
-			session.remove("offset");
+			session.put(NAMES[type][ORDERBY], orderby);
+			session.remove(NAMES[type][OFFSET]);
 		}
 		
 		if (offset != null)
-			session.put("offset", offset);
-	
+			session.put(NAMES[type][OFFSET], offset);
+			
 		if ("list".equals(nav))
 			list();
 		if ("log".equals(nav))
@@ -177,9 +276,13 @@ public class FilterTab extends AbstractVireoController {
 		
 		Person person = context.getPerson();
 		
+		int type = SUBMISSION;
+		if ("log".equals(nav))
+			type = ACTION_LOG;
+		
 		// Load the active filter from the cookie
 		ActiveSearchFilter activeFilter = Spring.getBeanOfType(ActiveSearchFilter.class);
-		Cookie cookie = request.cookies.get(SUBMISSION_FILTER_COOKIE_NAME);
+		Cookie cookie = request.cookies.get(NAMES[type][ACTIVE_FILTER]);
 		if (cookie != null) {
 			try {
 				activeFilter.decode(cookie.value);
@@ -238,7 +341,7 @@ public class FilterTab extends AbstractVireoController {
 		}
 		
 		// Save the active filter to a cookie
-		response.setCookie(SUBMISSION_FILTER_COOKIE_NAME, activeFilter.encode());
+		response.setCookie(NAMES[type][ACTIVE_FILTER], activeFilter.encode());
 		session.remove("offset");
 		
 		if ("list".equals(nav))
@@ -247,11 +350,6 @@ public class FilterTab extends AbstractVireoController {
 			log();
 		
 		error("Unknown list modify navigation controll");
-	}
-	
-	public static void log() {
-		String nav = "log";
-		render(nav);
 	}
 
 	/**
@@ -269,26 +367,46 @@ public class FilterTab extends AbstractVireoController {
 	@Catch(RuntimeException.class)
 	public static void handleError(Throwable throwable) {
 		
+		Logger.error(throwable, "Error on the List or Log tab, clearing the users session to recover.");
+		
 		// When an error occurs, clear the current state so the user is not
 		// trapped in an endless loop they can't recover from without
 		// clearing their cookies. Then save the error message on the flash
 		// and report it to the user on their next page view.
-		session.remove("direction");
-		session.remove("orderby");
-		session.remove("offset");
 		
-		response.setCookie(SUBMISSION_FILTER_COOKIE_NAME,"");
+		// Clear out everything related to submission
+		response.setCookie(NAMES[SUBMISSION][ACTIVE_FILTER],"");
+
+		session.remove(NAMES[SUBMISSION][DIRECTION]);
+		session.remove(NAMES[SUBMISSION][ORDERBY]);
+		session.remove(NAMES[SUBMISSION][OFFSET]);
 		
+		// Clear out everything related to action logs
+		response.setCookie(NAMES[ACTION_LOG][ACTIVE_FILTER],"");
+
+		session.remove(NAMES[ACTION_LOG][DIRECTION]);
+		session.remove(NAMES[ACTION_LOG][ORDERBY]);
+		session.remove(NAMES[ACTION_LOG][OFFSET]);
+		
+		// Store the error so it can be displayed.
 		flash.put("error", throwable.getMessage());
 		
+		// Check for an endless error loop.
 		String errorLoop = flash.get("errorLoop");
 		flash.put("errorLoop", "maybe");
 		
 		if (errorLoop == null) {
 			// Only redirect if no error loop is detected.
+			if ("log".equals(request.actionMethod)) 
+				FilterTab.log();
+			
+			if ("list".equals(request.actionMethod)) 
+				FilterTab.list();
+			
 			if ("log".equals(request.routeArgs.get("nav")))
 				FilterTab.log();
-			else
+			
+			if ("list".equals(request.routeArgs.get("nav")))
 				FilterTab.list();
 		}
 	}
