@@ -21,7 +21,7 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 	@Column(nullable = false)
 	public int displayOrder;
 	
-	@Column(nullable = false, unique = true, length=32768) // 2^15
+	@Column(nullable = false, unique = true, length=255)
 	public String name;
 
 	@Column(nullable = false, length=32768) // 2^15
