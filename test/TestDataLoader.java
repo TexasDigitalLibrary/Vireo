@@ -38,7 +38,7 @@ import play.modules.spring.Spring;
 public class TestDataLoader extends Job {
 
 	/**
-	 * How many random submisions to create
+	 * How many random submissions to create
 	 */
 	public static final int RANDOM_SUBMISSIONS = 10;	
 	
@@ -567,7 +567,7 @@ public class TestDataLoader extends Job {
 			
 			
 			
-			if (i % 100 == 0) {
+			if (i > 0 && i % 100 == 0) {
 				// Do a database commit every 100 transactions.
 				
 				JPA.em().getTransaction().commit();
@@ -577,16 +577,10 @@ public class TestDataLoader extends Job {
 				// Reload persistant objects
 				embargos = settingRepo.findAllEmbargoTypes();
 				reviewer = personRepo.findPersonByEmail("jdimaggio@gmail.com");
+				Logger.debug("Generated "+i+" random submissions so far.");
 			}
 		}
-
 	}
-	
-	
-	
-	
-	
-	
 	
 	/**
 	 * Generate a random date.
