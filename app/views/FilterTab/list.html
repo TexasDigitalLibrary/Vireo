@@ -82,7 +82,11 @@
 						<td>${sub.getDocumentTitle()}</td>
 						#{/elseif}
 						#{elseif column == DOCUMENT_ABSTRACT}
-                        <td>#{if sub.getDocumentAbstract() != null}${sub.getDocumentAbstract()?.substring(0,25)}...#{/if}</td>
+                        <td>
+                            #{if sub.getDocumentAbstract() != null}                             
+                                	${sub.getDocumentAbstract().size() < 25 ? sub.getDocumentAbstract() : sub.getDocumentAbstract()?.substring(0,25) + "..."}                               
+                            #{/if}
+                        </td>
 						#{/elseif}
 						#{elseif column == DOCUMENT_KEYWORDS}
 						<td>${sub.getDocumentKeywords()}</td>
