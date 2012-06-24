@@ -64,12 +64,7 @@
 						  #{if sub.getStudentLastName() == null}
 						  Unknown
 						  #{/if}
-						  #{else}
-						  ${sub.getStudentLastName()}
-						  #{/else}
-						  #{if sub.getStudentFirstName() != null || sub.getStudentLastName() != null}
-						  , ${sub.getStudentFirstName()} ${sub.getStudentMiddleName()}
-						  #{/if}
+						  #{else}${sub.getStudentLastName()}#{/else}#{if sub.getStudentFirstName() != null || sub.getStudentLastName() != null}, ${sub.getStudentFirstName()} ${sub.getStudentMiddleName()}#{/if}
 						</td>
 						#{/elseif}
 						#{elseif column == STATE}
@@ -134,7 +129,11 @@
 						<td>${sub.getCommitteeContactEmail()}</td>
 						#{/elseif}
 						#{elseif column == COMMITTEE_DISPOSITION}
-						<td>${sub.getCommitteeDisposition()}</td>
+						<td>
+						    #{if sub.getCommitteeDisposition() != null}                             
+                                    ${sub.getCommitteeDisposition().size() < 25 ? sub.getCommitteeDisposition() : sub.getCommitteeDisposition()?.substring(0,25) + "..."}                               
+                            #{/if}
+						</td>
 						#{/elseif}
 						#{elseif column == DEGREE}
 						<td>${sub.getDegree()}</td>
