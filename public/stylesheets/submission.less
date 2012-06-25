@@ -4,10 +4,6 @@
 BASICS
 **********************/
 html {
-	/*
-	background:url("../images/bg.jpg") repeat-x;
-	background-color:@backgroundColor;
-	*/
 	background: @bodyGradientBegin; /* Old browsers */
 	background: -moz-linear-gradient(top,  @bodyGradientBegin 0%, @bodyGradientEnd 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,@bodyGradientBegin), color-stop(100%,@bodyGradientEnd)); /* Chrome,Safari4+ */
@@ -23,8 +19,6 @@ html {
 
 body {
 	background:none;
-	border-bottom-right-radius: 50% 50%;
-	color:@mainColor;
 	font-family:"Trebuchet MS",Verdana,Geneva,Arial,Helvetica,sans-serif;
 }
 
@@ -78,7 +72,7 @@ form td{
 TWITTERBOOTSTRAP OVERIDES
 **********************/
 .container {
-	background:url("../images/header.jpg") repeat-x scroll 0 0 @white;
+	background:@headerGradientBegin;
 	border-left:1px solid @borderColor;
 	border-right:1px solid @borderColor;
 }
@@ -107,15 +101,24 @@ SPECIFIC OVERIDES
 	z-index:0;
 }
 
-#tdl-logo{
-	background:url("../images/logo.jpg") no-repeat scroll 0 0 transparent;
-	height:100px;
+#left-logo{
+	background:url("../images/tdl-vireo-logo-left.gif") no-repeat scroll 0 0 transparent;
+	height:42px;
 	position:relative;
-	top:10px;
-	left:10px;
-	display:block;
-	text-decoration:none;
+	top:30px;
+	left:13px;
+	width:184px;
 	z-index:1;
+}
+
+#right-logo{
+	background:url("../images/tdl-vireo-logo-right.gif") no-repeat scroll 0 0 transparent;
+	height:42px;
+    position:absolute;
+   	top:30px;
+    right:13px;
+    width:144px;
+    z-index:1;
 }
 
 #personal-bar {
@@ -128,8 +131,6 @@ SPECIFIC OVERIDES
 	margin:0 20px;
 	padding:20px;
 	min-height:700px;
-	border-bottom-right-radius: 50% 50%;
-	
 }
 
 #footer{
@@ -138,9 +139,9 @@ SPECIFIC OVERIDES
 	clear: both;
 	margin:auto;
 	padding: 0;
-	height:40px;
+	height:31px;
 	width: 800px;
-	color: @white;
+	color:@white;
 }
 
 #footer p{
