@@ -1,6 +1,30 @@
 #{extends 'submitSteps.html' /}
 #{set title:'Document Info' /}
 
+<script type="text/javascript">
+    
+    $(function(){
+        var template = $('#committee-member').clone(),
+        memberCount = 1;
+        
+        var addCommitteeMember = function(e){
+            // Prevent button from submitting form
+            e.preventDefault();
+            
+            memberCount++;
+            var member = template.clone().find(':input').each(function() {
+                var newId = this.id.substring(0, this.id.length-1) + memberCount;
+                $(this).prev().attr('for', newId); // update label for (assume prev sib is label)
+                this.name = this.id = newId; // update id and name (assume the same)
+            }).end() // back to .member
+            .attr('id', 'att' + memberCount) // update member id
+            .prependTo('#committee-members'); // add to container
+        };
+        
+        $('#add').click(addCommitteeMember); // attach event
+});
+</script>
+
 <br />
 <div class="row pageHead">
 	<h3 class="span11">Document Information</h3>
@@ -77,78 +101,44 @@
 	
 	<fieldset class="form-inline">
 		<legend>Your Committee</legend>
-		<table>
-		<tr>
-			<td><input type="text" class="input-medium" id="committeFirstName"></td>
-			<td><input type="text" class="span1" id="committeMiddleInitial"></td>
-			<td><input type="text" class="input-medium" id="committeeLastName"></td>
-			<td><label class="checkbox"><input type="checkbox" id="chairFlag" class="inline"> Chair</label></td>
-		</tr>
-		<tr>
-			<td><label class="span2">First Name</label></td>
-			<td><label class="span1">MI</label></td>
-			<td><label class="span2">Last Name</label></td>
-			<td></td>
-		</tr>
-		</table>
-		<table>
-		<tr>
-			<td><input type="text" class="input-medium" id="committeFirstName"></td>
-			<td><input type="text" class="span1" id="committeMiddleInitial"></td>
-			<td><input type="text" class="input-medium" id="committeeLastName"></td>
-			<td><label class="checkbox"><input type="checkbox" id="chairFlag" class="inline"> Chair</label></td>
-		</tr>
-		<tr>
-			<td><label class="span2">First Name</label></td>
-			<td><label class="span1">MI</label></td>
-			<td><label class="span2">Last Name</label></td>
-			<td></td>
-		</tr>
-		</table>
-		<table>
-		<tr>
-			<td><input type="text" class="input-medium" id="committeFirstName"></td>
-			<td><input type="text" class="span1" id="committeMiddleInitial"></td>
-			<td><input type="text" class="input-medium" id="committeeLastName"></td>
-			<td><label class="checkbox"><input type="checkbox" id="chairFlag" class="inline"> Chair</label></td>
-		</tr>
-		<tr>
-			<td><label class="span2">First Name</label></td>
-			<td><label class="span1">MI</label></td>
-			<td><label class="span2">Last Name</label></td>
-			<td></td>
-		</tr>
-		</table>
-		<table>
-		<tr>
-			<td><input type="text" class="input-medium" id="committeFirstName"></td>
-			<td><input type="text" class="span1" id="committeMiddleInitial"></td>
-			<td><input type="text" class="input-medium" id="committeeLastName"></td>
-			<td><label class="checkbox"><input type="checkbox" id="chairFlag" class="inline"> Chair</label></td>
-		</tr>
-		<tr>
-			<td><label class="span2">First Name</label></td>
-			<td><label class="span1">MI</label></td>
-			<td><label class="span2">Last Name</label></td>
-			<td></td>
-		</tr>
-		</table>
-		<table>
-		<tr>
-			<td><input type="text" class="input-medium" id="committeFirstName"></td>
-			<td><input type="text" class="span1" id="committeMiddleInitial"></td>
-			<td><input type="text" class="input-medium" id="committeeLastName"></td>
-			<td><label class="checkbox"><input type="checkbox" id="chairFlag" class="inline"> Chair</label></td>
-		</tr>
-		<tr>
-			<td><label class="span2">First Name</label></td>
-			<td><label class="span1">MI</label></td>
-			<td><label class="span2">Last Name</label></td>
-			<td></td>
-		</tr>
-		</table>
+                <div id="committee-members">
+                    <table id="committee-member">
+                        <tr> 
+                            <td><input type="text" class="input-medium" id="committeeFirstName1" name="committeeFirstName1"></td>
+                            <td><input type="text" class="span1" id="committeeMiddleName1" name="committeeMiddleName1"></td>
+                            <td><input type="text" class="input-medium" id="committeeLastName1" name="committeeLastName1"></td>
+                            <td><label class="checkbox"><input type="checkbox" id="committeeChairFlag1" name="committeeChairFlag1" class="inline"> Chair</label></td>
+                        </tr>
+                        <tr>
+                            <td><label class="span2">First Name</label></td>
+                            <td><label class="span1">MI</label></td>
+                            <td><label class="span2">Last Name</label></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                    
+                    #{list committeeMembers, as: 'member'}
+                        ${count}
+                    
+                        <table id="committee-member">
+                            <tr> 
+                                <td><input type="text" class="input-medium" id="committeeFirstName${member.getDisplayOrder()}" name="committeeFirstName${member.getDisplayOrder()}" value="${member.getFirstName()}"></td>
+                                <td><input type="text" class="span1" id="committeeMiddleName${member.getDisplayOrder()}" name="committeeMiddleName${member.getDisplayOrder()}" value="${member.getMiddleName()}"></td>
+                                <td><input type="text" class="input-medium" id="committeeLastName${member.getDisplayOrder()}" name="committeeLastName${member.getDisplayOrder()}" value="${member.getLastName()}"></td>
+                                <td><label class="checkbox"><input type="checkbox" id="committeeChairFlag${member.getDisplayOrder()}" name="committeeChairFlag${member.getDisplayOrder()}" class="inline" #{if member.isCommitteeChair()}checked="yes"#{/if}> Chair</label></td>
+                            </tr>
+                            <tr>
+                                <td><label class="span2">First Name</label></td>
+                                <td><label class="span1">MI</label></td>
+                                <td><label class="span2">Last Name</label></td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    #{/list}
+                </div>
+                
 		<div class="row center">
-			<button class="btn">Add Additional Member</button>
+                    <input class="btn" id="add" name="add" type="submit" value="Add Additional Member" />
 		</div>		
 	</fieldset>
 	

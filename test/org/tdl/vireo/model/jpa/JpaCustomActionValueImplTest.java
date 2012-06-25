@@ -204,13 +204,13 @@ public class JpaCustomActionValueImplTest extends UnitTest {
 		Iterator<ActionLog> logItr = logs.iterator();
 		
 		sub.delete();
-		sub = null;
+		sub = null;	
 		
-		assertEquals("Submission created by Mock Administrator",logItr.next().getEntry());
-		assertEquals("Submission status changed to 'Submitted' by Mock Administrator",logItr.next().getEntry());
+		assertEquals("Custom action "+def.getLabel()+" unset by Mock Administrator", logItr.next().getEntry());
+		assertEquals("Custom action "+def.getLabel()+" unset by Mock Administrator", logItr.next().getEntry());
 		assertEquals("Custom action "+def.getLabel()+" set by Mock Administrator", logItr.next().getEntry());
-		assertEquals("Custom action "+def.getLabel()+" unset by Mock Administrator", logItr.next().getEntry());
-		assertEquals("Custom action "+def.getLabel()+" unset by Mock Administrator", logItr.next().getEntry());
+		assertEquals("Submission status changed to 'Submitted' by Mock Administrator",logItr.next().getEntry());
+		assertEquals("Submission created by Mock Administrator",logItr.next().getEntry());
 		assertFalse(logItr.hasNext());
 	}
 	

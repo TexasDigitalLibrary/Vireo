@@ -25,6 +25,9 @@ import sun.util.logging.resources.logging;
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
+import java.util.*;
+import org.tdl.vireo.model.impl.CommitteeMemberImpl;
+import play.mvc.Scope.Params;
 
 /**
  * Submit controller
@@ -362,9 +365,11 @@ public class Submit extends AbstractVireoController {
         String committeeFirstName = params.get("committeeFirstName");
         String committeeMiddleInitial = params.get("committeeMiddleInitial");
         String committeeLastName = params.get("committeeLastName");
-        String chairFlag = params.get("chairFlag");
+        String chairFlag = params.get("committeeChairFlag");
         String chairEmail = params.get("chairEmail");
         String embargo = params.get("embargo");
+        
+        List<CommitteeMember> committeeMembers = parseCommitteeMembers(params);
         
         // Get currently logged in person 
         Person currentPerson = context.getPerson();
@@ -422,6 +427,11 @@ public class Submit extends AbstractVireoController {
                 sub.setDocumentKeywords(keywords);
                 sub.setCommitteeContactEmail(chairEmail);
                 sub.setEmbargoType(settingRepo.findEmbargoType(Long.parseLong(embargo)));
+                
+                for(CommitteeMember c : committeeMembers) {
+                    sub.addCommitteeMember(c.getFirstName(), c.getLastName(), c.getMiddleName(), c.isCommitteeChair());
+                }
+                
                 sub.save();
                 
                 fileUpload(subId);
@@ -439,6 +449,9 @@ public class Submit extends AbstractVireoController {
         // List of all *active* Embargo Types
         List<EmbargoType> embargoTypes = settingRepo.findAllActiveEmbargoTypes();
         renderArgs.put("embargoTypes", embargoTypes);
+        
+        // List of Committee Member objects
+        renderArgs.put("committeeMembers", committeeMembers);
         
         render( subId, 
                 title, 
@@ -761,5 +774,61 @@ public class Submit extends AbstractVireoController {
     public static String getMonth(int month) {
         return new DateFormatSymbols().getMonths()[month];
     }
+
     
+    /**
+     * Returns a list of all committee member metadata sent in request
+     * 
+     * @param params the full parameter set of the request
+     * @return a list of CommitteeMember skeleton records for use in the view
+     *         or conversion to database-backed CommitteeMembers in the database
+     */
+    private static List<CommitteeMember> parseCommitteeMembers(Params params) {
+        List<CommitteeMember> committeeMembers = new ArrayList<CommitteeMember>();
+        Map<String, String[]> allParams = params.all();
+        int added = 0;
+
+        String first;
+        String last;
+        String middle;
+        
+        for (String paramName : allParams.keySet()) {
+            if (paramName.length() > 9 && paramName.substring(0, 9).equals("committee")) {
+
+                // Grab index of found committee member
+                String index = paramName.substring(paramName.length() - 1);
+
+                first = params.get("committeeFirsttName" + index);
+                last = params.get("committeeLastName" + index);
+                middle = params.get("committeeMiddleName" + index);
+                
+                // Don't add a member more than once
+                if(null != index && Integer.parseInt(index) <= added) {
+                    continue;
+                }
+                
+                // Skip empty entries
+                if((null == last || last.equals("")) &&
+                   (null == first || first.equals("")) &&
+                   (null == middle || middle.equals("")) &&
+                   (null == params.get("committeeChairFlag" + index))) {
+                    added++;
+                    continue;
+                }
+
+                // Populate a Committee Member skeleton object and add to list
+                CommitteeMember member = new CommitteeMemberImpl();
+                member.setLastName(params.get("committeeLastName" + index));
+                member.setFirstName(params.get("committeeFirstName" + index));
+                member.setMiddleName(params.get("committeeMiddleName" + index));
+                member.setCommitteeChair(null == params.get("committeeChairFlag" + index) ? false : true);
+                member.setDisplayOrder(added + 2);
+                
+                committeeMembers.add(member);
+                added++;
+                Logger.info(String.valueOf(added));
+            }
+        }
+        return committeeMembers;
+    }
 }
