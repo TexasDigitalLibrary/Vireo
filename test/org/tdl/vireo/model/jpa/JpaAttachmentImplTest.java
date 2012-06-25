@@ -80,7 +80,7 @@ public class JpaAttachmentImplTest extends UnitTest {
 		
 		File file = createRandomFile(10L);
 		
-		Attachment attachment = sub.addAttachment(file, AttachmentType.PRIMARY);
+		Attachment attachment = sub.addAttachment(file, AttachmentType.PRIMARY).save();
 		
 		assertNotNull(attachment);
 		assertEquals(file.getName(),attachment.getName());
@@ -453,16 +453,6 @@ public class JpaAttachmentImplTest extends UnitTest {
 	 */
 	@Test
 	public void testPersistance() throws IOException {
-		// Commit and reopen a new transaction because some of the other tests
-		// may have caused exceptions which set the transaction to be rolled
-		// back.
-		if (JPA.em().getTransaction().getRollbackOnly())
-			JPA.em().getTransaction().rollback();
-		else
-			JPA.em().getTransaction().commit();
-		JPA.em().clear();
-		JPA.em().getTransaction().begin();
-		
 		
 		File file1 = createRandomFile(10L);
 		Attachment attachment = sub.addAttachment(file1, AttachmentType.PRIMARY).save();

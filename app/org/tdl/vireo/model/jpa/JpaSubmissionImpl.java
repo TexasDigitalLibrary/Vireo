@@ -59,19 +59,19 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@ManyToOne(optional = false, targetEntity = JpaPersonImpl.class)
 	public Person submitter;
 
-	@Column(length=32768) // 2^15
+	@Column(length=255)
 	public String studentFirstName;
-	@Column(length=32768) // 2^15
+	@Column(length=255)
 	public String studentLastName;
-	@Column(length=32768) // 2^15
+	@Column(length=255)
 	public String studentMiddleName;
 	public Integer studentBirthYear;
 	
-	@Column(length=32768) // 2^15
+	@Column(length=326768) // 2^15
 	public String documentTitle;
-	@Column(length=32768) // 2^15
+	@Column(length=326768) // 2^15
 	public String documentAbstract;
-	@Column(length=32768) // 2^15
+	@Column(length=326768) // 2^15
 	public String documentKeywords;
 
 	@OneToOne(targetEntity = JpaEmbargoTypeImpl.class)
@@ -83,16 +83,17 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@OneToMany(targetEntity = JpaCommitteeMemberImpl.class, mappedBy = "submission", cascade = CascadeType.ALL)
 	@OrderBy("displayOrder")
 	public List<CommitteeMember> committeeMembers;
-	@Column(length=32768) // 2^15
+	@Column(length=255)
 	public String committeeContactEmail;
 	
-	@Column(unique = true, length=32768) // 2^15
+	@Column(unique = true, length=255)
 	public String committeeEmailHash;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date committeeApprovalDate;
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date committeeEmbargoApprovalDate;
+	@Column(length=326768) // 2^15
 	public String committeeDisposition;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -102,15 +103,15 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date licenseAgreementDate;
 	
-	@Column(length=32768) // 2^15
+	@Column(length=255)
 	public String degree;
-	@Column(length=32768) // 2^15
+	@Column(length=255)
 	public String department;
-	@Column(length=32768) // 2^15
+	@Column(length=255)
 	public String college;
-	@Column(length=32768) // 2^15
+	@Column(length=255)
 	public String major;
-	@Column(length=32768) // 2^15
+	@Column(length=255)
 	public String documentType;
 
 	public Integer graduationYear;
@@ -129,11 +130,14 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@OneToMany(targetEntity = JpaActionLogImpl.class, mappedBy = "submission")
 	public List<ActionLog> actionLogs;
 	
+	// List of log items pending a save.
 	@Transient
 	protected List<ActionLog> pendingLogs = new ArrayList<ActionLog>();
 	
-	// Insure that the pendingLogs list is valid when a submission is fetched from the repository
-	
+	/**
+	 * Insure that the pendingLogs array is initialized when loading the object
+	 * from the database.
+	 */
 	@PostLoad
 	private void onPostLoad() {
 	     pendingLogs = new ArrayList<ActionLog>();

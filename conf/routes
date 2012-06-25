@@ -27,6 +27,7 @@ POST	/submit/{subId}submitETD				Submit.submitETD
 *       /submit/{subId}/review                  Submit.review
 
 ### List & Log Tabs
+* 		/admin									FilterTab.list
 *	    /admin/list                             FilterTab.list
 *       /admin/log                              FilterTab.log
 *       /admin/{nav}/filter                     FilterTab.modifyFilter
