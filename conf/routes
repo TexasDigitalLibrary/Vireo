@@ -23,13 +23,18 @@ GET     /profile                                Authentication.profile
 *   	/submit/{subId}/docinfo                 Submit.docInfo
 *	    /submit/{subId}/upload                  Submit.fileUpload
 *	    /submit/{subId}/confirm                 Submit.confirmAndSubmit
+POST	/submit/{subId}submitETD				Submit.submitETD
 *       /submit/{subId}/review                  Submit.review
 
-### Reviewer
-*	    /admin/list                             Review.list
-*       /admin/view                             Review.view
-*       /admin/log                              Review.log
-*       /admin/{nav}/filter                     Review.modifyFilter
+### List & Log Tabs
+* 		/admin									FilterTab.list
+*	    /admin/list                             FilterTab.list
+*       /admin/log                              FilterTab.log
+*       /admin/{nav}/filter                     FilterTab.modifyFilter
+*       /admin/{nav}/search                     FilterTab.modifySearch
+
+### View Tab
+*       /admin/view                             ViewTab.view
 
 ### Manager
 *       /admin/settings/user					Config.userPreferences

@@ -26,7 +26,7 @@ public class JpaPreferenceImpl extends JpaAbstractModel<JpaPreferenceImpl> imple
 	@ManyToOne(targetEntity = JpaPersonImpl.class, optional=false)
 	public Person person;
 
-	@Column(nullable = false, length=32768) // 2^15
+	@Column(nullable = false, length=255)
 	public String name;
 
 	@Column(length=32768) // 2^15

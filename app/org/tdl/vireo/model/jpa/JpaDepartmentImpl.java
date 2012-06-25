@@ -23,7 +23,7 @@ public class JpaDepartmentImpl extends JpaAbstractModel<JpaDepartmentImpl> imple
 	@Column(nullable = false)
 	public int displayOrder;
 
-	@Column(nullable = false, unique = true, length=32768) // 2^15
+	@Column(nullable = false, unique = true, length=255) 
 	public String name;
 
 	/**

@@ -39,55 +39,55 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 	 */
 	public static final String HASH_ALGORITHM = "SHA-256";
 	
-	@Column(unique = true,length=32768) // 2^15
+	@Column(unique = true,length=255)
 	public String netid;
 
-	@Column(nullable = false, unique = true, length=32768) // 2^15
+	@Column(nullable = false, unique = true, length=255)
 	public String email;
 	
-	@Column(length=32768) // 2^15
+	@Column(length=255)
 	public String passwordHash;
 	
-	@Column(length=32768) // 2^15
+	@Column(length=255)
 	public String institutionalIdentifier;
 
-	@Column(nullable = false, length=32768) // 2^15
+	@Column(nullable = false, length=255) 
 	public String firstName;
 
-	@Column(nullable = false, length=32768) // 2^15
+	@Column(nullable = false, length=255) 
 	public String lastName;
-	@Column(length=32768) // 2^15
+	@Column(length=255) 
 	public String middleName;
-	@Column(length=32768) // 2^15
+	@Column(length=255) 
 	public String displayName;
 
 	public Integer birthYear;
 
-	@Column(length=32768) // 2^15
+	@Column(length=255) 
 	public String currentPhoneNumber;
-	@Column(length=32768) // 2^15
+	@Column(length=255) 
 	public String currentPostalAddress;
-	@Column(length=32768) // 2^15
+	@Column(length=255) 
 	public String currentEmailAddress;
 	
-	@Column(length=32768) // 2^15
+	@Column(length=255) 
 	public String permanentPhoneNumber;
-	@Column(length=32768) // 2^15
+	@Column(length=255) 
 	public String permanentPostalAddress;
-	@Column(length=32768) // 2^15
+	@Column(length=255) 
 	public String permanentEmailAddress;
 
-	@Column(length=32768) // 2^15
+	@Column(length=255) 
 	public String currentDegree;
-	@Column(length=32768) // 2^15
+	@Column(length=255) 
 	public String currentDepartment;
-	@Column(length=32768) // 2^15
+	@Column(length=255) 
 	public String currentCollege;
-	@Column(length=32768) // 2^15
+	@Column(length=255) 
 	public String currentMajor;
-	@Column(length=32768) // 2^15
+	@Column(length=255) 
 	public Integer currentGraduationYear;
-	@Column(length=32768) // 2^15
+	@Column(length=255) 
 	public Integer currentGraduationMonth;
 
 	@OneToMany(targetEntity=JpaPreferenceImpl.class, mappedBy="person", cascade=CascadeType.ALL)

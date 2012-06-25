@@ -34,7 +34,7 @@
         		});
         		
         		/**
-        		 * Tab Navigation within the @Review.view page.
+        		 * Tab Navigation within the @ViewTab.view page.
         		 *
         		 * This function matches the class of the anchor tag
         		 * with the id of the div with class "edit-box-holder"
@@ -111,9 +111,9 @@
 				
 				<div id="tabs" class="pull-right">
 					<ul class="nav nav-tabs">
-						<li><a id="tab-list" href="@{Review.list}" #{if nav=="list"}class="current"#{/if}>List</a></li>
-						<li><a id="tab-view" href="@{Review.view}" #{if nav=="view"}class="current"#{/if}>View</a></li>
-						<li><a id="tab-log" href="@{Review.log}" #{if nav=="log"}class="current"#{/if}>Log</a></li>
+						<li><a id="tab-list" href="@{FilterTab.list}" #{if nav=="list"}class="current"#{/if}>List</a></li>
+						<li><a id="tab-view" href="@{ViewTab.view}" #{if nav=="view"}class="current"#{/if}>View</a></li>
+						<li><a id="tab-log" href="@{FilterTab.log}" #{if nav=="log"}class="current"#{/if}>Log</a></li>
 						<li><a id="tab-settings" href="@{Config.userPreferences}" #{if nav=="settings"}class="current"#{/if}>Settings</a></li>
 					</ul>					
 				</div>

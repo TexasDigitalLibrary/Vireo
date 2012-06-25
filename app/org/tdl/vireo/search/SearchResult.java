@@ -52,5 +52,57 @@ public interface SearchResult<T extends AbstractModel> {
 	 *         offset or limit in place.
 	 */
 	public int getTotal();
-
+	
+	
+	/**
+	 * Return a list of pagination calculations to aid in displaying the
+	 * pagination links below a table listing.
+	 * 
+	 * The list returned will include an entry for each pagination option with
+	 * the current result in the center of the window. Thus if the window is 10
+	 * entries, then the current page would be #5 with four entry before, and 5
+	 * entries following. However if the active page was such that there could
+	 * not be five entries before then the scale would be increased so that the
+	 * remaining were added to the end.
+	 * 
+	 * @param windowSize
+	 *            How many pagination entries to include surrounding the
+	 *            currently active entry.
+	 * @return A list of pagination entries.
+	 */
+	public List<Pagination> getPagination(int windowSize);
+	
+	
+	/**
+	 * A simple class to contain pagination entries.
+	 */
+	public static class Pagination {
+		
+		// The displayable page number for this entry.
+		public final int pageNumber;
+		
+		// The offset that will generate this page.
+		public final int offset;
+		
+		// Weather this entry is the currently active entry for this search result.
+		public final boolean current;
+		
+		
+		/**
+		 * Construct a new pagination entry.
+		 * 
+		 * @param pageNumber
+		 *            The displayable page number of this entry.
+		 * @param offset
+		 *            The technical offset for this page.
+		 * @param current
+		 *            Weather this is the current entry or not.
+		 */
+		public Pagination(int pageNumber, int offset, boolean current) {
+			this.pageNumber = pageNumber;
+			this.offset = offset;
+			this.current = current;
+		}
+	
+	};
 }
