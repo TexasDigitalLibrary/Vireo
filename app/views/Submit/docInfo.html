@@ -3,27 +3,26 @@
 
 <script type="text/javascript">
     
-    var counter = 0;
-    
-    $(function($) {
-        $("#add").click(function(e) {
+    $(function(){
+        var template = $('#committee-member').clone(),
+        memberCount = 1;
+        
+        var addCommitteeMember = function(e){
             // Prevent button from submitting form
             e.preventDefault();
             
-            // Increment and append counter to name & id attribs
-            counter++;
-            var cln = $('#committee-member').clone(true);
-            cln.id = cln.id + counter;
-            cln.find("[id^='committeeFirstName'], [id^='committeeMiddleInitial'], [id^='committeeLastName'], [id^='chairFlag']").each(function(i, val) {
-                val.id = val.id.match(/^([^0-9]+)[0-9]*$/)[1] + "" + counter;
-            });
-            
-            //Insert at bottom
-            cln.insertAfter('#committee-member');
-            
-            return false;
-        });
-    })
+            memberCount++;
+            var member = template.clone().find(':input').each(function() {
+                var newId = this.id.substring(0, this.id.length-1) + memberCount;
+                $(this).prev().attr('for', newId); // update label for (assume prev sib is label)
+                this.name = this.id = newId; // update id and name (assume the same)
+            }).end() // back to .member
+            .attr('id', 'att' + memberCount) // update member id
+            .prependTo('#committee-members'); // add to container
+        };
+        
+        $('#add').click(addCommitteeMember); // attach event
+});
 </script>
 
 <br />
@@ -102,24 +101,41 @@
 	
 	<fieldset class="form-inline">
 		<legend>Your Committee</legend>
-
-                
-                <table id="committee-member">
-                    <tr>
-                        <td><input type="text" class="input-medium" id="committeeFirstName" name="committeeFirstName"></td>
-                        <td><input type="text" class="span1" id="committeeMiddleInitial" name="committeeMiddleInitial"></td>
-                        <td><input type="text" class="input-medium" id="committeeLastName" name="committeeLastName"></td>
-                        <td><label class="checkbox"><input type="checkbox" id="chairFlag" name="chairFlag" class="inline"> Chair</label></td>
-                    </tr>
-                    <tr>
-                        <td><label class="span2">First Name</label></td>
-                        <td><label class="span1">MI</label></td>
-                        <td><label class="span2">Last Name</label></td>
-                        <td></td>
-                    </tr>
-                </table>
-                
-                
+                <div id="committee-members">
+                    <table id="committee-member">
+                        <tr> 
+                            <td><input type="text" class="input-medium" id="committeeFirstName1" name="committeeFirstName1"></td>
+                            <td><input type="text" class="span1" id="committeeMiddleName1" name="committeeMiddleName1"></td>
+                            <td><input type="text" class="input-medium" id="committeeLastName1" name="committeeLastName1"></td>
+                            <td><label class="checkbox"><input type="checkbox" id="committeeChairFlag1" name="committeeChairFlag1" class="inline"> Chair</label></td>
+                        </tr>
+                        <tr>
+                            <td><label class="span2">First Name</label></td>
+                            <td><label class="span1">MI</label></td>
+                            <td><label class="span2">Last Name</label></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                    
+                    #{list committeeMembers, as: 'member'}
+                        ${count}
+                    
+                        <table id="committee-member">
+                            <tr> 
+                                <td><input type="text" class="input-medium" id="committeeFirstName${member.getDisplayOrder()}" name="committeeFirstName${member.getDisplayOrder()}" value="${member.getFirstName()}"></td>
+                                <td><input type="text" class="span1" id="committeeMiddleName${member.getDisplayOrder()}" name="committeeMiddleName${member.getDisplayOrder()}" value="${member.getMiddleName()}"></td>
+                                <td><input type="text" class="input-medium" id="committeeLastName${member.getDisplayOrder()}" name="committeeLastName${member.getDisplayOrder()}" value="${member.getLastName()}"></td>
+                                <td><label class="checkbox"><input type="checkbox" id="committeeChairFlag${member.getDisplayOrder()}" name="committeeChairFlag${member.getDisplayOrder()}" class="inline" #{if member.isCommitteeChair()}checked="yes"#{/if}> Chair</label></td>
+                            </tr>
+                            <tr>
+                                <td><label class="span2">First Name</label></td>
+                                <td><label class="span1">MI</label></td>
+                                <td><label class="span2">Last Name</label></td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    #{/list}
+                </div>
                 
 		<div class="row center">
                     <input class="btn" id="add" name="add" type="submit" value="Add Additional Member" />
