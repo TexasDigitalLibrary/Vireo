@@ -8,12 +8,20 @@
 			<div class="main-heading">Active Document</div>
 		</div>
 		<div class="box-body">
-			<img class="pull-left" src="../public/images/pdf-logo.gif" />
-			<p>Jungle.pdf<br /><a href="#"><b>Download</b></a></p>
-			<div class="clear"></div>
+			#{if submission.getPrimaryDocument()}
+				<img class="pull-left" src="../public/images/pdf-logo.gif" />
+				<p>${submission.getPrimaryDocument().getName()}<br />
+				<a href="${submission.getPrimaryDocument().getFile()}"><b>Download</b></a></p>
+				<div class="clear"></div>
+			#{/if}#{else}
+				<p>none</p>
+			#{/else}
+			
 			<div class="sub-heading">FILE OPTIONS</div>
 			<ul class="unstyled">
+				#{if submission.getAttachments()}
 				<li>View All Files</li>
+				#{/if}
 				<li>Upload New File</li>
 			</ul>
 		</div>
@@ -29,23 +37,29 @@
 		</div>
 		<div class="box-body">
 			<p>
-			<button class="btn btn-info">Under Review</button>
+			<button class="btn btn-info">${submission.getState().getDisplayName()}</button>
 			</p>
 			<ul class="unstyled">
 				<li>Assigned To:</li>
-				<li><b>Unassigned</b></li>
+				<li><b>
+				#{if submission.getAssignee()}
+					${submission.getAssignee().getDisplayName()}
+				#{/if}#{else}
+					Unassigned
+				#{/else}
+				</b></li>
 			</ul>
 			<ul class="unstyled">
 				<li>Last Action:</li>
-				<li><b>23 May 2012; 12:23 PM</b></li>
+				<li><b>${actionLogs[0].getActionDate()?.format("MM/dd/yyyy hh:mm:ss")}</b></li>
 			</ul>
 			<ul class="unstyled">
 				<li>What:</li>
-				<li><b>Document Information Change</b></li>
+				<li><b>${actionLogs[0].getEntry().substring(0, Math.min(actionLogs[0].getEntry().length(), 50))}#{if actionLogs[0].getEntry().length() > 50}...#{/if}</b></li>
 			</ul>
 			<ul class="unstyled">
 				<li>UMI Release:</li>
-				<li><b>True</b></li>
+				<li><b>${submission.getUMIRelease()}</b></li>
 			</ul>
 		</div>
 		<div class="box-footer">
@@ -73,7 +87,7 @@
 
 <div id="right-column">
 	<div class="inner">
-		<h1>Thornton, Billy (Major - PhD)</h1>
+		<h1>${submission.getStudentLastName()}, ${submission.getStudentFirstName()} (${submission.getMajor()} - ${submission.getDegree()})</h1>
 		
 		<div class="edit-holder pull-left">
 			<ul class="nav nav-tabs">
@@ -301,23 +315,17 @@
 				</tr>
 			</thead>
 			<tbody>
+				#{list items:0..3, as:'value'}
+					#{if actionLogs[value]}
+					<tr>
+						<td>${actionLogs[value].getPerson().getFirstName()} ${actionLogs[value].getPerson().getLastName()}</td>
+						<td>${actionLogs[value].getEntry()}</td>
+						<td>${actionLogs[value].getActionDate()?.format("MM/dd/yyyy hh:mm:ss")}</td>
+					</tr>
+					#{/if}
+				#{/list}				
 				<tr>
-					<td>Gillian Anderson</td>
-					<td>Document type changed 'Dissertation' by Gillian Anderson</td>
-					<td>23 May 2012; 12:23 PM</td>
-				</tr>
-				<tr>
-					<td>Gillian Anderson</td>
-					<td>Submission degree name changed 'PhD' by Gillian Anderson</td>
-					<td>23 May 2012; 12:23 PM</td>
-				</tr>
-				<tr>
-					<td>Gillian Anderson</td>
-					<td>Submission status changed 'Under Review' by Gillian Anderson</td>
-					<td>13 May 2012; 08:23 AM</td>
-				</tr>
-				<tr>
-					<td class="comments"><a href="#"><b>[more...]</b></a></td>
+					<td class="comments"><a href="@{FilterTab.log()}"><b>[more...]</b></a></td>
 					<td class="comments tr" colspan="2"><button class="btn btn-small">Add Comment</button></td>
 				</tr>
 			</tbody>
@@ -334,12 +342,14 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
-					<td>Billy Thornton</td>
-					<td><a href="#">Jungle.pdf</a> (0.57MB)</td>
-					<td>Primary Document</td>
-					<td>08 May 2012; 11:29 AM</td>
-				</tr>
+				#{list items:submission.getAttachments(), as:'attachment'}
+					<tr>
+						<td></td>
+						<td><a href="${attachment.getFile()}">${attachment.getName()}</a> (${attachment.getDisplaySize()})</td>
+						<td>${attachment.getType()}</td>
+						<td></td>
+					</tr>
+				#{/list}				
 				<tr>
 					<td colspan="4" class="comments tr"><button class="btn btn-small">Add File</button></td>
 				</tr>

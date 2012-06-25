@@ -420,7 +420,7 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 
 	@Override
 	public List<ActionLog> findActionLog(Submission submission) {
-		return JpaActionLogImpl.find("submission = ? order by actionDate, id", submission).fetch();
+		return JpaActionLogImpl.find("submission = ? order by actionDate desc, id desc", submission).fetch();
 	}
 
 	@Override

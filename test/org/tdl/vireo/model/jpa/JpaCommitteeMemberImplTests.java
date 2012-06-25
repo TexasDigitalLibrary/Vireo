@@ -146,11 +146,12 @@ public class JpaCommitteeMemberImplTests extends UnitTest {
 		sub.delete();
 		sub = null;
 		
-		assertEquals("Submission created by Mock Administrator",logItr.next().getEntry());
-		assertEquals("Submission status changed to 'Submitted' by Mock Administrator",logItr.next().getEntry());
-		assertEquals("Committee member 'First Middle Last' as chair added by Mock Administrator", logItr.next().getEntry());
-		assertEquals("Committee member 'Changed Middle Last' modified by Mock Administrator", logItr.next().getEntry());
 		assertEquals("Committee member 'Changed Middle Last' removed by Mock Administrator", logItr.next().getEntry());
+		assertEquals("Committee member 'Changed Middle Last' modified by Mock Administrator", logItr.next().getEntry());
+		assertEquals("Committee member 'First Middle Last' as chair added by Mock Administrator", logItr.next().getEntry());
+		assertEquals("Submission status changed to 'Submitted' by Mock Administrator",logItr.next().getEntry());
+		assertEquals("Submission created by Mock Administrator",logItr.next().getEntry());
+		
 		assertFalse(logItr.hasNext());
 	}
 	

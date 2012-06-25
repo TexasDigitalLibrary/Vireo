@@ -57,7 +57,7 @@
 					<tr>
 					    #{list items:columns, as:'column'}
 						#{if column == ID}
-						<td>${sub.getId()}</td>
+						<td><a href="@{ViewTab.view()}?subId=${sub.getId()}">${sub.getId()}</a></td>
 						#{/if}
 						#{elseif column == SUBMITTER}
 						<td>
