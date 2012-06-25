@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.junit.Test;
+import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.NamedSearchFilter;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
@@ -53,6 +54,12 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 		
 		// Login as an administrator
 		LOGIN();
+		
+		
+		Person reviewer = personRepo.findPersonsByRole(RoleType.REVIEWER).get(0);
+		EmbargoType embargo1 = settingRepo.findAllEmbargoTypes().get(0);
+		EmbargoType embargo2 = settingRepo.findAllEmbargoTypes().get(1);
+		
 	
 		// Run for both the list and log tabs
 		String[] possibleNavs = {"list","log"};
@@ -82,7 +89,7 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 			// Add ASSGINEE: unassigned
 			GET(FILTER_URL+"?action=add&type=assignee&value=null");
 			// Add ASSGINEE: Billy
-			GET(FILTER_URL+"?action=add&type=assignee&value=1");
+			GET(FILTER_URL+"?action=add&type=assignee&value="+reviewer.getId());
 			// Add GRADUATION SEMESTER: 2010 May
 			GET(FILTER_URL+"?action=add&type=semester&year=2010&month=4");
 			// Add GRADUATION SEMESTER: 2011 August
@@ -100,9 +107,9 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 			// Add MAJOR: Zoology
 			GET(FILTER_URL+"?action=add&type=major&value=Zoology");
 			// Add EMBARGO: none
-			GET(FILTER_URL+"?action=add&type=embargo&value=1");
+			GET(FILTER_URL+"?action=add&type=embargo&value="+embargo1.getId());
 			// Add EMBARGO: Patent Hold
-			GET(FILTER_URL+"?action=add&type=embargo&value=3");
+			GET(FILTER_URL+"?action=add&type=embargo&value="+embargo2.getId());
 			// Add DEGREE: Doctor of Philosophy
 			GET(FILTER_URL+"?action=add&type=degree&value=Doctor+of+Philosophy");
 			// Add DEGREE: Bachelor of Environmental Design
@@ -116,6 +123,7 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 
 			// Now that we are at the apex, check that everything is still there.
 			response = GET(LIST_URL);
+			
 			assertTrue(getContent(response).contains("filter?action=remove&type=state&value=Submitted"));
 			assertFalse(getContent(response).contains("filter?action=add&type=state&value=Submitted"));
 			assertTrue(getContent(response).contains("filter?action=remove&type=state&value=InProgress"));
@@ -124,8 +132,8 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 			assertFalse(getContent(response).contains("filter?action=add&type=state&value=Published"));
 			assertTrue(getContent(response).contains("filter?action=remove&type=assignee&value=null"));
 			assertFalse(getContent(response).contains("filter?action=add&type=assignee&value=null"));
-			assertTrue(getContent(response).contains("filter?action=remove&type=assignee&value=1"));
-			assertFalse(getContent(response).contains("filter?action=add&type=assignee&value=1"));
+			assertTrue(getContent(response).contains("filter?action=remove&type=assignee&value="+reviewer.getId()));
+			assertFalse(getContent(response).contains("filter?action=add&type=assignee&value="+reviewer.getId()));
 			assertTrue(getContent(response).contains("filter?action=remove&type=semester&year=2010&month=4"));
 			assertFalse(getContent(response).contains("filter?action=add&type=semester&year=2010&month=4"));
 			assertTrue(getContent(response).contains("filter?action=remove&type=semester&year=2011&month=7"));
@@ -142,10 +150,10 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 			assertFalse(getContent(response).contains("filter?action=add&type=major&value=Accounting"));
 			assertTrue(getContent(response).contains("filter?action=remove&type=major&value=Zoology"));
 			assertFalse(getContent(response).contains("filter?action=add&type=major&value=Zoology"));		
-			assertTrue(getContent(response).contains("filter?action=remove&type=embargo&value=1"));
-			assertFalse(getContent(response).contains("filter?action=add&type=embargo&value=1"));		
-			assertTrue(getContent(response).contains("filter?action=remove&type=embargo&value=3"));
-			assertFalse(getContent(response).contains("filter?action=add&type=embargo&value=3"));
+			assertTrue(getContent(response).contains("filter?action=remove&type=embargo&value="+embargo1.getId()));
+			assertFalse(getContent(response).contains("filter?action=add&type=embargo&value="+embargo1.getId()));		
+			assertTrue(getContent(response).contains("filter?action=remove&type=embargo&value="+embargo2.getId()));
+			assertFalse(getContent(response).contains("filter?action=add&type=embargo&value="+embargo2.getId()));
 			assertTrue(getContent(response).contains("filter?action=remove&type=degree&value=Doctor+of+Philosophy"));
 			assertFalse(getContent(response).contains("filter?action=add&type=degree&value=Doctor+of+Philosophy"));
 			assertTrue(getContent(response).contains("filter?action=remove&type=degree&value=Bachelor+of+Environmental+Design"));
@@ -166,7 +174,7 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 			// Remove ASSGINEE: unassigned
 			GET(FILTER_URL+"?action=remove&type=assignee&value=null");
 			// Remove ASSGINEE: Billy
-			GET(FILTER_URL+"?action=remove&type=assignee&value=1");
+			GET(FILTER_URL+"?action=remove&type=assignee&value="+reviewer.getId());
 			// Remove GRADUATION SEMESTER: 2010 May
 			GET(FILTER_URL+"?action=remove&type=semester&year=2010&month=4");
 			// Remove GRADUATION SEMESTER: 2011 August
@@ -184,9 +192,9 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 			// Remove MAJOR: Zoology
 			GET(FILTER_URL+"?action=remove&type=major&value=Zoology");
 			// Remove EMBARGO: none
-			GET(FILTER_URL+"?action=remove&type=embargo&value=1");	
+			GET(FILTER_URL+"?action=remove&type=embargo&value="+embargo1.getId());	
 			// Remove EMBARGO: Patent Hold
-			GET(FILTER_URL+"?action=remove&type=embargo&value=3");
+			GET(FILTER_URL+"?action=remove&type=embargo&value="+embargo2.getId());
 			// Remove DEGREE: Doctor of Philosophy
 			GET(FILTER_URL+"?action=remove&type=degree&value=Doctor+of+Philosophy");
 			// Remove DEGREE: Bachelor of Environmental Design
@@ -340,7 +348,7 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 	 * of deleting the filter.
 	 */
 	@Test
-	public void testSaveClearAndRemoveFilter() {
+	public void testSaveClearAndRemoveFilter() throws InterruptedException {
 		
 		// Login as an administrator
 		LOGIN();
@@ -382,6 +390,9 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 			Long filterId = Long.valueOf(matcher.group(1));
 			
 			// Check that the filter was saved to the database.
+			JPA.em().getTransaction().commit();
+			JPA.em().clear();
+			JPA.em().getTransaction().begin();
 			NamedSearchFilter filter = subRepo.findSearchFilter(filterId);
 			
 			assertEquals("My Test Filter", filter.getName());
@@ -416,10 +427,12 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 			assertTrue(getContent(response).contains("filter?action=remove&type=state&value=Submitted"));
 	
 			// Verify that the filter was removed in the database
-			filter = subRepo.findSearchFilter(filterId);
+			JPA.em().getTransaction().commit();
+			JPA.em().clear();
+			JPA.em().getTransaction().begin();
+			filter =  subRepo.findSearchFilter(filterId);
 			
 			assertNull(filter);
-			JPA.em().clear();
 		}
 	}
 	

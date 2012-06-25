@@ -222,15 +222,6 @@ public class JpaCustomActionDefinitionImplTest extends UnitTest {
 	 */
 	@Test
 	public void testPersistance() {
-		// Commit and reopen a new transaction because some of the other tests
-		// may have caused exceptions which set the transaction to be rolled
-		// back.
-		if (JPA.em().getTransaction().getRollbackOnly())
-			JPA.em().getTransaction().rollback();
-		else
-			JPA.em().getTransaction().commit();
-		JPA.em().clear();
-		JPA.em().getTransaction().begin();
 		
 		CustomActionDefinition def = settingRepo.createCustomActionDefinition("label").save();
 		

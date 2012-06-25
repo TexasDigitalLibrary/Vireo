@@ -57,10 +57,15 @@
 					<tr>
 					    #{list items:columns, as:'column'}
 						#{if column == ID}
-						<td>${sub.getId()}</td>
+						<td><a href="@{ViewTab.view()}?subId=${sub.getId()}">${sub.getId()}</a></td>
 						#{/if}
 						#{elseif column == SUBMITTER}
-						<td>${sub.getStudentLastName()}, ${sub.getStudentFirstName()} ${sub.getStudentMiddleName()}</td>
+						<td>
+						  #{if sub.getStudentLastName() == null}
+						  Unknown
+						  #{/if}
+						  #{else}${sub.getStudentLastName()}#{/else}#{if sub.getStudentFirstName() != null || sub.getStudentLastName() != null}, ${sub.getStudentFirstName()} ${sub.getStudentMiddleName()}#{/if}
+						</td>
 						#{/elseif}
 						#{elseif column == STATE}
 						<td>${sub.getState().getDisplayName()}</td>
@@ -72,7 +77,11 @@
 						<td>${sub.getDocumentTitle()}</td>
 						#{/elseif}
 						#{elseif column == DOCUMENT_ABSTRACT}
-                        <td>${sub.getDocumentAbstract()?.substring(0,25)}...</td>
+                        <td>
+                            #{if sub.getDocumentAbstract() != null}                             
+                                	${sub.getDocumentAbstract().size() < 25 ? sub.getDocumentAbstract() : sub.getDocumentAbstract()?.substring(0,25) + "..."}                               
+                            #{/if}
+                        </td>
 						#{/elseif}
 						#{elseif column == DOCUMENT_KEYWORDS}
 						<td>${sub.getDocumentKeywords()}</td>
@@ -81,7 +90,11 @@
 						<td>${sub.getPrimaryDocument()?.getName()}</td>
 						#{/elseif}
 						#{elseif column == GRADUATION_DATE}
-						%{ String monthName = new java.text.DateFormatSymbols().getMonths()[sub.getGraduationMonth()]; }%
+						%{ 
+						String monthName = null;
+						if (sub.getGraduationMonth() != null && sub.getGraduationMonth() >= 0 && sub.getGraduationMonth() <= 11)
+						  monthName = new java.text.DateFormatSymbols().getMonths()[sub.getGraduationMonth()]; 
+						}%
                         <td>${sub.getGraduationYear()} ${monthName}</td>
 						#{/elseif}
 						#{elseif column == SUBMISSION_DATE}
@@ -116,7 +129,11 @@
 						<td>${sub.getCommitteeContactEmail()}</td>
 						#{/elseif}
 						#{elseif column == COMMITTEE_DISPOSITION}
-						<td>${sub.getCommitteeDisposition()}</td>
+						<td>
+						    #{if sub.getCommitteeDisposition() != null}                             
+                                    ${sub.getCommitteeDisposition().size() < 25 ? sub.getCommitteeDisposition() : sub.getCommitteeDisposition()?.substring(0,25) + "..."}                               
+                            #{/if}
+						</td>
 						#{/elseif}
 						#{elseif column == DEGREE}
 						<td>${sub.getDegree()}</td>

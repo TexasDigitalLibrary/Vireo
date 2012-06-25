@@ -27,6 +27,7 @@ POST	/submit/{subId}submitETD				Submit.submitETD
 *       /submit/{subId}/review                  Submit.review
 
 ### List & Log Tabs
+* 		/admin									FilterTab.list
 *	    /admin/list                             FilterTab.list
 *       /admin/log                              FilterTab.log
 *       /admin/{nav}/filter                     FilterTab.modifyFilter
@@ -34,6 +35,7 @@ POST	/submit/{subId}submitETD				Submit.submitETD
 
 ### View Tab
 *       /admin/view                             ViewTab.view
+GET		/admin/view/{subId}						ViewTab.view
 
 ### Manager
 *       /admin/settings/user					Config.userPreferences

@@ -30,13 +30,13 @@ public class JpaCommitteeMemberImpl extends JpaAbstractModel<JpaCommitteeMemberI
 	@ManyToOne(targetEntity=JpaSubmissionImpl.class, optional=false)
 	public Submission submission;
 
-	@Column(length=32768) // 2^15
+	@Column(length=255)
 	public String firstName;
 	
-	@Column(length=32768) // 2^15
+	@Column(length=255)
 	public String lastName;
 	
-	@Column(length=32768) // 2^15
+	@Column(length=255)
 	public String middleName;
 	public boolean chair;
 

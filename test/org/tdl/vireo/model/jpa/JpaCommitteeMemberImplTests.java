@@ -146,11 +146,12 @@ public class JpaCommitteeMemberImplTests extends UnitTest {
 		sub.delete();
 		sub = null;
 		
-		assertEquals("Submission created by Mock Administrator",logItr.next().getEntry());
-		assertEquals("Submission status changed to 'Submitted' by Mock Administrator",logItr.next().getEntry());
-		assertEquals("Committee member 'First Middle Last' as chair added by Mock Administrator", logItr.next().getEntry());
-		assertEquals("Committee member 'Changed Middle Last' modified by Mock Administrator", logItr.next().getEntry());
 		assertEquals("Committee member 'Changed Middle Last' removed by Mock Administrator", logItr.next().getEntry());
+		assertEquals("Committee member 'Changed Middle Last' modified by Mock Administrator", logItr.next().getEntry());
+		assertEquals("Committee member 'First Middle Last' as chair added by Mock Administrator", logItr.next().getEntry());
+		assertEquals("Submission status changed to 'Submitted' by Mock Administrator",logItr.next().getEntry());
+		assertEquals("Submission created by Mock Administrator",logItr.next().getEntry());
+		
 		assertFalse(logItr.hasNext());
 	}
 	
@@ -159,15 +160,6 @@ public class JpaCommitteeMemberImplTests extends UnitTest {
 	 */
 	@Test
 	public void testPersistence() {
-		// Commit and reopen a new transaction because some of the other tests
-		// may have caused exceptions which set the transaction to be rolled
-		// back.
-		if (JPA.em().getTransaction().getRollbackOnly())
-			JPA.em().getTransaction().rollback();
-		else
-			JPA.em().getTransaction().commit();
-		JPA.em().clear();
-		JPA.em().getTransaction().begin();
 		
 		CommitteeMember member = sub.addCommitteeMember("first", "last", "middle", false).save();
 		

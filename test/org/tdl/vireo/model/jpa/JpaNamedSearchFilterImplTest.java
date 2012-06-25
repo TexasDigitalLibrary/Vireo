@@ -675,8 +675,8 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		sub2.setAssignee(person);
 		sub2.setEmbargoType(e2);
 		sub2.setDocumentType("AAAA");
-		sub2.addAttachment(file1, AttachmentType.PRIMARY);
-		sub2.addAttachment(file2, AttachmentType.SUPPLEMENTAL);
+		sub2.addAttachment(file2, AttachmentType.PRIMARY);
+		sub2.addAttachment(file1, AttachmentType.SUPPLEMENTAL);
 		sub2.addCommitteeMember("AAAA", "AAAA", "a", false);
 		sub2.setSubmissionDate(new Date(2005,5,1));
 		sub2.setApprovalDate(new Date(2005,5,1));
@@ -730,9 +730,9 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		
 		// Primary Attachment
 		submissions = subRepo.filterSearchSubmissions(filter, SearchOrder.PRIMARY_DOCUMENT, SearchDirection.ASCENDING, 0, 20).getResults();
-		// Arg nulls first depending upon database implementation.
 		assertTrue(submissions.contains(sub1));
 		assertTrue(submissions.contains(sub2));
+		// Arg nulls first depending upon database implementation.
 		assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));
 		
 		// Committee Members

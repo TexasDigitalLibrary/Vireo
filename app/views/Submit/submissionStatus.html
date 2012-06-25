@@ -1,0 +1,51 @@
+#{extends 'main.html' /}
+#{set title:'Submission Status' /}
+
+<br />
+<div class="row pageHead">
+    <h3 class="span11">Submission Status</h3>
+</div>
+<br />
+
+#{ifErrors}
+<ul class="red">
+    #{errors}
+        <li>${error}</li>
+    #{/errors}
+</ul>
+#{/ifErrors}
+
+<div class="row">
+    <table>
+        <tbody><tr class="table-header-row">
+            <th class="table-header-cell odd">Title</th>
+            <th class="table-header-cell even">Manuscript</th>
+            <th class="table-header-cell odd">Status</th>
+            <th class="table-header-cell even">Date Submitted</th>
+            <th class="table-header-cell odd">Assigned To</th>
+            <th class="table-header-cell even">Actions</th>
+        </tr>
+        #{list items:submissionList, as:"submission"}
+        <tr class="table-row even">
+            <td class="table-cell odd">${documentTitle}</td>
+            <td class="table-cell even">${primaryDocumentName}<a href="@{primaryDocumentFileURI}" class="">[view]</a>
+            </td>
+            <td class="table-cell odd">${stateDisplayName}</td>
+            <td class="table-cell even">${dateString}</td> // 23 Jun 2012; 9:21 PM
+            <td class="table-cell odd">${assigneeDisplayName}</td>
+            <td class="table-cell even">
+                #{if editableByStudent}
+                    <a href="@{Submit.review(id)}" class="actions">View</a>
+                #{/if}
+                #{else}
+                #{/else}
+            </td>
+        </tr>
+        #{/list}
+
+        </tbody></table>
+</div>
+
+<div class="form-actions row center">
+    <a href="@{Submit.verifyPersonalInformation}" class="btn btn-primary">Start your submission</a>
+</div>
