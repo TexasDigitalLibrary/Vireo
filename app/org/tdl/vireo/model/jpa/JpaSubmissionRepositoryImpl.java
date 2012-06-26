@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -56,17 +57,17 @@ import play.db.jpa.JPA;
  */
 public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 	
+	// How many objects to load for each iterator's batch operaton.
+	public static final int ITERATOR_BATCH_SIZE = 10;
+	
 	// Define sorting syntax for individual fields.
+	@Deprecated
 	public static final String[] SUBMISSION_ORDER_BY_COLUMNS = new String[SearchOrder.values().length];
+	@Deprecated
 	public static final String[] ACTION_LOG_ORDER_BY_COLUMNS = new String[SearchOrder.values().length];
 
 	{
 		// Static block to define sorting columns.
-		// TODO: Pull in the following tables to support sorting by others types:
-		// 1) Attachments
-		// 2) Committee Members
-		// 3) Custom Actions
-		// 4) Action Log Table for last event time.
 		
 		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.ID.ordinal()] = "sub.id %";
 		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.SUBMITTER.ordinal()] = "submitter.lastName %, submitter.firstName %, sub.id %";
@@ -148,6 +149,17 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 	}
 	
 	@Override
+	public Iterator<Submission> findAllSubmissions() {
+		return new JpaIterator() {
+			@Override
+			protected List loadNextBatch(int offset) {
+				return JpaSubmissionImpl.all().from(offset).fetch(10);
+			}
+		};
+	}
+	
+	@Override
+	@Deprecated
 	public SearchResult<Submission> filterSearchSubmissions(SearchFilter filter,
 			SearchOrder orderBy, SearchDirection direction, int offset,
 			int limit) {
@@ -422,8 +434,19 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 	public List<ActionLog> findActionLog(Submission submission) {
 		return JpaActionLogImpl.find("submission = ? order by actionDate desc, id desc", submission).fetch();
 	}
+	
+	@Override
+	public Iterator<ActionLog> findAllActionLogs() {
+		return new JpaIterator() {
+			@Override
+			protected List loadNextBatch(int offset) {
+				return JpaActionLogImpl.all().from(offset).fetch(10);
+			}
+		};
+	}
 
 	@Override
+	@Deprecated
 	public SearchResult<ActionLog> filterSearchActionLogs(SearchFilter filter,
 			SearchOrder orderBy, SearchDirection direction, int offset,
 			int limit) {
@@ -647,7 +670,7 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 	}
 	
 	
-	
+	@Deprecated
 	public static class JpaSearchResultsImpl<T extends AbstractModel> implements SearchResult<T> {
 
 		public final SearchFilter filter;
@@ -744,6 +767,7 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 	 * together. The combined clause will be constructed using a passed
 	 * StringBuilder so that we can efficiently build large queries.
 	 */
+	@Deprecated
 	public static interface Clause {
 		public StringBuilder buildClause(StringBuilder query);
 	}
@@ -752,6 +776,7 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 	 * The implementation of the Clause interface for just a single statement. A
 	 * statement would be something like "property = :value".
 	 */
+	@Deprecated
 	public static class Statement implements Clause {
 		final private String statement;
 		public Statement(final String statement) {
@@ -771,6 +796,7 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 	 * by the implementing concrete class.
 	 * 
 	 */
+	@Deprecated
 	public abstract static class ClauseList extends ArrayList<Clause> implements Clause {
 		
 		// The logical operator will glue together the individual clauses in the list.
@@ -838,6 +864,7 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 	/**
 	 * Concrete implementation of the ClauseList for clauses that should be "OR"ed together.
 	 */
+	@Deprecated
 	public static class ORList extends ClauseList {
 		
 		public ORList() {
@@ -850,11 +877,103 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 	/**
 	 * Concrete implementation of the ClauseList for clauses that should be "AND"ed together.
 	 */
+	@Deprecated
 	public static class ANDList extends ClauseList {
 		
 		public ANDList() {
 			super("AND");
 		}
+	}
+	
+	
+	
+	
+	/**
+	 * Inner class to handle iterating over submissions or action logs. This
+	 * class solves the problem of needing to loop over all objects which may be
+	 * too huge to load into memory at one time. The iterator addresses the
+	 * problem by loading the objects in batches, so only a few objects are in
+	 * memory at any single time.
+	 * 
+	 * @param <T>
+	 *            The type of object to iterate over.
+	 */
+	public static abstract class JpaIterator<T extends AbstractModel> implements Iterator<T> {
+
+		// This is the offset into the global list of objects.
+		public int offset = 0;
+
+		// This is the pointer to the current object in the list of retrieved
+		// objects.
+		public int currentPointer = 0;
+
+		// This is the current batch of retrieved objects.
+		public List<T> retrieved = new ArrayList<T>();
+
+		/** Construct a new iterator **/
+		protected JpaIterator() {
+			loadNextBatch();
+		}
+		
+		/**
+		 * Load the next batch of objects from the database.
+		 * 
+		 * @param offset
+		 *            How many objects have previously been loaded.
+		 * @return A list of objects returned from the database, or an empty
+		 *         list if no more objects exist.
+		 */
+		protected abstract List<T> loadNextBatch(int offset);
+		
+		
+		/**
+		 * Load the next batch, remove the current batch, obtain a new list and
+		 * update the internal pointers.
+		 */
+		protected void loadNextBatch() {
+			
+			for (T model : retrieved)
+				JPA.em().detach(model);
+			
+			retrieved = loadNextBatch(offset);
+			offset = offset + retrieved.size();
+			currentPointer = 0;
+		}
+		
+		@Override
+		public boolean hasNext() {
+			
+			if (currentPointer >= retrieved.size()) {
+				loadNextBatch();
+			}
+			
+			if (currentPointer < retrieved.size()) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		@Override
+		public T next() {
+			
+			if (currentPointer >= retrieved.size()) {
+				loadNextBatch();
+			}
+			
+			if (currentPointer < retrieved.size()) {
+				// We have it loaded, so return it.
+				return retrieved.get(currentPointer++); 
+			} else {
+				return null;
+			}
+		}
+
+		@Override
+		public void remove() {
+			retrieved.get(currentPointer).delete();
+		}
+		
 	}
 
 }

@@ -1,5 +1,6 @@
 package org.tdl.vireo.model;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -60,6 +61,15 @@ public interface SubmissionRepository {
 	 *         there are none.
 	 */
 	public List<Submission> findSubmission(Person Submitter);
+	
+	/**
+	 * Find all submissions in Vireo. Since this can be potentially huge, we
+	 * return an iterator. After each object is cycled by the iterator it may
+	 * potentially be removed from the current database connection.
+	 * 
+	 * @return An iterator over all submissions.
+	 */
+	public Iterator<Submission> findAllSubmissions();
 
 	/**
 	 * Perform a filter search of submissions returning the result.
@@ -148,6 +158,15 @@ public interface SubmissionRepository {
 	 */
 	public List<ActionLog> findActionLog(Submission submission);
 
+	/**
+	 * Find all Action Logs in Vireo. Since this can be potentially huge, we
+	 * return an iterator. After each object is cycled by the iterator it may
+	 * potentially be removed from the current database connection.
+	 * 
+	 * @return An iterator over all action logs.
+	 */
+	public Iterator<ActionLog> findAllActionLogs();
+	
 	/**
 	 * Perform a filter search of ActionLogs returning the result.
 	 * 

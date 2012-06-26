@@ -1,5 +1,6 @@
 package org.tdl.vireo.model.jpa;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
@@ -153,6 +154,34 @@ public class JpaSubmissionImplTests extends UnitTest {
 		assertEquals(sub.getId(),retrieved.getId());
 		
 		retrieved.delete();
+	}
+	
+	/**
+	 * Test finding all submissions using an iterator.
+	 */
+	@Test
+	public void findAllSubmissions() {
+		
+		List<Submission> subs = new ArrayList<Submission>();
+		for (int i = 0; i < JpaSubmissionRepositoryImpl.ITERATOR_BATCH_SIZE; i++) {
+			subs.add((Submission) subRepo.createSubmission(person).save());
+		}
+		
+		Iterator<Submission> itr = subRepo.findAllSubmissions();
+		
+		int count = 0;
+		while(itr.hasNext()) {
+			Submission sub = itr.next();
+			
+			assertNotNull(sub);
+			count++;
+		}
+		
+		assertTrue(subs.size() < count);
+		
+		for (Submission sub : subs) {
+			subRepo.findSubmission(sub.getId()).delete();
+		}
 	}
 	
 	/**
