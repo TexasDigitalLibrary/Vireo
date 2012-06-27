@@ -159,6 +159,11 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 	}
 	
 	@Override
+	public long findSubmissionsTotal() {
+		return JpaSubmissionImpl.count();
+	}
+	
+	@Override
 	@Deprecated
 	public SearchResult<Submission> filterSearchSubmissions(SearchFilter filter,
 			SearchOrder orderBy, SearchDirection direction, int offset,
@@ -443,6 +448,11 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 				return JpaActionLogImpl.all().from(offset).fetch(10);
 			}
 		};
+	}
+	
+	@Override
+	public long findActionLogsTotal() {
+		return JpaActionLogImpl.count();
 	}
 
 	@Override

@@ -160,7 +160,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 	 * Test finding all submissions using an iterator.
 	 */
 	@Test
-	public void findAllSubmissions() {
+	public void testfindAllSubmissions() {
 		
 		List<Submission> subs = new ArrayList<Submission>();
 		for (int i = 0; i < JpaSubmissionRepositoryImpl.ITERATOR_BATCH_SIZE; i++) {
@@ -178,6 +178,26 @@ public class JpaSubmissionImplTests extends UnitTest {
 		}
 		
 		assertTrue(subs.size() < count);
+		
+		for (Submission sub : subs) {
+			subRepo.findSubmission(sub.getId()).delete();
+		}
+	}
+	
+	/**
+	 * Test find total # of submissions 
+	 */
+	@Test
+	public void testFindSubmissionsTotal() {
+		
+		long previousTotal = subRepo.findSubmissionsTotal();
+		
+		List<Submission> subs = new ArrayList<Submission>();
+		for (int i = 0; i < 10; i++) {
+			subs.add((Submission) subRepo.createSubmission(person).save());
+		}
+		
+		assertEquals(previousTotal+10, subRepo.findSubmissionsTotal());
 		
 		for (Submission sub : subs) {
 			subRepo.findSubmission(sub.getId()).delete();

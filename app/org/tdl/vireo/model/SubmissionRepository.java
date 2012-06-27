@@ -70,6 +70,14 @@ public interface SubmissionRepository {
 	 * @return An iterator over all submissions.
 	 */
 	public Iterator<Submission> findAllSubmissions();
+	
+	/**
+	 * Find how many submissions are stored in the persistent repository.
+	 * 
+	 * @return the number total number of submissions stored in the persistent
+	 *         repository.
+	 */
+	public long findSubmissionsTotal();
 
 	/**
 	 * Perform a filter search of submissions returning the result.
@@ -166,6 +174,15 @@ public interface SubmissionRepository {
 	 * @return An iterator over all action logs.
 	 */
 	public Iterator<ActionLog> findAllActionLogs();
+	
+	/**
+	 * Find how many action logs are stored in the persistent repository.
+	 * 
+	 * @return the number total number of action logs stored in the persistent
+	 *         repository.
+	 */
+	public long findActionLogsTotal();
+
 	
 	/**
 	 * Perform a filter search of ActionLogs returning the result.
