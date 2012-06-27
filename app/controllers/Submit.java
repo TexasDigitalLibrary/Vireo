@@ -490,22 +490,7 @@ public class Submit extends AbstractVireoController {
             // If the upload manuscript button is pressed - then add the manuscript as an attachment
             
             if (params.get("uploadPrimary") != null) {
-
-                File primaryDocument = params.get("primaryDocument",File.class);
-
-                if (primaryDocument == null)
-                    Logger.info("Doc is null");
-                else
-                    Logger.info("Doc: " + primaryDocument.getClass().getName());
-
-                try {
-                    sub.addAttachment(primaryDocument, AttachmentType.PRIMARY);
-                    sub.save();
-                } catch (IOException e) {
-                    validation.addError("primaryDocument", "Error uploading primary document.");
-                } catch (IllegalArgumentException e) {
-                    validation.addError("primaryDocument","Error uploading primary document.");
-                }
+            	uploadPrimaryDocument(sub);
             }
 
             // If the upload supplementary button is pressed - then add the manuscript as an attachment
@@ -529,11 +514,14 @@ public class Submit extends AbstractVireoController {
                 }
             }
 
-            // Submit was clicked
+            // 'Save And Continue' button was clicked
             
             if (params.get("submit-next") != null) {
 
-                // No files were uploaded
+            	// Go see if we have a document we can upload
+            	
+                if(params.get("primaryDocument",File.class) != null)
+                	uploadPrimaryDocument(sub);
             	
                 if (sub.getPrimaryDocument() == null)
                     validation.addError("primaryDocument", "A manuscript file must be uploaded.");
@@ -543,9 +531,7 @@ public class Submit extends AbstractVireoController {
         		for (Attachment attachment : sub.getAttachments()) {
         			Logger.info("Attachment for Submission: " + attachment.getName());
         		}
-        		
-        		
-        		// TODO -- Handle case where a doc has been uploade but not added
+        		 		
         		// TODO -- Check file type ??
         		
                 // Finally, if all is well, we can move on
@@ -560,6 +546,34 @@ public class Submit extends AbstractVireoController {
 
             render(subId, primaryAttachment, supplementalAttachments);
         }
+	}
+	
+	// Private method to upload a primary document.
+	
+	private static void uploadPrimaryDocument(Submission sub) {
+		
+        File primaryDocument = params.get("primaryDocument",File.class);
+
+        if (primaryDocument == null)
+            Logger.info("Doc is null");
+        else
+            Logger.info("Doc: " + primaryDocument.getName());
+
+        if (primaryDocument != null) {
+        	if (!primaryDocument.getName().toLowerCase().endsWith(".pdf")) {
+        		validation.addError("primaryDocument", "Primary document must be a PDF file.");
+        		return;
+        	}
+        	
+        }
+        try {
+            sub.addAttachment(primaryDocument, AttachmentType.PRIMARY);
+            sub.save();
+        } catch (IOException e) {
+            validation.addError("primaryDocument", "Error uploading primary document.");
+        } catch (IllegalArgumentException e) {
+            validation.addError("primaryDocument","Error uploading primary document.");
+        }		
 	}
 
 	
