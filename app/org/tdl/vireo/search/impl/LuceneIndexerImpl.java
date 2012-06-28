@@ -20,6 +20,7 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.NumericField;
 import org.apache.lucene.index.CorruptIndexException;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
@@ -76,8 +77,11 @@ import play.modules.spring.Spring;
  * state: The bean name of the current state. single token not analyzed (search
  * and sort)
  * 
- * assigned: search index for those who are assigned. The field is composed of
- * either the id of the assigned person, or 0 for unassigned submissions.
+ * searchAssigned: search index for those who are assigned. The field is
+ * composed of either the id of the assigned person, or 0 for unassigned
+ * submissions.
+ * 
+ * sortAssigned: The full name of the person assigned
  * 
  * graduationSemester: The grad year & month converted into a date object and
  * stored as milliseconds.
@@ -95,6 +99,9 @@ import play.modules.spring.Spring;
  * documentType: The document type's name, single token not analyzed (search and
  * sort)
  * 
+ * umiRelease: Either "yes", "no", or "" for the three possible states (search
+ * and sort)
+ * 
  * submissionDate: The submission date for the submission as a numeric date
  * stored as milliseconds.
  * 
@@ -103,6 +110,8 @@ import play.modules.spring.Spring;
  * ONLY USED FOR SORTING:
  * 
  * studentName: The student name for sorting.
+ * 
+ * documentTitle: The document's title for sorting.
  * 
  * documentAbstract: The document's abstract for sorting.
  * 
@@ -125,13 +134,10 @@ import play.modules.spring.Spring;
  * 
  * committeeContactEmail: The committee email for sorting
  * 
- * umiRelease: Either "yes", "no", or "none" for the three possible states for
- * sorting.
- * 
  * customActions: The count of custom actions that have been checked off on the
  * submission for sorting.
  * 
- * lastEvent: The textual entry of the last log event for sorting.
+ * lastEventEntry: The textual entry of the last log event for sorting.
  * 
  * lastEventTime: The date of the last entry for sorting.
  * 
@@ -152,6 +158,7 @@ public class LuceneIndexerImpl implements Indexer {
 	
 	// Static Lucene configuration
 	public final Directory index;
+	public final IndexReader reader;
 	public final Version version = Version.LUCENE_36;
 	public final Analyzer standardAnalyzer = new StandardAnalyzer(version);
 	
@@ -163,6 +170,7 @@ public class LuceneIndexerImpl implements Indexer {
 	 */
 	public LuceneIndexerImpl() throws IOException {
 		index = FSDirectory.open(new File(Play.configuration.getProperty("index.path","data/indexes")));
+		reader = IndexReader.open(index);
 	}
 	
 	/**
@@ -513,9 +521,10 @@ public class LuceneIndexerImpl implements Indexer {
 				studentName += sub.getStudentMiddleName();
 			searchText.append(studentName).append(" ");
 			
+			String documentTitle = sub.getDocumentTitle();
 			String documentAbstract = sub.getDocumentAbstract();
 			String documentKeywords = sub.getDocumentKeywords();
-			searchText.append(documentAbstract).append(" ").append(documentKeywords).append(" ");
+			searchText.append(documentTitle).append(" ").append(documentAbstract).append(" ").append(documentKeywords).append(" ");
 			
 			String primaryDocument = null;
 			if (sub.getPrimaryDocument() != null) {
@@ -553,14 +562,14 @@ public class LuceneIndexerImpl implements Indexer {
 					customActions++;
 			}
 			
-			String lastEvent = null;
+			String lastEventEntry = null;
 			Date lastEventTime = null;
 			
 			List<ActionLog> logs = subRepo.findActionLog(sub);
 			if (logs.size() > 0) {
-				lastEvent = logs.get(0).getEntry();
+				lastEventEntry = logs.get(0).getEntry();
 				lastEventTime = logs.get(0).getActionDate();
-				searchText.append(lastEvent);
+				searchText.append(lastEventEntry);
 			}
 			
 			Document doc = new Document();
@@ -603,6 +612,9 @@ public class LuceneIndexerImpl implements Indexer {
 			if (studentName != null)
 			doc.add(new Field("studentName",studentName, Field.Store.NO,Index.NOT_ANALYZED));
 			
+			if (documentTitle != null)
+			doc.add(new Field("documentTitle",documentTitle, Field.Store.NO,Index.NOT_ANALYZED));
+			
 			if (documentAbstract != null)
 			doc.add(new Field("documentAbstract",documentAbstract, Field.Store.NO,Index.NOT_ANALYZED));
 			
@@ -635,8 +647,8 @@ public class LuceneIndexerImpl implements Indexer {
 			
 			doc.add(new NumericField("customActions",Field.Store.NO,true).setIntValue(customActions));
 			
-			if (lastEvent != null)
-			doc.add(new Field("lastEvent",lastEvent,Field.Store.NO,Index.NOT_ANALYZED));
+			if (lastEventEntry != null)
+			doc.add(new Field("lastEventEntry",lastEventEntry,Field.Store.NO,Index.NOT_ANALYZED));
 			
 			if (lastEventTime != null)
 			doc.add(new NumericField("lastEventTime",Field.Store.NO,true).setLongValue(lastEventTime.getTime()));
@@ -653,13 +665,13 @@ public class LuceneIndexerImpl implements Indexer {
 					logSearchAssigned = log.getPerson().getId();
 					logSortAssigned = log.getPerson().getFullName();
 				}
-				Date logActionDate = log.getActionDate();
+				Date logTime = log.getActionDate();
 				
 				// The new special things for action logs.
 				doc = new Document();
 				doc.add(new NumericField("subId",Field.Store.YES,true).setLongValue(sub.getId()));
 				doc.add(new NumericField("logId",Field.Store.YES,true).setLongValue(log.getId()));
-				doc.add(new Field("type","log",Field.Store.YES,Index.NOT_ANALYZED));
+				doc.add(new Field("type","actionlog",Field.Store.YES,Index.NOT_ANALYZED));
 				
 				if (logEntry != null)
 				doc.add(new Field("searchText",logEntry,Field.Store.NO,Index.ANALYZED_NO_NORMS));
@@ -673,10 +685,10 @@ public class LuceneIndexerImpl implements Indexer {
 				doc.add(new Field("sortAssigned",logSortAssigned,Field.Store.NO,Index.NOT_ANALYZED));
 				
 				if (logEntry != null)
-				doc.add(new Field("lastEvent",logEntry,Field.Store.NO,Index.NOT_ANALYZED));
+				doc.add(new Field("lastEventEntry",logEntry,Field.Store.NO,Index.NOT_ANALYZED));
 				
-				if (logActionDate != null)
-				doc.add(new NumericField("lastEventTime",Field.Store.NO,true).setLongValue(logActionDate.getTime()));
+				if (logTime != null)
+				doc.add(new NumericField("lastEventTime",Field.Store.NO,true).setLongValue(logTime.getTime()));
 				
 				
 				// Stuff that is the same as the submission.

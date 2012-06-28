@@ -12,7 +12,7 @@ public enum SearchOrder {
 	
 	STATE(3),
 	
-	ASSGINEE(4),
+	ASSIGNEE(4),
 	
 	DOCUMENT_TITLE(5),
 	DOCUMENT_ABSTRACT(6),

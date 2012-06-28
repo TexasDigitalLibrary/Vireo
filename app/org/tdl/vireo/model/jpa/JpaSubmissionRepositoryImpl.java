@@ -103,7 +103,7 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 		
 		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.STATE.ordinal()] = "sub.stateName %, sub.id %";
 		
-		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.ASSGINEE.ordinal()] = "assignee.lastName %, assignee.firstName %, sub.id %";
+		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.ASSIGNEE.ordinal()] = "assignee.lastName %, assignee.firstName %, sub.id %";
 		
 		SUBMISSION_ORDER_BY_COLUMNS[SearchOrder.UMI_RELEASE.ordinal()] = "sub.UMIRelease %, sub.id %";
 		
