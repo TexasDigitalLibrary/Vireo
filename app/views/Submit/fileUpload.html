@@ -31,6 +31,7 @@
                     <div class="controls">
                         <input type="file" id="primaryFile" class="input-file" name="primaryDocument">
                         <input type="submit" value="Upload" class="uploadBtn btn" name="uploadPrimary">
+                        
                     </div>
                 #{/if}
                 #{else}
@@ -38,9 +39,13 @@
                         <p>
                             ${primaryAttachment.getName()}
                             (${primaryAttachment.getDisplaySize()})
+                            <input type="submit" value="Replace Manuscript" class="uploadBtn btn" name="replacePrimary">
+                            
                         </p>
                     </div>
                 #{/else}
+                              
+
 			</div>
 		</fieldset>
 		

@@ -493,6 +493,17 @@ public class Submit extends AbstractVireoController {
             	uploadPrimaryDocument(sub);
             }
 
+            // If the replace manuscript button is pressed - then delete the manuscript 
+            
+            if (params.get("replacePrimary") != null) {
+            	Logger.info("Replace/Delete Manuscript");            	
+            	Attachment primaryDoc = sub.getPrimaryDocument();   
+            	if (primaryDoc != null) {
+            		primaryDoc.delete();
+            		sub.save();
+            	}
+            }
+
             // If the upload supplementary button is pressed - then add the manuscript as an attachment
             
             if (params.get("uploadSupplementary") != null) {
@@ -531,9 +542,7 @@ public class Submit extends AbstractVireoController {
         		for (Attachment attachment : sub.getAttachments()) {
         			Logger.info("Attachment for Submission: " + attachment.getName());
         		}
-        		 		
-        		// TODO -- Check file type ??
-        		
+        		 		       		
                 // Finally, if all is well, we can move on
                 
                 if (!validation.hasErrors())
