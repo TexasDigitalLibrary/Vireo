@@ -153,9 +153,9 @@
 						</span></li>
 					<li><label>Permanent Address:</label><span id="permAddress"
 						#{if submitter.getPermanentPostalAddress()}
-							>${submitter.getPermanentPostalAddress()}
+							class="textarea">${submitter.getPermanentPostalAddress()}
 						#{/if}#{else}
-							class="empty">none
+							class="textarea empty">none
 						#{/else}
 						</span></li>
 					<li><label>Current Phone:</label><span id="currentPhone"
@@ -167,9 +167,9 @@
 						</span></li>
 					<li><label>Current Address:</label><span id="currentAddress"
 						#{if submitter.getCurrentPostalAddress()}
-							>${submitter.getCurrentPostalAddress()}
+							class="textarea">${submitter.getCurrentPostalAddress()}
 						#{/if}#{else}
-							class="empty">none
+							class="textarea empty">none
 						#{/else}
 					</span></li>
 				</ul>
@@ -189,13 +189,13 @@
 						</span></li>
 					<li><label>Embargo:</label><span id="embargo"
 						#{if submission.getEmbargoType()}
-							>${submission.getEmbargoType().getName()}
+							class="select">${submission.getEmbargoType().getName()}
 						#{/if}#{else}
-							class="empty">none
+							class="select empty">none
 						#{/else}
 						</span></li>
 					<li><label>UMI Release:</label><span id="umiRelease"
-						#{if submission.getUMIRelease()}
+						#{if submission.getUMIRelease() != null}
 							>${submission.getUMIRelease()}
 						#{/if}#{else}
 							class="empty">none
@@ -203,16 +203,16 @@
 						</span></li>
 					<li><label>Document Type:</label><span id="docType"
 						#{if submission.getDocumentType()}
-							>${submission.getDocumentType()}
+							class="select">${submission.getDocumentType()}
 						#{/if}#{else}
-							class="empty">none
+							class="select empty">none
 						#{/else}
 						</span></li>
 					<li><label>Keywords:</label><span id="keywords"
 						#{if submission.getDocumentKeywords()}
-							>${submission.getDocumentKeywords()}
+							class="textarea">${submission.getDocumentKeywords()}
 						#{/if}#{else}
-							class="empty">none
+							class="textarea empty">none
 						#{/else}
 					</span></li>
 				</ul>
@@ -221,9 +221,9 @@
 				<ul class="unstyled">
 					<li><label>Abstract:</label><span id="abstract"
 						#{if submission.getDocumentAbstract()}
-							>${submission.getDocumentAbstract()}
+							class="textarea">${submission.getDocumentAbstract()}
 						#{/if}#{else}
-							class="empty">none
+							class="textarea empty">none
 						#{/else}
 					</span></li>
 				</ul>
@@ -243,23 +243,23 @@
 						</span></li>
 					<li><label>Department:</label><span id="department"
 						#{if submission.getDepartment()}
-							>${submission.getDepartment()}
+							class="select">${submission.getDepartment()}
 						#{/if}#{else}
-							class="empty">none
+							class="select empty">none
 						#{/else}
 						</span></li>
 					<li><label>Degree:</label><span id="degree"
 						#{if submission.getDegree()}
-							>${submission.getDegree()}
+							class="select">${submission.getDegree()}
 						#{/if}#{else}
-							class="empty">none
+							class="select empty">none
 						#{/else}
 						</span></li>
 					<li><label>Degree Level:</label><span id="degreeLevel"
 						#{if submission.getDegree()}
-							>${degreeLevel}
+							class="select">${degreeLevel}
 						#{/if}#{else}
-							class="empty">none
+							class="select empty">none
 						#{/else}
 						</span></li>
 					<li><label>Major:</label><span id="major"
@@ -303,6 +303,14 @@
 			</div>
 			<div class="clear"></div>
 			</div>
+			
+			<!-- Hidden Select Options -->
+			<div id="embargoTypeOptions" style="display:none;">
+				#{list items:embargos, as:'embargo'}
+					<option value="${embargo.getId()}">${embargo.getName()}</option>
+				#{/list}
+			</div>
+			
 		</div>
 		
 		<h2>ACTION LOG</h2>
@@ -315,7 +323,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				#{list items:0..3, as:'value'}
+				#{list items:0..4, as:'value'}
 					#{if actionLogs[value]}
 					<tr>
 						<td>${actionLogs[value].getPerson().getFirstName()} ${actionLogs[value].getPerson().getLastName()}</td>

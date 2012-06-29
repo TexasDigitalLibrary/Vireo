@@ -37,6 +37,7 @@ POST	/submit/{subId}submitETD				Submit.submitETD
 ### View Tab
 *       /admin/view                             ViewTab.view
 GET		/admin/view/{subId}						ViewTab.view
+POST	/admin/view/update						ViewTab.updateJSON
 
 ### Manager
 *       /admin/settings/user					Config.userPreferences

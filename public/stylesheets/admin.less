@@ -387,13 +387,28 @@ EDIT HOLDERS & BOXES
 	font-weight:bold;
 	float:left;
 }
-.edit-box span{
+.edit-box span, .editing{
 	width:55%;
 	text-align:left;
 	float:left;
 }
+.edit-box span{
+	cursor:pointer;
+}
 .edit-box .empty{
 	color:@grayLighter;
+}
+.edit-box input, .edit-box select, .edit-box option{
+	margin:0;
+	padding:0;
+	width:80%;
+}
+.edit-box select{
+	float:left;
+	height:20px;
+}
+.error .badge{
+	display:inline;
 }
 
 /**********************
