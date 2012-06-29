@@ -11,9 +11,12 @@ import org.apache.lucene.document.DateTools;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.queryParser.ParseException;
+import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.NumericRangeQuery;
+import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
 import org.apache.lucene.search.TermQuery;
@@ -141,39 +144,43 @@ public class LuceneSearcherImpl implements Searcher {
 			SearchOrder orderBy, SearchDirection direction, int offset,
 			int limit) {
 		try {
-			IndexReader reader = indexer.reader;
-			IndexSearcher searcher = new IndexSearcher(reader);
-			
-			
-			BooleanQuery andQuery = new BooleanQuery();
-			andQuery.add(new TermQuery(new Term("type","submission")),Occur.MUST);
-			buildQuery(andQuery,filter); // <-- This does most of the work.
-			
-			boolean reverse = (direction == SearchDirection.ASCENDING) ? true : false;
-			
-			SortField dynamicSortField = new SortField(SORT_SUB_FIELDS[orderBy.ordinal()], SORT_TYPES[orderBy.ordinal()], reverse);
-			SortField idSortField = new SortField("subId",SortField.LONG,reverse);
-			Sort sort = new Sort(dynamicSortField, idSortField);
-	
-			
-			// Run the search
-			TopDocs topDocs = searcher.search(andQuery, offset + limit, sort);
-			
-			
-			List<Submission> results = new ArrayList<Submission>();
-			for(int i=offset; i < offset + limit ; i++) {
-				if (i >= topDocs.scoreDocs.length )
-					break;
-				Document doc = searcher.doc(topDocs.scoreDocs[i].doc);
+			IndexReader reader = IndexReader.open(indexer.index);
+			try {
+				IndexSearcher searcher = new IndexSearcher(reader);
 				
-				Long subId = Long.valueOf(doc.get("subId"));
-				Submission sub = subRepo.findSubmission(subId);
-				if (sub != null)
-					results.add(sub);
+				
+				BooleanQuery andQuery = new BooleanQuery();
+				andQuery.add(new TermQuery(new Term("type","submission")),Occur.MUST);
+				buildQuery(andQuery,filter); // <-- This does most of the work.
+				
+				boolean reverse = (direction == SearchDirection.ASCENDING) ? true : false;
+				
+				SortField dynamicSortField = new SortField(SORT_SUB_FIELDS[orderBy.ordinal()], SORT_TYPES[orderBy.ordinal()], reverse);
+				SortField idSortField = new SortField("subId",SortField.LONG,reverse);
+				Sort sort = new Sort(dynamicSortField, idSortField);
+		
+				Logger.debug("Submission Query: "+andQuery.toString());
+				
+				// Run the search
+				TopDocs topDocs = searcher.search(andQuery, offset + limit, sort);
+				
+				
+				List<Submission> results = new ArrayList<Submission>();
+				for(int i=offset; i < offset + limit ; i++) {
+					if (i >= topDocs.scoreDocs.length )
+						break;
+					Document doc = searcher.doc(topDocs.scoreDocs[i].doc);
+					
+					Long subId = Long.valueOf(doc.get("subId"));
+					Submission sub = subRepo.findSubmission(subId);
+					if (sub != null)
+						results.add(sub);
+				}
+		
+				return new LuceneSearchResults<Submission>(filter, direction, orderBy, offset, limit, results, topDocs.totalHits);
+			} finally {
+				reader.close();
 			}
-	
-			return new LuceneSearchResults<Submission>(filter, direction, orderBy, offset, limit, results, topDocs.totalHits);
-			
 		} catch (IOException ioe) {
 			Logger.error(ioe,"Unable to search");
 		}
@@ -186,37 +193,42 @@ public class LuceneSearcherImpl implements Searcher {
 			int limit) {
 		
 		try {
-			IndexReader reader = indexer.reader;
-			IndexSearcher searcher = new IndexSearcher(reader);
-			
-			
-			BooleanQuery andQuery = new BooleanQuery();
-			andQuery.add(new TermQuery(new Term("type","actionlog")),Occur.MUST);
-			buildQuery(andQuery,filter); // <-- This does most of the work.
-			
-			boolean reverse = (direction == SearchDirection.ASCENDING) ? true : false;
-			
-			SortField dynamicSortField = new SortField(SORT_LOG_FIELDS[orderBy.ordinal()], SORT_TYPES[orderBy.ordinal()], reverse);
-			SortField idSortField = new SortField("logId",SortField.LONG,reverse);
-			Sort sort = new Sort(dynamicSortField, idSortField);
-			
-			// Run the search
-			TopDocs topDocs = searcher.search(andQuery, offset + limit, sort);
-							
-			List<ActionLog> results = new ArrayList<ActionLog>();
-			for(int i=offset; i < offset + limit ; i++) {
-				if (i >= topDocs.scoreDocs.length )
-					break;
-				Document doc = searcher.doc(topDocs.scoreDocs[i].doc);
+			IndexReader reader = IndexReader.open(indexer.index);
+			try {
+				IndexSearcher searcher = new IndexSearcher(reader);
 				
-				Long logId = Long.valueOf(doc.get("logId"));
-				ActionLog log = subRepo.findActionLog(logId);
-				if (log != null)
-					results.add(log);
+				
+				BooleanQuery andQuery = new BooleanQuery();
+				andQuery.add(new TermQuery(new Term("type","actionlog")),Occur.MUST);
+				buildQuery(andQuery,filter); // <-- This does most of the work.
+				
+				boolean reverse = (direction == SearchDirection.ASCENDING) ? true : false;
+				
+				SortField dynamicSortField = new SortField(SORT_LOG_FIELDS[orderBy.ordinal()], SORT_TYPES[orderBy.ordinal()], reverse);
+				SortField idSortField = new SortField("logId",SortField.LONG,reverse);
+				Sort sort = new Sort(dynamicSortField, idSortField);
+				
+				Logger.debug("Log Query: "+andQuery.toString());
+				
+				// Run the search
+				TopDocs topDocs = searcher.search(andQuery, offset + limit, sort);
+								
+				List<ActionLog> results = new ArrayList<ActionLog>();
+				for(int i=offset; i < offset + limit ; i++) {
+					if (i >= topDocs.scoreDocs.length )
+						break;
+					Document doc = searcher.doc(topDocs.scoreDocs[i].doc);
+					
+					Long logId = Long.valueOf(doc.get("logId"));
+					ActionLog log = subRepo.findActionLog(logId);
+					if (log != null)
+						results.add(log);
+				}
+		
+				return new LuceneSearchResults<ActionLog>(filter, direction, orderBy, offset, limit, results, topDocs.totalHits);
+			} finally {
+				reader.close();
 			}
-	
-			return new LuceneSearchResults<ActionLog>(filter, direction, orderBy, offset, limit, results, topDocs.totalHits);
-			
 		} catch (IOException ioe) {
 			Logger.error(ioe,"Unable to search");
 		}
@@ -236,12 +248,19 @@ public class LuceneSearcherImpl implements Searcher {
 	 * @param filter The filter search paramaters.
 	 */
 	public void buildQuery(BooleanQuery andQuery, SearchFilter filter) {
+		QueryParser parser = new QueryParser(indexer.version,"searchText",indexer.standardAnalyzer);
 		
 		// Search Text Filter
 		if (filter.getSearchText().size() > 0) {
 			BooleanQuery orQuery = new BooleanQuery();
 			for(String searchText : filter.getSearchText()) {
-				orQuery.add(new TermQuery(new Term("text", searchText)), Occur.SHOULD);
+				try {
+					// First try to interpret it as a complex lucene search string.
+					orQuery.add(parser.parse(searchText),Occur.SHOULD);
+				} catch (ParseException e) {
+					// If that fails just fall back to a term query.
+					orQuery.add(new TermQuery(new Term("searchText", searchText)), Occur.SHOULD);
+				}
 			}
 			andQuery.add(orQuery,Occur.MUST);
 		}

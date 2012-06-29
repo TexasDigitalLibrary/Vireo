@@ -43,6 +43,7 @@ import com.mysql.jdbc.log.Log;
 
 import play.Logger;
 import play.Play;
+import play.db.jpa.JPA;
 import play.jobs.Job;
 import play.modules.spring.Spring;
 
@@ -157,8 +158,8 @@ public class LuceneIndexerImpl implements Indexer {
 	private IndexJob nextJob = null;
 	
 	// Static Lucene configuration
+	public final File indexFile;
 	public final Directory index;
-	public final IndexReader reader;
 	public final Version version = Version.LUCENE_36;
 	public final Analyzer standardAnalyzer = new StandardAnalyzer(version);
 	
@@ -169,8 +170,8 @@ public class LuceneIndexerImpl implements Indexer {
 	 * Construct a new LuceneIndexer
 	 */
 	public LuceneIndexerImpl() throws IOException {
-		index = FSDirectory.open(new File(Play.configuration.getProperty("index.path","data/indexes")));
-		reader = IndexReader.open(index);
+		indexFile = new File(Play.configuration.getProperty("index.path","data/indexes"));
+		index = FSDirectory.open(indexFile);
 	}
 	
 	/**
@@ -254,7 +255,7 @@ public class LuceneIndexerImpl implements Indexer {
 	public void commit() {
 	
 		Set<Long> txn = transactionLocal.get();
-		if (txn.size() > 0) {
+		if (txn != null && txn.size() > 0) {
 			IndexJob newJob = new UpdateIndexJob(txn);
 			runNextJob(newJob);
 		}
@@ -267,9 +268,17 @@ public class LuceneIndexerImpl implements Indexer {
 	 */
 	@Override
 	public void rebuild() {
-		
 		IndexJob newJob = new RebuildIndexJob();
 		runNextJob(newJob);
+	}
+	
+	/**
+	 * Rebuild the index now, and wait for the index to be rebuilt.
+	 */
+	public void rebuildNow() {
+		currentJob = null;
+		nextJob = null;
+		new RebuildIndexJob().doJob();
 	}
 	
 	
@@ -431,8 +440,12 @@ public class LuceneIndexerImpl implements Indexer {
 		 */
 		public void doJob() {
 			try {
+				long start = System.currentTimeMillis();
+								
 				writeIndex();
 				
+				Logger.debug("Index job '"+this.getLabel()+"' over "+total+" submissions completed succesfully in " + ((System.currentTimeMillis()-start)/1000F) +" seconds.");
+
 			} catch(CorruptIndexException cie) {
 				// TODO: handle this gracefully.
 				Logger.fatal(cie, "Unable to update index because it is corrupted.");
@@ -823,6 +836,8 @@ public class LuceneIndexerImpl implements Indexer {
 					if (sub != null)
 						indexSubmission(writer, sub);
 
+					JPA.em().detach(sub);
+					
 					progress++;
 				}
 			} finally {
