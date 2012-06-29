@@ -630,9 +630,18 @@ public class Submit extends AbstractVireoController {
         
 	}
 	
+	// Submission Status
+	
+	@Security(RoleType.STUDENT)
+	public static void submissionStatus(Long subId) {		
+		render(subId);      
+	}
+	
+	// Final page of the submission process
+	
 	@Security(RoleType.STUDENT)
 	public static void review(Long subId) {
-		render("Submit/Review.html");
+		render(subId);
 	}
 
     /**

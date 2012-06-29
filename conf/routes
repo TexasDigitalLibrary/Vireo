@@ -25,6 +25,7 @@ GET     /profile                                Authentication.profile
 *	    /submit/{subId}/confirm                 Submit.confirmAndSubmit
 POST	/submit/{subId}submitETD				Submit.submitETD
 *       /submit/{subId}/review                  Submit.review
+* 		/submit/{subId}/submissionStatus		Submit.submissionStatus
 
 ### List & Log Tabs
 * 		/admin									FilterTab.list
