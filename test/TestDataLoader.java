@@ -1,3 +1,4 @@
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -6,6 +7,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
 import org.tdl.vireo.model.Degree;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.EmbargoType;
@@ -15,6 +18,8 @@ import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionRepository;
+import org.tdl.vireo.search.Indexer;
+import org.tdl.vireo.search.impl.LuceneIndexerImpl;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.security.impl.ShibbolethAuthenticationMethodImpl;
 import org.tdl.vireo.state.State;
@@ -37,6 +42,17 @@ import play.modules.spring.Spring;
 @OnApplicationStart
 public class TestDataLoader extends Job {
 
+	
+	public static StateManager stateManager = Spring.getBeanOfType(StateManager.class);
+	public static PersonRepository personRepo = Spring.getBeanOfType(PersonRepository.class);
+	public static SubmissionRepository subRepo = Spring.getBeanOfType(SubmissionRepository.class);
+	public static SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
+	public static SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
+	public static LuceneIndexerImpl indexer = Spring.getBeanOfType(LuceneIndexerImpl.class);
+	public static ShibbolethAuthenticationMethodImpl shibAuth = Spring.getBeanOfType(ShibbolethAuthenticationMethodImpl.class);
+
+
+	
 	/**
 	 * How many random submissions to create
 	 */
@@ -344,8 +360,8 @@ public class TestDataLoader extends Job {
 	 */
 	@Override
 	public void doJob() {
-		try {
-			SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
+		try {			
+			clearIndex();
 			
 			// Turn off authorizations.
 			context.turnOffAuthorization(); 
@@ -358,11 +374,28 @@ public class TestDataLoader extends Job {
 			
 			loadSubmissions();
 			
+			Logger.debug("Rebuilding index...");
+			indexer.rebuildNow();
+			indexer.rollback();
+			
 			context.logout();
 			
 		} catch (Exception e) {Logger.error(e, "Unable to load test data.");}
 	}
 	
+	/**
+	 * Clear out the lucene search index each time we start in test mode.
+	 */
+	public static void clearIndex() {
+		File directory = indexer.indexFile;
+		if (directory != null && directory.exists() && directory.isDirectory() && directory.canWrite()) {
+			
+			File[] files = directory.listFiles();
+			for (File file : files) {
+				file.delete();
+			}
+		}
+	}
 	
 	/**
 	 * Load the predefined user accounts.
@@ -372,10 +405,7 @@ public class TestDataLoader extends Job {
 	 * by our mock shibboleth provider.
 	 */
 	public static void loadPeople() {
-		
-		PersonRepository personRepo = Spring.getBeanOfType(PersonRepository.class);
-		ShibbolethAuthenticationMethodImpl shib = Spring.getBeanOfType(ShibbolethAuthenticationMethodImpl.class);
-		
+
 		// Create all persons
 		for(PersonsArray personDefinition : PERSONS_DEFINITIONS) {
 			Person person = personRepo.createPerson(personDefinition.netId, personDefinition.email, personDefinition.firstName, personDefinition.lastName, personDefinition.role);
@@ -384,10 +414,10 @@ public class TestDataLoader extends Job {
 		}
 		// Special case. Initialize Billy-bob with all the data defined by the shibboleth authentication. This results in a lot less confusion when the authentitation changes a person's metadat.
 		
-		boolean originalMock = shib.mock;
-		shib.mock = true;
-		shib.authenticate(null);
-		shib.mock = originalMock;
+		boolean originalMock = shibAuth.mock;
+		shibAuth.mock = true;
+		shibAuth.authenticate(null);
+		shibAuth.mock = originalMock;
 		
 	}
 	
@@ -396,42 +426,40 @@ public class TestDataLoader extends Job {
 	 * document types, graduation month, and embargo definitions.
 	 */
 	public static void loadSettings() {
-		
-		SettingsRepository settingsRepo = Spring.getBeanOfType(SettingsRepository.class);
-		
+				
 		// Create all colleges
 		for(String collegeDefinition : COLLEGES_DEFINITIONS) {
-			settingsRepo.createCollege(collegeDefinition).save();
+			settingRepo.createCollege(collegeDefinition).save();
 		}
 		
 		// Create all departments
 		for(String departmentDefinition : DEPARTMENTS_DEFINITIONS) {
-			settingsRepo.createDepartment(departmentDefinition).save();
+			settingRepo.createDepartment(departmentDefinition).save();
 		}
 		
 		// Create all majors
 		for(String majorDefinition : MAJORS_DEFINITIONS) {
-			settingsRepo.createMajor(majorDefinition).save();
+			settingRepo.createMajor(majorDefinition).save();
 		}
 		
 		// Create all degrees
 		for(DegreeLevelArray degreeDefinition : DEGREES_DEFINITIONS) {
-			settingsRepo.createDegree(degreeDefinition.name, degreeDefinition.degreeLevel).save();
+			settingRepo.createDegree(degreeDefinition.name, degreeDefinition.degreeLevel).save();
 		}
 		
 		// Create all document types
 		for(DegreeLevelArray docTypeDefinition : DOCTYPES_DEFINITIONS) {
-			settingsRepo.createDocumentType(docTypeDefinition.name, docTypeDefinition.degreeLevel).save();
+			settingRepo.createDocumentType(docTypeDefinition.name, docTypeDefinition.degreeLevel).save();
 		}
 		
 		// Create all graduation months
 		for(int gradMonthDefinition : GRAD_MONTHS_DEFINITIONS) {
-			settingsRepo.createGraduationMonth(gradMonthDefinition).save();
+			settingRepo.createGraduationMonth(gradMonthDefinition).save();
 		}
 		
 		// Create all embargo types
 		for(EmbargoArray embargoDefinition : EMBARGO_DEFINTITIONS) {
-			settingsRepo.createEmbargoType(embargoDefinition.name, embargoDefinition.description, embargoDefinition.duration, embargoDefinition.active).save();
+			settingRepo.createEmbargoType(embargoDefinition.name, embargoDefinition.description, embargoDefinition.duration, embargoDefinition.active).save();
 		}
 	}
 	
@@ -439,12 +467,6 @@ public class TestDataLoader extends Job {
 	 * Load randomly generated submissions.
 	 */
 	public static void loadSubmissions() {
-		
-		StateManager stateManager = Spring.getBeanOfType(StateManager.class);
-		PersonRepository personRepo = Spring.getBeanOfType(PersonRepository.class);
-		SubmissionRepository subRepo = Spring.getBeanOfType(SubmissionRepository.class);
-		SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
-		SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
 		
 		// Cache a list of all embargo types.
 		List<EmbargoType> embargos = settingRepo.findAllEmbargoTypes();
@@ -454,6 +476,7 @@ public class TestDataLoader extends Job {
 		// Establish a constant random seed so each run through this code produces the same results.
 		Random random = new Random(123456789);
 		
+		long start = System.currentTimeMillis();
 		for(int i=0; i < RANDOM_SUBMISSIONS; i++) {
 			context.turnOffAuthorization();
 			String[] studentName = generateRandomName(random, ACTOR_NAMES);
@@ -577,9 +600,16 @@ public class TestDataLoader extends Job {
 				// Reload persistant objects
 				embargos = settingRepo.findAllEmbargoTypes();
 				reviewer = personRepo.findPersonByEmail("jdimaggio@gmail.com");
-				Logger.debug("Generated "+i+" random submissions so far.");
+				
+				Logger.debug("Random submission generator: "+i+" submissions at "+ ((System.currentTimeMillis() - start)/i) +" milleseconds per submission (in progress)");
 			}
 		}
+		Logger.debug("Random submission generator: "+RANDOM_SUBMISSIONS+" submissions at "+ ((System.currentTimeMillis() - start)/RANDOM_SUBMISSIONS) +" milleseconds per submission (finished)");
+		
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**

@@ -4,6 +4,7 @@ import javax.persistence.MappedSuperclass;
 
 import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.Person;
+import org.tdl.vireo.search.Indexer;
 import org.tdl.vireo.security.SecurityContext;
 
 import play.db.jpa.GenericModel;
@@ -24,15 +25,27 @@ import play.modules.spring.Spring;
  */
 @MappedSuperclass
 public abstract class JpaAbstractModel<T extends JpaAbstractModel> extends Model implements AbstractModel {
-
+	
 	@Override
 	public T save() {
-		return super.save();
+		T result = super.save();
+		
+		// Tell the indexer that this object has been updated.
+		Indexer indexer = Spring.getBeanOfType(Indexer.class);
+		indexer.updated(result);
+		
+		return result;
 	}
 
 	@Override
 	public T delete() {
-		return super.delete();
+		T result =  super.delete();
+		
+		// Tell the indexer that this object has been updated.
+		Indexer indexer = Spring.getBeanOfType(Indexer.class);
+		indexer.updated(result);
+		
+		return result;
 	}
 
 	@Override

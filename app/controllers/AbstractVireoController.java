@@ -5,6 +5,8 @@ import java.util.Map;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.SubmissionRepository;
+import org.tdl.vireo.search.Indexer;
+import org.tdl.vireo.search.Searcher;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.StateManager;
 
@@ -30,7 +32,10 @@ public abstract class AbstractVireoController extends Controller {
 	public static SubmissionRepository subRepo = Spring.getBeanOfType(SubmissionRepository.class);
 	public static SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
 	public static StateManager stateManager = Spring.getBeanOfType(StateManager.class);
+	public static Indexer indexer = Spring.getBeanOfType(Indexer.class);
+	public static Searcher searcher = Spring.getBeanOfType(Searcher.class);
 
+	
 	/**
 	 * This is run before any action to inject the repositories into the
 	 * template. This way the template can access information from any
