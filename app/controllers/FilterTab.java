@@ -114,10 +114,7 @@ public class FilterTab extends AbstractVireoController {
 		// TODO: Look up the limit based upon the user's preferences.
 		Integer limit = 100;
 				
-		long start = System.currentTimeMillis();
 		SearchResult<Submission> results = searcher.submissionSearch(activeFilter, orderby, direction, offset, limit);
-		System.out.println("Total Search time: "+(System.currentTimeMillis()-start));
-
 		
 		// Step 3: Prepare any variables for display
 		//////////
@@ -136,7 +133,6 @@ public class FilterTab extends AbstractVireoController {
 		renderArgs.put(SearchDirection.ASCENDING.name(), SearchDirection.ASCENDING);
 		renderArgs.put(SearchDirection.DESCENDING.name(), SearchDirection.DESCENDING);
 		
-		System.out.println("Just before render: "+(System.currentTimeMillis()-start));
 		render(nav, allFilters, activeFilter, results, orderby, columns, direction);
 	}
 	
