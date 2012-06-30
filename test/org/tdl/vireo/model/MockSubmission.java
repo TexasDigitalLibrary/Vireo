@@ -66,6 +66,8 @@ public class MockSubmission extends AbstractMock implements Submission {
 	public Person assignee;
 	public Boolean UMIRelease;
 	public List<CustomActionValue> customActions = new ArrayList<CustomActionValue>();
+	public String lastLogEntry;
+	public Date lastLogDate;
 
 	@Override
 	public MockSubmission save() {
@@ -437,6 +439,16 @@ public class MockSubmission extends AbstractMock implements Submission {
 		log.actionDate = new Date();
 		log.privateFlag = false;
 		return log;
+	}
+
+	@Override
+	public String getLastLogEntry() {
+		return lastLogEntry;
+	}
+
+	@Override
+	public Date getLastLogDate() {
+		return lastLogDate;
 	}
 
 }

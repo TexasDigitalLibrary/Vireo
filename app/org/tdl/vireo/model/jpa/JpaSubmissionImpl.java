@@ -126,6 +126,11 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@OneToMany(targetEntity = JpaCustomActionValueImpl.class, mappedBy = "submission", cascade = CascadeType.ALL)
 	public List<CustomActionValue> customActions;
 	
+	@Column(length=326768) // 2^15
+	public String lastActionLogEntry;
+	@Temporal(TemporalType.TIMESTAMP)
+	public Date lastActionLogDate;
+	
 	// This is not publicly available, only present for queries.
 	@OneToMany(targetEntity = JpaActionLogImpl.class, mappedBy = "submission")
 	public List<ActionLog> actionLogs;
@@ -170,6 +175,11 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	public JpaSubmissionImpl save() {
 		
 		assertReviewerOrOwner(submitter);
+		
+		if (pendingLogs.size() > 0) {
+			lastActionLogEntry = pendingLogs.get(pendingLogs.size()-1).getEntry();
+			lastActionLogDate = pendingLogs.get(pendingLogs.size()-1).getActionDate();
+		}
 		
 		super.save();
 		
@@ -713,6 +723,16 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 				definition, value);
 		customActions.add(customAction);
 		return customAction;
+	}
+	
+	@Override
+	public String getLastLogEntry() {
+		return lastActionLogEntry;
+	}
+
+	@Override
+	public Date getLastLogDate() {
+		return lastActionLogDate;
 	}
 	
 	

@@ -136,6 +136,29 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 	public Submission findSubmission(Long id) {
 		return (Submission) JpaSubmissionImpl.findById(id);
 	}
+	
+	@Override
+	public List<Submission> findSubmissions(List<Long> submissionIds) {
+		
+		
+		StringBuilder sql = new StringBuilder();
+		sql.append("FROM JpaSubmissionImpl WHERE id IN (");
+		for (int i=0; i < submissionIds.size(); i++) {
+			if (i > 0)
+				sql.append(",");
+			sql.append("?"+(i+1));
+		}
+		sql.append(")");
+		
+		
+		TypedQuery query = JPA.em().createQuery(sql.toString(),JpaSubmissionImpl.class);
+		
+		for (int i=0; i < submissionIds.size(); i++) {
+		query.setParameter(i+1, submissionIds.get(i));
+		}
+		
+		return query.getResultList();
+	}
 
 	@Override
 	public Submission findSubmissionByEmailHash(String emailHash) {
@@ -435,6 +458,28 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 		return (ActionLog) JpaActionLogImpl.findById(id);
 	}
 
+	@Override
+	public List<ActionLog> findActionLogs(List<Long> logIds) {
+		
+		StringBuilder sql = new StringBuilder();
+		sql.append("FROM JpaActionLogImpl WHERE id IN (");
+		for (int i=0; i < logIds.size(); i++) {
+			if (i > 0)
+				sql.append(",");
+			sql.append("?"+(i+1));
+		}
+		sql.append(")");
+		
+		
+		TypedQuery query = JPA.em().createQuery(sql.toString(),JpaActionLogImpl.class);
+		
+		for (int i=0; i < logIds.size(); i++) {
+		query.setParameter(i+1, logIds.get(i));
+		}
+		
+		return query.getResultList();
+	}
+	
 	@Override
 	public List<ActionLog> findActionLog(Submission submission) {
 		return JpaActionLogImpl.find("submission = ? order by actionDate desc, id desc", submission).fetch();
