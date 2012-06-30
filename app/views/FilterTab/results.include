@@ -1,0 +1,281 @@
+*{
+This include displays the results table for the ListTab or the LogTab. 
+
+This include is mostly written in groovy instead of using template tags because
+there is a substantial performance improvement by using all groovy for the
+loops over results. This makes the file harder to maintain but much quicker 
+in results.
+}*
+
+<table class="table table-striped table-bordered table-condensed">
+    <thead>
+        <tr>
+        %{
+        def routeArgs = new java.util.HashMap<String,String>();
+        routeArgs.put("nav",nav);
+        String modifySearchUrl = play.mvc.Router.reverse("FilterTab.modifySearch",routeArgs).url;
+                
+        for(org.tdl.vireo.search.SearchOrder column : columns) {
+            if (orderby == column) {
+                out.print("<th class=\"orderby " + ((direction == ASCENDING) ? "ascending" : "descending") +"\">");
+                out.print("<a href="+modifySearchUrl+"?direction=toggle\">")
+                out.print(play.i18n.Messages.get(nav.toUpperCase() + "_COLUMN_"+column.name()));
+                out.print("</a>");
+                out.print("</th>");
+            } else {
+                out.print("<th>");
+                out.print("<a href=\""+modifySearchUrl+"?orderby="+column.getId()+"\">")
+                out.print(play.i18n.Messages.get(nav.toUpperCase() + "_COLUMN_"+column.name()));
+                out.print("</a>");
+                out.print("</th>");
+            }
+        } // for columns
+        }%
+        </tr>
+    </thead>
+    <tbody>
+        %{
+        int sql = 0;
+        String viewTabUrl = play.mvc.Router.reverse("ViewTab.view").url;
+        
+        for(def object : results.getResults()) {
+           out.print("<tr>");
+           
+           def sub = null;
+           def log = null;
+           if (object instanceof org.tdl.vireo.model.Submission) {
+              sub = object;
+           } else {
+              log = object;
+              sub = log.getSubmission();
+           }
+           
+           for(org.tdl.vireo.search.SearchOrder column : columns) {
+             out.print("<td>");
+
+             switch (column) {
+                 case ID:
+                     if ("log".equals(nav)) {
+                        // For action log show the log's id, not the submission's id.
+                        out.print("<a href=\""+viewTabUrl+"?subId="+sub.getId()+"\">"+log.getId()+"</a>");
+                     } else {                 
+                        out.print("<a href=\""+viewTabUrl+"?subId="+sub.getId()+"\">"+sub.getId()+"</a>");
+                     }
+                     break;
+                 case SUBMITTER:
+                     if (sub.getStudentLastName() == null) {
+                        out.print("Unknown");
+                     } else {
+                        out.print(sub.getStudentLastName());
+                        if (sub.getStudentFirstName() == null || sub.getStudentLastName()) {
+                            out.print(", ");
+                            if (sub.getStudentFirstName() != null)
+                                out.print(sub.getStudentFirstName());
+                            out.print(" ");
+                            if (sub.getStudentMiddleName() != null)
+                                out.print(sub.getStudentMiddleName());
+                        }
+                     }
+                     break;
+                 case STATE:
+                     if ("log".equals(nav)) {
+                         // For action logs, show the state at the time the log was made.
+                         if (log.getSubmissionState() != null)
+                             out.print(log.getSubmissionState().getDisplayName());
+                     } else {
+                         if (sub.getState() != null)
+                             out.print(sub.getState().getDisplayName());
+                     }
+                     break;
+                 case ASSIGNEE:
+                     if ("log".equals(nav)) {
+                         if (log.getPerson() != null) 
+                             out.print(log.getPerson().getFullName());
+                     } else {
+                         if (sub.getAssignee() != null)
+                             out.print(sub.getAssignee().getFullName());
+                     }
+                     break;
+                 case DOCUMENT_TITLE:
+                     if (sub.getDocumentTitle() != null)
+                         out.print(sub.getDocumentTitle());
+                     break;
+                 case DOCUMENT_ABSTRACT:
+                     if (sub.getDocumentAbstract() != null) {
+                         if (sub.getDocumentAbstract().size() < 25) {
+                             out.print(sub.getDocumentAbstract());
+                         } else {
+                             out.print(sub.getDocumentAbstract()?.substring(0,25) + "...");
+                         }
+                     }
+                     break;
+                 case DOCUMENT_KEYWORDS:
+                     if (sub.getDocumentKeywords() != null)
+                        out.print(sub.getDocumentKeywords());
+                     break;
+                 case PRIMARY_DOCUMENT:
+                     if (sub.getPrimaryDocument() != null)
+                        out.print(sub.getPrimaryDocument().getName());
+                     break;
+                 case GRADUATION_DATE:
+                     String monthName = null;
+                     if (sub.getGraduationMonth() != null && sub.getGraduationMonth() >= 0 && sub.getGraduationMonth() <= 11)
+                        monthName = new java.text.DateFormatSymbols().getMonths()[sub.getGraduationMonth()]; 
+                     if (sub.getGraduationYear() != null)
+                        out.print(sub.getGraduationYear());
+                     if (monthName != null)
+                        out.print(" "+monthName);
+                     break;
+                 case SUBMISSION_DATE:
+                     if (sub.getSubmissionDate() != null)
+                        out.print(sub.getSubmissionDate().format('MM/dd/yyyy'));
+                     break;
+                 case LICENSE_AGREEMENT_DATE:
+                     if (sub.getLicenseAgreementDate() != null)
+                        out.print(sub.getLicenseAgreementDate().format('MM/dd/yyyy'));
+                     break;
+                 case APPROVAL_DATE:
+                     if (sub.getApprovalDate() != null)
+                        out.print(sub.getApprovalDate().format('MM/dd/yyyy'));
+                     break;                      
+                 case COMMITTEE_APPROVAL_DATE:
+                     if (sub.getCommitteeApprovalDate() != null)
+                        out.print(sub.getCommitteeApprovalDate().format('MM/dd/yyyy'));
+                     break;                          
+                 case COMMITTEE_EMBARGO_APPROVAL_DATE:
+                     if (sub.getCommitteeEmbargoApprovalDate() != null)
+                        out.print(sub.getCommitteeEmbargoApprovalDate().format('MM/dd/yyyy'));
+                     break;                          
+                 case COMMITTEE_MEMBERS:
+                     boolean first = true;
+                     for (org.tdl.vireo.model.CommitteeMember member : sub.getCommitteeMembers()) {
+                        if (!first)
+                            out.print("; ");
+                        else
+                            first = false;
+                        out.print(member.getFullName());                             
+                     }
+                     break;
+                 case COMMITTEE_CONTACT_EMAIL:
+                     if (sub.getCommitteeContactEmail() != null)
+                        out.print(sub.getCommitteeContactEmail());
+                     break;
+                 case COMMITTEE_DISPOSITION:
+                     if (sub.getCommitteeDisposition() != null) {
+                         if (sub.getCommitteeDisposition().size() < 25) {
+                             out.print(sub.getCommitteeDisposition());
+                         } else {
+                             out.print(sub.getCommitteeDisposition()?.substring(0,25) + "...");
+                         }
+                     }
+                     break;
+                 case DEGREE:
+                     if (sub.getDegree() != null)
+                         out.print(sub.getDegree());
+                     break;
+                 case COLLEGE:
+                     if (sub.getCollege() != null)
+                         out.print(sub.getCollege());
+                     break;
+                 case DEPARTMENT:
+                     if (sub.getDepartment() != null)
+                         out.print(sub.getDepartment());
+                     break;
+                 case MAJOR:
+                     if (sub.getMajor() != null)
+                         out.print(sub.getMajor());
+                     break;
+                 case EMBARGO_TYPE:
+                     if (sub.getEmbargoType() != null)
+                         out.print(sub.getEmbargoType().getName());
+                     break;
+                 case DOCUMENT_TYPE:
+                     if (sub.getDocumentType() != null)
+                         out.print(sub.getDocumentType());
+                     break;
+                 case UMI_RELEASE:
+                     if (sub.getUMIRelease() != null) {
+                        if (sub.getUMIRelease()) {
+                            out.print("yes");
+                        } else {
+                            out.print("no");
+                        }
+                     }
+                     break;
+                 case CUSTOM_ACTIONS:
+                     int actions = 0;
+                     for (org.tdl.vireo.model.CustomActionValue action : sub.getCustomActions()) {
+                        if (action.getValue()) {
+                            actions++;
+                        }
+                     }
+                     if (actions > 0)
+                        out.print(actions);
+                     break;
+                 case LAST_EVENT_ENTRY:
+                     if ("log".equals(nav)) {
+                        out.print(log.getEntry());
+                     } else {
+                         if (sub.getLastLogEntry() != null)
+                             out.print(sub.getLastLogEntry());
+                     }
+                     break;
+                 case LAST_EVENT_TIME:
+                     if ("log".equals(nav)) {
+                        out.print(log.getActionDate().format("MM/dd/yyyy hh:mm:ss"));
+                     } else {
+                         if (sub.getLastLogDate() != null)
+                             out.print(sub.getLastLogDate().format("MM/dd/yyyy hh:mm:ss"));
+                     }
+                     break;
+
+                     
+             } // switch (column)
+             out.print("</td>");
+           } // for columns
+           out.print("</tr>");
+        } // for results.getResults()
+        }%
+        <tr>
+            <td class="comments" colspan="${columns.length}">
+               ${results.getTotal()} matching records displayed on ${(int) ((results.getTotal() / results.getLimit()) +1)} pages.
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div class="pagination">
+  <ul>
+    %{
+      List pagination = results.getPagination(7);
+    }%
+    
+    #{if results.getOffset() - results.getLimit() >= 0 }
+    <li><a href="@{FilterTab.modifySearch(nav)}?offset=${ results.getOffset() - results.getLimit() }">Prev</a></li>
+    #{/if}
+    #{else}
+    <li class="disabled"><a href="#">Prev</a></li>
+    #{/else}
+    
+    #{if pagination.get(0).pageNumber > 1}
+    <li class="disabled"><a href="#">...</a></li>
+    #{/if}
+    
+    #{list items:pagination, as:'page'}
+    <li #{if page.current == true}class="active"#{/if}>
+      <a href="@{FilterTab.modifySearch(nav)}?offset=${ page.offset }">${page.pageNumber}</a>
+    </li>
+    #{/list}
+    
+     #{if pagination.get(pagination.size()-1).pageNumber < results.getTotal() / results.getLimit() }
+    <li class="disabled"><a href="#">...</a></li>
+    #{/if}
+    
+    #{if results.getOffset() + results.getLimit() < results.getTotal() }
+    <li><a href="@{FilterTab.modifySearch(nav)}?offset=${ results.getOffset() + results.getLimit() }">Next</a></li>
+    #{/if}
+    #{else}
+    <li class="disabled"><a href="#">Next</a></li>
+    #{/else}
+    
+     </ul>
+</div>
