@@ -4,11 +4,14 @@ import java.io.IOError;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.lucene.document.DateTools;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.ParseException;
@@ -110,6 +113,34 @@ public class LuceneSearcherImpl implements Searcher {
 	public SubmissionRepository subRepo = null;
 	public StateManager stateManager = null;
 	
+
+// TODO: Possible future improvement to add caching of the IndexReader.
+//
+//	private IndexReader reader = null;
+//	private int readerCount = 0;
+//	
+//	public synchronized IndexReader checkoutReader() throws CorruptIndexException, IOException {
+//		if (reader == null)
+//			reader = IndexReader.open(indexer.index);
+//		
+//		readerCount++;
+//		
+//		return reader;
+//	}
+//	
+//	public synchronized void returnReader(IndexReader reader) {
+//		readerCount--;
+//	}
+//	
+//	public void closeReader() throws IOException {
+//		while (readerCount > 0)
+//			Thread.yield();
+//		
+//		reader.close();
+//		reader = null;
+//	}
+	
+	
 	/**
 	 * Spring injection for the LuceneIndexerImpl. Note that this implementation
 	 * is tied directly to the indexer implementation, that is why the datatype
@@ -163,20 +194,19 @@ public class LuceneSearcherImpl implements Searcher {
 				
 				// Run the search
 				TopDocs topDocs = searcher.search(andQuery, offset + limit, sort);
-				
-				
-				List<Submission> results = new ArrayList<Submission>();
+								
+				List<Long> sortedIds = new ArrayList<Long>();
 				for(int i=offset; i < offset + limit ; i++) {
 					if (i >= topDocs.scoreDocs.length )
 						break;
 					Document doc = searcher.doc(topDocs.scoreDocs[i].doc);
 					
-					Long subId = Long.valueOf(doc.get("subId"));
-					Submission sub = subRepo.findSubmission(subId);
-					if (sub != null)
-						results.add(sub);
+					sortedIds.add(Long.valueOf(doc.get("subId")));
 				}
-		
+				
+				List<Submission> results = subRepo.findSubmissions(sortedIds);
+				Collections.sort(results,new ModelComparator(sortedIds));
+				
 				return new LuceneSearchResults<Submission>(filter, direction, orderBy, offset, limit, results, topDocs.totalHits);
 			} finally {
 				reader.close();
@@ -212,19 +242,19 @@ public class LuceneSearcherImpl implements Searcher {
 				
 				// Run the search
 				TopDocs topDocs = searcher.search(andQuery, offset + limit, sort);
-								
-				List<ActionLog> results = new ArrayList<ActionLog>();
+				
+				List<Long> sortedIds = new ArrayList<Long>();
 				for(int i=offset; i < offset + limit ; i++) {
 					if (i >= topDocs.scoreDocs.length )
 						break;
 					Document doc = searcher.doc(topDocs.scoreDocs[i].doc);
 					
-					Long logId = Long.valueOf(doc.get("logId"));
-					ActionLog log = subRepo.findActionLog(logId);
-					if (log != null)
-						results.add(log);
+					sortedIds.add(Long.valueOf(doc.get("logId")));
 				}
-		
+				
+				List<ActionLog> results = subRepo.findActionLogs(sortedIds);
+				Collections.sort(results,new ModelComparator(sortedIds));
+
 				return new LuceneSearchResults<ActionLog>(filter, direction, orderBy, offset, limit, results, topDocs.totalHits);
 			} finally {
 				reader.close();
@@ -506,6 +536,43 @@ public class LuceneSearcherImpl implements Searcher {
 			return pagination;
 		}
 	} // LuceneSearchResults
+	
+	
+	
+	/**
+	 * Sort vireo model objects based upon a provided list of ids.
+	 * 
+	 */
+	public static class ModelComparator implements Comparator<AbstractModel> {
+		
+		// The predefined list of sorted ids.
+		public final List<Long> sortedIds;
+		
+		/**
+		 * Construct a new comparator.
+		 * @param sortedIds A predefined list of sorted ids.
+		 */
+		public ModelComparator(List<Long> sortedIds) {
+			this.sortedIds = sortedIds;
+		}
+
+		@Override
+		public int compare(AbstractModel a, AbstractModel b) {
+			
+			Long aId = a.getId();
+			Long bId = b.getId();
+			
+			if (aId == bId)
+				return 0;
+			if (sortedIds.indexOf(aId) < sortedIds.indexOf(bId))
+				return -1;
+			return 1;
+		}
+		
+	}
+	
+	
+	
 }
 
 
