@@ -1,5 +1,7 @@
 package org.tdl.vireo.search.impl;
 
+import org.tdl.vireo.search.Indexer;
+
 import play.Logger;
 import play.PlayPlugin;
 import play.modules.spring.Spring;
@@ -15,45 +17,45 @@ import play.modules.spring.Spring;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 public class LucenePlayPluginImpl extends PlayPlugin {
-
-	// We can't load the indexer right away because when this plugin get's
-	// constructed Spring is not yet available.
-	public static LuceneIndexerImpl indexer = null;
-
-	/**
-	 * @return A statically cached copy of the indexer.
-	 */
-	private static LuceneIndexerImpl getIndexer() {
-		if (indexer == null)
-			indexer = Spring.getBeanOfType(LuceneIndexerImpl.class);
-		return indexer;
-	}
-
 	@Override
 	public void beforeInvocation() {
 		// Start the transaction by clearing it out of any previous state that
 		// may have been left over.
-		getIndexer().rollback();
+		try {
+			Spring.getBeanOfType(Indexer.class).rollback();
+		} catch (RuntimeException re) {
+			Logger.warn(re,"LucenePlayPlugin is unable to start index transaction because the indexer is not defined.");
+		}
 	}
 
 	@Override
 	public void afterInvocation() {
-		// The request succeeded, so commit the transaction.
-		getIndexer().commit();
+		// The request succeeded, so commit the transaction. If there's an
+		// exception here we want to throw it to blow up the rest of the
+		// application, so everyone knows about the error.
+		Spring.getBeanOfType(Indexer.class).commit();
 	}
 
 	@Override
 	public void onInvocationException(Throwable e) {
-		// There was an exception thrown, so rollback the transaction.
-		getIndexer().rollback();
+		try {
+			// There was an exception thrown, so rollback the transaction.
+			Spring.getBeanOfType(Indexer.class).rollback();
+		} catch (RuntimeException re) {
+			Logger.warn(re,"LucenePlayPlugin unable to roll back index transaction on exception.");
+		}
 	}
 
 	@Override
 	public void invocationFinally() {
-		// Either the after, or exception methods above should have been called.
-		// Just to make sure that we don't leave a transaction laying around we
-		// will rollback now.
-		getIndexer().rollback();
+		try {
+			// Either the after, or exception methods above should have been called.
+			// Just to make sure that we don't leave a transaction laying around we
+			// will rollback now.
+			Spring.getBeanOfType(Indexer.class).rollback();
+		} catch (RuntimeException re) {
+			Logger.warn(re,"LucenePlayPlugin unable to roll back index transaction on exception.");
+		}
 	}
 
 }
