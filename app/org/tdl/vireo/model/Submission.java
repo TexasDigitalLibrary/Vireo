@@ -414,6 +414,24 @@ public interface Submission extends AbstractModel {
 			Boolean value);
 	
 	/**
+	 * This is a short cut method to improve the performance of displaying
+	 * search results. It is suggested that implementors cache the entry of the
+	 * last action log item to improve performance.
+	 * 
+	 * @return The entry of the last log event to affect this submission.
+	 */
+	public String getLastLogEntry();
+
+	/**
+	 * This is a short cut method to improve the performance of displaying
+	 * search results. It is suggested that implementors cache the date of the
+	 * last action log to improve performance.
+	 * 
+	 * @return The date of the last log event to affect this submission.
+	 */
+	public Date getLastLogDate();
+	
+	/**
 	 * Create an action log entry about this submission.
 	 * 
 	 * @param entry

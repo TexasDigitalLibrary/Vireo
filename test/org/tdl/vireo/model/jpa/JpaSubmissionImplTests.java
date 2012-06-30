@@ -499,6 +499,8 @@ public class JpaSubmissionImplTests extends UnitTest {
 		assertEquals("Submission created by Mock Administrator",logItr.next().getEntry());
 		
 		assertFalse(logItr.hasNext());
+		
+		assertEquals("UMI Release cleared by Mock Administrator", sub.getLastLogEntry());
 	}
 	
 	/**

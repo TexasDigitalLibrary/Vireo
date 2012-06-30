@@ -42,6 +42,19 @@ public interface SubmissionRepository {
 	 * @return The submission object or null if not found.
 	 */
 	public Submission findSubmission(Long id);
+	
+	/**
+	 * Find all the submission objects for the given list of ids. Some
+	 * implementations may impose a limit on the number of ids that are
+	 * permissible. If an submission object was not found for the particular id,
+	 * then it will not appear in the resulting list and no exception will be
+	 * thrown. The result list may be in any order.
+	 * 
+	 * @param submissionIds
+	 *            The ids of all the submission objects.
+	 * @return A list of submission objects.
+	 */
+	public List<Submission> findSubmissions(List<Long> submissionIds);
 
 	/**
 	 * Find a submission by email hash
@@ -156,6 +169,19 @@ public interface SubmissionRepository {
 	 * @return The action log or null if not found.
 	 */
 	public ActionLog findActionLog(Long id);
+	
+	/**
+	 * Find all the action log objects for the given list of ids. Some
+	 * implementations may impose a limit on the number of ids that are
+	 * permissible. If a log object was not found for the particular id, then it
+	 * will not appear in the resulting list and no exception will be thrown.
+	 * The result list may be in any order.
+	 * 
+	 * @param logIds
+	 *            The ids of all the action log objects.
+	 * @return A list of action log objects.
+	 */
+	public List<ActionLog> findActionLogs(List<Long> logIds);
 
 	/**
 	 * Find all action logs for a particular submission order by date.
