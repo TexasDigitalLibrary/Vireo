@@ -91,25 +91,6 @@ public interface SubmissionRepository {
 	 *         repository.
 	 */
 	public long findSubmissionsTotal();
-
-	/**
-	 * Perform a filter search of submissions returning the result.
-	 * 
-	 * @param filter
-	 *            The filter object to search by.
-	 * @param orderBy
-	 *            The order of submissions
-	 * @param direction
-	 *            Weather the order is ascending or descending.
-	 * @param offset
-	 *            What index to off set the list into.
-	 * @param limit
-	 *            How many submissions to returned.
-	 * @return The result containing the list of submissions.
-	 */
-	public SearchResult<Submission> filterSearchSubmissions(SearchFilter filter,
-			SearchOrder orderBy, SearchDirection direction, int offset,
-			int limit);
 	
 	// //////////////////////////////////////////////////////////////
 	// Submission informational
@@ -208,26 +189,6 @@ public interface SubmissionRepository {
 	 *         repository.
 	 */
 	public long findActionLogsTotal();
-
-	
-	/**
-	 * Perform a filter search of ActionLogs returning the result.
-	 * 
-	 * @param filter
-	 *            The filter object to search by.
-	 * @param orderBy
-	 *            The order of actionLogs
-	 * @param direction
-	 *            Weather the order is ascending or descending.
-	 * @param offset
-	 *            What index to off set the list into.
-	 * @param limit
-	 *            How many logs to returned.
-	 * @return The result object containing the list of action logs.
-	 */
-	public SearchResult<ActionLog> filterSearchActionLogs(SearchFilter filter,
-			SearchOrder orderBy, SearchDirection direction, int offset,
-			int limit);
 	
 	// //////////////////
 	// Filter Search
