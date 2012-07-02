@@ -166,6 +166,11 @@ public class LuceneIndexerImpl implements Indexer {
 	// Spring dependencies
 	public SubmissionRepository subRepo = null;
 	
+	// A flag to designate weather the current index is corrupted. This does two
+	// things, prevents searches across the corrupted index and serves as a flag
+	// to prevent infinate rebuilding of a corrupted index.
+	public boolean corruptIndex = false;
+	
 	/**
 	 * Construct a new LuceneIndexer
 	 */
@@ -313,13 +318,52 @@ public class LuceneIndexerImpl implements Indexer {
 		}
 	}
 	
+	/**
+	 * Delete the index and rebuild.
+	 * 
+	 * This method allows for recovery of corrupted indexes because it blows
+	 * away whatever is in the index directory.
+	 * 
+	 * This method will (even with the wait flag turned off) will block until
+	 * all the current jobs have been canceled and the index files have been
+	 * deleted.
+	 */
 	@Override
 	public void deleteAndRebuild(boolean wait) {
+
+		Logger.info("Removing the entire lucene index at '"+indexFile.getPath()+"' and rebuilding.'");
 		
+		// First, cancel any currently running jobs.
+		nextJob = null;
+		if (currentJob != null)
+			currentJob.cancelJob();
+		synchronized(this) {
+			
+			// Wait for the jobs to stop
+			while(isJobRunning()) {
+				Thread.yield();
+			}
+			
+			// Delete everything in the index directory.
+			if (indexFile != null && indexFile.exists() ) {
+				File[] files = indexFile.listFiles();
+				for (File file : files) {
+					file.delete();
+				}
+			}
+			
+			// Create our job, and put it on the queue. This will prevent any other jobs from jumping before this one while we are in the synchronized queue.
+			LuceneAbstractJobImpl newJob = new LuceneRebuildJobImpl(this);
+			currentJob = newJob;
+		}
 		
-		
-		
-		
+		if (wait) {
+			// Start the rebuild job in the current thread.
+			currentJob.doJob();
+		} else {
+			// Start it as a background job.
+			currentJob.now();
+		}
 	}
 	
 	@Override

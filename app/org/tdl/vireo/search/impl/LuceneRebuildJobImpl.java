@@ -43,7 +43,7 @@ public class LuceneRebuildJobImpl extends LuceneAbstractJobImpl {
 
 	@Override
 	public void writeIndex() throws CorruptIndexException,
-	LockObtainFailedException, IOException {
+	LockObtainFailedException, IOException, InterruptedException {
 
 		progress = 0;
 		total = (int) indexer.subRepo.findSubmissionsTotal();
@@ -60,9 +60,18 @@ public class LuceneRebuildJobImpl extends LuceneAbstractJobImpl {
 			while (itr.hasNext()) {
 				indexSubmission(writer, itr.next());
 				progress++;
+				
+				
+				// Have we been asked to stop?
+				if (cancel) {
+					writer.rollback();
+					writer = null;
+					throw new InterruptedException("Lucene '"+this.getLabel()+"' job recieved a cancel request after processing "+progress+" number of submissions, rolling back changes.");
+				}
 			}
 		} finally {
-			writer.close();
+			if (writer != null)
+				writer.close();
 		}
 	}
 

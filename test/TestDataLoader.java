@@ -361,8 +361,6 @@ public class TestDataLoader extends Job {
 	@Override
 	public void doJob() {
 		try {			
-			clearIndex();
-			
 			// Turn off authorizations.
 			context.turnOffAuthorization(); 
 			try {
@@ -375,26 +373,12 @@ public class TestDataLoader extends Job {
 			loadSubmissions();
 			
 			Logger.debug("Rebuilding index...");
-			indexer.rebuildNow();
+			indexer.deleteAndRebuild(true);
 			indexer.rollback();
 			
 			context.logout();
 			
 		} catch (Exception e) {Logger.error(e, "Unable to load test data.");}
-	}
-	
-	/**
-	 * Clear out the lucene search index each time we start in test mode.
-	 */
-	public static void clearIndex() {
-		File directory = indexer.indexFile;
-		if (directory != null && directory.exists() && directory.isDirectory() && directory.canWrite()) {
-			
-			File[] files = directory.listFiles();
-			for (File file : files) {
-				file.delete();
-			}
-		}
 	}
 	
 	/**

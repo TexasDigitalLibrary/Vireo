@@ -69,7 +69,7 @@ public class LuceneUpdateJob extends LuceneAbstractJobImpl {
 	}
 
 	@Override
-	public void writeIndex() throws CorruptIndexException, LockObtainFailedException, IOException {
+	public void writeIndex() throws CorruptIndexException, LockObtainFailedException, IOException, InterruptedException {
 
 
 		// Update the progress and total one last time before starting.
@@ -93,6 +93,13 @@ public class LuceneUpdateJob extends LuceneAbstractJobImpl {
 				JPA.em().detach(sub);
 
 				progress++;
+				
+				// Have we been asked to stop?
+				if (cancel) {
+					writer.rollback();
+					writer = null;
+					throw new InterruptedException("Lucene '"+this.getLabel()+"' job recieved a cancel request after processing "+progress+" number of submissions, rolling back changes.");
+				}
 			}
 		} finally {
 			writer.close();

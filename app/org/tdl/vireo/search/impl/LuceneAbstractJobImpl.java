@@ -41,6 +41,9 @@ public abstract class LuceneAbstractJobImpl extends Job {
 	// lastly just before a job is about to run.
 	public int total = 0;
 	
+	// Flag to stop this job immediately abandoning any results.
+	public boolean cancel = false;
+	
 	/**
 	 * Construct a new index job. 
 	 * 
@@ -70,18 +73,6 @@ public abstract class LuceneAbstractJobImpl extends Job {
 	public abstract String getLabel();
 	
 	/**
-	 * Write the index.
-	 * 
-	 * This method may throw the following exceptions, and the caller is
-	 * expected to handle them.
-	 * 
-	 * @throws CorruptIndexException
-	 * @throws LockObtainFailedException
-	 * @throws IOException
-	 */
-	public abstract void writeIndex() throws CorruptIndexException, LockObtainFailedException, IOException;
-	
-	/**
 	 * @return The number of processed submissions.
 	 */
 	public int getProgress() {
@@ -96,36 +87,76 @@ public abstract class LuceneAbstractJobImpl extends Job {
 	}
 	
 	/**
+	 * Single to the running job that it should be cancelled. If the job is
+	 * currently in progress it will stop after the next submission, rollback
+	 * any uncommitted changes to the index and finish processing.
+	 */
+	public void cancelJob() {
+		this.cancel = true;
+	}
+	
+	/**
 	 * Start an index job.
 	 * 
 	 * This method handles the exceptions
 	 */
 	public void doJob() {
 		try {
+			if (cancel) {
+				throw new InterruptedException("Lucene '"+this.getLabel()+"' job recieved a cancel request before begining processing.");
+			}
+			
 			long start = System.currentTimeMillis();
 							
 			writeIndex();
 			
-			Logger.debug("Index job '"+this.getLabel()+"' over "+total+" submissions completed succesfully in " + ((System.currentTimeMillis()-start)/1000F) +" seconds.");
+			Logger.debug("Lucene '"+this.getLabel()+"' job processed "+total+" submissions completed succesfully in " + ((System.currentTimeMillis()-start)/1000F) +" seconds.");
+			
+			// If we successfully finished, then the index is no longer corrupted.
+			indexer.corruptIndex = false;
 
 		} catch(CorruptIndexException cie) {
-			// TODO: handle this gracefully.
-			Logger.fatal(cie, "Unable to update index because it is corrupted.");
+			
+			// Attempt to automaticall rebuild the index without intervention. To prevent infinate loops we will only rebuild a maximum of 5 times.
+			if (!indexer.corruptIndex) {
+				Logger.error(cie, "Lucene is unable to update index because it is corrupted, attempting to recover by rebuilding the index.");
+				indexer.deleteAndRebuild(false);
+				cancel = true;
+				
+			} else {
+				Logger.fatal(cie, "Lucene's attempt to rebuild a corrupted index has failed. No further attempts will be made, and searching is disabled.");
+			}
 			throw new RuntimeException(cie);
 			
 		} catch(LockObtainFailedException lofe) {
-			// TODO: handle? I think lucene allready waits some amount of time before throwing.
-			Logger.error(lofe, "Unable to update search index because it is being locked by another process.");
+			Logger.error(lofe, "Lucene is unable to update search index because it is being locked by another process.");
 			throw new RuntimeException(lofe);
 			
 		} catch (IOException ioe) {
-			Logger.error(ioe, "Unable to update search index because of IOException.");
+			Logger.error(ioe, "Lucene is unable to update search index because of IO exception.");
 			throw new RuntimeException(ioe);
-			
+		} catch (InterruptedException ie) {
+			// We were asked to stop.
+			Logger.info(ie.getMessage());
 		} finally {
-			indexer.runNextJob(null);
+			// If we were cancled don't start the next job.
+			if (!cancel)
+				indexer.runNextJob(null);
 		}
 	}
+	
+	/**
+	 * Write the index.
+	 * 
+	 * This method may throw the following exceptions, and the caller is
+	 * expected to handle them.
+	 * 
+	 * @throws CorruptIndexException
+	 * @throws LockObtainFailedException
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public abstract void writeIndex() throws CorruptIndexException, LockObtainFailedException, IOException,  InterruptedException;
 	
 	/**
 	 * Write a the provided submission and all associated action logs to the
