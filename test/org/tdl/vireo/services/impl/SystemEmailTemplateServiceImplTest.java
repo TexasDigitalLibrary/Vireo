@@ -115,7 +115,9 @@ public class SystemEmailTemplateServiceImplTest extends UnitTest {
 		assertNotNull(names);
 		assertTrue(names.contains("SYSTEM New User Registration"));
 		assertTrue(names.contains("SYSTEM Verify Email Address"));
-		assertEquals(2,names.size());
+		assertTrue(names.contains("SYSTEM Email Test"));
+
+		assertEquals(3,names.size());
 
 	}
 	
