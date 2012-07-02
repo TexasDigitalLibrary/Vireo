@@ -1,5 +1,139 @@
 #{extends 'admin.html' /}
 
+#{set 'moreScripts'}
+<script type="text/javascript">
+jQuery(document).ready(function(){
+	/**
+	 * Swap from span to input field and back
+	 *
+	 *
+	 *
+	 */
+	 jQuery(".edit-box ul li span").live("click", function(){
+		if(jQuery(".editing").length == 0){
+			jQuery(".tooltip").remove();
+			jQuery(this).find(".tooltip-icon").remove();
+			var editItem = jQuery(this);       
+			var value = editItem.text().trim();
+			
+			if(value=="none"){
+				value="";
+				jQuery("body").append('<div id="backup"></div>')
+			} else {
+				//Make back up info			
+				jQuery("body").append('<div id="backup">'+editItem.html().trim()+'</div>')
+			}
+			
+			//Text Areas
+			if(editItem.hasClass("textarea")){
+				editItem.replaceWith('<div id="'+editItem.attr("id")+'" class="editing textarea"><textarea class="field" textarea">'+value+'</textarea>&nbsp<i class="icon-remove"></i>&nbsp<i class="icon-ok"></i></div>');
+			//Select Drop Downs
+			} else if(editItem.hasClass("select")){
+				var selectCode = '<div id="'+editItem.attr("id")+'" class="editing select"><select class="field">';
+				selectCode += '<option value="">choose...</option>';
+				selectCode += '<option value="'+value+'" selected="selected">'+value+'</option>';
+				selectCode += '</select>&nbsp<i class="icon-remove"></i>&nbsp<i class="icon-ok"></i></div>';
+				editItem.replaceWith(selectCode);
+			//Input Fields
+			} else {
+				editItem.replaceWith('<div id="'+editItem.attr("id")+'" class="editing"><input class="field" type="text" value="'+value+'" />&nbsp<i class="icon-remove"></i>&nbsp<i class="icon-ok"></i></div>');
+			}
+			jQuery(".editing").setTimeout(jQuery(".editing").focus());
+		} 
+	});
+	
+	
+	jQuery(".icon-ok").live("click", function(){
+		jQuery("#backup").remove();
+		var classValue = '';
+		var fieldItem;
+		if(jQuery(".editing").hasClass("textarea")){
+			classValue = classValue + 'textarea ';
+			fieldItem = jQuery(".editing textarea");
+		} else if(jQuery(".editing").hasClass("select")){
+			classValue = classValue + 'select ';
+			fieldItem = jQuery(".editing select");
+		} else {
+			fieldItem = jQuery(".editing input");
+		}
+		var id=jQuery(".editing").attr("id");
+		var theValue;
+		if(fieldItem.val().trim()){
+			theValue = fieldItem.val();
+		}
+		jQuery(".editing").replaceWith('<div class="'+id+' progress progress-striped active"><div class="bar" style="width:100%"></div></div>');
+		        			
+		jQuery.ajax({
+			url:'@{ViewTab.updateJSON()}',
+			data:{
+				subId:'${submission.getId()}',
+				field:id,
+				value:theValue
+			},
+			dataType:'json',
+			type:'POST',
+			success:function(data){
+				var currentValue;
+				if(data.value){
+					currentValue = nl2br(data.value);
+				} else {
+					currentValue = "none";
+					classValue = classValue + 'empty ';
+				}
+				
+				if(data.success){
+					jQuery("div."+id).replaceWith('<span id="'+id+'" class="'+classValue+'">'+currentValue+'</span>');
+				} else {
+					jQuery("div."+id).replaceWith('<span id="'+id+'" class="error '+classValue+'">'+currentValue+' <a href="#" class="tooltip-icon" rel="tooltip" title="'+data.message+'"><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
+					jQuery('.tooltip-icon').tooltip();
+				}
+			},
+			error:function(){
+				jQuery("div."+id).replaceWith('<span id="'+id+'" class="error '+classValue+'">Failed to Update <a href="#" class="tooltip-icon" rel="tooltip" title="There was an error with your request."><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
+				jQuery('.tooltip-icon').tooltip();
+			}
+			
+		})
+	});
+	
+	//Cancel an edit.
+	jQuery(".icon-remove").live("click", function(){
+		var classValue = '';
+		var fieldItem;
+		if(jQuery(".editing").hasClass("textarea")){
+			classValue = classValue + 'textarea ';
+			fieldItem = jQuery(".editing textarea");
+		} else if(jQuery(".editing").hasClass("select")){
+			classValue = classValue + 'select ';
+			fieldItem = jQuery(".editing select");
+		} else {
+			fieldItem = jQuery(".editing input");
+		}
+		var id=jQuery(".editing").attr("id");
+		
+		var currentValue = jQuery("#backup").html();
+		
+		if(!currentValue){
+			currentValue = "none";
+			classValue += "empty ";
+		}
+		
+		jQuery(".editing").replaceWith('<span id="'+id+'" class="'+classValue+'">'+currentValue+'</span>');
+		
+		jQuery("#backup").remove();
+	});
+	
+	/**
+	 * Function to convert new lines in <br /> tags.
+	 */
+	function nl2br (str, is_xhtml) {   
+		var breakTag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';    
+		return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1'+ breakTag +'$2');
+	}
+});
+</script>
+#{/set}
+
 <div id="left-column" class="pull-left">
 
 	<div class="side-box">
@@ -153,9 +287,9 @@
 						</span></li>
 					<li><label>Permanent Address:</label><span id="permAddress"
 						#{if submitter.getPermanentPostalAddress()}
-							>${submitter.getPermanentPostalAddress()}
+							class="textarea">${submitter.getPermanentPostalAddress()}
 						#{/if}#{else}
-							class="empty">none
+							class="textarea empty">none
 						#{/else}
 						</span></li>
 					<li><label>Current Phone:</label><span id="currentPhone"
@@ -167,9 +301,9 @@
 						</span></li>
 					<li><label>Current Address:</label><span id="currentAddress"
 						#{if submitter.getCurrentPostalAddress()}
-							>${submitter.getCurrentPostalAddress()}
+							class="textarea">${submitter.getCurrentPostalAddress()}
 						#{/if}#{else}
-							class="empty">none
+							class="textarea empty">none
 						#{/else}
 					</span></li>
 				</ul>
@@ -189,13 +323,13 @@
 						</span></li>
 					<li><label>Embargo:</label><span id="embargo"
 						#{if submission.getEmbargoType()}
-							>${submission.getEmbargoType().getName()}
+							class="select">${submission.getEmbargoType().getName()}
 						#{/if}#{else}
-							class="empty">none
+							class="select empty">none
 						#{/else}
 						</span></li>
 					<li><label>UMI Release:</label><span id="umiRelease"
-						#{if submission.getUMIRelease()}
+						#{if submission.getUMIRelease() != null}
 							>${submission.getUMIRelease()}
 						#{/if}#{else}
 							class="empty">none
@@ -203,16 +337,16 @@
 						</span></li>
 					<li><label>Document Type:</label><span id="docType"
 						#{if submission.getDocumentType()}
-							>${submission.getDocumentType()}
+							class="select">${submission.getDocumentType()}
 						#{/if}#{else}
-							class="empty">none
+							class="select empty">none
 						#{/else}
 						</span></li>
 					<li><label>Keywords:</label><span id="keywords"
 						#{if submission.getDocumentKeywords()}
-							>${submission.getDocumentKeywords()}
+							class="textarea">${submission.getDocumentKeywords()}
 						#{/if}#{else}
-							class="empty">none
+							class="textarea empty">none
 						#{/else}
 					</span></li>
 				</ul>
@@ -221,9 +355,9 @@
 				<ul class="unstyled">
 					<li><label>Abstract:</label><span id="abstract"
 						#{if submission.getDocumentAbstract()}
-							>${submission.getDocumentAbstract()}
+							class="textarea">${submission.getDocumentAbstract()}
 						#{/if}#{else}
-							class="empty">none
+							class="textarea empty">none
 						#{/else}
 					</span></li>
 				</ul>
@@ -243,23 +377,23 @@
 						</span></li>
 					<li><label>Department:</label><span id="department"
 						#{if submission.getDepartment()}
-							>${submission.getDepartment()}
+							class="select">${submission.getDepartment()}
 						#{/if}#{else}
-							class="empty">none
+							class="select empty">none
 						#{/else}
 						</span></li>
 					<li><label>Degree:</label><span id="degree"
 						#{if submission.getDegree()}
-							>${submission.getDegree()}
+							class="select">${submission.getDegree()}
 						#{/if}#{else}
-							class="empty">none
+							class="select empty">none
 						#{/else}
 						</span></li>
 					<li><label>Degree Level:</label><span id="degreeLevel"
 						#{if submission.getDegree()}
-							>${degreeLevel}
+							class="select">${degreeLevel}
 						#{/if}#{else}
-							class="empty">none
+							class="select empty">none
 						#{/else}
 						</span></li>
 					<li><label>Major:</label><span id="major"
@@ -303,6 +437,14 @@
 			</div>
 			<div class="clear"></div>
 			</div>
+			
+			<!-- Hidden Select Options -->
+			<div id="embargoTypeOptions" style="display:none;">
+				#{list items:embargos, as:'embargo'}
+					<option value="${embargo.getId()}">${embargo.getName()}</option>
+				#{/list}
+			</div>
+			
 		</div>
 		
 		<h2>ACTION LOG</h2>
@@ -315,7 +457,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				#{list items:0..3, as:'value'}
+				#{list items:0..4, as:'value'}
 					#{if actionLogs[value]}
 					<tr>
 						<td>${actionLogs[value].getPerson().getFirstName()} ${actionLogs[value].getPerson().getLastName()}</td>

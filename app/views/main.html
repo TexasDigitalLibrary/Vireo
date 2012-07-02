@@ -32,10 +32,9 @@
     </head>
     <body>
     	<div class="container">
-	    	<div id="header">	    		
-	    		<a id="tdl-logo" href="http://www.tdl.org" title="Texas Digital Library Home">
-	    		&nbsp;
-	    		</a>
+	    	<div id="header">	    
+	    		<div id=left-logo></div>		
+	    		<!-- <a id="tdl-logo" href="http://www.tdl.org" title="Texas Digital Library Home">&nbsp;</a> -->
 	    		
 	    		<div id="personal-bar">
 					#{if session.get("personId") }
@@ -46,14 +45,16 @@
 					   <a href="@{Authentication.loginList()}">Login</a>
 					#{/else}
 				</div>    	
+				<div id=right-logo></div>
 	    	</div>
 	    	<div id="body">
 	       		#{doLayout /}
-	        </div>	        
-    	</div>
-    	<div id="footer">
+	        </div>
+    	</div>	        
+	    <div id="footer">
         	<p class="pull-left">Vireo 1.8 &copy; 2012 <a href="#">Texas Digital Library</a>. All Rights Reserved.</p>
         	<p class="pull-right">Valid <a href="#">XHTML 1.0</a>, <a href="#">CSS</a>. <a href="#">Section 508 Compliant</a>.</p>
-        </div>
+       	</div>
+
     </body>
 </html>
