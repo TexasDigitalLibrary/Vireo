@@ -62,7 +62,12 @@ in results.
                         out.print("<a href=\""+viewTabUrl+"?subId="+sub.getId()+"\">"+sub.getId()+"</a>");
                      }
                      break;
-                 case SUBMITTER:
+                case STUDENT_EMAIL:
+                     if (sub.getSubmitter() != null) {
+                        out.print(sub.getSubmitter().getEmail());
+                     }
+                     break;
+                 case STUDENT_NAME:
                      if (sub.getStudentLastName() == null) {
                         out.print("Unknown");
                      } else {

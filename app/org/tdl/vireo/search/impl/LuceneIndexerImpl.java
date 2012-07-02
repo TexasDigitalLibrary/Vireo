@@ -112,6 +112,8 @@ import play.modules.spring.Spring;
  * 
  * studentName: The student name for sorting.
  * 
+ * studentEmail: The student's email for sorting.
+ * 
  * documentTitle: The document's title for sorting.
  * 
  * documentAbstract: The document's abstract for sorting.

@@ -61,7 +61,8 @@ public class LuceneSearcherImpl implements Searcher {
 	{
 		// Sort fields for submissions
 		SORT_SUB_FIELDS[SearchOrder.ID.ordinal()] = "subId";
-		SORT_SUB_FIELDS[SearchOrder.SUBMITTER.ordinal()] = "studentName";
+		SORT_SUB_FIELDS[SearchOrder.STUDENT_EMAIL.ordinal()] = "studentEmail";
+		SORT_SUB_FIELDS[SearchOrder.STUDENT_NAME.ordinal()] = "studentName";
 		SORT_SUB_FIELDS[SearchOrder.STATE.ordinal()] = "state";
 		SORT_SUB_FIELDS[SearchOrder.ASSIGNEE.ordinal()] = "sortAssigned";
 		SORT_SUB_FIELDS[SearchOrder.DOCUMENT_TITLE.ordinal()] = "documentTitle";

@@ -464,7 +464,10 @@ public class TestDataLoader extends Job {
 		for(int i=0; i < RANDOM_SUBMISSIONS; i++) {
 			context.turnOffAuthorization();
 			String[] studentName = generateRandomName(random, ACTOR_NAMES);
-			Person student = personRepo.createPerson("student"+i, "student"+i+"@tdl.org", studentName[0], studentName[1], RoleType.STUDENT);
+			String studentEmail = generateRandomEmail(random, studentName);
+			studentEmail = studentEmail.replaceFirst("@", (i+1)+"@");
+			
+			Person student = personRepo.createPerson("student"+i, studentEmail, studentName[0], studentName[1], RoleType.STUDENT);
 			student.setMiddleName(studentName[2]);
 			student.save();
 			

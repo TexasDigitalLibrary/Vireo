@@ -391,7 +391,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 			assertTrue(submissions.indexOf(sub2) < submissions.indexOf(sub1));
 			
 			// Submitter
-			submissions = searcher.submissionSearch(filter, SearchOrder.SUBMITTER, SearchDirection.ASCENDING, 0, 20).getResults();
+			submissions = searcher.submissionSearch(filter, SearchOrder.STUDENT_NAME, SearchDirection.ASCENDING, 0, 20).getResults();
 			assertTrue(submissions.contains(sub1));
 			assertTrue(submissions.contains(sub2));
 			assertTrue(submissions.indexOf(sub2) < submissions.indexOf(sub1));

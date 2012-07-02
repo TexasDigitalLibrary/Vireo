@@ -227,6 +227,9 @@ public abstract class LuceneAbstractJobImpl extends Job {
 			studentName += sub.getStudentMiddleName();
 		searchText.append(studentName).append(" ");
 		
+		String studentEmail = sub.getSubmitter().getEmail();
+		searchText.append(studentEmail);
+		
 		String documentTitle = sub.getDocumentTitle();
 		String documentAbstract = sub.getDocumentAbstract();
 		String documentKeywords = sub.getDocumentKeywords();
@@ -317,6 +320,9 @@ public abstract class LuceneAbstractJobImpl extends Job {
 		
 		if (studentName != null)
 		doc.add(new Field("studentName",studentName, Field.Store.NO,Index.NOT_ANALYZED));
+		
+		if (studentEmail != null)
+		doc.add(new Field("studentEmail",studentEmail, Field.Store.NO,Index.NOT_ANALYZED));
 		
 		if (documentTitle != null)
 		doc.add(new Field("documentTitle",documentTitle, Field.Store.NO,Index.NOT_ANALYZED));
@@ -424,6 +430,9 @@ public abstract class LuceneAbstractJobImpl extends Job {
 			
 			if (studentName != null)
 			doc.add(new Field("studentName",studentName, Field.Store.NO,Index.NOT_ANALYZED));
+			
+			if (studentEmail != null)
+				doc.add(new Field("studentEmail",studentEmail, Field.Store.NO,Index.NOT_ANALYZED));
 			
 			if (documentAbstract != null)
 			doc.add(new Field("documentAbstract",documentAbstract, Field.Store.NO,Index.NOT_ANALYZED));

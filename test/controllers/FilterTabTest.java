@@ -459,7 +459,7 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 			
 			// To save test run time instead of searching all possible search orders, we'll just check one.
 			//for(SearchOrder order : SearchOrder.values()) {
-				SearchOrder order = SearchOrder.SUBMITTER;
+				SearchOrder order = SearchOrder.STUDENT_NAME;
 			
 			
 				// Test each column as ascending and decending
