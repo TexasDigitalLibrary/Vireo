@@ -18,7 +18,7 @@ in results.
         for(org.tdl.vireo.search.SearchOrder column : columns) {
             if (orderby == column) {
                 out.print("<th class=\"orderby " + ((direction == ASCENDING) ? "ascending" : "descending") +"\">");
-                out.print("<a href="+modifySearchUrl+"?direction=toggle\">")
+                out.print("<a href=\""+modifySearchUrl+"?direction=toggle\">")
                 out.print(play.i18n.Messages.get(nav.toUpperCase() + "_COLUMN_"+column.name()));
                 out.print("</a>");
                 out.print("</th>");

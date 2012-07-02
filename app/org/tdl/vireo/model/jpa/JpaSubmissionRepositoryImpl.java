@@ -77,6 +77,8 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 	@Override
 	public List<Submission> findSubmissions(List<Long> submissionIds) {
 		
+		if (submissionIds == null || submissionIds.size() == 0)
+			return new ArrayList<Submission>();
 		
 		StringBuilder sql = new StringBuilder();
 		sql.append("FROM JpaSubmissionImpl WHERE id IN (");
@@ -194,6 +196,9 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 
 	@Override
 	public List<ActionLog> findActionLogs(List<Long> logIds) {
+		
+		if (logIds == null || logIds.size() == 0)
+			return new ArrayList<ActionLog>();
 		
 		StringBuilder sql = new StringBuilder();
 		sql.append("FROM JpaActionLogImpl WHERE id IN (");
