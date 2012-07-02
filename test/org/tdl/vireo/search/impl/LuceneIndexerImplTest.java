@@ -73,7 +73,6 @@ public class LuceneIndexerImplTest extends UnitTest {
 	 */
 	@After
 	public void cleanup() {
-
 		for (Submission sub : subs) {
 			subRepo.findSubmission(sub.getId()).delete();
 		}
@@ -156,7 +155,7 @@ public class LuceneIndexerImplTest extends UnitTest {
 		assertEquals(-1L, indexer.getCurrentJobTotal());
 		
 		// Commit the 100 jobs.
-		indexer.commit();
+		indexer.commit(false);
 		
 		// Check that a job is running
 		assertTrue(indexer.isJobRunning());
@@ -199,7 +198,7 @@ public class LuceneIndexerImplTest extends UnitTest {
 		assertEquals(-1L, indexer.getCurrentJobTotal());
 		
 		// Kickoff rebuilding the index
-		indexer.rebuild();
+		indexer.rebuild(false);
 		
 		// Check that a job is running
 		assertTrue(indexer.isJobRunning());

@@ -113,34 +113,6 @@ public class LuceneSearcherImpl implements Searcher {
 	public SubmissionRepository subRepo = null;
 	public StateManager stateManager = null;
 	
-
-// TODO: Possible future improvement to add caching of the IndexReader.
-//
-//	private IndexReader reader = null;
-//	private int readerCount = 0;
-//	
-//	public synchronized IndexReader checkoutReader() throws CorruptIndexException, IOException {
-//		if (reader == null)
-//			reader = IndexReader.open(indexer.index);
-//		
-//		readerCount++;
-//		
-//		return reader;
-//	}
-//	
-//	public synchronized void returnReader(IndexReader reader) {
-//		readerCount--;
-//	}
-//	
-//	public void closeReader() throws IOException {
-//		while (readerCount > 0)
-//			Thread.yield();
-//		
-//		reader.close();
-//		reader = null;
-//	}
-	
-	
 	/**
 	 * Spring injection for the LuceneIndexerImpl. Note that this implementation
 	 * is tied directly to the indexer implementation, that is why the datatype

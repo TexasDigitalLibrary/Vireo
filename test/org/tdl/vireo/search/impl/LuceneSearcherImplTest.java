@@ -81,6 +81,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 	 */
 	@After
 	public void cleanup() throws InterruptedException {
+		try {
 		JPA.em().clear();
 		try {
 		if (person != null)
@@ -93,15 +94,11 @@ public class LuceneSearcherImplTest extends UnitTest{
 		JPA.em().getTransaction().commit();
 		JPA.em().getTransaction().begin();
 		
-		indexer.rebuild();
-		Thread.sleep(100);
-		for (int i = 0; i < 1000; i++) {
-			// Wait for the indexer to stop
-			Thread.sleep(100);
-			if (!indexer.isJobRunning())
-				break;
-		}
+		indexer.rebuild(true);
 		assertFalse(indexer.isJobRunning());
+		} catch (RuntimeException re) {
+			
+		}
 	}
 	
 	
@@ -141,13 +138,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 		JPA.em().getTransaction().commit();
 		JPA.em().getTransaction().begin();
 		Thread.sleep(100);
-		indexer.rebuild();
-		for (int i = 0; i < 1000; i++) {
-			// Wait for the indexer to stop
-			Thread.sleep(100);
-			if (!indexer.isJobRunning())
-				break;
-		}
+		indexer.rebuild(true);
 		assertFalse(indexer.isJobRunning());
 		
 		// Empty Filter
@@ -307,8 +298,8 @@ public class LuceneSearcherImplTest extends UnitTest{
 		
 		} finally {
 			filter.delete();
-			sub1.delete();
-			sub2.delete();
+			subRepo.findSubmission(sub1.getId()).delete();
+			subRepo.findSubmission(sub2.getId()).delete();
 			embargo1.delete();
 			embargo2.delete();
 			otherPerson.delete();
@@ -383,13 +374,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 		JPA.em().getTransaction().commit();
 		JPA.em().getTransaction().begin();
 		Thread.sleep(100);
-		indexer.rebuild();
-		for (int i = 0; i < 1000; i++) {
-			// Wait for the indexer to stop
-			Thread.sleep(100);
-			if (!indexer.isJobRunning())
-				break;
-		}
+		indexer.rebuild(true);
 		assertFalse(indexer.isJobRunning());
 		
 		// Search Text Filter
@@ -564,8 +549,8 @@ public class LuceneSearcherImplTest extends UnitTest{
 		} finally {
 			// Cleanup
 			filter.delete();
-			sub1.delete();
-			sub2.delete();
+			subRepo.findSubmission(sub1.getId()).delete();
+			subRepo.findSubmission(sub2.getId()).delete();
 			file1.delete();
 			file2.delete();
 			e1.delete();
@@ -611,13 +596,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 		JPA.em().getTransaction().commit();
 		JPA.em().getTransaction().begin();
 		Thread.sleep(100);
-		indexer.rebuild();
-		for (int i = 0; i < 1000; i++) {
-			// Wait for the indexer to stop
-			Thread.sleep(100);
-			if (!indexer.isJobRunning())
-				break;
-		}
+		indexer.rebuild(true);
 		
 		List<ActionLog> logs;
 		NamedSearchFilter filter = null;
@@ -771,8 +750,8 @@ public class LuceneSearcherImplTest extends UnitTest{
 		} finally {
 			
 			filter.delete();
-			sub1.delete();
-			sub2.delete();
+			subRepo.findSubmission(sub1.getId()).delete();
+			subRepo.findSubmission(sub2.getId()).delete();
 			embargo1.delete();
 			embargo2.delete();
 			otherPerson.delete();

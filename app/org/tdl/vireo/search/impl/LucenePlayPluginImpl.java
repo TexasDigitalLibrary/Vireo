@@ -33,7 +33,7 @@ public class LucenePlayPluginImpl extends PlayPlugin {
 		// The request succeeded, so commit the transaction. If there's an
 		// exception here we want to throw it to blow up the rest of the
 		// application, so everyone knows about the error.
-		Spring.getBeanOfType(Indexer.class).commit();
+		Spring.getBeanOfType(Indexer.class).commit(false);
 	}
 
 	@Override
