@@ -37,20 +37,40 @@ public interface Indexer {
 	/**
 	 * Commit the updated models to the search index.
 	 * 
-	 * Because updating the search index may be a time consuming process this
-	 * method will return immediately and start a background thread to update
-	 * the index.
+	 * @param wait
+	 *            If true the method will not return until rebuilding the index
+	 *            is completed, otherwise rebuilding will take place in a
+	 *            background thread.
 	 */
-	public void commit();
+	public void commit(boolean wait);
 
 	/**
 	 * Rebuild the entire search index from scratch.
 	 * 
-	 * This will remove all entries in the search index and rebuild it. This
-	 * method will return immediatly and start a background process to rebuild
-	 * the index.
+	 * This will remove all entries in the search index and rebuild it.
+	 * 
+	 * @param wait
+	 *            If true the method will not return until rebuilding the index
+	 *            is completed, otherwise rebuilding will take place in a
+	 *            background thread.
 	 */
-	public void rebuild();
+	public void rebuild(boolean wait);
+	
+	/**
+	 * Delete the entire search index and rebuild it from scratch. This will
+	 * cancel any index jobs currently in progress, and the index will be
+	 * irrevocably deleted. Following the deletion, the index will be rebuild.
+	 * 
+	 * While this index is rebuilding searches may not be performed against the
+	 * index. Any search that does process will result in an exception.
+	 * 
+	 * 
+	 * @param wait
+	 *            If true the method will not return until rebuilding the index
+	 *            is completed, otherwise rebuilding will take place in a
+	 *            background thread.
+	 */
+	public void deleteAndRebuild(boolean wait);
 
 	/////////////////
 	// Job Management
