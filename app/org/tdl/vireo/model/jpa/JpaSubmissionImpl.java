@@ -229,9 +229,10 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		
 		assertReviewerOrOwner(submitter);
 
-		this.studentFirstName = firstName;
-		
-		generateChangeLog("Student first name", firstName, false);
+		if (!equals(this.studentFirstName,firstName)) {
+			this.studentFirstName = firstName;
+			generateChangeLog("Student first name", firstName, false);
+		}
 	}
 
 	@Override
@@ -244,9 +245,10 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		
 		assertReviewerOrOwner(submitter);
 
-		this.studentLastName = lastName;
-		
-		generateChangeLog("Student last name", lastName, false);
+		if (!equals(this.studentLastName,lastName)) {
+			this.studentLastName = lastName;
+			generateChangeLog("Student last name", lastName, false);
+		}
 	}
 
 	@Override
@@ -258,9 +260,10 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		
 		assertReviewerOrOwner(submitter);
 
-		this.studentMiddleName = middleName;
-		
-		generateChangeLog("Student middle name", middleName, false);
+		if (!equals(this.studentMiddleName,middleName)) {
+			this.studentMiddleName = middleName;
+			generateChangeLog("Student middle name", middleName, false);
+		}
 	}
 
 	@Override
@@ -273,12 +276,14 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		
 		assertReviewerOrOwner(submitter);
 
-		this.studentBirthYear = year;
-
-		if (year == null)
-			generateChangeLog("Student birth year", null,false);
-		else
-			generateChangeLog("Student birth year", String.valueOf(year),false);
+		if (!equals(this.studentBirthYear,year)) {
+			this.studentBirthYear = year;
+	
+			if (year == null)
+				generateChangeLog("Student birth year", null,false);
+			else
+				generateChangeLog("Student birth year", String.valueOf(year),false);
+		}
 	}
 
 	@Override
@@ -290,9 +295,12 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	public void setDocumentTitle(String title) {
 		
 		assertReviewerOrOwner(submitter);
-		this.documentTitle = title;
 		
-		generateChangeLog("Document title", title, false);
+		if (!equals(this.documentTitle,title)) {
+
+			this.documentTitle = title;
+			generateChangeLog("Document title", title, false);
+		}
 	}
 
 	@Override
@@ -304,9 +312,11 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	public void setDocumentAbstract(String docAbstract) {
 		
 		assertReviewerOrOwner(submitter);
-		this.documentAbstract = docAbstract;
 		
-		generateChangeLog("Document abstract", docAbstract, false);
+		if (!equals(this.documentAbstract,docAbstract)) {
+			this.documentAbstract = docAbstract;
+			generateChangeLog("Document abstract", docAbstract, false);
+		}
 	}
 
 	@Override
@@ -318,9 +328,11 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	public void setDocumentKeywords(String keywords) {
 		
 		assertReviewerOrOwner(submitter);
-		this.documentKeywords = keywords;
-		
-		generateChangeLog("Document keywords", keywords, false);
+
+		if (!equals(this.documentKeywords,keywords)) {
+			this.documentKeywords = keywords;
+			generateChangeLog("Document keywords", keywords, false);
+		}
 	}
 
 	@Override
@@ -332,9 +344,11 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	public void setEmbargoType(EmbargoType embargo) {
 		
 		assertReviewerOrOwner(submitter);
-		this.embargoType = embargo;
 		
-		generateChangeLog("Embargo type",embargo.getName(), false);
+		if (!equals(this.embargoType,embargo)) {
+			this.embargoType = embargo;
+			generateChangeLog("Embargo type",embargo.getName(), false);
+		}
 	}
 
 	@Override
@@ -418,9 +432,11 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@Override
 	public void setCommitteeContactEmail(String email) {
 		assertReviewerOrOwner(submitter);
-		this.committeeContactEmail = email;
 		
-		generateChangeLog("Committee contact email address", email, false);
+		if (!equals(this.committeeContactEmail,email)) {
+			this.committeeContactEmail = email;
+			generateChangeLog("Committee contact email address", email, false);
+		}
 	}
 
 	@Override
@@ -431,9 +447,11 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@Override
 	public void setCommitteeEmailHash(String hash) {
 		assertReviewerOrOwner(submitter);
-		this.committeeEmailHash = hash;
 		
-		generateLog("New committee email hash generated", false);
+		if (!equals(this.committeeEmailHash,hash)) {
+			this.committeeEmailHash = hash;		
+			generateLog("New committee email hash generated", false);
+		}
 	}
 
 	@Override
@@ -444,12 +462,15 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@Override
 	public void setCommitteeApprovalDate(Date date) {
 		assertReviewerOrOwner(submitter);
-		this.committeeApprovalDate = date;
 		
-		if (date == null)
-			generateLog("Committee approval of submission cleared",false);
-		else
-			generateLog("Committee approval of submission set",false);
+		if (!equals(this.committeeApprovalDate,date)) {
+			this.committeeApprovalDate = date;
+			
+			if (date == null)
+				generateLog("Committee approval of submission cleared",false);
+			else
+				generateLog("Committee approval of submission set",false);
+		}
 	}
 
 	@Override
@@ -460,12 +481,15 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@Override
 	public void setCommitteeEmbargoApprovalDate(Date date) {
 		assertReviewerOrOwner(submitter);
-		this.committeeEmbargoApprovalDate = date;
 		
-		if (date == null)
-			generateLog("Committee approval of embargo cleared",false);
-		else
-			generateLog("Committee approval of embargo set",false);
+		if (!equals(this.committeeEmbargoApprovalDate,date)) {
+			this.committeeEmbargoApprovalDate = date;
+			
+			if (date == null)
+				generateLog("Committee approval of embargo cleared",false);
+			else
+				generateLog("Committee approval of embargo set",false);
+		}
 	}
 
 	@Override
@@ -476,9 +500,11 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@Override
 	public void setCommitteeDisposition(String disposition) {
 		assertReviewerOrOwner(submitter);
-		this.committeeDisposition = disposition;
 		
-		generateChangeLog("Committee disposition",disposition,false);
+		if (!equals(this.committeeDisposition,disposition)) {
+			this.committeeDisposition = disposition;
+			generateChangeLog("Committee disposition",disposition,false);
+		}
 	}
 
 	@Override
@@ -489,12 +515,15 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@Override
 	public void setSubmissionDate(Date date) {
 		assertReviewerOrOwner(submitter);
-		this.submissionDate = date;
 		
-		if (date == null)
-			generateLog("Submission date cleared",true);
-		else
-			generateLog("Submission date set",true);
+		if (!equals(this.submissionDate,date)) {
+			this.submissionDate = date;
+			
+			if (date == null)
+				generateLog("Submission date cleared",true);
+			else
+				generateLog("Submission date set",true);
+		}
 	}
 
 	@Override
@@ -505,12 +534,15 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@Override
 	public void setApprovalDate(Date date) {
 		assertReviewerOrOwner(submitter);
-		this.approvalDate = date;
 		
-		if (date == null)
-			generateLog("Submission approval cleared",true);
-		else
-			generateLog("Submission approval set",true);
+		if (!equals(this.approvalDate,date)) {
+			this.approvalDate = date;
+			
+			if (date == null)
+				generateLog("Submission approval cleared",true);
+			else
+				generateLog("Submission approval set",true);
+		}
 	}
 
 	@Override
@@ -521,12 +553,15 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@Override
 	public void setLicenseAgreementDate(Date date) {
 		assertReviewerOrOwner(submitter);
-		this.licenseAgreementDate = date;
 		
-		if (date == null)
-			generateLog("Submission license agreement cleared",true);
-		else
-			generateLog("Submission license agreement set",true);
+		if (!equals(this.licenseAgreementDate,date)) {
+			this.licenseAgreementDate = date;
+			
+			if (date == null)
+				generateLog("Submission license agreement cleared",true);
+			else
+				generateLog("Submission license agreement set",true);
+		}
 	}
 
 	@Override
@@ -537,9 +572,11 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@Override
 	public void setDegree(String degree) {
 		assertReviewerOrOwner(submitter);
-		this.degree = degree;
 		
-		generateChangeLog("Degree",degree,false);
+		if (!equals(this.degree,degree)) {
+			this.degree = degree;
+			generateChangeLog("Degree",degree,false);
+		}
 	}
 
 	@Override
@@ -550,9 +587,11 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@Override
 	public void setDepartment(String department) {
 		assertReviewerOrOwner(submitter);
-		this.department = department;
 		
-		generateChangeLog("Department",department,false);
+		if (!equals(this.department,department)) {
+			this.department = department;
+			generateChangeLog("Department",department,false);
+		}
 	}
 
 	@Override
@@ -563,9 +602,11 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@Override
 	public void setCollege(String college) {
 		assertReviewerOrOwner(submitter);
-		this.college = college;
 		
-		generateChangeLog("College",college,false);
+		if (!equals(this.college,college)) {
+			this.college = college;
+			generateChangeLog("College",college,false);
+		}
 	}
 
 	@Override
@@ -576,9 +617,11 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@Override
 	public void setMajor(String major) {
 		assertReviewerOrOwner(submitter);
-		this.major = major;
 		
-		generateChangeLog("Major",major,false);
+		if (!equals(this.major,major)) {
+			this.major = major;
+			generateChangeLog("Major",major,false);
+		}
 	}
 
 	@Override
@@ -590,9 +633,11 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@Override
 	public void setDocumentType(String documentType) {
 		assertReviewerOrOwner(submitter);
-		this.documentType = documentType;
 		
-		generateChangeLog("Document type",documentType,false);
+		if (!equals(this.documentType,documentType)) {
+			this.documentType = documentType;
+			generateChangeLog("Document type",documentType,false);
+		}
 	}
 
 	@Override
@@ -603,12 +648,15 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@Override
 	public void setGraduationYear(Integer year) {
 		assertReviewerOrOwner(submitter);
-		this.graduationYear = year;
 		
-		if (year == null)
-			generateChangeLog("Graduation year", null,false);
-		else
-			generateChangeLog("Graduation year", String.valueOf(year),false);
+		if (!equals(this.graduationYear,year)) {
+			this.graduationYear = year;
+			
+			if (year == null)
+				generateChangeLog("Graduation year", null,false);
+			else
+				generateChangeLog("Graduation year", String.valueOf(year),false);
+		}
 	}
 
 	@Override
@@ -624,12 +672,14 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		
 		assertReviewerOrOwner(submitter);
 		
-		this.graduationMonth = month;
-		
-		if (month == null)
-			generateChangeLog("Graduation month", null,false);
-		else
-			generateChangeLog("Graduation month", new DateFormatSymbols().getMonths()[month],false);
+		if (!equals(this.graduationMonth,month)) {
+			this.graduationMonth = month;
+			
+			if (month == null)
+				generateChangeLog("Graduation month", null,false);
+			else
+				generateChangeLog("Graduation month", new DateFormatSymbols().getMonths()[month],false);
+		}
 	}
 
 	@Override
@@ -645,9 +695,10 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		
 		assertReviewer();
 		
-		this.stateName = state.getBeanName();
-		
-		generateChangeLog("Submission status",state.getDisplayName(),true);
+		if (!equals(this.stateName,state.getBeanName())) {
+			this.stateName = state.getBeanName();
+			generateChangeLog("Submission status",state.getDisplayName(),true);
+		}
 	}
 
 	@Override
@@ -677,14 +728,17 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	public void setUMIRelease(Boolean umiRelease) {
 		
 		assertReviewerOrOwner(submitter);
-		this.UMIRelease = umiRelease;
 		
-		if (umiRelease == null)
-			generateLog("UMI Release cleared",false);
-		else if (umiRelease == true)
-			generateChangeLog("UMI Release","Yes",false);
-		else
-			generateChangeLog("UMI Release","No",false);
+		if (!equals(this.UMIRelease,umiRelease)) {
+			this.UMIRelease = umiRelease;
+			
+			if (umiRelease == null)
+				generateLog("UMI Release cleared",false);
+			else if (umiRelease == true)
+				generateChangeLog("UMI Release","Yes",false);
+			else
+				generateChangeLog("UMI Release","No",false);
+		}
 	}
 
 	@Override
@@ -821,6 +875,26 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 				newValue);
 		
 		generateLog(entry,always);
+	}
+	
+	/**
+	 * Return true if the two objects are equals, accounting for nulls.
+	 * 
+	 * @param a An object
+	 * @param b An object
+	 * @return True if a is the same as b, otherwise false.
+	 */
+	private boolean equals(Object a, Object b) {
+		
+		if (a == null) {
+			if (b == null) 
+				return true;
+			else
+				return false;
+		} else {
+			return a.equals(b);
+		}
+		
 	}
 	
 
