@@ -1,5 +1,20 @@
 #{extends 'main.html' /} #{set title:'System Control Panel' /}
 
+#{set 'moreScripts'}
+<script type="text/javascript">
+jQuery(document).ready(function() { 
+	
+	jQuery("#delete-and-rebuild-index").click(function() {
+		
+		var response =
+			window.confirm("Are you sure? Users will not be able to search while the index is being rebuilt.");
+		return response;
+	});    
+    
+});
+</script>
+#{/set}
+
 <br/>
 <div class="row pageHead">
 	<h3>System Control Panel</h3>
@@ -129,7 +144,7 @@
 		
 		<form class="form-inline" method="POST" action="@{System.rebuildIndex()}">
 			<input class="btn-info" type="submit" name="submit_rebuild" value="Rebuild Index">
-			<input class="btn-danger" type="submit" name="submit_deleteAndRebuild" value="Delete Index and Rebuild">
+			<input class="btn-danger" type="submit" name="submit_deleteAndRebuild" value="Delete Index and Rebuild" id="delete-and-rebuild-index">
 		</form>
 	</div>
 </div>
