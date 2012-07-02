@@ -45,6 +45,12 @@ GET		/admin/view/{subId}						ViewTab.view
 *       /admin/settings/configurable			Config.configurableSettings
 
 
+### System Administrator
+GET     /system/?                               System.controlPanelRedirect
+GET     /system/panel/?                         System.controlPanel
+POST    /system/email/test                      System.testEmail
+POST    /system/index/rebuild                   System.rebuildIndex
+
 
 # Ignore favicon requests
 GET     /favicon.ico                            404
