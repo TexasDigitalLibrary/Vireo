@@ -8,7 +8,7 @@ in results.
 }*
 
 <table class="table table-striped table-bordered table-condensed">
-    <thead>
+    <thead id="results-table">
         <tr>
         %{
         def routeArgs = new java.util.HashMap<String,String>();
@@ -106,13 +106,8 @@ in results.
                          out.print(sub.getDocumentTitle());
                      break;
                  case DOCUMENT_ABSTRACT:
-                     if (sub.getDocumentAbstract() != null) {
-                         if (sub.getDocumentAbstract().size() < 25) {
-                             out.print(sub.getDocumentAbstract());
-                         } else {
-                             out.print(sub.getDocumentAbstract()?.substring(0,25) + "...");
-                         }
-                     }
+                     if (sub.getDocumentAbstract() != null)
+                         out.print(sub.getDocumentAbstract());
                      break;
                  case DOCUMENT_KEYWORDS:
                      if (sub.getDocumentKeywords() != null)
@@ -166,13 +161,8 @@ in results.
                         out.print(sub.getCommitteeContactEmail());
                      break;
                  case COMMITTEE_DISPOSITION:
-                     if (sub.getCommitteeDisposition() != null) {
-                         if (sub.getCommitteeDisposition().size() < 25) {
-                             out.print(sub.getCommitteeDisposition());
-                         } else {
-                             out.print(sub.getCommitteeDisposition()?.substring(0,25) + "...");
-                         }
-                     }
+                     if (sub.getCommitteeDisposition() != null) 
+                         out.print(sub.getCommitteeDisposition());
                      break;
                  case DEGREE:
                      if (sub.getDegree() != null)
@@ -242,8 +232,8 @@ in results.
         } // for results.getResults()
         }%
         <tr>
-            <td class="comments" colspan="${columns.length}">
-               ${results.getTotal()} matching records displayed on ${(int) ((results.getTotal() / results.getLimit()) +1)} pages.
+            <td class="comments" colspan="${columns.size()}">
+               ${results.getTotal()} matching records displayed on ${(int) ((results.getTotal() / results.getLimit()) +1)} pages (${results.getLimit()} per page).
             </td>
         </tr>
     </tbody>

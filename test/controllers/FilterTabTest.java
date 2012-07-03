@@ -459,7 +459,7 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 			
 			// To save test run time instead of searching all possible search orders, we'll just check one.
 			//for(SearchOrder order : SearchOrder.values()) {
-				SearchOrder order = SearchOrder.STUDENT_NAME;
+				SearchOrder order = SearchOrder.ID;
 			
 			
 				// Test each column as ascending and decending
@@ -480,5 +480,57 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 			//}
 		}
 	}
+	
+	@Test
+	public void testCustomizeTable() {
+		
+		// Login as an administrator
+		LOGIN();
+		
+		String nav = "list";
+		
+		// Get our URLS
+		Map<String,Object> routeArgs = new HashMap<String,Object>();
+		routeArgs.put("nav", nav);
+		final String FILTER_URL = (nav.equals("list")) ? Router.reverse("FilterTab.list",routeArgs).url : Router.reverse("FilterTab.log",routeArgs).url;
+		final String CUSTOMIZE_URL = Router.reverse("FilterTab.customizeTable",routeArgs).url;
+		
+		Response response = GET(FILTER_URL);
+		
+		assertContentMatch("customize-results-table",response);
+		// The default tables shared between list and log tabs.
+		assertContentMatch("<li id=\"column_"+SearchOrder.ID.getId()+"\" class=\"originally-shown\"", response);
+		assertContentMatch("<li id=\"column_"+SearchOrder.STATE.getId()+"\" class=\"originally-shown\"", response);
+		assertContentMatch("<li id=\"column_"+SearchOrder.ASSIGNEE.getId()+"\" class=\"originally-shown\"", response);
+		assertContentMatch("<li id=\"column_"+SearchOrder.LAST_EVENT_ENTRY.getId()+"\" class=\"originally-shown\"", response);
+		assertContentMatch("<li id=\"column_"+SearchOrder.LAST_EVENT_TIME.getId()+"\" class=\"originally-shown\"", response);
+		
+		// The default results per page.
+		assertContentMatch("<option selected=\"true\" value=\"100\">100</option>",response);
+		
+		
+		String columnsString = "column_"+SearchOrder.ID.getId()+",column_"+SearchOrder.DOCUMENT_TITLE.getId()+",column_"+SearchOrder.STATE.getId();
+		
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("columns",columnsString);
+		params.put("resultsPerPage", "20");
+		params.put("submit_save","Save");
+		POST(CUSTOMIZE_URL,params);
+		
+		response = GET(FILTER_URL);
+		
+		assertContentMatch("<li id=\"column_"+SearchOrder.ID.getId()+"\" class=\"originally-shown\"", response);
+		assertContentMatch("<li id=\"column_"+SearchOrder.DOCUMENT_TITLE.getId()+"\" class=\"originally-shown\"", response);
+		assertContentMatch("<li id=\"column_"+SearchOrder.STATE.getId()+"\" class=\"originally-shown\"", response);
+		
+		assertContentMatch("<li id=\"column_"+SearchOrder.ASSIGNEE.getId()+"\" class=\"originally-hidden\"", response);
+		assertContentMatch("<li id=\"column_"+SearchOrder.LAST_EVENT_ENTRY.getId()+"\" class=\"originally-hidden\"", response);
+		assertContentMatch("<li id=\"column_"+SearchOrder.LAST_EVENT_TIME.getId()+"\" class=\"originally-hidden\"", response);
+
+		assertContentMatch("<option selected=\"true\" value=\"20\">20</option>",response);
+
+		
+	}
+	
 	
 }

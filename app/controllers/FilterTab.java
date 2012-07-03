@@ -1,6 +1,7 @@
 package controllers;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -47,13 +48,17 @@ public class FilterTab extends AbstractVireoController {
 			"SubmissionFilter",
 			"SubmissionDirection",
 			"SubmissionOrderBy",
-			"SubmissionOffset"
+			"SubmissionOffset",
+			"SubmissionColumns",
+			"SubmissionResultsPerPage"
 		},
 		{
 			"ActionLogFilter",
 			"ActionLogDirection",
 			"ActionLogOrderBy",
-			"ActionLogOffset"
+			"ActionLogOffset",
+			"ActionLogColumns",
+			"ActionLogResultsPerPage"
 		}
 	};
 	
@@ -66,7 +71,16 @@ public class FilterTab extends AbstractVireoController {
 	public final static int DIRECTION = 1;
 	public final static int ORDERBY = 2;
 	public final static int OFFSET = 3;
+	public final static int COLUMNS = 4;
+	public final static int RESULTSPERPAGE = 5;
 	
+	/**
+	 * Redirect to the list page.
+	 */
+	@Security(RoleType.REVIEWER)
+	public static void listRedirect() {
+		list();
+	}
 	
 	
 	/**
@@ -88,12 +102,12 @@ public class FilterTab extends AbstractVireoController {
 		
 		// Load the acive filter from the cookie
 		ActiveSearchFilter activeFilter = Spring.getBeanOfType(ActiveSearchFilter.class);
-		Cookie cookie = request.cookies.get(NAMES[SUBMISSION][ACTIVE_FILTER]);
-		if (cookie != null && cookie.value != null && cookie.value.trim().length() > 0) {
+		Cookie filterCookie = request.cookies.get(NAMES[SUBMISSION][ACTIVE_FILTER]);
+		if (filterCookie != null && filterCookie.value != null && filterCookie.value.trim().length() > 0) {
 			try {
-				activeFilter.decode(cookie.value);
+				activeFilter.decode(filterCookie.value);
 			} catch (RuntimeException re) {
-				Logger.warn(re,"Unable to decode search filter: "+cookie.value);
+				Logger.warn(re,"Unable to decode search filter: "+filterCookie.value);
 			}
 		}
 		
@@ -111,10 +125,18 @@ public class FilterTab extends AbstractVireoController {
 		if (session.get(NAMES[SUBMISSION][OFFSET]) != null)
 			offset = Integer.valueOf(session.get(NAMES[SUBMISSION][OFFSET]));
 		
-		// TODO: Look up the limit based upon the user's preferences.
-		Integer limit = 100;
+		// Lookup the results per page
+		Integer resultsPerPage = 100;
+		Cookie resultsPerPageCookie = request.cookies.get(NAMES[SUBMISSION][RESULTSPERPAGE]);
+		if (resultsPerPageCookie != null && resultsPerPageCookie.value != null && resultsPerPageCookie.value.trim().length() > 0) {	
+			try {
+				resultsPerPage = Integer.valueOf(resultsPerPageCookie.value);
+			} catch (RuntimeException re) {
+				Logger.warn(re,"Unable to understand results per page: "+resultsPerPageCookie.value);
+			}
+		}
 				
-		SearchResult<Submission> results = searcher.submissionSearch(activeFilter, orderby, direction, offset, limit);
+		SearchResult<Submission> results = searcher.submissionSearch(activeFilter, orderby, direction, offset, resultsPerPage);
 		
 		// Step 3: Prepare any variables for display
 		//////////
@@ -122,8 +144,20 @@ public class FilterTab extends AbstractVireoController {
 		String nav = "list";
 		
 		// Get a list of columns to display
-		// TODO: Make it dynamic which columns to display.
-		SearchOrder[] columns = SearchOrder.values();
+		List<SearchOrder> columns = new ArrayList<SearchOrder>();
+		Cookie columnsCookie = request.cookies.get(NAMES[SUBMISSION][COLUMNS]);
+		if (columnsCookie != null && columnsCookie.value != null && columnsCookie.value.trim().length() > 0) {
+			try {
+				String[] ids = columnsCookie.value.split(",");
+				for(String id : ids)
+					columns.add(SearchOrder.find(Integer.valueOf(id)));
+			} catch (RuntimeException re) {
+				Logger.warn(re,"Unable to decode column order: "+columnsCookie.value);
+			}
+		}
+		if (columns.size() == 0)
+			columns = getDefaultColumns(SUBMISSION);
+		
 		
 		// Add all search directions to the view
 		for (SearchOrder order2 : SearchOrder.values())
@@ -133,7 +167,7 @@ public class FilterTab extends AbstractVireoController {
 		renderArgs.put(SearchDirection.ASCENDING.name(), SearchDirection.ASCENDING);
 		renderArgs.put(SearchDirection.DESCENDING.name(), SearchDirection.DESCENDING);
 		
-		render(nav, allFilters, activeFilter, results, orderby, columns, direction);
+		render(nav, allFilters, activeFilter, results, orderby, columns, direction, resultsPerPage);
 	}
 	
 	/**
@@ -177,11 +211,19 @@ public class FilterTab extends AbstractVireoController {
 		if (session.get(NAMES[ACTION_LOG][OFFSET]) != null)
 			offset = Integer.valueOf(session.get(NAMES[ACTION_LOG][OFFSET]));
 		
-		// TODO: Look up the limit based upon the user's preferences.
-		Integer limit = 100;
+		// Lookup the results per page
+		Integer resultsPerPage = 100;
+		Cookie resultsPerPageCookie = request.cookies.get(NAMES[ACTION_LOG][RESULTSPERPAGE]);
+		if (resultsPerPageCookie != null && resultsPerPageCookie.value != null && resultsPerPageCookie.value.trim().length() > 0) {	
+			try {
+				resultsPerPage = Integer.valueOf(resultsPerPageCookie.value);
+			} catch (RuntimeException re) {
+				Logger.warn(re,"Unable to understand results per page: "+resultsPerPageCookie.value);
+			}
+		}
 		
 		//SearchResult<ActionLog> results = subRepo.filterSearchActionLogs(activeFilter,orderby, direction, offset, limit);
-		SearchResult<ActionLog> results = searcher.actionLogSearch(activeFilter, orderby, direction, offset, limit);
+		SearchResult<ActionLog> results = searcher.actionLogSearch(activeFilter, orderby, direction, offset, resultsPerPage);
 
 		// Step 3: Prepare any variables for display
 		//////////
@@ -189,8 +231,21 @@ public class FilterTab extends AbstractVireoController {
 		String nav = "log";
 		
 		// Get a list of columns to display
-		// TODO: Make it dynamic which columns to display.
-		SearchOrder[] columns = SearchOrder.values();
+		List<SearchOrder> columns = new ArrayList<SearchOrder>();
+		Cookie columnsCookie = request.cookies.get(NAMES[ACTION_LOG][COLUMNS]);
+		if (columnsCookie != null && columnsCookie.value != null && columnsCookie.value.trim().length() > 0) {
+			try {
+				String[] ids = columnsCookie.value.split(",");
+				for(String id : ids)
+					columns.add(SearchOrder.find(Integer.valueOf(id)));
+			} catch (RuntimeException re) {
+				Logger.warn(re,"Unable to decode column order: "+columnsCookie.value);
+			}
+		}
+		if (columns.size() == 0)
+			columns = getDefaultColumns(ACTION_LOG);
+		
+		
 		
 		// Add all search directions to the view
 		for (SearchOrder order2 : SearchOrder.values())
@@ -200,7 +255,7 @@ public class FilterTab extends AbstractVireoController {
 		renderArgs.put(SearchDirection.ASCENDING.name(), SearchDirection.ASCENDING);
 		renderArgs.put(SearchDirection.DESCENDING.name(), SearchDirection.DESCENDING);
 		
-		render(nav, allFilters, activeFilter, results, orderby, columns, direction);
+		render(nav, allFilters, activeFilter, results, orderby, columns, direction, resultsPerPage);
 	}
 	
 	/**
@@ -348,7 +403,64 @@ public class FilterTab extends AbstractVireoController {
 		if ("log".equals(nav))
 			log();
 		
-		error("Unknown list modify navigation controll");
+		error("Unknown modify navigation control type");
+	}
+	
+	/**
+	 * Customize the columns shown, and their order, and the results per page.
+	 * 
+	 * @param nav list or log
+	 */
+	@Security(RoleType.REVIEWER)
+	public static void customizeTable(String nav) {
+
+		int type = SUBMISSION;
+		if ("log".equals(nav))
+			type = ACTION_LOG;
+
+		// The input will be of the form "column_1,column_2,column_3,...". We
+		// will split these up and retrieve the actual search object for each
+		// one and arrange in a list. This will ensure that they are all valid
+		// ids.
+		List<SearchOrder> columns = new ArrayList<SearchOrder>();
+		String columnsString = params.get("columns");
+		String[] columnIds = columnsString.split(",");
+		for (String columnId : columnIds) {
+			String[] parts = columnId.split("_");
+
+			SearchOrder column = SearchOrder.find(Integer.valueOf(parts[1]));
+			columns.add(column);
+		}
+
+		// Check that column has at least the ID field.
+		if (columns.contains(SearchOrder.ID)) {
+
+			// Now that everythinghas been checked, reform the list into a comma
+			// separated list: "1,2,4,5" (notice not the column_part as before)
+			String columnsSerialized = "";
+			for (SearchOrder column : columns) {
+				if (columnsSerialized.length() > 0)
+					columnsSerialized += ",";
+				columnsSerialized += column.getId();
+			}
+
+			// Save as a cookie.
+			response.setCookie(NAMES[type][COLUMNS], columnsSerialized);
+		}
+		
+		// Handle results per page
+		Integer resultsPerPage = params.get("resultsPerPage",Integer.class);
+		if (resultsPerPage != null && resultsPerPage >= 20 && resultsPerPage <= 400) {
+			response.setCookie(NAMES[type][RESULTSPERPAGE], String.valueOf(resultsPerPage));
+		}
+		
+		// Send the user off to the appropriate filter tab.
+		if ("list".equals(nav))
+			list();
+		if ("log".equals(nav))
+			log();
+		
+		error("Unknown customize navigation control type");
 	}
 
 	/**
@@ -644,5 +756,37 @@ public class FilterTab extends AbstractVireoController {
 		} else {	
 			error("Unable to remove an unknown filter paramater.");
 		}
+	}
+	
+	/**
+	 * Return the default columns when none are set.
+	 * 
+	 * @param type
+	 *            The screen type, either ACTION_LOG or SUBMISSION
+	 * @return A list of default columns.
+	 */
+	protected static List<SearchOrder> getDefaultColumns(int type) {
+		
+		List<SearchOrder> columns = new ArrayList<SearchOrder>();
+		if (type == ACTION_LOG) {
+			columns.add(SearchOrder.ID);
+			columns.add(SearchOrder.STATE);
+			columns.add(SearchOrder.ASSIGNEE);
+			columns.add(SearchOrder.LAST_EVENT_ENTRY);
+			columns.add(SearchOrder.LAST_EVENT_TIME);			
+		} else {
+			columns.add(SearchOrder.ID);
+			columns.add(SearchOrder.STUDENT_NAME);
+			columns.add(SearchOrder.STATE);
+			columns.add(SearchOrder.ASSIGNEE);
+			columns.add(SearchOrder.DOCUMENT_TITLE);
+			columns.add(SearchOrder.SUBMISSION_DATE);
+			columns.add(SearchOrder.APPROVAL_DATE);
+			columns.add(SearchOrder.EMBARGO_TYPE);
+			columns.add(SearchOrder.LAST_EVENT_ENTRY);
+			columns.add(SearchOrder.LAST_EVENT_TIME);
+		}
+		
+		return columns;
 	}
 }

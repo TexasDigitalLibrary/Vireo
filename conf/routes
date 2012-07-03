@@ -28,14 +28,15 @@ POST	/submit/{subId}submitETD				Submit.submitETD
 * 		/submit/{subId}/submissionStatus		Submit.submissionStatus
 
 ### List & Log Tabs
-* 		/admin									FilterTab.list
-*	    /admin/list                             FilterTab.list
-*       /admin/log                              FilterTab.log
+* 		/admin/?								FilterTab.listRedirect
+*	    /admin/list/?                           FilterTab.list
+*       /admin/log/?                            FilterTab.log
 *       /admin/{nav}/filter                     FilterTab.modifyFilter
 *       /admin/{nav}/search                     FilterTab.modifySearch
+*       /admin/{nav}/table-view                 FilterTab.customizeTable
 
 ### View Tab
-*       /admin/view                             ViewTab.view
+*       /admin/view/?                           ViewTab.view
 GET		/admin/view/{subId}						ViewTab.view
 POST	/admin/view/update						ViewTab.updateJSON
 
