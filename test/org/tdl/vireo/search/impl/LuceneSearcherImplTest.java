@@ -2,6 +2,7 @@ package org.tdl.vireo.search.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -740,8 +741,16 @@ public class LuceneSearcherImplTest extends UnitTest{
 			// Date Range Filter
 			filter = subRepo.createSearchFilter(person, "test-range");
 			filter.addAssignee(otherPerson);
-			filter.setDateRangeStart(new Date(2000,1,1));
-			filter.setDateRangeEnd(new Date(2006,1,1));
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(new Date());
+			cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) - 1);
+			Date startDate = cal.getTime();
+			cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) + 2);
+			Date endDate = cal.getTime();
+			
+			
+			filter.setDateRangeStart(startDate);
+			filter.setDateRangeEnd(endDate);
 			filter.save();
 	
 			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 20).getResults();
