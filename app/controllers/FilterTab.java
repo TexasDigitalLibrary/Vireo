@@ -880,8 +880,6 @@ public class FilterTab extends AbstractVireoController {
 			columns.add(SearchOrder.SUBMISSION_DATE);
 			columns.add(SearchOrder.APPROVAL_DATE);
 			columns.add(SearchOrder.EMBARGO_TYPE);
-			columns.add(SearchOrder.LAST_EVENT_ENTRY);
-			columns.add(SearchOrder.LAST_EVENT_TIME);
 		}
 		
 		return columns;

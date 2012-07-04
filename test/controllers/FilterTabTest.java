@@ -132,7 +132,10 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 			GET(FILTER_URL+"?action=add&type=docType&value=Thesis");
 			// Add DOCUMENT TYPE: Dissertation
 			GET(FILTER_URL+"?action=add&type=docType&value=Dissertation");
+			// Add UMI RELEASE: True
+			GET(FILTER_URL+"?action=add&type=umi&value=true");
 
+			
 			// Now that we are at the apex, check that everything is still there.
 			response = GET(LIST_URL);
 			
@@ -176,6 +179,8 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 			assertFalse(getContent(response).contains("filter?action=add&type=docType&value=Thesis"));
 			assertTrue(getContent(response).contains("filter?action=remove&type=docType&value=Dissertation"));
 			assertFalse(getContent(response).contains("filter?action=add&type=docType&value=Dissertation"));
+			assertTrue(getContent(response).contains("filter?action=remove&type=umi&value=true"));
+			assertFalse(getContent(response).contains("filter?action=add&type=umi&value=true"));
 			
 			// Remove STATUS: Submitted
 			GET(FILTER_URL+"?action=remove&type=state&value=Submitted");
@@ -217,6 +222,9 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 			GET(FILTER_URL+"?action=remove&type=docType&value=Thesis");
 			// Remove DOCUMENT TYPE: Dissertation
 			GET(FILTER_URL+"?action=remove&type=docType&value=Dissertation");
+			// Remove UMI RELEASE: true
+			GET(FILTER_URL+"?action=remove&type=umi&value=true");
+
 			
 			// Finally, check that there are no filters left
 			response = GET(LIST_URL);
@@ -526,8 +534,6 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 			assertContentMatch("<li id=\"column_"+SearchOrder.ID.getId()+"\" class=\"originally-shown\"", response);
 			assertContentMatch("<li id=\"column_"+SearchOrder.STATE.getId()+"\" class=\"originally-shown\"", response);
 			assertContentMatch("<li id=\"column_"+SearchOrder.ASSIGNEE.getId()+"\" class=\"originally-shown\"", response);
-			assertContentMatch("<li id=\"column_"+SearchOrder.LAST_EVENT_ENTRY.getId()+"\" class=\"originally-shown\"", response);
-			assertContentMatch("<li id=\"column_"+SearchOrder.LAST_EVENT_TIME.getId()+"\" class=\"originally-shown\"", response);
 			
 			// The default results per page.
 			assertContentMatch("<option selected=\"true\" value=\"100\">100</option>",response);
