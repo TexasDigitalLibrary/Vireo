@@ -287,8 +287,8 @@ public class LuceneSearcherImplTest extends UnitTest{
 			
 			// Date Range Filter
 			filter = subRepo.createSearchFilter(person, "test-range");
-			filter.setSubmissionDateRangeStart(new Date(2000,1,1));
-			filter.setSubmissionDateRangeEnd(new Date(2006,1,1));
+			filter.setDateRangeStart(new Date(2000,1,1));
+			filter.setDateRangeEnd(new Date(2006,1,1));
 			filter.save();
 	
 			submissions = searcher.submissionSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 20).getResults();
@@ -740,8 +740,8 @@ public class LuceneSearcherImplTest extends UnitTest{
 			// Date Range Filter
 			filter = subRepo.createSearchFilter(person, "test-range");
 			filter.addAssignee(otherPerson);
-			filter.setSubmissionDateRangeStart(new Date(2000,1,1));
-			filter.setSubmissionDateRangeEnd(new Date(2006,1,1));
+			filter.setDateRangeStart(new Date(2000,1,1));
+			filter.setDateRangeEnd(new Date(2006,1,1));
 			filter.save();
 	
 			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 20).getResults();

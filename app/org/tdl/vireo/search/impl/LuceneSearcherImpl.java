@@ -155,7 +155,7 @@ public class LuceneSearcherImpl implements Searcher {
 				
 				BooleanQuery andQuery = new BooleanQuery();
 				andQuery.add(new TermQuery(new Term("type","submission")),Occur.MUST);
-				buildQuery(andQuery,filter); // <-- This does most of the work.
+				buildQuery(andQuery,filter,true); // <-- This does most of the work.
 				
 				boolean reverse = (direction == SearchDirection.ASCENDING) ? true : false;
 				
@@ -203,7 +203,7 @@ public class LuceneSearcherImpl implements Searcher {
 				
 				BooleanQuery andQuery = new BooleanQuery();
 				andQuery.add(new TermQuery(new Term("type","actionlog")),Occur.MUST);
-				buildQuery(andQuery,filter); // <-- This does most of the work.
+				buildQuery(andQuery,filter,false); // <-- This does most of the work.
 				
 				boolean reverse = (direction == SearchDirection.ASCENDING) ? true : false;
 				
@@ -249,8 +249,9 @@ public class LuceneSearcherImpl implements Searcher {
 	 * 
 	 * @param andQuery The existing and-based query
 	 * @param filter The filter search paramaters.
+	 * @param submissions Whether this is for submissions or action logs
 	 */
-	public void buildQuery(BooleanQuery andQuery, SearchFilter filter) {
+	public void buildQuery(BooleanQuery andQuery, SearchFilter filter, boolean submissions) {
 		QueryParser parser = new QueryParser(indexer.version,"searchText",indexer.standardAnalyzer);
 		
 		// Search Text Filter
@@ -376,18 +377,21 @@ public class LuceneSearcherImpl implements Searcher {
 		}
 		
 		// Date Range Filter
-		if (filter.getSubmissionDateRangeStart() != null || filter.getSubmissionDateRangeEnd() != null) {
+		if (filter.getDateRangeStart() != null || filter.getDateRangeEnd() != null) {
 			
 			long startTime = 0;
-			if (filter.getSubmissionDateRangeStart() != null)
-				startTime = filter.getSubmissionDateRangeStart().getTime();
+			if (filter.getDateRangeStart() != null)
+				startTime = filter.getDateRangeStart().getTime();
 			
 			long endTime = Long.MAX_VALUE;
-			if (filter.getSubmissionDateRangeEnd() != null)
-				endTime = filter.getSubmissionDateRangeEnd().getTime();
+			if (filter.getDateRangeEnd() != null)
+				endTime = filter.getDateRangeEnd().getTime();
+			
+			if (submissions)
+				andQuery.add(NumericRangeQuery.newLongRange("submissionDate", startTime, endTime, true,true),Occur.MUST);
+			else
+				andQuery.add(NumericRangeQuery.newLongRange("lastEventTime", startTime, endTime, true,true),Occur.MUST);
 
-			NumericRangeQuery rangeQuery = NumericRangeQuery.newLongRange("submissionDate", startTime, endTime, true,true);
-			andQuery.add(rangeQuery,Occur.MUST);
 		}
 	}
 	

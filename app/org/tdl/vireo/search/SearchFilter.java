@@ -236,26 +236,24 @@ public interface SearchFilter {
 	public void setUMIRelease(Boolean value);
 
 	/**
-	 * @return The start of the current submission date range search.
+	 * @return The start of the current date range search.
 	 */
-	public Date getSubmissionDateRangeStart();
+	public Date getDateRangeStart();
 
 	/**
 	 * @param start
-	 *            The new start of the submission date range, may be null for
-	 *            infinite.
+	 *            The new start of the date range, may be null for infinite.
 	 */
-	public void setSubmissionDateRangeStart(Date start);
+	public void setDateRangeStart(Date start);
 
 	/**
-	 * @return The end of the current submission date range search.
+	 * @return The end of the current date range search.
 	 */
-	public Date getSubmissionDateRangeEnd();
+	public Date getDateRangeEnd();
 
 	/**
 	 * @param end
-	 *            The new end of the submission date range, may be null for
-	 *            infinite
+	 *            The new end of the date range, may be null for infinite
 	 */
-	public void setSubmissionDateRangeEnd(Date end);
+	public void setDateRangeEnd(Date end);
 }

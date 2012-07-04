@@ -700,7 +700,7 @@ public class FilterTab extends AbstractVireoController {
 				start.set(Calendar.MINUTE,start.getActualMinimum(Calendar.MINUTE));
 				start.set(Calendar.SECOND,start.getActualMinimum(Calendar.SECOND));
 				
-				activeFilter.setSubmissionDateRangeStart(start.getTime());
+				activeFilter.setDateRangeStart(start.getTime());
 			}
 			
 			// Next handle end date
@@ -715,7 +715,7 @@ public class FilterTab extends AbstractVireoController {
 				end.set(Calendar.MINUTE,end.getActualMaximum(Calendar.MINUTE));
 				end.set(Calendar.SECOND,end.getActualMaximum(Calendar.SECOND));
 				
-				activeFilter.setSubmissionDateRangeEnd(end.getTime());
+				activeFilter.setDateRangeEnd(end.getTime());
 			}
 		} else if ("rangeChoose".equals(type)) {
 			
@@ -772,8 +772,8 @@ public class FilterTab extends AbstractVireoController {
 			end.set(Calendar.SECOND,end.getActualMaximum(Calendar.SECOND));
 			
 			// Set the range
-			activeFilter.setSubmissionDateRangeStart(start.getTime());
-			activeFilter.setSubmissionDateRangeEnd(end.getTime());			
+			activeFilter.setDateRangeStart(start.getTime());
+			activeFilter.setDateRangeEnd(end.getTime());			
 		} else {
 			error("Unable to add an unknown filter paramater.");
 		}
@@ -845,10 +845,10 @@ public class FilterTab extends AbstractVireoController {
 			activeFilter.setUMIRelease(null);
 			
 		} else if ("rangeStart".equals(type)) {
-			activeFilter.setSubmissionDateRangeStart(null);
+			activeFilter.setDateRangeStart(null);
 		
 		} else if ("rangeEnd".equals(type)) {
-			activeFilter.setSubmissionDateRangeEnd(null);
+			activeFilter.setDateRangeEnd(null);
 
 		} else {	
 			error("Unable to remove an unknown filter paramater.");

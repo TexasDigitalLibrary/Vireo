@@ -301,8 +301,8 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		filter.addDocumentType("docType1");
 		filter.addDocumentType("docType2");
 		filter.setUMIRelease(true);
-		filter.setSubmissionDateRangeStart(new Date());
-		filter.setSubmissionDateRangeEnd(new Date());
+		filter.setDateRangeStart(new Date());
+		filter.setDateRangeEnd(new Date());
 		filter.save();
 
 		// Commit and reopen a new transaction.
@@ -351,8 +351,8 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		assertTrue(retrieved.getDocumentTypes().contains("docType2"));
 		assertFalse(retrieved.getDocumentTypes().contains("docType3"));
 		assertTrue(retrieved.getUMIRelease());
-		assertNotNull(retrieved.getSubmissionDateRangeStart());
-		assertNotNull(retrieved.getSubmissionDateRangeEnd());
+		assertNotNull(retrieved.getDateRangeStart());
+		assertNotNull(retrieved.getDateRangeEnd());
 		
 		retrieved.delete();
 		settingRepo.findEmbargoType(embargo1.getId()).delete();

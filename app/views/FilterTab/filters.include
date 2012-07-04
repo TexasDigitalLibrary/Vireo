@@ -175,15 +175,15 @@ managing and modifying filters.
         </ul>
         #{/if}
         
-        #{if (facet == FACET_DATE_CHOOSE || facet == FACET_DATE_RANGE ) && !dateRangeDisplayed && ( activeFilter.getSubmissionDateRangeStart() != null || activeFilter.getSubmissionDateRangeEnd() != null ) }
+        #{if (facet == FACET_DATE_CHOOSE || facet == FACET_DATE_RANGE ) && !dateRangeDisplayed && ( activeFilter.getDateRangeStart() != null || activeFilter.getDateRangeEnd() != null ) }
         %{ dateRangeDisplayed = true; }%
-        <div class="sub-heading">SUBMISSION DATE</div>
+        <div class="sub-heading">#{if "list".equals(nav)}SUBMISSION DATE#{/if}#{else}ACTION DATE#{/else}</div>
         <ul class="unstyled editable">
-            #{if activeFilter.getSubmissionDateRangeStart() != null}
-            <li><strong>Before: </strong><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=rangeStart">${activeFilter.getSubmissionDateRangeStart().format('MM/dd/yyyy')}</a>
+            #{if activeFilter.getDateRangeStart() != null}
+            <li><strong>Before: </strong><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=rangeStart">${activeFilter.getDateRangeStart().format('MM/dd/yyyy')}</a>
             #{/if}
-            #{if activeFilter.getSubmissionDateRangeEnd() != null}
-            <li><strong>After: </strong><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=rangeEnd">${activeFilter.getSubmissionDateRangeEnd().format('MM/dd/yyyy')}</a>
+            #{if activeFilter.getDateRangeEnd() != null}
+            <li><strong>After: </strong><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=rangeEnd">${activeFilter.getDateRangeEnd().format('MM/dd/yyyy')}</a>
             #{/if}
         </ul>
         #{/if}
@@ -434,11 +434,11 @@ managing and modifying filters.
         </ul>
         #{/if}
         #{if facet == FACET_DATE_CHOOSE}
-        <div class="sub-heading">SUBMISSION DATE (CHOOSE)</div>
+        <div class="sub-heading">#{if "list".equals(nav)}SUBMISSION DATE#{/if}#{else}ACTION DATE#{/else} (CHOOSE)</div>
         <ul class="unstyled">
             %{
-              Date start = activeFilter.getSubmissionDateRangeStart();
-              Date end = activeFilter.getSubmissionDateRangeEnd();
+              Date start = activeFilter.getDateRangeStart();
+              Date end = activeFilter.getDateRangeEnd();
             }%
          
             #{if start == null && end == null }
@@ -474,18 +474,18 @@ managing and modifying filters.
         </ul>
         #{/if}
         #{if facet == FACET_DATE_RANGE }
-        <div class="sub-heading">SUBMISSION DATE (RANGE)</div>
+        <div class="sub-heading">#{if "list".equals(nav)}SUBMISSION DATE#{/if}#{else}ACTION DATE#{/else} (RANGE)</div>
         <ul class="unstyled">
-            #{if activeFilter.getSubmissionDateRangeStart() == null || activeFilter.getSubmissionDateRangeEnd() == null }
+            #{if activeFilter.getDateRangeStart() == null || activeFilter.getDateRangeEnd() == null }
             <li><form action="@{FilterTab.ModifyFilters(nav)}" method="POST" class="form-search">
                 <input type="hidden" name="type" value="range"/>
                 <input type="hidden" name="action" value="add"/>
-                #{if activeFilter.getSubmissionDateRangeStart() == null }
+                #{if activeFilter.getDateRangeStart() == null }
                 <p class="daterange-label">After:</p>
                 <input type="text" name="startDate" class="input-small">
                 <p class="daterange-hint">MM/DD/YYYY</p>
                 #{/if}
-                #{if activeFilter.getSubmissionDateRangeEnd() == null }
+                #{if activeFilter.getDateRangeEnd() == null }
                 <p class="daterange-label">Before:</p>
                 <input type="text" name="endDate" class="input-small">
                 <p class="daterange-hint">MM/DD/YYYY</p>
