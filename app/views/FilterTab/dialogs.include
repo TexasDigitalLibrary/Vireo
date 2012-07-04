@@ -1,0 +1,236 @@
+*{
+Filter tab dialog boxes.
+
+This include includes all the various dialog boxes used on the list and log
+tabs. Normally they are hidden but when activated they appear on the page.
+
+}*
+#{set 'moreScripts'}
+<script type="text/javascript">
+jQuery(document).ready(function() { 
+
+    /** Hide all the dialog boxes initially **/
+    jQuery('#filter-save-modal').modal({
+        'show': false
+    });
+    jQuery('#filter-manage-modal').modal({
+        'show': false
+    });
+    jQuery('#filter-customize-modal').modal({
+        'show': false
+    });
+    jQuery('#customize-search-modal').modal({
+        'show': false
+    });    
+    
+    /** Sortable columns **/
+    jQuery("#shownColumns, #hiddenColumns").sortable({
+        connectWith: ".columnsSortable",
+        placeholder: "placeholder",
+        cancel: '#column_1', // ID
+        update: function(event,ui) {
+            var list = jQuery("#shownColumns").sortable('toArray').toString();
+            jQuery("#columns-field").val(list);
+        }
+    }).disableSelection();
+    
+    var list = jQuery("#shownColumns").sortable('toArray').toString();
+    jQuery("#columns-field").val(list);
+    
+    /** Sortable facets **/
+    jQuery("#shownFacets, #hiddenFacets").sortable({
+        connectWith: ".facetsSortable",
+        placeholder: "placeholder",
+        update: function(event,ui) {
+            var list = jQuery("#shownFacets").sortable('toArray').toString();
+            jQuery("#facets-field").val(list);
+        }
+    }).disableSelection();
+    
+    var list = jQuery("#shownFacets").sortable('toArray').toString();
+    jQuery("#facets-field").val(list);
+});
+</script>
+#{/set}
+
+
+<div class="modal hide fade" id="filter-save-modal">
+    <form action="@{FilterTab.ModifyFilters(nav)}" method="POST" class="form-horizontal">
+        <input type="hidden" name="action" value="save"/>
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>Save Filters</h3>
+        </div>
+        <div class="modal-body">
+            <p>Save your currently active filter by assigning it a name. If the name already exists then the filter will be replaced.</p>
+            <br/>
+            <fieldset>
+                <div class="control-group">
+                    <label class="control-label" for="name"><strong>Filter Name</strong>:</label>
+                    <div class="controls">
+                        <input type="text" class="input-xlarge" name="name"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="public"><strong>Public</strong>:</label>
+                    <div class="controls">
+                        <input type="checkbox" name="public" value="true"/>
+                        <p class="help-block">I would like this filter to be available to all users.</p>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <input type="submit" class="btn btn-primary" name="submit_save" value="Save Filter"/>
+        </div>
+    </form>
+</div>
+
+<div class="modal hide fade" id="filter-manage-modal">
+    <form action="@{FilterTab.ModifyFilters(nav)}" method="POST">
+        <input type="hidden" name="action" value="manage"/>
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>Manage Filters</h3>
+        </div>
+        <div class="modal-body">
+            <p>Use the form to remove any filters which are no longer needed.</p>
+            <br/>
+            <table class="table table-borderd table-striped">
+                <tr>
+                    <th>Remove</th>
+                    <th>Filter Name</th>
+                    <th>Status</th>
+                </tr>
+                #{list items:subRepo.findSearchFiltersByCreatorOrPublic(securityContext.getPerson()), as:'filter'}
+                <tr>
+                    <td>
+                        #{if filter.getCreator() == securityContext.getPerson() || securityContext.getPerson().getRole().ordinal() >= org.tdl.vireo.model.RoleType.MANAGER.ordinal() }
+                        <input type="checkbox" name="remove" value="${filter.getId()}"/>
+                        #{/if}
+                    </td>
+                    <td>${filter.getName()}</td>
+                    <td>
+                        #{if filter.getCreator() == securityContext.getPerson() && filter.isPublic() }
+                        Your public filter
+                        #{/if}
+                        #{elseif filter.getCreator() == securityContext.getPerson() && !filter.isPublic() }
+                        Your private filter
+                        #{/elseif}
+                        #{else}
+                        ${filter.getCreator().getFullName()}'s public filter
+                        #{/else}
+                    </td>
+                </tr>
+                #{/list}
+                #{else}
+                <tr>
+                    <td colspan="3" class="center">
+                    <p>There currently are no saved filters.</p>
+                    </td>
+                </tr>
+                #{/else}
+            </table>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <input type="submit" class="btn btn-primary" name="submit_remove" value="Remove Filters"/>
+        </div>
+    </form>
+</div>
+
+<div class="modal hide fade" id="filter-customize-modal">
+    <form action="@{FilterTab.CustomizeFilters(nav)}" method="POST" class="form-horizontal">
+        <input id="facets-field" type="hidden" name="facets" value=""/>
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>Customize Filters</h3>
+        </div>
+        <div class="modal-body">
+            <p>Please select which search filter options should be displayed by dragging into or out of the list of displayed options.</p>
+
+            <div id="column-sort" class="row">
+                <div class="span3 offset1">        
+                    <h4>Displayed Filters</h4>            
+                    <ul id="shownFacets" class="facetsSortable">
+                        #{list items:facets, as:'facet'}
+                        <li id="facet_${facet.getId()}" class="originally-shown">&{nav.toUpperCase()+'_FACET_'+facet.name()}</li>
+                        #{/list}
+                    </ul>
+                </div>
+                <div class="span3">
+                    <h4>Disabled Filters</h4>
+                    <ul id="hiddenFacets" class="facetsSortable">
+                        #{list items:org.tdl.vireo.search.SearchFacet.values(), as:'facet'}
+                        #{if !facets.contains(facet) }
+                        <li id="facet_${facet.getId()}" class="originally-hidden">&{nav.toUpperCase()+'_FACET_'+facet.name()}</li>
+                        #{/if}
+                        #{/list}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <input type="submit" class="btn btn-primary" name="submit_save" value="Save"/>
+        </div>
+    </form>
+</div>
+
+
+
+<div class="modal hide fade" id="customize-search-modal">
+    <form id="customize-search-form" action="@{FilterTab.customizeSearch(nav)}" method="POST" class="form-horizontal">
+        <input id="columns-field" type="hidden" name="columns" value=""/>
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>Customize Results Table</h3>
+        </div>
+        <div class="modal-body">
+            <p>Please select which columns should be displayed by dragging into or out of the list of displayed columns.</p>
+
+            <div id="column-sort" class="row">
+                <div class="span3 offset1">        
+                    <h4>Displayed Columns</h4>            
+                    <ul id="shownColumns" class="columnsSortable">
+                        #{list items:columns, as:'column'}
+                        <li id="column_${column.getId()}" class="originally-shown">&{nav.toUpperCase()+'_COLUMN_'+column.name()}</li>
+                        #{/list}
+                    </ul>
+                </div>
+                <div class="span3">
+                    <h4>Disabled Columns</h4>
+                    <ul id="hiddenColumns" class="columnsSortable">
+                        #{list items:org.tdl.vireo.search.SearchOrder.values(), as:'column'}
+                        #{if !columns.contains(column) }
+                        <li id="column_${column.getId()}" class="originally-hidden">&{nav.toUpperCase()+'_COLUMN_'+column.name()}</li>
+                        #{/if}
+                        #{/list}
+                    </ul>
+                </div>
+            </div>
+            <br/>
+            <fieldset>
+                <div class="control-group">
+                    <label class="control-label" for="name"><strong>Results per page</strong>:</label>
+                    <div class="controls">
+                        <select name="resultsPerPage">
+                            <option #{if resultsPerPage == 20}selected="true"#{/if} value="20">20</option>
+                            <option #{if resultsPerPage == 40}selected="true"#{/if} value="40">40</option>
+                            <option #{if resultsPerPage == 60}selected="true"#{/if} value="60">60</option>
+                            <option #{if resultsPerPage == 100}selected="true"#{/if} value="100">100</option>
+                            <option #{if resultsPerPage == 200}selected="true"#{/if} value="200">200</option>
+                            <option #{if resultsPerPage == 400}selected="true"#{/if} value="400">400</option>
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+            
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <input type="submit" class="btn btn-primary" name="submit_save" value="Save"/>
+        </div>
+    </form>
+</div>

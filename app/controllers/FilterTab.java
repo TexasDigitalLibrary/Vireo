@@ -15,6 +15,7 @@ import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionRepository;
 import org.tdl.vireo.search.ActiveSearchFilter;
 import org.tdl.vireo.search.SearchDirection;
+import org.tdl.vireo.search.SearchFacet;
 import org.tdl.vireo.search.SearchFilter;
 import org.tdl.vireo.search.SearchOrder;
 import org.tdl.vireo.search.SearchResult;
@@ -50,7 +51,8 @@ public class FilterTab extends AbstractVireoController {
 			"SubmissionOrderBy",
 			"SubmissionOffset",
 			"SubmissionColumns",
-			"SubmissionResultsPerPage"
+			"SubmissionFacets",
+			"SubmissionResultsPerPage",
 		},
 		{
 			"ActionLogFilter",
@@ -58,6 +60,7 @@ public class FilterTab extends AbstractVireoController {
 			"ActionLogOrderBy",
 			"ActionLogOffset",
 			"ActionLogColumns",
+			"ActionLogFacets",
 			"ActionLogResultsPerPage"
 		}
 	};
@@ -72,7 +75,8 @@ public class FilterTab extends AbstractVireoController {
 	public final static int ORDERBY = 2;
 	public final static int OFFSET = 3;
 	public final static int COLUMNS = 4;
-	public final static int RESULTSPERPAGE = 5;
+	public final static int FACETS = 5;
+	public final static int RESULTSPERPAGE = 6;
 	
 	/**
 	 * Redirect to the list page.
@@ -158,16 +162,36 @@ public class FilterTab extends AbstractVireoController {
 		if (columns.size() == 0)
 			columns = getDefaultColumns(SUBMISSION);
 		
-		
-		// Add all search directions to the view
-		for (SearchOrder order2 : SearchOrder.values())
-			renderArgs.put(order2.name(), order2);
+		// Get a list of facets to display
+		List<SearchFacet> facets = new ArrayList<SearchFacet>();
+		Cookie facetsCookie = request.cookies.get(NAMES[SUBMISSION][FACETS]);
+		if (facetsCookie != null && facetsCookie.value != null) {
+			try {
+				if (facetsCookie.value.length() > 0) {
+					String[] ids = facetsCookie.value.split(",");
+					for(String id : ids)
+						facets.add(SearchFacet.find(Integer.valueOf(id)));
+				}
+			} catch (RuntimeException re) {
+				Logger.warn(re,"Unable to decode facet order: "+facetsCookie.value);
+			}
+		} else {
+			facets = getDefaultFacets(SUBMISSION);
+		}
+				
+		// Add all search orders to the view
+		for (SearchOrder order : SearchOrder.values())
+			renderArgs.put(order.name(), order);
+				
+		// Add all search facets to the view
+		for (SearchFacet facet : SearchFacet.values())
+			renderArgs.put("FACET_"+facet.name(), facet);
 		
 	    // Add ASCENDING and DECENDING to the view
 		renderArgs.put(SearchDirection.ASCENDING.name(), SearchDirection.ASCENDING);
 		renderArgs.put(SearchDirection.DESCENDING.name(), SearchDirection.DESCENDING);
 		
-		render(nav, allFilters, activeFilter, results, orderby, columns, direction, resultsPerPage);
+		render(nav, allFilters, activeFilter, results, orderby, columns, facets, direction, resultsPerPage);
 	}
 	
 	/**
@@ -245,17 +269,37 @@ public class FilterTab extends AbstractVireoController {
 		if (columns.size() == 0)
 			columns = getDefaultColumns(ACTION_LOG);
 		
+		// Get a list of facets to display
+		List<SearchFacet> facets = new ArrayList<SearchFacet>();
+		Cookie facetsCookie = request.cookies.get(NAMES[ACTION_LOG][FACETS]);
+		if (facetsCookie != null && facetsCookie.value != null) {
+			try {
+				if (facetsCookie.value.length() > 0) {
+					String[] ids = facetsCookie.value.split(",");
+					for(String id : ids)
+						facets.add(SearchFacet.find(Integer.valueOf(id)));
+				}
+			} catch (RuntimeException re) {
+				Logger.warn(re,"Unable to decode facet order: "+facetsCookie.value);
+			}
+		} else {
+			facets = getDefaultFacets(ACTION_LOG);
+		}
 		
 		
-		// Add all search directions to the view
-		for (SearchOrder order2 : SearchOrder.values())
-			renderArgs.put(order2.name(), order2);
+		// Add all search orders to the view
+		for (SearchOrder order : SearchOrder.values())
+			renderArgs.put(order.name(), order);
+				
+		// Add all search facets to the view
+		for (SearchFacet facet : SearchFacet.values())
+			renderArgs.put("FACET_"+facet.name(), facet);
 		
 	    // Add ASCENDING and DECENDING to the view
 		renderArgs.put(SearchDirection.ASCENDING.name(), SearchDirection.ASCENDING);
 		renderArgs.put(SearchDirection.DESCENDING.name(), SearchDirection.DESCENDING);
 		
-		render(nav, allFilters, activeFilter, results, orderby, columns, direction, resultsPerPage);
+		render(nav, allFilters, activeFilter, results, orderby, columns, facets, direction, resultsPerPage);
 	}
 	
 	/**
@@ -304,6 +348,64 @@ public class FilterTab extends AbstractVireoController {
 	}
 	
 	/**
+	 * Customize the columns shown, and their order, and the results per page.
+	 * 
+	 * @param nav list or log
+	 */
+	@Security(RoleType.REVIEWER)
+	public static void customizeSearch(String nav) {
+
+		int type = SUBMISSION;
+		if ("log".equals(nav))
+			type = ACTION_LOG;
+
+		// The input will be of the form "column_1,column_2,column_3,...". We
+		// will split these up and retrieve the actual search object for each
+		// one and arrange in a list. This will ensure that they are all valid
+		// ids.
+		List<SearchOrder> columns = new ArrayList<SearchOrder>();
+		String columnsString = params.get("columns");
+		String[] columnIds = columnsString.split(",");
+		for (String columnId : columnIds) {
+			String[] parts = columnId.split("_");
+
+			SearchOrder column = SearchOrder.find(Integer.valueOf(parts[1]));
+			columns.add(column);
+		}
+
+		// Check that column has at least the ID field.
+		if (columns.contains(SearchOrder.ID)) {
+
+			// Now that everythinghas been checked, reform the list into a comma
+			// separated list: "1,2,4,5" (notice not the column_part as before)
+			String columnsSerialized = "";
+			for (SearchOrder column : columns) {
+				if (columnsSerialized.length() > 0)
+					columnsSerialized += ",";
+				columnsSerialized += column.getId();
+			}
+
+			// Save as a cookie.
+			response.setCookie(NAMES[type][COLUMNS], columnsSerialized);
+		}
+		
+		// Handle results per page
+		Integer resultsPerPage = params.get("resultsPerPage",Integer.class);
+		if (resultsPerPage != null && resultsPerPage >= 20 && resultsPerPage <= 400) {
+			response.setCookie(NAMES[type][RESULTSPERPAGE], String.valueOf(resultsPerPage));
+		}
+		
+		// Send the user off to the appropriate filter tab.
+		if ("list".equals(nav))
+			list();
+		if ("log".equals(nav))
+			log();
+		
+		error("Unknown customize navigation control type");
+	}
+
+	
+	/**
 	 * Modify the current active filter.
 	 * 
 	 * Operations supported are:
@@ -326,7 +428,7 @@ public class FilterTab extends AbstractVireoController {
 	 *            The current mode: list or log
 	 */
 	@Security(RoleType.REVIEWER)
-	public static void modifyFilter(String nav) {
+	public static void modifyFilters(String nav) {
 		
 		Person person = context.getPerson();
 		
@@ -406,53 +508,43 @@ public class FilterTab extends AbstractVireoController {
 		error("Unknown modify navigation control type");
 	}
 	
-	/**
-	 * Customize the columns shown, and their order, and the results per page.
-	 * 
-	 * @param nav list or log
-	 */
 	@Security(RoleType.REVIEWER)
-	public static void customizeTable(String nav) {
-
+	public static void customizeFilters(String nav) {
+		
 		int type = SUBMISSION;
 		if ("log".equals(nav))
 			type = ACTION_LOG;
 
-		// The input will be of the form "column_1,column_2,column_3,...". We
+		// The input will be of the form "facet_1,facet_2,facet_3,...". We
 		// will split these up and retrieve the actual search object for each
 		// one and arrange in a list. This will ensure that they are all valid
 		// ids.
-		List<SearchOrder> columns = new ArrayList<SearchOrder>();
-		String columnsString = params.get("columns");
-		String[] columnIds = columnsString.split(",");
-		for (String columnId : columnIds) {
-			String[] parts = columnId.split("_");
+		String facetsSerialized = "";
 
-			SearchOrder column = SearchOrder.find(Integer.valueOf(parts[1]));
-			columns.add(column);
-		}
-
-		// Check that column has at least the ID field.
-		if (columns.contains(SearchOrder.ID)) {
-
-			// Now that everythinghas been checked, reform the list into a comma
-			// separated list: "1,2,4,5" (notice not the column_part as before)
-			String columnsSerialized = "";
-			for (SearchOrder column : columns) {
-				if (columnsSerialized.length() > 0)
-					columnsSerialized += ",";
-				columnsSerialized += column.getId();
+		List<SearchFacet> facets = new ArrayList<SearchFacet>();
+		String facetsString = params.get("facets");
+		if (facetsString != null && facetsString.trim().length() > 0) {
+			String[] facetIds = facetsString.split(",");
+			for (String facetId : facetIds) {
+				String[] parts = facetId.split("_");
+	
+				SearchFacet facet = SearchFacet.find(Integer.valueOf(parts[1]));
+				facets.add(facet);
 			}
+	
+			// Now that every thing has been checked, reform the list into a comma
+			// separated list: "1,2,4,5" (notice not the facet_part as before)
+			for (SearchFacet facet : facets) {
+				if (facetsSerialized.length() > 0)
+					facetsSerialized += ",";
+				facetsSerialized += facet.getId();
+			}
+		}
 
-			// Save as a cookie.
-			response.setCookie(NAMES[type][COLUMNS], columnsSerialized);
-		}
+		// Save as a cookie.
+		response.setCookie(NAMES[type][FACETS], facetsSerialized);
+	
 		
-		// Handle results per page
-		Integer resultsPerPage = params.get("resultsPerPage",Integer.class);
-		if (resultsPerPage != null && resultsPerPage >= 20 && resultsPerPage <= 400) {
-			response.setCookie(NAMES[type][RESULTSPERPAGE], String.valueOf(resultsPerPage));
-		}
 		
 		// Send the user off to the appropriate filter tab.
 		if ("list".equals(nav))
@@ -460,9 +552,9 @@ public class FilterTab extends AbstractVireoController {
 		if ("log".equals(nav))
 			log();
 		
-		error("Unknown customize navigation control type");
+		error("Unknown customize filter navigation control type");
 	}
-
+	
 	/**
 	 * When an error occurs it is very likely related to the current
 	 * configuration which is saved in cookies, such as the current filter
@@ -788,5 +880,31 @@ public class FilterTab extends AbstractVireoController {
 		}
 		
 		return columns;
+	}
+	
+	
+	/**
+	 * Return the default search facets when none are set.
+	 * 
+	 * @param type
+	 *            The screen type, either ACTION_LOG or SUBMISSION
+	 * @return A list of default facets.
+	 */
+	protected static List<SearchFacet> getDefaultFacets(int type) {
+		
+		List<SearchFacet> facets = new ArrayList<SearchFacet>();
+		if (type == ACTION_LOG) {
+			facets.add(SearchFacet.TEXT);
+			facets.add(SearchFacet.STATE);
+			facets.add(SearchFacet.ASSIGNEE);
+			facets.add(SearchFacet.DATE_RANGE);			
+		} else {
+			facets.add(SearchFacet.TEXT);
+			facets.add(SearchFacet.STATE);
+			facets.add(SearchFacet.ASSIGNEE);
+			facets.add(SearchFacet.GRADUATION_SEMESTER);
+		}
+		
+		return facets;
 	}
 }

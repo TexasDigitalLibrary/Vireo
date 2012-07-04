@@ -1,36 +1,38 @@
-#{set 'moreScripts'}
-<script type="text/javascript">
-jQuery(document).ready(function() { 
-    jQuery('#filter-save-modal').modal({
-        'show': false
-    });
-    
-    jQuery('#filter-manage-modal').modal({
-        'show': false
-    });
-    
-    
-});
-</script>
-#{/set}
+*{
+Show the faceted search filter parameters.
 
+Display the current filter search state, along with all the options for
+managing and modifying filters.
+
+}*
 <div class="side-box">
     <div class="box-head expanded">
         <div class="expand">[-]</div>
         <div class="main-heading">Now filtering By:</div>
     </div>
     <div class="box-body">
-    
-        #{if activeFilter.getSearchText().size() > 0 }
+        %{ 
+            def dateRangeDisplayed = false; 
+            
+            def allFacets = facets;
+            for (def facet : org.tdl.vireo.search.SearchFacet.values() ) {
+                if (!allFacets.contains(facet))
+                    allFacets.add(facet);
+            }
+        
+        }%
+        #{list items:allFacets, as:'facet'}
+        
+        #{if facet == FACET_TEXT && activeFilter.getSearchText().size() > 0 }
         <div class="sub-heading">SEARCH BOX</div>
         <ul class="unstyled">
             #{list items:activeFilter.getSearchText(), as:'value'}
-            <li><a class="removable" href="@{FilterTab.ModifyFilter(nav)}?action=remove&type=text&value=${value.urlEncode()}">${value}</a></li>
+            <li><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=text&value=${value.urlEncode()}">${value}</a></li>
             #{/list}
         </ul>
         #{/if}
         
-        #{if activeFilter.getStates().size() > 0 }
+        #{if facet == FACET_STATE && activeFilter.getStates().size() > 0 }
         <div class="sub-heading">STATUS</div>
         <ul class="unstyled editable">
             {%
@@ -52,7 +54,7 @@ jQuery(document).ready(function() {
             #{list items:activeFilter.getStates(), as:'value'}
             %{ org.tdl.vireo.state.State state = stateManager.getState(value) }%
             #{if !state.isActive() && !state.isArchived() }
-            <li><a class="removable" href="@{FilterTab.ModifyFilter(nav)}?action=remove&type=state&value=${value.urlEncode()}">${state.getDisplayName()}</a><li>
+            <li><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=state&value=${value.urlEncode()}">${state.getDisplayName()}</a><li>
             #{/if}
             #{/list}
             
@@ -63,7 +65,7 @@ jQuery(document).ready(function() {
             #{list items:activeFilter.getStates(), as:'value'}
             %{ org.tdl.vireo.state.State state = stateManager.getState(value) }%
             #{if state.isActive() }
-            <li><a class="removable" href="@{FilterTab.ModifyFilter(nav)}?action=remove&type=state&value=${value.urlEncode()}">${state.getDisplayName()}</a></li>
+            <li><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=state&value=${value.urlEncode()}">${state.getDisplayName()}</a></li>
             #{/if}
             #{/list}
             </ul>
@@ -77,7 +79,7 @@ jQuery(document).ready(function() {
             #{list items:activeFilter.getStates(), as:'value'}
             %{ org.tdl.vireo.state.State state = stateManager.getState(value) }%
             #{if state.isArchived() }
-            <li><a class="removable" href="@{FilterTab.ModifyFilter(nav)}?action=remove&type=state&value=${value.urlEncode()}">${state.getDisplayName()}</a></li>
+            <li><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=state&value=${value.urlEncode()}">${state.getDisplayName()}</a></li>
             #{/if}
             #{/list}
             </ul>
@@ -86,95 +88,98 @@ jQuery(document).ready(function() {
         </ul>
         #{/if}
         
-        #{if activeFilter.getAssignees().size() > 0 }
+        #{if facet == FACET_ASSIGNEE && activeFilter.getAssignees().size() > 0 }
         <div class="sub-heading">ASSIGNED TO</div>
         <ul class="unstyled editable">
             #{list items:activeFilter.getAssignees(), as:'person'}
             #{if person == null}
-            <li><a class="removable" href="@{FilterTab.ModifyFilter(nav)}?action=remove&type=assignee&value=null">Unassigned</a></li>
+            <li><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=assignee&value=null">Unassigned</a></li>
             #{/if}
             #{else}
-            <li><a class="removable" href="@{FilterTab.ModifyFilter(nav)}?action=remove&type=assignee&value=${person.getId()}">${person.getFullName()}</a></li>
+            <li><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=assignee&value=${person.getId()}">${person.getFullName()}</a></li>
             #{/else}
             #{/list}
         </ul>
         #{/if}
         
-        #{if activeFilter.getGraduationSemesters().size() > 0 }
+        #{if facet == FACET_GRADUATION_SEMESTER && activeFilter.getGraduationSemesters().size() > 0 }
         <div class="sub-heading">GRADUATION SEMESTER</div>
         <ul class="unstyled editable">
             #{list items:activeFilter.getGraduationSemesters(), as:'semester'}
             %{ String monthName = new java.text.DateFormatSymbols().getMonths()[semester.month]; }%
-            <li><a class="removable" href="@{FilterTab.ModifyFilter(nav)}?action=remove&type=semester&year=${semester.year}&month=${semester.month}">${semester.year} ${monthName}</a></li>
+            <li><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=semester&year=${semester.year}&month=${semester.month}">${semester.year} ${monthName}</a></li>
             #{/list}
         </ul>
         #{/if}
         
-        #{if activeFilter.getDepartments().size() > 0 }
+        #{if facet == FACET_DEPARTMENT && activeFilter.getDepartments().size() > 0 }
         <div class="sub-heading">DEPARTMENT</div>
         <ul class="unstyled editable">
             #{list items:activeFilter.getDepartments(), as:'value'}
-            <li><a class="removable" href="@{FilterTab.ModifyFilter(nav)}?action=remove&type=department&value=${value.urlEncode()}">${value}</a></li>
+            <li><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=department&value=${value.urlEncode()}">${value}</a></li>
             #{/list}
         </ul>
         #{/if}
         
-        #{if activeFilter.getColleges().size() > 0 }
+        #{if facet == FACET_COLLEGE && activeFilter.getColleges().size() > 0 }
         <div class="sub-heading">COLLEGE</div>
         <ul class="unstyled editable">
             #{list items:activeFilter.getColleges(), as:'value'}
-            <li><a class="removable" href="@{FilterTab.ModifyFilter(nav)}?action=remove&type=college&value=${value.urlEncode()}">${value}</a></li>
+            <li><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=college&value=${value.urlEncode()}">${value}</a></li>
             #{/list}
         </ul>
         #{/if}
         
-        #{if activeFilter.getMajors().size() > 0 }
+        #{if facet == FACET_MAJOR && activeFilter.getMajors().size() > 0 }
         <div class="sub-heading">MAJOR</div>
         <ul class="unstyled editable">
             #{list items:activeFilter.getMajors(), as:'value'}
-            <li><a class="removable" href="@{FilterTab.ModifyFilter(nav)}?action=remove&type=major&value=${value.urlEncode()}">${value}</a></li>
+            <li><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=major&value=${value.urlEncode()}">${value}</a></li>
             #{/list}
         </ul>
         #{/if}
         
-         #{if activeFilter.getEmbargoTypes().size() > 0 }
+         #{if facet == FACET_EMBARGO && activeFilter.getEmbargoTypes().size() > 0 }
         <div class="sub-heading">EMBARGO</div>
         <ul class="unstyled editable">
             #{list items:activeFilter.getEmbargoTypes(), as:'embargo'}
-            <li><a class="removable" href="@{FilterTab.ModifyFilter(nav)}?action=remove&type=embargo&value=${embargo.getId()}">${embargo.getName()}</a></li>
+            <li><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=embargo&value=${embargo.getId()}">${embargo.getName()}</a></li>
             #{/list}
         </ul>
         #{/if}
 
-        #{if activeFilter.getDegrees().size() > 0 }
+        #{if facet == FACET_DEGREE && activeFilter.getDegrees().size() > 0 }
         <div class="sub-heading">DEGREE</div>
         <ul class="unstyled editable">
             #{list items:activeFilter.getDegrees(), as:'value'}
-            <li><a class="removable" href="@{FilterTab.ModifyFilter(nav)}?action=remove&type=degree&value=${value.urlEncode()}">${value}</a></li>
+            <li><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=degree&value=${value.urlEncode()}">${value}</a></li>
             #{/list}
         </ul>
         #{/if}
         
-        #{if activeFilter.getDocumentTypes().size() > 0 }
+        #{if facet == FACET_DOCUMENT_TYPE && activeFilter.getDocumentTypes().size() > 0 }
         <div class="sub-heading">DOCUMENT TYPE</div>
         <ul class="unstyled editable">
             #{list items:activeFilter.getDocumentTypes(), as:'value'}
-            <li><a class="removable" href="@{FilterTab.ModifyFilter(nav)}?action=remove&type=docType&value=${value.urlEncode()}">${value}</a></li>
+            <li><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=docType&value=${value.urlEncode()}">${value}</a></li>
             #{/list}
         </ul>
         #{/if}
         
-        #{if activeFilter.getSubmissionDateRangeStart() != null || activeFilter.getSubmissionDateRangeEnd() != null }
+        #{if (facet == FACET_DATE_CHOOSE || facet == FACET_DATE_RANGE ) && !dateRangeDisplayed && ( activeFilter.getSubmissionDateRangeStart() != null || activeFilter.getSubmissionDateRangeEnd() != null ) }
+        %{ dateRangeDisplayed = true; }%
         <div class="sub-heading">SUBMISSION DATE</div>
         <ul class="unstyled editable">
             #{if activeFilter.getSubmissionDateRangeStart() != null}
-            <li><strong>Before: </strong><a class="removable" href="@{FilterTab.ModifyFilter(nav)}?action=remove&type=rangeStart">${activeFilter.getSubmissionDateRangeStart().format('MM/dd/yyyy')}</a>
+            <li><strong>Before: </strong><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=rangeStart">${activeFilter.getSubmissionDateRangeStart().format('MM/dd/yyyy')}</a>
             #{/if}
             #{if activeFilter.getSubmissionDateRangeEnd() != null}
-            <li><strong>After: </strong><a class="removable" href="@{FilterTab.ModifyFilter(nav)}?action=remove&type=rangeEnd">${activeFilter.getSubmissionDateRangeEnd().format('MM/dd/yyyy')}</a>
+            <li><strong>After: </strong><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=rangeEnd">${activeFilter.getSubmissionDateRangeEnd().format('MM/dd/yyyy')}</a>
             #{/if}
         </ul>
         #{/if}
+        
+        #{/list}
         
     </div>
     <div class="box-footer">
@@ -190,9 +195,10 @@ jQuery(document).ready(function() {
     <div class="box-body">
         <div class="sub-heading">MANAGE FILTERS</div>
         <ul class="unstyled">
-            <li><a href="@{FilterTab.ModifyFilter(nav)}?action=clear" class="confirm">Clear current filter</a></li>
+            <li><a href="@{FilterTab.ModifyFilters(nav)}?action=clear" class="confirm">Clear current filter</a></li>
             <li><a href="#filter-save-modal" data-toggle="modal">Save current filter</a></li>
             <li><a href="#filter-manage-modal" data-toggle="modal">Remove existing filters</a></li>
+            <li><a href="#filter-customize-modal" data-toggle="modal">Customize filters</a></li>
         </ul>
     </div>
     #{if subRepo.findSearchFiltersByCreatorOrPublic(securityContext.getPerson()).size() > 0 }
@@ -200,117 +206,35 @@ jQuery(document).ready(function() {
         <div class="sub-heading">SAVED FILTERS</div>
         <ul class="unstyled">
             #{list items:subRepo.findSearchFiltersByCreatorOrPublic(securityContext.getPerson()), as:'filter'}
-            <li><a href="@{FilterTab.ModifyFilter(nav)}?action=load&filter=${filter.getId()}">${filter.getName()}</a></li>
+            <li><a href="@{FilterTab.ModifyFilters(nav)}?action=load&filter=${filter.getId()}">${filter.getName()}</a></li>
             #{/list}
         </ul>
     </div>
     #{/if}
     <div class="box-footer">
-    
     </div>      
 </div>
 
-<div class="modal hide fade" id="filter-save-modal">
-    <form action="@{FilterTab.ModifyFilter(nav)}" method="POST" class="form-horizontal">
-        <input type="hidden" name="action" value="save"/>
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">×</button>
-            <h3>Save Filters</h3>
-        </div>
-        <div class="modal-body">
-            <p>Save your currently active filter by assigning it a name. If the name already exists then the filter will be replaced.</p>
-            <br/>
-            <fieldset>
-                <div class="control-group">
-                    <label class="control-label" for="name"><strong>Filter Name</strong>:</label>
-                    <div class="controls">
-                        <input type="text" class="input-xlarge" name="name"/>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="public"><strong>Public</strong>:</label>
-                    <div class="controls">
-                        <input type="checkbox" name="public" value="true"/>
-                        <p class="help-block">I would like this filter to be available to all users.</p>
-                    </div>
-                </div>
-            </fieldset>
-        </div>
-        <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <input type="submit" class="btn btn-primary" name="submit_save" value="Save Filter"/>
-        </div>
-    </form>
-</div>
-
-<div class="modal hide fade" id="filter-manage-modal">
-    <form action="@{FilterTab.ModifyFilter(nav)}" method="POST">
-        <input type="hidden" name="action" value="manage"/>
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">×</button>
-            <h3>Manage Filters</h3>
-        </div>
-        <div class="modal-body">
-            <p>Use the form to remove any filters which are no longer needed.</p>
-            <br/>
-            <table class="table table-borderd table-striped">
-                <tr>
-                    <th>Remove</th>
-                    <th>Filter Name</th>
-                    <th>Status</th>
-                </tr>
-                #{list items:subRepo.findSearchFiltersByCreatorOrPublic(securityContext.getPerson()), as:'filter'}
-                <tr>
-                    <td>
-                        #{if filter.getCreator() == securityContext.getPerson() || securityContext.getPerson().getRole().ordinal() >= org.tdl.vireo.model.RoleType.MANAGER.ordinal() }
-                        <input type="checkbox" name="remove" value="${filter.getId()}"/>
-                        #{/if}
-                    </td>
-                    <td>${filter.getName()}</td>
-                    <td>
-                        #{if filter.getCreator() == securityContext.getPerson() && filter.isPublic() }
-                        Your public filter
-                        #{/if}
-                        #{elseif filter.getCreator() == securityContext.getPerson() && !filter.isPublic() }
-                        Your private filter
-                        #{/elseif}
-                        #{else}
-                        ${filter.getCreator().getFullName()}'s public filter
-                        #{/else}
-                    </td>
-                </tr>
-                #{/list}
-                #{else}
-                <tr>
-                    <td colspan="3" class="center">
-                    <p>There currently are no saved filters.</p>
-                    </td>
-                </tr>
-                #{/else}
-            </table>
-        </div>
-        <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <input type="submit" class="btn btn-primary" name="submit_remove" value="Remove Filters"/>
-        </div>
-    </form>
-</div>
-
+#{if facets.size() > 0 }
 <div class="side-box">
     <div class="box-head expanded">
         <div class="expand">[-]</div>
         <div class="main-heading">Filter Further By:</div>
     </div>
     <div class="box-body">
+        #{list items:facets, as:'facet'}
+        #{if facet == FACET_TEXT}
         <div class="sub-heading">SEARCH BOX</div>
         <ul class="unstyled">
-            <li><form action="@{FilterTab.modifyFilter(nav)}" method="POST" class="form-search">
+            <li><form action="@{FilterTab.modifyFilters(nav)}" method="POST" class="form-search">
                 <input type="hidden" name="type" value="text"/>
                 <input type="hidden" name="action" value="add"/>
                 <input type="text" name="value" class="input-small">
                 <button type="submit" class="btn btn-primary">Go</button>
             </form></li>
         </ul>
+        #{/if}
+        #{if facet == FACET_STATE }
         <div class="sub-heading">STATUS</div>
         <ul class="unstyled">
             {%
@@ -344,7 +268,7 @@ jQuery(document).ready(function() {
             <!-- List all non-active non-archive states -->
             #{list items:stateManager.getAllStates(), as:'state'}
             #{if !state.isActive() && !state.isArchived() && !activeFilter.getStates().contains(state.getBeanName())}
-            <li><a href="@{FilterTab.ModifyFilter(nav)}?action=add&type=state&value=${state.getBeanName().urlEncode()}">${state.getDisplayName()}</a></li>
+            <li><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=state&value=${state.getBeanName().urlEncode()}">${state.getDisplayName()}</a></li>
             #{/if}
             #{/list}
             
@@ -354,7 +278,7 @@ jQuery(document).ready(function() {
             <ul class="unstyled#{if !expandActive} hidden#{/if}">
             #{list items:stateManager.getAllStates(), as:'state'}
             #{if state.isActive() && !activeFilter.getStates().contains(state.getBeanName())}
-            <li><a href="@{FilterTab.ModifyFilter(nav)}?action=add&type=state&value=${state.getBeanName().urlEncode()}">${state.getDisplayName()}</a></li>
+            <li><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=state&value=${state.getBeanName().urlEncode()}">${state.getDisplayName()}</a></li>
             #{/if}
             #{/list}
             </ul>
@@ -367,18 +291,19 @@ jQuery(document).ready(function() {
             <ul class="unstyled#{if !expandArchived} hidden#{/if}">
             #{list items:stateManager.getAllStates(), as:'state'}
             #{if state.isArchived() && !activeFilter.getStates().contains(state.getBeanName())}
-            <li><a href="@{FilterTab.ModifyFilter(nav)}?action=add&type=state&value=${state.getBeanName().urlEncode()}">${state.getDisplayName()}</a></li>
+            <li><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=state&value=${state.getBeanName().urlEncode()}">${state.getDisplayName()}</a></li>
             #{/if}
             #{/list}
             </ul>
             </li>
             #{/if}
         </ul>
-        
+        #{/if}
+        #{if facet == FACET_ASSIGNEE }
         <div class="sub-heading">ASSIGNED TO</div>
         <ul class="unstyled">
             #{if !activeFilter.getAssignees().contains(null) }
-            <li><a href="@{FilterTab.ModifyFilter(nav)}?action=add&type=assignee&value=null">Unassigned</a>
+            <li><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=assignee&value=null">Unassigned</a>
             #{/if}
             %{ int shown = 1 // because of unassigned }%
             #{list items:personRepo.findPersonsByRole(org.tdl.vireo.model.RoleType.REVIEWER), as:'person'}
@@ -386,11 +311,12 @@ jQuery(document).ready(function() {
             #{if shown == 6}
             <li class="more">more...</li>
             #{/if}
-            <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilter(nav)}?action=add&type=assignee&value=${person.getId()}">${person.getFullName()}</a></li>
+            <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=assignee&value=${person.getId()}">${person.getFullName()}</a></li>
             #{/if}
             #{/list}
         </ul>
-        
+        #{/if}
+        #{if facet == FACET_GRADUATION_SEMESTER }
         <div class="sub-heading">GRADUATION SEMESTER</div>
         <ul class="unstyled">
             %{ shown = 0 }%
@@ -400,11 +326,12 @@ jQuery(document).ready(function() {
             <li class="more">more...</li>
             #{/if}
             %{ String monthName = new java.text.DateFormatSymbols().getMonths()[semester.month]; }%
-            <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilter(nav)}?action=add&type=semester&year=${semester.year}&month=${semester.month}">${semester.year} ${monthName}</a></li>
+            <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=semester&year=${semester.year}&month=${semester.month}">${semester.year} ${monthName}</a></li>
             #{/if}
             #{/list}
         </ul>
-        
+        #{/if}
+        #{if facet == FACET_DEPARTMENT }
         <div class="sub-heading">DEPARTMENT</div>
         <ul class="unstyled">
             %{ shown = 0 }%
@@ -413,11 +340,12 @@ jQuery(document).ready(function() {
             #{if shown == 6}
             <li class="more">more...</li>
             #{/if}
-            <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilter(nav)}?action=add&type=department&value=${dept.getName().urlEncode()}">${dept.getName()}</a></li>
+            <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=department&value=${dept.getName().urlEncode()}">${dept.getName()}</a></li>
             #{/if}
             #{/list}
         </ul>
-        
+        #{/if}
+        #{if facet == FACET_COLLEGE }
         <div class="sub-heading">COLLEGE</div>
         <ul class="unstyled">
             %{ shown = 0 }%
@@ -426,11 +354,12 @@ jQuery(document).ready(function() {
             #{if shown == 6}
             <li class="more">more...</li>
             #{/if}
-            <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilter(nav)}?action=add&type=college&value=${college.getName().urlEncode()}">${college.getName()}</a></li>
+            <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=college&value=${college.getName().urlEncode()}">${college.getName()}</a></li>
             #{/if}
             #{/list}
         </ul>
-        
+        #{/if}
+        #{if facet == FACET_MAJOR }
         <div class="sub-heading">MAJOR</div>
         <ul class="unstyled">
             %{ shown = 0 }%
@@ -439,11 +368,12 @@ jQuery(document).ready(function() {
             #{if shown == 6}
             <li class="more">more...</li>
             #{/if}
-            <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilter(nav)}?action=add&type=major&value=${major.getName().urlEncode()}">${major.getName()}</a></li>
+            <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=major&value=${major.getName().urlEncode()}">${major.getName()}</a></li>
             #{/if}
             #{/list}
         </ul>
-        
+        #{/if}
+        #{if facet == FACET_EMBARGO }
         <div class="sub-heading">EMBARGO</div>
         <ul class="unstyled">
             %{ shown = 0 }%
@@ -452,11 +382,12 @@ jQuery(document).ready(function() {
             #{if shown == 6}
             <li class="more">more...</li>
             #{/if}
-            <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilter(nav)}?action=add&type=embargo&value=${embargo.getId()}">${embargo.getName()}</a></li>
+            <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=embargo&value=${embargo.getId()}">${embargo.getName()}</a></li>
             #{/if}
             #{/list}
         </ul>
-        
+        #{/if}
+        #{if facet == FACET_DEGREE }
         <div class="sub-heading">DEGREE</div>
         <ul class="unstyled">
             %{ shown = 0 }%
@@ -465,11 +396,12 @@ jQuery(document).ready(function() {
             #{if shown == 6}
             <li class="more">more...</li>
             #{/if}
-            <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilter(nav)}?action=add&type=degree&value=${degree.getName().urlEncode()}">${degree.getName()}</a></li>
+            <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=degree&value=${degree.getName().urlEncode()}">${degree.getName()}</a></li>
             #{/if}
             #{/list}
         </ul>
-        
+        #{/if}
+        #{if facet == FACET_DOCUMENT_TYPE }
         <div class="sub-heading">DOCUMENT TYPE</div>
         <ul class="unstyled">
             %{ shown = 0 }%
@@ -478,13 +410,12 @@ jQuery(document).ready(function() {
              #{if shown == 6}
             <li class="more">more...</li>
             #{/if}
-            <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilter(nav)}?action=add&type=docType&value=${docType.getName().urlEncode()}">${docType.getName()}</a></li>
+            <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=docType&value=${docType.getName().urlEncode()}">${docType.getName()}</a></li>
             #{/if}
             #{/list}
         </ul>
-        
-        <!-- TODO: Submission Date (Choose) -->
-        
+        #{/if}
+        #{if facet == FACET_DATE_CHOOSE}
         <div class="sub-heading">SUBMISSION DATE (CHOOSE)</div>
         <ul class="unstyled">
             %{
@@ -497,7 +428,7 @@ jQuery(document).ready(function() {
             #{if year_index == 6}
             <li class="more">more...</li>
             #{/if}
-            <li #{if year_index >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilter(nav)}?action=add&type=rangeChoose&year=${year}">${year}</a></li>
+            <li #{if year_index >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=rangeChoose&year=${year}">${year}</a></li>
             #{/list}
             #{/if}
             *{ If the range is for exactly a year, then allow the user to narrow the date to a month. }*
@@ -510,7 +441,7 @@ jQuery(document).ready(function() {
             #{if month_index == 6}
             <li class="more">more...</li>
             #{/if}
-            <li #{if month_index >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilter(nav)}?action=add&type=rangeChoose&year=${year}&month=${month}">${monthName}</a></li>
+            <li #{if month_index >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=rangeChoose&year=${year}&month=${month}">${monthName}</a></li>
             #{/list}
             #{/elseif}
             #{elseif start != null && end != null && start.getYear() == end.getYear() && start.getMonth() == end.getMonth() && start.getDate() == 1 && end.getDate() >= 28}
@@ -518,17 +449,17 @@ jQuery(document).ready(function() {
             int year = start.getYear() + 1900;
             int month = start.getMonth();
             }%
-            <li><a href="@{FilterTab.ModifyFilter(nav)}?action=add&type=rangeChoose&year=${year}&month=${month}&days=1">Days 1-10</a></li>
-            <li><a href="@{FilterTab.ModifyFilter(nav)}?action=add&type=rangeChoose&year=${year}&month=${month}&days=11">Days 11-20</a></li>
-            <li><a href="@{FilterTab.ModifyFilter(nav)}?action=add&type=rangeChoose&year=${year}&month=${month}&days=21">Days 21-31</a></li>
+            <li><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=rangeChoose&year=${year}&month=${month}&days=1">Days 1-10</a></li>
+            <li><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=rangeChoose&year=${year}&month=${month}&days=11">Days 11-20</a></li>
+            <li><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=rangeChoose&year=${year}&month=${month}&days=21">Days 21-31</a></li>
             #{/elseif}
         </ul>
-        
-        
+        #{/if}
+        #{if facet == FACET_DATE_RANGE }
         <div class="sub-heading">SUBMISSION DATE (RANGE)</div>
         <ul class="unstyled">
             #{if activeFilter.getSubmissionDateRangeStart() == null || activeFilter.getSubmissionDateRangeEnd() == null }
-            <li><form action="@{FilterTab.modifyFilter(nav)}" method="POST" class="form-search">
+            <li><form action="@{FilterTab.ModifyFilters(nav)}" method="POST" class="form-search">
                 <input type="hidden" name="type" value="range"/>
                 <input type="hidden" name="action" value="add"/>
                 #{if activeFilter.getSubmissionDateRangeStart() == null }
@@ -545,9 +476,12 @@ jQuery(document).ready(function() {
             </form></li>
             #{/if}
         </ul>
+        #{/if}
         
+        #{/list} *{ for facets }*
     </div>
     <div class="box-footer">
     
     </div>      
 </div>
+#{/if} *{ if any facets }*

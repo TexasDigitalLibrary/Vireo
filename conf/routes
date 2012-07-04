@@ -31,9 +31,10 @@ POST	/submit/{subId}submitETD				Submit.submitETD
 * 		/admin/?								FilterTab.listRedirect
 *	    /admin/list/?                           FilterTab.list
 *       /admin/log/?                            FilterTab.log
-*       /admin/{nav}/filter                     FilterTab.modifyFilter
+*       /admin/{nav}/filter                     FilterTab.modifyFilters
+*       /admin/{nav}/filter/customize           FilterTab.customizeFilters
 *       /admin/{nav}/search                     FilterTab.modifySearch
-*       /admin/{nav}/table-view                 FilterTab.customizeTable
+*       /admin/{nav}/search/customize           FilterTab.customizeSearch
 
 ### View Tab
 *       /admin/view/?                           ViewTab.view

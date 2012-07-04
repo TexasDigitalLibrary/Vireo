@@ -54,6 +54,10 @@ th {
     background: url(../images/nav-bg.gif) repeat-x left bottom transparent;
 }
 
+th.selected {
+    background: url(../images/nav-bg-selected.png) repeat-x left bottom #E8EEEA;
+}
+
 td.comments{
 	background:url("../images/nav-bg.gif") repeat-x left top #E0E0E0;
 	height:31px;
@@ -93,10 +97,6 @@ fieldset.default{
 
 .settings .half{
 	width:@inputWidth/2;
-}
-
-th.orderby {
-    background:url("../images/nav-bg.gif") repeat-x left top #E0E0E0;    
 }
 
 th.orderby.ascending a {
@@ -421,14 +421,13 @@ div.modal form {
 /**********************
 COLUMN SORTING
 **********************/
-#customize-results-table {
-    margin: -500px 0 0 -280px;
+#customize-search-modal {
+    margin: -350px 0 0 -280px;
 }
-#customize-results-table .modal-body {
-    height: 650px;
-    max-height: 650px;
+#customize-search-modal .modal-body {
+    max-height: 600px;
 }
-#customize-results-table h4 {
+#customize-search-modal h4 {
     text-align: center;
 }
 
@@ -452,9 +451,9 @@ COLUMN SORTING
 }
 
 #column-sort li.originally-hidden {
-    color: #b94a48;
-    background-color: #f2dede;
-    border-color: #eed3d7;
+    color: #666666;
+    background-color: #EEEEEE;
+    border-color: #CCCCCC;
 }
 #column-sort .placeholder {
     color: #c09853;
