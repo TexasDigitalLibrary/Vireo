@@ -15,6 +15,7 @@ import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.SubmissionRepository;
 import org.tdl.vireo.model.jpa.JpaEmailTemplateImpl;
 import org.tdl.vireo.search.SearchDirection;
+import org.tdl.vireo.search.SearchFacet;
 import org.tdl.vireo.search.SearchOrder;
 import org.tdl.vireo.security.SecurityContext;
 
@@ -71,9 +72,20 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 			routeArgs.put("nav", nav);
 			
 			final String LIST_URL = (nav.equals("list")) ? Router.reverse("FilterTab.list",routeArgs).url : Router.reverse("FilterTab.log",routeArgs).url;
-			final String FILTER_URL = Router.reverse("FilterTab.modifyFilter",routeArgs).url;
+			final String FILTER_URL = Router.reverse("FilterTab.modifyFilters",routeArgs).url;
+			final String CUSTOMIZE_FILTERS_URL = Router.reverse("FilterTab.customizeFilters",routeArgs).url;
 
-			
+			// Turn on most filters
+			String facets = "";
+			for (SearchFacet facet: SearchFacet.values()) {
+				if (facets.length() > 0)
+					facets += ",";
+				facets += "facet_"+facet.getId();
+			}
+			Map<String,String> params = new HashMap<String,String>();
+			params.put("facets", facets);
+			params.put("submit_save","Save");
+			POST(CUSTOMIZE_FILTERS_URL,params);
 			
 			
 			Response response = GET(LIST_URL);
@@ -235,7 +247,15 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 			Map<String,Object> routeArgs = new HashMap<String,Object>();
 			routeArgs.put("nav", nav);
 			final String LIST_URL = (nav.equals("list")) ? Router.reverse("FilterTab.list",routeArgs).url : Router.reverse("FilterTab.log",routeArgs).url;
-			final String FILTER_URL = Router.reverse("FilterTab.modifyFilter",routeArgs).url;
+			final String FILTER_URL = Router.reverse("FilterTab.modifyFilters",routeArgs).url;
+			final String CUSTOMIZE_FILTERS_URL = Router.reverse("FilterTab.customizeFilters",routeArgs).url;
+			
+			// Turn on the date range filters
+			String facets = "facet_"+SearchFacet.DATE_CHOOSE.getId()+",facet_"+SearchFacet.DATE_RANGE.getId();
+			Map<String,String> params = new HashMap<String,String>();
+			params.put("facets", facets);
+			params.put("submit_save","Save");
+			POST(CUSTOMIZE_FILTERS_URL,params);
 			
 			Response response = GET(LIST_URL);
 			// Check that there are no filters.
@@ -310,7 +330,7 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 			
 			
 			// Add a manual start date
-			Map<String,String> params = new HashMap<String,String>();
+			params.clear();
 			params.put("type", "range");
 			params.put("action", "add");
 			params.put("startDate", "5/5/2011");
@@ -361,7 +381,7 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 			Map<String,Object> routeArgs = new HashMap<String,Object>();
 			routeArgs.put("nav", nav);
 			final String LIST_URL = (nav.equals("list")) ? Router.reverse("FilterTab.list",routeArgs).url : Router.reverse("FilterTab.log",routeArgs).url;
-			final String FILTER_URL = Router.reverse("FilterTab.modifyFilter",routeArgs).url;
+			final String FILTER_URL = Router.reverse("FilterTab.modifyFilters",routeArgs).url;
 			
 			Response response = GET(LIST_URL);
 			// Check that there are no filters.
@@ -468,68 +488,117 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 	
 				response = GET(LIST_URL);
 				String labelName = Messages.get(nav.toUpperCase()+"_COLUMN_"+order.name());
-				assertContentMatch("<th class=\"orderby ascending\">\\s*<a href=\"[^\"]*\\?direction=toggle\">"+labelName+"</a>",response);
+				assertContentMatch("<th class=\"orderby selected ascending\">\\s*<a href=\"[^\"]*\\?direction=toggle\">"+labelName+"</a>",response);
 				
 				GET(SEARCH_URL+"?orderby="+order.getId());
 				GET(SEARCH_URL+"?direction=toggle");
 	
 				response = GET(LIST_URL);
-				assertContentMatch("<th class=\"orderby descending\">\\s*<a href=\"[^\"]*\\?direction=toggle\">"+labelName+"</a>",response);
+				assertContentMatch("<th class=\"orderby selected descending\">\\s*<a href=\"[^\"]*\\?direction=toggle\">"+labelName+"</a>",response);
 				
 				GET(SEARCH_URL+"?direction=toggle");
 			//}
 		}
 	}
 	
+	/**
+	 * Test customizing the columns displayed.
+	 */
 	@Test
-	public void testCustomizeTable() {
+	public void testCustomizeSearch() {
 		
 		// Login as an administrator
 		LOGIN();
 		
-		String nav = "list";
+		String[] possibleNavs = {"list","log"};
+		for (String nav : possibleNavs) {
+			
+			// Get our URLS
+			Map<String,Object> routeArgs = new HashMap<String,Object>();
+			routeArgs.put("nav", nav);
+			final String FILTER_URL = (nav.equals("list")) ? Router.reverse("FilterTab.list",routeArgs).url : Router.reverse("FilterTab.log",routeArgs).url;
+			final String CUSTOMIZE_URL = Router.reverse("FilterTab.customizeSearch",routeArgs).url;
+			
+			Response response = GET(FILTER_URL);
+			
+			assertContentMatch("customize-search-form",response);
+			// The default tables shared between list and log tabs.
+			assertContentMatch("<li id=\"column_"+SearchOrder.ID.getId()+"\" class=\"originally-shown\"", response);
+			assertContentMatch("<li id=\"column_"+SearchOrder.STATE.getId()+"\" class=\"originally-shown\"", response);
+			assertContentMatch("<li id=\"column_"+SearchOrder.ASSIGNEE.getId()+"\" class=\"originally-shown\"", response);
+			assertContentMatch("<li id=\"column_"+SearchOrder.LAST_EVENT_ENTRY.getId()+"\" class=\"originally-shown\"", response);
+			assertContentMatch("<li id=\"column_"+SearchOrder.LAST_EVENT_TIME.getId()+"\" class=\"originally-shown\"", response);
+			
+			// The default results per page.
+			assertContentMatch("<option selected=\"true\" value=\"100\">100</option>",response);
+			
+			// Change the columns
+			String columnsString = "column_"+SearchOrder.ID.getId()+",column_"+SearchOrder.DOCUMENT_TITLE.getId()+",column_"+SearchOrder.STATE.getId();
+			
+			Map<String,String> params = new HashMap<String,String>();
+			params.put("columns",columnsString);
+			params.put("resultsPerPage", "20");
+			params.put("submit_save","Save");
+			POST(CUSTOMIZE_URL,params);
+			
+			response = GET(FILTER_URL);
+			
+			assertContentMatch("<li id=\"column_"+SearchOrder.ID.getId()+"\" class=\"originally-shown\"", response);
+			assertContentMatch("<li id=\"column_"+SearchOrder.DOCUMENT_TITLE.getId()+"\" class=\"originally-shown\"", response);
+			assertContentMatch("<li id=\"column_"+SearchOrder.STATE.getId()+"\" class=\"originally-shown\"", response);
+			
+			assertContentMatch("<li id=\"column_"+SearchOrder.ASSIGNEE.getId()+"\" class=\"originally-hidden\"", response);
+			assertContentMatch("<li id=\"column_"+SearchOrder.LAST_EVENT_ENTRY.getId()+"\" class=\"originally-hidden\"", response);
+			assertContentMatch("<li id=\"column_"+SearchOrder.LAST_EVENT_TIME.getId()+"\" class=\"originally-hidden\"", response);
+	
+			assertContentMatch("<option selected=\"true\" value=\"20\">20</option>",response);
+		}
+	}
+	
+	/**
+	 * Test changing the filter facet options
+	 */
+	@Test
+	public void testCustomizeFacets() {
+		// Login as an administrator
+		LOGIN();
 		
-		// Get our URLS
-		Map<String,Object> routeArgs = new HashMap<String,Object>();
-		routeArgs.put("nav", nav);
-		final String FILTER_URL = (nav.equals("list")) ? Router.reverse("FilterTab.list",routeArgs).url : Router.reverse("FilterTab.log",routeArgs).url;
-		final String CUSTOMIZE_URL = Router.reverse("FilterTab.customizeTable",routeArgs).url;
+		String[] possibleNavs = {"list","log"};
+		for (String nav : possibleNavs) {
 		
-		Response response = GET(FILTER_URL);
-		
-		assertContentMatch("customize-results-table",response);
-		// The default tables shared between list and log tabs.
-		assertContentMatch("<li id=\"column_"+SearchOrder.ID.getId()+"\" class=\"originally-shown\"", response);
-		assertContentMatch("<li id=\"column_"+SearchOrder.STATE.getId()+"\" class=\"originally-shown\"", response);
-		assertContentMatch("<li id=\"column_"+SearchOrder.ASSIGNEE.getId()+"\" class=\"originally-shown\"", response);
-		assertContentMatch("<li id=\"column_"+SearchOrder.LAST_EVENT_ENTRY.getId()+"\" class=\"originally-shown\"", response);
-		assertContentMatch("<li id=\"column_"+SearchOrder.LAST_EVENT_TIME.getId()+"\" class=\"originally-shown\"", response);
-		
-		// The default results per page.
-		assertContentMatch("<option selected=\"true\" value=\"100\">100</option>",response);
-		
-		
-		String columnsString = "column_"+SearchOrder.ID.getId()+",column_"+SearchOrder.DOCUMENT_TITLE.getId()+",column_"+SearchOrder.STATE.getId();
-		
-		Map<String,String> params = new HashMap<String,String>();
-		params.put("columns",columnsString);
-		params.put("resultsPerPage", "20");
-		params.put("submit_save","Save");
-		POST(CUSTOMIZE_URL,params);
-		
-		response = GET(FILTER_URL);
-		
-		assertContentMatch("<li id=\"column_"+SearchOrder.ID.getId()+"\" class=\"originally-shown\"", response);
-		assertContentMatch("<li id=\"column_"+SearchOrder.DOCUMENT_TITLE.getId()+"\" class=\"originally-shown\"", response);
-		assertContentMatch("<li id=\"column_"+SearchOrder.STATE.getId()+"\" class=\"originally-shown\"", response);
-		
-		assertContentMatch("<li id=\"column_"+SearchOrder.ASSIGNEE.getId()+"\" class=\"originally-hidden\"", response);
-		assertContentMatch("<li id=\"column_"+SearchOrder.LAST_EVENT_ENTRY.getId()+"\" class=\"originally-hidden\"", response);
-		assertContentMatch("<li id=\"column_"+SearchOrder.LAST_EVENT_TIME.getId()+"\" class=\"originally-hidden\"", response);
-
-		assertContentMatch("<option selected=\"true\" value=\"20\">20</option>",response);
-
-		
+			// Get our URLS
+			Map<String,Object> routeArgs = new HashMap<String,Object>();
+			routeArgs.put("nav", nav);
+			final String FILTER_URL = (nav.equals("list")) ? Router.reverse("FilterTab.list",routeArgs).url : Router.reverse("FilterTab.log",routeArgs).url;
+			final String CUSTOMIZE_URL = Router.reverse("FilterTab.customizeFilters",routeArgs).url;
+			
+			Response response = GET(FILTER_URL);
+			
+			assertContentMatch("filter-customize-modal",response);
+			// The default facets shared between list and log tabs.
+			assertContentMatch("<li id=\"facet_"+SearchFacet.TEXT.getId()+"\" class=\"originally-shown\"", response);
+			assertContentMatch("<li id=\"facet_"+SearchFacet.STATE.getId()+"\" class=\"originally-shown\"", response);
+			assertContentMatch("<li id=\"facet_"+SearchFacet.ASSIGNEE.getId()+"\" class=\"originally-shown\"", response);
+			
+			
+			// Change the facets
+			String facetsString = "facet_"+SearchFacet.TEXT.getId()+",facet_"+SearchFacet.DEGREE.getId()+",facet_"+SearchFacet.DATE_RANGE.getId();
+			
+			Map<String,String> params = new HashMap<String,String>();
+			params.put("facets",facetsString);
+			params.put("submit_save","Save");
+			POST(CUSTOMIZE_URL,params);
+			
+			response = GET(FILTER_URL);
+			
+			assertContentMatch("<li id=\"facet_"+SearchFacet.TEXT.getId()+"\" class=\"originally-shown\"", response);
+			assertContentMatch("<li id=\"facet_"+SearchFacet.DEGREE.getId()+"\" class=\"originally-shown\"", response);
+			assertContentMatch("<li id=\"facet_"+SearchFacet.DATE_RANGE.getId()+"\" class=\"originally-shown\"", response);
+			
+			assertContentMatch("<li id=\"facet_"+SearchFacet.STATE.getId()+"\" class=\"originally-hidden\"", response);
+			assertContentMatch("<li id=\"facet_"+SearchFacet.ASSIGNEE.getId()+"\" class=\"originally-hidden\"", response);
+			assertContentMatch("<li id=\"facet_"+SearchFacet.UMI_RELEASE.getId()+"\" class=\"originally-hidden\"", response);
+		}
 	}
 	
 	

@@ -14,7 +14,9 @@ managing and modifying filters.
         %{ 
             def dateRangeDisplayed = false; 
             
-            def allFacets = facets;
+            // Get all facets ordered by the customized facets, but add all
+            // others to the end so that no parameters are missed.
+            def allFacets = new ArrayList<org.tdl.vireo.search.SearchFacet>(facets);
             for (def facet : org.tdl.vireo.search.SearchFacet.values() ) {
                 if (!allFacets.contains(facet))
                     allFacets.add(facet);

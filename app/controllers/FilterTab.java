@@ -439,7 +439,7 @@ public class FilterTab extends AbstractVireoController {
 		// Load the active filter from the cookie
 		ActiveSearchFilter activeFilter = Spring.getBeanOfType(ActiveSearchFilter.class);
 		Cookie cookie = request.cookies.get(NAMES[type][ACTIVE_FILTER]);
-		if (cookie != null) {
+		if (cookie != null && cookie.value != null && cookie.value.trim().length() > 0) {
 			try {
 				activeFilter.decode(cookie.value);
 			} catch (RuntimeException re) {
@@ -462,24 +462,29 @@ public class FilterTab extends AbstractVireoController {
 			if (params.get("public") != null)
 				publicFlag = true;
 			
-			// Check if a filter allready exsits for the name.
-			NamedSearchFilter namedFilter = subRepo.findSearchFilterByCreatorAndName(person, name);
-			if (namedFilter == null) {
-				namedFilter = subRepo.createSearchFilter(person, name);
-			}
+			if (name != null && name.trim().length() > 0 ) {
 			
-			namedFilter.setPublic(publicFlag);
-			activeFilter.copyTo(namedFilter);
-			namedFilter.save();
+				// Check if a filter allready exsits for the name.
+				NamedSearchFilter namedFilter = subRepo.findSearchFilterByCreatorAndName(person, name);
+				if (namedFilter == null) {
+					namedFilter = subRepo.createSearchFilter(person, name);
+				}
+				
+				namedFilter.setPublic(publicFlag);
+				activeFilter.copyTo(namedFilter);
+				namedFilter.save();
+			}
 			
 		} else if ("manage".equals(action)) {
 			String[] removeIds = params.getAll("remove");
-			for (String removeId : removeIds) {	
-				NamedSearchFilter namedFilter = subRepo.findSearchFilter(Long.valueOf(removeId));
-				
-				if (namedFilter.getCreator() == person || person.getRole().ordinal() >= RoleType.MANAGER.ordinal())
-					namedFilter.delete();
-			}			
+			if (removeIds != null ) {
+				for (String removeId : removeIds) {	
+					NamedSearchFilter namedFilter = subRepo.findSearchFilter(Long.valueOf(removeId));
+					
+					if (namedFilter.getCreator() == person || person.getRole().ordinal() >= RoleType.MANAGER.ordinal())
+						namedFilter.delete();
+				}
+			}
 			
 		} else if ("load".equals(action)) {
 			Long filterId = params.get("filter",Long.class);
