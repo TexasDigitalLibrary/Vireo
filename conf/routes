@@ -17,8 +17,9 @@ GET     /profile                                Authentication.profile
 *       /profile/password                       Authentication.updatePassword
 
 ### Student Submissions
-*       /submit/?                               Submit.verifyPersonalInformation
+*       /submit/?                               Submit.submissionStatus
 *       /submit/{subId}/verifyinfo              Submit.verifyPersonalInformation
+*       /submit/verifyinfo                      Submit.verifyPersonalInformation
 *	    /submit/{subId}/license                 Submit.license
 *   	/submit/{subId}/docinfo                 Submit.docInfo
 *	    /submit/{subId}/upload                  Submit.fileUpload
@@ -26,6 +27,7 @@ GET     /profile                                Authentication.profile
 POST	/submit/{subId}/submitETD				Submit.submitETD
 *       /submit/{subId}/review                  Submit.review
 * 		/submit/{subId}/submissionStatus		Submit.submissionStatus
+*       /submit/{subId}/delete                  Submit.deleteSubmission
 
 ### List & Log Tabs
 GET     /admin/?                                FilterTab.listRedirect

@@ -16,36 +16,46 @@
 #{/ifErrors}
 
 <div class="row">
-    <table>
-        <tbody><tr class="table-header-row">
-            <th class="table-header-cell odd">Title</th>
-            <th class="table-header-cell even">Manuscript</th>
-            <th class="table-header-cell odd">Status</th>
-            <th class="table-header-cell even">Date Submitted</th>
-            <th class="table-header-cell odd">Assigned To</th>
-            <th class="table-header-cell even">Actions</th>
-        </tr>
+    <table class="table table-striped table-bordered table-condensed">    
+    
+ 	<thead>
+        <tr>
+        	<td>Title</td>
+         	<td>Manuscript</td>
+         	<td>Status</td>
+         	<td>Date Submitted</td>
+         	<td>Assigned To</td>
+         	<td>Actions</td>
+         </tr>
+    </thead>
+        <tbody>
+        
         #{list items:submissionList, as:"submission"}
-        <tr class="table-row even">
-            <td class="table-cell odd">${documentTitle}</td>
-            <td class="table-cell even">${primaryDocumentName}<a href="@{primaryDocumentFileURI}" class="">[view]</a>
-            </td>
-            <td class="table-cell odd">${stateDisplayName}</td>
-            <td class="table-cell even">${dateString}</td> // 23 Jun 2012; 9:21 PM
-            <td class="table-cell odd">${assigneeDisplayName}</td>
-            <td class="table-cell even">
-                #{if editableByStudent}
-                    <a href="@{Submit.review(id)}" class="actions">View</a>
-                #{/if}
+        
+	        <tr>
+	            <td>${submission.getDocumentTitle()}</td>
+				<td>${controllers.Submit.getDocumentName(submission)}</td>
+				<td>${submission.getState().getDisplayName()}</td>
+				<td>${submission.getSubmissionDate()== null?"n/a":submission.getSubmissionDate()}</td>
+				<td>${submission.getAssignee() == null?"Unassigned":submission.getAssignee().getDisplayName()}</td>
+				<td> 
+				#{if submission.getState().getDisplayName().equals("In Progress")}
+				    <a href="@{Submit.verifyPersonalInformation(submission.getId())}">Continue</a>
+				    <a href="@{Submit.deleteSubmission(submission.getId())}">Delete</a>
+                #{/if} 
                 #{else}
-                #{/else}
-            </td>
-        </tr>
+				     <a href="/ut-etd/vireo/view?appID=4967">View</a>				 
+				#{/else}
+				</td>
+				
+	        </tr>
         #{/list}
 
         </tbody></table>
+        
+        <div class="form-actions row center">
+		    <a href="@{Submit.verifyPersonalInformation()}" class="btn btn-primary">Start a new submission</a>
+		</div>
+        
 </div>
 
-<div class="form-actions row center">
-    <a href="@{Submit.verifyPersonalInformation}" class="btn btn-primary">Start your submission</a>
-</div>
