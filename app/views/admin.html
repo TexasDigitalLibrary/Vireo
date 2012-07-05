@@ -101,8 +101,8 @@
 	    		<span id="logo">&nbsp;</span>
 	    		
 	    		<div id="personal-bar">
-					#{if session.get("personId") }
-						<a href="@{Authentication.profile()}"><b>${session.get("firstName")} ${session.get("lastName")}</b></a> |
+					#{if currentUser != null }
+						<a href="@{Authentication.profile()}"><b>${currentUser.getDisplayName()}</b></a> |
 						<a href="@{Authentication.logout()}">Logout</a>
 					#{/if}
 					#{else}

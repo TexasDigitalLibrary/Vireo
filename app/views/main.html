@@ -37,8 +37,8 @@
 	    		<!-- <a id="tdl-logo" href="http://www.tdl.org" title="Texas Digital Library Home">&nbsp;</a> -->
 	    		
 	    		<div id="personal-bar">
-					#{if session.get("personId") }
-						<a href="@{Authentication.profile()}">${session.get("firstName")} ${session.get("lastName")}</a> |
+					#{if currentUser != null }
+						<a href="@{Authentication.profile()}">${currentUser.getDisplayName()}</a> |
 						<a href="@{Authentication.logout()}">Logout</a>
 					#{/if}
 					#{else}

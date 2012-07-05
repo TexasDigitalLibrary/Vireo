@@ -271,6 +271,33 @@ public class JpaPersonImplTests extends UnitTest {
 	}
 	
 	/**
+	 * Test that getDisplayName() and getCurrentEmailAddress() default to their
+	 * alternative attributes when not defined.
+	 */
+	@Test
+	public void testNameAndEmailDefaults() {
+		
+		Person person = repo.createPerson("netid", "email1@email.com", "first", "last", RoleType.NONE).save();
+
+		assertEquals("first last",person.getDisplayName());
+		assertEquals("email1@email.com",person.getCurrentEmailAddress());
+		
+		person.setDisplayName("changed");
+		person.setCurrentEmailAddress("changed@email.com");
+		
+		assertEquals("changed",person.getDisplayName());
+		assertEquals("changed@email.com",person.getCurrentEmailAddress());
+		
+		person.setDisplayName(null);
+		person.setCurrentEmailAddress(null);
+		
+		assertEquals("first last",person.getDisplayName());
+		assertEquals("email1@email.com",person.getCurrentEmailAddress());
+		
+		person.delete();
+	}
+	
+	/**
 	 * Test that netids are optional, but when pressent must be unique.
 	 */
 	@Test

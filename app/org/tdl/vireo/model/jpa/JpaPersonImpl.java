@@ -262,7 +262,11 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 
 	@Override
 	public String getDisplayName() {
-		return displayName;
+		
+		if (displayName == null)
+			return getFullName();
+		else
+			return displayName;
 	}
 
 	@Override
@@ -314,7 +318,11 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 
 	@Override
 	public String getCurrentEmailAddress() {
-		return currentEmailAddress;
+		
+		if (currentEmailAddress == null)
+			return getEmail();
+		else 
+			return currentEmailAddress;
 	}
 
 	@Override

@@ -125,7 +125,9 @@ public interface Person extends AbstractModel {
 	public String getFullName();
 	
 	/**
-	 * @return The preferred display name for the person.
+	 * @return The preferred display name for the person. If no specific
+	 *         displayName is specified then the results from getFullName() will
+	 *         be returned instead.
 	 */
 	public String getDisplayName();
 
@@ -181,7 +183,9 @@ public interface Person extends AbstractModel {
 
 	/**
 	 * 
-	 * @return The current email address.
+	 * @return The current email address. If no specific email address is
+	 *         specified here, then the user's primary email address (aka
+	 *         getEmail()) will be returned.
 	 */
 	public String getCurrentEmailAddress();
 

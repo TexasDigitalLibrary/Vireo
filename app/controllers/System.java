@@ -20,6 +20,7 @@ import play.Play;
 import play.db.jpa.JPA;
 import play.modules.spring.Spring;
 import play.mvc.Router;
+import play.mvc.With;
 import play.mvc.Router.ActionDefinition;
 
 /**
@@ -31,6 +32,7 @@ import play.mvc.Router.ActionDefinition;
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
+@With(Authentication.class)
 public class System extends AbstractVireoController {
 
 	// The email template to use when sending a test email.

@@ -105,6 +105,7 @@ public class Authentication extends AbstractVireoController {
 		if (personId != null) {
 			person = personRepo.findPerson(personId);			
 			context.login(person);
+			renderArgs.put("currentUser",context.getPerson());
 		}
 		
 		// Check if there are any security restrictions for this action.

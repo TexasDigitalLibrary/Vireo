@@ -14,7 +14,7 @@ import java.util.Map.Entry;
 
 import org.tdl.vireo.model.RoleType;
 
-
+@With(Authentication.class)
 public class Application extends AbstractVireoController {
 
     public static void index() {
