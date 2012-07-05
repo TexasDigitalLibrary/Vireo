@@ -5,7 +5,9 @@ Display the current filter search state, along with all the options for
 managing and modifying filters.
 
 }*
+#{set 'now-filtering-by-box'}
 <div class="side-box">
+
     <div class="box-head expanded">
         <div class="expand">[-]</div>
         <div class="main-heading">Now filtering By:</div>
@@ -26,7 +28,7 @@ managing and modifying filters.
         #{list items:allFacets, as:'facet'}
         
         #{if facet == FACET_TEXT && activeFilter.getSearchText().size() > 0 }
-        <div class="sub-heading">SEARCH BOX</div>
+        <div class="sub-heading">&{nav.toUpperCase()+'_FACET_'+facet.name()}</div>
         <ul class="unstyled">
             #{list items:activeFilter.getSearchText(), as:'value'}
             <li><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=text&value=${value.urlEncode()}">${value}</a></li>
@@ -35,7 +37,7 @@ managing and modifying filters.
         #{/if}
         
         #{if facet == FACET_STATE && activeFilter.getStates().size() > 0 }
-        <div class="sub-heading">STATUS</div>
+        <div class="sub-heading">&{nav.toUpperCase()+'_FACET_'+facet.name()}</div>
         <ul class="unstyled editable">
             {%
             Boolean showActive = false;
@@ -91,7 +93,7 @@ managing and modifying filters.
         #{/if}
         
         #{if facet == FACET_ASSIGNEE && activeFilter.getAssignees().size() > 0 }
-        <div class="sub-heading">ASSIGNED TO</div>
+        <div class="sub-heading">&{nav.toUpperCase()+'_FACET_'+facet.name()}</div>
         <ul class="unstyled editable">
             #{list items:activeFilter.getAssignees(), as:'person'}
             #{if person == null}
@@ -105,7 +107,7 @@ managing and modifying filters.
         #{/if}
         
         #{if facet == FACET_GRADUATION_SEMESTER && activeFilter.getGraduationSemesters().size() > 0 }
-        <div class="sub-heading">GRADUATION SEMESTER</div>
+        <div class="sub-heading">&{nav.toUpperCase()+'_FACET_'+facet.name()}</div>
         <ul class="unstyled editable">
             #{list items:activeFilter.getGraduationSemesters(), as:'semester'}
             %{ String monthName = new java.text.DateFormatSymbols().getMonths()[semester.month]; }%
@@ -115,7 +117,7 @@ managing and modifying filters.
         #{/if}
         
         #{if facet == FACET_DEPARTMENT && activeFilter.getDepartments().size() > 0 }
-        <div class="sub-heading">DEPARTMENT</div>
+        <div class="sub-heading">&{nav.toUpperCase()+'_FACET_'+facet.name()}</div>
         <ul class="unstyled editable">
             #{list items:activeFilter.getDepartments(), as:'value'}
             <li><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=department&value=${value.urlEncode()}">${value}</a></li>
@@ -124,16 +126,16 @@ managing and modifying filters.
         #{/if}
         
         #{if facet == FACET_COLLEGE && activeFilter.getColleges().size() > 0 }
-        <div class="sub-heading">COLLEGE</div>
+        <div class="sub-heading">&{nav.toUpperCase()+'_FACET_'+facet.name()}</div>
         <ul class="unstyled editable">
             #{list items:activeFilter.getColleges(), as:'value'}
             <li><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=college&value=${value.urlEncode()}">${value}</a></li>
             #{/list}
         </ul>
         #{/if}
-        
+
         #{if facet == FACET_MAJOR && activeFilter.getMajors().size() > 0 }
-        <div class="sub-heading">MAJOR</div>
+        <div class="sub-heading">&{nav.toUpperCase()+'_FACET_'+facet.name()}</div>
         <ul class="unstyled editable">
             #{list items:activeFilter.getMajors(), as:'value'}
             <li><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=major&value=${value.urlEncode()}">${value}</a></li>
@@ -142,7 +144,7 @@ managing and modifying filters.
         #{/if}
         
          #{if facet == FACET_EMBARGO && activeFilter.getEmbargoTypes().size() > 0 }
-        <div class="sub-heading">EMBARGO</div>
+        <div class="sub-heading">&{nav.toUpperCase()+'_FACET_'+facet.name()}</div>
         <ul class="unstyled editable">
             #{list items:activeFilter.getEmbargoTypes(), as:'embargo'}
             <li><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=embargo&value=${embargo.getId()}">${embargo.getName()}</a></li>
@@ -151,7 +153,7 @@ managing and modifying filters.
         #{/if}
 
         #{if facet == FACET_DEGREE && activeFilter.getDegrees().size() > 0 }
-        <div class="sub-heading">DEGREE</div>
+        <div class="sub-heading">&{nav.toUpperCase()+'_FACET_'+facet.name()}</div>
         <ul class="unstyled editable">
             #{list items:activeFilter.getDegrees(), as:'value'}
             <li><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=degree&value=${value.urlEncode()}">${value}</a></li>
@@ -160,7 +162,7 @@ managing and modifying filters.
         #{/if}
         
         #{if facet == FACET_DOCUMENT_TYPE && activeFilter.getDocumentTypes().size() > 0 }
-        <div class="sub-heading">DOCUMENT TYPE</div>
+        <div class="sub-heading">&{nav.toUpperCase()+'_FACET_'+facet.name()}</div>
         <ul class="unstyled editable">
             #{list items:activeFilter.getDocumentTypes(), as:'value'}
             <li><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=docType&value=${value.urlEncode()}">${value}</a></li>
@@ -169,7 +171,7 @@ managing and modifying filters.
         #{/if}
         
         #{if facet == FACET_UMI_RELEASE && activeFilter.getUMIRelease() != null }
-        <div class="sub-heading">UMI Release</div>
+        <div class="sub-heading">&{nav.toUpperCase()+'_FACET_'+facet.name()}</div>
         <ul class="unstyled editable">
             <li><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=umi&value=${activeFilter.getUMIRelease()}">${activeFilter.getUMIRelease().toString().capitalizeWords()}</a></li>
         </ul>
@@ -177,7 +179,7 @@ managing and modifying filters.
         
         #{if (facet == FACET_DATE_CHOOSE || facet == FACET_DATE_RANGE ) && !dateRangeDisplayed && ( activeFilter.getDateRangeStart() != null || activeFilter.getDateRangeEnd() != null ) }
         %{ dateRangeDisplayed = true; }%
-        <div class="sub-heading">#{if "list".equals(nav)}SUBMISSION DATE#{/if}#{else}ACTION DATE#{/else}</div>
+        <div class="sub-heading">&{nav.toUpperCase()+'_FACET_DATE'}</div>
         <ul class="unstyled editable">
             #{if activeFilter.getDateRangeStart() != null}
             <li><strong>Before: </strong><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=rangeStart">${activeFilter.getDateRangeStart().format('MM/dd/yyyy')}</a>
@@ -195,6 +197,14 @@ managing and modifying filters.
     
     </div>      
 </div>
+#{/set}
+*{
+We do this silly bid about putting the 'now-filting-by' box in a set then
+immediately display it to work around a bug in groovy. Groovy has a maximum
+size each individual block may be, so by separating this file into two
+different blocks this gets around this problem because each is independent.
+}*
+#{get 'now-filtering-by-box'/}
 
 <div class="side-box">
     <div class="box-head expanded">
@@ -233,7 +243,7 @@ managing and modifying filters.
     <div class="box-body">
         #{list items:facets, as:'facet'}
         #{if facet == FACET_TEXT}
-        <div class="sub-heading">SEARCH BOX</div>
+        <div class="sub-heading">&{nav.toUpperCase()+'_FACET_'+facet.name()}</div>
         <ul class="unstyled">
             <li><form action="@{FilterTab.modifyFilters(nav)}" method="POST" class="form-search">
                 <input type="hidden" name="type" value="text"/>
@@ -244,7 +254,7 @@ managing and modifying filters.
         </ul>
         #{/if}
         #{if facet == FACET_STATE }
-        <div class="sub-heading">STATUS</div>
+        <div class="sub-heading">&{nav.toUpperCase()+'_FACET_'+facet.name()}</div>
         <ul class="unstyled">
             {%
             
@@ -309,7 +319,7 @@ managing and modifying filters.
         </ul>
         #{/if}
         #{if facet == FACET_ASSIGNEE }
-        <div class="sub-heading">ASSIGNED TO</div>
+        <div class="sub-heading">&{nav.toUpperCase()+'_FACET_'+facet.name()}</div>
         <ul class="unstyled">
             #{if !activeFilter.getAssignees().contains(null) }
             <li><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=assignee&value=null">Unassigned</a>
@@ -326,7 +336,7 @@ managing and modifying filters.
         </ul>
         #{/if}
         #{if facet == FACET_GRADUATION_SEMESTER }
-        <div class="sub-heading">GRADUATION SEMESTER</div>
+        <div class="sub-heading">&{nav.toUpperCase()+'_FACET_'+facet.name()}</div>
         <ul class="unstyled">
             %{ shown = 0 }%
             #{list items:subRepo.findAllGraduationSemesters(), as:'semester'}
@@ -341,7 +351,7 @@ managing and modifying filters.
         </ul>
         #{/if}
         #{if facet == FACET_DEPARTMENT }
-        <div class="sub-heading">DEPARTMENT</div>
+        <div class="sub-heading">&{nav.toUpperCase()+'_FACET_'+facet.name()}</div>
         <ul class="unstyled">
             %{ shown = 0 }%
             #{list items:settingRepo.findAllDepartments(), as:'dept'}
@@ -355,7 +365,7 @@ managing and modifying filters.
         </ul>
         #{/if}
         #{if facet == FACET_COLLEGE }
-        <div class="sub-heading">COLLEGE</div>
+        <div class="sub-heading">&{nav.toUpperCase()+'_FACET_'+facet.name()}</div>
         <ul class="unstyled">
             %{ shown = 0 }%
             #{list items:settingRepo.findAllColleges(), as:'college'}
@@ -369,7 +379,7 @@ managing and modifying filters.
         </ul>
         #{/if}
         #{if facet == FACET_MAJOR }
-        <div class="sub-heading">MAJOR</div>
+        <div class="sub-heading">&{nav.toUpperCase()+'_FACET_'+facet.name()}</div>
         <ul class="unstyled">
             %{ shown = 0 }%
             #{list items:settingRepo.findAllMajors(), as:'major'}
@@ -383,7 +393,7 @@ managing and modifying filters.
         </ul>
         #{/if}
         #{if facet == FACET_EMBARGO }
-        <div class="sub-heading">EMBARGO</div>
+        <div class="sub-heading">&{nav.toUpperCase()+'_FACET_'+facet.name()}</div>
         <ul class="unstyled">
             %{ shown = 0 }%
             #{list items:settingRepo.findAllEmbargoTypes(), as:'embargo'}
@@ -397,7 +407,7 @@ managing and modifying filters.
         </ul>
         #{/if}
         #{if facet == FACET_DEGREE }
-        <div class="sub-heading">DEGREE</div>
+        <div class="sub-heading">&{nav.toUpperCase()+'_FACET_'+facet.name()}</div>
         <ul class="unstyled">
             %{ shown = 0 }%
             #{list items:settingRepo.findAllDegrees(), as:'degree'}
@@ -411,7 +421,7 @@ managing and modifying filters.
         </ul>
         #{/if}
         #{if facet == FACET_DOCUMENT_TYPE }
-        <div class="sub-heading">DOCUMENT TYPE</div>
+        <div class="sub-heading">&{nav.toUpperCase()+'_FACET_'+facet.name()}</div>
         <ul class="unstyled">
             %{ shown = 0 }%
             #{list items:settingRepo.findAllDocumentTypes(), as:'docType'}
@@ -425,7 +435,7 @@ managing and modifying filters.
         </ul>
         #{/if}
         #{if facet == FACET_UMI_RELEASE }
-        <div class="sub-heading">UMI RELEASE</div>
+        <div class="sub-heading">&{nav.toUpperCase()+'_FACET_'+facet.name()}</div>
         <ul class="unstyled">
         	#{if activeFilter.getUMIRelease() == null }
             <li><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=umi&value=true">True</a></li>
@@ -434,7 +444,7 @@ managing and modifying filters.
         </ul>
         #{/if}
         #{if facet == FACET_DATE_CHOOSE}
-        <div class="sub-heading">#{if "list".equals(nav)}SUBMISSION DATE#{/if}#{else}ACTION DATE#{/else} (CHOOSE)</div>
+        <div class="sub-heading">&{nav.toUpperCase()+'_FACET_'+facet.name()}</div>
         <ul class="unstyled">
             %{
               Date start = activeFilter.getDateRangeStart();
@@ -474,7 +484,7 @@ managing and modifying filters.
         </ul>
         #{/if}
         #{if facet == FACET_DATE_RANGE }
-        <div class="sub-heading">#{if "list".equals(nav)}SUBMISSION DATE#{/if}#{else}ACTION DATE#{/else} (RANGE)</div>
+        <div class="sub-heading">&{nav.toUpperCase()+'_FACET_'+facet.name()}</div>
         <ul class="unstyled">
             #{if activeFilter.getDateRangeStart() == null || activeFilter.getDateRangeEnd() == null }
             <li><form action="@{FilterTab.ModifyFilters(nav)}" method="POST" class="form-search">
