@@ -1,4 +1,61 @@
 #{extends 'admin.html' /}
+#{set 'moreScripts' }
+<script type="text/javascript">
+jQuery(document).ready(function(){
+    /** 
+     * All fields tagged as "submit-on-change" will send ajax events to update
+     * those fields on the server. 
+     **/
+     jQuery("#displayName, #currentEmailAddress, #ccEmail").change(function () {
+         var field = jQuery(this).attr('name');
+         var value = jQuery(this).val();
+         
+         
+         jQuery.ajax({
+             url:'@{SettingsTab.updateProfileJSON() }',
+             data:{
+                 'field': field,
+                 'value': value
+             },
+             dataType:'json',
+             type:'POST',
+             success:function(data){
+            	 
+            	 if (data.success) {
+            		jQuery("#displayNameField,")
+            	 }
+            	 
+            	 
+                 var currentValue;
+                 if(data.value){
+                     currentValue = nl2br(data.value);
+                 } else {
+                     currentValue = "none";
+                     classValue = classValue + 'empty ';
+                 }
+                 
+                 if(data.success){
+                     jQuery("div."+id).replaceWith('<span id="'+id+'" class="'+classValue+'">'+currentValue+'</span>');
+                 } else {
+                     jQuery("div."+id).replaceWith('<span id="'+id+'" class="error '+classValue+'">'+currentValue+' <a href="#" class="tooltip-icon" rel="tooltip" title="'+data.message+'"><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
+                     jQuery('.tooltip-icon').tooltip();
+                 }
+             },
+             error:function(){
+                 jQuery("div."+id).replaceWith('<span id="'+id+'" class="error '+classValue+'">Failed to Update <a href="#" class="tooltip-icon" rel="tooltip" title="There was an error with your request."><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
+                 jQuery('.tooltip-icon').tooltip();
+             }
+             
+         })
+         
+         
+     })
+
+     
+}) // document ready
+</script>
+#{/set}
+
 
 <div id="left-column" class="pull-left">
 
@@ -10,7 +67,7 @@
 		<div class="box-body">			
 			<div class="sub-heading">NAME</div>
 			<ul class="unstyled">
-				<li> ${currentUser.getDisplayName()} </li>
+				<li id="displayName"> ${currentUser.getDisplayName()} </li>
 			</ul>
 			<div class="sub-heading">EMAIL</div>
 			<ul class="unstyled">
@@ -30,12 +87,12 @@
 		<div class="box-body">			
 			<div class="sub-heading">DISPLAY NAME</div>
 			<ul class="unstyled">
-				<li><input class="input-medium" type="text" value="Billy Bob" /></li>
+				<li><input id="displayName" class="input-medium" type="text" name="displayName" value="Billy Bob" /></li>
 			</ul>
 			<div class="sub-heading">PREFERED EMAIL</div>
 			<ul class="unstyled">
-				<li><input class="input-medium" type="text" value="bthornton@gmail.com" /></li>
-				<li><input type="checkbox" class="checkbox"> I want to receive a copy of all emails sent by the system on my behalf.</input></li>
+				<li><input id="currentEmailAddress" class="input-medium" type="text" name="currentEmailAddress" value="bthornton@gmail.com" /></li>
+				<li><input id="ccEmails" type="checkbox" class="checkbox"> I want to receive a copy of all emails sent by the system on my behalf.</input></li>
 			</ul>
 		</div>
 		<div class="box-footer">
