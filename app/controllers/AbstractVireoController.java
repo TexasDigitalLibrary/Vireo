@@ -48,6 +48,7 @@ public abstract class AbstractVireoController extends Controller {
 		renderArgs.put("subRepo", subRepo);
 		renderArgs.put("settingRepo", settingRepo);
 		renderArgs.put("stateManager", stateManager);
+		renderArgs.put("person",context.getPerson());
 	}
 
 	/**

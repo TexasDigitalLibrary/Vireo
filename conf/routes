@@ -28,25 +28,25 @@ POST	/submit/{subId}/submitETD				Submit.submitETD
 * 		/submit/{subId}/submissionStatus		Submit.submissionStatus
 
 ### List & Log Tabs
-* 		/admin/?								FilterTab.listRedirect
-*	    /admin/list/?                           FilterTab.list
-*       /admin/log/?                            FilterTab.log
+GET     /admin/?                                FilterTab.listRedirect
+GET     /admin/list/?                           FilterTab.list
+GET     /admin/log/?                            FilterTab.log
 *       /admin/{nav}/filter                     FilterTab.modifyFilters
-*       /admin/{nav}/filter/customize           FilterTab.customizeFilters
+POST    /admin/{nav}/filter/customize           FilterTab.customizeFilters
 *       /admin/{nav}/search                     FilterTab.modifySearch
-*       /admin/{nav}/search/customize           FilterTab.customizeSearch
+POST    /admin/{nav}/search/customize           FilterTab.customizeSearch
 
 ### View Tab
 *       /admin/view/?                           ViewTab.view
 GET		/admin/view/{subId}						ViewTab.view
 POST	/admin/view/update						ViewTab.updateJSON
 
-### Manager
-*       /admin/settings/user					Config.userPreferences
-*       /admin/settings							Config.userPreferences
-*       /admin/settings/applications			Config.applicationSettings
-*       /admin/settings/email					Config.emailSettings
-*       /admin/settings/configurable			Config.configurableSettings
+### Settings Tab
+GET     /admin/settings/?                       SettingsTab.settingsRedirect
+GET     /admin/settings/user/?                  settings.UserPreferencesTab.userPreferences
+GET     /admin/settings/applications/?			settings.ApplicationSettingsTab.applicationSettings
+GET     /admin/settings/email/?					settings.EmailSettingsTab.emailSettings
+GET     /admin/settings/configurable/?			settings.ConfigurableSettingsTab.configurableSettings
 
 
 ### System Administrator
