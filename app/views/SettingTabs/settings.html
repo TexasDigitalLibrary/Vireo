@@ -1,15 +1,55 @@
 #{extends 'admin.html' /}
 #{set 'moreScripts' }
 <script type="text/javascript">
+
+/**
+ * General function to display an error message.
+ * 
+ * An alert box will be shown if it is not allready present, displaying the
+ * error message.
+ *
+ * TODO: Move out to a seperate javascript file?
+ */
+function settingsError(heading,message) {
+	if (jQuery("#settings-error").length == 0) {
+		// Create first error, just after the navigation tabs
+		jQuery("#right-column .nav-tabs").after("<div id='settings-error' class='alert alert-error hidden'><button data-dismiss='alert' class='close' type='button'>×</button></div>")
+		jQuery("#settings-error").slideToggle();
+	} 
+	jQuery("#settings-error").append("<p><strong>"+heading+"</strong>: "+message+"</p>");
+}
+
+
+
 jQuery(document).ready(function(){
     /** 
-     * All fields tagged as "submit-on-change" will send ajax events to update
-     * those fields on the server. 
+     * Handle AJAX updates for the three profile fields, displayName,
+     * currentEmailAddress, and ccEmail.
      **/
      jQuery("#displayName, #currentEmailAddress, #ccEmail").change(function () {
-         var field = jQuery(this).attr('name');
-         var value = jQuery(this).val();
+    	 var $this = jQuery(this);
+         var field = $this.attr('name');
+         var value = $this.val();
          
+         if ("ccEmail" == field) {
+        	 value = $this.attr('checked');
+         }
+         
+         var successCallback = function(data) {
+        	 $this.parent("fieldset").removeClass("error");
+        	 
+        	 // Username at the upper left hand corner
+        	 jQuery("#personal-bar a:first-of-type b").text(data.displayName);
+        	 
+        	 // Profile box
+        	 jQuery("#my-profile ul:first-of-type li").text(data.displayName);
+        	 jQuery("#my-profile ul:last-of-type li").text(data.currentEmailAddress);
+         }
+         
+         var failureCallback = function (message) {
+        	 $this.parent("fieldset").addClass("error");
+        	 settingsError("Unable to update profile",message);
+         }
          
          jQuery.ajax({
              url:'@{SettingsTab.updateProfileJSON() }',
@@ -20,38 +60,18 @@ jQuery(document).ready(function(){
              dataType:'json',
              type:'POST',
              success:function(data){
-            	 
             	 if (data.success) {
-            		jQuery("#displayNameField,")
+            		successCallback(data);
+            	 } else {
+            		 failureCallback(data.message)
             	 }
-            	 
-            	 
-                 var currentValue;
-                 if(data.value){
-                     currentValue = nl2br(data.value);
-                 } else {
-                     currentValue = "none";
-                     classValue = classValue + 'empty ';
-                 }
-                 
-                 if(data.success){
-                     jQuery("div."+id).replaceWith('<span id="'+id+'" class="'+classValue+'">'+currentValue+'</span>');
-                 } else {
-                     jQuery("div."+id).replaceWith('<span id="'+id+'" class="error '+classValue+'">'+currentValue+' <a href="#" class="tooltip-icon" rel="tooltip" title="'+data.message+'"><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
-                     jQuery('.tooltip-icon').tooltip();
-                 }
              },
              error:function(){
-                 jQuery("div."+id).replaceWith('<span id="'+id+'" class="error '+classValue+'">Failed to Update <a href="#" class="tooltip-icon" rel="tooltip" title="There was an error with your request."><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
-                 jQuery('.tooltip-icon').tooltip();
+            	 failureCallback("Unable to communicate with the server.");
              }
              
-         })
-         
-         
+         });  
      })
-
-     
 }) // document ready
 </script>
 #{/set}
@@ -64,10 +84,10 @@ jQuery(document).ready(function(){
 			<div class="expand">[-]</div>
 			<div class="main-heading">My Profile</div>
 		</div>
-		<div class="box-body">			
+		<div id="my-profile" class="box-body">			
 			<div class="sub-heading">NAME</div>
 			<ul class="unstyled">
-				<li id="displayName"> ${currentUser.getDisplayName()} </li>
+				<li> ${currentUser.getDisplayName()} </li>
 			</ul>
 			<div class="sub-heading">EMAIL</div>
 			<ul class="unstyled">
@@ -87,12 +107,12 @@ jQuery(document).ready(function(){
 		<div class="box-body">			
 			<div class="sub-heading">DISPLAY NAME</div>
 			<ul class="unstyled">
-				<li><input id="displayName" class="input-medium" type="text" name="displayName" value="Billy Bob" /></li>
+				<li><fieldset class="control-group"><input id="displayName" class="input-medium" type="text" name="displayName" value="${currentUser.getDisplayName()}" /></fieldset></li>
 			</ul>
 			<div class="sub-heading">PREFERED EMAIL</div>
 			<ul class="unstyled">
-				<li><input id="currentEmailAddress" class="input-medium" type="text" name="currentEmailAddress" value="bthornton@gmail.com" /></li>
-				<li><input id="ccEmails" type="checkbox" class="checkbox"> I want to receive a copy of all emails sent by the system on my behalf.</input></li>
+				<li><fieldset class="control-group"><input id="currentEmailAddress" class="input-medium" type="text" name="currentEmailAddress" value="${currentUser.getCurrentEmailAddress()}" /></fieldset></li>
+				<li><fieldset class="control-group"><input id="ccEmail" type="checkbox" class="checkbox" name="ccEmail" #{if currentUser.getPreference("ccEmail") != null }checked="true"#{/if}> I want to receive a copy of all emails sent by the system on my behalf.</input></fieldset></li>
 			</ul>
 		</div>
 		<div class="box-footer">
@@ -110,6 +130,7 @@ jQuery(document).ready(function(){
 			<li #{if subNav=="email"}class="active"#{/if}><a href="@{settings.EmailSettingsTab.emailSettings}">Email Settings</a></li>
 			<li #{if subNav=="config"}class="active"#{/if}><a href="@{settings.ConfigurableSettingsTab.configurableSettings}">Configurable Settings</a></li>
 		</ul>
+
 		#{doLayout /}
 	</div>
 </div>
