@@ -47,7 +47,6 @@ public class SettingsTab extends AbstractVireoController {
 	 */
 	@Security(RoleType.REVIEWER)
 	public static void updateProfileJSON(String field, String value) {
-		java.lang.System.out.println("updateProfileJSON('"+field+"','"+value+"')");
 		try {
 			if (value != null && value.trim().length() == 0)
 				value = null;
