@@ -1,26 +1,6 @@
 #{extends 'admin.html' /}
 #{set 'moreScripts' }
 <script type="text/javascript">
-
-/**
- * General function to display an error message.
- * 
- * An alert box will be shown if it is not allready present, displaying the
- * error message.
- *
- * TODO: Move out to a seperate javascript file?
- */
-function settingsError(heading,message) {
-	if (jQuery("#settings-error").length == 0) {
-		// Create first error, just after the navigation tabs
-		jQuery("#right-column .nav-tabs").after("<div id='settings-error' class='alert alert-error hidden'><button data-dismiss='alert' class='close' type='button'>×</button></div>")
-		jQuery("#settings-error").slideToggle();
-	} 
-	jQuery("#settings-error").append("<p><strong>"+heading+"</strong>: "+message+"</p>");
-}
-
-
-
 jQuery(document).ready(function(){
     /** 
      * Handle AJAX updates for the three profile fields, displayName,
@@ -35,8 +15,19 @@ jQuery(document).ready(function(){
         	 value = $this.attr('checked');
          }
          
+         jQuery("#my-profile").addClass("waiting");
+         jQuery("#my-preferences").addClass("waiting");
+
+         
          var successCallback = function(data) {
+        	 
+        	 // Remove the ajax loading indicators
+             jQuery("#my-profile").removeClass("waiting");
+             jQuery("#my-preferences").removeClass("waiting");
+        	 
+             // Clear any previous errors
         	 $this.parent("fieldset").removeClass("error");
+        	 clearAlert("profile-alert-"+field);
         	 
         	 // Username at the upper left hand corner
         	 jQuery("#personal-bar a:first-of-type b").text(data.displayName);
@@ -44,11 +35,17 @@ jQuery(document).ready(function(){
         	 // Profile box
         	 jQuery("#my-profile ul:first-of-type li").text(data.displayName);
         	 jQuery("#my-profile ul:last-of-type li").text(data.currentEmailAddress);
+        	 
+        	 // The input field
+        	 jQuery("#displayName").val(data.displayName);
          }
          
          var failureCallback = function (message) {
+             jQuery("#my-profile").removeClass("waiting");
+             jQuery("#my-preferences").removeClass("waiting");
+             
         	 $this.parent("fieldset").addClass("error");
-        	 settingsError("Unable to update profile",message);
+        	 displayAlert("profile-alert-"+field,"Unable to update profile",message);
          }
          
          jQuery.ajax({
@@ -104,7 +101,7 @@ jQuery(document).ready(function(){
 			<div class="expand">[-]</div>
 			<div class="main-heading">My Preferences</div>
 		</div>
-		<div class="box-body">			
+		<div id="my-preferences" class="box-body">			
 			<div class="sub-heading">DISPLAY NAME</div>
 			<ul class="unstyled">
 				<li><fieldset class="control-group"><input id="displayName" class="input-medium" type="text" name="displayName" value="${currentUser.getDisplayName()}" /></fieldset></li>
@@ -130,6 +127,7 @@ jQuery(document).ready(function(){
 			<li #{if subNav=="email"}class="active"#{/if}><a href="@{settings.EmailSettingsTab.emailSettings}">Email Settings</a></li>
 			<li #{if subNav=="config"}class="active"#{/if}><a href="@{settings.ConfigurableSettingsTab.configurableSettings}">Configurable Settings</a></li>
 		</ul>
+		<div id="alert-area">*{Javascript may dynamically fill this div with errors as needed.}*</div>
 
 		#{doLayout /}
 	</div>
