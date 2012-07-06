@@ -298,8 +298,14 @@ public class Authentication extends AbstractVireoController {
 			if (flash.get("url") != null && flash.get("url").trim().length() > 0) {
 				String url = flash.get("url");
 				flash.remove("url");
+
+				Logger.info("Going to: " + url);
+
 				redirect(url);
 			} else {
+				
+				Logger.info("Going to index");
+				
 				Application.index();
 			}
 		} 

@@ -2,6 +2,8 @@ package controllers;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Calendar;
@@ -613,8 +615,11 @@ public class Submit extends AbstractVireoController {
 		render(subId, sub, submitter, actionLogList);		
 	}
 	
-	// Submit the ETD
 	
+	/**
+	 * Submit the ETD
+	 * @param subId
+	 */
 	@Security(RoleType.STUDENT)
 	public static void submitETD(Long subId) {		
         Submission sub = subRepo.findSubmission(subId);
@@ -625,25 +630,54 @@ public class Submit extends AbstractVireoController {
         Logger.info("Next State: " + stateList.get(0).getDisplayName());
         
         sub.setState(stateList.get(0));
-        
+        sub.save();
         review(subId);     
         
 	}
 	
-	// Submission Status
 	
+	/**
+	 * Submission Status
+	 */
 	@Security(RoleType.STUDENT)
-	public static void submissionStatus(Long subId) {		
-		render(subId);      
+	public static void submissionStatus() {	
+		
+        // Check to see if they have any active submissions
+		
+        Person submitter = context.getPerson();
+        List<Submission> submissionList = subRepo.findSubmission(submitter);
+
+        if(submissionList.size() > 0) {       	
+            render(submissionList);
+        } else{
+
+        	verifyPersonalInformation(null);
+
+        }
 	}
 	
-	// Final page of the submission process
 	
+	/**
+	 * Final page of the submission process
+	 * @param subId
+	 */
 	@Security(RoleType.STUDENT)
 	public static void review(Long subId) {
 		render(subId);
 	}
 
+	/**
+	 * Delete a given submission
+	 * @param subId
+	 */
+	@Security(RoleType.STUDENT)
+	public static void deleteSubmission(Long subId) {
+        Submission sub = subRepo.findSubmission(subId);
+        sub.delete();
+        submissionStatus();
+	}
+
+	
     /**
      * Helper for assigning <em>class="current"</em> to the nav item
      * @param name1
@@ -863,4 +897,18 @@ public class Submit extends AbstractVireoController {
         }
         return committeeMembers;
     }
+    
+    // Get document name from a submission
+    public static String getDocumentName(Submission sub){
+		Attachment primaryDocument = sub.getPrimaryDocument();            
+		String primaryDocumentName = "";	 
+
+		if (primaryDocument != null) {
+			primaryDocumentName = primaryDocument.getName();
+		}   
+		
+		Logger.info("Get Document Name: " + primaryDocumentName );
+		return primaryDocumentName;    	
+    }
+    
 }
