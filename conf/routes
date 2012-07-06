@@ -50,6 +50,7 @@ GET     /admin/settings/applications/?			settings.ApplicationSettingsTab.applica
 GET     /admin/settings/email/?					settings.EmailSettingsTab.emailSettings
 GET     /admin/settings/configurable/?			settings.ConfigurableSettingsTab.configurableSettings
 POST	/admin/settings/updateProfile			SettingsTab.updateProfileJSON
+POST    /admin/settings/user/update             settings.UserPreferencesTab.updateUserPreferencesJSON
 
 
 ### System Administrator

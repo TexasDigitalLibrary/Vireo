@@ -81,7 +81,7 @@ public class SettingsTab extends AbstractVireoController {
 			renderJSON("{ \"success\": \"true\", \"displayName\": \""+displayName+"\", \"currentEmailAddress\": \""+currentEmailAddress+"\" }");
 			
 		} catch (AddressException ae) {
-			renderJSON("{ \"failure\": \"true\", \"message\": \"The email address is not valid.\" }");
+			renderJSON("{ \"failure\": \"true\", \"message\": \"The email address is not valid. It should be formatted like 'your-username@your-domain' without any spaces and includes one @ sign.\" }");
 			
 		} catch (RuntimeException re) {
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+re.getMessage()+"\" }");

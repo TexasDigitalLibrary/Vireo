@@ -1,18 +1,97 @@
 #{extends 'SettingTabs/settings.html' /}
+#{set 'moreSettingScripts' }
+<script type="text/javascript">
+jQuery(document).ready(function(){
+    /** 
+     * Handle AJAX updates for the view tab option user preferences
+     **/
+     jQuery(".user-preference").change(function () {
+         var $this = jQuery(this);
+         var field = $this.attr('name');
+         value = $this.attr('checked');
+        
+         $this.closest("fieldset").addClass("waiting");
 
+         var successCallback = function(data) {
+             // Remove the ajax loading indicators & alerts
+             $this.closest("fieldset").removeClass("waiting");
+             $this.closest("fieldset").removeClass("error");
+             clearAlert("user-preference-"+field);
+         }
+         
+         var failureCallback = function (message) {
+        	 $this.closest("fieldset").removeClass("waiting");
+             $this.closest("fieldset").addClass("error");
+             displayAlert("user-preference-"+field,"Unable to update preference",message);
+         }
+         
+         jQuery.ajax({
+             url:'@{settings.UserPreferencesTab.updateUserPreferencesJSON()}',
+             data:{
+                 'field': field,
+                 'value': value
+             },
+             dataType:'json',
+             type:'POST',
+             success:function(data){
+                 if (data.success) {
+                    successCallback(data);
+                 } else {
+                     failureCallback(data.message)
+                 }
+             },
+             error:function(){
+                 failureCallback("Unable to communicate with the server.");
+             }
+             
+         });  
+     })
+}) // document ready
+</script>
+#{/set}
 <h2>VIEW TAB OPTIONS</h2>
 
+<form>
 <fieldset class="default settings">
 	<legend class="default">When adding notes, which options should be checked by default?</legend>
-	<div><input type="checkbox" class="checkbox"> Email the student</input></div>
-	<div><input type="checkbox" class="checkbox"> CC student's advisor</input></div>
-	<div><input type="checkbox" class="checkbox"> Flag submission as Needs Corrections</input></div>
-	<div><input type="checkbox" class="checkbox"> Mark comment as private</input></div>
+	<div>
+	   <input name="${org.tdl.vireo.model.Preference.NOTES_EMAIL_STUDENT}" type="checkbox" class="checkbox user-preference" #{if NOTES_EMAIL_STUDENT != null}checked="true"#{/if}>
+	       Email the student
+	   </input>
+	</div>
+	<div>
+	   <input name="${org.tdl.vireo.model.Preference.NOTES_CC_ADVISOR}"  type="checkbox" class="checkbox user-preference" #{if NOTES_CC_ADVISOR != null}checked="true"#{/if}>
+	       CC student's advisor
+	   </input>
+	</div>
+	<div>
+	   <input name="${org.tdl.vireo.model.Preference.NOTES_FLAG_NEEDS_CORRECTIONS}" type="checkbox" class="checkbox user-preference"#{if NOTES_FLAG_NEEDS_CORRECTIONS != null}checked="true"#{/if}>
+	       Flag submission as Needs Corrections
+	   </input>
+	</div>
+	<div>
+	   <input name="${org.tdl.vireo.model.Preference.NOTES_MARK_PRIVATE}" type="checkbox" class="checkbox user-preference" #{if NOTES_MARK_PRIVATE != null}checked="true"#{/if}>
+	       Mark comment as private
+	   </input>
+	</div>
 </fieldset>
 
 <fieldset class="default settings">
 	<legend class="default">When attaching files, which options should be checked by default?</legend>
-	<div><input type="checkbox" class="checkbox"> Email the student</input></div>
-	<div><input type="checkbox" class="checkbox"> CC student's advisor</input></div>
-	<div><input type="checkbox" class="checkbox"> Flag submission as Needs Corrections</input></div>
+	<div>
+	   <input name="${org.tdl.vireo.model.Preference.ATTACHMENT_EMAIL_STUDENT}" type="checkbox" class="checkbox user-preference" #{if ATTACHMENT_EMAIL_STUDENT != null}checked="true"#{/if}>
+	       Email the student
+	   </input>
+	</div>
+	<div>
+	   <input name="${org.tdl.vireo.model.Preference.ATTACHMENT_CC_ADVISOR}" type="checkbox" class="checkbox user-preference" #{if ATTACHMENT_CC_ADVISOR != null}checked="true"#{/if}>
+	       CC student's advisor
+	   </input>
+	</div>
+	<div>
+	   <input name="${org.tdl.vireo.model.Preference.ATTACHMENT_FLAG_NEEDS_CORRECTIONS}" type="checkbox" class="checkbox user-preference" #{if ATTACHMENT_FLAG_NEEDS_CORRECTIONS != null}checked="true"#{/if}>
+	       Flag submission as Needs Corrections
+	   </input>
+	</div>
 </fieldset>
+</form>
