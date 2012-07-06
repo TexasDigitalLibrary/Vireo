@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>#{get 'title' /}</title>
+<meta charset="utf-8">
+<script src="@{'/public/javascripts/jquery-1.7.2.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+<script src="@{'/public/javascripts/jquery-ui-1.8.21.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>                            
+<script src="@{'/public/javascripts/bootstrap.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+<script src="@{'/public/javascripts/vireo-admin.js'}" type="text/javascript" charset="${_response_encoding}"></script>      
+#{qunit.include /}
+</head>
+<body>
+</body>
+<script language="JavaScript">
+
+/** Functions to reset the dom between tests **/
+function reset() {
+    jQuery("body").empty();
+}
+
+/**
+ * Test the displayAlert() and clearAlert() methods.
+ */
+test("test displaying and clearing alert", function() {
+	expect(8);
+	
+	reset();
+	jQuery("body").append("<div id='alert-area'></div>");
+	
+	// First display an allert
+	displayAlert("test","this is bold", "this is a message");
+	
+	equal(1,jQuery("#alert-area #test").length);
+	equal("this is bold",jQuery("#test strong").text());
+	equal("this is bold: this is a message",jQuery("#test p").text());
+	
+	// Next, update that alert
+	displayAlert("test","changed","changed");
+	
+	equal(1,jQuery("#alert-area #test").length);
+	equal("changed",jQuery("#test strong").text());
+	equal("changed: changed",jQuery("#test p").text());
+	
+	// Finaly, clear the alert
+	clearAlert("test");
+	
+	equal(1,jQuery("#alert-area").length);
+	equal(0,jQuery("#alert-area #test").length);
+});
+
+</script>
+</html> 
+

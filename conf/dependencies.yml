@@ -4,4 +4,6 @@ require:
     - play
     - play -> spring 1.0.3
     - play -> less 0.9.1
+    - play -> qunit 1.0:
+        id: test
     - org.apache.lucene -> lucene-core 3.6.0
