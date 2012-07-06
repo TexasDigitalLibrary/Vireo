@@ -1,6 +1,10 @@
 package controllers;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -237,6 +241,7 @@ public class Submit extends AbstractVireoController {
 				sub.setDepartment(department);
 				sub.setDegree(degree);
 				sub.setMajor(major);
+				sub.setSubmissionDate(new Date());
 				submitter.setPermanentPhoneNumber(permPhone);
 				submitter.setPermanentPostalAddress(permAddress);
 				submitter.setPermanentEmailAddress(permEmail);
@@ -898,7 +903,11 @@ public class Submit extends AbstractVireoController {
         return committeeMembers;
     }
     
-    // Get document name from a submission
+    /**
+     * Get document name from a submission
+     * @param sub
+     * @return
+     */
     public static String getDocumentName(Submission sub){
 		Attachment primaryDocument = sub.getPrimaryDocument();            
 		String primaryDocumentName = "";	 
@@ -909,6 +918,29 @@ public class Submit extends AbstractVireoController {
 		
 		Logger.info("Get Document Name: " + primaryDocumentName );
 		return primaryDocumentName;    	
-    }
+    }    
     
+    /**
+     * View the document of an attachment
+     * @param attachment
+     */
+    
+    public static void viewPrimaryDocument(Long subId) {
+    	
+    	Submission sub = subRepo.findSubmission(subId);
+    	
+    	if (sub.getPrimaryDocument() == null)
+    		submissionStatus();
+    	
+    	Logger.info("In View Primary Document " + sub.getPrimaryDocument().getName() );
+    	Attachment attachment = sub.getPrimaryDocument();
+    	response.setContentTypeIfNotSet(attachment.getMimeType());  	
+    	
+    	try {
+    		renderBinary( new FileInputStream(attachment.getFile()), attachment.getFile().length());
+    	} catch (FileNotFoundException ex) {
+    		error("File not found");
+    	}
+    }
+
 }
