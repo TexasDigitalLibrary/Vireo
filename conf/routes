@@ -42,6 +42,8 @@ POST    /admin/{nav}/search/customize           FilterTab.customizeSearch
 *       /admin/view/?                           ViewTab.view
 GET		/admin/view/{subId}						ViewTab.view
 POST	/admin/view/update						ViewTab.updateJSON
+POST	/admin/view/updateGraduationDate		ViewTab.updateGraduationDateJSON
+POST	/admin/view/updateCommitteeMember		ViewTab.updateCommitteeMemberJSON
 
 ### Settings Tab
 GET     /admin/settings/?                       SettingsTab.settingsRedirect

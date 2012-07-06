@@ -387,21 +387,20 @@ EDIT HOLDERS & BOXES
 	font-weight:bold;
 	float:left;
 }
-.edit-box span, .editing{
+.edit-box li.edit span, .editing{
 	width:55%;
 	text-align:left;
 	float:left;
 }
-.edit-box span{
+.edit-box li.edit span, .editCommitteeMember{
 	cursor:pointer;
 }
 .edit-box .empty{
 	color:@grayLighter;
 }
-.edit-box input, .edit-box select, .edit-box option{
+.edit-box input, .edit-box select{
 	margin:0;
 	padding:0;
-	width:80%;
 }
 .edit-box select{
 	float:left;
@@ -409,6 +408,13 @@ EDIT HOLDERS & BOXES
 }
 .error .badge{
 	display:inline;
+}
+
+#committeeMembers li{
+	margin:0px 0px 10px;
+}
+#committeeMembers td{
+	min-width:50px;
 }
 
 /**********************
