@@ -71,6 +71,7 @@ public class ViewTab extends AbstractVireoController {
 		
 		Object currentValue = null;
 		String message = null;
+		DegreeLevel degreeLevel = null;
 		
 		try{
 				
@@ -214,6 +215,7 @@ public class ViewTab extends AbstractVireoController {
 		} else if("degree".equals(field)){			
 			submission.setDegree(value);
 			currentValue = submission.getDegree();
+			degreeLevel = settingRepo.findDegreeByName(submission.getDegree()).getLevel();
 		
 		//Major
 		} else if("major".equals(field)){			
@@ -251,7 +253,13 @@ public class ViewTab extends AbstractVireoController {
 			currentValue = StringEscapeUtils.escapeJava(currentValue.toString());
 		}
 		
-		String json = "{ \"success\": true, \"value\": \""+currentValue+"\" }";
+		String json;
+		
+		if(degreeLevel!=null){
+			json = "{ \"success\": true, \"value\": \""+currentValue+"\", \"degreeLevel\": \""+degreeLevel+"\" }";
+		} else {
+			json = "{ \"success\": true, \"value\": \""+currentValue+"\" }";
+		}
 		
 		renderJSON(json);
 		
@@ -349,6 +357,16 @@ public class ViewTab extends AbstractVireoController {
 		
 		renderJSON("{ \"success\": true }");
 		
+	}
+	
+	@Security(RoleType.REVIEWER)
+	public static void refreshActionLogTable(Long id){
+		
+		Submission submission = subRepo.findSubmission(id);
+		
+		List<ActionLog> actionLogs	= subRepo.findActionLog(submission);
+		
+		renderTemplate("ViewTab/actionLogTable.include", actionLogs);
 	}
 
 }

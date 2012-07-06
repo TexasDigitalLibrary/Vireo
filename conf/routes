@@ -45,6 +45,7 @@ GET		/admin/view/{subId}						ViewTab.view
 POST	/admin/view/update						ViewTab.updateJSON
 POST	/admin/view/updateGraduationDate		ViewTab.updateGraduationDateJSON
 POST	/admin/view/updateCommitteeMember		ViewTab.updateCommitteeMemberJSON
+POST	/admin/view/refreshActionLog			ViewTab.refreshActionLogTable
 
 ### Settings Tab
 GET     /admin/settings/?                       SettingsTab.settingsRedirect
