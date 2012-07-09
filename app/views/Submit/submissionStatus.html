@@ -34,7 +34,13 @@
         
 	        <tr>
 	            <td>${submission.getDocumentTitle()}</td>
-				<td>${controllers.Submit.getDocumentName(submission)}</td>
+				<td>${controllers.Submit.getDocumentName(submission)}
+				
+				#{if submission.getPrimaryDocument() != null}
+				    <a href="@{Submit.viewPrimaryDocument(submission.getId())}">[view]</a>
+				#{/if}
+				
+				</td>
 				<td>${submission.getState().getDisplayName()}</td>
 				<td>${submission.getSubmissionDate()== null?"n/a":submission.getSubmissionDate()}</td>
 				<td>${submission.getAssignee() == null?"Unassigned":submission.getAssignee().getDisplayName()}</td>

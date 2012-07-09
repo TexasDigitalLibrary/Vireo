@@ -28,6 +28,7 @@ POST	/submit/{subId}/submitETD				Submit.submitETD
 *       /submit/{subId}/review                  Submit.review
 * 		/submit/{subId}/submissionStatus		Submit.submissionStatus
 *       /submit/{subId}/delete                  Submit.deleteSubmission
+*		/submit/{subId}/viewPrimaryDocument		Submit.viewPrimaryDocument
 
 ### List & Log Tabs
 GET     /admin/?                                FilterTab.listRedirect
@@ -42,6 +43,9 @@ POST    /admin/{nav}/search/customize           FilterTab.customizeSearch
 *       /admin/view/?                           ViewTab.view
 GET		/admin/view/{subId}						ViewTab.view
 POST	/admin/view/update						ViewTab.updateJSON
+POST	/admin/view/updateGraduationDate		ViewTab.updateGraduationDateJSON
+POST	/admin/view/updateCommitteeMember		ViewTab.updateCommitteeMemberJSON
+POST	/admin/view/refreshActionLog			ViewTab.refreshActionLogTable
 
 ### Settings Tab
 GET     /admin/settings/?                       SettingsTab.settingsRedirect
