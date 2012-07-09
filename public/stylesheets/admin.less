@@ -15,7 +15,7 @@ body {
 	background:none;
 	color:@mainColor;
 	font-family:"Trebuchet MS",Verdana,Geneva,Arial,Helvetica,sans-serif;
-	min-width:1000px;
+	min-width:1025px;
 }
 
 /*****************
@@ -376,19 +376,20 @@ EDIT HOLDERS & BOXES
 }
 .edit-box{
 	width:45%;
+	margin-right:15px;
 }
 .edit-box li{
 	clear:left;
 }
 .edit-box label{
-	width:35%;
+	width:45%;
 	text-align:right;
 	padding-right:7px;
 	font-weight:bold;
 	float:left;
 }
 .edit-box li.edit span, .editing{
-	width:55%;
+	width:48%;
 	text-align:left;
 	float:left;
 }
@@ -400,11 +401,12 @@ EDIT HOLDERS & BOXES
 }
 .edit-box input, .edit-box select{
 	margin:0;
-	padding:0;
+	padding:0;	
 }
 .edit-box select{
 	float:left;
 	height:20px;
+	width:100%;
 }
 .error .badge{
 	display:inline;
@@ -415,6 +417,10 @@ EDIT HOLDERS & BOXES
 }
 #committeeMembers td{
 	min-width:50px;
+}
+
+.edit-box .icon-pencil{
+	opacity:.5;
 }
 
 /**********************
@@ -485,20 +491,6 @@ AJAX WAITING
     background-position: center center;
 }
 
-
-
-.waiting input[type="text"],
-.waiting input[type="password"],
-.waiting textarea {
-    background-color: transparent;
+.waiting * {
+     opacity: 0.60;
 }
-
-
-
-#my-preferences.waiting .sub-heading,
-#my-profile.waiting .sub-heading {
-    opacity: 0.50;
-}
-
-
-

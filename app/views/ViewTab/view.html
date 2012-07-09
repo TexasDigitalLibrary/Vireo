@@ -35,7 +35,7 @@ jQuery(document).ready(function(){
 				markup += jQuery("#gradMonthOptions").html();
 				markup += '</select><select id="gradYear">'
 				markup += jQuery("#gradYearOptions").html();
-				markup += '</select>&nbsp<i class="icon-remove"></i>&nbsp<i class="icon-ok"></i></div>';
+				markup += '</select><br /><i class="icon-remove"></i>&nbsp<i class="icon-ok"></i></div>';
 				editItem.replaceWith(markup);
 				
 				jQuery("option").each(function(){
@@ -47,12 +47,12 @@ jQuery(document).ready(function(){
 			
 				//Text Areas
 				if(editItem.hasClass("textarea")){
-					editItem.replaceWith('<div id="'+editItem.attr("id")+'" class="editing textarea"><textarea class="field" textarea">'+value+'</textarea>&nbsp<i class="icon-remove"></i>&nbsp<i class="icon-ok"></i></div>');
+					editItem.replaceWith('<div id="'+editItem.attr("id")+'" class="editing textarea"><textarea class="field" textarea">'+value+'</textarea><br /><i class="icon-remove"></i>&nbsp<i class="icon-ok"></i></div>');
 				//Select Drop Downs
 				} else if(editItem.hasClass("select")){
 					var selectCode = '<div id="'+editItem.attr("id")+'" class="editing select"><select class="field">';
 					selectCode += jQuery("#"+editItem.attr("id")+"Options").html();
-					selectCode += '</select>&nbsp<i class="icon-remove"></i>&nbsp<i class="icon-ok"></i></div>';
+					selectCode += '</select><br /><i class="icon-remove"></i>&nbsp<i class="icon-ok"></i></div>';
 					editItem.replaceWith(selectCode);
 					jQuery(".field option").each(function(){
 						if(jQuery(this).text()==value){
@@ -61,7 +61,7 @@ jQuery(document).ready(function(){
 					})
 				//Input Fields
 				} else {
-					editItem.replaceWith('<div id="'+editItem.attr("id")+'" class="editing"><input class="field" type="text" value="'+value+'" />&nbsp<i class="icon-remove"></i>&nbsp<i class="icon-ok"></i></div>');
+					editItem.replaceWith('<div id="'+editItem.attr("id")+'" class="editing"><input class="field" type="text" value="'+value+'" /><br /><i class="icon-remove"></i>&nbsp<i class="icon-ok"></i></div>');
 				}
 				jQuery(".editing").setTimeout(jQuery(".editing").focus());
 			}
@@ -171,7 +171,7 @@ jQuery(document).ready(function(){
 					}
 					
 					if(data.success){
-						jQuery("div."+id).replaceWith('<span id="'+id+'" class="'+classValue+'">'+currentValue+'</span>');
+						jQuery("div."+id).replaceWith('<span id="'+id+'" class="'+classValue+'"><i class="icon-pencil"></i> '+currentValue+'</span>');
 					}
 				},
 				error:function(){
@@ -195,9 +195,9 @@ jQuery(document).ready(function(){
 				success:function(data){	
 					if(data.success){
 						markup = '<div class="editCommitteeMember">';
-						markup += '<span class="lastName"><b>'+data.lastName+'</b></span><span class="seperator">,&nbsp;</span>';
-						markup += '<span class="firstName"><b>'+data.firstName+'</b>&nbsp;</span>';
-						markup += '<span class="middleName"><b>'+data.middleName+'</b>&nbsp;</span>';						
+						markup += '<span class="lastName">'+data.lastName+'</span><span class="seperator">,&nbsp;</span>';
+						markup += '<span class="firstName">'+data.firstName+'&nbsp;</span>';
+						markup += '<span class="middleName">'+data.middleName+'&nbsp;</span>';						
 						if(data.chair=="true"){
 							markup += '<span class="chair label label-info">';
 							markup += 'chair';
@@ -208,9 +208,9 @@ jQuery(document).ready(function(){
 						jQuery("li."+data.id).html(markup);
 					} else {
 						markup = '<div class="editCommitteeMember">';
-						markup += '<span class="lastName"><b>'+data.lastName+'</b></span><span class="seperator">,&nbsp;</span>';
-						markup += '<span class="firstName"><b>'+data.firstName+'</b>&nbsp;</span>';
-						markup += '<span class="middleName"><b>'+data.middleName+'</b>&nbsp;</span>';						
+						markup += '<span class="lastName">'+data.lastName+'</span><span class="seperator">,&nbsp;</span>';
+						markup += '<span class="firstName">'+data.firstName+'&nbsp;</span>';
+						markup += '<span class="middleName">'+data.middleName+'&nbsp;</span>';						
 						if(data.chair=="true"){
 							markup += '<span class="chair label label-info">';
 							markup += 'chair';
@@ -249,10 +249,10 @@ jQuery(document).ready(function(){
 					}
 					
 					if(data.success){
-						jQuery("div."+id).replaceWith('<span id="'+id+'" class="'+classValue+'">'+currentValue+'</span>');
+						jQuery("div."+id).replaceWith('<span id="'+id+'" class="'+classValue+'"><i class="icon-pencil"></i> '+currentValue+'</span>');
 						jQuery("#degreeLevel").text(data.degreeLevel);						
 					} else {
-						jQuery("div."+id).replaceWith('<span id="'+id+'" class="error '+classValue+'">'+currentValue+' <a href="#" class="tooltip-icon" rel="tooltip" title="'+data.message+'"><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
+						jQuery("div."+id).replaceWith('<span id="'+id+'" class="error '+classValue+'"><i class="icon-pencil"></i> '+currentValue+' <a href="#" class="tooltip-icon" rel="tooltip" title="'+data.message+'"><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
 						jQuery('.tooltip-icon').tooltip();
 					}
 				},
@@ -265,6 +265,7 @@ jQuery(document).ready(function(){
 		}	
 		jQuery("#backup").remove();
 		updateActionLog();
+		updateLeftColumn();
 	});
 	
 	//Cancel an edit.
@@ -304,6 +305,8 @@ jQuery(document).ready(function(){
 	
 	function updateActionLog(){
 		
+		jQuery("#actionLog").addClass("waiting");
+		
 		jQuery.ajax({
 			url:'@{ViewTab.refreshActionLogTable()}',
 			data:{
@@ -313,12 +316,36 @@ jQuery(document).ready(function(){
 			type:'POST',
 			success:function(data){
 				jQuery("#actionLog tbody").replaceWith(data);
+				jQuery("#actionLog").removeClass("waiting");
 			},
 			error:function(){
 				alert("Error refreshing Action Log Table.");
 			}
 			
-		});	
+		});
+		
+	}
+	
+	function updateLeftColumn(){
+		
+		jQuery(".side-box").addClass("waiting");
+		
+		jQuery.ajax({
+			url:'@{ViewTab.refreshLeftColumn()}',
+			data:{
+				id:'${submission.getId()}'
+			},
+			dataType:'html',
+			type:'POST',
+			success:function(data){
+				jQuery("#left-column").html(data);
+				jQuery(".side-box").removeClass("waiting");
+			},
+			error:function(){
+				alert("Error refreshing Left Column.");
+			}
+			
+		});
 		
 	}
 	
@@ -335,86 +362,7 @@ jQuery(document).ready(function(){
 
 <div id="left-column" class="pull-left">
 
-	<div class="side-box">
-		<div class="box-head expanded">
-			<div class="expand">[-]</div>
-			<div class="main-heading">Active Document</div>
-		</div>
-		<div class="box-body">
-			#{if submission.getPrimaryDocument()}
-				<img class="pull-left" src="../public/images/pdf-logo.gif" />
-				<p>${submission.getPrimaryDocument().getName()}<br />
-				<a href="${submission.getPrimaryDocument().getFile()}"><b>Download</b></a></p>
-				<div class="clear"></div>
-			#{/if}#{else}
-				<p>none</p>
-			#{/else}
-			
-			<div class="sub-heading">FILE OPTIONS</div>
-			<ul class="unstyled">
-				#{if submission.getAttachments()}
-				<li>View All Files</li>
-				#{/if}
-				<li>Upload New File</li>
-			</ul>
-		</div>
-		<div class="box-footer">
-		
-		</div>		
-	</div>
-	
-	<div class="side-box">
-		<div class="box-head expanded">
-			<div class="expand">[-]</div>
-			<div class="main-heading">Submission Status</div>
-		</div>
-		<div class="box-body">
-			<p>
-			<button class="btn btn-info">${submission.getState().getDisplayName()}</button>
-			</p>
-			<ul class="unstyled">
-				<li>Assigned To:</li>
-				<li><b>
-				#{if submission.getAssignee()}
-					${submission.getAssignee().getDisplayName()}
-				#{/if}#{else}
-					Unassigned
-				#{/else}
-				</b></li>
-			</ul>
-			<ul class="unstyled">
-				<li>Last Action:</li>
-				<li><b>${actionLogs[0].getActionDate()?.format("MM/dd/yyyy hh:mm:ss")}</b></li>
-			</ul>
-			<ul class="unstyled">
-				<li>What:</li>
-				<li><b>${actionLogs[0].getEntry().substring(0, Math.min(actionLogs[0].getEntry().length(), 50))}#{if actionLogs[0].getEntry().length() > 50}...#{/if}</b></li>
-			</ul>
-			<ul class="unstyled">
-				<li>UMI Release:</li>
-				<li><b>${submission.getUMIRelease()}</b></li>
-			</ul>
-		</div>
-		<div class="box-footer">
-		
-		</div>		
-	</div>
-	
-	<div class="side-box">
-		<div class="box-head expanded">
-			<div class="expand">[-]</div>
-			<div class="main-heading">Custom Actions</div>
-		</div>
-		<div class="box-body">
-			<p>
-			<input type="checkbox" class="checkbox"> Passed their classes</input>
-			</p>
-			
-		</div>
-		<div class="box-footer">
-		
-		</div>		
-	</div>	
+	#{include 'ViewTab/leftColumn.include' /}	
 		
 </div>
 
@@ -433,37 +381,37 @@ jQuery(document).ready(function(){
 				<ul class="unstyled">
 					<li class="edit"><label>First Name:</label><span id="firstName"
 						#{if submission.getStudentFirstName()}
-							>${submission.getStudentFirstName()}
+							><i class="icon-pencil"></i> ${submission.getStudentFirstName()}
 						#{/if}#{else}
-							class="empty">none
+							class="empty"><i class="icon-pencil"></i> none
 						#{/else}
 						</span></li>
 					<li class="edit"><label>Middle Name:</label><span id="middleName"
 						#{if submission.getStudentMiddleName()}
-							>${submission.getStudentMiddleName()}
+							><i class="icon-pencil"></i> ${submission.getStudentMiddleName()}
 						#{/if}#{else}
-							class="empty">none
+							class="empty"><i class="icon-pencil"></i> none
 						#{/else}
 						</span></li>							
 					<li class="edit"><label>Last Name:</label><span id="lastName"
 						#{if submission.getStudentLastName()}
-							>${submission.getStudentLastName()}
+							><i class="icon-pencil"></i> ${submission.getStudentLastName()}
 						#{/if}#{else}
-							class="empty">none
+							class="empty"><i class="icon-pencil"></i> none
 						#{/else}
 						</span></li>
 					<li class="edit"><label>Email:</label><span id="email"
 						#{if submitter.getEmail()}
-							>${submitter.getEmail()}
+							><i class="icon-pencil"></i> ${submitter.getEmail()}
 						#{/if}#{else}
-							class="empty">none
+							class="empty"><i class="icon-pencil"></i> none
 						#{/else}
 						</span></li>
 					<li class="edit"><label>Year of Birth:</label><span id="birthYear"
 						#{if submission.getStudentBirthYear()}
-							>${submission.getStudentBirthYear()}
+							><i class="icon-pencil"></i> ${submission.getStudentBirthYear()}
 						#{/if}#{else}
-							class="empty">none
+							class="empty"><i class="icon-pencil"></i> none
 						#{/else}
 					</span></li>
 				</ul>
@@ -472,37 +420,37 @@ jQuery(document).ready(function(){
 				<ul class="unstyled">
 					<li class="edit"><label>Permanent Phone:</label><span id="permPhone"
 						#{if submitter.getPermanentPhoneNumber()}
-							>${submitter.getPermanentPhoneNumber()}
+							><i class="icon-pencil"></i> ${submitter.getPermanentPhoneNumber()}
 						#{/if}#{else}
-							class="empty">none
+							class="empty"><i class="icon-pencil"></i> none
 						#{/else}
 						</span></li>
 					<li class="edit"><label>Permanent Email:</label><span id="permEmail"
 						#{if submitter.getPermanentEmailAddress()}
-							>${submitter.getPermanentEmailAddress()}
+							><i class="icon-pencil"></i> ${submitter.getPermanentEmailAddress()}
 						#{/if}#{else}
-							class="empty">none
+							class="empty"><i class="icon-pencil"></i> none
 						#{/else}
 						</span></li>
 					<li class="edit"><label>Permanent Address:</label><span id="permAddress"
 						#{if submitter.getPermanentPostalAddress()}
-							class="textarea">${submitter.getPermanentPostalAddress()}
+							class="textarea"><i class="icon-pencil"></i> ${submitter.getPermanentPostalAddress()}
 						#{/if}#{else}
-							class="textarea empty">none
+							class="textarea empty"><i class="icon-pencil"></i> none
 						#{/else}
 						</span></li>
 					<li class="edit"><label>Current Phone:</label><span id="currentPhone"
 						#{if submitter.getCurrentPhoneNumber()}
-							>${submitter.getCurrentPhoneNumber()}
+							><i class="icon-pencil"></i> ${submitter.getCurrentPhoneNumber()}
 						#{/if}#{else}
-							class="empty">none
+							class="empty"><i class="icon-pencil"></i> none
 						#{/else}
 						</span></li>
 					<li class="edit"><label>Current Address:</label><span id="currentAddress"
 						#{if submitter.getCurrentPostalAddress()}
-							class="textarea">${submitter.getCurrentPostalAddress()}
+							class="textarea"><i class="icon-pencil"></i> ${submitter.getCurrentPostalAddress()}
 						#{/if}#{else}
-							class="textarea empty">none
+							class="textarea empty"><i class="icon-pencil"></i> none
 						#{/else}
 					</span></li>
 				</ul>
@@ -515,37 +463,37 @@ jQuery(document).ready(function(){
 				<ul class="unstyled">
 					<li class="edit"><label>Title:</label><span id="title"
 						#{if submission.getDocumentTitle()}
-							>${submission.getDocumentTitle()}
+							><i class="icon-pencil"></i> ${submission.getDocumentTitle()}
 						#{/if}#{else}
-							class="empty">none
+							class="empty"><i class="icon-pencil"></i> none
 						#{/else}
 						</span></li>
 					<li class="edit"><label>Embargo:</label><span id="embargo"
 						#{if submission.getEmbargoType()}
-							class="select">${submission.getEmbargoType().getName()}
+							class="select"><i class="icon-pencil"></i> ${submission.getEmbargoType().getName()}
 						#{/if}#{else}
-							class="select empty">none
+							class="select empty"><i class="icon-pencil"></i> none
 						#{/else}
 						</span></li>
 					<li class="edit"><label>UMI Release:</label><span id="umiRelease"
 						#{if submission.getUMIRelease() != null}
-							class="select">${submission.getUMIRelease()}
+							class="select"><i class="icon-pencil"></i> ${submission.getUMIRelease()}
 						#{/if}#{else}
-							class="select empty">none
+							class="select empty"><i class="icon-pencil"></i> none
 						#{/else}
 						</span></li>
 					<li class="edit"><label>Document Type:</label><span id="docType"
 						#{if submission.getDocumentType()}
-							class="select">${submission.getDocumentType()}
+							class="select"><i class="icon-pencil"></i> ${submission.getDocumentType()}
 						#{/if}#{else}
-							class="select empty">none
+							class="select empty"><i class="icon-pencil"></i> none
 						#{/else}
 						</span></li>
 					<li class="edit"><label>Keywords:</label><span id="keywords"
 						#{if submission.getDocumentKeywords()}
-							class="textarea">${submission.getDocumentKeywords()}
+							class="textarea"><i class="icon-pencil"></i> ${submission.getDocumentKeywords()}
 						#{/if}#{else}
-							class="textarea empty">none
+							class="textarea empty"><i class="icon-pencil"></i> none
 						#{/else}
 					</span></li>
 				</ul>
@@ -554,9 +502,9 @@ jQuery(document).ready(function(){
 				<ul class="unstyled">
 					<li class="edit"><label>Abstract:</label><span id="abstract"
 						#{if submission.getDocumentAbstract()}
-							class="textarea">${submission.getDocumentAbstract()}
+							class="textarea"><i class="icon-pencil"></i> ${submission.getDocumentAbstract()}
 						#{/if}#{else}
-							class="textarea empty">none
+							class="textarea empty"><i class="icon-pencil"></i> none
 						#{/else}
 					</span></li>
 				</ul>
@@ -569,51 +517,51 @@ jQuery(document).ready(function(){
 				<ul class="unstyled">
 					<li class="edit"><label>School:</label><span id="college"
 						#{if submission.getCollege()}
-							class="select">${submission.getCollege()}
+							class="select"><i class="icon-pencil"></i> ${submission.getCollege()}
 						#{/if}#{else}
-							class="select empty">none
+							class="select empty"><i class="icon-pencil"></i> none
 						#{/else}
 						</span></li>
 					<li class="edit"><label>Department:</label><span id="department"
 						#{if submission.getDepartment()}
-							class="select">${submission.getDepartment()}
+							class="select"><i class="icon-pencil"></i> ${submission.getDepartment()}
 						#{/if}#{else}
-							class="select empty">none
+							class="select empty"><i class="icon-pencil"></i> none
 						#{/else}
 						</span></li>
 					<li class="edit"><label>Degree:</label><span id="degree"
 						#{if submission.getDegree()}
-							class="select">${submission.getDegree()}
+							class="select"><i class="icon-pencil"></i> ${submission.getDegree()}
 						#{/if}#{else}
-							class="select empty">none
+							class="select empty"><i class="icon-pencil"></i> none
 						#{/else}
 						</span></li>
 					<li><label>Degree Level:</label><span id="degreeLevel"
 						#{if submission.getDegree()}
 							class="select">${degreeLevel}
 						#{/if}#{else}
-							class="select empty">none
+							class="select empty"><i class="icon-pencil"></i> none
 						#{/else}
 						</span></li>
 					<li class="edit"><label>Major:</label><span id="major"
 						#{if submission.getMajor()}
-							class="select">${submission.getMajor()}
+							class="select"><i class="icon-pencil"></i> ${submission.getMajor()}
 						#{/if}#{else}
-							class="select empty">none
+							class="select empty"><i class="icon-pencil"></i> none
 						#{/else}
 						</span></li>
 					<li class="edit"><label>Graduation Semester:</label><span id="gradSemester"
 						#{if submission.getGraduationMonth() && submission.getGraduationYear()}
-							class="select">${gradMonth} ${submission.getGraduationYear()}
+							class="select"><i class="icon-pencil"></i> ${gradMonth} ${submission.getGraduationYear()}
 						#{/if}#{else}
-							class="select empty">none
+							class="select empty"><i class="icon-pencil"></i> none
 						#{/else}
 						</span></li>
 					<li class="edit"><label>Advisor Email:</label><span id="advisorEmail"
 						#{if submission.getCommitteeContactEmail()}
-							>${submission.getCommitteeContactEmail()}
+							><i class="icon-pencil"></i> ${submission.getCommitteeContactEmail()}
 						#{/if}#{else}
-							class="empty">none
+							class="empty"><i class="icon-pencil"></i> none
 						#{/else}
 						</span></li>
 					<li><label></label><span><button class="btn">Send Advisor Approval Email</button></span></li>
@@ -621,15 +569,16 @@ jQuery(document).ready(function(){
 			</div>
 			<div id="committeeMembers" class="edit-box pull-left">				
 				<ul class="unstyled">
-					<li><h4>Committee Members:</h4><ul class="unstyled" style="padding:10px 0 0 20px;">
+					<li><i class="icon-pencil"></i> <b>Committee Members:</b>
+					<ul class="unstyled" style="padding:10px 0 0 30px;">
 					#{if submission.getCommitteeMembers()}
 					#{list items:submission.getCommitteeMembers(), as:'value'}
 						
 						<li class="${value.getId()}">
 							<div class="editCommitteeMember">
-								<span class="lastName"><b>${value.getLastName()}</b></span><span class="seperator">,</span>
-								<span class="firstName"><b>${value.getFirstName()}</b></span> 
-								<span class="middleName"><b>${value.getMiddleName()}</b></span>
+								<span class="lastName">${value.getLastName()}</span><span class="seperator">,</span>
+								<span class="firstName">${value.getFirstName()}</span> 
+								<span class="middleName">${value.getMiddleName()}</span>
 								#{if value.isCommitteeChair()}
 								<span class="chair label label-info">chair</span>
 								#{/if}
@@ -740,3 +689,5 @@ jQuery(document).ready(function(){
 		</table>
 	</div>
 </div>
+
+#{include 'ViewTab/dialogs.include' /}

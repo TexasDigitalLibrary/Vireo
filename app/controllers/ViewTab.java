@@ -7,6 +7,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.CommitteeMember;
+import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.Department;
 import org.tdl.vireo.model.DocumentType;
@@ -14,6 +15,7 @@ import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.state.State;
 
 import play.modules.spring.Spring;
 import play.mvc.With;
@@ -57,14 +59,17 @@ public class ViewTab extends AbstractVireoController {
 		String gradMonth = new DateFormatSymbols().getMonths()[submission.getGraduationMonth()];
 		
 		List<ActionLog> actionLogs	= subRepo.findActionLog(submission);		
-				
+		
+		List<State> states = stateManager.getAllStates();
+		
+		List<Person> assignees = personRepo.findPersonsByRole(RoleType.REVIEWER);
+		
 		String nav = "view";
-		render(nav, submission, submitter, degreeLevel, gradMonth, actionLogs, settingRepo);
+		render(nav, submission, submitter, degreeLevel, gradMonth, actionLogs, settingRepo, states, assignees);
 	}
 	
 	@Security(RoleType.REVIEWER)
 	public static void updateJSON(Long subId, String field, String value){
-		Logger.info("Started updating an item.");
 		
 		Submission submission = subRepo.findSubmission(subId);
 		Person submitter = submission.getSubmitter();
@@ -267,7 +272,6 @@ public class ViewTab extends AbstractVireoController {
 	
 	@Security(RoleType.REVIEWER)
 	public static void updateGraduationDateJSON(Long subId, String month, String year){
-		Logger.info("Started updating graduation semester.");
 		
 		Submission submission = subRepo.findSubmission(subId);
 		
@@ -290,9 +294,7 @@ public class ViewTab extends AbstractVireoController {
 	
 	@Security(RoleType.REVIEWER)
 	public static void addCommitteeMemberJSON(Long subId, String firstName, String lastName, String middleName, Boolean chair){
-		
-		Logger.info("Started adding committee member.");
-		
+				
 		Submission submission = subRepo.findSubmission(subId);
 		
 		try {
@@ -317,10 +319,7 @@ public class ViewTab extends AbstractVireoController {
 	
 	@Security(RoleType.REVIEWER)
 	public static void updateCommitteeMemberJSON(Long id, String firstName, String lastName, String middleName, Boolean chair){
-		
-		Logger.info("Started updating committee member.");
-		Logger.info(id+" "+firstName+" "+middleName+" "+lastName+" "+chair);
-		
+				
 		try {
 			
 			if(firstName==null || firstName.trim().length()==0)
@@ -350,9 +349,7 @@ public class ViewTab extends AbstractVireoController {
 	
 	@Security(RoleType.REVIEWER)
 	public static void removeCommitteeMemberJSON(Long subId, Long id){
-		
-		Logger.info("Started removing committee member.");
-		
+				
 		subRepo.findCommitteeMember(id).delete();
 		
 		renderJSON("{ \"success\": true }");
@@ -367,6 +364,49 @@ public class ViewTab extends AbstractVireoController {
 		List<ActionLog> actionLogs	= subRepo.findActionLog(submission);
 		
 		renderTemplate("ViewTab/actionLogTable.include", actionLogs);
+	}
+	
+	@Security(RoleType.REVIEWER)
+	public static void refreshLeftColumn(Long id){
+		
+		Submission submission = subRepo.findSubmission(id);
+		
+		List<ActionLog> actionLogs	= subRepo.findActionLog(submission);
+		
+		renderTemplate("ViewTab/leftColumn.include", actionLogs, submission);
+		
+	}
+	
+	@Security(RoleType.REVIEWER)
+	public static void changeSubmissionStatus(Long id){
+		
+		String beanName = params.get("submission-status");
+		
+		Submission submission = subRepo.findSubmission(id);
+		
+		State state = stateManager.getState(beanName);
+		
+		submission.setState(state);
+		
+		submission.save();
+		
+		view();
+		
+	}
+	
+	@Security(RoleType.REVIEWER)
+	public static void changeAssignedTo(Long id){
+				
+		Person assignee = personRepo.findPerson(Long.valueOf(params.get("assignee")));
+		
+		Submission submission = subRepo.findSubmission(id);
+		
+		submission.setAssignee(assignee);
+		
+		submission.save();
+		
+		view();
+		
 	}
 
 }
