@@ -1,12 +1,14 @@
 <div class="modal hide fade" id="submission-status-modal">
-    <form id="submission-status-form" action="@{ViewTab.changeSubmissionStatus(submission.getId())}" method="POST" class="form-horizontal">
-        <input id="columns-field" type="hidden" name="columns" value=""/>
+    
+        
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">×</button>
             <h3>Change Submission Status</h3>
         </div>
-        <div class="modal-body">
+        <div class="modal-body">          
             
+            
+            <form id="submission-status-form" action="@{ViewTab.changeSubmissionStatus(submission.getId())}" method="POST" class="form-horizontal">
             <select name="submission-status">
             	#{list items:states, as:'state'}
             		<option value="${state.getBeanName()}">${state.getDisplayName()}</option>
@@ -23,7 +25,7 @@
 
 <div class="modal hide fade" id="assignee-modal">
     <form id="assignee-form" action="@{ViewTab.changeAssignedTo(submission.getId())}" method="POST" class="form-horizontal">
-        <input id="columns-field" type="hidden" name="columns" value=""/>
+        
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">×</button>
             <h3>Change Submission Status</h3>
@@ -33,7 +35,8 @@
             <select name="assignee">
             	#{list items:assignees, as:'assignee'}
             		<option value="${assignee.getId()}">${assignee.getDisplayName()}</option>
-            	#{/list}            	
+            	#{/list}
+            	<option value="">Unassign</option>            	
             </select>
             
         </div>

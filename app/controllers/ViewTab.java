@@ -248,6 +248,7 @@ public class ViewTab extends AbstractVireoController {
 			if(value==null){
 				value="";
 			}
+			value = StringEscapeUtils.escapeJava(value);
 			message = re.getMessage();
 			renderJSON("{ \"success\": false, \"value\": \""+value+"\", \"message\": \""+message+"\" }");
 		}
@@ -308,8 +309,16 @@ public class ViewTab extends AbstractVireoController {
 			submission.addCommitteeMember(firstName, lastName, middleName, chair);
 			
 		} catch (RuntimeException re) {
+			firstName = StringEscapeUtils.escapeJavaScript(firstName);
+			lastName = StringEscapeUtils.escapeJavaScript(lastName);
+			middleName = StringEscapeUtils.escapeJavaScript(middleName);
+			
 			renderJSON("{ \"success\": false, \"firstName\": \""+firstName+"\", \"lastName\": \""+lastName+"\", \"chair\": \""+chair+"\", \"message\": \""+re.getMessage()+"\" }");
 		}
+		
+		firstName = StringEscapeUtils.escapeJavaScript(firstName);
+		lastName = StringEscapeUtils.escapeJavaScript(lastName);
+		middleName = StringEscapeUtils.escapeJavaScript(middleName);
 		
 		String json = "{ \"success\": true, \"firstName\": \""+firstName+"\", \"lastName\": \""+lastName+"\", \"chair\": \""+chair+"\" }";
 		
@@ -338,8 +347,16 @@ public class ViewTab extends AbstractVireoController {
 			committeeMember.save();
 			
 		} catch (RuntimeException re) {
+			firstName = StringEscapeUtils.escapeJavaScript(firstName);
+			lastName = StringEscapeUtils.escapeJavaScript(lastName);
+			middleName = StringEscapeUtils.escapeJavaScript(middleName);
+			
 			renderJSON("{ \"success\": false, \"id\": \""+id+"\", \"firstName\": \""+firstName+"\", \"lastName\": \""+lastName+"\", \"middleName\": \""+middleName+"\", \"chair\": \""+chair+"\", \"message\": \""+re.getMessage()+"\" }");
 		}
+		
+		firstName = StringEscapeUtils.escapeJavaScript(firstName);
+		lastName = StringEscapeUtils.escapeJavaScript(lastName);
+		middleName = StringEscapeUtils.escapeJavaScript(middleName);
 		
 		String json = "{ \"success\": true, \"id\": \""+id+"\", \"firstName\": \""+firstName+"\", \"lastName\": \""+lastName+"\", \"middleName\": \""+middleName+"\", \"chair\": \""+chair+"\" }";
 		
@@ -396,13 +413,15 @@ public class ViewTab extends AbstractVireoController {
 	
 	@Security(RoleType.REVIEWER)
 	public static void changeAssignedTo(Long id){
-				
-		Person assignee = personRepo.findPerson(Long.valueOf(params.get("assignee")));
 		
 		Submission submission = subRepo.findSubmission(id);
 		
-		submission.setAssignee(assignee);
-		
+		if(params.get("assignee").isEmpty()){
+			submission.setAssignee(null);
+		} else {
+			Person assignee = personRepo.findPerson(Long.valueOf(params.get("assignee")));			
+			submission.setAssignee(assignee);
+		}
 		submission.save();
 		
 		view();
