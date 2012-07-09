@@ -1,0 +1,80 @@
+<div class="side-box">
+	<div class="box-head expanded">
+		<div class="expand">[-]</div>
+		<div class="main-heading">Active Document</div>
+	</div>
+	<div class="box-body">
+		#{if submission.getPrimaryDocument()}
+			<img class="pull-left" src="../public/images/pdf-logo.gif" />
+			<p>${submission.getPrimaryDocument().getName()}<br />
+			<a href="${submission.getPrimaryDocument().getFile()}"><b>Download</b></a></p>
+			<div class="clear"></div>
+		#{/if}#{else}
+			<p>none</p>
+		#{/else}
+		
+		<div class="sub-heading">FILE OPTIONS</div>
+		<ul class="unstyled">
+			#{if submission.getAttachments()}
+			<li>View All Files</li>
+			#{/if}
+			<li>Upload New File</li>
+		</ul>
+	</div>
+	<div class="box-footer">
+	
+	</div>		
+</div>
+
+<div class="side-box">
+	<div class="box-head expanded">
+		<div class="expand">[-]</div>
+		<div class="main-heading">Submission Status</div>
+	</div>
+	<div class="box-body">
+		<p>
+		<a href="#submission-status-modal" data-toggle="modal"><button class="btn btn-info">${submission.getState().getDisplayName()}</button></a>
+		</p>
+		<ul class="unstyled">
+			<li>Assigned To:</li>
+			<li><b><a href="#assignee-modal" data-toggle="modal">
+			#{if submission.getAssignee()}
+				${submission.getAssignee().getDisplayName()}
+			#{/if}#{else}
+				Unassigned
+			#{/else}
+			</a></b></li>
+		</ul>
+		<ul class="unstyled">
+			<li>Last Action:</li>
+			<li><b>${actionLogs[0].getActionDate()?.format("MM/dd/yyyy hh:mm:ss")}</b></li>
+		</ul>
+		<ul class="unstyled">
+			<li>What:</li>
+			<li><b>${actionLogs[0].getEntry().substring(0, Math.min(actionLogs[0].getEntry().length(), 50))}#{if actionLogs[0].getEntry().length() > 50}...#{/if}</b></li>
+		</ul>
+		<ul class="unstyled">
+			<li>UMI Release:</li>
+			<li><b>${submission.getUMIRelease()}</b></li>
+		</ul>
+	</div>
+	<div class="box-footer">
+	
+	</div>		
+</div>
+
+<div class="side-box">
+	<div class="box-head expanded">
+		<div class="expand">[-]</div>
+		<div class="main-heading">Custom Actions</div>
+	</div>
+	<div class="box-body">
+		<p>
+		<input type="checkbox" class="checkbox"> Passed their classes</input>
+		</p>
+		
+	</div>
+	<div class="box-footer">
+	
+	</div>		
+</div>
