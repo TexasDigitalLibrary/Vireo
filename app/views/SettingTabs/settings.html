@@ -123,12 +123,14 @@ jQuery(document).ready(function(){
 
 <div id="right-column">
 	<div class="inner">
+	    #{if currentUser.getRole().ordinal() >= org.tdl.vireo.model.RoleType.MANAGER.ordinal()}
 		<ul class="nav nav-tabs">
 			<li #{if subNav=="user"}class="active"#{/if}><a href="@{settings.UserPreferencesTab.userPreferences}">User Preferences</a></li>
 			<li #{if subNav=="application"}class="active"#{/if}><a href="@{settings.ApplicationSettingsTab.applicationSettings}">Application Settings</a></li>
 			<li #{if subNav=="email"}class="active"#{/if}><a href="@{settings.EmailSettingsTab.emailSettings}">Email Settings</a></li>
 			<li #{if subNav=="config"}class="active"#{/if}><a href="@{settings.ConfigurableSettingsTab.configurableSettings}">Configurable Settings</a></li>
 		</ul>
+		#{/if}
 		<div id="alert-area">*{Javascript may dynamically fill this div with errors as needed.}*</div>
 
 		#{doLayout /}

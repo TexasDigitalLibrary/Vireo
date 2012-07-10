@@ -58,6 +58,10 @@ GET     /admin/settings/email/?					settings.EmailSettingsTab.emailSettings
 GET     /admin/settings/configurable/?			settings.ConfigurableSettingsTab.configurableSettings
 POST	/admin/settings/updateProfile			SettingsTab.updateProfileJSON
 POST    /admin/settings/user/update             settings.UserPreferencesTab.updateUserPreferencesJSON
+POST    /admin/settings/applications/update     settings.ApplicationSettingsTab.updateApplicationSettingsJSON
+POST    /admin/settings/actions/add             settings.ApplicationSettingsTab.addCustomActionJSON
+POST    /admin/settings/actions/remove          settings.ApplicationSettingsTab.removeCustomActionJSON
+POST    /admin/settings/actions/reorder         settings.ApplicationSettingsTab.reorderCustomActionsJSON
 
 
 ### System Administrator

@@ -3,6 +3,7 @@ package controllers.settings;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Preference;
 import org.tdl.vireo.model.RoleType;
@@ -43,7 +44,6 @@ public class UserPreferencesTab extends SettingsTab {
 		renderArgs.put("ATTACHMENT_EMAIL_STUDENT", person.getPreference(ATTACHMENT_EMAIL_STUDENT));
 		renderArgs.put("ATTACHMENT_CC_ADVISOR", person.getPreference(ATTACHMENT_CC_ADVISOR));
 		renderArgs.put("ATTACHMENT_FLAG_NEEDS_CORRECTIONS", person.getPreference(ATTACHMENT_FLAG_NEEDS_CORRECTIONS));
-
 		
 		String nav = "settings";
 		String subNav = "user";
@@ -58,6 +58,7 @@ public class UserPreferencesTab extends SettingsTab {
 	 * @param value
 	 *            The value (either something or null)
 	 */
+	@Security(RoleType.REVIEWER)
 	public static void updateUserPreferencesJSON(String field, String value) {
 		
 		try {
@@ -91,7 +92,8 @@ public class UserPreferencesTab extends SettingsTab {
 			renderJSON("{ \"success\": \"true\" }");
 
 		} catch (RuntimeException re) {
-			renderJSON("{ \"failure\": \"true\", \"message\": \""+re.getMessage()+"\" }");
+			String message = StringEscapeUtils.escapeJavaScript(re.getMessage());
+			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
 		}
 	}
 }
