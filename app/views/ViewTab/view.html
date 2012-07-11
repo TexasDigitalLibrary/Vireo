@@ -297,7 +297,7 @@ jQuery(document).ready(function(){
 				classValue += "empty ";
 			}
 			
-			jQuery(".editing").replaceWith('<span id="'+id+'" class="'+classValue+'">'+currentValue+'</span>');
+			jQuery(".editing").replaceWith('<span id="'+id+'" class="'+classValue+'"><i class="icon-pencil"></i> '+currentValue+'</span>');
 		}
 		
 		jQuery("#backup").remove();
