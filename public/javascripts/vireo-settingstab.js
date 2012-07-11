@@ -1,5 +1,69 @@
 
 
+
+/**********************************************************
+ * User Preference Tab
+ **********************************************************/
+
+/**
+ * Handle updating user preferences, like what the default options should be
+ * under the view tab. All of these are simple checkbox toggles.
+ * 
+ * @param jsonURL
+ *            The JSON url to submit updates to
+ * @returns A Callback function
+ */
+function userPreferenceHandler(jsonURL) {
+
+	return function () {
+		var $this = jQuery(this);
+		var field = $this.attr('name');
+		value = $this.attr('checked');
+
+		$this.closest("fieldset").addClass("waiting");
+
+		var successCallback = function(data) {
+			// Remove the ajax loading indicators & alerts
+			$this.closest("fieldset").removeClass("waiting");
+			$this.closest("fieldset").removeClass("error");
+			clearAlert("user-preference-"+field);
+		}
+
+		var failureCallback = function (message) {
+			$this.closest("fieldset").removeClass("waiting");
+			$this.closest("fieldset").addClass("error");
+			displayAlert("user-preference-"+field,"Unable to update preference",message);
+		}
+
+		jQuery.ajax({
+			url:jsonURL,
+			data:{
+				'field': field,
+				'value': value
+			},
+			dataType:'json',
+			type:'POST',
+			success:function(data){
+				if (data.success) {
+					successCallback(data);
+				} else {
+					failureCallback(data.message)
+				}
+			},
+			error:function(){
+				failureCallback("Unable to communicate with the server.");
+			}
+
+		});  
+	};
+}
+
+
+/**********************************************************
+ * Application Settings Tab
+ **********************************************************/
+
+
 /**
  * Handler for the application settings field to save their state via ajax. This
  * method supports all the toggleable fields on this page, as well as submision

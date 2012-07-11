@@ -2,50 +2,9 @@
 #{set 'moreSettingScripts' }
 <script type="text/javascript">
 jQuery(document).ready(function(){
-    /** 
-     * Handle AJAX updates for the view tab option user preferences
-     **/
-     jQuery(".user-preference").change(function () {
-         var $this = jQuery(this);
-         var field = $this.attr('name');
-         value = $this.attr('checked');
-        
-         $this.closest("fieldset").addClass("waiting");
+	
+     jQuery(".user-preference").change(userPreferenceHandler('@{settings.UserPreferencesTab.updateUserPreferencesJSON()}'));
 
-         var successCallback = function(data) {
-             // Remove the ajax loading indicators & alerts
-             $this.closest("fieldset").removeClass("waiting");
-             $this.closest("fieldset").removeClass("error");
-             clearAlert("user-preference-"+field);
-         }
-         
-         var failureCallback = function (message) {
-        	 $this.closest("fieldset").removeClass("waiting");
-             $this.closest("fieldset").addClass("error");
-             displayAlert("user-preference-"+field,"Unable to update preference",message);
-         }
-         
-         jQuery.ajax({
-             url:'@{settings.UserPreferencesTab.updateUserPreferencesJSON()}',
-             data:{
-                 'field': field,
-                 'value': value
-             },
-             dataType:'json',
-             type:'POST',
-             success:function(data){
-                 if (data.success) {
-                    successCallback(data);
-                 } else {
-                     failureCallback(data.message)
-                 }
-             },
-             error:function(){
-                 failureCallback("Unable to communicate with the server.");
-             }
-             
-         });  
-     })
 }) // document ready
 </script>
 #{/set}
