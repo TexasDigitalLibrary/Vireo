@@ -154,7 +154,7 @@ function fadeInHandler(selector) {
 
 
 /**********************************************************
- * Alert Management
+ * Miscellaneous Functions
  **********************************************************/
 
 /**

@@ -196,6 +196,17 @@ test("test displaying and clearing alert", function() {
 	equal(0,jQuery("#alert-area #test").length);
 });
 
+/**
+ * Test nl2br
+ */
+test("test nl2br", function() {
+	reset();
+		
+	equals('aaaa<br />\nbbbb',nl2br("aaaa\nbbbb",true));
+    equals('aaaa<br>\nbbbb',nl2br("aaaa\nbbbb",false));
+});
+ 
+
 </script>
 </html> 
 
