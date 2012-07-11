@@ -2,203 +2,28 @@
 #{set 'moreSettingScripts' }
 <script type="text/javascript">
 jQuery(document).ready(function(){
-    /** 
-     * Handle AJAX updates for the view tab option user preferences
-     **/
-     var settingsCallback = function () {
-         var $this = jQuery(this);
-         var field = $this.attr('name');
-         var value = $this.val();
-         
-         $this.parent().addClass("waiting");
-         
-         var successCallback = function(data) {
-             // Remove the ajax loading indicators & alerts
-             $this.parent().removeClass("waiting");
-             clearAlert("application-setting-"+field);
-         }
-         
-         var failureCallback = function (message) {
-             $this.parent().removeClass("waiting");
-             displayAlert("application-setting-"+field,"Unable to update setting",message);
-         }
-         
-         jQuery.ajax({
-             url:'@{settings.ApplicationSettingsTab.updateApplicationSettingsJSON()}',
-             data:{
-                 'field': field,
-                 'value': value
-             },
-             dataType:'json',
-             type:'POST',
-             success:function(data){
-                 if (data.success) {
-                    successCallback(data);
-                 } else {
-                     failureCallback(data.message)
-                 }
-             },
-             error:function(){
-                 failureCallback("Unable to communicate with the server.");
-             }
-             
-         });  
-     }
-     
-     jQuery(".application-toggle").click(settingsCallback);
-     jQuery(".application-text").change(settingsCallback);
+
+	// Settings toggle and input/textarea fields
+     jQuery(".application-toggle").click(applicationSettingsHandler('@{settings.ApplicationSettingsTab.updateApplicationSettingsJSON()}'));
+     jQuery(".application-text").change(applicationSettingsHandler('@{settings.ApplicationSettingsTab.updateApplicationSettingsJSON()}'));
     
-     
-     /**
-      * Handle AJAX updates for the custom action definitions 
-      **/
-     /** Sortable columns **/
+     // Sortable action list
      jQuery("#action-list, #action-remove").sortable({
          connectWith: ".action-sortable",
          placeholder: "placeholder",
-         update: function(event,ui) {
-        	 
-        	 if (this.id == 'action-remove') {
-        		 var actionId = ui.item.attr('id');
-        		 
-        		 jQuery("#"+actionId).remove();
-        		  
-                 var successCallback = function(data) {
-                     // Remove the ajax loading indicators & alerts
-                     clearAlert("application-setting-actions-remove");
-                     
-                     // Check to see if we need to hide the trashcan
-                     if (jQuery("#action-list li").length == 0) {
-                    	 jQuery("#action-remove").fadeOut();
-                     }
-                 }
-                 
-                 var failureCallback = function (message) {
-                     displayAlert("application-setting-actions-remove","Unable to remove actions",message);
-                 }
-                                  
-                 jQuery.ajax({
-                     url:'@{settings.ApplicationSettingsTab.removeCustomActionJSON()}',
-                     data:{
-                         'actionId': actionId
-                     },
-                     dataType:'json',
-                     type:'POST',
-                     success:function(data){
-                         if (data.success) {
-                            successCallback(data);
-                         } else {
-                             failureCallback(data.message)
-                         }
-                     },
-                     error:function(){
-                         failureCallback("Unable to communicate with the server.");
-                     }
-                     
-                 });  
-        		 
-        		 
-        		 
-        	 } else {
-        		 
-                 var list = jQuery("#action-list").sortable('toArray').toString();
-
-        		 var successCallback = function(data) {
-                     // Remove the ajax loading indicators & alerts
-                     clearAlert("application-setting-actions-reorder");
-                 }
-                 
-                 var failureCallback = function (message) {
-                     displayAlert("application-setting-actions-reorder","Unable to reorder actions",message);
-                 }
-                                  
-                 jQuery.ajax({
-                     url:'@{settings.ApplicationSettingsTab.reorderCustomActionsJSON()}',
-                     data:{
-                         'actionIds': list
-                     },
-                     dataType:'json',
-                     type:'POST',
-                     success:function(data){
-                         if (data.success) {
-                            successCallback(data);
-                         } else {
-                             failureCallback(data.message)
-                         }
-                     },
-                     error:function(){
-                         failureCallback("Unable to communicate with the server.");
-                     }
-                     
-                 });  
-        	 }
-         }
+         update: updateSortableHandler(
+        		 '@{settings.ApplicationSettingsTab.reorderCustomActionsJSON()}',
+        		 '@{settings.ApplicationSettingsTab.removeCustomActionJSON()}'
+        		 )
      }).disableSelection();
     
-     jQuery("#add-action-link").click(function () {
-    	 
-    	 jQuery("#add-action-dialog").fadeIn();
-    	 return false;
-     });
      
-     jQuery("#add-action-save").click(function () {
-    	 
-         var successCallback = function(data) {
-             // Remove the ajax loading indicators & alerts
-             jQuery("#add-action-label").closest('.control-group').removeClass("error");
-             clearAlert("application-setting-actions");
-             
-             jQuery("#action-list").append("<li id='action_"+data.id+"'>"+data.label+"</li>");
-             
-             jQuery("#add-action-dialog").fadeOut();
-             jQuery("#action-remove").fadeIn();
-             jQuery("#add-action-label").val("");
-             jQuery("#add-action-dialog .control-group").removeClass("error");
-         }
-         
-         var failureCallback = function (message) {
-             jQuery("#add-action-label").closest('.control-group').addClass("error");
-             displayAlert("application-setting-actions","Unable to update setting",message);
-         }
-    	 
-         label = jQuery("#add-action-label").val();
-         
-    	 jQuery.ajax({
-             url:'@{settings.ApplicationSettingsTab.addCustomActionJSON()}',
-             data:{
-                 'label': label
-             },
-             dataType:'json',
-             type:'POST',
-             success:function(data){
-                 if (data.success) {
-                    successCallback(data);
-                 } else {
-                     failureCallback(data.message)
-                 }
-             },
-             error:function(){
-                 failureCallback("Unable to communicate with the server.");
-             }
-             
-         });  
-    	 
-    	 return false;
-     });
+     jQuery("#add-action-link").click(fadeInHandler("#add-action-dialog"));
      
-     jQuery("#add-action-cancel").click(function() {
-    	 jQuery("#add-action-dialog").fadeOut();
-    	 jQuery("#add-action-label").val("");
-    	 jQuery("#add-action-dialog .control-group").removeClass("error");
-    	 return false;
-     })
+     jQuery("#add-action-save").click(saveAddActionHandler('@{settings.ApplicationSettingsTab.addCustomActionJSON()}'));
      
+     jQuery("#add-action-cancel").click(cancelAddActionHandler());
      
-     
-     
-     
-     
-
 }) // document ready
 </script>
 #{/set}
@@ -294,7 +119,7 @@ jQuery(document).ready(function(){
     <form class="form-horizontal">
         <fieldset>
             <div class="control-group">
-                <label class="control-label" for="">New Action</label>
+                <label class="control-label" for="add-action-label">New Action</label>
                 <div class="controls">
                     <input type="text" class="input-large" id="add-action-label"/>
                     <p class="help-block">Label of the new custom action</p>

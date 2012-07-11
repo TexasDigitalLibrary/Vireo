@@ -48,6 +48,37 @@ test("test displaying and clearing alert", function() {
 	equal(0,jQuery("#alert-area #test").length);
 });
 
+/**
+ * Test fadeIn & fadeOut handlers
+ */
+ test("Test fade in & fade out handles", function () {
+	 expect(4);
+	 reset();
+	 stop();
+	 
+	 jQuery("body").append("<div id='fade'>I fade in and out</div>");
+	 
+	 // fade the element out
+	 fadeOutHandler("#fade")()
+	 
+	 setTimeout(function () {
+		    equals(1,jQuery('#fade').length);
+		    equals('none',jQuery('#fade').css('display'));
+		    
+		    // Fade the element back out
+		    fadeInHandler("#fade")()
+		    
+		    setTimeout(function () {	    
+		    	  equals(1,jQuery('#fade').length);
+		    	  equals('block',jQuery('#fade').css('display'));
+		    	  
+		    	  start();
+		    },1000);
+	 },1000);
+	 
+ });
+
+
 </script>
 </html> 
 
