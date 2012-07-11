@@ -22,6 +22,50 @@ function reset() {
 }
 
 /**
+ * Test updating profile.
+ */
+test("test mpProfileHandler AJAX", function() {
+	expect(7);
+	reset(); 
+	
+	// personal-bar
+	jQuery("body").append("<div id='personal-bar'><a href='/profile'><b>Old username</b></a> | <a href='/logout'>Logout</a></div>");
+	
+	// my-profile box
+	jQuery("body").append("<div class='side-box'><div id='my-profile' class='box-body'><div class='sub-heading'>NAME</div><ul class='unstyled'><li id='my-profile-username'>Old username</li></ul><div class='sub-heading'>EMAIL</div><ul class='unstyled'><li id='my-profile-email'>old@email.com</li></ul></div></div>");
+	
+	// my-preferences box
+	jQuery("body").append("<div class='side-box'><div id='my-preferences' class='box-body'><div class='sub-heading'>DISPLAY NAME</div><ul class='unstyled'><li><fieldset class='control-group'><input id='displayName' class='input-medium' type='text' name='displayName' value='Old username' /></fieldset></li></ul><div class='sub-heading'>PREFERED EMAIL</div><ul class='unstyled'><li><fieldset class='control-group'><input id='currentEmailAddress' class='input-medium' type='text' name='currentEmailAddress' value='old@email.com' /></fieldset></li><li><fieldset class='control-group'><input id='ccEmail' type='checkbox' class='checkbox' name='ccEmail'> I want to receive a copy of all emails sent by the system on my behalf.</input></fieldset></li></ul></div></div>");  
+	
+	// Register the handler
+	var handler = myProfileHandler("/ajax/test/url");
+	jQuery("#displayName, #currentEmailAddress, #ccEmail").change(handler);
+	
+	// MOCK AJAX
+	var options = null;
+	jQuery.ajax = function(param) {
+	    options = param;
+	};
+	
+	// Simulate change in display name
+	jQuery("#displayName").change();
+	options.success({ success: 'true', displayName: 'new name', currentEmailAddress: 'new@email.com'});
+	
+	// Test the result
+	equals('/ajax/test/url',options.url);
+	equals('POST',options.type);
+	equals('json',options.dataType);
+	equals('displayName',options.data.field);
+	equals('Old username',options.data.value);
+	
+	// Check that the markup was changed with the returned data
+	equals('new name',jQuery("#my-profile ul:first-of-type li").text());
+	equals('new@email.com',jQuery("#my-profile ul:last-of-type li").text());
+
+});
+ 
+
+/**
  * Test the toggeling of user preferences
  */
 test("test userPreferenceHandler AJAX", function() {

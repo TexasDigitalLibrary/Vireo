@@ -3,73 +3,10 @@
 <script src="@{'/public/javascripts/vireo-settingstab.js'}" type="text/javascript" charset="${_response_encoding}"></script>      
 <script type="text/javascript">
 jQuery(document).ready(function(){
-    /** 
-     * Handle AJAX updates for the three profile fields, displayName,
-     * currentEmailAddress, and ccEmail.
-     **/
-     jQuery("#displayName, #currentEmailAddress, #ccEmail").change(function () {
-    	 var $this = jQuery(this);
-         var field = $this.attr('name');
-         var value = $this.val();
-         
-         if ("ccEmail" == field) {
-        	 value = $this.attr('checked');
-         }
-         
-         jQuery("#my-profile").addClass("waiting");
-         jQuery("#my-preferences").addClass("waiting");
 
-         
-         var successCallback = function(data) {
-        	 
-        	 // Remove the ajax loading indicators
-             jQuery("#my-profile").removeClass("waiting");
-             jQuery("#my-preferences").removeClass("waiting");
-        	 
-             // Clear any previous errors
-        	 $this.parent("fieldset").removeClass("error");
-        	 clearAlert("profile-alert-"+field);
-        	 
-        	 // Username at the upper left hand corner
-        	 jQuery("#personal-bar a:first-of-type b").text(data.displayName);
-        	 
-        	 // Profile box
-        	 jQuery("#my-profile ul:first-of-type li").text(data.displayName);
-        	 jQuery("#my-profile ul:last-of-type li").text(data.currentEmailAddress);
-        	 
-        	 // The input field
-        	 jQuery("#displayName").val(data.displayName);
-         }
-         
-         var failureCallback = function (message) {
-             jQuery("#my-profile").removeClass("waiting");
-             jQuery("#my-preferences").removeClass("waiting");
-             
-        	 $this.parent("fieldset").addClass("error");
-        	 displayAlert("profile-alert-"+field,"Unable to update profile",message);
-         }
-         
-         jQuery.ajax({
-             url:'@{SettingsTab.updateProfileJSON() }',
-             data:{
-                 'field': field,
-                 'value': value
-             },
-             dataType:'json',
-             type:'POST',
-             success:function(data){
-            	 if (data.success) {
-            		successCallback(data);
-            	 } else {
-            		 failureCallback(data.message)
-            	 }
-             },
-             error:function(){
-            	 failureCallback("Unable to communicate with the server.");
-             }
-             
-         });  
-     })
+	// handle profile updates
+    jQuery("#displayName, #currentEmailAddress, #ccEmail").change(myProfileHandler('@{SettingsTab.updateProfileJSON() }'));
+
 }) // document ready
 </script>
 

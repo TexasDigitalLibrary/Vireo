@@ -1,5 +1,83 @@
 
 
+/**********************************************************
+ * My Profile (shown on all setting tabs)
+ **********************************************************/
+
+/**
+ * Handle updating the my-profile sidebox on all settings tab. This is things
+ * like display name, preferred email address, and weather you want to be CCed
+ * all the time.
+ * 
+ * @param jsonURL
+ *            The json url to submit profile updates too
+ */
+function myProfileHandler(jsonURL) {
+	return function () {
+		var $this = jQuery(this);
+		var field = $this.attr('name');
+		var value = $this.val();
+
+		if ("ccEmail" == field) {
+			value = $this.attr('checked');
+		}
+
+		jQuery("#my-profile").addClass("waiting");
+		jQuery("#my-preferences").addClass("waiting");
+
+
+		var successCallback = function(data) {
+
+			// Remove the ajax loading indicators
+			jQuery("#my-profile").removeClass("waiting");
+			jQuery("#my-preferences").removeClass("waiting");
+
+			// Clear any previous errors
+			$this.parent("fieldset").removeClass("error");
+			clearAlert("profile-alert-"+field);
+
+			// Username at the upper left hand corner
+			jQuery("#personal-bar a:first-of-type b").text(data.displayName);
+
+			// Profile box
+			jQuery("#my-profile ul:first-of-type li").text(data.displayName);
+			jQuery("#my-profile ul:last-of-type li").text(data.currentEmailAddress);
+
+			// The input field
+			jQuery("#displayName").val(data.displayName);
+		}
+
+		var failureCallback = function (message) {
+			jQuery("#my-profile").removeClass("waiting");
+			jQuery("#my-preferences").removeClass("waiting");
+
+			$this.parent("fieldset").addClass("error");
+			displayAlert("profile-alert-"+field,"Unable to update profile",message);
+		}
+
+		jQuery.ajax({
+			url:jsonURL,
+			data:{
+				'field': field,
+				'value': value
+			},
+			dataType:'json',
+			type:'POST',
+			success:function(data){
+				if (data.success) {
+					successCallback(data);
+				} else {
+					failureCallback(data.message)
+				}
+			},
+			error:function(){
+				failureCallback("Unable to communicate with the server.");
+			}
+
+		});  
+	}
+}
+
 
 /**********************************************************
  * User Preference Tab
