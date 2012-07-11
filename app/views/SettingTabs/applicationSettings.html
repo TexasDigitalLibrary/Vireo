@@ -30,7 +30,7 @@ jQuery(document).ready(function(){
 
 <h2>SUBMISSION AVAILABILITY</h2>
 
-<div class="submissionAvailability pull-left wrap">
+<div class="submissionAvailability wrap">
 	<ul class="unstyled">
 		<li>
 			<label>Submissions are currently:</label>
@@ -40,15 +40,13 @@ jQuery(document).ready(function(){
 					<button name="${org.tdl.vireo.model.Configuration.SUBMISSIONS_OPEN}" class="btn application-toggle #{if !SUBMISSIONS_OPEN}active#{/if}">Closed</button>
 				</div>
 			</span>
-			<div class="clear"></div>
 		</li>
-		<li>
+		<li id="currentSemester">
 			<label>Current submission semester:</label>
 			<span>
 			     <input name="${org.tdl.vireo.model.Configuration.CURRENT_SEMESTER}" class="application-text" type="text" value="${CURRENT_SEMESTER}" />
 			     <div class="info">'Month Year' (i.e. May ${ new Date().getYear() + 1900})</div>
 			</span>
-			<div class="clear"></div>
 		</li>
 		<li>
 			<label>Allow multiple submissions:</label>
@@ -58,7 +56,6 @@ jQuery(document).ready(function(){
                     <button name="${org.tdl.vireo.model.Configuration.ALLOW_MULTIPLE_SUBMISSIONS}" class="btn application-toggle #{if !ALLOW_MULTIPLE_SUBMISSIONS}active#{/if}">No</button>
                 </div>
             </span>
-			<div class="clear"></div>
 		</li>
 		<li>
 			<label>Request "College" parameter:</label>
@@ -68,7 +65,6 @@ jQuery(document).ready(function(){
                     <button name="${org.tdl.vireo.model.Configuration.REQUEST_COLLEGE}" class="btn application-toggle #{if !REQUEST_COLLEGE}active#{/if}">No</button>
                 </div>
 			</span>
-			<div class="clear"></div>
 		</li>
 		<li>
 			<label>Offer UMI release option:</label>
@@ -78,11 +74,9 @@ jQuery(document).ready(function(){
                     <button name="${org.tdl.vireo.model.Configuration.REQUEST_UMI}" class="btn application-toggle #{if !REQUEST_UMI}active#{/if}">No</button>
                 </div>
 			</span>     
-			<div class="clear"></div>
 		</li>
 	</ul>
 </div>
-<div class="clear"></div>
 
 <h2>SUBMISSION INSTRUCTIONS</h2>
 
