@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>#{get 'title' /}</title>
+<meta charset="utf-8">
+<script src="@{'/public/javascripts/jquery-1.7.2.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+<script src="@{'/public/javascripts/jquery-ui-1.8.21.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>                            
+<script src="@{'/public/javascripts/bootstrap.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+<script src="@{'/public/javascripts/vireo-admin.js'}" type="text/javascript" charset="${_response_encoding}"></script>      
+#{qunit.include /}
+</head>
+<body>
+</body>
+<script language="JavaScript">
+
+/** Functions to reset the dom between tests **/
+function reset() {
+    jQuery("body").empty();
+}
+
+/**
+ * Test expanding & collapsing sideboxes
+ */
+test("test toggleSideBoxHandler", function() {
+	expect(4);
+	reset();
+	
+	// Setup
+	jQuery("body").append("<div class='side-box'><div class='box-head expanded'><div class='expand'>[-]</div><div class='main-heading'>Header</div></div><div class='box-body'>Content</div><div class='box-footer'></div></div>");
+	
+	// Register the handler
+	var handler = toggleSideBoxHandler();
+	jQuery(".box-head").unbind('click').click(handler);
+	
+	// Simulate a click
+	jQuery(".box-head").click();
+	
+	// Verify the result
+	equals(false,jQuery(".box-head").hasClass("expanded"));
+	equals("[+]",jQuery(".expand").text());
+	
+	// Simulate another click
+	jQuery(".box-head").click();
+	equals(true,jQuery(".box-head").hasClass("expanded"));
+	equals("[-]",jQuery(".expand").text());
+	
+	
+});
+
+/**
+ * Test navigating between tags
+ */
+test("test tabNavigationHandler",function () {
+	expect(12);
+	reset();
+	
+	// Setup
+	jQuery("body").append("<div class='edit-holder pull-left'><ul class='nav nav-tabs'><li class='active'><a class='personalInfo' href='#'>Personal Info</a></li><li><a class='docInfo' href='#'>Document Info</a></li><li><a class='degreeInfo' href='#'>Degree Info</a></li></ul><div id='personalInfo' class='edit-box-holder'></div><div id='docInfo' class='edit-box-holder hidden'></div><div id='degreeInfo' class='edit-box-holder hidden'></div></div>");
+	
+	
+	// Register the handler
+	var handler = tabNavigationHandler();
+	jQuery(".edit-holder .nav a").click(handler);
+	
+	// Simulate a click on DocInfo
+	jQuery(".edit-holder .nav a.docInfo").click();
+	
+	equals(1,jQuery(".edit-holder li.active a.docInfo").length);
+	equals(true,jQuery("#personalInfo").hasClass("hidden"));
+    equals(false,jQuery("#docInfo").hasClass("hidden"));
+    equals(true,jQuery("#degreeInfo").hasClass("hidden"));
+
+    // Simulate a click on DegreeInfo
+    jQuery(".edit-holder .nav a.degreeInfo").click();
+    
+    equals(1,jQuery(".edit-holder li.active a.degreeInfo").length);
+    equals(true,jQuery("#personalInfo").hasClass("hidden"));
+    equals(true,jQuery("#docInfo").hasClass("hidden"));
+    equals(false,jQuery("#degreeInfo").hasClass("hidden"));
+	
+    
+    // Simulate a second click on DegreeInfo
+    jQuery(".edit-holder .nav a.degreeInfo").click();
+    
+    equals(1,jQuery(".edit-holder li.active a.degreeInfo").length);
+    equals(true,jQuery("#personalInfo").hasClass("hidden"));
+    equals(true,jQuery("#docInfo").hasClass("hidden"));
+    equals(false,jQuery("#degreeInfo").hasClass("hidden"));
+	
+});
+
+
+/**
+ * Test expanding a more link.
+ */
+test("test moreHandler",function () {
+	expect(2);
+	reset();
+	
+	// Setup
+	jQuery("body").append("<ol id='test-list'><li>1</li><li class='more'>more</li><li class='hidden'>2</li><li class='hidden'>3</li></ol>");
+	
+	
+	// Register the handler
+	var handler = moreHandler();
+	jQuery(".more").click(handler);
+	
+	// Simulate a click on more
+	jQuery(".more").click();
+	
+	equals(0,jQuery(".hidden").length);
+	equals(0,jQuery(".more").length);
+});
+
+
+/**
+ * Test the confirm link handler
+ */
+test("test confirmHandler", function () {
+	expect(1);
+	reset();
+	
+	// Setup
+	jQuery("body").append("<a class='confirm' href='#'>link</a>");
+	
+	// Register the handler
+	var handler = confirmHandler();
+	jQuery(".confirm").click(handler);
+	
+	
+	// Simulate a click
+	jQuery(".confirm").click();
+	
+	equals("(Are you sure?)",jQuery(".confirm").text());
+	
+});
+
+/**
+ * Test fadeIn & fadeOut handlers
+ */
+test("Test fade in & fade out handles", function () {
+    expect(4);
+    reset();
+    stop();
+    
+    jQuery("body").append("<div id='fade'>I fade in and out</div>");
+    
+    // fade the element out
+    fadeOutHandler("#fade")()
+    
+    setTimeout(function () {
+           equals(1,jQuery('#fade').length);
+           equals('none',jQuery('#fade').css('display'));
+           
+           // Fade the element back out
+           fadeInHandler("#fade")()
+           
+           setTimeout(function () {        
+                 equals(1,jQuery('#fade').length);
+                 equals('block',jQuery('#fade').css('display'));
+                 
+                 start();
+           },1000);
+    },1000);
+    
+});
+
+
+/**
+ * Test the displayAlert() and clearAlert() methods.
+ */
+test("test displaying and clearing alert", function() {
+	expect(8);
+	
+	reset();
+	jQuery("body").append("<div id='alert-area'></div>");
+	
+	// First display an allert
+	displayAlert("test","this is bold", "this is a message");
+	
+	equal(1,jQuery("#alert-area #test").length);
+	equal("this is bold",jQuery("#test strong").text());
+	equal("this is bold: this is a message",jQuery("#test p").text());
+	
+	// Next, update that alert
+	displayAlert("test","changed","changed");
+	
+	equal(1,jQuery("#alert-area #test").length);
+	equal("changed",jQuery("#test strong").text());
+	equal("changed: changed",jQuery("#test p").text());
+	
+	// Finaly, clear the alert
+	clearAlert("test");
+	
+	equal(1,jQuery("#alert-area").length);
+	equal(0,jQuery("#alert-area #test").length);
+});
+
+</script>
+</html> 
+
