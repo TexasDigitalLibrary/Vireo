@@ -7,42 +7,59 @@
         </div>
         <div class="modal-body">          
             
+            <div style="padding-bottom:15px;">
+            <h3>Current Transitions</h3>
+            #{list items:transitions, as:'state'}
+            	<button class="btn">${state.getDisplayName()}</button>
+            #{/list}
+            </div>
             
+            <h3>Advanced Options</h3>
             <form id="submission-status-form" action="@{ViewTab.changeSubmissionStatus(submission.getId())}" method="POST" class="form-horizontal">
             <select name="submission-status">
             	#{list items:states, as:'state'}
-            		<option value="${state.getBeanName()}">${state.getDisplayName()}</option>
+            		<option value="${state.getBeanName()}" #{if submission.getState()==state}selected="selected"#{/if}>${state.getDisplayName()}</option>
             	#{/list}            	
             </select>
-            
+            <input type="submit" class="btn btn-primary" name="submit_save" value="Save"/>
+            </form>
+            <div style="padding-top:15px;">
+            <button class="btn btn-important">Cancel this Submission</button>
+            </div>
         </div>
         <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <input type="submit" class="btn btn-primary" name="submit_save" value="Save"/>
+            <a href="#" class="btn" data-dismiss="modal">Close</a>            
         </div>
-    </form>
+    
 </div>
 
 <div class="modal hide fade" id="assignee-modal">
-    <form id="assignee-form" action="@{ViewTab.changeAssignedTo(submission.getId())}" method="POST" class="form-horizontal">
-        
+            
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">×</button>
             <h3>Change Submission Status</h3>
         </div>
+        
         <div class="modal-body">
             
+           <div style="padding-bottom:15px;">
+           	<button class="btn">Assign to me</button>
+           </div>
+           
+            <form id="assignee-form" action="@{ViewTab.changeAssignedTo(submission.getId())}" method="POST" class="form-horizontal">
             <select name="assignee">
             	#{list items:assignees, as:'assignee'}
-            		<option value="${assignee.getId()}">${assignee.getDisplayName()}</option>
+            		<option value="${assignee.getId()}" #{if submission.getAssignee()==assignee}selected="selected"#{/if}>${assignee.getDisplayName()}</option>
             	#{/list}
-            	<option value="">Unassign</option>            	
+            	<option value="" #{if submission.getAssignee()==null}selected="selected"#{/if}>Unassign</option>            	
             </select>
-            
+           <input type="submit" class="btn btn-primary" name="submit_save" value="Save"/> 
+           </form>
+           
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <input type="submit" class="btn btn-primary" name="submit_save" value="Save"/>
+            
         </div>
-    </form>
+    
 </div>
