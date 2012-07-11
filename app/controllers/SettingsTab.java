@@ -1,9 +1,15 @@
 package controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.mozilla.javascript.Context;
+import org.tdl.vireo.model.AbstractOrderedModel;
+import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Preference;
 import org.tdl.vireo.model.RoleType;
@@ -78,15 +84,78 @@ public class SettingsTab extends AbstractVireoController {
 			
 			String displayName = person.getDisplayName();
 			String currentEmailAddress = person.getCurrentEmailAddress();
+			
+			displayName = StringEscapeUtils.escapeJavaScript(displayName);
+			currentEmailAddress = StringEscapeUtils.escapeJavaScript(currentEmailAddress);
+						
 			renderJSON("{ \"success\": \"true\", \"displayName\": \""+displayName+"\", \"currentEmailAddress\": \""+currentEmailAddress+"\" }");
 			
 		} catch (AddressException ae) {
 			renderJSON("{ \"failure\": \"true\", \"message\": \"The email address is not valid. It should be formatted like 'your-username@your-domain' without any spaces and includes one @ sign.\" }");
 			
 		} catch (RuntimeException re) {
-			renderJSON("{ \"failure\": \"true\", \"message\": \""+re.getMessage()+"\" }");
+			String message = StringEscapeUtils.escapeJavaScript(re.getMessage());
+			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
 			
 		}
+	}
+	
+	/**
+	 * Internal method to persist the current ordering of the model.
+	 * 
+	 * Each item in the list will have it's display order updated according to
+	 * it's position in the provided list. Then the item will be saved() to
+	 * persistant storage.
+	 * 
+	 * @param models
+	 *            A List of ordered models.
+	 */
+	protected static void saveModelOrder(
+			List<? extends AbstractOrderedModel> models) {
+		int i = 0;
+		for (AbstractOrderedModel model : models) {
+			model.setDisplayOrder(i);
+			model.save();
+			i = i + 10;
+		}
+	}
+	
+	/**
+	 * Internal method to resolve the ids from a sortable element.
+	 * 
+	 * The jQuery sortable library expects all ids to be of the format: type_id.
+	 * This method will process a comma sepeareted list of these jquery-based
+	 * ids, resolving them into their actual model objects according to the ids
+	 * position within the idString.
+	 * 
+	 * 
+	 * @param idString
+	 *            Comma seperated list of ids and labels: i.e. action_1,
+	 *            action_2, etc...
+	 * @param type
+	 *            The type of model.
+	 * @return A list of models
+	 */
+	protected static <T extends AbstractOrderedModel> List<T> resolveIds(String idString, Class<T> type) {
+		
+		List<T> models = new ArrayList<T>();
+		
+		String[] idArray = idString.split(",");
+		for (String idElement : idArray) {
+			
+			String[] parts = idElement.split("_");
+			
+			Long id = Long.valueOf(parts[1]);
+			
+			if (type.equals(CustomActionDefinition.class)){
+				CustomActionDefinition action = settingRepo.findCustomActionDefinition(id);
+				models.add((T) action);		
+			} else {
+				throw new IllegalArgumentException("Unknown model type: "+type.getName());
+			}
+		}
+		
+		return models;
 	}
 	
 }

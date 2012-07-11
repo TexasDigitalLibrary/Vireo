@@ -1,8 +1,6 @@
 package controllers;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.List;
+import java.util.*;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -23,6 +21,7 @@ import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.CommitteeMember;
+import org.tdl.vireo.model.SettingsRepository;
 
 
 /**
@@ -37,121 +36,186 @@ public class SubmitTest extends AbstractVireoFunctionalTest {
 	public static SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
 	public static PersonRepository personRepo = Spring.getBeanOfType(PersonRepository.class);
 	public static SubmissionRepository subRepo = Spring.getBeanOfType(SubmissionRepository.class);
+        public static SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
 	
-	// Make sure that we can get the VerifyInfo page
-	
-	 @Test
-	 public void testGetVerifyInfoPage() {
+        @Test
+        public void testFullSubmission() {
+            
+            LOGIN();
 
-		 LOGIN();
-		 
-		 final String VERIFY_URL = Router
-				 .reverse("Submit.verifyPersonalInformation").url;
-		 Response response = GET(VERIFY_URL);
-		 assertStatus(200, response);
-	 }
-	 
-	 // Test posting VerifyPersonalInformation to the license page
-	 
-	 @Test
-	 @Ignore // Scott didn't finish this test.
-	 public void testPostVerifyInfo(){
-		 
-		 LOGIN();
-		 
-		 final String DO_VERIFY_URL = Router
-				 .reverse("Submit.doVerifyPersonalInformation").url;
-		 
-		 Map<String,String> verifyArgs = new HashMap<String,String>();
-		 
-		 verifyArgs.put("middleName","TestStudentFirstName");
-		 verifyArgs.put("yearOfBirth","1996");
-		 verifyArgs.put("department","science");
-		 verifyArgs.put("degree","bs");
-		 verifyArgs.put("major","computer science");
-		 verifyArgs.put("permPhone","555-1212");
-		 verifyArgs.put("permAddress","2222 Fake Street");
-		 verifyArgs.put("permEmail","noreply@noreply.org");
-		 verifyArgs.put("currentPhone","555-1212");
-		 verifyArgs.put("currentAddress","2222 Fake Street");
+            context.turnOffAuthorization();
 
-			
-		 Response response = POST(DO_VERIFY_URL, verifyArgs);
-		 
-		 assertStatus(200, response);
-	 }
-         
-         @Ignore
-	 @Test
-	 public void testDocumentInfo() {
+            // create submission
+            Person person = personRepo.findPersonByEmail("bthornton@gmail.com");
+            Submission s = subRepo.createSubmission(person);
+            s.save();
+            long subId = s.getId();
 
-	 	LOGIN();
+            JPA.em().getTransaction().commit();
+            JPA.em().clear();
+            JPA.em().getTransaction().begin();
+            
+            // get first page
+            String verifyURL = Router.reverse("Submit.verifyPersonalInformation").url;
+            Response response = GET(verifyURL);
+            assertIsOk(response);
+            response = null;
+            
+            // add valid values
+            Map<String, String> args = new HashMap<String, String>();
 
-	 	context.turnOffAuthorization();
+            args.put("firstName", "TestStudentFirstName");
+            args.put("middleName", "Middle");
+            args.put("lastName", "TestStudentLastName");
+            args.put("email", "test@studentemail.com");
+            args.put("yearOfBirth", "1996");
+            
+            // Grab the first configured department, degree, major
+            args.put("department", settingRepo.findAllDepartments().get(0).getName());
+            args.put("degree", settingRepo.findAllDegrees().get(0).getName());
+            args.put("major", settingRepo.findAllMajors().get(0).getName());
+            
+            args.put("permPhone", "555-1212");
+            args.put("permAddress", "2222 Fake Street");
+            args.put("permEmail", "noreply@noreply.org");
+            args.put("currentPhone", "555-1212");
+            args.put("currentAddress", "2222 Fake Street");
+            
+            args.put("subId", Long.toString(subId));
+            args.put("submit_next", "");
+            
+            // submit first page
+            response = POST(verifyURL, args);
+            response = GET(response.getHeader("Location"));
+            
+            // check second page
+            assertIsOk(response);
+            assertContentMatch("License Agreement", response);
+            
+            s = null;
+            
+            // check db
+            s = subRepo.findSubmission(subId);
+            
+            // FIXME:  These values are currently not being persisted due to the locked field-set
+            // assertEquals(args.get("firstName"), s.getStudentFirstName());
+            // assertEquals(args.get("middleName"), s.getStudentMiddleName());
+            // assertEquals(args.get("lastName"), s.getStudentLastName());
+            // assertEquals(args.get("yearOfBirth"), Integer.toString(s.getStudentBirthYear()));
+            assertEquals(args.get("department"), s.getDepartment());
+            assertEquals(args.get("major"), s.getMajor());
+            assertEquals(args.get("permPhone"), s.getSubmitter().getPermanentPhoneNumber());
+            assertEquals(args.get("permAddress"), s.getSubmitter().getPermanentPostalAddress());
+            assertEquals(args.get("permEmail"), s.getSubmitter().getPermanentEmailAddress());
+            assertEquals(args.get("currentPhone"), s.getSubmitter().getCurrentPhoneNumber());
+            assertEquals(args.get("currentAddress"), s.getSubmitter().getCurrentPostalAddress());
+            
+            args = null;
+            response = null;
+            
+            // add valid value(s)
+            args = new HashMap<String, String>();
+            args.put("submit_next", "");
+            args.put("licenseAgreement", "on");
+            
+            // submit second page
+            Map<String,Object> routeArgs = new HashMap<String,Object>();
+            routeArgs.put("subId", Long.toString(subId));
+            String licenseURL = Router.reverse("Submit.license", routeArgs).url;
+            
+            response = POST(licenseURL, args);
+            response = GET(response.getHeader("Location"));
+            assertIsOk(response);
+            
+            // check third page
+            assertContentMatch("Document Information", response);
+            response = null;
+            s = null;
+            JPA.em().clear();
+            
+            // check db
+            s = subRepo.findSubmission(subId);
+            
+            assertNotNull(s.getLicenseAgreementDate());
+            
+            // add valid values
+            args = null;
+            args = new HashMap<String, String>();
+            args.put("subId", Long.toString(subId));
+            args.put("title", "Test Title");
+            args.put("degreeMonth", String.valueOf(settingRepo.findAllGraduationMonths().get(0).getMonth()));
+            args.put("degreeYear", String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
+            args.put("docType", settingRepo.findDocumentType(Long.parseLong("1")).getName());
+            args.put("abstractText", "This is an abstract");
+            args.put("keywords", "key; word;");
+            args.put("committeeFirstName1", "First");
+            args.put("committeeMiddleName1", "Middle");
+            args.put("committeeLastName1", "Last");
+            args.put("committeeChairFlag1", "checked");
+            args.put("chairEmail", "fake@email.com");
+            args.put("embargo", "1");
+            args.put("submit_next", "");
+            
+            // submit third page
+            response = null;
+            s = null;
+            JPA.em().clear();
+            
+            String docInfoURL = Router.reverse("Submit.docInfo", routeArgs).url;
+            response = POST(docInfoURL, args);
+            response = GET(response.getHeader("Location"));
 
-                Person person = personRepo.findPersonByEmail("bthornton@gmail.com");
-                
-	 	Submission s = subRepo.createSubmission(person);
-	 	s.save();
+            // check fourth page
+            assertIsOk(response);
+            assertContentMatch("Upload Your Files", response);
+            
+            // check db
+            s = subRepo.findSubmission(subId);
+            
+            assertEquals(args.get("chairEmail"), s.getCommitteeContactEmail());
+            assertEquals(args.get("title"), s.getDocumentTitle());
+            assertEquals(args.get("degreeMonth"), s.getGraduationMonth().toString());
+            assertEquals(args.get("degreeYear"), String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
+            assertEquals(args.get("docType"), s.getDocumentType());
+            assertEquals(args.get("abstractText"), s.getDocumentAbstract());
+            assertEquals(args.get("keywords"), s.getDocumentKeywords());
+            assertEquals(settingRepo.findEmbargoType(Long.parseLong(args.get("embargo").toString())), s.getEmbargoType());
+            
+            List<CommitteeMember> committeeMembers = s.getCommitteeMembers();
+            assertEquals(1, committeeMembers.size());
+                    
+            // add valid values
+            
+            // submit fourth page
+            
+            // check fifth page
+            
+            // check db
+            
+            // submit fifth page
+            
+            // check sixth page
+            
+            // check db
+            
+            // delete submission
 
-		JPA.em().getTransaction().commit();
-		JPA.em().clear();
-		JPA.em().getTransaction().begin();
+            // Re-fetch Submission in new transaction (to avoid a "detatched" object)
+            s = subRepo.findSubmission(subId);
+            
+            s.delete();
 
-	 	long subId = s.getId();
-	 	
-	 	// Auth on
-	 	context.restoreAuthorization();
+            JPA.em().getTransaction().commit();
+            JPA.em().clear();
+            JPA.em().getTransaction().begin();
 
-	 	Map<String,Object> docArgs = new HashMap<String,Object>();
+            context.restoreAuthorization();
 
-	 	docArgs.put("subId", Long.toString(subId));
-		docArgs.put("title", "Test Title");
-		docArgs.put("committeeFirstName", "First");
-		docArgs.put("committeeMiddleInitial", "Middle");
-		docArgs.put("committeeLastName", "Last");
-		docArgs.put("chairFlag", "checked");
-		docArgs.put("chairEmail", "fake@email.com");
-		docArgs.put("embargo", "1");
-                docArgs.put("submit_next", "");
-
-		// Nulling person here because I was getting an exception when attempting to delete it:
-		// A java.lang.RuntimeException has been caught, java.lang.IllegalArgumentException: Removing a detached instance org.tdl.vireo.model.jpa.JpaPersonImpl#7
-		person = null;
-		s = null;
-
-		// Verify that POST succeeds and we land on the Upload step
-		final String DOC_URL = Router.reverse("Submit.docInfo", docArgs).url;
-                
-		Response response = POST(DOC_URL);
-                Logger.info(response.current.get().toString());
-		// FIXME: Still getting 302 on this
-                assertIsOk(response);
-		assertContentMatch("Upload Your Files",response);
-
-		// Check that values are in submission object
-		s = subRepo.findSubmission(subId);
-		assertNotNull(s);
-		assertEquals("Test Title", s.getDocumentTitle());
-		assertEquals("fake@email.com", s.getCommitteeContactEmail());
-
-		List<CommitteeMember> committeeMembers = s.getCommitteeMembers();
-		assertEquals(1, committeeMembers.size());
-		// TODO: Iterate through committee members and verify individual fields
-		// TODO: Add tests to verify appropriate embargo state once code is written
-
-		context.turnOffAuthorization();
-
-		// Clean up the submission created on the mock user
-		s.delete();
-
-		JPA.em().getTransaction().commit();
-		JPA.em().clear();
-		JPA.em().getTransaction().begin();
-		
-		context.restoreAuthorization();
-		
-		JPA.em().getTransaction().commit();
-		JPA.em().clear();
-	 }
+            JPA.em().getTransaction().commit();
+            JPA.em().clear();
+            
+            // Verify deletion
+            s = subRepo.findSubmission(subId);
+            assertNull(s);
+        }
 }

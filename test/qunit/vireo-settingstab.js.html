@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>#{get 'title' /}</title>
+<meta charset="utf-8">
+<script src="@{'/public/javascripts/jquery-1.7.2.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+<script src="@{'/public/javascripts/jquery-ui-1.8.21.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>                            
+<script src="@{'/public/javascripts/bootstrap.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+<script src="@{'/public/javascripts/vireo-admin.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+<script src="@{'/public/javascripts/vireo-settingstab.js'}" type="text/javascript" charset="${_response_encoding}"></script>      
+      
+#{qunit.include /}
+</head>
+<body>
+</body>
+<script language="JavaScript">
+
+/** Functions to reset the dom between tests **/
+function reset() {
+    jQuery("body").empty();
+    jQuery("body").append("<div id='alert-area'></div>");
+}
+
+/**
+ * Test the toggeling application settings (i.e. are submissions opened or closed)
+ */
+test("test applicationSettingsHandler AJAX", function() {
+	expect(6);
+	reset();
+	
+	// Create the buttons markup we will use for testing
+	jQuery("body").append("<div id='parent' class='btn-group' data-toggle='buttons-radio'><button id='button1' name='test-button' class='btn application-toggle' value='true'>Open</button><button id='button2' name='test-button' class='btn application-toggle active'>Closed</button>");
+	
+	// Register the handler
+	var handler = applicationSettingsHandler("/ajax/test/url");
+	jQuery(".application-toggle").click(handler);
+
+	// Mock AJAX
+	var options = null;
+	jQuery.ajax = function(param) {
+		options = param;
+	};
+	
+	
+	// Simulate a click & ajax return
+	jQuery("#button1").click();
+	
+	options.success({ success: 'true'})
+		
+	equals(true,jQuery("#button1").hasClass("active"));
+	equals('/ajax/test/url',options.url);
+	equals('POST',options.type);
+	equals('json',options.dataType);
+	equals('test-button',options.data.field);
+	equals('true',options.data.value);	
+});
+
+/**
+ * Test the reordering sortable custom actions
+ */
+test("test updateSortableHandler AJAX", function() {
+    expect(4);
+    reset();
+    
+    // Create the markup we will use for testing
+    jQuery("body").append("<ol id='action-list' class='action-sortable'><li id='action_1'>one</li><li id='action_2'>two</li></ol><ul id='action-remove' class='action-sortable'><p class='info'><em class='icon-trash'></em> Remove items by dragging them to the trash can</p></ul>");
+    
+    // Register the handler
+    var handler = updateSortableHandler("/ajax/reorder/url","/ajax/remove/url");    
+    var actionList = jQuery("#action-list");
+    actionList.sortable({
+        connectWith: ".action-sortable",
+        placeholder: "placeholder"
+    }).disableSelection();
+    actionList.bind("sortupdate",handler)
+
+    // Mock AJAX
+    var options = null;
+    jQuery.ajax = function(param) {
+        options = param;
+    };
+    
+    // Simulate an reorder update
+    actionList.trigger("sortupdate");
+    
+    options.success({ success: 'true'})
+            
+    equals('/ajax/reorder/url',options.url);
+    equals('POST',options.type);
+    equals('json',options.dataType);
+    equals('action_1,action_2',options.data.actionIds);
+});
+
+/**
+ * Test adding a new custom action
+ */
+test("Test saveAddActionHandler AJAX", function() {
+	expect(6);
+	reset();
+	
+	
+	// Setup
+	jQuery("body").append("<ol id='action-list' class='action-sortable'></ol>");
+    jQuery("body").append("<div id='add-action-dialog'><fieldset><div class='control-group'><label class='control-label' for=''>New Action</label><div class='controls'><input type='text' class='input-large' id='add-action-label' value='action label as defined'/></div></div><div class='control-group'><div class='controls'><button id='add-action-save' class='btn btn-primary'>Add Action</button><button id='add-action-cancel' class='btn'>Cancel</button></div></div></fieldset></div>");
+    
+    // Register the handler
+    var handler = saveAddActionHandler('ajax/url');
+    jQuery("#add-action-save").click(handler);
+    
+    // Mock AJAX
+    var options = null;
+    jQuery.ajax = function(param) {
+        options = param;
+    };
+    
+    jQuery("#add-action-save").click();
+    
+    options.success({ success: 'true', id:'99', label: 'action label as returned' });
+    
+    equals('ajax/url',options.url);
+    equals('POST',options.type);
+    equals('json',options.dataType)
+    equals('action label as defined',options.data.label);
+    
+    
+    equals(1,jQuery("#action_99").length);
+    equals('action label as returned', jQuery("#action_99").text());
+	
+});
+
+/**
+ * Test canceling the addition of a new custom action
+ */
+ test("Test cancelAddActionHandler", function() {
+	 reset();
+	 stop();
+	 
+	 // Setup
+	 jQuery("body").append("<div id='add-action-dialog'><fieldset><div class='control-group error'><label class='control-label' for=''>New Action</label><div class='controls'><input type='text' class='input-large' id='add-action-label' value='action label as defined'/></div></div><div class='control-group'><div class='controls'><button id='add-action-save' class='btn btn-primary'>Add Action</button><button id='add-action-cancel' class='btn'>Cancel</button></div></div></fieldset></div>");
+
+	 // Call the the handler, we can do this simply because there's no ajax!
+	 cancelAddActionHandler()();
+	 
+	 setTimeout(function () {
+		 equals(1,jQuery("#add-action-dialog").length);
+		 equals('none',jQuery("#add-action-dialog").css("display"));
+		 equals('',jQuery("#add-action-label").val())
+		 equals(false,jQuery(".control-group").hasClass("error"));
+		 
+		 start();
+	 },1000);
+	 
+ });
+
+
+</script>
+</html> 
+

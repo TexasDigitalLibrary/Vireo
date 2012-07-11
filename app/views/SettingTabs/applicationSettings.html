@@ -1,4 +1,32 @@
 #{extends 'SettingTabs/settings.html' /}
+#{set 'moreSettingScripts' }
+<script type="text/javascript">
+jQuery(document).ready(function(){
+
+	// Settings toggle and input/textarea fields
+     jQuery(".application-toggle").click(applicationSettingsHandler('@{settings.ApplicationSettingsTab.updateApplicationSettingsJSON()}'));
+     jQuery(".application-text").change(applicationSettingsHandler('@{settings.ApplicationSettingsTab.updateApplicationSettingsJSON()}'));
+    
+     // Sortable action list
+     jQuery("#action-list, #action-remove").sortable({
+         connectWith: ".action-sortable",
+         placeholder: "placeholder",
+         update: updateSortableHandler(
+        		 '@{settings.ApplicationSettingsTab.reorderCustomActionsJSON()}',
+        		 '@{settings.ApplicationSettingsTab.removeCustomActionJSON()}'
+        		 )
+     }).disableSelection();
+    
+     
+     jQuery("#add-action-link").click(fadeInHandler("#add-action-dialog"));
+     
+     jQuery("#add-action-save").click(saveAddActionHandler('@{settings.ApplicationSettingsTab.addCustomActionJSON()}'));
+     
+     jQuery("#add-action-cancel").click(cancelAddActionHandler());
+     
+}) // document ready
+</script>
+#{/set}
 
 <h2>SUBMISSION AVAILABILITY</h2>
 
@@ -6,27 +34,50 @@
 	<ul class="unstyled">
 		<li>
 			<label>Submissions are currently:</label>
-			<span><button class="btn">OPEN</button><div class="info">Click to close</div></span>
+			<span>
+			    <div class="btn-group" data-toggle="buttons-radio">
+					<button name="${org.tdl.vireo.model.Configuration.SUBMISSIONS_OPEN}" class="btn application-toggle #{if SUBMISSIONS_OPEN}active#{/if}" value="true">Open</button>
+					<button name="${org.tdl.vireo.model.Configuration.SUBMISSIONS_OPEN}" class="btn application-toggle #{if !SUBMISSIONS_OPEN}active#{/if}">Closed</button>
+				</div>
+			</span>
 			<div class="clear"></div>
 		</li>
 		<li>
 			<label>Current submission semester:</label>
-			<span><input type="text" value="May 2013" /><div class="info">'Month Year' (i.e. May 2006)</div></span>
+			<span>
+			     <input name="${org.tdl.vireo.model.Configuration.CURRENT_SEMESTER}" class="application-text" type="text" value="${CURRENT_SEMESTER}" />
+			     <div class="info">'Month Year' (i.e. May ${ new Date().getYear() + 1900})</div>
+			</span>
 			<div class="clear"></div>
 		</li>
 		<li>
 			<label>Allow multiple submissions:</label>
-			<span><button class="btn">YES</button><div class="info">Click to stop allowing multiple submissions</div></span>
+			<span>
+                <div class="btn-group" data-toggle="buttons-radio">
+                    <button name="${org.tdl.vireo.model.Configuration.ALLOW_MULTIPLE_SUBMISSIONS}" class="btn application-toggle #{if ALLOW_MULTIPLE_SUBMISSIONS}active#{/if}" value="true">Yes</button>
+                    <button name="${org.tdl.vireo.model.Configuration.ALLOW_MULTIPLE_SUBMISSIONS}" class="btn application-toggle #{if !ALLOW_MULTIPLE_SUBMISSIONS}active#{/if}">No</button>
+                </div>
+            </span>
 			<div class="clear"></div>
 		</li>
 		<li>
 			<label>Request "College" parameter:</label>
-			<span><button class="btn">NO</button><div class="info">Click to request</div></span>
+			<span>
+			     <div class="btn-group" data-toggle="buttons-radio">
+                    <button name="${org.tdl.vireo.model.Configuration.REQUEST_COLLEGE}" class="btn application-toggle #{if REQUEST_COLLEGE}active#{/if}" value="true">Yes</button>
+                    <button name="${org.tdl.vireo.model.Configuration.REQUEST_COLLEGE}" class="btn application-toggle #{if !REQUEST_COLLEGE}active#{/if}">No</button>
+                </div>
+			</span>
 			<div class="clear"></div>
 		</li>
 		<li>
 			<label>Offer UMI release option:</label>
-			<span><button class="btn">NO</button><div class="info">Click to offer</div></span>
+			<span>
+			     <div class="btn-group" data-toggle="buttons-radio">
+                    <button name="${org.tdl.vireo.model.Configuration.REQUEST_UMI}" class="btn application-toggle #{if REQUEST_UMI}active#{/if}" value="true">Yes</button>
+                    <button name="${org.tdl.vireo.model.Configuration.REQUEST_UMI}" class="btn application-toggle #{if !REQUEST_UMI}active#{/if}">No</button>
+                </div>
+			</span>     
 			<div class="clear"></div>
 		</li>
 	</ul>
@@ -36,19 +87,54 @@
 <h2>SUBMISSION INSTRUCTIONS</h2>
 
 <div class="wrap">
-	<textarea rows="7" class="span7">
-	</textarea>
-	<div class="span6 info">These instructions will be shown as part of the submission confirmation. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. Newlines are converted to paragraphs automatically.</div>
+    <div class="span7">
+	<textarea rows="7" class="span7 application-text" name="${org.tdl.vireo.model.Configuration.SUBMISSION_INSTRUCTIONS}">#{verbatim}${SUBMISSION_INSTRUCTIONS}#{/verbatim}</textarea>
+	<p class="info">These instructions will be shown as part of the submission confirmation. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. Newlines are converted to paragraphs automatically.</p>
+	</div>
 	<div class="clear"></div>
 </div>
 
 <h2>CUSTOM ACTIONS CHECKLIST</h2>
 
 <div class="wrap">
-<ol>
-	<li>Passed their classes <a href="#">[Remove]</a></li>
+<div class="row">
+<div class="span4">
+<ol id="action-list" class="action-sortable">
+	#{list items:actions, as:'action'}
+	   <li id="action_${action.getId()}">${action.getLabel()}</li>	
+	#{/list}
 </ol>
-<a href="#">[ADD NEW]</a>
+</div>
+<div class="span3">
+<ul id="action-remove" class="action-sortable" #{if actions.size() == 0}style="display: none;"#{/if}>
+<p class="info"><em class="icon-trash"></em> Remove items by dragging them to the trash can</p>
+</ul>
+</div>
+</div>
+
+<a id="add-action-link" href="#">[ADD NEW]</a>
+
+<div class="row">
+<div id="add-action-dialog" class="span3" style="display: none;">
+    <form class="form-horizontal">
+        <fieldset>
+            <div class="control-group">
+                <label class="control-label" for="add-action-label">New Action</label>
+                <div class="controls">
+                    <input type="text" class="input-large" id="add-action-label"/>
+                    <p class="help-block">Label of the new custom action</p>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+	                <button id="add-action-save" class="btn btn-primary">Add Action</button>
+	                <button id="add-action-cancel" class="btn">Cancel</button>
+	            </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+</div>
 </div>
 
 <h2>WHO HAS ACCESS?</h2>
