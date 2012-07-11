@@ -17,6 +17,8 @@ import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.state.State;
 
+import com.google.gson.Gson;
+
 import play.modules.spring.Spring;
 import play.mvc.With;
 
@@ -61,11 +63,12 @@ public class ViewTab extends AbstractVireoController {
 		List<ActionLog> actionLogs	= subRepo.findActionLog(submission);		
 		
 		List<State> states = stateManager.getAllStates();
+		List<State> transitions = submission.getState().getTransitions(submission);
 		
 		List<Person> assignees = personRepo.findPersonsByRole(RoleType.REVIEWER);
 		
 		String nav = "view";
-		render(nav, submission, submitter, degreeLevel, gradMonth, actionLogs, settingRepo, states, assignees);
+		render(nav, submission, submitter, degreeLevel, gradMonth, actionLogs, settingRepo, states, assignees, transitions);
 	}
 	
 	@Security(RoleType.REVIEWER)
@@ -248,23 +251,26 @@ public class ViewTab extends AbstractVireoController {
 			if(value==null){
 				value="";
 			}
-			value = StringEscapeUtils.escapeJava(value);
+			value = new Gson().toJson(value);
 			message = re.getMessage();
-			renderJSON("{ \"success\": false, \"value\": \""+value+"\", \"message\": \""+message+"\" }");
+			Logger.info("JSON Failed");
+			renderJSON("{ \"success\": false, \"value\": "+value+", \"message\": \""+message+"\" }");
 		}
 		
 		if(currentValue==null) {
-			currentValue="";
+			value = new Gson().toJson("");
 		} else {
-			currentValue = StringEscapeUtils.escapeJava(currentValue.toString());
+			value = new Gson().toJson(currentValue.toString());
 		}
 		
 		String json;
 		
 		if(degreeLevel!=null){
-			json = "{ \"success\": true, \"value\": \""+currentValue+"\", \"degreeLevel\": \""+degreeLevel+"\" }";
+			Logger.info("JSON Success: Degree");
+			json = "{ \"success\": true, \"value\": "+value+", \"degreeLevel\": \""+degreeLevel+"\" }";
 		} else {
-			json = "{ \"success\": true, \"value\": \""+currentValue+"\" }";
+			Logger.info("JSON Success");
+			json = "{ \"success\": true, \"value\": "+value+" }";
 		}
 		
 		renderJSON(json);
@@ -285,9 +291,9 @@ public class ViewTab extends AbstractVireoController {
 		submission.save();
 		
 		String gradMonth = new DateFormatSymbols().getMonths()[submission.getGraduationMonth()];
-		String currentValue = StringEscapeUtils.escapeJava(gradMonth+" "+submission.getGraduationYear().toString());
+		String currentValue = new Gson().toJson(gradMonth+" "+submission.getGraduationYear().toString());
 				
-		String json = "{ \"success\": true, \"value\": \""+currentValue+"\" }";
+		String json = "{ \"success\": true, \"value\": "+currentValue+" }";
 		
 		renderJSON(json);
 		
@@ -309,18 +315,18 @@ public class ViewTab extends AbstractVireoController {
 			submission.addCommitteeMember(firstName, lastName, middleName, chair);
 			
 		} catch (RuntimeException re) {
-			firstName = StringEscapeUtils.escapeJavaScript(firstName);
-			lastName = StringEscapeUtils.escapeJavaScript(lastName);
-			middleName = StringEscapeUtils.escapeJavaScript(middleName);
+			firstName = new Gson().toJson(firstName);
+			lastName = new Gson().toJson(lastName);
+			middleName = new Gson().toJson(middleName);
 			
-			renderJSON("{ \"success\": false, \"firstName\": \""+firstName+"\", \"lastName\": \""+lastName+"\", \"chair\": \""+chair+"\", \"message\": \""+re.getMessage()+"\" }");
+			renderJSON("{ \"success\": false, \"firstName\": "+firstName+", \"lastName\": "+lastName+", \"chair\": "+chair+", \"message\": \""+re.getMessage()+"\" }");
 		}
 		
-		firstName = StringEscapeUtils.escapeJavaScript(firstName);
-		lastName = StringEscapeUtils.escapeJavaScript(lastName);
-		middleName = StringEscapeUtils.escapeJavaScript(middleName);
+		firstName = new Gson().toJson(firstName);
+		lastName = new Gson().toJson(lastName);
+		middleName = new Gson().toJson(middleName);
 		
-		String json = "{ \"success\": true, \"firstName\": \""+firstName+"\", \"lastName\": \""+lastName+"\", \"chair\": \""+chair+"\" }";
+		String json = "{ \"success\": true, \"firstName\": "+firstName+", \"lastName\": "+lastName+", \"chair\": \""+chair+"\" }";
 		
 		renderJSON(json);
 		
@@ -347,18 +353,18 @@ public class ViewTab extends AbstractVireoController {
 			committeeMember.save();
 			
 		} catch (RuntimeException re) {
-			firstName = StringEscapeUtils.escapeJavaScript(firstName);
-			lastName = StringEscapeUtils.escapeJavaScript(lastName);
-			middleName = StringEscapeUtils.escapeJavaScript(middleName);
+			firstName = new Gson().toJson(firstName);
+			lastName = new Gson().toJson(lastName);
+			middleName = new Gson().toJson(middleName);
 			
-			renderJSON("{ \"success\": false, \"id\": \""+id+"\", \"firstName\": \""+firstName+"\", \"lastName\": \""+lastName+"\", \"middleName\": \""+middleName+"\", \"chair\": \""+chair+"\", \"message\": \""+re.getMessage()+"\" }");
+			renderJSON("{ \"success\": false, \"id\": \""+id+"\", \"firstName\": "+firstName+", \"lastName\": "+lastName+", \"middleName\": "+middleName+", \"chair\": \""+chair+"\", \"message\": \""+re.getMessage()+"\" }");
 		}
 		
-		firstName = StringEscapeUtils.escapeJavaScript(firstName);
-		lastName = StringEscapeUtils.escapeJavaScript(lastName);
-		middleName = StringEscapeUtils.escapeJavaScript(middleName);
+		firstName = new Gson().toJson(firstName);
+		lastName = new Gson().toJson(lastName);
+		middleName = new Gson().toJson(middleName);
 		
-		String json = "{ \"success\": true, \"id\": \""+id+"\", \"firstName\": \""+firstName+"\", \"lastName\": \""+lastName+"\", \"middleName\": \""+middleName+"\", \"chair\": \""+chair+"\" }";
+		String json = "{ \"success\": true, \"id\": \""+id+"\", \"firstName\": "+firstName+", \"lastName\": "+lastName+", \"middleName\": "+middleName+", \"chair\": \""+chair+"\" }";
 		
 		renderJSON(json);
 		
