@@ -6,7 +6,6 @@ import java.util.List;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.mozilla.javascript.Context;
 import org.tdl.vireo.model.AbstractOrderedModel;
 import org.tdl.vireo.model.CustomActionDefinition;
@@ -85,8 +84,8 @@ public class SettingsTab extends AbstractVireoController {
 			String displayName = person.getDisplayName();
 			String currentEmailAddress = person.getCurrentEmailAddress();
 			
-			displayName = StringEscapeUtils.escapeJavaScript(displayName);
-			currentEmailAddress = StringEscapeUtils.escapeJavaScript(currentEmailAddress);
+			displayName = escapeJavaScript(displayName);
+			currentEmailAddress = escapeJavaScript(currentEmailAddress);
 						
 			renderJSON("{ \"success\": \"true\", \"displayName\": \""+displayName+"\", \"currentEmailAddress\": \""+currentEmailAddress+"\" }");
 			
@@ -94,7 +93,7 @@ public class SettingsTab extends AbstractVireoController {
 			renderJSON("{ \"failure\": \"true\", \"message\": \"The email address is not valid. It should be formatted like 'your-username@your-domain' without any spaces and includes one @ sign.\" }");
 			
 		} catch (RuntimeException re) {
-			String message = StringEscapeUtils.escapeJavaScript(re.getMessage());
+			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
 			
 		}

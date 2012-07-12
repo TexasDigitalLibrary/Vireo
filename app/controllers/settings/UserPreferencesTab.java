@@ -3,7 +3,6 @@ package controllers.settings;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Preference;
 import org.tdl.vireo.model.RoleType;
@@ -92,7 +91,7 @@ public class UserPreferencesTab extends SettingsTab {
 			renderJSON("{ \"success\": \"true\" }");
 
 		} catch (RuntimeException re) {
-			String message = StringEscapeUtils.escapeJavaScript(re.getMessage());
+			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
 		}
 	}

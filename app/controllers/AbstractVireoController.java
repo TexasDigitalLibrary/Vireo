@@ -2,6 +2,7 @@ package controllers;
 
 import java.util.Map;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.SubmissionRepository;
@@ -67,5 +68,19 @@ public abstract class AbstractVireoController extends Controller {
 		for (Map.Entry<String, String> entry : names.entrySet())        {
 			Logger.info(entry.getKey() + "= {" + entry.getValue() + "}");
 		}
+	}
+	
+	
+	/**
+	 * Escape Javascrip strings. In Javascript double quotes must be escaped.
+	 * 
+	 * @param value
+	 *            The java string.
+	 * @return A javascript escaped string
+	 */
+	protected static String escapeJavaScript(String value) {
+		value = StringEscapeUtils.escapeJavaScript(value);
+		value = value.replaceAll("\\\\'", "'");
+		return value;
 	}
 }

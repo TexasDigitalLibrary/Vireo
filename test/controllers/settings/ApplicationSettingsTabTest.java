@@ -207,12 +207,13 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 	 * Test adding and removing custom actions
 	 */
 	@Test
-	public void testAddingAndRemovingACustomAction() {
+	public void testAddingEditingAndRemovingACustomAction() {
 		
 		LOGIN();
 		
 		// Get our urls and a list of fields.
 		final String ADD_URL = Router.reverse("settings.ApplicationSettingsTab.addCustomActionJSON").url;
+		final String EDIT_URL = Router.reverse("settings.ApplicationSettingsTab.editCustomActionJSON").url;
 		final String REMOVE_URL = Router.reverse("settings.ApplicationSettingsTab.removeCustomActionJSON").url;
 
 		// Add a new custom action
@@ -232,6 +233,17 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 		// Verify the action exists in the database.
 		JPA.em().clear();
 		assertNotNull(settingRepo.findCustomActionDefinition(id));
+		
+		
+		// Now edit the custom action
+		params.clear();
+		params.put("actionId","action_"+id);
+		params.put("label", "Changed Label");
+		response = POST(EDIT_URL,params);
+		
+		// Verify the action was updated in the database.
+		JPA.em().clear();
+		assertEquals("Changed Label",settingRepo.findCustomActionDefinition(id).getLabel());
 		
 		// Now remove the custom action
 		params.clear();

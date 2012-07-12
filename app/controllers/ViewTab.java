@@ -3,7 +3,6 @@ package controllers;
 import play.Logger;
 import play.mvc.Controller;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.CommitteeMember;

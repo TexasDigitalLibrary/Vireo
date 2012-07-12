@@ -3,7 +3,6 @@ package controllers.settings;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.CustomActionDefinition;
@@ -100,14 +99,14 @@ public class ApplicationSettingsTab extends SettingsTab {
 			}
 			
 		
-			field = StringEscapeUtils.escapeJavaScript(field);
-			value = StringEscapeUtils.escapeJavaScript(value);
+			field = escapeJavaScript(field);
+			value = escapeJavaScript(value);
 			
 			
 			renderJSON("{ \"success\": \"true\", \"field\": \""+field+"\", \"value\": \""+value+"\" }");
 		} catch (RuntimeException re) {
 			
-			String message = StringEscapeUtils.escapeJavaScript(re.getMessage());			
+			String message = escapeJavaScript(re.getMessage());			
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
 		}
 	}
@@ -134,11 +133,43 @@ public class ApplicationSettingsTab extends SettingsTab {
 			
 			saveModelOrder(actions);
 			
-			label = StringEscapeUtils.escapeJavaScript(label);
+			label = escapeJavaScript(label);
 			
 			renderJSON("{ \"success\": \"true\", \"id\": "+action.getId()+", \"label\": \""+label+"\" }");
 		} catch (RuntimeException re) {
-			String message = StringEscapeUtils.escapeJavaScript(re.getMessage());			
+			String message = escapeJavaScript(re.getMessage());			
+			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
+		}
+	}
+
+	/**
+	 * Edit an existing custom action's label. The id and the label will be
+	 * returned.
+	 * 
+	 * @param actionId
+	 *            The id of the action to be edited, in the fom "action_id"
+	 * @param label
+	 *            The new label of the action.
+	 */
+	@Security(RoleType.MANAGER)
+	public static void editCustomActionJSON(String actionId, String label) {
+		try {
+			// Check input
+			if (label == null || label.trim().length() == 0)
+				throw new IllegalArgumentException("Label is required");
+			
+			// Save the new label
+			String[] parts = actionId.split("_");
+			Long id = Long.valueOf(parts[1]);
+			CustomActionDefinition action = settingRepo.findCustomActionDefinition(id);
+			action.setLabel(label);
+			action.save();
+			
+			label = escapeJavaScript(label);
+			
+			renderJSON("{ \"success\": \"true\", \"id\": "+action.getId()+", \"label\": \""+label+"\" }");
+		} catch (RuntimeException re) {
+			String message = escapeJavaScript(re.getMessage());			
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
 		}
 	}
@@ -160,7 +191,7 @@ public class ApplicationSettingsTab extends SettingsTab {
 			
 			renderJSON("{ \"success\": \"true\" }");
 		} catch (RuntimeException re) {
-			String message = StringEscapeUtils.escapeJavaScript(re.getMessage());			
+			String message = escapeJavaScript(re.getMessage());			
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
 		}
 	}
@@ -186,7 +217,7 @@ public class ApplicationSettingsTab extends SettingsTab {
 			
 			renderJSON("{ \"success\": \"true\" }");
 		} catch (RuntimeException re) {
-			String message = StringEscapeUtils.escapeJavaScript(re.getMessage());			
+			String message = escapeJavaScript(re.getMessage());			
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
 		}
 	}

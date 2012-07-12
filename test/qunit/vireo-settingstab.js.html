@@ -22,6 +22,125 @@ function reset() {
 }
 
 /**
+ * Test canceling an edit
+ */
+test("test sortableCancelEditHandler",function() {
+    expect(2);
+    reset();
+    
+    // Setup
+    jQuery("body").append("<ol id='action-list' class='action-sortable'><li id='action_1'><span class='editing'><input type='text' value='Original Label' placeholder='Original Label'/><i class='icon-remove'></i><i class='icon-ok'></i></span></li></ol>");
+
+    
+    // Register the handler
+    var handler = sortableCancelEditHandler();
+    jQuery('.icon-remove').click(handler);
+    
+    // Simulate a click
+    jQuery('.icon-remove').click();
+    
+    equals(1,jQuery(".action-editable").length);
+    equals(0,jQuery(".editing").length);
+    
+});
+
+/**
+ * Test initiating an edit
+ */
+test("test sortableStartEditHandler",function() {
+	expect(2);
+	reset();
+	
+	// Setup
+    jQuery("body").append("<ol id='action-list' class='action-sortable'><li id='action_1'><a class='action-editable' href='#'><em class='icon-pencil'></em> My Label</a></li></ol>");
+
+	
+	// Register the handler
+	var handler = sortableStartEditHandler();
+	jQuery('.action-editable').click(handler);
+	
+	// Simulate a click
+	jQuery('.action-editable').click();
+	
+	equals(0,jQuery(".action-editable").length);
+	equals(1,jQuery(".editing").length);
+	
+});
+
+/**
+ * Test saving an edit
+ */
+test("test sortableSaveEditHandler AJAX", function() {
+	expect(6);
+	reset();
+	
+	// Create the markup we will use for testing
+    jQuery("body").append("<ol id='action-list' class='action-sortable'><li id='action_1'><span class='editing'><input type='text' value='Original Label' placeholder='Original Label'/><i class='icon-remove'></i><i class='icon-ok'></i></span></li></ol>");
+   
+	// Register the handler
+	var handler = sortableSaveEditHandler("action","/ajax/test/url");
+	jQuery(".icon-ok").click(handler);
+	
+	// Mock AJAX
+    var options = null;
+    jQuery.ajax = function(param) {
+        options = param;
+    };
+	
+	// Simulate a click
+	jQuery(".icon-ok").click()
+	
+	options.success({ success: 'true', id: '1', label: 'Something new'})
+    
+    equals('/ajax/test/url',options.url);
+    equals('POST',options.type);
+    equals('json',options.dataType);
+    equals('action_1',options.data.actionId);
+    equals('Original Label',options.data.label);
+    
+    equals(0,jQuery("#action_1 input").length);
+	
+});
+
+
+/**
+ * Test the reordering sortable custom actions
+ */
+test("test sortableUpdateHandler AJAX", function() {
+    expect(4);
+    reset();
+    
+    // Create the markup we will use for testing
+    jQuery("body").append("<ol id='action-list' class='action-sortable'><li id='action_1'>one</li><li id='action_2'>two</li></ol><ul id='action-remove' class='action-sortable'><p class='info'><em class='icon-trash'></em> Remove items by dragging them to the trash can</p></ul>");
+    
+    // Register the handler
+    var handler = sortableUpdateHandler("action", "/ajax/reorder/url","/ajax/remove/url");    
+    var actionList = jQuery("#action-list");
+    actionList.sortable({
+        connectWith: ".action-sortable",
+        placeholder: "placeholder"
+    }).disableSelection();
+    actionList.bind("sortupdate",handler)
+
+    // Mock AJAX
+    var options = null;
+    jQuery.ajax = function(param) {
+        options = param;
+    };
+    
+    // Simulate an reorder update
+    actionList.trigger("sortupdate");
+    
+    options.success({ success: 'true'})
+            
+    equals('/ajax/reorder/url',options.url);
+    equals('POST',options.type);
+    equals('json',options.dataType);
+    equals('action_1,action_2',options.data.actionIds);
+});
+
+
+/**
  * Test updating profile.
  */
 test("test mpProfileHandler AJAX", function() {
@@ -131,48 +250,11 @@ test("test applicationSettingsHandler AJAX", function() {
 });
 
 /**
- * Test the reordering sortable custom actions
- */
-test("test updateSortableHandler AJAX", function() {
-    expect(4);
-    reset();
-    
-    // Create the markup we will use for testing
-    jQuery("body").append("<ol id='action-list' class='action-sortable'><li id='action_1'>one</li><li id='action_2'>two</li></ol><ul id='action-remove' class='action-sortable'><p class='info'><em class='icon-trash'></em> Remove items by dragging them to the trash can</p></ul>");
-    
-    // Register the handler
-    var handler = updateSortableHandler("/ajax/reorder/url","/ajax/remove/url");    
-    var actionList = jQuery("#action-list");
-    actionList.sortable({
-        connectWith: ".action-sortable",
-        placeholder: "placeholder"
-    }).disableSelection();
-    actionList.bind("sortupdate",handler)
-
-    // Mock AJAX
-    var options = null;
-    jQuery.ajax = function(param) {
-        options = param;
-    };
-    
-    // Simulate an reorder update
-    actionList.trigger("sortupdate");
-    
-    options.success({ success: 'true'})
-            
-    equals('/ajax/reorder/url',options.url);
-    equals('POST',options.type);
-    equals('json',options.dataType);
-    equals('action_1,action_2',options.data.actionIds);
-});
-
-/**
  * Test adding a new custom action
  */
 test("Test saveAddActionHandler AJAX", function() {
 	expect(6);
 	reset();
-	
 	
 	// Setup
 	jQuery("body").append("<ol id='action-list' class='action-sortable'></ol>");
@@ -195,11 +277,10 @@ test("Test saveAddActionHandler AJAX", function() {
     equals('ajax/url',options.url);
     equals('POST',options.type);
     equals('json',options.dataType)
-    equals('action label as defined',options.data.label);
-    
+    equals(true,options.data.label.indexOf('defined') > 0);    
     
     equals(1,jQuery("#action_99").length);
-    equals('action label as returned', jQuery("#action_99").text());
+    equals(true,jQuery("#action_99").text().indexOf('returned') > 0);
 	
 });
 
