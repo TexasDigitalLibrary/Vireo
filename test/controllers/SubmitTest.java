@@ -1,5 +1,6 @@
 package controllers;
 
+import java.io.*;
 import java.util.*;
 
 import org.junit.Ignore;
@@ -43,10 +44,11 @@ public class SubmitTest extends AbstractVireoFunctionalTest {
             
             LOGIN();
 
-            context.turnOffAuthorization();
+//            context.turnOffAuthorization();
 
             // create submission
             Person person = personRepo.findPersonByEmail("bthornton@gmail.com");
+            context.login(person);
             Submission s = subRepo.createSubmission(person);
             s.save();
             long subId = s.getId();
@@ -185,12 +187,33 @@ public class SubmitTest extends AbstractVireoFunctionalTest {
             assertEquals(1, committeeMembers.size());
                     
             // add valid values
+            Map<String, File> files = new HashMap<String, File>();
+            File thesisFile = null;
             
+            try {
+                thesisFile = getResourceFile("controllers/test.pdf");
+                files.put("primaryDocument", thesisFile);
+                
+            } catch (IOException ioe) {
+                fail("Test upload file not found");
+            }
+
+            args = null;
+            args = new HashMap<String, String>();
+            args.put("subId", Long.toString(subId));
+            // FIXME: This page uses a dash in "submit-next". Correct to underscore to match all other pages.
+            args.put("submit-next", "");
+
             // submit fourth page
+            String uploadURL = Router.reverse("Submit.fileUpload", routeArgs).url;
+            response = POST(uploadURL, args, files);
+            response = GET(response.getHeader("Location"));
             
             // check fifth page
+            assertIsOk(response);
+            assertContentMatch("Confirm & Submit", response);
             
-            // check db
+            // check for file, db
             
             // submit fifth page
             
@@ -198,7 +221,8 @@ public class SubmitTest extends AbstractVireoFunctionalTest {
             
             // check db
             
-            // delete submission
+            // delete submission & test file
+            thesisFile.delete();
 
             // Re-fetch Submission in new transaction (to avoid a "detatched" object)
             s = subRepo.findSubmission(subId);
@@ -209,7 +233,7 @@ public class SubmitTest extends AbstractVireoFunctionalTest {
             JPA.em().clear();
             JPA.em().getTransaction().begin();
 
-            context.restoreAuthorization();
+//            context.restoreAuthorization();
 
             JPA.em().getTransaction().commit();
             JPA.em().clear();
@@ -218,4 +242,33 @@ public class SubmitTest extends AbstractVireoFunctionalTest {
             s = subRepo.findSubmission(subId);
             assertNull(s);
         }
+        
+    /**
+     * Extract the file from the jar and place it in a temporary location for the test to operate from.
+     *
+     * @param filePath The path, relative to the classpath, of the file to reference.
+     * @return A Java File object reference.
+     * @throws IOException
+     */
+    protected static File getResourceFile(String filePath) throws IOException {
+
+        File file = File.createTempFile("ingest-import-test", ".pdf");
+
+        // While we're packaged by play we have to ask Play for the inputstream instead of the classloader.
+        //InputStream is = DSpaceCSVIngestServiceImplTests.class
+        //		.getResourceAsStream(filePath);
+        InputStream is = Play.classloader.getResourceAsStream(filePath);
+        OutputStream os = new FileOutputStream(file);
+
+        // Copy the file out of the jar into a temporary space.
+        byte[] buffer = new byte[1024];
+        int len;
+        while ((len = is.read(buffer)) > 0) {
+            os.write(buffer, 0, len);
+        }
+        is.close();
+        os.close();
+
+        return file;
+    }
 }
