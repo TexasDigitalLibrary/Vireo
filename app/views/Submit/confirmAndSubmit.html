@@ -154,15 +154,17 @@
 				<td>Time</td>
 			</tr>
 		</thead>
-		<tbody>
-		    #{list items:actionLogList, as:'log'}
-		    <tr>
-			    <td> ${log.getPerson().getFullName()} </td>
-				<td> ${log.getEntry()}  </td>
-				<td> ${log.getActionDate().format('dd MMMM yyyy hh:mm')} </td>	    
-		    </tr>
-		    #{/list}				
-		</tbody>
+                <tbody>
+                    #{list items:actionLogList, as:'log'}
+                    <tr>
+                        #{if null != log.getPerson() }
+                            <td> ${log.getPerson().getFullName()} </td>
+                        #{/if}
+                        <td> ${log.getEntry()}  </td>
+                        <td> ${log.getActionDate().format('dd MMMM yyyy hh:mm')} </td>	    
+                    </tr>
+                    #{/list}				
+                </tbody>
 	</table>
 </div>
 
