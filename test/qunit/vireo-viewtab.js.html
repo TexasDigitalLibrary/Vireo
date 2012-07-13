@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>#{get 'title' /}</title>
+<meta charset="utf-8">
+<script src="@{'/public/javascripts/jquery-1.7.2.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+<script src="@{'/public/javascripts/jquery-ui-1.8.21.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>                            
+<script src="@{'/public/javascripts/bootstrap.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+<script src="@{'/public/javascripts/vireo-admin.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+<script src="@{'/public/javascripts/vireo-viewtab.js'}" type="text/javascript" charset="${_response_encoding}"></script>      
+#{qunit.include /}
+</head>
+<body>
+</body>
+<script language="JavaScript">
+
+/** Functions to reset the dom between tests **/
+function reset() {
+    jQuery("body").empty();
+}
+
+/**
+ * Test swapping from span to input field
+ */
+test("test swapToInputHandler generic input" , function() {
+	expect(8);
+	reset();
+	
+	//Create markup to test
+	var markup = '<div class="edit-box">';
+		markup += '<ul><li class="edit">';
+		markup += '<label>First Name:</label><span id="firstName"><i class="icon-pencil"></i>Audrey</span>';
+		markup += '</li></ul>';
+		markup += '</div>';
+	
+	//Append markup to body
+	jQuery("body").append(markup);
+		
+	//Register the handler
+	var handler = swapToInputHandler();
+	jQuery("#firstName").click(handler);
+	
+	//Simulate click
+	jQuery("#firstName").click();
+	
+	equal(0, jQuery("span").length, "The span has been removed.");
+	equal(1, jQuery("input").length, "There is one input field.");
+	equal("Audrey", jQuery("input").val(), "The input value is accurate.");
+	equal(1, jQuery("div#firstName").length, "The surrounding div has the correct id.");
+	equal(1, jQuery(".icon-remove").length, "There is one cancel icon.");
+	equal(1, jQuery(".icon-ok").length, "There is one submit icon.");
+	equal(1, jQuery("#backup").length, "The backup was created.");
+	equal('<i class="icon-pencil"></i>Audrey', jQuery("#backup").html(), "The backup is accurate.");
+
+});
+
+/**
+ * Test swapping from span to select drop down
+ */
+test("test swapToInputHandler select drop down", function(){
+	expect(9);
+	reset();
+	
+	//Create markup to test
+	var markup = '<div class="edit-box">';
+		markup += '<ul><li class="edit">';
+		markup += '<label>UMI Release:</label><span id="umiRelease" class="select"><i class="icon-pencil"></i>false</span>';
+		markup += '</li></ul>';
+		markup += '</div>';
+		markup += '<div id="umiReleaseOptions" style="display:none;">';
+		markup += '<option value="true">true</option>';
+		markup += '<option value="false">false</option>';
+		markup += '</div>';
+	
+	//Append markup to body
+	jQuery("body").append(markup);
+	
+	//Register the handle
+	var handler = swapToInputHandler();
+	jQuery("#umiRelease").click(handler);
+	
+	//Simulate click
+	jQuery("#umiRelease").click();
+	
+	equal(0, jQuery("span").length, "The span has been removed.");
+	equal(1, jQuery("select").length, "There is one select field.");
+	equal(2, jQuery("select option").length, "There are two options.");
+	equal(1, jQuery("select option[value='false']:selected").length, "The proper option is selected.");
+	equal(1, jQuery("div#umiRelease").length, "The surrounding div has the correct id.");
+	equal(1, jQuery(".icon-remove").length, "There is one cancel icon.");
+	equal(1, jQuery(".icon-ok").length, "There is one submit icon.");
+	equal(1, jQuery("#backup").length, "The backup was created.");
+	equal('<i class="icon-pencil"></i>false', jQuery("#backup").html(), "The backup is accurate.");
+	
+});
+ 
+/**
+ * Test swapping from span to text area field.
+ */
+test("test swapToInputHandler text area", function(){
+	expect(7);
+	reset();
+	
+	//Create markup to test
+	var markup = '<div class="edit-box">';
+		markup += '<ul><li class="edit">';
+		markup += '<label>Permanent Address:</label>';
+		markup += '<span id="permAddress" class="textarea"><i class="icon-pencil"></i>123 Street Name<br />City, ST 12345</span>';
+		markup += '</li></ul>';
+		markup += '</div>';
+	
+	//Append markup to body
+	jQuery("body").append(markup);
+	
+	//Register the handle
+	var handler = swapToInputHandler();
+	jQuery("#permAddress").click(handler);
+	
+	//Simulate click
+	jQuery("#permAddress").click();
+	
+	equal(0, jQuery("span").length, "The span has been removed.");
+	equal(1, jQuery("textarea").length, "There is one text area.");
+	equal(1, jQuery("div#permAddress").length, "The surrounding div has the correct id.");
+	equal(1, jQuery(".icon-remove").length, "There is one cancel icon.");
+	equal(1, jQuery(".icon-ok").length, "There is one submit icon.");
+	equal(1, jQuery("#backup").length, "The backup was created.");
+	equal('<i class="icon-pencil"></i>123 Street Name<br>City, ST 12345', jQuery("#backup").html(), "The backup is accurate.");
+});
+
+/**
+ * Test swapping from span to graduation selection fields.
+ */
+test("test swapToInputHandler graduation fields", function(){
+	expect(8);
+	reset();
+	
+	//Create markup to test
+	var markup = '<div class="edit-box">';
+		markup += '<ul><li class="edit">';
+		markup += '<label>Graduation Semester:</label>';
+		markup += '<span id="gradSemester" class="select"><i class="icon-pencil"></i>May 2013</span>';
+		markup += '</li></ul>';
+		markup += '</div>';
+		markup += '<div id="gradMonthOptions" style="display:none;">';
+		markup += '<option value="4">May</option>';
+		markup += '<option value="7">August</option>';
+		markup += '<option value="11">December</option>';
+		markup += '</div>';
+		markup += '<div id="gradYearOptions" style="display:none;">';
+		markup += '<option value="2006">2006</option>';
+		markup += '<option value="2007">2007</option>';
+		markup += '<option value="2008">2008</option>';
+		markup += '<option value="2009">2009</option>';
+		markup += '<option value="2010">2010</option>';
+		markup += '<option value="2011">2011</option>';
+		markup += '<option value="2012">2012</option>';
+		markup += '<option value="2013">2013</option>';
+		markup += '</div>';
+	
+	//Append markup to body
+	jQuery("body").append(markup);
+	
+	//Register the handle
+	var handler = swapToInputHandler();
+	jQuery("#gradSemester").click(handler);
+	
+	//Simulate click
+	jQuery("#gradSemester").click();
+	
+	equal(0, jQuery("span").length, "The span has been removed.");
+	equal(2, jQuery("select").length, "There are two select fields.");
+	equal(1, jQuery("select option[value='4']:selected").length, "The correct month is selected.");
+	equal(1, jQuery("select option[value='2013']:selected").length, "The correct year is selected.");
+	equal(1, jQuery(".icon-remove").length, "There is one cancel icon.");
+	equal(1, jQuery(".icon-ok").length, "There is one submit icon.");
+	equal(1, jQuery("#backup").length, "The backup was created.");
+	equal('<i class="icon-pencil"></i>May 2013', jQuery("#backup").html(), "The backup is accurate.");
+});
+
+/**
+ * Test swapping the committee member data with editable fields.
+ */
+test("test editCommitteeMemberHandler", function(){
+	expect(10);
+	reset();
+	
+	//Create markup to test
+	var markup = '<div id="committeeMembers" class="edit-box">';
+		markup += '<ul><li class="1">';
+		markup += '<div class="editCommitteeMember">';
+		markup += '<span class="lastName">Smith</span><span class="seperator">,</span>';
+		markup += '<span class="firstName">John</span>';
+		markup += '<span class="middleName">W</span>';
+		markup += '<span class="chair">chair</span>';
+		markup += '</div>';
+		markup += '</li></ul>';
+		markup += '</div>';
+		
+	//Append markup to body
+	jQuery("body").append(markup);
+	
+	//Register the handle
+	var handler = editCommitteeMemberHandler();
+	jQuery(".editCommitteeMember").click(handler);
+	
+	//Simulate click
+	jQuery(".editCommitteeMember").click();
+	
+	equal(0, jQuery("#committeeMembers span").length, "The spans have been removed.");
+	equal(5, jQuery("input").length, "There are three input fields.");
+	equal("John", jQuery("#cmFirstName").val(), "The first name field has the correct value.");
+	equal("W", jQuery("#cmMiddleName").val(), "The middle name field has the correct value.");
+	equal("Smith", jQuery("#cmLastName").val(), "The last name field has the correct value.");
+	equal(1, jQuery("#chair:checked").length, "The chair field is checked.");
+	equal(1, jQuery(".icon-remove").length, "There is one cancel icon.");
+	equal(1, jQuery(".icon-ok").length, "There is one submit icon.");
+	equal(1, jQuery("#backup").length, "The backup was created.");
+	equal('<span class="lastName">Smith</span><span class="seperator">,</span><span class="firstName">John</span><span class="middleName">W</span><span class="chair">chair</span>', jQuery("#backup").html(), "The backup is accurate.");
+});
+
+/**
+ * Test canceling a currently editing field.
+ */
+test("test cancelEditingHandler", function(){
+	expect(7);
+	reset();
+	
+	//Create markup to test
+	var markup = '<div class="edit-box">';
+		markup += '<ul><li class="edit">';
+		markup += '<label>First Name:</label><span id="firstName"><i class="icon-pencil"></i>Audrey</span>';
+		markup += '</li></ul>';
+		markup += '</div>';
+	
+	//Append markup to body
+	jQuery("body").append(markup);
+		
+	//Register the handler
+	var handler = swapToInputHandler();
+	jQuery("#firstName").click(handler);
+	
+	//Simulate click
+	jQuery("#firstName").click();
+	
+	equal(0, jQuery("span").length, "The span has been removed.");
+	equal(1, jQuery("input").length, "There is one input field.");
+	equal('<i class="icon-pencil"></i>Audrey', jQuery("#backup").html(), "The backup is accurate.");
+	
+	//Register Cancel Handler
+	var cancelHandler = cancelEditingHandler();
+	jQuery(".icon-remove").click(cancelHandler);
+	
+	//Simulate click
+	jQuery(".icon-remove").click();
+	
+	equal(0, jQuery("input").length, "The input is now removed.");
+	equal(0, jQuery("#backup").length, "The backup has been removed.");
+	equal(1, jQuery("span").length, "There is one span.");
+	equal('<i class="icon-pencil"></i>Audrey', jQuery("span#firstName").html(), "The restored markup is accurate.");
+});
+ 
+/**
+ * Test committing ajax on a general input.
+ */
+test("test commitChangesHandler AJAX General", function(){
+	expect(9);
+	reset();
+	
+	//Create markup to test
+	var markup = '<div class="edit-box">';
+		markup += '<ul><li class="edit">';
+		markup += '<label>First Name:</label><span id="firstName"><i class="icon-pencil"></i> Audrey</span>';
+		markup += '</li></ul>';
+		markup += '</div>';
+	
+	//Append markup to body
+	jQuery("body").append(markup);
+		
+	//Register the handler
+	var handler = swapToInputHandler();
+	jQuery("#firstName").click(handler);
+	
+	//Simulate click
+	jQuery("#firstName").click();
+	
+	// Mock AJAX
+    var options = null;
+    jQuery.ajax = function(param) {
+        options = param;
+    };
+	
+	//AJAX handler
+	commitChangesHandler(jQuery(".icon-ok"), "/jsonURL", "/graduationURL", "/committeeURL", 1);
+	
+	options.success({ success: 'true', value: 'Susie' });
+	
+	equal('/jsonURL',options.url,"The ajax url is correct.");
+    equal('POST',options.type,"The ajax type is correct.");
+    equal('json',options.dataType,"The ajax dataType is correct.");
+    equal('Audrey',options.data.value,"The ajax data value is correct.");
+    equal(1,options.data.subId,"The ajax data subId is correct.");
+    equal('firstName',options.data.field,"The ajax data field is correct.");
+    
+    equal('<i class="icon-pencil"></i> Susie',jQuery("span").html(),"The data returned is correct.");
+    equal(0, jQuery(".icon-remove").length,"There are zero remove icons.");
+    equal(0, jQuery(".icon-ok").length,"There are zero ok icons.");
+	
+});
+ 
+/**
+ * Test committing ajax for graduation semester.
+ */
+test("test commitChangesHandler AJAX graduation semester", function(){
+	expect(9);
+	reset();
+	 
+	//Create markup to test
+	var markup = '<div class="edit-box">';
+		markup += '<ul><li class="edit">';
+		markup += '<label>Graduation Semester:</label>';
+		markup += '<span id="gradSemester" class="select"><i class="icon-pencil"></i>May 2013</span>';
+		markup += '</li></ul>';
+		markup += '</div>';
+		markup += '<div id="gradMonthOptions" style="display:none;">';
+		markup += '<option value="4">May</option>';
+		markup += '<option value="7">August</option>';
+		markup += '<option value="11">December</option>';
+		markup += '</div>';
+		markup += '<div id="gradYearOptions" style="display:none;">';
+		markup += '<option value="2006">2006</option>';
+		markup += '<option value="2007">2007</option>';
+		markup += '<option value="2008">2008</option>';
+		markup += '<option value="2009">2009</option>';
+		markup += '<option value="2010">2010</option>';
+		markup += '<option value="2011">2011</option>';
+		markup += '<option value="2012">2012</option>';
+		markup += '<option value="2013">2013</option>';
+		markup += '</div>';
+	
+	//Append markup to body
+	jQuery("body").append(markup);
+	
+	//Register the handle
+	var handler = swapToInputHandler();
+	jQuery("#gradSemester").click(handler);
+	
+	//Simulate click
+	jQuery("#gradSemester").click();
+	
+	// Mock AJAX
+    var options = null;
+    jQuery.ajax = function(param) {
+        options = param;
+    };
+    
+  //AJAX handler
+	commitChangesHandler(jQuery(".icon-ok"), "/jsonURL", "/graduationURL", "/committeeURL", 1);
+	
+	options.success({ success: 'true', value: 'August 2012' });
+	
+	equal('/graduationURL', options.url,"The ajax url is correct.");
+    equal('POST', options.type,"The ajax type is correct.");
+    equal('json', options.dataType,"The ajax dataType is correct.");    
+    equal(1, options.data.subId,"The ajax data subId is correct.");
+    equal(4, options.data.month,"The ajax data month is correct.");
+    equal('2013', options.data.year,"The ajax data year is correct.");
+    
+    equal('<i class="icon-pencil"></i> August 2012', jQuery("span").html(),"The data returned is correct.");
+    equal(0, jQuery(".icon-remove").length,"There are zero remove icons.");
+    equal(0, jQuery(".icon-ok").length,"There are zero ok icons.");
+    
+});
+ 
+/**
+ * Test AJAX committee members.
+ */
+test("test commitChangesHandler AJAX committee members", function(){
+
+	reset();
+	
+	//Create markup to test
+	var markup = '<div id="committeeMembers" class="edit-box">';
+		markup += '<ul><li class="1">';
+		markup += '<div class="editCommitteeMember">';
+		markup += '<span class="lastName">Smith</span><span class="seperator">,</span>';
+		markup += '<span class="firstName">John</span>';
+		markup += '<span class="middleName">W</span>';
+		markup += '<span class="chair">chair</span>';
+		markup += '</div>';
+		markup += '</li></ul>';
+		markup += '</div>';
+		
+	//Append markup to body
+	jQuery("body").append(markup);
+	
+	//Register the handle
+	var handler = editCommitteeMemberHandler();
+	jQuery(".editCommitteeMember").click(handler);
+	
+	//Simulate click
+	jQuery(".editCommitteeMember").click();
+	
+	// Mock AJAX
+    var options = null;
+    jQuery.ajax = function(param) {
+        options = param;
+    };
+    
+  	//AJAX handler
+	commitChangesHandler(jQuery(".icon-ok"), "/jsonURL", "/graduationURL", "/committeeURL", 1);
+	
+	options.success({ success: 'true', id: 1, firstName: 'John', lastName: 'Smith', middleName: 'W', chair: 'false' });
+	
+	equal('/committeeURL', options.url,"The ajax url is correct.");
+    equal('POST', options.type,"The ajax type is correct.");
+    equal('json', options.dataType,"The ajax dataType is correct.");    
+    equal(1, options.data.id,"The ajax data id is correct.");
+    equal('John', options.data.firstName,"The ajax data firstName is correct.");
+    equal('W', options.data.middleName,"The ajax data middleName is correct.");
+    equal('Smith', options.data.lastName,"The ajax data lastName is correct.");
+    equal(true, options.data.chair,"The ajax data chair is correct.");
+    
+    equal('John', jQuery("span.firstName").text().trim(),"The first name returned is correct.");
+    equal('W', jQuery("span.middleName").text().trim(),"The middle name returned is correct.");
+    equal('Smith', jQuery("span.lastName").text().trim(),"The last name returned is correct.");
+    equal(true, !jQuery("span.chair").text().trim(),"The chair returned is correct.");
+    equal(0, jQuery(".icon-remove").length,"There are zero remove icons.");
+    equal(0, jQuery(".icon-ok").length,"There are zero ok icons.");
+});
+ 
+</script>
+</html> 

@@ -56,7 +56,7 @@ function swapToInputHandler(){
 				} else {
 					editItem.replaceWith('<div id="'+editItem.attr("id")+'" class="editing"><input class="field" type="text" value="'+value+'" /><br /><i class="icon-remove"></i>&nbsp<i class="icon-ok"></i></div>');
 				}
-				jQuery(".editing input").setTimeout(jQuery(".editing").focus());
+				//jQuery(".editing input").setTimeout(jQuery(".editing").focus());
 			}
 		}
 	}
@@ -109,16 +109,16 @@ function editCommitteeMemberHandler(){
  * This function commits changes for the currently
  * edited field.
  * 
- * @param eventHandler (The reference element)
+ * @param eventTarget (The reference element)
  * @param jsonURL (The method to update generic items)
  * @param graduationURL (The method to update graduation semester)
  * @param committeeURL (The method to update committee members)
  * @param subId (The submission id)
  */
-function commitChangesHandler(eventHandler, jsonURL, graduationURL, committeeURL, subId){
+function commitChangesHandler(eventTarget, jsonURL, graduationURL, committeeURL, subId){
 	var classValue = '';
 	var fieldItem;
-	var parent = eventHandler.parent();
+	var parent = eventTarget.parent();
 	if(jQuery(".editing").hasClass("textarea")){
 		classValue = classValue + 'textarea ';
 		fieldItem = jQuery(".editing textarea");
@@ -150,7 +150,7 @@ function commitChangesHandler(eventHandler, jsonURL, graduationURL, committeeURL
 	var committeeChair;
 	var committeeId;
 	
-	if(eventHandler.closest("#committeeMembers").length){
+	if(eventTarget.closest("#committeeMembers").length){
 		committeeMember = true;
 		committeeFirstName = jQuery("#cmFirstName").val().trim();
 		committeeLastName = jQuery("#cmLastName").val().trim();
