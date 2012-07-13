@@ -59,11 +59,48 @@ GET     /admin/settings/configurable/?			settings.ConfigurableSettingsTab.config
 POST	/admin/settings/updateProfile			SettingsTab.updateProfileJSON
 POST    /admin/settings/user/update             settings.UserPreferencesTab.updateUserPreferencesJSON
 POST    /admin/settings/applications/update     settings.ApplicationSettingsTab.updateApplicationSettingsJSON
+
+### Settings tab - Actions
 POST    /admin/settings/actions/add             settings.ApplicationSettingsTab.addCustomActionJSON
 POST    /admin/settings/actions/edit            settings.ApplicationSettingsTab.editCustomActionJSON
 POST    /admin/settings/actions/remove          settings.ApplicationSettingsTab.removeCustomActionJSON
 POST    /admin/settings/actions/reorder         settings.ApplicationSettingsTab.reorderCustomActionsJSON
 
+## Settings tab - Colleges
+POST    /admin/settings/colleges/add            settings.ConfigurableSettingsTab.addCollegeJSON
+POST    /admin/settings/colleges/edit           settings.ConfigurableSettingsTab.editCollegeJSON
+POST    /admin/settings/colleges/remove         settings.ConfigurableSettingsTab.removeCollegeJSON
+POST    /admin/settings/colleges/reorder        settings.ConfigurableSettingsTab.reorderCollegesJSON
+
+## Settings tab - Departments
+POST    /admin/settings/departments/add         settings.ConfigurableSettingsTab.addDepartmentJSON
+POST    /admin/settings/departments/edit        settings.ConfigurableSettingsTab.editDepartmentJSON
+POST    /admin/settings/departments/remove      settings.ConfigurableSettingsTab.removeDepartmentJSON
+POST    /admin/settings/departments/reorder     settings.ConfigurableSettingsTab.reorderDepartmentsJSON
+
+## Settings tab - Majors
+POST    /admin/settings/majors/add              settings.ConfigurableSettingsTab.addMajorJSON
+POST    /admin/settings/majors/edit             settings.ConfigurableSettingsTab.editMajorJSON
+POST    /admin/settings/majors/remove           settings.ConfigurableSettingsTab.removeMajorJSON
+POST    /admin/settings/majors/reorder          settings.ConfigurableSettingsTab.reorderMajorsJSON
+
+## Settings tab - Degrees
+POST    /admin/settings/degrees/add             settings.ConfigurableSettingsTab.addDegreeJSON
+POST    /admin/settings/degrees/edit            settings.ConfigurableSettingsTab.editDegreeJSON
+POST    /admin/settings/degrees/remove          settings.ConfigurableSettingsTab.removeDegreeJSON
+POST    /admin/settings/degrees/reorder         settings.ConfigurableSettingsTab.reorderDegreesJSON
+
+## Settings tab - Document Types
+POST    /admin/settings/docTypes/add            settings.ConfigurableSettingsTab.addDocumentTypeJSON
+POST    /admin/settings/docTypes/edit           settings.ConfigurableSettingsTab.editDocumentTypeJSON
+POST    /admin/settings/docTypes/remove         settings.ConfigurableSettingsTab.removeDocumentTypeJSON
+POST    /admin/settings/docTypes/reorder        settings.ConfigurableSettingsTab.reorderDocumentTypesJSON
+
+## Settings tab - Graduation Months
+POST    /admin/settings/gradMonths/add          settings.ConfigurableSettingsTab.addGraduationMonthJSON
+POST    /admin/settings/gradMonths/edit         settings.ConfigurableSettingsTab.editGraduationMonthJSON
+POST    /admin/settings/gradMonths/remove       settings.ConfigurableSettingsTab.removeGraduationMonthJSON
+POST    /admin/settings/gradMonths/reorder      settings.ConfigurableSettingsTab.reorderGraduationMonthsJSON
 
 ### System Administrator
 GET     /system/?                               System.controlPanelRedirect

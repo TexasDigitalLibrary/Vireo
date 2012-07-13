@@ -8,7 +8,13 @@ import javax.mail.internet.InternetAddress;
 
 import org.mozilla.javascript.Context;
 import org.tdl.vireo.model.AbstractOrderedModel;
+import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.CustomActionDefinition;
+import org.tdl.vireo.model.Degree;
+import org.tdl.vireo.model.Department;
+import org.tdl.vireo.model.DocumentType;
+import org.tdl.vireo.model.GraduationMonth;
+import org.tdl.vireo.model.Major;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Preference;
 import org.tdl.vireo.model.RoleType;
@@ -148,7 +154,32 @@ public class SettingsTab extends AbstractVireoController {
 			
 			if (type.equals(CustomActionDefinition.class)){
 				CustomActionDefinition action = settingRepo.findCustomActionDefinition(id);
-				models.add((T) action);		
+				models.add((T) action);	
+				
+			} else if (type.equals(College.class)) {
+				College college = settingRepo.findCollege(id);
+				models.add((T) college);
+				
+			} else if (type.equals(Department.class)) {
+				Department department = settingRepo.findDepartment(id);
+				models.add((T) department);
+				
+			} else if (type.equals(Major.class)) {
+				Major major = settingRepo.findMajor(id);
+				models.add((T) major);
+				
+			} else if (type.equals(Degree.class)) {
+				Degree degree = settingRepo.findDegree(id);
+				models.add((T) degree);
+				
+			} else if (type.equals(DocumentType.class)) {
+				DocumentType docType = settingRepo.findDocumentType(id);
+				models.add((T) docType);
+				
+			} else if (type.equals(GraduationMonth.class)) {
+				GraduationMonth month = settingRepo.findGraduationMonth(id);
+				models.add((T) month);
+				
 			} else {
 				throw new IllegalArgumentException("Unknown model type: "+type.getName());
 			}
