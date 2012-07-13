@@ -90,13 +90,13 @@ test("test sortableSaveEditHandler AJAX", function() {
 	// Simulate a click
 	jQuery(".icon-ok").click()
 	
-	options.success({ success: 'true', id: '1', label: 'Something new'})
+	options.success({ success: 'true', id: '1', name: 'Something new'})
     
     equals('/ajax/test/url',options.url);
     equals('POST',options.type);
     equals('json',options.dataType);
     equals('action_1',options.data.actionId);
-    equals('Original Label',options.data.label);
+    equals('Original Label',options.data.name);
     
     equals(0,jQuery("#action_1 input").length);
 	
@@ -137,6 +137,68 @@ test("test sortableUpdateHandler AJAX", function() {
     equals('POST',options.type);
     equals('json',options.dataType);
     equals('action_1,action_2',options.data.actionIds);
+});
+
+
+/**
+ * Test adding a new custom action
+ */
+test("Test saveAddActionHandler AJAX", function() {
+    expect(6);
+    reset();
+    
+    // Setup
+    jQuery("body").append("<ol id='action-list' class='action-sortable'></ol>");
+    jQuery("body").append("<div id='add-action-dialog'><fieldset><div class='control-group'><label class='control-label' for=''>New Action</label><div class='controls'><input type='text' class='input-large' id='add-action-name' value='action label as defined'/></div></div><div class='control-group'><div class='controls'><button id='add-action-save' class='btn btn-primary'>Add Action</button><button id='add-action-cancel' class='btn'>Cancel</button></div></div></fieldset></div>");
+    
+    // Register the handler
+    var handler = saveAddActionHandler('action','ajax/url');
+    jQuery("#add-action-save").click(handler);
+    
+    // Mock AJAX
+    var options = null;
+    jQuery.ajax = function(param) {
+        options = param;
+    };
+    
+    jQuery("#add-action-save").click();
+    
+    options.success({ success: 'true', id:'99', name: 'action label as returned' });
+    
+    console.log("%o",options);
+    
+    equals('ajax/url',options.url);
+    equals('POST',options.type);
+    equals('json',options.dataType)
+    equals(true,options.data.name.indexOf('defined') > 0);    
+    
+    equals(1,jQuery("#action_99").length);
+    equals(true,jQuery("#action_99").text().indexOf('returned') > 0);
+    
+});
+
+/**
+ * Test canceling the addition of a new custom action
+ */
+test("Test cancelAddActionHandler", function() {
+    expect(4);
+    reset();
+    stop();
+    
+    // Setup
+    jQuery("body").append("<div id='add-action-dialog'><fieldset><div class='control-group error'><label class='control-label' for=''>New Action</label><div class='controls'><input type='text' class='input-large' id='add-action-name' value='action label as defined'/></div></div><div class='control-group'><div class='controls'><button id='add-action-save' class='btn btn-primary'>Add Action</button><button id='add-action-cancel' class='btn'>Cancel</button></div></div></fieldset></div>");
+    
+    // Call the the handler, we can do this simply because there's no ajax!
+    cancelAddActionHandler('action')();
+    
+    setTimeout(function () {
+        equals(1,jQuery("#add-action-dialog").length);
+        equals('none',jQuery("#add-action-dialog").css("display"));
+        equals('',jQuery("#add-action-name").val())
+        equals(false,jQuery(".control-group").hasClass("error"));
+        
+        start();
+    },1000);
 });
 
 
@@ -249,64 +311,7 @@ test("test applicationSettingsHandler AJAX", function() {
 	equals('true',options.data.value);	
 });
 
-/**
- * Test adding a new custom action
- */
-test("Test saveAddActionHandler AJAX", function() {
-	expect(6);
-	reset();
-	
-	// Setup
-	jQuery("body").append("<ol id='action-list' class='action-sortable'></ol>");
-    jQuery("body").append("<div id='add-action-dialog'><fieldset><div class='control-group'><label class='control-label' for=''>New Action</label><div class='controls'><input type='text' class='input-large' id='add-action-label' value='action label as defined'/></div></div><div class='control-group'><div class='controls'><button id='add-action-save' class='btn btn-primary'>Add Action</button><button id='add-action-cancel' class='btn'>Cancel</button></div></div></fieldset></div>");
-    
-    // Register the handler
-    var handler = saveAddActionHandler('ajax/url');
-    jQuery("#add-action-save").click(handler);
-    
-    // Mock AJAX
-    var options = null;
-    jQuery.ajax = function(param) {
-        options = param;
-    };
-    
-    jQuery("#add-action-save").click();
-    
-    options.success({ success: 'true', id:'99', label: 'action label as returned' });
-    
-    equals('ajax/url',options.url);
-    equals('POST',options.type);
-    equals('json',options.dataType)
-    equals(true,options.data.label.indexOf('defined') > 0);    
-    
-    equals(1,jQuery("#action_99").length);
-    equals(true,jQuery("#action_99").text().indexOf('returned') > 0);
-	
-});
 
-/**
- * Test canceling the addition of a new custom action
- */
-test("Test cancelAddActionHandler", function() {
-	expect(4);
-	reset();
-	stop();
-	
-	// Setup
-	jQuery("body").append("<div id='add-action-dialog'><fieldset><div class='control-group error'><label class='control-label' for=''>New Action</label><div class='controls'><input type='text' class='input-large' id='add-action-label' value='action label as defined'/></div></div><div class='control-group'><div class='controls'><button id='add-action-save' class='btn btn-primary'>Add Action</button><button id='add-action-cancel' class='btn'>Cancel</button></div></div></fieldset></div>");
-	
-	// Call the the handler, we can do this simply because there's no ajax!
-	cancelAddActionHandler()();
-	
-	setTimeout(function () {
-		equals(1,jQuery("#add-action-dialog").length);
-		equals('none',jQuery("#add-action-dialog").css("display"));
-		equals('',jQuery("#add-action-label").val())
-		equals(false,jQuery(".control-group").hasClass("error"));
-		
-		start();
-	},1000);
-});
 
 
 </script>

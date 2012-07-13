@@ -512,12 +512,38 @@ AJAX WAITING
 /**********************
 CUSTOM ACTION SORTING
 **********************/
+.settings-sortable {
+    position: relative;
+}
 
-#action-list li {
+.settings-sortable .icon-pencil {
+    opacity: 0.5;
+}
+
+.settings-sortable-list {
+    width: 324px;
+}
+
+.settings-sortable-list li {
     cursor: move;
 }
 
-#action-remove {
+.settings-sortable-remove {
     list-style-type: none;
+    position: absolute;
+    left: 350px;
+    width: 150px;
 }
+
+.settings-sortable-error input {
+    border-color: #B94A48;
+    color: #B94A48;
+}
+.settings-sortable-error input:focus {
+    border-color: #953B39;
+    box-shadow: 0 0 6px #D59392;
+}
+
+
+
 

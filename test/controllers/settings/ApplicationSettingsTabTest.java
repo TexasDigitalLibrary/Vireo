@@ -218,7 +218,7 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 
 		// Add a new custom action
 		Map<String,String> params = new HashMap<String,String>();
-		params.put("label","New \"Custom\" action");
+		params.put("name","New \"Custom\" action");
 		Response response = POST(ADD_URL,params);
 		assertContentMatch("\"success\": \"true\"", response);
 		
@@ -238,7 +238,7 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 		// Now edit the custom action
 		params.clear();
 		params.put("actionId","action_"+id);
-		params.put("label", "Changed Label");
+		params.put("name", "Changed Label");
 		response = POST(EDIT_URL,params);
 		
 		// Verify the action was updated in the database.

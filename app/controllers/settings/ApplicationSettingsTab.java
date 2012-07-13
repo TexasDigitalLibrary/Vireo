@@ -115,27 +115,27 @@ public class ApplicationSettingsTab extends SettingsTab {
 	 * Add a new custom action value. The id and label of the new action will be
 	 * returned.
 	 * 
-	 * @param label
+	 * @param name
 	 *            The label of the new action
 	 */
 	@Security(RoleType.MANAGER)
-	public static void addCustomActionJSON(String label) {
+	public static void addCustomActionJSON(String name) {
 		
 		try {
-			if (label == null || label.trim().length() == 0)
+			if (name == null || name.trim().length() == 0)
 				throw new IllegalArgumentException("Label is required");
 			
 			// Add the new action to the end of the list.
 			List<CustomActionDefinition> actions = settingRepo.findAllCustomActionDefinition();
 			
-			CustomActionDefinition action = settingRepo.createCustomActionDefinition(label);
+			CustomActionDefinition action = settingRepo.createCustomActionDefinition(name);
 			actions.add(action);
 			
 			saveModelOrder(actions);
 			
-			label = escapeJavaScript(label);
+			name = escapeJavaScript(name);
 			
-			renderJSON("{ \"success\": \"true\", \"id\": "+action.getId()+", \"label\": \""+label+"\" }");
+			renderJSON("{ \"success\": \"true\", \"id\": "+action.getId()+", \"name\": \""+name+"\" }");
 		} catch (RuntimeException re) {
 			String message = escapeJavaScript(re.getMessage());			
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
@@ -148,26 +148,26 @@ public class ApplicationSettingsTab extends SettingsTab {
 	 * 
 	 * @param actionId
 	 *            The id of the action to be edited, in the fom "action_id"
-	 * @param label
+	 * @param name
 	 *            The new label of the action.
 	 */
 	@Security(RoleType.MANAGER)
-	public static void editCustomActionJSON(String actionId, String label) {
+	public static void editCustomActionJSON(String actionId, String name) {
 		try {
 			// Check input
-			if (label == null || label.trim().length() == 0)
+			if (name == null || name.trim().length() == 0)
 				throw new IllegalArgumentException("Label is required");
 			
 			// Save the new label
 			String[] parts = actionId.split("_");
 			Long id = Long.valueOf(parts[1]);
 			CustomActionDefinition action = settingRepo.findCustomActionDefinition(id);
-			action.setLabel(label);
+			action.setLabel(name);
 			action.save();
 			
-			label = escapeJavaScript(label);
+			name = escapeJavaScript(name);
 			
-			renderJSON("{ \"success\": \"true\", \"id\": "+action.getId()+", \"label\": \""+label+"\" }");
+			renderJSON("{ \"success\": \"true\", \"id\": "+action.getId()+", \"name\": \""+name+"\" }");
 		} catch (RuntimeException re) {
 			String message = escapeJavaScript(re.getMessage());			
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");

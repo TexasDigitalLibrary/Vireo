@@ -152,6 +152,20 @@ function fadeInHandler(selector) {
 	}
 }
 
+/**
+ * Handle to slide in and slide out selected elements.
+ * 
+ * @param selector
+ *            The element to be slide
+ * @returns A Callback function
+ */
+function slideToggleHandler(selector) {
+	return function() {
+		jQuery(selector).slideToggle();
+		return false;
+	}
+}
+
 
 /**********************************************************
  * Miscellaneous Functions

@@ -1,5 +1,7 @@
 package controllers.settings;
 
+import static org.tdl.vireo.model.Configuration.SUBMISSIONS_OPEN;
+
 import java.text.DateFormatSymbols;
 import java.util.List;
 
@@ -22,11 +24,31 @@ import controllers.SettingsTab;
 @With(Authentication.class)
 public class ConfigurableSettingsTab extends SettingsTab {
 
+	/**
+	 * Display the configurable settings page.
+	 */
 	@Security(RoleType.MANAGER)
 	public static void configurableSettings() {
+		
+		List<College> colleges = settingRepo.findAllColleges();
+		List<Department> departments = settingRepo.findAllDepartments();
+		List<Major> majors = settingRepo.findAllMajors();
+		List<Degree> degrees = settingRepo.findAllDegrees();
+		List<DocumentType> docTypes = settingRepo.findAllDocumentTypes();
+		List<GraduationMonth> gradMonths = settingRepo.findAllGraduationMonths();
+
+		
+		renderArgs.put("UNDERGRADUATE", DegreeLevel.UNDERGRADUATE);
+		renderArgs.put("MASTERS", DegreeLevel.MASTERS);
+		renderArgs.put("DOCTORAL", DegreeLevel.DOCTORAL);
+
+		
 		String nav = "settings";
 		String subNav = "config";
-		renderTemplate("SettingTabs/configurableSettings.html", nav, subNav);
+		renderTemplate("SettingTabs/configurableSettings.html", nav, subNav, 
+				
+				// Sortable lists
+				colleges, departments, majors, degrees, docTypes, gradMonths);
 	}
 
 	// ////////////////////////////////////////////
@@ -76,6 +98,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 	 */
 	@Security(RoleType.MANAGER)
 	public static void editCollegeJSON(String collegeId, String name) {
+		System.out.println("1");
 		try {
 			// Check input
 			if (name == null || name.trim().length() == 0)
@@ -90,12 +113,14 @@ public class ConfigurableSettingsTab extends SettingsTab {
 
 			name = escapeJavaScript(name);
 
-			renderJSON("{ \"success\": \"true\", \"id\": " + college.getId()
-					+ ", \"name\": \"" + name + "\" }");
+			System.out.println("2");
+
+			renderJSON("{ \"success\": \"true\", \"id\": " + college.getId() + ", \"name\": \"" + name + "\" }");
 		} catch (RuntimeException re) {
+			System.out.println("3");
+			re.printStackTrace();
 			String message = escapeJavaScript(re.getMessage());
-			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
-					+ "\" }");
+			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
 		}
 	}
 

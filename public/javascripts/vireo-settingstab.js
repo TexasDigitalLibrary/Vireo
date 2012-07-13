@@ -4,6 +4,61 @@
  * Generic Sortable tools (used on several of the tabs)
  **********************************************************/
 
+function displaySortableItem(type, editable, $element, id, name, level) {
+	
+	if (
+	    type == "action" ||
+	    type == "college" ||
+	    type == "department" ||
+	    type == "major" ||
+	    type == "graduationMonth"
+	   ) {
+	
+		if (editable) {
+			$element.replaceWith("<li id='" + id + "'><span class='editing'><input type='text' value='"+name+"' placeholder='"+name+"'/><i class='icon-remove'></i><i class='icon-ok'></i></span></li>");
+		} else {
+			$element.replaceWith("<li id='" + id + "'><a class='"+type+"-editable' href='#'><em class='icon-pencil'></em> " + name + "</a></li>");
+		}
+	
+	} else if (
+		type == "degree" ||
+		type == "documentType"
+		) {
+		
+		if (editable) {
+			$element.replaceWith(
+					"<li id='" + id + "'>"+
+					"<span class='editing'>"+
+					"<input type='text' value='"+name+"' placeholder='"+name+"'/>"+
+					"<select placeholder='"+level+"'>"+
+                    "<option value='2'>UNDERGRADUATE</option>"+
+                    "<option value='3'>MASTERS</option>"+
+                    "<option value='4'>DOCTORAL</option>"+
+                    "</select>"+
+					"<i class='icon-remove'></i>"+
+					"<i class='icon-ok'></i>"+
+					"</span>"+
+					"</li>");
+			jQuery("#"+id+" select").val(level);
+		} else {
+			
+			var levelText = "NONE";
+			if (level == "2" || level == 2)
+				levelText = "UNDERGRADUATE";
+			if (level == "3" || level == 3)
+				levelText = "MASTERS";
+			if (level == "4" || level == 4)
+				levelText = "DOCTORAL";
+			
+			
+			$element.replaceWith("<li id='" + id + "'><a class='"+type+"-editable' href='#'><em class='icon-pencil'></em> <span class='name'>" + name + "</span> <span class='level info'>("+levelText+")</span></a></li>");
+		}
+		
+	}
+
+}
+
+
 /**
  * Swap out the current element and make it editable. This is used for all
  * single value sortables, like custom actions, majors, departments, etc...
@@ -21,16 +76,46 @@ function swapToEditable(element) {
 		swapFromEditable(jQuery(".editing"));
 	}
 
-	if ($element.attr("id").indexOf("action_") == 0) {
+	var id = $element.attr("id");
+	var type = id.substring(0,id.indexOf("_"));
+	
+	if (
+		type == "action" ||
+		type == "college" ||
+		type == "department" ||
+		type == "major" ||
+	    type == "graduationMonth"
+	   ) {
 		// Make the field editable
-		var actionId = $element.attr('id');
-		var label = jQuery.trim($element.find("a.action-editable").text());
+		var name = jQuery.trim($element.find("a."+type+"-editable").text());
 		
-		while (label.indexOf("'") > -1) {
-			label = label.replace("'","&#39;");
+		while (name.indexOf("'") > -1) {
+			name = name.replace("'","&#39;");
 		}
 		
-		$element.replaceWith("<li id='" + actionId + "'><span class='editing'><input type='text' value='"+label+"' placeholder='"+label+"'/><i class='icon-remove'></i><i class='icon-ok'></i></span></li>");
+		displaySortableItem(type, true, $element, id, name);
+	} else if (
+		type == "degree" ||
+		type == "documentType"
+		) {
+		// Make the field editable
+		var name = jQuery.trim($element.find("a."+type+"-editable .name").text());
+		var levelText = jQuery.trim($element.find("a."+type+"-editable .level").text());
+		
+		var level = 1;
+		if (levelText.indexOf("UNDERGRADUATE") >= 0)
+			level = 2;
+		if (levelText.indexOf("MASTERS") >= 0)
+			level = 3;
+		if (levelText.indexOf("DOCTORAL") >= 0)
+			level = 4;
+		
+		
+		while (name.indexOf("'") > -1) {
+			name = name.replace("'","&#39;");
+		}
+		
+		displaySortableItem(type, true, $element, id, name, level);
 	}
 }
 
@@ -49,13 +134,29 @@ function swapFromEditable(element) {
 		$element = $element.closest("li");
 
 	var id = $element.attr("id");
-	if (id.indexOf("action_") == 0) {
+	var type = id.substring(0,id.indexOf("_"));
 
-		var actionId = $element.attr('id');
-		var label = $element.find("input").attr("placeholder");
+	
+	if (
+		type == "action" ||
+		type == "college" ||
+		type == "department" ||
+		type == "major" ||
+	    type == "graduationMonth"
+	   ) {
+
+		var name = $element.find("input").attr("placeholder");
 		
-		$element.replaceWith("<li id='" + actionId + "'><a class='action-editable' href='#'><em class='icon-pencil'></em> " + label + "</a></li>");
+		displaySortableItem(type, false, $element, id, name);
+	} else if (
+		    type == "degree" ||
+		    type == "documentType"
+		   ) {
 
+		var name = $element.find("input").attr("placeholder");
+		var level = $element.find("select").attr("placeholder");
+		
+		displaySortableItem(type, false, $element, id, name, level);
 	}
 
 }
@@ -129,29 +230,33 @@ function sortableSaveEditHandler(type,jsonURL) {
 			return;
 
 		var id = jQuery(this).closest("li").attr('id');
-		var label = jQuery(this).closest("li").find("input").val();
+		var name = jQuery(this).closest("li").find("input").val();
+		var level = jQuery(this).closest("li").find("select").val(); 
 		jQuery("#"+type+"-list").addClass("waiting");
 
 		var successCallback = function(data) {
 			// Remove the ajax loading indicators & alerts
 			clearAlert(type + "-edit-" + id);
 			jQuery("#"+type+"-list").removeClass("waiting");
+			jQuery("#"+id).removeClass("settings-sortable-error");
 
-			jQuery("#"+type+"_" + data.id).replaceWith("<li id='"+type+"_" + data.id + "'><a class='"+type+"-editable' href='#'><em class='icon-pencil'></em> " + data.label + "</a></li>");
+
+			displaySortableItem(type,false,jQuery("#"+type+"_" + data.id), type+"_"+data.id, data.name, data.level);
+
 		}
 
 		var failureCallback = function(message) {
-			jQuery("#action-list").removeClass("waiting");
+			jQuery("#"+type+"-list").removeClass("waiting");
+			jQuery("#"+id).addClass("settings-sortable-error");
 			displayAlert(type + "-edit-" + id, "Unable to edit "+type, message);
 		}
 
-		
 		var data = {};
 		data[type+'Id'] = id;
-		data["label"] = label;
-		
-		console.log("%o",data);
-		
+		data["name"] = name;
+		if (level)
+			data["level"] = level;
+				
 		jQuery.ajax({
 			url : jsonURL,
 			data : data,
@@ -271,6 +376,99 @@ function sortableUpdateHandler(type, reorderURL, removeURL) {
 		};
 	};
 }
+
+
+/**
+ * Handler for adding a new action to the list. The method will handle
+ * everything needed to update the dialog form, ajax request to add the new
+ * action, and error handling.
+ * 
+ * @param type
+ * 			  The type of objects: action, major, degree, etc...
+ * @param jsonURL
+ *            The JSON url to add new custom actions.
+ * @returns A Callback function
+ */
+function saveAddActionHandler(type, jsonURL) {
+	return function() {
+		var successCallback = function(data) {
+			// Remove the ajax loading indicators & alerts
+			jQuery("#add-"+type+"-name").closest('.control-group').removeClass("error");
+			if (jQuery("#add-"+type+"-level").length > 0)
+				jQuery("#add-"+type+"-level").closest('.control-group').removeClass("error");
+			clearAlert(type+"-add");
+			
+			var $newElement = jQuery("<li/>").appendTo(jQuery("#"+type+"-list"));
+			displaySortableItem(type,false,$newElement, type+"_"+data.id, data.name, data.level);
+
+			jQuery("#add-"+type+"-dialog").slideToggle();
+			jQuery("#"+type+"-remove").fadeIn();
+			jQuery("#add-"+type+"-name").val("");
+			if (jQuery("#add-"+type+"-level").length > 0)
+				jQuery("#add-"+type+"-level").val("-1");
+			jQuery("#add-"+type+"-dialog .control-group").removeClass("error");
+		}
+
+		var failureCallback = function(message) {
+			jQuery("#add-"+type+"-name").closest('.control-group').addClass("error");
+			
+			if (jQuery("#add-"+type+"-level").length > 0)
+				jQuery("#add-"+type+"-level").closest('.control-group').addClass("error");
+
+			
+			displayAlert(type+"-add","Unable to add "+type, message);
+		}
+
+		var data = {};
+		
+		data.name = jQuery("#add-"+type+"-name").val();
+		if (jQuery("#add-"+type+"-level").length > 0)
+			data.level = jQuery("#add-"+type+"-level").val();
+
+		jQuery.ajax({
+			url : jsonURL,
+			data : data,
+			dataType : 'json',
+			type : 'POST',
+			success : function(data) {
+				if (data.success) {
+					successCallback(data);
+				} else {
+					failureCallback(data.message)
+				}
+			},
+			error : function() {
+				failureCallback("Unable to communicate with the server.");
+			}
+
+		});
+
+		return false;
+	};
+}
+
+/**
+ * Handler for the cancel button when adding an action. This will clear out the
+ * form and fadeout dialog form.
+ * 
+ * @param type
+ * 			  The type of objects: action, major, degree, etc..
+ * @returns A Callback function
+ */
+function cancelAddActionHandler(type) {
+
+	return function() {
+		jQuery("#add-"+type+"-dialog").slideToggle();
+		jQuery("#add-"+type+"-name").val("");
+		if (jQuery("#add-"+type+"-level").length > 0)
+			jQuery("#add-"+type+"-level").val("-1");
+		
+		jQuery("#add-"+type+"-dialog .control-group").removeClass("error");
+		return false;
+	};
+
+}
+
 
 
 /**********************************************************
@@ -464,78 +662,5 @@ function applicationSettingsHandler(jsonURL) {
 
 		});  
 	};
-}
-
-/**
- * Handler for adding a new action to the list. The method will handle
- * everything needed to update the dialog form, ajax request to add the new
- * action, and error handling.
- * 
- * @param jsonURL
- *            The JSON url to add new custom actions.
- * @returns A Callback function
- */
-function saveAddActionHandler(jsonURL) {
-	return function() {
-		var successCallback = function(data) {
-			// Remove the ajax loading indicators & alerts
-			jQuery("#add-action-label").closest('.control-group').removeClass("error");
-			clearAlert("application-setting-actions");
-
-			jQuery("#action-list").append("<li id='action_" + data.id + "'><a class='action-editable' href='#'><em class='icon-pencil'></em> " + data.label + "</a></li>");
-			
-			
-			jQuery("#add-action-dialog").fadeOut();
-			jQuery("#action-remove").fadeIn();
-			jQuery("#add-action-label").val("");
-			jQuery("#add-action-dialog .control-group").removeClass("error");
-		}
-
-		var failureCallback = function(message) {
-			jQuery("#add-action-label").closest('.control-group').addClass("error");
-			displayAlert("application-setting-actions","Unable to update setting", message);
-		}
-
-		label = jQuery("#add-action-label").val();
-
-		jQuery.ajax({
-			url : jsonURL,
-			data : {
-				'label' : label
-			},
-			dataType : 'json',
-			type : 'POST',
-			success : function(data) {
-				if (data.success) {
-					successCallback(data);
-				} else {
-					failureCallback(data.message)
-				}
-			},
-			error : function() {
-				failureCallback("Unable to communicate with the server.");
-			}
-
-		});
-
-		return false;
-	};
-}
-
-/**
- * Handler for the cancel button when adding an action. This will clear out the
- * form and fadeout dialog form.
- * 
- * @returns A Callbackfunction
- */
-function cancelAddActionHandler() {
-
-	return function() {
-		jQuery("#add-action-dialog").fadeOut();
-		jQuery("#add-action-label").val("");
-		jQuery("#add-action-dialog .control-group").removeClass("error");
-		return false;
-	};
-
 }
 
