@@ -98,7 +98,6 @@ public class ConfigurableSettingsTab extends SettingsTab {
 	 */
 	@Security(RoleType.MANAGER)
 	public static void editCollegeJSON(String collegeId, String name) {
-		System.out.println("1");
 		try {
 			// Check input
 			if (name == null || name.trim().length() == 0)
@@ -113,11 +112,8 @@ public class ConfigurableSettingsTab extends SettingsTab {
 
 			name = escapeJavaScript(name);
 
-			System.out.println("2");
-
 			renderJSON("{ \"success\": \"true\", \"id\": " + college.getId() + ", \"name\": \"" + name + "\" }");
 		} catch (RuntimeException re) {
-			System.out.println("3");
 			re.printStackTrace();
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
