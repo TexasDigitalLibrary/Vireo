@@ -65,8 +65,12 @@ public class EmailSettingsTab extends SettingsTab {
 			name = escapeJavaScript(template.getName());
 			subject = escapeJavaScript(template.getSubject());
 			message = escapeJavaScript(template.getMessage());
+			
+			String system = " ";
+			if (template.isSystemRequired())
+				system = ", \"system\": \"true\" ";
 
-			renderJSON("{ \"success\": \"true\", \"id\": " + template.getId() + ", \"name\": \"" + name + "\", \"subject\": \"" + subject + "\", \"message\": \"" + message + "\" }");
+			renderJSON("{ \"success\": \"true\", \"id\": " + template.getId() + ", \"name\": \"" + name + "\", \"subject\": \"" + subject + "\", \"message\": \"" + message + "\""+system+"}");
 		} catch (RuntimeException re) {
 			String errorMessage = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + errorMessage + "\" }");
@@ -89,8 +93,12 @@ public class EmailSettingsTab extends SettingsTab {
 			String name = escapeJavaScript(template.getName());
 			String subject = escapeJavaScript(template.getSubject());
 			String message = escapeJavaScript(template.getMessage());
+			
+			String system = " ";
+			if (template.isSystemRequired())
+				system = ", \"system\": \"true\" ";
 
-			renderJSON("{ \"success\": \"true\", \"id\": " + template.getId() + ", \"name\": \"" + name + "\", \"subject\": \"" + subject + "\", \"message\": \"" + message + "\" }");
+			renderJSON("{ \"success\": \"true\", \"id\": " + template.getId() + ", \"name\": \"" + name + "\", \"subject\": \"" + subject + "\", \"message\": \"" + message + "\""+system+"}");
 		} catch (RuntimeException re) {
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
@@ -135,7 +143,11 @@ public class EmailSettingsTab extends SettingsTab {
 			subject = escapeJavaScript(template.getSubject());
 			message = escapeJavaScript(template.getMessage());
 
-			renderJSON("{ \"success\": \"true\", \"id\": " + template.getId() + ", \"name\": \"" + name + "\", \"subject\": \"" + subject + "\", \"message\": \"" + message + "\" }");
+			String system = " ";
+			if (template.isSystemRequired())
+				system = ", \"system\": \"true\" ";
+			
+			renderJSON("{ \"success\": \"true\", \"id\": " + template.getId() + ", \"name\": \"" + name + "\", \"subject\": \"" + subject + "\", \"message\": \"" + message + "\""+system+"}");
 		} catch (RuntimeException re) {
 			re.printStackTrace();
 			String errorMessage = escapeJavaScript(re.getMessage());
