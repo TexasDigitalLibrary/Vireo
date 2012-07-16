@@ -4,6 +4,28 @@
  * Generic Sortable tools (used on several of the tabs)
  **********************************************************/
 
+/**
+ * Display a sortable item. This method will look at the type field being passed
+ * and do different displayed based upon the value presented. It will either
+ * display a simple text field-based value, or a pair of a text field and degree
+ * level dropdown.
+ * 
+ * Here are the supported types: action, college, department, major,
+ * graduationMonth, degree, and documentType.
+ * 
+ * @param type
+ *            The type of sortable being displayed.
+ * @param editable
+ *            Weather the field shouldbe displayed as editable or static.
+ * @param $element
+ *            The current element in the list to be replaced.
+ * @param id
+ *            The unique id of the object.
+ * @param name
+ *            The object's name.
+ * @param level
+ *            The object's degree level (as an integere, and optional)
+ */
 function displaySortableItem(type, editable, $element, id, name, level) {
 	
 	if (
@@ -26,6 +48,10 @@ function displaySortableItem(type, editable, $element, id, name, level) {
 		) {
 		
 		if (editable) {
+			
+			// Note: the values for degree levels are hard coded. They should come from the 
+			// Degree level enum.
+			
 			$element.replaceWith(
 					"<li id='" + id + "'>"+
 					"<span class='editing'>"+

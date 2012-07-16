@@ -21,6 +21,22 @@ function reset() {
     jQuery("body").append("<div id='alert-area'></div>");
 }
 
+test("test displaySortableItem", function() {
+	expect(4);
+	reset();
+	
+	jQuery("body").append("<ol id='test-list'><li id='original-li'></li></ol>");
+	
+	var $element = jQuery("#original-li");
+	
+	displaySortableItem('action',true,$element,'action-12','my action');
+	
+	equals(0,jQuery("#original-li").length);
+	equals(1,jQuery("#action-12").length);
+	equals(1,jQuery("#test-list li").length);
+	equals(1,jQuery("#action-12 input").length);
+});
+
 /**
  * Test canceling an edit
  */
