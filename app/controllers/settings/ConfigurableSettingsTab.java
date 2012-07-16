@@ -6,7 +6,6 @@ import java.text.DateFormatSymbols;
 import java.util.List;
 
 import org.tdl.vireo.model.College;
-import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.Degree;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.Department;
@@ -68,7 +67,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			if (name == null || name.trim().length() == 0)
 				throw new IllegalArgumentException("Name is required");
 
-			// Add the new action to the end of the list.
+			// Add the new college to the end of the list.
 			List<College> colleges = settingRepo.findAllColleges();
 
 			College college = settingRepo.createCollege(name);
@@ -103,7 +102,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			if (name == null || name.trim().length() == 0)
 				throw new IllegalArgumentException("Name is required");
 
-			// Save the new label
+			// Save the new college
 			String[] parts = collegeId.split("_");
 			Long id = Long.valueOf(parts[1]);
 			College college = settingRepo.findCollege(id);
@@ -186,7 +185,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			if (name == null || name.trim().length() == 0)
 				throw new IllegalArgumentException("Name is required");
 
-			// Add the new action to the end of the list.
+			// Add the new department to the end of the list.
 			List<Department> departments = settingRepo.findAllDepartments();
 
 			Department department = settingRepo.createDepartment(name);
@@ -222,7 +221,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			if (name == null || name.trim().length() == 0)
 				throw new IllegalArgumentException("Name is required");
 
-			// Save the new label
+			// Save the new department
 			String[] parts = departmentId.split("_");
 			Long id = Long.valueOf(parts[1]);
 			Department department = settingRepo.findDepartment(id);
@@ -308,7 +307,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			if (name == null || name.trim().length() == 0)
 				throw new IllegalArgumentException("Name is required");
 
-			// Add the new action to the end of the list.
+			// Add the new major to the end of the list.
 			List<Major> majors = settingRepo.findAllMajors();
 
 			Major major = settingRepo.createMajor(name);
@@ -342,7 +341,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			if (name == null || name.trim().length() == 0)
 				throw new IllegalArgumentException("Name is required");
 
-			// Save the new label
+			// Save the new major
 			String[] parts = majorId.split("_");
 			Long id = Long.valueOf(parts[1]);
 			Major major = settingRepo.findMajor(id);
@@ -429,7 +428,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 
 			DegreeLevel degreeLevel = DegreeLevel.find(level);
 
-			// Add the new action to the end of the list.
+			// Add the new degree to the end of the list.
 			List<Degree> degrees = settingRepo.findAllDegrees();
 
 			Degree degree = settingRepo.createDegree(name,degreeLevel);
@@ -467,7 +466,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 
 			DegreeLevel degreeLevel = DegreeLevel.find(level);
 
-			// Save the new label
+			// Save the new degree
 			String[] parts = degreeId.split("_");
 			Long id = Long.valueOf(parts[1]);
 			Degree degree = settingRepo.findDegree(id);
@@ -553,7 +552,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 
 			DegreeLevel degreeLevel = DegreeLevel.find(level);
 
-			// Add the new action to the end of the list.
+			// Add the new type to the end of the list.
 			List<DocumentType> documentTypes = settingRepo.findAllDocumentTypes();
 
 			DocumentType documentType = settingRepo.createDocumentType(name,degreeLevel);
@@ -591,7 +590,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 
 			DegreeLevel degreeLevel = DegreeLevel.find(level);
 
-			// Save the new label
+			// Save the new type
 			String[] parts = documentTypeId.split("_");
 			Long id = Long.valueOf(parts[1]);
 			DocumentType documentType = settingRepo.findDocumentType(id);
@@ -676,7 +675,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 
 			int monthInt = monthNameToInt(name);
 			
-			// Add the new action to the end of the list.
+			// Add the new month to the end of the list.
 			List<GraduationMonth> months = settingRepo.findAllGraduationMonths();
 
 			GraduationMonth month = settingRepo.createGraduationMonth(monthInt);
@@ -711,7 +710,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 
 			int monthInt = monthNameToInt(name);
 			
-			// Save the new label
+			// Save the new month
 			String[] parts = graduationMonthId.split("_");
 			Long id = Long.valueOf(parts[1]);
 			GraduationMonth month = settingRepo.findGraduationMonth(id);

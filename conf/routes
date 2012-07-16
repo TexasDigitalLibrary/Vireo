@@ -66,6 +66,13 @@ POST    /admin/settings/actions/edit            settings.ApplicationSettingsTab.
 POST    /admin/settings/actions/remove          settings.ApplicationSettingsTab.removeCustomActionJSON
 POST    /admin/settings/actions/reorder         settings.ApplicationSettingsTab.reorderCustomActionsJSON
 
+### Settings tab - Email Templates
+POST    /admin/settings/templates/add           settings.EmailSettingsTab.addEmailTemplateJSON
+POST    /admin/settings/templates/retrieve      settings.EmailSettingsTab.retrieveEmailTemplateJSON
+POST    /admin/settings/templates/edit          settings.EmailSettingsTab.editEmailTemplateJSON
+POST    /admin/settings/templates/remove        settings.EmailSettingsTab.removeEmailTemplateJSON
+POST    /admin/settings/templates/reorder       settings.EmailSettingsTab.reorderEmailTemplatesJSON
+
 ## Settings tab - Colleges
 POST    /admin/settings/colleges/add            settings.ConfigurableSettingsTab.addCollegeJSON
 POST    /admin/settings/colleges/edit           settings.ConfigurableSettingsTab.editCollegeJSON
