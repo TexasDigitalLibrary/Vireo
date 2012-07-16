@@ -42,12 +42,12 @@
 				
 				</td>
 				<td>${submission.getState().getDisplayName()}</td>
-				<td>${submission.getSubmissionDate()== null?"n/a":submission.getSubmissionDate()}</td>
+				<td>${submission.getSubmissionDate()== null?"n/a":submission.getSubmissionDate().format('dd MMMM yyyy')}</td>
 				<td>${submission.getAssignee() == null?"Unassigned":submission.getAssignee().getDisplayName()}</td>
 				<td> 
 				#{if submission.getState().getDisplayName().equals("In Progress")}
-				    <a href="@{Submit.verifyPersonalInformation(submission.getId())}">Continue</a>
-				    <a href="@{Submit.deleteSubmission(submission.getId())}">Delete</a>
+				    <a class="btn btn-primary" href="@{Submit.verifyPersonalInformation(submission.getId())}">Continue</a>
+				    <a class="btn btn-primary" href="@{Submit.deleteSubmission(submission.getId())}">Delete</a>
                 #{/if} 
                 #{else}
 				     <a href="/ut-etd/vireo/view?appID=4967">View</a>				 
