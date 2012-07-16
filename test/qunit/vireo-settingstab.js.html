@@ -217,6 +217,125 @@ test("Test cancelAddActionHandler", function() {
     },1000);
 });
 
+/**
+ * Test retrieving an email template.
+ */
+test("Test retrieveEmailTemplateHandler AJAX", function() {
+	expect(7);
+    reset();
+    
+    // Setup
+    jQuery("body").append("<ol id='emailTemplate-list' class='emailTemplate-sortable'></ol>");
+    jQuery("#emailTemplate-list").append("<li id='emailTemplate_1' class='retrieve'><div class='editing'><span>SYSTEM Email Test</span><form class='form-horizontal'><fieldset><div class='control-group'><label for='edit-emailTemplate-name' class='control-label'><strong>Name</strong></label><div class='controls'><input type='text' id='edit-emailTemplate-name' class='input-xxlarge' disabled='disabled'></div></div><div class='control-group'><label for='edit-emailTemplate-subject' class='control-label'><strong>Subject</strong></label><div class='controls'><input type='text' id='edit-emailTemplate-subject' class='input-xxlarge'></div></div><div class='control-group'><label for='edit-emailTemplate-message' class='control-label'><strong>Message</strong></label><div class='controls'><textarea class='input-xxlarge' id='edit-emailTemplate-message'></textarea></div></div><div class='control-group'><div class='controls'><button class='btn btn-primary' id='edit-emailTemplate-save'>Save</button><button class='btn disabled' id='edit-emailTemplate-delete' style=' '>Delete</button><button class='btn' id='edit-emailTemplate-cancel'>Cancel</button></div></div></fieldset></form></div></li>");
+    
+    // Register the handler
+    var handler = retrieveEmailTemplateHandler('ajax/url');
+    jQuery(".retrieve").click(handler);
+    
+    // Mock AJAX
+    var options = null;
+    jQuery.ajax = function(param) {
+        options = param;
+    };
+    
+    jQuery(".retrieve").click();
+    
+    options.success({ success: 'true', id:'1', name: 'name returned', subject: 'subject returned', message: 'message returned' });
+    
+    equals('ajax/url',options.url);
+    equals('POST',options.type);
+    equals('json',options.dataType)
+    equals('emailTemplate_1',options.data.emailTemplateId);
+    
+    equals('name returned',jQuery("#edit-emailTemplate-name").val())
+    equals('subject returned',jQuery("#edit-emailTemplate-subject").val())
+    equals('message returned',jQuery("#edit-emailTemplate-message").val())    
+});
+
+
+/**
+ * Test removing an email template.
+ */
+test("Test removeEmailTemplateHandler AJAX", function() {
+    expect(5);
+    reset();
+    stop();
+    
+    // Setup
+    jQuery("body").append("<ol id='emailTemplate-list' class='emailTemplate-sortable'></ol>");
+    jQuery("#emailTemplate-list").append("<li id='emailTemplate_1' class='retrieve'><div class='editing'><span>SYSTEM Email Test</span><form class='form-horizontal'><fieldset><div class='control-group'><label for='edit-emailTemplate-name' class='control-label'><strong>Name</strong></label><div class='controls'><input type='text' id='edit-emailTemplate-name' class='input-xxlarge' disabled='disabled'></div></div><div class='control-group'><label for='edit-emailTemplate-subject' class='control-label'><strong>Subject</strong></label><div class='controls'><input type='text' id='edit-emailTemplate-subject' class='input-xxlarge'></div></div><div class='control-group'><label for='edit-emailTemplate-message' class='control-label'><strong>Message</strong></label><div class='controls'><textarea class='input-xxlarge' id='edit-emailTemplate-message'></textarea></div></div><div class='control-group'><div class='controls'><button class='btn btn-primary' id='edit-emailTemplate-save'>Save</button><button class='btn disabled' id='edit-emailTemplate-delete' style=' '>Delete</button><button class='btn' id='edit-emailTemplate-cancel'>Cancel</button></div></div></fieldset></form></div></li>");
+    
+    // Register the handler
+    var handler = removeEmailTemplateHandler('ajax/url');
+    jQuery(".retrieve").click(handler);
+    
+    // Mock AJAX
+    var options = null;
+    jQuery.ajax = function(param) {
+        options = param;
+    };
+    
+    jQuery(".retrieve").click();
+    
+    options.success({ success: 'true' });
+    
+    
+    setTimeout(function () {
+		equals('ajax/url',options.url);
+		equals('POST',options.type);
+		equals('json',options.dataType)
+		equals('emailTemplate_1',options.data.emailTemplateId);
+		
+		equals(0,jQuery("#emailTemplate_1").length)   
+        
+        start();
+    },1000);
+});
+
+
+/**
+ * Test editing an email template.
+ */
+test("Test editEmailTemplateHandler AJAX", function() {
+    expect(9);
+    reset();
+    stop();
+    
+    // Setup
+    jQuery("body").append("<ol id='emailTemplate-list' class='emailTemplate-sortable'></ol>");
+    jQuery("#emailTemplate-list").append("<li id='emailTemplate_1' class='retrieve'><div class='editing'><span>SYSTEM Email Test</span><form class='form-horizontal'><fieldset><div class='control-group'><label for='edit-emailTemplate-name' class='control-label'><strong>Name</strong></label><div class='controls'><input type='text' id='edit-emailTemplate-name' class='input-xxlarge' value='Original Name'></div></div><div class='control-group'><label for='edit-emailTemplate-subject' class='control-label'><strong>Subject</strong></label><div class='controls'><input type='text' id='edit-emailTemplate-subject' class='input-xxlarge' value='Original Subject'></div></div><div class='control-group'><label for='edit-emailTemplate-message' class='control-label'><strong>Message</strong></label><div class='controls'><textarea class='input-xxlarge' id='edit-emailTemplate-message'>Original Message</textarea></div></div><div class='control-group'><div class='controls'><button class='btn btn-primary' id='edit-emailTemplate-save'>Save</button><button class='btn disabled' id='edit-emailTemplate-delete' style=' '>Delete</button><button class='btn' id='edit-emailTemplate-cancel'>Cancel</button></div></div></fieldset></form></div></li>");
+    
+    // Register the handler
+    var handler = editEmailTemplateHandler('ajax/url');
+    jQuery(".retrieve").click(handler);
+    
+    // Mock AJAX
+    var options = null;
+    jQuery.ajax = function(param) {
+        options = param;
+    };
+    
+    jQuery(".retrieve").click();
+    
+    options.success({ success: 'true', id: '1', name: 'New Name', subject: 'New Subject', message: 'New Message' });
+    
+    
+    setTimeout(function () {
+        equals('ajax/url',options.url);
+        equals('POST',options.type);
+        equals('json',options.dataType)
+        equals('emailTemplate_1',options.data.emailTemplateId);
+        equals('Original Name',options.data.name);
+        equals('Original Subject',options.data.subject);
+        equals('Original Message',options.data.message);
+
+        
+        equals(1,jQuery("#emailTemplate_1").length) 
+        equals(' New Name',jQuery("#emailTemplate_1").text());
+        
+        start();
+    },1000);
+});
 
 /**
  * Test updating profile.
