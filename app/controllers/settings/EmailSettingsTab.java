@@ -5,6 +5,7 @@ import java.util.List;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.RoleType;
 
+import play.Logger;
 import play.mvc.With;
 
 import controllers.Authentication;
@@ -17,9 +18,13 @@ public class EmailSettingsTab extends SettingsTab {
 
 	@Security(RoleType.MANAGER)
 	public static void emailSettings(){
+		
+		
+		List<EmailTemplate> templates = settingRepo.findAllEmailTemplates();
+		
 		String nav = "settings";
 		String subNav = "email";
-		renderTemplate("SettingTabs/emailSettings.html",nav, subNav);
+		renderTemplate("SettingTabs/emailSettings.html",nav, subNav, templates);
 	}
 	
 	
@@ -151,7 +156,7 @@ public class EmailSettingsTab extends SettingsTab {
 		} catch (RuntimeException re) {
 			re.printStackTrace();
 			String errorMessage = escapeJavaScript(re.getMessage());
-			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
+			renderJSON("{ \"failure\": \"true\", \"message\": \"" + errorMessage + "\" }");
 		}
 	}
 

@@ -1,4 +1,32 @@
 #{extends 'SettingTabs/settings.html' /}
+#{set 'moreSettingScripts' }
+<script type="text/javascript">
+jQuery(document).ready(function(){
+
+     // Handlers for the sortable emailTemplates list
+     jQuery("#emailTemplate-list").sortable({
+         placeholder: "placeholder",
+         update: sortableUpdateHandler(
+                    'emailTemplate',
+                    '@{settings.EmailSettingsTab.reorderEmailTemplatesJSON()}'
+                    )
+     }).disableSelection().enableSelection();
+        
+     
+     
+     
+     jQuery("#emailTemplate-list .emailTemplate-editable").live("click",sortableStartEditHandler());
+     jQuery("#emailTemplate-list #edit-emailTemplate-cancel").live("click",sortableCancelEditHandler());
+     jQuery("#emailTemplate-list #edit-emailTemplate-save").live("click",editEmailTemplateHandler('@{settings.EmailSettingsTab.editEmailTemplateJSON()}'));
+     jQuery("#emailTemplate-list #edit-emailTemplate-delete").live("click",removeEmailTemplateHandler('@{settings.EmailSettingsTab.removeEmailTemplateJSON()}'));     
+     jQuery("#emailTemplate-list .retrieve").live("click",retrieveEmailTemplateHandler('@{settings.EmailSettingsTab.retrieveEmailTemplateJSON()}')); 
+     jQuery("#add-emailTemplate-link").click(slideToggleHandler("#add-emailTemplate-dialog"));
+     jQuery("#add-emailTemplate-save").click(saveAddActionHandler('emailTemplate','@{settings.EmailSettingsTab.addEmailTemplateJSON()}'));
+     jQuery("#add-emailTemplate-cancel").click(cancelAddActionHandler('emailTemplate'));
+     
+}) // document ready
+</script>
+#{/set}
 
 <h2>EMAIL OPTIONS</h2>
 
@@ -23,12 +51,51 @@
 
 <h2>EMAIL TEMPLATES</h2>
 
-<div class="wrap">
-<ol>
-	<li>test <a href="#">[Remove]</a></li>
-</ol>
-<a href="#">[ADD NEW]</a>
+<div class="wrap settings-sortable">
+	<ol id="emailTemplate-list" class="emailTemplate-sortable settings-sortable-list">
+	      #{list items:templates, as:'template'}
+	         <li id="emailTemplate_${template.getId()}"><a class="emailTemplate-editable" href="#"><em class="icon-pencil"></em> ${template.getName()}</a></li>    
+	      #{/list}
+	</ol>
 </div>
+
+
+<a id="add-emailTemplate-link" href="#">[ADD NEW]</a>
+
+<div id="add-emailTemplate-dialog" style="display: none;">
+    <form class="form-horizontal">
+        <fieldset>
+            <div class="control-group">
+                <label class="control-label" for="add-emailTemplate-name"><strong>Name</strong></label>
+                <div class="controls">
+                    <input type="text" class="input-xxlarge" id="add-emailTemplate-name"/>
+                    <p class="info">Name of the new template, this is never shown to students.</p>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="add-emailTemplate-subject"><strong>Subject</strong></label>
+                <div class="controls">
+                    <input type="text" class="input-xxlarge" id="add-emailTemplate-subject"/>
+                    <p class="info">The email subject as students will receive it.</p>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="add-emailTemplate-message"><strong>Message</strong></label>
+                <div class="controls">
+                    <textarea id="add-emailTemplate-message" class="input-xxlarge"></textarea>
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <div class="controls">
+                    <button id="add-emailTemplate-save" class="btn btn-primary">Add Email Template</button>
+                    <button id="add-emailTemplate-cancel" class="btn">Cancel</button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+<br/><br/>
 
 <h2>TEMPLATES VARIABLES</h2>
 <p>Variables can be added to the email templates, both in the subject line and in the body.Variable names are will be all uppercase, and should be surrounded by brackets if you want them to be automatically replaced with the associated values. The available values are:</p>

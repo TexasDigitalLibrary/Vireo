@@ -11,7 +11,7 @@
  * level dropdown.
  * 
  * Here are the supported types: action, college, department, major,
- * graduationMonth, degree, and documentType.
+ * graduationMonth, degree, documentType, and emailTemplate.
  * 
  * @param type
  *            The type of sortable being displayed.
@@ -27,7 +27,7 @@
  *            The object's degree level (as an integere, and optional)
  */
 function displaySortableItem(type, editable, $element, id, name, level) {
-	
+		
 	if (
 	    type == "action" ||
 	    type == "college" ||
@@ -78,6 +78,66 @@ function displaySortableItem(type, editable, $element, id, name, level) {
 			
 			
 			$element.replaceWith("<li id='" + id + "'><a class='"+type+"-editable' href='#'><em class='icon-pencil'></em> <span class='name'>" + name + "</span> <span class='level info'>("+levelText+")</span></a></li>");
+		}
+		
+	} else if (
+		type == "emailTemplate"
+		) {
+		
+		if (editable) {
+			
+			$element.attr('id',id);
+			$element.html(
+					 "<div class='editing'>"+
+					 "   <span>" + name + "</span>" +
+					 "   <form class='form-horizontal' style='display: none;'>"+
+					 "       <fieldset>"+
+					 "           <div class='control-group'>"+
+					 "               <label class='control-label' for='edit-emailTemplate-name'><strong>Name</strong></label>"+
+					 "               <div class='controls'>"+
+					 "                   <input type='text' class='input-xxlarge' id='edit-emailTemplate-name'/>"+
+					 "               </div>"+
+					 "           </div>"+
+					 "           <div class='control-group'>"+
+					 "               <label class='control-label' for='edit-emailTemplate-subject'><strong>Subject</strong></label>"+
+					 "               <div class='controls'>"+
+					 "                   <input type='text' class='input-xxlarge' id='edit-emailTemplate-subject'/>"+
+					 "               </div>"+
+					 "           </div>"+
+					 "           <div class='control-group'>"+
+					 "               <label class='control-label' for='edit-emailTemplate-message'><strong>Message</strong></label>"+
+					 "               <div class='controls'>"+
+					 "                   <textarea id='edit-emailTemplate-message' class='input-xxlarge'></textarea>"+
+					 "               </div>"+
+					 "           </div>"+
+					 "           <div class='control-group'>"+
+					 "               <div class='controls'>"+
+					 "                   <button id='edit-emailTemplate-save' class='btn btn-primary'>Save</button>"+
+					 "                   <button id='edit-emailTemplate-delete' class='btn'>Delete</button>"+
+					 "                   <button id='edit-emailTemplate-cancel' class='btn'>Cancel</button>"+
+					 "               </div>"+
+					 "           </div>"+
+					 "       </fieldset>"+
+					 "   </form>"+
+					 "</div>"
+					 );
+			
+			// Animate the from's appearance
+			$element.find("form").slideToggle();
+			
+			// Trigger loading the data from the server for this template
+			$element.addClass("retrieve");
+			$element.click();
+			$element.removeClass("retrieve");
+		} else {
+			
+			if ($element.attr('id')) {
+				$element.find("form").slideToggle(null,function() {
+					$element.replaceWith("<li id='" + id + "'><a class='"+type+"-editable' href='#'><em class='icon-pencil'></em> " + name + "</a></li>");				
+				});
+			} else {
+				$element.replaceWith("<li id='" + id + "'><a class='"+type+"-editable' href='#'><em class='icon-pencil'></em> " + name + "</a></li>");
+			}
 		}
 		
 	}
@@ -142,6 +202,13 @@ function swapToEditable(element) {
 		}
 		
 		displaySortableItem(type, true, $element, id, name, level);
+	} else if (
+		type == "emailTemplate"
+	  ) {
+		// Make the field editable
+		var name = jQuery.trim($element.find("a."+type+"-editable").text());
+		
+		displaySortableItem(type, true, $element, id, name);		
 	}
 }
 
@@ -175,14 +242,21 @@ function swapFromEditable(element) {
 		
 		displaySortableItem(type, false, $element, id, name);
 	} else if (
-		    type == "degree" ||
-		    type == "documentType"
-		   ) {
+	    type == "degree" ||
+	    type == "documentType"
+	   ) {
 
 		var name = $element.find("input").attr("placeholder");
 		var level = $element.find("select").attr("placeholder");
 		
 		displaySortableItem(type, false, $element, id, name, level);
+	} else if (
+			type == "emailTemplate"
+	  ) {
+		// Make the field editable
+		var name = jQuery.trim($element.find("div.editing span").text());
+		
+		displaySortableItem(type, false, $element, id, name);		
 	}
 
 }
@@ -212,7 +286,6 @@ function sortableGlobalCancelEditHandler() {
  */
 function sortableCancelEditHandler() {
 	return function(event) {
-
 		swapFromEditable(this);
 		event.stopPropagation();
 		return false;
@@ -422,13 +495,18 @@ function saveAddActionHandler(type, jsonURL) {
 			jQuery("#add-"+type+"-name").closest('.control-group').removeClass("error");
 			if (jQuery("#add-"+type+"-level").length > 0)
 				jQuery("#add-"+type+"-level").closest('.control-group').removeClass("error");
+			if (jQuery("#add-"+type+"-subject").length > 0)
+				jQuery("#add-"+type+"-subject").closest('.control-group').removeClass("error");
+			if (jQuery("#add-"+type+"-message").length > 0)
+				jQuery("#add-"+type+"-message").closest('.control-group').removeClass("error");
 			clearAlert(type+"-add");
 			
 			var $newElement = jQuery("<li/>").appendTo(jQuery("#"+type+"-list"));
 			displaySortableItem(type,false,$newElement, type+"_"+data.id, data.name, data.level);
 
 			jQuery("#add-"+type+"-dialog").slideToggle();
-			jQuery("#"+type+"-remove").fadeIn();
+			if (jQuery("#"+type+"-remove").length > 0)
+				jQuery("#"+type+"-remove").fadeIn();
 			jQuery("#add-"+type+"-name").val("");
 			if (jQuery("#add-"+type+"-level").length > 0)
 				jQuery("#add-"+type+"-level").val("-1");
@@ -441,6 +519,11 @@ function saveAddActionHandler(type, jsonURL) {
 			if (jQuery("#add-"+type+"-level").length > 0)
 				jQuery("#add-"+type+"-level").closest('.control-group').addClass("error");
 
+			if (jQuery("#add-"+type+"-subject").length > 0)
+				jQuery("#add-"+type+"-subject").closest('.control-group').addClass("error");
+			
+			if (jQuery("#add-"+type+"-message").length > 0)
+				jQuery("#add-"+type+"-message").closest('.control-group').addClass("error");
 			
 			displayAlert(type+"-add","Unable to add "+type, message);
 		}
@@ -450,6 +533,12 @@ function saveAddActionHandler(type, jsonURL) {
 		data.name = jQuery("#add-"+type+"-name").val();
 		if (jQuery("#add-"+type+"-level").length > 0)
 			data.level = jQuery("#add-"+type+"-level").val();
+		
+		if (jQuery("#add-"+type+"-subject").length > 0)
+			data.subject = jQuery("#add-"+type+"-subject").val();
+		
+		if (jQuery("#add-"+type+"-message").length > 0)
+			data.message = jQuery("#add-"+type+"-message").val();
 
 		jQuery.ajax({
 			url : jsonURL,
@@ -489,6 +578,12 @@ function cancelAddActionHandler(type) {
 		if (jQuery("#add-"+type+"-level").length > 0)
 			jQuery("#add-"+type+"-level").val("-1");
 		
+		if (jQuery("#add-"+type+"-subject").length > 0)
+			jQuery("#add-"+type+"-subject").val("");
+		
+		if (jQuery("#add-"+type+"-message").length > 0)
+			jQuery("#add-"+type+"-message").val("");
+		
 		jQuery("#add-"+type+"-dialog .control-group").removeClass("error");
 		return false;
 	};
@@ -496,6 +591,190 @@ function cancelAddActionHandler(type) {
 }
 
 
+/**
+ * Retrieve an email template from the server and fill in it's editable fields.
+ * If the email template is a system template then the name field and delete
+ * field are disabled.
+ * 
+ * @param jsonURL
+ *            The url where templates may be retrieved from.
+ * @returns A Callback function
+ */
+function retrieveEmailTemplateHandler(jsonURL) {
+	
+	return function() {
+		jQuery(this).addClass("waiting");
+		var id = jQuery(this).attr("id");
+		
+		var successCallback = function(data) {
+			// Remove loading indicator and alerts
+			jQuery("#"+id).removeClass("waiting");
+			clearAlert("emailTemplate-retrieve-"+id);
+			
+			jQuery("#"+id+" #edit-emailTemplate-name").val(data.name);
+			jQuery("#"+id+" #edit-emailTemplate-subject").val(data.subject);
+			jQuery("#"+id+" #edit-emailTemplate-message").val(data.message);
+
+			if (data.system) {
+				jQuery("#"+id+" #edit-emailTemplate-name").attr("disabled","true");
+				jQuery("#"+id+" #edit-emailTemplate-delete").addClass("disabled","true");
+			}
+
+		}
+
+		var failureCallback = function(message) {
+			displayAlert("emailTemplate-retrieve-"+id,"Unable to load email template", message);
+		}
+		
+		jQuery.ajax({
+			url : jsonURL,
+			data : {
+				emailTemplateId: id
+			},
+			dataType : 'json',
+			type : 'POST',
+			success : function(data) {
+				if (data.success) {
+					successCallback(data);
+				} else {
+					failureCallback(data.message)
+				}
+			},
+			error : function() {
+				failureCallback("Unable to communicate with the server.");
+			}
+		});
+
+		return false;
+	};
+}
+
+/**
+ * Delete an email template.
+ * 
+ * @param jsonURL
+ *            The url where templates may be deleted.
+ * @returns A Callback function
+ */
+function removeEmailTemplateHandler(jsonURL) {
+	
+	return function() {
+		// Don't allow deleting of system email templates
+		if (jQuery(this).hasClass("disabled"))
+			return false;
+		
+		var $element = jQuery(this).closest("li");
+		$element.addClass("waiting");
+		var id = $element.attr("id");
+		
+		var successCallback = function(data) {
+			// Remove loading indicator and alerts
+			jQuery("#"+id).removeClass("waiting");
+			clearAlert("emailTemplate-delete-"+id);
+			
+			jQuery("#"+id).slideToggle(null, function () {
+				jQuery("#"+id).remove();
+			});
+		}
+
+		var failureCallback = function(message) {
+			displayAlert("emailTemplate-delete-"+id,"Unable to remove email template", message);
+			
+			jQuery("#"+id+" .control-group").each( function() {
+				jQuery(this).addClass("error");
+			});
+		}
+		
+		jQuery.ajax({
+			url : jsonURL,
+			data : {
+				emailTemplateId: id
+			},
+			dataType : 'json',
+			type : 'POST',
+			success : function(data) {
+				if (data.success) {
+					successCallback(data);
+				} else {
+					failureCallback(data.message)
+				}
+			},
+			error : function() {
+				failureCallback("Unable to communicate with the server.");
+			}
+
+		});
+
+		return false;
+	};
+}
+
+/**
+ * Save an email template.
+ * 
+ * @param jsonURL
+ *            The url where templates may be saved.
+ * @returns A Callback function
+ */
+function editEmailTemplateHandler(jsonURL) {
+	
+	return function() {
+		var $element = jQuery(this).closest("li");
+		$element.addClass("waiting");
+		var id = $element.attr("id");
+
+		var name = $element.find("#edit-emailTemplate-name").val();
+		var subject = $element.find("#edit-emailTemplate-subject").val();
+		var message = $element.find("#edit-emailTemplate-message").val();
+
+		
+		var successCallback = function(data) {
+			// Remove loading indicator and alerts
+			jQuery("#"+id).removeClass("waiting");
+			clearAlert("emailTemplate-delete-"+id);
+			
+			jQuery("#"+id+" .control-group").each( function() {
+				jQuery(this).removeClass("error");
+			});
+			
+			displaySortableItem('emailTemplate',false,$element, "emailTemplate_"+data.id, data.name);
+		}
+
+		var failureCallback = function(message) {
+			$element.removeClass("waiting");
+			displayAlert("emailTemplate-edit-"+id,"Unable to save email template", message);
+			
+			jQuery("#"+id+" .control-group").each( function() {
+				jQuery(this).addClass("error");
+			});
+		}
+		
+		jQuery.ajax({
+			url : jsonURL,
+			data : {
+				emailTemplateId: id,
+				name: name,
+				subject: subject,
+				message: message
+			},
+			dataType : 'json',
+			type : 'POST',
+			success : function(data) {
+				if (data.success) {
+					successCallback(data);
+				} else {
+					failureCallback(data.message)
+				}
+			},
+			error : function() {
+				failureCallback("Unable to communicate with the server.");
+			}
+
+		});
+
+		return false;
+	};
+}
 
 /**********************************************************
  * My Profile (shown on all setting tabs)
