@@ -191,6 +191,34 @@ public class JpaEmailTemplateImplTest extends UnitTest {
 	}
 	
 	/**
+	 * Test using templates which are system required.
+	 */
+	@Test
+	public void testSystemRequired() {
+		
+		EmailTemplate template = settingRepo.createEmailTemplate("name","subject","body");
+		template.setSystemRequired(true);
+		template.save();
+		
+		try {
+			template.setName("changed");
+			fail("Able to set name to null");
+		} catch (IllegalStateException ise) {
+			/* yay */
+		}
+
+		try {
+			template.delete();
+			fail("Able to set name to null");
+		} catch (IllegalStateException ise) {
+			/* yay */
+		}
+		
+		template.setSystemRequired(false);
+		template.delete();
+	}
+	
+	/**
 	 * Test the validation when modifying properties
 	 */
 	@Test 

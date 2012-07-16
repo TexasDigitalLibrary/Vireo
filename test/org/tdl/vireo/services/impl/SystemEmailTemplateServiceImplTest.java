@@ -32,12 +32,16 @@ public class SystemEmailTemplateServiceImplTest extends UnitTest {
 	public void setup() {
 		context.turnOffAuthorization();
 		EmailTemplate template = settingRepo.findEmailTemplateByName("SYSTEM New User Registration");
-		if (template != null)
+		if (template != null) {
+			template.setSystemRequired(false);
 			template.delete();
+		}
 		
 		template = settingRepo.findEmailTemplateByName("SYSTEM Verify Email Address");
-		if (template != null)
+		if (template != null) {
+			template.setSystemRequired(false);
 			template.delete();
+		}
 	}
 	
 	/**
@@ -69,6 +73,7 @@ public class SystemEmailTemplateServiceImplTest extends UnitTest {
 		assertTrue(template.getMessage().contains("{REGISTRATION_URL}"));
 		assertTrue(template.getMessage().contains("The Vireo Team"));
 
+		template.setSystemRequired(false);
 		template.delete();
 
 		// Change Password Registration
@@ -80,6 +85,7 @@ public class SystemEmailTemplateServiceImplTest extends UnitTest {
 		assertTrue(template.getMessage().contains("{REGISTRATION_URL}"));
 		assertTrue(template.getMessage().contains("The Vireo Team"));
 
+		template.setSystemRequired(false);
 		template.delete();
 	}
 	
@@ -97,10 +103,12 @@ public class SystemEmailTemplateServiceImplTest extends UnitTest {
 		
 		assertEquals("SYSTEM New User Registration", template.getName());
 		assertEquals("Vireo Account Registration",template.getSubject());
+		assertTrue(template.isSystemRequired());
 		assertTrue(template.getMessage().contains("To complete registration of your Vireo account, please click the link"));
 		assertTrue(template.getMessage().contains("{REGISTRATION_URL}"));
 		assertTrue(template.getMessage().contains("The Vireo Team"));
 
+		template.setSystemRequired(false);
 		template.delete();
 	}
 	
@@ -117,7 +125,8 @@ public class SystemEmailTemplateServiceImplTest extends UnitTest {
 		assertTrue(names.contains("SYSTEM Verify Email Address"));
 		assertTrue(names.contains("SYSTEM Email Test"));
 
-		assertEquals(3,names.size());
+		// There may be more added in the future.
+		assertTrue(names.size() >= 3);
 
 	}
 	
@@ -130,7 +139,7 @@ public class SystemEmailTemplateServiceImplTest extends UnitTest {
 		List<EmailTemplate> templates = systemEmailService.generateAllSystemEmailTemplates();
 		
 		assertNotNull(templates);
-		assertEquals(2,templates.size());
+		assertTrue(templates.size() >= 2);
 	}
 	
 

@@ -41,4 +41,17 @@ public interface EmailTemplate extends AbstractOrderedModel {
 	 *            The new message of this email template.
 	 */
 	public void setMessage(String message);
+	
+	/**
+	 * @return True, if this email template is required by the system. These
+	 *         templates may not be deleted.
+	 */
+	public boolean isSystemRequired();
+	
+	/**
+	 * @param required
+	 *            Set weather this Template is required by the system. These
+	 *            templates bay not be renamed or deleted.
+	 */
+	public void setSystemRequired(boolean required);
 }

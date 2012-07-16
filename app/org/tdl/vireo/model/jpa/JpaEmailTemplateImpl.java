@@ -29,6 +29,9 @@ public class JpaEmailTemplateImpl extends JpaAbstractModel<JpaEmailTemplateImpl>
 
 	@Column(nullable = false, length=32768) // 2^15
 	public String message;
+	
+	@Column(nullable = false)
+	public Boolean systemRequired;
 
 	/**
 	 * Create a new JpaEmailTemplateImpl
@@ -53,6 +56,7 @@ public class JpaEmailTemplateImpl extends JpaAbstractModel<JpaEmailTemplateImpl>
 	    
 		assertManager();
 		
+		this.systemRequired = false;
 	    this.displayOrder = 0;
 	    this.name = name;
 		this.subject = subject;
@@ -70,6 +74,9 @@ public class JpaEmailTemplateImpl extends JpaAbstractModel<JpaEmailTemplateImpl>
 	public JpaEmailTemplateImpl delete() {
 		assertManager();
 
+		if (isSystemRequired())
+			throw new IllegalStateException("Unable to delete the email template '"+name+"' because it is required by the system.");
+		
 		return super.delete();
 	}
 	
@@ -97,6 +104,13 @@ public class JpaEmailTemplateImpl extends JpaAbstractModel<JpaEmailTemplateImpl>
 			throw new IllegalArgumentException("Name is required");
 		
 		assertManager();
+		
+		// Just to be nice so that if you're not changing it we won't do the system required check.
+		if (name.equals(this.name))
+			return;
+		
+		if (isSystemRequired())
+			throw new IllegalStateException("Unable to rename the email template '"+name+"' because it is required by the system.");
 		
 		this.name = name;
 	}
@@ -132,6 +146,18 @@ public class JpaEmailTemplateImpl extends JpaAbstractModel<JpaEmailTemplateImpl>
 		assertManager();
 		
 		this.message = message;
+	}
+	
+	@Override
+	public boolean isSystemRequired() {
+		return systemRequired;
+	}
+	
+	@Override
+	public void setSystemRequired(boolean systemRequired) {
+		assertAdministrator();
+		
+		this.systemRequired = systemRequired;
 	}
 
 }

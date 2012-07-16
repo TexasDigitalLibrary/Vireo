@@ -254,7 +254,7 @@ public interface SettingsRepository {
 	 * Create a new email template
 	 * 
 	 * @param name
-	 * 			  The template's name
+	 *            The template's name
 	 * @param subject
 	 *            The template's subject
 	 * @param message

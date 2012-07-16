@@ -18,6 +18,7 @@ public class MockEmailTemplate extends AbstractMock implements EmailTemplate {
 	public String name;
 	public String subject;
 	public String message;
+	public boolean required;
 
 	@Override
 	public MockEmailTemplate save() {
@@ -77,6 +78,16 @@ public class MockEmailTemplate extends AbstractMock implements EmailTemplate {
 	@Override
 	public void setMessage(String message) {
 		this.message = message;
+	}
+	
+	@Override
+	public boolean isSystemRequired() {
+		return required;
+	}
+	
+	@Override
+	public void setSystemRequired(boolean required) {
+		this.required = required;
 	}
 
 }
