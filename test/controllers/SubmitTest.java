@@ -8,6 +8,7 @@ import java.util.Map;
 import org.junit.Test;
 import org.tdl.vireo.model.*;
 import org.tdl.vireo.security.SecurityContext;
+import play.Logger;
 import play.Play;
 import play.db.jpa.JPA;
 import play.modules.spring.Spring;
@@ -32,9 +33,7 @@ public class SubmitTest extends AbstractVireoFunctionalTest {
 
         LOGIN();
 
-//            context.turnOffAuthorization();
-
-        // create submission
+        // Create submission
         Person person = personRepo.findPersonByEmail("bthornton@gmail.com");
         context.login(person);
         Submission s = subRepo.createSubmission(person);
@@ -45,15 +44,14 @@ public class SubmitTest extends AbstractVireoFunctionalTest {
         JPA.em().clear();
         JPA.em().getTransaction().begin();
 
-        // get first page
+        // Get first page
         String verifyURL = Router.reverse("Submit.verifyPersonalInformation").url;
         Response response = GET(verifyURL);
         assertIsOk(response);
         response = null;
 
-        // add valid values
+        // Add valid values
         Map<String, String> args = new HashMap<String, String>();
-
         args.put("firstName", "TestStudentFirstName");
         args.put("middleName", "Middle");
         args.put("lastName", "TestStudentLastName");
@@ -74,17 +72,16 @@ public class SubmitTest extends AbstractVireoFunctionalTest {
         args.put("subId", Long.toString(subId));
         args.put("submit_next", "");
 
-        // submit first page
+        // Submit first page
         response = POST(verifyURL, args);
         response = GET(response.getHeader("Location"));
 
-        // check second page
+        // Check second page
         assertIsOk(response);
         assertContentMatch("License Agreement", response);
 
+        // Check db
         s = null;
-
-        // check db
         s = subRepo.findSubmission(subId);
 
         // FIXME:  These values are currently not being persisted due to the locked field-set
@@ -92,6 +89,7 @@ public class SubmitTest extends AbstractVireoFunctionalTest {
         // assertEquals(args.get("middleName"), s.getStudentMiddleName());
         // assertEquals(args.get("lastName"), s.getStudentLastName());
         // assertEquals(args.get("yearOfBirth"), Integer.toString(s.getStudentBirthYear()));
+
         assertEquals(args.get("department"), s.getDepartment());
         assertEquals(args.get("major"), s.getMajor());
         assertEquals(args.get("permPhone"), s.getSubmitter().getPermanentPhoneNumber());
@@ -100,35 +98,32 @@ public class SubmitTest extends AbstractVireoFunctionalTest {
         assertEquals(args.get("currentPhone"), s.getSubmitter().getCurrentPhoneNumber());
         assertEquals(args.get("currentAddress"), s.getSubmitter().getCurrentPostalAddress());        
 
-        // add valid value(s)
+        // Add valid values
         response = null;
         args = null;
         args = new HashMap<String, String>();
         args.put("submit_next", "");
         args.put("licenseAgreement", "on");
 
-        // submit second page
+        // Submit second page
         Map<String, Object> routeArgs = new HashMap<String, Object>();
         routeArgs.put("subId", Long.toString(subId));
         String licenseURL = Router.reverse("Submit.license", routeArgs).url;
-
         response = POST(licenseURL, args);
         response = GET(response.getHeader("Location"));
 
-        // check third page
+        // Check third page
         assertIsOk(response);
         assertContentMatch("Document Information", response);
 
+        // Check db
         response = null;
         s = null;
         JPA.em().clear();
-
-        // check db
         s = subRepo.findSubmission(subId);
-
         assertNotNull(s.getLicenseAgreementDate());
 
-        // add valid values
+        // Add valid values
         args = null;
         args = new HashMap<String, String>();
         args.put("subId", Long.toString(subId));
@@ -146,11 +141,7 @@ public class SubmitTest extends AbstractVireoFunctionalTest {
         args.put("embargo", "1");
         args.put("submit_next", "");
 
-        // submit third page
-        response = null;
-        s = null;
-        JPA.em().clear();
-
+        // Submit third page
         String docInfoURL = Router.reverse("Submit.docInfo", routeArgs).url;
         response = POST(docInfoURL, args);
         response = GET(response.getHeader("Location"));
@@ -160,8 +151,9 @@ public class SubmitTest extends AbstractVireoFunctionalTest {
         assertContentMatch("Upload Your Files", response);
 
         // check db
+        s = null;
+        JPA.em().clear();
         s = subRepo.findSubmission(subId);
-
         assertEquals(args.get("chairEmail"), s.getCommitteeContactEmail());
         assertEquals(args.get("title"), s.getDocumentTitle());
         assertEquals(args.get("degreeMonth"), s.getGraduationMonth().toString());
@@ -174,7 +166,7 @@ public class SubmitTest extends AbstractVireoFunctionalTest {
         List<CommitteeMember> committeeMembers = s.getCommitteeMembers();
         assertEquals(1, committeeMembers.size());
 
-        // add valid values
+        // Add valid values
         Map<String, File> files = new HashMap<String, File>();
         File thesisFile = null;
 
@@ -192,39 +184,70 @@ public class SubmitTest extends AbstractVireoFunctionalTest {
         // FIXME: This page uses a dash in "submit-next". Correct to underscore to match all other pages.
         args.put("submit-next", "");
 
-        // submit fourth page
+        // Submit fourth page
         String uploadURL = Router.reverse("Submit.fileUpload", routeArgs).url;
         response = POST(uploadURL, args, files);
         response = GET(response.getHeader("Location"));
 
-        // check fifth page
+        // Check fifth page
         assertIsOk(response);
         assertContentMatch("Confirm & Submit", response);
 
-        // check for file, db
-
-        // submit fifth page
-
-        // check sixth page
-
-        // check db
-
-        // delete submission & test file
-        thesisFile.delete();
-
-        // Re-fetch Submission in new transaction (to avoid a "detatched" object)
+        // Check for file, db
+        s = null;
+        args = null;
+        JPA.em().clear();
         s = subRepo.findSubmission(subId);
+        assertNotNull(s.getPrimaryDocument());
+        assertEquals(1, s.getAttachments().size());
+        
+        // FIXME: Degree not matching on Confirm & Submit page
+        // assertContentMatch(s.getDegree(), response);
+        
+        // FIXME: School on Confirm & Submit page is hard-coded to "Texas Digital Library"
+        // assertContentMatch(s.getCollege(), response);
+        
+        // FIXME: The Confirm & Submit page pulls the submitter object's "current major", not the one associated with the submission
+        // assertContentMatch(s.getMajor(), response);
+        
+        assertContentMatch(s.getDocumentTitle(), response);
+        assertContentMatch(s.getGraduationMonth().toString(), response);
+        assertContentMatch(String.valueOf(Calendar.getInstance().get(Calendar.YEAR)), response);
+        assertContentMatch(s.getDocumentType(), response);
+        assertContentMatch(s.getDocumentKeywords(), response);
+        assertContentMatch(s.getDocumentAbstract(), response);
+        assertContentMatch(s.getCommitteeContactEmail(), response);
+        assertContentMatch(s.getEmbargoType().getDescription(), response);
+        assertContentMatch(s.getPrimaryDocument().getName(), response);
+        
+        // Add values
+        args = new HashMap<String, String>();
+        args.put("submit-next", "");
+        args.put("subId", Long.toString(subId));
+
+        // Submit fifth page
+        String submitURL = Router.reverse("Submit.submitETD", routeArgs).url;
+        response = POST(submitURL, args);
+        response = GET(response.getHeader("Location"));
+
+        // Check sixth page
+        assertIsOk(response);
+        assertContentMatch("Submittal Complete", response);
+
+        // Check db
+        s = null;
+        JPA.em().clear();
+        s = subRepo.findSubmission(subId);
+        assertEquals("Submitted", s.getState().getDisplayName());
+
+        // Delete submission & test file
+        thesisFile.delete();
 
         s.delete();
 
         JPA.em().getTransaction().commit();
         JPA.em().clear();
         JPA.em().getTransaction().begin();
-
-//            context.restoreAuthorization();
-
-        JPA.em().getTransaction().commit();
-        JPA.em().clear();
 
         // Verify deletion
         s = subRepo.findSubmission(subId);
