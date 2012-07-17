@@ -5,6 +5,8 @@ import static org.tdl.vireo.model.Configuration.SUBMISSIONS_OPEN;
 import java.text.DateFormatSymbols;
 import java.util.List;
 
+import javax.persistence.PersistenceException;
+
 import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.Degree;
 import org.tdl.vireo.model.DegreeLevel;
@@ -14,6 +16,7 @@ import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.Major;
 import org.tdl.vireo.model.RoleType;
 
+import play.Logger;
 import play.mvc.With;
 
 import controllers.Authentication;
@@ -79,7 +82,14 @@ public class ConfigurableSettingsTab extends SettingsTab {
 
 			renderJSON("{ \"success\": \"true\", \"id\": " + college.getId()
 					+ ", \"name\": \"" + name + "\" }");
+		} catch (IllegalArgumentException iae) {
+			String message = escapeJavaScript(iae.getMessage());			
+			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
+		} catch (PersistenceException pe) {
+			name = escapeJavaScript(name);
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another college allready exists with the name: '"+name+"'\" }");
 		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to add college");
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
 					+ "\" }");
@@ -112,8 +122,14 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			name = escapeJavaScript(name);
 
 			renderJSON("{ \"success\": \"true\", \"id\": " + college.getId() + ", \"name\": \"" + name + "\" }");
+		} catch (IllegalArgumentException iae) {
+			String message = escapeJavaScript(iae.getMessage());			
+			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
+		} catch (PersistenceException pe) {
+			name = escapeJavaScript(name);
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another college allready exists with the name: '"+name+"'\" }");
 		} catch (RuntimeException re) {
-			re.printStackTrace();
+			Logger.error(re,"Unable to edit college");
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
 		}
@@ -136,6 +152,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 
 			renderJSON("{ \"success\": \"true\" }");
 		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to remove college");
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
 					+ "\" }");
@@ -162,6 +179,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 
 			renderJSON("{ \"success\": \"true\" }");
 		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to reorder colleges");
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
 					+ "\" }");
@@ -197,7 +215,14 @@ public class ConfigurableSettingsTab extends SettingsTab {
 
 			renderJSON("{ \"success\": \"true\", \"id\": " + department.getId()
 					+ ", \"name\": \"" + name + "\" }");
+		} catch (IllegalArgumentException iae) {
+			String message = escapeJavaScript(iae.getMessage());			
+			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
+		} catch (PersistenceException pe) {
+			name = escapeJavaScript(name);
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another department allready exists with the name: '"+name+"'\" }");
 		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to add department");
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
 					+ "\" }");
@@ -232,7 +257,14 @@ public class ConfigurableSettingsTab extends SettingsTab {
 
 			renderJSON("{ \"success\": \"true\", \"id\": " + department.getId()
 					+ ", \"name\": \"" + name + "\" }");
+		} catch (IllegalArgumentException iae) {
+			String message = escapeJavaScript(iae.getMessage());			
+			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
+		} catch (PersistenceException pe) {
+			name = escapeJavaScript(name);
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another department allready exists with the name: '"+name+"'\" }");
 		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to edit department");
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
 					+ "\" }");
@@ -257,6 +289,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 
 			renderJSON("{ \"success\": \"true\" }");
 		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to remove department");
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
 					+ "\" }");
@@ -284,6 +317,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 
 			renderJSON("{ \"success\": \"true\" }");
 		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to reoder departments");
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
 					+ "\" }");
@@ -319,7 +353,14 @@ public class ConfigurableSettingsTab extends SettingsTab {
 
 			renderJSON("{ \"success\": \"true\", \"id\": " + major.getId()
 					+ ", \"name\": \"" + name + "\" }");
+		} catch (IllegalArgumentException iae) {
+			String message = escapeJavaScript(iae.getMessage());			
+			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
+		} catch (PersistenceException pe) {
+			name = escapeJavaScript(name);
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another major allready exists with the name: '"+name+"'\" }");
 		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to add major");
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
 					+ "\" }");
@@ -352,7 +393,14 @@ public class ConfigurableSettingsTab extends SettingsTab {
 
 			renderJSON("{ \"success\": \"true\", \"id\": " + major.getId()
 					+ ", \"name\": \"" + name + "\" }");
+		} catch (IllegalArgumentException iae) {
+			String message = escapeJavaScript(iae.getMessage());			
+			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
+		} catch (PersistenceException pe) {
+			name = escapeJavaScript(name);
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another major allready exists with the name: '"+name+"'\" }");
 		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to edit major");
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
 					+ "\" }");
@@ -376,6 +424,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 
 			renderJSON("{ \"success\": \"true\" }");
 		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to remove major");
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
 					+ "\" }");
@@ -401,6 +450,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 
 			renderJSON("{ \"success\": \"true\" }");
 		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to reorder majors");
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
 					+ "\" }");
@@ -439,7 +489,16 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			name = escapeJavaScript(degree.getName());
 
 			renderJSON("{ \"success\": \"true\", \"id\": " + degree.getId()	+ ", \"name\": \"" + name + "\", \"level\": "+degreeLevel.getId()+" }");
+		} catch (IllegalArgumentException iae) {
+			String message = escapeJavaScript(iae.getMessage());			
+			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
+			
+		} catch (PersistenceException pe) {
+			name = escapeJavaScript(name);
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another degree allready exists with the name: '"+name+"'\" }");
+			
 		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to add degree");
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
 		}
@@ -477,7 +536,16 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			name = escapeJavaScript(name);
 
 			renderJSON("{ \"success\": \"true\", \"id\": " + degree.getId() + ", \"name\": \"" + name + "\", \"level\": "+degreeLevel.getId()+" }");
+		} catch (IllegalArgumentException iae) {
+			String message = escapeJavaScript(iae.getMessage());			
+			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
+			
+		} catch (PersistenceException pe) {
+			name = escapeJavaScript(name);
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another degree allready exists with the name: '"+name+"'\" }");
+			
 		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to edit degree");
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
 		}
@@ -500,6 +568,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 
 			renderJSON("{ \"success\": \"true\" }");
 		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to remove degree");
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
 					+ "\" }");
@@ -526,6 +595,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 
 			renderJSON("{ \"success\": \"true\" }");
 		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to reoder degrees");
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
 		}
@@ -563,7 +633,16 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			name = escapeJavaScript(documentType.getName());
 
 			renderJSON("{ \"success\": \"true\", \"id\": " + documentType.getId()	+ ", \"name\": \"" + name + "\", \"level\": "+degreeLevel.getId()+" }");
+		} catch (IllegalArgumentException iae) {
+			String message = escapeJavaScript(iae.getMessage());			
+			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
+			
+		} catch (PersistenceException pe) {
+			name = escapeJavaScript(name);
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another document type allready exists with the name: '"+name+"'\" }");
+			
 		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to add document type");
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
 		}
@@ -601,7 +680,16 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			name = escapeJavaScript(name);
 
 			renderJSON("{ \"success\": \"true\", \"id\": " + documentType.getId() + ", \"name\": \"" + name + "\", \"level\": "+degreeLevel.getId()+" }");
+		} catch (IllegalArgumentException iae) {
+			String message = escapeJavaScript(iae.getMessage());			
+			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
+			
+		} catch (PersistenceException pe) {
+			name = escapeJavaScript(name);
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another document type allready exists with the name: '"+name+"'\" }");
+			
 		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to edit document type");
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
 		}
@@ -624,6 +712,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 
 			renderJSON("{ \"success\": \"true\" }");
 		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to remove document type");
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
 					+ "\" }");
@@ -650,6 +739,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 
 			renderJSON("{ \"success\": \"true\" }");
 		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to reoder document types");
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
 		}
@@ -686,7 +776,16 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			name = escapeJavaScript(month.getMonthName());
 
 			renderJSON("{ \"success\": \"true\", \"id\": " + month.getId() + ", \"name\": \"" + name + "\" }");
+		} catch (IllegalArgumentException iae) {
+			String message = escapeJavaScript(iae.getMessage());			
+			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
+			
+		} catch (PersistenceException pe) {
+			name = escapeJavaScript(name);
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another graduation month allready exists with the name: '"+name+"'\" }");
+			
 		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to add graduation month");
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
 		}
@@ -721,7 +820,16 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			name = escapeJavaScript(month.getMonthName());
 
 			renderJSON("{ \"success\": \"true\", \"id\": " + month.getId() + ", \"name\": \"" + name + "\" }");
+		} catch (IllegalArgumentException iae) {
+			String message = escapeJavaScript(iae.getMessage());			
+			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
+			
+		} catch (PersistenceException pe) {
+			name = escapeJavaScript(name);
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another graduation month allready exists with the name: '"+name+"'\" }");
+			
 		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to edit graduation month");
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
 		}
@@ -744,6 +852,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 
 			renderJSON("{ \"success\": \"true\" }");
 		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to remove graduation month");
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
 		}
@@ -769,6 +878,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 
 			renderJSON("{ \"success\": \"true\" }");
 		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to reorder graduation month");
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
 		}

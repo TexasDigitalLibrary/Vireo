@@ -7,6 +7,7 @@ import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Preference;
 import org.tdl.vireo.model.RoleType;
 
+import play.Logger;
 import play.mvc.With;
 
 import controllers.Authentication;
@@ -91,6 +92,7 @@ public class UserPreferencesTab extends SettingsTab {
 			renderJSON("{ \"success\": \"true\" }");
 
 		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to update user preferences");
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
 		}

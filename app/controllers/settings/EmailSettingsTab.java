@@ -12,6 +12,8 @@ import static org.tdl.vireo.model.Preference.NOTES_MARK_PRIVATE;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.PersistenceException;
+
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.Person;
@@ -82,6 +84,7 @@ public class EmailSettingsTab extends SettingsTab {
 			
 			renderJSON("{ \"success\": \"true\" }");
 		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to update email settings");
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
 		}
@@ -133,7 +136,16 @@ public class EmailSettingsTab extends SettingsTab {
 				system = ", \"system\": \"true\" ";
 
 			renderJSON("{ \"success\": \"true\", \"id\": " + template.getId() + ", \"name\": \"" + name + "\", \"subject\": \"" + subject + "\", \"message\": \"" + message + "\""+system+"}");
+		} catch (IllegalArgumentException iae) {
+			String errorMessage = escapeJavaScript(iae.getMessage());			
+			renderJSON("{ \"failure\": \"true\", \"message\": \""+errorMessage+"\" }");
+			
+		} catch (PersistenceException pe) {
+			name = escapeJavaScript(name);
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another email template allready exists with the name: '"+name+"'\" }");
+			
 		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to add email template");
 			String errorMessage = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + errorMessage + "\" }");
 		}
@@ -162,6 +174,7 @@ public class EmailSettingsTab extends SettingsTab {
 
 			renderJSON("{ \"success\": \"true\", \"id\": " + template.getId() + ", \"name\": \"" + name + "\", \"subject\": \"" + subject + "\", \"message\": \"" + message + "\""+system+"}");
 		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to retrieve email template");
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
 		}
@@ -210,8 +223,16 @@ public class EmailSettingsTab extends SettingsTab {
 				system = ", \"system\": \"true\" ";
 			
 			renderJSON("{ \"success\": \"true\", \"id\": " + template.getId() + ", \"name\": \"" + name + "\", \"subject\": \"" + subject + "\", \"message\": \"" + message + "\""+system+"}");
+		} catch (IllegalArgumentException iae) {
+			String errorMessage = escapeJavaScript(iae.getMessage());			
+			renderJSON("{ \"failure\": \"true\", \"message\": \""+errorMessage+"\" }");
+			
+		} catch (PersistenceException pe) {
+			name = escapeJavaScript(name);
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another email template allready exists with the name: '"+name+"'\" }");
+			
 		} catch (RuntimeException re) {
-			re.printStackTrace();
+			Logger.error(re,"Unable to edit email template");
 			String errorMessage = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + errorMessage + "\" }");
 		}
@@ -234,6 +255,7 @@ public class EmailSettingsTab extends SettingsTab {
 
 			renderJSON("{ \"success\": \"true\" }");
 		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to remove email template");
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
 		}
@@ -259,6 +281,7 @@ public class EmailSettingsTab extends SettingsTab {
 
 			renderJSON("{ \"success\": \"true\" }");
 		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to reorder email template");
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
 		}

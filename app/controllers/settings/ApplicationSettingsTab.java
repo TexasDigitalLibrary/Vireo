@@ -3,11 +3,14 @@ package controllers.settings;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.PersistenceException;
+
 import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.RoleType;
 
+import play.Logger;
 import play.mvc.With;
 
 import controllers.Authentication;
@@ -105,7 +108,7 @@ public class ApplicationSettingsTab extends SettingsTab {
 			
 			renderJSON("{ \"success\": \"true\", \"field\": \""+field+"\", \"value\": \""+value+"\" }");
 		} catch (RuntimeException re) {
-			
+			Logger.error(re,"Unable to update application settings");
 			String message = escapeJavaScript(re.getMessage());			
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
 		}
@@ -136,7 +139,14 @@ public class ApplicationSettingsTab extends SettingsTab {
 			name = escapeJavaScript(name);
 			
 			renderJSON("{ \"success\": \"true\", \"id\": "+action.getId()+", \"name\": \""+name+"\" }");
+		} catch (IllegalArgumentException iae) {
+			String message = escapeJavaScript(iae.getMessage());			
+			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
+		} catch (PersistenceException pe) {
+			name = escapeJavaScript(name);
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another custom action allready exists with the name: '"+name+"'\" }");
 		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to add custom action");
 			String message = escapeJavaScript(re.getMessage());			
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
 		}
@@ -168,7 +178,14 @@ public class ApplicationSettingsTab extends SettingsTab {
 			name = escapeJavaScript(name);
 			
 			renderJSON("{ \"success\": \"true\", \"id\": "+action.getId()+", \"name\": \""+name+"\" }");
+		} catch (IllegalArgumentException iae) {
+			String message = escapeJavaScript(iae.getMessage());			
+			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
+		} catch (PersistenceException pe) {
+			name = escapeJavaScript(name);
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another custom action allready exists with the name: '"+name+"'\" }");
 		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to edit custom action");
 			String message = escapeJavaScript(re.getMessage());			
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
 		}
@@ -191,6 +208,7 @@ public class ApplicationSettingsTab extends SettingsTab {
 			
 			renderJSON("{ \"success\": \"true\" }");
 		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to remove custom action");
 			String message = escapeJavaScript(re.getMessage());			
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
 		}
@@ -217,6 +235,7 @@ public class ApplicationSettingsTab extends SettingsTab {
 			
 			renderJSON("{ \"success\": \"true\" }");
 		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to reorder custom action");
 			String message = escapeJavaScript(re.getMessage());			
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
 		}
