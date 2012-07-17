@@ -617,7 +617,26 @@ function retrieveEmailTemplateHandler(jsonURL) {
 
 			if (data.system) {
 				jQuery("#"+id+" #edit-emailTemplate-name").attr("disabled","true");
+				jQuery("#"+id+" #edit-emailTemplate-name").attr("title","System defined templates may not be renamed or deleted.");
+				
+				jQuery("#"+id+" form fieldset").prepend("<div class='control-group warning'><label class='control-label'><p><strong>System Template</strong></p></label><div class='controls'><p id='system-warning' class='help-inline'></p></div></div>");
+				if (data.name == "SYSTEM Initial Submission") {
+					jQuery("#"+id+" #system-warning").html("This system defined template is sent to the student immediatly after completing their submission.");
+				} else if (data.name == "SYSTEM Advisor Review Request") {
+					jQuery("#"+id+" #system-warning").html("This system defined template is sent to the student's advisor requesting their approval of the submission and embargo options.");					
+				} else if (data.name == "SYSTEM Verify Email Address") {
+					jQuery("#"+id+" #system-warning").html("This system defined template is sent to the any user who has forgotten their password, and is attempting to recover it. It is very important that the template contain the {REGISTRATION_URL} variable otherwise the user would not be able to recover their account. If Vireo is configured to use a Single-Sign-On system this option may not be available.");										
+				} else if (data.name == "SYSTEM New User Registration") {
+					jQuery("#"+id+" #system-warning").html("This system defined template is sent to any new user when they register their account. It is very important that the template contain the {REGISTRATION_URL} variable otherwise the user would not be able to complete the registration process. If Vireo is configured to use a Single-Sign-On system this option may not be available.");										
+				} else {
+					jQuery("#"+id+" #system-warning").html("This system defined template.");
+				}
+				jQuery("#"+id+" #system-warning").append(" The template may not be renamed or deleted.");
+				
+				
 				jQuery("#"+id+" #edit-emailTemplate-delete").addClass("disabled","true");
+				jQuery("#"+id+" #edit-emailTemplate-delete").attr("title","System defined templates may not be renamed or deleted.");
+
 			}
 
 		}
