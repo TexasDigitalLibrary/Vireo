@@ -1,8 +1,21 @@
 package controllers.settings;
 
+import static org.tdl.vireo.model.Configuration.*;
+import static org.tdl.vireo.model.Preference.ATTACHMENT_CC_ADVISOR;
+import static org.tdl.vireo.model.Preference.ATTACHMENT_EMAIL_STUDENT;
+import static org.tdl.vireo.model.Preference.ATTACHMENT_FLAG_NEEDS_CORRECTIONS;
+import static org.tdl.vireo.model.Preference.NOTES_CC_ADVISOR;
+import static org.tdl.vireo.model.Preference.NOTES_EMAIL_STUDENT;
+import static org.tdl.vireo.model.Preference.NOTES_FLAG_NEEDS_CORRECTIONS;
+import static org.tdl.vireo.model.Preference.NOTES_MARK_PRIVATE;
+
+import java.util.ArrayList;
 import java.util.List;
 
+import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.EmailTemplate;
+import org.tdl.vireo.model.Person;
+import org.tdl.vireo.model.Preference;
 import org.tdl.vireo.model.RoleType;
 
 import play.Logger;
@@ -19,7 +32,13 @@ public class EmailSettingsTab extends SettingsTab {
 	@Security(RoleType.MANAGER)
 	public static void emailSettings(){
 		
+		// Get the email checkboxes
+		renderArgs.put("EMAIL_SHOW_ADDRESSES", settingRepo.findConfigurationByName(EMAIL_SHOW_ADDRESSES));
+		renderArgs.put("EMAIL_CC_ADVISOR",     settingRepo.findConfigurationByName(EMAIL_CC_ADVISOR));
+		renderArgs.put("EMAIL_CC_STUDENT",     settingRepo.findConfigurationByName(EMAIL_CC_STUDENT));
+
 		
+		// List all templates
 		List<EmailTemplate> templates = settingRepo.findAllEmailTemplates();
 		
 		String nav = "settings";
@@ -28,7 +47,45 @@ public class EmailSettingsTab extends SettingsTab {
 	}
 	
 	
-	
+	/**
+	 * Receive updates for email configuration (the checkboxs at the top of the page, not the templates)
+	 * 
+	 * @param field
+	 *            The field being updated.
+	 * @param value
+	 *            The value (either something or null)
+	 */
+	@Security(RoleType.REVIEWER)
+	public static void updateEmailSettingsJSON(String field, String value) {
+		
+		try {
+			boolean booleanValue = true;
+			if (value == null || value.trim().length() == 0)
+				booleanValue = false;
+			
+			
+			List<String> editableFields = new ArrayList<String>();
+			editableFields.add(EMAIL_SHOW_ADDRESSES);
+			editableFields.add(EMAIL_CC_ADVISOR);
+			editableFields.add(EMAIL_CC_STUDENT);
+			
+			if (!editableFields.contains(field))
+				throw new IllegalArgumentException("Unknown field '"+field+"'");
+			
+			Configuration configuration = settingRepo.findConfigurationByName(field);
+
+			if (!booleanValue && configuration != null)
+				configuration.delete();
+			else if (booleanValue && configuration == null)
+				settingRepo.createConfiguration(field, "true").save();
+
+			
+			renderJSON("{ \"success\": \"true\" }");
+		} catch (RuntimeException re) {
+			String message = escapeJavaScript(re.getMessage());
+			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
+		}
+	}
 	
 	
 	

@@ -61,6 +61,5 @@ public interface Preference extends AbstractModel {
 	/** When adding an attachment, should the submission be flagged as needs corrections by default */
 	public final static String ATTACHMENT_FLAG_NEEDS_CORRECTIONS = "attachment_flag_submission_as_needs_corrections_by_default";
 	
-	
 
 }

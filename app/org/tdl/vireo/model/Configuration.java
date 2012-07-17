@@ -32,6 +32,7 @@ public interface Configuration extends AbstractModel {
 	
 	/** Common configuration **/
 	
+	// Application Settings
 	/** If defined then submissions are open, otherwise they are closed. **/
 	public final static String SUBMISSIONS_OPEN = "submissions_open";
 	
@@ -50,5 +51,15 @@ public interface Configuration extends AbstractModel {
 	/** Instructions show to uses after completing their submission */
 	public final static String SUBMISSION_INSTRUCTIONS = "submission_instructions";
 	
+	
+	// Email settings
+	/** Make administrative staff email address available to students. **/
+	public final static String EMAIL_SHOW_ADDRESSES = "email_shown_addresses";
+	
+	/** CC the student's advisor as soon as student submits their work. **/
+	public final static String EMAIL_CC_ADVISOR = "email_cc_advisor";
+	
+	/** CC the student whenever the system sent an email to someone else. **/
+	public final static String EMAIL_CC_STUDENT = "email_cc_student";
 	
 }

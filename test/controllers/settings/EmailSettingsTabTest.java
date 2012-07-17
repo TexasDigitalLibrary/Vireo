@@ -1,6 +1,9 @@
 package controllers.settings;
 import static org.tdl.vireo.model.Configuration.ALLOW_MULTIPLE_SUBMISSIONS;
 import static org.tdl.vireo.model.Configuration.CURRENT_SEMESTER;
+import static org.tdl.vireo.model.Configuration.EMAIL_CC_ADVISOR;
+import static org.tdl.vireo.model.Configuration.EMAIL_CC_STUDENT;
+import static org.tdl.vireo.model.Configuration.EMAIL_SHOW_ADDRESSES;
 import static org.tdl.vireo.model.Configuration.REQUEST_COLLEGE;
 import static org.tdl.vireo.model.Configuration.REQUEST_UMI;
 import static org.tdl.vireo.model.Configuration.SUBMISSIONS_OPEN;
@@ -72,7 +75,67 @@ public class EmailSettingsTabTest extends AbstractVireoFunctionalTest {
 		assertIsOk(response);
 	}
 	
-	
+	/**
+	 * Test setting and unsetting all the email settings (the check boxes not the templates)
+	 */
+	@Test
+	public void testToggelingEmailSettings() {
+		LOGIN();
+		
+		// Get our urls and a list of fields.
+		final String URL = Router.reverse("settings.EmailSettingsTab.updateEmailSettingsJSON").url;
+
+		List<String> booleanFields = new ArrayList<String>();
+		booleanFields.add(EMAIL_SHOW_ADDRESSES);
+		booleanFields.add(EMAIL_CC_ADVISOR);
+		booleanFields.add(EMAIL_CC_STUDENT);
+		
+		
+		// Get the field's current state
+		List<String> originalState = new ArrayList<String>();
+		JPA.em().clear();
+		for (String field : booleanFields) {
+			if (settingRepo.findConfigurationByName(field) != null)
+				originalState.add(field);
+		}
+		
+		// Set each field.
+		for (String field : booleanFields) {
+			
+			Map<String,String> params = new HashMap<String,String>();
+			params.put("field", field);
+			params.put("value","checked");
+			Response response = POST(URL,params);
+			assertContentMatch("\"success\": \"true\"", response);
+		}
+		
+		// Check that all the fields are set.
+		JPA.em().clear();
+		for (String field : booleanFields) {
+			assertNotNull(settingRepo.findConfigurationByName(field));
+		}
+		
+		// Turn off each field.
+		for (String field : booleanFields) {
+			
+			Map<String,String> params = new HashMap<String,String>();
+			params.put("field", field);
+			params.put("value","");
+			Response response = POST(URL,params);
+			assertContentMatch("\"success\": \"true\"", response);
+		}
+		
+		// Check that all the fields are turned off.
+		JPA.em().clear();
+		for (String field : booleanFields) {
+			assertNull(settingRepo.findConfigurationByName(field));
+		}
+		
+		// Restore to original state
+		for (String field : originalState) {
+			settingRepo.createConfiguration(field, "true");
+		}
+	}
 
 	
 	/**

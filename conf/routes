@@ -56,9 +56,12 @@ GET     /admin/settings/user/?                  settings.UserPreferencesTab.user
 GET     /admin/settings/applications/?			settings.ApplicationSettingsTab.applicationSettings
 GET     /admin/settings/email/?					settings.EmailSettingsTab.emailSettings
 GET     /admin/settings/configurable/?			settings.ConfigurableSettingsTab.configurableSettings
+
+### Settings tab - General AJAX
 POST	/admin/settings/updateProfile			SettingsTab.updateProfileJSON
 POST    /admin/settings/user/update             settings.UserPreferencesTab.updateUserPreferencesJSON
 POST    /admin/settings/applications/update     settings.ApplicationSettingsTab.updateApplicationSettingsJSON
+POST    /admin/settings/email/update            settings.EmailSettingsTab.updateEmailSettingsJSON
 
 ### Settings tab - Actions
 POST    /admin/settings/actions/add             settings.ApplicationSettingsTab.addCustomActionJSON
