@@ -79,6 +79,8 @@ public abstract class AbstractVireoController extends Controller {
 	 * @return A javascript escaped string
 	 */
 	protected static String escapeJavaScript(String value) {
+		if (value == null)
+			return "";
 		value = StringEscapeUtils.escapeJavaScript(value);
 		value = value.replaceAll("\\\\'", "'");
 		return value;
