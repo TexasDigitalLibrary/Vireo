@@ -117,5 +117,4 @@ public class EmailServiceImplTest extends UnitTest {
 		assertTrue(recieved.contains("Submission Status: "+stateManager.getInitialState().getDisplayName()));
 		assertTrue(recieved.contains("Assigned To: Staff Reviewer \n"));
 	}
-
 }

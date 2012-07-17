@@ -61,40 +61,62 @@ public class EmailServiceImpl implements EmailService {
 		
 		String subject = template.getSubject();
 		String message = template.getMessage();
-		
-		if (params.FULL_NAME != null)
-			message = message.replaceAll("\\{FULL_NAME\\}",params.FULL_NAME);
-		
-		if (params.FIRST_NAME != null)
-			message = message.replaceAll("\\{FIRST_NAME\\}",params.FIRST_NAME);
-		
-		if (params.LAST_NAME != null)
-			message = message.replaceAll("\\{LAST_NAME\\}",params.LAST_NAME);
-		
-		if (params.DOCUMENT_TITLE != null)
-			message = message.replaceAll("\\{DOCUMENT_TITLE\\}",params.DOCUMENT_TITLE);
-		
-		if (params.DOCUMENT_TYPE != null)
-			message = message.replaceAll("\\{DOCUMENT_TYPE\\}",params.DOCUMENT_TYPE);
-		
-		if (params.GRAD_SEMESTER != null)
-			message = message.replaceAll("\\{GRAD_SEMESTER\\}",params.GRAD_SEMESTER);
-		
-		if (params.STUDENT_URL != null)
-			message = message.replaceAll("\\{STUDENT_URL\\}",params.STUDENT_URL);
-		
-		if (params.ADVISOR_URL != null)
-			message = message.replaceAll("\\{ADVISOR_URL\\}",params.ADVISOR_URL);
-		
-		if (params.REGISTRATION_URL != null)
-			message = message.replaceAll("\\{REGISTRATION_URL\\}",params.REGISTRATION_URL);
-		
-		if (params.SUBMISSION_STATUS != null)
-			message = message.replaceAll("\\{SUBMISSION_STATUS\\}",params.SUBMISSION_STATUS);
-		
-		if (params.SUBMISSION_ASSIGNED_TO != null)
-			message = message.replaceAll("\\{SUBMISSION_ASSIGNED_TO\\}",params.SUBMISSION_ASSIGNED_TO);
 
+		if (params.FULL_NAME != null) {
+			subject = subject.replaceAll("\\{FULL_NAME\\}",params.FULL_NAME);
+			message = message.replaceAll("\\{FULL_NAME\\}",params.FULL_NAME);
+		}
+		
+		if (params.FIRST_NAME != null) {
+			subject = subject.replaceAll("\\{FIRST_NAME\\}",params.FIRST_NAME);
+			message = message.replaceAll("\\{FIRST_NAME\\}",params.FIRST_NAME);
+		}
+		
+		if (params.LAST_NAME != null) {
+			subject = subject.replaceAll("\\{LAST_NAME\\}",params.LAST_NAME);
+			message = message.replaceAll("\\{LAST_NAME\\}",params.LAST_NAME);
+		}
+			
+		if (params.DOCUMENT_TITLE != null) {
+			subject = subject.replaceAll("\\{DOCUMENT_TITLE\\}",params.DOCUMENT_TITLE);
+			message = message.replaceAll("\\{DOCUMENT_TITLE\\}",params.DOCUMENT_TITLE);
+		}
+			
+		if (params.DOCUMENT_TYPE != null) {
+			subject = subject.replaceAll("\\{DOCUMENT_TYPE\\}",params.DOCUMENT_TYPE);
+			message = message.replaceAll("\\{DOCUMENT_TYPE\\}",params.DOCUMENT_TYPE);
+		}
+			
+		if (params.GRAD_SEMESTER != null) {
+			subject = subject.replaceAll("\\{GRAD_SEMESTER\\}",params.GRAD_SEMESTER);
+			message = message.replaceAll("\\{GRAD_SEMESTER\\}",params.GRAD_SEMESTER);
+		}
+			
+		if (params.STUDENT_URL != null) {
+			subject = subject.replaceAll("\\{STUDENT_URL\\}",params.STUDENT_URL);
+			message = message.replaceAll("\\{STUDENT_URL\\}",params.STUDENT_URL);
+		}
+			
+		if (params.ADVISOR_URL != null) {
+			subject = subject.replaceAll("\\{ADVISOR_URL\\}",params.ADVISOR_URL);
+			message = message.replaceAll("\\{ADVISOR_URL\\}",params.ADVISOR_URL);
+		}
+			
+		if (params.REGISTRATION_URL != null) {
+			subject = subject.replaceAll("\\{REGISTRATION_URL\\}",params.REGISTRATION_URL);
+			message = message.replaceAll("\\{REGISTRATION_URL\\}",params.REGISTRATION_URL);
+		}
+			
+		if (params.SUBMISSION_STATUS != null) {
+			subject = subject.replaceAll("\\{SUBMISSION_STATUS\\}",params.SUBMISSION_STATUS);
+			message = message.replaceAll("\\{SUBMISSION_STATUS\\}",params.SUBMISSION_STATUS);
+		}
+			
+		if (params.SUBMISSION_ASSIGNED_TO != null) {
+			subject = subject.replaceAll("\\{SUBMISSION_ASSIGNED_TO\\}",params.SUBMISSION_ASSIGNED_TO);
+			message = message.replaceAll("\\{SUBMISSION_ASSIGNED_TO\\}",params.SUBMISSION_ASSIGNED_TO);
+		}
+			
 		EmailJob job = new EmailJob(recipients,replyTo,subject,message);
 		job.now();
 
