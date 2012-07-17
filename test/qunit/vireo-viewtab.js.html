@@ -129,56 +129,6 @@ test("test swapToInputHandler text area", function(){
 });
 
 /**
- * Test swapping from span to graduation selection fields.
- */
-test("test swapToInputHandler graduation fields", function(){
-	expect(8);
-	reset();
-	
-	//Create markup to test
-	var markup = '<div class="edit-box">';
-		markup += '<ul><li class="edit">';
-		markup += '<label>Graduation Semester:</label>';
-		markup += '<span id="gradSemester" class="select"><i class="icon-pencil"></i>May 2013</span>';
-		markup += '</li></ul>';
-		markup += '</div>';
-		markup += '<div id="gradMonthOptions" style="display:none;">';
-		markup += '<option value="4">May</option>';
-		markup += '<option value="7">August</option>';
-		markup += '<option value="11">December</option>';
-		markup += '</div>';
-		markup += '<div id="gradYearOptions" style="display:none;">';
-		markup += '<option value="2006">2006</option>';
-		markup += '<option value="2007">2007</option>';
-		markup += '<option value="2008">2008</option>';
-		markup += '<option value="2009">2009</option>';
-		markup += '<option value="2010">2010</option>';
-		markup += '<option value="2011">2011</option>';
-		markup += '<option value="2012">2012</option>';
-		markup += '<option value="2013">2013</option>';
-		markup += '</div>';
-	
-	//Append markup to body
-	jQuery("body").append(markup);
-	
-	//Register the handle
-	var handler = swapToInputHandler();
-	jQuery("#gradSemester").click(handler);
-	
-	//Simulate click
-	jQuery("#gradSemester").click();
-	
-	equal(0, jQuery("span").length, "The span has been removed.");
-	equal(2, jQuery("select").length, "There are two select fields.");
-	equal(1, jQuery("select option[value='4']:selected").length, "The correct month is selected.");
-	equal(1, jQuery("select option[value='2013']:selected").length, "The correct year is selected.");
-	equal(1, jQuery(".icon-remove").length, "There is one cancel icon.");
-	equal(1, jQuery(".icon-ok").length, "There is one submit icon.");
-	equal(1, jQuery("#backup").length, "The backup was created.");
-	equal('<i class="icon-pencil"></i>May 2013', jQuery("#backup").html(), "The backup is accurate.");
-});
-
-/**
  * Test swapping the committee member data with editable fields.
  */
 test("test editCommitteeMemberHandler", function(){
@@ -291,7 +241,7 @@ test("test commitChangesHandler AJAX General", function(){
     };
 	
 	//AJAX handler
-	commitChangesHandler(jQuery(".icon-ok"), "/jsonURL", "/graduationURL", "/committeeURL", 1);
+	commitChangesHandler(jQuery(".icon-ok"), "/jsonURL", "/committeeURL", 1);
 	
 	options.success({ success: 'true', value: 'Susie' });
 	
@@ -307,71 +257,7 @@ test("test commitChangesHandler AJAX General", function(){
     equal(0, jQuery(".icon-ok").length,"There are zero ok icons.");
 	
 });
- 
-/**
- * Test committing ajax for graduation semester.
- */
-test("test commitChangesHandler AJAX graduation semester", function(){
-	expect(9);
-	reset();
-	 
-	//Create markup to test
-	var markup = '<div class="edit-box">';
-		markup += '<ul><li class="edit">';
-		markup += '<label>Graduation Semester:</label>';
-		markup += '<span id="gradSemester" class="select"><i class="icon-pencil"></i>May 2013</span>';
-		markup += '</li></ul>';
-		markup += '</div>';
-		markup += '<div id="gradMonthOptions" style="display:none;">';
-		markup += '<option value="4">May</option>';
-		markup += '<option value="7">August</option>';
-		markup += '<option value="11">December</option>';
-		markup += '</div>';
-		markup += '<div id="gradYearOptions" style="display:none;">';
-		markup += '<option value="2006">2006</option>';
-		markup += '<option value="2007">2007</option>';
-		markup += '<option value="2008">2008</option>';
-		markup += '<option value="2009">2009</option>';
-		markup += '<option value="2010">2010</option>';
-		markup += '<option value="2011">2011</option>';
-		markup += '<option value="2012">2012</option>';
-		markup += '<option value="2013">2013</option>';
-		markup += '</div>';
-	
-	//Append markup to body
-	jQuery("body").append(markup);
-	
-	//Register the handle
-	var handler = swapToInputHandler();
-	jQuery("#gradSemester").click(handler);
-	
-	//Simulate click
-	jQuery("#gradSemester").click();
-	
-	// Mock AJAX
-    var options = null;
-    jQuery.ajax = function(param) {
-        options = param;
-    };
-    
-  //AJAX handler
-	commitChangesHandler(jQuery(".icon-ok"), "/jsonURL", "/graduationURL", "/committeeURL", 1);
-	
-	options.success({ success: 'true', value: 'August 2012' });
-	
-	equal('/graduationURL', options.url,"The ajax url is correct.");
-    equal('POST', options.type,"The ajax type is correct.");
-    equal('json', options.dataType,"The ajax dataType is correct.");    
-    equal(1, options.data.subId,"The ajax data subId is correct.");
-    equal(4, options.data.month,"The ajax data month is correct.");
-    equal('2013', options.data.year,"The ajax data year is correct.");
-    
-    equal('<i class="icon-pencil"></i> August 2012', jQuery("span").html(),"The data returned is correct.");
-    equal(0, jQuery(".icon-remove").length,"There are zero remove icons.");
-    equal(0, jQuery(".icon-ok").length,"There are zero ok icons.");
-    
-});
- 
+  
 /**
  * Test AJAX committee members.
  */
@@ -408,7 +294,7 @@ test("test commitChangesHandler AJAX committee members", function(){
     };
     
   	//AJAX handler
-	commitChangesHandler(jQuery(".icon-ok"), "/jsonURL", "/graduationURL", "/committeeURL", 1);
+	commitChangesHandler(jQuery(".icon-ok"), "/jsonURL", "/committeeURL", 1);
 	
 	options.success({ success: 'true', id: 1, firstName: 'John', lastName: 'Smith', middleName: 'W', chair: 'false' });
 	
