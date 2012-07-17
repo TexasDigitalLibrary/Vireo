@@ -76,6 +76,13 @@ POST    /admin/settings/templates/edit          settings.EmailSettingsTab.editEm
 POST    /admin/settings/templates/remove        settings.EmailSettingsTab.removeEmailTemplateJSON
 POST    /admin/settings/templates/reorder       settings.EmailSettingsTab.reorderEmailTemplatesJSON
 
+## Settings tab - Embargo Types
+POST    /admin/settings/embargos/add            settings.ConfigurableSettingsTab.addEmbargoTypeJSON
+POST    /admin/settings/embargos/edit           settings.ConfigurableSettingsTab.editEmbargoTypeJSON
+POST    /admin/settings/embargos/remove         settings.ConfigurableSettingsTab.removeEmbargoTypeJSON
+POST    /admin/settings/embargos/reorder        settings.ConfigurableSettingsTab.reorderEmbargoTypesJSON
+
+
 ## Settings tab - Colleges
 POST    /admin/settings/colleges/add            settings.ConfigurableSettingsTab.addCollegeJSON
 POST    /admin/settings/colleges/edit           settings.ConfigurableSettingsTab.editCollegeJSON

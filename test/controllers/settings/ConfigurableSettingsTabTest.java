@@ -23,6 +23,8 @@ import org.tdl.vireo.model.Degree;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.Department;
 import org.tdl.vireo.model.DocumentType;
+import org.tdl.vireo.model.EmailTemplate;
+import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.Major;
 import org.tdl.vireo.model.Person;
@@ -71,7 +73,94 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		assertIsOk(response);
 	}
 	
+	/**
+	 * Test adding and editing an Email Template.
+	 */
+	@Test
+	public void testAddingEditingEmbargoTypes() {
+		
+		LOGIN();
+		
+		// Get our urls and a list of fields.
+		final String ADD_URL = Router.reverse("settings.ConfigurableSettingsTab.addEmbargoTypeJSON").url;
+		final String EDIT_URL = Router.reverse("settings.ConfigurableSettingsTab.editEmbargoTypeJSON").url;
+
+		// Add a new template
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("name","New Embargo Type");
+		params.put("description","New Description");
+		params.put("months","4");
+		params.put("active", "true");
+
+		Response response = POST(ADD_URL,params);
+		assertContentMatch("\"success\": \"true\"", response);
+		
+		// Extract the id of the newly created action.
+		Pattern ID_PATTERN = Pattern.compile("\"id\": ([0-9]+), ");
+		Matcher tokenMatcher = ID_PATTERN.matcher(getContent(response));
+		assertTrue(tokenMatcher.find());
+		String idString = tokenMatcher.group(1);
+		assertNotNull(idString);
+		Long id = Long.valueOf(idString);
+		
+		// Verify the embargo exists in the database.
+		JPA.em().clear();
+		assertNotNull(settingRepo.findEmbargoType(id));
+		assertEquals("New Embargo Type",settingRepo.findEmbargoType(id).getName());
+		assertEquals("New Description",settingRepo.findEmbargoType(id).getDescription());
+		assertEquals(new Integer(4),settingRepo.findEmbargoType(id).getDuration());
+		assertEquals(true,settingRepo.findEmbargoType(id).isActive());
+		
+		// Now edit the embargo
+		params.clear();
+		params.put("embargoTypeId","embargoType_"+id);
+		params.put("name", "Changed Name");
+		params.put("description", "Changed Description");
+		//params.put("months", null);
+		//params.put("active", false);
+		response = POST(EDIT_URL,params);
+		assertContentMatch("\"success\": \"true\"", response);
+
+		
+		// Verify the action was updated in the database.
+		JPA.em().clear();
+		assertEquals("Changed Name",settingRepo.findEmbargoType(id).getName());
+		assertEquals("Changed Description",settingRepo.findEmbargoType(id).getDescription());
+		assertEquals(null,settingRepo.findEmbargoType(id).getDuration());
+		assertEquals(false,settingRepo.findEmbargoType(id).isActive());
+		
+		settingRepo.findEmbargoType(id).delete();
+	}
 	
+	/**
+	 * Test reordering a set of email templates.
+	 */
+	@Test
+	public void testReorderingTemplates() {
+		LOGIN();
+		
+		final String REORDER_URL = Router.reverse("settings.ConfigurableSettingsTab.reorderEmbargoTypesJSON").url;
+		
+		// Create two custom actions:
+		EmbargoType embargo1 = settingRepo.createEmbargoType("name1", "description", null, false).save();
+		EmbargoType embargo2 = settingRepo.createEmbargoType("name2", "description", null, false).save();
+		
+		// Reorder the custom actions
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("embargoTypeIds", "embargoType_"+embargo2.getId()+",embargoType_"+embargo1.getId());
+		Response response = POST(REORDER_URL,params);
+		assertContentMatch("\"success\": \"true\"", response);
+		
+		// Verify that the actions were reorderd
+		JPA.em().clear();
+		embargo1 = settingRepo.findEmbargoType(embargo1.getId());
+		embargo2 = settingRepo.findEmbargoType(embargo2.getId());
+		assertTrue(embargo1.getDisplayOrder() > embargo2.getDisplayOrder());
+		
+		// Cleanup
+		embargo1.delete();
+		embargo2.delete();
+	}
 
 	
 	/**

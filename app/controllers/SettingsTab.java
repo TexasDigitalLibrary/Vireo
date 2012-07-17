@@ -14,6 +14,7 @@ import org.tdl.vireo.model.Degree;
 import org.tdl.vireo.model.Department;
 import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.EmailTemplate;
+import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.Major;
 import org.tdl.vireo.model.Person;
@@ -184,6 +185,10 @@ public class SettingsTab extends AbstractVireoController {
 			} else if (type.equals(EmailTemplate.class)) {
 				EmailTemplate template = settingRepo.findEmailTemplate(id);
 				models.add((T) template);
+				
+			} else if (type.equals(EmbargoType.class)) {
+				EmbargoType embargo = settingRepo.findEmbargoType(id);
+				models.add((T) embargo);
 				
 			} else {
 				throw new IllegalArgumentException("Unknown model type: "+type.getName());
