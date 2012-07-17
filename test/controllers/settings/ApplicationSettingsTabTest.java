@@ -145,14 +145,14 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 		// change the current semester
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("field", CURRENT_SEMESTER);
-		params.put("value","changed \"by test\"");
+		params.put("value","May 2012");
 		Response response = POST(URL,params);
 		assertContentMatch("\"success\": \"true\"", response);
 	
 		
 		// Check that all the fields are set.
 		assertNotNull(settingRepo.findConfigurationByName(CURRENT_SEMESTER));
-		assertEquals("changed \"by test\"",settingRepo.findConfigurationByName(CURRENT_SEMESTER).getValue());
+		assertEquals("May 2012",settingRepo.findConfigurationByName(CURRENT_SEMESTER).getValue());
 		
 		JPA.em().clear();
 		if (originalValue == null) {

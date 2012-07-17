@@ -1,5 +1,6 @@
 package controllers.settings;
 
+import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,6 +92,11 @@ public class ApplicationSettingsTab extends SettingsTab {
 			} else if (textFields.contains(field)) {
 				// This is a free-form text field
 				
+				
+				if (CURRENT_SEMESTER.toString().equals(field) && !isValidCurrentSemester(value)) {
+					throw new IllegalArgumentException("The current semester is invalid, it must be of the form: month year. I.g. 'May 2012'");
+				}
+				
 				Configuration config = settingRepo.findConfigurationByName(field);
 				if (config == null)
 					config = settingRepo.createConfiguration(field, value);
@@ -107,6 +113,9 @@ public class ApplicationSettingsTab extends SettingsTab {
 			
 			
 			renderJSON("{ \"success\": \"true\", \"field\": \""+field+"\", \"value\": \""+value+"\" }");
+		} catch (IllegalArgumentException iae) {
+			String message = escapeJavaScript(iae.getMessage());			
+			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to update application settings");
 			String message = escapeJavaScript(re.getMessage());			
@@ -243,8 +252,34 @@ public class ApplicationSettingsTab extends SettingsTab {
 	
 
 	
-	
-	
+	/**
+	 * Validate the current semester string which must be of the format: month
+	 * year.
+	 * 
+	 * @param value
+	 *            The value to be validated.
+	 * @return Either true if valid, otherwise false.
+	 */
+	protected static boolean isValidCurrentSemester(String value) {
+
+		try {
+			if (value == null || value.trim().length() == 0)
+				// The blank value is also acceptable.
+				return true;
+			
+			String[] parts = value.split(" ");
+
+			if (parts.length != 2)
+				return false;
+
+			Integer month = monthNameToInt(parts[0]);
+			Integer year = Integer.valueOf(parts[1]);
+
+			return true;
+		} catch (RuntimeException re) {
+			return false;
+		}
+	}
 	
 	
 	

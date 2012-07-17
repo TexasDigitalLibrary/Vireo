@@ -957,11 +957,13 @@ function applicationSettingsHandler(jsonURL) {
 		var successCallback = function(data) {
 			// Remove the ajax loading indicators & alerts
 			$this.parent().removeClass("waiting");
+			$this.removeClass("settings-error");
 			clearAlert("application-setting-"+field);
 		}
 
 		var failureCallback = function (message) {
 			$this.parent().removeClass("waiting");
+			$this.addClass("settings-error");
 			displayAlert("application-setting-"+field,"Unable to update setting",message);
 		}
 

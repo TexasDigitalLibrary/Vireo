@@ -1012,35 +1012,5 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
 		}
 	}
-	
-	
-	
-	
-	/**
-	 * Internal method to translate the name of a month into it's integer value.
-	 * 
-	 * If the month name is invalid then a user displayable message is thrown as
-	 * an IllegalArgumentException.
-	 * 
-	 * @param monthName
-	 *            The name of a month in the default lanugage.
-	 * @return The integer value of the month, january=0, december=11.
-	 */
-	protected static int monthNameToInt(String monthName) {
-		
-		if (monthName == null || monthName.trim().length() == 0)
-			throw new IllegalArgumentException("monthName is required.");
-		
-		monthName = monthName.toLowerCase();
-		
-		String[] months = new DateFormatSymbols().getMonths();
-		for (int i =0; i <months.length; i++) {
-			
-			if (monthName.equalsIgnoreCase(months[i]))
-				return i;
-		}
-		
-		throw new IllegalArgumentException("The month '"+monthName+"' is invalid, month names should be spelled out completely such as \"January\", \"Feburary\", etc...");
-	}
 
 }
