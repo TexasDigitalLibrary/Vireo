@@ -11,53 +11,36 @@ function swapToInputHandler(){
 			jQuery("#backup").remove()
 			
 			var editItem = jQuery(this);       
-			var value = editItem.text().trim();
+			var value = escapeQuotes(editItem.text().trim());
 			
 			if(value=="none"){
 				value="";
 				jQuery("body").append('<div id="backup"></div>')
 			} else {
 				//Make back up info			
-				jQuery("body").append('<div id="backup">'+editItem.html().trim()+'</div>')
+				jQuery("body").append('<div id="backup">'+editItem.html()+'</div>')
 			}
 			
-			//Graduation Semester
-			if(editItem.attr("id")=="gradSemester"){
-				var markup = '<div id="'+editItem.attr("id")+'" class="editing select">';
-				markup += '<select id="gradMonth">';
-				markup += jQuery("#gradMonthOptions").html();
-				markup += '</select><select id="gradYear">'
-				markup += jQuery("#gradYearOptions").html();
-				markup += '</select><br /><i class="icon-remove"></i>&nbsp<i class="icon-ok"></i></div>';
-				editItem.replaceWith(markup);
-				
-				jQuery("option").each(function(){
-					if(value.indexOf(jQuery(this).text()) >= 0){
-						jQuery(this).attr("selected", "selected");
+			//Text Areas
+			if(editItem.hasClass("textarea")){
+				editItem.replaceWith('<div id="'+editItem.attr("id")+'" class="editing textarea"><textarea class="field" textarea">'+value+'</textarea><br /><i class="icon-remove"></i>&nbsp<i class="icon-ok"></i></div>');
+			//Select Drop Downs
+			} else if(editItem.hasClass("select")){
+				var selectCode = '<div id="'+editItem.attr("id")+'" class="editing select"><select class="field">';
+				selectCode += jQuery("#"+editItem.attr("id")+"Options").html();
+				selectCode += '</select><br /><i class="icon-remove"></i>&nbsp<i class="icon-ok"></i></div>';
+				editItem.replaceWith(selectCode);
+				jQuery(".field option").each(function(){
+					if(jQuery(this).text()==value){
+						jQuery(this).attr("selected","selected");
 					}
 				})
+			//Input Fields
 			} else {
-			
-				//Text Areas
-				if(editItem.hasClass("textarea")){
-					editItem.replaceWith('<div id="'+editItem.attr("id")+'" class="editing textarea"><textarea class="field" textarea">'+value+'</textarea><br /><i class="icon-remove"></i>&nbsp<i class="icon-ok"></i></div>');
-				//Select Drop Downs
-				} else if(editItem.hasClass("select")){
-					var selectCode = '<div id="'+editItem.attr("id")+'" class="editing select"><select class="field">';
-					selectCode += jQuery("#"+editItem.attr("id")+"Options").html();
-					selectCode += '</select><br /><i class="icon-remove"></i>&nbsp<i class="icon-ok"></i></div>';
-					editItem.replaceWith(selectCode);
-					jQuery(".field option").each(function(){
-						if(jQuery(this).text()==value){
-							jQuery(this).attr("selected","selected");
-						}
-					})
-				//Input Fields
-				} else {
-					editItem.replaceWith('<div id="'+editItem.attr("id")+'" class="editing"><input class="field" type="text" value="'+value+'" /><br /><i class="icon-remove"></i>&nbsp<i class="icon-ok"></i></div>');
-				}
-				//jQuery(".editing input").setTimeout(jQuery(".editing").focus());
+				editItem.replaceWith('<div id="'+editItem.attr("id")+'" class="editing"><input class="field" type="text" value="'+value+'" /><br /><i class="icon-remove"></i>&nbsp<i class="icon-ok"></i></div>');
 			}
+			//jQuery(".editing input").setTimeout(jQuery(".editing").focus());
+			
 		}
 	}
 }
@@ -79,9 +62,9 @@ function editCommitteeMemberHandler(){
 			jQuery("body").append('<div id="backup">'+jQuery(this).html().trim()+'</div>');
 			
 			var memberId = jQuery(this).parent("li").attr("class");		
-			var firstName = jQuery(this).find(".firstName").text();
-			var lastName = jQuery(this).find(".lastName").text();
-			var middleName = jQuery(this).find(".middleName").text();
+			var firstName = escapeQuotes(jQuery(this).find(".firstName").text());
+			var lastName = escapeQuotes(jQuery(this).find(".lastName").text());
+			var middleName = escapeQuotes(jQuery(this).find(".middleName").text());
 			
 			var chair = (jQuery(this).find(".chair").text().trim()=="chair");
 			var checked = "";
@@ -115,7 +98,7 @@ function editCommitteeMemberHandler(){
  * @param committeeURL (The method to update committee members)
  * @param subId (The submission id)
  */
-function commitChangesHandler(eventTarget, jsonURL, graduationURL, committeeURL, subId){
+function commitChangesHandler(eventTarget, jsonURL, committeeURL, subId){
 	var classValue = '';
 	var fieldItem;
 	var parent = eventTarget.parent();
@@ -132,15 +115,6 @@ function commitChangesHandler(eventTarget, jsonURL, graduationURL, committeeURL,
 	var theValue;
 	if(fieldItem.val().trim()){
 		theValue = fieldItem.val();
-	}
-	
-	var gradSemester;
-	var monthValue;
-	var yearValue;
-	if(parent.attr("id")=="gradSemester"){
-		gradSemester = true;
-		monthValue = jQuery("#gradMonth").val().trim();
-		yearValue = jQuery("#gradYear").val().trim();
 	}
 	
 	var committeeMember;
@@ -161,36 +135,7 @@ function commitChangesHandler(eventTarget, jsonURL, graduationURL, committeeURL,
 	
 	jQuery(".editing").replaceWith('<div class="'+id+' progress progress-striped active"><div class="bar" style="width:100%"></div></div>');
 	
-	if(gradSemester){
-		jQuery.ajax({
-			url:graduationURL,
-			data:{
-				subId:subId,
-				month:monthValue,
-				year:yearValue
-			},
-			dataType:'json',
-			type:'POST',
-			success:function(data){
-				var currentValue;
-				if(data.value){
-					currentValue = nl2br(data.value);
-				} else {
-					currentValue = "none";
-					classValue = classValue + 'empty ';
-				}
-				
-				if(data.success){
-					jQuery("div."+id).replaceWith('<span id="'+id+'" class="'+classValue+'"><i class="icon-pencil"></i> '+currentValue+'</span>');
-				}
-			},
-			error:function(){
-				jQuery("div."+id).replaceWith('<span id="'+id+'" class="error '+classValue+'">'+jQuery("#backup").html()+' <a href="#" class="tooltip-icon" rel="tooltip" title="There was an error with your request."><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
-				jQuery('.tooltip-icon').tooltip();
-			}
-			
-		});
-	} else if(committeeMember) {
+	if(committeeMember) {
 		jQuery.ajax({
 			url:committeeURL,
 			data:{
@@ -376,4 +321,17 @@ function updateLeftColumn(url, id){
 		
 	});
 	
+}
+
+/**
+ * Function to set the value of the hidden input "special_value"
+ * to the id of the button clicked. Then the parent form will be submitted.
+ *
+ * @param form (The form object to submit)
+ * @param value (The value tied to the button clicked. Stored in the buttons Id attribute.)
+ *
+ */
+function assignSpecialValueAndSubmit(form, value){
+		form.find("input[name='special_value']").val(value);
+		form.submit();	
 }
