@@ -9,7 +9,6 @@ jQuery(document).ready(function(){
 	 var refreshActionLogURL = "@{ViewTab.refreshActionLogTable()}";
 	 var refreshLeftColumnURL = "@{ViewTab.refreshLeftColumn()}";
 	 var updateJSONURL = "@{ViewTab.updateJSON()}";
-	 var updateGraduationDateJSONURL = "@{ViewTab.updateGraduationDateJSON()}";
 	 var updateCommitteeMemberJSONURL = "@{ViewTab.updateCommitteeMemberJSON()}";
 	 		
 	/**
@@ -28,7 +27,7 @@ jQuery(document).ready(function(){
 	jQuery(".icon-ok").live("click", function(){		
 		
 		var $this = jQuery(this);
-		commitChangesHandler($this, updateJSONURL, updateGraduationDateJSONURL, updateCommitteeMemberJSONURL, subId);		
+		commitChangesHandler($this, updateJSONURL, updateCommitteeMemberJSONURL, subId);		
 		updateActionLog(refreshActionLogURL, subId);
 		updateLeftColumn(refreshLeftColumnURL, subId);
 		
@@ -60,6 +59,15 @@ jQuery(document).ready(function(){
 	jQuery("#committeeMembers .editCommitteeMember").live("click", function(e){		
 		e.stopPropagation();		
 	});
+	
+	/**
+	 * Special Value Event
+	 */
+	 jQuery(".special-value").live("click", function(){
+		 var form = jQuery(this).closest("form");
+		 var value = jQuery(this).attr("id");
+		 assignSpecialValueAndSubmit(form, value);
+	 });
 	
 });
 </script>
@@ -257,9 +265,9 @@ jQuery(document).ready(function(){
 						</span></li>
 					<li class="edit"><label>Graduation Semester:</label><span id="gradSemester"
 						#{if submission.getGraduationMonth() && submission.getGraduationYear()}
-							class="select"><i class="icon-pencil"></i> ${gradMonth} ${submission.getGraduationYear()}
+							><i class="icon-pencil"></i> ${gradMonth} ${submission.getGraduationYear()}
 						#{/if}#{else}
-							class="select empty"><i class="icon-pencil"></i> none
+							class="empty"><i class="icon-pencil"></i> none
 						#{/else}
 						</span></li>
 					<li class="edit"><label>Advisor Email:</label><span id="advisorEmail"
@@ -336,22 +344,6 @@ jQuery(document).ready(function(){
 				#{list items:settingRepo.findAllMajors(), as:'major'}
 					<option value="${major.getName()}">${major.getName()}</option>
 				#{/list}
-			</div>
-			
-			<div id="gradMonthOptions" style="display:none;">
-				<option value="4">May</option>
-				<option value="7">August</option>
-				<option value="11">December</option>
-			</div>
-			<div id="gradYearOptions" style="display:none;">
-				<option value="2006">2006</option>
-				<option value="2007">2007</option>
-				<option value="2008">2008</option>
-				<option value="2009">2009</option>
-				<option value="2010">2010</option>
-				<option value="2011">2011</option>
-				<option value="2012">2012</option>
-				<option value="2013">2013</option>
 			</div>
 			
 		</div>
