@@ -34,6 +34,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import org.tdl.vireo.model.impl.CommitteeMemberImpl;
 import play.mvc.Scope.Params;
+import static org.tdl.vireo.model.Configuration.CURRENT_SEMESTER;
+import static org.tdl.vireo.model.Configuration.SUBMISSIONS_OPEN;
 
 /**
  * Submit controller
@@ -44,8 +46,25 @@ import play.mvc.Scope.Params;
  * @author <a href="bill-ingram.com">Bill Ingram</a>
  */
 
+
 @With(Authentication.class)
 public class Submit extends AbstractVireoController {
+	
+	/**
+	 * Set up values needed by all methods in this controller
+	 */
+	
+	@Before
+	static void beforeSubmit() {
+		renderArgs.put("SUBMISSIONS_OPEN", settingRepo.findConfigurationByName(SUBMISSIONS_OPEN));
+		
+		Configuration curSemConfig = settingRepo.findConfigurationByName(CURRENT_SEMESTER);
+		
+		String currentSemester = (curSemConfig == null ? "" : curSemConfig.getValue());
+			
+		renderArgs.put("CURRENT_SEMESTER", currentSemester);
+	}
+	
 	
 	/**
 	 * The first screen of the submission process which allows the student to
@@ -652,12 +671,12 @@ public class Submit extends AbstractVireoController {
         Person submitter = context.getPerson();
         List<Submission> submissionList = subRepo.findSubmission(submitter);
 
-        if(submissionList.size() > 0) {       	
+        Logger.info("SubmissionStatus " + settingRepo.findConfigurationByName(SUBMISSIONS_OPEN));
+        
+        if(submissionList.size() > 0 || settingRepo.findConfigurationByName(SUBMISSIONS_OPEN) == null) {       	
             render(submissionList);
         } else{
-
         	verifyPersonalInformation(null);
-
         }
 	}
 	
