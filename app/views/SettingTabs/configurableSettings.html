@@ -18,7 +18,25 @@ jQuery(document).ready(function(){
 	 jQuery("#embargoType-save").click(embargoSaveDialogHandler('@{settings.ConfigurableSettingsTab.editEmbargoTypeJSON()}'));
 	 jQuery("#embargoType-list").sortable({
 		 placeholder: "placeholder",
-		 update: embargoSortableUpdateHandler('@{settings.ConfigurableSettingsTab.reorderEmbargoTypesJSON()}')
+		 update: embargoSortableUpdateHandler('@{settings.ConfigurableSettingsTab.reorderEmbargoTypesJSON()}'),
+		 
+		 // This function keeps the cell size consistent when sorting.
+		 helper: function(e, tr)
+		  {
+		    var $originals = tr.children();
+		    var $helper = tr.clone();
+		    $helper.children().each(function(index)
+		    {
+		      // Set helper cell sizes to match the original sizes
+		      $(this).width($originals.eq(index).width())
+		    });
+		    return $helper;
+		  },
+		  
+		  // This allows the placeholder to have a background color
+		  'start': function (event, ui) {
+		        ui.placeholder.html('<td colspan="5">&nbsp;</td>');
+		  }
 	 });
 	 
 	 
@@ -442,8 +460,10 @@ jQuery(document).ready(function(){
                 <div class="control-group">
                     <label class="control-label" for="embargoType-active"><strong>Display</strong>:</label>
                     <div class="controls">
-                        <input type="checkbox" name="embargoType-active" id="embargoType-active" value="true"/>
-                        <p class="help-block">This embargo option should be available for new submissions.</p>
+                        <label class="checkbox">
+                            <input type="checkbox" name="embargoType-active" id="embargoType-active" value="true"/>
+                            This embargo option will be available for<br/>new submissions.
+                        </label>
                     </div>
                 </div>
                 <div class="control-group">
