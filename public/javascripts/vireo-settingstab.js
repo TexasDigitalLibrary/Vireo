@@ -1048,3 +1048,251 @@ function emailSettingsHandler(jsonURL) {
 		});  
 	};
 }
+
+/**********************************************************
+ * Configurable Settings Tab (Embargos)
+ **********************************************************/
+
+/**
+ * Event handler to toggle the display of embargo type's duration between
+ * indeterminate and determinate.
+ * 
+ * @returns A Callback function
+ */
+function embargoDurationToggleHandler() {
+	return function() {
+
+		if (jQuery("#timeframe-indeterminate").attr("checked")) {
+			// Indeterminate
+			jQuery("#embargoType-months").attr("disabled", "true");
+			jQuery("#duration-group").slideUp();
+
+		} else {
+			// Determinate
+			jQuery("#embargoType-months").attr("disabled", null);
+			jQuery("#duration-group").slideDown();
+		}
+
+	}
+}
+
+/**
+ * Open the embargo type dialog box. This will work for opening an existing
+ * embargo, or adding a new embargo.
+ * 
+ * @returns A Callback function
+ */
+function embargoOpenDialogHandler() {
+	return function () {
+
+		if (jQuery(this).closest("tr").length > 0) {
+			// Loading an existing type
+			var $row = jQuery(this).closest("tr"); 
+			jQuery("#embargoType-id").val($row.attr("id"));
+			jQuery("#embargoType-name").val(jQuery.trim($row.find(".embargoType-name-cell").text()));
+			jQuery("#embargoType-description").val(jQuery.trim($row.find(".embargoType-description-cell").text()));
+
+			if ($row.find(".embargoType-active-cell").text().indexOf("Yes") > -1)
+				jQuery("#embargoType-active").attr("checked","true");
+			else
+				jQuery("#embargoType-active").attr("checked");
+
+			if ($row.find(".embargoType-duration-cell").text().indexOf("Indefinite") > -1) {
+				jQuery("#timeframe-indeterminate").attr("checked","true");
+				jQuery("#embargoType-months").val("");
+				jQuery("#embargoType-months").attr("disabled","true");
+				jQuery("#duration-group").hide();
+			} else {
+				jQuery("#timeframe-determinate").attr("checked","true");
+				jQuery("#embargoType-months").val(jQuery.trim($row.find(".embargoType-duration-cell").text()));
+				jQuery("#embargoType-months").attr("disabled",null);
+				jQuery("#duration-group").show();
+			}
+			
+			jQuery("#embargo-type-modal .modal-header h3").text("Edit Embargo Type");
+			jQuery("#embargo-type-modal .modal-footer #embargoType-save").val("Save Embargo");
+
+
+		} else {
+			// Adding a new embargo type
+			jQuery("#embargoType-id").val("");
+			jQuery("#embargoType-name").val("");
+			jQuery("#embargoType-description").val("");
+			jQuery("#embargoType-active").attr("checked","true");
+			jQuery("#timeframe-determinate").attr("checked","true");
+			jQuery("#embargoType-months").val("");
+			jQuery("#embargoType-months").attr("disabled",null);
+			jQuery("#duration-group").show();
+			
+			jQuery("#embargo-type-modal .modal-header h3").text("Add Embargo Type");
+			jQuery("#embargo-type-modal .modal-footer #embargoType-save").val("Add Embargo");
+
+		}
+
+		// Clear out any previous errors
+		jQuery("#embargoType-errors").html("");
+		jQuery("#embargo-type-modal .control-group").each(function () {
+			jQuery(this).removeClass("error"); 
+		});
+
+		jQuery('#embargo-type-modal').modal('show');
+
+
+	}
+}
+
+/**
+ * Create or Edit an existing embargo type. This callback function handles
+ * saving the embargo dialog box.
+ * 
+ * @param jsonURL
+ *            The url where embargos should be updated.
+ * @returns A Callback Function
+ */
+function embargoSaveDialogHandler(jsonURL) {
+	return function () {
+
+		var embargoTypeId = jQuery("#embargoType-id").val();
+		var name = jQuery("#embargoType-name").val();
+		var description = jQuery("#embargoType-description").val();
+		var active = null;
+		if (jQuery("#embargoType-active:checked").length > 0)
+			active = "true";
+
+		var months = null
+		if (jQuery("#timeframe-determinate:checked").length > 0)
+			months = jQuery("#embargoType-months").val();
+		jQuery("#embargo-type-modal").addClass("waiting");
+
+		var successCallback = function(data) {
+
+			// Remove the ajax loading indicators & alerts
+			jQuery("#embargo-type-modal").removeClass("waiting");
+			jQuery("#embargoType-errors").html("");
+			jQuery("#embargo-type-modal .control-group").each(function () {
+				jQuery(this).removeClass("error"); 
+			});
+
+			var $row
+			if (jQuery("#embargoType_"+data.id).length > 0) {
+				// Look up the old row
+				$row = jQuery("#embargoType_"+data.id);
+			} else {
+				// Add a new row to the end of the list.
+				$row = jQuery( 
+						"<tr id='embargoType_"+data.id+"'>"+
+						"    <td class='embargoType-name-cell'></td>"+
+						"    <td class='embargoType-description-cell'></td>"+
+						"    <td class='embargoType-active-cell'></td>"+
+						"    <td class='embargoType-duration-cell'></td>"+
+						"    <td class='embargoType-edit-cell'><a href='#'>Edit</a></td>" +
+						"</tr>"
+				).appendTo(jQuery("#embargoType-list"));
+			}
+
+			$row.find(".embargoType-name-cell").text(data.name);
+			$row.find(".embargoType-description-cell").text(data.description);
+			if (data.active == "true")
+				$row.find(".embargoType-active-cell").text("Yes");
+			else
+				$row.find(".embargoType-active-cell").text("No");
+
+			if (data.months == "null")
+				$row.find(".embargoType-duration-cell").text("Indefinite");
+			else
+				$row.find(".embargoType-duration-cell").text(data.months);
+
+			jQuery('#embargo-type-modal').modal('hide');
+
+		}
+
+		var failureCallback = function (message) {
+
+			// Add failure indicators
+			jQuery("#embargo-type-modal").removeClass("waiting");
+			jQuery("#embargo-type-modal .control-group").each(function () {
+				jQuery(this).addClass("error"); 
+			});
+
+			// Display the error
+			jQuery("#embargoType-errors").html("<li><strong>Unable to save embargo</strong>: "+message);
+
+		}
+
+		jQuery.ajax({
+			url:jsonURL,
+			data:{
+				'embargoTypeId': embargoTypeId,
+				'name': name,
+				'description': description,
+				'months': months,
+				'active': active
+			},
+			dataType:'json',
+			type:'POST',
+			success:function(data){
+				if (data.success) {
+					successCallback(data);
+				} else {
+					failureCallback(data.message)
+				}
+			},
+			error:function(){
+				failureCallback("Unable to communicate with the server.");
+			}
+
+		});
+
+		return false;
+	}
+}
+
+/**
+ * Sortable update handler for embargo types. This callback is called whenever
+ * re-sorts the list of embargos, saving the new order in the system.
+ * 
+ * @param jsonURL
+ *            The json url to update embargo order.
+ * @returns A Callback function
+ */
+var embargoSortableUpdateHandler = function(jsonURL) {
+	return function(event, ui) {
+
+		var list = jQuery("#embargoType-list").sortable('toArray').toString();
+		jQuery("#embargoType-list").addClass("waiting");
+
+		var successCallback = function(data) {
+			// Remove the ajax loading indicators & alerts
+			clearAlert("embargoType-reorder");
+			jQuery("#embargoType-list").removeClass("waiting");
+		}
+
+		var failureCallback = function(message) {
+			displayAlert("embargoType-reorder", "Unable to reorder " + type,
+					message);
+			jQuery("#embargoType-list").removeClass("waiting");
+		}
+
+		var data = {};
+		data['embargoTypeIds'] = list;
+
+		jQuery.ajax({
+			url : jsonURL,
+			data : data,
+			dataType : 'json',
+			type : 'POST',
+			success : function(data) {
+				if (data.success) {
+					successCallback(data);
+				} else {
+					failureCallback(data.message)
+				}
+			},
+			error : function() {
+				failureCallback("Unable to communicate with the server.");
+			}
+
+		});
+	};
+}
+

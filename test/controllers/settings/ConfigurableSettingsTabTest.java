@@ -82,7 +82,6 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		LOGIN();
 		
 		// Get our urls and a list of fields.
-		final String ADD_URL = Router.reverse("settings.ConfigurableSettingsTab.addEmbargoTypeJSON").url;
 		final String EDIT_URL = Router.reverse("settings.ConfigurableSettingsTab.editEmbargoTypeJSON").url;
 
 		// Add a new template
@@ -92,7 +91,7 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		params.put("months","4");
 		params.put("active", "true");
 
-		Response response = POST(ADD_URL,params);
+		Response response = POST(EDIT_URL,params);
 		assertContentMatch("\"success\": \"true\"", response);
 		
 		// Extract the id of the newly created action.
