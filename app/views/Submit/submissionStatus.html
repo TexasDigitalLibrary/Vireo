@@ -58,7 +58,7 @@
 				    <a class="btn btn-primary" href="@{Submit.deleteSubmission(submission.getId())}">Delete</a>
                 #{/if} 
                 #{else}
-				     <a class="btn btn-primary" href="/ut-etd/vireo/view?appID=4967">View</a>				 
+				     <a class="btn btn-primary" href="@{Submit.studentView(submission.getId())}">View</a>				 
 				#{/else}
 				</td>
 				

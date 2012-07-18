@@ -51,18 +51,24 @@ import static org.tdl.vireo.model.Configuration.SUBMISSIONS_OPEN;
 public class Submit extends AbstractVireoController {
 	
 	/**
-	 * Set up values needed by all methods in this controller
+	 * Set up values needed to display submission status at the top of each page.
+	 * If submissions are closed - always redirect to the submissionStatus page. 
 	 */
 	
-	@Before
+	@Before(unless="submissionStatus")
 	static void beforeSubmit() {
+		
+		if (settingRepo.findConfigurationByName(SUBMISSIONS_OPEN) == null)
+			submissionStatus();	
+		
 		renderArgs.put("SUBMISSIONS_OPEN", settingRepo.findConfigurationByName(SUBMISSIONS_OPEN));
 		
 		Configuration curSemConfig = settingRepo.findConfigurationByName(CURRENT_SEMESTER);
-		
-		String currentSemester = (curSemConfig == null ? "" : curSemConfig.getValue());
+		String currentSemester = (curSemConfig == null ? "undefined" : curSemConfig.getValue());
 			
 		renderArgs.put("CURRENT_SEMESTER", currentSemester);
+
+
 	}
 	
 	
@@ -83,6 +89,7 @@ public class Submit extends AbstractVireoController {
 		// Bail if they canceled
 		if (params.get("submit_cancel") != null)
 			Application.index();
+		
 		
 		Person submitter = context.getPerson();
 		
@@ -657,12 +664,12 @@ public class Submit extends AbstractVireoController {
         sub.save();
         review(subId);     
         
-	}
-	
+	}	
 	
 	/**
 	 * Submission Status
 	 */
+	
 	@Security(RoleType.STUDENT)
 	public static void submissionStatus() {	
 		
@@ -673,13 +680,45 @@ public class Submit extends AbstractVireoController {
 
         Logger.info("SubmissionStatus " + settingRepo.findConfigurationByName(SUBMISSIONS_OPEN));
         
-        if(submissionList.size() > 0 || settingRepo.findConfigurationByName(SUBMISSIONS_OPEN) == null) {       	
+        if(submissionList.size() > 0 || settingRepo.findConfigurationByName(SUBMISSIONS_OPEN) == null) {
+        	
+        	//TODO -- This could be refactored - this same code is in the @Before method above
+        	
+    		Configuration curSemConfig = settingRepo.findConfigurationByName(CURRENT_SEMESTER);
+    		String currentSemester = (curSemConfig == null ? "undefined" : curSemConfig.getValue());
+    			
+    		renderArgs.put("CURRENT_SEMESTER", currentSemester);
+    		renderArgs.put("SUBMISSIONS_OPEN", settingRepo.findConfigurationByName(SUBMISSIONS_OPEN));
             render(submissionList);
         } else{
         	verifyPersonalInformation(null);
         }
 	}
 	
+	// Handle the Student View form 
+	
+	@Security(RoleType.STUDENT)
+	public static void studentView(Long subId) {		
+		
+		// Locate the submission 
+			
+        Submission sub = subRepo.findSubmission(subId);
+        Person submitter = context.getPerson();
+        List<ActionLog> actionLogList = subRepo.findActionLog(sub);
+        
+        if (sub == null) {
+            // something is wrong
+            error("Did not receive the expected submission id.");
+        } else {
+
+            // This is an existing submission so check that we're the student or administrator here.
+            
+            if (sub.getSubmitter() != submitter)
+                unauthorized();		
+        }
+        
+		render(subId, sub, submitter, actionLogList);		
+	}
 	
 	/**
 	 * Final page of the submission process

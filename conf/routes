@@ -29,6 +29,8 @@ POST	/submit/{subId}/submitETD				Submit.submitETD
 * 		/submit/{subId}/submissionStatus		Submit.submissionStatus
 *       /submit/{subId}/delete                  Submit.deleteSubmission
 *		/submit/{subId}/viewPrimaryDocument		Submit.viewPrimaryDocument
+*		/submit/{subId}/studentView				Submit.studentView
+
 
 ### List & Log Tabs
 GET     /admin/?                                FilterTab.listRedirect
