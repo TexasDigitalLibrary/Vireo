@@ -18,6 +18,7 @@ import org.tdl.vireo.model.Submission;
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  * @author Joe DeVries
+ * @author Micah Cooper
  */
 public interface EmailService {
 
@@ -34,7 +35,24 @@ public interface EmailService {
 	 *            The preferred reply to address (may be null, in this case the
 	 *            default mail.replyto will be used).
 	 */
-	public void sendEmail(EmailTemplate template, TemplateParameters params, List<String> recipients, String replyTo);
+	public void sendEmail(EmailTemplate template, TemplateParameters params, List<String> recipients, String replyTo, List<String> carbonCopies);
+	
+	/**
+	 * Send an email template to a set of recipients.
+	 * 
+	 * @param subject
+	 *            The subject of the email.
+	 * @param message
+	 * 			  The message of the email.
+	 * @param params
+	 *            Parameters for the template's variable substitution.
+	 * @param recipients
+	 *            A list of recipients to attach to the email.
+	 * @param replyTo
+	 *            The preferred reply to address (may be null, in this case the
+	 *            default mail.replyto will be used).
+	 */
+	public void sendEmail(String subject, String message, TemplateParameters params, List<String> recipients, String replyTo, List<String> carbonCopies);
 	
 	/**
 	 * Manage a list of variable substitutions that may be used.

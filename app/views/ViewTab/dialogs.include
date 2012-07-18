@@ -91,7 +91,7 @@
 		            <input type="checkbox" name="status_change" class="checkbox"> Flag submission as "Needs Corrections"</input><br />
             	</li>
             	<li>
-            		<input type="radio" name="visibility" class="radio"> Comment is public</input><br />
+            		<input type="radio" name="visibility" class="radio" value="public"> Comment is public</input><br />
             		<ul class="unstyled" style="padding-left:15px;">
             			<li>
             				<input type="checkbox" name="email_student" class="checkbox"> Email the student</input><br />
@@ -102,7 +102,7 @@
             		</ul>
             	</li>
             	<li>            	
-            		<input type="radio" name="visibility" class="radio"> Mark comment as private</input>
+            		<input type="radio" name="visibility" class="radio" value="private"> Mark comment as private</input>
             	</li>
             </ul>                   
 	</div>
