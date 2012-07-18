@@ -33,6 +33,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 	@Security(RoleType.MANAGER)
 	public static void configurableSettings() {
 		
+		List<EmbargoType> embargos = settingRepo.findAllEmbargoTypes();
 		List<College> colleges = settingRepo.findAllColleges();
 		List<Department> departments = settingRepo.findAllDepartments();
 		List<Major> majors = settingRepo.findAllMajors();
@@ -50,6 +51,9 @@ public class ConfigurableSettingsTab extends SettingsTab {
 		String subNav = "config";
 		renderTemplate("SettingTabs/configurableSettings.html", nav, subNav, 
 				
+				// The lonely tabel on the page
+				embargos,
+				
 				// Sortable lists
 				colleges, departments, majors, degrees, docTypes, gradMonths);
 	}
@@ -59,57 +63,10 @@ public class ConfigurableSettingsTab extends SettingsTab {
 	// ////////////////////////////////////////////
 	
 	/**
-	 * Add a new embargo type.
+	 * Create or edit an existing embargo type.
 	 * 
-	 * @param name
-	 *            The name of the new embargo type.
-	 * @param description
-	 *            The description of the type.
-	 * @param months
-	 *            The duration, in months, for this type
-	 * @param active
-	 *            Weather this type is active.
-	 */
-	public static void addEmbargoTypeJSON(String name, String description, Integer months, boolean active) {
-		
-		try {
-			if (name == null || name.trim().length() == 0)
-				throw new IllegalArgumentException("Name is required");
-			
-			if (description == null || description.trim().length() == 0)
-				throw new IllegalArgumentException("Description is required");
-
-			// Add the new college to the end of the list.
-			List<EmbargoType> embargos = settingRepo.findAllEmbargoTypes();
-
-			EmbargoType embargo = settingRepo.createEmbargoType(name, description, months, active);
-			embargos.add(embargo);
-
-			saveModelOrder(embargos);
-
-			name = escapeJavaScript(embargo.getName());
-			description = escapeJavaScript(embargo.getDescription());
-
-			renderJSON("{ \"success\": \"true\", \"id\": " + embargo.getId() + ", \"name\": \"" + name + "\", \"description\": \"" + description + "\", \"active\": \"" + active + "\", \"months\": \"" + months + "\" }");
-		} catch (IllegalArgumentException iae) {
-			String message = escapeJavaScript(iae.getMessage());			
-			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
-		} catch (PersistenceException pe) {
-			name = escapeJavaScript(name);
-			renderJSON("{ \"failure\": \"true\", \"message\": \"Another embargo type allready exists with the name: '"+name+"'\" }");
-		} catch (RuntimeException re) {
-			Logger.error(re,"Unable to add college");
-			String message = escapeJavaScript(re.getMessage());
-			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
-					+ "\" }");
-		}	
-	}
-	
-	/**
-	 * Edit an existing embargo type.
-	 * 
-	 * @param embargoId
-	 *            The id of the embargo type, in the form "embargoType_id"
+	 * @param embargoId (Optional)
+	 *            The id of the embargo type, in the form "embargoType_id". If no id is provided then a new embargo type will be created.
 	 * @param name
 	 *            The name of the type
 	 * @param description
@@ -128,15 +85,29 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			if (description == null || description.trim().length() == 0)
 				throw new IllegalArgumentException("Description is required");
 
-			// Save the new embargo
-			String[] parts = embargoTypeId.split("_");
-			Long id = Long.valueOf(parts[1]);
-			EmbargoType embargo = settingRepo.findEmbargoType(id);
-			embargo.setName(name);
-			embargo.setDescription(description);
-			embargo.setDuration(months);
-			embargo.setActive(active);
-			embargo.save();
+			// Create or modify the embargo
+			EmbargoType embargo = null;
+			if (embargoTypeId != null && embargoTypeId.trim().length() > 0) {
+				
+				// Modify an existing embargo
+				String[] parts = embargoTypeId.split("_");
+				Long id = Long.valueOf(parts[1]);
+				embargo = settingRepo.findEmbargoType(id);
+				embargo.setName(name);
+				embargo.setDescription(description);
+				embargo.setDuration(months);
+				embargo.setActive(active);
+				embargo.save();
+
+			} else {
+				List<EmbargoType> embargos = settingRepo.findAllEmbargoTypes();
+
+				// Create a new embargo
+				embargo = settingRepo.createEmbargoType(name, description, months, active);
+				embargos.add(embargo);
+
+				saveModelOrder(embargos);
+			}
 
 			name = escapeJavaScript(embargo.getName());
 			description = escapeJavaScript(embargo.getDescription());

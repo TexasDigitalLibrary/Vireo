@@ -14,6 +14,8 @@ import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.services.EmailService;
+import org.tdl.vireo.services.impl.EmailServiceImpl;
 import org.tdl.vireo.state.State;
 
 import com.google.gson.Gson;
@@ -443,6 +445,31 @@ public class ViewTab extends AbstractVireoController {
 	
 	@Security(RoleType.REVIEWER)
 	public static void addActionLogComment(Long id){
+		
+		Submission submission = subRepo.findSubmission(id);
+		EmailService emailService = Spring.getBeanOfType(EmailServiceImpl.class);
+		
+		String comment = params.get("comment");
+		
+		if(params.get("status_change") != null)
+			submission.setState(stateManager.getState("NeedsCorrection"));
+		
+		ActionLog actionLog = submission.logAction(comment);
+		
+		if("private".equals(params.get("visibility")))
+			actionLog.setPrivate(true);
+		
+		if(params.get("email_student") != null) {			
+			//TODO Email Student
+			//emailService.sendEmail(template, params, recipients, replyTo)
+		}
+		
+		if(params.get("cc_advisor") != null)
+			//TODO Carbon Advisor
+		
+		submission.save();
+		actionLog.save();
+		
 		view();
 	}
 

@@ -80,9 +80,7 @@ POST    /admin/settings/templates/remove        settings.EmailSettingsTab.remove
 POST    /admin/settings/templates/reorder       settings.EmailSettingsTab.reorderEmailTemplatesJSON
 
 ## Settings tab - Embargo Types
-POST    /admin/settings/embargos/add            settings.ConfigurableSettingsTab.addEmbargoTypeJSON
 POST    /admin/settings/embargos/edit           settings.ConfigurableSettingsTab.editEmbargoTypeJSON
-POST    /admin/settings/embargos/remove         settings.ConfigurableSettingsTab.removeEmbargoTypeJSON
 POST    /admin/settings/embargos/reorder        settings.ConfigurableSettingsTab.reorderEmbargoTypesJSON
 
 

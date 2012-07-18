@@ -26,14 +26,26 @@ import play.libs.Mail;
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  * @author Joe DeVries
+ * @author Micah Cooper
  */
 public class EmailServiceImpl implements EmailService {
 
 	@Override
-	public void sendEmail(EmailTemplate template, TemplateParameters params, List<String> recipients, String replyTo) {
+	public void sendEmail(EmailTemplate template, TemplateParameters params, List<String> recipients, String replyTo, List<String> carbonCopies) {
 		
 		if (template == null)
 			throw new IllegalArgumentException("Template is required.");
+		
+		sendEmail(template.getSubject(), template.getMessage(), params, recipients, replyTo, carbonCopies);
+	}
+	
+	public void sendEmail(String subject, String message, TemplateParameters params, List<String> recipients, String replyTo, List<String> carbonCopies) {
+		
+		if(subject == null)
+			throw new IllegalArgumentException("Subject is required.");
+		
+		if(message == null)
+			throw new IllegalArgumentException("Message is required.");
 		
 		if (params == null)
 			throw new IllegalArgumentException("Template parameters are required.");
@@ -56,11 +68,16 @@ public class EmailServiceImpl implements EmailService {
 				throw new IllegalArgumentException("Supplied recipent email address is invalid: "+recipient);
 			}
 		}
-
 		
-		
-		String subject = template.getSubject();
-		String message = template.getMessage();
+		if(carbonCopies != null) {
+			for (String carbonCopy : carbonCopies) {
+				try {
+					new InternetAddress(carbonCopy);
+				} catch (AddressException e) {
+					throw new IllegalArgumentException("Supplied carbon copy email address is invalid: "+carbonCopy);
+				}
+			}
+		}
 
 		if (params.FULL_NAME != null) {
 			subject = subject.replaceAll("\\{FULL_NAME\\}",params.FULL_NAME);
@@ -117,7 +134,7 @@ public class EmailServiceImpl implements EmailService {
 			message = message.replaceAll("\\{SUBMISSION_ASSIGNED_TO\\}",params.SUBMISSION_ASSIGNED_TO);
 		}
 			
-		EmailJob job = new EmailJob(recipients,replyTo,subject,message);
+		EmailJob job = new EmailJob(recipients,carbonCopies,replyTo,subject,message);
 		job.now();
 
 	}
@@ -131,6 +148,7 @@ public class EmailServiceImpl implements EmailService {
 		public String subject;
 		public String message;
 		public List<String> recipients;
+		public List<String> carbonCopies;
 		public String replyto;
 		
 		/**
@@ -138,6 +156,8 @@ public class EmailServiceImpl implements EmailService {
 		 * 
 		 * @param recipients
 		 *            The recipients of this email.
+		 * @param carbonCopies
+		 * 			  The cc recipients of this email.
 		 * @param replyto
 		 *            Who the email should be from (may be null)
 		 * @param subject
@@ -145,10 +165,11 @@ public class EmailServiceImpl implements EmailService {
 		 * @param message
 		 *            The complete email message with all variables replaced.
 		 */
-		public EmailJob(List<String> recipients, String replyto, String subject, String message) {
+		public EmailJob(List<String> recipients, List<String> carbonCopies, String replyto, String subject, String message) {
 			this.subject = subject;
 			this.message = message;
 			this.recipients = recipients;
+			this.carbonCopies = carbonCopies;
 			this.replyto = replyto;
 		}
 		
@@ -168,6 +189,11 @@ public class EmailServiceImpl implements EmailService {
 				}
 				for (String recipient : recipients) {
 					email.addTo(recipient);
+				}
+				if(carbonCopies != null) {
+					for (String carbonCopy : carbonCopies) {
+						email.addCc(carbonCopy);
+					}
 				}
 				email.setSubject(subject);
 				email.setMsg(message);

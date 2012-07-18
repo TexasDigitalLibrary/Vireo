@@ -81,12 +81,15 @@ public class EmailServiceImplTest extends UnitTest {
 		List<String> recipients = new ArrayList<String>();
 		recipients.add("email@email.com");
 		
+		List<String> carbonCopies = new ArrayList<String>();
+		carbonCopies.add("carbon@carbonCopy.com");
+		
 		// Send the email:
 		TemplateParameters params = new TemplateParameters(submission);
 		params.STUDENT_URL = "http://studenturl/";
 		params.ADVISOR_URL = "http://advisorurl/";
 		params.REGISTRATION_URL = "http://registerurl/";
-		emailService.sendEmail(template, params, recipients, "noreply@email.com");
+		emailService.sendEmail(template, params, recipients, "noreply@email.com", carbonCopies);
 		
 		// Wait for the email thread to send the email.
 		String recieved = null;
@@ -103,6 +106,7 @@ public class EmailServiceImplTest extends UnitTest {
 		assertTrue(recieved.contains("From: "+Play.configuration.getProperty("mail.from")));
 		assertTrue(recieved.contains("ReplyTo: noreply@email.com"));
 		assertTrue(recieved.contains("To: \"email@email.com\" <email@email.com>"));
+		assertTrue(recieved.contains("Cc: \"carbon@carbonCopy.com\" <carbon@carbonCopy.com>"));
 		assertTrue(recieved.contains("Subject: Template Subject"));
 
 		assertTrue(recieved.contains("Full Name: Student Submitter \n"));

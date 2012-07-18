@@ -451,7 +451,7 @@ public class Authentication extends AbstractVireoController {
 				List<String> recipients = new ArrayList<String>();
 				recipients.add(email);
 				
-				emailService.sendEmail(template, params, recipients, null);
+				emailService.sendEmail(template, params, recipients, null, null);
 				
 				renderTemplate("Authentication/registerSent.html",email);
 			}
@@ -583,7 +583,7 @@ public class Authentication extends AbstractVireoController {
 				List<String> recipients = new ArrayList<String>();
 				recipients.add(email);
 				
-				emailService.sendEmail(template, params, recipients, null);
+				emailService.sendEmail(template, params, recipients, null, null);
 				
 				renderTemplate("Authentication/recoverSent.html",email);
 			}
