@@ -1,10 +1,17 @@
 #{extends 'main.html' /}
 
+*{TODO: refactor to put the SUBMISSIONS_OPEN logic in only one place}*
+
 #{if subId == null}
 
-<div class="row">
-    *{TODO: need to pull submission period from admin configs}*
-    <p class="center red large">Currently accepting submissions for the May 2013 semester.</p>
+<div class="row">    
+    #{if SUBMISSIONS_OPEN}
+    	<p class="center red large">Currently accepting submissions for the ${CURRENT_SEMESTER} semester.</p>
+    #{/if}
+    #{else}
+        	<p class="alert alert-error">Submissions are currently closed; please contact your thesis office for more information.</p>
+    #{/else}
+    
     <ul id="submitSteps" class="unstyled span11 nav">
         <li id="step1Btn"><a href="@{Submit.verifyPersonalInformation(subId)}" ${controllers.Submit.giveCurrentClassIfEqual("verifyPersonalInformation",request.actionMethod)}></a></li>
         <li id="step2Btn" class="disabled"><a></a></li>
@@ -19,8 +26,14 @@
 #{else}
 
 <div class="row">
-*{TODO: need to pull submission period from admin configs}*
-    <p class="center red large">Currently accepting submissions for the May 2013 semester.</p>
+
+    #{if SUBMISSIONS_OPEN}
+    	<p class="center red large">Currently accepting submissions for the ${CURRENT_SEMESTER} semester.</p>
+    #{/if}
+    #{else}
+        	<p class="alert alert-error">Submissions are currently closed; please contact your thesis office for more information.</p>
+    #{/else}
+    
     <ul id="submitSteps" class="unstyled span11">
         <li id="step1Btn"><a href="@{Submit.verifyPersonalInformation(subId)}" ${controllers.Submit.giveCurrentClassIfEqual("verifyPersonalInformation",request.actionMethod)}></a></li>
         <li id="step2Btn"><a href="@{Submit.license(subId)}" ${controllers.Submit.giveCurrentClassIfEqual("license",request.actionMethod)}></a></li>

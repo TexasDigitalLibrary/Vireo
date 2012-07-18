@@ -15,6 +15,14 @@
 </ul>
 #{/ifErrors}
 
+
+#{if SUBMISSIONS_OPEN}
+    <p class="center red large">Currently accepting submissions for the ${CURRENT_SEMESTER} semester.</p>
+#{/if}
+#{else}
+        <p class="alert alert-error">Submissions are currently closed; please contact your thesis office for more information.</p>
+#{/else}
+    
 <div class="row">
     <table class="table table-striped table-bordered table-condensed">    
     
@@ -50,7 +58,7 @@
 				    <a class="btn btn-primary" href="@{Submit.deleteSubmission(submission.getId())}">Delete</a>
                 #{/if} 
                 #{else}
-				     <a href="/ut-etd/vireo/view?appID=4967">View</a>				 
+				     <a class="btn btn-primary" href="/ut-etd/vireo/view?appID=4967">View</a>				 
 				#{/else}
 				</td>
 				
@@ -58,10 +66,11 @@
         #{/list}
 
         </tbody></table>
-        
-        <div class="form-actions row center">
-		    <a href="@{Submit.verifyPersonalInformation()}" class="btn btn-primary">Start a new submission</a>
-		</div>
+        #{if SUBMISSIONS_OPEN }
+	        <div class="form-actions row center">
+			    <a href="@{Submit.verifyPersonalInformation()}" class="btn btn-primary">Start a new submission</a>
+			</div>
+		#{/if}
         
 </div>
 
