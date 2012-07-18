@@ -146,7 +146,7 @@ public class System extends AbstractVireoController {
 		
 		List<String> recipients = new ArrayList<String>();
 		recipients.add(email);
-		emailService.sendEmail(template, new TemplateParameters(), recipients, null);
+		emailService.sendEmail(template, new TemplateParameters(), recipients, null, null);
 		
 		render();
 	}

@@ -69,11 +69,13 @@ public class EmailServiceImpl implements EmailService {
 			}
 		}
 		
-		for (String carbonCopy : carbonCopies) {
-			try {
-				new InternetAddress(carbonCopy);
-			} catch (AddressException e) {
-				throw new IllegalArgumentException("Supplied carbon copy email address is invalid: "+carbonCopy);
+		if(carbonCopies != null) {
+			for (String carbonCopy : carbonCopies) {
+				try {
+					new InternetAddress(carbonCopy);
+				} catch (AddressException e) {
+					throw new IllegalArgumentException("Supplied carbon copy email address is invalid: "+carbonCopy);
+				}
 			}
 		}
 
@@ -188,8 +190,10 @@ public class EmailServiceImpl implements EmailService {
 				for (String recipient : recipients) {
 					email.addTo(recipient);
 				}
-				for (String carbonCopy : carbonCopies) {
-					email.addCc(carbonCopy);
+				if(carbonCopies != null) {
+					for (String carbonCopy : carbonCopies) {
+						email.addCc(carbonCopy);
+					}
 				}
 				email.setSubject(subject);
 				email.setMsg(message);
