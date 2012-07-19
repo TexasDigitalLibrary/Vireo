@@ -29,22 +29,21 @@ public class SubmitTest extends AbstractVireoFunctionalTest {
     public static SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
 
     @Test
-    public void testFullSubmission() {
+    public void testFullSubmission() {    	
+
     	
-        LOGIN();
+        // We can only turn submissions on with authorization turned off.
+    	// So turn off authorization - save the setting and then turn auth back on - just for the integrity of the test.
     	
 		context.turnOffAuthorization();
 
         Configuration so = 
         		settingRepo.createConfiguration(org.tdl.vireo.model.Configuration.SUBMISSIONS_OPEN, "true");
-        so.save();
-
-
+        so.save();    
         
+        context.restoreAuthorization();
         
-        //Configuration so = settingRepo.findConfigurationByName(org.tdl.vireo.model.Configuration.SUBMISSIONS_OPEN);
-        
-        
+        LOGIN();
 
         // Create submission
         Person person = personRepo.findPersonByEmail("bthornton@gmail.com");
