@@ -678,7 +678,13 @@ public class Submit extends AbstractVireoController {
         Person submitter = context.getPerson();
         List<Submission> submissionList = subRepo.findSubmission(submitter);
 
-        Logger.info("SubmissionStatus " + settingRepo.findConfigurationByName(SUBMISSIONS_OPEN));
+        
+        Configuration so = settingRepo.findConfigurationByName(SUBMISSIONS_OPEN);
+        
+        if (so != null) 
+        	Logger.info("SubmissionStatus " + settingRepo.findConfigurationByName(SUBMISSIONS_OPEN).getValue());
+        else
+        	Logger.info("SubmissionStatus Null");                      
         
         if(submissionList.size() > 0 || settingRepo.findConfigurationByName(SUBMISSIONS_OPEN) == null) {
         	

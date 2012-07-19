@@ -32,6 +32,10 @@ public class SubmitTest extends AbstractVireoFunctionalTest {
     public void testFullSubmission() {
 
         LOGIN();
+        
+        Configuration so = settingRepo.findConfigurationByName(org.tdl.vireo.model.Configuration.SUBMISSIONS_OPEN);
+        so.setValue("true");
+        so.save();
 
         // Create submission
         Person person = personRepo.findPersonByEmail("bthornton@gmail.com");
