@@ -77,13 +77,14 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 	 * Test adding and editing an Email Template.
 	 */
 	@Test
-	public void testAddingEditingEmbargoTypes() {
+	public void testAddingEditingDeletingEmbargoTypes() {
 		
 		LOGIN();
 		
 		// Get our urls and a list of fields.
 		final String EDIT_URL = Router.reverse("settings.ConfigurableSettingsTab.editEmbargoTypeJSON").url;
-
+		final String REMOVE_URL = Router.reverse("settings.ConfigurableSettingsTab.removeEmbargoTypeJSON").url;
+		
 		// Add a new template
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("name","New Embargo Type");
@@ -128,7 +129,15 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		assertEquals(null,settingRepo.findEmbargoType(id).getDuration());
 		assertEquals(false,settingRepo.findEmbargoType(id).isActive());
 		
-		settingRepo.findEmbargoType(id).delete();
+		// Now remove the embargo type
+		params.clear();
+		params.put("embargoTypeId","embargoType_"+id);
+		response = POST(REMOVE_URL,params);
+		assertContentMatch("\"success\": \"true\"", response);
+		
+		// Verify the action was deleted in the database;
+		JPA.em().clear();
+		assertNull(settingRepo.findEmbargoType(id));
 	}
 	
 	/**

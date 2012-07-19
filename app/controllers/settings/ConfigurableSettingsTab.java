@@ -128,6 +128,28 @@ public class ConfigurableSettingsTab extends SettingsTab {
 	}
 	
 	/**
+	 * Remove an existing embargo type.
+	 * 
+	 * @param embargoId 
+	 * 			  The id of the embargo type to be removed.
+	 */
+	public static void removeEmbargoTypeJSON(String embargoTypeId) {
+		
+		try {
+			String[] parts = embargoTypeId.split("_");
+			Long id = Long.valueOf(parts[1]);
+			EmbargoType embargo = settingRepo.findEmbargoType(id);
+			embargo.delete();
+			
+			renderJSON("{ \"success\": \"true\" }");
+		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to remove embargo type");
+			String message = escapeJavaScript(re.getMessage());
+			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
+		}	
+	}
+	
+	/**
 	 * Reorder a list of embargo types.
 	 * 
 	 * @param embargoIds
