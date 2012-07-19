@@ -56,7 +56,7 @@ public class ViewTab extends AbstractVireoController {
 		} else {
 			FilterTab.list();
 		}
-
+		
 		Submission submission = subRepo.findSubmission(id);
 		Person submitter = submission.getSubmitter();
 
