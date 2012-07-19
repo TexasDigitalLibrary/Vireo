@@ -78,13 +78,18 @@
 		<form id="add-comment-form" action="@{ViewTab.addActionLogComment(submission.getId())}" method="POST" class="form-horizontal"> 
             <ul class="unstyled">
             	<li>
+            		Subject:<br />
+            		<input type="text" name="subject" class="span8" />
+            	</li>
+            	<li>
             		<textarea class="textarea span8" name="comment" rows="6">compose comment here...</textarea>
             	</li>
             	<li>
 		            <select name="email_template">
 		            	<option value="" selected="selected">Choose an email template...</option>
-		            	<option value="1">Email 1</option>
-		            	<option value="2">Email 2</option>
+		            	#{list items:templates, as:'template'}
+		            		<option value="${template.getId()}">${template.getName()}</option>
+		            	#{/list}
 		            </select>
 		        </li>
 		        <li>

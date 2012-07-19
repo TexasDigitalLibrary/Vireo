@@ -16,6 +16,7 @@ jQuery(document).ready(function(){
 	 jQuery("#add-embargoType-link").click(embargoOpenDialogHandler());
 	 jQuery("#timeframe-indeterminate, #timeframe-determinate").change(embargoDurationToggleHandler());
 	 jQuery("#embargoType-save").click(embargoSaveDialogHandler('@{settings.ConfigurableSettingsTab.editEmbargoTypeJSON()}'));
+	 jQuery("#embargoType-remove").click(embargoRemoveDialogHandler('@{settings.ConfigurableSettingsTab.removeEmbargoTypeJSON()}'));
 	 jQuery("#embargoType-list").sortable({
 		 placeholder: "placeholder",
 		 update: embargoSortableUpdateHandler('@{settings.ConfigurableSettingsTab.reorderEmbargoTypesJSON()}'),
@@ -168,7 +169,6 @@ jQuery(document).ready(function(){
 
 <h2>AVAILABLE EMBARGO TYPES</h2>
 
-#{if embargos.size() > 0 }
 <table class="table table-striped table-bordered table-condensed">
 	<thead>
 		<tr>
@@ -191,7 +191,7 @@ jQuery(document).ready(function(){
 	    #{/list}
 	</tbody>
 </table>
-#{/if}
+
 
 <p><a id="add-embargoType-link" href="#">[ADD NEW]</a></p>
 
@@ -490,6 +490,7 @@ jQuery(document).ready(function(){
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <a id="embargoType-remove" href="#" class="btn">Delete Embargo</a>
             <input id="embargoType-save" type="submit" class="btn btn-primary" name="submit_save" value="Save Embargo"/>
         </div>
     </form>

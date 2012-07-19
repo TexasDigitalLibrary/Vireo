@@ -1,14 +1,19 @@
 package org.tdl.vireo.model.jpa;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.TypedQuery;
 
 import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.CustomActionDefinition;
+import org.tdl.vireo.search.Indexer;
 
 import play.data.validation.Required;
 import play.db.jpa.Model;
+import play.modules.spring.Spring;
 
 /**
  * Jpa specific implementation of Vireo's CustomActionDefinition interface.
@@ -54,6 +59,19 @@ public class JpaCustomActionDefinitionImpl extends JpaAbstractModel<JpaCustomAct
 	public JpaCustomActionDefinitionImpl delete() {
 		
 		assertManager();
+		
+		// Tell the indexer about all the submissions that will be effected by
+		// this deletion.
+		TypedQuery<Long> effectedQuery = em().createQuery(
+				"SELECT sub.id "+
+				"FROM JpaSubmissionImpl AS sub "+
+				"JOIN sub.customActions as action "+
+				"WHERE action.definition = :definition ",
+				Long.class);
+		effectedQuery.setParameter("definition", this);
+		List<Long> effectedIds = effectedQuery.getResultList();
+		Indexer indexer = Spring.getBeanOfType(Indexer.class);
+		indexer.updated(effectedIds);
 		
 		// Delete all values associated with this definition
 		em().createQuery(

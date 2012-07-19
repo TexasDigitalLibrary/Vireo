@@ -94,7 +94,7 @@ public class LuceneIndexerImplTest extends UnitTest {
 		
 		// Test updating a new submission.
 		MockSubmission sub = new MockSubmission();
-		indexer.updated(sub);
+		indexer.updated(sub.getId());
 		assertTrue(indexer.transactionLocal.get().contains(sub.getId()));
 		indexer.rollback();
 	
@@ -153,6 +153,7 @@ public class LuceneIndexerImplTest extends UnitTest {
 		assertEquals("None",indexer.getCurrentJobLabel());
 		assertEquals(-1L, indexer.getCurrentJobProgress());
 		assertEquals(-1L, indexer.getCurrentJobTotal());
+		assertTrue(indexer.isUpdated(lastSubId));
 		
 		// Commit the 100 jobs.
 		indexer.commit(false);

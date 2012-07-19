@@ -314,6 +314,40 @@ test("test commitChangesHandler AJAX committee members", function(){
     equal(0, jQuery(".icon-remove").length,"There are zero remove icons.");
     equal(0, jQuery(".icon-ok").length,"There are zero ok icons.");
 });
- 
+
+/**
+ * Test AJAX retrieve template data.
+ */
+test("test retrieveTemplateJSON AJAX", function(){
+	expect(6);
+	reset();
+	
+	var markup = '<div id="add-comment-modal">';
+		markup += '<textarea name="comment"></textarea>';
+		markup += '<input type="text" name="subject" value="" />';
+		markup += '</div>';
+	
+	jQuery("body").append(markup);
+	
+	// Mock AJAX
+	var options = null;
+	jQuery.ajax = function(param) {
+		options = param;
+	}
+	
+	//AJAX handler
+	retrieveTemplateHandler("/jsonURL", 1);
+	
+	options.success({ success: 'true', subject: 'This is my subject.', message: 'This is the body of the email.' });
+	
+	equal('/jsonURL', options.url,"The ajax url is correct.");
+	equal('POST', options.type,"The ajax type is correct.");
+	equal('json', options.dataType,"The ajax dataType is correct.");
+	equal(1, options.data.id,"The ajax data id is correct.");
+	
+	equal("This is the body of the email.", jQuery("textarea").html(),"The message was updated correctly.");
+	equal("This is my subject.", jQuery("input").val(),"The subject was updated correctly.");
+});
+
 </script>
 </html> 

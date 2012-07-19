@@ -335,3 +335,31 @@ function assignSpecialValueAndSubmit(form, value){
 		form.find("input[name='special_value']").val(value);
 		form.submit();	
 }
+
+/**
+ * Function to update subject and comment area when a template is selected.
+ *
+ * @param url (The method to update the add comment modal.)
+ *
+ * @param id (The id of the template.)
+ */
+function retrieveTemplateHandler(url, id){
+	jQuery("#add-comment-modal").addClass("waiting");
+	
+	jQuery.ajax({
+		url:url,
+		data:{
+			id:id
+		},
+		dataType:'json',
+		type:'POST',
+		success:function(data){
+			jQuery("#add-comment-modal input[name='subject']").val(data.subject);
+			jQuery("#add-comment-modal textarea[name='comment']").html(data.message);
+			jQuery("#add-comment-modal").removeClass("waiting");
+		},
+		error:function(){
+			alert("Error inserting template data.");
+		}
+	});
+}

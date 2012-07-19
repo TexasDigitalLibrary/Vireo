@@ -234,13 +234,48 @@ public class LuceneIndexerImpl implements Indexer {
 		
 		// Add the submission to the transaction
 		if (sub != null) {
-			// Create a new transaction if needed.
-			if (transactionLocal.get() == null)
-				transactionLocal.set(new LinkedSet<Long>());
-			
-			// Add the submission to the transaction
-			transactionLocal.get().add(sub.getId());
+			updated(sub.getId());
 		}
+	}
+	
+	@Override
+	public void updated(Long submissionId) {
+		
+		if (submissionId == null)
+			throw new IllegalArgumentException("An submission id is required");
+
+		// Create a new transaction if needed.
+		if (transactionLocal.get() == null)
+			transactionLocal.set(new LinkedSet<Long>());
+		
+		// Add the submission to the transaction
+		transactionLocal.get().add(submissionId);
+		
+	}
+	
+	@Override
+	public void updated(List<Long> submissionIds) {
+		
+		if (submissionIds == null)
+			throw new IllegalArgumentException("A list of submission ids are required");
+		
+		for (Long submissionId : submissionIds) {
+			updated(submissionId);
+		}
+	}
+	
+	@Override
+	public boolean isUpdated(Long submissionId) {
+		
+		if (transactionLocal.get() != null) {
+			return transactionLocal.get().contains(submissionId);
+		}
+		return false;
+	}
+
+	@Override
+	public boolean isUpdated(Submission submission) {
+		return isUpdated(submission.getId());
 	}
 	
 	/**
