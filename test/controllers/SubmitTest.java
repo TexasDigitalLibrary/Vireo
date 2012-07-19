@@ -30,12 +30,21 @@ public class SubmitTest extends AbstractVireoFunctionalTest {
 
     @Test
     public void testFullSubmission() {
-
+    	
         LOGIN();
-        
-        Configuration so = settingRepo.findConfigurationByName(org.tdl.vireo.model.Configuration.SUBMISSIONS_OPEN);
-        so.setValue("true");
+    	
+		context.turnOffAuthorization();
+
+        Configuration so = 
+        		settingRepo.createConfiguration(org.tdl.vireo.model.Configuration.SUBMISSIONS_OPEN, "true");
         so.save();
+
+
+        
+        
+        //Configuration so = settingRepo.findConfigurationByName(org.tdl.vireo.model.Configuration.SUBMISSIONS_OPEN);
+        
+        
 
         // Create submission
         Person person = personRepo.findPersonByEmail("bthornton@gmail.com");
