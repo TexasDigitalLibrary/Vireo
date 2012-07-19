@@ -96,13 +96,13 @@
 		            <input type="checkbox" name="status_change" class="checkbox"> Flag submission as "Needs Corrections"</input><br />
             	</li>
             	<li>
-            		<input type="radio" name="visibility" class="radio" value="public"> Comment is public</input><br />
-            		<ul class="unstyled" style="padding-left:15px;">
+            		<input type="radio" name="visibility" class="radio" value="public" checked="true"> Comment is public</input><br />
+            		<ul class="unstyled" style="padding-left:15px;" id="comment-email-options">
             			<li>
             				<input type="checkbox" name="email_student" class="checkbox"> Email the student</input><br />
             			</li>
             			<li>
-            				<input type="checkbox" name="cc_advisor" class="checkbox"> CC student's advisor</input><br />
+            				<input type="checkbox" name="cc_advisor" class="checkbox" disabled="true"> CC student's advisor</input><br />
             			</li>
             		</ul>
             	</li>

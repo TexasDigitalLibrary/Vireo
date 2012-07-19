@@ -38,9 +38,7 @@ function swapToInputHandler(){
 			//Input Fields
 			} else {
 				editItem.replaceWith('<div id="'+editItem.attr("id")+'" class="editing"><input class="field" type="text" value="'+value+'" /><br /><i class="icon-remove"></i>&nbsp<i class="icon-ok"></i></div>');
-			}
-			//jQuery(".editing input").setTimeout(jQuery(".editing").focus());
-			
+			}			
 		}
 	}
 }
@@ -362,4 +360,36 @@ function retrieveTemplateHandler(url, id){
 			alert("Error inserting template data.");
 		}
 	});
+}
+
+/**
+ * Function that checks when adding a new comment if the comment is public or private
+ * and disables the email options accordingly.
+ * 
+ */
+function toggleAddCommentEmailOptions(){
+	return function(){
+		if(jQuery("#add-comment-modal input[name='visibility']:checked").val()=="public"){
+			jQuery("#add-comment-modal input[name='email_student']").removeAttr("disabled");
+		} else {
+			jQuery("#comment-email-options input").each(function(){
+				jQuery(this).attr("disabled","true");
+				jQuery(this).removeAttr("checked");
+			});
+		}
+	}
+}
+
+/**
+ * Function to toggle the ability to CC the advisor when Email the student is selected.
+ */
+function toggleCarbonCopyAdvisor(){
+	return function(){
+		if(jQuery("#add-comment-modal input[name='email_student']:checked").length){
+			jQuery("#add-comment-modal input[name='cc_advisor']").removeAttr("disabled");
+		} else {
+			jQuery("#add-comment-modal input[name='cc_advisor']").removeAttr("checked");
+			jQuery("#add-comment-modal input[name='cc_advisor']").attr("disabled","true");
+		}
+	}
 }

@@ -77,6 +77,12 @@ jQuery(document).ready(function(){
 		 retrieveTemplateHandler(retrieveTemplateJSONURL, jQuery(this).val());
 	 });
 	
+	/**
+	 * Add Comment Disable/Enable Events
+	 */
+	 jQuery("#add-comment-modal input[name='visibility']").live("click", toggleAddCommentEmailOptions());
+	 jQuery("#add-comment-modal input[name='email_student']").live("click", toggleCarbonCopyAdvisor());
+	
 });
 </script>
 #{/set}
