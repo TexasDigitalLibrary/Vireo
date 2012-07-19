@@ -5,8 +5,15 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.MockPerson;
+import org.tdl.vireo.model.Person;
+import org.tdl.vireo.model.PersonRepository;
+import org.tdl.vireo.model.RoleType;
+import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.model.SubmissionRepository;
+import org.tdl.vireo.search.Indexer;
 import org.tdl.vireo.security.SecurityContext;
 
 import play.db.jpa.JPA;
@@ -22,7 +29,10 @@ public class JpaEmbargoTypeImplTest extends UnitTest {
 	
 	// Repositories
 	public static SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
+	public static PersonRepository personRepo = Spring.getBeanOfType(PersonRepository.class);
+	public static SubmissionRepository subRepo = Spring.getBeanOfType(SubmissionRepository.class);
 	public static JpaSettingsRepositoryImpl settingRepo = Spring.getBeanOfType(JpaSettingsRepositoryImpl.class);
+	public static Indexer indexer = Spring.getBeanOfType(Indexer.class);
 	
 	@Before
 	public void setup() {
@@ -45,7 +55,7 @@ public class JpaEmbargoTypeImplTest extends UnitTest {
 	@Test
 	public void testCreate() {
 		
-		EmbargoType type = settingRepo.createEmbargoType("name", "description", 12, true);
+		EmbargoType type = settingRepo.createEmbargoType("name", "description", 12, true).save();
 		
 		assertNotNull(type);
 		assertTrue(type.isActive());
@@ -274,6 +284,37 @@ public class JpaEmbargoTypeImplTest extends UnitTest {
 		type2.delete();
 		type3.delete();
 		type4.delete();
+	}
+	
+	
+	/**
+	 * Test that you can delete an embargo type and have submision associated with the type be cleared.
+	 */
+	@Test
+	public void testDeletetion() {
+		EmbargoType embargo = settingRepo.createEmbargoType("name", "description", 0, true).save();
+		Person person = personRepo.createPerson("netid", "email@email.com", "first", "last", RoleType.NONE).save();
+		Submission sub = subRepo.createSubmission(person);
+		sub.setEmbargoType(embargo);
+		sub.save();
+		
+		// Clear out the indexer transaction.
+		indexer.rollback();
+		assertFalse(indexer.isUpdated(sub));
+
+		embargo.delete();
+		
+		// Check that the submission was queued up in the indexer.
+		assertTrue(indexer.isUpdated(sub));
+		
+		// check that the value associated with it was also deleted, once refreshed
+		JPA.em().clear();
+		sub = subRepo.findSubmission(sub.getId());
+		
+		assertNull(sub.getEmbargoType());
+		
+		subRepo.findSubmission(sub.getId()).delete();
+		personRepo.findPerson(person.getId()).delete();
 	}
 	
 	/**

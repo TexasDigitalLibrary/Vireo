@@ -1,5 +1,7 @@
 package org.tdl.vireo.search;
 
+import java.util.List;
+
 import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Submission;
@@ -26,6 +28,46 @@ public interface Indexer {
 	 *            The model object which was created, saved, or deleted.
 	 */
 	public <T extends AbstractModel> void updated(T model);
+	
+	/**
+	 * This is a notification method to update the index for the provided
+	 * submission Id. This works the same as the updated(model) varient however
+	 * this may be more efficient in situations where the full object is not
+	 * available. The indexer will keep track of these submissions until either
+	 * rollback() or commit() is called from the same thread.
+	 * 
+	 * @param submissionId The id of the submission which was created, saved, or deleted.
+	 */
+	public void updated(Long submissionId);
+	
+	/**
+	 * This is a notification method to update the index for the provided list
+	 * of submission ids. This works the same as the updated(model) varient
+	 * however this may be more efficient in situations where the full object is
+	 * not available. The indexer will keep track of these submissions until
+	 * either rollback() or commit() is called from the same thread.
+	 * 
+	 * @param submissionIds
+	 *            A list of submission ids which were created, saved, or
+	 *            deleted.
+	 */
+	public void updated(List<Long> submissionIds);
+	
+	/**
+	 * @param submissionId
+	 *            The id of a submission object.
+	 * @return True if the identified submission is included in the current
+	 *         transaction.
+	 */
+	public boolean isUpdated(Long submissionId);
+
+	/**
+	 * @param submission
+	 *            A submission object.
+	 * @return True if the submission object is included in the current
+	 *         transaction.
+	 */
+	public boolean isUpdated(Submission submission);
 
 	/**
 	 * Roll back the current proposed changes to the model. This is typically

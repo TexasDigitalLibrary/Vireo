@@ -10,6 +10,7 @@ import org.tdl.vireo.model.MockPerson;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.search.impl.LuceneIndexerImpl;
 import org.tdl.vireo.security.SecurityContext;
 
 import play.db.jpa.JPA;
@@ -28,6 +29,7 @@ public class JpaCustomActionDefinitionImplTest extends UnitTest {
 	public static JpaPersonRepositoryImpl personRepo = Spring.getBeanOfType(JpaPersonRepositoryImpl.class);
 	public static JpaSubmissionRepositoryImpl subRepo = Spring.getBeanOfType(JpaSubmissionRepositoryImpl.class);
 	public static JpaSettingsRepositoryImpl settingRepo = Spring.getBeanOfType(JpaSettingsRepositoryImpl.class);
+	public static LuceneIndexerImpl indexer = Spring.getBeanOfType(LuceneIndexerImpl.class);
 	
 	@Before
 	public void setup() {
@@ -255,7 +257,15 @@ public class JpaCustomActionDefinitionImplTest extends UnitTest {
 		sub.addCustomAction(def, true);
 		sub.save();
 		
+		// Clear out the indexer transaction.
+		indexer.rollback();
+		assertFalse(indexer.isUpdated(sub));
+
+		
 		def.delete();
+		
+		// Check that the submission was queued up in the indexer.
+		assertTrue(indexer.isUpdated(sub));
 		
 		// check that the value associated with it was also deleted, once refreshed
 		JPA.em().clear();

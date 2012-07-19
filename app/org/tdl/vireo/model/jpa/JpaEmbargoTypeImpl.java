@@ -1,13 +1,18 @@
 package org.tdl.vireo.model.jpa;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.TypedQuery;
 
 import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.EmbargoType;
+import org.tdl.vireo.search.Indexer;
 
 import play.db.jpa.Model;
+import play.modules.spring.Spring;
 
 /**
  * Jpa specific implementation of Vireo's Embargo Type interface.
@@ -76,6 +81,28 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 	public JpaEmbargoTypeImpl delete() {
 		assertManager();
 
+		// Tell the indexer about all the submissions that will be effected by
+		// this deletion.
+		TypedQuery<Long> effectedQuery = em().createQuery(
+				"SELECT sub.id "+
+				"FROM JpaSubmissionImpl AS sub "+
+				"WHERE sub.embargoType = :embargo ",
+				Long.class);
+		effectedQuery.setParameter("embargo", this);
+		List<Long> effectedIds = effectedQuery.getResultList();
+		Indexer indexer = Spring.getBeanOfType(Indexer.class);
+		indexer.updated(effectedIds);
+		
+		
+			// Delete all values associated with this definition
+		em().createQuery(
+			"UPDATE JpaSubmissionImpl AS sub "+
+		    "SET sub.embargoType = null "+
+			"WHERE sub.embargoType = :embargo"
+			).setParameter("embargo", this)
+			.executeUpdate();
+		
+		
 		return super.delete();
 	}
 	
