@@ -10,11 +10,13 @@ import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.Department;
 import org.tdl.vireo.model.DocumentType;
+import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.services.EmailService;
+import org.tdl.vireo.services.EmailService.TemplateParameters;
 import org.tdl.vireo.services.impl.EmailServiceImpl;
 import org.tdl.vireo.state.State;
 
@@ -59,6 +61,7 @@ public class ViewTab extends AbstractVireoController {
 		Person submitter = submission.getSubmitter();
 
 		DegreeLevel degreeLevel = settingRepo.findDegreeByName(submission.getDegree()).getLevel();
+		List<EmailTemplate> templates = settingRepo.findAllEmailTemplates();
 
 		String gradMonth = new DateFormatSymbols().getMonths()[submission.getGraduationMonth()];
 
@@ -70,7 +73,7 @@ public class ViewTab extends AbstractVireoController {
 		List<Person> assignees = personRepo.findPersonsByRole(RoleType.REVIEWER);		
 
 		String nav = "view";
-		render(nav, submission, submitter, degreeLevel, gradMonth, actionLogs, settingRepo, states, assignees, transitions);
+		render(nav, submission, submitter, degreeLevel, gradMonth, actionLogs, settingRepo, states, assignees, transitions, templates);
 	}
 
 	@Security(RoleType.REVIEWER)
@@ -449,6 +452,7 @@ public class ViewTab extends AbstractVireoController {
 		Submission submission = subRepo.findSubmission(id);
 		EmailService emailService = Spring.getBeanOfType(EmailServiceImpl.class);
 		
+		String subject = params.get("subject");
 		String comment = params.get("comment");
 		
 		if(params.get("status_change") != null)
@@ -459,18 +463,55 @@ public class ViewTab extends AbstractVireoController {
 		if("private".equals(params.get("visibility")))
 			actionLog.setPrivate(true);
 		
-		if(params.get("email_student") != null) {			
-			//TODO Email Student
-			//emailService.sendEmail(template, params, recipients, replyTo)
+		if(params.get("email_student") != null && "public".equals(params.get("visibility"))) {			
+			
+			//Setup Params
+			TemplateParameters emailParams = new TemplateParameters(submission);
+			
+			//Create list of recipients
+			List<String> recipients = new ArrayList<String>();
+			recipients.add(submission.getSubmitter().getCurrentEmailAddress());
+			
+			//Create list of carbon copies
+			List<String> carbonCopies = new ArrayList<String>();
+			if(params.get("cc_advisor") != null) {
+				carbonCopies.add(submission.getCommitteeContactEmail());
+			}
+			
+			String replyTo = context.getPerson().getCurrentEmailAddress();
+			
+			emailService.sendEmail(subject, comment, emailParams, recipients, replyTo, carbonCopies);
 		}
-		
-		if(params.get("cc_advisor") != null)
-			//TODO Carbon Advisor
 		
 		submission.save();
 		actionLog.save();
 		
 		view();
+	}
+	
+	/**
+	 * A method to update the add comment subject and comment with 
+	 * a templates subject and message.
+	 * 
+	 * @param id (The id of the template.)
+	 */
+	@Security(RoleType.REVIEWER)
+	public static void retrieveTemplateJSON(Long id) {
+		
+		String subject = "";
+		String message = "";
+		
+		if(id != null) {
+			EmailTemplate template = settingRepo.findEmailTemplate(id);
+		
+			subject = escapeJavaScript(template.getSubject());
+			message = escapeJavaScript(template.getMessage());
+		}
+		
+		String json = "{ \"success\": true, \"subject\": \""+subject+"\", \"message\": \""+message+"\" }";
+		
+		renderJSON(json);
+		
 	}
 
 	/**
