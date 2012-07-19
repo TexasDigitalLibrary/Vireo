@@ -1111,6 +1111,7 @@ function embargoOpenDialogHandler() {
 			
 			jQuery("#embargo-type-modal .modal-header h3").text("Edit Embargo Type");
 			jQuery("#embargo-type-modal .modal-footer #embargoType-save").val("Save Embargo");
+			jQuery("#embargoType-remove").show();
 
 
 		} else {
@@ -1126,6 +1127,7 @@ function embargoOpenDialogHandler() {
 			
 			jQuery("#embargo-type-modal .modal-header h3").text("Add Embargo Type");
 			jQuery("#embargo-type-modal .modal-footer #embargoType-save").val("Add Embargo");
+			jQuery("#embargoType-remove").hide();
 
 		}
 
@@ -1246,6 +1248,81 @@ function embargoSaveDialogHandler(jsonURL) {
 		return false;
 	}
 }
+
+
+/**
+ * Delete an existing embargo type. This will confirm that this is what the user wants to do.
+ * 
+ * @param jsonURL
+ *            The url where embargos are deleted.
+ * @returns A Callback Function
+ */
+function embargoRemoveDialogHandler(jsonURL) {
+	return function () {
+
+		// Confirm before deleting
+		var really = confirm("Alert! All submissions which use this embargo type will have their embargo settings deleted with no way to recover. Are you REALLY sure you want to delete this embargo type?");
+		if (!really)
+			return false;
+		
+		var embargoTypeId = jQuery("#embargoType-id").val();
+		jQuery("#embargo-type-modal").addClass("waiting");
+		
+		var successCallback = function(data) {
+
+			// Remove the ajax loading indicators & alerts
+			jQuery("#embargo-type-modal").removeClass("waiting");
+			jQuery("#embargoType-errors").html("");
+			jQuery("#embargo-type-modal .control-group").each(function () {
+				jQuery(this).removeClass("error"); 
+			});
+			jQuery("#"+embargoTypeId).remove();
+			
+			// Go back to the list
+			jQuery('#embargo-type-modal').modal('hide');
+
+		}
+
+		var failureCallback = function (message) {
+
+			// Add failure indicators
+			jQuery("#embargo-type-modal").removeClass("waiting");
+			jQuery("#embargo-type-modal .control-group").each(function () {
+				jQuery(this).addClass("error"); 
+			});
+
+			// Display the error
+			jQuery("#embargoType-errors").html("<li><strong>Unable to save embargo</strong>: "+message);
+
+		}
+
+		jQuery.ajax({
+			url:jsonURL,
+			data:{
+				'embargoTypeId': embargoTypeId
+			},
+			dataType:'json',
+			type:'POST',
+			success:function(data){
+				if (data.success) {
+					successCallback(data);
+				} else {
+					failureCallback(data.message)
+				}
+			},
+			error:function(){
+				failureCallback("Unable to communicate with the server.");
+			}
+
+		});
+
+		return false;
+	}
+}
+
+
+
+
 
 /**
  * Sortable update handler for embargo types. This callback is called whenever
