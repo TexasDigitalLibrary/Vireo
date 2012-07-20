@@ -37,7 +37,8 @@
                 #{else}
                     <div class="controls">
                         <p>
-                            ${primaryAttachment.getName()}
+                            <a href="@{Submit.viewPrimaryDocument(subId)}">${primaryAttachment.getName()}</a>
+
                             (${primaryAttachment.getDisplaySize()})
                             <input type="submit" value="Replace Manuscript" class="uploadBtn btn" name="replacePrimary">
                             
@@ -58,28 +59,41 @@
 			<div class="control-group">
 				<label class="control-label" for="supplementaryFile">Supplementary Files:</label>
 
+                <div class="controls">
+                    <input type="file" id="supplementaryFile" class="input-file" name="supplementaryDocument">
+                    <input type="submit" value="Upload" class="uploadBtn btn" name="uploadSupplementary">
+                </div>
+			</div>
+		</fieldset>
+		
 
+		<fieldset id="supplementaryFileUploadList">
+			<legend>Uploaded supplementary files</legend>
+			<div class="control-group">
                 #{if supplementalAttachments.size() > 0}
                     <div class="controls">
                         #{list items:supplementalAttachments, as:"attachment"}
                             <p>
-                            ${attachment.getName()}
-                                (${attachment.getDisplaySize()})
+                            <label>
+                                <input type="checkbox" value="${attachment.getId()}" name="attachmentToRemove">
+                                ${attachment.getName()} (${attachment.getDisplaySize()})  
+                            </label>                                                     
                             </p>
                         #{/list}
-                        <input type="file" id="supplementaryFile" class="input-file" name="supplementaryDocument">
-                        <input type="submit" value="Add" class="uploadBtn btn" name="uploadSupplementary">
+                            <input type="submit" value="Remove Selected" class="uploadBtn btn" name="removeSupplementary">                        
                     </div>
                 #{/if}
-                #{else}
-                    <div class="controls">
-                        <input type="file" id="supplementaryFile" class="input-file" name="supplementaryDocument">
-                        <input type="submit" value="Upload" class="uploadBtn btn" name="uploadSupplementary">
-                    </div>
-                #{/else}
 
 			</div>
-		</fieldset>
+		</fieldset>		
+		
+		
+		
+		
+		
+		
+		
+		
 
         <fieldset id="sourceFileUpload" style="display: none;">
             <legend>Upload document source files</legend>

@@ -500,7 +500,11 @@ public class Submit extends AbstractVireoController {
                 embargo);
     }
 
-    // Handle File Upload
+
+	/**
+	 * File upload form    
+	 * @param subId
+	 */
     
 	@Security(RoleType.STUDENT)
 	public static void fileUpload(Long subId) {
@@ -549,7 +553,7 @@ public class Submit extends AbstractVireoController {
                     Logger.info("Doc: " + supplementaryDocument.getClass().getName());
 
                 try {
-                    sub.addAttachment(supplementaryDocument, AttachmentType.SUPPLEMENTAL);
+                    sub.addAttachment(supplementaryDocument, AttachmentType.SUPPLEMENTAL);                                         
                     sub.save();
                 } catch (IOException e) {
                     validation.addError("supplementaryDocument","Error uploading supplementary document.");
@@ -581,8 +585,40 @@ public class Submit extends AbstractVireoController {
                 if (!validation.hasErrors())
                     confirmAndSubmit(subId);
             }
+            
+            // Handle the remove supplementary document button 
+            
+            if (params.get("removeSupplementary") != null) {
+            	
+            	// Get values from all check boxes
+            	
+            	String[] idsToRemove = params.getAll("attachmentToRemove");
+            	
+            	// Iterate over all checked check boxes - removing attachments as we go
+            	
+            	if (idsToRemove != null)
+	            	for (String id : idsToRemove ) {
+	            		
+	            		// Iterate over the list of supplemental documents and delete the indicated docs
+	            		List<Attachment> supList = sub.getSupplementalDocuments();
+	            		
+	            		for (Attachment a : supList) {
+	            			
+	            			Logger.info("Comparing " + a.getId() + " " + new Long(id));
+	            			
+	            			if (a.getId().equals(new Long(id))) {
+	            				
+	            				Logger.info("Deleteing attachment " + a.getId());
+	            				
+	            				a.delete();
+	            			}
+	            		}
+	            		
+	            	}            	            	
+            }
 
-            // Initialize variables
+            // Initialize variables and display form
+            
             Attachment primaryAttachment = sub.getPrimaryDocument();
             List<Attachment> supplementalAttachments = sub.getSupplementalDocuments();
 
