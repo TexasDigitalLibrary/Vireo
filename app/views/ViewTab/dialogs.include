@@ -93,21 +93,53 @@
 		            </select>
 		        </li>
 		        <li>
-		            <input type="checkbox" name="status_change" class="checkbox"> Flag submission as "Needs Corrections"</input><br />
+		            <input type="checkbox" name="status_change" class="checkbox" 
+		            #{if currentUser.getPreference("notes_flag_submission_as_needs_corrections_by_default") != null}
+		             checked="true"
+		            #{/if}
+		            > Flag submission as "Needs Corrections"</input><br />		            
             	</li>
             	<li>
-            		<input type="radio" name="visibility" class="radio" value="public" checked="true"> Comment is public</input><br />
+            		<input type="radio" name="visibility" class="radio" value="public"
+            		#{if currentUser.getPreference("notes_mark_comment_as_private_by_default") == null}
+            		checked="true"
+            		#{/if}
+            		> Comment is public</input><br />
             		<ul class="unstyled" style="padding-left:15px;" id="comment-email-options">
             			<li>
-            				<input type="checkbox" name="email_student" class="checkbox"> Email the student</input><br />
+            				<input type="checkbox" name="email_student" class="checkbox"
+            			#{if currentUser.getPreference("notes_mark_comment_as_private_by_default") == null}
+            		 		#{if currentUser.getPreference("notes_email_student_by_default") != null}
+            		 			checked="true"
+            		 		#{/if}
+            			#{/if}#{else}
+            				disabled="true"
+            			#{/else}
+            			> Email the student</input><br />
             			</li>
             			<li>
-            				<input type="checkbox" name="cc_advisor" class="checkbox" disabled="true"> CC student's advisor</input><br />
+            				<input type="checkbox" name="cc_advisor" class="checkbox" 
+            				#{if currentUser.getPreference("notes_mark_comment_as_private_by_default") == null}
+            					#{if currentUser.getPreference("notes_email_student_by_default") != null}
+            						#{if currentUser.getPreference("notes_cc_student_advisor_by_default") != null}
+            		 					checked="true"
+            		 				#{/if}
+            		 			#{/if}#{else}
+            		 				disabled="true"
+            		 			#{/else}
+            				#{/if}#{else}
+            					disabled="true"
+            				#{/else}
+            				> CC student's advisor</input><br />
             			</li>
             		</ul>
             	</li>
             	<li>            	
-            		<input type="radio" name="visibility" class="radio" value="private"> Mark comment as private</input>
+            		<input type="radio" name="visibility" class="radio" value="private"
+            		#{if currentUser.getPreference("notes_mark_comment_as_private_by_default") != null}
+            			checked="true"
+            		#{/if}
+            		> Mark comment as private</input>
             	</li>
             </ul>                   
 	</div>

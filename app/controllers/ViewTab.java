@@ -7,6 +7,8 @@ import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.CommitteeMember;
 import org.tdl.vireo.model.Configuration;
+import org.tdl.vireo.model.CustomActionDefinition;
+import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.Department;
 import org.tdl.vireo.model.DocumentType;
@@ -44,7 +46,7 @@ import javax.mail.internet.InternetAddress;
 public class ViewTab extends AbstractVireoController {
 
 	@Security(RoleType.REVIEWER)
-	public static void view() {		
+	public static void view() {			
 		
 		if(params.get("subId") != null){
 			session.put("submission", params.get("subId"));
@@ -62,18 +64,21 @@ public class ViewTab extends AbstractVireoController {
 
 		DegreeLevel degreeLevel = settingRepo.findDegreeByName(submission.getDegree()).getLevel();
 		List<EmailTemplate> templates = settingRepo.findAllEmailTemplates();
-
+		List<CustomActionDefinition> actions = settingRepo.findAllCustomActionDefinition();
+		
 		String gradMonth = new DateFormatSymbols().getMonths()[submission.getGraduationMonth()];
 
 		List<ActionLog> actionLogs	= subRepo.findActionLog(submission);		
 
 		List<State> states = stateManager.getAllStates();
+		
 		List<State> transitions = submission.getState().getTransitions(submission);
-
+		List<CustomActionValue> actionValues = submission.getCustomActions();
+		
 		List<Person> assignees = personRepo.findPersonsByRole(RoleType.REVIEWER);		
 
 		String nav = "view";
-		render(nav, submission, submitter, degreeLevel, gradMonth, actionLogs, settingRepo, states, assignees, transitions, templates);
+		render(nav, submission, submitter, degreeLevel, gradMonth, actionLogs, settingRepo, states, assignees, transitions, templates, actions, actionValues);
 	}
 
 	@Security(RoleType.REVIEWER)

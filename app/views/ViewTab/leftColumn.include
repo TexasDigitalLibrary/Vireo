@@ -69,10 +69,11 @@
 		<div class="main-heading">Custom Actions</div>
 	</div>
 	<div class="box-body">
+		#{list items:actions, as:'action'}
 		<p>
-		<input type="checkbox" class="checkbox"> Passed their classes</input>
+			<input type="checkbox" class="checkbox" #{if submission.getCustomAction(action) != null && submission.getCustomAction(action).getValue()}checked="checked"#{/if}> ${action.getLabel()}</input>
 		</p>
-		
+		#{/list}
 	</div>
 	<div class="box-footer">
 	
