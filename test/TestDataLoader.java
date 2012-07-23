@@ -22,6 +22,7 @@ import org.tdl.vireo.search.Indexer;
 import org.tdl.vireo.search.impl.LuceneIndexerImpl;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.security.impl.ShibbolethAuthenticationMethodImpl;
+import org.tdl.vireo.services.SystemEmailTemplateService;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
 
@@ -50,6 +51,7 @@ public class TestDataLoader extends Job {
 	public static SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
 	public static LuceneIndexerImpl indexer = Spring.getBeanOfType(LuceneIndexerImpl.class);
 	public static ShibbolethAuthenticationMethodImpl shibAuth = Spring.getBeanOfType(ShibbolethAuthenticationMethodImpl.class);
+	public static SystemEmailTemplateService systemEmailService = Spring.getBeanOfType(SystemEmailTemplateService.class);
 
 
 	
@@ -352,6 +354,70 @@ public class TestDataLoader extends Job {
 	    		null,
 	    		true)
 	};
+	
+	/**
+	 * Initial custom actions
+	 */
+	private static final String[] CUSTOM_ACTIONS_DEFINITIONS = {
+		"Apply for Graduation",
+		"Register for Semester",
+		"Verify Passing/Exemption of Oral Exam",
+		"Approval Form",
+		"Submit All Copyright Permissions",
+		"C&A Form",
+		"ProQuest",
+		"Survey of Earned Doctorates",
+		"AAUDE Survey",
+		"Sent to UMI/ProQuest"
+	};
+
+	/**
+	 * Initial Email Templates 
+	 */
+	private static final EmailTemplateArray[] EMAIL_TEMPLATE_DEFINITIONS = {
+		new EmailTemplateArray(
+				"E-Submittal Complete - No Signed Approval form", 
+				"[ETD] Signed approval forms needed", 
+				"{FIRST_NAME} {LAST_NAME}:\n"+
+				"\n"+
+				"You have successfully finished the ONLINE portion of submitting your manuscript. However, submittal is NOT COMPLETE until we receive your signed Approval Form. Once received, we will begin the review of your manuscript.\n"+
+				"\n"+
+				"If you think that we should already have received your Approval Form, please contact the Thesis Office.\n"+
+				"\n"+
+				"Thank you,\n"+
+				"\n"+
+				"The Vireo Team\n"),
+		new EmailTemplateArray(
+				"First Round Manuscript Corrects Ready for Download",
+				"[ETD] First round corrects ready",
+				"{FIRST_NAME},\n"+
+				"\n"+
+				"The review of your manuscript is complete. The list of remaining corrections can be viewed or downloaded by logging in to the submittal system.\n"+ 
+				"\n"+
+				"When you log into the system, you should click \"View\" under the Actions heading. At the bottom of this page you should see a box labeled Application Activity. If you scroll down within that box, you should see a link to your corrections.\n"+
+				"\n"+
+				"Student Link: {STUDENT_URL}\n"+
+				"\n"+
+				"Carefully make the requested corrections and submit your revised file as soon as possible. After you make the changes to your original file, convert it to PDF. Click the \"Replace Thesis\" button next to your currently uploaded file, and then click \"Browse\" to find and upload the new version. You may add comments by typing them in the message box and clicking \"Add Message.\" Once you have finished, click the \"Submit Corrections\" button at the bottom of the page. Clicking this button will finalize your re-submission. You will not be able to make further changes.\n"+
+				"\n"+
+				"All requirements must be met for the Thesis Office to clear your record. Once you are cleared, the Thesis Office will send you a confirmation email. If you have any questions or concerns, please contact our office.\n"+
+				"\n"+
+				"Your advisory chair should use the following link to view this submission: {ADVISOR_URL}\n"+
+				"\n"+
+				"Thank you,\n"+
+				"\n"+
+				"The Vireo Team\n"),
+		new EmailTemplateArray(
+				"Apply for Graduation Reminder",
+				"[ETD] Apply for Graduation", 
+				"{FIRST_NAME},\n"+
+				"\n"+
+				"In order to clear the Thesis Office, you need to apply for graduation in the semester you will be officially graduating (http://howdy.tamu.edu). As of today, our records indicate that you have not yet applied for graduation. The last day to apply is November 27. If you still plan to graduate in December please complete this requirement as soon as possible. If you have questions or concerns, please contact our office. \n"+
+				"\n"+
+				"Thank you,\n"+
+				"\n"+
+				"The Vireo Team\n")
+	};
 		
 	
 	/**
@@ -444,6 +510,17 @@ public class TestDataLoader extends Job {
 		// Create all embargo types
 		for(EmbargoArray embargoDefinition : EMBARGO_DEFINTITIONS) {
 			settingRepo.createEmbargoType(embargoDefinition.name, embargoDefinition.description, embargoDefinition.duration, embargoDefinition.active).save();
+		}
+		
+		// Create all custom actions
+		for(String actionDefinition : CUSTOM_ACTIONS_DEFINITIONS) {
+			settingRepo.createCustomActionDefinition(actionDefinition).save();
+		}
+		
+		// Create all email templates
+		systemEmailService.generateAllSystemEmailTemplates();
+		for(EmailTemplateArray templateDefinition : EMAIL_TEMPLATE_DEFINITIONS) {
+			settingRepo.createEmailTemplate(templateDefinition.name, templateDefinition.subject, templateDefinition.message).save();
 		}
 	}
 	
@@ -808,6 +885,19 @@ public class TestDataLoader extends Job {
 		}
 		
 		
+	}
+	
+	private static class EmailTemplateArray {
+		
+		String name;
+		String subject;
+		String message;
+		
+		EmailTemplateArray(String name, String subject, String message) {
+			this.name= name;
+			this.subject=subject;
+			this.message=message;
+		}
 	}
 	
 	/** List of email domains, everything past the @ sign **/
