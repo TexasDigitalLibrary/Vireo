@@ -20,6 +20,7 @@ import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
+import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.security.SecurityContext;
 
@@ -287,4 +288,83 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 		action1.delete();
 		action2.delete();
 	}
+	
+	/**
+	 * Test searching for members. This tests both the blank query, pagination,
+	 * and a query for "Billy"
+	 */
+	@Test
+	public void testSearchMembers() {
+		LOGIN();
+		
+		final String SEARCH_URL = Router.reverse("settings.ApplicationSettingsTab.searchMembers").url;
+		
+		// Do an empty search
+		Response response = POST(SEARCH_URL);
+		
+		assertContentMatch("Search",response);
+		List<Person> results = personRepo.searchPersons(null, 0, ApplicationSettingsTab.SEARCH_MEMBERS_RESULTS_PER_PAGE);
+		for (Person result : results) {
+			assertContentMatch("personId_"+result.getId(),response);
+			assertContentMatch(result.getFullName(),response);
+		}
+		
+		// Paginate to the next page
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("query", "");
+		params.put("offset", "2");
+		response = POST(SEARCH_URL,params);
+		
+		assertContentMatch("Search",response);
+		results = personRepo.searchPersons("", 2, ApplicationSettingsTab.SEARCH_MEMBERS_RESULTS_PER_PAGE);
+		for (Person result : results) {
+			assertContentMatch("personId_"+result.getId(),response);
+			assertContentMatch(result.getFullName(),response);
+		}
+		
+		// Do a specific search for "Billy", there should be two users from the
+		// TestData loader that this matches.
+		params.clear();
+		params.put("query", "Billy");
+		params.put("offset", "0");
+		response = POST(SEARCH_URL,params);
+		
+		assertContentMatch("Search",response);
+		results = personRepo.searchPersons("Billy", 0, ApplicationSettingsTab.SEARCH_MEMBERS_RESULTS_PER_PAGE);
+		for (Person result : results) {
+			assertContentMatch("personId_"+result.getId(),response);
+			assertContentMatch(result.getFullName(),response);
+		}
+		
+	}
+	
+	/**
+	 * Test updated a person's role. 
+	 */
+	@Test
+	public void testUpdatePersonRole() {
+		LOGIN();
+		
+		final String UPDATE_URL = Router.reverse("settings.ApplicationSettingsTab.updatePersonRole").url;
+		
+		// Create a person
+		Person person = personRepo.createPerson("netid", "email@email.com", "firstName", "lastName", RoleType.NONE).save();
+		
+		// Upgrade person to a reviewer
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("personId", "personId_"+person.getId());
+		params.put("role", String.valueOf(RoleType.REVIEWER.getId()));
+		Response response = POST(UPDATE_URL,params);
+		
+		assertContentMatch("Add Member",response);
+		assertContentMatch("personId_"+person.getId(),response);
+		assertContentMatch(person.getFullName(),response);
+		
+		JPA.em().clear();
+		personRepo.findPerson(person.getId()).delete();
+		
+		
+	}
+	
+	
 }

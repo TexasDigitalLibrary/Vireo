@@ -1,0 +1,49 @@
+*{
+    This include is used on the Application Settings Tab, within the add
+    members modal dialog box. This include is used during the original page
+    display and from an AJAX call to search or paginate through the results
+    list.
+}*
+<div class="modal-body">
+    <input type="text" class="input-medium search-query">
+    <button id="members-search" type="submit" class="btn">Search</button>
+    
+    
+    <ul class="pager">
+        #{if offset > 0 }
+        <li class="previous">
+            <a href="@{settings.ApplicationSettingsTab.searchMembers}?query=${query}&offset=${offset-limit}" >&larr; Previous</a>
+        </li>
+        #{/if}
+        #{if searchResults.size() == limit}
+        <li class="next">
+            <a href="@{settings.ApplicationSettingsTab.searchMembers}?query=${query}&offset=${offset+limit}" >Next &rarr;</a>
+        </li>
+        #{/if}
+    </ul>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Add</th>
+                <th>Name</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            #{list items:searchResults, as:'person'}
+            <tr id="personId_${person.getId()}">
+                <td>
+                    #{if !reviewers.contains(person) }
+                    <button id="person-add" class="btn">Add</button>
+                    #{/if}
+                    #{else}
+                    ${person.getRole().name()}
+                    #{/else}
+                </td>
+                <td>${person.getFullName()}</td>
+                <td>${person.getEmail()}</td>
+            </tr>
+            #{/list}
+        </tbody>
+    </table>
+</div>

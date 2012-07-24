@@ -75,6 +75,23 @@ public interface PersonRepository {
 	 * @return A list of all persons which this role or higher.
 	 */
 	public List<Person> findPersonsByRole(RoleType type);
+	
+	
+	/**
+	 * Search for all people regardless of their role or state which match the
+	 * provided query in either their name, or email address. Results may be
+	 * paginated based upon the offset and limit provided.
+	 * 
+	 * @param query
+	 *            The query to search for
+	 * @param offset
+	 *            How far into the search results
+	 * @param limit
+	 *            Limit the the maximum number of results.
+	 * @return A list of persons that will be no larger than the maximum number
+	 *         of results.
+	 */
+	public List<Person> searchPersons(String query,int offset, int limit);
 
 	/**
 	 * @return All person objects

@@ -73,6 +73,10 @@ POST    /admin/settings/actions/edit            settings.ApplicationSettingsTab.
 POST    /admin/settings/actions/remove          settings.ApplicationSettingsTab.removeCustomActionJSON
 POST    /admin/settings/actions/reorder         settings.ApplicationSettingsTab.reorderCustomActionsJSON
 
+### Settings Tab - Members
+POST    /admin/settings/members/search          settings.ApplicationSettingsTab.searchMembers
+POST    /admin/settings/members/update          settings.ApplicationSettingsTab.updatePersonRole
+
 ### Settings tab - Email Templates
 POST    /admin/settings/templates/add           settings.EmailSettingsTab.addEmailTemplateJSON
 POST    /admin/settings/templates/retrieve      settings.EmailSettingsTab.retrieveEmailTemplateJSON

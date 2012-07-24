@@ -9,6 +9,7 @@ import javax.persistence.PersistenceException;
 import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.CustomActionDefinition;
+import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 
 import play.Logger;
@@ -22,6 +23,9 @@ import static org.tdl.vireo.model.Configuration.*;
 @With(Authentication.class)
 public class ApplicationSettingsTab extends SettingsTab {
 
+	// How many members to list per page when searching for new members to add as reviewers or above.
+	public final static int SEARCH_MEMBERS_RESULTS_PER_PAGE = 5;
+	
 	/**
 	 * Display the application settings page.
 	 */
@@ -45,9 +49,16 @@ public class ApplicationSettingsTab extends SettingsTab {
 		List<CustomActionDefinition> actions = settingRepo.findAllCustomActionDefinition();
 		
 		
+		List<Person> reviewers = personRepo.findPersonsByRole(RoleType.REVIEWER);
+		
+		int offset=0;
+		int limit=SEARCH_MEMBERS_RESULTS_PER_PAGE;		
+		List<Person> searchResults = personRepo.searchPersons(null, offset, limit);
+
+		
 		String nav = "settings";
 		String subNav = "application";
-		renderTemplate("SettingTabs/applicationSettings.html",nav, subNav, actions);
+		renderTemplate("SettingTabs/applicationSettings.html",nav, subNav, actions, reviewers, searchResults, offset, limit);
 	}
 	
 	/**
@@ -249,6 +260,77 @@ public class ApplicationSettingsTab extends SettingsTab {
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
 		}
 	}
+
+	/**
+	 * Search the current list of members and generate. This action is designed
+	 * to be invoked from an AJAX call but does not produce JSON. Instead it
+	 * returns an HTML snipit that can be used to replace the contents of the
+	 * Search Members modal dialog box.
+	 * 
+	 * @param query
+	 *            The search query to look for new members, or null.
+	 * @param offset
+	 *            The offset into the list of people
+	 */
+	@Security(RoleType.MANAGER)
+	public static void searchMembers(String query, int offset) {
+		
+		int limit = SEARCH_MEMBERS_RESULTS_PER_PAGE;
+		List<Person> searchResults = personRepo.searchPersons(query, offset, limit);
+		List<Person> reviewers = personRepo.findPersonsByRole(RoleType.REVIEWER);
+		
+		renderTemplate("SettingTabs/searchMembers.include",query, offset, limit, searchResults, reviewers);
+	}
+	
+	/**
+	 * Modify the person's role. This action is designed to be invoked from an
+	 * AJAK call but does not produce JSON. Instead it returns a snipit of HTML
+	 * that can be used to replace the current list of reviewers.
+	 * 
+	 * @param personId
+	 *            The id of the person, in the form "person_id"
+	 * @param role
+	 *            The id of the new role
+	 */
+	@Security(RoleType.MANAGER)
+	public static void updatePersonRole(String personId, int role) {
+		
+		try {
+
+			RoleType newRole = RoleType.find(role);
+			
+			if (newRole.ordinal() > context.getPerson().getRole().ordinal())
+				throw new IllegalArgumentException("Unable to set a user's role to a higher level that the current user.");
+			
+			
+			String[] parts = personId.split("_");
+			Long id = Long.valueOf(parts[1]);
+			Person updated = personRepo.findPerson(id);
+			updated.setRole(newRole);
+			updated.save();
+			
+			List<Person> reviewers = personRepo.findPersonsByRole(RoleType.REVIEWER);
+
+			renderTemplate("SettingTabs/listMembers.include",reviewers,updated);
+			
+			
+			
+		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to update person's role");
+			String error = re.getMessage();
+			renderTemplate("SettingTabs/listMembers.include",error);
+		}		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 
 	

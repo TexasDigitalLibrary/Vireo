@@ -174,6 +174,39 @@ public class JpaPersonImplTests extends UnitTest {
 	}
 	
 	/**
+	 * Test searching for people
+	 */
+	@Test 
+	public void searchPersons() {
+		
+		// This test depends upon data created by the TestDataLoader
+		
+		Person billy1 = repo.findPersonByEmail("bthornton@gmail.com");
+		Person billy2 = repo.findPersonByEmail("bcrudup@gmail.com");
+
+		
+		// Search for billy which should match at least two records
+		List<Person> results = repo.searchPersons("Billy", 0, 100);
+		
+		assertNotNull(results);
+		assertTrue(results.size() >= 2);
+		assertTrue(results.contains(billy1));
+		assertTrue(results.contains(billy2));
+		
+		
+		// Search for @ which matches everyone.
+		List<Person> page1 = repo.searchPersons("@", 0, 2);
+		assertNotNull(page1);
+		assertEquals(2,page1.size());
+		
+		List<Person> page2 = repo.searchPersons("@",2,2);
+		assertNotNull(page2);
+		assertEquals(2,page2.size());
+		assertFalse(page2.contains(page1.get(0)));
+		assertFalse(page2.contains(page1.get(1)));
+	}
+	
+	/**
 	 * Test that persons are assigned ids.
 	 */
 	@Test

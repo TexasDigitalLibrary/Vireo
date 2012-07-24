@@ -83,6 +83,41 @@ public class JpaPersonRepositoryImpl implements PersonRepository {
 	public List<Person> findAllPersons() {
 		return (List) JpaPersonImpl.findAll();
 	}
+	
+	@Override
+	public List<Person> searchPersons(String query,int offset, int limit) {
+		
+		
+		// If the user has provided a query then generate a WHERE clause.
+		final String where;
+		if (query == null || query.trim().length() == 0)
+			where = "";
+		else
+			where = "WHERE " +
+					"p.netid LIKE :query OR " +
+					"p.email LIKE :query OR " +
+					"p.firstName LIKE :query OR " +
+					"p.middleName LIKE :query OR "+
+					"p.lastName LIKE :query OR "+
+					"p.displayName LIKE :query ";
+		
+		// Combine to the final select statement;
+		final String select = 
+			"SELECT p " +
+			"FROM JpaPersonImpl AS p " +
+			where +
+			"ORDER BY p.lastName ASC, p.firstName ASC, p.id ASC";
+		
+		
+		TypedQuery<JpaPersonImpl> typedQuery = JPA.em().createQuery(select, JpaPersonImpl.class);
+		if (query != null && query.trim().length() > 0)
+			typedQuery.setParameter("query", "%"+query+"%");
+		typedQuery.setFirstResult(offset);
+		typedQuery.setMaxResults(limit);
+		
+		List results =  typedQuery.getResultList();
+		return results;
+	}
 
 	// ///////////////////////////
 	// Personal Preference Model

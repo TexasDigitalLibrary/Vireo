@@ -1,0 +1,48 @@
+*{
+    This include is used on the Application Settings Tab to list all the
+    members who currently have at least review level access. This include is
+    used when the page is originally loaded and when an AJAX call is made to
+    change a person's role. 
+}*
+<tbody>
+    #{if error}
+        <tr>
+            <td colspan="3">
+                <div class="alert alert-error">
+                    <p><strong>Unable to update person's role</strong>:${error}</p>
+                </div>
+            </td>
+        </tr>
+    #{/if}
+    #{else}
+        #{list items:reviewers, as:'person'}
+        <tr id="personId_${person.getId()}">
+            <td>${person.getFullName()}</td>
+            <td>${person.getEmail()}</td>
+            <td roleId="${person.getRole().getId()}">
+                #{if currentUser.getRole().ordinal() >= person.getRole().ordinal()}
+                <a class="role-editable" href="#">
+                    <em class="icon-pencil"></em>${person.getRole().name()}
+                </a>
+                <span style="display: none;" class="role-editing">
+                    <select id="role">
+                        #{list items:org.tdl.vireo.model.RoleType.values(), as:'role'}
+                        <option value="${role.getId()}" #{if currentUser.getRole().ordinal() < role.ordinal() }disabled="true"#{/if}>
+                            ${role.name()}
+                        </option>
+                        #{/list}
+                    </select>
+                </span>
+                
+                #{/if}
+                #{else}
+                <em class="icon-user"></em>${person.getRole().name()}
+                #{/else}
+            </td>
+        </tr>
+        #{/list}
+        <tr>
+            <td class="comments tr" colspan="4"><button class="btn btn-small">Add Member</button></td>
+        </tr>
+    #{/else}
+</tbody>
