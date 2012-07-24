@@ -181,8 +181,6 @@ test("Test saveAddActionHandler AJAX", function() {
     
     options.success({ success: 'true', id:'99', name: 'action label as returned' });
     
-    console.log("%o",options);
-    
     equals('ajax/url',options.url);
     equals('POST',options.type);
     equals('json',options.dataType)
@@ -446,6 +444,364 @@ test("test applicationSettingsHandler AJAX", function() {
 	equals('true',options.data.value);	
 });
 
+/**
+ * Test searching though people
+ */
+test("test memberSearchHandler AJAX", function() {
+	expect(2);
+	reset();
+	
+	
+	// Setup
+	jQuery("body").append(
+		"<div id='add-member-modal' class='modal fade in' style='display: block;'>" +
+		"	<input type='hidden' value='' id='embargoType-id' name='embargoType-id'>" +
+		"	<div class='modal-header'>" +
+		"		<button data-dismiss='modal' class='close' type='button'>×</button>" +
+		"		<h3>Add Member</h3>" +
+		"	</div>" +
+		"	<div class='modal-body'>" +
+		"		<form action='/admin/settings/members/search'>" +
+		"			<input type='text' value='' class='input-medium search-query' id='members-search-query'>" +
+		"			<button class='btn' type='submit' id='members-search-button'>Search</button>" +
+		"		</form>" +
+		"		<ul class='pager'>" +
+		"			<li class='next'>" +
+		"			  <a href='/admin/settings/members/search?query=&amp;offset=5'>Next →</a>" +
+		"			</li>" +
+		"		</ul>" +
+		"		<table class='table table-bordered'>" +
+		"		    <thead>" +
+		"		        <tr>" +
+		"		            <th>Add</th>" +
+		"		            <th>Name</th>" +
+		"		            <th>Email</th>" +
+		"		        </tr>" +
+		"		    </thead>" +
+		"		    <tbody>" +
+		"		                    <tr id='personId_8'>" +
+		"		            <td>" +
+		"		                                    <button class='btn' id='member-add-button'>Add</button>" +
+		"		                                                    </td>" +
+		"		            <td>Maria Alonso</td>" +
+		"		            <td>Maria.Alonso1@gmail.com</td>" +
+		"		        </tr>" +
+		"		                    <tr id='personId_7'>" +
+		"		            <td>" +
+		"		                                    <button class='btn' id='member-add-button'>Add</button>" +
+		"		                                                    </td>" +
+		"		            <td>Gillian Anderson</td>" +
+		"		            <td>ganderson@gmail.com</td>" +
+		"		        </tr>" +
+		"		                    <tr id='personId_6'>" +
+		"		            <td>" +
+		"		                                    <button class='btn' id='member-add-button'>Add</button>" +
+		"		                                                    </td>" +
+		"		            <td>Billy Crudup</td>" +
+		"		            <td>bcrudup@gmail.com</td>" +
+		"		        </tr>" +
+		"		                    <tr id='personId_5'>" +
+		"		            <td>" +
+		"		                                    <button class='btn' id='member-add-button'>Add</button>" +
+		"		                                                    </td>" +
+		"		            <td>Claire Danes</td>" +
+		"		            <td>cdanes@gmail.com</td>" +
+		"		        </tr>" +
+		"		                    <tr id='personId_4'>" +
+		"		            <td>" +
+		"		                                                        REVIEWER" +
+		"		                                </td>" +
+		"		            <td>John Di Maggio</td>" +
+		"		            <td>jdimaggio@gmail.com</td>" +
+		"		        </tr>" +
+		"		    </tbody>" +
+		"		</table>" +
+		"	</div>" +
+		"	<div class='modal-footer'>" +
+		"	<a data-dismiss='modal' class='btn' href='#'>Close</a>" +
+		"	</div>" +
+		"</div>"	
+	);
+	
+	// Register the handler
+	var handler = memberSearchHandler();
+	jQuery(".pager a").click(handler);
+	
+    // Mock AJAX
+    var options = null;
+    jQuery.ajax = function(param) {
+        options = param;
+    };
+    
+    // Simulate a click & ajax return
+    jQuery(".pager a").click();
+    
+    options.success("<p id='success'>success</p>");
+	
+    equals('/admin/settings/members/search?query=&offset=5',options.url);
+    equals(1,jQuery("#success").length);
+	
+});
+
+/**
+ * Test adding a new member from the dialog box.
+ */
+test("test memberAddHandler AJAX", function() {
+    expect(4);
+    reset();
+    
+    
+    // Setup
+    jQuery("body").append(
+	    "<table class='table table-striped table-bordered table-condensed' id='members-table'>" +
+		"    <thead>" +
+		"        <tr>" +
+		"            <th width='190'>Role</th>" +
+		"            <th>Name</th>" +
+		"            <th>Email</th>" +
+		"        </tr>" +
+		"    </thead>" +
+		"    <tbody>" +
+		"        <tr id='personId_3'>" +
+		"            <td width='190' roleid='2'><a href='#' class='member-editable'>" +
+		"                    <em class='icon-pencil'></em> REVIEWER </a> <span" +
+		"                class='member-editing' style='display: none;'> <select" +
+		"                    class='input-medium ' id='role'>" +
+		"                        <option value='0'>NONE</option>" +
+		"                        <option value='1'>STUDENT</option>" +
+		"                        <option selected='true' value='2'>REVIEWER</option>" +
+		"                        <option value='3'>MANAGER</option>" +
+		"                        <option value='4'>ADMINISTRATOR</option>" +
+		"                </select> </span></td>" +
+		"            <td>John Di Maggio</td>" +
+		"            <td>jdimaggio@gmail.com</td>" +
+		"        </tr>" +
+		"        <tr id='personId_2'>" +
+		"            <td width='190' roleid='3'><a href='#' class='member-editable'>" +
+		"                    <em class='icon-pencil'></em> MANAGER </a> <span class='member-editing'" +
+		"                style='display: none;'> <select class='input-medium '" +
+		"                    id='role'>" +
+		"                        <option value='0'>NONE</option>" +
+		"                        <option value='1'>STUDENT</option>" +
+		"                        <option value='2'>REVIEWER</option>" +
+		"                        <option selected='true' value='3'>MANAGER</option>" +
+		"                        <option value='4'>ADMINISTRATOR</option>" +
+		"                </select> </span></td>" +
+		"            <td>Minnie Driver</td>" +
+		"            <td>mdriver@gmail.com</td>" +
+		"        </tr>" +
+		"        <tr id='personId_1'>" +
+		"            <td width='190' roleid='4'><a href='#' class='member-editable'>" +
+		"                    <em class='icon-pencil'></em> ADMINISTRATOR </a> <span" +
+		"                class='member-editing' style='display: none;'> <select" +
+		"                    class='input-medium this-member' id='role'>" +
+		"                        <option value='0'>NONE</option>" +
+		"                        <option value='1'>STUDENT</option>" +
+		"                        <option value='2'>REVIEWER</option>" +
+		"                        <option value='3'>MANAGER</option>" +
+		"                        <option selected='true' value='4'>ADMINISTRATOR</option>" +
+		"                </select> </span> <span class='info'>(you)</span></td>" +
+		"            <td>Billy Thornton</td>" +
+		"            <td>bthornton@gmail.com</td>" +
+		"        </tr>" +
+		"        <tr>" +
+		"            <td colspan='4' class='comments tr'><a data-toggle='modal'" +
+		"                href='#add-member-modal'>" +
+		"                    <button data-toggle='#add-member-modal' class='btn btn-small'>Add" +
+		"                        Member</button> </a></td>" +
+		"        </tr>" +
+		"    </tbody>" +
+		"</table>"
+    );
+    
+    
+    
+    jQuery("body").append(
+        "<div id='add-member-modal' class='modal fade in' style='display: block;'>" +
+        "   <input type='hidden' value='' id='embargoType-id' name='embargoType-id'>" +
+        "   <div class='modal-header'>" +
+        "       <button data-dismiss='modal' class='close' type='button'>×</button>" +
+        "       <h3>Add Member</h3>" +
+        "   </div>" +
+        "   <div class='modal-body'>" +
+        "       <form action='/admin/settings/members/search'>" +
+        "           <input type='text' value='' class='input-medium search-query' id='members-search-query'>" +
+        "           <button class='btn' type='submit' id='members-search-button'>Search</button>" +
+        "       </form>" +
+        "       <ul class='pager'>" +
+        "           <li class='next'>" +
+        "             <a href='/admin/settings/members/search?query=&amp;offset=5'>Next →</a>" +
+        "           </li>" +
+        "       </ul>" +
+        "       <table class='table table-bordered'>" +
+        "           <thead>" +
+        "               <tr>" +
+        "                   <th>Add</th>" +
+        "                   <th>Name</th>" +
+        "                   <th>Email</th>" +
+        "               </tr>" +
+        "           </thead>" +
+        "           <tbody>" +
+        "                           <tr id='personId_8'>" +
+        "                   <td>" +
+        "                                           <button class='btn member-add-button' id='alonso-add-button'>Add</button>" +
+        "                                                           </td>" +
+        "                   <td>Maria Alonso</td>" +
+        "                   <td>Maria.Alonso1@gmail.com</td>" +
+        "               </tr>" +
+        "                           <tr id='personId_7'>" +
+        "                   <td>" +
+        "                                           <button class='btn member-add-button'>Add</button>" +
+        "                                                           </td>" +
+        "                   <td>Gillian Anderson</td>" +
+        "                   <td>ganderson@gmail.com</td>" +
+        "               </tr>" +
+        "                           <tr id='personId_6'>" +
+        "                   <td>" +
+        "                                           <button class='btn member-add-button'>Add</button>" +
+        "                                                           </td>" +
+        "                   <td>Billy Crudup</td>" +
+        "                   <td>bcrudup@gmail.com</td>" +
+        "               </tr>" +
+        "                           <tr id='personId_5'>" +
+        "                   <td>" +
+        "                                           <button class='btn member-add-button'>Add</button>" +
+        "                                                           </td>" +
+        "                   <td>Claire Danes</td>" +
+        "                   <td>cdanes@gmail.com</td>" +
+        "               </tr>" +
+        "                           <tr id='personId_4'>" +
+        "                   <td>" +
+        "                                                               REVIEWER" +
+        "                                       </td>" +
+        "                   <td>John Di Maggio</td>" +
+        "                   <td>jdimaggio@gmail.com</td>" +
+        "               </tr>" +
+        "           </tbody>" +
+        "       </table>" +
+        "   </div>" +
+        "   <div class='modal-footer'>" +
+        "   <a data-dismiss='modal' class='btn' href='#'>Close</a>" +
+        "   </div>" +
+        "</div>"    
+    );
+    
+    // Register the handler
+    var handler = memberAddHandler('ajax');
+    jQuery(".member-add-button").click(handler);
+    
+    // Mock AJAX
+    var options = null;
+    jQuery.ajax = function(param) {
+        options = param;
+    };
+    
+    // Simulate a click & ajax return
+    jQuery("#alonso-add-button").click();
+    
+    options.success("<p id='success'>success</p>");
+    
+    equals('ajax',options.url);
+    equals('personId_8',options.data.personId);
+    equals('2',options.data.role);
+    equals(1,jQuery("#success").length);
+    
+});
+
+/**
+ * Test updating a current member's role
+ */
+test("test memberUpdateHandler AJAX", function() {
+    expect(4);
+    reset();
+    
+    
+    // Setup
+    jQuery("body").append(
+        "<table class='table table-striped table-bordered table-condensed' id='members-table'>" +
+        "    <thead>" +
+        "        <tr>" +
+        "            <th width='190'>Role</th>" +
+        "            <th>Name</th>" +
+        "            <th>Email</th>" +
+        "        </tr>" +
+        "    </thead>" +
+        "    <tbody>" +
+        "        <tr id='personId_3'>" +
+        "            <td width='190' roleid='2'><a href='#' class='member-editable'>" +
+        "                    <em class='icon-pencil'></em> REVIEWER </a> <span" +
+        "                class='member-editing' style='display: none;'> <select" +
+        "                    class='input-medium ' id='role'>" +
+        "                        <option value='0'>NONE</option>" +
+        "                        <option value='1'>STUDENT</option>" +
+        "                        <option selected='true' value='2'>REVIEWER</option>" +
+        "                        <option value='3'>MANAGER</option>" +
+        "                        <option value='4'>ADMINISTRATOR</option>" +
+        "                </select> </span></td>" +
+        "            <td>John Di Maggio</td>" +
+        "            <td>jdimaggio@gmail.com</td>" +
+        "        </tr>" +
+        "        <tr id='personId_2'>" +
+        "            <td width='190' roleid='3'><a href='#' class='member-editable'>" +
+        "                    <em class='icon-pencil'></em> MANAGER </a> <span class='member-editing'" +
+        "                style='display: none;'> <select class='input-medium '" +
+        "                    id='role'>" +
+        "                        <option value='0'>NONE</option>" +
+        "                        <option value='1'>STUDENT</option>" +
+        "                        <option value='2'>REVIEWER</option>" +
+        "                        <option selected='true' value='3'>MANAGER</option>" +
+        "                        <option value='4'>ADMINISTRATOR</option>" +
+        "                </select> </span></td>" +
+        "            <td>Minnie Driver</td>" +
+        "            <td>mdriver@gmail.com</td>" +
+        "        </tr>" +
+        "        <tr id='personId_1'>" +
+        "            <td width='190' roleid='4'><a href='#' class='member-editable'>" +
+        "                    <em class='icon-pencil'></em> ADMINISTRATOR </a> <span" +
+        "                class='member-editing' style='display: none;'> <select" +
+        "                    class='input-medium this-member' id='role'>" +
+        "                        <option value='0'>NONE</option>" +
+        "                        <option value='1'>STUDENT</option>" +
+        "                        <option value='2'>REVIEWER</option>" +
+        "                        <option value='3'>MANAGER</option>" +
+        "                        <option selected='true' value='4'>ADMINISTRATOR</option>" +
+        "                </select> </span> <span class='info'>(you)</span></td>" +
+        "            <td>Billy Thornton</td>" +
+        "            <td>bthornton@gmail.com</td>" +
+        "        </tr>" +
+        "        <tr>" +
+        "            <td colspan='4' class='comments tr'><a data-toggle='modal'" +
+        "                href='#add-member-modal'>" +
+        "                    <button data-toggle='#add-member-modal' class='btn btn-small'>Add" +
+        "                        Member</button> </a></td>" +
+        "        </tr>" +
+        "    </tbody>" +
+        "</table>"
+    );
+    
+    
+    // Register the handler
+    var handler = memberUpdateHandler('ajax');
+    jQuery(".member-editable").click(handler);
+    
+    // Mock AJAX
+    var options = null;
+    jQuery.ajax = function(param) {
+        options = param;
+    };
+    
+    // Simulate a click & ajax return
+    jQuery("#personId_3 .member-editable").click();
+    jQuery("#personId_3 select").trigger("change");
+    
+    options.success("<p id='success'>success</p>");
+    
+    equals('ajax',options.url);
+    equals('personId_3',options.data.personId);
+    equals('2',options.data.role);
+    equals(1,jQuery("#success").length);
+    
+});
 
 /**
  * Test the toggeling email settings

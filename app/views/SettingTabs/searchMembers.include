@@ -34,7 +34,7 @@
             <tr id="personId_${person.getId()}">
                 <td>
                     #{if !reviewers.contains(person) }
-                    <button id="member-add-button" class="btn">Add</button>
+                    <button class="btn member-add-button">Add</button>
                     #{/if}
                     #{else}
                     ${person.getRole().name()}

@@ -33,9 +33,9 @@ jQuery(document).ready(function(){
      jQuery("#add-action-cancel").click(cancelAddActionHandler('action'));
      
      // Member Management (aka who has access)
-     jQuery("#add-member-modal .pager a").live("click",membearSearchHandler());
-     jQuery("#add-member-modal #members-search-button").live("click",membearSearchHandler());
-     jQuery("#add-member-modal #member-add-button").live("click",memberAddHandler('@{settings.ApplicationSettingsTab.updatePersonRole()}'));
+     jQuery("#add-member-modal .pager a").live("click",memberSearchHandler());
+     jQuery("#add-member-modal #members-search-button").live("click",memberSearchHandler());
+     jQuery("#add-member-modal .member-add-button").live("click",memberAddHandler('@{settings.ApplicationSettingsTab.updatePersonRole()}'));
      jQuery("#members-table .member-editable").live("click",memberUpdateHandler('@{settings.ApplicationSettingsTab.updatePersonRole()}'));
      
      

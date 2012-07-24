@@ -998,7 +998,7 @@ function applicationSettingsHandler(jsonURL) {
  * 
  * @returns A Callback function
  */
-function membearSearchHandler() {
+function memberSearchHandler() {
 	return function () {
 
 		jQuery("#add-member-modal").addClass("waiting");
