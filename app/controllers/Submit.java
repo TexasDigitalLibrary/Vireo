@@ -679,7 +679,9 @@ public class Submit extends AbstractVireoController {
                 unauthorized();		
         }
         
-		render(subId, sub, submitter, actionLogList);		
+        List<Attachment> supplementalAttachments = sub.getSupplementalDocuments();
+
+		render(subId, sub, submitter, actionLogList, supplementalAttachments);		
 	}
 	
 	
