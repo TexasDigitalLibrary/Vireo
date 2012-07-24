@@ -273,11 +273,15 @@ public class ApplicationSettingsTab extends SettingsTab {
 	 *            The offset into the list of people
 	 */
 	@Security(RoleType.MANAGER)
-	public static void searchMembers(String query, int offset) {
+	public static void searchMembers(String query, Integer offset) {
+		
+		if (offset == null || offset < 0)
+			offset = 0;
 		
 		int limit = SEARCH_MEMBERS_RESULTS_PER_PAGE;
 		List<Person> searchResults = personRepo.searchPersons(query, offset, limit);
 		List<Person> reviewers = personRepo.findPersonsByRole(RoleType.REVIEWER);
+
 		
 		renderTemplate("SettingTabs/searchMembers.include",query, offset, limit, searchResults, reviewers);
 	}

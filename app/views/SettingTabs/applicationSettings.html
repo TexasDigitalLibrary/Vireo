@@ -32,6 +32,13 @@ jQuery(document).ready(function(){
      
      jQuery("#add-action-cancel").click(cancelAddActionHandler('action'));
      
+     // Member Management (aka who has access)
+     jQuery("#add-member-modal .pager a").live("click",membearSearchHandler());
+     jQuery("#add-member-modal #members-search-button").live("click",membearSearchHandler());
+     jQuery("#add-member-modal #member-add-button").live("click",memberAddHandler('@{settings.ApplicationSettingsTab.updatePersonRole()}'));
+     jQuery("#members-table .member-editable").live("click",memberUpdateHandler('@{settings.ApplicationSettingsTab.updatePersonRole()}'));
+     
+     
 }) // document ready
 </script>
 #{/set}
@@ -135,12 +142,12 @@ jQuery(document).ready(function(){
 
 <h2>WHO HAS ACCESS?</h2>
 
-<table class="table table-striped table-bordered table-condensed">
+<table id="members-table" class="table table-striped table-bordered table-condensed">
 	<thead>
 		<tr>
-			<td>Name</td>
-			<td>Email</td>
-			<td>Role</td>			
+            <th width="190">Role</th>           
+			<th>Name</th>
+			<th>Email</th>
 		</tr>
 	</thead>
     #{include 'SettingTabs/listMembers.include' /}
@@ -149,15 +156,13 @@ jQuery(document).ready(function(){
 
 
 <div class="modal fade" id="add-member-modal">
-    <form class="form-horizontal">
-        <input type="hidden" name="embargoType-id" id="embargoType-id" value=""/>
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">×</button>
-            <h3>Add Member</h3>
-        </div>
-        #{include 'SettingTabs/searchMembers.include' /}
-        <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">Close</a>
-        </div>
-    </form>
+	<input type="hidden" name="embargoType-id" id="embargoType-id" value=""/>
+	<div class="modal-header">
+	    <button type="button" class="close" data-dismiss="modal">×</button>
+	    <h3>Add Member</h3>
+	</div>
+	#{include 'SettingTabs/searchMembers.include' /}
+	<div class="modal-footer">
+	    <a href="#" class="btn" data-dismiss="modal">Close</a>
+	</div>
 </div>

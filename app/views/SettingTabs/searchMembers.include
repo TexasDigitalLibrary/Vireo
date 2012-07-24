@@ -5,19 +5,19 @@
     list.
 }*
 <div class="modal-body">
-    <input type="text" class="input-medium search-query">
-    <button id="members-search" type="submit" class="btn">Search</button>
-    
-    
+    <form action="@{settings.ApplicationSettingsTab.searchMembers}">
+        <input  id="members-search-query" type="text" class="input-medium search-query" value="${query}">
+        <button id="members-search-button" type="submit" class="btn">Search</button>
+    </form>
     <ul class="pager">
         #{if offset > 0 }
         <li class="previous">
-            <a href="@{settings.ApplicationSettingsTab.searchMembers}?query=${query}&offset=${offset-limit}" >&larr; Previous</a>
+            <a href="@{settings.ApplicationSettingsTab.searchMembers}?query=${query}&offset=${offset - limit}" >&larr; Previous</a>
         </li>
         #{/if}
         #{if searchResults.size() == limit}
         <li class="next">
-            <a href="@{settings.ApplicationSettingsTab.searchMembers}?query=${query}&offset=${offset+limit}" >Next &rarr;</a>
+            <a href="@{settings.ApplicationSettingsTab.searchMembers}?query=${query}&offset=${offset + limit}" >Next &rarr;</a>
         </li>
         #{/if}
     </ul>
@@ -34,7 +34,7 @@
             <tr id="personId_${person.getId()}">
                 <td>
                     #{if !reviewers.contains(person) }
-                    <button id="person-add" class="btn">Add</button>
+                    <button id="member-add-button" class="btn">Add</button>
                     #{/if}
                     #{else}
                     ${person.getRole().name()}
@@ -44,6 +44,18 @@
                 <td>${person.getEmail()}</td>
             </tr>
             #{/list}
+            #{else}
+            <tr>
+                <td colspan="3" class="search-empty">
+                    #{if offset == 0}
+                    <p>No members matched the search query: '${query}'</p>
+                    #{/if}
+                    #{else}
+                    <p>No more members match the search criteria</p>
+                    #{/else}
+                </td>
+            </tr>
+            #{/else}
         </tbody>
     </table>
 </div>

@@ -70,7 +70,7 @@ public class JpaPersonRepositoryImpl implements PersonRepository {
 	@Override
 	public List<Person> findPersonsByRole(RoleType type) {
 		
-		final String select = "SELECT p FROM JpaPersonImpl AS p WHERE p.role >= :type";
+		final String select = "SELECT p FROM JpaPersonImpl AS p WHERE p.role >= :type ORDER BY p.lastName ASC, p.firstName ASC, p.id ASC";
 		TypedQuery<JpaPersonImpl> query = JPA.em().createQuery(select, JpaPersonImpl.class);
 		query.setParameter("type", type);
 		
@@ -94,12 +94,15 @@ public class JpaPersonRepositoryImpl implements PersonRepository {
 			where = "";
 		else
 			where = "WHERE " +
-					"p.netid LIKE :query OR " +
-					"p.email LIKE :query OR " +
-					"p.firstName LIKE :query OR " +
-					"p.middleName LIKE :query OR "+
-					"p.lastName LIKE :query OR "+
-					"p.displayName LIKE :query ";
+					"LOWER( p.netid ) LIKE :query OR " +
+					"LOWER( p.email ) LIKE :query OR " +
+					"LOWER( p.firstName ) LIKE :query OR " +
+					"LOWER( p.middleName ) LIKE :query OR "+
+					"LOWER( p.lastName ) LIKE :query OR "+
+					"LOWER( p.displayName ) LIKE :query OR "+
+					"LOWER( CONCAT( p.firstName, ' ', p.lastName ) ) LIKE :query OR " +
+					"LOWER( CONCAT( p.firstName, ' ', p.middleName, ' ', p.lastName ) ) LIKE :query "
+					;
 		
 		// Combine to the final select statement;
 		final String select = 
@@ -111,7 +114,7 @@ public class JpaPersonRepositoryImpl implements PersonRepository {
 		
 		TypedQuery<JpaPersonImpl> typedQuery = JPA.em().createQuery(select, JpaPersonImpl.class);
 		if (query != null && query.trim().length() > 0)
-			typedQuery.setParameter("query", "%"+query+"%");
+			typedQuery.setParameter("query", "%"+query.toLowerCase()+"%");
 		typedQuery.setFirstResult(offset);
 		typedQuery.setMaxResults(limit);
 		

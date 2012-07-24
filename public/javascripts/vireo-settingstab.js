@@ -990,6 +990,172 @@ function applicationSettingsHandler(jsonURL) {
 	};
 }
 
+/**
+ * Handler to search for new members within the "Add Member" dialog box. This
+ * will perform the search and replace the dialog box's contents which new HTML
+ * returned from the server. Note this same handler is used for both pagination
+ * and the search button.
+ * 
+ * @returns A Callback function
+ */
+function membearSearchHandler() {
+	return function () {
+
+		jQuery("#add-member-modal").addClass("waiting");
+
+		// Follow pagination links
+		var url = "";
+		var data = {};
+		if (jQuery(this).is("a")) {
+			url = jQuery(this).attr("href");
+		} else {
+			url = jQuery("#add-member-modal form").attr("action");
+			var bb = jQuery("#members-search-query");
+			data["query"] = bb.val();
+			data["offset"] = 0;
+		}
+
+		jQuery.ajax({
+			url : url,
+			data : data,
+			dataType : 'html',
+			type : 'POST',
+			success : function(data) {
+				jQuery("#add-member-modal .modal-body").replaceWith(data).remove();
+				jQuery("#add-member-modal").removeClass("waiting"); 
+			},
+			error:function(){
+				alert("Error unable to communicate with server.");
+			}
+		});
+
+
+		return false;
+	};
+}
+
+/**
+ * Handler to add a new member found using the "add member" dialog box. This
+ * call back handles clicking on the add button to add them as a reviewer.
+ * 
+ * @param htmlURL
+ *            The url to update a person's role. (returns html NOT json)
+ * @returns A Callback function
+ */
+function memberAddHandler(htmlURL) {
+	return function () {
+
+		jQuery("#add-member-modal").addClass("waiting");
+
+		// Follow pagination links
+		var id = jQuery(this).closest("tr").attr("id");
+		var role = "2" // We always add people at the reviewer level
+
+			var $this = jQuery(this);
+
+
+		jQuery.ajax({
+			url : htmlURL,
+			data : {
+				personId : id,
+				role : role
+			},
+			dataType : 'html',
+			type : 'POST',
+			success : function(data) {
+				jQuery("#members-table tbody").replaceWith(data).remove();
+				$this.replaceWith("<span>Added</span>").remove();
+				jQuery("#add-member-modal").removeClass("waiting"); 
+			},
+			error:function(){
+				alert("Error unable to communicate with server.");
+			}
+		});
+
+
+		return false;
+
+	};
+}
+
+/**
+ * Handler to update a current reviewer's role. This will switch the input to an
+ * editable select list and attach the nessesary handlers to modify or cancel
+ * the entry.
+ * 
+ * @param htmlURL
+ *            The url to update a person's role. (returns html NOT json)
+ * @returns A Callback function
+ */
+function memberUpdateHandler(htmlURL) {
+	return function () {
+
+		jQuery(this).hide();
+		jQuery(this).closest("tr").find(".member-editing").show();
+
+
+		// Attache a cancel handler
+		var cancelHandler = function (event) {
+			if (jQuery(event.target).closest(".member-editing").length == 0) {
+
+				jQuery(".member-editing").each(function () {
+					jQuery(this).hide();
+					jQuery(this).find("select").unbind("click");
+				})
+				jQuery(".member-editable").each(function () {
+					jQuery(this).show();
+				})
+
+				// Unregister this event
+				jQuery(document).unbind("click",cancelHandler);
+			}
+		};
+
+		// Attach a change handler
+		var changeHandler = function () {
+			var id = jQuery(this).closest("tr").attr("id");
+			var role = jQuery(this).val();
+			jQuery("#members-table").addClass("waiting");
+
+			if (jQuery(this).hasClass("this-member")) {
+				if (!confirm("You are about to change your current role! It may mean that you will no longer be able to access these settings tabs.")) {
+					jQuery("#members-table").removeClass("waiting");
+					jQuery(document).click();
+					jQuery(this).unbind("change");
+					return false; 
+				}
+			}
+
+			jQuery(document).unbind("click",cancelHandler);
+			jQuery(this).unbind("change");
+
+			jQuery.ajax({
+				url : htmlURL,
+				data : {
+					personId : id,
+					role : role
+				},
+				dataType : 'html',
+				type : 'POST',
+				success : function(data) {
+					jQuery("#members-table tbody").replaceWith(data).remove();
+					jQuery("#members-table").removeClass("waiting"); 
+				},
+				error:function(){
+					alert("Error unable to communicate with server.");
+				}
+			});
+		};
+
+		jQuery(this).closest("tr").find(".member-editing select").change(changeHandler);
+		jQuery(document).click(cancelHandler);
+
+
+		return false;
+
+	};
+}
+
 
 /**********************************************************
  * Email Settings Tab
@@ -1372,4 +1538,9 @@ var embargoSortableUpdateHandler = function(jsonURL) {
 		});
 	};
 }
+
+
+
+
+
 
