@@ -34,16 +34,17 @@ public class ApplicationSettingsTab extends SettingsTab {
 		
 		renderArgs.put("SUBMISSIONS_OPEN", settingRepo.findConfigurationByName(SUBMISSIONS_OPEN));
 		renderArgs.put("ALLOW_MULTIPLE_SUBMISSIONS", settingRepo.findConfigurationByName(ALLOW_MULTIPLE_SUBMISSIONS));
-		renderArgs.put("REQUEST_COLLEGE", settingRepo.findConfigurationByName(REQUEST_COLLEGE));
-		renderArgs.put("REQUEST_UMI", settingRepo.findConfigurationByName(REQUEST_UMI));
+		renderArgs.put("SUBMIT_REQUEST_BIRTH", settingRepo.findConfigurationByName(SUBMIT_REQUEST_BIRTH));
+		renderArgs.put("SUBMIT_REQUEST_COLLEGE", settingRepo.findConfigurationByName(SUBMIT_REQUEST_COLLEGE));
+		renderArgs.put("SUBMIT_REQUEST_UMI", settingRepo.findConfigurationByName(SUBMIT_REQUEST_UMI));
 		
 		Configuration currentSemester = settingRepo.findConfigurationByName(CURRENT_SEMESTER);
 		if (currentSemester != null)
 			renderArgs.put("CURRENT_SEMESTER", currentSemester.getValue());
 
-		Configuration submissionInstructions = settingRepo.findConfigurationByName(SUBMISSION_INSTRUCTIONS);
-		if (submissionInstructions != null)
-			renderArgs.put("SUBMISSION_INSTRUCTIONS", submissionInstructions.getValue());
+		Configuration submitInstructions = settingRepo.findConfigurationByName(SUBMIT_INSTRUCTIONS);
+		if (submitInstructions != null)
+			renderArgs.put("SUBMIT_INSTRUCTIONS", submitInstructions.getValue());
 
 		
 		List<CustomActionDefinition> actions = settingRepo.findAllCustomActionDefinition();
@@ -80,11 +81,12 @@ public class ApplicationSettingsTab extends SettingsTab {
 			List<String> booleanFields = new ArrayList<String>();
 			booleanFields.add(SUBMISSIONS_OPEN);
 			booleanFields.add(ALLOW_MULTIPLE_SUBMISSIONS);
-			booleanFields.add(REQUEST_COLLEGE);
-			booleanFields.add(REQUEST_UMI);
+			booleanFields.add(SUBMIT_REQUEST_BIRTH);
+			booleanFields.add(SUBMIT_REQUEST_COLLEGE);
+			booleanFields.add(SUBMIT_REQUEST_UMI);
 			List<String> textFields = new ArrayList<String>();
 			textFields.add(CURRENT_SEMESTER);
-			textFields.add(SUBMISSION_INSTRUCTIONS);
+			textFields.add(SUBMIT_INSTRUCTIONS);
 			
 			
 			if (booleanFields.contains(field)) {

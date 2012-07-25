@@ -1,13 +1,7 @@
 package controllers.settings;
-import static org.tdl.vireo.model.Configuration.ALLOW_MULTIPLE_SUBMISSIONS;
-import static org.tdl.vireo.model.Configuration.CURRENT_SEMESTER;
 import static org.tdl.vireo.model.Configuration.EMAIL_CC_ADVISOR;
 import static org.tdl.vireo.model.Configuration.EMAIL_CC_STUDENT;
 import static org.tdl.vireo.model.Configuration.EMAIL_SHOW_ADDRESSES;
-import static org.tdl.vireo.model.Configuration.REQUEST_COLLEGE;
-import static org.tdl.vireo.model.Configuration.REQUEST_UMI;
-import static org.tdl.vireo.model.Configuration.SUBMISSIONS_OPEN;
-import static org.tdl.vireo.model.Configuration.SUBMISSION_INSTRUCTIONS;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,17 +13,7 @@ import java.util.regex.Pattern;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.tdl.vireo.model.College;
-import org.tdl.vireo.model.Configuration;
-import org.tdl.vireo.model.CustomActionDefinition;
-import org.tdl.vireo.model.Degree;
-import org.tdl.vireo.model.DegreeLevel;
-import org.tdl.vireo.model.Department;
-import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.EmailTemplate;
-import org.tdl.vireo.model.GraduationMonth;
-import org.tdl.vireo.model.Major;
-import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.security.SecurityContext;
@@ -38,7 +22,6 @@ import play.db.jpa.JPA;
 import play.modules.spring.Spring;
 import play.mvc.Http.Response;
 import play.mvc.Router;
-
 import controllers.AbstractVireoFunctionalTest;
 /**
  * Test for the email settings tab. 

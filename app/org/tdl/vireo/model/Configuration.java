@@ -32,6 +32,20 @@ public interface Configuration extends AbstractModel {
 	
 	/** Common configuration **/
 	
+	// Submission Settings
+	/** If defined then the student's birth year will be requested */
+	public final static String SUBMIT_REQUEST_BIRTH = "submit_request_birth";
+	
+	/** If defined then the college parameter will be requested */
+	public final static String SUBMIT_REQUEST_COLLEGE = "submit_request_college";
+	
+	/** If defined then the UMI Release parameter will be requested */
+	public final static String SUBMIT_REQUEST_UMI = "submit_request_umi";
+	
+	/** Instructions show to uses after completing their submission */
+	public final static String SUBMIT_INSTRUCTIONS = "submit_instructions";
+	
+	
 	// Application Settings
 	/** If defined then submissions are open, otherwise they are closed. **/
 	public final static String SUBMISSIONS_OPEN = "submissions_open";
@@ -41,15 +55,6 @@ public interface Configuration extends AbstractModel {
 	
 	/** If defined then multiple submissions are allowed. */
 	public final static String ALLOW_MULTIPLE_SUBMISSIONS = "allow_multiple_submissions";
-	
-	/** If defined then the college parameter will be requested */
-	public final static String REQUEST_COLLEGE = "request_college";
-	
-	/** If defined then the UMI Release parameter will be requested */
-	public final static String REQUEST_UMI = "request_umi";
-	
-	/** Instructions show to uses after completing their submission */
-	public final static String SUBMISSION_INSTRUCTIONS = "submission_instructions";
 	
 	
 	// Email settings

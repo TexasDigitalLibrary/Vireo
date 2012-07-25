@@ -73,11 +73,20 @@ jQuery(document).ready(function(){
             </span>
 		</li>
 		<li>
+            <label>Request student's birth year:</label>
+            <span>
+                 <div class="btn-group" data-toggle="buttons-radio">
+                    <button name="${org.tdl.vireo.model.Configuration.SUBMIT_REQUEST_BIRTH}" class="btn application-toggle #{if SUBMIT_REQUEST_BIRTH}active#{/if}" value="true">Yes</button>
+                    <button name="${org.tdl.vireo.model.Configuration.SUBMIT_REQUEST_BIRTH}" class="btn application-toggle #{if !SUBMIT_REQUEST_BIRTH}active#{/if}">No</button>
+                </div>
+            </span>
+        </li>
+		<li>
 			<label>Request "College" parameter:</label>
 			<span>
 			     <div class="btn-group" data-toggle="buttons-radio">
-                    <button name="${org.tdl.vireo.model.Configuration.REQUEST_COLLEGE}" class="btn application-toggle #{if REQUEST_COLLEGE}active#{/if}" value="true">Yes</button>
-                    <button name="${org.tdl.vireo.model.Configuration.REQUEST_COLLEGE}" class="btn application-toggle #{if !REQUEST_COLLEGE}active#{/if}">No</button>
+                    <button name="${org.tdl.vireo.model.Configuration.SUBMIT_REQUEST_COLLEGE}" class="btn application-toggle #{if SUBMIT_REQUEST_COLLEGE}active#{/if}" value="true">Yes</button>
+                    <button name="${org.tdl.vireo.model.Configuration.SUBMIT_REQUEST_COLLEGE}" class="btn application-toggle #{if !SUBMIT_REQUEST_COLLEGE}active#{/if}">No</button>
                 </div>
 			</span>
 		</li>
@@ -85,8 +94,8 @@ jQuery(document).ready(function(){
 			<label>Offer UMI release option:</label>
 			<span>
 			     <div class="btn-group" data-toggle="buttons-radio">
-                    <button name="${org.tdl.vireo.model.Configuration.REQUEST_UMI}" class="btn application-toggle #{if REQUEST_UMI}active#{/if}" value="true">Yes</button>
-                    <button name="${org.tdl.vireo.model.Configuration.REQUEST_UMI}" class="btn application-toggle #{if !REQUEST_UMI}active#{/if}">No</button>
+                    <button name="${org.tdl.vireo.model.Configuration.SUBMIT_REQUEST_UMI}" class="btn application-toggle #{if SUBMIT_REQUEST_UMI}active#{/if}" value="true">Yes</button>
+                    <button name="${org.tdl.vireo.model.Configuration.SUBMIT_REQUEST_UMI}" class="btn application-toggle #{if !SUBMIT_REQUEST_UMI}active#{/if}">No</button>
                 </div>
 			</span>     
 		</li>
@@ -97,7 +106,7 @@ jQuery(document).ready(function(){
 
 <div class="wrap">
     <div class="span7">
-	<textarea rows="7" class="span7 application-text" name="${org.tdl.vireo.model.Configuration.SUBMISSION_INSTRUCTIONS}">#{verbatim}${SUBMISSION_INSTRUCTIONS}#{/verbatim}</textarea>
+	<textarea rows="7" class="span7 application-text" name="${org.tdl.vireo.model.Configuration.SUBMIT_INSTRUCTIONS}">#{verbatim}${SUBMIT_INSTRUCTIONS}#{/verbatim}</textarea>
 	<p class="info">These instructions will be shown as part of the submission confirmation. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. Newlines are converted to paragraphs automatically.</p>
 	</div>
 	<div class="clear"></div>

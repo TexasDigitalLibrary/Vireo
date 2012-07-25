@@ -1,10 +1,5 @@
 package controllers.settings;
-import static org.tdl.vireo.model.Configuration.ALLOW_MULTIPLE_SUBMISSIONS;
-import static org.tdl.vireo.model.Configuration.CURRENT_SEMESTER;
-import static org.tdl.vireo.model.Configuration.REQUEST_COLLEGE;
-import static org.tdl.vireo.model.Configuration.REQUEST_UMI;
-import static org.tdl.vireo.model.Configuration.SUBMISSIONS_OPEN;
-import static org.tdl.vireo.model.Configuration.SUBMISSION_INSTRUCTIONS;
+import static org.tdl.vireo.model.Configuration.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,8 +73,9 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 		List<String> booleanFields = new ArrayList<String>();
 		booleanFields.add(SUBMISSIONS_OPEN);
 		booleanFields.add(ALLOW_MULTIPLE_SUBMISSIONS);
-		booleanFields.add(REQUEST_COLLEGE);
-		booleanFields.add(REQUEST_UMI);
+		booleanFields.add(SUBMIT_REQUEST_BIRTH);
+		booleanFields.add(SUBMIT_REQUEST_COLLEGE);
+		booleanFields.add(SUBMIT_REQUEST_UMI);
 		
 		
 		// Get the current list of 
@@ -178,25 +174,25 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 		final String URL = Router.reverse("settings.ApplicationSettingsTab.updateApplicationSettingsJSON").url;
 
 		
-		Configuration originalValue = settingRepo.findConfigurationByName(SUBMISSION_INSTRUCTIONS);
+		Configuration originalValue = settingRepo.findConfigurationByName(SUBMIT_INSTRUCTIONS);
 		
 		// change the current semester
 		Map<String,String> params = new HashMap<String,String>();
-		params.put("field", SUBMISSION_INSTRUCTIONS);
+		params.put("field", SUBMIT_INSTRUCTIONS);
 		params.put("value","changed \"by test\"");
 		Response response = POST(URL,params);
 		assertContentMatch("\"success\": \"true\"", response);
 	
 		
 		// Check that all the fields are set.
-		assertNotNull(settingRepo.findConfigurationByName(SUBMISSION_INSTRUCTIONS));
-		assertEquals("changed \"by test\"",settingRepo.findConfigurationByName(SUBMISSION_INSTRUCTIONS).getValue());
+		assertNotNull(settingRepo.findConfigurationByName(SUBMIT_INSTRUCTIONS));
+		assertEquals("changed \"by test\"",settingRepo.findConfigurationByName(SUBMIT_INSTRUCTIONS).getValue());
 		
 		JPA.em().clear();
 		if (originalValue == null) {
-			settingRepo.findConfigurationByName(SUBMISSION_INSTRUCTIONS).delete();
+			settingRepo.findConfigurationByName(SUBMIT_INSTRUCTIONS).delete();
 		} else {
-			Configuration value = settingRepo.findConfigurationByName(SUBMISSION_INSTRUCTIONS);
+			Configuration value = settingRepo.findConfigurationByName(SUBMIT_INSTRUCTIONS);
 			value.setValue(originalValue.getValue());
 			value.save();
 			
