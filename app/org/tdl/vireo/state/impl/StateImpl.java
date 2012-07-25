@@ -24,6 +24,8 @@ public class StateImpl implements State, BeanNameAware {
 	public boolean archived = false;
 	public boolean editableByStudent = false;
 	public boolean editableByReviewer = false;
+	public boolean depositable = false;
+	public boolean deletable = false;
 	
 	
 	public List<State> transitions = new ArrayList<State>();
@@ -112,11 +114,46 @@ public class StateImpl implements State, BeanNameAware {
 	public void setEditableByReviewer(boolean editable) {
 		this.editableByReviewer = editable;
 	}
+	
+	@Override
+	public boolean isDeletable() {
+		return deletable;
+	}
+	
+	/**
+	 * @param deletable Weather the submission may be permanently deleted by the reviewer.
+	 */
+	public void setDeletable(boolean deletable) {
+		this.deletable = deletable;
+	}
+	
+	@Override
+	public boolean isDepositable() {
+		return depositable;
+	}
+	
+	/**
+	 * @param deletable Weather the submission may be permanently deleted by the reviewer.
+	 */
+	public void setDepositable(boolean depositable) {
+		this.depositable = depositable;
+	}
 
 	@Override
 	public List<State> getTransitions(Submission submission) {
 		
-		if (submission.getEmbargoType() == null || embargoTransitions.size() == 0)
+		boolean embargoed = false;
+		if (submission.getEmbargoType() != null) {
+			Integer duration = submission.getEmbargoType().getDuration();
+			
+			// Null duration means it is indefinitely embargoed.
+			// A duration of anything greater than zero is defined embargo period.
+			// However a duration of zero, is the same as having no embargo type specified. (it's the none type)
+			if (duration == null || duration > 0)
+				embargoed = true;
+		}
+		
+		if (!embargoed || embargoTransitions.size() == 0)
 			return transitions;
 		
 		return embargoTransitions;

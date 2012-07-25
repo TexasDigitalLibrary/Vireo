@@ -50,6 +50,15 @@ public class StateManagerImplTests extends UnitTest {
 
 		assertNotNull(manager.getInitialState());
 	}
+	
+	/**
+	 * Test that there is a state for canceled submissions.
+	 */
+	@Test
+	public void testCancelState() {
+
+		assertNotNull(manager.getCancelState());
+	}
 
 	/**
 	 * Test that the manager knows about all states, and nothing more.

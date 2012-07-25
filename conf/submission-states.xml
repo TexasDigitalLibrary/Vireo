@@ -16,6 +16,7 @@
 	<bean id="StateManager" class="org.tdl.vireo.state.impl.StateManagerImpl"
 		scope="singleton" autowire="byType">
 		<property name="initialState" ref="InProgress" />
+		<property name="cancelState" ref="Cancelled" />
 		<!-- List of all states will be autowired -->
 	</bean>
 
@@ -123,6 +124,7 @@
 		<property name="displayName" value="Published" />
 		<property name="archived" value="true" />
 		<property name="editableByReviewer" value="true" />
+		<property name="depositable" value="true" />
 		<property name="transitions">
 			<util:list list-class="java.util.ArrayList" value-type="org.tdl.vireo.state.State">
 				<ref bean="PendingPublication" />
@@ -144,6 +146,7 @@
 		<property name="displayName" value="Withdrawn" />
 		<property name="archived" value="true" />
 		<property name="editableByReviewer" value="true" />
+        <property name="deletable" value="true" />
 	</bean>
 
 	<bean id="Cancelled" class="org.tdl.vireo.state.impl.StateImpl"
@@ -151,6 +154,7 @@
 		<property name="displayName" value="Cancelled" />
 		<property name="archived" value="true" />
 		<property name="editableByReviewer" value="true" />
+		<property name="deletable" value="true" />
 	</bean>
 
 </beans>

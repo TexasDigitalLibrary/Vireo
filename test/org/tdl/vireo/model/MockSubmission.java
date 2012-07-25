@@ -44,7 +44,7 @@ public class MockSubmission extends AbstractMock implements Submission {
 	public String documentTitle;
 	public String documentAbstract;
 	public String documentKeywords;
-	public EmbargoType embargoType;
+	public MockEmbargoType embargoType;
 	public List<Attachment> attachments = new ArrayList<Attachment>();
 	public List<CommitteeMember> committeeMembers = new ArrayList<CommitteeMember>();
 	public String committeeContactEmail;
@@ -172,7 +172,7 @@ public class MockSubmission extends AbstractMock implements Submission {
 
 	@Override
 	public void setEmbargoType(EmbargoType embargo) {
-		this.embargoType = embargo;
+		this.embargoType = (MockEmbargoType) embargo;
 	}
 
 	@Override

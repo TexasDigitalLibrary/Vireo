@@ -22,33 +22,45 @@ public interface State {
 	public String getDisplayName();
 
 	/**
-	 * @return Weather this state is considered to be in-progress by the
+	 * @return Whether this state is considered to be in-progress by the
 	 *         student. I.e. are they still editing it prior to submission.
 	 */
 	public boolean isInProgress();
 
 	/**
-	 * @return Weather this state is considered under active review by
+	 * @return Whether this state is considered under active review by
 	 *         reviewers. I.e. after a student has submitted the submission. But
 	 *         before it has been approved & published.
 	 */
 	public boolean isActive();
 
 	/**
-	 * @return Weather this state is in a terminal state such as published,
+	 * @return Whether this state is in a terminal state such as published,
 	 *         cancelled, etc.,
 	 */
 	public boolean isArchived();
 
 	/**
-	 * @return Weather the student can edit the submission during this state.
+	 * @return Whether the student can edit the submission during this state.
 	 */
 	public boolean isEditableByStudent();
 
 	/**
-	 * @return Weather a reviewer can edit the submission during this state.
+	 * @return Whether a reviewer can edit the submission during this state.
 	 */
 	public boolean isEditableByReviewer();
+
+	/**
+	 * @return Whether this state should display the option to permanently
+	 *         remove the submission.
+	 */
+	public boolean isDeletable();
+
+	/**
+	 * @return Whether this state should be deposited in to a repository when
+	 *         transitioning into this state.
+	 */
+	public boolean isDepositable();
 
 	/**
 	 * Return a list of valid transitions for this submission.

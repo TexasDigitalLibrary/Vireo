@@ -20,6 +20,7 @@ public class StateManagerImpl implements StateManager {
 	/** Injected properties **/
 	public List<State> allStates = new ArrayList<State>();
 	public State initialState = null;
+	public State cancelState = null;
 
 	@Override
 	public State getState(String beanName) {
@@ -30,13 +31,13 @@ public class StateManagerImpl implements StateManager {
 	}
 
 	@Override
-	public State getInitialState() {
-		return initialState;
-	}
-
-	@Override
 	public List<State> getAllStates() {
 		return new ArrayList<State>(allStates);
+	}
+	
+	@Override
+	public State getInitialState() {
+		return initialState;
 	}
 
 	/**
@@ -45,6 +46,18 @@ public class StateManagerImpl implements StateManager {
 	 */
 	public void setInitialState(State state) {
 		this.initialState = state;
+	}
+	
+	@Override
+	public State getCancelState() {
+		return initialState;
+	}
+	/**
+	 * @param state
+	 *            Set the state where all canceled submission should be assigned too.
+	 */
+	public void setCancelState(State state) {
+		this.cancelState = state;
 	}
 
 	/**
