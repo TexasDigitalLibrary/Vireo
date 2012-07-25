@@ -66,6 +66,7 @@ public class MockSubmission extends AbstractMock implements Submission {
 	public Person assignee;
 	public Boolean UMIRelease;
 	public List<CustomActionValue> customActions = new ArrayList<CustomActionValue>();
+	public String depositId;
 	public String lastLogEntry;
 	public Date lastLogDate;
 
@@ -429,6 +430,16 @@ public class MockSubmission extends AbstractMock implements Submission {
 		action.value = value;
 		customActions.add(action);
 		return action;
+	}
+	
+	@Override
+	public String getDepositId() {
+		return depositId;
+	}
+
+	@Override
+	public void setDepositId(String depositId) {
+		this.depositId = depositId;
 	}
 
 	@Override

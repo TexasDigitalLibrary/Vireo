@@ -420,6 +420,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		sub.setGraduationMonth(0);
 		sub.setGraduationYear(2002);
 		sub.setUMIRelease(false);
+		sub.setDepositId("depositId");
 		
 		// Test clearing
 		sub.setDocumentTitle(null);
@@ -441,6 +442,8 @@ public class JpaSubmissionImplTests extends UnitTest {
 		sub.setGraduationMonth(null);
 		sub.setGraduationYear(null);
 		sub.setUMIRelease(null);
+		sub.setDepositId(null);
+
 		
 		sub.save();
 		
@@ -452,6 +455,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		
 		sub.delete();
 		
+		assertEquals("Repository deposit ID cleared by Mock Administrator", logItr.next().getEntry());
 		assertEquals("UMI Release cleared by Mock Administrator", logItr.next().getEntry());
 		assertEquals("Graduation year cleared by Mock Administrator", logItr.next().getEntry());
 		assertEquals("Graduation month cleared by Mock Administrator", logItr.next().getEntry());
@@ -471,7 +475,8 @@ public class JpaSubmissionImplTests extends UnitTest {
 		assertEquals("Document keywords cleared by Mock Administrator", logItr.next().getEntry());
 		assertEquals("Document abstract cleared by Mock Administrator", logItr.next().getEntry());
 		assertEquals("Document title cleared by Mock Administrator", logItr.next().getEntry());
-		
+
+		assertEquals("Repository deposit ID changed to 'depositId' by Mock Administrator", logItr.next().getEntry());
 		assertEquals("UMI Release changed to 'No' by Mock Administrator", logItr.next().getEntry());
 		assertEquals("Graduation year changed to '2002' by Mock Administrator", logItr.next().getEntry());
 		assertEquals("Graduation month changed to 'January' by Mock Administrator", logItr.next().getEntry());
@@ -500,7 +505,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		
 		assertFalse(logItr.hasNext());
 		
-		assertEquals("UMI Release cleared by Mock Administrator", sub.getLastLogEntry());
+		assertEquals("Repository deposit ID cleared by Mock Administrator", sub.getLastLogEntry());
 	}
 	
 	/**
@@ -542,6 +547,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		sub.setGraduationMonth(0);
 		sub.setGraduationYear(2002);
 		sub.setUMIRelease(false);
+		sub.setDepositId("depositId");
 		sub.save();
 		
 		
@@ -570,6 +576,8 @@ public class JpaSubmissionImplTests extends UnitTest {
 		assertEquals(Integer.valueOf(0),sub.getGraduationMonth());
 		assertEquals(Integer.valueOf(2002),sub.getGraduationYear());
 		assertEquals(Boolean.valueOf(false),sub.getUMIRelease());
+		assertEquals("depositId",sub.getDepositId());
+
 		
 		sub.delete();
 		person.delete();

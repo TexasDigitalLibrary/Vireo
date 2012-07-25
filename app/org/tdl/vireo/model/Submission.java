@@ -414,6 +414,18 @@ public interface Submission extends AbstractModel {
 			Boolean value);
 	
 	/**
+	 * @return The deposit id associated with submission. It usually is a URL
+	 *         but different repositories may use another identifier type.
+	 */
+	public String getDepositId();
+	
+	/**
+	 * @param depositId
+	 *            Set the deposit id for this submission.
+	 */
+	public void setDepositId(String depositId);
+	
+	/**
 	 * This is a short cut method to improve the performance of displaying
 	 * search results. It is suggested that implementors cache the entry of the
 	 * last action log item to improve performance.

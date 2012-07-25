@@ -126,6 +126,9 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@OneToMany(targetEntity = JpaCustomActionValueImpl.class, mappedBy = "submission", cascade = CascadeType.ALL)
 	public List<CustomActionValue> customActions;
 	
+	@Column(length=255)
+	public String depositId;
+	
 	@Column(length=326768) // 2^15
 	public String lastActionLogEntry;
 	@Temporal(TemporalType.TIMESTAMP)
@@ -777,6 +780,21 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 				definition, value);
 		customActions.add(customAction);
 		return customAction;
+	}
+	
+	@Override
+	public String getDepositId() {
+		return depositId;
+	}
+	
+	@Override
+	public void setDepositId(String depositId) {
+		assertReviewerOrOwner(submitter);
+		
+		if (!equals(this.depositId,depositId)) {
+			this.depositId = depositId;
+			generateChangeLog("Repository deposit ID",depositId,false);
+		}
 	}
 	
 	@Override
