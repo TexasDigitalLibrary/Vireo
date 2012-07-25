@@ -140,6 +140,8 @@ import play.modules.spring.Spring;
  * customActions: The count of custom actions that have been checked off on the
  * submission for sorting.
  * 
+ * depositId: The deposit id for sorting
+ * 
  * lastEventEntry: The textual entry of the last log event for sorting.
  * 
  * lastEventTime: The date of the last entry for sorting.

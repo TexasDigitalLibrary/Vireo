@@ -207,6 +207,10 @@ in results.
                      if (actions > 0)
                         out.print(actions);
                      break;
+                 case DEPOSIT_ID:
+                     if (sub.getDepositId() != null)
+                         out.print(sub.getDepositId());
+                     break;
                  case LAST_EVENT_ENTRY:
                      if ("log".equals(nav)) {
                         out.print(log.getEntry());

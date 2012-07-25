@@ -86,6 +86,7 @@ public class LuceneSearcherImpl implements Searcher {
 		SORT_SUB_FIELDS[SearchOrder.DOCUMENT_TYPE.ordinal()] = "documentType";
 		SORT_SUB_FIELDS[SearchOrder.UMI_RELEASE.ordinal()] = "umiRelease";
 		SORT_SUB_FIELDS[SearchOrder.CUSTOM_ACTIONS.ordinal()] = "customActions";
+		SORT_SUB_FIELDS[SearchOrder.DEPOSIT_ID.ordinal()] = "depositId";
 		SORT_SUB_FIELDS[SearchOrder.LAST_EVENT_ENTRY.ordinal()] = "lastEventEntry";
 		SORT_SUB_FIELDS[SearchOrder.LAST_EVENT_TIME.ordinal()] = "lastEventTime";
 		

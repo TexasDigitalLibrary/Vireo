@@ -45,8 +45,10 @@ public enum SearchOrder {
 	
 	CUSTOM_ACTIONS(26),
 	
-	LAST_EVENT_ENTRY(27),
-	LAST_EVENT_TIME(28);
+	DEPOSIT_ID(27),
+	
+	LAST_EVENT_ENTRY(28),
+	LAST_EVENT_TIME(29);
 	
 	// The id for this search order.
 	private int id;

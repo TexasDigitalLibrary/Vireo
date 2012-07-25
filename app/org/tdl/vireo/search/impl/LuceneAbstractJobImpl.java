@@ -271,6 +271,9 @@ public abstract class LuceneAbstractJobImpl extends Job {
 				customActions++;
 		}
 		
+		String depositId = sub.getDepositId();
+		searchText.append(depositId).append(" ");
+		
 		String lastEventEntry = null;
 		Date lastEventTime = null;
 		
@@ -358,6 +361,9 @@ public abstract class LuceneAbstractJobImpl extends Job {
 		doc.add(new Field("umiRelease",umiRelease,Field.Store.NO,Index.NOT_ANALYZED));
 		
 		doc.add(new NumericField("customActions",Field.Store.NO,true).setIntValue(customActions));
+		
+		if (depositId != null)
+		doc.add(new Field("depositId",depositId,Field.Store.NO,Index.NOT_ANALYZED));
 		
 		if (lastEventEntry != null)
 		doc.add(new Field("lastEventEntry",lastEventEntry,Field.Store.NO,Index.NOT_ANALYZED));
@@ -465,6 +471,9 @@ public abstract class LuceneAbstractJobImpl extends Job {
 			doc.add(new Field("umiRelease",umiRelease,Field.Store.NO,Index.NOT_ANALYZED));
 			
 			doc.add(new NumericField("customActions",Field.Store.NO,true).setIntValue(customActions));
+			
+			if (depositId != null)
+			doc.add(new Field("depositId",depositId,Field.Store.NO,Index.NOT_ANALYZED));
 			
 			writer.addDocument(doc);
 		} // for logs
