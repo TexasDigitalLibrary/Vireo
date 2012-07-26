@@ -50,7 +50,7 @@ public class StateManagerImpl implements StateManager {
 	
 	@Override
 	public State getCancelState() {
-		return initialState;
+		return cancelState;
 	}
 	/**
 	 * @param state

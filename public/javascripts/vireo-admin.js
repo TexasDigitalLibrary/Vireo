@@ -24,7 +24,7 @@ jQuery(document).ready(function(){
 	jQuery('.more').click(moreHandler());
 
 	// Confirm links
-	jQuery('.confirm').click(confirmHandler());
+	jQuery('.confirm').live("click", confirmHandler());
 });
 
 
@@ -109,7 +109,7 @@ function moreHandler() {
  * 
  * @returns A Callback function
  */
-function confirmHandler() {
+function confirmHandler() {	
 	return function() {
 		 if (jQuery(this).text().indexOf("Are you sure?") >= 0) {
 			 return true;

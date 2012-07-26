@@ -2,17 +2,18 @@
  * Swap to input field function
  */
 function swapToInputHandler(){	
-		return function() {
-			if(jQuery(".editing").length == 0){
-				
+	return function(event) {
+		if(jQuery(this).closest(".editing").length == 0) {
+			jQuery(".icon-remove").click();
+
 			//Clean up
 			jQuery(".tooltip").remove();
 			jQuery(this).find(".tooltip-icon").remove();
 			jQuery("#backup").remove()
-			
+
 			var editItem = jQuery(this);       
 			var value = escapeQuotes(editItem.text().trim());
-			
+
 			if(value=="none"){
 				value="";
 				jQuery("body").append('<div id="backup"></div>')
@@ -20,25 +21,27 @@ function swapToInputHandler(){
 				//Make back up info			
 				jQuery("body").append('<div id="backup">'+editItem.html()+'</div>')
 			}
-			
+
 			//Text Areas
 			if(editItem.hasClass("textarea")){
-				editItem.replaceWith('<div id="'+editItem.attr("id")+'" class="editing textarea"><textarea class="field" textarea">'+value+'</textarea><br /><i class="icon-remove"></i>&nbsp<i class="icon-ok"></i></div>');
-			//Select Drop Downs
+				editItem.replaceWith('<div id="'+editItem.attr("id")+'" class="editing textarea"><textarea class="field" textarea">'+value+'</textarea><br /><i class="icon-remove" title="cancel"></i>&nbsp<i class="icon-ok" title="commit"></i></div>');
+				//Select Drop Downs
 			} else if(editItem.hasClass("select")){
 				var selectCode = '<div id="'+editItem.attr("id")+'" class="editing select"><select class="field">';
 				selectCode += jQuery("#"+editItem.attr("id")+"Options").html();
-				selectCode += '</select><br /><i class="icon-remove"></i>&nbsp<i class="icon-ok"></i></div>';
+				selectCode += '</select><br /><i class="icon-remove" title="cancel"></i>&nbsp<i class="icon-ok" title="commit"></i></div>';
 				editItem.replaceWith(selectCode);
 				jQuery(".field option").each(function(){
 					if(jQuery(this).text()==value){
 						jQuery(this).attr("selected","selected");
 					}
 				})
-			//Input Fields
+				//Input Fields
 			} else {
-				editItem.replaceWith('<div id="'+editItem.attr("id")+'" class="editing"><input class="field" type="text" value="'+value+'" /><br /><i class="icon-remove"></i>&nbsp<i class="icon-ok"></i></div>');
+				editItem.replaceWith('<div id="'+editItem.attr("id")+'" class="editing"><input class="field" type="text" value="'+value+'" /><br /><i class="icon-remove" title="cancel"></i>&nbsp<i class="icon-ok" title="commit"></i></div>');
 			}			
+
+			event.stopPropagation();
 		}
 	}
 }
@@ -48,40 +51,73 @@ function swapToInputHandler(){
  * into editable fields.
  */
 function editCommitteeMemberHandler(){	
-	return function(){
-		if(jQuery(".editing").length == 0){
-			
+	return function(event){
+		if(jQuery(this).closest(".editing").length == 0) {
+			jQuery(".icon-remove").click();
+
 			//Clean up
 			jQuery(".tooltip").remove();
 			jQuery(this).find(".tooltip-icon").remove();
 			jQuery("#backup").remove();
-			
+
 			//Backup
 			jQuery("body").append('<div id="backup">'+jQuery(this).html().trim()+'</div>');
-			
+
 			var memberId = jQuery(this).parent("li").attr("class");		
 			var firstName = escapeQuotes(jQuery(this).find(".firstName").text());
 			var lastName = escapeQuotes(jQuery(this).find(".lastName").text());
 			var middleName = escapeQuotes(jQuery(this).find(".middleName").text());
-			
+
 			var chair = (jQuery(this).find(".chair").text().trim()=="chair");
 			var checked = "";
 			if(chair){
 				checked = 'checked="checked"';
 			}
-			
+
 			var markup = '<div class="editing"><table>';
 			markup += '<tr><td><b>Last Name</b></td><td><b>First Name</b></td><td><b>Middle Name</b></td><td></td></tr>'
-			markup += '<tr>'
-			markup += '<td><input id="memberId" class="hidden" type="hidden" value="'+memberId+'" />';
+				markup += '<tr>'
+					markup += '<td><input id="memberId" class="hidden" type="hidden" value="'+memberId+'" />';
 			markup += '<input id="cmLastName" class="span2" type="text" value="'+lastName+'" /></td>';
 			markup += '<td><input id="cmFirstName" class="span2" type="text" value="'+firstName+'" /></td>';
 			markup += '<td><input id="cmMiddleName" class="span2" type="text" value="'+middleName+'" /></td>';
 			markup += '<td><input id="chair" type="checkbox" class="checkbox" '+checked+' > chair</input></td>';
 			markup += '</tr>';
-			markup += '</table><i class="icon-remove"></i>&nbsp<i class="icon-ok"></i></div>';
-			
+			markup += '</table><div style="padding:5px;"><a class="btn btn-danger btn-mini remove-committee-member" style="margin-right:10px;">delete</a>&nbsp;<i class="icon-remove" title="cancel"></i>&nbsp;<i class="icon-ok" title="commit"></i></div></div>';
+
 			jQuery(this).replaceWith(markup);
+
+			event.stopPropagation();
+		}
+	}
+}
+
+/**
+ * This function adds fields to add a new committee member.
+ */
+function addCommitteeMemberHandler(){
+	return function(event) {
+		if(jQuery(this).closest(".editing").length == 0) {
+			jQuery(".icon-remove").click();
+
+			//Clean up
+			jQuery(".tooltip").remove();
+			jQuery(this).find(".tooltip-icon").remove();
+			jQuery("#backup").remove();
+
+			var markup = '<li class="add"><div class="editing"><table>';
+			markup += '<tr><td><b>Last Name</b></td><td><b>First Name</b></td><td><b>Middle Name</b></td><td></td></tr>'
+				markup += '<tr>'
+					markup += '<td><input id="cmLastName" class="span2" type="text" /></td>';
+			markup += '<td><input id="cmFirstName" class="span2" type="text" /></td>';
+			markup += '<td><input id="cmMiddleName" class="span2" type="text" /></td>';
+			markup += '<td><input id="chair" type="checkbox" class="checkbox"> chair</input></td>';
+			markup += '</tr>';
+			markup += '</table><i class="icon-remove" title="cancel"></i>&nbsp<i class="icon-ok" title="commit"></i></div></li>';
+
+			jQuery(markup).insertBefore('#add_new_member');
+
+			event.stopPropagation();
 		}
 	}
 }
@@ -220,13 +256,115 @@ function commitChangesHandler(eventTarget, jsonURL, committeeURL, subId){
 }
 
 /**
+ * This function commits adding a new committee member.
+ */
+function commitNewCommitteeMemberHandler(id, jsonURL) {
+
+	var committeeFirstName = jQuery("#cmFirstName").val().trim();
+	var committeeLastName = jQuery("#cmLastName").val().trim();
+	var committeeMiddleName = jQuery("#cmMiddleName").val().trim();
+	var committeeChair = jQuery("#chair").is(':checked');
+
+	jQuery(".editing").replaceWith('<div class="progress progress-striped active"><div class="bar" style="width:100%"></div></div>');
+
+	jQuery.ajax({
+		url:jsonURL,
+		data:{
+			subId:id,
+			firstName:committeeFirstName,
+			lastName:committeeLastName,
+			middleName:committeeMiddleName,
+			chair:committeeChair
+		},
+		dataType:'json',
+		type:'POST',
+		success:function(data){	
+			if(data.success){
+				var markup = '<div class="editCommitteeMember">';
+				markup += '<span class="lastName">'+data.lastName+'</span><span class="seperator">,&nbsp;</span>';
+				markup += '<span class="firstName">'+data.firstName+'&nbsp;</span>';
+				markup += '<span class="middleName">'+data.middleName+'&nbsp;</span>';						
+				if(data.chair=="true"){
+					markup += '<span class="chair label label-info">';
+					markup += 'chair';
+					markup += '</span>';
+				}
+				markup += '</div>';
+
+				jQuery("li.add").html(markup);
+				jQuery("li.add").addClass(data.id);
+				jQuery("li.add").removeClass("add");					
+			} else {
+				var markup = '<div class="editing"><table>';
+				markup += '<tr><td><b>Last Name</b></td><td><b>First Name</b></td><td><b>Middle Name</b></td><td></td></tr>'
+					markup += '<tr>'
+						markup += '<td><input id="cmLastName" class="span2" type="text" value="'+data.lastName+'" /></td>';
+				markup += '<td><input id="cmFirstName" class="span2" type="text" value="'+data.firstName+'" /></td>';
+				markup += '<td><input id="cmMiddleName" class="span2" type="text" value="'+data.middleName+'" /></td>';
+				markup += '<td><input id="chair" type="checkbox" class="checkbox"';
+				if(data.chair=="true"){
+					markup += ' checked="true"';
+				}
+				markup += '> chair</input></td>';
+				markup += '</tr>';
+				markup += '</table><i class="icon-remove"></i>&nbsp<i class="icon-ok"></i>';					
+				markup += '<span><a href="#" class="tooltip-icon" rel="tooltip" title="'+data.message+'"><span class="badge badge-important"><i class="icon-warning-sign icon-white"></i></span></a></span>';
+				markup += '</div>';
+
+				jQuery("li.add").html(markup);
+				jQuery('.tooltip-icon').tooltip();
+			}
+		},
+		error:function(){
+			jQuery("li.add").replaceWith('<span class="error"><a href="#" class="tooltip-icon" rel="tooltip" title="There was an error with your request."><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
+			jQuery('.tooltip-icon').tooltip();
+		}
+
+	});
+}
+
+/**
+ * This function calls the method to delete
+ * a committee member.
+ */
+function removeCommitteeMemberHandler(jsonURL, element){
+
+	var id = element.closest("li").attr("class");
+	
+	jQuery(".editing").replaceWith('<div class="progress progress-striped active"><div class="bar" style="width:100%"></div></div>');
+
+	jQuery.ajax({
+		url:jsonURL,
+		data:{
+			id:id
+		},
+		dataType:'json',
+		type:'POST',
+		success:function(data){	
+			if(data.success){				
+				jQuery("li."+data.id).remove();					
+			} else {
+				
+			}
+		},
+		error:function(){			
+			jQuery("li."+id).html('<span class="error"><a href="#" class="tooltip-icon" rel="tooltip" title="There was an error with your request."><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
+			jQuery('.tooltip-icon').tooltip();
+		}
+	});
+}
+
+/**
  * This function cancels the currently edited field
  * and replaces the content with a backup stored in 
  * a hidden div (#backup)
  */
 function cancelEditingHandler(){
 	return function() {
-		if(jQuery(this).closest("#committeeMembers").length){
+		$this = jQuery(".icon-remove");
+		if($this.closest(".add").length){
+			jQuery(".add").remove();
+		}else if($this.closest("#committeeMembers").length){
 
 			var oldValue = jQuery("#backup").html();			
 			var swap = jQuery(".editing");
