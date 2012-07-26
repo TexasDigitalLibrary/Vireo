@@ -82,9 +82,14 @@ jQuery(document).ready(function(){
 	 * Special Value Event
 	 */
 	 jQuery(".special-value").live("click", function(){
+		if(jQuery(this).hasClass("deleteState")) {
+			jQuery(this).text("(Are you sure?)");
+			jQuery(this).removeClass("deleteState");
+		} else {
 		 var form = jQuery(this).closest("form");
 		 var value = jQuery(this).attr("id");
 		 assignSpecialValueAndSubmit(form, value);
+		}
 	 });
 	
 	/**

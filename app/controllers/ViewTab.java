@@ -62,7 +62,10 @@ public class ViewTab extends AbstractVireoController {
 		Submission submission = subRepo.findSubmission(id);
 		Person submitter = submission.getSubmitter();
 
-		DegreeLevel degreeLevel = settingRepo.findDegreeByName(submission.getDegree()).getLevel();
+		DegreeLevel degreeLevel = null;		
+		if(submission.getDegree() != null)
+			degreeLevel = settingRepo.findDegreeByName(submission.getDegree()).getLevel();
+		
 		List<EmailTemplate> templates = settingRepo.findAllEmailTemplates();
 		List<CustomActionDefinition> actions = settingRepo.findAllCustomActionDefinition();
 		
@@ -71,7 +74,7 @@ public class ViewTab extends AbstractVireoController {
 		List<ActionLog> actionLogs	= subRepo.findActionLog(submission);		
 
 		List<State> states = stateManager.getAllStates();
-		
+				
 		List<State> transitions = submission.getState().getTransitions(submission);
 		List<CustomActionValue> actionValues = submission.getCustomActions();
 		
@@ -85,7 +88,7 @@ public class ViewTab extends AbstractVireoController {
 				gradMonth, 
 				actionLogs, 
 				settingRepo, 
-				states, 
+				states,
 				assignees, 
 				transitions, 
 				templates, 
@@ -439,14 +442,21 @@ public class ViewTab extends AbstractVireoController {
 		
 		Submission submission = subRepo.findSubmission(id);
 
-		State state = stateManager.getState(beanName);
-
-		submission.setState(state);
-
-		submission.save();
-
-		view();
-
+		State state = null;
+		
+		if("deleteState".equals(beanName)) {
+			submission.delete();
+			controllers.FilterTab.list();
+		} else {
+			if("cancelState".equals(beanName)) {
+				state = stateManager.getCancelState();
+			} else {
+				state = stateManager.getState(beanName);
+			}
+			submission.setState(state);
+			submission.save();
+			view();
+		}
 	}
 
 	@Security(RoleType.REVIEWER)
