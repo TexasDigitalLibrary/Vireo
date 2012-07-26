@@ -7,7 +7,7 @@
 </div>
 <br />
 <div id="confirmSubmit" class="row">
-<form action="@{Submit.submitETD(subId)}" method="post" class="form-horizontal">
+<form action="@{Submit.studentView(subId)}" method="post" class="form-horizontal" enctype="multipart/form-data">
 	<legend>About You</legend>
 	<div class="control-group">
 		<label class="control-label"><b>Name:</b></label>
@@ -111,16 +111,86 @@
 	<legend>Uploaded File</legend>
 	<div class="control-group">
 		<label class="control-label"><b>Primary Document:</b></label>
-		<div class="controls">
-			<p>${sub.getPrimaryDocument().getName()} ${sub.getPrimaryDocument().getDisplaySize()}</p>
-		</div>
+		
+		
+		
+		   #{if sub.getState().isEditableByStudent()} *{If submission is in needs correction state - show the editor }*
+		
+	        #{if primaryAttachment == null}
+	            <div class="controls">
+	                <input type="file" id="primaryFile" class="input-file" name="primaryDocument">
+	                <input type="submit" value="Upload" class="uploadBtn btn" name="uploadPrimary">                
+	            </div>
+	        #{/if}
+	        #{else}
+	            <div class="controls">
+	                <p>
+	                    <a href="@{Submit.viewPrimaryDocument(subId)}">${primaryAttachment.getName()}</a>
+	                    (${primaryAttachment.getDisplaySize()})
+	                    <input type="submit" value="Replace Manuscript" class="uploadBtn btn" name="replacePrimary">
+	                    
+	                </p>
+	            </div>
+	        #{/else}		
+			
+			
+			<fieldset id="supplementaryFileUpload">
+				<div class="control-group">
+					<label class="control-label" for="supplementaryFile"><b>Supplementary Files:</b></label>
+	
+	                <div class="controls">
+	                    <input type="file" id="supplementaryFile" class="input-file" name="supplementaryDocument">
+	                    <input type="submit" value="Upload" class="uploadBtn btn" name="uploadSupplementary">
+	                </div>
+				</div>
+			</fieldset>
+			
+	
+			<fieldset id="supplementaryFileUploadList">
+				<div class="control-group">
+	                #{if supplementalAttachments.size() > 0}
+	                   
+							<table class="span11 table-striped table-bordered">
+								<thead>
+									<tr>
+										<td>Name</td>
+										<td>size</td>
+									</tr>
+								</thead>
+				                <tbody>
+			                        #{list items:supplementalAttachments, as:"attachment"}
+										<tr>
+			                                <td>
+	                               			   <input type="checkbox" value="${attachment.getId()}" name="attachmentToRemove">
+	                          	     			   ${attachment.getName()} 
+	                          	     		</td>
+	                          	     		<td>   
+	                          	     			   ${attachment.getDisplaySize()}  
+		                                    </td>
+	                                    </tr>
+			                        #{/list}
+									<tr>
+	                  							
+									</tr>
+								</tbody>
+					        </table>	 
+					         					
+	 						<input type="submit" value="Remove Selected" class="uploadBtn btn" name="removeSupplementary">     
+	 
+	                #{/if}
+
+			</div>
+		</fieldset>				
+		#{/if}
+		#{else} *{Not editable by student }*
+            <div class="controls">
+                    <a href="@{Submit.viewPrimaryDocument(subId)}">${primaryAttachment.getName()}</a>
+                    (${primaryAttachment.getDisplaySize()})                    
+            </div>				
+		#{/else}
+		
 	</div>
-	<div class="control-group">
-		<label class="control-label"></label>
-		<div class="controls">
-			<p><a href="@{Submit.fileUpload(subId)}">[edit your uploaded files]</a></p>
-		</div>
-	</div>
+	
 	
 
 	

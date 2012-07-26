@@ -53,7 +53,7 @@
 				<td>${submission.getSubmissionDate()== null?"n/a":submission.getSubmissionDate().format('dd MMMM yyyy')}</td>
 				<td>${submission.getAssignee() == null?"Unassigned":submission.getAssignee().getDisplayName()}</td>
 				<td> 
-				#{if submission.getState().getDisplayName().equals("In Progress")}
+				#{if submission.getState().isInProgress()}
 				    <a class="btn btn-primary" href="@{Submit.verifyPersonalInformation(submission.getId())}">Continue</a>
 				    <a class="btn btn-primary" href="@{Submit.deleteSubmission(submission.getId())}">Delete</a>
                 #{/if} 

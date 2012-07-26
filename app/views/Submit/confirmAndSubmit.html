@@ -128,34 +128,28 @@
 		<label class="control-label"><b>Primary Document:</b></label>
 		<div class="controls">
 			<p>${sub.getPrimaryDocument().getName()} ${sub.getPrimaryDocument().getDisplaySize()}</p>
-		</div>	
-
-		   
+		</div>			   
 
                 #{if supplementalAttachments.size() > 0}
                 
 				<table class="span11 table-striped table-bordered">
-				<thead>
-					<tr>
-						<td>Name</td>
-						<td>size</td>
-					</tr>
-				</thead>
-                <tbody>
-                        #{list items:supplementalAttachments, as:"attachment"}
-                            <p>
-                            <label>
-                                <td>${attachment.getName()}</td> <td>${attachment.getDisplaySize()} </td> 
-                            </label>                                                     
-                            </p>
-                        #{/list}
-				</tbody>
-                #{/if}
-		    </table>
-
-
-
-		
+					<thead>
+						<tr>
+							<td>Name</td>
+							<td>size</td>
+						</tr>
+					</thead>
+	                <tbody>
+	                        #{list items:supplementalAttachments, as:"attachment"}
+	                            <tr>
+	                            <label>
+	                                <td>${attachment.getName()}</td> <td>${attachment.getDisplaySize()} </td> 
+	                            </label>                                                     
+	                            </tr>
+	                        #{/list}
+					</tbody>
+		        </table>	
+		    #{/if}	
 	</div>
 	
 	<div class="control-group">
