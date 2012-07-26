@@ -17,6 +17,16 @@ import org.tdl.vireo.model.Submission;
 public interface Packager {
 
 	/**
+	 * @return The technical spring bean name of this packager implementation.
+	 */
+	public String getBeanName();
+
+	/**
+	 * @return The displayable name of this bean.
+	 */
+	public String getDisplayName();
+
+	/**
 	 * Generate a new package for this submission.
 	 * 
 	 * The package returned will file system resources so it is very important

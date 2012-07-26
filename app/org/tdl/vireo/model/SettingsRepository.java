@@ -359,5 +359,44 @@ public interface SettingsRepository {
 	 *         list if there are none.
 	 */
 	public List<Configuration> findAllConfigurations();
+	
+	
+	// ///////////////////////////
+	// Deposit Locations
+	// ///////////////////////////
+
+	/**
+	 * Create a new deposit location
+	 * 
+	 * @param name
+	 *            The name of the new deposit location.
+	 * @return A new deposit location object.
+	 */
+	public DepositLocation createDepositLocation(String name);
+
+	/**
+	 * Find a deposit location object by id.
+	 * 
+	 * @param id
+	 *            The location's unique id.
+	 * @return The deposit location, or null if not found.
+	 */
+	public DepositLocation findDepositLocation(Long id);
+
+	/**
+	 * Find a deposit location by name.
+	 * 
+	 * @param name
+	 *            The location's unique name.
+	 * @return The deposit location, or null if not found.
+	 */
+	public DepositLocation findDepositLocationByName(String name);
+
+	/**
+	 * Find all defined deposit locations.
+	 * 
+	 * @return A list of all deposit locations.
+	 */
+	public List<DepositLocation> findAllDepositLocation();
 
 }

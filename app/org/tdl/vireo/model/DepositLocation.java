@@ -107,8 +107,8 @@ public interface DepositLocation extends AbstractOrderedModel {
 	public Depositor getDepositor();
 
 	/**
-	 * @param depository
+	 * @param depositor
 	 *            The new depositor implementation
 	 */
-	public void setDepositor(Depositor depository);
+	public void setDepositor(Depositor depositor);
 }

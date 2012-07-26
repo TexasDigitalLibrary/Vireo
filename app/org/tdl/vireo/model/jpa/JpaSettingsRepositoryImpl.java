@@ -13,6 +13,7 @@ import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.Degree;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.Department;
+import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmbargoType;
@@ -237,4 +238,27 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 
 	}
 
+	// ///////////////////////////
+	// Deposit Locations
+	// ///////////////////////////
+	
+	@Override
+	public DepositLocation createDepositLocation(String name) {
+		return new JpaDepositLocationImpl(name); 
+	}
+
+	@Override
+	public DepositLocation findDepositLocation(Long id) {
+		return (DepositLocation) JpaDepositLocationImpl.findById(id);
+	}
+
+	@Override
+	public DepositLocation findDepositLocationByName(String name) {
+		return JpaDepositLocationImpl.find("name = ?", name).first();
+	}
+
+	@Override
+	public List<DepositLocation> findAllDepositLocation() {
+		return (List) JpaDepositLocationImpl.find("order by displayOrder").fetch();
+	}
 }
