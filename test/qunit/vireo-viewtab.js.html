@@ -349,5 +349,110 @@ test("test retrieveTemplateJSON AJAX", function(){
 	equal("This is my subject.", jQuery("input").val(),"The subject was updated correctly.");
 });
 
+/**
+ * Test Add New Committee Member Fields
+ */
+test("test addCommitteeMemberHandler", function(){
+	expect(4);
+	reset();
+	 
+	var markup = '<ul>';
+		markup += '<li id="add_new_member">'
+		markup += '<button class="btn">Add New Member</button>'
+		markup += '</li></ul>'
+		
+	jQuery("body").append(markup);
+		
+	//Register the handler
+	var handler = addCommitteeMemberHandler();
+	jQuery("#add_new_member").click(handler);
+	
+	//Simulate click
+	jQuery("#add_new_member").click();
+	
+	equal(1, jQuery("#cmLastName").length, "There is 1 input for last name.");
+	equal(1, jQuery("#cmFirstName").length, "There is 1 input for first name.");
+	equal(1, jQuery("#cmMiddleName").length, "There is 1 input for middle name.");
+	equal(1, jQuery("#chair").length, "There is 1 input for chair.");	
+	
+ });
+ 
+ /**
+  * Test Commit New Committee Member Handler AJAX
+  */
+test("test commitNewCommitteeMemberHandler", function(){
+	expect(13);
+	reset();
+	
+	var markup = '<ul><li class="add">';
+		markup += '<input type="text" id="cmFirstName" value="Judy" />';
+		markup += '<input type="text" id="cmLastName" value="Jetson" />';
+		markup += '<input type="text" id="cmMiddleName" value="L" />';
+		markup += '<input type="checkbox" id="chair" />';
+		markup += '</li></ul>';
+	
+	jQuery("body").append(markup);
+	
+	// Mock AJAX
+	var options = null;
+	jQuery.ajax = function(param) {
+		options = param;
+	}
+	
+	//AJAX handler
+	commitNewCommitteeMemberHandler(1, "/jsonURL");
+	
+	options.success({ success: 'true', id: '2', firstName: 'Sam', lastName: 'Colt', middleName: 'T', chair: 'true' });
+	
+	equal('/jsonURL', options.url,"The ajax url is correct.");
+	equal('POST', options.type,"The ajax type is correct.");
+	equal('json', options.dataType,"The ajax dataType is correct.");
+	equal(1, options.data.subId,"The ajax data id is correct.");
+	equal('Judy', options.data.firstName, "The ajax data firstName is correct.");
+	equal('Jetson', options.data.lastName, "The ajax data lastName is correct.");
+	equal('L', options.data.middleName, "The ajax data middleName is correct.");
+	equal(false, options.data.chair, "The ajax data chair is correct.");
+	
+	equal('Sam', jQuery(".firstName").text().trim(), "The first name is correct.");
+	equal('T', jQuery(".middleName").text().trim(), "The middle name is correct.");
+	equal('Colt', jQuery(".lastName").text().trim(), "The last name is correct.");
+	equal('chair', jQuery(".chair").text().trim(), "The member is chair.");
+	equal(0, jQuery(".add").length, "There are 0 list items with the class 'add'.");
+	
+});
+ 
+/**
+ * Test removing a Committee Member AJAX
+ */
+test("test removeCommitteeMemberHandler", function(){
+	expect(4);
+	reset();
+	
+	var markup = '<ul>';
+		markup += '<li class="1">';
+		markup += '<a class="remove-committee-member">delete</a>';
+		markup += '</li>';
+		markup += '</ul>';
+	
+	jQuery("body").append(markup);
+	
+	// Mock AJAX
+	var options = null;
+	jQuery.ajax = function(param) {
+		options = param;
+	}
+	
+	//AJAX handler
+	removeCommitteeMemberHandler("/jsonURL", jQuery(".remove-committee-member"));
+	
+	options.success({ success: 'true', id: '1' });
+	
+	equal('/jsonURL', options.url,"The ajax url is correct.");
+	equal('POST', options.type,"The ajax type is correct.");
+	equal('json', options.dataType,"The ajax dataType is correct.");
+
+	equal(0, jQuery("li").length, "The committee member was removed.");
+});
+  
 </script>
 </html> 

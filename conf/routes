@@ -47,6 +47,8 @@ GET		/admin/view/{subId}						ViewTab.view
 POST	/admin/view/update						ViewTab.updateJSON
 POST	/admin/view/updateGraduationDate		ViewTab.updateGraduationDateJSON
 POST	/admin/view/updateCommitteeMember		ViewTab.updateCommitteeMemberJSON
+POST	/admin/view/addCommitteeMember			ViewTab.addCommitteeMemberJSON
+POST	/admin/view/removeCommitteeMember		ViewTab.removeCommitteeMemberJSON
 POST	/admin/view/refreshActionLog			ViewTab.refreshActionLogTable
 POST	/admin/view/refreshLeftColumn			ViewTab.refreshLeftColumn
 POST	/admin/view/changeSubmissionStatus		ViewTab.changeSubmissionStatus

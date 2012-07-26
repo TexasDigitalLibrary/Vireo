@@ -82,7 +82,7 @@
             		<input type="text" name="subject" class="span8" />
             	</li>
             	<li>
-            		<textarea class="textarea span8" name="comment" rows="6">compose comment here...</textarea>
+            		<textarea class="textarea span8" name="comment" rows="6" placeholder="compose comment here..."></textarea>
             	</li>
             	<li>
 		            <select name="email_template">
