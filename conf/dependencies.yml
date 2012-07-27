@@ -5,6 +5,7 @@ require:
     - play -> spring 1.0.3
     - play -> less 0.9.1
     - org.apache.lucene -> lucene-core 3.6.0
+    - org.swordapp -> sword-common 1.1
     - play -> qunit 1.0:
         id: test
     - org.jdom -> jdom 1.1.3:
