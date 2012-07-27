@@ -280,6 +280,16 @@ public interface Submission extends AbstractModel {
 	public void setDegree(String degree);
 
 	/**
+	 * @return The degree level for this submission
+	 */
+	public DegreeLevel getDegreeLevel();
+	
+	/**
+	 * @param level The new degree level for this submission
+	 */
+	public void setDegreeLevel(DegreeLevel level);
+	
+	/**
 	 * 
 	 * @return The degree department that will award this degree.
 	 */

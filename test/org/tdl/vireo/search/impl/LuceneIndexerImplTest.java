@@ -65,6 +65,10 @@ public class LuceneIndexerImplTest extends UnitTest {
 		
 		JPA.em().getTransaction().commit();
 		JPA.em().getTransaction().begin();
+		
+		// pause for any index job to complete
+		while (indexer.isJobRunning())
+			Thread.yield();
 	}
 	
 	/**
