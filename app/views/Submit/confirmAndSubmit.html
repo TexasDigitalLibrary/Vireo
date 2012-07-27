@@ -83,7 +83,9 @@
 	<div class="control-group">
 		<label class="control-label"><b>Degree Date:</b></label>
 		<div class="controls">
-			<p>${controllers.Submit.getMonth(sub.getGraduationMonth())} ${sub.getGraduationYear()}</p>
+		    #{if sub.getGraduationMonth() != null}
+				<p>${controllers.Submit.getMonth(sub.getGraduationMonth())} ${sub.getGraduationYear()}</p>
+			#{/if}
 		</div>
 	</div>
 	<div class="control-group">
@@ -113,7 +115,9 @@
 	<div class="control-group">
 		<label class="control-label"><b>Embargo:</b></label>
 		<div class="controls">
-			<p>${sub.getEmbargoType().getDescription()}</p>
+			#{if sub.getEmbargoType() != null}
+				<p>${sub.getEmbargoType().getDescription()}</p>
+			#{/if}
 		</div>
 	</div>
 	<div class="control-group">
@@ -127,7 +131,9 @@
 	<div class="control-group">
 		<label class="control-label"><b>Primary Document:</b></label>
 		<div class="controls">
-			<p>${sub.getPrimaryDocument().getName()} ${sub.getPrimaryDocument().getDisplaySize()}</p>
+		    #{if sub.getPrimaryDocument() != null}
+			    <p>${sub.getPrimaryDocument().getName()} ${sub.getPrimaryDocument().getDisplaySize()}</p>
+			#{/if}
 		</div>			   
 
                 #{if supplementalAttachments.size() > 0}
