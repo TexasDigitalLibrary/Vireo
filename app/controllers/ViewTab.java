@@ -64,15 +64,13 @@ public class ViewTab extends AbstractVireoController {
 		
 		Submission submission = subRepo.findSubmission(id);
 		Person submitter = submission.getSubmitter();
-
-		DegreeLevel degreeLevel = null;		
-		if(submission.getDegree() != null)
-			degreeLevel = settingRepo.findDegreeByName(submission.getDegree()).getLevel();
-		
+	
 		List<EmailTemplate> templates = settingRepo.findAllEmailTemplates();
 		List<CustomActionDefinition> actions = settingRepo.findAllCustomActionDefinition();
 		
-		String gradMonth = new DateFormatSymbols().getMonths()[submission.getGraduationMonth()];
+		String gradMonth = null;		
+		if(submission.getGraduationMonth() != null)
+			gradMonth = new DateFormatSymbols().getMonths()[submission.getGraduationMonth()];
 
 		List<ActionLog> actionLogs	= subRepo.findActionLog(submission);		
 
@@ -86,8 +84,7 @@ public class ViewTab extends AbstractVireoController {
 		String nav = "view";
 		render(	nav,
 				submission,
-				submitter, 
-				degreeLevel, 
+				submitter,  
 				gradMonth, 
 				actionLogs, 
 				settingRepo, 
@@ -261,6 +258,7 @@ public class ViewTab extends AbstractVireoController {
 				submission.setDegree(value);
 				currentValue = submission.getDegree();
 				degreeLevel = settingRepo.findDegreeByName(submission.getDegree()).getLevel();
+				submission.setDegreeLevel(degreeLevel);
 
 				//Major
 			} else if("major".equals(field)){			
