@@ -400,6 +400,35 @@ function cancelEditingHandler(){
 }
 
 /**
+ * Function to update custom actions.
+ * 
+ * @param url (The method to update custom actions)
+ * @param id (The submission id)
+ * @param action (The name of the input field)
+ * @param value (The value of the input field)
+ */
+function updateCustomActionsHandler(url, id, action, value) {
+	
+	jQuery.ajax({
+		url:url,
+		data:{
+			id:id,
+			action:action,
+			value:value
+		},
+		dataType:'json',
+		type:'POST',
+		success:function(data){
+			
+		},
+		error:function(){
+			alert("Error updating custom action.");
+		}
+	});
+	
+}
+
+/**
  * Function to update Action Log table on the view page
  * after a change has been made to the submission object.
  * 

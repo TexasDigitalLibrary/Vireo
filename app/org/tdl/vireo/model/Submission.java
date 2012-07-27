@@ -422,7 +422,7 @@ public interface Submission extends AbstractModel {
 	 */
 	public CustomActionValue addCustomAction(CustomActionDefinition definition,
 			Boolean value);
-	
+		
 	/**
 	 * @return The deposit id associated with submission. It usually is a URL
 	 *         but different repositories may use another identifier type.
