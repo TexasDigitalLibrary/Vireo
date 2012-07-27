@@ -168,6 +168,10 @@ in results.
                      if (sub.getDegree() != null)
                          out.print(sub.getDegree());
                      break;
+                 case DEGREE_LEVEL:
+                     if (sub.getDegreeLevel() != null)
+                         out.print(sub.getDegreeLevel().name());
+                     break;
                  case COLLEGE:
                      if (sub.getCollege() != null)
                          out.print(sub.getCollege());

@@ -10,7 +10,11 @@
             <div style="padding-bottom:15px;">
             <h3>Current Transitions</h3>
             #{list items:transitions, as:'state'}
-            	<a id="${state.getBeanName()}" class="btn special-value">${state.getDisplayName()}</a>
+            	<a id="${state.getBeanName()}" class="btn special-value 
+            	#{if state.isDepositable()}
+            		 btn-success
+            	#{/if}
+            	">${state.getDisplayName()}</a>
             #{/list}
             </div>
             
@@ -24,7 +28,11 @@
             <input type="submit" class="btn btn-primary" name="submit_save" value="Save"/>
             
             <div style="padding-top:15px;">
-            <a id="Cancelled" class="btn btn-important special-value">Cancel this Submission</a>
+           		#{if submission.getState().isDeletable()}
+           			<a id="deleteState" class="btn btn-danger special-value deleteState">Delete this Submission</a>
+           		#{/if}#{else}
+           			<a id="cancelState" class="btn btn-important special-value">Cancel this Submission</a>
+            	#{/else}
             </div>
             </form>
         </div>
@@ -82,7 +90,7 @@
             		<input type="text" name="subject" class="span8" />
             	</li>
             	<li>
-            		<textarea class="textarea span8" name="comment" rows="6">compose comment here...</textarea>
+            		<textarea class="textarea span8" name="comment" rows="6" placeholder="compose comment here..."></textarea>
             	</li>
             	<li>
 		            <select name="email_template">

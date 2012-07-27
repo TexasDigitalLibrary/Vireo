@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.tdl.vireo.model.ActionLog;
+import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.MockPerson;
 import org.tdl.vireo.model.Person;
@@ -413,6 +414,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		sub.setApprovalDate(now);
 		sub.setLicenseAgreementDate(now);
 		sub.setDegree("degree");
+		sub.setDegreeLevel(DegreeLevel.UNDERGRADUATE);
 		sub.setDepartment("department");
 		sub.setCollege("college");
 		sub.setMajor("major");
@@ -435,6 +437,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		sub.setApprovalDate(null);
 		sub.setLicenseAgreementDate(null);
 		sub.setDegree(null);
+		sub.setDegreeLevel(null);
 		sub.setDepartment(null);
 		sub.setCollege(null);
 		sub.setMajor(null);
@@ -463,6 +466,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		assertEquals("Major cleared by Mock Administrator", logItr.next().getEntry());
 		assertEquals("College cleared by Mock Administrator", logItr.next().getEntry());
 		assertEquals("Department cleared by Mock Administrator", logItr.next().getEntry());
+		assertEquals("Degree level cleared by Mock Administrator", logItr.next().getEntry());
 		assertEquals("Degree cleared by Mock Administrator", logItr.next().getEntry());
 		assertEquals("Submission license agreement cleared by Mock Administrator", logItr.next().getEntry());
 		assertEquals("Submission approval cleared by Mock Administrator", logItr.next().getEntry());
@@ -484,6 +488,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		assertEquals("Major changed to 'major' by Mock Administrator", logItr.next().getEntry());
 		assertEquals("College changed to 'college' by Mock Administrator", logItr.next().getEntry());
 		assertEquals("Department changed to 'department' by Mock Administrator", logItr.next().getEntry());
+		assertEquals("Degree level changed to 'UNDERGRADUATE' by Mock Administrator", logItr.next().getEntry());
 		assertEquals("Degree changed to 'degree' by Mock Administrator", logItr.next().getEntry());
 		assertEquals("Submission license agreement set by Mock Administrator", logItr.next().getEntry());
 		assertEquals("Submission approval set by Mock Administrator", logItr.next().getEntry());
@@ -540,6 +545,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		sub.setApprovalDate(now);
 		sub.setLicenseAgreementDate(now);
 		sub.setDegree("degree");
+		sub.setDegreeLevel(DegreeLevel.UNDERGRADUATE);
 		sub.setDepartment("department");
 		sub.setCollege("college");
 		sub.setMajor("major");
@@ -569,6 +575,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		assertEquals(now,sub.getApprovalDate());
 		assertEquals(now,sub.getLicenseAgreementDate());
 		assertEquals("degree",sub.getDegree());
+		assertEquals(DegreeLevel.UNDERGRADUATE,sub.getDegreeLevel());
 		assertEquals("department",sub.getDepartment());
 		assertEquals("college",sub.getCollege());
 		assertEquals("major",sub.getMajor());

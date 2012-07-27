@@ -62,7 +62,10 @@ public class ViewTab extends AbstractVireoController {
 		Submission submission = subRepo.findSubmission(id);
 		Person submitter = submission.getSubmitter();
 
-		DegreeLevel degreeLevel = settingRepo.findDegreeByName(submission.getDegree()).getLevel();
+		DegreeLevel degreeLevel = null;		
+		if(submission.getDegree() != null)
+			degreeLevel = settingRepo.findDegreeByName(submission.getDegree()).getLevel();
+		
 		List<EmailTemplate> templates = settingRepo.findAllEmailTemplates();
 		List<CustomActionDefinition> actions = settingRepo.findAllCustomActionDefinition();
 		
@@ -71,14 +74,27 @@ public class ViewTab extends AbstractVireoController {
 		List<ActionLog> actionLogs	= subRepo.findActionLog(submission);		
 
 		List<State> states = stateManager.getAllStates();
-		
+				
 		List<State> transitions = submission.getState().getTransitions(submission);
 		List<CustomActionValue> actionValues = submission.getCustomActions();
 		
 		List<Person> assignees = personRepo.findPersonsByRole(RoleType.REVIEWER);		
 
 		String nav = "view";
-		render(nav, submission, submitter, degreeLevel, gradMonth, actionLogs, settingRepo, states, assignees, transitions, templates, actions, actionValues);
+		render(	nav,
+				submission,
+				submitter, 
+				degreeLevel, 
+				gradMonth, 
+				actionLogs, 
+				settingRepo, 
+				states,
+				assignees, 
+				transitions, 
+				templates, 
+				actions, 
+				actionValues
+				);
 	}
 
 	@Security(RoleType.REVIEWER)
@@ -312,7 +328,9 @@ public class ViewTab extends AbstractVireoController {
 	public static void addCommitteeMemberJSON(Long subId, String firstName, String lastName, String middleName, Boolean chair){
 
 		Submission submission = subRepo.findSubmission(subId);
-
+		
+		CommitteeMember newMember = null;
+		
 		try {
 
 			if(firstName==null || firstName.trim().length()==0)
@@ -321,21 +339,24 @@ public class ViewTab extends AbstractVireoController {
 			if(lastName==null || lastName.trim().length()==0)
 				throw new RuntimeException("Committee Member Last Name is required.");
 
-			submission.addCommitteeMember(firstName, lastName, middleName, chair);
+			newMember = submission.addCommitteeMember(firstName, lastName, middleName, chair);
 
 		} catch (RuntimeException re) {
 			firstName = escapeJavaScript(firstName);
 			lastName = escapeJavaScript(lastName);
 			middleName = escapeJavaScript(middleName);
-
-			renderJSON("{ \"success\": false, \"firstName\": \""+firstName+"\", \"lastName\": \""+lastName+"\", \"chair\": \""+chair+"\", \"message\": \""+re.getMessage()+"\" }");
+			
+			renderJSON("{ \"success\": false, \"firstName\": \""+firstName+"\", \"lastName\": \""+lastName+"\", \"middleName\": \""+middleName+"\", \"chair\": \""+chair+"\", \"message\": \""+re.getMessage()+"\" }");
 		}
 
+		submission.save();
+		
 		firstName = escapeJavaScript(firstName);
 		lastName = escapeJavaScript(lastName);
 		middleName = escapeJavaScript(middleName);
+		Long id = newMember.getId();
 
-		String json = "{ \"success\": true, \"firstName\": \""+firstName+"\", \"lastName\": \""+lastName+"\", \"chair\": \""+chair+"\" }";
+		String json = "{ \"success\": true, \"id\": \""+id+"\", \"firstName\": \""+firstName+"\", \"lastName\": \""+lastName+"\", \"middleName\": \""+middleName+"\", \"chair\": \""+chair+"\" }";
 
 		renderJSON(json);
 
@@ -380,11 +401,11 @@ public class ViewTab extends AbstractVireoController {
 	}
 
 	@Security(RoleType.REVIEWER)
-	public static void removeCommitteeMemberJSON(Long subId, Long id){
+	public static void removeCommitteeMemberJSON(Long id){
 
 		subRepo.findCommitteeMember(id).delete();
 
-		renderJSON("{ \"success\": true }");
+		renderJSON("{ \"success\": true, \"id\": \""+id+"\" }");
 
 	}
 
@@ -404,8 +425,10 @@ public class ViewTab extends AbstractVireoController {
 		Submission submission = subRepo.findSubmission(id);
 
 		List<ActionLog> actionLogs	= subRepo.findActionLog(submission);
+		List<CustomActionDefinition> actions = settingRepo.findAllCustomActionDefinition();
+		List<CustomActionValue> actionValues = submission.getCustomActions();
 
-		renderTemplate("ViewTab/leftColumn.include", actionLogs, submission);
+		renderTemplate("ViewTab/leftColumn.include", actionLogs, submission, actions, actionValues);
 
 	}
 
@@ -419,14 +442,21 @@ public class ViewTab extends AbstractVireoController {
 		
 		Submission submission = subRepo.findSubmission(id);
 
-		State state = stateManager.getState(beanName);
-
-		submission.setState(state);
-
-		submission.save();
-
-		view();
-
+		State state = null;
+		
+		if("deleteState".equals(beanName)) {
+			submission.delete();
+			controllers.FilterTab.list();
+		} else {
+			if("cancelState".equals(beanName)) {
+				state = stateManager.getCancelState();
+			} else {
+				state = stateManager.getState(beanName);
+			}
+			submission.setState(state);
+			submission.save();
+			view();
+		}
 	}
 
 	@Security(RoleType.REVIEWER)

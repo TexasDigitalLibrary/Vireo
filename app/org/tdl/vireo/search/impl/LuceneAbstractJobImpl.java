@@ -271,6 +271,11 @@ public abstract class LuceneAbstractJobImpl extends Job {
 				customActions++;
 		}
 		
+		String degreeLevel = null;
+		if (sub.getDegreeLevel() != null)
+			degreeLevel = sub.getDegreeLevel().name();
+		searchText.append(degreeLevel).append(" ");
+		
 		String depositId = sub.getDepositId();
 		searchText.append(depositId).append(" ");
 		
@@ -361,6 +366,9 @@ public abstract class LuceneAbstractJobImpl extends Job {
 		doc.add(new Field("umiRelease",umiRelease,Field.Store.NO,Index.NOT_ANALYZED));
 		
 		doc.add(new NumericField("customActions",Field.Store.NO,true).setIntValue(customActions));
+
+		if (degreeLevel != null)
+		doc.add(new Field("degreeLevel",degreeLevel,Field.Store.NO,Index.NOT_ANALYZED));
 		
 		if (depositId != null)
 		doc.add(new Field("depositId",depositId,Field.Store.NO,Index.NOT_ANALYZED));
@@ -471,6 +479,9 @@ public abstract class LuceneAbstractJobImpl extends Job {
 			doc.add(new Field("umiRelease",umiRelease,Field.Store.NO,Index.NOT_ANALYZED));
 			
 			doc.add(new NumericField("customActions",Field.Store.NO,true).setIntValue(customActions));
+			
+			if (degreeLevel != null)
+			doc.add(new Field("degreeLevel",degreeLevel,Field.Store.NO,Index.NOT_ANALYZED));
 			
 			if (depositId != null)
 			doc.add(new Field("depositId",depositId,Field.Store.NO,Index.NOT_ANALYZED));

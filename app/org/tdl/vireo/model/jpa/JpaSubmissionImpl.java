@@ -33,6 +33,7 @@ import org.tdl.vireo.model.CommitteeMember;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.Degree;
+import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.Department;
 import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.EmbargoType;
@@ -105,6 +106,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	
 	@Column(length=255)
 	public String degree;
+	public DegreeLevel degreeLevel;
 	@Column(length=255)
 	public String department;
 	@Column(length=255)
@@ -579,6 +581,24 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		if (!equals(this.degree,degree)) {
 			this.degree = degree;
 			generateChangeLog("Degree",degree,false);
+		}
+	}
+	
+	@Override
+	public DegreeLevel getDegreeLevel() {
+		return degreeLevel;
+	}
+
+	@Override
+	public void setDegreeLevel(DegreeLevel level) {
+		assertReviewerOrOwner(submitter);
+		
+		if (!equals(this.degreeLevel,level)) {
+			this.degreeLevel = level;
+			generateChangeLog(
+					"Degree level",         
+					(degreeLevel == null) ? null : degreeLevel.name(),
+					false);
 		}
 	}
 

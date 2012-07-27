@@ -259,13 +259,18 @@ public class Submit extends AbstractVireoController {
 				
 				if (sub == null)
 					sub = subRepo.createSubmission(submitter);
-				
+										
 				sub.setStudentFirstName(firstName);
 				sub.setStudentMiddleName(middleName);
 				sub.setStudentLastName(lastName);
 				sub.setStudentBirthYear(birthYearInt);
 				sub.setDepartment(department);
 				sub.setDegree(degree);
+				
+				// Put the degree level of the student's current degree into the submission
+				
+				sub.setDegreeLevel(settingRepo.findDegreeByName(degree).getLevel());
+				
 				sub.setMajor(major);
 				sub.setSubmissionDate(new Date());
 				submitter.setPermanentPhoneNumber(permPhone);
@@ -273,6 +278,7 @@ public class Submit extends AbstractVireoController {
 				submitter.setPermanentEmailAddress(permEmail);
 				submitter.setCurrentPhoneNumber(currentPhone);
 				submitter.setCurrentPostalAddress(currentAddress);
+				
 				
 				sub.save();
 				submitter.save();
@@ -544,22 +550,7 @@ public class Submit extends AbstractVireoController {
             // If the upload supplementary button is pressed - then add the manuscript as an attachment
             
             if (params.get("uploadSupplementary") != null) {
-
-                File supplementaryDocument = params.get("supplementaryDocument",File.class);
-
-                if (supplementaryDocument == null)
-                    Logger.info("Doc is null");
-                else
-                    Logger.info("Doc: " + supplementaryDocument.getClass().getName());
-
-                try {
-                    sub.addAttachment(supplementaryDocument, AttachmentType.SUPPLEMENTAL);                                         
-                    sub.save();
-                } catch (IOException e) {
-                    validation.addError("supplementaryDocument","Error uploading supplementary document.");
-                } catch (IllegalArgumentException e) {
-                    validation.addError("supplementaryDocument","Error uploading supplementary document.");
-                }
+            	uploadSupplementary(sub);
             }
 
             // 'Save And Continue' button was clicked
@@ -576,6 +567,8 @@ public class Submit extends AbstractVireoController {
                
                 // For now - print the names of the attachments in the submission
                 
+                // TODO - do we need to upload supplemental attachments here?
+                
         		for (Attachment attachment : sub.getAttachments()) {
         			Logger.info("Attachment for Submission: " + attachment.getName());
         		}
@@ -589,32 +582,7 @@ public class Submit extends AbstractVireoController {
             // Handle the remove supplementary document button 
             
             if (params.get("removeSupplementary") != null) {
-            	
-            	// Get values from all check boxes
-            	
-            	String[] idsToRemove = params.getAll("attachmentToRemove");
-            	
-            	// Iterate over all checked check boxes - removing attachments as we go
-            	
-            	if (idsToRemove != null)
-	            	for (String id : idsToRemove ) {
-	            		
-	            		// Iterate over the list of supplemental documents and delete the indicated docs
-	            		List<Attachment> supList = sub.getSupplementalDocuments();
-	            		
-	            		for (Attachment a : supList) {
-	            			
-	            			Logger.info("Comparing " + a.getId() + " " + new Long(id));
-	            			
-	            			if (a.getId().equals(new Long(id))) {
-	            				
-	            				Logger.info("Deleteing attachment " + a.getId());
-	            				
-	            				a.delete();
-	            			}
-	            		}
-	            		
-	            	}            	            	
+            	removeSupplementary(sub);           	            	
             }
 
             // Initialize variables and display form
@@ -641,8 +609,7 @@ public class Submit extends AbstractVireoController {
         	if (!primaryDocument.getName().toLowerCase().endsWith(".pdf")) {
         		validation.addError("primaryDocument", "Primary document must be a PDF file.");
         		return;
-        	}
-        	
+        	}       	
         }
         try {
             sub.addAttachment(primaryDocument, AttachmentType.PRIMARY);
@@ -654,6 +621,67 @@ public class Submit extends AbstractVireoController {
         }		
 	}
 
+	// Private method to upload a supplementary document.
+
+	private static void uploadSupplementary(Submission sub) {
+		
+        // If the upload supplementary button is pressed - then add the manuscript as an attachment
+        
+        if (params.get("uploadSupplementary") != null) {
+
+            File supplementaryDocument = params.get("supplementaryDocument",File.class);
+
+            if (supplementaryDocument == null)
+                Logger.info("Doc is null");
+            else
+                Logger.info("Doc: " + supplementaryDocument.getClass().getName());
+
+            try {
+                sub.addAttachment(supplementaryDocument, AttachmentType.SUPPLEMENTAL);                                         
+                sub.save();
+            } catch (IOException e) {
+                validation.addError("supplementaryDocument","Error uploading supplementary document.");
+            } catch (IllegalArgumentException e) {
+                validation.addError("supplementaryDocument","Error uploading supplementary document.");
+            }
+        }				
+	}
+	
+	
+	/**
+	 * Common method to remove supplementary files from a submission (based on checkboxes in the form)
+	 * @param sub
+	 */
+	private static void removeSupplementary(Submission sub) {
+		
+    	// Get values from all check boxes
+    	
+    	String[] idsToRemove = params.getAll("attachmentToRemove");
+    	
+    	// Iterate over all checked check boxes - removing attachments as we go
+    	
+    	if (idsToRemove != null)
+        	for (String id : idsToRemove ) {
+        		
+        		// Iterate over the list of supplemental documents and delete the indicated docs
+        		List<Attachment> supList = sub.getSupplementalDocuments();
+        		
+        		for (Attachment a : supList) {
+        			
+        			Logger.info("Comparing " + a.getId() + " " + new Long(id));
+        			
+        			if (a.getId().equals(new Long(id))) {
+        				
+        				Logger.info("Deleteing attachment " + a.getId());
+        				
+        				a.delete();
+        			}
+        		}
+        		
+        	}            		
+	}
+	
+	
 	
 	// Handle the Confirm and Submit form
 	
@@ -661,9 +689,7 @@ public class Submit extends AbstractVireoController {
 	public static void confirmAndSubmit(Long subId) {		
 		
 		// Locate the submission 
-		
-		// TODO -- refactor - all of the methods in this controller have this same code at the beginning
-		
+			
         Submission sub = subRepo.findSubmission(subId);
         Person submitter = context.getPerson();
         List<ActionLog> actionLogList = subRepo.findActionLog(sub);
@@ -700,8 +726,7 @@ public class Submit extends AbstractVireoController {
         
         sub.setState(stateList.get(0));
         sub.save();
-        review(subId);     
-        
+        review(subId);             
 	}	
 	
 	/**
@@ -754,14 +779,47 @@ public class Submit extends AbstractVireoController {
             // something is wrong
             error("Did not receive the expected submission id.");
         } else {
+        	      	
 
             // This is an existing submission so check that we're the student or administrator here.
             
             if (sub.getSubmitter() != submitter)
                 unauthorized();		
+
+            // If the upload manuscript button is pressed - then add the manuscript as an attachment
+            
+            if (params.get("uploadPrimary") != null) {
+            	Logger.info("Student View Upload " + sub.toString());
+            	uploadPrimaryDocument(sub);
+            }
+            
+            // If the upload supplementary file button is pressed - then add the supplementary doc as an attachment
+
+            if (params.get("uploadSupplementary") != null) {
+            	Logger.info("Student View Upload " + sub.toString());
+            	uploadSupplementary(sub);
+            }            
+            
+            // If the replace manuscript button is pressed - then delete the manuscript 
+            
+            if (params.get("replacePrimary") != null) {
+            	Logger.info("Replace/Delete Manuscript");            	
+            	Attachment primaryDoc = sub.getPrimaryDocument();   
+            	if (primaryDoc != null) {
+            		primaryDoc.delete();
+            		sub.save();
+            	}
+            }
+            
+            if (params.get("removeSupplementary") != null) {
+            	removeSupplementary(sub);
+            }
         }
         
-		render(subId, sub, submitter, actionLogList);		
+        Attachment primaryAttachment = sub.getPrimaryDocument();
+        List<Attachment> supplementalAttachments = sub.getSupplementalDocuments();
+        
+		render(subId, sub, submitter, actionLogList, primaryAttachment, supplementalAttachments);		
 	}
 	
 	/**

@@ -94,6 +94,10 @@ public class SystemTest extends AbstractVireoFunctionalTest {
 	@Test
 	public void testIndex() throws InterruptedException {
 		
+		// Wait for any index job to finish.
+		while (indexer.isJobRunning())
+			Thread.yield();
+		
 		final String PANEL_URL = Router.reverse("System.controlPanel").url;
 		final String EMAIL_URL = Router.reverse("System.rebuildIndex").url;
 		

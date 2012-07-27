@@ -140,6 +140,8 @@ import play.modules.spring.Spring;
  * customActions: The count of custom actions that have been checked off on the
  * submission for sorting.
  * 
+ * degreeLevel: the degree level, single token not analyzed just for sorting
+ * 
  * depositId: The deposit id for sorting
  * 
  * lastEventEntry: The textual entry of the last log event for sorting.

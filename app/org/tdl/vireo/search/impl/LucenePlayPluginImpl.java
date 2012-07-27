@@ -3,6 +3,7 @@ package org.tdl.vireo.search.impl;
 import org.tdl.vireo.search.Indexer;
 
 import play.Logger;
+import play.Play;
 import play.PlayPlugin;
 import play.modules.spring.Spring;
 
@@ -17,15 +18,13 @@ import play.modules.spring.Spring;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 public class LucenePlayPluginImpl extends PlayPlugin {
+	
 	@Override
 	public void beforeInvocation() {
 		// Start the transaction by clearing it out of any previous state that
 		// may have been left over.
-		try {
+		if (Play.started)
 			Spring.getBeanOfType(Indexer.class).rollback();
-		} catch (RuntimeException re) {
-			Logger.warn(re,"LucenePlayPlugin is unable to start index transaction because the indexer is not defined.");
-		}
 	}
 
 	@Override
@@ -33,29 +32,26 @@ public class LucenePlayPluginImpl extends PlayPlugin {
 		// The request succeeded, so commit the transaction. If there's an
 		// exception here we want to throw it to blow up the rest of the
 		// application, so everyone knows about the error.
-		Spring.getBeanOfType(Indexer.class).commit(false);
+		if (Play.started)
+			Spring.getBeanOfType(Indexer.class).commit(false);
 	}
 
 	@Override
 	public void onInvocationException(Throwable e) {
-		try {
-			// There was an exception thrown, so rollback the transaction.
+		
+		// There was an exception thrown, so rollback the transaction.
+		if (Play.started)
 			Spring.getBeanOfType(Indexer.class).rollback();
-		} catch (RuntimeException re) {
-			Logger.warn(re,"LucenePlayPlugin unable to roll back index transaction on exception.");
-		}
 	}
 
 	@Override
 	public void invocationFinally() {
-		try {
-			// Either the after, or exception methods above should have been called.
-			// Just to make sure that we don't leave a transaction laying around we
-			// will rollback now.
+		
+		// Either the after, or exception methods above should have been called.
+		// Just to make sure that we don't leave a transaction laying around we
+		// will rollback now.
+		if (Play.started)
 			Spring.getBeanOfType(Indexer.class).rollback();
-		} catch (RuntimeException re) {
-			Logger.warn(re,"LucenePlayPlugin unable to roll back index transaction on exception.");
-		}
 	}
 
 }
