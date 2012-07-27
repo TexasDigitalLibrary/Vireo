@@ -586,8 +586,12 @@ public class TestDataLoader extends Job {
 			if (random.nextInt(100) > 70)
 				sub.setCommitteeDisposition(generateRandomAbstract(random));
 			
-			if (random.nextInt(100) > 5)
-				sub.setDegree(DEGREES_DEFINITIONS[random.nextInt(DEGREES_DEFINITIONS.length-1)].name);
+			if (random.nextInt(100) > 5) {
+				DegreeLevelArray degree = DEGREES_DEFINITIONS[random.nextInt(DEGREES_DEFINITIONS.length-1)];
+				
+				sub.setDegree(degree.name);
+				sub.setDegreeLevel(degree.degreeLevel);
+			}
 			
 			if (random.nextInt(100) > 5)
 				sub.setDepartment(DEPARTMENTS_DEFINITIONS[random.nextInt(DEPARTMENTS_DEFINITIONS.length-1)]);
