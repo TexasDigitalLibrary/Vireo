@@ -78,7 +78,7 @@ public class TemplatePackagerImplTest extends UnitTest {
 		sub.setDocumentAbstract("document abstract");
 		sub.setDocumentKeywords("document keywords");
 		sub.setDegree("selected degree");
-		//sub.setDegreeLevel(DegreeLevel.UNDERGRADUATE);
+		sub.setDegreeLevel(DegreeLevel.UNDERGRADUATE);
 		sub.setDepartment("selected department");
 		sub.setCollege("selected college");
 		sub.setMajor("selected major");
@@ -146,7 +146,6 @@ public class TemplatePackagerImplTest extends UnitTest {
 			
 			File targetDir = createNewTempDir();
 			decompressZip(targetDir, zipFile);
-			System.out.println("Decompressed zip pacakage to: "+targetDir.getCanonicalPath());
 			Map<String, File> fileMap = getFileMap(targetDir);
 			
 			// There should be three files
@@ -165,10 +164,14 @@ public class TemplatePackagerImplTest extends UnitTest {
 			assertTrue(manifest.contains(sub.getDocumentTitle()));
 			assertTrue(manifest.contains(sub.getDocumentAbstract()));
 			
+			// Cleanup
+			for(File file : fileMap.values())
+				file.delete();
+			targetDir.delete();
+			
+			pkg.delete();
+			assertFalse(zipFile.exists());
 		}
-		
-		
-		
 	}
 	
 	

@@ -176,7 +176,11 @@
                     #{/if}
                     
                     <!-- thesis.degree.level = Degree Level (Doctoral, Masters, Undergraduate) -->
-                    <!-- TODO: add degree.level -->
+                    #{if sub.getDegreeLevel() != null } 
+                    <dim:field mdschema="thesis" element="degree" qualifier="level">
+                        ${ sub.getDegreeLevel().name().toLowerCase().capitalizeWords() }
+                    </dim:field>
+                    #{/if}
                     
                     <!-- thesis.degree.discipline = Major -->
                     #{if sub.getMajor() != null } 
