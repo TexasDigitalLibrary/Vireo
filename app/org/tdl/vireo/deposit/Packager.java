@@ -1,6 +1,7 @@
 package org.tdl.vireo.deposit;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.tdl.vireo.model.Submission;
 
@@ -38,7 +39,7 @@ public interface Packager {
 	 *            The submission
 	 * @return A package
 	 */
-	public Package generatePackage(Submission submission);
+	public Package generatePackage(Submission submission) throws IOException;
 
 	/**
 	 * A simple inner class to contain the information necessary for depositing

@@ -120,4 +120,24 @@
         <property name="personRepository" ref="PersonRepository"/>
         <property name="settingsRepository" ref="SettingsRepository"/>
     </bean>
+    
+    <!-- Deposit Packages -->
+    <bean id="DSpaceMETS" class="org.tdl.vireo.deposit.impl.TemplatePackagerImpl" scope="prototype">
+        <property name="displayName" value="Default DSpace Format"/>
+        <property name="templatePath" value="conf/deposit/dspace.mets"/>
+        <property name="mimeType" value="application/zip"/>
+        <property name="format" value="http://purl.org/net/sword-types/METSDSpaceSIP"/>
+        <property name="manifestName" value="mets.xml"/>
+        <property name="attachmentTypeNames">
+            <list>
+                <value>PRIMARY</value>
+                <value>SUPPLEMENTAL</value>
+            </list>
+        </property>
+        <property name="templateArguments">
+            <util:map>
+                <entry key="agent" value="Vireo DSpace METS packager"/>
+            </util:map>
+        </property>
+    </bean>
 </beans>
