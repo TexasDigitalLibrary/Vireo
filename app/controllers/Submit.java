@@ -259,13 +259,18 @@ public class Submit extends AbstractVireoController {
 				
 				if (sub == null)
 					sub = subRepo.createSubmission(submitter);
-				
+										
 				sub.setStudentFirstName(firstName);
 				sub.setStudentMiddleName(middleName);
 				sub.setStudentLastName(lastName);
 				sub.setStudentBirthYear(birthYearInt);
 				sub.setDepartment(department);
 				sub.setDegree(degree);
+				
+				// Put the degree level of the student's current degree into the submission
+				
+				sub.setDegreeLevel(settingRepo.findDegreeByName(degree).getLevel());
+				
 				sub.setMajor(major);
 				sub.setSubmissionDate(new Date());
 				submitter.setPermanentPhoneNumber(permPhone);
@@ -273,6 +278,7 @@ public class Submit extends AbstractVireoController {
 				submitter.setPermanentEmailAddress(permEmail);
 				submitter.setCurrentPhoneNumber(currentPhone);
 				submitter.setCurrentPostalAddress(currentAddress);
+				
 				
 				sub.save();
 				submitter.save();
