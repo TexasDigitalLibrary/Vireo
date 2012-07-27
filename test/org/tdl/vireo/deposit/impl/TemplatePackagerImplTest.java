@@ -164,9 +164,6 @@ public class TemplatePackagerImplTest extends UnitTest {
 			assertTrue(manifest.contains(sub.getStudentLastName()));
 			assertTrue(manifest.contains(sub.getDocumentTitle()));
 			assertTrue(manifest.contains(sub.getDocumentAbstract()));
-			assertTrue(manifest.contains(sub.getDegree()));
-			assertTrue(manifest.contains(sub.getCollege()));
-			assertTrue(manifest.contains(sub.getMajor()));
 			
 		}
 		

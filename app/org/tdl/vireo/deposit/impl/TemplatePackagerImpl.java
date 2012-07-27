@@ -146,7 +146,7 @@ public class TemplatePackagerImpl extends AbstractPackagerImpl {
 	 * @param arguments
 	 *            Template arguments
 	 */
-	public void setTemplateArguments(Map<String,Object> arguments) {
+	public void setManifestTemplateArguments(Map<String,Object> arguments) {
 		templateArguments = arguments;
 	}
 	

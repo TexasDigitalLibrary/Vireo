@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+
+<metadata
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:dcterms="http://purl.org/dc/terms/">
+
+    <!-- dc.creator = Student -->
+	<dc:creator>
+	    %{
+	         if (sub.getStudentLastName() == null) {
+	            out.print("Unknown");
+	         } else {
+	            out.print(sub.getStudentLastName());
+	            if (sub.getStudentFirstName() == null || sub.getStudentLastName()) {
+	                out.print(", ");
+	                if (sub.getStudentFirstName() != null)
+	                    out.print(sub.getStudentFirstName());
+	                out.print(" ");
+	                if (sub.getStudentMiddleName() != null)
+	                    out.print(sub.getStudentMiddleName());
+	            }
+	         }
+	         if (sub.getStudentBirthYear() != null) {
+	            out.print(" "+sub.getStudentBirthYear()+"-");
+	         }
+	    %} 
+	</dc:creator>
+	
+	<!-- dc.title = Document Title -->
+	#{if sub.getDocumentTitle() != null } 
+	<dc:title>
+	    ${ sub.getDocumentTitle() }
+	</dc:title>
+	#{/if}
+	
+	<!-- dc.description.abstract = Document Abstract -->
+	#{if sub.getDocumentAbstract() != null } 
+	<dc:description xsi:type="dcterms:abstract">
+	dim:field mdschema="dc" element="description" qualifier="abstract">
+	    ${ sub.getDocumentAbstract() }
+	</dc:description>
+	#{/if}
+	
+	<!-- dc.subject = Document Keywords, split on ";" (multiple) -->
+	#{if sub.getDocumentKeywords() != null } 
+	#{list items:sub.getDocumentKeywords().split(";"), as:'keyword'} 
+	<dc:subject>
+	    ${ keyword.trim() }
+	</dc:subject>
+	#{/list}
+	#{/if}
+	
+	<!-- dc.contributor.advisor = Committee Members, both chairs and members included (Multiple) -->
+	#{list items:sub.getCommitteeMembers(), as:'member'} 
+	<dc:contributor>
+	    %{
+	         if (member.getLastName() == null) {
+	            out.print("Unknown");
+	         } else {
+	            out.print(member.getLastName());
+	            if (member.getFirstName() == null || member.getLastName()) {
+	                out.print(", ");
+	                if (member.getFirstName() != null)
+	                    out.print(member.getFirstName());
+	                out.print(" ");
+	                if (member.getMiddleName() != null)
+	                    out.print(member.getMiddleName());
+	            }
+	         }
+	    %} 
+	</dc:contributor>
+	#{/list}
+	
+	
+	<!-- dc.date = Graduation date in "YYYY-MM" format -->
+	#{if sub.getGraduationYear() != null } 
+	<dc:date>
+	    %{
+	        out.print(sub.getGraduationYear());
+	        if (sub.getGraduationMonth() != null) {
+	            out.print("-");
+	            // Jaunary=0, December=11
+	            out.print(sub.getGraduationMonth()+1);
+	        }
+	    }% 
+	</dc:date>
+	#{/if}
+	
+	<!-- dc.date.dateAccepted = Approval date in "YYYY-MM-DD" format -->
+	#{if sub.getApprovalDate() != null } 
+	<dc:date" xsi:type="dcterms:dateAccepted">
+	    ${ sub.getApprovalDate().format("yyyy-MM-dd") }
+	</dc:date>
+	#{/if}
+	
+	
+	<!-- dc.format = Primary Document's mimetype, almost always "application/pdf" -->
+	#{if sub.getPrimaryDocument() != null } 
+	<dc:format>
+	    ${ sub.getPrimaryDocument().getMimeType() }
+	</dc:format>
+	#{/if}
+	
+	<!-- dc.language = "en_US" // Sorry we are lazy and Americans. -->
+	<dc:language>en_US</dc:language>
+	
+	<!-- dc.type.text = "thesis" // constant -->
+	<dc:type xsi:type="dcterm:text">thesis</dc:type>
+	
+	<!-- dc.identifier.uri == Deposit ID, this would only be available when re-depositing -->
+	#{if sub.getDepositId() != null } 
+	<dc:identifier xsi:type="dcterms:URI">
+	    ${ sub.getDepositId() }
+	</dc:identifier>
+	#{/if}
+	
+</metadata>
