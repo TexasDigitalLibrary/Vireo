@@ -396,6 +396,11 @@ public class Submit extends AbstractVireoController {
     public static void docInfo(Long subId) {
 
         String title = params.get("title");
+        
+        
+        Logger.info("Title: " + title);
+        
+        
         String degreeMonth = params.get("degreeMonth");
         String degreeYear = params.get("degreeYear");
         String docType = params.get("docType");
@@ -410,8 +415,6 @@ public class Submit extends AbstractVireoController {
         
         List<CommitteeMember> committeeMembers = parseCommitteeMembers(params);
         
-        // Get currently logged in person 
-        Person currentPerson = context.getPerson();
         Submission sub = null;
 
         if (null != subId) {
@@ -492,10 +495,30 @@ public class Submit extends AbstractVireoController {
         // List of Committee Member objects
         renderArgs.put("committeeMembers", committeeMembers);
         
+        // Fill in values in the form - from the database
+        
+        if (sub != null) {
+        	title = sub.getDocumentTitle();
+        	
+        	if (sub.getGraduationMonth() != null)
+        		degreeMonth =  sub.getGraduationMonth().toString();
+            if (sub.getGraduationYear() != null)
+            	degreeYear = sub.getGraduationYear().toString();
+            docType = sub.getDocumentType();
+            abstractText = sub.getDocumentAbstract();
+            keywords = sub.getDocumentKeywords();
+            chairEmail = sub.getCommitteeContactEmail();
+            
+            if (sub.getEmbargoType() != null)
+            	embargo = sub.getEmbargoType().getId().toString();
+            
+            Logger.info("Embargo: <" + embargo + ">");
+        }
         render( subId, 
                 title, 
                 degreeMonth, 
                 degreeYear, 
+                docType,
                 abstractText, 
                 keywords, 
                 committeeFirstName, 

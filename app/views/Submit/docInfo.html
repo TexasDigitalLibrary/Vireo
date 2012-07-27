@@ -161,8 +161,8 @@
                     <div class="control-group #{ifError 'embargo'}error#{/ifError}">
                         <label class="control-label">${et.getName()}:</label>
                         <div class="controls">
-                            <label class="radio">
-                                <input type="radio" id="embargo" name="embargo" selected="selected" value="${et.getId()}">&nbsp;&nbsp;${et.getDescription()}
+                            <label class="radio"> 
+                                <input type="radio" id="embargo" name="embargo" selected="selected" value="${et.getId()}" #{if embargo == et.getId().toString()} checked=true #{/if}>&nbsp;&nbsp;${et.getDescription()}
                             </label>
                         </div>
                     </div>
