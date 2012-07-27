@@ -683,9 +683,7 @@ public class Submit extends AbstractVireoController {
 	public static void confirmAndSubmit(Long subId) {		
 		
 		// Locate the submission 
-		
-		// TODO -- refactor - all of the methods in this controller have this same code at the beginning
-		
+			
         Submission sub = subRepo.findSubmission(subId);
         Person submitter = context.getPerson();
         List<ActionLog> actionLogList = subRepo.findActionLog(sub);
