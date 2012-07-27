@@ -1,6 +1,7 @@
 package org.tdl.vireo.deposit;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.tdl.vireo.model.Submission;
 
@@ -17,6 +18,16 @@ import org.tdl.vireo.model.Submission;
 public interface Packager {
 
 	/**
+	 * @return The technical spring bean name of this packager implementation.
+	 */
+	public String getBeanName();
+
+	/**
+	 * @return The displayable name of this bean.
+	 */
+	public String getDisplayName();
+
+	/**
 	 * Generate a new package for this submission.
 	 * 
 	 * The package returned will file system resources so it is very important
@@ -28,7 +39,7 @@ public interface Packager {
 	 *            The submission
 	 * @return A package
 	 */
-	public Package generatePackage(Submission submission);
+	public Package generatePackage(Submission submission) throws IOException;
 
 	/**
 	 * A simple inner class to contain the information necessary for depositing

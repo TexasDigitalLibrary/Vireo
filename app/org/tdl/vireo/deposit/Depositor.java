@@ -18,6 +18,16 @@ import org.tdl.vireo.search.SearchFilter;
 public interface Depositor {
 
 	/**
+	 * @return The technical spring bean name of this depositor implementation.
+	 */
+	public String getBeanName();
+
+	/**
+	 * @return The displayable name of this bean.
+	 */
+	public String getDisplayName();
+	
+	/**
 	 * Deposit one submission and if successfully change to the published state.
 	 * 
 	 * The deposit operation will occur in a separate thread and could

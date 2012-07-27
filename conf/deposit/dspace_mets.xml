@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+
+<mets ID="vireo-mets-1" OBJID="vireo-submission-${ sub.getId() }" LABEL="DSpace Item"
+    PROFILE="DSpace METS SIP Profile 1.0" xmlns="http://www.loc.gov/METS/"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd">
+
+    <metsHdr CREATEDATE="${ new java.util.Date().format("yyyy-MM-dd'T'HH:mm:ssz") }">
+        <agent ROLE="CREATOR" TYPE="OTHER">
+            <name>${ agent }</name>
+        </agent>
+    </metsHdr>
+    
+    <dmdSec ID="vireo-mets-dmd-1" GROUPID="vireo-mets-dmd-1">
+        <mdWrap LABEL="DIM Metadata" MDTYPE="OTHER" OTHERMDTYPE="DIM" MIMETYPE="text/xml">
+            <xmlData>
+                <dim:dim xmlns:dim="http://www.dspace.org/xmlns/dspace/dim">
+
+                    <!-- dc.creator = Student -->
+                    <dim:field mdschema="dc" element="creator">
+                        %{
+                             if (sub.getStudentLastName() == null) {
+                                out.print("Unknown");
+                             } else {
+                                out.print(sub.getStudentLastName());
+                                if (sub.getStudentFirstName() == null || sub.getStudentLastName()) {
+                                    out.print(", ");
+                                    if (sub.getStudentFirstName() != null)
+                                        out.print(sub.getStudentFirstName());
+                                    out.print(" ");
+                                    if (sub.getStudentMiddleName() != null)
+                                        out.print(sub.getStudentMiddleName());
+                                }
+                             }
+                             if (sub.getStudentBirthYear() != null) {
+                                out.print(" "+sub.getStudentBirthYear()+"-");
+                             }
+                        %} 
+                    </dim:field>
+
+                    <!-- dc.title = Document Title -->
+                    #{if sub.getDocumentTitle() != null } 
+                    <dim:field mdschema="dc" element="title">
+                        ${ sub.getDocumentTitle() }
+                    </dim:field>
+                    #{/if}
+                    
+                    <!-- dc.description.abstract = Document Abstract -->
+                    #{if sub.getDocumentAbstract() != null } 
+                    <dim:field mdschema="dc" element="description" qualifier="abstract">
+                        ${ sub.getDocumentAbstract() }
+                    </dim:field>
+                    #{/if}
+                    
+                    <!-- dc.subject = Document Keywords, split on ";" (multiple) -->
+                    #{if sub.getDocumentKeywords() != null } 
+                    #{list items:sub.getDocumentKeywords().split(";"), as:'keyword'} 
+                    <dim:field mdschema="dc" element="subject">
+                        ${ keyword.trim() }
+                    </dim:field>
+                    #{/list}
+                    #{/if}
+
+                    <!-- dc.contributor.advisor = Committee Memmbers who are flagged as chair (may be multiple) -->
+                    #{list items:sub.getCommitteeMembers(), as:'member'} 
+                    #{if member.isCommitteeChair() } 
+                    <dim:field mdschema="dc" element="contributor" qualifier="advisor">
+                        %{
+                             if (member.getLastName() == null) {
+                                out.print("Unknown");
+                             } else {
+                                out.print(member.getLastName());
+                                if (member.getFirstName() == null || member.getLastName()) {
+                                    out.print(", ");
+                                    if (member.getFirstName() != null)
+                                        out.print(member.getFirstName());
+                                    out.print(" ");
+                                    if (member.getMiddleName() != null)
+                                        out.print(member.getMiddleName());
+                                }
+                             }
+                        %} 
+                    </dim:field>
+                    #{/if}
+                    #{/list}
+                    
+                    
+                    <!-- dc.contributor.committeeMember = Committee Members who are not flagged as chair (likely multiple) -->
+                    #{list items:sub.getCommitteeMembers(), as:'member'}
+                    #{if !member.isCommitteeChair() } 
+                    <dim:field mdschema="dc" element="contributor" qualifier="advisor">
+                        %{
+                             if (member.getLastName() == null) {
+                                out.print("Unknown");
+                             } else {
+                                out.print(member.getLastName());
+                                if (member.getFirstName() == null || member.getLastName()) {
+                                    out.print(", ");
+                                    if (member.getFirstName() != null)
+                                        out.print(member.getFirstName());
+                                    out.print(" ");
+                                    if (member.getMiddleName() != null)
+                                        out.print(member.getMiddleName());
+                                }
+                             }
+                        %} 
+                    </dim:field>
+                    #{/if}
+                    #{/list}
+                    
+                    
+                    <!-- dc.date.created = Graduation date in "YYYY-MM" format -->
+                    <!-- dc.date.submitted = Graduation date in "month YYYY" format -->
+                    #{if sub.getGraduationYear() != null } 
+                    <dim:field mdschema="dc" element="date" qualifier="created">
+                        %{
+                            out.print(sub.getGraduationYear());
+                            if (sub.getGraduationMonth() != null) {
+                                out.print("-");
+                                // Jaunary=0, December=11
+                                out.print(sub.getGraduationMonth()+1);
+                            }
+                        }% 
+                    </dim:field>
+                    <dim:field mdschema="dc" element="date" qualifier="submitted">
+                        %{
+                             String monthName = null;
+                             if (sub.getGraduationMonth() != null && sub.getGraduationMonth() >= 0 && sub.getGraduationMonth() <= 11)
+                                monthName = new java.text.DateFormatSymbols().getMonths()[sub.getGraduationMonth()]; 
+                             if (sub.getGraduationYear() != null)
+                                out.print(sub.getGraduationYear());
+                             if (monthName != null)
+                                out.print(" "+monthName);
+                         }% 
+                    </dim:field>
+                    #{/if}
+                    
+                    <!-- dc.date.issued = Approval date in "YYYY-MM-DD" format -->
+                    #{if sub.getApprovalDate() != null } 
+                    <dim:field mdschema="dc" element="date" qualifier="issued">
+                        ${ sub.getApprovalDate().format("yyyy-MM-dd") }
+                    </dim:field>
+                    #{/if}
+                    
+                    
+                    <!-- dc.format.mimetype = Primary Document's mimetype, almost always "application/pdf" -->
+                    #{if sub.getPrimaryDocument() != null } 
+                    <dim:field mdschema="dc" element="format" qualifier="mimetype">
+                        ${ sub.getPrimaryDocument().getMimeType() }
+                    </dim:field>
+                    #{/if}
+                    
+                    <!-- dc.language.iso = "en_US" // Sorry we are lazy and Americans. -->
+                    <dim:field mdschema="dc" element="language" qualifier="iso">en_US</dim:field>
+                    
+                    <!-- dc.type.material = "text" // constant -->
+                    <dim:field mdschema="dc" element="type" qualifier="material">text</dim:field>
+                    
+                    <!-- dc.type.genre = "thesis" // constant -->
+                    <dim:field mdschema="dc" element="type" qualifier="genre">thesis</dim:field>
+                    
+                    <!-- dc.identifier.uri == Deposit ID, this would only be available when re-depositing -->
+                    #{if sub.getDepositId() != null } 
+                    <dim:field mdschema="dc" element="identifier" qualifier="uri">
+                        ${ sub.getDepositId() }
+                    </dim:field>
+                    #{/if}
+                    
+                    
+                    <!-- thesis.degree.name == Degree -->
+                    #{if sub.getDegree() != null } 
+                    <dim:field mdschema="thesis" element="degree" qualifier="name">
+                        ${ sub.getDegree() }
+                    </dim:field>
+                    #{/if}
+                    
+                    <!-- thesis.degree.level = Degree Level (Doctoral, Masters, Undergraduate) -->
+                    #{if sub.getDegreeLevel() != null } 
+                    <dim:field mdschema="thesis" element="degree" qualifier="level">
+                        ${ sub.getDegreeLevel().name().toLowerCase().capitalizeWords() }
+                    </dim:field>
+                    #{/if}
+                    
+                    <!-- thesis.degree.discipline = Major -->
+                    #{if sub.getMajor() != null } 
+                    <dim:field mdschema="thesis" element="degree" qualifier="discipline">
+                        ${ sub.getMajor() }
+                    </dim:field>
+                    #{/if}
+                    
+                    <!-- thesis.degree.grantor = Constant Value -->
+                    <!-- TODO: add degree.grantor -->
+                    
+                    
+                    <!-- thesis.degree.department = Department -->
+                    #{if sub.getDepartment() != null } 
+                    <dim:field mdschema="thesis" element="degree" qualifier="department">
+                        ${ sub.getDepartment() }
+                    </dim:field>
+                    #{/if}
+                    
+                    
+                    <!-- thesis.degree.college = College -->
+                    #{if sub.getCollege() != null } 
+                    <dim:field mdschema="thesis" element="degree" qualifier="college">
+                        ${ sub.getCollege() }
+                    </dim:field>
+                    #{/if}
+                    
+                    <!-- dc.description.provenance = Statement about when this package was generated. -->
+                    <dim:field mdschema="dc" element="description" qualifier="provenance">
+                        DSpace METS Submission Ingestion Package generated from Vireo submission #${ sub.getId() } on ${ new java.util.Date().format("yyyy-MM-dd 'at' HH:mm:ss") }
+                    </dim:field>                  
+                    
+                    <!-- dc.date.accessioned (No longer included in Vireo 2) -->
+                    <!-- dc.date.available (No longer included in Vireo 2) -->
+                </dim:dim>
+            </xmlData>
+        </mdWrap>
+    </dmdSec>
+
+    <fileSec>
+        <fileGrp ID="vireo-mets-fgrp-1" USE="CONTENT">
+        
+            <!-- Primary Document -->
+        
+            #{if sub.getPrimaryDocument() != null } 
+            <file GROUPID="piper-mets-file-group-${ sub.getPrimaryDocument().getType().ordinal() }" 
+                  ID="piper-mets-file-${ sub.getPrimaryDocument().getId() }" 
+                  MIMETYPE="${ sub.getPrimaryDocument().getMimeType() }"
+                  SEQ="1">
+                  <FLocat LOCTYPE="URL" xlink:href="${ sub.getPrimaryDocument().getName() }"/>
+            </file>
+            #{/if}
+            
+            <!-- Supplemental Documents -->
+            
+            #{list items:sub.getSupplementalDocuments(), as:'attachment'} 
+            <file GROUPID="piper-mets-file-group-${ attachment.getType().ordinal() }" 
+                  ID="piper-mets-file-${ attachment.getId() }" 
+                  MIMETYPE="${ attachment.getMimeType() }"
+                  SEQ="${ sub.getSupplementalDocuments().indexOf(attachment) + 1 }">
+                  <FLocat LOCTYPE="URL" xlink:href="${ attachment.getName() }"/>
+            </file>
+            #{/list}
+ 
+        </fileGrp>
+    </fileSec>
+    
+    <structMap ID="vireo-mets-struct-1" LABEL="structure" TYPE="LOGICAL">
+        <div ID="vireo-mets-div-1" DMDID="vireo-mets-dmd-1" TYPE="DSpace Item">
+        
+            <!-- Set the primary bitstream to the primary document -->
+            
+            <fptr FILEID="piper-mets-file-${ sub.getPrimaryDocument().getId() }"/>
+            
+            <!-- Bitstream div for the primary document -->
+            
+            #{if sub.getPrimaryDocument() != null } 
+            <div ID="piper-mets-div-${ sub.getPrimaryDocument().getId() }" 
+                 TYPE="DSpace Content Bitstream">
+                 <ftpr FILEID="piper-mets-file-${ sub.getPrimaryDocument().getId() }"/>
+            </div>
+            #{/if}
+            
+            <!-- Bitstream divs for each supplemental document -->
+            
+            #{list items:sub.getSupplementalDocuments(), as:'attachment'} 
+            <div ID="piper-mets-div-${ attachment.getId() }" 
+                 TYPE="DSpace Content Bitstream">
+                 <ftpr FILEID="piper-mets-file-${ attachment.getId() }"/>
+            </div>
+            #{/list}
+              
+        </div>
+    </structMap>
+
+</mets>

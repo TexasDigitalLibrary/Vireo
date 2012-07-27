@@ -55,6 +55,7 @@ POST	/admin/view/changeSubmissionStatus		ViewTab.changeSubmissionStatus
 POST	/admin/view/changeAssignedTo			ViewTab.changeAssignedTo
 POST	/admin/view/addActionLogComment			ViewTab.addActionLogComment
 POST	/admin/view/retrieveTemplate			ViewTab.retrieveTemplateJSON
+POST	/admin/view/updateCustomAction			ViewTab.updateCustomActionsJSON
 
 ### Settings Tab
 GET     /admin/settings/?                       SettingsTab.settingsRedirect
