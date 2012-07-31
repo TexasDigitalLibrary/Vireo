@@ -426,6 +426,8 @@ public class Submit extends AbstractVireoController {
             error("Did not receive the expected submission id.");
         }
         
+        // Validate the form and if all is ok - save in the model
+        
         if (params.get("submit_next") != null) {
             
             if(null == title || title.equals("")) {
@@ -476,6 +478,8 @@ public class Submit extends AbstractVireoController {
                 
                 sub.save();
                 
+                // Once the form has been saved - go to the fileUpload form 
+                
                 fileUpload(subId);
             }
         }
@@ -502,12 +506,23 @@ public class Submit extends AbstractVireoController {
         	
         	if (sub.getGraduationMonth() != null)
         		degreeMonth =  sub.getGraduationMonth().toString();
+        	
             if (sub.getGraduationYear() != null)
             	degreeYear = sub.getGraduationYear().toString();
+            
             docType = sub.getDocumentType();
             abstractText = sub.getDocumentAbstract();
             keywords = sub.getDocumentKeywords();
             chairEmail = sub.getCommitteeContactEmail();
+            
+            // Get the list of committee members
+            
+            committeeMembers = sub.getCommitteeMembers();
+            
+            // List of Committee Member objects
+            renderArgs.put("committeeMembers", committeeMembers);
+            
+            Logger.info("Committee Member List: " + committeeMembers.size());
             
             if (sub.getEmbargoType() != null)
             	embargo = sub.getEmbargoType().getId().toString();

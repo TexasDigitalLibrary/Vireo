@@ -102,6 +102,7 @@
 	<fieldset class="form-inline">
 		<legend>Your Committee</legend>
                 <div id="committee-members">
+                                          
                     <table id="committee-member">
                         <tr> 
                             <td><input type="text" class="input-medium" id="committeeFirstName1" name="committeeFirstName1"></td>
@@ -116,7 +117,7 @@
                             <td></td>
                         </tr>
                     </table>
-                    
+                
                     #{list committeeMembers, as: 'member'}
                         ${count}
                     
@@ -134,7 +135,8 @@
                                 <td></td>
                             </tr>
                         </table>
-                    #{/list}
+                    #{/list}                       
+
                 </div>
                 
 		<div class="row center">
