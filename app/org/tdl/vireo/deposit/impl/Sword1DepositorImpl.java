@@ -1,6 +1,5 @@
 package org.tdl.vireo.deposit.impl;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -15,10 +14,9 @@ import org.purl.sword.client.Client;
 import org.purl.sword.client.PostMessage;
 import org.purl.sword.client.SWORDClientException;
 import org.springframework.beans.factory.BeanNameAware;
+import org.tdl.vireo.deposit.DepositPackage;
 import org.tdl.vireo.deposit.Depositor;
 import org.tdl.vireo.model.DepositLocation;
-import org.tdl.vireo.model.Submission;
-import org.tdl.vireo.search.SearchFilter;
 
 import play.Logger;
 
@@ -132,89 +130,67 @@ public class Sword1DepositorImpl implements Depositor, BeanNameAware {
 	}
 
 	@Override
-	public void deposit(DepositLocation location, Submission submission) {
-		// TODO Auto-generated method stub
+	public String deposit(DepositLocation location, DepositPackage depositPackage) {
 		
-	}
+		
+		// Check our input
+		if (location == null)
+			throw new IllegalArgumentException("The deposit location is required.");
 
-	@Override
-	public void deposit(DepositLocation location, SearchFilter filter) {
-		// TODO Auto-generated method stub
+		if (depositPackage == null)
+			throw new IllegalArgumentException("The deposit package is required.");
 		
-	}
-	
-	
-//	@Override
-//	public int deposit(Location credentials, URL collection,
-//			PackageIterator packageIterator) {
-//		if(credentials == null || credentials.repositoryURL == null)
-//		{
-//			throw new IllegalArgumentException("Bad credentials or repository when trying to deposit()");
-//		}
-//		
-//		if(collection == null)
-//		{
-//			throw new IllegalArgumentException("Null collection when trying to deposit()");
-//		}
-//		
-//		if(packageIterator == null)
-//		{
-//			throw new IllegalArgumentException("Null packageIterator when trying to deposit()");
-//		}
-//		
-//		// Note, an important side effect of this check is to double check the
-//		// user's authentication with the sword server. In most cases if the
-//		// user does not possess the proper access on the remote server then
-//		// this call would result in an exception being thrown.
-//		if(getCollectionName(credentials, collection) == null) 
-//		{
-//			throw new IllegalArgumentException("Collection url: '"+collection.toExternalForm()+"' is invalid upon deposit()");
-//		}
-//		
-//		//Building the client
-//		Client client = new Client();
-//		client.setServer(credentials.repositoryURL.getHost(), credentials.repositoryURL.getPort());
-//		client.setUserAgent(USER_AGENT);
-//		
-//		//If the credentials include a username and password, set those on the client.
-//		if(credentials.username != null && credentials.password != null)
-//			client.setCredentials(credentials.username, credentials.password);
-//		
-//		//create POST message of each deposit
-//		int count = 0;
-//		while(packageIterator.hasNext())
-//		{
-//			try{
-//				File packageFile = packageIterator.next();
-//				PostMessage message = new PostMessage();
-//				message.setFilepath(packageFile.getAbsolutePath());
-//				message.setDestination(collection.toExternalForm());
-//				message.setFiletype(packageIterator.getMimeType());
-//				message.setUseMD5(false);
-//				message.setVerbose(false);
-//				message.setNoOp(false);
-//				message.setFormatNamespace(packageIterator.getFormat());
-//				message.setSlug("");
-//				message.setChecksumError(false);
-//				message.setUserAgent(USER_AGENT);
-//				
-//				DepositResponse response = client.postFile(message);
-//				packageIterator.setDepositID(response.getEntry().getId());
-//				count++;
-//			}
-//			catch(SWORDClientException sce)
-//			{
-//				packageIterator.setDepositError(sce.getMessage());
-//				Logger.error(sce, "Exception trying to deposit package.");
-//			}
-//			
-//		}
-//		
-//		return count;
-//	}
-	
-	
-	
-	
+		if ( depositPackage.getFile() == null ||  !depositPackage.getFile().exists())
+			throw new IllegalArgumentException("The deposit package does not exist on disk or is inaccessable.");
+		
+		if (location.getRepositoryURL() == null)
+			throw new IllegalArgumentException("The deposit location must have a repository URL defined.");
+
+		if (location.getCollectionURL() == null)
+			throw new IllegalArgumentException("The deposit location must have a collection URL defined.");
+
+		
+		//Building the client
+		Client client = new Client();
+		client.setServer(
+				location.getRepositoryURL().getHost(), 
+				location.getRepositoryURL().getPort());
+		client.setUserAgent(USER_AGENT);
+		
+		//If the credentials include a username and password, set those on the client.
+		if (location.getUsername() != null && location.getPassword() != null)
+			client.setCredentials(location.getUsername(), location.getPassword());
+		try{
+			PostMessage message = new PostMessage();
+			
+			message.setFilepath(depositPackage.getFile().getAbsolutePath());
+			message.setDestination(location.getCollectionURL().toExternalForm());
+			message.setFiletype(depositPackage.getMimeType());
+			message.setUseMD5(false);
+			message.setVerbose(false);
+			message.setNoOp(false);
+			message.setFormatNamespace(depositPackage.getFormat());
+			message.setSlug("");
+			message.setChecksumError(false);
+			message.setUserAgent(USER_AGENT);
+			if (location.getOnBehalfOf() != null)
+				message.setOnBehalfOf(location.getOnBehalfOf());
+			
+			DepositResponse response = client.postFile(message);
+			
+			
+			if (response.getHttpResponse() < 200 || response.getHttpResponse() > 204 )
+				throw new RuntimeException("Sword server responed with a non success HTTP status code: "+response.getHttpResponse());
+			
+			String depositId = response.getEntry().getId();
+			if (depositId == null)
+				throw new RuntimeException("Sword server failed to return a deposit id.");
+			return depositId;
+		}
+		catch(SWORDClientException sce)
+		{
+			throw new RuntimeException(sce);
+		}		
+	}	
 	
 }

@@ -24,6 +24,7 @@ import java.util.zip.ZipInputStream;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.tdl.vireo.deposit.DepositPackage;
 import org.tdl.vireo.deposit.Packager;
 import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.DegreeLevel;
@@ -130,7 +131,7 @@ public class TemplatePackagerImplTest extends UnitTest {
 		
 		for (TemplatePackagerImpl packager : packagers.values()) {
 			
-			Packager.Package pkg = packager.generatePackage(sub);
+			DepositPackage pkg = packager.generatePackage(sub);
 			
 			assertNotNull(pkg);
 			assertEquals(packager.format,pkg.getFormat());

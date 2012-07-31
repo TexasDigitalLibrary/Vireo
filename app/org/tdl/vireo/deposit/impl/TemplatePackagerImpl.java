@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.tdl.vireo.deposit.DepositPackage;
 import org.tdl.vireo.deposit.Packager;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.AttachmentType;
@@ -152,10 +153,23 @@ public class TemplatePackagerImpl extends AbstractPackagerImpl {
 	
 	
 	@Override
-	public Package generatePackage(Submission submission) throws IOException {
+	public DepositPackage generatePackage(Submission submission) throws IOException {
 		
 		// Check that we have everything that we need.
+		if (submission == null || submission.getId() == null)
+			throw new IllegalArgumentException("Unable to generate a package because the submission is null, or has not been persisted.");
 		
+		if (templateFile == null)
+			throw new IllegalStateException("Unable to generate package because no template file exists.");
+		
+		if (manifestName == null)
+			throw new IllegalStateException("Unable to generate package because no manifest name has been defined.");
+		
+		if (mimeType == null)
+			throw new IllegalStateException("Unable to generate package because no MIME type name has been defined.");
+		
+		if (format == null)
+			throw new IllegalStateException("Unable to generate package because no package format name has been defined.");
 		
 		// Generate the manifest.
 		Map<String, Object> templateBinding = new HashMap<String,Object>();
@@ -164,8 +178,7 @@ public class TemplatePackagerImpl extends AbstractPackagerImpl {
 			templateBinding.putAll(templateArguments);
 		Template template = TemplateLoader.load(templateFile);
 		String manifest = template.render(templateBinding);
-		
-		
+				
 		// Create a zip package
 		File file = File.createTempFile("submission-"+submission.getId()+"-package-", ".zip");
 		
@@ -220,7 +233,7 @@ public class TemplatePackagerImpl extends AbstractPackagerImpl {
 	 * file we've built along with some basic metadata.
 	 * 
 	 */
-	public static class TemplatePackage implements Packager.Package {
+	public static class TemplatePackage implements DepositPackage {
 
 		// Members
 		public final String mimeType;

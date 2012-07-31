@@ -52,8 +52,12 @@ public class MockSwordServerLauncher {
 	public static class stopServer extends Job {
 
 		public void doJob() throws Exception {
-			MockSwordServer.stop();
-			Logger.info("Mock Sword Server stopped.");
+			try {
+				MockSwordServer.stop();
+				Logger.info("Mock Sword Server stopped.");
+			} catch (Throwable t) {
+				Logger.info("Unable to stop the Mock Sword Server, ignoring.");
+			}
 		}
 
 	}

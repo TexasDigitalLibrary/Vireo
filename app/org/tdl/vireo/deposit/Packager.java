@@ -39,43 +39,6 @@ public interface Packager {
 	 *            The submission
 	 * @return A package
 	 */
-	public Package generatePackage(Submission submission) throws IOException;
-
-	/**
-	 * A simple inner class to contain the information necessary for depositing
-	 * the package.
-	 */
-	public interface Package {
-
-		/**
-		 * The mimetype of the packaging format. Since all packages must be a
-		 * single file, typically the mimetype is 'application/zip' for a zip
-		 * archive.
-		 * 
-		 * @return The mimetype
-		 */
-		public String getMimeType();
-
-		/**
-		 * A descriptor of the format used. This may very widely between
-		 * repository implementations. For DSpace items packaged using METS, the
-		 * format is: http://purl.org/net/sword-types/METSDSpaceSIP
-		 * 
-		 * @return The format
-		 */
-		public String getFormat();
-
-		/**
-		 * @return A File pointer to the package.
-		 */
-		public File getFile();
-
-		/**
-		 * Release all resources used by this package. All callers who generate
-		 * a package must call the delete() method when finished.
-		 */
-		public void delete();
-
-	}
+	public DepositPackage generatePackage(Submission submission) throws IOException;
 
 }
