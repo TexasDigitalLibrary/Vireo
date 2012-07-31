@@ -322,6 +322,12 @@ public class Sword1DepositorImplTest extends UnitTest {
 		}
 		
 		@Override
+		public String getDepositId() {
+			// Sword 1 dosen't support re-deposit
+			return null;
+		}
+		
+		@Override
 		public String getMimeType() {
 			return mimeType;
 		}

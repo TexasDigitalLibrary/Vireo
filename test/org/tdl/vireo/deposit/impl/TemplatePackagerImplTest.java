@@ -134,6 +134,7 @@ public class TemplatePackagerImplTest extends UnitTest {
 			DepositPackage pkg = packager.generatePackage(sub);
 			
 			assertNotNull(pkg);
+			assertEquals(sub.getDepositId(),pkg.getDepositId());
 			assertEquals(packager.format,pkg.getFormat());
 			assertEquals(packager.mimeType,pkg.getMimeType());
 			

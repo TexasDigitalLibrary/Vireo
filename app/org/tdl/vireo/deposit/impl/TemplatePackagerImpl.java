@@ -153,7 +153,7 @@ public class TemplatePackagerImpl extends AbstractPackagerImpl {
 	
 	
 	@Override
-	public DepositPackage generatePackage(Submission submission) throws IOException {
+	public DepositPackage generatePackage(Submission submission) {
 		
 		// Check that we have everything that we need.
 		if (submission == null || submission.getId() == null)
@@ -171,58 +171,63 @@ public class TemplatePackagerImpl extends AbstractPackagerImpl {
 		if (format == null)
 			throw new IllegalStateException("Unable to generate package because no package format name has been defined.");
 		
-		// Generate the manifest.
-		Map<String, Object> templateBinding = new HashMap<String,Object>();
-		templateBinding.put("sub", submission);
-		if (templateArguments != null)
-			templateBinding.putAll(templateArguments);
-		Template template = TemplateLoader.load(templateFile);
-		String manifest = template.render(templateBinding);
-				
-		// Create a zip package
-		File file = File.createTempFile("submission-"+submission.getId()+"-package-", ".zip");
-		
-		FileOutputStream fos = new FileOutputStream(file);
-		ZipOutputStream zos  = new ZipOutputStream(fos);
-		byte[] buffer = new byte[1024];
-		int bufferLength;
-		
-		
-		// Add our manifest as the first entry.
-		zos.putNextEntry(new ZipEntry(manifestName));
-		
-		ByteArrayInputStream bais = new ByteArrayInputStream(manifest.getBytes());
-		while ((bufferLength = bais.read(buffer)) > 0) {
-			zos.write(buffer,0,bufferLength);
-		}
-		zos.closeEntry();
-		bais.close();
-		
-		
-		// Add all the attachments
-		for(Attachment attachment : submission.getAttachments())
-		{
-			// Do we include this type?
-			if (!attachmentTypes.contains(attachment.getType()))
-				continue;
+		try {
+			// Generate the manifest.
+			Map<String, Object> templateBinding = new HashMap<String,Object>();
+			templateBinding.put("sub", submission);
+			if (templateArguments != null)
+				templateBinding.putAll(templateArguments);
+			Template template = TemplateLoader.load(templateFile);
+			String manifest = template.render(templateBinding);
+					
+			// Create a zip package
+			File file = File.createTempFile("submission-"+submission.getId()+"-package-", ".zip");
 			
-			zos.putNextEntry(new ZipEntry(attachment.getName()));
+			FileOutputStream fos = new FileOutputStream(file);
+			ZipOutputStream zos  = new ZipOutputStream(fos);
+			byte[] buffer = new byte[1024];
+			int bufferLength;
 			
-			FileInputStream fis = new FileInputStream(attachment.getFile());
-			while ((bufferLength = fis.read(buffer)) > 0) {
+			
+			// Add our manifest as the first entry.
+			zos.putNextEntry(new ZipEntry(manifestName));
+			
+			ByteArrayInputStream bais = new ByteArrayInputStream(manifest.getBytes());
+			while ((bufferLength = bais.read(buffer)) > 0) {
 				zos.write(buffer,0,bufferLength);
 			}
-			
 			zos.closeEntry();
-			fis.close();
+			bais.close();
+			
+			
+			// Add all the attachments
+			for(Attachment attachment : submission.getAttachments())
+			{
+				// Do we include this type?
+				if (!attachmentTypes.contains(attachment.getType()))
+					continue;
+				
+				zos.putNextEntry(new ZipEntry(attachment.getName()));
+				
+				FileInputStream fis = new FileInputStream(attachment.getFile());
+				while ((bufferLength = fis.read(buffer)) > 0) {
+					zos.write(buffer,0,bufferLength);
+				}
+				
+				zos.closeEntry();
+				fis.close();
+			}
+			
+			// Close out all the resources
+			zos.close();
+			
+			
+			// Create the actual package!
+			String depositId = submission.getDepositId();
+			return new TemplatePackage(depositId, mimeType, format, file);
+		} catch (IOException ioe) {
+			throw new RuntimeException("Unable to generate package",ioe);
 		}
-		
-		// Close out all the resources
-		zos.close();
-		
-		
-		// Create the actual package!
-		return new TemplatePackage(mimeType, format, file);
 	}
 	
 	
@@ -236,16 +241,23 @@ public class TemplatePackagerImpl extends AbstractPackagerImpl {
 	public static class TemplatePackage implements DepositPackage {
 
 		// Members
+		public final String depositId;
 		public final String mimeType;
 		public final String format;
 		public final File file;
 
-		public TemplatePackage(String mimeType, String format, File file) {
+		public TemplatePackage(String depositId, String mimeType, String format, File file) {
+			this.depositId = depositId;
 			this.mimeType = mimeType;
 			this.format = format;
 			this.file = file;
 		}
 
+		@Override
+		public String getDepositId() {
+			return depositId;
+		}
+		
 		@Override
 		public String getMimeType() {
 			return mimeType;

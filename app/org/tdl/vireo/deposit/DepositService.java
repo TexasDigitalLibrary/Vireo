@@ -2,8 +2,8 @@ package org.tdl.vireo.deposit;
 
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.Submission;
-
-import com.sun.jndi.toolkit.dir.SearchFilter;
+import org.tdl.vireo.search.SearchFilter;
+import org.tdl.vireo.state.State;
 
 /**
  * The deposit service handles the common tasks of depositing a submission or
@@ -19,9 +19,9 @@ public interface DepositService {
 	/**
 	 * Deposit one submission and if successfully change to the published state.
 	 * 
-	 * The deposit operation will occur in a separate thread and could
-	 * potentially take a substantial amount of time depending on how responsive
-	 * the remote server is and the size of the submission.
+	 * Deposits may take a substantial amount of time depending on how
+	 * responsive the remote server is and the size of the submission. Most uses
+	 * cases should use not wait for competition before returning.
 	 * 
 	 * As many errors as possible will be checked before separating into a
 	 * separate thread as possible. I.e. the location will be checked for all
@@ -39,8 +39,19 @@ public interface DepositService {
 	 * @param submission
 	 *            The single submission to deposit.
 	 * 
+	 * @param successState
+	 *            The state the submission should will be transition into upon
+	 *            successfully depositing. If the deposit failed then the
+	 *            submission will remain in it's original state.
+	 * 
+	 * @param wait
+	 *            If true the method will not return until the deposit is
+	 *            completed, otherwise depositing will take place in a
+	 *            background thread.
+	 * 
 	 */
-	public void deposit(DepositLocation location, Submission submission);
+	public void deposit(DepositLocation location, Submission submission,
+			State successState, boolean wait);
 
 	/**
 	 * Deposit a batch of submissions and for each successful deposit change to
@@ -63,7 +74,21 @@ public interface DepositService {
 	 *            depositor is different than this implementation.
 	 * @param filter
 	 *            A search filter of all submissions which should be deposited.
+	 * @param successState
+	 *            The state the submission should will be transition into upon
+	 *            successfully depositing. If the deposit failed then the
+	 *            submission will remain in it's original state.
+	 	 * @param wait
+	 *            If true the method will not return until the deposit is
+	 *            completed, otherwise depositing will take place in a
+	 *            background thread.
 	 */
-	public void deposit(DepositLocation location, SearchFilter filter);
+	public void deposit(DepositLocation location, SearchFilter filter, State successState);
 	
+	/**
+	 * @return If there is at least one background deposit task currently
+	 *         running, or waiting to run.
+	 */
+	public boolean isDepositRunning();
+
 }

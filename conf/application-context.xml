@@ -125,6 +125,10 @@
     <bean id="Sword1Deposit" class="org.tdl.vireo.deposit.impl.Sword1DepositorImpl" scope="prototype">
         <property name="displayName" value="SWORD Version 1"/>
     </bean>
+    <bean id="DepositService" class="org.tdl.vireo.deposit.impl.DepositServiceImpl" scope="prototype">
+        <property name="searcher" ref="Searcher"/>
+        <property name="submissionsPerBatch" value="10"/>
+    </bean>
     
     <!-- Deposit Packages -->
     <bean id="DSpaceMETS" class="org.tdl.vireo.deposit.impl.TemplatePackagerImpl" scope="prototype">

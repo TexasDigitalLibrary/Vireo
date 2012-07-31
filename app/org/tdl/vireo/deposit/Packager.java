@@ -39,6 +39,6 @@ public interface Packager {
 	 *            The submission
 	 * @return A package
 	 */
-	public DepositPackage generatePackage(Submission submission) throws IOException;
+	public DepositPackage generatePackage(Submission submission);
 
 }

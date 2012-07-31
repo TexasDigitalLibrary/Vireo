@@ -12,6 +12,14 @@ import java.io.File;
 public interface DepositPackage {
 
 	/**
+	 * If the package allready has a deposit id assigned, possibily by a
+	 * previous deposit then this is the id assigned.
+	 * 
+	 * @return The deposit id for this package, may be null if not available.
+	 */
+	public String getDepositId();
+	
+	/**
 	 * The mimetype of the packaging format. Since all packages must be a
 	 * single file, typically the mimetype is 'application/zip' for a zip
 	 * archive.
