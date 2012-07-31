@@ -44,22 +44,22 @@ public class MockSwordServerLauncher {
 
 	}
 
-	/**
-	 * Stop the mock sword server when the application is shutting down.
-	 **/
-	@OnApplicationStop
-	@NoTransaction
-	public static class stopServer extends Job {
-
-		public void doJob() throws Exception {
-			try {
-				MockSwordServer.stop();
-				Logger.info("Mock Sword Server stopped.");
-			} catch (Throwable t) {
-				Logger.info("Unable to stop the Mock Sword Server, ignoring.");
-			}
-		}
-
-	}
+//	/**
+//	 * Stop the mock sword server when the application is shutting down.
+//	 **/
+//	@OnApplicationStop
+//	@NoTransaction
+//	public static class stopServer extends Job {
+//
+//		public void doJob() throws Exception {
+//			try {
+//				MockSwordServer.stop();
+//				Logger.info("Mock Sword Server stopped.");
+//			} catch (Throwable t) {
+//				Logger.info("Unable to stop the Mock Sword Server, ignoring.");
+//			}
+//		}
+//
+//	}
 
 }
