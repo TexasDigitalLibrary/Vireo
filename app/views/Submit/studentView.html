@@ -94,6 +94,19 @@
 			<p>${sub.getDocumentAbstract()}</p>
 		</div>
 	</div>
+	
+    #{list items:sub.committeeMembers, as:"member"}	
+
+	<div class="control-group">
+		<label class="control-label"><b>Committee Member:</b></label>
+		<div class="controls">
+			<p>${member.getFirstName()} ${member.getMiddleName()} ${member.getLastName()}</p>
+		</div>
+	</div>	
+	
+	#{/list}	
+	
+	
 	<div class="control-group">
 		<label class="control-label"><b>Chair Email Address:</b></label>
 		<div class="controls">
@@ -187,9 +200,6 @@
                     <a href="@{Submit.viewPrimaryDocument(subId)}">${primaryAttachment.getName()}</a>
                     (${primaryAttachment.getDisplaySize()})                    
             </div>		
-            
-
-
 
 			<table class="span11 table-striped table-bordered">
 				<thead>
@@ -200,26 +210,21 @@
 				</thead>
                 <tbody>
                        #{list items:supplementalAttachments, as:"attachment"}
-						<tr>
-                               <td>
-                    	     		${attachment.getName()} 
-                       	     	</td>
-                       	     	<td>   
-                       	     		${attachment.getDisplaySize()}  
-                                 </td>
+						  <tr>
+                                <td>
+                 	     		    ${attachment.getName()} 
+                    	     	</td>
+                    	     	<td>   
+                    	     		${attachment.getDisplaySize()}  
+                                </td>
                          </tr>
                        #{/list}
-
 				</tbody>
-	        </table>	                       
-            		
+	        </table>	                                   		
 		#{/else}
 		
 	</div>
-	
-	
 
-	
 </form>
 <br />
 <div>

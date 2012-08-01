@@ -106,6 +106,18 @@
 			<p>${sub.getDocumentAbstract()}</p>
 		</div>
 	</div>
+	
+    #{list items:sub.committeeMembers, as:"member"}	
+
+	<div class="control-group">
+		<label class="control-label"><b>Committee Member:</b></label>
+		<div class="controls">
+			<p>${member.getFirstName()} ${member.getMiddleName()} ${member.getLastName()}</p>
+		</div>
+	</div>	
+	
+	#{/list}
+	
 	<div class="control-group">
 		<label class="control-label"><b>Chair Email Address:</b></label>
 		<div class="controls">
