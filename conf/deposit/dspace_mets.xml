@@ -208,6 +208,48 @@
                     </dim:field>
                     #{/if}
                     
+                    
+                    <!-- local.embargo.terms, lift, and embargo provenance-->
+                    #{if sub.getEmbargoType() != null } 
+                    
+                    #{if sub.getEmbargoType().getDuration() == null } 
+                    <dim:field mdschema="dc" element="description" qualifier="provenance">
+                        Submission original under an indefinite embargo labeled '${ sub.getEmbargoType().getName() }'. The submission was deposited into a repository on ${ new java.util.Date().format("yyyy-MM-dd") } without embargo terms
+                    </dim:field>
+                    #{/if} 
+                    #{elseif sub.getEmbargoType().getDuration() != 0 } 
+                    %{
+                        // Calculate the embargo lift date.
+                        java.util.Calendar cal = java.util.Calendar.getInstance();
+                        
+                        if (sub.getGraduationYear() != null) {
+                            cal.clear();
+                            cal.set(java.util.Calendar.YEAR, sub.getGraduationYear());
+                            if (sub.getGraduationMonth() != null)
+                                cal.set(java.util.Calendar.MONTH,sub.getGraduationMonth());
+                        }
+                        
+                        cal.add(java.util.Calendar.MONTH, sub.getEmbargoType().getDuration());
+                        java.util.Date liftDate = cal.getTime();
+                    }% 
+                    <dim:field mdschema="local" element="embargo" qualifier="terms">
+                        ${ liftDate.format("yyyy-MM-dd") }
+                    </dim:field>
+                    <dim:field mdschema="local" element="embargo" qualifier="lift">
+                        ${ liftDate.format("yyyy-MM-dd") }
+                    </dim:field>
+                    <dim:field mdschema="dc" element="description" qualifier="provenance">
+                        Submission published under a ${sub.getEmbargoType().getDuration() } month embargo labeled '${ sub.getEmbargoType.getName() }', the embargo will last until ${ liftDate.format("yyyy-MM-dd") }
+                    </dim:field>
+                    #{/elseif} 
+                    #{else} 
+                    <dim:field mdschema="dc" element="description" qualifier="provenance">
+                        Submission original under the a zero month embargo labeled '${ sub.getEmbargoType.getName() }'.
+                    </dim:field>
+                    #{/else}
+
+                    #{/if} 
+                    
                     <!-- dc.description.provenance = Statement about when this package was generated. -->
                     <dim:field mdschema="dc" element="description" qualifier="provenance">
                         DSpace METS Submission Ingestion Package generated from Vireo submission #${ sub.getId() } on ${ new java.util.Date().format("yyyy-MM-dd 'at' HH:mm:ss") }
