@@ -39,6 +39,11 @@ public class MockEmailTemplate extends AbstractMock implements EmailTemplate {
 	public MockEmailTemplate merge() {
 		return this;
 	}
+	
+	@Override
+	public MockEmailTemplate detach() {
+		return this;
+	}
 
 	@Override
 	public int getDisplayOrder() {

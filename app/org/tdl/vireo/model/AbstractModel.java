@@ -51,5 +51,15 @@ public abstract interface AbstractModel {
 	 * @return The merged model
 	 */
 	public <T extends AbstractModel> T merge();
+	
+	/**
+	 * Remove this object as a currently managed entity. After calling this
+	 * method accessing relationship information may result in an exception, and
+	 * it is no longer valid to call any persistence method. In order to restore
+	 * the object to a persistable state the merge() method needs to be called.
+	 * 
+	 * @return the detached model, for convienence
+	 */
+	public <T extends AbstractModel> T detach();
 
 }

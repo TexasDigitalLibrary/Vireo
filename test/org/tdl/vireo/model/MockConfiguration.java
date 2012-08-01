@@ -38,6 +38,11 @@ public class MockConfiguration extends AbstractMock implements Configuration {
 	}
 	
 	@Override
+	public MockConfiguration detach() {
+		return this;
+	}
+	
+	@Override
 	public String getName() {
 		return name;
 	}

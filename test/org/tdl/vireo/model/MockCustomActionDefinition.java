@@ -36,6 +36,11 @@ public class MockCustomActionDefinition extends AbstractMock implements CustomAc
 	public MockCustomActionDefinition merge() {
 		return this;
 	}
+	
+	@Override
+	public MockCustomActionDefinition detach() {
+		return this;
+	}
 
 	@Override
 	public int getDisplayOrder() {

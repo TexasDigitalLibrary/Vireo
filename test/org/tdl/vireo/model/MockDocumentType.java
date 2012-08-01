@@ -37,6 +37,11 @@ public class MockDocumentType extends AbstractMock implements DocumentType {
 	public MockDocumentType merge() {
 		return this;
 	}
+	
+	@Override
+	public MockDocumentType detach() {
+		return this;
+	}
 
 	@Override
 	public int getDisplayOrder() {

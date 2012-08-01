@@ -52,6 +52,11 @@ public class MockActionLog extends AbstractMock implements ActionLog {
 	public MockActionLog merge() {
 		return this;
 	}
+	
+	@Override
+	public MockActionLog detach() {
+		return this;
+	}
 
 	@Override
 	public Submission getSubmission() {

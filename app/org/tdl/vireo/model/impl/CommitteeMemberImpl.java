@@ -97,4 +97,8 @@ public class CommitteeMemberImpl implements CommitteeMember {
     public <T extends AbstractModel> T merge() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+    
+    public <T extends AbstractModel> T detach() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

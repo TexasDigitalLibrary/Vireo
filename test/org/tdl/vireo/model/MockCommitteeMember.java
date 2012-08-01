@@ -45,6 +45,11 @@ public class MockCommitteeMember extends AbstractMock implements CommitteeMember
 	public MockCommitteeMember merge() {
 		return this;
 	}
+	
+	@Override
+	public MockCommitteeMember detach() {
+		return this;
+	}
 
 	@Override
 	public int getDisplayOrder() {

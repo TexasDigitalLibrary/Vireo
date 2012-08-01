@@ -42,6 +42,11 @@ public class MockCustomActionValue extends AbstractMock implements CustomActionV
 	public MockCustomActionValue merge() {
 		return this;
 	}
+	
+	@Override
+	public MockCustomActionValue detach() {
+		return this;
+	}
 
 	@Override
 	public Submission getSubmission() {

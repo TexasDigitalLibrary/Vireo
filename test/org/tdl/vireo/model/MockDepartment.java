@@ -35,6 +35,11 @@ public class MockDepartment extends AbstractMock implements Department {
 	public MockDepartment merge() {
 		return this;
 	}
+	
+	@Override
+	public MockDepartment detach() {
+		return this;
+	}
 
 	@Override
 	public int getDisplayOrder() {

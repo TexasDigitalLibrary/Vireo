@@ -36,6 +36,11 @@ public class MockDegree extends AbstractMock implements Degree {
 	public MockDegree merge() {
 		return this;
 	}
+	
+	@Override
+	public MockDegree detach() {
+		return this;
+	}
 
 	@Override
 	public int getDisplayOrder() {

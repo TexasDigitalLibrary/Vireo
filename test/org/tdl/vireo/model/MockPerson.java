@@ -140,6 +140,11 @@ public class MockPerson extends AbstractMock implements Person {
 	public MockPerson merge() {
 		return this;
 	}
+	
+	@Override
+	public MockPerson detach() {
+		return this;
+	}
 
 	@Override
 	public String getNetId() {

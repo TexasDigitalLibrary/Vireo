@@ -57,7 +57,12 @@ public abstract class JpaAbstractModel<T extends JpaAbstractModel> extends Model
 	public T merge() {
 		return super.merge();
 	}
-	
+
+	@Override
+	public T detach() {
+		this.em().detach(this);
+		return (T) this;
+	}
 	
 	/**
 	 * Assert that the current user is an administrator, if not then a Security

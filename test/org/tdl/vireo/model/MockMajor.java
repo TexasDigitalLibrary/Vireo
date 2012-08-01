@@ -35,6 +35,11 @@ public class MockMajor extends AbstractMock implements Major {
 	public MockMajor merge() {
 		return this;
 	}
+	
+	@Override
+	public MockMajor detach() {
+		return this;
+	}
 
 	@Override
 	public int getDisplayOrder() {

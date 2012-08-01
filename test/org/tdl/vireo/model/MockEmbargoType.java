@@ -40,6 +40,11 @@ public class MockEmbargoType extends AbstractMock implements EmbargoType {
 	public MockEmbargoType merge() {
 		return this;
 	}
+	
+	@Override
+	public MockEmbargoType detach() {
+		return this;
+	}
 
 	@Override
 	public int getDisplayOrder() {

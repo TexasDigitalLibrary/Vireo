@@ -36,6 +36,11 @@ public class MockCollege extends AbstractMock implements College {
 	public MockCollege merge() {
 		return this;
 	}
+	
+	@Override
+	public MockCollege detach() {
+		return this;
+	}
 
 	@Override
 	public int getDisplayOrder() {

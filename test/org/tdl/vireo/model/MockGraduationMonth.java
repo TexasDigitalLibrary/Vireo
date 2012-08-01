@@ -37,6 +37,11 @@ public class MockGraduationMonth extends AbstractMock implements GraduationMonth
 	public MockGraduationMonth merge() {
 		return this;
 	}
+	
+	@Override
+	public MockGraduationMonth detach() {
+		return this;
+	}
 
 	@Override
 	public int getDisplayOrder() {

@@ -42,6 +42,10 @@ public class MockPreference extends AbstractMock implements Preference {
 	public MockPreference merge() {
 		return this;
 	}
+	@Override
+	public MockPreference detach() {
+		return this;
+	}
 
 	@Override
 	public Person getPerson() {

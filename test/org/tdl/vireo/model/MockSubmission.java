@@ -90,6 +90,11 @@ public class MockSubmission extends AbstractMock implements Submission {
 	public MockSubmission merge() {
 		return this;
 	}
+	
+	@Override
+	public MockSubmission detach() {
+		return this;
+	}
 
 	@Override
 	public Person getSubmitter() {
@@ -460,6 +465,11 @@ public class MockSubmission extends AbstractMock implements Submission {
 		log.submission = this;
 		log.actionDate = new Date();
 		log.privateFlag = false;
+		
+		// store this as the last log entry as well.
+		this.lastLogEntry = entry;
+		this.lastLogDate = log.actionDate;
+		
 		return log;
 	}
 

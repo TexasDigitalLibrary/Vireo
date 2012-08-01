@@ -54,6 +54,11 @@ public class MockDepositLocation extends AbstractMock implements
 	public MockDepositLocation merge() {
 		return this;
 	}
+	
+	@Override
+	public MockDepositLocation detach() {
+		return this;
+	}
 
 	@Override
 	public int getDisplayOrder() {

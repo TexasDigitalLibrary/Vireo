@@ -47,6 +47,11 @@ public class MockAttachment extends AbstractMock implements Attachment {
 	}
 	
 	@Override
+	public MockAttachment detach() {
+		return this;
+	}
+	
+	@Override
 	public Submission getSubmission() {
 		return submission;
 	}
