@@ -13,6 +13,7 @@ jQuery(document).ready(function(){
 	 var addCommitteeMemberJSONURL = "@{ViewTab.addCommitteeMemberJSON()}";
 	 var removeCommitteeMemberJSONURL = "@{ViewTab.removeCommitteeMemberJSON()}";
 	 var retrieveTemplateJSONURL = "@{ViewTab.retrieveTemplateJSON()}";
+	 var updateCustomActionJSONURL = "@{ViewTab.updateCustomActionsJSON()}";
 	
 	/**
 	 * Cancel Editing
@@ -73,10 +74,20 @@ jQuery(document).ready(function(){
 	
 	jQuery(document).live("keypress", function(event){
 		var keycode = (event.keyCode ? event.keyCode : event.which);
-		if(keycode == '13'){
+		if(keycode == '13' && !event.shiftKey){
 			jQuery(".icon-ok").click();
 		}
 	});
+	
+	/**
+	 * Update Custom Actions
+	 */
+	 jQuery(".custom-action").live("change", function(){
+		 $this = jQuery(this);
+		 updateCustomActionsHandler(updateCustomActionJSONURL, subId, $this.attr("name"), $this.is(':checked'));
+		 updateActionLog(refreshActionLogURL, subId);
+		 updateLeftColumn(refreshLeftColumnURL, subId);
+	 });
 		
 	/**
 	 * Special Value Event
@@ -287,10 +298,10 @@ jQuery(document).ready(function(){
 						#{/else}
 						</span></li>
 					<li><label>Degree Level:</label><span id="degreeLevel"
-						#{if submission.getDegree()}
-							class="select">${degreeLevel}
+						#{if submission.getDegreeLevel()}
+							class="select">${submission.getDegreeLevel()}
 						#{/if}#{else}
-							class="select empty"><i class="icon-pencil"></i> none
+							class="empty"> none
 						#{/else}
 						</span></li>
 					<li class="edit"><label>Major:</label><span id="major"

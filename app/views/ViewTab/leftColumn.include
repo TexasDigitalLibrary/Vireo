@@ -71,7 +71,7 @@
 	<div class="box-body">
 		#{list items:actions, as:'action'}
 		<p>
-			<input type="checkbox" class="checkbox" #{if submission.getCustomAction(action) != null && submission.getCustomAction(action).getValue()}checked="checked"#{/if}> ${action.getLabel()}</input>
+			<input name="custom_action_${action.getId()}" type="checkbox" class="checkbox custom-action" #{if submission.getCustomAction(action) != null && submission.getCustomAction(action).getValue()}checked="checked"#{/if}> ${action.getLabel()}</input>
 		</p>
 		#{/list}
 	</div>

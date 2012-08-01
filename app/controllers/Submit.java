@@ -396,6 +396,11 @@ public class Submit extends AbstractVireoController {
     public static void docInfo(Long subId) {
 
         String title = params.get("title");
+        
+        
+        Logger.info("Title: " + title);
+        
+        
         String degreeMonth = params.get("degreeMonth");
         String degreeYear = params.get("degreeYear");
         String docType = params.get("docType");
@@ -410,8 +415,6 @@ public class Submit extends AbstractVireoController {
         
         List<CommitteeMember> committeeMembers = parseCommitteeMembers(params);
         
-        // Get currently logged in person 
-        Person currentPerson = context.getPerson();
         Submission sub = null;
 
         if (null != subId) {
@@ -422,6 +425,8 @@ public class Submit extends AbstractVireoController {
             // TODO: Are we going to handle this more gracefully in the future?
             error("Did not receive the expected submission id.");
         }
+        
+        // Validate the form and if all is ok - save in the model
         
         if (params.get("submit_next") != null) {
             
@@ -473,6 +478,8 @@ public class Submit extends AbstractVireoController {
                 
                 sub.save();
                 
+                // Once the form has been saved - go to the fileUpload form 
+                
                 fileUpload(subId);
             }
         }
@@ -492,10 +499,41 @@ public class Submit extends AbstractVireoController {
         // List of Committee Member objects
         renderArgs.put("committeeMembers", committeeMembers);
         
+        // Fill in values in the form - from the database
+        
+        if (sub != null) {
+        	title = sub.getDocumentTitle();
+        	
+        	if (sub.getGraduationMonth() != null)
+        		degreeMonth =  sub.getGraduationMonth().toString();
+        	
+            if (sub.getGraduationYear() != null)
+            	degreeYear = sub.getGraduationYear().toString();
+            
+            docType = sub.getDocumentType();
+            abstractText = sub.getDocumentAbstract();
+            keywords = sub.getDocumentKeywords();
+            chairEmail = sub.getCommitteeContactEmail();
+            
+            // Get the list of committee members
+            
+            committeeMembers = sub.getCommitteeMembers();
+            
+            // List of Committee Member objects
+            renderArgs.put("committeeMembers", committeeMembers);
+            
+            Logger.info("Committee Member List: " + committeeMembers.size());
+            
+            if (sub.getEmbargoType() != null)
+            	embargo = sub.getEmbargoType().getId().toString();
+            
+            Logger.info("Embargo: <" + embargo + ">");
+        }
         render( subId, 
                 title, 
                 degreeMonth, 
                 degreeYear, 
+                docType,
                 abstractText, 
                 keywords, 
                 committeeFirstName, 

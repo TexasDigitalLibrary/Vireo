@@ -45,6 +45,9 @@ import javax.mail.internet.InternetAddress;
 @With(Authentication.class)
 public class ViewTab extends AbstractVireoController {
 
+	/**
+	 * The main view method.
+	 */
 	@Security(RoleType.REVIEWER)
 	public static void view() {			
 		
@@ -61,15 +64,13 @@ public class ViewTab extends AbstractVireoController {
 		
 		Submission submission = subRepo.findSubmission(id);
 		Person submitter = submission.getSubmitter();
-
-		DegreeLevel degreeLevel = null;		
-		if(submission.getDegree() != null)
-			degreeLevel = settingRepo.findDegreeByName(submission.getDegree()).getLevel();
-		
+	
 		List<EmailTemplate> templates = settingRepo.findAllEmailTemplates();
 		List<CustomActionDefinition> actions = settingRepo.findAllCustomActionDefinition();
 		
-		String gradMonth = new DateFormatSymbols().getMonths()[submission.getGraduationMonth()];
+		String gradMonth = null;		
+		if(submission.getGraduationMonth() != null)
+			gradMonth = new DateFormatSymbols().getMonths()[submission.getGraduationMonth()];
 
 		List<ActionLog> actionLogs	= subRepo.findActionLog(submission);		
 
@@ -77,14 +78,13 @@ public class ViewTab extends AbstractVireoController {
 				
 		List<State> transitions = submission.getState().getTransitions(submission);
 		List<CustomActionValue> actionValues = submission.getCustomActions();
-		
+				
 		List<Person> assignees = personRepo.findPersonsByRole(RoleType.REVIEWER);		
 
 		String nav = "view";
 		render(	nav,
 				submission,
-				submitter, 
-				degreeLevel, 
+				submitter,  
 				gradMonth, 
 				actionLogs, 
 				settingRepo, 
@@ -97,6 +97,14 @@ public class ViewTab extends AbstractVireoController {
 				);
 	}
 
+	/**
+	 * A method to update the "Personal Info", "Document Info" and "Degree Info"
+	 * excluding committee members.
+	 * 
+	 * @param subId (The submission id)
+	 * @param field (The name of the form field being updated)
+	 * @param value (The value being submitted)
+	 */
 	@Security(RoleType.REVIEWER)
 	public static void updateJSON(Long subId, String field, String value){
 
@@ -250,6 +258,7 @@ public class ViewTab extends AbstractVireoController {
 				submission.setDegree(value);
 				currentValue = submission.getDegree();
 				degreeLevel = settingRepo.findDegreeByName(submission.getDegree()).getLevel();
+				submission.setDegreeLevel(degreeLevel);
 
 				//Major
 			} else if("major".equals(field)){			
@@ -324,6 +333,15 @@ public class ViewTab extends AbstractVireoController {
 
 	}
 
+	/**
+	 * A method to add a new committee member.
+	 * 
+	 * @param subId (The submission id)
+	 * @param firstName (The committee members first name)
+	 * @param lastName (The committee members last name)
+	 * @param middleName (The committee members middle name)
+	 * @param chair (A boolean to flag if the committee member is a chair)
+	 */
 	@Security(RoleType.REVIEWER)
 	public static void addCommitteeMemberJSON(Long subId, String firstName, String lastName, String middleName, Boolean chair){
 
@@ -362,6 +380,16 @@ public class ViewTab extends AbstractVireoController {
 
 	}
 
+	/**
+	 * A method to update a committee members information.
+	 * 
+	 * @param id (The committee member id)
+	 * @param firstName (The committee members first name)
+	 * @param lastName (The committee members last name)
+	 * @param middleName (The committee members middle name)
+	 * @param chair (A boolean to flag if a committee member is a chair)
+	 */
+	
 	@Security(RoleType.REVIEWER)
 	public static void updateCommitteeMemberJSON(Long id, String firstName, String lastName, String middleName, Boolean chair){
 
@@ -400,6 +428,11 @@ public class ViewTab extends AbstractVireoController {
 
 	}
 
+	/**
+	 * A method to remove committee members.
+	 * 
+	 * @param id (The committee member id)
+	 */
 	@Security(RoleType.REVIEWER)
 	public static void removeCommitteeMemberJSON(Long id){
 
@@ -409,6 +442,11 @@ public class ViewTab extends AbstractVireoController {
 
 	}
 
+	/**
+	 * A method to refresh the content of the action log table with the latest data.
+	 *  
+	 * @param id (The submission id)
+	 */
 	@Security(RoleType.REVIEWER)
 	public static void refreshActionLogTable(Long id){
 
@@ -419,6 +457,11 @@ public class ViewTab extends AbstractVireoController {
 		renderTemplate("ViewTab/actionLogTable.include", actionLogs);
 	}
 
+	/**
+	 * A method to refresh the content of the left column with the latest data.
+	 * 
+	 * @param id (The submission id)
+	 */
 	@Security(RoleType.REVIEWER)
 	public static void refreshLeftColumn(Long id){
 
@@ -432,6 +475,12 @@ public class ViewTab extends AbstractVireoController {
 
 	}
 
+	/**
+	 * A method to change the status of a submission.
+	 * 
+	 * @param id (The submission id)
+	 */
+	
 	@Security(RoleType.REVIEWER)
 	public static void changeSubmissionStatus(Long id){
 
@@ -459,6 +508,12 @@ public class ViewTab extends AbstractVireoController {
 		}
 	}
 
+	/**
+	 * A method to change the assignee of a submission.
+	 * 
+	 * @param id (The submission id)
+	 */
+	
 	@Security(RoleType.REVIEWER)
 	public static void changeAssignedTo(Long id){
 
@@ -480,6 +535,12 @@ public class ViewTab extends AbstractVireoController {
 		view();
 
 	}
+	
+	/**
+	 * A method to add an Action Log Comment and send an email if requested.
+	 * 
+	 * @param id (The submission id)
+	 */
 	
 	@Security(RoleType.REVIEWER)
 	public static void addActionLogComment(Long id){
@@ -547,6 +608,25 @@ public class ViewTab extends AbstractVireoController {
 		
 		renderJSON(json);
 		
+	}
+	
+	@Security(RoleType.REVIEWER)
+	public static void updateCustomActionsJSON(Long id, String action, Boolean value) {
+		
+		Submission submission = subRepo.findSubmission(id);
+				
+		String actionIdString = action.replaceAll("custom_action_", "");
+		Long actionId = Long.valueOf(actionIdString);
+		
+		CustomActionDefinition actionDef = settingRepo.findCustomActionDefinition(actionId);
+		
+		if(submission.getCustomAction(actionDef) == null) {
+			submission.addCustomAction(actionDef, value);
+		} else {
+			submission.getCustomAction(actionDef).delete();
+		}
+		
+		submission.save();
 	}
 
 	/**
