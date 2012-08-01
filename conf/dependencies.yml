@@ -5,10 +5,10 @@ require:
     - play -> spring 1.0.3
     - play -> less 0.9.1
     - org.apache.lucene -> lucene-core 3.6.0
-    - sword -> sword-common 1.1
+    - org.swordapp -> sword-common 1.1
     - play -> qunit 1.0:
         id: test
-    - edu.tamu.mock -> mock-swordserver 1.2:
+    - edu.tamu.mock -> mock-swordserver 1.3:
         id: test
 
 repositories:
