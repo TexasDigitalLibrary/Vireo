@@ -186,7 +186,33 @@
             <div class="controls">
                     <a href="@{Submit.viewPrimaryDocument(subId)}">${primaryAttachment.getName()}</a>
                     (${primaryAttachment.getDisplaySize()})                    
-            </div>				
+            </div>		
+            
+
+
+
+			<table class="span11 table-striped table-bordered">
+				<thead>
+					<tr>
+						<td>Name</td>
+						<td>size</td>
+					</tr>
+				</thead>
+                <tbody>
+                       #{list items:supplementalAttachments, as:"attachment"}
+						<tr>
+                               <td>
+                    	     		${attachment.getName()} 
+                       	     	</td>
+                       	     	<td>   
+                       	     		${attachment.getDisplaySize()}  
+                                 </td>
+                         </tr>
+                       #{/list}
+
+				</tbody>
+	        </table>	                       
+            		
 		#{/else}
 		
 	</div>
