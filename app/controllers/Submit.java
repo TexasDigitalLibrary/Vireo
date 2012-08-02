@@ -811,13 +811,11 @@ public class Submit extends AbstractVireoController {
 			
         Submission sub = subRepo.findSubmission(subId);
         Person submitter = context.getPerson();
-        List<ActionLog> actionLogList = subRepo.findActionLog(sub);
         
         if (sub == null) {
             // something is wrong
             error("Did not receive the expected submission id.");
-        } else {
-        	      	
+        } else {        	      	
 
             // This is an existing submission so check that we're the student or administrator here.
             
@@ -849,11 +847,22 @@ public class Submit extends AbstractVireoController {
             	}
             }
             
+            // Remove indicated supplementary file
+            
             if (params.get("removeSupplementary") != null) {
             	removeSupplementary(sub);
             }
+            
+            // Handle add message button. Just add the message to the submission
+            
+            if (params.get("addmsg") != null) {   
+            	if (!params.get("studentMessage").equals(""))
+            			sub.logAction("Message added : '" +	params.get("studentMessage") + "'").save();
+            }
         }
         
+        List<ActionLog> actionLogList = subRepo.findActionLog(sub);
+
         Attachment primaryAttachment = sub.getPrimaryDocument();
         List<Attachment> supplementalAttachments = sub.getSupplementalDocuments();
         

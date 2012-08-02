@@ -193,6 +193,18 @@
 	                #{/if}
 
 			</div>
+			
+			
+			<div class="control-group">
+				<label class="control-label"><b>Add Message:</b></label>
+				<div class="controls">
+					<textarea rows="4" cols="80" name="studentMessage"></textarea>
+		            <input class="btn" id="addmsg" name="addmsg" type="submit" value="Add Message" />
+				</div>
+			</div>			
+			
+			
+			
 		</fieldset>				
 		#{/if}
 		#{else} *{Not editable by student }*
@@ -201,7 +213,8 @@
                     (${primaryAttachment.getDisplaySize()})                    
             </div>		
 
-			<table class="span11 table-striped table-bordered">
+	 #{if supplementalAttachments.size() > 0}
+			<table class="table-striped table-bordered">
 				<thead>
 					<tr>
 						<td>Name</td>
@@ -220,12 +233,26 @@
                          </tr>
                        #{/list}
 				</tbody>
-	        </table>	                                   		
+	        </table>	         
+	    #{/if}
+	                              		
 		#{/else}
+
+
+
+
+
+
+
+
+
+
 		
 	</div>
+	
 
 </form>
+
 <br />
 <div>
 	<legend>Application Activity</legend>
@@ -251,5 +278,7 @@
                 </tbody>
 	</table>
 </div>
+
+
 
 </div>
