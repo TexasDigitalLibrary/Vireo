@@ -40,10 +40,10 @@ public class JpaDepositLocationImpl extends JpaAbstractModel<JpaDepositLocationI
 	public String name;
 	
 	@Column(length=1024)
-	public String repositoryURL;
+	public String repository;
 	
 	@Column(length=1024)
-	public String collectionURL;
+	public String collection;
 	
 	@Column(length=255)
 	public String username;
@@ -119,50 +119,31 @@ public class JpaDepositLocationImpl extends JpaAbstractModel<JpaDepositLocationI
 	}
 	
 	@Override
-	public URL getRepositoryURL() {
+	public String getRepository() {
 		
-		if (repositoryURL == null)
-			return null;
-		
-		try {
-			return new URL(repositoryURL);
-		} catch (MalformedURLException e) {
-			return null;
-		}
+		return repository;
 	}
 
 	@Override
-	public void setRepositoryURL(URL url) {
+	public void setRepository(String repository) {
 		
 		assertManager();
 		
-		if (url == null)
-			repositoryURL = null;
-		else
-			repositoryURL = url.toExternalForm();
+		this.repository = repository;
 	}
 
 	@Override
-	public URL getCollectionURL() {
-		if (collectionURL == null)
-			return null;
+	public String getCollection() {
+		return collection;
 		
-		try {
-			return new URL(collectionURL);
-		} catch (MalformedURLException e) {
-			return null;
-		}
 	}
 
 	@Override
-	public void setCollectionURL(URL url) {
+	public void setCollection(String collection) {
 
 		assertManager();
 		
-		if (url == null)
-			collectionURL = null;
-		else
-			collectionURL = url.toExternalForm();
+		this.collection = collection;
 	}
 
 	@Override

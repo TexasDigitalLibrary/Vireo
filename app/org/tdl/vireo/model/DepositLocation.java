@@ -30,26 +30,27 @@ public interface DepositLocation extends AbstractOrderedModel {
 	public void setName(String name);
 
 	/**
-	 * @return The url of the depositing repository.
+	 * @return The location of the repository, this will likely be a URI.
 	 */
-	public URL getRepositoryURL();
+	public String getRepository();
 
 	/**
-	 * @param url
-	 *            The new url of the depositing repository.
+	 * @param location
+	 *            The new location of the repository. This will likely be a URI.
 	 */
-	public void setRepositoryURL(URL url);
+	public void setRepository(String location);
 
 	/**
-	 * @return The URL of the collection within the repository.
+	 * @return The collection id or location within the designated repository. This will likely be a URI.
 	 */
-	public URL getCollectionURL();
+	public String getCollection();
 
 	/**
-	 * @param url
-	 *            The new collection url within the repository.
+	 * @param location
+	 *            The new collection id or location within the designated
+	 *            repository. This will likely be a URI.
 	 */
-	public void setCollectionURL(URL url);
+	public void setCollection(String location);
 
 	/**
 	 * @return The authentication username, null if no authentication is

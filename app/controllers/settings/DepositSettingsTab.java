@@ -1,7 +1,5 @@
 package controllers.settings;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -89,12 +87,12 @@ public class DepositSettingsTab extends SettingsTab {
 		String username = null;
 		String password = null;
 		String onBehalfOf = null;
-		URL repositoryURL = null;
-		URL collectionURL = null;
+		String repository = null;
+		String collection = null;
 		
 		
 		boolean connectionOk = false;
-		Map<String,URL> collectionsMap = null;
+		Map<String,String> collectionsMap = null;
 		if (depositLocationId != null) {
 			String[] parts = depositLocationId.split("_");
 			Long id = Long.valueOf(parts[1]);
@@ -106,20 +104,20 @@ public class DepositSettingsTab extends SettingsTab {
 			username = location.getUsername();
 			password = location.getPassword();
 			onBehalfOf = location.getOnBehalfOf();
-			repositoryURL = location.getRepositoryURL();
-			collectionURL = location.getCollectionURL();
+			repository = location.getRepository();
+			collection = location.getCollection();
 			
 			try {
 				collectionsMap = depositor.getCollections(location);
 				connectionOk = true;
 				
 				if (collectionsMap == null || collectionsMap.size() == 0)
-					validation.addError("collectionURL","The repository is not able to provide a list of collections.");
+					validation.addError("collection","The repository is not able to provide a list of collections.");
 			} catch (RuntimeException re) {
 				if (re.getMessage().contains("Code: 401")) {
 					validation.addError("auth","Unauthorized credentials");
 				} else if (re.getMessage().contains("Connection refused")) {
-					validation.addError("repositoryURL","Connection refused");
+					validation.addError("repository","Connection refused");
 				} else {
 					validation.addError("general","Unable to communicate with this remote repository: "+re.getMessage());
 				}
@@ -134,7 +132,7 @@ public class DepositSettingsTab extends SettingsTab {
 		renderTemplate("SettingTabs/editDepositLocation.include",nav, subNav, packagers, depositors, collectionsMap, connectionOk,
 				
 				// Deposit location
-				depositLocationId, name, packager, depositor, username, password, onBehalfOf, repositoryURL, collectionURL
+				depositLocationId, name, packager, depositor, username, password, onBehalfOf, repository, collection
 				);
 	}
 	
@@ -161,8 +159,8 @@ public class DepositSettingsTab extends SettingsTab {
 		String username = params.get("username");
 		String password = params.get("password");
 		String onBehalfOf = params.get("onBehalfOf");
-		String repositoryURLString = params.get("repositoryURL");
-		String collectionURLString = params.get("collectionURL");
+		String repository = params.get("repository");
+		String collection = params.get("collection");
 				
 		// Nullify things
 		if (username != null && username.trim().length() == 0)
@@ -191,23 +189,8 @@ public class DepositSettingsTab extends SettingsTab {
 			validation.addError("depositor", "The protocol is invalid.");
 		}
 		
-		URL repositoryURL = null;
-		try {
-			if (repositoryURLString == null || repositoryURLString.trim().length() == 0)
-				validation.addError("repositoryURL", "The repository URL is required");
-			else
-				repositoryURL = new URL(repositoryURLString);
-		} catch (MalformedURLException e) {
-			validation.addError("repositoryURL", "The repositor URL is invalid");
-		}
-		
-		URL collectionURL = null;
-		try {
-			if (collectionURLString != null && collectionURLString.trim().length() > 0)
-				collectionURL = new URL(collectionURLString);
-		} catch (MalformedURLException e) {
-			validation.addError("collectionURL", "The collection URL is invalid");
-		}
+		if (repository == null || repository.trim().length() == 0)
+			validation.addError("repository", "The repository location is required");
 		
 		// If no errors then try and save location
 		DepositLocation location = null;
@@ -247,8 +230,8 @@ public class DepositSettingsTab extends SettingsTab {
 				
 				location.setUsername(username);
 				location.setOnBehalfOf(onBehalfOf);
-				location.setRepositoryURL(repositoryURL);
-				location.setCollectionURL(collectionURL);
+				location.setRepository(repository);
+				location.setCollection(collection);
 				location.setPackager(packager);
 				location.setDepositor(depositor);
 				location.setName(name);
@@ -263,14 +246,14 @@ public class DepositSettingsTab extends SettingsTab {
 
 		
 		// If there are still no errors, then try and get a list of all collections
-		Map<String,URL> collectionsMap = new HashMap<String,URL>();
+		Map<String,String> collectionsMap = new HashMap<String,String>();
 		boolean connectionOk = false;
 		if (!validation.hasErrors() && location != null) {
 
 			try {
 				collectionsMap = depositor.getCollections(location);
 				if (collectionsMap == null || collectionsMap.size() == 0)
-					validation.addError("collectionURL","The repository is not able to provide a list of collections.");
+					validation.addError("collection","The repository is not able to provide a list of collections.");
 				
 				connectionOk = true;
 			} catch (RuntimeException re) {
@@ -278,7 +261,7 @@ public class DepositSettingsTab extends SettingsTab {
 				if (re.getMessage().contains("Code: 401")) {
 					validation.addError("auth","Unauthorized credentials");
 				} else if (re.getMessage().contains("Connection refused")) {
-					validation.addError("repositoryURL","Connection refused");
+					validation.addError("repository","Connection refused");
 				} else {
 					validation.addError("general","Unable to communicate with this remote repository: "+re.getMessage());
 				}
@@ -286,8 +269,8 @@ public class DepositSettingsTab extends SettingsTab {
 			
 			
 			// Now at the end do a check to make sure the user has selected a collection url.
-			if (!validation.hasErrors() && "depositLocation-save".equals(action) && collectionURL == null) {
-				validation.addError("collectionURL","A collection is required.");
+			if (!validation.hasErrors() && "depositLocation-save".equals(action) && collection == null) {
+				validation.addError("collection","A collection is required.");
 			}
 				
 		}
@@ -313,7 +296,7 @@ public class DepositSettingsTab extends SettingsTab {
 		renderTemplate("SettingTabs/editDepositLocation.include", packagers, depositors, collectionsMap, testDepositId, connectionOk, action,
 			
 			// Deposit location
-			depositLocationId, name, packager, depositor, username, password, onBehalfOf, repositoryURL, collectionURL);
+			depositLocationId, name, packager, depositor, username, password, onBehalfOf, repository, collection);
 	}
 
 	/**

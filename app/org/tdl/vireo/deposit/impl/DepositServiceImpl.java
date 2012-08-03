@@ -1,5 +1,7 @@
 package org.tdl.vireo.deposit.impl;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -118,10 +120,10 @@ public class DepositServiceImpl implements DepositService{
 			throw new IllegalArgumentException("A deposit location is required.");
 
 		
-		if (location.getRepositoryURL() == null)
+		if (location.getRepository() == null)
 			throw new IllegalArgumentException("A repository URL is required.");
 		
-		if (location.getCollectionURL() == null)
+		if (location.getCollection() == null)
 			throw new IllegalArgumentException("A collection URL is required.");
 		
 		if (location.getPackager() == null)
@@ -265,18 +267,18 @@ public class DepositServiceImpl implements DepositService{
 				
 				String depositId = depositor.deposit(location, depositPackage);
 				
-				ActionLog log = submission.logAction("Deposited into repository collection '"+location.getCollectionURL()+"'");
+				ActionLog log = submission.logAction("Deposited into repository collection '"+location.getCollection()+"'");
 				log.save();
 				submission.setDepositId(depositId);
 				if (successState != null)
 					submission.setState(successState);
 				submission.save();
 				
-				Logger.info("Deposited submissions #"+submission.getId()+" into repository: '"+location.getRepositoryURL().toExternalForm()+"', collection: '"+location.getCollectionURL()+"'.");
+				Logger.info("Deposited submissions #"+submission.getId()+" into repository: '"+location.getRepository()+"', collection: '"+location.getCollection()+"'.");
 				
 			} catch (RuntimeException re) {
 				Logger.error(re,"Deposit failed for submission #"+submission.getId());
-				ActionLog log = submission.logAction("Deposit failed while attempting to deposit into repository collection '"+location.getCollectionURL()+"' because of the error '"+re.getMessage()+"' ");
+				ActionLog log = submission.logAction("Deposit failed while attempting to deposit into repository collection '"+location.getCollection()+"' because of the error '"+re.getMessage()+"' ");
 				log.save();
 				submission.save();
 				

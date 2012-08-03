@@ -58,17 +58,22 @@ public class Sword1DepositorImpl implements Depositor, BeanNameAware {
 
 	
 	@Override
-	public Map<String, URL> getCollections(DepositLocation location) {
-		Map<String, URL> foundCollections = new HashMap<String, URL>();
+	public Map<String, String> getCollections(DepositLocation location) {
+		Map<String, String> foundCollections = new HashMap<String, String>();
 		
-		if(location == null || location.getRepositoryURL() == null)
-		{
+		if(location == null || location.getRepository() == null)
 			throw new IllegalArgumentException("Bad deposit location or repository URL when trying to getCollections()");
+
+		URL repositoryURL;
+		try {
+			repositoryURL = new URL(location.getRepository());
+		} catch (MalformedURLException e) {
+			throw new IllegalArgumentException("The repository is an invalid URL.");
 		}
 		
 		//Building the client
 		Client client = new Client();
-		client.setServer(location.getRepositoryURL().getHost(), location.getRepositoryURL().getPort());
+		client.setServer(repositoryURL.getHost(), repositoryURL.getPort());
 		client.setUserAgent(USER_AGENT);
 		
 		//If the credentials include a username and password, set those on the client.
@@ -78,15 +83,14 @@ public class Sword1DepositorImpl implements Depositor, BeanNameAware {
 		//Obtaining the service document
 		//If the credentials contain an onbehalfof user, retrieve the service document on behalf of that user.  Otherwise, simply retrieve the service document.
 		ServiceDocument serviceDocument = null;
-		String repositoryURLString = location.getRepositoryURL().toExternalForm();
 		try {
 			if(location.getOnBehalfOf() != null)
 			{			
-				serviceDocument = client.getServiceDocument(repositoryURLString, location.getOnBehalfOf());
+				serviceDocument = client.getServiceDocument(location.getRepository(), location.getOnBehalfOf());
 			}
 			else
 			{
-				serviceDocument = client.getServiceDocument(repositoryURLString);
+				serviceDocument = client.getServiceDocument(location.getRepository());
 			}
 		} catch (SWORDClientException e) {
 			throw new RuntimeException(e);
@@ -100,16 +104,7 @@ public class Sword1DepositorImpl implements Depositor, BeanNameAware {
 		{
 			for(Collection collection : workspace.getCollections())
 			{
-				// add this collection to our map
-				URL collectionURL = null;
-				try {
-					collectionURL = new URL(collection.getLocation());
-				} catch (MalformedURLException e) {
-					Logger.error(e, "Exception in forming URL: '" + collection.getLocation() + "' from collection " + collection.getTitle() + " in workspace " + workspace.getTitle() + " for repository " + repositoryURLString);
-					continue;
-				}
-				
-				foundCollections.put(collection.getTitle(), collectionURL);
+				foundCollections.put(collection.getTitle(), collection.getLocation());
 			}
 		}		
 		
@@ -118,12 +113,11 @@ public class Sword1DepositorImpl implements Depositor, BeanNameAware {
 
 
 	@Override
-	public String getCollectionName(DepositLocation location,
-			URL collectionURL) {
-		Map<String, URL> namesToCollectionURLs = this.getCollections(location);
-		for( String name : namesToCollectionURLs.keySet())
+	public String getCollectionName(DepositLocation location, String collection) {
+		Map<String, String> namesToCollections = this.getCollections(location);
+		for( String name : namesToCollections.keySet())
 		{
-			if(namesToCollectionURLs.get(name).equals(collectionURL))
+			if(namesToCollections.get(name).equals(collection))
 				return name;
 		}
 		return null;
@@ -143,18 +137,25 @@ public class Sword1DepositorImpl implements Depositor, BeanNameAware {
 		if ( depositPackage.getFile() == null ||  !depositPackage.getFile().exists())
 			throw new IllegalArgumentException("The deposit package does not exist on disk or is inaccessable.");
 		
-		if (location.getRepositoryURL() == null)
+		if (location.getRepository() == null)
 			throw new IllegalArgumentException("The deposit location must have a repository URL defined.");
-
-		if (location.getCollectionURL() == null)
+		
+		if (location.getCollection() == null)
 			throw new IllegalArgumentException("The deposit location must have a collection URL defined.");
 
+		URL repositoryURL;
+		try {
+			repositoryURL = new URL(location.getRepository());
+		} catch (MalformedURLException e) {
+			throw new IllegalArgumentException("The repository is an invalid URL.");
+		}
+		
 		
 		//Building the client
 		Client client = new Client();
 		client.setServer(
-				location.getRepositoryURL().getHost(), 
-				location.getRepositoryURL().getPort());
+				repositoryURL.getHost(), 
+				repositoryURL.getPort());
 		client.setUserAgent(USER_AGENT);
 		
 		//If the credentials include a username and password, set those on the client.
@@ -164,7 +165,7 @@ public class Sword1DepositorImpl implements Depositor, BeanNameAware {
 			PostMessage message = new PostMessage();
 			
 			message.setFilepath(depositPackage.getFile().getAbsolutePath());
-			message.setDestination(location.getCollectionURL().toExternalForm());
+			message.setDestination(location.getCollection());
 			message.setFiletype(depositPackage.getMimeType());
 			message.setUseMD5(false);
 			message.setVerbose(false);

@@ -1229,9 +1229,9 @@ test("test depositSaveHandler AJAX", function() {
 		"	            </div>" +
 		"	        </div>" +
 		"	        <div class='control-group '>" +
-		"	            <label for='dpositLocation-repositoryURL' class='control-label'><strong>Repository URL</strong>:</label>" +
+		"	            <label for='dpositLocation-repository' class='control-label'><strong>Repository Location</strong>:</label>" +
 		"	            <div class='controls'>" +
-		"	                <input type='text' value='http://localhost:8082/servicedocument' id='depositLocation-repositoryURL' name='depositLocation-repositoryURL' class='input-xlarge'>" +
+		"	                <input type='text' value='http://localhost:8082/servicedocument' id='depositLocation-repository' name='depositLocation-repository' class='input-xlarge'>" +
 		"	            </div>" +
 		"	        </div>" +
 		"	        <div class='control-group '>" +
@@ -1259,9 +1259,9 @@ test("test depositSaveHandler AJAX", function() {
 		"	            </div>" +
 		"	        </div>" +
 		"	        <div class='control-group '>" +
-		"	            <label for='depositLocation-collectionURL' class='control-label'><strong>Collection</strong>:</label>" +
+		"	            <label for='depositLocation-collection' class='control-label'><strong>Collection</strong>:</label>" +
 		"	            <div class='controls'>" +
-		"	                <select id='depositLocation-collectionURL' name='depositLocation-collectionURL' class='input-xlarge'>" +
+		"	                <select id='depositLocation-collection' name='depositLocation-collection' class='input-xlarge'>" +
 		"	                                                                     " +
 		"	                    <option value='http://localhost:8082/deposit/c'>Collection C</option>" +
 		"	                                             " +
@@ -1312,8 +1312,8 @@ test("test depositSaveHandler AJAX", function() {
     equals('Mock Sword Repository', options.data.name);
     equals('Sword1Deposit', options.data.depositor);
     equals('DSpaceMETS', options.data.packager);
-    equals('http://localhost:8082/servicedocument', options.data.repositoryURL);
-    equals('http://localhost:8082/deposit/a', options.data.collectionURL);
+    equals('http://localhost:8082/servicedocument', options.data.repository);
+    equals('http://localhost:8082/deposit/a', options.data.collection);
     equals('testUser', options.data.username);
     
     options.success("<p id='new-content'>This is the contents of a  modal dialog box</p>");

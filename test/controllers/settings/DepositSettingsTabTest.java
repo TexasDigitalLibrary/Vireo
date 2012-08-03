@@ -94,8 +94,8 @@ public class DepositSettingsTabTest extends AbstractVireoFunctionalTest {
 		Response response = POST(URL,params);
 		
 		assertContentMatch(location.getName(),response);
-		assertContentMatch(location.getRepositoryURL().toExternalForm(),response);
-		assertContentMatch(location.getCollectionURL().toExternalForm(),response);
+		assertContentMatch(location.getRepository(),response);
+		assertContentMatch(location.getCollection(),response);
 		assertContentMatch(location.getUsername(),response);
 	}
 	
@@ -116,11 +116,11 @@ public class DepositSettingsTabTest extends AbstractVireoFunctionalTest {
 		params.put("name","New Deposit Location");
 		params.put("packager","DSpaceMETS");
 		params.put("depositor","Sword1Deposit");
-		params.put("repositoryURL","http://localhost:8082/servicedocument");
+		params.put("repository","http://localhost:8082/servicedocument");
 		params.put("username","testUser");
 		params.put("password","testPassword");
 		params.put("onBehalfOf","");
-		params.put("collectionURL","http://localhost:8082/deposit/a");
+		params.put("collection","http://localhost:8082/deposit/a");
 		Response response = POST(SAVE_URL,params);
 				
 		assertContentMatch("New Deposit Location",response);

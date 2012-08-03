@@ -36,8 +36,8 @@ public class DepositServiceImplTest extends UnitTest {
 		// Set up our mock objects.
 		MockSubmission submission = new MockSubmission();
 		MockDepositLocation location = new MockDepositLocation();
-		location.repositoryURL = new URL("http://localhost/repository");
-		location.collectionURL = new URL("http://localhost/repository/collection");
+		location.repository = "http://localhost/repository";
+		location.collection = "http://localhost/repository/collection";
 		location.packager = new MockPackager();
 		location.depositor = new MockDepositor();
 		MockState successState = new MockState();
@@ -70,8 +70,8 @@ public class DepositServiceImplTest extends UnitTest {
 
 			// Set up our mock objects.
 			MockDepositLocation location = new MockDepositLocation();
-			location.repositoryURL = new URL("http://localhost/repository");
-			location.collectionURL = new URL("http://localhost/repository/collection");
+			location.repository = "http://localhost/repository";
+			location.collection = "http://localhost/repository/collection";
 			location.packager = new MockPackager();
 			location.depositor = new MockDepositor();
 			MockState successState = new MockState();

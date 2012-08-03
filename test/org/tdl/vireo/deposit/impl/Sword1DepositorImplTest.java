@@ -29,9 +29,9 @@ public class Sword1DepositorImplTest extends UnitTest {
 	
 	public static final int PORT = 8082;
 	public static final String repositoryURL = "http://localhost:"+PORT+"/servicedocument";
-	public static final String collectionAURL = "http://localhost:"+PORT+"/deposit/a";
-	public static final String collectionBURL = "http://localhost:"+PORT+"/deposit/b";
-	public static final String collectionCURL = "http://localhost:"+PORT+"/deposit/c";
+	public static final String collectionA = "http://localhost:"+PORT+"/deposit/a";
+	public static final String collectionB = "http://localhost:"+PORT+"/deposit/b";
+	public static final String collectionC = "http://localhost:"+PORT+"/deposit/c";
 	
 	/**
 	 * Test that the bean name for this depositor is accurate.
@@ -67,14 +67,14 @@ public class Sword1DepositorImplTest extends UnitTest {
 
 		MockDepositLocation location = getDepositLocation();
 
-		Map<String, URL> collections = depositor.getCollections(location);
+		Map<String, String> collections = depositor.getCollections(location);
 
 		assertNotNull(collections);
 		assertEquals(3, collections.size());
 		assertNotNull(collections.get("Collection A"));
 		assertNotNull(collections.get("Collection B"));
 		assertNotNull(collections.get("Collection C"));
-		assertEquals("http://localhost:"+PORT+"/deposit/a",collections.get("Collection A").toExternalForm());
+		assertEquals("http://localhost:"+PORT+"/deposit/a",collections.get("Collection A"));
 	}
 
 	
@@ -89,14 +89,14 @@ public class Sword1DepositorImplTest extends UnitTest {
 		MockDepositLocation location = getDepositLocation();
 		location.onBehalfOf = "someoneelse";
 
-		Map<String, URL> collections = depositor.getCollections(location);
+		Map<String, String> collections = depositor.getCollections(location);
 
 		assertNotNull(collections);
 		assertEquals(3, collections.size());
 		assertNotNull(collections.get("Collection A"));
 		assertNotNull(collections.get("Collection B"));
 		assertNotNull(collections.get("Collection C"));
-		assertEquals("http://localhost:"+PORT+"/deposit/a",collections.get("Collection A").toExternalForm());
+		assertEquals("http://localhost:"+PORT+"/deposit/a",collections.get("Collection A"));
 
 	}
 	
@@ -112,7 +112,7 @@ public class Sword1DepositorImplTest extends UnitTest {
 		// (1) Test with just a bad url
 		try {
 			MockDepositLocation location = getDepositLocation();
-			location.repositoryURL = new URL("http://localhost:"+PORT+"/thisdoesnotexist");
+			location.repository = "http://localhost:"+PORT+"/thisdoesnotexist";
 			
 			depositor.getCollections(location);
 			fail("getCollections() did not throw an exception with an invalid repository URL.");
@@ -156,15 +156,15 @@ public class Sword1DepositorImplTest extends UnitTest {
 		MockDepositLocation location = getDepositLocation();
 
 		// resolve collection A
-		String name = depositor.getCollectionName(location, new URL(collectionAURL));
+		String name = depositor.getCollectionName(location, collectionA);
 		assertEquals("Collection A", name);
 
 		// resolve collection B
-		name = depositor.getCollectionName(location, new URL(collectionBURL));
+		name = depositor.getCollectionName(location, collectionB);
 		assertEquals("Collection B", name);
 		
 		// resolve collection C
-		name = depositor.getCollectionName(location, new URL(collectionCURL));
+		name = depositor.getCollectionName(location, collectionC);
 		assertEquals("Collection C", name);
 
 	}
@@ -178,8 +178,7 @@ public class Sword1DepositorImplTest extends UnitTest {
 	public void testGetCollectionNameBad() throws MalformedURLException {
 		MockDepositLocation location = getDepositLocation();
 
-		URL doesnotexist = new URL("http://localhost:"+PORT+"/deposit/thisdoesnotexist");
-		assertNull(depositor.getCollectionName(location, doesnotexist));
+		assertNull(depositor.getCollectionName(location, "http://localhost:"+PORT+"/deposit/thisdoesnotexist"));
 	}
 
 	
@@ -299,8 +298,8 @@ public class Sword1DepositorImplTest extends UnitTest {
 	protected static MockDepositLocation getDepositLocation() throws MalformedURLException {
 		
 		MockDepositLocation location = new MockDepositLocation();
-		location.repositoryURL = new URL(repositoryURL);
-		location.collectionURL = new URL(collectionAURL);
+		location.repository = repositoryURL;
+		location.collection = collectionA;
 		location.username = "testUser";
 		location.password = "testPassword";
 		return location;

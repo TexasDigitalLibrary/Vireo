@@ -43,25 +43,24 @@ public interface Depositor {
 	public String deposit(DepositLocation location, DepositPackage depositPackage);
 
 	/**
-	 * Retrieve a map of collection names, and their technical URLs.
+	 * Retrieve a map of collection names, and their technical identifier.
 	 * 
 	 * @param location
 	 *            The repository location.
-	 * @return A map of colleciton names & urls.
+	 * @return A map of collection names & internal identifiers.
 	 */
-	public Map<String, URL> getCollections(DepositLocation location);
+	public Map<String, String> getCollections(DepositLocation location);
 
 	/**
-	 * Resolve the collection URL into a displayable name for the collection.
+	 * Resolve the collection identifier into a displayable name for the collection.
 	 * 
 	 * @param location
 	 *            The deposit location.
-	 * @param collectionURL
-	 *            The collection URL to resolve. If the location has a
-	 *            collection url specified it is ignored.
+	 * @param collection
+	 *            The collection identifier to resolve. 
 	 * 
 	 * @return The displayable name of the collection.
 	 */
-	public String getCollectionName(DepositLocation location, URL collectionURL);
+	public String getCollectionName(DepositLocation location, String collection);
 
 }

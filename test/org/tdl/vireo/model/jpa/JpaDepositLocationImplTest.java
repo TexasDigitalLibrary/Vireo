@@ -244,8 +244,8 @@ public class JpaDepositLocationImplTest extends UnitTest {
 		JPA.em().getTransaction().begin();
 		
 		DepositLocation location = settingRepo.createDepositLocation("location");
-		location.setRepositoryURL(new URL("http://example.com/"));
-		location.setCollectionURL(new URL("http://example.com/collection"));
+		location.setRepository("http://example.com/");
+		location.setCollection("http://example.com/collection");
 		location.setUsername("username");
 		location.setPassword("password");
 		location.setOnBehalfOf("onBehalfOf");
@@ -262,8 +262,8 @@ public class JpaDepositLocationImplTest extends UnitTest {
 		
 		assertEquals(location.getId(),retrieved.getId());
 		assertEquals(location.getName(),retrieved.getName());
-		assertEquals(location.getRepositoryURL(),retrieved.getRepositoryURL());
-		assertEquals(location.getCollectionURL(),retrieved.getCollectionURL());
+		assertEquals(location.getRepository(),retrieved.getRepository());
+		assertEquals(location.getCollection(),retrieved.getCollection());
 		assertEquals(location.getUsername(),retrieved.getUsername());
 		assertEquals(location.getPassword(),retrieved.getPassword());
 		assertEquals(location.getOnBehalfOf(),retrieved.getOnBehalfOf());

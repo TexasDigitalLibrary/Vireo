@@ -27,8 +27,8 @@ public class MockDepositLocation extends AbstractMock implements
 	public Long id;
 	public int displayOrder;
 	public String name;
-	public URL repositoryURL;
-	public URL collectionURL;
+	public String repository;
+	public String collection;
 	public String username;
 	public String password;
 	public String onBehalfOf;
@@ -81,23 +81,23 @@ public class MockDepositLocation extends AbstractMock implements
 	}
 
 	@Override
-	public URL getRepositoryURL() {
-		return repositoryURL;
+	public String getRepository() {
+		return repository;
 	}
 
 	@Override
-	public void setRepositoryURL(URL url) {
-		this.repositoryURL = url;
+	public void setRepository(String location) {
+		this.repository = location;
 	}
 
 	@Override
-	public URL getCollectionURL() {
-		return collectionURL;
+	public String getCollection() {
+		return collection;
 	}
 
 	@Override
-	public void setCollectionURL(URL url) {
-		this.collectionURL = url;
+	public void setCollection(String collection) {
+		this.collection = collection;
 	}
 
 	@Override

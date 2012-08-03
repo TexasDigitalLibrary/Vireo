@@ -20,7 +20,7 @@ public class MockDepositor implements Depositor {
 
 	public String depositIdFormat = "http://repository.edu/deposit/%d1";
 
-	public Map<String, URL> collectionsMap = new HashMap<String, URL>();
+	public Map<String, String> collectionsMap = new HashMap<String, String>();
 
 	@Override
 	public String getBeanName() {
@@ -41,15 +41,15 @@ public class MockDepositor implements Depositor {
 	}
 
 	@Override
-	public Map<String, URL> getCollections(DepositLocation location) {
-		return null;
+	public Map<String, String> getCollections(DepositLocation location) {
+		return collectionsMap;
 	}
 
 	@Override
-	public String getCollectionName(DepositLocation location, URL collectionURL) {
-		Map<String, URL> namesToCollectionURLs = this.getCollections(location);
-		for (String name : namesToCollectionURLs.keySet()) {
-			if (namesToCollectionURLs.get(name).equals(collectionURL))
+	public String getCollectionName(DepositLocation location, String collection) {
+		Map<String, String> namesToCollections = this.getCollections(location);
+		for (String name : namesToCollections.keySet()) {
+			if (namesToCollections.get(name).equals(collection))
 				return name;
 		}
 		return null;

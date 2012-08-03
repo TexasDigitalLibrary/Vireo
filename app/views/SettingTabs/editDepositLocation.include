@@ -47,10 +47,10 @@
                     </select>
                 </div>
             </div>
-            <div class="control-group ${ errors.forKey("repositoryURL")  ? "error" : "" }">
-                <label class="control-label" for="dpositLocation-repositoryURL"><strong>Repository URL</strong>:</label>
+            <div class="control-group ${ errors.forKey("repository")  ? "error" : "" }">
+                <label class="control-label" for="dpositLocation-repository"><strong>Repository Location</strong>:</label>
                 <div class="controls">
-                    <input type="text" class="input-xlarge" name="depositLocation-repositoryURL" id="depositLocation-repositoryURL" value="${repositoryURL}"/>
+                    <input type="text" class="input-xlarge" name="depositLocation-repository" id="depositLocation-repository" value="${repository}"/>
                 </div>
             </div>
             <div class="control-group ${ errors.forKey("auth") ? "error" : "" }">
@@ -77,21 +77,18 @@
                     <button id="depositLocation-test" class="btn #{if "depositLocation-test".equals(action)}${ errors.size() == 0 ? "btn-success" : "btn-warning" }#{/if}" >Test connection & find available collections</button>
                 </div>
             </div>
-            <div class="control-group ${ errors.forKey("collectionURL")  ? "error" : "" }">
-                <label class="control-label" for="depositLocation-collectionURL"><strong>Collection</strong>:</label>
+            <div class="control-group ${ errors.forKey("collection")  ? "error" : "" }">
+                <label class="control-label" for="depositLocation-collection"><strong>Collection</strong>:</label>
                 <div class="controls">
-                    <select class="input-xlarge" name="depositLocation-collectionURL" id="depositLocation-collectionURL">
-                        #{if collectionURL == null}
+                    <select class="input-xlarge" name="depositLocation-collection" id="depositLocation-collection">
+                        #{if collection == null}
                         <option value="">Please select a collection...</option>
                         #{/if}
                         #{list items:collectionsMap?.keySet(), as:'name'}
-                        %{
-                            java.net.URL url = collectionsMap.get(name);
-                        }% 
-                        <option value="${ url.toExternalForm() }" ${ url.equals(collectionURL) ? "selected=\"true\"" : "" }>${ name }</option>
+                        <option value="${ collectionsMap.get(name) }" ${ collectionsMap.get(name).equals(collection) ? "selected=\"true\"" : "" }>${ name }</option>
                         #{/list}
-                        #{elseif collectionURL != null}
-                        <option value="${ collectionURL.toExternalForm() }" selected="true">${ collectionURL.toExternalForm() }</option>
+                        #{elseif collection != null}
+                        <option value="${ collection }" selected="true">${ collection }</option>
                         #{/elseif} 
                     </select>
                 </div>

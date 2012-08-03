@@ -428,8 +428,8 @@ public class TestDataLoader extends Job {
 	private static final DepositLocationArray[] DEPOSIT_LOCATION_DEFINITIONS = {
 		new DepositLocationArray(
 				"Mock Sword Repository", // name
-				"http://localhost:8082/servicedocument", // repositoryURL
-				"http://localhost:8082/deposit/a", // collectionURL
+				"http://localhost:8082/servicedocument", // repository
+				"http://localhost:8082/deposit/a", // collection
 				"testUser", // username
 				"testPassword", // password
 				null, // onBehalfOf
@@ -437,8 +437,8 @@ public class TestDataLoader extends Job {
 				"Sword1Deposit"),
 		new DepositLocationArray(
 				"Failure Repository", // name
-				"http://localhost:8082/servicedocument", // repositoryURL
-				"http://localhost:8082/deposit/a", // collectionURL
+				"http://localhost:8082/servicedocument", // repository
+				"http://localhost:8082/deposit/a", // collection
 				"invalid", // username
 				"invalid", // password
 				"error", // onBehalfOf
@@ -552,8 +552,8 @@ public class TestDataLoader extends Job {
 		// Create all deposit locations
 		for(DepositLocationArray locationDefinition : DEPOSIT_LOCATION_DEFINITIONS) {
 			DepositLocation location = settingRepo.createDepositLocation(locationDefinition.name);
-			location.setRepositoryURL(new URL(locationDefinition.repositoryURL));
-			location.setCollectionURL(new URL(locationDefinition.collectionURL));
+			location.setRepository(locationDefinition.repository);
+			location.setCollection(locationDefinition.collection);
 			location.setUsername(locationDefinition.username);
 			location.setPassword(locationDefinition.password);
 			location.setOnBehalfOf(locationDefinition.onBehalfOf);
@@ -949,20 +949,20 @@ public class TestDataLoader extends Job {
 	private static class DepositLocationArray {
 		
 		String name;
-		String repositoryURL;
-		String collectionURL;
+		String repository;
+		String collection;
 		String username;
 		String password;
 		String onBehalfOf;
 		String packager;
 		String depositor;
 		
-		DepositLocationArray(String name, String repositoryURL,
-				String collectionURL, String username, String password,
+		DepositLocationArray(String name, String repository,
+				String collection, String username, String password,
 				String onBehalfOf, String packager, String depositor) {
 			this.name = name;
-			this.repositoryURL = repositoryURL;
-			this.collectionURL = collectionURL;
+			this.repository = repository;
+			this.collection = collection;
 			this.username = username;
 			this.password = password;
 			this.onBehalfOf = onBehalfOf;

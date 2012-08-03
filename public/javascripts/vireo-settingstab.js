@@ -1679,14 +1679,14 @@ function depositSaveHandler(closeOnSave, saveURL, updateURL) {
 		var name = jQuery("#depositLocation-name").val();
 		var depositor = jQuery("#depositLocation-depositor").val();
 		var packager = jQuery("#depositLocation-packager").val();
-		var repositoryURL = jQuery("#depositLocation-repositoryURL").val();
+		var repository = jQuery("#depositLocation-repository").val();
 		var username = jQuery("#depositLocation-username").val();
 		var password = jQuery("#depositLocation-password").val();
 		var onBehalfOf = jQuery("#depositLocation-onBehalfOf").val();
-		var collectionURL = jQuery("#depositLocation-collectionURL").val();
+		var collection = jQuery("#depositLocation-collection").val();
 
-		if (collectionURL == null)
-			collectionURL = "";
+		if (collection == null)
+			collection = "";
 
 		jQuery.ajax({
 			url : saveURL,
@@ -1696,11 +1696,11 @@ function depositSaveHandler(closeOnSave, saveURL, updateURL) {
 				name: name,
 				depositor: depositor,
 				packager: packager,
-				repositoryURL: repositoryURL,
+				repository: repository,
 				username: username,
 				password: password,
 				onBehalfOf: onBehalfOf,
-				collectionURL: collectionURL
+				collection: collection
 			},
 			dataType : 'html',
 			type : 'POST',
