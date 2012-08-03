@@ -94,6 +94,19 @@
 			<p>${sub.getDocumentAbstract()}</p>
 		</div>
 	</div>
+	
+    #{list items:sub.committeeMembers, as:"member"}	
+
+	<div class="control-group">
+		<label class="control-label"><b>Committee Member:</b></label>
+		<div class="controls">
+			<p>${member.getFirstName()} ${member.getMiddleName()} ${member.getLastName()}</p>
+		</div>
+	</div>	
+	
+	#{/list}	
+	
+	
 	<div class="control-group">
 		<label class="control-label"><b>Chair Email Address:</b></label>
 		<div class="controls">
@@ -180,21 +193,66 @@
 	                #{/if}
 
 			</div>
+			
+			
+			<div class="control-group">
+				<label class="control-label"><b>Add Message:</b></label>
+				<div class="controls">
+					<textarea rows="4" cols="80" name="studentMessage"></textarea>
+		            <input class="btn" id="addmsg" name="addmsg" type="submit" value="Add Message" />
+				</div>
+			</div>			
+			
+			
+			
 		</fieldset>				
 		#{/if}
 		#{else} *{Not editable by student }*
             <div class="controls">
                     <a href="@{Submit.viewPrimaryDocument(subId)}">${primaryAttachment.getName()}</a>
                     (${primaryAttachment.getDisplaySize()})                    
-            </div>				
+            </div>		
+
+	 #{if supplementalAttachments.size() > 0}
+			<table class="table-striped table-bordered">
+				<thead>
+					<tr>
+						<td>Name</td>
+						<td>size</td>
+					</tr>
+				</thead>
+                <tbody>
+                       #{list items:supplementalAttachments, as:"attachment"}
+						  <tr>
+                                <td>
+                 	     		    ${attachment.getName()} 
+                    	     	</td>
+                    	     	<td>   
+                    	     		${attachment.getDisplaySize()}  
+                                </td>
+                         </tr>
+                       #{/list}
+				</tbody>
+	        </table>	         
+	    #{/if}
+	                              		
 		#{/else}
+
+
+
+
+
+
+
+
+
+
 		
 	</div>
 	
-	
 
-	
 </form>
+
 <br />
 <div>
 	<legend>Application Activity</legend>
@@ -220,5 +278,7 @@
                 </tbody>
 	</table>
 </div>
+
+
 
 </div>
