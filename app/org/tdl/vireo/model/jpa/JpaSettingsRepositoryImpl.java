@@ -258,7 +258,7 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	}
 
 	@Override
-	public List<DepositLocation> findAllDepositLocation() {
+	public List<DepositLocation> findAllDepositLocations() {
 		return (List) JpaDepositLocationImpl.find("order by displayOrder").fetch();
 	}
 }

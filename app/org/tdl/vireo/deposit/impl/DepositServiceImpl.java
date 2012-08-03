@@ -80,7 +80,7 @@ public class DepositServiceImpl implements DepositService{
 			throw new IllegalArgumentException("A persisted submission object is required");
 		
 		// kick off a job to deposit this submission
-		DepositJob job = new DepositJob(location,submission,successState);
+		DepositJob job = new DepositJob(location,submission,successState,wait);
 		
 		if (wait) {
 			// Do it within this thread.
@@ -149,6 +149,7 @@ public class DepositServiceImpl implements DepositService{
 		public final Submission submission;
 		public final SearchFilter filter;
 		public final State successState;
+		public final boolean throwErrors;
 		
 		
 		/**
@@ -162,13 +163,20 @@ public class DepositServiceImpl implements DepositService{
 		 * @param successState
 		 *            The state submissions should be set to if the deposit is
 		 *            successful.
+		 * @param throwErrors
+		 *            normally errors will be logged and a submission's status
+		 *            updated correctly. However sometimes you want the errors
+		 *            to be thrown for evaluation in the ui. For this case turn
+		 *            throwErrors on, then in addition logging and updating the
+		 *            status if an error is encountered it will be thrown.
 		 */
 		public DepositJob(DepositLocation location, Submission submission,
-				State successState) {
+				State successState, boolean throwErrors) {
 			this.location = location;
 			this.submission = submission;
 			this.filter = null;
 			this.successState = successState;
+			this.throwErrors = throwErrors;
 			
 			jobQueue.add(this);
 		}
@@ -191,6 +199,7 @@ public class DepositServiceImpl implements DepositService{
 			this.submission = null;
 			this.filter = filter;
 			this.successState = successState;
+			this.throwErrors = false;
 			
 			jobQueue.add(this);
 		}
@@ -225,17 +234,12 @@ public class DepositServiceImpl implements DepositService{
 					// Commit the transaction and detach all the submissions.
 					JPA.em().getTransaction().commit();
 					JPA.em().clear();
-					JPA.em().getTransaction().begin();
-					
-					Logger.info("Deposited "+results.getResults().size()+" submissions into repository: '"+location.getRepositoryURL().toExternalForm()+"', collection: '"+location.getCollectionURL()+"'.");
-					
+					JPA.em().getTransaction().begin();					
 				} while ( results.getResults().size() != 0 );
 				
 			} else {
 				// This is the simple case, just deposit this one item.
-				depositSubmission(submission);
-				
-				Logger.info("Deposited submissions #"+submission.getId()+" into repository: '"+location.getRepositoryURL().toExternalForm()+"', collection: '"+location.getCollectionURL()+"'.");
+				depositSubmission(submission);				
 			}
 			
 			jobQueue.remove(this);
@@ -267,12 +271,17 @@ public class DepositServiceImpl implements DepositService{
 				if (successState != null)
 					submission.setState(successState);
 				submission.save();
-			} catch (RuntimeException re) {
 				
+				Logger.info("Deposited submissions #"+submission.getId()+" into repository: '"+location.getRepositoryURL().toExternalForm()+"', collection: '"+location.getCollectionURL()+"'.");
+				
+			} catch (RuntimeException re) {
+				Logger.error(re,"Deposit failed for submission #"+submission.getId());
 				ActionLog log = submission.logAction("Deposit failed while attempting to deposit into repository collection '"+location.getCollectionURL()+"' because of the error '"+re.getMessage()+"' ");
 				log.save();
 				submission.save();
 				
+				if (throwErrors)
+					throw re;
 			} finally {
 				if (depositPackage != null)
 					depositPackage.delete();

@@ -1539,6 +1539,231 @@ var embargoSortableUpdateHandler = function(jsonURL) {
 	};
 }
 
+/**********************************************************
+ * Deposit Settings
+ **********************************************************/
+
+
+/**
+ * Handler for loading the deposit location modal dialog box. The entire body of
+ * the modal dialog is loaded from the server to replace the contents of the old
+ * dialog.
+ * 
+ * @param url
+ *            The url to lead the dialog box from.
+ * @returns A call back function.
+ */
+function depositLoadModalHandler(url) {
+	return function() {
+
+		jQuery("#deposit-location-modal").modal('show');
+		jQuery("#deposit-location-modal form").addClass("waiting");
+
+		var id = jQuery(this).closest("li").attr("id");
+
+		jQuery.ajax({
+			url : url,
+			data : {
+				depositLocationId : id
+			},
+			dataType : 'html',
+			type : 'POST',
+			success : function(data) {
+				jQuery("#deposit-location-modal form").replaceWith(data)
+						.remove();
+			},
+			error : function() {
+				alert("Error unable to communicate with server.");
+			}
+		});
+
+		return false;
+	};
+}
+
+
+/**
+ * Handler for adding a new deposit location. This will display the modal dialog
+ * box with empty data. The dialog is loaded from the server.
+ * 
+ * @param url
+ *            The url to lead the dialog box from.
+ * @returns A call back function.
+ */
+function depositAddModalHandler(url) {
+	return function() {
+
+		jQuery("#deposit-location-modal").modal('show');
+		jQuery("#deposit-location-modal form").addClass("waiting");
+
+		jQuery.ajax({
+			url : url,
+			dataType : 'html',
+			type : 'POST',
+			success : function(data) {
+				jQuery("#deposit-location-modal form").replaceWith(data)
+						.remove();
+			},
+			error : function() {
+				alert("Error unable to communicate with server.");
+			}
+		});
+
+		return false;
+	};
+}
+
+/**
+ * This is not a handler. This is expected to be called by other handlers. It
+ * function will update the list of depositLocations. The url where to get the
+ * snipit of HTML is expected to be passed. Basically each time a location is
+ * added, modified, or deleted this function is called to update the list.
+ * 
+ * The sortable handler works on the
+ * <ul>
+ * tag for this list. Since it is hard to re-adjust the sortable handler this
+ * function goes out of it's way to just replace the children of the
+ * <ul>
+ * tag. This allows the individual
+ * <li>'s to be updated without effecting the events registered on the
+ * <ul>.
+ * 
+ * @param url
+ *            The url where a snipit of HTML for the deposit list is located.
+ */
+function depositUpdateLocationList(url) {
+	
+	jQuery("#depositLocation-list").addClass("waiting");
+	
+	jQuery.ajax({
+        url : url,
+        dataType : 'html',
+        type : 'POST',
+        success : function(data) {
+        	
+        	jQuery("#depositLocation-list").empty();
+        	jQuery("#depositLocation-list").append(jQuery(data).children())
+        	jQuery("#depositLocation-list").removeClass("waiting");
+        },
+        error:function(){
+            jQuery("#depositLocation-list").removeClass("waiting");
+        }
+    });
+}
+
+/**
+ * Save a deposit location handler. This method is for multiple buttons on the
+ * deposit location modal dialog box. Basicaly for everything but the delete &
+ * cancel buttons. This works for adding new locations, or editing existing
+ * ones.
+ * 
+ * @param closeOnSave
+ *            A boolean flag to determine if the dialog box should be saved if
+ *            this update is successfull.
+ * @param saveURL
+ *            The url where to send the updates too, an HTML snipit of a new
+ *            form is expected.
+ * @param updateURL
+ *            The url where to update the list of deposit locations (in-case the
+ *            name changed).
+ * @returns A call back function.
+ */
+function depositSaveHandler(closeOnSave, saveURL, updateURL) {
+
+	return function () {
+
+		jQuery("#deposit-location-modal form").addClass("waiting");
+
+		var action = jQuery(this).attr("id");
+		var id = jQuery("#depositLocation-id").val()
+		var name = jQuery("#depositLocation-name").val();
+		var depositor = jQuery("#depositLocation-depositor").val();
+		var packager = jQuery("#depositLocation-packager").val();
+		var repositoryURL = jQuery("#depositLocation-repositoryURL").val();
+		var username = jQuery("#depositLocation-username").val();
+		var password = jQuery("#depositLocation-password").val();
+		var onBehalfOf = jQuery("#depositLocation-onBehalfOf").val();
+		var collectionURL = jQuery("#depositLocation-collectionURL").val();
+
+		if (collectionURL == null)
+			collectionURL = "";
+
+		jQuery.ajax({
+			url : saveURL,
+			data : {
+				action: action,
+				depositLocationId: id,
+				name: name,
+				depositor: depositor,
+				packager: packager,
+				repositoryURL: repositoryURL,
+				username: username,
+				password: password,
+				onBehalfOf: onBehalfOf,
+				collectionURL: collectionURL
+			},
+			dataType : 'html',
+			type : 'POST',
+			success : function(data) {
+				jQuery("#deposit-location-modal form").replaceWith(data).remove();
+
+				// If this was the save button close the dialog if there are no errors
+				if (closeOnSave && jQuery("#deposit-location-errors").children().length == 0)
+					jQuery("#deposit-location-modal").modal('hide');
+
+				depositUpdateLocationList(updateURL);
+
+			},
+			error:function(){
+				alert("Error unable to communicate with server.");
+			}
+		});
+
+		return false;
+	};
+};
+
+/**
+ * Delete deposit location handler. This method will send the ajax query to
+ * delete the deposit location, and after that has returned succesfully it will
+ * update the list of deposit locations.
+ * 
+ * @param deleteURL
+ *            The JSON url where deletes should be posted.
+ * @param updateURL
+ *            The URL to update the list of deposit locations after the delete
+ *            has occured.
+ * @returns A call back function.
+ */
+function depositDeleteHandler(deleteURL, updateURL) {
+	return function() {
+		jQuery("#deposit-location-modal form").addClass("waiting");
+
+		var id = jQuery("#depositLocation-id").val()
+
+		jQuery.ajax({
+			url : deleteURL,
+			data : {
+				depositLocationId : id,
+			},
+			dataType : 'json',
+			type : 'POST',
+			success : function(data) {
+				depositUpdateLocationList(updateURL);
+				jQuery("#deposit-location-modal").modal('hide');
+
+				if (!data.success)
+					alert("Error unable to delete deposit location because: "
+							+ data.message);
+			},
+			error : function() {
+				alert("Error unable to communicate with server.");
+			}
+		});
+
+		return false;
+	}
+}
 
 
 

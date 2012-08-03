@@ -13,6 +13,7 @@ import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.Degree;
 import org.tdl.vireo.model.Department;
+import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmbargoType;
@@ -190,6 +191,10 @@ public class SettingsTab extends AbstractVireoController {
 			} else if (type.equals(EmbargoType.class)) {
 				EmbargoType embargo = settingRepo.findEmbargoType(id);
 				models.add((T) embargo);
+				
+			} else if (type.equals(DepositLocation.class)) {
+				DepositLocation location = settingRepo.findDepositLocation(id);
+				models.add((T) location);
 				
 			} else {
 				throw new IllegalArgumentException("Unknown model type: "+type.getName());

@@ -1,0 +1,11 @@
+*{
+    This include is used on the Deposit Settings Tab to list all the
+    deposit locations which are currently configured. This include is used when
+    the page is originally loaded, and when an AJAX call is made to add or
+    remove a deposit location.
+}*
+<ol id="depositLocation-list" class="depositLocation-sortable settings-sortable-list">
+    #{list items:locations, as:'location'}
+       <li id="depositLocation_${location.getId()}"><a class="depositLocation-editable" href="#"><em class="icon-pencil"></em> ${location.getName()}</a></li>    
+    #{/list}
+</ol>

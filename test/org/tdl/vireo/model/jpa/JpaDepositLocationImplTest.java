@@ -142,12 +142,12 @@ public class JpaDepositLocationImplTest extends UnitTest {
 	@Test
 	public void testFindAllLocations() {
 
-		int initialSize = settingRepo.findAllDepositLocation().size();
+		int initialSize = settingRepo.findAllDepositLocations().size();
 		
 		DepositLocation location1 = settingRepo.createDepositLocation("location1").save();
 		DepositLocation location2 = settingRepo.createDepositLocation("location2").save();
 
-		int postSize = settingRepo.findAllDepositLocation().size();
+		int postSize = settingRepo.findAllDepositLocations().size();
 		
 		assertEquals(initialSize +2, postSize);
 		
@@ -211,7 +211,7 @@ public class JpaDepositLocationImplTest extends UnitTest {
 		location3.save();
 		location4.save();
 		
-		List<DepositLocation> locations = settingRepo.findAllDepositLocation();
+		List<DepositLocation> locations = settingRepo.findAllDepositLocations();
 		
 		int index1 = locations.indexOf(location1);
 		int index2 = locations.indexOf(location2);

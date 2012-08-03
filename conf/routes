@@ -63,6 +63,8 @@ GET     /admin/settings/user/?                  settings.UserPreferencesTab.user
 GET     /admin/settings/applications/?			settings.ApplicationSettingsTab.applicationSettings
 GET     /admin/settings/email/?					settings.EmailSettingsTab.emailSettings
 GET     /admin/settings/configurable/?			settings.ConfigurableSettingsTab.configurableSettings
+GET     /admin/settings/deposit/?               settings.DepositSettingsTab.depositSettings
+
 
 ### Settings tab - General AJAX
 POST	/admin/settings/updateProfile			SettingsTab.updateProfileJSON
@@ -127,6 +129,13 @@ POST    /admin/settings/gradMonths/add          settings.ConfigurableSettingsTab
 POST    /admin/settings/gradMonths/edit         settings.ConfigurableSettingsTab.editGraduationMonthJSON
 POST    /admin/settings/gradMonths/remove       settings.ConfigurableSettingsTab.removeGraduationMonthJSON
 POST    /admin/settings/gradMonths/reorder      settings.ConfigurableSettingsTab.reorderGraduationMonthsJSON
+
+## Settings tab - Deposit Locations
+POST    /admin/settings/deposit/update          settings.DepositSettingsTab.updateDepositLocationList
+POST    /admin/settings/deposit/load            settings.DepositSettingsTab.loadDepositLocation
+POST    /admin/settings/deposit/save            settings.DepositSettingsTab.saveDepositLocation
+POST    /admin/settings/deposit/remove          settings.DepositSettingsTab.removeDepositLocationJSON
+POST    /admin/settings/deposit/reorder         settings.DepositSettingsTab.reorderDepositLocationsJSON
 
 ### System Administrator
 GET     /system/?                               System.controlPanelRedirect

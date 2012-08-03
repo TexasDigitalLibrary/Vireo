@@ -20,6 +20,11 @@ import controllers.Security;
 import controllers.SettingsTab;
 import static org.tdl.vireo.model.Configuration.*;
 
+/**
+ * Application settings
+ * 
+ * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
+ */
 @With(Authentication.class)
 public class ApplicationSettingsTab extends SettingsTab {
 

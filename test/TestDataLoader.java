@@ -1,4 +1,6 @@
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -9,8 +11,11 @@ import java.util.Random;
 
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.tdl.vireo.deposit.Depositor;
+import org.tdl.vireo.deposit.Packager;
 import org.tdl.vireo.model.Degree;
 import org.tdl.vireo.model.DegreeLevel;
+import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
@@ -420,6 +425,27 @@ public class TestDataLoader extends Job {
 	};
 		
 	
+	private static final DepositLocationArray[] DEPOSIT_LOCATION_DEFINITIONS = {
+		new DepositLocationArray(
+				"Mock Sword Repository", // name
+				"http://localhost:8082/servicedocument", // repositoryURL
+				"http://localhost:8082/deposit/a", // collectionURL
+				"testUser", // username
+				"testPassword", // password
+				null, // onBehalfOf
+				"DSpaceMETS", 
+				"Sword1Deposit"),
+		new DepositLocationArray(
+				"Failure Repository", // name
+				"http://localhost:8082/servicedocument", // repositoryURL
+				"http://localhost:8082/deposit/a", // collectionURL
+				"invalid", // username
+				"invalid", // password
+				"error", // onBehalfOf
+				"DSpaceMETS", 
+				"Sword1Deposit")
+	};
+	
 	/**
 	 * This is the driver method which will call the three types of load methods
 	 * individually, for People, Settings, and Submissions.
@@ -475,7 +501,7 @@ public class TestDataLoader extends Job {
 	 * Load all predefined settings. Colleges, departments, majors, degrees,
 	 * document types, graduation month, and embargo definitions.
 	 */
-	public static void loadSettings() {
+	public static void loadSettings() throws MalformedURLException {
 				
 		// Create all colleges
 		for(String collegeDefinition : COLLEGES_DEFINITIONS) {
@@ -521,6 +547,19 @@ public class TestDataLoader extends Job {
 		systemEmailService.generateAllSystemEmailTemplates();
 		for(EmailTemplateArray templateDefinition : EMAIL_TEMPLATE_DEFINITIONS) {
 			settingRepo.createEmailTemplate(templateDefinition.name, templateDefinition.subject, templateDefinition.message).save();
+		}
+		
+		// Create all deposit locations
+		for(DepositLocationArray locationDefinition : DEPOSIT_LOCATION_DEFINITIONS) {
+			DepositLocation location = settingRepo.createDepositLocation(locationDefinition.name);
+			location.setRepositoryURL(new URL(locationDefinition.repositoryURL));
+			location.setCollectionURL(new URL(locationDefinition.collectionURL));
+			location.setUsername(locationDefinition.username);
+			location.setPassword(locationDefinition.password);
+			location.setOnBehalfOf(locationDefinition.onBehalfOf);
+			location.setDepositor((Depositor) Spring.getBean(locationDefinition.depositor));
+			location.setPackager((Packager) Spring.getBean(locationDefinition.packager));
+			location.save();
 		}
 	}
 	
@@ -904,6 +943,31 @@ public class TestDataLoader extends Job {
 			this.name= name;
 			this.subject=subject;
 			this.message=message;
+		}
+	}
+	
+	private static class DepositLocationArray {
+		
+		String name;
+		String repositoryURL;
+		String collectionURL;
+		String username;
+		String password;
+		String onBehalfOf;
+		String packager;
+		String depositor;
+		
+		DepositLocationArray(String name, String repositoryURL,
+				String collectionURL, String username, String password,
+				String onBehalfOf, String packager, String depositor) {
+			this.name = name;
+			this.repositoryURL = repositoryURL;
+			this.collectionURL = collectionURL;
+			this.username = username;
+			this.password = password;
+			this.onBehalfOf = onBehalfOf;
+			this.packager = packager;
+			this.depositor = depositor;
 		}
 	}
 	

@@ -132,7 +132,7 @@
     
     <!-- Deposit Packages -->
     <bean id="DSpaceMETS" class="org.tdl.vireo.deposit.impl.TemplatePackagerImpl" scope="prototype">
-        <property name="displayName" value="Default DSpace Format"/>
+        <property name="displayName" value="Default DSpace METS SIP"/>
         <property name="manifestTemplatePath" value="conf/deposit/dspace_mets.xml"/>
         <property name="manifestName" value="mets.xml"/>
         <property name="mimeType" value="application/zip"/>
@@ -144,7 +144,7 @@
         </property>
     </bean>
     <bean id="GenericQDC" class="org.tdl.vireo.deposit.impl.TemplatePackagerImpl" scope="prototype">
-        <property name="displayName" value="Generic Qualified Dublin Core Format"/>
+        <property name="displayName" value="Generic Qualified Dublin Core SIP"/>
         <property name="manifestTemplatePath" value="conf/deposit/qualified_dublin_core.xml"/>
         <property name="manifestName" value="metadata.xml"/>
         <property name="mimeType" value="application/zip"/>

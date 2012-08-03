@@ -294,8 +294,9 @@
         <div ID="vireo-mets-div-1" DMDID="vireo-mets-dmd-1" TYPE="DSpace Item">
         
             <!-- Set the primary bitstream to the primary document -->
-            
+            #{if sub.getPrimaryDocument() != null } 
             <fptr FILEID="piper-mets-file-${ sub.getPrimaryDocument().getId() }"/>
+            #{/if} 
             
             <!-- Bitstream div for the primary document -->
             

@@ -1,0 +1,122 @@
+*{
+    This include is used on the Deposit Settings Tab, within the add/edit modal
+    dialog box. This is trivially included on the initial page load, and when
+    updates are made.
+}*
+<form class="form-horizontal">
+    <input type="hidden" name="depositLocation-id" id="depositLocation-id" value="${depositLocationId}"/>
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h3>${ (depositLocationId == null) ? "Add" : "Edit" } Deposit Location</h3>
+    </div>
+    <div class="modal-body">
+        <div id="deposit-location-errors">
+            #{ifErrors}
+            <ul class="red">
+                #{errors}
+                <li>${error}</li> 
+                #{/errors}
+            </ul>
+            #{/ifErrors}
+        </div>
+    
+        <fieldset>
+            <div class="control-group ${ errors.forKey('name')  ? "error" : "" }">
+                <label class="control-label" for="depositLocation-name"><strong>Location Name</strong>:</label>
+                <div class="controls">
+                    <input type="text" class="input-xlarge" name="depositLocation-name" id="depositLocation-name" value="${name}"/>
+                </div>
+            </div>
+            <div class="control-group ${ errors.forKey("depositor")  ? "error" : "" }">
+                <label class="control-label" for="depositLocation-depositor"><strong>Protocol</strong>:</label>
+                <div class="controls">
+                    <select class="input-xlarge" name="depositLocation-depositor" id="depositLocation-depositor">
+                        #{list items:depositors, as:'depositorOption'}
+                            <option value="${depositorOption.getBeanName() }" ${ (depositor == depositorOption) ? "selected=\"true\"" : ""}>${depositorOption.getDisplayName()}</option>
+                        #{/list}
+                    </select>
+                </div>
+            </div>
+            <div class="control-group ${ errors.forKey("packager")  ? "error" : "" }">
+                <label class="control-label" for="depositLocation-packager"><strong>Format</strong>:</label>
+                <div class="controls">
+                    <select class="input-xlarge" name="depositLocation-packager" id="depositLocation-packager">
+                        #{list items:packagers, as:'packagerOption'}
+                            <option value="${packagerOption.getBeanName()}" ${ (packager == packagerOption) ? "selected=\"true\"" : ""}>${packagerOption.getDisplayName()}</option>
+                        #{/list}
+                    </select>
+                </div>
+            </div>
+            <div class="control-group ${ errors.forKey("repositoryURL")  ? "error" : "" }">
+                <label class="control-label" for="dpositLocation-repositoryURL"><strong>Repository URL</strong>:</label>
+                <div class="controls">
+                    <input type="text" class="input-xlarge" name="depositLocation-repositoryURL" id="depositLocation-repositoryURL" value="${repositoryURL}"/>
+                </div>
+            </div>
+            <div class="control-group ${ errors.forKey("auth") ? "error" : "" }">
+                <label class="control-label" for="depositLocation-username"><strong>Username</strong>:</label>
+                <div class="controls">
+                    <input type="text" class="input-xlarge" name="depositLocation-username" id="depositLocation-username" value="${username}"/>
+                </div>
+            </div>
+            <div class="control-group ${ errors.forKey("auth") ? "error" : "" }">
+                <label class="control-label" for="depositLocation-password"><strong>Password</strong>:</label>
+                <div class="controls">
+                    <input type="password" class="input-xlarge" name="depositLocation-password" id="depositLocation-password" #{if password != null}value="${ "".pad(password.length()) }"#{/if}/>
+                </div>
+            </div>
+            <div class="control-group ${ errors.forKey("auth") ? "error" : "" }">
+                <label class="control-label" for="depositLocation-onBehalfOf"><strong>On Behalf Of</strong>:</label>
+                <div class="controls">
+                    <input type="text" class="input-xlarge" name="depositLocation-onBehalfOf" id="depositLocation-onBehalfOf" value="${onBehalfOf}"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label"></label>
+                <div class="controls">
+                    <button id="depositLocation-test" class="btn #{if "depositLocation-test".equals(action)}${ errors.size() == 0 ? "btn-success" : "btn-warning" }#{/if}" >Test connection & find available collections</button>
+                </div>
+            </div>
+            <div class="control-group ${ errors.forKey("collectionURL")  ? "error" : "" }">
+                <label class="control-label" for="depositLocation-collectionURL"><strong>Collection</strong>:</label>
+                <div class="controls">
+                    <select class="input-xlarge" name="depositLocation-collectionURL" id="depositLocation-collectionURL">
+                        #{if collectionURL == null}
+                        <option value="">Please select a collection...</option>
+                        #{/if}
+                        #{list items:collectionsMap?.keySet(), as:'name'}
+                        %{
+                            java.net.URL url = collectionsMap.get(name);
+                        }% 
+                        <option value="${ url.toExternalForm() }" ${ url.equals(collectionURL) ? "selected=\"true\"" : "" }>${ name }</option>
+                        #{/list}
+                        #{elseif collectionURL != null}
+                        <option value="${ collectionURL.toExternalForm() }" selected="true">${ collectionURL.toExternalForm() }</option>
+                        #{/elseif} 
+                    </select>
+                </div>
+            </div>
+            #{if connectionOk }
+            <div class="control-group">
+                <label class="control-label"><strong>Debugging Tools</strong>:</label>
+                <div class="controls">
+                    #{if testDepositId == null}
+                    <button id="depositLocation-test-submit" class="btn" >Submit a test item to this location</button><br/>
+                    #{/if}
+                    #{else}
+                    <p>Test item successfully deposited: <br/><a href="${testDepositId}" target="_blank">${testDepositId}</p>
+                    #{/else}
+                </div>
+            </div>
+            #{/if}
+            
+        </fieldset>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Close</a>
+        #{if depositLocationId != null }
+        <a href="#" id="depositLocation-delete" class="btn">Delete</a>
+        #{/if}
+        <a href="#" id="depositLocation-save" class="btn">Save</a>
+    </div>
+</form>

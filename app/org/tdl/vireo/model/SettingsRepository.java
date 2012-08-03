@@ -397,6 +397,6 @@ public interface SettingsRepository {
 	 * 
 	 * @return A list of all deposit locations.
 	 */
-	public List<DepositLocation> findAllDepositLocation();
+	public List<DepositLocation> findAllDepositLocations();
 
 }
