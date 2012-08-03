@@ -26,8 +26,7 @@ public interface Depositor {
 	 * @return The displayable name of this bean.
 	 */
 	public String getDisplayName();
-	
-	
+
 	/**
 	 * Deposit the package into the remote location. The resulting depositID
 	 * assigned by the location should be returned.
@@ -39,8 +38,10 @@ public interface Depositor {
 	 * @param depositPackage
 	 *            The package to be deposited.
 	 * @return The depositID
+	 * @throws DepositException
 	 */
-	public String deposit(DepositLocation location, DepositPackage depositPackage);
+	public String deposit(DepositLocation location,
+			DepositPackage depositPackage);
 
 	/**
 	 * Retrieve a map of collection names, and their technical identifier.
@@ -48,18 +49,21 @@ public interface Depositor {
 	 * @param location
 	 *            The repository location.
 	 * @return A map of collection names & internal identifiers.
+	 * @throws DepositException
 	 */
 	public Map<String, String> getCollections(DepositLocation location);
 
 	/**
-	 * Resolve the collection identifier into a displayable name for the collection.
+	 * Resolve the collection identifier into a displayable name for the
+	 * collection.
 	 * 
 	 * @param location
 	 *            The deposit location.
 	 * @param collection
-	 *            The collection identifier to resolve. 
+	 *            The collection identifier to resolve.
 	 * 
 	 * @return The displayable name of the collection.
+	 * @throws DepositException
 	 */
 	public String getCollectionName(DepositLocation location, String collection);
 

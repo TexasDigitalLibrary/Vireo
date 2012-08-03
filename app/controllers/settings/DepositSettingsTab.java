@@ -10,6 +10,8 @@ import java.util.Map;
 
 import javax.persistence.PersistenceException;
 
+import org.tdl.vireo.deposit.DepositException;
+import org.tdl.vireo.deposit.DepositException.FIELD;
 import org.tdl.vireo.deposit.DepositService;
 import org.tdl.vireo.deposit.Depositor;
 import org.tdl.vireo.deposit.Packager;
@@ -107,21 +109,26 @@ public class DepositSettingsTab extends SettingsTab {
 			repository = location.getRepository();
 			collection = location.getCollection();
 			
-			try {
-				collectionsMap = depositor.getCollections(location);
-				connectionOk = true;
-				
-				if (collectionsMap == null || collectionsMap.size() == 0)
-					validation.addError("collection","The repository is not able to provide a list of collections.");
-			} catch (RuntimeException re) {
-				if (re.getMessage().contains("Code: 401")) {
-					validation.addError("auth","Unauthorized credentials");
-				} else if (re.getMessage().contains("Connection refused")) {
-					validation.addError("repository","Connection refused");
-				} else {
-					validation.addError("general","Unable to communicate with this remote repository: "+re.getMessage());
-				}
-			}
+// Don't try to connect on inital load because it could take too long.
+//			try {
+//				collectionsMap = depositor.getCollections(location);
+//				connectionOk = true;
+//				
+//				if (collectionsMap == null || collectionsMap.size() == 0)
+//					validation.addError("collection","The repository is not able to provide a list of collections.");
+//			} catch (DepositException de) {
+//				
+//				if (de.isField(FIELD.REPOSITORY)) {
+//					validation.addError("repository",de.getMessage());
+//				} else if (de.isField(FIELD.AUTHENTICATION)) {
+//					validation.addError("auth",de.getMessage());
+//				} else {
+//					validation.addError("general","Unable to communicate with deposit location: "+de.getMessage());
+//				}
+//				
+//			} catch (RuntimeException re) {
+//				validation.addError("general","Unable to communicate with deposit location: "+re.getMessage());
+//			}
 		} 
 		
 		List<Packager> packagers = new ArrayList<Packager>( (Collection) Spring.getBeansOfType(Packager.class).values() );
@@ -256,15 +263,18 @@ public class DepositSettingsTab extends SettingsTab {
 					validation.addError("collection","The repository is not able to provide a list of collections.");
 				
 				connectionOk = true;
-			} catch (RuntimeException re) {
+			} catch (DepositException de) {
 				
-				if (re.getMessage().contains("Code: 401")) {
-					validation.addError("auth","Unauthorized credentials");
-				} else if (re.getMessage().contains("Connection refused")) {
-					validation.addError("repository","Connection refused");
+				if (de.isField(FIELD.REPOSITORY)) {
+					validation.addError("repository",de.getMessage());
+				} else if (de.isField(FIELD.AUTHENTICATION)) {
+					validation.addError("auth",de.getMessage());
 				} else {
-					validation.addError("general","Unable to communicate with this remote repository: "+re.getMessage());
+					validation.addError("general","Unable to communicate with deposit location: "+de.getMessage());
 				}
+				
+			} catch (RuntimeException re) {
+				validation.addError("general","Unable to communicate with deposit location: "+re.getMessage());
 			}
 			
 			
