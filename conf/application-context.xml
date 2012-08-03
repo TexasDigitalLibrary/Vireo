@@ -126,6 +126,8 @@
         <property name="displayName" value="SWORD Version 1"/>
     </bean>
     <bean id="DepositService" class="org.tdl.vireo.deposit.impl.DepositServiceImpl" scope="prototype">
+        <property name="personRepository" ref="PersonRepository"/>
+        <property name="securityContext" ref="SecurityContext"/>
         <property name="searcher" ref="Searcher"/>
         <property name="submissionsPerBatch" value="10"/>
     </bean>

@@ -14,12 +14,15 @@ import org.tdl.vireo.deposit.Depositor;
 import org.tdl.vireo.deposit.Packager;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.DepositLocation;
+import org.tdl.vireo.model.Person;
+import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.search.SearchDirection;
 import org.tdl.vireo.search.SearchFilter;
 import org.tdl.vireo.search.SearchOrder;
 import org.tdl.vireo.search.SearchResult;
 import org.tdl.vireo.search.Searcher;
+import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.State;
 
 import play.Logger;
@@ -38,8 +41,14 @@ import play.utils.Java;
  */
 public class DepositServiceImpl implements DepositService{
 
+	// The repository of people
+	public PersonRepository personRepo;
+	
 	// The searcher used to find submissions in a batch.
 	public Searcher searcher;
+	
+	// The security context, who's logged in.
+	public SecurityContext context;
 
 	// How many items should be processed at the same time.
 	public int submissionsPerBatch = 10;
@@ -56,6 +65,22 @@ public class DepositServiceImpl implements DepositService{
 		this.searcher = searcher;
 	}
 
+	/**
+	 * @param repo
+	 *            The person repository
+	 */
+	public void setPersonRepository(PersonRepository repo) {
+		this.personRepo = repo;
+	}
+
+	/**
+	 * @param context
+	 *            The security context managing who is currently logged in.
+	 */
+	public void setSecurityContext(SecurityContext context) {
+		this.context = context;
+	}
+	
 	/**
 	 * Set how many submissions should be processed at one time when operating
 	 * in batch mode. This effects the amount of memory required when depositing
@@ -152,6 +177,7 @@ public class DepositServiceImpl implements DepositService{
 		public final SearchFilter filter;
 		public final State successState;
 		public final boolean throwErrors;
+		public final Long personId;
 		
 		
 		/**
@@ -180,6 +206,20 @@ public class DepositServiceImpl implements DepositService{
 			this.successState = successState;
 			this.throwErrors = throwErrors;
 			
+			if (context.getPerson() != null) {
+				
+				if (!context.isReviewer())
+					throw new SecurityException("Not authorized to preform deposit operation.");
+				
+				this.personId = context.getPerson().getId();
+			} else {
+				
+				if (!context.isAuthorizationActive())
+					throw new SecurityException("Not authorized to preform deposit operation.");
+
+				this.personId = null;
+			}
+			
 			jobQueue.add(this);
 		}
 
@@ -203,6 +243,20 @@ public class DepositServiceImpl implements DepositService{
 			this.successState = successState;
 			this.throwErrors = false;
 			
+			if (context.getPerson() != null) {
+				
+				if (!context.isReviewer())
+					throw new SecurityException("Not authorized to preform deposit operation.");
+				
+				this.personId = context.getPerson().getId();
+			} else {
+				
+				if (!context.isAuthorizationActive())
+					throw new SecurityException("Not authorized to preform deposit operation.");
+
+				this.personId = null;
+			}
+			
 			jobQueue.add(this);
 		}
 		
@@ -214,37 +268,59 @@ public class DepositServiceImpl implements DepositService{
 		 * there are no more submissions left. Alternatively in the single mode
 		 * the one submission is deposited.
 		 */
-		public void doJob() {			
-			if (submission == null) {
-				// This is the complex case, we're depositing a batch of items.
-				int offset = 0;
+		public void doJob() {	
+			
+			if (this.personId != null) {
+				Person person = personRepo.findPerson(personId);
+				if (person == null)
+					throw new IllegalStateException("Unable to complete deposit job because person no longer exists.");
 				
-				SearchResult<Submission> results = null;
-				do {
-					// Get the next batch of submissions.
-					results = searcher.submissionSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, offset, submissionsPerBatch);
-					 
-					// Deposit them one-by-one.
-					for (Submission submission : results.getResults()) {
-						// Deposit the submission
-						depositSubmission(submission);
-					}
-					
-					// Calculate the next offset.
-					offset = offset + results.getResults().size();
-					
-					// Commit the transaction and detach all the submissions.
-					JPA.em().getTransaction().commit();
-					JPA.em().clear();
-					JPA.em().getTransaction().begin();					
-				} while ( results.getResults().size() != 0 );
-				
+				// Log the person in for this job.
+				context.login(person);
 			} else {
-				// This is the simple case, just deposit this one item.
-				depositSubmission(submission);				
+				context.turnOffAuthorization();
+			}
+			
+			try {
+				if (submission == null) {
+					// This is the complex case, we're depositing a batch of items.
+					int offset = 0;
+					
+					SearchResult<Submission> results = null;
+					do {
+						// Get the next batch of submissions.
+						results = searcher.submissionSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, offset, submissionsPerBatch);
+						 
+						// Deposit them one-by-one.
+						for (Submission submission : results.getResults()) {
+							// Deposit the submission
+							depositSubmission(submission);
+						}
+						
+						// Calculate the next offset.
+						offset = offset + results.getResults().size();
+						
+						// Commit the transaction and detach all the submissions.
+						JPA.em().getTransaction().commit();
+						JPA.em().clear();
+						JPA.em().getTransaction().begin();					
+					} while ( results.getResults().size() != 0 );
+					
+				} else {
+					// This is the simple case, just deposit this one item.
+					depositSubmission(submission);				
+				}
+			
+			} finally {
+				if (this.personId != null) {
+					context.logout();
+				} else {
+					context.restoreAuthorization();
+				}
 			}
 			
 			jobQueue.remove(this);
+			
 		}
 
 		/**

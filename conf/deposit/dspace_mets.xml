@@ -239,12 +239,12 @@
                         ${ liftDate.format("yyyy-MM-dd") }
                     </dim:field>
                     <dim:field mdschema="dc" element="description" qualifier="provenance">
-                        Submission published under a ${sub.getEmbargoType().getDuration() } month embargo labeled '${ sub.getEmbargoType.getName() }', the embargo will last until ${ liftDate.format("yyyy-MM-dd") }
+                        Submission published under a ${sub.getEmbargoType().getDuration() } month embargo labeled '${ sub.getEmbargoType().getName() }', the embargo will last until ${ liftDate.format("yyyy-MM-dd") }
                     </dim:field>
                     #{/elseif} 
                     #{else} 
                     <dim:field mdschema="dc" element="description" qualifier="provenance">
-                        Submission original under the a zero month embargo labeled '${ sub.getEmbargoType.getName() }'.
+                        Submission original under the a zero month embargo labeled '${ sub.getEmbargoType().getName() }'.
                     </dim:field>
                     #{/else}
 

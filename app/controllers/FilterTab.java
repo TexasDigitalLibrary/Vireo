@@ -6,7 +6,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.tdl.vireo.deposit.DepositService;
 import org.tdl.vireo.model.ActionLog;
+import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
@@ -38,6 +40,10 @@ import play.mvc.With;
 @With(Authentication.class)
 public class FilterTab extends AbstractVireoController {
 
+	// Service to handle batch deposits
+	public static DepositService depositService = Spring.getBeanOfType(DepositService.class);
+
+	
 	// Store the cookie and session names in an easy to lookup two dimensional
 	// array, so that modifySearch() and modifyFilter() can be easily coded to
 	// support both sets of names. This allows you to do:
@@ -190,6 +196,19 @@ public class FilterTab extends AbstractVireoController {
 	    // Add ASCENDING and DECENDING to the view
 		renderArgs.put(SearchDirection.ASCENDING.name(), SearchDirection.ASCENDING);
 		renderArgs.put(SearchDirection.DESCENDING.name(), SearchDirection.DESCENDING);
+		
+		// All the published states
+		List<State> publishStates = new ArrayList<State>();
+		for (State state : stateManager.getAllStates()) {
+			if (state.isDepositable())
+				publishStates.add(state);
+		}
+		renderArgs.put("publishStates", publishStates);
+		
+		// Get all the deposit locations
+		List<DepositLocation> depositLocations = settingRepo.findAllDepositLocations();
+		renderArgs.put("depositLocations", depositLocations);
+
 		
 		render(nav, allFilters, activeFilter, results, orderby, columns, facets, direction, resultsPerPage);
 	}
@@ -558,6 +577,45 @@ public class FilterTab extends AbstractVireoController {
 			log();
 		
 		error("Unknown customize filter navigation control type");
+	}
+	
+	/**
+	 * Deposit and Publish a batch of submissions. After kicking off a
+	 * background process the user will be redirected back to the list page.
+	 * 
+	 * @param depositLocationId
+	 *            The id of the location these submissions should be deposited
+	 *            into.
+	 * @param successState
+	 *            The state these should be transitioned into if successful.
+	 *            (optional)
+	 */
+	@Security(RoleType.REVIEWER) 
+	public static void batchDepositAndPublish(Long depositLocationId, String successState) {
+
+		// Step 1, get the current filter
+		ActiveSearchFilter filter = Spring.getBeanOfType(ActiveSearchFilter.class);
+		Cookie filterCookie = request.cookies.get(NAMES[SUBMISSION][ACTIVE_FILTER]);
+		if (filterCookie != null && filterCookie.value != null && filterCookie.value.trim().length() > 0) {
+			try {
+				filter.decode(filterCookie.value);
+			} catch (RuntimeException re) {
+				Logger.warn(re,"Unable to decode search filter: "+filterCookie.value);
+			}
+		}
+		
+		// Step 2, Lookup the location.
+		DepositLocation location = settingRepo.findDepositLocation(depositLocationId);
+		
+		// Step 3, Resolve the state.
+		State successStateObject = null;
+		if (successState != null && successState.length() > 0)
+			successStateObject = stateManager.getState(successState);
+		
+		// Kick off the batch
+		depositService.deposit(location, filter, successStateObject);
+		
+		list();
 	}
 	
 	/**

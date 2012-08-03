@@ -234,3 +234,50 @@ jQuery(document).ready(function() {
         </div>
     </form>
 </div>
+
+#{if "list".equals(nav) } 
+<div class="modal hide fade" id="batch-deposit-modal">
+    <form id="customize-search-form" action="@{FilterTab.batchDepositAndPublish()}" method="POST" class="form-horizontal">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>Batch Deposit & Publish</h3>
+        </div>
+        <div class="modal-body">
+            <p>This batch operation will attempt to deposit all the submissions selected by the currently active filter. 
+            If the deposit is successful then the submissions will be transition to the publish state selected below. If
+            the deposit fails for any reason the submission will remain in it's current state.</p>
+            
+            <p>This operation may take quite some time depending on how many submissions are currently selected. You will
+            be returned to the filter list tab where you may continue to use the site.</p>
+            
+            <fieldset>
+                <div class="control-group">
+                    <label class="control-label" for="depositLocationId"><strong>Deposit Location</strong>:</label>
+                    <div class="controls">
+                        <select class="input-xlarge" name="depositLocationId" id="depositLocationId">
+                            #{list items:depositLocations, as:'location'}
+                                <option value="${location.getId() }">${location.getName()}</option>
+                            #{/list}
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="depositLocation-name"><strong>Next State</strong>:</label>
+                    <div class="controls">
+                        <select class="input-xlarge" name="successState" id="successState">
+                            <option value="">Leave in current state</option>
+                            #{list items:publishStates, as:'state'}
+                                <option value="${state.getBeanName() }">${state.getDisplayName()}</option>
+                            #{/list}
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <input type="submit" class="btn btn-primary" name="submit_save" value="Deposit & Publish"/>
+        </div>
+    </form>
+</div>
+#{/if} 
