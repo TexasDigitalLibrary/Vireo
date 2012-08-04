@@ -2,7 +2,7 @@
 	#{list items:0..4, as:'value'}
 		#{if actionLogs[value]}
 		<tr>
-			<td>${actionLogs[value].getPerson().getFirstName()} ${actionLogs[value].getPerson().getLastName()}</td>
+			<td>${actionLogs[value].getPerson()?.getFirstName()} ${actionLogs[value].getPerson()?.getLastName()}</td>
 			<td>${actionLogs[value].getEntry()}</td>
 			<td>${actionLogs[value].getActionDate()?.format("MM/dd/yyyy hh:mm:ss")}</td>
 		</tr>

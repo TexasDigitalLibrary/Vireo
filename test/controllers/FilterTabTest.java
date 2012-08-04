@@ -6,14 +6,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.junit.Test;
+import org.tdl.vireo.deposit.DepositService;
+import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.NamedSearchFilter;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.SettingsRepository;
+import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionRepository;
 import org.tdl.vireo.model.jpa.JpaEmailTemplateImpl;
+import org.tdl.vireo.search.Indexer;
 import org.tdl.vireo.search.SearchDirection;
 import org.tdl.vireo.search.SearchFacet;
 import org.tdl.vireo.search.SearchOrder;
@@ -40,6 +44,8 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 	public static PersonRepository personRepo = Spring.getBeanOfType(PersonRepository.class);
 	public static SubmissionRepository subRepo = Spring.getBeanOfType(SubmissionRepository.class);
 	public static SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
+	public static DepositService depositService = Spring.getBeanOfType(DepositService.class);
+	public static Indexer indexer = Spring.getBeanOfType(Indexer.class);
 	
 	/**
 	 * Test that we can remove and add each type of parameter (except for the
@@ -608,4 +614,61 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 	}
 	
 	
+	/**
+	 * Test doing a batch deposit.
+	 */
+	@Test
+	public void testDpositAndPublish() throws InterruptedException {
+
+		context.turnOffAuthorization();
+		
+		// Login as an administrator
+		LOGIN();
+
+
+		// Get our URLS
+		Map<String,Object> routeArgs = new HashMap<String,Object>();
+		routeArgs.put("nav", "list");
+
+		final String LIST_URL = Router.reverse("FilterTab.list").url;
+		final String FILTER_URL = Router.reverse("FilterTab.modifyFilters",routeArgs).url;
+		final String DEPOSIT_URL = Router.reverse("FilterTab.batchDepositAndPublish").url;
+
+		DepositLocation location = settingRepo.findAllDepositLocations().get(0);
+		Person person = personRepo.findPersonByEmail("bthornton@gmail.com");
+		Submission sub = subRepo.createSubmission(person);
+		sub.setDocumentTitle("Deposit test");
+		sub.setDegree("Degree Deposit");
+		sub.save();
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		indexer.commit(true);
+		
+		// Filter for "Degree Deposit"
+		GET(FILTER_URL+"?action=add&type=degree&value=Degree+Deposit");
+		
+		// Do the batch publish
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("depositLocationId",String.valueOf(location.getId()));
+		params.put("successState","");
+		Response response = POST(DEPOSIT_URL,params);
+		
+		assertHeaderEquals("Location", LIST_URL, response);
+		
+		// Wait for the deposit to finish.
+		while (depositService.isDepositRunning() || indexer.isJobRunning()) {
+			Thread.yield();
+		}
+		
+		// Check that the submission had a deposit id set.
+		JPA.em().clear();
+		sub = subRepo.findSubmission(sub.getId());
+		assertNotNull(sub.getDepositId());
+		sub.delete();
+		
+		context.restoreAuthorization();
+	}
+
 }

@@ -54,7 +54,7 @@ public class DepositServiceImpl implements DepositService{
 	public int submissionsPerBatch = 10;
 	
 	// List of currently scheduled deposit jobs
-	public Set<DepositJob> jobQueue = Collections.synchronizedSet(new HashSet<DepositJob>()); 
+	public static Set<DepositJob> jobQueue = Collections.synchronizedSet(new HashSet<DepositJob>()); 
 
 	/**
 	 * @param searcher
@@ -269,58 +269,63 @@ public class DepositServiceImpl implements DepositService{
 		 * the one submission is deposited.
 		 */
 		public void doJob() {	
-			
-			if (this.personId != null) {
-				Person person = personRepo.findPerson(personId);
-				if (person == null)
-					throw new IllegalStateException("Unable to complete deposit job because person no longer exists.");
-				
-				// Log the person in for this job.
-				context.login(person);
-			} else {
-				context.turnOffAuthorization();
-			}
-			
 			try {
-				if (submission == null) {
-					// This is the complex case, we're depositing a batch of items.
-					int offset = 0;
-					
-					SearchResult<Submission> results = null;
-					do {
-						// Get the next batch of submissions.
-						results = searcher.submissionSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, offset, submissionsPerBatch);
-						 
-						// Deposit them one-by-one.
-						for (Submission submission : results.getResults()) {
-							// Deposit the submission
-							depositSubmission(submission);
-						}
-						
-						// Calculate the next offset.
-						offset = offset + results.getResults().size();
-						
-						// Commit the transaction and detach all the submissions.
-						JPA.em().getTransaction().commit();
-						JPA.em().clear();
-						JPA.em().getTransaction().begin();					
-					} while ( results.getResults().size() != 0 );
-					
-				} else {
-					// This is the simple case, just deposit this one item.
-					depositSubmission(submission);				
-				}
-			
-			} finally {
 				if (this.personId != null) {
-					context.logout();
+					Person person = personRepo.findPerson(personId);
+					if (person == null)
+						throw new IllegalStateException("Unable to complete deposit job because person no longer exists.");
+					
+					// Log the person in for this job.
+					context.login(person);
 				} else {
-					context.restoreAuthorization();
+					context.turnOffAuthorization();
 				}
+	
+				try {
+					if (submission == null) {
+						// This is the complex case, we're depositing a batch of items.
+						int offset = 0;
+						
+						SearchResult<Submission> results = null;
+						do {
+	
+							// Get the next batch of submissions.
+							results = searcher.submissionSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, offset, submissionsPerBatch);
+							 
+	
+							// Deposit them one-by-one.
+							for (Submission submission : results.getResults()) {
+								// Deposit the submission
+								depositSubmission(submission);
+							}
+							
+							// Calculate the next offset.
+							offset = offset + results.getResults().size();
+							
+							// Commit the transaction and detach all the submissions.
+							JPA.em().getTransaction().commit();
+							JPA.em().clear();
+							JPA.em().getTransaction().begin();					
+						} while ( results.getResults().size() != 0 );
+						
+					} else {
+						// This is the simple case, just deposit this one item.
+						depositSubmission(submission);				
+					}
+				
+				} finally {
+					if (this.personId != null) {
+						context.logout();
+					} else {
+						context.restoreAuthorization();
+					}
+				}
+				
+				jobQueue.remove(this);
+			} catch (RuntimeException re) {
+				Logger.fatal(re,"Unexepcted exception while attempting to deposit items. Aborted.");
+				throw re;
 			}
-			
-			jobQueue.remove(this);
-			
 		}
 
 		/**
@@ -350,7 +355,7 @@ public class DepositServiceImpl implements DepositService{
 					submission.setState(successState);
 				submission.save();
 				
-				Logger.info("Deposited submissions #"+submission.getId()+" into repository: '"+location.getRepository()+"', collection: '"+location.getCollection()+"'.");
+				Logger.info("Deposited submissions #"+submission.getId()+" into repository: '"+location.getRepository()+"', collection: '"+location.getCollection()+"', and assigned depositId: '"+depositId+"'.");
 				
 			} catch (RuntimeException re) {
 				Logger.error(re,"Deposit failed for submission #"+submission.getId());
