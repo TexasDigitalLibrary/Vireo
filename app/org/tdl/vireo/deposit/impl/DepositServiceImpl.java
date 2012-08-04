@@ -17,6 +17,7 @@ import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.model.SubmissionRepository;
 import org.tdl.vireo.search.SearchDirection;
 import org.tdl.vireo.search.SearchFilter;
 import org.tdl.vireo.search.SearchOrder;
@@ -43,6 +44,9 @@ public class DepositServiceImpl implements DepositService{
 
 	// The repository of people
 	public PersonRepository personRepo;
+	
+	// The submission repository
+	public SubmissionRepository subRepo;
 	
 	// The searcher used to find submissions in a batch.
 	public Searcher searcher;
@@ -71,6 +75,14 @@ public class DepositServiceImpl implements DepositService{
 	 */
 	public void setPersonRepository(PersonRepository repo) {
 		this.personRepo = repo;
+	}
+	
+	/**
+	 * @param repo
+	 *            The submission repository
+	 */
+	public void setSubmissionRepository(SubmissionRepository repo) {
+		this.subRepo = repo;
 	}
 
 	/**
@@ -268,8 +280,10 @@ public class DepositServiceImpl implements DepositService{
 		 * there are no more submissions left. Alternatively in the single mode
 		 * the one submission is deposited.
 		 */
-		public void doJob() {	
+		public void doJob() {
 			try {
+				JPA.em().clear();
+
 				if (this.personId != null) {
 					Person person = personRepo.findPerson(personId);
 					if (person == null)
@@ -281,50 +295,51 @@ public class DepositServiceImpl implements DepositService{
 					context.turnOffAuthorization();
 				}
 	
-				try {
-					if (submission == null) {
-						// This is the complex case, we're depositing a batch of items.
-						int offset = 0;
+				if (submission == null) {
+					// This is the complex case, we're depositing a batch of items.
+					int offset = 0;
+					
+					SearchResult<Submission> results = null;
+					do {
+
+						// Get the next batch of submissions.
+						results = searcher.submissionSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, offset, submissionsPerBatch);
+						 
+
+						// Deposit them one-by-one.
+						for (Submission submission : results.getResults()) {
+							// Deposit the submission
+							depositSubmission(submission);
+						}
 						
-						SearchResult<Submission> results = null;
-						do {
-	
-							// Get the next batch of submissions.
-							results = searcher.submissionSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, offset, submissionsPerBatch);
-							 
-	
-							// Deposit them one-by-one.
-							for (Submission submission : results.getResults()) {
-								// Deposit the submission
-								depositSubmission(submission);
-							}
-							
-							// Calculate the next offset.
-							offset = offset + results.getResults().size();
-							
-							// Commit the transaction and detach all the submissions.
-							JPA.em().getTransaction().commit();
-							JPA.em().clear();
-							JPA.em().getTransaction().begin();					
-						} while ( results.getResults().size() != 0 );
+						// Calculate the next offset.
+						offset = offset + results.getResults().size();
 						
-					} else {
-						// This is the simple case, just deposit this one item.
-						depositSubmission(submission);				
-					}
-				
-				} finally {
-					if (this.personId != null) {
-						context.logout();
-					} else {
-						context.restoreAuthorization();
-					}
+						// Commit the transaction and detach all the submissions.
+						JPA.em().getTransaction().commit();
+						JPA.em().clear();
+						JPA.em().getTransaction().begin();					
+					} while ( results.getResults().size() != 0 );
+					
+				} else {
+					// This is the simple case, just deposit this one item.
+					Submission submission = this.submission.merge();
+					depositSubmission(submission);				
 				}
+				
 				
 				jobQueue.remove(this);
 			} catch (RuntimeException re) {
 				Logger.fatal(re,"Unexepcted exception while attempting to deposit items. Aborted.");
 				throw re;
+				
+			} finally {
+				// Clean up the security context
+				if (this.personId != null) {
+					context.logout();
+				} else {
+					context.restoreAuthorization();
+				}
 			}
 		}
 

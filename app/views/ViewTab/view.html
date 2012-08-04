@@ -93,14 +93,39 @@ jQuery(document).ready(function(){
 	 * Special Value Event
 	 */
 	 jQuery(".special-value").live("click", function(){
+		 
+		var form = jQuery(this).closest("form");
+		var value = jQuery(this).attr("id");
+		 
+		// Confirm before deleting
 		if(jQuery(this).hasClass("deleteState")) {
 			jQuery(this).text("(Are you sure?)");
 			jQuery(this).removeClass("deleteState");
-		} else {
-		 var form = jQuery(this).closest("form");
-		 var value = jQuery(this).attr("id");
-		 assignSpecialValueAndSubmit(form, value);
+			return false;
+		} 
+
+		// Check if we need to ask for a deposit location before submitting
+		if (jQuery(this).hasClass("ask-for-deposit-location") &&
+		    jQuery("#select-depositLocation").is(':hidden')) {
+
+			jQuery("#select-depositLocation").slideToggle();
+			return false;
 		}
+		
+		// If this is jump to any transition, check if we need to ask for a deposit location.
+		if (jQuery(this).is("#transition-jump")) {
+			value = jQuery("select[name='submission-status']").val();
+			var option = jQuery("select[name='submission-status'] option[value='"+value+"']");
+			if (option.hasClass("ask-for-deposit-location") &&
+				jQuery("#select-depositLocation").is(':hidden')) {
+				
+				jQuery("#select-depositLocation").slideToggle();
+				return false;
+			}
+		}
+
+		assignSpecialValueAndSubmit(form, value);
+
 	 });
 	
 	/**
@@ -116,6 +141,24 @@ jQuery(document).ready(function(){
 	 jQuery("#add-comment-modal input[name='visibility']").live("click", toggleAddCommentEmailOptions());
 	 jQuery("#add-comment-modal input[name='email_student']").live("click", toggleCarbonCopyAdvisor());
 	
+	 
+	 
+	 jQuery(".state-transition.btn-success").live("click",function () {
+		 
+		 // Check if there are more than one deposit location.
+		 if (jQuery("#select-depositLocation").length > 0) {
+			 // Check if we have asked for it yet.
+			 if (jQuery("#select-depositLocation").hasClass('hide')) {
+				 // Show the option if not.
+				 jQuery("#select-depositLocation").slideToggle();
+				 
+				 return false;
+			 } 
+		 }
+		 
+		 // All other cases we just submit the form.
+	 });
+	 
 });
 </script>
 #{/set}

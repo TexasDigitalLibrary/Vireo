@@ -10,22 +10,42 @@
             <div style="padding-bottom:15px;">
             <h3>Current Transitions</h3>
             #{list items:transitions, as:'state'}
-            	<a id="${state.getBeanName()}" class="btn special-value 
+            	<a id="${state.getBeanName()}" class="btn special-value
             	#{if state.isDepositable()}
-            		 btn-success
+            		 btn-success 
+            		 #{if depositLocations.size() > 1}
+            		 	ask-for-deposit-location
+            		 #{/if}
             	#{/if}
             	">${state.getDisplayName()}</a>
             #{/list}
             </div>
             
+            #{if depositLocations.size() > 1}
+	            <div id="select-depositLocation" class="control-group error hidden">
+	        		<p><strong>Deposit location:</strong> 
+		            <select class="input-xlarge" name="depositLocationId" id="depositLocationId">
+		                #{list items:depositLocations, as:'location'}
+		                    <option value="${location.getId() }">${location.getName()}</option>
+		                #{/list}
+		            </select>
+		            </p>
+	            </div>
+            #{/if}
+            #{elseif depositLocations.size() == 1}
+            	<input type="hidden" name="depositLocationId" value="${depositLocations.get(0).getId()}"/>
+            #{/elseif}
+            
             <h3>Advanced Options</h3>            
             <select name="submission-status">
             	#{list items:states, as:'state'}
-            		<option value="${state.getBeanName()}" #{if submission.getState()==state}selected="selected"#{/if}>${state.getDisplayName()}</option>
+            		<option value="${state.getBeanName()}" 
+            			#{if submission.getState()==state}selected="selected"#{/if} 
+            			#{if state.isDepositable() && depositLocations.size() > 1} class="ask-for-deposit-location" #{/if}>${state.getDisplayName()}</option>
             	#{/list}            	
             </select>
             <input type="hidden" name="special_value" value="" />
-            <input type="submit" class="btn btn-primary" name="submit_save" value="Save"/>
+            <input type="submit" id="transition-jump" class="btn btn-primary special-value" name="submit_save" value="Save"/>
             
             <div style="padding-top:15px;">
            		#{if submission.getState().isDeletable()}

@@ -3,6 +3,7 @@ package controllers;
 import play.Logger;
 import play.mvc.Controller;
 
+import org.tdl.vireo.deposit.DepositService;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.CommitteeMember;
@@ -11,6 +12,7 @@ import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.Department;
+import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmbargoType;
@@ -45,6 +47,8 @@ import javax.mail.internet.InternetAddress;
 @With(Authentication.class)
 public class ViewTab extends AbstractVireoController {
 
+	public static DepositService depositService = Spring.getBeanOfType(DepositService.class);
+	
 	/**
 	 * The main view method.
 	 */
@@ -79,7 +83,9 @@ public class ViewTab extends AbstractVireoController {
 		List<State> transitions = submission.getState().getTransitions(submission);
 		List<CustomActionValue> actionValues = submission.getCustomActions();
 				
-		List<Person> assignees = personRepo.findPersonsByRole(RoleType.REVIEWER);		
+		List<Person> assignees = personRepo.findPersonsByRole(RoleType.REVIEWER);	
+		
+		List<DepositLocation> depositLocations = settingRepo.findAllDepositLocations();
 
 		String nav = "view";
 		render(	nav,
@@ -93,7 +99,8 @@ public class ViewTab extends AbstractVireoController {
 				transitions, 
 				templates, 
 				actions, 
-				actionValues
+				actionValues,
+				depositLocations
 				);
 	}
 
@@ -482,7 +489,7 @@ public class ViewTab extends AbstractVireoController {
 	 */
 	
 	@Security(RoleType.REVIEWER)
-	public static void changeSubmissionStatus(Long id){
+	public static void changeSubmissionStatus(Long id) {
 
 		String beanName = params.get("submission-status");
 		
@@ -502,6 +509,16 @@ public class ViewTab extends AbstractVireoController {
 			} else {
 				state = stateManager.getState(beanName);
 			}
+			
+			Long depositLocationId = params.get("depositLocationId", Long.class);
+			if (state.isDepositable() && depositLocationId != null) {
+				// Deposit the item
+				DepositLocation location = settingRepo.findDepositLocation(depositLocationId);
+				depositService.deposit(location, submission, state, true);
+				view();
+			}
+			
+			// Normal state transition, update & save.
 			submission.setState(state);
 			submission.save();
 			view();
