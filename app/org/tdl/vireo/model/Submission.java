@@ -156,6 +156,11 @@ public interface Submission extends AbstractModel {
 	public Attachment addAttachment(File file, AttachmentType type) throws IOException;
 
 	/**
+	 * @return The specific attachment
+	 */
+	public Attachment findAttachmentById(Long id);
+	
+	/**
 	 * 
 	 * @return The a list of all committee mebers associated with this submission.
 	 */

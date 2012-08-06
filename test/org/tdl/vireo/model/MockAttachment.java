@@ -1,6 +1,7 @@
 package org.tdl.vireo.model;
 
 import java.io.File;
+import java.util.Date;
 
 import org.tdl.vireo.model.jpa.JpaSubmissionImpl;
 
@@ -22,6 +23,8 @@ public class MockAttachment extends AbstractMock implements Attachment {
 	public Submission submission;
 	public String name;
 	public AttachmentType type;
+	public Person person;
+	public Date date;
 	public String mimeType;
 	public File file;
 	public long fileSize;
@@ -94,6 +97,16 @@ public class MockAttachment extends AbstractMock implements Attachment {
 	@Override
 	public File getFile() {
 		return file;
+	}
+
+	@Override
+	public Person getPerson() {
+		return person;
+	}
+
+	@Override
+	public Date getDate() {
+		return date;
 	}
 
 }

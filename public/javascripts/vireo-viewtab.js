@@ -552,11 +552,24 @@ function toggleAddCommentEmailOptions(){
  */
 function toggleCarbonCopyAdvisor(){
 	return function(){
-		if(jQuery("#add-comment-modal input[name='email_student']:checked").length){
-			jQuery("#add-comment-modal input[name='cc_advisor']").removeAttr("disabled");
+		var parent = jQuery(this).parents(".emailCarbon").first();
+		if(parent.find("input[name='email_student']:checked").length){
+			parent.find("input[name='cc_advisor']").removeAttr("disabled");
 		} else {
-			jQuery("#add-comment-modal input[name='cc_advisor']").removeAttr("checked");
-			jQuery("#add-comment-modal input[name='cc_advisor']").attr("disabled","true");
+			parent.find("input[name='cc_advisor']").removeAttr("checked");
+			parent.find("input[name='cc_advisor']").attr("disabled","true");
 		}
+	}
+}
+
+/**
+ * Function to toggle the add file options.
+ */
+function toggleFileOptions(){
+	return function(){
+		var value = jQuery("#add-file-modal input[name='uploadType']:checked").val();
+		var container = jQuery(this).next(".fileContainer");
+		jQuery(".fileContainer").slideUp(500);		
+		container.slideDown(500);				
 	}
 }

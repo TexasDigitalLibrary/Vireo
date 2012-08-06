@@ -11,8 +11,8 @@
 	<tr>
 		<td class="comments"><a href="@{FilterTab.log()}"><b>[more...]</b></a></td>
 		<td class="comments tr" colspan="2">
-			<a href="#add-comment-modal" data-toggle="modal">
-				<button class="btn btn-small">Add Comment</button>
+			<a href="#add-comment-modal" data-toggle="modal" class="btn btn-mini">
+				Add Comment
 			</a>
 		</td>
 	</tr>

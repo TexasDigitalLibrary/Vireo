@@ -139,7 +139,12 @@ jQuery(document).ready(function(){
 	 * Add Comment Disable/Enable Events
 	 */
 	 jQuery("#add-comment-modal input[name='visibility']").live("click", toggleAddCommentEmailOptions());
-	 jQuery("#add-comment-modal input[name='email_student']").live("click", toggleCarbonCopyAdvisor());
+	 jQuery("input[name='email_student']").live("click", toggleCarbonCopyAdvisor());
+	 
+	/**
+	 * Add File Events
+	 */
+	 jQuery("#add-file-modal input[name='uploadType']").live("change", toggleFileOptions());
 	
 	 
 	 
@@ -451,6 +456,7 @@ jQuery(document).ready(function(){
 			#{include 'ViewTab/actionLogTable.include' /}
 		</table>
 		
+		<a id="fileList"></a>
 		<h2>ALL FILES</h2>
 		<table class="table table-striped table-bordered table-condensed">
 			<thead>
@@ -464,14 +470,18 @@ jQuery(document).ready(function(){
 			<tbody>
 				#{list items:submission.getAttachments(), as:'attachment'}
 					<tr>
-						<td></td>
-						<td><a href="${attachment.getFile()}">${attachment.getName()}</a> (${attachment.getDisplaySize()})</td>
+						<td>${attachment.getPerson().getFirstName()} ${attachment.getPerson().getLastName()}</td>
+						<td><a href="@{ViewTab.viewFile(attachment.getId(), attachment.getName())}" target="_blank">${attachment.getName()}</a> (${attachment.getDisplaySize()})</td>
 						<td>${attachment.getType()}</td>
-						<td></td>
+						<td>${attachment.getDate()?.format("MM/dd/yyyy hh:mm:ss")}</td>
 					</tr>
 				#{/list}				
 				<tr>
-					<td colspan="4" class="comments tr"><button class="btn btn-small">Add File</button></td>
+					<td colspan="4" class="comments tr">
+					<a href="#add-file-modal" data-toggle="modal" class="btn btn-mini">
+						Add File
+					</a>
+					</td>
 				</tr>
 			</tbody>
 		</table>

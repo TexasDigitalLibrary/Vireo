@@ -5,6 +5,8 @@ import play.mvc.Controller;
 
 import org.tdl.vireo.deposit.DepositService;
 import org.tdl.vireo.model.ActionLog;
+import org.tdl.vireo.model.Attachment;
+import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.CommitteeMember;
 import org.tdl.vireo.model.Configuration;
@@ -29,6 +31,10 @@ import com.google.gson.Gson;
 import play.modules.spring.Spring;
 import play.mvc.With;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -644,6 +650,155 @@ public class ViewTab extends AbstractVireoController {
 		}
 		
 		submission.save();
+	}
+	
+	@Security(RoleType.REVIEWER)
+	public static void addFile(Long subId){
+
+		Submission sub = subRepo.findSubmission(subId);
+		String uploadType = params.get("uploadType");
+		
+		String fileName = null;
+		
+		if("note".equals(uploadType)){			
+			fileName = uploadNote(sub);
+		} else if("primary".equals(uploadType)){			
+			fileName = uploadPrimary(sub);
+		} else if("supplement".equals(uploadType)){
+			fileName = uploadSupplement(sub);			
+		}
+		
+		if(params.get("email_student") != null) {			
+			
+			EmailService emailService = Spring.getBeanOfType(EmailServiceImpl.class);
+			
+			String subject = "A file has been uploaded.";
+			String comment = "The file " + fileName + " has been uploaded.";
+						
+			//Setup Params
+			TemplateParameters emailParams = new TemplateParameters(sub);
+			
+			//Create list of recipients
+			List<String> recipients = new ArrayList<String>();
+			recipients.add(sub.getSubmitter().getCurrentEmailAddress());
+			
+			//Create list of carbon copies
+			List<String> carbonCopies = new ArrayList<String>();
+			if(params.get("cc_advisor") != null) {
+				carbonCopies.add(sub.getCommitteeContactEmail());
+			}
+			
+			String replyTo = context.getPerson().getCurrentEmailAddress();
+			
+			emailService.sendEmail(subject, comment, emailParams, recipients, replyTo, carbonCopies);
+		}
+		
+		if(params.get("needsCorrection") != null)
+			sub.setState(stateManager.getState("NeedsCorrection"));
+		
+		sub.save();
+		
+		view();
+	}
+	
+	@Security(RoleType.REVIEWER)
+	private static String uploadNote(Submission sub){
+		
+		File attachment = params.get("noteAttachment",File.class);
+		
+		if(attachment == null)
+			Logger.info("Doc is null");
+		else
+			Logger.info("Doc: " + attachment.getClass().getName());
+		
+		try{
+			Attachment thisAttachment = sub.addAttachment(attachment, AttachmentType.FEEDBACK);
+			thisAttachment.save();
+		} catch (IOException e) {
+			validation.addError("noteDocument","Error uploading note/feedback document.");
+		} catch (IllegalArgumentException e) {
+			validation.addError("noteDocument","Error uploading note/feedback document.");
+		}
+		
+		return attachment.getName();
+	}
+	
+	@Security(RoleType.REVIEWER)
+	private static String uploadSupplement(Submission sub){
+		
+		File attachment = params.get("supplementAttachment",File.class);
+		
+		if(attachment == null)
+			Logger.info("Doc is null");
+		else
+			Logger.info("Doc: " + attachment.getClass().getName());
+		
+		try{
+			Attachment thisAttachment = sub.addAttachment(attachment, AttachmentType.SUPPLEMENTAL);
+			thisAttachment.save();
+		} catch (IOException e) {
+			validation.addError("supplementDocument","Error uploading supplemental document.");
+		} catch (IllegalArgumentException e) {
+			validation.addError("supplementDocument","Error uploading supplemental document.");
+		}
+		
+		return attachment.getName();		
+	}
+	
+	@Security(RoleType.REVIEWER)
+	private static String uploadPrimary(Submission sub){
+		
+		File attachment = params.get("primaryAttachment",File.class);
+		
+		if(attachment == null)
+			Logger.info("Doc is null");
+		else
+			Logger.info("Doc: " + attachment.getClass().getName());
+		
+		if(attachment != null){
+			if(!attachment.getName().toLowerCase().endsWith(".pdf")) {
+				validation.addError("primaryDocument", "Primary document must be a PDF file.");
+				return attachment.getName();
+			}
+		}
+		
+		try{
+			Attachment currentAttachment = sub.getPrimaryDocument();
+			if(currentAttachment != null)
+				currentAttachment.delete();
+			
+			Attachment thisAttachment = sub.addAttachment(attachment, AttachmentType.PRIMARY);
+			thisAttachment.save();
+		} catch (IOException e) {
+			validation.addError("primaryDocument","Error uploading primary document.");
+		} catch (IllegalArgumentException e) {
+			validation.addError("primaryDocument","Error uploading primary document.");
+		}
+		
+		return attachment.getName();
+	}
+	
+	@Security(RoleType.REVIEWER)
+	public static void viewFile(Long id, String name){
+		
+		Long subId = null;
+		if(session.contains("submission")){
+			subId = Long.valueOf(session.get("submission"));
+		} else {
+			FilterTab.list();
+		}
+		
+		Submission sub = subRepo.findSubmission(subId);
+		
+		Attachment attachment = sub.findAttachmentById(id);
+		response.setContentTypeIfNotSet(attachment.getMimeType());
+		
+		try {
+			renderBinary( new FileInputStream(attachment.getFile()), attachment.getFile().length());
+		} catch (FileNotFoundException ex) {
+			error("File not found");
+		}
+		
 	}
 
 	/**

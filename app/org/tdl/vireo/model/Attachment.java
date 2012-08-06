@@ -1,6 +1,7 @@
 package org.tdl.vireo.model;
 
 import java.io.File;
+import java.util.Date;
 
 /**
  * A file attachment associated with a particular submission such as the primary
@@ -63,5 +64,15 @@ public interface Attachment extends AbstractModel {
 	 * @return The file.
 	 */
 	public File getFile();
+	
+	/**
+	 * @return The person that uploaded the attachment.
+	 */
+	public Person getPerson();
+	
+	/**
+	 * @return The date the attachment was uploaded.
+	 */
+	public Date getDate();
 
 }

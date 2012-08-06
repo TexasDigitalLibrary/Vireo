@@ -133,7 +133,7 @@
             		checked="true"
             		#{/if}
             		> Comment is public</input><br />
-            		<ul class="unstyled" style="padding-left:15px;" id="comment-email-options">
+            		<ul class="unstyled emailCarbon" style="padding-left:15px;" id="comment-email-options">
             			<li>
             				<input type="checkbox" name="email_student" class="checkbox"
             			#{if currentUser.getPreference("notes_mark_comment_as_private_by_default") == null}
@@ -175,6 +175,70 @@
 	<div class="modal-footer">
 			<a href="#" class="btn" data-dismiss="modal">Close</a>
 			<input type="submit" class="btn btn-primary" name="submit_save" value="Save"/> 
+		</form>                 
+	</div>
+    
+</div>
+
+<div class="modal hide fade" id="add-file-modal">
+	
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal">×</button>
+		<h3>Add File</h3>
+	</div>
+        
+	<div class="modal-body">
+		<form id="add-file-form" action="@{ViewTab.addFile(submission.getId())}" method="POST" class="form-horizontal" enctype="multipart/form-data">
+			<ul class="unstyled">
+				<li><input type="radio" class="radio" name="uploadType" value="note"> Attach a note or correction document</input>
+					<ul class="unstyled fileContainer" style="padding-left:15px; display:none;">
+						<li class="well">
+							Choose file: <input type="file" name="noteAttachment" />
+						</li>
+					</ul>
+				</li>
+				<li><input type="radio" class="radio" name="uploadType" value="primary"> Replace the primary document</input>
+					<ul class="unstyled fileContainer" style="padding-left:15px; display:none;">
+						<li class="well">
+							Choose file: <input type="file" name="primaryAttachment" />
+						</li>
+					</ul>
+				</li>
+				<li><input type="radio" class="radio" name="uploadType" value="supplement"> Manage supplementary documents</input>
+					<ul class="unstyled fileContainer" style="padding-left:15px; display:none;">
+						<li class="well">
+							<h4>Add a Supplemental File</h4>
+							Choose file: <input type="file" name="supplementAttachment" />
+						</li>
+					</ul>
+				</li>				
+				<li class="emailCarbon"><input type="checkbox" class="checkbox" name="email_student"
+				#{if currentUser.getPreference("attachment_email_student_by_default") != null}
+				 checked="true"
+				#{/if}
+				> Email the student</input>
+					<ul class="unstyled" style="padding-left:15px;">
+						<li><input type="checkbox" class="checkbox" name="cc_advisor"
+						#{if currentUser.getPreference("attachment_email_student_by_default") == null}
+							disabled="true"
+						#{/if}
+						#{else}#{if currentUser.getPreference("attachment_cc_student_advisor_by_default") != null}
+							checked="true"
+						#{/if}#{/else}
+						> CC student's advisor</input></li>
+					</ul>
+				</li>
+				<li><input type="checkbox" class="checkbox" name="needsCorrection" value="true"
+				#{if currentUser.getPreference("attachment_flag_submission_as_needs_corrections_by_default") != null}
+		         checked="true"
+		        #{/if}
+				> Flag submission as Needs Corrections</input></li>
+			</ul>
+	</div>
+	
+	<div class="modal-footer">
+			<a href="#" class="btn" data-dismiss="modal">Close</a>
+			<input type="submit" class="btn btn-primary" name="submit_save" value="Submit"/> 
 		</form>                 
 	</div>
     

@@ -675,8 +675,9 @@ public class Submit extends AbstractVireoController {
                 Logger.info("Doc: " + supplementaryDocument.getClass().getName());
 
             try {
-                sub.addAttachment(supplementaryDocument, AttachmentType.SUPPLEMENTAL);                                         
-                sub.save();
+            	Attachment thisAttachment = sub.addAttachment(supplementaryDocument, AttachmentType.SUPPLEMENTAL);                                         
+                thisAttachment.save();
+            	sub.save();
             } catch (IOException e) {
                 validation.addError("supplementaryDocument","Error uploading supplementary document.");
             } catch (IllegalArgumentException e) {

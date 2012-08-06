@@ -13,6 +13,7 @@ import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.state.StateManager;
 
+import play.Logger;
 import play.data.validation.Required;
 import play.db.jpa.Model;
 import play.modules.spring.Spring;
@@ -48,7 +49,7 @@ public class JpaCustomActionValueImpl extends JpaAbstractModel<JpaCustomActionVa
 	 */
 	protected JpaCustomActionValueImpl(Submission submission,
 			CustomActionDefinition definition, boolean value) {
-
+		
 		if (submission == null)
 			throw new IllegalArgumentException("Submission is required.");
 		
@@ -60,6 +61,13 @@ public class JpaCustomActionValueImpl extends JpaAbstractModel<JpaCustomActionVa
 		this.submission = submission;
 		this.definition = definition;
 		this.value = value;
+		
+		// Ignore the log message if the submission is in the initial state.
+		StateManager manager = Spring.getBeanOfType(StateManager.class);
+		if (manager.getInitialState() != submission.getState()) {			
+			String entry = "Custom action "+definition.getLabel()+" " + (value ? "set" : "unset");
+			submission.logAction(entry).save();
+		}
 	}
 
 	@Override
@@ -71,7 +79,7 @@ public class JpaCustomActionValueImpl extends JpaAbstractModel<JpaCustomActionVa
 		
 		// Ignore the log message if the submission is in the initial state.
 		StateManager manager = Spring.getBeanOfType(StateManager.class);
-		if (manager.getInitialState() != submission.getState()) {
+		if (manager.getInitialState() != submission.getState()) {			
 			String entry = "Custom action "+definition.getLabel()+" " + (value ? "set" : "unset");
 			submission.logAction(entry).save();
 		}

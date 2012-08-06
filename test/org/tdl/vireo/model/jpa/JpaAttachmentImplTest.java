@@ -91,6 +91,30 @@ public class JpaAttachmentImplTest extends UnitTest {
 	}
 	
 	/**
+	 * Test creating an attachment with an owner.
+	 */
+	@Test
+	public void testCreateAttachmentWithOwner() throws IOException {
+		
+		Person person = personRepo.createPerson("uploader", "uploader@email.com", "firstName", "lastName", RoleType.ADMINISTRATOR).save();		
+		context.logout();
+		context.login(person);
+		
+		File file = createRandomFile(10L);
+		
+		Attachment attachment = sub.addAttachment(file, AttachmentType.PRIMARY).save();
+		
+		assertEquals(person,attachment.getPerson());
+		assertNotNull(attachment.getDate());
+		
+		attachment.delete();
+		file.delete();
+		sub.delete();
+		sub = null;
+		person.delete();
+	}
+	
+	/**
 	 * Tests creating a bad attachment.
 	 */
 	@Test

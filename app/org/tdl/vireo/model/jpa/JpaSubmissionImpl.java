@@ -403,6 +403,15 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		attachments.add(attachment);
 		return attachment;
 	}
+	
+	@Override
+	public Attachment findAttachmentById(Long id){
+		for(Attachment attachment : attachments) {
+			if(id == attachment.getId())
+				return attachment;
+		}
+		return null;
+	}
 
 	@Override
 	public List<CommitteeMember> getCommitteeMembers() {
