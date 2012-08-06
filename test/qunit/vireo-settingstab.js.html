@@ -445,6 +445,31 @@ test("test applicationSettingsHandler AJAX", function() {
 });
 
 /**
+ * Test unlocking text area fields on the application settings tab.
+ */
+test("test applicationUnlockField", function() {
+	expect(3)
+	reset();
+	
+	//Setup
+	jQuery("body").append(
+		"<div class='span9'>"+
+	    "<p class='application-text-lock'><a id='link' href='#submit_instructions'><em class='icon-lock'></em> This field is locked to prevent accidental editing, click to unlock.</a></p>"+
+		"<textarea readonly='true' name='submit_instructions' id='submit_instructions' class='input-xxlarge application-text'>"+
+		"	content "+
+		"</textarea>"+
+		"</div>"
+	);
+	
+	jQuery("a#link").click(applicationUnlockField);
+	jQuery("a#link").click();
+	
+	equals(0,jQuery("textarea[readonly]").length);
+	equals(1,jQuery("textarea").length);
+	equals(0,jQuery(".application-text-lock a").length);
+});
+
+/**
  * Test searching though people
  */
 test("test memberSearchHandler AJAX", function() {

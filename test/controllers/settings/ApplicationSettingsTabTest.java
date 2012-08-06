@@ -185,6 +185,7 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 	
 		
 		// Check that all the fields are set.
+		JPA.em().clear();
 		assertNotNull(settingRepo.findConfigurationByName(SUBMIT_INSTRUCTIONS));
 		assertEquals("changed \"by test\"",settingRepo.findConfigurationByName(SUBMIT_INSTRUCTIONS).getValue());
 		

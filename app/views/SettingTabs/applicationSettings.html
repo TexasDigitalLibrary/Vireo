@@ -39,6 +39,10 @@ jQuery(document).ready(function(){
      jQuery("#members-table .member-editable").live("click",memberUpdateHandler('@{settings.ApplicationSettingsTab.updatePersonRole()}'));
      
      
+     // Lock the big text areas
+     jQuery(".application-text-lock a").click(applicationUnlockField);
+     
+     
 }) // document ready
 </script>
 #{/set}
@@ -56,13 +60,6 @@ jQuery(document).ready(function(){
 				</div>
 			</span>
 		</li>
-		<li id="currentSemester">
-			<label>Current submission semester:</label>
-			<span>
-			     <input name="${org.tdl.vireo.model.Configuration.CURRENT_SEMESTER}" class="application-text" type="text" value="${CURRENT_SEMESTER}" />
-			     <div class="info">'Month Year' (i.e. May ${ new Date().getYear() + 1900})</div>
-			</span>
-		</li>
 		<li>
 			<label>Allow multiple submissions:</label>
 			<span>
@@ -72,6 +69,28 @@ jQuery(document).ready(function(){
                 </div>
             </span>
 		</li>
+		<li id="currentSemester">
+			<label>Current submission semester:</label>
+			<span>
+			     <input name="${org.tdl.vireo.model.Configuration.CURRENT_SEMESTER}" class="application-text" type="text" value="${CURRENT_SEMESTER}" />
+			     <div class="info">'Month Year' (i.e. May ${ new Date().getYear() + 1900})</div>
+			</span>
+		</li>
+		<li id="currentSemester">
+			<label>Degree Granting School</label>
+			<span>
+			     <input name="${org.tdl.vireo.model.Configuration.GRANTOR}" class="application-text" type="text" value="${GRANTOR}" />
+			     <div class="info">The full name of the institution awarding degrees.</div>
+			</span>
+		</li>
+	</ul>
+</div>
+
+<h2>SUBMISSION QUESTIONS</h2>
+
+<div class="submissionAvailability wrap">
+	<ul class="unstyled">
+
 		<li>
             <label>Request student's birth year:</label>
             <span>
@@ -105,9 +124,23 @@ jQuery(document).ready(function(){
 <h2>SUBMISSION INSTRUCTIONS</h2>
 
 <div class="wrap">
-    <div class="span7">
-	<textarea rows="7" class="span7 application-text" name="${org.tdl.vireo.model.Configuration.SUBMIT_INSTRUCTIONS}">#{verbatim}${SUBMIT_INSTRUCTIONS}#{/verbatim}</textarea>
+    <div class="span9">
+    <p class="application-text-lock"><a href="#${org.tdl.vireo.model.Configuration.SUBMIT_INSTRUCTIONS}"><em class="icon-lock"></em> This field is locked to prevent accidental editing, click to unlock.</a></p>
+	<textarea class="input-xxlarge application-text" id="${org.tdl.vireo.model.Configuration.SUBMIT_INSTRUCTIONS}" name="${org.tdl.vireo.model.Configuration.SUBMIT_INSTRUCTIONS}" readonly="true">#{verbatim}${SUBMIT_INSTRUCTIONS}#{/verbatim}</textarea>
+
 	<p class="info">These instructions will be shown as part of the submission confirmation. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. Newlines are converted to paragraphs automatically.</p>
+	</div>
+	<div class="clear"></div>
+</div>
+
+<h2>SUBMISSION LICENSE</h2>
+
+<div class="wrap">
+    <div class="span9">
+    <p class="application-text-lock"><a href="#${org.tdl.vireo.model.Configuration.SUBMIT_LICENSE}"><em class="icon-lock"></em> This field is locked to prevent accidental editing, click to unlock.</a></p>
+	<textarea class="input-xxlarge application-text" id="${org.tdl.vireo.model.Configuration.SUBMIT_LICENSE}" name="${org.tdl.vireo.model.Configuration.SUBMIT_LICENSE}" readonly="true">#{verbatim}${SUBMIT_LICENSE}#{/verbatim}</textarea>
+		
+	<p class="info">Students are required to accept this license as part of their submission. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. Newlines are converted to paragraphs automatically.</p>
 	</div>
 	<div class="clear"></div>
 </div>

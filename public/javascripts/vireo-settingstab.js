@@ -991,6 +991,21 @@ function applicationSettingsHandler(jsonURL) {
 }
 
 /**
+ * Callback handler to unlock a text area field under the application settings
+ * tab. These fields have the "readonly" attribute set to prevent accedential
+ * editing. Clicking a link with this call back will remove the readonly
+ * attribute, and change the mesage to indicate that the field may now be
+ * edited.
+ */
+function applicationUnlockField() {
+	 var selector = jQuery(this).attr("href");
+	 jQuery(selector).removeAttr("readonly");
+	 jQuery(this).replaceWith("<em class='icon-pencil'></em> This field is unlocked and may be edited. Leaving the page will re-lock the field.");
+	 return false;
+}
+
+
+/**
  * Handler to search for new members within the "Add Member" dialog box. This
  * will perform the search and replace the dialog box's contents which new HTML
  * returned from the server. Note this same handler is used for both pagination

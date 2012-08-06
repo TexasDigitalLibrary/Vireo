@@ -39,6 +39,7 @@ public class ApplicationSettingsTab extends SettingsTab {
 		
 		renderArgs.put("SUBMISSIONS_OPEN", settingRepo.findConfigurationByName(SUBMISSIONS_OPEN));
 		renderArgs.put("ALLOW_MULTIPLE_SUBMISSIONS", settingRepo.findConfigurationByName(ALLOW_MULTIPLE_SUBMISSIONS));
+		
 		renderArgs.put("SUBMIT_REQUEST_BIRTH", settingRepo.findConfigurationByName(SUBMIT_REQUEST_BIRTH));
 		renderArgs.put("SUBMIT_REQUEST_COLLEGE", settingRepo.findConfigurationByName(SUBMIT_REQUEST_COLLEGE));
 		renderArgs.put("SUBMIT_REQUEST_UMI", settingRepo.findConfigurationByName(SUBMIT_REQUEST_UMI));
@@ -47,9 +48,17 @@ public class ApplicationSettingsTab extends SettingsTab {
 		if (currentSemester != null)
 			renderArgs.put("CURRENT_SEMESTER", currentSemester.getValue());
 
+		Configuration grantor = settingRepo.findConfigurationByName(GRANTOR);
+		if (grantor != null)
+			renderArgs.put("GRANTOR", grantor.getValue());
+		
 		Configuration submitInstructions = settingRepo.findConfigurationByName(SUBMIT_INSTRUCTIONS);
 		if (submitInstructions != null)
 			renderArgs.put("SUBMIT_INSTRUCTIONS", submitInstructions.getValue());
+		
+		Configuration submitLicense = settingRepo.findConfigurationByName(SUBMIT_LICENSE);
+		if (submitLicense != null)
+			renderArgs.put("SUBMIT_LICENSE", submitLicense.getValue());
 
 		
 		List<CustomActionDefinition> actions = settingRepo.findAllCustomActionDefinition();
@@ -91,7 +100,10 @@ public class ApplicationSettingsTab extends SettingsTab {
 			booleanFields.add(SUBMIT_REQUEST_UMI);
 			List<String> textFields = new ArrayList<String>();
 			textFields.add(CURRENT_SEMESTER);
+			textFields.add(GRANTOR);
 			textFields.add(SUBMIT_INSTRUCTIONS);
+			textFields.add(SUBMIT_LICENSE);
+
 			
 			
 			if (booleanFields.contains(field)) {

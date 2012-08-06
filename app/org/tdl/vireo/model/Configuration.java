@@ -32,6 +32,9 @@ public interface Configuration extends AbstractModel {
 	
 	/** Common configuration **/
 	
+	/** The degree awarding institution.  */
+	public final static String GRANTOR = "grantor";
+	
 	// Submission Settings
 	/** If defined then the student's birth year will be requested */
 	public final static String SUBMIT_REQUEST_BIRTH = "submit_request_birth";
@@ -44,7 +47,9 @@ public interface Configuration extends AbstractModel {
 	
 	/** Instructions show to uses after completing their submission */
 	public final static String SUBMIT_INSTRUCTIONS = "submit_instructions";
-	
+
+	/** The license students must agree to during submission  */
+	public final static String SUBMIT_LICENSE = "submit_license";
 	
 	// Application Settings
 	/** If defined then submissions are open, otherwise they are closed. **/
