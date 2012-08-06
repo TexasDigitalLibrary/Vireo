@@ -23,6 +23,7 @@
             
             #{if depositLocations.size() > 1}
 	            <div id="select-depositLocation" class="control-group error hidden">
+	                <p>Multiple deposit locations are defined. Please select a deposit location below where this submission should be sent to. Then try the submission again.</p>
 	        		<p><strong>Deposit location:</strong> 
 		            <select class="input-xlarge" name="depositLocationId" id="depositLocationId">
 		                #{list items:depositLocations, as:'location'}
