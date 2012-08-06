@@ -109,6 +109,7 @@ jQuery(document).ready(function(){
 		    jQuery("#select-depositLocation").is(':hidden')) {
 
 			jQuery("#select-depositLocation").slideToggle();
+			jQuery("select[name='submission-status']").val(value);
 			return false;
 		}
 		
