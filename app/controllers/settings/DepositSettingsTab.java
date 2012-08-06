@@ -292,6 +292,7 @@ public class DepositSettingsTab extends SettingsTab {
 			try {
 				testDepositId = submitTestItem(location);
 			} catch (RuntimeException re) {
+				Logger.warn(re,"Unable to submit test item.");
 				validation.addError("general", "Unable to submit test item because: "+re.getMessage());
 			}
 			

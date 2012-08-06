@@ -188,8 +188,10 @@ public class DepositServiceImpl implements DepositService{
 		public final Submission submission;
 		public final SearchFilter filter;
 		public final State successState;
-		public final boolean throwErrors;
+		public final boolean runInThread;
+		
 		public final Long personId;
+		public final boolean ignoreAuthorizations;
 		
 		
 		/**
@@ -203,33 +205,42 @@ public class DepositServiceImpl implements DepositService{
 		 * @param successState
 		 *            The state submissions should be set to if the deposit is
 		 *            successful.
-		 * @param throwErrors
-		 *            normally errors will be logged and a submission's status
-		 *            updated correctly. However sometimes you want the errors
-		 *            to be thrown for evaluation in the ui. For this case turn
-		 *            throwErrors on, then in addition logging and updating the
-		 *            status if an error is encountered it will be thrown.
+		 * @param runInThread
+		 *            Normally this job is expected to be run as a background
+		 *            job. However for some circumstances it is better to run
+		 *            the deposit in the same thread. When this is done, errors
+		 *            are re-thrown. This allows the UI to immediatly handle
+		 *            those errors instead of inspecting the submission's action
+		 *            log.
 		 */
 		public DepositJob(DepositLocation location, Submission submission,
-				State successState, boolean throwErrors) {
+				State successState, boolean runInThread) {
 			this.location = location;
 			this.submission = submission;
 			this.filter = null;
 			this.successState = successState;
-			this.throwErrors = throwErrors;
+			this.runInThread = runInThread;
 			
 			if (context.getPerson() != null) {
 				
 				if (!context.isReviewer())
 					throw new SecurityException("Not authorized to preform deposit operation.");
 				
-				this.personId = context.getPerson().getId();
+				if ( runInThread ) {
+					this.personId = null;
+					this.ignoreAuthorizations = false;
+				} else {
+					this.personId = context.getPerson().getId();
+					this.ignoreAuthorizations = false;
+				}
+				
 			} else {
 				
 				if (!context.isAuthorizationActive())
 					throw new SecurityException("Not authorized to preform deposit operation.");
 
 				this.personId = null;
+				this.ignoreAuthorizations = true;
 			}
 			
 			jobQueue.add(this);
@@ -253,7 +264,7 @@ public class DepositServiceImpl implements DepositService{
 			this.submission = null;
 			this.filter = filter;
 			this.successState = successState;
-			this.throwErrors = false;
+			this.runInThread = false;
 			
 			if (context.getPerson() != null) {
 				
@@ -261,12 +272,14 @@ public class DepositServiceImpl implements DepositService{
 					throw new SecurityException("Not authorized to preform deposit operation.");
 				
 				this.personId = context.getPerson().getId();
+				this.ignoreAuthorizations = false;
 			} else {
 				
 				if (!context.isAuthorizationActive())
 					throw new SecurityException("Not authorized to preform deposit operation.");
 
 				this.personId = null;
+				this.ignoreAuthorizations = true;
 			}
 			
 			jobQueue.add(this);
@@ -282,17 +295,18 @@ public class DepositServiceImpl implements DepositService{
 		 */
 		public void doJob() {
 			try {
-				JPA.em().clear();
 
-				if (this.personId != null) {
+				if (ignoreAuthorizations) {
+					context.turnOffAuthorization();
+				}
+				
+				if (!runInThread && personId != null) {
 					Person person = personRepo.findPerson(personId);
 					if (person == null)
 						throw new IllegalStateException("Unable to complete deposit job because person no longer exists.");
 					
 					// Log the person in for this job.
 					context.login(person);
-				} else {
-					context.turnOffAuthorization();
 				}
 	
 				if (submission == null) {
@@ -335,9 +349,10 @@ public class DepositServiceImpl implements DepositService{
 				
 			} finally {
 				// Clean up the security context
-				if (this.personId != null) {
+				if (!runInThread && personId != null) {
 					context.logout();
-				} else {
+				} 
+				if (ignoreAuthorizations) {
 					context.restoreAuthorization();
 				}
 			}
@@ -378,7 +393,7 @@ public class DepositServiceImpl implements DepositService{
 				log.save();
 				submission.save();
 				
-				if (throwErrors)
+				if (runInThread)
 					throw re;
 			} finally {
 				if (depositPackage != null)

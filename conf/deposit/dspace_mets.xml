@@ -23,14 +23,14 @@
                              if (sub.getStudentLastName() == null) {
                                 out.print("Unknown");
                              } else {
-                                out.print(sub.getStudentLastName());
+                                out.print(sub.getStudentLastName().escapeXml());
                                 if (sub.getStudentFirstName() == null || sub.getStudentLastName()) {
                                     out.print(", ");
                                     if (sub.getStudentFirstName() != null)
-                                        out.print(sub.getStudentFirstName());
+                                        out.print(sub.getStudentFirstName().escapeXml());
                                     out.print(" ");
                                     if (sub.getStudentMiddleName() != null)
-                                        out.print(sub.getStudentMiddleName());
+                                        out.print(sub.getStudentMiddleName().escapeXml());
                                 }
                              }
                              if (sub.getStudentBirthYear() != null) {
@@ -42,14 +42,14 @@
                     <!-- dc.title = Document Title -->
                     #{if sub.getDocumentTitle() != null } 
                     <dim:field mdschema="dc" element="title">
-                        ${ sub.getDocumentTitle() }
+                        ${ sub.getDocumentTitle().escapeXml() }
                     </dim:field>
                     #{/if}
                     
                     <!-- dc.description.abstract = Document Abstract -->
                     #{if sub.getDocumentAbstract() != null } 
                     <dim:field mdschema="dc" element="description" qualifier="abstract">
-                        ${ sub.getDocumentAbstract() }
+                        ${ sub.getDocumentAbstract().escapeXml() }
                     </dim:field>
                     #{/if}
                     
@@ -57,7 +57,7 @@
                     #{if sub.getDocumentKeywords() != null } 
                     #{list items:sub.getDocumentKeywords().split(";"), as:'keyword'} 
                     <dim:field mdschema="dc" element="subject">
-                        ${ keyword.trim() }
+                        ${ keyword.trim().escapeXml() }
                     </dim:field>
                     #{/list}
                     #{/if}
@@ -70,14 +70,14 @@
                              if (member.getLastName() == null) {
                                 out.print("Unknown");
                              } else {
-                                out.print(member.getLastName());
+                                out.print(member.getLastName().escapeXml());
                                 if (member.getFirstName() == null || member.getLastName()) {
                                     out.print(", ");
                                     if (member.getFirstName() != null)
-                                        out.print(member.getFirstName());
+                                        out.print(member.getFirstName().escapeXml());
                                     out.print(" ");
                                     if (member.getMiddleName() != null)
-                                        out.print(member.getMiddleName());
+                                        out.print(member.getMiddleName().escapeXml());
                                 }
                              }
                         %} 
@@ -94,14 +94,14 @@
                              if (member.getLastName() == null) {
                                 out.print("Unknown");
                              } else {
-                                out.print(member.getLastName());
+                                out.print(member.getLastName().escapeXml());
                                 if (member.getFirstName() == null || member.getLastName()) {
                                     out.print(", ");
                                     if (member.getFirstName() != null)
-                                        out.print(member.getFirstName());
+                                        out.print(member.getFirstName().escapeXml());
                                     out.print(" ");
                                     if (member.getMiddleName() != null)
-                                        out.print(member.getMiddleName());
+                                        out.print(member.getMiddleName().escapeXml());
                                 }
                              }
                         %} 
@@ -147,7 +147,7 @@
                     <!-- dc.format.mimetype = Primary Document's mimetype, almost always "application/pdf" -->
                     #{if sub.getPrimaryDocument() != null } 
                     <dim:field mdschema="dc" element="format" qualifier="mimetype">
-                        ${ sub.getPrimaryDocument().getMimeType() }
+                        ${ sub.getPrimaryDocument().getMimeType().escapeXml() }
                     </dim:field>
                     #{/if}
                     
@@ -163,7 +163,7 @@
                     <!-- dc.identifier.uri == Deposit ID, this would only be available when re-depositing -->
                     #{if sub.getDepositId() != null } 
                     <dim:field mdschema="dc" element="identifier" qualifier="uri">
-                        ${ sub.getDepositId() }
+                        ${ sub.getDepositId().escapeXml() }
                     </dim:field>
                     #{/if}
                     
@@ -171,21 +171,21 @@
                     <!-- thesis.degree.name == Degree -->
                     #{if sub.getDegree() != null } 
                     <dim:field mdschema="thesis" element="degree" qualifier="name">
-                        ${ sub.getDegree() }
+                        ${ sub.getDegree().escapeXml() }
                     </dim:field>
                     #{/if}
                     
                     <!-- thesis.degree.level = Degree Level (Doctoral, Masters, Undergraduate) -->
                     #{if sub.getDegreeLevel() != null } 
                     <dim:field mdschema="thesis" element="degree" qualifier="level">
-                        ${ sub.getDegreeLevel().name().toLowerCase().capitalizeWords() }
+                        ${ sub.getDegreeLevel().name().toLowerCase().capitalizeWords().escapeXml() }
                     </dim:field>
                     #{/if}
                     
                     <!-- thesis.degree.discipline = Major -->
                     #{if sub.getMajor() != null } 
                     <dim:field mdschema="thesis" element="degree" qualifier="discipline">
-                        ${ sub.getMajor() }
+                        ${ sub.getMajor().escapeXml() }
                     </dim:field>
                     #{/if}
                     
@@ -196,7 +196,7 @@
                     <!-- thesis.degree.department = Department -->
                     #{if sub.getDepartment() != null } 
                     <dim:field mdschema="thesis" element="degree" qualifier="department">
-                        ${ sub.getDepartment() }
+                        ${ sub.getDepartment().escapeXml() }
                     </dim:field>
                     #{/if}
                     
@@ -204,7 +204,7 @@
                     <!-- thesis.degree.college = College -->
                     #{if sub.getCollege() != null } 
                     <dim:field mdschema="thesis" element="degree" qualifier="college">
-                        ${ sub.getCollege() }
+                        ${ sub.getCollege().escapeXml() }
                     </dim:field>
                     #{/if}
                     
@@ -214,7 +214,7 @@
                     
                     #{if sub.getEmbargoType().getDuration() == null } 
                     <dim:field mdschema="dc" element="description" qualifier="provenance">
-                        Submission original under an indefinite embargo labeled '${ sub.getEmbargoType().getName() }'. The submission was deposited into a repository on ${ new java.util.Date().format("yyyy-MM-dd") } without embargo terms
+                        Submission original under an indefinite embargo labeled '${ sub.getEmbargoType().getName().escapeXml() }'. The submission was deposited into a repository on ${ new java.util.Date().format("yyyy-MM-dd") } without embargo terms
                     </dim:field>
                     #{/if} 
                     #{elseif sub.getEmbargoType().getDuration() != 0 } 
@@ -239,12 +239,12 @@
                         ${ liftDate.format("yyyy-MM-dd") }
                     </dim:field>
                     <dim:field mdschema="dc" element="description" qualifier="provenance">
-                        Submission published under a ${sub.getEmbargoType().getDuration() } month embargo labeled '${ sub.getEmbargoType().getName() }', the embargo will last until ${ liftDate.format("yyyy-MM-dd") }
+                        Submission published under a ${sub.getEmbargoType().getDuration() } month embargo labeled '${ sub.getEmbargoType().getName().escapeXml() }', the embargo will last until ${ liftDate.format("yyyy-MM-dd") }
                     </dim:field>
                     #{/elseif} 
                     #{else} 
                     <dim:field mdschema="dc" element="description" qualifier="provenance">
-                        Submission original under the a zero month embargo labeled '${ sub.getEmbargoType().getName() }'.
+                        Submission original under the a zero month embargo labeled '${ sub.getEmbargoType().getName().escapeXml() }'.
                     </dim:field>
                     #{/else}
 
@@ -270,9 +270,9 @@
             #{if sub.getPrimaryDocument() != null } 
             <file GROUPID="piper-mets-file-group-${ sub.getPrimaryDocument().getType().ordinal() }" 
                   ID="piper-mets-file-${ sub.getPrimaryDocument().getId() }" 
-                  MIMETYPE="${ sub.getPrimaryDocument().getMimeType() }"
+                  MIMETYPE="${ sub.getPrimaryDocument().getMimeType().escapeXml() }"
                   SEQ="1">
-                  <FLocat LOCTYPE="URL" xlink:href="${ sub.getPrimaryDocument().getName() }"/>
+                  <FLocat LOCTYPE="URL" xlink:href="${ sub.getPrimaryDocument().getName().escapeXml() }"/>
             </file>
             #{/if}
             
@@ -281,9 +281,9 @@
             #{list items:sub.getSupplementalDocuments(), as:'attachment'} 
             <file GROUPID="piper-mets-file-group-${ attachment.getType().ordinal() }" 
                   ID="piper-mets-file-${ attachment.getId() }" 
-                  MIMETYPE="${ attachment.getMimeType() }"
+                  MIMETYPE="${ attachment.getMimeType().escapeXml() }"
                   SEQ="${ sub.getSupplementalDocuments().indexOf(attachment) + 1 }">
-                  <FLocat LOCTYPE="URL" xlink:href="${ attachment.getName() }"/>
+                  <FLocat LOCTYPE="URL" xlink:href="${ attachment.getName().escapeXml() }"/>
             </file>
             #{/list}
  
