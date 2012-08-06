@@ -19,6 +19,7 @@ import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
 
+import play.Logger;
 import play.db.jpa.JPA;
 import play.modules.spring.Spring;
 import play.test.UnitTest;
@@ -199,7 +200,7 @@ public class JpaCustomActionValueImplTest extends UnitTest {
 		value.setValue(false);
 		value.save();
 		value.delete();
-		
+				
 		List<ActionLog> logs = subRepo.findActionLog(sub);
 		Iterator<ActionLog> logItr = logs.iterator();
 		
@@ -209,6 +210,7 @@ public class JpaCustomActionValueImplTest extends UnitTest {
 		assertEquals("Custom action "+def.getLabel()+" unset by Mock Administrator", logItr.next().getEntry());
 		assertEquals("Custom action "+def.getLabel()+" unset by Mock Administrator", logItr.next().getEntry());
 		assertEquals("Custom action "+def.getLabel()+" set by Mock Administrator", logItr.next().getEntry());
+		assertEquals("Custom action custom action set by Mock Administrator",logItr.next().getEntry());
 		assertEquals("Submission status changed to 'Submitted' by Mock Administrator",logItr.next().getEntry());
 		assertEquals("Submission created by Mock Administrator",logItr.next().getEntry());
 		assertFalse(logItr.hasNext());
