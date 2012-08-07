@@ -557,7 +557,6 @@ public class TestDataLoader extends Job {
 				
 		// Create all configuration settings
 		for (ConfigurationArray config : CONFIG_DEFINITIONS) {
-			System.out.println("Setting: "+config.name);
 			settingRepo.createConfiguration(config.name, config.value).save();
 		}
 		

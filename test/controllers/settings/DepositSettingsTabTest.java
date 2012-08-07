@@ -185,4 +185,65 @@ public class DepositSettingsTabTest extends AbstractVireoFunctionalTest {
 		location1.delete();
 		location2.delete();
 	}
+	
+	/**
+	 * Test submiting a test item to a test sword server... you know test the
+	 * test. But really it's broken several times now and no one noticed, so I'm
+	 * adding a test so we know when it breaks.
+	 */
+	@Test
+	public void testDepositingSubmission() {
+		LOGIN();
+		
+		// Get our urls and a list of fields.
+		final String SAVE_URL = Router.reverse("settings.DepositSettingsTab.saveDepositLocation").url;
+		final String REMOVE_URL = Router.reverse("settings.DepositSettingsTab.removeDepositLocationJSON").url;
+
+		
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("depositLocationId", "");
+		params.put("name","New Deposit Location");
+		params.put("packager","DSpaceMETS");
+		params.put("depositor","Sword1Deposit");
+		params.put("repository","http://localhost:8082/servicedocument");
+		params.put("username","testUser");
+		params.put("password","testPassword");
+		params.put("onBehalfOf","");
+		params.put("collection","http://localhost:8082/deposit/a");
+		params.put("action","depositLocation-test-submit");
+		Response response = POST(SAVE_URL,params);
+				
+		assertContentMatch("New Deposit Location",response);
+		assertContentMatch("packager",response);
+		assertContentMatch("DSpaceMETS",response);
+		assertContentMatch("Sword1Deposit",response);
+		assertContentMatch("servicedocument",response);
+		assertContentMatch("testUser",response);
+		assertContentMatch("Test item successfully deposited: ",response);
+
+		// Extract the id of the newly created location.
+		Pattern ID_PATTERN = Pattern.compile("id=\"depositLocation-id\" value=\"depositLocation_([0-9]+)\"");
+		Matcher tokenMatcher = ID_PATTERN.matcher(getContent(response));
+		assertTrue(tokenMatcher.find());
+		String idString = tokenMatcher.group(1);
+		assertNotNull(idString);
+		Long id = Long.valueOf(idString);
+		
+		// Check if the location exists
+		DepositLocation location = settingRepo.findDepositLocation(id);
+		
+		assertNotNull(location);
+		assertEquals("New Deposit Location",location.getName());
+		
+		
+		// Try and delete 
+		params.clear();
+		params.put("depositLocationId", "depositLocation_"+location.getId());
+		response = POST(REMOVE_URL,params);
+		assertContentMatch("\"success\": \"true\"", response);
+		
+		// Check that it was deleted in the database.
+		JPA.em().clear();
+		assertNull(settingRepo.findDepositLocation(id));
+	}
 }
