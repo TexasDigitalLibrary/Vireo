@@ -1,5 +1,6 @@
 package org.tdl.vireo.model.jpa;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -53,18 +54,12 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 	public Blob data;
 
 	/**
-	 * Create a new JpaAttachmentImpl
+	 * Private constructor to share code between the file and bytearray constructors.
 	 * 
-	 * @param submission
-	 *            The submission this attachment belongs too.
-	 * @param type
-	 *            The type of the attachment.
-	 * @param file
-	 *            The file.
+	 * @param submission The submission this attachment will be associated with.
+	 * @param type The type of the submission.
 	 */
-	protected JpaAttachmentImpl(Submission submission, AttachmentType type,
-			File file) throws IOException {
-
+	private JpaAttachmentImpl(Submission submission, AttachmentType type) {
 		if (submission == null)
 			throw new IllegalArgumentException("Submission is required");
 		
@@ -77,6 +72,38 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 				throw new IllegalArgumentException("There can only be one primary document associated with a submission. You must remove the current primary document before adding another.");
 		}
 
+		assertReviewerOrOwner(submission.getSubmitter());
+
+		// If the person operating is not a persistant person, a mock or
+		// otherwise then don't record the link.
+		SecurityContext context = Spring.getBeanOfType(SecurityContext.class);		
+		Person person = context.getPerson();
+		if (person != null && !person.getClass().isAnnotationPresent(Entity.class))
+			person = null;
+		
+		this.submission = submission;
+		this.type = type;
+		this.person = person;
+		this.date = new Date();
+		
+	}
+	
+	
+	/**
+	 * Create a new JpaAttachmentImpl from a file.
+	 * 
+	 * @param submission
+	 *            The submission this attachment belongs too.
+	 * @param type
+	 *            The type of the attachment.
+	 * @param file
+	 *            The file.
+	 */
+	protected JpaAttachmentImpl(Submission submission, AttachmentType type,
+			File file) throws IOException {
+
+		this(submission,type);
+		
 		if (file == null)
 			throw new IllegalArgumentException("File is required");
 		
@@ -86,22 +113,42 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 		if (!file.canRead())
 			throw new IllegalArgumentException("File is not readable");
 		
-		assertReviewerOrOwner(submission.getSubmitter());
-			
-		// If the person operating is not a persistant person, a mock or
-		// otherwise then don't record the link.
-		SecurityContext context = Spring.getBeanOfType(SecurityContext.class);		
-		Person person = context.getPerson();
-		if (person != null && !person.getClass().isAnnotationPresent(Entity.class))
-			person = null;
-		
-		this.submission = submission;
 		this.name = file.getName();
-		this.type = type;
-		this.person = person;
-		this.date = new Date();
 		this.data = new Blob();
 		this.data.set(new FileInputStream(file), MimeTypes.getContentType(name));
+	}
+	
+
+	/**
+	 * Create a new JpaAttachmentIpml from a byte array.
+	 * 
+	 * @param submission
+	 *            The submission this attachment belongs too.
+	 * @param type
+	 *            The type of the attachment.
+	 * @param filename
+	 *            The filename of the attachment.
+	 * @param content
+	 *            The contents of the attachment.
+	 */
+	protected JpaAttachmentImpl(Submission submission, AttachmentType type,
+			String filename, byte[] content) throws IOException {
+	
+		this(submission,type);
+		
+		if (filename == null || filename.trim().length() == 0)
+			throw new IllegalArgumentException("A filename is required for an attachment.");
+		
+		if (content == null || content.length == 0)
+			throw new IllegalArgumentException("The contents of an attachment may not be blank.");
+		
+		this.name = filename;
+		this.data = new Blob();
+		this.data.set(
+				new ByteArrayInputStream(content),
+				MimeTypes.getContentType(filename)
+				);
+		
 	}
 
 	@Override

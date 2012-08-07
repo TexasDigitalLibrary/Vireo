@@ -231,6 +231,24 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	public Configuration findConfigurationByName(String name) {
 		return JpaConfigurationImpl.find("name = ?", name).first();
 	}
+	
+	@Override
+	public String getConfig(String name, String defaultValue) {
+		
+		String value = getConfig(name);
+		if (value == null || value.trim().length() == 0)
+			return defaultValue;
+		else
+			return value;
+	}
+	
+	@Override
+	public String getConfig(String name) {
+		Configuration config = findConfigurationByName(name);
+		if (config == null)
+			return null;
+		return config.getValue();
+	}
 
 	@Override
 	public List<Configuration> findAllConfigurations() {

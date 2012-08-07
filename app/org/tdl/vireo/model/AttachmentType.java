@@ -9,6 +9,7 @@ public enum AttachmentType {
 	UNKNOWN,
 	PRIMARY,
 	SUPPLEMENTAL,
+	LICENSE,
 	ARCHIVED,
 	FEEDBACK
 }

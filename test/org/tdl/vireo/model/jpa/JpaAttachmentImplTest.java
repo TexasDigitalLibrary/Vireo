@@ -91,6 +91,28 @@ public class JpaAttachmentImplTest extends UnitTest {
 	}
 	
 	/**
+	 * Test creating an attachment from a byte array.
+	 */
+	@Test
+	public void testCreateFromByteArray() throws IOException {
+		
+		byte[] content = "This is test content".getBytes();
+		
+		Attachment attachment = sub.addAttachment(content, "test.txt",AttachmentType.LICENSE);
+		
+		assertNotNull(attachment);
+		assertEquals("test.txt",attachment.getName());
+		assertEquals(AttachmentType.LICENSE,attachment.getType());
+		
+		File file = attachment.getFile();
+		String retrieved = FileUtils.readFileToString(file);
+		assertEquals("This is test content",retrieved);
+	
+		attachment.delete();
+		
+	}
+	
+	/**
 	 * Test creating an attachment with an owner.
 	 */
 	@Test

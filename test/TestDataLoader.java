@@ -110,16 +110,16 @@ public class TestDataLoader extends Job {
 				"\n" +
 				"I warrant that:\n" +
 				"\n" +
-				" 1) I am the copyright owner of the Work, or\n" +
-				" 2) I am one of the copyright owners and have permission from the other owners to submit the Work, or\n" +
-				" 3) My Institution or Department is the copyright owner and I have permission to submit the Work, or\n" +
-				"    Another party is the copyright owner and I have permission to submit the Work.\n" +
+				"    1) I am the copyright owner of the Work, or\n" +
+				"    2) I am one of the copyright owners and have permission from the other owners to submit the Work, or\n" +
+				"    3) My Institution or Department is the copyright owner and I have permission to submit the Work, or\n" +
+				"    4) Another party is the copyright owner and I have permission to submit the Work.\n" +
 				"\n" +
 				"Based on this, I further warrant to my knowledge:\n" +
 				"\n" +
-				" 1) The Work does not infringe any copyright, patent, or trade secrets of any third party,\n" +
-				" 2) The Work does not contain any libelous matter, nor invade the privacy of any person or third party, and\n" +
-				" 3) That no right in the Work has been sold, mortgaged, or otherwise disposed of, and is free from all claims.\n" +
+				"    1) The Work does not infringe any copyright, patent, or trade secrets of any third party,\n" +
+				"    2) The Work does not contain any libelous matter, nor invade the privacy of any person or third party, and\n" +
+				"    3) That no right in the Work has been sold, mortgaged, or otherwise disposed of, and is free from all claims.\n" +
 				"\n" +
 				"I agree to hold TDL, Institution, Department, and their agents harmless for any liability arising from any breach of the above warranties or any claim of intellectual property infringement arising from the exercise of these non-exclusive granted rights.\n"+
 				"\n"

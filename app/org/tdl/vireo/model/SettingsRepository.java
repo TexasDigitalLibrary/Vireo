@@ -351,6 +351,29 @@ public interface SettingsRepository {
 	 * @return The configuration object, or null if not found.
 	 */
 	public Configuration findConfigurationByName(String name);
+	
+	/**
+	 * Find a system wide configuration and return it's value. If the
+	 * configuration parameter is not set, then return the default value
+	 * supplied.
+	 * 
+	 * @param name
+	 *            The name of the configuration object.
+	 * @param defaultValue
+	 *            The default value for the configuration object if not found.
+	 * @return The value
+	 */
+	public String getConfig(String name, String defaultValue);
+
+	/**
+	 * Find a system wide configuration and return it's value. If the
+	 * configuration object does not exist then null will be returned.
+	 * 
+	 * @param name
+	 *            The name of the parameter.
+	 * @return The value, or null.
+	 */
+	public String getConfig(String name);
 
 	/**
 	 * Find all system wide configuration parameters.

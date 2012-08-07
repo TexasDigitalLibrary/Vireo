@@ -148,6 +148,39 @@ public class JpaConfigurationImplTest extends UnitTest {
 	}
 	
 	/**
+	 * Test retrieval of value by name.
+	 */
+	@Test
+	public void testGetConfig() {
+		Configuration config = settingRepo.createConfiguration("config","value").save();
+
+		
+		String retrieved = settingRepo.getConfig("config");
+		
+		assertEquals("value", retrieved);
+		
+		config.delete();
+	}
+	
+	/**
+	 * Test retrieval of value by name with default
+	 */
+	@Test
+	public void testGetConfigWithDefault() {
+		Configuration config = settingRepo.createConfiguration("config","value").save();
+
+		// Search for one that exists.
+		String retrieved = settingRepo.getConfig("config","default");
+		assertEquals("value", retrieved);
+		
+		// Search for one that is missing.
+		retrieved = settingRepo.getConfig("thisdoesnotexist","default");
+		assertEquals("default",retrieved);
+		
+		config.delete();
+	}
+	
+	/**
 	 * Test retrieving all configurations
 	 */
 	@Test

@@ -30,18 +30,6 @@ public class SubmitTest extends AbstractVireoFunctionalTest {
 
     @Test
     public void testFullSubmission() {    	
-
-    	
-        // We can only turn submissions on with authorization turned off.
-    	// So turn off authorization - save the setting and then turn auth back on - just for the integrity of the test.
-    	
-		context.turnOffAuthorization();
-
-        Configuration so = 
-        		settingRepo.createConfiguration(org.tdl.vireo.model.Configuration.SUBMISSIONS_OPEN, "true");
-        so.save();    
-        
-        context.restoreAuthorization();
         
         LOGIN();
 
@@ -211,7 +199,7 @@ public class SubmitTest extends AbstractVireoFunctionalTest {
         JPA.em().clear();
         s = subRepo.findSubmission(subId);
         assertNotNull(s.getPrimaryDocument());
-        assertEquals(1, s.getAttachments().size());
+        assertEquals(2, s.getAttachments().size());
         
         // FIXME: Degree not matching on Confirm & Submit page
         // assertContentMatch(s.getDegree(), response);

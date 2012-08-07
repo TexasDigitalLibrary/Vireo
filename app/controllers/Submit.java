@@ -350,7 +350,9 @@ public class Submit extends AbstractVireoController {
 		
 		// Display the for with appropriate values filled in
 		
-		render(submitter,subId,disabledFields,firstName,middleName,lastName,birthYear,department,degree, major, permPhone,permAddress,permEmail,currentPhone,currentAddress);
+		String grantor = settingRepo.getConfig(Configuration.GRANTOR,"Unknown Institution");
+		
+		render(submitter,subId,disabledFields,firstName,middleName,lastName,birthYear,grantor,department,degree, major, permPhone,permAddress,permEmail,currentPhone,currentAddress);
 	}
 
 	@Security(RoleType.STUDENT)
@@ -363,14 +365,14 @@ public class Submit extends AbstractVireoController {
         } else {
             Person submitter = context.getPerson();
 
-            // This is an existing submission so check that we're the student or administrator here.
+            // This is an existing submission so check that we're the student here.
             if (sub.getSubmitter() != submitter)
                 unauthorized();
 
             String checked = sub.getLicenseAgreementDate() != null ? "checked=checked" : "";
 
             // Not too keen on this; seems messy
-            String licenseText = Play.configuration.getProperty("submit.license.text", "");
+            String licenseText = settingRepo.getConfig(Configuration.SUBMIT_LICENSE,DEFAULT_LICENSE);
 
             // first time here?
             if (params.get("submit_next") != null) {
@@ -378,15 +380,49 @@ public class Submit extends AbstractVireoController {
                 if (params.get("licenseAgreement") == null) {
                     validation.addError("laLabel","You must agree to the license agreement before continuing.");
                 } else {
-                    sub.setLicenseAgreementDate(new Date());
+                	
+                	Date agreementDate = new Date();
+                    sub.setLicenseAgreementDate(agreementDate);
 
+                    
+                    // Check if another license has been selected been saved.
+                    for (Attachment attachment : sub.getAttachments()){
+                    	if (attachment.getType() == AttachmentType.LICENSE && attachment.getName() == "LICENSE.txt") {
+                    		// Remove the old license, and save the new one.
+                    		attachment.delete();
+                    		break;
+                    	}
+                    }
+                    
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy 'at' hh:mm a");
+                    
+                    licenseText += "\n\n--------------------------------------------------------------------------\n";
+                    licenseText += "The license above was accepted by "+submitter.getFullName()+" on "+formatter.format(agreementDate)+"\n";
+                                        
+                    // Save the text that the student aggreed too.
+                    try {
+                    	sub.addAttachment(licenseText.getBytes(),"LICENSE.txt",AttachmentType.LICENSE).save();
+                    } catch (IOException ioe) {
+                    	throw new RuntimeException("Unable to save license aggreement.",ioe);
+                    }
+                    
                     sub.save();
 
                     docInfo(subId);
                     //fileUpload(subId);
                 }
             }
-
+            
+            // Format the license text for display
+            licenseText = licenseText.replaceAll("  ", "&nbsp;&nbsp;");
+            String[] paragraphs = licenseText.split("\n\\s*\n");
+            licenseText = "";
+            for (String paragraph : paragraphs) {
+            	licenseText += "<p>"+paragraph+"</p>";
+            }
+            
+            licenseText = licenseText.replaceAll("\n", "<br/>");
+            
             render(subId,licenseText,checked);
         }
 
@@ -1150,5 +1186,29 @@ public class Submit extends AbstractVireoController {
     		error("File not found");
     	}
     }
+    
+    
+    protected final static String DEFAULT_LICENSE = 
+    		"I grant the Texas Digital Library (hereafter called \"TDL\"), my home institution (hereafter called \"Institution\"), and my academic department (hereafter called \"Department\") the non-exclusive rights to copy, display, perform, distribute and publish the content I submit to this repository (hereafter called \"Work\") and to make the Work available in any format in perpetuity as part of a TDL, Institution or Department repository communication or distribution effort.\n" +
+			"\n" +
+			"I understand that once the Work is submitted, a bibliographic citation to the Work can remain visible in perpetuity, even if the Work is updated or removed.\n" +
+			"\n" +
+			"I understand that the Work's copyright owner(s) will continue to own copyright outside these non-exclusive granted rights.\n" +
+			"\n" +
+			"I warrant that:\n" +
+			"\n" +
+			"    1) I am the copyright owner of the Work, or\n" +
+			"    2) I am one of the copyright owners and have permission from the other owners to submit the Work, or\n" +
+			"    3) My Institution or Department is the copyright owner and I have permission to submit the Work, or\n" +
+			"    4) Another party is the copyright owner and I have permission to submit the Work.\n" +
+			"\n" +
+			"Based on this, I further warrant to my knowledge:\n" +
+			"\n" +
+			"    1) The Work does not infringe any copyright, patent, or trade secrets of any third party,\n" +
+			"    2) The Work does not contain any libelous matter, nor invade the privacy of any person or third party, and\n" +
+			"    3) That no right in the Work has been sold, mortgaged, or otherwise disposed of, and is free from all claims.\n" +
+			"\n" +
+			"I agree to hold TDL, Institution, Department, and their agents harmless for any liability arising from any breach of the above warranties or any claim of intellectual property infringement arising from the exercise of these non-exclusive granted rights.\n"+
+			"\n";
 
 }

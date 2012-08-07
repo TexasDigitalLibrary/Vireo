@@ -148,12 +148,29 @@ public interface Submission extends AbstractModel {
 	public List<Attachment> getAttachments();
 
 	/**
-	 * Add a new attachment.
-	 * @param file The new attachment file.
-	 * @param type The type of the attachment.
+	 * Add a new attachment from a file.
+	 * 
+	 * @param file
+	 *            The new attachment file.
+	 * @param type
+	 *            The type of the attachment.
 	 * @return The newly created attachment.
 	 */
-	public Attachment addAttachment(File file, AttachmentType type) throws IOException;
+	public Attachment addAttachment(File file, AttachmentType type)
+			throws IOException;
+
+	/**
+	 * Add a new attachment from a byte arra.
+	 * 
+	 * @param content
+	 *            The contents of the new attachment.
+	 * @param filename
+	 *            The filename of the file.
+	 * @param type
+	 *            The type of attachment.
+	 * @return The newly created attachment.
+	 */
+	public Attachment addAttachment(byte[] content, String filename, AttachmentType type) throws IOException;
 
 	/**
 	 * @return The specific attachment

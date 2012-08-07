@@ -405,6 +405,15 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	}
 	
 	@Override
+	public Attachment addAttachment(byte[] content, String filename, AttachmentType type)
+			throws IOException {
+
+		Attachment attachment = new JpaAttachmentImpl(this, type, filename, content);
+		attachments.add(attachment);
+		return attachment;
+	}
+	
+	@Override
 	public Attachment findAttachmentById(Long id){
 		for(Attachment attachment : attachments) {
 			if(id == attachment.getId())

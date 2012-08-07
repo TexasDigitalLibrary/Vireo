@@ -217,6 +217,15 @@ public class MockSubmission extends AbstractMock implements Submission {
 	}
 	
 	@Override
+	public Attachment addAttachment(byte[] content, String filename, AttachmentType type) {
+		MockAttachment attachment = new MockAttachment();
+		attachment.name = filename;
+		attachment.type = type;
+		attachments.add(attachment);
+		return attachment;
+	}
+	
+	@Override
 	public Attachment findAttachmentById(Long id) {
 		for(Attachment attachment : attachments) {
 			if(id == attachment.getId())
