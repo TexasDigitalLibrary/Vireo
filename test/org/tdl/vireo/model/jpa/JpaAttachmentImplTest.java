@@ -60,6 +60,7 @@ public class JpaAttachmentImplTest extends UnitTest {
 	 */
 	@After
 	public void cleanup() {
+		try {
 		JPA.em().clear();
 		if (sub != null)
 			subRepo.findSubmission(sub.getId()).delete();
@@ -70,6 +71,9 @@ public class JpaAttachmentImplTest extends UnitTest {
 		
 		JPA.em().getTransaction().rollback();
 		JPA.em().getTransaction().begin();
+		} catch (RuntimeException re) {
+			
+		}
 	}
 	
 	/**
@@ -132,7 +136,7 @@ public class JpaAttachmentImplTest extends UnitTest {
 		
 		byte[] content = "This is test content".getBytes();
 		
-		Attachment attachment = sub.addAttachment(content, "test.txt",AttachmentType.LICENSE);
+		Attachment attachment = sub.addAttachment(content, "test.txt",AttachmentType.LICENSE).save();
 		
 		assertNotNull(attachment);
 		assertEquals("test.txt",attachment.getName());

@@ -129,13 +129,15 @@ public class SubmitTest extends AbstractVireoFunctionalTest {
         assertNotNull(s.getLicenseAgreementDate());
 
         // Add valid values
+        DocumentType docType = settingRepo.findAllDocumentTypes().get(0);
+        EmbargoType embargoType = settingRepo.findAllEmbargoTypes().get(1);
         args = null;
         args = new HashMap<String, String>();
         args.put("subId", Long.toString(subId));
         args.put("title", "Test Title");
         args.put("degreeMonth", String.valueOf(settingRepo.findAllGraduationMonths().get(0).getMonth()));
         args.put("degreeYear", String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
-        args.put("docType", settingRepo.findDocumentType(Long.parseLong("1")).getName());
+        args.put("docType", docType.getName());
         args.put("abstractText", "This is an abstract");
         args.put("keywords", "key; word;");
         args.put("committeeFirstName1", "First");
@@ -143,7 +145,7 @@ public class SubmitTest extends AbstractVireoFunctionalTest {
         args.put("committeeLastName1", "Last");
         args.put("committeeChairFlag1", "checked");
         args.put("chairEmail", "fake@email.com");
-        args.put("embargo", "1");
+        args.put("embargo", embargoType.getId()+"");
         args.put("submit_next", "");
 
         // Submit third page

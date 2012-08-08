@@ -22,10 +22,12 @@ public class Application extends AbstractVireoController {
         // Check to see if they have active submissions
     	
         Person submitter = context.getPerson();
-        List<Submission> submissionList = subRepo.findSubmission(submitter);
-
-        if(submissionList.size() > 0) {
-            render(submissionList);
+        if (submitter != null) {
+	        List<Submission> submissionList = subRepo.findSubmission(submitter);
+	
+	        if(submissionList.size() > 0) {
+	            render(submissionList);
+	        }
         }
         
         render();
