@@ -91,6 +91,40 @@ public class JpaAttachmentImplTest extends UnitTest {
 	}
 	
 	/**
+	 * Test creating a duplicate attachments.
+	 */
+	@Test
+	public void testCreatingDuplicateAttachments() throws IOException {
+		
+		File file = createRandomFile(10L);
+		
+		Attachment attachment = sub.addAttachment(file, AttachmentType.PRIMARY).save();
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().getTransaction().begin();
+		
+		try {
+			sub.addAttachment(file, AttachmentType.SUPPLEMENTAL).save();
+			fail("Able to create two attachments with the same name.");
+		} catch (RuntimeException re) {
+			// yay
+		}
+	
+		JPA.em().getTransaction().rollback();
+		JPA.em().getTransaction().begin();
+		subRepo.findAttachment(attachment.getId()).delete();
+		subRepo.findSubmission(sub.getId()).delete();
+		personRepo.findPerson(person.getId()).delete();
+		file.delete();
+		
+		sub = null;
+		person = null;
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().getTransaction().begin();
+	}
+	
+	/**
 	 * Test creating an attachment from a byte array.
 	 */
 	@Test
@@ -239,8 +273,8 @@ public class JpaAttachmentImplTest extends UnitTest {
 
 		
 		Attachment a1 = sub.addAttachment(file1, AttachmentType.PRIMARY).save();
-		Attachment a2 = sub.addAttachment(file1, AttachmentType.SUPPLEMENTAL).save();
-		Attachment a3 = sub.addAttachment(file1, AttachmentType.SUPPLEMENTAL).save();
+		Attachment a2 = sub.addAttachment(file2, AttachmentType.SUPPLEMENTAL).save();
+		Attachment a3 = sub.addAttachment(file3, AttachmentType.SUPPLEMENTAL).save();
 
 		
 		Attachment primary = sub.getPrimaryDocument();
@@ -299,8 +333,8 @@ public class JpaAttachmentImplTest extends UnitTest {
 
 		
 		Attachment a1 = sub.addAttachment(file1, AttachmentType.PRIMARY).save();
-		Attachment a2 = sub.addAttachment(file1, AttachmentType.SUPPLEMENTAL).save();
-		Attachment a3 = sub.addAttachment(file1, AttachmentType.SUPPLEMENTAL).save();
+		Attachment a2 = sub.addAttachment(file2, AttachmentType.SUPPLEMENTAL).save();
+		Attachment a3 = sub.addAttachment(file3, AttachmentType.SUPPLEMENTAL).save();
 		
 		List<Attachment> attachments = sub.getAttachments();
 		
@@ -577,13 +611,13 @@ public class JpaAttachmentImplTest extends UnitTest {
 
 		context.login(person);
 		Attachment a1 = sub.addAttachment(file1, AttachmentType.SUPPLEMENTAL).save();
-		a1.setName("changed");
+		a1.setName("changed1");
 		a1.save();
 		
 		// Test that a reviewer can add an attachment
 		context.login(MockPerson.getReviewer());
 		Attachment a2 = sub.addAttachment(file2, AttachmentType.SUPPLEMENTAL).save();
-		a2.setName("changed");
+		a2.setName("changed2");
 		a2.save();
 
 		// Test that a someone else can not add an attachment.

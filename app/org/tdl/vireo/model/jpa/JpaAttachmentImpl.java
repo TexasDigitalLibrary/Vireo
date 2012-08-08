@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.io.FileUtils;
 import org.tdl.vireo.model.AbstractModel;
@@ -33,7 +34,8 @@ import play.modules.spring.Spring;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 @Entity
-@Table(name = "attachment")
+@Table(name = "attachment",
+	uniqueConstraints = { @UniqueConstraint( columnNames = { "submission_id", "name" } ) } )
 public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> implements Attachment {
 
 	@ManyToOne(targetEntity=JpaSubmissionImpl.class, optional=false)
