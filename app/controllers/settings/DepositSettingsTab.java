@@ -245,6 +245,9 @@ public class DepositSettingsTab extends SettingsTab {
 				location.save();
 				
 				depositLocationId = "depositLocation_"+location.getId();
+			} catch (PersistenceException pe) {
+				validation.addError("name", "Another deposit location allready exists with the name.");
+				
 			} catch (RuntimeException re) {
 				Logger.error(re,"Unable to save Deposit Location");
 				validation.addError("general", "Unable to save form because: "+re.getMessage());
