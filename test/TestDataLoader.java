@@ -622,13 +622,16 @@ public class TestDataLoader extends Job {
 			location.setOnBehalfOf(locationDefinition.onBehalfOf);
 			location.setDepositor(depositor);
 			location.setPackager(packager);
-			location.save();
 			
 			
 			if (depositor instanceof FileDepositorImpl) {
 				File baseDir = ((FileDepositorImpl) depositor).baseDir;
 				FileUtils.forceMkdir(baseDir);
+				
+				location.setCollection(new File(baseDir.getCanonicalPath()+File.separator+locationDefinition.collection).getCanonicalPath());
 			}
+			
+			location.save();
 		}
 	}
 	

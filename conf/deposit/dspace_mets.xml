@@ -296,8 +296,8 @@
         
             <!-- Licence Documents -->
             
-            #{list items:sub.getAttachments(), as:'attachment'}
-            #{if attachment.getType() == org.tdl.vireo.model.AttachmentType.LICENSE}
+            #{list items:sub.getAttachments(), as:'attachment'} 
+            #{if attachment.getType() == org.tdl.vireo.model.AttachmentType.LICENSE} 
             <file GROUPID="piper-mets-file-group-${ attachment.getType().ordinal() }" 
                   ID="piper-mets-file-${ attachment.getId() }" 
                   MIMETYPE="${ attachment.getMimeType().escapeXml() }">
