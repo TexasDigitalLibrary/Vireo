@@ -83,8 +83,9 @@ public class UserPreferencesTabTest extends AbstractVireoFunctionalTest {
 		}
 		
 		// Check that all the fields are set.
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
-		Person person = personRepo.findPersonByEmail("bthornton@gmail.com");
+		JPA.em().getTransaction().begin();		Person person = personRepo.findPersonByEmail("bthornton@gmail.com");
 		for (String field : editableFields) {
 			assertNotNull(person.getPreference(field));
 		}
@@ -100,7 +101,9 @@ public class UserPreferencesTabTest extends AbstractVireoFunctionalTest {
 		}
 		
 		// Check that all the fields are turned off.
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		person = personRepo.findPersonByEmail("bthornton@gmail.com");
 		for (String field : editableFields) {
 			assertNull(person.getPreference(field));

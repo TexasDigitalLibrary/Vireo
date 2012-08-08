@@ -90,7 +90,9 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		Long id = Long.valueOf(idString);
 		
 		// Verify the embargo exists in the database.
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		assertNotNull(settingRepo.findEmbargoType(id));
 		assertEquals("New Embargo Type",settingRepo.findEmbargoType(id).getName());
 		assertEquals("New Description",settingRepo.findEmbargoType(id).getDescription());
@@ -109,7 +111,9 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 
 		
 		// Verify the action was updated in the database.
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		assertEquals("Changed Name",settingRepo.findEmbargoType(id).getName());
 		assertEquals("Changed Description",settingRepo.findEmbargoType(id).getDescription());
 		assertEquals(null,settingRepo.findEmbargoType(id).getDuration());
@@ -122,7 +126,9 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		assertContentMatch("\"success\": \"true\"", response);
 		
 		// Verify the action was deleted in the database;
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		assertNull(settingRepo.findEmbargoType(id));
 	}
 	
@@ -139,6 +145,10 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		EmbargoType embargo1 = settingRepo.createEmbargoType("name1", "description", null, false).save();
 		EmbargoType embargo2 = settingRepo.createEmbargoType("name2", "description", null, false).save();
 		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
 		// Reorder the custom actions
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("embargoTypeIds", "embargoType_"+embargo2.getId()+",embargoType_"+embargo1.getId());
@@ -146,7 +156,9 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		assertContentMatch("\"success\": \"true\"", response);
 		
 		// Verify that the actions were reorderd
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		embargo1 = settingRepo.findEmbargoType(embargo1.getId());
 		embargo2 = settingRepo.findEmbargoType(embargo2.getId());
 		assertTrue(embargo1.getDisplayOrder() > embargo2.getDisplayOrder());
@@ -185,7 +197,9 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		Long id = Long.valueOf(idString);
 		
 		// Verify the action exists in the database.
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		assertNotNull(settingRepo.findCollege(id));
 		assertEquals("New College",settingRepo.findCollege(id).getName());
 		
@@ -197,7 +211,9 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		response = POST(EDIT_URL,params);
 		
 		// Verify the action was updated in the database.
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		assertEquals("Changed Name",settingRepo.findCollege(id).getName());
 		
 		// Now remove the custom action
@@ -207,7 +223,9 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		assertContentMatch("\"success\": \"true\"", response);
 		
 		// Verify the action was deleted in the database;
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		assertNull(settingRepo.findCollege(id));
 	}
 	
@@ -224,6 +242,10 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		College college1 = settingRepo.createCollege("test one").save();
 		College college2 = settingRepo.createCollege("test two").save();
 		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
 		// Reorder the custom actions
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("collegeIds", "college_"+college2.getId()+",college_"+college1.getId());
@@ -231,7 +253,9 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		assertContentMatch("\"success\": \"true\"", response);
 		
 		// Verify that the actions were reorderd
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		college1 = settingRepo.findCollege(college1.getId());
 		college2 = settingRepo.findCollege(college2.getId());
 		
@@ -271,7 +295,9 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		Long id = Long.valueOf(idString);
 		
 		// Verify the action exists in the database.
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		assertNotNull(settingRepo.findDepartment(id));
 		assertEquals("New Department",settingRepo.findDepartment(id).getName());
 		
@@ -283,7 +309,9 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		response = POST(EDIT_URL,params);
 		
 		// Verify the action was updated in the database.
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		assertEquals("Changed Name",settingRepo.findDepartment(id).getName());
 		
 		// Now remove the custom action
@@ -293,7 +321,9 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		assertContentMatch("\"success\": \"true\"", response);
 		
 		// Verify the action was deleted in the database;
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		assertNull(settingRepo.findDepartment(id));
 	}
 	
@@ -310,6 +340,10 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		Department department1 = settingRepo.createDepartment("test one").save();
 		Department department2 = settingRepo.createDepartment("test two").save();
 		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
 		// Reorder the custom actions
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("departmentIds", "department_"+department2.getId()+",department_"+department1.getId());
@@ -317,7 +351,9 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		assertContentMatch("\"success\": \"true\"", response);
 		
 		// Verify that the actions were reorderd
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		department1 = settingRepo.findDepartment(department1.getId());
 		department2 = settingRepo.findDepartment(department2.getId());
 		
@@ -356,7 +392,9 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		Long id = Long.valueOf(idString);
 		
 		// Verify the action exists in the database.
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		assertNotNull(settingRepo.findMajor(id));
 		assertEquals("New Major",settingRepo.findMajor(id).getName());
 		
@@ -368,7 +406,9 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		response = POST(EDIT_URL,params);
 		
 		// Verify the action was updated in the database.
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		assertEquals("Changed Name",settingRepo.findMajor(id).getName());
 		
 		// Now remove the custom action
@@ -378,7 +418,9 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		assertContentMatch("\"success\": \"true\"", response);
 		
 		// Verify the action was deleted in the database;
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		assertNull(settingRepo.findMajor(id));
 	}
 	
@@ -395,6 +437,10 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		Major major1 = settingRepo.createMajor("test one").save();
 		Major major2 = settingRepo.createMajor("test two").save();
 		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
 		// Reorder the custom actions
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("majorIds", "major_"+major2.getId()+",major_"+major1.getId());
@@ -402,7 +448,9 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		assertContentMatch("\"success\": \"true\"", response);
 		
 		// Verify that the actions were reorderd
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		major1 = settingRepo.findMajor(major1.getId());
 		major2 = settingRepo.findMajor(major2.getId());
 		
@@ -442,7 +490,9 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		Long id = Long.valueOf(idString);
 		
 		// Verify the action exists in the database.
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		assertNotNull(settingRepo.findDegree(id));
 		assertEquals("New Degree",settingRepo.findDegree(id).getName());
 		assertEquals(DegreeLevel.UNDERGRADUATE,settingRepo.findDegree(id).getLevel());
@@ -456,7 +506,9 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		response = POST(EDIT_URL,params);
 		
 		// Verify the action was updated in the database.
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		assertEquals("Changed Name",settingRepo.findDegree(id).getName());
 		assertEquals(DegreeLevel.DOCTORAL,settingRepo.findDegree(id).getLevel());
 
@@ -468,7 +520,9 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		assertContentMatch("\"success\": \"true\"", response);
 		
 		// Verify the action was deleted in the database;
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		assertNull(settingRepo.findDegree(id));
 	}
 	
@@ -485,6 +539,10 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		Degree degree1 = settingRepo.createDegree("test one",DegreeLevel.DOCTORAL).save();
 		Degree degree2 = settingRepo.createDegree("test two",DegreeLevel.MASTERS).save();
 		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
 		// Reorder the custom actions
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("degreeIds", "degree_"+degree2.getId()+",degree_"+degree1.getId());
@@ -492,7 +550,9 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		assertContentMatch("\"success\": \"true\"", response);
 		
 		// Verify that the actions were reorderd
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		degree1 = settingRepo.findDegree(degree1.getId());
 		degree2 = settingRepo.findDegree(degree2.getId());
 		
@@ -532,7 +592,9 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		Long id = Long.valueOf(idString);
 		
 		// Verify the action exists in the database.
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		assertNotNull(settingRepo.findDocumentType(id));
 		assertEquals("New Document Type",settingRepo.findDocumentType(id).getName());
 		assertEquals(DegreeLevel.UNDERGRADUATE,settingRepo.findDocumentType(id).getLevel());
@@ -546,7 +608,9 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		response = POST(EDIT_URL,params);
 		
 		// Verify the action was updated in the database.
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		assertEquals("Changed Name",settingRepo.findDocumentType(id).getName());
 		assertEquals(DegreeLevel.DOCTORAL,settingRepo.findDocumentType(id).getLevel());
 
@@ -558,7 +622,9 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		assertContentMatch("\"success\": \"true\"", response);
 		
 		// Verify the action was deleted in the database;
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		assertNull(settingRepo.findDocumentType(id));
 	}
 	
@@ -575,6 +641,10 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		DocumentType docType1 = settingRepo.createDocumentType("test one",DegreeLevel.DOCTORAL).save();
 		DocumentType docType2 = settingRepo.createDocumentType("test two",DegreeLevel.MASTERS).save();
 		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
 		// Reorder the custom actions
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("documentTypeIds", "documentType_"+docType2.getId()+",documentType_"+docType1.getId());
@@ -582,7 +652,9 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		assertContentMatch("\"success\": \"true\"", response);
 		
 		// Verify that the actions were reorderd
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		docType1 = settingRepo.findDocumentType(docType1.getId());
 		docType2 = settingRepo.findDocumentType(docType2.getId());
 		
@@ -621,7 +693,9 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		Long id = Long.valueOf(idString);
 		
 		// Verify the action exists in the database.
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		assertNotNull(settingRepo.findGraduationMonth(id));
 		assertEquals(10,settingRepo.findGraduationMonth(id).getMonth());
 		
@@ -633,7 +707,9 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		response = POST(EDIT_URL,params);
 		
 		// Verify the action was updated in the database.
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		assertEquals(0,settingRepo.findGraduationMonth(id).getMonth());
 		
 		// Now remove the custom action
@@ -643,7 +719,9 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		assertContentMatch("\"success\": \"true\"", response);
 		
 		// Verify the action was deleted in the database;
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		assertNull(settingRepo.findGraduationMonth(id));
 	}
 	
@@ -660,6 +738,10 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		GraduationMonth month1 = settingRepo.createGraduationMonth(6).save();
 		GraduationMonth month2 = settingRepo.createGraduationMonth(10).save();
 		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
 		// Reorder the custom actions
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("graduationMonthIds", "graduationMonth_"+month2.getId()+",graduationMonth_"+month1.getId());
@@ -667,7 +749,9 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		assertContentMatch("\"success\": \"true\"", response);
 		
 		// Verify that the actions were reorderd
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		month1 = settingRepo.findGraduationMonth(month1.getId());
 		month2 = settingRepo.findGraduationMonth(month2.getId());
 		

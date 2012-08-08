@@ -76,8 +76,9 @@ public class EmailSettingsTabTest extends AbstractVireoFunctionalTest {
 		
 		// Get the field's current state
 		List<String> originalState = new ArrayList<String>();
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
-		for (String field : booleanFields) {
+		JPA.em().getTransaction().begin();		for (String field : booleanFields) {
 			if (settingRepo.findConfigurationByName(field) != null)
 				originalState.add(field);
 		}
@@ -93,8 +94,9 @@ public class EmailSettingsTabTest extends AbstractVireoFunctionalTest {
 		}
 		
 		// Check that all the fields are set.
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
-		for (String field : booleanFields) {
+		JPA.em().getTransaction().begin();		for (String field : booleanFields) {
 			assertNotNull(settingRepo.findConfigurationByName(field));
 		}
 		
@@ -109,8 +111,9 @@ public class EmailSettingsTabTest extends AbstractVireoFunctionalTest {
 		}
 		
 		// Check that all the fields are turned off.
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
-		for (String field : booleanFields) {
+		JPA.em().getTransaction().begin();		for (String field : booleanFields) {
 			assertNull(settingRepo.findConfigurationByName(field));
 		}
 		
@@ -153,8 +156,9 @@ public class EmailSettingsTabTest extends AbstractVireoFunctionalTest {
 		Long id = Long.valueOf(idString);
 		
 		// Verify the action exists in the database.
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
-		assertNotNull(settingRepo.findEmailTemplate(id));
+		JPA.em().getTransaction().begin();		assertNotNull(settingRepo.findEmailTemplate(id));
 		assertEquals("New Template",settingRepo.findEmailTemplate(id).getName());
 		assertEquals("New Subject",settingRepo.findEmailTemplate(id).getSubject());
 		assertEquals("New Message",settingRepo.findEmailTemplate(id).getMessage());
@@ -179,7 +183,9 @@ public class EmailSettingsTabTest extends AbstractVireoFunctionalTest {
 
 		
 		// Verify the action was updated in the database.
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		assertEquals("Changed Name",settingRepo.findEmailTemplate(id).getName());
 		assertEquals("Changed Subject",settingRepo.findEmailTemplate(id).getSubject());
 		assertEquals("Changed Message",settingRepo.findEmailTemplate(id).getMessage());
@@ -191,7 +197,9 @@ public class EmailSettingsTabTest extends AbstractVireoFunctionalTest {
 		assertContentMatch("\"success\": \"true\"", response);
 		
 		// Verify the action was deleted in the database;
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		assertNull(settingRepo.findEmailTemplate(id));
 	}
 	
@@ -208,6 +216,10 @@ public class EmailSettingsTabTest extends AbstractVireoFunctionalTest {
 		EmailTemplate template1 = settingRepo.createEmailTemplate("name1", "subject", "message").save();
 		EmailTemplate template2 = settingRepo.createEmailTemplate("name2", "subject", "message").save();
 		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
 		// Reorder the custom actions
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("emailTemplateIds", "emailTemplate_"+template2.getId()+",emailTemplate_"+template1.getId());
@@ -215,7 +227,9 @@ public class EmailSettingsTabTest extends AbstractVireoFunctionalTest {
 		assertContentMatch("\"success\": \"true\"", response);
 		
 		// Verify that the actions were reorderd
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		template1 = settingRepo.findEmailTemplate(template1.getId());
 		template2 = settingRepo.findEmailTemplate(template2.getId());
 		assertTrue(template1.getDisplayOrder() > template2.getDisplayOrder());

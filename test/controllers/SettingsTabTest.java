@@ -48,6 +48,10 @@ public class SettingsTabTest extends AbstractVireoFunctionalTest {
 		Response response = POST(UPDATE_URL,params);
 		assertContentMatch("\"success\": \"true\",", response);
 		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
 		person = personRepo.findPersonByEmail("bthornton@gmail.com");
 		assertEquals("changed",person.getDisplayName());
 		person.setDisplayName(originalDisplayName);
@@ -66,7 +70,10 @@ public class SettingsTabTest extends AbstractVireoFunctionalTest {
 
 		Person person = personRepo.findPersonByEmail("bthornton@gmail.com");
 		String originalDisplayName = person.getDisplayName();
-		JPA.em().detach(person);
+
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		
 		// Login as an administrator
 		LOGIN();
@@ -80,6 +87,10 @@ public class SettingsTabTest extends AbstractVireoFunctionalTest {
 		
 		Response response = POST(UPDATE_URL,params);
 		assertContentMatch("\"success\": \"true\",", response);
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		
 		person = personRepo.findPersonByEmail("bthornton@gmail.com");
 		assertEquals(person.getFullName(),person.getDisplayName());
@@ -98,7 +109,10 @@ public class SettingsTabTest extends AbstractVireoFunctionalTest {
 
 		Person person = personRepo.findPersonByEmail("bthornton@gmail.com");
 		String originalCurrentEmailAddress = person.getCurrentEmailAddress();
-		JPA.em().detach(person);
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		
 		// Login as an administrator
 		LOGIN();
@@ -112,6 +126,10 @@ public class SettingsTabTest extends AbstractVireoFunctionalTest {
 		
 		Response response = POST(UPDATE_URL,params);
 		assertContentMatch("\"success\": \"true\",", response);
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		
 		person = personRepo.findPersonByEmail("bthornton@gmail.com");
 		assertEquals("changed@email.com",person.getCurrentEmailAddress());
@@ -130,8 +148,10 @@ public class SettingsTabTest extends AbstractVireoFunctionalTest {
 
 		Person person = personRepo.findPersonByEmail("bthornton@gmail.com");
 		Preference originalCCEmail = person.getPreference("ccEmail");
-		JPA.em().detach(person);
-		JPA.em().detach(originalCCEmail);
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		
 		// Login as an administrator
 		LOGIN();
@@ -145,6 +165,10 @@ public class SettingsTabTest extends AbstractVireoFunctionalTest {
 		
 		Response response = POST(UPDATE_URL,params);
 		assertContentMatch("\"success\": \"true\",", response);
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		
 		person = personRepo.findPersonByEmail("bthornton@gmail.com");
 		assertNotNull(person.getPreference("ccEmail"));

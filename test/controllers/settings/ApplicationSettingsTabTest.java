@@ -80,7 +80,9 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 		
 		// Get the current list of 
 		List<String> originalState = new ArrayList<String>();
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		for (String field : booleanFields) {
 			if (settingRepo.findConfigurationByName(field) != null)
 				originalState.add(field);
@@ -98,7 +100,9 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 		}
 		
 		// Check that all the fields are set.
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		for (String field : booleanFields) {
 			assertNotNull(settingRepo.findConfigurationByName(field));
 		}
@@ -114,7 +118,9 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 		}
 		
 		// Check that all the fields are turned off.
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		for (String field : booleanFields) {
 			assertNull(settingRepo.findConfigurationByName(field));
 		}
@@ -185,7 +191,9 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 	
 		
 		// Check that all the fields are set.
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		assertNotNull(settingRepo.findConfigurationByName(SUBMIT_INSTRUCTIONS));
 		assertEquals("changed \"by test\"",settingRepo.findConfigurationByName(SUBMIT_INSTRUCTIONS).getValue());
 		
@@ -203,9 +211,10 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 	
 	/**
 	 * Test adding and removing custom actions
+	 * @throws InterruptedException 
 	 */
 	@Test
-	public void testAddingEditingAndRemovingACustomAction() {
+	public void testAddingEditingAndRemovingACustomAction() throws InterruptedException {
 		
 		LOGIN();
 		
@@ -229,7 +238,9 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 		Long id = Long.valueOf(idString);
 		
 		// Verify the action exists in the database.
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		assertNotNull(settingRepo.findCustomActionDefinition(id));
 		
 		
@@ -240,7 +251,10 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 		response = POST(EDIT_URL,params);
 		
 		// Verify the action was updated in the database.
+		Thread.yield();
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		assertEquals("Changed Label",settingRepo.findCustomActionDefinition(id).getLabel());
 		
 		// Now remove the custom action
@@ -250,7 +264,9 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 		assertContentMatch("\"success\": \"true\"", response);
 		
 		// Verify the action was deleted in the database;
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		assertNull(settingRepo.findCustomActionDefinition(id));
 	}
 	
@@ -267,6 +283,10 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 		// Create two custom actions:
 		CustomActionDefinition action1 = settingRepo.createCustomActionDefinition("test one").save();
 		CustomActionDefinition action2 = settingRepo.createCustomActionDefinition("test two").save();
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
 		
 		// Reorder the custom actions
 		Map<String,String> params = new HashMap<String,String>();
@@ -274,8 +294,11 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 		Response response = POST(REORDER_URL,params);
 		assertContentMatch("\"success\": \"true\"", response);
 		
+		
 		// Verify that the actions were reorderd
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		action1 = settingRepo.findCustomActionDefinition(action1.getId());
 		action2 = settingRepo.findCustomActionDefinition(action2.getId());
 		
@@ -347,6 +370,10 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 		// Create a person
 		Person person = personRepo.createPerson("netid", "email@email.com", "firstName", "lastName", RoleType.NONE).save();
 		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
 		// Upgrade person to a reviewer
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("personId", "personId_"+person.getId());
@@ -357,7 +384,9 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 		assertContentMatch("personId_"+person.getId(),response);
 		assertContentMatch(person.getFullName(),response);
 		
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		personRepo.findPerson(person.getId()).delete();
 		
 		

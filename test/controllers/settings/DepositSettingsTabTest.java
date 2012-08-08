@@ -104,6 +104,10 @@ public class DepositSettingsTabTest extends AbstractVireoFunctionalTest {
 	 */
 	@Test
 	public void testSaveAndDeleteDepositLocation() {
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		LOGIN();
 		
 		// Get our urls and a list of fields.
@@ -139,6 +143,9 @@ public class DepositSettingsTabTest extends AbstractVireoFunctionalTest {
 		Long id = Long.valueOf(idString);
 		
 		// Check if the location exists
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		DepositLocation location = settingRepo.findDepositLocation(id);
 		
 		assertNotNull(location);
@@ -152,7 +159,9 @@ public class DepositSettingsTabTest extends AbstractVireoFunctionalTest {
 		assertContentMatch("\"success\": \"true\"", response);
 		
 		// Check that it was deleted in the database.
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		assertNull(settingRepo.findDepositLocation(id));
 	}
 	
@@ -169,6 +178,10 @@ public class DepositSettingsTabTest extends AbstractVireoFunctionalTest {
 		DepositLocation location1 = settingRepo.createDepositLocation("one").save();
 		DepositLocation location2 = settingRepo.createDepositLocation("two").save();
 		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
 		// Reorder the custom actions
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("depositLocationIds", "depositLocation_"+location2.getId()+",depositLocation_"+location1.getId());
@@ -176,7 +189,9 @@ public class DepositSettingsTabTest extends AbstractVireoFunctionalTest {
 		assertContentMatch("\"success\": \"true\"", response);
 		
 		// Verify that the actions were reorderd
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		location1 = settingRepo.findDepositLocation(location1.getId());
 		location2 = settingRepo.findDepositLocation(location2.getId());
 		assertTrue(location1.getDisplayOrder() > location2.getDisplayOrder());
@@ -230,6 +245,9 @@ public class DepositSettingsTabTest extends AbstractVireoFunctionalTest {
 		Long id = Long.valueOf(idString);
 		
 		// Check if the location exists
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		DepositLocation location = settingRepo.findDepositLocation(id);
 		
 		assertNotNull(location);
@@ -243,7 +261,9 @@ public class DepositSettingsTabTest extends AbstractVireoFunctionalTest {
 		assertContentMatch("\"success\": \"true\"", response);
 		
 		// Check that it was deleted in the database.
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		assertNull(settingRepo.findDepositLocation(id));
 	}
 }

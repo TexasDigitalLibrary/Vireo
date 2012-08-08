@@ -81,6 +81,9 @@ public class SubmitTest extends AbstractVireoFunctionalTest {
         assertContentMatch("License Agreement", response);
 
         // Check db
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
         s = null;
         s = subRepo.findSubmission(subId);
 
@@ -119,7 +122,9 @@ public class SubmitTest extends AbstractVireoFunctionalTest {
         // Check db
         response = null;
         s = null;
-        JPA.em().clear();
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
         s = subRepo.findSubmission(subId);
         assertNotNull(s.getLicenseAgreementDate());
 
@@ -152,7 +157,9 @@ public class SubmitTest extends AbstractVireoFunctionalTest {
 
         // check db
         s = null;
-        JPA.em().clear();
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
         s = subRepo.findSubmission(subId);
         assertEquals(args.get("chairEmail"), s.getCommitteeContactEmail());
         assertEquals(args.get("title"), s.getDocumentTitle());
@@ -196,7 +203,9 @@ public class SubmitTest extends AbstractVireoFunctionalTest {
         // Check for file, db
         s = null;
         args = null;
-        JPA.em().clear();
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
         s = subRepo.findSubmission(subId);
         assertNotNull(s.getPrimaryDocument());
         assertEquals(2, s.getAttachments().size());
@@ -236,7 +245,9 @@ public class SubmitTest extends AbstractVireoFunctionalTest {
 
         // Check db
         s = null;
-        JPA.em().clear();
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
         s = subRepo.findSubmission(subId);
         assertEquals("Submitted", s.getState().getDisplayName());
 

@@ -618,7 +618,7 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 	 * Test doing a batch deposit.
 	 */
 	@Test
-	public void testDpositAndPublish() throws InterruptedException {
+	public void testDepositAndPublish() throws InterruptedException {
 
 		context.turnOffAuthorization();
 		
@@ -663,7 +663,9 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 		}
 		
 		// Check that the submission had a deposit id set.
+		JPA.em().getTransaction().commit();
 		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		sub = subRepo.findSubmission(sub.getId());
 		assertNotNull(sub.getDepositId());
 		sub.delete();
