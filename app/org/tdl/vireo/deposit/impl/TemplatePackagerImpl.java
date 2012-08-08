@@ -16,7 +16,10 @@ import org.tdl.vireo.deposit.DepositPackage;
 import org.tdl.vireo.deposit.Packager;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.AttachmentType;
+import org.tdl.vireo.model.PersonRepository;
+import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.model.SubmissionRepository;
 
 import play.Play;
 import play.exceptions.TemplateNotFoundException;
@@ -47,6 +50,10 @@ public class TemplatePackagerImpl extends AbstractPackagerImpl {
 	public List<AttachmentType> attachmentTypes = null;
 	public Map<String,Object> templateArguments = null;
 	
+	// Repositories to be injected into template for convienence
+	public PersonRepository personRepo;
+	public SubmissionRepository subRepo;
+	public SettingsRepository settingRepo;
 
 	/**
 	 * Construct a new template packager.
@@ -56,6 +63,38 @@ public class TemplatePackagerImpl extends AbstractPackagerImpl {
 		attachmentTypes.add(AttachmentType.PRIMARY);
 		attachmentTypes.add(AttachmentType.SUPPLEMENTAL);
 	}
+	
+	/**
+	 * Inject the repository of people and their preferences.
+	 * 
+	 * @param personRepo
+	 *            Person Repository
+	 */
+	public void setPersonRepository(PersonRepository personRepo) {
+		this.personRepo = personRepo;
+	}
+
+	/**
+	 * Inject the repository of submission and their related objects: committee
+	 * members, attachments, custom action values.
+	 * 
+	 * @param subRepo
+	 *            Submission Repository
+	 */
+	public void setSubmissionRepository(SubmissionRepository subRepo) {
+		this.subRepo = subRepo;
+	}
+
+	/**
+	 * Inject the repository of system-wide settings & configuration.
+	 * 
+	 * @param settingRepo
+	 *            Settings Repository
+	 */
+	public void setSettingsRepository(SettingsRepository settingRepo) {
+		this.settingRepo = settingRepo;
+	}
+	
 	
 	/**
 	 * (REQUIRED) Set the template for generating the manifest file. This
@@ -175,6 +214,9 @@ public class TemplatePackagerImpl extends AbstractPackagerImpl {
 			// Generate the manifest.
 			Map<String, Object> templateBinding = new HashMap<String,Object>();
 			templateBinding.put("sub", submission);
+			templateBinding.put("personRepo", personRepo);
+			templateBinding.put("subRepo",subRepo);
+			templateBinding.put("settingRepo",settingRepo);
 			if (templateArguments != null)
 				templateBinding.putAll(templateArguments);
 			Template template = TemplateLoader.load(templateFile);
@@ -220,11 +262,9 @@ public class TemplatePackagerImpl extends AbstractPackagerImpl {
 			
 			// Close out all the resources
 			zos.close();
-			
-			
+		
 			// Create the actual package!
-			String depositId = submission.getDepositId();
-			return new TemplatePackage(depositId, mimeType, format, file);
+			return new TemplatePackage(submission, mimeType, format, file);
 		} catch (IOException ioe) {
 			throw new RuntimeException("Unable to generate package",ioe);
 		}
@@ -241,18 +281,25 @@ public class TemplatePackagerImpl extends AbstractPackagerImpl {
 	public static class TemplatePackage implements DepositPackage {
 
 		// Members
+		public final Submission submission;
 		public final String depositId;
 		public final String mimeType;
 		public final String format;
 		public final File file;
 
-		public TemplatePackage(String depositId, String mimeType, String format, File file) {
-			this.depositId = depositId;
+		public TemplatePackage(Submission submission, String mimeType, String format, File file) {
+			this.submission = submission;
+			this.depositId = submission.getDepositId();
 			this.mimeType = mimeType;
 			this.format = format;
 			this.file = file;
 		}
 
+		@Override
+		public Submission getSubmission() {
+			return submission;
+		}
+		
 		@Override
 		public String getDepositId() {
 			return depositId;

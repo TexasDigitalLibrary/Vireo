@@ -3,6 +3,8 @@ package org.tdl.vireo.deposit;
 import java.io.File;
 import java.io.IOException;
 
+import org.tdl.vireo.model.Submission;
+
 /**
  * Mock implementation of the deposit package interface.
  * 
@@ -10,6 +12,7 @@ import java.io.IOException;
  */
 public class MockDepositPackage implements DepositPackage {
 
+	public Submission submission;
 	public String depositId;
 	public String mimeType = "application/zip";
 	public String format = "http://something/";
@@ -23,6 +26,11 @@ public class MockDepositPackage implements DepositPackage {
 		}
 	}
 
+	@Override
+	public Submission getSubmission() {
+		return submission;
+	}
+	
 	@Override
 	public String getDepositId() {
 		return depositId;

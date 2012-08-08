@@ -2,6 +2,8 @@ package org.tdl.vireo.deposit;
 
 import java.io.File;
 
+import org.tdl.vireo.model.Submission;
+
 /**
  * A deposit package contains all the information necessary for a depositor to
  * submit the submission to a remote repository. This class is build by a
@@ -11,6 +13,11 @@ import java.io.File;
  */
 public interface DepositPackage {
 
+	/**
+	 * @return The submission from which this package was derived.
+	 */
+	public Submission getSubmission();
+	
 	/**
 	 * If the package allready has a deposit id assigned, possibily by a
 	 * previous deposit then this is the id assigned.

@@ -189,9 +189,12 @@
                     </dim:field>
                     #{/if}
                     
-                    <!-- thesis.degree.grantor = Constant Value -->
-                    <!-- TODO: add degree.grantor -->
-                    
+                    <!-- thesis.degree.grantor = Global configuration setting (settings tab - application settings) -->
+                    #{ if settingRepo.getConfig(org.tdl.vireo.model.Configuration.GRANTOR) != null } 
+                    <dim:field mdschema="thesis" element="degree" qualifier="grantor">
+                        ${ settingRepo.getConfig(org.tdl.vireo.model.Configuration.GRANTOR) }
+                    </dim:field>
+                    #{/if}
                     
                     <!-- thesis.degree.department = Department -->
                     #{if sub.getDepartment() != null } 
@@ -282,12 +285,29 @@
             <file GROUPID="piper-mets-file-group-${ attachment.getType().ordinal() }" 
                   ID="piper-mets-file-${ attachment.getId() }" 
                   MIMETYPE="${ attachment.getMimeType().escapeXml() }"
-                  SEQ="${ sub.getSupplementalDocuments().indexOf(attachment) + 1 }">
+                  SEQ="${ sub.getSupplementalDocuments().indexOf(attachment) + 2 }">
                   <FLocat LOCTYPE="URL" xlink:href="${ attachment.getName().escapeXml() }"/>
             </file>
             #{/list}
  
         </fileGrp>
+        
+        <fileGrp ID="vireo-mets-fgrp-2" USE="LICENSE">
+        
+            <!-- Licence Documents -->
+            
+            #{list items:sub.getAttachments(), as:'attachment'}
+            #{if attachment.getType() == org.tdl.vireo.model.AttachmentType.LICENSE}
+            <file GROUPID="piper-mets-file-group-${ attachment.getType().ordinal() }" 
+                  ID="piper-mets-file-${ attachment.getId() }" 
+                  MIMETYPE="${ attachment.getMimeType().escapeXml() }">
+                  <FLocat LOCTYPE="URL" xlink:href="${ attachment.getName().escapeXml() }"/>
+            </file>
+            #{/if}
+            #{/list}
+        
+        </fileGrp>
+        
     </fileSec>
     
     <structMap ID="vireo-mets-struct-1" LABEL="structure" TYPE="LOGICAL">

@@ -12,6 +12,7 @@ import java.util.Map;
 import org.junit.Test;
 import org.tdl.vireo.deposit.DepositPackage;
 import org.tdl.vireo.model.MockDepositLocation;
+import org.tdl.vireo.model.Submission;
 
 import play.Play;
 import play.modules.spring.Spring;
@@ -310,6 +311,7 @@ public class Sword1DepositorImplTest extends UnitTest {
 	 */
 	public static class MockPackage implements DepositPackage {
 
+		public Submission submission;
 		public String mimeType;
 		public String format;
 		public File file;
@@ -318,6 +320,12 @@ public class Sword1DepositorImplTest extends UnitTest {
 			this.mimeType = mimeType;
 			this.format = format;
 			this.file = file;
+		}
+		
+		@Override
+		public Submission getSubmission() {
+			// Sword 1 dosen't need the submission
+			return null;
 		}
 		
 		@Override

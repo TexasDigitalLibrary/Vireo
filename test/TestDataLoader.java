@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -9,10 +10,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.tdl.vireo.deposit.Depositor;
 import org.tdl.vireo.deposit.Packager;
+import org.tdl.vireo.deposit.impl.FileDepositorImpl;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.Degree;
 import org.tdl.vireo.model.DegreeLevel;
@@ -488,14 +491,14 @@ public class TestDataLoader extends Job {
 				"DSpaceMETS", 
 				"Sword1Deposit"),
 		new DepositLocationArray(
-				"Failure Repository", // name
-				"http://localhost:8082/servicedocument", // repository
-				"http://localhost:8082/deposit/a", // collection
-				"invalid", // username
-				"invalid", // password
-				"error", // onBehalfOf
+				"File Deposit", // name
+				"data/deposits/", // repository
+				"", // collection
+				"", // username
+				"", // password
+				"", // onBehalfOf
 				"DSpaceMETS", 
-				"Sword1Deposit")
+				"FileDeposit")
 	};
 	
 	/**
@@ -553,7 +556,7 @@ public class TestDataLoader extends Job {
 	 * Load all predefined settings. Colleges, departments, majors, degrees,
 	 * document types, graduation month, and embargo definitions.
 	 */
-	public static void loadSettings() throws MalformedURLException {
+	public static void loadSettings() throws IOException {
 				
 		// Create all configuration settings
 		for (ConfigurationArray config : CONFIG_DEFINITIONS) {
@@ -608,15 +611,24 @@ public class TestDataLoader extends Job {
 		
 		// Create all deposit locations
 		for(DepositLocationArray locationDefinition : DEPOSIT_LOCATION_DEFINITIONS) {
+			Depositor depositor = (Depositor) Spring.getBean(locationDefinition.depositor);
+			Packager packager = (Packager) Spring.getBean(locationDefinition.packager);
+			
 			DepositLocation location = settingRepo.createDepositLocation(locationDefinition.name);
 			location.setRepository(locationDefinition.repository);
 			location.setCollection(locationDefinition.collection);
 			location.setUsername(locationDefinition.username);
 			location.setPassword(locationDefinition.password);
 			location.setOnBehalfOf(locationDefinition.onBehalfOf);
-			location.setDepositor((Depositor) Spring.getBean(locationDefinition.depositor));
-			location.setPackager((Packager) Spring.getBean(locationDefinition.packager));
+			location.setDepositor(depositor);
+			location.setPackager(packager);
 			location.save();
+			
+			
+			if (depositor instanceof FileDepositorImpl) {
+				File baseDir = ((FileDepositorImpl) depositor).baseDir;
+				FileUtils.forceMkdir(baseDir);
+			}
 		}
 	}
 	

@@ -22,6 +22,12 @@ import org.tdl.vireo.model.DepositLocation;
 import play.Logger;
 import org.tdl.vireo.deposit.DepositException.FIELD;
 
+/**
+ * Sword, version 1, depositor. This supports identifying collections from the
+ * service document and depositing them into the repository.
+ * 
+ * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
+ */
 public class Sword1DepositorImpl implements Depositor, BeanNameAware {
 
 	/**

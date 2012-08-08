@@ -221,7 +221,7 @@ public class DepositSettingsTab extends SettingsTab {
 				// password we use blanks. So if it's the same number of blanks
 				// leave the password alone.
 				String originalPassword = location.getPassword();
-				if (originalPassword != null) {					
+				if (originalPassword != null && password != null) {					
 					// Convert the original password to all spaces.
 					originalPassword = originalPassword.replaceAll(".", " ");
 					
