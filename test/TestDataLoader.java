@@ -739,9 +739,6 @@ public class TestDataLoader extends Job {
 			if (random.nextInt(100) > 50)
 				sub.setCommitteeApprovalDate(generateRandomDate(random,2,2010));
 			
-			if (random.nextInt(100) > 50)
-				sub.setDepositId(String.valueOf(random.nextInt()));
-			
 			sub.save();
 			context.logout();
 			
