@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.ScheduledFuture;
@@ -311,6 +312,30 @@ public class DepositServiceImpl implements DepositService{
 	
 				if (submission == null) {
 					// This is the complex case, we're depositing a batch of items.
+					Iterator<Submission> itr = searcher.submissionSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING);
+					
+					while (itr.hasNext()) {
+						Submission sub = itr.next();
+						depositSubmission(sub);
+						
+						JPA.em().getTransaction().commit();
+						JPA.em().getTransaction().begin();
+					}
+					
+					
+					/*************
+					 * This is the old implementation written before the
+					 * submissionSearch supported an iterator. I am not 100%
+					 * positive that there are no side effects to the newer
+					 * implementation, so I'm going to leave this around here as
+					 * a comment to make it easier to roll back. Just take out
+					 * the code from here to the top of "if submission == null".
+					 * 
+					 * However, if you're looking at this and it's not 2012,
+					 * then you should delete this comment because all the
+					 * possible sideffects have been discovered.
+					 *
+
 					int offset = 0;
 					
 					SearchResult<Submission> results = null;
@@ -334,6 +359,7 @@ public class DepositServiceImpl implements DepositService{
 						JPA.em().clear();
 						JPA.em().getTransaction().begin();					
 					} while ( results.getResults().size() != 0 );
+					************/
 					
 				} else {
 					// This is the simple case, just deposit this one item.
