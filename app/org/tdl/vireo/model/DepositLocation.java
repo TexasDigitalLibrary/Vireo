@@ -2,8 +2,8 @@ package org.tdl.vireo.model;
 
 import java.net.URL;
 
-import org.tdl.vireo.deposit.Depositor;
-import org.tdl.vireo.deposit.Packager;
+import org.tdl.vireo.export.Depositor;
+import org.tdl.vireo.export.Packager;
 
 /**
  * A pre-configured deposit location. While technically this may mean deposit

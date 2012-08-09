@@ -1,4 +1,4 @@
-package org.tdl.vireo.deposit;
+package org.tdl.vireo.export;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +39,6 @@ public interface Packager {
 	 *            The submission
 	 * @return A package
 	 */
-	public DepositPackage generatePackage(Submission submission);
+	public ExportPackage generatePackage(Submission submission);
 
 }

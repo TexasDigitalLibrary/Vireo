@@ -8,8 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import org.tdl.vireo.deposit.Depositor;
-import org.tdl.vireo.deposit.Packager;
+import org.tdl.vireo.export.Depositor;
+import org.tdl.vireo.export.Packager;
 import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.DepositLocation;

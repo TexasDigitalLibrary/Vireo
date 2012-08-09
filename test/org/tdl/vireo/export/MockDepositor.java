@@ -1,9 +1,11 @@
-package org.tdl.vireo.deposit;
+package org.tdl.vireo.export;
 
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.tdl.vireo.export.Depositor;
+import org.tdl.vireo.export.ExportPackage;
 import org.tdl.vireo.model.DepositLocation;
 
 /**
@@ -34,7 +36,7 @@ public class MockDepositor implements Depositor {
 
 	@Override
 	public String deposit(DepositLocation location,
-			DepositPackage depositPackage) {
+			ExportPackage depositPackage) {
 
 		return String.format(depositIdFormat, depositsPerformed++);
 

@@ -1,4 +1,4 @@
-package org.tdl.vireo.deposit;
+package org.tdl.vireo.export;
 
 import java.io.File;
 
@@ -11,7 +11,7 @@ import org.tdl.vireo.model.Submission;
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
-public interface DepositPackage {
+public interface ExportPackage {
 
 	/**
 	 * @return The submission from which this package was derived.
@@ -19,17 +19,10 @@ public interface DepositPackage {
 	public Submission getSubmission();
 	
 	/**
-	 * If the package allready has a deposit id assigned, possibily by a
-	 * previous deposit then this is the id assigned.
-	 * 
-	 * @return The deposit id for this package, may be null if not available.
-	 */
-	public String getDepositId();
-	
-	/**
-	 * The mimetype of the packaging format. Since all packages must be a
-	 * single file, typically the mimetype is 'application/zip' for a zip
-	 * archive.
+	 * The mimetype of the packaging format. If the package is a single file,
+	 * then a mimetype should be returned. Such as application/zip. However the
+	 * common case is an amalgamation of multiple file types in a directory. In
+	 * this case the mimeType should be null.
 	 * 
 	 * @return The mimetype
 	 */
@@ -45,7 +38,9 @@ public interface DepositPackage {
 	public String getFormat();
 
 	/**
-	 * @return A File pointer to the package.
+	 * @return A File pointer to the package. The file may be either a directory
+	 *         on disk or a single file depending upon the packager and the
+	 *         specific format it includes.
 	 */
 	public File getFile();
 

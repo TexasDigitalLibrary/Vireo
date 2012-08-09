@@ -1,4 +1,4 @@
-package org.tdl.vireo.deposit.impl;
+package org.tdl.vireo.export.impl;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -11,8 +11,9 @@ import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
-import org.tdl.vireo.deposit.DepositPackage;
-import org.tdl.vireo.deposit.MockDepositPackage;
+import org.tdl.vireo.export.ExportPackage;
+import org.tdl.vireo.export.MockExportPackage;
+import org.tdl.vireo.export.impl.FileDepositorImpl;
 import org.tdl.vireo.model.MockDepositLocation;
 import org.tdl.vireo.model.MockSubmission;
 import org.tdl.vireo.model.Submission;
@@ -136,15 +137,15 @@ public class FileDepositorImplTest extends UnitTest {
 	public void testDeposit() throws IOException {
 		MockDepositLocation location = getDepositLocation();
 		
-		MockDepositPackage pkg = new MockDepositPackage();
-		pkg.file = getResourceFile("org/tdl/vireo/deposit/impl/Sword1_ValidDeposit.zip");
+		MockExportPackage pkg = new MockExportPackage();
+		pkg.file = getResourceFile("org/tdl/vireo/export/impl/Sword1_ValidDeposit.zip");
 		pkg.mimeType = "application/zip";
 		pkg.format = "http://purl.org/net/sword-types/METSDSpaceSIP";
 		pkg.submission = new MockSubmission();
 
 		String depositID = depositor.deposit(location, pkg);
 		
-		assertNotNull(depositID);
+		assertNull(depositID);
 		
 		File depositFile = new File(depositor.baseDir.getPath()+File.separator+"package_"+pkg.submission.getId()+".zip");
 		assertTrue(depositFile.exists());

@@ -122,23 +122,23 @@
     </bean>
     
     <!-- Deposit -->
-    <bean id="DepositService" class="org.tdl.vireo.deposit.impl.DepositServiceImpl" scope="singleton">
+    <bean id="DepositService" class="org.tdl.vireo.export.impl.DepositServiceImpl" scope="singleton">
         <property name="personRepository" ref="PersonRepository"/>
         <property name="submissionRepository" ref="SubmissionRepository"/>
         <property name="securityContext" ref="SecurityContext"/>
         <property name="searcher" ref="Searcher"/>
         <property name="submissionsPerBatch" value="10"/>
     </bean>
-    <bean id="Sword1Deposit" class="org.tdl.vireo.deposit.impl.Sword1DepositorImpl" scope="singleton">
+    <bean id="Sword1Deposit" class="org.tdl.vireo.export.impl.Sword1DepositorImpl" scope="singleton">
         <property name="displayName" value="SWORD Version 1"/>
     </bean>
-    <bean id="FileDeposit" class="org.tdl.vireo.deposit.impl.FileDepositorImpl" scope="singleton">
+    <bean id="FileDeposit" class="org.tdl.vireo.export.impl.FileDepositorImpl" scope="singleton">
         <property name="displayName" value="File Deposit"/>
         <property name="baseDirectory" value="data/deposits"/>
     </bean>
     
     <!-- Deposit Packages -->
-    <bean id="DSpaceMETS" class="org.tdl.vireo.deposit.impl.TemplatePackagerImpl" scope="prototype">
+    <bean id="DSpaceMETS" class="org.tdl.vireo.export.impl.TemplatePackagerImpl" scope="prototype">
         <property name="personRepository" ref="PersonRepository"/>
         <property name="submissionRepository" ref="SubmissionRepository"/>
         <property name="settingsRepository" ref="SettingsRepository"/>
@@ -160,7 +160,7 @@
             </list>
         </property>
     </bean>
-    <bean id="GenericQDC" class="org.tdl.vireo.deposit.impl.TemplatePackagerImpl" scope="prototype">
+    <bean id="GenericQDC" class="org.tdl.vireo.export.impl.TemplatePackagerImpl" scope="prototype">
         <property name="personRepository" ref="PersonRepository"/>
         <property name="submissionRepository" ref="SubmissionRepository"/>
         <property name="settingsRepository" ref="SettingsRepository"/>

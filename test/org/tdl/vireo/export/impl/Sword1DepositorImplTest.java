@@ -1,5 +1,7 @@
-package org.tdl.vireo.deposit.impl;
+package org.tdl.vireo.export.impl;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -7,10 +9,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Enumeration;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.Test;
-import org.tdl.vireo.deposit.DepositPackage;
+import org.tdl.vireo.export.ExportPackage;
+import org.tdl.vireo.export.impl.Sword1DepositorImpl;
 import org.tdl.vireo.model.MockDepositLocation;
 import org.tdl.vireo.model.Submission;
 
@@ -190,10 +197,32 @@ public class Sword1DepositorImplTest extends UnitTest {
 	public void testDeposit() throws IOException {
 		MockDepositLocation location = getDepositLocation();
 		
-		File file = getResourceFile("org/tdl/vireo/deposit/impl/Sword1_ValidDeposit.zip");
+		File file = getResourceFile("org/tdl/vireo/export/impl/Sword1_ValidDeposit.zip");
 		String mimeType = "application/zip";
 		String format = "http://purl.org/net/sword-types/METSDSpaceSIP";
 		MockPackage pkg = new MockPackage(mimeType, format, file);
+
+		String depositID = depositor.deposit(location, pkg);
+		
+		assertNotNull(depositID);
+	}
+	
+	/**
+	 * Test that the depositor reports success for the valid deposit package that is uncompressed as a zip.
+	 */
+	@Test
+	public void testUncompressedDeposit() throws IOException {
+		MockDepositLocation location = getDepositLocation();
+		
+		File file = getResourceFile("org/tdl/vireo/export/impl/Sword1_ValidDeposit.zip");
+		File dir = File.createTempFile("tmp-", ".dir");
+		dir.delete();
+		dir.mkdir();
+		unzip(file, dir);
+		
+		String mimeType = null;
+		String format = "http://purl.org/net/sword-types/METSDSpaceSIP";
+		MockPackage pkg = new MockPackage(mimeType, format, dir);
 
 		String depositID = depositor.deposit(location, pkg);
 		
@@ -209,7 +238,7 @@ public class Sword1DepositorImplTest extends UnitTest {
 	public void testDepositWithBadPackage() throws IOException {
 		MockDepositLocation location = getDepositLocation();
 		
-		File file = getResourceFile("org/tdl/vireo/deposit/impl/Sword1_InvalidDeposit.zip");
+		File file = getResourceFile("org/tdl/vireo/export/impl/Sword1_InvalidDeposit.zip");
 		String mimeType = "application/zip";
 		String format = "http://purl.org/net/sword-types/METSDSpaceSIP";
 		MockPackage pkg = new MockPackage(mimeType, format, file);
@@ -236,7 +265,7 @@ public class Sword1DepositorImplTest extends UnitTest {
 		location.username = "invalid";
 		location.password = "invalid";
 
-		File file = getResourceFile("org/tdl/vireo/deposit/impl/Sword1_ValidDeposit.zip");
+		File file = getResourceFile("org/tdl/vireo/export/impl/Sword1_ValidDeposit.zip");
 		String mimeType = "application/zip";
 		String format = "http://purl.org/net/sword-types/METSDSpaceSIP";
 		MockPackage pkg = new MockPackage(mimeType, format, file);
@@ -293,6 +322,45 @@ public class Sword1DepositorImplTest extends UnitTest {
 	}
 
 	
+	public void unzip(File zipFile, File destDir) throws IOException {
+		int BUFFER = 2048;
+
+		ZipFile zip = new ZipFile(zipFile);
+		
+		Enumeration zipFileEntries = zip.entries();
+
+		// Process each entry
+		while (zipFileEntries.hasMoreElements()) {
+			// grab a zip file entry
+			ZipEntry entry = (ZipEntry) zipFileEntries.nextElement();
+
+			String currentEntry = entry.getName();
+
+			File destFile = new File(destDir, currentEntry);
+
+			// create the parent directory structure if needed
+			if (!entry.isDirectory()) {
+				BufferedInputStream is = new BufferedInputStream(zip.getInputStream(entry));
+				int currentByte;
+				// establish buffer for writing file
+				byte data[] = new byte[BUFFER];
+
+				// write the current file to disk
+				FileOutputStream fos = new FileOutputStream(destFile);
+				BufferedOutputStream bos = new BufferedOutputStream(fos,BUFFER);
+
+				// read and write until last byte is encountered
+				while ((currentByte = is.read(data, 0, BUFFER)) != -1) {
+					bos.write(data, 0, currentByte);
+				}
+				bos.flush();
+				bos.close();
+				is.close();
+			}
+		}
+	}
+
+	
 	/**
 	 * @return A basic deposit location.
 	 */
@@ -309,7 +377,7 @@ public class Sword1DepositorImplTest extends UnitTest {
 	/**
 	 * Mock deposit package.
 	 */
-	public static class MockPackage implements DepositPackage {
+	public static class MockPackage implements ExportPackage {
 
 		public Submission submission;
 		public String mimeType;
@@ -325,12 +393,6 @@ public class Sword1DepositorImplTest extends UnitTest {
 		@Override
 		public Submission getSubmission() {
 			// Sword 1 dosen't need the submission
-			return null;
-		}
-		
-		@Override
-		public String getDepositId() {
-			// Sword 1 dosen't support re-deposit
 			return null;
 		}
 		

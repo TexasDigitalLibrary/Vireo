@@ -6,7 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.tdl.vireo.deposit.DepositService;
+import org.tdl.vireo.export.DepositService;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.EmbargoType;
@@ -616,6 +616,15 @@ public class FilterTab extends AbstractVireoController {
 		depositService.deposit(location, filter, successStateObject);
 		
 		list();
+	}
+	
+	
+	@Security(RoleType.REVIEWER)
+	public static void export(String exportBean) {
+		
+		
+		
+		
 	}
 	
 	/**

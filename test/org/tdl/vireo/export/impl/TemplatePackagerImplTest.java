@@ -1,5 +1,6 @@
-package org.tdl.vireo.deposit.impl;
+package org.tdl.vireo.export.impl;
 
+import org.apache.commons.io.FileUtils;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -24,8 +25,9 @@ import java.util.zip.ZipInputStream;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.tdl.vireo.deposit.DepositPackage;
-import org.tdl.vireo.deposit.Packager;
+import org.tdl.vireo.export.ExportPackage;
+import org.tdl.vireo.export.Packager;
+import org.tdl.vireo.export.impl.TemplatePackagerImpl;
 import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.Person;
@@ -131,24 +133,21 @@ public class TemplatePackagerImplTest extends UnitTest {
 		
 		for (TemplatePackagerImpl packager : packagers.values()) {
 			
-			DepositPackage pkg = packager.generatePackage(sub);
+			ExportPackage pkg = packager.generatePackage(sub);
 			
 			assertNotNull(pkg);
-			assertEquals(sub.getDepositId(),pkg.getDepositId());
 			assertEquals(packager.format,pkg.getFormat());
 			assertEquals(packager.mimeType,pkg.getMimeType());
 			
 			
 			
 			
-			File zipFile = pkg.getFile();
-			assertNotNull(zipFile);
-			assertTrue("Package file does not exist", zipFile.exists());
-			assertTrue("Package file is not readable", zipFile.canRead());
+			File exportFile = pkg.getFile();
+			assertNotNull(exportFile);
+			assertTrue("Package file does not exist", exportFile.exists());
+			assertTrue("Package file is not readable", exportFile.canRead());
 			
-			File targetDir = createNewTempDir();
-			decompressZip(targetDir, zipFile);
-			Map<String, File> fileMap = getFileMap(targetDir);
+			Map<String, File> fileMap = getFileMap(exportFile);
 			
 			// There should be three files
 			assertTrue(fileMap.containsKey(packager.manifestName));
@@ -167,12 +166,8 @@ public class TemplatePackagerImplTest extends UnitTest {
 			assertTrue(manifest.contains(sub.getDocumentAbstract()));
 			
 			// Cleanup
-			for(File file : fileMap.values())
-				file.delete();
-			targetDir.delete();
-			
 			pkg.delete();
-			assertFalse(zipFile.exists());
+			assertFalse(exportFile.exists());
 		}
 	}
 	
@@ -191,48 +186,6 @@ public class TemplatePackagerImplTest extends UnitTest {
 		assertTrue(tempDir.isDirectory());
 
 		return tempDir;
-	}
-	
-	/**
-	 * A utility method that takes in zip file and extracts it into the target
-	 * directory
-	 * 
-	 * @param targetDir
-	 * @param zipFile
-	 */
-	public void decompressZip(File targetDir, File zipFile) throws IOException 
-	{
-		FileInputStream fio = new FileInputStream(zipFile);
-		ZipInputStream zio = new ZipInputStream(new BufferedInputStream(fio));
-	
-		ZipEntry entry;
-		File targetFile;
-		String filename;
-		while((entry = zio.getNextEntry()) != null) {
-			filename = entry.getName();
-			targetFile = new File(targetDir.getCanonicalPath() + File.separator + filename);
-			saveZipEntry(targetFile, zio);
-		}
-		zio.close();
-	}
-	
-	/**
-	 * Read from a zip input stream and save the contents in the target file
-	 * 
-	 * @param targetFile
-	 * @param zio
-	 */
-	public void saveZipEntry(File targetFile, ZipInputStream zio) throws IOException 
-	{
-		OutputStream os = new FileOutputStream(targetFile);
-
-		// Copy the file out of the zip archive and into the target file.
-		byte[] buffer = new byte[1024];
-		int len;
-		while ((len = zio.read(buffer)) > 0) {
-			os.write(buffer, 0, len);
-		}
-		os.close();
 	}
 
 	/**

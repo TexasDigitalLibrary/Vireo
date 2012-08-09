@@ -1,7 +1,7 @@
-package org.tdl.vireo.deposit.impl;
+package org.tdl.vireo.export.impl;
 
 import org.springframework.beans.factory.BeanNameAware;
-import org.tdl.vireo.deposit.Packager;
+import org.tdl.vireo.export.Packager;
 import org.tdl.vireo.model.Submission;
 
 /**

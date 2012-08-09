@@ -10,11 +10,11 @@ import java.util.Map;
 
 import javax.persistence.PersistenceException;
 
-import org.tdl.vireo.deposit.DepositException;
-import org.tdl.vireo.deposit.DepositException.FIELD;
-import org.tdl.vireo.deposit.DepositService;
-import org.tdl.vireo.deposit.Depositor;
-import org.tdl.vireo.deposit.Packager;
+import org.tdl.vireo.export.DepositException;
+import org.tdl.vireo.export.DepositService;
+import org.tdl.vireo.export.Depositor;
+import org.tdl.vireo.export.Packager;
+import org.tdl.vireo.export.DepositException.FIELD;
 import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.CustomActionDefinition;

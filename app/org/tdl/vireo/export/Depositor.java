@@ -1,4 +1,4 @@
-package org.tdl.vireo.deposit;
+package org.tdl.vireo.export;
 
 import java.net.URL;
 import java.util.Map;
@@ -35,13 +35,12 @@ public interface Depositor {
 	 *            The deposit location, a repository and collection. If all
 	 *            values are not assigned then an IllegalArgument exception will
 	 *            be thrown.
-	 * @param depositPackage
+	 * @param exportPackage
 	 *            The package to be deposited.
 	 * @return The depositID
 	 * @throws DepositException
 	 */
-	public String deposit(DepositLocation location,
-			DepositPackage depositPackage);
+	public String deposit(DepositLocation location, ExportPackage exportPackage);
 
 	/**
 	 * Retrieve a map of collection names, and their technical identifier.

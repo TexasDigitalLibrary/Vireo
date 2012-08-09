@@ -1,4 +1,4 @@
-package org.tdl.vireo.deposit.impl;
+package org.tdl.vireo.export.impl;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -9,10 +9,10 @@ import java.util.Set;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.ScheduledFuture;
 
-import org.tdl.vireo.deposit.DepositPackage;
-import org.tdl.vireo.deposit.DepositService;
-import org.tdl.vireo.deposit.Depositor;
-import org.tdl.vireo.deposit.Packager;
+import org.tdl.vireo.export.DepositService;
+import org.tdl.vireo.export.Depositor;
+import org.tdl.vireo.export.ExportPackage;
+import org.tdl.vireo.export.Packager;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.Person;
@@ -395,20 +395,23 @@ public class DepositServiceImpl implements DepositService{
 		 */
 		public void depositSubmission(Submission submission) {
 
-			DepositPackage depositPackage = null;
+			ExportPackage exportPackage = null;
 			try {
 				Packager packager = location.getPackager();
 				Depositor depositor = location.getDepositor();
 				
-				depositPackage = packager.generatePackage(submission);
+				exportPackage = packager.generatePackage(submission);
 				
-				String depositId = depositor.deposit(location, depositPackage);
+				String depositId = depositor.deposit(location, exportPackage);
 				
 				ActionLog log = submission.logAction("Deposited into repository collection '"+location.getCollection()+"'");
 				log.save();
-				submission.setDepositId(depositId);
+				
+				if (depositId != null)
+					submission.setDepositId(depositId);
 				if (successState != null)
 					submission.setState(successState);
+				
 				submission.save();
 				
 				Logger.info("Deposited submissions #"+submission.getId()+" into repository: '"+location.getRepository()+"', collection: '"+location.getCollection()+"', and assigned depositId: '"+depositId+"'.");
@@ -422,8 +425,8 @@ public class DepositServiceImpl implements DepositService{
 				if (runInThread)
 					throw re;
 			} finally {
-				if (depositPackage != null)
-					depositPackage.delete();
+				if (exportPackage != null)
+					exportPackage.delete();
 			}
 		}
 		

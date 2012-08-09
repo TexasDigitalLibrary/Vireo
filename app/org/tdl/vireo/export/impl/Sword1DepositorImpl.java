@@ -1,10 +1,21 @@
-package org.tdl.vireo.deposit.impl;
+package org.tdl.vireo.export.impl;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.io.FileUtils;
 import org.purl.sword.base.Collection;
 import org.purl.sword.base.DepositResponse;
 import org.purl.sword.base.Service;
@@ -14,13 +25,15 @@ import org.purl.sword.client.Client;
 import org.purl.sword.client.PostMessage;
 import org.purl.sword.client.SWORDClientException;
 import org.springframework.beans.factory.BeanNameAware;
-import org.tdl.vireo.deposit.DepositException;
-import org.tdl.vireo.deposit.DepositPackage;
-import org.tdl.vireo.deposit.Depositor;
+import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.DepositLocation;
 
 import play.Logger;
-import org.tdl.vireo.deposit.DepositException.FIELD;
+
+import org.tdl.vireo.export.DepositException;
+import org.tdl.vireo.export.Depositor;
+import org.tdl.vireo.export.ExportPackage;
+import org.tdl.vireo.export.DepositException.FIELD;
 
 /**
  * Sword, version 1, depositor. This supports identifying collections from the
@@ -155,28 +168,45 @@ public class Sword1DepositorImpl implements Depositor, BeanNameAware {
 	}
 
 	@Override
-	public String deposit(DepositLocation location, DepositPackage depositPackage) {
+	public String deposit(DepositLocation location, ExportPackage exportPackage) {
 
-
-		// Check our input
-		if (location == null)
-			throw new IllegalArgumentException("The deposit location is required.");
-
-		if (depositPackage == null)
-			throw new IllegalArgumentException("The deposit package is required.");
-
-		if ( depositPackage.getFile() == null ||  !depositPackage.getFile().exists())
-			throw new IllegalArgumentException("The deposit package does not exist on disk or is inaccessable.");
-
-		if (location.getRepository() == null)
-			throw new IllegalArgumentException("The deposit location must have a repository URL defined.");
-
-		if (location.getCollection() == null)
-			throw new IllegalArgumentException("The deposit location must have a collection URL defined.");
-
-		try{
-		URL repositoryURL = new URL(location.getRepository());
+		boolean zippedExport = false;
+		File exportFile = null;
 		
+		try {
+			// Check our input
+			if (location == null)
+				throw new IllegalArgumentException("The deposit location is required.");
+	
+			if (exportPackage == null)
+				throw new IllegalArgumentException("The deposit package is required.");
+	
+			if ( exportPackage.getFile() == null ||  !exportPackage.getFile().exists())
+				throw new IllegalArgumentException("The deposit package does not exist on disk or is inaccessable.");
+	
+			if (location.getRepository() == null)
+				throw new IllegalArgumentException("The deposit location must have a repository URL defined.");
+	
+			if (location.getCollection() == null)
+				throw new IllegalArgumentException("The deposit location must have a collection URL defined.");
+
+
+			URL repositoryURL = new URL(location.getRepository());
+		
+			// Check the package
+			exportFile = exportPackage.getFile();
+			String exportMimeType = exportPackage.getMimeType();
+			
+			// If we are given a directory, zip it up because sword requires one file submissions.
+			if (exportFile.isDirectory()) {
+				File zipFile = File.createTempFile(exportFile.getName()+"-", ".zip");
+				zipPackage(zipFile, exportFile);
+				exportFile = zipFile;
+				exportMimeType = "application/zip";
+				zippedExport = true;
+			}
+			
+			
 			//Building the client
 			Client client = new Client();
 			client.setServer(
@@ -190,13 +220,13 @@ public class Sword1DepositorImpl implements Depositor, BeanNameAware {
 			
 			PostMessage message = new PostMessage();
 
-			message.setFilepath(depositPackage.getFile().getAbsolutePath());
+			message.setFilepath(exportFile.getAbsolutePath());
 			message.setDestination(location.getCollection());
-			message.setFiletype(depositPackage.getMimeType());
+			message.setFiletype(exportMimeType);
 			message.setUseMD5(false);
 			message.setVerbose(false);
 			message.setNoOp(false);
-			message.setFormatNamespace(depositPackage.getFormat());
+			message.setFormatNamespace(exportPackage.getFormat());
 			message.setSlug("");
 			message.setChecksumError(false);
 			message.setUserAgent(USER_AGENT);
@@ -241,11 +271,86 @@ public class Sword1DepositorImpl implements Depositor, BeanNameAware {
 			} 
 
 			throw new DepositException(field, message, sce);
+		} catch (IOException ioe) {
+			Logger.error(ioe, "Unable to deposit()");
+			
+			throw new DepositException(FIELD.OTHER,ioe.getMessage(),ioe);
+			
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to deposit()");
 			
 			throw new DepositException(FIELD.OTHER, re.getMessage(), re);
-		} 
+		} finally {
+			// If we created a zip file make sure it gets cleaned up.
+			
+			if (zippedExport && exportFile != null)
+				exportFile.delete();
+		}
 	}	
 
+	/**
+	 * Internal method for ziping a directory together into a single deposit
+	 * package.
+	 * 
+	 * One tricky note, the file name of the directory is not included in the
+	 * resulting zip.
+	 * 
+	 * @param zipFile
+	 *            The file where the zip will be created.
+	 * @param dirFile
+	 *            The source directory.
+	 */
+	protected static void zipPackage(File zipFile, File dirFile) throws IOException {
+
+		// The result is a directory, so we need to zip the directory up.
+		FileOutputStream fos = new FileOutputStream(zipFile);
+		ZipOutputStream zos  = new ZipOutputStream(fos);
+		byte[] buffer = new byte[1024];
+		int bufferLength;
+		
+		
+		zipDirectory("",dirFile,zos);
+		
+		zos.close();
+	}
+	
+	/**
+	 * Internal recursive method for zipping the files and sub-directories of a
+	 * file into a single deposit package.
+	 * 
+	 * @param baseName
+	 *            The base name to pre-pend to file names in the zip archive.
+	 * @param directory
+	 *            The directory to process.
+	 * @param zos
+	 *            The zip output stream.
+	 */
+	protected static void zipDirectory(String baseName, File directory, ZipOutputStream zos) throws IOException
+	{
+		// Add all the files
+		File[] files = directory.listFiles();
+		for (File file : files) {
+			
+			if (file.isDirectory()) {
+
+				zipDirectory(baseName + directory.getName() + File.separator, file, zos);
+			} else {
+				
+				InputStream is = new BufferedInputStream(new FileInputStream(file));
+				
+				zos.putNextEntry(new ZipEntry(baseName + file.getName()));
+				
+				byte[] buf = new byte[1024];
+				int len;
+				while ((len = is.read(buf)) > 0) {
+					zos.write(buf, 0, len);
+				}
+				
+				is.close();
+				zos.closeEntry();
+			}	
+		}
+	}
+	
+	
 }

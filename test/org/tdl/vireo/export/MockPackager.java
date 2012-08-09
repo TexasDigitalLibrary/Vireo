@@ -1,8 +1,10 @@
-package org.tdl.vireo.deposit;
+package org.tdl.vireo.export;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.tdl.vireo.export.ExportPackage;
+import org.tdl.vireo.export.Packager;
 import org.tdl.vireo.model.Submission;
 
 /**
@@ -16,7 +18,7 @@ public class MockPackager implements Packager {
 	public String displayName = "Mock Packager";
 
 	// List of all the generated packages;
-	public List<MockDepositPackage> generated = new ArrayList<MockDepositPackage>();
+	public List<MockExportPackage> generated = new ArrayList<MockExportPackage>();
 
 	@Override
 	public String getBeanName() {
@@ -29,11 +31,10 @@ public class MockPackager implements Packager {
 	}
 
 	@Override
-	public DepositPackage generatePackage(Submission submission) {
-		MockDepositPackage pkg = new MockDepositPackage();
+	public ExportPackage generatePackage(Submission submission) {
+		MockExportPackage pkg = new MockExportPackage();
 
-		if (submission.getDepositId() != null)
-			pkg.depositId = submission.getDepositId();
+		pkg.submission = submission;
 
 		generated.add(pkg);
 		return pkg;

@@ -1,4 +1,4 @@
-package org.tdl.vireo.deposit.impl;
+package org.tdl.vireo.export.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -12,8 +12,9 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.tdl.vireo.deposit.DepositPackage;
-import org.tdl.vireo.deposit.Packager;
+import org.apache.commons.io.FileUtils;
+import org.tdl.vireo.export.ExportPackage;
+import org.tdl.vireo.export.Packager;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.PersonRepository;
@@ -28,7 +29,7 @@ import play.templates.TemplateLoader;
 import play.vfs.VirtualFile;
 
 /**
- * Generic pacakager that uses a the standard play templating system to generate
+ * Generic packager that uses a the standard play templating system to generate
  * manifests for deposit packages. Each packaged produced will consist of a
  * manifest file, along with a series of files. This packaged is ziped together
  * into a single bundle ready for deposit.
@@ -50,7 +51,7 @@ public class TemplatePackagerImpl extends AbstractPackagerImpl {
 	public List<AttachmentType> attachmentTypes = null;
 	public Map<String,Object> templateArguments = null;
 	
-	// Repositories to be injected into template for convienence
+	// Repositories to be injected into template for convenience
 	public PersonRepository personRepo;
 	public SubmissionRepository subRepo;
 	public SettingsRepository settingRepo;
@@ -192,7 +193,7 @@ public class TemplatePackagerImpl extends AbstractPackagerImpl {
 	
 	
 	@Override
-	public DepositPackage generatePackage(Submission submission) {
+	public ExportPackage generatePackage(Submission submission) {
 		
 		// Check that we have everything that we need.
 		if (submission == null || submission.getId() == null)
@@ -222,24 +223,19 @@ public class TemplatePackagerImpl extends AbstractPackagerImpl {
 			Template template = TemplateLoader.load(templateFile);
 			String manifest = template.render(templateBinding);
 					
-			// Create a zip package
-			File file = File.createTempFile("submission-"+submission.getId()+"-package-", ".zip");
-			
-			FileOutputStream fos = new FileOutputStream(file);
-			ZipOutputStream zos  = new ZipOutputStream(fos);
-			byte[] buffer = new byte[1024];
-			int bufferLength;
 			
 			
-			// Add our manifest as the first entry.
-			zos.putNextEntry(new ZipEntry(manifestName));
+			// Create an export directory
+			File exportDir = File.createTempFile("template-export-", ".dir");
+			exportDir.delete();
+			exportDir.mkdir();
 			
-			ByteArrayInputStream bais = new ByteArrayInputStream(manifest.getBytes());
-			while ((bufferLength = bais.read(buffer)) > 0) {
-				zos.write(buffer,0,bufferLength);
-			}
-			zos.closeEntry();
-			bais.close();
+			
+			// Copy the manifest
+			File manifestFile = new File(exportDir.getPath()+File.separator+manifestName);
+			FileUtils.copyInputStreamToFile(
+					new ByteArrayInputStream(manifest.getBytes()), 
+					manifestFile);
 			
 			
 			// Add all the attachments
@@ -248,23 +244,16 @@ public class TemplatePackagerImpl extends AbstractPackagerImpl {
 				// Do we include this type?
 				if (!attachmentTypes.contains(attachment.getType()))
 					continue;
-				
-				zos.putNextEntry(new ZipEntry(attachment.getName()));
-				
-				FileInputStream fis = new FileInputStream(attachment.getFile());
-				while ((bufferLength = fis.read(buffer)) > 0) {
-					zos.write(buffer,0,bufferLength);
-				}
-				
-				zos.closeEntry();
-				fis.close();
+
+				File exportFile = new File(exportDir.getPath()+File.separator+attachment.getName());
+				FileUtils.copyFile(
+						attachment.getFile(),
+						exportFile
+						);
 			}
-			
-			// Close out all the resources
-			zos.close();
 		
 			// Create the actual package!
-			return new TemplatePackage(submission, mimeType, format, file);
+			return new TemplatePackage(submission, mimeType, format, exportDir);
 		} catch (IOException ioe) {
 			throw new RuntimeException("Unable to generate package",ioe);
 		}
@@ -278,18 +267,16 @@ public class TemplatePackagerImpl extends AbstractPackagerImpl {
 	 * file we've built along with some basic metadata.
 	 * 
 	 */
-	public static class TemplatePackage implements DepositPackage {
+	public static class TemplatePackage implements ExportPackage {
 
 		// Members
 		public final Submission submission;
-		public final String depositId;
 		public final String mimeType;
 		public final String format;
 		public final File file;
 
 		public TemplatePackage(Submission submission, String mimeType, String format, File file) {
 			this.submission = submission;
-			this.depositId = submission.getDepositId();
 			this.mimeType = mimeType;
 			this.format = format;
 			this.file = file;
@@ -298,11 +285,6 @@ public class TemplatePackagerImpl extends AbstractPackagerImpl {
 		@Override
 		public Submission getSubmission() {
 			return submission;
-		}
-		
-		@Override
-		public String getDepositId() {
-			return depositId;
 		}
 		
 		@Override
@@ -322,8 +304,19 @@ public class TemplatePackagerImpl extends AbstractPackagerImpl {
 
 		@Override
 		public void delete() {
-			if (file != null && file.exists())
-				file.delete();
+			if (file != null && file.exists()) {
+
+				if (file.isDirectory()) {
+					try {
+						FileUtils.deleteDirectory(file);
+					} catch (IOException ioe) {
+						throw new RuntimeException("Unable to cleanup export package: " + file.getAbsolutePath(),ioe);
+					}
+				} else {
+					file.delete();
+				}
+
+			}
 		}
 
 		/**

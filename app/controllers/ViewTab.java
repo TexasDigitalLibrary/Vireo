@@ -3,7 +3,7 @@ package controllers;
 import play.Logger;
 import play.mvc.Controller;
 
-import org.tdl.vireo.deposit.DepositService;
+import org.tdl.vireo.export.DepositService;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.AttachmentType;

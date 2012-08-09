@@ -1,24 +1,24 @@
-package org.tdl.vireo.deposit;
+package org.tdl.vireo.export;
 
 import java.io.File;
 import java.io.IOException;
 
+import org.tdl.vireo.export.ExportPackage;
 import org.tdl.vireo.model.Submission;
 
 /**
- * Mock implementation of the deposit package interface.
+ * Mock implementation of the export package interface.
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
-public class MockDepositPackage implements DepositPackage {
+public class MockExportPackage implements ExportPackage {
 
 	public Submission submission;
-	public String depositId;
 	public String mimeType = "application/zip";
 	public String format = "http://something/";
 	public File file;
 
-	public MockDepositPackage() {
+	public MockExportPackage() {
 		try {
 			file = File.createTempFile("mock-deposit-package-", ".zip");
 		} catch (IOException ioe) {
@@ -29,11 +29,6 @@ public class MockDepositPackage implements DepositPackage {
 	@Override
 	public Submission getSubmission() {
 		return submission;
-	}
-	
-	@Override
-	public String getDepositId() {
-		return depositId;
 	}
 
 	@Override

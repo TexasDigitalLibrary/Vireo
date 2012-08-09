@@ -1,4 +1,4 @@
-package org.tdl.vireo.deposit.impl;
+package org.tdl.vireo.export.impl;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,14 +18,15 @@ import org.purl.sword.client.Client;
 import org.purl.sword.client.PostMessage;
 import org.purl.sword.client.SWORDClientException;
 import org.springframework.beans.factory.BeanNameAware;
-import org.tdl.vireo.deposit.DepositException;
-import org.tdl.vireo.deposit.DepositPackage;
-import org.tdl.vireo.deposit.Depositor;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.Submission;
 
 import play.Logger;
-import org.tdl.vireo.deposit.DepositException.FIELD;
+
+import org.tdl.vireo.export.DepositException;
+import org.tdl.vireo.export.Depositor;
+import org.tdl.vireo.export.ExportPackage;
+import org.tdl.vireo.export.DepositException.FIELD;
 
 /**
  * A simple file depositor. This implementation will just copy the deposit
@@ -164,17 +165,17 @@ public class FileDepositorImpl implements Depositor, BeanNameAware {
 	}
 
 	@Override
-	public String deposit(DepositLocation location, DepositPackage depositPackage) {
+	public String deposit(DepositLocation location, ExportPackage exportPackage) {
 
 		try {
 		// Check our input
 		if (location == null)
 			throw new IllegalArgumentException("The deposit location is required.");
 
-		if (depositPackage == null)
+		if (exportPackage == null)
 			throw new IllegalArgumentException("The deposit package is required.");
 
-		if ( depositPackage.getFile() == null ||  !depositPackage.getFile().exists())
+		if ( exportPackage.getFile() == null ||  !exportPackage.getFile().exists())
 			throw new IllegalArgumentException("The deposit package does not exist on disk or is inaccessable.");
 
 		if (location.getRepository() == null)
@@ -219,20 +220,24 @@ public class FileDepositorImpl implements Depositor, BeanNameAware {
 		
 		
 		// Figure out the destination file
-		Submission submission = depositPackage.getSubmission();
-		File packageFile = depositPackage.getFile();
+		Submission submission = exportPackage.getSubmission();
+		File packageFile = exportPackage.getFile();
 		String packageName = packageFile.getName();
 		String packageExt = ".pkg";
 		if (packageName.lastIndexOf(".") > 0) 
 			packageExt = packageName.substring(packageName.lastIndexOf("."),packageName.length());
 		
-		File depositFile = new File(depositPath + File.separator + "package_"+submission.getId()+packageExt);
+		File exportFile = new File(depositPath + File.separator + "package_"+submission.getId()+packageExt);
 		
 		// Do the actual deposit
-		FileUtils.copyFile(packageFile, depositFile);
+		if (exportFile.isDirectory()) {
+			FileUtils.copyDirectory(packageFile, exportFile);
+		} else {
+			FileUtils.copyFile(packageFile, exportFile);
+		}
 		
-		
-		return depositFile.getPath();
+		// We don't return a deposit id
+		return null;
 			
 		} catch (SecurityException se) {
 			Logger.error(se,"Unable to deposit()");

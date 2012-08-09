@@ -1,4 +1,4 @@
-package org.tdl.vireo.deposit;
+package org.tdl.vireo.export;
 
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.Submission;
