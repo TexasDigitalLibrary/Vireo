@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.lucene.document.DateTools;
@@ -240,6 +241,19 @@ public class LuceneSearcherImpl implements Searcher {
 		return null;
 	}
 	
+	@Override
+	public Iterator<Submission> submissionSearch(SearchFilter filter,
+			SearchOrder orderBy, SearchDirection direction) {
+		
+		return new SearchIteratorImpl<Submission>(Submission.class,this, filter, orderBy, direction);
+	}
+
+	@Override
+	public Iterator<ActionLog> actionLogSearch(SearchFilter filter,
+			SearchOrder orderBy, SearchDirection direction) {
+		
+		return new SearchIteratorImpl<ActionLog>(ActionLog.class,this, filter, orderBy, direction);
+	}
 	
 	
 	

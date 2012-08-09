@@ -1,6 +1,7 @@
 package org.tdl.vireo.search;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.tdl.vireo.model.ActionLog;
@@ -61,6 +62,18 @@ public class MockSearcher implements Searcher {
 			results.results.add(actionLogs.get(i));
 
 		return results;
+	}
+
+	@Override
+	public Iterator<Submission> submissionSearch(SearchFilter filter,
+			SearchOrder orderBy, SearchDirection direction) {
+		return (Iterator) submissions.iterator();
+	}
+
+	@Override
+	public Iterator<ActionLog> actionLogSearch(SearchFilter filter,
+			SearchOrder orderBy, SearchDirection direction) {
+		return (Iterator) actionLogs.iterator();
 	}
 
 }

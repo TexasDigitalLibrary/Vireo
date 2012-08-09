@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -25,6 +26,7 @@ import org.tdl.vireo.model.jpa.JpaSettingsRepositoryImpl;
 import org.tdl.vireo.model.jpa.JpaSubmissionRepositoryImpl;
 import org.tdl.vireo.search.Indexer;
 import org.tdl.vireo.search.SearchDirection;
+import org.tdl.vireo.search.SearchFilter;
 import org.tdl.vireo.search.SearchOrder;
 import org.tdl.vireo.search.Searcher;
 import org.tdl.vireo.security.SecurityContext;
@@ -61,13 +63,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 	 */
 	@Before
 	public void setup() throws InterruptedException {
-		// Wait for any currently processing index jobs to finish.
-		for (int i = 0; i < 1000; i++) {
-			// Wait for the indexer to stop
-			Thread.sleep(100);
-			if (!indexer.isJobRunning())
-				break;
-		}
+		indexer.rebuild(true);
 		assertFalse(indexer.isJobRunning());
 		
 		context.login(MockPerson.getAdministrator());
@@ -82,24 +78,95 @@ public class LuceneSearcherImplTest extends UnitTest{
 	 */
 	@After
 	public void cleanup() throws InterruptedException {
-		try {
 		JPA.em().clear();
-		try {
 		if (person != null)
 			personRepo.findPerson(person.getId()).delete();
 		context.logout();
-		} catch (RuntimeException re) {
-			
-		}
 		
 		JPA.em().getTransaction().commit();
 		JPA.em().getTransaction().begin();
 		
 		indexer.rebuild(true);
 		assertFalse(indexer.isJobRunning());
-		} catch (RuntimeException re) {
+	}
+
+	/**
+	 * Test the search iterator. Since the iterator just is a wrapper around the
+	 * normal paginated search methods we don't need to test every possibility
+	 * just that it works for at least one.
+	 */
+	@Test
+	public void testSubmissionIterator() {
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
+		
+		int originalObjectsPerBatch = SearchIteratorImpl.OBJECTS_PER_BATCH;
+		SearchIteratorImpl.OBJECTS_PER_BATCH = 3;
+		
+		SearchFilter filter = Spring.getBeanOfType(UriActiveSearchFilterImpl.class);
+		
+		long count = 0;
+		Long lastId = null;
+		Iterator<Submission> searchItr = searcher.submissionSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING);
+		while (searchItr.hasNext()) {
+			// Check that the submission exists
+			Submission sub = searchItr.next();
+			assertNotNull(sub);
 			
+			// Check that the submissions are in order.
+			if (lastId != null) {
+				assertTrue(lastId > sub.getId());
+			}
+			lastId = sub.getId();
+			
+			// Count all the submissions.
+			count++;
 		}
+
+		
+		long total = subRepo.findSubmissionsTotal();
+		assertEquals(total,count);
+		
+		SearchIteratorImpl.OBJECTS_PER_BATCH = originalObjectsPerBatch;
+	}
+	
+	/**
+	 * Test the search iterator for action logs. 
+	 */
+	@Test
+	public void testActionLogIterator() {
+
+		
+		int originalObjectsPerBatch = SearchIteratorImpl.OBJECTS_PER_BATCH;
+		SearchIteratorImpl.OBJECTS_PER_BATCH = 3;
+		
+		SearchFilter filter = Spring.getBeanOfType(UriActiveSearchFilterImpl.class);
+		
+		long count = 0;
+		Long lastId = null;
+		Iterator<ActionLog> searchItr = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING);
+		while (searchItr.hasNext()) {
+			// Check that the submission exists
+			ActionLog log = searchItr.next();
+			assertNotNull(log);
+			
+			// Check that the logs are in order.
+			if (lastId != null) {
+				assertTrue(lastId > log.getId());
+			}
+			lastId = log.getId();
+			
+			// Count all the submissions.
+			count++;
+		}
+
+		
+		long total = subRepo.findActionLogsTotal();
+		assertEquals(total,count);
+		
+		SearchIteratorImpl.OBJECTS_PER_BATCH = originalObjectsPerBatch;
 	}
 	
 	
