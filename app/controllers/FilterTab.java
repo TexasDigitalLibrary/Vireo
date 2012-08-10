@@ -6,7 +6,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.tdl.vireo.export.ChunkStream;
 import org.tdl.vireo.export.DepositService;
+import org.tdl.vireo.export.ExportService;
+import org.tdl.vireo.export.Packager;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.EmbargoType;
@@ -26,6 +29,7 @@ import org.tdl.vireo.state.State;
 
 import play.Logger;
 import play.data.binding.As;
+import play.libs.F.Promise;
 import play.modules.spring.Spring;
 import play.mvc.Catch;
 import play.mvc.Http.Cookie;
@@ -42,6 +46,7 @@ public class FilterTab extends AbstractVireoController {
 
 	// Service to handle batch deposits
 	public static DepositService depositService = Spring.getBeanOfType(DepositService.class);
+	public static ExportService exportService = Spring.getBeanOfType(ExportService.class);
 
 	
 	// Store the cookie and session names in an easy to lookup two dimensional
@@ -620,11 +625,39 @@ public class FilterTab extends AbstractVireoController {
 	
 	
 	@Security(RoleType.REVIEWER)
-	public static void export(String exportBean) {
+	public static void export(String packager) {
+		
+//		response.contentType = "mimeType";
+//		response.setHeader("Content-Disposition", "attachment; filename=bob.txt");
+		packager = "DSpaceMETS";
 		
 		
+		// Step 1, get the current filter
+		ActiveSearchFilter filter = Spring.getBeanOfType(ActiveSearchFilter.class);
+		Cookie filterCookie = request.cookies.get(NAMES[SUBMISSION][ACTIVE_FILTER]);
+		if (filterCookie != null && filterCookie.value != null && filterCookie.value.trim().length() > 0) {
+			try {
+				filter.decode(filterCookie.value);
+			} catch (RuntimeException re) {
+				Logger.warn(re,"Unable to decode search filter: "+filterCookie.value);
+			}
+		}
 		
+		// Step 2, locate the packager
+		Packager exportPackage = (Packager) Spring.getBean(packager);
 		
+		// Stream the chunks.
+		ChunkStream stream = exportService.export(exportPackage,filter);
+		
+		response.contentType = stream.getContentType();
+		response.setHeader("Content-Disposition", stream.getContentDisposition());
+		
+		while(stream.hasNextChunk()) {
+			Promise<byte[]> nextChunk = stream.nextChunk();
+			byte[] chunk = await(nextChunk);
+			
+			response.writeChunk(chunk);
+		}
 	}
 	
 	/**

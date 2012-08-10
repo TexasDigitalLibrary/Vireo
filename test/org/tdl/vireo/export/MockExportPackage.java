@@ -3,6 +3,7 @@ package org.tdl.vireo.export;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.commons.io.FileUtils;
 import org.tdl.vireo.export.ExportPackage;
 import org.tdl.vireo.model.Submission;
 
@@ -20,7 +21,8 @@ public class MockExportPackage implements ExportPackage {
 
 	public MockExportPackage() {
 		try {
-			file = File.createTempFile("mock-deposit-package-", ".zip");
+			file = File.createTempFile("mock-package-", ".xml");
+			FileUtils.writeStringToFile(file, "Mock-Package");
 		} catch (IOException ioe) {
 			throw new RuntimeException(ioe);
 		}
