@@ -40,7 +40,7 @@ import play.jobs.Job;
 public class ExportServiceImpl implements ExportService {
 
 	public final static String MIME_TYPE = "application/zip";
-	public final static int BUFFER_SIZE = 100; // that's 100 chunks, of several hundred bytes each.
+	public final static int BUFFER_SIZE = 10; // Each chunk may be big.
 	
 	// The repository of people
 	public PersonRepository personRepo;
@@ -179,6 +179,7 @@ public class ExportServiceImpl implements ExportService {
 					// Iterate over all the items, adding each one to the export.
 					while (itr.hasNext()) {
 						Submission sub = itr.next();
+						System.out.println("Exporting "+sub.getId());
 
 						ExportPackage pkg = packager.generatePackage(sub);
 						try {
@@ -192,6 +193,14 @@ public class ExportServiceImpl implements ExportService {
 							// Ensure the package isdeleted.
 							pkg.delete();
 						}
+						
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
 					}
 				} finally {
 					// Ensure the ziparchive is closed.

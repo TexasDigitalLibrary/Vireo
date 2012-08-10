@@ -158,7 +158,7 @@ public class ChunkStreamImpl extends OutputStream implements ChunkStream {
 	 * Our first internal method to write chunks into the stream. This method
 	 * will attempt to write the chunk, but if it fails because the buffer is
 	 * full then it will progressively back of publishing. This is to give the
-	 * consumer time to catch up. However if after about 8 minutes the consumer
+	 * consumer time to catch up. However if after about one minute the consumer
 	 * hasn't caught up then we assume there's a big problem and blow up with an
 	 * IO Exception.
 	 * 
@@ -169,7 +169,7 @@ public class ChunkStreamImpl extends OutputStream implements ChunkStream {
 	 *            The chunk to be written into the stream.
 	 */
 	protected void writeOrWait(byte[] event) throws IOException {
-		for (int attempts = 0; attempts < 1000; attempts++) {
+		for (int attempts = 0; attempts < 350; attempts++) {
 			try {
 				// First try to publish with out any overhead
 				synchronizedWrite(event);
@@ -182,7 +182,7 @@ public class ChunkStreamImpl extends OutputStream implements ChunkStream {
 				}
 			}
 		}
-		throw new IOException("ChunkStream buffer is full.");
+		throw new IOException("ChunkStream buffer is full, the client probably disconnected.");
 	}
 	
 	/**
