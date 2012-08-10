@@ -672,5 +672,42 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 		
 		context.restoreAuthorization();
 	}
+	
+	/**
+	 * Test downloading a batch export.
+	 */
+	@Test
+	public void testBatchExport() {
+		
+		context.turnOffAuthorization();
+		
+		// Login as an administrator
+		LOGIN();
+
+
+		// Get our URLS
+		Map<String,Object> routeArgs = new HashMap<String,Object>();
+		routeArgs.put("nav", "list");
+
+		final String LIST_URL = Router.reverse("FilterTab.list").url;
+		final String EXPORT_URL = Router.reverse("FilterTab.batchExport",routeArgs).url;
+		
+		// Double check the list
+		Response response = GET(LIST_URL);
+		assertContentMatch("id=\"batch-export-modal\"",response);
+		
+		// Do the batch export
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("packager","DSpaceMETS");
+		response = POST(EXPORT_URL,params);
+		assertIsOk(response);
+		assertContentType("application/zip", response);
+		assertHeaderEquals("Content-Disposition", "attachment; filename=DSpaceMETS.zip", response);
+		
+		
+		
+		
+		
+	}
 
 }

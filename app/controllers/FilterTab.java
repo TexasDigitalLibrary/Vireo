@@ -3,6 +3,7 @@ package controllers;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -213,6 +214,10 @@ public class FilterTab extends AbstractVireoController {
 		// Get all the deposit locations
 		List<DepositLocation> depositLocations = settingRepo.findAllDepositLocations();
 		renderArgs.put("depositLocations", depositLocations);
+		
+		// Get all the packagers (export formats)
+		List<Packager> packagers = new ArrayList<Packager>( (Collection) Spring.getBeansOfType(Packager.class).values() );
+		renderArgs.put("packagers", packagers);
 
 		
 		render(nav, allFilters, activeFilter, results, orderby, columns, facets, direction, resultsPerPage);
@@ -623,15 +628,16 @@ public class FilterTab extends AbstractVireoController {
 		list();
 	}
 	
-	
+	/**
+	 * Download a back export. This may take a considerable amount of time, so
+	 * we use play's asynchronous features to suspend the current thread until
+	 * the next chunk of data is ready to be published.
+	 * 
+	 * @param packager The packager to use for the export.
+	 */
 	@Security(RoleType.REVIEWER)
-	public static void export(String packager) {
-		
-//		response.contentType = "mimeType";
-//		response.setHeader("Content-Disposition", "attachment; filename=bob.txt");
-		packager = "DSpaceMETS";
-		
-		
+	public static void batchExport(String packager) {
+			
 		// Step 1, get the current filter
 		ActiveSearchFilter filter = Spring.getBeanOfType(ActiveSearchFilter.class);
 		Cookie filterCookie = request.cookies.get(NAMES[SUBMISSION][ACTIVE_FILTER]);
@@ -646,7 +652,7 @@ public class FilterTab extends AbstractVireoController {
 		// Step 2, locate the packager
 		Packager exportPackage = (Packager) Spring.getBean(packager);
 		
-		// Stream the chunks.
+		// Step 3, Stream the chunks.
 		ChunkStream stream = exportService.export(exportPackage,filter);
 		
 		response.contentType = stream.getContentType();

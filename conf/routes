@@ -41,7 +41,7 @@ POST    /admin/{nav}/filter/customize           FilterTab.customizeFilters
 *       /admin/{nav}/search                     FilterTab.modifySearch
 POST    /admin/{nav}/search/customize           FilterTab.customizeSearch
 POST    /admin/list/batch/deposit               FilterTab.batchDepositAndPublish
-*       /admin/list/batch/export                FilterTab.export
+POST    /admin/list/batch/export                FilterTab.batchExport
 
 ### View Tab
 *       /admin/view/?                           ViewTab.view
