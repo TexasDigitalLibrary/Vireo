@@ -752,7 +752,7 @@ public class TestDataLoader extends Job {
 			if (random.nextInt(100) > 75)
 				sub.addAttachment(new File("test/SampleSupplementalDocument.xls"),AttachmentType.SUPPLEMENTAL);
 
-			if (random.nextInt(100) > 75)
+			if (random.nextInt(100) > 50)
 				sub.addAttachment(new File("test/SampleFeedbackDocument.png"),AttachmentType.FEEDBACK);
 			
 			
