@@ -151,7 +151,7 @@
         <property name="settingsRepository" ref="SettingsRepository"/>
         <property name="displayName" value="DSpace METS"/>
         <property name="format" value="http://purl.org/net/sword-types/METSDSpaceSIP"/>
-        <property name="manifestTemplatePath" value="conf/deposit/dspace_mets.xml"/>
+        <property name="manifestTemplatePath" value="conf/formats/dspace_mets.xml"/>
         <property name="manifestName" value="mets.xml"/>
         <property name="manifestTemplateArguments">
             <util:map>
@@ -172,7 +172,7 @@
         <property name="settingsRepository" ref="SettingsRepository"/>
         <property name="displayName" value="Generic Qualified Dublin Core"/>
         <property name="format" value="http://purl.org/dc/elements/1.1/"/>
-        <property name="manifestTemplatePath" value="conf/deposit/qualified_dublin_core.xml"/>
+        <property name="manifestTemplatePath" value="conf/formats/qualified_dublin_core.xml"/>
         <property name="manifestName" value="metadata.xml"/>
         <property name="attachmentTypeNames">
             <list>
@@ -191,10 +191,10 @@
         <property name="format" value="http://www.dspace.org/xmlns/dspace"/>
         <property name="templatePaths">
         	<util:map>
-        		<entry key="dublin_core.xml"     value="conf/deposit/dspace_simple.xml"/>
-        		<entry key="metadata_thesis.xml" value="conf/deposit/dspace_simple.xml"/>
-        		<entry key="metadata_local.xml"  value="conf/deposit/dspace_simple.xml"/>
-        		<entry key="contents"  value="conf/deposit/dspace_simple.xml"/>
+        		<entry key="dublin_core.xml"     value="conf/formats/dspace_simple.xml"/>
+        		<entry key="metadata_thesis.xml" value="conf/formats/dspace_simple.xml"/>
+        		<entry key="metadata_local.xml"  value="conf/formats/dspace_simple.xml"/>
+        		<entry key="contents"            value="conf/formats/dspace_simple.xml"/>
         	</util:map>
         </property>
         <property name="attachmentTypeNames">
