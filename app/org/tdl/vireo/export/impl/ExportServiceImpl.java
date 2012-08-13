@@ -204,7 +204,11 @@ public class ExportServiceImpl implements ExportService {
 					}
 				} finally {
 					// Ensure the ziparchive is closed.
+					try {
 					zos.close();
+					} catch (Exception e) {
+						Logger.error(e,"Unable to close export zip archive, Ignoring.");
+					}
 				}
 
 			} catch (RuntimeException re) {

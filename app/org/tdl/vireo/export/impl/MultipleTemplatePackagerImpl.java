@@ -30,41 +30,25 @@ import play.templates.TemplateLoader;
 import play.vfs.VirtualFile;
 
 /**
- * Generic packager that uses a the standard play templating system to generate
- * manifests for packages. Each packaged produced will consist of a
- * manifest file, along with a series of files. This packaged is ziped together
- * into a single bundle ready for deposit.
- * 
- * The values that define what format, which files, etc, are all injected by
- * spring. This allows for many different package formats to be created by just
- * adding a new spring bean definition. See each of the injection methods below
- * for a description of the various injectable settings.
+ * Generic packager that uses the standard play templating system to generate
+ * files. Unlike the TemplatePackagerImpl, this class is capable of generating
+ * multiple "manifests", there's just called templates here. Each one is a
+ * groovy template that can produce a file for the export.
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
-public class TemplatePackagerImpl extends AbstractPackagerImpl {
+public class MultipleTemplatePackagerImpl extends AbstractPackagerImpl {
 	
 	/* Spring injected paramaters */
-	public VirtualFile templateFile = null;
-	public String mimeType = null;
+	public Map<String,VirtualFile> templates = new HashMap<String,VirtualFile>();
 	public String format = null;
-	public String manifestName = "mets.xml";
-	public List<AttachmentType> attachmentTypes = null;
-	public Map<String,Object> templateArguments = null;
+	public List<AttachmentType> attachmentTypes = new ArrayList<AttachmentType>();
+	public Map<String,Object> templateArguments = new HashMap<String,Object>();
 	
 	// Repositories to be injected into template for convenience
 	public PersonRepository personRepo;
 	public SubmissionRepository subRepo;
 	public SettingsRepository settingRepo;
-
-	/**
-	 * Construct a new template packager.
-	 */
-	public TemplatePackagerImpl() {
-		attachmentTypes = new ArrayList<AttachmentType>();
-		attachmentTypes.add(AttachmentType.PRIMARY);
-		attachmentTypes.add(AttachmentType.SUPPLEMENTAL);
-	}
 	
 	/**
 	 * Inject the repository of people and their preferences.
@@ -97,37 +81,28 @@ public class TemplatePackagerImpl extends AbstractPackagerImpl {
 		this.settingRepo = settingRepo;
 	}
 	
-	
 	/**
-	 * (REQUIRED) Set the template for generating the manifest file. This
-	 * parameter is always required.
+	 * (REQUIRED) Configure the multiple templates that will be generated for
+	 * this packager format. The map will contain file names, to template paths.
 	 * 
-	 * @param templatePath
-	 *            The path (relative to the application's directory)
+	 * @param templates
+	 *            A map of filenames, to templates paths.
 	 */
-	public void setManifestTemplatePath(String templatePath) {
-		VirtualFile templateFile = Play.getVirtualFile(templatePath);
+	public void setTemplatePaths(Map<String, String> templates) {
 
-		// Blow up at construction time if template not found.
-		if (templateFile == null || !templateFile.exists()) 
-            throw new TemplateNotFoundException(templatePath);
+		for (String name : templates.keySet()) {
+			
+			String templatePath = templates.get(name);
+			VirtualFile templateFile = Play.getVirtualFile(templatePath);
+			
+			if ( templatePath == null || !templateFile.exists())
+				throw new IllegalArgumentException("Template '"+templatePath+"' does not exist.");
+			
+			this.templates.put(name, templateFile);
 		
-		this.templateFile = templateFile;
-	}
-
-	/**
-	 * (OPTIONAL) Set the mimetype of the resulting package generated. For most
-	 * cases the mimetype should be null, meaning that there are multiple files
-	 * generated contained within a directory. However, if the packager format
-	 * generates a single file, then the mimetype should be set to the type of
-	 * that file. Such as "text/xml". By default if no mimetype is set, then
-	 * null is assumed.
-	 * 
-	 * @param mimeType
-	 *            The mime type of the package.
-	 */
-	public void setMimeType(String mimeType) {
-		this.mimeType = mimeType;
+			
+			
+		}
 	}
 
 	/**
@@ -144,28 +119,10 @@ public class TemplatePackagerImpl extends AbstractPackagerImpl {
 	}
 	
 	/**
-	 * (OPTIONAL) Set the name of the manifest file file. This will vary between
-	 * package formats but some popular ones are "mets.xml", or "mods.xml". See
-	 * the specific format to understand what the file is going to be called.
-	 * 
-	 * If no manifest name is set, then "mets.xml" will be used.
-	 * 
-	 * @param manifestName
-	 *            The name of the manifest file.
-	 */
-	public void setManifestName(String manifestName) {
-		this.manifestName = manifestName;
-	}
-	
-	/**
 	 * (OPITONAL) Set the attachment types which will be included in the
 	 * package. Since not all attachments should be deposited, this allows the
 	 * package to filter which files to include. They must be the exact name
 	 * (all uppercase) of types listed in the AttachmentType enum.
-	 * 
-	 * If no types are specified then "PRIMARY", and "SUPPLEMENTAL" types will
-	 * be included. If you do not want any files included in the package then
-	 * pass an empty list.
 	 * 
 	 * @param attachmentTypeNames
 	 *            List of attachment types to include.
@@ -189,86 +146,68 @@ public class TemplatePackagerImpl extends AbstractPackagerImpl {
 	 * @param arguments
 	 *            Template arguments
 	 */
-	public void setManifestTemplateArguments(Map<String,Object> arguments) {
+	public void setTemplateArguments(Map<String,Object> arguments) {
 		templateArguments = arguments;
 	}
 	
 	
 	@Override
 	public ExportPackage generatePackage(Submission submission) {
-		
+
 		// Check that we have everything that we need.
 		if (submission == null || submission.getId() == null)
 			throw new IllegalArgumentException("Unable to generate a package because the submission is null, or has not been persisted.");
-		
-		if (templateFile == null)
+
+		if (templates == null || templates.size() == 0)
 			throw new IllegalStateException("Unable to generate package because no template file exists.");
-		
-		if (manifestName == null)
-			throw new IllegalStateException("Unable to generate package because no manifest name has been defined.");
-		
+
 		if (format == null)
 			throw new IllegalStateException("Unable to generate package because no package format name has been defined.");
-		
+
 		try {
-			// Generate the manifest.
-			Map<String, Object> templateBinding = new HashMap<String,Object>();
-			templateBinding.put("sub", submission);
-			templateBinding.put("personRepo", personRepo);
-			templateBinding.put("subRepo",subRepo);
-			templateBinding.put("settingRepo",settingRepo);
-			templateBinding.put("manifestName", manifestName);
-			templateBinding.put("format", format);
-			templateBinding.put("mimeType", mimeType);
-			templateBinding.put("attachmentTypes", attachmentTypes);
-			if (templateArguments != null)
-				templateBinding.putAll(templateArguments);
-			Template template = TemplateLoader.load(templateFile);
-			String manifest = template.render(templateBinding);
+			// Generate the package export directory
+			File pkg = File.createTempFile("template-export-", ".dir");
+			pkg.delete();
+			pkg.mkdir();
+			
+			
+			// Generate each of the export files
+			for (String name : templates.keySet()) {
+				VirtualFile templateFile = templates.get(name);
+				
+				Map<String, Object> templateBinding = new HashMap<String,Object>();
+				templateBinding.put("sub", submission);
+				templateBinding.put("personRepo", personRepo);
+				templateBinding.put("subRepo",subRepo);
+				templateBinding.put("settingRepo",settingRepo);
+				templateBinding.put("format", format);
+				templateBinding.put("attachmentTypes", attachmentTypes);
+				templateBinding.put("template",name);
+				templateBinding.put("templates",templates);
+				
+				if (templateArguments != null)
+					templateBinding.putAll(templateArguments);
+				Template template = TemplateLoader.load(templateFile);
+				String rendered = template.render(templateBinding);
 					
-			
-			File pkg = null;
-			
-			if (attachmentTypes.size() > 0 ) {
-				
-				// The package has more than one file, so export as a directory.
-				pkg = File.createTempFile("template-export-", ".dir");
-				pkg.delete();
-				pkg.mkdir();
-				
-				
-				// Copy the manifest
-				File manifestFile = new File(pkg.getPath(),manifestName);
-				FileUtils.writeStringToFile(manifestFile, manifest);
-				
-				
-				// Add all the attachments
-				for(Attachment attachment : submission.getAttachments())
-				{
-					// Do we include this type?
-					if (!attachmentTypes.contains(attachment.getType()))
-						continue;
 	
-					File exportFile = new File(pkg.getPath(),attachment.getName());
-					FileUtils.copyFile(
-							attachment.getFile(),
-							exportFile
-							);
-				}
-				
-			} else {
-				
-				// There's only one file, so export as a single file.
-				String extension = FilenameUtils.getExtension(manifestName);
-				if (extension.length() > 0)
-					extension = "."+extension;
-				
-				pkg = File.createTempFile("template-export", extension);
-				FileUtils.writeStringToFile(pkg, manifest);
+				// Copy the manifest
+				File outputFile = new File(pkg,name);
+				FileUtils.writeStringToFile(outputFile, rendered);
 			}
-		
+			
+			// Add all the attachments
+			for (Attachment attachment : submission.getAttachments()) {
+				// Do we include this type?
+				if (!attachmentTypes.contains(attachment.getType()))
+					continue;
+
+				File exportFile = new File(pkg,attachment.getName());
+				FileUtils.copyFile(attachment.getFile(), exportFile);
+			}
+			
 			// Create the actual package!
-			return new TemplatePackage(submission, mimeType, format, pkg);
+			return new TemplatePackage(submission, null, format, pkg);
 			
 		} catch (IOException ioe) {
 			throw new RuntimeException("Unable to generate package",ioe);

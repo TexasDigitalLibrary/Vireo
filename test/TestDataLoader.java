@@ -16,6 +16,7 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.tdl.vireo.export.Depositor;
 import org.tdl.vireo.export.Packager;
 import org.tdl.vireo.export.impl.FileDepositorImpl;
+import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.Degree;
 import org.tdl.vireo.model.DegreeLevel;
@@ -638,7 +639,7 @@ public class TestDataLoader extends Job {
 	/**
 	 * Load randomly generated submissions.
 	 */
-	public static void loadSubmissions() {
+	public static void loadSubmissions() throws IOException {
 		
 		// Cache a list of all embargo types.
 		List<EmbargoType> embargos = settingRepo.findAllEmbargoTypes();
@@ -738,6 +739,22 @@ public class TestDataLoader extends Job {
 			
 			if (random.nextInt(100) > 50)
 				sub.setCommitteeApprovalDate(generateRandomDate(random,2,2010));
+			
+			if (random.nextInt(100) > 5) 
+				sub.addAttachment(new File("test/SamplePrimaryDocument.pdf"),AttachmentType.PRIMARY);
+			
+			if (random.nextInt(100) > 20) 
+				sub.addAttachment(settingRepo.getConfig(Configuration.SUBMIT_LICENSE).getBytes(), "LICENSE.txt", AttachmentType.LICENSE);
+			
+			if (random.nextInt(100) > 75)
+				sub.addAttachment(new File("test/SampleSupplementalDocument.doc"),AttachmentType.SUPPLEMENTAL);
+			
+			if (random.nextInt(100) > 75)
+				sub.addAttachment(new File("test/SampleSupplementalDocument.xls"),AttachmentType.SUPPLEMENTAL);
+
+			if (random.nextInt(100) > 50)
+				sub.addAttachment(new File("test/SampleFeedbackDocument.png"),AttachmentType.FEEDBACK);
+			
 			
 			sub.save();
 			context.logout();
