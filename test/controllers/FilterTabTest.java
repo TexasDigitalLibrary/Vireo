@@ -613,6 +613,46 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 		}
 	}
 	
+	/**
+	 * Test that we can reset the log filter to just search for all action logs
+	 * from one particular submission.
+	 */
+	@Test
+	public void testResetLogFilterToOneSubmission() {
+
+		// Login as an administrator
+		LOGIN();
+
+
+		// Run for both the list and log tabs
+		// Get our URLS
+		Map<String,Object> routeArgs = new HashMap<String,Object>();
+		routeArgs.put("nav", "log");
+
+		final String LIST_URL = Router.reverse("FilterTab.log",routeArgs).url;
+		final String FILTER_URL = Router.reverse("FilterTab.modifyFilters",routeArgs).url;
+		final String RESET_URL = Router.reverse("FilterTab.resetLogFilterToOneSubmission").url;
+
+
+		Response response = GET(LIST_URL);
+		// Check that there are no filters.
+		assertContentMatch("<div class=\"main-heading\">Now filtering By:<\\/div>\\s*<\\/div>\\s*<div class=\"box-body\">\\s*<\\/div>", response);
+
+		// Reset to one submission
+		GET(RESET_URL+"?subId=5");
+
+		// Check the list display
+		response = GET(LIST_URL);
+		assertTrue(getContent(response).contains("filter?action=remove&type=sub&value=5"));
+
+		// Remove the submission
+		GET(FILTER_URL+"?action=remove&type=sub&value=5");
+
+		// Check the list display
+		response = GET(LIST_URL);
+		assertFalse(getContent(response).contains("filter?action=remove&type=sub&value=5"));
+	}
+	
 	
 	/**
 	 * Test doing a batch deposit.

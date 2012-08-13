@@ -26,6 +26,7 @@ import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.NamedSearchFilter;
+import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.search.Semester;
 
 /**
@@ -45,6 +46,9 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	public String name;
 	
 	public boolean publicFlag;
+	
+	@OneToMany(targetEntity=JpaSubmissionImpl.class)
+	public List<Submission> submissions;
 	
 	@ElementCollection
 	public List<String> searchText;
@@ -107,6 +111,7 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 		this.creator = creator;
 		this.name = name;
 		this.publicFlag = false;
+		this.submissions = new ArrayList<Submission>();
 		this.searchText = new ArrayList<String>();
 		this.states = new ArrayList<String>();
 		this.assignees = new ArrayList<Person>();
@@ -237,6 +242,21 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 		}
 	}
 
+	@Override
+	public List<Submission> getSubmissions() {
+		return submissions;
+	}
+
+	@Override
+	public void addSubmission(Submission sub) {
+		submissions.add(sub);
+	}
+
+	@Override
+	public void removeSubmission(Submission sub) {
+		submissions.remove(sub);
+	}
+	
 	@Override
 	public List<String> getSearchText() {
 		return searchText;

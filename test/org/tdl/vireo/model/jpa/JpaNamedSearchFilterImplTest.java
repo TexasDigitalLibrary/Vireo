@@ -278,8 +278,13 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		EmbargoType embargo1 = settingRepo.createEmbargoType("embargo1", "description", 12, true).save();
 		EmbargoType embargo2 = settingRepo.createEmbargoType("embargo2", "description", 24, true).save();
 		
+		Submission sub1 = subRepo.createSubmission(otherPerson).save();
+		Submission sub2 = subRepo.createSubmission(otherPerson).save();
+		
 		NamedSearchFilter filter = subRepo.createSearchFilter(person, "filter").save();
 		filter.setPublic(false);
+		filter.addSubmission(sub1);
+		filter.addSubmission(sub2);
 		filter.addSearchText("text1");
 		filter.addSearchText("text2");
 		filter.addState("status1");
@@ -313,6 +318,8 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		NamedSearchFilter retrieved = subRepo.findSearchFilter(filter.getId());
 		
 		//assertFalse(retrieved.isPublic());
+		assertTrue(retrieved.getSubmissions().contains(sub1));
+		assertTrue(retrieved.getSubmissions().contains(sub2));
 		assertTrue(retrieved.getSearchText().contains("text1"));
 		assertTrue(retrieved.getSearchText().contains("text2"));
 		assertFalse(retrieved.getSearchText().contains("text3"));
@@ -355,6 +362,8 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		assertNotNull(retrieved.getDateRangeEnd());
 		
 		retrieved.delete();
+		subRepo.findSubmission(sub1.getId()).delete();
+		subRepo.findSubmission(sub2.getId()).delete();
 		settingRepo.findEmbargoType(embargo1.getId()).delete();
 		settingRepo.findEmbargoType(embargo2.getId()).delete();
 		personRepo.findPerson(otherPerson.getId()).delete();

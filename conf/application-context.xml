@@ -118,6 +118,7 @@
     </bean>
     <bean id="ActiveSearchFilter" class="org.tdl.vireo.search.impl.UriActiveSearchFilterImpl" scope="prototype">
         <property name="personRepository" ref="PersonRepository"/>
+        <property name="submissionRepository" ref="SubmissionRepository"/>
         <property name="settingsRepository" ref="SettingsRepository"/>
     </bean>
     

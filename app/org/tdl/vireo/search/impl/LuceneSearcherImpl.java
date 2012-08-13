@@ -270,6 +270,15 @@ public class LuceneSearcherImpl implements Searcher {
 	public void buildQuery(BooleanQuery andQuery, SearchFilter filter, boolean submissions) {
 		QueryParser parser = new QueryParser(indexer.version,"searchText",indexer.standardAnalyzer);
 		
+		// Submission filter
+		if (filter.getSubmissions().size() > 0) {
+			BooleanQuery orQuery = new BooleanQuery();
+			for(Submission sub : filter.getSubmissions()) {
+				orQuery.add(new TermQuery(new Term("subId", NumericUtils.longToPrefixCoded(sub.getId()))), Occur.SHOULD);
+			}
+			andQuery.add(orQuery,Occur.MUST);
+		}
+		
 		// Search Text Filter
 		if (filter.getSearchText().size() > 0) {
 			BooleanQuery orQuery = new BooleanQuery();

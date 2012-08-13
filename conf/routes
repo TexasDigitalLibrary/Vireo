@@ -40,6 +40,7 @@ GET     /admin/log/?                            FilterTab.log
 POST    /admin/{nav}/filter/customize           FilterTab.customizeFilters
 *       /admin/{nav}/search                     FilterTab.modifySearch
 POST    /admin/{nav}/search/customize           FilterTab.customizeSearch
+*       /admin/log/filter/reset                 FilterTab.resetLogFilterToOneSubmission
 POST    /admin/list/batch/deposit               FilterTab.batchDepositAndPublish
 POST    /admin/list/batch/export                FilterTab.batchExport
 

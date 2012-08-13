@@ -22,6 +22,8 @@ import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.SettingsRepository;
+import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.model.SubmissionRepository;
 import org.tdl.vireo.model.jpa.JpaPersonImpl;
 import org.tdl.vireo.search.ActiveSearchFilter;
 import org.tdl.vireo.search.Semester;
@@ -42,9 +44,11 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 
 	// Spring injection
 	public PersonRepository personRepo = null;
+	public SubmissionRepository subRepo = null;
 	public SettingsRepository settingRepo = null;
 
 	// Danamic variables
+	public List<Submission> submissions = new ArrayList<Submission>();
 	public List<String> searchText = new ArrayList<String>();
 	public List<String> states = new ArrayList<String>();
 	public List<Person> assignees = new ArrayList<Person>();
@@ -73,6 +77,14 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 	public void setPersonRepository(PersonRepository personRepo) {
 		this.personRepo = personRepo;
 	}
+
+	/**
+	 * @param subRepo
+	 *            The submission repository to use for looking up submissions.
+	 */
+	public void setSubmissionRepository(SubmissionRepository subRepo) {
+		this.subRepo = subRepo;
+	}
 	
 	/**
 	 * @param settingRepo
@@ -80,6 +92,21 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 	 */
 	public void setSettingsRepository(SettingsRepository settingRepo) {
 		this.settingRepo = settingRepo;
+	}
+	
+	@Override
+	public List<Submission> getSubmissions() {
+		return submissions;
+	}
+
+	@Override
+	public void addSubmission(Submission sub) {
+		submissions.add(sub);
+	}
+
+	@Override
+	public void removeSubmission(Submission sub) {
+		submissions.remove(sub);
 	}
 	
 	@Override
@@ -290,6 +317,7 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 		result.append(":");
 		
 		// Handle all the lists.
+		encodeList(result,submissions);
 		encodeList(result,searchText);
 		encodeList(result,states);
 		encodeList(result,assignees);
@@ -324,45 +352,46 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 	public void decode(String encoded) {
 		try {
 			String[] split = encoded.split(":",-1);
-			if (split.length != 15)
+			if (split.length != 16)
 				throw new IllegalArgumentException("Unable to decode active search filter because it does not have the 15 expected number of components instead it has "+split.length);
 
 			// Decode all the lists
-			searchText = decodeList(split[1],String.class);
-			states = decodeList(split[2],String.class);
-			assignees = decodeList(split[3],Person.class);
-			embargos = decodeList(split[4],EmbargoType.class);
-			semesters = decodeList(split[5],Semester.class);
-			degrees = decodeList(split[6],String.class);
-			departments = decodeList(split[7],String.class);
-			colleges = decodeList(split[8],String.class);
-			majors = decodeList(split[9],String.class);
-			documentTypes = decodeList(split[10],String.class);
+			submissions = decodeList(split[1],Submission.class);
+			searchText = decodeList(split[2],String.class);
+			states = decodeList(split[3],String.class);
+			assignees = decodeList(split[4],Person.class);
+			embargos = decodeList(split[5],EmbargoType.class);
+			semesters = decodeList(split[6],Semester.class);
+			degrees = decodeList(split[7],String.class);
+			departments = decodeList(split[8],String.class);
+			colleges = decodeList(split[9],String.class);
+			majors = decodeList(split[10],String.class);
+			documentTypes = decodeList(split[11],String.class);
 
 			// Handle the single values
-			if ("true".equalsIgnoreCase(split[11])) {
+			if ("true".equalsIgnoreCase(split[12])) {
 				umiRelease = true;
-			} else if ("false".equalsIgnoreCase(split[11])) {
+			} else if ("false".equalsIgnoreCase(split[12])) {
 				umiRelease = false;
 			} else {
 				umiRelease = null;
 			}
 
-			if (split[12].length() != 0) {
+			if (split[13].length() != 0) {
 				try {
-					rangeStart = new Date(Long.valueOf(split[12]));
+					rangeStart = new Date(Long.valueOf(split[13]));
 				} catch (RuntimeException re) {
-					Logger.warn("Unable to decode value '"+split[12]+"' for rangeStart.");
+					Logger.warn("Unable to decode value '"+split[13]+"' for rangeStart.");
 				}
 			} else {
 				rangeStart = null;
 			}
 
-			if (split[13].length() != 0) {
+			if (split[14].length() != 0) {
 				try {
-					rangeEnd = new Date(Long.valueOf(split[13]));
+					rangeEnd = new Date(Long.valueOf(split[14]));
 				} catch (RuntimeException re) {
-					Logger.warn("Unable to decode value '"+split[13]+"' for rangeEnd.");
+					Logger.warn("Unable to decode value '"+split[14]+"' for rangeEnd.");
 				}
 			} else {
 				rangeEnd = null;
@@ -378,6 +407,9 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 	public void copyTo(SearchFilter other) {
 		
 		// We're going to be sneaky and take advantage of the fact that the list return by all filters are mutable.
+		
+		other.getSubmissions().clear();
+		other.getSubmissions().addAll(this.submissions);
 		
 		other.getSearchText().clear();
 		other.getSearchText().addAll(this.searchText);
@@ -417,6 +449,7 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 	@Override
 	public void copyFrom(SearchFilter other) {
 		
+		this.submissions = new ArrayList<Submission>(other.getSubmissions());
 		this.searchText = new ArrayList<String>(other.getSearchText());
 		this.states = new ArrayList<String>(other.getStates());
 		this.assignees = new ArrayList<Person>(other.getAssignees());
@@ -473,6 +506,13 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 						Person person = personRepo.findPerson(personId);
 						result.add((T) person);
 					}
+				} else if (type == Submission.class) {
+					// List type is submission
+					
+					Long subId = Long.valueOf(raw);
+					Submission sub = subRepo.findSubmission(subId);
+					result.add((T) sub);
+					
 				} else if (type == EmbargoType.class) {
 					// List type is embargo types
 					
@@ -543,6 +583,11 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 				// Full person object from assignee
 				Long personId = ((Person) value).getId();
 				result.append(String.valueOf(personId));
+				
+			} else if (value instanceof Submission) {
+				// Full submission object
+				Long subId = ((Submission) value).getId();
+				result.append(String.valueOf(subId));
 				
 			} else if (value instanceof EmbargoType) {
 				// Full embargo object

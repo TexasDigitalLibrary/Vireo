@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.Person;
+import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.state.State;
 
 /**
@@ -23,6 +24,23 @@ import org.tdl.vireo.state.State;
  */
 public interface SearchFilter {
 
+	/**
+	 * @return A list of individual submissions this filter is restricted too.
+	 */
+	public List<Submission> getSubmissions();
+
+	/**
+	 * @param sub
+	 *            Add an individual submission this filter is limmitted too.
+	 */
+	public void addSubmission(Submission sub);
+
+	/**
+	 * @param sub
+	 *            Remove an individual submission from this filter.
+	 */
+	public void removeSubmission(Submission sub);
+	
 	/**
 	 * @return The list of all free-form search parameters
 	 */

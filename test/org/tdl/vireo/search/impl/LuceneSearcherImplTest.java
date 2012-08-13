@@ -219,6 +219,17 @@ public class LuceneSearcherImplTest extends UnitTest{
 			assertTrue(submissions.contains(sub2));
 			filter.delete();
 			
+			// Submission Filter
+			filter = subRepo.createSearchFilter(person, "test-sub");
+			filter.addSubmission(sub1);
+			filter.save();
+			
+			submissions = searcher.submissionSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 20).getResults();
+			
+			assertTrue(submissions.contains(sub1));
+			assertFalse(submissions.contains(sub2));
+			filter.delete();
+			
 			// Search Text Filter
 			filter = subRepo.createSearchFilter(person, "test-text");
 			filter.addSearchText("important");
@@ -686,6 +697,17 @@ public class LuceneSearcherImplTest extends UnitTest{
 			
 			assertNotNull(logs);
 			assertTrue(logs.size() > 2);
+			filter.delete();
+			
+			// Search Text Filter
+			filter = subRepo.createSearchFilter(otherPerson, "test-sub");
+			filter.addSubmission(sub2);
+			filter.save();
+			
+			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 20).getResults();
+			
+			assertEquals(sub2,logs.get(0).getSubmission());
+			assertEquals("Assignee changed to 'first last' by first last", logs.get(0).getEntry());
 			filter.delete();
 			
 			// Search Text Filter

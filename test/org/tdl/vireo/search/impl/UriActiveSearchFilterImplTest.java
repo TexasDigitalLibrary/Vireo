@@ -9,10 +9,13 @@ import org.junit.Test;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.MockEmbargoType;
 import org.tdl.vireo.model.MockPerson;
+import org.tdl.vireo.model.MockSubmission;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.SettingsRepository;
+import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.model.SubmissionRepository;
 import org.tdl.vireo.search.ActiveSearchFilter;
 import org.tdl.vireo.security.SecurityContext;
 
@@ -28,6 +31,7 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 
 	// Spring dependencies
 	public static PersonRepository personRepo = Spring.getBeanOfType(PersonRepository.class);
+	public static SubmissionRepository subRepo = Spring.getBeanOfType(SubmissionRepository.class);
 	public static SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
 	public static SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
 	
@@ -46,7 +50,12 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		MockEmbargoType embargo2 = new MockEmbargoType();
 		embargo2.name = "Embargo 2";
 		
+		MockSubmission sub1 = new MockSubmission();
+		MockSubmission sub2 = new MockSubmission();
+		
 		ActiveSearchFilter filter = Spring.getBeanOfType(UriActiveSearchFilterImpl.class);
+		filter.addSubmission(sub1);
+		filter.addSubmission(sub2);
 		filter.addSearchText("text1");
 		filter.addSearchText("text2");
 		filter.addState("state1");
@@ -73,7 +82,8 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		filter.setDateRangeEnd(end);
 		
 		// yay, now lets read that back out.
-		
+		assertEquals(sub1,filter.getSubmissions().get(0));
+		assertEquals(sub2,filter.getSubmissions().get(1));
 		assertEquals("text1",filter.getSearchText().get(0));
 		assertEquals("text2",filter.getSearchText().get(1));
 		assertEquals("state1",filter.getStates().get(0));
@@ -119,9 +129,15 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		EmbargoType embargo1 = settingRepo.createEmbargoType("embargo1", "description", 12, true).save();
 		EmbargoType embargo2 = settingRepo.createEmbargoType("embargo2", "description", 24, true).save();
 		
+		Person submitter = personRepo.createPerson("netId", "email@email.com", "firstName", "lastName", RoleType.STUDENT).save();
+		Submission sub1 = subRepo.createSubmission(submitter).save();
+		Submission sub2 = subRepo.createSubmission(submitter).save();
+		
 		try {
 
 			ActiveSearchFilter filter = Spring.getBeanOfType(UriActiveSearchFilterImpl.class);
+			filter.addSubmission(sub1);
+			filter.addSubmission(sub2);
 			filter.addSearchText("text1");
 			filter.addSearchText("text2");
 			filter.addState("state1");
@@ -148,7 +164,7 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 			filter.setDateRangeEnd(end);
 
 			String encoded = filter.encode();
-
+			
 			// Make sure the encoded stirng is at least plausable.
 			assertNotNull(encoded);
 			assertFalse(encoded.contains(" "));
@@ -161,6 +177,8 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 			newFilter.decode(encoded);
 
 			// yay, now lets read that back out.
+			assertEquals(sub1,filter.getSubmissions().get(0));
+			assertEquals(sub2,filter.getSubmissions().get(1));
 			assertEquals("text1",newFilter.getSearchText().get(0));
 			assertEquals("text2",newFilter.getSearchText().get(1));
 			assertEquals("state1",newFilter.getStates().get(0));
@@ -189,6 +207,9 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 			assertEquals(end,newFilter.getDateRangeEnd());
 
 		} finally {
+			sub1.delete();
+			sub2.delete();
+			submitter.delete();
 			person1.delete();
 			person2.delete();
 			embargo1.delete();
@@ -209,6 +230,7 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		ActiveSearchFilter newFilter = Spring.getBeanOfType(UriActiveSearchFilterImpl.class);
 		newFilter.decode(encoded);
 		
+		assertEquals(0,newFilter.getSubmissions().size());
 		assertEquals(0,newFilter.getSearchText().size());
 		assertEquals(0,newFilter.getStates().size());
 		assertEquals(0,newFilter.getAssignees().size());
@@ -239,7 +261,12 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		MockEmbargoType embargo2 = new MockEmbargoType();
 		embargo2.name = "Embargo 2";
 		
+		MockSubmission sub1 = new MockSubmission();
+		MockSubmission sub2 = new MockSubmission();
+		
 		ActiveSearchFilter filter = Spring.getBeanOfType(UriActiveSearchFilterImpl.class);
+		filter.addSubmission(sub1);
+		filter.addSubmission(sub2);
 		filter.addSearchText("text1");
 		filter.addSearchText("text2");
 		filter.addState("state1");
@@ -269,6 +296,8 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		filter.copyTo(newFilter);
 		
 		// yay, now lets read that back out.
+		assertEquals(sub1,newFilter.getSubmissions().get(0));
+		assertEquals(sub2,newFilter.getSubmissions().get(1));
 		assertEquals("text1",newFilter.getSearchText().get(0));
 		assertEquals("text2",newFilter.getSearchText().get(1));
 		assertEquals("state1",newFilter.getStates().get(0));
@@ -295,6 +324,7 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		assertEquals(Boolean.valueOf(true),newFilter.getUMIRelease());
 		assertEquals(start,newFilter.getDateRangeStart());
 		assertEquals(end,newFilter.getDateRangeEnd());
+		
 	}
 	
 	/**
@@ -311,7 +341,12 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		MockEmbargoType embargo2 = new MockEmbargoType();
 		embargo2.name = "Embargo 2";
 		
+		MockSubmission sub1 = new MockSubmission();
+		MockSubmission sub2 = new MockSubmission();
+		
 		ActiveSearchFilter filter = Spring.getBeanOfType(UriActiveSearchFilterImpl.class);
+		filter.addSubmission(sub1);
+		filter.addSubmission(sub2);
 		filter.addSearchText("text1");
 		filter.addSearchText("text2");
 		filter.addState("state1");
@@ -341,6 +376,8 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		newFilter.copyFrom(filter);
 		
 		// yay, now lets read that back out.
+		assertEquals(sub1,newFilter.getSubmissions().get(0));
+		assertEquals(sub2,newFilter.getSubmissions().get(1));
 		assertEquals("text1",newFilter.getSearchText().get(0));
 		assertEquals("text2",newFilter.getSearchText().get(1));
 		assertEquals("state1",newFilter.getStates().get(0));

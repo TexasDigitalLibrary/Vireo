@@ -542,6 +542,30 @@ public class FilterTab extends AbstractVireoController {
 		error("Unknown modify navigation control type");
 	}
 	
+	/**
+	 * This is a special method to reset the log filter so that it only is
+	 * looking at log items from one particular submission.
+	 * 
+	 * @param subId
+	 *            The submission id.
+	 */
+	@Security(RoleType.REVIEWER)
+	public static void resetLogFilterToOneSubmission(Long subId) {
+		
+		// Create a new blank filter.
+		ActiveSearchFilter activeFilter = Spring.getBeanOfType(ActiveSearchFilter.class);
+		
+		// Find the submission and load it.
+		Submission sub = subRepo.findSubmission(subId);
+		activeFilter.addSubmission(sub);
+		
+		// Save the active filter to a cookie
+		response.setCookie(NAMES[ACTION_LOG][ACTIVE_FILTER], activeFilter.encode());
+		
+		// Redirect back to the log page;
+		log();
+	}
+	
 	@Security(RoleType.REVIEWER)
 	public static void customizeFilters(String nav) {
 		
@@ -905,8 +929,11 @@ public class FilterTab extends AbstractVireoController {
 		String type = params.get("type");
 		String value = params.get("value");
 		
-		
-		if ("text".equals(type)) {
+		if ("sub".equals(type)) {
+			Long subId = params.get("value",Long.class);
+			Submission sub = subRepo.findSubmission(subId);
+			activeFilter.removeSubmission(sub);
+		} else if ("text".equals(type)) {
 			activeFilter.removeSearchText(value);
 			
 		} else if ("state".equals(type)) {

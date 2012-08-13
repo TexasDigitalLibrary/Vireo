@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.Person;
+import org.tdl.vireo.model.Submission;
 
 /**
  * Mock implementation of the generic search filter interface.
@@ -14,6 +15,7 @@ import org.tdl.vireo.model.Person;
  */
 public class MockSearchFilter implements SearchFilter {
 
+	public List<Submission> submissions = new ArrayList<Submission>();
 	public List<String> searchText = new ArrayList<String>();
 	public List<String> states = new ArrayList<String>();
 	public List<Person> assignees = new ArrayList<Person>();
@@ -27,6 +29,21 @@ public class MockSearchFilter implements SearchFilter {
 	public Boolean umiRelease = null;
 	public Date rangeStart = null;
 	public Date rangeEnd = null;
+	
+	@Override
+	public List<Submission> getSubmissions() {
+		return submissions;
+	}
+
+	@Override
+	public void addSubmission(Submission sub) {
+		submissions.add(sub);
+	}
+
+	@Override
+	public void removeSubmission(Submission sub) {
+		submissions.remove(sub);
+	}
 	
 	@Override
 	public List<String> getSearchText() {
