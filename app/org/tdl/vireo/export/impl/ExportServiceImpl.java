@@ -179,7 +179,6 @@ public class ExportServiceImpl implements ExportService {
 					// Iterate over all the items, adding each one to the export.
 					while (itr.hasNext()) {
 						Submission sub = itr.next();
-						System.out.println("Exporting "+sub.getId());
 
 						ExportPackage pkg = packager.generatePackage(sub);
 						try {
@@ -193,14 +192,6 @@ public class ExportServiceImpl implements ExportService {
 							// Ensure the package isdeleted.
 							pkg.delete();
 						}
-						
-						try {
-							Thread.sleep(1000);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						
 					}
 				} finally {
 					// Ensure the ziparchive is closed.
