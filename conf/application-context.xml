@@ -172,7 +172,7 @@
         <property name="settingsRepository" ref="SettingsRepository"/>
         <property name="displayName" value="Generic Qualified Dublin Core"/>
         <property name="format" value="http://purl.org/dc/elements/1.1/"/>
-        <property name="manifestTemplatePath" value="conf/formats/qualified_dublin_core.xml"/>
+        <property name="manifestTemplatePath" value="conf/formats/qdc.xml"/>
         <property name="manifestName" value="metadata.xml"/>
         <property name="attachmentTypeNames">
             <list>
@@ -233,6 +233,23 @@
         <property name="format" value="http://www.loc.gov/MARC21/slim"/>
         <property name="manifestTemplatePath" value="conf/formats/marc21slim.xml"/>
         <property name="manifestName" value="marc.xml"/>
+    </bean>
+    <bean id="MODS" class="org.tdl.vireo.export.impl.TemplatePackagerImpl" scope="prototype">
+        <property name="personRepository" ref="PersonRepository"/>
+        <property name="submissionRepository" ref="SubmissionRepository"/>
+        <property name="settingsRepository" ref="SettingsRepository"/>
+        <property name="displayName" value="MODS"/>
+        <property name="mimeType" value="text/xml"/>
+        <property name="format" value="http://www.loc.gov/MARC21/slim"/>
+        <property name="manifestTemplatePath" value="conf/formats/mods.xml"/>
+        <property name="manifestName" value="mods.xml"/>
+        <property name="attachmentTypeNames">
+            <list>
+                <value>PRIMARY</value>
+                <value>SUPPLEMENTAL</value>
+                <value>LICENSE</value>
+            </list>
+        </property>
     </bean>
     
 </beans>
