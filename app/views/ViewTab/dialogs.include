@@ -208,7 +208,30 @@
 				<li><input type="radio" class="radio" name="uploadType" value="supplement"> Manage supplementary documents</input>
 					<ul class="unstyled fileContainer" style="padding-left:15px; display:none;">
 						<li class="well">
-							<h4>Add a Supplemental File</h4>
+							#{if !submission.getSupplementalDocuments().isEmpty()}
+							<h4><input type="radio" class="radio" name="supplementType" value="delete">
+								Delete a Supplemental File
+							</input></h4>
+							Choose a file:&nbsp;
+							<select name="supplementDelete">
+								#{list items:submission.getSupplementalDocuments(), as:'file'}
+									<option value="${file.getId()}">${file.getName()}</option>
+								#{/list}								
+							</select><br /><br />
+							<h4><input type="radio" class="radio" name="supplementType" value="replace">
+								Replace a Supplemental File
+							</input></h4>
+							Choose a file:&nbsp;
+							<select name="supplementReplaceOriginal">
+								#{list items:submission.getSupplementalDocuments(), as:'file'}
+									<option value="${file.getId()}">${file.getName()}</option>
+								#{/list}								
+							</select><br />
+							New File: <input type="file" name="supplementReplace" /><br /><br />
+							#{/if}
+							<h4><input type="radio" class="radio" name="supplementType" value="add" checked="true">
+								Add a Supplemental File
+							</input></h4>
 							Choose file: <input type="file" name="supplementAttachment" />
 						</li>
 					</ul>

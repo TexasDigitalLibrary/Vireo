@@ -92,7 +92,7 @@ public class ViewTab extends AbstractVireoController {
 		List<Person> assignees = personRepo.findPersonsByRole(RoleType.REVIEWER);	
 		
 		List<DepositLocation> depositLocations = settingRepo.findAllDepositLocations();
-
+		
 		String nav = "view";
 		render(	nav,
 				submission,
@@ -466,7 +466,7 @@ public class ViewTab extends AbstractVireoController {
 		Submission submission = subRepo.findSubmission(id);
 
 		List<ActionLog> actionLogs	= subRepo.findActionLog(submission);
-
+		
 		renderTemplate("ViewTab/actionLogTable.include", actionLogs);
 	}
 
@@ -633,6 +633,13 @@ public class ViewTab extends AbstractVireoController {
 		
 	}
 	
+	/**
+	 * A method to update the custom action values from the view tab.
+	 * 	
+	 * @param id (The submission id)
+	 * @param action (The name of the custom action)
+	 * @param value (The boolean value of the custom action)
+	 */
 	@Security(RoleType.REVIEWER)
 	public static void updateCustomActionsJSON(Long id, String action, Boolean value) {
 		
@@ -652,6 +659,13 @@ public class ViewTab extends AbstractVireoController {
 		submission.save();
 	}
 	
+	/**
+	 * The method to add a file to the submission being viewed.
+	 * This checks the type of file being uploaded (note, primary, supplement)
+	 * and calls the appropriate private method.
+	 * 
+	 * @param subId (The submission id)
+	 */
 	@Security(RoleType.REVIEWER)
 	public static void addFile(Long subId){
 
@@ -659,13 +673,19 @@ public class ViewTab extends AbstractVireoController {
 		String uploadType = params.get("uploadType");
 		
 		String fileName = null;
+		List<String> files = null;
 		
 		if("note".equals(uploadType)){			
 			fileName = uploadNote(sub);
 		} else if("primary".equals(uploadType)){			
 			fileName = uploadPrimary(sub);
 		} else if("supplement".equals(uploadType)){
-			fileName = uploadSupplement(sub);			
+			String manageSup = params.get("supplementType");	
+			if("delete".equals(manageSup) || "replace".equals(manageSup)) {
+				files = removeSupplement(sub, manageSup);
+			} else {
+				fileName = uploadSupplement(sub);
+			}						
 		}
 		
 		if(params.get("email_student") != null) {			
@@ -701,6 +721,12 @@ public class ViewTab extends AbstractVireoController {
 		view();
 	}
 	
+	/**
+	 * The private method to add a "note" file.
+	 *  
+	 * @param sub (The current submission)
+	 * @return (A String containing the name of the file)
+	 */
 	@Security(RoleType.REVIEWER)
 	private static String uploadNote(Submission sub){
 		
@@ -723,6 +749,12 @@ public class ViewTab extends AbstractVireoController {
 		return attachment.getName();
 	}
 	
+	/**
+	 * The private method to add a "supplement" file.
+	 *  
+	 * @param sub (The current submission)
+	 * @return (A String containing the name of the file)
+	 */
 	@Security(RoleType.REVIEWER)
 	private static String uploadSupplement(Submission sub){
 		
@@ -745,6 +777,62 @@ public class ViewTab extends AbstractVireoController {
 		return attachment.getName();		
 	}
 	
+	/**
+	 * The private method to delete or replace "supplement" files.
+	 * 
+	 * @param sub (The current submission)
+	 * @param action (The action to take, either delete or replace)
+	 * @return (A list<String> containing the old file and new one)
+	 */
+	@Security(RoleType.REVIEWER)
+	private static List<String> removeSupplement(Submission sub, String action){
+		
+		List<String> files = new ArrayList<String>();
+		String oldName = null;
+		String newName = null;
+		Attachment oldFile = null;
+		
+		if("replace".equals(action)) {
+			oldFile = sub.findAttachmentById(Long.valueOf(params.get("supplementReplaceOriginal")));
+		} else {
+			oldFile = sub.findAttachmentById(Long.valueOf(params.get("supplementDelete")));
+		}
+		oldName = oldFile.getName();
+		oldFile.delete();
+		
+		if("replace".equals(action)) {
+			File attachment = params.get("supplementReplace",File.class);
+			
+			if(attachment == null)
+				Logger.info("Doc is null");
+			else
+				Logger.info("Doc: " + attachment.getClass().getName());
+			
+			try{
+				Attachment thisAttachment = sub.addAttachment(attachment, AttachmentType.SUPPLEMENTAL);
+				thisAttachment.save();
+			} catch (IOException e) {
+				validation.addError("supplementDocument","Error uploading supplemental document.");
+			} catch (IllegalArgumentException e) {
+				validation.addError("supplementDocument","Error uploading supplemental document.");
+			}
+			
+			newName = attachment.getName();
+		}
+		
+		files.add(oldName);
+		files.add(newName);
+		
+		return files;
+	}
+	
+	/**
+	 * The private method to add a "primary" file. If a primary file already exists
+	 * it will replace the file.
+	 *  
+	 * @param sub (The current submission)
+	 * @return (A String containing the name of the file)
+	 */
 	@Security(RoleType.REVIEWER)
 	private static String uploadPrimary(Submission sub){
 		
@@ -778,6 +866,12 @@ public class ViewTab extends AbstractVireoController {
 		return attachment.getName();
 	}
 	
+	/**
+	 * A method for displaying/downloading the submission's attachements
+	 * 
+	 * @param id (The attachment id)
+	 * @param name (The name of the file)
+	 */
 	@Security(RoleType.REVIEWER)
 	public static void viewFile(Long id, String name){
 		

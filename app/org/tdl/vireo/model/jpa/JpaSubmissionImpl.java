@@ -177,8 +177,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	}
 
 	@Override
-	public JpaSubmissionImpl save() {
-		
+	public JpaSubmissionImpl save() {		
 		assertReviewerOrOwner(submitter);
 		
 		if (pendingLogs.size() > 0) {
@@ -189,11 +188,11 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		super.save();
 		
 		// After saving save all pending actionlogs
-		for(ActionLog log : pendingLogs) {
+		for(ActionLog log : pendingLogs) {			
 			log.save();
 		}
 		pendingLogs.clear();
-				
+		
 		return this;
 	}
 	
@@ -300,9 +299,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	public void setDocumentTitle(String title) {
 		
 		assertReviewerOrOwner(submitter);
-		
 		if (!equals(this.documentTitle,title)) {
-
 			this.documentTitle = title;
 			generateChangeLog("Document title", title, false);
 		}
@@ -895,7 +892,6 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	 * 			  This log message should be generated no matter what state the submission is currently in.
 	 */
 	protected void generateLog(String entry, boolean always) {
-		
 		if (!always) {
 			// Ignore if the submission is in the initial state.
 			StateManager manager = Spring.getBeanOfType(StateManager.class);
