@@ -49,22 +49,13 @@ public class TemplatePackagerImpl extends AbstractPackagerImpl {
 	public String mimeType = null;
 	public String format = null;
 	public String manifestName = "mets.xml";
-	public List<AttachmentType> attachmentTypes = null;
+	public List<AttachmentType> attachmentTypes = new ArrayList<AttachmentType>();
 	public Map<String,Object> templateArguments = null;
 	
 	// Repositories to be injected into template for convenience
 	public PersonRepository personRepo;
 	public SubmissionRepository subRepo;
 	public SettingsRepository settingRepo;
-
-	/**
-	 * Construct a new template packager.
-	 */
-	public TemplatePackagerImpl() {
-		attachmentTypes = new ArrayList<AttachmentType>();
-		attachmentTypes.add(AttachmentType.PRIMARY);
-		attachmentTypes.add(AttachmentType.SUPPLEMENTAL);
-	}
 	
 	/**
 	 * Inject the repository of people and their preferences.
@@ -163,9 +154,7 @@ public class TemplatePackagerImpl extends AbstractPackagerImpl {
 	 * package to filter which files to include. They must be the exact name
 	 * (all uppercase) of types listed in the AttachmentType enum.
 	 * 
-	 * If no types are specified then "PRIMARY", and "SUPPLEMENTAL" types will
-	 * be included. If you do not want any files included in the package then
-	 * pass an empty list.
+	 * If no types are specified then no attachments will be included.
 	 * 
 	 * @param attachmentTypeNames
 	 *            List of attachment types to include.

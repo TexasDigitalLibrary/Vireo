@@ -147,23 +147,40 @@ public class TemplatePackagerImplTest extends UnitTest {
 			assertTrue("Package file does not exist", exportFile.exists());
 			assertTrue("Package file is not readable", exportFile.canRead());
 			
-			Map<String, File> fileMap = getFileMap(exportFile);
+			if (exportFile.isDirectory()) {
 			
-			// There should be three files
-			assertTrue(fileMap.containsKey(packager.manifestName));
-			assertTrue(fileMap.containsKey("bottle.pdf"));
-			assertTrue(fileMap.containsKey("fluff.jpg"));
-			
-			// Load up the manifest and make sure it's valid XML.
-			SAXBuilder builder = new SAXBuilder();
-			Document doc = builder.build(fileMap.get(packager.manifestName));
-			
-			// Check that the manifest contains important data
-			String manifest = readFile(fileMap.get(packager.manifestName));
-			assertTrue(manifest.contains(sub.getStudentFirstName()));
-			assertTrue(manifest.contains(sub.getStudentLastName()));
-			assertTrue(manifest.contains(sub.getDocumentTitle()));
-			assertTrue(manifest.contains(sub.getDocumentAbstract()));
+				// The export is a directory of multiple files
+				Map<String, File> fileMap = getFileMap(exportFile);
+				
+				// There should be three files
+				assertTrue(fileMap.containsKey(packager.manifestName));
+				assertTrue(fileMap.containsKey("bottle.pdf"));
+				assertTrue(fileMap.containsKey("fluff.jpg"));
+				
+				// Load up the manifest and make sure it's valid XML.
+				SAXBuilder builder = new SAXBuilder();
+				Document doc = builder.build(fileMap.get(packager.manifestName));
+				
+				// Check that the manifest contains important data
+				String manifest = readFile(fileMap.get(packager.manifestName));
+				assertTrue(manifest.contains(sub.getStudentFirstName()));
+				assertTrue(manifest.contains(sub.getStudentLastName()));
+				assertTrue(manifest.contains(sub.getDocumentTitle()));
+				assertTrue(manifest.contains(sub.getDocumentAbstract()));
+			} else {
+				
+				// The export is a single file, try and load it as xml.
+				
+				SAXBuilder builder = new SAXBuilder();
+				Document doc = builder.build(exportFile);
+				
+				// Check that the export contains important data
+				String manifest = readFile(exportFile);
+				assertTrue(manifest.contains(sub.getStudentFirstName()));
+				assertTrue(manifest.contains(sub.getStudentLastName()));
+				assertTrue(manifest.contains(sub.getDocumentTitle()));
+				assertTrue(manifest.contains(sub.getDocumentAbstract()));
+			}
 			
 			// Cleanup
 			pkg.delete();

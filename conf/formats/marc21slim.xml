@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+*{
+    This is an MARC 21 XML format. This format is most useful for ingesting
+    records of submissions into your institutional OPAC for easier searching
+    and discovery of local resources.
+    
+    http://www.loc.gov/standards/Example:xml/
+}*
+<record xmlns="http://www.loc.gov/MARC21/slim"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+    
+    <!--  
+	    MARC Leader Field for a bibliographic notation for a textual monograph. 
+	    
+	    00-04 => blank for record length
+	    05    => "n" for new
+	    06    => "a" for textual material
+	    07    => "m" for monograph
+	    08    => blank for type of control
+	    09    => "a" for unicode encoding
+	    10    => "2" for date field positions?
+	    11    => "2" for sub field positions?
+	    12-16 => blank for no base address
+	    17    => "u" for unknown encoding level
+	    18    => "u" for unknown cataloging form
+	    19    => blank for unknown multipart
+	    20    => "4" because it always contains a 4
+	    21    => "5" because it always contains a 5
+	    22    => "0" because it always contains a 0
+	    23    => "0" because it always contains a 0 
+	-->
+	<leader>     nam a22     uu 4500</leader>
+    
+    <!-- 
+	     MARC 006 Control Field for an electronic resource
+	 
+	     00    => "m" for electronic resource
+	     01-04 => blank for undefined field
+	     05    => "f" for specialized target audience
+	     06    => blank for unknown form of item
+	     07-08 => blank for undefined field
+	     09    => "d" for document type of computer file
+	     10    => blank for undefined field
+	     11    => blank for not a government publication
+	     12-17 => blank for undefined field  
+	 -->
+	 <controlfield tag="006">m    f   d        </controlfield>
+
+	<!-- 
+	    MARC 007 Control Field for physical description
+	
+	    00    => "c" for electronic resource
+	    01    => "r" for remote material
+	    02    => blank for undefined field
+	    03    => "u" for unknown color
+	    04    => "n" for unspecified dimension
+	    05    => "u" for unknown sound
+	    06-08 => bar for unknown image depth
+	    09    => bar for unknown file formats
+	    10    => bar for unknown quality assurance 
+	    11    => bar for unknown digital source
+	    12    => bar for unknown compression
+	    13    => bar for unknown reformatting quality
+	-->
+	<controlfield tag="007">cr unu||||||||</controlfield>
+
+    <!-- 
+   	    MARC 008 Control field for a book/monograph
+	
+	    00-05 => blank
+	    06    => "s" for single known date
+	    07-10 => Year of publication
+	    11-14 => blank (secondary date)
+	    15-17 => blank (place of publication)
+	    18-22 => bar (Illustrations and audience)
+	    23    => "o" for online
+	    24-27 => "bm  " bibliographies and thesis nature
+	    28    => blank (government publication)
+	    29    => "0" for not a conference publication
+	    30    => "0" for not a festschrift (what ever that is?)
+	    31    => "0" for no index
+	    32    => blank (position not used)
+	    33    => "0" for non-fiction
+	    34    => bar for biography
+	    35-37 => "eng" for language
+	    38    => blank indicating the record has not been modified
+	    39    => "d" for other cataloging source
+	-->
+	%{
+	   // Graduation year is publication year
+	   def pubYear = "    ";
+	   if (sub.getGraduationYear() != null)
+	       pubYear = sub.getGraduationYear();
+	   
+	}% 
+    <controlfield tag="008">      s${ pubYear }       |||||obm   000 0|eng d</controlfield>
+
+    #{if sub.getDepositId() != null } 
+    <!-- 035, System Control Number -->
+    <!-- 
+        Source: depositId()
+        Example:
+            <marc:datafield tag="035" ind1=" " ind2=" ">
+                <marc:subfield code="a">http://hdl.handle.net/123456789/ETD-1969-42</marc:subfield>
+            </marc:datafield>
+    -->
+    <datafield tag="035" ind1=" " ind2=" ">
+        <subfield code="a">${ sub.getDepositId() }</subfield>
+    </datafield>
+    #{/if}
+    
+    <!-- 100, ETD creator -->
+    <!-- 
+        Source: studentLastName, studentFirstName studentMiddleName birthYear-
+        Example:
+            <marc:datafield tag="100" ind1="1" ind2=" ">
+                <marc:subfield code="a">User, Student A</marc:subfield>
+                <marc:subfield code="e">author</marc:subfield>
+            </marc:datafield>
+    -->
+    %{
+        def studentName = "unknown";
+        if (sub.getStudentLastName() != null) {
+            studentName = sub.getStudentLastName();
+            if (sub.getStudentFirstName() != null || sub.getStudentMiddleName() != null ) {
+                studentName += ", ";
+                if (sub.getStudentFirstName() != null)
+                    studentName += sub.getStudentFirstName();
+                if (sub.getStudentFirstName() != null || sub.getStudentMiddleName() != null )
+                    studentName += " ";
+                if (sub.getStudentMiddleName() != null)
+                    studentName += sub.getStudentMiddleName();
+            }
+         }
+         if (sub.getStudentBirthYear() != null) {
+            studentName += " "+sub.getStudentBirthYear()+"-";
+         }
+    %} 
+    <datafield tag="100" ind1="1" ind2=" ">
+	    <subfield code="a">${ studentName.escapeXml() }</subfield>
+	    <subfield code="e">author</subfield>
+    </datafield>
+    
+    #{if sub.getDocumentTitle() != null } 
+    <!-- 245, ETD title -->
+    <!--
+        Source: documentTitle
+        Example:
+            <marc:datafield tag="245" ind1="1" ind2="0">
+                <marc:subfield code="a">A Russian Financial Analysis of the Statistical Probability of Graduating</marc:subfield>
+            </marc:datafield>
+            
+        Note, we'll try and fill the second indicator appropriately, which should be the number of insignificant characters in the title. 
+        We only support A, An, The at the present time. I googled around and couldn't find a list of english articles.
+    -->
+    %{
+        def title = sub.getDocumentTitle();
+        def ind2 = 0;
+        if (title.startsWith("A "))
+            ind2 = 2;
+        if (title.startsWith("An "))
+            ind2 = 3;
+        if (title.startsWith("The "))
+            ind2 = 4;
+    }% 
+    <datafield tag="245" ind1="1" ind2="${ind2}">
+        <subfield code="a">${ title.escapeXml() }</subfield>
+    </datafield>
+    #{/if}
+    
+    #{if settingRepo.getConfig(org.tdl.vireo.model.Configuration.GRANTOR) != null } 
+    <!-- 260, ETD publisher, use the granting institution as the publisher and the graduation year -->
+    <!--
+        Source: Configured institutional grantor, along with the graduation year.
+        Example:
+            <marc:datafield tag="260" ind1=" " ind2=" ">
+                <marc:subfield code="b">[My University</marc:subfield>
+                <marc:subfield code="c">2011.]</marc:subfield>
+            </marc:datafield>
+    -->
+    <datafield tag="260" ind1=" " ind2=" ">
+        <subfield code="b">[${ settingRepo.getConfig(org.tdl.vireo.model.Configuration.GRANTOR).escapeXml() }</subfield>
+        #{if sub.getGraduationYear() != null } 
+        <subfield code="c">${ sub.getGraduationYear() }.]</subfield>
+        #{/if} 
+        #{else} 
+        <subfield code="c">${ new java.util.Date().format("yyyy") }.]</subfield>
+        #{/else} 
+    </datafield>
+    #{/if}
+
+    <!-- 502, Dissertation information -->
+    <!--
+        Source: Configured institutional grantor, level, major, graduation year, and deposit id.
+        Example:
+            <marc:datafield tag="502" ind1=" " ind2=" ">
+                <marc:subfield code="a">Masters thesis</marc:subfield>
+                <marc:subfield code="b">Masters of Arts</marc:subfield>
+                <marc:subfield code="c">My University</marc:subfield>
+                <marc:subfield code="d">2011</marc:subfield>
+                <marc:subfield code="g">Finance</marc:subfield>
+                <marc:subfield code="o">http://hdl.handle.net/123456789/ETD-1969-42</marc:subfield>
+            </marc:datafield>
+        
+    -->
+    <datafield tag="502" ind1=" " ind2=" ">
+        #{if sub.getDegreeLevel() != null} 
+        <subfield code="a">${ sub.getDegreeLevel().name().toLowerCase().capitalizeWords().escapeXml() } thesis.</subfield>
+        #{/if}
+        #{if sub.getDegree() != null } 
+        <subfield code="b">${ sub.getDegree().escapeXml() }</subfield>
+        #{/if}
+        #{if settingRepo.getConfig(org.tdl.vireo.model.Configuration.GRANTOR) != null } 
+        <subfield code="c">${ settingRepo.getConfig(org.tdl.vireo.model.Configuration.GRANTOR).escapeXml() }</subfield>
+        #{/if}
+        #{if sub.getGraduationYear() != null } 
+        <subfield code="d">${ sub.getGraduationYear() }</subfield>
+        #{/if}
+        #{if sub.getMajor() != null} 
+        <subfield code="g">${ sub.getMajor().escapeXml() }</subfield>
+        #{/if}
+        #{if sub.getDepositId() != null} 
+        <subfield code="o">${ sub.getDepositId().escapeXml() }</subfield>
+        #{/if} 
+    </datafield>
+    
+     <!-- 504, static - includes biblograhpic references -->
+     <!--
+         Source:
+             None, this is statically generated for all records.
+         Example:
+             <marc:datafield tag="504" ind1=" " ind2=" ">
+                 <marc:subfield code="a">Includes bibliographical references.</marc:subfield>
+             </marc:datafield>   
+     -->
+     <datafield tag="504" ind1=" " ind2=" ">
+         <subfield code="a">Includes bibliographical references.</subfield>
+     </datafield>
+
+     <!-- 516, static - Type of computer file -->
+     <!--
+         Source:
+             None, this is statically generated for all records.
+         Example:
+             <marc:datafield tag="516" ind1=" " ind2=" ">
+                 <marc:subfield code="a">Text (Thesis).</marc:subfield>
+             </marc:datafield>
+         
+     -->
+     <datafield tag="516" ind1=" " ind2=" ">
+         <subfield code="a">>Text (Thesis).</subfield>
+     </datafield>
+     
+     <!-- 520, Abstract -->
+     <!-- 
+         Source: documentAbstract
+         Example:
+             <marc:datafield tag="520" ind1="3" ind2=" ">
+                 <marc:subfield code="a">
+                     The probability is asymptotically approching zero.
+                 </marc:subfield>
+             </marc:datafield>
+     -->
+     #{if sub.getDocumentAbstract() != null } 
+     <datafield tag="520" ind1="3" ind2=" ">
+         <subfield code="a">${ sub.getDocumentAbstract().escapeXml() }</subfield>
+     </datafield>
+     #{/if}
+     
+     <!-- 650, ETD discipline index terms -->
+     <!--
+         Source: major
+         Example:
+             <marc:datafield tag="650" ind1="4" ind2=" ">
+                 <marc:subfield code="a">Finance</marc:subfield>
+             </marc:datafield>
+             
+     -->
+     #{if sub.getMajor() != null } 
+     <datafield tag="650" ind1=" " ind2="4">
+         <subfield code="a">${ sub.getMajor().escapeXml() }</subfield>
+     </datafield>
+     #{/if}
+    
+    <!-- 653, ETD subject/keywords -->
+    <!--
+        Source: documentKeywords
+        Example:
+            <marc:datafield tag="653" ind1=" " ind2="0">
+                <marc:subfield code="a">One</marc:subfield>
+            </marc:datafield>
+            <marc:datafield tag="653" ind1=" " ind2="0">
+                <marc:subfield code="a">Two</marc:subfield>
+            </marc:datafield>
+            <marc:datafield tag="653" ind1=" " ind2="0">
+                <marc:subfield code="a">Three</marc:subfield>
+            </marc:datafield>
+        
+    -->
+    #{if sub.getDocumentKeywords() != null } 
+    #{list items:sub.getDocumentKeywords().split(";"), as:'keyword' } 
+    <datafield tag="653" ind1=" " ind2="0">
+        <subfield code="a">${ keyword.trim().escapeXml() }</subfield>
+    </datafield>
+    #{/list}
+    #{/if}
+    
+    <!-- 655, Static field that says this is an ETD -->
+    <!--
+        Source:
+            None, this is statically generated for all records.
+        Example:
+            <marc:datafield tag="655" ind1=" " ind2="4">
+                <marc:subfield code="a">Electronic Thesis or Dissertation</marc:subfield>
+            </marc:datafield>
+        
+    -->
+    <datafield tag="655" ind1=" " ind2="4">
+        <subfield code="a">Electronic Thesis or Dissertation</subfield>
+    </datafield>
+    
+    <!-- 710, ETD Institution -->
+    <!--
+        Source: Configured institutional grantor, and department.
+        Example:
+            <marc:datafield tag="710" ind1="2" ind2=" ">
+                <marc:subfield code="a">My University</marc:subfield>
+                <marc:subfield code="b">Statistics</marc:subfield>
+            </marc:datafield>
+        
+    -->
+    #{if settingRepo.getConfig(org.tdl.vireo.model.Configuration.GRANTOR) != null } 
+    <datafield tag="710" ind1="2" ind2=" ">
+        <subfield code="a">${ settingRepo.getConfig(org.tdl.vireo.model.Configuration.GRANTOR).escapeXml() }</subfield>
+        #{if sub.getDepartment() != null } 
+        <subfield code="b">${ sub.getDepartment().escapeXml() }</subfield>
+        #{/if} 
+    </datafield>
+    #{/if} 
+    
+    
+    <!-- 720, ETD chair or co-chairs contributors -->
+    <!--
+        Source: Committee members (who are chairs)
+        Example:
+            <marc:datafield tag="720" ind1="1" ind2=" ">
+                <marc:subfield code="a">Leggett, John</marc:subfield>
+                <marc:subfield code="e">chair</marc:subfield>
+            </marc:datafield>
+        
+    -->
+    %{
+        def chairs = new java.util.ArrayList<org.tdl.vireo.model.CommitteeMember>();
+        def members = new java.util.ArrayList<org.tdl.vireo.model.CommitteeMember>();
+        
+        for (org.tdl.vireo.model.CommitteeMember member : sub.getCommitteeMembers()) {
+            if (member.isCommitteeChair()) {
+                chairs.add(member);
+            } else {
+                members.add(member);
+            }
+        }
+    }%
+    #{list items:getCommiteeMembers, as:'member'}
+    %{
+        def name = "Unknown";
+        if (member.getLastName() != null) {
+            name = member.getLastName();
+            if (member.getFirstName() != null || member.getMiddleName() != null ) {
+                name += ", ";
+                if (member.getFirstName() != null)
+                    name += member.getFirstName();
+                if (member.getFirstName() != null || member.getMiddleName() != null )
+                    name += " ";
+                if (member.getMiddleName() != null)
+                    name += member.getName();
+            }
+         }
+    %} 
+    <datafield tag="720" ind1="1" ind2=" ">
+        <subfield code="a">${ name.escapeXml() }</subfield>
+        <subfield code="e">${ chairs.size() > 0 ? "co-chair" : "chair" }</subfield>
+    </datafield>
+    #{/list}
+    
+    
+    <!-- 720, ETD committee members -->
+    <!--
+        Source: committee members (who are not chairs)
+        Example:
+            <marc:datafield tag="720" ind1="1" ind2=" ">
+                <marc:subfield code="a">Shipman, Frank</marc:subfield>
+                <marc:subfield code="e">committee member</marc:subfield>
+            </marc:datafield>
+            <marc:datafield tag="720" ind1="1" ind2=" ">
+                <marc:subfield code="a">Furuta, Richard</marc:subfield>
+                <marc:subfield code="e">committee member</marc:subfield>
+            </marc:datafield>
+    -->
+    #{list items:members, as:'member'}
+    %{
+        def name = "Unknown";
+        if (member.getLastName() != null) {
+            name = member.getLastName();
+            if (member.getFirstName() != null || member.getMiddleName() != null ) {
+                name += ", ";
+                if (member.getFirstName() != null)
+                    name += member.getFirstName();
+                if (member.getFirstName() != null || member.getMiddleName() != null )
+                    name += " ";
+                if (member.getMiddleName() != null)
+                    name += member.getName();
+            }
+         }
+    %} 
+    <datafield tag="720" ind1="1" ind2=" ">
+        <subfield code="a">${ name.escapeXml() }</subfield>
+        <subfield code="e">committee member</subfield>
+    </datafield>
+    #{/list}
+
+    #{if sub.getDepositId() != null } 
+    <!-- 856, ETD location and access -->
+    <!--
+        Source: Deposit Id
+        Example:
+            <marc:datafield tag="856" ind1="4" ind2="0">
+                <marc:subfield code="q">application/pdf</marc:subfield>
+                <marc:subfield code="u">http://hdl.handle.net/123456789/ETD-1969-42</marc:subfield>
+            </marc:datafield>
+        
+    -->
+    <datafield tag="856" ind1="4" ind2="0">
+        #{if sub.getPrimaryDocument() != null } 
+        <subfield code="q">${ sub.getPrimaryDocument().getMimeType().escapeXml() }</subfield>
+        #{/if} 
+        <subfield code="u">${ sub.getDepositId().escapeXml() }</subfield>
+    </datafield>
+    #{/if} 
+    
+</record>
