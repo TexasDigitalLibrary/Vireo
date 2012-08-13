@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
+*{
+    This is the DSpace METS SIP format. This is the best format to use when
+    ingesting content into a DSpace based repository. It does rely on a few
+    schemas to be present, naturally there are several fields in the dc schema.
+    However in addition to the dc schema, this export expects that there be
+    fields in the "thesis", and "local" schemas. Your may need to modify those
+    values for your particular repository's configuration. The "thesis" schema
+    handles metadata relating the the nature of being a thesis or dissertation
+    such as major, department, degree level, etc. The "local" schema is used
+    exclusively for handling embargo related controlls. If the submission is
+    under a non-indefinate embargo then the embargo terms and lift fields will
+    be supplied appropriately so that DSpace will know to release the ETD
+    automatically when the embargo has expired.
 
+    https://wiki.duraspace.org/display/DSPACE/DSpaceMETSSIPProfile
+    
+    It is recommended that if you are modifying this format for your local
+    institution that instead of changing this file directly instead create a
+    copy of it and modify the copy. Then in the application-context.xml add a
+    separate entry for your locally modify DSpace METS format.
+}*
 <mets ID="vireo-mets-1" OBJID="vireo-submission-${ sub.getId() }" LABEL="DSpace Item"
     PROFILE="DSpace METS SIP Profile 1.0" xmlns="http://www.loc.gov/METS/"
     xmlns:xlink="http://www.w3.org/1999/xlink"

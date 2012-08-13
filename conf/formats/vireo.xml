@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+*{
+    This format is not according to any schema (although we should probably
+    define one). It is designed to be a usefull representation of the internal
+    vireo data model in XML. It should be the highest fidelity format
+    available. This format is useful if you will be doing further
+    transformations once downloaded to hook into other formats or services. I
+    have tried to make it as easy as possible to work with this format in XSL
+    by repeating some data. For example all dates are spelled out in ISO-8601
+    format as well as milliseconds since the epoc. You can use which ever is
+    more convenient for you.
+    
+    To accommodate future changes to this export, a version attribute has been
+    added. Initially we are starting with "1.0", as changes are made this
+    number should be incremented.
+}*
+<submission id="${sub.getId() }" generated="${ new java.util.Date().format("yyyy-MM-dd'T'HH:mm:ssZ") }" version="1.0">
+
+    <submitter id="${ sub.getSubmitter().getId() }">
+        <email>${ sub.getSubmitter().getEmail().escapeXml() }</email>
+        #{if sub.getSubmitter().getNetId() != null} 
+        <netId>${ sub.getSubmitter().getNetId().escapeXml() }</netId>
+        #{/if}
+        #{if sub.getSubmitter().getInstitutionalIdentifier() != null} 
+        <institutionalIdentifier>${ sub.getSubmitter().getInstitutionalIdentifier().escapeXml() }</institutionalIdentifier>
+        #{/if}
+        #{if sub.getSubmitter().getFirstName() != null} 
+        <firstName>${ sub.getSubmitter().getFirstName().escapeXml() }</firstName>
+        #{/if}
+        #{if sub.getSubmitter().getMiddleName() != null} 
+        <middleName>${ sub.getSubmitter().getMiddleName().escapeXml() }</middleName>
+        #{/if}
+        #{if sub.getSubmitter().getLastName() != null} 
+        <lastName>${ sub.getSubmitter().getLastName().escapeXml() }</lastName>
+        #{/if}
+        #{if sub.getSubmitter().getBirthYear() != null} 
+        <birthYear>${ sub.getSubmitter().getBirthYear() }</birthYear>
+        #{/if}
+        #{if sub.getSubmitter().getCurrentPhoneNumber() != null} 
+        <currentPhoneNumber>${ sub.getSubmitter().getCurrentPhoneNumber().escapeXml() }</currentPhoneNumber>
+        #{/if}
+        #{if sub.getSubmitter().getCurrentPostalAddress() != null} 
+        <currentPostalAddress>${ sub.getSubmitter().getCurrentPostalAddress().escapeXml() }</currentPostalAddress>
+        #{/if}
+        #{if sub.getSubmitter().getCurrentEmailAddress() != null} 
+        <currentEmailAddress>${ sub.getSubmitter().getCurrentEmailAddress().escapeXml() }</currentEmailAddress>
+        #{/if}
+        #{if sub.getSubmitter().getPermanentPhoneNumber() != null}
+        <permanentPhoneNumber>${ sub.getSubmitter().getPermanentPhoneNumber().escapeXml() }</permanentPhoneNumber>
+        #{/if}
+        #{if sub.getSubmitter().getPermanentPostalAddress() != null} 
+        <permanentPostalAddress>${ sub.getSubmitter().getPermanentPostalAddress().escapeXml() }</permanentPostalAddress>
+        #{/if}
+        #{if sub.getSubmitter().getPermanentEmailAddress() != null} 
+        <permanentEmailAddress>${ sub.getSubmitter().getLastName().escapeXml() }</permanentEmailAddress>
+        #{/if}
+        #{if sub.getSubmitter().getRole() != null} 
+        <role>${ sub.getSubmitter().getRole().name().escapeXml() }</role>
+        #{/if} 
+    </submitter>
+
+    #{if sub.getStudentFirstName() != null} 
+    <studentFirstName>${ sub.getStudentFirstName().escapeXml() }</studentFirstName>
+    #{/if}
+    
+    #{if sub.getStudentMiddleName() != null} 
+    <studentMiddleName>${ sub.getStudentMiddleName().escapeXml() }</studentMiddleName>
+    #{/if}
+
+    #{if sub.getStudentLastName() != null} 
+    <studentLastName>${ sub.getStudentLastName().escapeXml() }</studentLastName>
+    #{/if}
+    
+    #{if sub.getStudentBirthYear() != null} 
+    <studentBirthYear>${ sub.getStudentBirthYear() }</studentBirthYear>
+    #{/if}
+    
+    #{if sub.getDocumentTitle() != null } 
+    <documentTitle>${ sub.getDocumentTitle().escapeXml() }</documentTitle>
+    #{/if}
+
+    #{if sub.getDocumentAbstract() != null } 
+    <documentAbstract>${ sub.getDocumentAbstract().escapeXml() }</documentAbstract>
+    #{/if}
+    
+    #{if sub.getDocumentKeywords() != null } 
+    <documentKeywords>${ sub.getDocumentKeywords().escapeXml() }</documentKeywords>
+    #{/if}
+
+    #{if sub.getEmbargoType() != null} 
+    <embargoType id="${ sub.getEmbargoType().getId() }" active="#{if sub.getEmbargoType().isActive()}true#{/if}#{else}false#{/else}">
+        <name>${ sub.getEmbargoType().getName().escapeXml() }</name>
+        <description>${ sub.getEmbargoType().getDescription().escapeXml() }</description>
+        #{if sub.getEmbargoType().getDuration() == null } 
+        <duration indefinite="true">Indefinite</duration>
+        #{/if}
+        #{else} 
+        <duration months="${ sub.getEmbargoType().getDuration() }">${sub.getEmbargoType().getDuration()} Months</duration>
+        #{/else}
+        #{if sub.getEmbargoType().getDuration() != null && sub.getEmbargoType().getDuration() != 0 && sub.getGraduationYear() != null} 
+        %{
+            // Calculate the embargo lift date.
+            java.util.Calendar cal = java.util.Calendar.getInstance();
+            
+            if (sub.getGraduationYear() != null) {
+                cal.clear();
+                cal.set(java.util.Calendar.YEAR, sub.getGraduationYear());
+                if (sub.getGraduationMonth() != null)
+                    cal.set(java.util.Calendar.MONTH,sub.getGraduationMonth());
+            }
+            
+            cal.add(java.util.Calendar.MONTH, sub.getEmbargoType().getDuration());
+            java.util.Date expireDate = cal.getTime();
+        }% 
+        <expireDate long="${expireDate.getTime() }">${ expireDate.format("yyyy-MM-dd'T'HH:mm:ssZ") }</expireDate>
+        #{/if} 
+    </embargoType>
+    #{/if}
+
+    <committeeMembers>
+        #{list items:sub.getCommitteeMembers(), as:'member'} 
+        <committeeMember chair="#{if member.isCommitteeChair()}true#{/if}#{else}false#{/else}" id="${ member.getId() }">
+           #{if member.getFirstName() != null} 
+           <firstName>${ member.getFirstName().escapeXml() }</firstName>
+           #{/if} 
+           #{if member.getMiddleName() != null} 
+           <middleName>${ member.getMiddleName().escapeXml() }</middleName>
+           #{/if} 
+           #{if member.getLastName() != null} 
+           <lastName>${ member.getLastName().escapeXml() }</lastName>
+           #{/if} 
+           </committeeMember>
+        #{/list} 
+    </committeeMembers>
+    
+    #{if sub.getCommitteeDisposition() != null } 
+    <committeeDisposition>${ sub.getCommitteeDisposition().escapeXml() }</committeeDisposition>
+    #{/if}
+    
+    #{if sub.getCommitteeContactEmail() != null } 
+    <committeeContactEmail>${ sub.getCommitteeContactEmail().escapeXml() }</committeeContactEmail>
+    #{/if}
+    
+    #{if sub.getCommitteeApprovalDate() != null } 
+    <committeeApprovalDate long="${sub.getCommitteeApprovalDate().getTime() }">${ sub.getCommitteeApprovalDate().format("yyyy-MM-dd'T'HH:mm:ssZ") }</committeeApprovalDate>
+    #{/if}
+    
+    #{if sub.getCommitteeEmbargoApprovalDate() != null } 
+    <committeeEmbargoApprovalDate long="${sub.getCommitteeEmbargoApprovalDate().getTime() }">${ sub.getCommitteeEmbargoApprovalDate().format("yyyy-MM-dd'T'HH:mm:ssZ") }</committeeEmbargoApprovalDate>
+    #{/if}
+
+    #{if sub.getSubmissionDate() != null } 
+    <submissionDate long="${sub.getSubmissionDate().getTime() }">${ sub.getSubmissionDate().format("yyyy-MM-dd'T'HH:mm:ssZ") }</submissionDate>
+    #{/if}
+    
+    #{if sub.getLicenseAgreementDate() != null } 
+    <approvalDate long="${sub.getLicenseAgreementDate().getTime() }">${ sub.getLicenseAgreementDate().format("yyyy-MM-dd'T'HH:mm:ssZ") }</approvalDate>
+    #{/if}
+     
+    #{if sub.getApprovalDate() != null } 
+    <approvalDate long="${sub.getApprovalDate().getTime() }">${ sub.getApprovalDate().format("yyyy-MM-dd'T'HH:mm:ssZ") }</approvalDate>
+    #{/if}
+    
+    #{if sub.getDegree() != null } 
+    <degree>${ sub.getDegree() }</degree>
+    #{/if}
+    
+    #{if sub.getDegreeLevel() != null } 
+    <degreeLevel>${ sub.getDegreeLevel().name().toLowerCase().capitalizeWords().escapeXml() }</degreeLevel>
+    #{/if}
+    
+    #{if sub.getDepartment() != null } 
+    <department>${ sub.getDepartment() }</department>
+    #{/if}
+    
+    #{if sub.getCollege() != null } 
+    <college>${ sub.getCollege() }</college>
+    #{/if}
+    
+    #{if sub.getMajor() != null } 
+    <major>${ sub.getMajor() }</major>
+    #{/if}
+    
+    #{if sub.getDocumentType() != null } 
+    <documentType>${ sub.getDocumentType() }</documentType>
+    #{/if}
+    
+    #{if sub.getGraduationYear() != null }
+    %{
+        def graduationDate = sub.getGraduationYear();
+        if (sub.getGraduationMonth() != null) {
+            graduationDate += "-";
+            graduationDate += sub.getGraduationMonth()+1;
+        }
+    }% 
+    <graduationDate>${ graduationDate }</graduationDate>
+    #{/if}
+    
+    #{if sub.getGraduationYear() != null } 
+    <graduationYear>${ sub.getGraduationYear() }</graduationYear>
+    #{/if}
+    
+    #{if sub.getGraduationMonth() != null }
+    %{
+        String monthName = "Unknown";
+        if (sub.getGraduationMonth() >= 0 && sub.getGraduationMonth() <= 11)
+           monthName = new java.text.DateFormatSymbols().getMonths()[sub.getGraduationMonth()]; 
+    }% 
+    <!-- 0=january, 11=december -->
+    <graduationMonth int="${ sub.getGraduationMonth() }">${ monthName }</graduationMonth>
+    #{/if}
+    
+    #{if sub.getUMIRelease() != null } 
+    <umi #{if sub.getUMIRelease()}release="true"#{/if}#{else}release="false"#{/else}/>
+    #{/if}
+    
+    #{if sub.getDepositId() != null } 
+    <depositId>${ sub.getDepositId() }</depositId>
+    #{/if}
+    
+    <state beanName="${ sub.getState().getBeanName() }">${ sub.getState().getDisplayName() }</state>
+    
+    #{if sub.getAssignee() != null } 
+    <submitter id="${ sub.getAssignee().getId() }">
+        #{if sub.getAssignee().getFirstName() != null} 
+        <firstName>${ sub.getAssignee().getFirstName().escapeXml() }</firstName>
+        #{/if}
+        #{if sub.getAssignee().getMiddleName() != null} 
+        <middleName>${ sub.getAssignee().getMiddleName().escapeXml() }</middleName>
+        #{/if}
+        #{if sub.getAssignee().getLastName() != null} 
+        <lastName>${ sub.getAssignee().getLastName().escapeXml() }</lastName>
+        #{/if}
+        #{if sub.getAssignee().getEmail() != null} 
+        <email>${ sub.getAssignee().getEmail().escapeXml() }</email>
+        #{/if}
+        #{if sub.getSubmitter().getRole() != null} 
+        <role>${ sub.getSubmitter().getRole().name().escapeXml() }</role>
+        #{/if} 
+    </submitter>
+    #{/if}
+    
+    <customActions>
+        #{list items:sub.getCustomActions(), as:'actions'} 
+        <action #{if actions.getValue()}value="true"#{/if}#{else}value="false"#{/else}>${ actions.getDefinition().getLabel().escapeXml() }</action>
+        #{/list} 
+    </customActions>
+
+    <attachments>
+        #{list items:sub.getAttachments(), as:'attachment'} 
+        <attachment included="#{if attachmentTypes.contains(attachment.getType())}true#{/if}#{else}false#{/else}" type="${attachment.getType().name()}">
+            <name>${ attachment.getName().escapeXml() }</name>
+            <mimeType>${ attachment.getMimeType().escapeXml() }</mimeType>
+            <size bytes="${ attachment.getSize() }">${ attachment.getDisplaySize() }</size>
+            <date long="${attachment.getDate().getTime() }">${ attachment.getDate().format("yyyy-MM-dd'T'HH:mm:ssZ") }</date>
+            <internalPath>${ attachment.getFile().getAbsolutePath().escapeXml() }</internalPath>
+            #{if attachment.getPerson() != null } 
+		    <person id="${ attachment.getPerson().getId() }">
+		        #{if attachment.getPerson().getEmail() != null} 
+                <email>${ attachment.getPerson().getEmail().escapeXml() }</email>
+                #{/if}
+                #{if attachment.getPerson().getNetId() != null} 
+                <netId>${ attachment.getPerson().getNetId().escapeXml() }</netId>
+                #{/if}
+		        #{if attachment.getPerson().getFirstName() != null} 
+		        <firstName>${ attachment.getPerson().getFirstName().escapeXml() }</firstName>
+		        #{/if}
+		        #{if attachment.getPerson().getMiddleName() != null} 
+		        <middleName>${ attachment.getPerson().getMiddleName().escapeXml() }</middleName>
+		        #{/if}
+		        #{if attachment.getPerson().getLastName() != null} 
+		        <lastName>${ attachment.getPerson().getLastName().escapeXml() }</lastName>
+		        #{/if}
+		        #{if attachment.getPerson().getRole() != null} 
+		        <role>${ attachment.getPerson().getRole().name().escapeXml() }</role>
+		        #{/if} 
+		    </submitter>
+		    #{/if} 
+        </attachment>
+        #{/list} 
+    </attachments>
+
+</submission>

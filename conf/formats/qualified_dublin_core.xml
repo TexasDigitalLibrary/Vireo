@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-
+*{
+    This is very generic Dublin Core format. This is meant to be Vireo's
+    example of a repository agnostic format. However in practice I doubt this
+    would be ingestable by any repository implementation without modification.
+    
+    http://dublincore.org/specifications/
+    
+    This format has not been well tested, if you have a problem with it then it
+    is probably a bug. Please fit it. 
+}*
 <metadata
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:dc="http://purl.org/dc/elements/1.1/"
