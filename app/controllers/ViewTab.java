@@ -92,7 +92,7 @@ public class ViewTab extends AbstractVireoController {
 		List<Person> assignees = personRepo.findPersonsByRole(RoleType.REVIEWER);	
 		
 		List<DepositLocation> depositLocations = settingRepo.findAllDepositLocations();
-		
+				
 		String nav = "view";
 		render(	nav,
 				submission,

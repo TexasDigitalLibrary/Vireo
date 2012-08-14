@@ -1,5 +1,5 @@
 <tbody>
-	#{list items:0..4, as:'value'}
+	#{list items:0..9, as:'value'}
 		#{if actionLogs[value]}
 		<tr>
 			<td>${actionLogs[value].getPerson()?.getFirstName()} ${actionLogs[value].getPerson()?.getLastName()}</td>
