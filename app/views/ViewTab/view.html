@@ -132,8 +132,9 @@ jQuery(document).ready(function(){
 	/**
 	 * Retrieve template data event
 	 */
-	 jQuery("#add-comment-modal select[name='email_template']").live("change", function(){
-		 retrieveTemplateHandler(retrieveTemplateJSONURL, jQuery(this).val());
+	 jQuery(".modal select[name='email_template']").live("change", function(){
+		 modal = jQuery(this).closest(".modal");
+		 retrieveTemplateHandler(retrieveTemplateJSONURL, jQuery(this).val(), modal);
 	 });
 	
 	/**
@@ -409,38 +410,52 @@ jQuery(document).ready(function(){
 			
 			<!-- Hidden Select Options -->
 			<div id="embargoOptions" style="display:none;">
+				<select class="field">
 				#{list items:settingRepo.findAllEmbargoTypes(), as:'embargo'}
 					<option value="${embargo.getId()}">${embargo.getName()}</option>
 				#{/list}
+				</select>
 			</div>
 			<div id="umiReleaseOptions" style="display:none;">
+				<select class="field">
 				<option value="true">true</option>
 				<option value="false">false</option>
+				</select>
 			</div>
 			<div id="docTypeOptions" style="display:none;">
+				<select class="field">
 				#{list items:settingRepo.findAllDocumentTypes(), as:'docType'}
 					<option value="${docType.getName()}">${docType.getName()} - ${docType.getLevel()}</option>
 				#{/list}
+				</select>
 			</div>
 			<div id="collegeOptions" style="display:none;">
+				<select class="field">
 				#{list items:settingRepo.findAllColleges(), as:'college'}
 					<option value="${college.getName()}">${college.getName()}</option>
 				#{/list}
+				</select>
 			</div>
 			<div id="departmentOptions" style="display:none;">
+				<select class="field">
 				#{list items:settingRepo.findAllDepartments(), as:'department'}
 					<option value="${department.getName()}">${department.getName()}</option>
 				#{/list}
+				</select>
 			</div>
 			<div id="degreeOptions" style="display:none;">
+				<select class="field">
 				#{list items:settingRepo.findAllDegrees(), as:'degree'}
 					<option value="${degree.getName()}">${degree.getName()}</option>
 				#{/list}
+				</select>
 			</div>
 			<div id="majorOptions" style="display:none;">
+				<select class="field">
 				#{list items:settingRepo.findAllMajors(), as:'major'}
 					<option value="${major.getName()}">${major.getName()}</option>
 				#{/list}
+				</select>
 			</div>
 			
 		</div>

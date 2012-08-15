@@ -251,6 +251,7 @@
 						#{/if}#{/else}
 						> CC student's advisor</input></li>
 					</ul>
+					<div id="add-file-email-options" style="display:none;">
 					<ul class="unstyled">
 		            	<li>
 		            		Subject:<br />
@@ -268,6 +269,7 @@
 				            </select>
 				        </li>
 					</ul>
+					</div>
 				</li>
 				<li><input type="checkbox" class="checkbox" name="needsCorrection" value="true"
 				#{if currentUser.getPreference("attachment_flag_submission_as_needs_corrections_by_default") != null}
