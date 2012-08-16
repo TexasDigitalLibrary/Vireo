@@ -45,7 +45,7 @@
 				<td>${controllers.Submit.getDocumentName(submission)}
 				
 				#{if submission.getPrimaryDocument() != null}
-				    <a href="@{Submit.viewPrimaryDocument(submission.getId())}">[view]</a>
+				    <a href="@{Submit.viewAttachment(submission.getId(),submission.getPrimaryDocument().getId())}">[view]</a>
 				#{/if}
 				
 				</td>
@@ -54,7 +54,7 @@
 				<td>${submission.getAssignee() == null?"Unassigned":submission.getAssignee().getDisplayName()}</td>
 				<td> 
 				#{if submission.getState().isInProgress()}
-				    <a class="btn btn-primary" href="@{Submit.verifyPersonalInformation(submission.getId())}">Continue</a>
+				    <a class="btn btn-primary" href="@{submitSteps.PersonalInfo.personalInfo(submission.getId())}">Continue</a>
 				    <a class="btn btn-primary" href="@{Submit.deleteSubmission(submission.getId())}">Delete</a>
                 #{/if} 
                 #{else}
@@ -68,7 +68,7 @@
         </tbody></table>
         #{if SUBMISSIONS_OPEN }
 	        <div class="form-actions row center">
-			    <a href="@{Submit.verifyPersonalInformation()}" class="btn btn-primary">Start a new submission</a>
+			    <a href="@{submitSteps.PersonalInfo.personalInfo()}" class="btn btn-primary">Start a new submission</a>
 			</div>
 		#{/if}
         

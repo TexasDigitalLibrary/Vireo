@@ -20,10 +20,10 @@
 
 <div class="well">#{verbatim}${licenseText}#{/verbatim}</div>
 <div class="row center">
-<form action="@{Submit.license(subId)}" method="post" class="form-inline">
+<form action="@{submitSteps.License.license(subId)}" method="post" class="form-inline">
 	<fieldset style="margin:0 0 10px;">
-		<label class="checkbox" id="laLabel">
-            <input id="licenseAgreement" type="checkbox" name="licenseAgreement" ${checked}/> By checking here you agree to the above license in its entirety.
+		<label id="lalabel" class="checkbox #{if errors.forKey('laLabel')}red#{/if}">
+            <input id="licenseAgreement" type="checkbox" name="licenseAgreement" ${ licenseAgreement != null ? "checked='true'" : "" }/> By checking here you agree to the above license in its entirety.
 		</label>
 	</fieldset>
 	

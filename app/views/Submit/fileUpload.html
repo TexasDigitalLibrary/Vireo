@@ -5,31 +5,31 @@
 <div class="row pageHead">
 	<h3 class="span11">Upload Your Files</h3>
 </div>
-
-#{ifErrors}
+<br/>
+<div class="row">
+<div class="span7">
+	<p>In this step you will upload your thesis or dissertation to the server. Optionally, you may upload additional supplementary files that will be available along with your document after publication.</p>
+    <br/>
+    #{ifErrors}
     <ul class="red">
         #{errors}
             <li>${error}</li>
         #{/errors}
     </ul>
-#{/ifErrors}
-
-
-<div class="row">
-<div class="span7">
-	<p>In this step you will upload your thesis or dissertation to the server. Optionally, you may upload additional supplementary files that will be available along with your document after publication.</p>
-
-	<form action="@{submit.fileUpload(subId)}" method="POST" class="form-horizontal" enctype="multipart/form-data">
+    #{/ifErrors}
+    <br/>
+    
+	<form action="@{submitSteps.FileUpload.fileUpload(subId)}" method="POST" class="form-horizontal" enctype="multipart/form-data">
 		
 		<fieldset id="primaryFileUpload">
 			<legend>Upload your manuscript</legend>
 
-			<div class="control-group">
-				<label class="control-label" for="primaryFile"><b>* Manuscript in PDF:</b></label>
+			<div class="control-group #{ifError 'primaryDocument'}error#{/ifError}">
+				<label class="control-label" for="primaryFile"><b>* Manuscript in PDF</b>:</label>
 
                 #{if primaryAttachment == null}
                     <div class="controls">
-                        <input type="file" id="primaryFile" class="input-file" name="primaryDocument">
+                        <input type="file" id="primaryFile" class="input-file" name="primaryDocument"><br/>
                         <input type="submit" value="Upload" class="uploadBtn btn" name="uploadPrimary">
                         
                     </div>
@@ -37,7 +37,7 @@
                 #{else}
                     <div class="controls">
                         <p>
-                            <a href="@{Submit.viewPrimaryDocument(subId)}">${primaryAttachment.getName()}</a>
+                            <a href="@{Submit.viewAttachment(subId,primaryAttachment.getId())}" target="_blank">${primaryAttachment.getName()}</a>
 
                             (${primaryAttachment.getDisplaySize()})
                             <input type="submit" value="Replace Manuscript" class="uploadBtn btn" name="replacePrimary">
@@ -56,11 +56,11 @@
                 Upload only supplementary files such as audio, video or data sets.
                 These files must be listed in the appendix of your thesis or dissertation.
             </p>
-			<div class="control-group">
+			<div class="control-group #{ifError 'supplementaryDocument'}error#{/ifError}">
 				<label class="control-label" for="supplementaryFile">Supplementary Files:</label>
 
                 <div class="controls">
-                    <input type="file" id="supplementaryFile" class="input-file" name="supplementaryDocument">
+                    <input type="file" id="supplementaryFile" class="input-file" name="supplementaryDocument"><br/>
                     <input type="submit" value="Upload" class="uploadBtn btn" name="uploadSupplementary">
                 </div>
 			</div>
@@ -76,7 +76,10 @@
                             <p>
                             <label>
                                 <input type="checkbox" value="${attachment.getId()}" name="attachmentToRemove">
-                                ${attachment.getName()} (${attachment.getDisplaySize()})  
+                                <a href="@{Submit.viewAttachment(subId,attachment.getId())}" target="_blank">
+                                    ${attachment.getName()}
+                                </a> 
+                                (${attachment.getDisplaySize()})
                             </label>                                                     
                             </p>
                         #{/list}
@@ -86,14 +89,6 @@
 
 			</div>
 		</fieldset>		
-		
-		
-		
-		
-		
-		
-		
-		
 
         <fieldset id="sourceFileUpload" style="display: none;">
             <legend>Upload document source files</legend>

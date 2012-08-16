@@ -19,13 +19,13 @@
 </ul>
 #{/ifErrors}
 
-  <form action="@{submit.verifyPersonalInformation(subId)}" method="post" class="form-horizontal">
-  <input type="hidden" name="subId" value="${subId}"/>
+  <form action="@{submitSteps.PersonalInfo.personalInfo(subId)}" method="post" class="form-horizontal">
+    <input type="hidden" name="subId" value="${subId}"/>
 		
 	<fieldset>
 		<legend>Personal Information</legend>
 		<div class="control-group #{ifError 'firstName'}error#{/ifError}">
-			<label class="control-label" for="firstName"><b>* First Name</b></label>
+			<label class="control-label" for="firstName"><b>* First Name</b>:</label>
 			<div class="controls">
 			    #{if disabledFields.contains("firstName")}
 			    <p>${firstName}</p>
@@ -36,7 +36,7 @@
 			</div>
 		</div>
 		<div class="control-group #{ifError 'middleName'}error#{/ifError}">
-			<label class="control-label" for="middleName">Middle Name</label>
+			<label class="control-label" for="middleName">Middle Name:</label>
 			<div class="controls">
 			    #{if disabledFields.contains("middleName")}
                 <p>${middleName}</p>
@@ -49,7 +49,7 @@
 			</div>
 		</div>
 		<div class="control-group #{ifError 'lastName'}error#{/ifError}">
-			<label class="control-label" for="lastName"><b>* Last Name</b></label>
+			<label class="control-label" for="lastName"><b>* Last Name</b>:</label>
 			<div class="controls">
 			    #{if disabledFields.contains("lastName")}
                 <p>${lastName}</p>
@@ -60,13 +60,14 @@
 			</div>
 		</div>
 		<div class="control-group #{ifError 'emailName'}error#{/ifError}">
-			<label class="control-label" for="email"><b>* Email</b></label>
+			<label class="control-label" for="email"><b>* Email</b>:</label>
 			<div class="controls">
                 <p>${submitter.getEmail()}</p>
 			</div>
 		</div>
+		#{if requestBirth}
 		<div class="control-group #{ifError 'birthYear'}error#{/ifError}">
-			<label class="control-label" for="birthYear">Year of Birth</label>
+			<label class="control-label" for="birthYear">Year of Birth:</label>
 			<div class="controls">
 			    #{if disabledFields.contains("birthYear")}
                 <p>${birthYear}</p>
@@ -78,18 +79,39 @@
 				#{/else}
 			</div>
 		</div>
+		#{/if}
 	</fieldset>
 	
 	<fieldset>
 		<legend>Affiliation</legend>
 		<div class="control-group">
-			<label class="control-label" for="school"><b>* School</b></label>
+			<label class="control-label" for="school"><b>* School</b>:</label>
 			<div class="controls">
 				<p>${grantor}</p>
 			</div>
 		</div>
+		#{if requestCollege}
+		<div class="control-group #{ifError 'college'}error#{/ifError}">
+            <label class="control-label" for="college"><b>* College</b>:</label>
+            <div class="controls">
+                #{if disabledFields.contains("college")}
+                <p>${college}</p>
+                #{/if} 
+                #{else}
+                <select name="college">
+                    <option #{if college == null}selected="true"#{/if}>...choose</option>
+                    #{list items:settingRepo.findAllColleges(), as:'collegeObject'}
+                    <option #{if college == collegeObject.getName()}selected="true"#{/if} value="${collegeObject.getName()}">${collegeObject.getName()}</option>
+                    #{/list}
+                </select>
+                <a href="#" class="tooltip-icon" rel="tooltip" title="Enter the college you belong to."><i class="icon-info-sign">               
+                </i></a>
+                #{/else}
+            </div>
+        </div>
+        #{/if}
 		<div class="control-group #{ifError 'department'}error#{/ifError}">
-			<label class="control-label" for="department"><b>* Department</b></label>
+			<label class="control-label" for="department"><b>* Department</b>:</label>
 			<div class="controls">
 			    #{if disabledFields.contains("department")}
                 <p>${department}</p>
@@ -107,7 +129,7 @@
 			</div>
 		</div>
 		<div class="control-group #{ifError 'degree'}error#{/ifError}">
-			<label class="control-label" for="degree"><b>* Degree</b></label>
+			<label class="control-label" for="degree"><b>* Degree</b>:</label>
 			<div class="controls">
 			    #{if disabledFields.contains("degree")}
                 <p>${degree}</p>
@@ -125,7 +147,7 @@
 			</div>
 		</div>
 		<div class="control-group #{ifError 'major'}error#{/ifError}">
-			<label class="control-label" for="major"><b>* Major</b></label>
+			<label class="control-label" for="major"><b>* Major</b>:</label>
 			<div class="controls">
 			    #{if disabledFields.contains("major")}
                 <p>${major}</p>
@@ -147,7 +169,7 @@
 	<fieldset>
 		<legend>Phone &amp; Address</legend>
 		<div class="control-group #{ifError 'permPhone'}error#{/ifError}">
-			<label class="control-label" for="permPhone"><b>* Permanent Phone:</b></label>
+			<label class="control-label" for="permPhone"><b>* Permanent Phone</b>:</label>
 			<div class="controls">
 			    #{if disabledFields.contains("permPhone")}
                 <p>${permPhone}</p>
@@ -160,7 +182,7 @@
 			</div>
 		</div>
 		<div class="control-group #{ifError 'permAddress'}error#{/ifError}">
-			<label class="control-label" for="permAddress"><b>* Permanent Address:</b></label>
+			<label class="control-label" for="permAddress"><b>* Permanent Address</b>:</label>
 			<div class="controls">
 			    #{if disabledFields.contains("permAddress")}
                 <p>${permAddress}</p>

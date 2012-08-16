@@ -115,7 +115,7 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 		if (!file.canRead())
 			throw new IllegalArgumentException("File is not readable");
 		
-		this.name = file.getName();
+		setName(file.getName());
 		this.data = new Blob();
 		this.data.set(new FileInputStream(file), MimeTypes.getContentType(name));
 	}
@@ -144,7 +144,7 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 		if (content == null || content.length == 0)
 			throw new IllegalArgumentException("The contents of an attachment may not be blank.");
 		
-		this.name = filename;
+		setName(filename);
 		this.data = new Blob();
 		this.data.set(
 				new ByteArrayInputStream(content),
@@ -239,6 +239,10 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 			throw new IllegalArgumentException("Attachment name may not be blank or null.");
 
 		assertReviewerOrOwner(submission.getSubmitter());
+		
+		// Check if this filename has allready exists
+		if (submission.getId() != null && find("submission = ?1 AND name = ?2", submission, name).first() != null)
+			throw new IllegalArgumentException("An attachment with the name '"+name+"' allready exists for this submission.");
 		
 		this.name = name;
 	}

@@ -1,30 +1,6 @@
 #{extends 'submitSteps.html' /}
 #{set title:'Document Info' /}
 
-<script type="text/javascript">
-    
-    $(function(){
-        var template = $('#committee-member').clone(),
-        memberCount = 1;
-        
-        var addCommitteeMember = function(e){
-            // Prevent button from submitting form
-            e.preventDefault();
-            
-            memberCount++;
-            var member = template.clone().find(':input').each(function() {
-                var newId = this.id.substring(0, this.id.length-1) + memberCount;
-                $(this).prev().attr('for', newId); // update label for (assume prev sib is label)
-                this.name = this.id = newId; // update id and name (assume the same)
-            }).end() // back to .member
-            .attr('id', 'att' + memberCount) // update member id
-            .prependTo('#committee-members'); // add to container
-        };
-        
-        $('#add').click(addCommitteeMember); // attach event
-});
-</script>
-
 <br />
 <div class="row pageHead">
 	<h3 class="span11">Document Information</h3>
@@ -42,18 +18,18 @@
 </ul>
 #{/ifErrors}
 <br/>
-	<form action="@{Submit.docInfo(subId)}" method="post" class="form-inline">
+	<form action="@{submitSteps.DocumentInfo.documentInfo(subId)}" method="post" class="form-inline">
 	
 	<fieldset class="form-horizontal">
 		<legend>Document Information</legend>
 		<div class="control-group #{ifError 'title'}error#{/ifError}">
-			<label class="control-label" for="title"><b>* Title</b></label>
+			<label class="control-label" for="title"><b>* Title</b>:</label>
 			<div class="controls">
 				<input type="text" class="span5" id="title" name="title" value="${title}">
 			</div>
 		</div>
 		<div class="control-group #{ifError 'degreeMonth'}error#{/ifError} #{ifError 'degreeYear'}error#{/ifError}">
-			<label class="control-label" for="degreeDate"><b>* Degree Date</b></label>
+			<label class="control-label" for="degreeDate"><b>* Degree Date</b>:</label>
 			<div class="controls row">
 				<select class="span2" id="degreeMonth" name="degreeMonth">
                                     <option #{if null == degreeMonth || Integer.parseInt(degreeMonth) <= 0}selected="true"#{/if} value="0">...choose</option>
@@ -73,7 +49,7 @@
 			</div>
 		</div>
 		<div class="control-group #{ifError 'docType'}error#{/ifError}">
-			<label class="control-label" for="docType"><b>* Document Type</b></label>
+			<label class="control-label" for="docType"><b>* Document Type</b>:</label>
 			<div class="controls">
                             <select class="span4" id="docType" name="docType">
                                 <option #{if null == docType || docType.equals("")}selected="true"#{/if} value="0">...choose</option>
@@ -84,13 +60,13 @@
 			</div>
 		</div>
 		<div class="control-group #{ifError 'abstractText'}error#{/ifError}">
-			<label class="control-label" for="abstractText"><b>* Abstract</b></label>
+			<label class="control-label" for="abstractText"><b>* Abstract</b>:</label>
 			<div class="controls">
 				<textarea class="span4" id="abstractText" name="abstractText">${abstractText}</textarea>
 			</div>
 		</div>
 		<div class="control-group #{ifError 'keywords'}error#{/ifError}">
-			<label class="control-label" for="keywords"><b>* Keywords</b></label>
+			<label class="control-label" for="keywords"><b>* Keywords</b>:</label>
 			<div class="controls">
 				<textarea class="span4" id="keywords" name="keywords">${keywords}</textarea>
 				<a href="#" class="tooltip-icon" rel="tooltip" title="You can enter multiple keywords. Use semi-colons ( ; ) to separate the entries."><i class="icon-info-sign">				
@@ -102,31 +78,27 @@
 	<fieldset class="form-inline">
 		<legend>Your Committee</legend>
                 <div id="committee-members">
-                                          
-                    <table id="committee-member">
-                        <tr> 
-                            <td><input type="text" class="input-medium" id="committeeFirstName1" name="committeeFirstName1"></td>
-                            <td><input type="text" class="span1" id="committeeMiddleName1" name="committeeMiddleName1"></td>
-                            <td><input type="text" class="input-medium" id="committeeLastName1" name="committeeLastName1"></td>
-                            <td><label class="checkbox"><input type="checkbox" id="committeeChairFlag1" name="committeeChairFlag1" class="inline"> Chair</label></td>
-                        </tr>
-                        <tr>
-                            <td><label class="span2">First Name</label></td>
-                            <td><label class="span1">MI</label></td>
-                            <td><label class="span2">Last Name</label></td>
-                            <td></td>
-                        </tr>
-                    </table>
-                
-                    #{list committeeMembers, as: 'member'}
-                        ${count}
-                    
-                        <table id="committee-member">
+
+                    #{list items:1..committeeSlots, as:'i'}
+                    %{
+                        def firstName = "";
+                        def middleName = "";
+                        def lastName = "";
+                        def chairFlag = "";
+                        
+                        if (committee.size() >= i) {
+                            firstName = committee.get(i-1).get("firstName");
+                            middleName = committee.get(i-1).get("middleName");
+                            lastName = committee.get(i-1).get("lastName");
+                            chairFlag = committee.get(i-1).get("chairFlag");
+                        }
+                    }%
+                    <table id="committee-member" #{ifError "member"+i}class="error"#{/ifError}>
                             <tr> 
-                                <td><input type="text" class="input-medium" id="committeeFirstName${member.getDisplayOrder()}" name="committeeFirstName${member.getDisplayOrder()}" value="${member.getFirstName()}"></td>
-                                <td><input type="text" class="span1" id="committeeMiddleName${member.getDisplayOrder()}" name="committeeMiddleName${member.getDisplayOrder()}" value="${member.getMiddleName()}"></td>
-                                <td><input type="text" class="input-medium" id="committeeLastName${member.getDisplayOrder()}" name="committeeLastName${member.getDisplayOrder()}" value="${member.getLastName()}"></td>
-                                <td><label class="checkbox"><input type="checkbox" id="committeeChairFlag${member.getDisplayOrder()}" name="committeeChairFlag${member.getDisplayOrder()}" class="inline" #{if member.isCommitteeChair()}checked="yes"#{/if}> Chair</label></td>
+                                <td><input type="text" class="input-medium" id="committeeFirstName${i}" name="committeeFirstName${i}" value="${firstName}"></td>
+                                <td><input type="text" class="span1" id="committeeMiddleName${i}" name="committeeMiddleName${i}" value="${middleName}"></td>
+                                <td><input type="text" class="input-medium" id="committeeLastName${i}" name="committeeLastName${i}" value="${lastName}"></td>
+                                <td><label class="checkbox"><input type="checkbox" id="committeeChairFlag${i}" name="committeeChairFlag${i}" class="inline" ${ (chairFlag != null && chairFlag.trim().length() > 0) ? "checked='true'" : "" }> Chair</label></td>
                             </tr>
                             <tr>
                                 <td><label class="span2">First Name</label></td>
@@ -134,20 +106,20 @@
                                 <td><label class="span2">Last Name</label></td>
                                 <td></td>
                             </tr>
-                        </table>
-                    #{/list}                       
+                    </table>
 
+                    #{/list} 
                 </div>
                 
 		<div class="row center">
-                    <input class="btn" id="add" name="add" type="submit" value="Add Additional Member" />
+                    <input type="submit" class="btn" id="submit_add" name="submit_add" value="Add Additional Members" />
 		</div>		
 	</fieldset>
 	
 	<fieldset class="form-horizontal">
 		<legend>Chair's Contact Email</legend>
 		<div class="control-group #{ifError 'chairEmail'}error#{/ifError}">
-			<label class="control-label" for="chairEmail"><b>* Committee<br />Chair Email:</b></label>
+			<label class="control-label" for="chairEmail"><b>* Committee<br />Chair Email</b>:</label>
 			<div class="controls">
 				<input type="text" class="span4" id="chairEmail" name="chairEmail" value="${chairEmail}">
 				<a href="#" class="tooltip-icon" rel="tooltip" title="Enter an email address for your committee chair."><i class="icon-info-sign">				
@@ -170,6 +142,21 @@
                     </div>
                 #{/list}                
 	</fieldset>
+	
+	#{if requestUMI}
+	<fieldset class="form-horizontal">
+        <legend>Release Options</legend>
+        <div class="control-group #{ifError 'umi'}error#{/ifError}">
+            <label class="control-label" for="umi">UMI Publication:</label>
+            <div class="controls">
+                <input type="checkbox" id="umi" name="umi" value="release" ${ (umi != null) ? "checked='true'" : "" }/> 
+                I am requesting that a copy of my thesis/dissertation be sent to UMI for inclusion in their <em>Digital Dissertations</em> 
+                database. I understand that some additional paperwork and/or fees may be required.
+            </div>
+        </div>            
+    </fieldset>
+    #{/if}
+    
 	<div class="span10 center">
 		<input type="submit" name="submit_next" value="Save and Continue >>" class="btn btn-primary">
 	</div>

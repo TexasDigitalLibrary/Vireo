@@ -1,0 +1,217 @@
+#{extends 'submitSteps.html' /}
+#{set title:'Confirm & Submit' /}
+
+<br />
+<div class="row pageHead">
+	<h3 class="span11">Confirm & Submit</h3>
+</div>
+<br />
+
+#{ifErrors}
+<ul class="red">
+    #{if errors.forKey('personalInfo')}
+        <li>There are errors on the "Verify Your Information" step. <a href="@{submitSteps.PersonalInfo.personalInfo(subId)}">[visit step]</a></li>
+    #{/if}
+    #{if errors.forKey('license')}
+        <li>There are errors on the "License Agreement" step. <a href="@{submitSteps.License.license(subId)}">[visit step]</a></li>
+    #{/if}
+    #{if errors.forKey('documentInfo')}
+        <li>There are errors on the "Document Information" step. <a href="@{submitSteps.DocumentInfo.documentInfo(subId)}">[visit step]</a></li>
+    #{/if}
+    #{if errors.forKey('fileUpload')}
+        <li>There are errors on the "File Upload" step. <a href="@{submitSteps.FileUpload.fileUpload(subId)}">[visit step]</a></li>
+    #{/if}
+</ul>
+
+<p>You need to correct these errors before completing your submission.</p>
+#{/ifErrors}
+
+<div id="confirmSubmit" class="row">
+<form action="@{submitSteps.Confirm.confirm(subId)}" method="post" class="form-horizontal">
+	<legend>About You</legend>
+	<div class="control-group #{if errors.forKey('firstName') || errors.forKey('lastName')}error#{/if}">
+		<label class="control-label "><b>Name:</b></label>
+		<div class="controls">
+			<p>${submitter?.getLastName()}, ${submitter?.getFirstName()}</p>
+		</div>
+	</div>
+	<div class="control-group #{if errors.forKey('email')}error#{/if}">
+		<label class="control-label"><b>Email:</b></label>
+		<div class="controls">
+			<p>${submitter?.getEmail()}</p>
+		</div>
+	</div>
+	#{if requestBirth}
+	<div class="control-group #{if errors.forKey('birthYear')}error#{/if}">
+		<label class="control-label"><b>Year of Birth:</b></label>
+		<div class="controls">
+			<p>${submitter?.getBirthYear()}</p>
+		</div>
+	</div>
+	#{/if}
+	<div class="control-group #{if errors.forKey('phone')}error#{/if}">
+		<label class="control-label"><b>Phone:</b></label>
+		<div class="controls">
+			<p>${submitter?.getCurrentPhoneNumber()}</p>
+		</div>
+	</div>
+	<div class="control-group" #{if errors.forKey('currentAddress')}error#{/if}>
+		<label class="control-label"><b>Address:</b></label>
+		<div class="controls">
+			<p>${submitter?.getCurrentPostalAddress()}</p>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"></label>
+		<div class="controls">
+			<p><a href="@{submitSteps.PersonalInfo.personalInfo(subId)}">[edit your personal information]</a></p>
+		</div>
+	</div>
+	
+	<legend>Academic Affiliation</legend>
+	<div class="control-group">
+		<label class="control-label"><b>School:</b></label>
+		<div class="controls">
+			<p>${grantor}</p>
+		</div>
+	</div>
+	<div class="control-group #{if errors.forKey('degree')}error#{/if}">
+		<label class="control-label"><b>Degree:</b></label>
+		<div class="controls">
+			<p>${submitter.getCurrentDegree()}</p>
+		</div>
+	</div>
+	<div class="control-group #{if errors.forKey('major')}error#{/if}">
+		<label class="control-label"><b>Major:</b></label>
+		<div class="controls">
+			<p>${submitter.getCurrentMajor()}</p>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"></label>
+		<div class="controls">
+			<p><a href="@{submitSteps.PersonalInfo.personalInfo(subId)}">[edit your academic affiliation]</a></p>
+		</div>
+	</div>
+	
+	<legend>Document Information</legend>
+	<div class="control-group #{if errors.forKey('title')}error#{/if}">
+		<label class="control-label"><b>Title:</b></label>
+		<div class="controls">
+			<p>${sub.getDocumentTitle()}</p>
+		</div>
+	</div>
+		
+	<div class="control-group #{if errors.forKey('degreeMonth') || errors.forKey('degreeYear') }error#{/if}">
+		<label class="control-label"><b>Degree Date:</b></label>
+		<div class="controls">
+		    #{if sub.getGraduationMonth() != null && sub.getGraduationYear() != null}
+		    %{
+		      def month = "unknown";
+		      if (sub.getGraduationMonth() >= 0 && sub.getGraduationMonth() <= 11)
+		          month = new java.text.DateFormatSymbols().getMonths()[sub.getGraduationMonth()]
+		    }% 
+				<p>${month} ${sub.getGraduationYear()}</p>
+			#{/if}
+		</div>
+	</div>
+	<div class="control-group #{if errors.forKey('docType')}error#{/if}">
+		<label class="control-label"><b>Document Type:</b></label>
+		<div class="controls">
+			<p>${sub.getDocumentType()}</p>
+		</div>
+	</div>
+	<div class="control-group #{if errors.forKey('keywords')}error#{/if}">
+		<label class="control-label"><b>Keywords:</b></label>
+		<div class="controls">
+			<p>${sub.getDocumentKeywords()}</p>
+		</div>
+	</div>
+	<div class="control-group #{if errors.forKey('abstractText')}error#{/if}">
+		<label class="control-label"><b>Abstract:</b></label>
+		<div class="controls">
+			<p>${sub.getDocumentAbstract()}</p>
+		</div>
+	</div>
+	
+    #{list items:sub.getCommitteeMembers(), as:"member"}	
+
+	<div class="control-group">
+		<label class="control-label"><b>Committee Member:</b></label>
+		<div class="controls">
+			<p>${member.getFullName()}
+			#{if member.isCommitteeChair()}
+			<em>(chair)</em>
+			#{/if}
+			</p>
+		</div>
+	</div>	
+	
+	#{/list}
+	
+	<div class="control-group #{if errors.forKey('chairEmail')}error#{/if}">
+		<label class="control-label"><b>Chair Email Address:</b></label>
+		<div class="controls">
+			<p><a href="mailto:${sub.getCommitteeContactEmail()}">${sub.getCommitteeContactEmail()}</a></p>
+		</div>
+	</div>
+	<div class="control-group #{if errors.forKey('embargo')}error#{/if}">
+		<label class="control-label"><b>Embargo:</b></label>
+		<div class="controls">
+			#{if sub.getEmbargoType() != null}
+				<p>${sub.getEmbargoType().getDescription()}</p>
+			#{/if}
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"></label>
+		<div class="controls">
+			<p><a href="@{submitSteps.DocumentInfo.documentInfo(subId)}">[edit your document information]</a></p>
+		</div>
+	</div>
+	
+	<legend>Uploaded File${ supplementaryDocuments.size() > 0 ? "s" : "" }</legend>
+	<div class="control-group #{if errors.forKey('primaryDocument')}error#{/if}">
+		<label class="control-label"><b>Primary Document:</b></label>
+		<div class="controls">
+		    #{if primaryDocument != null}
+			    <p>
+			         <a href="@{Submit.viewAttachment(subId,primaryDocument.getId())}" target="_blank">${primaryDocument.getName()}</a>
+			         (${primaryDocument.getDisplaySize()})
+			     </p>
+			#{/if}
+			#{else}
+			     <p><em>No primary document uploaded</em>
+			#{/else}
+		</div>
+	</div>
+    #{if supplementaryDocuments.size() > 0}
+    <div class="control-group">
+        <label class="control-label"><b>Supplementary Document${ supplementaryDocuments.pluralize() }:</b></label>
+        <div class="controls">
+            #{list items:supplementaryDocuments, as:'attachment'}
+            <p>
+                <a href="@{Submit.viewAttachment(subId,attachment.getId())}" target="_blank">${attachment.getName()}</a>
+                (${attachment.getDisplaySize()})
+            </p>
+            #{/list}
+        </div>
+    </div>
+    #{/if}
+	<div class="control-group">
+		<label class="control-label"></label>
+		<div class="controls">
+			<p><a href="@{submitSteps.FileUpload.fileUpload(subId)}">[edit your uploaded files]</a></p>
+		</div>
+	</div>
+	
+	<legend>Final Submission</legend>
+	<p>Please verify all the information displayed below before proceeding. Once you click the button to approve this document, you cannot make any more changes to the form's data without contacting your local thesis office.</p>
+	<div class="span11 center"><input type="submit" name="submit_confirm" value="Confirm and Submit" class="btn btn-primary #{ifErrors} disabled #{/ifErrors}"/></div>
+	
+</form>
+<br/>
+<br/>
+<br/>
+
+</div>

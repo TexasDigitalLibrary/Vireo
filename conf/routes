@@ -18,18 +18,18 @@ GET     /profile                                Authentication.profile
 
 ### Student Submissions
 *       /submit/?                               Submit.submissionStatus
-*       /submit/{subId}/verifyinfo              Submit.verifyPersonalInformation
-*       /submit/verifyinfo                      Submit.verifyPersonalInformation
-*	    /submit/{subId}/license                 Submit.license
-*   	/submit/{subId}/docinfo                 Submit.docInfo
-*	    /submit/{subId}/upload                  Submit.fileUpload
-*	    /submit/{subId}/confirm                 Submit.confirmAndSubmit
-POST	/submit/{subId}/submitETD				Submit.submitETD
+*       /submit/{subId}/personalInfo            submitSteps.PersonalInfo.personalInfo
+*       /submit/personalInfo                    submitSteps.PersonalInfo.personalInfo
+*	    /submit/{subId}/license                 submitSteps.License.license
+*   	/submit/{subId}/documentInfo            submitSteps.DocumentInfo.documentInfo
+*	    /submit/{subId}/upload                  submitSteps.FileUpload.fileUpload
+*	    /submit/{subId}/confirm                 submitSteps.Confirm.confirm
 *       /submit/{subId}/review                  Submit.review
 * 		/submit/{subId}/submissionStatus		Submit.submissionStatus
 *       /submit/{subId}/delete                  Submit.deleteSubmission
-*		/submit/{subId}/viewPrimaryDocument		Submit.viewPrimaryDocument
 *		/submit/{subId}/studentView				Submit.studentView
+
+GET     /submit/{subId}/file/{attachmentId}     Submit.viewAttachment
 
 
 ### List & Log Tabs
