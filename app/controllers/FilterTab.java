@@ -718,13 +718,20 @@ public class FilterTab extends AbstractVireoController {
 		session.remove(NAMES[SUBMISSION][DIRECTION]);
 		session.remove(NAMES[SUBMISSION][ORDERBY]);
 		session.remove(NAMES[SUBMISSION][OFFSET]);
-		
+		session.remove(NAMES[SUBMISSION][COLUMNS]);
+		session.remove(NAMES[SUBMISSION][FACETS]);
+		session.remove(NAMES[SUBMISSION][RESULTSPERPAGE]);
+
 		// Clear out everything related to action logs
 		response.setCookie(NAMES[ACTION_LOG][ACTIVE_FILTER],"");
 
 		session.remove(NAMES[ACTION_LOG][DIRECTION]);
 		session.remove(NAMES[ACTION_LOG][ORDERBY]);
 		session.remove(NAMES[ACTION_LOG][OFFSET]);
+		session.remove(NAMES[ACTION_LOG][COLUMNS]);
+		session.remove(NAMES[ACTION_LOG][FACETS]);
+		session.remove(NAMES[ACTION_LOG][RESULTSPERPAGE]);
+		
 		
 		// Store the error so it can be displayed.
 		flash.put("error", throwable.getMessage());
