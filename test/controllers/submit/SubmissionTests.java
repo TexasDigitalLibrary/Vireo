@@ -66,6 +66,7 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 	public String originalRequestBirth = null;
 	public String originalRequestCollege = null;
 	public String originalRequestUMI = null;
+	public String originalAllowMultiple = null;
 
 	/**
 	 * Setup
@@ -78,6 +79,8 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 		originalRequestBirth = settingRepo.getConfig(Configuration.SUBMIT_REQUEST_BIRTH);
 		originalRequestCollege = settingRepo.getConfig(Configuration.SUBMIT_REQUEST_COLLEGE);
 		originalRequestUMI = settingRepo.getConfig(Configuration.SUBMIT_REQUEST_UMI);
+		originalAllowMultiple = settingRepo.getConfig(Configuration.ALLOW_MULTIPLE_SUBMISSIONS);
+
 	}
 
 	/**
@@ -111,6 +114,13 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 		}
 		if (originalRequestUMI != null && requestUMI == null) {
 			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_UMI,"true");
+		}
+		Configuration allowMultiple = settingRepo.findConfigurationByName(Configuration.ALLOW_MULTIPLE_SUBMISSIONS);
+		if (originalAllowMultiple == null && allowMultiple != null) {
+			allowMultiple.delete();
+		}
+		if (originalRequestUMI != null && allowMultiple == null) {
+			settingRepo.createConfiguration(Configuration.ALLOW_MULTIPLE_SUBMISSIONS,"true");
 		}
 
 		// if we created a submission, delete it.
@@ -317,7 +327,146 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 
 		// the cleanup will make sure the submission gets deleted.
 	}
+	
+	/**
+	 * Test weather multiple submissions are allowed.
+	 */
+	@Test
+	public void testMultipleSubmissionsAllowed() throws IOException {    
 
+		// Turn ON any of the extra paramaters
+		if (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_BIRTH) == null) {
+			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_BIRTH,"true").save();
+		}
+		if (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_COLLEGE) == null) {
+			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_COLLEGE,"true").save();
+		}
+		if (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_UMI) == null) {
+			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_UMI,"true").save();
+		}
+		if (settingRepo.getConfig(Configuration.ALLOW_MULTIPLE_SUBMISSIONS) == null) {
+			settingRepo.createConfiguration(Configuration.ALLOW_MULTIPLE_SUBMISSIONS,"true").save();
+		}
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+
+
+		// Login as the student Clair Danes
+		LOGIN("cdanes@gmail.com");
+		// Turn off authentication for the test thread
+		context.turnOffAuthorization();
+
+		// Create first submission
+		personalInfo(
+				null, // firstName
+				"middle", // middleName
+				null, // lastName
+				"1971", // birthYear
+				settingRepo.findAllColleges().get(0).getName(), // college
+				settingRepo.findAllDepartments().get(0).getName(), // department 
+				settingRepo.findAllDegrees().get(0).getName(), // degree
+				settingRepo.findAllMajors().get(0).getName(), // major 
+				"555-1212", // permPhone
+				"2222 Fake Street", // permAddress 
+				"noreply@noreply.org", // permEmail
+				"555-1212 ex2", // currentPhone 
+				"2222 Fake Street APT 11" //currentAddress
+				);	
+		
+		// Attempt to create a second submission.
+		Long firstId = subId;
+		subId = null;
+		personalInfo(
+				null, // firstName
+				"middle", // middleName
+				null, // lastName
+				"1971", // birthYear
+				settingRepo.findAllColleges().get(0).getName(), // college
+				settingRepo.findAllDepartments().get(0).getName(), // department 
+				settingRepo.findAllDegrees().get(0).getName(), // degree
+				settingRepo.findAllMajors().get(0).getName(), // major 
+				"555-1212", // permPhone
+				"2222 Fake Street", // permAddress 
+				"noreply@noreply.org", // permEmail
+				"555-1212 ex2", // currentPhone 
+				"2222 Fake Street APT 11" //currentAddress
+				);	
+		
+		assertTrue(subId != firstId);
+		
+		// Clean up the first submission, the other one will happen in cleanup.
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		subRepo.findSubmission(firstId).delete();
+	}
+	
+	/**
+	 * Test weather multiple submissions are allowed.
+	 */
+	@Test
+	public void testMultipleSubmissionsDisallowed() throws IOException {    
+
+		// Turn ON any of the extra paramaters
+		if (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_BIRTH) == null) {
+			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_BIRTH,"true").save();
+		}
+		if (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_COLLEGE) == null) {
+			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_COLLEGE,"true").save();
+		}
+		if (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_UMI) == null) {
+			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_UMI,"true").save();
+		}
+		if (settingRepo.getConfig(Configuration.ALLOW_MULTIPLE_SUBMISSIONS) != null) {
+			settingRepo.findConfigurationByName(Configuration.ALLOW_MULTIPLE_SUBMISSIONS).delete();
+		}
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+
+
+		// Login as the student Clair Danes
+		LOGIN("cdanes@gmail.com");
+		// Turn off authentication for the test thread
+		context.turnOffAuthorization();
+
+		// Create first submission
+		personalInfo(
+				null, // firstName
+				"middle", // middleName
+				null, // lastName
+				"1971", // birthYear
+				settingRepo.findAllColleges().get(0).getName(), // college
+				settingRepo.findAllDepartments().get(0).getName(), // department 
+				settingRepo.findAllDegrees().get(0).getName(), // degree
+				settingRepo.findAllMajors().get(0).getName(), // major 
+				"555-1212", // permPhone
+				"2222 Fake Street", // permAddress 
+				"noreply@noreply.org", // permEmail
+				"555-1212 ex2", // currentPhone 
+				"2222 Fake Street APT 11" //currentAddress
+				);	
+		
+		// Attempt to create a second submission.
+		String PERSONAL_INFO_URL = Router.reverse("submit.PersonalInfo.personalInfo").url;
+		
+		Response response = GET(PERSONAL_INFO_URL);
+		// This should fail.
+		assertEquals(new Integer(500),response.status);
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * Handle the personal information step. If any value is null, then it will
 	 * not be submitted with the form data. All non-null inputs will be verified
