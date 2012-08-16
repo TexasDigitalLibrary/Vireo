@@ -1,4 +1,4 @@
-package controllers.submitSteps;
+package controllers.submit;
 
 import java.util.List;
 import java.util.Map;
@@ -14,7 +14,7 @@ import org.tdl.vireo.state.State;
 import play.Logger;
 
 import controllers.Security;
-import controllers.Submit;
+import controllers.Student;
 
 /**
  * This is the fifth, and last step, of the submission process. We allow
@@ -25,7 +25,7 @@ import controllers.Submit;
  * @author <a href="bill-ingram.com">Bill Ingram</a>
  * @author Dan Galewsky
  */
-public class Confirm extends Submit {
+public class Confirm extends AbstractSubmitStep {
 
 	/**
 	 * Confirm the submission has passed the verification from all the previous
@@ -106,7 +106,7 @@ public class Confirm extends Submit {
 			State nextState = sub.getState().getTransitions(sub).get(0);
 			sub.setState(nextState);
 			sub.save();
-			review(subId);
+			Student.review(subId);
 		}
 		
 

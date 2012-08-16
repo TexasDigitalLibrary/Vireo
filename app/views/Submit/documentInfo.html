@@ -1,4 +1,4 @@
-#{extends 'submitSteps.html' /}
+#{extends 'Submit/submitStep.html' /}
 #{set title:'Document Info' /}
 
 <br />
@@ -18,7 +18,7 @@
 </ul>
 #{/ifErrors}
 <br/>
-	<form action="@{submitSteps.DocumentInfo.documentInfo(subId)}" method="post" class="form-inline">
+	<form action="@{submit.DocumentInfo.documentInfo(subId)}" method="post" class="form-inline">
 	
 	<fieldset class="form-horizontal">
 		<legend>Document Information</legend>

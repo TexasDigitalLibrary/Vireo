@@ -1,4 +1,4 @@
-package controllers.submitSteps;
+package controllers.submit;
 
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import org.tdl.vireo.model.Submission;
 import play.Logger;
 import play.mvc.Scope.Params;
 import controllers.Security;
-import controllers.Submit;
+import controllers.Student;
 
 /**
  * This is the third step of the submission process. This is where students
@@ -34,7 +34,7 @@ import controllers.Submit;
  * @author <a href="bill-ingram.com">Bill Ingram</a>
  * @author Dan Galewsky 
  */
-public class DocumentInfo extends Submit {
+public class DocumentInfo extends AbstractSubmitStep {
 
 	
 	/**

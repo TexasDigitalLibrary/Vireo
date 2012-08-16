@@ -1,4 +1,4 @@
-#{extends 'submitSteps.html' /}
+#{extends 'Submit/submitStep.html' /}
 #{set title:'License' /}
 
 <br />
@@ -20,7 +20,7 @@
 
 <div class="well">#{verbatim}${licenseText}#{/verbatim}</div>
 <div class="row center">
-<form action="@{submitSteps.License.license(subId)}" method="post" class="form-inline">
+<form action="@{submit.License.license(subId)}" method="post" class="form-inline">
 	<fieldset style="margin:0 0 10px;">
 		<label id="lalabel" class="checkbox #{if errors.forKey('laLabel')}red#{/if}">
             <input id="licenseAgreement" type="checkbox" name="licenseAgreement" ${ licenseAgreement != null ? "checked='true'" : "" }/> By checking here you agree to the above license in its entirety.

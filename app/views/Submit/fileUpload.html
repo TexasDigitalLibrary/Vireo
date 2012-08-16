@@ -1,4 +1,4 @@
-#{extends 'submitSteps.html' /}
+#{extends 'Submit/submitStep.html' /}
 #{set title:'File Upload' /}
 
 <br />
@@ -19,7 +19,7 @@
     #{/ifErrors}
     <br/>
     
-	<form action="@{submitSteps.FileUpload.fileUpload(subId)}" method="POST" class="form-horizontal" enctype="multipart/form-data">
+	<form action="@{submit.FileUpload.fileUpload(subId)}" method="POST" class="form-horizontal" enctype="multipart/form-data">
 		
 		<fieldset id="primaryFileUpload">
 			<legend>Upload your manuscript</legend>
@@ -37,7 +37,7 @@
                 #{else}
                     <div class="controls">
                         <p>
-                            <a href="@{Submit.viewAttachment(subId,primaryAttachment.getId())}" target="_blank">${primaryAttachment.getName()}</a>
+                            <a href="@{Student.viewAttachment(subId,primaryAttachment.getId())}" target="_blank">${primaryAttachment.getName()}</a>
 
                             (${primaryAttachment.getDisplaySize()})
                             <input type="submit" value="Replace Manuscript" class="uploadBtn btn" name="replacePrimary">
@@ -76,7 +76,7 @@
                             <p>
                             <label>
                                 <input type="checkbox" value="${attachment.getId()}" name="attachmentToRemove">
-                                <a href="@{Submit.viewAttachment(subId,attachment.getId())}" target="_blank">
+                                <a href="@{Student.viewAttachment(subId,attachment.getId())}" target="_blank">
                                     ${attachment.getName()}
                                 </a> 
                                 (${attachment.getDisplaySize()})

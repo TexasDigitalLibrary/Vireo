@@ -42,10 +42,10 @@
         
 	        <tr>
 	            <td>${submission.getDocumentTitle()}</td>
-				<td>${controllers.Submit.getDocumentName(submission)}
+				<td>${controllers.Student.getDocumentName(submission)}
 				
 				#{if submission.getPrimaryDocument() != null}
-				    <a href="@{Submit.viewAttachment(submission.getId(),submission.getPrimaryDocument().getId())}">[view]</a>
+				    <a href="@{Student.viewAttachment(submission.getId(),submission.getPrimaryDocument().getId())}">[view]</a>
 				#{/if}
 				
 				</td>
@@ -54,11 +54,11 @@
 				<td>${submission.getAssignee() == null?"Unassigned":submission.getAssignee().getDisplayName()}</td>
 				<td> 
 				#{if submission.getState().isInProgress()}
-				    <a class="btn btn-primary" href="@{submitSteps.PersonalInfo.personalInfo(submission.getId())}">Continue</a>
-				    <a class="btn btn-primary" href="@{Submit.deleteSubmission(submission.getId())}">Delete</a>
+				    <a class="btn btn-primary" href="@{submit.PersonalInfo.personalInfo(submission.getId())}">Continue</a>
+				    <a class="btn btn-primary" href="@{Student.deleteSubmission(submission.getId())}">Delete</a>
                 #{/if} 
                 #{else}
-				     <a class="btn btn-primary" href="@{Submit.studentView(submission.getId())}">View</a>				 
+				     <a class="btn btn-primary" href="@{Student.studentView(submission.getId())}">View</a>				 
 				#{/else}
 				</td>
 				
@@ -68,7 +68,7 @@
         </tbody></table>
         #{if SUBMISSIONS_OPEN }
 	        <div class="form-actions row center">
-			    <a href="@{submitSteps.PersonalInfo.personalInfo()}" class="btn btn-primary">Start a new submission</a>
+			    <a href="@{submit.PersonalInfo.personalInfo()}" class="btn btn-primary">Start a new submission</a>
 			</div>
 		#{/if}
         

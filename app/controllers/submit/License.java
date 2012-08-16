@@ -1,4 +1,4 @@
-package controllers.submitSteps;
+package controllers.submit;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -12,7 +12,7 @@ import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
 
 import controllers.Security;
-import controllers.Submit;
+import controllers.Student;
 
 /**
  * The second step of the license process where the user must accept the provided license.
@@ -21,7 +21,7 @@ import controllers.Submit;
  * @author <a href="bill-ingram.com">Bill Ingram</a>
  * @author Dan Galewsky
  */
-public class License extends Submit {
+public class License extends AbstractSubmitStep {
 
 	/**
 	 * The second step of the submission process. Where the user must accept the

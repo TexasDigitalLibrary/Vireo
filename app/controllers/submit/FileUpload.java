@@ -1,4 +1,4 @@
-package controllers.submitSteps;
+package controllers.submit;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +15,7 @@ import org.tdl.vireo.model.Submission;
 import play.Logger;
 import play.libs.MimeTypes;
 import controllers.Security;
-import controllers.Submit;
+import controllers.Student;
 
 /**
  * The fourth step of the submission process where students upload their files.
@@ -26,7 +26,7 @@ import controllers.Submit;
  * @author <a href="bill-ingram.com">Bill Ingram</a>
  * @author Dan Galewsky
  */
-public class FileUpload extends Submit{
+public class FileUpload extends AbstractSubmitStep {
 
 	/**
 	 * The fourth step of the submission process where students upload their

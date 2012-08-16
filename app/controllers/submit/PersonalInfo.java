@@ -1,4 +1,4 @@
-package controllers.submitSteps;
+package controllers.submit;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -20,7 +20,7 @@ import org.tdl.vireo.model.Submission;
 import play.Play;
 import controllers.Application;
 import controllers.Security;
-import controllers.Submit;
+import controllers.Student;
 
 /**
  * The first step of the submission process. This is where the student confirms
@@ -37,7 +37,7 @@ import controllers.Submit;
  * @author <a href="bill-ingram.com">Bill Ingram</a>
  * @author Dan Galewsky
  */
-public class PersonalInfo extends Submit {
+public class PersonalInfo extends AbstractSubmitStep {
 
 	/**
 	 * The first screen of the submission process which allows the student to

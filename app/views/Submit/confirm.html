@@ -1,4 +1,4 @@
-#{extends 'submitSteps.html' /}
+#{extends 'Submit/submitStep.html' /}
 #{set title:'Confirm & Submit' /}
 
 <br />
@@ -10,16 +10,16 @@
 #{ifErrors}
 <ul class="red">
     #{if errors.forKey('personalInfo')}
-        <li>There are errors on the "Verify Your Information" step. <a href="@{submitSteps.PersonalInfo.personalInfo(subId)}">[visit step]</a></li>
+        <li>There are errors on the "Verify Your Information" step. <a href="@{submit.PersonalInfo.personalInfo(subId)}">[visit step]</a></li>
     #{/if}
     #{if errors.forKey('license')}
-        <li>There are errors on the "License Agreement" step. <a href="@{submitSteps.License.license(subId)}">[visit step]</a></li>
+        <li>There are errors on the "License Agreement" step. <a href="@{submit.License.license(subId)}">[visit step]</a></li>
     #{/if}
     #{if errors.forKey('documentInfo')}
-        <li>There are errors on the "Document Information" step. <a href="@{submitSteps.DocumentInfo.documentInfo(subId)}">[visit step]</a></li>
+        <li>There are errors on the "Document Information" step. <a href="@{submit.DocumentInfo.documentInfo(subId)}">[visit step]</a></li>
     #{/if}
     #{if errors.forKey('fileUpload')}
-        <li>There are errors on the "File Upload" step. <a href="@{submitSteps.FileUpload.fileUpload(subId)}">[visit step]</a></li>
+        <li>There are errors on the "File Upload" step. <a href="@{submit.FileUpload.fileUpload(subId)}">[visit step]</a></li>
     #{/if}
 </ul>
 
@@ -27,7 +27,7 @@
 #{/ifErrors}
 
 <div id="confirmSubmit" class="row">
-<form action="@{submitSteps.Confirm.confirm(subId)}" method="post" class="form-horizontal">
+<form action="@{submit.Confirm.confirm(subId)}" method="post" class="form-horizontal">
 	<legend>About You</legend>
 	<div class="control-group #{if errors.forKey('firstName') || errors.forKey('lastName')}error#{/if}">
 		<label class="control-label "><b>Name:</b></label>
@@ -64,7 +64,7 @@
 	<div class="control-group">
 		<label class="control-label"></label>
 		<div class="controls">
-			<p><a href="@{submitSteps.PersonalInfo.personalInfo(subId)}">[edit your personal information]</a></p>
+			<p><a href="@{submit.PersonalInfo.personalInfo(subId)}">[edit your personal information]</a></p>
 		</div>
 	</div>
 	
@@ -90,7 +90,7 @@
 	<div class="control-group">
 		<label class="control-label"></label>
 		<div class="controls">
-			<p><a href="@{submitSteps.PersonalInfo.personalInfo(subId)}">[edit your academic affiliation]</a></p>
+			<p><a href="@{submit.PersonalInfo.personalInfo(subId)}">[edit your academic affiliation]</a></p>
 		</div>
 	</div>
 	
@@ -166,7 +166,7 @@
 	<div class="control-group">
 		<label class="control-label"></label>
 		<div class="controls">
-			<p><a href="@{submitSteps.DocumentInfo.documentInfo(subId)}">[edit your document information]</a></p>
+			<p><a href="@{submit.DocumentInfo.documentInfo(subId)}">[edit your document information]</a></p>
 		</div>
 	</div>
 	
@@ -176,7 +176,7 @@
 		<div class="controls">
 		    #{if primaryDocument != null}
 			    <p>
-			         <a href="@{Submit.viewAttachment(subId,primaryDocument.getId())}" target="_blank">${primaryDocument.getName()}</a>
+			         <a href="@{Student.viewAttachment(subId,primaryDocument.getId())}" target="_blank">${primaryDocument.getName()}</a>
 			         (${primaryDocument.getDisplaySize()})
 			     </p>
 			#{/if}
@@ -191,7 +191,7 @@
         <div class="controls">
             #{list items:supplementaryDocuments, as:'attachment'}
             <p>
-                <a href="@{Submit.viewAttachment(subId,attachment.getId())}" target="_blank">${attachment.getName()}</a>
+                <a href="@{Student.viewAttachment(subId,attachment.getId())}" target="_blank">${attachment.getName()}</a>
                 (${attachment.getDisplaySize()})
             </p>
             #{/list}
@@ -201,7 +201,7 @@
 	<div class="control-group">
 		<label class="control-label"></label>
 		<div class="controls">
-			<p><a href="@{submitSteps.FileUpload.fileUpload(subId)}">[edit your uploaded files]</a></p>
+			<p><a href="@{submit.FileUpload.fileUpload(subId)}">[edit your uploaded files]</a></p>
 		</div>
 	</div>
 	

@@ -7,7 +7,7 @@
 </div>
 <br />
 <div id="confirmSubmit" class="row">
-<form action="@{Submit.studentView(subId)}" method="post" class="form-horizontal" enctype="multipart/form-data">
+<form action="@{Student.studentView(subId)}" method="post" class="form-horizontal" enctype="multipart/form-data">
 	<legend>About You</legend>
 	<div class="control-group">
 		<label class="control-label"><b>Name:</b></label>
@@ -73,7 +73,14 @@
 	<div class="control-group">
 		<label class="control-label"><b>Degree Date:</b></label>
 		<div class="controls">
-			<p>${controllers.Submit.getMonth(sub.getGraduationMonth())} ${sub.getGraduationYear()}</p>
+            #{if sub.getGraduationMonth() != null && sub.getGraduationYear() != null}
+            %{
+              def month = "unknown";
+              if (sub.getGraduationMonth() >= 0 && sub.getGraduationMonth() <= 11)
+                  month = new java.text.DateFormatSymbols().getMonths()[sub.getGraduationMonth()]
+            }% 
+                <p>${month} ${sub.getGraduationYear()}</p>
+            #{/if}
 		</div>
 	</div>
 	<div class="control-group">
@@ -138,7 +145,7 @@
 	        #{else}
 	            <div class="controls">
 	                <p>
-	                    <a href="@{Submit.viewPrimaryDocument(subId)}">${primaryAttachment.getName()}</a>
+	                    <a href="@{Student.viewPrimaryDocument(subId)}">${primaryAttachment.getName()}</a>
 	                    (${primaryAttachment.getDisplaySize()})
 	                    <input type="submit" value="Replace Manuscript" class="uploadBtn btn" name="replacePrimary">
 	                    
@@ -209,7 +216,7 @@
 		#{/if}
 		#{else} *{Not editable by student }*
             <div class="controls">
-                    <a href="@{Submit.viewPrimaryDocument(subId)}">${primaryAttachment.getName()}</a>
+                    <a href="@{Student.viewAttachment(subId,sub.getPrimaryDocument().getId())}">${primaryAttachment.getName()}</a>
                     (${primaryAttachment.getDisplaySize()})                    
             </div>		
 

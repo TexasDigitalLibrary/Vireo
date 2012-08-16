@@ -17,19 +17,19 @@ GET     /profile                                Authentication.profile
 *       /profile/password                       Authentication.updatePassword
 
 ### Student Submissions
-*       /submit/?                               Submit.submissionStatus
-*       /submit/{subId}/personalInfo            submitSteps.PersonalInfo.personalInfo
-*       /submit/personalInfo                    submitSteps.PersonalInfo.personalInfo
-*	    /submit/{subId}/license                 submitSteps.License.license
-*   	/submit/{subId}/documentInfo            submitSteps.DocumentInfo.documentInfo
-*	    /submit/{subId}/upload                  submitSteps.FileUpload.fileUpload
-*	    /submit/{subId}/confirm                 submitSteps.Confirm.confirm
-*       /submit/{subId}/review                  Submit.review
-* 		/submit/{subId}/submissionStatus		Submit.submissionStatus
-*       /submit/{subId}/delete                  Submit.deleteSubmission
-*		/submit/{subId}/studentView				Submit.studentView
+*       /submit/?                               Student.submissionStatus
+*       /submit/{subId}/personalInfo            submit.PersonalInfo.personalInfo
+*       /submit/personalInfo                    submit.PersonalInfo.personalInfo
+*	    /submit/{subId}/license                 submit.License.license
+*   	/submit/{subId}/documentInfo            submit.DocumentInfo.documentInfo
+*	    /submit/{subId}/upload                  submit.FileUpload.fileUpload
+*	    /submit/{subId}/confirm                 submit.Confirm.confirm
+*       /submit/{subId}/review                  Student.review
+* 		/submit/{subId}/submissionStatus		Student.submissionStatus
+*       /submit/{subId}/delete                  Student.deleteSubmission
+*		/submit/{subId}/studentView				Student.studentView
 
-GET     /submit/{subId}/file/{attachmentId}     Submit.viewAttachment
+GET     /submit/{subId}/file/{attachmentId}     Student.viewAttachment
 
 
 ### List & Log Tabs
