@@ -81,6 +81,8 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 		originalRequestUMI = settingRepo.getConfig(Configuration.SUBMIT_REQUEST_UMI);
 		originalAllowMultiple = settingRepo.getConfig(Configuration.ALLOW_MULTIPLE_SUBMISSIONS);
 
+		// Turn off authentication for the test thread
+		context.turnOffAuthorization();
 	}
 
 	/**
@@ -130,6 +132,8 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 			JPA.em().getTransaction().begin();
 			subRepo.findSubmission(subId).delete();
 		}
+		
+		context.restoreAuthorization();
 	}
 
 	/**
@@ -154,8 +158,6 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 
 		// Login as the student Clair Danes
 		LOGIN("cdanes@gmail.com");
-		// Turn off authentication for the test thread
-		context.turnOffAuthorization();
 
 		// Get our URLs
 		final String INDEX_URL = Router.reverse("Application.index").url;
@@ -253,8 +255,6 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 
 		// Login as the student Clair Danes
 		LOGIN("cdanes@gmail.com");
-		// Turn off authentication for the test thread
-		context.turnOffAuthorization();
 
 		// Get our URLs
 		final String INDEX_URL = Router.reverse("Application.index").url;
@@ -354,8 +354,6 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 
 		// Login as the student Clair Danes
 		LOGIN("cdanes@gmail.com");
-		// Turn off authentication for the test thread
-		context.turnOffAuthorization();
 
 		// Create first submission
 		personalInfo(
@@ -428,8 +426,6 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 
 		// Login as the student Clair Danes
 		LOGIN("cdanes@gmail.com");
-		// Turn off authentication for the test thread
-		context.turnOffAuthorization();
 
 		// Create first submission
 		personalInfo(
@@ -455,7 +451,6 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 		// This should fail.
 		assertEquals(new Integer(500),response.status);
 	}
-
 	
 	
 	
@@ -835,7 +830,11 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 
 		State newState = sub.getState();
 		assertTrue(newState != stateManager.getInitialState());
-
+		
+		
+		// Get the completted submission page.
+		response = GET(response.getHeader("Location"));
+		assertContentMatch("Submittal Complete", response);
 	}
 
 

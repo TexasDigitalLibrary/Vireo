@@ -1,0 +1,10 @@
+#{extends 'main.html' /}
+#{set title:'Submittal Complete' /}
+
+<h3>Submittal Complete</h3>
+
+#{verbatim}${instructions}#{/verbatim}
+
+<p>
+<a href="@{Student.submissionStatus}" class="actions">View submission status</a>
+</p>

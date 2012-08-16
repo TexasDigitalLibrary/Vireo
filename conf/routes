@@ -16,7 +16,7 @@ GET     /profile                                Authentication.profile
 *       /profile/update                         Authentication.updateProfile
 *       /profile/password                       Authentication.updatePassword
 
-### Student Submissions
+### New Submissions
 *       /submit/?                               Student.submissionStatus
 *       /submit/{subId}/personalInfo            submit.PersonalInfo.personalInfo
 *       /submit/personalInfo                    submit.PersonalInfo.personalInfo
@@ -24,7 +24,9 @@ GET     /profile                                Authentication.profile
 *   	/submit/{subId}/documentInfo            submit.DocumentInfo.documentInfo
 *	    /submit/{subId}/upload                  submit.FileUpload.fileUpload
 *	    /submit/{subId}/confirm                 submit.Confirm.confirm
-*       /submit/{subId}/review                  Student.review
+*       /submit/{subId}/complete                submit.Confirm.complete
+
+### Student Interface
 * 		/submit/{subId}/submissionStatus		Student.submissionStatus
 *       /submit/{subId}/delete                  Student.deleteSubmission
 *		/submit/{subId}/studentView				Student.studentView

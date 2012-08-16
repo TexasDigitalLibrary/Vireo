@@ -94,11 +94,11 @@ public class Confirm extends AbstractSubmitStep {
 		if (!FileUpload.verify(primaryDocument)) {
 			validation.addError("fileUpload", "There are errors on this page to correct.");
 		}
-		
-		
+
+
 
 		if (params.get("submit_confirm") != null && !validation.hasErrors()) {
-		
+
 			// TODO: Send emails
 			// TODO: generate email hash
 			// TODO: update filenames?
@@ -107,14 +107,15 @@ public class Confirm extends AbstractSubmitStep {
 				State nextState = sub.getState().getTransitions(sub).get(0);
 				sub.setState(nextState);
 				sub.save();
-				
+
 			} finally {
 				context.restoreAuthorization();
+
 			}
-			Student.review(subId);
-			
+
+			complete(subId);
 		}
-		
+
 
 		List<ActionLog> logs = subRepo.findActionLog(sub);
 		List<Attachment> supplementaryDocuments = sub.getSupplementalDocuments();
@@ -128,5 +129,32 @@ public class Confirm extends AbstractSubmitStep {
 
 				requestCollege, requestBirth, requestUMI);		
 	}
+	
+	/**
+	 * After completing a submission, show a set of instructions on what the student should do next.
+	 * 
+	 * @param subid The id of the completed submission.
+	 */
+	public static void complete(Long subId) {
+		// Get the post submission instructions for display
+		String instructions = settingRepo.getConfig(Configuration.SUBMIT_INSTRUCTIONS,DEFAULT_INSTRUCTIONS);
+
+		instructions = instructions.replaceAll("  ", "&nbsp;&nbsp;");
+		String[] paragraphs = instructions.split("\n\\s*\n");
+		instructions = "";
+		for (String paragraph : paragraphs) {
+			instructions += "<p>"+paragraph+"</p>";
+		}
+
+		instructions = instructions.replaceAll("\n", "<br/>");
+
+		renderTemplate("Submit/complete.html", instructions);
+	}
+
+	/**
+	 * The very generic default set of instructions if none are set.
+	 */
+	public final static String DEFAULT_INSTRUCTIONS =
+			"Thank you for your submission. In order to meet your graduation deadline, please make your final paperwork submission to the Graduate School before the end of the semester.";
 
 }

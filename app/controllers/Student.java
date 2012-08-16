@@ -281,15 +281,6 @@ public class Student extends AbstractVireoController {
         
 		render(subId, sub, submitter, actionLogList, primaryAttachment, supplementalAttachments);		
 	}
-	
-	/**
-	 * Final page of the submission process
-	 * @param subId
-	 */
-	@Security(RoleType.STUDENT)
-	public static void review(Long subId) {
-		render(subId);
-	}
 
 	/**
 	 * Delete a given submission
