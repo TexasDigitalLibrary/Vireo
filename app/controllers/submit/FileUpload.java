@@ -67,7 +67,7 @@ public class FileUpload extends AbstractSubmitStep {
 
 		
 		// 'Save And Continue' button was clicked
-		if (params.get("submit-next") != null && !validation.hasErrors()) {
+		if (params.get("submit_next") != null && !validation.hasErrors()) {
 			Confirm.confirm(subId);
 		}
 

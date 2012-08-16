@@ -102,11 +102,17 @@ public class Confirm extends AbstractSubmitStep {
 			// TODO: Send emails
 			// TODO: generate email hash
 			// TODO: update filenames?
-			
-			State nextState = sub.getState().getTransitions(sub).get(0);
-			sub.setState(nextState);
-			sub.save();
+			try {
+				context.turnOffAuthorization();
+				State nextState = sub.getState().getTransitions(sub).get(0);
+				sub.setState(nextState);
+				sub.save();
+				
+			} finally {
+				context.restoreAuthorization();
+			}
 			Student.review(subId);
+			
 		}
 		
 

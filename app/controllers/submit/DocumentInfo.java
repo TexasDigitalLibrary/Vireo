@@ -110,10 +110,10 @@ public class DocumentInfo extends AbstractSubmitStep {
             sub.setDocumentKeywords(keywords);
             sub.setCommitteeContactEmail(chairEmail);
             sub.setEmbargoType(settingRepo.findEmbargoType(Long.parseLong(embargo)));
-            if (requestUMI && umi != null && umi.trim().length() > 0)
-            	sub.setUMIRelease(false);
-            else if (requestUMI)
+            if (requestUMI && umi != null && umi.trim().length() > 0) 
             	sub.setUMIRelease(true);
+            else if (requestUMI) 
+            	sub.setUMIRelease(false);
             
             saveCommitteeMembers(sub, committee);
             
