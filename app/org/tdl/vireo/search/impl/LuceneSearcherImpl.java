@@ -78,7 +78,6 @@ public class LuceneSearcherImpl implements Searcher {
 		SORT_SUB_FIELDS[SearchOrder.COMMITTEE_EMBARGO_APPROVAL_DATE.ordinal()] = "committeeEmbargoApprovalDate";
 		SORT_SUB_FIELDS[SearchOrder.COMMITTEE_MEMBERS.ordinal()] = "committeeMembers";
 		SORT_SUB_FIELDS[SearchOrder.COMMITTEE_CONTACT_EMAIL.ordinal()] = "committeeContactEmail";
-		SORT_SUB_FIELDS[SearchOrder.COMMITTEE_DISPOSITION.ordinal()] = "committeeDisposition";
 		SORT_SUB_FIELDS[SearchOrder.DEGREE.ordinal()] = "degree";
 		SORT_SUB_FIELDS[SearchOrder.DEGREE_LEVEL.ordinal()] = "degreeLevel";
 		SORT_SUB_FIELDS[SearchOrder.COLLEGE.ordinal()] = "college";

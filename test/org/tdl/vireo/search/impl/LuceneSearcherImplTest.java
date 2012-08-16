@@ -186,7 +186,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 		
 		Submission sub1 = subRepo.createSubmission(person);
 		createSubmission(sub1, "B Title", "This is really important work", "One; Two; Three;", 
-				"committee@email.com", "I approve this ETD", "degree", "department", "college", "major",
+				"committee@email.com", "degree", "department", "college", "major",
 				"documentType", 2002, 5, true);
 		sub1.setAssignee(otherPerson);
 		sub1.setSubmissionDate(new Date(2012,5,1));
@@ -196,7 +196,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 		
 		Submission sub2 = subRepo.createSubmission(person);
 		createSubmission(sub2, "A Title", "I really like this work", "One; Four; Five;", 
-				"anotherCommittee@email.com", "I reject this ETD", "another", "another", "another", "another",
+				"anotherCommittee@email.com", "another", "another", "another", "another",
 				"another", 2003, 6, null);
 		sub2.setSubmissionDate(new Date(2005,5,1));
 		sub2.setEmbargoType(embargo1);
@@ -412,7 +412,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 		// Configure submission 1
 		Submission sub1 = subRepo.createSubmission(person);
 		createSubmission(sub1, "B Title", "This is really important work", "One; Two; Three;", 
-				"committee@email.com", "I reject this ETD", "degree", "department", "college", "major",
+				"committee@email.com", "degree", "department", "college", "major",
 				"documentType", 2012, 5, true);
 		sub1.setAssignee(otherPerson);
 
@@ -434,7 +434,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 		// Configure submission 2
 		Submission sub2 = subRepo.createSubmission(otherPerson);
 		createSubmission(sub2, "A Title", "I really like this work", "One; Four; Five;", 
-				"anotherCommittee@email.com", "I approve this ETD", "another", "another", "another", "another",
+				"anotherCommittee@email.com", "another", "another", "another", "another",
 				"another", 2005, 4, null);
 		sub2.setAssignee(person);
 		sub2.setEmbargoType(e2);
@@ -530,12 +530,6 @@ public class LuceneSearcherImplTest extends UnitTest{
 			assertTrue(submissions.contains(sub1));
 			assertTrue(submissions.contains(sub2));
 			assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));
-			
-			// Committee Disposition
-			submissions = searcher.submissionSearch(filter, SearchOrder.COMMITTEE_DISPOSITION, SearchDirection.ASCENDING, 0, 20).getResults();
-			assertTrue(submissions.contains(sub1));
-			assertTrue(submissions.contains(sub2));
-			assertTrue(submissions.indexOf(sub2) < submissions.indexOf(sub1));
 			
 			// Submission Date
 			submissions = searcher.submissionSearch(filter, SearchOrder.SUBMISSION_DATE, SearchDirection.ASCENDING, 0, 20).getResults();
@@ -662,7 +656,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 		
 		Submission sub1 = subRepo.createSubmission(person);
 		createSubmission(sub1, "B UniqueTitle B", "This is really important work", "One; Two; Three;", 
-				"committee@email.com", "I approve this ETD", "degree", "department", "college", "major",
+				"committee@email.com", "degree", "department", "college", "major",
 				"documentType", 2002, 5, true);
 		sub1.setAssignee(otherPerson);
 		sub1.setSubmissionDate(new Date(2012,5,1));
@@ -671,7 +665,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 		
 		Submission sub2 = subRepo.createSubmission(person);
 		createSubmission(sub2, "A UniqueTitle A", "I really like this work", "One; Four; Five;", 
-				"anotherCommittee@email.com", "I reject this ETD", "another", "another", "another", "another",
+				"anotherCommittee@email.com", "another", "another", "another", "another",
 				"another", 2003, 6, null);
 		sub2.setSubmissionDate(new Date(2005,5,1));
 		sub2.setEmbargoType(embargo1);
@@ -872,7 +866,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 	 */
 	private Submission createSubmission(Submission sub, String title, String docAbstract,
 			String keywords, String committeeEmail,
-			String committeeDisposition, String degree, String department,
+			String degree, String department,
 			String college, String major, String documentType,
 			Integer gradYear, Integer gradMonth, Boolean UMIRelease) {
 	
@@ -881,7 +875,6 @@ public class LuceneSearcherImplTest extends UnitTest{
 		sub.setDocumentKeywords(keywords);
 		sub.setCommitteeContactEmail(committeeEmail);
 		sub.setCommitteeApprovalDate(new Date());
-		sub.setCommitteeDisposition(committeeDisposition);
 		sub.setDegree(degree);
 		sub.setDepartment(department);
 		sub.setCollege(college);

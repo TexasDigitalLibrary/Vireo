@@ -244,18 +244,6 @@ public interface Submission extends AbstractModel {
 
 	/**
 	 * 
-	 * @return The disposition of the committee when the application was approved or declined.
-	 */
-	public String getCommitteeDisposition();
-
-	/**
-	 * 
-	 * @param disposition The new disposition of the committee.
-	 */
-	public void setCommitteeDisposition(String disposition);
-
-	/**
-	 * 
 	 * @return The date the submission was submitted for review.
 	 */
 	public Date getSubmissionDate();

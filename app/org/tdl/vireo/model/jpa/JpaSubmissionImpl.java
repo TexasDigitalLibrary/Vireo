@@ -94,8 +94,6 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	public Date committeeApprovalDate;
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date committeeEmbargoApprovalDate;
-	@Column(length=326768) // 2^15
-	public String committeeDisposition;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date submissionDate;
@@ -509,21 +507,6 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 				generateLog("Committee approval of embargo cleared",false);
 			else
 				generateLog("Committee approval of embargo set",false);
-		}
-	}
-
-	@Override
-	public String getCommitteeDisposition() {
-		return committeeDisposition;
-	}
-
-	@Override
-	public void setCommitteeDisposition(String disposition) {
-		assertReviewerOrOwner(submitter);
-		
-		if (!equals(this.committeeDisposition,disposition)) {
-			this.committeeDisposition = disposition;
-			generateChangeLog("Committee disposition",disposition,false);
 		}
 	}
 

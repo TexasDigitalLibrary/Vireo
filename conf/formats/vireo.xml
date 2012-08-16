@@ -133,10 +133,6 @@
         #{/list} 
     </committeeMembers>
     
-    #{if sub.getCommitteeDisposition() != null } 
-    <committeeDisposition>${ sub.getCommitteeDisposition().escapeXml() }</committeeDisposition>
-    #{/if}
-    
     #{if sub.getCommitteeContactEmail() != null } 
     <committeeContactEmail>${ sub.getCommitteeContactEmail().escapeXml() }</committeeContactEmail>
     #{/if}

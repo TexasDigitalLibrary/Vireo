@@ -160,10 +160,6 @@ in results.
                      if (sub.getCommitteeContactEmail() != null)
                         out.print(sub.getCommitteeContactEmail());
                      break;
-                 case COMMITTEE_DISPOSITION:
-                     if (sub.getCommitteeDisposition() != null) 
-                         out.print(sub.getCommitteeDisposition());
-                     break;
                  case DEGREE:
                      if (sub.getDegree() != null)
                          out.print(sub.getDegree());

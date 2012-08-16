@@ -51,7 +51,6 @@ public class MockSubmission extends AbstractMock implements Submission {
 	public String committeeEmailHash;
 	public Date committeeApprovalDate;
 	public Date committeeEmbargoApprovalDate;
-	public String committeeDisposition;
 	public Date submissionDate;
 	public Date approvalDate;
 	public Date licenseAgreementDate;
@@ -289,16 +288,6 @@ public class MockSubmission extends AbstractMock implements Submission {
 	@Override
 	public void setCommitteeEmbargoApprovalDate(Date date) {
 		this.committeeEmbargoApprovalDate = date;
-	}
-
-	@Override
-	public String getCommitteeDisposition() {
-		return committeeDisposition;
-	}
-
-	@Override
-	public void setCommitteeDisposition(String disposition) {
-		this.committeeDisposition = disposition;
 	}
 
 	@Override
