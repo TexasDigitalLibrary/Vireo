@@ -557,7 +557,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		File file = null;
 		
 		try {
-			file = getResourceFile("controllers/test.pdf");
+			file = getResourceFile("SampleSupplementalDocument.doc");
 			files.put("noteAttachment", file);
 		} catch (IOException ioe) {
 			fail("Test upload file not found.");
@@ -600,7 +600,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		File file = null;
 		
 		try {
-			file = getResourceFile("controllers/test.pdf");
+			file = getResourceFile("SampleFeedbackDocument.png");
 			files.put("noteAttachment", file);
 		} catch (IOException ioe) {
 			fail("Test upload file not found.");
@@ -643,7 +643,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		File file = null;
 		
 		try {
-			file = getResourceFile("controllers/test.pdf");
+			file = getResourceFile("SampleSupplementalDocument.doc");
 			files.put("supplementAttachment", file);
 		} catch (IOException ioe) {
 			fail("Test upload file not found.");
@@ -686,7 +686,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		File file = null;
 		
 		try {
-			file = getResourceFile("controllers/test.pdf");
+			file = getResourceFile("SampleSupplementalDocument.doc");
 			files.put("supplementAttachment", file);
 		} catch (IOException ioe) {
 			fail("Test upload file not found.");
@@ -744,7 +744,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		File file = null;
 		
 		try {
-			file = getResourceFile("controllers/test.pdf");
+			file = getResourceFile("SamplePrimaryDocument.pdf");
 			files.put("primaryAttachment", file);
 		} catch (IOException ioe) {
 			fail("Test upload file not found.");
@@ -787,7 +787,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		File file = null;
 		
 		try {
-			file = getResourceFile("controllers/test.pdf");
+			file = getResourceFile("SamplePrimaryDocument.pdf");
 			files.put("noteAttachment", file);
 		} catch (IOException ioe) {
 			fail("Test upload file not found.");

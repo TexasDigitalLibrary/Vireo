@@ -127,7 +127,7 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 		
 		// Restore to original state
 		for (String field : originalState) {
-			settingRepo.createConfiguration(field, "true");
+			settingRepo.createConfiguration(field, "true").save();
 		}
 	}
 	

@@ -150,6 +150,8 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 		// Get our URLs
 		final String INDEX_URL = Router.reverse("Application.index").url;
 		final String STATUS_URL = Router.reverse("Student.submissionStatus").url;
+		final String PERSONAL_INFO_URL = Router.reverse("submit.PersonalInfo.personalInfo").url;
+
 
 		// View the homepage
 		Response response = GET(INDEX_URL);
@@ -158,7 +160,8 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 		assertContentMatch(STATUS_URL,response); // and it's url.
 
 		response = GET(STATUS_URL);
-		response = GET(response.getHeader("Location"));
+		assertEquals(PERSONAL_INFO_URL,response.getHeader("Location"));
+		response = GET(PERSONAL_INFO_URL);
 		assertContentMatch("<title>Verify Personal Information</title>",response);
 
 		// PersonalInfo step
@@ -208,7 +211,7 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 				);
 
 		// FileUpload Step
-		fileUpload("controllers/submit/test.pdf", "controllers/submit/test.pdf");
+		fileUpload("SamplePrimaryDocument.pdf", "SampleSupplementalDocument.doc", "SampleSupplementalDocument.xls");
 
 		// Finaly, confirm
 		confirm();
@@ -246,6 +249,7 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 		// Get our URLs
 		final String INDEX_URL = Router.reverse("Application.index").url;
 		final String STATUS_URL = Router.reverse("Student.submissionStatus").url;
+		final String PERSONAL_INFO_URL = Router.reverse("submit.PersonalInfo.personalInfo").url;
 
 		// View the homepage
 		Response response = GET(INDEX_URL);
@@ -254,7 +258,8 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 		assertContentMatch(STATUS_URL,response); // and it's url.
 
 		response = GET(STATUS_URL);
-		response = GET(response.getHeader("Location"));
+		assertEquals(PERSONAL_INFO_URL,response.getHeader("Location"));
+		response = GET(PERSONAL_INFO_URL);
 		assertContentMatch("<title>Verify Personal Information</title>",response);
 
 
@@ -305,7 +310,7 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 				);
 
 		// FileUpload Step
-		fileUpload("controllers/submit/test.pdf", "controllers/submit/test.pdf");
+		fileUpload("SamplePrimaryDocument.pdf", "SampleSupplementalDocument.doc");
 
 		// Finaly, confirm
 		confirm();
