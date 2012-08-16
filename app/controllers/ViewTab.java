@@ -92,7 +92,7 @@ public class ViewTab extends AbstractVireoController {
 		List<Person> assignees = personRepo.findPersonsByRole(RoleType.REVIEWER);	
 		
 		List<DepositLocation> depositLocations = settingRepo.findAllDepositLocations();
-		
+				
 		String nav = "view";
 		render(	nav,
 				submission,
@@ -467,7 +467,7 @@ public class ViewTab extends AbstractVireoController {
 
 		List<ActionLog> actionLogs	= subRepo.findActionLog(submission);
 		
-		renderTemplate("ViewTab/actionLogTable.include", actionLogs);
+		renderTemplate("ViewTab/actionLogTable.include", actionLogs, submission);
 	}
 
 	/**
@@ -572,16 +572,11 @@ public class ViewTab extends AbstractVireoController {
 		EmailService emailService = Spring.getBeanOfType(EmailServiceImpl.class);
 		
 		String subject = params.get("subject");
-		String comment = params.get("comment");
+		String message = params.get("comment");
 		
 		if(params.get("status_change") != null)
 			submission.setState(stateManager.getState("NeedsCorrection"));
-		
-		ActionLog actionLog = submission.logAction(comment);
-		
-		if("private".equals(params.get("visibility")))
-			actionLog.setPrivate(true);
-		
+				
 		if(params.get("email_student") != null && "public".equals(params.get("visibility"))) {			
 			
 			//Setup Params
@@ -599,8 +594,69 @@ public class ViewTab extends AbstractVireoController {
 			
 			String replyTo = context.getPerson().getCurrentEmailAddress();
 			
-			emailService.sendEmail(subject, comment, emailParams, recipients, replyTo, carbonCopies);
+			emailService.sendEmail(subject, message, emailParams, recipients, replyTo, carbonCopies);
+			
+			if (emailParams.FULL_NAME != null) {
+				subject = subject.replaceAll("\\{FULL_NAME\\}",emailParams.FULL_NAME);
+				message = message.replaceAll("\\{FULL_NAME\\}",emailParams.FULL_NAME);
+			}
+			
+			if (emailParams.FIRST_NAME != null) {
+				subject = subject.replaceAll("\\{FIRST_NAME\\}",emailParams.FIRST_NAME);
+				message = message.replaceAll("\\{FIRST_NAME\\}",emailParams.FIRST_NAME);
+			}
+			
+			if (emailParams.LAST_NAME != null) {
+				subject = subject.replaceAll("\\{LAST_NAME\\}",emailParams.LAST_NAME);
+				message = message.replaceAll("\\{LAST_NAME\\}",emailParams.LAST_NAME);
+			}
+				
+			if (emailParams.DOCUMENT_TITLE != null) {
+				subject = subject.replaceAll("\\{DOCUMENT_TITLE\\}",emailParams.DOCUMENT_TITLE);
+				message = message.replaceAll("\\{DOCUMENT_TITLE\\}",emailParams.DOCUMENT_TITLE);
+			}
+				
+			if (emailParams.DOCUMENT_TYPE != null) {
+				subject = subject.replaceAll("\\{DOCUMENT_TYPE\\}",emailParams.DOCUMENT_TYPE);
+				message = message.replaceAll("\\{DOCUMENT_TYPE\\}",emailParams.DOCUMENT_TYPE);
+			}
+				
+			if (emailParams.GRAD_SEMESTER != null) {
+				subject = subject.replaceAll("\\{GRAD_SEMESTER\\}",emailParams.GRAD_SEMESTER);
+				message = message.replaceAll("\\{GRAD_SEMESTER\\}",emailParams.GRAD_SEMESTER);
+			}
+				
+			if (emailParams.STUDENT_URL != null) {
+				subject = subject.replaceAll("\\{STUDENT_URL\\}",emailParams.STUDENT_URL);
+				message = message.replaceAll("\\{STUDENT_URL\\}",emailParams.STUDENT_URL);
+			}
+				
+			if (emailParams.ADVISOR_URL != null) {
+				subject = subject.replaceAll("\\{ADVISOR_URL\\}",emailParams.ADVISOR_URL);
+				message = message.replaceAll("\\{ADVISOR_URL\\}",emailParams.ADVISOR_URL);
+			}
+				
+			if (emailParams.REGISTRATION_URL != null) {
+				subject = subject.replaceAll("\\{REGISTRATION_URL\\}",emailParams.REGISTRATION_URL);
+				message = message.replaceAll("\\{REGISTRATION_URL\\}",emailParams.REGISTRATION_URL);
+			}
+				
+			if (emailParams.SUBMISSION_STATUS != null) {
+				subject = subject.replaceAll("\\{SUBMISSION_STATUS\\}",emailParams.SUBMISSION_STATUS);
+				message = message.replaceAll("\\{SUBMISSION_STATUS\\}",emailParams.SUBMISSION_STATUS);
+			}
+				
+			if (emailParams.SUBMISSION_ASSIGNED_TO != null) {
+				subject = subject.replaceAll("\\{SUBMISSION_ASSIGNED_TO\\}",emailParams.SUBMISSION_ASSIGNED_TO);
+				message = message.replaceAll("\\{SUBMISSION_ASSIGNED_TO\\}",emailParams.SUBMISSION_ASSIGNED_TO);
+			}
+			
 		}
+		
+		ActionLog actionLog = submission.logAction(message);
+		
+		if("private".equals(params.get("visibility")))
+			actionLog.setPrivate(true);
 		
 		submission.save();
 		actionLog.save();
@@ -692,8 +748,8 @@ public class ViewTab extends AbstractVireoController {
 			
 			EmailService emailService = Spring.getBeanOfType(EmailServiceImpl.class);
 			
-			String subject = "A file has been uploaded.";
-			String comment = "The file " + fileName + " has been uploaded.";
+			String subject = params.get("subject");
+			String comment = params.get("comment");
 						
 			//Setup Params
 			TemplateParameters emailParams = new TemplateParameters(sub);

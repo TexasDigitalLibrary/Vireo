@@ -67,10 +67,10 @@ test("test swapToInputHandler select drop down", function(){
 		markup += '<label>UMI Release:</label><span id="umiRelease" class="select"><i class="icon-pencil"></i>false</span>';
 		markup += '</li></ul>';
 		markup += '</div>';
-		markup += '<div id="umiReleaseOptions" style="display:none;">';
+		markup += '<div id="umiReleaseOptions" style="display:none;"><select class="field">';
 		markup += '<option value="true">true</option>';
 		markup += '<option value="false">false</option>';
-		markup += '</div>';
+		markup += '</select></div>';
 	
 	//Append markup to body
 	jQuery("body").append(markup);
@@ -83,9 +83,9 @@ test("test swapToInputHandler select drop down", function(){
 	jQuery("#umiRelease").click();
 	
 	equal(0, jQuery("span").length, "The span has been removed.");
-	equal(1, jQuery("select").length, "There is one select field.");
-	equal(2, jQuery("select option").length, "There are two options.");
-	equal(1, jQuery("select option[value='false']:selected").length, "The proper option is selected.");
+	equal(2, jQuery("select").length, "There are two select fields.");
+	equal(2, jQuery("#umiRelease select option").length, "There are two options.");
+	equal(1, jQuery("#umiRelease select option[value='false']:selected").length, "The proper option is selected.");
 	equal(1, jQuery("div#umiRelease").length, "The surrounding div has the correct id.");
 	equal(1, jQuery(".icon-remove").length, "There is one cancel icon.");
 	equal(1, jQuery(".icon-ok").length, "There is one submit icon.");
@@ -322,7 +322,7 @@ test("test retrieveTemplateJSON AJAX", function(){
 	expect(6);
 	reset();
 	
-	var markup = '<div id="add-comment-modal">';
+	var markup = '<div class="modal" id="add-comment-modal">';
 		markup += '<textarea name="comment"></textarea>';
 		markup += '<input type="text" name="subject" value="" />';
 		markup += '</div>';
@@ -336,7 +336,7 @@ test("test retrieveTemplateJSON AJAX", function(){
 	}
 	
 	//AJAX handler
-	retrieveTemplateHandler("/jsonURL", 1);
+	retrieveTemplateHandler("/jsonURL", 1, jQuery(".modal"));
 	
 	options.success({ success: 'true', subject: 'This is my subject.', message: 'This is the body of the email.' });
 	

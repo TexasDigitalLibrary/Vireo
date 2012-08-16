@@ -14,6 +14,7 @@ import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.CommitteeMember;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.EmailTemplate;
+import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.RoleType;
@@ -298,6 +299,8 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		submission.setDocumentTitle("My Document Title");
 		State state = stateManager.getState("InReview");
 		submission.setState(state);
+		EmbargoType embargo = settingRepo.findAllEmbargoTypes().get(0);
+		submission.setEmbargoType(embargo);
 		submission.save();
 		Long id = submission.getId();
 		

@@ -18,7 +18,7 @@
 			#{if submission.getAttachments()}
 			<li><a href="#fileList">View All Files</a></li>
 			#{/if}
-			<li><a href="#add-file-modal" data-toggle="modal">Upload New File</li>
+			<li><a href="#add-file-modal" data-toggle="modal">Upload New File</a></li>
 		</ul>
 	</div>
 	<div class="box-footer">
@@ -57,6 +57,10 @@
 			<li>UMI Release:</li>
 			<li><b>${submission.getUMIRelease()}</b></li>
 		</ul>
+		<ul class="unstyled">
+			<li>Embargo Option</li>
+			<li><b>${submission.getEmbargoType().getName()}</b></li>
+		</ul>
 	</div>
 	<div class="box-footer">
 	
@@ -68,7 +72,7 @@
 		<div class="expand">[-]</div>
 		<div class="main-heading">Custom Actions</div>
 	</div>
-	<div class="box-body">
+	<div id="custom-actions" class="box-body">
 		#{list items:actions, as:'action'}
 		<p>
 			<input name="custom_action_${action.getId()}" type="checkbox" class="checkbox custom-action" #{if submission.getCustomAction(action) != null && submission.getCustomAction(action).getValue()}checked="checked"#{/if}> ${action.getLabel()}</input>

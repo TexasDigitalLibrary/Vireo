@@ -27,11 +27,11 @@ function swapToInputHandler(){
 				editItem.replaceWith('<div id="'+editItem.attr("id")+'" class="editing textarea"><textarea class="field" textarea">'+value+'</textarea><br /><i class="icon-remove" title="cancel"></i>&nbsp<i class="icon-ok" title="commit"></i></div>');
 				//Select Drop Downs
 			} else if(editItem.hasClass("select")){
-				var selectCode = '<div id="'+editItem.attr("id")+'" class="editing select"><select class="field">';
+				var selectCode = '<div id="'+editItem.attr("id")+'" class="editing select">';
 				selectCode += jQuery("#"+editItem.attr("id")+"Options").html();
-				selectCode += '</select><br /><i class="icon-remove" title="cancel"></i>&nbsp<i class="icon-ok" title="commit"></i></div>';
+				selectCode += '<br /><i class="icon-remove" title="cancel"></i>&nbsp<i class="icon-ok" title="commit"></i></div>';
 				editItem.replaceWith(selectCode);
-				jQuery(".field option").each(function(){
+				jQuery("#"+editItem.attr("id")+" .field option").each(function(){
 					if(jQuery(this).text()==value){
 						jQuery(this).attr("selected","selected");
 					}
@@ -508,8 +508,8 @@ function assignSpecialValueAndSubmit(form, value){
  *
  * @param id (The id of the template.)
  */
-function retrieveTemplateHandler(url, id){
-	jQuery("#add-comment-modal").addClass("waiting");
+function retrieveTemplateHandler(url, id, modal){
+	modal.addClass("waiting");
 	
 	jQuery.ajax({
 		url:url,
@@ -519,9 +519,9 @@ function retrieveTemplateHandler(url, id){
 		dataType:'json',
 		type:'POST',
 		success:function(data){
-			jQuery("#add-comment-modal input[name='subject']").val(data.subject);
-			jQuery("#add-comment-modal textarea[name='comment']").html(data.message);
-			jQuery("#add-comment-modal").removeClass("waiting");
+			modal.find("input[name='subject']").val(data.subject);
+			modal.find("textarea[name='comment']").html(data.message);
+			modal.removeClass("waiting");
 		},
 		error:function(){
 			alert("Error inserting template data.");
@@ -548,10 +548,25 @@ function toggleAddCommentEmailOptions(){
 }
 
 /**
+ * Function to toggle subject/comment fields when "email student" is selected
+ * in the "add file" dialog box.
+ */
+function toggleAddFileEmailOptions(){
+	if(jQuery("#add-file-modal input[name='email_student']:checked").length){
+		jQuery("#add-file-email-options").slideDown(500);
+	} else {
+		jQuery("#add-file-email-options").slideUp(500);
+	}
+}
+
+/**
  * Function to toggle the ability to CC the advisor when Email the student is selected.
  */
 function toggleCarbonCopyAdvisor(){
 	return function(){
+		if(jQuery(this).closest(".modal").is("#add-file-modal")){
+			toggleAddFileEmailOptions();
+		}
 		var parent = jQuery(this).parents(".emailCarbon").first();
 		if(parent.find("input[name='email_student']:checked").length){
 			parent.find("input[name='cc_advisor']").removeAttr("disabled");
