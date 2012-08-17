@@ -62,12 +62,12 @@ public class EmailServiceImplTest extends UnitTest {
 		MockAttachment primaryDocument = new MockAttachment();
 		
 		// Example properties
-		submitter.firstName = "Student";
-		submitter.lastName = "Submitter";
 		assignee.firstName = "Staff";
 		assignee.lastName = "Reviewer";
 		primaryDocument.name = "MyThesis.pdf";
 		primaryDocument.type = AttachmentType.PRIMARY;
+		submission.studentFirstName = "Student";
+		submission.studentLastName = "Submitter";
 		submission.documentType = "Thesis";
 		submission.state = stateManager.getInitialState();
 		submission.graduationYear = 2012;

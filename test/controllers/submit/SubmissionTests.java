@@ -29,6 +29,7 @@ import org.tdl.vireo.state.StateManager;
 
 import play.Play;
 import play.db.jpa.JPA;
+import play.libs.Mail;
 import play.modules.spring.Spring;
 import play.mvc.Http.Response;
 import play.mvc.Router;
@@ -140,7 +141,7 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 	 * Test a complete submission workflow without asking for any additional parameters.
 	 */
 	@Test
-	public void testFullSubmission() throws IOException {    
+	public void testFullSubmission() throws IOException, InterruptedException {    
 
 		// Turn off any of the extra paramaters
 		if (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_BIRTH) != null) {
@@ -188,7 +189,7 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 				settingRepo.findAllMajors().get(0).getName(), // major 
 				"555-1212", // permPhone
 				"2222 Fake Street", // permAddress 
-				"noreply@noreply.org", // permEmail
+				"advisor@noreply.org", // permEmail
 				"555-1212 ex2", // currentPhone 
 				"2222 Fake Street APT 11" //currentAddress
 				);	
@@ -217,7 +218,7 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 				"This is really cool work!", // abstractText 
 				"one; two; three;", // keywords
 				committee, // committee
-				"noreplyfromadvisor@noreply.org", // committeeEmail
+				"advisor@noreply.org", // committeeEmail
 				String.valueOf(settingRepo.findAllEmbargoTypes().get(1).getId()), // embargo
 				null // UMI
 				);
@@ -226,7 +227,7 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 		fileUpload("SamplePrimaryDocument.pdf", "SampleSupplementalDocument.doc", "SampleSupplementalDocument.xls");
 
 		// Finaly, confirm
-		confirm();
+		confirm("cdanes@gmail.com","advisor@noreply.org");
 
 		// the cleanup will make sure the submission gets deleted.
 	}
@@ -236,7 +237,7 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 	 * birth year, college, and umi release.
 	 */
 	@Test
-	public void testFullSubmissionWithOptionalParamaters() throws IOException {    
+	public void testFullSubmissionWithOptionalParamaters() throws IOException, InterruptedException {    
 
 		// Turn ON any of the extra paramaters
 		if (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_BIRTH) == null) {
@@ -285,7 +286,7 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 				settingRepo.findAllMajors().get(0).getName(), // major 
 				"555-1212", // permPhone
 				"2222 Fake Street", // permAddress 
-				"noreply@noreply.org", // permEmail
+				"perm@noreply.org", // permEmail
 				"555-1212 ex2", // currentPhone 
 				"2222 Fake Street APT 11" //currentAddress
 				);	
@@ -314,7 +315,7 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 				"This is really cool work!", // abstractText 
 				"one; two; three;", // keywords
 				committee, // committee
-				"noreplyfromadvisor@noreply.org", // committeeEmail
+				"committee@noreply.org", // committeeEmail
 				String.valueOf(settingRepo.findAllEmbargoTypes().get(1).getId()), // embargo
 				"true" // UMI 
 				);
@@ -323,7 +324,7 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 		fileUpload("SamplePrimaryDocument.pdf", "SampleSupplementalDocument.doc");
 
 		// Finaly, confirm
-		confirm();
+		confirm("cdanes@gmail.com","committee@noreply.org");
 
 		// the cleanup will make sure the submission gets deleted.
 	}
@@ -737,7 +738,7 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 			assertEquals(Long.valueOf(embargo), sub.getEmbargoType().getId());
 		if (umi != null)
 			assertEquals(true, sub.getUMIRelease());
-
+		
 		assertEquals(committee.size(), sub.getCommitteeMembers().size());
 	}
 
@@ -806,9 +807,14 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 	/**
 	 * Confirm the submission. We assume there will be no errors because each
 	 * step before hand should have taken care of that.
+	 * 
+	 * @param studentEmail The email address of the student (so we can verify they received their email)
+	 * @param advisorEmail The email address of the advisor (so we can verify they received their email)
 	 */
-	public void confirm() {
+	public void confirm(String studentEmail, String advisorEmail) throws InterruptedException {
+		Mail.Mock.reset();
 
+		
 		// Get our URL
 		Map<String,Object> routeArgs = new HashMap<String,Object>();
 		routeArgs.put("subId",subId);
@@ -835,6 +841,39 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 		// Get the completted submission page.
 		response = GET(response.getHeader("Location"));
 		assertContentMatch("Submittal Complete", response);
+		
+		
+		// Verify the new state;
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		sub = subRepo.findSubmission(subId);
+		
+		// Wait for the emails to be recieved.
+		String studentContent = null;
+		for (int i = 0; i < 10; i++) {
+			Thread.yield();
+			Thread.sleep(100);
+			studentContent = Mail.Mock.getLastMessageReceivedBy(studentEmail);
+			if (studentContent != null)
+				break;
+		}
+		assertNotNull(studentContent);
+		
+		String advisorContent = null;
+		for (int i = 0; i < 10; i++) {
+			Thread.yield();
+			Thread.sleep(100);
+			advisorContent = Mail.Mock.getLastMessageReceivedBy(advisorEmail);
+			if (advisorContent != null)
+				break;
+		}
+		assertNotNull(advisorContent);
+		
+		// Verify the advisor can return.
+		assertNotNull(sub.getCommitteeEmailHash());
+		assertTrue(advisorContent.contains(sub.getCommitteeEmailHash()));
+		
 	}
 
 

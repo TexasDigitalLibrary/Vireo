@@ -16,6 +16,9 @@ GET     /profile                                Authentication.profile
 *       /profile/update                         Authentication.updateProfile
 *       /profile/password                       Authentication.updatePassword
 
+### Advisor URL
+*       /advisor/{token}/review                 Advisor.review
+
 ### New Submissions
 *       /submit/{subId}/personalInfo            submit.PersonalInfo.personalInfo
 *       /submit/personalInfo                    submit.PersonalInfo.personalInfo
