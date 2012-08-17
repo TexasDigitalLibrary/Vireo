@@ -25,6 +25,7 @@ import controllers.submit.PersonalInfo;
 
 import play.Logger;
 import play.Play;
+import play.libs.MimeTypes;
 import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
@@ -43,41 +44,30 @@ import static org.tdl.vireo.model.Configuration.SUBMISSIONS_OPEN;
  * 
  * Please don't touch right now.
  */
-
-
 @With(Authentication.class)
 public class Student extends AbstractVireoController {
-	
+
 	/**
-	 * Set up values needed to display submission status at the top of each page.
-	 * If submissions are closed - always redirect to the submissionStatus page. 
+	 * Retrieve the submission object and make sure it's in a proper state. This
+	 * is slightly different that the version that is in the submission steps
+	 * because it does not restrict the submission to be in an initial state.
+	 * 
+	 * @return The submission object.
 	 */
-	
-	@Before(unless="submissionStatus")
-	static void beforeSubmit() {
-		
-		if (settingRepo.findConfigurationByName(SUBMISSIONS_OPEN) == null)
-			submissionStatus();	
-		
-		renderArgs.put("SUBMISSIONS_OPEN", settingRepo.findConfigurationByName(SUBMISSIONS_OPEN));
-		
-		Configuration curSemConfig = settingRepo.findConfigurationByName(CURRENT_SEMESTER);
-		String currentSemester = (curSemConfig == null ? "undefined" : curSemConfig.getValue());
-			
-		renderArgs.put("CURRENT_SEMESTER", currentSemester);
-
-
-	}
-	
 	protected static Submission getSubmission() {
+		// We require an sub id.
 		Long subId = params.get("subId", Long.class);
-		Submission sub = subRepo.findSubmission(subId);
-		
-		if (sub == null) {
+		if (subId == null) {
 		    error("Did not receive the expected submission id.");
 		} 
-				
-		// This is an existing submission so check that we're the student here.
+		
+		// And the submission must exist.
+		Submission sub = subRepo.findSubmission(subId);
+		if (sub == null) {
+		    error("Unable to find the submission #"+subId);
+		}
+		
+		// Check that we are the owner of the submission.
 		Person submitter = context.getPerson();
 		if (sub.getSubmitter() != submitter)
 		    unauthorized();
@@ -87,282 +77,271 @@ public class Student extends AbstractVireoController {
 
 
 
-	
-//	// Private method to upload a primary document.
-//	
-	private static void uploadPrimaryDocument(Submission sub) {
-		
-        File primaryDocument = params.get("primaryDocument",File.class);
-
-        if (primaryDocument == null)
-            Logger.info("Doc is null");
-        else
-            Logger.info("Doc: " + primaryDocument.getName());
-
-        if (primaryDocument != null) {
-        	if (!primaryDocument.getName().toLowerCase().endsWith(".pdf")) {
-        		validation.addError("primaryDocument", "Primary document must be a PDF file.");
-        		return;
-        	}       	
-        }
-        try {
-            sub.addAttachment(primaryDocument, AttachmentType.PRIMARY);
-            sub.save();
-        } catch (IOException e) {
-            validation.addError("primaryDocument", "Error uploading primary document.");
-        } catch (IllegalArgumentException e) {
-            validation.addError("primaryDocument","Error uploading primary document.");
-        }		
-	}
-
-	// Private method to upload a supplementary document.
-
-	private static void uploadSupplementary(Submission sub) {
-		
-        // If the upload supplementary button is pressed - then add the manuscript as an attachment
-        
-        if (params.get("uploadSupplementary") != null) {
-
-            File supplementaryDocument = params.get("supplementaryDocument",File.class);
-
-            if (supplementaryDocument == null)
-                Logger.info("Doc is null");
-            else
-                Logger.info("Doc: " + supplementaryDocument.getClass().getName());
-
-            try {
-            	Attachment thisAttachment = sub.addAttachment(supplementaryDocument, AttachmentType.SUPPLEMENTAL);                                         
-                thisAttachment.save();
-            	sub.save();
-            } catch (IOException e) {
-                validation.addError("supplementaryDocument","Error uploading supplementary document.");
-            } catch (IllegalArgumentException e) {
-                validation.addError("supplementaryDocument","Error uploading supplementary document.");
-            }
-        }				
-	}
-	
-	
 	/**
-	 * Common method to remove supplementary files from a submission (based on checkboxes in the form)
-	 * @param sub
+	 * This is a general swiss army of a controller method. This is where the
+	 * student should go to start anything. If they come here and don't have
+	 * anything then they will be redirected to start a new submission. However
+	 * if they have other submissions then they will see a list. If the
+	 * configuration is not to have multiple submissions then the student will
+	 * be shutteled either to their inprogress submission, or view the status of
+	 * the previous submission.
 	 */
-	private static void removeSupplementary(Submission sub) {
-		
-    	// Get values from all check boxes
-    	
-    	String[] idsToRemove = params.getAll("attachmentToRemove");
-    	
-    	// Iterate over all checked check boxes - removing attachments as we go
-    	
-    	if (idsToRemove != null)
-        	for (String id : idsToRemove ) {
-        		
-        		// Iterate over the list of supplemental documents and delete the indicated docs
-        		List<Attachment> supList = sub.getSupplementalDocuments();
-        		
-        		for (Attachment a : supList) {
-        			
-        			Logger.info("Comparing " + a.getId() + " " + new Long(id));
-        			
-        			if (a.getId().equals(new Long(id))) {
-        				
-        				Logger.info("Deleteing attachment " + a.getId());
-        				
-        				a.delete();
-        			}
-        		}
-        		
-        	}            		
-	}
-	
-	
-	
-
-	
-	/**
-	 * Submission Status
-	 */
-	
 	@Security(RoleType.STUDENT)
-	public static void submissionStatus() {	
-		
-        // Check to see if they have any active submissions
-		
-        Person submitter = context.getPerson();
-        List<Submission> submissionList = subRepo.findSubmission(submitter);
+	public static void submissionList() {	
 
-        
-        Configuration so = settingRepo.findConfigurationByName(SUBMISSIONS_OPEN);
-        
-        if (so != null) 
-        	Logger.info("SubmissionStatus " + settingRepo.findConfigurationByName(SUBMISSIONS_OPEN).getValue());
-        else
-        	Logger.info("SubmissionStatus Null");                      
-        
-        if(submissionList.size() > 0 || settingRepo.findConfigurationByName(SUBMISSIONS_OPEN) == null) {
-        	
-        	//TODO -- This could be refactored - this same code is in the @Before method above
-        	
-    		Configuration curSemConfig = settingRepo.findConfigurationByName(CURRENT_SEMESTER);
-    		String currentSemester = (curSemConfig == null ? "undefined" : curSemConfig.getValue());
-    			
-    		renderArgs.put("CURRENT_SEMESTER", currentSemester);
-    		renderArgs.put("SUBMISSIONS_OPEN", settingRepo.findConfigurationByName(SUBMISSIONS_OPEN));
-            render(submissionList);
-        } else{
-        	PersonalInfo.personalInfo(null);
-        }
-	}
-	
-	// Handle the Student View form 
-	
-	@Security(RoleType.STUDENT)
-	public static void studentView(Long subId) {		
+		Person submitter = context.getPerson();
+		List<Submission> submissions = subRepo.findSubmission(submitter);
+
+
+		boolean submissionsOpen = (settingRepo.getConfig(Configuration.SUBMISSIONS_OPEN) != null) ? true : false;
+		boolean allowMultiple = (settingRepo.getConfig(Configuration.ALLOW_MULTIPLE_SUBMISSIONS) != null) ? true : false;
+
 		
-		// Locate the submission 
+		if (submissions.size() == 1 && !allowMultiple) {
+			// If they all ready have a submission, and we don't allow multiple
+			// submissions just go straight to the submission instead of the
+			// list.
+			Submission sub = submissions.get(0);
 			
-        Submission sub = subRepo.findSubmission(subId);
-        Person submitter = context.getPerson();
-        
-        if (sub == null) {
-            // something is wrong
-            error("Did not receive the expected submission id.");
-        } else {        	      	
+			if (sub.getState().isInProgress()) {
+				// The one submission isn't complete yet.
+				PersonalInfo.personalInfo(sub.getId());
+			} else {
+				// Go straight to view the status page.
+				submissionView(sub.getId());
+			}
+			
+		} else if(submissions.size() > 0 || !submissionsOpen) {
+			// Show the list of submissions. This also handles the case if
+			// submissions are closed, they will see a message telling them that.
+			
+			renderArgs.put("SUBMISSIONS_OPEN", settingRepo.findConfigurationByName(SUBMISSIONS_OPEN));
+			renderArgs.put("CURRENT_SEMESTER", settingRepo.getConfig(CURRENT_SEMESTER, "current"));
+			
+			renderTemplate("Student/list.html",submissions,allowMultiple,submissionsOpen);
+		} else{
+			
+			// They don't have any submissions, and submissions are open. So
+			// take them directly to the submission screen.
+			PersonalInfo.personalInfo(null);
+		}
+	}
 
-            // This is an existing submission so check that we're the student or administrator here.
-            
-            if (sub.getSubmitter() != submitter)
-                unauthorized();		
+	/**
+	 * Student view of the submission. The form in all cases allows the student
+	 * to leave comments for reviewers.
+	 * 
+	 * However, if the submission is in a state that allows editing by students
+	 * then they may modify the documents associated with the submission, before
+	 * confirming their corrections.
+	 * 
+	 * @param subId The submission id.
+	 */
+	@Security(RoleType.STUDENT)
+	public static void submissionView(Long subId) {		
 
-            // If the upload manuscript button is pressed - then add the manuscript as an attachment
-            
-            if (params.get("uploadPrimary") != null) {
-            	Logger.info("Student View Upload " + sub.toString());
-            	uploadPrimaryDocument(sub);
-            }
-            
-            // If the upload supplementary file button is pressed - then add the supplementary doc as an attachment
+		// Locate the submission 
 
-            if (params.get("uploadSupplementary") != null) {
-            	Logger.info("Student View Upload " + sub.toString());
-            	uploadSupplementary(sub);
-            }            
-            
-            // If the replace manuscript button is pressed - then delete the manuscript 
-            
-            if (params.get("replacePrimary") != null) {
-            	Logger.info("Replace/Delete Manuscript");            	
-            	Attachment primaryDoc = sub.getPrimaryDocument();   
-            	if (primaryDoc != null) {
-            		primaryDoc.delete();
-            		sub.save();
-            	}
-            }
-            
-            // Remove indicated supplementary file
-            
-            if (params.get("removeSupplementary") != null) {
-            	removeSupplementary(sub);
-            }
-            
-            // Handle add message button. Just add the message to the submission
-            
-            if (params.get("addmsg") != null) {   
-            	if (!params.get("studentMessage").equals(""))
-            			sub.logAction("Message added : '" +	params.get("studentMessage") + "'").save();
-            }
-        }
-        
-        List<ActionLog> actionLogList = subRepo.findActionLog(sub);
+		Submission sub = subRepo.findSubmission(subId);
+		Person submitter = context.getPerson();
 
-        Attachment primaryAttachment = sub.getPrimaryDocument();
-        List<Attachment> supplementalAttachments = sub.getSupplementalDocuments();
-        
-		render(subId, sub, submitter, actionLogList, primaryAttachment, supplementalAttachments);		
+		if (sub.getState().isEditableByStudent()) {
+			// If the replace manuscript button is pressed - then delete the manuscript 
+			if (params.get("replacePrimary") != null) {
+				Attachment primaryDoc = sub.getPrimaryDocument();   
+				if (primaryDoc != null) {
+					primaryDoc.delete();
+					sub.save();
+				}
+			}
+			
+			// Handle the remove supplementary document button 
+			if (params.get("removeSupplementary") != null) {
+				removeSupplementary(sub);           	            	
+			}
+			
+			if(params.get("primaryDocument",File.class) != null)
+				uploadPrimaryDocument(sub);
+			
+			if(params.get("supplementaryDocument",File.class) != null)
+				uploadSupplementary(sub);
+			
+			// If there is no primary document, mark it as in error.
+			if (sub.getPrimaryDocument() == null)
+				validation.addError("primaryDocument", "A primary document is required.");
+		}
+
+		// Handle add message button. Just add the message to the submission
+		if (params.get("addmsg") != null) {   
+			if (!params.get("studentMessage").equals(""))
+				sub.logAction("Message added : '" +	params.get("studentMessage") + "'").save();
+		}
+
+		List<Submission> allSubmissions = subRepo.findSubmission(submitter);
+		List<ActionLog> logs = subRepo.findActionLog(sub);
+		Attachment primaryDocument = sub.getPrimaryDocument();
+		List<Attachment> supplementaryDocuments = sub.getSupplementalDocuments();
+
+		renderTemplate("Student/view.html",subId, sub, submitter, logs, primaryDocument, supplementaryDocuments, allSubmissions);		
 	}
 
 	/**
 	 * Delete a given submission
+	 * 
 	 * @param subId
+	 *            The submission to delete.
 	 */
 	@Security(RoleType.STUDENT)
-	public static void deleteSubmission(Long subId) {
-        Submission sub = subRepo.findSubmission(subId);
-        sub.delete();
-        submissionStatus();
+	public static void submissionDelete(Long subId) {
+		Submission sub = getSubmission();
+		sub.delete();
+		
+		Person submitter = context.getPerson();
+		List<Submission> submissions = subRepo.findSubmission(submitter);
+		if (submissions.size() == 0)
+			// No other submissions, send you back to the index.
+			Application.index();
+		else
+			// Go back to the list of other submissions.
+			submissionList();
 	}
 
+
+
+
 	
-    /**
-     * Helper for assigning <em>class="current"</em> to the nav item
-     * @param name1
-     * @param name2
-     * @return
-     */
-    public static String giveCurrentClassIfEqual(String name1, String name2) {
-        return name1 == name2 ? "class=current" : "";
-    }
+	
+	
+	
+	/**
+	 * Helper method to handle uploading a primary document.
+	 * 
+	 * @param sub
+	 *            The submission to add the attachment too.
+	 */
+	public static boolean uploadPrimaryDocument(Submission sub) {
 
+		File primaryDocument = params.get("primaryDocument",File.class);
+		if (primaryDocument == null)
+			return false;
 
-
-    /**
-     * Get document name from a submission
-     * @param sub
-     * @return
-     */
-    public static String getDocumentName(Submission sub){
-		Attachment primaryDocument = sub.getPrimaryDocument();            
-		String primaryDocumentName = "";	 
-
-		if (primaryDocument != null) {
-			primaryDocumentName = primaryDocument.getName();
-		}   
+		String mimetype = MimeTypes.getContentType(primaryDocument.getName());
+		if (!"application/pdf".equals(mimetype)) {
+			validation.addError("primaryDocument", "Primary document must be a PDF file.");
+			return false;
+		}       	
 		
-		Logger.info("Get Document Name: " + primaryDocumentName );
-		return primaryDocumentName;    	
-    }    
-    
-    /**
-     * View the document of an attachment
-     * @param attachment
-     */
-    
-    public static void viewPrimaryDocument(Long subId) {
-    	
-    	Submission sub = subRepo.findSubmission(subId);
-    	
-    	if (sub.getPrimaryDocument() == null)
-    		submissionStatus();
-    	
-    	Logger.info("In View Primary Document " + sub.getPrimaryDocument().getName() );
-    	Attachment attachment = sub.getPrimaryDocument();
-    	response.setContentTypeIfNotSet(attachment.getMimeType());  	
-    	
-    	try {
-    		renderBinary( new FileInputStream(attachment.getFile()), attachment.getFile().length());
-    	} catch (FileNotFoundException ex) {
-    		error("File not found");
-    	}
-    }
-    
-    public static void viewAttachment(Long subId, Long attachmentId) {
-    	
-    	if (attachmentId == null)
-    		error();
-    	
-    	Submission sub = getSubmission();    	
-    	Attachment attachment = subRepo.findAttachment(attachmentId);
-    	
-    	if (attachment == null)
-    		error();
-    	if (attachment.getSubmission() != sub)
-    		unauthorized();
-    	
-    	response.setContentTypeIfNotSet(attachment.getMimeType());    	
-    	renderBinary(attachment.getFile(),attachment.getName());
-    	
-    	
-    }
+	
+		try {
+			Attachment attachment = sub.addAttachment(primaryDocument, AttachmentType.PRIMARY);
+			attachment.save();
+			sub.save();
+		} catch (IOException ioe) {
+			Logger.error(ioe,"Unable to upload primary document");
+			validation.addError("primaryDocument","Error uploading primary document.");
+		
+		} catch (IllegalArgumentException iae) {
+			Logger.error(iae,"Unable to upload primary document");
+			
+			if (iae.getMessage().contains("allready exists for this submission"))
+				validation.addError("primaryDocument", "A file with that name allready exists; please use a different name or remove the other file.");
+			else
+				validation.addError("primaryDocument","Error uploading primary document.");
+		
+		}
+		return true;
+	}
+
+	/**
+	 * Helper method to handle uploading supplementary files.
+	 * 
+	 * @param sub
+	 *            The submission to add the attachment too.
+	 */
+	public static boolean uploadSupplementary(Submission sub) {
+
+		// If the upload supplementary button is pressed - then add the manuscript as an attachment
+		File supplementaryDocument = params.get("supplementaryDocument",File.class);
+		if (supplementaryDocument == null)
+			return false;
+
+		Attachment attachment = null;
+		try {
+			attachment = sub.addAttachment(supplementaryDocument, AttachmentType.SUPPLEMENTAL);                                         
+			attachment.save();
+			sub.save();
+		} catch (IOException ioe) {
+			Logger.error(ioe,"Unable to upload supplementary document");
+			validation.addError("supplementaryDocument","Error uploading supplementary document.");
+		
+		} catch (IllegalArgumentException iae) {
+			Logger.error(iae,"Unable to upload supplementary document");
+			
+			if (iae.getMessage().contains("allready exists for this submission"))
+				validation.addError("supplementaryDocument", "A file with that name allready exists; please use a different name or remove the other file.");
+			else
+				validation.addError("supplementaryDocument","Error uploading primary document.");
+		
+		}
+		return true;
+	}
+
+
+	/**
+	 * Helper method to handle removing supplementary files from a
+	 * submission. We check that the attachments are associated with the
+	 * submission, and that they are SUPPLEMENTAL files to prevent deletion of
+	 * other attachments.
+	 * 
+	 * @param sub
+	 *            The submission to remove attachments from.
+	 */
+	public static boolean removeSupplementary(Submission sub) {
+
+		// Get values from all check boxes
+		String[] idsToRemove = params.getAll("attachmentToRemove");
+
+		// Iterate over all checked check boxes - removing attachments as we go
+		for (String idString : idsToRemove) {
+			Long id = Long.valueOf(idString);
+			
+			Attachment attachment = subRepo.findAttachment(id);
+			
+			if (attachment.getSubmission() == sub && attachment.getType() == AttachmentType.SUPPLEMENTAL)
+				attachment.delete();
+		}
+		
+		return true;
+	}
+	
+	
+	/**
+	 * Helper method to view an attachment. In many places through the
+	 * submission interface there are references to view attachments. All of
+	 * them point here to download the file.
+	 * 
+	 * @param subId
+	 *            The submission id.
+	 * @param attachmentId
+	 *            The attachment id.
+	 */
+	public static void viewAttachment(Long subId, Long attachmentId) {
+
+		if (attachmentId == null)
+			error();
+
+		Submission sub = getSubmission();    	
+		Attachment attachment = subRepo.findAttachment(attachmentId);
+
+		if (attachment == null)
+			error();
+		if (attachment.getSubmission() != sub)
+			unauthorized();
+
+		response.setContentTypeIfNotSet(attachment.getMimeType());    	
+		renderBinary(attachment.getFile(),attachment.getName());
+
+
+	}
 
 }

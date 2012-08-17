@@ -66,11 +66,10 @@
 			</div>
 		</fieldset>
 		
-
+		#{if supplementalAttachments.size() > 0}
 		<fieldset id="supplementaryFileUploadList">
 			<legend>Uploaded supplementary files</legend>
 			<div class="control-group">
-                #{if supplementalAttachments.size() > 0}
                     <div class="controls">
                         #{list items:supplementalAttachments, as:"attachment"}
                             <p>
@@ -85,25 +84,9 @@
                         #{/list}
                             <input type="submit" value="Remove Selected" class="uploadBtn btn" name="removeSupplementary">                        
                     </div>
-                #{/if}
-
 			</div>
 		</fieldset>		
-
-        <fieldset id="sourceFileUpload" style="display: none;">
-            <legend>Upload document source files</legend>
-            <p>
-                We encourage you to upload your thesis or dissertation in its original
-                format (such as Microsoft Word or LaTeX) for preservation purposes.
-            </p>
-            <div class="control-group">
-                <label class="control-label" for="sourceFile">Document Source Files:</label>
-                <div class="controls">
-                    <input type="file" id="sourceFile" class="input-file" name="sourceDocument">
-                    <input type="submit" value="Upload" class="uploadBtn btn" name="uploadSource">
-                </div>
-            </div>
-        </fieldset>
+		#{/if}
 		
 		<div class="pull-right">
 			<input type="submit" value="Save and Continue >>" class="btn btn-primary" name="submit_next">

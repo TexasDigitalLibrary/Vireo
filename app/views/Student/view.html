@@ -1,0 +1,276 @@
+#{extends 'main.html' /}
+#{set title:'View Application' /}
+
+<br />
+<div class="row pageHead">
+	<h3 class="span11">View Application</h3>
+</div>
+<br/>
+#{if sub.getState().isEditableByStudent() }
+	<div class="alert alert-error">
+		<p><strong>${sub.getState().getDisplayName()}</strong>!</p>
+		<p>The application requires you to make corrections. Please make the indicated corrections and upload a the
+		 corrected primary manuscript.Then confirm your corrections at the bottom of the page. After confirming you
+		 will no longer be able to edit the application.</p>
+	</div>
+#{/if}
+<div id="confirmSubmit" class="row">
+<form action="@{Student.submissionView(subId)}" method="post" class="form-horizontal" enctype="multipart/form-data">
+	<legend>About You</legend>
+	<div class="control-group">
+		<label class="control-label "><b>Name:</b></label>
+		<div class="controls">
+			<p>${submitter?.getLastName()}, ${submitter?.getFirstName()}</p>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"><b>Email:</b></label>
+		<div class="controls">
+			<p>${submitter?.getEmail()}</p>
+		</div>
+	</div>
+	#{if requestBirth}
+	<div class="control-group">
+		<label class="control-label"><b>Year of Birth:</b></label>
+		<div class="controls">
+			<p>${submitter?.getBirthYear()}</p>
+		</div>
+	</div>
+	#{/if}
+	<div class="control-group">
+		<label class="control-label"><b>Phone:</b></label>
+		<div class="controls">
+			<p>${submitter?.getCurrentPhoneNumber()}</p>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"><b>Address:</b></label>
+		<div class="controls">
+			<p>${submitter?.getCurrentPostalAddress()}</p>
+		</div>
+	</div>
+
+	
+	<legend>Academic Affiliation</legend>
+	<div class="control-group">
+		<label class="control-label"><b>School:</b></label>
+		<div class="controls">
+			<p>${grantor}</p>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"><b>Degree:</b></label>
+		<div class="controls">
+			<p>${submitter.getCurrentDegree()}</p>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"><b>Major:</b></label>
+		<div class="controls">
+			<p>${submitter.getCurrentMajor()}</p>
+		</div>
+	</div>
+
+	
+	<legend>Document Information</legend>
+	<div class="control-group">
+		<label class="control-label"><b>Title:</b></label>
+		<div class="controls">
+			<p>${sub.getDocumentTitle()}</p>
+		</div>
+	</div>
+		
+	<div class="control-group">
+		<label class="control-label"><b>Degree Date:</b></label>
+		<div class="controls">
+		    #{if sub.getGraduationMonth() != null && sub.getGraduationYear() != null}
+		    %{
+		      def month = "unknown";
+		      if (sub.getGraduationMonth() >= 0 && sub.getGraduationMonth() <= 11)
+		          month = new java.text.DateFormatSymbols().getMonths()[sub.getGraduationMonth()]
+		    }% 
+				<p>${month} ${sub.getGraduationYear()}</p>
+			#{/if}
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"><b>Document Type:</b></label>
+		<div class="controls">
+			<p>${sub.getDocumentType()}</p>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"><b>Keywords:</b></label>
+		<div class="controls">
+			<p>${sub.getDocumentKeywords()}</p>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"><b>Abstract:</b></label>
+		<div class="controls">
+			<p>${sub.getDocumentAbstract()}</p>
+		</div>
+	</div>
+	
+    #{list items:sub.getCommitteeMembers(), as:"member"}	
+
+	<div class="control-group">
+		<label class="control-label"><b>Committee Member:</b></label>
+		<div class="controls">
+			<p>${member.getFullName()}
+			#{if member.isCommitteeChair()}
+			<em>(chair)</em>
+			#{/if}
+			</p>
+		</div>
+	</div>	
+	
+	#{/list}
+	
+	<div class="control-group">
+		<label class="control-label"><b>Chair Email Address:</b></label>
+		<div class="controls">
+			<p><a href="mailto:${sub.getCommitteeContactEmail()}">${sub.getCommitteeContactEmail()}</a></p>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"><b>Embargo:</b></label>
+		<div class="controls">
+			#{if sub.getEmbargoType() != null}
+				<p>${sub.getEmbargoType().getDescription()}</p>
+			#{/if}
+			#{else}
+				<p>None</p>
+			#{/else}
+		</div>
+	</div>
+	
+	<legend>Uploaded File${ supplementaryDocuments.size() > 0 ? "s" : "" }</legend>
+	#{ifErrors}
+	<br/>
+	<ul class="red">
+	    #{errors}
+	        <li>${error}</li>
+	    #{/errors}
+	</ul>
+	</br>
+	#{/ifErrors}
+	<div class="control-group #{if errors.forKey('primaryDocument')}error#{/if}">
+		<label class="control-label"><b>Primary Document:</b></label>
+		<div class="controls">
+			#{if sub.getState().isEditableByStudent()}
+				#{if primaryDocument == null}
+					<input type="file" id="primaryFile" class="input-file" name="primaryDocument"><br/>
+			        <input type="submit" value="Upload" class="uploadBtn btn" name="uploadPrimary">
+			        <br/>
+			        <br/>               
+		        #{/if}
+		        #{else}
+	                <p>
+	                    <a href="@{Student.viewAttachment(subId,primaryDocument.getId())}">${primaryDocument.getName()}</a>
+	                    (${primaryDocument.getDisplaySize()})
+	                    <input type="submit" value="Replace Manuscript" class="uploadBtn btn" name="replacePrimary">
+	                </p>
+		        #{/else}
+	        #{/if}		
+			#{else}
+				#{if primaryDocument != null}
+				    <p>
+				         <a href="@{Student.viewAttachment(subId,primaryDocument.getId())}" target="_blank">${primaryDocument.getName()}</a>
+				         (${primaryDocument.getDisplaySize()})
+				     </p>
+				#{/if}
+				#{else}
+				     <p><em>No primary document uploaded</em></p>
+				#{/else}
+			#{/else}
+		</div>
+	</div>
+    <div class="control-group #{if errors.forKey('supplementalDocument')}error#{/if}">
+        <label class="control-label"><b>Supplementary Document${ supplementaryDocuments.pluralize() }:</b></label>
+        <div class="controls">
+            #{list items:supplementaryDocuments, as:'attachment'}
+            <p>
+            	#{if sub.getState().isEditableByStudent()}
+            	<label>
+            		<input type="checkbox" value="${attachment.getId()}" name="attachmentToRemove">
+                    <a href="@{Student.viewAttachment(subId,attachment.getId())}" target="_blank">
+                    	${attachment.getName()}
+                    </a> 
+                    (${attachment.getDisplaySize()})
+                 </label>  
+            	#{/if}
+            	#{else}
+	                <a href="@{Student.viewAttachment(subId,attachment.getId())}" target="_blank">${attachment.getName()}</a>
+	                (${attachment.getDisplaySize()})
+	            #{/else}
+            </p>
+            #{/list}
+            #{else}
+            	<p><em>No supplementary documents uploaded</em></p>
+            #{/else}
+            
+            #{if sub.getState().isEditableByStudent() && supplementaryDocuments.size() > 0 }
+            	<input type="submit" value="Remove Selected" class="uploadBtn btn" name="removeSupplementary">                        
+            #{/if}
+        </div>
+    </div>
+	#{if sub.getState().isEditableByStudent()}
+	<br/>
+	<br/>
+	<div class="control-group">
+        <label class="control-label"><b>Upload additional supplementary files:</b></label>
+        <div class="controls">
+        	<input type="file" id="supplementaryFile" class="input-file" name="supplementaryDocument"><br/>
+            <input type="submit" value="Upload" class="uploadBtn btn" name="uploadSupplementary">
+        </div>
+    </div>
+    #{/if}
+	<legend>Application Activity</legend>
+	<div id="student-log-view">
+	<table class="span10 table table-striped table-bordered table-condensed">
+		<thead>
+			<tr>
+				<td>Name</td>
+				<td>Action</td>
+				<td>Time</td>
+			</tr>
+		</thead>
+		<tbody>
+			#{list items:logs, as:'log'}
+			#{if !log.isPrivate() }
+			<tr>
+				#{if null != log.getPerson() }
+					<td>${log.getPerson().getFullName()}</td>
+				#{/if}
+				<td>${log.getEntry()}</td>
+				<td>${log.getActionDate().format('dd/MM/yyyy hh:mm:ss')}</td>
+			</tr>
+			#{/if}
+			#{/list}
+		</tbody>
+	</table>
+	</div>
+
+	<legend>Leave a message</legend>
+	<div class="control-group">
+		<label class="control-label"><b>Message:</b></label>
+		<div class="controls">
+			<textarea class="span6" style="height:200px;"name="studentMessage"></textarea>
+            <input class="btn" id="addmsg" name="addmsg" type="submit" value="Add Message" />
+            <br/>
+		</div>
+	</div>			
+	
+	#{if sub.getState().isEditableByStudent() }
+		<div class="form-actions row center">
+			<input type="submit" class="btn btn-primary" name="submit_confirm" value="I confirm the application is ready to be reviewed"/>
+		</div>		
+	#{/if}
+	
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+</form>
+</div>

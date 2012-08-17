@@ -60,13 +60,10 @@ public class AbstractSubmitStep extends AbstractVireoController {
 	static void beforeSubmit() {
 		
 		if (settingRepo.findConfigurationByName(SUBMISSIONS_OPEN) == null)
-			Student.submissionStatus();	
+			Student.submissionList();	
 		
 		renderArgs.put("SUBMISSIONS_OPEN", settingRepo.findConfigurationByName(SUBMISSIONS_OPEN));
-		
-		String currentSemester = settingRepo.getConfig(CURRENT_SEMESTER, "current");
-			
-		renderArgs.put("CURRENT_SEMESTER", currentSemester);
+		renderArgs.put("CURRENT_SEMESTER", settingRepo.getConfig(CURRENT_SEMESTER, "current"));
 
 
 	}

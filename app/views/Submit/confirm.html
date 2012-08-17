@@ -55,7 +55,7 @@
 			<p>${submitter?.getCurrentPhoneNumber()}</p>
 		</div>
 	</div>
-	<div class="control-group" #{if errors.forKey('currentAddress')}error#{/if}>
+	<div class="control-group #{if errors.forKey('currentAddress')}error#{/if}">
 		<label class="control-label"><b>Address:</b></label>
 		<div class="controls">
 			<p>${submitter?.getCurrentPostalAddress()}</p>
@@ -161,6 +161,9 @@
 			#{if sub.getEmbargoType() != null}
 				<p>${sub.getEmbargoType().getDescription()}</p>
 			#{/if}
+			#{else}
+				<p>None</p>
+			#{/else}
 		</div>
 	</div>
 	<div class="control-group">

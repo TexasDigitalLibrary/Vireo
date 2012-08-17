@@ -53,14 +53,14 @@ public class FileUpload extends AbstractSubmitStep {
 		
 		// Handle the remove supplementary document button 
 		if (params.get("removeSupplementary") != null) {
-			removeSupplementary(sub);           	            	
+			Student.removeSupplementary(sub);           	            	
 		}
 		
 		if(params.get("primaryDocument",File.class) != null)
-			uploadPrimaryDocument(sub);
+			Student.uploadPrimaryDocument(sub);
 		
 		if(params.get("supplementaryDocument",File.class) != null)
-			uploadSupplementary(sub);
+			Student.uploadSupplementary(sub);
 		
 		if (!"true".equals(flash.get("nextStep")))
 			verify(sub.getPrimaryDocument());
@@ -98,103 +98,5 @@ public class FileUpload extends AbstractSubmitStep {
 		
 	}
 	
-	
-	/**
-	 * Internal helper method to handle uploading a primary document.
-	 * 
-	 * @param sub
-	 *            The submission to add the attachment too.
-	 */
-	protected static void uploadPrimaryDocument(Submission sub) {
-
-		File primaryDocument = params.get("primaryDocument",File.class);
-		if (primaryDocument == null)
-			return;
-
-		String mimetype = MimeTypes.getContentType(primaryDocument.getName());
-		if (!"application/pdf".equals(mimetype)) {
-			validation.addError("primaryDocument", "Primary document must be a PDF file.");
-			return;
-		}       	
-		
-	
-		try {
-			Attachment attachment = sub.addAttachment(primaryDocument, AttachmentType.PRIMARY);
-			attachment.save();
-			sub.save();
-		} catch (IOException ioe) {
-			Logger.error(ioe,"Unable to upload primary document");
-			validation.addError("primaryDocument","Error uploading primary document.");
-		
-		} catch (IllegalArgumentException iae) {
-			Logger.error(iae,"Unable to upload primary document");
-			
-			if (iae.getMessage().contains("allready exists for this submission"))
-				validation.addError("primaryDocument", "A file with that name allready exists; please use a different name or remove the other file.");
-			else
-				validation.addError("primaryDocument","Error uploading primary document.");
-		
-		}				
-	}
-
-	/**
-	 * Internal helper method to handle uploading supplementary files.
-	 * 
-	 * @param sub
-	 *            The submission to add the attachment too.
-	 */
-	protected static void uploadSupplementary(Submission sub) {
-
-		// If the upload supplementary button is pressed - then add the manuscript as an attachment
-		File supplementaryDocument = params.get("supplementaryDocument",File.class);
-		if (supplementaryDocument == null)
-			return;
-
-		Attachment attachment = null;
-		try {
-			attachment = sub.addAttachment(supplementaryDocument, AttachmentType.SUPPLEMENTAL);                                         
-			attachment.save();
-			sub.save();
-		} catch (IOException ioe) {
-			Logger.error(ioe,"Unable to upload supplementary document");
-			validation.addError("supplementaryDocument","Error uploading supplementary document.");
-		
-		} catch (IllegalArgumentException iae) {
-			Logger.error(iae,"Unable to upload supplementary document");
-			
-			if (iae.getMessage().contains("allready exists for this submission"))
-				validation.addError("supplementaryDocument", "A file with that name allready exists; please use a different name or remove the other file.");
-			else
-				validation.addError("supplementaryDocument","Error uploading primary document.");
-		
-		}				
-	}
-
-
-	/**
-	 * Internal helper method to handle removing supplementary files from a
-	 * submission. We check that the attachments are associated with the
-	 * submission, and that they are SUPPLEMENTAL files to prevent deletion of
-	 * other attachments.
-	 * 
-	 * @param sub
-	 *            The submission to remove attachments from.
-	 */
-	private static void removeSupplementary(Submission sub) {
-
-		// Get values from all check boxes
-
-		String[] idsToRemove = params.getAll("attachmentToRemove");
-
-		// Iterate over all checked check boxes - removing attachments as we go
-		for (String idString : idsToRemove) {
-			Long id = Long.valueOf(idString);
-			
-			Attachment attachment = subRepo.findAttachment(id);
-			
-			if (attachment.getSubmission() == sub && attachment.getType() == AttachmentType.SUPPLEMENTAL)
-				attachment.delete();
-		}		
-	}
 
 }

@@ -161,7 +161,7 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 
 		// Get our URLs
 		final String INDEX_URL = Router.reverse("Application.index").url;
-		final String STATUS_URL = Router.reverse("Student.submissionStatus").url;
+		final String LIST_URL = Router.reverse("Student.submissionList").url;
 		final String PERSONAL_INFO_URL = Router.reverse("submit.PersonalInfo.personalInfo").url;
 
 
@@ -169,9 +169,9 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 		Response response = GET(INDEX_URL);
 		assertIsOk(response);
 		assertContentMatch("Start your submission",response); // the start button is there.
-		assertContentMatch(STATUS_URL,response); // and it's url.
+		assertContentMatch(LIST_URL,response); // and it's url.
 
-		response = GET(STATUS_URL);
+		response = GET(LIST_URL);
 		assertEquals(PERSONAL_INFO_URL,response.getHeader("Location"));
 		response = GET(PERSONAL_INFO_URL);
 		assertContentMatch("<title>Verify Personal Information</title>",response);
@@ -258,16 +258,16 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 
 		// Get our URLs
 		final String INDEX_URL = Router.reverse("Application.index").url;
-		final String STATUS_URL = Router.reverse("Student.submissionStatus").url;
+		final String LIST_URL = Router.reverse("Student.submissionList").url;
 		final String PERSONAL_INFO_URL = Router.reverse("submit.PersonalInfo.personalInfo").url;
 
 		// View the homepage
 		Response response = GET(INDEX_URL);
 		assertIsOk(response);
 		assertContentMatch("Start your submission",response); // the start button is there.
-		assertContentMatch(STATUS_URL,response); // and it's url.
+		assertContentMatch(LIST_URL,response); // and it's url.
 
-		response = GET(STATUS_URL);
+		response = GET(LIST_URL);
 		assertEquals(PERSONAL_INFO_URL,response.getHeader("Location"));
 		response = GET(PERSONAL_INFO_URL);
 		assertContentMatch("<title>Verify Personal Information</title>",response);
