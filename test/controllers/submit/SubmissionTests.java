@@ -100,7 +100,7 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 			requestBirth.delete();
 		}
 		if (originalRequestBirth != null && requestBirth == null) {
-			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_BIRTH,"true");
+			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_BIRTH,"true").save();
 		}
 
 		Configuration requestCollege = settingRepo.findConfigurationByName(Configuration.SUBMIT_REQUEST_COLLEGE);
@@ -108,7 +108,7 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 			requestCollege.delete();
 		}
 		if (originalRequestCollege != null && requestCollege == null) {
-			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_COLLEGE,"true");
+			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_COLLEGE,"true").save();
 		}
 
 		Configuration requestUMI = settingRepo.findConfigurationByName(Configuration.SUBMIT_REQUEST_UMI);
@@ -116,14 +116,14 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 			requestUMI.delete();
 		}
 		if (originalRequestUMI != null && requestUMI == null) {
-			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_UMI,"true");
+			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_UMI,"true").save();
 		}
 		Configuration allowMultiple = settingRepo.findConfigurationByName(Configuration.ALLOW_MULTIPLE_SUBMISSIONS);
 		if (originalAllowMultiple == null && allowMultiple != null) {
 			allowMultiple.delete();
 		}
-		if (originalRequestUMI != null && allowMultiple == null) {
-			settingRepo.createConfiguration(Configuration.ALLOW_MULTIPLE_SUBMISSIONS,"true");
+		if (originalAllowMultiple != null && allowMultiple == null) {
+			settingRepo.createConfiguration(Configuration.ALLOW_MULTIPLE_SUBMISSIONS,"true").save();
 		}
 
 		// if we created a submission, delete it.

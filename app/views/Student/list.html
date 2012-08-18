@@ -1,5 +1,20 @@
 #{extends 'main.html' /}
 #{set title:'Submission Status' /}
+#{set 'moreScripts'}
+<script type="text/javascript" >
+
+jQuery(document).ready(function() {
+	jQuery("#submission-delete").click(function() {
+		if (jQuery(this).text().indexOf("Are you sure?") >= 0) {
+			return true;
+		} else {
+			jQuery(this).text("Are you sure?");
+			return false;
+		}
+	});
+})
+</script>
+#{/set}
 
 <br />
 <div class="row pageHead">
@@ -44,8 +59,8 @@
 				<td>${sub.getAssignee() == null ? "Unassigned" : sub.getAssignee().getDisplayName()}</td>
 				<td> 
 				#{if sub.getState().isInProgress() }
-				    <a class="btn btn-primary" href="@{submit.PersonalInfo.personalInfo(sub.getId())}">Continue</a>
-				    <a class="btn btn-primary" href="@{Student.submissionDelete(sub.getId())}">Delete</a>
+				    <a id="submission-continue" class="btn btn-primary" href="@{submit.PersonalInfo.personalInfo(sub.getId())}">Continue</a>
+				    <a id="submission-delete" class="btn btn-primary" href="@{Student.submissionDelete(sub.getId())}">Delete</a>
                 #{/if} 
                 #{else}
 				     <a class="btn btn-primary" href="@{Student.submissionView(sub.getId())}">

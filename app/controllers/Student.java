@@ -95,7 +95,6 @@ public class Student extends AbstractVireoController {
 
 		boolean submissionsOpen = (settingRepo.getConfig(Configuration.SUBMISSIONS_OPEN) != null) ? true : false;
 		boolean allowMultiple = (settingRepo.getConfig(Configuration.ALLOW_MULTIPLE_SUBMISSIONS) != null) ? true : false;
-
 		
 		if (submissions.size() == 1 && !allowMultiple) {
 			// If they all ready have a submission, and we don't allow multiple
@@ -120,7 +119,6 @@ public class Student extends AbstractVireoController {
 			
 			renderTemplate("Student/list.html",submissions,allowMultiple,submissionsOpen);
 		} else{
-			
 			// They don't have any submissions, and submissions are open. So
 			// take them directly to the submission screen.
 			PersonalInfo.personalInfo(null);
@@ -145,6 +143,12 @@ public class Student extends AbstractVireoController {
 		Submission sub = subRepo.findSubmission(subId);
 		Person submitter = context.getPerson();
 
+		// Handle add message button. Just add the message to the submission
+		if (params.get("submit_addMessage") != null) {   
+			if (!params.get("studentMessage").equals(""))
+				sub.logAction("Message added : '" +	params.get("studentMessage") + "'").save();
+		}
+		
 		if (sub.getState().isEditableByStudent()) {
 			// If the replace manuscript button is pressed - then delete the manuscript 
 			if (params.get("replacePrimary") != null) {
@@ -160,7 +164,7 @@ public class Student extends AbstractVireoController {
 				removeSupplementary(sub);           	            	
 			}
 			
-			if(params.get("primaryDocument",File.class) != null)
+			if(params.get("primaryDocument",File.class) != null) 
 				uploadPrimaryDocument(sub);
 			
 			if(params.get("supplementaryDocument",File.class) != null)
@@ -169,12 +173,19 @@ public class Student extends AbstractVireoController {
 			// If there is no primary document, mark it as in error.
 			if (sub.getPrimaryDocument() == null)
 				validation.addError("primaryDocument", "A primary document is required.");
-		}
+			
+			if (params.get("submit_corrections") != null) {
+				try {
+					context.turnOffAuthorization();
+					State nextState = sub.getState().getTransitions(sub).get(0);
+					sub.setState(nextState);
+					sub.save();
 
-		// Handle add message button. Just add the message to the submission
-		if (params.get("addmsg") != null) {   
-			if (!params.get("studentMessage").equals(""))
-				sub.logAction("Message added : '" +	params.get("studentMessage") + "'").save();
+				} finally {
+					context.restoreAuthorization();
+
+				}
+			}
 		}
 
 		List<Submission> allSubmissions = subRepo.findSubmission(submitter);

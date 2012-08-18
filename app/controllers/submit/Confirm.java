@@ -99,9 +99,6 @@ public class Confirm extends AbstractSubmitStep {
 
 		if (params.get("submit_confirm") != null && !validation.hasErrors()) {
 
-			// TODO: Send emails
-			// TODO: generate email hash
-			// TODO: update filenames?
 			try {
 				context.turnOffAuthorization();
 				State nextState = sub.getState().getTransitions(sub).get(0);

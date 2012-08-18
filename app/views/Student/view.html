@@ -257,14 +257,14 @@
 		<label class="control-label"><b>Message:</b></label>
 		<div class="controls">
 			<textarea class="span6" style="height:200px;"name="studentMessage"></textarea>
-            <input class="btn" id="addmsg" name="addmsg" type="submit" value="Add Message" />
+            <input class="btn" id="addmsg" name="submit_addMessage" type="submit" value="Add Message" />
             <br/>
 		</div>
 	</div>			
 	
 	#{if sub.getState().isEditableByStudent() }
 		<div class="form-actions row center">
-			<input type="submit" class="btn btn-primary" name="submit_confirm" value="I confirm the application is ready to be reviewed"/>
+			<input type="submit" class="btn btn-primary" name="submit_corrections" value="Submit Corrections"/>
 		</div>		
 	#{/if}
 	
