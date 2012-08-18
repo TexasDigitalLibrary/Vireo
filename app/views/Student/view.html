@@ -20,7 +20,7 @@
 	<div class="control-group">
 		<label class="control-label "><b>Name:</b></label>
 		<div class="controls">
-			<p>${submitter?.getLastName()}, ${submitter?.getFirstName()}</p>
+			<p>${sub.getStudentLastName()}, ${sub.getStudentFirstName()}</p>
 		</div>
 	</div>
 	<div class="control-group">
@@ -33,7 +33,7 @@
 	<div class="control-group">
 		<label class="control-label"><b>Year of Birth:</b></label>
 		<div class="controls">
-			<p>${submitter?.getBirthYear()}</p>
+			<p>${sub.getStudentBirthYear()}</p>
 		</div>
 	</div>
 	#{/if}
@@ -61,13 +61,13 @@
 	<div class="control-group">
 		<label class="control-label"><b>Degree:</b></label>
 		<div class="controls">
-			<p>${submitter.getCurrentDegree()}</p>
+			<p>${sub.getDegree()}</p>
 		</div>
 	</div>
 	<div class="control-group">
 		<label class="control-label"><b>Major:</b></label>
 		<div class="controls">
-			<p>${submitter.getCurrentMajor()}</p>
+			<p>${sub.getMajor()}</p>
 		</div>
 	</div>
 
