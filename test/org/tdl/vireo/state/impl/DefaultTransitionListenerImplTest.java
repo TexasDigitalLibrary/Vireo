@@ -11,12 +11,12 @@ import play.libs.Mail;
 import play.modules.spring.Spring;
 import play.test.UnitTest;
 
-public class StudentSubmissionCompletedListenerImplTest extends UnitTest {
+public class DefaultTransitionListenerImplTest extends UnitTest {
 
-	public static StudentSubmissionCompletedListenerImpl listener = Spring.getBeanOfType(StudentSubmissionCompletedListenerImpl.class);
+	public static DefaultTransitionListenerImpl listener = Spring.getBeanOfType(DefaultTransitionListenerImpl.class);
 	
 	@Test
-	public void testListener() throws InterruptedException {
+	public void testListenerForCompletingSubmission() throws InterruptedException {
 		Mail.Mock.reset();
 		
 		// Setup a mock submission
@@ -74,6 +74,44 @@ public class StudentSubmissionCompletedListenerImplTest extends UnitTest {
 		// Verify state.
 		assertNotNull(sub.getCommitteeEmailHash());
 		assertTrue(advisorEmail.contains(sub.getCommitteeEmailHash()));
+		assertEquals("LAST-THESIS.pdf",sub.getPrimaryDocument().getName());
+	}
+	
+	
+	@Test
+	public void testListenerForSubmittingCorrections() throws InterruptedException {
+		Mail.Mock.reset();
+		
+		// Setup a mock submission
+		MockPerson submitter = new MockPerson();
+		submitter.email = "student@noreply.org";
+		
+		MockAttachment primary = new MockAttachment();
+		primary.setName("original.pdf");
+		primary.type = AttachmentType.PRIMARY;
+		
+		MockSubmission sub = new MockSubmission();
+		sub.submitter = submitter;
+		sub.committeeContactEmail = "committee@noreply.org";
+		sub.studentFirstName = "first";
+		sub.studentLastName = "last";
+		sub.documentType = "Thesis";
+		sub.documentTitle = "My Test Thesis";
+		sub.graduationMonth = 06;
+		sub.graduationYear = 2012;
+		sub.attachments.add(primary);
+		
+		MockState previous = new MockState();
+		previous.isEditableByStudent = true;
+		
+		MockState current = new MockState();
+		current.isEditableByStudent = false;
+		
+		sub.state = current;
+		
+		// Run the service
+		listener.transition(sub, previous);
+		
 		assertEquals("LAST-THESIS.pdf",sub.getPrimaryDocument().getName());
 		
 		

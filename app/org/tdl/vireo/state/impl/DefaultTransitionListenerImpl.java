@@ -25,7 +25,7 @@ import play.mvc.Router.ActionDefinition;
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
-public class StudentSubmissionCompletedListenerImpl implements StateTransitionListener {
+public class DefaultTransitionListenerImpl implements StateTransitionListener {
 
 	public static final String STUDENT_INITIAL_SUBMISSION_TEMPLATE = "SYSTEM_Initial_Submission";
 	public static final String ADVISOR_INITIAL_SUBMISSION_TEMPLATE = "SYSTEM_Advisor_Review_Request";
@@ -106,6 +106,14 @@ public class StudentSubmissionCompletedListenerImpl implements StateTransitionLi
 				emailService.sendEmail(template, params, recipients, null, null);
 			}
 			
+		}
+		
+		if (previousState.isEditableByStudent() && !currentState.isEditableByStudent()) {
+			// The student has submitted corrections.
+			
+			// Normalize the primary document's filename for publication.
+			normalizePrimaryDocumentFileName(sub);
+			sub.save();
 		}
 	}
 	

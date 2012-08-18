@@ -108,7 +108,7 @@
     </bean>
     
     <!-- State Listeners -->
-    <bean id="StudentSubmissionCompletedListener" class="org.tdl.vireo.state.impl.StudentSubmissionCompletedListenerImpl" scope="singleton">
+    <bean id="DefaultTransitionListener" class="org.tdl.vireo.state.impl.DefaultTransitionListenerImpl" scope="singleton">
         <property name="emailService" ref="EmailService"/>
         <property name="systemEmailTemplateService" ref="SystemEmailTemplateService"/>
         <property name="submissionRepository" ref="SubmissionRepository"/>
