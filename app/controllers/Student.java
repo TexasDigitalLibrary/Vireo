@@ -188,12 +188,13 @@ public class Student extends AbstractVireoController {
 			}
 		}
 
+		String grantor = settingRepo.getConfig(Configuration.GRANTOR,"Unknown Institution");
 		List<Submission> allSubmissions = subRepo.findSubmission(submitter);
 		List<ActionLog> logs = subRepo.findActionLog(sub);
 		Attachment primaryDocument = sub.getPrimaryDocument();
 		List<Attachment> supplementaryDocuments = sub.getSupplementalDocuments();
 
-		renderTemplate("Student/view.html",subId, sub, submitter, logs, primaryDocument, supplementaryDocuments, allSubmissions);		
+		renderTemplate("Student/view.html",subId, sub, submitter, logs, primaryDocument, supplementaryDocuments, allSubmissions, grantor);		
 	}
 
 	/**

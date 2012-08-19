@@ -240,9 +240,7 @@
 			#{list items:logs, as:'log'}
 			#{if !log.isPrivate() }
 			<tr>
-				#{if null != log.getPerson() }
-					<td>${log.getPerson().getFullName()}</td>
-				#{/if}
+				<td>${log.getPerson()?.getFullName()}</td>
 				<td>${log.getEntry()}</td>
 				<td>${log.getActionDate().format('dd/MM/yyyy hh:mm:ss')}</td>
 			</tr>

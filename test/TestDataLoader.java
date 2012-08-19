@@ -694,7 +694,7 @@ public class TestDataLoader extends Job {
 			
 			if (random.nextInt(100) > 5 && firstMemberName != null)
 				sub.setCommitteeContactEmail(generateRandomEmail(random,firstMemberName));
-			
+						
 			if (random.nextInt(100) > 5) {
 				DegreeLevelArray degree = DEGREES_DEFINITIONS[random.nextInt(DEGREES_DEFINITIONS.length-1)];
 				
@@ -754,6 +754,7 @@ public class TestDataLoader extends Job {
 			
 			
 			sub.save();
+
 			context.logout();
 			
 			// Generate modifications to the 
@@ -777,8 +778,10 @@ public class TestDataLoader extends Job {
 						sub.setState(transitions.get(random.nextInt(transitions.size()-1)));
 					}
 				}
-				sub.save();
 			}
+			
+			sub.setCommitteeEmailHash("ABC"+sub.getId());
+			sub.save();
 			context.logout();
 			
 			

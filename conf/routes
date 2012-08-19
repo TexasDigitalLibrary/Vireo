@@ -18,6 +18,7 @@ GET     /profile                                Authentication.profile
 
 ### Advisor URL
 *       /advisor/{token}/review                 Advisor.review
+*       /advisor/{token}/file/{attachmentId}	Advisor.viewAttachment
 
 ### New Submissions
 *       /submit/{subId}/personalInfo            submit.PersonalInfo.personalInfo
