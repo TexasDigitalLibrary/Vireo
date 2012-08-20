@@ -1468,7 +1468,7 @@ public class TestDataLoader extends Job {
 			"say", "scale", "school", "science", "scissors", "screw", "sea",
 			"seat", "second", "secret", "secretary", "see", "seed", "seem",
 			"selection", "self", "send", "sense", "separate", "serious",
-			"servant", "sex", "shade", "shake", "shame", "sharp", "sheep",
+			"servant", "shade", "shake", "shame", "sharp", "sheep",
 			"shelf", "ship", "shirt", "shock", "shoe", "short", "shut", "side",
 			"sign", "silk", "silver", "simple", "sister", "size", "skin",
 			"skirt", "sky", "sleep", "slip", "slope", "slow", "small", "smash",
