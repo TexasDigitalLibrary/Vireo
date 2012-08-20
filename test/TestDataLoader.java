@@ -663,123 +663,126 @@ public class TestDataLoader extends Job {
 			context.restoreAuthorization();
 			context.login(student);
 			Submission sub = subRepo.createSubmission(student);
-			
-			sub.setStudentFirstName(studentName[0]);
-			sub.setStudentLastName(studentName[1]);
-			sub.setStudentMiddleName(studentName[2]);
-			if (random.nextInt(100) > 30)
-				sub.setStudentBirthYear(random.nextInt(20)+1980);
-			
-			if (random.nextInt(100) > 5)
-				sub.setDocumentTitle(generateRandomTitle(random));
-			
-			if (random.nextInt(100) > 5)
-				sub.setDocumentAbstract(generateRandomAbstract(random));
-			
-			if (random.nextInt(100) > 5)
-				sub.setDocumentKeywords(generateRandomKeywords(random));			
 
-			if (random.nextInt(100) > 5)
-				sub.setEmbargoType(embargos.get(random.nextInt(embargos.size()-1)));
-			
-			int members = random.nextInt(5);
-			String[] firstMemberName = null;
-			for (int m = 0 ; m < members; m++) {
-				String[] memberName = generateRandomName(random, FAMOUS_NAMES);
-				if (firstMemberName == null)
-					firstMemberName = memberName;
-				boolean chair = random.nextBoolean();
-				sub.addCommitteeMember(memberName[0], memberName[1], memberName[2], chair);
-			}
-			
-			if (random.nextInt(100) > 5 && firstMemberName != null)
-				sub.setCommitteeContactEmail(generateRandomEmail(random,firstMemberName));
-			
-			if (random.nextInt(100) > 5) {
-				DegreeLevelArray degree = DEGREES_DEFINITIONS[random.nextInt(DEGREES_DEFINITIONS.length-1)];
+			if(i>0){
+				sub.setStudentFirstName(studentName[0]);
+				sub.setStudentLastName(studentName[1]);
+				sub.setStudentMiddleName(studentName[2]);
+				if (random.nextInt(100) > 30)
+					sub.setStudentBirthYear(random.nextInt(20)+1980);
 				
-				sub.setDegree(degree.name);
-				sub.setDegreeLevel(degree.degreeLevel);
-			}
-			
-			if (random.nextInt(100) > 5)
-				sub.setDepartment(DEPARTMENTS_DEFINITIONS[random.nextInt(DEPARTMENTS_DEFINITIONS.length-1)]);
-			
-			if (random.nextInt(100) > 5)
-				sub.setCollege(COLLEGES_DEFINITIONS[random.nextInt(COLLEGES_DEFINITIONS.length-1)]);
-			
-			if (random.nextInt(100) > 5)
-				sub.setMajor(MAJORS_DEFINITIONS[random.nextInt(MAJORS_DEFINITIONS.length-1)]);
-			
-			if (random.nextInt(100) > 5)
-				sub.setDocumentType(DOCTYPES_DEFINITIONS[random.nextInt(DOCTYPES_DEFINITIONS.length-1)].name);
-			
-			if (random.nextInt(100) > 5) {
-				sub.setGraduationYear(random.nextInt(10)+2002);
-				sub.setGraduationMonth(GRAD_MONTHS_DEFINITIONS[random.nextInt(GRAD_MONTHS_DEFINITIONS.length-1)]);
-			}
+				if (random.nextInt(100) > 5)
+					sub.setDocumentTitle(generateRandomTitle(random));
 				
-			if (random.nextInt(100) > 5)
-				sub.setUMIRelease(random.nextBoolean());
-			
-			if (random.nextInt(100) > 5)
-				sub.setSubmissionDate(generateRandomDate(random,2,2010));
-			
-			if (random.nextInt(100) > 70)
-				sub.setApprovalDate(generateRandomDate(random,2,2010));
-			
-			if (random.nextInt(100) > 5)
-				sub.setLicenseAgreementDate(generateRandomDate(random,2,2010));
-			
-			if (random.nextInt(100) > 50)
-				sub.setCommitteeEmbargoApprovalDate(generateRandomDate(random,2,2010));
-			
-			if (random.nextInt(100) > 50)
-				sub.setCommitteeApprovalDate(generateRandomDate(random,2,2010));
-			
-			if (random.nextInt(100) > 5) 
-				sub.addAttachment(new File("test/SamplePrimaryDocument.pdf"),AttachmentType.PRIMARY);
-			
-			if (random.nextInt(100) > 20) 
-				sub.addAttachment(settingRepo.getConfig(Configuration.SUBMIT_LICENSE).getBytes(), "LICENSE.txt", AttachmentType.LICENSE);
-			
-			if (random.nextInt(100) > 75)
-				sub.addAttachment(new File("test/SampleSupplementalDocument.doc"),AttachmentType.SUPPLEMENTAL);
-			
-			if (random.nextInt(100) > 75)
-				sub.addAttachment(new File("test/SampleSupplementalDocument.xls"),AttachmentType.SUPPLEMENTAL);
+				if (random.nextInt(100) > 5)
+					sub.setDocumentAbstract(generateRandomAbstract(random));
+				
+				if (random.nextInt(100) > 5)
+					sub.setDocumentKeywords(generateRandomKeywords(random));			
+	
+				if (random.nextInt(100) > 5)
+					sub.setEmbargoType(embargos.get(random.nextInt(embargos.size()-1)));
+				
+				int members = random.nextInt(5);
+				String[] firstMemberName = null;
+				for (int m = 0 ; m < members; m++) {
+					String[] memberName = generateRandomName(random, FAMOUS_NAMES);
+					if (firstMemberName == null)
+						firstMemberName = memberName;
+					boolean chair = random.nextBoolean();
+					sub.addCommitteeMember(memberName[0], memberName[1], memberName[2], chair);
+				}
+				
+				if (random.nextInt(100) > 5 && firstMemberName != null)
+					sub.setCommitteeContactEmail(generateRandomEmail(random,firstMemberName));
+				
+				if (random.nextInt(100) > 5) {
+					DegreeLevelArray degree = DEGREES_DEFINITIONS[random.nextInt(DEGREES_DEFINITIONS.length-1)];
 
-			if (random.nextInt(100) > 50)
-				sub.addAttachment(new File("test/SampleFeedbackDocument.png"),AttachmentType.FEEDBACK);
-			
+					sub.setDegree(degree.name);
+					sub.setDegreeLevel(degree.degreeLevel);
+				}
+				
+				if (random.nextInt(100) > 5)
+					sub.setDepartment(DEPARTMENTS_DEFINITIONS[random.nextInt(DEPARTMENTS_DEFINITIONS.length-1)]);
+				
+				if (random.nextInt(100) > 5)
+					sub.setCollege(COLLEGES_DEFINITIONS[random.nextInt(COLLEGES_DEFINITIONS.length-1)]);
+				
+				if (random.nextInt(100) > 5)
+					sub.setMajor(MAJORS_DEFINITIONS[random.nextInt(MAJORS_DEFINITIONS.length-1)]);
+				
+				if (random.nextInt(100) > 5)
+					sub.setDocumentType(DOCTYPES_DEFINITIONS[random.nextInt(DOCTYPES_DEFINITIONS.length-1)].name);
+				
+				if (random.nextInt(100) > 5) {
+					sub.setGraduationYear(random.nextInt(10)+2002);
+					sub.setGraduationMonth(GRAD_MONTHS_DEFINITIONS[random.nextInt(GRAD_MONTHS_DEFINITIONS.length-1)]);
+				}
+					
+				if (random.nextInt(100) > 5)
+					sub.setUMIRelease(random.nextBoolean());
+				
+				if (random.nextInt(100) > 5)
+					sub.setSubmissionDate(generateRandomDate(random,2,2010));
+				
+				if (random.nextInt(100) > 70)
+					sub.setApprovalDate(generateRandomDate(random,2,2010));
+				
+				if (random.nextInt(100) > 5)
+					sub.setLicenseAgreementDate(generateRandomDate(random,2,2010));
+				
+				if (random.nextInt(100) > 50)
+					sub.setCommitteeEmbargoApprovalDate(generateRandomDate(random,2,2010));
+				
+				if (random.nextInt(100) > 50)
+					sub.setCommitteeApprovalDate(generateRandomDate(random,2,2010));
+				
+				if (random.nextInt(100) > 5) 
+					sub.addAttachment(new File("test/SamplePrimaryDocument.pdf"),AttachmentType.PRIMARY);
+				
+				if (random.nextInt(100) > 20) 
+					sub.addAttachment(settingRepo.getConfig(Configuration.SUBMIT_LICENSE).getBytes(), "LICENSE.txt", AttachmentType.LICENSE);
+				
+				if (random.nextInt(100) > 75)
+					sub.addAttachment(new File("test/SampleSupplementalDocument.doc"),AttachmentType.SUPPLEMENTAL);
+				
+				if (random.nextInt(100) > 75)
+					sub.addAttachment(new File("test/SampleSupplementalDocument.xls"),AttachmentType.SUPPLEMENTAL);
+	
+				if (random.nextInt(100) > 50)
+					sub.addAttachment(new File("test/SampleFeedbackDocument.png"),AttachmentType.FEEDBACK);
+			}
 			
 			sub.save();
 			context.logout();
 			
-			// Generate modifications to the 
-			context.login(reviewer);
-			int actionLogs = random.nextInt(30)+10;
-			for (int l = 0; l < actionLogs; l++) {
-				
-				if (random.nextInt(100) > 30 ) {
-					// Create randomly generated action.
-					sub.logAction("Randomly generated action");
-				} else {
-					State state = sub.getState();					
-					List<State> transitions = state.getTransitions(sub);
-					if (transitions.size() == 0)
-						transitions = stateManager.getAllStates();
-				
-					if (transitions.size() == 1) {
-						
-						sub.setState(transitions.get(0));
+			if(i>0) {
+				// Generate modifications to the 
+				context.login(reviewer);
+				int actionLogs = random.nextInt(30)+10;
+				for (int l = 0; l < actionLogs; l++) {
+					
+					if (random.nextInt(100) > 30 ) {
+						// Create randomly generated action.
+						sub.logAction("Randomly generated action");
 					} else {
-						sub.setState(transitions.get(random.nextInt(transitions.size()-1)));
+						State state = sub.getState();					
+						List<State> transitions = state.getTransitions(sub);
+						if (transitions.size() == 0)
+							transitions = stateManager.getAllStates();
+					
+						if (transitions.size() == 1) {
+							
+							sub.setState(transitions.get(0));
+						} else {
+							sub.setState(transitions.get(random.nextInt(transitions.size()-1)));
+						}
 					}
+					sub.save();
 				}
-				sub.save();
+				context.logout();
 			}
-			context.logout();
 			
 			
 			

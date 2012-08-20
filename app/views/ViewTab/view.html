@@ -1,4 +1,5 @@
 #{extends 'admin.html' /}
+#{set title:'View Submission Details' /}
 
 #{set 'moreScripts'}
 <script src="@{'/public/javascripts/vireo-viewtab.js'}" type="text/javascript" charset="${_response_encoding}"></script> 
@@ -8,6 +9,7 @@ jQuery(document).ready(function(){
 	 var subId = ${submission.getId()};
 	 var refreshActionLogURL = "@{ViewTab.refreshActionLogTable()}";
 	 var refreshLeftColumnURL = "@{ViewTab.refreshLeftColumn()}";
+	 var refreshHeaderURL = "@{ViewTab.refreshHeader()}";
 	 var updateJSONURL = "@{ViewTab.updateJSON()}";
 	 var updateCommitteeMemberJSONURL = "@{ViewTab.updateCommitteeMemberJSON()}";
 	 var addCommitteeMemberJSONURL = "@{ViewTab.addCommitteeMemberJSON()}";
@@ -31,7 +33,7 @@ jQuery(document).ready(function(){
 	/**
 	 * Swap from span to input field.
 	 */ 
-	 jQuery(".edit-box ul li.edit span").live("click", swapToInputHandler());
+	jQuery(".edit-box ul li.edit span").live("click", swapToInputHandler());
 	
 	/*
 	 * Swap committee member content into editable fields.
@@ -51,6 +53,7 @@ jQuery(document).ready(function(){
 			 removeCommitteeMemberHandler(removeCommitteeMemberJSONURL, jQuery(this));
 			 updateActionLog(refreshActionLogURL, subId);
 			 updateLeftColumn(refreshLeftColumnURL, subId);
+			 updateHeader(refreshHeaderURL, subId);
 		 } else {
 			 jQuery(this).text("(Are you sure?)");
 			 return false;
@@ -69,7 +72,7 @@ jQuery(document).ready(function(){
 		}
 		updateActionLog(refreshActionLogURL, subId);
 		updateLeftColumn(refreshLeftColumnURL, subId);
-		
+		updateHeader(refreshHeaderURL, subId);		
 	});
 	
 	jQuery(document).live("keypress", function(event){
@@ -87,6 +90,7 @@ jQuery(document).ready(function(){
 		 updateCustomActionsHandler(updateCustomActionJSONURL, subId, $this.attr("name"), $this.is(':checked'));
 		 updateActionLog(refreshActionLogURL, subId);
 		 updateLeftColumn(refreshLeftColumnURL, subId);
+		 updateHeader(refreshHeaderURL, subId);
 	 });
 		
 	/**
@@ -179,13 +183,13 @@ jQuery(document).ready(function(){
 <div id="right-column">
 	<div class="inner">
 		<div id="alert-area">*{Javascript may dynamically fill this div with errors as needed.}*</div>
-		<h1>${submission.getStudentLastName()}, ${submission.getStudentFirstName()} (${submission.getMajor()} - ${submission.getDegree()})</h1>
+		<div id="mainHeader">#{include 'ViewTab/header.include' /}</div>
 		
 		<div class="edit-holder pull-left">
 			<ul class="nav nav-tabs">
-				<li class="active"><a class="personalInfo" href="#">Personal Info</a></li>
-				<li><a class="docInfo" href="#">Document Info</a></li>
-				<li><a class="degreeInfo" href="#">Degree Info</a></li>
+				<li class="active"><a class="personalInfo" href="javascript:;">Personal Info</a></li>
+				<li><a class="docInfo" href="javascript:;">Document Info</a></li>
+				<li><a class="degreeInfo" href="javascript:;">Degree Info</a></li>
 			</ul>
 			<div id="personalInfo" class="edit-box-holder">
 			<div class="edit-box pull-left">
@@ -375,7 +379,9 @@ jQuery(document).ready(function(){
 							class="empty"><i class="icon-pencil"></i> none
 						#{/else}
 						</span></li>
-					<li><label></label><span><button class="btn">Send Advisor Approval Email</button></span></li>
+					#{if submission.getCommitteeContactEmail()}
+					<li><label></label><span><form action="@{ViewTab.sendAdvisorEmail(submission.getId())}" method="POST"><input type="submit" class="btn" value="Send Advisor Approval Email" /></form></span></li>
+					#{/if}
 				</ul>				
 			</div>
 			<div id="committeeMembers" class="edit-box pull-left">				
@@ -396,12 +402,9 @@ jQuery(document).ready(function(){
 							</div>
 						</li>
 						
-					#{/list}
-						<li id="add_new_member"><button class="btn">Add New Member</button></li>						
+					#{/list}												
 					#{/if}
-					#{else}
-					<li class="empty">none</li>
-					#{/else}
+					<li id="add_new_member"><button class="btn">Add New Member</button></li>
 					</ul></li>
 				</ul>				
 			</div>

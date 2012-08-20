@@ -63,6 +63,7 @@ td.comments{
 	height:31px;
 	padding:0 15px;
 	line-height:28px;
+	vertical-align:middle;
 }
 
 td button, td button.btn, td button.btn-small{
@@ -151,13 +152,14 @@ LAYOUT
 
 #tabs{
 	position:absolute;
-	bottom:0;
+	bottom:0px;
 	right:10px;
 }
 
 #tabs ul{
 	border-bottom:none;
 	margin:0;
+	margin-bottom:20px;
 }
 
 #tabs li{
@@ -376,6 +378,8 @@ SIDE BOXES
 #custom-actions input{
 	left:-20px;
 	position:absolute;
+	margin:0px;
+	padding:0px;
 }
 
 /**********************
@@ -420,7 +424,7 @@ EDIT HOLDERS & BOXES
 .edit-box .empty{
 	color:@grayLighter;
 }
-.edit-box input, .edit-box select{
+.edit-box input[type="text"], .edit-box select{
 	margin:0;
 	padding:0;	
 }
@@ -457,6 +461,10 @@ div.modal form {
 
 div.modal li {
 	margin:7px 0;
+}
+
+.fade.modal{
+	top:-60%;
 }
 
 /**********************

@@ -55,11 +55,21 @@
 		</ul>
 		<ul class="unstyled">
 			<li>UMI Release:</li>
-			<li><b>${submission.getUMIRelease()}</b></li>
+			<li><b>#{if submission.getUMIRelease() != null}
+				${submission.getUMIRelease()}
+			#{/if}#{else}
+				none
+			#{/else}
+			</b></li>
 		</ul>
 		<ul class="unstyled">
 			<li>Embargo Option</li>
-			<li><b>${submission.getEmbargoType().getName()}</b></li>
+			<li><b>#{if submission.getEmbargoType() != null}
+				${submission.getEmbargoType().getName()}
+			#{/if}#{else}
+				none
+			#{/else}
+			</b></li>
 		</ul>
 	</div>
 	<div class="box-footer">

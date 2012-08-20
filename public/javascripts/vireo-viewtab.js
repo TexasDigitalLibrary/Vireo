@@ -12,9 +12,12 @@ function swapToInputHandler(){
 			jQuery("#backup").remove()
 
 			var editItem = jQuery(this);       
-			var value = escapeQuotes(editItem.text().trim());
-
-			if(value=="none"){
+			var value = escapeQuotes(editItem.text());
+			var checkValue = value.replace(/\t/g,"");
+			checkValue = checkValue.replace(/\n/g,"");
+			checkValue = checkValue.replace(/\r/g,"");
+			checkValue = checkValue.replace(" ","");
+			if(checkValue=="none" || checkValue=="null"){
 				value="";
 				jQuery("body").append('<div id="backup"></div>')
 			} else {
@@ -61,14 +64,14 @@ function editCommitteeMemberHandler(){
 			jQuery("#backup").remove();
 
 			//Backup
-			jQuery("body").append('<div id="backup">'+jQuery(this).html().trim()+'</div>');
+			jQuery("body").append('<div id="backup">'+jQuery(this).html()+'</div>');
 
 			var memberId = jQuery(this).parent("li").attr("class");		
 			var firstName = escapeQuotes(jQuery(this).find(".firstName").text());
 			var lastName = escapeQuotes(jQuery(this).find(".lastName").text());
 			var middleName = escapeQuotes(jQuery(this).find(".middleName").text());
 
-			var chair = (jQuery(this).find(".chair").text().trim()=="chair");
+			var chair = (jQuery(this).find(".chair").text()=="chair");
 			var checked = "";
 			if(chair){
 				checked = 'checked="checked"';
@@ -147,7 +150,7 @@ function commitChangesHandler(eventTarget, jsonURL, committeeURL, subId){
 	}
 	var id=jQuery(".editing").attr("id");
 	var theValue;
-	if(fieldItem.val().trim()){
+	if(fieldItem.val()){
 		theValue = fieldItem.val();
 	}
 	
@@ -160,11 +163,11 @@ function commitChangesHandler(eventTarget, jsonURL, committeeURL, subId){
 	
 	if(eventTarget.closest("#committeeMembers").length){
 		committeeMember = true;
-		committeeFirstName = jQuery("#cmFirstName").val().trim();
-		committeeLastName = jQuery("#cmLastName").val().trim();
-		committeeMiddleName = jQuery("#cmMiddleName").val().trim();
+		committeeFirstName = jQuery("#cmFirstName").val();
+		committeeLastName = jQuery("#cmLastName").val();
+		committeeMiddleName = jQuery("#cmMiddleName").val();
 		committeeChair = jQuery("#chair").is(':checked');
-		committeeId = jQuery("#memberId").val().trim();
+		committeeId = jQuery("#memberId").val();
 	}
 	
 	jQuery(".editing").replaceWith('<div class="'+id+' progress progress-striped active"><div class="bar" style="width:100%"></div></div>');
@@ -239,7 +242,10 @@ function commitChangesHandler(eventTarget, jsonURL, committeeURL, subId){
 				
 				if(data.success){
 					jQuery("div."+id).replaceWith('<span id="'+id+'" class="'+classValue+'"><i class="icon-pencil"></i> '+currentValue+'</span>');
-					jQuery("#degreeLevel").text(data.degreeLevel);						
+					if(data.degreeLevel != null){
+						jQuery("#degreeLevel").text(data.degreeLevel);
+						jQuery("#degreeLevel").removeClass("empty");
+					}
 				} else {
 					jQuery("div."+id).replaceWith('<span id="'+id+'" class="error '+classValue+'"><i class="icon-pencil"></i> '+currentValue+' <a href="#" class="tooltip-icon" rel="tooltip" title="'+data.message+'"><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
 					jQuery('.tooltip-icon').tooltip();
@@ -260,9 +266,9 @@ function commitChangesHandler(eventTarget, jsonURL, committeeURL, subId){
  */
 function commitNewCommitteeMemberHandler(id, jsonURL) {
 
-	var committeeFirstName = jQuery("#cmFirstName").val().trim();
-	var committeeLastName = jQuery("#cmLastName").val().trim();
-	var committeeMiddleName = jQuery("#cmMiddleName").val().trim();
+	var committeeFirstName = jQuery("#cmFirstName").val();
+	var committeeLastName = jQuery("#cmLastName").val();
+	var committeeMiddleName = jQuery("#cmMiddleName").val();
 	var committeeChair = jQuery("#chair").is(':checked');
 
 	jQuery(".editing").replaceWith('<div class="progress progress-striped active"><div class="bar" style="width:100%"></div></div>');
@@ -486,6 +492,33 @@ function updateLeftColumn(url, id){
 		
 	});
 	
+}
+
+/**
+ * Function to update the Header on the view page
+ * after a change has been made to the submission object.
+ * 
+ * @param url (The method to update the Header)
+ * @param id (The submission id)
+ */
+function updateHeader(url, id){
+	jQuery("#mainHeader").addClass("waiting");
+	
+	jQuery.ajax({
+		url:url,
+		data:{
+			id:id
+		},
+		dataType:'html',
+		type:'POST',
+		success:function(data){
+			jQuery("#mainHeader").html(data);
+			jQuery("#mainHeader").removeClass("waiting");
+		},
+		error:function(){
+			alert("Error refreshing the Header");
+		}
+	})
 }
 
 /**

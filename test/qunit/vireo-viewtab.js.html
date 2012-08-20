@@ -248,7 +248,7 @@ test("test commitChangesHandler AJAX General", function(){
 	equal('/jsonURL',options.url,"The ajax url is correct.");
     equal('POST',options.type,"The ajax type is correct.");
     equal('json',options.dataType,"The ajax dataType is correct.");
-    equal('Audrey',options.data.value,"The ajax data value is correct.");
+    equal('Audrey',options.data.value.replace(" ",""),"The ajax data value is correct.");
     equal(1,options.data.subId,"The ajax data subId is correct.");
     equal('firstName',options.data.field,"The ajax data field is correct.");
     

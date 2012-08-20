@@ -120,7 +120,13 @@ public class ViewTab extends AbstractVireoController {
 	 */
 	@Security(RoleType.REVIEWER)
 	public static void updateJSON(Long subId, String field, String value){
-
+		if(value!=null){
+			value = value.trim();
+		
+			if("none".equals(value.toLowerCase()) || "null".equals(value.toLowerCase()))
+				value=null;
+		}
+		
 		Submission submission = subRepo.findSubmission(subId);
 		Person submitter = submission.getSubmitter();
 
@@ -132,7 +138,7 @@ public class ViewTab extends AbstractVireoController {
 
 			//First Name
 			if("firstName".equals(field)) {
-				if(value == null || value.trim().length() == 0)
+				if(value == null || value.length() == 0)
 					throw new RuntimeException("First Name is required.");
 
 				submission.setStudentFirstName(value);
@@ -145,7 +151,7 @@ public class ViewTab extends AbstractVireoController {
 
 				//Last Name
 			} else if("lastName".equals(field)) {
-				if(value==null || value.trim().length()==0)
+				if(value==null || value.length()==0)
 					throw new RuntimeException("Last Name is required.");
 
 				submission.setStudentLastName(value);				
@@ -153,7 +159,7 @@ public class ViewTab extends AbstractVireoController {
 
 				//Email
 			} else if("email".equals(field)) {
-				if(value==null || value.trim().length()==0)
+				if(value==null || value.length()==0)
 					throw new RuntimeException("Email is required.");
 
 				try {
@@ -167,7 +173,7 @@ public class ViewTab extends AbstractVireoController {
 
 				//Year of Birth
 			} else if("birthYear".equals(field)) {						
-				if(value!=null && value.trim().length()>0) {
+				if(value!=null && value.length()>0) {
 					Integer birthYearInt = null;
 					try{
 						birthYearInt = Integer.valueOf(value);
@@ -186,7 +192,7 @@ public class ViewTab extends AbstractVireoController {
 
 				//Permanent Phone
 			} else if("permPhone".equals(field)){
-				if(value==null || value.trim().length()==0)
+				if(value==null || value.length()==0)
 					throw new RuntimeException("Permanent Phone is required.");
 
 				submitter.setPermanentPhoneNumber(value);
@@ -194,7 +200,7 @@ public class ViewTab extends AbstractVireoController {
 
 				//Permanent Email
 			} else if("permEmail".equals(field)){
-				if(value!=null && value.trim().length()>0) {
+				if(value!=null && value.length()>0) {
 					try {
 						new InternetAddress(value).validate();
 					} catch (AddressException ae) {
@@ -207,7 +213,7 @@ public class ViewTab extends AbstractVireoController {
 
 				//Permanent Address
 			} else if("permAddress".equals(field)){
-				if(value==null || value.trim().length()==0)
+				if(value==null || value.length()==0)
 					throw new RuntimeException("Permanent Address is required.");
 
 				submitter.setPermanentPostalAddress(value);
@@ -225,7 +231,7 @@ public class ViewTab extends AbstractVireoController {
 
 				//Title
 			} else if("title".equals(field)){
-				if(value==null || value.trim().length()==0)
+				if(value==null || value.length()==0)
 					throw new RuntimeException("Title is required.");
 
 				submission.setDocumentTitle(value);
@@ -301,7 +307,7 @@ public class ViewTab extends AbstractVireoController {
 
 				//Advisor Email
 			} else if("advisorEmail".equals(field)){
-				if(value==null || value.trim().length()==0)
+				if(value==null || value.length()==0)
 					throw new RuntimeException("Advisor Email is required.");
 
 				try {
@@ -357,17 +363,33 @@ public class ViewTab extends AbstractVireoController {
 	 */
 	@Security(RoleType.REVIEWER)
 	public static void addCommitteeMemberJSON(Long subId, String firstName, String lastName, String middleName, Boolean chair){
-
-		Submission submission = subRepo.findSubmission(subId);
+		if(firstName != null){
+			firstName = firstName.trim();
 		
+			if("none".equals(firstName.toLowerCase()) || "null".equals(firstName.toLowerCase()))
+				firstName=null;
+		}
+		if(lastName != null){
+			lastName = lastName.trim();
+		
+			if("none".equals(lastName.toLowerCase()) || "null".equals(lastName.toLowerCase()))
+				lastName=null;
+		}
+		if(middleName != null){
+			middleName = middleName.trim();
+		
+			if("none".equals(middleName.toLowerCase()) || "null".equals(middleName.toLowerCase()))
+				middleName=null;
+		}
+		Submission submission = subRepo.findSubmission(subId);		
 		CommitteeMember newMember = null;
 		
 		try {
 
-			if(firstName==null || firstName.trim().length()==0)
+			if(firstName==null || firstName.length()==0)
 				throw new RuntimeException("Committee Member First Name is required.");
 
-			if(lastName==null || lastName.trim().length()==0)
+			if(lastName==null || lastName.length()==0)
 				throw new RuntimeException("Committee Member Last Name is required.");
 
 			newMember = submission.addCommitteeMember(firstName, lastName, middleName, chair);
@@ -405,13 +427,30 @@ public class ViewTab extends AbstractVireoController {
 	
 	@Security(RoleType.REVIEWER)
 	public static void updateCommitteeMemberJSON(Long id, String firstName, String lastName, String middleName, Boolean chair){
-
+		if(firstName != null){
+			firstName = firstName.trim();
+		
+			if("none".equals(firstName.toLowerCase()) || "null".equals(firstName.toLowerCase()))
+				firstName=null;
+		}
+		if(lastName != null){
+			lastName = lastName.trim();
+		
+			if("none".equals(lastName.toLowerCase()) || "null".equals(lastName.toLowerCase()))
+				lastName=null;
+		}
+		if(middleName != null){
+			middleName = middleName.trim();
+		
+			if("none".equals(middleName.toLowerCase()) || "null".equals(middleName.toLowerCase()))
+				middleName=null;
+		}
 		try {
 
-			if(firstName==null || firstName.trim().length()==0)
+			if(firstName==null || firstName.length()==0)
 				throw new RuntimeException("Committee Member First Name is required.");
 
-			if(lastName==null || lastName.trim().length()==0)
+			if(lastName==null || lastName.length()==0)
 				throw new RuntimeException("Committee Member Last Name is required.");
 
 			CommitteeMember committeeMember = subRepo.findCommitteeMember(id);
@@ -486,6 +525,18 @@ public class ViewTab extends AbstractVireoController {
 
 		renderTemplate("ViewTab/leftColumn.include", actionLogs, submission, actions, actionValues);
 
+	}
+	
+	/**
+	 * A method to refresh the header with the latest data
+	 * 
+	 * @param id (The submission id)
+	 */
+	@Security(RoleType.REVIEWER)
+	public static void refreshHeader(Long id){
+		Submission submission = subRepo.findSubmission(id);
+		
+		renderTemplate("ViewTab/header.include", submission);
 	}
 
 	/**
@@ -576,83 +627,81 @@ public class ViewTab extends AbstractVireoController {
 		
 		if(params.get("status_change") != null)
 			submission.setState(stateManager.getState("NeedsCorrection"));
-				
-		if(params.get("email_student") != null && "public".equals(params.get("visibility"))) {			
-			
-			//Setup Params
-			TemplateParameters emailParams = new TemplateParameters(submission);
-			
-			//Create list of recipients
-			List<String> recipients = new ArrayList<String>();
-			recipients.add(submission.getSubmitter().getCurrentEmailAddress());
-			
-			//Create list of carbon copies
-			List<String> carbonCopies = new ArrayList<String>();
-			if(params.get("cc_advisor") != null) {
-				carbonCopies.add(submission.getCommitteeContactEmail());
-			}
-			
-			String replyTo = context.getPerson().getCurrentEmailAddress();
-			
-			emailService.sendEmail(subject, message, emailParams, recipients, replyTo, carbonCopies);
-			
-			if (emailParams.FULL_NAME != null) {
-				subject = subject.replaceAll("\\{FULL_NAME\\}",emailParams.FULL_NAME);
-				message = message.replaceAll("\\{FULL_NAME\\}",emailParams.FULL_NAME);
-			}
-			
-			if (emailParams.FIRST_NAME != null) {
-				subject = subject.replaceAll("\\{FIRST_NAME\\}",emailParams.FIRST_NAME);
-				message = message.replaceAll("\\{FIRST_NAME\\}",emailParams.FIRST_NAME);
-			}
-			
-			if (emailParams.LAST_NAME != null) {
-				subject = subject.replaceAll("\\{LAST_NAME\\}",emailParams.LAST_NAME);
-				message = message.replaceAll("\\{LAST_NAME\\}",emailParams.LAST_NAME);
-			}
-				
-			if (emailParams.DOCUMENT_TITLE != null) {
-				subject = subject.replaceAll("\\{DOCUMENT_TITLE\\}",emailParams.DOCUMENT_TITLE);
-				message = message.replaceAll("\\{DOCUMENT_TITLE\\}",emailParams.DOCUMENT_TITLE);
-			}
-				
-			if (emailParams.DOCUMENT_TYPE != null) {
-				subject = subject.replaceAll("\\{DOCUMENT_TYPE\\}",emailParams.DOCUMENT_TYPE);
-				message = message.replaceAll("\\{DOCUMENT_TYPE\\}",emailParams.DOCUMENT_TYPE);
-			}
-				
-			if (emailParams.GRAD_SEMESTER != null) {
-				subject = subject.replaceAll("\\{GRAD_SEMESTER\\}",emailParams.GRAD_SEMESTER);
-				message = message.replaceAll("\\{GRAD_SEMESTER\\}",emailParams.GRAD_SEMESTER);
-			}
-				
-			if (emailParams.STUDENT_URL != null) {
-				subject = subject.replaceAll("\\{STUDENT_URL\\}",emailParams.STUDENT_URL);
-				message = message.replaceAll("\\{STUDENT_URL\\}",emailParams.STUDENT_URL);
-			}
-				
-			if (emailParams.ADVISOR_URL != null) {
-				subject = subject.replaceAll("\\{ADVISOR_URL\\}",emailParams.ADVISOR_URL);
-				message = message.replaceAll("\\{ADVISOR_URL\\}",emailParams.ADVISOR_URL);
-			}
-				
-			if (emailParams.REGISTRATION_URL != null) {
-				subject = subject.replaceAll("\\{REGISTRATION_URL\\}",emailParams.REGISTRATION_URL);
-				message = message.replaceAll("\\{REGISTRATION_URL\\}",emailParams.REGISTRATION_URL);
-			}
-				
-			if (emailParams.SUBMISSION_STATUS != null) {
-				subject = subject.replaceAll("\\{SUBMISSION_STATUS\\}",emailParams.SUBMISSION_STATUS);
-				message = message.replaceAll("\\{SUBMISSION_STATUS\\}",emailParams.SUBMISSION_STATUS);
-			}
-				
-			if (emailParams.SUBMISSION_ASSIGNED_TO != null) {
-				subject = subject.replaceAll("\\{SUBMISSION_ASSIGNED_TO\\}",emailParams.SUBMISSION_ASSIGNED_TO);
-				message = message.replaceAll("\\{SUBMISSION_ASSIGNED_TO\\}",emailParams.SUBMISSION_ASSIGNED_TO);
-			}
-			
+					
+		//Setup Params
+		TemplateParameters emailParams = new TemplateParameters(submission);
+		
+		//Create list of recipients
+		List<String> recipients = new ArrayList<String>();
+		recipients.add(submission.getSubmitter().getCurrentEmailAddress());
+		
+		//Create list of carbon copies
+		List<String> carbonCopies = new ArrayList<String>();
+		if(params.get("cc_advisor") != null) {
+			carbonCopies.add(submission.getCommitteeContactEmail());
 		}
 		
+		String replyTo = context.getPerson().getCurrentEmailAddress();
+					
+		if (emailParams.FULL_NAME != null) {
+			subject = subject.replaceAll("\\{FULL_NAME\\}",emailParams.FULL_NAME);
+			message = message.replaceAll("\\{FULL_NAME\\}",emailParams.FULL_NAME);
+		}
+		
+		if (emailParams.FIRST_NAME != null) {
+			subject = subject.replaceAll("\\{FIRST_NAME\\}",emailParams.FIRST_NAME);
+			message = message.replaceAll("\\{FIRST_NAME\\}",emailParams.FIRST_NAME);
+		}
+		
+		if (emailParams.LAST_NAME != null) {
+			subject = subject.replaceAll("\\{LAST_NAME\\}",emailParams.LAST_NAME);
+			message = message.replaceAll("\\{LAST_NAME\\}",emailParams.LAST_NAME);
+		}
+			
+		if (emailParams.DOCUMENT_TITLE != null) {
+			subject = subject.replaceAll("\\{DOCUMENT_TITLE\\}",emailParams.DOCUMENT_TITLE);
+			message = message.replaceAll("\\{DOCUMENT_TITLE\\}",emailParams.DOCUMENT_TITLE);
+		}
+			
+		if (emailParams.DOCUMENT_TYPE != null) {
+			subject = subject.replaceAll("\\{DOCUMENT_TYPE\\}",emailParams.DOCUMENT_TYPE);
+			message = message.replaceAll("\\{DOCUMENT_TYPE\\}",emailParams.DOCUMENT_TYPE);
+		}
+			
+		if (emailParams.GRAD_SEMESTER != null) {
+			subject = subject.replaceAll("\\{GRAD_SEMESTER\\}",emailParams.GRAD_SEMESTER);
+			message = message.replaceAll("\\{GRAD_SEMESTER\\}",emailParams.GRAD_SEMESTER);
+		}
+			
+		if (emailParams.STUDENT_URL != null) {
+			subject = subject.replaceAll("\\{STUDENT_URL\\}",emailParams.STUDENT_URL);
+			message = message.replaceAll("\\{STUDENT_URL\\}",emailParams.STUDENT_URL);
+		}
+			
+		if (emailParams.ADVISOR_URL != null) {
+			subject = subject.replaceAll("\\{ADVISOR_URL\\}",emailParams.ADVISOR_URL);
+			message = message.replaceAll("\\{ADVISOR_URL\\}",emailParams.ADVISOR_URL);
+		}
+			
+		if (emailParams.REGISTRATION_URL != null) {
+			subject = subject.replaceAll("\\{REGISTRATION_URL\\}",emailParams.REGISTRATION_URL);
+			message = message.replaceAll("\\{REGISTRATION_URL\\}",emailParams.REGISTRATION_URL);
+		}
+			
+		if (emailParams.SUBMISSION_STATUS != null) {
+			subject = subject.replaceAll("\\{SUBMISSION_STATUS\\}",emailParams.SUBMISSION_STATUS);
+			message = message.replaceAll("\\{SUBMISSION_STATUS\\}",emailParams.SUBMISSION_STATUS);
+		}
+			
+		if (emailParams.SUBMISSION_ASSIGNED_TO != null) {
+			subject = subject.replaceAll("\\{SUBMISSION_ASSIGNED_TO\\}",emailParams.SUBMISSION_ASSIGNED_TO);
+			message = message.replaceAll("\\{SUBMISSION_ASSIGNED_TO\\}",emailParams.SUBMISSION_ASSIGNED_TO);
+		}
+			
+		if(params.get("email_student") != null && "public".equals(params.get("visibility"))) {
+			emailService.sendEmail(subject, message, emailParams, recipients, replyTo, carbonCopies);
+		}		
+	
 		ActionLog actionLog = submission.logAction(message);
 		
 		if("private".equals(params.get("visibility")))
@@ -949,6 +998,38 @@ public class ViewTab extends AbstractVireoController {
 			error("File not found");
 		}
 		
+	}
+	
+	/**
+	 * A method to send the Advisor Approval Email
+	 * 
+	 * @param id (The submission id)
+	 */
+	@Security(RoleType.REVIEWER)
+	public static void sendAdvisorEmail(Long id){
+		Submission submission = subRepo.findSubmission(id);
+		
+		String advisorEmail = submission.getCommitteeContactEmail();
+		
+		EmailService emailService = Spring.getBeanOfType(EmailServiceImpl.class);
+		
+		EmailTemplate template = settingRepo.findEmailTemplateByName("SYSTEM Advisor Review Request");
+							
+		//Setup Params
+		TemplateParameters emailParams = new TemplateParameters(submission);
+		
+		//Create list of recipients
+		List<String> recipients = new ArrayList<String>();
+		recipients.add(advisorEmail);
+		
+		//Create list of carbon copies
+		List<String> carbonCopies = new ArrayList<String>();		
+		
+		String replyTo = context.getPerson().getCurrentEmailAddress();
+		
+		emailService.sendEmail(template, emailParams, recipients, replyTo, carbonCopies);
+		
+		view();
 	}
 
 	/**

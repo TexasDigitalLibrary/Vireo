@@ -11,7 +11,7 @@ html {
 	background: -o-linear-gradient(top,  @bodyGradientBegin 0%,@bodyGradientEnd 100%); /* Opera 11.10+ */
 	background: -ms-linear-gradient(top,  @bodyGradientBegin 0%,@bodyGradientEnd 100%); /* IE10+ */
 	background: linear-gradient(top,  @bodyGradientBegin 0%,@bodyGradientEnd 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='@bodyGradientBegin', endColorstr='@bodyGradientEnd',GradientType=0 ); /* IE6-9 */
+	/*filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='@bodyGradientBegin', endColorstr='@bodyGradientEnd',GradientType=0 ); /* IE6-9 */
 	height: 100%;
 	background-repeat: no-repeat;
     background-attachment: fixed;
@@ -99,7 +99,7 @@ SPECIFIC OVERIDES
 	background:-o-linear-gradient(top,  @headerGradientBegin 0%,@headerGradientEnd 100%); /* Opera 11.10+ */
 	background:-ms-linear-gradient(top,  @headerGradientBegin 0%,@headerGradientEnd 100%); /* IE10+ */
 	background:linear-gradient(top,  @headerGradientBegin 0%,@headerGradientEnd 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='@headerGradientBegin', endColorstr='@headerGradientEnd',GradientType=0 ); /* IE6-9 */
+	/*filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='@headerGradientBegin', endColorstr='@headerGradientEnd',GradientType=0 ); /* IE6-9 */
 	z-index:0;
 }
 
@@ -188,7 +188,7 @@ SUBMIT STEP BUTTONS
 	float:left;
 }
 
-#submitSteps a{
+#submitSteps a, #submitSteps span{
 	display:block;
 	border:none;
 	margin-right:-5px;
@@ -217,23 +217,23 @@ SUBMIT STEP BUTTONS
 	background:url("../images/step5.gif") no-repeat scroll 0 0 transparent;	
 }
 
-#step1Btn a.disabled, #step1Btn a.disabled:hover{
+#step1Btn a.disabled{
 	background:url("../images/step1_disabled.gif") no-repeat scroll 0 0 transparent;	
 }
 
-#step2Btn a.disabled, #step2Btn a.disabled:hover{
+#step2Btn span.disabled{
 	background:url("../images/step2_disabled.gif") no-repeat scroll 0 0 transparent;	
 }
 
-#step3Btn a.disabled, #step3Btn a.disabled:hover{
+#step3Btn span.disabled{
 	background:url("../images/step3_disabled.gif") no-repeat scroll 0 0 transparent;	
 }
 
-#step4Btn a.disabled, #step4Btn a.disabled:hover{
+#step4Btn span.disabled{
 	background:url("../images/step4_disabled.gif") no-repeat scroll 0 0 transparent;	
 }
 
-#step5Btn a.disabled, #step5Btn a.disabled:hover{
+#step5Btn span.disabled{
 	background:url("../images/step5_disabled.gif") no-repeat scroll 0 0 transparent;	
 }
 
