@@ -2,6 +2,7 @@ package controllers;
 
 import play.Logger;
 import play.mvc.Controller;
+import play.mvc.Router;
 
 import org.tdl.vireo.export.DepositService;
 import org.tdl.vireo.model.ActionLog;
@@ -30,6 +31,7 @@ import com.google.gson.Gson;
 
 import play.modules.spring.Spring;
 import play.mvc.With;
+import play.mvc.Router.ActionDefinition;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,7 +40,9 @@ import java.io.IOException;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -72,16 +76,20 @@ public class ViewTab extends AbstractVireoController {
 			FilterTab.list();
 		}
 		
+		Boolean isManager = context.isManager();
+		
 		Submission submission = subRepo.findSubmission(id);
 		Person submitter = submission.getSubmitter();
-	
+		
+		String advisorUrl = getAdvisorURL(submission);
+		
 		List<EmailTemplate> templates = settingRepo.findAllEmailTemplates();
 		List<CustomActionDefinition> actions = settingRepo.findAllCustomActionDefinition();
 		
 		String gradMonth = null;		
 		if(submission.getGraduationMonth() != null)
 			gradMonth = new DateFormatSymbols().getMonths()[submission.getGraduationMonth()];
-
+		
 		List<ActionLog> actionLogs	= subRepo.findActionLog(submission);		
 
 		List<State> states = stateManager.getAllStates();
@@ -96,7 +104,9 @@ public class ViewTab extends AbstractVireoController {
 		String nav = "view";
 		render(	nav,
 				submission,
-				submitter,  
+				submitter,
+				isManager,
+				advisorUrl,
 				gradMonth, 
 				actionLogs, 
 				settingRepo, 
@@ -1017,6 +1027,9 @@ public class ViewTab extends AbstractVireoController {
 							
 		//Setup Params
 		TemplateParameters emailParams = new TemplateParameters(submission);
+		emailParams.ADVISOR_URL = getAdvisorURL(submission);
+		if (emailParams.SUBMISSION_ASSIGNED_TO == null)
+			emailParams.SUBMISSION_ASSIGNED_TO = "n/a";
 		
 		//Create list of recipients
 		List<String> recipients = new ArrayList<String>();
@@ -1083,5 +1096,24 @@ public class ViewTab extends AbstractVireoController {
 		}
 
 		throw new IllegalArgumentException("The month '"+monthName+"' is invalid, month names should be spelled out completely such as 'January', 'Feburary', etc...");
+	}
+	
+	/**
+	 * Retrieve the url where advisors may approve the submission.
+	 * 
+	 * @param sub
+	 *            The submission.
+	 * @return the url
+	 */
+	protected static String getAdvisorURL(Submission sub) {
+		
+		Map<String,Object> routeArgs = new HashMap<String,Object>();
+		routeArgs.put("token", sub.getCommitteeEmailHash());
+		
+		ActionDefinition advisorAction = Router.reverse("Advisor.review",routeArgs);
+		advisorAction.absolute();
+		
+		
+		return advisorAction.url;
 	}
 }
