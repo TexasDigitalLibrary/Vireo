@@ -107,6 +107,13 @@
     	<property name="securityContext" ref="SecurityContext"/>
     </bean>
     
+    <!-- State Listeners -->
+    <bean id="DefaultTransitionListener" class="org.tdl.vireo.state.impl.DefaultTransitionListenerImpl" scope="singleton">
+        <property name="emailService" ref="EmailService"/>
+        <property name="systemEmailTemplateService" ref="SystemEmailTemplateService"/>
+        <property name="submissionRepository" ref="SubmissionRepository"/>
+    </bean>
+    
     <!-- Search -->
     <bean id="Indexer" class="org.tdl.vireo.search.impl.LuceneIndexerImpl" scope="singleton">
         <property name="submissionRepository" ref="SubmissionRepository"/>
@@ -241,7 +248,7 @@
         <property name="settingsRepository" ref="SettingsRepository"/>
         <property name="displayName" value="MODS"/>
         <property name="mimeType" value="text/xml"/>
-        <property name="format" value="http://www.loc.gov/MARC21/slim"/>
+        <property name="format" value="http://www.loc.gov/standards/mods/v3/mods.xsd"/>
         <property name="manifestTemplatePath" value="conf/formats/mods.xml"/>
         <property name="manifestName" value="mods.xml"/>
         <property name="attachmentTypeNames">

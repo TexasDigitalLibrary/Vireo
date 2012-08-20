@@ -61,6 +61,21 @@ public class PersonalInfo extends AbstractSubmitStep {
 		if (params.get("submit_cancel") != null)
 			Application.index();
 
+		
+		// Check if this is a new submission.
+		if (subId == null) {
+			// Do we allow multiple submissions?
+			boolean allowMultiple = (settingRepo.getConfig(Configuration.ALLOW_MULTIPLE_SUBMISSIONS) != null) ? true : false;
+			
+			if (!allowMultiple) {
+				// Check if this user allready has another submission open.
+				List<Submission> otherSubmissions = subRepo.findSubmission(context.getPerson());
+				
+				if (otherSubmissions.size() > 0) {
+					error("Multiple submissions are not allowed, and the submitter allready has another submission.");
+				}
+			}
+		}
 
 		Person submitter = context.getPerson();
 

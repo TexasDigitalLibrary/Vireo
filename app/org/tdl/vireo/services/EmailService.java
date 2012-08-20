@@ -108,9 +108,10 @@ public interface EmailService {
 		 *            The submission object.
 		 */
 		public TemplateParameters(Submission submission) {
-			FULL_NAME = submission.getSubmitter().getFullName();
-			FIRST_NAME = submission.getSubmitter().getFirstName();
-			LAST_NAME = submission.getSubmitter().getLastName();
+			FULL_NAME = submission.getStudentFirstName() + " " + submission.getStudentLastName();
+			FIRST_NAME = submission.getStudentFirstName();
+			LAST_NAME = submission.getStudentLastName();
+			
 			DOCUMENT_TYPE = submission.getDocumentType();
 			SUBMISSION_STATUS = submission.getState().getDisplayName();
 			

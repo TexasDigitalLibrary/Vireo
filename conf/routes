@@ -16,18 +16,23 @@ GET     /profile                                Authentication.profile
 *       /profile/update                         Authentication.updateProfile
 *       /profile/password                       Authentication.updatePassword
 
-### Student Submissions
-*       /submit/?                               Student.submissionStatus
+### Advisor URL
+*       /advisor/{token}/review                 Advisor.review
+*       /advisor/{token}/file/{attachmentId}	Advisor.viewAttachment
+
+### New Submissions
 *       /submit/{subId}/personalInfo            submit.PersonalInfo.personalInfo
 *       /submit/personalInfo                    submit.PersonalInfo.personalInfo
 *	    /submit/{subId}/license                 submit.License.license
 *   	/submit/{subId}/documentInfo            submit.DocumentInfo.documentInfo
 *	    /submit/{subId}/upload                  submit.FileUpload.fileUpload
 *	    /submit/{subId}/confirm                 submit.Confirm.confirm
-*       /submit/{subId}/review                  Student.review
-* 		/submit/{subId}/submissionStatus		Student.submissionStatus
-*       /submit/{subId}/delete                  Student.deleteSubmission
-*		/submit/{subId}/studentView				Student.studentView
+*       /submit/{subId}/complete                submit.Confirm.complete
+
+### Student Interface
+* 		/submit/?								Student.submissionList
+*		/submit/{subId}/view					Student.submissionView
+*       /submit/{subId}/delete                  Student.submissionDelete
 
 GET     /submit/{subId}/file/{attachmentId}     Student.viewAttachment
 

@@ -60,30 +60,37 @@ public class AbstractSubmitStep extends AbstractVireoController {
 	static void beforeSubmit() {
 		
 		if (settingRepo.findConfigurationByName(SUBMISSIONS_OPEN) == null)
-			Student.submissionStatus();	
+			Student.submissionList();	
 		
 		renderArgs.put("SUBMISSIONS_OPEN", settingRepo.findConfigurationByName(SUBMISSIONS_OPEN));
-		
-		Configuration curSemConfig = settingRepo.findConfigurationByName(CURRENT_SEMESTER);
-		String currentSemester = (curSemConfig == null ? "undefined" : curSemConfig.getValue());
-			
-		renderArgs.put("CURRENT_SEMESTER", currentSemester);
+		renderArgs.put("CURRENT_SEMESTER", settingRepo.getConfig(CURRENT_SEMESTER, "current"));
 
 
 	}
 	
 	protected static Submission getSubmission() {
-		Long subId = params.get("subId", Long.class);
-		Submission sub = subRepo.findSubmission(subId);
 		
-		if (sub == null) {
+		// We require an sub id.
+		Long subId = params.get("subId", Long.class);
+		if (subId == null) {
 		    error("Did not receive the expected submission id.");
 		} 
-				
-		// This is an existing submission so check that we're the student here.
+		
+		// And the submission must exist.
+		Submission sub = subRepo.findSubmission(subId);
+		if (sub == null) {
+		    error("Unable to find the submission #"+subId);
+		}
+		
+		// Check that we are the owner of the submission.
 		Person submitter = context.getPerson();
 		if (sub.getSubmitter() != submitter)
 		    unauthorized();
+		
+		// And check that it is in the initial state.
+		State initialState = stateManager.getInitialState();
+		if (sub.getState() != initialState)
+			error("This submission is no longer editable.");
 		
 		return sub;
 	}

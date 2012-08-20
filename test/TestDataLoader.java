@@ -672,15 +672,6 @@ public class TestDataLoader extends Job {
 					sub.setStudentBirthYear(random.nextInt(20)+1980);
 				
 				if (random.nextInt(100) > 5)
-					sub.setDocumentTitle(generateRandomTitle(random));
-				
-				if (random.nextInt(100) > 5)
-					sub.setDocumentAbstract(generateRandomAbstract(random));
-				
-				if (random.nextInt(100) > 5)
-					sub.setDocumentKeywords(generateRandomKeywords(random));			
-	
-				if (random.nextInt(100) > 5)
 					sub.setEmbargoType(embargos.get(random.nextInt(embargos.size()-1)));
 				
 				int members = random.nextInt(5);
@@ -695,13 +686,21 @@ public class TestDataLoader extends Job {
 				
 				if (random.nextInt(100) > 5 && firstMemberName != null)
 					sub.setCommitteeContactEmail(generateRandomEmail(random,firstMemberName));
-				
+							
 				if (random.nextInt(100) > 5) {
 					DegreeLevelArray degree = DEGREES_DEFINITIONS[random.nextInt(DEGREES_DEFINITIONS.length-1)];
-
 					sub.setDegree(degree.name);
 					sub.setDegreeLevel(degree.degreeLevel);
 				}
+				
+				if (random.nextInt(100) > 5)
+					sub.setDocumentTitle(generateRandomTitle(random));
+				
+				if (random.nextInt(100) > 5)
+					sub.setDocumentAbstract(generateRandomAbstract(random));
+				
+				if (random.nextInt(100) > 5)
+					sub.setDocumentKeywords(generateRandomKeywords(random));				
 				
 				if (random.nextInt(100) > 5)
 					sub.setDepartment(DEPARTMENTS_DEFINITIONS[random.nextInt(DEPARTMENTS_DEFINITIONS.length-1)]);
@@ -755,6 +754,7 @@ public class TestDataLoader extends Job {
 			}
 			
 			sub.save();
+
 			context.logout();
 			
 			if(i>0) {
@@ -779,10 +779,12 @@ public class TestDataLoader extends Job {
 							sub.setState(transitions.get(random.nextInt(transitions.size()-1)));
 						}
 					}
+					sub.setCommitteeEmailHash("ABC"+sub.getId());
 					sub.save();
 				}
 				context.logout();
 			}
+
 			
 			
 			

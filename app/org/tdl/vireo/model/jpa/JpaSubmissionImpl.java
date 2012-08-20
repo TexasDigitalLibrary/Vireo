@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -44,6 +45,7 @@ import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
+import org.tdl.vireo.state.StateTransitionListener;
 
 import play.db.jpa.Model;
 import play.modules.spring.Spring;
@@ -717,8 +719,17 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		assertReviewer();
 		
 		if (!equals(this.stateName,state.getBeanName())) {
+			State previousState = getState();
+			
 			this.stateName = state.getBeanName();
 			generateChangeLog("Submission status",state.getDisplayName(),true);
+			
+			
+			// Notify the state change listeners
+			List<StateTransitionListener> listeners = new ArrayList<StateTransitionListener>((Collection) Spring.getBeansOfType(StateTransitionListener.class).values());
+			for (StateTransitionListener listener : listeners) {
+				listener.transition(this, previousState);
+			}
 		}
 	}
 

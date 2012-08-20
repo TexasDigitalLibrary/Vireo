@@ -29,6 +29,7 @@ import org.tdl.vireo.state.StateManager;
 
 import play.Play;
 import play.db.jpa.JPA;
+import play.libs.Mail;
 import play.modules.spring.Spring;
 import play.mvc.Http.Response;
 import play.mvc.Router;
@@ -66,6 +67,7 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 	public String originalRequestBirth = null;
 	public String originalRequestCollege = null;
 	public String originalRequestUMI = null;
+	public String originalAllowMultiple = null;
 
 	/**
 	 * Setup
@@ -78,6 +80,10 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 		originalRequestBirth = settingRepo.getConfig(Configuration.SUBMIT_REQUEST_BIRTH);
 		originalRequestCollege = settingRepo.getConfig(Configuration.SUBMIT_REQUEST_COLLEGE);
 		originalRequestUMI = settingRepo.getConfig(Configuration.SUBMIT_REQUEST_UMI);
+		originalAllowMultiple = settingRepo.getConfig(Configuration.ALLOW_MULTIPLE_SUBMISSIONS);
+
+		// Turn off authentication for the test thread
+		context.turnOffAuthorization();
 	}
 
 	/**
@@ -94,7 +100,7 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 			requestBirth.delete();
 		}
 		if (originalRequestBirth != null && requestBirth == null) {
-			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_BIRTH,"true");
+			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_BIRTH,"true").save();
 		}
 
 		Configuration requestCollege = settingRepo.findConfigurationByName(Configuration.SUBMIT_REQUEST_COLLEGE);
@@ -102,7 +108,7 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 			requestCollege.delete();
 		}
 		if (originalRequestCollege != null && requestCollege == null) {
-			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_COLLEGE,"true");
+			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_COLLEGE,"true").save();
 		}
 
 		Configuration requestUMI = settingRepo.findConfigurationByName(Configuration.SUBMIT_REQUEST_UMI);
@@ -110,7 +116,14 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 			requestUMI.delete();
 		}
 		if (originalRequestUMI != null && requestUMI == null) {
-			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_UMI,"true");
+			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_UMI,"true").save();
+		}
+		Configuration allowMultiple = settingRepo.findConfigurationByName(Configuration.ALLOW_MULTIPLE_SUBMISSIONS);
+		if (originalAllowMultiple == null && allowMultiple != null) {
+			allowMultiple.delete();
+		}
+		if (originalAllowMultiple != null && allowMultiple == null) {
+			settingRepo.createConfiguration(Configuration.ALLOW_MULTIPLE_SUBMISSIONS,"true").save();
 		}
 
 		// if we created a submission, delete it.
@@ -120,13 +133,15 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 			JPA.em().getTransaction().begin();
 			subRepo.findSubmission(subId).delete();
 		}
+		
+		context.restoreAuthorization();
 	}
 
 	/**
 	 * Test a complete submission workflow without asking for any additional parameters.
 	 */
 	@Test
-	public void testFullSubmission() throws IOException {    
+	public void testFullSubmission() throws IOException, InterruptedException {    
 
 		// Turn off any of the extra paramaters
 		if (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_BIRTH) != null) {
@@ -144,12 +159,10 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 
 		// Login as the student Clair Danes
 		LOGIN("cdanes@gmail.com");
-		// Turn off authentication for the test thread
-		context.turnOffAuthorization();
 
 		// Get our URLs
 		final String INDEX_URL = Router.reverse("Application.index").url;
-		final String STATUS_URL = Router.reverse("Student.submissionStatus").url;
+		final String LIST_URL = Router.reverse("Student.submissionList").url;
 		final String PERSONAL_INFO_URL = Router.reverse("submit.PersonalInfo.personalInfo").url;
 
 
@@ -157,9 +170,9 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 		Response response = GET(INDEX_URL);
 		assertIsOk(response);
 		assertContentMatch("Start your submission",response); // the start button is there.
-		assertContentMatch(STATUS_URL,response); // and it's url.
+		assertContentMatch(LIST_URL,response); // and it's url.
 
-		response = GET(STATUS_URL);
+		response = GET(LIST_URL);
 		assertEquals(PERSONAL_INFO_URL,response.getHeader("Location"));
 		response = GET(PERSONAL_INFO_URL);
 		assertContentMatch("<title>Verify Personal Information</title>",response);
@@ -176,7 +189,7 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 				settingRepo.findAllMajors().get(0).getName(), // major 
 				"555-1212", // permPhone
 				"2222 Fake Street", // permAddress 
-				"noreply@noreply.org", // permEmail
+				"advisor@noreply.org", // permEmail
 				"555-1212 ex2", // currentPhone 
 				"2222 Fake Street APT 11" //currentAddress
 				);	
@@ -205,7 +218,7 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 				"This is really cool work!", // abstractText 
 				"one; two; three;", // keywords
 				committee, // committee
-				"noreplyfromadvisor@noreply.org", // committeeEmail
+				"advisor@noreply.org", // committeeEmail
 				String.valueOf(settingRepo.findAllEmbargoTypes().get(1).getId()), // embargo
 				null // UMI
 				);
@@ -214,7 +227,7 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 		fileUpload("SamplePrimaryDocument.pdf", "SampleSupplementalDocument.doc", "SampleSupplementalDocument.xls");
 
 		// Finaly, confirm
-		confirm();
+		confirm("cdanes@gmail.com","advisor@noreply.org");
 
 		// the cleanup will make sure the submission gets deleted.
 	}
@@ -224,7 +237,7 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 	 * birth year, college, and umi release.
 	 */
 	@Test
-	public void testFullSubmissionWithOptionalParamaters() throws IOException {    
+	public void testFullSubmissionWithOptionalParamaters() throws IOException, InterruptedException {    
 
 		// Turn ON any of the extra paramaters
 		if (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_BIRTH) == null) {
@@ -243,21 +256,19 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 
 		// Login as the student Clair Danes
 		LOGIN("cdanes@gmail.com");
-		// Turn off authentication for the test thread
-		context.turnOffAuthorization();
 
 		// Get our URLs
 		final String INDEX_URL = Router.reverse("Application.index").url;
-		final String STATUS_URL = Router.reverse("Student.submissionStatus").url;
+		final String LIST_URL = Router.reverse("Student.submissionList").url;
 		final String PERSONAL_INFO_URL = Router.reverse("submit.PersonalInfo.personalInfo").url;
 
 		// View the homepage
 		Response response = GET(INDEX_URL);
 		assertIsOk(response);
 		assertContentMatch("Start your submission",response); // the start button is there.
-		assertContentMatch(STATUS_URL,response); // and it's url.
+		assertContentMatch(LIST_URL,response); // and it's url.
 
-		response = GET(STATUS_URL);
+		response = GET(LIST_URL);
 		assertEquals(PERSONAL_INFO_URL,response.getHeader("Location"));
 		response = GET(PERSONAL_INFO_URL);
 		assertContentMatch("<title>Verify Personal Information</title>",response);
@@ -275,7 +286,7 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 				settingRepo.findAllMajors().get(0).getName(), // major 
 				"555-1212", // permPhone
 				"2222 Fake Street", // permAddress 
-				"noreply@noreply.org", // permEmail
+				"perm@noreply.org", // permEmail
 				"555-1212 ex2", // currentPhone 
 				"2222 Fake Street APT 11" //currentAddress
 				);	
@@ -304,7 +315,7 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 				"This is really cool work!", // abstractText 
 				"one; two; three;", // keywords
 				committee, // committee
-				"noreplyfromadvisor@noreply.org", // committeeEmail
+				"committee@noreply.org", // committeeEmail
 				String.valueOf(settingRepo.findAllEmbargoTypes().get(1).getId()), // embargo
 				"true" // UMI 
 				);
@@ -313,11 +324,145 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 		fileUpload("SamplePrimaryDocument.pdf", "SampleSupplementalDocument.doc");
 
 		// Finaly, confirm
-		confirm();
+		confirm("cdanes@gmail.com","committee@noreply.org");
 
 		// the cleanup will make sure the submission gets deleted.
 	}
+	
+	/**
+	 * Test weather multiple submissions are allowed.
+	 */
+	@Test
+	public void testMultipleSubmissionsAllowed() throws IOException {    
 
+		// Turn ON any of the extra paramaters
+		if (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_BIRTH) == null) {
+			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_BIRTH,"true").save();
+		}
+		if (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_COLLEGE) == null) {
+			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_COLLEGE,"true").save();
+		}
+		if (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_UMI) == null) {
+			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_UMI,"true").save();
+		}
+		if (settingRepo.getConfig(Configuration.ALLOW_MULTIPLE_SUBMISSIONS) == null) {
+			settingRepo.createConfiguration(Configuration.ALLOW_MULTIPLE_SUBMISSIONS,"true").save();
+		}
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+
+
+		// Login as the student Clair Danes
+		LOGIN("cdanes@gmail.com");
+
+		// Create first submission
+		personalInfo(
+				null, // firstName
+				"middle", // middleName
+				null, // lastName
+				"1971", // birthYear
+				settingRepo.findAllColleges().get(0).getName(), // college
+				settingRepo.findAllDepartments().get(0).getName(), // department 
+				settingRepo.findAllDegrees().get(0).getName(), // degree
+				settingRepo.findAllMajors().get(0).getName(), // major 
+				"555-1212", // permPhone
+				"2222 Fake Street", // permAddress 
+				"noreply@noreply.org", // permEmail
+				"555-1212 ex2", // currentPhone 
+				"2222 Fake Street APT 11" //currentAddress
+				);	
+		
+		// Attempt to create a second submission.
+		Long firstId = subId;
+		subId = null;
+		personalInfo(
+				null, // firstName
+				"middle", // middleName
+				null, // lastName
+				"1971", // birthYear
+				settingRepo.findAllColleges().get(0).getName(), // college
+				settingRepo.findAllDepartments().get(0).getName(), // department 
+				settingRepo.findAllDegrees().get(0).getName(), // degree
+				settingRepo.findAllMajors().get(0).getName(), // major 
+				"555-1212", // permPhone
+				"2222 Fake Street", // permAddress 
+				"noreply@noreply.org", // permEmail
+				"555-1212 ex2", // currentPhone 
+				"2222 Fake Street APT 11" //currentAddress
+				);	
+		
+		assertTrue(subId != firstId);
+		
+		// Clean up the first submission, the other one will happen in cleanup.
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		subRepo.findSubmission(firstId).delete();
+	}
+	
+	/**
+	 * Test weather multiple submissions are allowed.
+	 */
+	@Test
+	public void testMultipleSubmissionsDisallowed() throws IOException {    
+
+		// Turn ON any of the extra paramaters
+		if (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_BIRTH) == null) {
+			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_BIRTH,"true").save();
+		}
+		if (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_COLLEGE) == null) {
+			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_COLLEGE,"true").save();
+		}
+		if (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_UMI) == null) {
+			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_UMI,"true").save();
+		}
+		if (settingRepo.getConfig(Configuration.ALLOW_MULTIPLE_SUBMISSIONS) != null) {
+			settingRepo.findConfigurationByName(Configuration.ALLOW_MULTIPLE_SUBMISSIONS).delete();
+		}
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+
+
+		// Login as the student Clair Danes
+		LOGIN("cdanes@gmail.com");
+
+		// Create first submission
+		personalInfo(
+				null, // firstName
+				"middle", // middleName
+				null, // lastName
+				"1971", // birthYear
+				settingRepo.findAllColleges().get(0).getName(), // college
+				settingRepo.findAllDepartments().get(0).getName(), // department 
+				settingRepo.findAllDegrees().get(0).getName(), // degree
+				settingRepo.findAllMajors().get(0).getName(), // major 
+				"555-1212", // permPhone
+				"2222 Fake Street", // permAddress 
+				"noreply@noreply.org", // permEmail
+				"555-1212 ex2", // currentPhone 
+				"2222 Fake Street APT 11" //currentAddress
+				);	
+		
+		// Attempt to create a second submission.
+		String PERSONAL_INFO_URL = Router.reverse("submit.PersonalInfo.personalInfo").url;
+		
+		Response response = GET(PERSONAL_INFO_URL);
+		// This should fail.
+		assertEquals(new Integer(500),response.status);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * Handle the personal information step. If any value is null, then it will
 	 * not be submitted with the form data. All non-null inputs will be verified
@@ -593,7 +738,7 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 			assertEquals(Long.valueOf(embargo), sub.getEmbargoType().getId());
 		if (umi != null)
 			assertEquals(true, sub.getUMIRelease());
-
+		
 		assertEquals(committee.size(), sub.getCommitteeMembers().size());
 	}
 
@@ -662,9 +807,14 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 	/**
 	 * Confirm the submission. We assume there will be no errors because each
 	 * step before hand should have taken care of that.
+	 * 
+	 * @param studentEmail The email address of the student (so we can verify they received their email)
+	 * @param advisorEmail The email address of the advisor (so we can verify they received their email)
 	 */
-	public void confirm() {
+	public void confirm(String studentEmail, String advisorEmail) throws InterruptedException {
+		Mail.Mock.reset();
 
+		
 		// Get our URL
 		Map<String,Object> routeArgs = new HashMap<String,Object>();
 		routeArgs.put("subId",subId);
@@ -686,7 +836,44 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 
 		State newState = sub.getState();
 		assertTrue(newState != stateManager.getInitialState());
-
+		
+		
+		// Get the completted submission page.
+		response = GET(response.getHeader("Location"));
+		assertContentMatch("Submittal Complete", response);
+		
+		
+		// Verify the new state;
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		sub = subRepo.findSubmission(subId);
+		
+		// Wait for the emails to be recieved.
+		String studentContent = null;
+		for (int i = 0; i < 10; i++) {
+			Thread.yield();
+			Thread.sleep(100);
+			studentContent = Mail.Mock.getLastMessageReceivedBy(studentEmail);
+			if (studentContent != null)
+				break;
+		}
+		assertNotNull(studentContent);
+		
+		String advisorContent = null;
+		for (int i = 0; i < 10; i++) {
+			Thread.yield();
+			Thread.sleep(100);
+			advisorContent = Mail.Mock.getLastMessageReceivedBy(advisorEmail);
+			if (advisorContent != null)
+				break;
+		}
+		assertNotNull(advisorContent);
+		
+		// Verify the advisor can return.
+		assertNotNull(sub.getCommitteeEmailHash());
+		assertTrue(advisorContent.contains(sub.getCommitteeEmailHash()));
+		
 	}
 
 
