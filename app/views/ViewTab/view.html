@@ -183,6 +183,7 @@ jQuery(document).ready(function(){
 <div id="right-column">
 	<div class="inner">
 		<div id="alert-area">*{Javascript may dynamically fill this div with errors as needed.}*</div>
+		#{if submission.getDepositId()}<div id="depositId" class="label label-warning">Deposit ID: ${submission.getDepositId()}</div>#{/if}
 		<div id="mainHeader">#{include 'ViewTab/header.include' /}</div>
 		
 		<div class="edit-holder pull-left">
@@ -379,8 +380,11 @@ jQuery(document).ready(function(){
 							class="empty"><i class="icon-pencil"></i> none
 						#{/else}
 						</span></li>
-					#{if submission.getCommitteeContactEmail()}
+					#{if submission.getCommitteeContactEmail() && submission.getCommitteeEmailHash()}
 					<li><label></label><span><form action="@{ViewTab.sendAdvisorEmail(submission.getId())}" method="POST"><input type="submit" class="btn" value="Send Advisor Approval Email" /></form></span></li>
+					#{/if}
+					#{if isManager}
+						<li><label>Faculty Review URL:</label><span><a href="${advisorUrl}">${advisorUrl}</a></span></li>
 					#{/if}
 				</ul>				
 			</div>
