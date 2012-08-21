@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.CustomActionDefinition;
+import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.RoleType;
@@ -326,7 +327,7 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 		List<Person> results = personRepo.searchPersons(null, 0, ApplicationSettingsTab.SEARCH_MEMBERS_RESULTS_PER_PAGE);
 		for (Person result : results) {
 			assertContentMatch("personId_"+result.getId(),response);
-			assertContentMatch(result.getFullName(),response);
+			assertContentMatch(result.getFormattedName(NameFormat.FIRST_LAST),response);
 		}
 		
 		// Paginate to the next page
@@ -339,7 +340,7 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 		results = personRepo.searchPersons("", 2, ApplicationSettingsTab.SEARCH_MEMBERS_RESULTS_PER_PAGE);
 		for (Person result : results) {
 			assertContentMatch("personId_"+result.getId(),response);
-			assertContentMatch(result.getFullName(),response);
+			assertContentMatch(result.getFormattedName(NameFormat.FIRST_LAST),response);
 		}
 		
 		// Do a specific search for "Billy", there should be two users from the
@@ -353,7 +354,7 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 		results = personRepo.searchPersons("Billy", 0, ApplicationSettingsTab.SEARCH_MEMBERS_RESULTS_PER_PAGE);
 		for (Person result : results) {
 			assertContentMatch("personId_"+result.getId(),response);
-			assertContentMatch(result.getFullName(),response);
+			assertContentMatch(result.getFormattedName(NameFormat.FIRST_LAST),response);
 		}
 		
 	}
@@ -382,7 +383,7 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 		
 		assertContentMatch("Add Member",response);
 		assertContentMatch("personId_"+person.getId(),response);
-		assertContentMatch(person.getFullName(),response);
+		assertContentMatch(person.getFormattedName(NameFormat.FIRST_LAST),response);
 		
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();

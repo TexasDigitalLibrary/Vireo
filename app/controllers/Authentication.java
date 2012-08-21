@@ -19,6 +19,7 @@ import javax.mail.internet.InternetAddress;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.tdl.vireo.model.EmailTemplate;
+import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.RoleType;
@@ -370,11 +371,9 @@ public class Authentication extends AbstractVireoController {
 			
 			if (params.get("submit_register") != null) {
 				
-				if (firstName == null || firstName.trim().length() == 0)
-					validation.addError("firstName", "First name is required.");
-				
-				if (lastName == null || lastName.trim().length() == 0)
-					validation.addError("lastName", "Last name is required.");
+				if ( (firstName == null || firstName.trim().length() == 0) &&
+						(lastName == null || lastName.trim().length() == 0) )
+					validation.addError("lastName", "Either a First or Last name is required.");
 				
 				if (password1 == null || password1.trim().length() == 0)
 					validation.addError("password1", "Please pick a password.");
@@ -605,7 +604,7 @@ public class Authentication extends AbstractVireoController {
 		Person person = context.getPerson();
 		
 		// Person profile information.
-		String fullName = person.getFullName();
+		String fullName = person.getFormattedName(NameFormat.FIRST_LAST);
 		String email = person.getEmail();
 		String firstName = person.getFirstName();
 		String lastName = person.getLastName();
@@ -647,7 +646,7 @@ public class Authentication extends AbstractVireoController {
 			Authentication.profile();
 		
 		// Static content
-		String fullName = person.getFullName();
+		String fullName = person.getFormattedName(NameFormat.FIRST_LAST);
 		String email = person.getEmail();
 		
 		// Dynamic fields
@@ -739,7 +738,7 @@ public class Authentication extends AbstractVireoController {
 			Authentication.profile();
 		
 		// Static content
-		String fullName = person.getFullName();
+		String fullName = person.getFormattedName(NameFormat.FIRST_LAST);
 		
 		// Dynamic fields
 		String current = params.get("current");

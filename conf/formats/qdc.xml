@@ -16,30 +16,13 @@
 
     <!-- dc.creator = Student -->
 	<dc:creator>
-	    %{
-	         if (sub.getStudentLastName() == null) {
-	            out.print("Unknown");
-	         } else {
-	            out.print(sub.getStudentLastName());
-	            if (sub.getStudentFirstName() == null || sub.getStudentLastName()) {
-	                out.print(", ");
-	                if (sub.getStudentFirstName() != null)
-	                    out.print(sub.getStudentFirstName());
-	                out.print(" ");
-	                if (sub.getStudentMiddleName() != null)
-	                    out.print(sub.getStudentMiddleName());
-	            }
-	         }
-	         if (sub.getStudentBirthYear() != null) {
-	            out.print(" "+sub.getStudentBirthYear()+"-");
-	         }
-	    %} 
+	    ${ sub.getStudentFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH).escapeXml() }
 	</dc:creator>
 	
 	<!-- dc.title = Document Title -->
 	#{if sub.getDocumentTitle() != null } 
 	<dc:title>
-	    ${ sub.getDocumentTitle() }
+	    ${ sub.getDocumentTitle().escapeXml() }
 	</dc:title>
 	#{/if}
 	
@@ -47,7 +30,7 @@
 	#{if sub.getDocumentAbstract() != null } 
 	<dc:description xsi:type="dcterms:abstract">
 	dim:field mdschema="dc" element="description" qualifier="abstract">
-	    ${ sub.getDocumentAbstract() }
+	    ${ sub.getDocumentAbstract().escapeXml() }
 	</dc:description>
 	#{/if}
 	
@@ -55,7 +38,7 @@
 	#{if sub.getDocumentKeywords() != null } 
 	#{list items:sub.getDocumentKeywords().split(";"), as:'keyword'} 
 	<dc:subject>
-	    ${ keyword.trim() }
+	    ${ keyword.trim().escapeXml() }
 	</dc:subject>
 	#{/list}
 	#{/if}
@@ -63,21 +46,7 @@
 	<!-- dc.contributor.advisor = Committee Members, both chairs and members included (Multiple) -->
 	#{list items:sub.getCommitteeMembers(), as:'member'} 
 	<dc:contributor>
-	    %{
-	         if (member.getLastName() == null) {
-	            out.print("Unknown");
-	         } else {
-	            out.print(member.getLastName());
-	            if (member.getFirstName() == null || member.getLastName()) {
-	                out.print(", ");
-	                if (member.getFirstName() != null)
-	                    out.print(member.getFirstName());
-	                out.print(" ");
-	                if (member.getMiddleName() != null)
-	                    out.print(member.getMiddleName());
-	            }
-	         }
-	    %} 
+	   ${ member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH).escapeXml() }
 	</dc:contributor>
 	#{/list}
 	
@@ -107,7 +76,7 @@
 	<!-- dc.format = Primary Document's mimetype, almost always "application/pdf" -->
 	#{if sub.getPrimaryDocument() != null } 
 	<dc:format>
-	    ${ sub.getPrimaryDocument().getMimeType() }
+	    ${ sub.getPrimaryDocument().getMimeType().escapeXml() }
 	</dc:format>
 	#{/if}
 	
@@ -120,7 +89,7 @@
 	<!-- dc.identifier.uri == Deposit ID, this would only be available when re-depositing -->
 	#{if sub.getDepositId() != null } 
 	<dc:identifier xsi:type="dcterms:URI">
-	    ${ sub.getDepositId() }
+	    ${ sub.getDepositId().escapeXml() }
 	</dc:identifier>
 	#{/if}
 	

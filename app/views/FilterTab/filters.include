@@ -108,7 +108,7 @@ managing and modifying filters.
             <li><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=assignee&value=null">Unassigned</a></li>
             #{/if}
             #{else}
-            <li><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=assignee&value=${person.getId()}">${person.getFullName()}</a></li>
+            <li><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=assignee&value=${person.getId()}">${person.getFormattedName(org.tdl.vireo.model.NameFormat.FIRST_LAST)}</a></li>
             #{/else}
             #{/list}
         </ul>
@@ -338,7 +338,7 @@ different blocks this gets around this problem because each is independent.
             #{if shown == 6}
             <li class="more">more...</li>
             #{/if}
-            <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=assignee&value=${person.getId()}">${person.getFullName()}</a></li>
+            <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=assignee&value=${person.getId()}">${person.getFormattedName(org.tdl.vireo.model.NameFormat.FIRST_LAST)}</a></li>
             #{/if}
             #{/list}
         </ul>

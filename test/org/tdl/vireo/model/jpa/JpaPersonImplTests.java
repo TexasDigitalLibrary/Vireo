@@ -6,6 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.tdl.vireo.model.MockPerson;
+import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.security.SecurityContext;
@@ -69,15 +70,9 @@ public class JpaPersonImplTests extends UnitTest {
 			fail("Able to create person with null email");
 		} catch (IllegalArgumentException iae) {/* yay */}
 		
-		// create with null first
+		// create with null first & last name
 		try {
-			repo.createPerson("netid", "email@email.com",null, "last", RoleType.NONE);
-			fail("Able to create person with null first");
-		} catch (IllegalArgumentException iae) {/* yay */}
-		
-		// create with null last
-		try {
-			repo.createPerson("netid", "email@email.com", "first", null, RoleType.NONE);
+			repo.createPerson("netid", "email@email.com", null, null, RoleType.NONE);
 			fail("Able to create person with null last");
 		} catch (IllegalArgumentException iae) {/* yay */}
 		
@@ -93,17 +88,12 @@ public class JpaPersonImplTests extends UnitTest {
 			fail("Able to create person with blank email");
 		} catch (IllegalArgumentException iae) {/* yay */}
 		
-		// create with blank first
+		// create with blank first & last name
 		try {
-			repo.createPerson("netid", "email@email.com","", "last", RoleType.NONE);
+			repo.createPerson("netid", "email@email.com","", "", RoleType.NONE);
 			fail("Able to create person with blank first");
 		} catch (IllegalArgumentException iae) {/* yay */}
 		
-		// create with blank last
-		try {
-			repo.createPerson("netid", "email@email.com", "first", "", RoleType.NONE);
-			fail("Able to create person with blank last");
-		} catch (IllegalArgumentException iae) {/* yay */}
 	}
 	
 	/**
@@ -403,18 +393,14 @@ public class JpaPersonImplTests extends UnitTest {
 			fail("able to set email to null");
 		} catch (IllegalArgumentException iae) { /* yay */ }
 		
-		// First name to null
+		// first and last name to null
 		try {
 			person.setFirstName(null);
-			fail("able to set firstName to null");
-		} catch (IllegalArgumentException iae) { /* yay */ }
-		
-		// Lastname to null
-		try {
 			person.setLastName(null);
-			fail("able to set lastName to null");
+			person.save();
+			fail("able to set first and last name to null");
 		} catch (IllegalArgumentException iae) { /* yay */ }
-		
+	
 		// Role to null
 		try {
 			person.setRole(null);
@@ -427,16 +413,12 @@ public class JpaPersonImplTests extends UnitTest {
 			fail("able to set email to blank");
 		} catch (IllegalArgumentException iae) { /* yay */ }
 		
-		// First name to blank
+		// first and last name to blank
 		try {
 			person.setFirstName("");
-			fail("able to set firstName to blank");
-		} catch (IllegalArgumentException iae) { /* yay */ }
-		
-		// Lastname to blank
-		try {
 			person.setLastName("");
-			fail("able to set lastName to blank");
+			person.save();
+			fail("able to set first and last name to blank");
 		} catch (IllegalArgumentException iae) { /* yay */ }
 		
 		// Grad month out of bounds
@@ -454,14 +436,176 @@ public class JpaPersonImplTests extends UnitTest {
 		person.delete();
 	}
 	
+	/**
+	 * Test that we can support users with either a first or a last name.
+	 */
+	@Test
+	public void testFirstOrLasteName() {
+		
+		// Create a person with no last name.
+		Person hasFirst = repo.createPerson("netid-first", "first@email.com", "first", null, RoleType.NONE);
+		hasFirst.save();
+		
+		// Create a person with no first name.
+		Person hasLast = repo.createPerson("netid-last","last@email.com",null,"last", RoleType.NONE);
+		hasLast.save();
+		
+		// Switch hasFirst to just a last name
+		hasFirst.setFirstName(null);
+		hasFirst.setLastName("last");
+		hasFirst.save();
+		
+		// Switch hasLast to just a first name
+		hasLast.setFirstName("first");
+		hasLast.setLastName(null);
+		hasLast.save();
+		
+		// Give them both
+		hasFirst.setFirstName("first");
+		hasFirst.setLastName("last");
+		hasFirst.save();
+		
+		// Try and modify to no first or last name.
+		hasLast.setFirstName(null);
+		hasLast.setLastName(null);
+		try {
+			hasLast.save();
+			fail("able to modify to having no first or last name");
+		} catch (IllegalArgumentException iae) {
+			// yay
+		}
+		
+		hasFirst.delete();
+		hasLast.delete();
+		
+	}
+	
+	
 	/** 
 	 * Test the fullName method.
 	 */
 	@Test
 	public void testFullName() {
 		Person person = repo.createPerson("netid", "email@email.com", "First", "Last", RoleType.NONE);
+		person.setMiddleName("Middle");
+		person.setBirthYear(1980);
 	
-		assertEquals("First Last", person.getFullName());
+		// Try with everything defined
+		assertEquals("First Last", person.getFormattedName(NameFormat.FIRST_LAST));
+		assertEquals("First Middle Last", person.getFormattedName(NameFormat.FIRST_MIDDLE_LAST));
+		assertEquals("First Middle Last 1980-", person.getFormattedName(NameFormat.FIRST_MIDDLE_LAST_BIRTH));
+		assertEquals("First Last 1980-", person.getFormattedName(NameFormat.FIRST_LAST_BIRTH));
+		assertEquals("Last, First", person.getFormattedName(NameFormat.LAST_FIRST));
+		assertEquals("Last, First Middle", person.getFormattedName(NameFormat.LAST_FIRST_MIDDLE));
+		assertEquals("Last, First Middle 1980-", person.getFormattedName(NameFormat.LAST_FIRST_MIDDLE_BIRTH));
+		assertEquals("Last, First 1980-", person.getFormattedName(NameFormat.LAST_FIRST_BIRTH));
+		
+		// Without a first name
+		person.setFirstName(null);
+		assertEquals("Last", person.getFormattedName(NameFormat.FIRST_LAST));
+		assertEquals("Middle Last", person.getFormattedName(NameFormat.FIRST_MIDDLE_LAST));
+		assertEquals("Middle Last 1980-", person.getFormattedName(NameFormat.FIRST_MIDDLE_LAST_BIRTH));
+		assertEquals("Last 1980-", person.getFormattedName(NameFormat.FIRST_LAST_BIRTH));
+		assertEquals("Last", person.getFormattedName(NameFormat.LAST_FIRST));
+		assertEquals("Last, Middle", person.getFormattedName(NameFormat.LAST_FIRST_MIDDLE));
+		assertEquals("Last, Middle 1980-", person.getFormattedName(NameFormat.LAST_FIRST_MIDDLE_BIRTH));
+		assertEquals("Last 1980-", person.getFormattedName(NameFormat.LAST_FIRST_BIRTH));
+		
+		// Without a last name
+		person.setFirstName("First");
+		person.setLastName(null);
+		assertEquals("First", person.getFormattedName(NameFormat.FIRST_LAST));
+		assertEquals("First Middle", person.getFormattedName(NameFormat.FIRST_MIDDLE_LAST));
+		assertEquals("First Middle 1980-", person.getFormattedName(NameFormat.FIRST_MIDDLE_LAST_BIRTH));
+		assertEquals("First 1980-", person.getFormattedName(NameFormat.FIRST_LAST_BIRTH));
+		assertEquals("First", person.getFormattedName(NameFormat.LAST_FIRST));
+		assertEquals("First Middle", person.getFormattedName(NameFormat.LAST_FIRST_MIDDLE));
+		assertEquals("First Middle 1980-", person.getFormattedName(NameFormat.LAST_FIRST_MIDDLE_BIRTH));
+		assertEquals("First 1980-", person.getFormattedName(NameFormat.LAST_FIRST_BIRTH));
+
+		// Without a middle name
+		person.setLastName("Last");
+		person.setMiddleName(null);
+		assertEquals("First Last", person.getFormattedName(NameFormat.FIRST_LAST));
+		assertEquals("First Last", person.getFormattedName(NameFormat.FIRST_MIDDLE_LAST));
+		assertEquals("First Last 1980-", person.getFormattedName(NameFormat.FIRST_MIDDLE_LAST_BIRTH));
+		assertEquals("First Last 1980-", person.getFormattedName(NameFormat.FIRST_LAST_BIRTH));
+		assertEquals("Last, First", person.getFormattedName(NameFormat.LAST_FIRST));
+		assertEquals("Last, First", person.getFormattedName(NameFormat.LAST_FIRST_MIDDLE));
+		assertEquals("Last, First 1980-", person.getFormattedName(NameFormat.LAST_FIRST_MIDDLE_BIRTH));
+		assertEquals("Last, First 1980-", person.getFormattedName(NameFormat.LAST_FIRST_BIRTH));
+		
+		// Without a birth year
+		person.setMiddleName("Middle");
+		person.setBirthYear(null);
+		assertEquals("First Last", person.getFormattedName(NameFormat.FIRST_LAST));
+		assertEquals("First Middle Last", person.getFormattedName(NameFormat.FIRST_MIDDLE_LAST));
+		assertEquals("First Middle Last", person.getFormattedName(NameFormat.FIRST_MIDDLE_LAST_BIRTH));
+		assertEquals("First Last", person.getFormattedName(NameFormat.FIRST_LAST_BIRTH));
+		assertEquals("Last, First", person.getFormattedName(NameFormat.LAST_FIRST));
+		assertEquals("Last, First Middle", person.getFormattedName(NameFormat.LAST_FIRST_MIDDLE));
+		assertEquals("Last, First Middle", person.getFormattedName(NameFormat.LAST_FIRST_MIDDLE_BIRTH));
+		assertEquals("Last, First", person.getFormattedName(NameFormat.LAST_FIRST_BIRTH));
+		
+		
+		// With just a first name
+		person.setFirstName("First");
+		person.setMiddleName(null);
+		person.setLastName(null);
+		person.setBirthYear(null);
+		assertEquals("First", person.getFormattedName(NameFormat.FIRST_LAST));
+		assertEquals("First", person.getFormattedName(NameFormat.FIRST_MIDDLE_LAST));
+		assertEquals("First", person.getFormattedName(NameFormat.FIRST_MIDDLE_LAST_BIRTH));
+		assertEquals("First", person.getFormattedName(NameFormat.FIRST_LAST_BIRTH));
+		assertEquals("First", person.getFormattedName(NameFormat.LAST_FIRST));
+		assertEquals("First", person.getFormattedName(NameFormat.LAST_FIRST_MIDDLE));
+		assertEquals("First", person.getFormattedName(NameFormat.LAST_FIRST_MIDDLE_BIRTH));
+		assertEquals("First", person.getFormattedName(NameFormat.LAST_FIRST_BIRTH));
+		
+		// With just a last name
+		person.setFirstName(null);
+		person.setMiddleName(null);
+		person.setLastName("Last");
+		person.setBirthYear(null);
+		assertEquals("Last", person.getFormattedName(NameFormat.FIRST_LAST));
+		assertEquals("Last", person.getFormattedName(NameFormat.FIRST_MIDDLE_LAST));
+		assertEquals("Last", person.getFormattedName(NameFormat.FIRST_MIDDLE_LAST_BIRTH));
+		assertEquals("Last", person.getFormattedName(NameFormat.FIRST_LAST_BIRTH));
+		assertEquals("Last", person.getFormattedName(NameFormat.LAST_FIRST));
+		assertEquals("Last", person.getFormattedName(NameFormat.LAST_FIRST_MIDDLE));
+		assertEquals("Last", person.getFormattedName(NameFormat.LAST_FIRST_MIDDLE_BIRTH));
+		assertEquals("Last", person.getFormattedName(NameFormat.LAST_FIRST_BIRTH));
+		
+		// With just a first name and a birth year
+		person.setFirstName("First");
+		person.setMiddleName(null);
+		person.setLastName(null);
+		person.setBirthYear(1980);
+		assertEquals("First", person.getFormattedName(NameFormat.FIRST_LAST));
+		assertEquals("First", person.getFormattedName(NameFormat.FIRST_MIDDLE_LAST));
+		assertEquals("First 1980-", person.getFormattedName(NameFormat.FIRST_MIDDLE_LAST_BIRTH));
+		assertEquals("First 1980-", person.getFormattedName(NameFormat.FIRST_LAST_BIRTH));
+		assertEquals("First", person.getFormattedName(NameFormat.LAST_FIRST));
+		assertEquals("First", person.getFormattedName(NameFormat.LAST_FIRST_MIDDLE));
+		assertEquals("First 1980-", person.getFormattedName(NameFormat.LAST_FIRST_MIDDLE_BIRTH));
+		assertEquals("First 1980-", person.getFormattedName(NameFormat.LAST_FIRST_BIRTH));
+		
+		
+		// With just a last name and birth year
+		person.setFirstName(null);
+		person.setMiddleName(null);
+		person.setLastName("Last");
+		person.setBirthYear(1980);
+		assertEquals("Last", person.getFormattedName(NameFormat.FIRST_LAST));
+		assertEquals("Last", person.getFormattedName(NameFormat.FIRST_MIDDLE_LAST));
+		assertEquals("Last 1980-", person.getFormattedName(NameFormat.FIRST_MIDDLE_LAST_BIRTH));
+		assertEquals("Last 1980-", person.getFormattedName(NameFormat.FIRST_LAST_BIRTH));
+		assertEquals("Last", person.getFormattedName(NameFormat.LAST_FIRST));
+		assertEquals("Last", person.getFormattedName(NameFormat.LAST_FIRST_MIDDLE));
+		assertEquals("Last 1980-", person.getFormattedName(NameFormat.LAST_FIRST_MIDDLE_BIRTH));
+		assertEquals("Last 1980-", person.getFormattedName(NameFormat.LAST_FIRST_BIRTH));
+		
+		
 		person.delete();
 	}
 	

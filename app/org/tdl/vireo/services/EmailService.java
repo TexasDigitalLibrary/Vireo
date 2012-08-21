@@ -4,6 +4,7 @@ import java.text.DateFormatSymbols;
 import java.util.List;
 
 import org.tdl.vireo.model.EmailTemplate;
+import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Submission;
 
 /**
@@ -125,7 +126,7 @@ public interface EmailService {
 			}
 
 			if (submission.getAssignee() != null)
-				SUBMISSION_ASSIGNED_TO = submission.getAssignee().getFullName();
+				SUBMISSION_ASSIGNED_TO = submission.getAssignee().getFormattedName(NameFormat.FIRST_LAST);
 		}
 		
 	}

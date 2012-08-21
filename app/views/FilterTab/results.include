@@ -68,19 +68,7 @@ in results.
                      }
                      break;
                  case STUDENT_NAME:
-                     if (sub.getStudentLastName() == null) {
-                        out.print("Unknown");
-                     } else {
-                        out.print(sub.getStudentLastName());
-                        if (sub.getStudentFirstName() == null || sub.getStudentLastName()) {
-                            out.print(", ");
-                            if (sub.getStudentFirstName() != null)
-                                out.print(sub.getStudentFirstName());
-                            out.print(" ");
-                            if (sub.getStudentMiddleName() != null)
-                                out.print(sub.getStudentMiddleName());
-                        }
-                     }
+                     out.print(sub.getStudentFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH));
                      break;
                  case STATE:
                      if ("log".equals(nav)) {
@@ -95,10 +83,10 @@ in results.
                  case ASSIGNEE:
                      if ("log".equals(nav)) {
                          if (log.getPerson() != null) 
-                             out.print(log.getPerson().getFullName());
+                             out.print(log.getPerson().getFormattedName(org.tdl.vireo.model.NameFormat.FIRST_LAST));
                      } else {
                          if (sub.getAssignee() != null)
-                             out.print(sub.getAssignee().getFullName());
+                             out.print(sub.getAssignee().getFormattedName(org.tdl.vireo.model.NameFormat.FIRST_LAST));
                      }
                      break;
                  case DOCUMENT_TITLE:
@@ -153,7 +141,7 @@ in results.
                             out.print("; ");
                         else
                             first = false;
-                        out.print(member.getFullName());                             
+                        out.print(member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST));                             
                      }
                      break;
                  case COMMITTEE_CONTACT_EMAIL:

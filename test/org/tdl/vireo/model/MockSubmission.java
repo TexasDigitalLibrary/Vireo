@@ -140,6 +140,11 @@ public class MockSubmission extends AbstractMock implements Submission {
 	}
 
 	@Override
+	public String getStudentFormattedName(NameFormat format) {
+		return NameFormat.format(format, studentFirstName, studentMiddleName, studentLastName, studentBirthYear);
+	}
+	
+	@Override
 	public String getDocumentTitle() {
 		return documentTitle;
 	}

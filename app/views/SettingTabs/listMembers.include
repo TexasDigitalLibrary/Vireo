@@ -40,7 +40,7 @@
                 #{/else}
                 #{if currentUser == person}<span class="info">(you)</span>#{/if}
             </td>
-            <td>${person.getFullName()}</td>
+            <td>${person.getFormattedName(org.tdl.vireo.model.NameFormat.FIRST_LAST)}</td>
             <td>${person.getEmail()}</td>
         </tr>
         #{/list}

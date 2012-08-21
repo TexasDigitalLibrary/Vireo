@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
+import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.Preference;
@@ -93,7 +94,7 @@ public class SettingsTabTest extends AbstractVireoFunctionalTest {
 		JPA.em().getTransaction().begin();
 		
 		person = personRepo.findPersonByEmail("bthornton@gmail.com");
-		assertEquals(person.getFullName(),person.getDisplayName());
+		assertEquals(person.getFormattedName(NameFormat.FIRST_LAST),person.getDisplayName());
 		person.setDisplayName(originalDisplayName);
 		person.save();
 		

@@ -19,7 +19,7 @@ public interface PersonRepository {
 	// //////////////
 
 	/**
-	 * Create a new person model.
+	 * Create a new person model. Either the first or last name must be present.
 	 * 
 	 * @param netId
 	 *            The unique netid of the person.

@@ -40,6 +40,7 @@ import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.Major;
+import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.security.SecurityContext;
@@ -233,6 +234,9 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		
 		assertReviewerOrOwner(submitter);
 
+		if (firstName != null && firstName.trim().length() == 0)
+			firstName = null;
+		
 		if (!equals(this.studentFirstName,firstName)) {
 			this.studentFirstName = firstName;
 			generateChangeLog("Student first name", firstName, false);
@@ -249,6 +253,9 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		
 		assertReviewerOrOwner(submitter);
 
+		if (lastName != null && lastName.trim().length() == 0)
+			lastName = null;
+		
 		if (!equals(this.studentLastName,lastName)) {
 			this.studentLastName = lastName;
 			generateChangeLog("Student last name", lastName, false);
@@ -264,6 +271,9 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		
 		assertReviewerOrOwner(submitter);
 
+		if (middleName != null && middleName.trim().length() == 0)
+			middleName = null;
+		
 		if (!equals(this.studentMiddleName,middleName)) {
 			this.studentMiddleName = middleName;
 			generateChangeLog("Student middle name", middleName, false);
@@ -288,6 +298,12 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 			else
 				generateChangeLog("Student birth year", String.valueOf(year),false);
 		}
+	}
+	
+	@Override
+	public String getStudentFormattedName(NameFormat format) {
+		
+		return NameFormat.format(format, studentFirstName, studentMiddleName, studentLastName, studentBirthYear);
 	}
 
 	@Override
@@ -748,7 +764,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		if (assignee == null)
 			generateChangeLog("Assignee", null,true);
 		else
-			generateChangeLog("Assignee",assignee.getFullName(),true);
+			generateChangeLog("Assignee",assignee.getFormattedName(NameFormat.FIRST_LAST),true);
 	}
 
 	@Override
@@ -865,7 +881,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		Person actor = context.getPerson();
 		String actorName = "an unknown user";
 		if (actor != null)
-			actorName = actor.getFullName();
+			actorName = actor.getFormattedName(NameFormat.FIRST_LAST);
 		
 		entry = entry + " by " + actorName;
 		

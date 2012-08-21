@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.CommitteeMember;
 import org.tdl.vireo.model.MockPerson;
+import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
@@ -91,14 +92,22 @@ public class JpaCommitteeMemberImplTests extends UnitTest {
 	public void testBadCreateMember() {
 		
 		try {
-			sub.addCommitteeMember(null, "last", "middle", false);
-			fail("able to create a member without a first name.");
+			sub.addCommitteeMember(null, null, "middle", false);
+			fail("able to create a member without a first or last name.");
 		} catch (IllegalArgumentException iae) { /* yay */ }
+	}
+	
+	/**
+	 * Test creating a member with just a first or last name.
+	 */
+	@Test
+	public void testCreateSingleNamedMember() {
+		CommitteeMember justFirst = sub.addCommitteeMember("first", null, null, false).save();
+
+		CommitteeMember justLast = sub.addCommitteeMember(null, "last", null, false).save();
 		
-		try {
-			sub.addCommitteeMember("first", null, "middle", false);
-			fail("able to create a member without a last name.");
-		} catch (IllegalArgumentException iae) { /* yay */ }
+		justFirst.delete();
+		justLast.delete();
 	}
 	
 	/**
@@ -121,6 +130,18 @@ public class JpaCommitteeMemberImplTests extends UnitTest {
 		CommitteeMember retrieved = subRepo.findCommitteeMember(member.getId());
 		
 		assertEquals(member.getId(), retrieved.getId());
+	}
+	
+	/**
+	 * Test name formatting
+	 */
+	@Test 
+	public void testStudentNameFormat() {
+		CommitteeMember member = sub.addCommitteeMember("First", "Last", "Middle", false).save();
+
+		
+		assertEquals("Last, First Middle",member.getFormattedName(NameFormat.LAST_FIRST_MIDDLE_BIRTH));
+
 	}
 	
 	/**

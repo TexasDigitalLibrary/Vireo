@@ -44,12 +44,6 @@ public interface CommitteeMember extends AbstractOrderedModel {
 	 *            The new middle name of the committee member.
 	 */
 	public void setMiddleName(String middleName);
-
-	/**
-	 * @return the full name (first, middle, and last names) of this committee
-	 *         member.
-	 */
-	public String getFullName();
 	
 	/**
 	 * @return True if this committee member is a chair or co-chair of the
@@ -63,5 +57,13 @@ public interface CommitteeMember extends AbstractOrderedModel {
 	 *            student's degree committee.
 	 */
 	public void setCommitteeChair(boolean chair);
+	
+	/**
+	 * @param format
+	 *            The format specifying how the name should be constructed.
+	 * 
+	 * @return The committee member's name according to the format specified.
+	 */
+	public String getFormattedName(NameFormat format);
 
 }

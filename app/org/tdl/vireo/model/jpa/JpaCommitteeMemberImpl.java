@@ -8,6 +8,7 @@ import javax.persistence.Table;
 
 import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.CommitteeMember;
+import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.state.StateManager;
 
@@ -60,11 +61,14 @@ public class JpaCommitteeMemberImpl extends JpaAbstractModel<JpaCommitteeMemberI
 		if (submission == null)
 			throw new IllegalArgumentException("Submissions are required");
 		
-		if (firstName == null || firstName.length() == 0)
-			throw new IllegalArgumentException("First name is required");
+		if (firstName != null && firstName.trim().length() == 0)
+			firstName = null;
 		
-		if (lastName == null || lastName.length() == 0)
-			throw new IllegalArgumentException("Last name is required");
+		if (lastName != null && lastName.trim().length() == 0)
+			lastName = null;
+		
+		if (firstName == null && lastName == null)
+			throw new IllegalArgumentException("Either a first or a last name is required.");
 		
 		assertReviewerOrOwner(submission.getSubmitter());
 		
@@ -81,6 +85,11 @@ public class JpaCommitteeMemberImpl extends JpaAbstractModel<JpaCommitteeMemberI
 		
 		assertReviewerOrOwner(submission.getSubmitter());
 		
+		// Do the check to ensure that there it at least a first or a last name available.
+		if ((firstName == null || firstName.length() == 0) &&
+			(lastName == null || lastName.length() == 0))
+			throw new IllegalArgumentException("Either a first or a last name is required.");
+		
 		boolean newObject = false;
 		if (id == null)
 			newObject = true;
@@ -93,13 +102,13 @@ public class JpaCommitteeMemberImpl extends JpaAbstractModel<JpaCommitteeMemberI
 				if (newObject) {
 					
 				// We're a new object so log the addition.
-				String entry = "Committee member '"+this.getFullName()+"'"+(this.isCommitteeChair() ? " as chair" : "")+" added";
+				String entry = "Committee member '"+this.getFormattedName(NameFormat.FIRST_MIDDLE_LAST)+"'"+(this.isCommitteeChair() ? " as chair" : "")+" added";
 				submission.logAction(entry).save();
 	
 			} else {
 				
 				// We've been updated so log the change.
-				String entry = "Committee member '"+this.getFullName()+"'"+(this.isCommitteeChair() ? " as chair" : "")+" modified";
+				String entry = "Committee member '"+this.getFormattedName(NameFormat.FIRST_MIDDLE_LAST)+"'"+(this.isCommitteeChair() ? " as chair" : "")+" modified";
 				submission.logAction(entry).save();
 			}
 		}
@@ -121,7 +130,7 @@ public class JpaCommitteeMemberImpl extends JpaAbstractModel<JpaCommitteeMemberI
 		StateManager manager = Spring.getBeanOfType(StateManager.class);
 		if (manager.getInitialState() != submission.getState()) {
 			
-			String entry = "Committee member '"+this.getFullName()+"'"+(this.isCommitteeChair() ? " as chair" : "")+" removed";
+			String entry = "Committee member '"+this.getFormattedName(NameFormat.FIRST_MIDDLE_LAST)+"'"+(this.isCommitteeChair() ? " as chair" : "")+" removed";
 			submission.logAction(entry).save();
 		}
 		
@@ -182,12 +191,9 @@ public class JpaCommitteeMemberImpl extends JpaAbstractModel<JpaCommitteeMemberI
 	}
 	
 	@Override
-	public String getFullName() {
+	public String getFormattedName(NameFormat format) {
 		
-		if (middleName == null)
-			return firstName + " " + lastName;
-		else
-			return firstName + " " + middleName + " " + lastName;
+		return NameFormat.format(format, firstName, middleName, lastName, null);
 	}
 
 	@Override

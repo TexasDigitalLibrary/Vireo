@@ -15,6 +15,7 @@ import org.apache.lucene.store.LockObtainFailedException;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.CommitteeMember;
 import org.tdl.vireo.model.CustomActionValue;
+import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Submission;
 
 import play.Logger;
@@ -186,7 +187,7 @@ public abstract class LuceneAbstractJobImpl extends Job {
 		String sortAssigned = "";
 		if (sub.getAssignee() != null) {
 			searchAssigned = sub.getAssignee().getId();
-			sortAssigned = sub.getAssignee().getFullName();
+			sortAssigned = sub.getAssignee().getFormattedName(NameFormat.LAST_FIRST_MIDDLE_BIRTH);
 			searchText.append(sortAssigned).append(" ");
 		}
 		
@@ -389,7 +390,7 @@ public abstract class LuceneAbstractJobImpl extends Job {
 			String logSortAssigned = null;
 			if (log.getPerson() != null) {
 				logSearchAssigned = log.getPerson().getId();
-				logSortAssigned = log.getPerson().getFullName();
+				logSortAssigned = log.getPerson().getFormattedName(NameFormat.FIRST_LAST);
 			}
 			Date logTime = log.getActionDate();
 			

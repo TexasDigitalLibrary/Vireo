@@ -81,6 +81,14 @@ public interface Submission extends AbstractModel {
 	 */
 	public void setStudentBirthYear(Integer year);
 	
+	/**
+	 * @param format
+	 *            The format specifying how the name should be constructed.
+	 * 
+	 * @return The student's name according to the format specified.
+	 */
+	public String getStudentFormattedName(NameFormat format);
+	
 	
 	/**
 	 * @return The document title.

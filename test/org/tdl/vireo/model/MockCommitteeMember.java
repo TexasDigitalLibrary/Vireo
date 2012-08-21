@@ -97,11 +97,8 @@ public class MockCommitteeMember extends AbstractMock implements CommitteeMember
 	}
 	
 	@Override
-	public String getFullName() {
-		if (middleName == null)
-			return firstName + " " + lastName;
-		else
-			return firstName + " " + middleName + " " + lastName;
+	public String getFormattedName(NameFormat format) {
+		return NameFormat.format(format, firstName, middleName, lastName, null);
 	}
 
 	@Override

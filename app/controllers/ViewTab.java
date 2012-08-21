@@ -79,6 +79,8 @@ public class ViewTab extends AbstractVireoController {
 		Boolean isManager = context.isManager();
 		
 		Submission submission = subRepo.findSubmission(id);
+		if (submission == null)
+			FilterTab.list();
 		Person submitter = submission.getSubmitter();
 		
 		String advisorUrl = getAdvisorURL(submission);
@@ -148,9 +150,6 @@ public class ViewTab extends AbstractVireoController {
 
 			//First Name
 			if("firstName".equals(field)) {
-				if(value == null || value.length() == 0)
-					throw new RuntimeException("First Name is required.");
-
 				submission.setStudentFirstName(value);
 				currentValue = submission.getStudentFirstName();
 
@@ -161,9 +160,6 @@ public class ViewTab extends AbstractVireoController {
 
 				//Last Name
 			} else if("lastName".equals(field)) {
-				if(value==null || value.length()==0)
-					throw new RuntimeException("Last Name is required.");
-
 				submission.setStudentLastName(value);				
 				currentValue = submission.getStudentLastName();	
 
@@ -396,11 +392,8 @@ public class ViewTab extends AbstractVireoController {
 		
 		try {
 
-			if(firstName==null || firstName.length()==0)
-				throw new RuntimeException("Committee Member First Name is required.");
-
-			if(lastName==null || lastName.length()==0)
-				throw new RuntimeException("Committee Member Last Name is required.");
+			if(firstName == null && lastName == null)
+				throw new RuntimeException("Committee Member First or Last name is required.");
 
 			newMember = submission.addCommitteeMember(firstName, lastName, middleName, chair);
 
@@ -457,11 +450,8 @@ public class ViewTab extends AbstractVireoController {
 		}
 		try {
 
-			if(firstName==null || firstName.length()==0)
-				throw new RuntimeException("Committee Member First Name is required.");
-
-			if(lastName==null || lastName.length()==0)
-				throw new RuntimeException("Committee Member Last Name is required.");
+			if(firstName == null && lastName == null)
+				throw new RuntimeException("Committee Member First or Last name is required");
 
 			CommitteeMember committeeMember = subRepo.findCommitteeMember(id);
 

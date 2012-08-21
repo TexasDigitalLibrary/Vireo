@@ -90,6 +90,9 @@ public interface Person extends AbstractModel {
 	public String getFirstName();
 
 	/**
+	 * By the time this object is saved, either a first or a last name must
+	 * exist on the person.
+	 * 
 	 * @param firstName
 	 *            The new first name of the person.
 	 */
@@ -107,6 +110,9 @@ public interface Person extends AbstractModel {
 	public void setMiddleName(String middleName);
 
 	/**
+	 * By the time this object is saved, either a first or a last name must
+	 * exist on the person.
+	 * 
 	 * @return The last name of the person.
 	 */
 	public String getLastName();
@@ -119,10 +125,12 @@ public interface Person extends AbstractModel {
 	public void setLastName(String lastName);
 
 	/**
-	 * @return Return the full name of this person composed of their first and
-	 *         last names.
+	 * @param format
+	 *            The format specifying how the name should be constructed.
+	 * 
+	 * @return The person's name according to the format specified.
 	 */
-	public String getFullName();
+	public String getFormattedName(NameFormat format);
 	
 	/**
 	 * @return The preferred display name for the person. If no specific

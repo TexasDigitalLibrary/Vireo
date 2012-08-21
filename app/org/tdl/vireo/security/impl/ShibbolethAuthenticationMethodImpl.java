@@ -247,8 +247,8 @@ public class ShibbolethAuthenticationMethodImpl extends
 			Logger.error("Shib: Missing required email address attributes. Email address attribute header = %1s.", headerEmail);
 			return AuthenticationResult.MISSING_CREDENTIALS;
 		}
-		if (firstName == null || lastName == null) {
-			Logger.error("Shib: Missing required first and/or last name attributes. First Name attribute header = %1s, Last Name attribute header = %2s", headerFirstName, headerLastName);
+		if (firstName == null && lastName == null) {
+			Logger.error("Shib: Missing required first and last name attributes. First Name attribute header = %1s, Last Name attribute header = %2s", headerFirstName, headerLastName);
 			return AuthenticationResult.MISSING_CREDENTIALS;
 		}
 				

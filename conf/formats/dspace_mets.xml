@@ -39,24 +39,7 @@
 
                     <!-- dc.creator = Student -->
                     <dim:field mdschema="dc" element="creator">
-                        %{
-                             if (sub.getStudentLastName() == null) {
-                                out.print("Unknown");
-                             } else {
-                                out.print(sub.getStudentLastName().escapeXml());
-                                if (sub.getStudentFirstName() == null || sub.getStudentLastName()) {
-                                    out.print(", ");
-                                    if (sub.getStudentFirstName() != null)
-                                        out.print(sub.getStudentFirstName().escapeXml());
-                                    out.print(" ");
-                                    if (sub.getStudentMiddleName() != null)
-                                        out.print(sub.getStudentMiddleName().escapeXml());
-                                }
-                             }
-                             if (sub.getStudentBirthYear() != null) {
-                                out.print(" "+sub.getStudentBirthYear()+"-");
-                             }
-                        %} 
+                        ${ sub.getStudentFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH) }
                     </dim:field>
 
                     <!-- dc.title = Document Title -->
@@ -86,21 +69,7 @@
                     #{list items:sub.getCommitteeMembers(), as:'member'} 
                     #{if member.isCommitteeChair() } 
                     <dim:field mdschema="dc" element="contributor" qualifier="advisor">
-                        %{
-                             if (member.getLastName() == null) {
-                                out.print("Unknown");
-                             } else {
-                                out.print(member.getLastName().escapeXml());
-                                if (member.getFirstName() == null || member.getLastName()) {
-                                    out.print(", ");
-                                    if (member.getFirstName() != null)
-                                        out.print(member.getFirstName().escapeXml());
-                                    out.print(" ");
-                                    if (member.getMiddleName() != null)
-                                        out.print(member.getMiddleName().escapeXml());
-                                }
-                             }
-                        %} 
+                        ${ member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH) }
                     </dim:field>
                     #{/if}
                     #{/list}
@@ -110,21 +79,7 @@
                     #{list items:sub.getCommitteeMembers(), as:'member'}
                     #{if !member.isCommitteeChair() } 
                     <dim:field mdschema="dc" element="contributor" qualifier="advisor">
-                        %{
-                             if (member.getLastName() == null) {
-                                out.print("Unknown");
-                             } else {
-                                out.print(member.getLastName().escapeXml());
-                                if (member.getFirstName() == null || member.getLastName()) {
-                                    out.print(", ");
-                                    if (member.getFirstName() != null)
-                                        out.print(member.getFirstName().escapeXml());
-                                    out.print(" ");
-                                    if (member.getMiddleName() != null)
-                                        out.print(member.getMiddleName().escapeXml());
-                                }
-                             }
-                        %} 
+                        ${ member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH) } 
                     </dim:field>
                     #{/if}
                     #{/list}

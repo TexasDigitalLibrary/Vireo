@@ -124,7 +124,7 @@ jQuery(document).ready(function() {
                         Your private filter
                         #{/elseif}
                         #{else}
-                        ${filter.getCreator().getFullName()}'s public filter
+                        ${filter.getCreator().getFormattedName(org.tdl.vireo.model.NameFormat.FIRST_LAST)}'s public filter
                         #{/else}
                     </td>
                 </tr>

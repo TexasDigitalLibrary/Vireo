@@ -139,7 +139,7 @@
 	<div class="control-group">
 		<label class="control-label"><b>Committee Member:</b></label>
 		<div class="controls">
-			<p>${member.getFullName()}
+			<p>${member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST)}
 			#{if member.isCommitteeChair()}
 			<em>(chair)</em>
 			#{/if}

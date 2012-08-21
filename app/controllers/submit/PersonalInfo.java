@@ -353,13 +353,12 @@ public class PersonalInfo extends AbstractSubmitStep {
 		int numberOfErrorsBefore = validation.errors().size();
 		
 		// First name
-		if (firstName == null || firstName.trim().length() == 0)
-			validation.addError("firstName","First name is required.");
-
-		// Last name
-		if (lastName == null || lastName.trim().length() == 0)
-			validation.addError("lastName","Last name is required.");
-
+		if ((firstName == null || firstName.trim().length() == 0) &&
+			(lastName == null || lastName.trim().length() == 0)) {
+			validation.addError("firstName","Either the first or last name is required");
+			validation.addError("lastName","Either the first or last name is required");
+		}
+		
 		// Year of birth
 		Integer birthYearInt = null;
 		if (requestBirth && birthYear != null && birthYear.trim().length() > 0) {

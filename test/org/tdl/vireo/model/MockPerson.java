@@ -220,8 +220,8 @@ public class MockPerson extends AbstractMock implements Person {
 	}
 	
 	@Override
-	public String getFullName() {
-		return firstName + " "+ lastName;
+	public String getFormattedName(NameFormat format) {
+		return NameFormat.format(format, firstName, middleName, lastName, birthYear);
 	}
 
 	@Override

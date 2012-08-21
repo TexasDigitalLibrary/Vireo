@@ -13,9 +13,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.CustomActionValue;
+import org.tdl.vireo.model.NameFormat;
+import org.tdl.vireo.model.NameFormat.NameFormatter;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Preference;
 import org.tdl.vireo.model.RoleType;
@@ -51,10 +54,10 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 	@Column(length=255)
 	public String institutionalIdentifier;
 
-	@Column(nullable = false, length=255) 
+	@Column(length=255) 
 	public String firstName;
 
-	@Column(nullable = false, length=255) 
+	@Column(length=255) 
 	public String lastName;
 	@Column(length=255) 
 	public String middleName;
@@ -116,11 +119,14 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 		if (email == null || email.length() == 0)
 			throw new IllegalArgumentException("Email is required");
 		
-		if (firstName == null || firstName.length() == 0)
-			throw new IllegalArgumentException("FirstName is required");
+		if (firstName != null && firstName.trim().length() == 0)
+			firstName = null;
 		
-		if (lastName == null || lastName.length() == 0)
-			throw new IllegalArgumentException("lastName is required");
+		if (lastName != null && lastName.trim().length() == 0)
+			lastName = null;
+		
+		if (firstName == null && lastName == null)
+			throw new IllegalArgumentException("Either a first or a last name is required.");
 		
 		if (role == null )
 			throw new IllegalArgumentException("Role is required");
@@ -144,6 +150,11 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 		// the manager can change the person's role. So when saving we just
 		// allow managers (or above) or the original person to edit the object.
 		assertManagerOrOwner(this);
+		
+		// Do the check to ensure that there it at least a first or a last name available.
+		if ((firstName == null || firstName.length() == 0) &&
+			(lastName == null || lastName.length() == 0))
+			throw new IllegalArgumentException("Either a first or a last name is required.");
 		
 		return super.save();
 	}
@@ -221,10 +232,11 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 	@Override
 	public void setFirstName(String firstName) {
 		
-		if (firstName == null || firstName.length() == 0)
-			throw new IllegalArgumentException("firstName is required");
-		
 		assertAdministratorOrOwner(this);
+		
+		// Convert blanks to nulls.
+		if (firstName != null && firstName.trim().length() == 0)
+			firstName = null;
 		
 		this.firstName = firstName;
 	}
@@ -247,24 +259,26 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 	@Override
 	public void setLastName(String lastName) {
 		
-		if (lastName == null || lastName.length() == 0)
-			throw new IllegalArgumentException("lastName is required");
-		
 		assertAdministratorOrOwner(this);
+		
+		// Convert blanks to nulls.
+		if (lastName != null && lastName.trim().length() == 0)
+			lastName = null;
 		
 		this.lastName = lastName;
 	}
 	
 	@Override
-	public String getFullName() {
-		return firstName + " " + lastName;
+	public String getFormattedName(NameFormat format) {
+		
+		return NameFormat.format(format, firstName, middleName, lastName, birthYear);
 	}
 
 	@Override
 	public String getDisplayName() {
 		
 		if (displayName == null)
-			return getFullName();
+			return getFormattedName(NameFormat.FIRST_LAST);
 		else
 			return displayName;
 	}

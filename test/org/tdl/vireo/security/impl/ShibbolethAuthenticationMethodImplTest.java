@@ -319,15 +319,13 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		headersWithoutNetid.remove("SHIB_netid");
 		Map<String,String> headersWithoutMail = new HashMap<String,String>(headers);
 		headersWithoutMail.remove("SHIB_mail");
-		Map<String,String> headersWithoutFirstName = new HashMap<String,String>(headers);
-		headersWithoutFirstName.remove("SHIB_givenName");
-		Map<String,String> headersWithoutLastName = new HashMap<String,String>(headers);
-		headersWithoutLastName.remove("SHIB_sn");
+		Map<String,String> headersWithoutName = new HashMap<String,String>(headers);
+		headersWithoutName.remove("SHIB_givenName");
+		headersWithoutName.remove("SHIB_sn");
 		
 		Request requestWithoutNetid = buildRequest(headersWithoutNetid);
 		Request requestWithoutMail = buildRequest(headersWithoutMail);
-		Request requestWithoutFirstName = buildRequest(headersWithoutFirstName);
-		Request requestWithoutLastName = buildRequest(headersWithoutLastName);
+		Request requestWithoutName = buildRequest(headersWithoutName);
 		
 		// Try each time with one value missing
 		AuthenticationResult result = method.authenticate(requestWithoutNetid);
@@ -338,11 +336,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		assertEquals(AuthenticationResult.MISSING_CREDENTIALS, result);
 		assertNull(context.getPerson());
 		
-		result = method.authenticate(requestWithoutFirstName);
-		assertEquals(AuthenticationResult.MISSING_CREDENTIALS, result);
-		assertNull(context.getPerson());
-		
-		result = method.authenticate(requestWithoutLastName);
+		result = method.authenticate(requestWithoutName);
 		assertEquals(AuthenticationResult.MISSING_CREDENTIALS, result);
 		assertNull(context.getPerson());
 		

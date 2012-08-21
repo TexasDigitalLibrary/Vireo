@@ -7,6 +7,7 @@ import java.util.Date;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.Configuration;
+import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
@@ -175,7 +176,7 @@ public class License extends AbstractSubmitStep {
 		Person submitter = context.getPerson();
 
 		licenseText += "\n\n--------------------------------------------------------------------------\n";
-		licenseText += "The license above was accepted by "+submitter.getFullName()+" on "+formatter.format(agreementDate)+"\n";
+		licenseText += "The license above was accepted by "+submitter.getFormattedName(NameFormat.FIRST_LAST)+" on "+formatter.format(agreementDate)+"\n";
 
 		return licenseText;
 

@@ -119,26 +119,8 @@
                 <marc:subfield code="e">author</marc:subfield>
             </marc:datafield>
     -->
-    %{
-        def studentName = "unknown";
-        if (sub.getStudentLastName() != null) {
-            studentName = sub.getStudentLastName();
-            if (sub.getStudentFirstName() != null || sub.getStudentMiddleName() != null ) {
-                studentName += ", ";
-                if (sub.getStudentFirstName() != null)
-                    studentName += sub.getStudentFirstName();
-                if (sub.getStudentFirstName() != null || sub.getStudentMiddleName() != null )
-                    studentName += " ";
-                if (sub.getStudentMiddleName() != null)
-                    studentName += sub.getStudentMiddleName();
-            }
-         }
-         if (sub.getStudentBirthYear() != null) {
-            studentName += " "+sub.getStudentBirthYear()+"-";
-         }
-    %} 
     <datafield tag="100" ind1="1" ind2=" ">
-	    <subfield code="a">${ studentName.escapeXml() }</subfield>
+	    <subfield code="a">${ sub.getStudentFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH).escapeXml() }</subfield>
 	    <subfield code="e">author</subfield>
     </datafield>
     
@@ -363,23 +345,8 @@
         }
     }%
     #{list items:getCommiteeMembers, as:'member'}
-    %{
-        def name = "Unknown";
-        if (member.getLastName() != null) {
-            name = member.getLastName();
-            if (member.getFirstName() != null || member.getMiddleName() != null ) {
-                name += ", ";
-                if (member.getFirstName() != null)
-                    name += member.getFirstName();
-                if (member.getFirstName() != null || member.getMiddleName() != null )
-                    name += " ";
-                if (member.getMiddleName() != null)
-                    name += member.getName();
-            }
-         }
-    %} 
     <datafield tag="720" ind1="1" ind2=" ">
-        <subfield code="a">${ name.escapeXml() }</subfield>
+        <subfield code="a">${ member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH).escapeXml() }</subfield>
         <subfield code="e">${ chairs.size() > 0 ? "co-chair" : "chair" }</subfield>
     </datafield>
     #{/list}
@@ -399,23 +366,8 @@
             </marc:datafield>
     -->
     #{list items:members, as:'member'}
-    %{
-        def name = "Unknown";
-        if (member.getLastName() != null) {
-            name = member.getLastName();
-            if (member.getFirstName() != null || member.getMiddleName() != null ) {
-                name += ", ";
-                if (member.getFirstName() != null)
-                    name += member.getFirstName();
-                if (member.getFirstName() != null || member.getMiddleName() != null )
-                    name += " ";
-                if (member.getMiddleName() != null)
-                    name += member.getName();
-            }
-         }
-    %} 
     <datafield tag="720" ind1="1" ind2=" ">
-        <subfield code="a">${ name.escapeXml() }</subfield>
+        <subfield code="a">${ member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH).escapeXml() }</subfield>
         <subfield code="e">committee member</subfield>
     </datafield>
     #{/list}

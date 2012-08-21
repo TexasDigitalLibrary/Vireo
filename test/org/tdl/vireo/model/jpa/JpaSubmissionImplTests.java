@@ -14,6 +14,7 @@ import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.MockPerson;
+import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.SettingsRepository;
@@ -381,6 +382,22 @@ public class JpaSubmissionImplTests extends UnitTest {
 		
 		sub.delete();
 		embargo.delete();
+	}
+	
+	/**
+	 * Test name formatting
+	 */
+	@Test 
+	public void testStudentNameFormat() {
+		Submission sub = subRepo.createSubmission(person);
+
+		sub.setStudentFirstName("First");
+		sub.setStudentMiddleName("Middle");
+		sub.setStudentLastName("Last");
+		sub.setStudentBirthYear(1980);
+		
+		assertEquals("Last, First Middle 1980-",sub.getStudentFormattedName(NameFormat.LAST_FIRST_MIDDLE_BIRTH));
+
 	}
 	
 	/**
