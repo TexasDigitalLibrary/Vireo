@@ -55,6 +55,7 @@ public class ShibbolethAuthenticationMethodImpl extends
 	public String headerLastName = "SHIB_sn"; 
 	public String headerDisplayName = "SHIB_cn"; 
 	public String headerBirthYear = "SHIB_dateOfBirth"; 
+	public String headerAffiliations = "SHIB_eduPersonAffilation";
 	public String headerCurrentPhoneNumber = "SHIB_phone";
 	public String headerCurrentPostalAddress = "SHIB_postal";
 	public String headerCurrentEmailAddress = "SHIB_mail";
@@ -190,6 +191,7 @@ public class ShibbolethAuthenticationMethodImpl extends
 		headerMiddleName = attributeMap.get("middleName");
 		headerDisplayName = attributeMap.get("displayName");
 		headerBirthYear = attributeMap.get("birthYear");
+		headerAffiliations = attributeMap.get("affiliations");
 		headerCurrentPhoneNumber = attributeMap.get("currentPhoneNumber");
 		headerCurrentPostalAddress = attributeMap.get("currentPostalAddress");
 		headerCurrentEmailAddress = attributeMap.get("currentEmailAddress");
@@ -299,6 +301,12 @@ public class ShibbolethAuthenticationMethodImpl extends
 				} catch (NumberFormatException nfe) {
 					Logger.warn("Shib: Unable to interpret birth year attribute '"+headerBirthYear+"'='"+birthYearString+"' as an integer.");
 				}
+			}
+			if (headerAffiliations != null) {
+				person.getAffiliations().clear();
+				List<String> affiliations = getAttributes(request, headerAffiliations);
+				if (affiliations != null)
+					person.getAffiliations().addAll(affiliations);
 			}
 			if (headerCurrentPhoneNumber != null) {
 				String currentPhoneNumber = getSingleAttribute(request, headerCurrentPhoneNumber);

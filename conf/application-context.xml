@@ -57,6 +57,7 @@
         		<entry key="middleName" value="${auth.shib.attribute.middleName}"/>
         		<entry key="displayName" value="${auth.shib.attribute.displayName}"/>
         		<entry key="birthYear" value="${auth.shib.attribute.birthYear}"/>
+        		<entry key="affiliations" value="${auth.shib.attribute.affiliations}"/>
         		<entry key="currentPhoneNumber" value="${auth.shib.attribute.currentPhoneNumber}"/>
         		<entry key="currentPostalAddress" value="${auth.shib.attribute.currentPostalAddress}"/>
         		<entry key="currentEmailAddress" value="${auth.shib.attribute.currentEmailAddress}"/>
@@ -84,6 +85,7 @@
         		<entry key="${auth.shib.attribute.middleName}" value="Bob"/>
         		<entry key="${auth.shib.attribute.displayName}" value="Billy Bob"/>
         		<entry key="${auth.shib.attribute.birthYear}" value="1955"/>
+        		<entry key="${auth.shib.attribute.affiliations}" value="staff;faculty;affiliate"/>
         		<entry key="${auth.shib.attribute.currentPhoneNumber}" value="555-555-1931"/>
         		<entry key="${auth.shib.attribute.currentPostalAddress}" value="Any City, Any State 12345"/>
         		<entry key="${auth.shib.attribute.currentEmailAddress}" value="bthornton@gmail.com"/>

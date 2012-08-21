@@ -52,6 +52,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 	public String originalHeaderLastName;
 	public String originalHeaderDisplayName;
 	public String originalHeaderBirthYear;
+	public String originalHeaderAffilations;
 	public String originalHeaderCurrentPhoneNumber;
 	public String originalHeaderCurrentPostalAddress;
 	public String originalHeaderCurrentEmailAddress;
@@ -94,6 +95,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		originalHeaderLastName = method.headerLastName;
 		originalHeaderDisplayName = method.headerDisplayName;
 		originalHeaderBirthYear = method.headerBirthYear;
+		originalHeaderAffilations = method.headerAffiliations;
 		originalHeaderCurrentPhoneNumber = method.headerCurrentPhoneNumber;
 		originalHeaderCurrentPostalAddress = method.headerCurrentPostalAddress;
 		originalHeaderCurrentEmailAddress = method.headerCurrentEmailAddress;
@@ -117,6 +119,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		method.headerLastName = "SHIB_sn"; 
 		method.headerDisplayName = "SHIB_cn"; 
 		method.headerBirthYear = "SHIB_birthYear"; 
+		method.headerAffiliations = "SHIB_eduPersonAffilation";
 		method.headerCurrentPhoneNumber = "SHIB_phone";
 		method.headerCurrentPostalAddress = "SHIB_postal";
 		method.headerCurrentEmailAddress = "SHIB_mail";
@@ -155,6 +158,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		method.headerLastName = originalHeaderLastName;
 		method.headerDisplayName = originalHeaderDisplayName;
 		method.headerBirthYear = originalHeaderBirthYear;
+		method.headerAffiliations = originalHeaderAffilations;
 		method.headerCurrentPhoneNumber = originalHeaderCurrentPhoneNumber;
 		method.headerCurrentPostalAddress = originalHeaderCurrentPostalAddress;
 		method.headerCurrentEmailAddress = originalHeaderCurrentEmailAddress;
@@ -199,6 +203,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		headers.put("SHIB_initials","initials");
 		headers.put("SHIB_cn","cn");
 		headers.put("SHIB_birthYear","1950");
+		headers.put("SHIB_eduPersonAffilation","staff;student;affiliate");
 		headers.put("SHIB_phone","phone");
 		headers.put("SHIB_postal","postal");
 		headers.put("SHIB_permanentPhone","permanentPhone");
@@ -226,6 +231,9 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		assertEquals("initials",person1.getMiddleName());
 		assertEquals("cn",person1.getDisplayName());
 		assertEquals(Integer.valueOf(1950),person1.getBirthYear());
+		assertTrue(person1.getAffiliations().contains("staff"));
+		assertTrue(person1.getAffiliations().contains("student"));
+		assertTrue(person1.getAffiliations().contains("affiliate"));
 		assertEquals("phone",person1.getCurrentPhoneNumber());
 		assertEquals("postal",person1.getCurrentPostalAddress());
 		assertEquals("permanentPhone",person1.getPermanentPhoneNumber());
@@ -257,6 +265,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		mockAttributes.put("SHIB_initials","initials");
 		mockAttributes.put("SHIB_cn","cn");
 		mockAttributes.put("SHIB_birthYear","1950");
+		mockAttributes.put("SHIB_eduPersonAffilation","staff;student;affiliate");
 		mockAttributes.put("SHIB_phone","phone");
 		mockAttributes.put("SHIB_postal","postal");
 		mockAttributes.put("SHIB_permanentPhone","permanentPhone");
@@ -286,6 +295,9 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		assertEquals("initials",person1.getMiddleName());
 		assertEquals("cn",person1.getDisplayName());
 		assertEquals(Integer.valueOf(1950),person1.getBirthYear());
+		assertTrue(person1.getAffiliations().contains("staff"));
+		assertTrue(person1.getAffiliations().contains("student"));
+		assertTrue(person1.getAffiliations().contains("affiliate"));
 		assertEquals("phone",person1.getCurrentPhoneNumber());
 		assertEquals("postal",person1.getCurrentPostalAddress());
 		assertEquals("permanentPhone",person1.getPermanentPhoneNumber());
