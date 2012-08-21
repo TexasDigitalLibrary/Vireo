@@ -336,8 +336,10 @@ public class Student extends AbstractVireoController {
 	 *            The submission id.
 	 * @param attachmentId
 	 *            The attachment id.
+	 * @param name
+	 * 			  The name of the attachment (not used)
 	 */
-	public static void viewAttachment(Long subId, Long attachmentId) {
+	public static void viewAttachment(Long subId, Long attachmentId, String name) {
 
 		if (attachmentId == null)
 			error();
@@ -351,7 +353,12 @@ public class Student extends AbstractVireoController {
 			unauthorized();
 
 		response.setContentTypeIfNotSet(attachment.getMimeType());    	
-		renderBinary(attachment.getFile(),attachment.getName());
+	
+		try {
+			renderBinary( new FileInputStream(attachment.getFile()), attachment.getFile().length());
+		} catch (FileNotFoundException ex) {
+			error("File not found");
+		}
 
 
 	}

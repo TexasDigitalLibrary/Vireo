@@ -167,7 +167,7 @@
 		        #{/if}
 		        #{else}
 	                <p>
-	                    <a href="@{Student.viewAttachment(subId,primaryDocument.getId())}">${primaryDocument.getName()}</a>
+	                    <a href="@{Student.viewAttachment(subId,primaryDocument.getId(),primaryDocument.getName())}">${primaryDocument.getName()}</a>
 	                    (${primaryDocument.getDisplaySize()})
 	                    <input type="submit" value="Replace Manuscript" class="uploadBtn btn" name="replacePrimary">
 	                </p>
@@ -176,7 +176,7 @@
 			#{else}
 				#{if primaryDocument != null}
 				    <p>
-				         <a href="@{Student.viewAttachment(subId,primaryDocument.getId())}" target="_blank">${primaryDocument.getName()}</a>
+				         <a href="@{Student.viewAttachment(subId,primaryDocument.getId(),primaryDocument.getName())}" target="_blank">${primaryDocument.getName()}</a>
 				         (${primaryDocument.getDisplaySize()})
 				     </p>
 				#{/if}
@@ -194,14 +194,14 @@
             	#{if sub.getState().isEditableByStudent()}
             	<label>
             		<input type="checkbox" value="${attachment.getId()}" name="attachmentToRemove">
-                    <a href="@{Student.viewAttachment(subId,attachment.getId())}" target="_blank">
+                    <a href="@{Student.viewAttachment(subId,attachment.getId(),attachment.getName())}" target="_blank">
                     	${attachment.getName()}
                     </a> 
                     (${attachment.getDisplaySize()})
                  </label>  
             	#{/if}
             	#{else}
-	                <a href="@{Student.viewAttachment(subId,attachment.getId())}" target="_blank">${attachment.getName()}</a>
+	                <a href="@{Student.viewAttachment(subId,attachment.getId(),attachment.getName())}" target="_blank">${attachment.getName()}</a>
 	                (${attachment.getDisplaySize()})
 	            #{/else}
             </p>

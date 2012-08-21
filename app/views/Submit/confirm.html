@@ -179,7 +179,7 @@
 		<div class="controls">
 		    #{if primaryDocument != null}
 			    <p>
-			         <a href="@{Student.viewAttachment(subId,primaryDocument.getId())}" target="_blank">${primaryDocument.getName()}</a>
+			         <a href="@{Student.viewAttachment(subId,primaryDocument.getId(),primaryDocument.getName())}" target="_blank">${primaryDocument.getName()}</a>
 			         (${primaryDocument.getDisplaySize()})
 			     </p>
 			#{/if}
@@ -194,7 +194,7 @@
         <div class="controls">
             #{list items:supplementaryDocuments, as:'attachment'}
             <p>
-                <a href="@{Student.viewAttachment(subId,attachment.getId())}" target="_blank">${attachment.getName()}</a>
+                <a href="@{Student.viewAttachment(subId,attachment.getId(),attachment.getName())}" target="_blank">${attachment.getName()}</a>
                 (${attachment.getDisplaySize()})
             </p>
             #{/list}

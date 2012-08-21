@@ -163,7 +163,7 @@
 		<div class="controls">
 			#{if primaryDocument != null}
 			    <p>
-			         <a href="@{Advisor.viewAttachment(token,primaryDocument.getId())}" target="_blank">${primaryDocument.getName()}</a>
+			         <a href="@{Advisor.viewAttachment(token,primaryDocument.getId(),primaryDocument.getName())}" target="_blank">${primaryDocument.getName()}</a>
 			         (${primaryDocument.getDisplaySize()})
 			     </p>
 			#{/if}
@@ -177,7 +177,7 @@
         <div class="controls">
             #{list items:supplementaryDocuments, as:'attachment'}
             <p>
-                <a href="@{Advisor.viewAttachment(token,attachment.getId())}" target="_blank">${attachment.getName()}</a>
+                <a href="@{Advisor.viewAttachment(token,attachment.getId(),attachment.getName())}" target="_blank">${attachment.getName()}</a>
                 (${attachment.getDisplaySize()})
             </p>
             #{/list}

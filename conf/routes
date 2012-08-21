@@ -18,7 +18,7 @@ GET     /profile                                Authentication.profile
 
 ### Advisor URL
 *       /advisor/{token}/review                 Advisor.review
-*       /advisor/{token}/file/{attachmentId}	Advisor.viewAttachment
+*       /advisor/{token}/file/{attachmentId}/{name}	Advisor.viewAttachment
 
 ### New Submissions
 *       /submit/{subId}/personalInfo            submit.PersonalInfo.personalInfo
@@ -34,7 +34,7 @@ GET     /profile                                Authentication.profile
 *		/submit/{subId}/view					Student.submissionView
 *       /submit/{subId}/delete                  Student.submissionDelete
 
-GET     /submit/{subId}/file/{attachmentId}     Student.viewAttachment
+GET     /submit/{subId}/file/{attachmentId}/{name} Student.viewAttachment
 
 
 ### List & Log Tabs

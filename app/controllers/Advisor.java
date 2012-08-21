@@ -62,12 +62,15 @@ public class Advisor extends AbstractVireoController {
 	/**
 	 * Helper method to view an attachment specifically for advisors to handle their permissions.
 	 * 
-	 * @param subId
-	 *            The submission id.
+	 * @param token
+	 *            The token identifying the submission
 	 * @param attachmentId
 	 *            The attachment id.
+	 * @param name
+	 * 	          The name of the attachment. (not used)
+	 *            
 	 */
-	public static void viewAttachment(String token, Long attachmentId) {
+	public static void viewAttachment(String token, Long attachmentId, String name) {
 
 		notFoundIfNull(token);
 		notFoundIfNull(attachmentId);

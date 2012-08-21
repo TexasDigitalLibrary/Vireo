@@ -37,7 +37,7 @@
                 #{else}
                     <div class="controls">
                         <p>
-                            <a href="@{Student.viewAttachment(subId,primaryAttachment.getId())}" target="_blank">${primaryAttachment.getName()}</a>
+                            <a href="@{Student.viewAttachment(subId,primaryAttachment.getId(),primaryAttachment.getName())}" target="_blank">${primaryAttachment.getName()}</a>
 
                             (${primaryAttachment.getDisplaySize()})
                             <input type="submit" value="Replace Manuscript" class="uploadBtn btn" name="replacePrimary">
@@ -75,7 +75,7 @@
                             <p>
                             <label>
                                 <input type="checkbox" value="${attachment.getId()}" name="attachmentToRemove">
-                                <a href="@{Student.viewAttachment(subId,attachment.getId())}" target="_blank">
+                                <a href="@{Student.viewAttachment(subId,attachment.getId(),attachment.getName())}" target="_blank">
                                     ${attachment.getName()}
                                 </a> 
                                 (${attachment.getDisplaySize()})
