@@ -355,8 +355,8 @@ public class DocumentInfo extends AbstractSubmitStep {
     		// Check that if we have a first name, then we have a last name.
     		String firstName = member.get("firstName");
     		String lastName = member.get("lastName");
-    		if ((firstName != null && firstName.trim().length() > 0) ^ (lastName != null && lastName.trim().length() > 0)) {
-    			validation.addError("member"+i,"Please provide both a first and last name for all committee members.");
+    		if ((firstName == null || firstName.trim().length() == 0) && (lastName == null || lastName.trim().length() == 0)) {
+    			validation.addError("member"+i,"Please provide a first or last name for all committee members.");
     		}
     		
     		if (firstName != null && firstName.trim().length() > 0)
@@ -393,6 +393,15 @@ public class DocumentInfo extends AbstractSubmitStep {
     		String middleName = params.get("committeeMiddleName"+i);
     		String lastName = params.get("committeeLastName"+i);
     		String chairFlag = params.get("committeeChairFlag"+i);
+    		i++;
+
+    		
+    		if ((firstName == null  || firstName.trim().length() == 0) &&
+    			(lastName == null   || lastName.trim().length() == 0) &&
+    			(middleName == null || middleName.trim().length() == 0) &&
+    			(chairFlag == null  || chairFlag.trim().length() == 0) ) 
+    			// If all the fields are blank then skip this one.
+    			continue;
     		
     		Map<String,String> member = new HashMap<String,String>();
     		member.put("firstName",firstName);
@@ -401,7 +410,6 @@ public class DocumentInfo extends AbstractSubmitStep {
     		member.put("chairFlag",chairFlag);
     		
     		committee.add(member);
-    		i++;
     	}
     	
     	return committee;
