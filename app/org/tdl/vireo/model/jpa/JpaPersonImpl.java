@@ -10,6 +10,7 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -65,6 +66,9 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 	public String displayName;
 
 	public Integer birthYear;
+	
+	@ElementCollection
+	public List<String> affiliations;
 
 	@Column(length=255) 
 	public String currentPhoneNumber;
@@ -139,6 +143,7 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 		this.email = email;
 		this.firstName = firstName;
 		this.lastName = lastName;
+		this.affiliations = new ArrayList<String>();
 		this.preferences = new ArrayList<Preference>();
 		this.role = role;
 	}
@@ -309,6 +314,21 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 		return currentPhoneNumber;
 	}
 
+	@Override
+	public List<String> getAffiliations() {
+		return affiliations;
+	}
+
+	@Override
+	public void addAffiliation(String affiliation) {
+		affiliations.add(affiliation);
+	}
+
+	@Override
+	public void removeAffilation(String affiliation) {
+		affiliations.remove(affiliation);
+	}
+	
 	@Override
 	public void setCurrentPhoneNumber(String phoneNumber) {
 		

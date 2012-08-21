@@ -158,11 +158,25 @@ public interface Person extends AbstractModel {
 	 */
 	public void setBirthYear(Integer year);
 
-	// Note: Vireo1 has this field in it's data model but the field is not used
-	// anywhere. So we will leave it out of this version.
-	//
-	// public String getCitizenshipInfo();
-	// public void setCitizenshipInfo(String info);
+	/**
+	 * @return The list of affiliations this person has. Typically this is
+	 *         things like "Student", "Staff", "Faculty", etc and are designated
+	 *         by the authentication source.
+	 */
+	public List<String> getAffiliations();
+
+	/**
+	 * @param affiliation
+	 *            The new affilation to add for this person.
+	 */
+	public void addAffiliation(String affiliation);
+
+	/**
+	 * 
+	 * @param affiliation
+	 *            Remove this affilation from this person.
+	 */
+	public void removeAffilation(String affiliation);
 
 	/**
 	 * @return The current phone number.

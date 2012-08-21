@@ -623,6 +623,8 @@ public class JpaPersonImplTests extends UnitTest {
 		person.setLastName("last");
 		person.setDisplayName("display");
 		person.setBirthYear(1945);
+		person.addAffiliation("affiliation1");
+		person.addAffiliation("affiliation2");
 		person.setCurrentPhoneNumber("currentPhone");
 		person.setCurrentPostalAddress("currentPostal");
 		person.setCurrentEmailAddress("currentEmail");
@@ -645,6 +647,8 @@ public class JpaPersonImplTests extends UnitTest {
 		assertEquals("last",person.getLastName());
 		assertEquals("display",person.getDisplayName());
 		assertEquals(Integer.valueOf(1945),person.getBirthYear());
+		assertTrue(person.getAffiliations().contains("affiliation1"));
+		assertTrue(person.getAffiliations().contains("affiliation2"));
 		assertEquals("currentPhone",person.getCurrentPhoneNumber());
 		assertEquals("currentPostal",person.getCurrentPostalAddress());
 		assertEquals("currentEmail",person.getCurrentEmailAddress());

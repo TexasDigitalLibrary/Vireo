@@ -42,6 +42,7 @@ public class MockPerson extends AbstractMock implements Person {
 	public String middleName;
 	public String displayName;
 	public Integer birthYear;
+	public List<String> affiliations = new ArrayList<String>();
 	public String currentPhoneNumber;
 	public String currentPostalAddress;
 	public String currentEmailAddress;
@@ -187,6 +188,21 @@ public class MockPerson extends AbstractMock implements Person {
 	@Override
 	public void setInstitutionalIdentifier(String identifier) {
 		this.institutionalIdentifier = identifier;
+	}
+	
+	@Override
+	public List<String> getAffiliations() {
+		return affiliations;
+	}
+
+	@Override
+	public void addAffiliation(String affiliation) {
+		affiliations.add(affiliation);
+	}
+
+	@Override
+	public void removeAffilation(String affiliation) {
+		affiliations.remove(affiliation);
 	}
 
 	@Override
