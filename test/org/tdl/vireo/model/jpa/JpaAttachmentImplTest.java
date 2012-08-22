@@ -555,7 +555,7 @@ public class JpaAttachmentImplTest extends UnitTest {
 		attachment.archive();
 		
 		assertEquals(AttachmentType.ARCHIVED,attachment.getType());
-		assertEquals("PRIMARY-DOCUMENT-"+JpaAttachmentImpl.dateFormat.format(new Date())+".dat",attachment.getName());
+		assertEquals("PRIMARY-DOCUMENT-archived-on-"+JpaAttachmentImpl.dateFormat.format(new Date())+".dat",attachment.getName());
 		
 		attachment.delete();
 		file.delete();
