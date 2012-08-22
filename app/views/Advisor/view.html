@@ -1,5 +1,5 @@
 #{extends 'main.html' /}
-#{set title:'View Application' /}
+#{set title:'Review Application' /}
 
 <br />
 <div class="row pageHead">
@@ -136,7 +136,7 @@
 	
 	<legend>Embargo Options</legend>
 	<div class="control-group">
-		<label class="control-label"><b>Embargo:</b></label>
+		<label class="control-label"><b>Embargo</b>:<br/><em>(selected)</em></label>
 		<div class="controls">
 			#{if sub.getEmbargoType() != null}
 				<p><strong>${sub.getEmbargoType().getName()}</strong> - ${sub.getEmbargoType().getDescription()}</p>
@@ -147,7 +147,7 @@
 		</div>
 	</div>
 	<div class="control-group">
-		<label class="control-label"><b>Alternative Options</b>: <em>(not selected)</em></label>
+		<label class="control-label"><b>Alternative Options</b>:<br/> <em>(not selected)</em></label>
 		<div class="controls">
 			#{list items:allEmbargos, as:'embargo'}
 				#{if embargo != sub.getEmbargoType()}

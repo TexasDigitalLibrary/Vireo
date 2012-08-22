@@ -779,7 +779,6 @@ public class TestDataLoader extends Job {
 							sub.setState(transitions.get(random.nextInt(transitions.size()-1)));
 						}
 					}
-					sub.setCommitteeEmailHash("ABC"+sub.getId());
 					sub.save();
 				}
 				context.logout();
