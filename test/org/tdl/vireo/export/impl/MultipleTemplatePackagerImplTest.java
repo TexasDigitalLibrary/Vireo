@@ -147,7 +147,7 @@ public class MultipleTemplatePackagerImplTest extends UnitTest {
 			Map<String, File> fileMap = getFileMap(exportFile);
 			
 			// There should be three files
-			assertTrue(fileMap.containsKey("bottle.pdf"));
+			assertTrue(fileMap.containsKey("LASTNAME-SELECTEDDOCUMENTTYPE-2002.pdf"));
 			assertTrue(fileMap.containsKey("fluff.jpg"));
 			
 			// Check that each of the templates exist

@@ -55,6 +55,11 @@ public class MockAttachment extends AbstractMock implements Attachment {
 	}
 	
 	@Override
+	public void archive() {
+		type = AttachmentType.ARCHIVED;
+	}
+	
+	@Override
 	public Submission getSubmission() {
 		return submission;
 	}

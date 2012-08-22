@@ -84,11 +84,11 @@ public class JpaAttachmentImplTest extends UnitTest {
 		
 		File file = createRandomFile(10L);
 		
-		Attachment attachment = sub.addAttachment(file, AttachmentType.PRIMARY).save();
+		Attachment attachment = sub.addAttachment(file, AttachmentType.SUPPLEMENTAL).save();
 		
 		assertNotNull(attachment);
 		assertEquals(file.getName(),attachment.getName());
-		assertEquals(AttachmentType.PRIMARY,attachment.getType());
+		assertEquals(AttachmentType.SUPPLEMENTAL,attachment.getType());
 	
 		attachment.delete();
 		file.delete();
@@ -102,31 +102,102 @@ public class JpaAttachmentImplTest extends UnitTest {
 		
 		File file = createRandomFile(10L);
 		
-		Attachment attachment = sub.addAttachment(file, AttachmentType.PRIMARY).save();
+		Attachment attachment1 = sub.addAttachment(file, AttachmentType.SUPPLEMENTAL).save();
+		Attachment attachment2 = sub.addAttachment(file, AttachmentType.SUPPLEMENTAL).save();
 		
-		JPA.em().getTransaction().commit();
-		JPA.em().getTransaction().begin();
-		
-		try {
-			sub.addAttachment(file, AttachmentType.SUPPLEMENTAL).save();
-			fail("Able to create two attachments with the same name.");
-		} catch (RuntimeException re) {
-			// yay
-		}
-	
-		JPA.em().getTransaction().rollback();
-		JPA.em().getTransaction().begin();
-		subRepo.findAttachment(attachment.getId()).delete();
-		subRepo.findSubmission(sub.getId()).delete();
-		personRepo.findPerson(person.getId()).delete();
+		assertFalse(attachment1.getName().equals(attachment2.getName()));
 		file.delete();
 		
-		sub = null;
-		person = null;
-		
-		JPA.em().getTransaction().commit();
-		JPA.em().getTransaction().begin();
+		attachment1.delete();
+		attachment2.delete();
 	}
+	
+	/**
+	 * Test renaming when adding a primary document.
+	 */
+	@Test
+	public void testCreatingPrimaryDocumentWithAllInfo() throws IOException {
+		File file = createRandomFile(10L);
+		
+		sub.setStudentLastName("last");
+		sub.setDocumentType("Thesis");
+		sub.setGraduationYear(2010);
+		sub.save();
+		
+		Attachment attachment = sub.addAttachment(file, AttachmentType.PRIMARY).save();
+		
+		assertNotNull(attachment);
+		assertEquals("LAST-THESIS-2010.dat",attachment.getName());
+		assertEquals(AttachmentType.PRIMARY,attachment.getType());
+	
+		attachment.delete();
+		file.delete();
+	}
+	
+	/**
+	 * Test renaming when adding a primary document without a name
+	 */
+	@Test
+	public void testCreatingPrimaryDocumentWithOutName() throws IOException {
+		File file = createRandomFile(10L);
+		
+		sub.setDocumentType("Thesis");
+		sub.setGraduationYear(2010);
+		sub.save();
+		
+		Attachment attachment = sub.addAttachment(file, AttachmentType.PRIMARY).save();
+		
+		assertNotNull(attachment);
+		assertEquals("PRIMARY-THESIS-2010.dat",attachment.getName());
+		assertEquals(AttachmentType.PRIMARY,attachment.getType());
+	
+		attachment.delete();
+		file.delete();
+	}
+	
+	/**
+	 * Test renaming when adding a primary document without a document type
+	 */
+	@Test
+	public void testCreatingPrimaryDocumentWithOutDocType() throws IOException {
+		File file = createRandomFile(10L);
+		
+		sub.setStudentLastName("last");
+		sub.setGraduationYear(2010);
+		sub.save();
+		
+		Attachment attachment = sub.addAttachment(file, AttachmentType.PRIMARY).save();
+		
+		assertNotNull(attachment);
+		assertEquals("LAST-DOCUMENT-2010.dat",attachment.getName());
+		assertEquals(AttachmentType.PRIMARY,attachment.getType());
+	
+		attachment.delete();
+		file.delete();
+	}
+	
+	/**
+	 * Test renaming when adding a primary document without grad year
+	 */
+	@Test
+	public void testCreatingPrimaryDocumentWithoutGradYear() throws IOException {
+		File file = createRandomFile(10L);
+		
+		sub.setStudentLastName("last");
+		sub.setDocumentType("Thesis");
+		sub.save();
+		
+		Attachment attachment = sub.addAttachment(file, AttachmentType.PRIMARY).save();
+		
+		assertNotNull(attachment);
+		assertEquals("LAST-THESIS.dat",attachment.getName());
+		assertEquals(AttachmentType.PRIMARY,attachment.getType());
+	
+		attachment.delete();
+		file.delete();
+	}
+	
+	
 	
 	/**
 	 * Test creating an attachment from a byte array.
@@ -210,7 +281,6 @@ public class JpaAttachmentImplTest extends UnitTest {
 		Attachment attachment = sub.addAttachment(file, AttachmentType.PRIMARY).save();
 		
 		assertNotNull(attachment);
-		assertEquals(file.getName(),attachment.getName());
 		assertEquals(AttachmentType.PRIMARY,attachment.getType());
 		
 		
@@ -260,6 +330,26 @@ public class JpaAttachmentImplTest extends UnitTest {
 		String retrievedContent = FileUtils.readFileToString(retrieved.getFile());
 		
 		assertEquals(originalContent,retrievedContent);
+		
+		file.delete();
+		
+	}
+	
+	/**
+	 * Test retrieving attachment via name.
+	 */
+	@Test
+	public void testFindByIdAndName() throws IOException {
+		
+		File file = createRandomFile(10L);
+		
+		Attachment attachment = sub.addAttachment(file, AttachmentType.PRIMARY).save();
+		
+		Attachment retrieved = sub.findAttachmentById(attachment.getId());
+		assertEquals(attachment,retrieved);
+		
+		retrieved = sub.findAttachmentByName(attachment.getName());
+		assertEquals(attachment,retrieved);
 		
 		file.delete();
 		
@@ -402,6 +492,76 @@ public class JpaAttachmentImplTest extends UnitTest {
 	}
 	
 	/**
+	 * Test updating the primary document name after changes to the submission.
+	 */
+	@Test
+	public void testUpdatingPrimaryDocumentName() throws IOException {
+		File file = createRandomFile(10L);
+		
+		Attachment attachment = sub.addAttachment(file, AttachmentType.PRIMARY).save();
+		
+		assertNotNull(attachment);
+		assertEquals("PRIMARY-DOCUMENT.dat",attachment.getName());
+		assertEquals(AttachmentType.PRIMARY,attachment.getType());
+		
+		
+		sub.setStudentLastName("last");
+		sub.setDocumentType("Thesis");
+		assertEquals("LAST-THESIS.dat",attachment.getName());
+		
+		sub.setGraduationYear(2010);
+		assertEquals("LAST-THESIS-2010.dat",attachment.getName());
+		
+		sub.setStudentLastName(null);
+		assertEquals("PRIMARY-THESIS-2010.dat",attachment.getName());
+		
+		sub.save();
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
+		sub = subRepo.findSubmission(sub.getId());
+	
+		assertEquals("PRIMARY-THESIS-2010.dat",attachment.getName());		
+	
+		
+		// clean everything up
+		subRepo.findAttachment(attachment.getId()).delete();
+		subRepo.findSubmission(sub.getId()).delete();
+		personRepo.findPerson(person.getId()).delete();
+		
+		sub = null;
+		person = null;
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
+		file.delete();
+	}
+	
+	/**
+	 * Test updating the primary document name after changes to the submission.
+	 */
+	@Test
+	public void testArchiving() throws IOException {
+		File file = createRandomFile(10L);
+		
+		Attachment attachment = sub.addAttachment(file, AttachmentType.PRIMARY).save();
+		
+		assertNotNull(attachment);
+		assertEquals("PRIMARY-DOCUMENT.dat",attachment.getName());
+		assertEquals(AttachmentType.PRIMARY,attachment.getType());
+		
+		attachment.archive();
+		
+		assertEquals(AttachmentType.ARCHIVED,attachment.getType());
+		assertEquals("PRIMARY-DOCUMENT-"+JpaAttachmentImpl.dateFormat.format(new Date())+".dat",attachment.getName());
+		
+		attachment.delete();
+		file.delete();
+	}
+	
+	/**
 	 * Test property validation
 	 */
 	@Test
@@ -518,7 +678,7 @@ public class JpaAttachmentImplTest extends UnitTest {
 		
 		File file1 = createRandomFile(10L);
 
-		Attachment a1 = sub.addAttachment(file1, AttachmentType.PRIMARY).save();
+		Attachment a1 = sub.addAttachment(file1, AttachmentType.SUPPLEMENTAL).save();
 
 		assertTrue(a1.getFile().exists());
 		assertFalse(file1.getAbsolutePath().equals(a1.getFile().getAbsolutePath()));
@@ -542,7 +702,7 @@ public class JpaAttachmentImplTest extends UnitTest {
 		sub.setState(nextState);
 		sub.save();
 		
-		Attachment attachment = sub.addAttachment(file, AttachmentType.PRIMARY);
+		Attachment attachment = sub.addAttachment(file, AttachmentType.FEEDBACK);
 		attachment.save();
 		attachment.setName("newPDF.pdf");
 		attachment.save();
@@ -558,8 +718,8 @@ public class JpaAttachmentImplTest extends UnitTest {
 		
 		assertEquals("SUPPLEMENTAL file 'newPDF.pdf' (10 bytes) removed by Mock Administrator", logItr.next().getEntry());
 		assertEquals("SUPPLEMENTAL file 'newPDF.pdf' modified by Mock Administrator", logItr.next().getEntry());
-		assertEquals("PRIMARY file 'newPDF.pdf' modified by Mock Administrator", logItr.next().getEntry());
-		assertEquals("PRIMARY file '"+file.getName()+"' (10 bytes) uploaded by Mock Administrator", logItr.next().getEntry());
+		assertEquals("FEEDBACK file 'newPDF.pdf' modified by Mock Administrator", logItr.next().getEntry());
+		assertEquals("FEEDBACK file '"+file.getName()+"' (10 bytes) uploaded by Mock Administrator", logItr.next().getEntry());
 		assertEquals("New committee email hash generated by Mock Administrator",logItr.next().getEntry());
 		assertEquals("Submission status changed to 'Submitted' by Mock Administrator",logItr.next().getEntry());
 		assertEquals("Submission created by Mock Administrator",logItr.next().getEntry());
@@ -577,7 +737,7 @@ public class JpaAttachmentImplTest extends UnitTest {
 	public void testPersistance() throws IOException {
 		
 		File file1 = createRandomFile(10L);
-		Attachment attachment = sub.addAttachment(file1, AttachmentType.PRIMARY).save();
+		Attachment attachment = sub.addAttachment(file1, AttachmentType.SUPPLEMENTAL).save();
 		
 		// Commit and reopen a new transaction.
 		JPA.em().getTransaction().commit();
@@ -615,7 +775,7 @@ public class JpaAttachmentImplTest extends UnitTest {
 		String originalContent = FileUtils.readFileToString(file1);
 
 		
-		Attachment a1 = sub.addAttachment(file1, AttachmentType.PRIMARY).save();
+		Attachment a1 = sub.addAttachment(file1, AttachmentType.SUPPLEMENTAL).save();
 		sub.refresh();
 		
 		file1.delete();

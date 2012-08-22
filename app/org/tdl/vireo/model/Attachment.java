@@ -15,6 +15,16 @@ import java.util.Date;
 public interface Attachment extends AbstractModel {
 
 	/**
+	 * Archive this attachment.
+	 * 
+	 * This means changing the type to be ARCHIVED, and modifying the name to
+	 * denote that it is an archive file (so that the name can be re-used)
+	 * 
+	 * This will fail if the attachment is already an archive.
+	 */
+	public void archive();
+	
+	/**
 	 * @return The submission this attachment belongs too.
 	 */
 	public Submission getSubmission();

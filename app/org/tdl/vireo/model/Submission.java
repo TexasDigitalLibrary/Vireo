@@ -193,6 +193,11 @@ public interface Submission extends AbstractModel {
 	public Attachment findAttachmentById(Long id);
 	
 	/**
+	 * @return the specific attachment
+	 */
+	public Attachment findAttachmentByName(String name);
+	
+	/**
 	 * 
 	 * @return The a list of all committee mebers associated with this submission.
 	 */

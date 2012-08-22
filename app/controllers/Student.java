@@ -154,7 +154,8 @@ public class Student extends AbstractVireoController {
 			if (params.get("replacePrimary") != null) {
 				Attachment primaryDoc = sub.getPrimaryDocument();   
 				if (primaryDoc != null) {
-					primaryDoc.delete();
+					primaryDoc.archive();
+					primaryDoc.save();
 					sub.save();
 				}
 			}

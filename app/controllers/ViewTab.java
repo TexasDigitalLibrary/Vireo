@@ -943,11 +943,6 @@ public class ViewTab extends AbstractVireoController {
 		
 		File attachment = params.get("primaryAttachment",File.class);
 		
-		if(attachment == null)
-			Logger.info("Doc is null");
-		else
-			Logger.info("Doc: " + attachment.getClass().getName());
-		
 		if(attachment != null){
 			if(!attachment.getName().toLowerCase().endsWith(".pdf")) {
 				validation.addError("primaryDocument", "Primary document must be a PDF file.");
@@ -957,8 +952,10 @@ public class ViewTab extends AbstractVireoController {
 		
 		try{
 			Attachment currentAttachment = sub.getPrimaryDocument();
-			if(currentAttachment != null)
-				currentAttachment.delete();
+			if(currentAttachment != null) {
+				currentAttachment.archive();
+				currentAttachment.save();
+			}
 			
 			Attachment thisAttachment = sub.addAttachment(attachment, AttachmentType.PRIMARY);
 			thisAttachment.save();
@@ -1096,6 +1093,9 @@ public class ViewTab extends AbstractVireoController {
 	 * @return the url
 	 */
 	protected static String getAdvisorURL(Submission sub) {
+		
+		if (sub.getCommitteeEmailHash() == null)
+			return null;
 		
 		Map<String,Object> routeArgs = new HashMap<String,Object>();
 		routeArgs.put("token", sub.getCommitteeEmailHash());

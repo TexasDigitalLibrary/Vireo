@@ -240,6 +240,8 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		if (!equals(this.studentFirstName,firstName)) {
 			this.studentFirstName = firstName;
 			generateChangeLog("Student first name", firstName, false);
+			
+			updatePrimaryDocumentName();
 		}
 	}
 
@@ -259,6 +261,8 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		if (!equals(this.studentLastName,lastName)) {
 			this.studentLastName = lastName;
 			generateChangeLog("Student last name", lastName, false);
+			
+			updatePrimaryDocumentName();
 		}
 	}
 
@@ -436,6 +440,18 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	public Attachment findAttachmentById(Long id){
 		for(Attachment attachment : attachments) {
 			if(id == attachment.getId())
+				return attachment;
+		}
+		return null;
+	}
+	
+	@Override
+	public Attachment findAttachmentByName(String name){
+		if (name == null)
+			return null;
+		
+		for(Attachment attachment : attachments) {
+			if(name.equals(attachment.getName()))
 				return attachment;
 		}
 		return null;
@@ -682,6 +698,8 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		if (!equals(this.documentType,documentType)) {
 			this.documentType = documentType;
 			generateChangeLog("Document type",documentType,false);
+			
+			updatePrimaryDocumentName();
 		}
 	}
 
@@ -701,6 +719,8 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 				generateChangeLog("Graduation year", null,false);
 			else
 				generateChangeLog("Graduation year", String.valueOf(year),false);
+			
+			updatePrimaryDocumentName();
 		}
 	}
 
@@ -946,6 +966,21 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	}
 	
 	/**
+	 * This is called when information that could potentially effect the name of
+	 * the primary document has been modified. This method is called to see if
+	 * the attachment should be updated.
+	 */
+	protected void updatePrimaryDocumentName() {
+	
+		Attachment primary = this.getPrimaryDocument();
+		if (primary != null) {
+			((JpaAttachmentImpl) primary).renamePrimaryDocument();
+			primary.save();
+		}
+	}
+	
+	
+	/**
 	 * Return true if the two objects are equals, accounting for nulls.
 	 * 
 	 * @param a An object
@@ -961,8 +996,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 				return false;
 		} else {
 			return a.equals(b);
-		}
-		
+		}	
 	}
 	
 

@@ -383,7 +383,7 @@ jQuery(document).ready(function(){
 					#{if submission.getCommitteeContactEmail() && submission.getCommitteeEmailHash()}
 					<li><label></label><span><form action="@{ViewTab.sendAdvisorEmail(submission.getId())}" method="POST"><input type="submit" class="btn" value="Send Advisor Approval Email" /></form></span></li>
 					#{/if}
-					#{if isManager}
+					#{if isManager && advisorUrl != null }
 						<li><label>Faculty Review URL:</label><span><a href="${advisorUrl}">${advisorUrl}</a></span></li>
 					#{/if}
 				</ul>				

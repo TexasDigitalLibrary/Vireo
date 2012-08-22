@@ -154,7 +154,7 @@ public class TemplatePackagerImplTest extends UnitTest {
 				
 				// There should be three files
 				assertTrue(fileMap.containsKey(packager.manifestName));
-				assertTrue(fileMap.containsKey("bottle.pdf"));
+				assertTrue(fileMap.containsKey("LASTNAME-SELECTEDDOCUMENTTYPE-2002.pdf"));
 				assertTrue(fileMap.containsKey("fluff.jpg"));
 				
 				// Load up the manifest and make sure it's valid XML.

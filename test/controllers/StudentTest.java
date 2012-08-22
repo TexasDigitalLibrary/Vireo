@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.tdl.vireo.model.ActionLog;
+import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
@@ -22,6 +24,7 @@ import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionRepository;
+import org.tdl.vireo.model.jpa.JpaAttachmentImpl;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
@@ -463,10 +466,10 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 		fileParams.put("primaryDocument",testPDF);
 		params.put("uploadPrimary","Upload");
 		response = POST(VIEW_URL,params,fileParams);
-				
+		
 		assertIsOk(response);
 		assertContentMatch("<title>View Application</title>",response);
-		assertContentMatch(testPDF.getName(),response);
+		assertContentMatch("PRIMARY-DOCUMENT.pdf",response);
 		
 		// Delete a manuscript
 		params.clear();
@@ -475,7 +478,10 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 		
 		assertIsOk(response);
 		assertContentMatch("<title>View Application</title>",response);
-		assertFalse(getContent(response).contains(testPDF.getName()+"</a>"));
+		assertFalse(getContent(response).contains("PRIMARY-DOCUMENT.pdf</a>"));
+		
+		sub = subRepo.findSubmission(sub.getId());
+		assertEquals("PRIMARY-DOCUMENT-archived-on-"+JpaAttachmentImpl.dateFormat.format(new Date())+".pdf",sub.getAttachmentsByType(AttachmentType.ARCHIVED).get(0).getName());
 	}
 
 	/**

@@ -5,12 +5,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
 import org.tdl.vireo.model.ActionLog;
+import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.CommitteeMember;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.EmailTemplate;
@@ -21,6 +23,7 @@ import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionRepository;
+import org.tdl.vireo.model.jpa.JpaAttachmentImpl;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
@@ -47,6 +50,32 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 	public static SubmissionRepository subRepo = Spring.getBeanOfType(SubmissionRepository.class);
 	public static SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
 	public static StateManager stateManager = Spring.getBeanOfType(StateManager.class);
+	
+	/**
+	 * Simple test to make sure we can view a blank document in the viewTab
+	 * without generating errors.
+	 */
+	@Test
+	public void testViewingABlankSubmission() {
+		context.turnOffAuthorization();
+		
+		Person person = personRepo.findPersonByEmail("bthornton@gmail.com");		
+		Submission submission = subRepo.createSubmission(person).save();
+		Long id = submission.getId();
+		JPA.em().detach(submission);
+		
+		LOGIN();
+		
+		final String VIEW_URL = Router.reverse("ViewTab.view").url;
+
+		Response response = GET(VIEW_URL+"?subId="+id);
+		assertIsOk(response);
+		
+		submission = subRepo.findSubmission(id);
+		submission.delete();
+		
+		context.restoreAuthorization();
+	}
 	
 	/**
 	 * Test that an admin can change an item on a submission.
@@ -722,9 +751,11 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 	
 	/**
 	 * Test uploading a "primary" file
+	 * @throws IOException 
 	 */
 	@Test
-	public void testUploadPrimary() {
+	public void testUploadPrimary() throws IOException {
+		
 		context.turnOffAuthorization();
 		LOGIN();
 		
@@ -732,6 +763,8 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		Submission submission = subRepo.createSubmission(person);
 		submission.setAssignee(person);
 		submission.save();
+		File file = getResourceFile("SamplePrimaryDocument.pdf");
+
 		
 		Long id = submission.getId();
 		
@@ -739,25 +772,35 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		
 		String UPDATE_URL = Router.reverse("ViewTab.addFile").url;
 		
+		// Update a primary document
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("subId", id.toString());
 		params.put("uploadType", "primary");
 		
 		Map<String,File> files = new HashMap<String,File>();
-		File file = null;
-		
-		try {
-			file = getResourceFile("SamplePrimaryDocument.pdf");
-			files.put("primaryAttachment", file);
-		} catch (IOException ioe) {
-			fail("Test upload file not found.");
-		}
+		files.put("primaryAttachment", file);
 		
 		Response response = POST(UPDATE_URL,params,files);
 		assertStatus(302,response);
 		
+		// Re-upload a primary document
+		params = new HashMap<String,String>();
+		params.put("subId", id.toString());
+		params.put("uploadType", "primary");
+		
+		files = new HashMap<String,File>();
+		files.put("primaryAttachment", file);
+		
+		response = POST(UPDATE_URL,params,files);
+		assertStatus(302,response);
+		
+		
 		file.delete();
+		// Verify the files were uploaded and archived
 		submission = subRepo.findSubmission(id);
+		assertEquals("PRIMARY-DOCUMENT.pdf",submission.getPrimaryDocument().getName());
+		assertEquals("PRIMARY-DOCUMENT-archived-on-"+JpaAttachmentImpl.dateFormat.format(new Date())+".pdf",submission.getAttachmentsByType(AttachmentType.ARCHIVED).get(0).getName());
+		
 		submission.delete();
 		
 		context.restoreAuthorization();

@@ -4,6 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.Normalizer;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -14,6 +16,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Attachment;
@@ -55,6 +58,8 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 
 	public Blob data;
 
+	public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	
 	/**
 	 * Private constructor to share code between the file and bytearray constructors.
 	 * 
@@ -118,6 +123,9 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 		setName(file.getName());
 		this.data = new Blob();
 		this.data.set(new FileInputStream(file), MimeTypes.getContentType(name));
+		
+		if (AttachmentType.PRIMARY == type)
+			renamePrimaryDocument();
 	}
 	
 
@@ -151,6 +159,8 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 				MimeTypes.getContentType(filename)
 				);
 		
+		if (AttachmentType.PRIMARY == type)
+			renamePrimaryDocument();
 	}
 
 	@Override
@@ -158,6 +168,9 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 
 		assertReviewerOrOwner(submission.getSubmitter());
 
+		if (AttachmentType.PRIMARY == type)
+			renamePrimaryDocument();
+		
 		boolean newObject = false;
 		if (id == null)
 			newObject = true;
@@ -222,7 +235,26 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 		
 		return this;
 	}
-
+	
+	@Override
+	public void archive() {
+		
+		if (type == AttachmentType.ARCHIVED)
+			throw new IllegalStateException("Unable to archive an allready archived attachment.");
+		
+		type = AttachmentType.ARCHIVED;
+		
+		// Rename the file: [filename]-2012-08-14[#].extension
+		
+		String basename = FilenameUtils.getBaseName(name);
+		String date = dateFormat.format(new Date());
+		String extension = FilenameUtils.getExtension(name);
+		
+		String newName = rename(basename+"-archived-on-"+date,extension);
+		
+		this.setName(newName);
+	}	
+	
 	@Override
 	public Submission getSubmission() {
 		return this.submission;
@@ -241,8 +273,12 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 		assertReviewerOrOwner(submission.getSubmitter());
 		
 		// Check if this filename has allready exists
-		if (submission.getId() != null && find("submission = ?1 AND name = ?2", submission, name).first() != null)
-			throw new IllegalArgumentException("An attachment with the name '"+name+"' allready exists for this submission.");
+		if (submission.getId() != null && submission.findAttachmentByName(name) != null) {
+			// If so, we rename this attachment
+			String basename = FilenameUtils.getBaseName(name);
+			String extension = FilenameUtils.getExtension(name);
+			name = rename(basename,extension);
+		}
 		
 		this.name = name;
 	}
@@ -298,6 +334,117 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 	@Override
 	public Date getDate() {
 		return this.date;
+	}	
+	
+	/**
+	 * Search for an available attachment name based upon the basename and
+	 * extension provided. If the name is already taken then a _1, _2, _3 will
+	 * be appended until a unique name can be reached. Once a unique name has
+	 * been found it is returned.
+	 * 
+	 * @param basename
+	 *            The base filename.
+	 * @param extension
+	 *            The file's extension (may be null or blank)
+	 * @return An unused filename in the form [basename][_1][.extension]
+	 */
+	protected String rename(String basename, String extension) {
+		
+		// Check if the new filename exsits, if so add a copy number. Repeate until found.
+		int i = 0;
+		while (true) {
+			
+			// Figure out the new filename
+			String filename = basename+"_"+i;
+			if (i == 0 )
+				filename = basename;
+			
+			if (extension != null && extension.length() > 0)
+				filename += "."+extension;
+			
+			// Check if it exists
+			if (submission.findAttachmentByName(filename) == null)
+				// The file name is unique!
+				return filename;
+			
+			// keep searching
+			i++;
+		}
+	}
+	
+	/**
+	 * Rename the primary document to follow the convention: [LAST]-[DOCUMENT
+	 * TYPE]-[YEAR].pdf. If those parameters are not available on the submission
+	 * then fall backs are used all the way back to "PRIMARY-DOCUMENT.pdf" is
+	 * nothing is available.
+	 * 
+	 * If an attachment already exists with that name then then the existing
+	 * attachment is renamed. The primary document's name will always take
+	 * precedence.
+	 * 
+	 * @return The attachment that was renamed, if any.
+	 */
+	protected Attachment renamePrimaryDocument() {
+		
+		// We only enforce the nameing convention on primary documents.
+		if (this.type != AttachmentType.PRIMARY)
+			throw new IllegalStateException("Unable to rename the primary document on an attachment which is not of type = PRIMARY.");
+		
+		// Step 1) Figure out what the primary document should be named.
+		String namePart = null;
+		if (submission.getStudentLastName() != null && submission.getStudentLastName().trim().length() > 0)
+			// If available use the last name.
+			namePart = submission.getStudentLastName();
+		if (namePart == null && submission.getStudentLastName() != null && submission.getStudentLastName().trim().length() > 0)
+			// If the last name is unavailable, use the first name.
+			namePart = submission.getStudentFirstName();
+		if (namePart == null)
+			// Lastly fall back to the word primary if we don't have a student name;
+			namePart = "primary";
+		
+		String docPart = null;
+		if (submission.getDocumentType() != null && submission.getDocumentType().trim().length() > 0)
+			// Use the document type
+			docPart = submission.getDocumentType();
+		if (docPart == null)
+			// If no document type then, just use the word "document"
+			docPart = "document";
+		
+		String yearPart = null;
+		if (submission.getGraduationYear() != null)
+			// Add the year if helpfull
+			yearPart = String.valueOf(submission.getGraduationYear());
+		
+		// Put it all together
+		String filename = namePart + "-" + docPart;
+		if (yearPart != null)
+			filename += "-" + yearPart;
+		
+		// Sanitize the filename for any random characters
+		filename = Normalizer.normalize(filename, Normalizer.Form.NFD);
+		filename = filename.replaceAll("[^a-zA-Z0-9\\-_]", "");
+		filename = filename.toUpperCase();
+		
+		String extension = FilenameUtils.getExtension(this.name);
+		if (extension != null && extension.trim().length() > 0)
+			filename += "." + extension;
+		
+		// Step 2) Check if that name allready exists, and if so move it out of the way.
+		Attachment exists = submission.findAttachmentByName(filename);
+		if (exists != null && exists != this) {
+			String existsBase = FilenameUtils.getBaseName(exists.getName());
+			String existsExt = FilenameUtils.getExtension(exists.getName());
+			String newName = ((JpaAttachmentImpl) (exists)).rename(existsBase,existsExt);
+			exists.setName(newName);
+			exists.save();
+		}
+		
+		// Step 3) rename the file
+		if (!filename.equals(this.getName()))
+			this.setName(filename);
+		
+		
+		return exists;
 	}
 
 }

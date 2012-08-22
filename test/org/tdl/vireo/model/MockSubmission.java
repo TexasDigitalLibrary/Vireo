@@ -242,6 +242,18 @@ public class MockSubmission extends AbstractMock implements Submission {
 		}
 		return null;
 	}
+	
+	@Override
+	public Attachment findAttachmentByName(String name) {
+		if (name == null)
+			return null;
+		
+		for(Attachment attachment : attachments) {
+			if(name.equals(attachment.getName()))
+				return attachment;
+		}
+		return null;
+	}
 
 	@Override
 	public List<CommitteeMember> getCommitteeMembers() {
