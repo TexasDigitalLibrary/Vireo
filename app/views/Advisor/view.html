@@ -157,7 +157,7 @@
 		</div>
 	</div>
 	
-	<legend>Uploaded File${ supplementaryDocuments.size() > 0 ? "s" : "" }</legend>
+	<legend>Uploaded Files</legend>
 	<div class="control-group #{if errors.forKey('primaryDocument')}error#{/if}">
 		<label class="control-label"><b>Primary Document:</b></label>
 		<div class="controls">
@@ -186,6 +186,19 @@
             #{/else}
         </div>
     </div>
+    #{if feedbackDocuments != null && feedbackDocuments.size() > 0}
+    <div class="control-group #{if errors.forKey('feedbackDocument')}error#{/if}">
+        <label class="control-label"><b>Feedback Document${ feedbackDocuments.pluralize() }:</b></label>
+        <div class="controls">
+            #{list items:feedbackDocuments, as:'attachment'}
+            <p>
+                <a href="@{Advisor.viewAttachment(token,attachment.getId(),attachment.getName())}" target="_blank">${attachment.getName()}</a>
+                (${attachment.getDisplaySize()})
+            </p>
+            #{/list}
+        </div>
+    </div>
+    #{/if}
     
 	<legend>Application Activity</legend>
 	<div id="student-log-view">

@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Attachment;
+import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.NameFormat;
@@ -93,8 +94,9 @@ public class Advisor extends AbstractVireoController {
 		List<ActionLog> logs = subRepo.findActionLog(sub);
 		Attachment primaryDocument = sub.getPrimaryDocument();
 		List<Attachment> supplementaryDocuments = sub.getSupplementalDocuments();
+		List<Attachment> feedbackDocuments = sub.getAttachmentsByType(AttachmentType.FEEDBACK);
 
-		renderTemplate("Advisor/view.html", token, sub, submitter, logs, primaryDocument, supplementaryDocuments,grantor,allEmbargos,inputRecieved);
+		renderTemplate("Advisor/view.html", token, sub, submitter, logs, primaryDocument, supplementaryDocuments, feedbackDocuments, grantor,allEmbargos,inputRecieved);
 
 	}
 	

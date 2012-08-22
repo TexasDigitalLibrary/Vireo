@@ -193,8 +193,9 @@ public class Student extends AbstractVireoController {
 		List<ActionLog> logs = subRepo.findActionLog(sub);
 		Attachment primaryDocument = sub.getPrimaryDocument();
 		List<Attachment> supplementaryDocuments = sub.getSupplementalDocuments();
+		List<Attachment> feedbackDocuments = sub.getAttachmentsByType(AttachmentType.FEEDBACK);
 
-		renderTemplate("Student/view.html",subId, sub, submitter, logs, primaryDocument, supplementaryDocuments, allSubmissions, grantor);		
+		renderTemplate("Student/view.html",subId, sub, submitter, logs, primaryDocument, supplementaryDocuments, feedbackDocuments, allSubmissions, grantor);		
 	}
 
 	/**

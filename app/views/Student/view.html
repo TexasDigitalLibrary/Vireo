@@ -14,6 +14,15 @@
 		 corrections you will no longer be able to edit the application.</p>
 	</div>
 #{/if}
+#{ifErrors}
+<br/>
+<ul class="red">
+    #{errors}
+        <li>${error}</li>
+    #{/errors}
+</ul>
+</br>
+#{/ifErrors}
 <div id="confirmSubmit" class="row">
 <form action="@{Student.submissionView(subId)}" method="post" class="form-horizontal" enctype="multipart/form-data">
 	<legend>About You</legend>
@@ -145,7 +154,7 @@
 		</div>
 	</div>
 	
-	<legend>Uploaded File${ supplementaryDocuments.size() > 0 ? "s" : "" }</legend>
+	<legend>Uploaded Files</legend>
 	#{ifErrors}
 	<br/>
 	<ul class="red">
@@ -226,6 +235,23 @@
         </div>
     </div>
     #{/if}
+    
+    #{if feedbackDocuments != null && feedbackDocuments.size() > 0}
+    <div class="control-group #{if errors.forKey('feedbackDocument')}error#{/if}">
+        <label class="control-label"><b>Feedback Document${ feedbackDocuments.pluralize() }:</b></label>
+        <div class="controls">
+            #{list items:feedbackDocuments, as:'attachment'}
+            <p>
+	            <a href="@{Student.viewAttachment(subId,attachment.getId(),attachment.getName())}" target="_blank">${attachment.getName()}</a>
+	            (${attachment.getDisplaySize()})
+            </p>
+            #{/list}
+        </div>
+    </div>
+    #{/if}
+    
+    
+    
 	<legend>Application Activity</legend>
 	<div id="student-log-view">
 	<table class="span10 table table-striped table-bordered table-condensed">

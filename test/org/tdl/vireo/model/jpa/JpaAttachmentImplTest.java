@@ -326,6 +326,42 @@ public class JpaAttachmentImplTest extends UnitTest {
 	}
 	
 	/**
+	 * Test retrieving attchments by type
+	 */
+	@Test
+	public void testFindByType() throws IOException {
+		
+		File file1 = createRandomFile(10L);
+		File file2 = createRandomFile(10L);
+		File file3 = createRandomFile(10L);
+
+		
+		Attachment a1 = sub.addAttachment(file1, AttachmentType.PRIMARY).save();
+		Attachment a2 = sub.addAttachment(file2, AttachmentType.SUPPLEMENTAL).save();
+		Attachment a3 = sub.addAttachment(file3, AttachmentType.SUPPLEMENTAL).save();
+		
+		List<Attachment> supplemental = sub.getAttachmentsByType(AttachmentType.SUPPLEMENTAL);
+		
+		boolean foundA2 = false;
+		boolean foundA3 = false;
+		
+		for (Attachment a : supplemental) {
+			if (a.getId() == a2.getId())
+				foundA2 = true;
+			if (a.getId() == a3.getId())
+				foundA3 = true;
+		}
+		
+		assertTrue(foundA2);
+		assertTrue(foundA3);
+		assertEquals(2,supplemental.size());
+		
+		file1.delete();
+		file2.delete();
+		file3.delete();
+	}
+	
+	/**
 	 * Test retrieving all attachments
 	 */
 	@Test

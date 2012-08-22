@@ -382,14 +382,20 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@Override
 	public List<Attachment> getSupplementalDocuments() {
 		
+		return getAttachmentsByType(AttachmentType.SUPPLEMENTAL);
+	}
+	
+	@Override
+	public List<Attachment> getAttachmentsByType(AttachmentType type) {
 		
-		List<Attachment> supplemental = new ArrayList<Attachment>();
+		
+		List<Attachment> found = new ArrayList<Attachment>();
 		for (Attachment attachment : attachments) {
-			if (AttachmentType.SUPPLEMENTAL == attachment.getType())
-				supplemental.add(attachment);
+			if (type == attachment.getType())
+				found.add(attachment);
 		}
 		
-		return supplemental;
+		return found;
 	}
 
 	@Override
