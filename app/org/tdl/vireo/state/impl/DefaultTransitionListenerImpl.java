@@ -77,12 +77,9 @@ public class DefaultTransitionListenerImpl implements StateTransitionListener {
 			
 			// 1) Generate advisor hash			
 			generateCommitteEmailHash(sub);
-			
-			// 2) Normalize the primary document's filename for publication.
-			normalizePrimaryDocumentFileName(sub);
 			sub.save();
 			
-			// Generate template parameters
+			// 2) Generate template parameters
 			EmailService.TemplateParameters params = new EmailService.TemplateParameters(sub);
 			params.STUDENT_URL = getStudentURL(sub);
 			params.ADVISOR_URL = getAdvisorURL(sub);
@@ -106,14 +103,6 @@ public class DefaultTransitionListenerImpl implements StateTransitionListener {
 				emailService.sendEmail(template, params, recipients, null, null);
 			}
 			
-		}
-		
-		if (previousState.isEditableByStudent() && !currentState.isEditableByStudent()) {
-			// The student has submitted corrections.
-			
-			// Normalize the primary document's filename for publication.
-			normalizePrimaryDocumentFileName(sub);
-			sub.save();
 		}
 	}
 	
@@ -144,50 +133,6 @@ public class DefaultTransitionListenerImpl implements StateTransitionListener {
 
 		sub.setCommitteeEmailHash(hash);
 		return hash;
-	}
-	
-	/**
-	 * Normalize the filename of the primary document to be:
-	 * 
-	 * [LAST NAME]-[DOCUMENT TYPE].pdf
-	 * 
-	 * @param sub The submission
-	 * @return the new filename.
-	 */
-	protected String normalizePrimaryDocumentFileName(Submission sub) {
-		
-		if (sub.getPrimaryDocument() == null)
-			return null;
-		
-		Attachment primaryDocument = sub.getPrimaryDocument();
-		
-		String filename = sub.getStudentLastName()+" "+sub.getDocumentType();
-		filename = filename.replaceAll(" ","-");
-		filename = filename.replaceAll("[^A-Za-z0-9\\-]", "").toUpperCase();
-		
-		// Loop if the filename is allready taken.
-		int attempts = 1;
-		while (true) {
-			
-			try {
-				primaryDocument.setName(filename + ".pdf");
-				
-				// We're good the name is not taken.
-				break;
-			} catch (IllegalArgumentException iae) {
-				
-				// Update the filename to be more unique.
-				if (filename.lastIndexOf("_") > 0)
-					filename = filename.substring(0, filename.lastIndexOf("_"));
-				
-				filename += "_"+attempts;
-				
-				attempts++;
-			}
-		} // Loop until we get a name we like.
-		primaryDocument.save();
-		
-		return filename;
 	}
 	
 	/**
