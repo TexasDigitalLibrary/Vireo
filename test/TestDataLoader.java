@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -25,6 +26,7 @@ import org.tdl.vireo.model.Degree;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.EmbargoType;
+import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.RoleType;
@@ -37,6 +39,8 @@ import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.security.impl.ShibbolethAuthenticationMethodImpl;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
+
+import controllers.submit.License;
 
 import play.Logger;
 import play.db.jpa.JPA;
@@ -730,9 +734,6 @@ public class TestDataLoader extends Job {
 				if (random.nextInt(100) > 70)
 					sub.setApprovalDate(generateRandomDate(random,2,2010));
 				
-				if (random.nextInt(100) > 5)
-					sub.setLicenseAgreementDate(generateRandomDate(random,2,2010));
-				
 				if (random.nextInt(100) > 50)
 					sub.setCommitteeEmbargoApprovalDate(generateRandomDate(random,2,2010));
 				
@@ -745,8 +746,12 @@ public class TestDataLoader extends Job {
 				if (random.nextInt(100) > 5) 
 					sub.addAttachment(new File("test/SamplePrimaryDocument.pdf"),AttachmentType.PRIMARY);
 				
-				if (random.nextInt(100) > 20) 
-					sub.addAttachment(settingRepo.getConfig(Configuration.SUBMIT_LICENSE).getBytes(), "LICENSE.txt", AttachmentType.LICENSE);
+				if (random.nextInt(100) > 20) {
+					Date agreementDate = generateRandomDate(random,2,2010);
+					String stampedLicense = stampLicense(settingRepo.getConfig(Configuration.SUBMIT_LICENSE), agreementDate);
+					sub.addAttachment(stampedLicense.getBytes(), "LICENSE.txt", AttachmentType.LICENSE);
+					sub.setLicenseAgreementDate(agreementDate);
+				}
 				
 				if (random.nextInt(100) > 75)
 					sub.addAttachment(new File("test/SampleSupplementalDocument.doc"),AttachmentType.SUPPLEMENTAL);
@@ -839,6 +844,28 @@ public class TestDataLoader extends Job {
 		} while (hash == null);
 
 		return hash;
+	}
+	
+	/**
+	 * Stamp the license with who is accepting the license and the current date.
+	 * This way this information will be stored directly with the license text.
+	 * 
+	 * @param licenseText
+	 *            The license text.
+	 * @param agreementDate
+	 *            The exact date of agreement.
+	 * @return The stamped license text
+	 */
+	public static String stampLicense(String licenseText, Date agreementDate) {
+
+		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy 'at' hh:mm a");
+		Person submitter = context.getPerson();
+
+		licenseText += "\n\n--------------------------------------------------------------------------\n";
+		licenseText += "The license above was accepted by "+submitter.getFormattedName(NameFormat.FIRST_LAST)+" on "+formatter.format(agreementDate)+"\n";
+
+		return licenseText;
+
 	}
 	
 	/**

@@ -59,7 +59,7 @@
 		    if (sub.getGraduationMonth() != null) {
 		        out.print("-");
 		        // Jaunary=0, December=11
-		        out.print(String.format("%2d",sub.getGraduationMonth()+1));
+		        out.print(String.format("%02d",sub.getGraduationMonth()+1));
 		    }
 		}% 
 	</dc:date>
