@@ -165,6 +165,42 @@ ${ attachment.getName() }	bundle:LICENSE
 
        #{/if} 
     
+    
+		<!-- dc.description.provenance = License Agreement Date -->
+		#{if sub.getLicenseAgreementDate() != null} 
+       <dcvalue element="description" qualifier="provenance">
+		    The student, ${ sub.getStudentFormattedName(org.tdl.vireo.model.NameFormat.FIRST_LAST) }, accepted the attached license on ${ sub.getLicenseAgreementDate().format("yyyy-MM-dd 'at' HH:mm") }. 
+       </dcvalue>
+		#{/if} 
+		
+		<!-- dc.description.provenance = Submission Date -->
+		#{if sub.getSubmissionDate() != null} 
+       <dcvalue element="description" qualifier="provenance">
+		    The student, ${ sub.getStudentFormattedName(org.tdl.vireo.model.NameFormat.FIRST_LAST) }, submitted this ${ sub.getDocumentType() == null ? "document" : sub.getDocumentType() } for approval on ${ sub.getSubmissionDate().format("yyyy-MM-dd 'at' HH:mm") }. 
+       </dcvalue>
+		#{/if} 
+		
+		<!-- dc.description.provenance = Committee Approval Date -->
+		#{if sub.getCommitteeApprovalDate() != null} 
+       <dcvalue element="description" qualifier="provenance">
+		    The committee advisor approved this ${ sub.getDocumentType() == null ? "document" : sub.getDocumentType() } on ${ sub.getSubmissionDate().format("yyyy-MM-dd 'at' HH:mm") }. 
+       </dcvalue>
+		#{/if} 
+		
+		<!-- dc.description.provenance = Committee Embargo Approval Date -->
+		#{if sub.getCommitteeApprovalDate() != null} 
+       <dcvalue element="description" qualifier="provenance">
+		    The committee advisor approved the embargo selection for this ${ sub.getDocumentType() == null ? "document" : sub.getDocumentType() } on ${ sub.getSubmissionDate().format("yyyy-MM-dd 'at' HH:mm") }. 
+       </dcvalue>
+		#{/if} 
+		
+		<!-- dc.description.provenance = Approval Date -->
+		#{if sub.getCommitteeApprovalDate() != null} 
+       <dcvalue element="description" qualifier="provenance">
+		    This ${ sub.getDocumentType() == null ? "document" : sub.getDocumentType() } was approved for publication on ${ sub.getSubmissionDate().format("yyyy-MM-dd 'at' HH:mm") }. 
+       </dcvalue>
+		#{/if} 
+    
      <!-- dc.description.provenance = Statement about when this package was generated. -->
         <dcvalue element="description" qualifier="provenance">
             DSpace METS Submission Ingestion Package generated from Vireo submission #${ sub.getId() } on ${ new java.util.Date().format("yyyy-MM-dd 'at' HH:mm:ss") }
