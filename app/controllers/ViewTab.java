@@ -81,8 +81,11 @@ public class ViewTab extends AbstractVireoController {
 		Boolean isManager = context.isManager();
 		
 		Submission submission = subRepo.findSubmission(id);
-		if (submission == null)
+
+		if(submission==null){
 			FilterTab.list();
+		}
+		
 		Person submitter = submission.getSubmitter();
 		
 		String advisorUrl = getAdvisorURL(submission);

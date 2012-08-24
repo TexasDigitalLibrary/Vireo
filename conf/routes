@@ -16,6 +16,9 @@ GET     /profile                                Authentication.profile
 *       /profile/update                         Authentication.updateProfile
 *       /profile/password                       Authentication.updatePassword
 
+### First User URL
+*		/createUser								FirstUser.createUser
+
 ### Advisor URL
 *       /advisor/{token}/review                 Advisor.review
 *       /advisor/{token}/file/{attachmentId}/{name}	Advisor.viewAttachment

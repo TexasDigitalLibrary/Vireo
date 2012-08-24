@@ -41,7 +41,7 @@ public class License extends AbstractSubmitStep {
 
 		// Get the form data.
 		String licenseAgreement = params.get("licenseAgreement");
-		String licenseText = settingRepo.getConfig(Configuration.SUBMIT_LICENSE,DEFAULT_LICENSE);
+		String licenseText = settingRepo.getConfig(Configuration.SUBMIT_LICENSE,Configuration.DEFAULT_SUBMIT_LICENSE);
 
 		if (params.get("submit_next") == null) {
 			licenseAgreement = sub.getLicenseAgreementDate() != null ? "true" : null; 
@@ -181,32 +181,4 @@ public class License extends AbstractSubmitStep {
 		return licenseText;
 
 	}
-
-	/**
-	 * This is the default license if no one has set any license yet under the
-	 * application's setting tab. It's just the super generic version adopted by
-	 * TDL.
-	 */
-	protected final static String DEFAULT_LICENSE = 
-			"I grant the Texas Digital Library (hereafter called \"TDL\"), my home institution (hereafter called \"Institution\"), and my academic department (hereafter called \"Department\") the non-exclusive rights to copy, display, perform, distribute and publish the content I submit to this repository (hereafter called \"Work\") and to make the Work available in any format in perpetuity as part of a TDL, Institution or Department repository communication or distribution effort.\n" +
-					"\n" +
-					"I understand that once the Work is submitted, a bibliographic citation to the Work can remain visible in perpetuity, even if the Work is updated or removed.\n" +
-					"\n" +
-					"I understand that the Work's copyright owner(s) will continue to own copyright outside these non-exclusive granted rights.\n" +
-					"\n" +
-					"I warrant that:\n" +
-					"\n" +
-					"    1) I am the copyright owner of the Work, or\n" +
-					"    2) I am one of the copyright owners and have permission from the other owners to submit the Work, or\n" +
-					"    3) My Institution or Department is the copyright owner and I have permission to submit the Work, or\n" +
-					"    4) Another party is the copyright owner and I have permission to submit the Work.\n" +
-					"\n" +
-					"Based on this, I further warrant to my knowledge:\n" +
-					"\n" +
-					"    1) The Work does not infringe any copyright, patent, or trade secrets of any third party,\n" +
-					"    2) The Work does not contain any libelous matter, nor invade the privacy of any person or third party, and\n" +
-					"    3) That no right in the Work has been sold, mortgaged, or otherwise disposed of, and is free from all claims.\n" +
-					"\n" +
-					"I agree to hold TDL, Institution, Department, and their agents harmless for any liability arising from any breach of the above warranties or any claim of intellectual property infringement arising from the exercise of these non-exclusive granted rights.\n"+
-					"\n";
 }

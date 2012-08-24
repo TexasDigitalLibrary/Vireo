@@ -168,7 +168,7 @@ public class Confirm extends AbstractSubmitStep {
 	 */
 	public static void complete(Long subId) {
 		// Get the post submission instructions for display
-		String instructions = settingRepo.getConfig(Configuration.SUBMIT_INSTRUCTIONS,DEFAULT_INSTRUCTIONS);
+		String instructions = settingRepo.getConfig(Configuration.SUBMIT_INSTRUCTIONS,Configuration.DEFAULT_SUBMIT_INSTRUCTIONS);
 
 		instructions = instructions.replaceAll("  ", "&nbsp;&nbsp;");
 		String[] paragraphs = instructions.split("\n\\s*\n");
@@ -293,10 +293,4 @@ public class Confirm extends AbstractSubmitStep {
 		return advisorAction.url;
 	}
 	
-	/**
-	 * The very generic default set of instructions if none are set.
-	 */
-	public final static String DEFAULT_INSTRUCTIONS =
-			"Thank you for your submission. In order to meet your graduation deadline, please make your final paperwork submission to the Graduate School before the end of the semester.";
-
 }
