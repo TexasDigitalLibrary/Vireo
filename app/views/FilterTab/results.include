@@ -51,15 +51,15 @@ in results.
            }
            
            for(org.tdl.vireo.search.SearchOrder column : columns) {
-             out.print("<td>");
+             out.print("<td><a href=\""+viewTabUrl+"?subId="+sub.getId()+"\">");
 
              switch (column) {
                  case ID:
                      if ("log".equals(nav)) {
                         // For action log show the log's id, not the submission's id.
-                        out.print("<a href=\""+viewTabUrl+"?subId="+sub.getId()+"\">"+log.getId()+"</a>");
+                        out.print(log.getId());
                      } else {                 
-                        out.print("<a href=\""+viewTabUrl+"?subId="+sub.getId()+"\">"+sub.getId()+"</a>");
+                        out.print(sub.getId());
                      }
                      break;
                 case STUDENT_EMAIL:
@@ -218,7 +218,7 @@ in results.
 
                      
              } // switch (column)
-             out.print("</td>");
+             out.print("</a></td>");
            } // for columns
            out.print("</tr>");
         } // for results.getResults()

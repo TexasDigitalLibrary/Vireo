@@ -15,6 +15,7 @@ import play.Logger;
 import play.modules.spring.Spring;
 import play.mvc.Before;
 import play.mvc.Controller;
+import play.mvc.Router;
 
 /**
  * This is a common ancestor for all Vireo controllers. It will hold any common
@@ -36,6 +37,7 @@ public abstract class AbstractVireoController extends Controller {
 	public static Indexer indexer = Spring.getBeanOfType(Indexer.class);
 	public static Searcher searcher = Spring.getBeanOfType(Searcher.class);
 
+	public static Boolean firstUser = null;
 	
 	/**
 	 * This is run before any action to inject the repositories into the
@@ -44,11 +46,24 @@ public abstract class AbstractVireoController extends Controller {
 	 */
 	@Before
 	public static void injectRepositories() {
-		renderArgs.put("securityContext",context);
-		renderArgs.put("personRepo",personRepo);
+		renderArgs.put("securityContext", context);
+		renderArgs.put("personRepo", personRepo);
 		renderArgs.put("subRepo", subRepo);
 		renderArgs.put("settingRepo", settingRepo);
 		renderArgs.put("stateManager", stateManager);
+	}
+	
+	@Before(unless = { "FirstUser.createUser" })
+	public static void checkForFirstUser() {
+		if(firstUser==null) {
+			if(personRepo.findAllPersons().size()==0) {
+				firstUser = true;				
+			} else {
+				firstUser = false;
+			}
+		}
+		if(firstUser==true)
+			FirstUser.createUser();
 	}
 
 	/**
