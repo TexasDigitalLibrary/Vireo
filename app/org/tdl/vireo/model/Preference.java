@@ -38,6 +38,9 @@ public interface Preference extends AbstractModel {
 	
 	/** Common preferences **/
 	
+	/** When sending any emails, CC the current user. **/
+	public final static String CC_EMAILS = "cc_emails";
+	
 	/** When adding a note, should the student be emailed by default */
 	public final static String NOTES_EMAIL_STUDENT = "notes_email_student_by_default";
 	

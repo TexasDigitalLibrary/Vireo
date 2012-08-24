@@ -78,7 +78,7 @@ public class SettingsTab extends AbstractVireoController {
 				person.setCurrentEmailAddress(value);
 			} else if ("ccEmail".equals(field)) {
 				
-				Preference ccEmail = person.getPreference("ccEmail");
+				Preference ccEmail = person.getPreference(Preference.CC_EMAILS);
 				if (value == null && ccEmail != null) {
 					// remove the setting
 					ccEmail.delete();

@@ -109,6 +109,15 @@
     	<property name="securityContext" ref="SecurityContext"/>
     </bean>
     
+    <bean id="NewEmailService" class="org.tdl.vireo.email.impl.EmailServiceImpl" scope="singleton">
+        <property name="securityContext" ref="SecurityContext"/>
+    </bean>
+	<bean id="NewVireoEmail" class="org.tdl.vireo.email.impl.VireoEmailImpl" scope="prototype">
+	     <constructor-arg ref="SecurityContext"/>
+	     <constructor-arg ref="PersonRepository"/>
+	     <constructor-arg ref="SubmissionRepository"/>
+	</bean>
+    
     <!-- State Listeners -->
     <bean id="DefaultTransitionListener" class="org.tdl.vireo.state.impl.DefaultTransitionListenerImpl" scope="singleton">
         <property name="emailService" ref="EmailService"/>

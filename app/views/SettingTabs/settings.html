@@ -50,7 +50,7 @@ jQuery(document).ready(function(){
 			<div class="sub-heading">PREFERED EMAIL</div>
 			<ul class="unstyled">
 				<li><fieldset class="control-group"><input id="currentEmailAddress" class="input-medium" type="text" name="currentEmailAddress" value="${currentUser.getCurrentEmailAddress()}" /></fieldset></li>
-				<li><fieldset class="control-group"><input id="ccEmail" type="checkbox" class="checkbox" name="ccEmail" #{if currentUser.getPreference("ccEmail") != null }checked="true"#{/if}> I want to receive a copy of all emails sent by the system on my behalf.</input></fieldset></li>
+				<li><fieldset class="control-group"><input id="ccEmail" type="checkbox" class="checkbox" name="ccEmail" #{if currentUser.getPreference(org.tdl.vireo.model.Preference.CC_EMAILS) != null }checked="true"#{/if}> I want to receive a copy of all emails sent by the system on my behalf.</input></fieldset></li>
 			</ul>
 		</div>
 		<div class="box-footer">
