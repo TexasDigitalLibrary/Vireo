@@ -701,19 +701,19 @@ public class LuceneSearcherImplTest extends UnitTest{
 			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 20).getResults();
 			
 			assertEquals(sub2,logs.get(0).getSubmission());
-			assertEquals("Assignee changed to 'first last' by first last", logs.get(0).getEntry());
+			assertEquals("Assignee changed to 'first last'", logs.get(0).getEntry());
 			filter.delete();
 			
 			// Search Text Filter
 			filter = subRepo.createSearchFilter(otherPerson, "test-text");
 			filter.addAssignee(otherPerson);
-			filter.addSearchText("Submission created by first last");
+			filter.addSearchText("Submission created");
 			filter.save();
 			
 			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 20).getResults();
 			
 			assertEquals(sub2,logs.get(0).getSubmission());
-			assertEquals("Assignee changed to 'first last' by first last", logs.get(0).getEntry());
+			assertEquals("Submission date set", logs.get(0).getEntry());
 			filter.delete();
 			
 			// State Filter
@@ -725,7 +725,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.DESCENDING, 0, 20).getResults();
 			
 			assertEquals(sub1,logs.get(0).getSubmission());
-			assertEquals("Submission created by first last", logs.get(0).getEntry());
+			assertEquals("Submission created", logs.get(0).getEntry());
 			filter.delete();
 			
 			// Assignee Filter
@@ -736,7 +736,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 20).getResults();
 			
 			assertEquals(sub2,logs.get(0).getSubmission());
-			assertEquals("Assignee changed to 'first last' by first last", logs.get(0).getEntry());
+			assertEquals("Assignee changed to 'first last'", logs.get(0).getEntry());
 			filter.delete();
 			
 			// Embargo Filter
@@ -748,7 +748,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 20).getResults();
 			
 			assertEquals(sub2,logs.get(0).getSubmission());
-			assertEquals("Assignee changed to 'first last' by first last", logs.get(0).getEntry());
+			assertEquals("Assignee changed to 'first last'", logs.get(0).getEntry());
 			filter.delete();
 			
 			// Graduation Semester Filter

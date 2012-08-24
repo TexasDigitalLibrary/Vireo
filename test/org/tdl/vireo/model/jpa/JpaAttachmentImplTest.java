@@ -716,12 +716,12 @@ public class JpaAttachmentImplTest extends UnitTest {
 		sub.delete();
 		sub = null;
 		
-		assertEquals("SUPPLEMENTAL file 'newPDF.pdf' (10 bytes) removed by Mock Administrator", logItr.next().getEntry());
-		assertEquals("SUPPLEMENTAL file 'newPDF.pdf' modified by Mock Administrator", logItr.next().getEntry());
-		assertEquals("FEEDBACK file 'newPDF.pdf' modified by Mock Administrator", logItr.next().getEntry());
-		assertEquals("FEEDBACK file '"+file.getName()+"' (10 bytes) uploaded by Mock Administrator", logItr.next().getEntry());
-		assertEquals("Submission status changed to 'Submitted' by Mock Administrator",logItr.next().getEntry());
-		assertEquals("Submission created by Mock Administrator",logItr.next().getEntry());
+		assertEquals("SUPPLEMENTAL file 'newPDF.pdf' (10 bytes) removed", logItr.next().getEntry());
+		assertEquals("SUPPLEMENTAL file 'newPDF.pdf' modified", logItr.next().getEntry());
+		assertEquals("FEEDBACK file 'newPDF.pdf' modified", logItr.next().getEntry());
+		assertEquals("FEEDBACK file '"+file.getName()+"' (10 bytes) uploaded", logItr.next().getEntry());
+		assertEquals("Submission status changed to 'Submitted'",logItr.next().getEntry());
+		assertEquals("Submission created",logItr.next().getEntry());
 		
 		assertFalse(logItr.hasNext());
 		

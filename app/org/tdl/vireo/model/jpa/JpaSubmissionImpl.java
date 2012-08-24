@@ -861,7 +861,9 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	
 	@Override
 	public ActionLog logAction(String entry) {
-		return logAction(entry, null);
+		ActionLog log = logAction(entry, null);
+		pendingLogs.add(log);
+		return log;
 	}
 	
 	/**
@@ -885,8 +887,9 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
 		
 		Person actor = context.getPerson();
-		if (actor != null)
-			entry += " by " + actor.getFormattedName(NameFormat.FIRST_LAST);
+		// The "By whom ever" is duplicating data and just uneeded.
+		//if (actor != null)
+		//	entry += " by " + actor.getFormattedName(NameFormat.FIRST_LAST);
 		
 		return new JpaActionLogImpl(this, this.getState(), actor, new Date(), attachment, entry, false);
 	}
