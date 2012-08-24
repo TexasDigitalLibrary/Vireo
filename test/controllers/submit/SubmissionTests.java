@@ -211,7 +211,7 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 		committee.add(member2);
 
 		documentInfo(
-				"Clair Danes Thesis on Testing ", // title
+				"Clair Danes Thesis on Testing", // title
 				String.valueOf(settingRepo.findAllGraduationMonths().get(0).getMonth()), // degreeMonth 
 				String.valueOf(Calendar.getInstance().get(Calendar.YEAR)), // degreeYear 
 				settingRepo.findAllDocumentTypes().get(0).getName(), // docType
@@ -708,6 +708,7 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 			if (member.get("chairFlag") != null)
 				params.put("committeeChairFlag"+(i+1),"true");
 		}
+		params.put("step","documentInfo");
 		params.put("submit_next", "Save and Continue");
 
 		// Post the form

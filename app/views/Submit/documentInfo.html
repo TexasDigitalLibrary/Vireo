@@ -19,7 +19,7 @@
 #{/ifErrors}
 <br/>
 	<form action="@{submit.DocumentInfo.documentInfo(subId)}" method="post" class="form-inline">
-	
+	<input type="hidden" name="step" value="documentInfo"/>
 	<fieldset class="form-horizontal">
 		<legend>Document Information</legend>
 		<div class="control-group #{ifError 'title'}error#{/ifError}">
