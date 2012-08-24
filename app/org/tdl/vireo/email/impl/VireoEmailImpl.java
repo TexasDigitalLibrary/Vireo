@@ -64,7 +64,7 @@ public class VireoEmailImpl implements VireoEmail {
 	 * @param subRepo
 	 *            The submisison repository.
 	 */
-	protected VireoEmailImpl(SecurityContext context, PersonRepository personRepo, SubmissionRepository subRepo) throws AddressException {
+	protected VireoEmailImpl(SecurityContext context, PersonRepository personRepo, SubmissionRepository subRepo) {
 		
 		this.personRepo = personRepo;
 		this.subRepo = subRepo;
@@ -90,24 +90,23 @@ public class VireoEmailImpl implements VireoEmail {
 	}
 
 	@Override
-	public void addTo(String email) throws AddressException {
+	public void addTo(String email) {
 		addTo(email, null);
 	}
 
 	@Override
-	public void addTo(String email, String name) throws AddressException {
+	public void addTo(String email, String name) {
 		addTo(createAddress(email, name));
 	}
 
 	@Override
-	public void addTo(Person person) throws AddressException {
+	public void addTo(Person person) {
 		addTo(createAddress(person));
 	}
 	
 	@Override
-	public void addTo(InternetAddress address) throws AddressException {
-		address.validate();
-		to.add(address);
+	public void addTo(InternetAddress address) {
+		to.add(validateAddress(address));
 	}
 
 	@Override
@@ -116,24 +115,23 @@ public class VireoEmailImpl implements VireoEmail {
 	}
 
 	@Override
-	public void addCc(String email) throws AddressException {
+	public void addCc(String email) {
 		addCc(email, null);
 	}
 
 	@Override
-	public void addCc(String email, String name) throws AddressException {
+	public void addCc(String email, String name) {
 		addCc(createAddress(email, name));
 	}
 	
 	@Override
-	public void addCc(Person person) throws AddressException {
+	public void addCc(Person person) {
 		addCc(createAddress(person));
 	}
 	
 	@Override
-	public void addCc(InternetAddress address) throws AddressException {
-		address.validate();
-		cc.add(address);
+	public void addCc(InternetAddress address) {
+		cc.add(validateAddress(address));
 	}
 
 	@Override
@@ -142,24 +140,23 @@ public class VireoEmailImpl implements VireoEmail {
 	}
 
 	@Override
-	public void addBcc(String email) throws AddressException {
+	public void addBcc(String email) {
 		addBcc(email, null);
 	}
 
 	@Override
-	public void addBcc(String email, String name) throws AddressException {
+	public void addBcc(String email, String name) {
 		addBcc(createAddress(email, name));
 	}
 
 	@Override
-	public void addBcc(Person person) throws AddressException {
+	public void addBcc(Person person) {
 		addBcc(createAddress(person));
 	}
 	
 	@Override
-	public void addBcc(InternetAddress address) throws AddressException {
-		address.validate();
-		bcc.add(address);
+	public void addBcc(InternetAddress address) {
+		bcc.add(validateAddress(address));
 	}
 
 	@Override
@@ -168,24 +165,23 @@ public class VireoEmailImpl implements VireoEmail {
 	}
 
 	@Override
-	public void setReplyTo(String email) throws AddressException {
+	public void setReplyTo(String email) {
 		setReplyTo(email, null);
 	}
 
 	@Override
-	public void setReplyTo(String email, String name) throws AddressException {
+	public void setReplyTo(String email, String name) {
 		setReplyTo(createAddress(email, name));
 	}
 
 	@Override
-	public void setReplyTo(Person person) throws AddressException {
+	public void setReplyTo(Person person) {
 		setReplyTo(createAddress(person));
 	}
 	
 	@Override
-	public void setReplyTo(InternetAddress address) throws AddressException {
-		address.validate();
-		_replyTo = address;
+	public void setReplyTo(InternetAddress address) {
+		_replyTo = validateAddress(address);
 	}
 
 	@Override
@@ -194,24 +190,23 @@ public class VireoEmailImpl implements VireoEmail {
 	}
 
 	@Override
-	public void setFrom(String email) throws AddressException {
+	public void setFrom(String email) {
 		setFrom(email, null);
 	}
 
 	@Override
-	public void setFrom(String email, String name) throws AddressException {
+	public void setFrom(String email, String name) {
 		setFrom(createAddress(email, name));
 	}
 
 	@Override
-	public void setFrom(Person person) throws AddressException {
+	public void setFrom(Person person) {
 		setFrom(createAddress(person));
 	}
 	
 	@Override
-	public void setFrom(InternetAddress address) throws AddressException {
-		address.validate();
-		_from = address;
+	public void setFrom(InternetAddress address) {
+		_from = validateAddress(address);
 	}
 
 	@Override
@@ -397,8 +392,7 @@ public class VireoEmailImpl implements VireoEmail {
 	 *            The address's name
 	 * @return A new InternetAddress
 	 */
-	private InternetAddress createAddress(String email, String name)
-			throws AddressException {
+	private InternetAddress createAddress(String email, String name) {
 		try {
 
 			InternetAddress address = new InternetAddress(email);
@@ -407,8 +401,8 @@ public class VireoEmailImpl implements VireoEmail {
 				address.setPersonal(name);
 
 			return address;
-		} catch (UnsupportedEncodingException uee) {
-			throw new RuntimeException(uee);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 
 	}
@@ -419,13 +413,29 @@ public class VireoEmailImpl implements VireoEmail {
 	 * @param person The person
 	 * @return A new InternetAddress
 	 */
-	private InternetAddress createAddress(Person person) throws AddressException {
+	private InternetAddress createAddress(Person person) {
 		String email = person.getEmail();
 		if (person.getCurrentEmailAddress() != null)
 			email = person.getCurrentEmailAddress();
 		
 		String name = person.getFormattedName(NameFormat.FIRST_LAST);
 		return createAddress(email,name);
+	}
+	
+	/**
+	 * Validate the provided email address, and throw a runtime exception if
+	 * invalid.
+	 * 
+	 * @param address
+	 *            The address to validate.
+	 */
+	private InternetAddress validateAddress(InternetAddress address) {
+		try {
+			address.validate();
+			return address;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 }

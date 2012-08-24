@@ -54,14 +54,14 @@
 	<!-- dc.date = Graduation date in "YYYY-MM" format -->
 	#{if sub.getGraduationYear() != null } 
 	<dc:date>
-	    %{
-	        out.print(sub.getGraduationYear());
-	        if (sub.getGraduationMonth() != null) {
-	            out.print("-");
-	            // Jaunary=0, December=11
-	            out.print(sub.getGraduationMonth()+1);
-	        }
-	    }% 
+		%{
+		    out.print(sub.getGraduationYear());
+		    if (sub.getGraduationMonth() != null) {
+		        out.print("-");
+		        // Jaunary=0, December=11
+		        out.print(String.format("%2d",sub.getGraduationMonth()+1));
+		    }
+		}% 
 	</dc:date>
 	#{/if}
 	

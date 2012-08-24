@@ -10,9 +10,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.tdl.vireo.email.EmailService;
+import org.tdl.vireo.email.SystemEmailTemplateService;
 import org.tdl.vireo.export.Depositor;
 import org.tdl.vireo.export.Packager;
 import org.tdl.vireo.export.impl.FileDepositorImpl;
@@ -32,7 +35,6 @@ import org.tdl.vireo.search.Indexer;
 import org.tdl.vireo.search.impl.LuceneIndexerImpl;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.security.impl.ShibbolethAuthenticationMethodImpl;
-import org.tdl.vireo.services.SystemEmailTemplateService;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
 
@@ -737,6 +739,9 @@ public class TestDataLoader extends Job {
 				if (random.nextInt(100) > 50)
 					sub.setCommitteeApprovalDate(generateRandomDate(random,2,2010));
 				
+				if (random.nextInt(100) > 5)
+					sub.setCommitteeEmailHash(generateCommitteEmailHash());
+				
 				if (random.nextInt(100) > 5) 
 					sub.addAttachment(new File("test/SamplePrimaryDocument.pdf"),AttachmentType.PRIMARY);
 				
@@ -807,6 +812,33 @@ public class TestDataLoader extends Job {
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();
 		JPA.em().getTransaction().begin();
+	}
+	
+	
+	/**
+	 * Generate a random security hash. The hash must be unique and not
+	 * currently being used by a submission.
+	 * 
+	 * @return The new hash.
+	 */
+	public static String generateCommitteEmailHash() {
+
+		String hash = null;
+
+		do {		
+			byte[] randomBytes = new byte[8];
+			new Random().nextBytes(randomBytes);
+			String proposed = Base64.encodeBase64URLSafeString(randomBytes);
+			proposed = proposed.replaceAll("[^A-Za-z0-9]","");
+						
+			// Check if the hash allready exists
+			if (subRepo.findSubmissionByEmailHash(proposed) == null) {
+				// We're done, otherwise keep looping.
+				hash = proposed;
+			}
+		} while (hash == null);
+
+		return hash;
 	}
 	
 	/**

@@ -1,13 +1,17 @@
 package org.tdl.vireo.email.impl;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Future;
 
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.SimpleEmail;
 import org.tdl.vireo.email.EmailService;
 import org.tdl.vireo.email.VireoEmail;
+import org.tdl.vireo.export.impl.DepositServiceImpl.DepositJob;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Submission;
@@ -15,6 +19,7 @@ import org.tdl.vireo.security.SecurityContext;
 
 import play.Logger;
 import play.Play;
+import play.db.jpa.JPA;
 import play.jobs.Job;
 import play.libs.Mail;
 import play.libs.Mail.Mock;
@@ -32,6 +37,10 @@ public class EmailServiceImpl implements EmailService {
 	// Spring dependency
 	public SecurityContext context;
 
+	// List of jobs in the queue.
+	public static Set<EmailJob> jobQueue = Collections.synchronizedSet(new HashSet<EmailJob>()); 
+
+	
 	/**
 	 * Inject spring security context dependency.
 	 * 
@@ -60,6 +69,11 @@ public class EmailServiceImpl implements EmailService {
 			// Otherwise, schedule it for immediate execution.
 			job.now();
 		}
+	}
+	
+	@Override
+	public boolean isJobRunning() {
+		return !jobQueue.isEmpty();
 	}
 
 
@@ -90,6 +104,8 @@ public class EmailServiceImpl implements EmailService {
 			this.email = email;
 			this.context = context;
 			this.wait = wait;
+			
+			jobQueue.add(this);
 		}
 
 		/**
@@ -157,6 +173,8 @@ public class EmailServiceImpl implements EmailService {
 				
 				if (wait)
 					throw new RuntimeException(t);
+			} finally {
+				jobQueue.remove(this);
 			}
 		}
 

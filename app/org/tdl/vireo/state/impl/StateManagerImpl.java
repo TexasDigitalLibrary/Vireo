@@ -52,6 +52,7 @@ public class StateManagerImpl implements StateManager {
 	public State getCancelState() {
 		return cancelState;
 	}
+	
 	/**
 	 * @param state
 	 *            Set the state where all canceled submission should be assigned too.

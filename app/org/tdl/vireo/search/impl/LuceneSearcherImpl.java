@@ -94,8 +94,7 @@ public class LuceneSearcherImpl implements Searcher {
 		// Sort fields for action logs
 		for (int i=0; i < SearchOrder.values().length; i++) 
 			SORT_LOG_FIELDS[i] = SORT_SUB_FIELDS[i];
-		SORT_SUB_FIELDS[SearchOrder.ID.ordinal()] = "logId";
-		SORT_SUB_FIELDS[SearchOrder.ID.ordinal()] = "subId";		
+		SORT_LOG_FIELDS[SearchOrder.ID.ordinal()] = "logId";
 
 		// Sort types for both submissions and action logs
 		for (int i=0; i < SearchOrder.values().length; i++) 

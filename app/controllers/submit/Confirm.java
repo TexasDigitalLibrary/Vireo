@@ -1,17 +1,27 @@
 package controllers.submit;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
+import org.apache.commons.codec.binary.Base64;
+import org.tdl.vireo.email.EmailService;
+import org.tdl.vireo.email.SystemEmailTemplateService;
+import org.tdl.vireo.email.VireoEmail;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.Configuration;
+import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.state.State;
 
 import play.Logger;
+import play.modules.spring.Spring;
+import play.mvc.Router;
+import play.mvc.Router.ActionDefinition;
 
 import controllers.Security;
 import controllers.Student;
@@ -27,6 +37,13 @@ import controllers.Student;
  */
 public class Confirm extends AbstractSubmitStep {
 
+	public static final String STUDENT_INITIAL_SUBMISSION_TEMPLATE = "SYSTEM_Initial_Submission";
+	public static final String ADVISOR_INITIAL_SUBMISSION_TEMPLATE = "SYSTEM_Advisor_Review_Request";
+	
+	public static EmailService emailService = Spring.getBeanOfType(EmailService.class);
+	public static SystemEmailTemplateService templateService = Spring.getBeanOfType(SystemEmailTemplateService.class);
+
+	
 	/**
 	 * Confirm the submission has passed the verification from all the previous
 	 * steps. Then allow the user to review their information before confirming
@@ -101,10 +118,27 @@ public class Confirm extends AbstractSubmitStep {
 
 			try {
 				context.turnOffAuthorization();
+				
+				// Generate an committee hash
+				generateCommitteEmailHash(sub);
+				
+				// Clear the approval dates
+				sub.setCommitteeApprovalDate(null);
+				sub.setCommitteeEmbargoApprovalDate(null);
+					
+				// Transition to the next state
 				State nextState = sub.getState().getTransitions(sub).get(0);
 				sub.setState(nextState);
+				
+				// Generate the emails
+				VireoEmail studentEmail = generateStudentEmail(sub);
+				VireoEmail advisorEmail = generateAdvisorEmail(sub);
+				
 				sub.save();
 
+				// After we have saved our state do we kick off the emails
+				emailService.sendEmail(studentEmail, false);
+				emailService.sendEmail(advisorEmail, false);
 			} finally {
 				context.restoreAuthorization();
 
@@ -148,6 +182,117 @@ public class Confirm extends AbstractSubmitStep {
 		renderTemplate("Submit/complete.html", instructions);
 	}
 
+	/**
+	 * Generate security hash for this submission. This method will make sure
+	 * that it is not being used by another submission before assigning a hash.
+	 * 
+	 * @param sub
+	 *            The submission to assign the hash too.
+	 * @return The new hash.
+	 */
+	protected static String generateCommitteEmailHash(Submission sub) {
+
+		String hash = null;
+
+		do {		
+			byte[] randomBytes = new byte[8];
+			new Random().nextBytes(randomBytes);
+			String proposed = Base64.encodeBase64URLSafeString(randomBytes);
+			proposed = proposed.replaceAll("[^A-Za-z0-9]","");
+						
+			// Check if the hash allready exists
+			if (subRepo.findSubmissionByEmailHash(proposed) == null) {
+				// We're done, otherwise keep looping.
+				hash = proposed;
+			}
+		} while (hash == null);
+
+		sub.setCommitteeEmailHash(hash);
+		return hash;
+	}
+	
+	protected static VireoEmail generateStudentEmail(Submission sub) {
+		templateService.generateAllSystemEmailTemplates();
+
+		VireoEmail email = null;
+		if (sub.getSubmitter().getEmail() != null) {
+			EmailTemplate template = templateService.generateSystemEmailTemplate(STUDENT_INITIAL_SUBMISSION_TEMPLATE);
+
+			email = emailService.createEmail();
+			email.setTemplate(template);
+			email.addParameters(sub);
+			email.addParameter("STUDENT_URL",getStudentURL(sub));
+			
+			email.addTo(sub.getSubmitter());
+			
+			email.setLogOnCompletion(null, sub);
+			email.setSuccessLogMessage("Student confirmation sent to "+sub.getSubmitter().getEmail());
+			email.setFailureLogMessage("Failed to send student confirmation, "+sub.getSubmitter().getEmail());
+		}
+		
+		return email;
+	}
+	
+	protected static VireoEmail generateAdvisorEmail(Submission sub) {
+		VireoEmail email = null;
+		if (sub.getCommitteeContactEmail() != null) {
+			EmailTemplate template = templateService.generateSystemEmailTemplate(ADVISOR_INITIAL_SUBMISSION_TEMPLATE);
+
+			email = emailService.createEmail();
+			email.getTo().clear();
+			email.getCc().clear();
+			email.getBcc().clear();
+			
+			
+			email.setTemplate(template);
+			email.addParameters(sub);
+			email.addParameter("ADVISOR_URL",getAdvisorURL(sub));
+			
+			email.addTo(sub.getCommitteeContactEmail());
+			
+			email.setLogOnCompletion(null, sub);
+			email.setSuccessLogMessage("Advisor review request sent to "+sub.getCommitteeContactEmail());
+			email.setFailureLogMessage("Failed to send advisor review request, "+sub.getCommitteeContactEmail());
+
+		}
+		
+		return email;
+	}
+	
+	/**
+	 * Retrieve the url where students may review their submission.
+	 * 
+	 * @param sub
+	 *            The submission
+	 * @return The url
+	 */
+	protected static String getStudentURL(Submission sub) {
+		
+		ActionDefinition studentAction = Router.reverse("Student.submissionList");
+		studentAction.absolute();
+		
+		return studentAction.url;
+	}
+	
+	/**
+	 * Retrieve the url where advisors may approve the submission.
+	 * 
+	 * @param sub
+	 *            The submission.
+	 * @return the url
+	 */
+	protected static String getAdvisorURL(Submission sub) {
+		
+		Map<String,Object> routeArgs = new HashMap<String,Object>();
+		routeArgs.put("token", sub.getCommitteeEmailHash());
+		
+		ActionDefinition advisorAction = Router.reverse("Advisor.review",routeArgs);
+		advisorAction.absolute();
+		
+		
+		return advisorAction.url;
+	}
+	
 	/**
 	 * The very generic default set of instructions if none are set.
 	 */

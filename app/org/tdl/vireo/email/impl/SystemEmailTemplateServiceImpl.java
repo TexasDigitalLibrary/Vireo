@@ -1,4 +1,4 @@
-package org.tdl.vireo.services.impl;
+package org.tdl.vireo.email.impl;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,7 +28,7 @@ import play.modules.spring.Spring;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 public class SystemEmailTemplateServiceImpl implements
-		org.tdl.vireo.services.SystemEmailTemplateService {
+		org.tdl.vireo.email.SystemEmailTemplateService {
 
 	// Constants
 	public static final String BASE_PATH = Play.applicationPath + File.separator + "conf"+File.separator+"emails"+File.separator;

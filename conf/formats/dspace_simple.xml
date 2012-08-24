@@ -79,25 +79,23 @@ ${ attachment.getName() }	bundle:LICENSE
     <!-- dc.date.submitted = Graduation date in "month YYYY" format -->
     #{if sub.getGraduationYear() != null } 
     <dcvalue element="date" qualifier="created">
-        %{
-            out.print(sub.getGraduationYear());
-            if (sub.getGraduationMonth() != null) {
-                out.print("-");
-                // Jaunary=0, December=11
-                out.print(sub.getGraduationMonth()+1);
-            }
-        }% 
+		%{
+			out.print(sub.getGraduationYear());
+			if (sub.getGraduationMonth() != null) {
+			    out.print("-");
+			    // Jaunary=0, December=11
+			    out.print(String.format("%2d",sub.getGraduationMonth()+1));
+			}
+		}% 
     </dcvalue>
     <dcvalue element="date" qualifier="submitted">
-        %{
-             String monthName = null;
-             if (sub.getGraduationMonth() != null && sub.getGraduationMonth() >= 0 && sub.getGraduationMonth() <= 11)
-                monthName = new java.text.DateFormatSymbols().getMonths()[sub.getGraduationMonth()]; 
-             if (sub.getGraduationYear() != null)
-                out.print(sub.getGraduationYear());
-             if (monthName != null)
-                out.print(" "+monthName);
-         }% 
+		%{
+			if (sub.getGraduationMonth() != null && sub.getGraduationMonth() >= 0 && sub.getGraduationMonth() <= 11) {
+			   String monthName = new java.text.DateFormatSymbols().getMonths()[sub.getGraduationMonth()]; 
+			   out.print(monthName+" ");
+			}
+			out.print(sub.getGraduationYear());
+		}% 
     </dcvalue>
     #{/if}
     
@@ -212,13 +210,6 @@ ${ attachment.getName() }	bundle:LICENSE
     </dcvalue>
     #{/if}
     
-    
-    <!-- thesis.degree.college = College -->
-    #{if sub.getCollege() != null } 
-    <dcvalue element="degree" qualifier="college">
-        ${ sub.getCollege().escapeXml() }
-    </dcvalue>
-    #{/if} 
 </dublin_core>
 #{/elseif}
 #{elseif "metadata_local.xml".equals(template) }

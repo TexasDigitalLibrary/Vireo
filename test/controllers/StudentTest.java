@@ -426,7 +426,7 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 		
 		sub = subRepo.findSubmission(sub.getId());
 		List<ActionLog> logs = subRepo.findActionLog(sub);
-		assertEquals(4,logs.size());
+		assertEquals(3,logs.size());
 	}
 
 	/**

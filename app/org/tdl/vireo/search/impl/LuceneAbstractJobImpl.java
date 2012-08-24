@@ -384,6 +384,7 @@ public abstract class LuceneAbstractJobImpl extends Job {
 		
 		for (ActionLog log : logs) {
 			
+			Long logId = log.getId();
 			String logEntry = log.getEntry();
 			String logState = log.getSubmissionState().getDisplayName();
 			long logSearchAssigned = 0;
@@ -396,8 +397,8 @@ public abstract class LuceneAbstractJobImpl extends Job {
 			
 			// The new special things for action logs.
 			doc = new Document();
-			doc.add(new NumericField("subId",Field.Store.YES,true).setLongValue(sub.getId()));
-			doc.add(new NumericField("logId",Field.Store.YES,true).setLongValue(log.getId()));
+			doc.add(new NumericField("subId",Field.Store.YES,true).setLongValue(subId));
+			doc.add(new NumericField("logId",Field.Store.YES,true).setLongValue(logId));
 			doc.add(new Field("type","actionlog",Field.Store.YES,Index.NOT_ANALYZED));
 			
 			if (logEntry != null)

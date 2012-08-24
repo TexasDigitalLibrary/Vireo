@@ -66,6 +66,7 @@ public class AdvisorTest extends AbstractVireoFunctionalTest {
 		// Create a submission
 		sub = subRepo.createSubmission(student);
 		sub.setState(sub.getState().getTransitions(sub).get(0));
+		sub.setCommitteeEmailHash("ABC"+sub.getId());
 		sub.save();
 		
 		// Save the token

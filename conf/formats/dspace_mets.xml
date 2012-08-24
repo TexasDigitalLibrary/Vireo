@@ -94,19 +94,17 @@
                             if (sub.getGraduationMonth() != null) {
                                 out.print("-");
                                 // Jaunary=0, December=11
-                                out.print(sub.getGraduationMonth()+1);
+                                out.print(String.format("%2d",sub.getGraduationMonth()+1));
                             }
                         }% 
                     </dim:field>
                     <dim:field mdschema="dc" element="date" qualifier="submitted">
                         %{
-                             String monthName = null;
-                             if (sub.getGraduationMonth() != null && sub.getGraduationMonth() >= 0 && sub.getGraduationMonth() <= 11)
-                                monthName = new java.text.DateFormatSymbols().getMonths()[sub.getGraduationMonth()]; 
-                             if (sub.getGraduationYear() != null)
-                                out.print(sub.getGraduationYear());
-                             if (monthName != null)
-                                out.print(" "+monthName);
+                             if (sub.getGraduationMonth() != null && sub.getGraduationMonth() >= 0 && sub.getGraduationMonth() <= 11) {
+                                String monthName = new java.text.DateFormatSymbols().getMonths()[sub.getGraduationMonth()]; 
+                                out.print(monthName+" ");
+                             }
+                             out.print(sub.getGraduationYear());
                          }% 
                     </dim:field>
                     #{/if}
@@ -175,14 +173,6 @@
                     #{if sub.getDepartment() != null } 
                     <dim:field mdschema="thesis" element="degree" qualifier="department">
                         ${ sub.getDepartment().escapeXml() }
-                    </dim:field>
-                    #{/if}
-                    
-                    
-                    <!-- thesis.degree.college = College -->
-                    #{if sub.getCollege() != null } 
-                    <dim:field mdschema="thesis" element="degree" qualifier="college">
-                        ${ sub.getCollege().escapeXml() }
                     </dim:field>
                     #{/if}
                     

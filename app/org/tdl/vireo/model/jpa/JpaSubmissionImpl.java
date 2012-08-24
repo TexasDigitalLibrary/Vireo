@@ -4,12 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
+import java.util.Random;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -24,31 +22,22 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
-import org.hibernate.annotations.Cascade;
-import org.tdl.vireo.model.AbstractModel;
+import org.apache.commons.codec.binary.Base64;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.AttachmentType;
-import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.CommitteeMember;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.CustomActionValue;
-import org.tdl.vireo.model.Degree;
 import org.tdl.vireo.model.DegreeLevel;
-import org.tdl.vireo.model.Department;
-import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.EmbargoType;
-import org.tdl.vireo.model.GraduationMonth;
-import org.tdl.vireo.model.Major;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
-import org.tdl.vireo.state.StateTransitionListener;
 
-import play.db.jpa.Model;
 import play.modules.spring.Spring;
 
 /**
@@ -761,17 +750,8 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		assertReviewer();
 		
 		if (!equals(this.stateName,state.getBeanName())) {
-			State previousState = getState();
-			
 			this.stateName = state.getBeanName();
 			generateChangeLog("Submission status",state.getDisplayName(),true);
-			
-			
-			// Notify the state change listeners
-			List<StateTransitionListener> listeners = new ArrayList<StateTransitionListener>((Collection) Spring.getBeansOfType(StateTransitionListener.class).values());
-			for (StateTransitionListener listener : listeners) {
-				listener.transition(this, previousState);
-			}
 		}
 	}
 
@@ -905,11 +885,8 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
 		
 		Person actor = context.getPerson();
-		String actorName = "an unknown user";
 		if (actor != null)
-			actorName = actor.getFormattedName(NameFormat.FIRST_LAST);
-		
-		entry = entry + " by " + actorName;
+			entry += " by " + actor.getFormattedName(NameFormat.FIRST_LAST);
 		
 		return new JpaActionLogImpl(this, this.getState(), actor, new Date(), attachment, entry, false);
 	}

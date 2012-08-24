@@ -1,4 +1,4 @@
-package org.tdl.vireo.services;
+package org.tdl.vireo.email;
 
 import java.util.List;
 

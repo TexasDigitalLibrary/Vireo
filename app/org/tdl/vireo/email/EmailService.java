@@ -30,4 +30,10 @@ public interface EmailService {
 	 */
 	public void sendEmail(VireoEmail email, boolean wait);
 
+	
+	/**
+	 * @return True if a background email job is currently in the queue to be
+	 *         run, or is executing concurrently.
+	 */
+	public boolean isJobRunning();
 }

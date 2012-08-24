@@ -3,25 +3,18 @@ package controllers;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.lucene.document.Field.Index;
-import org.tdl.vireo.model.AbstractModel;
+import org.tdl.vireo.email.EmailService;
+import org.tdl.vireo.email.SystemEmailTemplateService;
+import org.tdl.vireo.email.VireoEmail;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.search.Indexer;
-import org.tdl.vireo.search.impl.LuceneIndexerImpl;
-import org.tdl.vireo.services.EmailService;
-import org.tdl.vireo.services.SystemEmailTemplateService;
-import org.tdl.vireo.services.EmailService.TemplateParameters;
 
 import play.Play;
-import play.db.jpa.JPA;
 import play.modules.spring.Spring;
-import play.mvc.Router;
 import play.mvc.With;
-import play.mvc.Router.ActionDefinition;
 
 /**
  * System administrator control panel.
@@ -144,9 +137,11 @@ public class System extends AbstractVireoController {
 		templateService.generateAllSystemEmailTemplates();
 		EmailTemplate template = settingRepo.findEmailTemplateByName(TEST_EMAIL_TEMPLATE);
 		
-		List<String> recipients = new ArrayList<String>();
-		recipients.add(email);
-		emailService.sendEmail(template, new TemplateParameters(), recipients, null, null);
+		
+		VireoEmail vireoEmail = emailService.createEmail();
+		vireoEmail.addTo(email);
+		vireoEmail.setTemplate(template);
+		emailService.sendEmail(vireoEmail,true);
 		
 		render();
 	}

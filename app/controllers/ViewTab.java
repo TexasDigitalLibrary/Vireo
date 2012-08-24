@@ -4,6 +4,8 @@ import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Router;
 
+import org.tdl.vireo.email.EmailService;
+import org.tdl.vireo.email.VireoEmail;
 import org.tdl.vireo.export.DepositService;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Attachment;
@@ -22,9 +24,6 @@ import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
-import org.tdl.vireo.services.EmailService;
-import org.tdl.vireo.services.EmailService.TemplateParameters;
-import org.tdl.vireo.services.impl.EmailServiceImpl;
 import org.tdl.vireo.state.State;
 
 import com.google.gson.Gson;
@@ -58,6 +57,9 @@ import javax.mail.internet.InternetAddress;
 public class ViewTab extends AbstractVireoController {
 
 	public static DepositService depositService = Spring.getBeanOfType(DepositService.class);
+	public static EmailService emailService = Spring.getBeanOfType(EmailService.class);
+
+	
 	
 	/**
 	 * The main view method.
@@ -620,7 +622,6 @@ public class ViewTab extends AbstractVireoController {
 	public static void addActionLogComment(Long id){
 		
 		Submission submission = subRepo.findSubmission(id);
-		EmailService emailService = Spring.getBeanOfType(EmailServiceImpl.class);
 		
 		String subject = params.get("subject");
 		String message = params.get("comment");
@@ -628,88 +629,48 @@ public class ViewTab extends AbstractVireoController {
 		if(params.get("status_change") != null)
 			submission.setState(stateManager.getState("NeedsCorrection"));
 					
-		//Setup Params
-		TemplateParameters emailParams = new TemplateParameters(submission);
+		VireoEmail email = emailService.createEmail();
+		
+		// Run the parameters
+		email.addParameters(submission);
+		email.setSubject(subject);
+		email.setMessage(message);
+		email.applyParameterSubstitution();
 		
 		//Create list of recipients
-		List<String> recipients = new ArrayList<String>();
-		recipients.add(submission.getSubmitter().getCurrentEmailAddress());
+		email.addTo(submission.getSubmitter());
 		
 		//Create list of carbon copies
-		List<String> carbonCopies = new ArrayList<String>();
-		if(params.get("cc_advisor") != null) {
-			carbonCopies.add(submission.getCommitteeContactEmail());
+		if(params.get("cc_advisor") != null && submission.getCommitteeContactEmail() != null) {
+			email.addCc(submission.getCommitteeContactEmail());
 		}
 		
-		String replyTo = context.getPerson().getCurrentEmailAddress();
+		email.setReplyTo(context.getPerson());
 					
-		if (emailParams.FULL_NAME != null) {
-			subject = subject.replaceAll("\\{FULL_NAME\\}",emailParams.FULL_NAME);
-			message = message.replaceAll("\\{FULL_NAME\\}",emailParams.FULL_NAME);
-		}
-		
-		if (emailParams.FIRST_NAME != null) {
-			subject = subject.replaceAll("\\{FIRST_NAME\\}",emailParams.FIRST_NAME);
-			message = message.replaceAll("\\{FIRST_NAME\\}",emailParams.FIRST_NAME);
-		}
-		
-		if (emailParams.LAST_NAME != null) {
-			subject = subject.replaceAll("\\{LAST_NAME\\}",emailParams.LAST_NAME);
-			message = message.replaceAll("\\{LAST_NAME\\}",emailParams.LAST_NAME);
-		}
+		if(params.get("email_student") != null && "public".equals(params.get("visibility"))) {	
+			// Send the email and log it after completion
+			email.setLogOnCompletion(context.getPerson(), submission);
+			emailService.sendEmail(email,false);
 			
-		if (emailParams.DOCUMENT_TITLE != null) {
-			subject = subject.replaceAll("\\{DOCUMENT_TITLE\\}",emailParams.DOCUMENT_TITLE);
-			message = message.replaceAll("\\{DOCUMENT_TITLE\\}",emailParams.DOCUMENT_TITLE);
-		}
+		} else {
+			// Otherwise just log it.
+			subject = email.getSubject();
+			message = email.getMessage();
 			
-		if (emailParams.DOCUMENT_TYPE != null) {
-			subject = subject.replaceAll("\\{DOCUMENT_TYPE\\}",emailParams.DOCUMENT_TYPE);
-			message = message.replaceAll("\\{DOCUMENT_TYPE\\}",emailParams.DOCUMENT_TYPE);
-		}
+			String entry;
+			if (subject != null && subject.trim().length() > 0)
+				entry = subject+": "+message;
+			else
+				entry = message;
 			
-		if (emailParams.GRAD_SEMESTER != null) {
-			subject = subject.replaceAll("\\{GRAD_SEMESTER\\}",emailParams.GRAD_SEMESTER);
-			message = message.replaceAll("\\{GRAD_SEMESTER\\}",emailParams.GRAD_SEMESTER);
-		}
+			ActionLog log = submission.logAction(entry);
+			if("private".equals(params.get("visibility")))
+				log.setPrivate(true);
 			
-		if (emailParams.STUDENT_URL != null) {
-			subject = subject.replaceAll("\\{STUDENT_URL\\}",emailParams.STUDENT_URL);
-			message = message.replaceAll("\\{STUDENT_URL\\}",emailParams.STUDENT_URL);
+			submission.save();
+			log.save();
 		}
-			
-		if (emailParams.ADVISOR_URL != null) {
-			subject = subject.replaceAll("\\{ADVISOR_URL\\}",emailParams.ADVISOR_URL);
-			message = message.replaceAll("\\{ADVISOR_URL\\}",emailParams.ADVISOR_URL);
-		}
-			
-		if (emailParams.REGISTRATION_URL != null) {
-			subject = subject.replaceAll("\\{REGISTRATION_URL\\}",emailParams.REGISTRATION_URL);
-			message = message.replaceAll("\\{REGISTRATION_URL\\}",emailParams.REGISTRATION_URL);
-		}
-			
-		if (emailParams.SUBMISSION_STATUS != null) {
-			subject = subject.replaceAll("\\{SUBMISSION_STATUS\\}",emailParams.SUBMISSION_STATUS);
-			message = message.replaceAll("\\{SUBMISSION_STATUS\\}",emailParams.SUBMISSION_STATUS);
-		}
-			
-		if (emailParams.SUBMISSION_ASSIGNED_TO != null) {
-			subject = subject.replaceAll("\\{SUBMISSION_ASSIGNED_TO\\}",emailParams.SUBMISSION_ASSIGNED_TO);
-			message = message.replaceAll("\\{SUBMISSION_ASSIGNED_TO\\}",emailParams.SUBMISSION_ASSIGNED_TO);
-		}
-			
-		if(params.get("email_student") != null && "public".equals(params.get("visibility"))) {
-			emailService.sendEmail(subject, message, emailParams, recipients, replyTo, carbonCopies);
-		}		
 	
-		ActionLog actionLog = submission.logAction(message);
-		
-		if("private".equals(params.get("visibility")))
-			actionLog.setPrivate(true);
-		
-		submission.save();
-		actionLog.save();
-		
 		view();
 	}
 	
@@ -777,45 +738,41 @@ public class ViewTab extends AbstractVireoController {
 		Submission sub = subRepo.findSubmission(subId);
 		String uploadType = params.get("uploadType");
 		
-		String fileName = null;
-		List<String> files = null;
 		
 		if("note".equals(uploadType)){			
-			fileName = uploadNote(sub);
+			 uploadNote(sub);
 		} else if("primary".equals(uploadType)){			
-			fileName = uploadPrimary(sub);
+			uploadPrimary(sub);
 		} else if("supplement".equals(uploadType)){
 			String manageSup = params.get("supplementType");	
 			if("delete".equals(manageSup) || "replace".equals(manageSup)) {
-				files = removeSupplement(sub, manageSup);
+				removeSupplement(sub, manageSup);
 			} else {
-				fileName = uploadSupplement(sub);
+				uploadSupplement(sub);
 			}						
 		}
 		
 		if(params.get("email_student") != null) {			
-			
-			EmailService emailService = Spring.getBeanOfType(EmailServiceImpl.class);
-			
+						
 			String subject = params.get("subject");
 			String comment = params.get("comment");
-						
-			//Setup Params
-			TemplateParameters emailParams = new TemplateParameters(sub);
 			
-			//Create list of recipients
-			List<String> recipients = new ArrayList<String>();
-			recipients.add(sub.getSubmitter().getCurrentEmailAddress());
+			VireoEmail email = emailService.createEmail();
+			email.addParameters(sub);
+			email.addTo(sub.getSubmitter());
+			email.setReplyTo(context.getPerson());
 			
 			//Create list of carbon copies
-			List<String> carbonCopies = new ArrayList<String>();
-			if(params.get("cc_advisor") != null) {
-				carbonCopies.add(sub.getCommitteeContactEmail());
+			if(params.get("cc_advisor") != null && sub.getCommitteeContactEmail() != null) {
+				email.addCc(sub.getCommitteeContactEmail());
 			}
 			
-			String replyTo = context.getPerson().getCurrentEmailAddress();
+			email.setSubject(subject);
+			email.setMessage(comment);
 			
-			emailService.sendEmail(subject, comment, emailParams, recipients, replyTo, carbonCopies);
+			email.setLogOnCompletion(context.getPerson(), sub);
+			
+			emailService.sendEmail(email,false);
 		}
 		
 		if(params.get("needsCorrection") != null)
@@ -1007,27 +964,28 @@ public class ViewTab extends AbstractVireoController {
 		Submission submission = subRepo.findSubmission(id);
 		
 		String advisorEmail = submission.getCommitteeContactEmail();
-		
-		EmailService emailService = Spring.getBeanOfType(EmailServiceImpl.class);
-		
 		EmailTemplate template = settingRepo.findEmailTemplateByName("SYSTEM Advisor Review Request");
-							
+
+		
+		VireoEmail email = emailService.createEmail();
+		// Clear out all the recipients so we don't send this to anyone other than the advisor.
+		email.getTo().clear();
+		email.getCc().clear();
+		email.getBcc().clear();
+		
+		email.addTo(advisorEmail);
+						
 		//Setup Params
-		TemplateParameters emailParams = new TemplateParameters(submission);
-		emailParams.ADVISOR_URL = getAdvisorURL(submission);
-		if (emailParams.SUBMISSION_ASSIGNED_TO == null)
-			emailParams.SUBMISSION_ASSIGNED_TO = "n/a";
+		email.setTemplate(template);
+		email.addParameters(submission);
+		email.addParameter("ADVISOR_URL", getAdvisorURL(submission));
 		
-		//Create list of recipients
-		List<String> recipients = new ArrayList<String>();
-		recipients.add(advisorEmail);
+		email.setLogOnCompletion(context.getPerson(), submission);
+		email.setSuccessLogMessage("Resent advisor request sent to "+advisorEmail);
+		email.setFailureLogMessage("Failed to resend advisor request to "+advisorEmail);
 		
-		//Create list of carbon copies
-		List<String> carbonCopies = new ArrayList<String>();		
 		
-		String replyTo = context.getPerson().getCurrentEmailAddress();
-		
-		emailService.sendEmail(template, emailParams, recipients, replyTo, carbonCopies);
+		emailService.sendEmail(email,false);
 		
 		view();
 	}

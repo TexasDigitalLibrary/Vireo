@@ -36,7 +36,7 @@ public interface VireoEmail {
 	 * @param email
 	 *            An email address
 	 */
-	public void addTo(String email) throws AddressException;
+	public void addTo(String email);
 
 	/**
 	 * Add a new "To" recipient.
@@ -46,7 +46,7 @@ public interface VireoEmail {
 	 * @param name
 	 *            A descriptive name
 	 */
-	public void addTo(String email, String name) throws AddressException;
+	public void addTo(String email, String name);
 
 	/**
 	 * Add a new "To" recipient
@@ -54,7 +54,7 @@ public interface VireoEmail {
 	 * @param person
 	 *            The person object.
 	 */
-	public void addTo(Person person) throws AddressException;
+	public void addTo(Person person);
 	
 	/**
 	 * Add a new "To" recipient.
@@ -62,7 +62,7 @@ public interface VireoEmail {
 	 * @param address
 	 *            The address
 	 */
-	public void addTo(InternetAddress address) throws AddressException;
+	public void addTo(InternetAddress address);
 
 	// CC
 
@@ -78,7 +78,7 @@ public interface VireoEmail {
 	 * @param email
 	 *            An email address
 	 */
-	public void addCc(String email) throws AddressException;
+	public void addCc(String email);
 
 	/**
 	 * Add a new Carbon Copy recipient.
@@ -88,7 +88,7 @@ public interface VireoEmail {
 	 * @param name
 	 *            A descriptive name
 	 */
-	public void addCc(String email, String name) throws AddressException;
+	public void addCc(String email, String name);
 
 	/**
 	 * Add a new Carbon Copy recipient
@@ -96,7 +96,7 @@ public interface VireoEmail {
 	 * @param person
 	 *            The person object.
 	 */
-	public void addCc(Person person) throws AddressException;
+	public void addCc(Person person);
 	
 	/**
 	 * Add a new Carbon Copy recipient.
@@ -104,7 +104,7 @@ public interface VireoEmail {
 	 * @param address
 	 *            The address
 	 */
-	public void addCc(InternetAddress address) throws AddressException;
+	public void addCc(InternetAddress address);
 
 	// BCC
 
@@ -120,7 +120,7 @@ public interface VireoEmail {
 	 * @param email
 	 *            An email address
 	 */
-	public void addBcc(String email) throws AddressException;
+	public void addBcc(String email);
 
 	/**
 	 * Add a new Blind Carbon Copy recipient.
@@ -130,7 +130,7 @@ public interface VireoEmail {
 	 * @param name
 	 *            A descriptive name
 	 */
-	public void addBcc(String email, String name) throws AddressException;
+	public void addBcc(String email, String name);
 
 	/**
 	 * Add a new Carbon Copy recipient
@@ -138,7 +138,7 @@ public interface VireoEmail {
 	 * @param person
 	 *            The person object.
 	 */
-	public void addBcc(Person person) throws AddressException;
+	public void addBcc(Person person);
 	
 	/**
 	 * Add a new Blind Carbon Copy recipient
@@ -146,7 +146,7 @@ public interface VireoEmail {
 	 * @param address
 	 *            The address
 	 */
-	public void addBcc(InternetAddress address) throws AddressException;
+	public void addBcc(InternetAddress address);
 
 	// ReplyTo
 
@@ -161,7 +161,7 @@ public interface VireoEmail {
 	 * @param email
 	 *            An email address
 	 */
-	public void setReplyTo(String email) throws AddressException;
+	public void setReplyTo(String email);
 
 	/**
 	 * Set the new reply to address
@@ -171,7 +171,7 @@ public interface VireoEmail {
 	 * @param name
 	 *            A descriptive name
 	 */
-	public void setReplyTo(String email, String name) throws AddressException;
+	public void setReplyTo(String email, String name);
 
 	/**
 	 * Set the new reply to address
@@ -179,7 +179,7 @@ public interface VireoEmail {
 	 * @param person
 	 *            The person object.
 	 */
-	public void setReplyTo(Person person) throws AddressException;
+	public void setReplyTo(Person person);
 	
 	/**
 	 * Set the new reply to address.
@@ -187,7 +187,7 @@ public interface VireoEmail {
 	 * @param address
 	 *            The address
 	 */
-	public void setReplyTo(InternetAddress address) throws AddressException;
+	public void setReplyTo(InternetAddress address);
 
 	// From
 
@@ -202,7 +202,7 @@ public interface VireoEmail {
 	 * @param email
 	 *            An email address
 	 */
-	public void setFrom(String email) throws AddressException;
+	public void setFrom(String email);
 
 	/**
 	 * Set the from address.
@@ -212,7 +212,7 @@ public interface VireoEmail {
 	 * @param name
 	 *            A descriptive name.
 	 */
-	public void setFrom(String email, String name) throws AddressException;
+	public void setFrom(String email, String name);
 
 	/**
 	 * Set the new from address
@@ -220,7 +220,7 @@ public interface VireoEmail {
 	 * @param person
 	 *            The person object.
 	 */
-	public void setFrom(Person person) throws AddressException;
+	public void setFrom(Person person);
 	
 	/**
 	 * Set the from address
@@ -228,7 +228,7 @@ public interface VireoEmail {
 	 * @param address
 	 *            The address
 	 */
-	public void setFrom(InternetAddress address) throws AddressException;
+	public void setFrom(InternetAddress address);
 
 	// Subject and Message
 
@@ -337,11 +337,11 @@ public interface VireoEmail {
 	 * 
 	 * @param person
 	 *            The person responsible, or null if none.
-	 * @param submisison
+	 * @param submission
 	 *            The submission where completion should be logged, or null if
 	 *            no logs should be generated.
 	 */
-	public void setLogOnCompletion(Person person, Submission submisison);
+	public void setLogOnCompletion(Person person, Submission submission);
 
 	/**
 	 * @return The successful log message.

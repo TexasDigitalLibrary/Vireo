@@ -102,28 +102,20 @@
         </property>
     </bean>
     
-    <!-- Services -->
-    <bean id="EmailService" class="org.tdl.vireo.services.impl.EmailServiceImpl" scope="singleton"/>
-    <bean id="SystemEmailTemplateService" class="org.tdl.vireo.services.impl.SystemEmailTemplateServiceImpl" scope="singleton">
-    	<property name="settingsRepository" ref="SettingsRepository"/>
-    	<property name="securityContext" ref="SecurityContext"/>
-    </bean>
-    
-    <bean id="NewEmailService" class="org.tdl.vireo.email.impl.EmailServiceImpl" scope="singleton">
+    <!-- Email -->
+    <bean id="EmailService" class="org.tdl.vireo.email.impl.EmailServiceImpl" scope="singleton">
         <property name="securityContext" ref="SecurityContext"/>
     </bean>
-	<bean id="NewVireoEmail" class="org.tdl.vireo.email.impl.VireoEmailImpl" scope="prototype">
+	<bean id="VireoEmail" class="org.tdl.vireo.email.impl.VireoEmailImpl" scope="prototype">
 	     <constructor-arg ref="SecurityContext"/>
 	     <constructor-arg ref="PersonRepository"/>
 	     <constructor-arg ref="SubmissionRepository"/>
 	</bean>
-    
-    <!-- State Listeners -->
-    <bean id="DefaultTransitionListener" class="org.tdl.vireo.state.impl.DefaultTransitionListenerImpl" scope="singleton">
-        <property name="emailService" ref="EmailService"/>
-        <property name="systemEmailTemplateService" ref="SystemEmailTemplateService"/>
-        <property name="submissionRepository" ref="SubmissionRepository"/>
+	<bean id="SystemEmailTemplateService" class="org.tdl.vireo.email.impl.SystemEmailTemplateServiceImpl" scope="singleton">
+        <property name="settingsRepository" ref="SettingsRepository"/>
+        <property name="securityContext" ref="SecurityContext"/>
     </bean>
+    
     
     <!-- Search -->
     <bean id="Indexer" class="org.tdl.vireo.search.impl.LuceneIndexerImpl" scope="singleton">

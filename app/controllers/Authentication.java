@@ -18,6 +18,10 @@ import javax.mail.internet.InternetAddress;
 
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.tdl.vireo.email.EmailService;
+import org.tdl.vireo.email.SystemEmailTemplateService;
+import org.tdl.vireo.email.VireoEmail;
+import org.tdl.vireo.email.impl.SystemEmailTemplateServiceImpl;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
@@ -27,10 +31,6 @@ import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.security.AuthenticationMethod;
 import org.tdl.vireo.security.AuthenticationResult;
 import org.tdl.vireo.security.SecurityContext;
-import org.tdl.vireo.services.EmailService;
-import org.tdl.vireo.services.EmailService.TemplateParameters;
-import org.tdl.vireo.services.SystemEmailTemplateService;
-import org.tdl.vireo.services.impl.SystemEmailTemplateServiceImpl;
 
 import play.Logger;
 import play.Play;
@@ -444,13 +444,12 @@ public class Authentication extends AbstractVireoController {
 				action.absolute();
 				String token = generateToken(email, "reg");
 				
-				TemplateParameters params = new TemplateParameters();
-				params.REGISTRATION_URL = action.url + "?token="+token;
+				VireoEmail vireoEmail = emailService.createEmail();
+				vireoEmail.setTemplate(template);
+				vireoEmail.addParameter("REGISTRATION_URL", action.url + "?token="+token);
+				vireoEmail.addTo(email);
 				
-				List<String> recipients = new ArrayList<String>();
-				recipients.add(email);
-				
-				emailService.sendEmail(template, params, recipients, null, null);
+				emailService.sendEmail(vireoEmail,false);
 				
 				renderTemplate("Authentication/registerSent.html",email);
 			}
@@ -576,13 +575,12 @@ public class Authentication extends AbstractVireoController {
 				action.absolute();
 				String token = generateToken(email, "rec");
 				
-				TemplateParameters params = new TemplateParameters();
-				params.REGISTRATION_URL = action.url + "?token="+token;
+				VireoEmail vireoEmail = emailService.createEmail();
+				vireoEmail.setTemplate(template);
+				vireoEmail.addParameter("REGISTRATION_URL", action.url + "?token="+token);
+				vireoEmail.addTo(email);
 				
-				List<String> recipients = new ArrayList<String>();
-				recipients.add(email);
-				
-				emailService.sendEmail(template, params, recipients, null, null);
+				emailService.sendEmail(vireoEmail,false);
 				
 				renderTemplate("Authentication/recoverSent.html",email);
 			}
