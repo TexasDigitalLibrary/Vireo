@@ -314,15 +314,19 @@ public class Student extends AbstractVireoController {
 
 		// Get values from all check boxes
 		String[] idsToRemove = params.getAll("attachmentToRemove");
-
-		// Iterate over all checked check boxes - removing attachments as we go
-		for (String idString : idsToRemove) {
-			Long id = Long.valueOf(idString);
-			
-			Attachment attachment = subRepo.findAttachment(id);
-			
-			if (attachment.getSubmission() == sub && attachment.getType() == AttachmentType.SUPPLEMENTAL)
-				attachment.delete();
+		
+		if (idsToRemove != null) {
+		
+			// Iterate over all checked check boxes - removing attachments as we go
+			for (String idString : idsToRemove) {
+				Long id = Long.valueOf(idString);
+				
+				Attachment attachment = subRepo.findAttachment(id);
+				
+				if (attachment.getSubmission() == sub && attachment.getType() == AttachmentType.SUPPLEMENTAL)
+					attachment.delete();
+			}
+		
 		}
 		
 		return true;
