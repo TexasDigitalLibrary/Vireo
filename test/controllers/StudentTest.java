@@ -562,9 +562,10 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 		fileParams.put("primaryDocument", primaryFile);
 		
 		response = POST(VIEW_URL,params,fileParams);
-		assertIsOk(response);
-		//assertNotNull(response.getHeader("Location"));
+		assertNotNull(response.getHeader("Location"));
 
+		response = GET(response.getHeader("Location"));
+		assertContentMatch("Corrections Submitted",response);
 		
 		
 		// Verify the submission.

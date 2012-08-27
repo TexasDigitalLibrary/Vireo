@@ -199,6 +199,8 @@ public class Student extends AbstractVireoController {
 					sub.setState(nextState);
 					sub.save();
 
+					correctionsComplete(sub.getId());
+					
 				} finally {
 					context.restoreAuthorization();
 
@@ -216,6 +218,18 @@ public class Student extends AbstractVireoController {
 		renderTemplate("Student/view.html",subId, sub, submitter, logs, primaryDocument, supplementaryDocuments, feedbackDocuments, allSubmissions, grantor);		
 	}
 
+	/**
+	 * Splash screen after a student has submitted corrections.
+	 * 
+	 * @param subId The submission
+	 */
+	@Security(RoleType.STUDENT)
+	public static void correctionsComplete(Long subId) {
+		
+		renderTemplate("Student/complete.html");
+		
+	}
+	
 	/**
 	 * Delete a given submission
 	 * 
