@@ -215,6 +215,40 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 		response = GET(VIEW_URL);
 		assertContentMatch("<title>View Application</title>",response);	
 	}
+	
+	/**
+	 * Test that if a student has an archived submission they can see the list page to start another submission.
+	 */
+	@Test
+	public void testOpenAndMultipleArchivedSubmission() {
+		
+		configure(true,false);
+		
+		Submission sub = subRepo.createSubmission(submitter);
+		sub.setState(sub.getState().getTransitions(sub).get(0));
+		for (State state : stateManager.getAllStates()) {
+			if (state.isArchived()) {
+				sub.setState(state);
+				break;
+			}
+		}
+		sub.save();
+		subs.add(sub);
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
+		LOGIN("student@tdl.org");
+		
+		final String LIST_URL = Router.reverse("Student.submissionList").url;
+		
+		Response response = GET(LIST_URL);
+		assertIsOk(response);
+		assertContentMatch("<title>Submission Status</title>",response);
+		assertContentMatch(">Start a new submission</a>",response);
+		
+	}
 
 	/**
 	 * Test that when submissions are closed, and multiple submissions are
