@@ -54,10 +54,10 @@ public class AdvisorTest extends AbstractVireoFunctionalTest {
 		context.turnOffAuthorization();
 		
 		// Create people
-		student = personRepo.createPerson("student", "student@tdl.org", "first", "last", RoleType.STUDENT);
+		student = personRepo.createPerson("student", "student@tdl.org", "first", "last", RoleType.STUDENT).save();
 		student.setPassword("password");
 		student.save();
-		advisor = personRepo.createPerson("advisor", "advisor@tdl.org", "first", "last", RoleType.NONE);
+		advisor = personRepo.createPerson("advisor", "advisor@tdl.org", "first", "last", RoleType.NONE).save();
 		advisor.setPassword("password");
 		advisor.addAffiliation("faculty");
 		advisor.addAffiliation("affiliate");

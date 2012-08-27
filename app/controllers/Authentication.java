@@ -149,21 +149,19 @@ public class Authentication extends AbstractVireoController {
 	public static void loginList() {
 		flash.keep("url");	
 		
-		// Get the list of all our authentication methods
-		List<AuthenticationMethod> enabledMethods = getEnabledAuthenticationMethods();
+		// Get the list of all our *visible* authentication methods
+		List<AuthenticationMethod> visibleMethods = getVisibleAuthenticationMethods();
 		
 		// Fail if the admin forgot to define ANY authentication methods.
-		if (enabledMethods.size() == 0)
+		if (visibleMethods.size() == 0)
 			error("No authentication methods are defined or enabled.");
 		
 		// If there is only one option skip the list and go straight there.
-		if (enabledMethods.size() == 1) {
-			Map<String,Object> routeArgs = new HashMap<String,Object>();
-			routeArgs.put("method",enabledMethods.get(0).getBeanName());
-			redirect("Authentication.loginMethod", routeArgs);
+		if (visibleMethods.size() == 1) {
+			loginMethod(visibleMethods.get(0).getBeanName());
 		}
 				
-		render(enabledMethods);
+		render(visibleMethods);
 	}
 	
 	/**
@@ -299,14 +297,8 @@ public class Authentication extends AbstractVireoController {
 			if (flash.get("url") != null && flash.get("url").trim().length() > 0) {
 				String url = flash.get("url");
 				flash.remove("url");
-
-				Logger.info("Going to: " + url);
-
 				redirect(url);
 			} else {
-				
-				Logger.info("Going to index");
-				
 				Application.index();
 			}
 		} 
@@ -388,7 +380,7 @@ public class Authentication extends AbstractVireoController {
 					
 					// Create the account.
 					context.turnOffAuthorization();
-					person = personRepo.createPerson(null, email, firstName, lastName, RoleType.STUDENT);
+					person = personRepo.createPerson(null, email, firstName, lastName, RoleType.STUDENT).save();
 					person.setPassword(password1);
 					person.save();
 					context.turnOffAuthorization();
@@ -910,6 +902,18 @@ public class Authentication extends AbstractVireoController {
 				enabledMethods.add(method);
 		}
 		return enabledMethods;
+	}
+	
+	/**
+	 * @return The list of all enabled and visible authenticationMethods.
+	 */
+	private static List<AuthenticationMethod> getVisibleAuthenticationMethods() {
+		List<AuthenticationMethod> visibleMethods = new ArrayList<AuthenticationMethod>();
+		for(AuthenticationMethod method : getEnabledAuthenticationMethods()) {
+			if (method.isVisible())
+				visibleMethods.add(method);
+		}
+		return visibleMethods;
 	}
 	
 	/**

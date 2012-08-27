@@ -39,8 +39,8 @@ public class PasswordAuthenticationMethodImplTest extends UnitTest {
 	public void setup() {
 		// Setup two user accounts;
 		context.turnOffAuthorization();
-		person1 = personRepo.createPerson("netid", "email@email.com", "first", "last", RoleType.NONE);
-		person2 = personRepo.createPerson("other", "other@email.com", "other", "another", RoleType.NONE);
+		person1 = personRepo.createPerson("netid", "email@email.com", "first", "last", RoleType.NONE).save();
+		person2 = personRepo.createPerson("other", "other@email.com", "other", "another", RoleType.NONE).save();
 		
 		person1.setPassword("password");
 		person2.setPassword("secret");

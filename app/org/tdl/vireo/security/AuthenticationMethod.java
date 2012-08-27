@@ -46,6 +46,17 @@ public interface AuthenticationMethod {
 	 */
 	public boolean isEnabled();
 	
+	/**
+	 * @return Whether this authentication method is visible. Authentication
+	 *         methods may enabled (i.e. can be used) but not displayed to users
+	 *         as an option. When methods are enabled but not visible the user
+	 *         would need to know the correct login url to go directly to the
+	 *         login page for that method. This is useful for situations where
+	 *         you want all users to go one way, but want to allow a special
+	 *         case for administrators to login specially.
+	 */
+	public boolean isVisible();
+	
 
 	/**
 	 * @return The publicly displayable name of this authentication method. If
