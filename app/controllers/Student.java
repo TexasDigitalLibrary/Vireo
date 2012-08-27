@@ -192,7 +192,7 @@ public class Student extends AbstractVireoController {
 			if (sub.getPrimaryDocument() == null)
 				validation.addError("primaryDocument", "A primary document is required.");
 			
-			if (params.get("submit_corrections") != null) {
+			if (params.get("submit_corrections") != null && !validation.hasErrors()) {
 				try {
 					context.turnOffAuthorization();
 					State nextState = sub.getState().getTransitions(sub).get(0);

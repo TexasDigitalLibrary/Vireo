@@ -664,6 +664,7 @@ public class TestDataLoader extends Job {
 			
 			Person student = personRepo.createPerson("student"+i, studentEmail, studentName[0], studentName[1], RoleType.STUDENT);
 			student.setMiddleName(studentName[2]);
+			student.setPassword("password");
 			student.save();
 			
 			context.restoreAuthorization();

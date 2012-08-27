@@ -522,7 +522,7 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 	 * Test completing corrections.
 	 */
 	@Test
-	public void testCompletingCorrections() {
+	public void testCompletingCorrections() throws IOException {
 
 		Submission sub = subRepo.createSubmission(submitter);
 		for(State state : stateManager.getAllStates()) {
@@ -546,7 +546,7 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 		Response response = GET(VIEW_URL);
 		assertIsOk(response);
 		assertContentMatch("<title>View Application</title>",response);
-		assertTrue(getContent(response).contains("Upload additional supplementary files"));
+		assertContentMatch("class=\"btn btn-primary disabled\" name=\"submit_corrections\" value=\"Complete Corrections\"",response);
 		
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("submit_corrections","Confirm Corrections");
@@ -554,8 +554,19 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 		
 		assertIsOk(response);
 		assertContentMatch("<title>View Application</title>",response);
-		assertFalse(getContent(response).contains("Upload additional supplementary files"));
+		assertContentMatch("class=\"btn btn-primary disabled\" name=\"submit_corrections\" value=\"Complete Corrections\"",response);
 
+		File primaryFile = getResourceFile("SamplePrimaryDocument.pdf");
+		
+		Map<String,File> fileParams = new HashMap<String,File>();
+		fileParams.put("primaryDocument", primaryFile);
+		
+		response = POST(VIEW_URL,params,fileParams);
+		assertIsOk(response);
+		//assertNotNull(response.getHeader("Location"));
+
+		
+		
 		// Verify the submission.
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();
@@ -563,6 +574,7 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 		
 		sub = subRepo.findSubmission(sub.getId());
 		assertFalse(sub.getState() == needsCorrection);
+		assertNotNull(sub.getPrimaryDocument());
 	}
 	 
 
