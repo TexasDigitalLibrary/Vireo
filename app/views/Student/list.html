@@ -50,11 +50,11 @@ jQuery(document).ready(function() {
 				<td>${sub.getPrimaryDocument() == null ? "none" : sub.getPrimaryDocument().getName()}
 				
 				#{if sub.getPrimaryDocument() != null}
-				    <a href="@{Student.viewAttachment(sub.getId(),sub.getPrimaryDocument().getId())}">[view]</a>
+				    <a href="@{Student.viewAttachment(sub.getId(),sub.getPrimaryDocument().getId(),sub.getPrimaryDocument().getName())}">[view]</a>
 				#{/if}
 				
 				</td>
-				<td>${sub.getState().getDisplayName()}</td>
+				<td ${sub.getState().isEditableByStudent() ? "class='red'" : ""}>${sub.getState().getDisplayName()}</td>
 				<td>${sub.getSubmissionDate() == null ? "n/a" : sub.getSubmissionDate().format('dd MMMM yyyy')}</td>
 				<td>${sub.getAssignee() == null ? "Unassigned" : sub.getAssignee().getDisplayName()}</td>
 				<td> 
@@ -74,7 +74,7 @@ jQuery(document).ready(function() {
 
         </tbody>
 	</table>
-	#{if SUBMISSIONS_OPEN }
+	#{if showStartSubmissionButton }
 	<div class="form-actions row center">
 		<a href="@{submit.PersonalInfo.personalInfo()}" class="btn btn-primary">Start a new submission</a>
 	</div>

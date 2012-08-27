@@ -96,12 +96,19 @@ public class Student extends AbstractVireoController {
 		boolean submissionsOpen = (settingRepo.getConfig(Configuration.SUBMISSIONS_OPEN) != null) ? true : false;
 		boolean allowMultiple = (settingRepo.getConfig(Configuration.ALLOW_MULTIPLE_SUBMISSIONS) != null) ? true : false;
 		
-		if (submissions.size() == 1 && !allowMultiple) {
-			// If they all ready have a submission, and we don't allow multiple
-			// submissions just go straight to the submission instead of the
-			// list.
+		// Check to see there are no submissions, start a new one.
+		if (submissions.size() == 0 && submissionsOpen) {
+			// First time, here let's start a new sub.
+			PersonalInfo.personalInfo(null);
+		}
+		
+		
+		// Check to see if we should skip the list page.
+		if (submissions.size() == 1 && !allowMultiple && !submissions.get(0).getState().isArchived()) {
+			// The only condition when a user should skip the list page is, when allow multiple 
+			// submissions is turned off AND they have one *active* submission.
 			Submission sub = submissions.get(0);
-			
+		
 			if (sub.getState().isInProgress()) {
 				// The one submission isn't complete yet.
 				PersonalInfo.personalInfo(sub.getId());
@@ -109,20 +116,30 @@ public class Student extends AbstractVireoController {
 				// Go straight to view the status page.
 				submissionView(sub.getId());
 			}
-			
-		} else if(submissions.size() > 0 || !submissionsOpen) {
-			// Show the list of submissions. This also handles the case if
-			// submissions are closed, they will see a message telling them that.
-			
-			renderArgs.put("SUBMISSIONS_OPEN", settingRepo.findConfigurationByName(SUBMISSIONS_OPEN));
-			renderArgs.put("CURRENT_SEMESTER", settingRepo.getConfig(CURRENT_SEMESTER, "current"));
-			
-			renderTemplate("Student/list.html",submissions,allowMultiple,submissionsOpen);
-		} else{
-			// They don't have any submissions, and submissions are open. So
-			// take them directly to the submission screen.
-			PersonalInfo.personalInfo(null);
 		}
+
+		// Should we allow the student to start another submission.
+		boolean showStartSubmissionButton = allowMultiple;
+		
+		// Check if we should allow the user to start another submission.
+		boolean allArchived = true;
+		for (Submission sub : submissions) {
+			if (!sub.getState().isArchived())
+				allArchived = false;
+		}
+		if (allArchived) {
+			// If all the current submissions are archived, allow the user to submit another submission.
+			showStartSubmissionButton = true;
+		}
+		
+		if (!submissionsOpen)
+			// If we're not open, then no one can start a new submission.
+			showStartSubmissionButton = false;
+		
+		renderArgs.put("SUBMISSIONS_OPEN", settingRepo.findConfigurationByName(SUBMISSIONS_OPEN));
+		renderArgs.put("CURRENT_SEMESTER", settingRepo.getConfig(CURRENT_SEMESTER, "current"));
+		
+		renderTemplate("Student/list.html",submissions, showStartSubmissionButton);
 	}
 
 	/**
@@ -175,13 +192,15 @@ public class Student extends AbstractVireoController {
 			if (sub.getPrimaryDocument() == null)
 				validation.addError("primaryDocument", "A primary document is required.");
 			
-			if (params.get("submit_corrections") != null) {
+			if (params.get("submit_corrections") != null && !validation.hasErrors()) {
 				try {
 					context.turnOffAuthorization();
 					State nextState = sub.getState().getTransitions(sub).get(0);
 					sub.setState(nextState);
 					sub.save();
 
+					correctionsComplete(sub.getId());
+					
 				} finally {
 					context.restoreAuthorization();
 
@@ -199,6 +218,18 @@ public class Student extends AbstractVireoController {
 		renderTemplate("Student/view.html",subId, sub, submitter, logs, primaryDocument, supplementaryDocuments, feedbackDocuments, allSubmissions, grantor);		
 	}
 
+	/**
+	 * Splash screen after a student has submitted corrections.
+	 * 
+	 * @param subId The submission
+	 */
+	@Security(RoleType.STUDENT)
+	public static void correctionsComplete(Long subId) {
+		
+		renderTemplate("Student/complete.html");
+		
+	}
+	
 	/**
 	 * Delete a given submission
 	 * 
@@ -219,7 +250,6 @@ public class Student extends AbstractVireoController {
 			// Go back to the list of other submissions.
 			submissionList();
 	}
-
 
 
 
@@ -365,8 +395,6 @@ public class Student extends AbstractVireoController {
 		} catch (FileNotFoundException ex) {
 			error("File not found");
 		}
-
-
 	}
 
 }

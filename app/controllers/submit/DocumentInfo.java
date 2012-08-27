@@ -17,6 +17,7 @@ import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.GraduationMonth;
+import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
 
@@ -406,7 +407,7 @@ public class DocumentInfo extends AbstractSubmitStep {
 		List<Map<String,String>> committee = new ArrayList<Map<String,String>>();
 
 		int i = 1;
-		while (params.get("committeeLastName"+i) != null) {
+		while (params.get("committeeFirstName"+i) != null || params.get("committeeLastName"+i) != null) {
 
 			String firstName = params.get("committeeFirstName"+i);
 			String middleName = params.get("committeeMiddleName"+i);
@@ -416,10 +417,8 @@ public class DocumentInfo extends AbstractSubmitStep {
 
 
 			if ((firstName == null  || firstName.trim().length() == 0) &&
-					(lastName == null   || lastName.trim().length() == 0) &&
-					(middleName == null || middleName.trim().length() == 0) &&
-					(chairFlag == null  || chairFlag.trim().length() == 0) ) 
-				// If all the fields are blank then skip this one.
+					(lastName == null   || lastName.trim().length() == 0)) 
+				// If the first or last name fields are blank then skip this one.
 				continue;
 
 			Map<String,String> member = new HashMap<String,String>();
@@ -462,16 +461,21 @@ public class DocumentInfo extends AbstractSubmitStep {
 			boolean chair = false;
 			if (chairFlag != null && chairFlag.trim().length() > 0)
 				chair = true;
-
-			// Make sure that we have a first & last name.
-			if (firstName == null || firstName.trim().length() == 0)
+			
+			// Make sure that we have a first or last name
+			if (firstName != null && firstName.trim().length() == 0)
+				firstName = null;
+			if (lastName != null && lastName.trim().length() == 0)
+				lastName = null;
+			if (firstName == null && lastName == null)
 				continue;
-			if (lastName == null || lastName.trim().length() == 0)
-				continue;
+			
 
 			CommitteeMember newMember = sub.addCommitteeMember(firstName, lastName, middleName, chair);
 			newMember.setDisplayOrder(i);
 			newMember.save();
+			
+			i++;
 		}
 
 		return true;

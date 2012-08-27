@@ -215,6 +215,40 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 		response = GET(VIEW_URL);
 		assertContentMatch("<title>View Application</title>",response);	
 	}
+	
+	/**
+	 * Test that if a student has an archived submission they can see the list page to start another submission.
+	 */
+	@Test
+	public void testOpenAndMultipleArchivedSubmission() {
+		
+		configure(true,false);
+		
+		Submission sub = subRepo.createSubmission(submitter);
+		sub.setState(sub.getState().getTransitions(sub).get(0));
+		for (State state : stateManager.getAllStates()) {
+			if (state.isArchived()) {
+				sub.setState(state);
+				break;
+			}
+		}
+		sub.save();
+		subs.add(sub);
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
+		LOGIN("student@tdl.org");
+		
+		final String LIST_URL = Router.reverse("Student.submissionList").url;
+		
+		Response response = GET(LIST_URL);
+		assertIsOk(response);
+		assertContentMatch("<title>Submission Status</title>",response);
+		assertContentMatch(">Start a new submission</a>",response);
+		
+	}
 
 	/**
 	 * Test that when submissions are closed, and multiple submissions are
@@ -488,7 +522,7 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 	 * Test completing corrections.
 	 */
 	@Test
-	public void testCompletingCorrections() {
+	public void testCompletingCorrections() throws IOException {
 
 		Submission sub = subRepo.createSubmission(submitter);
 		for(State state : stateManager.getAllStates()) {
@@ -512,7 +546,7 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 		Response response = GET(VIEW_URL);
 		assertIsOk(response);
 		assertContentMatch("<title>View Application</title>",response);
-		assertTrue(getContent(response).contains("Upload additional supplementary files"));
+		assertContentMatch("class=\"btn btn-primary disabled\" name=\"submit_corrections\" value=\"Complete Corrections\"",response);
 		
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("submit_corrections","Confirm Corrections");
@@ -520,8 +554,20 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 		
 		assertIsOk(response);
 		assertContentMatch("<title>View Application</title>",response);
-		assertFalse(getContent(response).contains("Upload additional supplementary files"));
+		assertContentMatch("class=\"btn btn-primary disabled\" name=\"submit_corrections\" value=\"Complete Corrections\"",response);
 
+		File primaryFile = getResourceFile("SamplePrimaryDocument.pdf");
+		
+		Map<String,File> fileParams = new HashMap<String,File>();
+		fileParams.put("primaryDocument", primaryFile);
+		
+		response = POST(VIEW_URL,params,fileParams);
+		assertNotNull(response.getHeader("Location"));
+
+		response = GET(response.getHeader("Location"));
+		assertContentMatch("Corrections Submitted",response);
+		
+		
 		// Verify the submission.
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();
@@ -529,6 +575,7 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 		
 		sub = subRepo.findSubmission(sub.getId());
 		assertFalse(sub.getState() == needsCorrection);
+		assertNotNull(sub.getPrimaryDocument());
 	}
 	 
 

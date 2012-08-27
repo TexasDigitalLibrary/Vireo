@@ -35,6 +35,7 @@ GET     /profile                                Authentication.profile
 ### Student Interface
 * 		/submit/?								Student.submissionList
 *		/submit/{subId}/view					Student.submissionView
+*       /submit/{subId}/corrections             Student.correctionsComplete
 *       /submit/{subId}/delete                  Student.submissionDelete
 
 GET     /submit/{subId}/file/{attachmentId}/{name} Student.viewAttachment

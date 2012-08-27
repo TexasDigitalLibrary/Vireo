@@ -1,6 +1,23 @@
 #{extends 'main.html' /}
 #{set title:'View Application' /}
+#{set 'moreScripts'}
+<script type="text/javascript" >
 
+jQuery(document).ready(function() {
+	
+	
+    jQuery("#submit_corrections").click(function() {
+    	
+        if (jQuery(this).val().indexOf("Are you sure?") >= 0) {
+            return true;
+        }
+        jQuery(this).val("Are you sure?");
+        jQuery("#submit-corrections-warning").slideToggle(500);
+        return false;
+    });
+})
+</script>
+#{/set}
 <br />
 <div class="row pageHead">
 	<h3 class="span11">View Application</h3>
@@ -9,9 +26,9 @@
 #{if sub.getState().isEditableByStudent() }
 	<div class="alert alert-error">
 		<p><strong>${sub.getState().getDisplayName()}</strong>!</p>
-		<p>The application requires you to make corrections. Please make the indicated corrections and upload a the
-		 corrected manuscript. Then submit your corrections at the bottom of the page. After submitting the 
-		 corrections you will no longer be able to edit the application.</p>
+		<p>The application requires you to make corrections. Please make the indicated corrections and upload the
+		 new manuscript. After clicking the "Completing Corrections" button at the bottom of the page you will no
+		 longer be able to edit the application.</p>
 	</div>
 #{/if}
 #{ifErrors}
@@ -280,7 +297,7 @@
 	<div class="control-group">
 		<label class="control-label"><b>Message:</b></label>
 		<div class="controls">
-			<textarea class="span6" style="height:200px;"name="studentMessage"></textarea>
+			<textarea class="span6" style="height:200px;" name="studentMessage"></textarea>
             <input class="btn" id="addmsg" name="submit_addMessage" type="submit" value="Add Message" />
             <br/>
 		</div>
@@ -288,7 +305,10 @@
 	
 	#{if sub.getState().isEditableByStudent() }
 		<div class="form-actions row center">
-			<input type="submit" class="btn btn-primary" name="submit_corrections" value="Submit Corrections"/>
+		    <p id="submit-corrections-warning" class="hidden red">
+		      After completing your corrections you will no longer be able to edit this application. Did you completed all the required changes, and uploaded a new manuscript?
+		    </p>
+			<input id="submit_corrections" type="submit" class="btn btn-primary ${sub.getPrimaryDocument() == null ? "disabled" : ""}" name="submit_corrections" value="Complete Corrections"/>
 		</div>		
 	#{/if}
 	
