@@ -9,9 +9,9 @@
 #{if sub.getState().isEditableByStudent() }
 	<div class="alert alert-error">
 		<p><strong>${sub.getState().getDisplayName()}</strong>!</p>
-		<p>The application requires you to make corrections. Please make the indicated corrections and upload a the
-		 corrected manuscript. Then submit your corrections at the bottom of the page. After submitting the 
-		 corrections you will no longer be able to edit the application.</p>
+		<p>The application requires you to make corrections. Please make the indicated corrections and upload the
+		 new manuscript. After clicking the "Completing Corrections" button at the bottom of the page you will no
+		 longer be able to edit the application.</p>
 	</div>
 #{/if}
 #{ifErrors}
@@ -288,7 +288,7 @@
 	
 	#{if sub.getState().isEditableByStudent() }
 		<div class="form-actions row center">
-			<input type="submit" class="btn btn-primary" name="submit_corrections" value="Submit Corrections"/>
+			<input type="submit" class="btn btn-primary" name="submit_corrections" value="Complete Corrections"/>
 		</div>		
 	#{/if}
 	
