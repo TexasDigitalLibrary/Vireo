@@ -39,6 +39,8 @@ import java.io.IOException;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +61,23 @@ public class ViewTab extends AbstractVireoController {
 	public static DepositService depositService = Spring.getBeanOfType(DepositService.class);
 	public static EmailService emailService = Spring.getBeanOfType(EmailService.class);
 
-	
+	public static class AttachmentSortByDate implements Comparator<Attachment> {
+
+		@Override
+		public int compare(Attachment a, Attachment b) {
+			if(a==null && b==null)
+				return 0;
+			
+			if(a==null)
+				return -1;
+			
+			if(b==null)
+				return -1;
+			
+			return b.getDate().compareTo(a.getDate());
+		}
+		
+	}
 	
 	/**
 	 * The main view method.
@@ -107,7 +125,11 @@ public class ViewTab extends AbstractVireoController {
 		List<Person> assignees = personRepo.findPersonsByRole(RoleType.REVIEWER);	
 		
 		List<DepositLocation> depositLocations = settingRepo.findAllDepositLocations();
-				
+		
+		List<Attachment> attachments = submission.getAttachments();
+		Collections.sort(attachments, new AttachmentSortByDate());
+		
+		
 		String nav = "view";
 		render(	nav,
 				submission,
@@ -123,7 +145,8 @@ public class ViewTab extends AbstractVireoController {
 				templates, 
 				actions, 
 				actionValues,
-				depositLocations
+				depositLocations,
+				attachments
 				);
 	}
 

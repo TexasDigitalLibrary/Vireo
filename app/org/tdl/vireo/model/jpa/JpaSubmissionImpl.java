@@ -392,7 +392,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	}
 
 	@Override
-	public List<Attachment> getAttachments() {
+	public List<Attachment> getAttachments() {		
 		return attachments;
 	}
 

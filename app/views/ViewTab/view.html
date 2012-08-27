@@ -491,7 +491,7 @@ jQuery(document).ready(function(){
 				</tr>
 			</thead>
 			<tbody>
-				#{list items:submission.getAttachments(), as:'attachment'}
+				#{list items:attachments, as:'attachment'}
 					<tr>
 						<td>${attachment.getPerson().getFirstName()} ${attachment.getPerson().getLastName()}</td>
 						<td><a href="@{ViewTab.viewFile(attachment.getId(), attachment.getName())}" target="_blank">${attachment.getName()}</a> (${attachment.getDisplaySize()})</td>
