@@ -23,9 +23,9 @@ public class FirstUser extends AbstractVireoController {
 	public static SystemEmailTemplateService systemEmailService = Spring.getBeanOfType(SystemEmailTemplateService.class);
 	
 	public static void createUser() {
-		if(firstUser == false)
-			Application.index();	
-		
+		if(firstUser == null || firstUser == false)
+				Application.index();
+				
 		if(params.get("createFirstUser")!=null) {
 			//Get form parameters
 			String firstName = params.get("firstName");
@@ -33,15 +33,14 @@ public class FirstUser extends AbstractVireoController {
 			String email = params.get("email");
 			String password1 = params.get("password1");
 			String password2 = params.get("password2");
-			String netid1 = params.get("netid1");
-			String netid2 = params.get("netid2");
+			String netid = params.get("netid");
 			
-			verify(firstName, lastName, email, password1, password2, netid1, netid2);
+			verify(firstName, lastName, email, password1, password2, netid);
 		
 			if(!validation.hasErrors()) {
 				// Create the account.
 				context.turnOffAuthorization();
-				Person person = personRepo.createPerson(netid1, email, firstName, lastName, RoleType.ADMINISTRATOR);
+				Person person = personRepo.createPerson(netid, email, firstName, lastName, RoleType.ADMINISTRATOR);
 				person.setPassword(password1);
 				person.save();
 				context.turnOffAuthorization();
@@ -78,21 +77,16 @@ public class FirstUser extends AbstractVireoController {
 				
 			} else {
 				
-				firstUser = null;
-				
 				renderTemplate("FirstUser/createUser.html",
 						firstName,
 						lastName,
 						email,
 						password1,
 						password2,
-						netid1,
-						netid2
+						netid
 				);
 			}
 		}
-		
-		firstUser = null;
 		
 		renderTemplate("FirstUser/createUser.html");
 	}
@@ -105,11 +99,10 @@ public class FirstUser extends AbstractVireoController {
 	 * @param email (The email provided)
 	 * @param password1 (The password provided)
 	 * @param password2 (Verification of password1)
-	 * @param netid1 (The netid provided)
-	 * @param netid2 (Verification of netid1)
+	 * @param netid (The netid provided)
 	 * @return
 	 */
-	public static boolean verify(String firstName, String lastName, String email, String password1, String password2, String netid1, String netid2){
+	public static boolean verify(String firstName, String lastName, String email, String password1, String password2, String netid){
 		
 		int numberOfErrorsBefore = validation.errors().size();
 		
@@ -138,16 +131,7 @@ public class FirstUser extends AbstractVireoController {
 		} else if(!password2.equals(password1)) {
 				validation.addError("passwords", "The passwords provided do not match.");
 		}
-		
-		if(netid1!=null && !netid1.isEmpty()){
-			if(netid2==null || netid2.isEmpty()) {
-				validation.addError("netid2", "Please verify your NetId.");
-			
-			} else if(!netid2.equals(netid1)) {
-				validation.addError("netids", "The NetIds provided do not match.");
-			}
-		}
-		
+				
 		if(numberOfErrorsBefore == validation.errors().size())
 			return false;
 		else
