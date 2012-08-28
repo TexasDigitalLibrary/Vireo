@@ -39,8 +39,7 @@ in results.
         String viewTabUrl = play.mvc.Router.reverse("ViewTab.view").url;
         
         for(def object : results.getResults()) {
-           out.print("<tr>");
-           
+                      
            def sub = null;
            def log = null;
            if (object instanceof org.tdl.vireo.model.Submission) {
@@ -48,6 +47,14 @@ in results.
            } else {
               log = object;
               sub = log.getSubmission();
+           }
+           
+           if("log".equals(nav)) {
+           		if(log.isPrivate()) {
+           			out.print("<tr class='private'>");
+           		}
+           } else {
+           		out.print("<tr>");
            }
            
            for(org.tdl.vireo.search.SearchOrder column : columns) {
@@ -202,6 +209,9 @@ in results.
                  case LAST_EVENT_ENTRY:
                      if ("log".equals(nav)) {
                         out.print(log.getEntry());
+                        if(log.isPrivate()) {
+                        	out.print("<b> - [private]</b>");
+                        }
                      } else {
                          if (sub.getLastLogEntry() != null)
                              out.print(sub.getLastLogEntry());
