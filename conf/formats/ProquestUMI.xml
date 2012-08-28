@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+*{
+	The Proquest/UMI export format. Use this format when publishing records to
+	Proquest for inclusion in their database of Thesis and Dissertations. There 
+	are a mirad of options at the top of this fale that you can use to 
+	customise the export generated metadata. This ranges from embargo settings,
+	publication identifiers, and whether to release contact information for the
+	student.
+	
+	One thing to remember
+	=====================
+	
+	ProQuest/UMI does not require *any* metadata. I realise that their DTD and
+	specification state that this and that are required fields. However many 
+	schools are not required to provide any metadata at all, just PDFs. So 
+	keep that in mind when working with Proquest that just because they are
+	asking for something does not mean we are required to provide it. They can
+	use all the other open interoperability standards to collect and publish 
+	these works.
+	
+	
+	Known Defficiencies:
+	====================
+	
+	1) Proquest would like a field they call "DISS_category" which contains a
+	subject hierarchy using a controlled vocabularity from UMI. Vireo does not 
+	currently collect this field. Also it is unclear what licensing
+	restrictions ProQuest places on using this controlled vocabulary and
+	whether we can include the list with in Vireo. 
+	
+	2) Mailing Address parsing. Vireo does not require the student to supply
+	their mailing address as individual fields street, city, state, zip code.
+	Instead we have one field where the students supply this as one string.
+	ProQuest would like the address to be split up into it's components and
+	this format attempts to do that. However some students may format their
+	address in such a way that is unparsable by this export. To help ease
+	the problems as a comment we supply the full address and then do our
+	best job to parse it. 
+	
+ 	123 Some Street
+ 	Some City, State 123456789
+ 	
+ 	As long as the address looks similar to the one above it can be parsed.
+ 	The important things are that the street is on the first line, the city
+ 	is seperated by a comma, and there is a space between the zip code and
+ 	state.
+
+}*
+%{
+	//Configure UMI export options
+	
+	// #### Publishing Options
+	// 0 - Traditional publishing
+	// 1 - Open Access, requires an additional $95 fee.
+	int publishing_option = 1;
+
+	// #### Third Party Search
+	// Indicates the author would like to have his or her metadata indexed by
+	// external search engines.
+	boolean third_party_search = true;
+	
+	// #### Third Party Sales
+	// Indicates the author would like to have his or her work sold by 3rd
+	// party retailers in addition to ProQuest / UMI.
+	boolean third_party_sales = false;
+	
+	// #### Release Student Contact
+	// In addition to the student's name should their phone, mailing address,
+	// and email address be released to ProQuest. Turning this on may violate
+	// FERPA regulations.
+	boolean release_student_contact_information = false;
+
+	// #### Apply for Copyright
+	// Indicate if the author wants us proquest to apply for copyright. There 
+	// is an additional $65 fee for copyright registration, and for FTP sites,
+	// the author must submit a signed paper form with the additional payment.
+	boolean apply_for_copyright = false;
+	
+	// #### External ID
+	// Each record exported to UMI has an 'external_id' which records with
+	// vireo submission generated this record. Proquest suggests it should
+	// begin with a lower case school identifier such as khust or emory,
+	// followed by a colon, and then the school's own unique identifier. In 
+	// this case the vireo submission id will be appended to this prefix.
+	String external_id_prefix = "vireo:";
+
+	// #### Institutional Code
+	// Proquest assignes each instutition a code, supply that code here.
+	String institution_code = "";
+	
+	// #### Institutional Name
+	// The name of the institution, we use the grantor field established under
+	// the application settings tab.
+	String institution_name = settingRepo.getConfig(org.tdl.vireo.model.Configuration.GRANTOR);
+	
+	// #### Institutional Processing Code
+	// ProQuest says "This is the ETD code assigned to the school instruction
+	// to be used when checking items in Can be blank for external vendors
+	// sending submissions." You're guess as to what this means is as good as
+	// mine, but I think it's okay to leave blank.
+	String institution_processing_code = "";
+
+	// #### Embargo Code
+	// The embargo code can be one of the following values
+	// 0 - No embargo
+	// 1 - 6 months embargo
+	// 2 - 1 year embargo
+	// 3 - 2 year embargo
+	// 4 - flexible delayed release
+	// 
+	// If you choose the #4, flexible delayed release, then you also need to
+	// place sales and format restrictions using the parameters below.
+	int embargoCode = 0;
+	if (embargoCode != 4 && sub.getEmbargoType() != null) {
+		if (sub.getEmbargoType().getDuration() != null) {
+			if (sub.getEmbargoType().getDuration() >= 0)
+				// No duration
+				embargoCode = 0;
+			else if (sub.getEmbargoType().getDuration() >= 6 )
+			    // 6 months or under
+				embargoCode = 1;
+			else if (sub.getEmbargoType().getDuration() >= 12)
+				// 6 months to 1 year
+			    embargoCode = 2;
+			else
+			    // 1 year or greater
+			    embargoCode = 3;
+		} else {
+			// The vireo embargo is tagged as indefinite, so the best we can do
+			// with UMI is 2 years. 
+			embargoCode = 3;
+		}
+	}
+	
+	// #### Sales Restrictions (embargo = 4)
+	// 0 - No sales restriction
+	// 1 - Not available for sale
+	// 2 - Sell to author only/copyright
+	// 4 - Sell to author only
+	int sale_restriction_code = 0;
+	String sale_restriction_remove = "";
+	
+	// #### Format Restrictions (embargo = 4)
+	// 0 - no format restriction
+	// X - Xerographic not available
+	// F - Microfiche not available
+	// M - Microfilm not available
+	// C - CD-ROM not available
+	// E - Electronic not available
+	// XF - Xerographic and Microfiche not available
+	// XM - Xerographic and Microfilm not available
+	// XC - Xerographic and CD-ROM not available
+	// XE - Xerographic and Electronic not available
+	// FM - Microform not available
+	// FC - Microfiche and CD-ROM not available
+	// FE - Microfiche and Electronic not available
+	// MC - Microfilm and CD-ROM not available
+	// ME - Microfilm and Electronic not available
+	// CE - CD-ROM and Electronic not available
+	// XFM - Only CD-ROM and Electronic available
+	// XFC - Only Microfilm and Electronic available
+	// XFE - Only Microfilm and CD-ROM available
+	// XMC - Only Microfiche and Electronic available
+	// XME - Only Microfiche and CD-ROM available
+	// XCE - Only Microform available
+	// FMC - Only Xerographic and electronic available
+	// FCE - Only Xerographic and Microfilm available
+	// FME - Only Xerographic and CD-ROM available
+	// MCE - Only Xerographic and Microfiche available
+	// XFMC - Only Electronic available
+	// XFME - Only CD-ROM available
+	// XFCE - Only Microfilm available
+	// XMCE - Only Microfiche available
+	// FMCE - Only Xerographic available
+	String format_restriction_code ="0";
+	String format_restriction_remove = "";
+	
+}%
+<DISS_submission
+	pulishing_option="${ publishing_option }"
+	embargo_code="${ embargoCode }"
+	third_party_search="${ third_party_search ? "Y" : "N" }"
+	third_party_sales="${ third_party_sales ? "Y" : "N" }">
+	<!-- Generated by The Vireo ETD Submission System on ${ new java.util.Date().format("yyyy/MM/dd 'at' HH:mm:ss") }. -->
+
+	<DISS_authorship>
+		<DISS_author type="primary">
+			<DISS_name>
+				<DISS_surname>${sub.getStudentLastName()}</DISS_surname>
+				<DISS_fname>${sub.getStudentFirstName()}</DISS_fname>
+				<DISS_middle>${sub.getStudentMiddleName()}</DISS_middle>
+                <DISS_affiliation>
+                    ${ settingRepo.getConfig(org.tdl.vireo.model.Configuration.GRANTOR) } 
+                </DISS_affiliation>
+			</DISS_name>
+		
+			#{if release_student_contact_information } 
+			<DISS_contact type="current">
+				#{if sub.getGraduationYear() != null } 
+				<DISS_contact_effdt>
+					%{
+						// The day, we don't know it so just say 01
+						out.print("01/");
+						if (sub.getGraduationMonth() != null) {
+							// Jaunary=0, December=11
+							out.print(String.format("%02d",sub.getGraduationMonth()+1)+"/");
+						} else {
+							out.print("01/");
+						}
+						out.print(sub.getGraduationYear());
+					}% 
+				</DISS_contact_effdt>
+				#{/if}
+				
+				#{if sub.getSubmitter().getCurrentPhoneNumber() != null} 
+				<DISS_phone_fax type="P">
+					%{
+						def areaCode = "";
+						def phoneNum = "";
+						
+						def fullPhone = sub.getSubmitter().getCurrentPhoneNumber();
+						def trimPhone = fullPhone.replaceAll("[^0-9]","");
+						
+						if (trimPhone.length() > 7) {
+							// The phone number is long enough to have an area code, split that off.
+							areaCode = trimPhone.substring(0,trimPhone.length() - 7)
+							phoneNum = trimPhone.substring(trimPhone.length() - 7, trimPhone.length());
+						} else {
+							// We don't have an area code, so the whole things goes into phone
+							phoneNum = trimPhone;
+						}
+					
+					}% 
+					<!-- ${ fullPhone } -->
+					<DISS_area_code>${ areaCode }</DISS_area_code>
+					<DISS_phone_num>${ phoneNum }</DISS_phone_num>
+				</DISS_phone_fax>
+				#{/if}
+				
+				#{if sub.getSubmitter().getCurrentPostalAddress() != null } 
+				<DISS_address>
+					%{
+						def addrline = "";
+						def city = "";
+						def st = "";
+						def pcode = "";
+						
+						def fullAddr = sub.getSubmitter().getCurrentPostalAddress();
+						
+						// Typically the first line is the address line
+						String[] lines = fullAddr.split("\n")
+						if (lines != null && lines.length >= 1)
+							addrline = lines[0];
+						
+						// Typicaly the second line is "city, state zip"
+						if (lines != null && lines.length >= 2) {
+							def secondLine = lines[1].trim();
+						
+							// The city is before the comma
+							if (secondLine.indexOf(",") > 0) {
+								city = secondLine.substring(0,secondLine.indexOf(","));
+								secondLine = secondLine.substring(secondLine.indexOf(","), secondLine.length());
+								
+								// After the comma is "State <space> postal code"
+								if (secondLine.lastIndexOf(" ") > 0) {
+									pcode = secondLine.substring(secondLine.lastIndexOf(" ")+1, secondLine.length());
+									st = secondLine.substring(1,secondLine.lastIndexOf(" "));
+								}
+							}
+						}
+					}% 
+					<!-- 
+${ fullAddr } 
+					-->
+					<DISS_addrline>${ addrline }</DISS_addrline>
+					<DISS_city>${ city }</DISS_city>
+					<DISS_st>${ st }</DISS_st>
+					<DISS_pcode>${ pcode }</DISS_pcode>
+					<DISS_country></DISS_country>
+				</DISS_address>
+				#{/if}
+				
+				<DISS_email>
+					${ sub.getSubmitter().getEmail() }
+				</DISS_email>
+			</DISS_contact>
+			#{/if} 
+		</DISS_author>
+	</DISS_authorship>
+
+	<DISS_description
+		page_count=""
+        type="${ sub.getDegreeLevel()?.name()?.toLowerCase()?.escapeXml() }"
+		external_id="${ external_id_prefix }${ sub.getId() }"
+		apply_for_copyright="${ apply_for_copyright ? "yes" : "no" }">
+		
+		<DISS_title>${ sub.getDocumentTitle() }</DISS_title>
+		<DISS_dates>
+			<DISS_comp_date>${ sub.getGraduationYear() }</DISS_comp_date>
+			<DISS_accept_date>${ sub.getApprovalDate()?.format("MM/dd/yyyy") }</DISS_accept_date>
+		</DISS_dates>
+		<DISS_degree>${ sub.getDegree() }</DISS_degree>
+		<DISS_institution>
+			<DISS_inst_code>${ institution_code }</DISS_inst_code>
+			<DISS_inst_name>${ institution_name }</DISS_inst_name>
+			<DISS_inst_contact>${ sub.getDepartment() }</DISS_inst_contact>
+			<DISS_processing_code>${ institution_processing_code }</DISS_processing_code>
+		</DISS_institution>
+		
+		#{list items:sub.getCommitteeMembers(), as:'member'} 
+			#{verbatim}${ member.isCommitteeChair() ? "<DISS_advisor>" : "<DISS_cmte_member>"}#{/verbatim}
+			
+				<DISS_surname>${ member.getLastName() }</DISS_surname>
+				<DISS_fname>${ member.getFirstName() }</DISS_fname>
+				<DISS_middle>${ member.getMiddleName() }</DISS_middle>
+			
+			#{verbatim}${ member.isCommitteeChair() ? "<DISS_advisor>" : "<DISS_cmte_member>"}#{/verbatim}
+		#{/list}
+		
+		<DISS_categorization>
+			#{if sub.getDocumentKeywords() != null}
+			#{list items:sub.getDocumentKeywords().split(";"), as:'keyword'} 
+			<DISS_keyword>${keyword.trim()}</DISS_keyword>
+			#{/list}
+			#{/if} 
+			<DISS_language>EN</DISS_language>
+		</DISS_categorization>
+	</DISS_description>
+	
+	<DISS_content>
+		<DISS_abstract>
+			#{if sub.getDocumentAbstract() != null}
+			#{list items:sub.getDocumentAbstract().split("\n"), as:'para'} 
+				<DISS_para>
+					${ para.escapeXml() }
+				</DISS_para>
+			#{/list}
+			#{/if} 
+		</DISS_abstract>
+		<DISS_binary type="${ "application/pdf".equals(sub.getPrimaryDocument()?.getMimeType()) ? "PDF" : "other" }">${ sub.getPrimaryDocument()?.getName() }</DISS_binary>
+	</DISS_content>
+	
+	#{if embargoCode == 4} 
+	<DISS_restriction>	
+	   <DISS_sales_restriction code="${ sale_restriction_code }" remove="${ sale_restriction_remove }"/>
+	   <DISS_format_restriction code="${ format_restriction_code }" remove="${ format_restriction_remove }"/>
+	   <DISS_note/>
+	</DISS_restriction>
+	#{/if}
+	
+</DISS_submission>
