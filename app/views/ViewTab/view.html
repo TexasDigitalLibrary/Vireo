@@ -182,7 +182,15 @@ jQuery(document).ready(function(){
 
 <div id="right-column">
 	<div class="inner">
-		<div id="alert-area">*{Javascript may dynamically fill this div with errors as needed.}*</div>
+		<div id="alert-area">
+			#{ifErrors}
+			<ul class="red">
+			    #{errors}
+			    <li>${error}</li> 
+			    #{/errors}
+			</ul>
+		#{/ifErrors}
+		</div>
 		#{if submission.getDepositId()}<div id="depositId" class="label label-warning">Deposit ID: ${submission.getDepositId()}</div>#{/if}
 		<div id="mainHeader">#{include 'ViewTab/header.include' /}</div>
 		
@@ -331,7 +339,7 @@ jQuery(document).ready(function(){
 			<div id="degreeInfo" class="edit-box-holder hidden">
 			<div class="edit-box pull-left">
 				<ul class="unstyled">
-					<li class="edit"><label>School:</label><span id="college"
+					<li class="edit"><label>College:</label><span id="college"
 						#{if submission.getCollege()}
 							class="select"><i class="icon-pencil"></i> ${submission.getCollege()}
 						#{/if}#{else}

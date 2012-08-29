@@ -4,6 +4,7 @@ import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Router;
 
+import org.springframework.validation.Errors;
 import org.tdl.vireo.email.EmailService;
 import org.tdl.vireo.email.VireoEmail;
 import org.tdl.vireo.export.DepositService;
@@ -78,7 +79,7 @@ public class ViewTab extends AbstractVireoController {
 		}
 		
 	}
-	
+		
 	/**
 	 * The main view method.
 	 */
@@ -765,8 +766,8 @@ public class ViewTab extends AbstractVireoController {
 		String uploadType = params.get("uploadType");
 		
 		
-		if("note".equals(uploadType)){			
-			 uploadNote(sub);
+		if("note".equals(uploadType)){
+			uploadNote(sub);
 		} else if("primary".equals(uploadType)){			
 			uploadPrimary(sub);
 		} else if("supplement".equals(uploadType)){
@@ -821,9 +822,7 @@ public class ViewTab extends AbstractVireoController {
 		File attachment = params.get("noteAttachment",File.class);
 		
 		if(attachment == null)
-			Logger.info("Doc is null");
-		else
-			Logger.info("Doc: " + attachment.getClass().getName());
+			validation.addError("noteDocument", "There was no document selected.");
 		
 		try{
 			Attachment thisAttachment = sub.addAttachment(attachment, AttachmentType.FEEDBACK);
