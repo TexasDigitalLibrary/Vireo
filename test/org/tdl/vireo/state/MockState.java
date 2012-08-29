@@ -25,6 +25,7 @@ public class MockState implements State {
 	public boolean isEditableByReviewer = false;
 	public boolean isDeletable = false;
 	public boolean isDepositable = false;
+	public boolean isApproved = false;
 	public List<MockState> transitions = new ArrayList<MockState>();
 
 	@Override
@@ -70,6 +71,11 @@ public class MockState implements State {
 	@Override
 	public boolean isDepositable() {
 		return isDepositable;
+	}
+	
+	@Override
+	public boolean isApproved() {
+		return isApproved;
 	}
 
 	@Override

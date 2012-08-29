@@ -75,6 +75,7 @@ public class StateImplTest extends UnitTest {
 		state.setEditableByReviewer(true);
 		state.setDeletable(true);
 		state.setDepositable(true);
+		state.setApproved(true);
 		
 		assertEquals("state",state.getBeanName());
 		assertEquals("display",state.getDisplayName());
@@ -85,6 +86,7 @@ public class StateImplTest extends UnitTest {
 		assertTrue(state.isEditableByReviewer());
 		assertTrue(state.isDeletable());
 		assertTrue(state.isDepositable());
+		assertTrue(state.isApproved());
 
 	}
 	

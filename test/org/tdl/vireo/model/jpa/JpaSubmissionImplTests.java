@@ -311,6 +311,25 @@ public class JpaSubmissionImplTests extends UnitTest {
 	}
 	
 	/**
+	 * Test the approved state
+	 */
+	@Test
+	public void testApproveState() {
+		Submission sub = subRepo.createSubmission(person);
+		
+		for(State state : stateManager.getAllStates()) {
+			if (state.isApproved()) {
+				sub.setState(state);
+				break;
+			}
+		}
+		
+		assertNotNull(sub.getApprovalDate());
+		
+		sub.delete();
+	}
+	
+	/**
 	 * Test validation of graduation months.
 	 */
 	@Test

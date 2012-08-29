@@ -61,6 +61,13 @@ public interface State {
 	 *         transitioning into this state.
 	 */
 	public boolean isDepositable();
+	
+	/**
+	 * @return Whether a submission transitioned into this state should be
+	 *         considered approved. If so then the approvalDate will be set of
+	 *         the submission.
+	 */
+	public boolean isApproved();
 
 	/**
 	 * Return a list of valid transitions for this submission.

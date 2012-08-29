@@ -752,6 +752,10 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		if (!equals(this.stateName,state.getBeanName())) {
 			this.stateName = state.getBeanName();
 			generateChangeLog("Submission status",state.getDisplayName(),true);
+			
+			// Check if this state is approved
+			if (this.approvalDate == null && state.isApproved())
+				this.setApprovalDate(new Date());
 		}
 	}
 

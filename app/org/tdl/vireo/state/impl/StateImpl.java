@@ -9,10 +9,13 @@ import org.tdl.vireo.state.State;
 
 
 /**
- * Simple implementation of the vireo state interface. This class basically just is a holder for the configuration injected from spring, this allows for the state transitions to be defined within spring so that they may be customized between different installations.
+ * Simple implementation of the vireo state interface. This class basically just
+ * is a holder for the configuration injected from spring, this allows for the
+ * state transitions to be defined within spring so that they may be customized
+ * between different installations.
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
- *
+ * 
  */
 public class StateImpl implements State, BeanNameAware {
 
@@ -25,6 +28,7 @@ public class StateImpl implements State, BeanNameAware {
 	public boolean editableByStudent = false;
 	public boolean editableByReviewer = false;
 	public boolean depositable = false;
+	public boolean approved = false;
 	public boolean deletable = false;
 	
 	
@@ -61,7 +65,7 @@ public class StateImpl implements State, BeanNameAware {
 	}
 
 	/**
-	 * @param inProgress Weather this state is considered inProgress
+	 * @param inProgress Whether this state is considered inProgress
 	 */
 	public void setInProgress(boolean inProgress) {
 		this.inProgress = inProgress;
@@ -73,7 +77,7 @@ public class StateImpl implements State, BeanNameAware {
 	}
 	
 	/**
-	 * @param active Weather this state is considered under active review
+	 * @param active Whether this state is considered under active review
 	 */
 	public void setActive(boolean active) {
 		this.active = active;
@@ -85,7 +89,7 @@ public class StateImpl implements State, BeanNameAware {
 	}
 	
 	/**
-	 * @param archived Weather this state is considered archived.
+	 * @param archived Whether this state is considered archived.
 	 */
 	public void setArchived(boolean archived) {
 		this.archived = archived;
@@ -97,7 +101,7 @@ public class StateImpl implements State, BeanNameAware {
 	}
 	
 	/**
-	 * @param editable Weather the submission may be edited by the student.
+	 * @param editable Whether the submission may be edited by the student.
 	 */
 	public void setEditableByStudent(boolean editable) {
 		this.editableByStudent = editable;
@@ -109,7 +113,7 @@ public class StateImpl implements State, BeanNameAware {
 	}
 	
 	/**
-	 * @param editable Weather the submission may be edited by the reviewer.
+	 * @param editable Whether the submission may be edited by the reviewer.
 	 */
 	public void setEditableByReviewer(boolean editable) {
 		this.editableByReviewer = editable;
@@ -121,7 +125,7 @@ public class StateImpl implements State, BeanNameAware {
 	}
 	
 	/**
-	 * @param deletable Weather the submission may be permanently deleted by the reviewer.
+	 * @param deletable Whether the submission may be permanently deleted by the reviewer.
 	 */
 	public void setDeletable(boolean deletable) {
 		this.deletable = deletable;
@@ -133,10 +137,22 @@ public class StateImpl implements State, BeanNameAware {
 	}
 	
 	/**
-	 * @param deletable Weather the submission may be permanently deleted by the reviewer.
+	 * @param deletable Whether the submission may be permanently deleted by the reviewer.
 	 */
 	public void setDepositable(boolean depositable) {
 		this.depositable = depositable;
+	}
+	
+	@Override
+	public boolean isApproved() {
+		return approved;
+	}
+	
+	/**
+	 * @param approved Whether the submission should be approved when transitioned into this state.
+	 */
+	public void setApproved(boolean approved) {
+		this.approved = approved;
 	}
 
 	@Override
