@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -554,15 +555,24 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 	 */
 	protected String generateHash(String message) {
 		try {
+			if (this.getId() == null)
+				throw new IllegalStateException("Unable to use a password on an unpersisted person object. You *must* call save before attepmting to set or verify a password.");
+			
+			// Get the password salt
+			byte[] salt = new byte[24];
+			Random random = new Random(Long.valueOf(this.getId()));
+			random.nextBytes(salt);
+			
+			
 			// Generate the hash using the pre-defined algorithm.
 			MessageDigest md = MessageDigest.getInstance(HASH_ALGORITHM);
+			md.update(salt);
 			byte[] byteHash = md.digest(message.getBytes());
 
 			// Convert the hash to hex values for easy storage and portability.
 			StringBuffer hash = new StringBuffer();
 			for (int i = 0; i < byteHash.length; i++) {
-				hash.append(Integer.toString((byteHash[i] & 0xff) + 0x100, 16)
-						.substring(1));
+				hash.append(Integer.toString((byteHash[i] & 0xff) + 0x100, 16).substring(1));
 			}
 			
 			// Retun the hash.

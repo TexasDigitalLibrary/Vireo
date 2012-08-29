@@ -299,7 +299,7 @@ public class AuthenticationTest extends AbstractVireoFunctionalTest {
 		
 		// Create a user to recover their password.
 		context.turnOffAuthorization();
-		Person person = personRepo.createPerson("forgetful", "forgetfull@email.com", "Forgetfull", "Person", RoleType.STUDENT);
+		Person person = personRepo.createPerson("forgetful", "forgetfull@email.com", "Forgetfull", "Person", RoleType.STUDENT).save();
 		person.setPassword("password");
 		person.save();
 		context.restoreAuthorization();
@@ -390,7 +390,7 @@ public class AuthenticationTest extends AbstractVireoFunctionalTest {
 		
 		// Create a user to recover their password.
 		context.turnOffAuthorization();
-		Person person = personRepo.createPerson("updatter", "updatter@email.com", "Updatable", "Person", RoleType.STUDENT);
+		Person person = personRepo.createPerson("updatter", "updatter@email.com", "Updatable", "Person", RoleType.STUDENT).save();
 		person.setPassword("password");
 		person.save();
 		context.restoreAuthorization();
@@ -476,7 +476,7 @@ public class AuthenticationTest extends AbstractVireoFunctionalTest {
 
 		// Create a user to recover their password.
 		context.turnOffAuthorization();
-		Person person = personRepo.createPerson("MrChange", "changer@email.com", "Detecated", "Changer", RoleType.STUDENT);
+		Person person = personRepo.createPerson("MrChange", "changer@email.com", "Detecated", "Changer", RoleType.STUDENT).save();
 		person.setPassword("password");
 		person.save();
 		context.restoreAuthorization();

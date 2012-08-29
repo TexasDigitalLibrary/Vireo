@@ -73,7 +73,7 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 		originalSubmissionsOpen = settingRepo.getConfig(Configuration.SUBMISSIONS_OPEN);
 		originalAllowMultiple = settingRepo.getConfig(Configuration.ALLOW_MULTIPLE_SUBMISSIONS);
 		
-		submitter = personRepo.createPerson("netid", "student@tdl.org", "first", "last", RoleType.STUDENT);
+		submitter = personRepo.createPerson("netid", "student@tdl.org", "first", "last", RoleType.STUDENT).save();
 		submitter.setPassword("password");
 		submitter.save();
 	}

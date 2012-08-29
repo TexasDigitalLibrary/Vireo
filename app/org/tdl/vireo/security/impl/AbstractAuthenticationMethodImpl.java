@@ -26,6 +26,7 @@ public abstract class AbstractAuthenticationMethodImpl implements
 	 */
 	public String beanName;
 	public boolean enabled = false;
+	public boolean visible = true;
 	public String displayName;
 	public String displayDescription;
 	public boolean allowNewRegistration = false;
@@ -62,6 +63,21 @@ public abstract class AbstractAuthenticationMethodImpl implements
 	 */
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+	
+	@Override
+	public boolean isVisible() {
+		return visible;
+	}
+	
+	/**
+	 * Set the visibility of this authentication method.
+	 * 
+	 * @param visible
+	 *            The new value.
+	 */
+	public void setVisible(boolean visible) {
+		this.visible = visible;
 	}
 
 	@Override

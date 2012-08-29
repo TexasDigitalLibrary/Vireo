@@ -11,7 +11,7 @@
 	</div>
 </div>
 <br />
-#{list items:enabledMethods, as:'method'}
+#{list items:visibleMethods, as:'method'}
 <div class="row">
 	<span class="span3 center">
 	   <a href="@@{Authentication.loginMethod(method.getBeanName())}" class="btn">${method.getDisplayName()}</a>

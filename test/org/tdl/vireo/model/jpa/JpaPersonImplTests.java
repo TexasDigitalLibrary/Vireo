@@ -344,7 +344,7 @@ public class JpaPersonImplTests extends UnitTest {
 	@Test
 	public void testPasswords() {
 		
-		Person person = repo.createPerson("netid", "email@email.com", "first", "last", RoleType.NONE);
+		Person person = repo.createPerson("netid", "email@email.com", "first", "last", RoleType.NONE).save();
 		
 		// With no password set everything fails.
 		assertFalse(person.validatePassword(null));

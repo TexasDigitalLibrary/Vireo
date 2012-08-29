@@ -546,7 +546,7 @@ public class TestDataLoader extends Job {
 
 		// Create all persons
 		for(PersonsArray personDefinition : PERSONS_DEFINITIONS) {
-			Person person = personRepo.createPerson(personDefinition.netId, personDefinition.email, personDefinition.firstName, personDefinition.lastName, personDefinition.role);
+			Person person = personRepo.createPerson(personDefinition.netId, personDefinition.email, personDefinition.firstName, personDefinition.lastName, personDefinition.role).save();
 			person.setPassword(personDefinition.password);
 			person.save();
 		}
@@ -662,7 +662,7 @@ public class TestDataLoader extends Job {
 			String studentEmail = generateRandomEmail(random, studentName);
 			studentEmail = studentEmail.replaceFirst("@", (i+1)+"@");
 			
-			Person student = personRepo.createPerson("student"+i, studentEmail, studentName[0], studentName[1], RoleType.STUDENT);
+			Person student = personRepo.createPerson("student"+i, studentEmail, studentName[0], studentName[1], RoleType.STUDENT).save();
 			student.setMiddleName(studentName[2]);
 			student.setPassword("password");
 			student.save();
