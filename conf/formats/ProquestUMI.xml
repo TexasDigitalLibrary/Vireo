@@ -27,23 +27,6 @@
 	currently collect this field. Also it is unclear what licensing
 	restrictions ProQuest places on using this controlled vocabulary and
 	whether we can include the list with in Vireo. 
-	
-	2) Mailing Address parsing. Vireo does not require the student to supply
-	their mailing address as individual fields street, city, state, zip code.
-	Instead we have one field where the students supply this as one string.
-	ProQuest would like the address to be split up into it's components and
-	this format attempts to do that. However some students may format their
-	address in such a way that is unparsable by this export. To help ease
-	the problems as a comment we supply the full address and then do our
-	best job to parse it. 
-	
- 	123 Some Street
- 	Some City, State 123456789
- 	
- 	As long as the address looks similar to the one above it can be parsed.
- 	The important things are that the street is on the first line, the city
- 	is seperated by a comma, and there is a space between the zip code and
- 	state.
 
 }*
 %{
@@ -68,7 +51,7 @@
 	// In addition to the student's name should their phone, mailing address,
 	// and email address be released to ProQuest. Turning this on may violate
 	// FERPA regulations.
-	boolean release_student_contact_information = false;
+	boolean release_student_contact_information = true;
 
 	// #### Apply for Copyright
 	// Indicate if the author wants us proquest to apply for copyright. There 
@@ -193,95 +176,191 @@
                     ${ settingRepo.getConfig(org.tdl.vireo.model.Configuration.GRANTOR) } 
                 </DISS_affiliation>
 			</DISS_name>
-		
+			
 			#{if release_student_contact_information } 
+			%{
+				/** 
+				 * Groovy closure to parse a phone number into it's distinct 
+				 * components. This should work must of the time, however if
+				 * it dosent then everything is stuffed in the "number" field.
+				 * So at least the information is transmitted.
+				 */
+				def parsePhone = { fullPhone ->
+					// The phone parts that we are trying extract
+					String cntry_code = null;
+			        String area_code  = null;
+			        String number     = null;
+			        String ext        = null;
+			        
+			        // Give it our best shot
+			        java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(
+			                '^(?:[\\+]?[\\(]?([\\d]{1,3})[\\s\\-\\.\\)]+)?' +  // cntry_code (optional)
+			                '(?:[\\(]?([\\d]{1,3})[\\s\\-/\\)]+)'           +  // area_code
+			                '([2-9][0-9\\s\\-\\.]{6,}[0-9])'                +  // number
+			                '(?:[\\s\\D]+([\\d]{1,5}))?$');                  // ext (optional)
+			
+			        java.util.regex.Matcher matcher = pattern.matcher(fullPhone);
+			
+			        if(matcher.matches()) {
+			            cntry_code = matcher.group(1);
+			            area_code  = matcher.group(2);
+			            number     = matcher.group(3);
+			            ext        = matcher.group(4);
+			        } else {
+			        	String trimPhone = fullPhone.replaceAll("[^0-9]","");
+			        	if (trimPhone.length() > 7) {
+							// The phone number is long enough to have an area code, split that off.
+							area_code = trimPhone.substring(0,trimPhone.length() - 7)
+							number = trimPhone.substring(trimPhone.length() - 7, trimPhone.length());
+						} else {
+							// We don't have an area code, so the whole things goes into phone
+							number = trimPhone;
+						}
+			        }
+			        
+			        
+			        return [ 
+			            full_phone: fullPhone,
+			        	cntry_code: cntry_code,
+			        	area_code: area_code,
+			        	number: number,
+			        	ext: ext
+			        		];
+				};
+				
+				/** 
+				 * Groovy closure to parse addresses into it's distinct
+				 * component. Like the phone number above, if it fails then
+				 * everything is stuffed into addrline.
+				 */
+				def parseAddress = { fullAddress ->
+					String addrline = null;
+			        String city     = null;
+			        String state    = null;
+			        String zip      = null;
+			        String cntry    = null;
+			
+					// Extract the address
+					String oneLineAddress = fullAddress.replaceAll("\r\n"," ");
+					oneLineAddress = oneLineAddress.replaceAll("\n"," ");
+						
+			        // Case Insensitive
+			        // This does a <em>good enough</em> job of parsing, but is often incorrect
+			        java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(
+				        '(.+(?:(?:STREET|ST|DRIVE|DR|AVENUE|AVE|AV|ROAD|RD|LOOP|COURT|CT|CIRCLE|CR|TERRANCE|TERR|HIGHWAY|HWY|PARKWAY|PRKY|PLACE|PL|WAY|RIDGE|RDG|LANE|LN|BOULEVARD|BLVD)\\.?)(?:(?:,?\\s)(?:APT|UNIT|#)[\\.,]?\\s\\w+)?)(?:,?)' +
+				                                    	// address
+				        '(?:\\s)([a-zA-Z\\s]+),?'  +	// city
+				        '(?:\\s)([a-zA-Z\\s]{2,})' +	// state
+				        '(?:\\s)([\\d]+[\\-\\d]+)' +	// zip
+				        '((?:\\s)([\\s\\D]+))?',		// country
+			        	java.util.regex.Pattern.CASE_INSENSITIVE);
+			
+			
+			        java.util.regex.Matcher matcher = pattern.matcher(oneLineAddress);
+			
+			        if (matcher.matches()) {
+			            addrline = matcher.group(1);
+			            city     = matcher.group(2);
+			            state    = matcher.group(3);
+			            zip      = matcher.group(4);
+			            cntry    = matcher.group(5);
+			        } else {
+			            addrline = fullAddress;  // if it fails, put everything in addrline
+			        }
+			        
+			        return [
+			            full_address: fullAddress,
+			        	addrline: addrline,
+			        	city: city,
+			        	state: state,
+			        	zip: zip,
+			        	cntry: cntry
+			        	];
+				};
+			
+			%}
+			
+			<!-- Current Contact Information -->
 			<DISS_contact type="current">
 				#{if sub.getGraduationYear() != null } 
 				<DISS_contact_effdt>
-					%{
-						// The day, we don't know it so just say 01
-						out.print("01/");
-						if (sub.getGraduationMonth() != null) {
-							// Jaunary=0, December=11
-							out.print(String.format("%02d",sub.getGraduationMonth()+1)+"/");
-						} else {
-							out.print("01/");
-						}
-						out.print(sub.getGraduationYear());
-					}% 
+					${ sub.getSubmissionDate()?.format("MM/dd/yyyy") }
 				</DISS_contact_effdt>
 				#{/if}
 				
 				#{if sub.getSubmitter().getCurrentPhoneNumber() != null} 
 				<DISS_phone_fax type="P">
-					%{
-						def areaCode = "";
-						def phoneNum = "";
-						
-						def fullPhone = sub.getSubmitter().getCurrentPhoneNumber();
-						def trimPhone = fullPhone.replaceAll("[^0-9]","");
-						
-						if (trimPhone.length() > 7) {
-							// The phone number is long enough to have an area code, split that off.
-							areaCode = trimPhone.substring(0,trimPhone.length() - 7)
-							phoneNum = trimPhone.substring(trimPhone.length() - 7, trimPhone.length());
-						} else {
-							// We don't have an area code, so the whole things goes into phone
-							phoneNum = trimPhone;
-						}
-					
+				    %{
+				        def phone = parsePhone(sub.getSubmitter().getCurrentPhoneNumber());
 					}% 
-					<!-- ${ fullPhone } -->
-					<DISS_area_code>${ areaCode }</DISS_area_code>
-					<DISS_phone_num>${ phoneNum }</DISS_phone_num>
+					<!-- ${ phone["full_phone"] } -->
+					<DISS_cntry_cd>${ phone["cntry_code"] }</DISS_cntry_cd>
+					<DISS_area_code>${ phone["area_code"] }</DISS_area_code>
+					<DISS_phone_num>${ phone["number"] }</DISS_phone_num>
+					<DISS_phone_ext>${ phone["ext"] }</DISS_phone_ext>
 				</DISS_phone_fax>
 				#{/if}
 				
 				#{if sub.getSubmitter().getCurrentPostalAddress() != null } 
 				<DISS_address>
 					%{
-						def addrline = "";
-						def city = "";
-						def st = "";
-						def pcode = "";
-						
-						def fullAddr = sub.getSubmitter().getCurrentPostalAddress();
-						
-						// Typically the first line is the address line
-						String[] lines = fullAddr.split("\n")
-						if (lines != null && lines.length >= 1)
-							addrline = lines[0];
-						
-						// Typicaly the second line is "city, state zip"
-						if (lines != null && lines.length >= 2) {
-							def secondLine = lines[1].trim();
-						
-							// The city is before the comma
-							if (secondLine.indexOf(",") > 0) {
-								city = secondLine.substring(0,secondLine.indexOf(","));
-								secondLine = secondLine.substring(secondLine.indexOf(","), secondLine.length());
-								
-								// After the comma is "State <space> postal code"
-								if (secondLine.lastIndexOf(" ") > 0) {
-									pcode = secondLine.substring(secondLine.lastIndexOf(" ")+1, secondLine.length());
-									st = secondLine.substring(1,secondLine.lastIndexOf(" "));
-								}
-							}
-						}
-					}% 
+						def address = parseAddress(sub.getSubmitter().getCurrentPostalAddress());
+					%} 
 					<!-- 
-${ fullAddr } 
+${ address["full_address"] } 
 					-->
-					<DISS_addrline>${ addrline }</DISS_addrline>
-					<DISS_city>${ city }</DISS_city>
-					<DISS_st>${ st }</DISS_st>
-					<DISS_pcode>${ pcode }</DISS_pcode>
-					<DISS_country></DISS_country>
+					<DISS_addrline>${ address["addrline"] }</DISS_addrline>
+					<DISS_city>${ address["city"] }</DISS_city>
+					<DISS_st>${ address["state"] }</DISS_st>
+					<DISS_pcode>${ address["zip"] }</DISS_pcode>
+					<DISS_country>${ address["cntry"] }</DISS_country>
 				</DISS_address>
 				#{/if}
 				
 				<DISS_email>
 					${ sub.getSubmitter().getEmail() }
+				</DISS_email>
+			</DISS_contact>
+			
+			<!-- Permanent Contact Information -->
+			<DISS_contact type="future">
+				#{if sub.getGraduationYear() != null } 
+				<DISS_contact_effdt>
+					${ sub.getSubmissionDate()?.format("MM/dd/yyyy") }
+				</DISS_contact_effdt>
+				#{/if}
+				
+				#{if sub.getSubmitter().getPermanentPhoneNumber() != null} 
+				<DISS_phone_fax type="P">
+				    %{
+				        def phone = parsePhone(sub.getSubmitter().getPermanentPhoneNumber());
+					}% 
+					<!-- ${ phone["full_phone"] } -->
+					<DISS_cntry_cd>${ phone["cntry_code"] }</DISS_cntry_cd>
+					<DISS_area_code>${ phone["area_code"] }</DISS_area_code>
+					<DISS_phone_num>${ phone["number"] }</DISS_phone_num>
+					<DISS_phone_ext>${ phone["ext"] }</DISS_phone_ext>
+				</DISS_phone_fax>
+				#{/if}
+				
+				#{if sub.getSubmitter().getPermanentPostalAddress() != null } 
+				<DISS_address>
+					%{
+						def address = parseAddress(sub.getSubmitter().getPermanentPostalAddress());
+					%} 
+					<!-- 
+${ address["full_address"] } 
+					-->
+					<DISS_addrline>${ address["addrline"] }</DISS_addrline>
+					<DISS_city>${ address["city"] }</DISS_city>
+					<DISS_st>${ address["state"] }</DISS_st>
+					<DISS_pcode>${ address["zip"] }</DISS_pcode>
+					<DISS_country>${ address["cntry"] }</DISS_country>
+				</DISS_address>
+				#{/if}
+				
+				<DISS_email>
+					${ sub.getSubmitter().getPermanentEmailAddress() }
 				</DISS_email>
 			</DISS_contact>
 			#{/if} 
