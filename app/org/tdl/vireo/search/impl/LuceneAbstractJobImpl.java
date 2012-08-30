@@ -489,6 +489,9 @@ public abstract class LuceneAbstractJobImpl extends Job {
 			doc.add(new Field("depositId",depositId,Field.Store.NO,Index.NOT_ANALYZED));
 			
 			writer.addDocument(doc);
+			
+			// Detach the log so it dosn't keep stacking up in memory.
+			log.detach();
 		} // for logs
 	} // indexSubmission(writer,sub)
 } // IndexJob
