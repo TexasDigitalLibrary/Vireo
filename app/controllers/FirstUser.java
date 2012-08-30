@@ -11,6 +11,7 @@ import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
+import org.tdl.vireo.search.Indexer;
 import org.tdl.vireo.security.AuthenticationMethod;
 import org.tdl.vireo.email.SystemEmailTemplateService;
 import org.tdl.vireo.email.impl.SystemEmailTemplateServiceImpl;
@@ -21,6 +22,7 @@ import play.modules.spring.Spring;
 public class FirstUser extends AbstractVireoController {
 	
 	public static SystemEmailTemplateService systemEmailService = Spring.getBeanOfType(SystemEmailTemplateService.class);
+	public static Indexer indexer = Spring.getBeanOfType(Indexer.class);
 	
 	public static void createUser() {
 		if(firstUser == null || firstUser == false)
@@ -40,7 +42,7 @@ public class FirstUser extends AbstractVireoController {
 			if(!validation.hasErrors()) {
 				// Create the account.
 				context.turnOffAuthorization();
-				Person person = personRepo.createPerson(netid, email, firstName, lastName, RoleType.ADMINISTRATOR);
+				Person person = personRepo.createPerson(netid, email, firstName, lastName, RoleType.ADMINISTRATOR).save();
 				person.setPassword(password1);
 				person.save();
 				context.turnOffAuthorization();
@@ -69,11 +71,14 @@ public class FirstUser extends AbstractVireoController {
 					settingRepo.createEmbargoType(embargoDefinition.name, embargoDefinition.description, embargoDefinition.duration, embargoDefinition.active).save();
 				}
 				
+				// Do a fresh rebuild of the index
+				indexer.deleteAndRebuild(true);
+				
 				//Flag that any future user is not the first user.
 				firstUser = false;
 				
-				// Go to the index page.
-				Application.index();
+				// Go to the settings page
+				SettingsTab.settingsRedirect();
 				
 			} else {
 				

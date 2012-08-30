@@ -39,6 +39,9 @@
 	    		<div id="personal-bar">
 					#{if currentUser != null }
 						<a href="@{Authentication.profile()}">${currentUser.getDisplayName()}</a> |
+						#{if securityContext.isReviewer()}
+						<a href="@{FilterTab.list()}">Admin</a> |
+						#{/if}
 						<a href="@{Authentication.logout()}">Logout</a>
 					#{/if}
 					#{else}
