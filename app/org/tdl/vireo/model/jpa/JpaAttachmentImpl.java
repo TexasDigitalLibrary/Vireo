@@ -121,8 +121,16 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 			throw new IllegalArgumentException("File is not readable");
 		
 		setName(file.getName());
+		
+		String mimeType;
+		try {
+			mimeType = MimeTypes.getContentType(name);
+		} catch (RuntimeException re) {
+			mimeType = "application/octet-stream";
+		}
+		
 		this.data = new Blob();
-		this.data.set(new FileInputStream(file), MimeTypes.getContentType(name));
+		this.data.set(new FileInputStream(file), mimeType);
 		
 		if (AttachmentType.PRIMARY == type)
 			renamePrimaryDocument();
@@ -153,10 +161,18 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 			throw new IllegalArgumentException("The contents of an attachment may not be blank.");
 		
 		setName(filename);
+		
+		String mimeType;
+		try {
+			mimeType = MimeTypes.getContentType(filename);
+		} catch (RuntimeException re) {
+			mimeType = "application/octet-stream";
+		}
+		
 		this.data = new Blob();
 		this.data.set(
 				new ByteArrayInputStream(content),
-				MimeTypes.getContentType(filename)
+				mimeType
 				);
 		
 		if (AttachmentType.PRIMARY == type)
