@@ -1,5 +1,6 @@
 package controllers;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -12,7 +13,9 @@ import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.search.Indexer;
 
+import play.Logger;
 import play.Play;
+import play.jobs.Job;
 import play.modules.spring.Spring;
 import play.mvc.With;
 
@@ -96,6 +99,12 @@ public class System extends AbstractVireoController {
 		} else {
 			mailPass = "n/a";
 		}
+		
+		// Vireo Information
+		long personTotal = personRepo.findPersonsTotal();
+		long submissionTotal = subRepo.findSubmissionsTotal();
+		long actionLogTotal = subRepo.findActionLogsTotal();
+		
 	
 		// Index Information
 		String indexImpl = indexer.getClass().getSimpleName();
@@ -119,6 +128,9 @@ public class System extends AbstractVireoController {
 				
 				// Mail Info
 				mailMode, mailHost, mailUser, mailPass, mailChannel, mailFrom, mailReply,
+				
+				// Vireo Info
+				personTotal, submissionTotal, actionLogTotal,
 				
 				// Index Information
 				indexImpl, indexJob
@@ -147,6 +159,36 @@ public class System extends AbstractVireoController {
 	}
 	
 	/**
+	 * Generate test submissions.
+	 * 
+	 * @param howMany
+	 *            How many test submissions to generate.
+	 * @throws InterruptedException
+	 */
+	@Security(RoleType.ADMINISTRATOR)
+	public static void testSubmissions(final int howMany) throws InterruptedException {
+				
+		if (!Play.mode.isDev())
+			error("Generating test submissions is only available in a DEV mode.");
+		
+		if (!"test".equals(Play.id))
+			error("Generating test submissions is only available when runing under the '%test' framework id.");
+		
+		if (howMany < 1)
+			error();
+	
+		long start = java.lang.System.currentTimeMillis();
+		Job job = new TestSubmissionsJob(indexer,howMany);
+		await(job.now());
+		long stop = java.lang.System.currentTimeMillis();
+		
+		long totalTime = stop - start;
+		long timePerSubmission = totalTime / howMany;
+
+		renderTemplate("System/testSubmission.html", howMany, totalTime, timePerSubmission);
+	}
+	
+	/**
 	 * Rebuild the index, either destructively or in place.
 	 */
 	@Security(RoleType.ADMINISTRATOR)
@@ -162,7 +204,49 @@ public class System extends AbstractVireoController {
 		controlPanel();
 	}
 	
-	
-	
+	/**
+	 * Background job to generate random submissions.
+	 */
+	public static class TestSubmissionsJob extends Job {
+		
+		public Indexer indexer;
+		public int howMany;
+		
+		/**
+		 * Construct a new job.
+		 * 
+		 * @param indexer
+		 *            The indexer, we will rebuild the entire index after
+		 *            completing.
+		 * @param howMany
+		 *            How many random submissions to generate.
+		 */
+		public TestSubmissionsJob(Indexer indexer, int howMany) {
+			this.indexer = indexer;
+			this.howMany = howMany;
+		}
+		
+		/**
+		 * Actually do the job of random submissions.
+		 * 
+		 * Important note we don't actually import the TestDataLoader and call
+		 * the loadSubmissions method directly because we don't want a compile
+		 * time dependency between production code and test code. This feature
+		 * is only available when running under a test environment.
+		 */
+		public void doJob() throws Exception {
+			
+			Class clazz = Class.forName("TestDataLoader");
+			
+			Class[] types = { long.class, int.class };
+			Method method = clazz.getMethod("loadSubmissions", types);
+			
+			long seed = java.lang.System.currentTimeMillis();
+			method.invoke(null, seed, howMany);
+			
+			indexer.rollback();
+			indexer.rebuild(false);
+		}
+	}
 	
 }

@@ -294,6 +294,15 @@ public class JpaPersonImplTests extends UnitTest {
 	}
 	
 	/**
+	 * Test retrieving count of all persons
+	 */
+	@Test
+	public void testFindPersonsTotal() {
+		
+		assertEquals(repo.findAllPersons().size(),repo.findPersonsTotal());
+	}
+	
+	/**
 	 * Test that getDisplayName() and getCurrentEmailAddress() default to their
 	 * alternative attributes when not defined.
 	 */

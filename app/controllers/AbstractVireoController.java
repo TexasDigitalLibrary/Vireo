@@ -56,7 +56,7 @@ public abstract class AbstractVireoController extends Controller {
 	@Before(unless = { "FirstUser.createUser" })
 	public static void checkForFirstUser() {
 		if(firstUser==null) {
-			if(personRepo.findAllPersons().size()==0) {
+			if(personRepo.findPersonsTotal()==0) {
 				firstUser = true;				
 			} else {
 				firstUser = false;

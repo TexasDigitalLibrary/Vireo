@@ -97,6 +97,14 @@ public interface PersonRepository {
 	 * @return All person objects
 	 */
 	public List<Person> findAllPersons();
+	
+	/**
+	 * Find how many persons are stored in the persistent repository.
+	 * 
+	 * @return the number total number of persons stored in the persistent
+	 *         repository.
+	 */
+	public long findPersonsTotal();
 
 	// ///////////////////////////
 	// Personal Preference Model

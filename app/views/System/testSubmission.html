@@ -1,0 +1,30 @@
+#{extends 'main.html' /} #{set title:'System Control Panel' /}
+
+<br/>
+<div class="row pageHead">
+	<h3>System Control Panel</h3>
+</div>
+<br />
+
+<p><strong>Submissions Generated:</strong> ${howMany} </p>
+
+<p><strong>Total Time:</strong> 
+#{if totalTime < 1000}
+	${ totalTime.format('0.00') } milliseconds
+#{/if}
+#{elseif totalTime < 1000*60}
+	${ (totalTime/1000).format('0.00') } seconds
+#{/elseif}
+#{elseif totalTime < 1000*60*60}
+	${ (totalTime/1000/60).format('0.00') } minutes
+#{/elseif}
+#{else}
+	${ (totalTime/1000/60/60).format('0.00') } hours
+#{/else}
+</p>
+<p><strong>Time Per Submission:</strong> ${ timePerSubmission } milliseconds</p>
+
+<p>Don't forget the index may still be rebuilding.</p>
+
+<p><a class="btn" href="@{System.ControlPanel()}">Back to control panel</a></p>
+

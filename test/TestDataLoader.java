@@ -524,7 +524,7 @@ public class TestDataLoader extends Job {
 				context.restoreAuthorization();
 			}
 			
-			loadSubmissions();
+			loadSubmissions(123456789,RANDOM_SUBMISSIONS);
 			
 			Logger.debug("Rebuilding index...");
 			indexer.deleteAndRebuild(true);
@@ -645,7 +645,7 @@ public class TestDataLoader extends Job {
 	/**
 	 * Load randomly generated submissions.
 	 */
-	public static void loadSubmissions() throws IOException {
+	public static void loadSubmissions(long seed, int howMany) throws IOException {
 		
 		// Cache a list of all embargo types.
 		List<EmbargoType> embargos = settingRepo.findAllEmbargoTypes();
@@ -653,19 +653,27 @@ public class TestDataLoader extends Job {
 		Person reviewer = personRepo.findPersonByEmail("jdimaggio@gmail.com");
 		
 		// Establish a constant random seed so each run through this code produces the same results.
-		Random random = new Random(123456789);
+		Random random = new Random(seed);
 		
 		long start = System.currentTimeMillis();
-		for(int i=0; i < RANDOM_SUBMISSIONS; i++) {
-			context.turnOffAuthorization();
-			String[] studentName = generateRandomName(random, ACTOR_NAMES);
-			String studentEmail = generateRandomEmail(random, studentName);
-			studentEmail = studentEmail.replaceFirst("@", (i+1)+"@");
+		for(int i=0; i < howMany; i++) {
+			context.turnOffAuthorization();			
+			Person student = personRepo.findPersonByNetId("student"+i);
+			if (student == null) {
+				String[] studentName = generateRandomName(random, ACTOR_NAMES);				
+				String studentEmail = generateRandomEmail(random, studentName);
+				studentEmail = studentEmail.replaceFirst("@", (i+1)+"@");
+				
+				student = personRepo.createPerson("student"+i, studentEmail, studentName[0], studentName[1], RoleType.STUDENT).save();
+				student.setMiddleName(studentName[2]);
+				student.setPassword("password");
+				student.save();
+			}
 			
-			Person student = personRepo.createPerson("student"+i, studentEmail, studentName[0], studentName[1], RoleType.STUDENT).save();
-			student.setMiddleName(studentName[2]);
-			student.setPassword("password");
-			student.save();
+			String[] studentName = new String[3];
+			studentName[0] = student.getFirstName();
+			studentName[1] = student.getLastName();
+			studentName[2] = student.getMiddleName();
 			
 			context.restoreAuthorization();
 			context.login(student);
@@ -812,7 +820,7 @@ public class TestDataLoader extends Job {
 				Logger.debug("Random submission generator: "+i+" submissions at "+ ((System.currentTimeMillis() - start)/i) +" milleseconds per submission (in progress)");
 			}
 		}
-		Logger.debug("Random submission generator: "+RANDOM_SUBMISSIONS+" submissions at "+ ((System.currentTimeMillis() - start)/RANDOM_SUBMISSIONS) +" milleseconds per submission (finished)");
+		Logger.debug("Random submission generator: "+howMany+" submissions at "+ ((System.currentTimeMillis() - start)/howMany) +" milleseconds per submission (finished)");
 		
 		
 		JPA.em().getTransaction().commit();

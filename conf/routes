@@ -157,6 +157,7 @@ POST    /admin/settings/deposit/reorder         settings.DepositSettingsTab.reor
 GET     /system/?                               System.controlPanelRedirect
 GET     /system/panel/?                         System.controlPanel
 POST    /system/email/test                      System.testEmail
+GET		/system/submission/test					System.testSubmissions
 POST    /system/index/rebuild                   System.rebuildIndex
 
 

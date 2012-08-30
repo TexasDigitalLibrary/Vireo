@@ -144,6 +144,11 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 			// TODO Auto-generated method stub
 			return new ArrayList<Person>();
 		}
+		
+		@Override
+		public long findPersonsTotal() {
+			return 0L;
+		}
 
 		@Override
 		public Preference findPreference(Long id) {

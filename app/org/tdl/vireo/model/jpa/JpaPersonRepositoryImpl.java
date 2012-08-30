@@ -121,6 +121,11 @@ public class JpaPersonRepositoryImpl implements PersonRepository {
 		List results =  typedQuery.getResultList();
 		return results;
 	}
+	
+	@Override
+	public long findPersonsTotal() {
+		return JpaPersonImpl.count();
+	}
 
 	// ///////////////////////////
 	// Personal Preference Model
