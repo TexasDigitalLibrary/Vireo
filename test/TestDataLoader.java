@@ -517,6 +517,15 @@ public class TestDataLoader extends Job {
 		try {			
 			// Turn off authorizations.
 			context.turnOffAuthorization(); 
+			
+			// Check to see if test data has allready been loaded.
+			if (settingRepo.getConfig("TEST_DATA_LOADER") != null) {
+				Logger.debug("Test data has allready been loaded, skiping...");
+				return;
+			}
+			Logger.debug("Loading test data.");
+			settingRepo.createConfiguration("TEST_DATA_LOADER", "true").save();
+			
 			try {
 				loadPeople();
 				loadSettings();
