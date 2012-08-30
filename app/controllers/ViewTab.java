@@ -817,7 +817,7 @@ public class ViewTab extends AbstractVireoController {
 	 * @return (A String containing the name of the file)
 	 */
 	@Security(RoleType.REVIEWER)
-	private static String uploadNote(Submission sub){
+	private static void uploadNote(Submission sub){
 		
 		File attachment = params.get("noteAttachment",File.class);
 		
@@ -825,15 +825,12 @@ public class ViewTab extends AbstractVireoController {
 			validation.addError("noteDocument", "There was no document selected.");
 		
 		try{
-			Attachment thisAttachment = sub.addAttachment(attachment, AttachmentType.FEEDBACK);
-			thisAttachment.save();
+			sub.addAttachment(attachment, AttachmentType.FEEDBACK);
 		} catch (IOException e) {
 			validation.addError("noteDocument","Error uploading note/feedback document.");
 		} catch (IllegalArgumentException e) {
 			validation.addError("noteDocument","Error uploading note/feedback document.");
 		}
-		
-		return attachment.getName();
 	}
 	
 	/**
@@ -843,25 +840,20 @@ public class ViewTab extends AbstractVireoController {
 	 * @return (A String containing the name of the file)
 	 */
 	@Security(RoleType.REVIEWER)
-	private static String uploadSupplement(Submission sub){
+	private static void uploadSupplement(Submission sub){
 		
 		File attachment = params.get("supplementAttachment",File.class);
 		
 		if(attachment == null)
-			Logger.info("Doc is null");
-		else
-			Logger.info("Doc: " + attachment.getClass().getName());
+			validation.addError("supplementDocument", "There was no document selected.");
 		
 		try{
-			Attachment thisAttachment = sub.addAttachment(attachment, AttachmentType.SUPPLEMENTAL);
-			thisAttachment.save();
+			sub.addAttachment(attachment, AttachmentType.SUPPLEMENTAL);
 		} catch (IOException e) {
 			validation.addError("supplementDocument","Error uploading supplemental document.");
 		} catch (IllegalArgumentException e) {
 			validation.addError("supplementDocument","Error uploading supplemental document.");
-		}
-		
-		return attachment.getName();		
+		}		
 	}
 	
 	/**
@@ -872,45 +864,32 @@ public class ViewTab extends AbstractVireoController {
 	 * @return (A list<String> containing the old file and new one)
 	 */
 	@Security(RoleType.REVIEWER)
-	private static List<String> removeSupplement(Submission sub, String action){
+	private static void removeSupplement(Submission sub, String action){
 		
-		List<String> files = new ArrayList<String>();
-		String oldName = null;
-		String newName = null;
 		Attachment oldFile = null;
 		
 		if("replace".equals(action)) {
 			oldFile = sub.findAttachmentById(Long.valueOf(params.get("supplementReplaceOriginal")));
-		} else {
+		} else {			
 			oldFile = sub.findAttachmentById(Long.valueOf(params.get("supplementDelete")));
 		}
-		oldName = oldFile.getName();
-		oldFile.delete();
+		if(oldFile!=null)
+			oldFile.delete();
 		
 		if("replace".equals(action)) {
 			File attachment = params.get("supplementReplace",File.class);
 			
 			if(attachment == null)
-				Logger.info("Doc is null");
-			else
-				Logger.info("Doc: " + attachment.getClass().getName());
+				validation.addError("supplementDocument", "There was no document selected.");
 			
 			try{
-				Attachment thisAttachment = sub.addAttachment(attachment, AttachmentType.SUPPLEMENTAL);
-				thisAttachment.save();
+				sub.addAttachment(attachment, AttachmentType.SUPPLEMENTAL);
 			} catch (IOException e) {
 				validation.addError("supplementDocument","Error uploading supplemental document.");
 			} catch (IllegalArgumentException e) {
 				validation.addError("supplementDocument","Error uploading supplemental document.");
 			}
-			
-			newName = attachment.getName();
 		}
-		
-		files.add(oldName);
-		files.add(newName);
-		
-		return files;
 	}
 	
 	/**
@@ -921,15 +900,16 @@ public class ViewTab extends AbstractVireoController {
 	 * @return (A String containing the name of the file)
 	 */
 	@Security(RoleType.REVIEWER)
-	private static String uploadPrimary(Submission sub){
+	private static void uploadPrimary(Submission sub){
 		
 		File attachment = params.get("primaryAttachment",File.class);
 		
 		if(attachment != null){
 			if(!attachment.getName().toLowerCase().endsWith(".pdf")) {
 				validation.addError("primaryDocument", "Primary document must be a PDF file.");
-				return attachment.getName();
 			}
+		} else {
+			validation.addError("primaryDocument", "There was no document selected.");
 		}
 		
 		try{
@@ -939,19 +919,16 @@ public class ViewTab extends AbstractVireoController {
 				currentAttachment.save();
 			}
 			
-			Attachment thisAttachment = sub.addAttachment(attachment, AttachmentType.PRIMARY);
-			thisAttachment.save();
+			sub.addAttachment(attachment, AttachmentType.PRIMARY);
 		} catch (IOException e) {
 			validation.addError("primaryDocument","Error uploading primary document.");
 		} catch (IllegalArgumentException e) {
 			validation.addError("primaryDocument","Error uploading primary document.");
 		}
-		
-		return attachment.getName();
 	}
 	
 	/**
-	 * A method for displaying/downloading the submission's attachements
+	 * A method for displaying/downloading the submission's attachments
 	 * 
 	 * @param id (The attachment id)
 	 * @param name (The name of the file)

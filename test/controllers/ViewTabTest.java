@@ -7,11 +7,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
 import org.tdl.vireo.model.ActionLog;
+import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.CommitteeMember;
 import org.tdl.vireo.model.CustomActionDefinition;
@@ -272,8 +274,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 	 */
 	@Test
 	public void testRefreshActionLogTable() {
-		context.turnOffAuthorization();
-		LOGIN();
+		context.turnOffAuthorization();		
 		
 		Person person = personRepo.findPersonByEmail("bthornton@gmail.com");		
 		Submission submission = subRepo.createSubmission(person);
@@ -286,6 +287,8 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		assertEquals("My Document Title", submission.getDocumentTitle());
 				
 		JPA.em().detach(submission);
+		
+		LOGIN();
 		
 		String UPDATE_URL = Router.reverse("ViewTab.updateJSON").url;
 		
@@ -321,8 +324,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 	@Test
 	public void testRefreshLeftColumn() {
 		context.turnOffAuthorization();
-		LOGIN();
-		
+				
 		Person person = personRepo.findPersonByEmail("bthornton@gmail.com");		
 		Submission submission = subRepo.createSubmission(person);
 		submission.setDocumentTitle("My Document Title");
@@ -336,6 +338,8 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		assertEquals("My Document Title", submission.getDocumentTitle());
 				
 		JPA.em().detach(submission);
+		
+		LOGIN();
 		
 		String UPDATE_URL = Router.reverse("ViewTab.updateJSON").url;
 		
@@ -371,8 +375,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 	@Test
 	public void testChangeSubmissionStatus() {
 		context.turnOffAuthorization();
-		LOGIN();
-		
+				
 		Person person = personRepo.findPersonByEmail("bthornton@gmail.com");		
 		Submission submission = subRepo.createSubmission(person);
 		State state = stateManager.getState("InReview");
@@ -383,6 +386,8 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		assertEquals(submission.getState().getBeanName(), "InReview");
 		
 		JPA.em().detach(submission);
+		
+		LOGIN();
 		
 		String UPDATE_URL = Router.reverse("ViewTab.changeSubmissionStatus").url;
 		
@@ -410,8 +415,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 	@Test
 	public void testChangeAssignedTo() {
 		context.turnOffAuthorization();
-		LOGIN();
-		
+				
 		Person person = personRepo.findPersonByEmail("bthornton@gmail.com");
 		Person newPerson = personRepo.createPerson("jdoe", "jdoe@gmail.com", "John", "Doe", RoleType.REVIEWER);
 		newPerson.save();
@@ -426,6 +430,8 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		
 		JPA.em().detach(submission);
 		JPA.em().detach(newPerson);
+		
+		LOGIN();
 		
 		String UPDATE_URL = Router.reverse("ViewTab.changeAssignedTo").url;
 		
@@ -454,8 +460,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 	@Test
 	public void testAddActionLogComment() {
 		context.turnOffAuthorization();
-		LOGIN();
-		
+				
 		Person person = personRepo.findPersonByEmail("bthornton@gmail.com");
 		Submission submission = subRepo.createSubmission(person);
 		submission.setAssignee(person);
@@ -467,6 +472,8 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		assertEquals(submission.getAssignee().getCurrentEmailAddress(), "bthornton@gmail.com");
 		
 		JPA.em().detach(submission);
+		
+		LOGIN();
 		
 		String UPDATE_URL = Router.reverse("ViewTab.addActionLogComment").url;
 		
@@ -494,13 +501,14 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 	@Test
 	public void testRetrieveTemplateJSON() {
 		context.turnOffAuthorization();
-		LOGIN();
-		
+				
 		EmailTemplate template = settingRepo.createEmailTemplate("newTemplate", "New Template Subject", "New Template Message");
 		template.save();
 		Long id = template.getId();
 		
 		JPA.em().detach(template);
+		
+		LOGIN();
 		
 		String UPDATE_URL = Router.reverse("ViewTab.retrieveTemplateJSON").url;
 		
@@ -523,8 +531,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 	@Test
 	public void testUpdateCustomActionsJSON() {
 		context.turnOffAuthorization();
-		LOGIN();
-		
+				
 		Person person = personRepo.findPersonByEmail("bthornton@gmail.com");
 		Submission submission = subRepo.createSubmission(person);
 		submission.setAssignee(person);
@@ -540,6 +547,8 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		
 		JPA.em().detach(submission);
 		JPA.em().detach(actionDef);
+		
+		LOGIN();
 		
 		String UPDATE_URL = Router.reverse("ViewTab.updateCustomActionsJSON").url;
 		
@@ -568,8 +577,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 	@Test
 	public void testAddFile() {
 		context.turnOffAuthorization();
-		LOGIN();
-		
+				
 		Person person = personRepo.findPersonByEmail("bthornton@gmail.com");
 		Submission submission = subRepo.createSubmission(person);
 		submission.setAssignee(person);
@@ -578,6 +586,8 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		Long id = submission.getId();
 		
 		JPA.em().detach(submission);
+		
+		LOGIN();
 		
 		String UPDATE_URL = Router.reverse("ViewTab.addFile").url;
 		
@@ -611,8 +621,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 	@Test
 	public void testUploadNote() {
 		context.turnOffAuthorization();
-		LOGIN();
-		
+			
 		Person person = personRepo.findPersonByEmail("bthornton@gmail.com");
 		Submission submission = subRepo.createSubmission(person);
 		submission.setAssignee(person);
@@ -621,6 +630,8 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		Long id = submission.getId();
 		
 		JPA.em().detach(submission);
+		
+		LOGIN();
 		
 		String UPDATE_URL = Router.reverse("ViewTab.addFile").url;
 		
@@ -654,8 +665,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 	@Test
 	public void testUploadSupplement() {
 		context.turnOffAuthorization();
-		LOGIN();
-		
+			
 		Person person = personRepo.findPersonByEmail("bthornton@gmail.com");
 		Submission submission = subRepo.createSubmission(person);
 		submission.setAssignee(person);
@@ -664,6 +674,8 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		Long id = submission.getId();
 		
 		JPA.em().detach(submission);
+		
+		LOGIN();
 		
 		String UPDATE_URL = Router.reverse("ViewTab.addFile").url;
 		
@@ -684,8 +696,12 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		Response response = POST(UPDATE_URL,params,files);
 		assertStatus(302,response);
 		
-		file.delete();
 		submission = subRepo.findSubmission(id);
+		
+		assertNotNull(submission.getSupplementalDocuments().get(0));
+		Attachment attachment = submission.getSupplementalDocuments().get(0);
+		
+		attachment.delete();		
 		submission.delete();
 		
 		context.restoreAuthorization();
@@ -697,46 +713,39 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 	@Test
 	public void testRemoveSupplement() {
 		context.turnOffAuthorization();
-		LOGIN();
-		
+				
 		Person person = personRepo.findPersonByEmail("bthornton@gmail.com");
 		Submission submission = subRepo.createSubmission(person);
 		submission.setAssignee(person);
-		submission.save();
+		
+		File file = null;
+		try {
+			file = getResourceFile("SampleSupplementalDocument.doc");
+			submission.addAttachment(file, AttachmentType.SUPPLEMENTAL);
+		} catch (IOException e) {
+			fail("Couldn't upload test file.");
+		}		
+		
+		submission.save();		
 		
 		Long id = submission.getId();
+		Long fileId = submission.getSupplementalDocuments().get(0).getId();		
+		
+		assertNotNull(fileId);
 		
 		JPA.em().detach(submission);
+		
+		LOGIN();
 		
 		String UPDATE_URL = Router.reverse("ViewTab.addFile").url;
 		
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("subId", id.toString());
 		params.put("uploadType", "supplement");
-		
-		Map<String,File> files = new HashMap<String,File>();
-		File file = null;
-		
-		try {
-			file = getResourceFile("SampleSupplementalDocument.doc");
-			files.put("supplementAttachment", file);
-		} catch (IOException ioe) {
-			fail("Test upload file not found.");
-		}
-		
-		Response response = POST(UPDATE_URL,params,files);
-		assertStatus(302,response);
-
-		submission = subRepo.findSubmission(id);
-		
-		Long fileId = submission.getSupplementalDocuments().get(0).getId();
-		
-		JPA.em().detach(submission);
-		
 		params.put("supplementType", "delete");
 		params.put("supplementDelete", fileId.toString());
 		
-		response = POST(UPDATE_URL,params);
+		Response response = POST(UPDATE_URL,params);
 		assertStatus(302,response);
 		
 		submission = subRepo.findSubmission(id);
@@ -745,7 +754,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		
 		file.delete();
 		submission.delete();
-		
+			
 		context.restoreAuthorization();
 	}
 	
@@ -755,10 +764,8 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 	 */
 	@Test
 	public void testUploadPrimary() throws IOException {
-		
 		context.turnOffAuthorization();
-		LOGIN();
-		
+				
 		Person person = personRepo.findPersonByEmail("bthornton@gmail.com");
 		Submission submission = subRepo.createSubmission(person);
 		submission.setAssignee(person);
@@ -769,6 +776,8 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		Long id = submission.getId();
 		
 		JPA.em().detach(submission);
+		
+		LOGIN();
 		
 		String UPDATE_URL = Router.reverse("ViewTab.addFile").url;
 		
@@ -812,8 +821,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 	@Test
 	public void testViewFile() {
 		context.turnOffAuthorization();
-		LOGIN();
-		
+				
 		Person person = personRepo.findPersonByEmail("bthornton@gmail.com");
 		Submission submission = subRepo.createSubmission(person);
 		submission.setAssignee(person);
@@ -822,6 +830,8 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		Long id = submission.getId();
 		
 		JPA.em().detach(submission);
+		
+		LOGIN();
 		
 		String UPDATE_URL = Router.reverse("ViewTab.addFile").url;
 		
