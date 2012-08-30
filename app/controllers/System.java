@@ -113,9 +113,9 @@ public class System extends AbstractVireoController {
 			indexJob = indexer.getCurrentJobLabel();
 			float complete = 0;
 			if (indexer.getCurrentJobTotal() > 0)
-				complete = indexer.getCurrentJobProgress() / indexer.getCurrentJobTotal();
-			
-			indexJob += " ("+complete+"% complete)";
+				complete = (((float) indexer.getCurrentJobProgress()) / indexer.getCurrentJobTotal()) * 100;
+						
+			indexJob += String.format(" ( %.3f%% complete )",complete);
 		}
 
 		render(
