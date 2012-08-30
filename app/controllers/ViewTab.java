@@ -1,6 +1,7 @@
 package controllers;
 
 import play.Logger;
+import play.db.jpa.JPA;
 import play.mvc.Controller;
 import play.mvc.Router;
 
@@ -96,10 +97,20 @@ public class ViewTab extends AbstractVireoController {
 		} else {
 			FilterTab.list();
 		}
-		
-		Boolean isManager = context.isManager();
-		
 		Submission submission = subRepo.findSubmission(id);
+		
+		//Check for "Add Action Log Comment"
+		if(params.get("addActionLogComment")!=null)
+			addActionLogComment(submission);
+		
+		//Check for "Add File"
+		if(params.get("addFile")!=null)
+			addFile(submission);		
+		
+		JPA.em().detach(submission);
+		submission = subRepo.findSubmission(id);
+		
+		Boolean isManager = context.isManager();		
 
 		if(submission==null){
 			FilterTab.list();
@@ -646,59 +657,67 @@ public class ViewTab extends AbstractVireoController {
 	 */
 	
 	@Security(RoleType.REVIEWER)
-	public static void addActionLogComment(Long id){
-		
-		Submission submission = subRepo.findSubmission(id);
-		
+	private static void addActionLogComment(Submission submission){
+				
 		String subject = params.get("subject");
 		String message = params.get("comment");
 		
-		if(params.get("status_change") != null)
-			submission.setState(stateManager.getState("NeedsCorrection"));
-					
-		VireoEmail email = emailService.createEmail();
+		if(params.get("email_student")!=null) {
+			
+			if(subject == null || subject.isEmpty())
+				validation.addError("addActionLogSubject", "You must include a subject when sending an email.");
 		
-		// Run the parameters
-		email.addParameters(submission);
-		email.setSubject(subject);
-		email.setMessage(message);
-		email.applyParameterSubstitution();
-		
-		//Create list of recipients
-		email.addTo(submission.getSubmitter());
-		
-		//Create list of carbon copies
-		if(params.get("cc_advisor") != null && submission.getCommitteeContactEmail() != null) {
-			email.addCc(submission.getCommitteeContactEmail());
+			if(message == null || message.isEmpty())
+				validation.addError("addActionLogComment", "You must include a comment when sending an email.");
+			
 		}
 		
-		email.setReplyTo(context.getPerson());
-					
-		if(params.get("email_student") != null && "public".equals(params.get("visibility"))) {	
-			// Send the email and log it after completion
-			email.setLogOnCompletion(context.getPerson(), submission);
-			emailService.sendEmail(email,false);
+		if(!validation.hasErrors()) {
+			if(params.get("status_change") != null)
+				submission.setState(stateManager.getState("NeedsCorrection"));
+						
+			VireoEmail email = emailService.createEmail();
 			
-		} else {
-			// Otherwise just log it.
-			subject = email.getSubject();
-			message = email.getMessage();
+			// Run the parameters
+			email.addParameters(submission);
+			email.setSubject(subject);
+			email.setMessage(message);
+			email.applyParameterSubstitution();
 			
-			String entry;
-			if (subject != null && subject.trim().length() > 0)
-				entry = subject+": "+message;
-			else
-				entry = message;
+			//Create list of recipients
+			email.addTo(submission.getSubmitter());
 			
-			ActionLog log = submission.logAction(entry);
-			if("private".equals(params.get("visibility")))
-				log.setPrivate(true);
+			//Create list of carbon copies
+			if(params.get("cc_advisor") != null && submission.getCommitteeContactEmail() != null) {
+				email.addCc(submission.getCommitteeContactEmail());
+			}
 			
-			submission.save();
-			log.save();
+			email.setReplyTo(context.getPerson());
+						
+			if(params.get("email_student") != null && "public".equals(params.get("visibility"))) {	
+				// Send the email and log it after completion
+				email.setLogOnCompletion(context.getPerson(), submission);
+				emailService.sendEmail(email,false);
+				
+			} else {
+				// Otherwise just log it.
+				subject = email.getSubject();
+				message = email.getMessage();
+				
+				String entry;
+				if (subject != null && subject.trim().length() > 0)
+					entry = subject+": "+message;
+				else
+					entry = message;
+				
+				ActionLog log = submission.logAction(entry);
+				if("private".equals(params.get("visibility")))
+					log.setPrivate(true);
+				
+				submission.save();
+				log.save();
+			}
 		}
-	
-		view();
 	}
 	
 	/**
@@ -760,12 +779,10 @@ public class ViewTab extends AbstractVireoController {
 	 * @param subId (The submission id)
 	 */
 	@Security(RoleType.REVIEWER)
-	public static void addFile(Long subId){
-
-		Submission sub = subRepo.findSubmission(subId);
-		String uploadType = params.get("uploadType");
+	private static void addFile(Submission sub){
 		
-		
+		String uploadType = params.get("uploadType");		
+				
 		if("note".equals(uploadType)){
 			uploadNote(sub);
 		} else if("primary".equals(uploadType)){			
@@ -784,30 +801,38 @@ public class ViewTab extends AbstractVireoController {
 			String subject = params.get("subject");
 			String comment = params.get("comment");
 			
-			VireoEmail email = emailService.createEmail();
-			email.addParameters(sub);
-			email.addTo(sub.getSubmitter());
-			email.setReplyTo(context.getPerson());
+			if(subject==null || subject.isEmpty())
+				validation.addError("addFileSubject", "You must include a subject when sending an email.");
 			
-			//Create list of carbon copies
-			if(params.get("cc_advisor") != null && sub.getCommitteeContactEmail() != null) {
-				email.addCc(sub.getCommitteeContactEmail());
-			}
+			if(comment==null || comment.isEmpty())
+				validation.addError("addFileComment", "You must include a comment when sending an email.");
 			
-			email.setSubject(subject);
-			email.setMessage(comment);
-			
-			email.setLogOnCompletion(context.getPerson(), sub);
-			
-			emailService.sendEmail(email,false);
-		}
-		
-		if(params.get("needsCorrection") != null)
-			sub.setState(stateManager.getState("NeedsCorrection"));
-		
-		sub.save();
-		
-		view();
+			if(!validation.hasErrors()){
+				VireoEmail email = emailService.createEmail();
+				email.addParameters(sub);
+				email.addTo(sub.getSubmitter());
+				email.setReplyTo(context.getPerson());
+				
+				//Create list of carbon copies
+				if(params.get("cc_advisor") != null && sub.getCommitteeContactEmail() != null) {
+					email.addCc(sub.getCommitteeContactEmail());
+				}
+				
+				email.setSubject(subject);
+				email.setMessage(comment);
+				
+				email.setLogOnCompletion(context.getPerson(), sub);
+				
+				emailService.sendEmail(email,false);
+			}			
+		}		
+
+		if(!validation.hasErrors()) {
+			if(params.get("needsCorrection") != null)
+				sub.setState(stateManager.getState("NeedsCorrection"));
+						
+			sub.save();
+		}		
 	}
 	
 	/**
@@ -821,8 +846,10 @@ public class ViewTab extends AbstractVireoController {
 		
 		File attachment = params.get("noteAttachment",File.class);
 		
-		if(attachment == null)
+		if(attachment == null) {
 			validation.addError("noteDocument", "There was no document selected.");
+			return;
+		}
 		
 		try{
 			sub.addAttachment(attachment, AttachmentType.FEEDBACK);
@@ -844,8 +871,10 @@ public class ViewTab extends AbstractVireoController {
 		
 		File attachment = params.get("supplementAttachment",File.class);
 		
-		if(attachment == null)
+		if(attachment == null) {
 			validation.addError("supplementDocument", "There was no document selected.");
+			return;
+		}
 		
 		try{
 			sub.addAttachment(attachment, AttachmentType.SUPPLEMENTAL);
@@ -853,7 +882,7 @@ public class ViewTab extends AbstractVireoController {
 			validation.addError("supplementDocument","Error uploading supplemental document.");
 		} catch (IllegalArgumentException e) {
 			validation.addError("supplementDocument","Error uploading supplemental document.");
-		}		
+		}
 	}
 	
 	/**
@@ -879,8 +908,10 @@ public class ViewTab extends AbstractVireoController {
 		if("replace".equals(action)) {
 			File attachment = params.get("supplementReplace",File.class);
 			
-			if(attachment == null)
+			if(attachment == null) {
 				validation.addError("supplementDocument", "There was no document selected.");
+				return;
+			}
 			
 			try{
 				sub.addAttachment(attachment, AttachmentType.SUPPLEMENTAL);
@@ -907,9 +938,11 @@ public class ViewTab extends AbstractVireoController {
 		if(attachment != null){
 			if(!attachment.getName().toLowerCase().endsWith(".pdf")) {
 				validation.addError("primaryDocument", "Primary document must be a PDF file.");
+				return;
 			}
 		} else {
 			validation.addError("primaryDocument", "There was no document selected.");
+			return;
 		}
 		
 		try{
@@ -918,13 +951,12 @@ public class ViewTab extends AbstractVireoController {
 				currentAttachment.archive();
 				currentAttachment.save();
 			}
-			
 			sub.addAttachment(attachment, AttachmentType.PRIMARY);
 		} catch (IOException e) {
 			validation.addError("primaryDocument","Error uploading primary document.");
 		} catch (IllegalArgumentException e) {
 			validation.addError("primaryDocument","Error uploading primary document.");
-		}
+		}		
 	}
 	
 	/**

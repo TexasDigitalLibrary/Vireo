@@ -475,16 +475,17 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		
 		LOGIN();
 		
-		String UPDATE_URL = Router.reverse("ViewTab.addActionLogComment").url;
+		String UPDATE_URL = Router.reverse("ViewTab.view").url;
 		
 		Map<String,String> params = new HashMap<String,String>();
-		params.put("id", id.toString());
+		params.put("subId", id.toString());
 		params.put("subject", "The subject");
 		params.put("comment", "This is the comment.");
 		params.put("visibility", "public");
+		params.put("addActionLogComment", "true");
 		
 		Response response = POST(UPDATE_URL,params);
-		assertStatus(302, response);
+		assertIsOk(response);
 		
 		submission = subRepo.findSubmission(id);
 		assertTrue(subRepo.findActionLog(submission).size()>numActionLogs);
@@ -589,11 +590,12 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		
 		LOGIN();
 		
-		String UPDATE_URL = Router.reverse("ViewTab.addFile").url;
+		String UPDATE_URL = Router.reverse("ViewTab.view").url;
 		
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("subId", id.toString());
 		params.put("uploadType", "note");
+		params.put("addFile", "true");
 		
 		Map<String,File> files = new HashMap<String,File>();
 		File file = null;
@@ -606,7 +608,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		}
 		
 		Response response = POST(UPDATE_URL,params,files);
-		assertStatus(302,response);
+		assertIsOk(response);
 		
 		file.delete();
 		submission = subRepo.findSubmission(id);
@@ -633,11 +635,12 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		
 		LOGIN();
 		
-		String UPDATE_URL = Router.reverse("ViewTab.addFile").url;
+		String UPDATE_URL = Router.reverse("ViewTab.view").url;
 		
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("subId", id.toString());
 		params.put("uploadType", "note");
+		params.put("addFile", "true");
 		
 		Map<String,File> files = new HashMap<String,File>();
 		File file = null;
@@ -650,7 +653,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		}
 		
 		Response response = POST(UPDATE_URL,params,files);
-		assertStatus(302,response);
+		assertIsOk(response);
 		
 		file.delete();
 		submission = subRepo.findSubmission(id);
@@ -677,11 +680,12 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		
 		LOGIN();
 		
-		String UPDATE_URL = Router.reverse("ViewTab.addFile").url;
+		String UPDATE_URL = Router.reverse("ViewTab.view").url;
 		
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("subId", id.toString());
 		params.put("uploadType", "supplement");
+		params.put("addFile", "true");
 		
 		Map<String,File> files = new HashMap<String,File>();
 		File file = null;
@@ -694,7 +698,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		}
 		
 		Response response = POST(UPDATE_URL,params,files);
-		assertStatus(302,response);
+		assertIsOk(response);
 		
 		submission = subRepo.findSubmission(id);
 		
@@ -737,16 +741,17 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		
 		LOGIN();
 		
-		String UPDATE_URL = Router.reverse("ViewTab.addFile").url;
+		String UPDATE_URL = Router.reverse("ViewTab.view").url;
 		
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("subId", id.toString());
 		params.put("uploadType", "supplement");
 		params.put("supplementType", "delete");
 		params.put("supplementDelete", fileId.toString());
+		params.put("addFile", "true");
 		
 		Response response = POST(UPDATE_URL,params);
-		assertStatus(302,response);
+		assertIsOk(response);
 		
 		submission = subRepo.findSubmission(id);
 		
@@ -779,29 +784,31 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		
 		LOGIN();
 		
-		String UPDATE_URL = Router.reverse("ViewTab.addFile").url;
+		String UPDATE_URL = Router.reverse("ViewTab.view").url;
 		
 		// Update a primary document
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("subId", id.toString());
 		params.put("uploadType", "primary");
+		params.put("addFile", "true");
 		
 		Map<String,File> files = new HashMap<String,File>();
 		files.put("primaryAttachment", file);
 		
 		Response response = POST(UPDATE_URL,params,files);
-		assertStatus(302,response);
+		assertIsOk(response);
 		
 		// Re-upload a primary document
 		params = new HashMap<String,String>();
 		params.put("subId", id.toString());
 		params.put("uploadType", "primary");
+		params.put("addFile", "true");
 		
 		files = new HashMap<String,File>();
 		files.put("primaryAttachment", file);
 		
 		response = POST(UPDATE_URL,params,files);
-		assertStatus(302,response);
+		assertIsOk(response);
 		
 		
 		file.delete();
@@ -833,11 +840,12 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		
 		LOGIN();
 		
-		String UPDATE_URL = Router.reverse("ViewTab.addFile").url;
+		String UPDATE_URL = Router.reverse("ViewTab.view").url;
 		
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("subId", id.toString());
 		params.put("uploadType", "note");
+		params.put("addFile", "true");
 		
 		Map<String,File> files = new HashMap<String,File>();
 		File file = null;
@@ -850,7 +858,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		}
 		
 		Response response = POST(UPDATE_URL,params,files);
-		assertStatus(302,response);
+		assertIsOk(response);
 		
 		submission = subRepo.findSubmission(id);
 		Long fileId = submission.getAttachments().get(0).getId();
@@ -866,7 +874,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 					
 		response = GET(UPDATE_URL);
 		
-		assertStatus(302, response);
+		assertIsOk(response);
 		
 		Session.current().clear();
 		file.delete();
