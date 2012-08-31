@@ -18,7 +18,13 @@ jQuery(document).ready(function() {
 })
 </script>
 #{/set}
-<br />
+<ul class="breadcrumb">
+	<li><a href="@{Application.index()}">Home</a> <span class="divider">/</span></li>
+	#{if allowMultiple}
+	<li><a href="@{Student.submissionList()}">Submissions</a> <span class="divider">/</span></li>
+	#{/if}
+	<li class="active">View</li>
+</ul>
 <div class="row pageHead">
 	<h3 class="span11">View Application</h3>
 </div>

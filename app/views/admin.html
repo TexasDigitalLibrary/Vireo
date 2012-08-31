@@ -23,6 +23,10 @@
 	    		<div id="personal-bar">
 					#{if currentUser != null }
 						<a href="@{Authentication.profile()}"><b>${currentUser.getDisplayName()}</b></a> |
+						<a href="@{Application.index()}">Home</a> | 
+						#{if currentUser.getRole().ordinal() >= org.tdl.vireo.model.RoleType.MANAGER.ordinal()}
+							<a href="@{System.controlPanel()}">System</a> | 
+						#{/if}
 						<a href="@{Authentication.logout()}">Logout</a>
 					#{/if}
 					#{else}
@@ -46,7 +50,7 @@
 	        <div class="clear"></div>
 	        <div id="footer" class="row">
 	        	<p class="pull-left">Vireo 1.8 &copy; 2012 <a href="#">Texas Digital Library</a>. All Rights Reserved.
-	        	<br />Valid <a href="#">XHTML 1.0</a>, <a href="#">CSS</a>. <a href="#">Section 508 Compliant</a>.</p>
+	        	<br />Valid <a href="#">XHTML 5.0</a>, <a href="#">CSS</a>. <a href="#">Section 508 Compliant</a>.</p>
 	        </div>
     	</div>
     </body>

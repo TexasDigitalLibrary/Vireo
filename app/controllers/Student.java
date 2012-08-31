@@ -160,6 +160,8 @@ public class Student extends AbstractVireoController {
 		Submission sub = subRepo.findSubmission(subId);
 		Person submitter = context.getPerson();
 
+		boolean allowMultiple = (settingRepo.getConfig(Configuration.ALLOW_MULTIPLE_SUBMISSIONS) != null) ? true : false;
+		
 		// Handle add message button. Just add the message to the submission
 		if (params.get("submit_addMessage") != null) {   
 			if (!params.get("studentMessage").equals(""))
@@ -215,7 +217,7 @@ public class Student extends AbstractVireoController {
 		List<Attachment> supplementaryDocuments = sub.getSupplementalDocuments();
 		List<Attachment> feedbackDocuments = sub.getAttachmentsByType(AttachmentType.FEEDBACK);
 
-		renderTemplate("Student/view.html",subId, sub, submitter, logs, primaryDocument, supplementaryDocuments, feedbackDocuments, allSubmissions, grantor);		
+		renderTemplate("Student/view.html",subId, sub, submitter, logs, primaryDocument, supplementaryDocuments, feedbackDocuments, allSubmissions, grantor, allowMultiple);		
 	}
 
 	/**
