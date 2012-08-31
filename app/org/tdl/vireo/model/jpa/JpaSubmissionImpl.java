@@ -207,6 +207,17 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 
 		return super.delete();
 	}
+	
+	
+	@Override
+	public JpaSubmissionImpl detach() {
+		submitter.detach();
+		if (assignee != null)
+			assignee.detach();
+		if (embargoType != null)
+			embargoType.detach();
+		return super.detach();
+	}
 
 	@Override
 	public Person getSubmitter() {

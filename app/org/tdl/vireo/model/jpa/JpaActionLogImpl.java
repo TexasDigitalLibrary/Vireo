@@ -111,6 +111,17 @@ public class JpaActionLogImpl extends JpaAbstractModel<JpaActionLogImpl> impleme
 		throw new IllegalStateException("Action Logs may not be deleted.");
 		// return super.delete();
 	}
+	
+	@Override
+	public JpaActionLogImpl detach() {
+		
+		submission.detach();
+		if (person != null)
+			person.detach();
+		if (attachment != null)
+			attachment.detach();
+		return super.detach();
+	}
 
 	@Override
 	public Submission getSubmission() {

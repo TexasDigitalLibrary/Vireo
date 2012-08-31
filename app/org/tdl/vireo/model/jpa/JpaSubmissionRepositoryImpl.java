@@ -314,7 +314,7 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 		protected void loadNextBatch() {
 			
 			for (T model : retrieved)
-				JPA.em().detach(model);
+				model.detach();
 			
 			retrieved = loadNextBatch(offset);
 			offset = offset + retrieved.size();
