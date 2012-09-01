@@ -67,10 +67,8 @@ POST	/admin/view/refreshLeftColumn			ViewTab.refreshLeftColumn
 POST	/admin/view/refreshHeader				ViewTab.refreshHeader
 POST	/admin/view/changeSubmissionStatus		ViewTab.changeSubmissionStatus
 POST	/admin/view/changeAssignedTo			ViewTab.changeAssignedTo
-POST	/admin/view/addActionLogComment			ViewTab.addActionLogComment
 POST	/admin/view/retrieveTemplate			ViewTab.retrieveTemplateJSON
 POST	/admin/view/updateCustomAction			ViewTab.updateCustomActionsJSON
-POST	/admin/view/addFile						ViewTab.addFile
 GET		/admin/view/viewFile/{id}/{name}		ViewTab.viewFile
 
 ### Settings Tab

@@ -1,6 +1,12 @@
 #{extends 'main.html' /}
 #{set title:'Submittal Complete' /}
 
+<ul class="breadcrumb">
+	<li><a href="@{Application.index()}">Home</a> <span class="divider">/</span></li>
+	<li><a href="@{Student.submissionList()}">Submissions</a> <span class="divider">/</span></li>
+	<li class="active">Complete</li>
+</ul>
+
 <h3>Submittal Complete</h3>
 
 #{verbatim}${instructions}#{/verbatim}
