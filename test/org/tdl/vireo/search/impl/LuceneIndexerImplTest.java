@@ -80,7 +80,7 @@ public class LuceneIndexerImplTest extends UnitTest {
 		for (Submission sub : subs) {
 			subRepo.findSubmission(sub.getId()).delete();
 		}
-		person.delete();
+		personRepo.findPerson(person.getId()).delete();
 		context.logout();
 		indexer.rollback();
 		

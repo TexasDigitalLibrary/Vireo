@@ -379,9 +379,9 @@ public class LuceneSearcherImplTest extends UnitTest{
 			filter.delete();
 			subRepo.findSubmission(sub1.getId()).delete();
 			subRepo.findSubmission(sub2.getId()).delete();
-			embargo1.delete();
-			embargo2.delete();
-			otherPerson.delete();
+			settingRepo.findEmbargoType(embargo1.getId()).delete();
+			settingRepo.findEmbargoType(embargo2.getId()).delete();
+			personRepo.findPerson(otherPerson.getId()).delete();
 		}
 	}
 	
@@ -634,10 +634,10 @@ public class LuceneSearcherImplTest extends UnitTest{
 			subRepo.findSubmission(sub2.getId()).delete();
 			file1.delete();
 			file2.delete();
-			e1.delete();
-			e2.delete();
-			def.delete();
-			otherPerson.delete();
+			settingRepo.findEmbargoType(e1.getId()).delete();
+			settingRepo.findEmbargoType(e2.getId()).delete();
+			settingRepo.findCustomActionDefinition(def.getId()).delete();
+			personRepo.findPerson(otherPerson.getId()).delete();
 		}
 		
 	}
@@ -852,9 +852,9 @@ public class LuceneSearcherImplTest extends UnitTest{
 			filter.delete();
 			subRepo.findSubmission(sub1.getId()).delete();
 			subRepo.findSubmission(sub2.getId()).delete();
-			embargo1.delete();
-			embargo2.delete();
-			otherPerson.delete();
+			settingRepo.findEmbargoType(embargo1.getId()).delete();
+			settingRepo.findEmbargoType(embargo2.getId()).delete();
+			personRepo.findPerson(otherPerson.getId()).delete();
 		}
 	}
 	
