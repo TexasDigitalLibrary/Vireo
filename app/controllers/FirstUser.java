@@ -72,7 +72,7 @@ public class FirstUser extends AbstractVireoController {
 				}
 				
 				// Do a fresh rebuild of the index
-				indexer.deleteAndRebuild(true);
+				indexer.deleteAndRebuild(false);
 				
 				//Flag that any future user is not the first user.
 				firstUser = false;
