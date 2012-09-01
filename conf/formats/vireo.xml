@@ -52,7 +52,7 @@
         <permanentPostalAddress>${ sub.getSubmitter().getPermanentPostalAddress().escapeXml() }</permanentPostalAddress>
         #{/if}
         #{if sub.getSubmitter().getPermanentEmailAddress() != null} 
-        <permanentEmailAddress>${ sub.getSubmitter().getLastName().escapeXml() }</permanentEmailAddress>
+        <permanentEmailAddress>${ sub.getSubmitter().getPermanentEmailAddress().escapeXml() }</permanentEmailAddress>
         #{/if}
         #{if sub.getSubmitter().getRole() != null} 
         <role>${ sub.getSubmitter().getRole().name().escapeXml() }</role>

@@ -183,21 +183,21 @@ ${ attachment.getName() }	bundle:LICENSE
 		<!-- dc.description.provenance = Committee Approval Date -->
 		#{if sub.getCommitteeApprovalDate() != null} 
        <dcvalue element="description" qualifier="provenance">
-		    The committee advisor approved this ${ sub.getDocumentType() == null ? "document" : sub.getDocumentType() } on ${ sub.getSubmissionDate().format("yyyy-MM-dd 'at' HH:mm") }. 
+		    The committee advisor approved this ${ sub.getDocumentType() == null ? "document" : sub.getDocumentType() } on ${ sub.getCommitteeApprovalDate().format("yyyy-MM-dd 'at' HH:mm") }. 
        </dcvalue>
 		#{/if} 
 		
 		<!-- dc.description.provenance = Committee Embargo Approval Date -->
-		#{if sub.getCommitteeApprovalDate() != null} 
+		#{if sub.getCommitteeEmbargoApprovalDate() != null} 
        <dcvalue element="description" qualifier="provenance">
-		    The committee advisor approved the embargo selection for this ${ sub.getDocumentType() == null ? "document" : sub.getDocumentType() } on ${ sub.getSubmissionDate().format("yyyy-MM-dd 'at' HH:mm") }. 
+		    The committee advisor approved the embargo selection for this ${ sub.getDocumentType() == null ? "document" : sub.getDocumentType() } on ${ sub.getCommitteeEmbargoApprovalDate().format("yyyy-MM-dd 'at' HH:mm") }. 
        </dcvalue>
 		#{/if} 
 		
 		<!-- dc.description.provenance = Approval Date -->
-		#{if sub.getCommitteeApprovalDate() != null} 
+		#{if sub.getApprovalDate() != null} 
        <dcvalue element="description" qualifier="provenance">
-		    This ${ sub.getDocumentType() == null ? "document" : sub.getDocumentType() } was approved for publication on ${ sub.getSubmissionDate().format("yyyy-MM-dd 'at' HH:mm") }. 
+		    This ${ sub.getDocumentType() == null ? "document" : sub.getDocumentType() } was approved for publication on ${ sub.getApprovalDate().format("yyyy-MM-dd 'at' HH:mm") }. 
        </dcvalue>
 		#{/if} 
     
