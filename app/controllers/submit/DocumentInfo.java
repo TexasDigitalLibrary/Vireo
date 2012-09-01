@@ -309,7 +309,15 @@ public class DocumentInfo extends AbstractSubmitStep {
 		validYears.add(currentYear - 1);
 		validYears.add(currentYear);
 		validYears.add(currentYear + 1);
-
+		validYears.add(currentYear + 2);
+		validYears.add(currentYear + 3);
+		validYears.add(currentYear + 4);
+		validYears.add(currentYear + 5);
+		validYears.add(currentYear + 6);
+		validYears.add(currentYear + 7);
+		validYears.add(currentYear + 8);
+		validYears.add(currentYear + 9);
+		
 		return validYears;
 	}
 
