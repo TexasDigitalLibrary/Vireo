@@ -71,14 +71,16 @@ public class FirstUser extends AbstractVireoController {
 					settingRepo.createEmbargoType(embargoDefinition.name, embargoDefinition.description, embargoDefinition.duration, embargoDefinition.active).save();
 				}
 				
-				// Do a fresh rebuild of the index
-				indexer.deleteAndRebuild(false);
-				
 				//Flag that any future user is not the first user.
 				firstUser = false;
 				
 				// Go to the settings page
-				SettingsTab.settingsRedirect();
+				try {
+					SettingsTab.settingsRedirect();
+				} finally {
+					// Do a fresh rebuild of the index after the page has loaded.
+					indexer.deleteAndRebuild(false);
+				}
 				
 			} else {
 				
