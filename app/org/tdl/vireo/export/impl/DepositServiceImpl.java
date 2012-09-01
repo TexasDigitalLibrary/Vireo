@@ -314,12 +314,15 @@ public class DepositServiceImpl implements DepositService{
 					// This is the complex case, we're depositing a batch of items.
 					Iterator<Submission> itr = searcher.submissionSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING);
 					
-					while (itr.hasNext()) {
+					while (itr.hasNext()) {						
 						Submission sub = itr.next();
 						depositSubmission(sub);
 						
 						JPA.em().getTransaction().commit();
 						JPA.em().getTransaction().begin();
+						
+						// Don't let memory get out of control
+						System.gc();						
 					}
 					
 					

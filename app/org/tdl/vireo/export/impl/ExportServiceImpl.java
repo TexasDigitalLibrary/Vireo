@@ -168,7 +168,7 @@ public class ExportServiceImpl implements ExportService {
 				} else {
 					// Assume we're running as a background admin process.
 					context.turnOffAuthorization();
-				}				
+				}
 
 				BufferedOutputStream bos = new BufferedOutputStream(out);
 				ZipOutputStream zos = new ZipOutputStream(bos);
@@ -192,6 +192,9 @@ public class ExportServiceImpl implements ExportService {
 							// Ensure the package isdeleted.
 							pkg.delete();
 						}
+						
+						// Don't let memory get out of control
+						System.gc();
 					}
 				} finally {
 					// Ensure the ziparchive is closed.
@@ -243,7 +246,7 @@ public class ExportServiceImpl implements ExportService {
 				} else {
 
 					InputStream is = new BufferedInputStream(new FileInputStream(file));
-
+					
 					zos.putNextEntry(new ZipEntry(baseName + file.getName()));
 
 					byte[] buf = new byte[1024];

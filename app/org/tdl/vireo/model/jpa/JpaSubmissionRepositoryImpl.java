@@ -115,7 +115,7 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 		return new JpaIterator() {
 			@Override
 			protected List loadNextBatch(int offset) {
-				return JpaSubmissionImpl.all().from(offset).fetch(10);
+				return JpaSubmissionImpl.find("order by id desc").from(offset).fetch(ITERATOR_BATCH_SIZE);
 			}
 		};
 	}

@@ -57,6 +57,7 @@ public class LuceneRebuildJobImpl extends LuceneAbstractJobImpl {
 
 			Iterator<Submission> itr = indexer.subRepo.findAllSubmissions();
 
+			int count = 0;
 			while (itr.hasNext()) {
 				indexSubmission(writer, itr.next());
 				progress++;
@@ -67,6 +68,14 @@ public class LuceneRebuildJobImpl extends LuceneAbstractJobImpl {
 					writer.rollback();
 					writer = null;
 					throw new InterruptedException("Lucene '"+this.getLabel()+"' job recieved a cancel request after processing "+progress+" number of submissions, rolling back changes.");
+				}
+				
+				// Keep memory usage under control
+				if (count > 100) {
+					System.gc();
+					count = 0;
+				} else {
+					count++;
 				}
 			}
 		} finally {
