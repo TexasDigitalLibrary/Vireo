@@ -16,6 +16,7 @@ import javax.persistence.PersistenceException;
 
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.EmailTemplate;
+import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Preference;
 import org.tdl.vireo.model.RoleType;
@@ -127,6 +128,15 @@ public class EmailSettingsTab extends SettingsTab {
 
 			saveModelOrder(templates);
 
+			Logger.info("%s (%d: %s) has added email template #%d.\nTemplate Name = '%s'\nTemplate Subject = '%s'\nTemplate Body = '%s'",
+					context.getPerson().getFormattedName(NameFormat.FIRST_LAST), 
+					context.getPerson().getId(), 
+					context.getPerson().getEmail(),
+					template.getId(),
+					template.getName(),
+					template.getSubject(),
+					template.getMessage());
+			
 			name = escapeJavaScript(template.getName());
 			subject = escapeJavaScript(template.getSubject());
 			message = escapeJavaScript(template.getMessage());
@@ -214,6 +224,15 @@ public class EmailSettingsTab extends SettingsTab {
 			template.setMessage(message);
 			template.save();
 
+			Logger.info("%s (%d: %s) has edited email template #%d.\nTemplate Name = '%s'\nTemplate Subject = '%s'\nTemplate Body = '%s'",
+					context.getPerson().getFormattedName(NameFormat.FIRST_LAST), 
+					context.getPerson().getId(), 
+					context.getPerson().getEmail(),
+					template.getId(),
+					template.getName(),
+					template.getSubject(),
+					template.getMessage());
+			
 			name = escapeJavaScript(template.getName());
 			subject = escapeJavaScript(template.getSubject());
 			message = escapeJavaScript(template.getMessage());
@@ -253,6 +272,15 @@ public class EmailSettingsTab extends SettingsTab {
 			EmailTemplate template = settingRepo.findEmailTemplate(id);
 			template.delete();
 
+			Logger.info("%s (%d: %s) has deleted email template #%d.\nTemplate Name = '%s'\nTemplate Subject = '%s'\nTemplate Body = '%s'",
+					context.getPerson().getFormattedName(NameFormat.FIRST_LAST), 
+					context.getPerson().getId(), 
+					context.getPerson().getEmail(),
+					template.getId(),
+					template.getName(),
+					template.getSubject(),
+					template.getMessage());
+			
 			renderJSON("{ \"success\": \"true\" }");
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to remove email template");

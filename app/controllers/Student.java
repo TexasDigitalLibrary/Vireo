@@ -160,6 +160,12 @@ public class Student extends AbstractVireoController {
 		Submission sub = subRepo.findSubmission(subId);
 		Person submitter = context.getPerson();
 
+		Logger.info("%s (%d: %s) has viewed submission #%d.",
+				submitter.getFormattedName(NameFormat.FIRST_LAST), 
+				submitter.getId(), 
+				submitter.getEmail(),
+				sub.getId());
+		
 		boolean allowMultiple = (settingRepo.getConfig(Configuration.ALLOW_MULTIPLE_SUBMISSIONS) != null) ? true : false;
 		
 		// Handle add message button. Just add the message to the submission
@@ -244,6 +250,13 @@ public class Student extends AbstractVireoController {
 		sub.delete();
 		
 		Person submitter = context.getPerson();
+		
+		Logger.info("%s (%d: %s) has deleted submission #%d.",
+				submitter.getFormattedName(NameFormat.FIRST_LAST), 
+				submitter.getId(), 
+				submitter.getEmail(),
+				sub.getId());
+		
 		List<Submission> submissions = subRepo.findSubmission(submitter);
 		if (submissions.size() == 0)
 			// No other submissions, send you back to the index.

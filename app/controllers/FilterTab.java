@@ -14,6 +14,7 @@ import org.tdl.vireo.export.Packager;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.EmbargoType;
+import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.NamedSearchFilter;
@@ -675,6 +676,13 @@ public class FilterTab extends AbstractVireoController {
 		
 		// Step 2, locate the packager
 		Packager exportPackage = (Packager) Spring.getBean(packager);
+		
+		Logger.info("%s (%d: %s) downloaded an export.\nExport Packager = '%s'\nExport Filter = '%s'",
+				context.getPerson().getFormattedName(NameFormat.FIRST_LAST), 
+				context.getPerson().getId(), 
+				context.getPerson().getEmail(),
+				exportPackage==null ? "null" : exportPackage.getBeanName(),
+				filter==null ? "null" : filter.encode());
 		
 		// Step 3, Stream the chunks.
 		ChunkStream stream = exportService.export(exportPackage,filter);

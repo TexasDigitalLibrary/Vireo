@@ -19,6 +19,7 @@ import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.Major;
+import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Preference;
 import org.tdl.vireo.model.RoleType;
@@ -26,6 +27,7 @@ import org.tdl.vireo.model.RoleType;
 import controllers.settings.ApplicationSettingsTab;
 import controllers.settings.UserPreferencesTab;
 
+import play.Logger;
 import play.mvc.Controller;
 import play.mvc.With;
 
@@ -70,6 +72,13 @@ public class SettingsTab extends AbstractVireoController {
 			
 			if ("displayName".equals(field)) {
 				person.setDisplayName(value);
+				
+				Logger.info("%s (%d: %s) has changed their display name to '%s'.",
+						context.getPerson().getFormattedName(NameFormat.FIRST_LAST), 
+						context.getPerson().getId(), 
+						context.getPerson().getEmail(),
+						value);
+				
 			} else if ("currentEmailAddress".equals(field)) {
 				if (value == null || value.trim().length() == 0)
 					throw new IllegalArgumentException("An email address is required.");

@@ -13,7 +13,6 @@ import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.state.StateManager;
 
-import play.Logger;
 import play.data.validation.Required;
 import play.db.jpa.Model;
 import play.modules.spring.Spring;

@@ -15,6 +15,7 @@ import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
 
+import play.Logger;
 import play.Play;
 import play.mvc.With;
 
@@ -46,7 +47,6 @@ public class Advisor extends AbstractVireoController {
 		// access to the security token can access this page.
 		
 		Person person = context.getPerson();
-		java.lang.System.out.println("Person: "+person.getFormattedName(NameFormat.FIRST_LAST));
 		
 		if (context.isManager()) {
 			String affiliationConfig = Play.configuration.getProperty(AFFILIATION_CONFIG, "");
@@ -64,6 +64,12 @@ public class Advisor extends AbstractVireoController {
 		Submission sub = subRepo.findSubmissionByEmailHash(token);
 		notFoundIfNull(sub);
 
+		Logger.info("%s (%d: %s) has viewed submission #%d.",
+				person.getFormattedName(NameFormat.FIRST_LAST), 
+				person.getId(), 
+				person.getEmail(),
+				sub.getId());
+		
 		boolean inputRecieved = false;
 		try {
 			context.turnOffAuthorization();

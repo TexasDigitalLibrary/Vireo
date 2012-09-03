@@ -31,7 +31,6 @@ import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
 import org.tdl.vireo.state.impl.StateManagerImpl;
 
-import play.Logger;
 import play.Play;
 import play.db.jpa.JPA;
 import play.modules.spring.Spring;
@@ -310,7 +309,6 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		
 		response = POST(UPDATE_URL,params);
 		assertIsOk(response);
-		//java.lang.System.out.println(getContent(response));
 		assertContentMatch("Document title changed to",response);				
 		
 		submission.delete();
@@ -361,7 +359,6 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		
 		response = POST(UPDATE_URL,params);
 		assertIsOk(response);
-		//java.lang.System.out.println(getContent(response));
 		assertContentMatch("Document title changed to",response);				
 		
 		submission.delete();

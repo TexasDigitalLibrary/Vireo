@@ -374,7 +374,7 @@ public class ViewTab extends AbstractVireoController {
 			}
 			value = escapeJavaScript(value);
 			message = re.getMessage();
-			Logger.info("JSON Failed");
+			Logger.error("Unable to update "+field+" in the view tab of the admin section.");
 			renderJSON("{ \"success\": false, \"value\": \""+value+"\", \"message\": \""+message+"\" }");
 		}
 
@@ -387,10 +387,8 @@ public class ViewTab extends AbstractVireoController {
 		String json;
 
 		if(degreeLevel!=null){
-			Logger.info("JSON Success: Degree");
 			json = "{ \"success\": true, \"value\": \""+value+"\", \"degreeLevel\": \""+degreeLevel+"\" }";
 		} else {
-			Logger.info("JSON Success");
 			json = "{ \"success\": true, \"value\": \""+value+"\" }";
 		}
 

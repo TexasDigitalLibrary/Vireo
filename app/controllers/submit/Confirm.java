@@ -13,6 +13,7 @@ import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.EmailTemplate;
+import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
@@ -136,6 +137,12 @@ public class Confirm extends AbstractSubmitStep {
 				
 				sub.save();
 
+				Logger.info("%s (%d: %s) has completed and confirmed submission #%d.",
+						submitter.getFormattedName(NameFormat.FIRST_LAST), 
+						submitter.getId(), 
+						submitter.getEmail(),
+						sub.getId());
+				
 				// After we have saved our state do we kick off the emails
 				emailService.sendEmail(studentEmail, false);
 				emailService.sendEmail(advisorEmail, false);

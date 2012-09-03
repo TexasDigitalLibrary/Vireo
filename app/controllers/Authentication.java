@@ -236,6 +236,12 @@ public class Authentication extends AbstractVireoController {
 					session.put("lastName", person.getLastName());
 					session.put("displayName", person.getDisplayName());
 					
+					Logger.info("%s (%d: %s) has logged in. Redirecting to %s.",
+							person.getFormattedName(NameFormat.FIRST_LAST), 
+							person.getId(), 
+							person.getEmail(),
+							flash.get("url")==null ? "index" : flash.get("url"));
+					
 					// Where to go next? If there were trying to go somethere go
 					// back there, otherwise go to the root.
 					if (flash.get("url") != null) {
@@ -291,6 +297,12 @@ public class Authentication extends AbstractVireoController {
 			session.put("firstName", person.getFirstName());
 			session.put("lastName", person.getLastName());
 			session.put("displayName", person.getDisplayName());
+			
+			Logger.info("%s (%d: %s) has logged in. Redirecting to %s.",
+					person.getFormattedName(NameFormat.FIRST_LAST), 
+					person.getId(), 
+					person.getEmail(),
+					flash.get("url")==null ? "index" : flash.get("url"));
 			
 			// Where to go next? If there were trying to go somethere go
 			// back there, otherwise go to the root.
@@ -396,7 +408,15 @@ public class Authentication extends AbstractVireoController {
 					session.put("firstName", person.getFirstName());
 					session.put("lastName", person.getLastName());
 					session.put("displayName", person.getDisplayName());
-							
+					
+					Logger.info("%s (%d: %s) has registered an account. /nFirst Name = '%s'/nLast Name = '%s'/nRole Type = '%s'",
+							person.getFormattedName(NameFormat.FIRST_LAST), 
+							person.getId(), 
+							person.getEmail(),
+							person.getFirstName(),
+							person.getLastName(),
+							person.getRole().name());
+					
 					// Go to the index page.
 					Application.index();
 				}
@@ -689,6 +709,20 @@ public class Authentication extends AbstractVireoController {
 				person.setPermanentEmailAddress(permanentEmailAddress);
 				person.save();
 				
+				Logger.info("%s (%d: %s) has updated their profile. \nFirst Name = '%s'\nLast Name = '%s'\nMiddle Name = '%s'\nBirth Year = '%d'\nCurrent Phone Number = '%s'\nCurrent Postal Address = '%s'\nPermanent Phone Number = '%s'\nPermanent Postal Address = '%s'\nPermanent Email Address = '%s'",
+						person.getFormattedName(NameFormat.FIRST_LAST), 
+						person.getId(), 
+						person.getEmail(),
+						person.getFirstName(),
+						person.getLastName(),
+						person.getMiddleName(),
+						person.getBirthYear(),
+						person.getCurrentPhoneNumber(),
+						person.getCurrentPostalAddress(),
+						person.getPermanentPhoneNumber(),
+						person.getPermanentPostalAddress(),
+						person.getPermanentEmailAddress());
+				
 				Authentication.profile();
 			}
 		} else {
@@ -758,6 +792,8 @@ public class Authentication extends AbstractVireoController {
 				person.setPassword(password1);
 				person.save();
 				
+				Logger.info("%s (%d: %s) has updated their password.", person.getFormattedName(NameFormat.FIRST_LAST), person.getId(), person.getEmail());
+				
 				Authentication.profile();
 			}
 		}
@@ -782,6 +818,11 @@ public class Authentication extends AbstractVireoController {
 	
 		// Clear our session, effectively logging the user out of the application.
 		session.clear();
+		
+		Logger.info("%s (%d: %s) has logged out.",
+				context.getPerson().getFormattedName(NameFormat.FIRST_LAST), 
+				context.getPerson().getId(), 
+				context.getPerson().getEmail());
 		
 		if (method != null) {
 			// If the user was authenticated by an implicit authentication

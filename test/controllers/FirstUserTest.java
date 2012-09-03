@@ -30,7 +30,6 @@ import org.tdl.vireo.model.SubmissionRepository;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.StateManager;
 
-import play.Logger;
 import play.modules.spring.Spring;
 import play.mvc.Http.Response;
 import play.mvc.Router;

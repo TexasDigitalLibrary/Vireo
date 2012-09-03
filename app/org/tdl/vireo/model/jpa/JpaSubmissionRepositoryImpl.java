@@ -47,7 +47,6 @@ import org.tdl.vireo.search.SearchOrder;
 import org.tdl.vireo.search.SearchResult;
 import org.tdl.vireo.state.StateManager;
 
-import play.Logger;
 import play.db.jpa.JPA;
 
 /**

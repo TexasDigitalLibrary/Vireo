@@ -943,7 +943,6 @@ public class TestDataLoader extends Job {
 			result[2] = null;
 		}
 		} catch (Throwable t) {
-			System.out.println(fullName);
 			return null;
 		}
 		

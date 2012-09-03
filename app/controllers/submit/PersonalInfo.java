@@ -13,10 +13,12 @@ import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.Degree;
 import org.tdl.vireo.model.Department;
 import org.tdl.vireo.model.Major;
+import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
 
+import play.Logger;
 import play.Play;
 import controllers.Application;
 import controllers.Security;
@@ -203,8 +205,11 @@ public class PersonalInfo extends AbstractSubmitStep {
 				}
 				
 				// If there are no erros, save the submission.
-				if (sub == null)
+				boolean created = false;
+				if (sub == null) {
 					sub = subRepo.createSubmission(submitter);
+					created = true;
+				}
 
 				sub.setStudentFirstName(firstName);
 				sub.setStudentMiddleName(middleName);
@@ -231,10 +236,18 @@ public class PersonalInfo extends AbstractSubmitStep {
 				try {
 					sub.save();
 					submitter.save();
+					
+					if(created){
+						Logger.info("%s (%d: %s) has started submission #%d.",
+								submitter.getFormattedName(NameFormat.FIRST_LAST), 
+								submitter.getId(), 
+								submitter.getEmail(),
+								sub.getId());
+					}
 				} catch(RuntimeException re) {
 					validation.addError("general", re.getMessage());
 				}
-
+				
 				// Display the license -- passing along the submission id
 				flash.put("nextStep", "true");
 				License.license(sub.getId());

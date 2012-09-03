@@ -21,6 +21,7 @@ import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.EmailTemplate;
+import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
@@ -204,12 +205,14 @@ public class DepositSettingsTab extends SettingsTab {
 		if (!validation.hasErrors()) {
 			try {
 				// Save the values
+				Boolean created = false;
 				if (depositLocationId != null && depositLocationId.trim().length() > 0) {
 					String[] parts = depositLocationId.split("_");
 					Long id = Long.valueOf(parts[1]);
 					location = settingRepo.findDepositLocation(id);
 				} else {
 					location = settingRepo.createDepositLocation(name);
+					created = true;
 					
 					// Make sure the new location is last on the list.
 					List<DepositLocation> locations = settingRepo.findAllDepositLocations();
@@ -243,6 +246,20 @@ public class DepositSettingsTab extends SettingsTab {
 				location.setDepositor(depositor);
 				location.setName(name);
 				location.save();
+				
+				Logger.info("%s (%d: %s) has %s deposit location #%d.\nDeposit Name = '%s'\nDeposit Packager = '%s'\nDeposit Depositor = '%s'\nDeposit Repository = '%s'\nDeposit Username = '%s'\nDeposit On Behalf Of = '%s'\nDeposit Collection = '%s'",
+						context.getPerson().getFormattedName(NameFormat.FIRST_LAST), 
+						context.getPerson().getId(), 
+						context.getPerson().getEmail(),
+						created ? "added" : "edited",
+						location.getId(),
+						location.getName(),
+						location.getPackager()==null ? "null" : location.getPackager().getBeanName(),
+						location.getDepositor()==null ? "null" : location.getDepositor().getBeanName(),
+						location.getRepository(),
+						location.getUsername(),
+						location.getOnBehalfOf(),
+						location.getCollection());
 				
 				depositLocationId = "depositLocation_"+location.getId();
 			} catch (PersistenceException pe) {
@@ -329,6 +346,19 @@ public class DepositSettingsTab extends SettingsTab {
 			DepositLocation location = settingRepo.findDepositLocation(id);
 			location.delete();
 
+			Logger.info("%s (%d: %s) has deleted deposit location #%d.\nDeposit Name = '%s'\nDeposit Packager = '%s'\nDeposit Depositor = '%s'\nDeposit Repository = '%s'\nDeposit Username = '%s'\nDeposit On Behalf Of = '%s'\nDeposit Collection = '%s'",
+					context.getPerson().getFormattedName(NameFormat.FIRST_LAST), 
+					context.getPerson().getId(), 
+					context.getPerson().getEmail(),
+					location.getId(),
+					location.getName(),
+					location.getPackager()==null ? "null" : location.getPackager().getBeanName(),
+					location.getDepositor()==null ? "null" : location.getDepositor().getBeanName(),
+					location.getRepository(),
+					location.getUsername(),
+					location.getOnBehalfOf(),
+					location.getCollection());
+			
 			renderJSON("{ \"success\": \"true\" }");
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to remove deposit location");

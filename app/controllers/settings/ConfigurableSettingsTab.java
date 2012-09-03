@@ -15,6 +15,7 @@ import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.Major;
+import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.RoleType;
 
 import play.Logger;
@@ -98,7 +99,6 @@ public class ConfigurableSettingsTab extends SettingsTab {
 				embargo.setDuration(months);
 				embargo.setActive(active);
 				embargo.save();
-
 			} else {
 				List<EmbargoType> embargos = settingRepo.findAllEmbargoTypes();
 
@@ -108,6 +108,16 @@ public class ConfigurableSettingsTab extends SettingsTab {
 
 				saveModelOrder(embargos);
 			}
+			
+			Logger.info("%s (%d: %s) has edited embargo #%d.\nEmbargo Name = '%s'\nEmbargo Description = '%s'\nEmbargo Duration = '%d'\nEmbargo Active = '%b'",
+					context.getPerson().getFormattedName(NameFormat.FIRST_LAST), 
+					context.getPerson().getId(), 
+					context.getPerson().getEmail(),
+					embargo.getId(),
+					embargo.getName(),
+					embargo.getDescription(),
+					embargo.getDuration(),
+					embargo.isActive());
 
 			name = escapeJavaScript(embargo.getName());
 			description = escapeJavaScript(embargo.getDescription());
@@ -138,8 +148,18 @@ public class ConfigurableSettingsTab extends SettingsTab {
 		try {
 			String[] parts = embargoTypeId.split("_");
 			Long id = Long.valueOf(parts[1]);
-			EmbargoType embargo = settingRepo.findEmbargoType(id);
+			EmbargoType embargo = settingRepo.findEmbargoType(id);			
 			embargo.delete();
+			
+			Logger.info("%s (%d: %s) has deleted embargo #%d.\nEmbargo Name = '%s'\nEmbargo Description = '%s'\nEmbargo Duration = '%d'\nEmbargo Active = '%b'",
+					context.getPerson().getFormattedName(NameFormat.FIRST_LAST), 
+					context.getPerson().getId(), 
+					context.getPerson().getEmail(),
+					embargo.getId(),
+					embargo.getName(),
+					embargo.getDescription(),
+					embargo.getDuration(),
+					embargo.isActive());
 			
 			renderJSON("{ \"success\": \"true\" }");
 		} catch (RuntimeException re) {

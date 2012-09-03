@@ -9,6 +9,7 @@ import javax.persistence.PersistenceException;
 import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.CustomActionDefinition;
+import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 
@@ -127,12 +128,26 @@ public class ApplicationSettingsTab extends SettingsTab {
 					throw new IllegalArgumentException("The current semester is invalid, it must be of the form: month year. I.g. 'May 2012'");
 				}
 				
+				String oldValue = null;
 				Configuration config = settingRepo.findConfigurationByName(field);
+				
 				if (config == null)
 					config = settingRepo.createConfiguration(field, value);
-				else
+				else {
+					oldValue = config.getValue();
 					config.setValue(value);
+				}
 				config.save();
+				
+				if(SUBMIT_LICENSE.equals(field)){
+					Logger.info("%s (%d: %s) has updated license aggreement from '%s' to '%s'.",
+							context.getPerson().getFormattedName(NameFormat.FIRST_LAST), 
+							context.getPerson().getId(), 
+							context.getPerson().getEmail(),
+							oldValue,
+							value);			
+				}
+				
 			} else {
 				throw new IllegalArgumentException("Unknown field '"+field+"'");
 			}
@@ -329,8 +344,19 @@ public class ApplicationSettingsTab extends SettingsTab {
 			String[] parts = personId.split("_");
 			Long id = Long.valueOf(parts[1]);
 			Person updated = personRepo.findPerson(id);
+			RoleType oldRole = updated.getRole();
 			updated.setRole(newRole);
 			updated.save();
+			
+			Logger.info("%s (%d: %s) has changed %s (%d: %s) role from %s to %s.",
+					context.getPerson().getFormattedName(NameFormat.FIRST_LAST), 
+					context.getPerson().getId(), 
+					context.getPerson().getEmail(),
+					updated.getFormattedName(NameFormat.FIRST_LAST), 
+					updated.getId(), 
+					updated.getEmail(),
+					oldRole.name(),
+					newRole.name());
 			
 			List<Person> reviewers = personRepo.findPersonsByRole(RoleType.REVIEWER);
 
