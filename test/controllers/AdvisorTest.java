@@ -143,7 +143,7 @@ public class AdvisorTest extends AbstractVireoFunctionalTest {
 		
 		response = POST(ADVISOR_URL,params);
 		assertIsOk(response);
-		assertContentMatch("You're input has been recorded.",response);
+		assertContentMatch("Your input has been recorded.",response);
 		
 		
 		// verify the action log.
@@ -187,7 +187,7 @@ public class AdvisorTest extends AbstractVireoFunctionalTest {
 		
 		response = POST(ADVISOR_URL,params);
 		assertIsOk(response);
-		assertContentMatch("You're input has been recorded.",response);
+		assertContentMatch("Your input has been recorded.",response);
 		assertContentMatch("name=\"embargoApproval\" value=\"reject\" checked='true'",response);
 		assertContentMatch("name=\"committeeApproval\" value=\"reject\" checked='true'",response);
 
@@ -244,7 +244,7 @@ public class AdvisorTest extends AbstractVireoFunctionalTest {
 		
 		response = POST(ADVISOR_URL,params);
 		assertIsOk(response);
-		assertContentMatch("You're input has been recorded.",response);
+		assertContentMatch("Your input has been recorded.",response);
 		assertFalse(getContent(response).contains("name=\"embargoApproval\""));
 		assertFalse(getContent(response).contains("name=\"committeeApproval\""));
 		
