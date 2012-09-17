@@ -314,7 +314,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 	 */
 	@Test
 	public void testApproveState() {
-		Submission sub = subRepo.createSubmission(person);
+		Submission sub = subRepo.createSubmission(person).save();
 		
 		for(State state : stateManager.getAllStates()) {
 			if (state.isApproved()) {
