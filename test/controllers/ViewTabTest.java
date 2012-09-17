@@ -63,7 +63,10 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		Person person = personRepo.findPersonByEmail("bthornton@gmail.com");		
 		Submission submission = subRepo.createSubmission(person).save();
 		Long id = submission.getId();
-		JPA.em().detach(submission);
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		
 		LOGIN();
 		
@@ -95,7 +98,9 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		assertEquals("My Document Title", submission.getDocumentTitle());
 		assertEquals("My Document Abstract", submission.getDocumentAbstract());
 		
-		JPA.em().detach(submission);
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		
 		LOGIN();
 		
@@ -135,7 +140,9 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		
 		assertEquals(0, submission.getCommitteeMembers().size());
 		
-		JPA.em().detach(submission);
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		
 		LOGIN();	
 		
@@ -190,8 +197,9 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		assertEquals("T", member.getMiddleName());
 		assertTrue(member.isCommitteeChair());
 		
-		JPA.em().detach(submission);
-		JPA.em().detach(member);
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		
 		LOGIN();	
 		
@@ -244,8 +252,9 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		assertEquals("T", member.getMiddleName());
 		assertTrue(member.isCommitteeChair());
 		
-		JPA.em().detach(submission);
-		JPA.em().detach(member);
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		
 		LOGIN();	
 		
@@ -285,7 +294,9 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		
 		assertEquals("My Document Title", submission.getDocumentTitle());
 				
-		JPA.em().detach(submission);
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		
 		LOGIN();
 		
@@ -335,7 +346,9 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		
 		assertEquals("My Document Title", submission.getDocumentTitle());
 				
-		JPA.em().detach(submission);
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		
 		LOGIN();
 		
@@ -382,7 +395,9 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		
 		assertEquals(submission.getState().getBeanName(), "InReview");
 		
-		JPA.em().detach(submission);
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		
 		LOGIN();
 		
@@ -425,8 +440,9 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		
 		assertEquals(submission.getAssignee().getCurrentEmailAddress(), "bthornton@gmail.com");
 		
-		JPA.em().detach(submission);
-		JPA.em().detach(newPerson);
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		
 		LOGIN();
 		
@@ -468,7 +484,9 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		
 		assertEquals(submission.getAssignee().getCurrentEmailAddress(), "bthornton@gmail.com");
 		
-		JPA.em().detach(submission);
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		
 		LOGIN();
 		
@@ -504,7 +522,9 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		template.save();
 		Long id = template.getId();
 		
-		JPA.em().detach(template);
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		
 		LOGIN();
 		
@@ -543,8 +563,9 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		
 		Long actionId = actionDef.getId();
 		
-		JPA.em().detach(submission);
-		JPA.em().detach(actionDef);
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		
 		LOGIN();
 		
@@ -583,7 +604,9 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		
 		Long id = submission.getId();
 		
-		JPA.em().detach(submission);
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		
 		LOGIN();
 		
@@ -628,7 +651,9 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		
 		Long id = submission.getId();
 		
-		JPA.em().detach(submission);
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		
 		LOGIN();
 		
@@ -673,7 +698,9 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		
 		Long id = submission.getId();
 		
-		JPA.em().detach(submission);
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		
 		LOGIN();
 		
@@ -734,7 +761,9 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		
 		assertNotNull(fileId);
 		
-		JPA.em().detach(submission);
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		
 		LOGIN();
 		
@@ -777,7 +806,9 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		
 		Long id = submission.getId();
 		
-		JPA.em().detach(submission);
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		
 		LOGIN();
 		
@@ -833,7 +864,9 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		
 		Long id = submission.getId();
 		
-		JPA.em().detach(submission);
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		
 		LOGIN();
 		
