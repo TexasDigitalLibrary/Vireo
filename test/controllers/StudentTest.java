@@ -76,6 +76,10 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 		submitter = personRepo.createPerson("netid", "student@tdl.org", "first", "last", RoleType.STUDENT).save();
 		submitter.setPassword("password");
 		submitter.save();
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 	}
 
 	/**
@@ -113,6 +117,10 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 			personRepo.findPerson(submitter.getId()).delete();
 		
 		context.restoreAuthorization();
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 	}
 
 	
@@ -604,6 +612,10 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 		if (allowMultiple && allowMultipleConfig == null) {
 			settingRepo.createConfiguration(Configuration.ALLOW_MULTIPLE_SUBMISSIONS,"true").save();
 		}
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**
