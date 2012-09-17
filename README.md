@@ -14,7 +14,7 @@ Vireo 1.8 is complete functional rewrite of Vireo! This new version is built on 
 
 ## Building and Deploying Vireo ##
 
-Refer to [the wiki pages]() for instructions on deploying Vireo from scratch or updating a previous release. 
+Refer to [the wiki pages]("https://github.com/TexasDigitalLibrary/Vireo/wiki") for instructions on deploying Vireo from scratch or updating a previous release. 
 
 ## License and Copyright ##
 
