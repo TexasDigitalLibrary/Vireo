@@ -10,7 +10,7 @@ For more information on Vireo, visit the [Vireo Users Group blog]("http://blogs.
 
 ## Vireo 1.8 - What's New ##
 
-Vireo 1.8 is complete functional rewrite of Vireo. This new version is built on the Java Play! framework and is no longer based on the DSpace software platform. 
+Vireo 1.8 is complete functional rewrite of Vireo! This new version is built on the Java Play framework and is no longer based on the DSpace software platform. 
 
 ## Building and Deploying Vireo ##
 
