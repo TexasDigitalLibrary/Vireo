@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -51,9 +52,11 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	public List<Submission> submissions;
 	
 	@ElementCollection
+	@CollectionTable(name="search_filter_text")
 	public List<String> searchText;
 	
 	@ElementCollection
+	@CollectionTable(name="search_filter_states")
 	public List<String> states;
 	
 	@OneToMany(targetEntity=JpaPersonImpl.class)
@@ -64,24 +67,30 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	public List<EmbargoType> embargos;
 	
 	@ElementCollection
+	@CollectionTable(name="search_filter_semesters")
 	public List<String> semesters;
 	
 	@Transient
 	public List<Semester> cachedSemesters;
 	
 	@ElementCollection
+	@CollectionTable(name="search_filter_degrees")
 	public List<String> degrees;
 	
 	@ElementCollection
+	@CollectionTable(name="search_filter_departments")
 	public List<String> departments;
 	
 	@ElementCollection
+	@CollectionTable(name="search_filter_colleges")
 	public List<String> colleges;
 	
 	@ElementCollection
+	@CollectionTable(name="search_filter_majors")
 	public List<String> majors;
 	
 	@ElementCollection
+	@CollectionTable(name="search_filter_documenttypes")
 	public List<String> documentTypes;
 	
 	public Boolean umiRelease;

@@ -37,11 +37,19 @@ public class EmailSettingsTabTest extends AbstractVireoFunctionalTest {
 	@Before
 	public void setup() {
 		context.turnOffAuthorization();
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 	}
 	
 	@After
 	public void cleanup() {
 		context.restoreAuthorization();
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**

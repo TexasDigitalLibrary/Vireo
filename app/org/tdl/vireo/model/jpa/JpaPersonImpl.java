@@ -10,6 +10,7 @@ import java.util.Random;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -69,6 +70,7 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 	public Integer birthYear;
 	
 	@ElementCollection
+	@CollectionTable(name="person_affiliations")
 	public List<String> affiliations;
 
 	@Column(length=255) 

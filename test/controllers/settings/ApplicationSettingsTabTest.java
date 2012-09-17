@@ -40,11 +40,17 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 	@Before
 	public void setup() {
 		context.turnOffAuthorization();
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 	}
 	
 	@After
 	public void cleanup() {
 		context.restoreAuthorization();
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**
@@ -151,6 +157,7 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 		params.put("field", CURRENT_SEMESTER);
 		params.put("value","May 2012");
 		Response response = POST(URL,params);
+		System.out.println(getContent(response));
 		assertContentMatch("\"success\": \"true\"", response);
 	
 		

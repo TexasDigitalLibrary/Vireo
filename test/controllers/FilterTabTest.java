@@ -681,10 +681,14 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 		sub.setDegree("Degree Deposit");
 		sub.save();
 		
+		
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();
 		JPA.em().getTransaction().begin();
 		indexer.commit(true);
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		
 		// Filter for "Degree Deposit"
 		GET(FILTER_URL+"?action=add&type=degree&value=Degree+Deposit");
@@ -696,6 +700,7 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 		Response response = POST(DEPOSIT_URL,params);
 		
 		assertHeaderEquals("Location", LIST_URL, response);
+
 		
 		// Wait for the deposit to finish.
 		while (depositService.isDepositRunning() || indexer.isJobRunning()) {
@@ -711,6 +716,10 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 		sub.delete();
 		
 		context.restoreAuthorization();
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 	}
 	
 	/**
@@ -734,6 +743,7 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 		
 		// Double check the list
 		Response response = GET(LIST_URL);
+				
 		assertContentMatch("id=\"batch-export-modal\"",response);
 		
 		// We can't actually test the export because the test apparatus dosn't support chunked responses.
