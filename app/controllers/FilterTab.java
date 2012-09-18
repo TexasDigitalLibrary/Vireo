@@ -421,7 +421,7 @@ public class FilterTab extends AbstractVireoController {
 		
 		// Handle results per page
 		Integer resultsPerPage = params.get("resultsPerPage",Integer.class);
-		if (resultsPerPage != null && resultsPerPage >= 20 && resultsPerPage <= 400) {
+		if (resultsPerPage != null && resultsPerPage >= 20 && resultsPerPage <= 1000) {
 			response.setCookie(NAMES[type][RESULTSPERPAGE], String.valueOf(resultsPerPage));
 		}
 		

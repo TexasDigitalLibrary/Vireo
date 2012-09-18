@@ -227,6 +227,8 @@ jQuery(document).ready(function() {
                             <option #{if resultsPerPage == 100}selected="true"#{/if} value="100">100</option>
                             <option #{if resultsPerPage == 200}selected="true"#{/if} value="200">200</option>
                             <option #{if resultsPerPage == 400}selected="true"#{/if} value="400">400</option>
+                            <option #{if resultsPerPage == 500}selected="true"#{/if} value="500">500</option>
+                            <option #{if resultsPerPage == 1000}selected="true"#{/if} value="1000">1k</option>
                         </select>
                     </div>
                 </div>
