@@ -186,9 +186,9 @@ in results.
                  case UMI_RELEASE:
                      if (sub.getUMIRelease() != null) {
                         if (sub.getUMIRelease()) {
-                            out.print("yes");
+                            out.print("Yes");
                         } else {
-                            out.print("no");
+                            out.print("No");
                         }
                      }
                      break;
