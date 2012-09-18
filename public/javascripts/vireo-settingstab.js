@@ -625,9 +625,9 @@ function retrieveEmailTemplateHandler(jsonURL) {
 				} else if (data.name == "SYSTEM Advisor Review Request") {
 					jQuery("#"+id+" #system-warning").html("This system defined template is sent to the student's advisor requesting their approval of the submission and embargo options.");					
 				} else if (data.name == "SYSTEM Verify Email Address") {
-					jQuery("#"+id+" #system-warning").html("This system defined template is sent to the any user who has forgotten their password, and is attempting to recover it. It is very important that the template contain the {REGISTRATION_URL} variable otherwise the user would not be able to recover their account. If Vireo is configured to use a Single-Sign-On system this option may not be available.");										
+					jQuery("#"+id+" #system-warning").html("This system defined template is sent to the any user who has forgotten their password, and is attempting to recover it. It is very important that the template contains the {REGISTRATION_URL} variable otherwise the user would not be able to recover their account. If Vireo is configured to use a Single-Sign-On system this option may not be available.");										
 				} else if (data.name == "SYSTEM New User Registration") {
-					jQuery("#"+id+" #system-warning").html("This system defined template is sent to any new user when they register their account. It is very important that the template contain the {REGISTRATION_URL} variable otherwise the user would not be able to complete the registration process. If Vireo is configured to use a Single-Sign-On system this option may not be available.");										
+					jQuery("#"+id+" #system-warning").html("This system defined template is sent to any new user when they register their account. It is very important that the template contains the {REGISTRATION_URL} variable otherwise the user would not be able to complete the registration process. If Vireo is configured to use a Single-Sign-On system this option may not be available.");										
 				} else {
 					jQuery("#"+id+" #system-warning").html("This system defined template.");
 				}

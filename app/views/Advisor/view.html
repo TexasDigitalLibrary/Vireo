@@ -250,10 +250,10 @@
 			#{/if}
 			#{else}
 			<label class="checkbox">
-				<input type="radio" name="committeeApproval" value="approve"/> I approve of this application.
+				<input type="radio" name="committeeApproval" value="approve"/> I approve this application.
 			</label>
 			<label class="checkbox">
-				<input type="radio" name="committeeApproval" value="reject" ${ "reject".equals(params.get("committeeApproval")) ? "checked='true'" : ""}/> I reject the this application. <em>(Please leave a comment explaining why below)</em>
+				<input type="radio" name="committeeApproval" value="reject" ${ "reject".equals(params.get("committeeApproval")) ? "checked='true'" : ""}/> I reject this application. <em>(Please leave a comment explaining why below)</em>
 			</label>
 			#{/else}
 			<br/>

@@ -249,8 +249,8 @@ jQuery(document).ready(function() {
         </div>
         <div class="modal-body">
             <p>This batch operation will attempt to deposit all the submissions selected by the currently active filter. 
-            If the deposit is successful then the submissions will be transition to the publish state selected below. If
-            the deposit fails for any reason the submission will remain in it's current state.</p>
+            If the deposit is successful then the submissions will be transitioned to the publish state selected below. If
+            the deposit fails for any reason the submission will remain in its current state.</p>
             
             <p>This operation may take quite some time depending on how many submissions are currently selected. You will
             be returned to the filter list tab where you may continue to use the site.</p>
@@ -295,9 +295,9 @@ jQuery(document).ready(function() {
             <h3>Batch Export</h3>
         </div>
         <div class="modal-body">
-            <p>Download all the submissions selected by the currently active filter. The download will begin
-            immediatly, and make take some time to complete. Unfortunitaly, your browser will not be able to provide
-            an estimate of when the download is complete.</p>
+            <p>Download all the submissions selected by the currently active filter. The download will begin 
+            immediately, and may take some time to complete. Unfortunately, your browser will not be able to 
+            provide an estimate of when the download is complete.</p>
             
             <fieldset>
                 <div class="control-group">
