@@ -70,12 +70,25 @@
 		<property name="transitions">
 			<util:list
 				list-class="java.util.ArrayList" value-type="org.tdl.vireo.state.State">
-				<ref bean="InReview" />
-				<ref bean="WaitingOnRequirements" />
-				<ref bean="Approved" />
+				<ref bean="CorrectionsRecieved"/>
 			</util:list>
 		</property>
 	</bean>
+	
+	<bean id="CorrectionsRecieved" class="org.tdl.vireo.state.impl.StateImpl"
+        scope="singleton">
+        <property name="displayName" value="Corrections Recieved" />
+        <property name="active" value="true" />
+        <property name="editableByReviewer" value="true" />
+        <property name="transitions">
+            <util:list
+                list-class="java.util.ArrayList" value-type="org.tdl.vireo.state.State">
+                <ref bean="InReview" />
+                <ref bean="WaitingOnRequirements" />
+                <ref bean="Approved" />
+            </util:list>
+        </property>
+    </bean>
 
 	<bean id="WaitingOnRequirements" class="org.tdl.vireo.state.impl.StateImpl"
 		scope="singleton">
@@ -89,6 +102,13 @@
 			</util:list>
 		</property>
 	</bean>
+	
+	<bean id="OnHold" class="org.tdl.vireo.state.impl.StateImpl"
+        scope="singleton">
+        <property name="displayName" value="On Hold" />
+        <property name="active" value="true" />
+        <property name="editableByReviewer" value="true" />
+    </bean>
 
 	<bean id="Approved" class="org.tdl.vireo.state.impl.StateImpl"
 		scope="singleton">
@@ -134,13 +154,6 @@
 	</bean>
 
 	<!-- Out of Workflow states -->
-
-	<bean id="OnHold" class="org.tdl.vireo.state.impl.StateImpl"
-		scope="singleton">
-		<property name="displayName" value="On Hold" />
-		<property name="archived" value="true" />
-		<property name="editableByReviewer" value="true" />
-	</bean>
 
 	<bean id="Withdrawn" class="org.tdl.vireo.state.impl.StateImpl"
 		scope="singleton">
