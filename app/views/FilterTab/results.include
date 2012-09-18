@@ -7,6 +7,7 @@ loops over results. This makes the file harder to maintain but much quicker
 in results.
 }*
 
+#{if results != null && results.getResults() != null }
 <table class="table table-striped table-bordered table-condensed">
     <thead id="results-table">
         <tr>
@@ -276,3 +277,24 @@ in results.
     
      </ul>
 </div>
+#{/if}
+#{elseif indexer.isJobRunning() }
+%{
+    float complete = 0;
+    if (indexer.getCurrentJobTotal() > 0)
+        complete = (((float) indexer.getCurrentJobProgress()) / indexer.getCurrentJobTotal()) * 100;
+                        
+    String completeString = String.format("%.3f%%",complete);
+}%
+
+<div class="alert alert-warning">
+<p><strong>Searching is currently unavailable</strong></p>
+<p>The index is currently being rebuilt and the rebuilding process searching is disabled. The rebuild is ${completeString} complete.</p>
+</div>
+#{/elseif}
+#{else}
+<div class="alert alert-error">
+<p><strong>Searching is currently unavailable</strong></p>
+<p>The search index is either corrupted, or is otherwise inaccessible. Please contact your system administrator to rebuild the search index or restore access.</p>
+</div>
+#{/else}
