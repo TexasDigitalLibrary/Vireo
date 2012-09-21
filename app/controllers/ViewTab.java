@@ -118,7 +118,6 @@ public class ViewTab extends AbstractVireoController {
 			gradMonth = new DateFormatSymbols().getMonths()[submission.getGraduationMonth()];
 		
 		List<ActionLog> actionLogs	= subRepo.findActionLog(submission);
-		actionLogs = null;
 		
 		List<State> states = stateManager.getAllStates();
 				
@@ -280,9 +279,15 @@ public class ViewTab extends AbstractVireoController {
 				currentValue = submission.getEmbargoType().getName();
 
 				//UMI Release
-			} else if("umiRelease".equals(field)){			
-				submission.setUMIRelease(Boolean.parseBoolean(value));
-				currentValue = submission.getUMIRelease();
+			} else if("umiRelease".equals(field)){
+				Boolean umi = null;
+				if("yes".equals(value)) {
+					umi = true;
+				} else {
+					umi = false;					
+				}
+				submission.setUMIRelease(umi);
+				currentValue = submission.getUMIRelease() ? "yes" : "no";				
 
 				//Document Type
 			} else if("docType".equals(field)){
