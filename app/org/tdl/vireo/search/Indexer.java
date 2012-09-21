@@ -3,7 +3,6 @@ package org.tdl.vireo.search;
 import java.util.List;
 
 import org.tdl.vireo.model.AbstractModel;
-import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Submission;
 
 /**

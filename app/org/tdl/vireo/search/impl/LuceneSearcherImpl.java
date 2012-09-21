@@ -1,31 +1,26 @@
 package org.tdl.vireo.search.impl;
 
-import java.io.IOError;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.lucene.document.DateTools;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.NumericRangeQuery;
-import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.util.NumericUtils;
 import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.ActionLog;
@@ -39,7 +34,6 @@ import org.tdl.vireo.search.SearchOrder;
 import org.tdl.vireo.search.SearchResult;
 import org.tdl.vireo.search.Searcher;
 import org.tdl.vireo.search.Semester;
-import org.tdl.vireo.search.SearchResult.Pagination;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
 

@@ -1,7 +1,5 @@
 package org.tdl.vireo.export;
 
-import java.io.IOException;
-
 import play.libs.F.Promise;
 
 /**

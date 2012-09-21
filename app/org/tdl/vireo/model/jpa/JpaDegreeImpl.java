@@ -5,12 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.Degree;
 import org.tdl.vireo.model.DegreeLevel;
-
-import play.data.validation.Required;
-import play.db.jpa.Model;
 
 /**
  * Jpa specific implementation of Vireo's Degree interface.

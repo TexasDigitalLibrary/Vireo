@@ -1,22 +1,14 @@
 package org.tdl.vireo.model.jpa;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.export.Depositor;
 import org.tdl.vireo.export.Packager;
-import org.tdl.vireo.model.AbstractModel;
-import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.DepositLocation;
 
 import play.Logger;
-import play.data.validation.Required;
-import play.db.jpa.Model;
 import play.modules.spring.Spring;
 
 /**

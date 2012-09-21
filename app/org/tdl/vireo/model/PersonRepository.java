@@ -1,7 +1,6 @@
 package org.tdl.vireo.model;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * The Vireo persistent repository for persons (aka users of various types).

@@ -1,8 +1,5 @@
 package controllers.settings;
 
-import static org.tdl.vireo.model.Configuration.SUBMISSIONS_OPEN;
-
-import java.text.DateFormatSymbols;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
@@ -20,7 +17,6 @@ import org.tdl.vireo.model.RoleType;
 
 import play.Logger;
 import play.mvc.With;
-
 import controllers.Authentication;
 import controllers.Security;
 import controllers.SettingsTab;

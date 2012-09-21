@@ -2,33 +2,15 @@ package org.tdl.vireo.search.impl;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import net.sf.oval.internal.util.LinkedSet;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.Field.Index;
-import org.apache.lucene.document.NumericField;
-import org.apache.lucene.index.CorruptIndexException;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.store.LockObtainFailedException;
-import org.apache.lucene.util.NumericUtils;
 import org.apache.lucene.util.Version;
 import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.ActionLog;
@@ -39,13 +21,8 @@ import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionRepository;
 import org.tdl.vireo.search.Indexer;
 
-import com.mysql.jdbc.log.Log;
-
 import play.Logger;
 import play.Play;
-import play.db.jpa.JPA;
-import play.jobs.Job;
-import play.modules.spring.Spring;
 
 /**
  * The Lucene Search Indexer.

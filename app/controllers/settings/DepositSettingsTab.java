@@ -1,6 +1,5 @@
 package controllers.settings;
 
-import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -11,30 +10,22 @@ import java.util.Map;
 import javax.persistence.PersistenceException;
 
 import org.tdl.vireo.export.DepositException;
+import org.tdl.vireo.export.DepositException.FIELD;
 import org.tdl.vireo.export.DepositService;
 import org.tdl.vireo.export.Depositor;
 import org.tdl.vireo.export.Packager;
-import org.tdl.vireo.export.DepositException.FIELD;
-import org.tdl.vireo.model.AbstractModel;
-import org.tdl.vireo.model.Configuration;
-import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.DepositLocation;
-import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.NameFormat;
-import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
-import org.tdl.vireo.model.SubmissionRepository;
 
 import play.Logger;
 import play.modules.spring.Spring;
 import play.mvc.With;
-
 import controllers.Authentication;
 import controllers.Security;
 import controllers.SettingsTab;
-import static org.tdl.vireo.model.Configuration.*;
 
 /**
  * Deposit settings tab

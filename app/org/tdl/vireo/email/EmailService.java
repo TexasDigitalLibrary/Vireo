@@ -1,6 +1,5 @@
 package org.tdl.vireo.email;
 
-import org.tdl.vireo.model.EmailTemplate;
 
 /**
  * Email service handling the sending of emails either in the background or in

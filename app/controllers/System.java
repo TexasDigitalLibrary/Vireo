@@ -1,9 +1,7 @@
 package controllers;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.tdl.vireo.email.EmailService;
 import org.tdl.vireo.email.SystemEmailTemplateService;
@@ -13,7 +11,6 @@ import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.search.Indexer;
 
-import play.Logger;
 import play.Play;
 import play.jobs.Job;
 import play.modules.spring.Spring;

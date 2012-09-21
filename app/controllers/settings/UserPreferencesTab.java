@@ -1,5 +1,7 @@
 package controllers.settings;
 
+import static org.tdl.vireo.model.Preference.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,11 +11,9 @@ import org.tdl.vireo.model.RoleType;
 
 import play.Logger;
 import play.mvc.With;
-
 import controllers.Authentication;
 import controllers.Security;
 import controllers.SettingsTab;
-import static org.tdl.vireo.model.Preference.*;
 
 /**
  * User preference tab.

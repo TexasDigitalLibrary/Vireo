@@ -1,7 +1,6 @@
 package org.tdl.vireo.model;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * The person object is used for both students, reviewers, and administrators

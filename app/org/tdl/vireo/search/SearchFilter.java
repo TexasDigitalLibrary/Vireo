@@ -6,7 +6,6 @@ import java.util.List;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Submission;
-import org.tdl.vireo.state.State;
 
 /**
  * A filter search is a set of parameters to search for a set of Vireo

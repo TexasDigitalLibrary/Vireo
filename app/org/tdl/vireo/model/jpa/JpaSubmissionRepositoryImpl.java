@@ -2,12 +2,8 @@ package org.tdl.vireo.model.jpa;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -19,33 +15,13 @@ import javax.persistence.criteria.Root;
 import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Attachment;
-import org.tdl.vireo.model.AttachmentType;
-import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.CommitteeMember;
-import org.tdl.vireo.model.Configuration;
-import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.CustomActionValue;
-import org.tdl.vireo.model.Degree;
-import org.tdl.vireo.model.DegreeLevel;
-import org.tdl.vireo.model.Department;
-import org.tdl.vireo.model.DocumentType;
-import org.tdl.vireo.model.EmailTemplate;
-import org.tdl.vireo.model.EmbargoType;
-import org.tdl.vireo.model.GraduationMonth;
-import org.tdl.vireo.model.Major;
-import org.tdl.vireo.model.Person;
-import org.tdl.vireo.model.Preference;
-import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.NamedSearchFilter;
+import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Submission;
-import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.SubmissionRepository;
-import org.tdl.vireo.search.SearchDirection;
-import org.tdl.vireo.search.SearchFilter;
 import org.tdl.vireo.search.Semester;
-import org.tdl.vireo.search.SearchOrder;
-import org.tdl.vireo.search.SearchResult;
-import org.tdl.vireo.state.StateManager;
 
 import play.db.jpa.JPA;
 

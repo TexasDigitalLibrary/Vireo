@@ -6,11 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import org.apache.ivy.plugins.parser.AbstractModuleDescriptorParser;
-import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.GraduationMonth;
-
-import play.db.jpa.Model;
 
 /**
  * Jpa specific implementation of Vireo's Graduation Month.

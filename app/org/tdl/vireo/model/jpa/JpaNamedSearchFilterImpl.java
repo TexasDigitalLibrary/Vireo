@@ -22,11 +22,9 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
-import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.EmbargoType;
-import org.tdl.vireo.model.GraduationMonth;
-import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.NamedSearchFilter;
+import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.search.Semester;
 

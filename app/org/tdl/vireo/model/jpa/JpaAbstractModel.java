@@ -7,7 +7,6 @@ import org.tdl.vireo.model.Person;
 import org.tdl.vireo.search.Indexer;
 import org.tdl.vireo.security.SecurityContext;
 
-import play.db.jpa.GenericModel;
 import play.db.jpa.Model;
 import play.modules.spring.Spring;
 

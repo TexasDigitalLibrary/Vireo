@@ -1,44 +1,31 @@
 package controllers;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import org.apache.commons.codec.binary.Base64;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.tdl.vireo.email.EmailService;
 import org.tdl.vireo.email.SystemEmailTemplateService;
 import org.tdl.vireo.email.VireoEmail;
-import org.tdl.vireo.email.impl.SystemEmailTemplateServiceImpl;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
-import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.RoleType;
-import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.security.AuthenticationMethod;
 import org.tdl.vireo.security.AuthenticationResult;
-import org.tdl.vireo.security.SecurityContext;
 
 import play.Logger;
 import play.Play;
-import play.libs.Codec;
-import play.libs.Crypto;
 import play.modules.spring.Spring;
 import play.mvc.Before;
-import play.mvc.Controller;
 import play.mvc.Finally;
 import play.mvc.Router;
 import play.mvc.Router.ActionDefinition;

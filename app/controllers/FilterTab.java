@@ -1,6 +1,5 @@
 package controllers;
 
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -15,11 +14,10 @@ import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.NameFormat;
+import org.tdl.vireo.model.NamedSearchFilter;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
-import org.tdl.vireo.model.NamedSearchFilter;
 import org.tdl.vireo.model.Submission;
-import org.tdl.vireo.model.SubmissionRepository;
 import org.tdl.vireo.search.ActiveSearchFilter;
 import org.tdl.vireo.search.SearchDirection;
 import org.tdl.vireo.search.SearchFacet;
@@ -28,9 +26,7 @@ import org.tdl.vireo.search.SearchOrder;
 import org.tdl.vireo.search.SearchResult;
 import org.tdl.vireo.state.State;
 
-
 import play.Logger;
-import play.data.binding.As;
 import play.libs.F.Promise;
 import play.modules.spring.Spring;
 import play.mvc.Catch;

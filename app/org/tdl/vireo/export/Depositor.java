@@ -1,11 +1,8 @@
 package org.tdl.vireo.export;
 
-import java.net.URL;
 import java.util.Map;
 
 import org.tdl.vireo.model.DepositLocation;
-import org.tdl.vireo.model.Submission;
-import org.tdl.vireo.search.SearchFilter;
 
 /**
  * Deposit service.

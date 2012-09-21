@@ -3,15 +3,11 @@ package org.tdl.vireo.model.jpa;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Preference;
-
-import play.db.jpa.Model;
 
 /**
  * Jpa specefic implementation of Vireo's Preference interface

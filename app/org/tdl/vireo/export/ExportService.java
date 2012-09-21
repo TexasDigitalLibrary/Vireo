@@ -1,6 +1,5 @@
 package org.tdl.vireo.export;
 
-import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.search.SearchFilter;
 
 /**

@@ -2,35 +2,23 @@ package org.tdl.vireo.search.impl;
 
 //import groovy.json.StringEscapeUtils;
 
-import java.net.URI;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import org.apache.commons.codec.net.URLCodec;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionRepository;
-import org.tdl.vireo.model.jpa.JpaPersonImpl;
 import org.tdl.vireo.search.ActiveSearchFilter;
-import org.tdl.vireo.search.Semester;
 import org.tdl.vireo.search.SearchFilter;
+import org.tdl.vireo.search.Semester;
 
 import play.Logger;
-import play.modules.spring.Spring;
 
 /**
  * An URI based implementation of active search.

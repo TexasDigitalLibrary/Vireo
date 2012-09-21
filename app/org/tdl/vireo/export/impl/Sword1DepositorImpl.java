@@ -1,10 +1,8 @@
 package org.tdl.vireo.export.impl;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,7 +13,6 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.apache.commons.io.FileUtils;
 import org.purl.sword.base.Collection;
 import org.purl.sword.base.DepositResponse;
 import org.purl.sword.base.Service;
@@ -25,15 +22,13 @@ import org.purl.sword.client.Client;
 import org.purl.sword.client.PostMessage;
 import org.purl.sword.client.SWORDClientException;
 import org.springframework.beans.factory.BeanNameAware;
-import org.tdl.vireo.model.Attachment;
+import org.tdl.vireo.export.DepositException;
+import org.tdl.vireo.export.DepositException.FIELD;
+import org.tdl.vireo.export.Depositor;
+import org.tdl.vireo.export.ExportPackage;
 import org.tdl.vireo.model.DepositLocation;
 
 import play.Logger;
-
-import org.tdl.vireo.export.DepositException;
-import org.tdl.vireo.export.Depositor;
-import org.tdl.vireo.export.ExportPackage;
-import org.tdl.vireo.export.DepositException.FIELD;
 
 /**
  * Sword, version 1, depositor. This supports identifying collections from the

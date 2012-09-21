@@ -1,6 +1,5 @@
 package org.tdl.vireo.model;
 
-import java.util.Set;
 
 /**
  * This class represents degrees which may be awarded by Vireo.

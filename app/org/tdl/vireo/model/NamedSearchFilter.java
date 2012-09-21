@@ -1,10 +1,6 @@
 package org.tdl.vireo.model;
 
-import java.util.Date;
-import java.util.List;
-
 import org.tdl.vireo.search.SearchFilter;
-import org.tdl.vireo.state.State;
 
 /**
  * A named filter search is a set of parameters to search for a set of Vireo

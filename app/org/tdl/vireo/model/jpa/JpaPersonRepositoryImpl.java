@@ -1,36 +1,13 @@
 package org.tdl.vireo.model.jpa;
 
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.ParameterExpression;
-import javax.persistence.criteria.Root;
 
-import org.tdl.vireo.model.ActionLog;
-import org.tdl.vireo.model.Attachment;
-import org.tdl.vireo.model.College;
-import org.tdl.vireo.model.CommitteeMember;
-import org.tdl.vireo.model.Configuration;
-import org.tdl.vireo.model.CustomActionDefinition;
-import org.tdl.vireo.model.CustomActionValue;
-import org.tdl.vireo.model.Degree;
-import org.tdl.vireo.model.DegreeLevel;
-import org.tdl.vireo.model.Department;
-import org.tdl.vireo.model.DocumentType;
-import org.tdl.vireo.model.EmailTemplate;
-import org.tdl.vireo.model.EmbargoType;
-import org.tdl.vireo.model.GraduationMonth;
-import org.tdl.vireo.model.Major;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.Preference;
 import org.tdl.vireo.model.RoleType;
-import org.tdl.vireo.model.Submission;
-import org.tdl.vireo.model.SettingsRepository;
 
 import play.db.jpa.JPA;
 
