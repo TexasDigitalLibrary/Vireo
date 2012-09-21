@@ -114,6 +114,8 @@ import play.modules.spring.Spring;
  * 
  * studentEmail: The student's email for sorting.
  * 
+ * institutionalIdentifier: The student's institutional identifier
+ * 
  * documentTitle: The document's title for sorting.
  * 
  * documentAbstract: The document's abstract for sorting.

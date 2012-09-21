@@ -635,13 +635,20 @@ public class TestDataLoader extends Job {
 				studentEmail = studentEmail.replaceFirst("@", (i+1)+"@");
 				
 				student = personRepo.createPerson("student"+i, studentEmail, studentName[0], studentName[1], RoleType.STUDENT).save();
-				student.setMiddleName(studentName[2]);
-				student.setPassword("password");
-				student.setCurrentPhoneNumber("555-555-5555");
-				student.setCurrentPostalAddress("2335 Barron Basen Dr\nSome Town, Texas 77845");
-				student.setPermanentPhoneNumber("555-999-9999");
-				student.setPermanentPostalAddress("2335 Dry Gulch Dr\nAnother Town, IL 78834");
-				student.setPermanentEmailAddress("permanent@gmail.com");
+				if (i > 0) {
+					student.setMiddleName(studentName[2]);
+					student.setPassword("password");
+					student.setCurrentPhoneNumber("555-555-5555");
+					student.setCurrentPostalAddress("2335 Barron Basen Dr\nSome Town, Texas 77845");
+					student.setPermanentPhoneNumber("555-999-9999");
+					student.setPermanentPostalAddress("2335 Dry Gulch Dr\nAnother Town, IL 78834");
+					student.setPermanentEmailAddress("permanent@gmail.com");
+					student.setInstitutionalIdentifier(
+							"" + random.nextInt(9) + random.nextInt(9) + random.nextInt(9) +
+							random.nextInt(9) + random.nextInt(9) + random.nextInt(9) +
+							random.nextInt(9) + random.nextInt(9) +random.nextInt(9)
+							);
+				}
 				student.save();
 			}
 			

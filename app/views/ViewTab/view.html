@@ -238,6 +238,13 @@ jQuery(document).ready(function(){
 							class="empty"><i class="icon-pencil"></i> none
 						#{/else}
 					</span></li>
+					<li><label>Institutional ID:</label><span id="institutionalIdentifier"
+                        #{if submission.getSubmitter().getInstitutionalIdentifier()}
+                            ><i class="icon-none"></i>${submission.getSubmitter().getInstitutionalIdentifier()}
+                        #{/if}#{else}
+                            class="empty"><i class="icon-none"></i> none
+                        #{/else}
+                    </span></li>
 				</ul>
 			</div>
 			<div class="edit-box pull-left">

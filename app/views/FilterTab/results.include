@@ -71,13 +71,18 @@ in results.
                      }
                      break;
                 case STUDENT_EMAIL:
-                     if (sub.getSubmitter() != null) {
+                     if (sub.getSubmitter() != null && sub.getSubmitter().getEmail() != null) {
                         out.print(sub.getSubmitter().getEmail());
                      }
                      break;
                  case STUDENT_NAME:
                      out.print(sub.getStudentFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH));
                      break;
+                 case STUDENT_ID:
+                     if (sub.getSubmitter() != null && sub.getSubmitter().getInstitutionalIdentifier() != null) {
+                        out.print(sub.getSubmitter().getInstitutionalIdentifier());
+                     }
+                     break;   
                  case STATE:
                      if ("log".equals(nav)) {
                          // For action logs, show the state at the time the log was made.
