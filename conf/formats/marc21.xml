@@ -74,7 +74,7 @@ if (sub.getDepositId() != null){
 
 //Data Field 040
 tag = "040";
-field = "\u001FaTXA \u001FcTXA\u001E";
+field = "  \u001FaTXA\u001FcTXA\u001E";
 length = field.getBytes().length;	
 lString = org.apache.commons.lang.StringUtils.leftPad(length.toString(), 4, '0');
 pString = org.apache.commons.lang.StringUtils.leftPad(position.toString(), 5, '0');
@@ -84,7 +84,7 @@ fields += field;
 
 //Data Field 099
 tag = "099";
-field = "\u001Fa${ pubYear }";
+field = "  \u001Fa${ pubYear }";
 field += "\u001Fa${ sub.getDocumentType() }";
 if (sub.getDepositId() != null){
 	def fullUrl = "${ sub.getDepositId() }";
@@ -135,9 +135,9 @@ if(sub.getDocumentTitle() != null){
     field = "1${ind2}\u001Fa" + mainTitle;
     field += "\u001Fh[electronic resource]";
     if(!subTitle.isEmpty() && subTitle != null){
-    	field += ":\u001Fb" + subTitle;
+    	field += " :\u001Fb" + subTitle;
     }
-    field += "/\u001Fcby ${ sub.getStudentFormattedName(org.tdl.vireo.model.NameFormat.FIRST_LAST) }.";    
+    field += " /\u001Fcby ${ sub.getStudentFormattedName(org.tdl.vireo.model.NameFormat.FIRST_LAST) }.";    
     field += "\u001E";
     length = field.getBytes().length;	
 	lString = org.apache.commons.lang.StringUtils.leftPad(length.toString(), 4, '0');
