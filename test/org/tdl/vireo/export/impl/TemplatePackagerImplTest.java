@@ -169,10 +169,11 @@ public class TemplatePackagerImplTest extends UnitTest {
 				assertTrue(manifest.contains(sub.getDocumentAbstract()));
 			} else {
 				
-				// The export is a single file, try and load it as xml.
-				
-				SAXBuilder builder = new SAXBuilder();
-				Document doc = builder.build(exportFile);
+				if(!".txt".equals(exportFile.getName().substring(exportFile.getName().lastIndexOf('.')))){
+					// The export is a single file, try and load it as xml.					
+					SAXBuilder builder = new SAXBuilder();
+					Document doc = builder.build(exportFile);
+				}	
 				
 				// Check that the export contains important data
 				String manifest = readFile(exportFile);
@@ -180,6 +181,7 @@ public class TemplatePackagerImplTest extends UnitTest {
 				assertTrue(manifest.contains(sub.getStudentLastName()));
 				assertTrue(manifest.contains(sub.getDocumentTitle()));
 				assertTrue(manifest.contains(sub.getDocumentAbstract()));
+				
 			}
 			
 			// Cleanup

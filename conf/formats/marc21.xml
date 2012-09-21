@@ -18,6 +18,13 @@ def fields = "";
 def field = "";
 def tag = "";
 
+def grantor = "";
+if(settingRepo.getConfigValue(org.tdl.vireo.model.Configuration.GRANTOR) != null){
+	grantor = settingRepo.getConfigValue(org.tdl.vireo.model.Configuration.GRANTOR);
+} else {
+	grantor = "Texas A&M University";
+}
+
 // Control Field 006
 tag = "006";
 field = "m    f   d        \u001E";
@@ -141,21 +148,19 @@ if(sub.getDocumentTitle() != null){
 }
 
 // Data Field 260
-if(settingRepo.getConfig(org.tdl.vireo.model.Configuration.GRANTOR) != null){
-	tag = "260";
-	field = "  \u001Fa[College Station, Tex. :\u001Fb${ settingRepo.getConfig(org.tdl.vireo.model.Configuration.GRANTOR) },\u001Fc";
-	if(sub.getGraduationYear() != null){
-		field += "${ sub.getGraduationYear() }]\u001E";
-	} else {
-		field += "${ new java.util.Date().format('yyyy') }]\u001E";
-	}
-	length = field.getBytes().length;	
-	lString = org.apache.commons.lang.StringUtils.leftPad(length.toString(), 4, '0');
-	pString = org.apache.commons.lang.StringUtils.leftPad(position.toString(), 5, '0');
-	directory += tag+lString+pString;
-	position += length;
-	fields += field;
+tag = "260";
+field = "  \u001Fa[College Station, Tex. :\u001Fb${ grantor },\u001Fc";
+if(sub.getGraduationYear() != null){
+	field += "${ sub.getGraduationYear() }]\u001E";
+} else {
+	field += "${ new java.util.Date().format('yyyy') }]\u001E";
 }
+length = field.getBytes().length;	
+lString = org.apache.commons.lang.StringUtils.leftPad(length.toString(), 4, '0');
+pString = org.apache.commons.lang.StringUtils.leftPad(position.toString(), 5, '0');
+directory += tag+lString+pString;
+position += length;
+fields += field;
 
 // Data Field 300
 tag = "300";
@@ -182,8 +187,8 @@ tag = "502";
 field = "  ";
 if(sub.getDegreeLevel() != null)
 	field += "\u001Fa${ sub.getDegree() }";
-if(settingRepo.getConfig(org.tdl.vireo.model.Configuration.GRANTOR) != null)
-	field += "\u001Fc${ settingRepo.getConfig(org.tdl.vireo.model.Configuration.GRANTOR) }";
+
+	field += "\u001Fc${ grantor }";
 if(sub.getGraduationYear() != null)
 	field += "\u001Fd${ sub.getGraduationYear() }";
 if(sub.getDepositId() != null)
