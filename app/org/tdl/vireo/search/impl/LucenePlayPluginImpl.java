@@ -2,7 +2,6 @@ package org.tdl.vireo.search.impl;
 
 import org.tdl.vireo.search.Indexer;
 
-import play.Logger;
 import play.Play;
 import play.PlayPlugin;
 import play.modules.spring.Spring;

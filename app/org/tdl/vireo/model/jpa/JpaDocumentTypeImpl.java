@@ -5,12 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.DocumentType;
-
-import play.data.validation.Required;
-import play.db.jpa.Model;
 
 /**
  * Jpa specefic implementation of Vireo's Document Type interface

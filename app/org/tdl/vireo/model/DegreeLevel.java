@@ -1,6 +1,5 @@
 package org.tdl.vireo.model;
 
-import org.tdl.vireo.search.SearchOrder;
 
 /**
  * The possible degree levels supported by vireo.

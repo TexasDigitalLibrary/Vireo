@@ -3,11 +3,8 @@ package org.tdl.vireo.model.jpa;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
@@ -16,17 +13,11 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
-import org.tdl.vireo.model.AbstractModel;
-import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.NameFormat;
-import org.tdl.vireo.model.NameFormat.NameFormatter;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Preference;
 import org.tdl.vireo.model.RoleType;
-
-import play.db.jpa.Model;
 
 /**
  * Jpa specific implementation of Vireo's Person interface.

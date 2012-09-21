@@ -4,10 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.Major;
-
-import play.db.jpa.Model;
 
 /**
  * Jpa specific implementation of Vireo's Major interface.

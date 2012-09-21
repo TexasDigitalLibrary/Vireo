@@ -1,39 +1,5 @@
 package controllers;
 
-import play.Logger;
-import play.db.jpa.JPA;
-import play.mvc.Controller;
-import play.mvc.Router;
-
-import org.springframework.validation.Errors;
-import org.tdl.vireo.email.EmailService;
-import org.tdl.vireo.email.VireoEmail;
-import org.tdl.vireo.export.DepositService;
-import org.tdl.vireo.model.ActionLog;
-import org.tdl.vireo.model.Attachment;
-import org.tdl.vireo.model.AttachmentType;
-import org.tdl.vireo.model.College;
-import org.tdl.vireo.model.CommitteeMember;
-import org.tdl.vireo.model.Configuration;
-import org.tdl.vireo.model.CustomActionDefinition;
-import org.tdl.vireo.model.CustomActionValue;
-import org.tdl.vireo.model.DegreeLevel;
-import org.tdl.vireo.model.Department;
-import org.tdl.vireo.model.DepositLocation;
-import org.tdl.vireo.model.DocumentType;
-import org.tdl.vireo.model.EmailTemplate;
-import org.tdl.vireo.model.EmbargoType;
-import org.tdl.vireo.model.Person;
-import org.tdl.vireo.model.RoleType;
-import org.tdl.vireo.model.Submission;
-import org.tdl.vireo.state.State;
-
-import com.google.gson.Gson;
-
-import play.modules.spring.Spring;
-import play.mvc.With;
-import play.mvc.Router.ActionDefinition;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -49,6 +15,30 @@ import java.util.Map;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+
+import org.tdl.vireo.email.EmailService;
+import org.tdl.vireo.email.VireoEmail;
+import org.tdl.vireo.export.DepositService;
+import org.tdl.vireo.model.ActionLog;
+import org.tdl.vireo.model.Attachment;
+import org.tdl.vireo.model.AttachmentType;
+import org.tdl.vireo.model.CommitteeMember;
+import org.tdl.vireo.model.CustomActionDefinition;
+import org.tdl.vireo.model.CustomActionValue;
+import org.tdl.vireo.model.DegreeLevel;
+import org.tdl.vireo.model.DepositLocation;
+import org.tdl.vireo.model.EmailTemplate;
+import org.tdl.vireo.model.Person;
+import org.tdl.vireo.model.RoleType;
+import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.state.State;
+
+import play.Logger;
+import play.db.jpa.JPA;
+import play.modules.spring.Spring;
+import play.mvc.Router;
+import play.mvc.Router.ActionDefinition;
+import play.mvc.With;
 
 /**
  * The controller for the view tab.

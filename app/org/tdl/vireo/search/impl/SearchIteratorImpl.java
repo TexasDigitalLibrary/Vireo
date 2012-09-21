@@ -1,10 +1,7 @@
 package org.tdl.vireo.search.impl;
 
-import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 
 import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.ActionLog;

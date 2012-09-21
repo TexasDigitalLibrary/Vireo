@@ -7,12 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.TypedQuery;
 
-import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.search.Indexer;
 
-import play.data.validation.Required;
-import play.db.jpa.Model;
 import play.modules.spring.Spring;
 
 /**

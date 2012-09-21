@@ -2,13 +2,8 @@ package org.tdl.vireo.model;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.tdl.vireo.search.Semester;
-import org.tdl.vireo.search.SearchDirection;
-import org.tdl.vireo.search.SearchFilter;
-import org.tdl.vireo.search.SearchOrder;
-import org.tdl.vireo.search.SearchResult;
 
 /**
  * The Vireo persistent repository for submissions. This object follows the

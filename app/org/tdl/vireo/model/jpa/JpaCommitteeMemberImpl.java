@@ -3,17 +3,13 @@ package org.tdl.vireo.model.jpa;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.CommitteeMember;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.state.StateManager;
 
-import play.data.validation.Required;
-import play.db.jpa.Model;
 import play.modules.spring.Spring;
 
 /**

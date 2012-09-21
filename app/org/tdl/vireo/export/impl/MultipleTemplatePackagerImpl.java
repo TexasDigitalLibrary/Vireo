@@ -1,21 +1,14 @@
 package org.tdl.vireo.export.impl;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.tdl.vireo.export.ExportPackage;
-import org.tdl.vireo.export.Packager;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.PersonRepository;
@@ -24,7 +17,6 @@ import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionRepository;
 
 import play.Play;
-import play.exceptions.TemplateNotFoundException;
 import play.templates.Template;
 import play.templates.TemplateLoader;
 import play.vfs.VirtualFile;

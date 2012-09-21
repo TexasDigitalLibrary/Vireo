@@ -3,7 +3,6 @@ package org.tdl.vireo.email;
 import java.util.List;
 import java.util.Map;
 
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import org.tdl.vireo.model.EmailTemplate;

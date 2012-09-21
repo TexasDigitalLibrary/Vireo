@@ -2,31 +2,19 @@ package org.tdl.vireo.export.impl;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
-import org.purl.sword.base.Collection;
-import org.purl.sword.base.DepositResponse;
-import org.purl.sword.base.Service;
-import org.purl.sword.base.ServiceDocument;
-import org.purl.sword.base.Workspace;
-import org.purl.sword.client.Client;
-import org.purl.sword.client.PostMessage;
-import org.purl.sword.client.SWORDClientException;
 import org.springframework.beans.factory.BeanNameAware;
+import org.tdl.vireo.export.DepositException;
+import org.tdl.vireo.export.DepositException.FIELD;
+import org.tdl.vireo.export.Depositor;
+import org.tdl.vireo.export.ExportPackage;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.Submission;
 
 import play.Logger;
-
-import org.tdl.vireo.export.DepositException;
-import org.tdl.vireo.export.Depositor;
-import org.tdl.vireo.export.ExportPackage;
-import org.tdl.vireo.export.DepositException.FIELD;
 
 /**
  * A simple file depositor. This implementation will just copy the deposit

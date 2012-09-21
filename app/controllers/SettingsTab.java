@@ -7,7 +7,6 @@ import java.util.List;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
-import org.mozilla.javascript.Context;
 import org.tdl.vireo.model.AbstractOrderedModel;
 import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.CustomActionDefinition;
@@ -24,12 +23,9 @@ import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Preference;
 import org.tdl.vireo.model.RoleType;
 
-import controllers.settings.ApplicationSettingsTab;
-import controllers.settings.UserPreferencesTab;
-
 import play.Logger;
-import play.mvc.Controller;
 import play.mvc.With;
+import controllers.settings.UserPreferencesTab;
 
 /**
  * Parent class for all setting tab controllers.

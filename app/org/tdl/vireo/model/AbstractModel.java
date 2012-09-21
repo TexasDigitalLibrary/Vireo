@@ -1,6 +1,5 @@
 package org.tdl.vireo.model;
 
-import play.db.jpa.JPABase;
 
 /**
  * This is the abstract parent interface for all Vireo model objects. It defines

@@ -2,7 +2,6 @@ package org.tdl.vireo.export.impl;
 
 import org.springframework.beans.factory.BeanNameAware;
 import org.tdl.vireo.export.Packager;
-import org.tdl.vireo.model.Submission;
 
 /**
  * Abstract packager implementation.

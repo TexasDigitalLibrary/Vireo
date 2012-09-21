@@ -1,19 +1,12 @@
 package controllers.submit;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-
 import org.tdl.vireo.model.Attachment;
-import org.tdl.vireo.model.AttachmentType;
-import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
 
-import play.Logger;
-import play.libs.MimeTypes;
 import controllers.Security;
 import controllers.Student;
 

@@ -1,18 +1,13 @@
 package org.tdl.vireo.email.impl;
 
-import java.io.UnsupportedEncodingException;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
-import java.util.Formatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
-import org.apache.commons.mail.SimpleEmail;
-import org.hibernate.ejb.CurrentEntityManagerImpl;
 import org.tdl.vireo.email.VireoEmail;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.NameFormat;

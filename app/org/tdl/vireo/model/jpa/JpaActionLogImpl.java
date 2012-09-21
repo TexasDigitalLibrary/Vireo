@@ -2,17 +2,13 @@ package org.tdl.vireo.model.jpa;
 
 import java.util.Date;
 
-import javax.naming.OperationNotSupportedException;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.Person;
@@ -20,10 +16,6 @@ import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
 
-import com.sun.xml.internal.txw2.IllegalAnnotationException;
-
-import play.data.validation.Required;
-import play.db.jpa.Model;
 import play.modules.spring.Spring;
 
 /**

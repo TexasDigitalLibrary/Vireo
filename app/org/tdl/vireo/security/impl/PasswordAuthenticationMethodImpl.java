@@ -1,10 +1,8 @@
 package org.tdl.vireo.security.impl;
 
 import org.tdl.vireo.model.Person;
-import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.security.AuthenticationMethod;
 import org.tdl.vireo.security.AuthenticationResult;
-import org.tdl.vireo.security.AuthenticationMethod.Explicit;
 
 import play.mvc.Http.Request;
 

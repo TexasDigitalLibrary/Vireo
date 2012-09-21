@@ -1,13 +1,6 @@
 package controllers.settings;
 
 import static org.tdl.vireo.model.Configuration.*;
-import static org.tdl.vireo.model.Preference.ATTACHMENT_CC_ADVISOR;
-import static org.tdl.vireo.model.Preference.ATTACHMENT_EMAIL_STUDENT;
-import static org.tdl.vireo.model.Preference.ATTACHMENT_FLAG_NEEDS_CORRECTIONS;
-import static org.tdl.vireo.model.Preference.NOTES_CC_ADVISOR;
-import static org.tdl.vireo.model.Preference.NOTES_EMAIL_STUDENT;
-import static org.tdl.vireo.model.Preference.NOTES_FLAG_NEEDS_CORRECTIONS;
-import static org.tdl.vireo.model.Preference.NOTES_MARK_PRIVATE;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,13 +10,10 @@ import javax.persistence.PersistenceException;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.NameFormat;
-import org.tdl.vireo.model.Person;
-import org.tdl.vireo.model.Preference;
 import org.tdl.vireo.model.RoleType;
 
 import play.Logger;
 import play.mvc.With;
-
 import controllers.Authentication;
 import controllers.Security;
 import controllers.SettingsTab;
