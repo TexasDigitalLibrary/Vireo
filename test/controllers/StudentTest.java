@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import org.junit.After;
 import org.junit.Before;
@@ -34,7 +33,6 @@ import play.db.jpa.JPA;
 import play.modules.spring.Spring;
 import play.mvc.Http.Response;
 import play.mvc.Router;
-import play.test.FunctionalTest;
 
 /**
  * Test all the functions of the Student Controller.

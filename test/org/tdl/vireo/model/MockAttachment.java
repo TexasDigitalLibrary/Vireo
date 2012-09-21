@@ -3,10 +3,6 @@ package org.tdl.vireo.model;
 import java.io.File;
 import java.util.Date;
 
-import org.tdl.vireo.model.jpa.JpaSubmissionImpl;
-
-import play.db.jpa.Blob;
-
 /**
  * This is a simple mock attachment class that may be useful for testing. Feel
  * free to extend this to add in extra parameters that you feel appropriate.

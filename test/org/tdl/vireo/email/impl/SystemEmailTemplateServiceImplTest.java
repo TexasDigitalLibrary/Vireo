@@ -5,7 +5,6 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.tdl.vireo.email.impl.SystemEmailTemplateServiceImpl;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.security.SecurityContext;

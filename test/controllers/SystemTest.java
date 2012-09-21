@@ -2,24 +2,14 @@ package controllers;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.junit.Test;
-import org.tdl.vireo.model.Person;
-import org.tdl.vireo.model.PersonRepository;
-import org.tdl.vireo.model.RoleType;
-import org.tdl.vireo.model.jpa.JpaEmailTemplateImpl;
 import org.tdl.vireo.search.Indexer;
-import org.tdl.vireo.security.SecurityContext;
 
-import play.Play;
-import play.db.jpa.JPA;
 import play.libs.Mail;
 import play.modules.spring.Spring;
 import play.mvc.Http.Response;
 import play.mvc.Router;
-import play.test.FunctionalTest;
 
 /**
  * Test the system control panel.

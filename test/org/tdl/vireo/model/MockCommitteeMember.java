@@ -1,9 +1,5 @@
 package org.tdl.vireo.model;
 
-import javax.persistence.Column;
-import javax.persistence.ManyToOne;
-
-import org.tdl.vireo.model.jpa.JpaSubmissionImpl;
 
 /**
  * This is a simple mock committee member class that may be useful for testing.

@@ -1,11 +1,8 @@
 package org.tdl.vireo.export;
 
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.tdl.vireo.export.Depositor;
-import org.tdl.vireo.export.ExportPackage;
 import org.tdl.vireo.model.DepositLocation;
 
 /**

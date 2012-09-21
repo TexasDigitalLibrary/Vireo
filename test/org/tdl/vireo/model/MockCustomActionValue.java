@@ -1,9 +1,5 @@
 package org.tdl.vireo.model;
 
-import javax.persistence.ManyToOne;
-
-import org.tdl.vireo.model.jpa.JpaCustomActionDefinitionImpl;
-import org.tdl.vireo.model.jpa.JpaSubmissionImpl;
 
 /**
  * This is a simple mock custom action value class that may be useful for

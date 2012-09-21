@@ -1,33 +1,18 @@
 package org.tdl.vireo.export.impl;
 
-import org.apache.commons.io.FileUtils;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
-
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
+import org.jdom.JDOMException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.tdl.vireo.export.ExportPackage;
-import org.tdl.vireo.export.Packager;
-import org.tdl.vireo.export.impl.TemplatePackagerImpl;
 import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.Person;
@@ -36,9 +21,7 @@ import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.jpa.JpaPersonRepositoryImpl;
 import org.tdl.vireo.model.jpa.JpaSettingsRepositoryImpl;
 import org.tdl.vireo.model.jpa.JpaSubmissionRepositoryImpl;
-import org.tdl.vireo.search.Semester;
 import org.tdl.vireo.security.SecurityContext;
-import org.tdl.vireo.state.State;
 
 import play.modules.spring.Spring;
 import play.test.UnitTest;

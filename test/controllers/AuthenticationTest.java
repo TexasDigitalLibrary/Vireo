@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.RoleType;
-import org.tdl.vireo.model.jpa.JpaEmailTemplateImpl;
 import org.tdl.vireo.security.SecurityContext;
 
 import play.Play;
@@ -18,7 +17,6 @@ import play.libs.Mail;
 import play.modules.spring.Spring;
 import play.mvc.Http.Response;
 import play.mvc.Router;
-import play.test.FunctionalTest;
 
 /**
  * Test all the actions in the Authentication controller such as loging in,

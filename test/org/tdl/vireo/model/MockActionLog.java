@@ -2,14 +2,6 @@ package org.tdl.vireo.model;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import org.tdl.vireo.model.jpa.JpaAttachmentImpl;
-import org.tdl.vireo.model.jpa.JpaPersonImpl;
-import org.tdl.vireo.model.jpa.JpaSubmissionImpl;
 import org.tdl.vireo.state.State;
 
 /**

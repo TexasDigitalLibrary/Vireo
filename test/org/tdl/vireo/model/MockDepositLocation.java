@@ -1,7 +1,5 @@
 package org.tdl.vireo.model;
 
-import java.net.URL;
-
 import org.tdl.vireo.export.Depositor;
 import org.tdl.vireo.export.Packager;
 

@@ -16,21 +16,16 @@ import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionRepository;
-import org.tdl.vireo.model.jpa.JpaEmailTemplateImpl;
 import org.tdl.vireo.search.Indexer;
-import org.tdl.vireo.search.SearchDirection;
 import org.tdl.vireo.search.SearchFacet;
 import org.tdl.vireo.search.SearchOrder;
 import org.tdl.vireo.security.SecurityContext;
 
-import play.Play;
 import play.db.jpa.JPA;
 import play.i18n.Messages;
-import play.libs.Mail;
 import play.modules.spring.Spring;
 import play.mvc.Http.Response;
 import play.mvc.Router;
-import play.test.FunctionalTest;
 
 /**
  * Test the FilterTab controller

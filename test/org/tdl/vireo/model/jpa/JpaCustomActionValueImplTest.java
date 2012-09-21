@@ -2,13 +2,11 @@ package org.tdl.vireo.model.jpa;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.tdl.vireo.model.ActionLog;
-import org.tdl.vireo.model.CommitteeMember;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.MockPerson;

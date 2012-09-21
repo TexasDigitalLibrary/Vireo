@@ -1,12 +1,10 @@
 package controllers;
 
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
-import play.Play;
-import play.mvc.Router;
 import play.mvc.Http.Response;
+import play.mvc.Router;
 import play.test.FunctionalTest;
 
 /**

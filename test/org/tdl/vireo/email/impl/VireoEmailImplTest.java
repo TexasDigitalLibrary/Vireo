@@ -10,7 +10,6 @@ import org.tdl.vireo.email.VireoEmail;
 import org.tdl.vireo.model.MockPerson;
 import org.tdl.vireo.model.MockPreference;
 import org.tdl.vireo.model.MockSubmission;
-import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Preference;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.MockState;
