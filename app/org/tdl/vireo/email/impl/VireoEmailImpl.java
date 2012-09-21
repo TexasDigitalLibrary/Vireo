@@ -60,10 +60,15 @@ public class VireoEmailImpl implements VireoEmail {
 	 *            The submisison repository.
 	 */
 	protected VireoEmailImpl(SecurityContext context, PersonRepository personRepo, SubmissionRepository subRepo) {
+	
+		// Check our play requirements
+		if (Play.configuration.getProperty("mail.from") == null ||
+			Play.configuration.getProperty("mail.replyto") == null)
+			throw new IllegalArgumentException("The configuration parameters \"mail.from\" and \"mail.replyto\" are required for sending email and must be defined in the application.conf");
 		
 		this.personRepo = personRepo;
 		this.subRepo = subRepo;
-		
+	
 		// Set the default from address
 		this.setFrom(Play.configuration.getProperty("mail.from"));
 		this.setReplyTo(Play.configuration.getProperty("mail.replyto"));
