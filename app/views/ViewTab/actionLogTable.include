@@ -1,6 +1,6 @@
 <tbody>
 	#{list items:0..9, as:'value'}
-		#{if actionLogs[value]}
+		#{if actionLogs != null && actionLogs[value]}
 		<tr #{if actionLogs[value].isPrivate()}class="private"#{/if}>
 			<td>${actionLogs[value].getPerson()?.getFirstName()} ${actionLogs[value].getPerson()?.getLastName()}</td>
 			<td>${actionLogs[value].getEntry()} #{if actionLogs[value].isPrivate()}<b> - [private]</b>#{/if}</td>
@@ -9,7 +9,11 @@
 		#{/if}
 	#{/list}				
 	<tr>
-		<td class="comments"><a href="@{FilterTab.resetLogFilterToOneSubmission(submission.getId())}"><b>[more...]</b></a></td>
+		<td class="comments">
+			#{if actionLogs != null}
+				<a href="@{FilterTab.resetLogFilterToOneSubmission(submission.getId())}"><b>[more...]</b></a>
+			#{/if}
+		</td>
 		<td class="comments tr" colspan="2">
 			<a href="#add-comment-modal" data-toggle="modal" class="btn btn-mini">
 				Add Comment

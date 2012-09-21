@@ -11,8 +11,10 @@ function swapToInputHandler(){
 			jQuery(this).find(".tooltip-icon").remove();
 			jQuery("#backup").remove()
 
-			var editItem = jQuery(this);       
-			var value = escapeQuotes(editItem.text());
+			var editItem = jQuery(this);
+			
+			var value = jQuery.trim(escapeQuotes(editItem.text()));
+						
 			var checkValue = value.replace(/\t/g,"");
 			checkValue = checkValue.replace(/\n/g,"");
 			checkValue = checkValue.replace(/\r/g,"");
@@ -67,9 +69,9 @@ function editCommitteeMemberHandler(){
 			jQuery("body").append('<div id="backup">'+jQuery(this).html()+'</div>');
 
 			var memberId = jQuery(this).parent("li").attr("class");		
-			var firstName = escapeQuotes(jQuery(this).find(".firstName").text());
-			var lastName = escapeQuotes(jQuery(this).find(".lastName").text());
-			var middleName = escapeQuotes(jQuery(this).find(".middleName").text());
+			var firstName = jQuery.trim(escapeQuotes(jQuery(this).find(".firstName").text()));
+			var lastName = jQuery.trim(escapeQuotes(jQuery(this).find(".lastName").text()));
+			var middleName = jQuery.trim(escapeQuotes(jQuery(this).find(".middleName").text()));
 
 			var chair = (jQuery(this).find(".chair").text()=="chair");
 			var checked = "";

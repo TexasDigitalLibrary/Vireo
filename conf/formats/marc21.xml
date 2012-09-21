@@ -1,0 +1,293 @@
+*{
+	This is the basic MARC 21 format.
+	
+	http://www.loc.gov/marc/umb/um11to12.html
+}*%{
+
+def marc21 = "";
+def position = 0;
+def length = 0;
+
+def pString = "";
+def lString = "";
+
+def leader = "RLXXXnam a22BADXXKa 4500";
+def directory = "";
+def fields = "";
+
+def field = "";
+def tag = "";
+
+// Control Field 006
+tag = "006";
+field = "m    f   d        \u001E";
+length = field.getBytes().length;
+lString = org.apache.commons.lang.StringUtils.leftPad(length.toString(), 4, '0');
+pString = org.apache.commons.lang.StringUtils.leftPad(position.toString(), 5, '0');
+directory += tag+lString+pString;
+position += length;
+fields += field;
+
+// Control Field 007
+tag = "007";
+field = "cr unu||||||||\u001E";
+length = field.getBytes().length;
+lString = org.apache.commons.lang.StringUtils.leftPad(length.toString(), 4, '0');
+pString = org.apache.commons.lang.StringUtils.leftPad(position.toString(), 5, '0');
+directory += tag+lString+pString;
+position += length;
+fields += field;
+
+// Control Field 008
+// Graduation year is publication year
+def pubYear = "    ";
+if (sub.getGraduationYear() != null)
+	pubYear = sub.getGraduationYear();
+
+tag = "008";
+field = "      s${ pubYear }    txu|||||obm   000 0|eng d\u001E";
+length = field.getBytes().length;
+lString = org.apache.commons.lang.StringUtils.leftPad(length.toString(), 4, '0');
+pString = org.apache.commons.lang.StringUtils.leftPad(position.toString(), 5, '0');
+directory += tag+lString+pString;
+position += length;
+fields += field;
+
+// Data Field 035
+if (sub.getDepositId() != null){
+	tag = "035";
+	field = "  \u001Fa(TxCM)${ sub.getDepositId() }\u001E";
+	length = field.getBytes().length;	
+	lString = org.apache.commons.lang.StringUtils.leftPad(length.toString(), 4, '0');
+	pString = org.apache.commons.lang.StringUtils.leftPad(position.toString(), 5, '0');
+	directory += tag+lString+pString;
+	position += length;
+	fields += field;
+}
+
+//Data Field 040
+tag = "040";
+field = "\u001FaTXA \u001FcTXA\u001E";
+length = field.getBytes().length;	
+lString = org.apache.commons.lang.StringUtils.leftPad(length.toString(), 4, '0');
+pString = org.apache.commons.lang.StringUtils.leftPad(position.toString(), 5, '0');
+directory += tag+lString+pString;
+position += length;
+fields += field;
+
+//Data Field 099
+tag = "099";
+field = "\u001Fa${ pubYear }";
+field += "\u001Fa${ sub.getDocumentType() }";
+if (sub.getDepositId() != null){
+	def fullUrl = "${ sub.getDepositId() }";
+	if(fullUrl.contains("http://hdl.handle.net")){
+		def postFix = fullUrl.substring(fullUrl.lastIndexOf('/'));
+		fullUrl = fullUrl.replaceAll(postFix, '');
+		def preFix = fullUrl.substring(fullUrl.lastIndexOf('/')+1);
+		def handle = preFix + postFix;
+		field += "\u001Fa" + handle;
+	}	
+}
+field += "\u001E";
+length = field.getBytes().length;
+lString = org.apache.commons.lang.StringUtils.leftPad(length.toString(), 4, '0');
+pString = org.apache.commons.lang.StringUtils.leftPad(position.toString(), 5, '0');
+directory += tag+lString+pString;
+position += length;
+fields += field;
+
+// Data Field 100
+tag = "100";
+field = "1 \u001Fa${ sub.getStudentFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE) }.\u001E";
+length = field.getBytes().length;
+lString = org.apache.commons.lang.StringUtils.leftPad(length.toString(), 4, '0');
+pString = org.apache.commons.lang.StringUtils.leftPad(position.toString(), 5, '0');
+directory += tag+lString+pString;
+position += length;
+fields += field;
+
+// Data Field 245
+if(sub.getDocumentTitle() != null){
+	def title = sub.getDocumentTitle();
+	def ind2 = 0;
+	if (title.startsWith("A "))
+        ind2 = 2;
+    if (title.startsWith("An "))
+        ind2 = 3;
+    if (title.startsWith("The "))
+        ind2 = 4;
+        
+    def subTitle = title.substring(title.indexOf(':') + 1);
+    if(title.equals(subTitle)){
+    	subTitle = "";
+    }
+    def mainTitle = title.replaceAll(':'+subTitle, '');
+    
+    tag = "245";    
+    field = "1${ind2}\u001Fa" + mainTitle;
+    field += "\u001Fh[electronic resource]";
+    if(!subTitle.isEmpty() && subTitle != null){
+    	field += ":\u001Fb" + subTitle;
+    }
+    field += "/\u001Fcby ${ sub.getStudentFormattedName(org.tdl.vireo.model.NameFormat.FIRST_LAST) }.";    
+    field += "\u001E";
+    length = field.getBytes().length;	
+	lString = org.apache.commons.lang.StringUtils.leftPad(length.toString(), 4, '0');
+	pString = org.apache.commons.lang.StringUtils.leftPad(position.toString(), 5, '0');
+	directory += tag+lString+pString;
+	position += length;
+	fields += field;
+}
+
+// Data Field 260
+if(settingRepo.getConfig(org.tdl.vireo.model.Configuration.GRANTOR) != null){
+	tag = "260";
+	field = "  \u001Fa[College Station, Tex. :\u001Fb${ settingRepo.getConfig(org.tdl.vireo.model.Configuration.GRANTOR) },\u001Fc";
+	if(sub.getGraduationYear() != null){
+		field += "${ sub.getGraduationYear() }]\u001E";
+	} else {
+		field += "${ new java.util.Date().format('yyyy') }]\u001E";
+	}
+	length = field.getBytes().length;	
+	lString = org.apache.commons.lang.StringUtils.leftPad(length.toString(), 4, '0');
+	pString = org.apache.commons.lang.StringUtils.leftPad(position.toString(), 5, '0');
+	directory += tag+lString+pString;
+	position += length;
+	fields += field;
+}
+
+// Data Field 300
+tag = "300";
+field = "  \u001Fa1 online resource.\u001E";
+length = field.getBytes().length;
+lString = org.apache.commons.lang.StringUtils.leftPad(length.toString(), 4, '0');
+pString = org.apache.commons.lang.StringUtils.leftPad(position.toString(), 5, '0');
+directory += tag+lString+pString;
+position += length;
+fields += field;
+
+// Data Field 500
+tag = "500";
+field = "  \u001Fa\"Major Subject: ${ sub.getMajor() }\"\u001E";
+length = field.getBytes().length;
+lString = org.apache.commons.lang.StringUtils.leftPad(length.toString(), 4, '0');
+pString = org.apache.commons.lang.StringUtils.leftPad(position.toString(), 5, '0');
+directory += tag+lString+pString;
+position += length;
+fields += field;
+
+// Data Field 502
+tag = "502";
+field = "  ";
+if(sub.getDegreeLevel() != null)
+	field += "\u001Fa${ sub.getDegree() }";
+if(settingRepo.getConfig(org.tdl.vireo.model.Configuration.GRANTOR) != null)
+	field += "\u001Fc${ settingRepo.getConfig(org.tdl.vireo.model.Configuration.GRANTOR) }";
+if(sub.getGraduationYear() != null)
+	field += "\u001Fd${ sub.getGraduationYear() }";
+if(sub.getDepositId() != null)
+	field += "\u001Fo${ sub.getDepositId() }";
+
+field += "\u001E";
+length = field.getBytes().length;
+lString = org.apache.commons.lang.StringUtils.leftPad(length.toString(), 4, '0');
+pString = org.apache.commons.lang.StringUtils.leftPad(position.toString(), 5, '0');
+directory += tag+lString+pString;
+position += length;
+fields += field;
+
+// Data Field 504
+tag = "504";
+field = "  \u001FaIncludes bibliographical references.\u001E";
+length = field.getBytes().length;
+lString = org.apache.commons.lang.StringUtils.leftPad(length.toString(), 4, '0');
+pString = org.apache.commons.lang.StringUtils.leftPad(position.toString(), 5, '0');
+directory += tag+lString+pString;
+position += length;
+fields += field;
+
+// Data Field 516
+tag = "516";
+field = "  \u001FaText (${ sub.getDocumentType() })\u001E";
+length = field.getBytes().length;
+lString = org.apache.commons.lang.StringUtils.leftPad(length.toString(), 4, '0');
+pString = org.apache.commons.lang.StringUtils.leftPad(position.toString(), 5, '0');
+directory += tag+lString+pString;
+position += length;
+fields += field;
+
+// Data Field 520
+if(sub.getDocumentAbstract() != null){
+	tag = "520";
+	field = "3 \u001Fa${ sub.getDocumentAbstract() }";
+	if(sub.getDepositId() != null){
+		field += "       The electronic version of this dissertation is accessible from ${ sub.getDepositId() }";
+	}
+	field += "\u001E";
+	length = field.getBytes().length;	
+	lString = org.apache.commons.lang.StringUtils.leftPad(length.toString(), 4, '0');
+	pString = org.apache.commons.lang.StringUtils.leftPad(position.toString(), 5, '0');
+	directory += tag+lString+pString;
+	position += length;
+	fields += field;
+}
+
+// Data Field 588
+tag = "588";
+field = "  \u001FaDescription from author supplied metadata(automated record created ${ new java.util.Date().format('yyyy-MM-dd HH:mm:ss') }).\u001E";
+length = field.getBytes().length;
+lString = org.apache.commons.lang.StringUtils.leftPad(length.toString(), 4, '0');
+pString = org.apache.commons.lang.StringUtils.leftPad(position.toString(), 5, '0');
+directory += tag+lString+pString;
+position += length;
+fields += field;
+
+// Data Field 650
+if(sub.getMajor() != null){
+	tag = "650";
+	field = " 4\u001FaMajor ${ sub.getMajor() }\u001E";
+	length = field.getBytes().length;	
+	lString = org.apache.commons.lang.StringUtils.leftPad(length.toString(), 4, '0');
+	pString = org.apache.commons.lang.StringUtils.leftPad(position.toString(), 5, '0');
+	directory += tag+lString+pString;
+	position += length;
+	fields += field;
+}
+
+// Data Field 653
+if(sub.getDocumentKeywords() != null){
+	sub.getDocumentKeywords().split(";").each() {
+		tag = "653"
+		field = "  \u001Fa${ it.trim() }\u001E";
+		length = field.getBytes().length;		
+		lString = org.apache.commons.lang.StringUtils.leftPad(length.toString(), 4, '0');
+		pString = org.apache.commons.lang.StringUtils.leftPad(position.toString(), 5, '0');
+		directory += tag+lString+pString;
+		position += length;
+		fields += field;
+	}
+}
+
+// Data Field 856
+if(sub.getDepositId() != null){
+	tag = "856";	
+	field = "40\u001Fu${ sub.getDepositId() }\u001FzConnect to the full text of this online resource.\u001E";
+	length = field.getBytes().length;
+	lString = org.apache.commons.lang.StringUtils.leftPad(length.toString(), 4, '0');
+	pString = org.apache.commons.lang.StringUtils.leftPad(position.toString(), 5, '0');
+	directory += tag+lString+pString;
+	position += length;
+	fields += field;
+}
+
+directory += "\u001E";
+marc21 += leader+directory+fields+"\u001D";
+
+def recordLength = org.apache.commons.lang.StringUtils.leftPad((marc21.getBytes().length).toString(), 5, '0');
+def baseAddressOfData = org.apache.commons.lang.StringUtils.leftPad((leader.getBytes().length + directory.getBytes().length).toString(), 5, '0');
+
+marc21 = marc21.replaceAll("RLXXX", recordLength);
+marc21 = marc21.replaceAll("BADXX", baseAddressOfData);
+
+}%${ marc21.raw() }

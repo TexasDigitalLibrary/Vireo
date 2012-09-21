@@ -15,6 +15,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 import org.tdl.vireo.export.ChunkStream;
 import org.tdl.vireo.export.ExportPackage;
 import org.tdl.vireo.export.ExportService;
@@ -38,7 +39,7 @@ import play.jobs.Job;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 public class ExportServiceImpl implements ExportService {
-
+	
 	public final static String MIME_TYPE = "application/zip";
 	public final static int BUFFER_SIZE = 10; // Each chunk may be big.
 	

@@ -47,11 +47,18 @@
 		</ul>
 		<ul class="unstyled">
 			<li>Last Action:</li>
-			<li><b>${actionLogs[0].getActionDate()?.format("MM/dd/yyyy hh:mm:ss")}</b></li>
+			<li>
+			#{if actionLogs != null}
+				<b>${actionLogs[0].getActionDate()?.format("MM/dd/yyyy hh:mm:ss")}</b>			
+			</li>			
 		</ul>
 		<ul class="unstyled">
 			<li>What:</li>
-			<li><b>${actionLogs[0].getEntry().substring(0, Math.min(actionLogs[0].getEntry().length(), 50))}#{if actionLogs[0].getEntry().length() > 50}...#{/if}</b></li>
+			<li><b>${actionLogs[0].getEntry().substring(0, Math.min(actionLogs[0].getEntry().length(), 50))}#{if actionLogs[0].getEntry().length() > 50}...#{/if}</b>
+			#{/if}#{else}
+				<span class="empty">none</span>
+			#{/else}
+			</li>
 		</ul>
 		<ul class="unstyled">
 			<li>UMI Release:</li>
