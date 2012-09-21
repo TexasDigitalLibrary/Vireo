@@ -27,7 +27,7 @@ import play.mvc.Router;
 
 import controllers.AbstractVireoFunctionalTest;
 /**
- * Test for the user preferences tab. 
+ * Test for the application settings tab. 
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
@@ -177,10 +177,10 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 	}
 	
 	/**
-	 * Test changing the submission instructions
+	 * Test changing the submission license
 	 */
 	@Test
-	public void testSubmissionInstructions() {
+	public void testSubmissionLicense() {
 		
 		LOGIN();
 		
@@ -188,11 +188,11 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 		final String URL = Router.reverse("settings.ApplicationSettingsTab.updateApplicationSettingsJSON").url;
 
 		
-		Configuration originalValue = settingRepo.findConfigurationByName(SUBMIT_INSTRUCTIONS);
+		Configuration originalValue = settingRepo.findConfigurationByName(SUBMIT_LICENSE);
 		
 		// change the current semester
 		Map<String,String> params = new HashMap<String,String>();
-		params.put("field", SUBMIT_INSTRUCTIONS);
+		params.put("field", SUBMIT_LICENSE);
 		params.put("value","changed \"by test\"");
 		Response response = POST(URL,params);
 		assertContentMatch("\"success\": \"true\"", response);
@@ -202,14 +202,14 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();
 		JPA.em().getTransaction().begin();
-		assertNotNull(settingRepo.findConfigurationByName(SUBMIT_INSTRUCTIONS));
-		assertEquals("changed \"by test\"",settingRepo.findConfigurationByName(SUBMIT_INSTRUCTIONS).getValue());
+		assertNotNull(settingRepo.findConfigurationByName(SUBMIT_LICENSE));
+		assertEquals("changed \"by test\"",settingRepo.findConfigurationByName(SUBMIT_LICENSE).getValue());
 		
 		JPA.em().clear();
 		if (originalValue == null) {
-			settingRepo.findConfigurationByName(SUBMIT_INSTRUCTIONS).delete();
+			settingRepo.findConfigurationByName(SUBMIT_LICENSE).delete();
 		} else {
-			Configuration value = settingRepo.findConfigurationByName(SUBMIT_INSTRUCTIONS);
+			Configuration value = settingRepo.findConfigurationByName(SUBMIT_LICENSE);
 			value.setValue(originalValue.getValue());
 			value.save();
 			

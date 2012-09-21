@@ -1,7 +1,5 @@
 package controllers;
 
-import java.util.Map;
-
 import org.apache.commons.lang.StringEscapeUtils;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.SettingsRepository;
@@ -11,11 +9,9 @@ import org.tdl.vireo.search.Searcher;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.StateManager;
 
-import play.Logger;
 import play.modules.spring.Spring;
 import play.mvc.Before;
 import play.mvc.Controller;
-import play.mvc.Router;
 
 /**
  * This is a common ancestor for all Vireo controllers. It will hold any common
@@ -66,25 +62,6 @@ public abstract class AbstractVireoController extends Controller {
 		if(firstUser==true)
 			FirstUser.createUser();
 	}
-
-	/**
-	 * This is a helpfull debugging method so that developers can better
-	 * understand the state of the applications while under initial development.
-	 * 
-	 * TODO: Remove this method before the end of the initial series of sprints.
-	 */
-	protected static void dumpParams() {
-
-		Map<String, String> names = params.allSimple();
-
-		Logger.info("Session: " + session.toString());
-
-		Logger.info("Params:");
-		
-		for (Map.Entry<String, String> entry : names.entrySet())        {
-			Logger.info(entry.getKey() + "= {" + entry.getValue() + "}");
-		}
-	}
 	
 	
 	/**
@@ -100,5 +77,27 @@ public abstract class AbstractVireoController extends Controller {
 		value = StringEscapeUtils.escapeJavaScript(value);
 		value = value.replaceAll("\\\\'", "'");
 		return value;
+	}
+	
+	/**
+	 * Convert plain text into passable HTML. Separate text into paragraphs,
+	 * preserve intending, and try not to mess with any embedded tags.
+	 * 
+	 * @param value
+	 *            The input text.
+	 * @return HTML suitable for display.
+	 */
+	protected static String text2html(String value) {
+
+		String html = value.replaceAll("  ", "&nbsp;&nbsp;");
+		String[] paragraphs = html.split("\n\\s*\n");
+		html = "";
+		for (String paragraph : paragraphs) {
+			html += "<p>" + paragraph + "</p>";
+		}
+
+		html = html.replaceAll("\n", "<br/>");
+
+		return html;
 	}
 }

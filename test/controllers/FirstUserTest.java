@@ -383,15 +383,21 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 		}
 
 		@Override
-		public String getConfig(String name, String defaultValue) {
+		public String getConfigValue(String name, String defaultValue) {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
-		public String getConfig(String name) {
+		public String getConfigValue(String name) {
 			// TODO Auto-generated method stub
 			return null;
+		}
+		
+		@Override
+		public boolean getConfigBoolean(String name) {
+			// TODO Auto-generated method stub
+			return false;
 		}
 
 		@Override

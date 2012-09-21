@@ -12,7 +12,85 @@
 	<!-- Vireo Persistence Repositories -->
 	<bean id="PersonRepository" class="org.tdl.vireo.model.jpa.JpaPersonRepositoryImpl" scope="singleton" />
 	<bean id="SubmissionRepository" class="org.tdl.vireo.model.jpa.JpaSubmissionRepositoryImpl" scope="singleton" />
-	<bean id="SettingsRepository" class="org.tdl.vireo.model.jpa.JpaSettingsRepositoryImpl" scope="singleton" />
+	<bean id="SettingsRepository" class="org.tdl.vireo.model.jpa.JpaSettingsRepositoryImpl" scope="singleton" >
+	   <property name="configurationDefaults">
+	       <util:map>
+	           <entry key="front_page_instructions">
+                   <value>
+&lt;h1&gt;Welcome to the Thesis&lt;br /&gt;&amp; Dissertation Submission System&lt;/h1&gt;
+
+Once you have passed the final defense and satisfied the requirements of the committee, you are ready to submit your manuscript to the Thesis Office for review. This submission process is fully electronic, and is made through an online application developed and maintained by the Texas Digital Library, in conjunction with the Texas A&amp;M, MIT, and UIUC.
+
+To get started with your submission, click the link below. You will be asked to authenticate using your NetID:
+
+{START_SUBMISSION}
+
+&lt;h3&gt;Your help can make things better&lt;/h3&gt;
+
+You feedback is very important to us; it allows us to continue to improve the system. Please feel free to notify us directly at dev@tdl.org if you have any suggestions to increase the usability or effectiveness of this application. You can talk to the TAMU Thesis Office regarding any issues that may arise during the submission process.
+                   </value>
+               </entry>
+	           <entry key="submit_license">
+	               <value>
+I grant the Texas Digital Library (hereafter called "TDL"), my home institution (hereafter called "Institution"), and my academic department (hereafter called "Department") the non-exclusive rights to copy, display, perform, distribute and publish the content I submit to this repository (hereafter called "Work") and to make the Work available in any format in perpetuity as part of a TDL, Institution or Department repository communication or distribution effort.
+
+I understand that once the Work is submitted, a bibliographic citation to the Work can remain visible in perpetuity, even if the Work is updated or removed.
+
+I understand that the Work's copyright owner(s) will continue to own copyright outside these non-exclusive granted rights.
+
+I warrant that:
+
+    1) I am the copyright owner of the Work, or
+    2) I am one of the copyright owners and have permission from the other owners to submit the Work, or
+    3) My Institution or Department is the copyright owner and I have permission to submit the Work, or
+    4) Another party is the copyright owner and I have permission to submit the Work.
+
+Based on this, I further warrant to my knowledge:
+
+    1) The Work does not infringe any copyright, patent, or trade secrets of any third party,
+    2) The Work does not contain any libelous matter, nor invade the privacy of any person or third party, and
+    3) That no right in the Work has been sold, mortgaged, or otherwise disposed of, and is free from all claims.
+
+I agree to hold TDL, Institution, Department, and their agents harmless for any liability arising from any breach of the above warranties or any claim of intellectual property infringement arising from the exercise of these non-exclusive granted rights.
+                   </value>
+               </entry>
+               <entry key="submit_instructions">
+                   <value>
+The Thesis Office has received your electronic submittal. You will also receive an email confirmation. We will check your records as soon as possible to determine whether or not we have the signed Approval Form on file. Please be aware that your file is not complete and cannot be reviewed until we have both the electronic manuscript and the signed Approval Form.
+
+As soon as both items have been received, your manuscript will be placed in the queue and will be processed along with all other submissions for the semester in the order in which your completed file (manuscript and Approval Form) was received.
+
+The following are approximate turn-around times after the manuscript and the signed approval form have been submitted to the Thesis Office. Manuscripts are reviewed in the order received.
+
+Early in semester – 5 working days
+Week before Deadline Day – 10 working days
+Deadline Day – 15 working days
+
+If you have any questions about your submittal, feel free to contact our office.
+
+Thank you,
+
+Thesis Office
+                   </value>
+               </entry>
+               <entry key="correction_instructions">
+                   <value>
+The Thesis Office has received your corrections. Manuscripts are reviewed in the order received.
+
+Early in semester – 5 working days
+Week before Deadline Day – 10 working days
+Deadline Day – 15 working days
+
+If you have any questions about your submittal, feel free to contact our office. 
+
+Thank you,
+
+Thesis Office
+                   </value>
+               </entry>
+	       </util:map>
+	   </property>
+	</bean>
 
 	<!-- Security & Authentication -->
 	<bean id="SecurityContext" class="org.tdl.vireo.security.impl.SecurityContextImpl" scope="singleton" />

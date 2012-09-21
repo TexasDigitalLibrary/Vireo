@@ -13,7 +13,6 @@ import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
 
 import controllers.Security;
-import controllers.Student;
 
 /**
  * The second step of the license process where the user must accept the provided license.
@@ -41,7 +40,7 @@ public class License extends AbstractSubmitStep {
 
 		// Get the form data.
 		String licenseAgreement = params.get("licenseAgreement");
-		String licenseText = settingRepo.getConfig(Configuration.SUBMIT_LICENSE,Configuration.DEFAULT_SUBMIT_LICENSE);
+		String licenseText = settingRepo.getConfigValue(Configuration.SUBMIT_LICENSE);
 
 		if (params.get("submit_next") == null) {
 			licenseAgreement = sub.getLicenseAgreementDate() != null ? "true" : null; 
@@ -73,14 +72,7 @@ public class License extends AbstractSubmitStep {
 		}
 
 		// Format the license text for display
-		licenseText = licenseText.replaceAll("  ", "&nbsp;&nbsp;");
-		String[] paragraphs = licenseText.split("\n\\s*\n");
-		licenseText = "";
-		for (String paragraph : paragraphs) {
-			licenseText += "<p>"+paragraph+"</p>";
-		}
-
-		licenseText = licenseText.replaceAll("\n", "<br/>");
+		licenseText = text2html(licenseText);
 
 		renderTemplate("Submit/license.html",subId,licenseText,licenseAgreement);
 

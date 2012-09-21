@@ -1,38 +1,52 @@
 package controllers;
 
-import org.tdl.vireo.model.Attachment;
-import org.tdl.vireo.model.Person;
-import org.tdl.vireo.model.Submission;
-import org.tdl.vireo.state.State;
-import play.*;
-import play.mvc.*;
-import play.mvc.Http.Header;
+import org.tdl.vireo.model.Configuration;
 
-import java.net.URI;
-import java.util.*;
-import java.util.Map.Entry;
+import play.mvc.With;
 
-import org.tdl.vireo.model.RoleType;
-
+/**
+ * This is a very simple controller that only handles the index page of the
+ * application.
+ * 
+ * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
+ * 
+ */
 @With(Authentication.class)
 public class Application extends AbstractVireoController {
 
-    public static void index() {
+	/**
+	 * The variable of where to place the start a submission button in the front
+	 * page text.
+	 */
+	public static final String START_SUBMISSION = "{START_SUBMISSION}";
 
-        // Check to see if they have active submissions
-    	
-        Person submitter = context.getPerson();
-        if (submitter != null) {
-	        List<Submission> submissionList = subRepo.findSubmission(submitter);
-	
-	        if(submissionList.size() > 0) {
-	            render(submissionList);
-	        }
-        }
-        
-        render();
-    }
-        
-     
+	/**
+	 * Vireo index page.
+	 */
+	public static void index() {
+
+		// Get the text for the front page.
+		String instructions = settingRepo
+				.getConfigValue(Configuration.FRONT_PAGE_INSTRUCTIONS);
+		instructions = text2html(instructions);
+
+		// Split the text into two blocks, one block before the
+		// "start submission" button, and the other after.
+		String instructionsBefore = "";
+		String instructionsAfter = "";
+
+		int idx = instructions.indexOf(START_SUBMISSION);
+		if (idx > -1) {
+
+			instructionsBefore = instructions.substring(0, idx);
+			instructionsAfter = instructions.substring(
+					idx + START_SUBMISSION.length(), instructions.length());
+		} else {
+			instructionsBefore = instructions;
+		}
+
+		// Render the Application/index.html template
+		render(instructionsBefore, instructionsAfter);
+	}
 
 }

@@ -94,7 +94,7 @@ public class Advisor extends AbstractVireoController {
 			context.restoreAuthorization();
 		}
 
-		String grantor = settingRepo.getConfig(Configuration.GRANTOR,"Unknown Institution");
+		String grantor = settingRepo.getConfigValue(Configuration.GRANTOR,"Unknown Institution");
 		List<EmbargoType> allEmbargos = settingRepo.findAllEmbargoTypes();
 		Person submitter = sub.getSubmitter();
 		List<ActionLog> logs = subRepo.findActionLog(sub);

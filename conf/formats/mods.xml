@@ -46,10 +46,10 @@
     </name>
     #{/list}
     
-    #{ if settingRepo.getConfig(org.tdl.vireo.model.Configuration.GRANTOR) != null } 
+    #{ if settingRepo.getConfigValue(org.tdl.vireo.model.Configuration.GRANTOR) != null } 
     <name type="corporate" authority="lcnaf">
         <roleterm authority="marcrelator" type="text">Degree Grantor</roleterm>
-        <namePart>${ settingRepo.getConfig(org.tdl.vireo.model.Configuration.GRANTOR).escapeXml() }</namePart>
+        <namePart>${ settingRepo.getConfigValue(org.tdl.vireo.model.Configuration.GRANTOR).escapeXml() }</namePart>
         <namePart>English</namePart>
     </name>
     #{/if}

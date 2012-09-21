@@ -650,18 +650,29 @@ input.settings-error:focus,
     max-height: 550px;
 }
 
-textarea.application-text {
-	width: 530px;
-	height: 400px;
+div.application-text,
+div.theme-text {
+    width: 600px;
 }
 
-textarea.application-text[readonly] {
-	background-color: #FCFCFC;
-	border-color: #DDDDDD;
+.application-text textarea, 
+.theme-text textarea {
+    width: 530px;
+    height: 400px;
 }
 
-.application-text-lock .icon-lock,
-.application-text-lock .icon-pencil {
-	opacity:0.5;
+.application-text textarea,
+.theme-text textarea[readonly] {
+    background-color: #FCFCFC;
+    border-color: #DDDDDD;
 }
+
+.application-text .lock-control .icon-lock,
+.application-text .lock-control .icon-pencil,
+.theme-text .lock-control .icon-lock,
+.theme-text .lock-control .icon-pencil {
+    opacity: 0.5;
+}
+
+
 

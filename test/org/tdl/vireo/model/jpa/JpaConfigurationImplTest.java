@@ -155,7 +155,7 @@ public class JpaConfigurationImplTest extends UnitTest {
 		Configuration config = settingRepo.createConfiguration("config","value").save();
 
 		
-		String retrieved = settingRepo.getConfig("config");
+		String retrieved = settingRepo.getConfigValue("config");
 		
 		assertEquals("value", retrieved);
 		
@@ -170,14 +170,28 @@ public class JpaConfigurationImplTest extends UnitTest {
 		Configuration config = settingRepo.createConfiguration("config","value").save();
 
 		// Search for one that exists.
-		String retrieved = settingRepo.getConfig("config","default");
+		String retrieved = settingRepo.getConfigValue("config","default");
 		assertEquals("value", retrieved);
 		
 		// Search for one that is missing.
-		retrieved = settingRepo.getConfig("thisdoesnotexist","default");
+		retrieved = settingRepo.getConfigValue("thisdoesnotexist","default");
 		assertEquals("default",retrieved);
 		
 		config.delete();
+	}
+	
+	/**
+	 * Test retrieval of boolean value by name
+	 */
+	@Test
+	public void testGetBooleanConfig() {
+		Configuration config = settingRepo.createConfiguration("config","value").save();
+
+		assertTrue(settingRepo.getConfigBoolean("config"));
+		
+		config.delete();
+		
+		assertFalse(settingRepo.getConfigBoolean("config"));
 	}
 	
 	/**

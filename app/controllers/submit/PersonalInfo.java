@@ -22,7 +22,6 @@ import play.Logger;
 import play.Play;
 import controllers.Application;
 import controllers.Security;
-import controllers.Student;
 
 /**
  * The first step of the submission process. This is where the student confirms
@@ -56,8 +55,8 @@ public class PersonalInfo extends AbstractSubmitStep {
 	public static void personalInfo(Long subId) {
 
 		// Get Configuration
-		boolean requestCollege = (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_COLLEGE) != null) ? true : false;
-		boolean requestBirth = (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_BIRTH) != null) ? true : false;
+		boolean requestCollege = settingRepo.getConfigBoolean(Configuration.SUBMIT_REQUEST_COLLEGE);
+		boolean requestBirth = settingRepo.getConfigBoolean(Configuration.SUBMIT_REQUEST_BIRTH);
 
 		// Bail if they canceled
 		if (params.get("submit_cancel") != null)
@@ -67,7 +66,7 @@ public class PersonalInfo extends AbstractSubmitStep {
 		// Check if this is a new submission.
 		if (subId == null) {
 			// Do we allow multiple submissions?
-			boolean allowMultiple = (settingRepo.getConfig(Configuration.ALLOW_MULTIPLE_SUBMISSIONS) != null) ? true : false;
+			boolean allowMultiple = settingRepo.getConfigBoolean(Configuration.ALLOW_MULTIPLE_SUBMISSIONS);
 			
 			if (!allowMultiple) {
 				// Check if this user allready has another submission open.
@@ -323,7 +322,7 @@ public class PersonalInfo extends AbstractSubmitStep {
 
 		// Display the for with appropriate values filled in
 
-		String grantor = settingRepo.getConfig(Configuration.GRANTOR,"Unknown Institution");
+		String grantor = settingRepo.getConfigValue(Configuration.GRANTOR,"Unknown Institution");
 
 		renderTemplate("Submit/personalInfo.html",submitter, subId, disabledFields, requestCollege, requestBirth,
 
@@ -360,8 +359,8 @@ public class PersonalInfo extends AbstractSubmitStep {
 	public static boolean verify(String firstName,String lastName, String birthYear, String college, String department, String degree, String major, String permPhone, String permAddress, String permEmail) {
 		
 		// Get submission configuration.
-		boolean requestCollege = (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_COLLEGE) != null) ? true : false;
-		boolean requestBirth = (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_BIRTH) != null) ? true : false;
+		boolean requestCollege = settingRepo.getConfigBoolean(Configuration.SUBMIT_REQUEST_COLLEGE);
+		boolean requestBirth = settingRepo.getConfigBoolean(Configuration.SUBMIT_REQUEST_BIRTH);
 		
 		int numberOfErrorsBefore = validation.errors().size();
 		

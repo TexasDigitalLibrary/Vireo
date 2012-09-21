@@ -75,6 +75,7 @@ GET		/admin/view/viewFile/{id}/{name}		ViewTab.viewFile
 GET     /admin/settings/?                       SettingsTab.settingsRedirect
 GET     /admin/settings/user/?                  settings.UserPreferencesTab.userPreferences
 GET     /admin/settings/applications/?			settings.ApplicationSettingsTab.applicationSettings
+GET     /admin/settings/theme/?                 settings.ThemeSettingsTab.themeSettings
 GET     /admin/settings/email/?					settings.EmailSettingsTab.emailSettings
 GET     /admin/settings/configurable/?			settings.ConfigurableSettingsTab.configurableSettings
 GET     /admin/settings/deposit/?               settings.DepositSettingsTab.depositSettings
@@ -84,6 +85,7 @@ GET     /admin/settings/deposit/?               settings.DepositSettingsTab.depo
 POST	/admin/settings/updateProfile			SettingsTab.updateProfileJSON
 POST    /admin/settings/user/update             settings.UserPreferencesTab.updateUserPreferencesJSON
 POST    /admin/settings/applications/update     settings.ApplicationSettingsTab.updateApplicationSettingsJSON
+POST    /admin/settings/themes/update           settings.ThemeSettingsTab.updateThemeSettingsJSON
 POST    /admin/settings/email/update            settings.EmailSettingsTab.updateEmailSettingsJSON
 
 ### Settings tab - Actions

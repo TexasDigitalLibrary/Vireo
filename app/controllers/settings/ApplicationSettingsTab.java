@@ -1,12 +1,12 @@
 package controllers.settings;
 
-import java.text.DateFormatSymbols;
+import static org.tdl.vireo.model.Configuration.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
 
-import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.NameFormat;
@@ -15,11 +15,9 @@ import org.tdl.vireo.model.RoleType;
 
 import play.Logger;
 import play.mvc.With;
-
 import controllers.Authentication;
 import controllers.Security;
 import controllers.SettingsTab;
-import static org.tdl.vireo.model.Configuration.*;
 
 /**
  * Application settings
@@ -45,26 +43,12 @@ public class ApplicationSettingsTab extends SettingsTab {
 		renderArgs.put("SUBMIT_REQUEST_COLLEGE", settingRepo.findConfigurationByName(SUBMIT_REQUEST_COLLEGE));
 		renderArgs.put("SUBMIT_REQUEST_UMI", settingRepo.findConfigurationByName(SUBMIT_REQUEST_UMI));
 		
-		Configuration currentSemester = settingRepo.findConfigurationByName(CURRENT_SEMESTER);
-		if (currentSemester != null)
-			renderArgs.put("CURRENT_SEMESTER", currentSemester.getValue());
+		renderArgs.put("CURRENT_SEMESTER", settingRepo.getConfigValue(CURRENT_SEMESTER, ""));
+		renderArgs.put("GRANTOR", settingRepo.getConfigValue(GRANTOR, ""));
+		renderArgs.put("SUBMIT_LICENSE", settingRepo.getConfigValue(SUBMIT_LICENSE));
 
-		Configuration grantor = settingRepo.findConfigurationByName(GRANTOR);
-		if (grantor != null)
-			renderArgs.put("GRANTOR", grantor.getValue());
-		
-		Configuration submitInstructions = settingRepo.findConfigurationByName(SUBMIT_INSTRUCTIONS);
-		if (submitInstructions != null)
-			renderArgs.put("SUBMIT_INSTRUCTIONS", submitInstructions.getValue());
-		
-		Configuration submitLicense = settingRepo.findConfigurationByName(SUBMIT_LICENSE);
-		if (submitLicense != null)
-			renderArgs.put("SUBMIT_LICENSE", submitLicense.getValue());
-
-		
 		List<CustomActionDefinition> actions = settingRepo.findAllCustomActionDefinition();
-		
-		
+				
 		List<Person> reviewers = personRepo.findPersonsByRole(RoleType.REVIEWER);
 		
 		int offset=0;
@@ -102,7 +86,6 @@ public class ApplicationSettingsTab extends SettingsTab {
 			List<String> textFields = new ArrayList<String>();
 			textFields.add(CURRENT_SEMESTER);
 			textFields.add(GRANTOR);
-			textFields.add(SUBMIT_INSTRUCTIONS);
 			textFields.add(SUBMIT_LICENSE);
 
 			

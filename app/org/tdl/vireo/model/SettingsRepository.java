@@ -1,7 +1,6 @@
 package org.tdl.vireo.model;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * The Vireo persistent repository for application-level settings. This object
@@ -363,17 +362,31 @@ public interface SettingsRepository {
 	 *            The default value for the configuration object if not found.
 	 * @return The value
 	 */
-	public String getConfig(String name, String defaultValue);
+	public String getConfigValue(String name, String defaultValue);
 
 	/**
 	 * Find a system wide configuration and return it's value. If the
-	 * configuration object does not exist then null will be returned.
+	 * configuration object does not exist the the Configuration.DEFAULTS
+	 * registry will be consulted. If a default has been registered for the
+	 * parameter then the default will be returned, otherwise null.
 	 * 
 	 * @param name
 	 *            The name of the parameter.
 	 * @return The value, or null.
 	 */
-	public String getConfig(String name);
+	public String getConfigValue(String name);
+	
+	/**
+	 * Find a system wide configuration and return it's boolean value. If the
+	 * configuration parameter has any value at all it is considered true, if no
+	 * configuration entry is defined for the parameter then it is considered
+	 * false.
+	 * 
+	 * @param name
+	 *            The name of the configuration object.
+	 * @return The value
+	 */
+	public boolean getConfigBoolean(String name);
 
 	/**
 	 * Find all system wide configuration parameters.

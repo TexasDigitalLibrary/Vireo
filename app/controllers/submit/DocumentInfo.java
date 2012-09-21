@@ -1,30 +1,23 @@
 package controllers.submit;
 
-import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
-import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.CommitteeMember;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.GraduationMonth;
-import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
 
-import play.Logger;
-import play.mvc.Scope.Params;
 import controllers.Security;
-import controllers.Student;
 
 /**
  * This is the third step of the submission process. This is where students
@@ -55,7 +48,7 @@ public class DocumentInfo extends AbstractSubmitStep {
 	public static void documentInfo(Long subId) {
 
 		// Get our configuration;
-		boolean requestUMI = (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_UMI) != null) ? true : false;
+		boolean requestUMI = settingRepo.getConfigBoolean(Configuration.SUBMIT_REQUEST_UMI);
 
 		// Validate the submission
 		Submission sub = getSubmission();

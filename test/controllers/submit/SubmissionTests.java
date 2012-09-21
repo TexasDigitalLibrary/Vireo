@@ -79,10 +79,10 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 	@Before
 	public void setup() {
 		// Get the configuration setting prior to doing anything so that we can restore them after.
-		originalRequestBirth = settingRepo.getConfig(Configuration.SUBMIT_REQUEST_BIRTH);
-		originalRequestCollege = settingRepo.getConfig(Configuration.SUBMIT_REQUEST_COLLEGE);
-		originalRequestUMI = settingRepo.getConfig(Configuration.SUBMIT_REQUEST_UMI);
-		originalAllowMultiple = settingRepo.getConfig(Configuration.ALLOW_MULTIPLE_SUBMISSIONS);
+		originalRequestBirth = settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_BIRTH);
+		originalRequestCollege = settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_COLLEGE);
+		originalRequestUMI = settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_UMI);
+		originalAllowMultiple = settingRepo.getConfigValue(Configuration.ALLOW_MULTIPLE_SUBMISSIONS);
 
 		// Turn off authentication for the test thread
 		context.turnOffAuthorization();
@@ -146,13 +146,13 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 	public void testFullSubmission() throws IOException, InterruptedException {    
 
 		// Turn off any of the extra paramaters
-		if (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_BIRTH) != null) {
+		if (settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_BIRTH) != null) {
 			settingRepo.findConfigurationByName(Configuration.SUBMIT_REQUEST_BIRTH).delete();
 		}
-		if (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_COLLEGE) != null) {
+		if (settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_COLLEGE) != null) {
 			settingRepo.findConfigurationByName(Configuration.SUBMIT_REQUEST_COLLEGE).delete();
 		}
-		if (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_UMI) != null) {
+		if (settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_UMI) != null) {
 			settingRepo.findConfigurationByName(Configuration.SUBMIT_REQUEST_UMI).delete();
 		}
 		JPA.em().getTransaction().commit();
@@ -242,13 +242,13 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 	public void testFullSubmissionWithOptionalParamaters() throws IOException, InterruptedException {    
 
 		// Turn ON any of the extra paramaters
-		if (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_BIRTH) == null) {
+		if (settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_BIRTH) == null) {
 			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_BIRTH,"true").save();
 		}
-		if (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_COLLEGE) == null) {
+		if (settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_COLLEGE) == null) {
 			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_COLLEGE,"true").save();
 		}
-		if (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_UMI) == null) {
+		if (settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_UMI) == null) {
 			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_UMI,"true").save();
 		}
 		JPA.em().getTransaction().commit();
@@ -338,16 +338,16 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 	public void testMultipleSubmissionsAllowed() throws IOException {    
 
 		// Turn ON any of the extra paramaters
-		if (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_BIRTH) == null) {
+		if (settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_BIRTH) == null) {
 			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_BIRTH,"true").save();
 		}
-		if (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_COLLEGE) == null) {
+		if (settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_COLLEGE) == null) {
 			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_COLLEGE,"true").save();
 		}
-		if (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_UMI) == null) {
+		if (settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_UMI) == null) {
 			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_UMI,"true").save();
 		}
-		if (settingRepo.getConfig(Configuration.ALLOW_MULTIPLE_SUBMISSIONS) == null) {
+		if (settingRepo.getConfigValue(Configuration.ALLOW_MULTIPLE_SUBMISSIONS) == null) {
 			settingRepo.createConfiguration(Configuration.ALLOW_MULTIPLE_SUBMISSIONS,"true").save();
 		}
 		JPA.em().getTransaction().commit();
@@ -410,16 +410,16 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 	public void testMultipleSubmissionsDisallowed() throws IOException {    
 
 		// Turn ON any of the extra paramaters
-		if (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_BIRTH) == null) {
+		if (settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_BIRTH) == null) {
 			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_BIRTH,"true").save();
 		}
-		if (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_COLLEGE) == null) {
+		if (settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_COLLEGE) == null) {
 			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_COLLEGE,"true").save();
 		}
-		if (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_UMI) == null) {
+		if (settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_UMI) == null) {
 			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_UMI,"true").save();
 		}
-		if (settingRepo.getConfig(Configuration.ALLOW_MULTIPLE_SUBMISSIONS) != null) {
+		if (settingRepo.getConfigValue(Configuration.ALLOW_MULTIPLE_SUBMISSIONS) != null) {
 			settingRepo.findConfigurationByName(Configuration.ALLOW_MULTIPLE_SUBMISSIONS).delete();
 		}
 		JPA.em().getTransaction().commit();
@@ -462,13 +462,13 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 	public void testCommitteeMembers() throws IOException, InterruptedException {    
 
 		// Turn off any of the extra paramaters
-		if (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_BIRTH) != null) {
+		if (settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_BIRTH) != null) {
 			settingRepo.findConfigurationByName(Configuration.SUBMIT_REQUEST_BIRTH).delete();
 		}
-		if (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_COLLEGE) != null) {
+		if (settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_COLLEGE) != null) {
 			settingRepo.findConfigurationByName(Configuration.SUBMIT_REQUEST_COLLEGE).delete();
 		}
-		if (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_UMI) != null) {
+		if (settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_UMI) != null) {
 			settingRepo.findConfigurationByName(Configuration.SUBMIT_REQUEST_UMI).delete();
 		}
 		JPA.em().getTransaction().commit();

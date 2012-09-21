@@ -23,9 +23,7 @@ import play.Logger;
 import play.modules.spring.Spring;
 import play.mvc.Router;
 import play.mvc.Router.ActionDefinition;
-
 import controllers.Security;
-import controllers.Student;
 
 /**
  * This is the fifth, and last step, of the submission process. We allow
@@ -57,9 +55,9 @@ public class Confirm extends AbstractSubmitStep {
 	public static void confirm(Long subId) {		
 
 		// Submission configuration
-		boolean requestCollege = (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_COLLEGE) != null) ? true : false;
-		boolean requestBirth = (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_BIRTH) != null) ? true : false;
-		boolean requestUMI = (settingRepo.getConfig(Configuration.SUBMIT_REQUEST_UMI) != null) ? true : false;
+		boolean requestCollege = settingRepo.getConfigBoolean(Configuration.SUBMIT_REQUEST_COLLEGE);
+		boolean requestBirth = settingRepo.getConfigBoolean(Configuration.SUBMIT_REQUEST_BIRTH);
+		boolean requestUMI = settingRepo.getConfigBoolean(Configuration.SUBMIT_REQUEST_UMI);
 
 		// Locate the submission 
 		Submission sub = getSubmission();
@@ -157,7 +155,7 @@ public class Confirm extends AbstractSubmitStep {
 
 		List<ActionLog> logs = subRepo.findActionLog(sub);
 		List<Attachment> supplementaryDocuments = sub.getSupplementalDocuments();
-		String grantor = settingRepo.getConfig(Configuration.GRANTOR,"Unknown Institution");
+		String grantor = settingRepo.getConfigValue(Configuration.GRANTOR,"Unknown Institution");
 
 
 		renderTemplate("Submit/confirm.html",subId, sub, grantor, submitter, logs, 
@@ -175,16 +173,8 @@ public class Confirm extends AbstractSubmitStep {
 	 */
 	public static void complete(Long subId) {
 		// Get the post submission instructions for display
-		String instructions = settingRepo.getConfig(Configuration.SUBMIT_INSTRUCTIONS,Configuration.DEFAULT_SUBMIT_INSTRUCTIONS);
-
-		instructions = instructions.replaceAll("  ", "&nbsp;&nbsp;");
-		String[] paragraphs = instructions.split("\n\\s*\n");
-		instructions = "";
-		for (String paragraph : paragraphs) {
-			instructions += "<p>"+paragraph+"</p>";
-		}
-
-		instructions = instructions.replaceAll("\n", "<br/>");
+		String instructions = settingRepo.getConfigValue(Configuration.SUBMIT_INSTRUCTIONS);
+		instructions = text2html(instructions);
 
 		renderTemplate("Submit/complete.html", instructions);
 	}

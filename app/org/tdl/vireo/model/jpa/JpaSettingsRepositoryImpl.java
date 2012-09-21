@@ -1,15 +1,11 @@
 package org.tdl.vireo.model.jpa;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
-import org.tdl.vireo.model.ActionLog;
-import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.College;
-import org.tdl.vireo.model.CommitteeMember;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.CustomActionDefinition;
-import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.Degree;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.Department;
@@ -19,10 +15,6 @@ import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.Major;
-import org.tdl.vireo.model.Person;
-import org.tdl.vireo.model.Preference;
-import org.tdl.vireo.model.RoleType;
-import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SettingsRepository;
 
 /**
@@ -233,27 +225,45 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	}
 	
 	@Override
-	public String getConfig(String name, String defaultValue) {
+	public String getConfigValue(String name, String defaultValue) {
 		
-		String value = getConfig(name);
-		if (value == null || value.trim().length() == 0)
+		Configuration config = findConfigurationByName(name);
+		if (config == null || config.getValue() == null || config.getValue().trim().length() == 0)
 			return defaultValue;
 		else
-			return value;
+			return config.getValue();
 	}
 	
 	@Override
-	public String getConfig(String name) {
-		Configuration config = findConfigurationByName(name);
-		if (config == null)
-			return null;
-		return config.getValue();
+	public String getConfigValue(String name) {
+		
+		return getConfigValue(name,Configuration.DEFAULTS.get(name));
+	}
+	
+	@Override
+	public boolean getConfigBoolean(String name) {
+		
+		return getConfigValue(name) != null ? true : false;
 	}
 
 	@Override
 	public List<Configuration> findAllConfigurations() {
 		return (List) JpaConfigurationImpl.findAll();
 
+	}
+
+	/**
+	 * Set default configuration parameters from spring.
+	 * 
+	 * @param defaults
+	 *            A map of name value pairs for default configuration
+	 *            paramaters.
+	 */
+	public void setConfigurationDefaults(Map<String, String> defaults) {
+		for (String name : defaults.keySet()) {
+			String value = defaults.get(name);
+			Configuration.DEFAULTS.register(name, value);
+		}
 	}
 
 	// ///////////////////////////

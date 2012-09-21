@@ -7,16 +7,12 @@ import java.util.Map;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
-import org.tdl.vireo.model.Configuration;
-import org.tdl.vireo.model.EmailTemplate;
+import org.tdl.vireo.email.SystemEmailTemplateService;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.search.Indexer;
 import org.tdl.vireo.security.AuthenticationMethod;
-import org.tdl.vireo.email.SystemEmailTemplateService;
-import org.tdl.vireo.email.impl.SystemEmailTemplateServiceImpl;
 
-import play.Logger;
 import play.modules.spring.Spring;
 
 public class FirstUser extends AbstractVireoController {
@@ -61,10 +57,6 @@ public class FirstUser extends AbstractVireoController {
 				
 				//Generate System Email Templates
 				systemEmailService.generateAllSystemEmailTemplates();
-				
-				//Create Default Submit Instruction and License						
-				settingRepo.createConfiguration(Configuration.SUBMIT_INSTRUCTIONS, Configuration.DEFAULT_SUBMIT_INSTRUCTIONS).save();
-				settingRepo.createConfiguration(Configuration.SUBMIT_LICENSE, Configuration.DEFAULT_SUBMIT_LICENSE).save();
 				
 				//Setup Embargos
 				for(EmbargoArray embargoDefinition : EMBARGO_DEFINTITIONS) {

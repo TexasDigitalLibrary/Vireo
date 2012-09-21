@@ -70,8 +70,8 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 		context.turnOffAuthorization();
 		
 		// Get the configuration setting prior to doing anything so that we can restore them after.
-		originalSubmissionsOpen = settingRepo.getConfig(Configuration.SUBMISSIONS_OPEN);
-		originalAllowMultiple = settingRepo.getConfig(Configuration.ALLOW_MULTIPLE_SUBMISSIONS);
+		originalSubmissionsOpen = settingRepo.getConfigValue(Configuration.SUBMISSIONS_OPEN);
+		originalAllowMultiple = settingRepo.getConfigValue(Configuration.ALLOW_MULTIPLE_SUBMISSIONS);
 		
 		submitter = personRepo.createPerson("netid", "student@tdl.org", "first", "last", RoleType.STUDENT).save();
 		submitter.setPassword("password");

@@ -163,9 +163,9 @@
                     #{/if}
                     
                     <!-- thesis.degree.grantor = Global configuration setting (settings tab - application settings) -->
-                    #{ if settingRepo.getConfig(org.tdl.vireo.model.Configuration.GRANTOR) != null } 
+                    #{ if settingRepo.getConfigValue(org.tdl.vireo.model.Configuration.GRANTOR) != null } 
                     <dim:field mdschema="thesis" element="degree" qualifier="grantor">
-                        ${ settingRepo.getConfig(org.tdl.vireo.model.Configuration.GRANTOR) }
+                        ${ settingRepo.getConfigValue(org.tdl.vireo.model.Configuration.GRANTOR) }
                     </dim:field>
                     #{/if}
                     

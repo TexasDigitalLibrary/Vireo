@@ -5,7 +5,7 @@ jQuery(document).ready(function(){
 
 	// Settings toggle and input/textarea fields
      jQuery(".application-toggle").click(applicationSettingsHandler('@{settings.ApplicationSettingsTab.updateApplicationSettingsJSON()}'));
-     jQuery(".application-text").change(applicationSettingsHandler('@{settings.ApplicationSettingsTab.updateApplicationSettingsJSON()}'));
+     jQuery(".application-text textarea").change(applicationSettingsHandler('@{settings.ApplicationSettingsTab.updateApplicationSettingsJSON()}'));
     
      // Sortable action list
      jQuery("#action-list, #action-remove").sortable({
@@ -40,7 +40,7 @@ jQuery(document).ready(function(){
      
      
      // Lock the big text areas
-     jQuery(".application-text-lock a").click(applicationUnlockField);
+     jQuery(".lock-control a").click(applicationUnlockField);
      
      
 }) // document ready
@@ -121,24 +121,12 @@ jQuery(document).ready(function(){
 	</ul>
 </div>
 
-<h2>SUBMISSION INSTRUCTIONS</h2>
-
-<div class="wrap">
-    <div class="span9">
-    <p class="application-text-lock"><a href="#${org.tdl.vireo.model.Configuration.SUBMIT_INSTRUCTIONS}"><em class="icon-lock"></em> This field is locked to prevent accidental editing, click to unlock.</a></p>
-	<textarea class="input-xxlarge application-text" id="${org.tdl.vireo.model.Configuration.SUBMIT_INSTRUCTIONS}" name="${org.tdl.vireo.model.Configuration.SUBMIT_INSTRUCTIONS}" readonly="true">#{verbatim}${SUBMIT_INSTRUCTIONS}#{/verbatim}</textarea>
-
-	<p class="info">These instructions will be shown as part of the submission confirmation. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically.</p>
-	</div>
-	<div class="clear"></div>
-</div>
-
 <h2>SUBMISSION LICENSE</h2>
 
-<div class="wrap">
+<div class="wrap application-text">
     <div class="span9">
-    <p class="application-text-lock"><a href="#${org.tdl.vireo.model.Configuration.SUBMIT_LICENSE}"><em class="icon-lock"></em> This field is locked to prevent accidental editing, click to unlock.</a></p>
-	<textarea class="input-xxlarge application-text" id="${org.tdl.vireo.model.Configuration.SUBMIT_LICENSE}" name="${org.tdl.vireo.model.Configuration.SUBMIT_LICENSE}" readonly="true">#{verbatim}${SUBMIT_LICENSE}#{/verbatim}</textarea>
+    <p class="lock-control"><a href="#${org.tdl.vireo.model.Configuration.SUBMIT_LICENSE}"><em class="icon-lock"></em> This field is locked to prevent accidental editing, click to unlock.</a></p>
+	<textarea class="input-xxlarge" id="${org.tdl.vireo.model.Configuration.SUBMIT_LICENSE}" name="${org.tdl.vireo.model.Configuration.SUBMIT_LICENSE}" readonly="true">#{verbatim}${SUBMIT_LICENSE}#{/verbatim}</textarea>
 		
 	<p class="info">Students are required to accept this license as part of their submission. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically.</p>
 	</div>

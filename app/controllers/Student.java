@@ -1,43 +1,28 @@
 package controllers;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
+import static org.tdl.vireo.model.Configuration.CURRENT_SEMESTER;
+import static org.tdl.vireo.model.Configuration.SUBMISSIONS_OPEN;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Calendar;
 import java.util.List;
 
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-
-import org.tdl.vireo.model.*;
+import org.tdl.vireo.model.ActionLog;
+import org.tdl.vireo.model.Attachment;
+import org.tdl.vireo.model.AttachmentType;
+import org.tdl.vireo.model.Configuration;
+import org.tdl.vireo.model.NameFormat;
+import org.tdl.vireo.model.Person;
+import org.tdl.vireo.model.RoleType;
+import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.state.State;
 
-import com.google.gson.Gson;
-
-import controllers.submit.PersonalInfo;
-
 import play.Logger;
-import play.Play;
 import play.libs.MimeTypes;
-import play.mvc.Before;
-import play.mvc.Controller;
 import play.mvc.With;
-import sun.util.logging.resources.logging;
-
-import java.text.DateFormat;
-import java.text.DateFormatSymbols;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import play.mvc.Scope.Params;
-import static org.tdl.vireo.model.Configuration.CURRENT_SEMESTER;
-import static org.tdl.vireo.model.Configuration.SUBMISSIONS_OPEN;
+import controllers.submit.PersonalInfo;
 
 /**
  * THIS CONTROLLER IS BEING REFACTORED. 
@@ -93,8 +78,8 @@ public class Student extends AbstractVireoController {
 		List<Submission> submissions = subRepo.findSubmission(submitter);
 
 
-		boolean submissionsOpen = (settingRepo.getConfig(Configuration.SUBMISSIONS_OPEN) != null) ? true : false;
-		boolean allowMultiple = (settingRepo.getConfig(Configuration.ALLOW_MULTIPLE_SUBMISSIONS) != null) ? true : false;
+		boolean submissionsOpen = settingRepo.getConfigBoolean(Configuration.SUBMISSIONS_OPEN);
+		boolean allowMultiple = settingRepo.getConfigBoolean(Configuration.ALLOW_MULTIPLE_SUBMISSIONS);
 		
 		// Check to see there are no submissions, start a new one.
 		if (submissions.size() == 0 && submissionsOpen) {
@@ -137,7 +122,7 @@ public class Student extends AbstractVireoController {
 			showStartSubmissionButton = false;
 		
 		renderArgs.put("SUBMISSIONS_OPEN", settingRepo.findConfigurationByName(SUBMISSIONS_OPEN));
-		renderArgs.put("CURRENT_SEMESTER", settingRepo.getConfig(CURRENT_SEMESTER, "current"));
+		renderArgs.put("CURRENT_SEMESTER", settingRepo.getConfigValue(CURRENT_SEMESTER, "current"));
 		
 		renderTemplate("Student/list.html",submissions, showStartSubmissionButton);
 	}
@@ -166,7 +151,7 @@ public class Student extends AbstractVireoController {
 				submitter.getEmail(),
 				sub.getId());
 		
-		boolean allowMultiple = (settingRepo.getConfig(Configuration.ALLOW_MULTIPLE_SUBMISSIONS) != null) ? true : false;
+		boolean allowMultiple = settingRepo.getConfigBoolean(Configuration.ALLOW_MULTIPLE_SUBMISSIONS);
 		
 		// Handle add message button. Just add the message to the submission
 		if (params.get("submit_addMessage") != null) {   
@@ -216,7 +201,7 @@ public class Student extends AbstractVireoController {
 			}
 		}
 
-		String grantor = settingRepo.getConfig(Configuration.GRANTOR,"Unknown Institution");
+		String grantor = settingRepo.getConfigValue(Configuration.GRANTOR,"Unknown Institution");
 		List<Submission> allSubmissions = subRepo.findSubmission(submitter);
 		List<ActionLog> logs = subRepo.findActionLog(sub);
 		Attachment primaryDocument = sub.getPrimaryDocument();
@@ -234,7 +219,12 @@ public class Student extends AbstractVireoController {
 	@Security(RoleType.STUDENT)
 	public static void correctionsComplete(Long subId) {
 		
-		renderTemplate("Student/complete.html");
+		
+		// Get the post corrections instructions for display
+		String instructions = settingRepo.getConfigValue(Configuration.CORRECTION_INSTRUCTIONS);
+		instructions = text2html(instructions);
+		
+		renderTemplate("Student/complete.html",instructions);
 		
 	}
 	
