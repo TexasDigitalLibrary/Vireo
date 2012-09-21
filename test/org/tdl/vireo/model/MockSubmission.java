@@ -4,23 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import org.tdl.vireo.model.jpa.JpaAttachmentImpl;
-import org.tdl.vireo.model.jpa.JpaCommitteeMemberImpl;
-import org.tdl.vireo.model.jpa.JpaCustomActionValueImpl;
-import org.tdl.vireo.model.jpa.JpaEmbargoTypeImpl;
-import org.tdl.vireo.model.jpa.JpaGraduationMonthImpl;
-import org.tdl.vireo.model.jpa.JpaPersonImpl;
 import org.tdl.vireo.state.State;
 
 /**

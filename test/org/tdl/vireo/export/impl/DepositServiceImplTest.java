@@ -1,12 +1,10 @@
 package org.tdl.vireo.export.impl;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 
 import org.junit.Test;
 import org.tdl.vireo.export.MockDepositor;
 import org.tdl.vireo.export.MockPackager;
-import org.tdl.vireo.export.impl.DepositServiceImpl;
 import org.tdl.vireo.model.MockDepositLocation;
 import org.tdl.vireo.model.MockSubmission;
 import org.tdl.vireo.search.MockSearchFilter;

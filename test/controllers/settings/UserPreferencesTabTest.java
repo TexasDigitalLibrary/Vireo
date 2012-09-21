@@ -22,7 +22,6 @@ import play.db.jpa.JPA;
 import play.modules.spring.Spring;
 import play.mvc.Http.Response;
 import play.mvc.Router;
-
 import controllers.AbstractVireoFunctionalTest;
 /**
  * Test for the user preferences tab. 

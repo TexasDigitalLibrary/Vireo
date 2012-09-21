@@ -1,14 +1,12 @@
 package org.tdl.vireo.model.jpa;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.DegreeLevel;
@@ -17,7 +15,6 @@ import org.tdl.vireo.model.MockPerson;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
-import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.search.Semester;
 import org.tdl.vireo.security.SecurityContext;

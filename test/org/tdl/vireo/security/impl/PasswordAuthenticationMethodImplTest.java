@@ -6,11 +6,9 @@ import org.junit.Test;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.RoleType;
-import org.tdl.vireo.model.jpa.JpaPersonRepositoryImpl;
 import org.tdl.vireo.security.AuthenticationMethod;
 import org.tdl.vireo.security.AuthenticationResult;
 import org.tdl.vireo.security.SecurityContext;
-import org.tdl.vireo.security.impl.PasswordAuthenticationMethodImpl;
 
 import play.db.jpa.JPA;
 import play.modules.spring.Spring;

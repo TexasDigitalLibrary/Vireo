@@ -1,18 +1,7 @@
 package org.tdl.vireo.model;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.OneToMany;
-
-import org.tdl.vireo.model.AbstractModel;
-import org.tdl.vireo.model.Person;
-import org.tdl.vireo.model.Preference;
-import org.tdl.vireo.model.RoleType;
 
 /**
  * This is a simple mock person class that may be useful for testing. Feel free

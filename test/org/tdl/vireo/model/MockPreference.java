@@ -1,9 +1,5 @@
 package org.tdl.vireo.model;
 
-import javax.persistence.Column;
-import javax.persistence.ManyToOne;
-
-import org.tdl.vireo.model.jpa.JpaPersonImpl;
 
 /**
  * This is a simple mock personal preference class that may be useful for

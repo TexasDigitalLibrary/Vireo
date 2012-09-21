@@ -1,9 +1,4 @@
 package controllers.settings;
-import static org.tdl.vireo.model.Configuration.EMAIL_CC_ADVISOR;
-import static org.tdl.vireo.model.Configuration.EMAIL_CC_STUDENT;
-import static org.tdl.vireo.model.Configuration.EMAIL_SHOW_ADDRESSES;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +9,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.tdl.vireo.model.DepositLocation;
-import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.security.SecurityContext;

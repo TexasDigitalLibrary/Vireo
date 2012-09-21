@@ -6,17 +6,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
-import org.tdl.vireo.export.ExportPackage;
 import org.tdl.vireo.export.MockExportPackage;
-import org.tdl.vireo.export.impl.FileDepositorImpl;
 import org.tdl.vireo.model.MockDepositLocation;
 import org.tdl.vireo.model.MockSubmission;
-import org.tdl.vireo.model.Submission;
 
 import play.Play;
 import play.modules.spring.Spring;

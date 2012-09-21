@@ -1,6 +1,5 @@
 package org.tdl.vireo.model;
 
-import javax.persistence.Column;
 
 /**
  * This is a simple mock embargo type class that may be useful for testing. Feel

@@ -12,7 +12,6 @@ import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.security.AuthenticationResult;
 import org.tdl.vireo.security.SecurityContext;
-import org.tdl.vireo.security.impl.ShibbolethAuthenticationMethodImpl;
 
 import play.db.jpa.JPA;
 import play.modules.spring.Spring;

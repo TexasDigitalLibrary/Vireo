@@ -5,8 +5,8 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.DegreeLevel;
+import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.MockPerson;
 import org.tdl.vireo.security.SecurityContext;
 

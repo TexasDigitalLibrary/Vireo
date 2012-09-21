@@ -1,35 +1,14 @@
 package org.tdl.vireo.state.impl;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import javax.naming.OperationNotSupportedException;
 
 import org.junit.Test;
-import org.tdl.vireo.model.AbstractModel;
-import org.tdl.vireo.model.Attachment;
-import org.tdl.vireo.model.AttachmentType;
-import org.tdl.vireo.model.CommitteeMember;
-import org.tdl.vireo.model.CustomActionDefinition;
-import org.tdl.vireo.model.CustomActionValue;
-import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.MockEmbargoType;
 import org.tdl.vireo.model.MockSubmission;
-import org.tdl.vireo.model.Person;
-import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.state.State;
-import org.tdl.vireo.state.impl.StateImpl;
 
-import play.Play;
 import play.modules.spring.Spring;
 import play.test.UnitTest;
 

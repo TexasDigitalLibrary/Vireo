@@ -1,28 +1,18 @@
 package org.tdl.vireo.model.jpa;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.tdl.vireo.model.ActionLog;
-import org.tdl.vireo.model.AttachmentType;
-import org.tdl.vireo.model.CustomActionDefinition;
-import org.tdl.vireo.model.DegreeLevel;
-import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.MockPerson;
+import org.tdl.vireo.model.NamedSearchFilter;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
-import org.tdl.vireo.model.NamedSearchFilter;
 import org.tdl.vireo.model.Submission;
-import org.tdl.vireo.search.SearchDirection;
 import org.tdl.vireo.search.Semester;
-import org.tdl.vireo.search.SearchOrder;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.StateManager;
 

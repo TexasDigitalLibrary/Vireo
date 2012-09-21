@@ -1,11 +1,8 @@
 package org.tdl.vireo.model.jpa;
 
-import java.util.List;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.MockPerson;
 import org.tdl.vireo.security.SecurityContext;

@@ -2,10 +2,8 @@ import java.net.BindException;
 
 import play.Logger;
 import play.db.jpa.NoTransaction;
-import play.exceptions.JavaExecutionException;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
-import play.jobs.OnApplicationStop;
 import edu.tamu.mocksword.server.MockSwordServer;
 
 /**

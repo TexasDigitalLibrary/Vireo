@@ -8,7 +8,6 @@ import org.junit.Test;
 import org.tdl.vireo.email.EmailService;
 import org.tdl.vireo.email.VireoEmail;
 import org.tdl.vireo.model.ActionLog;
-import org.tdl.vireo.model.MockPerson;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
@@ -18,7 +17,7 @@ import org.tdl.vireo.security.SecurityContext;
 
 import play.libs.Mail;
 import play.modules.spring.Spring;
-import play.test.UnitTest;;
+import play.test.UnitTest;
 
 /**
  * Test sending vireo emails.
