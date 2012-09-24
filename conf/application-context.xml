@@ -232,7 +232,7 @@ Thesis Office
     </bean>
     <bean id="FileDeposit" class="org.tdl.vireo.export.impl.FileDepositorImpl" scope="singleton">
         <property name="displayName" value="File Deposit"/>
-        <property name="baseDirectory" value="data/deposits"/>
+        <property name="baseDirectory" value="${deposits.path}"/>
     </bean>
     
     <!-- Package Formats -->
