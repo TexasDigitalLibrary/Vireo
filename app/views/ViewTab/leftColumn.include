@@ -63,7 +63,7 @@
 		<ul class="unstyled">
 			<li>UMI Release:</li>
 			<li><b>#{if submission.getUMIRelease() != null}
-				${submission.getUMIRelease()}
+				${submission.getUMIRelease() ? "yes" : "no"}
 			#{/if}#{else}
 				none
 			#{/else}

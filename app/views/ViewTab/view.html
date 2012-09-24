@@ -308,7 +308,7 @@ jQuery(document).ready(function(){
 						</span></li>
 					<li class="edit"><label>UMI Release:</label><span id="umiRelease"
 						#{if submission.getUMIRelease() != null}
-							class="select"><i class="icon-pencil"></i> ${submission.getUMIRelease()}
+							class="select"><i class="icon-pencil"></i> ${submission.getUMIRelease() ? "yes" : "no"}
 						#{/if}#{else}
 							class="select empty"><i class="icon-pencil"></i> none
 						#{/else}
@@ -440,8 +440,8 @@ jQuery(document).ready(function(){
 			</div>
 			<div id="umiReleaseOptions" style="display:none;">
 				<select class="field">
-				<option value="true">true</option>
-				<option value="false">false</option>
+				<option value="yes">yes</option>
+				<option value="no">no</option>
 				</select>
 			</div>
 			<div id="docTypeOptions" style="display:none;">
