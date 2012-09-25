@@ -221,12 +221,16 @@ public abstract class LuceneAbstractJobImpl extends Job {
 		
 		String studentName = "";
 		if (sub.getStudentLastName() != null)
-			studentName += sub.getStudentLastName();
+			studentName += sub.getStudentLastName() + " ";
 		if (sub.getStudentFirstName() != null)
-			studentName += sub.getStudentFirstName();
+			studentName += sub.getStudentFirstName() + " ";
 		if (sub.getStudentMiddleName() != null)
-			studentName += sub.getStudentMiddleName();
+			studentName += sub.getStudentMiddleName() + " ";
 		searchText.append(studentName).append(" ");
+		
+		searchText.append(sub.getStudentFormattedName(NameFormat.LAST_FIRST_BIRTH)).append(" ");
+		searchText.append(sub.getStudentFormattedName(NameFormat.FIRST_LAST_BIRTH)).append(" ");
+
 		
 		String studentEmail = sub.getSubmitter().getEmail();
 		searchText.append(studentEmail).append(" ");
