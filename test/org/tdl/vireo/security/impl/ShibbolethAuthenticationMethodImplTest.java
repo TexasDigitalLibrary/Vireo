@@ -15,8 +15,10 @@ import org.tdl.vireo.security.SecurityContext;
 
 import play.db.jpa.JPA;
 import play.modules.spring.Spring;
+import play.mvc.Router;
 import play.mvc.Http.Header;
 import play.mvc.Http.Request;
+import play.mvc.Router.ActionDefinition;
 import play.test.UnitTest;
 
 /**
@@ -427,13 +429,46 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		
 		method.mock = false;
 		
-		String redirect = method.startAuthentication(null, "return");
+		
+		ActionDefinition action = Router.reverse("Application.index");
+		
+		String redirect = method.startAuthentication(null, action);
 		assertNotNull(redirect);
-		assertTrue(redirect.contains("return"));
+		assertTrue(redirect.contains("target=%2F"));
 		
 		method.mock = true;
 		
-		assertNull(method.startAuthentication(null, "return"));
+		assertNull(method.startAuthentication(null, action));
+	}
+	
+	/**
+	 * Test that the shibboleth initiation url looks correct with force ssl turned on.
+	 */
+	@Test
+	public void testShibbolethInitiationWithSSL() {
+		
+		method.mock = false;
+		boolean originalSSL = method.loginForceSSL;
+		try {
+			// Test with ssl turned on
+			ActionDefinition action = Router.reverse("Application.index");
+			method.loginForceSSL = true;
+			
+			String redirect = method.startAuthentication(null, action);
+			assertTrue(redirect.contains("target=https%3A%2F%2F"));
+			
+			
+			// Test with it turned off
+			action = Router.reverse("Application.index");
+			method.loginForceSSL = false;
+			
+			redirect = method.startAuthentication(null, action);
+			assertTrue(redirect.contains("target=%2F"));
+			
+		} finally {
+			method.mock = true;
+			method.loginForceSSL = originalSSL;
+		}
 	}
 	
 	/**

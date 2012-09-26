@@ -3,6 +3,7 @@ package org.tdl.vireo.security;
 import org.tdl.vireo.model.Person;
 
 import play.mvc.Http.Request;
+import play.mvc.Router.ActionDefinition;
 
 /**
  * This is the generalized authentication interface for Vireo. Create an
@@ -177,13 +178,12 @@ public interface AuthenticationMethod {
 		 * 
 		 * @param request
 		 *            The HTTP request object.
-		 * @param returnURL
-		 *            The fully qualified URL where users must be returned to
-		 *            after authenticating with an external service.
+		 * @param returnAction
+		 *            The Play action to handle return authentication. 
 		 * @return The URL to redirect the user initiating authentication, or
 		 *         null if no redirection is required.
 		 */
-		public String startAuthentication(Request request, String returnURL);
+		public String startAuthentication(Request request, ActionDefinition returnAction);
 
 		/**
 		 * Authenticate this request. If the is successfully then the user will

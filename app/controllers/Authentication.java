@@ -188,11 +188,9 @@ public class Authentication extends AbstractVireoController {
 			
 			Map<String,Object> routeArgs = new HashMap<String,Object>();
 			routeArgs.put("methodName",methodName);
-			ActionDefinition routeDefinition = Router.reverse("Authentication.loginReturn", routeArgs);
-			routeDefinition.absolute();
-			String returnURL = routeDefinition.url;
+			ActionDefinition returnAction = Router.reverse("Authentication.loginReturn", routeArgs);
 			
-			String initiationRedirect = implicitMethod.startAuthentication(request, returnURL);
+			String initiationRedirect = implicitMethod.startAuthentication(request, returnAction);
 			
 			if (initiationRedirect == null) {
 				loginReturn(methodName);

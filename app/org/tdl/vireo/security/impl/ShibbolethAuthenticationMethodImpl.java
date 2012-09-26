@@ -16,6 +16,7 @@ import play.Play;
 import play.Play.Mode;
 import play.mvc.Http.Header;
 import play.mvc.Http.Request;
+import play.mvc.Router.ActionDefinition;
 
 /**
  * Shibboleth Authentication
@@ -36,6 +37,9 @@ public class ShibbolethAuthenticationMethodImpl extends
 	// The location to start a shibboleth session.
 	public String loginURL = "/Shibboleth.sso/Login?target=%1s";
 	public String logoutURL = "/Shibboleth.sso/Logout?return=%1s";
+	
+	// Force the login URL to use SSL
+	public boolean loginForceSSL = false;
 	
 	// Use netid or email adress as primary account identifier.
 	public boolean useNetIdAsIdentifier = true;
@@ -68,6 +72,19 @@ public class ShibbolethAuthenticationMethodImpl extends
 	
 	// Map of mock shibboleth attributes
 	public Map<String,String> mockAttributes = new HashMap<String,String>();
+	
+	
+	/**
+	 * Set whether the current protocol should be overridden for any login
+	 * request to force it to SSL. If this is turned off then login requests
+	 * will be handled using the protocol under which they were received.
+	 * 
+	 * @param loginForceSSL
+	 *            Whether to force SSL for login.
+	 */
+	public void setLoginForceSSL(boolean loginForceSSL) {
+		this.loginForceSSL = loginForceSSL;
+	}
 	
 	/**
 	 * Set the shibboleth login initiation url. This is a standard java format
@@ -205,11 +222,19 @@ public class ShibbolethAuthenticationMethodImpl extends
 
 	
 	@Override
-	public String startAuthentication(Request request, String returnURL) {
+	public String startAuthentication(Request request, ActionDefinition returnAction) {
 		
 		// If we are mocking a shibboleth connection then we can proceed straight to authentication.
 		if (mock)
 			return null;
+		
+		String returnURL = returnAction.url;
+		if (loginForceSSL) {
+			returnAction.absolute();
+			returnURL = returnAction.url;
+			if (returnURL.startsWith("http://")) 
+				returnURL = "https://"+returnURL.substring(7);
+		}
 		
 		// Generate the URL to initiate a shibboleth session
 		String encodedReturnURL = URLEncoder.encode(returnURL);
