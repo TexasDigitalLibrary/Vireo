@@ -48,7 +48,7 @@
 		<ul class="unstyled">
 			<li>Last Action:</li>
 			<li>
-			#{if actionLogs != null}
+			#{if actionLogs != null && actionLogs.size() > 0}
 				<b>${actionLogs[0].getActionDate()?.format("MM/dd/yyyy hh:mm:ss")}</b>			
 			</li>			
 		</ul>
