@@ -116,6 +116,10 @@ public class Authentication extends AbstractVireoController {
 			if (expectedRole.ordinal() > actualRole.ordinal())
 				forbidden();
 		}
+		
+		// If someone is authenticated, check if we need to require SSL
+		if (person != null)
+			checkForceSSL();
 	}
 
 	/**
@@ -135,6 +139,7 @@ public class Authentication extends AbstractVireoController {
 	 */
 	public static void loginList() {
 		flash.keep("url");	
+		checkForceSSL();
 		
 		// Get the list of all our *visible* authentication methods
 		List<AuthenticationMethod> visibleMethods = getVisibleAuthenticationMethods();
@@ -163,7 +168,8 @@ public class Authentication extends AbstractVireoController {
 	 *            The spring bean name of the authentication method.
 	 */
 	public static void loginMethod(String methodName) {
-		flash.keep("url");	
+		flash.keep("url");
+		checkForceSSL();
 		
 		notFoundIfNull(methodName);
 		if (params.get("submit_cancel") != null)
@@ -258,7 +264,7 @@ public class Authentication extends AbstractVireoController {
 	 *            The spring bean name of the implicit authentication method
 	 */
 	public static void loginReturn(String methodName) {
-		flash.keep("url");	
+		flash.keep("url");
 		notFoundIfNull(methodName);
 		
 		AuthenticationMethod.Implicit method = null;
@@ -330,6 +336,8 @@ public class Authentication extends AbstractVireoController {
 		// Bail if we don't allow registration
 		if (!isRegistrationEnabled())
 			notFound();
+		
+		checkForceSSL();
 		
 		// Bail if someone is already logged in.
 		if (context.getPerson() != null)
@@ -480,6 +488,8 @@ public class Authentication extends AbstractVireoController {
 		if (!isPasswordRecoveryEnabled())
 			notFound();
 		
+		checkForceSSL();
+		
 		// Bail if someone is already logged in.
 		if (context.getPerson() != null)
 			Authentication.profile();
@@ -595,6 +605,8 @@ public class Authentication extends AbstractVireoController {
 	@Security(RoleType.NONE)
 	public static void profile() {
 		
+		checkForceSSL();
+		
 		// Who's logged in.
 		Person person = context.getPerson();
 		
@@ -631,6 +643,8 @@ public class Authentication extends AbstractVireoController {
 	 */
 	@Security(RoleType.NONE)
 	public static void updateProfile() {
+		
+		checkForceSSL();
 		
 		Person person = context.getPerson();
 		
@@ -738,6 +752,9 @@ public class Authentication extends AbstractVireoController {
 	 */
 	@Security(RoleType.NONE)
 	public static void updatePassword() {
+		
+		checkForceSSL();
+		
 		Person person = context.getPerson();
 		
 		if (!isUpdatePasswordEnabled(person))
@@ -997,6 +1014,41 @@ public class Authentication extends AbstractVireoController {
 				return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * Check if we are forcing all authenticated sessions to be on secure SSL.
+	 * If so then the user will be redirected back to the same page over SSL.
+	 */
+	private static void checkForceSSL() {
+
+		// Only need to check if we're not secure.
+		if (!request.secure) {
+			
+			// Check if we are configured to force connections over ssl
+			String forceSSL = Play.configuration.getProperty("auth.forceSSL", "false");
+			if ("true".equalsIgnoreCase(forceSSL) || "yes".equalsIgnoreCase(forceSSL) || "on".equalsIgnoreCase(forceSSL)) {
+				
+				if (flash.contains("forceSSL")) {
+					Logger.error("Detected an infinate loop while attempting to redirect to SSL because 'auth.forceSSL' is turned on. If you are off loading SSL to a proxy make sure it is suppling the X-Forwarded-Proto header, and that the proxy's IP address is set correctly in your application.conf's XForwardSupport.");
+					error("Unable to redirect connection to SSL.");
+				}
+				
+				// If the user has already logged in then something is probably wrong with the configuration. So log it.
+				if (context.getPerson() != null)
+					Logger.warn("%s (%d: %s) is requesting '%s' over insecure http, redirecting to: %s",
+							context.getPerson().getFormattedName(NameFormat.FIRST_LAST), 
+							context.getPerson().getId(), 
+							context.getPerson().getEmail(),
+							request.url,
+							"https://"+request.domain + request.url);
+				
+				flash.put("forceSSL", "true");
+				
+				// Redirect to this url using https
+				redirect("https://"+request.domain + request.url);
+			}
+		}
 	}
 	
 }
