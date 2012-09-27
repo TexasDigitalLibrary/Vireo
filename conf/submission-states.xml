@@ -75,9 +75,9 @@
 		</property>
 	</bean>
 	
-	<bean id="CorrectionsRecieved" class="org.tdl.vireo.state.impl.StateImpl"
+	<bean id="CorrectionsReceived" class="org.tdl.vireo.state.impl.StateImpl"
         scope="singleton">
-        <property name="displayName" value="Corrections Recieved" />
+        <property name="displayName" value="Corrections Received" />
         <property name="active" value="true" />
         <property name="editableByReviewer" value="true" />
         <property name="transitions">
