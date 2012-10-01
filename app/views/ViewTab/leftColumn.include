@@ -37,7 +37,7 @@
 		</p>
 		<ul class="unstyled">
 			<li>Assigned To:</li>
-			<li><b><a href="#assignee-modal" data-toggle="modal">
+			<li><i class="icon-pencil"></i><b><a href="#assignee-modal" data-toggle="modal">
 			#{if submission.getAssignee()}
 				${submission.getAssignee().getDisplayName()}
 			#{/if}#{else}
@@ -80,7 +80,7 @@
 		</ul>
 		<ul class="unstyled">
 			<li>Submission Date</li>
-			<li><b><a href="#submission-date-modal" data-toggle="modal">${submission.getSubmissionDate()?.format("MM/dd/yyyy")}</a></b></li>
+			<li><i class="icon-pencil"></i><b><a href="#submission-date-modal" data-toggle="modal">${submission.getSubmissionDate()?.format("MM/dd/yyyy")}</a></b></li>
 		</ul>
 	</div>
 	<div class="box-footer">
