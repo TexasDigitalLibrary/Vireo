@@ -237,6 +237,25 @@ Thesis Office
     </bean>
     
     <!-- Package Formats -->
+    <bean id="VireoExport" class="org.tdl.vireo.export.impl.TemplatePackagerImpl" scope="prototype">
+        <property name="personRepository" ref="PersonRepository"/>
+        <property name="submissionRepository" ref="SubmissionRepository"/>
+        <property name="settingsRepository" ref="SettingsRepository"/>
+        <property name="displayName" value="Vireo Export"/>
+        <property name="format" value="http://purl.org/dc/elements/1.1/"/>
+        <property name="manifestTemplatePath" value="conf/formats/vireo.xml"/>
+        <property name="manifestName" value="vireo.xml"/>
+        <property name="attachmentTypeNames">
+            <list>
+                <value>UNKNOWN</value>
+                <value>PRIMARY</value>
+                <value>SUPPLEMENTAL</value>
+                <value>LICENSE</value>
+                <value>ARCHIVED</value>
+                <value>FEEDBACK</value> 
+            </list>
+        </property>
+    </bean>
     <bean id="DSpaceMETS" class="org.tdl.vireo.export.impl.TemplatePackagerImpl" scope="prototype">
         <property name="personRepository" ref="PersonRepository"/>
         <property name="submissionRepository" ref="SubmissionRepository"/>
@@ -250,22 +269,6 @@ Thesis Office
                 <entry key="agent" value="Vireo DSpace METS packager"/>
             </util:map>
         </property>
-        <property name="attachmentTypeNames">
-            <list>
-                <value>PRIMARY</value>
-                <value>SUPPLEMENTAL</value>
-                <value>LICENSE</value>
-            </list>
-        </property>
-    </bean>
-    <bean id="GenericQDC" class="org.tdl.vireo.export.impl.TemplatePackagerImpl" scope="prototype">
-        <property name="personRepository" ref="PersonRepository"/>
-        <property name="submissionRepository" ref="SubmissionRepository"/>
-        <property name="settingsRepository" ref="SettingsRepository"/>
-        <property name="displayName" value="Generic Qualified Dublin Core"/>
-        <property name="format" value="http://purl.org/dc/elements/1.1/"/>
-        <property name="manifestTemplatePath" value="conf/formats/qdc.xml"/>
-        <property name="manifestName" value="metadata.xml"/>
         <property name="attachmentTypeNames">
             <list>
                 <value>PRIMARY</value>
@@ -297,43 +300,30 @@ Thesis Office
             </list>
         </property>
     </bean>
-    <bean id="VireoExport" class="org.tdl.vireo.export.impl.TemplatePackagerImpl" scope="prototype">
+    <bean id="GenericQDC" class="org.tdl.vireo.export.impl.TemplatePackagerImpl" scope="prototype">
         <property name="personRepository" ref="PersonRepository"/>
         <property name="submissionRepository" ref="SubmissionRepository"/>
         <property name="settingsRepository" ref="SettingsRepository"/>
-        <property name="displayName" value="Vireo Export"/>
+        <property name="displayName" value="Generic Qualified Dublin Core"/>
         <property name="format" value="http://purl.org/dc/elements/1.1/"/>
-        <property name="manifestTemplatePath" value="conf/formats/vireo.xml"/>
-        <property name="manifestName" value="vireo.xml"/>
+        <property name="manifestTemplatePath" value="conf/formats/qdc.xml"/>
+        <property name="manifestName" value="metadata.xml"/>
         <property name="attachmentTypeNames">
             <list>
-                <value>UNKNOWN</value>
                 <value>PRIMARY</value>
                 <value>SUPPLEMENTAL</value>
                 <value>LICENSE</value>
-                <value>ARCHIVED</value>
-                <value>FEEDBACK</value> 
             </list>
         </property>
     </bean>
-    <bean id="FilesExport" class="org.tdl.vireo.export.impl.FilePackagerImpl" scope="prototype">
-        <property name="displayName" value="Files Export"/>
+    <bean id="FileExport" class="org.tdl.vireo.export.impl.FilePackagerImpl" scope="prototype">
+        <property name="displayName" value="File Export"/>
         <property name="attachmentTypeNames">
             <list>
                 <value>PRIMARY</value>
                 <value>SUPPLEMENTAL</value> 
             </list>
         </property>
-    </bean>
-    <bean id="MarcXML21" class="org.tdl.vireo.export.impl.TemplatePackagerImpl" scope="prototype">
-        <property name="personRepository" ref="PersonRepository"/>
-        <property name="submissionRepository" ref="SubmissionRepository"/>
-        <property name="settingsRepository" ref="SettingsRepository"/>
-        <property name="displayName" value="MARC21 XML (slim)"/>
-        <property name="mimeType" value="text/xml"/>
-        <property name="format" value="http://www.loc.gov/MARC21/slim"/>
-        <property name="manifestTemplatePath" value="conf/formats/marc21slim.xml"/>
-        <property name="manifestName" value="marc.xml"/>
     </bean>
     <bean id="Marc21" class="org.tdl.vireo.export.impl.TemplatePackagerImpl" scope="prototype">
         <property name="personRepository" ref="PersonRepository"/>
@@ -344,6 +334,16 @@ Thesis Office
         <property name="format" value="http://www.loc.gov/marc/umb/um11to12.html"/>
         <property name="manifestTemplatePath" value="conf/formats/marc21.xml"/>
         <property name="manifestName" value="marc21.bib"/>
+    </bean>
+    <bean id="MarcXML21" class="org.tdl.vireo.export.impl.TemplatePackagerImpl" scope="prototype">
+        <property name="personRepository" ref="PersonRepository"/>
+        <property name="submissionRepository" ref="SubmissionRepository"/>
+        <property name="settingsRepository" ref="SettingsRepository"/>
+        <property name="displayName" value="MARC21 XML"/>
+        <property name="mimeType" value="text/xml"/>
+        <property name="format" value="http://www.loc.gov/MARC21/slim"/>
+        <property name="manifestTemplatePath" value="conf/formats/marc21slim.xml"/>
+        <property name="manifestName" value="marc.xml"/>
     </bean>
     <bean id="MODS" class="org.tdl.vireo.export.impl.TemplatePackagerImpl" scope="prototype">
         <property name="personRepository" ref="PersonRepository"/>
