@@ -1,10 +1,23 @@
 #{extends 'admin.html' /}
 #{set title:'View Submission Details' /}
 
+#{set 'moreStyles'}
+<link href="@{'/public/stylesheets/datepicker.css'}" rel="stylesheet" type="text/css">
+#{/set}
+
 #{set 'moreScripts'}
-<script src="@{'/public/javascripts/vireo-viewtab.js'}" type="text/javascript" charset="${_response_encoding}"></script> 
+<script src="@{'/public/javascripts/vireo-viewtab.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+<script src="@{'/public/javascripts/bootstrap-datepicker.js'}" type="text/javascript" charset="${_response_encoding}"></script>
 <script type="text/javascript" >
 jQuery(document).ready(function(){
+	
+	if(jQuery.browser.msie){
+		if(parseInt(jQuery.browser.version, 10) != 7 && parseInt(jQuery.browser.version, 10) != 8){
+			jQuery(".datepicker").datepicker();
+		}
+	} else {
+		jQuery(".datepicker").datepicker();
+	}
 	
 	 var subId = ${submission.getId()};
 	 var refreshActionLogURL = "@{ViewTab.refreshActionLogTable()}";

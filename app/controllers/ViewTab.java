@@ -4,11 +4,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.DateFormatSymbols;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -642,6 +646,34 @@ public class ViewTab extends AbstractVireoController {
 
 		view();
 
+	}
+	
+	/**
+	 * A method to change the submission date.
+	 * 
+	 * @param id (The submission id)
+	 */
+	@Security(RoleType.REVIEWER)
+	public static void changeSubmissionDate(Long id){
+		
+		Submission submission = subRepo.findSubmission(id);
+		
+		try{
+			String newDate = params.get("submission-date");
+			DateFormat formatter;
+			Date date;
+			
+			formatter = new SimpleDateFormat("MM/dd/yyyy");
+			date = (Date)formatter.parse(newDate);
+			
+			submission.setSubmissionDate(date);
+			submission.save();
+		} catch (ParseException e) {
+			validation.addError("changeSubmissionDate", "The date provided was not formatted correctly. Please format your date like MM/DD/YYYY.");
+		}
+		
+		view();
+		
 	}
 	
 	/**

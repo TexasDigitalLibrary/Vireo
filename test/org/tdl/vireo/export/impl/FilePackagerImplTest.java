@@ -37,7 +37,7 @@ import play.test.UnitTest;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  * 
  */
-public class TemplatePackagerImplTest extends UnitTest {
+public class FilePackagerImplTest extends UnitTest {
 
 	// All the repositories
 	public static SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
@@ -56,25 +56,7 @@ public class TemplatePackagerImplTest extends UnitTest {
 		context.turnOffAuthorization();
 		person = personRepo.createPerson("netid", "email@email.com", "first", "last", RoleType.NONE).save();
 		sub = subRepo.createSubmission(person);
-		
-		// Okay, we should start generating action log messages now.
-		sub.setStudentFirstName("first name");
-		sub.setStudentLastName("last name");
-		sub.setStudentMiddleName("middle name");
-		sub.setStudentBirthYear(2002);
-		sub.setDocumentTitle("document title");
-		sub.setDocumentAbstract("document abstract");
-		sub.setDocumentKeywords("document keywords");
-		sub.setDegree("selected degree");
-		sub.setDegreeLevel(DegreeLevel.UNDERGRADUATE);
-		sub.setDepartment("selected department");
-		sub.setCollege("selected college");
-		sub.setMajor("selected major");
-		sub.setDocumentType("selected document type");
-		sub.setGraduationMonth(0);
-		sub.setGraduationYear(2002);
-		sub.setDepositId("depositId");
-		
+				
 		// Create some attachments
 		File tmpDir = createNewTempDir();
 		File bottle_pdf = createAndWriteFile(tmpDir, "bottle.pdf", "bottle.pdf: This is not really a pdf file.");
@@ -95,7 +77,7 @@ public class TemplatePackagerImplTest extends UnitTest {
 	 * Clean up our submission.
 	 */
 	@After
-	public void cleanup() {
+	public void cleanup() {		
 		sub.delete();
 		person.delete();
 		context.restoreAuthorization();
@@ -110,15 +92,15 @@ public class TemplatePackagerImplTest extends UnitTest {
 	public void testPackager() throws IOException, JDOMException {
 
 		// Test all the template packagers
-		Map<String,TemplatePackagerImpl> packagers = Spring.getBeansOfType(TemplatePackagerImpl.class);
+		Map<String,FilePackagerImpl> packagers = Spring.getBeansOfType(FilePackagerImpl.class);
 		
-		for (TemplatePackagerImpl packager : packagers.values()) {
+		for (FilePackagerImpl packager : packagers.values()) {
 			
 			ExportPackage pkg = packager.generatePackage(sub);
 			
 			assertNotNull(pkg);
-			assertEquals(packager.format,pkg.getFormat());
-			assertEquals(packager.mimeType,pkg.getMimeType());
+			assertEquals("File System",pkg.getFormat());
+			assertNull(pkg.getMimeType());
 			
 			
 			
@@ -128,42 +110,14 @@ public class TemplatePackagerImplTest extends UnitTest {
 			assertTrue("Package file does not exist", exportFile.exists());
 			assertTrue("Package file is not readable", exportFile.canRead());
 			
-			if (exportFile.isDirectory()) {
+			assertTrue(exportFile.isDirectory());
 			
-				// The export is a directory of multiple files
-				Map<String, File> fileMap = getFileMap(exportFile);
-				
-				// There should be three files
-				assertTrue(fileMap.containsKey(packager.manifestName));
-				assertTrue(fileMap.containsKey("LASTNAME-SELECTEDDOCUMENTTYPE-2002.pdf"));
-				assertTrue(fileMap.containsKey("fluff.jpg"));
-				
-				// Load up the manifest and make sure it's valid XML.
-				SAXBuilder builder = new SAXBuilder();
-				Document doc = builder.build(fileMap.get(packager.manifestName));
-				
-				// Check that the manifest contains important data
-				String manifest = readFile(fileMap.get(packager.manifestName));
-				assertTrue(manifest.contains(sub.getStudentFirstName()));
-				assertTrue(manifest.contains(sub.getStudentLastName()));
-				assertTrue(manifest.contains(sub.getDocumentTitle()));
-				assertTrue(manifest.contains(sub.getDocumentAbstract()));
-			} else {
-				
-				if(".xml".equals(exportFile.getName().substring(exportFile.getName().lastIndexOf('.')))){
-					// The export is a single file, try and load it as xml.					
-					SAXBuilder builder = new SAXBuilder();
-					Document doc = builder.build(exportFile);
-				}	
-				
-				// Check that the export contains important data
-				String manifest = readFile(exportFile);
-				assertTrue(manifest.contains(sub.getStudentFirstName()));
-				assertTrue(manifest.contains(sub.getStudentLastName()));
-				assertTrue(manifest.contains(sub.getDocumentTitle()));
-				assertTrue(manifest.contains(sub.getDocumentAbstract()));
-				
-			}
+			// The export is a directory of multiple files
+			Map<String, File> fileMap = getFileMap(exportFile);
+			
+			// There should be three files
+			assertTrue(fileMap.containsKey("PRIMARY-DOCUMENT.pdf"));
+			assertTrue(fileMap.containsKey("fluff.jpg"));			
 			
 			// Cleanup
 			pkg.delete();

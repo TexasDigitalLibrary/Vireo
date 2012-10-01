@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -460,6 +462,48 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		
 		submission.delete();
 		newPerson.delete();
+		
+		context.restoreAuthorization();	
+	}
+	
+	/**
+	 * Test that an admin can change the submission date.
+	 */
+	@Test
+	public void testChangeSubmissionDate() {
+		context.turnOffAuthorization();
+		
+		Person person = personRepo.findPersonByEmail("bthornton@gmail.com");
+		Submission submission = subRepo.createSubmission(person);
+		submission.setAssignee(person);
+		submission.save();
+		
+		Long id = submission.getId();
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
+		LOGIN();
+		
+		String UPDATE_URL = Router.reverse("ViewTab.changeSubmissionDate").url;
+		
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("id", id.toString());
+		params.put("submission-date", "05/30/1999");
+		
+		Response response = POST(UPDATE_URL,params);
+		assertStatus(302, response);
+		
+		submission = subRepo.findSubmission(id);
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+		
+		String theDate = dateFormat.format(submission.getSubmissionDate());
+		
+		assertEquals(theDate, "05/30/1999");
+		
+		submission.delete();
 		
 		context.restoreAuthorization();	
 	}

@@ -141,7 +141,7 @@
 	tag = "099";
 	field = "  \u001Fa${ pubYear }";
 	if(sub.getDocumentType() != null){
-		field += "\u001Fa${ org.apache.commons.lang.WordUtils.capitalize(sub.getDocumentType().toLowerCase()) }";
+		field += "\u001Fa${ sub.getDocumentType().toLowerCase().capitalizeWords() }";
 		if (sub.getDepositId() != null){
 			def fullUrl = "${ sub.getDepositId() }";
 			if(fullUrl.contains(depositURL)){
@@ -272,7 +272,7 @@
 	// Data Field 516
 	if(sub.getDocumentType() != null){
 		tag = "516";
-		field = "  \u001FaText (${ org.apache.commons.lang.WordUtils.capitalize(sub.getDocumentType().toLowerCase()) })\u001E";
+		field = "  \u001FaText (${ sub.getDocumentType().toLowerCase().capitalizeWords() })\u001E";
 		length = field.getBytes().length;
 		lString = org.apache.commons.lang.StringUtils.leftPad(length.toString(), 4, '0');
 		pString = org.apache.commons.lang.StringUtils.leftPad(position.toString(), 5, '0');

@@ -96,6 +96,26 @@
     
 </div>
 
+<div class="modal hide fade" id="submission-date-modal">
+	<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h3>Change Submission Date</h3>
+    </div>
+    
+    <form id="submission-date-form" action="@{ViewTab.changeSubmissionDate(submission.getId())}" method="POST" class="form-horizontal"> 
+    <div class="modal-body">
+    		<p>Dates must be formatted as MM/DD/YYYY.</p>
+	       <input class="datepicker" name="submission-date" type="text" value="${submission.getSubmissionDate()?.format('MM/dd/yyyy')}" />       
+    </div>
+    
+    <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Close</a>
+        <input type="submit" class="btn btn-primary" name="submit_save" value="Save"/>
+    </div>
+    </form>
+    
+</div>
+
 <div class="modal hide fade" id="add-comment-modal">
 	
 	<div class="modal-header">

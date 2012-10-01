@@ -2,6 +2,8 @@ package org.tdl.vireo.search.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -711,8 +713,11 @@ public class LuceneSearcherImplTest extends UnitTest{
 			
 			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 20).getResults();
 			
+			DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+			String formattedDate = format.format(sub2.getSubmissionDate());
+			
 			assertEquals(sub2,logs.get(0).getSubmission());
-			assertEquals("Submission date set", logs.get(0).getEntry());
+			assertEquals("Submission date set to "+formattedDate, logs.get(0).getEntry());
 			filter.delete();
 			
 			// State Filter

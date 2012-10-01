@@ -1,5 +1,7 @@
 package org.tdl.vireo.model.jpa;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -493,6 +495,9 @@ public class JpaSubmissionImplTests extends UnitTest {
 		
 		sub.delete();
 		
+		DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+		String formattedDate = format.format(now);
+		
 		assertEquals("Repository deposit ID cleared", logItr.next().getEntry());
 		assertEquals("UMI Release cleared", logItr.next().getEntry());
 		assertEquals("Graduation year cleared", logItr.next().getEntry());
@@ -526,7 +531,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		assertEquals("Degree changed to 'degree'", logItr.next().getEntry());
 		assertEquals("Submission license agreement set", logItr.next().getEntry());
 		assertEquals("Submission approval set", logItr.next().getEntry());
-		assertEquals("Submission date set", logItr.next().getEntry());
+		assertEquals("Submission date set to "+formattedDate, logItr.next().getEntry());
 		assertEquals("Committee approval of embargo set", logItr.next().getEntry());
 		assertEquals("Committee approval of submission set", logItr.next().getEntry());
 		assertEquals("New committee email hash generated", logItr.next().getEntry());

@@ -67,6 +67,7 @@ POST	/admin/view/refreshLeftColumn			ViewTab.refreshLeftColumn
 POST	/admin/view/refreshHeader				ViewTab.refreshHeader
 POST	/admin/view/changeSubmissionStatus		ViewTab.changeSubmissionStatus
 POST	/admin/view/changeAssignedTo			ViewTab.changeAssignedTo
+POST	/admin/view/changeSubmissionDate		ViewTab.changeSubmissionDate
 POST	/admin/view/retrieveTemplate			ViewTab.retrieveTemplateJSON
 POST	/admin/view/updateCustomAction			ViewTab.updateCustomActionsJSON
 GET		/admin/view/viewFile/{id}/{name}		ViewTab.viewFile

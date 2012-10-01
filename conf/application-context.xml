@@ -316,6 +316,15 @@ Thesis Office
             </list>
         </property>
     </bean>
+    <bean id="FilesExport" class="org.tdl.vireo.export.impl.FilePackagerImpl" scope="prototype">
+        <property name="displayName" value="Files Export"/>
+        <property name="attachmentTypeNames">
+            <list>
+                <value>PRIMARY</value>
+                <value>SUPPLEMENTAL</value> 
+            </list>
+        </property>
+    </bean>
     <bean id="MarcXML21" class="org.tdl.vireo.export.impl.TemplatePackagerImpl" scope="prototype">
         <property name="personRepository" ref="PersonRepository"/>
         <property name="submissionRepository" ref="SubmissionRepository"/>
@@ -334,7 +343,7 @@ Thesis Office
         <property name="mimeType" value="text/plain"/>
         <property name="format" value="http://www.loc.gov/marc/umb/um11to12.html"/>
         <property name="manifestTemplatePath" value="conf/formats/marc21.xml"/>
-        <property name="manifestName" value="marc21.txt"/>
+        <property name="manifestName" value="marc21.bib"/>
     </bean>
     <bean id="MODS" class="org.tdl.vireo.export.impl.TemplatePackagerImpl" scope="prototype">
         <property name="personRepository" ref="PersonRepository"/>

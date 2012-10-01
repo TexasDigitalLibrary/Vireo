@@ -3,6 +3,8 @@ package org.tdl.vireo.model.jpa;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -560,10 +562,13 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		if (!equals(this.submissionDate,date)) {
 			this.submissionDate = date;
 			
-			if (date == null)
+			if (date == null) {
 				generateLog("Submission date cleared",true);
-			else
-				generateLog("Submission date set",true);
+			} else {
+				DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+				String formattedDate = format.format(date);
+				generateLog("Submission date set to "+formattedDate,true);
+			}
 		}
 	}
 
