@@ -70,7 +70,7 @@
 		<property name="transitions">
 			<util:list
 				list-class="java.util.ArrayList" value-type="org.tdl.vireo.state.State">
-				<ref bean="CorrectionsRecieved"/>
+				<ref bean="CorrectionsReceived"/>
 			</util:list>
 		</property>
 	</bean>
