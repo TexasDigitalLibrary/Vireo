@@ -42,7 +42,7 @@
                 <div class="controls">
                     <select class="input-xlarge" name="depositLocation-packager" id="depositLocation-packager">
                         #{list items:packagers, as:'packagerOption'}
-                            <option value="${packagerOption.getBeanName()}" ${ (packager == packagerOption) ? "selected=\"true\"" : ""}>${packagerOption.getDisplayName()}</option>
+                            <option value="${packagerOption.getBeanName()}" ${ (packager?.getBeanName() == packagerOption?.getBeanName()) ? "selected=\"true\"" : ""}>${packagerOption.getDisplayName()}</option>
                         #{/list}
                     </select>
                 </div>

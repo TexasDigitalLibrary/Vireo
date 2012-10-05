@@ -101,6 +101,8 @@ public class DepositSettingsTab extends SettingsTab {
 			repository = location.getRepository();
 			collection = location.getCollection();
 			
+			System.out.println("Packager = "+packager.getBeanName());
+			
 // Don't try to connect on inital load because it could take too long.
 //			try {
 //				collectionsMap = depositor.getCollections(location);
