@@ -96,6 +96,7 @@ public class DepositSettingsTabTest extends AbstractVireoFunctionalTest {
 		Response response = POST(URL,params);
 		
 		assertContentMatch(location.getName(),response);
+		assertContentMatch("value=\""+location.getPackager().getBeanName()+"\" selected=\"true\"",response);
 		assertContentMatch(location.getRepository(),response);
 		assertContentMatch(location.getCollection(),response);
 		assertContentMatch(location.getUsername(),response);
