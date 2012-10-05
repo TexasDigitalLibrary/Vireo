@@ -4,10 +4,10 @@
 jQuery(document).ready(function(){
 
 	// Settings toggle and input/textarea fields
-     jQuery(".theme-text textarea").change(applicationSettingsHandler('@{settings.ThemeSettingsTab.updateThemeSettingsJSON()}'));
+     jQuery(".theme-textarea").change(applicationSettingsHandler('@{settings.ThemeSettingsTab.updateThemeSettingsJSON()}'));
      
      // Lock the big text areas
-     jQuery(".theme-text .lock-control a").click(applicationUnlockField);
+     jQuery(".theme-protected .lock-control a").click(applicationUnlockField);
      
      
 }) // document ready
@@ -16,27 +16,27 @@ jQuery(document).ready(function(){
 
 <h2>FRONT PAGE INSTRUCTIONS</h2>
 
-<div class="wrap theme-text">
+<div class="wrap theme-protected">
     <p class="lock-control"><a href="#${org.tdl.vireo.model.Configuration.FRONT_PAGE_INSTRUCTIONS}"><em class="icon-lock"></em> This field is locked to prevent accidental editing, click to unlock.</a></p>
-    <textarea class="input-xxlarge" id="${org.tdl.vireo.model.Configuration.FRONT_PAGE_INSTRUCTIONS}" name="${org.tdl.vireo.model.Configuration.FRONT_PAGE_INSTRUCTIONS}" readonly="true">#{verbatim}${FRONT_PAGE_INSTRUCTIONS}#{/verbatim}</textarea>
+    <textarea class="input-xxlarge theme-textarea" id="${org.tdl.vireo.model.Configuration.FRONT_PAGE_INSTRUCTIONS}" name="${org.tdl.vireo.model.Configuration.FRONT_PAGE_INSTRUCTIONS}" readonly="true">#{verbatim}${FRONT_PAGE_INSTRUCTIONS}#{/verbatim}</textarea>
 
     <p class="info">These instructions are show on the front page of Vireo to all users. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically.</p>
 </div>
 
 <h2>POST SUBMISSION INSTRUCTIONS</h2>
 
-<div class="wrap theme-text">
+<div class="wrap theme-protected">
     <p class="lock-control"><a href="#${org.tdl.vireo.model.Configuration.SUBMIT_INSTRUCTIONS}"><em class="icon-lock"></em> This field is locked to prevent accidental editing, click to unlock.</a></p>
-	<textarea class="input-xxlarge" id="${org.tdl.vireo.model.Configuration.SUBMIT_INSTRUCTIONS}" name="${org.tdl.vireo.model.Configuration.SUBMIT_INSTRUCTIONS}" readonly="true">#{verbatim}${SUBMIT_INSTRUCTIONS}#{/verbatim}</textarea>
+	<textarea class="input-xxlarge theme-textarea" id="${org.tdl.vireo.model.Configuration.SUBMIT_INSTRUCTIONS}" name="${org.tdl.vireo.model.Configuration.SUBMIT_INSTRUCTIONS}" readonly="true">#{verbatim}${SUBMIT_INSTRUCTIONS}#{/verbatim}</textarea>
 
 	<p class="info">These instructions will be shown on the confirmation page after a student has completed their submission. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically.</p>
 </div>
 
 <h2>POST CORRECTION INSTRUCTIONS</h2>
 
-<div class="wrap theme-text">
+<div class="wrap theme-protected">
     <p class="lock-control"><a href="#${org.tdl.vireo.model.Configuration.CORRECTION_INSTRUCTIONS}"><em class="icon-lock"></em> This field is locked to prevent accidental editing, click to unlock.</a></p>
-    <textarea class="input-xxlarge" id="${org.tdl.vireo.model.Configuration.CORRECTION_INSTRUCTIONS}" name="${org.tdl.vireo.model.Configuration.CORRECTION_INSTRUCTIONS}" readonly="true">#{verbatim}${CORRECTION_INSTRUCTIONS}#{/verbatim}</textarea>
+    <textarea class="input-xxlarge theme-textarea" id="${org.tdl.vireo.model.Configuration.CORRECTION_INSTRUCTIONS}" name="${org.tdl.vireo.model.Configuration.CORRECTION_INSTRUCTIONS}" readonly="true">#{verbatim}${CORRECTION_INSTRUCTIONS}#{/verbatim}</textarea>
 
     <p class="info"> These instructions are shown on the confirmation page after a student has submitted corrections for their submission. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically.</p>
 </div>
