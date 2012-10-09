@@ -748,11 +748,63 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 //		assertIsOk(response);
 //		assertContentType("application/zip", response);
 //		assertHeaderEquals("Content-Disposition", "attachment; filename=DSpaceMETS.zip", response);
-		
-		
-		
-		
-		
+	}
+	
+	/**
+	 * Test that changing the search filter resets pagination back to the first
+	 * page. This bug was reported in VIREO-89.
+	 * 
+	 * This test assumes that there will only be 10 submissions. It uses this to
+	 * make adjustments to how far to paginate into the list.
+	 */
+	@Test
+	public void testPaginationResets() {
+
+		// Login as an administrator
+		LOGIN();
+
+
+		// Run for both the list and log tabs
+		String[] possibleNavs = {"list","log"};
+		for (String nav : possibleNavs) {
+
+			// Get our URLS
+			Map<String,Object> routeArgs = new HashMap<String,Object>();
+			routeArgs.put("nav", nav);
+
+			final String LIST_URL = (nav.equals("list")) ? Router.reverse("FilterTab.list",routeArgs).url : Router.reverse("FilterTab.log",routeArgs).url;
+			final String FILTER_URL = Router.reverse("FilterTab.modifyFilters",routeArgs).url;
+			final String MODIFY_SEARCH_URL = Router.reverse("FilterTab.modifySearch",routeArgs).url;
+			final String CUSTOMIZE_SEARCH_URL = Router.reverse("FilterTab.customizeSearch",routeArgs).url;
+
+			
+			// Change the number of results per page.
+			String columnsString = "column_"+SearchOrder.ID.getId()+",column_"+SearchOrder.DOCUMENT_TITLE.getId()+",column_"+SearchOrder.STATE.getId();
+			
+			Map<String,String> params = new HashMap<String,String>();
+			params.put("columns",columnsString);
+			params.put("resultsPerPage", "list".equals(nav) ? "2": "40");
+			params.put("submit_save","Save");
+			POST(CUSTOMIZE_SEARCH_URL,params);
+			
+			// With no filter in place, paginate to page 4 (there should be 5 total)
+			GET(MODIFY_SEARCH_URL+"?offset=" +("list".equals(nav) ? "5": "120"));
+			
+			Response response = GET(LIST_URL);
+			// Check that we have at least some submissions
+			assertContentMatch("<a href=\"/admin/view\\?subId=\\d+\">\\d+</a>",response);
+			
+			
+			// Change the filter status
+			GET(FILTER_URL+"?action=add&type=state&value=InReview");
+			
+			
+			response = GET(LIST_URL);
+			// Check that our pagination was switched so that we show at least some records.
+			assertContentMatch("<a href=\"/admin/view\\?subId=\\d+\">\\d+</a>",response);
+			
+		}
+
 	}
 
 }
