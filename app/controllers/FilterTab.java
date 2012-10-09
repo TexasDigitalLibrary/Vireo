@@ -417,8 +417,9 @@ public class FilterTab extends AbstractVireoController {
 		
 		// Handle results per page
 		Integer resultsPerPage = params.get("resultsPerPage",Integer.class);
-		if (resultsPerPage != null && resultsPerPage >= 20 && resultsPerPage <= 1000) {
+		if (resultsPerPage != null && resultsPerPage > 0 && resultsPerPage <= 1000) {
 			response.setCookie(NAMES[type][RESULTSPERPAGE], String.valueOf(resultsPerPage));
+			session.remove(NAMES[type][OFFSET]);
 		}
 		
 		// Send the user off to the appropriate filter tab.
@@ -529,7 +530,7 @@ public class FilterTab extends AbstractVireoController {
 		
 		// Save the active filter to a cookie
 		response.setCookie(NAMES[type][ACTIVE_FILTER], activeFilter.encode());
-		session.remove("offset");
+		session.remove(NAMES[type][OFFSET]);
 		
 		if ("list".equals(nav))
 			list();
