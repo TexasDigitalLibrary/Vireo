@@ -2,10 +2,14 @@ package controllers;
 
 import java.lang.reflect.Method;
 import java.util.Date;
+import java.util.List;
 
 import org.tdl.vireo.email.EmailService;
 import org.tdl.vireo.email.SystemEmailTemplateService;
 import org.tdl.vireo.email.VireoEmail;
+import org.tdl.vireo.job.JobManager;
+import org.tdl.vireo.job.JobMetadata;
+import org.tdl.vireo.job.JobStatus;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.SettingsRepository;
@@ -36,13 +40,15 @@ public class System extends AbstractVireoController {
 	public static EmailService emailService = Spring.getBeanOfType(EmailService.class);
 	public static SystemEmailTemplateService templateService = Spring.getBeanOfType(SystemEmailTemplateService.class);
 	public static SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
+	public static JobManager jobManager = Spring.getBeanOfType(JobManager.class);
+
 	
 	/**
-	 * Redirect "system/" to "system/panel"
+	 * Redirect "system/" to "system/general" so it defaults to the general panel.
 	 */
 	@Security(RoleType.ADMINISTRATOR)
 	public static void controlPanelRedirect() {
-		controlPanel();
+		generalPanel();
 	}
 	
 	/**
@@ -50,7 +56,7 @@ public class System extends AbstractVireoController {
 	 * administrator features.
 	 */
 	@Security(RoleType.ADMINISTRATOR)
-	public static void controlPanel() {
+	public static void generalPanel() {
 
 		Runtime runtime = Runtime.getRuntime();	
 
@@ -114,8 +120,10 @@ public class System extends AbstractVireoController {
 						
 			indexJob += String.format(" ( %.3f%% complete )",complete);
 		}
+		
 
-		render(
+
+		renderTemplate("System/generalPanel.html",
 				// Java Info
 				javaVersion, osName, osArch, osVersion, availableProcessors,
 				
@@ -136,6 +144,24 @@ public class System extends AbstractVireoController {
 				
 				);
 	}
+	
+	/**
+	 * Display and manage background jobs.
+	 */
+	@Security(RoleType.ADMINISTRATOR)
+	public static void jobPanel() {
+	
+		// Job data
+		List<JobMetadata> jobs = jobManager.findAllJobs();
+		
+		// Status Definitions
+		for (JobStatus status : JobStatus.values()) {
+			renderArgs.put(status.name(), status);
+		}
+		
+		renderTemplate("System/jobPanel.html",jobs);
+	}
+	
 	
 	/**
 	 * Send a test email to the provided address.
@@ -200,7 +226,7 @@ public class System extends AbstractVireoController {
 		}
 		
 		// Redirect back to the control pannel.
-		controlPanel();
+		generalPanel();
 	}
 	
 	/**

@@ -1,4 +1,4 @@
-#{extends 'main.html' /} #{set title:'System Control Panel' /}
+    #{extends 'main.html' /} #{set title:'System Control Panel' /}
 
 #{set 'moreScripts'}
 <script type="text/javascript">
@@ -27,6 +27,8 @@ jQuery(document).ready(function() {
 	<h3>System Control Panel</h3>
 </div>
 <br />
+
+#{include 'System/tabs.include' /}
 
 <div class="row-fluid">
 	<div class="span6">
@@ -183,4 +185,6 @@ jQuery(document).ready(function() {
 	</div>
 	
 </div>
+<br/>
+<br/>
 

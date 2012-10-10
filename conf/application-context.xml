@@ -183,6 +183,10 @@ Thesis Office
         </property>
     </bean>
     
+    <!-- Job Management -->
+    <bean id="JobManager" class="org.tdl.vireo.job.impl.JobManagerImpl" scope="singleton">
+    </bean>
+    
     <!-- Email -->
     <bean id="EmailService" class="org.tdl.vireo.email.impl.EmailServiceImpl" scope="singleton">
         <property name="securityContext" ref="SecurityContext"/>
@@ -225,6 +229,7 @@ Thesis Office
         <property name="personRepository" ref="PersonRepository"/>
         <property name="securityContext" ref="SecurityContext"/>
         <property name="searcher" ref="Searcher"/>
+        <property name="jobManager" ref="JobManager"/>
     </bean>
     
     <!-- Deposit Protocols -->

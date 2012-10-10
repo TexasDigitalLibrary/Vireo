@@ -38,10 +38,5 @@ public interface ExportService {
 	 * @return A stream of the export.
 	 */
 	public ChunkStream export(Packager packager, SearchFilter filter);
-
-	/**
-	 * @return true if an export is currently running.
-	 */
-	public boolean isExportRunning();
 	
 }

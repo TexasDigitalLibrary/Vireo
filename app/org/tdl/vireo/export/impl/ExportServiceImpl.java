@@ -20,12 +20,16 @@ import org.tdl.vireo.export.ChunkStream;
 import org.tdl.vireo.export.ExportPackage;
 import org.tdl.vireo.export.ExportService;
 import org.tdl.vireo.export.Packager;
+import org.tdl.vireo.job.JobManager;
+import org.tdl.vireo.job.JobMetadata;
+import org.tdl.vireo.job.JobStatus;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.search.SearchDirection;
 import org.tdl.vireo.search.SearchFilter;
 import org.tdl.vireo.search.SearchOrder;
+import org.tdl.vireo.search.SearchResult;
 import org.tdl.vireo.search.Searcher;
 import org.tdl.vireo.security.SecurityContext;
 
@@ -52,8 +56,8 @@ public class ExportServiceImpl implements ExportService {
 	// The security context, who's logged in.
 	public SecurityContext context;
 	
-	// List of currently scheduled deposit jobs
-	public static Set<ExportJob> jobQueue = Collections.synchronizedSet(new HashSet<ExportJob>()); 
+	// Maintains job metadata
+	public JobManager jobManager;
 
 	/**
 	 * @param searcher
@@ -80,9 +84,12 @@ public class ExportServiceImpl implements ExportService {
 		this.context = context;
 	}	
 	
-	@Override
-	public boolean isExportRunning() {
-		return !jobQueue.isEmpty();
+	/**
+	 * @param jobManager
+	 *            The manager which maintains metadata about jobs.
+	 */
+	public void setJobManager(JobManager jobManager) {
+		this.jobManager = jobManager;
 	}
 
 	@Override
@@ -115,6 +122,9 @@ public class ExportServiceImpl implements ExportService {
 		public final OutputStream out;
 		public final Long personId;
 		
+		// Metadata about this job
+		public final JobMetadata meta;
+		
 		/**
 		 * Construct a new export job.
 		 * 
@@ -144,7 +154,10 @@ public class ExportServiceImpl implements ExportService {
 				this.personId = null;
 			}
 			
-			jobQueue.add(this);
+			// Register the job's metadata
+			meta = jobManager.register("Download " + packager.getDisplayName(),context.getPerson());
+			meta.setJob(this);
+			meta.setStatus(JobStatus.READY);
 		}
 		
 		/**
@@ -158,7 +171,9 @@ public class ExportServiceImpl implements ExportService {
 		public void doJob() throws IOException {
 
 			try {
-
+				meta.setStatus(JobStatus.RUNNING);
+				
+				
 				if (personId != null) {
 					Person person = personRepo.findPerson(personId);
 					if (person == null)
@@ -170,7 +185,15 @@ public class ExportServiceImpl implements ExportService {
 					// Assume we're running as a background admin process.
 					context.turnOffAuthorization();
 				}
-
+				
+				// Figure out how many submissions total we are exporting
+				SearchResult<Submission> results = searcher.submissionSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 1);
+				meta.getProgress().total = results.getTotal();
+				meta.getProgress().completed = 0;
+				if (results.getResults().size() > 0)
+					results.getResults().get(0).detach();
+				
+				// Start processing bitstreams
 				BufferedOutputStream bos = new BufferedOutputStream(out);
 				ZipOutputStream zos = new ZipOutputStream(bos);
 				String archiveFolder = packager.getBeanName()+File.separator;
@@ -196,6 +219,8 @@ public class ExportServiceImpl implements ExportService {
 						
 						// Don't let memory get out of control
 						System.gc();
+						
+						meta.getProgress().completed++;
 					}
 				} finally {
 					// Ensure the ziparchive is closed.
@@ -208,10 +233,14 @@ public class ExportServiceImpl implements ExportService {
 
 			} catch (RuntimeException re) {
 				Logger.fatal(re,"Unexepcted exception while exporting items. Aborted.");
+				meta.setMessage(re.toString());
+				meta.setStatus(JobStatus.FAILED);
 				throw re;
 
 			} catch (IOException ioe) {
 				Logger.error(ioe,"Unexpected expection while exporting items. Aborted.");
+				meta.setMessage(ioe.toString());
+				meta.setStatus(JobStatus.FAILED);
 				throw ioe;
 
 			} finally {
@@ -221,8 +250,9 @@ public class ExportServiceImpl implements ExportService {
 				} else {
 					context.restoreAuthorization();
 				}
-				jobQueue.remove(this);
 			}
+			meta.setStatus(JobStatus.SUCCESS);
+			meta.setJob(null);
 		}
 
 		/**

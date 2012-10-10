@@ -1,0 +1,10 @@
+<div class="tabbable">
+    <ul class="nav nav-tabs">
+        <li ${"generalPanel".equals(request.actionMethod) ? "class='active'" : ""}>
+            <a href="@{System.generalPanel}">General</a>
+        <li>
+        <li ${"taskPanel".equals(request.actionMethod) ? "class='active'" : ""}>
+            <a href="@{System.jobPanel}">Jobs</a>
+        </li>
+    </ul>
+</div>

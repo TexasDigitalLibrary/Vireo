@@ -156,10 +156,11 @@ POST    /admin/settings/deposit/reorder         settings.DepositSettingsTab.reor
 
 ### System Administrator
 GET     /system/?                               System.controlPanelRedirect
-GET     /system/panel/?                         System.controlPanel
-POST    /system/email/test                      System.testEmail
-GET		/system/submission/test					System.testSubmissions
-POST    /system/index/rebuild                   System.rebuildIndex
+GET     /system/general/?                       System.generalPanel
+POST    /system/general/email                   System.testEmail
+GET		/system/general/submissions				System.testSubmissions
+POST    /system/general/index                   System.rebuildIndex
+GET     /system/jobs/?                          System.jobPanel
 
 
 # Ignore favicon requests

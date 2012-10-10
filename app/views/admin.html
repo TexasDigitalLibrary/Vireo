@@ -24,7 +24,7 @@
 						<a href="@{Authentication.profile()}"><b>${currentUser.getDisplayName()}</b></a> |
 						<a href="@{Application.index()}">Home</a> | 
 						#{if currentUser.getRole().ordinal() >= org.tdl.vireo.model.RoleType.MANAGER.ordinal()}
-							<a href="@{System.controlPanel()}">System</a> | 
+							<a href="@{System.generalPanel()}">System</a> | 
 						#{/if}
 						<a href="@{Authentication.logout()}">Logout</a>
 					#{/if}

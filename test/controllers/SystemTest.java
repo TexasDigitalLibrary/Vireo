@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
+import org.tdl.vireo.job.JobManager;
+import org.tdl.vireo.job.JobMetadata;
+import org.tdl.vireo.job.JobStatus;
 import org.tdl.vireo.search.Indexer;
 
 import play.libs.Mail;
@@ -20,14 +23,15 @@ public class SystemTest extends AbstractVireoFunctionalTest {
 	
 	// Spring dependencies
 	public static Indexer indexer = Spring.getBeanOfType(Indexer.class);
+	public static JobManager backgroundManager = Spring.getBeanOfType(JobManager.class);
 	
 	/**
 	 * Test viewing the control panel page
 	 */
 	@Test
-	public void testControlPanel() {
+	public void testGeneralPanel() {
 		
-		final String PANEL_URL = Router.reverse("System.controlPanel").url;
+		final String PANEL_URL = Router.reverse("System.generalPanel").url;
 		
 		LOGIN();
 		
@@ -44,6 +48,33 @@ public class SystemTest extends AbstractVireoFunctionalTest {
 		assertContentMatch("name=\"submit_testEmail\"", response);
 		assertContentMatch("name=\"submit_rebuild\"", response);
 		assertContentMatch("name=\"submit_deleteAndRebuild\"", response);
+	}
+	
+	/**
+	 * Test viewing the job panel.
+	 */
+	@Test
+	public void testJobPanel() {
+		// Add a job to test for.
+		JobMetadata operation = backgroundManager.register("Test Job");
+		operation.getProgress().completed=5;
+		operation.getProgress().total = 10;
+		operation.setStatus(JobStatus.RUNNING);
+		operation.setMessage("This job generated during unit tests, please ignore.");
+		
+		
+		final String PANEL_URL = Router.reverse("System.jobPanel").url;
+		
+		LOGIN();
+		
+		Response response = GET(PANEL_URL);
+		
+		assertContentMatch("RUNNING",response);
+		assertContentMatch("Test Job", response);
+		assertContentMatch("This job generated during unit tests, please ignore.",response);
+
+		
+		operation.setStatus(JobStatus.CANCELLED);
 	}
 	
 	/**
@@ -88,7 +119,7 @@ public class SystemTest extends AbstractVireoFunctionalTest {
 		while (indexer.isJobRunning())
 			Thread.yield();
 		
-		final String PANEL_URL = Router.reverse("System.controlPanel").url;
+		final String PANEL_URL = Router.reverse("System.generalPanel").url;
 		final String EMAIL_URL = Router.reverse("System.rebuildIndex").url;
 		
 		LOGIN();

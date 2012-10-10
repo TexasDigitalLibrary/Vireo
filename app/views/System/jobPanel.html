@@ -1,0 +1,104 @@
+    #{extends 'main.html' /} #{set title:'System Control Panel' /}
+
+#{set 'moreScripts'}
+<script type="text/javascript">
+
+function load() {
+    setTimeout("refresh()", 30 * 1000);
+}
+
+function refresh() {
+    window.location.reload();
+    load();
+}
+
+jQuery(document).ready(function() { 
+
+	load();
+	
+});
+</script>
+#{/set}
+
+<br/>
+<div class="row pageHead">
+	<h3>System Control Panel</h3>
+</div>
+<br />
+
+#{include 'System/tabs.include' /}
+
+<table class="table table-border table-condensed">
+    <thead>
+        <th>ID</th>
+        <th>Started</th>
+        <th>Status</th>
+        <th>Complete</th>
+        <th>Job</th>
+        <th>Owner</th>
+    </thead>
+    <tbody>
+        #{list items:jobs, as:'job'}
+            <tr 
+            #{if job.getStatus() == WAITING}
+                class="alert-info"
+            #{/if}
+            #{elseif job.getStatus().isActive()}
+                class="alert-success"
+            #{/elseif}
+            #{elseif job.getStatus() == FAILED}
+                class="alert-error"
+            #{/elseif}
+            #{elseif job.getStatus() == CANCELLED}
+                class="alert"
+            #{/elseif}
+            >
+                <td ${ job.getMessage() != null ? "rowspan='2'" : ''} style="vertical-align: center;">
+	                <strong>${job.getId().toString().substring(0,6)}</strong>
+                </td>
+                <td>${new Date(job.getStartTime()).since()}</td>
+                <td>${job.getStatus()}</td>
+                <td>${job.getProgress()}</td>
+                <td>${job.getName()}</td>
+                <td>
+                    #{if job.getOwnerId() != null}
+	                   ${personRepo.findPerson(job.getOwnerId())?.getFormattedName(org.tdl.vireo.model.NameFormat.FIRST_LAST) }
+	                #{/if}
+	                #{else}
+	                   <em>none</em>
+	                #{/else}
+	            </td>
+            </tr>
+            #{if job.getMessage() != null }
+                <tr
+	            #{if job.getStatus() == WAITING}
+	                class="alert-info"
+	            #{/if}
+	            #{elseif job.getStatus().isActive()}
+	                class="alert-success"
+	            #{/elseif}
+	            #{elseif job.getStatus() == FAILED}
+	                class="alert-error"
+	            #{/elseif}
+	            #{elseif job.getStatus() == CANCELLED}
+	                class="alert"
+	            #{/elseif}
+                >
+                    <td colspan="5">
+                        ${job.getMessage()}
+                    </td>
+                <tr/>
+            #{/if}
+        #{/list}
+        #{else}
+        <tr>
+            <td colspan="6" style="text-align:center;">
+                <em>No tasks have been registered since.</em>
+            </td>
+        #{/else}
+    </tbody>
+</table>
+
+<br/>
+<br/>
+
