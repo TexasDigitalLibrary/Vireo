@@ -54,6 +54,23 @@ jQuery(document).ready(function() {
         jQuery("#batch-export-modal").modal('hide');
         return true;
     });
+    
+    // Batch Update Status dialog box
+    jQuery("#state").click(function() {
+        if (jQuery("#state option:selected").hasClass("ask-for-depositLocation") &&
+            jQuery("#ask-for-depositLocation-group").is(":hidden")) {
+            
+            // Show the extra fields
+            jQuery("#ask-for-depositLocation-group").slideToggle();
+            
+            
+        } else if (!jQuery("#state option:selected").hasClass("ask-for-depositLocation") &&
+            !jQuery("#ask-for-depositLocation-group").is(":hidden")) {
+            
+            // Hide the extra field
+            jQuery("#ask-for-depositLocation-group").slideToggle();
+        }
+    });
 });
 </script>
 #{/set}
@@ -243,23 +260,31 @@ jQuery(document).ready(function() {
 </div>
 
 #{if "list".equals(nav) } 
-<div class="modal hide fade" id="batch-deposit-modal">
-    <form id="customize-search-form" action="@{FilterTab.batchDepositAndPublish()}" method="POST" class="form-horizontal">
+<div class="modal hide fade" id="batch-transition-modal">
+    <form id="batch-transition-form" action="@{FilterTab.batchTransition()}" method="POST" class="form-horizontal">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">×</button>
-            <h3>Batch Deposit & Publish</h3>
+            <h3>Batch Update Status</h3>
         </div>
         <div class="modal-body">
-            <p>This batch operation will attempt to deposit all the submissions selected by the currently active filter. 
-            If the deposit is successful then the submissions will be transitioned to the publish state selected below. If
-            the deposit fails for any reason the submission will remain in its current state.</p>
+            <p>This batch operation will modify the status of all the submissions selected by the currently active filter. 
+            If the new state is for publishing, then the items will be deposited into a remote repository.</p>
             
-            <p>This operation may take quite some time depending on how many submissions are currently selected. You will
-            be returned to the filter list tab where you may continue to use the site.</p>
+            <p>This operation may take quite some time depending on how many submissions are currently selected.</p>
             
             <fieldset>
                 <div class="control-group">
-                    <label class="control-label" for="depositLocationId"><strong>Deposit Location</strong>:</label>
+                    <label class="control-label" for="state"><strong>New State</strong>:</label>
+                    <div class="controls">
+                        <select class="input-xlarge" name="state" id="state">
+                            #{list items:states, as:'state'}
+                                <option value="${state.getBeanName() }" ${ state.isDepositable() ? "class='ask-for-depositLocation'" : ""}>${state.getDisplayName()}</option>
+                            #{/list}
+                        </select>
+                    </div>
+                </div>
+                <div id="ask-for-depositLocation-group" class="control-group hidden">
+                    <label class="control-label red" for="depositLocationId"><strong>Deposit Location</strong>:</label>
                     <div class="controls">
                         <select class="input-xlarge" name="depositLocationId" id="depositLocationId">
                             #{list items:depositLocations, as:'location'}
@@ -268,22 +293,11 @@ jQuery(document).ready(function() {
                         </select>
                     </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label" for="depositLocation-name"><strong>Next State</strong>:</label>
-                    <div class="controls">
-                        <select class="input-xlarge" name="successState" id="successState">
-                            <option value="">Leave in current state</option>
-                            #{list items:publishStates, as:'state'}
-                                <option value="${state.getBeanName() }">${state.getDisplayName()}</option>
-                            #{/list}
-                        </select>
-                    </div>
-                </div>
             </fieldset>
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <input type="submit" class="btn btn-primary" name="submit_save" value="Deposit & Publish"/>
+            <input type="submit" class="btn btn-primary" name="submit_save" value="Transition"/>
         </div>
     </form>
 </div>

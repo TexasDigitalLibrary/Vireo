@@ -116,6 +116,9 @@ public interface JobMetadata {
 		 */
 		public float toFloat() {
 
+			if (total == 0)
+				return 0F;
+			
 			try {
 				return ((float) completed) / ((float) total) * 100;
 			} catch (RuntimeException re) {

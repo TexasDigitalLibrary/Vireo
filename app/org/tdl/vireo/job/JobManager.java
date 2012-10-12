@@ -61,6 +61,38 @@ public interface JobManager {
 	 */
 	public List<JobMetadata> findJobsByType(Class type);
 
+	
+	/**
+	 * Yield the current thread until there are no more active jobs.
+	 */
+	public void waitForJobs();
+	
+	/**
+	 * Yield the current thread until the specified job has completed.
+	 * 
+	 * @param id
+	 *            The UUID of the job to wait for.
+	 */
+	public void waitForJobs(UUID id);
+
+	/**
+	 * Yield the current thread until all jobs by the specified owner has
+	 * completed.
+	 * 
+	 * @param owner
+	 *            The owner to wait for.
+	 */
+	public void waitForJobs(Person owner);
+
+	/**
+	 * Yield the current thread until all jobs of the specified type have
+	 * completed.
+	 * 
+	 * @param type
+	 *            The job type to wait for.
+	 */
+	public void waitForJobs(Class type);
+	
 	/**
 	 * Register a new jobMetadata with the provided name and owned by the
 	 * provided person.
@@ -85,8 +117,8 @@ public interface JobManager {
 
 	/**
 	 * Deregister or remove this job's metadata from the manager. While the
-	 * manager will periodicall prune old jobs which have been completed. By
-	 * calling deregister the job will be immediatly removed.
+	 * manager will periodically prune old jobs which have been completed. By
+	 * calling deregister the job will be immediately removed.
 	 * 
 	 * @param job
 	 *            The job to deregister.

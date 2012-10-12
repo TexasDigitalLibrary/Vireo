@@ -107,7 +107,4 @@ public class JobMetadataImpl implements JobMetadata {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-
-	
-	
 }

@@ -53,42 +53,4 @@ public interface DepositService {
 	public void deposit(DepositLocation location, Submission submission,
 			State successState, boolean wait);
 
-	/**
-	 * Deposit a batch of submissions and for each successful deposit change to
-	 * the published state.
-	 * 
-	 * The deposit operation will occur in a separate thread that will likely
-	 * take a substantial amount of time.
-	 * 
-	 * As many errors as possible will be checked before separating into a
-	 * separate thread as possible. I.e. the location will be checked for all
-	 * the required attribute, the state of the submission object etc. However
-	 * some errors may not occur until deposit time. When these errors occur the
-	 * submission will remain in it's current state and an action log item will
-	 * be generated detailing the error encountered.
-	 * 
-	 * @param location
-	 *            The deposit location where this submission should be deposited
-	 *            into. The location must be complete, containing a repository
-	 *            URL, collection URL, and packager. It is also unwise if the
-	 *            depositor is different than this implementation.
-	 * @param filter
-	 *            A search filter of all submissions which should be deposited.
-	 * @param successState
-	 *            The state the submission should will be transition into upon
-	 *            successfully depositing. If the deposit failed then the
-	 *            submission will remain in it's original state.
-	 	 * @param wait
-	 *            If true the method will not return until the deposit is
-	 *            completed, otherwise depositing will take place in a
-	 *            background thread.
-	 */
-	public void deposit(DepositLocation location, SearchFilter filter, State successState);
-	
-	/**
-	 * @return If there is at least one background deposit task currently
-	 *         running, or waiting to run.
-	 */
-	public boolean isDepositRunning();
-
 }

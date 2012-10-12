@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 import org.junit.Test;
 import org.tdl.vireo.export.DepositService;
+import org.tdl.vireo.job.JobManager;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.NamedSearchFilter;
@@ -20,6 +21,8 @@ import org.tdl.vireo.search.Indexer;
 import org.tdl.vireo.search.SearchFacet;
 import org.tdl.vireo.search.SearchOrder;
 import org.tdl.vireo.security.SecurityContext;
+import org.tdl.vireo.state.State;
+import org.tdl.vireo.state.StateManager;
 
 import play.db.jpa.JPA;
 import play.i18n.Messages;
@@ -41,6 +44,8 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 	public static SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
 	public static DepositService depositService = Spring.getBeanOfType(DepositService.class);
 	public static Indexer indexer = Spring.getBeanOfType(Indexer.class);
+	public static JobManager jobManager = Spring.getBeanOfType(JobManager.class);
+	public static StateManager stateManager = Spring.getBeanOfType(StateManager.class);
 	
 	/**
 	 * Test that we can remove and add each type of parameter (except for the
@@ -650,24 +655,22 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 	
 	
 	/**
-	 * Test doing a batch deposit.
+	 * Test doing a batch status update
 	 */
 	@Test
-	public void testDepositAndPublish() throws InterruptedException {
+	public void testBatchUpdate() throws InterruptedException {
 
 		context.turnOffAuthorization();
 		
 		// Login as an administrator
 		LOGIN();
 
-
 		// Get our URLS
 		Map<String,Object> routeArgs = new HashMap<String,Object>();
 		routeArgs.put("nav", "list");
 
-		final String LIST_URL = Router.reverse("FilterTab.list").url;
 		final String FILTER_URL = Router.reverse("FilterTab.modifyFilters",routeArgs).url;
-		final String DEPOSIT_URL = Router.reverse("FilterTab.batchDepositAndPublish").url;
+		final String DEPOSIT_URL = Router.reverse("FilterTab.batchTransition").url;
 
 		DepositLocation location = settingRepo.findAllDepositLocations().get(0);
 		Person person = personRepo.findPersonByEmail("bthornton@gmail.com");
@@ -675,6 +678,11 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 		sub.setDocumentTitle("Deposit test");
 		sub.setDegree("Degree Deposit");
 		sub.save();
+		
+		State publishState = null;
+		for (State state : stateManager.getAllStates())
+			if (state.isDepositable())
+				publishState = state;
 		
 		
 		JPA.em().getTransaction().commit();
@@ -691,16 +699,14 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 		// Do the batch publish
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("depositLocationId",String.valueOf(location.getId()));
-		params.put("successState","");
+		params.put("state",publishState.getBeanName());
 		Response response = POST(DEPOSIT_URL,params);
 		
-		assertHeaderEquals("Location", LIST_URL, response);
-
+		// Check that we were sent to the progress bar
+		assertNotNull(response.getHeader("Location"));
 		
 		// Wait for the deposit to finish.
-		while (depositService.isDepositRunning() || indexer.isJobRunning()) {
-			Thread.yield();
-		}
+		jobManager.waitForJobs();
 		
 		// Check that the submission had a deposit id set.
 		JPA.em().getTransaction().commit();

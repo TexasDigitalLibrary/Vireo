@@ -218,7 +218,7 @@ public class FileDepositorImpl implements Depositor, BeanNameAware {
 		File exportFile = new File(depositPath + File.separator + "package_"+submission.getId()+packageExt);
 		
 		// Do the actual deposit
-		if (exportFile.isDirectory()) {
+		if (packageFile.isDirectory()) {
 			FileUtils.copyDirectory(packageFile, exportFile);
 		} else {
 			FileUtils.copyFile(packageFile, exportFile);

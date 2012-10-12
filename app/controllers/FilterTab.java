@@ -5,11 +5,15 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
+import org.tdl.vireo.batch.TransitionService;
 import org.tdl.vireo.export.ChunkStream;
 import org.tdl.vireo.export.DepositService;
 import org.tdl.vireo.export.ExportService;
 import org.tdl.vireo.export.Packager;
+import org.tdl.vireo.job.JobManager;
+import org.tdl.vireo.job.JobMetadata;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.EmbargoType;
@@ -43,7 +47,8 @@ import play.mvc.With;
 public class FilterTab extends AbstractVireoController {
 
 	// Service to handle batch deposits
-	public static DepositService depositService = Spring.getBeanOfType(DepositService.class);
+	public static JobManager jobManager = Spring.getBeanOfType(JobManager.class);
+	public static TransitionService transitionService = Spring.getBeanOfType(TransitionService.class);
 	public static ExportService exportService = Spring.getBeanOfType(ExportService.class);
 
 	
@@ -201,12 +206,7 @@ public class FilterTab extends AbstractVireoController {
 		renderArgs.put(SearchDirection.DESCENDING.name(), SearchDirection.DESCENDING);
 		
 		// All the published states
-		List<State> publishStates = new ArrayList<State>();
-		for (State state : stateManager.getAllStates()) {
-			if (state.isDepositable())
-				publishStates.add(state);
-		}
-		renderArgs.put("publishStates", publishStates);
+		renderArgs.put("states", stateManager.getAllStates());
 		
 		// Get all the deposit locations
 		List<DepositLocation> depositLocations = settingRepo.findAllDepositLocations();
@@ -623,7 +623,7 @@ public class FilterTab extends AbstractVireoController {
 	 *            (optional)
 	 */
 	@Security(RoleType.REVIEWER) 
-	public static void batchDepositAndPublish(Long depositLocationId, String successState) {
+	public static void batchTransition(String state, Long depositLocationId) {
 
 		// Step 1, get the current filter
 		ActiveSearchFilter filter = Spring.getBeanOfType(ActiveSearchFilter.class);
@@ -637,17 +637,20 @@ public class FilterTab extends AbstractVireoController {
 		}
 		
 		// Step 2, Lookup the location.
-		DepositLocation location = settingRepo.findDepositLocation(depositLocationId);
+		DepositLocation location = null;
+		if (depositLocationId != null)
+			location = settingRepo.findDepositLocation(depositLocationId);
 		
 		// Step 3, Resolve the state.
-		State successStateObject = null;
-		if (successState != null && successState.length() > 0)
-			successStateObject = stateManager.getState(successState);
-		
+		State stateObject = null;
+		if (state != null && state.length() > 0)
+			stateObject = stateManager.getState(state);
+				
 		// Kick off the batch
-		depositService.deposit(location, filter, successStateObject);
-		
-		list();
+		JobMetadata job = transitionService.transition(filter, stateObject, location);
+
+		// Show a progress bar
+		JobTab.adminStatus(job.getId().toString());
 	}
 	
 	/**

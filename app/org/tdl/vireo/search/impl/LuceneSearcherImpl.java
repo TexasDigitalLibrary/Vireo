@@ -247,7 +247,7 @@ public class LuceneSearcherImpl implements Searcher {
 		
 		return new SearchIteratorImpl<ActionLog>(ActionLog.class,this, filter, orderBy, direction);
 	}
-	
+
 	
 	
 	

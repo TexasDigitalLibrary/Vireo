@@ -31,8 +31,13 @@ public class JobManagerImpl implements JobManager {
 	
 	@Override
 	public synchronized JobMetadata findJob(UUID jobId) {
+		
+		if (jobId == null)
+			throw new IllegalArgumentException("Unable to find background operations with a specific id without the id specified.");
+		
+		
 		for (JobMetadata job: jobs) {
-			if (job.getId() == jobId)
+			if (jobId.equals(job.getId()))
 				return job;
 		}
 		
@@ -97,6 +102,66 @@ public class JobManagerImpl implements JobManager {
 		
 		Collections.reverse(found);
 		return found;
+	}
+	
+	@Override
+	public void waitForJobs(UUID id) {
+		
+		JobMetadata job = this.findJob(id);
+		
+		if (job == null)
+			return;
+		
+		while (job.getStatus().isActive()) {
+			Thread.yield();
+		}
+	}
+
+	@Override
+	public void waitForJobs() {
+		
+		while (this.findJobsByStatus(JobStatus.ACTIVE).size() > 0) {
+			Thread.yield();
+		}
+	}
+	
+	@Override
+	public void waitForJobs(Person owner) {
+		
+		int active;
+		do {
+			active = 0;
+			List<JobMetadata> jobs = this.findJobsByOwner(owner);
+			for (JobMetadata job : jobs) {
+				if (job.getStatus().isActive()) {
+					active++;
+				}
+			}
+			
+			if (active > 0)
+				Thread.yield();
+			
+		} while ( active > 0 );
+		
+	}
+
+	@Override
+	public void waitForJobs(Class type) {
+	
+		int active;
+		do {
+			active = 0;
+			List<JobMetadata> jobs = this.findJobsByType(type);
+			for (JobMetadata job : jobs) {
+				if (job.getStatus().isActive()) {
+					active++;
+				}
+			}
+			
+			if (active > 0)
+				Thread.yield();
+			
+		} while ( active > 0 );
 	}
 
 	@Override
@@ -165,6 +230,32 @@ public class JobManagerImpl implements JobManager {
 				return;
 			
 		}
+	}
+	
+	/**
+	 * Helpfull method to display the state of the job queue
+	 */
+	public synchronized String toString() {
+		
+		StringBuilder string = new StringBuilder();
+		
+		for (JobMetadata job : jobs) {
+			string.append(job.getId());
+			string.append(": ");
+			string.append(job.getStatus().name());
+			string.append(", ");
+			string.append(job.getProgress().toString());
+			
+			if (job.getOwnerId() != null) {
+				string.append(" (");
+				string.append(job.getOwnerId());
+				string.append(")");
+			}
+			string.append("\n");
+		}
+		
+		
+		return string.toString();
 	}
 
 }

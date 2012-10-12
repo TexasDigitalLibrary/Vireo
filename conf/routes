@@ -50,7 +50,7 @@ POST    /admin/{nav}/filter/customize           FilterTab.customizeFilters
 *       /admin/{nav}/search                     FilterTab.modifySearch
 POST    /admin/{nav}/search/customize           FilterTab.customizeSearch
 *       /admin/log/filter/reset                 FilterTab.resetLogFilterToOneSubmission
-POST    /admin/list/batch/deposit               FilterTab.batchDepositAndPublish
+POST    /admin/list/batch/transition            FilterTab.batchTransition
 POST    /admin/list/batch/export                FilterTab.batchExport
 
 ### View Tab
@@ -153,6 +153,10 @@ POST    /admin/settings/deposit/load            settings.DepositSettingsTab.load
 POST    /admin/settings/deposit/save            settings.DepositSettingsTab.saveDepositLocation
 POST    /admin/settings/deposit/remove          settings.DepositSettingsTab.removeDepositLocationJSON
 POST    /admin/settings/deposit/reorder         settings.DepositSettingsTab.reorderDepositLocationsJSON
+
+## Job Tab
+GET     /admin/job/{jobId}                      JobTab.adminStatus
+GET     /admin/job/{jobId}/update               JobTab.updateJSON
 
 ### System Administrator
 GET     /system/?                               System.controlPanelRedirect

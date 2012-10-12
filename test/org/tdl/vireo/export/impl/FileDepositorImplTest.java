@@ -69,7 +69,7 @@ public class FileDepositorImplTest extends UnitTest {
 		Map<String, String> collections = depositor.getCollections(location);
 
 		assertNotNull(collections);
-		assertEquals(4, collections.size());
+		assertTrue(collections.size() >= 4); // There could all ready be other collections.
 		
 		assertNotNull(collections.get("Collection_A"));
 		assertNotNull(collections.get("Collection_B"));

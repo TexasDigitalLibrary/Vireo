@@ -120,7 +120,6 @@ public class System extends AbstractVireoController {
 						
 			indexJob += String.format(" ( %.3f%% complete )",complete);
 		}
-		
 
 
 		renderTemplate("System/generalPanel.html",
