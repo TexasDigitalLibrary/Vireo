@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.tdl.vireo.batch.DeleteService;
 import org.tdl.vireo.batch.TransitionService;
 import org.tdl.vireo.export.ChunkStream;
 import org.tdl.vireo.export.DepositService;
@@ -49,6 +50,7 @@ public class FilterTab extends AbstractVireoController {
 	// Service to handle batch deposits
 	public static JobManager jobManager = Spring.getBeanOfType(JobManager.class);
 	public static TransitionService transitionService = Spring.getBeanOfType(TransitionService.class);
+	public static DeleteService deleteService = Spring.getBeanOfType(DeleteService.class);
 	public static ExportService exportService = Spring.getBeanOfType(ExportService.class);
 
 	
@@ -645,9 +647,13 @@ public class FilterTab extends AbstractVireoController {
 		State stateObject = null;
 		if (state != null && state.length() > 0)
 			stateObject = stateManager.getState(state);
-				
-		// Kick off the batch
-		JobMetadata job = transitionService.transition(filter, stateObject, location);
+		
+		// Kick off the batch update or delete job
+		JobMetadata job = null;
+		if (stateObject.isDeletable() && "confirm-delete".equals(params.get("delete-submissions")))
+			job = deleteService.delete(filter);
+		else 
+			job = transitionService.transition(filter, stateObject, location);
 
 		// Show a progress bar
 		JobTab.adminStatus(job.getId().toString());

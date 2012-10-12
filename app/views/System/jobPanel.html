@@ -54,7 +54,7 @@ jQuery(document).ready(function() {
             #{/elseif}
             >
                 <td ${ job.getMessage() != null ? "rowspan='2'" : ''} style="vertical-align: center;">
-	                <strong>${job.getId().toString().substring(0,6)}</strong>
+	                <a href="@{JobTab.adminStatus(job.getId().toString())}" title="${job.getId().toString()}"><strong>${job.getId().toString().substring(0,6)}</strong></a>
                 </td>
                 <td>${new Date(job.getStartTime()).since()}</td>
                 <td>${job.getStatus()}</td>

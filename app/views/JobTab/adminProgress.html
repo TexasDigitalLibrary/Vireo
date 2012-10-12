@@ -93,25 +93,27 @@ jQuery(document).ready(function() {
 	
 	    <h1 id="job-name">${job.getName()}</h1>
 	    
-	    <div id="job-status" class="progress progress-striped
-	    #{if job.getStatus() == WAITING || job.getStatus() == READY }
-	       progress-info active
-	    #{/if}
-	    #{elseif job.getStatus() == RUNNING}
-	       progress-success active
-	    #{/elseif}
-	    #{elseif job.getStatus() == SUCCESS}
-	       progress-success
-	    #{/elseif}
-	    #{elseif job.getStatus() == FAILED}
-	       progress-danger
-	    #{/elseif}
-	    #{elseif job.getStatus() == CANCELLED}
-	       progress-warning
-	    #{/elseif}">
-	        <div class="bar" style="width: ${ job.getStatus().isActive() ? "0%" : job.getProgress().toString()};">${ job.getStatus().isActive() ? "" : job.getProgress().toString()}</div>
+	    <div class="well">
+		    <div id="job-status" class="progress progress-striped
+		    #{if job.getStatus() == WAITING || job.getStatus() == READY }
+		       progress-info active
+		    #{/if}
+		    #{elseif job.getStatus() == RUNNING}
+		       progress-success active
+		    #{/elseif}
+		    #{elseif job.getStatus() == SUCCESS}
+		       progress-success
+		    #{/elseif}
+		    #{elseif job.getStatus() == FAILED}
+		       progress-danger
+		    #{/elseif}
+		    #{elseif job.getStatus() == CANCELLED}
+		       progress-warning
+		    #{/elseif}">
+		        <div class="bar" style="width: ${ job.getStatus().isActive() ? "0%" : job.getProgress().toString()};">${ job.getStatus().isActive() ? "" : job.getProgress().toString()}</div>
+		    </div>
+		    <span id="job-message">${job.getMessage()}</span>
 	    </div>
-	    <span id="job-message">${job.getMessage()}</span>
 	    <br/>
 	    <br/>
 	    <div id="job-complete" class="${ job.getStatus().isActive() ? 'hidden' : '' }">

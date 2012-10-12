@@ -57,18 +57,20 @@ jQuery(document).ready(function() {
     
     // Batch Update Status dialog box
     jQuery("#state").click(function() {
-        if (jQuery("#state option:selected").hasClass("ask-for-depositLocation") &&
-            jQuery("#ask-for-depositLocation-group").is(":hidden")) {
-            
-            // Show the extra fields
+    
+        // Toggle the deposit location field display
+        if (jQuery("#state option:selected").hasClass("ask-for-depositLocation") && jQuery("#ask-for-depositLocation-group").is(":hidden")) {
             jQuery("#ask-for-depositLocation-group").slideToggle();
-            
-            
-        } else if (!jQuery("#state option:selected").hasClass("ask-for-depositLocation") &&
-            !jQuery("#ask-for-depositLocation-group").is(":hidden")) {
-            
-            // Hide the extra field
+        } else if (!jQuery("#state option:selected").hasClass("ask-for-depositLocation") && !jQuery("#ask-for-depositLocation-group").is(":hidden")) {
             jQuery("#ask-for-depositLocation-group").slideToggle();
+        }
+        
+        // Toggle the delete field display
+        if (jQuery("#state option:selected").hasClass("ask-for-delete") && jQuery("#ask-for-delete-group").is(":hidden")) {
+            jQuery("#ask-for-delete-group input").attr("checked", false);
+            jQuery("#ask-for-delete-group").slideToggle();
+        } else if (!jQuery("#state option:selected").hasClass("ask-for-delete") && !jQuery("#ask-for-delete-group").is(":hidden")) {
+            jQuery("#ask-for-delete-group").slideToggle();
         }
     });
 });
@@ -278,7 +280,7 @@ jQuery(document).ready(function() {
                     <div class="controls">
                         <select class="input-xlarge" name="state" id="state">
                             #{list items:states, as:'state'}
-                                <option value="${state.getBeanName() }" ${ state.isDepositable() ? "class='ask-for-depositLocation'" : ""}>${state.getDisplayName()}</option>
+                                <option value="${state.getBeanName() }" class="${ state.isDepositable() ? "ask-for-depositLocation" : ""} ${ state.isDeletable() ? "ask-for-delete" : ""}">${state.getDisplayName()}</option>
                             #{/list}
                         </select>
                     </div>
@@ -287,12 +289,22 @@ jQuery(document).ready(function() {
                     <label class="control-label red" for="depositLocationId"><strong>Deposit Location</strong>:</label>
                     <div class="controls">
                         <select class="input-xlarge" name="depositLocationId" id="depositLocationId">
+                                <option value=""><em>Do not deposit submissions</em></option>
                             #{list items:depositLocations, as:'location'}
                                 <option value="${location.getId() }">${location.getName()}</option>
                             #{/list}
                         </select>
                     </div>
                 </div>
+                <div id="ask-for-delete-group" class="control-group hidden">
+                    <label class="control-label red" for="delete"><strong>Delete Submissions</strong>:</label>
+                    <div class="controls">
+                        <label class="checkbox inline">
+                            <input type="checkbox" name="delete-submissions" value="confirm-delete">
+                        </label>
+                    </div>
+                </div>
+                
             </fieldset>
         </div>
         <div class="modal-footer">

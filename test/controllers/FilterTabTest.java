@@ -724,6 +724,74 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 	}
 	
 	/**
+	 * Test deleting a batch
+	 */
+	@Test
+	public void testBatchDelete() throws InterruptedException {
+
+		context.turnOffAuthorization();
+		
+		// Login as an administrator
+		LOGIN();
+
+		// Get our URLS
+		Map<String,Object> routeArgs = new HashMap<String,Object>();
+		routeArgs.put("nav", "list");
+
+		final String FILTER_URL = Router.reverse("FilterTab.modifyFilters",routeArgs).url;
+		final String DELETE_URL = Router.reverse("FilterTab.batchTransition").url;
+
+		Person person = personRepo.findPersonByEmail("bthornton@gmail.com");
+		Submission sub = subRepo.createSubmission(person);
+		sub.setDocumentTitle("Delete test");
+		sub.setDegree("Degree Delete");
+		sub.save();
+		
+		State deleteState = null;
+		for (State state : stateManager.getAllStates())
+			if (state.isDeletable())
+				deleteState = state;
+		
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		indexer.commit(true);
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
+		// Filter for "Degree Deposit"
+		GET(FILTER_URL+"?action=add&type=degree&value=Degree+Delete");
+		
+		// Do the batch publish
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("depositLocationId","");
+		params.put("state",deleteState.getBeanName());
+		params.put("delete-submissions","confirm-delete");
+		Response response = POST(DELETE_URL,params);
+		
+		// Check that we were sent to the progress bar
+		assertNotNull(response.getHeader("Location"));
+		
+		// Wait for the deposit to finish.
+		jobManager.waitForJobs();
+		
+		// Check that the submission had a deposit id set.
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		sub = subRepo.findSubmission(sub.getId());
+		assertNull(sub);
+		
+		context.restoreAuthorization();
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+	}
+	
+	/**
 	 * Test downloading a batch export.
 	 */
 	@Test
