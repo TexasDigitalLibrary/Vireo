@@ -24,7 +24,7 @@ jQuery(document).ready(function(){
 	jQuery('.more').click(moreHandler());
 
 	// Confirm links
-	jQuery('.confirm').live("click", confirmHandler());
+	jQuery('.confirm').live("click", confirmHandler());	
 });
 
 
