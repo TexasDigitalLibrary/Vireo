@@ -52,6 +52,7 @@ POST    /admin/{nav}/search/customize           FilterTab.customizeSearch
 *       /admin/log/filter/reset                 FilterTab.resetLogFilterToOneSubmission
 POST    /admin/list/batch/transition            FilterTab.batchTransition
 POST    /admin/list/batch/export                FilterTab.batchExport
+POST	/admin/list/batch/assign				FilterTab.batchAssign
 
 ### View Tab
 *       /admin/view/?                           ViewTab.view

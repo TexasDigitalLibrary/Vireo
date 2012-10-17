@@ -317,6 +317,40 @@ jQuery(document).ready(function() {
         </div>
     </form>
 </div>
+#{/if}
+
+#{if "list".equals(nav) } 
+<div class="modal hide fade" id="batch-assign-modal">
+    <form id="batch-assign-form" action="@{FilterTab.batchAssign()}" method="POST" class="form-horizontal">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>Batch Assign</h3>
+        </div>
+        <div class="modal-body">
+            <p>This batch operation will modify the assignee of all the submissions selected by the currently active filter.</p>
+            
+            <p>This operation may take quite some time depending on how many submissions are currently selected.</p>
+            
+            <fieldset>
+                <div class="control-group">
+                    <label class="control-label" for="assignTo"><strong>Assign To</strong>:</label>
+                    <div class="controls">
+                        <select class="input-xlarge" name="assignTo" id="assignTo">
+                            <option value="null">Unassigned</option>
+                            #{list items:assignees, as:'person'}                             
+					            <option value="${person.getId()}">${person.getFormattedName(org.tdl.vireo.model.NameFormat.FIRST_LAST)}</option>
+					        #{/list}
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <button type="submit" class="btn btn-primary batchConfirm" name="submit_save">Assign</button>
+        </div>
+    </form>
+</div>
 #{/if} 
 
 #{if "list".equals(nav) } 

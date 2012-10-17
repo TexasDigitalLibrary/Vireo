@@ -218,8 +218,9 @@ public class FilterTab extends AbstractVireoController {
 		List<Packager> packagers = new ArrayList<Packager>( (Collection) Spring.getBeansOfType(Packager.class).values() );
 		renderArgs.put("packagers", packagers);
 
+		List<Person> assignees = personRepo.findPersonsByRole(RoleType.REVIEWER);
 		
-		render(nav, allFilters, activeFilter, results, orderby, columns, facets, direction, resultsPerPage);
+		render(nav, allFilters, activeFilter, results, orderby, columns, facets, direction, resultsPerPage, assignees);
 	}
 	
 	/**
@@ -657,6 +658,14 @@ public class FilterTab extends AbstractVireoController {
 
 		// Show a progress bar
 		JobTab.adminStatus(job.getId().toString());
+	}
+	
+	/**
+	 * 
+	 */
+	@Security(RoleType.REVIEWER)
+	public static void batchAssign(Long assignTo) {
+		
 	}
 	
 	/**
