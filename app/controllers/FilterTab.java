@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import org.tdl.vireo.batch.DeleteService;
 import org.tdl.vireo.batch.TransitionService;
+import org.tdl.vireo.batch.AssignService;
 import org.tdl.vireo.export.ChunkStream;
 import org.tdl.vireo.export.DepositService;
 import org.tdl.vireo.export.ExportService;
@@ -52,6 +53,7 @@ public class FilterTab extends AbstractVireoController {
 	public static TransitionService transitionService = Spring.getBeanOfType(TransitionService.class);
 	public static DeleteService deleteService = Spring.getBeanOfType(DeleteService.class);
 	public static ExportService exportService = Spring.getBeanOfType(ExportService.class);
+	public static AssignService assignService = Spring.getBeanOfType(AssignService.class);
 
 	
 	// Store the cookie and session names in an easy to lookup two dimensional
@@ -661,11 +663,31 @@ public class FilterTab extends AbstractVireoController {
 	}
 	
 	/**
+	 * Change the assignee on a batch of submissions. After kicking off a
+	 * background process the user will be redirected back to the list page.
 	 * 
+	 * @param assignTo
+	 * 			The id of the person the submissions will be assigned to.
 	 */
 	@Security(RoleType.REVIEWER)
 	public static void batchAssign(Long assignTo) {
 		
+		// Get the current filter
+		ActiveSearchFilter filter = Spring.getBeanOfType(ActiveSearchFilter.class);
+		Cookie filterCookie = request.cookies.get(NAMES[SUBMISSION][ACTIVE_FILTER]);
+		if (filterCookie != null && filterCookie.value != null && filterCookie.value.trim().length() > 0) {
+			try {
+				filter.decode(filterCookie.value);
+			} catch (RuntimeException re) {
+				Logger.warn(re,"Unable to decode search filter: "+filterCookie.value);
+			}
+		}
+		
+		// Kick off the batch assign to
+		JobMetadata job = assignService.assign(filter, assignTo);
+		
+		// Show a progress bar
+		JobTab.adminStatus(job.getId().toString());
 	}
 	
 	/**
