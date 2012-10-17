@@ -16,6 +16,8 @@ import org.tdl.vireo.security.SecurityContext;
 
 import play.Logger;
 import play.Play;
+import play.db.jpa.JPA;
+import play.db.jpa.JPAPlugin;
 import play.jobs.Job;
 import play.libs.Mail;
 import play.modules.spring.Spring;
@@ -184,28 +186,44 @@ public class EmailServiceImpl implements EmailService {
 		 */
 		public void logMessage(String logMessage) {
 
-			Submission sub = this.email.getLogSubmission();
-			if (sub != null) {
-				Person person = this.email.getLogPerson();
-				boolean loggedSomeoneIn = false;
-				if (context.getPerson() == null && person != null) {
-					context.login(person);
-					loggedSomeoneIn = true;
+			synchronized (EmailService.class) {
+				
+				// If we are in a background thread isolate the transaction as much
+				// as possible to prevent deadlocks.
+				if (!wait) {
+					if (JPA.isInsideTransaction())
+						JPAPlugin.closeTx(false);
+					JPAPlugin.startTx(false);
 				}
-				context.turnOffAuthorization();
-
-				try {
-					ActionLog log = sub.logAction(logMessage);
-					log.save();
-					sub.save();
-				} finally {
-
-					context.restoreAuthorization();
-					if (loggedSomeoneIn)
-						context.logout();
+				
+				Submission sub = this.email.getLogSubmission();
+				if (sub != null) {
+					Person person = this.email.getLogPerson();
+					boolean loggedSomeoneIn = false;
+					if (context.getPerson() == null && person != null) {
+						context.login(person);
+						loggedSomeoneIn = true;
+					}
+					context.turnOffAuthorization();
+	
+					try {
+						ActionLog log = sub.logAction(logMessage);
+						log.save();
+						sub.save();
+					} finally {
+	
+						context.restoreAuthorization();
+						if (loggedSomeoneIn)
+							context.logout();
+					} // finally
+				} // if sub
+				
+				if (!wait) {
+					JPAPlugin.closeTx(false);
 				}
-			}
-		}
-	}
+				
+			} // synchronized EmailService
+		} // logMessage
+	} // emailJob
 
 }

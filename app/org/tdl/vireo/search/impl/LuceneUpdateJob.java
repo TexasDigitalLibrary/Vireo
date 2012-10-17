@@ -15,6 +15,7 @@ import org.apache.lucene.util.NumericUtils;
 import org.tdl.vireo.model.Submission;
 
 import play.db.jpa.JPA;
+import play.db.jpa.JPAPlugin;
 
 /**
  * Update the index for a given list of modified submissions.
@@ -86,11 +87,16 @@ public class LuceneUpdateJob extends LuceneAbstractJobImpl {
 				writer.deleteDocuments(new TermQuery(new Term("subId",
 						NumericUtils.longToPrefixCoded(id))));
 
+				if (JPA.isInsideTransaction())
+					JPAPlugin.closeTx(false);
+				JPAPlugin.startTx(true);
+				
 				Submission sub = indexer.subRepo.findSubmission(id);
 				if (sub != null)
 					indexSubmission(writer, sub);
 
-				JPA.em().detach(sub);
+				JPAPlugin.closeTx(false);
+				JPAPlugin.startTx(false);
 
 				progress++;
 				
