@@ -93,7 +93,7 @@ public class HashedBlob implements BinaryField, UserType {
 			File hashDir = new File(getStore(), name1 + File.separator + name2
 					+ File.separator + name3 + File.separator + name4);
 
-			file = new File(getStore(), UUID);
+			file = new File(hashDir, UUID);
 		}
 		return file;
 	}
