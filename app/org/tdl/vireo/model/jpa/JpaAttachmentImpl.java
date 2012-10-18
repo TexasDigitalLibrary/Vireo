@@ -22,7 +22,6 @@ import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.security.SecurityContext;
 
-import play.db.jpa.Blob;
 import play.libs.MimeTypes;
 import play.modules.spring.Spring;
 
@@ -51,7 +50,7 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 	@Column(nullable = false)
 	public Date date;
 
-	public Blob data;
+	public HashedBlob data;
 
 	public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	
@@ -124,7 +123,7 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 			mimeType = "application/octet-stream";
 		}
 		
-		this.data = new Blob();
+		this.data = new HashedBlob();
 		this.data.set(new FileInputStream(file), mimeType);
 		
 		if (AttachmentType.PRIMARY == type)
@@ -164,7 +163,7 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 			mimeType = "application/octet-stream";
 		}
 		
-		this.data = new Blob();
+		this.data = new HashedBlob();
 		this.data.set(
 				new ByteArrayInputStream(content),
 				mimeType
