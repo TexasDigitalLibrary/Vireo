@@ -70,6 +70,7 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 	public String originalRequestCollege = null;
 	public String originalRequestUMI = null;
 	public String originalAllowMultiple = null;
+	public String originalSubmissionsOpen = null;
 
 	/**
 	 * Setup
@@ -83,6 +84,7 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 		originalRequestCollege = settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_COLLEGE);
 		originalRequestUMI = settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_UMI);
 		originalAllowMultiple = settingRepo.getConfigValue(Configuration.ALLOW_MULTIPLE_SUBMISSIONS);
+		originalSubmissionsOpen = settingRepo.getConfigValue(Configuration.SUBMISSIONS_OPEN);
 
 		// Turn off authentication for the test thread
 		context.turnOffAuthorization();
@@ -96,37 +98,13 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 	@After
 	public void cleanup() {
 
-		// Restore our configuration.		
-		Configuration requestBirth = settingRepo.findConfigurationByName(Configuration.SUBMIT_REQUEST_BIRTH);
-		if (originalRequestBirth == null && requestBirth != null) {
-			requestBirth.delete();
-		}
-		if (originalRequestBirth != null && requestBirth == null) {
-			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_BIRTH,"true").save();
-		}
-
-		Configuration requestCollege = settingRepo.findConfigurationByName(Configuration.SUBMIT_REQUEST_COLLEGE);
-		if (originalRequestCollege == null && requestCollege != null) {
-			requestCollege.delete();
-		}
-		if (originalRequestCollege != null && requestCollege == null) {
-			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_COLLEGE,"true").save();
-		}
-
-		Configuration requestUMI = settingRepo.findConfigurationByName(Configuration.SUBMIT_REQUEST_UMI);
-		if (originalRequestUMI == null && requestUMI != null) {
-			requestUMI.delete();
-		}
-		if (originalRequestUMI != null && requestUMI == null) {
-			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_UMI,"true").save();
-		}
-		Configuration allowMultiple = settingRepo.findConfigurationByName(Configuration.ALLOW_MULTIPLE_SUBMISSIONS);
-		if (originalAllowMultiple == null && allowMultiple != null) {
-			allowMultiple.delete();
-		}
-		if (originalAllowMultiple != null && allowMultiple == null) {
-			settingRepo.createConfiguration(Configuration.ALLOW_MULTIPLE_SUBMISSIONS,"true").save();
-		}
+		// Restore our configuration.
+		setRequestBirthYear(originalRequestBirth != null);
+		setRequestCollege(originalRequestCollege != null);
+		setRequestUMI(originalRequestUMI != null);
+		setAllowMultipleSubmissions(originalAllowMultiple != null);
+		setSubmissionsOpen(originalSubmissionsOpen != null);
+		
 
 		// if we created a submission, delete it.
 		if (subId != null) {
@@ -140,21 +118,68 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 	}
 
 	/**
+	 * Test that there is not an endless redirect bug when submissions are closed and a student has a submission in progress. This condition only occures when multiple submissions are turned off.
+	 */
+	@Test
+	public void testVIERO90() throws IOException, InterruptedException {    
+
+		// Turn off any of the extra paramaters
+		setRequestBirthYear(false);
+		setRequestCollege(false);
+		setRequestUMI(false);
+		setAllowMultipleSubmissions(false);
+		setSubmissionsOpen(false);
+		
+		// Create an in-progress submission
+		Person cdanes = personRepo.findPersonByEmail("cdanes@gmail.com");
+		Submission sub = subRepo.createSubmission(cdanes);
+		sub.save();
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
+		// Login as the student Clair Danes
+		LOGIN("cdanes@gmail.com");
+
+		// Get our URLs
+		Map<String,Object> routeArgs = new HashMap<String,Object>();
+		routeArgs.put("subId", sub.getId());
+		final String INDEX_URL = Router.reverse("Application.index").url;
+		final String LIST_URL = Router.reverse("Student.submissionList").url;
+		final String DELETE_URL = Router.reverse("Student.submissionDelete",routeArgs).url;
+		
+		// View the homepage
+		Response response = GET(INDEX_URL);
+		assertIsOk(response);
+		assertContentMatch("Start your submission",response); // the start button is there.
+		assertContentMatch(LIST_URL,response); // and it's url.
+
+		response = GET(LIST_URL);
+		assertIsOk(response);
+		// There should be a message telling the user that submissions are closed.
+		assertContentMatch("Submissions are currently closed",response);
+		assertContentMatch("This submission was not completed by the deadline. Please contact the thesis office.",response);
+		
+		// There should be no edit links.
+		assertFalse(getContent(response).contains("Continue</a>"));
+		
+		// Delete the late submission
+		response = GET(DELETE_URL);
+		assertEquals(INDEX_URL,response.getHeader("Location"));
+	}
+	
+	/**
 	 * Test a complete submission workflow without asking for any additional parameters.
 	 */
 	@Test
 	public void testFullSubmission() throws IOException, InterruptedException {    
 
 		// Turn off any of the extra paramaters
-		if (settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_BIRTH) != null) {
-			settingRepo.findConfigurationByName(Configuration.SUBMIT_REQUEST_BIRTH).delete();
-		}
-		if (settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_COLLEGE) != null) {
-			settingRepo.findConfigurationByName(Configuration.SUBMIT_REQUEST_COLLEGE).delete();
-		}
-		if (settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_UMI) != null) {
-			settingRepo.findConfigurationByName(Configuration.SUBMIT_REQUEST_UMI).delete();
-		}
+		setRequestBirthYear(false);
+		setRequestCollege(false);
+		setRequestUMI(false);
+		setAllowMultipleSubmissions(false);
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();
 		JPA.em().getTransaction().begin();
@@ -242,15 +267,10 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 	public void testFullSubmissionWithOptionalParamaters() throws IOException, InterruptedException {    
 
 		// Turn ON any of the extra paramaters
-		if (settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_BIRTH) == null) {
-			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_BIRTH,"true").save();
-		}
-		if (settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_COLLEGE) == null) {
-			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_COLLEGE,"true").save();
-		}
-		if (settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_UMI) == null) {
-			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_UMI,"true").save();
-		}
+		setRequestBirthYear(true);
+		setRequestCollege(true);
+		setRequestUMI(true);
+		setAllowMultipleSubmissions(false);
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();
 		JPA.em().getTransaction().begin();
@@ -338,18 +358,11 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 	public void testMultipleSubmissionsAllowed() throws IOException {    
 
 		// Turn ON any of the extra paramaters
-		if (settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_BIRTH) == null) {
-			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_BIRTH,"true").save();
-		}
-		if (settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_COLLEGE) == null) {
-			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_COLLEGE,"true").save();
-		}
-		if (settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_UMI) == null) {
-			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_UMI,"true").save();
-		}
-		if (settingRepo.getConfigValue(Configuration.ALLOW_MULTIPLE_SUBMISSIONS) == null) {
-			settingRepo.createConfiguration(Configuration.ALLOW_MULTIPLE_SUBMISSIONS,"true").save();
-		}
+		setRequestBirthYear(true);
+		setRequestCollege(true);
+		setRequestUMI(true);
+		setAllowMultipleSubmissions(true);
+		
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();
 		JPA.em().getTransaction().begin();
@@ -410,18 +423,10 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 	public void testMultipleSubmissionsDisallowed() throws IOException {    
 
 		// Turn ON any of the extra paramaters
-		if (settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_BIRTH) == null) {
-			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_BIRTH,"true").save();
-		}
-		if (settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_COLLEGE) == null) {
-			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_COLLEGE,"true").save();
-		}
-		if (settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_UMI) == null) {
-			settingRepo.createConfiguration(Configuration.SUBMIT_REQUEST_UMI,"true").save();
-		}
-		if (settingRepo.getConfigValue(Configuration.ALLOW_MULTIPLE_SUBMISSIONS) != null) {
-			settingRepo.findConfigurationByName(Configuration.ALLOW_MULTIPLE_SUBMISSIONS).delete();
-		}
+		setRequestBirthYear(true);
+		setRequestCollege(true);
+		setRequestUMI(true);
+		setAllowMultipleSubmissions(false);
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();
 		JPA.em().getTransaction().begin();
@@ -462,15 +467,10 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 	public void testCommitteeMembers() throws IOException, InterruptedException {    
 
 		// Turn off any of the extra paramaters
-		if (settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_BIRTH) != null) {
-			settingRepo.findConfigurationByName(Configuration.SUBMIT_REQUEST_BIRTH).delete();
-		}
-		if (settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_COLLEGE) != null) {
-			settingRepo.findConfigurationByName(Configuration.SUBMIT_REQUEST_COLLEGE).delete();
-		}
-		if (settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_UMI) != null) {
-			settingRepo.findConfigurationByName(Configuration.SUBMIT_REQUEST_UMI).delete();
-		}
+		setRequestBirthYear(false);
+		setRequestCollege(false);
+		setRequestUMI(false);
+		setAllowMultipleSubmissions(false);
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();
 		JPA.em().getTransaction().begin();
@@ -593,10 +593,72 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 	}
 
 	
+	/**
+	 * Set whether the birth year should be requested during submission.
+	 * 
+	 * @param value
+	 *            On or off
+	 */
+	public void setRequestBirthYear(boolean value) {
+		setConfiguration(Configuration.SUBMIT_REQUEST_BIRTH, value);
+	}
+
+	/**
+	 * Set whether the college parameter should be requested during submission.
+	 * 
+	 * @param value
+	 *            On or off
+	 */
+	public void setRequestCollege(boolean value) {
+		setConfiguration(Configuration.SUBMIT_REQUEST_COLLEGE, value);
+	}
+
+	/**
+	 * Set whether the UMI parameter should be requested during submission.
+	 * 
+	 * @param value
+	 *            On or off
+	 */
+	public void setRequestUMI(boolean value) {
+		setConfiguration(Configuration.SUBMIT_REQUEST_UMI, value);
+	}
+
+	/**
+	 * Set whether multiple submissions are allowed.
+	 * 
+	 * @param value
+	 *            Allowed or Disallowed
+	 */
+	public void setAllowMultipleSubmissions(boolean value) {
+		setConfiguration(Configuration.ALLOW_MULTIPLE_SUBMISSIONS, value);
+	}
 	
-	
-	
-	
+	/**
+	 * Set whether submissions are opened or closed.
+	 * 
+	 * @param value open or closed.
+	 */
+	public void setSubmissionsOpen(boolean value) {
+		setConfiguration(Configuration.SUBMISSIONS_OPEN, value);
+	}
+
+	/**
+	 * Generic method to set the configuration of a particular parameter. This
+	 * method only works for boolean configuration parameters.
+	 * 
+	 * @param config
+	 *            The configuration name
+	 * @param value
+	 *            The value.
+	 */
+	public void setConfiguration(String config, boolean value) {
+
+		if (value && settingRepo.getConfigValue(config) == null)
+			settingRepo.createConfiguration(config, "true").save();
+
+		if (!value && settingRepo.getConfigValue(config) != null)
+			settingRepo.findConfigurationByName(config).delete();
+	}
 	
 	
 	
