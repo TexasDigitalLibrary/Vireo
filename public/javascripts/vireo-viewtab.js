@@ -27,11 +27,12 @@ function swapToInputHandler(){
 				jQuery("body").append('<div id="backup">'+editItem.html()+'</div>')
 			}
 
-			//Text Areas
-			if(editItem.hasClass("textarea")){
+			if(editItem.hasClass("textarea")) {
+				//Text Areas
 				editItem.replaceWith('<div id="'+editItem.attr("id")+'" class="editing textarea"><textarea class="field" textarea">'+value+'</textarea><br /><i class="icon-remove" title="cancel"></i>&nbsp<i class="icon-ok" title="commit"></i></div>');
+				
+			} else if(editItem.hasClass("select")) {
 				//Select Drop Downs
-			} else if(editItem.hasClass("select")){
 				var selectCode = '<div id="'+editItem.attr("id")+'" class="editing select">';
 				selectCode += jQuery("#"+editItem.attr("id")+"Options").html();
 				selectCode += '<br /><i class="icon-remove" title="cancel"></i>&nbsp<i class="icon-ok" title="commit"></i></div>';
@@ -41,8 +42,18 @@ function swapToInputHandler(){
 						jQuery(this).attr("selected","selected");
 					}
 				})
-				//Input Fields
+				
+			} else if(editItem.hasClass("autocomplete")) { 
+				// Autocomplete fields
+				var selectCode = '<div id="'+editItem.attr("id")+'" class="editing autocomplete">';
+				selectCode += jQuery("#"+editItem.attr("id")+"Options").html();
+				selectCode += '<br /><i class="icon-remove" title="cancel"></i>&nbsp<i class="icon-ok" title="commit"></i></div>';
+				editItem.replaceWith(selectCode);
+				
+				jQuery("#"+editItem.attr("id")+" .field").val(value);
+				
 			} else {
+				//Input Fields
 				editItem.replaceWith('<div id="'+editItem.attr("id")+'" class="editing"><input class="field" type="text" value="'+value+'" /><br /><i class="icon-remove" title="cancel"></i>&nbsp<i class="icon-ok" title="commit"></i></div>');
 			}			
 
@@ -141,12 +152,16 @@ function commitChangesHandler(eventTarget, jsonURL, committeeURL, subId){
 	var classValue = '';
 	var fieldItem;
 	var parent = eventTarget.parent();
+	
 	if(jQuery(".editing").hasClass("textarea")){
 		classValue = classValue + 'textarea ';
 		fieldItem = jQuery(".editing textarea");
 	} else if(jQuery(".editing").hasClass("select")){
 		classValue = classValue + 'select ';
 		fieldItem = jQuery(".editing select");
+	} else if(jQuery(".editing").hasClass("autocomplete")){
+		classValue = classValue + 'autocomplete ';
+		fieldItem = jQuery(".editing input");
 	} else {
 		fieldItem = jQuery(".editing input");
 	}
@@ -388,6 +403,9 @@ function cancelEditingHandler(){
 			} else if(jQuery(".editing").hasClass("select")){
 				classValue = classValue + 'select ';
 				fieldItem = jQuery(".editing select");
+			} else if(jQuery(".editing").hasClass("autocomplete")) { 
+				classValue = classValue + 'autocomplete';
+				fieldItem = jQuery(".editing autocomplete");
 			} else {
 				fieldItem = jQuery(".editing input");
 			}

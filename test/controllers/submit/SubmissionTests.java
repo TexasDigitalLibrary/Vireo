@@ -17,8 +17,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.tdl.vireo.model.AttachmentType;
+import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.CommitteeMember;
 import org.tdl.vireo.model.Configuration;
+import org.tdl.vireo.model.Department;
+import org.tdl.vireo.model.Major;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
@@ -349,6 +352,135 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 		confirm("cdanes@gmail.com","committee@noreply.org");
 
 		// the cleanup will make sure the submission gets deleted.
+	}
+	
+	/**
+	 * Test submissions when there are no colleges, departments, or majors defined. These become free-form search fields.
+	 */
+	@Test
+	public void testFullSubmissionWithNoPredefinedLists() throws IOException, InterruptedException {    
+
+		// Turn off any of the extra paramaters
+		setRequestBirthYear(false);
+		setRequestCollege(true);
+		setRequestUMI(false);
+		setAllowMultipleSubmissions(false);
+		
+		// clear out colleges, department, majors
+		List<String> originalColleges = new ArrayList<String>();
+		for (College college : settingRepo.findAllColleges()) {
+			originalColleges.add(college.getName());
+			college.delete();
+		}
+		List<String> originalDepartments = new ArrayList<String>();
+		for (Department department : settingRepo.findAllDepartments()) {
+			originalDepartments.add(department.getName());
+			department.delete();
+		}
+		List<String> originalMajors = new ArrayList<String>();
+		for (Major major : settingRepo.findAllMajors()) {
+			originalMajors.add(major.getName());
+			major.delete();
+		}
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+
+		// Login as the student Clair Danes
+		LOGIN("cdanes@gmail.com");
+
+		// Get our URLs
+		final String INDEX_URL = Router.reverse("Application.index").url;
+		final String LIST_URL = Router.reverse("Student.submissionList").url;
+		final String PERSONAL_INFO_URL = Router.reverse("submit.PersonalInfo.personalInfo").url;
+
+
+		// View the homepage
+		Response response = GET(INDEX_URL);
+		assertIsOk(response);
+		assertContentMatch("Start your submission",response); // the start button is there.
+		assertContentMatch(LIST_URL,response); // and it's url.
+
+		response = GET(LIST_URL);
+		assertEquals(PERSONAL_INFO_URL,response.getHeader("Location"));
+		response = GET(PERSONAL_INFO_URL);
+		assertContentMatch("<title>Verify Personal Information</title>",response);
+
+		// PersonalInfo step
+		personalInfo(
+				null, // firstName
+				"middle", // middleName
+				null, // lastName
+				null, // birthYear
+				"My College", // college
+				"My Department", // department 
+				settingRepo.findAllDegrees().get(0).getName(), // degree
+				"My Major", // major 
+				"555-1212", // permPhone
+				"2222 Fake Street", // permAddress 
+				"advisor@noreply.org", // permEmail
+				"555-1212 ex2", // currentPhone 
+				"2222 Fake Street APT 11" //currentAddress
+				);	
+
+		// License Step
+		license();
+
+		// DocumentInfo Step
+		List<Map<String,String>> committee = new ArrayList<Map<String,String>>();
+		Map<String,String> member1 = new HashMap<String,String>();
+		member1.put("firstName", "Bob");
+		member1.put("lastName", "Jones");
+		member1.put("chairFlag", "true");
+		Map<String,String> member2 = new HashMap<String,String>();
+		member2.put("firstName", "John");
+		member2.put("middleName", "Jack");
+		member2.put("lastName", "Leggett");
+		committee.add(member1);
+		committee.add(member2);
+
+		documentInfo(
+				"Clair Danes Thesis on Testing", // title
+				String.valueOf(settingRepo.findAllGraduationMonths().get(0).getMonth()), // degreeMonth 
+				String.valueOf(Calendar.getInstance().get(Calendar.YEAR)), // degreeYear 
+				settingRepo.findAllDocumentTypes().get(0).getName(), // docType
+				"This is really cool work!", // abstractText 
+				"one; two; three;", // keywords
+				committee, // committee
+				"advisor@noreply.org", // committeeEmail
+				String.valueOf(settingRepo.findAllEmbargoTypes().get(1).getId()), // embargo
+				null // UMI
+				);
+
+		// FileUpload Step
+		fileUpload("SamplePrimaryDocument.pdf", "SampleSupplementalDocument.doc", "SampleSupplementalDocument.xls");
+
+		// Finaly, confirm
+		confirm("cdanes@gmail.com","advisor@noreply.org");
+
+		// Restore all Colleges, Departments, and Majors
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
+		// clear out colleges, department, majors
+		int i = 0;
+		for (String name : originalColleges) {
+			College college = settingRepo.createCollege(name);
+			college.setDisplayOrder(i++);
+			college.save();
+		}
+		for (String name : originalDepartments) {
+			Department department = settingRepo.createDepartment(name);
+			department.setDisplayOrder(i++);
+			department.save();
+		}
+		for (String name : originalMajors) {
+			Major major = settingRepo.createMajor(name);
+			major.setDisplayOrder(i++);
+			major.save();
+		}
 	}
 	
 	/**

@@ -1,6 +1,7 @@
 package controllers;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -606,6 +607,52 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 			assertContentMatch("<li id=\"facet_"+SearchFacet.ASSIGNEE.getId()+"\" class=\"originally-hidden\"", response);
 			assertContentMatch("<li id=\"facet_"+SearchFacet.UMI_RELEASE.getId()+"\" class=\"originally-hidden\"", response);
 		}
+	}
+	
+	/**
+	 * Test that the filter options displayed for College, Department, and Major
+	 * come from the list of those values actually in use.
+	 * 
+	 */
+	@Test
+	public void testCollegeDepartmentMajorList() {
+		
+		LOGIN();
+		
+		// Get the URLs
+		Map<String,Object> routeArgs = new HashMap<String,Object>();
+		routeArgs.put("nav", "list");
+		final String FILTER_URL = Router.reverse("FilterTab.list").url;
+		final String CUSTOMIZE_URL = Router.reverse("FilterTab.customizeFilters",routeArgs).url;
+		
+		// Turn on the college, department, and major facets
+		String facetsString = "facet_"+SearchFacet.COLLEGE.getId()+",facet_"+SearchFacet.DEPARTMENT.getId()+",facet_"+SearchFacet.MAJOR.getId();
+		
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("facets",facetsString);
+		params.put("submit_save","Save");
+		POST(CUSTOMIZE_URL,params);
+		
+		java.lang.System.out.println(FILTER_URL);
+		
+		// Check that all the colleges are listed.
+		Response response = GET(FILTER_URL);
+		
+		List<String> colleges = subRepo.findAllColleges();
+		for (String college : colleges) {
+			assertContentMatch("action=add\\&type=college\\&value=[^\"]*\">"+college.replaceAll("&", "\\&")+"<",response);
+		}
+		
+		List<String> departments = subRepo.findAllDepartments();
+		for (String department : departments) {
+			assertContentMatch("action=add\\&type=department\\&value=[^\"]*\">"+department.replaceAll("&", "\\&")+"<",response);
+		}
+		
+		List<String> majors = subRepo.findAllMajors();
+		for (String major : majors) {
+			assertContentMatch("action=add\\&type=major\\&value=[^\"]*\">"+major.replaceAll("&", "\\&")+"<",response);
+		}
+
 	}
 	
 	/**
