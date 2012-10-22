@@ -93,6 +93,43 @@ test("test swapToInputHandler select drop down", function(){
 	equal('<i class="icon-pencil"></i>false', jQuery("#backup").html(), "The backup is accurate.");
 	
 });
+
+/**
+ * Test swapping from span to select drop down
+ */
+test("test swapToInputHandler select autocomplete", function(){
+    expect(7);
+    reset();
+    
+    //Create markup to test
+    var markup = '<div class="edit-box">';
+        markup += '<ul><li class="edit">';
+        markup += '<label>Major:</label><span id="major" class="autocomplete"><i class="icon-pencil"></i>My Major</span>';
+        markup += '</li></ul>';
+        markup += '</div>';
+        markup += '<div id="majorOptions" style="display:none;">';
+        markup += '<input type="text"/>'
+        markup += '</div>';
+    
+    //Append markup to body
+    jQuery("body").append(markup);
+    
+    //Register the handle
+    var handler = swapToInputHandler();
+    jQuery("#major").click(handler);
+    
+    //Simulate click
+    jQuery("#major").click();
+    
+    equal(0, jQuery("span").length, "The span has been removed.");
+    equal(2, jQuery("input").length, "There are two input fields.");
+    equal(1, jQuery("div#major").length, "The surrounding div has the correct id.");
+    equal(1, jQuery(".icon-remove").length, "There is one cancel icon.");
+    equal(1, jQuery(".icon-ok").length, "There is one submit icon.");
+    equal(1, jQuery("#backup").length, "The backup was created.");
+    equal('<i class="icon-pencil"></i>My Major', jQuery("#backup").html(), "The backup is accurate.");
+    
+});
  
 /**
  * Test swapping from span to text area field.

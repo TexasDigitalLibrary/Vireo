@@ -101,6 +101,21 @@ public interface SubmissionRepository {
 	 * @return A list of all years for which submissions occured during that year.
 	 */
 	public List<Integer> findAllSubmissionYears();
+	
+	/**
+	 * @return A list of all colleges for which submissions have been submitted under.
+	 */
+	public List<String> findAllColleges();
+
+	/**
+	 * @return A list of all departments for which departments have been submitted under.
+	 */
+	public List<String> findAllDepartments();
+	
+	/**
+	 * @return A list of all majors for which majors have been submitted under.
+	 */
+	public List<String> findAllMajors();
 
 	// //////////////////////////////////////////////////////////////
 	// Attachment, Committee Member, and Custom Action Value Models

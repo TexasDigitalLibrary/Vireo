@@ -140,6 +140,30 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 		return results;	
 	}
 	
+	@Override
+	public List<String> findAllColleges() {
+		Query query = JPA.em().createQuery("SELECT DISTINCT college FROM JpaSubmissionImpl WHERE college IS NOT NULL ORDER BY college ASC");
+		
+		List<String> results = query.getResultList();
+		return results;
+	}
+	
+	@Override
+	public List<String> findAllDepartments() {
+		Query query = JPA.em().createQuery("SELECT DISTINCT department FROM JpaSubmissionImpl WHERE department IS NOT NULL ORDER BY department ASC");
+		
+		List<String> results = query.getResultList();
+		return results;
+	}
+	
+	@Override
+	public List<String> findAllMajors() {
+		Query query = JPA.em().createQuery("SELECT DISTINCT major FROM JpaSubmissionImpl WHERE major IS NOT NULL ORDER BY major ASC");
+		
+		List<String> results = query.getResultList();
+		return results;
+	}
+	
 	// //////////////////////////////////////////////////////////////
 	// Attachment, Committee Member, and Custom Action Value Models
 	// //////////////////////////////////////////////////////////////

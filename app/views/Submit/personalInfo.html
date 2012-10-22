@@ -98,14 +98,18 @@
                 <p>${college}</p>
                 #{/if} 
                 #{else}
-                <select name="college">
-                    <option #{if college == null}selected="true"#{/if}>...choose</option>
-                    #{list items:settingRepo.findAllColleges(), as:'collegeObject'}
-                    <option #{if college == collegeObject.getName()}selected="true"#{/if} value="${collegeObject.getName()}">${collegeObject.getName()}</option>
-                    #{/list}
-                </select>
-                <a href="#" class="tooltip-icon" rel="tooltip" title="Enter the college you belong to."><i class="icon-info-sign">               
-                </i></a>
+                    #{if settingRepo.findAllColleges().size() > 0 }
+		                <select name="college">
+		                    <option #{if college == null}selected="true"#{/if}>...choose</option>
+		                    #{list items:settingRepo.findAllColleges(), as:'collegeObject'}
+		                    <option #{if college == collegeObject.getName()}selected="true"#{/if} value="${collegeObject.getName()}">${collegeObject.getName()}</option>
+		                    #{/list}
+		                </select>
+		            #{/if}
+		            #{else}
+		                <input name="college" value="${college}"/>
+		            #{/else}
+		            <a href="#" class="tooltip-icon" rel="tooltip" title="Enter the college you belong to."><i class="icon-info-sign"></i></a>
                 #{/else}
             </div>
         </div>
@@ -117,14 +121,19 @@
                 <p>${department}</p>
                 #{/if} 
                 #{else}
-			    <select name="department">
-			        <option #{if department == null}selected="true"#{/if}>...choose</option>
-				    #{list items:settingRepo.findAllDepartments(), as:'dept'}
-				    <option #{if department == dept.getName()}selected="true"#{/if} value="${dept.getName()}">${dept.getName()}</option>
-				    #{/list}
-			    </select>
-				<a href="#" class="tooltip-icon" rel="tooltip" title="Enter the department you belong to."><i class="icon-info-sign">				
-				</i></a>
+                    #{if settingRepo.findAllDepartments().size() > 0 }
+					    <select name="department">
+					        <option #{if department == null}selected="true"#{/if}>...choose</option>
+						    #{list items:settingRepo.findAllDepartments(), as:'dept'}
+						    <option #{if department == dept.getName()}selected="true"#{/if} value="${dept.getName()}">${dept.getName()}</option>
+						    #{/list}
+					    </select>
+					#{/if}
+					#{else}
+					   <input name="department" value="${department}"/>
+					#{/else}
+					<a href="#" class="tooltip-icon" rel="tooltip" title="Enter the department you belong to."><i class="icon-info-sign">				
+					</i></a>
 			    #{/else}
 			</div>
 		</div>
@@ -153,14 +162,19 @@
                 <p>${major}</p>
                 #{/if} 
                 #{else}
-				<select id="major" name="major">
-				    <option #{if major == null}selected="true"#{/if}>...choose</option>
-                    #{list items:settingRepo.findAllMajors(), as:'majorObject'}
-                    <option #{if major == majorObject.getName()}selected="true"#{/if} value="${majorObject.getName()}">${majorObject.getName()}</option>
-                    #{/list}
-				</select>
-				<a href="#" class="tooltip-icon" rel="tooltip" title="Enter the discipline you specialized in."><i class="icon-info-sign">				
-				</i></a>
+                    #{if settingRepo.findAllMajors().size() > 0 }
+						<select id="major" name="major">
+						    <option #{if major == null}selected="true"#{/if}>...choose</option>
+		                    #{list items:settingRepo.findAllMajors(), as:'majorObject'}
+		                    <option #{if major == majorObject.getName()}selected="true"#{/if} value="${majorObject.getName()}">${majorObject.getName()}</option>
+		                    #{/list}
+						</select>
+					#{/if}
+					#{else}
+					   <input name="major" value="${major}"/>
+					#{/else}
+					<a href="#" class="tooltip-icon" rel="tooltip" title="Enter the discipline you specialized in."><i class="icon-info-sign">				
+					</i></a>
 				#{/else}
 			</div>
 		</div>

@@ -28,3 +28,7 @@ CREATE INDEX person_idx_role ON person USING btree (role) WHERE role >= 2;
 CREATE UNIQUE INDEX submission_idx_id ON submission USING btree (id);
 CREATE INDEX submission_idx_submitter ON submission USING btree (submitter_id);
 CREATE INDEX submission_idx_hash ON submission USING hash (committeeemailhash);
+CREATE INDEX submission_idx_colleges ON submission USING btree (college);
+CREATE INDEX submission_idx_departments ON submission USING btree (department);
+CREATE INDEX submission_idx_majors ON submission USING btree (major);
+
