@@ -57,14 +57,23 @@ jQuery(document).ready(function() {
 				#{/if}
 				
 				</td>
-				<td ${sub.getState().isEditableByStudent() ? "class='red'" : ""}>${sub.getState().getDisplayName()}</td>
+				<td ${sub.getState().isEditableByStudent() ? "class='red'" : ""}>
+				    ${sub.getState().getDisplayName()}
+				    #{if !SUBMISSIONS_OPEN && sub.getState().isInProgress() }
+				    <br/><span class="red">This submission was not completed by the deadline. Please contact the thesis office.</span>
+				    #{/if}
+				</td>
 				<td>${sub.getSubmissionDate() == null ? "n/a" : sub.getSubmissionDate().format('dd MMMM yyyy')}</td>
 				<td>${sub.getAssignee() == null ? "Unassigned" : sub.getAssignee().getDisplayName()}</td>
 				<td> 
-				#{if sub.getState().isInProgress() }
+				#{if !SUBMISSIONS_OPEN && sub.getState().isInProgress() }
+				    *{ submissions closed before the user was able to finish their submission. }*
+				    <a id="submission-delete" class="btn btn-primary" href="@{Student.submissionDelete(sub.getId())}">Delete</a>
+				#{/if}
+				#{elseif sub.getState().isInProgress() }
 				    <a id="submission-continue" class="btn btn-primary" href="@{submit.PersonalInfo.personalInfo(sub.getId())}">Continue</a>
 				    <a id="submission-delete" class="btn btn-primary" href="@{Student.submissionDelete(sub.getId())}">Delete</a>
-                #{/if} 
+                #{/elseif} 
                 #{else}
 				     <a class="btn btn-primary" href="@{Student.submissionView(sub.getId())}">
 				     	${ sub.getState().isEditableByStudent() ? "Edit" : "View" }
