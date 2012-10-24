@@ -448,13 +448,21 @@ public class PersonalInfo extends AbstractSubmitStep {
 	 * @return True if the name is a valid college name.
 	 */
 	protected static boolean isValidCollege(String collegeName) {
+		
 		if (collegeName == null || collegeName.trim().length() == 0)
 			return false;
-		for (College college : settingRepo.findAllColleges() ) {
-			if (collegeName.equals(college.getName()))
-				return true;
+		
+		if (settingRepo.findAllColleges().size() > 0) {
+			// If there is a list of colleges it must be in the list.
+			for (College college : settingRepo.findAllColleges() ) {
+				if (collegeName.equals(college.getName()))
+					return true;
+			}
+			return false;
 		}
-		return false;
+		
+		// Otherwise, it can be anything
+		return true;
 	}
 
 	/**
@@ -465,11 +473,18 @@ public class PersonalInfo extends AbstractSubmitStep {
 	protected static boolean isValidDepartment(String departmentName) {
 		if (departmentName == null || departmentName.trim().length() == 0)
 			return false;
-		for (Department department : settingRepo.findAllDepartments() ) {
-			if (departmentName.equals(department.getName()))
-				return true;
+		
+		if (settingRepo.findAllDepartments().size() > 0) {
+			// If there is a list of departments it must be in the list.
+			for (Department department : settingRepo.findAllDepartments() ) {
+				if (departmentName.equals(department.getName()))
+					return true;
+			}
+			return false;
 		}
-		return false;
+		
+		// Otherwise, it can be anything.
+		return true;
 	}
 
 	/**
@@ -480,6 +495,9 @@ public class PersonalInfo extends AbstractSubmitStep {
 	protected static boolean isValidDegree(String degreeName) {
 		if (degreeName == null || degreeName.trim().length() == 0)
 			return false;
+		
+		// Unlike the other fields, the degree must be pre-defined. Otherwise
+		// we would not know what level to assign this submission.
 		for (Degree degree : settingRepo.findAllDegrees() ) {
 			if (degreeName.equals(degree.getName()))
 				return true;
@@ -495,11 +513,18 @@ public class PersonalInfo extends AbstractSubmitStep {
 	protected static boolean isValidMajor(String majorName) {
 		if (majorName == null || majorName.trim().length() == 0)
 			return false;
-		for (Major major : settingRepo.findAllMajors() ) {
-			if (majorName.equals(major.getName()))
-				return true;
+		
+		if (settingRepo.findAllMajors().size() > 0) {
+			// If there is a list of majors it must be in the list.
+			for (Major major : settingRepo.findAllMajors() ) {
+				if (majorName.equals(major.getName()))
+					return true;
+			}
+			return false;
 		}
-		return false;
+		
+		// Otherwise, it can be anything
+		return true;
 	}
 	
 	

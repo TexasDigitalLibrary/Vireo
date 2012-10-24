@@ -94,10 +94,10 @@ public class Student extends AbstractVireoController {
 			// submissions is turned off AND they have one *active* submission.
 			Submission sub = submissions.get(0);
 		
-			if (sub.getState().isInProgress()) {
+			if (submissionsOpen && sub.getState().isInProgress()) {
 				// The one submission isn't complete yet.
 				PersonalInfo.personalInfo(sub.getId());
-			} else {
+			} else if (!sub.getState().isInProgress()){
 				// Go straight to view the status page.
 				submissionView(sub.getId());
 			}

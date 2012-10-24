@@ -361,43 +361,49 @@ different blocks this gets around this problem because each is independent.
         #{if facet == FACET_DEPARTMENT }
         <div class="sub-heading">&{nav.toUpperCase()+'_FACET_'+facet.name()}</div>
         <ul class="unstyled">
-            %{ shown = 0 }%
-            #{list items:settingRepo.findAllDepartments(), as:'dept'}
-            #{if !activeFilter.getDepartments().contains(dept.getName()) }{% shown++ %}
+            %{ shown = 0 }%     
+            #{if shown == 0}
+            #{list items:subRepo.findAllDepartments(), as:'dept'}
+            #{if !activeFilter.getDepartments().contains(dept) }{% shown++ %}
             #{if shown == 6}
             <li class="more">more...</li>
             #{/if}
-            <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=department&value=${dept.getName().urlEncode()}">${dept.getName()}</a></li>
+            <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=department&value=${dept.urlEncode()}">${dept}</a></li>
             #{/if}
             #{/list}
+            #{/if}
         </ul>
         #{/if}
         #{if facet == FACET_COLLEGE }
         <div class="sub-heading">&{nav.toUpperCase()+'_FACET_'+facet.name()}</div>
         <ul class="unstyled">
             %{ shown = 0 }%
-            #{list items:settingRepo.findAllColleges(), as:'college'}
-            #{if !activeFilter.getColleges().contains(college.getName()) }{% shown++ %}
+            #{if shown == 0}
+            #{list items:subRepo.findAllColleges(), as:'college'}
+            #{if !activeFilter.getColleges().contains(college) }{% shown++ %}
             #{if shown == 6}
             <li class="more">more...</li>
             #{/if}
-            <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=college&value=${college.getName().urlEncode()}">${college.getName()}</a></li>
+            <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=college&value=${college.urlEncode()}">${college}</a></li>
             #{/if}
             #{/list}
+            #{/if}
         </ul>
         #{/if}
         #{if facet == FACET_MAJOR }
         <div class="sub-heading">&{nav.toUpperCase()+'_FACET_'+facet.name()}</div>
         <ul class="unstyled">
             %{ shown = 0 }%
-            #{list items:settingRepo.findAllMajors(), as:'major'}
-            #{if !activeFilter.getMajors().contains(major.getName()) }{% shown++ %}
+            #{if shown == 0}
+            #{list items:subRepo.findAllMajors(), as:'major'}
+            #{if !activeFilter.getMajors().contains(major) }{% shown++ %}
             #{if shown == 6}
             <li class="more">more...</li>
             #{/if}
-            <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=major&value=${major.getName().urlEncode()}">${major.getName()}</a></li>
+            <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=major&value=${major.urlEncode()}">${major}</a></li>
             #{/if}
             #{/list}
+            #{/if}
         </ul>
         #{/if}
         #{if facet == FACET_EMBARGO }

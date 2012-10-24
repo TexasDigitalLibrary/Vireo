@@ -361,16 +361,16 @@ jQuery(document).ready(function(){
 				<ul class="unstyled">
 					<li class="edit"><label>College:</label><span id="college"
 						#{if submission.getCollege()}
-							class="select"><i class="icon-pencil"></i> ${submission.getCollege()}
+							class="autocomplete"><i class="icon-pencil"></i> ${submission.getCollege()}
 						#{/if}#{else}
-							class="select empty"><i class="icon-pencil"></i> none
+							class="autocomplete empty"><i class="icon-pencil"></i> none
 						#{/else}
 						</span></li>
 					<li class="edit"><label>Department:</label><span id="department"
 						#{if submission.getDepartment()}
-							class="select"><i class="icon-pencil"></i> ${submission.getDepartment()}
+							class="autocomplete"><i class="icon-pencil"></i> ${submission.getDepartment()}
 						#{/if}#{else}
-							class="select empty"><i class="icon-pencil"></i> none
+							class="autocomplete empty"><i class="icon-pencil"></i> none
 						#{/else}
 						</span></li>
 					<li class="edit"><label>Degree:</label><span id="degree"
@@ -389,9 +389,9 @@ jQuery(document).ready(function(){
 						</span></li>
 					<li class="edit"><label>Major:</label><span id="major"
 						#{if submission.getMajor()}
-							class="select"><i class="icon-pencil"></i> ${submission.getMajor()}
+							class="autocomplete"><i class="icon-pencil"></i> ${submission.getMajor()}
 						#{/if}#{else}
-							class="select empty"><i class="icon-pencil"></i> none
+							class="autocomplete empty"><i class="icon-pencil"></i> none
 						#{/else}
 						</span></li>
 					<li class="edit"><label>Graduation Semester:</label><span id="gradSemester"
@@ -458,25 +458,51 @@ jQuery(document).ready(function(){
 				</select>
 			</div>
 			<div id="docTypeOptions" style="display:none;">
-				<select class="field">
+			    <select class="field">
 				#{list items:settingRepo.findAllDocumentTypes(), as:'docType'}
 					<option value="${docType.getName()}">${docType.getName()} - ${docType.getLevel()}</option>
 				#{/list}
 				</select>
 			</div>
 			<div id="collegeOptions" style="display:none;">
-				<select class="field">
-				#{list items:settingRepo.findAllColleges(), as:'college'}
-					<option value="${college.getName()}">${college.getName()}</option>
-				#{/list}
-				</select>
+			    %{
+			       // fill type ahead with the list of pre-defined colleges, or if there are none of those then all colleges actually used
+			       def colleges = [];
+			       for (def college : settingRepo.findAllColleges()) {
+			           colleges.push(college.getName());
+			       }
+			       if (colleges.size() == 0) {
+			           for (String college : subRepo.findAllColleges()) {
+			             colleges.push(college);
+			           }
+			       }
+			    }%
+                <input class="field"
+                  data-items="20"
+                  data-provide="typeahead"
+                  data-min-length="0"
+                  data-source='[#{list items:colleges, as:'college'}"${college.escapeJavaScript()}"${ college_isLast ? "" : ","}#{/list}]'
+                  />
 			</div>
 			<div id="departmentOptions" style="display:none;">
-				<select class="field">
-				#{list items:settingRepo.findAllDepartments(), as:'department'}
-					<option value="${department.getName()}">${department.getName()}</option>
-				#{/list}
-				</select>
+                %{
+                   // fill type ahead with the list of pre-defined departments, or if there are none of those then all departments actually used
+                   def departments = [];
+                   for (def department : settingRepo.findAllDepartments()) {
+                       departments.push(department.getName());
+                   }
+                   if (departments.size() == 0) {
+                       for (String department : subRepo.findAllDepartments()) {
+                         departments.push(department);
+                       }
+                   }
+                }%
+                <input class="field"
+                  data-items="20"
+                  data-provide="typeahead"
+                  data-min-length="0"
+                  data-source='[#{list items:departments, as:'department'}"${department.escapeJavaScript()}"${ department_isLast ? "" : ","}#{/list}]'
+                  />
 			</div>
 			<div id="degreeOptions" style="display:none;">
 				<select class="field">
@@ -486,11 +512,24 @@ jQuery(document).ready(function(){
 				</select>
 			</div>
 			<div id="majorOptions" style="display:none;">
-				<select class="field">
-				#{list items:settingRepo.findAllMajors(), as:'major'}
-					<option value="${major.getName()}">${major.getName()}</option>
-				#{/list}
-				</select>
+                %{
+                   // fill type ahead with the list of pre-defined majors, or if there are none of those then all majors actually used
+                   def majors = [];
+                   for (def major : settingRepo.findAllMajors()) {
+                       majors.push(major.getName());
+                   }
+                   if (majors.size() == 0) {
+                       for (String major : subRepo.findAllMajors()) {
+                         majors.push(major);
+                       }
+                   }
+                }%
+                <input class="field"
+                  data-items="20"
+                  data-provide="typeahead"
+                  data-min-length="0"
+                  data-source='[#{list items:majors, as:'major'}"${major.escapeJavaScript()}"${ major_isLast ? "" : ","}#{/list}]'
+                  />
 			</div>
 			
 		</div>

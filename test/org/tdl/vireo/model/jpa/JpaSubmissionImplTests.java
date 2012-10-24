@@ -279,6 +279,54 @@ public class JpaSubmissionImplTests extends UnitTest {
 	}
 	
 	/**
+	 * Test finding all colleges used by submissions.
+	 */
+	@Test
+	public void testFindAllColleges() {
+		
+		Submission sub = subRepo.createSubmission(person);
+		sub.setCollege("My College");
+		sub.save();
+		
+		List<String> colleges = subRepo.findAllColleges();
+		assertTrue(colleges.contains("My College"));
+		
+		sub.delete();
+	}
+	
+	/**
+	 * Test finding all departments used by submissions.
+	 */
+	@Test
+	public void testFindAllDepartments() {
+		
+		Submission sub = subRepo.createSubmission(person);
+		sub.setDepartment("My Department");
+		sub.save();
+		
+		List<String> departments = subRepo.findAllDepartments();
+		assertTrue(departments.contains("My Department"));
+		
+		sub.delete();
+	}
+	
+	/**
+	 * Test finding all majors used by submissions.
+	 */
+	@Test
+	public void testFindAllMajors() {
+		
+		Submission sub = subRepo.createSubmission(person);
+		sub.setMajor("My Major");
+		sub.save();
+		
+		List<String> majors = subRepo.findAllMajors();
+		assertTrue(majors.contains("My Major"));
+		
+		sub.delete();
+	}
+	
+	/**
 	 * Test getting and setting state.
 	 */
 	@Test
