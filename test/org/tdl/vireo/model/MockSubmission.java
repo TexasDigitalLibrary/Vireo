@@ -54,6 +54,7 @@ public class MockSubmission extends AbstractMock implements Submission {
 	public String depositId;
 	public String lastLogEntry;
 	public Date lastLogDate;
+	public List<MockActionLog> logs = new ArrayList<MockActionLog>();
 
 	@Override
 	public MockSubmission save() {
@@ -483,6 +484,7 @@ public class MockSubmission extends AbstractMock implements Submission {
 		// store this as the last log entry as well.
 		this.lastLogEntry = entry;
 		this.lastLogDate = log.actionDate;
+		logs.add(log);
 		
 		return log;
 	}
@@ -496,5 +498,5 @@ public class MockSubmission extends AbstractMock implements Submission {
 	public Date getLastLogDate() {
 		return lastLogDate;
 	}
-
+	
 }

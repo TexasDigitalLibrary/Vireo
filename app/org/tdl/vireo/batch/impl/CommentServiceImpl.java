@@ -189,10 +189,11 @@ public class CommentServiceImpl implements CommentService {
 						if(ccAdvisor && sub.getCommitteeContactEmail() != null)
 							email.addCc(sub.getCommitteeContactEmail());
 						
-						email.setReplyTo(context.getPerson());
+						if(context.getPerson()!=null)
+							email.setReplyTo(context.getPerson());
 						
 						email.setLogOnCompletion(context.getPerson(), sub);
-						emailService.sendEmail(email, false);
+						emailService.sendEmail(email, true);
 						
 					} else {
 						String entry;
@@ -204,6 +205,8 @@ public class CommentServiceImpl implements CommentService {
 						ActionLog log = sub.logAction(entry);
 						if(!visibility)
 							log.setPrivate(true);
+						else
+							log.setPrivate(false);
 						
 						sub.save();
 						log.save();
