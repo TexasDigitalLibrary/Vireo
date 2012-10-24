@@ -9,7 +9,23 @@ tabs. Normally they are hidden but when activated they appear on the page.
 <script src="@{'/public/javascripts/vireo-filtertab.js'}" type="text/javascript" charset="${_response_encoding}"></script>
 <script type="text/javascript">
 jQuery(document).ready(function() {
-		
+	
+	var retrieveTemplateJSONURL = "@{ViewTab.retrieveTemplateJSON()}";
+	
+	/**
+	 * Retrieve template data event
+	 */
+	 jQuery(".modal select[name='email_template']").live("change", function(){
+		 modal = jQuery(this).closest(".modal");
+		 retrieveTemplateHandler(retrieveTemplateJSONURL, jQuery(this).val(), modal);
+	 });
+	
+	/**
+	 * Add Comment Disable/Enable Events
+	 */
+	 jQuery(".emailOptions input[name='visibility']").live("click", toggleAddCommentEmailOptions());
+	 jQuery("input[name='email_student']").live("click", toggleCarbonCopyAdvisor());
+	
 	// Batch Confirm links
 	jQuery('.batchConfirm').click(batchConfirmHandler(${results.getTotal()}));
 	
@@ -352,6 +368,86 @@ jQuery(document).ready(function() {
     </form>
 </div>
 #{/if} 
+
+#{if "list".equals(nav) }
+<div class="modal hide fade emailOptions" id="batch-comment-modal">
+	
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal">×</button>
+		<h3>Batch Comment/Email</h3>
+	</div>
+        
+	<div class="modal-body">
+		<form id="batch-comment-form" action="@{FilterTab.batchComment()}" method="POST" class="form-horizontal" enctype="multipart/form-data"> 
+            <ul class="unstyled">
+            	<li>
+            		Subject:<br />
+            		<input type="text" name="subject" class="span8" />
+            	</li>
+            	<li>
+            		<textarea class="textarea span8" name="comment" rows="6" placeholder="compose comment here..."></textarea>
+            	</li>
+            	<li>
+		            <select name="email_template">
+		            	<option value="" selected="selected">Choose an email template...</option>
+		            	#{list items:templates, as:'template'}
+		            		<option value="${template.getId()}">${template.getName()}</option>
+		            	#{/list}
+		            </select>
+		        </li>
+            	<li>
+            		<input type="radio" name="visibility" class="radio" value="public"
+            		#{if currentUser.getPreference("notes_mark_comment_as_private_by_default") == null}
+            		checked="true"
+            		#{/if}
+            		> Comment is public</input><br />
+            		<ul class="unstyled emailCarbon" style="padding-left:15px;" id="comment-email-options">
+            			<li>
+            				<input type="checkbox" name="email_student" class="checkbox"
+            			#{if currentUser.getPreference("notes_mark_comment_as_private_by_default") == null}
+            		 		#{if currentUser.getPreference("notes_email_student_by_default") != null}
+            		 			checked="true"
+            		 		#{/if}
+            			#{/if}#{else}
+            				disabled="true"
+            			#{/else}
+            			> Email the student</input><br />
+            			</li>
+            			<li>
+            				<input type="checkbox" name="cc_advisor" class="checkbox" 
+            				#{if currentUser.getPreference("notes_mark_comment_as_private_by_default") == null}
+            					#{if currentUser.getPreference("notes_email_student_by_default") != null}
+            						#{if currentUser.getPreference("notes_cc_student_advisor_by_default") != null}
+            		 					checked="true"
+            		 				#{/if}
+            		 			#{/if}#{else}
+            		 				disabled="true"
+            		 			#{/else}
+            				#{/if}#{else}
+            					disabled="true"
+            				#{/else}
+            				> CC student's advisor</input><br />
+            			</li>
+            		</ul>
+            	</li>
+            	<li>            	
+            		<input type="radio" name="visibility" class="radio" value="private"
+            		#{if currentUser.getPreference("notes_mark_comment_as_private_by_default") != null}
+            			checked="true"
+            		#{/if}
+            		> Mark comment as private</input>
+            	</li>
+            </ul>                   
+	</div>
+	
+	<div class="modal-footer">
+			<a href="#" class="btn" data-dismiss="modal">Close</a>
+			<button type="submit" class="btn btn-primary batchConfirm" name="submit_save">Submit</button>
+		</form>                 
+	</div>
+    
+</div>
+#{/if}
 
 #{if "list".equals(nav) } 
 <div class="modal hide fade" id="batch-export-modal">

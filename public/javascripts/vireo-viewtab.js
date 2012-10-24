@@ -537,52 +537,6 @@ function assignSpecialValueAndSubmit(form, value){
 }
 
 /**
- * Function to update subject and comment area when a template is selected.
- *
- * @param url (The method to update the add comment modal.)
- *
- * @param id (The id of the template.)
- */
-function retrieveTemplateHandler(url, id, modal){
-	modal.addClass("waiting");
-	
-	jQuery.ajax({
-		url:url,
-		data:{
-			id:id
-		},
-		dataType:'json',
-		type:'POST',
-		success:function(data){
-			modal.find("input[name='subject']").val(data.subject);
-			modal.find("textarea[name='comment']").html(data.message);
-			modal.removeClass("waiting");
-		},
-		error:function(){
-			alert("Error inserting template data.");
-		}
-	});
-}
-
-/**
- * Function that checks when adding a new comment if the comment is public or private
- * and disables the email options accordingly.
- * 
- */
-function toggleAddCommentEmailOptions(){
-	return function(){
-		if(jQuery("#add-comment-modal input[name='visibility']:checked").val()=="public"){
-			jQuery("#add-comment-modal input[name='email_student']").removeAttr("disabled");
-		} else {
-			jQuery("#comment-email-options input").each(function(){
-				jQuery(this).attr("disabled","true");
-				jQuery(this).removeAttr("checked");
-			});
-		}
-	}
-}
-
-/**
  * Function to toggle subject/comment fields when "email student" is selected
  * in the "add file" dialog box.
  */
@@ -591,24 +545,6 @@ function toggleAddFileEmailOptions(){
 		jQuery("#add-file-email-options").slideDown(500);
 	} else {
 		jQuery("#add-file-email-options").slideUp(500);
-	}
-}
-
-/**
- * Function to toggle the ability to CC the advisor when Email the student is selected.
- */
-function toggleCarbonCopyAdvisor(){
-	return function(){
-		if(jQuery(this).closest(".modal").is("#add-file-modal")){
-			toggleAddFileEmailOptions();
-		}
-		var parent = jQuery(this).parents(".emailCarbon").first();
-		if(parent.find("input[name='email_student']:checked").length){
-			parent.find("input[name='cc_advisor']").removeAttr("disabled");
-		} else {
-			parent.find("input[name='cc_advisor']").removeAttr("checked");
-			parent.find("input[name='cc_advisor']").attr("disabled","true");
-		}
 	}
 }
 

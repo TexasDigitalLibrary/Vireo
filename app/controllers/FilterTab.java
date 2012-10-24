@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.tdl.vireo.batch.CommentService;
 import org.tdl.vireo.batch.DeleteService;
 import org.tdl.vireo.batch.TransitionService;
 import org.tdl.vireo.batch.AssignService;
@@ -18,6 +19,7 @@ import org.tdl.vireo.job.JobManager;
 import org.tdl.vireo.job.JobMetadata;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.DepositLocation;
+import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.NamedSearchFilter;
@@ -54,6 +56,7 @@ public class FilterTab extends AbstractVireoController {
 	public static DeleteService deleteService = Spring.getBeanOfType(DeleteService.class);
 	public static ExportService exportService = Spring.getBeanOfType(ExportService.class);
 	public static AssignService assignService = Spring.getBeanOfType(AssignService.class);
+	public static CommentService commentService = Spring.getBeanOfType(CommentService.class);
 
 	
 	// Store the cookie and session names in an easy to lookup two dimensional
@@ -221,8 +224,9 @@ public class FilterTab extends AbstractVireoController {
 		renderArgs.put("packagers", packagers);
 
 		List<Person> assignees = personRepo.findPersonsByRole(RoleType.REVIEWER);
+		List<EmailTemplate> templates = settingRepo.findAllEmailTemplates();
 		
-		render(nav, allFilters, activeFilter, results, orderby, columns, facets, direction, resultsPerPage, assignees);
+		render(nav, allFilters, activeFilter, results, orderby, columns, facets, direction, resultsPerPage, assignees, templates);
 	}
 	
 	/**
@@ -686,6 +690,44 @@ public class FilterTab extends AbstractVireoController {
 		// Kick off the batch assign to
 		JobMetadata job = assignService.assign(filter, assignTo);
 		
+		// Show a progress bar
+		JobTab.adminStatus(job.getId().toString());
+	}
+	
+	/**
+	 * Add a comment/send email on a batch of submissions.
+	 */
+	@Security(RoleType.REVIEWER)
+	public static void batchComment() {
+		
+		String comment = params.get("comment");
+		String subject = params.get("subject");
+		Boolean visibility = false;
+		Boolean sendEmail = false;
+		Boolean ccAdvisor = false;
+		if("public".equals(params.get("visibility"))){
+			visibility = true;
+			if(params.get("email_student") != null){
+				sendEmail = true;
+				if(params.get("cc_advisor") != null)
+					ccAdvisor = true;
+			}
+		}
+		
+		// Get the current filter
+		ActiveSearchFilter filter = Spring.getBeanOfType(ActiveSearchFilter.class);
+		Cookie filterCookie = request.cookies.get(NAMES[SUBMISSION][ACTIVE_FILTER]);
+		if (filterCookie != null && filterCookie.value != null && filterCookie.value.trim().length() > 0) {
+			try {
+				filter.decode(filterCookie.value);
+			} catch (RuntimeException re) {
+				Logger.warn(re,"Unable to decode search filter: "+filterCookie.value);
+			}
+		}
+		
+		// Kick off the batch comment/email
+		JobMetadata job = commentService.comment(filter, comment, subject, visibility, sendEmail, ccAdvisor);
+	
 		// Show a progress bar
 		JobTab.adminStatus(job.getId().toString());
 	}
