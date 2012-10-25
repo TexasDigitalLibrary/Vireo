@@ -91,86 +91,53 @@ public class LuceneSearcherImplTest extends UnitTest{
 		assertFalse(indexer.isJobRunning());
 	}
 
+	
 	/**
-	 * Test the search iterator. Since the iterator just is a wrapper around the
-	 * normal paginated search methods we don't need to test every possibility
-	 * just that it works for at least one.
+	 * Test the id search for submisisons.
 	 */
 	@Test
-	public void testSubmissionIterator() {
+	public void testSubmissionIDSearch() {
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();
 		JPA.em().getTransaction().begin();
 		
-		
-		int originalObjectsPerBatch = SearchIteratorImpl.OBJECTS_PER_BATCH;
-		SearchIteratorImpl.OBJECTS_PER_BATCH = 3;
-		
 		SearchFilter filter = Spring.getBeanOfType(UriActiveSearchFilterImpl.class);
 		
-		long count = 0;
-		Long lastId = null;
-		Iterator<Submission> searchItr = searcher.submissionSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING);
-		while (searchItr.hasNext()) {
-			// Check that the submission exists
-			Submission sub = searchItr.next();
-			assertNotNull(sub);
+		long[] sortedIds = searcher.submissionSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING);
+		
+		
+		long lastId = -1;
+		for (long id : sortedIds) {			
+			assertTrue(lastId < id);
 			
-			// Check that the submissions are in order.
-			if (lastId != null) {
-				assertTrue(lastId > sub.getId());
-			}
-			lastId = sub.getId();
-			
-			// Count all the submissions.
-			count++;
+			lastId = id;
 		}
-
 		
 		long total = subRepo.findSubmissionsTotal();
-		assertEquals(total,count);
-		
-		SearchIteratorImpl.OBJECTS_PER_BATCH = originalObjectsPerBatch;
+		assertEquals(total,(int)sortedIds.length);
 	}
 	
 	/**
-	 * Test the search iterator for action logs. 
+	 * Test the id search for action logs. 
 	 */
 	@Test
-	public void testActionLogIterator() {
+	public void testActionLogIDSearch() {
 
-		
-		int originalObjectsPerBatch = SearchIteratorImpl.OBJECTS_PER_BATCH;
-		SearchIteratorImpl.OBJECTS_PER_BATCH = 3;
 		
 		SearchFilter filter = Spring.getBeanOfType(UriActiveSearchFilterImpl.class);
 		
-		long count = 0;
-		Long lastId = null;
-		Iterator<ActionLog> searchItr = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING);
-		while (searchItr.hasNext()) {
-			// Check that the submission exists
-			ActionLog log = searchItr.next();
-			assertNotNull(log);
+		long[] sortedIds = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING);
+		
+		long lastId = -1;
+		for (long id : sortedIds) {
+			assertTrue(lastId < id);
 			
-			// Check that the logs are in order.
-			if (lastId != null) {
-				assertTrue(lastId > log.getId());
-			}
-			lastId = log.getId();
-			
-			// Count all the submissions.
-			count++;
+			lastId = id;
 		}
-
 		
 		long total = subRepo.findActionLogsTotal();
-		assertEquals(total,count);
-		
-		SearchIteratorImpl.OBJECTS_PER_BATCH = originalObjectsPerBatch;
+		assertEquals(total,(int)sortedIds.length);
 	}
-	
-	
 	
 	/**
 	 * Okay, there is almost literally is an infinite number of search filters
@@ -467,163 +434,163 @@ public class LuceneSearcherImplTest extends UnitTest{
 		try {
 
 			// Submission ID
-			submissions = searcher.submissionSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 20).getResults();
+			submissions = searcher.submissionSearch(filter, SearchOrder.ID, SearchDirection.DESCENDING, 0, 20).getResults();
 			assertTrue(submissions.contains(sub1));
 			assertTrue(submissions.contains(sub2));
 			assertTrue(submissions.indexOf(sub2) < submissions.indexOf(sub1));
 			
 			// Submitter
-			submissions = searcher.submissionSearch(filter, SearchOrder.STUDENT_NAME, SearchDirection.ASCENDING, 0, 20).getResults();
+			submissions = searcher.submissionSearch(filter, SearchOrder.STUDENT_NAME, SearchDirection.DESCENDING, 0, 20).getResults();
 			assertTrue(submissions.contains(sub1));
 			assertTrue(submissions.contains(sub2));
 			assertTrue(submissions.indexOf(sub2) < submissions.indexOf(sub1));
 			
 			// Document Title
-			submissions = searcher.submissionSearch(filter, SearchOrder.DOCUMENT_TITLE, SearchDirection.ASCENDING, 0, 20).getResults();
+			submissions = searcher.submissionSearch(filter, SearchOrder.DOCUMENT_TITLE, SearchDirection.DESCENDING, 0, 20).getResults();
 			assertTrue(submissions.contains(sub1));
 			assertTrue(submissions.contains(sub2));
 			assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));
 			
 			// Document Abstract
-			submissions = searcher.submissionSearch(filter, SearchOrder.DOCUMENT_ABSTRACT, SearchDirection.ASCENDING, 0, 20).getResults();
+			submissions = searcher.submissionSearch(filter, SearchOrder.DOCUMENT_ABSTRACT, SearchDirection.DESCENDING, 0, 20).getResults();
 			assertTrue(submissions.contains(sub1));
 			assertTrue(submissions.contains(sub2));
 			assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));
 			
 			// Document Keywords
-			submissions = searcher.submissionSearch(filter, SearchOrder.DOCUMENT_KEYWORDS, SearchDirection.ASCENDING, 0, 20).getResults();
+			submissions = searcher.submissionSearch(filter, SearchOrder.DOCUMENT_KEYWORDS, SearchDirection.DESCENDING, 0, 20).getResults();
 			assertTrue(submissions.contains(sub1));
 			assertTrue(submissions.contains(sub2));
 			assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));
 			
 			// Document EmbargoType
-			submissions = searcher.submissionSearch(filter, SearchOrder.EMBARGO_TYPE, SearchDirection.ASCENDING, 0, 20).getResults();
+			submissions = searcher.submissionSearch(filter, SearchOrder.EMBARGO_TYPE, SearchDirection.DESCENDING, 0, 20).getResults();
 			assertTrue(submissions.contains(sub1));
 			assertTrue(submissions.contains(sub2));
 			assertTrue(submissions.indexOf(sub2) < submissions.indexOf(sub1));
 			
 			// Primary Attachment
-			submissions = searcher.submissionSearch(filter, SearchOrder.PRIMARY_DOCUMENT, SearchDirection.ASCENDING, 0, 20).getResults();
+			submissions = searcher.submissionSearch(filter, SearchOrder.PRIMARY_DOCUMENT, SearchDirection.DESCENDING, 0, 20).getResults();
 			assertTrue(submissions.contains(sub1));
 			assertTrue(submissions.contains(sub2));
 			assertTrue(submissions.indexOf(sub2) < submissions.indexOf(sub1));
 			
 			// Committee Members
-			submissions = searcher.submissionSearch(filter, SearchOrder.COMMITTEE_MEMBERS, SearchDirection.ASCENDING, 0, 20).getResults();
+			submissions = searcher.submissionSearch(filter, SearchOrder.COMMITTEE_MEMBERS, SearchDirection.DESCENDING, 0, 20).getResults();
 			assertTrue(submissions.contains(sub1));
 			assertTrue(submissions.contains(sub2));
 			assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));
 			
 			// Committee Contact Email
-			submissions = searcher.submissionSearch(filter, SearchOrder.COMMITTEE_CONTACT_EMAIL, SearchDirection.ASCENDING, 0, 20).getResults();
+			submissions = searcher.submissionSearch(filter, SearchOrder.COMMITTEE_CONTACT_EMAIL, SearchDirection.DESCENDING, 0, 20).getResults();
 			assertTrue(submissions.contains(sub1));
 			assertTrue(submissions.contains(sub2));
 			assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));
 			
 			// Committee Approval Date
-			submissions = searcher.submissionSearch(filter, SearchOrder.COMMITTEE_APPROVAL_DATE, SearchDirection.ASCENDING, 0, 20).getResults();
+			submissions = searcher.submissionSearch(filter, SearchOrder.COMMITTEE_APPROVAL_DATE, SearchDirection.DESCENDING, 0, 20).getResults();
 			assertTrue(submissions.contains(sub1));
 			assertTrue(submissions.contains(sub2));
 			assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));
 			
 			// Committee Embargo Approval Date
-			submissions = searcher.submissionSearch(filter, SearchOrder.COMMITTEE_APPROVAL_DATE, SearchDirection.ASCENDING, 0, 20).getResults();
+			submissions = searcher.submissionSearch(filter, SearchOrder.COMMITTEE_APPROVAL_DATE, SearchDirection.DESCENDING, 0, 20).getResults();
 			assertTrue(submissions.contains(sub1));
 			assertTrue(submissions.contains(sub2));
 			assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));
 			
 			// Submission Date
-			submissions = searcher.submissionSearch(filter, SearchOrder.SUBMISSION_DATE, SearchDirection.ASCENDING, 0, 20).getResults();
+			submissions = searcher.submissionSearch(filter, SearchOrder.SUBMISSION_DATE, SearchDirection.DESCENDING, 0, 20).getResults();
 			assertTrue(submissions.contains(sub1));
 			assertTrue(submissions.contains(sub2));
 			assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));
 			
 			// Approval Date
-			submissions = searcher.submissionSearch(filter, SearchOrder.APPROVAL_DATE, SearchDirection.ASCENDING, 0, 20).getResults();
+			submissions = searcher.submissionSearch(filter, SearchOrder.APPROVAL_DATE, SearchDirection.DESCENDING, 0, 20).getResults();
 			assertTrue(submissions.contains(sub1));
 			assertTrue(submissions.contains(sub2));
 			assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));
 	
 			// License Agreement Date
-			submissions = searcher.submissionSearch(filter, SearchOrder.LICENSE_AGREEMENT_DATE, SearchDirection.ASCENDING, 0, 20).getResults();
+			submissions = searcher.submissionSearch(filter, SearchOrder.LICENSE_AGREEMENT_DATE, SearchDirection.DESCENDING, 0, 20).getResults();
 			assertTrue(submissions.contains(sub1));
 			assertTrue(submissions.contains(sub2));
 			assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));
 	
 			// Degree
-			submissions = searcher.submissionSearch(filter, SearchOrder.DEGREE, SearchDirection.ASCENDING, 0, 20).getResults();
+			submissions = searcher.submissionSearch(filter, SearchOrder.DEGREE, SearchDirection.DESCENDING, 0, 20).getResults();
 			assertTrue(submissions.contains(sub1));
 			assertTrue(submissions.contains(sub2));
 			assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));
 			
 			// Department
-			submissions = searcher.submissionSearch(filter, SearchOrder.DEPARTMENT, SearchDirection.ASCENDING, 0, 20).getResults();
+			submissions = searcher.submissionSearch(filter, SearchOrder.DEPARTMENT, SearchDirection.DESCENDING, 0, 20).getResults();
 			assertTrue(submissions.contains(sub1));
 			assertTrue(submissions.contains(sub2));
 			assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));
 			
 			// College
-			submissions = searcher.submissionSearch(filter, SearchOrder.COLLEGE, SearchDirection.ASCENDING, 0, 20).getResults();
+			submissions = searcher.submissionSearch(filter, SearchOrder.COLLEGE, SearchDirection.DESCENDING, 0, 20).getResults();
 			assertTrue(submissions.contains(sub1));
 			assertTrue(submissions.contains(sub2));
 			assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));
 			
 			// Major
-			submissions = searcher.submissionSearch(filter, SearchOrder.MAJOR, SearchDirection.ASCENDING, 0, 20).getResults();
+			submissions = searcher.submissionSearch(filter, SearchOrder.MAJOR, SearchDirection.DESCENDING, 0, 20).getResults();
 			assertTrue(submissions.contains(sub1));
 			assertTrue(submissions.contains(sub2));
 			assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));
 			
 			// DocumentType
-			submissions = searcher.submissionSearch(filter, SearchOrder.DOCUMENT_TYPE, SearchDirection.ASCENDING, 0, 20).getResults();
+			submissions = searcher.submissionSearch(filter, SearchOrder.DOCUMENT_TYPE, SearchDirection.DESCENDING, 0, 20).getResults();
 			assertTrue(submissions.contains(sub1));
 			assertTrue(submissions.contains(sub2));
 			assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));
 			
 			// Graduation Date
-			submissions = searcher.submissionSearch(filter, SearchOrder.GRADUATION_DATE, SearchDirection.ASCENDING, 0, 20).getResults();
+			submissions = searcher.submissionSearch(filter, SearchOrder.GRADUATION_DATE, SearchDirection.DESCENDING, 0, 20).getResults();
 			assertTrue(submissions.contains(sub1));
 			assertTrue(submissions.contains(sub2));
 			assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));
 			
 			// State
-			submissions = searcher.submissionSearch(filter, SearchOrder.STATE, SearchDirection.ASCENDING, 0, 20).getResults();
+			submissions = searcher.submissionSearch(filter, SearchOrder.STATE, SearchDirection.DESCENDING, 0, 20).getResults();
 			assertTrue(submissions.contains(sub1));
 			assertTrue(submissions.contains(sub2));
 			assertTrue(submissions.indexOf(sub2) < submissions.indexOf(sub1));
 			
 			// Assignee
-			submissions = searcher.submissionSearch(filter, SearchOrder.GRADUATION_DATE, SearchDirection.ASCENDING, 0, 20).getResults();
+			submissions = searcher.submissionSearch(filter, SearchOrder.GRADUATION_DATE, SearchDirection.DESCENDING, 0, 20).getResults();
 			assertTrue(submissions.contains(sub1));
 			assertTrue(submissions.contains(sub2));
 			assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));
 			
 			// UMI Release
-			submissions = searcher.submissionSearch(filter, SearchOrder.UMI_RELEASE, SearchDirection.ASCENDING, 0, 20).getResults();
+			submissions = searcher.submissionSearch(filter, SearchOrder.UMI_RELEASE, SearchDirection.DESCENDING, 0, 20).getResults();
 			assertTrue(submissions.contains(sub1));
 			assertTrue(submissions.contains(sub2));
 			assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));
 			
 			// Custom Action
-			submissions = searcher.submissionSearch(filter, SearchOrder.CUSTOM_ACTIONS, SearchDirection.ASCENDING, 0, 20).getResults();
+			submissions = searcher.submissionSearch(filter, SearchOrder.CUSTOM_ACTIONS, SearchDirection.DESCENDING, 0, 20).getResults();
 			assertTrue(submissions.contains(sub1));
 			assertTrue(submissions.contains(sub2));
 			assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));
 			
 			// Deposit Id
-			submissions = searcher.submissionSearch(filter, SearchOrder.DEPOSIT_ID, SearchDirection.ASCENDING, 0, 20).getResults();
+			submissions = searcher.submissionSearch(filter, SearchOrder.DEPOSIT_ID, SearchDirection.DESCENDING, 0, 20).getResults();
 			assertTrue(submissions.contains(sub1));
 			assertTrue(submissions.contains(sub2));
 			assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));
 			
 			// Last Event Entry
-			submissions = searcher.submissionSearch(filter, SearchOrder.LAST_EVENT_ENTRY, SearchDirection.ASCENDING, 0, 20).getResults();
+			submissions = searcher.submissionSearch(filter, SearchOrder.LAST_EVENT_ENTRY, SearchDirection.DESCENDING, 0, 20).getResults();
 			assertTrue(submissions.contains(sub1));
 			assertTrue(submissions.contains(sub2));
 			assertTrue(submissions.indexOf(sub2) < submissions.indexOf(sub1));
 			
 			// Last Event Time
-			submissions = searcher.submissionSearch(filter, SearchOrder.LAST_EVENT_TIME, SearchDirection.ASCENDING, 0, 20).getResults();
+			submissions = searcher.submissionSearch(filter, SearchOrder.LAST_EVENT_TIME, SearchDirection.DESCENDING, 0, 20).getResults();
 			assertTrue(submissions.contains(sub1));
 			assertTrue(submissions.contains(sub2));
 			assertTrue(submissions.indexOf(sub2) < submissions.indexOf(sub1));
@@ -688,7 +655,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 			filter = subRepo.createSearchFilter(otherPerson, "test-empty");
 			filter.save();
 			
-			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 20).getResults();
+			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.DESCENDING, 0, 20).getResults();
 			
 			assertNotNull(logs);
 			assertTrue(logs.size() > 2);
@@ -699,7 +666,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 			filter.addSubmission(sub2);
 			filter.save();
 			
-			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 20).getResults();
+			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.DESCENDING, 0, 20).getResults();
 			
 			assertEquals(sub2,logs.get(0).getSubmission());
 			assertEquals("Assignee changed to 'first last'", logs.get(0).getEntry());
@@ -711,7 +678,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 			filter.addSearchText("Submission created");
 			filter.save();
 			
-			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 20).getResults();
+			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.DESCENDING, 0, 20).getResults();
 			
 			DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
 			String formattedDate = format.format(sub2.getSubmissionDate());
@@ -726,7 +693,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 			filter.addState(stateManager.getInitialState().getBeanName());
 			filter.save();
 			
-			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.DESCENDING, 0, 20).getResults();
+			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 20).getResults();
 			
 			assertEquals(sub1,logs.get(0).getSubmission());
 			assertEquals("Submission created", logs.get(0).getEntry());
@@ -737,7 +704,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 			filter.addAssignee(otherPerson);
 			filter.save();
 			
-			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 20).getResults();
+			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.DESCENDING, 0, 20).getResults();
 			
 			assertEquals(sub2,logs.get(0).getSubmission());
 			assertEquals("Assignee changed to 'first last'", logs.get(0).getEntry());
@@ -749,7 +716,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 			filter.addEmbargoType(embargo1);
 			filter.save();
 			
-			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 20).getResults();
+			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.DESCENDING, 0, 20).getResults();
 			
 			assertEquals(sub2,logs.get(0).getSubmission());
 			assertEquals("Assignee changed to 'first last'", logs.get(0).getEntry());
@@ -761,7 +728,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 			filter.addGraduationSemester(2002,05);
 			filter.save();
 			
-			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 20).getResults();
+			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.DESCENDING, 0, 20).getResults();
 			
 			assertEquals(sub1.getId(),logs.get(0).getSubmission().getId());
 			filter.delete();
@@ -772,7 +739,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 			filter.addDegree("degree");
 			filter.save();
 	
-			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 20).getResults();
+			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.DESCENDING, 0, 20).getResults();
 			
 			assertEquals(sub1.getId(),logs.get(0).getSubmission().getId());
 			filter.delete();
@@ -783,7 +750,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 			filter.addDepartment("department");
 			filter.save();
 	
-			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 20).getResults();
+			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.DESCENDING, 0, 20).getResults();
 			
 			assertEquals(sub1.getId(),logs.get(0).getSubmission().getId());
 			filter.delete();
@@ -795,7 +762,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 			filter.addCollege("college");
 			filter.save();
 	
-			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 20).getResults();
+			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.DESCENDING, 0, 20).getResults();
 			
 			assertEquals(sub1.getId(),logs.get(0).getSubmission().getId());
 			filter.delete();
@@ -806,7 +773,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 			filter.addMajor("major");
 			filter.save();
 	
-			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 20).getResults();
+			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.DESCENDING, 0, 20).getResults();
 			
 			assertEquals(sub1.getId(),logs.get(0).getSubmission().getId());
 			filter.delete();
@@ -817,7 +784,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 			filter.addDocumentType("documentType");
 			filter.save();
 	
-			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 20).getResults();
+			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.DESCENDING, 0, 20).getResults();
 			
 			assertEquals(sub1.getId(),logs.get(0).getSubmission().getId());
 			filter.delete();
@@ -828,7 +795,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 			filter.setUMIRelease(true);
 			filter.save();
 	
-			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 20).getResults();
+			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.DESCENDING, 0, 20).getResults();
 			
 			assertEquals(sub1.getId(),logs.get(0).getSubmission().getId());
 			filter.delete();
@@ -848,7 +815,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 			filter.setDateRangeEnd(endDate);
 			filter.save();
 	
-			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 20).getResults();
+			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.DESCENDING, 0, 20).getResults();
 			
 			assertEquals(sub2.getId(),logs.get(0).getSubmission().getId());
 		} finally {

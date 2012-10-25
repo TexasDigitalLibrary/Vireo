@@ -1,6 +1,7 @@
 package org.tdl.vireo.search;
 
 import java.util.Iterator;
+import java.util.List;
 
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Submission;
@@ -60,14 +61,14 @@ public interface Searcher {
 	public SearchResult<ActionLog> actionLogSearch(SearchFilter filter,
 			SearchOrder orderBy, SearchDirection direction, int offset,
 			int limit);
-	
-	
+
 	/**
-	 * Search for all submissions which match the parameters and order specified
-	 * below. The iterator returned will go through all submissions which match
-	 * the search filter. Submissions from previous iterations may be detached
-	 * from the persistence manager to increase memory efficiency, so it is best
-	 * not to keep those references around in memory.
+	 * Search for the ids of all submissions which match the parameters and
+	 * order specified below. This method is useful for batch operations where
+	 * you want to operate on the entire set but don't want to have all the
+	 * objects in memory for the entire time. This way you can get the list and
+	 * iterate through the list one at a time clearing out all the previous
+	 * objects each time.
 	 * 
 	 * @param filter
 	 *            The filter parameters describing which submissions should be
@@ -78,15 +79,16 @@ public interface Searcher {
 	 *            The direction of the order.
 	 * @return The submission results object.
 	 */
-	public Iterator<Submission> submissionSearch(SearchFilter filter,
-			SearchOrder orderBy, SearchDirection direction);
+	public long[] submissionSearch(SearchFilter filter, SearchOrder orderBy,
+			SearchDirection direction);
 
 	/**
-	 * Search for all action logs which match the parameters and order specified
-	 * below. The iterator returned will go through all action logs which match
-	 * the search filter. Action logs from previous iterations may be detached
-	 * from the persistence manager to increase memory efficiency, so it is best
-	 * not to keep those references around in memory.
+	 * Search for the ids of all action logs which match the parameters and
+	 * order specified below. This method is useful for batch operations where
+	 * you want to operate on the entire set but don't want to have all the
+	 * objects in memory for the entire time. This way you can get the list and
+	 * iterate through the list one at a time clearing out all the previous
+	 * objects each time.
 	 * 
 	 * @param filter
 	 *            The filter parameters describing which log items should be
@@ -97,7 +99,7 @@ public interface Searcher {
 	 *            The direction of the order.
 	 * @return The action log results object.
 	 */
-	public Iterator<ActionLog> actionLogSearch(SearchFilter filter,
-			SearchOrder orderBy, SearchDirection direction);
+	public long[] actionLogSearch(SearchFilter filter, SearchOrder orderBy,
+			SearchDirection direction);
 
 }

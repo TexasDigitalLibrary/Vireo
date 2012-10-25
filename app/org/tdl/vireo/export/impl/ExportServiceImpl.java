@@ -26,6 +26,7 @@ import org.tdl.vireo.job.JobStatus;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.model.SubmissionRepository;
 import org.tdl.vireo.search.SearchDirection;
 import org.tdl.vireo.search.SearchFilter;
 import org.tdl.vireo.search.SearchOrder;
@@ -34,6 +35,7 @@ import org.tdl.vireo.search.Searcher;
 import org.tdl.vireo.security.SecurityContext;
 
 import play.Logger;
+import play.db.jpa.JPA;
 import play.jobs.Job;
 
 
@@ -47,8 +49,9 @@ public class ExportServiceImpl implements ExportService {
 	public final static String MIME_TYPE = "application/zip";
 	public final static int BUFFER_SIZE = 10; // Each chunk may be big.
 	
-	// The repository of people
+	// The repositories
 	public PersonRepository personRepo;
+	public SubmissionRepository subRepo;
 	
 	// The searcher used to find submissions in a batch.
 	public Searcher searcher;
@@ -74,6 +77,14 @@ public class ExportServiceImpl implements ExportService {
 	 */
 	public void setPersonRepository(PersonRepository repo) {
 		this.personRepo = repo;
+	}
+	
+	/**
+	 * @param repo
+	 *            The submission repository
+	 */
+	public void setSubmissionRepository(SubmissionRepository repo) {
+		this.subRepo = repo;
 	}
 
 	/**
@@ -187,22 +198,18 @@ public class ExportServiceImpl implements ExportService {
 				}
 				
 				// Figure out how many submissions total we are exporting
-				SearchResult<Submission> results = searcher.submissionSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 1);
-				meta.getProgress().total = results.getTotal();
+				long[] subIds = searcher.submissionSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING);
+				meta.getProgress().total = subIds.length;
 				meta.getProgress().completed = 0;
-				if (results.getResults().size() > 0)
-					results.getResults().get(0).detach();
 				
 				// Start processing bitstreams
 				BufferedOutputStream bos = new BufferedOutputStream(out);
 				ZipOutputStream zos = new ZipOutputStream(bos);
 				String archiveFolder = packager.getBeanName()+File.separator;
 				try {
-					Iterator<Submission> itr = searcher.submissionSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING);
-
 					// Iterate over all the items, adding each one to the export.
-					while (itr.hasNext()) {
-						Submission sub = itr.next();
+					for (long subId : subIds) {
+						Submission sub = subRepo.findSubmission(subId);
 
 						ExportPackage pkg = packager.generatePackage(sub);
 						try {
@@ -216,6 +223,11 @@ public class ExportServiceImpl implements ExportService {
 							// Ensure the package isdeleted.
 							pkg.delete();
 						}
+						
+						// Immediately save the transaction
+						JPA.em().getTransaction().commit();
+						JPA.em().clear();
+						JPA.em().getTransaction().begin();
 						
 						// Don't let memory get out of control
 						System.gc();

@@ -10,6 +10,7 @@ import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.model.SubmissionRepository;
 import org.tdl.vireo.search.SearchDirection;
 import org.tdl.vireo.search.SearchFilter;
 import org.tdl.vireo.search.SearchOrder;
@@ -30,8 +31,9 @@ import play.jobs.Job;
  */
 public class AssignServiceImpl implements AssignService {
 
-	// The repository of people
+	// The repositories
 	public PersonRepository personRepo;
+	public SubmissionRepository subRepo;
 
 	// The searcher used to find submissions in a batch.
 	public Searcher searcher;
@@ -48,6 +50,14 @@ public class AssignServiceImpl implements AssignService {
 	 */
 	public void setPersonRepository(PersonRepository repo) {
 		this.personRepo = repo;
+	}
+	
+	/**
+	 * @param repo
+	 *            The submission repository
+	 */
+	public void setSubmissionRepository(SubmissionRepository repo) {
+		this.subRepo = repo;
 	}
 	
 	/**
@@ -79,9 +89,9 @@ public class AssignServiceImpl implements AssignService {
 
 		if (filter == null)
 			throw new IllegalArgumentException("A search filter is required");
-
+		
 		if (context.isAuthorizationActive() && !context.isReviewer())
-			throw new SecurityException("Unauthorized to transition submissions.");
+			throw new SecurityException("Unauthorized to assign submissions");
 
 		AssignJob job = new AssignJob(filter, assignTo);
 
@@ -108,6 +118,9 @@ public class AssignServiceImpl implements AssignService {
 		 * 
 		 * @param filter
 		 *            The filter to use to search for submissions.
+		 *            
+		 * @param assigneTo
+		 * 			  The id of the person to assign submissions too.
 		 */
 		public AssignJob(SearchFilter filter, Long assignTo) {
 
@@ -138,26 +151,22 @@ public class AssignServiceImpl implements AssignService {
 				if (personId != null) {
 					Person person = personRepo.findPerson(personId);
 					if (person == null)
-						throw new IllegalStateException("Unable to complete transition job because person no longer exists.");
+						throw new IllegalStateException("Unable to complete batch assign job because person no longer exists.");
 					context.login(person);
 				} else {
 					context.turnOffAuthorization();
 				}
 				
-				// Figure out how many submissions total we are exporting
-				SearchResult<Submission> results = searcher.submissionSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 1);
-				metadata.getProgress().total = results.getTotal();
+				// Figure out how many submissions total we are working with
+				long[] subIds = searcher.submissionSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING);
+				metadata.getProgress().total = subIds.length;
 				metadata.getProgress().completed = 0;
-				if (results.getResults().size() > 0)
-					results.getResults().get(0).detach();
 				
-				// Delete!
+				// Assign!
 				metadata.setMessage("Changing assignee on submissions...");
-				Iterator<Submission> itr = searcher.submissionSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING);
+				for (long subId : subIds) {
 				
-				while(itr.hasNext()) {
-
-					Submission sub = itr.next();
+					Submission sub = subRepo.findSubmission(subId);
 					
 					if(assignTo!=null)
 						sub.setAssignee(personRepo.findPerson(assignTo));
@@ -168,6 +177,7 @@ public class AssignServiceImpl implements AssignService {
 					
 					// Immediately save the transaction
 					JPA.em().getTransaction().commit();
+					JPA.em().clear();
 					JPA.em().getTransaction().begin();
 					
 					// Don't let memory get out of control

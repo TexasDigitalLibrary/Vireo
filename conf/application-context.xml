@@ -220,6 +220,7 @@ Thesis Office
     <!-- Batch -->
     <bean id="BatchTransition" class="org.tdl.vireo.batch.impl.TransitionServiceImpl" scope="singleton">
         <property name="personRepository" ref="PersonRepository"/>
+        <property name="submissionRepository" ref="SubmissionRepository"/>
         <property name="securityContext" ref="SecurityContext"/>
         <property name="searcher" ref="Searcher"/>
         <property name="depositService" ref="DepositService"/>
@@ -227,21 +228,25 @@ Thesis Office
     </bean>
     <bean id="BatchDelete" class="org.tdl.vireo.batch.impl.DeleteServiceImpl" scope="singleton">
         <property name="personRepository" ref="PersonRepository"/>
+        <property name="submissionRepository" ref="SubmissionRepository"/>
         <property name="securityContext" ref="SecurityContext"/>
         <property name="searcher" ref="Searcher"/>
         <property name="jobManager" ref="JobManager"/>
     </bean>
     <bean id="BatchAssign" class="org.tdl.vireo.batch.impl.AssignServiceImpl" scope="singleton">
     	<property name="personRepository" ref="PersonRepository"/>
+    	<property name="submissionRepository" ref="SubmissionRepository"/>
     	<property name="securityContext" ref="SecurityContext"/>
     	<property name="searcher" ref="Searcher"/>
     	<property name="jobManager" ref="JobManager"/>
     </bean>
     <bean id="BatchComment" class="org.tdl.vireo.batch.impl.CommentServiceImpl" scope="singleton">
     	<property name="personRepository" ref="PersonRepository"/>
+    	<property name="submissionRepository" ref="SubmissionRepository"/>
     	<property name="securityContext" ref="SecurityContext"/>
     	<property name="searcher" ref="Searcher"/>
     	<property name="jobManager" ref="JobManager"/>
+    	<property name="emailService" ref="EmailService"/>
     </bean>
     
     <!-- Export/Deposit -->
@@ -252,6 +257,7 @@ Thesis Office
     </bean>
     <bean id="ExportService" class="org.tdl.vireo.export.impl.ExportServiceImpl" scope="singleton">
         <property name="personRepository" ref="PersonRepository"/>
+        <property name="submissionRepository" ref="SubmissionRepository"/>
         <property name="securityContext" ref="SecurityContext"/>
         <property name="searcher" ref="Searcher"/>
         <property name="jobManager" ref="JobManager"/>

@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.tdl.vireo.export.ChunkStream;
 import org.tdl.vireo.export.MockPackager;
 import org.tdl.vireo.model.MockSubmission;
+import org.tdl.vireo.model.SubmissionRepository;
 import org.tdl.vireo.search.MockSearchFilter;
 import org.tdl.vireo.search.MockSearcher;
 import org.tdl.vireo.search.Searcher;
@@ -40,6 +41,8 @@ public class ExportServiceImplTest extends UnitTest {
 	public void testExport() throws IOException, InterruptedException, ExecutionException {
 		
 		Searcher originalSearcher = service.searcher;
+		SubmissionRepository originalSubRepo = service.subRepo;
+
 		try {
 			MockPackager packager = new MockPackager();
 			MockSearchFilter filter = new MockSearchFilter();
@@ -48,6 +51,7 @@ public class ExportServiceImplTest extends UnitTest {
 				searcher.submissions.add(new MockSubmission());
 			
 			service.searcher = searcher;
+			service.subRepo = searcher.subRepo;
 			ChunkStream stream = service.export(packager, filter);
 			
 			// Write out the export to a single file.
@@ -78,6 +82,7 @@ public class ExportServiceImplTest extends UnitTest {
 			exportFile.delete();
 		} finally {
 			service.searcher = originalSearcher;
+			service.subRepo = originalSubRepo;
 		}
 	}
 	

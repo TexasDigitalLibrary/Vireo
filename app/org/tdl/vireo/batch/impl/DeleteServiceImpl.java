@@ -12,6 +12,7 @@ import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.model.SubmissionRepository;
 import org.tdl.vireo.search.SearchDirection;
 import org.tdl.vireo.search.SearchFilter;
 import org.tdl.vireo.search.SearchOrder;
@@ -32,8 +33,9 @@ import play.jobs.Job;
  */
 public class DeleteServiceImpl implements DeleteService {
 
-	// The repository of people
+	// The repositories
 	public PersonRepository personRepo;
+	public SubmissionRepository subRepo;
 
 	// The searcher used to find submissions in a batch.
 	public Searcher searcher;
@@ -50,6 +52,14 @@ public class DeleteServiceImpl implements DeleteService {
 	 */
 	public void setPersonRepository(PersonRepository repo) {
 		this.personRepo = repo;
+	}
+	
+	/**
+	 * @param repo
+	 *            The submission repository
+	 */
+	public void setSubmissionRepository(SubmissionRepository repo) {
+		this.subRepo = repo;
 	}
 	
 	/**
@@ -145,24 +155,21 @@ public class DeleteServiceImpl implements DeleteService {
 				}
 				
 				// Figure out how many submissions total we are exporting
-				SearchResult<Submission> results = searcher.submissionSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 1);
-				metadata.getProgress().total = results.getTotal();
+				long[] subIds = searcher.submissionSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING);
+				metadata.getProgress().total = subIds.length;
 				metadata.getProgress().completed = 0;
-				if (results.getResults().size() > 0)
-					results.getResults().get(0).detach();
 				
 				// Delete!
-				metadata.setMessage("Deleting submissions...");
-				Iterator<Submission> itr = searcher.submissionSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING);
-				
-				while(itr.hasNext()) {
+				metadata.setMessage("Deleting submissions...");				
+				for (long subId : subIds) {
 
-					Submission sub = itr.next();
+					Submission sub = subRepo.findSubmission(subId);
 					sub.delete();
 					
 					
 					// Immediately save the transaction
 					JPA.em().getTransaction().commit();
+					JPA.em().clear();
 					JPA.em().getTransaction().begin();
 					
 					// Don't let memory get out of controll

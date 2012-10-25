@@ -9,6 +9,7 @@ import org.tdl.vireo.export.MockPackager;
 import org.tdl.vireo.job.JobManager;
 import org.tdl.vireo.model.MockDepositLocation;
 import org.tdl.vireo.model.MockSubmission;
+import org.tdl.vireo.model.SubmissionRepository;
 import org.tdl.vireo.search.MockSearchFilter;
 import org.tdl.vireo.search.MockSearcher;
 import org.tdl.vireo.search.Searcher;
@@ -48,6 +49,8 @@ public class TransitionServiceImplTest extends UnitTest {
 
 		context.turnOffAuthorization();
 		Searcher originalSearcher = service.searcher;
+		SubmissionRepository originalSubRepo = service.subRepo;
+
 		try {
 
 			// Set up our mock objects.
@@ -61,6 +64,7 @@ public class TransitionServiceImplTest extends UnitTest {
 
 			// Do the deposit
 			service.searcher = searcher;
+			service.subRepo = searcher.subRepo;
 			service.transition(filter,  state,  null);
 
 			// Wait for deposit to finish.
@@ -76,6 +80,7 @@ public class TransitionServiceImplTest extends UnitTest {
 
 		} finally {
 			service.searcher = originalSearcher;
+			service.subRepo = originalSubRepo;
 			context.restoreAuthorization();
 		}
 
@@ -89,6 +94,7 @@ public class TransitionServiceImplTest extends UnitTest {
 
 		context.turnOffAuthorization();
 		Searcher originalSearcher = service.searcher;
+		SubmissionRepository originalSubRepo = service.subRepo;
 		try {
 
 			// Set up our mock objects.
@@ -106,6 +112,7 @@ public class TransitionServiceImplTest extends UnitTest {
 
 			// Do the deposit
 			service.searcher = searcher;
+			service.subRepo = searcher.subRepo;
 			service.transition(filter,  state,  location);
 
 			// Wait for deposit to finish.
@@ -122,6 +129,7 @@ public class TransitionServiceImplTest extends UnitTest {
 
 		} finally {
 			service.searcher = originalSearcher;
+			service.subRepo = originalSubRepo;
 			context.restoreAuthorization();
 		}
 

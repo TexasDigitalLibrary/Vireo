@@ -153,7 +153,7 @@ public class LuceneSearcherImpl implements Searcher {
 				andQuery.add(new TermQuery(new Term("type","submission")),Occur.MUST);
 				buildQuery(andQuery,filter,true); // <-- This does most of the work.
 				
-				boolean reverse = (direction == SearchDirection.ASCENDING) ? true : false;
+				boolean reverse = (direction == SearchDirection.ASCENDING) ? false : true;
 				
 				SortField dynamicSortField = new SortField(SORT_SUB_FIELDS[orderBy.ordinal()], SORT_TYPES[orderBy.ordinal()], reverse);
 				SortField idSortField = new SortField("subId",SortField.LONG,reverse);
@@ -201,7 +201,7 @@ public class LuceneSearcherImpl implements Searcher {
 				andQuery.add(new TermQuery(new Term("type","actionlog")),Occur.MUST);
 				buildQuery(andQuery,filter,false); // <-- This does most of the work.
 				
-				boolean reverse = (direction == SearchDirection.ASCENDING) ? true : false;
+				boolean reverse = (direction == SearchDirection.ASCENDING) ? false : true;
 				
 				SortField dynamicSortField = new SortField(SORT_LOG_FIELDS[orderBy.ordinal()], SORT_TYPES[orderBy.ordinal()], reverse);
 				SortField idSortField = new SortField("logId",SortField.LONG,reverse);
@@ -235,17 +235,85 @@ public class LuceneSearcherImpl implements Searcher {
 	}
 	
 	@Override
-	public Iterator<Submission> submissionSearch(SearchFilter filter,
+	public long[] submissionSearch(SearchFilter filter,
 			SearchOrder orderBy, SearchDirection direction) {
 		
-		return new SearchIteratorImpl<Submission>(Submission.class,this, filter, orderBy, direction);
+		try {
+			IndexReader reader = IndexReader.open(indexer.index);
+			try {
+				IndexSearcher searcher = new IndexSearcher(reader);
+				
+				BooleanQuery andQuery = new BooleanQuery();
+				andQuery.add(new TermQuery(new Term("type","submission")),Occur.MUST);
+				buildQuery(andQuery,filter,true); // <-- This does most of the work.
+				
+				boolean reverse = (direction == SearchDirection.ASCENDING) ? false : true;
+				
+				SortField dynamicSortField = new SortField(SORT_SUB_FIELDS[orderBy.ordinal()], SORT_TYPES[orderBy.ordinal()], reverse);
+				SortField idSortField = new SortField("subId",SortField.LONG,reverse);
+				Sort sort = new Sort(dynamicSortField, idSortField);
+		
+				Logger.debug("Submission ID Query: "+andQuery.toString());
+				
+				TopDocs topDocs = searcher.search(andQuery, Integer.MAX_VALUE, sort);
+								
+				long[] sortedIds = new long[topDocs.scoreDocs.length];
+				for (int i = 0; i < topDocs.scoreDocs.length; i++) {
+					Document doc = searcher.doc(topDocs.scoreDocs[i].doc);
+					sortedIds[i] = Long.valueOf(doc.get("subId")).longValue();
+				}
+
+				return sortedIds;
+				
+			} finally {
+				reader.close();
+				
+			}
+		} catch (IOException ioe) {
+			Logger.error(ioe,"Unable to search");
+		}
+		return null;
 	}
 
 	@Override
-	public Iterator<ActionLog> actionLogSearch(SearchFilter filter,
+	public long[] actionLogSearch(SearchFilter filter,
 			SearchOrder orderBy, SearchDirection direction) {
 		
-		return new SearchIteratorImpl<ActionLog>(ActionLog.class,this, filter, orderBy, direction);
+		try {
+			IndexReader reader = IndexReader.open(indexer.index);
+			try {
+				IndexSearcher searcher = new IndexSearcher(reader);
+				
+				BooleanQuery andQuery = new BooleanQuery();
+				andQuery.add(new TermQuery(new Term("type","actionlog")),Occur.MUST);
+				buildQuery(andQuery,filter,true); // <-- This does most of the work.
+				
+				boolean reverse = (direction == SearchDirection.ASCENDING) ? false : true;
+				
+				SortField dynamicSortField = new SortField(SORT_SUB_FIELDS[orderBy.ordinal()], SORT_TYPES[orderBy.ordinal()], reverse);
+				SortField idSortField = new SortField("logId",SortField.LONG,reverse);
+				Sort sort = new Sort(dynamicSortField, idSortField);
+		
+				Logger.debug("Log ID Query: "+andQuery.toString());
+				
+				TopDocs topDocs = searcher.search(andQuery, Integer.MAX_VALUE, sort);
+								
+				long[] sortedIds = new long[topDocs.scoreDocs.length];
+				for (int i = 0; i < topDocs.scoreDocs.length; i++) {
+					Document doc = searcher.doc(topDocs.scoreDocs[i].doc);
+					sortedIds[i] = Long.valueOf(doc.get("logId")).longValue();
+				}
+
+				return sortedIds;
+				
+			} finally {
+				reader.close();
+				
+			}
+		} catch (IOException ioe) {
+			Logger.error(ioe,"Unable to search");
+		}
+		return null;
 	}
 
 	

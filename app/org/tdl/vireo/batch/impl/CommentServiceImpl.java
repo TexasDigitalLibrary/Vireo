@@ -13,6 +13,7 @@ import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.model.SubmissionRepository;
 import org.tdl.vireo.search.SearchDirection;
 import org.tdl.vireo.search.SearchFilter;
 import org.tdl.vireo.search.SearchOrder;
@@ -34,10 +35,12 @@ import play.modules.spring.Spring;
  */
 public class CommentServiceImpl implements CommentService {
 
-	public static EmailService emailService = Spring.getBeanOfType(EmailService.class);
+	// The email service
+	public EmailService emailService;
 	
-	// The repository of people
+	// The repositories
 	public PersonRepository personRepo;
+	public SubmissionRepository subRepo;
 
 	// The searcher used to find submissions in a batch.
 	public Searcher searcher;
@@ -54,6 +57,14 @@ public class CommentServiceImpl implements CommentService {
 	 */
 	public void setPersonRepository(PersonRepository repo) {
 		this.personRepo = repo;
+	}
+	
+	/**
+	 * @param repo
+	 *            The submission repository
+	 */
+	public void setSubmissionRepository(SubmissionRepository repo) {
+		this.subRepo = repo;
 	}
 	
 	/**
@@ -79,12 +90,22 @@ public class CommentServiceImpl implements CommentService {
 	public void setJobManager(JobManager jobManager) {
 		this.jobManager = jobManager;
 	}
+	
+	/**
+	 * @param emailService The email service
+	 */
+	public void setEmailService(EmailService emailService) {
+		this.emailService = emailService;
+	}
 
 	@Override
 	public JobMetadata comment(SearchFilter filter, String comment,
 			String subject, Boolean visibility, Boolean sendEmail, Boolean ccAdvisor) {
 		if (filter == null)
 			throw new IllegalArgumentException("A search filter is required");
+		
+		if (comment == null)
+			throw new IllegalArgumentException("A comment is required");
 
 		if (context.isAuthorizationActive() && !context.isReviewer())
 			throw new SecurityException("Unauthorized to transition submissions.");
@@ -97,7 +118,7 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	/**
-	 * The background job to change assignee on submissions.
+	 * The background job to place a comment or email on submissions.
 	 */
 	public class CommentJob extends Job {
 
@@ -117,6 +138,16 @@ public class CommentServiceImpl implements CommentService {
 		 * 
 		 * @param filter
 		 *            The filter to use to search for submissions.
+		 * @param comment
+		 * 			  The text of the comment or email message.
+		 * @param subject
+		 * 			  The subject of the comment or email message.
+		 * @param visibility
+		 * 			  Whether the comment should be marked private.
+		 * @param ccAdvisor
+		 *            Whether the advisior should be CC'ed.
+		 * @param sendEmail
+		 *            Whether to send email, or just leave a comment.
 		 */
 		public CommentJob(SearchFilter filter, String comment, String subject, Boolean visibility,
 				Boolean ccAdvisor, Boolean sendEmail) {
@@ -133,7 +164,12 @@ public class CommentServiceImpl implements CommentService {
 			else
 				personId = null;
 			
-			metadata = jobManager.register("Batch Comment/Email",context.getPerson());
+			
+			String jobTitle = "Batch Comment"	;		
+			if (this.sendEmail)
+				jobTitle = "Batch Email";
+			metadata = jobManager.register(jobTitle,context.getPerson());
+
 			metadata.setJob(this);
 			metadata.setStatus(JobStatus.READY);
 			metadata.setMessage("Waiting to start...");
@@ -159,19 +195,19 @@ public class CommentServiceImpl implements CommentService {
 				}
 				
 				// Figure out how many submissions total we are exporting
-				SearchResult<Submission> results = searcher.submissionSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 1);
-				metadata.getProgress().total = results.getTotal();
+				long[] subIds = searcher.submissionSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING);
+				metadata.getProgress().total = subIds.length;
 				metadata.getProgress().completed = 0;
-				if (results.getResults().size() > 0)
-					results.getResults().get(0).detach();
 				
-				// Delete!
-				metadata.setMessage("Adding comment/emailing on submissions...");
-				Iterator<Submission> itr = searcher.submissionSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING);
+				// Comment!
+				if (this.sendEmail)
+					metadata.setMessage("Sending emails...");
+				else
+					metadata.setMessage("Adding comments...");
 				
-				while(itr.hasNext()) {
+				for (long subId : subIds) {
 
-					Submission sub = itr.next();
+					Submission sub = subRepo.findSubmission(subId);
 					
 					if(sendEmail){
 						VireoEmail email = emailService.createEmail();
@@ -214,6 +250,7 @@ public class CommentServiceImpl implements CommentService {
 					
 					// Immediately save the transaction
 					JPA.em().getTransaction().commit();
+					JPA.em().clear();
 					JPA.em().getTransaction().begin();
 					
 					// Don't let memory get out of control
