@@ -564,7 +564,7 @@ public class FilterTab extends AbstractVireoController {
 		
 		// Find the submission and load it.
 		Submission sub = subRepo.findSubmission(subId);
-		activeFilter.addSubmission(sub);
+		activeFilter.addIncludedSubmission(sub);
 		
 		// Save the active filter to a cookie
 		response.setCookie(NAMES[ACTION_LOG][ACTIVE_FILTER], activeFilter.encode());
@@ -864,7 +864,23 @@ public class FilterTab extends AbstractVireoController {
 		String type = params.get("type");
 		String value = params.get("value");
 		
-		if ("text".equals(type)) {
+		if ("include_sub".equals(type)) {
+			Long subId = params.get("value",Long.class);
+			Submission sub = subRepo.findSubmission(subId);
+			activeFilter.addIncludedSubmission(sub);
+		} else if ("include_log".equals(type)) {
+			Long logId = params.get("value",Long.class);
+			ActionLog log = subRepo.findActionLog(logId);
+			activeFilter.addIncludedActionLog(log);
+		} else if ("exclude_sub".equals(type)) {
+			Long subId = params.get("value",Long.class);
+			Submission sub = subRepo.findSubmission(subId);
+			activeFilter.addExcludedSubmission(sub);
+		} else if ("exclude_log".equals(type)) {
+			Long logId = params.get("value",Long.class);
+			ActionLog log = subRepo.findActionLog(logId);
+			activeFilter.addExcludedActionLog(log);
+		} else if ("text".equals(type)) {
 			activeFilter.addSearchText(value);
 			
 		} else if ("state".equals(type)) {
@@ -1023,10 +1039,26 @@ public class FilterTab extends AbstractVireoController {
 		String type = params.get("type");
 		String value = params.get("value");
 		
-		if ("sub".equals(type)) {
+		if ("include_sub".equals(type)) {
 			Long subId = params.get("value",Long.class);
 			Submission sub = subRepo.findSubmission(subId);
-			activeFilter.removeSubmission(sub);
+			activeFilter.removeIncludedSubmission(sub);
+			
+		} else if ("include_log".equals(type)) {
+			Long logId = params.get("value",Long.class);
+			ActionLog log = subRepo.findActionLog(logId);
+			activeFilter.removeIncludedActionLog(log);
+			
+		} else if ("exclude_sub".equals(type)) {
+			Long subId = params.get("value",Long.class);
+			Submission sub = subRepo.findSubmission(subId);
+			activeFilter.removeExcludedSubmission(sub);
+			
+		} else if ("exclude_log".equals(type)) {
+			Long logId = params.get("value",Long.class);
+			ActionLog log = subRepo.findActionLog(logId);
+			activeFilter.removeExcludedActionLog(log);
+			
 		} else if ("text".equals(type)) {
 			activeFilter.removeSearchText(value);
 			

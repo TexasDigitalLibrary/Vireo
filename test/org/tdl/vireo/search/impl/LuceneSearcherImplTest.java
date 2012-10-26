@@ -187,15 +187,26 @@ public class LuceneSearcherImplTest extends UnitTest{
 			assertTrue(submissions.contains(sub2));
 			filter.delete();
 			
-			// Submission Filter
+			// Include Submission Filter
 			filter = subRepo.createSearchFilter(person, "test-sub");
-			filter.addSubmission(sub1);
+			filter.addIncludedSubmission(sub1);
 			filter.save();
 			
 			submissions = searcher.submissionSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 20).getResults();
 			
 			assertTrue(submissions.contains(sub1));
 			assertFalse(submissions.contains(sub2));
+			filter.delete();
+			
+			// Exclude Submission Filter
+			filter = subRepo.createSearchFilter(person, "test-sub");
+			filter.addExcludedSubmission(sub1);
+			filter.save();
+			
+			submissions = searcher.submissionSearch(filter, SearchOrder.ID, SearchDirection.ASCENDING, 0, 20).getResults();
+			
+			assertFalse(submissions.contains(sub1));
+			assertTrue(submissions.contains(sub2));
 			filter.delete();
 			
 			// Search Text Filter
@@ -661,9 +672,9 @@ public class LuceneSearcherImplTest extends UnitTest{
 			assertTrue(logs.size() > 2);
 			filter.delete();
 			
-			// Search Text Filter
+			// Submission Filter
 			filter = subRepo.createSearchFilter(otherPerson, "test-sub");
-			filter.addSubmission(sub2);
+			filter.addIncludedSubmission(sub2);
 			filter.save();
 			
 			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.DESCENDING, 0, 20).getResults();

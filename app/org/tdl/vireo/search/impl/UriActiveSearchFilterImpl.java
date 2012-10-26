@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
@@ -36,7 +37,10 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 	public SettingsRepository settingRepo = null;
 
 	// Danamic variables
-	public List<Submission> submissions = new ArrayList<Submission>();
+	public List<Submission> includedSubmissions = new ArrayList<Submission>();
+	public List<Submission> excludedSubmissions = new ArrayList<Submission>();
+	public List<ActionLog> includedActionLogs = new ArrayList<ActionLog>();
+	public List<ActionLog> excludedActionLogs = new ArrayList<ActionLog>();
 	public List<String> searchText = new ArrayList<String>();
 	public List<String> states = new ArrayList<String>();
 	public List<Person> assignees = new ArrayList<Person>();
@@ -83,18 +87,63 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 	}
 	
 	@Override
-	public List<Submission> getSubmissions() {
-		return submissions;
+	public List<Submission> getIncludedSubmissions() {
+		return includedSubmissions;
 	}
 
 	@Override
-	public void addSubmission(Submission sub) {
-		submissions.add(sub);
+	public void addIncludedSubmission(Submission sub) {
+		includedSubmissions.add(sub);
 	}
 
 	@Override
-	public void removeSubmission(Submission sub) {
-		submissions.remove(sub);
+	public void removeIncludedSubmission(Submission sub) {
+		includedSubmissions.remove(sub);
+	}
+	
+	@Override
+	public List<Submission> getExcludedSubmissions() {
+		return excludedSubmissions;
+	}
+
+	@Override
+	public void addExcludedSubmission(Submission sub) {
+		excludedSubmissions.add(sub);
+	}
+
+	@Override
+	public void removeExcludedSubmission(Submission sub) {
+		excludedSubmissions.remove(sub);
+	}
+	
+	@Override
+	public List<ActionLog> getIncludedActionLogs() {
+		return includedActionLogs;
+	}
+
+	@Override
+	public void addIncludedActionLog(ActionLog log) {
+		includedActionLogs.add(log);
+	}
+
+	@Override
+	public void removeIncludedActionLog(ActionLog log) {
+		includedActionLogs.remove(log);
+	}
+	
+	@Override
+	public List<ActionLog> getExcludedActionLogs() {
+		return excludedActionLogs;
+	}
+
+	@Override
+	public void addExcludedActionLog(ActionLog log) {
+		excludedActionLogs.add(log);
+	}
+
+	@Override
+	public void removeExcludedActionLog(ActionLog log) {
+		excludedActionLogs.remove(log);
 	}
 	
 	@Override
@@ -305,7 +354,10 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 		result.append(":");
 		
 		// Handle all the lists.
-		encodeList(result,submissions);
+		encodeList(result,includedSubmissions);
+		encodeList(result,excludedSubmissions);
+		encodeList(result,includedActionLogs);
+		encodeList(result,excludedActionLogs);
 		encodeList(result,searchText);
 		encodeList(result,states);
 		encodeList(result,assignees);
@@ -340,50 +392,57 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 	public void decode(String encoded) {
 		try {
 			String[] split = encoded.split(":",-1);
-			if (split.length != 16)
-				throw new IllegalArgumentException("Unable to decode active search filter because it does not have the 15 expected number of components instead it has "+split.length);
+			if (split.length != 19)
+				throw new IllegalArgumentException("Unable to decode active search filter because it does not have the 19 expected number of components instead it has "+split.length);
 
 			// Decode all the lists
-			submissions = decodeList(split[1],Submission.class);
-			searchText = decodeList(split[2],String.class);
-			states = decodeList(split[3],String.class);
-			assignees = decodeList(split[4],Person.class);
-			embargos = decodeList(split[5],EmbargoType.class);
-			semesters = decodeList(split[6],Semester.class);
-			degrees = decodeList(split[7],String.class);
-			departments = decodeList(split[8],String.class);
-			colleges = decodeList(split[9],String.class);
-			majors = decodeList(split[10],String.class);
-			documentTypes = decodeList(split[11],String.class);
+			int i = 1;
+			includedSubmissions = decodeList(split[i++],Submission.class);
+			excludedSubmissions = decodeList(split[i++],Submission.class);
+			includedActionLogs = decodeList(split[i++],ActionLog.class);
+			excludedActionLogs = decodeList(split[i++],ActionLog.class);
+			searchText = decodeList(split[i++],String.class);
+			states = decodeList(split[i++],String.class);
+			assignees = decodeList(split[i++],Person.class);
+			embargos = decodeList(split[i++],EmbargoType.class);
+			semesters = decodeList(split[i++],Semester.class);
+			degrees = decodeList(split[i++],String.class);
+			departments = decodeList(split[i++],String.class);
+			colleges = decodeList(split[i++],String.class);
+			majors = decodeList(split[i++],String.class);
+			documentTypes = decodeList(split[i++],String.class);
 
 			// Handle the single values
-			if ("true".equalsIgnoreCase(split[12])) {
+			if ("true".equalsIgnoreCase(split[i])) {
 				umiRelease = true;
-			} else if ("false".equalsIgnoreCase(split[12])) {
+			} else if ("false".equalsIgnoreCase(split[i])) {
 				umiRelease = false;
 			} else {
 				umiRelease = null;
 			}
+			i++;
 
-			if (split[13].length() != 0) {
+			if (split[i].length() != 0) {
 				try {
-					rangeStart = new Date(Long.valueOf(split[13]));
+					rangeStart = new Date(Long.valueOf(split[i]));
 				} catch (RuntimeException re) {
-					Logger.warn("Unable to decode value '"+split[13]+"' for rangeStart.");
+					Logger.warn("Unable to decode value '"+split[i]+"' for rangeStart.");
 				}
 			} else {
 				rangeStart = null;
 			}
-
-			if (split[14].length() != 0) {
+			i++;
+			
+			if (split[i].length() != 0) {
 				try {
-					rangeEnd = new Date(Long.valueOf(split[14]));
+					rangeEnd = new Date(Long.valueOf(split[i]));
 				} catch (RuntimeException re) {
-					Logger.warn("Unable to decode value '"+split[14]+"' for rangeEnd.");
+					Logger.warn("Unable to decode value '"+split[i]+"' for rangeEnd.");
 				}
 			} else {
 				rangeEnd = null;
 			}
+			
 		} catch (RuntimeException re) {
 			// If anything other than the specific cases we have allready caught
 			// just wrapped the exception with more information.
@@ -396,8 +455,17 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 		
 		// We're going to be sneaky and take advantage of the fact that the list return by all filters are mutable.
 		
-		other.getSubmissions().clear();
-		other.getSubmissions().addAll(this.submissions);
+		other.getIncludedSubmissions().clear();
+		other.getIncludedSubmissions().addAll(this.includedSubmissions);
+		
+		other.getExcludedSubmissions().clear();
+		other.getExcludedSubmissions().addAll(this.excludedSubmissions);
+		
+		other.getIncludedActionLogs().clear();
+		other.getIncludedActionLogs().addAll(this.includedActionLogs);
+		
+		other.getExcludedActionLogs().clear();
+		other.getExcludedActionLogs().addAll(this.excludedActionLogs);
 		
 		other.getSearchText().clear();
 		other.getSearchText().addAll(this.searchText);
@@ -437,7 +505,10 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 	@Override
 	public void copyFrom(SearchFilter other) {
 		
-		this.submissions = new ArrayList<Submission>(other.getSubmissions());
+		this.includedSubmissions = new ArrayList<Submission>(other.getIncludedSubmissions());
+		this.excludedSubmissions = new ArrayList<Submission>(other.getExcludedSubmissions());
+		this.includedActionLogs = new ArrayList<ActionLog>(other.getIncludedActionLogs());
+		this.excludedActionLogs = new ArrayList<ActionLog>(other.getExcludedActionLogs());
 		this.searchText = new ArrayList<String>(other.getSearchText());
 		this.states = new ArrayList<String>(other.getStates());
 		this.assignees = new ArrayList<Person>(other.getAssignees());
@@ -500,6 +571,13 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 					Long subId = Long.valueOf(raw);
 					Submission sub = subRepo.findSubmission(subId);
 					result.add((T) sub);
+					
+				} else if (type == ActionLog.class) {
+					// List type is ActionLog
+					
+					Long logId = Long.valueOf(raw);
+					ActionLog log = subRepo.findActionLog(logId);
+					result.add((T) log);
 					
 				} else if (type == EmbargoType.class) {
 					// List type is embargo types
@@ -577,7 +655,12 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 				Long subId = ((Submission) value).getId();
 				result.append(String.valueOf(subId));
 				
-			} else if (value instanceof EmbargoType) {
+			} else if (value instanceof ActionLog) {
+				// Full actionlog object
+				Long logId = ((ActionLog) value).getId();
+				result.append(String.valueOf(logId));
+				
+			}else if (value instanceof EmbargoType) {
 				// Full embargo object
 				Long embargoId = ((EmbargoType) value).getId();
 				result.append(String.valueOf(embargoId));

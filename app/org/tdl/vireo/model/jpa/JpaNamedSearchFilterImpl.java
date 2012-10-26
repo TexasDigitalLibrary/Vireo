@@ -8,6 +8,7 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PostLoad;
@@ -22,6 +23,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
+import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.NamedSearchFilter;
 import org.tdl.vireo.model.Person;
@@ -47,7 +49,20 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	public boolean publicFlag;
 	
 	@OneToMany(targetEntity=JpaSubmissionImpl.class)
-	public List<Submission> submissions;
+	@JoinTable(name="search_filter_included_submissions")
+	public List<Submission> includedSubmisisons;
+	
+	@OneToMany(targetEntity=JpaSubmissionImpl.class)
+	@JoinTable(name="search_filter_excluded_submissions")
+	public List<Submission> excludedSubmisisons;
+	
+	@OneToMany(targetEntity=JpaActionLogImpl.class)
+	@JoinTable(name="search_filter_included_actionlogs")
+	public List<ActionLog> includedActionLogs;
+	
+	@OneToMany(targetEntity=JpaActionLogImpl.class)
+	@JoinTable(name="search_filter_excluded_actionlogs")
+	public List<ActionLog> excludedActionLogs;
 	
 	@ElementCollection
 	@CollectionTable(name="search_filter_text")
@@ -118,7 +133,10 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 		this.creator = creator;
 		this.name = name;
 		this.publicFlag = false;
-		this.submissions = new ArrayList<Submission>();
+		this.includedSubmisisons = new ArrayList<Submission>();
+		this.excludedSubmisisons = new ArrayList<Submission>();
+		this.includedActionLogs = new ArrayList<ActionLog>();
+		this.excludedActionLogs = new ArrayList<ActionLog>();
 		this.searchText = new ArrayList<String>();
 		this.states = new ArrayList<String>();
 		this.assignees = new ArrayList<Person>();
@@ -250,18 +268,63 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	}
 
 	@Override
-	public List<Submission> getSubmissions() {
-		return submissions;
+	public List<Submission> getIncludedSubmissions() {
+		return includedSubmisisons;
 	}
 
 	@Override
-	public void addSubmission(Submission sub) {
-		submissions.add(sub);
+	public void addIncludedSubmission(Submission sub) {
+		includedSubmisisons.add(sub);
 	}
 
 	@Override
-	public void removeSubmission(Submission sub) {
-		submissions.remove(sub);
+	public void removeIncludedSubmission(Submission sub) {
+		includedSubmisisons.remove(sub);
+	}
+	
+	@Override
+	public List<Submission> getExcludedSubmissions() {
+		return excludedSubmisisons;
+	}
+
+	@Override
+	public void addExcludedSubmission(Submission sub) {
+		excludedSubmisisons.add(sub);
+	}
+
+	@Override
+	public void removeExcludedSubmission(Submission sub) {
+		excludedSubmisisons.remove(sub);
+	}
+	
+	@Override
+	public List<ActionLog> getIncludedActionLogs() {
+		return includedActionLogs;
+	}
+
+	@Override
+	public void addIncludedActionLog(ActionLog log) {
+		includedActionLogs.add(log);
+	}
+
+	@Override
+	public void removeIncludedActionLog(ActionLog log) {
+		includedActionLogs.remove(log);
+	}
+	
+	@Override
+	public List<ActionLog> getExcludedActionLogs() {
+		return excludedActionLogs;
+	}
+
+	@Override
+	public void addExcludedActionLog(ActionLog log) {
+		excludedActionLogs.add(log);
+	}
+
+	@Override
+	public void removeExcludedActionLog(ActionLog log) {
+		excludedActionLogs.remove(log);
 	}
 	
 	@Override

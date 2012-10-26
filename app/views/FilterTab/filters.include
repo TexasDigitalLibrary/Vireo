@@ -13,14 +13,6 @@ managing and modifying filters.
         <div class="main-heading">Now filtering By:</div>
     </div>
     <div class="box-body">
-        #{if activeFilter.getSubmissions().size() > 0 }
-        <div class="sub-heading">&{nav.toUpperCase()+'_FACET_SUBMISSION'}</div>
-        <ul class="unstyled">
-            #{list items:activeFilter.getSubmissions(), as:'sub'}
-            <li><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=sub&value=${sub.getId()}">Submission #${sub.getId()}</a></li>
-            #{/list}
-        </ul>
-        #{/if}
         %{ 
             def dateRangeDisplayed = false; 
             
@@ -199,6 +191,30 @@ managing and modifying filters.
         #{/if}
         
         #{/list}
+
+        #{if activeFilter.getIncludedSubmissions().size() > 0 || activeFilter.getIncludedActionLogs().size() > 0}
+        <div class="sub-heading">&{nav.toUpperCase()+'_FACET_INCLUDED'}</div>
+        <ul class="unstyled">
+            #{list items:activeFilter.getIncludedSubmissions(), as:'sub'}
+            <li><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=include_sub&value=${sub.getId()}">Submission #${sub.getId()}</a></li>
+            #{/list}
+            #{list items:activeFilter.getIncludedActionLogs(), as:'log'}
+            <li><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=include_log&value=${sub.getId()}">Log #${log.getId()}</a></li>
+            #{/list}
+        </ul>
+        #{/if}
+        
+        #{if activeFilter.getExcludedSubmissions().size() > 0 || activeFilter.getExcludedActionLogs().size() > 0}
+        <div class="sub-heading">&{nav.toUpperCase()+'_FACET_EXCLUDE'}</div>
+        <ul class="unstyled">
+            #{list items:activeFilter.getExcludedSubmissions(), as:'sub'}
+            <li><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=exclude_sub&value=${sub.getId()}">Submission #${sub.getId()}</a></li>
+            #{/list}
+            #{list items:activeFilter.getExcludedActionLogs(), as:'log'}
+            <li><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=exclude_log&value=${log.getId()}">Log #${log.getId()}</a></li>
+            #{/list}
+        </ul>
+        #{/if}
         
     </div>
     <div class="box-footer">

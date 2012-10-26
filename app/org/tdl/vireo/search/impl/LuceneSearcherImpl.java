@@ -331,13 +331,32 @@ public class LuceneSearcherImpl implements Searcher {
 	public void buildQuery(BooleanQuery andQuery, SearchFilter filter, boolean submissions) {
 		QueryParser parser = new QueryParser(indexer.version,"searchText",indexer.standardAnalyzer);
 		
-		// Submission filter
-		if (filter.getSubmissions().size() > 0) {
+		// Include Submission filter
+		if (filter.getIncludedSubmissions().size() > 0) {
 			BooleanQuery orQuery = new BooleanQuery();
-			for(Submission sub : filter.getSubmissions()) {
+			for(Submission sub : filter.getIncludedSubmissions()) {
 				orQuery.add(new TermQuery(new Term("subId", NumericUtils.longToPrefixCoded(sub.getId()))), Occur.SHOULD);
 			}
 			andQuery.add(orQuery,Occur.MUST);
+		}
+		
+		// Include Log filter
+		if (filter.getIncludedActionLogs().size() > 0) {
+			BooleanQuery orQuery = new BooleanQuery();
+			for(ActionLog log : filter.getIncludedActionLogs()) {
+				orQuery.add(new TermQuery(new Term("logId", NumericUtils.longToPrefixCoded(log.getId()))), Occur.SHOULD);
+			}
+			andQuery.add(orQuery,Occur.MUST);
+		}
+		
+		// Exclude Submission filter
+		for(Submission sub : filter.getExcludedSubmissions()) {
+			andQuery.add(new TermQuery(new Term("subId", NumericUtils.longToPrefixCoded(sub.getId()))), Occur.MUST_NOT);
+		}
+		
+		// Exclude Log filter
+		for(ActionLog log : filter.getExcludedActionLogs()) {
+			andQuery.add(new TermQuery(new Term("logId", NumericUtils.longToPrefixCoded(log.getId()))), Occur.MUST_NOT);
 		}
 		
 		// Search Text Filter

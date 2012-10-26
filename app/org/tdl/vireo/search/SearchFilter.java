@@ -3,6 +3,7 @@ package org.tdl.vireo.search;
 import java.util.Date;
 import java.util.List;
 
+import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Submission;
@@ -26,19 +27,70 @@ public interface SearchFilter {
 	/**
 	 * @return A list of individual submissions this filter is restricted too.
 	 */
-	public List<Submission> getSubmissions();
+	public List<Submission> getIncludedSubmissions();
 
 	/**
 	 * @param sub
 	 *            Add an individual submission this filter is limmitted too.
 	 */
-	public void addSubmission(Submission sub);
+	public void addIncludedSubmission(Submission sub);
 
 	/**
 	 * @param sub
 	 *            Remove an individual submission from this filter.
 	 */
-	public void removeSubmission(Submission sub);
+	public void removeIncludedSubmission(Submission sub);
+
+	/**
+	 * @return A list of individual logs this filter will exclude.
+	 */
+	public List<ActionLog> getExcludedActionLogs();
+
+	/**
+	 * @param log
+	 *            Add an individual logs this filter will exclude.
+	 */
+	public void addExcludedActionLog(ActionLog log);
+
+	/**
+	 * @param log
+	 *            Remove an individual logs from this filter this filter will no longer exclude.
+	 */
+	public void removeExcludedActionLog(ActionLog log);
+	
+	/**
+	 * @return A list of individual logs this filter is restricted too.
+	 */
+	public List<ActionLog> getIncludedActionLogs();
+
+	/**
+	 * @param log
+	 *            Add an individual log this filter is limmitted too.
+	 */
+	public void addIncludedActionLog(ActionLog log);
+
+	/**
+	 * @param log
+	 *            Remove an individual log from this filter.
+	 */
+	public void removeIncludedActionLog(ActionLog log);
+	
+	/**
+	 * @return A list of individual submissions this filter will exclude.
+	 */
+	public List<Submission> getExcludedSubmissions();
+
+	/**
+	 * @param sub
+	 *            Add an individual submission this filter will exclude.
+	 */
+	public void addExcludedSubmission(Submission sub);
+
+	/**
+	 * @param sub
+	 *            Remove an individual submission from this filter this filter will no longer exclude.
+	 */
+	public void removeExcludedSubmission(Submission sub);
 	
 	/**
 	 * @return The list of all free-form search parameters

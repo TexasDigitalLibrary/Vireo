@@ -99,6 +99,10 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 			// Check that there are no filters.
 			assertContentMatch("<div class=\"main-heading\">Now filtering By:<\\/div>\\s*<\\/div>\\s*<div class=\"box-body\">\\s*<\\/div>", response);
 			
+			// Add Include Submission
+			GET(FILTER_URL+"?action=add&type=include_sub&value=1");
+			// Add Exclude Submission
+			GET(FILTER_URL+"?action=add&type=exclude_sub&value=2");
 			// Add STATUS: Submitted
 			GET(FILTER_URL+"?action=add&type=state&value=Submitted");
 			// Add STATUS: In Progress
@@ -145,7 +149,9 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 			
 			// Now that we are at the apex, check that everything is still there.
 			response = GET(LIST_URL);
-			
+
+			assertTrue(getContent(response).contains("filter?action=remove&type=include_sub&value=1"));
+			assertTrue(getContent(response).contains("filter?action=remove&type=exclude_sub&value=2"));
 			assertTrue(getContent(response).contains("filter?action=remove&type=state&value=Submitted"));
 			assertFalse(getContent(response).contains("filter?action=add&type=state&value=Submitted"));
 			assertTrue(getContent(response).contains("filter?action=remove&type=state&value=InProgress"));
@@ -189,6 +195,11 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 			assertTrue(getContent(response).contains("filter?action=remove&type=umi&value=true"));
 			assertFalse(getContent(response).contains("filter?action=add&type=umi&value=true"));
 			
+
+			// Remove include submission
+			GET(FILTER_URL+"?action=remove&type=include_sub&value=1");
+			// Remove exclude submission
+			GET(FILTER_URL+"?action=remove&type=exclude_sub&value=2");
 			// Remove STATUS: Submitted
 			GET(FILTER_URL+"?action=remove&type=state&value=Submitted");
 			// Remove STATUS: In Progress
@@ -690,7 +701,7 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 
 		// Check the list display
 		response = GET(LIST_URL);
-		assertTrue(getContent(response).contains("filter?action=remove&type=sub&value=5"));
+		assertTrue(getContent(response).contains("filter?action=remove&type=include_sub&value=5"));
 
 		// Remove the submission
 		GET(FILTER_URL+"?action=remove&type=sub&value=5");

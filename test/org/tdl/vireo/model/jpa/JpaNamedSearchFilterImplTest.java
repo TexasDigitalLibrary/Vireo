@@ -6,6 +6,7 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.MockPerson;
 import org.tdl.vireo.model.NamedSearchFilter;
@@ -271,10 +272,20 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		Submission sub1 = subRepo.createSubmission(otherPerson).save();
 		Submission sub2 = subRepo.createSubmission(otherPerson).save();
 		
+		ActionLog log1 = sub1.logAction("log1").save();
+		ActionLog log2 = sub2.logAction("log2").save();
+
+		
 		NamedSearchFilter filter = subRepo.createSearchFilter(person, "filter").save();
 		filter.setPublic(false);
-		filter.addSubmission(sub1);
-		filter.addSubmission(sub2);
+		filter.addIncludedSubmission(sub1);
+		filter.addIncludedSubmission(sub2);
+		filter.addExcludedSubmission(sub1);
+		filter.addExcludedSubmission(sub2);
+		filter.addIncludedActionLog(log1);
+		filter.addIncludedActionLog(log2);
+		filter.addExcludedActionLog(log1);
+		filter.addExcludedActionLog(log2);
 		filter.addSearchText("text1");
 		filter.addSearchText("text2");
 		filter.addState("status1");
@@ -308,8 +319,14 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		NamedSearchFilter retrieved = subRepo.findSearchFilter(filter.getId());
 		
 		//assertFalse(retrieved.isPublic());
-		assertTrue(retrieved.getSubmissions().contains(sub1));
-		assertTrue(retrieved.getSubmissions().contains(sub2));
+		assertTrue(retrieved.getIncludedSubmissions().contains(sub1));
+		assertTrue(retrieved.getIncludedSubmissions().contains(sub2));
+		assertTrue(retrieved.getExcludedSubmissions().contains(sub1));
+		assertTrue(retrieved.getExcludedSubmissions().contains(sub2));
+		assertTrue(retrieved.getIncludedActionLogs().contains(log1));
+		assertTrue(retrieved.getIncludedActionLogs().contains(log2));
+		assertTrue(retrieved.getExcludedActionLogs().contains(log1));
+		assertTrue(retrieved.getExcludedActionLogs().contains(log2));
 		assertTrue(retrieved.getSearchText().contains("text1"));
 		assertTrue(retrieved.getSearchText().contains("text2"));
 		assertFalse(retrieved.getSearchText().contains("text3"));

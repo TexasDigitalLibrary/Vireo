@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Submission;
@@ -15,7 +16,10 @@ import org.tdl.vireo.model.Submission;
  */
 public class MockSearchFilter implements SearchFilter {
 
-	public List<Submission> submissions = new ArrayList<Submission>();
+	public List<Submission> includedSubmissions = new ArrayList<Submission>();
+	public List<Submission> excludedSubmissions = new ArrayList<Submission>();
+	public List<ActionLog> includedActionLogs = new ArrayList<ActionLog>();
+	public List<ActionLog> excludedActionLogs = new ArrayList<ActionLog>();
 	public List<String> searchText = new ArrayList<String>();
 	public List<String> states = new ArrayList<String>();
 	public List<Person> assignees = new ArrayList<Person>();
@@ -31,20 +35,65 @@ public class MockSearchFilter implements SearchFilter {
 	public Date rangeEnd = null;
 	
 	@Override
-	public List<Submission> getSubmissions() {
-		return submissions;
+	public List<Submission> getIncludedSubmissions() {
+		return includedSubmissions;
 	}
 
 	@Override
-	public void addSubmission(Submission sub) {
-		submissions.add(sub);
+	public void addIncludedSubmission(Submission sub) {
+		includedSubmissions.add(sub);
 	}
 
 	@Override
-	public void removeSubmission(Submission sub) {
-		submissions.remove(sub);
+	public void removeIncludedSubmission(Submission sub) {
+		includedSubmissions.remove(sub);
 	}
 	
+	@Override
+	public List<Submission> getExcludedSubmissions() {
+		return excludedSubmissions;
+	}
+
+	@Override
+	public void addExcludedSubmission(Submission sub) {
+		excludedSubmissions.add(sub);
+	}
+
+	@Override
+	public void removeExcludedSubmission(Submission sub) {
+		excludedSubmissions.remove(sub);
+	}
+	
+	@Override
+	public List<ActionLog> getIncludedActionLogs() {
+		return includedActionLogs;
+	}
+
+	@Override
+	public void addIncludedActionLog(ActionLog log) {
+		includedActionLogs.add(log);
+	}
+
+	@Override
+	public void removeIncludedActionLog(ActionLog log) {
+		includedActionLogs.remove(log);
+	}
+	
+	@Override
+	public List<ActionLog> getExcludedActionLogs() {
+		return excludedActionLogs;
+	}
+
+	@Override
+	public void addExcludedActionLog(ActionLog log) {
+		excludedActionLogs.add(log);
+	}
+
+	@Override
+	public void removeExcludedActionLog(ActionLog log) {
+		excludedActionLogs.remove(log);
+	}
+
 	@Override
 	public List<String> getSearchText() {
 		return searchText;

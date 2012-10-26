@@ -8,8 +8,8 @@ in results.
 }*
 
 #{if results != null && results.getResults() != null }
-<table class="table table-striped table-bordered table-condensed">
-    <thead id="results-table">
+<table id="results-table" class="table table-striped table-bordered table-condensed">
+    <thead>
         <tr>
         %{
         def routeArgs = new java.util.HashMap<String,String>();
@@ -39,6 +39,11 @@ in results.
         int sql = 0;
         String viewTabUrl = play.mvc.Router.reverse("ViewTab.view").url;
         
+        def navArgs = new HashMap<String,Object>();
+        navArgs.put("nav",nav);
+        String modifyFilterURL = play.mvc.Router.reverse("FilterTab.ModifyFilters",navArgs).url;
+        
+        
         for(def object : results.getResults()) {
                       
            def sub = null;
@@ -59,15 +64,25 @@ in results.
            }
            
            for(org.tdl.vireo.search.SearchOrder column : columns) {
-             out.print("<td><a href=\""+viewTabUrl+"?subId="+sub.getId()+"\">");
+           
+           	 out.print("<td>");
+             if (column == columns.get(0)) {
+	             if ("log".equals(nav)) {
+	             	out.print("<a class=\"exclude\" href=\""+modifyFilterURL+"?action=add&type=exclude_log&value="+log.getId()+"\"><i class=\"_icon-ban-circle\"></i></a>");
+	             } else {          
+	             	out.print("<a class=\"exclude\" href=\""+modifyFilterURL+"?action=add&type=exclude_sub&value="+sub.getId()+"\"><i class=\"_icon-ban-circle\"></i></a>");    
+	             }
+             }
+           
+             out.print("<a href=\""+viewTabUrl+"?subId="+sub.getId()+"\">");
 
              switch (column) {
                  case ID:
                      if ("log".equals(nav)) {
                         // For action log show the log's id, not the submission's id.
                         out.print(log.getId());
-                     } else {                 
-                        out.print(sub.getId());
+                     } else {          
+                        out.print(sub.getId());                        
                      }
                      break;
                 case STUDENT_EMAIL:

@@ -5,7 +5,9 @@ import java.util.Date;
 import java.util.List;
 
 import org.junit.Test;
+import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.EmbargoType;
+import org.tdl.vireo.model.MockActionLog;
 import org.tdl.vireo.model.MockEmbargoType;
 import org.tdl.vireo.model.MockPerson;
 import org.tdl.vireo.model.MockSubmission;
@@ -52,9 +54,18 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		MockSubmission sub1 = new MockSubmission();
 		MockSubmission sub2 = new MockSubmission();
 		
+		MockActionLog log1 = new MockActionLog();
+		MockActionLog log2 = new MockActionLog();
+		
 		ActiveSearchFilter filter = Spring.getBeanOfType(UriActiveSearchFilterImpl.class);
-		filter.addSubmission(sub1);
-		filter.addSubmission(sub2);
+		filter.addIncludedSubmission(sub1);
+		filter.addIncludedSubmission(sub2);
+		filter.addExcludedSubmission(sub1);
+		filter.addExcludedSubmission(sub2);
+		filter.addIncludedActionLog(log1);
+		filter.addIncludedActionLog(log2);
+		filter.addExcludedActionLog(log1);
+		filter.addExcludedActionLog(log2);
 		filter.addSearchText("text1");
 		filter.addSearchText("text2");
 		filter.addState("state1");
@@ -81,8 +92,14 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		filter.setDateRangeEnd(end);
 		
 		// yay, now lets read that back out.
-		assertEquals(sub1,filter.getSubmissions().get(0));
-		assertEquals(sub2,filter.getSubmissions().get(1));
+		assertEquals(sub1,filter.getIncludedSubmissions().get(0));
+		assertEquals(sub2,filter.getIncludedSubmissions().get(1));
+		assertEquals(sub1,filter.getExcludedSubmissions().get(0));
+		assertEquals(sub2,filter.getExcludedSubmissions().get(1));
+		assertEquals(log1,filter.getIncludedActionLogs().get(0));
+		assertEquals(log2,filter.getIncludedActionLogs().get(1));
+		assertEquals(log1,filter.getExcludedActionLogs().get(0));
+		assertEquals(log2,filter.getExcludedActionLogs().get(1));
 		assertEquals("text1",filter.getSearchText().get(0));
 		assertEquals("text2",filter.getSearchText().get(1));
 		assertEquals("state1",filter.getStates().get(0));
@@ -132,11 +149,20 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		Submission sub1 = subRepo.createSubmission(submitter).save();
 		Submission sub2 = subRepo.createSubmission(submitter).save();
 		
+		ActionLog log1 = sub1.logAction("log1").save();
+		ActionLog log2 = sub2.logAction("log2").save();
+		
 		try {
 
 			ActiveSearchFilter filter = Spring.getBeanOfType(UriActiveSearchFilterImpl.class);
-			filter.addSubmission(sub1);
-			filter.addSubmission(sub2);
+			filter.addIncludedSubmission(sub1);
+			filter.addIncludedSubmission(sub2);
+			filter.addExcludedSubmission(sub1);
+			filter.addExcludedSubmission(sub2);
+			filter.addIncludedActionLog(log1);
+			filter.addIncludedActionLog(log2);
+			filter.addExcludedActionLog(log1);
+			filter.addExcludedActionLog(log2);
 			filter.addSearchText("text1");
 			filter.addSearchText("text2");
 			filter.addState("state1");
@@ -163,7 +189,7 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 			filter.setDateRangeEnd(end);
 
 			String encoded = filter.encode();
-			
+						
 			// Make sure the encoded stirng is at least plausable.
 			assertNotNull(encoded);
 			assertFalse(encoded.contains(" "));
@@ -176,8 +202,14 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 			newFilter.decode(encoded);
 
 			// yay, now lets read that back out.
-			assertEquals(sub1,filter.getSubmissions().get(0));
-			assertEquals(sub2,filter.getSubmissions().get(1));
+			assertEquals(sub1,filter.getIncludedSubmissions().get(0));
+			assertEquals(sub2,filter.getIncludedSubmissions().get(1));
+			assertEquals(sub1,filter.getExcludedSubmissions().get(0));
+			assertEquals(sub2,filter.getExcludedSubmissions().get(1));
+			assertEquals(log1,filter.getIncludedActionLogs().get(0));
+			assertEquals(log2,filter.getIncludedActionLogs().get(1));
+			assertEquals(log1,filter.getExcludedActionLogs().get(0));
+			assertEquals(log2,filter.getExcludedActionLogs().get(1));
 			assertEquals("text1",newFilter.getSearchText().get(0));
 			assertEquals("text2",newFilter.getSearchText().get(1));
 			assertEquals("state1",newFilter.getStates().get(0));
@@ -229,7 +261,10 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		ActiveSearchFilter newFilter = Spring.getBeanOfType(UriActiveSearchFilterImpl.class);
 		newFilter.decode(encoded);
 		
-		assertEquals(0,newFilter.getSubmissions().size());
+		assertEquals(0,newFilter.getIncludedSubmissions().size());
+		assertEquals(0,newFilter.getExcludedSubmissions().size());
+		assertEquals(0,newFilter.getIncludedActionLogs().size());
+		assertEquals(0,newFilter.getExcludedActionLogs().size());
 		assertEquals(0,newFilter.getSearchText().size());
 		assertEquals(0,newFilter.getStates().size());
 		assertEquals(0,newFilter.getAssignees().size());
@@ -263,9 +298,18 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		MockSubmission sub1 = new MockSubmission();
 		MockSubmission sub2 = new MockSubmission();
 		
+		MockActionLog log1 = new MockActionLog();
+		MockActionLog log2 = new MockActionLog();
+		
 		ActiveSearchFilter filter = Spring.getBeanOfType(UriActiveSearchFilterImpl.class);
-		filter.addSubmission(sub1);
-		filter.addSubmission(sub2);
+		filter.addIncludedSubmission(sub1);
+		filter.addIncludedSubmission(sub2);
+		filter.addExcludedSubmission(sub1);
+		filter.addExcludedSubmission(sub2);
+		filter.addIncludedActionLog(log1);
+		filter.addIncludedActionLog(log2);
+		filter.addExcludedActionLog(log1);
+		filter.addExcludedActionLog(log2);
 		filter.addSearchText("text1");
 		filter.addSearchText("text2");
 		filter.addState("state1");
@@ -295,8 +339,14 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		filter.copyTo(newFilter);
 		
 		// yay, now lets read that back out.
-		assertEquals(sub1,newFilter.getSubmissions().get(0));
-		assertEquals(sub2,newFilter.getSubmissions().get(1));
+		assertEquals(sub1,newFilter.getIncludedSubmissions().get(0));
+		assertEquals(sub2,newFilter.getIncludedSubmissions().get(1));
+		assertEquals(sub1,newFilter.getExcludedSubmissions().get(0));
+		assertEquals(sub2,newFilter.getExcludedSubmissions().get(1));
+		assertEquals(log1,newFilter.getIncludedActionLogs().get(0));
+		assertEquals(log2,newFilter.getIncludedActionLogs().get(1));
+		assertEquals(log1,newFilter.getExcludedActionLogs().get(0));
+		assertEquals(log2,newFilter.getExcludedActionLogs().get(1));
 		assertEquals("text1",newFilter.getSearchText().get(0));
 		assertEquals("text2",newFilter.getSearchText().get(1));
 		assertEquals("state1",newFilter.getStates().get(0));
@@ -343,9 +393,18 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		MockSubmission sub1 = new MockSubmission();
 		MockSubmission sub2 = new MockSubmission();
 		
+		MockActionLog log1 = new MockActionLog();
+		MockActionLog log2 = new MockActionLog();
+		
 		ActiveSearchFilter filter = Spring.getBeanOfType(UriActiveSearchFilterImpl.class);
-		filter.addSubmission(sub1);
-		filter.addSubmission(sub2);
+		filter.addIncludedSubmission(sub1);
+		filter.addIncludedSubmission(sub2);
+		filter.addExcludedSubmission(sub1);
+		filter.addExcludedSubmission(sub2);
+		filter.addIncludedActionLog(log1);
+		filter.addIncludedActionLog(log2);
+		filter.addExcludedActionLog(log1);
+		filter.addExcludedActionLog(log2);
 		filter.addSearchText("text1");
 		filter.addSearchText("text2");
 		filter.addState("state1");
@@ -375,8 +434,14 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 		newFilter.copyFrom(filter);
 		
 		// yay, now lets read that back out.
-		assertEquals(sub1,newFilter.getSubmissions().get(0));
-		assertEquals(sub2,newFilter.getSubmissions().get(1));
+		assertEquals(sub1,newFilter.getIncludedSubmissions().get(0));
+		assertEquals(sub2,newFilter.getIncludedSubmissions().get(1));
+		assertEquals(sub1,newFilter.getExcludedSubmissions().get(0));
+		assertEquals(sub2,newFilter.getExcludedSubmissions().get(1));
+		assertEquals(log1,newFilter.getIncludedActionLogs().get(0));
+		assertEquals(log2,newFilter.getIncludedActionLogs().get(1));
+		assertEquals(log1,newFilter.getExcludedActionLogs().get(0));
+		assertEquals(log2,newFilter.getExcludedActionLogs().get(1));
 		assertEquals("text1",newFilter.getSearchText().get(0));
 		assertEquals("text2",newFilter.getSearchText().get(1));
 		assertEquals("state1",newFilter.getStates().get(0));
