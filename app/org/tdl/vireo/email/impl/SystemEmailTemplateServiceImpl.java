@@ -11,6 +11,7 @@ import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.security.SecurityContext;
 
+import play.Logger;
 import play.Play;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
@@ -179,8 +180,12 @@ public class SystemEmailTemplateServiceImpl implements
 	@OnApplicationStart
 	public static class initializeSystemEmailTemplates extends Job {
 		public void doJob() {
-			SystemEmailTemplateServiceImpl templateService = Spring.getBeanOfType(SystemEmailTemplateServiceImpl.class);
-			templateService.generateAllSystemEmailTemplates();
+			try {
+				SystemEmailTemplateServiceImpl templateService = Spring.getBeanOfType(SystemEmailTemplateServiceImpl.class);
+				templateService.generateAllSystemEmailTemplates();
+			} catch (RuntimeException re) {
+				Logger.error(re,"Unable to initialize system email templates.");
+			}
 		}
 	}
 
