@@ -473,6 +473,8 @@ function sortableUpdateHandler(type, reorderURL, removeURL) {
 
 			});
 		};
+		
+		event.stopPropagation();
 	};
 }
 

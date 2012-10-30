@@ -55,7 +55,7 @@ jQuery(document).ready(function(){
 <div class="wrap settings-sortable">
 	<ol id="emailTemplate-list" class="emailTemplate-sortable settings-sortable-list">
 	      #{list items:templates, as:'template'}
-	         <li id="emailTemplate_${template.getId()}"><a class="emailTemplate-editable" href="#"><em class="icon-pencil"></em> ${template.getName()}</a></li>    
+	         <li id="emailTemplate_${template.getId()}"><a class="emailTemplate-editable" href="javascript:void(0);"><em class="icon-pencil"></em> ${template.getName()}</a></li>    
 	      #{/list}
 	</ol>
 </div>

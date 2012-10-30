@@ -203,7 +203,7 @@ jQuery(document).ready(function(){
 	</ul>
 	<ol id="college-list" class="college-sortable settings-sortable-list">
 	    #{list items:colleges, as:'college'}
-	       <li id="college_${college.getId()}"><a class="college-editable" href="#"><em class="icon-pencil"></em> ${college.getName()}</a></li>    
+	       <li id="college_${college.getId()}"><a class="college-editable" href="javascript:void(0);"><em class="icon-pencil"></em> ${college.getName()}</a></li>    
 	    #{/list}
 	</ol>
 </div>
@@ -241,7 +241,7 @@ jQuery(document).ready(function(){
 	</ul>
 	<ol id="department-list" class="department-sortable settings-sortable-list">
 	    #{list items:departments, as:'department'}
-	       <li id="department_${department.getId()}"><a class="department-editable" href="#"><em class="icon-pencil"></em> ${department.getName()}</a></li>    
+	       <li id="department_${department.getId()}"><a class="department-editable" href="javascript:void(0);"><em class="icon-pencil"></em> ${department.getName()}</a></li>    
 	    #{/list}
 	</ol>
 </div>
@@ -277,7 +277,7 @@ jQuery(document).ready(function(){
     </ul>
     <ol id="major-list" class="major-sortable settings-sortable-list">
         #{list items:majors, as:'major'}
-           <li id="major_${major.getId()}"><a class="major-editable" href="#"><em class="icon-pencil"></em> ${major.getName()}</a></li>    
+           <li id="major_${major.getId()}"><a class="major-editable" href="javascript:void(0);"><em class="icon-pencil"></em> ${major.getName()}</a></li>    
         #{/list}
     </ol>
 </div>
@@ -313,7 +313,7 @@ jQuery(document).ready(function(){
     </ul>
     <ol id="degree-list" class="degree-sortable settings-sortable-list">
         #{list items:degrees, as:'degree'}
-           <li id="degree_${degree.getId()}"><a class="degree-editable" href="#"><em class="icon-pencil"></em> <span class="name">${degree.getName()}</span> <span class="level info">(${degree.getLevel().name()})</span></a></li>    
+           <li id="degree_${degree.getId()}"><a class="degree-editable" href="javascript:void(0);"><em class="icon-pencil"></em> <span class="name">${degree.getName()}</span> <span class="level info">(${degree.getLevel().name()})</span></a></li>    
         #{/list}
     </ol>
 </div>
@@ -360,7 +360,7 @@ jQuery(document).ready(function(){
     </ul>
     <ol id="documentType-list" class="documentType-sortable settings-sortable-list">
         #{list items:docTypes, as:'docType'}
-           <li id="documentType_${docType.getId()}"><a class="documentType-editable" href="#"><em class="icon-pencil"></em> <span class="name">${docType.getName()}</span> <span class="level info">(${docType.getLevel().name()})</span></a></li>    
+           <li id="documentType_${docType.getId()}"><a class="documentType-editable" href="javascript:void(0);"><em class="icon-pencil"></em> <span class="name">${docType.getName()}</span> <span class="level info">(${docType.getLevel().name()})</span></a></li>    
         #{/list}
     </ol>
 </div>
@@ -406,7 +406,7 @@ jQuery(document).ready(function(){
     </ul>
     <ol id="graduationMonth-list" class="graduationMonth-sortable settings-sortable-list">
         #{list items:gradMonths, as:'month'}
-           <li id="graduationMonth_${month.getId()}"><a class="graduationMonth-editable" href="#"><em class="icon-pencil"></em> ${month.getMonthName()}</a></li>    
+           <li id="graduationMonth_${month.getId()}"><a class="graduationMonth-editable" href="javascript:void(0);"><em class="icon-pencil"></em> ${month.getMonthName()}</a></li>    
         #{/list}
     </ol>
 </div>
@@ -438,7 +438,7 @@ jQuery(document).ready(function(){
     <form class="form-horizontal">
         <input type="hidden" name="embargoType-id" id="embargoType-id" value=""/>
         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">×</button>
+            <button type="button" class="close" data-dismiss="modal">X</button>
             <h3>Edit Embargo</h3>
         </div>
         <div class="modal-body">

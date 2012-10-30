@@ -6,6 +6,6 @@
 }*
 <ol id="depositLocation-list" class="depositLocation-sortable settings-sortable-list">
     #{list items:locations, as:'location'}
-       <li id="depositLocation_${location.getId()}"><a class="depositLocation-editable" href="#"><em class="icon-pencil"></em> ${location.getName()}</a></li>    
+       <li id="depositLocation_${location.getId()}"><a class="depositLocation-editable" href="javascript:void(0);"><em class="icon-pencil"></em> ${location.getName()}</a></li>    
     #{/list}
 </ol>
