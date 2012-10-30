@@ -1,1222 +1,510 @@
---
--- PostgreSQL database dump
---
-
-SET statement_timeout = 0;
-SET client_encoding = 'UTF8';
-SET standard_conforming_strings = off;
-SET check_function_bodies = false;
-SET client_min_messages = warning;
-SET escape_string_warning = off;
-
---
--- Name: plpgsql; Type: PROCEDURAL LANGUAGE; Schema: -; Owner: -
---
-
-CREATE OR REPLACE PROCEDURAL LANGUAGE plpgsql;
-
-
-SET search_path = public, pg_catalog;
-
-SET default_tablespace = '';
-
-SET default_with_oids = false;
-
---
--- Name: actionlog; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE actionlog (
-    id bigint NOT NULL,
-    actiondate timestamp without time zone,
-    entry character varying(32768) NOT NULL,
-    privateflag boolean NOT NULL,
-    submissionstate character varying(255) NOT NULL,
-    attachment_id bigint,
-    person_id bigint,
-    submission_id bigint NOT NULL
+create table actionlog (
+    id int8 not null,
+    actionDate timestamp,
+    entry varchar(32768) not null,
+    privateFlag bool not null,
+    submissionState varchar(255) not null,
+    attachment_id int8,
+    person_id int8,
+    submission_id int8 not null,
+    primary key (id)
 );
 
-
---
--- Name: attachment; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE attachment (
-    id bigint NOT NULL,
-    data character varying(255),
-    date timestamp without time zone NOT NULL,
-    name character varying(255) NOT NULL,
-    type integer NOT NULL,
-    person_id bigint,
-    submission_id bigint NOT NULL
+create table attachment (
+    id int8 not null,
+    data varchar(255),
+    date timestamp not null,
+    name varchar(255) not null,
+    type int4 not null,
+    person_id int8,
+    submission_id int8 not null,
+    primary key (id),
+    unique (submission_id, name)
 );
 
-
---
--- Name: college; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE college (
-    id bigint NOT NULL,
-    displayorder integer NOT NULL,
-    name character varying(255) NOT NULL
+create table college (
+    id int8 not null,
+    displayOrder int4 not null,
+    name varchar(255) not null unique,
+    primary key (id)
 );
 
-
---
--- Name: committee_member; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE committee_member (
-    id bigint NOT NULL,
-    chair boolean NOT NULL,
-    displayorder integer NOT NULL,
-    firstname character varying(255),
-    lastname character varying(255),
-    middlename character varying(255),
-    submission_id bigint NOT NULL
+create table committee_member (
+    id int8 not null,
+    chair bool not null,
+    displayOrder int4 not null,
+    firstName varchar(255),
+    lastName varchar(255),
+    middleName varchar(255),
+    submission_id int8 not null,
+    primary key (id)
 );
 
-
---
--- Name: configuration; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE configuration (
-    id bigint NOT NULL,
-    name character varying(255) NOT NULL,
-    value character varying(32768)
+create table configuration (
+    id int8 not null,
+    name varchar(255) not null unique,
+    value varchar(32768),
+    primary key (id)
 );
 
-
---
--- Name: custom_action_definition; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE custom_action_definition (
-    id bigint NOT NULL,
-    displayorder integer NOT NULL,
-    label character varying(255) NOT NULL
+create table custom_action_definition (
+    id int8 not null,
+    displayOrder int4 not null,
+    label varchar(255) not null unique,
+    primary key (id)
 );
 
-
---
--- Name: custom_action_value; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE custom_action_value (
-    id bigint NOT NULL,
-    value boolean NOT NULL,
-    definition_id bigint NOT NULL,
-    submission_id bigint NOT NULL
+create table custom_action_value (
+    id int8 not null,
+    value bool not null,
+    definition_id int8 not null,
+    submission_id int8 not null,
+    primary key (id),
+    unique (submission_id, definition_id)
 );
 
-
---
--- Name: degree; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE degree (
-    id bigint NOT NULL,
-    displayorder integer NOT NULL,
-    level integer NOT NULL,
-    name character varying(255) NOT NULL
+create table degree (
+    id int8 not null,
+    displayOrder int4 not null,
+    level int4 not null,
+    name varchar(255) not null,
+    primary key (id),
+    unique (name, level)
 );
 
-
---
--- Name: department; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE department (
-    id bigint NOT NULL,
-    displayorder integer NOT NULL,
-    name character varying(255) NOT NULL
+create table department (
+    id int8 not null,
+    displayOrder int4 not null,
+    name varchar(255) not null unique,
+    primary key (id)
 );
 
-
---
--- Name: deposit_location; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE deposit_location (
-    id bigint NOT NULL,
-    collection character varying(1024),
-    depositor character varying(255),
-    displayorder integer NOT NULL,
-    name character varying(255) NOT NULL,
-    onbehalfof character varying(255),
-    packager character varying(255),
-    password character varying(255),
-    repository character varying(1024),
-    username character varying(255)
+create table deposit_location (
+    id int8 not null,
+    collection varchar(1024),
+    depositor varchar(255),
+    displayOrder int4 not null,
+    name varchar(255) not null unique,
+    onBehalfOf varchar(255),
+    packager varchar(255),
+    password varchar(255),
+    repository varchar(1024),
+    username varchar(255),
+    primary key (id)
 );
 
-
---
--- Name: document_type; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE document_type (
-    id bigint NOT NULL,
-    displayorder integer NOT NULL,
-    level integer NOT NULL,
-    name character varying(255) NOT NULL
+create table document_type (
+    id int8 not null,
+    displayOrder int4 not null,
+    level int4 not null,
+    name varchar(255) not null,
+    primary key (id),
+    unique (name, level)
 );
 
-
---
--- Name: email_template; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE email_template (
-    id bigint NOT NULL,
-    displayorder integer NOT NULL,
-    message character varying(32768) NOT NULL,
-    name character varying(255) NOT NULL,
-    subject character varying(32768) NOT NULL,
-    systemrequired boolean NOT NULL
+create table email_template (
+    id int8 not null,
+    displayOrder int4 not null,
+    message varchar(32768) not null,
+    name varchar(255) not null unique,
+    subject varchar(32768) not null,
+    systemRequired bool not null,
+    primary key (id)
 );
 
-
---
--- Name: embargo_type; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE embargo_type (
-    id bigint NOT NULL,
-    active boolean NOT NULL,
-    description character varying(32768) NOT NULL,
-    displayorder integer NOT NULL,
-    duration integer,
-    name character varying(255) NOT NULL
+create table embargo_type (
+    id int8 not null,
+    active bool not null,
+    description varchar(32768) not null,
+    displayOrder int4 not null,
+    duration int4,
+    name varchar(255) not null unique,
+    primary key (id)
 );
 
-
---
--- Name: graduation_month; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE graduation_month (
-    id bigint NOT NULL,
-    displayorder integer NOT NULL,
-    month integer NOT NULL
+create table graduation_month (
+    id int8 not null,
+    displayOrder int4 not null,
+    month int4 not null unique,
+    primary key (id)
 );
 
-
---
--- Name: major; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE major (
-    id bigint NOT NULL,
-    displayorder integer NOT NULL,
-    name character varying(255) NOT NULL
+create table major (
+    id int8 not null,
+    displayOrder int4 not null,
+    name varchar(255) not null unique,
+    primary key (id)
 );
 
-
---
--- Name: person; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE person (
-    id bigint NOT NULL,
-    birthyear integer,
-    currentcollege character varying(255),
-    currentdegree character varying(255),
-    currentdepartment character varying(255),
-    currentemailaddress character varying(255),
-    currentgraduationmonth integer,
-    currentgraduationyear integer,
-    currentmajor character varying(255),
-    currentphonenumber character varying(255),
-    currentpostaladdress character varying(255),
-    displayname character varying(255),
-    email character varying(255) NOT NULL,
-    firstname character varying(255),
-    institutionalidentifier character varying(255),
-    lastname character varying(255),
-    middlename character varying(255),
-    netid character varying(255),
-    passwordhash character varying(255),
-    permanentemailaddress character varying(255),
-    permanentphonenumber character varying(255),
-    permanentpostaladdress character varying(255),
-    role integer NOT NULL
+create table person (
+    id int8 not null,
+    birthYear int4,
+    currentCollege varchar(255),
+    currentDegree varchar(255),
+    currentDepartment varchar(255),
+    currentEmailAddress varchar(255),
+    currentGraduationMonth int4,
+    currentGraduationYear int4,
+    currentMajor varchar(255),
+    currentPhoneNumber varchar(255),
+    currentPostalAddress varchar(255),
+    displayName varchar(255),
+    email varchar(255) not null unique,
+    firstName varchar(255),
+    institutionalIdentifier varchar(255),
+    lastName varchar(255),
+    middleName varchar(255),
+    netid varchar(255) unique,
+    passwordHash varchar(255),
+    permanentEmailAddress varchar(255),
+    permanentPhoneNumber varchar(255),
+    permanentPostalAddress varchar(255),
+    role int4 not null,
+    primary key (id)
 );
 
-
---
--- Name: person_affiliations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE person_affiliations (
-    jpapersonimpl_id bigint NOT NULL,
-    affiliations character varying(255)
+create table person_affiliations (
+    JpaPersonImpl_id int8 not null,
+    affiliations varchar(255)
 );
 
-
---
--- Name: preference; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE preference (
-    id bigint NOT NULL,
-    name character varying(255) NOT NULL,
-    value character varying(32768),
-    person_id bigint NOT NULL
+create table preference (
+    id int8 not null,
+    name varchar(255) not null,
+    value varchar(32768),
+    person_id int8 not null,
+    primary key (id),
+    unique (person_id, name)
 );
 
-
---
--- Name: search_filter; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE search_filter (
-    id bigint NOT NULL,
-    name character varying(255) NOT NULL,
-    publicflag boolean NOT NULL,
-    rangeend date,
-    rangestart date,
-    umirelease boolean,
-    unassigned boolean,
-    creator_id bigint NOT NULL
+create table search_filter (
+    id int8 not null,
+    name varchar(255) not null,
+    publicFlag bool not null,
+    rangeEnd date,
+    rangeStart date,
+    umiRelease bool,
+    unassigned bool,
+    creator_id int8 not null,
+    primary key (id),
+    unique (creator_id, name)
 );
 
-
---
--- Name: search_filter_colleges; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE search_filter_colleges (
-    jpanamedsearchfilterimpl_id bigint NOT NULL,
-    colleges character varying(255)
+create table search_filter_colleges (
+    JpaNamedSearchFilterImpl_id int8 not null,
+    colleges varchar(255)
 );
 
-
---
--- Name: search_filter_degrees; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE search_filter_degrees (
-    jpanamedsearchfilterimpl_id bigint NOT NULL,
-    degrees character varying(255)
+create table search_filter_degrees (
+    JpaNamedSearchFilterImpl_id int8 not null,
+    degrees varchar(255)
 );
 
-
---
--- Name: search_filter_departments; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE search_filter_departments (
-    jpanamedsearchfilterimpl_id bigint NOT NULL,
-    departments character varying(255)
+create table search_filter_departments (
+    JpaNamedSearchFilterImpl_id int8 not null,
+    departments varchar(255)
 );
 
-
---
--- Name: search_filter_documenttypes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE search_filter_documenttypes (
-    jpanamedsearchfilterimpl_id bigint NOT NULL,
-    documenttypes character varying(255)
+create table search_filter_documenttypes (
+    JpaNamedSearchFilterImpl_id int8 not null,
+    documentTypes varchar(255)
 );
 
-
---
--- Name: search_filter_embargo_type; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE search_filter_embargo_type (
-    search_filter_id bigint NOT NULL,
-    embargos_id bigint NOT NULL
+create table search_filter_embargo_type (
+    search_filter_id int8 not null,
+    embargos_id int8 not null,
+    unique (embargos_id)
 );
 
-
---
--- Name: search_filter_majors; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE search_filter_majors (
-    jpanamedsearchfilterimpl_id bigint NOT NULL,
-    majors character varying(255)
+create table search_filter_excluded_actionlogs (
+    search_filter_id int8 not null,
+    excludedActionLogs_id int8 not null,
+    unique (excludedActionLogs_id)
 );
 
-
---
--- Name: search_filter_person; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE search_filter_person (
-    search_filter_id bigint NOT NULL,
-    assignees_id bigint NOT NULL
+create table search_filter_excluded_submissions (
+    search_filter_id int8 not null,
+    excludedSubmisisons_id int8 not null,
+    unique (excludedSubmisisons_id)
 );
 
-
---
--- Name: search_filter_semesters; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE search_filter_semesters (
-    jpanamedsearchfilterimpl_id bigint NOT NULL,
-    semesters character varying(255)
+create table search_filter_included_actionlogs (
+    search_filter_id int8 not null,
+    includedActionLogs_id int8 not null,
+    unique (includedActionLogs_id)
 );
 
-
---
--- Name: search_filter_states; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE search_filter_states (
-    jpanamedsearchfilterimpl_id bigint NOT NULL,
-    states character varying(255)
+create table search_filter_included_submissions (
+    search_filter_id int8 not null,
+    includedSubmisisons_id int8 not null,
+    unique (includedSubmisisons_id)
 );
 
-
---
--- Name: search_filter_submission; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE search_filter_submission (
-    search_filter_id bigint NOT NULL,
-    submissions_id bigint NOT NULL
+create table search_filter_majors (
+    JpaNamedSearchFilterImpl_id int8 not null,
+    majors varchar(255)
 );
 
-
---
--- Name: search_filter_text; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE search_filter_text (
-    jpanamedsearchfilterimpl_id bigint NOT NULL,
-    searchtext character varying(255)
+create table search_filter_person (
+    search_filter_id int8 not null,
+    assignees_id int8 not null,
+    unique (assignees_id)
 );
 
-
---
--- Name: seq_actionlog; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE seq_actionlog
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: seq_attachment; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE seq_attachment
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: seq_college; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE seq_college
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: seq_committee_member; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE seq_committee_member
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: seq_configuration; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE seq_configuration
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: seq_custom_action_definition; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE seq_custom_action_definition
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: seq_custom_action_value; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE seq_custom_action_value
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: seq_degree; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE seq_degree
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: seq_department; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE seq_department
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: seq_deposit_location; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE seq_deposit_location
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: seq_document_type; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE seq_document_type
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: seq_email_template; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE seq_email_template
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: seq_embargo_type; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE seq_embargo_type
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: seq_graduation_month; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE seq_graduation_month
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: seq_major; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE seq_major
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: seq_person; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE seq_person
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: seq_preference; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE seq_preference
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: seq_search_filter; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE seq_search_filter
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: seq_submission; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE seq_submission
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: submission; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE submission (
-    id bigint NOT NULL,
-    umirelease boolean,
-    approvaldate timestamp without time zone,
-    college character varying(255),
-    committeeapprovaldate timestamp without time zone,
-    committeecontactemail character varying(255),
-    committeeemailhash character varying(255),
-    committeeembargoapprovaldate timestamp without time zone,
-    degree character varying(255),
-    degreelevel integer,
-    department character varying(255),
-    depositid character varying(255),
-    documentabstract character varying(326768),
-    documentkeywords character varying(326768),
-    documenttitle character varying(326768),
-    documenttype character varying(255),
-    graduationmonth integer,
-    graduationyear integer,
-    lastactionlogdate timestamp without time zone,
-    lastactionlogentry character varying(326768),
-    licenseagreementdate timestamp without time zone,
-    major character varying(255),
-    statename character varying(255),
-    studentbirthyear integer,
-    studentfirstname character varying(255),
-    studentlastname character varying(255),
-    studentmiddlename character varying(255),
-    submissiondate timestamp without time zone,
-    assignee_id bigint,
-    embargotype_id bigint,
-    submitter_id bigint NOT NULL
+create table search_filter_semesters (
+    JpaNamedSearchFilterImpl_id int8 not null,
+    semesters varchar(255)
 );
 
+create table search_filter_states (
+    JpaNamedSearchFilterImpl_id int8 not null,
+    states varchar(255)
+);
+
+create table search_filter_text (
+    JpaNamedSearchFilterImpl_id int8 not null,
+    searchText varchar(255)
+);
+
+create table submission (
+    id int8 not null,
+    UMIRelease bool,
+    approvalDate timestamp,
+    college varchar(255),
+    committeeApprovalDate timestamp,
+    committeeContactEmail varchar(255),
+    committeeEmailHash varchar(255) unique,
+    committeeEmbargoApprovalDate timestamp,
+    degree varchar(255),
+    degreeLevel int4,
+    department varchar(255),
+    depositId varchar(255),
+    documentAbstract varchar(326768),
+    documentKeywords varchar(326768),
+    documentTitle varchar(326768),
+    documentType varchar(255),
+    graduationMonth int4,
+    graduationYear int4,
+    lastActionLogDate timestamp,
+    lastActionLogEntry varchar(326768),
+    licenseAgreementDate timestamp,
+    major varchar(255),
+    stateName varchar(255),
+    studentBirthYear int4,
+    studentFirstName varchar(255),
+    studentLastName varchar(255),
+    studentMiddleName varchar(255),
+    submissionDate timestamp,
+    assignee_id int8,
+    embargoType_id int8,
+    submitter_id int8 not null,
+    primary key (id)
+);
+
+alter table actionlog 
+    add constraint FKBD1F14E936E2B7C 
+    foreign key (attachment_id) 
+    references attachment;
+
+alter table actionlog 
+    add constraint FKBD1F14EF967E3C 
+    foreign key (person_id) 
+    references person;
+
+alter table actionlog 
+    add constraint FKBD1F14E2D7E525C 
+    foreign key (submission_id) 
+    references submission;
+
+alter table attachment 
+    add constraint FK8AF75923F967E3C 
+    foreign key (person_id) 
+    references person;
+
+alter table attachment 
+    add constraint FK8AF759232D7E525C 
+    foreign key (submission_id) 
+    references submission;
+
+alter table committee_member 
+    add constraint FK1792999C2D7E525C 
+    foreign key (submission_id) 
+    references submission;
+
+alter table custom_action_value 
+    add constraint FKE49B30366B22F363 
+    foreign key (definition_id) 
+    references custom_action_definition;
+
+alter table custom_action_value 
+    add constraint FKE49B30362D7E525C 
+    foreign key (submission_id) 
+    references submission;
+
+alter table person_affiliations 
+    add constraint FKE29E7C2DF4A0EAA1 
+    foreign key (JpaPersonImpl_id) 
+    references person;
+
+alter table preference 
+    add constraint FKA8FCBCDBF967E3C 
+    foreign key (person_id) 
+    references person;
+
+alter table search_filter 
+    add constraint FK40B835EF2EF2D605 
+    foreign key (creator_id) 
+    references person;
+
+alter table search_filter_colleges 
+    add constraint FK32FE0A0C2E6A9C33 
+    foreign key (JpaNamedSearchFilterImpl_id) 
+    references search_filter;
+
+alter table search_filter_degrees 
+    add constraint FK884FE8D72E6A9C33 
+    foreign key (JpaNamedSearchFilterImpl_id) 
+    references search_filter;
+
+alter table search_filter_departments 
+    add constraint FKB38A4D112E6A9C33 
+    foreign key (JpaNamedSearchFilterImpl_id) 
+    references search_filter;
+
+alter table search_filter_documenttypes 
+    add constraint FK208979EE2E6A9C33 
+    foreign key (JpaNamedSearchFilterImpl_id) 
+    references search_filter;
+
+alter table search_filter_embargo_type 
+    add constraint FK63F94FB68E0B1A22 
+    foreign key (search_filter_id) 
+    references search_filter;
+
+alter table search_filter_embargo_type 
+    add constraint FK63F94FB69C9E0205 
+    foreign key (embargos_id) 
+    references embargo_type;
+
+alter table search_filter_excluded_actionlogs 
+    add constraint FKD187842A8E0B1A22 
+    foreign key (search_filter_id) 
+    references search_filter;
+
+alter table search_filter_excluded_actionlogs 
+    add constraint FKD187842AF3D6CD77 
+    foreign key (excludedActionLogs_id) 
+    references actionlog;
 
---
--- Name: actionlog_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
+alter table search_filter_excluded_submissions 
+    add constraint FK2DF4C02CEC613F 
+    foreign key (excludedSubmisisons_id) 
+    references submission;
 
-ALTER TABLE ONLY actionlog
-    ADD CONSTRAINT actionlog_pkey PRIMARY KEY (id);
+alter table search_filter_excluded_submissions 
+    add constraint FK2DF4C028E0B1A22 
+    foreign key (search_filter_id) 
+    references search_filter;
 
+alter table search_filter_included_actionlogs 
+    add constraint FK5A7E35F88E0B1A22 
+    foreign key (search_filter_id) 
+    references search_filter;
 
---
--- Name: attachment_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
+alter table search_filter_included_actionlogs 
+    add constraint FK5A7E35F819E843C5 
+    foreign key (includedActionLogs_id) 
+    references actionlog;
 
-ALTER TABLE ONLY attachment
-    ADD CONSTRAINT attachment_pkey PRIMARY KEY (id);
+alter table search_filter_included_submissions 
+    add constraint FK98BED3F4A909B4B1 
+    foreign key (includedSubmisisons_id) 
+    references submission;
 
+alter table search_filter_included_submissions 
+    add constraint FK98BED3F48E0B1A22 
+    foreign key (search_filter_id) 
+    references search_filter;
 
---
--- Name: attachment_submission_id_name_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
+alter table search_filter_majors 
+    add constraint FKFAC40E2A2E6A9C33 
+    foreign key (JpaNamedSearchFilterImpl_id) 
+    references search_filter;
 
-ALTER TABLE ONLY attachment
-    ADD CONSTRAINT attachment_submission_id_name_key UNIQUE (submission_id, name);
+alter table search_filter_person 
+    add constraint FK1EA7A56F7C2AAD 
+    foreign key (assignees_id) 
+    references person;
 
+alter table search_filter_person 
+    add constraint FK1EA7A58E0B1A22 
+    foreign key (search_filter_id) 
+    references search_filter;
 
---
--- Name: college_name_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
+alter table search_filter_semesters 
+    add constraint FK8BFDE7EB2E6A9C33 
+    foreign key (JpaNamedSearchFilterImpl_id) 
+    references search_filter;
 
-ALTER TABLE ONLY college
-    ADD CONSTRAINT college_name_key UNIQUE (name);
+alter table search_filter_states 
+    add constraint FK608DA522E6A9C33 
+    foreign key (JpaNamedSearchFilterImpl_id) 
+    references search_filter;
 
+alter table search_filter_text 
+    add constraint FK8068257D2E6A9C33 
+    foreign key (JpaNamedSearchFilterImpl_id) 
+    references search_filter;
 
---
--- Name: college_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
+alter table submission 
+    add constraint FK84363B4C62B46408 
+    foreign key (submitter_id) 
+    references person;
 
-ALTER TABLE ONLY college
-    ADD CONSTRAINT college_pkey PRIMARY KEY (id);
+alter table submission 
+    add constraint FK84363B4C44904182 
+    foreign key (assignee_id) 
+    references person;
 
+alter table submission 
+    add constraint FK84363B4CC6F816D8 
+    foreign key (embargoType_id) 
+    references embargo_type;
 
---
--- Name: committee_member_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
+create sequence seq_actionlog;
 
-ALTER TABLE ONLY committee_member
-    ADD CONSTRAINT committee_member_pkey PRIMARY KEY (id);
+create sequence seq_attachment;
 
+create sequence seq_college;
 
---
--- Name: configuration_name_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
+create sequence seq_committee_member;
 
-ALTER TABLE ONLY configuration
-    ADD CONSTRAINT configuration_name_key UNIQUE (name);
+create sequence seq_configuration;
 
+create sequence seq_custom_action_definition;
 
---
--- Name: configuration_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
+create sequence seq_custom_action_value;
 
-ALTER TABLE ONLY configuration
-    ADD CONSTRAINT configuration_pkey PRIMARY KEY (id);
+create sequence seq_degree;
 
+create sequence seq_department;
 
---
--- Name: custom_action_definition_label_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
+create sequence seq_deposit_location;
 
-ALTER TABLE ONLY custom_action_definition
-    ADD CONSTRAINT custom_action_definition_label_key UNIQUE (label);
+create sequence seq_document_type;
 
+create sequence seq_email_template;
 
---
--- Name: custom_action_definition_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
+create sequence seq_embargo_type;
 
-ALTER TABLE ONLY custom_action_definition
-    ADD CONSTRAINT custom_action_definition_pkey PRIMARY KEY (id);
+create sequence seq_graduation_month;
 
+create sequence seq_major;
 
---
--- Name: custom_action_value_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
+create sequence seq_person;
 
-ALTER TABLE ONLY custom_action_value
-    ADD CONSTRAINT custom_action_value_pkey PRIMARY KEY (id);
+create sequence seq_preference;
 
+create sequence seq_search_filter;
 
---
--- Name: custom_action_value_submission_id_definition_id_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY custom_action_value
-    ADD CONSTRAINT custom_action_value_submission_id_definition_id_key UNIQUE (submission_id, definition_id);
-
-
---
--- Name: degree_name_level_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY degree
-    ADD CONSTRAINT degree_name_level_key UNIQUE (name, level);
-
-
---
--- Name: degree_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY degree
-    ADD CONSTRAINT degree_pkey PRIMARY KEY (id);
-
-
---
--- Name: department_name_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY department
-    ADD CONSTRAINT department_name_key UNIQUE (name);
-
-
---
--- Name: department_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY department
-    ADD CONSTRAINT department_pkey PRIMARY KEY (id);
-
-
---
--- Name: deposit_location_name_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY deposit_location
-    ADD CONSTRAINT deposit_location_name_key UNIQUE (name);
-
-
---
--- Name: deposit_location_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY deposit_location
-    ADD CONSTRAINT deposit_location_pkey PRIMARY KEY (id);
-
-
---
--- Name: document_type_name_level_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY document_type
-    ADD CONSTRAINT document_type_name_level_key UNIQUE (name, level);
-
-
---
--- Name: document_type_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY document_type
-    ADD CONSTRAINT document_type_pkey PRIMARY KEY (id);
-
-
---
--- Name: email_template_name_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY email_template
-    ADD CONSTRAINT email_template_name_key UNIQUE (name);
-
-
---
--- Name: email_template_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY email_template
-    ADD CONSTRAINT email_template_pkey PRIMARY KEY (id);
-
-
---
--- Name: embargo_type_name_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY embargo_type
-    ADD CONSTRAINT embargo_type_name_key UNIQUE (name);
-
-
---
--- Name: embargo_type_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY embargo_type
-    ADD CONSTRAINT embargo_type_pkey PRIMARY KEY (id);
-
-
---
--- Name: graduation_month_month_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY graduation_month
-    ADD CONSTRAINT graduation_month_month_key UNIQUE (month);
-
-
---
--- Name: graduation_month_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY graduation_month
-    ADD CONSTRAINT graduation_month_pkey PRIMARY KEY (id);
-
-
---
--- Name: major_name_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY major
-    ADD CONSTRAINT major_name_key UNIQUE (name);
-
-
---
--- Name: major_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY major
-    ADD CONSTRAINT major_pkey PRIMARY KEY (id);
-
-
---
--- Name: person_email_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY person
-    ADD CONSTRAINT person_email_key UNIQUE (email);
-
-
---
--- Name: person_netid_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY person
-    ADD CONSTRAINT person_netid_key UNIQUE (netid);
-
-
---
--- Name: person_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY person
-    ADD CONSTRAINT person_pkey PRIMARY KEY (id);
-
-
---
--- Name: preference_person_id_name_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY preference
-    ADD CONSTRAINT preference_person_id_name_key UNIQUE (person_id, name);
-
-
---
--- Name: preference_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY preference
-    ADD CONSTRAINT preference_pkey PRIMARY KEY (id);
-
-
---
--- Name: search_filter_creator_id_name_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY search_filter
-    ADD CONSTRAINT search_filter_creator_id_name_key UNIQUE (creator_id, name);
-
-
---
--- Name: search_filter_embargo_type_embargos_id_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY search_filter_embargo_type
-    ADD CONSTRAINT search_filter_embargo_type_embargos_id_key UNIQUE (embargos_id);
-
-
---
--- Name: search_filter_person_assignees_id_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY search_filter_person
-    ADD CONSTRAINT search_filter_person_assignees_id_key UNIQUE (assignees_id);
-
-
---
--- Name: search_filter_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY search_filter
-    ADD CONSTRAINT search_filter_pkey PRIMARY KEY (id);
-
-
---
--- Name: search_filter_submission_submissions_id_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY search_filter_submission
-    ADD CONSTRAINT search_filter_submission_submissions_id_key UNIQUE (submissions_id);
-
-
---
--- Name: submission_committeeemailhash_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY submission
-    ADD CONSTRAINT submission_committeeemailhash_key UNIQUE (committeeemailhash);
-
-
---
--- Name: submission_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY submission
-    ADD CONSTRAINT submission_pkey PRIMARY KEY (id);
-
-
---
--- Name: fk1792999c2d7e525c; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY committee_member
-    ADD CONSTRAINT fk1792999c2d7e525c FOREIGN KEY (submission_id) REFERENCES submission(id);
-
-
---
--- Name: fk1ea7a56f7c2aad; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY search_filter_person
-    ADD CONSTRAINT fk1ea7a56f7c2aad FOREIGN KEY (assignees_id) REFERENCES person(id);
-
-
---
--- Name: fk1ea7a58e0b1a22; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY search_filter_person
-    ADD CONSTRAINT fk1ea7a58e0b1a22 FOREIGN KEY (search_filter_id) REFERENCES search_filter(id);
-
-
---
--- Name: fk208979ee2e6a9c33; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY search_filter_documenttypes
-    ADD CONSTRAINT fk208979ee2e6a9c33 FOREIGN KEY (jpanamedsearchfilterimpl_id) REFERENCES search_filter(id);
-
-
---
--- Name: fk32fe0a0c2e6a9c33; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY search_filter_colleges
-    ADD CONSTRAINT fk32fe0a0c2e6a9c33 FOREIGN KEY (jpanamedsearchfilterimpl_id) REFERENCES search_filter(id);
-
-
---
--- Name: fk40b835ef2ef2d605; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY search_filter
-    ADD CONSTRAINT fk40b835ef2ef2d605 FOREIGN KEY (creator_id) REFERENCES person(id);
-
-
---
--- Name: fk57729f9c4783dd21; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY search_filter_submission
-    ADD CONSTRAINT fk57729f9c4783dd21 FOREIGN KEY (submissions_id) REFERENCES submission(id);
-
-
---
--- Name: fk57729f9c8e0b1a22; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY search_filter_submission
-    ADD CONSTRAINT fk57729f9c8e0b1a22 FOREIGN KEY (search_filter_id) REFERENCES search_filter(id);
-
-
---
--- Name: fk608da522e6a9c33; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY search_filter_states
-    ADD CONSTRAINT fk608da522e6a9c33 FOREIGN KEY (jpanamedsearchfilterimpl_id) REFERENCES search_filter(id);
-
-
---
--- Name: fk63f94fb68e0b1a22; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY search_filter_embargo_type
-    ADD CONSTRAINT fk63f94fb68e0b1a22 FOREIGN KEY (search_filter_id) REFERENCES search_filter(id);
-
-
---
--- Name: fk63f94fb69c9e0205; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY search_filter_embargo_type
-    ADD CONSTRAINT fk63f94fb69c9e0205 FOREIGN KEY (embargos_id) REFERENCES embargo_type(id);
-
-
---
--- Name: fk8068257d2e6a9c33; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY search_filter_text
-    ADD CONSTRAINT fk8068257d2e6a9c33 FOREIGN KEY (jpanamedsearchfilterimpl_id) REFERENCES search_filter(id);
-
-
---
--- Name: fk84363b4c44904182; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY submission
-    ADD CONSTRAINT fk84363b4c44904182 FOREIGN KEY (assignee_id) REFERENCES person(id);
-
-
---
--- Name: fk84363b4c62b46408; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY submission
-    ADD CONSTRAINT fk84363b4c62b46408 FOREIGN KEY (submitter_id) REFERENCES person(id);
-
-
---
--- Name: fk84363b4cc6f816d8; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY submission
-    ADD CONSTRAINT fk84363b4cc6f816d8 FOREIGN KEY (embargotype_id) REFERENCES embargo_type(id);
-
-
---
--- Name: fk884fe8d72e6a9c33; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY search_filter_degrees
-    ADD CONSTRAINT fk884fe8d72e6a9c33 FOREIGN KEY (jpanamedsearchfilterimpl_id) REFERENCES search_filter(id);
-
-
---
--- Name: fk8af759232d7e525c; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY attachment
-    ADD CONSTRAINT fk8af759232d7e525c FOREIGN KEY (submission_id) REFERENCES submission(id);
-
-
---
--- Name: fk8af75923f967e3c; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY attachment
-    ADD CONSTRAINT fk8af75923f967e3c FOREIGN KEY (person_id) REFERENCES person(id);
-
-
---
--- Name: fk8bfde7eb2e6a9c33; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY search_filter_semesters
-    ADD CONSTRAINT fk8bfde7eb2e6a9c33 FOREIGN KEY (jpanamedsearchfilterimpl_id) REFERENCES search_filter(id);
-
-
---
--- Name: fka8fcbcdbf967e3c; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY preference
-    ADD CONSTRAINT fka8fcbcdbf967e3c FOREIGN KEY (person_id) REFERENCES person(id);
-
-
---
--- Name: fkb38a4d112e6a9c33; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY search_filter_departments
-    ADD CONSTRAINT fkb38a4d112e6a9c33 FOREIGN KEY (jpanamedsearchfilterimpl_id) REFERENCES search_filter(id);
-
-
---
--- Name: fkbd1f14e2d7e525c; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY actionlog
-    ADD CONSTRAINT fkbd1f14e2d7e525c FOREIGN KEY (submission_id) REFERENCES submission(id);
-
-
---
--- Name: fkbd1f14e936e2b7c; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY actionlog
-    ADD CONSTRAINT fkbd1f14e936e2b7c FOREIGN KEY (attachment_id) REFERENCES attachment(id);
-
-
---
--- Name: fkbd1f14ef967e3c; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY actionlog
-    ADD CONSTRAINT fkbd1f14ef967e3c FOREIGN KEY (person_id) REFERENCES person(id);
-
-
---
--- Name: fke29e7c2df4a0eaa1; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY person_affiliations
-    ADD CONSTRAINT fke29e7c2df4a0eaa1 FOREIGN KEY (jpapersonimpl_id) REFERENCES person(id);
-
-
---
--- Name: fke49b30362d7e525c; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY custom_action_value
-    ADD CONSTRAINT fke49b30362d7e525c FOREIGN KEY (submission_id) REFERENCES submission(id);
-
-
---
--- Name: fke49b30366b22f363; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY custom_action_value
-    ADD CONSTRAINT fke49b30366b22f363 FOREIGN KEY (definition_id) REFERENCES custom_action_definition(id);
-
-
---
--- Name: fkfac40e2a2e6a9c33; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY search_filter_majors
-    ADD CONSTRAINT fkfac40e2a2e6a9c33 FOREIGN KEY (jpanamedsearchfilterimpl_id) REFERENCES search_filter(id);
-
-
---
--- Name: public; Type: ACL; Schema: -; Owner: -
---
-
-REVOKE ALL ON SCHEMA public FROM PUBLIC;
-REVOKE ALL ON SCHEMA public FROM postgres;
-GRANT ALL ON SCHEMA public TO postgres;
-GRANT ALL ON SCHEMA public TO PUBLIC;
-
-
---
--- PostgreSQL database dump complete
---
-
+create sequence seq_submission;
