@@ -1,14 +1,12 @@
 package controllers;
 
-import static org.tdl.vireo.model.Configuration.CURRENT_SEMESTER;
-import static org.tdl.vireo.model.Configuration.SUBMISSIONS_OPEN;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
+import org.tdl.vireo.constant.AppConfig;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.AttachmentType;
@@ -78,8 +76,8 @@ public class Student extends AbstractVireoController {
 		List<Submission> submissions = subRepo.findSubmission(submitter);
 
 
-		boolean submissionsOpen = settingRepo.getConfigBoolean(Configuration.SUBMISSIONS_OPEN);
-		boolean allowMultiple = settingRepo.getConfigBoolean(Configuration.ALLOW_MULTIPLE_SUBMISSIONS);
+		boolean submissionsOpen = settingRepo.getConfigBoolean(AppConfig.SUBMISSIONS_OPEN);
+		boolean allowMultiple = settingRepo.getConfigBoolean(AppConfig.ALLOW_MULTIPLE_SUBMISSIONS);
 		
 		// Check to see there are no submissions, start a new one.
 		if (submissions.size() == 0 && submissionsOpen) {
@@ -121,8 +119,8 @@ public class Student extends AbstractVireoController {
 			// If we're not open, then no one can start a new submission.
 			showStartSubmissionButton = false;
 		
-		renderArgs.put("SUBMISSIONS_OPEN", settingRepo.findConfigurationByName(SUBMISSIONS_OPEN));
-		renderArgs.put("CURRENT_SEMESTER", settingRepo.getConfigValue(CURRENT_SEMESTER, "current"));
+		renderArgs.put("SUBMISSIONS_OPEN", settingRepo.findConfigurationByName(AppConfig.SUBMISSIONS_OPEN));
+		renderArgs.put("CURRENT_SEMESTER", settingRepo.getConfigValue(AppConfig.CURRENT_SEMESTER, "current"));
 		
 		renderTemplate("Student/list.html",submissions, showStartSubmissionButton);
 	}
@@ -151,7 +149,7 @@ public class Student extends AbstractVireoController {
 				submitter.getEmail(),
 				sub.getId());
 		
-		boolean allowMultiple = settingRepo.getConfigBoolean(Configuration.ALLOW_MULTIPLE_SUBMISSIONS);
+		boolean allowMultiple = settingRepo.getConfigBoolean(AppConfig.ALLOW_MULTIPLE_SUBMISSIONS);
 		
 		// Handle add message button. Just add the message to the submission
 		if (params.get("submit_addMessage") != null) {   
@@ -201,7 +199,7 @@ public class Student extends AbstractVireoController {
 			}
 		}
 
-		String grantor = settingRepo.getConfigValue(Configuration.GRANTOR,"Unknown Institution");
+		String grantor = settingRepo.getConfigValue(AppConfig.GRANTOR,"Unknown Institution");
 		List<Submission> allSubmissions = subRepo.findSubmission(submitter);
 		List<ActionLog> logs = subRepo.findActionLog(sub);
 		Attachment primaryDocument = sub.getPrimaryDocument();
@@ -221,7 +219,7 @@ public class Student extends AbstractVireoController {
 		
 		
 		// Get the post corrections instructions for display
-		String instructions = settingRepo.getConfigValue(Configuration.CORRECTION_INSTRUCTIONS);
+		String instructions = settingRepo.getConfigValue(AppConfig.CORRECTION_INSTRUCTIONS);
 		instructions = text2html(instructions);
 		
 		renderTemplate("Student/complete.html",instructions);

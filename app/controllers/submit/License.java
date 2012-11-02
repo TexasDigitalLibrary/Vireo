@@ -1,5 +1,7 @@
 package controllers.submit;
 
+import static org.tdl.vireo.constant.AppConfig.*;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -40,7 +42,7 @@ public class License extends AbstractSubmitStep {
 
 		// Get the form data.
 		String licenseAgreement = params.get("licenseAgreement");
-		String licenseText = settingRepo.getConfigValue(Configuration.SUBMIT_LICENSE);
+		String licenseText = settingRepo.getConfigValue(SUBMIT_LICENSE_TEXT);
 
 		if (params.get("submit_next") == null) {
 			licenseAgreement = sub.getLicenseAgreementDate() != null ? "true" : null; 

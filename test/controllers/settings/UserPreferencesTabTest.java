@@ -1,12 +1,6 @@
 package controllers.settings;
 
-import static org.tdl.vireo.model.Preference.ATTACHMENT_CC_ADVISOR;
-import static org.tdl.vireo.model.Preference.ATTACHMENT_EMAIL_STUDENT;
-import static org.tdl.vireo.model.Preference.ATTACHMENT_FLAG_NEEDS_CORRECTIONS;
-import static org.tdl.vireo.model.Preference.NOTES_CC_ADVISOR;
-import static org.tdl.vireo.model.Preference.NOTES_EMAIL_STUDENT;
-import static org.tdl.vireo.model.Preference.NOTES_FLAG_NEEDS_CORRECTIONS;
-import static org.tdl.vireo.model.Preference.NOTES_MARK_PRIVATE;
+import static org.tdl.vireo.constant.AppPref.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,5 +1,7 @@
 package controllers.submit;
 
+import static org.tdl.vireo.constant.AppConfig.*;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -48,7 +50,7 @@ public class DocumentInfo extends AbstractSubmitStep {
 	public static void documentInfo(Long subId) {
 
 		// Get our configuration;
-		boolean requestUMI = settingRepo.getConfigBoolean(Configuration.SUBMIT_REQUEST_UMI);
+		boolean requestUMI = settingRepo.getConfigBoolean(SUBMIT_REQUEST_UMI);
 
 		// Validate the submission
 		Submission sub = getSubmission();

@@ -35,6 +35,9 @@ import play.jobs.Job;
 import play.jobs.OnApplicationStart;
 import play.modules.spring.Spring;
 
+import static org.tdl.vireo.constant.AppConfig.*;
+
+
 /**
  * When running in a test environment pre-load some configuration and test data
  * just to make things easier.
@@ -81,10 +84,10 @@ public class TestDataLoader extends Job {
 	 */
 	private static final ConfigurationArray[] CONFIG_DEFINITIONS = {
 		
-		new ConfigurationArray(Configuration.SUBMISSIONS_OPEN, "true"),
-		new ConfigurationArray(Configuration.ALLOW_MULTIPLE_SUBMISSIONS, "true"),
-		new ConfigurationArray(Configuration.CURRENT_SEMESTER, "May 2012"),
-		new ConfigurationArray(Configuration.GRANTOR, "Texas A&M University")
+		new ConfigurationArray(SUBMISSIONS_OPEN, "true"),
+		new ConfigurationArray(ALLOW_MULTIPLE_SUBMISSIONS, "true"),
+		new ConfigurationArray(CURRENT_SEMESTER, "May 2012"),
+		new ConfigurationArray(GRANTOR, "Texas A&M University")
 
 	};
 	
@@ -727,7 +730,7 @@ public class TestDataLoader extends Job {
 				
 				if (random.nextInt(100) > 20) {
 					Date agreementDate = generateRandomDate(random,2,2010);
-					String stampedLicense = stampLicense(settingRepo.getConfigValue(Configuration.SUBMIT_LICENSE), agreementDate);
+					String stampedLicense = stampLicense(settingRepo.getConfigValue(SUBMIT_LICENSE_TEXT), agreementDate);
 					sub.addAttachment(stampedLicense.getBytes(), "LICENSE.txt", AttachmentType.LICENSE);
 					sub.setLicenseAgreementDate(agreementDate);
 				}

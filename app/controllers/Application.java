@@ -1,5 +1,6 @@
 package controllers;
 
+import org.tdl.vireo.constant.AppConfig;
 import org.tdl.vireo.model.Configuration;
 
 import play.mvc.With;
@@ -27,7 +28,7 @@ public class Application extends AbstractVireoController {
 
 		// Get the text for the front page.
 		String instructions = settingRepo
-				.getConfigValue(Configuration.FRONT_PAGE_INSTRUCTIONS);
+				.getConfigValue(AppConfig.FRONT_PAGE_INSTRUCTIONS);
 		instructions = text2html(instructions);
 
 		// Split the text into two blocks, one block before the

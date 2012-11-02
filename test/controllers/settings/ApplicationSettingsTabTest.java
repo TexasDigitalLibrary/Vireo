@@ -1,5 +1,5 @@
 package controllers.settings;
-import static org.tdl.vireo.model.Configuration.*;
+import static org.tdl.vireo.constant.AppConfig.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -187,11 +187,11 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 		final String URL = Router.reverse("settings.ApplicationSettingsTab.updateApplicationSettingsJSON").url;
 
 		
-		Configuration originalValue = settingRepo.findConfigurationByName(SUBMIT_LICENSE);
+		Configuration originalValue = settingRepo.findConfigurationByName(SUBMIT_LICENSE_TEXT);
 		
 		// change the current semester
 		Map<String,String> params = new HashMap<String,String>();
-		params.put("field", SUBMIT_LICENSE);
+		params.put("field", SUBMIT_LICENSE_TEXT);
 		params.put("value","changed \"by test\"");
 		Response response = POST(URL,params);
 		assertContentMatch("\"success\": \"true\"", response);
@@ -201,14 +201,14 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();
 		JPA.em().getTransaction().begin();
-		assertNotNull(settingRepo.findConfigurationByName(SUBMIT_LICENSE));
-		assertEquals("changed \"by test\"",settingRepo.findConfigurationByName(SUBMIT_LICENSE).getValue());
+		assertNotNull(settingRepo.findConfigurationByName(SUBMIT_LICENSE_TEXT));
+		assertEquals("changed \"by test\"",settingRepo.findConfigurationByName(SUBMIT_LICENSE_TEXT).getValue());
 		
 		JPA.em().clear();
 		if (originalValue == null) {
-			settingRepo.findConfigurationByName(SUBMIT_LICENSE).delete();
+			settingRepo.findConfigurationByName(SUBMIT_LICENSE_TEXT).delete();
 		} else {
-			Configuration value = settingRepo.findConfigurationByName(SUBMIT_LICENSE);
+			Configuration value = settingRepo.findConfigurationByName(SUBMIT_LICENSE_TEXT);
 			value.setValue(originalValue.getValue());
 			value.save();
 			

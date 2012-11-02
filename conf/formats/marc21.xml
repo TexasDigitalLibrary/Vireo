@@ -37,8 +37,8 @@
 	 * ====================================================
 	 */
 		def grantor = "";
-		if(settingRepo.getConfigValue(org.tdl.vireo.model.Configuration.GRANTOR) != null){
-			grantor = settingRepo.getConfigValue(org.tdl.vireo.model.Configuration.GRANTOR);
+		if(settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.GRANTOR) != null){
+			grantor = settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.GRANTOR);
 		} else {
 			grantor = "Texas A&M University";
 		}

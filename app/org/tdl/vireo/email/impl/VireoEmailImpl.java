@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.mail.internet.InternetAddress;
 
+import org.tdl.vireo.constant.AppPref;
 import org.tdl.vireo.email.VireoEmail;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.NameFormat;
@@ -75,7 +76,7 @@ public class VireoEmailImpl implements VireoEmail {
 		
 		// Check to see if the current person want's to be CC'ed
 		Person person = context.getPerson();
-		if (person != null && person.getPreference(Preference.CC_EMAILS) != null) {
+		if (person != null && person.getPreference(AppPref.CC_EMAILS) != null) {
 			String email = person.getEmail();
 			if (person.getCurrentEmailAddress() != null)
 				email = person.getCurrentEmailAddress();

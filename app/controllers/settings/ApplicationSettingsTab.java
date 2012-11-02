@@ -1,12 +1,13 @@
 package controllers.settings;
 
-import static org.tdl.vireo.model.Configuration.*;
+import static org.tdl.vireo.constant.AppConfig.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
 
+import org.tdl.vireo.constant.AppConfig;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.NameFormat;
@@ -45,7 +46,7 @@ public class ApplicationSettingsTab extends SettingsTab {
 		
 		renderArgs.put("CURRENT_SEMESTER", settingRepo.getConfigValue(CURRENT_SEMESTER, ""));
 		renderArgs.put("GRANTOR", settingRepo.getConfigValue(GRANTOR, ""));
-		renderArgs.put("SUBMIT_LICENSE", settingRepo.getConfigValue(SUBMIT_LICENSE));
+		renderArgs.put("SUBMIT_LICENSE", settingRepo.getConfigValue(SUBMIT_LICENSE_TEXT));
 
 		List<CustomActionDefinition> actions = settingRepo.findAllCustomActionDefinition();
 				
@@ -86,7 +87,7 @@ public class ApplicationSettingsTab extends SettingsTab {
 			List<String> textFields = new ArrayList<String>();
 			textFields.add(CURRENT_SEMESTER);
 			textFields.add(GRANTOR);
-			textFields.add(SUBMIT_LICENSE);
+			textFields.add(SUBMIT_LICENSE_TEXT);
 
 			
 			
@@ -122,7 +123,7 @@ public class ApplicationSettingsTab extends SettingsTab {
 				}
 				config.save();
 				
-				if(SUBMIT_LICENSE.equals(field)){
+				if(SUBMIT_LICENSE_TEXT.equals(field)){
 					Logger.info("%s (%d: %s) has updated license aggreement from '%s' to '%s'.",
 							context.getPerson().getFormattedName(NameFormat.FIRST_LAST), 
 							context.getPerson().getId(), 

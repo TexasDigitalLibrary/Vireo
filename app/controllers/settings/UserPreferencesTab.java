@@ -1,6 +1,6 @@
 package controllers.settings;
 
-import static org.tdl.vireo.model.Preference.*;
+import static org.tdl.vireo.constant.AppPref.*;
 
 import java.util.ArrayList;
 import java.util.List;

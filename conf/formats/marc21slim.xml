@@ -151,7 +151,7 @@
     </datafield>
     #{/if}
     
-    #{if settingRepo.getConfigValue(org.tdl.vireo.model.Configuration.GRANTOR) != null } 
+    #{if settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.GRANTOR) != null } 
     <!-- 260, ETD publisher, use the granting institution as the publisher and the graduation year -->
     <!--
         Source: Configured institutional grantor, along with the graduation year.
@@ -162,7 +162,7 @@
             </marc:datafield>
     -->
     <datafield tag="260" ind1=" " ind2=" ">
-        <subfield code="b">[${ settingRepo.getConfigValue(org.tdl.vireo.model.Configuration.GRANTOR).escapeXml() }</subfield>
+        <subfield code="b">[${ settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.GRANTOR).escapeXml() }</subfield>
         #{if sub.getGraduationYear() != null } 
         <subfield code="c">${ sub.getGraduationYear() }.]</subfield>
         #{/if} 
@@ -193,8 +193,8 @@
         #{if sub.getDegree() != null } 
         <subfield code="b">${ sub.getDegree().escapeXml() }</subfield>
         #{/if}
-        #{if settingRepo.getConfigValue(org.tdl.vireo.model.Configuration.GRANTOR) != null } 
-        <subfield code="c">${ settingRepo.getConfigValue(org.tdl.vireo.model.Configuration.GRANTOR).escapeXml() }</subfield>
+        #{if settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.GRANTOR) != null } 
+        <subfield code="c">${ settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.GRANTOR).escapeXml() }</subfield>
         #{/if}
         #{if sub.getGraduationYear() != null } 
         <subfield code="d">${ sub.getGraduationYear() }</subfield>
@@ -312,9 +312,9 @@
             </marc:datafield>
         
     -->
-    #{if settingRepo.getConfigValue(org.tdl.vireo.model.Configuration.GRANTOR) != null } 
+    #{if settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.GRANTOR) != null } 
     <datafield tag="710" ind1="2" ind2=" ">
-        <subfield code="a">${ settingRepo.getConfigValue(org.tdl.vireo.model.Configuration.GRANTOR).escapeXml() }</subfield>
+        <subfield code="a">${ settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.GRANTOR).escapeXml() }</subfield>
         #{if sub.getDepartment() != null } 
         <subfield code="b">${ sub.getDepartment().escapeXml() }</subfield>
         #{/if} 

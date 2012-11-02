@@ -1,6 +1,6 @@
 package controllers.settings;
 
-import static org.tdl.vireo.model.Configuration.*;
+import static org.tdl.vireo.constant.AppConfig.*;
 
 import java.util.ArrayList;
 import java.util.List;

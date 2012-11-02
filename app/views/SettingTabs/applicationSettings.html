@@ -57,8 +57,8 @@ jQuery(document).ready(function(){
 			<label>Submissions are currently:</label>
 			<span>
 			    <div class="btn-group" data-toggle="buttons-radio">
-					<button name="${org.tdl.vireo.model.Configuration.SUBMISSIONS_OPEN}" class="btn application-toggle #{if SUBMISSIONS_OPEN}active#{/if}" value="true">Open</button>
-					<button name="${org.tdl.vireo.model.Configuration.SUBMISSIONS_OPEN}" class="btn application-toggle #{if !SUBMISSIONS_OPEN}active#{/if}">Closed</button>
+					<button name="${org.tdl.vireo.constant.AppConfig.SUBMISSIONS_OPEN}" class="btn application-toggle #{if SUBMISSIONS_OPEN}active#{/if}" value="true">Open</button>
+					<button name="${org.tdl.vireo.constant.AppConfig.SUBMISSIONS_OPEN}" class="btn application-toggle #{if !SUBMISSIONS_OPEN}active#{/if}">Closed</button>
 				</div>
 			</span>
 		</li>
@@ -66,22 +66,22 @@ jQuery(document).ready(function(){
 			<label>Allow multiple submissions:</label>
 			<span>
                 <div class="btn-group" data-toggle="buttons-radio">
-                    <button name="${org.tdl.vireo.model.Configuration.ALLOW_MULTIPLE_SUBMISSIONS}" class="btn application-toggle #{if ALLOW_MULTIPLE_SUBMISSIONS}active#{/if}" value="true">Yes</button>
-                    <button name="${org.tdl.vireo.model.Configuration.ALLOW_MULTIPLE_SUBMISSIONS}" class="btn application-toggle #{if !ALLOW_MULTIPLE_SUBMISSIONS}active#{/if}">No</button>
+                    <button name="${org.tdl.vireo.constant.AppConfig.ALLOW_MULTIPLE_SUBMISSIONS}" class="btn application-toggle #{if ALLOW_MULTIPLE_SUBMISSIONS}active#{/if}" value="true">Yes</button>
+                    <button name="${org.tdl.vireo.constant.AppConfig.ALLOW_MULTIPLE_SUBMISSIONS}" class="btn application-toggle #{if !ALLOW_MULTIPLE_SUBMISSIONS}active#{/if}">No</button>
                 </div>
             </span>
 		</li>
 		<li id="currentSemester">
 			<label>Current submission semester:</label>
 			<span>
-			     <input name="${org.tdl.vireo.model.Configuration.CURRENT_SEMESTER}" class="application-text" type="text" value="${CURRENT_SEMESTER}" />
+			     <input name="${org.tdl.vireo.constant.AppConfig.CURRENT_SEMESTER}" class="application-text" type="text" value="${CURRENT_SEMESTER}" />
 			     <div class="info">'Month Year' (i.e. May ${ new Date().getYear() + 1900})</div>
 			</span>
 		</li>
 		<li id="currentSemester">
 			<label>Degree Granting School</label>
 			<span>
-			     <input name="${org.tdl.vireo.model.Configuration.GRANTOR}" class="application-text" type="text" value="${GRANTOR}" />
+			     <input name="${org.tdl.vireo.constant.AppConfig.GRANTOR}" class="application-text" type="text" value="${GRANTOR}" />
 			     <div class="info">The full name of the institution awarding degrees.</div>
 			</span>
 		</li>
@@ -97,8 +97,8 @@ jQuery(document).ready(function(){
             <label>Request student's birth year:</label>
             <span>
                  <div class="btn-group" data-toggle="buttons-radio">
-                    <button name="${org.tdl.vireo.model.Configuration.SUBMIT_REQUEST_BIRTH}" class="btn application-toggle #{if SUBMIT_REQUEST_BIRTH}active#{/if}" value="true">Yes</button>
-                    <button name="${org.tdl.vireo.model.Configuration.SUBMIT_REQUEST_BIRTH}" class="btn application-toggle #{if !SUBMIT_REQUEST_BIRTH}active#{/if}">No</button>
+                    <button name="${org.tdl.vireo.constant.AppConfig.SUBMIT_REQUEST_BIRTH}" class="btn application-toggle #{if SUBMIT_REQUEST_BIRTH}active#{/if}" value="true">Yes</button>
+                    <button name="${org.tdl.vireo.constant.AppConfig.SUBMIT_REQUEST_BIRTH}" class="btn application-toggle #{if !SUBMIT_REQUEST_BIRTH}active#{/if}">No</button>
                 </div>
             </span>
         </li>
@@ -106,8 +106,8 @@ jQuery(document).ready(function(){
 			<label>Request "College" parameter:</label>
 			<span>
 			     <div class="btn-group" data-toggle="buttons-radio">
-                    <button name="${org.tdl.vireo.model.Configuration.SUBMIT_REQUEST_COLLEGE}" class="btn application-toggle #{if SUBMIT_REQUEST_COLLEGE}active#{/if}" value="true">Yes</button>
-                    <button name="${org.tdl.vireo.model.Configuration.SUBMIT_REQUEST_COLLEGE}" class="btn application-toggle #{if !SUBMIT_REQUEST_COLLEGE}active#{/if}">No</button>
+                    <button name="${org.tdl.vireo.constant.AppConfig.SUBMIT_REQUEST_COLLEGE}" class="btn application-toggle #{if SUBMIT_REQUEST_COLLEGE}active#{/if}" value="true">Yes</button>
+                    <button name="${org.tdl.vireo.constant.AppConfig.SUBMIT_REQUEST_COLLEGE}" class="btn application-toggle #{if !SUBMIT_REQUEST_COLLEGE}active#{/if}">No</button>
                 </div>
 			</span>
 		</li>
@@ -115,8 +115,8 @@ jQuery(document).ready(function(){
 			<label>Offer UMI release option:</label>
 			<span>
 			     <div class="btn-group" data-toggle="buttons-radio">
-                    <button name="${org.tdl.vireo.model.Configuration.SUBMIT_REQUEST_UMI}" class="btn application-toggle #{if SUBMIT_REQUEST_UMI}active#{/if}" value="true">Yes</button>
-                    <button name="${org.tdl.vireo.model.Configuration.SUBMIT_REQUEST_UMI}" class="btn application-toggle #{if !SUBMIT_REQUEST_UMI}active#{/if}">No</button>
+                    <button name="${org.tdl.vireo.constant.AppConfig.SUBMIT_REQUEST_UMI}" class="btn application-toggle #{if SUBMIT_REQUEST_UMI}active#{/if}" value="true">Yes</button>
+                    <button name="${org.tdl.vireo.constant.AppConfig.SUBMIT_REQUEST_UMI}" class="btn application-toggle #{if !SUBMIT_REQUEST_UMI}active#{/if}">No</button>
                 </div>
 			</span>     
 		</li>
@@ -127,8 +127,8 @@ jQuery(document).ready(function(){
 
 <div class="wrap application-protected">
     <div class="span9">
-    <p class="lock-control"><a href="#${org.tdl.vireo.model.Configuration.SUBMIT_LICENSE}"><em class="icon-lock"></em> This field is locked to prevent accidental editing, click to unlock.</a></p>
-	<textarea class="input-xxlarge application-textarea" id="${org.tdl.vireo.model.Configuration.SUBMIT_LICENSE}" name="${org.tdl.vireo.model.Configuration.SUBMIT_LICENSE}" readonly="true">#{verbatim}${SUBMIT_LICENSE}#{/verbatim}</textarea>
+    <p class="lock-control"><a href="#${org.tdl.vireo.constant.AppConfig.SUBMIT_LICENSE_TEXT}"><em class="icon-lock"></em> This field is locked to prevent accidental editing, click to unlock.</a></p>
+	<textarea class="input-xxlarge application-textarea" id="${org.tdl.vireo.constant.AppConfig.SUBMIT_LICENSE_TEXT}" name="${org.tdl.vireo.constant.AppConfig.SUBMIT_LICENSE_TEXT}" readonly="true">#{verbatim}${SUBMIT_LICENSE_TEXT}#{/verbatim}</textarea>
 		
 	<p class="info">Students are required to accept this license as part of their submission. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically.</p>
 	</div>

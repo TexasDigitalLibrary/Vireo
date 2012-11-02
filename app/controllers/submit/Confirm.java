@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import static org.tdl.vireo.constant.AppConfig.*;
+
 import org.apache.commons.codec.binary.Base64;
 import org.tdl.vireo.email.EmailService;
 import org.tdl.vireo.email.SystemEmailTemplateService;
@@ -55,9 +57,9 @@ public class Confirm extends AbstractSubmitStep {
 	public static void confirm(Long subId) {		
 
 		// Submission configuration
-		boolean requestCollege = settingRepo.getConfigBoolean(Configuration.SUBMIT_REQUEST_COLLEGE);
-		boolean requestBirth = settingRepo.getConfigBoolean(Configuration.SUBMIT_REQUEST_BIRTH);
-		boolean requestUMI = settingRepo.getConfigBoolean(Configuration.SUBMIT_REQUEST_UMI);
+		boolean requestCollege = settingRepo.getConfigBoolean(SUBMIT_REQUEST_COLLEGE);
+		boolean requestBirth = settingRepo.getConfigBoolean(SUBMIT_REQUEST_BIRTH);
+		boolean requestUMI = settingRepo.getConfigBoolean(SUBMIT_REQUEST_UMI);
 
 		// Locate the submission 
 		Submission sub = getSubmission();
@@ -155,7 +157,7 @@ public class Confirm extends AbstractSubmitStep {
 
 		List<ActionLog> logs = subRepo.findActionLog(sub);
 		List<Attachment> supplementaryDocuments = sub.getSupplementalDocuments();
-		String grantor = settingRepo.getConfigValue(Configuration.GRANTOR,"Unknown Institution");
+		String grantor = settingRepo.getConfigValue(GRANTOR,"Unknown Institution");
 
 
 		renderTemplate("Submit/confirm.html",subId, sub, grantor, submitter, logs, 
@@ -173,7 +175,7 @@ public class Confirm extends AbstractSubmitStep {
 	 */
 	public static void complete(Long subId) {
 		// Get the post submission instructions for display
-		String instructions = settingRepo.getConfigValue(Configuration.SUBMIT_INSTRUCTIONS);
+		String instructions = settingRepo.getConfigValue(SUBMIT_INSTRUCTIONS);
 		instructions = text2html(instructions);
 
 		renderTemplate("Submit/complete.html", instructions);

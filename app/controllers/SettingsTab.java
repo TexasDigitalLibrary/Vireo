@@ -7,6 +7,7 @@ import java.util.List;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
+import org.tdl.vireo.constant.AppPref;
 import org.tdl.vireo.model.AbstractOrderedModel;
 import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.CustomActionDefinition;
@@ -83,7 +84,7 @@ public class SettingsTab extends AbstractVireoController {
 				person.setCurrentEmailAddress(value);
 			} else if ("ccEmail".equals(field)) {
 				
-				Preference ccEmail = person.getPreference(Preference.CC_EMAILS);
+				Preference ccEmail = person.getPreference(AppPref.CC_EMAILS);
 				if (value == null && ccEmail != null) {
 					// remove the setting
 					ccEmail.delete();

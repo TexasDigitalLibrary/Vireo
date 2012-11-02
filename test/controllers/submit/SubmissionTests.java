@@ -40,6 +40,9 @@ import play.mvc.Http.Response;
 import play.mvc.Router;
 import controllers.AbstractVireoFunctionalTest;
 
+import static org.tdl.vireo.constant.AppConfig.*;
+
+
 /**
  * These are a set of tests which test all the submission processes. This test
  * file is structured to hopefully make it easier to create additional tests in
@@ -83,11 +86,11 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 	@Before
 	public void setup() {
 		// Get the configuration setting prior to doing anything so that we can restore them after.
-		originalRequestBirth = settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_BIRTH);
-		originalRequestCollege = settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_COLLEGE);
-		originalRequestUMI = settingRepo.getConfigValue(Configuration.SUBMIT_REQUEST_UMI);
-		originalAllowMultiple = settingRepo.getConfigValue(Configuration.ALLOW_MULTIPLE_SUBMISSIONS);
-		originalSubmissionsOpen = settingRepo.getConfigValue(Configuration.SUBMISSIONS_OPEN);
+		originalRequestBirth = settingRepo.getConfigValue(SUBMIT_REQUEST_BIRTH);
+		originalRequestCollege = settingRepo.getConfigValue(SUBMIT_REQUEST_COLLEGE);
+		originalRequestUMI = settingRepo.getConfigValue(SUBMIT_REQUEST_UMI);
+		originalAllowMultiple = settingRepo.getConfigValue(ALLOW_MULTIPLE_SUBMISSIONS);
+		originalSubmissionsOpen = settingRepo.getConfigValue(SUBMISSIONS_OPEN);
 
 		// Turn off authentication for the test thread
 		context.turnOffAuthorization();
@@ -732,7 +735,7 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 	 *            On or off
 	 */
 	public void setRequestBirthYear(boolean value) {
-		setConfiguration(Configuration.SUBMIT_REQUEST_BIRTH, value);
+		setConfiguration(SUBMIT_REQUEST_BIRTH, value);
 	}
 
 	/**
@@ -742,7 +745,7 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 	 *            On or off
 	 */
 	public void setRequestCollege(boolean value) {
-		setConfiguration(Configuration.SUBMIT_REQUEST_COLLEGE, value);
+		setConfiguration(SUBMIT_REQUEST_COLLEGE, value);
 	}
 
 	/**
@@ -752,7 +755,7 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 	 *            On or off
 	 */
 	public void setRequestUMI(boolean value) {
-		setConfiguration(Configuration.SUBMIT_REQUEST_UMI, value);
+		setConfiguration(SUBMIT_REQUEST_UMI, value);
 	}
 
 	/**
@@ -762,7 +765,7 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 	 *            Allowed or Disallowed
 	 */
 	public void setAllowMultipleSubmissions(boolean value) {
-		setConfiguration(Configuration.ALLOW_MULTIPLE_SUBMISSIONS, value);
+		setConfiguration(ALLOW_MULTIPLE_SUBMISSIONS, value);
 	}
 	
 	/**
@@ -771,7 +774,7 @@ public class SubmissionTests extends AbstractVireoFunctionalTest {
 	 * @param value open or closed.
 	 */
 	public void setSubmissionsOpen(boolean value) {
-		setConfiguration(Configuration.SUBMISSIONS_OPEN, value);
+		setConfiguration(SUBMISSIONS_OPEN, value);
 	}
 
 	/**

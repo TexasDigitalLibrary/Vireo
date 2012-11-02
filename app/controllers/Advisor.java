@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.Date;
 import java.util.List;
 
+import org.tdl.vireo.constant.AppConfig;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.AttachmentType;
@@ -94,7 +95,7 @@ public class Advisor extends AbstractVireoController {
 			context.restoreAuthorization();
 		}
 
-		String grantor = settingRepo.getConfigValue(Configuration.GRANTOR,"Unknown Institution");
+		String grantor = settingRepo.getConfigValue(AppConfig.GRANTOR,"Unknown Institution");
 		List<EmbargoType> allEmbargos = settingRepo.findAllEmbargoTypes();
 		Person submitter = sub.getSubmitter();
 		List<ActionLog> logs = subRepo.findActionLog(sub);

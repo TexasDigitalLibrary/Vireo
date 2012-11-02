@@ -34,6 +34,9 @@ import play.modules.spring.Spring;
 import play.mvc.Http.Response;
 import play.mvc.Router;
 
+import static org.tdl.vireo.constant.AppConfig.*;
+
+
 /**
  * Test all the functions of the Student Controller.
  * 
@@ -68,8 +71,8 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 		context.turnOffAuthorization();
 		
 		// Get the configuration setting prior to doing anything so that we can restore them after.
-		originalSubmissionsOpen = settingRepo.getConfigValue(Configuration.SUBMISSIONS_OPEN);
-		originalAllowMultiple = settingRepo.getConfigValue(Configuration.ALLOW_MULTIPLE_SUBMISSIONS);
+		originalSubmissionsOpen = settingRepo.getConfigValue(SUBMISSIONS_OPEN);
+		originalAllowMultiple = settingRepo.getConfigValue(ALLOW_MULTIPLE_SUBMISSIONS);
 		
 		submitter = personRepo.createPerson("netid", "student@tdl.org", "first", "last", RoleType.STUDENT).save();
 		submitter.setPassword("password");
@@ -89,20 +92,20 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 	public void cleanup() {
 
 		// Restore our configuration.
-		Configuration submissionsOpen = settingRepo.findConfigurationByName(Configuration.SUBMISSIONS_OPEN);
+		Configuration submissionsOpen = settingRepo.findConfigurationByName(SUBMISSIONS_OPEN);
 		if (originalSubmissionsOpen == null && submissionsOpen != null) {
 			submissionsOpen.delete();
 		}
 		if (originalSubmissionsOpen != null && submissionsOpen == null) {
-			settingRepo.createConfiguration(Configuration.SUBMISSIONS_OPEN,"true").save();
+			settingRepo.createConfiguration(SUBMISSIONS_OPEN,"true").save();
 		}
 		
-		Configuration allowMultiple = settingRepo.findConfigurationByName(Configuration.ALLOW_MULTIPLE_SUBMISSIONS);
+		Configuration allowMultiple = settingRepo.findConfigurationByName(ALLOW_MULTIPLE_SUBMISSIONS);
 		if (originalAllowMultiple == null && allowMultiple != null) {
 			allowMultiple.delete();
 		}
 		if (originalAllowMultiple != null && allowMultiple == null) {
-			settingRepo.createConfiguration(Configuration.ALLOW_MULTIPLE_SUBMISSIONS,"true").save();
+			settingRepo.createConfiguration(ALLOW_MULTIPLE_SUBMISSIONS,"true").save();
 		}
 		
 		// Delete any left over submission.
@@ -595,20 +598,20 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 	 */
 	private void configure(boolean submissionsOpen, boolean allowMultiple) {
 		
-		Configuration submissionsOpenConfig = settingRepo.findConfigurationByName(Configuration.SUBMISSIONS_OPEN);
+		Configuration submissionsOpenConfig = settingRepo.findConfigurationByName(SUBMISSIONS_OPEN);
 		if (!submissionsOpen && submissionsOpenConfig != null) {
 			submissionsOpenConfig.delete();
 		}
 		if (submissionsOpen && submissionsOpenConfig == null) {
-			settingRepo.createConfiguration(Configuration.SUBMISSIONS_OPEN,"true").save();
+			settingRepo.createConfiguration(SUBMISSIONS_OPEN,"true").save();
 		}
 		
-		Configuration allowMultipleConfig = settingRepo.findConfigurationByName(Configuration.ALLOW_MULTIPLE_SUBMISSIONS);
+		Configuration allowMultipleConfig = settingRepo.findConfigurationByName(ALLOW_MULTIPLE_SUBMISSIONS);
 		if (!allowMultiple && allowMultipleConfig != null) {
 			allowMultipleConfig.delete();
 		}
 		if (allowMultiple && allowMultipleConfig == null) {
-			settingRepo.createConfiguration(Configuration.ALLOW_MULTIPLE_SUBMISSIONS,"true").save();
+			settingRepo.createConfiguration(ALLOW_MULTIPLE_SUBMISSIONS,"true").save();
 		}
 		
 		JPA.em().getTransaction().commit();

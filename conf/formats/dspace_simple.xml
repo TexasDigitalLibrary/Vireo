@@ -233,9 +233,9 @@ ${ attachment.getName() }	bundle:LICENSE
     #{/if}
     
     <!-- thesis.degree.grantor = Global configuration setting (settings tab - application settings) -->
-    #{ if settingRepo.getConfigValue(org.tdl.vireo.model.Configuration.GRANTOR) != null } 
+    #{ if settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.GRANTOR) != null } 
     <dcvalue element="degree" qualifier="grantor">
-        ${ settingRepo.getConfigValue(org.tdl.vireo.model.Configuration.GRANTOR) }
+        ${ settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.GRANTOR) }
     </dcvalue>
     #{/if}
     

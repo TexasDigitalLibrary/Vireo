@@ -1,7 +1,7 @@
 package controllers.settings;
-import static org.tdl.vireo.model.Configuration.EMAIL_CC_ADVISOR;
-import static org.tdl.vireo.model.Configuration.EMAIL_CC_STUDENT;
-import static org.tdl.vireo.model.Configuration.EMAIL_SHOW_ADDRESSES;
+
+import static org.tdl.vireo.constant.AppConfig.*;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;

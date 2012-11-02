@@ -1,7 +1,6 @@
 package controllers.submit;
 
-import static org.tdl.vireo.model.Configuration.CURRENT_SEMESTER;
-import static org.tdl.vireo.model.Configuration.SUBMISSIONS_OPEN;
+import static org.tdl.vireo.constant.AppConfig.*;
 
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Submission;

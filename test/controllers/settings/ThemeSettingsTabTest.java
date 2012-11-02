@@ -1,7 +1,7 @@
 package controllers.settings;
-import static org.tdl.vireo.model.Configuration.CORRECTION_INSTRUCTIONS;
-import static org.tdl.vireo.model.Configuration.FRONT_PAGE_INSTRUCTIONS;
-import static org.tdl.vireo.model.Configuration.SUBMIT_INSTRUCTIONS;
+
+import static org.tdl.vireo.constant.AppConfig.*;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;

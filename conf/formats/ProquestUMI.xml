@@ -74,7 +74,7 @@
 	// #### Institutional Name
 	// The name of the institution, we use the grantor field established under
 	// the application settings tab.
-	String institution_name = settingRepo.getConfigValue(org.tdl.vireo.model.Configuration.GRANTOR);
+	String institution_name = settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.GRANTOR);
 	
 	// #### Institutional Processing Code
 	// ProQuest says "This is the ETD code assigned to the school instruction
@@ -173,7 +173,7 @@
 				<DISS_fname>${sub.getStudentFirstName()}</DISS_fname>
 				<DISS_middle>${sub.getStudentMiddleName()}</DISS_middle>
                 <DISS_affiliation>
-                    ${ settingRepo.getConfigValue(org.tdl.vireo.model.Configuration.GRANTOR) } 
+                    ${ settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.GRANTOR) } 
                 </DISS_affiliation>
 			</DISS_name>
 			
