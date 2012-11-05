@@ -1,0 +1,52 @@
+*{
+Display Submission Field Include
+
+This include is used on the submission settings tab for each field where the
+user may customize it's options.
+
+}*
+
+<li class="#{if "disabled".equals(settingRepo.getConfigValue(field.ENABLED))}disabled#{/if} #{if "optional".equals(settingRepo.getConfigValue(field.ENABLED))}optional#{/if} #{if "required".equals(settingRepo.getConfigValue(field.ENABLED))}required#{/if}">
+    <a class="field-item toggle-field" href="javascript:void(0);">
+       <em class="icon-plus"></em> ${field.getName()} <span class="required-field">*</span>
+    </a>
+    <form class="form-horizontal" style="display: none;">
+       <fieldset>
+           <div class="control-group warning">
+               <label class="control-label"><strong>Usage:</strong></label>
+               <div class="controls">
+                   <p class="help-block span4">${field.getNote()}</p>
+               </div>
+           </div>
+       </fieldset>
+       
+       <div class="control-group">
+           <label class="control-label" for="${field.ENABLED}"><strong>Enabled</strong>:</label>
+           <div class="controls">
+               <div class="btn-group" data-toggle="buttons-radio">
+                   <button name="${field.ENABLED}" class="btn #{if "disabled".equals(settingRepo.getConfigValue(field.ENABLED))}active#{/if}" value="disabled">Disabled</button>
+                   <button name="${field.ENABLED}" class="btn #{if "optional".equals(settingRepo.getConfigValue(field.ENABLED))}active#{/if}" value="optional">Optional</button>
+                   <button name="${field.ENABLED}" class="btn #{if "required".equals(settingRepo.getConfigValue(field.ENABLED))}active#{/if}" value="required">Required</button>
+               </div>
+           </div>
+       </div>
+       <div class="control-group">
+           <label class="control-label" for="${field.LABEL}"><strong>Display Label</strong>:</label>
+           <div class="controls">
+               <input name="${field.LABEL}" id="${field.LABEL}" class="span4" type="text" value="${settingRepo.getConfigValue(field.LABEL)}" placeholder="${org.tdl.vireo.model.Configuration.DEFAULTS.get(field.LABEL)}">
+           </div>
+       </div>
+       <div class="control-group">
+           <label class="control-label" for="${field.HELP}"><strong>Help Text</strong>:</label>
+           <div class="controls">
+               <textarea name="${field.HELP}" id="${field.HELP}" class="span4" placeholder="${org.tdl.vireo.model.Configuration.DEFAULTS.get(field.HELP)}">${settingRepo.getConfigValue(field.HELP)}</textarea>
+           </div>
+       </div>
+       <div class="control-group">
+           <label class="control-label"></label>
+           <div class="controls close-form">
+               <p class="span4"><a class="toggle-field" href="javascript:void(0);">close</a></p>
+           </div>
+       </div>
+    </form>
+</li>

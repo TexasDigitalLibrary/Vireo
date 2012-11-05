@@ -1782,7 +1782,162 @@ function depositDeleteHandler(deleteURL, updateURL) {
 	}
 }
 
+/**********************************************************
+ * Submissions Settings Tab
+ **********************************************************/
 
+
+/**
+ * Handler for the submission settings to save their state via ajax. This
+ * method supports all the various settings related to submission fields.
+ * 
+ * @param jsonURL The JSON url to submit updates too.
+ * @returns A Callback function
+ */
+function submissionSettingsHandler(jsonURL) {
+
+	return function (event) {
+		var $this = jQuery(this);
+		var field = $this.attr('name');
+		var value = $this.val();
+
+		$this.addClass("waiting");
+
+		var successCallback = function(data) {
+			// Remove the ajax loading indicators & alerts
+			$this.removeClass("waiting");
+			$this.removeClass("settings-error");
+			clearAlert("submission-setting-"+field);
+			
+			// Update the label if required
+			if (data.field.indexOf("_enabled") > -1) {
+				var $element = jQuery("[name="+data.field+"]").closest("li");
+				$element.removeClass("disabled");
+				$element.removeClass("optional");
+				$element.removeClass("required");
+				$element.addClass(data.value);
+			}
+			
+		}
+
+		var failureCallback = function (message) {
+			$this.removeClass("waiting");
+			$this.addClass("settings-error");
+			displayAlert("submission-setting-"+field,"Unable to update setting",message);
+		}
+
+		jQuery.ajax({
+			url:jsonURL,
+			data:{
+				'field': field,
+				'value': value
+			},
+			dataType:'json',
+			type:'POST',
+			success:function(data){
+				if (data.success) {
+					successCallback(data);
+				} else {
+					failureCallback(data.message)
+				}
+			},
+			error:function(){
+				failureCallback("Unable to communicate with the server.");
+			}
+
+		});
+		
+	    event.preventDefault(); // cancel default behavior
+	};
+}
+
+/**
+ * Handle saving updates to submission sticky notes.
+ * 
+ * @param jsonURL The URL where updates should be sent.
+ */
+function stickySettingsHandler(jsonURL) {
+
+	return function (event) {
+		var $this = jQuery(this);
+		var field = $this.attr('name');
+		var index = $this.attr('data-index');
+		var value = $this.val();
+
+		$this.addClass("waiting");
+
+		var successCallback = function(data) {
+			// Remove the ajax loading indicators & alerts
+			$this.removeClass("waiting");
+			$this.removeClass("settings-error");
+			clearAlert("submission-setting-"+field);
+			
+			if (!data.value) {
+				$this.closest('li').slideUp(500, function() {
+					// Remove the element and re-index.
+					
+					var $sticky = $this.closest(".sticky");
+					$this.closest('li').remove();
+					$sticky.find('li textarea').each(function (index) {
+						jQuery(this).attr("data-index",index);
+					});
+				});
+			}
+			
+		}
+
+		var failureCallback = function (message) {
+			$this.removeClass("waiting");
+			$this.addClass("settings-error");
+			displayAlert("submission-setting-"+field,"Unable to update setting",message);
+		}
+
+		jQuery.ajax({
+			url:jsonURL,
+			data:{
+				'field': field,
+				'index': index,
+				'value': value
+			},
+			dataType:'json',
+			type:'POST',
+			success:function(data){
+				if (data.success) {
+					successCallback(data);
+				} else {
+					failureCallback(data.message)
+				}
+			},
+			error:function(){
+				failureCallback("Unable to communicate with the server.");
+			}
+
+		});
+		
+	    event.preventDefault(); // cancel default behavior
+	};
+}
+
+function addStickySettingsHandler() {
+	return function(event) {
+		
+		var $this = jQuery(this).closest('.sticky').find('ul');
+		
+		var name = $this.attr('data-name');
+		var $newSticky = jQuery("<li class='hidden'><div class='sticky-top'></div><div class='sticky-bottom'><a class='remove-sticky-note' href='javascript: void(0);'><em class='icon-remove-sign'></em></a><textarea name='"+name+"'>New Sticky Note.</textarea></div></li>");
+		$this.append($newSticky);
+		$newSticky.slideToggle(500, function() {
+			$newSticky.find('textarea').trigger('change');
+		});
+		
+		
+		// re-index
+		$this.find('textarea').each(function (index) {
+			jQuery(this).attr("data-index",index);
+		});
+		
+	};
+}
 
 
 

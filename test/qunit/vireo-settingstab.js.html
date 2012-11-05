@@ -1396,6 +1396,152 @@ test("test depositDeleteHandler AJAX", function() {
     
 });
 
+/**
+ * Test the updating field settings on the submisison settings page.
+ */
+test("test submissionSettingsHandler AJAX", function() {
+    expect(5);
+    reset();
+    
+    // Create the buttons markup we will use for testing
+    jQuery("body").append(
+		"<li>"+
+		"   <a class='toggle-field' href='javascript:void(0);'><em class='icon-plus'></em> Specific Field</a>"+
+		"   <form class='form-horizontal' style='display: none;'>"+
+		"      <div class='control-group'>"+
+		"          <label class='control-label' for='specific_field_label'><strong>Display Label</strong>:</label>"+
+		"          <div class='controls'>"+
+		"              <input name='specific_field_label' id='specific_field_label' class='span4' type='text' value='My Label' placeholder='Default Label'>"+
+		"          </div>"+
+		"      </div>"+
+		"   </form>"+
+		"</li>"
+	    );
+        
+    // Register the handler
+    var handler = submissionSettingsHandler("/ajax/test/url");
+    jQuery("#specific_field_label").change(handler);
+    
+    // Mock AJAX
+    var options = null;
+    jQuery.ajax = function(param) {
+        options = param;
+    };
+        
+    // Simulate a click & ajax return
+    jQuery("#specific_field_label").val("New Label");
+    jQuery("#specific_field_label").trigger("change");
+        
+    options.success({ success: "true", field: "specific_field_label", value: "New Label" })
+           
+    equals('/ajax/test/url',options.url);
+    equals('POST',options.type);
+    equals('json',options.dataType);
+    equals('specific_field_label',options.data.field);
+    equals('New Label',options.data.value); 
+});
+
+/**
+ * Test the updating field settings on the submisison settings page.
+ */
+test("test stickySettingsHandler AJAX", function() {
+    expect(7);
+    reset();
+    stop();
+    
+    // Create the buttons markup we will use for testing
+    jQuery("body").append(
+		"<div class='sticky span4'>"+
+		"	<h3>Sticky Notes</h3>"+
+		"	<ul data-name='submit_personal_info_stickyies'>"+
+		"		<li>"+
+		"		  <textarea data-index='0' name='submit_personal_info_stickyies'>Note One</textarea>"+
+		"		</li>"+
+		"		<li>"+
+		"		  <textarea id='field-two' data-index='1' name='submit_personal_info_stickyies'>Note Two</textarea>"+
+		"		</li><li>"+
+		"		  <textarea id='field-three' data-index='2' name='submit_personal_info_stickyies'>Note Three</textarea>"+
+		"		</li>"+
+		"	</ul>"+
+		"</div>"
+		);
+    		
+        
+    // Register the handler
+    var handler = stickySettingsHandler("/ajax/test/url");
+    jQuery("#field-two").change(handler);
+    
+    // Mock AJAX
+    var options = null;
+    jQuery.ajax = function(param) {
+        options = param;
+    };
+        
+    // Simulate a click & ajax return
+    jQuery("#field-two").val("");
+    jQuery("#field-two").trigger("change");
+        
+    options.success({ success: "true", field: "submit_personal_info_stickyies", index: 1, value: "" })
+           
+    equals('/ajax/test/url',options.url);
+    equals('POST',options.type);
+    equals('json',options.dataType);
+    equals('submit_personal_info_stickyies',options.data.field);
+    equals('',options.data.value); 
+
+    
+    setTimeout(function () {
+    	// Check that the note was removed.
+        equals(0,jQuery("#field-two").length);
+        equals(1,jQuery("#field-three").attr("data-index"))
+        
+        start();
+    },1000);
+    
+});
+
+/**
+ * Test the updating field settings on the submisison settings page.
+ */
+test("test stickySettingsHandler AJAX", function() {
+    expect(2);
+    reset();
+    stop();
+    
+    // Create the buttons markup we will use for testing
+    jQuery("body").append(
+        "<div class='sticky span4'>"+
+        "   <h3>Sticky Notes</h3>"+
+        "   <ul data-name='submit_personal_info_stickyies'>"+
+        "       <li>"+
+        "         <textarea id='field-one' data-index='0' name='submit_personal_info_stickyies'>Note One</textarea>"+
+        "       </li>"+
+        "       <li>"+
+        "         <textarea id='field-two' data-index='1' name='submit_personal_info_stickyies'>Note Two</textarea>"+
+        "       </li><li>"+
+        "         <textarea id='field-three' data-index='2' name='submit_personal_info_stickyies'>Note Three</textarea>"+
+        "       </li>"+
+        "   </ul>"+
+        "   <p><a id='add-link'>add link</a>"+
+        "</div>"
+        );
+            
+        
+    // Register the handler
+    var handler = addStickySettingsHandler();
+    jQuery("#add-link").click(handler);
+    jQuery("#add-link").trigger("click");
+
+    setTimeout(function () {
+        // Check that the note was added
+        equals(4,jQuery(".sticky li").length);
+        equals(3,jQuery(".sticky li:last textarea").attr("data-index"));
+        
+        start();
+    },1000);
+    
+});
+
 </script>
 </html> 
 

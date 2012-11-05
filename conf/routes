@@ -78,6 +78,7 @@ GET		/admin/view/viewFile/{id}/{name}		ViewTab.viewFile
 GET     /admin/settings/?                       SettingsTab.settingsRedirect
 GET     /admin/settings/user/?                  settings.UserPreferencesTab.userPreferences
 GET     /admin/settings/applications/?			settings.ApplicationSettingsTab.applicationSettings
+GET     /admin/settings/submission/?            settings.SubmissionSettingsTab.submissionSettings
 GET     /admin/settings/theme/?                 settings.ThemeSettingsTab.themeSettings
 GET     /admin/settings/email/?					settings.EmailSettingsTab.emailSettings
 GET     /admin/settings/configurable/?			settings.ConfigurableSettingsTab.configurableSettings
@@ -88,6 +89,7 @@ GET     /admin/settings/deposit/?               settings.DepositSettingsTab.depo
 POST	/admin/settings/updateProfile			SettingsTab.updateProfileJSON
 POST    /admin/settings/user/update             settings.UserPreferencesTab.updateUserPreferencesJSON
 POST    /admin/settings/applications/update     settings.ApplicationSettingsTab.updateApplicationSettingsJSON
+POST    /admin/settings/submission/update       settings.SubmissionSettingsTab.updateSubmissionSettingsJSON
 POST    /admin/settings/themes/update           settings.ThemeSettingsTab.updateThemeSettingsJSON
 POST    /admin/settings/email/update            settings.EmailSettingsTab.updateEmailSettingsJSON
 
@@ -100,6 +102,10 @@ POST    /admin/settings/actions/reorder         settings.ApplicationSettingsTab.
 ### Settings Tab - Members
 POST    /admin/settings/members/search          settings.ApplicationSettingsTab.searchMembers
 POST    /admin/settings/members/update          settings.ApplicationSettingsTab.updatePersonRole
+
+### Settings Tab - Submission Stickies
+POST    /admin/settings/submission/sticky       settings.SubmissionSettingsTab.updateStickySettingsJSON
+GET     /admin/settings/submission/reset        settings.SubmissionSettingsTab.resetSettings
 
 ### Settings tab - Email Templates
 POST    /admin/settings/templates/add           settings.EmailSettingsTab.addEmailTemplateJSON

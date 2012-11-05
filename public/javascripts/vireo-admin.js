@@ -111,10 +111,19 @@ function moreHandler() {
  */
 function confirmHandler() {	
 	return function() {
-		 if (jQuery(this).text().indexOf("Are you sure?") >= 0) {
+		
+		 if (jQuery(this).attr("data-confirmed")) {
 			 return true;
 		 } else {
-			 jQuery(this).text("(Are you sure?)");
+			 jQuery(this).empty();
+			 
+			 if (jQuery(this).attr('data-confirm')) 
+				 jQuery(this).append(jQuery(this).attr('data-confirm'));
+		     else 
+		    	 jQuery(this).text("(Are you sure?)");
+
+			 // Set the flag for this link being confirmed.
+			 jQuery(this).attr("data-confirmed","true");
 			 return false;
 		 }
 	 };

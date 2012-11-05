@@ -493,7 +493,12 @@ EDIT HOLDERS & BOXES
 	min-width:50px;
 }
 
-.icon-pencil{
+.icon-pencil,
+.icon-minus,
+.icon-plus,
+.icon-refresh,
+.icon-plus-sign,
+.icon-remove-sign {
 	opacity:.5;
 }
 
@@ -704,5 +709,71 @@ input.settings-error:focus,
     opacity: 0.5;
 }
 
-
+.submission-settings .sticky-bottom textarea {
+    max-width: 161px;
+    width: 161px;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+.submission-settings ul {
+    list-style-type: none;
+}
+.submission-settings p.help-block {
+    margin: 0;
+    padding-top: 5px;
+}
+.submission-settings .accordion-heading {
+    #gradient > .vertical(@white, #eee);    
+}
+.submission-settings .accordion-heading:hover {
+    #gradient > .vertical(@white, #ddd);    
+}
+.submission-settings .accordion-heading:hover a {
+    text-decoration: none;
+}
+.submission-settings .heading-note {
+    font-size: 13px;
+    line-height: 18px;
+    color: #70706F;
+}
+.submission-settings .close-form p {
+    text-align: right;
+}
+.submission-settings .close-form p a {
+    padding-right: 20px;
+}
+.submission-settings .control-label {
+    width: 110px;
+}
+.submission-settings .controls {
+    margin-left: 125px;
+}
+.submission-settings .fields {
+    margin-left: 0px;
+}
+.submission-settings .disabled-field,
+.submission-settings .required-field {
+    display: none;
+}
+.submission-settings .required .required-field {
+    display: inline;
+}
+.submission-settings .disabled {
+    text-decoration: line-through;
+}
+.submission-settings .sticky ul {
+    margin: 0;
+}
+.submission-settings .sticky-bottom {
+    position: relative;
+}
+.submission-settings .remove-sticky-note {
+    position: absolute;
+    right: 3px;
+    top: -15px;
+}
+.submission-settings .remove-sticky-note:hover .icon-remove-sign {
+    opacity: .75;
+}
 

@@ -70,4 +70,11 @@ public class AppConfig {
 	/** Instructions to show after submitting corrections */
 	public final static String CORRECTION_INSTRUCTIONS = "correction_instructions";
 	
+	
+	
+	// Submission Sticky notes
+	public final static String SUBMIT_PERSONAL_INFO_STICKIES = "submit_personal_info_stickyies";
+	public final static String SUBMIT_DOCUMENT_INFO_STICKIES = "submit_document_info_stickyies";
+	public final static String SUBMIT_UPLOAD_FILES_STICKIES = "submit_upload_files_stickyies";
+	
 }

@@ -1,0 +1,285 @@
+package org.tdl.vireo.constant;
+
+
+
+/**
+ * Common Field Configuration Names
+ * 
+ * Stored in the SettingsRepository there are global configuration objects
+ * consisting of name / value pairs. Various attributes about each field
+ * are stored there such as the student display label, help text, and
+ * whether the field is enabled or not. Each field is defined as an enum,
+ * with those three properties underneath. So to find the values for the
+ * FIRST_NAME field you would say:
+ * 
+ * FIRST_NAME.LABEL
+ * FIRST_NAME.HELP
+ * FIRST_NAME.ENABLED
+ * 
+ * Future developers, feel free to add additional configuration parameters to
+ * this class as needed.
+ * 
+ * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
+ */
+public enum FieldConfig {
+	
+	
+	/** Verify Personal Information **/
+	STUDENT_FIRST_NAME(
+			"First Name",
+			"submit_student_first_name_label", 
+			"submit_student_first_name_help",
+			"submit_student_first_name_enabled",
+			"The author's first name. This field may be configured to be locked if supplied by the authentication plugin."),
+
+	STUDENT_MIDDLE_NAME(
+			"Middle Name",
+			"submit_student_middle_name_label", 
+			"submit_student_middle_name_help",
+			"submit_student_middle_name_enabled",
+			"The author's middle name or initial. This field may be configured to be locked if supplied by the authentication plugin."),
+
+	STUDENT_LAST_NAME(
+			"Last Name",
+			"submit_student_last_name_label", 
+			"submit_student_last_name_help",
+			"submit_student_last_name_enabled",
+			"The author's last name. This field may be configured to be locked if supplied by the authentication plugin."),
+			
+	STUDENT_BIRTH_YEAR(
+			"Birth Year",
+			"submit_student_birth_year_label",
+			"submit_student_birth_year_help",
+			"submit_student_birth_year_enabled",
+			"The year the author was born. This field may be configured to be locked if supplied by the authentication plugin."),
+
+	/** Verify Personal Information :: Affiliations **/		
+	GRANTOR(
+			"Grantor",
+			"submit_grantor_label",
+			"submit_grantor_help",
+			"submit_grantor_enabled",
+			"The degree granting institution. This is a non-editable field and is only displayed on the submission process for clarification. The value of this field is shared between all submission and is set under the Application Settings tab."),
+	
+	COLLEGE(
+			"College",
+			"submit_college_label",
+			"submit_college_help",
+			"submit_college_enabled",
+			"The college or other unit of institution the author belongs too. This field is selected from a pre-defined list of colleges, or if there are none then is free-form. This field may be configured to be locked if supplied by the authentication plugin."),
+	
+	DEPARTMENT(
+			"Department",
+			"submit_department_label",
+			"submit_department_help",
+			"submit_department_enabled",
+			"The department or other unit of institution the author belongs too. This field is selected from a pre-defined list of departments, or if there are none then is free-form. This field may be configured to be locked if supplied by the authentication plugin."),
+
+	DEGREE(
+			"Degree",
+			"submit_degree_label",
+			"submit_degree_help",
+			"submit_degree_enabled",
+			"The degree being awarded to the author. This field is selected from a list of pre-defined degrees, from the selected degree the level of the degree is determined which will limit the choices of document types later in the submission process. This field may be configured to be locked if supplied by the authentication plugin."),
+	
+	MAJOR(
+			"Major",
+			"submit_major_label",
+			"submit_major_help",
+			"submit_major_enabled",
+			"The major of the degree sought by the author. This field is selected from a pre-defined list of majors, or if there are none then is free-form. This field may be configured to be locked if supplied by the authentication plugin."),
+	
+	/** Verify Personal Information :: Phone & Address **/
+	PERMANENT_PHONE_NUMBER(
+			"Permanent Phone",
+			"submit_permanent_phone_number_label",
+			"submit_permanent_phone_number_help",
+			"submit_permanent_phone_number_enabled",
+			"The contact phone number where the author is reachable after leaving the institution. This field may be configured to be locked if supplied by the authentication plugin."),
+	
+	PERMANENT_POSTAL_ADDRESS(
+			"Permanent Address",
+			"submit_permanent_postal_address_label",
+			"submit_permanent_postal_address_help",
+			"submit_permanent_postal_address_enabled",
+			"The mailing address where the author is reachable after leaving the institution. This field may be configured to be locked if supplied by the authentication plugin."),
+	
+	PERMANENT_EMAIL_ADDRESS(
+			"Permanent Email",
+			"submit_permanent_email_address_label",
+			"submit_permanent_email_address_help",
+			"submit_permanent_email_address_enabled",
+			"The email address where the author is reachable after leaving the institution. This field may be configured to be locked if supplied by the authentication plugin."),
+
+	CURRENT_PHONE_NUMBER(
+			"Current Phone",
+			"submit_current_phone_number_label",
+			"submit_current_phone_number_help",
+			"submit_current_phone_number_enabled",
+			"The contact phone number where the author is reachable. This field may be configured to be locked if supplied by the authentication plugin."),
+
+	
+	CURRENT_POSTAL_ADDRESS(
+			"Current Address",
+			"submit_current_postal_address_label",
+			"submit_current_postal_address_help",
+			"submit_current_postal_address_enabled",
+			"The mailing address where the author is reachable. This field may be configured to be locked if supplied by the authentication plugin."),
+
+	/** License Agreement **/
+			
+	LICENSE_AGREEMENT(
+			"License Agreement",
+			"submit_license_agreement_label",
+			"submit_license_agreement_help",
+			"submit_license_agreement_enabled",
+			"The standard license agreement that the author must agree to before continuing the submission. The text of the license is editable under the Application Settings Tab"),
+	
+			
+	/** Document Information **/
+			
+	DOCUMENT_TITLE(
+			"Document Title",
+			"submit_document_title_label",
+			"submit_document_title_help",
+			"submit_document_title_enabled",
+			"The title of the document being submitted"),
+	
+	GRADUATION_DATE(
+			"Graduation Date",
+			"submit_graduation_date_label",
+			"submit_graduation_date_help",
+			"submit_graduation_date_enabled",
+			"The date the submitter intends to graduate (month and year). The select months are available to choose from, and the year must be within 7 years plus or minus of the current year."),
+	
+	DOCUMENT_TYPE(
+			"Document Type",
+			"submit_document_type_label",
+			"submit_document_type_help",
+			"submit_document_type_enabled",
+			"The type of document being submitted. The options available are determined by the current degree level which is set by selecting a degree type on the first page."),
+	
+	DOCUMENT_ABSTRACT(
+			"Abstract",
+			"submit_document_abstract_label",
+			"submit_document_abstract_help",
+			"submit_document_abstract_enabled",
+			"The abstract of the document being submitted."),
+	
+	DOCUMENT_KEYWORDS(
+			"Keywards",
+			"submit_document_keywords_label",
+			"submit_document_keywords_help",
+			"submit_document_keywords_enabled",
+			"Any keywords associated with the submission separated by semi-colons."),
+	
+	/** Document Information :: Your Committee **/
+			
+	COMMITTEE(
+			"Committee Members",
+			"submit_committee_label",
+			"submit_committee_help",
+			"submit_committee_enabled",
+			"The committee members who approved of this submission."),
+	
+	COMMITTEE_CONTACT_EMAIL(
+			"Committee Contaict Email",
+			"submit_committee_contact_email_label",
+			"submit_committee_contact_email_help",
+			"submit_committee_contact_email_enabled",
+			"The contact email address for the chair of the submitter's committee. This email address will be sent an email requisting approval of the submission."),
+	
+	/** Publication Options **/
+			
+	EMBARGO_TYPE(
+			"Embargo Type",
+			"submit_embargo_type_label",
+			"submit_embargo_type_help",
+			"submit_embargo_type_enabled",
+			"Request a delay in publication. The options available are customizable under the Configurable Settings Tab."),
+	
+	UMI_RELEASE(
+			"UMI Release",
+			"submit_umi_release_label",
+			"submit_umi_release_help",
+			"submit_umi_release_enabled",
+			"Request release to the Proquest / UMI database."),
+	
+			
+	/** File Upload **/
+			
+	PRIMARY_ATTACHMENT(
+			"Primary Manuscript",
+			"submit_primary_attachment_label",
+			"submit_primary_attachment_help",
+			"submit_primary_attachment_enabled",
+			"The primary manuscript, must be a single PDF file."),
+	
+	SUPPLEMENTARY_ATTACHMENT(
+			"Supplemental Files",
+			"submit_supplementary_attachment_label",
+			"submit_supplementary_attachment_help",
+			"submit_supplementary_attachment_enabled",
+			"Any number of additional supplementary files in any format.");
+
+	/**
+	 * Private internal method to construct a new field configuration
+	 * 
+	 * @param name
+	 * 			  The canonical name of the field.
+	 * @param label
+	 *            The name of the configuration parameter where this field label
+	 *            is stored in the database.
+	 * @param help
+	 *            The name of the configuration paramater where this field label
+	 *            is stored in the database.
+	 * @param enabled
+	 *            The name of the configuration paramater where this field label
+	 *            is stored in the database.
+	 * @param note
+	 *            An english description of how this field is used for
+	 *            administrators.
+	 */
+	private FieldConfig(String name, String label, String help, String enabled,
+			String note) {
+		this.name = name;
+		this.LABEL = label;
+		this.HELP = help;
+		this.ENABLED = enabled;
+		this.note = note;
+	}
+
+	// Name of individual configuration parameters for this field:
+	public final String LABEL;
+	public final String HELP;
+	public final String ENABLED;
+	
+	// Internal english description of the field
+	public final String note;
+	public final String name;
+	
+	/**
+	 * @return The canonical name of the field.
+	 */
+	public String getName() {
+		return name;
+	}
+	
+	/**
+	 * @return The internal administrative note about this field.
+	 */
+	public String getNote() {
+		return note;
+	}
+
+	
+	// Groups of fields
+	
+	public static final FieldConfig[] PERSONAL_INFO_FIELDS = {STUDENT_FIRST_NAME,STUDENT_MIDDLE_NAME,STUDENT_LAST_NAME,STUDENT_BIRTH_YEAR,GRANTOR,COLLEGE,DEPARTMENT,DEGREE,MAJOR,PERMANENT_PHONE_NUMBER,PERMANENT_POSTAL_ADDRESS,PERMANENT_EMAIL_ADDRESS,CURRENT_PHONE_NUMBER,CURRENT_POSTAL_ADDRESS};
+
+	public static final FieldConfig[] LICENSE_AGREEMENT_FIELDS = {LICENSE_AGREEMENT};
+	
+	public static final FieldConfig[] DOCUMENT_INFO_FIELDS = {DOCUMENT_TITLE, GRADUATION_DATE, DOCUMENT_TYPE, DOCUMENT_ABSTRACT, DOCUMENT_KEYWORDS, COMMITTEE, COMMITTEE_CONTACT_EMAIL, EMBARGO_TYPE, UMI_RELEASE};
+
+	public static final FieldConfig[] UPLOAD_FILES_FIELDS = {PRIMARY_ATTACHMENT, SUPPLEMENTARY_ATTACHMENT};
+}
