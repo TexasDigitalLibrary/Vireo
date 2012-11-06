@@ -82,8 +82,6 @@ GET     /admin/settings/submission/?            settings.SubmissionSettingsTab.s
 GET     /admin/settings/theme/?                 settings.ThemeSettingsTab.themeSettings
 GET     /admin/settings/email/?					settings.EmailSettingsTab.emailSettings
 GET     /admin/settings/configurable/?			settings.ConfigurableSettingsTab.configurableSettings
-GET     /admin/settings/deposit/?               settings.DepositSettingsTab.depositSettings
-
 
 ### Settings tab - General AJAX
 POST	/admin/settings/updateProfile			SettingsTab.updateProfileJSON
@@ -98,6 +96,13 @@ POST    /admin/settings/actions/add             settings.ApplicationSettingsTab.
 POST    /admin/settings/actions/edit            settings.ApplicationSettingsTab.editCustomActionJSON
 POST    /admin/settings/actions/remove          settings.ApplicationSettingsTab.removeCustomActionJSON
 POST    /admin/settings/actions/reorder         settings.ApplicationSettingsTab.reorderCustomActionsJSON
+
+## Settings tab - Deposit Locations
+POST    /admin/settings/deposit/update          settings.ApplicationSettingsTab.updateDepositLocationList
+POST    /admin/settings/deposit/load            settings.ApplicationSettingsTab.loadDepositLocation
+POST    /admin/settings/deposit/save            settings.ApplicationSettingsTab.saveDepositLocation
+POST    /admin/settings/deposit/remove          settings.ApplicationSettingsTab.removeDepositLocationJSON
+POST    /admin/settings/deposit/reorder         settings.ApplicationSettingsTab.reorderDepositLocationsJSON
 
 ### Settings Tab - Members
 POST    /admin/settings/members/search          settings.ApplicationSettingsTab.searchMembers
@@ -154,13 +159,6 @@ POST    /admin/settings/gradMonths/add          settings.ConfigurableSettingsTab
 POST    /admin/settings/gradMonths/edit         settings.ConfigurableSettingsTab.editGraduationMonthJSON
 POST    /admin/settings/gradMonths/remove       settings.ConfigurableSettingsTab.removeGraduationMonthJSON
 POST    /admin/settings/gradMonths/reorder      settings.ConfigurableSettingsTab.reorderGraduationMonthsJSON
-
-## Settings tab - Deposit Locations
-POST    /admin/settings/deposit/update          settings.DepositSettingsTab.updateDepositLocationList
-POST    /admin/settings/deposit/load            settings.DepositSettingsTab.loadDepositLocation
-POST    /admin/settings/deposit/save            settings.DepositSettingsTab.saveDepositLocation
-POST    /admin/settings/deposit/remove          settings.DepositSettingsTab.removeDepositLocationJSON
-POST    /admin/settings/deposit/reorder         settings.DepositSettingsTab.reorderDepositLocationsJSON
 
 ## Job Tab
 GET     /admin/job/{jobId}                      JobTab.adminStatus

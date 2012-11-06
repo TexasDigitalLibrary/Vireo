@@ -34,6 +34,39 @@ jQuery(document).ready(function(){
      
      jQuery("#add-action-cancel").click(cancelAddActionHandler('action'));
      
+     
+  	// Register the deposit location dialog box.
+ 	jQuery("#deposit-location-modal").modal({
+ 				show: false
+ 			});
+ 	
+     // Handlers for the sortable deposit location list
+     jQuery("#depositLocation-list").sortable({
+         placeholder: "placeholder",
+         update: sortableUpdateHandler(
+                    'depositLocation',
+                    '@{settings.ApplicationSettingsTab.reorderDepositLocationsJSON()}'
+                    )
+     }).disableSelection().enableSelection();
+ 	
+ 	// Deposit location management
+ 	jQuery(".depositLocation-editable").live("click", depositLoadModalHandler('@{settings.ApplicationSettingsTab.loadDepositLocation}'));
+     jQuery("#depositLocation-add").live("click", depositAddModalHandler('@{settings.ApplicationSettingsTab.loadDepositLocation}'));
+ 	jQuery("#depositLocation-test").live("click", depositSaveHandler(false, 
+ 			'@{settings.ApplicationSettingsTab.saveDepositLocation}', 
+ 			'@{settings.ApplicationSettingsTab.updateDepositLocationList}'));
+ 	jQuery("#depositLocation-test-submit").live("click", depositSaveHandler(false, 
+ 			'@{settings.ApplicationSettingsTab.saveDepositLocation}', 
+ 			'@{settings.ApplicationSettingsTab.updateDepositLocationList}'));
+ 	jQuery("#depositLocation-save").live("click", depositSaveHandler(true, 
+ 			'@{settings.ApplicationSettingsTab.saveDepositLocation}', 
+ 			'@{settings.ApplicationSettingsTab.updateDepositLocationList}'));
+ 	jQuery("#depositLocation-delete").live("click", depositDeleteHandler(
+ 			'@{settings.ApplicationSettingsTab.removeDepositLocationJSON}',
+ 			'@{settings.ApplicationSettingsTab.updateDepositLocationList}'));
+     
+     
+     
      // Member Management (aka who has access)
      jQuery("#add-member-modal .pager a").live("click",memberSearchHandler());
      jQuery("#add-member-modal #members-search-button").live("click",memberSearchHandler());
@@ -171,6 +204,18 @@ jQuery(document).ready(function(){
     </form>
 </div>
 <br/><br/>
+
+<h2>DEPOSIT LOCATIONS</h2>
+
+<div class="wrap settings-sortable">
+#{include 'SettingTabs/listDepositLocations.include' /}
+</div>
+
+<a id="depositLocation-add" href="#">[ADD NEW]</a>
+
+<div class="modal fade" id="deposit-location-modal">
+    #{include 'SettingTabs/editDepositLocation.include' /}
+</div>
 
 <h2>WHO HAS ACCESS?</h2>
 

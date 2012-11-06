@@ -70,11 +70,10 @@ jQuery(document).ready(function(){
 			<li #{if subNav=="theme"}class="active"#{/if}><a href="@{settings.ThemeSettingsTab.themeSettings}">Theme Settings</a></li>
 			<li #{if subNav=="email"}class="active"#{/if}><a href="@{settings.EmailSettingsTab.emailSettings}">Email Settings</a></li>
 			<li #{if subNav=="config"}class="active"#{/if}><a href="@{settings.ConfigurableSettingsTab.configurableSettings}">Configurable Settings</a></li>
-			<li #{if subNav=="deposit"}class="active"#{/if}><a href="@{settings.DepositSettingsTab.depositSettings}">Deposit Settings</a></li>
 		</ul>
 		#{/if}
 		<div id="alert-area">*{Javascript may dynamically fill this div with errors as needed.}*</div>
-
+		
 		#{doLayout /}
 	</div>
 </div>
