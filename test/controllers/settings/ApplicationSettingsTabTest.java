@@ -157,7 +157,6 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 		params.put("field", CURRENT_SEMESTER);
 		params.put("value","May 2012");
 		Response response = POST(URL,params);
-		System.out.println(getContent(response));
 		assertContentMatch("\"success\": \"true\"", response);
 	
 		

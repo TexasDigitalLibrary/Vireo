@@ -65,6 +65,32 @@ public abstract class AbstractVireoController extends Controller {
 	
 	
 	/**
+	 * Return true if the string is either null or only consists of whitespace.
+	 * 
+	 * @param value
+	 *            The string to test.
+	 * @return True if the value is empty, otherwise false.
+	 */
+	protected static boolean isEmpty(String value) {
+		if (value == null)
+			return true;
+		if (value.trim().length() == 0)
+			return true;
+		return false;
+	}
+	
+	/**
+	 * Return true if the string contains a textual value and not just whitespace.
+	 * 
+	 * @param value
+	 *            The string to test.
+	 * @return True if the value has text, otherwise false.
+	 */
+	protected static boolean isNotEmpty(String value) {
+		return !isEmpty(value);
+	}
+	
+	/**
 	 * Escape Javascrip strings. In Javascript double quotes must be escaped.
 	 * 
 	 * @param value

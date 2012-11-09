@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.tdl.vireo.constant.AppConfig;
+import org.tdl.vireo.constant.FieldConfig;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.AttachmentType;
@@ -103,6 +104,10 @@ public class Advisor extends AbstractVireoController {
 		List<Attachment> supplementaryDocuments = sub.getSupplementalDocuments();
 		List<Attachment> feedbackDocuments = sub.getAttachmentsByType(AttachmentType.FEEDBACK);
 
+		for(FieldConfig field : FieldConfig.values()) {
+			renderArgs.put(field.name(),field );
+		}
+		
 		renderTemplate("Advisor/view.html", token, sub, submitter, logs, primaryDocument, supplementaryDocuments, feedbackDocuments, grantor,allEmbargos,inputRecieved);
 
 	}

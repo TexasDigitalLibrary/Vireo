@@ -30,14 +30,14 @@ public enum FieldConfig {
 			"submit_student_first_name_label", 
 			"submit_student_first_name_help",
 			"submit_student_first_name_enabled",
-			"The author's first name. This field may be configured to be locked if supplied by the authentication plugin."),
+			"The author's first name. This field may be configured to be locked if supplied by the authentication plugin. If both the first and last name are marked as required, then only one will actualy be required because some people have only one name. However both fields will be displayed as required since most people have more than one name."),
 
 	STUDENT_MIDDLE_NAME(
 			"Middle Name",
 			"submit_student_middle_name_label", 
 			"submit_student_middle_name_help",
 			"submit_student_middle_name_enabled",
-			"The author's middle name or initial. This field may be configured to be locked if supplied by the authentication plugin."),
+			"The author's middle name or initial. This field may be configured to be locked if supplied by the authentication plugin. If both the first and last name are marked as required, then only one will actualy be required because some people have only one name. However both fields will be displayed as required since most people have more than one name."),
 
 	STUDENT_LAST_NAME(
 			"Last Name",
@@ -45,6 +45,14 @@ public enum FieldConfig {
 			"submit_student_last_name_help",
 			"submit_student_last_name_enabled",
 			"The author's last name. This field may be configured to be locked if supplied by the authentication plugin."),
+			
+	STUDENT_EMAIL(
+			"Email",
+			"submit_student_email_label",
+			"submit_student_email_help",
+			"submit_student_email_enabled",
+			"The student's email address. This field is always locked to the address the student used to authenticate with and may not be edited."
+			),
 			
 	STUDENT_BIRTH_YEAR(
 			"Birth Year",
@@ -167,7 +175,7 @@ public enum FieldConfig {
 			"The abstract of the document being submitted."),
 	
 	DOCUMENT_KEYWORDS(
-			"Keywards",
+			"Keywords",
 			"submit_document_keywords_label",
 			"submit_document_keywords_help",
 			"submit_document_keywords_enabled",
@@ -275,7 +283,7 @@ public enum FieldConfig {
 	
 	// Groups of fields
 	
-	public static final FieldConfig[] PERSONAL_INFO_FIELDS = {STUDENT_FIRST_NAME,STUDENT_MIDDLE_NAME,STUDENT_LAST_NAME,STUDENT_BIRTH_YEAR,GRANTOR,COLLEGE,DEPARTMENT,DEGREE,MAJOR,PERMANENT_PHONE_NUMBER,PERMANENT_POSTAL_ADDRESS,PERMANENT_EMAIL_ADDRESS,CURRENT_PHONE_NUMBER,CURRENT_POSTAL_ADDRESS};
+	public static final FieldConfig[] PERSONAL_INFO_FIELDS = {STUDENT_FIRST_NAME,STUDENT_MIDDLE_NAME,STUDENT_LAST_NAME,STUDENT_EMAIL,STUDENT_BIRTH_YEAR,GRANTOR,COLLEGE,DEPARTMENT,DEGREE,MAJOR,PERMANENT_PHONE_NUMBER,PERMANENT_POSTAL_ADDRESS,PERMANENT_EMAIL_ADDRESS,CURRENT_PHONE_NUMBER,CURRENT_POSTAL_ADDRESS};
 
 	public static final FieldConfig[] LICENSE_AGREEMENT_FIELDS = {LICENSE_AGREEMENT};
 	

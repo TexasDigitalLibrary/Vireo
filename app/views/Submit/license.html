@@ -3,12 +3,14 @@
 
 <br />
 <div class="row pageHead">
-	<h3 class="span11">License Agreement</h3> 
+	<h3 class="span11">#{fieldLabel LICENSE_AGREEMENT /}</h3> 
 </div>
 <br />
+#{ifRequired LICENSE_AGREEMENT }
 <div class="row">
 <p class="span">You must agree to the non-exclusive license below in order to continue:</p>
 </div>
+#{/ifRequired}
 
 #{ifErrors}
 <ul class="red">
@@ -21,11 +23,14 @@
 <div class="well">#{verbatim}${licenseText}#{/verbatim}</div>
 <div class="row center">
 <form action="@{submit.License.license(subId)}" method="post" class="form-inline">
+    <input type="hidden" name="step" value="license"/>
+    #{ifEnabled LICENSE_AGREEMENT}
 	<fieldset style="margin:0 0 10px;">
-		<label id="lalabel" class="checkbox #{if errors.forKey('laLabel')}red#{/if}">
-            <input id="licenseAgreement" type="checkbox" name="licenseAgreement" ${ licenseAgreement != null ? "checked='true'" : "" }/> By checking here you agree to the above license in its entirety.
+		<label id="lalabel" class="checkbox #{if errors.forKey('licenseAgreement')}red#{/if}">
+            <input id="licenseAgreement" type="checkbox" name="licenseAgreement" ${ licenseAgreement != null ? "checked='true'" : "" }/> #{fieldHelp LICENSE_AGREEMENT /}
 		</label>
 	</fieldset>
+	#{/ifEnabled}
 	
 	<div class="span10 center">
         <input type="submit" class="btn btn-primary" name="submit_next" value="Save and Continue" />

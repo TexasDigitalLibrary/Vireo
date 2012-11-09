@@ -21,78 +21,93 @@
 
   <form action="@{submit.PersonalInfo.personalInfo(subId)}" method="post" class="form-horizontal">
     <input type="hidden" name="step" value="personalInfo"/>
-		
-	<fieldset>
-		<legend>Personal Information</legend>
-		<div class="control-group #{ifError 'firstName'}error#{/ifError}">
-			<label class="control-label" for="firstName"><b>* First Name</b>:</label>
-			<div class="controls">
-			    #{if disabledFields.contains("firstName")}
-			    <p>${firstName}</p>
-			    #{/if} 
-		        #{else}
-				<input type="text" name="firstName" value="${firstName}">
-				#{/else}
-			</div>
-		</div>
-		<div class="control-group #{ifError 'middleName'}error#{/ifError}">
-			<label class="control-label" for="middleName">Middle Name:</label>
-			<div class="controls">
-			    #{if disabledFields.contains("middleName")}
+	
+	#{ifEnabled [STUDENT_FIRST_NAME,STUDENT_MIDDLE_NAME,STUDENT_LAST_NAME,STUDENT_EMAIL,STUDENT_BIRTH_YEAR] }
+    <fieldset>
+        <legend>Personal Information</legend>
+        #{ifEnabled STUDENT_FIRST_NAME }
+        <div class="control-group #{errorClass 'firstName'/} #{fieldClass STUDENT_FIRST_NAME /}">
+            <label class="control-label" for="firstName"><span class="required-star">*</span> #{fieldLabel STUDENT_FIRST_NAME /}:</label>
+            <div class="controls">
+                #{if disabledFields.contains("firstName")}
+                <p>${firstName}</p>
+                #{/if} 
+                #{else}
+                <input type="text" name="firstName" value="${firstName}">
+                <a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp STUDENT_FIRST_NAME /}"><i class="icon-info-sign"></i></a>
+                #{/else}
+            </div>
+        </div>
+        #{/ifEnabled}
+        #{ifEnabled STUDENT_MIDDLE_NAME }
+        <div class="control-group #{errorClass 'middleName' /} #{fieldClass STUDENT_MIDDLE_NAME /}">
+            <label class="control-label" for="middleName"><span class="required-star">*</span> #{fieldLabel STUDENT_MIDDLE_NAME /}:</label>
+            <div class="controls">
+                #{if disabledFields.contains("middleName")}
                 <p>${middleName}</p>
                 #{/if} 
                 #{else}
-				<input type="text" class="span1" name="middleName" value="${middleName}">
-				<a href="#" class="tooltip-icon" rel="tooltip" title="Enter the first letter of your middle name."><i class="icon-info-sign">				
-				</i></a>
-				#{/else}
-			</div>
-		</div>
-		<div class="control-group #{ifError 'lastName'}error#{/ifError}">
-			<label class="control-label" for="lastName"><b>* Last Name</b>:</label>
-			<div class="controls">
-			    #{if disabledFields.contains("lastName")}
+                <input type="text" class="span1" name="middleName" value="${middleName}">
+                <a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp STUDENT_MIDDLE_NAME /}"><i class="icon-info-sign"></i></a>
+                #{/else}
+            </div>
+        </div>
+        #{/ifEnabled}
+        #{ifEnabled STUDENT_LAST_NAME }
+        <div class="control-group #{errorClass 'lastName' /} #{fieldClass STUDENT_LAST_NAME /}">
+            <label class="control-label" for="lastName"><span class="required-star">*</span> #{fieldLabel STUDENT_LAST_NAME /}:</label>
+            <div class="controls">
+                #{if disabledFields.contains("lastName")}
                 <p>${lastName}</p>
                 #{/if} 
                 #{else}
-				<input type="text" name="lastName" value="${lastName}">
-				#{/else}
-			</div>
-		</div>
-		<div class="control-group #{ifError 'emailName'}error#{/ifError}">
-			<label class="control-label" for="email"><b>* Email</b>:</label>
-			<div class="controls">
+                <input type="text" name="lastName" value="${lastName}">
+                <a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp STUDENT_LAST_NAME /}"><i class="icon-info-sign"></i></a>
+                #{/else}
+            </div>
+        </div>
+        #{/ifEnabled}
+        #{ifEnabled STUDENT_EMAIL }
+        <div class="control-group #{errorClass 'email' /} #{fieldClass STUDENT_EMAIL /}">
+            <label class="control-label" for="email"><span class="required-star">*</span> #{fieldLabel STUDENT_EMAIL /}:</label>
+            <div class="controls">
                 <p>${submitter.getEmail()}</p>
-			</div>
-		</div>
-		#{if requestBirth}
-		<div class="control-group #{ifError 'birthYear'}error#{/ifError}">
-			<label class="control-label" for="birthYear">Year of Birth:</label>
-			<div class="controls">
-			    #{if disabledFields.contains("birthYear")}
+            </div>
+        </div>
+        #{/ifEnabled}
+        #{ifEnabled STUDENT_BIRTH_YEAR }
+        <div class="control-group #{errorClass 'birthYear' /}  #{fieldClass STUDENT_BIRTH_YEAR /}">
+            <label class="control-label" for="birthYear"><span class="required-star">*</span> #{fieldLabel STUDENT_BIRTH_YEAR /}:</label>
+            <div class="controls">
+                #{if disabledFields.contains("birthYear")}
                 <p>${birthYear}</p>
                 #{/if} 
                 #{else}
-				<input type="text" class="span3" name="birthYear" value="${birthYear}">				
-				<a href="#" class="tooltip-icon" rel="tooltip" title="Enter the full year in which you were born. For example 1985."><i class="icon-info-sign">				
-				</i></a>
-				#{/else}
-			</div>
-		</div>
-		#{/if}
-	</fieldset>
+                <input type="text" class="span3" name="birthYear" value="${birthYear}">             
+                <a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp STUDENT_BIRTH_YEAR /}"><i class="icon-info-sign">               
+                </i></a>
+                #{/else}
+            </div>
+        </div>
+        #{/ifEnabled}
+
+    </fieldset>
+    #{/ifEnabled}
 	
+	#{ifEnabled [GRANTOR,COLLEGE,DEPARTMENT,DEGREE,MAJOR] }
 	<fieldset>
 		<legend>Affiliation</legend>
-		<div class="control-group">
-			<label class="control-label" for="school"><b>* School</b>:</label>
+		#{ifEnabled GRANTOR }
+		<div class="control-group #{errorClass 'grantor' /} #{fieldClass GRANTOR /}">
+			<label class="control-label" for="school"><span class="required-star">*</span> #{fieldLabel GRANTOR /}</b>:</label>
 			<div class="controls">
 				<p>${grantor}</p>
 			</div>
 		</div>
-		#{if requestCollege}
-		<div class="control-group #{ifError 'college'}error#{/ifError}">
-            <label class="control-label" for="college"><b>* College</b>:</label>
+		#{/ifEnabled}
+		#{ifEnabled COLLEGE}
+		<div class="control-group #{errorClass 'college' /} #{fieldClass COLLEGE /}">
+            <label class="control-label" for="college"><span class="required-star">*</span> #{fieldLabel COLLEGE /}:</label>
             <div class="controls">
                 #{if disabledFields.contains("college")}
                 <p>${college}</p>
@@ -100,7 +115,7 @@
                 #{else}
                     #{if settingRepo.findAllColleges().size() > 0 }
 		                <select name="college">
-		                    <option #{if college == null}selected="true"#{/if}>...choose</option>
+		                    <option #{if college == null}selected="true"#{/if} value="">...choose</option>
 		                    #{list items:settingRepo.findAllColleges(), as:'collegeObject'}
 		                    <option #{if college == collegeObject.getName()}selected="true"#{/if} value="${collegeObject.getName()}">${collegeObject.getName()}</option>
 		                    #{/list}
@@ -109,13 +124,14 @@
 		            #{else}
 		                <input name="college" value="${college}"/>
 		            #{/else}
-		            <a href="#" class="tooltip-icon" rel="tooltip" title="Enter the college you belong to."><i class="icon-info-sign"></i></a>
+		            <a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp COLLEGE /}"><i class="icon-info-sign"></i></a>
                 #{/else}
             </div>
         </div>
-        #{/if}
-		<div class="control-group #{ifError 'department'}error#{/ifError}">
-			<label class="control-label" for="department"><b>* Department</b>:</label>
+        #{/ifEnabled}
+        #{ifEnabled DEPARTMENT }
+		<div class="control-group #{errorClass 'department' /} #{fieldClass DEPARTMENT /}">
+			<label class="control-label" for="department"><span class="required-star">*</span> #{fieldLabel DEPARTMENT /}:</label>
 			<div class="controls">
 			    #{if disabledFields.contains("department")}
                 <p>${department}</p>
@@ -123,7 +139,7 @@
                 #{else}
                     #{if settingRepo.findAllDepartments().size() > 0 }
 					    <select name="department">
-					        <option #{if department == null}selected="true"#{/if}>...choose</option>
+					        <option #{if department == null}selected="true"#{/if} value="">...choose</option>
 						    #{list items:settingRepo.findAllDepartments(), as:'dept'}
 						    <option #{if department == dept.getName()}selected="true"#{/if} value="${dept.getName()}">${dept.getName()}</option>
 						    #{/list}
@@ -132,31 +148,34 @@
 					#{else}
 					   <input name="department" value="${department}"/>
 					#{/else}
-					<a href="#" class="tooltip-icon" rel="tooltip" title="Enter the department you belong to."><i class="icon-info-sign">				
+					<a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp DEPARTMENT /}"><i class="icon-info-sign">				
 					</i></a>
 			    #{/else}
 			</div>
 		</div>
-		<div class="control-group #{ifError 'degree'}error#{/ifError}">
-			<label class="control-label" for="degree"><b>* Degree</b>:</label>
+		#{/ifEnabled}
+		#{ifEnabled DEGREE  }
+		<div class="control-group #{errorClass 'degree' /} #{fieldClass DEGREE /}">
+			<label class="control-label" for="degree"><span class="required-star">*</span> #{fieldLabel DEGREE /}:</label>
 			<div class="controls">
 			    #{if disabledFields.contains("degree")}
                 <p>${degree}</p>
                 #{/if} 
                 #{else}
 				<select id="degree" name="degree">
-				    <option #{if degree == null}selected="true"#{/if}>...choose</option>
+				    <option #{if degree == null}selected="true"#{/if} value="">...choose</option>
                     #{list items:settingRepo.findAllDegrees(), as:'degreeObject'}
                     <option #{if degree == degreeObject.getName()}selected="true"#{/if} value="${degreeObject.getName()}">${degreeObject.getName()}</option>
                     #{/list}
 				</select>
-				<a href="#" class="tooltip-icon" rel="tooltip" title="Choose the type of degree you are seeking."><i class="icon-info-sign">				
-				</i></a>
+				<a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp DEGREE /}"><i class="icon-info-sign"></i></a>
 				#{/else}
 			</div>
 		</div>
-		<div class="control-group #{ifError 'major'}error#{/ifError}">
-			<label class="control-label" for="major"><b>* Major</b>:</label>
+		#{/ifEnabled}
+		#{ifEnabled MAJOR }
+		<div class="control-group #{errorClass 'major' /} #{fieldClass MAJOR /}">
+			<label class="control-label" for="major"><span class="required-star">*</span> #{fieldLabel MAJOR /}:</label>
 			<div class="controls">
 			    #{if disabledFields.contains("major")}
                 <p>${major}</p>
@@ -164,7 +183,7 @@
                 #{else}
                     #{if settingRepo.findAllMajors().size() > 0 }
 						<select id="major" name="major">
-						    <option #{if major == null}selected="true"#{/if}>...choose</option>
+						    <option #{if major == null}selected="true"#{/if} value="">...choose</option>
 		                    #{list items:settingRepo.findAllMajors(), as:'majorObject'}
 		                    <option #{if major == majorObject.getName()}selected="true"#{/if} value="${majorObject.getName()}">${majorObject.getName()}</option>
 		                    #{/list}
@@ -173,81 +192,90 @@
 					#{else}
 					   <input name="major" value="${major}"/>
 					#{/else}
-					<a href="#" class="tooltip-icon" rel="tooltip" title="Enter the discipline you specialized in."><i class="icon-info-sign">				
-					</i></a>
+					<a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp MAJOR /}"><i class="icon-info-sign"></i></a>
 				#{/else}
 			</div>
 		</div>
+		#{/ifEnabled}
 	</fieldset>
+	#{/ifEnabled}
 	
+	#{ifEnabled [PERMANENT_PHONE_NUMBER, PERMANENT_POSTAL_ADDRESS, PERMANENT_EMAIL_ADDRESS, CURRENT_PHONE_NUMBER, CURRENT_POSTAL_ADDRESS] }
 	<fieldset>
 		<legend>Phone &amp; Address</legend>
-		<div class="control-group #{ifError 'permPhone'}error#{/ifError}">
-			<label class="control-label" for="permPhone"><b>* Permanent Phone</b>:</label>
+		#{ifEnabled PERMANENT_PHONE_NUMBER }
+		<div class="control-group #{errorClass 'permPhone' /} #{fieldClass PERMANENT_PHONE_NUMBER /}">
+			<label class="control-label" for="permPhone"><span class="required-star">*</span> #{fieldLabel PERMANENT_PHONE_NUMBER /}:</label>
 			<div class="controls">
 			    #{if disabledFields.contains("permPhone")}
                 <p>${permPhone}</p>
                 #{/if} 
                 #{else}
 				<input type="text" class="span3" name="permPhone" value="${permPhone}">
-				<a href="#" class="tooltip-icon" rel="tooltip" title="Enter a phone number where you can be reached even after you have left school."><i class="icon-info-sign">				
+				<a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp PERMANENT_PHONE_NUMBER /}"><i class="icon-info-sign">				
 				</i></a>
 				#{/else}
 			</div>
 		</div>
-		<div class="control-group #{ifError 'permAddress'}error#{/ifError}">
-			<label class="control-label" for="permAddress"><b>* Permanent Address</b>:</label>
+		#{/ifEnabled}
+		#{ifEnabled PERMANENT_POSTAL_ADDRESS }
+		<div class="control-group #{errorClass 'permAddress' /} #{fieldClass PERMANENT_POSTAL_ADDRESS /}">
+			<label class="control-label" for="permAddress"><span class="required-star">*</span> #{fieldLabel PERMANENT_POSTAL_ADDRESS /}:</label>
 			<div class="controls">
 			    #{if disabledFields.contains("permAddress")}
                 <p>${permAddress}</p>
                 #{/if} 
                 #{else}
 				<textarea class="span4" name="permAddress">${permAddress}</textarea>
-				<a href="#" class="tooltip-icon" rel="tooltip" title="Enter an address where you can be reached even after you complete and leave school."><i class="icon-info-sign">				
-				</i></a>
+				<a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp PERMANENT_POSTAL_ADDRESS /}"><i class="icon-info-sign"></i></a>
 				#{/else}
 			</div>
 		</div>
-		<div class="control-group #{ifError 'permEmail'}error#{/ifError}">
-			<label class="control-label" for="permEmail">Permanent Email:</label>
+		#{/ifEnabled}
+		#{ifEnabled PERMANENT_EMAIL_ADDRESS }
+		<div class="control-group #{errorClass 'permEmail' /} #{fieldClass PERMANENT_EMAIL_ADDRESS /}">
+			<label class="control-label" for="permEmail"><span class="required-star">*</span> #{fieldLabel PERMANENT_EMAIL_ADDRESS /}:</label>
 			<div class="controls">
 			    #{if disabledFields.contains("permEmail")}
                 <p>${permEmail}</p>
                 #{/if} 
                 #{else}
 				<input type="text" class="span3" name="permEmail" value="${permEmail}">
-				<a href="#" class="tooltip-icon" rel="tooltip" title="Enter an email address you will always have."><i class="icon-info-sign">				
-				</i></a>
+				<a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp PERMANENT_EMAIL_ADDRESS /}"><i class="icon-info-sign"></i></a>
 				#{/else}
 			</div>
 		</div>
-		<div class="control-group #{ifError 'currentPhone'}error#{/ifError}">
-			<label class="control-label" for="currentPhone">Current Phone:</label>
+		#{/ifEnabled}
+		#{ifEnabled CURRENT_PHONE_NUMBER }
+		<div class="control-group #{errorClass 'currentPhone' /} #{fieldClass CURRENT_PHONE_NUMBER /}">
+			<label class="control-label" for="currentPhone"><span class="required-star">*</span> #{fieldLabel CURRENT_PHONE_NUMBER /}:</label>
 			<div class="controls">
 			    #{if disabledFields.contains("currentPhone")}
                 <p>${currentPhone}</p>
                 #{/if} 
                 #{else}
 				<input type="text" class="span3" name="currentPhone" value="${currentPhone}">
-				<a href="#" class="tooltip-icon" rel="tooltip" title="Enter a phone number where you can be reached."><i class="icon-info-sign">				
-				</i></a>
+				<a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp CURRENT_PHONE_NUMBER /}"><i class="icon-info-sign"></i></a>
 				#{/else}
 			</div>
 		</div>
-		<div class="control-group #{ifError 'currentAddress'}error#{/ifError}">
-			<label class="control-label" for="currentAddress">Current Address:</label>
+		#{/ifEnabled}
+		#{ifEnabled CURRENT_POSTAL_ADDRESS }
+		<div class="control-group #{errorClass 'currentAddress' /} #{fieldClass CURRENT_POSTAL_ADDRESS /}">
+			<label class="control-label" for="currentAddress"><span class="required-star">*</span> #{fieldLabel CURRENT_POSTAL_ADDRESS /}:</label>
 			<div class="controls">
 			    #{if disabledFields.contains("currentAddress")}
                 <p>${currentAddress}</p>
                 #{/if} 
                 #{else}
 				<textarea class="span4" name="currentAddress">${currentAddress}</textarea>
-				<a href="#" class="tooltip-icon" rel="tooltip" title="Enter an address where you can be reached."><i class="icon-info-sign">				
-				</i></a>
+				<a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp CURRENT_POSTAL_ADDRESS /}"><i class="icon-info-sign"></i></a>
 				#{/else}
 			</div>
 		</div>
+		#{/ifEnabled}
 	</fieldset>
+	#{/ifEnabled}
 	<fieldset>
         <div class="form-actions">
             <input type="submit" class="btn btn-primary" name="submit_next" value="Save and Continue" />
@@ -257,13 +285,9 @@
 </form>            
 </div>
 	<div id="stickyNotes" class="span3">
-		<div class="sticky-top"></div>
-		<div class="sticky-bottom">Your name should appear as it does on your title page. You can use Unicode characters, if your computer supports them.</div>
-		
-		<div class="sticky-top"></div>
-		<div class="sticky-bottom">Select the degree and major that are listed on your title page.</div>
-		
-		<div class="sticky-top"></div>
-		<div class="sticky-bottom">You must enter a permanent, long-term address. If your present address is different, use the Current Address field.</div>
+	    #{list items:stickies, as:'sticky'}
+	       <div class="sticky-top"></div>
+           <div class="sticky-bottom">#{verbatim}${sticky}#{/verbatim}</div>
+	    #{/list}
 	</div>
 </div>

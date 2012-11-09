@@ -2,6 +2,7 @@ package controllers.submit;
 
 import static org.tdl.vireo.constant.AppConfig.*;
 
+import org.tdl.vireo.constant.FieldConfig;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.state.State;
@@ -35,10 +36,16 @@ public class AbstractSubmitStep extends AbstractVireoController {
 		
 		renderArgs.put("SUBMISSIONS_OPEN", settingRepo.findConfigurationByName(SUBMISSIONS_OPEN));
 		renderArgs.put("CURRENT_SEMESTER", settingRepo.getConfigValue(CURRENT_SEMESTER, "current"));
-
-
+		
+		for(FieldConfig field : FieldConfig.values()) {
+			renderArgs.put(field.name(),field );
+		}
 	}
 	
+	/**
+	 * @return the currently active submission checking for all the error
+	 *         conditions.
+	 */
 	protected static Submission getSubmission() {
 		
 		// We require an sub id.
@@ -64,5 +71,29 @@ public class AbstractSubmitStep extends AbstractVireoController {
 			error("This submission is no longer editable.");
 		
 		return sub;
+	}
+	
+	/**
+	 * Return whether the specified field is enabled. If it is then return true,
+	 * otherwise false.
+	 * 
+	 * @param field
+	 *            The field to check whether it is enabled.
+	 * @return True if enabled, otherwise false.
+	 */
+	protected static boolean isFieldEnabled(FieldConfig field) {
+		return !"disabled".equals(settingRepo.getConfigValue(field.ENABLED));
+	}
+
+	/**
+	 * Return whether the specified field is required. If it is then return
+	 * true, otherwise false.
+	 * 
+	 * @param field
+	 *            The field to check whether it is required.
+	 * @return True if required, otherwise false.
+	 */
+	protected static boolean isFieldRequired(FieldConfig field) {
+		return "required".equals(settingRepo.getConfigValue(field.ENABLED));
 	}
 }

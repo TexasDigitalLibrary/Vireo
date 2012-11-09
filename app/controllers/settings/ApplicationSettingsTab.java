@@ -348,9 +348,7 @@ public class ApplicationSettingsTab extends SettingsTab {
 			onBehalfOf = location.getOnBehalfOf();
 			repository = location.getRepository();
 			collection = location.getCollection();
-			
-			System.out.println("Packager = "+packager.getBeanName());
-			
+						
 // Don't try to connect on inital load because it could take too long.
 //			try {
 //				collectionsMap = depositor.getCollections(location);

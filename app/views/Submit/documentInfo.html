@@ -20,119 +20,138 @@
 <br/>
 	<form action="@{submit.DocumentInfo.documentInfo(subId)}" method="post" class="form-inline">
 	<input type="hidden" name="step" value="documentInfo"/>
+	
+	#{ifEnabled [DOCUMENT_TITLE,GRADUATION_DATE,DOCUMENT_TYPE,DOCUMENT_ABSTRACT,DOCUMENT_KEYWORDS]}
 	<fieldset class="form-horizontal">
 		<legend>Document Information</legend>
-		<div class="control-group #{ifError 'title'}error#{/ifError}">
-			<label class="control-label" for="title"><b>* Title</b>:</label>
+		#{ifEnabled DOCUMENT_TITLE}
+		<div class="control-group #{errorClass 'title' /} #{fieldClass DOCUMENT_TITLE /}">
+			<label class="control-label" for="title"><span class="required-star">*</span> #{fieldLabel DOCUMENT_TITLE /}:</label>
 			<div class="controls">
-				<input type="text" class="span5" id="title" name="title" value="${title}">
+				<input type="text" class="span4" id="title" name="title" value="${title}">
+				<a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp DOCUMENT_TITLE /}"><i class="icon-info-sign"></i></a>
 			</div>
 		</div>
-		<div class="control-group #{ifError 'degreeMonth'}error#{/ifError} #{ifError 'degreeYear'}error#{/ifError}">
-			<label class="control-label" for="degreeDate"><b>* Degree Date</b>:</label>
+		#{/ifEnabled}
+		#{ifEnabled GRADUATION_DATE}
+		<div class="control-group #{errorClass 'degreeMonth'/} #{errorClass 'degreeYear'/} #{fieldClass GRADUATION_DATE /}">
+			<label class="control-label" for="degreeDate"><span class="required-star">*</span> #{fieldLabel GRADUATION_DATE /}:</label>
 			<div class="controls row">
 				<select class="span2" id="degreeMonth" name="degreeMonth">
-                                    <option #{if null == degreeMonth || Integer.parseInt(degreeMonth) <= 0}selected="true"#{/if} value="0">...choose</option>
+                    <option #{if null == degreeMonth }selected="true"#{/if} value="">...choose</option>
 				    #{list items:settingRepo.findAllGraduationMonths(), as:'month'}
-				    <option #{if null != degreeMonth && Integer.parseInt(degreeMonth) == month.getMonth()}selected="true"#{/if} value="${month.getMonth()}">${month.getMonthName()}</option>
+				    <option #{if null != degreeMonth && String.valueOf(month.getMonth()).equals(degreeMonth) }selected="true"#{/if} value="${month.getMonth()}">${month.getMonthName()}</option>
 				    #{/list}
 				</select>
 				<select class="span2" id="degreeYear" name="degreeYear">
-
-                                    <option #{if null == degreeYear || Integer.parseInt(degreeYear) <= 0}selected="true"#{/if} value="0">...choose</option>
+                    <option #{if null == degreeYear }selected="true"#{/if} value="">...choose</option>
 				    #{list degreeYears, as:'year'}
-				    <option #{if null != degreeYear && Integer.parseInt(degreeYear) == year}selected="true"#{/if} value="${year}">${year}</option>
+				    <option #{if null != degreeYear && String.valueOf(degreeYear).equals(year)}selected="true"#{/if} value="${year}">${year}</option>
 				    #{/list}
 				</select>
-				<a href="#" class="tooltip-icon" rel="tooltip" title="Example: May 2008"><i class="icon-info-sign">				
-				</i></a>
+				<a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp GRADUATION_DATE /}"><i class="icon-info-sign"></i></a>
 			</div>
 		</div>
-		<div class="control-group #{ifError 'docType'}error#{/ifError}">
-			<label class="control-label" for="docType"><b>* Document Type</b>:</label>
+		#{/ifEnabled}
+		#{ifEnabled DOCUMENT_TYPE}
+		<div class="control-group #{errorClass 'docType'/} #{fieldClass DOCUMENT_TYPE /}">
+			<label class="control-label" for="docType"><span class="required-star">*</span> #{fieldLabel DOCUMENT_TYPE /}:</label>
 			<div class="controls">
-                            <select class="span4" id="docType" name="docType">
-                                <option #{if null == docType || docType.equals("")}selected="true"#{/if} value="0">...choose</option>
-                                #{list docTypes, as: 'type'}
-                                    <option #{if null != type && docType.equals(type)}selected="true"#{/if} value="${type}">${type}</option>
-                                #{/list}
-                            </select>
+	            <select class="span4" id="docType" name="docType">
+	                <option #{if null == docType || docType.equals("")}selected="true"#{/if} value="">...choose</option>
+	                #{list docTypes, as: 'type'}
+	                    <option #{if null != type && docType.equals(type)}selected="true"#{/if} value="${type}">${type}</option>
+	                #{/list}
+	            </select>
+	            <a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp DOCUMENT_TYPE /}"><i class="icon-info-sign"></i></a>
 			</div>
 		</div>
-		<div class="control-group #{ifError 'abstractText'}error#{/ifError}">
-			<label class="control-label" for="abstractText"><b>* Abstract</b>:</label>
+		#{/ifEnabled}
+		#{ifEnabled DOCUMENT_ABSTRACT}
+		<div class="control-group #{errorClass 'abstractText'/} #{fieldClass DOCUMENT_ABSTRACT /}">
+			<label class="control-label" for="abstractText"><span class="required-star">*</span> #{fieldLabel DOCUMENT_ABSTRACT /}:</label>
 			<div class="controls">
 				<textarea class="span4" id="abstractText" name="abstractText">${abstractText}</textarea>
+				<a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp DOCUMENT_ABSTRACT /}"><i class="icon-info-sign"></i></a>
 			</div>
 		</div>
-		<div class="control-group #{ifError 'keywords'}error#{/ifError}">
-			<label class="control-label" for="keywords"><b>* Keywords</b>:</label>
+		#{/ifEnabled}
+		#{ifEnabled DOCUMENT_KEYWORDS}
+		<div class="control-group #{errorClass 'keywords'/} #{fieldClass DOCUMENT_KEYWORDS /}">
+			<label class="control-label" for="keywords"><span class="required-star">*</span> #{fieldLabel DOCUMENT_KEYWORDS /}:</label>
 			<div class="controls">
 				<textarea class="span4" id="keywords" name="keywords">${keywords}</textarea>
-				<a href="#" class="tooltip-icon" rel="tooltip" title="You can enter multiple keywords. Use semi-colons ( ; ) to separate the entries."><i class="icon-info-sign">				
-				</i></a>
+				<a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp DOCUMENT_KEYWORDS /}"><i class="icon-info-sign"></i></a>
 			</div>
 		</div>
+		#{/ifEnabled}
 	</fieldset>
+	#{/ifEnabled}
 	
+	#{ifEnabled COMMITTEE}
 	<fieldset class="form-inline">
-		<legend>Your Committee</legend>
-                <div id="committee-members">
+		<legend>#{fieldLabel COMMITTEE /}</legend>
+		<p>#{fieldHelp COMMITTEE /}</p>
+        <div id="committee-members">
 
-                    #{list items:1..committeeSlots, as:'i'}
-                    %{
-                        def firstName = "";
-                        def middleName = "";
-                        def lastName = "";
-                        def chairFlag = "";
-                        
-                        if (committee.size() >= i) {
-                            firstName = committee.get(i-1).get("firstName");
-                            middleName = committee.get(i-1).get("middleName");
-                            lastName = committee.get(i-1).get("lastName");
-                            chairFlag = committee.get(i-1).get("chairFlag");
-                        }
-                    }%
-                    <table id="committee-member" #{ifError "member"+i}class="error"#{/ifError}>
-                            <tr> 
-                                <td><input type="text" class="input-medium" id="committeeFirstName${i}" name="committeeFirstName${i}" value="${firstName}"></td>
-                                <td><input type="text" class="span1" id="committeeMiddleName${i}" name="committeeMiddleName${i}" value="${middleName}"></td>
-                                <td><input type="text" class="input-medium" id="committeeLastName${i}" name="committeeLastName${i}" value="${lastName}"></td>
-                                <td><label class="checkbox"><input type="checkbox" id="committeeChairFlag${i}" name="committeeChairFlag${i}" class="inline" ${ (chairFlag != null && chairFlag.trim().length() > 0) ? "checked='true'" : "" }> Chair</label></td>
-                            </tr>
-                            <tr>
-                                <td><label class="span2">First Name</label></td>
-                                <td><label class="span1">MI</label></td>
-                                <td><label class="span2">Last Name</label></td>
-                                <td></td>
-                            </tr>
-                    </table>
+            #{list items:1..committeeSlots, as:'i'}
+            %{
+                def firstName = "";
+                def middleName = "";
+                def lastName = "";
+                def chairFlag = "";
+                
+                if (committee.size() >= i) {
+                    firstName = committee.get(i-1).get("firstName");
+                    middleName = committee.get(i-1).get("middleName");
+                    lastName = committee.get(i-1).get("lastName");
+                    chairFlag = committee.get(i-1).get("chairFlag");
+                }
+            }%
+            <table id="committee-member" #{ifError "committee"}class="error"#{/ifError}>
+                    <tr> 
+                        <td><input type="text" class="input-medium" id="committeeFirstName${i}" name="committeeFirstName${i}" value="${firstName}"></td>
+                        <td><input type="text" class="span1" id="committeeMiddleName${i}" name="committeeMiddleName${i}" value="${middleName}"></td>
+                        <td><input type="text" class="input-medium" id="committeeLastName${i}" name="committeeLastName${i}" value="${lastName}"></td>
+                        <td><label class="checkbox"><input type="checkbox" id="committeeChairFlag${i}" name="committeeChairFlag${i}" class="inline" ${ (chairFlag != null && chairFlag.trim().length() > 0) ? "checked='true'" : "" }> Chair</label></td>
+                    </tr>
+                    <tr>
+                        <td><label class="span2">First Name</label></td>
+                        <td><label class="span1">MI</label></td>
+                        <td><label class="span2">Last Name</label></td>
+                        <td></td>
+                    </tr>
+            </table>
 
-                    #{/list} 
-                </div>
+            #{/list} 
+        </div>
                 
 		<div class="row center">
                     <input type="submit" class="btn" id="submit_add" name="submit_add" value="Add Additional Members" />
 		</div>		
 	</fieldset>
+	#{/ifEnabled}
 	
+	#{ifEnabled COMMITTEE_CONTACT_EMAIL}
 	<fieldset class="form-horizontal">
-		<legend>Chair's Contact Email</legend>
-		<div class="control-group #{ifError 'chairEmail'}error#{/ifError}">
-			<label class="control-label" for="chairEmail"><b>* Committee<br />Chair Email</b>:</label>
+		<legend>Committee Contact Email</legend>
+		<div class="control-group #{errorClass 'chairEmail' /} #{fieldClass COMMITTEE_CONTACT_EMAIL /}">
+			<label class="control-label" for="chairEmail"><span class="required-star">*</span> #{fieldLabel COMMITTEE_CONTACT_EMAIL /}:</label>
 			<div class="controls">
 				<input type="text" class="span4" id="chairEmail" name="chairEmail" value="${chairEmail}">
-				<a href="#" class="tooltip-icon" rel="tooltip" title="Enter an email address for your committee chair."><i class="icon-info-sign">				
+				<a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp COMMITTEE_CONTACT_EMAIL /}"><i class="icon-info-sign">				
 				</i></a>
 			</div>
 		</div>
 	</fieldset>
+	#{/ifEnabled}
 	
+	#{ifEnabled EMBARGO_TYPE }
 	<fieldset class="form-horizontal">
-		<legend>Embargo Options</legend>
-		<p>With your advisor's approval you may request a delay in the publication (embargo) of your work.</p>
+		<legend>#{ifRequired EMBARGO_TYPE}<strong>#{fieldLabel EMBARGO_TYPE /}</strong>#{/ifRequired}#{else}#{fieldLabel EMBARGO_TYPE /}#{/else}</legend>
+		<p>#{fieldHelp EMBARGO_TYPE /}</p>
                 #{list embargoTypes, as: 'et'}
-                    <div class="control-group #{ifError 'embargo'}error#{/ifError}">
+                    <div class="control-group #{errorClass 'embargo' /}">
                         <label class="control-label">${et.getName()}:</label>
                         <div class="controls">
                             <label class="radio"> 
@@ -142,20 +161,20 @@
                     </div>
                 #{/list}                
 	</fieldset>
+	#{/ifEnabled}
 	
-	#{if requestUMI}
+	#{ifEnabled UMI_RELEASE}
 	<fieldset class="form-horizontal">
-        <legend>Release Options</legend>
+        <legend>#{fieldLabel UMI_RELEASE /}</legend>
         <div class="control-group #{ifError 'umi'}error#{/ifError}">
             <label class="control-label" for="umi">UMI Publication:</label>
             <div class="controls">
                 <input type="checkbox" id="umi" name="umi" value="release" ${ (umi != null) ? "checked='true'" : "" }/> 
-                I am requesting that a copy of my thesis/dissertation be sent to UMI for inclusion in their <em>Digital Dissertations</em> 
-                database. I understand that some additional paperwork and/or fees may be required.
+                #{fieldHelp UMI_RELEASE /}
             </div>
         </div>            
     </fieldset>
-    #{/if}
+    #{/ifEnabled}
     
 	<div class="span10 center">
 		<input type="submit" name="submit_next" value="Save and Continue >>" class="btn btn-primary">
@@ -163,22 +182,9 @@
 	</form>
 </div>
 <div id="stickyNotes" class="span3">
-	<div class="sticky-top"></div>
-	<div class="sticky-bottom">For the degree date, enter the semester in which your degree will be conferred (typically your graduation semester).</div>
-	
-	<div class="sticky-top"></div>
-	<div class="sticky-bottom">You can use Unicode characters (like accents and diacritics) in these fields.</div>
-	
-	<div class="sticky-top"></div>
-	<div class="sticky-bottom">You can enter multiple keywords. Use semi-colons ( ; ) to separate the entries.</div>
-	
-	<div class="sticky-top"></div>
-	<div class="sticky-bottom">Enter the names of each member of your committee, and use the checkboxes to indicate which one is the committee chair (check two if you have co-chairs).</div>
-
-	<div class="sticky-top"></div>
-	<div class="sticky-bottom">Please enter an email address that can be used to contact your committee chair. If you have co-chairs, please choose only one address. </div>
-
-	<div class="sticky-top"></div>
-	<div class="sticky-bottom">If you don't know if you need an embargo, then you should check with your advisor. This option is typically only used for situations like patent holds or a request by a publisher if content from the document is pending publication.</div>
+     #{list items:stickies, as:'sticky'}
+       <div class="sticky-top"></div>
+       <div class="sticky-bottom">#{verbatim}${sticky}#{/verbatim}</div>
+    #{/list}
 </div>
 </div>

@@ -8,158 +8,19 @@
 <br/>
 #{if inputRecieved }
 <div class="alert alert-success">
-	<button class="close" data-dismiss="alert">×</button>
+	<button class="close" data-dismiss="alert">x</button>
 	<p><strong>Your input has been recorded.</strong> You may return to this page to follow the application's progress, or provide additional input in the future.</p>
 </div>
 #{/if}
 
 <div id="confirmSubmit" class="row">
 <form action="@{Advisor.review(token)}" method="post" class="form-horizontal">
-	<legend>Student</legend>
-	<div class="control-group">
-		<label class="control-label "><b>Name:</b></label>
-		<div class="controls">
-			<p>${sub.getStudentLastName()}, ${sub.getStudentFirstName()}</p>
-		</div>
-	</div>
-	<div class="control-group">
-		<label class="control-label"><b>Email:</b></label>
-		<div class="controls">
-			<p>${submitter?.getEmail()}</p>
-		</div>
-	</div>
-	#{if requestBirth}
-	<div class="control-group">
-		<label class="control-label"><b>Year of Birth:</b></label>
-		<div class="controls">
-			<p>${sub.getStudentBirthYear()}</p>
-		</div>
-	</div>
-	#{/if}
-	<div class="control-group">
-		<label class="control-label"><b>Phone:</b></label>
-		<div class="controls">
-			<p>${submitter?.getCurrentPhoneNumber()}</p>
-		</div>
-	</div>
-	<div class="control-group">
-		<label class="control-label"><b>Address:</b></label>
-		<div class="controls">
-			<p>${submitter?.getCurrentPostalAddress()}</p>
-		</div>
-	</div>
 
-	
-	<legend>Academic Affiliation</legend>
-	<div class="control-group">
-		<label class="control-label"><b>School:</b></label>
-		<div class="controls">
-			<p>${grantor}</p>
-		</div>
-	</div>
-	<div class="control-group">
-		<label class="control-label"><b>Degree:</b></label>
-		<div class="controls">
-			<p>${sub.getDegree()}</p>
-		</div>
-	</div>
-	<div class="control-group">
-		<label class="control-label"><b>Major:</b></label>
-		<div class="controls">
-			<p>${sub.getMajor()}</p>
-		</div>
-	</div>
-
-	
-	<legend>Document Information</legend>
-	<div class="control-group">
-		<label class="control-label"><b>Title:</b></label>
-		<div class="controls">
-			<p>${sub.getDocumentTitle()}</p>
-		</div>
-	</div>
-		
-	<div class="control-group">
-		<label class="control-label"><b>Degree Date:</b></label>
-		<div class="controls">
-		    #{if sub.getGraduationMonth() != null && sub.getGraduationYear() != null}
-		    %{
-		      def month = "unknown";
-		      if (sub.getGraduationMonth() >= 0 && sub.getGraduationMonth() <= 11)
-		          month = new java.text.DateFormatSymbols().getMonths()[sub.getGraduationMonth()]
-		    }% 
-				<p>${month} ${sub.getGraduationYear()}</p>
-			#{/if}
-		</div>
-	</div>
-	<div class="control-group">
-		<label class="control-label"><b>Document Type:</b></label>
-		<div class="controls">
-			<p>${sub.getDocumentType()}</p>
-		</div>
-	</div>
-	<div class="control-group">
-		<label class="control-label"><b>Keywords:</b></label>
-		<div class="controls">
-			<p>${sub.getDocumentKeywords()}</p>
-		</div>
-	</div>
-	<div class="control-group">
-		<label class="control-label"><b>Abstract:</b></label>
-		<div class="controls">
-			<p>${sub.getDocumentAbstract()}</p>
-		</div>
-	</div>
-	
-    #{list items:sub.getCommitteeMembers(), as:"member"}	
-
-	<div class="control-group">
-		<label class="control-label"><b>Committee Member:</b></label>
-		<div class="controls">
-			<p>${member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST)}
-			#{if member.isCommitteeChair()}
-			<em>(chair)</em>
-			#{/if}
-			</p>
-		</div>
-	</div>	
-	
-	#{/list}
-	
-	<div class="control-group">
-		<label class="control-label"><b>Chair Email Address:</b></label>
-		<div class="controls">
-			<p><a href="mailto:${sub.getCommitteeContactEmail()}">${sub.getCommitteeContactEmail()}</a></p>
-		</div>
-	</div>
-	
-	
-	<legend>Embargo Options</legend>
-	<div class="control-group">
-		<label class="control-label"><b>Embargo</b>:<br/><em>(selected)</em></label>
-		<div class="controls">
-			#{if sub.getEmbargoType() != null}
-				<p><strong>${sub.getEmbargoType().getName()}</strong> - ${sub.getEmbargoType().getDescription()}</p>
-			#{/if}
-			#{else}
-				<p>None</p>
-			#{/else}
-		</div>
-	</div>
-	<div class="control-group">
-		<label class="control-label"><b>Alternative Options</b>:<br/> <em>(not selected)</em></label>
-		<div class="controls">
-			#{list items:allEmbargos, as:'embargo'}
-				#{if embargo != sub.getEmbargoType()}
-					<p><strong>${embargo.getName()}</strong> - ${embargo.getDescription()}</p>
-				#{/if}
-			#{/list}
-		</div>
-	</div>
+    #{include 'viewSubmission.include' /}
 	
 	<legend>Uploaded Files</legend>
 	<div class="control-group #{if errors.forKey('primaryDocument')}error#{/if}">
-		<label class="control-label"><b>Primary Document:</b></label>
+		<label class="control-label">#{fieldLabel PRIMARY_ATTACHMENT /}:</label>
 		<div class="controls">
 			#{if primaryDocument != null}
 			    <p>
@@ -173,7 +34,7 @@
 		</div>
 	</div>
     <div class="control-group #{if errors.forKey('supplementalDocument')}error#{/if}">
-        <label class="control-label"><b>Supplementary Document${ supplementaryDocuments.pluralize() }:</b></label>
+        <label class="control-label">#{fieldLabel SUPPLEMENTARY_ATTACHMENT /}:</label>
         <div class="controls">
             #{list items:supplementaryDocuments, as:'attachment'}
             <p>

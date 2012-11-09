@@ -1,10 +1,12 @@
 package controllers.submit;
 
 import static org.tdl.vireo.constant.AppConfig.*;
+import static org.tdl.vireo.constant.FieldConfig.*;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.AttachmentType;
@@ -29,7 +31,7 @@ public class License extends AbstractSubmitStep {
 	 * The second step of the submission process. Where the user must accept the
 	 * provided license.
 	 * 
-	 * After accepting the license the text is stapmed with the current user and
+	 * After accepting the license the text is stamped with the current user and
 	 * agreement date. Then both the agreement date and stamped license text are
 	 * saved to the submission.
 	 * 
@@ -44,34 +46,35 @@ public class License extends AbstractSubmitStep {
 		String licenseAgreement = params.get("licenseAgreement");
 		String licenseText = settingRepo.getConfigValue(SUBMIT_LICENSE_TEXT);
 
-		if (params.get("submit_next") == null) {
-			licenseAgreement = sub.getLicenseAgreementDate() != null ? "true" : null; 
-		}
-		
 		// If it's blank, make it null.
 		if (licenseAgreement != null && licenseAgreement.trim().length() == 0)
 			licenseAgreement = null;
 		
-		if (!"true".equals(flash.get("nextStep")))
-			verify(licenseAgreement);
-
-		
-		// first time here?
-		if (params.get("submit_next") != null) {
-
+		if ("license".equals(params.get("step"))) {
+			// Save the state
 			if (licenseAgreement == null) {
 				recordDisagreement(sub);
-				
-				sub.save();
 			} else {
 				recordAgreement(sub,licenseText);
-				
-				sub.save();
-
-				flash.put("nextStep", "true");
-				DocumentInfo.documentInfo(subId);
 			}
+			sub.save();
+			
+		} else {
+			// load the state
+			licenseAgreement = sub.getLicenseAgreementDate() != null ? "true" : null; 
 		}
+		
+		// Verify the form if we are submitting or if jumping from the confirm step.
+		if ("license".equals(params.get("step")) ||
+			"confirm".equals(flash.get("from-step"))) {
+			verify(sub);
+		}
+		
+
+		if (params.get("submit_next") != null && !validation.hasErrors()) {
+			// Display the license -- passing along the submission id
+			DocumentInfo.documentInfo(subId);
+		} 
 
 		// Format the license text for display
 		licenseText = text2html(licenseText);
@@ -80,23 +83,25 @@ public class License extends AbstractSubmitStep {
 
 	}
 
-	
 	/**
-	 * Verify the license agreement has been agreed to.
+	 * Verify the license agreement has been accepted.
 	 * 
-	 * @param licenseAgreement
-	 *            The license agreement field.
-	 * @return True if the license has been agreed to, otherwise false.
+	 * @param sub The submission to verify.
+	 * @return True if no errors were found, otherwise false.
 	 */
-	public static boolean verify(String licenseAgreement) {
+	public static boolean verify(Submission sub) {
 		
-		if (licenseAgreement == null) {
-			validation.addError("laLabel", "You must agree to the license agreement before continuing.");
-			return false;
-		} else {
-			return true;
-		}
+		if (isFieldRequired(LICENSE_AGREEMENT)) {
+			Date agreementDate = sub.getLicenseAgreementDate();
+			List<Attachment> licenses = sub.getAttachmentsByType(AttachmentType.LICENSE);
+			
+			if (agreementDate == null || licenses.size() == 0) {
+				validation.addError("licenseAgreement","You must agree to the license agreement before continuing");
+				return false;
+			}
+		} // isRequired
 		
+		return true;
 	}
 	
 	/**

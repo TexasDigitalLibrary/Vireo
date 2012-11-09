@@ -114,8 +114,14 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 		}
 		
 		// Delete the submitter.
-		if (submitter != null)
+		if (submitter != null) {
+			
+			for(Submission sub : subRepo.findSubmission(submitter)) {
+				sub.delete();
+			}
+			
 			personRepo.findPerson(submitter.getId()).delete();
+		}
 		
 		context.restoreAuthorization();
 		

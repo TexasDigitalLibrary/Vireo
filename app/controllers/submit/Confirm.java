@@ -56,63 +56,23 @@ public class Confirm extends AbstractSubmitStep {
 	@Security(RoleType.STUDENT)
 	public static void confirm(Long subId) {		
 
-		// Submission configuration
-		boolean requestCollege = settingRepo.getConfigBoolean(SUBMIT_REQUEST_COLLEGE);
-		boolean requestBirth = settingRepo.getConfigBoolean(SUBMIT_REQUEST_BIRTH);
-		boolean requestUMI = settingRepo.getConfigBoolean(SUBMIT_REQUEST_UMI);
-
 		// Locate the submission 
 		Submission sub = getSubmission();
 		Person submitter = context.getPerson();
 
-		// Pull out information from the submission for verification.
-		// PersonalInfo
-		String firstName = sub.getStudentFirstName();
-		String lastName = sub.getStudentLastName();
-		String birthYear = (sub.getStudentBirthYear() != null) ? String.valueOf(sub.getStudentBirthYear()) : null;
-		String college = sub.getCollege();
-		String department = sub.getDepartment();
-		String degree = sub.getDegree();
-		String major = sub.getMajor();
-		String permPhone = submitter.getPermanentPhoneNumber();
-		String permAddress = submitter.getPermanentPostalAddress();
-		String permEmail = submitter.getPermanentEmailAddress();
-
-		// License
-		String licenseAgreement = sub.getLicenseAgreementDate() != null ? "agreed" : null;
-
-		// DocumentInfo
-		String title = sub.getDocumentTitle();
-		String degreeMonth = (sub.getGraduationMonth() != null) ? String.valueOf(sub.getGraduationMonth()) : null;
-		String degreeYear = (sub.getGraduationYear() != null) ? String.valueOf(sub.getGraduationYear()) : null;
-		String docType = sub.getDocumentType();
-		String abstractText = sub.getDocumentAbstract();
-		String keywords = sub.getDocumentKeywords();
-		String chairEmail = sub.getCommitteeContactEmail();
-		List<Map<String,String>> committee = DocumentInfo.loadCommitteeMembers(sub);
-		String embargo = (sub.getEmbargoType() != null) ? String.valueOf(sub.getEmbargoType().getId()) : null;
-		String umi = (sub.getUMIRelease() != null) ? String.valueOf(sub.getUMIRelease()) : null;
-
-		// FileUpload
-		Attachment primaryDocument = sub.getPrimaryDocument();
-
-
-		if (!PersonalInfo.verify(firstName, lastName, birthYear, college, department, degree, major, permPhone, permAddress, permEmail)) {
+		if (!PersonalInfo.verify(sub))
 			validation.addError("personalInfo", "There are errors on this page to correct.");
-		}
 
-		if (!License.verify(licenseAgreement)) {
+		if (!License.verify(sub))
 			validation.addError("license","There are errors on this page to correct.");
-		}
 
-		if (!DocumentInfo.verify(title, degreeMonth, degreeYear, docType, abstractText, keywords, committee, chairEmail, embargo)) {
+		if (!DocumentInfo.verify(sub))
 			validation.addError("documentInfo", "There are errors on this page to correct.");
-		}
 
-		if (!FileUpload.verify(primaryDocument)) {
+		if (!FileUpload.verify(sub))
 			validation.addError("fileUpload", "There are errors on this page to correct.");
-		}
 
+		flash.put("from-step","confirm");
 
 
 		if (params.get("submit_confirm") != null && !validation.hasErrors()) {
@@ -145,7 +105,8 @@ public class Confirm extends AbstractSubmitStep {
 				
 				// After we have saved our state do we kick off the emails
 				emailService.sendEmail(studentEmail, false);
-				emailService.sendEmail(advisorEmail, false);
+				if (advisorEmail != null)
+					emailService.sendEmail(advisorEmail, false);
 			} finally {
 				context.restoreAuthorization();
 
@@ -156,16 +117,15 @@ public class Confirm extends AbstractSubmitStep {
 
 
 		List<ActionLog> logs = subRepo.findActionLog(sub);
+		Attachment primaryDocument = sub.getPrimaryDocument();
 		List<Attachment> supplementaryDocuments = sub.getSupplementalDocuments();
 		String grantor = settingRepo.getConfigValue(GRANTOR,"Unknown Institution");
 
+		boolean showEditLinks = true;
 
-		renderTemplate("Submit/confirm.html",subId, sub, grantor, submitter, logs, 
-
+		renderTemplate("Submit/confirm.html",subId, sub, grantor, showEditLinks, submitter, logs, 
 				primaryDocument,
-				supplementaryDocuments,
-
-				requestCollege, requestBirth, requestUMI);		
+				supplementaryDocuments);		
 	}
 	
 	/**
@@ -210,6 +170,12 @@ public class Confirm extends AbstractSubmitStep {
 		return hash;
 	}
 	
+	/**
+	 * Generate an email to the student using the default template.
+	 * 
+	 * @param sub The submission to generate an email about.
+	 * @return A vireo email, or null if no email address exists.
+	 */
 	protected static VireoEmail generateStudentEmail(Submission sub) {
 		templateService.generateAllSystemEmailTemplates();
 
@@ -232,6 +198,12 @@ public class Confirm extends AbstractSubmitStep {
 		return email;
 	}
 	
+	/**
+	 * Generate an email to the advisor using the default template.
+	 * 
+	 * @param sub The submission to generate an email about.
+	 * @return A viero email, or null if no advisor email address exists.
+	 */
 	protected static VireoEmail generateAdvisorEmail(Submission sub) {
 		VireoEmail email = null;
 		if (sub.getCommitteeContactEmail() != null) {

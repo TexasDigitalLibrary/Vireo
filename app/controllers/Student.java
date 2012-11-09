@@ -1,5 +1,7 @@
 package controllers;
 
+import static org.tdl.vireo.constant.AppConfig.GRANTOR;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -7,6 +9,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.tdl.vireo.constant.AppConfig;
+import org.tdl.vireo.constant.FieldConfig;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.AttachmentType;
@@ -205,6 +208,10 @@ public class Student extends AbstractVireoController {
 		Attachment primaryDocument = sub.getPrimaryDocument();
 		List<Attachment> supplementaryDocuments = sub.getSupplementalDocuments();
 		List<Attachment> feedbackDocuments = sub.getAttachmentsByType(AttachmentType.FEEDBACK);
+		
+		for(FieldConfig field : FieldConfig.values()) {
+			renderArgs.put(field.name(),field );
+		}
 
 		renderTemplate("Student/view.html",subId, sub, submitter, logs, primaryDocument, supplementaryDocuments, feedbackDocuments, allSubmissions, grantor, allowMultiple);		
 	}
@@ -359,7 +366,6 @@ public class Student extends AbstractVireoController {
 				if (attachment.getSubmission() == sub && attachment.getType() == AttachmentType.SUPPLEMENTAL)
 					attachment.delete();
 			}
-		
 		}
 		
 		return true;

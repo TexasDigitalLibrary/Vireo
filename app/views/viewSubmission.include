@@ -1,0 +1,272 @@
+*{
+This viewSubmission include is used in several places where an overview of a
+submission needs to be displayed. These are the final step of the submission
+process to confim before submitting, the student's view after submission both
+for viewing and making changes, and the advisor's view to approve the
+submission.
+
+Variables that must be defined:
+
+1) sub - The submission object being viewed.
+2) submitter - The original submitter of the submission.
+3) grantor - the static value of grantor applied to all submissions.
+4) editLinks - boolean flag whether to show links back to where a student could edit the information in each block.
+
+Plus all the FieldConfig objects
+
+}*
+
+#{ifEnabled [STUDENT_FIRST_NAME,STUDENT_MIDDLE_NAME,STUDENT_EMAIL,STUDENT_BIRTH_YEAR]}
+<legend>About You</legend>
+#{ifEnabled [STUDENT_FIRST_NAME,STUDENT_MIDDLE_NAME]}
+<div class="control-group #{errorClass 'firstName' /} #{errorClass 'lastName' /} #{errorClass 'middleName' /} #{errorClass 'birthYear' /} ">
+    <label class="control-label ">Name:</label>
+    <div class="controls">
+        <p>${sub?.getStudentFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH)}</p>
+    </div>
+</div>
+#{/ifEnabled}
+#{ifEnabled STUDENT_EMAIL}
+<div class="control-group #{errorClass 'email' /} ">
+    <label class="control-label">#{fieldLabel STUDENT_EMAIL /}:</label>
+    <div class="controls">
+        <p><a href="mailto:${submitter?.getEmail()}">${submitter?.getEmail()}</a></p>
+    </div>
+</div>
+#{/ifEnabled}
+#{ifEnabled PERMANENT_PHONE_NUMBER }
+<div class="control-group #{errorClass 'permPhone' /} ">
+    <label class="control-label">#{fieldLabel PERMANENT_PHONE_NUMBER /}:</label>
+    <div class="controls">
+        <p>${submitter?.getPermanentPhoneNumber() }</p>
+    </div>
+</div>
+#{/ifEnabled}
+#{ifEnabled PERMANENT_POSTAL_ADDRESS }
+<div class="control-group #{errorClass 'permAddress' /} ">
+    <label class="control-label">#{fieldLabel PERMANENT_POSTAL_ADDRESS /}:</label>
+    <div class="controls">
+        <p>${submitter?.getPermanentPostalAddress() }</p>
+    </div>
+</div>
+#{/ifEnabled}
+#{ifEnabled PERMANENT_EMAIL_ADDRESS }
+<div class="control-group #{errorClass 'permEmail' /} ">
+    <label class="control-label">#{fieldLabel PERMANENT_EMAIL_ADDRESS /}:</label>
+    <div class="controls">
+        <p><a href="mailto:${submitter?.getPermanentEmailAddress()}">${submitter?.getPermanentEmailAddress()}</a></p>
+    </div>
+</div>
+#{/ifEnabled}
+#{ifEnabled CURRENT_PHONE_NUMBER }
+<div class="control-group #{errorClass 'currentPhone' /} ">
+    <label class="control-label">#{fieldLabel CURRENT_PHONE_NUMBER /}:</label>
+    <div class="controls">
+        <p>${submitter?.getCurrentPhoneNumber() }</p>
+    </div>
+</div>
+#{/ifEnabled}
+#{ifEnabled CURRENT_POSTAL_ADDRESS }
+<div class="control-group #{errorClass 'currentAddress' /} ">
+    <label class="control-label">#{fieldLabel CURRENT_POSTAL_ADDRESS /}:</label>
+    <div class="controls">
+        <p>${submitter?.getCurrentPostalAddress() }</p>
+    </div>
+</div>
+#{/ifEnabled}
+#{if showEditLinks}
+<div class="control-group">
+    <label class="control-label"></label>
+    <div class="controls">
+        <p><a href="@{submit.PersonalInfo.personalInfo(subId)}">[edit your personal information]</a></p>
+    </div>
+</div>
+#{/if}
+#{/ifEnabled}
+
+#{ifEnabled [GRANTOR,COLLEGE,DEPARTMENT,DEGREE,MAJOR] }
+<legend>Academic Affiliation</legend>
+
+#{ifEnabled GRANTOR }
+<div class="control-group #{errorClass 'grantor' /} ">
+    <label class="control-label">#{fieldLabel GRANTOR /}:</label>
+    <div class="controls">
+        <p>${ grantor }</p>
+    </div>
+</div>
+#{/ifEnabled}
+#{ifEnabled COLLEGE }
+<div class="control-group #{errorClass 'college' /} ">
+    <label class="control-label">#{fieldLabel COLLEGE /}:</label>
+    <div class="controls">
+        <p>${ sub.getCollege() }</p>
+    </div>
+</div>
+#{/ifEnabled}
+#{ifEnabled DEPARTMENT }
+<div class="control-group #{errorClass 'department' /} ">
+    <label class="control-label">#{fieldLabel DEPARTMENT /}:</label>
+    <div class="controls">
+        <p>${ sub.getDepartment() }</p>
+    </div>
+</div>
+#{/ifEnabled}
+#{ifEnabled DEGREE}
+<div class="control-group #{errorClass 'degree' /} ">
+    <label class="control-label">#{fieldLabel DEGREE /}:</label>
+    <div class="controls">
+        <p>${sub.getDegree()}</p>
+    </div>
+</div>
+#{/ifEnabled}
+#{ifEnabled MAJOR}
+<div class="control-group #{errorClass 'major' /} ">
+    <label class="control-label">#{fieldLabel MAJOR /}:</label>
+    <div class="controls">
+        <p>${sub.getMajor()}</p>
+    </div>
+</div>
+#{/ifEnabled}
+#{if showEditLinks}
+<div class="control-group">
+    <label class="control-label"></label>
+    <div class="controls">
+        <p><a href="@{submit.PersonalInfo.personalInfo(subId)}">[edit your academic affiliation]</a></p>
+    </div>
+</div>
+#{/if}
+#{/ifEnabled}
+
+#{ifEnabled [DOCUMENT_TITLE,GRADUATION_DATE,DOCUMENT_TYPE,DOCUMENT_ABSTRACT,DOCUMENT_KEYWORDS,COMMITTEE,COMMITTEE_CONTACT_EMAIL,EMBARGO_TYPE,UMI_RELEASE]}
+<legend>Document Information</legend>
+
+#{ifEnabled DOCUMENT_TITLE}
+<div class="control-group #{errorClass 'title' /} ">
+    <label class="control-label">#{fieldLabel DOCUMENT_TITLE /}:</label>
+    <div class="controls">
+        <p>${sub.getDocumentTitle()}</p>
+    </div>
+</div>
+#{/ifEnabled}
+#{ifEnabled GRADUATION_DATE }
+<div class="control-group #{errorClass 'degreeMonth' /} #{errorClass 'degreeYear' /} ">
+    <label class="control-label">#{fieldLabel GRADUATION_DATE /}:</label>
+    <div class="controls">
+        #{if sub.getGraduationMonth() != null && sub.getGraduationYear() != null}
+        %{
+          def month = "unknown";
+          if (sub.getGraduationMonth() >= 0 && sub.getGraduationMonth() <= 11)
+              month = new java.text.DateFormatSymbols().getMonths()[sub.getGraduationMonth()]
+        }% 
+            <p>${month} ${sub.getGraduationYear()}</p>
+        #{/if}
+    </div>
+</div>
+#{/ifEnabled}
+#{ifEnabled DOCUMENT_TYPE}
+<div class="control-group #{errorClass 'docType' /} ">
+    <label class="control-label">#{fieldLabel DOCUMENT_TYPE /}:</label>
+    <div class="controls">
+        <p>${sub.getDocumentType()}</p>
+    </div>
+</div>
+#{/ifEnabled}
+#{ifEnabled DOCUMENT_ABSTRACT}
+<div class="control-group #{errorClass 'keywords' /} ">
+    <label class="control-label">#{fieldLabel DOCUMENT_ABSTRACT /}:</label>
+    <div class="controls">
+        <p>${ sub.getDocumentAbstract() }</p>
+    </div>
+</div>
+#{/ifEnabled}
+#{ifEnabled DOCUMENT_KEYWORDS}
+<div class="control-group #{errorClass 'keywords' /} ">
+    <label class="control-label">#{fieldLabel DOCUMENT_KEYWORDS /}:</label>
+    <div class="controls">
+        <p>${sub.getDocumentKeywords()}</p>
+    </div>
+</div>
+#{/ifEnabled}
+
+#{ifEnabled COMMITTEE}
+#{list items:sub.getCommitteeMembers(), as:"member"}    
+<div class="control-group #{errorClass 'committee' /} ">
+    <label class="control-label">#{fieldLabel COMMITTEE /}:</label>
+    <div class="controls">
+        <p>${member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST)}
+        #{if member.isCommitteeChair()}
+        <em>(chair)</em>
+        #{/if}
+        </p>
+    </div>
+</div>  
+#{/list}
+#{/ifEnabled}
+
+#{ifEnabled COMMITTEE_CONTACT_EMAIL }
+<div class="control-group #{errorClass 'chairEmail' /} ">
+    <label class="control-label">#{fieldLabel COMMITTEE_CONTACT_EMAIL /}:</label>
+    <div class="controls">
+        <p><a href="mailto:${sub.getCommitteeContactEmail()}">${sub.getCommitteeContactEmail()}</a></p>
+    </div>
+</div>
+#{/ifEnabled}
+
+#{ifEnabled UMI_RELEASE}
+<div class="control-group #{errorClass 'umi' /} ">
+    <label class="control-label">#{fieldLabel UMI_RELEASE /}:</label>
+    <div class="controls">
+        #{if sub.getUMIRelease() != null}
+            <p>${ sub.getUMIRelease() ? "Yes" : "No"}</p>
+        #{/if}
+        #{else}
+            <p>None</p>
+        #{/else}
+    </div>
+</div>
+#{/ifEnabled}
+
+#{ifEnabled EMBARGO_TYPE }
+#{if !sub.getState().isInProgress() }
+<legend>#{fieldLabel EMBARGO_TYPE /}</legend>
+#{/if}
+
+<div class="control-group #{errorClass 'embargo' /}">
+    <label class="control-label">#{fieldLabel EMBARGO_TYPE /}:#{if !sub.getState().isInProgress() }<br/><em>(selected)</em>#{/if}</label>
+    <div class="controls">
+        #{if sub.getEmbargoType() != null}
+            <p><strong>${sub.getEmbargoType().getName()}</strong> - ${sub.getEmbargoType().getDescription()}</p>
+        #{/if}
+        #{else}
+            <p>None</p>
+        #{/else}
+    </div>
+</div>
+
+#{if !sub.getState().isInProgress() }
+<div class="control-group">
+    <label class="control-label">Alternative Options:<br/> <em>(not selected)</em></label>
+    <div class="controls">
+        #{list items:settingRepo.findAllEmbargoTypes(), as:'embargo'}
+            #{if embargo != sub.getEmbargoType()}
+                <p><strong>${embargo.getName()}</strong> - ${embargo.getDescription()}</p>
+            #{/if}
+        #{/list}
+    </div>
+</div>
+#{/if}
+
+#{/ifEnabled}
+
+#{if showEditLinks }
+<div class="control-group">
+    <label class="control-label"></label>
+    <div class="controls">
+        <p><a href="@{submit.DocumentInfo.documentInfo(subId)}">[edit your document information]</a></p>
+    </div>
+</div>
+#{/if}
+#{/ifEnabled}
+
+
+

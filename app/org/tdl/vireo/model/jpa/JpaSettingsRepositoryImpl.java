@@ -261,7 +261,7 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	 */
 	public void setConfigurationDefaults(Map<String, String> defaults) {
 		for (String name : defaults.keySet()) {
-			String value = defaults.get(name);
+			String value = defaults.get(name).trim();
 			Configuration.DEFAULTS.register(name, value);
 		}
 	}

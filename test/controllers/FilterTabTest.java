@@ -648,9 +648,7 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 		params.put("facets",facetsString);
 		params.put("submit_save","Save");
 		POST(CUSTOMIZE_URL,params);
-		
-		java.lang.System.out.println(FILTER_URL);
-		
+				
 		// Check that all the colleges are listed.
 		Response response = GET(FILTER_URL);
 		

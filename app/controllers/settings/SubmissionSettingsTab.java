@@ -118,7 +118,7 @@ public class SubmissionSettingsTab extends SettingsTab {
 				
 				if (config == null && value != null) {
 					// Create a new setting
-					settingRepo.createConfiguration(field, value).save();
+					settingRepo.createConfiguration(field, value.trim()).save();
 					
 			    } else if (config != null && value == null) {
 			    	// Delete an old setting
@@ -126,7 +126,7 @@ public class SubmissionSettingsTab extends SettingsTab {
 					
 				} else if (config != null && value != null) {
 					// Update the setting's value
-					config.setValue(value);
+					config.setValue(value.trim());
 					config.save();
 				}
 				
