@@ -80,9 +80,6 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 		List<String> booleanFields = new ArrayList<String>();
 		booleanFields.add(SUBMISSIONS_OPEN);
 		booleanFields.add(ALLOW_MULTIPLE_SUBMISSIONS);
-		booleanFields.add(SUBMIT_REQUEST_BIRTH);
-		booleanFields.add(SUBMIT_REQUEST_COLLEGE);
-		booleanFields.add(SUBMIT_REQUEST_UMI);
 		
 		
 		// Get the current list of 

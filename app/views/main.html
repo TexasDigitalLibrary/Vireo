@@ -33,8 +33,7 @@
     <body>
     	<div class="container">
 	    	<div id="header">	    
-	    		<div id=left-logo></div>		
-	    		<!-- <a id="tdl-logo" href="http://www.tdl.org" title="Texas Digital Library Home">&nbsp;</a> -->
+	    		<a id="left-logo" href="@{Application.index}" title="Home"></a>
 	    		
 	    		<div id="personal-bar">
 					#{if currentUser != null }
@@ -55,8 +54,7 @@
 	        </div>
     	</div>	        
 	    <div id="footer">
-        	<p class="pull-left">Vireo 1.8 &copy; 2012 <a href="#">Texas Digital Library</a>. All Rights Reserved.</p>
-        	<p class="pull-right">Valid <a href="#">XHTML 5.0</a>, <a href="#">CSS</a>. <a href="#">Section 508 Compliant</a>.</p>
+        	<p class="pull-left">Vireo 1.8 &copy; 2012 <a href="http://www.tdl.org/">Texas Digital Library</a>. All Rights Reserved.</p>
        	</div>
 
     </body>

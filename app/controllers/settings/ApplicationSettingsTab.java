@@ -56,10 +56,6 @@ public class ApplicationSettingsTab extends SettingsTab {
 		renderArgs.put("SUBMISSIONS_OPEN", settingRepo.findConfigurationByName(SUBMISSIONS_OPEN));
 		renderArgs.put("ALLOW_MULTIPLE_SUBMISSIONS", settingRepo.findConfigurationByName(ALLOW_MULTIPLE_SUBMISSIONS));
 		
-		renderArgs.put("SUBMIT_REQUEST_BIRTH", settingRepo.findConfigurationByName(SUBMIT_REQUEST_BIRTH));
-		renderArgs.put("SUBMIT_REQUEST_COLLEGE", settingRepo.findConfigurationByName(SUBMIT_REQUEST_COLLEGE));
-		renderArgs.put("SUBMIT_REQUEST_UMI", settingRepo.findConfigurationByName(SUBMIT_REQUEST_UMI));
-		
 		renderArgs.put("CURRENT_SEMESTER", settingRepo.getConfigValue(CURRENT_SEMESTER, ""));
 		renderArgs.put("GRANTOR", settingRepo.getConfigValue(GRANTOR, ""));
 		renderArgs.put("SUBMIT_LICENSE_TEXT", settingRepo.getConfigValue(SUBMIT_LICENSE_TEXT));
@@ -102,9 +98,6 @@ public class ApplicationSettingsTab extends SettingsTab {
 			List<String> booleanFields = new ArrayList<String>();
 			booleanFields.add(SUBMISSIONS_OPEN);
 			booleanFields.add(ALLOW_MULTIPLE_SUBMISSIONS);
-			booleanFields.add(SUBMIT_REQUEST_BIRTH);
-			booleanFields.add(SUBMIT_REQUEST_COLLEGE);
-			booleanFields.add(SUBMIT_REQUEST_UMI);
 			List<String> textFields = new ArrayList<String>();
 			textFields.add(CURRENT_SEMESTER);
 			textFields.add(GRANTOR);

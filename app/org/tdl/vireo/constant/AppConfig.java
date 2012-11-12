@@ -19,15 +19,15 @@ package org.tdl.vireo.constant;
 public class AppConfig {
 
 	// Submission Settings
-	/** If defined then the student's birth year will be requested */
+	/** If defined then the student's birth year will be requested. This field is no longer used, see FieldConfig */
 	@Deprecated
 	public final static String SUBMIT_REQUEST_BIRTH = "submit_request_birth";
 	
-	/** If defined then the college parameter will be requested */
+	/** If defined then the college parameter will be requested. This field is no longer used, see FieldConfig */
 	@Deprecated
 	public final static String SUBMIT_REQUEST_COLLEGE = "submit_request_college";
 	
-	/** If defined then the UMI Release parameter will be requested */
+	/** If defined then the UMI Release parameter will be requested. This field is no longer used, see FieldConfig */
 	@Deprecated
 	public final static String SUBMIT_REQUEST_UMI = "submit_request_umi";
 	
