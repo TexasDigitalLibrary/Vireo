@@ -195,7 +195,37 @@ jQuery(document).ready(function(){
     #{include 'SettingTabs/listMembers.include' /}
 </table>
 
+<h2>PROQUEST SETTINGS</h2>
 
+<div class="submissionAvailability wrap">
+	<ul class="unstyled">
+		
+		<li id="currentSemester">
+			<label>Proquest Institution Code:</label>
+			<span>
+			     <input name="${org.tdl.vireo.constant.AppConfig.PROQUEST_INSTITUTION_CODE}" class="application-text" type="text" value="${PROQUEST_INSTITUTION_CODE}" />
+			</span>
+		</li>
+		<li>
+			<label>Open Access Publishing:</label>
+			<span>
+			    <div class="btn-group" data-toggle="buttons-radio">
+					<button name="${org.tdl.vireo.constant.AppConfig.PROQUEST_OA_PUBLISHING}" class="btn application-toggle #{if PROQUEST_OA_PUBLISHING}active#{/if}" value="true">Yes</button>
+					<button name="${org.tdl.vireo.constant.AppConfig.PROQUEST_OA_PUBLISHING}" class="btn application-toggle #{if !PROQUEST_OA_PUBLISHING}active#{/if}">No</button>
+				</div>
+			</span>
+		</li>
+		<li>
+			<label>Indexed by Search Engines:</label>
+			<span>
+			    <div class="btn-group" data-toggle="buttons-radio">
+					<button name="${org.tdl.vireo.constant.AppConfig.PROQUEST_INDEXING}" class="btn application-toggle #{if PROQUEST_INDEXING}active#{/if}" value="true">Yes</button>
+					<button name="${org.tdl.vireo.constant.AppConfig.PROQUEST_INDEXING}" class="btn application-toggle #{if !PROQUEST_INDEXING}active#{/if}">No</button>
+				</div>
+			</span>
+		</li>
+	</ul>
+</div>
 
 <div class="modal fade" id="add-member-modal">
 	<input type="hidden" name="embargoType-id" id="embargoType-id" value=""/>

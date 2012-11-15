@@ -59,6 +59,10 @@ public class ApplicationSettingsTab extends SettingsTab {
 		renderArgs.put("CURRENT_SEMESTER", settingRepo.getConfigValue(CURRENT_SEMESTER, ""));
 		renderArgs.put("GRANTOR", settingRepo.getConfigValue(GRANTOR, ""));
 		renderArgs.put("SUBMIT_LICENSE_TEXT", settingRepo.getConfigValue(SUBMIT_LICENSE_TEXT));
+		
+		renderArgs.put("PROQUEST_INSTITUTION_CODE", settingRepo.getConfigValue(PROQUEST_INSTITUTION_CODE));
+		renderArgs.put("PROQUEST_OA_PUBLISHING", settingRepo.getConfigValue(PROQUEST_OA_PUBLISHING));
+		renderArgs.put("PROQUEST_INDEXING", settingRepo.getConfigValue(PROQUEST_INDEXING));
 
 		List<CustomActionDefinition> actions = settingRepo.findAllCustomActionDefinition();
 		
@@ -102,6 +106,9 @@ public class ApplicationSettingsTab extends SettingsTab {
 			textFields.add(CURRENT_SEMESTER);
 			textFields.add(GRANTOR);
 			textFields.add(SUBMIT_LICENSE_TEXT);
+			textFields.add(PROQUEST_INSTITUTION_CODE);
+			booleanFields.add(PROQUEST_OA_PUBLISHING);
+			booleanFields.add(PROQUEST_INDEXING);
 
 			
 			

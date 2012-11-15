@@ -36,11 +36,13 @@
 	// 0 - Traditional publishing
 	// 1 - Open Access, requires an additional $95 fee.
 	int publishing_option = 1;
+	if(!settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.PROQUEST_OA_PUBLISHING))
+		publishing_option = 0;
 
 	// #### Third Party Search
 	// Indicates the author would like to have his or her metadata indexed by
 	// external search engines.
-	boolean third_party_search = true;
+	boolean third_party_search = settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.PROQUEST_INDEXING);
 	
 	// #### Third Party Sales
 	// Indicates the author would like to have his or her work sold by 3rd
@@ -69,7 +71,7 @@
 
 	// #### Institutional Code
 	// Proquest assignes each instutition a code, supply that code here.
-	String institution_code = "";
+	String institution_code = settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.PROQUEST_INSTITUTION_CODE);
 	
 	// #### Institutional Name
 	// The name of the institution, we use the grantor field established under

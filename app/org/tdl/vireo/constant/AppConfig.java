@@ -70,6 +70,17 @@ public class AppConfig {
 	/** Instructions to show after submitting corrections */
 	public final static String CORRECTION_INSTRUCTIONS = "correction_instructions";
 	
+	//Proquest settings
+	/** The proquest institution code visible during export. */
+	public final static String PROQUEST_INSTITUTION_CODE = "proquest_institution_code";
+	
+	/** Allow proquest open access publishing. */
+	public final static String PROQUEST_OA_PUBLISHING = "proquest_oa_publishing";
+	
+	/** Allow proquest indexing by search engines. */
+	public final static String PROQUEST_INDEXING = "proquest_indexing";
+	
+	
 	
 	
 	// Submission Sticky notes
