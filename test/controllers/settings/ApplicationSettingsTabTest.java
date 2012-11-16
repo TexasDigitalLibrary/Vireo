@@ -80,6 +80,8 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 		List<String> booleanFields = new ArrayList<String>();
 		booleanFields.add(SUBMISSIONS_OPEN);
 		booleanFields.add(ALLOW_MULTIPLE_SUBMISSIONS);
+		booleanFields.add(PROQUEST_INDEXING);
+		booleanFields.add(PROQUEST_OA_PUBLISHING);
 		
 		
 		// Get the current list of 
@@ -155,13 +157,13 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 		params.put("value","May 2012");
 		Response response = POST(URL,params);
 		assertContentMatch("\"success\": \"true\"", response);
-	
+		JPA.em().clear();
+
 		
 		// Check that all the fields are set.
 		assertNotNull(settingRepo.findConfigurationByName(CURRENT_SEMESTER));
 		assertEquals("May 2012",settingRepo.findConfigurationByName(CURRENT_SEMESTER).getValue());
 		
-		JPA.em().clear();
 		if (originalValue == null) {
 			settingRepo.findConfigurationByName(CURRENT_SEMESTER).delete();
 		} else {
@@ -169,6 +171,76 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 			value.setValue(originalValue.getValue());
 			value.save();
 			
+		}
+	}
+	
+	/**
+	 * Test changing the granting instutition
+	 */
+	@Test
+	public void testGrantor() {
+		
+		LOGIN();
+		
+		// Get our urls and a list of fields.
+		final String URL = Router.reverse("settings.ApplicationSettingsTab.updateApplicationSettingsJSON").url;
+
+		
+		Configuration originalValue = settingRepo.findConfigurationByName(GRANTOR);
+		
+		// change the grantor
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("field", GRANTOR);
+		params.put("value","My Institution");
+		Response response = POST(URL,params);
+		assertContentMatch("\"success\": \"true\"", response);
+		JPA.em().clear();
+		
+		// Check that all the fields are set.
+		assertNotNull(settingRepo.findConfigurationByName(GRANTOR));
+		assertEquals("My Institution",settingRepo.findConfigurationByName(GRANTOR).getValue());
+		
+		if (originalValue == null) {
+			settingRepo.findConfigurationByName(GRANTOR).delete();
+		} else {
+			Configuration value = settingRepo.findConfigurationByName(GRANTOR);
+			value.setValue(originalValue.getValue());
+			value.save();
+		}
+	}
+	
+	/**
+	 * Test changing the proquest institution code
+	 */
+	@Test
+	public void testProquestInstitutionCode() {
+		
+		LOGIN();
+		
+		// Get our urls and a list of fields.
+		final String URL = Router.reverse("settings.ApplicationSettingsTab.updateApplicationSettingsJSON").url;
+
+		
+		Configuration originalValue = settingRepo.findConfigurationByName(PROQUEST_INSTITUTION_CODE);
+		
+		// change the institution code
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("field", PROQUEST_INSTITUTION_CODE);
+		params.put("value","TAMU01");
+		Response response = POST(URL,params);
+		assertContentMatch("\"success\": \"true\"", response);
+		JPA.em().clear();
+		
+		// Check that all the fields are set.
+		assertNotNull(settingRepo.findConfigurationByName(PROQUEST_INSTITUTION_CODE));
+		assertEquals("TAMU01",settingRepo.findConfigurationByName(PROQUEST_INSTITUTION_CODE).getValue());
+		
+		if (originalValue == null) {
+			settingRepo.findConfigurationByName(PROQUEST_INSTITUTION_CODE).delete();
+		} else {
+			Configuration value = settingRepo.findConfigurationByName(PROQUEST_INSTITUTION_CODE);
+			value.setValue(originalValue.getValue());
+			value.save();
 		}
 	}
 	

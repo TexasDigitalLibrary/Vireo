@@ -76,7 +76,10 @@ jQuery(document).ready(function(){
      
      // Lock the big text areas
      jQuery(".lock-control a").click(applicationUnlockField);
-     
+
+     // Tooltips
+     jQuery('.tooltip-icon').tooltip();
+
      
 }) // document ready
 </script>
@@ -112,13 +115,48 @@ jQuery(document).ready(function(){
 			</span>
 		</li>
 		<li id="currentSemester">
-			<label>Degree Granting School</label>
+			<label>Degree Granting School:</label>
 			<span>
 			     <input name="${org.tdl.vireo.constant.AppConfig.GRANTOR}" class="application-text" type="text" value="${GRANTOR}" />
 			     <div class="info">The full name of the institution awarding degrees.</div>
 			</span>
 		</li>
 	</ul>
+</div>
+
+<h2>PROQUEST / UMI SETTINGS</h2>
+
+<div class="submissionAvailability wrap">
+    <ul class="unstyled">
+        
+        <li>
+            <label>ProQuest Institution Code:</label>
+            <span>
+                 <input class="monospace" name="${org.tdl.vireo.constant.AppConfig.PROQUEST_INSTITUTION_CODE}" class="application-text" type="text" value="${PROQUEST_INSTITUTION_CODE}" />
+                 <a href="#" class="tooltip-icon" rel="tooltip" title="The code assigned by ProQuest/UMI to identify the institution associated with all submissions when submitting to their catalogue."><i class="icon-info-sign"></i></a>
+            </span>
+        </li>
+        <li>
+            <label>Open Access Publishing:</label>
+            <span>
+                <div class="btn-group" data-toggle="buttons-radio">
+                    <button name="${org.tdl.vireo.constant.AppConfig.PROQUEST_OA_PUBLISHING}" class="btn application-toggle #{if PROQUEST_OA_PUBLISHING}active#{/if}" value="true">Yes</button>
+                    <button name="${org.tdl.vireo.constant.AppConfig.PROQUEST_OA_PUBLISHING}" class="btn application-toggle #{if !PROQUEST_OA_PUBLISHING}active#{/if}">No</button>                    
+                </div>
+                <a href="#" class="tooltip-icon" rel="tooltip" title="If enabled then all submissions to the ProQuest/UMI catalogue will be publicly accessable. TThere may be a $95 per submission impossed by ProQuest for enabling this option."><i class="icon-info-sign"></i></a>                
+            </span>
+        </li>
+        <li>
+            <label>Indexed by Search Engines:</label>
+            <span>
+                <div class="btn-group" data-toggle="buttons-radio">
+                    <button name="${org.tdl.vireo.constant.AppConfig.PROQUEST_INDEXING}" class="btn application-toggle #{if PROQUEST_INDEXING}active#{/if}" value="true">Yes</button>
+                    <button name="${org.tdl.vireo.constant.AppConfig.PROQUEST_INDEXING}" class="btn application-toggle #{if !PROQUEST_INDEXING}active#{/if}">No</button>
+                </div>
+                <a href="#" class="tooltip-icon" rel="tooltip" title="If enabled then all submissions to the ProQuest/UMI catalogue will be have their metadata indexed by third parties (i.e. google, yahoo)."><i class="icon-info-sign"></i></a>
+            </span>
+        </li>
+    </ul>
 </div>
 
 <h2>SUBMISSION LICENSE</h2>
@@ -194,38 +232,6 @@ jQuery(document).ready(function(){
 	</thead>
     #{include 'SettingTabs/listMembers.include' /}
 </table>
-
-<h2>PROQUEST SETTINGS</h2>
-
-<div class="submissionAvailability wrap">
-	<ul class="unstyled">
-		
-		<li id="currentSemester">
-			<label>Proquest Institution Code:</label>
-			<span>
-			     <input name="${org.tdl.vireo.constant.AppConfig.PROQUEST_INSTITUTION_CODE}" class="application-text" type="text" value="${PROQUEST_INSTITUTION_CODE}" />
-			</span>
-		</li>
-		<li>
-			<label>Open Access Publishing:</label>
-			<span>
-			    <div class="btn-group" data-toggle="buttons-radio">
-					<button name="${org.tdl.vireo.constant.AppConfig.PROQUEST_OA_PUBLISHING}" class="btn application-toggle #{if PROQUEST_OA_PUBLISHING}active#{/if}" value="true">Yes</button>
-					<button name="${org.tdl.vireo.constant.AppConfig.PROQUEST_OA_PUBLISHING}" class="btn application-toggle #{if !PROQUEST_OA_PUBLISHING}active#{/if}">No</button>
-				</div>
-			</span>
-		</li>
-		<li>
-			<label>Indexed by Search Engines:</label>
-			<span>
-			    <div class="btn-group" data-toggle="buttons-radio">
-					<button name="${org.tdl.vireo.constant.AppConfig.PROQUEST_INDEXING}" class="btn application-toggle #{if PROQUEST_INDEXING}active#{/if}" value="true">Yes</button>
-					<button name="${org.tdl.vireo.constant.AppConfig.PROQUEST_INDEXING}" class="btn application-toggle #{if !PROQUEST_INDEXING}active#{/if}">No</button>
-				</div>
-			</span>
-		</li>
-	</ul>
-</div>
 
 <div class="modal fade" id="add-member-modal">
 	<input type="hidden" name="embargoType-id" id="embargoType-id" value=""/>
