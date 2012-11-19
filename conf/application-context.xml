@@ -142,6 +142,12 @@
         <property name="settingsRepository" ref="SettingsRepository"/>
     </bean>
     
+    <!-- Proquest -->
+    <bean id="ProquestVocabularyRepository" class="org.tdl.vireo.proquest.impl.ProquestExcelVocabularyRepositoryImpl" scope="singleton">
+        <property name="subjects"  value="classpath:proquest/umi_subjects.xls"/>
+        <property name="languages" value="classpath:proquest/language_codes.xls"/>
+    </bean>
+    
     <!-- Batch -->
     <bean id="BatchTransition" class="org.tdl.vireo.batch.impl.TransitionServiceImpl" scope="singleton">
         <property name="personRepository" ref="PersonRepository"/>
