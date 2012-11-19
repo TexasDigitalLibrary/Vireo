@@ -168,6 +168,11 @@ public class MockSearcher implements Searcher {
 		}
 
 		@Override
+		public List<String> findAllPrograms() {
+			return null;
+		}
+		
+		@Override
 		public List<String> findAllColleges() {
 			return null;
 		}

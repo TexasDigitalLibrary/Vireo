@@ -186,7 +186,7 @@ in results.
                      break;
                  case PROGRAM:
                  	 if (sub.getProgram() !=null)
-                 	 	 out.print(sub.getProgram().name());
+                 	 	 out.print(sub.getProgram());
                  	 break;
                  case COLLEGE:
                      if (sub.getCollege() != null)

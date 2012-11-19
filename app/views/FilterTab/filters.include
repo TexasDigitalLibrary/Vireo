@@ -125,6 +125,15 @@ managing and modifying filters.
         </ul>
         #{/if}
         
+         #{if facet == FACET_PROGRAM && activeFilter.getPrograms().size() > 0 }
+        <div class="sub-heading">&{nav.toUpperCase()+'_FACET_'+facet.name()}</div>
+        <ul class="unstyled editable">
+            #{list items:activeFilter.getPrograms(), as:'value'}
+            <li><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=program&value=${value.urlEncode()}">${value}</a></li>
+            #{/list}
+        </ul>
+        #{/if}
+        
         #{if facet == FACET_COLLEGE && activeFilter.getColleges().size() > 0 }
         <div class="sub-heading">&{nav.toUpperCase()+'_FACET_'+facet.name()}</div>
         <ul class="unstyled editable">
@@ -385,6 +394,22 @@ different blocks this gets around this problem because each is independent.
             <li class="more">more...</li>
             #{/if}
             <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=department&value=${dept.urlEncode()}">${dept}</a></li>
+            #{/if}
+            #{/list}
+            #{/if}
+        </ul>
+        #{/if}
+        #{if facet == FACET_PROGRAM }
+        <div class="sub-heading">&{nav.toUpperCase()+'_FACET_'+facet.name()}</div>
+        <ul class="unstyled">
+            %{ shown = 0 }%
+            #{if shown == 0}
+            #{list items:subRepo.findAllPrograms(), as:'program'}
+            #{if !activeFilter.getPrograms().contains(program) }{% shown++ %}
+            #{if shown == 6}
+            <li class="more">more...</li>
+            #{/if}
+            <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=program&value=${program.urlEncode()}">${program}</a></li>
             #{/if}
             #{/list}
             #{/if}

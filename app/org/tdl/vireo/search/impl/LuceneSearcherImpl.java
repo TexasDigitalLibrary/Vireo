@@ -452,6 +452,7 @@ public class LuceneSearcherImpl implements Searcher {
 			for(String program : filter.getPrograms()) {
 				orQuery.add(new TermQuery(new Term("program", program)), Occur.SHOULD);
 			}
+			andQuery.add(orQuery,Occur.MUST);
 		}
 				
 		// College Filter

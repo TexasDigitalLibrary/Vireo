@@ -103,6 +103,11 @@ public interface SubmissionRepository {
 	public List<Integer> findAllSubmissionYears();
 	
 	/**
+	 * @return A list of all programs for which submissions have been submitted under.
+	 */
+	public List<String> findAllPrograms();
+	
+	/**
 	 * @return A list of all colleges for which submissions have been submitted under.
 	 */
 	public List<String> findAllColleges();
