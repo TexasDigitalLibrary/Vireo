@@ -93,11 +93,15 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	@ElementCollection
 	@CollectionTable(name="search_filter_departments")
 	public List<String> departments;
+
+	@ElementCollection
+	@CollectionTable(name="search_filter_programs")
+	public List<String> programs;
 	
 	@ElementCollection
 	@CollectionTable(name="search_filter_colleges")
 	public List<String> colleges;
-	
+		
 	@ElementCollection
 	@CollectionTable(name="search_filter_majors")
 	public List<String> majors;
@@ -146,6 +150,7 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 		this.cachedSemesters = new ArrayList<Semester>();
 		this.degrees = new ArrayList<String>();
 		this.departments = new ArrayList<String>();
+		this.programs = new ArrayList<String>();
 		this.colleges = new ArrayList<String>();
 		this.majors = new ArrayList<String>();
 		this.documentTypes = new ArrayList<String>();
@@ -468,6 +473,23 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	}
 
 	@Override
+	public List<String> getPrograms() {
+		return programs;
+	}
+	
+	@Override
+	public void addProgram(String program) {
+		assertManagerOrOwner(creator);
+		programs.add(program);
+	}
+	
+	@Override
+	public void removeProgram(String program) {
+		assertManagerOrOwner(creator);
+		programs.remove(program);
+	}
+	
+	@Override
 	public List<String> getColleges() {
 		return colleges;
 	}
@@ -482,7 +504,7 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	public void removeCollege(String college) {
 		assertManagerOrOwner(creator);
 		colleges.remove(college);
-	}
+	}	
 
 	@Override
 	public List<String> getMajors() {

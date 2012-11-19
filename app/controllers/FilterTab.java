@@ -912,6 +912,9 @@ public class FilterTab extends AbstractVireoController {
 			
 		} else if ("department".equals(type)) {
 			activeFilter.addDepartment(value);
+		
+		} else if ("program".equals(type)) {
+			activeFilter.addProgram(value);
 			
 		} else if ("college".equals(type)) {
 			activeFilter.addCollege(value);
@@ -1091,6 +1094,9 @@ public class FilterTab extends AbstractVireoController {
 		} else if ("department".equals(type)) {
 			activeFilter.removeDepartment(value);
 		
+		} else if ("program".equals(type)) {
+			activeFilter.removeProgram(value);
+			
 		} else if ("college".equals(type)) {
 			activeFilter.removeCollege(value);
 		

@@ -31,6 +31,7 @@ function displaySortableItem(type, editable, $element, id, name, level) {
 	if (
 	    type == "action" ||
 	    type == "college" ||
+	    type == "program" ||
 	    type == "department" ||
 	    type == "major" ||
 	    type == "graduationMonth"
@@ -168,6 +169,7 @@ function swapToEditable(element) {
 	if (
 		type == "action" ||
 		type == "college" ||
+		type == "program" ||
 		type == "department" ||
 		type == "major" ||
 	    type == "graduationMonth"
@@ -233,6 +235,7 @@ function swapFromEditable(element) {
 	if (
 		type == "action" ||
 		type == "college" ||
+		type == "program" ||
 		type == "department" ||
 		type == "major" ||
 	    type == "graduationMonth"

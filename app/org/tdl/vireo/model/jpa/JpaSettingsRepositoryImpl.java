@@ -15,6 +15,7 @@ import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.Major;
+import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.SettingsRepository;
 
 /**
@@ -76,6 +77,21 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	@Override
 	public List<College> findAllColleges() {
 		return (List) JpaCollegeImpl.find("order by displayOrder").fetch();
+	}
+	
+	@Override
+	public Program createProgram(String name) {
+		return new JpaProgramImpl(name);
+	}
+	
+	@Override
+	public Program findProgram(Long id) {
+		return (Program) JpaProgramImpl.findById(id);
+	}
+	
+	@Override
+	public List<Program> findAllPrograms() {
+		return (List) JpaProgramImpl.find("order by displayOrder").fetch();
 	}
 
 	@Override

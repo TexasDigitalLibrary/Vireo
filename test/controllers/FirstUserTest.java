@@ -24,6 +24,7 @@ import org.tdl.vireo.model.MockPerson;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.Preference;
+import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.SubmissionRepository;
@@ -218,6 +219,24 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 
 		@Override
 		public List<College> findAllColleges() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+		@Override
+		public Program createProgram(String name) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Program findProgram(Long id) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public List<Program> findAllPrograms() {
 			// TODO Auto-generated method stub
 			return null;
 		}

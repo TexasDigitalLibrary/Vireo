@@ -334,13 +334,25 @@ public interface Submission extends AbstractModel {
 	 * 
 	 * @return The college that will award this degree.
 	 */
-	public String getCollege();
-
+	public String getCollege();	
+	
 	/**
 	 * 
 	 * @param college The new college.
 	 */
 	public void setCollege(String college);
+	
+	/**
+	 * 
+	 * @return The program associated with the submission
+	 */
+	public String getProgram();
+	
+	/**
+	 * 
+	 * @param program The program associated with the submission
+	 */
+	public void setProgram(String program);
 
 	/**
 	 * 

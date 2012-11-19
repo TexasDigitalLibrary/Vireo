@@ -22,6 +22,7 @@ import org.tdl.vireo.model.Major;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Preference;
+import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.RoleType;
 
 import play.Logger;
@@ -169,6 +170,10 @@ public class SettingsTab extends AbstractVireoController {
 			} else if (type.equals(College.class)) {
 				College college = settingRepo.findCollege(id);
 				models.add((T) college);
+			
+			} else if (type.equals(Program.class)) {
+				Program program = settingRepo.findProgram(id);
+				models.add((T) program);
 				
 			} else if (type.equals(Department.class)) {
 				Department department = settingRepo.findDepartment(id);

@@ -105,6 +105,32 @@ public interface SettingsRepository {
 	public List<College> findAllColleges();
 
 	/**
+	 * Create a new program object.
+	 * 
+	 * @param name
+	 * 			The name of the program
+	 * @return A new program object.
+	 */
+	public Program createProgram(String name);
+	
+	/**
+	 * Find a program by unique id.
+	 * 
+	 * @param id
+	 * 			The program's id
+	 * @return The program object or null if not found.
+	 */
+	public Program findProgram(Long id);
+	
+	/**
+	 * Find all program objects in order.
+	 * 
+	 * @return A list of all programs, or an empty list if there are none.
+	 * 
+	 */
+	public List<Program> findAllPrograms();
+	
+	/**
 	 * Create a new department object.
 	 * 
 	 * @param name

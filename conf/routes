@@ -130,6 +130,12 @@ POST    /admin/settings/colleges/edit           settings.ConfigurableSettingsTab
 POST    /admin/settings/colleges/remove         settings.ConfigurableSettingsTab.removeCollegeJSON
 POST    /admin/settings/colleges/reorder        settings.ConfigurableSettingsTab.reorderCollegesJSON
 
+## Settings tab - Programs
+POST    /admin/settings/programs/add            settings.ConfigurableSettingsTab.addProgramJSON
+POST    /admin/settings/programs/edit           settings.ConfigurableSettingsTab.editProgramJSON
+POST    /admin/settings/programs/remove         settings.ConfigurableSettingsTab.removeProgramJSON
+POST    /admin/settings/programs/reorder        settings.ConfigurableSettingsTab.reorderProgramsJSON
+
 ## Settings tab - Departments
 POST    /admin/settings/departments/add         settings.ConfigurableSettingsTab.addDepartmentJSON
 POST    /admin/settings/departments/edit        settings.ConfigurableSettingsTab.editDepartmentJSON

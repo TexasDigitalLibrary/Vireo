@@ -184,6 +184,10 @@ in results.
                      if (sub.getDegreeLevel() != null)
                          out.print(sub.getDegreeLevel().name());
                      break;
+                 case PROGRAM:
+                 	 if (sub.getProgram() !=null)
+                 	 	 out.print(sub.getProgram().name());
+                 	 break;
                  case COLLEGE:
                      if (sub.getCollege() != null)
                          out.print(sub.getCollege());

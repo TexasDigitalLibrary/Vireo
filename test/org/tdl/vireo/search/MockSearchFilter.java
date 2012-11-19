@@ -27,6 +27,7 @@ public class MockSearchFilter implements SearchFilter {
 	public List<Semester> semesters = new ArrayList<Semester>();
 	public List<String> degrees = new ArrayList<String>();
 	public List<String> departments = new ArrayList<String>();
+	public List<String> programs = new ArrayList<String>();
 	public List<String> colleges = new ArrayList<String>();
 	public List<String> majors = new ArrayList<String>();
 	public List<String> documentTypes = new ArrayList<String>();
@@ -209,6 +210,21 @@ public class MockSearchFilter implements SearchFilter {
 		departments.remove(department);
 	}
 
+	@Override
+	public List<String> getPrograms() {
+		return programs;
+	}
+	
+	@Override
+	public void addProgram(String program) {
+		programs.add(program);
+	}
+	
+	@Override
+	public void removeProgram(String program) {
+		programs.remove(program);
+	}
+	
 	@Override
 	public List<String> getColleges() {
 		return colleges;

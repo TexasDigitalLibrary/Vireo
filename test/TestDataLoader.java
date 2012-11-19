@@ -92,6 +92,15 @@ public class TestDataLoader extends Job {
 	};
 	
 	/**
+	 * Initial Programs to create
+	 */
+	private static final String[] PROGRAMS_DEFINITIONS = {
+		"Graduate Studies",
+		"Undergraduate Honors Fellows",
+		"Undergraduate Scholars"
+	};
+	
+	/**
 	 * Initial Colleges to create
 	 */
 	private static final String[] COLLEGES_DEFINITIONS = {
@@ -106,9 +115,7 @@ public class TestDataLoader extends Job {
 		"Interdisciplinary Degree Programs",
 		"Mays Business School",
 		"Texas A&M University at Galveston",
-		"Texas A&M University at Qatar",
-		"Undergraduate Honors Fellows",
-		"Undergraduate Scholars"
+		"Texas A&M University at Qatar"
 	};
 	
 	/**
@@ -531,6 +538,11 @@ public class TestDataLoader extends Job {
 			settingRepo.createConfiguration(config.name, config.value).save();
 		}
 		
+		// Create all programs
+		for(String programDefinition : PROGRAMS_DEFINITIONS) {
+			settingRepo.createProgram(programDefinition).save();
+		}
+		
 		// Create all colleges
 		for(String collegeDefinition : COLLEGES_DEFINITIONS) {
 			settingRepo.createCollege(collegeDefinition).save();
@@ -692,6 +704,9 @@ public class TestDataLoader extends Job {
 				
 				if (random.nextInt(100) > 5)
 					sub.setDepartment(DEPARTMENTS_DEFINITIONS[random.nextInt(DEPARTMENTS_DEFINITIONS.length-1)]);
+				
+				if (random.nextInt(100) > 5)
+					sub.setProgram(PROGRAMS_DEFINITIONS[random.nextInt(PROGRAMS_DEFINITIONS.length-1)]);
 				
 				if (random.nextInt(100) > 5)
 					sub.setCollege(COLLEGES_DEFINITIONS[random.nextInt(COLLEGES_DEFINITIONS.length-1)]);

@@ -61,6 +61,25 @@ jQuery(document).ready(function(){
      jQuery("#add-college-save").click(saveAddActionHandler('college','@{settings.ConfigurableSettingsTab.addCollegeJSON()}'));
      jQuery("#add-college-cancel").click(cancelAddActionHandler('college'));
      
+  // Handlers for the sortable programs list
+     jQuery("#program-list, #program-remove").sortable({
+         connectWith: ".program-sortable",
+         placeholder: "placeholder",
+         update: sortableUpdateHandler(
+                    'program',
+                    '@{settings.ConfigurableSettingsTab.reorderProgramsJSON()}',
+                    '@{settings.ConfigurableSettingsTab.removeProgramJSON()}'
+                    )
+     }).disableSelection().enableSelection();
+        
+     jQuery("#program-list .program-editable").live("click",sortableStartEditHandler());
+     jQuery("#program-list .icon-remove").live("click",sortableCancelEditHandler());     
+     jQuery("#program-list .icon-ok").live("click",sortableSaveEditHandler('program','@{settings.ConfigurableSettingsTab.editProgramJSON()}'));
+     jQuery("#program-list input").live("keypress",sortableSaveEditHandler('program','@{settings.ConfigurableSettingsTab.editProgramJSON()}'));
+     jQuery("#add-program-link").click(slideToggleHandler("#add-program-dialog"));
+     jQuery("#add-program-save").click(saveAddActionHandler('program','@{settings.ConfigurableSettingsTab.addProgramJSON()}'));
+     jQuery("#add-program-cancel").click(cancelAddActionHandler('program'));
+     
      // Handlers for the sortable Departments list
      jQuery("#department-list, #department-remove").sortable({
          connectWith: ".department-sortable",
@@ -165,274 +184,387 @@ jQuery(document).ready(function(){
 </script>
 #{/set}
 
+<h2>CONFIGURABLE SETTINGS</h2>
+
+<P>Customize the data that appears in various selectable options.</P>
+
+<div class="accordion settings-accordion configurable-settings" id="configurable-settings">	
+	<div class="accordion-group">
+		<div class="accordion-heading">
+			<a class="accordion-toggle" data-toggle="collapse" href="#availableEmbargoTypes"><strong>Available Embargo Types</strong></a>			
+		</div>
+		<div id="availableEmbargoTypes" class="accordion-body collapse ${ "availableEmbargoTypes".equals(flash.get("open")) ? "in" : "" }">
+			<div class="accordion-inner">
+			<h2>AVAILABLE EMBARGO TYPES</h2>
+			<table class="table table-striped table-bordered table-condensed">
+				<thead>
+					<tr>
+						<td>Name</td>
+						<td>Description</td>
+						<td>Display</td>
+						<td># of Months</td>
+						<td>Edit</td>
+					</tr>
+				</thead>
+				<tbody id="embargoType-list">
+				    #{list items:embargos, as:'embargo'}
+				       <tr id="embargoType_${embargo.getId()}">
+				           <td class="embargoType-name-cell">${embargo.getName()}</td>
+				           <td class="embargoType-description-cell">${embargo.getDescription()}</td>
+				           <td class="embargoType-active-cell">#{if embargo.isActive()}Yes#{/if}#{else}No#{/else}</td>
+				           <td class="embargoType-duration-cell">#{if embargo.getDuration() == null}Indefinite#{/if}#{else}${embargo.getDuration()}#{/else}</td>
+				           <td class="embargoType-edit-cell"><a href="#">Edit</a></td>
+				       </tr>
+				    #{/list}
+				</tbody>
+			</table>
+			
+			
+			<p><a id="add-embargoType-link" href="#">[ADD NEW]</a></p>
+			</div>
+		</div>
+	</div>
+
+	<div class="accordion-group">
+		<div class="accordion-heading">
+			<a class="accordion-toggle" data-toggle="collapse" href="#availableColleges"><strong>Available Colleges</strong></a>			
+		</div>
+		<div id="availableColleges" class="accordion-body collapse ${ "availableColleges".equals(flash.get("open")) ? "in" : "" }">
+			<div class="accordion-inner">
+				<h2>AVAILABLE COLLEGES</h2>
+				
+				<div class="wrap settings-sortable">
+					<ul id="college-remove" class="college-sortable settings-sortable-remove" #{if colleges.size() == 0}style="display: none;"#{/if}>
+					   <p class="info"><em class="icon-trash"></em> Remove items by dragging them to the trash can</p>
+					</ul>
+					<ol id="college-list" class="college-sortable settings-sortable-list">
+					    #{list items:colleges, as:'college'}
+					       <li id="college_${college.getId()}"><a class="college-editable" href="javascript:void(0);"><em class="icon-pencil"></em> ${college.getName()}</a></li>    
+					    #{/list}
+					</ol>
+				</div>
+				
+				<a id="add-college-link" href="#">[ADD NEW]</a>
+				
+				<div id="add-college-dialog" style="display: none;">
+				    <form class="form-horizontal">
+				        <fieldset>
+				            <div class="control-group">
+				                <label class="control-label" for="add-college-name">New College</label>
+				                <div class="controls">
+				                    <input type="text" class="input-large" id="add-college-name"/>
+				                    <p class="help-block">Name of the new college</p>
+				                </div>
+				            </div>
+				            <div class="control-group">
+				                <div class="controls">
+				                    <button id="add-college-save" class="btn btn-primary">Add College</button>
+				                    <button id="add-college-cancel" class="btn">Cancel</button>
+				                </div>
+				            </div>
+				        </fieldset>
+				    </form>
+				</div>
+				<br/><br/>
+			</div>
+		</div>
+	</div>
+
+	<div class="accordion-group">
+		<div class="accordion-heading">
+			<a class="accordion-toggle" data-toggle="collapse" href="#availablePrograms"><strong>Available Programs</strong></a>			
+		</div>
+		<div id="availablePrograms" class="accordion-body collapse ${ "availablePrograms".equals(flash.get("open")) ? "in" : "" }">
+			<div class="accordion-inner">
+				<h2>AVAILABLE PROGRAMS</h2>
+				
+				<div class="wrap settings-sortable">
+					<ul id="program-remove" class="program-sortable settings-sortable-remove" #{if programs.size() == 0}style="display: none;"#{/if}>
+					   <p class="info"><em class="icon-trash"></em> Remove items by dragging them to the trash can</p>
+					</ul>
+					<ol id="program-list" class="program-sortable settings-sortable-list">
+					    #{list items:programs, as:'program'}
+					       <li id="program_${program.getId()}"><a class="program-editable" href="javascript:void(0);"><em class="icon-pencil"></em> ${program.getName()}</a></li>    
+					    #{/list}
+					</ol>
+				</div>
+				
+				<a id="add-program-link" href="#">[ADD NEW]</a>
+				
+				<div id="add-program-dialog" style="display: none;">
+				    <form class="form-horizontal">
+				        <fieldset>
+				            <div class="control-group">
+				                <label class="control-label" for="add-program-name">New Program</label>
+				                <div class="controls">
+				                    <input type="text" class="input-large" id="add-program-name"/>
+				                    <p class="help-block">Name of the new program</p>
+				                </div>
+				            </div>
+				            <div class="control-group">
+				                <div class="controls">
+				                    <button id="add-program-save" class="btn btn-primary">Add Program</button>
+				                    <button id="add-program-cancel" class="btn">Cancel</button>
+				                </div>
+				            </div>
+				        </fieldset>
+				    </form>
+				</div>
+				<br/><br/>
+			</div>
+		</div>
+	</div>
 
 
-<h2>AVAILABLE EMBARGO TYPES</h2>
+	<div class="accordion-group">
+		<div class="accordion-heading">
+			<a class="accordion-toggle" data-toggle="collapse" href="#availableDepartments"><strong>Available Departments</strong></a>			
+		</div>
+		<div id="availableDepartments" class="accordion-body collapse ${ "availableDepartments".equals(flash.get("open")) ? "in" : "" }">
+			<div class="accordion-inner">
+				<h2>AVAILABLE DEPARTMENTS</h2>
+				
+				<div class="wrap settings-sortable">
+					<ul id="department-remove" class="department-sortable settings-sortable-remove" #{if departments.size() == 0}style="display: none;"#{/if}>
+					   <p class="info"><em class="icon-trash"></em> Remove items by dragging them to the trash can</p>
+					</ul>
+					<ol id="department-list" class="department-sortable settings-sortable-list">
+					    #{list items:departments, as:'department'}
+					       <li id="department_${department.getId()}"><a class="department-editable" href="javascript:void(0);"><em class="icon-pencil"></em> ${department.getName()}</a></li>    
+					    #{/list}
+					</ol>
+				</div>
+				
+				<a id="add-department-link" href="#">[ADD NEW]</a>
+				
+				<div id="add-department-dialog" style="display: none;">
+				    <form class="form-horizontal">
+				        <fieldset>
+				            <div class="control-group">
+				                <label class="control-label" for="add-department-name">New Department</label>
+				                <div class="controls">
+				                    <input type="text" class="input-large" id="add-department-name"/>
+				                    <p class="help-block">Name of the new department</p>
+				                </div>
+				            </div>
+				            <div class="control-group">
+				                <div class="controls">
+				                    <button id="add-department-save" class="btn btn-primary">Add Department</button>
+				                    <button id="add-department-cancel" class="btn">Cancel</button>
+				                </div>
+				            </div>
+				        </fieldset>
+				    </form>
+				</div>
+				<br/><br/>
+			</div>
+		</div>
+	</div>
+				
 
-<table class="table table-striped table-bordered table-condensed">
-	<thead>
-		<tr>
-			<td>Name</td>
-			<td>Description</td>
-			<td>Display</td>
-			<td># of Months</td>
-			<td>Edit</td>
-		</tr>
-	</thead>
-	<tbody id="embargoType-list">
-	    #{list items:embargos, as:'embargo'}
-	       <tr id="embargoType_${embargo.getId()}">
-	           <td class="embargoType-name-cell">${embargo.getName()}</td>
-	           <td class="embargoType-description-cell">${embargo.getDescription()}</td>
-	           <td class="embargoType-active-cell">#{if embargo.isActive()}Yes#{/if}#{else}No#{/else}</td>
-	           <td class="embargoType-duration-cell">#{if embargo.getDuration() == null}Indefinite#{/if}#{else}${embargo.getDuration()}#{/else}</td>
-	           <td class="embargoType-edit-cell"><a href="#">Edit</a></td>
-	       </tr>
-	    #{/list}
-	</tbody>
-</table>
+	<div class="accordion-group">
+		<div class="accordion-heading">
+			<a class="accordion-toggle" data-toggle="collapse" href="#availableMajors"><strong>Available Majors</strong></a>			
+		</div>
+		<div id="availableMajors" class="accordion-body collapse ${ "availableMajors".equals(flash.get("open")) ? "in" : "" }">
+			<div class="accordion-inner">
+				<h2>AVAILABLE MAJORS</h2>
+				
+				<div class="wrap settings-sortable">
+				    <ul id="major-remove" class="major-sortable settings-sortable-remove" #{if majors.size() == 0}style="display: none;"#{/if}>
+				       <p class="info"><em class="icon-trash"></em> Remove items by dragging them to the trash can</p>
+				    </ul>
+				    <ol id="major-list" class="major-sortable settings-sortable-list">
+				        #{list items:majors, as:'major'}
+				           <li id="major_${major.getId()}"><a class="major-editable" href="javascript:void(0);"><em class="icon-pencil"></em> ${major.getName()}</a></li>    
+				        #{/list}
+				    </ol>
+				</div>
+				
+				<a id="add-major-link" href="#">[ADD NEW]</a>
+				
+				<div id="add-major-dialog" style="display: none;">
+				    <form class="form-horizontal">
+				        <fieldset>
+				            <div class="control-group">
+				                <label class="control-label" for="add-major-name">New Major</label>
+				                <div class="controls">
+				                    <input type="text" class="input-large" id="add-major-name"/>
+				                    <p class="help-block">Name of the new major</p>
+				                </div>
+				            </div>
+				            <div class="control-group">
+				                <div class="controls">
+				                    <button id="add-major-save" class="btn btn-primary">Add Major</button>
+				                    <button id="add-major-cancel" class="btn">Cancel</button>
+				                </div>
+				            </div>
+				        </fieldset>
+				    </form>
+				</div>
+				<br/><br/>
+			</div>
+		</div>
+	</div>
 
 
-<p><a id="add-embargoType-link" href="#">[ADD NEW]</a></p>
+	<div class="accordion-group">
+		<div class="accordion-heading">
+			<a class="accordion-toggle" data-toggle="collapse" href="#availableDegrees"><strong>Available Degrees</strong></a>			
+		</div>
+		<div id="availableDegrees" class="accordion-body collapse ${ "availableDegrees".equals(flash.get("open")) ? "in" : "" }">
+			<div class="accordion-inner">
+				<h2>AVAILABLE DEGREES</h2>
+				
+				<div class="wrap settings-sortable">
+				    <ul id="degree-remove" class="degree-sortable settings-sortable-remove" #{if degrees.size() == 0}style="display: none;"#{/if}>
+				       <p class="info"><em class="icon-trash"></em> Remove items by dragging them to the trash can</p>
+				    </ul>
+				    <ol id="degree-list" class="degree-sortable settings-sortable-list">
+				        #{list items:degrees, as:'degree'}
+				           <li id="degree_${degree.getId()}"><a class="degree-editable" href="javascript:void(0);"><em class="icon-pencil"></em> <span class="name">${degree.getName()}</span> <span class="level info">(${degree.getLevel().name()})</span></a></li>    
+				        #{/list}
+				    </ol>
+				</div>
+				
+				<a id="add-degree-link" href="#">[ADD NEW]</a>
+				
+				<div id="add-degree-dialog" style="display: none;">
+				    <form class="form-horizontal">
+				        <fieldset>
+				            <div class="control-group">
+				                <label class="control-label" for="add-degree-name">New Degree</label>
+				                <div class="controls">
+				                    <input type="text" class="input-large" id="add-degree-name"/>
+				                </div>
+				            </div>
+				            <div class="control-group">
+				                <label class="control-label" for="add-degree-level">Degree Level</label>
+				                <div class="controls">
+					                <select id="add-degree-level">
+					                    <option selected="true" value="-1">...choose</option>
+					                    <option value="${UNDERGRADUATE.getId()}">${UNDERGRADUATE.name()}</option>
+					                    <option value="${MASTERS.getId()}">${MASTERS.name()}</option>
+					                    <option value="${DOCTORAL.getId()}">${DOCTORAL.name()}</option>
+					                </select>
+				                </div>
+				            </div>
+				            <div class="control-group">
+				                <div class="controls">
+				                    <button id="add-degree-save" class="btn btn-primary">Add Degree</button>
+				                    <button id="add-degree-cancel" class="btn">Cancel</button>
+				                </div>
+				            </div>
+				        </fieldset>
+				    </form>
+				</div>
+				<br/><br/>
+			</div>
+		</div>
+	</div>
 
-<h2>AVAILABLE COLLEGES</h2>
 
-<div class="wrap settings-sortable">
-	<ul id="college-remove" class="college-sortable settings-sortable-remove" #{if colleges.size() == 0}style="display: none;"#{/if}>
-	   <p class="info"><em class="icon-trash"></em> Remove items by dragging them to the trash can</p>
-	</ul>
-	<ol id="college-list" class="college-sortable settings-sortable-list">
-	    #{list items:colleges, as:'college'}
-	       <li id="college_${college.getId()}"><a class="college-editable" href="javascript:void(0);"><em class="icon-pencil"></em> ${college.getName()}</a></li>    
-	    #{/list}
-	</ol>
+	<div class="accordion-group">
+		<div class="accordion-heading">
+			<a class="accordion-toggle" data-toggle="collapse" href="#availableDocumentTypes"><strong>Available Document Types</strong></a>			
+		</div>
+		<div id="availableDocumentTypes" class="accordion-body collapse ${ "availableDocumentTypes".equals(flash.get("open")) ? "in" : "" }">
+			<div class="accordion-inner">
+				<h2>AVAILABLE DOCUMENT TYPES</h2>
+				
+				<div class="wrap settings-sortable">
+				    <ul id="documentType-remove" class="documentType-sortable settings-sortable-remove" #{if docTypes.size() == 0}style="display: none;"#{/if}>
+				       <p class="info"><em class="icon-trash"></em> Remove items by dragging them to the trash can</p>
+				    </ul>
+				    <ol id="documentType-list" class="documentType-sortable settings-sortable-list">
+				        #{list items:docTypes, as:'docType'}
+				           <li id="documentType_${docType.getId()}"><a class="documentType-editable" href="javascript:void(0);"><em class="icon-pencil"></em> <span class="name">${docType.getName()}</span> <span class="level info">(${docType.getLevel().name()})</span></a></li>    
+				        #{/list}
+				    </ol>
+				</div>
+				
+				<a id="add-documentType-link" href="#">[ADD NEW]</a>
+				
+				<div id="add-documentType-dialog" style="display: none;">
+				    <form class="form-horizontal">
+				        <fieldset>
+				            <div class="control-group">
+				                <label class="control-label" for="add-documentType-name">New Document Type</label>
+				                <div class="controls">
+				                    <input type="text" class="input-large" id="add-documentType-name"/>
+				                </div>
+				            </div>
+				            <div class="control-group">
+				                <label class="control-label" for="add-documentType-level">Degree Level</label>
+				                <div class="controls">
+				                    <select id="add-documentType-level">
+				                        <option selected="true" value="-1">...choose</option>
+				                        <option value="${UNDERGRADUATE.getId()}">${UNDERGRADUATE.name()}</option>
+				                        <option value="${MASTERS.getId()}">${MASTERS.name()}</option>
+				                        <option value="${DOCTORAL.getId()}">${DOCTORAL.name()}</option>
+				                    </select>
+				                </div>
+				            </div>
+				            <div class="control-group">
+				                <div class="controls">
+				                    <button id="add-documentType-save" class="btn btn-primary">Add Document Type</button>
+				                    <button id="add-documentType-cancel" class="btn">Cancel</button>
+				                </div>
+				            </div>
+				        </fieldset>
+				    </form>
+				</div>
+				<br/><br/>
+			</div>
+		</div>
+	</div>
+
+				
+	<div class="accordion-group">
+		<div class="accordion-heading">
+			<a class="accordion-toggle" data-toggle="collapse" href="#availableGraduationMonths"><strong>Available Graduation Months</strong></a>			
+		</div>
+		<div id="availableGraduationMonths" class="accordion-body collapse ${ "availableGraduationMonths".equals(flash.get("open")) ? "in" : "" }">
+			<div class="accordion-inner">
+				<h2>AVAILABLE GRADUATION MONTHS</h2>
+				
+				<div class="wrap settings-sortable">
+				    <ul id="graduationMonth-remove" class="graduationMonth-sortable settings-sortable-remove" #{if gradMonths.size() == 0}style="display: none;"#{/if}>
+				       <p class="info"><em class="icon-trash"></em> Remove items by dragging them to the trash can</p>
+				    </ul>
+				    <ol id="graduationMonth-list" class="graduationMonth-sortable settings-sortable-list">
+				        #{list items:gradMonths, as:'month'}
+				           <li id="graduationMonth_${month.getId()}"><a class="graduationMonth-editable" href="javascript:void(0);"><em class="icon-pencil"></em> ${month.getMonthName()}</a></li>    
+				        #{/list}
+				    </ol>
+				</div>
+				
+				<a id="add-graduationMonth-link" href="#">[ADD NEW]</a>
+				
+				<div id="add-graduationMonth-dialog" style="display: none;">
+				    <form class="form-horizontal">
+				        <fieldset>
+				            <div class="control-group">
+				                <label class="control-label" for="add-graduationMonth-name">New Month</label>
+				                <div class="controls">
+				                    <input type="text" class="input-large" id="add-graduationMonth-name"/>
+				                    <p class="help-block">Name of the new month</p>
+				                </div>
+				            </div>
+				            <div class="control-group">
+				                <div class="controls">
+				                    <button id="add-graduationMonth-save" class="btn btn-primary">Add Month</button>
+				                    <button id="add-graduationMonth-cancel" class="btn">Cancel</button>
+				                </div>
+				            </div>
+				        </fieldset>
+				    </form>
+				</div>
+				<br/><br/>
+			</div>
+		</div>
+	</div>
 </div>
-
-<a id="add-college-link" href="#">[ADD NEW]</a>
-
-<div id="add-college-dialog" style="display: none;">
-    <form class="form-horizontal">
-        <fieldset>
-            <div class="control-group">
-                <label class="control-label" for="add-college-name">New College</label>
-                <div class="controls">
-                    <input type="text" class="input-large" id="add-college-name"/>
-                    <p class="help-block">Name of the new college</p>
-                </div>
-            </div>
-            <div class="control-group">
-                <div class="controls">
-                    <button id="add-college-save" class="btn btn-primary">Add College</button>
-                    <button id="add-college-cancel" class="btn">Cancel</button>
-                </div>
-            </div>
-        </fieldset>
-    </form>
-</div>
-<br/><br/>
-
-
-
-<h2>AVAILABLE DEPARTMENTS</h2>
-
-<div class="wrap settings-sortable">
-	<ul id="department-remove" class="department-sortable settings-sortable-remove" #{if departments.size() == 0}style="display: none;"#{/if}>
-	   <p class="info"><em class="icon-trash"></em> Remove items by dragging them to the trash can</p>
-	</ul>
-	<ol id="department-list" class="department-sortable settings-sortable-list">
-	    #{list items:departments, as:'department'}
-	       <li id="department_${department.getId()}"><a class="department-editable" href="javascript:void(0);"><em class="icon-pencil"></em> ${department.getName()}</a></li>    
-	    #{/list}
-	</ol>
-</div>
-
-<a id="add-department-link" href="#">[ADD NEW]</a>
-
-<div id="add-department-dialog" style="display: none;">
-    <form class="form-horizontal">
-        <fieldset>
-            <div class="control-group">
-                <label class="control-label" for="add-department-name">New Department</label>
-                <div class="controls">
-                    <input type="text" class="input-large" id="add-department-name"/>
-                    <p class="help-block">Name of the new department</p>
-                </div>
-            </div>
-            <div class="control-group">
-                <div class="controls">
-                    <button id="add-department-save" class="btn btn-primary">Add Department</button>
-                    <button id="add-department-cancel" class="btn">Cancel</button>
-                </div>
-            </div>
-        </fieldset>
-    </form>
-</div>
-<br/><br/>
-
-<h2>AVAILABLE MAJORS</h2>
-
-<div class="wrap settings-sortable">
-    <ul id="major-remove" class="major-sortable settings-sortable-remove" #{if majors.size() == 0}style="display: none;"#{/if}>
-       <p class="info"><em class="icon-trash"></em> Remove items by dragging them to the trash can</p>
-    </ul>
-    <ol id="major-list" class="major-sortable settings-sortable-list">
-        #{list items:majors, as:'major'}
-           <li id="major_${major.getId()}"><a class="major-editable" href="javascript:void(0);"><em class="icon-pencil"></em> ${major.getName()}</a></li>    
-        #{/list}
-    </ol>
-</div>
-
-<a id="add-major-link" href="#">[ADD NEW]</a>
-
-<div id="add-major-dialog" style="display: none;">
-    <form class="form-horizontal">
-        <fieldset>
-            <div class="control-group">
-                <label class="control-label" for="add-major-name">New Major</label>
-                <div class="controls">
-                    <input type="text" class="input-large" id="add-major-name"/>
-                    <p class="help-block">Name of the new major</p>
-                </div>
-            </div>
-            <div class="control-group">
-                <div class="controls">
-                    <button id="add-major-save" class="btn btn-primary">Add Major</button>
-                    <button id="add-major-cancel" class="btn">Cancel</button>
-                </div>
-            </div>
-        </fieldset>
-    </form>
-</div>
-<br/><br/>
-
-<h2>AVAILABLE DEGREES</h2>
-
-<div class="wrap settings-sortable">
-    <ul id="degree-remove" class="degree-sortable settings-sortable-remove" #{if degrees.size() == 0}style="display: none;"#{/if}>
-       <p class="info"><em class="icon-trash"></em> Remove items by dragging them to the trash can</p>
-    </ul>
-    <ol id="degree-list" class="degree-sortable settings-sortable-list">
-        #{list items:degrees, as:'degree'}
-           <li id="degree_${degree.getId()}"><a class="degree-editable" href="javascript:void(0);"><em class="icon-pencil"></em> <span class="name">${degree.getName()}</span> <span class="level info">(${degree.getLevel().name()})</span></a></li>    
-        #{/list}
-    </ol>
-</div>
-
-<a id="add-degree-link" href="#">[ADD NEW]</a>
-
-<div id="add-degree-dialog" style="display: none;">
-    <form class="form-horizontal">
-        <fieldset>
-            <div class="control-group">
-                <label class="control-label" for="add-degree-name">New Degree</label>
-                <div class="controls">
-                    <input type="text" class="input-large" id="add-degree-name"/>
-                </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label" for="add-degree-level">Degree Level</label>
-                <div class="controls">
-	                <select id="add-degree-level">
-	                    <option selected="true" value="-1">...choose</option>
-	                    <option value="${UNDERGRADUATE.getId()}">${UNDERGRADUATE.name()}</option>
-	                    <option value="${MASTERS.getId()}">${MASTERS.name()}</option>
-	                    <option value="${DOCTORAL.getId()}">${DOCTORAL.name()}</option>
-	                </select>
-                </div>
-            </div>
-            <div class="control-group">
-                <div class="controls">
-                    <button id="add-degree-save" class="btn btn-primary">Add Degree</button>
-                    <button id="add-degree-cancel" class="btn">Cancel</button>
-                </div>
-            </div>
-        </fieldset>
-    </form>
-</div>
-<br/><br/>
-
-
-<h2>AVAILABLE DOCUMENT TYPES</h2>
-
-<div class="wrap settings-sortable">
-    <ul id="documentType-remove" class="documentType-sortable settings-sortable-remove" #{if docTypes.size() == 0}style="display: none;"#{/if}>
-       <p class="info"><em class="icon-trash"></em> Remove items by dragging them to the trash can</p>
-    </ul>
-    <ol id="documentType-list" class="documentType-sortable settings-sortable-list">
-        #{list items:docTypes, as:'docType'}
-           <li id="documentType_${docType.getId()}"><a class="documentType-editable" href="javascript:void(0);"><em class="icon-pencil"></em> <span class="name">${docType.getName()}</span> <span class="level info">(${docType.getLevel().name()})</span></a></li>    
-        #{/list}
-    </ol>
-</div>
-
-<a id="add-documentType-link" href="#">[ADD NEW]</a>
-
-<div id="add-documentType-dialog" style="display: none;">
-    <form class="form-horizontal">
-        <fieldset>
-            <div class="control-group">
-                <label class="control-label" for="add-documentType-name">New Document Type</label>
-                <div class="controls">
-                    <input type="text" class="input-large" id="add-documentType-name"/>
-                </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label" for="add-documentType-level">Degree Level</label>
-                <div class="controls">
-                    <select id="add-documentType-level">
-                        <option selected="true" value="-1">...choose</option>
-                        <option value="${UNDERGRADUATE.getId()}">${UNDERGRADUATE.name()}</option>
-                        <option value="${MASTERS.getId()}">${MASTERS.name()}</option>
-                        <option value="${DOCTORAL.getId()}">${DOCTORAL.name()}</option>
-                    </select>
-                </div>
-            </div>
-            <div class="control-group">
-                <div class="controls">
-                    <button id="add-documentType-save" class="btn btn-primary">Add Document Type</button>
-                    <button id="add-documentType-cancel" class="btn">Cancel</button>
-                </div>
-            </div>
-        </fieldset>
-    </form>
-</div>
-<br/><br/>
-
-<h2>AVAILABLE GRADUATION MONTHS</h2>
-
-<div class="wrap settings-sortable">
-    <ul id="graduationMonth-remove" class="graduationMonth-sortable settings-sortable-remove" #{if gradMonths.size() == 0}style="display: none;"#{/if}>
-       <p class="info"><em class="icon-trash"></em> Remove items by dragging them to the trash can</p>
-    </ul>
-    <ol id="graduationMonth-list" class="graduationMonth-sortable settings-sortable-list">
-        #{list items:gradMonths, as:'month'}
-           <li id="graduationMonth_${month.getId()}"><a class="graduationMonth-editable" href="javascript:void(0);"><em class="icon-pencil"></em> ${month.getMonthName()}</a></li>    
-        #{/list}
-    </ol>
-</div>
-
-<a id="add-graduationMonth-link" href="#">[ADD NEW]</a>
-
-<div id="add-graduationMonth-dialog" style="display: none;">
-    <form class="form-horizontal">
-        <fieldset>
-            <div class="control-group">
-                <label class="control-label" for="add-graduationMonth-name">New Month</label>
-                <div class="controls">
-                    <input type="text" class="input-large" id="add-graduationMonth-name"/>
-                    <p class="help-block">Name of the new month</p>
-                </div>
-            </div>
-            <div class="control-group">
-                <div class="controls">
-                    <button id="add-graduationMonth-save" class="btn btn-primary">Add Month</button>
-                    <button id="add-graduationMonth-cancel" class="btn">Cancel</button>
-                </div>
-            </div>
-        </fieldset>
-    </form>
-</div>
-<br/><br/>
 
 <div class="modal fade" id="embargo-type-modal">
     <form class="form-horizontal">
