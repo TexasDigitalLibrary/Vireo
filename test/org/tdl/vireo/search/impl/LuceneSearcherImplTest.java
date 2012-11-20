@@ -395,6 +395,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 				"documentType", 2012, 5, true);
 		sub1.setAssignee(otherPerson);
 
+		sub1.addDocumentSubject("BBB");
 		sub1.setEmbargoType(e1);
 		sub1.setDocumentType("ZZZZ");
 		sub1.addAttachment(file1, AttachmentType.SUPPLEMENTAL);
@@ -415,6 +416,8 @@ public class LuceneSearcherImplTest extends UnitTest{
 		createSubmission(sub2, "A Title", "I really like this work", "One; Four; Five;", 
 				"anotherCommittee@email.com", "another", "another", "another", "another",
 				"another", 2005, 4, null);
+		
+		sub2.addDocumentSubject("AAA");
 		sub2.setAssignee(person);
 		sub2.setEmbargoType(e2);
 		sub2.setDocumentType("AAAA");
@@ -470,6 +473,12 @@ public class LuceneSearcherImplTest extends UnitTest{
 			
 			// Document Keywords
 			submissions = searcher.submissionSearch(filter, SearchOrder.DOCUMENT_KEYWORDS, SearchDirection.DESCENDING, 0, 20).getResults();
+			assertTrue(submissions.contains(sub1));
+			assertTrue(submissions.contains(sub2));
+			assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));
+			
+			// Document Subjects
+			submissions = searcher.submissionSearch(filter, SearchOrder.DOCUMENT_SUBJECTS, SearchDirection.DESCENDING, 0, 20).getResults();
 			assertTrue(submissions.contains(sub1));
 			assertTrue(submissions.contains(sub2));
 			assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));

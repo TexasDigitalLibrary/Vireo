@@ -465,6 +465,45 @@ public class JpaSubmissionImplTests extends UnitTest {
 
 	}
 	
+	
+	/**
+	 * Test document subjects
+	 */
+	@Test
+	public void testDocumentSubjects() {
+		
+		Submission sub = subRepo.createSubmission(person);
+
+		assertEquals(0,sub.getDocumentSubjects().size());
+		
+		sub.addDocumentSubject("one");
+		sub.addDocumentSubject("two");
+		sub.addDocumentSubject("three");
+		
+		assertEquals("one",sub.getDocumentSubjects().get(0));
+		assertEquals("two",sub.getDocumentSubjects().get(1));
+		assertEquals("three",sub.getDocumentSubjects().get(2));
+		
+		sub.removeDocumentSubject("two");
+		
+		assertEquals("one",sub.getDocumentSubjects().get(0));
+		assertEquals("three",sub.getDocumentSubjects().get(1));
+		
+		sub.addDocumentSubject("one");
+		
+		assertEquals("one",sub.getDocumentSubjects().get(0));
+		assertEquals("three",sub.getDocumentSubjects().get(1));
+		assertEquals("one",sub.getDocumentSubjects().get(2));
+
+		
+		sub.removeDocumentSubject("one");
+		
+		assertEquals("three",sub.getDocumentSubjects().get(0));
+		assertEquals("one",sub.getDocumentSubjects().get(1));
+	}
+	
+	
+	
 	/**
 	 * Test that action logs are generated appropriately.
 	 * @throws InterruptedException 
@@ -622,6 +661,9 @@ public class JpaSubmissionImplTests extends UnitTest {
 		sub.setDocumentTitle("docTitle");
 		sub.setDocumentAbstract("docAbstract");
 		sub.setDocumentKeywords("docKeywords");
+		sub.addDocumentSubject("one");
+		sub.addDocumentSubject("two");
+		sub.addDocumentSubject("three");
 		sub.setCommitteeContactEmail("contactEmail");
 		sub.setCommitteeEmailHash("hash");
 		sub.setCommitteeApprovalDate(now);
@@ -651,6 +693,9 @@ public class JpaSubmissionImplTests extends UnitTest {
 		assertEquals("docTitle",sub.getDocumentTitle());
 		assertEquals("docAbstract",sub.getDocumentAbstract());
 		assertEquals("docKeywords",sub.getDocumentKeywords());
+		assertEquals("one",sub.getDocumentSubjects().get(0));
+		assertEquals("two",sub.getDocumentSubjects().get(1));
+		assertEquals("three",sub.getDocumentSubjects().get(2));
 		assertEquals("contactEmail",sub.getCommitteeContactEmail());
 		assertEquals("hash",sub.getCommitteeEmailHash());
 		assertEquals(now,sub.getCommitteeApprovalDate());

@@ -4,6 +4,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.SubmissionRepository;
+import org.tdl.vireo.proquest.ProquestVocabularyRepository;
 import org.tdl.vireo.search.Indexer;
 import org.tdl.vireo.search.Searcher;
 import org.tdl.vireo.security.SecurityContext;
@@ -29,6 +30,7 @@ public abstract class AbstractVireoController extends Controller {
 	public static PersonRepository personRepo = Spring.getBeanOfType(PersonRepository.class);
 	public static SubmissionRepository subRepo = Spring.getBeanOfType(SubmissionRepository.class);
 	public static SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
+	public static ProquestVocabularyRepository proquestRepo = Spring.getBeanOfType(ProquestVocabularyRepository.class);
 	public static StateManager stateManager = Spring.getBeanOfType(StateManager.class);
 	public static Indexer indexer = Spring.getBeanOfType(Indexer.class);
 	public static Searcher searcher = Spring.getBeanOfType(Searcher.class);
@@ -46,6 +48,7 @@ public abstract class AbstractVireoController extends Controller {
 		renderArgs.put("personRepo", personRepo);
 		renderArgs.put("subRepo", subRepo);
 		renderArgs.put("settingRepo", settingRepo);
+		renderArgs.put("proquestRepo", proquestRepo);
 		renderArgs.put("stateManager", stateManager);
 		renderArgs.put("indexer", indexer);
 	}

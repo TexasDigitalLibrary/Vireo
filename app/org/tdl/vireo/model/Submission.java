@@ -123,6 +123,31 @@ public interface Submission extends AbstractModel {
 	 * @param keywords A new list of document keywords
 	 */
 	public void setDocumentKeywords(String keywords);
+	
+	/**
+	 * @return the mutable list of document subjects. So you may use the
+	 *         add/remove/clear methods available on the list interface to
+	 *         modify this data. The list in it's current form will be saved
+	 *         when the submission object is receives a save() action.
+	 */
+	public List<String> getDocumentSubjects();
+
+	/**
+	 * Add a new subject to the end of the list of subjects for this document.
+	 * 
+	 * @param subject
+	 *            The subject to add.
+	 */
+	public void addDocumentSubject(String subject);
+
+	/**
+	 * Remove the first occurrence of the subject from the list of subjects for
+	 * this document..
+	 * 
+	 * @param subject
+	 *            The subject to remove.
+	 */
+	public void removeDocumentSubject(String subject);
 
 	/**
 	 * 

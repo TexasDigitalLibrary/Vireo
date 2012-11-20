@@ -27,7 +27,7 @@ test("test swapToInputHandler generic input" , function() {
 	reset();
 	
 	//Create markup to test
-	var markup = '<div class="edit-box">';
+	var markup =  '<div class="edit-box">';
 		markup += '<ul><li class="edit">';
 		markup += '<label>First Name:</label><span id="firstName"><i class="icon-pencil"></i>Audrey</span>';
 		markup += '</li></ul>';
@@ -128,6 +128,60 @@ test("test swapToInputHandler select autocomplete", function(){
     equal(1, jQuery(".icon-ok").length, "There is one submit icon.");
     equal(1, jQuery("#backup").length, "The backup was created.");
     equal('<i class="icon-pencil"></i>My Major', jQuery("#backup").html(), "The backup is accurate.");
+    
+});
+
+
+/**
+ * Test swapping from span to subject fields
+ */
+test("test swapToInputHandler select subject", function(){
+    expect(6);
+    reset();
+    
+    //Create markup to test
+    var markup = '<div class="edit-box">';
+        markup += '<ul><li class="edit">';
+        markup += '<label>Subjects:</label><span id="subjects" class="subject" data-primary="one" data-secondary="two" data-tertiary=""><i class="icon-pencil"></i><ul><li>one</li><li>two</li></ul></span>';
+        markup += '</li></ul>';
+        markup += '</div>';
+        markup += '<div id="subjectsOptions" style="display:none;">';
+        markup += '<select class="primary">';
+        markup += '<option value="">none...</option>';
+        markup += '<option value="one">one</option>';
+        markup += '<option value="two">two</option>';
+        markup += '<option value="three">three</option>';
+        markup += '</select>';
+        markup += '<select class="secondary">';
+        markup += '<option value="">none...</option>';
+        markup += '<option value="one">one</option>';
+        markup += '<option value="two">two</option>';
+        markup += '<option value="three">three</option>';
+        markup += '</select>';
+        markup += '<select class="tertiary">';
+        markup += '<option value="">none...</option>';
+        markup += '<option value="one">one</option>';
+        markup += '<option value="two">two</option>';
+        markup += '<option value="three">three</option>';
+        markup += '</select>';
+        markup += '</div>';
+    
+    //Append markup to body
+    jQuery("body").append(markup);
+    
+    //Register the handle
+    var handler = swapToInputHandler();
+    jQuery("#subjects").click(handler);
+    
+    //Simulate click
+    jQuery("#subjects").click();
+    
+    equal(0, jQuery("span").length, "The span has been removed.");
+    equal(6, jQuery("select").length, "There are six select fields.");
+    equal(1, jQuery("div#subjects").length, "The surrounding div has the correct id.");
+    equal(1, jQuery(".icon-remove").length, "There is one cancel icon.");
+    equal(1, jQuery(".icon-ok").length, "There is one submit icon.");
+    equal(1, jQuery("#backup").length, "The backup was created.");
     
 });
  
@@ -294,12 +348,84 @@ test("test commitChangesHandler AJAX General", function(){
     equal(0, jQuery(".icon-ok").length,"There are zero ok icons.");
 	
 });
+
+
+/**
+ * Test committing ajax for the subject triple
+ */
+test("test commitChangesHandler AJAX Subject", function(){
+    expect(10);
+    reset();
+    
+    //Create markup to test
+    var markup = '<div class="edit-box">';
+        markup += '<ul><li class="edit">';
+        markup += '<label>Subjects:</label><span id="subjects" class="subject" data-primary="one" data-secondary="two" data-tertiary=""><i class="icon-pencil"></i><ul><li>one</li><li>two</li></ul></span>';
+        markup += '</li></ul>';
+        markup += '</div>';
+        markup += '<div id="subjectsOptions" style="display:none;">';
+        markup += '<select class="primary">';
+        markup += '<option value="">none...</option>';
+        markup += '<option value="one">one</option>';
+        markup += '<option value="two">two</option>';
+        markup += '<option value="three">three</option>';
+        markup += '</select>';
+        markup += '<select class="secondary">';
+        markup += '<option value="">none...</option>';
+        markup += '<option value="one">one</option>';
+        markup += '<option value="two">two</option>';
+        markup += '<option value="three">three</option>';
+        markup += '</select>';
+        markup += '<select class="tertiary">';
+        markup += '<option value="">none...</option>';
+        markup += '<option value="one">one</option>';
+        markup += '<option value="two">two</option>';
+        markup += '<option value="three">three</option>';
+        markup += '</select>';
+        markup += '</div>';
+
+    
+    //Append markup to body
+    jQuery("body").append(markup);
+        
+    //Register the handler
+    var handler = swapToInputHandler();
+    jQuery("#subjects").click(handler);
+    
+    //Simulate click
+    jQuery("#subjects").click();
+    
+    // Mock AJAX
+    var options = null;
+    jQuery.ajax = function(param) {
+        options = param;
+    };
+    
+    //AJAX handler
+    commitChangesHandler(jQuery(".icon-ok"), "/jsonURL", "/committeeURL", 1);
+    
+    options.success({ success: 'true', value: '' });
+    
+    
+    equal('/jsonURL',options.url,"The ajax url is correct.");
+    equal('POST',options.type,"The ajax type is correct.");
+    equal('json',options.dataType,"The ajax dataType is correct.");
+    equal('one',options.data.primary,"Primary parameter is correct.");
+    equal('two',options.data.secondary,"Secondary parameter is correct.");
+    equal('',options.data.tertiary,"Tertiary parameter is correct.");
+    equal(1,options.data.subId,"The ajax data subId is correct.");
+    equal('subjects',options.data.field,"The ajax data field is correct.");
+    
+    equal(0, jQuery(".icon-remove").length,"There are zero remove icons.");
+    equal(0, jQuery(".icon-ok").length,"There are zero ok icons.");
+    
+});
   
 /**
  * Test AJAX committee members.
  */
 test("test commitChangesHandler AJAX committee members", function(){
-
+    expect(14);
 	reset();
 	
 	//Create markup to test
@@ -344,12 +470,14 @@ test("test commitChangesHandler AJAX committee members", function(){
     equal('Smith', options.data.lastName,"The ajax data lastName is correct.");
     equal(true, options.data.chair,"The ajax data chair is correct.");
     
+    
     equal('John', jQuery("span.firstName").text().trim(),"The first name returned is correct.");
     equal('W', jQuery("span.middleName").text().trim(),"The middle name returned is correct.");
     equal('Smith', jQuery("span.lastName").text().trim(),"The last name returned is correct.");
     equal(true, !jQuery("span.chair").text().trim(),"The chair returned is correct.");
     equal(0, jQuery(".icon-remove").length,"There are zero remove icons.");
     equal(0, jQuery(".icon-ok").length,"There are zero ok icons.");
+    
 });
 
 /**

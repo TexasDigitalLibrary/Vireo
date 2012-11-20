@@ -129,6 +129,10 @@ in results.
                      if (sub.getDocumentKeywords() != null)
                         out.print(sub.getDocumentKeywords());
                      break;
+                 case DOCUMENT_SUBJECTS:
+                     if (sub.getDocumentSubjects() != null)
+                        out.print(sub.getDocumentSubjects().join("; "));
+                     break;
                  case PRIMARY_DOCUMENT:
                      if (sub.getPrimaryDocument() != null)
                         out.print(sub.getPrimaryDocument().getName());

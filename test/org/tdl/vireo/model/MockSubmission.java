@@ -29,6 +29,7 @@ public class MockSubmission extends AbstractMock implements Submission {
 	public String documentTitle;
 	public String documentAbstract;
 	public String documentKeywords;
+	public List<String> documentSubjects = new ArrayList<String>();
 	public MockEmbargoType embargoType;
 	public List<Attachment> attachments = new ArrayList<Attachment>();
 	public List<CommitteeMember> committeeMembers = new ArrayList<CommitteeMember>();
@@ -159,6 +160,21 @@ public class MockSubmission extends AbstractMock implements Submission {
 	@Override
 	public void setDocumentKeywords(String keywords) {
 		this.documentKeywords = keywords;
+	}
+	
+	@Override
+	public List<String> getDocumentSubjects() {
+		return documentSubjects;
+	}
+	
+	@Override
+	public void addDocumentSubject(String subject) {
+		documentSubjects.add(subject);
+	}
+	
+	@Override
+	public void removeDocumentSubject(String subject) {
+		documentSubjects.remove(subject);
 	}
 
 	@Override

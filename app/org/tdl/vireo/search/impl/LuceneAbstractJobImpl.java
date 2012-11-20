@@ -243,6 +243,12 @@ public abstract class LuceneAbstractJobImpl extends Job {
 		String documentKeywords = sub.getDocumentKeywords();
 		searchText.append(documentTitle).append(" ").append(documentAbstract).append(" ").append(documentKeywords).append(" ");
 		
+		String documentSubjects = "";
+		for (String subject : sub.getDocumentSubjects()) {
+			documentSubjects += subject + " ";
+		}
+		searchText.append(documentSubjects).append(" ");
+		
 		String primaryDocument = null;
 		if (sub.getPrimaryDocument() != null) {
 			primaryDocument = sub.getPrimaryDocument().getName();
@@ -351,6 +357,9 @@ public abstract class LuceneAbstractJobImpl extends Job {
 		
 		if (documentKeywords != null)
 		doc.add(new Field("documentKeywords",documentKeywords, Field.Store.NO,Index.NOT_ANALYZED));
+		
+		if (documentSubjects != null)
+		doc.add(new Field("documentSubjects",documentSubjects, Field.Store.NO,Index.NOT_ANALYZED));
 		
 		if (primaryDocument != null)
 		doc.add(new Field("primaryDocument",primaryDocument, Field.Store.NO,Index.NOT_ANALYZED));
@@ -468,6 +477,9 @@ public abstract class LuceneAbstractJobImpl extends Job {
 			
 			if (documentKeywords != null)
 			doc.add(new Field("documentKeywords",documentKeywords, Field.Store.NO,Index.NOT_ANALYZED));
+			
+			if (documentSubjects != null)
+			doc.add(new Field("documentSubjects",documentSubjects, Field.Store.NO,Index.NOT_ANALYZED));
 			
 			if (primaryDocument != null)
 			doc.add(new Field("primaryDocument",primaryDocument, Field.Store.NO,Index.NOT_ANALYZED));

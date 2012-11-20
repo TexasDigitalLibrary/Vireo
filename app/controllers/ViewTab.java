@@ -35,6 +35,7 @@ import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.proquest.ProquestVocabularyRepository;
 import org.tdl.vireo.state.State;
 
 import play.Logger;
@@ -73,8 +74,8 @@ public class ViewTab extends AbstractVireoController {
 			return b.getDate().compareTo(a.getDate());
 		}
 		
-	}
-		
+	}	
+	
 	/**
 	 * The main view method.
 	 */
@@ -302,7 +303,23 @@ public class ViewTab extends AbstractVireoController {
 			} else if("keywords".equals(field)){			
 				submission.setDocumentKeywords(value);
 				currentValue = submission.getDocumentKeywords();
+			
+				//Document Subjects
+			} else if("subjects".equals(field)){				
+				String primary = params.get("primary");
+				String secondary = params.get("secondary");
+				String tertiary = params.get("tertiary");
 
+				submission.getDocumentSubjects().clear();
+				if (primary != null && primary.trim().length() > 0)
+					submission.addDocumentSubject(primary);
+				
+				if (secondary != null && secondary.trim().length() > 0)
+					submission.addDocumentSubject(secondary);
+				
+				if (tertiary != null && tertiary.trim().length() > 0)
+					submission.addDocumentSubject(tertiary);
+			
 				//Document Abstract
 			} else if("abstract".equals(field)){			
 				submission.setDocumentAbstract(value);

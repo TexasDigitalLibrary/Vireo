@@ -340,6 +340,21 @@ jQuery(document).ready(function(){
 							class="textarea empty"><i class="icon-pencil"></i> none
 						#{/else}
 					</span></li>
+					<li class="edit"><label>Subjects:</label><span id="subjects" 
+					    data-primary=  "${ submission.getDocumentSubjects().size() > 0 ? submission.getDocumentSubjects().get(0) : ''}"
+					    data-secondary="${ submission.getDocumentSubjects().size() > 1 ? submission.getDocumentSubjects().get(1) : ''}"
+					    data-tertiary= "${ submission.getDocumentSubjects().size() > 2 ? submission.getDocumentSubjects().get(2) : ''}"
+                        #{if submission.getDocumentSubjects().size() > 0}
+                            class="subject"><i class="icon-pencil"></i>
+                            <ul>
+                            #{list items:submission.getDocumentSubjects(), as:'subject'}
+                                <li>${subject}</li>
+                            #{/list}
+                            </ul>
+                        #{/if}#{else}
+                            class="subject empty"><i class="icon-pencil"></i> none
+                        #{/else}
+                    </span></li>
 				</ul>
 			</div>
 			<div class="edit-box pull-left">
@@ -464,6 +479,28 @@ jQuery(document).ready(function(){
 				#{/list}
 				</select>
 			</div>
+			<div id="subjectsOptions" style="display:none;">
+                <select class="primary">
+                    <option value=""><em>none...</em></option>
+                #{list items:proquestRepo.findAllSubjects(), as:'subject'}
+                    <option value="${subject.getDescription()}">${subject.getDescription()}</option>
+                #{/list}
+                </select>
+                
+                <select class="secondary">
+                    <option value=""><em>none...</em></option>
+                #{list items:proquestRepo.findAllSubjects(), as:'subject'}
+                    <option value="${subject.getDescription()}">${subject.getDescription()}</option>
+                #{/list}
+                </select>
+                
+                <select class="tertiary">
+                    <option value=""><em>none...</em></option>
+                #{list items:proquestRepo.findAllSubjects(), as:'subject'}
+                    <option value="${subject.getDescription()}">${subject.getDescription()}</option>
+                #{/list}
+                </select>
+            </div>
 			<div id="collegeOptions" style="display:none;">
 			    %{
 			       // fill type ahead with the list of pre-defined colleges, or if there are none of those then all colleges actually used

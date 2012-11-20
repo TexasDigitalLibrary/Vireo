@@ -25,6 +25,13 @@ function swapToInputHandler(){
 			} else {
 				//Make back up info			
 				jQuery("body").append('<div id="backup">'+editItem.html()+'</div>')
+				
+				if (editItem.attr("data-primary"))
+					jQuery("#backup").attr("data-primary",editItem.attr("data-primary"));
+				if (editItem.attr("data-secondary"))
+					jQuery("#backup").attr("data-secondary",editItem.attr("data-secondary"));
+				if (editItem.attr("data-tertiary"))
+					jQuery("#backup").attr("data-tertiary",editItem.attr("data-tertiary"));
 			}
 
 			if(editItem.hasClass("textarea")) {
@@ -52,7 +59,38 @@ function swapToInputHandler(){
 				
 				jQuery("#"+editItem.attr("id")+" .field").val(value);
 				
+			} else if(editItem.hasClass("subject")) {
+				// The three subject fields;
+				
+				var primary = editItem.attr("data-primary");
+				var secondary = editItem.attr("data-secondary");
+				var tertiary = editItem.attr("data-tertiary");
+				
+				var selectCode = '<div id="'+editItem.attr("id")+'" class="editing subject">';
+				selectCode += jQuery("#"+editItem.attr("id")+"Options").html();
+				selectCode += '<br /><i class="icon-remove" title="cancel"></i>&nbsp<i class="icon-ok" title="commit"></i></div>';
+				editItem.replaceWith(selectCode);
+
+				
+				jQuery("#"+editItem.attr("id")+" .primary option").each(function(){
+					if(jQuery(this).text()==primary){
+						jQuery(this).attr("selected","selected");
+					}
+				})
+
+				jQuery("#"+editItem.attr("id")+" .secondary option").each(function(){
+					if(jQuery(this).text()==secondary){
+						jQuery(this).attr("selected","selected");
+					}
+				})
+				
+				jQuery("#"+editItem.attr("id")+" .tertiary option").each(function(){
+					if(jQuery(this).text()==tertiary){
+						jQuery(this).attr("selected","selected");
+					}
+				})
 			} else {
+			
 				//Input Fields
 				editItem.replaceWith('<div id="'+editItem.attr("id")+'" class="editing"><input class="field" type="text" value="'+value+'" /><br /><i class="icon-remove" title="cancel"></i>&nbsp<i class="icon-ok" title="commit"></i></div>');
 			}			
@@ -153,6 +191,11 @@ function commitChangesHandler(eventTarget, jsonURL, committeeURL, subId){
 	var fieldItem;
 	var parent = eventTarget.parent();
 	
+	var subjectsField = false;
+	var primary;
+	var secondary;
+	var tertiary;
+	
 	if(jQuery(".editing").hasClass("textarea")){
 		classValue = classValue + 'textarea ';
 		fieldItem = jQuery(".editing textarea");
@@ -162,12 +205,19 @@ function commitChangesHandler(eventTarget, jsonURL, committeeURL, subId){
 	} else if(jQuery(".editing").hasClass("autocomplete")){
 		classValue = classValue + 'autocomplete ';
 		fieldItem = jQuery(".editing input");
+	} else if(jQuery(".editing").hasClass("subject")){
+		classValue = classValue + 'subject ';
+		
+		subjectsField = true;
+		primary = jQuery(".editing .primary").val();
+		secondary = jQuery(".editing .secondary").val(); 
+		tertiary = jQuery(".editing .tertiary").val();
 	} else {
 		fieldItem = jQuery(".editing input");
 	}
 	var id=jQuery(".editing").attr("id");
 	var theValue;
-	if(fieldItem.val()){
+	if(fieldItem && fieldItem.val()){
 		theValue = fieldItem.val();
 	}
 	
@@ -234,6 +284,48 @@ function commitChangesHandler(eventTarget, jsonURL, committeeURL, subId){
 			},
 			error:function(){
 				jQuery("div."+id).replaceWith('<span id="'+id+'" class="error '+classValue+'">'+jQuery("#backup").html()+' <a href="#" class="tooltip-icon" rel="tooltip" title="There was an error with your request."><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
+				jQuery('.tooltip-icon').tooltip();
+			}
+			
+		});
+	} else if (subjectsField) { 
+		jQuery.ajax({
+			url:jsonURL,
+			data:{
+				subId:subId,
+				field:id,
+				primary:primary,
+				secondary:secondary,
+				tertiary:tertiary
+			},
+			dataType:'json',
+			type:'POST',
+			success:function(data) {
+				
+				
+				currentValue = "<ul>";
+				if (primary)
+					currentValue += "<li>"+primary + "</li>";
+				if (secondary)
+					currentValue += "<li>"+secondary + "</li>";
+				if (tertiary)
+					currentValue += "<li>"+tertiary + "</li>";
+				currentValue += "</ul>"
+				
+				if (!primary && !secondary && !tertiary) {
+					classValue = classValue + 'empty';
+					currentValue = "none";
+				}
+				
+				if(data.success){
+					jQuery("div."+id).replaceWith('<span id="'+id+'" class="'+classValue+'" data-primary="'+primary+'" data-secondary="'+secondary+'" data-tertiary="'+tertiary+'"><i class="icon-pencil"></i>'+currentValue+'</span>');
+				} else {
+					jQuery("div."+id).replaceWith('<span id="'+id+'" class="error '+classValue+'"><i class="icon-pencil"></i> '+currentValue+' <a href="#" class="tooltip-icon" rel="tooltip" title="'+data.message+'"><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
+					jQuery('.tooltip-icon').tooltip();
+				}
+			},
+			error:function(){
+				jQuery("div."+id).replaceWith('<span id="'+id+'" class="error subjects">'+jQuery("#backup").html()+' <a href="#" class="tooltip-icon" rel="tooltip" title="There was an error with your request."><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
 				jQuery('.tooltip-icon').tooltip();
 			}
 			
@@ -406,7 +498,10 @@ function cancelEditingHandler(){
 			} else if(jQuery(".editing").hasClass("autocomplete")) { 
 				classValue = classValue + 'autocomplete';
 				fieldItem = jQuery(".editing autocomplete");
-			} else {
+			} else if(jQuery(".editing").hasClass("subject")) {
+				classValue = classValue + 'subject';
+				
+			} else {		
 				fieldItem = jQuery(".editing input");
 			}
 			var id=jQuery(".editing").attr("id");
@@ -419,6 +514,16 @@ function cancelEditingHandler(){
 			}
 			
 			jQuery(".editing").replaceWith('<span id="'+id+'" class="'+classValue+'">'+currentValue+'</span>');
+			
+			if (jQuery("#backup").attr("data-primary"))
+				jQuery("#"+id).attr("data-primary",jQuery("#backup").attr("data-primary"));
+			
+			if (jQuery("#backup").attr("data-secondary"))
+				jQuery("#"+id).attr("data-secondary",jQuery("#backup").attr("data-secondary"));
+			
+			if (jQuery("#backup").attr("data-tertiary"))
+				jQuery("#"+id).attr("data-tertiary",jQuery("#backup").attr("data-tertiary"));
+			
 		}
 		
 		jQuery("#backup").remove();

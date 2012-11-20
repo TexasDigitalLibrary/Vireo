@@ -11,12 +11,15 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
+import javax.persistence.OrderColumn;
 import javax.persistence.PostLoad;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -66,6 +69,10 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	public String documentAbstract;
 	@Column(length=326768) // 2^15
 	public String documentKeywords;
+	@ElementCollection
+	@OrderColumn
+	@CollectionTable(name="submission_subjects")
+	public List<String> documentSubjects;
 
 	@OneToOne(targetEntity = JpaEmbargoTypeImpl.class)
 	public EmbargoType embargoType;
@@ -157,6 +164,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		assertReviewerOrOwner(submitter);
 		
 		this.submitter = submitter;
+		this.documentSubjects = new ArrayList<String>();
 		this.attachments = new ArrayList<Attachment>();
 		this.committeeMembers = new ArrayList<CommitteeMember>();
 		this.customActions = new ArrayList<CustomActionValue>();
@@ -355,6 +363,21 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 			this.documentKeywords = keywords;
 			generateChangeLog("Document keywords", keywords, false);
 		}
+	}
+	
+	@Override
+	public List<String> getDocumentSubjects() {
+		return documentSubjects;
+	}
+	
+	@Override
+	public void addDocumentSubject(String subject) {
+		documentSubjects.add(subject);
+	}
+	
+	@Override
+	public void removeDocumentSubject(String subject) {
+		documentSubjects.remove(subject);
 	}
 
 	@Override

@@ -99,6 +99,8 @@ import play.Play;
  * 
  * documentKeywords: The document's keywords for sorting.
  * 
+ * documentSubjects: The document's subjects for sorting.
+ * 
  * primaryDocument: The name of the primary document for sorting.
  * 
  * licenseAgreementDate: The date the license was agreed too for sorting.
