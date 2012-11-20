@@ -129,6 +129,30 @@
             </div>
         </div>
         #{/ifEnabled}
+        #{ifEnabled PROGRAM}
+		<div class="control-group #{errorClass 'program' /} #{fieldClass PROGRAM /}">
+            <label class="control-label" for="program"><span class="required-star">*</span> #{fieldLabel PROGRAM /}:</label>
+            <div class="controls">
+                #{if disabledFields.contains("program")}
+                <p>${program}</p>
+                #{/if} 
+                #{else}
+                    #{if settingRepo.findAllPrograms().size() > 0 }
+		                <select name="program">
+		                    <option #{if program == null}selected="true"#{/if} value="">...choose</option>
+		                    #{list items:settingRepo.findAllPrograms(), as:'programObject'}
+		                    <option #{if program == programObject.getName()}selected="true"#{/if} value="${programObject.getName()}">${programObject.getName()}</option>
+		                    #{/list}
+		                </select>
+		            #{/if}
+		            #{else}
+		                <input name="program" value="${program}"/>
+		            #{/else}
+		            <a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp PROGRAM /}"><i class="icon-info-sign"></i></a>
+                #{/else}
+            </div>
+        </div>
+        #{/ifEnabled}
         #{ifEnabled DEPARTMENT }
 		<div class="control-group #{errorClass 'department' /} #{fieldClass DEPARTMENT /}">
 			<label class="control-label" for="department"><span class="required-star">*</span> #{fieldLabel DEPARTMENT /}:</label>

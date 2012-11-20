@@ -76,6 +76,13 @@ public enum FieldConfig {
 			"submit_college_enabled",
 			"The college or other unit of institution the author belongs too. This field is selected from a pre-defined list of colleges, or if there are none then is free-form. This field may be configured to be locked if supplied by the authentication plugin."),
 	
+	PROGRAM(
+			"Program",
+			"submit_program_label",
+			"submit_program_help",
+			"submit_program_enabled",
+			"The program the author belongs too. This field is selected from a pre-defined list of programs, or if there are none then is free-form."),
+			
 	DEPARTMENT(
 			"Department",
 			"submit_department_label",
@@ -283,7 +290,7 @@ public enum FieldConfig {
 	
 	// Groups of fields
 	
-	public static final FieldConfig[] PERSONAL_INFO_FIELDS = {STUDENT_FIRST_NAME,STUDENT_MIDDLE_NAME,STUDENT_LAST_NAME,STUDENT_EMAIL,STUDENT_BIRTH_YEAR,GRANTOR,COLLEGE,DEPARTMENT,DEGREE,MAJOR,PERMANENT_PHONE_NUMBER,PERMANENT_POSTAL_ADDRESS,PERMANENT_EMAIL_ADDRESS,CURRENT_PHONE_NUMBER,CURRENT_POSTAL_ADDRESS};
+	public static final FieldConfig[] PERSONAL_INFO_FIELDS = {STUDENT_FIRST_NAME,STUDENT_MIDDLE_NAME,STUDENT_LAST_NAME,STUDENT_EMAIL,STUDENT_BIRTH_YEAR,GRANTOR,COLLEGE,PROGRAM,DEPARTMENT,DEGREE,MAJOR,PERMANENT_PHONE_NUMBER,PERMANENT_POSTAL_ADDRESS,PERMANENT_EMAIL_ADDRESS,CURRENT_PHONE_NUMBER,CURRENT_POSTAL_ADDRESS};
 
 	public static final FieldConfig[] LICENSE_AGREEMENT_FIELDS = {LICENSE_AGREEMENT};
 	

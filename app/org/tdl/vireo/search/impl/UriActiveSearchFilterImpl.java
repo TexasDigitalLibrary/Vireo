@@ -48,6 +48,7 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 	public List<Semester> semesters = new ArrayList<Semester>();
 	public List<String> degrees = new ArrayList<String>();
 	public List<String> departments = new ArrayList<String>();
+	public List<String> programs = new ArrayList<String>();
 	public List<String> colleges = new ArrayList<String>();
 	public List<String> majors = new ArrayList<String>();
 	public List<String> documentTypes = new ArrayList<String>();
@@ -262,6 +263,21 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 	}
 
 	@Override
+	public List<String> getPrograms() {
+		return programs;
+	}
+	
+	@Override
+	public void addProgram(String program) {
+		programs.add(program);
+	}
+	
+	@Override
+	public void removeProgram(String program) {
+		programs.remove(program);
+	}
+	
+	@Override
 	public List<String> getColleges() {
 		return colleges;
 	}
@@ -275,7 +291,7 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 	public void removeCollege(String college) {
 		colleges.remove(college);
 	}
-
+	
 	@Override
 	public List<String> getMajors() {
 		return majors;
@@ -366,6 +382,7 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 		encodeList(result,degrees);
 		encodeList(result,departments);
 		encodeList(result,colleges);
+		encodeList(result,programs);
 		encodeList(result,majors);
 		encodeList(result,documentTypes);
 		
@@ -392,7 +409,7 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 	public void decode(String encoded) {
 		try {
 			String[] split = encoded.split(":",-1);
-			if (split.length != 19)
+			if (split.length != 20)
 				throw new IllegalArgumentException("Unable to decode active search filter because it does not have the 19 expected number of components instead it has "+split.length);
 
 			// Decode all the lists
@@ -409,6 +426,7 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 			degrees = decodeList(split[i++],String.class);
 			departments = decodeList(split[i++],String.class);
 			colleges = decodeList(split[i++],String.class);
+			programs = decodeList(split[i++],String.class);
 			majors = decodeList(split[i++],String.class);
 			documentTypes = decodeList(split[i++],String.class);
 
@@ -491,6 +509,9 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 		other.getColleges().clear();
 		other.getColleges().addAll(this.colleges);
 		
+		other.getPrograms().clear();
+		other.getPrograms().addAll(this.programs);
+		
 		other.getMajors().clear();
 		other.getMajors().addAll(this.majors);
 		
@@ -517,6 +538,7 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 		this.degrees = new ArrayList<String>(other.getDegrees());
 		this.departments = new ArrayList<String>(other.getDepartments());
 		this.colleges = new ArrayList<String>(other.getColleges());
+		this.programs = new ArrayList<String>(other.getPrograms());
 		this.majors = new ArrayList<String>(other.getMajors());
 		this.documentTypes = new ArrayList<String>(other.getDocumentTypes());
 		this.umiRelease = other.getUMIRelease();

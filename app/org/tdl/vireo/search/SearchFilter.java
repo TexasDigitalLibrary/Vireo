@@ -233,6 +233,23 @@ public interface SearchFilter {
 	public void removeDepartment(String department);
 
 	/**
+	 * @return The list of programs
+	 */
+	public List<String> getPrograms();
+	
+	/**
+	 * @param program
+	 * 			Add a new program to the filter.
+	 */
+	public void addProgram(String program);
+	
+	/**
+	 * @param program
+	 * 			Remove a program from the filter.
+	 */
+	public void removeProgram(String program);
+	
+	/**
 	 * @return The list of colleges
 	 */
 	public List<String> getColleges();
@@ -249,8 +266,8 @@ public interface SearchFilter {
 	 * @param college
 	 *            Remove a college from the filter.
 	 */
-	public void removeCollege(String college);
-
+	public void removeCollege(String college);	
+	
 	/**
 	 * 
 	 * @return The list of majors

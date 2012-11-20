@@ -381,6 +381,13 @@ jQuery(document).ready(function(){
 							class="autocomplete empty"><i class="icon-pencil"></i> none
 						#{/else}
 						</span></li>
+					<li class="edit"><label>Program:</label><span id="program"
+						#{if submission.getProgram()}
+							class="autocomplete"><i class="icon-pencil"></i> ${submission.getProgram()}
+						#{/if}#{else}
+							class="autocomplete empty"><i class="icon-pencil"></i> none
+						#{/else}
+						</span></li>
 					<li class="edit"><label>Department:</label><span id="department"
 						#{if submission.getDepartment()}
 							class="autocomplete"><i class="icon-pencil"></i> ${submission.getDepartment()}
@@ -519,6 +526,26 @@ jQuery(document).ready(function(){
                   data-provide="typeahead"
                   data-min-length="0"
                   data-source='[#{list items:colleges, as:'college'}"${college.escapeJavaScript()}"${ college_isLast ? "" : ","}#{/list}]'
+                  />
+			</div>
+			<div id="programOptions" style="display:none;">
+			    %{
+			       // fill type ahead with the list of pre-defined programs, or if there are none of those then all programs actually used
+			       def programs = [];
+			       for (def program : settingRepo.findAllPrograms()) {
+			           programs.push(program.getName());
+			       }
+			       if (programs.size() == 0) {
+			           for (String program : subRepo.findAllPrograms()) {
+			             programs.push(program);
+			           }
+			       }
+			    }%
+                <input class="field"
+                  data-items="20"
+                  data-provide="typeahead"
+                  data-min-length="0"
+                  data-source='[#{list items:programs, as:'program'}"${program.escapeJavaScript()}"${ program_isLast ? "" : ","}#{/list}]'
                   />
 			</div>
 			<div id="departmentOptions" style="display:none;">

@@ -330,6 +330,11 @@ public class ViewTab extends AbstractVireoController {
 				submission.setCollege(value);
 				currentValue = submission.getCollege();
 
+				//Program
+			} else if("program".equals(field)){
+				submission.setProgram(value);
+				currentValue = submission.getProgram();
+				
 				//Department
 			} else if("department".equals(field)){
 				submission.setDepartment(value);

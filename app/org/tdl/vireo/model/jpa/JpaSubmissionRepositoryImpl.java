@@ -141,6 +141,14 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 	}
 	
 	@Override
+	public List<String> findAllPrograms() {
+		Query query = JPA.em().createQuery("SELECT DISTINCT program FROM JpaSubmissionImpl WHERE program IS NOT NULL ORDER BY program ASC");
+		
+		List<String> results = query.getResultList();
+		return results;
+	}
+	
+	@Override
 	public List<String> findAllColleges() {
 		Query query = JPA.em().createQuery("SELECT DISTINCT college FROM JpaSubmissionImpl WHERE college IS NOT NULL ORDER BY college ASC");
 		

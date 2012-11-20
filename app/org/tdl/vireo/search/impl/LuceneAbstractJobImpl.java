@@ -203,9 +203,10 @@ public abstract class LuceneAbstractJobImpl extends Job {
 		}
 		
 		String department = sub.getDepartment();
+		String program = sub.getProgram();
 		String college = sub.getCollege();
 		String major = sub.getMajor();
-		searchText.append(department).append(" ").append(college).append(" ").append(major).append(" ");
+		searchText.append(department).append(" ").append(program).append(" ").append(college).append(" ").append(major).append(" ");
 		
 		String embargo = null;
 		if (sub.getEmbargoType() != null) {
@@ -322,8 +323,11 @@ public abstract class LuceneAbstractJobImpl extends Job {
 		if (department != null)
 		doc.add(new Field("department",department,Field.Store.NO,Index.NOT_ANALYZED));
 		
+		if (program != null)
+		doc.add(new Field("program",program,Field.Store.NO,Index.NOT_ANALYZED));
+			
 		if (college != null)
-		doc.add(new Field("college",college,Field.Store.NO,Index.NOT_ANALYZED));
+		doc.add(new Field("college",college,Field.Store.NO,Index.NOT_ANALYZED));		
 		
 		if (major != null)
 		doc.add(new Field("major",major,Field.Store.NO,Index.NOT_ANALYZED));
@@ -444,6 +448,9 @@ public abstract class LuceneAbstractJobImpl extends Job {
 			
 			if (department != null)
 			doc.add(new Field("department",department,Field.Store.NO,Index.NOT_ANALYZED));
+			
+			if (program != null)
+			doc.add(new Field("program",program,Field.Store.NO,Index.NOT_ANALYZED));
 			
 			if (college != null)
 			doc.add(new Field("college",college,Field.Store.NO,Index.NOT_ANALYZED));

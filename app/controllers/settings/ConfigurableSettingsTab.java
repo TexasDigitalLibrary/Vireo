@@ -13,6 +13,7 @@ import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.Major;
 import org.tdl.vireo.model.NameFormat;
+import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.RoleType;
 
 import play.Logger;
@@ -32,6 +33,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 		
 		List<EmbargoType> embargos = settingRepo.findAllEmbargoTypes();
 		List<College> colleges = settingRepo.findAllColleges();
+		List<Program> programs = settingRepo.findAllPrograms();
 		List<Department> departments = settingRepo.findAllDepartments();
 		List<Major> majors = settingRepo.findAllMajors();
 		List<Degree> degrees = settingRepo.findAllDegrees();
@@ -52,7 +54,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 				embargos,
 				
 				// Sortable lists
-				colleges, departments, majors, degrees, docTypes, gradMonths);
+				colleges, programs, departments, majors, degrees, docTypes, gradMonths);
 	}
 
 	// ////////////////////////////////////////////
@@ -323,6 +325,139 @@ public class ConfigurableSettingsTab extends SettingsTab {
 					+ "\" }");
 		}
 	}
+	
+	// ////////////////////////////////////////////
+		// PROGRAM AJAX
+		// ////////////////////////////////////////////
+
+		/**
+		 * Create a new Program. The id of the new program will be returned.
+		 * 
+		 * @param name
+		 *            The name of the new program
+		 */
+		@Security(RoleType.MANAGER)
+		public static void addProgramJSON(String name) {
+
+			try {
+				if (name == null || name.trim().length() == 0)
+					throw new IllegalArgumentException("Name is required");
+
+				// Add the new program to the end of the list.
+				List<Program> programs = settingRepo.findAllPrograms();
+
+				Program program = settingRepo.createProgram(name);
+				programs.add(program);
+
+				saveModelOrder(programs);
+
+				name = escapeJavaScript(program.getName());
+
+				renderJSON("{ \"success\": \"true\", \"id\": " + program.getId()
+						+ ", \"name\": \"" + name + "\" }");
+			} catch (IllegalArgumentException iae) {
+				String message = escapeJavaScript(iae.getMessage());			
+				renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
+			} catch (PersistenceException pe) {
+				name = escapeJavaScript(name);
+				renderJSON("{ \"failure\": \"true\", \"message\": \"Another program allready exists with the name: '"+name+"'\" }");
+			} catch (RuntimeException re) {
+				Logger.error(re,"Unable to add program");
+				String message = escapeJavaScript(re.getMessage());
+				renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
+						+ "\" }");
+			}
+		}
+
+		/**
+		 * Edit an existing program's name. Both the id and new name will be
+		 * returned.
+		 * 
+		 * @param programId
+		 *            The id of the program to be edited, in the form "program_id"
+		 * @param name
+		 *            The new name
+		 */
+		@Security(RoleType.MANAGER)
+		public static void editProgramJSON(String programId, String name) {
+			try {
+				// Check input
+				if (name == null || name.trim().length() == 0)
+					throw new IllegalArgumentException("Name is required");
+
+				// Save the new program
+				String[] parts = programId.split("_");
+				Long id = Long.valueOf(parts[1]);
+				Program program = settingRepo.findProgram(id);
+				program.setName(name);
+				program.save();
+
+				name = escapeJavaScript(name);
+
+				renderJSON("{ \"success\": \"true\", \"id\": " + program.getId() + ", \"name\": \"" + name + "\" }");
+			} catch (IllegalArgumentException iae) {
+				String message = escapeJavaScript(iae.getMessage());			
+				renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
+			} catch (PersistenceException pe) {
+				name = escapeJavaScript(name);
+				renderJSON("{ \"failure\": \"true\", \"message\": \"Another program allready exists with the name: '"+name+"'\" }");
+			} catch (RuntimeException re) {
+				Logger.error(re,"Unable to edit program");
+				String message = escapeJavaScript(re.getMessage());
+				renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
+			}
+		}
+
+		/**
+		 * Remove an existing program
+		 * 
+		 * @param programId
+		 *            The id of the program to be removed of the form "program_id"
+		 */
+		@Security(RoleType.MANAGER)
+		public static void removeProgramJSON(String programId) {
+			try {
+				// Delete the old college
+				String[] parts = programId.split("_");
+				Long id = Long.valueOf(parts[1]);
+				Program program = settingRepo.findProgram(id);
+				program.delete();
+
+				renderJSON("{ \"success\": \"true\" }");
+			} catch (RuntimeException re) {
+				Logger.error(re,"Unable to remove program");
+				String message = escapeJavaScript(re.getMessage());
+				renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
+						+ "\" }");
+			}
+		}
+
+		/**
+		 * Reorder a list of programs.
+		 * 
+		 * @param programIds
+		 *            An ordered list of ids in the form:
+		 *            "program_1,program_3,program_2"
+		 */
+		@Security(RoleType.MANAGER)
+		public static void reorderProgramsJSON(String programIds) {
+
+			try {
+
+				if (programIds != null && programIds.trim().length() > 0) {
+					// Save the new order
+					List<Program> programs = resolveIds(programIds, Program.class);
+					saveModelOrder(programs);
+				}
+
+				renderJSON("{ \"success\": \"true\" }");
+			} catch (RuntimeException re) {
+				Logger.error(re,"Unable to reorder programs");
+				String message = escapeJavaScript(re.getMessage());
+				renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
+						+ "\" }");
+			}
+		}
 
 	// ////////////////////////////////////////////
 	// DEPARTMENT AJAX

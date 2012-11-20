@@ -44,6 +44,7 @@ public class MockSubmission extends AbstractMock implements Submission {
 	public DegreeLevel level;
 	public String department;
 	public String college;
+	public String program;
 	public String major;
 	public String documentType;
 	public Integer graduationYear;
@@ -382,6 +383,16 @@ public class MockSubmission extends AbstractMock implements Submission {
 	@Override
 	public void setCollege(String college) {
 		this.college = college;
+	}
+	
+	@Override
+	public String getProgram() {
+		return program;
+	}
+	
+	@Override
+	public void setProgram(String program) {
+		this.program = program;
 	}
 
 	@Override

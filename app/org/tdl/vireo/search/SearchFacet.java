@@ -15,14 +15,15 @@ public enum SearchFacet {
 	ASSIGNEE(3),
 	GRADUATION_SEMESTER(4),
 	DEPARTMENT(5),
-	COLLEGE(6),
-	MAJOR(7),
-	EMBARGO(8),
-	DEGREE(9),
-	DOCUMENT_TYPE(10),
-	UMI_RELEASE(11),
-	DATE_CHOOSE(12),
-	DATE_RANGE(13);
+	PROGRAM(6),
+	COLLEGE(7),	
+	MAJOR(8),
+	EMBARGO(9),
+	DEGREE(10),
+	DOCUMENT_TYPE(11),
+	UMI_RELEASE(12),
+	DATE_CHOOSE(13),
+	DATE_RANGE(14);
 	
 	// The id for this search facet.
 	private int id;

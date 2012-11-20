@@ -76,6 +76,7 @@ public class LuceneSearcherImpl implements Searcher {
 		SORT_SUB_FIELDS[SearchOrder.COMMITTEE_CONTACT_EMAIL.ordinal()] = "committeeContactEmail";
 		SORT_SUB_FIELDS[SearchOrder.DEGREE.ordinal()] = "degree";
 		SORT_SUB_FIELDS[SearchOrder.DEGREE_LEVEL.ordinal()] = "degreeLevel";
+		SORT_SUB_FIELDS[SearchOrder.PROGRAM.ordinal()] = "program";
 		SORT_SUB_FIELDS[SearchOrder.COLLEGE.ordinal()] = "college";
 		SORT_SUB_FIELDS[SearchOrder.DEPARTMENT.ordinal()] = "department";
 		SORT_SUB_FIELDS[SearchOrder.MAJOR.ordinal()] = "major";
@@ -446,6 +447,15 @@ public class LuceneSearcherImpl implements Searcher {
 			andQuery.add(orQuery,Occur.MUST);
 		}
 		
+		// Program Filter
+		if (filter.getPrograms().size() > 0) {
+			BooleanQuery orQuery = new BooleanQuery();
+			for(String program : filter.getPrograms()) {
+				orQuery.add(new TermQuery(new Term("program", program)), Occur.SHOULD);
+			}
+			andQuery.add(orQuery,Occur.MUST);
+		}
+				
 		// College Filter
 		if (filter.getColleges().size() > 0) {
 			BooleanQuery orQuery = new BooleanQuery();
@@ -453,7 +463,7 @@ public class LuceneSearcherImpl implements Searcher {
 				orQuery.add(new TermQuery(new Term("college", college)), Occur.SHOULD);
 			}
 			andQuery.add(orQuery,Occur.MUST);
-		}
+		}		
 		
 		// Major Filter
 		if (filter.getMajors().size() > 0) {

@@ -178,6 +178,8 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 			filter.addDegree("degree2");
 			filter.addDepartment("dept1");
 			filter.addDepartment("dept2");
+			filter.addProgram("program1");
+			filter.addProgram("program2");
 			filter.addCollege("college1");
 			filter.addCollege("college2");
 			filter.addMajor("major1");
@@ -227,6 +229,8 @@ public class UriActiveSearchFilterImplTest extends UnitTest {
 			assertEquals("degree2",newFilter.getDegrees().get(1));
 			assertEquals("dept1",newFilter.getDepartments().get(0));
 			assertEquals("dept2",newFilter.getDepartments().get(1));
+			assertEquals("program1",newFilter.getPrograms().get(0));
+			assertEquals("program2",newFilter.getPrograms().get(1));
 			assertEquals("college1",newFilter.getColleges().get(0));
 			assertEquals("college2",newFilter.getColleges().get(1));
 			assertEquals("major1",newFilter.getMajors().get(0));

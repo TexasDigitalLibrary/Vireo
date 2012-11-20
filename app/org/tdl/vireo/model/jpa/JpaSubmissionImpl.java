@@ -109,6 +109,8 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@Column(length=255)
 	public String college;
 	@Column(length=255)
+	public String program;
+	@Column(length=255)
 	public String major;
 	@Column(length=255)
 	public String documentType;
@@ -685,7 +687,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	public String getCollege() {
 		return college;
 	}
-
+	
 	@Override
 	public void setCollege(String college) {
 		assertReviewerOrOwner(submitter);
@@ -693,6 +695,21 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		if (!equals(this.college,college)) {
 			this.college = college;
 			generateChangeLog("College",college,false);
+		}
+	}
+	
+	@Override
+	public String getProgram() {
+		return program;
+	}
+	
+	@Override
+	public void setProgram(String program) {
+		assertReviewerOrOwner(submitter);
+		
+		if (!equals(this.program,program)) {
+			this.program = program;
+			generateChangeLog("Program",program,false);
 		}
 	}
 
