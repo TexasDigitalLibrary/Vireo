@@ -17,17 +17,6 @@
 	asking for something does not mean we are required to provide it. They can
 	use all the other open interoperability standards to collect and publish 
 	these works.
-	
-	
-	Known Deficiencies:
-	====================
-	
-	1) Proquest would like a field they call "DISS_category" which contains a
-	subject hierarchy using a controlled vocabularity from UMI. Vireo does not 
-	currently collect this field. Also it is unclear what licensing
-	restrictions ProQuest places on using this controlled vocabulary and
-	whether we can include the list with in Vireo. 
-
 }*
 %{
 	//Configure UMI export options
@@ -160,6 +149,8 @@
 	String format_restriction_code ="0";
 	String format_restriction_remove = "";
 	
+	
+	def proquestUtils = play.modules.spring.Spring.getBeanOfType(org.tdl.vireo.proquest.ProquestUtilityService.class);
 }%
 <DISS_submission
 	pulishing_option="${ publishing_option }"
@@ -180,108 +171,6 @@
 			</DISS_name>
 			
 			#{if release_student_contact_information } 
-			%{
-				/** 
-				 * Groovy closure to parse a phone number into it's distinct 
-				 * components. This should work must of the time, however if
-				 * it dosent then everything is stuffed in the "number" field.
-				 * So at least the information is transmitted.
-				 */
-				def parsePhone = { fullPhone ->
-					// The phone parts that we are trying extract
-					String cntry_code = null;
-			        String area_code  = null;
-			        String number     = null;
-			        String ext        = null;
-			        
-			        // Give it our best shot
-			        java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(
-			                '^(?:[\\+]?[\\(]?([\\d]{1,3})[\\s\\-\\.\\)]+)?' +  // cntry_code (optional)
-			                '(?:[\\(]?([\\d]{1,3})[\\s\\-/\\)]+)'           +  // area_code
-			                '([2-9][0-9\\s\\-\\.]{6,}[0-9])'                +  // number
-			                '(?:[\\s\\D]+([\\d]{1,5}))?$');                  // ext (optional)
-			
-			        java.util.regex.Matcher matcher = pattern.matcher(fullPhone);
-			
-			        if(matcher.matches()) {
-			            cntry_code = matcher.group(1);
-			            area_code  = matcher.group(2);
-			            number     = matcher.group(3);
-			            ext        = matcher.group(4);
-			        } else {
-			        	String trimPhone = fullPhone.replaceAll("[^0-9]","");
-			        	if (trimPhone.length() > 7) {
-							// The phone number is long enough to have an area code, split that off.
-							area_code = trimPhone.substring(0,trimPhone.length() - 7)
-							number = trimPhone.substring(trimPhone.length() - 7, trimPhone.length());
-						} else {
-							// We don't have an area code, so the whole things goes into phone
-							number = trimPhone;
-						}
-			        }
-			        
-			        
-			        return [ 
-			            full_phone: fullPhone,
-			        	cntry_code: cntry_code,
-			        	area_code: area_code,
-			        	number: number,
-			        	ext: ext
-			        		];
-				};
-				
-				/** 
-				 * Groovy closure to parse addresses into it's distinct
-				 * component. Like the phone number above, if it fails then
-				 * everything is stuffed into addrline.
-				 */
-				def parseAddress = { fullAddress ->
-					String addrline = null;
-			        String city     = null;
-			        String state    = null;
-			        String zip      = null;
-			        String cntry    = null;
-			
-					// Extract the address
-					String oneLineAddress = fullAddress.replaceAll("\r\n"," ");
-					oneLineAddress = oneLineAddress.replaceAll("\n"," ");
-						
-			        // Case Insensitive
-			        // This does a <em>good enough</em> job of parsing, but is often incorrect
-			        java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(
-				        '(.+(?:(?:STREET|ST|DRIVE|DR|AVENUE|AVE|AV|ROAD|RD|LOOP|COURT|CT|CIRCLE|CR|TERRANCE|TERR|HIGHWAY|HWY|PARKWAY|PRKY|PLACE|PL|WAY|RIDGE|RDG|LANE|LN|BOULEVARD|BLVD)\\.?)(?:(?:,?\\s)(?:APT|UNIT|#)[\\.,]?\\s\\w+)?)(?:,?)' +
-				                                    	// address
-				        '(?:\\s)([a-zA-Z\\s]+),?'  +	// city
-				        '(?:\\s)([a-zA-Z\\s]{2,})' +	// state
-				        '(?:\\s)([\\d]+[\\-\\d]+)' +	// zip
-				        '((?:\\s)([\\s\\D]+))?',		// country
-			        	java.util.regex.Pattern.CASE_INSENSITIVE);
-			
-			
-			        java.util.regex.Matcher matcher = pattern.matcher(oneLineAddress);
-			
-			        if (matcher.matches()) {
-			            addrline = matcher.group(1);
-			            city     = matcher.group(2);
-			            state    = matcher.group(3);
-			            zip      = matcher.group(4);
-			            cntry    = matcher.group(5);
-			        } else {
-			            addrline = fullAddress;  // if it fails, put everything in addrline
-			        }
-			        
-			        return [
-			            full_address: fullAddress,
-			        	addrline: addrline,
-			        	city: city,
-			        	state: state,
-			        	zip: zip,
-			        	cntry: cntry
-			        	];
-				};
-			
-			%}
-			
 			<!-- Current Contact Information -->
 			<DISS_contact type="current">
 				#{if sub.getGraduationYear() != null } 
@@ -293,29 +182,29 @@
 				#{if sub.getSubmitter().getCurrentPhoneNumber() != null} 
 				<DISS_phone_fax type="P">
 				    %{
-				        def phone = parsePhone(sub.getSubmitter().getCurrentPhoneNumber());
+				        def phone = proquestUtils.parsePhone(sub.getSubmitter().getCurrentPhoneNumber());
 					}% 
-					<!-- ${ phone["full_phone"] } -->
-					<DISS_cntry_cd>${ phone["cntry_code"] }</DISS_cntry_cd>
-					<DISS_area_code>${ phone["area_code"] }</DISS_area_code>
-					<DISS_phone_num>${ phone["number"] }</DISS_phone_num>
-					<DISS_phone_ext>${ phone["ext"] }</DISS_phone_ext>
+					<!-- ${ phone.fullPhone } -->
+					<DISS_cntry_cd>${ phone.cntryCode }</DISS_cntry_cd>
+					<DISS_area_code>${ phone.areaCode }</DISS_area_code>
+					<DISS_phone_num>${ phone.number }</DISS_phone_num>
+					<DISS_phone_ext>${ phone.ext }</DISS_phone_ext>
 				</DISS_phone_fax>
 				#{/if}
 				
 				#{if sub.getSubmitter().getCurrentPostalAddress() != null } 
 				<DISS_address>
 					%{
-						def address = parseAddress(sub.getSubmitter().getCurrentPostalAddress());
+						def address = proquestUtils.parseAddress(sub.getSubmitter().getCurrentPostalAddress());
 					%} 
 					<!-- 
-${ address["full_address"] } 
+${ address.fullAddress } 
 					-->
-					<DISS_addrline>${ address["addrline"] }</DISS_addrline>
-					<DISS_city>${ address["city"] }</DISS_city>
-					<DISS_st>${ address["state"] }</DISS_st>
-					<DISS_pcode>${ address["zip"] }</DISS_pcode>
-					<DISS_country>${ address["cntry"] }</DISS_country>
+					<DISS_addrline>${ address.addrline }</DISS_addrline>
+					<DISS_city>${ address.city }</DISS_city>
+					<DISS_st>${ address.state }</DISS_st>
+					<DISS_pcode>${ address.zip }</DISS_pcode>
+					<DISS_country>${ address.cntry }</DISS_country>
 				</DISS_address>
 				#{/if}
 				
@@ -335,29 +224,29 @@ ${ address["full_address"] }
 				#{if sub.getSubmitter().getPermanentPhoneNumber() != null} 
 				<DISS_phone_fax type="P">
 				    %{
-				        def phone = parsePhone(sub.getSubmitter().getPermanentPhoneNumber());
+				        def phone = proquestUtils.parsePhone(sub.getSubmitter().getPermanentPhoneNumber());
 					}% 
-					<!-- ${ phone["full_phone"] } -->
-					<DISS_cntry_cd>${ phone["cntry_code"] }</DISS_cntry_cd>
-					<DISS_area_code>${ phone["area_code"] }</DISS_area_code>
-					<DISS_phone_num>${ phone["number"] }</DISS_phone_num>
-					<DISS_phone_ext>${ phone["ext"] }</DISS_phone_ext>
+                    <!-- ${ phone.fullPhone } -->
+                    <DISS_cntry_cd>${ phone.cntryCode }</DISS_cntry_cd>
+                    <DISS_area_code>${ phone.areaCode }</DISS_area_code>
+                    <DISS_phone_num>${ phone.number }</DISS_phone_num>
+                    <DISS_phone_ext>${ phone.ext }</DISS_phone_ext>
 				</DISS_phone_fax>
 				#{/if}
 				
 				#{if sub.getSubmitter().getPermanentPostalAddress() != null } 
 				<DISS_address>
 					%{
-						def address = parseAddress(sub.getSubmitter().getPermanentPostalAddress());
+						def address = proquestUtils.parseAddress(sub.getSubmitter().getPermanentPostalAddress());
 					%} 
 					<!-- 
-${ address["full_address"] } 
-					-->
-					<DISS_addrline>${ address["addrline"] }</DISS_addrline>
-					<DISS_city>${ address["city"] }</DISS_city>
-					<DISS_st>${ address["state"] }</DISS_st>
-					<DISS_pcode>${ address["zip"] }</DISS_pcode>
-					<DISS_country>${ address["cntry"] }</DISS_country>
+${ address.fullAddress } 
+                    -->
+                    <DISS_addrline>${ address.addrline }</DISS_addrline>
+                    <DISS_city>${ address.city }</DISS_city>
+                    <DISS_st>${ address.state }</DISS_st>
+                    <DISS_pcode>${ address.zip }</DISS_pcode>
+                    <DISS_country>${ address.cntry }</DISS_country>
 				</DISS_address>
 				#{/if}
 				
@@ -389,16 +278,24 @@ ${ address["full_address"] }
 		</DISS_institution>
 		
 		#{list items:sub.getCommitteeMembers(), as:'member'} 
-			#{verbatim}${ member.isCommitteeChair() ? "<DISS_advisor>" : "<DISS_cmte_member>"}#{/verbatim}
-			
+		#{verbatim}${ member.isCommitteeChair() ? "<DISS_advisor>" : "<DISS_cmte_member>"}#{/verbatim}
+			<DISS_name>
 				<DISS_surname>${ member.getLastName() }</DISS_surname>
 				<DISS_fname>${ member.getFirstName() }</DISS_fname>
 				<DISS_middle>${ member.getMiddleName() }</DISS_middle>
-			
-			#{verbatim}${ member.isCommitteeChair() ? "<DISS_advisor>" : "<DISS_cmte_member>"}#{/verbatim}
+            </DISS_name>			
+		#{verbatim}${ member.isCommitteeChair() ? "<DISS_advisor>" : "<DISS_cmte_member>"}#{/verbatim}
 		#{/list}
 		
 		<DISS_categorization>
+		
+		    #{list items:sub.getDocumentSubjects(), as:'subject'} 
+		    <DISS_category>
+		        <DISS_cat_code>${ proquestRepo.findSubjectByDescription(subject)?.getCode() }</DISS_cat_code>
+		        <DISS_cat_desc>${ subject }</DISS_cat_desc>
+		    </DISS_category>
+		    #{/list} 
+		
 			#{if sub.getDocumentKeywords() != null}
 			#{list items:sub.getDocumentKeywords().split(";"), as:'keyword'} 
 			<DISS_keyword>${keyword.trim()}</DISS_keyword>
@@ -419,6 +316,15 @@ ${ address["full_address"] }
 			#{/if} 
 		</DISS_abstract>
 		<DISS_binary type="${ "application/pdf".equals(sub.getPrimaryDocument()?.getMimeType()) ? "PDF" : "other" }">${ sub.getPrimaryDocument()?.getName() }</DISS_binary>
+		
+		#{list items:sub.getSupplementalDocuments(), as:'attachment' } 
+		<DISS_attachment>
+		  <DISS_file_name>${ attachment.getName().escapeXml() }</DISS_file_name>
+		  <DISS_file_category>${ proquestUtils.categorize(attachment).escapeXml() }</DISS_file_category>
+		  <DISS_file_descr>Supplemental File</DISS_file_descr>
+		  <!-- MimeType: ${ attachment.getMimeType() } -->
+		</DISS_attachment>
+		#{/list} 
 	</DISS_content>
 	
 	#{if embargoCode == 4} 

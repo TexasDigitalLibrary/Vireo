@@ -756,7 +756,7 @@ public class FilterTab extends AbstractVireoController {
 		// Step 2, locate the packager
 		Packager exportPackage = (Packager) Spring.getBean(packager);
 		
-		Logger.info("%s (%d: %s) downloaded an export.\nExport Packager = '%s'\nExport Filter = '%s'",
+		Logger.info("%s (%d: %s) downloaded an export. Export Packager = '%s'\nExport Filter = '%s'",
 				context.getPerson().getFormattedName(NameFormat.FIRST_LAST), 
 				context.getPerson().getId(), 
 				context.getPerson().getEmail(),
