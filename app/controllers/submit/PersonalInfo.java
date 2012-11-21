@@ -24,6 +24,7 @@ import org.tdl.vireo.model.Department;
 import org.tdl.vireo.model.Major;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
+import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
 
@@ -96,6 +97,8 @@ public class PersonalInfo extends AbstractSubmitStep {
 				sub.setStudentLastName(submitter.getLastName());
 			if (isFieldEnabled(STUDENT_BIRTH_YEAR))
 				sub.setStudentBirthYear(submitter.getBirthYear());
+			if (isFieldEnabled(PROGRAM))
+				sub.setProgram(submitter.getCurrentProgram());
 			if (isFieldEnabled(COLLEGE))
 				sub.setCollege(submitter.getCurrentCollege());
 			if (isFieldEnabled(DEPARTMENT))
@@ -122,6 +125,7 @@ public class PersonalInfo extends AbstractSubmitStep {
 		String middleName = params.get("middleName");
 		String lastName = params.get("lastName");
 		String birthYear = params.get("birthYear");
+		String program = params.get("program");
 		String college = params.get("college");
 		String department = params.get("department");
 		String degree = params.get("degree");
@@ -163,6 +167,10 @@ public class PersonalInfo extends AbstractSubmitStep {
 
 		// Should the affiliation group be locked.
 		if (isFieldGroupLocked("affiliation")) {
+			if (isValidProgram(submitter.getCurrentProgram())) {
+				disabledFields.add("program");
+				program = submitter.getCurrentProgram();
+			}
 			if (isValidCollege(submitter.getCurrentCollege())) {
 				disabledFields.add("college");
 				college = submitter.getCurrentCollege();
@@ -232,7 +240,8 @@ public class PersonalInfo extends AbstractSubmitStep {
 				}
 			}
 			
-			
+			if (isFieldEnabled(PROGRAM))
+				sub.setProgram(program);
 			if (isFieldEnabled(COLLEGE))
 				sub.setCollege(college);
 			if (isFieldEnabled(DEPARTMENT))
@@ -287,6 +296,7 @@ public class PersonalInfo extends AbstractSubmitStep {
 			middleName = sub.getStudentMiddleName();
 			lastName = sub.getStudentLastName();
 			birthYear = sub.getStudentBirthYear() != null ? String.valueOf(sub.getStudentBirthYear()) : null;
+			program = sub.getProgram();
 			college = sub.getCollege();
 			department = sub.getDepartment();
 			degree = sub.getDegree();
@@ -318,7 +328,7 @@ public class PersonalInfo extends AbstractSubmitStep {
 		renderTemplate("Submit/personalInfo.html",submitter, subId, disabledFields, stickies,
 
 				// Form data
-				firstName, middleName, lastName, birthYear, grantor, college, department, 
+				firstName, middleName, lastName, birthYear, grantor, program, college, department, 
 				degree, major, permPhone, permAddress, permEmail, currentPhone, currentAddress
 				);
 	}
@@ -357,12 +367,17 @@ public class PersonalInfo extends AbstractSubmitStep {
 		if (isFieldRequired(STUDENT_BIRTH_YEAR) && sub.getStudentBirthYear() == null)
 			validation.addError("birthYear","Your birth year is required");
 
+		// Program
+		if (sub.getProgram() != null && !isValidProgram(sub.getProgram()))
+			validation.addError("program", "The program selected is not valid");
+		if (isFieldRequired(PROGRAM) && isEmpty(sub.getProgram())) 
+			validation.addError("program", "Program is required");
+		
 		// College
 		if (sub.getCollege() != null && !isValidCollege(sub.getCollege()))
 			validation.addError("college","The college selected is not valid");
-		if (isFieldRequired(COLLEGE) && isEmpty(sub.getCollege())) {
+		if (isFieldRequired(COLLEGE) && isEmpty(sub.getCollege()))
 			validation.addError("college","College is required");
-		}
 		
 		// Department
 		if (sub.getDepartment() != null && !isValidDepartment(sub.getDepartment()))
@@ -434,6 +449,29 @@ public class PersonalInfo extends AbstractSubmitStep {
 		return false;
 	}
 
+	/**
+	 * @param programName
+	 *            The name of the program
+	 * @return True if the name is a valid program name.
+	 */
+	protected static boolean isValidProgram(String programName) {
+		
+		if (programName == null || programName.trim().length() == 0)
+			return false;
+		
+		if (settingRepo.findAllPrograms().size() > 0) {
+			// If there is a list of programs it must be in the list.
+			for (Program program : settingRepo.findAllPrograms() ) {
+				if (programName.equals(program.getName()))
+					return true;
+			}
+			return false;
+		}
+		
+		// Otherwise, it can be anything
+		return true;
+	}
+	
 	/**
 	 * @param collegeName
 	 *            The name of the college

@@ -300,6 +300,8 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		filter.addDegree("degree2");
 		filter.addDepartment("dept1");
 		filter.addDepartment("dept2");
+		filter.addProgram("program1");
+		filter.addProgram("program2");
 		filter.addCollege("college1");
 		filter.addCollege("college2");
 		filter.addMajor("major1");
@@ -355,6 +357,9 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		assertTrue(retrieved.getDepartments().contains("dept1"));
 		assertTrue(retrieved.getDepartments().contains("dept2"));
 		assertFalse(retrieved.getDepartments().contains("dept3"));
+		assertTrue(retrieved.getPrograms().contains("program1"));
+		assertTrue(retrieved.getPrograms().contains("program2"));
+		assertFalse(retrieved.getPrograms().contains("program3"));
 		assertTrue(retrieved.getColleges().contains("college1"));
 		assertTrue(retrieved.getColleges().contains("college2"));
 		assertFalse(retrieved.getColleges().contains("college3"));

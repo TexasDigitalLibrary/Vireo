@@ -166,6 +166,11 @@ POST    /admin/settings/gradMonths/edit         settings.ConfigurableSettingsTab
 POST    /admin/settings/gradMonths/remove       settings.ConfigurableSettingsTab.removeGraduationMonthJSON
 POST    /admin/settings/gradMonths/reorder      settings.ConfigurableSettingsTab.reorderGraduationMonthsJSON
 
+## Settings tab - Languages
+POST    /admin/settings/languages/add            settings.ConfigurableSettingsTab.addLanguageJSON
+POST    /admin/settings/languages/remove         settings.ConfigurableSettingsTab.removeLanguageJSON
+POST    /admin/settings/languages/reorder        settings.ConfigurableSettingsTab.reorderLanguagesJSON
+
 ## Job Tab
 GET     /admin/job/{jobId}                      JobTab.adminStatus
 GET     /admin/job/{jobId}/update               JobTab.updateJSON

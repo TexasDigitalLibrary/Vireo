@@ -82,7 +82,9 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 	public String currentDegree;
 	@Column(length=255) 
 	public String currentDepartment;
-	@Column(length=255) 
+	@Column(length=255)
+	public String currentProgram;
+	@Column(length=255)
 	public String currentCollege;
 	@Column(length=255) 
 	public String currentMajor;
@@ -426,6 +428,17 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 		this.currentDepartment = department;
 	}
 
+	@Override
+	public String getCurrentProgram() {
+		return currentProgram;
+	}
+	
+	@Override
+	public void setCurrentProgram(String program) {
+		assertAdministratorOrOwner(this);
+		this.currentProgram = program;
+	}
+	
 	@Override
 	public String getCurrentCollege() {
 		return currentCollege;

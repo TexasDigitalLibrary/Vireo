@@ -279,6 +279,22 @@ public class JpaSubmissionImplTests extends UnitTest {
 	}
 	
 	/**
+	 * Test finding all programs used by submissions.
+	 */
+	@Test
+	public void testFindAllPrograms() {
+		
+		Submission sub = subRepo.createSubmission(person);
+		sub.setProgram("My Program");
+		sub.save();
+		
+		List<String> programs = subRepo.findAllPrograms();
+		assertTrue(programs.contains("My Program"));
+		
+		sub.delete();
+	}
+	
+	/**
 	 * Test finding all colleges used by submissions.
 	 */
 	@Test
@@ -541,6 +557,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		sub.setDegree("degree");
 		sub.setDegreeLevel(DegreeLevel.UNDERGRADUATE);
 		sub.setDepartment("department");
+		sub.setProgram("program");
 		sub.setCollege("college");
 		sub.setMajor("major");
 		sub.setDocumentType("docType");
@@ -563,6 +580,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		sub.setDegree(null);
 		sub.setDegreeLevel(null);
 		sub.setDepartment(null);
+		sub.setProgram(null);
 		sub.setCollege(null);
 		sub.setMajor(null);
 		sub.setDocumentType(null);
@@ -592,6 +610,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		assertEquals("Document type cleared", logItr.next().getEntry());
 		assertEquals("Major cleared", logItr.next().getEntry());
 		assertEquals("College cleared", logItr.next().getEntry());
+		assertEquals("Program cleared", logItr.next().getEntry());
 		assertEquals("Department cleared", logItr.next().getEntry());
 		assertEquals("Degree level cleared", logItr.next().getEntry());
 		assertEquals("Degree cleared", logItr.next().getEntry());
@@ -613,6 +632,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		assertEquals("Document type changed to 'docType'", logItr.next().getEntry());
 		assertEquals("Major changed to 'major'", logItr.next().getEntry());
 		assertEquals("College changed to 'college'", logItr.next().getEntry());
+		assertEquals("Program changed to 'program'", logItr.next().getEntry());
 		assertEquals("Department changed to 'department'", logItr.next().getEntry());
 		assertEquals("Degree level changed to 'UNDERGRADUATE'", logItr.next().getEntry());
 		assertEquals("Degree changed to 'degree'", logItr.next().getEntry());
@@ -674,6 +694,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		sub.setDegree("degree");
 		sub.setDegreeLevel(DegreeLevel.UNDERGRADUATE);
 		sub.setDepartment("department");
+		sub.setProgram("program");
 		sub.setCollege("college");
 		sub.setMajor("major");
 		sub.setDocumentType("docType");
@@ -706,6 +727,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		assertEquals("degree",sub.getDegree());
 		assertEquals(DegreeLevel.UNDERGRADUATE,sub.getDegreeLevel());
 		assertEquals("department",sub.getDepartment());
+		assertEquals("program",sub.getProgram());
 		assertEquals("college",sub.getCollege());
 		assertEquals("major",sub.getMajor());
 		assertEquals("docType",sub.getDocumentType());

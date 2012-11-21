@@ -40,6 +40,7 @@ public class MockPerson extends AbstractMock implements Person {
 	public String permanentEmailAddress;
 	public String currentDegree;
 	public String currentDepartment;
+	public String currentProgram;
 	public String currentCollege;
 	public String currentMajor;
 	public Integer currentGraduationYear;
@@ -329,6 +330,16 @@ public class MockPerson extends AbstractMock implements Person {
 		this.currentDepartment = department;
 	}
 
+	@Override
+	public String getCurrentProgram() {
+		return currentProgram;
+	}
+	
+	@Override
+	public void setCurrentProgram(String program) {
+		this.currentProgram = program;
+	}
+	
 	@Override
 	public String getCurrentCollege() {
 		return currentCollege;

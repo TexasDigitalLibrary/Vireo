@@ -17,6 +17,7 @@ import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.GraduationMonth;
+import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.Major;
 import org.tdl.vireo.model.MockConfiguration;
 import org.tdl.vireo.model.MockEmbargoType;
@@ -445,6 +446,30 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 
 		@Override
 		public List<DepositLocation> findAllDepositLocations() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Language findLanguage(Long id) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public List<Language> findAllLanguages() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Language createLanguage(String name) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Language findLanguageByName(String name) {
 			// TODO Auto-generated method stub
 			return null;
 		}

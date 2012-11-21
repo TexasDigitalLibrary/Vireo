@@ -37,6 +37,7 @@ import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.proquest.ProquestLanguage;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
@@ -129,6 +130,9 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	
 	@Column(length=255)
 	public String depositId;
+	
+	@ManyToOne(optional = true, targetEntity = JpaLanguageImpl.class)
+	public ProquestLanguage language;
 	
 	@Column(length=326768) // 2^15
 	public String lastActionLogEntry;
@@ -904,6 +908,21 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 			this.depositId = depositId;
 			generateChangeLog("Repository deposit ID",depositId,false);
 		}
+	}
+	
+	@Override
+	public void setLanguage(ProquestLanguage language) {
+		assertReviewerOrOwner(submitter);
+		
+		if (!equals(this.language,language)) {
+			this.language = language;
+			generateChangeLog("Proquest Language",language.getDescription(),false);
+		}
+	}
+	
+	@Override
+	public ProquestLanguage getLanguage() {
+		return language;
 	}
 	
 	@Override
