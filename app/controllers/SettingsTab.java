@@ -18,6 +18,7 @@ import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.GraduationMonth;
+import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.Major;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
@@ -206,7 +207,10 @@ public class SettingsTab extends AbstractVireoController {
 			} else if (type.equals(DepositLocation.class)) {
 				DepositLocation location = settingRepo.findDepositLocation(id);
 				models.add((T) location);
-				
+			
+			} else if (type.equals(Language.class)) {
+				Language language = settingRepo.findLanguage(id);
+				models.add((T) language);
 			} else {
 				throw new IllegalArgumentException("Unknown model type: "+type.getName());
 			}

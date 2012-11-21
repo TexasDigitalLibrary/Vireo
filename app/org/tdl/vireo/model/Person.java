@@ -281,6 +281,17 @@ public interface Person extends AbstractModel {
 	public void setCurrentDepartment(String department);
 
 	/**
+	 * @return The current non-controlled program.
+	 */
+	public String getCurrentProgram();
+	
+	/**
+	 * @param program
+	 * 			The new program
+	 */
+	public void setCurrentProgram(String program);
+	
+	/**
 	 * 
 	 * @return The current non-controlled college.
 	 */

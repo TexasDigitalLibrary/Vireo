@@ -61,7 +61,7 @@ jQuery(document).ready(function(){
      jQuery("#add-college-save").click(saveAddActionHandler('college','@{settings.ConfigurableSettingsTab.addCollegeJSON()}'));
      jQuery("#add-college-cancel").click(cancelAddActionHandler('college'));
      
-  // Handlers for the sortable programs list
+  	 // Handlers for the sortable programs list
      jQuery("#program-list, #program-remove").sortable({
          connectWith: ".program-sortable",
          placeholder: "placeholder",
@@ -178,6 +178,24 @@ jQuery(document).ready(function(){
      jQuery("#add-graduationMonth-save").click(saveAddActionHandler('graduationMonth','@{settings.ConfigurableSettingsTab.addGraduationMonthJSON()}'));
      jQuery("#add-graduationMonth-cancel").click(cancelAddActionHandler('graduationMonth'));
      
+ 	 // Handlers for the sortable programs list
+     jQuery("#language-list, #language-remove").sortable({
+         connectWith: ".language-sortable",
+         placeholder: "placeholder",
+         update: sortableUpdateHandler(
+                    'language',
+                    '@{settings.ConfigurableSettingsTab.reorderLanguagesJSON()}',
+                    '@{settings.ConfigurableSettingsTab.removeLanguageJSON()}'
+                    )
+     }).disableSelection().enableSelection();
+        
+     //jQuery("#program-list .program-editable").live("click",sortableStartEditHandler());
+     //jQuery("#program-list .icon-remove").live("click",sortableCancelEditHandler());     
+     //jQuery("#program-list .icon-ok").live("click",sortableSaveEditHandler('program','@{settings.ConfigurableSettingsTab.editProgramJSON()}'));
+     //jQuery("#program-list input").live("keypress",sortableSaveEditHandler('program','@{settings.ConfigurableSettingsTab.editProgramJSON()}'));
+     jQuery("#add-language-link").click(slideToggleHandler("#add-language-dialog"));
+     jQuery("#add-language-save").click(saveAddActionHandler('language','@{settings.ConfigurableSettingsTab.addLanguageJSON()}'));
+     jQuery("#add-language-cancel").click(cancelAddActionHandler('language'));
      
      
 }) // document ready
@@ -564,6 +582,55 @@ jQuery(document).ready(function(){
 			</div>
 		</div>
 	</div>
+	
+	<div class="accordion-group">
+		<div class="accordion-heading">
+			<a class="accordion-toggle" data-toggle="collapse" href="#availableLanguages"><strong>Available Languages</strong></a>			
+		</div>
+		<div id="availableLanguages" class="accordion-body collapse ${ "availableLanguages".equals(flash.get("open")) ? "in" : "" }">
+			<div class="accordion-inner">
+				<h2>AVAILABLE LANGUAGES</h2>
+				
+				<div class="wrap settings-sortable">
+				    <ul id="language-remove" class="language-sortable settings-sortable-remove" #{if languages.size() == 0}style="display: none;"#{/if}>
+				       <p class="info"><em class="icon-trash"></em> Remove items by dragging them to the trash can</p>
+				    </ul>
+				    <ol id="language-list" class="language-sortable settings-sortable-list">
+				        #{list items:languages, as:'language'}
+				           <li id="language_${language.getId()}"><a href="javascript:void(0);"><em class="icon-pencil"></em> ${org.apache.commons.lang.LocaleUtils.toLocale(language.getName()).getDisplayName()}</a></li>    
+				        #{/list}
+				    </ol>
+				</div>
+				
+				<a id="add-language-link" href="#">[ADD NEW]</a>
+				
+				<div id="add-language-dialog" style="display: none;">
+				    <form class="form-horizontal">
+				        <fieldset>
+				            <div class="control-group">
+				                <label class="control-label" for="add-graduationMonth-name">New Language</label>
+				                <div class="controls">
+				                    <select class="input-large" id="add-language-name"/>
+				                    #{list items:localeLanguages, as:'localeLanguage'}
+				                    	<option value="${localeLanguage.toString()}">${localeLanguage.getDisplayName()}</option>
+				                    #{/list}	
+				                    </select>
+				                </div>
+				            </div>
+				            <div class="control-group">
+				                <div class="controls">
+				                    <button id="add-language-save" class="btn btn-primary">Add Language</button>
+				                    <button id="add-language-cancel" class="btn">Cancel</button>
+				                </div>
+				            </div>
+				        </fieldset>
+				    </form>
+				</div>
+				<br/><br/>
+			</div>
+		</div>
+	</div>
+	
 </div>
 
 <div class="modal fade" id="embargo-type-modal">

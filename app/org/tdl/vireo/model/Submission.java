@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
+import org.tdl.vireo.proquest.ProquestLanguage;
 import org.tdl.vireo.state.State;
 
 /**
@@ -528,5 +529,15 @@ public interface Submission extends AbstractModel {
 	 * @return The unsaved action log object.
 	 */
 	public ActionLog logAction(String entry);
+	
+	/**
+	 * Set the Proquest Language
+	 */
+	public void setLanguage(ProquestLanguage language);
+	
+	/**
+	 * Get the Proquest Language
+	 */
+	public ProquestLanguage getLanguage();
 
 }

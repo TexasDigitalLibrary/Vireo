@@ -74,6 +74,7 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 	// The original configuration, we will restore to these after the test.
 	public Map<String,String> originalSettings = new HashMap<String,String>();
 	public String originalRequestBirth = null;
+	public String originalRequestProgram = null;
 	public String originalRequestCollege = null;
 	public String originalRequestUMI = null;
 	public String originalAllowMultiple = null;
@@ -240,6 +241,7 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 	 *            The students's last name.
 	 * @param birthYear
 	 *            The student's birth year.
+	 * @param program
 	 * @param college
 	 * @param department
 	 * @param degree
@@ -250,7 +252,7 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 	 * @param currentPhone
 	 * @param currentAddress
 	 */
-	public void personalInfo(String firstName, String middleName, String lastName, String birthYear, String college, String department, String degree, String major, String permPhone, 
+	public void personalInfo(String firstName, String middleName, String lastName, String birthYear, String program, String college, String department, String degree, String major, String permPhone, 
 			String permAddress, String permEmail, String currentPhone, String currentAddress) {
 
 
@@ -295,6 +297,8 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 		if (birthYear != null)
 			params.put("birthYear", birthYear);
 
+		if (program != null)
+			params.put("program", program);
 		if (college != null)
 			params.put("college", college);
 		if (department != null)
@@ -352,6 +356,11 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 
 
 		// Academic Affiliation
+		if (program == null)
+			assertEquals(submitter.getCurrentProgram(), sub.getProgram());
+		else
+			assertEquals(program,sub.getProgram());
+		
 		if (college == null)
 			assertEquals(submitter.getCurrentCollege(), sub.getCollege());
 		else

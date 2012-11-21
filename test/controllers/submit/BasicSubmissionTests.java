@@ -15,6 +15,7 @@ import org.tdl.vireo.model.Department;
 import org.tdl.vireo.model.Major;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
+import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.Submission;
 
 import play.db.jpa.JPA;
@@ -24,7 +25,7 @@ import play.mvc.Http.Response;
 /**
  * Submission tests.
  * 
- * This class bulds on the ulitily of the abstract submission tests to actualy
+ * This class builds on the utility of the abstract submission tests to actually
  * test individual uses cases.
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
@@ -33,12 +34,12 @@ import play.mvc.Http.Response;
 public class BasicSubmissionTests extends AbstractSubmissionTests {
 
 	/**
-	 * Test that there is not an endless redirect bug when submissions are closed and a student has a submission in progress. This condition only occures when multiple submissions are turned off.
+	 * Test that there is not an endless redirect bug when submissions are closed and a student has a submission in progress. This condition only occurs when multiple submissions are turned off.
 	 */
 	@Test
 	public void testVIERO90() throws IOException, InterruptedException {    
 
-		// Turn off any of the extra paramaters
+		// Turn off any of the extra parameters
 		enableFields(FieldConfig.values());
 		disableFields(FieldConfig.STUDENT_BIRTH_YEAR);
 		disableFields(FieldConfig.COLLEGE);
@@ -91,7 +92,7 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 	@Test
 	public void testFullSubmission() throws IOException, InterruptedException {    
 
-		// Turn off any of the extra paramaters
+		// Turn off any of the extra parameters
 		enableFields(FieldConfig.values());
 		disableFields(FieldConfig.STUDENT_BIRTH_YEAR);
 		disableFields(FieldConfig.COLLEGE);
@@ -125,6 +126,7 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				"middle", // middleName
 				null, // lastName
 				null, // birthYear
+				null, // program
 				null, // college
 				settingRepo.findAllDepartments().get(0).getName(), // department 
 				settingRepo.findAllDegrees().get(0).getName(), // degree
@@ -219,6 +221,7 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				"middle", // middleName
 				null, // lastName
 				"1971", // birthYear
+				settingRepo.findAllPrograms().get(0).getName(), // program
 				settingRepo.findAllColleges().get(0).getName(), // college
 				settingRepo.findAllDepartments().get(0).getName(), // department 
 				settingRepo.findAllDegrees().get(0).getName(), // degree
@@ -284,7 +287,12 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 		disableFields(FieldConfig.UMI_RELEASE);
 		setAllowMultipleSubmissions(false);
 		
-		// clear out colleges, department, majors
+		// clear out colleges, department, majors, and programs
+		List<String> originalPrograms = new ArrayList<String>();
+		for (Program program : settingRepo.findAllPrograms()) {
+			originalPrograms.add(program.getName());
+			program.delete();
+		}
 		List<String> originalColleges = new ArrayList<String>();
 		for (College college : settingRepo.findAllColleges()) {
 			originalColleges.add(college.getName());
@@ -329,6 +337,7 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				"middle", // middleName
 				null, // lastName
 				null, // birthYear
+				"My Program", // program
 				"My College", // college
 				"My Department", // department 
 				settingRepo.findAllDegrees().get(0).getName(), // degree
@@ -385,6 +394,11 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 		
 		// clear out colleges, department, majors
 		int i = 0;
+		for (String name : originalPrograms) {
+			Program program = settingRepo.createProgram(name);
+			program.setDisplayOrder(i++);
+			program.save();
+		}
 		for (String name : originalColleges) {
 			College college = settingRepo.createCollege(name);
 			college.setDisplayOrder(i++);
@@ -429,6 +443,7 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				"middle", // middleName
 				null, // lastName
 				"1971", // birthYear
+				settingRepo.findAllPrograms().get(0).getName(), // program
 				settingRepo.findAllColleges().get(0).getName(), // college
 				settingRepo.findAllDepartments().get(0).getName(), // department 
 				settingRepo.findAllDegrees().get(0).getName(), // degree
@@ -448,6 +463,7 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				"middle", // middleName
 				null, // lastName
 				"1971", // birthYear
+				settingRepo.findAllPrograms().get(0).getName(), // program
 				settingRepo.findAllColleges().get(0).getName(), // college
 				settingRepo.findAllDepartments().get(0).getName(), // department 
 				settingRepo.findAllDegrees().get(0).getName(), // degree
@@ -494,6 +510,7 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				"middle", // middleName
 				null, // lastName
 				"1971", // birthYear
+				settingRepo.findAllPrograms().get(0).getName(), // program
 				settingRepo.findAllColleges().get(0).getName(), // college
 				settingRepo.findAllDepartments().get(0).getName(), // department 
 				settingRepo.findAllDegrees().get(0).getName(), // degree
@@ -553,6 +570,7 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				"middle", // middleName
 				null, // lastName
 				null, // birthYear
+				null, // program
 				null, // college
 				settingRepo.findAllDepartments().get(0).getName(), // department 
 				settingRepo.findAllDegrees().get(0).getName(), // degree
@@ -684,6 +702,7 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				null, // middleName
 				null, // lastName
 				null, // birthYear
+				null, // program
 				null, // college
 				null, // department 
 				null, // degree
@@ -766,6 +785,7 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				null, // middleName
 				null, // lastName
 				null, // birthYear
+				null, // program
 				null, // college
 				null, // department 
 				null, // degree

@@ -14,6 +14,7 @@ import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.GraduationMonth;
+import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.Major;
 import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.SettingsRepository;
@@ -220,7 +221,31 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	public List<CustomActionDefinition> findAllCustomActionDefinition() {
 		return (List) JpaCustomActionDefinitionImpl.find("order by displayOrder").fetch();
 	}
-
+	
+	// ///////////////////////////
+	// Language Model
+	// ///////////////////////////
+	
+	@Override
+	public Language createLanguage(String name) {
+		return new JpaLanguageImpl(name);
+	}
+	
+	@Override
+	public Language findLanguage(Long id) {
+		return (Language) JpaLanguageImpl.findById(id);
+	}
+	
+	@Override
+	public Language findLanguageByName(String name) {
+		return (Language) JpaLanguageImpl.find("name = ?", name).first();
+	}
+	
+	@Override
+	public List<Language> findAllLanguages() {
+		return (List) JpaLanguageImpl.find("order by displayOrder").fetch();
+	}
+	
 	// ///////////////////////////
 	// System wide configuration
 	// ///////////////////////////

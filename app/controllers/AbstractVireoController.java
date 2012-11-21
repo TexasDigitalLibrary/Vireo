@@ -34,6 +34,7 @@ public abstract class AbstractVireoController extends Controller {
 	public static StateManager stateManager = Spring.getBeanOfType(StateManager.class);
 	public static Indexer indexer = Spring.getBeanOfType(Indexer.class);
 	public static Searcher searcher = Spring.getBeanOfType(Searcher.class);
+	public static ProquestVocabularyRepository proquest = Spring.getBeanOfType(ProquestVocabularyRepository.class);
 
 	public static Boolean firstUser = null;
 	

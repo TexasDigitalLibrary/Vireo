@@ -1,6 +1,13 @@
 package controllers.settings;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
+
+import org.apache.commons.lang.LocaleUtils;
 
 import javax.persistence.PersistenceException;
 
@@ -11,10 +18,12 @@ import org.tdl.vireo.model.Department;
 import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.GraduationMonth;
+import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.Major;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.RoleType;
+import org.tdl.vireo.proquest.ProquestLanguage;
 
 import play.Logger;
 import play.mvc.With;
@@ -27,9 +36,10 @@ public class ConfigurableSettingsTab extends SettingsTab {
 
 	/**
 	 * Display the configurable settings page.
+	 * @throws Exception 
 	 */
 	@Security(RoleType.MANAGER)
-	public static void configurableSettings() {
+	public static void configurableSettings() throws Exception {
 		
 		List<EmbargoType> embargos = settingRepo.findAllEmbargoTypes();
 		List<College> colleges = settingRepo.findAllColleges();
@@ -39,7 +49,13 @@ public class ConfigurableSettingsTab extends SettingsTab {
 		List<Degree> degrees = settingRepo.findAllDegrees();
 		List<DocumentType> docTypes = settingRepo.findAllDocumentTypes();
 		List<GraduationMonth> gradMonths = settingRepo.findAllGraduationMonths();
-
+				
+		Locale locales[] = Locale.getAvailableLocales();
+		List<Locale> localeLanguages = new ArrayList<Locale>(Arrays.asList(locales));
+		Collections.sort(localeLanguages, ascending(getComparator(LocaleComparator.LANGUAGE_SORT, LocaleComparator.COUNTRY_SORT)));
+		
+		//List<ProquestLanguage> proquestLanguages = proquest.findAllLanguages();
+		List<Language> languages = settingRepo.findAllLanguages();
 		
 		renderArgs.put("UNDERGRADUATE", DegreeLevel.UNDERGRADUATE);
 		renderArgs.put("MASTERS", DegreeLevel.MASTERS);
@@ -54,7 +70,10 @@ public class ConfigurableSettingsTab extends SettingsTab {
 				embargos,
 				
 				// Sortable lists
-				colleges, programs, departments, majors, degrees, docTypes, gradMonths);
+				colleges, programs, departments, majors, degrees, docTypes, gradMonths, languages,
+				
+				// Locales
+				localeLanguages);
 	}
 
 	// ////////////////////////////////////////////
@@ -327,137 +346,137 @@ public class ConfigurableSettingsTab extends SettingsTab {
 	}
 	
 	// ////////////////////////////////////////////
-		// PROGRAM AJAX
-		// ////////////////////////////////////////////
+	// PROGRAM AJAX
+	// ////////////////////////////////////////////
 
-		/**
-		 * Create a new Program. The id of the new program will be returned.
-		 * 
-		 * @param name
-		 *            The name of the new program
-		 */
-		@Security(RoleType.MANAGER)
-		public static void addProgramJSON(String name) {
+	/**
+	 * Create a new Program. The id of the new program will be returned.
+	 * 
+	 * @param name
+	 *            The name of the new program
+	 */
+	@Security(RoleType.MANAGER)
+	public static void addProgramJSON(String name) {
 
-			try {
-				if (name == null || name.trim().length() == 0)
-					throw new IllegalArgumentException("Name is required");
+		try {
+			if (name == null || name.trim().length() == 0)
+				throw new IllegalArgumentException("Name is required");
 
-				// Add the new program to the end of the list.
-				List<Program> programs = settingRepo.findAllPrograms();
+			// Add the new program to the end of the list.
+			List<Program> programs = settingRepo.findAllPrograms();
 
-				Program program = settingRepo.createProgram(name);
-				programs.add(program);
+			Program program = settingRepo.createProgram(name);
+			programs.add(program);
 
+			saveModelOrder(programs);
+
+			name = escapeJavaScript(program.getName());
+
+			renderJSON("{ \"success\": \"true\", \"id\": " + program.getId()
+					+ ", \"name\": \"" + name + "\" }");
+		} catch (IllegalArgumentException iae) {
+			String message = escapeJavaScript(iae.getMessage());			
+			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
+		} catch (PersistenceException pe) {
+			name = escapeJavaScript(name);
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another program allready exists with the name: '"+name+"'\" }");
+		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to add program");
+			String message = escapeJavaScript(re.getMessage());
+			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
+					+ "\" }");
+		}
+	}
+
+	/**
+	 * Edit an existing program's name. Both the id and new name will be
+	 * returned.
+	 * 
+	 * @param programId
+	 *            The id of the program to be edited, in the form "program_id"
+	 * @param name
+	 *            The new name
+	 */
+	@Security(RoleType.MANAGER)
+	public static void editProgramJSON(String programId, String name) {
+		try {
+			// Check input
+			if (name == null || name.trim().length() == 0)
+				throw new IllegalArgumentException("Name is required");
+
+			// Save the new program
+			String[] parts = programId.split("_");
+			Long id = Long.valueOf(parts[1]);
+			Program program = settingRepo.findProgram(id);
+			program.setName(name);
+			program.save();
+
+			name = escapeJavaScript(name);
+
+			renderJSON("{ \"success\": \"true\", \"id\": " + program.getId() + ", \"name\": \"" + name + "\" }");
+		} catch (IllegalArgumentException iae) {
+			String message = escapeJavaScript(iae.getMessage());			
+			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
+		} catch (PersistenceException pe) {
+			name = escapeJavaScript(name);
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another program allready exists with the name: '"+name+"'\" }");
+		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to edit program");
+			String message = escapeJavaScript(re.getMessage());
+			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
+		}
+	}
+
+	/**
+	 * Remove an existing program
+	 * 
+	 * @param programId
+	 *            The id of the program to be removed of the form "program_id"
+	 */
+	@Security(RoleType.MANAGER)
+	public static void removeProgramJSON(String programId) {
+		try {
+			// Delete the old college
+			String[] parts = programId.split("_");
+			Long id = Long.valueOf(parts[1]);
+			Program program = settingRepo.findProgram(id);
+			program.delete();
+
+			renderJSON("{ \"success\": \"true\" }");
+		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to remove program");
+			String message = escapeJavaScript(re.getMessage());
+			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
+					+ "\" }");
+		}
+	}
+
+	/**
+	 * Reorder a list of programs.
+	 * 
+	 * @param programIds
+	 *            An ordered list of ids in the form:
+	 *            "program_1,program_3,program_2"
+	 */
+	@Security(RoleType.MANAGER)
+	public static void reorderProgramsJSON(String programIds) {
+
+		try {
+
+			if (programIds != null && programIds.trim().length() > 0) {
+				// Save the new order
+				List<Program> programs = resolveIds(programIds, Program.class);
 				saveModelOrder(programs);
-
-				name = escapeJavaScript(program.getName());
-
-				renderJSON("{ \"success\": \"true\", \"id\": " + program.getId()
-						+ ", \"name\": \"" + name + "\" }");
-			} catch (IllegalArgumentException iae) {
-				String message = escapeJavaScript(iae.getMessage());			
-				renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
-			} catch (PersistenceException pe) {
-				name = escapeJavaScript(name);
-				renderJSON("{ \"failure\": \"true\", \"message\": \"Another program allready exists with the name: '"+name+"'\" }");
-			} catch (RuntimeException re) {
-				Logger.error(re,"Unable to add program");
-				String message = escapeJavaScript(re.getMessage());
-				renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
-						+ "\" }");
 			}
+
+			renderJSON("{ \"success\": \"true\" }");
+		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to reorder programs");
+			String message = escapeJavaScript(re.getMessage());
+			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
+					+ "\" }");
 		}
-
-		/**
-		 * Edit an existing program's name. Both the id and new name will be
-		 * returned.
-		 * 
-		 * @param programId
-		 *            The id of the program to be edited, in the form "program_id"
-		 * @param name
-		 *            The new name
-		 */
-		@Security(RoleType.MANAGER)
-		public static void editProgramJSON(String programId, String name) {
-			try {
-				// Check input
-				if (name == null || name.trim().length() == 0)
-					throw new IllegalArgumentException("Name is required");
-
-				// Save the new program
-				String[] parts = programId.split("_");
-				Long id = Long.valueOf(parts[1]);
-				Program program = settingRepo.findProgram(id);
-				program.setName(name);
-				program.save();
-
-				name = escapeJavaScript(name);
-
-				renderJSON("{ \"success\": \"true\", \"id\": " + program.getId() + ", \"name\": \"" + name + "\" }");
-			} catch (IllegalArgumentException iae) {
-				String message = escapeJavaScript(iae.getMessage());			
-				renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
-			} catch (PersistenceException pe) {
-				name = escapeJavaScript(name);
-				renderJSON("{ \"failure\": \"true\", \"message\": \"Another program allready exists with the name: '"+name+"'\" }");
-			} catch (RuntimeException re) {
-				Logger.error(re,"Unable to edit program");
-				String message = escapeJavaScript(re.getMessage());
-				renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
-			}
-		}
-
-		/**
-		 * Remove an existing program
-		 * 
-		 * @param programId
-		 *            The id of the program to be removed of the form "program_id"
-		 */
-		@Security(RoleType.MANAGER)
-		public static void removeProgramJSON(String programId) {
-			try {
-				// Delete the old college
-				String[] parts = programId.split("_");
-				Long id = Long.valueOf(parts[1]);
-				Program program = settingRepo.findProgram(id);
-				program.delete();
-
-				renderJSON("{ \"success\": \"true\" }");
-			} catch (RuntimeException re) {
-				Logger.error(re,"Unable to remove program");
-				String message = escapeJavaScript(re.getMessage());
-				renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
-						+ "\" }");
-			}
-		}
-
-		/**
-		 * Reorder a list of programs.
-		 * 
-		 * @param programIds
-		 *            An ordered list of ids in the form:
-		 *            "program_1,program_3,program_2"
-		 */
-		@Security(RoleType.MANAGER)
-		public static void reorderProgramsJSON(String programIds) {
-
-			try {
-
-				if (programIds != null && programIds.trim().length() > 0) {
-					// Save the new order
-					List<Program> programs = resolveIds(programIds, Program.class);
-					saveModelOrder(programs);
-				}
-
-				renderJSON("{ \"success\": \"true\" }");
-			} catch (RuntimeException re) {
-				Logger.error(re,"Unable to reorder programs");
-				String message = escapeJavaScript(re.getMessage());
-				renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
-						+ "\" }");
-			}
-		}
+	}
 
 	// ////////////////////////////////////////////
 	// DEPARTMENT AJAX
@@ -1155,6 +1174,148 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
 		}
+	}
+	
+	// ////////////////////////////////////////////
+	// LANGUAGE AJAX
+	// ////////////////////////////////////////////
+
+	/**
+	 * Create a new Language. The id of the new language will be returned.
+	 * 
+	 * @param name
+	 *            The description provided by proquest of the new language
+	 */
+	@Security(RoleType.MANAGER)
+	public static void addLanguageJSON(String name) {
+		
+		try {
+			if (name == null || name.trim().length() == 0)
+				throw new IllegalArgumentException("Name is required");
+
+			// Add the new program to the end of the list.
+			List<Language> languages = settingRepo.findAllLanguages();
+
+			Language language = settingRepo.createLanguage(name);
+			languages.add(language);
+
+			saveModelOrder(languages);
+
+			name = escapeJavaScript(LocaleUtils.toLocale(language.getName()).getDisplayName());
+
+			renderJSON("{ \"success\": \"true\", \"id\": " + language.getId()
+					+ ", \"name\": \"" + name + "\" }");
+		} catch (IllegalArgumentException iae) {
+			String message = escapeJavaScript(iae.getMessage());			
+			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
+		} catch (PersistenceException pe) {
+			name = escapeJavaScript(name);
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another language allready exists with the name: '"+name+"'\" }");
+		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to add program");
+			String message = escapeJavaScript(re.getMessage());
+			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
+					+ "\" }");
+		}
+	}
+
+	/**
+	 * Remove an existing language
+	 * 
+	 * @param languageId
+	 *            The id of the language to be removed of the form "language_id"
+	 */
+	@Security(RoleType.MANAGER)
+	public static void removeLanguageJSON(String languageId) {
+		try {
+			// Delete the old college
+			String[] parts = languageId.split("_");
+			Long id = Long.valueOf(parts[1]);
+			Language language = settingRepo.findLanguage(id);
+			language.delete();
+
+			renderJSON("{ \"success\": \"true\" }");
+		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to remove language");
+			String message = escapeJavaScript(re.getMessage());
+			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
+					+ "\" }");
+		}
+	}
+
+	/**
+	 * Reorder a list of languages.
+	 * 
+	 * @param languageIds
+	 *            An ordered list of ids in the form:
+	 *            "language_1,language_3,language_2"
+	 */
+	@Security(RoleType.MANAGER)
+	public static void reorderLanguagesJSON(String languageIds) {
+
+		try {
+
+			if (languageIds != null && languageIds.trim().length() > 0) {
+				// Save the new order
+				List<Language> languages = resolveIds(languageIds, Language.class);
+				saveModelOrder(languages);
+			}
+
+			renderJSON("{ \"success\": \"true\" }");
+		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to reorder languages");
+			String message = escapeJavaScript(re.getMessage());
+			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
+					+ "\" }");
+		}
+	}
+	
+	/**
+	 * Sort Locales
+	 *
+	 */
+	public enum LocaleComparator implements Comparator<Locale> {
+
+		LANGUAGE_SORT {
+			public int compare(Locale o1, Locale o2) {
+				return o1.getDisplayName().compareTo(o2.getDisplayName());
+			}
+		},
+		COUNTRY_SORT {
+			public int compare(Locale o1, Locale o2) {
+				return o1.getDisplayCountry().compareTo(o2.getDisplayCountry());
+			}
+		};
+    }
+	
+	public static Comparator<Locale> decending(final Comparator<Locale> other) {
+		return new Comparator<Locale>() {
+			public int compare(Locale o1, Locale o2) {
+				return -1 * other.compare(o1, o2);
+			}
+		};
+	}
+    
+    public static Comparator<Locale> ascending(final Comparator<Locale> other) {
+		return new Comparator<Locale>() {
+			public int compare(Locale o1, Locale o2) {
+				return 1 * other.compare(o1, o2);
+			}
+		};
+	}
+	
+	public static Comparator<Locale> getComparator(final LocaleComparator... multipleOptions) {
+		return new Comparator<Locale>() {
+			public int compare(Locale o1, Locale o2) {
+				for (LocaleComparator option : multipleOptions) {
+					int result = option.compare(o1, o2);
+					if (result != 0) {
+						return result;
+					}
+				}
+				return 0;
+			}
+		};
 	}
 
 }

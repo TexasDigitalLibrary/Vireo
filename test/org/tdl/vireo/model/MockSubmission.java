@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.tdl.vireo.proquest.ProquestLanguage;
 import org.tdl.vireo.state.State;
 
 /**
@@ -524,6 +525,18 @@ public class MockSubmission extends AbstractMock implements Submission {
 	@Override
 	public Date getLastLogDate() {
 		return lastLogDate;
+	}
+
+	@Override
+	public void setLanguage(ProquestLanguage language) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public ProquestLanguage getLanguage() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

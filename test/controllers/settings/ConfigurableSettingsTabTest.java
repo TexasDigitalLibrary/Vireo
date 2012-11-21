@@ -16,6 +16,7 @@ import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.Major;
 import org.tdl.vireo.model.PersonRepository;
+import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.security.SecurityContext;
 
@@ -168,6 +169,103 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		embargo2.delete();
 	}
 
+	
+	/**
+	 * Test adding, editing, and removing a program.
+	 */
+	@Test
+	public void testAddingEditingRemovingPrograms() {
+		
+		LOGIN();
+		
+		// Get our urls and a list of fields.
+		final String ADD_URL = Router.reverse("settings.ConfigurableSettingsTab.addProgramJSON").url;
+		final String EDIT_URL = Router.reverse("settings.ConfigurableSettingsTab.editProgramJSON").url;
+		final String REMOVE_URL = Router.reverse("settings.ConfigurableSettingsTab.removeProgramJSON").url;
+
+		// Add a new custom action
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("name","New Program");
+		Response response = POST(ADD_URL,params);
+		assertContentMatch("\"success\": \"true\"", response);
+		
+		// Extract the id of the newly created action.
+		Pattern ID_PATTERN = Pattern.compile("\"id\": ([0-9]+), ");
+		Matcher tokenMatcher = ID_PATTERN.matcher(getContent(response));
+		assertTrue(tokenMatcher.find());
+		String idString = tokenMatcher.group(1);
+		assertNotNull(idString);
+		Long id = Long.valueOf(idString);
+		
+		// Verify the action exists in the database.
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		assertNotNull(settingRepo.findProgram(id));
+		assertEquals("New Program",settingRepo.findProgram(id).getName());
+		
+		
+		// Now edit the custom action
+		params.clear();
+		params.put("programId","program_"+id);
+		params.put("name", "Changed Name");
+		response = POST(EDIT_URL,params);
+		
+		// Verify the action was updated in the database.
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		assertEquals("Changed Name",settingRepo.findProgram(id).getName());
+		
+		// Now remove the custom action
+		params.clear();
+		params.put("programId","program_"+id);
+		response = POST(REMOVE_URL,params);
+		assertContentMatch("\"success\": \"true\"", response);
+		
+		// Verify the action was deleted in the database;
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		assertNull(settingRepo.findProgram(id));
+	}
+	
+	/**
+	 * Test reordering a set of programs.
+	 */
+	@Test
+	public void testReorderingProgram() {
+		LOGIN();
+		
+		final String REORDER_URL = Router.reverse("settings.ConfigurableSettingsTab.reorderProgramsJSON").url;
+		
+		// Create two custom actions:
+		Program program1 = settingRepo.createProgram("test one").save();
+		Program program2 = settingRepo.createProgram("test two").save();
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
+		// Reorder the custom actions
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("programIds", "program_"+program2.getId()+",program_"+program1.getId());
+		Response response = POST(REORDER_URL,params);
+		assertContentMatch("\"success\": \"true\"", response);
+		
+		// Verify that the actions were reorderd
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		program1 = settingRepo.findProgram(program1.getId());
+		program2 = settingRepo.findProgram(program2.getId());
+		
+		assertTrue(program1.getDisplayOrder() > program2.getDisplayOrder());
+		
+		// Cleanup
+		program1.delete();
+		program2.delete();
+	}
 	
 	/**
 	 * Test adding, editing, and removing a college.
@@ -726,7 +824,7 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 	}
 	
 	/**
-	 * Test reordering a set of colleges.
+	 * Test reordering a set of GraduationMonths.
 	 */
 	@Test
 	public void testReorderingGraduationMonths() {

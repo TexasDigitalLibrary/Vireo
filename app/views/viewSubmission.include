@@ -95,6 +95,14 @@ Plus all the FieldConfig objects
     </div>
 </div>
 #{/ifEnabled}
+#{ifEnabled PROGRAM }
+<div class="control-group #{errorClass 'program' /} ">
+	<label class="control-label">#{fieldLabel PROGRAM /}:</label>
+	<div class="controls">
+		<p>${ sub.getProgram() }</p>
+	</div>
+</div>
+#{/ifEnabled}
 #{ifEnabled COLLEGE }
 <div class="control-group #{errorClass 'college' /} ">
     <label class="control-label">#{fieldLabel COLLEGE /}:</label>
