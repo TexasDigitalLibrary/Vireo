@@ -531,13 +531,13 @@ public interface Submission extends AbstractModel {
 	public ActionLog logAction(String entry);
 	
 	/**
-	 * Set the Proquest Language
+	 * Set the Language
 	 */
-	public void setLanguage(ProquestLanguage language);
+	public void setLanguage(String language);
 	
 	/**
-	 * Get the Proquest Language
+	 * Get the Language
 	 */
-	public ProquestLanguage getLanguage();
+	public String getLanguage();
 
 }

@@ -47,6 +47,7 @@ public class MockSubmission extends AbstractMock implements Submission {
 	public String college;
 	public String program;
 	public String major;
+	public String language;
 	public String documentType;
 	public Integer graduationYear;
 	public Integer graduationMonth;
@@ -528,15 +529,14 @@ public class MockSubmission extends AbstractMock implements Submission {
 	}
 
 	@Override
-	public void setLanguage(ProquestLanguage language) {
-		// TODO Auto-generated method stub
-		
+	public String getLanguage() {
+		return language;
 	}
 
 	@Override
-	public ProquestLanguage getLanguage() {
-		// TODO Auto-generated method stub
-		return null;
+	public void setLanguage(String language) {
+		this.language = language;
+		
 	}
 	
 }

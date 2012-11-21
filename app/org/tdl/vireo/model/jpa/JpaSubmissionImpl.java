@@ -26,6 +26,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.apache.commons.lang.LocaleUtils;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.AttachmentType;
@@ -131,8 +132,8 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@Column(length=255)
 	public String depositId;
 	
-	@ManyToOne(optional = true, targetEntity = JpaLanguageImpl.class)
-	public ProquestLanguage language;
+	@Column(length=255)
+	public String language;
 	
 	@Column(length=326768) // 2^15
 	public String lastActionLogEntry;
@@ -911,17 +912,17 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	}
 	
 	@Override
-	public void setLanguage(ProquestLanguage language) {
+	public void setLanguage(String language) {
 		assertReviewerOrOwner(submitter);
 		
 		if (!equals(this.language,language)) {
 			this.language = language;
-			generateChangeLog("Proquest Language",language.getDescription(),false);
+			generateChangeLog("Language",LocaleUtils.toLocale(language).getDisplayName(),false);
 		}
 	}
 	
 	@Override
-	public ProquestLanguage getLanguage() {
+	public String getLanguage() {
 		return language;
 	}
 	

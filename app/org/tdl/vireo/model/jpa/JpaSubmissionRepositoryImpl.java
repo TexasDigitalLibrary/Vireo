@@ -172,6 +172,14 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 		return results;
 	}
 	
+	@Override
+	public List<String> findAllLanguages() {
+		Query query = JPA.em().createQuery("SELECT DISTINCT language FROM JpaLanguageImpl WHERE language IS NOT NULL ORDER BY language ASC");
+		
+		List<String> results = query.getResultList();
+		return results;
+	}
+	
 	// //////////////////////////////////////////////////////////////
 	// Attachment, Committee Member, and Custom Action Value Models
 	// //////////////////////////////////////////////////////////////
