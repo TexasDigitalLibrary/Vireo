@@ -24,6 +24,7 @@ import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.proquest.ProquestSubject;
 
 import au.com.bytecode.opencsv.CSVReader;
 
@@ -67,6 +68,9 @@ public class DocumentInfo extends AbstractSubmitStep {
 		String docType = params.get("docType");
 		String abstractText = params.get("abstractText");
 		String keywords = params.get("keywords");
+		String subjectPrimary = params.get("subject-primary");
+		String subjectSecondary = params.get("subject-secondary");
+		String subjectTertiary = params.get("subject-tertiary");
 		String chairEmail = params.get("chairEmail");
 		String embargo = params.get("embargo");
 		String umi = params.get("umi");
@@ -110,6 +114,21 @@ public class DocumentInfo extends AbstractSubmitStep {
 			
 			if (isFieldEnabled(DOCUMENT_KEYWORDS))
 				sub.setDocumentKeywords(keywords);
+			
+			if (isFieldEnabled(DOCUMENT_SUBJECTS)) {
+				
+				sub.getDocumentSubjects().clear();
+				
+				if (!isEmpty(subjectPrimary))
+					sub.addDocumentSubject(subjectPrimary);
+				
+				if (!isEmpty(subjectSecondary))
+					sub.addDocumentSubject(subjectSecondary);
+				
+				if (!isEmpty(subjectTertiary))
+					sub.addDocumentSubject(subjectTertiary);
+			}
+			
 			
 			if (isFieldEnabled(COMMITTEE_CONTACT_EMAIL))
 				sub.setCommitteeContactEmail(chairEmail);
@@ -157,6 +176,20 @@ public class DocumentInfo extends AbstractSubmitStep {
 			if (isFieldEnabled(DOCUMENT_KEYWORDS))
 				keywords = sub.getDocumentKeywords();
 			
+			if (isFieldEnabled(DOCUMENT_SUBJECTS)) {
+				
+				List<String> subjects = sub.getDocumentSubjects();
+				
+				if (subjects.size() > 0)
+					subjectPrimary = subjects.get(0);
+				
+				if (subjects.size() > 1)
+					subjectSecondary = subjects.get(1);
+				
+				if (subjects.size() > 2)
+					subjectTertiary = subjects.get(2);
+			}
+			
 			if (isFieldEnabled(FieldConfig.COMMITTEE_CONTACT_EMAIL))
 				chairEmail = sub.getCommitteeContactEmail();
 
@@ -186,13 +219,17 @@ public class DocumentInfo extends AbstractSubmitStep {
 		List<Integer> degreeYears = getDegreeYears();
 		renderArgs.put("degreeYears", degreeYears);
 
-
+		// List of all document types
 		List<String> docTypes = getValidDocumentTypes(sub);
 		renderArgs.put("docTypes", docTypes);
 
 		// List of all *active* Embargo Types
 		List<EmbargoType> embargoTypes = settingRepo.findAllActiveEmbargoTypes();
 		renderArgs.put("embargoTypes", embargoTypes);
+		
+		// List of all subjects
+		List<ProquestSubject> subjects = proquestRepo.findAllSubjects();
+		renderArgs.put("subjects", subjects);
 
 		// Figure out how mayn committee spots to show.
 		int committeeSlots = 4;
@@ -216,7 +253,8 @@ public class DocumentInfo extends AbstractSubmitStep {
 		renderTemplate("Submit/documentInfo.html", subId, stickies,
 
 				title, degreeMonth, degreeYear, docType, abstractText, keywords, 
-				committeeSlots, committee, chairEmail, embargo, umi);
+				subjectPrimary, subjectSecondary, subjectTertiary, committeeSlots, 
+				committee, chairEmail, embargo, umi);
 	}
 
 	/**
@@ -253,6 +291,19 @@ public class DocumentInfo extends AbstractSubmitStep {
 		if (isFieldRequired(DOCUMENT_KEYWORDS) && isEmpty(sub.getDocumentKeywords()))
 			validation.addError("keywords", "Please enter at least one keyword");
 
+		// Document Subjects
+		if (isFieldEnabled(DOCUMENT_SUBJECTS)) {
+			for (String subject : sub.getDocumentSubjects()) {
+				if (proquestRepo.findSubjectByDescription(subject) == null) {
+					validation.addError("subjects", "One of the selected subjects is invalid");
+				}
+			}
+			
+			if (isFieldRequired(DOCUMENT_SUBJECTS) && sub.getDocumentSubjects().size() == 0) {
+				validation.addError("subjects", "Please provide atleast a primary subject.");
+			}
+		}
+		
 		// Committee members (make sure they aren't any double entries)
 		if (isFieldRequired(COMMITTEE) && !validation.hasError("committee")) {
 			List<Map<String,String>> committee = loadCommitteeMembers(sub);

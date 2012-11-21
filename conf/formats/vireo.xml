@@ -86,6 +86,16 @@
     #{if sub.getDocumentKeywords() != null } 
     <documentKeywords>${ sub.getDocumentKeywords().escapeXml() }</documentKeywords>
     #{/if}
+    
+    #{if sub.getDocumentSubjects().size() > 0 }
+    <documentSubjects>
+	    #{list items:sub.getDocumentSubjects(), as:'subject'}
+	    <documentSubject #{if proquestRepo.findSubjectByDescription(subject) != null }proquestCode="${proquestRepo.findSubjectByDescription(subject).getCode()}"#{/if}>
+	       ${ subject.escapeXml() }
+	    </documentSubject>
+	    #{/list}
+    </documentSubjects>
+    #{/if}
 
     #{if sub.getEmbargoType() != null} 
     <embargoType id="${ sub.getEmbargoType().getId() }" active="#{if sub.getEmbargoType().isActive()}true#{/if}#{else}false#{/else}">

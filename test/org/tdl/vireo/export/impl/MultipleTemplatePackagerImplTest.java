@@ -21,6 +21,7 @@ import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.jpa.JpaPersonRepositoryImpl;
 import org.tdl.vireo.model.jpa.JpaSettingsRepositoryImpl;
 import org.tdl.vireo.model.jpa.JpaSubmissionRepositoryImpl;
+import org.tdl.vireo.proquest.ProquestVocabularyRepository;
 import org.tdl.vireo.security.SecurityContext;
 
 import play.modules.spring.Spring;
@@ -42,7 +43,10 @@ public class MultipleTemplatePackagerImplTest extends UnitTest {
 	public static JpaPersonRepositoryImpl personRepo = Spring.getBeanOfType(JpaPersonRepositoryImpl.class);
 	public static JpaSubmissionRepositoryImpl subRepo = Spring.getBeanOfType(JpaSubmissionRepositoryImpl.class);
 	public static JpaSettingsRepositoryImpl settingRepo = Spring.getBeanOfType(JpaSettingsRepositoryImpl.class);
+	public static ProquestVocabularyRepository proquestRepo = Spring.getBeanOfType(ProquestVocabularyRepository.class);
 
+	
+	
 	public Person person;
 	public Submission sub;
 	
@@ -63,6 +67,9 @@ public class MultipleTemplatePackagerImplTest extends UnitTest {
 		sub.setDocumentTitle("document title");
 		sub.setDocumentAbstract("document abstract");
 		sub.setDocumentKeywords("document keywords");
+		sub.addDocumentSubject(proquestRepo.findAllSubjects().get(0).getDescription());
+		sub.addDocumentSubject(proquestRepo.findAllSubjects().get(1).getDescription());
+		sub.addDocumentSubject(proquestRepo.findAllSubjects().get(2).getDescription());
 		sub.setDegree("selected degree");
 		sub.setDegreeLevel(DegreeLevel.UNDERGRADUATE);
 		sub.setDepartment("selected department");

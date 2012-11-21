@@ -131,7 +131,8 @@ in results.
                      break;
                  case DOCUMENT_SUBJECTS:
                      if (sub.getDocumentSubjects() != null)
-                        out.print(sub.getDocumentSubjects().join("; "));
+                        for(String subject : sub.getDocumentSubjects()) 
+                            out.print("<p>"+subject+"</p>");
                      break;
                  case PRIMARY_DOCUMENT:
                      if (sub.getPrimaryDocument() != null)

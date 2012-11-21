@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import javax.security.auth.Subject;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.tdl.vireo.email.SystemEmailTemplateService;
@@ -23,6 +25,8 @@ import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionRepository;
+import org.tdl.vireo.proquest.ProquestSubject;
+import org.tdl.vireo.proquest.ProquestVocabularyRepository;
 import org.tdl.vireo.search.impl.LuceneIndexerImpl;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.security.impl.ShibbolethAuthenticationMethodImpl;
@@ -55,6 +59,7 @@ public class TestDataLoader extends Job {
 	public static PersonRepository personRepo = Spring.getBeanOfType(PersonRepository.class);
 	public static SubmissionRepository subRepo = Spring.getBeanOfType(SubmissionRepository.class);
 	public static SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
+	public static ProquestVocabularyRepository proquestRepo = Spring.getBeanOfType(ProquestVocabularyRepository.class);
 	public static SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
 	public static LuceneIndexerImpl indexer = Spring.getBeanOfType(LuceneIndexerImpl.class);
 	public static ShibbolethAuthenticationMethodImpl shibAuth = Spring.getBeanOfType(ShibbolethAuthenticationMethodImpl.class);
@@ -701,6 +706,17 @@ public class TestDataLoader extends Job {
 				
 				if (random.nextInt(100) > 5)
 					sub.setDocumentKeywords(generateRandomKeywords(random));				
+				
+				if (random.nextInt(100) > 5) {
+					List<ProquestSubject> subjects = proquestRepo.findAllSubjects();
+					sub.addDocumentSubject(subjects.get(random.nextInt(subjects.size()-1)).getDescription());
+					if (random.nextInt(100) > 5) {
+						sub.addDocumentSubject(subjects.get(random.nextInt(subjects.size()-1)).getDescription());
+						if (random.nextInt(100) > 5) {
+							sub.addDocumentSubject(subjects.get(random.nextInt(subjects.size()-1)).getDescription());
+						}
+					}
+				}
 				
 				if (random.nextInt(100) > 5)
 					sub.setDepartment(DEPARTMENTS_DEFINITIONS[random.nextInt(DEPARTMENTS_DEFINITIONS.length-1)]);

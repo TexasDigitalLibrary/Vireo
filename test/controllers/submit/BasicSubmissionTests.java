@@ -159,6 +159,9 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				settingRepo.findAllDocumentTypes().get(0).getName(), // docType
 				"This is really cool work!", // abstractText 
 				"one; two; three;", // keywords
+				"Agriculture, Plant Pathology", // primary subject
+				"Agriculture, Animal Pathology", // secondary subject
+				"Agriculture, Food Science and Technology", // tertiary subject
 				committee, // committee
 				"advisor@noreply.org", // committeeEmail
 				String.valueOf(settingRepo.findAllEmbargoTypes().get(1).getId()), // embargo
@@ -250,6 +253,9 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				settingRepo.findAllDocumentTypes().get(0).getName(), // docType
 				"This is really cool work!", // abstractText 
 				"one; two; three;", // keywords
+				"Agriculture, Plant Pathology", // primary subject
+				null, // secondary subject
+				null, // tertiary subject
 				committee, // committee
 				"committee@noreply.org", // committeeEmail
 				String.valueOf(settingRepo.findAllEmbargoTypes().get(1).getId()), // embargo
@@ -357,6 +363,9 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				settingRepo.findAllDocumentTypes().get(0).getName(), // docType
 				"This is really cool work!", // abstractText 
 				"one; two; three;", // keywords
+				"Agriculture, Plant Pathology", // primary subject
+				"Agriculture, Animal Pathology", // secondary subject
+				"Agriculture, Food Science and Technology", // tertiary subject
 				committee, // committee
 				"advisor@noreply.org", // committeeEmail
 				String.valueOf(settingRepo.findAllEmbargoTypes().get(1).getId()), // embargo
@@ -578,6 +587,9 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				settingRepo.findAllDocumentTypes().get(0).getName(), // docType
 				"This is really cool work!", // abstractText 
 				"one; two; three;", // keywords
+				"Agriculture, Plant Pathology", // primary subject
+				"Agriculture, Animal Pathology", // secondary subject
+				"Agriculture, Food Science and Technology", // tertiary subject
 				committee, // committee
 				"advisor@noreply.org", // committeeEmail
 				String.valueOf(settingRepo.findAllEmbargoTypes().get(1).getId()), // embargo
@@ -696,6 +708,9 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				null, // docType
 				null, // abstractText 
 				null, // keywords
+				null, // primary subject
+				null, // secondary subject
+				null, // tertiary subject
 				committee, // committee
 				null, // committeeEmail
 				null, // embargo
@@ -775,6 +790,9 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				null, // docType
 				null, // abstractText 
 				null, // keywords
+				null, // primary subject
+				null, // secondary subject
+				null, // tertiary subject
 				committee, // committee
 				null, // committeeEmail
 				null, // embargo

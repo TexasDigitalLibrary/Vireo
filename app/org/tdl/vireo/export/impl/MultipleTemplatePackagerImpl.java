@@ -15,6 +15,7 @@ import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionRepository;
+import org.tdl.vireo.proquest.ProquestVocabularyRepository;
 
 import play.Play;
 import play.templates.Template;
@@ -41,6 +42,8 @@ public class MultipleTemplatePackagerImpl extends AbstractPackagerImpl {
 	public PersonRepository personRepo;
 	public SubmissionRepository subRepo;
 	public SettingsRepository settingRepo;
+	public ProquestVocabularyRepository proquestRepo;
+
 	
 	/**
 	 * Inject the repository of people and their preferences.
@@ -71,6 +74,16 @@ public class MultipleTemplatePackagerImpl extends AbstractPackagerImpl {
 	 */
 	public void setSettingsRepository(SettingsRepository settingRepo) {
 		this.settingRepo = settingRepo;
+	}
+	
+	/**
+	 * Inject the repository of proquest vocabulary.
+	 * 
+	 * @param proquestRepo
+	 *            Proquest Vocabulary Repository
+	 */
+	public void setProquestVocabularyRepository(ProquestVocabularyRepository proquestRepo) {
+		this.proquestRepo = proquestRepo;
 	}
 	
 	/**
@@ -172,6 +185,7 @@ public class MultipleTemplatePackagerImpl extends AbstractPackagerImpl {
 				templateBinding.put("personRepo", personRepo);
 				templateBinding.put("subRepo",subRepo);
 				templateBinding.put("settingRepo",settingRepo);
+				templateBinding.put("proquestRepo",proquestRepo);
 				templateBinding.put("format", format);
 				templateBinding.put("attachmentTypes", attachmentTypes);
 				templateBinding.put("template",name);

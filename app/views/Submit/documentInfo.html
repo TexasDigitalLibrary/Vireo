@@ -21,7 +21,7 @@
 	<form action="@{submit.DocumentInfo.documentInfo(subId)}" method="post" class="form-inline">
 	<input type="hidden" name="step" value="documentInfo"/>
 	
-	#{ifEnabled [DOCUMENT_TITLE,GRADUATION_DATE,DOCUMENT_TYPE,DOCUMENT_ABSTRACT,DOCUMENT_KEYWORDS]}
+	#{ifEnabled [DOCUMENT_TITLE,GRADUATION_DATE,DOCUMENT_TYPE,DOCUMENT_ABSTRACT,DOCUMENT_KEYWORDS,DOCUMENT_SUBJECTS]}
 	<fieldset class="form-horizontal">
 		<legend>Document Information</legend>
 		#{ifEnabled DOCUMENT_TITLE}
@@ -85,6 +85,41 @@
 			</div>
 		</div>
 		#{/ifEnabled}
+		
+		#{ifEnabled DOCUMENT_SUBJECTS }
+        <div id="subjects-field" class="control-group #{errorClass 'subjects' /} #{fieldClass DOCUMENT_SUBJECTS /}">
+            <label class="control-label" for="subjects"><span class="required-star">*</span> #{fieldLabel DOCUMENT_SUBJECTS /}:</label>
+            <div class="controls">
+            
+                <div class="help-block primary">Primary:</div>
+                <select name="subject-primary" class="span4">
+                    <option #{if subjectPrimary == null}selected="true"#{/if} value="">...choose #{ifRequired DOCUMENT_SUBJECTS}(required)#{/ifRequired}</option>
+                    #{list items:subjects, as:'subject'}
+                    <option #{if subjectPrimary == subject.getDescription()}selected="true"#{/if} value="${subject.getDescription()}">${subject.getDescription()}</option>
+                    #{/list}
+                </select>
+                <a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp DOCUMENT_SUBJECTS /}"><i class="icon-info-sign"></i></a>
+                
+	            
+	            <div class="help-block additional">Additional:</div>
+                <select name="subject-secondary" class="span4">
+                    <option #{if subjectSecondary == null}selected="true"#{/if} value="">...choose (optional)</option>
+                    #{list items:subjects, as:'subject'}
+                    <option #{if subjectSecondary == subject.getDescription()}selected="true"#{/if} value="${subject.getDescription()}">${subject.getDescription()}</option>
+                    #{/list}
+                </select>
+                
+                <select name="subject-tertiary" class="span4">
+                    <option #{if subjectTertiary == null}selected="true"#{/if} value="">...choose (optional)</option>
+                    #{list items:subjects, as:'subject'}
+                    <option #{if subjectTertiary == subject.getDescription()}selected="true"#{/if} value="${subject.getDescription()}">${subject.getDescription()}</option>
+                    #{/list}
+                </select>
+            </div>
+        </div>
+        #{/ifEnabled}
+		
+		
 	</fieldset>
 	#{/ifEnabled}
 	

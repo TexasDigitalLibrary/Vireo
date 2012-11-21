@@ -208,6 +208,7 @@
         <property name="personRepository" ref="PersonRepository"/>
         <property name="submissionRepository" ref="SubmissionRepository"/>
         <property name="settingsRepository" ref="SettingsRepository"/>
+        <property name="proquestVocabularyRepository" ref="ProquestVocabularyRepository"/>
         <property name="displayName" value="Vireo Export"/>
         <property name="format" value="http://purl.org/dc/elements/1.1/"/>
         <property name="manifestTemplatePath" value="conf/formats/vireo.xml"/>
@@ -227,6 +228,7 @@
         <property name="personRepository" ref="PersonRepository"/>
         <property name="submissionRepository" ref="SubmissionRepository"/>
         <property name="settingsRepository" ref="SettingsRepository"/>
+        <property name="proquestVocabularyRepository" ref="ProquestVocabularyRepository"/>
         <property name="displayName" value="DSpace METS"/>
         <property name="format" value="http://purl.org/net/sword-types/METSDSpaceSIP"/>
         <property name="manifestTemplatePath" value="conf/formats/dspace_mets.xml"/>
@@ -248,7 +250,7 @@
         <property name="personRepository" ref="PersonRepository"/>
         <property name="submissionRepository" ref="SubmissionRepository"/>
         <property name="settingsRepository" ref="SettingsRepository"/>
-        
+        <property name="proquestVocabularyRepository" ref="ProquestVocabularyRepository"/>
         <property name="displayName" value="DSpace Simple Archive"/>
         <property name="format" value="http://www.dspace.org/xmlns/dspace"/>
         <property name="templatePaths">
@@ -271,6 +273,7 @@
         <property name="personRepository" ref="PersonRepository"/>
         <property name="submissionRepository" ref="SubmissionRepository"/>
         <property name="settingsRepository" ref="SettingsRepository"/>
+        <property name="proquestVocabularyRepository" ref="ProquestVocabularyRepository"/>
         <property name="displayName" value="Generic Qualified Dublin Core"/>
         <property name="format" value="http://purl.org/dc/elements/1.1/"/>
         <property name="manifestTemplatePath" value="conf/formats/qdc.xml"/>
@@ -296,6 +299,7 @@
         <property name="personRepository" ref="PersonRepository"/>
         <property name="submissionRepository" ref="SubmissionRepository"/>
         <property name="settingsRepository" ref="SettingsRepository"/>
+        <property name="proquestVocabularyRepository" ref="ProquestVocabularyRepository"/>
         <property name="displayName" value="MARC21"/>
         <property name="mimeType" value="text/plain"/>
         <property name="format" value="http://www.loc.gov/marc/umb/um11to12.html"/>
@@ -306,6 +310,7 @@
         <property name="personRepository" ref="PersonRepository"/>
         <property name="submissionRepository" ref="SubmissionRepository"/>
         <property name="settingsRepository" ref="SettingsRepository"/>
+        <property name="proquestVocabularyRepository" ref="ProquestVocabularyRepository"/>
         <property name="displayName" value="MARC21 XML"/>
         <property name="mimeType" value="text/xml"/>
         <property name="format" value="http://www.loc.gov/MARC21/slim"/>
@@ -316,6 +321,7 @@
         <property name="personRepository" ref="PersonRepository"/>
         <property name="submissionRepository" ref="SubmissionRepository"/>
         <property name="settingsRepository" ref="SettingsRepository"/>
+        <property name="proquestVocabularyRepository" ref="ProquestVocabularyRepository"/>
         <property name="displayName" value="MODS"/>
         <property name="format" value="http://www.loc.gov/standards/mods/v3/mods.xsd"/>
         <property name="manifestTemplatePath" value="conf/formats/mods.xml"/>
@@ -332,6 +338,7 @@
     	<property name="personRepository" ref="PersonRepository"/>
         <property name="submissionRepository" ref="SubmissionRepository"/>
         <property name="settingsRepository" ref="SettingsRepository"/>
+        <property name="proquestVocabularyRepository" ref="ProquestVocabularyRepository"/>
         <property name="displayName" value="ProQuest UMI"/>
         <property name="format" value="http://www.proquest.com/assets/downloads/products/ftp_submissions.pdf"/>
         <property name="manifestTemplatePath" value="conf/formats/ProquestUMI.xml"/>

@@ -137,7 +137,7 @@ Plus all the FieldConfig objects
 #{/if}
 #{/ifEnabled}
 
-#{ifEnabled [DOCUMENT_TITLE,GRADUATION_DATE,DOCUMENT_TYPE,DOCUMENT_ABSTRACT,DOCUMENT_KEYWORDS,COMMITTEE,COMMITTEE_CONTACT_EMAIL,EMBARGO_TYPE,UMI_RELEASE]}
+#{ifEnabled [DOCUMENT_TITLE,GRADUATION_DATE,DOCUMENT_TYPE,DOCUMENT_ABSTRACT,DOCUMENT_KEYWORDS,DOCUMENT_SUBJECTS,COMMITTEE,COMMITTEE_CONTACT_EMAIL,EMBARGO_TYPE,UMI_RELEASE]}
 <legend>Document Information</legend>
 
 #{ifEnabled DOCUMENT_TITLE}
@@ -184,6 +184,16 @@ Plus all the FieldConfig objects
     <label class="control-label">#{fieldLabel DOCUMENT_KEYWORDS /}:</label>
     <div class="controls">
         <p>${sub.getDocumentKeywords()}</p>
+    </div>
+</div>
+#{/ifEnabled}
+#{ifEnabled DOCUMENT_SUBJECTS}
+<div class="control-group #{errorClass 'subjects' /} ">
+    <label class="control-label">#{fieldLabel DOCUMENT_SUBJECTS /}:</label>
+    <div class="controls">
+        #{list items:sub.getDocumentSubjects(), as:'subject'}
+            <p>${subject}</p>
+        #{/list}
     </div>
 </div>
 #{/ifEnabled}

@@ -187,6 +187,13 @@ public enum FieldConfig {
 			"submit_document_keywords_help",
 			"submit_document_keywords_enabled",
 			"Any keywords associated with the submission separated by semi-colons."),
+			
+	DOCUMENT_SUBJECTS(
+			"Subjects",
+			"submit_document_subjects_label",
+			"submit_document_subjects_help",
+			"submit_document_subjects_enabled",
+			"Up to three ProQuest / UMI subjects. If this field is marked as required only the primary subject will be required the additional subjects will be optional. The list of available subjects is provided by ProQuest and is found in conf/umi_subjects.xls."),
 	
 	/** Document Information :: Your Committee **/
 			
@@ -294,7 +301,7 @@ public enum FieldConfig {
 
 	public static final FieldConfig[] LICENSE_AGREEMENT_FIELDS = {LICENSE_AGREEMENT};
 	
-	public static final FieldConfig[] DOCUMENT_INFO_FIELDS = {DOCUMENT_TITLE, GRADUATION_DATE, DOCUMENT_TYPE, DOCUMENT_ABSTRACT, DOCUMENT_KEYWORDS, COMMITTEE, COMMITTEE_CONTACT_EMAIL, EMBARGO_TYPE, UMI_RELEASE};
+	public static final FieldConfig[] DOCUMENT_INFO_FIELDS = {DOCUMENT_TITLE, GRADUATION_DATE, DOCUMENT_TYPE, DOCUMENT_ABSTRACT, DOCUMENT_KEYWORDS, DOCUMENT_SUBJECTS, COMMITTEE, COMMITTEE_CONTACT_EMAIL, EMBARGO_TYPE, UMI_RELEASE};
 
 	public static final FieldConfig[] UPLOAD_FILES_FIELDS = {PRIMARY_ATTACHMENT, SUPPLEMENTARY_ATTACHMENT};
 }

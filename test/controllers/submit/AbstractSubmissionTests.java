@@ -442,7 +442,8 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 	 *            UMI release flag.
 	 */
 	public void documentInfo(String title, String degreeMonth, String degreeYear, String docType, String abstractText, String keywords,
-			List<Map<String,String>> committee, String chairEmail, String embargo, String umi)  {
+			String subjectPrimary, String subjectSecondary, String subjectTertiary, List<Map<String,String>> committee, String chairEmail, 
+			String embargo, String umi)  {
 
 		// Get our URL
 		Map<String,Object> routeArgs = new HashMap<String,Object>();
@@ -464,6 +465,12 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 			params.put("abstractText",abstractText);
 		if (keywords != null)
 			params.put("keywords",keywords);
+		if (subjectPrimary != null)
+			params.put("subject-primary",subjectPrimary);
+		if (subjectSecondary != null)
+			params.put("subject-secondary",subjectSecondary);
+		if (subjectTertiary != null)
+			params.put("subject-tertiary",subjectTertiary);	
 		if (chairEmail != null)
 			params.put("chairEmail", chairEmail);
 		if (embargo != null)
@@ -505,6 +512,12 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 			assertEquals(abstractText,sub.getDocumentAbstract());
 		if (keywords != null)
 			assertEquals(keywords,sub.getDocumentKeywords());
+		if (subjectPrimary != null)
+			assertEquals(subjectPrimary,sub.getDocumentSubjects().get(0));
+		if (subjectSecondary != null)
+			assertEquals(subjectSecondary,sub.getDocumentSubjects().get(1));
+		if (subjectTertiary != null)
+			assertEquals(subjectTertiary,sub.getDocumentSubjects().get(2));
 		if (chairEmail != null)
 			assertEquals(chairEmail, sub.getCommitteeContactEmail());
 		if (embargo != null)
