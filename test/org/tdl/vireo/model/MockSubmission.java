@@ -416,6 +416,17 @@ public class MockSubmission extends AbstractMock implements Submission {
 	public void setDocumentType(String documentType) {
 		this.documentType = documentType;
 	}
+	
+	@Override
+	public String getDocumentLanguage() {
+		return language;
+	}
+
+	@Override
+	public void setDocumentLanguage(String language) {
+		this.language = language;
+		
+	}
 
 	@Override
 	public Integer getGraduationYear() {
@@ -527,16 +538,4 @@ public class MockSubmission extends AbstractMock implements Submission {
 	public Date getLastLogDate() {
 		return lastLogDate;
 	}
-
-	@Override
-	public String getLanguage() {
-		return language;
-	}
-
-	@Override
-	public void setLanguage(String language) {
-		this.language = language;
-		
-	}
-	
 }

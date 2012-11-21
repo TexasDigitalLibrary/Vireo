@@ -103,8 +103,9 @@ public enum FieldConfig {
 			"submit_major_help",
 			"submit_major_enabled",
 			"The major of the degree sought by the author. This field is selected from a pre-defined list of majors, or if there are none then is free-form. This field may be configured to be locked if supplied by the authentication plugin."),
-	
+			
 	/** Verify Personal Information :: Phone & Address **/
+			
 	PERMANENT_PHONE_NUMBER(
 			"Permanent Phone",
 			"submit_permanent_phone_number_label",
@@ -195,6 +196,13 @@ public enum FieldConfig {
 			"submit_document_subjects_enabled",
 			"Up to three ProQuest / UMI subjects. If this field is marked as required only the primary subject will be required the additional subjects will be optional. The list of available subjects is provided by ProQuest and is found in conf/umi_subjects.xls."),
 	
+	DOCUMENT_LANGUAGE(
+			"Language",
+			"submit_language_label",
+			"submit_language_help",
+			"submit_language_enabled",
+			"The primary language of the thesis or dissertation. This field is selected from a pre-defined list of languages."),
+			
 	/** Document Information :: Your Committee **/
 			
 	COMMITTEE(
@@ -301,7 +309,7 @@ public enum FieldConfig {
 
 	public static final FieldConfig[] LICENSE_AGREEMENT_FIELDS = {LICENSE_AGREEMENT};
 	
-	public static final FieldConfig[] DOCUMENT_INFO_FIELDS = {DOCUMENT_TITLE, GRADUATION_DATE, DOCUMENT_TYPE, DOCUMENT_ABSTRACT, DOCUMENT_KEYWORDS, DOCUMENT_SUBJECTS, COMMITTEE, COMMITTEE_CONTACT_EMAIL, EMBARGO_TYPE, UMI_RELEASE};
+	public static final FieldConfig[] DOCUMENT_INFO_FIELDS = {DOCUMENT_TITLE, GRADUATION_DATE, DOCUMENT_TYPE, DOCUMENT_ABSTRACT, DOCUMENT_KEYWORDS, DOCUMENT_SUBJECTS, DOCUMENT_LANGUAGE, COMMITTEE, COMMITTEE_CONTACT_EMAIL, EMBARGO_TYPE, UMI_RELEASE};
 
 	public static final FieldConfig[] UPLOAD_FILES_FIELDS = {PRIMARY_ATTACHMENT, SUPPLEMENTARY_ATTACHMENT};
 }

@@ -151,6 +151,16 @@ public interface Submission extends AbstractModel {
 	public void removeDocumentSubject(String subject);
 
 	/**
+	 * Set the Language
+	 */
+	public void setDocumentLanguage(String language);
+	
+	/**
+	 * Get the Language
+	 */
+	public String getDocumentLanguage();
+	
+	/**
 	 * 
 	 * @return The type of embargo for this submission. Either requested or approved.
 	 */
@@ -529,15 +539,4 @@ public interface Submission extends AbstractModel {
 	 * @return The unsaved action log object.
 	 */
 	public ActionLog logAction(String entry);
-	
-	/**
-	 * Set the Language
-	 */
-	public void setLanguage(String language);
-	
-	/**
-	 * Get the Language
-	 */
-	public String getLanguage();
-
 }

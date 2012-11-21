@@ -750,6 +750,21 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 			updatePrimaryDocumentName();
 		}
 	}
+	
+	@Override
+	public void setDocumentLanguage(String language) {
+		assertReviewerOrOwner(submitter);
+		
+		if (!equals(this.language,language)) {
+			this.language = language;
+			generateChangeLog("Language",LocaleUtils.toLocale(language).getDisplayName(),false);
+		}
+	}
+	
+	@Override
+	public String getDocumentLanguage() {
+		return language;
+	}
 
 	@Override
 	public Integer getGraduationYear() {
@@ -909,21 +924,6 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 			this.depositId = depositId;
 			generateChangeLog("Repository deposit ID",depositId,false);
 		}
-	}
-	
-	@Override
-	public void setLanguage(String language) {
-		assertReviewerOrOwner(submitter);
-		
-		if (!equals(this.language,language)) {
-			this.language = language;
-			generateChangeLog("Language",LocaleUtils.toLocale(language).getDisplayName(),false);
-		}
-	}
-	
-	@Override
-	public String getLanguage() {
-		return language;
 	}
 	
 	@Override

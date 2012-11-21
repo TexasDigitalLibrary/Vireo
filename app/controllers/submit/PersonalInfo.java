@@ -240,20 +240,40 @@ public class PersonalInfo extends AbstractSubmitStep {
 				}
 			}
 			
-			if (isFieldEnabled(PROGRAM))
-				sub.setProgram(program);
-			if (isFieldEnabled(COLLEGE))
-				sub.setCollege(college);
-			if (isFieldEnabled(DEPARTMENT))
-				sub.setDepartment(department);
+			if (isFieldEnabled(PROGRAM)) {
+				if(program != null && program.trim().length() == 0)
+					sub.setProgram(null);
+				else
+					sub.setProgram(program);
+			}
+			if (isFieldEnabled(COLLEGE)) {
+				if(college != null && college.trim().length() == 0)
+					sub.setCollege(null);
+				else
+					sub.setCollege(college);
+			}
+			if (isFieldEnabled(DEPARTMENT)) {
+				if(department != null && department.trim().length() == 0)
+					sub.setDepartment(null);
+				else
+					sub.setDepartment(department);
+			}
 			if (isFieldEnabled(DEGREE)) {
-				sub.setDegree(degree);
+				if(degree != null && degree.trim().length() == 0)
+					sub.setDegree(null);
+				else
+					sub.setDegree(degree);
+				
 				// Put the degree level of the student's current degree into the submission
 				if (settingRepo.findDegreeByName(degree) != null)
 					sub.setDegreeLevel(settingRepo.findDegreeByName(degree).getLevel());
 			}
-			if (isFieldEnabled(MAJOR))
-				sub.setMajor(major);
+			if (isFieldEnabled(MAJOR)) {
+				if(major != null && major.trim().length() == 0)
+					sub.setMajor(null);
+				else
+					sub.setMajor(major);
+			}
 	
 			if (isFieldEnabled(PERMANENT_PHONE_NUMBER))
 				submitter.setPermanentPhoneNumber(permPhone);
