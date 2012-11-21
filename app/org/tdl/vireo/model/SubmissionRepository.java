@@ -122,6 +122,11 @@ public interface SubmissionRepository {
 	 */
 	public List<String> findAllMajors();
 
+	/**
+	 * @return A list of all languages
+	 */
+	public List<String> findAllLanguages();
+	
 	// //////////////////////////////////////////////////////////////
 	// Attachment, Committee Member, and Custom Action Value Models
 	// //////////////////////////////////////////////////////////////

@@ -258,6 +258,11 @@ public class MockSearcher implements Searcher {
 		public List<NamedSearchFilter> findAllSearchFilters() {
 			return null;
 		}
+
+		@Override
+		public List<String> findAllLanguages() {
+			return null;
+		}
 		
 	}
 
