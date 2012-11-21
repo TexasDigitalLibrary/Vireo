@@ -1,7 +1,7 @@
 package org.tdl.vireo.model;
 
 /**
- * This class represents languages to be used with Proquest.
+ * This class represents a language available for documents to be submitted under..
  * 
  * @author Micah Cooper
  */
