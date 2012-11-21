@@ -175,6 +175,10 @@
     <degreeLevel>${ sub.getDegreeLevel().name().toLowerCase().capitalizeWords().escapeXml() }</degreeLevel>
     #{/if}
     
+    #{if sub.getProgram() != null } 
+    <program>${ sub.getProgram() }</program>
+    #{/if}
+    
     #{if sub.getDepartment() != null } 
     <department>${ sub.getDepartment() }</department>
     #{/if}

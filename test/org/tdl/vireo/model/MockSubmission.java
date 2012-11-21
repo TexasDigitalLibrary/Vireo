@@ -31,6 +31,7 @@ public class MockSubmission extends AbstractMock implements Submission {
 	public String documentAbstract;
 	public String documentKeywords;
 	public List<String> documentSubjects = new ArrayList<String>();
+	public String documentLanguage;
 	public MockEmbargoType embargoType;
 	public List<Attachment> attachments = new ArrayList<Attachment>();
 	public List<CommitteeMember> committeeMembers = new ArrayList<CommitteeMember>();
@@ -47,7 +48,6 @@ public class MockSubmission extends AbstractMock implements Submission {
 	public String college;
 	public String program;
 	public String major;
-	public String language;
 	public String documentType;
 	public Integer graduationYear;
 	public Integer graduationMonth;
@@ -178,6 +178,16 @@ public class MockSubmission extends AbstractMock implements Submission {
 	@Override
 	public void removeDocumentSubject(String subject) {
 		documentSubjects.remove(subject);
+	}
+	
+	@Override
+	public String getDocumentLanguage() {
+		return documentLanguage;
+	}
+
+	@Override
+	public void setDocumentLanguage(String language) {
+		this.documentLanguage = language;
 	}
 
 	@Override
@@ -417,17 +427,6 @@ public class MockSubmission extends AbstractMock implements Submission {
 		this.documentType = documentType;
 	}
 	
-	@Override
-	public String getDocumentLanguage() {
-		return language;
-	}
-
-	@Override
-	public void setDocumentLanguage(String language) {
-		this.language = language;
-		
-	}
-
 	@Override
 	public Integer getGraduationYear() {
 		return graduationYear;

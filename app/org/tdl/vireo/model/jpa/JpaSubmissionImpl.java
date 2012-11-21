@@ -75,6 +75,8 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@OrderColumn
 	@CollectionTable(name="submission_subjects")
 	public List<String> documentSubjects;
+	@Column(length=255)
+	public String documentLanguage;
 
 	@OneToOne(targetEntity = JpaEmbargoTypeImpl.class)
 	public EmbargoType embargoType;
@@ -131,9 +133,6 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	
 	@Column(length=255)
 	public String depositId;
-	
-	@Column(length=255)
-	public String language;
 	
 	@Column(length=326768) // 2^15
 	public String lastActionLogEntry;
@@ -385,6 +384,21 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@Override
 	public void removeDocumentSubject(String subject) {
 		documentSubjects.remove(subject);
+	}
+	
+	@Override
+	public void setDocumentLanguage(String language) {
+		assertReviewerOrOwner(submitter);
+		
+		if (!equals(this.documentLanguage,language)) {
+			this.documentLanguage = language;
+			generateChangeLog("Document language",language,false);
+		}
+	}
+	
+	@Override
+	public String getDocumentLanguage() {
+		return documentLanguage;
 	}
 
 	@Override
@@ -749,21 +763,6 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 			
 			updatePrimaryDocumentName();
 		}
-	}
-	
-	@Override
-	public void setDocumentLanguage(String language) {
-		assertReviewerOrOwner(submitter);
-		
-		if (!equals(this.language,language)) {
-			this.language = language;
-			generateChangeLog("Language",LocaleUtils.toLocale(language).getDisplayName(),false);
-		}
-	}
-	
-	@Override
-	public String getDocumentLanguage() {
-		return language;
 	}
 
 	@Override
