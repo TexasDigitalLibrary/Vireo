@@ -27,7 +27,7 @@ jQuery(document).ready(function() {
 	 jQuery("input[name='email_student']").live("click", toggleCarbonCopyAdvisor());
 	
 	// Batch Confirm links
-	jQuery('.batchConfirm').click(batchConfirmHandler(${results.getTotal()}));
+	jQuery('.batchConfirm').click(batchConfirmHandler(${results?.getTotal()}));
 	
     /** Hide all the dialog boxes initially **/
     jQuery('#filter-save-modal').modal({
