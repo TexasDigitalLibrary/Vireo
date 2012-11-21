@@ -64,6 +64,8 @@ import play.Play;
  * graduationSemester: The grad year & month converted into a date object and
  * stored as milliseconds.
  * 
+ * program: the program, a single token not analyzed (search and sort)
+ * 
  * department: The department, single token not analyzed (search and sort)
  * 
  * college: The college, single token not analyzed (search and sort)
@@ -100,6 +102,8 @@ import play.Play;
  * documentKeywords: The document's keywords for sorting.
  * 
  * documentSubjects: The document's subjects for sorting.
+ * 
+ * documentLanguage: The document's language both code and name.
  * 
  * primaryDocument: The name of the primary document for sorting.
  * 

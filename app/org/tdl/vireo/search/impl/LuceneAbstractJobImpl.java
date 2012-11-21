@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
+import org.apache.commons.lang.LocaleUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Index;
@@ -250,6 +252,25 @@ public abstract class LuceneAbstractJobImpl extends Job {
 		}
 		searchText.append(documentSubjects).append(" ");
 		
+		String documentLanguage = null;
+		if (sub.getDocumentLanguage() != null) {
+			Locale locale = null;
+			try {
+				locale = LocaleUtils.toLocale(sub.getDocumentLanguage());
+			} catch (RuntimeException re) { /* ignore */ }
+			
+			if (locale != null) {
+				documentLanguage = locale.getDisplayName();
+				searchText.append(locale.getDisplayName()).append(" ");
+				searchText.append(locale.getDisplayLanguage()).append(" ");
+				searchText.append(locale.getDisplayCountry()).append(" ");
+				searchText.append(locale.getDisplayVariant()).append(" ");
+			} else {
+				// We can't find it's locale so just use the code.
+				documentLanguage = sub.getDocumentLanguage();
+			}
+		}
+		
 		String primaryDocument = null;
 		if (sub.getPrimaryDocument() != null) {
 			primaryDocument = sub.getPrimaryDocument().getName();
@@ -364,6 +385,9 @@ public abstract class LuceneAbstractJobImpl extends Job {
 		
 		if (documentSubjects != null)
 		doc.add(new Field("documentSubjects",documentSubjects, Field.Store.NO,Index.NOT_ANALYZED));
+		
+		if (documentLanguage != null)
+		doc.add(new Field("documentLanguage",documentLanguage, Field.Store.NO,Index.NOT_ANALYZED));
 		
 		if (primaryDocument != null)
 		doc.add(new Field("primaryDocument",primaryDocument, Field.Store.NO,Index.NOT_ANALYZED));
@@ -487,6 +511,9 @@ public abstract class LuceneAbstractJobImpl extends Job {
 			
 			if (documentSubjects != null)
 			doc.add(new Field("documentSubjects",documentSubjects, Field.Store.NO,Index.NOT_ANALYZED));
+			
+			if (documentLanguage != null)
+			doc.add(new Field("documentLanguage",documentLanguage, Field.Store.NO,Index.NOT_ANALYZED));
 			
 			if (primaryDocument != null)
 			doc.add(new Field("primaryDocument",primaryDocument, Field.Store.NO,Index.NOT_ANALYZED));

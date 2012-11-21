@@ -134,6 +134,19 @@ in results.
                         for(String subject : sub.getDocumentSubjects()) 
                             out.print("<p>"+subject+"</p>");
                      break;
+                 case DOCUMENT_LANGUAGE:
+                     if (sub.getDocumentLanguage() != null) {
+                        def locale = null;
+                        try {
+                            locale = org.apache.commons.lang.LocaleUtils.toLocale(sub.getDocumentLanguage());
+                        } catch (RuntimeException re) { /* ignore */ }
+                        if ( locale != null) {
+                            out.print(locale.getDisplayName());
+                        } else {
+                            out.print(sub.getDocumentLanguage());
+                        }
+                     }
+                     break;
                  case PRIMARY_DOCUMENT:
                      if (sub.getPrimaryDocument() != null)
                         out.print(sub.getPrimaryDocument().getName());

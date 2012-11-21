@@ -44,10 +44,10 @@ public class JpaLanguageImplTest extends UnitTest {
 	@Test
 	public void testCreate() {
 		
-		Language language = settingRepo.createLanguage("en");
+		Language language = settingRepo.createLanguage("de");
 		
 		assertNotNull(language);
-		assertEquals("en",language.getName());
+		assertEquals("de",language.getName());
 		
 		language.delete();
 	}
@@ -78,10 +78,10 @@ public class JpaLanguageImplTest extends UnitTest {
 	@Test
 	public void testCreateDuplicate() {
 		
-		settingRepo.createLanguage("en").save();
+		settingRepo.createLanguage("de").save();
 		
 		try {
-			settingRepo.createLanguage("en").save();
+			settingRepo.createLanguage("de").save();
 			fail("Able to create duplicate language");
 		} catch (RuntimeException re) {
 			/* yay */
@@ -97,7 +97,7 @@ public class JpaLanguageImplTest extends UnitTest {
 	@Test
 	public void testId() {
 		
-		Language language = settingRepo.createLanguage("en").save();
+		Language language = settingRepo.createLanguage("de").save();
 
 		assertNotNull(language.getId());
 		
@@ -109,7 +109,7 @@ public class JpaLanguageImplTest extends UnitTest {
 	 */
 	@Test
 	public void testFindById() {
-		Language language = settingRepo.createLanguage("en").save();
+		Language language = settingRepo.createLanguage("de").save();
 
 		
 		Language retrieved = settingRepo.findLanguage(language.getId());

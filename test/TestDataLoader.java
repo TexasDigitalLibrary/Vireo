@@ -450,6 +450,9 @@ public class TestDataLoader extends Job {
 				"The Vireo Team\n")
 	};
 		
+	/**
+	 * Initial deposit locations
+	 */
 	
 	private static final DepositLocationArray[] DEPOSIT_LOCATION_DEFINITIONS = {
 		new DepositLocationArray(
@@ -470,6 +473,15 @@ public class TestDataLoader extends Job {
 				"", // onBehalfOf
 				"DSpaceMETS", 
 				"FileDeposit")
+	};
+	
+	/**
+	 * Initial languages
+	 */
+	private static final String[] LANGUAGES_DEFINITIONS = {
+		"en",
+		"es",
+		"fr"
 	};
 	
 	/**
@@ -618,6 +630,11 @@ public class TestDataLoader extends Job {
 			
 			location.save();
 		}
+		
+		// Create all languages
+		for(String languageDefinition : LANGUAGES_DEFINITIONS) {
+			settingRepo.createLanguage(languageDefinition).save();
+		}
 	}
 	
 	/**
@@ -716,6 +733,10 @@ public class TestDataLoader extends Job {
 							sub.addDocumentSubject(subjects.get(random.nextInt(subjects.size()-1)).getDescription());
 						}
 					}
+				}
+				
+				if (random.nextInt(100) > 5) {
+					sub.setDocumentLanguage(LANGUAGES_DEFINITIONS[random.nextInt(LANGUAGES_DEFINITIONS.length)]);
 				}
 				
 				if (random.nextInt(100) > 5)
