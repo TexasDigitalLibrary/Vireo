@@ -119,6 +119,20 @@
         </div>
         #{/ifEnabled}
 		
+		#{ifEnabled DOCUMENT_LANGUAGE }
+		<div class="control-group #{errorClass 'docLanguage'/} #{fieldClass DOCUMENT_LANGUAGE /}">
+			<label class="control-label" for="docLanguage"><span class="required-star">*</span> #{fieldLabel DOCUMENT_LANGUAGE /}:</label>
+			<div class="controls">
+	            <select class="span4" id="docLanguage" name="docLanguage">
+	                <option #{if null == docLanguage || docLanguage.equals("")}selected="true"#{/if} value="">...choose</option>
+	                #{list docLanguages, as: 'language'}
+	                    <option #{if null != language && docLanguage.equals(language)}selected="true"#{/if} value="${language}">${org.apache.commons.lang.LocaleUtils.toLocale(language.getName()).getDisplayName()}</option>
+	                #{/list}
+	            </select>
+	            <a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp DOCUMENT_LANGUAGE /}"><i class="icon-info-sign"></i></a>
+			</div>
+		</div>
+		#{/ifEnabled}
 		
 	</fieldset>
 	#{/ifEnabled}

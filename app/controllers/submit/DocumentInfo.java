@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.LocaleUtils;
+
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
@@ -21,6 +23,7 @@ import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.GraduationMonth;
+import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
@@ -71,6 +74,7 @@ public class DocumentInfo extends AbstractSubmitStep {
 		String subjectPrimary = params.get("subject-primary");
 		String subjectSecondary = params.get("subject-secondary");
 		String subjectTertiary = params.get("subject-tertiary");
+		String docLanguage = params.get("language");
 		String chairEmail = params.get("chairEmail");
 		String embargo = params.get("embargo");
 		String umi = params.get("umi");
@@ -128,6 +132,9 @@ public class DocumentInfo extends AbstractSubmitStep {
 				if (!isEmpty(subjectTertiary))
 					sub.addDocumentSubject(subjectTertiary);
 			}
+			
+			if (isFieldEnabled(DOCUMENT_LANGUAGE))
+				sub.setDocumentLanguage(docLanguage);
 			
 			
 			if (isFieldEnabled(COMMITTEE_CONTACT_EMAIL))
@@ -231,6 +238,10 @@ public class DocumentInfo extends AbstractSubmitStep {
 		List<ProquestSubject> subjects = proquestRepo.findAllSubjects();
 		renderArgs.put("subjects", subjects);
 
+		// List of all languages
+		List<Language> languages = settingRepo.findAllLanguages();
+		renderArgs.put("docLanguages", languages);
+		
 		// Figure out how mayn committee spots to show.
 		int committeeSlots = 4;
 		if (committee.size() > 3)
@@ -253,7 +264,7 @@ public class DocumentInfo extends AbstractSubmitStep {
 		renderTemplate("Submit/documentInfo.html", subId, stickies,
 
 				title, degreeMonth, degreeYear, docType, abstractText, keywords, 
-				subjectPrimary, subjectSecondary, subjectTertiary, committeeSlots, 
+				subjectPrimary, subjectSecondary, subjectTertiary, docLanguage, committeeSlots, 
 				committee, chairEmail, embargo, umi);
 	}
 
@@ -303,6 +314,10 @@ public class DocumentInfo extends AbstractSubmitStep {
 				validation.addError("subjects", "Please provide atleast a primary subject.");
 			}
 		}
+		
+		// Language
+		if (isFieldRequired(DOCUMENT_LANGUAGE) && isEmpty(sub.getDocumentLanguage()))
+			validation.addError("language", "Please select a language.");
 		
 		// Committee members (make sure they aren't any double entries)
 		if (isFieldRequired(COMMITTEE) && !validation.hasError("committee")) {

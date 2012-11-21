@@ -426,7 +426,7 @@ public class MockSubmission extends AbstractMock implements Submission {
 	public void setDocumentType(String documentType) {
 		this.documentType = documentType;
 	}
-
+	
 	@Override
 	public Integer getGraduationYear() {
 		return graduationYear;
@@ -537,5 +537,4 @@ public class MockSubmission extends AbstractMock implements Submission {
 	public Date getLastLogDate() {
 		return lastLogDate;
 	}
-	
 }

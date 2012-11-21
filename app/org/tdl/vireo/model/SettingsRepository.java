@@ -196,6 +196,42 @@ public interface SettingsRepository {
 	 */
 	public List<DocumentType> findAllDocumentTypes();
 
+	// //////////////////////
+	// Language Model
+	// //////////////////////
+	
+	/**
+	 * Create a language
+	 * 
+	 * @param name
+	 * 			The description provided by Proquest of the language.
+	 */
+	public Language createLanguage(String name);
+	
+	/**
+	 * Find a language by id.
+	 * 
+	 * @param id
+	 * 			The id of the language.
+	 */
+	public Language findLanguage(Long id);
+	
+	/**
+	 * Find a language by the name
+	 * 
+	 * @param name
+	 * 			The name of the language.
+	 */
+	public Language findLanguageByName(String name);
+	
+	/**
+	 * Find all available languages.
+	 * 
+	 * @return A list of all available languages, or an empty list if
+	 * 			there are none.
+	 */
+	public List<Language> findAllLanguages();
+	
 	// ////////////////////
 	// Embargo Type Model
 	// ////////////////////
@@ -343,42 +379,6 @@ public interface SettingsRepository {
 	 *         there are none.
 	 */
 	public List<CustomActionDefinition> findAllCustomActionDefinition();
-
-	// //////////////////////
-	// Language Model
-	// //////////////////////
-	
-	/**
-	 * Create a language
-	 * 
-	 * @param name
-	 * 			The description provided by Proquest of the language.
-	 */
-	public Language createLanguage(String name);
-	
-	/**
-	 * Find a language by id.
-	 * 
-	 * @param id
-	 * 			The id of the language.
-	 */
-	public Language findLanguage(Long id);
-	
-	/**
-	 * Find a language by the name
-	 * 
-	 * @param name
-	 * 			The name of the language.
-	 */
-	public Language findLanguageByName(String name);
-	
-	/**
-	 * Find all available languages.
-	 * 
-	 * @return A list of all available languages, or an empty list if
-	 * 			there are none.
-	 */
-	public List<Language> findAllLanguages();
 	
 	// ///////////////////////////
 	// System wide configuration

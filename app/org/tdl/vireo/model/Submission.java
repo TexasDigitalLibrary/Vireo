@@ -539,5 +539,4 @@ public interface Submission extends AbstractModel {
 	 * @return The unsaved action log object.
 	 */
 	public ActionLog logAction(String entry);
-
 }
