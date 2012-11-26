@@ -80,8 +80,10 @@
 	</dc:format>
 	#{/if}
 	
-	<!-- dc.language = "en_US" // Sorry we are lazy and Americans. -->
-	<dc:language>en_US</dc:language>
+	<!-- dc.language = Document Language -->
+    #{if sub.getDocumentLanguage() != null }
+    <dc:language>${sub.getDocumentLanguage()}</dc:language>
+    #{/if}
 	
 	<!-- dc.type.text = "thesis" // constant -->
 	<dc:type xsi:type="dcterm:text">thesis</dc:type>

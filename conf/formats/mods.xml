@@ -76,9 +76,20 @@
     </originInfo>
     #{/if}
     
+    #{if sub.getDocumentLanguage() != null }
+    %{
+        // Convert to 3 letter language code.
+        def iso639 = null;
+        try {
+            Locale locale = org.apache.commons.lang.LocaleUtils.toLocale(sub.getDocumentLanguage());
+            iso639 = locale.getISO3Language();
+        } catch (RuntimeException re) { /* ignore */ }
+    }%
     <language>
-        <languageTerm type="code" authority="iso639-2b">eng</languageTerm>
+    
+        <languageTerm type="code" authority="iso639-2b">${ iso639 }</languageTerm>
     </language>
+    #{/if}
     
     <physicalDescription>
         <form authority="marcform">electronic</form>

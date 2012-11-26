@@ -305,7 +305,7 @@ ${ address.fullAddress }
 			#{if sub.getDocumentLanguage() != null && proquestUtils.languageCode(sub.getDocumentLanguage()) != null} 
 			%{ def lang = proquestUtils.languageCode(sub.getDocumentLanguage()) }% 
 			<!-- ${lang?.getDescription() } -->
-			<DISS_language>${lang?.getCode()?.escapeXML()}</DISS_language>
+			<DISS_language>${lang?.getCode()?.escapeXml()}</DISS_language>
 			#{/if} 
 			#{else} 
 			<!-- No language specified, default to English-->
