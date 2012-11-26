@@ -189,10 +189,6 @@ jQuery(document).ready(function(){
                     )
      }).disableSelection().enableSelection();
         
-     //jQuery("#program-list .program-editable").live("click",sortableStartEditHandler());
-     //jQuery("#program-list .icon-remove").live("click",sortableCancelEditHandler());     
-     //jQuery("#program-list .icon-ok").live("click",sortableSaveEditHandler('program','@{settings.ConfigurableSettingsTab.editProgramJSON()}'));
-     //jQuery("#program-list input").live("keypress",sortableSaveEditHandler('program','@{settings.ConfigurableSettingsTab.editProgramJSON()}'));
      jQuery("#add-language-link").click(slideToggleHandler("#add-language-dialog"));
      jQuery("#add-language-save").click(saveAddActionHandler('language','@{settings.ConfigurableSettingsTab.addLanguageJSON()}'));
      jQuery("#add-language-cancel").click(cancelAddActionHandler('language'));
@@ -597,10 +593,13 @@ jQuery(document).ready(function(){
 				    </ul>
 				    <ol id="language-list" class="language-sortable settings-sortable-list">
 				        #{list items:languages, as:'language'}
-				           <li id="language_${language.getId()}"><a href="javascript:void(0);"><em class="icon-pencil"></em> ${org.apache.commons.lang.LocaleUtils.toLocale(language.getName()).getDisplayName()}</a></li>    
+				           %{ def proquestLanguage = proquestUtils.languageCode(language.getName()); }%
+				           <li id="language_${language.getId()}"><a href="javascript:void(0);"><em class="icon-pencil"></em> ${org.apache.commons.lang.LocaleUtils.toLocale(language.getName()).getDisplayName()}#{if proquestLanguage != null}&nbsp;&nbsp; &diams;#{/if}</a></li>    
 				        #{/list}
 				    </ol>
 				</div>
+				
+				<p id="proquest-note">&diams; &mdash; Denotes a ProQuest / UMI compatable language</p>
 				
 				<a id="add-language-link" href="#">[ADD NEW]</a>
 				
@@ -612,7 +611,8 @@ jQuery(document).ready(function(){
 				                <div class="controls">
 				                    <select class="input-large" id="add-language-name"/>
 				                    #{list items:localeLanguages, as:'localeLanguage'}
-				                    	<option value="${localeLanguage.toString()}">${localeLanguage.getDisplayName()}</option>
+				                        %{ def proquestLanguage = proquestUtils.languageCode(localeLanguage.toString()); }%
+				                    	<option value="${localeLanguage.toString()}">${localeLanguage.getDisplayName()}#{if proquestLanguage != null}&nbsp;&nbsp; &diams;#{/if}</option>
 				                    #{/list}	
 				                    </select>
 				                </div>
