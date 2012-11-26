@@ -29,6 +29,8 @@ import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.proquest.ProquestSubject;
 
+import play.Logger;
+
 import au.com.bytecode.opencsv.CSVReader;
 
 import controllers.Security;
@@ -74,7 +76,15 @@ public class DocumentInfo extends AbstractSubmitStep {
 		String subjectPrimary = params.get("subject-primary");
 		String subjectSecondary = params.get("subject-secondary");
 		String subjectTertiary = params.get("subject-tertiary");
-		String docLanguage = params.get("language");
+		
+		String docLanguage = null;
+		if(isFieldRequired(DOCUMENT_LANGUAGE) && settingRepo.findAllLanguages().size()==1) {
+			docLanguage = settingRepo.findAllLanguages().get(0).getName();
+		} else {		
+			docLanguage = params.get("docLanguage");
+			Logger.info("The language is: ", docLanguage);
+		}
+		
 		String chairEmail = params.get("chairEmail");
 		String embargo = params.get("embargo");
 		String umi = params.get("umi");
@@ -197,6 +207,10 @@ public class DocumentInfo extends AbstractSubmitStep {
 					subjectTertiary = subjects.get(2);
 			}
 			
+			if (isFieldEnabled(DOCUMENT_LANGUAGE)) {	
+				docLanguage = sub.getDocumentLanguage();
+			}
+			
 			if (isFieldEnabled(FieldConfig.COMMITTEE_CONTACT_EMAIL))
 				chairEmail = sub.getCommitteeContactEmail();
 
@@ -283,7 +297,7 @@ public class DocumentInfo extends AbstractSubmitStep {
 		if(isFieldRequired(DOCUMENT_TITLE) && isEmpty(sub.getDocumentTitle()))
 			validation.addError("title", "Please enter a thesis title");
 
-		// Graduation Date (month & yeaor)
+		// Graduation Date (month & year)
 		if (!isValidDegreeMonth(sub.getGraduationMonth()))
 			validation.addError("degreeMonth", "Please select a degree month");
 

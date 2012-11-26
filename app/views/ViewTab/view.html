@@ -355,6 +355,13 @@ jQuery(document).ready(function(){
                             class="subject empty"><i class="icon-pencil"></i> none
                         #{/else}
                     </span></li>
+                    <li class="edit"><label>Language:</label><span id="docLanguage"
+                    	#{if submission.getDocumentLanguage()}
+                    		class="select"><i class="icon-pencil"></i> ${org.apache.commons.lang.LocaleUtils.toLocale(submission.getDocumentLanguage()).getDisplayName()}
+                    	#{/if}#{else}
+                    		class="select empty"><i class="icon-pencil"></i> none
+                    	#{/else}
+                    </span></li>
 				</ul>
 			</div>
 			<div class="edit-box pull-left">
@@ -507,6 +514,14 @@ jQuery(document).ready(function(){
                     <option value="${subject.getDescription()}">${subject.getDescription()}</option>
                 #{/list}
                 </select>
+            </div>
+            <div id="docLanguageOptions" style="display:none;">
+            	<select class="field">
+            		<option value=""><em>none...</em></option>
+            		#{list items:settingRepo.findAllLanguages(), as:'language'}            			
+            			<option value="${language.getName()}">${org.apache.commons.lang.LocaleUtils.toLocale(language.getName()).getDisplayName()}</option>
+            		#{/list}
+            	</select>
             </div>
 			<div id="collegeOptions" style="display:none;">
 			    %{

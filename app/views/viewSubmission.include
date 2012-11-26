@@ -84,7 +84,7 @@ Plus all the FieldConfig objects
 #{/if}
 #{/ifEnabled}
 
-#{ifEnabled [GRANTOR,COLLEGE,DEPARTMENT,DEGREE,MAJOR] }
+#{ifEnabled [GRANTOR,PROGRAM,COLLEGE,DEPARTMENT,DEGREE,MAJOR] }
 <legend>Academic Affiliation</legend>
 
 #{ifEnabled GRANTOR }
@@ -145,7 +145,7 @@ Plus all the FieldConfig objects
 #{/if}
 #{/ifEnabled}
 
-#{ifEnabled [DOCUMENT_TITLE,GRADUATION_DATE,DOCUMENT_TYPE,DOCUMENT_ABSTRACT,DOCUMENT_KEYWORDS,DOCUMENT_SUBJECTS,COMMITTEE,COMMITTEE_CONTACT_EMAIL,EMBARGO_TYPE,UMI_RELEASE]}
+#{ifEnabled [DOCUMENT_TITLE,GRADUATION_DATE,DOCUMENT_TYPE,DOCUMENT_ABSTRACT,DOCUMENT_KEYWORDS,DOCUMENT_SUBJECTS,DOCUMENT_LANGUAGE,COMMITTEE,COMMITTEE_CONTACT_EMAIL,EMBARGO_TYPE,UMI_RELEASE]}
 <legend>Document Information</legend>
 
 #{ifEnabled DOCUMENT_TITLE}
@@ -203,6 +203,15 @@ Plus all the FieldConfig objects
             <p>${subject}</p>
         #{/list}
     </div>
+</div>
+#{/ifEnabled}
+
+#{ifEnabled DOCUMENT_LANGUAGE}
+<div class="control-group #{errorClass 'language' /} ">
+	<label class="control-label">#{fieldLabel DOCUMENT_LANGUAGE /}:</label>
+	<div class="controls">
+		<p>${org.apache.commons.lang.LocaleUtils.toLocale(sub.getDocumentLanguage()).getDisplayName()}</p>
+	</div>
 </div>
 #{/ifEnabled}
 

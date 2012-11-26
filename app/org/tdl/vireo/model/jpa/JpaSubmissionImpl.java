@@ -35,6 +35,7 @@ import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.EmbargoType;
+import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Submission;
@@ -75,6 +76,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@OrderColumn
 	@CollectionTable(name="submission_subjects")
 	public List<String> documentSubjects;
+	
 	@Column(length=255)
 	public String documentLanguage;
 
@@ -392,7 +394,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		
 		if (!equals(this.documentLanguage,language)) {
 			this.documentLanguage = language;
-			generateChangeLog("Document language",language,false);
+			generateChangeLog("Document language",LocaleUtils.toLocale(language).getDisplayName(),false);
 		}
 	}
 	
