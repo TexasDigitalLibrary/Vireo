@@ -6,7 +6,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.tdl.vireo.model.Attachment;
+import org.tdl.vireo.proquest.ProquestLanguage;
 import org.tdl.vireo.proquest.ProquestUtilityService;
+import org.tdl.vireo.proquest.ProquestVocabularyRepository;
 
 /**
  * Implementation of the proquest utility service to provide a set of helpfull
@@ -17,6 +19,21 @@ import org.tdl.vireo.proquest.ProquestUtilityService;
  */
 public class ProquestUtilityServiceImpl implements ProquestUtilityService {
 
+	// Spring dependencies
+	public ProquestVocabularyRepository proquestRepo = null;
+	
+	/**
+	 * Inject the proquest repository dependency
+	 * 
+	 * @param proquestRepo
+	 *            The proquest vocabulary repository.
+	 */
+	public void setProquestVocabularyRepository(
+			ProquestVocabularyRepository proquestRepo) {
+		this.proquestRepo = proquestRepo;
+	}
+	
+	
 	@Override
 	public Phone parsePhone(final String fullPhone) {
 
@@ -97,6 +114,29 @@ public class ProquestUtilityServiceImpl implements ProquestUtilityService {
 		return new Address(fullAddress, addrline, city, state, zip, cntry);
 	}
 
+	@Override
+	public ProquestLanguage languageCode(String iso1799) {
+		
+		if (iso1799 == null || iso1799.trim().length() == 0)
+			return null;
+		
+		// Trim out any country or varianets from the iso code.
+		if (iso1799.contains("-"))
+			iso1799 = iso1799.substring(0, iso1799.indexOf("-"));
+		if (iso1799.contains("_"))
+			iso1799 = iso1799.substring(0, iso1799.indexOf("_"));
+		
+		// Search for the proquest language in mixed, uppper, or lower case.
+		ProquestLanguage lang = proquestRepo.findLanguageByCode(iso1799);
+		if (lang == null)
+			lang = proquestRepo.findLanguageByCode(iso1799.toUpperCase());
+		if (lang == null)
+			lang = proquestRepo.findLanguageByCode(iso1799.toLowerCase());
+		
+		
+		return lang;
+	}
+	
 	/**
 	 * 
 	 * ProQuest Categories:

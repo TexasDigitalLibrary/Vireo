@@ -51,6 +51,22 @@ public class ProquestUtilityServiceImplTests extends UnitTest {
 		assertEquals("other",service.categorize(new MockMimeAttachment("")));
 	}
 	
+	/**
+	 * Test mapping iso1799 language codes into proquest's language codes.
+	 */
+	@Test
+	public void testLanguageCode() {
+		
+		assertEquals("EN",service.languageCode("en").getCode());
+		assertEquals("FR",service.languageCode("Fr").getCode());
+		assertEquals(null,service.languageCode("does-not-exist"));
+		assertEquals("EN",service.languageCode("en-us").getCode());
+		assertEquals("EN",service.languageCode("en_us").getCode());
+		assertEquals("EN",service.languageCode("en_us_anything").getCode());
+		assertEquals(null,service.languageCode(""));
+		assertEquals(null,service.languageCode(null));
+	}
+	
 	
 	/**
 	 * Test parsing phone numbers

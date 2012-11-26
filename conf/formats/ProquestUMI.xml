@@ -301,7 +301,16 @@ ${ address.fullAddress }
 			<DISS_keyword>${keyword.trim()}</DISS_keyword>
 			#{/list}
 			#{/if} 
+			
+			#{if sub.getDocumentLanguage() != null && proquestUtils.languageCode(sub.getDocumentLanguage()) != null} 
+			%{ def lang = proquestUtils.languageCode(sub.getDocumentLanguage()) }% 
+			<!-- ${lang?.getDescription() } -->
+			<DISS_language>${lang?.getCode()?.escapeXML()}</DISS_language>
+			#{/if} 
+			#{else} 
+			<!-- No language specified, default to English-->
 			<DISS_language>EN</DISS_language>
+			#{/else} 
 		</DISS_categorization>
 	</DISS_description>
 	

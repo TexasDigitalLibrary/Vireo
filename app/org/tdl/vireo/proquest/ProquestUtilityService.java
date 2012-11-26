@@ -59,6 +59,14 @@ public interface ProquestUtilityService {
 	 *         returned.
 	 */
 	public String categorize(Attachment attachment);
+	
+	/**
+	 * Translate Vireo's ISO 1799 language into ProQuest's seemingly random language codes.
+	 * 
+	 * @param language Vireo's language. (may be null)
+	 * @return The ProQuest code for the language or null if none found.
+	 */
+	public ProquestLanguage languageCode(String language);
 
 	/**
 	 * The individual components of a proquest phone number.

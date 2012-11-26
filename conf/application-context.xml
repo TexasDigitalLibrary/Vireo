@@ -147,7 +147,9 @@
         <property name="subjects"  value="classpath:proquest/umi_subjects.xls"/>
         <property name="languages" value="classpath:proquest/language_codes.xls"/>
     </bean>
-    <bean id="ProquestUtilityService" class="org.tdl.vireo.proquest.impl.ProquestUtilityServiceImpl" scope="singleton"/>
+    <bean id="ProquestUtilityService" class="org.tdl.vireo.proquest.impl.ProquestUtilityServiceImpl" scope="singleton">
+        <property name="proquestVocabularyRepository" ref="ProquestVocabularyRepository"/>
+    </bean>
     
     <!-- Batch -->
     <bean id="BatchTransition" class="org.tdl.vireo.batch.impl.TransitionServiceImpl" scope="singleton">
