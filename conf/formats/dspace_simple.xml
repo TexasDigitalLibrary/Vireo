@@ -114,8 +114,10 @@ ${ attachment.getName() }	bundle:LICENSE
     </dcvalue>
     #{/if}
     
-    <!-- dc.language.iso = "en_US" // Sorry we are lazy and Americans. -->
-    <dcvalue element="language" qualifier="iso">en_US</dcvalue>
+    <!-- dc.language.iso = Document Language -->
+    #{if sub.getDocumentLanguage() != null }
+    <dim:field mdschema="dc" element="language" qualifier="iso">${sub.getDocumentLanguage()}</dim:field>
+    #{/if}
     
     <!-- dc.type.material = "text" // constant -->
     <dcvalue element="type" qualifier="material">text</dcvalue>

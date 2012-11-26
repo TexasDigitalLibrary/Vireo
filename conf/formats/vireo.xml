@@ -96,6 +96,10 @@
 	    #{/list}
     </documentSubjects>
     #{/if}
+    
+    #{if sub.getDocumentLanguage() != null }
+    <documentLanguage>${sub.getDocumentLanguage()}</documentLanguage>
+    #{/if}
 
     #{if sub.getEmbargoType() != null} 
     <embargoType id="${ sub.getEmbargoType().getId() }" active="#{if sub.getEmbargoType().isActive()}true#{/if}#{else}false#{/else}">
