@@ -80,7 +80,7 @@
 		</ul>
 		<ul class="unstyled">
 			<li>Submission Date</li>
-			<li><i class="icon-pencil"></i><b><a href="#submission-date-modal" data-toggle="modal">${submission.getSubmissionDate()?.format("MM/dd/yyyy")}</a></b></li>
+			<li><i class="icon-pencil"></i><b><a href="#submission-date-modal" data-toggle="modal">${ submission.getSubmissionDate() != null ? submission.getSubmissionDate()?.format("MM/dd/yyyy") : "none"  }</a></b></li>
 		</ul>
 	</div>
 	<div class="box-footer">

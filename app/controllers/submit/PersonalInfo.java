@@ -88,7 +88,6 @@ public class PersonalInfo extends AbstractSubmitStep {
 			}
 			// Create a submission with default data on it.
 			sub = subRepo.createSubmission(submitter);
-			sub.setSubmissionDate(new Date());
 			if (isFieldEnabled(STUDENT_FIRST_NAME))
 				sub.setStudentFirstName(submitter.getFirstName());
 			if (isFieldEnabled(STUDENT_MIDDLE_NAME))
