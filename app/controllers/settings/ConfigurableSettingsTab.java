@@ -1209,9 +1209,9 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			saveModelOrder(languages);
 
 			
-			String displayName = LocaleUtils.toLocale(language.getName()).getDisplayName();
+			String displayName = language.getLocale().getDisplayName();
 			
-			if (proquestUtils.languageCode(name) != null)
+			if (proquestUtils.languageCode(language.getLocale()) != null)
 				displayName += "&nbsp;&nbsp; &diams;";
 			
 			displayName = escapeJavaScript(displayName);

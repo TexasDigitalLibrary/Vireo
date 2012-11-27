@@ -302,8 +302,8 @@ ${ address.fullAddress }
 			#{/list}
 			#{/if} 
 			
-			#{if sub.getDocumentLanguage() != null && proquestUtils.languageCode(sub.getDocumentLanguage()) != null} 
-			%{ def lang = proquestUtils.languageCode(sub.getDocumentLanguage()) }% 
+			#{if sub.getDocumentLanguage() != null && proquestUtils.languageCode(sub.getDocumentLanguageLocale()) != null} 
+			%{ def lang = proquestUtils.languageCode(sub.getDocumentLanguageLocale()) }% 
 			<!-- ${lang?.getDescription() } -->
 			<DISS_language>${lang?.getCode()?.escapeXml()}</DISS_language>
 			#{/if} 

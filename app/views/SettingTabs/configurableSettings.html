@@ -593,8 +593,8 @@ jQuery(document).ready(function(){
 				    </ul>
 				    <ol id="language-list" class="language-sortable settings-sortable-list">
 				        #{list items:languages, as:'language'}
-				           %{ def proquestLanguage = proquestUtils.languageCode(language.getName()); }%
-				           <li id="language_${language.getId()}"><a href="javascript:void(0);"><em class="icon-pencil"></em> ${org.apache.commons.lang.LocaleUtils.toLocale(language.getName()).getDisplayName()}#{if proquestLanguage != null}&nbsp;&nbsp; &diams;#{/if}</a></li>    
+				           %{ def proquestLanguage = proquestUtils.languageCode(language.getLocale()); }%
+				           <li id="language_${language.getId()}"><a href="javascript:void(0);"><em class="icon-pencil"></em> ${language.getLocale().getDisplayName()}#{if proquestLanguage != null}&nbsp;&nbsp; &diams;#{/if}</a></li>    
 				        #{/list}
 				    </ol>
 				</div>
@@ -611,7 +611,7 @@ jQuery(document).ready(function(){
 				                <div class="controls">
 				                    <select class="input-large" id="add-language-name"/>
 				                    #{list items:localeLanguages, as:'localeLanguage'}
-				                        %{ def proquestLanguage = proquestUtils.languageCode(localeLanguage.toString()); }%
+				                        %{ def proquestLanguage = proquestUtils.languageCode(localeLanguage); }%
 				                    	<option value="${localeLanguage.toString()}">${localeLanguage.getDisplayName()}#{if proquestLanguage != null}&nbsp;&nbsp; &diams;#{/if}</option>
 				                    #{/list}	
 				                    </select>

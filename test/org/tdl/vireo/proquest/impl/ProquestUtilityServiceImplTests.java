@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.LocaleUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,13 +58,9 @@ public class ProquestUtilityServiceImplTests extends UnitTest {
 	@Test
 	public void testLanguageCode() {
 		
-		assertEquals("EN",service.languageCode("en").getCode());
-		assertEquals("FR",service.languageCode("Fr").getCode());
-		assertEquals(null,service.languageCode("does-not-exist"));
-		assertEquals("EN",service.languageCode("en-us").getCode());
-		assertEquals("EN",service.languageCode("en_us").getCode());
-		assertEquals("EN",service.languageCode("en_us_anything").getCode());
-		assertEquals(null,service.languageCode(""));
+		assertEquals("EN",service.languageCode(LocaleUtils.toLocale("en")).getCode());
+		assertEquals("FR",service.languageCode(LocaleUtils.toLocale("fr")).getCode());
+		assertEquals("EN",service.languageCode(LocaleUtils.toLocale("en_US")).getCode());
 		assertEquals(null,service.languageCode(null));
 	}
 	

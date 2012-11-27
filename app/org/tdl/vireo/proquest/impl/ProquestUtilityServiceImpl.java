@@ -1,6 +1,7 @@
 package org.tdl.vireo.proquest.impl;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -115,27 +116,29 @@ public class ProquestUtilityServiceImpl implements ProquestUtilityService {
 	}
 
 	@Override
-	public ProquestLanguage languageCode(String iso1799) {
+	public ProquestLanguage languageCode(Locale locale) {
 		
-		if (iso1799 == null || iso1799.trim().length() == 0)
+		if (locale == null)
 			return null;
 		
-		// Trim out any country or varianets from the iso code.
-		if (iso1799.contains("-"))
-			iso1799 = iso1799.substring(0, iso1799.indexOf("-"));
-		if (iso1799.contains("_"))
-			iso1799 = iso1799.substring(0, iso1799.indexOf("_"));
-		iso1799 = iso1799.toUpperCase();
+		String iso639 = locale.getLanguage();
+		String iso639_2b = locale.getISO3Language();
 		
-		
-		// First, search by special case mapping
+		// First lookup by the two letter language codes
 		ProquestLanguage lang = null;
-		if (LANG.containsKey(iso1799.toUpperCase()))
-			lang = proquestRepo.findLanguageByCode(LANG.get(iso1799));
+		if (iso639 != null) {
+			lang = proquestRepo.findLanguageByCode(LANG.get(iso639.toUpperCase()));
+		}
 		
-		// Don't implement secondary fall back search because this causes incorrect mappings.
+		// Second, fall back to the three leter language codes.
+		if (iso639_2b != null && lang == null) {
+			lang = proquestRepo.findLanguageByCode(LANG.get(iso639_2b.toUpperCase()));
+		}
+		
+		
+		// Don't implement ultimate fall back search because this causes incorrect mappings.
 		// if (lang == null)
-		//		lang = proquestRepo.findLanguageByCode(iso1799);
+		//		lang = proquestRepo.findLanguageByCode(iso639);
 		
 		return lang;
 	}
