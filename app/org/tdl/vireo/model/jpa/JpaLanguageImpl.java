@@ -1,9 +1,12 @@
 package org.tdl.vireo.model.jpa;
 
+import java.util.Locale;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import org.apache.commons.lang.LocaleUtils;
 import org.tdl.vireo.model.Language;
 
 /**
@@ -34,6 +37,9 @@ public class JpaLanguageImpl extends JpaAbstractModel<JpaLanguageImpl> implement
 		if (name == null || name.length() == 0)
 			throw new IllegalArgumentException("Name is required");
 
+		if (_toLocale(name) == null)
+			throw new IllegalArgumentException("Name is not a valid locale");
+		
 		assertManager();
 		
 		this.displayOrder = 0;
@@ -79,6 +85,30 @@ public class JpaLanguageImpl extends JpaAbstractModel<JpaLanguageImpl> implement
 		assertManager();
 
 		this.name = name;
+	}
+	
+	@Override
+	public Locale getLocale() {
+		return _toLocale(this.name);
+	}
+	
+	/**
+	 * Convert the given name to a Java locale.
+	 * 
+	 * @param name
+	 *            The name of a java locale
+	 * @return A java locale, or null if none found.
+	 */
+	protected static Locale _toLocale(String name) {
+		if (name == null)
+			return null;
+		
+		Locale locale = null;
+		try {
+			locale = LocaleUtils.toLocale(name);
+		} catch (RuntimeException re) { /* ignore */ }
+		
+		return locale;
 	}
 
 }

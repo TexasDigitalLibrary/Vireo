@@ -1,5 +1,9 @@
 package org.tdl.vireo.model;
 
+import java.util.Locale;
+
+import org.apache.commons.lang.LocaleUtils;
+
 /**
  * This is a simple mock language class that may be useful for testing. Feel free
  * to extend this to add in extra parameters that you feel appropriate.
@@ -60,6 +64,30 @@ public class MockLanguage extends AbstractMock implements Language {
 	@Override
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	@Override
+	public Locale getLocale() {
+		return toLocale(name);
+	}
+	
+	/**
+	 * Convert the given name to a Java locale.
+	 * 
+	 * @param name
+	 *            The name of a java locale
+	 * @return A java locale, or null if none found.
+	 */
+	public static Locale toLocale(String name) {
+		if (name == null)
+			return null;
+		
+		Locale locale = null;
+		try {
+			locale = LocaleUtils.toLocale(name);
+		} catch (RuntimeException re) { /* ignore */ }
+		
+		return locale;
 	}
 
 }
