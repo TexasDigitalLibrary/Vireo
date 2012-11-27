@@ -1,5 +1,6 @@
 package controllers.submit;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -124,6 +125,9 @@ public class Confirm extends AbstractSubmitStep {
 				// Clear the approval dates
 				sub.setCommitteeApprovalDate(null);
 				sub.setCommitteeEmbargoApprovalDate(null);
+				
+				// Set the submission date
+				sub.setSubmissionDate(new Date());
 					
 				// Transition to the next state
 				State nextState = sub.getState().getTransitions(sub).get(0);
