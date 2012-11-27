@@ -1,5 +1,7 @@
 package org.tdl.vireo.proquest;
 
+import java.util.Locale;
+
 import org.tdl.vireo.model.Attachment;
 
 
@@ -63,10 +65,10 @@ public interface ProquestUtilityService {
 	/**
 	 * Translate Vireo's ISO 1799 language into ProQuest's seemingly random language codes.
 	 * 
-	 * @param language Vireo's language. (may be null)
+	 * @param locale Vireo's language locale. (may be null)
 	 * @return The ProQuest code for the language or null if none found.
 	 */
-	public ProquestLanguage languageCode(String language);
+	public ProquestLanguage languageCode(Locale locale);
 
 	/**
 	 * The individual components of a proquest phone number.

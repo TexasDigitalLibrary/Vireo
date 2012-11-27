@@ -253,22 +253,14 @@ public abstract class LuceneAbstractJobImpl extends Job {
 		searchText.append(documentSubjects).append(" ");
 		
 		String documentLanguage = null;
-		if (sub.getDocumentLanguage() != null) {
-			Locale locale = null;
-			try {
-				locale = LocaleUtils.toLocale(sub.getDocumentLanguage());
-			} catch (RuntimeException re) { /* ignore */ }
+		if (sub.getDocumentLanguageLocale() != null) {
+			Locale locale = sub.getDocumentLanguageLocale();
+			searchText.append(locale.getDisplayName()).append(" ");
+			searchText.append(locale.getDisplayLanguage()).append(" ");
+			searchText.append(locale.getDisplayCountry()).append(" ");
+			searchText.append(locale.getDisplayVariant()).append(" ");
 			
-			if (locale != null) {
-				documentLanguage = locale.getDisplayName();
-				searchText.append(locale.getDisplayName()).append(" ");
-				searchText.append(locale.getDisplayLanguage()).append(" ");
-				searchText.append(locale.getDisplayCountry()).append(" ");
-				searchText.append(locale.getDisplayVariant()).append(" ");
-			} else {
-				// We can't find it's locale so just use the code.
-				documentLanguage = sub.getDocumentLanguage();
-			}
+			documentLanguage = locale.getDisplayName();
 		}
 		
 		String primaryDocument = null;
