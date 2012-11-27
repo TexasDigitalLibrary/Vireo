@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.tdl.vireo.proquest.ProquestLanguage;
 import org.tdl.vireo.state.State;
@@ -151,18 +152,26 @@ public interface Submission extends AbstractModel {
 	public void removeDocumentSubject(String subject);
 
 	/**
-	 * Set the Language
+	 * @param language
+	 *            The new language of the document. Must be a valid java locale.
 	 */
 	public void setDocumentLanguage(String language);
-	
+
 	/**
-	 * Get the Language
+	 * @return Language of the document
 	 */
 	public String getDocumentLanguage();
-	
+
+	/**
+	 * @return The locale of the document language, or null if not set or
+	 *         invalid.
+	 */
+	public Locale getDocumentLanguageLocale();
+
 	/**
 	 * 
-	 * @return The type of embargo for this submission. Either requested or approved.
+	 * @return The type of embargo for this submission. Either requested or
+	 *         approved.
 	 */
 	public EmbargoType getEmbargoType();
 

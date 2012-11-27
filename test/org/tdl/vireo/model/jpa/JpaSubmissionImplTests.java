@@ -6,13 +6,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
+import org.apache.commons.lang.LocaleUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.EmbargoType;
+import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.MockPerson;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
@@ -60,6 +63,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 	 */
 	@After
 	public void cleanup() {
+		try {
 		JPA.em().clear();
 		if (person != null)
 			personRepo.findPerson(person.getId()).delete();
@@ -67,6 +71,9 @@ public class JpaSubmissionImplTests extends UnitTest {
 		
 		JPA.em().getTransaction().rollback();
 		JPA.em().getTransaction().begin();
+		} catch (RuntimeException re) {
+			
+		}
 	}
 	
 	/**
@@ -387,6 +394,28 @@ public class JpaSubmissionImplTests extends UnitTest {
 		}
 		
 		assertNotNull(sub.getApprovalDate());
+		
+		sub.delete();
+	}
+	
+	/**
+	 * Test converting document language into a locale
+	 */
+	@Test
+	public void testGetLocale() {
+		
+		Submission sub = subRepo.createSubmission(person).save();
+		
+		sub.setDocumentLanguage("de");
+		Locale german = LocaleUtils.toLocale("de");
+		assertEquals(german, sub.getDocumentLanguageLocale());
+		
+		sub.setDocumentLanguage("de_CH");
+		Locale germanAustria = LocaleUtils.toLocale("de_CH");
+		assertEquals(germanAustria, sub.getDocumentLanguageLocale());
+
+		sub.setDocumentLanguage(null);
+		assertEquals(null, sub.getDocumentLanguageLocale());
 		
 		sub.delete();
 	}

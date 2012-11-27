@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
@@ -388,6 +389,10 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	
 	@Override
 	public void setDocumentLanguage(String language) {
+		
+		if (language != null && JpaLanguageImpl._toLocale(language) == null)
+			throw new IllegalArgumentException("Language is an invalid locale");
+		
 		assertReviewerOrOwner(submitter);
 		
 		if (!equals(this.documentLanguage,language)) {
@@ -399,6 +404,11 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@Override
 	public String getDocumentLanguage() {
 		return documentLanguage;
+	}
+	
+	@Override
+	public Locale getDocumentLanguageLocale() {
+		return JpaLanguageImpl._toLocale(documentLanguage);
 	}
 
 	@Override

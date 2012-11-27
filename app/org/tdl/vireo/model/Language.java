@@ -1,5 +1,7 @@
 package org.tdl.vireo.model;
 
+import java.util.Locale;
+
 /**
  * This class represents a language available for documents to be submitted under..
  * 
@@ -14,8 +16,14 @@ public interface Language extends AbstractOrderedModel {
 	
 	/**
 	 * @param name
-	 * 			Set the name of this language
+	 * 			Set the name/locale of this language
 	 */
 	public void setName(String name);
+	
+	
+	/**
+	 * @return the locale of the language.
+	 */
+	public Locale getLocale();
 
 }

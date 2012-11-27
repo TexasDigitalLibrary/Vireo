@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.tdl.vireo.proquest.ProquestLanguage;
 import org.tdl.vireo.state.State;
@@ -188,6 +189,11 @@ public class MockSubmission extends AbstractMock implements Submission {
 	@Override
 	public void setDocumentLanguage(String language) {
 		this.documentLanguage = language;
+	}
+	
+	@Override
+	public Locale getDocumentLanguageLocale() {
+		return MockLanguage.toLocale(this.documentLanguage);
 	}
 
 	@Override

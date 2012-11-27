@@ -405,7 +405,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 				"documentType", 2012, 5, true);
 		sub1.setAssignee(otherPerson);
 
-		sub1.setDocumentLanguage("BBBB");
+		sub1.setDocumentLanguage("ak");
 		sub1.addDocumentSubject("BBB");
 		sub1.setEmbargoType(e1);
 		sub1.setDocumentType("ZZZZ");
@@ -428,7 +428,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 				"anotherCommittee@email.com", "another", "another", "another", "another", "another",
 				"another", 2005, 4, null);
 		
-		sub2.setDocumentLanguage("AAA");
+		sub2.setDocumentLanguage("aa");
 		sub2.addDocumentSubject("AAA");
 		sub2.setAssignee(person);
 		sub2.setEmbargoType(e2);

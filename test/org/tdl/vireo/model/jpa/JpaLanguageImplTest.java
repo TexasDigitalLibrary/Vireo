@@ -1,7 +1,9 @@
 package org.tdl.vireo.model.jpa;
 
 import java.util.List;
+import java.util.Locale;
 
+import org.apache.commons.lang.LocaleUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -127,8 +129,8 @@ public class JpaLanguageImplTest extends UnitTest {
 
 		int initialSize = settingRepo.findAllLanguages().size();
 		
-		Language language1 = settingRepo.createLanguage("language1").save();
-		Language language2 = settingRepo.createLanguage("language2").save();
+		Language language1 = settingRepo.createLanguage("hu").save();
+		Language language2 = settingRepo.createLanguage("de").save();
 
 		int postSize = settingRepo.findAllLanguages().size();
 		
@@ -143,8 +145,8 @@ public class JpaLanguageImplTest extends UnitTest {
 	 */
 	@Test 
 	public void testNameValidation() {
-		Language language = settingRepo.createLanguage("language").save();
-		Language test = settingRepo.createLanguage("test").save();
+		Language language = settingRepo.createLanguage("de").save();
+		Language test = settingRepo.createLanguage("hu").save();
 		
 		try {
 			test.setName(null);
@@ -161,7 +163,7 @@ public class JpaLanguageImplTest extends UnitTest {
 		}
 		
 		try {
-			test.setName("language");
+			test.setName("de");
 			test.save();
 			fail("Able to modify object into duplicate.");
 		} catch(RuntimeException re) {
@@ -174,14 +176,31 @@ public class JpaLanguageImplTest extends UnitTest {
 	}
 	
 	/**
+	 * Test converting into a locale
+	 */
+	@Test
+	public void testGetLocale() {
+		
+		
+		Language lang1 = settingRepo.createLanguage("de").save();
+		Language lang2 = settingRepo.createLanguage("de_CH").save();
+		
+		Locale german = LocaleUtils.toLocale("de");
+		Locale germanAustria = LocaleUtils.toLocale("de_CH");
+		
+		assertEquals(german, lang1.getLocale());
+		assertEquals(germanAustria, lang2.getLocale());
+	}
+	
+	/**
 	 * Test the display order attribute.
 	 */
 	@Test
 	public void testOrder() {
-		Language language4 = settingRepo.createLanguage("language4").save();
-		Language language1 = settingRepo.createLanguage("language1").save();
-		Language language3 = settingRepo.createLanguage("language3").save();
-		Language language2 = settingRepo.createLanguage("language2").save();
+		Language language4 = settingRepo.createLanguage("aa").save();
+		Language language1 = settingRepo.createLanguage("ab").save();
+		Language language3 = settingRepo.createLanguage("af").save();
+		Language language2 = settingRepo.createLanguage("ak").save();
 		
 		language1.setDisplayOrder(0);
 		language2.setDisplayOrder(1);
@@ -225,7 +244,7 @@ public class JpaLanguageImplTest extends UnitTest {
 		JPA.em().clear();
 		JPA.em().getTransaction().begin();
 		
-		Language language = settingRepo.createLanguage("language").save();
+		Language language = settingRepo.createLanguage("de").save();
 		
 		// Commit and reopen a new transaction.
 		JPA.em().getTransaction().commit();
@@ -252,11 +271,11 @@ public class JpaLanguageImplTest extends UnitTest {
 	public void testAccess() {
 		
 		context.login(MockPerson.getManager());
-		settingRepo.createLanguage("language").save().delete();
+		settingRepo.createLanguage("de").save().delete();
 		
 		try {
 			context.login(MockPerson.getReviewer());
-			settingRepo.createLanguage("language").save();
+			settingRepo.createLanguage("hu").save();
 			fail("A reviewer was able to create a new object.");
 		} catch (SecurityException se) {
 			/* yay */
