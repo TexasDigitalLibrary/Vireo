@@ -238,7 +238,7 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	
 	@Override
 	public Language findLanguageByName(String name) {
-		return (Language) JpaLanguageImpl.find("name = ?", name).first();
+		return (Language) JpaLanguageImpl.find("name = (?1)", name).first();
 	}
 	
 	@Override
