@@ -35,12 +35,12 @@ public class JpaPersonRepositoryImpl implements PersonRepository {
 
 	@Override
 	public Person findPersonByEmail(String email) {
-		return JpaPersonImpl.find("email = ?", email).first();
+		return JpaPersonImpl.find("email = (?1)", email).first();
 	}
 
 	@Override
 	public Person findPersonByNetId(String netid) {
-		return JpaPersonImpl.find("netid = ?", netid).first();
+		return JpaPersonImpl.find("netid = (?1)", netid).first();
 
 	}
 	

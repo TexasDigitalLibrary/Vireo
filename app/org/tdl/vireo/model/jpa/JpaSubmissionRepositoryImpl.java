@@ -60,7 +60,7 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 		for (int i=0; i < submissionIds.size(); i++) {
 			if (i > 0)
 				sql.append(",");
-			sql.append("?"+(i+1));
+			sql.append("(?"+(i+1)+")");
 		}
 		sql.append(")");
 		
@@ -76,12 +76,12 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 
 	@Override
 	public Submission findSubmissionByEmailHash(String emailHash) {
-		return JpaSubmissionImpl.find("committeeEmailHash = ?", emailHash).first();
+		return JpaSubmissionImpl.find("committeeEmailHash = (?1)", emailHash).first();
 	}
 
 	@Override
 	public List<Submission> findSubmission(Person submitter) {
-		return JpaSubmissionImpl.find("submitter = ?", submitter).fetch();
+		return JpaSubmissionImpl.find("submitter = (?1)", submitter).fetch();
 
 	}
 	
@@ -220,7 +220,7 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 		for (int i=0; i < logIds.size(); i++) {
 			if (i > 0)
 				sql.append(",");
-			sql.append("?"+(i+1));
+			sql.append("(?"+(i+1)+")");
 		}
 		sql.append(")");
 		
@@ -236,7 +236,7 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 	
 	@Override
 	public List<ActionLog> findActionLog(Submission submission) {
-		return JpaActionLogImpl.find("submission = ? order by actionDate desc, id desc", submission).fetch();
+		return JpaActionLogImpl.find("submission = (?1) order by actionDate desc, id desc", submission).fetch();
 	}
 	
 	@Override
@@ -270,12 +270,12 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 
 	@Override
 	public List<NamedSearchFilter> findSearchFiltersByCreatorOrPublic(Person creator) {
-		return (List) JpaNamedSearchFilterImpl.find("creator = ? OR publicFlag = true order by id", creator).fetch();
+		return (List) JpaNamedSearchFilterImpl.find("creator = (?1) OR publicFlag = true order by id", creator).fetch();
 	}
 	
 	@Override
 	public NamedSearchFilter findSearchFilterByCreatorAndName(Person creator, String name) {
-		return JpaNamedSearchFilterImpl.find("creator = ? AND name = ?", creator, name).first();
+		return JpaNamedSearchFilterImpl.find("creator = (?1) AND name = (?2)", creator, name).first();
 	}
 	
 
