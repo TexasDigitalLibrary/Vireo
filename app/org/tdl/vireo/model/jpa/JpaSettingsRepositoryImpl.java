@@ -40,7 +40,7 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 
 	@Override
 	public Degree findDegreeByName(String name) {
-		return JpaDegreeImpl.find("name = ?", name).first();
+		return JpaDegreeImpl.find("name = (?1)", name).first();
 	}
 
 	@Override
@@ -110,7 +110,7 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 
 	@Override
 	public List<DocumentType> findAllDocumentTypes(DegreeLevel level) {
-		return JpaDocumentTypeImpl.find("level = ?", level).fetch();
+		return JpaDocumentTypeImpl.find("level = (?1)", level).fetch();
 	}
 
 	@Override
@@ -140,7 +140,7 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 
 	@Override
 	public List<EmbargoType> findAllActiveEmbargoTypes() {
-		return (List) JpaEmbargoTypeImpl.find("active = ? order by displayOrder", true).fetch();
+		return (List) JpaEmbargoTypeImpl.find("active = (?1) order by displayOrder", true).fetch();
 	}
 
 	// ////////////////////////
@@ -178,7 +178,7 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	
 	@Override
 	public EmailTemplate findEmailTemplateByName(String name) {
-		return JpaEmailTemplateImpl.find("name = ?", name).first();
+		return JpaEmailTemplateImpl.find("name = (?1)", name).first();
 	}
 
 	@Override
@@ -221,7 +221,7 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 
 	@Override
 	public Configuration findConfigurationByName(String name) {
-		return JpaConfigurationImpl.find("name = ?", name).first();
+		return JpaConfigurationImpl.find("name = (?1)", name).first();
 	}
 	
 	@Override
@@ -282,7 +282,7 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 
 	@Override
 	public DepositLocation findDepositLocationByName(String name) {
-		return JpaDepositLocationImpl.find("name = ?", name).first();
+		return JpaDepositLocationImpl.find("name = (?1)", name).first();
 	}
 
 	@Override

@@ -126,6 +126,10 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 
 		// Turn off authentication for the test thread
 		context.turnOffAuthorization();
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 	}
 
 	/**
