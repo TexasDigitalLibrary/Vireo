@@ -24,8 +24,11 @@ import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.proquest.ProquestLanguage;
+import org.tdl.vireo.proquest.ProquestUtilityService;
+import org.tdl.vireo.proquest.ProquestVocabularyRepository;
 
 import play.Logger;
+import play.modules.spring.Spring;
 import play.mvc.With;
 import controllers.Authentication;
 import controllers.Security;
@@ -34,6 +37,8 @@ import controllers.SettingsTab;
 @With(Authentication.class)
 public class ConfigurableSettingsTab extends SettingsTab {
 
+	public static final ProquestUtilityService proquestUtils = Spring.getBeanOfType(ProquestUtilityService.class);
+	
 	/**
 	 * Display the configurable settings page.
 	 * @throws Exception 
@@ -61,6 +66,8 @@ public class ConfigurableSettingsTab extends SettingsTab {
 		renderArgs.put("MASTERS", DegreeLevel.MASTERS);
 		renderArgs.put("DOCTORAL", DegreeLevel.DOCTORAL);
 
+		
+		renderArgs.put("proquestUtils",proquestUtils);
 		
 		String nav = "settings";
 		String subNav = "config";
@@ -1201,10 +1208,16 @@ public class ConfigurableSettingsTab extends SettingsTab {
 
 			saveModelOrder(languages);
 
-			name = escapeJavaScript(LocaleUtils.toLocale(language.getName()).getDisplayName());
+			
+			String displayName = LocaleUtils.toLocale(language.getName()).getDisplayName();
+			
+			if (proquestUtils.languageCode(name) != null)
+				displayName += "&nbsp;&nbsp; &diams;";
+			
+			displayName = escapeJavaScript(displayName);
 
 			renderJSON("{ \"success\": \"true\", \"id\": " + language.getId()
-					+ ", \"name\": \"" + name + "\" }");
+					+ ", \"name\": \"" + displayName + "\" }");
 		} catch (IllegalArgumentException iae) {
 			String message = escapeJavaScript(iae.getMessage());			
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");

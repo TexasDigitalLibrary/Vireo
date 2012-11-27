@@ -14,6 +14,7 @@ import org.tdl.vireo.model.Department;
 import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.GraduationMonth;
+import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.Major;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.Program;
@@ -134,10 +135,10 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 	}
 	
 	/**
-	 * Test reordering a set of email templates.
+	 * Test reordering a set of embargo types.
 	 */
 	@Test
-	public void testReorderingTemplates() {
+	public void testReorderingEmbargoTypes() {
 		LOGIN();
 		
 		final String REORDER_URL = Router.reverse("settings.ConfigurableSettingsTab.reorderEmbargoTypesJSON").url;
@@ -858,5 +859,90 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		// Cleanup
 		month1.delete();
 		month2.delete();
+	}
+	
+	
+	
+	/**
+	 * Test adding, editing, and removing a langauge.
+	 */
+	@Test
+	public void testAddingEditingRemovingLanguage() {
+		
+		LOGIN();
+		
+		// Get our urls and a list of fields.
+		final String ADD_URL = Router.reverse("settings.ConfigurableSettingsTab.addLanguageJSON").url;
+		final String REMOVE_URL = Router.reverse("settings.ConfigurableSettingsTab.removeLanguageJSON").url;
+
+		// Add a new language
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("name","ru");
+		Response response = POST(ADD_URL,params);
+		assertContentMatch("\"success\": \"true\"", response);
+		
+		// Extract the id of the newly created language.
+		Pattern ID_PATTERN = Pattern.compile("\"id\": ([0-9]+), ");
+		Matcher tokenMatcher = ID_PATTERN.matcher(getContent(response));
+		assertTrue(tokenMatcher.find());
+		String idString = tokenMatcher.group(1);
+		assertNotNull(idString);
+		Long id = Long.valueOf(idString);
+		
+		// Verify the language exists in the database.
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		assertNotNull(settingRepo.findLanguage(id));
+		assertEquals("ru",settingRepo.findLanguage(id).getName());
+		
+		// Now remove the custom action
+		params.clear();
+		params.put("languageId","language_"+id);
+		response = POST(REMOVE_URL,params);
+		assertContentMatch("\"success\": \"true\"", response);
+		
+		// Verify the action was deleted in the database;
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		assertNull(settingRepo.findLanguage(id));
+	}
+	
+	/**
+	 * Test reordering a set of programs.
+	 */
+	@Test
+	public void testReorderingLanguage() {
+		LOGIN();
+		
+		final String REORDER_URL = Router.reverse("settings.ConfigurableSettingsTab.reorderLanguagesJSON").url;
+		
+		// Create two custom actions:
+		Language lang1 = settingRepo.createLanguage("hi").save();
+		Language lang2 = settingRepo.createLanguage("ir").save();
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
+		// Reorder the custom actions
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("languageIds", "language_"+lang2.getId()+",language_"+lang1.getId());
+		Response response = POST(REORDER_URL,params);
+		assertContentMatch("\"success\": \"true\"", response);
+		
+		// Verify that the actions were reorderd
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		lang1 = settingRepo.findLanguage(lang1.getId());
+		lang2 = settingRepo.findLanguage(lang2.getId());
+		
+		assertTrue(lang1.getDisplayOrder() > lang2.getDisplayOrder());
+		
+		// Cleanup
+		lang1.delete();
+		lang2.delete();
 	}
 }

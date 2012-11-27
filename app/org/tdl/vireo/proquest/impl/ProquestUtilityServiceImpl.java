@@ -125,14 +125,17 @@ public class ProquestUtilityServiceImpl implements ProquestUtilityService {
 			iso1799 = iso1799.substring(0, iso1799.indexOf("-"));
 		if (iso1799.contains("_"))
 			iso1799 = iso1799.substring(0, iso1799.indexOf("_"));
+		iso1799 = iso1799.toUpperCase();
 		
-		// Search for the proquest language in mixed, uppper, or lower case.
-		ProquestLanguage lang = proquestRepo.findLanguageByCode(iso1799);
-		if (lang == null)
-			lang = proquestRepo.findLanguageByCode(iso1799.toUpperCase());
-		if (lang == null)
-			lang = proquestRepo.findLanguageByCode(iso1799.toLowerCase());
 		
+		// First, search by special case mapping
+		ProquestLanguage lang = null;
+		if (LANG.containsKey(iso1799.toUpperCase()))
+			lang = proquestRepo.findLanguageByCode(LANG.get(iso1799));
+		
+		// Don't implement secondary fall back search because this causes incorrect mappings.
+		// if (lang == null)
+		//		lang = proquestRepo.findLanguageByCode(iso1799);
 		
 		return lang;
 	}
@@ -178,6 +181,149 @@ public class ProquestUtilityServiceImpl implements ProquestUtilityService {
 
 		return category;
 	}
+	
+	/**
+	 * Special mapping from iso's 2 and 3 letter language codes to proquest's
+	 * crazy-on-crack language codes that follow no standard what-so-ever.
+	 */
+	public static final Map<String,String> LANG = new HashMap<String,String>();
+	static {
+		
+		LANG.put("AR","AR");  // Arabic
+		LANG.put("ARA","AR"); // Arabic
+
+		LANG.put("CA","CA");  // Catalan
+		LANG.put("CAT","CA"); // Catalan
+
+		LANG.put("ZH","CH");  // Chinese
+		LANG.put("CHI","CH"); // Chinese
+		LANG.put("ZHO","CH"); // Chinese
+		
+		LANG.put("HR","CR");  // Croatian
+		LANG.put("HRV","CR"); // Croatian
+
+		LANG.put("CS","CZ");  // Czech
+		LANG.put("CZE","CZ"); // Czech
+		LANG.put("CES","CZ"); // Czech
+		
+		LANG.put("DA","DA");  // Danish
+		LANG.put("DAN","DA"); // Danish
+		
+		LANG.put("NL","DU");  // Dutch
+		LANG.put("DUT","DU"); // Dutch
+		LANG.put("NLD","DU"); // Dutch
+
+		LANG.put("EN","EN");  // English
+		LANG.put("ENG","EN"); // English
+
+		LANG.put("FI","FI");  // Finnish
+		LANG.put("FIN","FI"); // Finnish
+
+		LANG.put("VLS","FL"); // Flemish
+		
+		LANG.put("FR","FR");  // French
+		LANG.put("FRE","FR"); // French
+		LANG.put("FRA","FR"); // French
+
+		LANG.put("GL","GA");  // Galician
+		LANG.put("GLG","GA"); // Galician
+		
+		LANG.put("DE","GE");  // German
+		LANG.put("GER","GE"); // German
+		LANG.put("DEU","GE"); // German
+
+		LANG.put("EL","GR");  // Greek
+		LANG.put("GRE","GR"); // Greek
+		LANG.put("ELL","GR"); // Greek
+
+		LANG.put("HE","HE");  // Hebrew
+		LANG.put("IW","HE");  // Hebrew ?
+		LANG.put("HEB","HE"); // Hebrew
+		
+		LANG.put("HU","HU");  // Hungarian
+		LANG.put("HUN","HU"); // Hungarian
+
+		LANG.put("IT","IT");  // Italian
+		LANG.put("ITA","IT"); // Italian
+		
+		LANG.put("JA","JA");  // Japanese
+		LANG.put("JAN","JA"); // Japanese
+
+		LANG.put("LA","LA");  // Latin
+		LANG.put("LAT","LA"); // Latin
+		
+		LANG.put("NO","NO");  // Norwegian
+		LANG.put("NOR","NO"); // Norwegian
+
+		LANG.put("PL","PL");  // Polish
+		LANG.put("POL","PL"); // Polish
+
+		LANG.put("PT","PR");  // Portuguese
+		LANG.put("POR","PR"); // Portuguese
+
+		LANG.put("RU","RU");  // Russian
+		LANG.put("RUS","RU"); // Russian
+
+		LANG.put("ST","SO");  // Sotho
+		LANG.put("SOT","SO"); // Sotho
+
+		LANG.put("ES","SP");  // Spanish
+		LANG.put("SPA","SP"); // Spanish
+
+		LANG.put("SV","SW");  // Swedish
+		LANG.put("SWE","SW"); // Swedish
+
+		LANG.put("TR","TU");  // Turkish
+		LANG.put("TUR","TU"); // Turkish
+
+		LANG.put("CY","WE");  // Welsh
+		LANG.put("WEL","WE"); // Welsh
+		LANG.put("CYM","WE"); // Welsh
+
+		LANG.put("YI","YI");  // Yiddish
+		LANG.put("YID","YI"); // Yiddish
+
+		LANG.put("UK","UK");  // Ukrainian
+		LANG.put("UKR","UK"); // Ukrainian
+
+		LANG.put("ET","ES");  // Estonian
+		LANG.put("EST","ES"); // Estonian
+
+		LANG.put("RO","RO");  // Romanian
+		LANG.put("RUM","RO"); // Romanian
+		LANG.put("RON","RO"); // Romanian
+
+		LANG.put("KO","KO");  // Korean
+		LANG.put("KOR","KO"); // Korean
+
+		LANG.put("EU","BQ");  // Basque
+		LANG.put("BAQ","BQ"); // Basque
+		LANG.put("EUS","BQ"); // Basque
+
+		LANG.put("GA","IR");  // Irish
+		LANG.put("GLE","IR"); // Irish
+
+		LANG.put("LV","LV");  // Latvian
+		LANG.put("LAV","LV"); // Latvian
+
+		LANG.put("HAW","HI"); // Hawaiian
+		
+		LANG.put("SA","SA");  // Sanskrit
+		LANG.put("SAN","SA"); // Sanskrit
+
+		LANG.put("JPR","JP"); // Judeo-Persian
+		LANG.put("ENM","ME"); // Middle English
+		LANG.put("LT","LI");  // Lithuanian
+		LANG.put("LIT","LI"); // Lithuanian
+
+		LANG.put("IS","IC");  // Icelandic
+		LANG.put("ICE","IC"); // Icelandic
+		LANG.put("ISL","IC"); // Icelandic
+
+		LANG.put("ANG","AN"); // Anglo-Saxon
+		
+	}
+	
 	
 	
 	/**

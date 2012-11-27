@@ -153,7 +153,7 @@
 	def proquestUtils = play.modules.spring.Spring.getBeanOfType(org.tdl.vireo.proquest.ProquestUtilityService.class);
 }%
 <DISS_submission
-	pulishing_option="${ publishing_option }"
+	publishing_option="${ publishing_option }"
 	embargo_code="${ embargoCode }"
 	third_party_search="${ third_party_search ? "Y" : "N" }"
 	third_party_sales="${ third_party_sales ? "Y" : "N" }">
