@@ -1,7 +1,9 @@
 package org.tdl.vireo.search.impl;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import net.sf.oval.internal.util.LinkedSet;
 
@@ -32,7 +34,10 @@ import play.db.jpa.JPAPlugin;
 public class LuceneUpdateJob extends LuceneAbstractJobImpl {
 
 	// The list of submission ids to update in the index.
-	public Set<Long> subIds;
+	private Set<Long> subIds;
+	
+	// Don't allow the job to be modified once it has started indexing.
+	private boolean indexing = false;
 
 	/**
 	 * Construct a new update index job.
@@ -41,7 +46,7 @@ public class LuceneUpdateJob extends LuceneAbstractJobImpl {
 	 */
 	public LuceneUpdateJob(LuceneIndexerImpl indexer, Set<Long> submissionIds) {
 		super(indexer);
-		this.subIds = new LinkedSet<Long>();
+		this.subIds = Collections.synchronizedSet(new LinkedSet<Long>());
 		this.subIds.addAll(submissionIds);
 		progress = 0; 
 		total = submissionIds.size();
@@ -55,23 +60,31 @@ public class LuceneUpdateJob extends LuceneAbstractJobImpl {
 	@Override
 	public LuceneAbstractJobImpl mergeJob(LuceneAbstractJobImpl job) {
 
-		if (job instanceof LuceneRebuildJobImpl) {
-			return job;
-		} else if (job instanceof LuceneUpdateJob) {
-			LuceneUpdateJob updateJob = (LuceneUpdateJob) job;
-			this.subIds.addAll(updateJob.subIds);
-			progress = 0;
-			total = subIds.size();
-			return this;
+		synchronized (this) {
+			if (indexing == true)
+				throw new IllegalStateException("Unable to modify an index job once it has started writting to the index.");
+			
+			if (job instanceof LuceneRebuildJobImpl) {
+				return job;
+			} else if (job instanceof LuceneUpdateJob) {
+				LuceneUpdateJob updateJob = (LuceneUpdateJob) job;
+				this.subIds.addAll(updateJob.subIds);
+				progress = 0;
+				total = subIds.size();
+				return this;
 
-		} else {
-			throw new IllegalArgumentException("Unable to merge index jobs because the other job is an unsupported: "+job.getClass().getName());
-		}
+			} else {
+				throw new IllegalArgumentException("Unable to merge index jobs because the other job is an unsupported: "+job.getClass().getName());
+			}
+		} // synchronized
 	}
 
 	@Override
 	public void writeIndex() throws CorruptIndexException, LockObtainFailedException, IOException, InterruptedException {
 
+		synchronized (this) {
+			indexing = true;
+		}
 
 		// Update the progress and total one last time before starting.
 		progress = 0;
@@ -109,6 +122,8 @@ public class LuceneUpdateJob extends LuceneAbstractJobImpl {
 			}
 		} finally {
 			writer.close();
+			subIds.clear();
+			indexing = false;
 		}
 	}
 }
