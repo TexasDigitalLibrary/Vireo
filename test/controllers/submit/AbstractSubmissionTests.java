@@ -445,6 +445,14 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 	 *            Document Abstract
 	 * @param keywords
 	 *            Document Keywords
+	 * @param subjectPrimary
+	 * 			  The primary ProQuest Subject
+	 * @param subjectSecondary
+	 * 			  The Secondary ProQuest Subject
+	 * @param subjectTertiary
+	 * 			  The Tertiary ProQuest Subject
+	 * @param language
+	 * 			  The document language
 	 * @param committee
 	 *            List of maps of committee members.
 	 * @param chairEmail
@@ -455,7 +463,7 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 	 *            UMI release flag.
 	 */
 	public void documentInfo(String title, String degreeMonth, String degreeYear, String docType, String abstractText, String keywords,
-			String subjectPrimary, String subjectSecondary, String subjectTertiary, List<Map<String,String>> committee, String chairEmail, 
+			String subjectPrimary, String subjectSecondary, String subjectTertiary, String language, List<Map<String,String>> committee, String chairEmail, 
 			String embargo, String umi)  {
 
 		// Get our URL
@@ -483,7 +491,9 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 		if (subjectSecondary != null)
 			params.put("subject-secondary",subjectSecondary);
 		if (subjectTertiary != null)
-			params.put("subject-tertiary",subjectTertiary);	
+			params.put("subject-tertiary",subjectTertiary);
+		if (language != null)
+			params.put("docLanguage", language);
 		if (chairEmail != null)
 			params.put("chairEmail", chairEmail);
 		if (embargo != null)
@@ -531,6 +541,8 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 			assertEquals(subjectSecondary,sub.getDocumentSubjects().get(1));
 		if (subjectTertiary != null)
 			assertEquals(subjectTertiary,sub.getDocumentSubjects().get(2));
+		if (language != null)
+			assertEquals(language,sub.getDocumentLanguage());
 		if (chairEmail != null)
 			assertEquals(chairEmail, sub.getCommitteeContactEmail());
 		if (embargo != null)
