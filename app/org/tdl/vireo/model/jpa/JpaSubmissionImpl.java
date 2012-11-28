@@ -399,7 +399,10 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		
 		if (!equals(this.documentLanguage,language)) {
 			this.documentLanguage = language;
-			generateChangeLog("Document language",LocaleUtils.toLocale(language).getDisplayName(),false);
+			if(language != null)
+				generateChangeLog("Document language",JpaLanguageImpl._toLocale(language).getDisplayName(),false);
+			else
+				generateChangeLog("Document language",null,false);
 		}
 	}
 	

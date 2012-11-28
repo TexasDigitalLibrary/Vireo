@@ -548,6 +548,25 @@ public class JpaSubmissionImplTests extends UnitTest {
 	}
 	
 	
+	/**
+	 * Test document language
+	 */
+	@Test
+	public void testDocumentLanguage() {
+		
+		Submission sub = subRepo.createSubmission(person);
+		
+		assertEquals(null,sub.getDocumentLanguage());
+		
+		sub.setDocumentLanguage("en");
+		
+		assertEquals("en",sub.getDocumentLanguage());
+		
+		sub.setDocumentLanguage(null);
+		
+		assertEquals(null,sub.getDocumentLanguage());
+	}
+	
 	
 	/**
 	 * Test that action logs are generated appropriately.
@@ -675,7 +694,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		assertEquals("Committee approval of submission set", logItr.next().getEntry());
 		assertEquals("New committee email hash generated", logItr.next().getEntry());
 		assertEquals("Committee contact email address changed to 'contactEmail'", logItr.next().getEntry());
-		assertEquals("Document language changed to 'en'", logItr.next().getEntry());
+		assertEquals("Document language changed to 'English'", logItr.next().getEntry());
 		assertEquals("Document keywords changed to 'docKeywords'", logItr.next().getEntry());
 		assertEquals("Document abstract changed to 'docAbstract'", logItr.next().getEntry());
 		assertEquals("Document title changed to 'docTitle'", logItr.next().getEntry());

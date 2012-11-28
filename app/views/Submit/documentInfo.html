@@ -125,13 +125,13 @@
 			<div class="controls">
 	            #{ifRequired DOCUMENT_LANGUAGE}
 	            	#{if docLanguages.size() == 1}
-	            		<p>${org.apache.commons.lang.LocaleUtils.toLocale(docLanguages.get(0).getName()).getDisplayName()}</p>
+	            		<p>${docLanguages.get(0).getLocale().getDisplayName()}</p>
 	            	#{/if}
 	            	#{else}
 		            	<select class="span4" id="docLanguage" name="docLanguage">
 			                <option #{if null == docLanguage || docLanguage.equals("")}selected="true"#{/if} value="">...choose</option>
 			                #{list docLanguages, as: 'language'}
-			                    <option #{if null != language && docLanguage.equals(language.getName())}selected="true"#{/if} value="${language.getName()}">${org.apache.commons.lang.LocaleUtils.toLocale(language.getName()).getDisplayName()}</option>
+			                    <option #{if null != language && docLanguage.equals(language.getName())}selected="true"#{/if} value="${language.getName()}">${language.getLocale().getDisplayName()}</option>
 			                #{/list}
 		            	</select>
 		            #{/else}
@@ -140,7 +140,7 @@
 	            <select class="span4" id="docLanguage" name="docLanguage">
 	                <option #{if null == docLanguage || docLanguage.equals("")}selected="true"#{/if} value="">...choose</option>
 	                #{list docLanguages, as: 'language'}
-	                    <option #{if null != language && docLanguage.equals(language.getName())}selected="true"#{/if} value="${language.getName()}">${org.apache.commons.lang.LocaleUtils.toLocale(language.getName()).getDisplayName()}</option>
+	                    <option #{if null != language && docLanguage.equals(language.getName())}selected="true"#{/if} value="${language.getName()}">${language.getLocale().getDisplayName()}</option>
 	                #{/list}
 	            </select>
 	            <a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp DOCUMENT_LANGUAGE /}"><i class="icon-info-sign"></i></a>

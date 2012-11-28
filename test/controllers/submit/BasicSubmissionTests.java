@@ -12,6 +12,7 @@ import org.tdl.vireo.constant.FieldConfig;
 import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.CommitteeMember;
 import org.tdl.vireo.model.Department;
+import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.Major;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
@@ -164,6 +165,7 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				"Agriculture, Plant Pathology", // primary subject
 				"Agriculture, Animal Pathology", // secondary subject
 				"Agriculture, Food Science and Technology", // tertiary subject
+				"en", // language
 				committee, // committee
 				"advisor@noreply.org", // committeeEmail
 				String.valueOf(settingRepo.findAllEmbargoTypes().get(1).getId()), // embargo
@@ -259,6 +261,7 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				"Agriculture, Plant Pathology", // primary subject
 				null, // secondary subject
 				null, // tertiary subject
+				null, // language
 				committee, // committee
 				"committee@noreply.org", // committeeEmail
 				String.valueOf(settingRepo.findAllEmbargoTypes().get(1).getId()), // embargo
@@ -287,7 +290,7 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 		disableFields(FieldConfig.UMI_RELEASE);
 		setAllowMultipleSubmissions(false);
 		
-		// clear out colleges, department, majors, and programs
+		// clear out colleges, department, majors, programs, and languages
 		List<String> originalPrograms = new ArrayList<String>();
 		for (Program program : settingRepo.findAllPrograms()) {
 			originalPrograms.add(program.getName());
@@ -307,6 +310,11 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 		for (Major major : settingRepo.findAllMajors()) {
 			originalMajors.add(major.getName());
 			major.delete();
+		}
+		List<String> originalLanguages = new ArrayList<String>();
+		for (Language language : settingRepo.findAllLanguages()) {
+			originalLanguages.add(language.getName());
+			language.delete();
 		}
 		
 		JPA.em().getTransaction().commit();
@@ -375,6 +383,7 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				"Agriculture, Plant Pathology", // primary subject
 				"Agriculture, Animal Pathology", // secondary subject
 				"Agriculture, Food Science and Technology", // tertiary subject
+				null, // language
 				committee, // committee
 				"advisor@noreply.org", // committeeEmail
 				String.valueOf(settingRepo.findAllEmbargoTypes().get(1).getId()), // embargo
@@ -413,6 +422,11 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 			Major major = settingRepo.createMajor(name);
 			major.setDisplayOrder(i++);
 			major.save();
+		}
+		for (String name : originalLanguages) {
+			Language language = settingRepo.createLanguage(name);
+			language.setDisplayOrder(i++);
+			language.save();
 		}
 	}
 	
@@ -608,6 +622,7 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				"Agriculture, Plant Pathology", // primary subject
 				"Agriculture, Animal Pathology", // secondary subject
 				"Agriculture, Food Science and Technology", // tertiary subject
+				"en", // language
 				committee, // committee
 				"advisor@noreply.org", // committeeEmail
 				String.valueOf(settingRepo.findAllEmbargoTypes().get(1).getId()), // embargo
@@ -730,6 +745,7 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				null, // primary subject
 				null, // secondary subject
 				null, // tertiary subject
+				null, // language
 				committee, // committee
 				null, // committeeEmail
 				null, // embargo
@@ -813,6 +829,7 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				null, // primary subject
 				null, // secondary subject
 				null, // tertiary subject
+				null, // language
 				committee, // committee
 				null, // committeeEmail
 				null, // embargo

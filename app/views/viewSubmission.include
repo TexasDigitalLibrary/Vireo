@@ -210,7 +210,7 @@ Plus all the FieldConfig objects
 <div class="control-group #{errorClass 'language' /} ">
 	<label class="control-label">#{fieldLabel DOCUMENT_LANGUAGE /}:</label>
 	<div class="controls">
-		<p>${org.apache.commons.lang.LocaleUtils.toLocale(sub.getDocumentLanguage()).getDisplayName()}</p>
+		<p>#{if sub.getDocumentLanguageLocale() != null}${sub.getDocumentLanguageLocale().getDisplayName()}#{/if}</p>
 	</div>
 </div>
 #{/ifEnabled}

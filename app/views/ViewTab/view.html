@@ -357,7 +357,7 @@ jQuery(document).ready(function(){
                     </span></li>
                     <li class="edit"><label>Language:</label><span id="docLanguage"
                     	#{if submission.getDocumentLanguage()}
-                    		class="select"><i class="icon-pencil"></i> ${org.apache.commons.lang.LocaleUtils.toLocale(submission.getDocumentLanguage()).getDisplayName()}
+                    		class="select"><i class="icon-pencil"></i> ${submission.getDocumentLanguageLocale().getDisplayName()}
                     	#{/if}#{else}
                     		class="select empty"><i class="icon-pencil"></i> none
                     	#{/else}
@@ -519,7 +519,7 @@ jQuery(document).ready(function(){
             	<select class="field">
             		<option value=""><em>none...</em></option>
             		#{list items:settingRepo.findAllLanguages(), as:'language'}            			
-            			<option value="${language.getName()}">${org.apache.commons.lang.LocaleUtils.toLocale(language.getName()).getDisplayName()}</option>
+            			<option value="${language.getName()}">${language.getLocale().getDisplayName()}</option>
             		#{/list}
             	</select>
             </div>
