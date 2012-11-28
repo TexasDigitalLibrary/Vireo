@@ -296,7 +296,8 @@ public class ShibbolethAuthenticationMethodImpl extends
 				}
 			} else {
 				// Update required fields.
-				person.setNetId(netid);
+				if (netid != null)
+					person.setNetId(netid);
 				person.setEmail(email);
 				person.setFirstName(firstName);
 				person.setLastName(lastName);
@@ -305,62 +306,77 @@ public class ShibbolethAuthenticationMethodImpl extends
 			// 4. Update Optional attributes:
 			if (headerInstitutionalIdentifier != null) {
 				String identifier = getSingleAttribute(request, headerInstitutionalIdentifier);
-				person.setInstitutionalIdentifier(identifier);
+				if (identifier != null)
+					person.setInstitutionalIdentifier(identifier);
 			}
 			if (headerMiddleName != null) {
 				String middleName = getSingleAttribute(request, headerMiddleName);
-				person.setMiddleName(middleName);
+				if (middleName != null)
+					person.setMiddleName(middleName);
 			}
 			if (headerDisplayName != null) {
 				String displayName = getSingleAttribute(request, headerDisplayName);
-				person.setDisplayName(displayName);
+				if (displayName != null)
+					person.setDisplayName(displayName);
 			}
 			if (headerBirthYear != null) {
 				String birthYearString = getSingleAttribute(request, headerBirthYear);
-				try {
-					Integer birthYear = Integer.valueOf(birthYearString);
-					person.setBirthYear(birthYear);
-				} catch (NumberFormatException nfe) {
-					Logger.warn("Shib: Unable to interpret birth year attribute '"+headerBirthYear+"'='"+birthYearString+"' as an integer.");
+				if (birthYearString != null) {
+					try {
+						Integer birthYear = Integer.valueOf(birthYearString);
+						person.setBirthYear(birthYear);
+					} catch (NumberFormatException nfe) {
+						Logger.warn("Shib: Unable to interpret birth year attribute '"+headerBirthYear+"'='"+birthYearString+"' as an integer.");
+					}
 				}
 			}
 			if (headerAffiliations != null) {
-				person.getAffiliations().clear();
 				List<String> affiliations = getAttributes(request, headerAffiliations);
-				if (affiliations != null)
-					person.getAffiliations().addAll(affiliations);
+				if (affiliations != null) {
+					person.getAffiliations().clear();
+					if (affiliations != null)
+						person.getAffiliations().addAll(affiliations);
+				}
 			}
 			if (headerCurrentPhoneNumber != null) {
 				String currentPhoneNumber = getSingleAttribute(request, headerCurrentPhoneNumber);
-				person.setCurrentPhoneNumber(currentPhoneNumber);
+				if (currentPhoneNumber != null)
+					person.setCurrentPhoneNumber(currentPhoneNumber);
 			}
 			if (headerCurrentPostalAddress != null) {
 				String currentPostalAddress = getSingleAttribute(request, headerCurrentPostalAddress);
-				person.setCurrentPostalAddress(currentPostalAddress);
+				if (currentPostalAddress != null) 
+					person.setCurrentPostalAddress(currentPostalAddress);
 			}
 			if (headerCurrentEmailAddress != null) {
 				String currentEmailAddress = getSingleAttribute(request, headerCurrentEmailAddress);
-				person.setCurrentEmailAddress(currentEmailAddress);
+				if (currentEmailAddress != null)
+					person.setCurrentEmailAddress(currentEmailAddress);
 			}
 			if (headerPermanentPhoneNumber != null) {
 				String permanentPhoneNumber = getSingleAttribute(request, headerPermanentPhoneNumber);
-				person.setPermanentPhoneNumber(permanentPhoneNumber);
+				if (permanentPhoneNumber != null)
+					person.setPermanentPhoneNumber(permanentPhoneNumber);
 			}
 			if (headerPermanentPostalAddress != null) {
 				String permanentPostalAddress = getSingleAttribute(request, headerPermanentPostalAddress);
-				person.setPermanentPostalAddress(permanentPostalAddress);
+				if (permanentPostalAddress != null)
+					person.setPermanentPostalAddress(permanentPostalAddress);
 			}
 			if (headerPermanentEmailAddress != null) {
 				String permanentEmailAddress = getSingleAttribute(request, headerPermanentEmailAddress);
-				person.setPermanentEmailAddress(permanentEmailAddress);
+				if (permanentEmailAddress != null)
+					person.setPermanentEmailAddress(permanentEmailAddress);
 			}
 			if (headerCurrentDegree != null) {
 				String currentDegree = getSingleAttribute(request, headerCurrentDegree);
-				person.setCurrentDegree(currentDegree);
+				if (currentDegree != null)
+					person.setCurrentDegree(currentDegree);
 			}
 			if (headerCurrentDepartment != null) {
 				String currentDepartment = getSingleAttribute(request, headerCurrentDepartment);
-				person.setCurrentDepartment(currentDepartment);
+				if (currentDepartment != null)
+					person.setCurrentDepartment(currentDepartment);
 			}
 			if (headerCurrentCollege != null) {
 				String currentCollege = getSingleAttribute(request, headerCurrentCollege);
@@ -368,26 +384,31 @@ public class ShibbolethAuthenticationMethodImpl extends
 			}
 			if (headerCurrentMajor != null) {
 				String currentMajor = getSingleAttribute(request, headerCurrentMajor);
-				person.setCurrentMajor(currentMajor);
+				if (currentMajor != null)
+					person.setCurrentMajor(currentMajor);
 			}
 			if (headerCurrentGraduationYear != null) {
 				String currentGraduationYearString = getSingleAttribute(request, headerCurrentGraduationYear);
-				try {
-					Integer currentGraduationYear = Integer.valueOf(currentGraduationYearString);
-					person.setCurrentGraduationYear(currentGraduationYear);
-				} catch (NumberFormatException nfe) {
-					Logger.warn("Shib: Unable to interpret current graduation year attribute '"+headerCurrentGraduationYear+"'='"+currentGraduationYearString+"' as an integer.");
+				if (currentGraduationYearString != null) {
+					try {
+						Integer currentGraduationYear = Integer.valueOf(currentGraduationYearString);
+						person.setCurrentGraduationYear(currentGraduationYear);
+					} catch (NumberFormatException nfe) {
+						Logger.warn("Shib: Unable to interpret current graduation year attribute '"+headerCurrentGraduationYear+"'='"+currentGraduationYearString+"' as an integer.");
+					}
 				}
 			}
 			if (headerCurrentGraduationMonth != null) {
 				String currentGraduationMonthString = getSingleAttribute(request, headerCurrentGraduationMonth);
-				try {
-					Integer currentGraduationMonth = Integer.valueOf(currentGraduationMonthString);
-					person.setCurrentGraduationMonth(currentGraduationMonth);
-				} catch (NumberFormatException nfe) {
-					Logger.warn("Shib: Unable to interpret current graduation month attribute '"+headerCurrentGraduationMonth+"'='"+currentGraduationMonthString+"' as an integer.");
-				} catch (IllegalArgumentException iae) {
-					Logger.warn("Shib: Illegal value for current graduation month attribute '"+headerCurrentGraduationMonth+"'='"+currentGraduationMonthString+"', 0=January, 11=Dember. Any values outside this range are illegal.");
+				if (currentGraduationMonthString != null) {
+					try {
+						Integer currentGraduationMonth = Integer.valueOf(currentGraduationMonthString);
+						person.setCurrentGraduationMonth(currentGraduationMonth);
+					} catch (NumberFormatException nfe) {
+						Logger.warn("Shib: Unable to interpret current graduation month attribute '"+headerCurrentGraduationMonth+"'='"+currentGraduationMonthString+"' as an integer.");
+					} catch (IllegalArgumentException iae) {
+						Logger.warn("Shib: Illegal value for current graduation month attribute '"+headerCurrentGraduationMonth+"'='"+currentGraduationMonthString+"', 0=January, 11=Dember. Any values outside this range are illegal.");
+					}
 				}
 			}
 			person.save();
