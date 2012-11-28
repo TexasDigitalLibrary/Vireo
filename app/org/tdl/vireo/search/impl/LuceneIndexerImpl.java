@@ -288,7 +288,6 @@ public class LuceneIndexerImpl implements Indexer {
 		Set<Long> txn = transactionLocal.get();
 		if (txn != null && txn.size() > 0) {
 			LuceneAbstractJobImpl newJob = new LuceneUpdateJob(this,txn);
-			runNextJob(newJob);
 			
 			if (wait) {
 				// We will run this job in the current thread and wait for it to
