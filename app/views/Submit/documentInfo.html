@@ -20,7 +20,6 @@
 <br/>
 	<form action="@{submit.DocumentInfo.documentInfo(subId)}" method="post" class="form-inline">
 	<input type="hidden" name="step" value="documentInfo"/>
-	
 	#{ifEnabled [DOCUMENT_TITLE,GRADUATION_DATE,DOCUMENT_TYPE,DOCUMENT_ABSTRACT,DOCUMENT_KEYWORDS,DOCUMENT_SUBJECTS]}
 	<fieldset class="form-horizontal">
 		<legend>Document Information</legend>
@@ -46,7 +45,7 @@
 				<select class="span2" id="degreeYear" name="degreeYear">
                     <option #{if null == degreeYear }selected="true"#{/if} value="">...choose</option>
 				    #{list degreeYears, as:'year'}
-				    <option #{if null != degreeYear && String.valueOf(degreeYear).equals(year)}selected="true"#{/if} value="${year}">${year}</option>
+				    <option #{if null != degreeYear && String.valueOf(year).equals(degreeYear)}selected="true"#{/if} value="${year}">${year}</option>
 				    #{/list}
 				</select>
 				<a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp GRADUATION_DATE /}"><i class="icon-info-sign"></i></a>
