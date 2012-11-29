@@ -8,10 +8,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.CommitteeMember;
+import org.tdl.vireo.model.CommitteeMemberRoleType;
+import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.MockPerson;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
+import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.State;
@@ -33,6 +36,8 @@ public class JpaCommitteeMemberImplTests extends UnitTest {
 	public static StateManager stateManager = Spring.getBeanOfType(StateManager.class);
 	public static JpaPersonRepositoryImpl personRepo = Spring.getBeanOfType(JpaPersonRepositoryImpl.class);
 	public static JpaSubmissionRepositoryImpl subRepo = Spring.getBeanOfType(JpaSubmissionRepositoryImpl.class);
+	public static JpaSettingsRepositoryImpl settingRepo = Spring.getBeanOfType(JpaSettingsRepositoryImpl.class);
+
 	
 	// Share the same person & submission
 	public static Person person;
@@ -53,6 +58,7 @@ public class JpaCommitteeMemberImplTests extends UnitTest {
 	 */
 	@After
 	public void cleanup() {
+		try {
 		JPA.em().clear();
 		if (sub != null)
 			subRepo.findSubmission(sub.getId()).delete();
@@ -64,6 +70,9 @@ public class JpaCommitteeMemberImplTests extends UnitTest {
 		
 		JPA.em().getTransaction().rollback();
 		JPA.em().getTransaction().begin();
+		} catch (RuntimeException re) {
+			
+		}
 	}
 	
 	/**
@@ -71,17 +80,17 @@ public class JpaCommitteeMemberImplTests extends UnitTest {
 	 */
 	@Test
 	public void testCreateMember() {
-		CommitteeMember member = sub.addCommitteeMember("first", "last", "middle", false);
+		CommitteeMember member = sub.addCommitteeMember("first", "last", "middle");
 		assertEquals("first",member.getFirstName());
 		assertEquals("last",member.getLastName());
 		assertEquals("middle",member.getMiddleName());
-		assertFalse(member.isCommitteeChair());
+		assertEquals(0,member.getRoles().size());
 		
-		member = sub.addCommitteeMember("first", "last", null, true);
+		member = sub.addCommitteeMember("first", "last", null);
 		assertEquals("first",member.getFirstName());
 		assertEquals("last",member.getLastName());
 		assertNull(member.getMiddleName());
-		assertTrue(member.isCommitteeChair());
+		assertEquals(0,member.getRoles().size());
 	}
 	
 	/**
@@ -91,7 +100,7 @@ public class JpaCommitteeMemberImplTests extends UnitTest {
 	public void testBadCreateMember() {
 		
 		try {
-			sub.addCommitteeMember(null, null, "middle", false);
+			sub.addCommitteeMember(null, null, "middle");
 			fail("able to create a member without a first or last name.");
 		} catch (IllegalArgumentException iae) { /* yay */ }
 	}
@@ -101,9 +110,9 @@ public class JpaCommitteeMemberImplTests extends UnitTest {
 	 */
 	@Test
 	public void testCreateSingleNamedMember() {
-		CommitteeMember justFirst = sub.addCommitteeMember("first", null, null, false).save();
+		CommitteeMember justFirst = sub.addCommitteeMember("first", null, null).save();
 
-		CommitteeMember justLast = sub.addCommitteeMember(null, "last", null, false).save();
+		CommitteeMember justLast = sub.addCommitteeMember(null, "last", null).save();
 		
 		justFirst.delete();
 		justLast.delete();
@@ -114,7 +123,7 @@ public class JpaCommitteeMemberImplTests extends UnitTest {
 	 */
 	@Test
 	public void testId() {
-		CommitteeMember member = sub.addCommitteeMember("first", "last", "middle", false);
+		CommitteeMember member = sub.addCommitteeMember("first", "last", "middle");
 		member.save();
 		assertNotNull(member.getId());
 	}
@@ -124,7 +133,7 @@ public class JpaCommitteeMemberImplTests extends UnitTest {
 	 */
 	@Test
 	public void testFindById() {
-		CommitteeMember member = sub.addCommitteeMember("first", "last", "middle", false).save();
+		CommitteeMember member = sub.addCommitteeMember("first", "last", "middle").save();
 		
 		CommitteeMember retrieved = subRepo.findCommitteeMember(member.getId());
 		
@@ -136,11 +145,38 @@ public class JpaCommitteeMemberImplTests extends UnitTest {
 	 */
 	@Test 
 	public void testStudentNameFormat() {
-		CommitteeMember member = sub.addCommitteeMember("First", "Last", "Middle", false).save();
+		CommitteeMember member = sub.addCommitteeMember("First", "Last", "Middle").save();
 
 		
 		assertEquals("Last, First Middle",member.getFormattedName(NameFormat.LAST_FIRST_MIDDLE_BIRTH));
 
+	}
+	
+	/**
+	 * Test role formatting
+	 */
+	@Test 
+	public void testRoleFormat() {
+		
+		CommitteeMemberRoleType type1 = settingRepo.createCommitteeMemberRoleType("Role 1", DegreeLevel.UNDERGRADUATE);
+		type1.setDisplayOrder(100);
+		type1.save();
+		CommitteeMemberRoleType type2 = settingRepo.createCommitteeMemberRoleType("Role 2", DegreeLevel.UNDERGRADUATE);
+		type2.setDisplayOrder(0);
+		type2.save();
+		
+		CommitteeMember member = sub.addCommitteeMember("First", "Last", "Middle");
+		member.addRole("Role 1");
+		member.addRole("Role 2");
+		member.save();
+
+		assertEquals("Role 2, Role 1",member.getFormattedRoles());
+		
+	
+		member.delete();
+		type1.delete();
+		type2.delete();
+		
 	}
 	
 	/**
@@ -154,9 +190,10 @@ public class JpaCommitteeMemberImplTests extends UnitTest {
 		sub.setState(nextState);
 		sub.save();
 		
-		CommitteeMember member = sub.addCommitteeMember("First", "Last", "Middle", true).save();
+		CommitteeMember member = sub.addCommitteeMember("First", "Last", "Middle").save();
 		member.setFirstName("Changed");
-		member.setCommitteeChair(false);
+		member.addRole("Role 1");
+		member.addRole("Role 2");
 		member.save();
 		member.delete();
 		
@@ -166,9 +203,9 @@ public class JpaCommitteeMemberImplTests extends UnitTest {
 		sub.delete();
 		sub = null;
 		
-		assertEquals("Committee member 'Changed Middle Last' removed", logItr.next().getEntry());
-		assertEquals("Committee member 'Changed Middle Last' modified", logItr.next().getEntry());
-		assertEquals("Committee member 'First Middle Last' as chair added", logItr.next().getEntry());
+		assertEquals("Committee member 'Changed Middle Last' (Role 1, Role 2) removed", logItr.next().getEntry());
+		assertEquals("Committee member 'Changed Middle Last' (Role 1, Role 2) modified", logItr.next().getEntry());
+		assertEquals("Committee member 'First Middle Last' added", logItr.next().getEntry());
 		assertEquals("Submission status changed to 'Submitted'",logItr.next().getEntry());
 		assertEquals("Submission created",logItr.next().getEntry());
 		
@@ -181,7 +218,10 @@ public class JpaCommitteeMemberImplTests extends UnitTest {
 	@Test
 	public void testPersistence() {
 		
-		CommitteeMember member = sub.addCommitteeMember("first", "last", "middle", false).save();
+		CommitteeMember member = sub.addCommitteeMember("first", "last", "middle");
+		member.addRole("Role 1");
+		member.addRole("Role 2");
+		member.save();
 		
 		// Commit and reopen a new transaction.
 		JPA.em().getTransaction().commit();
@@ -192,8 +232,9 @@ public class JpaCommitteeMemberImplTests extends UnitTest {
 		assertEquals("first",member.getFirstName());
 		assertEquals("last",member.getLastName());
 		assertEquals("middle",member.getMiddleName());
-		assertFalse(member.isCommitteeChair());
-		
+		assertEquals(2,member.getRoles().size());
+		assertEquals("Role 1",member.getRoles().get(0));
+		assertEquals("Role 2",member.getRoles().get(1));
 		
 		subRepo.findSubmission(sub.getId()).delete();
 		personRepo.findPerson(person.getId()).delete();
@@ -213,8 +254,11 @@ public class JpaCommitteeMemberImplTests extends UnitTest {
 	@Test
 	public void testDelete() {
 		
-		CommitteeMember member1 = sub.addCommitteeMember("first", "last", "middle", false).save();
-		CommitteeMember member2 = sub.addCommitteeMember("first", "last", "middle", false).save();
+		CommitteeMember member1 = sub.addCommitteeMember("first", "last", "middle").save();
+		CommitteeMember member2 = sub.addCommitteeMember("first", "last", "middle");
+		member2.addRole("Role 1");
+		member2.addRole("Role 2");
+		member2.save();
 
 		
 		List<CommitteeMember> members = sub.getCommitteeMembers();
@@ -241,10 +285,10 @@ public class JpaCommitteeMemberImplTests extends UnitTest {
 	@Test
 	public void testOrder() {
 		
-		CommitteeMember member4 = sub.addCommitteeMember("four", "last", "middle", false).save();
-		CommitteeMember member3 = sub.addCommitteeMember("three", "last", "middle", false).save();
-		CommitteeMember member2 = sub.addCommitteeMember("two", "last", "middle", false).save();
-		CommitteeMember member1 = sub.addCommitteeMember("one", "last", "middle", false).save();
+		CommitteeMember member4 = sub.addCommitteeMember("four", "last", "middle").save();
+		CommitteeMember member3 = sub.addCommitteeMember("three", "last", "middle").save();
+		CommitteeMember member2 = sub.addCommitteeMember("two", "last", "middle").save();
+		CommitteeMember member1 = sub.addCommitteeMember("one", "last", "middle").save();
 	
 		member1.setDisplayOrder(1);
 		member2.setDisplayOrder(2);
@@ -273,18 +317,18 @@ public class JpaCommitteeMemberImplTests extends UnitTest {
 	public void testAccess() {		
 		// Test that the owner can add a member
 		context.login(person);
-		CommitteeMember member1 = sub.addCommitteeMember("first", "last", "middle", false).save();
+		CommitteeMember member1 = sub.addCommitteeMember("first", "last", "middle").save();
 		member1.setFirstName("changed");
 		
 		// Test that a reviewer can add a member
 		context.login(MockPerson.getReviewer());
-		CommitteeMember member2 = sub.addCommitteeMember("first", "last", "middle", false).save();
+		CommitteeMember member2 = sub.addCommitteeMember("first", "last", "middle").save();
 		member2.setFirstName("changed");
 
 		// Test that a someone else can not add a member.
 		context.login(MockPerson.getStudent());
 		try {
-			sub.addCommitteeMember("first", "last", "middle", false).save();
+			sub.addCommitteeMember("first", "last", "middle").save();
 			fail("Someone else was able to add a member to a submission.");
 		} catch (SecurityException se) {
 			/* yay */

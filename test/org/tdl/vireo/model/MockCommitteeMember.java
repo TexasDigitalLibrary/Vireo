@@ -1,5 +1,8 @@
 package org.tdl.vireo.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * This is a simple mock committee member class that may be useful for testing.
@@ -20,6 +23,9 @@ public class MockCommitteeMember extends AbstractMock implements CommitteeMember
 	public String firstName;
 	public String lastName;
 	public String middleName;
+	public List<String> roles = new ArrayList<String>();
+	
+	@Deprecated
 	public boolean chair;
 
 	@Override
@@ -93,16 +99,44 @@ public class MockCommitteeMember extends AbstractMock implements CommitteeMember
 	}
 	
 	@Override
+	public List<String> getRoles() {
+		return roles;
+	}
+
+	@Override
+	public void addRole(String role) {
+		this.roles.add(role);
+	}
+
+	@Override
+	public void removeRole(String role) {
+		this.roles.remove(role);
+	}
+	
+	@Override
+	public String getFormattedRoles() {
+		String result = "";
+		for (String role : this.roles) {
+			if (result.length() != 0)
+				result += ", ";
+			result += role;
+		}
+		return result;
+	}
+	
+	@Override
 	public String getFormattedName(NameFormat format) {
 		return NameFormat.format(format, firstName, middleName, lastName, null);
 	}
 
 	@Override
+	@Deprecated
 	public boolean isCommitteeChair() {
 		return chair;
 	}
 
 	@Override
+	@Deprecated
 	public void setCommitteeChair(boolean chair) {
 		this.chair = chair;
 	}

@@ -460,7 +460,7 @@ public class ViewTab extends AbstractVireoController {
 			if(firstName == null && lastName == null)
 				throw new RuntimeException("Committee Member First or Last name is required.");
 
-			newMember = submission.addCommitteeMember(firstName, lastName, middleName, chair);
+			newMember = submission.addCommitteeMember(firstName, lastName, middleName, chair).save();
 
 		} catch (RuntimeException re) {
 			firstName = escapeJavaScript(firstName);

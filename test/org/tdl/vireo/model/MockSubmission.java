@@ -282,6 +282,7 @@ public class MockSubmission extends AbstractMock implements Submission {
 	}
 
 	@Override
+	@Deprecated
 	public CommitteeMember addCommitteeMember(String firstName,
 			String lastName, String middleName, Boolean chair) {
 		MockCommitteeMember member = new MockCommitteeMember();
@@ -289,6 +290,17 @@ public class MockSubmission extends AbstractMock implements Submission {
 		member.lastName = lastName;
 		member.middleName = middleName;
 		member.chair = chair;
+		committeeMembers.add(member);
+		return member;
+	}
+	
+	@Override
+	public CommitteeMember addCommitteeMember(String firstName,
+			String lastName, String middleName) {
+		MockCommitteeMember member = new MockCommitteeMember();
+		member.firstName = firstName;
+		member.lastName = lastName;
+		member.middleName = middleName;
 		committeeMembers.add(member);
 		return member;
 	}

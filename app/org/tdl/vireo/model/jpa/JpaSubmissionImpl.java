@@ -215,6 +215,13 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 			attachment.delete();
 		}
 		
+		// Explicitly delete the committee members because their roles will not
+		// delete on cascade.
+		List<CommitteeMember> membersCopy = new ArrayList<CommitteeMember>(committeeMembers);
+		for (CommitteeMember member : membersCopy) {
+			member.delete();
+		}
+		
 		// Delete all action logs associated with this submission
 		em().createQuery(
 			"DELETE FROM JpaActionLogImpl " +
@@ -522,10 +529,20 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	}
 
 	@Override
+	@Deprecated
 	public CommitteeMember addCommitteeMember(String firstName,
 			String lastName, String middleName, Boolean chair) {
 		CommitteeMember member = new JpaCommitteeMemberImpl(this, firstName,
 				lastName, middleName, chair);
+		committeeMembers.add(member);
+		return member;
+	}
+	
+	@Override
+	public CommitteeMember addCommitteeMember(String firstName,
+			String lastName, String middleName) {
+		CommitteeMember member = new JpaCommitteeMemberImpl(this, firstName,
+				lastName, middleName);
 		committeeMembers.add(member);
 		return member;
 	}

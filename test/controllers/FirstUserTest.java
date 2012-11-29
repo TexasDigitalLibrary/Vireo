@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.junit.Test;
 import org.tdl.vireo.model.College;
+import org.tdl.vireo.model.CommitteeMemberRoleType;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.Degree;
@@ -331,6 +332,30 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 
 		@Override
 		public List<GraduationMonth> findAllGraduationMonths() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+		@Override
+		public CommitteeMemberRoleType createCommitteeMemberRoleType(String name, DegreeLevel level) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public CommitteeMemberRoleType findCommitteeMemberRoleType(Long id) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public List<CommitteeMemberRoleType> findAllCommitteeMemberRoleTypes(DegreeLevel level) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public List<CommitteeMemberRoleType> findAllCommitteeMemberRoleTypes() {
 			// TODO Auto-generated method stub
 			return null;
 		}

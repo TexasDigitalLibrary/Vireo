@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.tdl.vireo.model.College;
+import org.tdl.vireo.model.CommitteeMemberRoleType;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.Degree;
@@ -127,6 +128,9 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 
 	@Override
 	public List<DocumentType> findAllDocumentTypes(DegreeLevel level) {
+		if (level == null)
+			return findAllDocumentTypes();
+		
 		return JpaDocumentTypeImpl.find("level = (?1)", level).fetch();
 	}
 
@@ -179,6 +183,33 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 		return (List) JpaGraduationMonthImpl.find("order by displayOrder").fetch();
 	}
 
+	// /////////////////////
+	// Committee Member Role Type Model
+	// /////////////////////
+	
+	@Override
+	public CommitteeMemberRoleType createCommitteeMemberRoleType(String name, DegreeLevel level) {
+		return new JpaCommitteeMemberRoleTypeImpl(name, level);
+	}
+
+	@Override
+	public CommitteeMemberRoleType findCommitteeMemberRoleType(Long id) {
+		return (CommitteeMemberRoleType) JpaCommitteeMemberRoleTypeImpl.findById(id);
+	}
+
+	@Override
+	public List<CommitteeMemberRoleType> findAllCommitteeMemberRoleTypes(DegreeLevel level) {
+		if (level == null)
+			return findAllCommitteeMemberRoleTypes();
+		
+		return JpaCommitteeMemberRoleTypeImpl.find("level = (?1)", level).fetch();
+	}
+
+	@Override
+	public List<CommitteeMemberRoleType> findAllCommitteeMemberRoleTypes() {
+		return (List) JpaCommitteeMemberRoleTypeImpl.find("order by displayOrder").fetch();
+	}
+	
 	// //////////////////////
 	// Email Template Model
 	// //////////////////////

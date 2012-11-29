@@ -307,6 +307,49 @@ public interface SettingsRepository {
 	 */
 	public List<GraduationMonth> findAllGraduationMonths();
 
+	// /////////////////////
+	// Committee Member Role Type Model
+	// /////////////////////
+
+	/**
+	 * Create a new committee member role type
+	 * 
+	 * @param name
+	 *            The name of the role.
+	 * @param level
+	 *            The level this role is available for.
+	 * @return A role type object.
+	 */
+	public CommitteeMemberRoleType createCommitteeMemberRoleType(String name,
+			DegreeLevel level);
+
+	/**
+	 * Find a committee member role type by id.
+	 * 
+	 * @param id
+	 *            The type's id.
+	 * @return The role type object, or null if not found.
+	 */
+	public CommitteeMemberRoleType findCommitteeMemberRoleType(Long id);
+
+	/**
+	 * Find all committee member role type objects in order that are valid for a
+	 * particular degree level.
+	 * 
+	 * @param level
+	 *            The degree level to find.
+	 * @return A list of all role types, or an empty list if there are none.
+	 */
+	public List<CommitteeMemberRoleType> findAllCommitteeMemberRoleTypes(
+			DegreeLevel level);
+
+	/**
+	 * Find all committee role type objects in order.
+	 * 
+	 * @return A list of all role types, or an empty list if there are none.
+	 */
+	public List<CommitteeMemberRoleType> findAllCommitteeMemberRoleTypes();
+
 	// //////////////////////
 	// Email Template Model
 	// //////////////////////
