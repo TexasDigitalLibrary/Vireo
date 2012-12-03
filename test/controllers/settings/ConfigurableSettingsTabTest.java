@@ -8,6 +8,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.tdl.vireo.model.College;
+import org.tdl.vireo.model.CommitteeMemberRoleType;
 import org.tdl.vireo.model.Degree;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.Department;
@@ -762,6 +763,108 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		// Cleanup
 		docType1.delete();
 		docType2.delete();
+	}
+	
+	/**
+	 * Test adding, editing, and removing a committee member role type.
+	 */
+	@Test
+	public void testAddingEditingRemovingCommitteeMemberRoleTypes() {
+		
+		LOGIN();
+		
+		// Get our urls and a list of fields.
+		final String ADD_URL = Router.reverse("settings.ConfigurableSettingsTab.addCommitteeMemberRoleTypeJSON").url;
+		final String EDIT_URL = Router.reverse("settings.ConfigurableSettingsTab.editCommitteeMemberRoleTypeJSON").url;
+		final String REMOVE_URL = Router.reverse("settings.ConfigurableSettingsTab.removeCommitteeMemberRoleTypeJSON").url;
+
+		// Add a new custom action
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("name","New Role Type");
+		params.put("level", String.valueOf(DegreeLevel.UNDERGRADUATE.getId()));
+		Response response = POST(ADD_URL,params);
+		assertContentMatch("\"success\": \"true\"", response);
+		
+		// Extract the id of the newly created action.
+		Pattern ID_PATTERN = Pattern.compile("\"id\": ([0-9]+), ");
+		Matcher tokenMatcher = ID_PATTERN.matcher(getContent(response));
+		assertTrue(tokenMatcher.find());
+		String idString = tokenMatcher.group(1);
+		assertNotNull(idString);
+		Long id = Long.valueOf(idString);
+		
+		// Verify the action exists in the database.
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		assertNotNull(settingRepo.findCommitteeMemberRoleType(id));
+		assertEquals("New Role Type",settingRepo.findCommitteeMemberRoleType(id).getName());
+		assertEquals(DegreeLevel.UNDERGRADUATE,settingRepo.findCommitteeMemberRoleType(id).getLevel());
+
+		
+		// Now edit the custom action
+		params.clear();
+		params.put("committeeMemberRoleTypeId","committeeMemberRoleType_"+id);
+		params.put("name", "Changed Name");
+		params.put("level", String.valueOf(DegreeLevel.DOCTORAL.getId()));
+		response = POST(EDIT_URL,params);
+		
+		// Verify the action was updated in the database.
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		assertEquals("Changed Name",settingRepo.findCommitteeMemberRoleType(id).getName());
+		assertEquals(DegreeLevel.DOCTORAL,settingRepo.findCommitteeMemberRoleType(id).getLevel());
+
+		
+		// Now remove the custom action
+		params.clear();
+		params.put("committeeMemberRoleTypeId","committeeMemberRoleType_"+id);
+		response = POST(REMOVE_URL,params);
+		assertContentMatch("\"success\": \"true\"", response);
+		
+		// Verify the action was deleted in the database;
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		assertNull(settingRepo.findCommitteeMemberRoleType(id));
+	}
+	
+	/**
+	 * Test reordering a set of document types.
+	 */
+	@Test
+	public void testReorderingCommitteeMemberRoleTypes() {
+		LOGIN();
+		
+		final String REORDER_URL = Router.reverse("settings.ConfigurableSettingsTab.reorderCommitteeMemberRoleTypesJSON").url;
+		
+		// Create two custom actions:
+		CommitteeMemberRoleType roleType1 = settingRepo.createCommitteeMemberRoleType("test one", DegreeLevel.DOCTORAL).save();
+		CommitteeMemberRoleType roleType2 = settingRepo.createCommitteeMemberRoleType("test two", DegreeLevel.MASTERS).save();
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
+		// Reorder the custom actions
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("committeeMemberRoleTypeIds", "committeeMemberRoleType_"+roleType2.getId()+",committeeMemberRoleType_"+roleType1.getId());
+		Response response = POST(REORDER_URL,params);
+		assertContentMatch("\"success\": \"true\"", response);
+		
+		// Verify that the actions were reorderd
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		roleType1 = settingRepo.findCommitteeMemberRoleType(roleType1.getId());
+		roleType2 = settingRepo.findCommitteeMemberRoleType(roleType2.getId());
+		
+		assertTrue(roleType1.getDisplayOrder() > roleType2.getDisplayOrder());
+		
+		// Cleanup
+		roleType1.delete();
+		roleType2.delete();
 	}
 	
 	/**

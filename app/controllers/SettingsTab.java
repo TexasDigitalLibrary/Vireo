@@ -10,6 +10,7 @@ import javax.mail.internet.InternetAddress;
 import org.tdl.vireo.constant.AppPref;
 import org.tdl.vireo.model.AbstractOrderedModel;
 import org.tdl.vireo.model.College;
+import org.tdl.vireo.model.CommitteeMemberRoleType;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.Degree;
 import org.tdl.vireo.model.Department;
@@ -191,6 +192,10 @@ public class SettingsTab extends AbstractVireoController {
 			} else if (type.equals(DocumentType.class)) {
 				DocumentType docType = settingRepo.findDocumentType(id);
 				models.add((T) docType);
+				
+			} else if (type.equals(CommitteeMemberRoleType.class)) {
+				CommitteeMemberRoleType roleType = settingRepo.findCommitteeMemberRoleType(id);
+				models.add((T) roleType);
 				
 			} else if (type.equals(GraduationMonth.class)) {
 				GraduationMonth month = settingRepo.findGraduationMonth(id);

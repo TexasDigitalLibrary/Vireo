@@ -12,6 +12,8 @@ import org.apache.commons.lang.LocaleUtils;
 import javax.persistence.PersistenceException;
 
 import org.tdl.vireo.model.College;
+import org.tdl.vireo.model.CommitteeMember;
+import org.tdl.vireo.model.CommitteeMemberRoleType;
 import org.tdl.vireo.model.Degree;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.Department;
@@ -53,6 +55,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 		List<Major> majors = settingRepo.findAllMajors();
 		List<Degree> degrees = settingRepo.findAllDegrees();
 		List<DocumentType> docTypes = settingRepo.findAllDocumentTypes();
+		List<CommitteeMemberRoleType> roleTypes = settingRepo.findAllCommitteeMemberRoleTypes();
 		List<GraduationMonth> gradMonths = settingRepo.findAllGraduationMonths();
 				
 		Locale locales[] = Locale.getAvailableLocales();
@@ -77,7 +80,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 				embargos,
 				
 				// Sortable lists
-				colleges, programs, departments, majors, degrees, docTypes, gradMonths, languages,
+				colleges, programs, departments, majors, degrees, docTypes, roleTypes, gradMonths, languages,
 				
 				// Locales
 				localeLanguages);
@@ -1039,6 +1042,151 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			renderJSON("{ \"success\": \"true\" }");
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to reoder document types");
+			String message = escapeJavaScript(re.getMessage());
+			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
+		}
+	}
+	
+	
+	// ////////////////////////////////////////////
+	// COMMITTEE MEMBER ROLE TYPES AJAX
+	// ////////////////////////////////////////////
+
+	/**
+	 * Create a new CommitteeMemberRoleType. The id of the new roleType will be returned.
+	 * 
+	 * @param name
+	 *            The name of the new roleType
+	 * @param level 
+	 * 			  The level id for the new roleType
+	 */
+	@Security(RoleType.MANAGER)
+	public static void addCommitteeMemberRoleTypeJSON(String name, int level) {
+
+		try {
+			if (name == null || name.trim().length() == 0)
+				throw new IllegalArgumentException("Name is required");
+
+			DegreeLevel degreeLevel = DegreeLevel.find(level);
+
+			// Add the new type to the end of the list.
+			List<CommitteeMemberRoleType> roleTypes = settingRepo.findAllCommitteeMemberRoleTypes();
+
+			CommitteeMemberRoleType roleType = settingRepo.createCommitteeMemberRoleType(name, degreeLevel);
+			roleTypes.add(roleType);
+
+			saveModelOrder(roleTypes);
+
+			name = escapeJavaScript(roleType.getName());
+
+			renderJSON("{ \"success\": \"true\", \"id\": " + roleType.getId()	+ ", \"name\": \"" + name + "\", \"level\": "+degreeLevel.getId()+" }");
+		} catch (IllegalArgumentException iae) {
+			String message = escapeJavaScript(iae.getMessage());			
+			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
+			
+		} catch (PersistenceException pe) {
+			name = escapeJavaScript(name);
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another committee member role type allready exists with the name: '"+name+"'\" }");
+			
+		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to add committee member role type");
+			String message = escapeJavaScript(re.getMessage());
+			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
+		}
+	}
+
+	/**
+	 * Edit an existing roleType's name. Both the id and new name will be
+	 * returned.
+	 * 
+	 * @param committeeMemberRoleTypeId
+	 *            The id of the roleType to be edited, in the form "committeeMemberRoleType_id"
+	 * @param name
+	 *            The new name
+	 * @param level
+	 * 			  The new level id
+	 * 
+	 */
+	@Security(RoleType.MANAGER)
+	public static void editCommitteeMemberRoleTypeJSON(String committeeMemberRoleTypeId, String name, int level) {
+		try {
+			// Check input
+			if (name == null || name.trim().length() == 0)
+				throw new IllegalArgumentException("Name is required");
+
+			DegreeLevel degreeLevel = DegreeLevel.find(level);
+
+			// Save the new type
+			String[] parts = committeeMemberRoleTypeId.split("_");
+			Long id = Long.valueOf(parts[1]);
+			CommitteeMemberRoleType roleType = settingRepo.findCommitteeMemberRoleType(id);
+			roleType.setName(name);
+			roleType.setLevel(degreeLevel);
+			roleType.save();
+
+			name = escapeJavaScript(name);
+
+			renderJSON("{ \"success\": \"true\", \"id\": " + roleType.getId() + ", \"name\": \"" + name + "\", \"level\": "+degreeLevel.getId()+" }");
+		} catch (IllegalArgumentException iae) {
+			String message = escapeJavaScript(iae.getMessage());			
+			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
+			
+		} catch (PersistenceException pe) {
+			name = escapeJavaScript(name);
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another committee member role type allready exists with the name: '"+name+"'\" }");
+			
+		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to edit committee member role type");
+			String message = escapeJavaScript(re.getMessage());
+			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
+		}
+	}
+
+	/**
+	 * Remove an existing committee member role type
+	 * 
+	 * @param committeeMemberRoleTypeId
+	 *            The id of the roleType to be removed of the form "committeeMemberRoleType_id"
+	 */
+	@Security(RoleType.MANAGER)
+	public static void removeCommitteeMemberRoleTypeJSON(String committeeMemberRoleTypeId) {
+		try {
+			// Delete the old documentType
+			String[] parts = committeeMemberRoleTypeId.split("_");
+			Long id = Long.valueOf(parts[1]);
+			CommitteeMemberRoleType roleType = settingRepo.findCommitteeMemberRoleType(id);
+			roleType.delete();
+
+			renderJSON("{ \"success\": \"true\" }");
+		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to remove committee member role type");
+			String message = escapeJavaScript(re.getMessage());
+			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
+					+ "\" }");
+		}
+	}
+
+	/**
+	 * Reorder a list of committee member role types.
+	 * 
+	 * @param committeeMemberRoleTypeIds
+	 *            An ordered list of ids in the form:
+	 *            "committeeMemberRoleType_1,committeeMemberRoleType_3,committeeMemberRoleType_2"
+	 */
+	@Security(RoleType.MANAGER)
+	public static void reorderCommitteeMemberRoleTypesJSON(String committeeMemberRoleTypeIds) {
+
+		try {
+
+			if (committeeMemberRoleTypeIds != null && committeeMemberRoleTypeIds.trim().length() > 0) {
+				// Save the new order
+				List<CommitteeMemberRoleType> roleTypes = resolveIds(committeeMemberRoleTypeIds, CommitteeMemberRoleType.class);
+				saveModelOrder(roleTypes);
+			}
+
+			renderJSON("{ \"success\": \"true\" }");
+		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to reoder committee member role types");
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
 		}

@@ -159,6 +159,27 @@ jQuery(document).ready(function(){
      jQuery("#add-documentType-save").click(saveAddActionHandler('documentType','@{settings.ConfigurableSettingsTab.addDocumentTypeJSON()}'));
      jQuery("#add-documentType-cancel").click(cancelAddActionHandler('documentType'));
      
+     
+     // Handlers for the sortable committee member role types list
+     jQuery("#committeeMemberRoleType-list, #committeeMemberRoleType-remove").sortable({
+         connectWith: ".committeeMemberRoleType-sortable",
+         placeholder: "placeholder",
+         update: sortableUpdateHandler(
+                    'committeeMemberRoleType',
+                    '@{settings.ConfigurableSettingsTab.reorderCommitteeMemberRoleTypesJSON()}',
+                    '@{settings.ConfigurableSettingsTab.removeCommitteeMemberRoleTypeJSON()}'
+                    )
+     }).disableSelection().enableSelection();
+        
+     jQuery("#committeeMemberRoleType-list .committeeMemberRoleType-editable").live("click",sortableStartEditHandler());
+     jQuery("#committeeMemberRoleType-list .icon-remove").live("click",sortableCancelEditHandler());     
+     jQuery("#committeeMemberRoleType-list .icon-ok").live("click",sortableSaveEditHandler('committeeMemberRoleType','@{settings.ConfigurableSettingsTab.editCommitteeMemberRoleTypeJSON()}'));
+     jQuery("#committeeMemberRoleType-list input").live("keypress",sortableSaveEditHandler('committeeMemberRoleType','@{settings.ConfigurableSettingsTab.editCommitteeMemberRoleTypeJSON()}'));
+     jQuery("#committeeMemberRoleType-list select").live("keypress",sortableSaveEditHandler('committeeMemberRoleType','@{settings.ConfigurableSettingsTab.editCommitteeMemberRoleTypeJSON()}'));
+     jQuery("#add-committeeMemberRoleType-link").click(slideToggleHandler("#add-committeeMemberRoleType-dialog"));
+     jQuery("#add-committeeMemberRoleType-save").click(saveAddActionHandler('committeeMemberRoleType','@{settings.ConfigurableSettingsTab.addCommitteeMemberRoleTypeJSON()}'));
+     jQuery("#add-committeeMemberRoleType-cancel").click(cancelAddActionHandler('committeeMemberRoleType'));
+     
      // Handlers for the sortable graduation months list
      jQuery("#graduationMonth-list, #graduationMonth-remove").sortable({
          connectWith: ".graduationMonth-sortable",
@@ -523,6 +544,78 @@ jQuery(document).ready(function(){
 				                <div class="controls">
 				                    <button id="add-documentType-save" class="btn btn-primary">Add Document Type</button>
 				                    <button id="add-documentType-cancel" class="btn">Cancel</button>
+				                </div>
+				            </div>
+				        </fieldset>
+				    </form>
+				</div>
+				<br/><br/>
+			</div>
+		</div>
+	</div>
+	
+	
+	<div class="accordion-group">
+		<div class="accordion-heading">
+			<a class="accordion-toggle" data-toggle="collapse" href="#availableCommitteeMemberRoleTypes"><strong>Available Committee Member Role Types</strong></a>			
+		</div>
+		<div id="availableCommitteeMemberRoleTypes" class="accordion-body collapse ${ "availableCommitteeMemberRoleTypes".equals(flash.get("open")) ? "in" : "" }">
+			<div class="accordion-inner">
+				<h2>AVAILABLE COMMITTEE MEMBER ROLE TYPES</h2>
+				
+				
+				<div class="wrap settings-sortable">
+				    <ul id="committeeMemberRoleType-remove" class="committeeMemberRoleType-sortable settings-sortable-remove" #{if roleTypes.size() == 0}style="display: none;"#{/if}>
+				       <p class="info"><em class="icon-trash"></em> Remove items by dragging them to the trash can</p>
+				    </ul>
+				    <ol id="committeeMemberRoleType-list" class="committeeMemberRoleType-sortable settings-sortable-list">
+				        #{list items:roleTypes, as:'roleType'}
+				           <li id="committeeMemberRoleType_${roleType.getId()}"><a class="committeeMemberRoleType-editable" href="javascript:void(0);"><em class="icon-pencil"></em> <span class="name">${roleType.getName()}</span> <span class="level info">(${roleType.getLevel().name()})</span></a></li>    
+				        #{/list}
+				    </ol>
+				</div>
+				
+				<a id="add-committeeMemberRoleType-link" href="#">[ADD NEW]</a>
+				
+				<div id="add-committeeMemberRoleType-dialog" style="display: none;">
+				    <form class="form-horizontal">
+				        <fieldset>
+				        	<div class="control-group warning">
+				        		<label class="control-label">Warning</label>
+				        		<div class="controls">
+				        			<span class="help-block" style="max-width: 530px;">
+				        				Committee member role types from outside the supported list may not be supported by the
+				        				export formats. The supported list of role types is: "Committee Chair", "Committee Co-Chair",
+				        				"Committee Supervisor", "Committee Co-Supervisor", "Committee Member", "Department Head", 
+				        				"Advisor", and "Director of Research".
+				        			</span>
+				        		</div>
+				        	</div>
+				            <div class="control-group">
+				                <label class="control-label" for="add-committeeMemberRoleType-name">New Role Type</label>
+				                <div class="controls">
+				                    <input type="text" class="input-large" id="add-committeeMemberRoleType-name"
+					                    data-provide="typeahead" data-items="20" data-min-length="0" 
+					                    data-source='["Committee Chair","Committee Co-Chair","Committee Supervisor","Committee Co-Supervisor","Committee Member","Department Head","Advisor","Director of Research"]'
+					                    autocomplete="off"
+				                    />
+				                </div>
+				            </div>
+				            <div class="control-group">
+				                <label class="control-label" for="add-committeeMemberRoleType-level">Degree Level</label>
+				                <div class="controls">
+				                    <select id="add-committeeMemberRoleType-level">
+				                        <option selected="true" value="-1">...choose</option>
+				                        <option value="${UNDERGRADUATE.getId()}">${UNDERGRADUATE.name()}</option>
+				                        <option value="${MASTERS.getId()}">${MASTERS.name()}</option>
+				                        <option value="${DOCTORAL.getId()}">${DOCTORAL.name()}</option>
+				                    </select>
+				                </div>
+				            </div>
+				            <div class="control-group">
+				                <div class="controls">
+				                    <button id="add-committeeMemberRoleType-save" class="btn btn-primary">Add Committee Member Role Type</button>
+				                    <button id="add-committeeMemberRoleType-cancel" class="btn">Cancel</button>
 				                </div>
 				            </div>
 				        </fieldset>
