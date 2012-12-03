@@ -181,13 +181,13 @@ in results.
                         out.print(sub.getCommitteeEmbargoApprovalDate().format('MM/dd/yyyy'));
                      break;                          
                  case COMMITTEE_MEMBERS:
-                     boolean first = true;
                      for (org.tdl.vireo.model.CommitteeMember member : sub.getCommitteeMembers()) {
-                        if (!first)
-                            out.print("; ");
-                        else
-                            first = false;
-                        out.print(member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST));                             
+                     	out.print("<p>");
+                        out.print(member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST));  
+                        if (member.getRoles().size() > 0) {
+                        	out.print(" ("+member.getFormattedRoles()+")");
+                        }
+                        out.print("</p>");
                      }
                      break;
                  case COMMITTEE_CONTACT_EMAIL:

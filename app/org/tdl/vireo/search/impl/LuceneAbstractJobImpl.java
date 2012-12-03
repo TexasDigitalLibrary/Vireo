@@ -277,7 +277,7 @@ public abstract class LuceneAbstractJobImpl extends Job {
 		String committeeMembers = "";
 		for (CommitteeMember member : sub.getCommitteeMembers()) {
 			// TODO: sort by display order?
-			committeeMembers += member.getLastName() + " " + member.getFirstName() + " " + member.getLastName();
+			committeeMembers += member.getFormattedName(NameFormat.LAST_FIRST) + " " + member.getFormattedRoles();
 		}
 		searchText.append(committeeMembers).append(" ");
 
