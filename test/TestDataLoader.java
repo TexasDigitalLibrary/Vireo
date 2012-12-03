@@ -14,6 +14,7 @@ import org.tdl.vireo.export.Depositor;
 import org.tdl.vireo.export.Packager;
 import org.tdl.vireo.export.impl.FileDepositorImpl;
 import org.tdl.vireo.model.AttachmentType;
+import org.tdl.vireo.model.CommitteeMember;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.DepositLocation;
@@ -354,6 +355,24 @@ public class TestDataLoader extends Job {
 	};
 	
 	/**
+	 * Initial Committee Member Role Types to create
+	 */
+	
+	private static final DegreeLevelArray[] ROLETYPES_DEFINITIONS = {
+		new DegreeLevelArray("Committee Member", DegreeLevel.DOCTORAL),
+		new DegreeLevelArray("Committee Chair", DegreeLevel.DOCTORAL),
+		new DegreeLevelArray("Committee Co-Chair", DegreeLevel.DOCTORAL),
+		new DegreeLevelArray("Directory of Research", DegreeLevel.DOCTORAL),
+
+
+		new DegreeLevelArray("Committee Chair", DegreeLevel.MASTERS),
+		new DegreeLevelArray("Committee Member", DegreeLevel.MASTERS),
+
+		new DegreeLevelArray("Advisor", DegreeLevel.UNDERGRADUATE),
+		new DegreeLevelArray("Department Head", DegreeLevel.UNDERGRADUATE)
+	};
+	
+	/**
 	 * Initial Graduation Months to create
 	 */
 	
@@ -585,6 +604,11 @@ public class TestDataLoader extends Job {
 			settingRepo.createDocumentType(docTypeDefinition.name, docTypeDefinition.degreeLevel).save();
 		}
 		
+		// Create all committee member role types
+		for(DegreeLevelArray roleTypeDefinition : ROLETYPES_DEFINITIONS) {
+			settingRepo.createCommitteeMemberRoleType(roleTypeDefinition.name, roleTypeDefinition.degreeLevel).save();
+		}
+		
 		// Create all graduation months
 		for(int gradMonthDefinition : GRAD_MONTHS_DEFINITIONS) {
 			settingRepo.createGraduationMonth(gradMonthDefinition).save();
@@ -684,7 +708,7 @@ public class TestDataLoader extends Job {
 			
 			context.restoreAuthorization();
 			context.login(student);
-			Submission sub = subRepo.createSubmission(student);
+			Submission sub = subRepo.createSubmission(student).save();
 
 			if(i>0){
 				sub.setStudentFirstName(studentName[0]);
@@ -702,8 +726,18 @@ public class TestDataLoader extends Job {
 					String[] memberName = generateRandomName(random, FAMOUS_NAMES);
 					if (firstMemberName == null)
 						firstMemberName = memberName;
-					boolean chair = random.nextBoolean();
-					sub.addCommitteeMember(memberName[0], memberName[1], memberName[2], chair);
+					CommitteeMember member = sub.addCommitteeMember(memberName[0], memberName[1], memberName[2]).save();
+					DegreeLevelArray role = ROLETYPES_DEFINITIONS[random.nextInt(ROLETYPES_DEFINITIONS.length-1)];
+					member.addRole(role.name);
+					
+					if (random.nextInt(100) > 70) {
+						role = ROLETYPES_DEFINITIONS[random.nextInt(ROLETYPES_DEFINITIONS.length-1)];
+						try {
+							// We could pick the same role twice.
+							member.addRole(role.name);
+						} catch (IllegalArgumentException iae) {/* ignore */};
+					}
+					member.save();
 				}
 				
 				if (random.nextInt(100) > 5 && firstMemberName != null)

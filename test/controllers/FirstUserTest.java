@@ -20,6 +20,7 @@ import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.Major;
+import org.tdl.vireo.model.MockCommitteeMemberRoleType;
 import org.tdl.vireo.model.MockConfiguration;
 import org.tdl.vireo.model.MockEmbargoType;
 import org.tdl.vireo.model.MockPerson;
@@ -83,6 +84,10 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 			assertNotNull(MockPersonRepository.lastPersonCreated);
 			assertFalse(Application.firstUser);
 			
+			// Test that the default values were created.
+			assertEquals(4,MockSettingsRepository.mockEmbargos.size());
+			assertEquals(6,MockSettingsRepository.mockRoleTypes.size());
+
 			
 		} finally {
 			Application.personRepo = personRepo;
@@ -164,6 +169,7 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 
 		public static List<MockEmbargoType> mockEmbargos = new ArrayList<MockEmbargoType>();
 		public static List<MockConfiguration> mockConfigs = new ArrayList<MockConfiguration>();
+		public static List<MockCommitteeMemberRoleType> mockRoleTypes = new ArrayList<MockCommitteeMemberRoleType>();
 		
 		@Override
 		public Degree createDegree(String name, DegreeLevel level) {
@@ -338,8 +344,14 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 		
 		@Override
 		public CommitteeMemberRoleType createCommitteeMemberRoleType(String name, DegreeLevel level) {
-			// TODO Auto-generated method stub
-			return null;
+			
+			MockCommitteeMemberRoleType roleType = new MockCommitteeMemberRoleType();
+			roleType.name = name;
+			roleType.level = level;
+			
+			mockRoleTypes.add(roleType);
+			
+			return roleType;
 		}
 
 		@Override
