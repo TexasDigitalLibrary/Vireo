@@ -430,10 +430,10 @@ public class ViewTab extends AbstractVireoController {
 	 * @param firstName (The committee members first name)
 	 * @param lastName (The committee members last name)
 	 * @param middleName (The committee members middle name)
-	 * @param chair (A boolean to flag if the committee member is a chair)
+	 * @param roles (List of roles the committee member has) - optional
 	 */
 	@Security(RoleType.REVIEWER)
-	public static void addCommitteeMemberJSON(Long subId, String firstName, String lastName, String middleName, Boolean chair){
+	public static void addCommitteeMemberJSON(Long subId, String firstName, String lastName, String middleName){
 		if(firstName != null){
 			firstName = firstName.trim();
 		
@@ -452,6 +452,10 @@ public class ViewTab extends AbstractVireoController {
 			if("none".equals(middleName.toLowerCase()) || "null".equals(middleName.toLowerCase()))
 				middleName=null;
 		}
+		
+		String[] roles = params.get("roles", String[].class);
+
+		
 		Submission submission = subRepo.findSubmission(subId);		
 		CommitteeMember newMember = null;
 		
@@ -460,14 +464,22 @@ public class ViewTab extends AbstractVireoController {
 			if(firstName == null && lastName == null)
 				throw new RuntimeException("Committee Member First or Last name is required.");
 
-			newMember = submission.addCommitteeMember(firstName, lastName, middleName, chair).save();
+			newMember = submission.addCommitteeMember(firstName, lastName, middleName).save();
+			if (roles != null) {
+				for(String role : roles) {
+					newMember.addRole(role);
+				}
+			}
+			newMember.save();
 
 		} catch (RuntimeException re) {
 			firstName = escapeJavaScript(firstName);
 			lastName = escapeJavaScript(lastName);
 			middleName = escapeJavaScript(middleName);
+			String rolesJSON = toJSON(roles);
+
 			
-			renderJSON("{ \"success\": false, \"firstName\": \""+firstName+"\", \"lastName\": \""+lastName+"\", \"middleName\": \""+middleName+"\", \"chair\": \""+chair+"\", \"message\": \""+re.getMessage()+"\" }");
+			renderJSON("{ \"success\": false, \"firstName\": \""+firstName+"\", \"lastName\": \""+lastName+"\", \"middleName\": \""+middleName+"\", \"roles\": "+rolesJSON+", \"message\": \""+re.getMessage()+"\" }");
 		}
 
 		submission.save();
@@ -476,8 +488,10 @@ public class ViewTab extends AbstractVireoController {
 		lastName = escapeJavaScript(lastName);
 		middleName = escapeJavaScript(middleName);
 		Long id = newMember.getId();
+		String rolesJSON = toJSON(roles);
 
-		String json = "{ \"success\": true, \"id\": \""+id+"\", \"firstName\": \""+firstName+"\", \"lastName\": \""+lastName+"\", \"middleName\": \""+middleName+"\", \"chair\": \""+chair+"\" }";
+
+		String json = "{ \"success\": true, \"id\": \""+id+"\", \"firstName\": \""+firstName+"\", \"lastName\": \""+lastName+"\", \"middleName\": \""+middleName+"\", \"roles\": "+rolesJSON+" }";
 
 		renderJSON(json);
 
@@ -490,11 +504,11 @@ public class ViewTab extends AbstractVireoController {
 	 * @param firstName (The committee members first name)
 	 * @param lastName (The committee members last name)
 	 * @param middleName (The committee members middle name)
-	 * @param chair (A boolean to flag if a committee member is a chair)
+	 * @param roles (List of roles the committee member has) - optional
 	 */
 	
 	@Security(RoleType.REVIEWER)
-	public static void updateCommitteeMemberJSON(Long id, String firstName, String lastName, String middleName, Boolean chair){
+	public static void updateCommitteeMemberJSON(Long id, String firstName, String lastName, String middleName){
 		if(firstName != null){
 			firstName = firstName.trim();
 		
@@ -513,6 +527,9 @@ public class ViewTab extends AbstractVireoController {
 			if("none".equals(middleName.toLowerCase()) || "null".equals(middleName.toLowerCase()))
 				middleName=null;
 		}
+		
+		String[] roles = params.get("roles", String[].class);
+		
 		try {
 
 			if(firstName == null && lastName == null)
@@ -523,7 +540,12 @@ public class ViewTab extends AbstractVireoController {
 			committeeMember.setFirstName(firstName);
 			committeeMember.setLastName(lastName);
 			committeeMember.setMiddleName(middleName);
-			committeeMember.setCommitteeChair(chair);
+			committeeMember.getRoles().clear();
+			if (roles != null) {
+				for(String role : roles) {
+					committeeMember.addRole(role);
+				}
+			}
 
 			committeeMember.save();
 
@@ -531,15 +553,17 @@ public class ViewTab extends AbstractVireoController {
 			firstName = escapeJavaScript(firstName);
 			lastName = escapeJavaScript(lastName);
 			middleName = escapeJavaScript(middleName);
+			String rolesJSON = toJSON(roles);
 
-			renderJSON("{ \"success\": false, \"id\": \""+id+"\", \"firstName\": \""+firstName+"\", \"lastName\": \""+lastName+"\", \"middleName\": \""+middleName+"\", \"chair\": \""+chair+"\", \"message\": \""+re.getMessage()+"\" }");
+			renderJSON("{ \"success\": false, \"id\": \""+id+"\", \"firstName\": \""+firstName+"\", \"lastName\": \""+lastName+"\", \"middleName\": \""+middleName+"\", \"roles\": "+rolesJSON+", \"message\": \""+re.getMessage()+"\" }");
 		}
 
 		firstName = escapeJavaScript(firstName);
 		lastName = escapeJavaScript(lastName);
 		middleName = escapeJavaScript(middleName);
+		String rolesJSON = toJSON(roles);
 
-		String json = "{ \"success\": true, \"id\": \""+id+"\", \"firstName\": \""+firstName+"\", \"lastName\": \""+lastName+"\", \"middleName\": \""+middleName+"\", \"chair\": \""+chair+"\" }";
+		String json = "{ \"success\": true, \"id\": \""+id+"\", \"firstName\": \""+firstName+"\", \"lastName\": \""+lastName+"\", \"middleName\": \""+middleName+"\", \"roles\": "+rolesJSON+" }";
 
 		renderJSON(json);
 

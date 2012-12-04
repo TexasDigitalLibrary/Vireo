@@ -110,6 +110,31 @@ public abstract class AbstractVireoController extends Controller {
 	}
 	
 	/**
+	 * Convert a simple java array of strings into a JSON object.
+	 * 
+	 * @param values
+	 *            The array to be encoded as JSON.
+	 * @return A json string.
+	 */
+	protected static String toJSON(String[] values) {
+		
+		if (values == null)
+			return "[]";
+		
+		String result = "[";
+		for (String value: values) {
+			if (result.length() > 1) {
+				result += ",";
+			}
+			result += "\""+escapeJavaScript(value)+"\"";
+		}
+		
+		result += "]";
+		
+		return result;
+	}
+	
+	/**
 	 * Convert plain text into passable HTML. Separate text into paragraphs,
 	 * preserve intending, and try not to mess with any embedded tags.
 	 * 

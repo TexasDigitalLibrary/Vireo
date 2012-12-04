@@ -121,27 +121,52 @@ function editCommitteeMemberHandler(){
 			var firstName = jQuery.trim(escapeQuotes(jQuery(this).find(".firstName").text()));
 			var lastName = jQuery.trim(escapeQuotes(jQuery(this).find(".lastName").text()));
 			var middleName = jQuery.trim(escapeQuotes(jQuery(this).find(".middleName").text()));
-
-			var chair = (jQuery(this).find(".chair").text()=="chair");
-			var checked = "";
-			if(chair){
-				checked = 'checked="checked"';
-			}
+			var currentRoles = new Array();
+			jQuery(this).find(".role").each(function () {
+				currentRoles.push(jQuery.trim(escapeQuotes(jQuery(this).text())));
+			});
+			
+			// get available roles
+			var availableRoles = jQuery.parseJSON(jQuery("#committeeMembers").attr("data-roles"));
 
 			var markup = '<div class="editing"><table>';
 			markup += '<tr><td><b>Last Name</b></td><td><b>First Name</b></td><td><b>Middle Name</b></td><td></td></tr>'
-				markup += '<tr>'
-					markup += '<td><input id="memberId" class="hidden" type="hidden" value="'+memberId+'" />';
+			markup += '<tr>'
+			markup += '<td><input id="memberId" class="hidden" type="hidden" value="'+memberId+'" />';
 			markup += '<input id="cmLastName" class="span2" type="text" value="'+lastName+'" /></td>';
 			markup += '<td><input id="cmFirstName" class="span2" type="text" value="'+firstName+'" /></td>';
 			markup += '<td><input id="cmMiddleName" class="span2" type="text" value="'+middleName+'" /></td>';
-			markup += '<td><input id="chair" type="checkbox" class="checkbox" '+checked+' > chair</input></td>';
+			markup += '</tr>';
+			markup += '<tr><td style="text-align:right;"><b>Roles:</b></td>';
+			markup += '<td colspan="2"><select id="cmRoles" multiple="multiple">';	
+			
+			// List all of the normal roles
+			jQuery.each(availableRoles, function(index, value) {
+				var selected = '';				
+				if (currentRoles.indexOf(value) > -1)
+					var selected = 'selected="selected"';
+				
+				markup += '<option value="'+value+'" '+selected+'>'+value+'</option>'
+			});
+			// If a current role is not in the list of available roles, add it to the end of the list.
+			jQuery.each(currentRoles, function(index, value) {
+				if (availableRoles.indexOf(value) == -1)
+					markup += '<option value="'+value+'" selected="selected">'+value+'</option>'
+			});
+
+			markup += '</select></td>';
 			markup += '</tr>';
 			markup += '</table><div style="padding:5px;"><a class="btn btn-danger btn-mini remove-committee-member" style="margin-right:10px;">delete</a>&nbsp;<i class="icon-remove" title="cancel"></i>&nbsp;<i class="icon-ok" title="commit"></i></div></div>';
 
 			jQuery(this).replaceWith(markup);
 
 			event.stopPropagation();
+			
+			jQuery("#cmRoles").multiselect({
+				header: false,
+				selectedList: 1,
+				noneSelectedText: "No roles selected"
+			});
 		}
 	}
 }
@@ -159,19 +184,37 @@ function addCommitteeMemberHandler(){
 			jQuery(this).find(".tooltip-icon").remove();
 			jQuery("#backup").remove();
 
+			// get available roles
+			var availableRoles = jQuery.parseJSON(jQuery("#committeeMembers").attr("data-roles"));
+			
 			var markup = '<li class="add"><div class="editing"><table>';
 			markup += '<tr><td><b>Last Name</b></td><td><b>First Name</b></td><td><b>Middle Name</b></td><td></td></tr>'
-				markup += '<tr>'
-					markup += '<td><input id="cmLastName" class="span2" type="text" /></td>';
+			markup += '<tr>'
+			markup += '<td><input id="cmLastName" class="span2" type="text" /></td>';
 			markup += '<td><input id="cmFirstName" class="span2" type="text" /></td>';
 			markup += '<td><input id="cmMiddleName" class="span2" type="text" /></td>';
-			markup += '<td><input id="chair" type="checkbox" class="checkbox"> chair</input></td>';
+			markup += '</tr>';
+			markup += '<tr><td style="text-align:right;"><b>Roles:</b></td>';
+			markup += '<td colspan="2"><select id="cmRoles" multiple="multiple">';	
+			
+			// List all of the normal roles
+			jQuery.each(availableRoles, function(index, value) {
+				markup += '<option value="'+value+'">'+value+'</option>'
+			});
+			
+			markup += '</select></td>';
 			markup += '</tr>';
 			markup += '</table><i class="icon-remove" title="cancel"></i>&nbsp<i class="icon-ok" title="commit"></i></div></li>';
 
 			jQuery(markup).insertBefore('#add_new_member');
 
 			event.stopPropagation();
+			
+			jQuery("#cmRoles").multiselect({
+				header: false,
+				selectedList: 1,
+				noneSelectedText: "No roles selected"
+			});
 		}
 	}
 }
@@ -225,7 +268,7 @@ function commitChangesHandler(eventTarget, jsonURL, committeeURL, subId){
 	var committeeFirstName;
 	var committeeLastName;
 	var committeeMiddleName;
-	var committeeChair;
+	var committeeRoles;
 	var committeeId;
 	
 	if(eventTarget.closest("#committeeMembers").length){
@@ -233,7 +276,9 @@ function commitChangesHandler(eventTarget, jsonURL, committeeURL, subId){
 		committeeFirstName = jQuery("#cmFirstName").val();
 		committeeLastName = jQuery("#cmLastName").val();
 		committeeMiddleName = jQuery("#cmMiddleName").val();
-		committeeChair = jQuery("#chair").is(':checked');
+		committeeRoles = jQuery("#cmRoles").val();
+	    if (committeeRoles == null)
+	    	committeeRoles = new Array();
 		committeeId = jQuery("#memberId").val();
 	}
 	
@@ -247,7 +292,7 @@ function commitChangesHandler(eventTarget, jsonURL, committeeURL, subId){
 				firstName:committeeFirstName,
 				lastName:committeeLastName,
 				middleName:committeeMiddleName,
-				chair:committeeChair
+				roles:committeeRoles
 			},
 			dataType:'json',
 			type:'POST',
@@ -256,12 +301,11 @@ function commitChangesHandler(eventTarget, jsonURL, committeeURL, subId){
 					markup = '<div class="editCommitteeMember">';
 					markup += '<span class="lastName">'+data.lastName+'</span><span class="seperator">,&nbsp;</span>';
 					markup += '<span class="firstName">'+data.firstName+'&nbsp;</span>';
-					markup += '<span class="middleName">'+data.middleName+'&nbsp;</span>';						
-					if(data.chair=="true"){
-						markup += '<span class="chair label label-info">';
-						markup += 'chair';
-						markup += '</span>';
-					}
+					markup += '<span class="middleName">'+data.middleName+'&nbsp;</span>';	
+					jQuery.each(data.roles,function(index,value) {
+						markup += ' <span class="role label label-info">'+value+'</span> '
+					
+					});
 					markup += '</div>';
 					
 					jQuery("li."+data.id).html(markup);
@@ -270,11 +314,10 @@ function commitChangesHandler(eventTarget, jsonURL, committeeURL, subId){
 					markup += '<span class="lastName">'+data.lastName+'</span><span class="seperator">,&nbsp;</span>';
 					markup += '<span class="firstName">'+data.firstName+'&nbsp;</span>';
 					markup += '<span class="middleName">'+data.middleName+'&nbsp;</span>';						
-					if(data.chair=="true"){
-						markup += '<span class="chair label label-info">';
-						markup += 'chair';
-						markup += '</span>';
-					}
+					jQuery.each(data.roles,function(index,value) {
+						markup += ' <span class="role label label-info">'+value+'</span> '
+					
+					});
 					markup += '<span><a href="#" class="tooltip-icon" rel="tooltip" title="'+data.message+'"><span class="badge badge-important"><i class="icon-warning-sign icon-white"></i></span></a></span>';
 					markup += '</div>';
 					
@@ -378,7 +421,9 @@ function commitNewCommitteeMemberHandler(id, jsonURL) {
 	var committeeFirstName = jQuery("#cmFirstName").val();
 	var committeeLastName = jQuery("#cmLastName").val();
 	var committeeMiddleName = jQuery("#cmMiddleName").val();
-	var committeeChair = jQuery("#chair").is(':checked');
+	var committeeRoles = jQuery("#cmRoles").val();
+	if (committeeRoles == null)
+		committeeRoles = new Array();
 
 	jQuery(".editing").replaceWith('<div class="progress progress-striped active"><div class="bar" style="width:100%"></div></div>');
 
@@ -389,7 +434,7 @@ function commitNewCommitteeMemberHandler(id, jsonURL) {
 			firstName:committeeFirstName,
 			lastName:committeeLastName,
 			middleName:committeeMiddleName,
-			chair:committeeChair
+			roles:committeeRoles
 		},
 		dataType:'json',
 		type:'POST',
@@ -398,12 +443,11 @@ function commitNewCommitteeMemberHandler(id, jsonURL) {
 				var markup = '<div class="editCommitteeMember">';
 				markup += '<span class="lastName">'+data.lastName+'</span><span class="seperator">,&nbsp;</span>';
 				markup += '<span class="firstName">'+data.firstName+'&nbsp;</span>';
-				markup += '<span class="middleName">'+data.middleName+'&nbsp;</span>';						
-				if(data.chair=="true"){
-					markup += '<span class="chair label label-info">';
-					markup += 'chair';
-					markup += '</span>';
-				}
+				markup += '<span class="middleName">'+data.middleName+'&nbsp;</span>';
+				jQuery.each(data.roles,function(index,value) {
+					markup += ' <span class="role label label-info">'+value+'</span> '
+				
+				});
 				markup += '</div>';
 
 				jQuery("li.add").html(markup);
@@ -416,11 +460,21 @@ function commitNewCommitteeMemberHandler(id, jsonURL) {
 						markup += '<td><input id="cmLastName" class="span2" type="text" value="'+data.lastName+'" /></td>';
 				markup += '<td><input id="cmFirstName" class="span2" type="text" value="'+data.firstName+'" /></td>';
 				markup += '<td><input id="cmMiddleName" class="span2" type="text" value="'+data.middleName+'" /></td>';
-				markup += '<td><input id="chair" type="checkbox" class="checkbox"';
-				if(data.chair=="true"){
-					markup += ' checked="true"';
-				}
-				markup += '> chair</input></td>';
+				markup += '</tr>';
+				markup += '<tr><td style="text-align:right;"><b>Roles:</b></td>';
+				markup += '<td colspan="2"><select id="cmRoles" multiple="multiple">';	
+				
+				// List all of the normal roles
+				var availableRoles = jQuery.parseJSON(jQuery("#committeeMembers").attr("data-roles"));
+				jQuery.each(availableRoles, function(index, value) {
+					var selected = '';				
+					if (data.roles.indexOf(value) > -1)
+						var selected = 'selected="selected"';
+					
+					markup += '<option value="'+value+'" '+selected+'>'+value+'</option>'
+				});
+
+				markup += '</select></td>';
 				markup += '</tr>';
 				markup += '</table><i class="icon-remove"></i>&nbsp<i class="icon-ok"></i>';					
 				markup += '<span><a href="#" class="tooltip-icon" rel="tooltip" title="'+data.message+'"><span class="badge badge-important"><i class="icon-warning-sign icon-white"></i></span></a></span>';
@@ -428,6 +482,12 @@ function commitNewCommitteeMemberHandler(id, jsonURL) {
 
 				jQuery("li.add").html(markup);
 				jQuery('.tooltip-icon').tooltip();
+				
+				jQuery("#cmRoles").multiselect({
+					header: false,
+					selectedList: 1,
+					noneSelectedText: "No roles selected"
+				});
 			}
 		},
 		error:function(){

@@ -152,7 +152,8 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		params.put("firstName", "John");
 		params.put("lastName", "Doe");
 		params.put("middleName", "T");
-		params.put("chair", "true");
+		params.put("roles", "Committee Member");
+		
 		
 		Response response = POST(UPDATE_URL,params);
 		assertIsOk(response);
@@ -165,7 +166,8 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		assertEquals("John", member.getFirstName());
 		assertEquals("Doe", member.getLastName());
 		assertEquals("T", member.getMiddleName());
-		assertTrue(member.isCommitteeChair());
+		assertEquals(1, member.getRoles().size());
+		assertEquals("Committee Member", member.getRoles().get(0));
 		
 		member.delete();
 		submission.delete();		
@@ -182,11 +184,11 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		context.turnOffAuthorization();
 		
 		Person person = personRepo.findPersonByEmail("bthornton@gmail.com");
-		Submission submission = subRepo.createSubmission(person);
-		submission.addCommitteeMember("John", "Doe", "T", true);
+		Submission submission = subRepo.createSubmission(person).save();
+		CommitteeMember member = submission.addCommitteeMember("John", "Doe", "T").save();
+		member.addRole("Committee Member");
 		submission.save();
 		
-		CommitteeMember member = submission.getCommitteeMembers().get(0);
 		Long subId = submission.getId();
 		Long id = member.getId();
 		
@@ -194,7 +196,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		assertEquals("John", member.getFirstName());
 		assertEquals("Doe", member.getLastName());
 		assertEquals("T", member.getMiddleName());
-		assertTrue(member.isCommitteeChair());
+		assertEquals("Committee Member", member.getRoles().get(0));
 		
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();
@@ -209,7 +211,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		params.put("firstName", "Jill");
 		params.put("lastName", "Duck");
 		params.put("middleName", "M");
-		params.put("chair", "false");
+		params.put("roles", "Committee Chair");
 		
 		Response response = POST(UPDATE_URL,params);
 		assertIsOk(response);
@@ -221,7 +223,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		assertEquals("Jill", member.getFirstName());
 		assertEquals("Duck", member.getLastName());
 		assertEquals("M", member.getMiddleName());
-		assertFalse(member.isCommitteeChair());
+		assertEquals("Committee Chair", member.getRoles().get(0));
 		
 		member.delete();
 		submission.delete();		

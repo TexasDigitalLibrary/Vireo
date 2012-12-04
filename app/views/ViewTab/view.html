@@ -3,11 +3,14 @@
 
 #{set 'moreStyles'}
 <link href="@{'/public/stylesheets/datepicker.css'}" rel="stylesheet" type="text/css">
+<link href="@{'/public/stylesheets/multiselect.css'}" rel="stylesheet" type="text/css">
+
 #{/set}
 
 #{set 'moreScripts'}
 <script src="@{'/public/javascripts/vireo-viewtab.js'}" type="text/javascript" charset="${_response_encoding}"></script>
 <script src="@{'/public/javascripts/bootstrap-datepicker.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+<script src="@{'/public/javascripts/jquery-ui-multiselect-1.13.js'}" type="text/javascript" charset="${_response_encoding}"></script>
 <script type="text/javascript" >
 jQuery(document).ready(function(){
 	
@@ -36,9 +39,14 @@ jQuery(document).ready(function(){
 	jQuery(".icon-remove").live("click", cancelEditingHandler());
 	
 	jQuery(document).click(function(event){		
-		if(jQuery(event.target).closest(".editing").length == 0) {			
-			if(jQuery(".editing").length > 0) {
-				jQuery(".icon-remove").click();
+		if(jQuery(event.target).closest(".editing").length == 0) {
+			
+			// Second check, make sure it's not a multiselect floating div either.
+			if(jQuery(event.target).closest(".ui-multiselect-menu").length == 0) {
+			
+				if(jQuery(".editing").length > 0) {
+					jQuery(".icon-remove").click();
+				}
 			}
 		}
 	});
@@ -445,7 +453,16 @@ jQuery(document).ready(function(){
 					#{/if}
 				</ul>				
 			</div>
-			<div id="committeeMembers" class="edit-box pull-left">				
+			
+			%{
+			   // Store the available roles as an attribute.
+			   def roles = [];
+			   for (def role : settingRepo.findAllCommitteeMemberRoleTypes())  {
+			   		if (!roles.contains(role.getName()))
+			   			roles.push(role.getName());
+			   }
+            }%
+			<div id="committeeMembers" class="edit-box pull-left" data-roles='[#{list items:roles, as:'role'}"${role.escapeJavaScript()}"${ role_isLast ? "" : ","}#{/list}]'>
 				<ul class="unstyled">
 					<li><i class="icon-pencil"></i> <b>Committee Members:</b>
 					<ul class="unstyled" style="padding:10px 0 0 30px;">
@@ -457,9 +474,9 @@ jQuery(document).ready(function(){
 								<span class="lastName">${value.getLastName()}</span><span class="seperator">,</span>
 								<span class="firstName">${value.getFirstName()}</span> 
 								<span class="middleName">${value.getMiddleName()}</span>
-								#{if value.isCommitteeChair()}
-								<span class="chair label label-info">chair</span>
-								#{/if}
+								#{list items:value.getRoles(), as:'role'}
+								<span class="role label label-info">${role}</span>								
+								#{/list}
 							</div>
 						</li>
 						
@@ -610,7 +627,6 @@ jQuery(document).ready(function(){
                   data-source='[#{list items:majors, as:'major'}"${major.escapeJavaScript()}"${ major_isLast ? "" : ","}#{/list}]'
                   />
 			</div>
-			
 		</div>
 		
 		<h2>ACTION LOG</h2>
