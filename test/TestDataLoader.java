@@ -363,10 +363,7 @@ public class TestDataLoader extends Job {
 		new DegreeLevelArray("Co-Chair", DegreeLevel.DOCTORAL),
 		new DegreeLevelArray("Director of Research", DegreeLevel.DOCTORAL),
 
-		new DegreeLevelArray("Chair", DegreeLevel.MASTERS),
-
-		new DegreeLevelArray("Advisor", DegreeLevel.UNDERGRADUATE),
-		new DegreeLevelArray("Department Head", DegreeLevel.UNDERGRADUATE)
+		new DegreeLevelArray("Chair", DegreeLevel.MASTERS)
 	};
 	
 	/**
@@ -724,15 +721,18 @@ public class TestDataLoader extends Job {
 					if (firstMemberName == null)
 						firstMemberName = memberName;
 					CommitteeMember member = sub.addCommitteeMember(memberName[0], memberName[1], memberName[2]).save();
-					DegreeLevelArray role = ROLETYPES_DEFINITIONS[random.nextInt(ROLETYPES_DEFINITIONS.length-1)];
-					member.addRole(role.name);
 					
-					if (random.nextInt(100) > 70) {
-						role = ROLETYPES_DEFINITIONS[random.nextInt(ROLETYPES_DEFINITIONS.length-1)];
-						try {
-							// We could pick the same role twice.
-							member.addRole(role.name);
-						} catch (IllegalArgumentException iae) {/* ignore */};
+					if (random.nextInt(100) > 75) {
+						DegreeLevelArray role = ROLETYPES_DEFINITIONS[random.nextInt(ROLETYPES_DEFINITIONS.length-1)];
+						member.addRole(role.name);
+						
+						if (random.nextInt(100) > 75) {
+							role = ROLETYPES_DEFINITIONS[random.nextInt(ROLETYPES_DEFINITIONS.length-1)];
+							try {
+								// We could pick the same role twice.
+								member.addRole(role.name);
+							} catch (IllegalArgumentException iae) {/* ignore */};
+						}
 					}
 					member.save();
 				}

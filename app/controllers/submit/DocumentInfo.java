@@ -456,7 +456,7 @@ public class DocumentInfo extends AbstractSubmitStep {
 			
 			boolean found = false;
 			for (CommitteeMemberRoleType type : types) {
-				if (type.getName().equals(type)) {
+				if (type.getName().equals(role)) {
 					found = true;
 					break;
 				}
@@ -567,7 +567,7 @@ public class DocumentInfo extends AbstractSubmitStep {
 			}
 			
 			// roles
-			if (isValidRoleType(sub, member.roles))
+			if (!isValidRoleType(sub, member.roles))
 				validation.addError("member"+i,"One of the roles selected is invalid");
 		}
 
@@ -594,7 +594,7 @@ public class DocumentInfo extends AbstractSubmitStep {
 			String middleName = params.get("committeeMiddleName"+i);
 			String lastName = params.get("committeeLastName"+i);
 			String[] roles = params.get("committeeRoles"+i,String[].class);
-			if (roles == null)
+			if (roles == null || (roles.length == 1 && roles[0].trim().length() == 0))
 				roles = new String[0];
 			i++;
 
