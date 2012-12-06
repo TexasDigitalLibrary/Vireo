@@ -221,8 +221,8 @@ Plus all the FieldConfig objects
     <label class="control-label">#{fieldLabel COMMITTEE /}:</label>
     <div class="controls">
         <p>${member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST)}
-        #{if member.isCommitteeChair()}
-        <em>(chair)</em>
+        #{if member.getRoles().size() > 0}
+        <em>(${ member.getFormattedRoles() })</em>
         #{/if}
         </p>
     </div>

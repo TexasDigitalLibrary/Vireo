@@ -604,11 +604,10 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 		Map<String,String> member1 = new HashMap<String,String>();
 		member1.put("firstName", "Bob");
 		member1.put("lastName", "Jones");
-		member1.put("chairFlag", "true");
 		Map<String,String> member2 = new HashMap<String,String>();
 		member2.put("firstName", "John");
-		member2.put("middleName", "Jack");
-		member2.put("lastName", "Leggett");
+		member2.put("lastName", "Jack");
+		member2.put("role", "Chair");
 		committee.add(member1);
 		committee.add(member2);
 
@@ -651,7 +650,7 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 		params.put("committeeFirstName2", "John");
 		params.put("committeeLastName2","Leggett");
 		params.put("committeeMiddleName2", "J.");
-		params.put("committeeChairFlag2", "true");
+		params.put("committeeRoles2", "Chair");
 		
 		params.put("step","documentInfo");
 		params.put("submit_add", "Add Additional Members");
@@ -670,10 +669,10 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 		List<CommitteeMember> members = sub.getCommitteeMembers();
 		
 		assertEquals("Bob Jones", members.get(0).getFormattedName(NameFormat.FIRST_MIDDLE_LAST));
-		assertFalse(members.get(0).isCommitteeChair());
+		assertEquals(0,members.get(0).getRoles().size());
 		assertEquals(1,members.get(0).getDisplayOrder());
 		assertEquals("John J. Leggett", members.get(1).getFormattedName(NameFormat.FIRST_MIDDLE_LAST));
-		assertTrue(members.get(1).isCommitteeChair());
+		assertEquals(1,members.get(1).getRoles().size());
 		assertEquals(2,members.get(1).getDisplayOrder());
 		
 		// Cleanup will delete the submission

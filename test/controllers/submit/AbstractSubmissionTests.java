@@ -507,8 +507,8 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 			params.put("committeeLastName"+(i+1), member.get("lastName"));
 			if (member.get("middleName") != null)
 				params.put("committeeMiddleName"+(i+1), member.get("middleName"));
-			if (member.get("chairFlag") != null)
-				params.put("committeeChairFlag"+(i+1),"true");
+			if (member.get("role") != null)
+				params.put("committeeRoles"+(i+1),member.get("role"));
 		}
 		params.put("step","documentInfo");
 		params.put("submit_next", "Save and Continue");

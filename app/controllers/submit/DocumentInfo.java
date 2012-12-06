@@ -1,3 +1,5 @@
+
+
 package controllers.submit;
 
 import static org.tdl.vireo.constant.AppConfig.*;
@@ -19,6 +21,7 @@ import javax.mail.internet.InternetAddress;
 
 import org.tdl.vireo.constant.FieldConfig;
 import org.tdl.vireo.model.CommitteeMember;
+import org.tdl.vireo.model.CommitteeMemberRoleType;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.EmbargoType;
@@ -36,14 +39,14 @@ import au.com.bytecode.opencsv.CSVReader;
 import controllers.Security;
 
 /**
- * This is the third step of the submission process. This is where students
- * provide metedata about their document, committee members, and select among
- * publication options.
- * 
- * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
- * @author <a href="bill-ingram.com">Bill Ingram</a>
- * @author Dan Galewsky 
- */
+* This is the third step of the submission process. This is where students
+* provide metedata about their document, committee members, and select among
+* publication options.
+* 
+* @author <a href="http://www.scottphillips.com">Scott Phillips</a>
+* @author <a href="bill-ingram.com">Bill Ingram</a>
+* @author Dan Galewsky 
+*/
 public class DocumentInfo extends AbstractSubmitStep {
 
 
@@ -82,14 +85,15 @@ public class DocumentInfo extends AbstractSubmitStep {
 			docLanguage = settingRepo.findAllLanguages().get(0).getName();
 		} else {		
 			docLanguage = params.get("docLanguage");
-			Logger.info("The language is: ", docLanguage);
+			if (docLanguage != null && docLanguage.trim().length() == 0)
+				docLanguage = null;
 		}
 		
 		String chairEmail = params.get("chairEmail");
 		String embargo = params.get("embargo");
 		String umi = params.get("umi");
 
-		List<Map<String,String>> committee = parseCommitteeMembers();
+		List<TransientMember> committee = parseCommitteeMembers();
 
 		if ("documentInfo".equals(params.get("step"))) {
 			
@@ -252,6 +256,10 @@ public class DocumentInfo extends AbstractSubmitStep {
 		List<ProquestSubject> subjects = proquestRepo.findAllSubjects();
 		renderArgs.put("subjects", subjects);
 
+		// List available committe roles
+		List<CommitteeMemberRoleType> availableRoles = settingRepo.findAllCommitteeMemberRoleTypes(sub.getDegreeLevel());
+		renderArgs.put("availableRoles", availableRoles);
+		
 		// List of all languages
 		List<Language> languages = settingRepo.findAllLanguages();
 		renderArgs.put("docLanguages", languages);
@@ -335,8 +343,8 @@ public class DocumentInfo extends AbstractSubmitStep {
 		
 		// Committee members (make sure they aren't any double entries)
 		if (isFieldRequired(COMMITTEE) && !validation.hasError("committee")) {
-			List<Map<String,String>> committee = loadCommitteeMembers(sub);
-			validateCommitteeMembers(committee);
+			List<TransientMember> committee = loadCommitteeMembers(sub);
+			validateCommitteeMembers(sub,committee);
 		}
 		
 		// Committee Contact Email
@@ -432,6 +440,35 @@ public class DocumentInfo extends AbstractSubmitStep {
 		return false;
 	}
 	
+	
+	/**
+	 * Determine if the provided roles are valid for this given degree level of the submission.
+	 * 
+	 * @param sub The submission
+	 * @param roles The roles to validate.
+	 * @return True if valid, otherwise false.
+	 */
+	protected static boolean isValidRoleType(Submission sub, List<String> roles) {
+		
+		List<CommitteeMemberRoleType> types = settingRepo.findAllCommitteeMemberRoleTypes(sub.getDegreeLevel());
+		
+		for (String role : roles) {
+			
+			boolean found = false;
+			for (CommitteeMemberRoleType type : types) {
+				if (type.getName().equals(type)) {
+					found = true;
+					break;
+				}
+			}
+			
+			if (!found)
+				return false;
+		}
+		
+		return true;
+	}
+	
 
 	/**
 	 * For now, this method returns the current valid years based on 
@@ -485,77 +522,70 @@ public class DocumentInfo extends AbstractSubmitStep {
 	}
 
 	/**
-	 * Load committee members into a list of maps from the supplied submission
+	 * Load committee members from the supplied submission
 	 * object.
 	 * 
 	 * @param sub
 	 *            The submission object
 	 * @return List of transient committee members.
 	 */
-	public static List<Map<String,String>> loadCommitteeMembers(Submission sub) {
-		List<Map<String,String>> committee = new ArrayList<Map<String,String>>();
+	public static List<TransientMember> loadCommitteeMembers(Submission sub) {
+		List<TransientMember> committee = new ArrayList<TransientMember>();
 
 		for (CommitteeMember member: sub.getCommitteeMembers()) {
 
-			Map<String,String> hash = new HashMap<String,String>();
-			hash.put("firstName",member.getFirstName());
-			hash.put("middleName",member.getMiddleName());
-			hash.put("lastName",member.getLastName());
-			hash.put("chairFlag",member.isCommitteeChair() ? "true" : null);
-			committee.add(hash);
+			TransientMember transientMember = new TransientMember(
+					member.getFirstName(), 
+					member.getMiddleName(), 
+					member.getLastName(), 
+					member.getRoles());
+			
+			committee.add(transientMember);
 		}
 
 		return committee;
 	}
 
 	/**
-	 * Validate the transient list of maps for committee members. This method
-	 * checks that all members have their first and last names, and that there
-	 * is atleast one member who is a committee chair.
+	 * Validate the transient list for committee members. This method
+	 * checks that all members have their first and last names
 	 * 
 	 * @param members
 	 *            List of maps for each committee member.
 	 */
-	public static boolean validateCommitteeMembers(List<Map<String,String>> members ) {
+	public static boolean validateCommitteeMembers(Submission sub, List<TransientMember> members ) {
 
 		boolean atLeastOneMember = false;
-		boolean atLeastOneChair = false;	
 		int i = 1;
-		for (Map<String,String> member : members) {
+		for (TransientMember member : members) {
 
 			// Check that if we have a first name, then we have a last name.
-			String firstName = member.get("firstName");
-			String lastName = member.get("lastName");
-			
-			if (isEmpty(firstName) && isEmpty(lastName)) {
+			if (isEmpty(member.firstName) && isEmpty(member.lastName)) {
 				validation.addError("member"+i,"Please provide a first or last name for all committee members.");
 			} else {
 				atLeastOneMember = true;
 			}
-
-			String chairFlag = member.get("chairFlag");
-			if (!isEmpty(chairFlag))
-				atLeastOneChair = true;
-			i++;
+			
+			// roles
+			if (isValidRoleType(sub, member.roles))
+				validation.addError("member"+i,"One of the roles selected is invalid");
 		}
 
 		if (!atLeastOneMember)
 			validation.addError("committee", "You must specify who is on your committee.");
-		else if (!atLeastOneChair)
-			validation.addError("committee", "You must specify which members are chairs or co-chairs of your committee.");
-
+		
 		return true;
 	}
 
 	/**
-	 * Construct the transient list of maps for committee members from the html
+	 * Construct the transient list for committee members from the html
 	 * form parameters.
 	 * 
-	 * @return List of maps for each committee member.
+	 * @return List of committee member.
 	 */
-	public static List<Map<String,String>> parseCommitteeMembers() {
+	public static List<TransientMember> parseCommitteeMembers() {
 
-		List<Map<String,String>> committee = new ArrayList<Map<String,String>>();
+		List<TransientMember> committee = new ArrayList<TransientMember>();
 
 		int i = 1;
 		while (params.get("committeeFirstName"+i) != null || params.get("committeeLastName"+i) != null) {
@@ -563,29 +593,31 @@ public class DocumentInfo extends AbstractSubmitStep {
 			String firstName = params.get("committeeFirstName"+i);
 			String middleName = params.get("committeeMiddleName"+i);
 			String lastName = params.get("committeeLastName"+i);
-			String chairFlag = params.get("committeeChairFlag"+i);
+			String[] roles = params.get("committeeRoles"+i,String[].class);
+			if (roles == null)
+				roles = new String[0];
 			i++;
-
 
 			if ((firstName == null  || firstName.trim().length() == 0) &&
 					(lastName == null   || lastName.trim().length() == 0)) 
 				// If the first or last name fields are blank then skip this one.
 				continue;
 
-			Map<String,String> member = new HashMap<String,String>();
-			member.put("firstName",firstName);
-			member.put("middleName",middleName);
-			member.put("lastName",lastName);
-			member.put("chairFlag",chairFlag);
+			TransientMember member = new TransientMember(
+					firstName, 
+					middleName, 
+					lastName, 
+					roles);
 
 			committee.add(member);
 		}
 
 		return committee;
 	}
-
+	
+	
 	/**
-	 * Save the transient list of maps for committee members into the submission
+	 * Save the transient list of committee members into the submission
 	 * object.
 	 * 
 	 * @param sub
@@ -593,7 +625,7 @@ public class DocumentInfo extends AbstractSubmitStep {
 	 * @param members
 	 *            The new list of committee members.
 	 */
-	public static boolean saveCommitteeMembers(Submission sub, List<Map<String,String>> members) {
+	public static boolean saveCommitteeMembers(Submission sub, List<TransientMember> members) {
 
 
 		for (CommitteeMember member : new ArrayList<CommitteeMember>(sub.getCommitteeMembers())) {
@@ -602,16 +634,12 @@ public class DocumentInfo extends AbstractSubmitStep {
 
 
 		int i = 1;
-		for (Map<String,String> member : members) {
+		for (TransientMember member : members) {
 
-			String firstName = member.get("firstName");
-			String middleName = member.get("middleName");
-			String lastName = member.get("lastName");
-			String chairFlag = member.get("chairFlag");
-
-			boolean chair = false;
-			if (chairFlag != null && chairFlag.trim().length() > 0)
-				chair = true;
+			String firstName = member.firstName;
+			String middleName = member.middleName;
+			String lastName = member.lastName;
+			List<String> roles = member.roles;
 			
 			// Make sure that we have a first or last name
 			if (firstName != null && firstName.trim().length() == 0)
@@ -622,8 +650,13 @@ public class DocumentInfo extends AbstractSubmitStep {
 				continue;
 			
 
-			CommitteeMember newMember = sub.addCommitteeMember(firstName, lastName, middleName, chair);
+			CommitteeMember newMember = sub.addCommitteeMember(firstName, lastName, middleName).save();
 			newMember.setDisplayOrder(i);
+			
+			for (String role : roles) {
+				newMember.addRole(role);
+			}
+			
 			newMember.save();
 			
 			i++;
@@ -632,4 +665,34 @@ public class DocumentInfo extends AbstractSubmitStep {
 		return true;
 	}
 
+	
+	
+	
+	
+	
+	
+	/**
+	 * Simple data structure to keep committee members while being processed.
+	 */
+	public static class TransientMember {
+		public String firstName;
+		public String middleName;
+		public String lastName;
+		public List<String> roles;
+
+		public TransientMember(String firstName, String middleName, String lastName, List<String> roles) {
+			this.firstName = firstName;
+			this.middleName = middleName;
+			this.lastName = lastName;
+			this.roles = new ArrayList<String>(roles);
+		}
+		
+		public TransientMember(String firstName, String middleName, String lastName, String[] roles) {
+			this.firstName = firstName;
+			this.middleName = middleName;
+			this.lastName = lastName;
+			this.roles = Arrays.asList(roles);
+		}
+	}
+	
 }

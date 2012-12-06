@@ -1,5 +1,20 @@
 #{extends 'Submit/submitStep.html' /}
 #{set title:'Document Info' /}
+#{set 'moreStyles'}
+<link href="@{'/public/stylesheets/multiselect.css'}" rel="stylesheet" type="text/css">
+#{/set}
+#{set 'moreScripts'}
+<script src="@{'/public/javascripts/jquery-ui-multiselect-1.13.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+<script type="text/javascript" >
+jQuery(document).ready(function(){
+    jQuery(".multiselect").multiselect({
+        header: false,
+        selectedList: 1,
+        noneSelectedText: "<em>&nbsp;... No roles selected</em>"
+    });
+});
+</script>
+#{/set}
 
 <br />
 <div class="row pageHead">
@@ -163,28 +178,45 @@
                 def firstName = "";
                 def middleName = "";
                 def lastName = "";
-                def chairFlag = "";
+                def currentRoles = new java.util.ArrayList<String>();
                 
                 if (committee.size() >= i) {
-                    firstName = committee.get(i-1).get("firstName");
-                    middleName = committee.get(i-1).get("middleName");
-                    lastName = committee.get(i-1).get("lastName");
-                    chairFlag = committee.get(i-1).get("chairFlag");
+                    firstName = committee.get(i-1).firstName;
+                    middleName = committee.get(i-1).middleName;
+                    lastName = committee.get(i-1).lastName;
+                    currentRoles = committee.get(i-1).roles;
                 }
             }%
-            <table id="committee-member" #{ifError "committee"}class="error"#{/ifError}>
-                    <tr> 
-                        <td><input type="text" class="input-medium" id="committeeFirstName${i}" name="committeeFirstName${i}" value="${firstName}"></td>
-                        <td><input type="text" class="span1" id="committeeMiddleName${i}" name="committeeMiddleName${i}" value="${middleName}"></td>
-                        <td><input type="text" class="input-medium" id="committeeLastName${i}" name="committeeLastName${i}" value="${lastName}"></td>
-                        <td><label class="checkbox"><input type="checkbox" id="committeeChairFlag${i}" name="committeeChairFlag${i}" class="inline" ${ (chairFlag != null && chairFlag.trim().length() > 0) ? "checked='true'" : "" }> Chair</label></td>
-                    </tr>
+            <table class="committee-member" #{ifError "committee"}class="error"#{/ifError}>
                     <tr>
                         <td><label class="span2">First Name</label></td>
                         <td><label class="span1">MI</label></td>
                         <td><label class="span2">Last Name</label></td>
-                        <td></td>
                     </tr>
+                    <tr> 
+                        <td><input type="text" class="input-medium" id="committeeFirstName${i}" name="committeeFirstName${i}" value="${firstName}"></td>
+                        <td><input type="text" class="span1" id="committeeMiddleName${i}" name="committeeMiddleName${i}" value="${middleName}"></td>
+                        <td><input type="text" class="input-medium" id="committeeLastName${i}" name="committeeLastName${i}" value="${lastName}"></td>
+                    </tr>
+                    #{if availableRoles.size() > 0}
+                    <tr class="committee-role-row">
+                        <td class="role-label">Role${availableRoles.pluralize()}: </td>
+                        <td colspan="2">
+                        
+                            #{if availableRoles.size() == 1}
+                            <input type="checkbox" id="committeeRoles${i}" name="committeeRoles${i}" value="${availableRoles.get(0).getName()}" #{if currentRoles.contains(availableRoles.get(0).getName())}checked="checked"#{/if}> ${availableRoles.get(0).getName()}
+                            #{/if}
+                            #{else}
+                            <select class="multiselect" id="committeeRoles${i}" name="committeeRoles${i}" multiple="multiple">
+                                #{list items:availableRoles, as:'role'}
+                                <option #{if currentRoles.contains(role.getName())}selected="selected"#{/if} value="${role.getName()}">${role.getName()}</option>
+                                #{/list}
+                            </select>
+                            #{/else}
+                        </td>
+                    </tr>
+                    #{/if}
+
             </table>
 
             #{/list} 
