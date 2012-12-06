@@ -20,6 +20,7 @@ import java.util.Map;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
+import org.apache.commons.io.FilenameUtils;
 import org.tdl.vireo.email.EmailService;
 import org.tdl.vireo.email.VireoEmail;
 import org.tdl.vireo.export.DepositService;
@@ -102,6 +103,14 @@ public class ViewTab extends AbstractVireoController {
 		if(params.get("addFile")!=null)
 			addFile(submission);		
 		
+		//Check for "Edit File"
+		if(params.get("editFile")!=null)
+			editFile(submission);
+		
+		//Check for "Delete File"
+		if(params.get("deleteFile")!=null)
+			deleteFile(submission);
+		
 		JPA.em().detach(submission);
 		submission = subRepo.findSubmission(id);
 		
@@ -136,7 +145,11 @@ public class ViewTab extends AbstractVireoController {
 		List<Attachment> attachments = submission.getAttachments();
 		Collections.sort(attachments, new AttachmentSortByDate());
 		
-		
+		List<String> attachmentTypes = new ArrayList<String>();
+		for(AttachmentType type : AttachmentType.values()){
+			attachmentTypes.add(type.toString());
+		}
+				
 		String nav = "view";
 		render(	nav,
 				submission,
@@ -153,7 +166,8 @@ public class ViewTab extends AbstractVireoController {
 				actions, 
 				actionValues,
 				depositLocations,
-				attachments
+				attachments,
+				attachmentTypes
 				);
 	}
 
@@ -859,18 +873,11 @@ public class ViewTab extends AbstractVireoController {
 	private static void addFile(Submission sub){
 		
 		String uploadType = params.get("uploadType");		
-				
-		if("note".equals(uploadType)){
-			uploadNote(sub);
-		} else if("primary".equals(uploadType)){			
+		
+		if("primary".equals(uploadType)) {
 			uploadPrimary(sub);
-		} else if("supplement".equals(uploadType)){
-			String manageSup = params.get("supplementType");	
-			if("delete".equals(manageSup) || "replace".equals(manageSup)) {
-				removeSupplement(sub, manageSup);
-			} else {
-				uploadSupplement(sub);
-			}						
+		}else if("additional".equals(uploadType)){
+			uploadAdditional(sub);
 		}
 		
 		if(params.get("email_student") != null) {			
@@ -913,28 +920,35 @@ public class ViewTab extends AbstractVireoController {
 	}
 	
 	/**
-	 * The private method to add a "note" file.
-	 *  
+	 * The private method to edit a file.
+	 * 
 	 * @param sub (The current submission)
-	 * @return (A String containing the name of the file)
+	 * 
 	 */
 	@Security(RoleType.REVIEWER)
-	private static void uploadNote(Submission sub){
+	private static void editFile(Submission sub){
+		Attachment attachment = sub.findAttachmentById(Long.valueOf(params.get("attachmentId")));
 		
-		File attachment = params.get("noteAttachment",File.class);
+		String newName = params.get("fileName");
+		String newType = params.get("attachmentType");
 		
-		if(attachment == null) {
-			validation.addError("noteDocument", "There was no document selected.");
-			return;
+		if(!newName.isEmpty() && newName != null && !newName.equals(attachment.getName()))
+			attachment.setName(newName);
+		
+		if(!newType.isEmpty() && newType != null && attachment.getType()!=AttachmentType.valueOf(newType)){
+			if("PRIMARY".equals(newType) && sub.getPrimaryDocument() != null) {
+				validation.addError("editFilePrimary", "There can only be one primary document.");
+				return;
+			} else {
+				attachment.setType(AttachmentType.valueOf(newType));
+			}
 		}
 		
-		try{
-			sub.addAttachment(attachment, AttachmentType.FEEDBACK);
-		} catch (IOException e) {
-			validation.addError("noteDocument","Error uploading note/feedback document.");
-		} catch (IllegalArgumentException e) {
-			validation.addError("noteDocument","Error uploading note/feedback document.");
+		if(!validation.hasErrors()) {
+			attachment.save();
+			sub.save();
 		}
+			
 	}
 	
 	/**
@@ -944,17 +958,22 @@ public class ViewTab extends AbstractVireoController {
 	 * @return (A String containing the name of the file)
 	 */
 	@Security(RoleType.REVIEWER)
-	private static void uploadSupplement(Submission sub){
+	private static void uploadAdditional(Submission sub){
 		
-		File attachment = params.get("supplementAttachment",File.class);
+		File attachment = params.get("additionalAttachment",File.class);
+		AttachmentType type = AttachmentType.valueOf(params.get("attachmentType"));
 		
 		if(attachment == null) {
-			validation.addError("supplementDocument", "There was no document selected.");
+			validation.addError("additionalDocument", "There was no document selected.");
+			return;
+		}
+		if(type == null) {
+			validation.addError("additionalDocument", "There was no attachment type selected.");
 			return;
 		}
 		
 		try{
-			sub.addAttachment(attachment, AttachmentType.SUPPLEMENTAL);
+			sub.addAttachment(attachment, type);
 		} catch (IOException e) {
 			validation.addError("supplementDocument","Error uploading supplemental document.");
 		} catch (IllegalArgumentException e) {
@@ -963,41 +982,16 @@ public class ViewTab extends AbstractVireoController {
 	}
 	
 	/**
-	 * The private method to delete or replace "supplement" files.
+	 * The private method to delete a file.
 	 * 
 	 * @param sub (The current submission)
-	 * @param action (The action to take, either delete or replace)
-	 * @return (A list<String> containing the old file and new one)
 	 */
 	@Security(RoleType.REVIEWER)
-	private static void removeSupplement(Submission sub, String action){
+	private static void deleteFile(Submission sub) {
+		Attachment attachment = sub.findAttachmentById(Long.valueOf(params.get("attachmentId")));
 		
-		Attachment oldFile = null;
-		
-		if("replace".equals(action)) {
-			oldFile = sub.findAttachmentById(Long.valueOf(params.get("supplementReplaceOriginal")));
-		} else {			
-			oldFile = sub.findAttachmentById(Long.valueOf(params.get("supplementDelete")));
-		}
-		if(oldFile!=null)
-			oldFile.delete();
-		
-		if("replace".equals(action)) {
-			File attachment = params.get("supplementReplace",File.class);
-			
-			if(attachment == null) {
-				validation.addError("supplementDocument", "There was no document selected.");
-				return;
-			}
-			
-			try{
-				sub.addAttachment(attachment, AttachmentType.SUPPLEMENTAL);
-			} catch (IOException e) {
-				validation.addError("supplementDocument","Error uploading supplemental document.");
-			} catch (IllegalArgumentException e) {
-				validation.addError("supplementDocument","Error uploading supplemental document.");
-			}
-		}
+		attachment.delete();
+		sub.save();
 	}
 	
 	/**

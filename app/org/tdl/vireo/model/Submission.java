@@ -204,7 +204,7 @@ public interface Submission extends AbstractModel {
 	 *            The type of attachment.
 	 * @return Return a list of all attachments of the given type.
 	 */
-	public List<Attachment> getAttachmentsByType(AttachmentType type);
+	public List<Attachment> getAttachmentsByType(AttachmentType...types);
 
 	/**
 	 * Add a new attachment from a file.

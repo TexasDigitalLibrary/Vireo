@@ -14,6 +14,7 @@ import org.tdl.vireo.email.SystemEmailTemplateService;
 import org.tdl.vireo.email.VireoEmail;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Attachment;
+import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.NameFormat;
@@ -122,14 +123,14 @@ public class Confirm extends AbstractSubmitStep {
 
 		List<ActionLog> logs = subRepo.findActionLog(sub);
 		Attachment primaryDocument = sub.getPrimaryDocument();
-		List<Attachment> supplementaryDocuments = sub.getSupplementalDocuments();
+		List<Attachment> additionalDocuments = sub.getAttachmentsByType(AttachmentType.SUPPLEMENTAL,AttachmentType.SOURCE,AttachmentType.ADMINISTRATIVE);
 		String grantor = settingRepo.getConfigValue(GRANTOR,"Unknown Institution");
 
 		boolean showEditLinks = true;
 
 		renderTemplate("Submit/confirm.html",subId, sub, grantor, showEditLinks, submitter, logs, 
 				primaryDocument,
-				supplementaryDocuments);		
+				additionalDocuments);		
 	}
 	
 	/**

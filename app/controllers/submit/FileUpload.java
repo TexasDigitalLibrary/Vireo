@@ -60,12 +60,16 @@ public class FileUpload extends AbstractSubmitStep {
 				Student.uploadPrimaryDocument(sub);
 		}
 		
-		// Manage supplemental files
-		if (isFieldEnabled(SUPPLEMENTARY_ATTACHMENT)) {
-			if (params.get("removeSupplementary") != null)
-				Student.removeSupplementary(sub);           	            	
-			if(params.get("supplementaryDocument",File.class) != null)
-				Student.uploadSupplementary(sub);
+		// Manage additional files
+		if (isFieldEnabled(SUPPLEMENTAL_ATTACHMENT) || isFieldEnabled(SOURCE_ATTACHMENT) || isFieldEnabled(ADMINISTRATIVE_ATTACHMENT)) {
+			if (params.get("removeAdditional") != null)
+				Student.removeAdditional(sub);           	            	
+			if(params.get("additionalDocument",File.class) != null) {
+				if(params.get("attachmentType").isEmpty())
+					validation.addError("attachmentType", "You must select an attachment type.");
+				else
+					Student.uploadAdditional(sub);
+			}
 		}
 		
 		// Verify the form if we are submitting or if jumping from the confirm step.
@@ -80,10 +84,9 @@ public class FileUpload extends AbstractSubmitStep {
 			Confirm.confirm(subId);
 		}
 
-
 		// Initialize variables and display form
 		Attachment primaryAttachment = sub.getPrimaryDocument();
-		List<Attachment> supplementalAttachments = sub.getSupplementalDocuments();
+		List<Attachment> additionalAttachments = sub.getAttachmentsByType(AttachmentType.SUPPLEMENTAL,AttachmentType.SOURCE,AttachmentType.ADMINISTRATIVE);
 
 		List<String> stickies = new ArrayList<String>();
 		String stickiesRaw = settingRepo.getConfigValue(SUBMIT_UPLOAD_FILES_STICKIES);
@@ -97,7 +100,12 @@ public class FileUpload extends AbstractSubmitStep {
 			}
 		}
 		
-		renderTemplate("Submit/fileUpload.html",subId, primaryAttachment, supplementalAttachments, stickies);
+		List<String> attachmentTypes = new ArrayList<String>();
+		for(AttachmentType type : AttachmentType.values()){
+			attachmentTypes.add(type.toString());
+		}
+		
+		renderTemplate("Submit/fileUpload.html",subId, primaryAttachment, additionalAttachments, attachmentTypes, stickies);
 	}
 
 	/**
@@ -113,9 +121,18 @@ public class FileUpload extends AbstractSubmitStep {
 		if (isFieldRequired(PRIMARY_ATTACHMENT) && sub.getPrimaryDocument() == null )
 			validation.addError("primaryDocument", "A manuscript file must be uploaded.");
 
-		if (isFieldRequired(SUPPLEMENTARY_ATTACHMENT) && sub.getAttachmentsByType(AttachmentType.SUPPLEMENTAL).size() == 0)
-			validation.addError("supplementaryDocument", "At least one supplementary file is required.");
-
+		if (isFieldRequired(SUPPLEMENTAL_ATTACHMENT) && 
+				sub.getAttachmentsByType(AttachmentType.SUPPLEMENTAL).size() == 0)
+			validation.addError("supplementalDocument", "At least one supplemental file is required.");
+		
+		if (isFieldRequired(SOURCE_ATTACHMENT) && 
+				sub.getAttachmentsByType(AttachmentType.SOURCE).size() == 0)
+			validation.addError("sourceDocument", "At least one source file is required.");
+		
+		if (isFieldRequired(ADMINISTRATIVE_ATTACHMENT) && 
+				sub.getAttachmentsByType(AttachmentType.ADMINISTRATIVE).size() == 0)
+			validation.addError("administrativeDocument", "At least one administrative file is required.");
+		
 		if (numberOfErrorsBefore == validation.errors().size()) 
 			return true;
 		else

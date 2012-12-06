@@ -326,7 +326,7 @@ ${ address.fullAddress }
 		</DISS_abstract>
 		<DISS_binary type="${ "application/pdf".equals(sub.getPrimaryDocument()?.getMimeType()) ? "PDF" : "other" }">${ sub.getPrimaryDocument()?.getName() }</DISS_binary>
 		
-		#{list items:sub.getSupplementalDocuments(), as:'attachment' } 
+		#{list items:sub.getAttachmentsByType(org.tdl.vireo.model.AttachmentType.SUPPLEMENTAL), as:'attachment' } 
 		<DISS_attachment>
 		  <DISS_file_name>${ attachment.getName().escapeXml() }</DISS_file_name>
 		  <DISS_file_category>${ proquestUtils.categorize(attachment).escapeXml() }</DISS_file_category>

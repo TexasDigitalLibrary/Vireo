@@ -505,7 +505,7 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 		Response response = GET(VIEW_URL);
 		assertIsOk(response);
 		assertContentMatch("<title>View Application</title>",response);
-		assertTrue(getContent(response).contains("Upload additional supplementary files"));
+		assertTrue(getContent(response).contains("Upload additional files"));
 		
 		File testPDF = getResourceFile("SamplePrimaryDocument.pdf");
 		

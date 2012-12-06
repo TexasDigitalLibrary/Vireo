@@ -30,6 +30,7 @@ import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
 
+import play.Logger;
 import play.Play;
 import play.db.jpa.JPA;
 import play.modules.spring.Spring;
@@ -634,57 +635,10 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 	}
 	
 	/**
-	 * Test that an admin can add a file.
+	 * Test uploading an "additonal" file
 	 */
 	@Test
-	public void testAddFile() {
-		context.turnOffAuthorization();
-				
-		Person person = personRepo.findPersonByEmail("bthornton@gmail.com");
-		Submission submission = subRepo.createSubmission(person);
-		submission.setAssignee(person);
-		submission.save();
-		
-		Long id = submission.getId();
-		
-		JPA.em().getTransaction().commit();
-		JPA.em().clear();
-		JPA.em().getTransaction().begin();
-		
-		LOGIN();
-		
-		String UPDATE_URL = Router.reverse("ViewTab.view").url;
-		
-		Map<String,String> params = new HashMap<String,String>();
-		params.put("subId", id.toString());
-		params.put("uploadType", "note");
-		params.put("addFile", "true");
-		
-		Map<String,File> files = new HashMap<String,File>();
-		File file = null;
-		
-		try {
-			file = getResourceFile("SampleSupplementalDocument.doc");
-			files.put("noteAttachment", file);
-		} catch (IOException ioe) {
-			fail("Test upload file not found.");
-		}
-		
-		Response response = POST(UPDATE_URL,params,files);
-		assertIsOk(response);
-		
-		file.delete();
-		submission = subRepo.findSubmission(id);
-		submission.delete();
-		
-		context.restoreAuthorization();
-	}
-	
-	/**
-	 * Test uploading a "note" file
-	 */
-	@Test
-	public void testUploadNote() {
+	public void testUploadAdditonal() {
 		context.turnOffAuthorization();
 			
 		Person person = personRepo.findPersonByEmail("bthornton@gmail.com");
@@ -704,54 +658,8 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("subId", id.toString());
-		params.put("uploadType", "note");
-		params.put("addFile", "true");
-		
-		Map<String,File> files = new HashMap<String,File>();
-		File file = null;
-		
-		try {
-			file = getResourceFile("SampleFeedbackDocument.png");
-			files.put("noteAttachment", file);
-		} catch (IOException ioe) {
-			fail("Test upload file not found.");
-		}
-		
-		Response response = POST(UPDATE_URL,params,files);
-		assertIsOk(response);
-		
-		file.delete();
-		submission = subRepo.findSubmission(id);
-		submission.delete();
-		
-		context.restoreAuthorization();
-	}
-	
-	/**
-	 * Test uploading a "supplement" file
-	 */
-	@Test
-	public void testUploadSupplement() {
-		context.turnOffAuthorization();
-			
-		Person person = personRepo.findPersonByEmail("bthornton@gmail.com");
-		Submission submission = subRepo.createSubmission(person);
-		submission.setAssignee(person);
-		submission.save();
-		
-		Long id = submission.getId();
-		
-		JPA.em().getTransaction().commit();
-		JPA.em().clear();
-		JPA.em().getTransaction().begin();
-		
-		LOGIN();
-		
-		String UPDATE_URL = Router.reverse("ViewTab.view").url;
-		
-		Map<String,String> params = new HashMap<String,String>();
-		params.put("subId", id.toString());
-		params.put("uploadType", "supplement");
+		params.put("uploadType", "additional");
+		params.put("attachmentType", "SUPPLEMENTAL");
 		params.put("addFile", "true");
 		
 		Map<String,File> files = new HashMap<String,File>();
@@ -759,7 +667,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		
 		try {
 			file = getResourceFile("SampleSupplementalDocument.doc");
-			files.put("supplementAttachment", file);
+			files.put("additionalAttachment", file);
 		} catch (IOException ioe) {
 			fail("Test upload file not found.");
 		}
@@ -775,60 +683,6 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		attachment.delete();		
 		submission.delete();
 		
-		context.restoreAuthorization();
-	}
-	
-	/**
-	 * Test removing a "supplement" file
-	 */
-	@Test
-	public void testRemoveSupplement() {
-		context.turnOffAuthorization();
-				
-		Person person = personRepo.findPersonByEmail("bthornton@gmail.com");
-		Submission submission = subRepo.createSubmission(person);
-		submission.setAssignee(person);
-		
-		File file = null;
-		try {
-			file = getResourceFile("SampleSupplementalDocument.doc");
-			submission.addAttachment(file, AttachmentType.SUPPLEMENTAL);
-		} catch (IOException e) {
-			fail("Couldn't upload test file.");
-		}		
-		
-		submission.save();		
-		
-		Long id = submission.getId();
-		Long fileId = submission.getSupplementalDocuments().get(0).getId();		
-		
-		assertNotNull(fileId);
-		
-		JPA.em().getTransaction().commit();
-		JPA.em().clear();
-		JPA.em().getTransaction().begin();
-		
-		LOGIN();
-		
-		String UPDATE_URL = Router.reverse("ViewTab.view").url;
-		
-		Map<String,String> params = new HashMap<String,String>();
-		params.put("subId", id.toString());
-		params.put("uploadType", "supplement");
-		params.put("supplementType", "delete");
-		params.put("supplementDelete", fileId.toString());
-		params.put("addFile", "true");
-		
-		Response response = POST(UPDATE_URL,params);
-		assertIsOk(response);
-		
-		submission = subRepo.findSubmission(id);
-		
-		assertEquals(0,submission.getSupplementalDocuments().size());
-		
-		file.delete();
-		submission.delete();
-			
 		context.restoreAuthorization();
 	}
 	
@@ -894,6 +748,148 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 	}
 	
 	/**
+	 * Test editing a file from the view tab.
+	 */
+	@Test
+	public void testEditFile() {
+		context.turnOffAuthorization();
+		
+		Person person = personRepo.findPersonByEmail("bthornton@gmail.com");
+		Submission submission = subRepo.createSubmission(person);
+		submission.setAssignee(person);
+		submission.save();
+		
+		Long id = submission.getId();
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
+		LOGIN();
+		
+		String UPDATE_URL = Router.reverse("ViewTab.view").url;
+		
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("subId", id.toString());
+		params.put("uploadType", "additional");
+		params.put("attachmentType", "FEEDBACK");
+		params.put("addFile", "true");
+		
+		Map<String,File> files = new HashMap<String,File>();
+		File file = null;
+		
+		try {
+			file = getResourceFile("SamplePrimaryDocument.pdf");
+			files.put("additionalAttachment", file);
+		} catch (IOException ioe) {
+			fail("Test upload file not found.");
+		}
+		
+		Response response = POST(UPDATE_URL,params,files);
+		assertIsOk(response);
+		
+		submission = subRepo.findSubmission(id);
+		Long fileId = submission.getAttachments().get(0).getId();
+		String oldFileName = submission.findAttachmentById(fileId).getName();
+		AttachmentType oldAttachmentType = submission.findAttachmentById(fileId).getType();
+		
+		assertEquals(AttachmentType.FEEDBACK,oldAttachmentType);
+		
+		JPA.em().clear();
+		
+		params.clear();
+		
+		params.put("subId", id.toString());
+		params.put("editFile", "true");
+		params.put("attachmentId", fileId.toString());
+		params.put("fileName", "newName");
+		params.put("attachmentType", "SOURCE");
+		
+		response = POST(UPDATE_URL,params);
+		assertIsOk(response);
+		
+		submission = subRepo.findSubmission(id);
+		String newFileName = submission.findAttachmentById(fileId).getName();
+		AttachmentType newAttachmentType = submission.findAttachmentById(fileId).getType();
+		
+		assertFalse(oldFileName.equals(newFileName));
+		assertFalse(AttachmentType.FEEDBACK==newAttachmentType);
+		assertTrue("newName".equals(newFileName));
+		assertTrue(AttachmentType.SOURCE==newAttachmentType);
+		
+		Session.current().clear();
+		file.delete();
+		submission.delete();
+		
+		context.restoreAuthorization();
+	}
+	
+	/**
+	 * Test the ability to delete a file.
+	 */
+	@Test
+	public void testDeleteFile() {
+		context.turnOffAuthorization();
+		
+		Person person = personRepo.findPersonByEmail("bthornton@gmail.com");
+		Submission submission = subRepo.createSubmission(person);
+		submission.setAssignee(person);
+		submission.save();
+		
+		Long id = submission.getId();
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
+		LOGIN();
+		
+		String UPDATE_URL = Router.reverse("ViewTab.view").url;
+		
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("subId", id.toString());
+		params.put("uploadType", "additional");
+		params.put("attachmentType", "FEEDBACK");
+		params.put("addFile", "true");
+		
+		Map<String,File> files = new HashMap<String,File>();
+		File file = null;
+		
+		try {
+			file = getResourceFile("SamplePrimaryDocument.pdf");
+			files.put("additionalAttachment", file);
+		} catch (IOException ioe) {
+			fail("Test upload file not found.");
+		}
+		
+		Response response = POST(UPDATE_URL,params,files);
+		assertIsOk(response);
+		
+		submission = subRepo.findSubmission(id);
+		Long fileId = submission.getAttachments().get(0).getId();
+		
+		JPA.em().clear();
+		
+		params.clear();
+		
+		params.put("subId", id.toString());
+		params.put("deleteFile", "true");
+		params.put("attachmentId", fileId.toString());
+		
+		response = POST(UPDATE_URL,params);
+		assertIsOk(response);
+		
+		submission = subRepo.findSubmission(id);
+		assertEquals(null,submission.findAttachmentById(fileId));
+		
+		Session.current().clear();
+		file.delete();
+		submission.delete();
+		
+		context.restoreAuthorization();
+	}
+	
+	/**
 	 * Test the viewFile page
 	 */
 	@Test
@@ -917,7 +913,8 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("subId", id.toString());
-		params.put("uploadType", "note");
+		params.put("uploadType", "additional");
+		params.put("attachmentType", "FEEDBACK");
 		params.put("addFile", "true");
 		
 		Map<String,File> files = new HashMap<String,File>();
@@ -925,7 +922,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		
 		try {
 			file = getResourceFile("SamplePrimaryDocument.pdf");
-			files.put("noteAttachment", file);
+			files.put("additionalAttachment", file);
 		} catch (IOException ioe) {
 			fail("Test upload file not found.");
 		}

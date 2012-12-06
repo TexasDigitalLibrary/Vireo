@@ -650,6 +650,7 @@ jQuery(document).ready(function(){
 					<td>File</td>
 					<td>Type</td>
 					<td>Time</td>
+					<td></td>
 				</tr>
 			</thead>
 			<tbody>
@@ -659,10 +660,11 @@ jQuery(document).ready(function(){
 						<td><a href="@{ViewTab.viewFile(attachment.getId(), attachment.getName())}" target="_blank">${attachment.getName()}</a> (${attachment.getDisplaySize()})</td>
 						<td>${attachment.getType()}</td>
 						<td>${attachment.getDate()?.format("MM/dd/yyyy hh:mm:ss")}</td>
+						<td><a href="#edit-file${attachment.getId()}-modal" data-toggle="modal">edit</a></td>
 					</tr>
 				#{/list}				
 				<tr>
-					<td colspan="4" class="comments tr">
+					<td colspan="5" class="comments tr">
 					<a href="#add-file-modal" data-toggle="modal" class="btn btn-mini">
 						Add File
 					</a>

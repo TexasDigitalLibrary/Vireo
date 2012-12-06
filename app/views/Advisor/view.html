@@ -33,17 +33,17 @@
 			#{/else}
 		</div>
 	</div>
-    <div class="control-group #{if errors.forKey('supplementalDocument')}error#{/if}">
-        <label class="control-label">#{fieldLabel SUPPLEMENTARY_ATTACHMENT /}:</label>
+    <div class="control-group #{if errors.forKey('additionalDocument')}error#{/if}">
+        <label class="control-label">Additional Documents:</label>
         <div class="controls">
-            #{list items:supplementaryDocuments, as:'attachment'}
+            #{list items:additionalDocuments, as:'attachment'}
             <p>
                 <a href="@{Advisor.viewAttachment(token,attachment.getId(),attachment.getName())}" target="_blank">${attachment.getName()}</a>
-                (${attachment.getDisplaySize()})
+                (${attachment.getType()} - ${attachment.getDisplaySize()})
             </p>
             #{/list}
             #{else}
-            	<p><em>No supplementary documents uploaded</em></p>
+            	<p><em>No additional documents uploaded</em></p>
             #{/else}
         </div>
     </div>

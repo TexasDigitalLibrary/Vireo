@@ -101,14 +101,14 @@ public class Advisor extends AbstractVireoController {
 		Person submitter = sub.getSubmitter();
 		List<ActionLog> logs = subRepo.findActionLog(sub);
 		Attachment primaryDocument = sub.getPrimaryDocument();
-		List<Attachment> supplementaryDocuments = sub.getSupplementalDocuments();
+		List<Attachment> additionalDocuments = sub.getAttachmentsByType(AttachmentType.SUPPLEMENTAL,AttachmentType.ADMINISTRATIVE,AttachmentType.SOURCE);
 		List<Attachment> feedbackDocuments = sub.getAttachmentsByType(AttachmentType.FEEDBACK);
 
 		for(FieldConfig field : FieldConfig.values()) {
 			renderArgs.put(field.name(),field );
 		}
 		
-		renderTemplate("Advisor/view.html", token, sub, submitter, logs, primaryDocument, supplementaryDocuments, feedbackDocuments, grantor,allEmbargos,inputRecieved);
+		renderTemplate("Advisor/view.html", token, sub, submitter, logs, primaryDocument, additionalDocuments, feedbackDocuments, grantor,allEmbargos,inputRecieved);
 
 	}
 	

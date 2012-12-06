@@ -30,8 +30,8 @@
 <form action="@{submit.Confirm.confirm(subId)}" method="post" class="form-horizontal">
     #{include 'viewSubmission.include' /}
 	
-	#{ifEnabled [PRIMARY_ATTACHMENT,SUPPLEMENTARY_ATTACHMENT] }
-	<legend>Uploaded File${ supplementaryDocuments.size() > 0 ? "s" : "" }</legend>
+	#{ifEnabled [PRIMARY_ATTACHMENT,SUPPLEMENTAL_ATTACHMENT,SOURCE_ATTACHMENT,ADMINISTRATIVE_ATTACHMENT] }
+	<legend>Uploaded File${ additionalDocuments.size() > 0 ? "s" : "" }</legend>
 	
 	#{ifEnabled PRIMARY_ATTACHMENT }
 	<div class="control-group #{errorClass 'primaryDocument' /} ">
@@ -49,15 +49,15 @@
 		</div>
 	</div>
 	#{/ifEnabled}
-	#{ifEnabled SUPPLEMENTARY_ATTACHMENT}
-    #{if supplementaryDocuments.size() > 0}
-    <div class="control-group #{errorClass 'supplementaryDocument' /} ">
-        <label class="control-label">#{fieldLabel SUPPLEMENTARY_ATTACHMENT /}:</label>
+	#{ifEnabled [SUPPLEMENTAL_ATTACHMENT,SOURCE_ATTACHMENT,ADMINISTRATIVE_ATTACHMENT]}
+    #{if additionalDocuments.size() > 0}
+    <div class="control-group #{errorClass 'additonalDocument' /} ">
+        <label class="control-label">Additional Documents:</label>
         <div class="controls">
-            #{list items:supplementaryDocuments, as:'attachment'}
+            #{list items:additionalDocuments, as:'attachment'}
             <p>
                 <a href="@{Student.viewAttachment(subId,attachment.getId(),attachment.getName())}" target="_blank">${attachment.getName()}</a>
-                (${attachment.getDisplaySize()})
+                (${attachment.getType()} - ${attachment.getDisplaySize()})
             </p>
             #{/list}
         </div>

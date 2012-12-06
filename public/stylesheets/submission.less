@@ -179,14 +179,20 @@ SPECIFIC OVERIDES
 }
 
 
-div.control-group.required label.control-label {
+div.control-group.required label.control-label, label.required {
     font-weight: bold;
+}
+label.optional{
+	font-weight: normal!important;
 }
 div.control-group label.control-label .required-star {
     display: none;
 }
 div.control-group.required label.control-label .required-star {
     display: inline;
+}
+label.optional .required-star {
+	display:none!important;
 }
 
 /********************
