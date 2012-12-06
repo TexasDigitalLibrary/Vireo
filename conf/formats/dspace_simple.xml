@@ -55,7 +55,7 @@ ${ attachment.getName() }	bundle:LICENSE
 
     <!-- dc.contributor.advisor = Committee Memmbers who are flagged as chair (may be multiple) -->
     #{list items:sub.getCommitteeMembers(), as:'member'} 
-    #{if member.isCommitteeChair() } 
+    #{if member.hasRole("Chair","Co-Chair","Supervisor","Co-Supervisor","Advisor") } 
     <dcvalue element="contributor" qualifier="advisor">
         ${ member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH) }
     </dcvalue>
@@ -65,7 +65,7 @@ ${ attachment.getName() }	bundle:LICENSE
     
     <!-- dc.contributor.committeeMember = Committee Members who are not flagged as chair (likely multiple) -->
     #{list items:sub.getCommitteeMembers(), as:'member'}
-    #{if !member.isCommitteeChair() } 
+    #{if member.hasNoRole() } 
     <dcvalue element="contributor" qualifier="advisor">
         ${ member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH) }$
     </dcvalue>

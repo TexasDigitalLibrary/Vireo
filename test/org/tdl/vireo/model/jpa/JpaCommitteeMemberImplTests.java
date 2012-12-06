@@ -180,6 +180,31 @@ public class JpaCommitteeMemberImplTests extends UnitTest {
 	}
 	
 	/**
+	 * Test has role test
+	 */
+	@Test 
+	public void testHasRole() {
+		
+		CommitteeMember member = sub.addCommitteeMember("First", "Last", "Middle");
+		member.addRole("Role 1");
+		member.addRole("Role 2");
+		member.save();
+
+		assertTrue(member.hasRole("Role 1","Role 2", "doesnotexist"));
+		assertTrue(member.hasRole("Role 1","doesnotexist", "doesnotexist"));
+		assertTrue(member.hasRole("doesnotexist", "Role 2","doesnotexist"));
+		assertFalse(member.hasRole("doesnotexist","doesnotexist", "doesnotexist"));
+		assertFalse(member.hasNoRole());
+		
+		
+		member.getRoles().clear();
+		assertTrue(member.hasNoRole());
+
+		
+		member.delete();
+	}
+	
+	/**
 	 * Test that action logs are generated appropriately.
 	 */
 	@Test

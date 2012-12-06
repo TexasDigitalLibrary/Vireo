@@ -359,14 +359,11 @@ public class TestDataLoader extends Job {
 	 */
 	
 	private static final DegreeLevelArray[] ROLETYPES_DEFINITIONS = {
-		new DegreeLevelArray("Committee Member", DegreeLevel.DOCTORAL),
-		new DegreeLevelArray("Committee Chair", DegreeLevel.DOCTORAL),
-		new DegreeLevelArray("Committee Co-Chair", DegreeLevel.DOCTORAL),
-		new DegreeLevelArray("Directory of Research", DegreeLevel.DOCTORAL),
+		new DegreeLevelArray("Chair", DegreeLevel.DOCTORAL),
+		new DegreeLevelArray("Co-Chair", DegreeLevel.DOCTORAL),
+		new DegreeLevelArray("Director of Research", DegreeLevel.DOCTORAL),
 
-
-		new DegreeLevelArray("Committee Chair", DegreeLevel.MASTERS),
-		new DegreeLevelArray("Committee Member", DegreeLevel.MASTERS),
+		new DegreeLevelArray("Chair", DegreeLevel.MASTERS),
 
 		new DegreeLevelArray("Advisor", DegreeLevel.UNDERGRADUATE),
 		new DegreeLevelArray("Department Head", DegreeLevel.UNDERGRADUATE)

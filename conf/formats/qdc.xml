@@ -44,10 +44,12 @@
 	#{/if}
 	
 	<!-- dc.contributor.advisor = Committee Members, both chairs and members included (Multiple) -->
-	#{list items:sub.getCommitteeMembers(), as:'member'} 
+	#{list items:sub.getCommitteeMembers(), as:'member'}
+	#{if member.hasNoRole() || member.hasRole("Chair","Co-Chair","Supervisor","Co-Supervisor","Advisor") } 
 	<dc:contributor>
 	   ${ member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH).escapeXml() }
 	</dc:contributor>
+	#{/if}
 	#{/list}
 	
 	

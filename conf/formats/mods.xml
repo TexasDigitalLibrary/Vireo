@@ -34,9 +34,10 @@
         #{/if} 
     </name>
     
-    #{list items:sub.getCommitteeMembers(), as:'member'} 
+    #{list items:sub.getCommitteeMembers(), as:'member'}
+    #{if member.hasRole("Chair","Co-Chair","Supervisor","Co-Supervisor","Advisor") }
     <name type="personal">
-        <roleterm authority="marcrelator" type="text">${ member.isCommitteeChair() ? "Thesis advisor" : "Committee member" }</roleterm>
+        <roleterm authority="marcrelator" type="text">Thesis advisor</roleterm>
         #{if member.getFirstName() != null} 
         <namePart type="given">${ member.getFirstName().escapeXml() }</namePart>
         #{/if}
@@ -44,6 +45,18 @@
         <namePart type="family">${ member.getLastName().escapeXml() }</namePart>
         #{/if} 
     </name>
+    #{/if}
+    #{elseif member.hasNoRole() }
+    <name type="personal">
+        <roleterm authority="marcrelator" type="text">Committee member</roleterm>
+        #{if member.getFirstName() != null} 
+        <namePart type="given">${ member.getFirstName().escapeXml() }</namePart>
+        #{/if}
+        #{if member.getLastName() != null} 
+        <namePart type="family">${ member.getLastName().escapeXml() }</namePart>
+        #{/if} 
+    </name>
+    #{/elseif}
     #{/list}
     
     #{ if settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.GRANTOR) != null } 

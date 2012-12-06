@@ -585,9 +585,9 @@ jQuery(document).ready(function(){
 				        		<div class="controls">
 				        			<span class="help-block" style="max-width: 530px;">
 				        				Committee member role types from outside the supported list may not be supported by the
-				        				export formats. The supported list of role types is: "Committee Chair", "Committee Co-Chair",
-				        				"Committee Supervisor", "Committee Co-Supervisor", "Committee Member", "Department Head", 
-				        				"Advisor", and "Director of Research".
+				        				export formats. The supported list of role types are: "Chair", "Co-Chair", "Supervisor",
+				        				"Co-Supervisor", "Advisor", "Department Head", "Director of Research". Any one listed on
+				        				the committee without a role is assumed to be a member.
 				        			</span>
 				        		</div>
 				        	</div>
@@ -596,7 +596,7 @@ jQuery(document).ready(function(){
 				                <div class="controls">
 				                    <input type="text" class="input-large" id="add-committeeMemberRoleType-name"
 					                    data-provide="typeahead" data-items="20" data-min-length="0" 
-					                    data-source='["Committee Chair","Committee Co-Chair","Committee Supervisor","Committee Co-Supervisor","Committee Member","Department Head","Advisor","Director of Research"]'
+					                    data-source='["Chair","Co-Chair","Supervisor","Co-Supervisor","Advisor","Department Head","Director of Research"]'
 					                    autocomplete="off"
 				                    />
 				                </div>

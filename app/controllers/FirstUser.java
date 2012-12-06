@@ -163,7 +163,7 @@ public class FirstUser extends AbstractVireoController {
 	 * Initial Committee Member Role Types
 	 */
 	
-	private static final String[] COMMITTEE_MEMBER_ROLE_TYPES_DEFINITIONS = {"Committee Chair", "Committee Member"};
+	private static final String[] COMMITTEE_MEMBER_ROLE_TYPES_DEFINITIONS = {"Chair"};
 	
 	/**
 	 * Initial Embargo Types to create

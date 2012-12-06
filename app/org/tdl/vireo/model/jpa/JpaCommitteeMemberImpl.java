@@ -295,6 +295,21 @@ public class JpaCommitteeMemberImpl extends
 
 		roles.remove(role);
 	}
+	
+	@Override
+	public boolean hasRole(String ... roles) {
+		
+		for (String role : roles) {
+			if (this.roles.contains(role))
+				return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean hasNoRole() {
+		return this.roles.size() == 0;
+	}
 
 	@Override
 	public String getFormattedRoles() {

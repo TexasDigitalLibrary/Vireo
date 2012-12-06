@@ -86,7 +86,7 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 			
 			// Test that the default values were created.
 			assertEquals(4,MockSettingsRepository.mockEmbargos.size());
-			assertEquals(6,MockSettingsRepository.mockRoleTypes.size());
+			assertEquals(3,MockSettingsRepository.mockRoleTypes.size());
 
 			
 		} finally {

@@ -337,9 +337,9 @@
         def members = new java.util.ArrayList<org.tdl.vireo.model.CommitteeMember>();
         
         for (org.tdl.vireo.model.CommitteeMember member : sub.getCommitteeMembers()) {
-            if (member.isCommitteeChair()) {
+            if (member.hasRole("Chair","Co-Chair","Supervisor","Co-Supervisor","Advisor")) {
                 chairs.add(member);
-            } else {
+            } else if (member.hasNoRole()) {
                 members.add(member);
             }
         }

@@ -67,7 +67,7 @@
 
                     <!-- dc.contributor.advisor = Committee Memmbers who are flagged as chair (may be multiple) -->
                     #{list items:sub.getCommitteeMembers(), as:'member'} 
-                    #{if member.isCommitteeChair() } 
+                    #{if member.hasRole("Chair","Co-Chair","Supervisor","Co-Supervisor","Advisor") }
                     <dim:field mdschema="dc" element="contributor" qualifier="advisor">
                         ${ member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH) }
                     </dim:field>
@@ -77,7 +77,7 @@
                     
                     <!-- dc.contributor.committeeMember = Committee Members who are not flagged as chair (likely multiple) -->
                     #{list items:sub.getCommitteeMembers(), as:'member'}
-                    #{if !member.isCommitteeChair() } 
+                    #{if member.hasNoRole() } 
                     <dim:field mdschema="dc" element="contributor" qualifier="advisor">
                         ${ member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH) } 
                     </dim:field>

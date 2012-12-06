@@ -88,6 +88,23 @@ public interface CommitteeMember extends AbstractOrderedModel {
 	public void removeRole(String role);
 	
 	/**
+	 * Return true if the member has at least one of the listed roles.
+	 * 
+	 * @param role
+	 *            A variable argument list of roles
+	 * @return True if this member has one of the specified roles.
+	 */
+	public boolean hasRole(String... roles);
+
+	/**
+	 * Return true if this committee member has no special roles. Typical this
+	 * indicates the person is just a committee member.
+	 * 
+	 * @return true if there are no roles.
+	 */
+	public boolean hasNoRole();
+	
+	/**
 	 * 
 	 * 
 	 * @return a string containing all the roles associated with this member as

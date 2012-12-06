@@ -278,13 +278,24 @@ ${ address.fullAddress }
 		</DISS_institution>
 		
 		#{list items:sub.getCommitteeMembers(), as:'member'} 
-		#{verbatim}${ member.isCommitteeChair() ? "<DISS_advisor>" : "<DISS_cmte_member>"}#{/verbatim}
+		#{if member.hasRole("Chair","Co-Chair","Supervisor","Co-Supervisor","Advisor") }
+		<DISS_advisor>
+            <DISS_name>
+                <DISS_surname>${ member.getLastName() }</DISS_surname>
+                <DISS_fname>${ member.getFirstName() }</DISS_fname>
+                <DISS_middle>${ member.getMiddleName() }</DISS_middle>
+            </DISS_name>
+		</DISS_advisor>
+		#{/if}
+		#{elseif member.hasNoRole() }
+		<DISS_cmte_member>
 			<DISS_name>
 				<DISS_surname>${ member.getLastName() }</DISS_surname>
 				<DISS_fname>${ member.getFirstName() }</DISS_fname>
 				<DISS_middle>${ member.getMiddleName() }</DISS_middle>
             </DISS_name>			
-		#{verbatim}${ member.isCommitteeChair() ? "<DISS_advisor>" : "<DISS_cmte_member>"}#{/verbatim}
+		<DISS_cmte_member>
+		#{/elseif}
 		#{/list}
 		
 		<DISS_categorization>
