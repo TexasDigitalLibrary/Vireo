@@ -46,7 +46,8 @@ function displaySortableItem(type, editable, $element, id, name, level) {
 	
 	} else if (
 		type == "degree" ||
-		type == "documentType"
+		type == "documentType" ||
+		type == "committeeMemberRoleType"
 		) {
 		
 		if (editable) {
@@ -68,6 +69,15 @@ function displaySortableItem(type, editable, $element, id, name, level) {
 					"</span>"+
 					"</li>");
 			jQuery("#"+id+" select").val(level);
+			
+			if (type == "committeeMemberRoleType") {
+				// Copy down the typeahead attributes to the new field.
+				jQuery("#"+id+" input").attr("data-provide",jQuery("#add-committeeMemberRoleType-name").attr("data-provide"));
+				jQuery("#"+id+" input").attr("data-items",jQuery("#add-committeeMemberRoleType-name").attr("data-items"));
+				jQuery("#"+id+" input").attr("data-min-length",jQuery("#add-committeeMemberRoleType-name").attr("data-min-length"));
+				jQuery("#"+id+" input").attr("data-source",jQuery("#add-committeeMemberRoleType-name").attr("data-source"));
+			}
+			
 		} else {
 			
 			var levelText = "NONE";
@@ -185,7 +195,8 @@ function swapToEditable(element) {
 		displaySortableItem(type, true, $element, id, name);
 	} else if (
 		type == "degree" ||
-		type == "documentType"
+		type == "documentType" ||
+		type == "committeeMemberRoleType"
 		) {
 		// Make the field editable
 		var name = jQuery.trim($element.find("a."+type+"-editable .name").text());

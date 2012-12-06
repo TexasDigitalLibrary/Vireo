@@ -245,12 +245,26 @@ public enum FieldConfig {
 			"submit_primary_attachment_enabled",
 			"The primary manuscript, must be a single PDF file."),
 	
-	SUPPLEMENTARY_ATTACHMENT(
+	SUPPLEMENTAL_ATTACHMENT(
 			"Supplemental Files",
-			"submit_supplementary_attachment_label",
-			"submit_supplementary_attachment_help",
-			"submit_supplementary_attachment_enabled",
-			"Any number of additional supplementary files in any format.");
+			"submit_supplemental_attachment_label",
+			"submit_supplemental_attachment_help",
+			"submit_supplemental_attachment_enabled",
+			"Any number of supplemental files in any format."),
+	
+	SOURCE_ATTACHMENT(
+			"Source Files",
+			"submit_source_attachment_label",
+			"submit_source_attachment_help",
+			"submit_source_attachment_enabled",
+			"Any number of source files in any format."),
+	
+	ADMINISTRATIVE_ATTACHMENT(
+			"Administrative Files",
+			"submit_administrative_attachment_label",
+			"submit_administrative_attachment_help",
+			"submit_administrative_attachment_enabled",
+			"Any number of additional files in any format.");
 
 	/**
 	 * Private internal method to construct a new field configuration
@@ -311,5 +325,5 @@ public enum FieldConfig {
 	
 	public static final FieldConfig[] DOCUMENT_INFO_FIELDS = {DOCUMENT_TITLE, GRADUATION_DATE, DOCUMENT_TYPE, DOCUMENT_ABSTRACT, DOCUMENT_KEYWORDS, DOCUMENT_SUBJECTS, DOCUMENT_LANGUAGE, COMMITTEE, COMMITTEE_CONTACT_EMAIL, EMBARGO_TYPE, UMI_RELEASE};
 
-	public static final FieldConfig[] UPLOAD_FILES_FIELDS = {PRIMARY_ATTACHMENT, SUPPLEMENTARY_ATTACHMENT};
+	public static final FieldConfig[] UPLOAD_FILES_FIELDS = {PRIMARY_ATTACHMENT, SUPPLEMENTAL_ATTACHMENT, SOURCE_ATTACHMENT, ADMINISTRATIVE_ATTACHMENT};
 }

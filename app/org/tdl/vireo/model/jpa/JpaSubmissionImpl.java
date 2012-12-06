@@ -398,9 +398,13 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	
 	@Override
 	public void setDocumentLanguage(String language) {
-		
-		if (language != null && JpaLanguageImpl._toLocale(language) == null)
-			throw new IllegalArgumentException("Language is an invalid locale");
+				
+		if (language != null) {
+			if(language.isEmpty())
+				language = null;
+			else if(JpaLanguageImpl._toLocale(language) == null)
+				throw new IllegalArgumentException("Language is an invalid locale");
+		}
 		
 		assertReviewerOrOwner(submitter);
 		
@@ -453,19 +457,22 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	public List<Attachment> getSupplementalDocuments() {
 		
 		return getAttachmentsByType(AttachmentType.SUPPLEMENTAL);
+		
 	}
 	
 	@Override
-	public List<Attachment> getAttachmentsByType(AttachmentType type) {
+	public List<Attachment> getAttachmentsByType(AttachmentType...types) {
 		
 		
-		List<Attachment> found = new ArrayList<Attachment>();
-		for (Attachment attachment : attachments) {
-			if (type == attachment.getType())
-				found.add(attachment);
+		List<Attachment> filteredAttachments = new ArrayList<Attachment>();
+		for (AttachmentType type : types) {
+			for (Attachment attachment : attachments) {
+				if (type == attachment.getType())
+					filteredAttachments.add(attachment);
+			}
 		}
 		
-		return found;
+		return filteredAttachments;
 	}
 
 	@Override

@@ -221,14 +221,16 @@ public class MockSubmission extends AbstractMock implements Submission {
 	}
 	
 	@Override
-	public List<Attachment> getAttachmentsByType(AttachmentType type) {
-		List<Attachment> found = new ArrayList<Attachment>();
+	public List<Attachment> getAttachmentsByType(AttachmentType...types) {
+		List<Attachment> filteredAttachments = new ArrayList<Attachment>();
 
-		for (Attachment attachment : attachments) {
-			if (type == attachment.getType())
-				found.add(attachment);
+		for (AttachmentType type : types) {
+			for (Attachment attachment : attachments) {
+				if (type == attachment.getType())
+					filteredAttachments.add(attachment);
+			}
 		}
-		return found;
+		return filteredAttachments;
 	}
 
 	@Override

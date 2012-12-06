@@ -281,13 +281,13 @@
             </file>
             #{/if}
             
-            <!-- Supplemental Documents -->
+            <!-- Supplemental and Source Documents -->
             
-            #{list items:sub.getSupplementalDocuments(), as:'attachment'} 
+            #{list items:sub.getAttachmentsByType(org.tdl.vireo.model.AttachmentType.SUPPLEMENTAL,org.tdl.vireo.model.AttachmentType.SOURCE), as:'attachment'} 
             <file GROUPID="piper-mets-file-group-${ attachment.getType().ordinal() }" 
                   ID="piper-mets-file-${ attachment.getId() }" 
                   MIMETYPE="${ attachment.getMimeType().escapeXml() }"
-                  SEQ="${ sub.getSupplementalDocuments().indexOf(attachment) + 2 }">
+                  SEQ="${ sub.getAttachmentsByType(org.tdl.vireo.model.AttachmentType.SUPPLEMENTAL,org.tdl.vireo.model.AttachmentType.SOURCE).indexOf(attachment) + 2 }">
                   <FLocat LOCTYPE="URL" xlink:href="${ attachment.getName().escapeXml() }"/>
             </file>
             #{/list}
@@ -298,14 +298,12 @@
         
             <!-- Licence Documents -->
             
-            #{list items:sub.getAttachments(), as:'attachment'} 
-            #{if attachment.getType() == org.tdl.vireo.model.AttachmentType.LICENSE} 
+            #{list items:sub.getAttachmentsByType(org.tdl.vireo.model.AttachmentType.LICENSE), as:'attachment'}             
             <file GROUPID="piper-mets-file-group-${ attachment.getType().ordinal() }" 
                   ID="piper-mets-file-${ attachment.getId() }" 
                   MIMETYPE="${ attachment.getMimeType().escapeXml() }">
                   <FLocat LOCTYPE="URL" xlink:href="${ attachment.getName().escapeXml() }"/>
             </file>
-            #{/if}
             #{/list}
         
         </fileGrp>
@@ -329,9 +327,9 @@
             </div>
             #{/if}
             
-            <!-- Bitstream divs for each supplemental document -->
+            <!-- Bitstream divs for each supplemental and source document -->
             
-            #{list items:sub.getSupplementalDocuments(), as:'attachment'} 
+            #{list items:sub.getAttachmentsByType(org.tdl.vireo.model.AttachmentType.SUPPLEMENTAL,org.tdl.vireo.model.AttachmentType.SOURCE), as:'attachment'} 
             <div ID="piper-mets-div-${ attachment.getId() }" 
                  TYPE="DSpace Content Bitstream">
                  <ftpr FILEID="piper-mets-file-${ attachment.getId() }"/>

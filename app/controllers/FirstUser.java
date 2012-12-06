@@ -8,6 +8,8 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import org.tdl.vireo.email.SystemEmailTemplateService;
+import org.tdl.vireo.model.CommitteeMemberRoleType;
+import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.search.Indexer;
@@ -58,9 +60,16 @@ public class FirstUser extends AbstractVireoController {
 				//Generate System Email Templates
 				systemEmailService.generateAllSystemEmailTemplates();
 				
-				//Setup Embargos
+				// Setup Embargos
 				for(EmbargoArray embargoDefinition : EMBARGO_DEFINTITIONS) {
 					settingRepo.createEmbargoType(embargoDefinition.name, embargoDefinition.description, embargoDefinition.duration, embargoDefinition.active).save();
+				}
+				
+				// Setup default Committee Member Role Types
+				for(String roleType : COMMITTEE_MEMBER_ROLE_TYPES_DEFINITIONS) {
+					settingRepo.createCommitteeMemberRoleType(roleType, DegreeLevel.UNDERGRADUATE).save();
+					settingRepo.createCommitteeMemberRoleType(roleType, DegreeLevel.MASTERS).save();
+					settingRepo.createCommitteeMemberRoleType(roleType, DegreeLevel.DOCTORAL).save();
 				}
 				
 				//Flag that any future user is not the first user.
@@ -151,6 +160,12 @@ public class FirstUser extends AbstractVireoController {
 	}
 	
 	/**
+	 * Initial Committee Member Role Types
+	 */
+	
+	private static final String[] COMMITTEE_MEMBER_ROLE_TYPES_DEFINITIONS = {"Committee Chair", "Committee Member"};
+	
+	/**
 	 * Initial Embargo Types to create
 	 */
 	
@@ -184,7 +199,7 @@ public class FirstUser extends AbstractVireoController {
 			this.duration = duration;
 			this.active = active;
 		}
-		
-		
 	}
+	
+	
 }

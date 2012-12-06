@@ -590,11 +590,12 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 		// Upload each of the supplementary documents
 		for (String supplement : supplementary) {
 			params= new HashMap<String, String>();
-			params.put("uploadSupplementary", "Upload");
-
+			params.put("uploadAdditional", "Upload");
+			params.put("attachmentType", "SUPPLEMENTAL");
+			
 			fileParams = new HashMap<String,File>();
 			File supplementaryFile = getResourceFile(supplement);
-			fileParams.put("supplementaryDocument", supplementaryFile);
+			fileParams.put("additionalDocument", supplementaryFile);			
 
 			response = POST(FILE_UPLOAD_URL,params,fileParams);
 			assertIsOk(response);

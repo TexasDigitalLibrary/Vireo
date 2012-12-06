@@ -14,13 +14,11 @@
 #{if sub.getPrimaryDocument() != null }
 ${ sub.getPrimaryDocument().getName() }	bundle:CONTENT	primary:true
 #{/if}
-#{list items:sub.getSupplementalDocuments(), as:'attachment'}
+#{list items:sub.getAttachmentsByType(org.tdl.vireo.model.AttachmentType.SUPPLEMENTAL,org.tdl.vireo.model.AttachmentType.SOURCE), as:'attachment'}
 ${ attachment.getName() }	bundle:CONTENT
 #{/list}
-#{list items:sub.getAttachments(), as:'attachment'}
-#{if attachment.getType() == org.tdl.vireo.model.AttachmentType.LICENSE}
+#{list items:sub.getAttachmentsByType(org.tdl.vireo.model.AttachmentType.LICENSE), as:'attachment'}
 ${ attachment.getName() }	bundle:LICENSE
-#{/if}
 #{/list}
 #{/if}
 #{elseif "dublin_core.xml".equals(template) }

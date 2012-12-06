@@ -4,7 +4,8 @@
 <title>#{get 'title' /}</title>
 <meta charset="utf-8">
 <script src="@{'/public/javascripts/jquery-1.7.2.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
-<script src="@{'/public/javascripts/jquery-ui-1.8.21.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>                            
+<script src="@{'/public/javascripts/jquery-ui-1.8.21.min.js'}" type="text/javascript" charset="${_response_encoding}"></script> 
+<script src="@{'/public/javascripts/jquery-ui-multiselect-1.13.js'}" type="text/javascript" charset="${_response_encoding}"></script>                           
 <script src="@{'/public/bootstrap/js/bootstrap.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
 <script src="@{'/public/javascripts/vireo-admin.js'}" type="text/javascript" charset="${_response_encoding}"></script>
 <script src="@{'/public/javascripts/vireo-viewtab.js'}" type="text/javascript" charset="${_response_encoding}"></script>      
@@ -223,17 +224,17 @@ test("test swapToInputHandler text area", function(){
  * Test swapping the committee member data with editable fields.
  */
 test("test editCommitteeMemberHandler", function(){
-	expect(10);
+	expect(9);
 	reset();
 	
 	//Create markup to test
-	var markup = '<div id="committeeMembers" class="edit-box">';
+	var markup = '<div id="committeeMembers" class="edit-box" data-roles=\'["Member","Chair"]\'>';
 		markup += '<ul><li class="1">';
 		markup += '<div class="editCommitteeMember">';
 		markup += '<span class="lastName">Smith</span><span class="seperator">,</span>';
 		markup += '<span class="firstName">John</span>';
 		markup += '<span class="middleName">W</span>';
-		markup += '<span class="chair">chair</span>';
+		markup += '<span class="role">Member</span>';
 		markup += '</div>';
 		markup += '</li></ul>';
 		markup += '</div>';
@@ -248,16 +249,15 @@ test("test editCommitteeMemberHandler", function(){
 	//Simulate click
 	jQuery(".editCommitteeMember").click();
 	
-	equal(0, jQuery("#committeeMembers span").length, "The spans have been removed.");
-	equal(5, jQuery("input").length, "There are three input fields.");
+	equal(6, jQuery("input").length, "There are three input fields.");
 	equal("John", jQuery("#cmFirstName").val(), "The first name field has the correct value.");
 	equal("W", jQuery("#cmMiddleName").val(), "The middle name field has the correct value.");
 	equal("Smith", jQuery("#cmLastName").val(), "The last name field has the correct value.");
-	equal(1, jQuery("#chair:checked").length, "The chair field is checked.");
+	equal("Member", jQuery("#cmRoles").val(), "The role field has the correct value.");
 	equal(1, jQuery(".icon-remove").length, "There is one cancel icon.");
 	equal(1, jQuery(".icon-ok").length, "There is one submit icon.");
 	equal(1, jQuery("#backup").length, "The backup was created.");
-	equal('<span class="lastName">Smith</span><span class="seperator">,</span><span class="firstName">John</span><span class="middleName">W</span><span class="chair">chair</span>', jQuery("#backup").html(), "The backup is accurate.");
+	equal('<span class="lastName">Smith</span><span class="seperator">,</span><span class="firstName">John</span><span class="middleName">W</span><span class="role">Member</span>', jQuery("#backup").html(), "The backup is accurate.");
 });
 
 /**
@@ -425,17 +425,17 @@ test("test commitChangesHandler AJAX Subject", function(){
  * Test AJAX committee members.
  */
 test("test commitChangesHandler AJAX committee members", function(){
-    expect(14);
+    expect(13);
 	reset();
 	
 	//Create markup to test
-	var markup = '<div id="committeeMembers" class="edit-box">';
+	var markup = '<div id="committeeMembers" class="edit-box" data-roles=\'["Member","Chair"]\'">';
 		markup += '<ul><li class="1">';
 		markup += '<div class="editCommitteeMember">';
 		markup += '<span class="lastName">Smith</span><span class="seperator">,</span>';
 		markup += '<span class="firstName">John</span>';
 		markup += '<span class="middleName">W</span>';
-		markup += '<span class="chair">chair</span>';
+		markup += '<span class="role">Member</span>';
 		markup += '</div>';
 		markup += '</li></ul>';
 		markup += '</div>';
@@ -459,7 +459,7 @@ test("test commitChangesHandler AJAX committee members", function(){
   	//AJAX handler
 	commitChangesHandler(jQuery(".icon-ok"), "/jsonURL", "/committeeURL", 1);
 	
-	options.success({ success: 'true', id: 1, firstName: 'John', lastName: 'Smith', middleName: 'W', chair: 'false' });
+	options.success({ success: 'true', id: 1, firstName: 'John', lastName: 'Smith', middleName: 'W', roles: ['Member'] });
 	
 	equal('/committeeURL', options.url,"The ajax url is correct.");
     equal('POST', options.type,"The ajax type is correct.");
@@ -468,13 +468,12 @@ test("test commitChangesHandler AJAX committee members", function(){
     equal('John', options.data.firstName,"The ajax data firstName is correct.");
     equal('W', options.data.middleName,"The ajax data middleName is correct.");
     equal('Smith', options.data.lastName,"The ajax data lastName is correct.");
-    equal(true, options.data.chair,"The ajax data chair is correct.");
     
     
     equal('John', jQuery("span.firstName").text().trim(),"The first name returned is correct.");
     equal('W', jQuery("span.middleName").text().trim(),"The middle name returned is correct.");
     equal('Smith', jQuery("span.lastName").text().trim(),"The last name returned is correct.");
-    equal(true, !jQuery("span.chair").text().trim(),"The chair returned is correct.");
+    equal('Member', jQuery("span.role").text().trim(),"The roles returned is correct.");
     equal(0, jQuery(".icon-remove").length,"There are zero remove icons.");
     equal(0, jQuery(".icon-ok").length,"There are zero ok icons.");
     
@@ -521,10 +520,11 @@ test("test addCommitteeMemberHandler", function(){
 	expect(4);
 	reset();
 	 
-	var markup = '<ul>';
+	var markup =  '<div id="committeeMembers" data-roles=\'["Member","Chair"]\'>';
+	    markup += '<ul>';
 		markup += '<li id="add_new_member">'
 		markup += '<button class="btn">Add New Member</button>'
-		markup += '</li></ul>'
+		markup += '</li></ul></div>'
 		
 	jQuery("body").append(markup);
 		
@@ -538,7 +538,7 @@ test("test addCommitteeMemberHandler", function(){
 	equal(1, jQuery("#cmLastName").length, "There is 1 input for last name.");
 	equal(1, jQuery("#cmFirstName").length, "There is 1 input for first name.");
 	equal(1, jQuery("#cmMiddleName").length, "There is 1 input for middle name.");
-	equal(1, jQuery("#chair").length, "There is 1 input for chair.");	
+	equal(1, jQuery("#cmRoles").length, "There is 1 input for chair.");	
 	
  });
  
@@ -549,12 +549,13 @@ test("test commitNewCommitteeMemberHandler", function(){
 	expect(13);
 	reset();
 	
-	var markup = '<ul><li class="add">';
+	var markup += '<div id="committeeMembers" data-roles=\'["Member","Chair"]\'>';
+	    markup += '<ul><li class="add">';
 		markup += '<input type="text" id="cmFirstName" value="Judy" />';
 		markup += '<input type="text" id="cmLastName" value="Jetson" />';
 		markup += '<input type="text" id="cmMiddleName" value="L" />';
-		markup += '<input type="checkbox" id="chair" />';
-		markup += '</li></ul>';
+		markup += '<input type="text" id="cmRoles" value="Chair" />';
+		markup += '</li></ul></div>';
 	
 	jQuery("body").append(markup);
 	
@@ -567,7 +568,7 @@ test("test commitNewCommitteeMemberHandler", function(){
 	//AJAX handler
 	commitNewCommitteeMemberHandler(1, "/jsonURL");
 	
-	options.success({ success: 'true', id: '2', firstName: 'Sam', lastName: 'Colt', middleName: 'T', chair: 'true' });
+	options.success({ success: 'true', id: '2', firstName: 'Sam', lastName: 'Colt', middleName: 'T', roles: ['Chair'] });
 	
 	equal('/jsonURL', options.url,"The ajax url is correct.");
 	equal('POST', options.type,"The ajax type is correct.");
@@ -576,12 +577,12 @@ test("test commitNewCommitteeMemberHandler", function(){
 	equal('Judy', options.data.firstName, "The ajax data firstName is correct.");
 	equal('Jetson', options.data.lastName, "The ajax data lastName is correct.");
 	equal('L', options.data.middleName, "The ajax data middleName is correct.");
-	equal(false, options.data.chair, "The ajax data chair is correct.");
+	equal(['Chair'], options.data.roles, "The ajax data roles is correct.");
 	
 	equal('Sam', jQuery(".firstName").text().trim(), "The first name is correct.");
 	equal('T', jQuery(".middleName").text().trim(), "The middle name is correct.");
 	equal('Colt', jQuery(".lastName").text().trim(), "The last name is correct.");
-	equal('chair', jQuery(".chair").text().trim(), "The member is chair.");
+	equal('Chair', jQuery(".role").text().trim(), "The member is chair.");
 	equal(0, jQuery(".add").length, "There are 0 list items with the class 'add'.");
 	
 });

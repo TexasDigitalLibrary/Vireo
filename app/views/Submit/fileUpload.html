@@ -50,37 +50,60 @@
 		</fieldset>
 		#{/ifEnabled}
 		
-		#{ifEnabled SUPPLEMENTARY_ATTACHMENT}
-		<fieldset id="supplementaryFileUpload">
-			<legend>Upload Supplementary Files</legend>
-            <p> #{fieldHelp SUPPLEMENTARY_ATTACHMENT /}</p>
-			<div class="control-group #{errorClass 'supplementaryDocument' /} #{fieldClass SUPPLEMENTARY_ATTACHMENT /}">
-				<label class="control-label" for="supplementaryFile"><span class="required-star">*</span> #{fieldLabel SUPPLEMENTARY_ATTACHMENT /}:</label>
+		#{ifEnabled [SUPPLEMENTAL_ATTACHMENT,SOURCE_ATTACHMENT,ADMINISTRATIVE_ATTACHMENT]}
+		<fieldset id="additionalFileUpload">
+			<legend>Upload Additional Files</legend>            
+			<div class="control-group #{errorClass 'additionalDocument' /} #{fieldClass SUPPLEMENTAL_ATTACHMENT /} #{fieldClass SOURCE_ATTACHMENT /} #{fieldClass ADMINISTRATIVE_ATTACHMENT /}">
+			#{ifEnabled SUPPLEMENTAL_ATTACHMENT}
+            <label class="control-label #{fieldClass SUPPLEMENTAL_ATTACHMENT /}"><span class="required-star">*</span> #{fieldLabel SUPPLEMENTAL_ATTACHMENT /}:</label>
+            <div class="controls"><p>#{fieldHelp SUPPLEMENTAL_ATTACHMENT /}</p></div>
+            #{/ifEnabled}
+            #{ifEnabled SOURCE_ATTACHMENT}
+            <label class="control-label #{fieldClass SOURCE_ATTACHMENT /}"><span class="required-star">*</span> #{fieldLabel SOURCE_ATTACHMENT /}:</label>
+            <div class="controls"><p>#{fieldHelp SOURCE_ATTACHMENT /}</p></div>
+            #{/ifEnabled}
+            #{ifEnabled ADMINISTRATIVE_ATTACHMENT}
+            <label class="control-label #{fieldClass ADMINISTRATIVE_ATTACHMENT /}"><span class="required-star">*</span> #{fieldLabel ADMINISTRATIVE_ATTACHMENT /}:</label>
+            <div class="controls"><p>#{fieldHelp ADMINISTRATIVE_ATTACHMENT /}</p></div>
+            #{/ifEnabled}
+				<label class="control-label" for="additionalFile"><span class="required-star">*</span> Additional Documents:</label>
 
                 <div class="controls">
-                    <input type="file" id="supplementaryFile" class="input-file" name="supplementaryDocument"><br/>
-                    <input type="submit" value="Upload" class="uploadBtn btn" name="uploadSupplementary">
+                    <select id="attachmentType" class="input-select" name="attachmentType" style="margin-bottom:7px;">
+                    	<option value="">choose type...</option>
+                    	#{ifEnabled SUPPLEMENTAL_ATTACHMENT}
+                    	<option value="SUPPLEMENTAL">#{fieldLabel SUPPLEMENTAL_ATTACHMENT /}</option>
+                    	#{/ifEnabled}
+                    	#{ifEnabled SOURCE_ATTACHMENT}
+                    	<option value="SOURCE">#{fieldLabel SOURCE_ATTACHMENT /}</option>
+                    	#{/ifEnabled}
+                    	#{ifEnabled ADMINISTRATIVE_ATTACHMENT}
+                    	<option value="ADMINISTRATIVE">#{fieldLabel ADMINISTRATIVE_ATTACHMENT /}</option>
+                    	#{/ifEnabled}
+                    </select>
+                    <input type="file" id="additionalFile" class="input-file" name="additionalDocument"><br/>
+                    <input type="submit" value="Upload" class="uploadBtn btn" name="uploadAdditional">
                 </div>
 			</div>
 		</fieldset>
 		
-		#{if supplementalAttachments.size() > 0}
-		<fieldset id="supplementaryFileUploadList">
-			<legend>Uploaded supplementary files</legend>
+		#{if additionalAttachments.size() > 0}
+		<fieldset id="additionalFileUploadList">
+			<legend>Uploaded additional files</legend>
 			<div class="control-group">
                     <div class="controls">
-                        #{list items:supplementalAttachments, as:"attachment"}
+                        #{list items:additionalAttachments, as:"attachment"}
                             <p>
                             <label>
                                 <input type="checkbox" value="${attachment.getId()}" name="attachmentToRemove">
                                 <a href="@{Student.viewAttachment(subId,attachment.getId(),attachment.getName())}" target="_blank">
                                     ${attachment.getName()}
                                 </a> 
-                                (${attachment.getDisplaySize()})
+                                <br />(${attachment.getType()} - ${attachment.getDisplaySize()})
                             </label>                                                     
                             </p>
                         #{/list}
-                            <input type="submit" value="Remove Selected" class="uploadBtn btn" name="removeSupplementary">                        
+                            <input type="submit" value="Remove Selected" class="uploadBtn btn" name="removeAdditional">                        
                     </div>
 			</div>
 		</fieldset>		

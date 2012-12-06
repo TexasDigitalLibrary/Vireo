@@ -210,14 +210,7 @@
         
 	<div class="modal-body">
 		<form id="add-file-form" action="@{ViewTab.view()}" method="POST" class="form-horizontal" enctype="multipart/form-data">
-			<ul class="unstyled">
-				<li><input type="radio" class="radio" name="uploadType" value="note"> Attach a note or correction document</input>
-					<ul class="unstyled fileContainer" style="padding-left:15px; display:none;">
-						<li class="well">
-							Choose file: <input type="file" name="noteAttachment" />
-						</li>
-					</ul>
-				</li>
+			<ul class="unstyled">				
 				<li><input type="radio" class="radio" name="uploadType" value="primary"> Replace the primary document</input>
 					<ul class="unstyled fileContainer" style="padding-left:15px; display:none;">
 						<li class="well">
@@ -225,34 +218,18 @@
 						</li>
 					</ul>
 				</li>
-				<li><input type="radio" class="radio" name="uploadType" value="supplement"> Manage supplementary documents</input>
+				<li><input type="radio" class="radio" name="uploadType" value="additional"> Add additional documents</input>
 					<ul class="unstyled fileContainer" style="padding-left:15px; display:none;">
 						<li class="well">
-							#{if !submission.getSupplementalDocuments().isEmpty()}
-							<h4><input type="radio" class="radio" name="supplementType" value="delete">
-								Delete a Supplemental File
-							</input></h4>
-							Choose a file:&nbsp;
-							<select name="supplementDelete">
-								#{list items:submission.getSupplementalDocuments(), as:'file'}
-									<option value="${file.getId()}">${file.getName()}</option>
-								#{/list}								
-							</select><br /><br />
-							<h4><input type="radio" class="radio" name="supplementType" value="replace">
-								Replace a Supplemental File
-							</input></h4>
-							Choose a file:&nbsp;
-							<select name="supplementReplaceOriginal">
-								#{list items:submission.getSupplementalDocuments(), as:'file'}
-									<option value="${file.getId()}">${file.getName()}</option>
-								#{/list}								
+							<select name="attachmentType" class="input-select" style="margin-bottom:7px;">
+								<option value="">choose type...</option>
+		                    	#{list items:attachmentTypes, as:"type"}
+		                    		#{if !"PRIMARY".equals(type)}
+		                    			<option value="${type}">${type}</option>
+		                    		#{/if}
+		                    	#{/list}
 							</select><br />
-							New File: <input type="file" name="supplementReplace" /><br /><br />
-							#{/if}
-							<h4><input type="radio" class="radio" name="supplementType" value="add" checked="true">
-								Add a Supplemental File
-							</input></h4>
-							Choose file: <input type="file" name="supplementAttachment" />
+							Choose file: <input type="file" name="additionalAttachment" />
 						</li>
 					</ul>
 				</li>				
@@ -306,4 +283,43 @@
 	</div>
     
 </div>
+
+#{list items:attachments, as:'attachment'}
+<div class="modal hide fade" id="edit-file${attachment.getId()}-modal">
 	
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal">×</button>
+		<h3>Editing ${attachment.getName()}</h3> (${attachment.getMimeType()})
+	</div>
+        
+	<div class="modal-body">
+		<form id="add-file-form" action="@{ViewTab.view()}" method="POST" class="form-horizontal" enctype="multipart/form-data">
+			<input type="hidden" name="attachmentId" value="${attachment.getId()}" />
+			<ul class="unstyled">
+				<li>
+					<p>New File Name:</p>
+					<input type="text" name="fileName" value="${attachment.getName()}" />
+				</li>
+				<li><p>New Attachment Type:</p>
+					<select name="attachmentType">
+					#{list items:attachmentTypes, as:'type'}
+						<option value="${type}"
+						#{if type.toString().equals(attachment.getType().toString())}
+						selected="selected"
+						#{/if}
+						>${type}</option>
+					#{/list}
+					</select>
+				</li>
+			</ul>
+	</div>
+	
+	<div class="modal-footer">
+			<button type="submit" class="btn btn-danger confirm" name="deleteFile" style="float:left">Delete</button>			
+			<a href="#" class="btn" data-dismiss="modal">Close</a>
+			<input type="submit" class="btn btn-primary" name="editFile" value="Submit"/>
+		</form>                 
+	</div>
+    
+</div>
+#{/list}

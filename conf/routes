@@ -160,6 +160,12 @@ POST    /admin/settings/docTypes/edit           settings.ConfigurableSettingsTab
 POST    /admin/settings/docTypes/remove         settings.ConfigurableSettingsTab.removeDocumentTypeJSON
 POST    /admin/settings/docTypes/reorder        settings.ConfigurableSettingsTab.reorderDocumentTypesJSON
 
+## Settings tab - Committee Member Role Types
+POST    /admin/settings/roleTypes/add            settings.ConfigurableSettingsTab.addCommitteeMemberRoleTypeJSON
+POST    /admin/settings/roleTypes/edit           settings.ConfigurableSettingsTab.editCommitteeMemberRoleTypeJSON
+POST    /admin/settings/roleTypes/remove         settings.ConfigurableSettingsTab.removeCommitteeMemberRoleTypeJSON
+POST    /admin/settings/roleTypes/reorder        settings.ConfigurableSettingsTab.reorderCommitteeMemberRoleTypesJSON
+
 ## Settings tab - Graduation Months
 POST    /admin/settings/gradMonths/add          settings.ConfigurableSettingsTab.addGraduationMonthJSON
 POST    /admin/settings/gradMonths/edit         settings.ConfigurableSettingsTab.editGraduationMonthJSON

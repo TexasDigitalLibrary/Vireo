@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.tdl.vireo.constant.AppConfig;
@@ -172,15 +173,15 @@ public class Student extends AbstractVireoController {
 			}
 			
 			// Handle the remove supplementary document button 
-			if (params.get("removeSupplementary") != null) {
-				removeSupplementary(sub);           	            	
+			if (params.get("removeAdditional") != null) {
+				removeAdditional(sub);           	            	
 			}
 			
 			if(params.get("primaryDocument",File.class) != null) 
 				uploadPrimaryDocument(sub);
 			
-			if(params.get("supplementaryDocument",File.class) != null)
-				uploadSupplementary(sub);
+			if(params.get("additionalDocument",File.class) != null)
+				uploadAdditional(sub);
 			
 			// If there is no primary document, mark it as in error.
 			if (sub.getPrimaryDocument() == null)
@@ -206,14 +207,19 @@ public class Student extends AbstractVireoController {
 		List<Submission> allSubmissions = subRepo.findSubmission(submitter);
 		List<ActionLog> logs = subRepo.findActionLog(sub);
 		Attachment primaryDocument = sub.getPrimaryDocument();
-		List<Attachment> supplementaryDocuments = sub.getSupplementalDocuments();
+		List<Attachment> additionalDocuments = sub.getAttachmentsByType(AttachmentType.SUPPLEMENTAL,AttachmentType.SOURCE,AttachmentType.ADMINISTRATIVE);
 		List<Attachment> feedbackDocuments = sub.getAttachmentsByType(AttachmentType.FEEDBACK);
 		
 		for(FieldConfig field : FieldConfig.values()) {
 			renderArgs.put(field.name(),field );
 		}
+		
+		List<String> attachmentTypes = new ArrayList<String>();
+		for(AttachmentType type : AttachmentType.values()){
+			attachmentTypes.add(type.toString());
+		}
 
-		renderTemplate("Student/view.html",subId, sub, submitter, logs, primaryDocument, supplementaryDocuments, feedbackDocuments, allSubmissions, grantor, allowMultiple);		
+		renderTemplate("Student/view.html",subId, sub, submitter, logs, primaryDocument, additionalDocuments, feedbackDocuments, allSubmissions, grantor, allowMultiple, attachmentTypes);		
 	}
 
 	/**
@@ -312,29 +318,36 @@ public class Student extends AbstractVireoController {
 	 * @param sub
 	 *            The submission to add the attachment too.
 	 */
-	public static boolean uploadSupplementary(Submission sub) {
+	public static boolean uploadAdditional(Submission sub) {
 
 		// If the upload supplementary button is pressed - then add the manuscript as an attachment
-		File supplementaryDocument = params.get("supplementaryDocument",File.class);
-		if (supplementaryDocument == null)
+		File additionalDocument = params.get("additionalDocument",File.class);
+		if (additionalDocument == null)
 			return false;
+		
+		AttachmentType type = null;
+		if(!params.get("attachmentType").isEmpty())
+			type = AttachmentType.valueOf(params.get("attachmentType"));
+		else
+			return false;
+		
 
 		Attachment attachment = null;
 		try {
-			attachment = sub.addAttachment(supplementaryDocument, AttachmentType.SUPPLEMENTAL);                                         
+			attachment = sub.addAttachment(additionalDocument, type);                                         
 			attachment.save();
 			sub.save();
 		} catch (IOException ioe) {
-			Logger.error(ioe,"Unable to upload supplementary document");
-			validation.addError("supplementaryDocument","Error uploading supplementary document.");
+			Logger.error(ioe,"Unable to upload additional document");
+			validation.addError("additionalDocument","Error uploading additional document.");
 		
 		} catch (IllegalArgumentException iae) {
-			Logger.error(iae,"Unable to upload supplementary document");
+			Logger.error(iae,"Unable to upload additional document");
 			
 			if (iae.getMessage().contains("allready exists for this submission"))
-				validation.addError("supplementaryDocument", "A file with that name allready exists; please use a different name or remove the other file.");
+				validation.addError("additionalDocument", "A file with that name allready exists; please use a different name or remove the other file.");
 			else
-				validation.addError("supplementaryDocument","Error uploading primary document.");
+				validation.addError("additionalDocument","Error uploading additional document.");
 		
 		}
 		return true;
@@ -342,15 +355,15 @@ public class Student extends AbstractVireoController {
 
 
 	/**
-	 * Helper method to handle removing supplementary files from a
+	 * Helper method to handle removing additional files from a
 	 * submission. We check that the attachments are associated with the
-	 * submission, and that they are SUPPLEMENTAL files to prevent deletion of
-	 * other attachments.
+	 * submission, and that they are SUPPLEMENTAL, ADMINISTRATIVE or SOURCE files 
+	 * to prevent deletion of other attachments.
 	 * 
 	 * @param sub
 	 *            The submission to remove attachments from.
 	 */
-	public static boolean removeSupplementary(Submission sub) {
+	public static boolean removeAdditional(Submission sub) {
 
 		// Get values from all check boxes
 		String[] idsToRemove = params.getAll("attachmentToRemove");
@@ -363,7 +376,10 @@ public class Student extends AbstractVireoController {
 				
 				Attachment attachment = subRepo.findAttachment(id);
 				
-				if (attachment.getSubmission() == sub && attachment.getType() == AttachmentType.SUPPLEMENTAL)
+				if (attachment.getSubmission() == sub && 
+						(attachment.getType() == AttachmentType.SUPPLEMENTAL ||
+						attachment.getType() == AttachmentType.ADMINISTRATIVE ||
+						attachment.getType() == AttachmentType.SOURCE))
 					attachment.delete();
 			}
 		}

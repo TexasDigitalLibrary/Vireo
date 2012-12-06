@@ -223,7 +223,9 @@
                 <value>SUPPLEMENTAL</value>
                 <value>LICENSE</value>
                 <value>ARCHIVED</value>
-                <value>FEEDBACK</value> 
+                <value>FEEDBACK</value>
+                <value>SOURCE</value>
+                <value>ADMINISTRATIVE</value> 
             </list>
         </property>
     </bean>
@@ -246,6 +248,7 @@
                 <value>PRIMARY</value>
                 <value>SUPPLEMENTAL</value>
                 <value>LICENSE</value>
+                <value>SOURCE</value>
             </list>
         </property>
     </bean>
@@ -269,6 +272,7 @@
                 <value>PRIMARY</value>
                 <value>SUPPLEMENTAL</value>
                 <value>LICENSE</value>
+                <value>SOURCE</value>
             </list>
         </property>
     </bean>
@@ -286,6 +290,7 @@
                 <value>PRIMARY</value>
                 <value>SUPPLEMENTAL</value>
                 <value>LICENSE</value>
+                <value>SOURCE</value>
             </list>
         </property>
     </bean>
@@ -294,7 +299,8 @@
         <property name="attachmentTypeNames">
             <list>
                 <value>PRIMARY</value>
-                <value>SUPPLEMENTAL</value> 
+                <value>SUPPLEMENTAL</value>                
+                <value>SOURCE</value> 
             </list>
         </property>
     </bean>
@@ -334,6 +340,7 @@
                 <value>PRIMARY</value>
                 <value>SUPPLEMENTAL</value>
                 <value>LICENSE</value>
+                <value>SOURCE</value>
             </list>
         </property>
     </bean>
