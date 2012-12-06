@@ -144,16 +144,4 @@ public class MockCommitteeMember extends AbstractMock implements CommitteeMember
 		return NameFormat.format(format, firstName, middleName, lastName, null);
 	}
 
-	@Override
-	@Deprecated
-	public boolean isCommitteeChair() {
-		return chair;
-	}
-
-	@Override
-	@Deprecated
-	public void setCommitteeChair(boolean chair) {
-		this.chair = chair;
-	}
-
 }

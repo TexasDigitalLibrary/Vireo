@@ -17,6 +17,7 @@ import org.tdl.vireo.export.DepositService;
 import org.tdl.vireo.export.Depositor;
 import org.tdl.vireo.export.Packager;
 import org.tdl.vireo.export.DepositException.FIELD;
+import org.tdl.vireo.model.CommitteeMember;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.DegreeLevel;
@@ -776,9 +777,11 @@ public class ApplicationSettingsTab extends SettingsTab {
 			sub.setGraduationMonth(new Date().getMonth());
 			sub.setGraduationYear(new Date().getYear()+1900);
 			
-			sub.addCommitteeMember("Test", "Advisor", null, true).save();
-			sub.addCommitteeMember("Test", "Member 1", null, false).save();
-			sub.addCommitteeMember("Test", "Member 2", null, false).save();
+			CommitteeMember member = sub.addCommitteeMember("Test", "Advisor", null).save();
+			member.addRole("Chair");
+			member.save();
+			sub.addCommitteeMember("Test", "Member 1", null).save();
+			sub.addCommitteeMember("Test", "Member 2", null).save();
 	
 			sub.save();
 			

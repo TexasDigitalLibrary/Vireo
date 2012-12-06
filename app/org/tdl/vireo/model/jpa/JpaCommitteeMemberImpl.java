@@ -50,50 +50,6 @@ public class JpaCommitteeMemberImpl extends
 	@CollectionTable(name = "committee_member_roles")
 	public List<String> roles;
 
-	@Deprecated
-	public boolean chair;
-
-	/**
-	 * Create a new JpaCommitteeMemberImpl
-	 * 
-	 * @param submission
-	 *            The submission this member belongs too.
-	 * @param firstName
-	 *            The first name of the member.
-	 * @param lastName
-	 *            The last name of the member.
-	 * @param middleName
-	 *            The middle name of the member.
-	 * @param chair
-	 *            Weather this member is a chair or co-chair.
-	 */
-	@Deprecated
-	protected JpaCommitteeMemberImpl(Submission submission, String firstName,
-			String lastName, String middleName, boolean chair) {
-
-		if (submission == null)
-			throw new IllegalArgumentException("Submissions are required");
-
-		if (firstName != null && firstName.trim().length() == 0)
-			firstName = null;
-
-		if (lastName != null && lastName.trim().length() == 0)
-			lastName = null;
-
-		if (firstName == null && lastName == null)
-			throw new IllegalArgumentException(
-					"Either a first or a last name is required.");
-
-		assertReviewerOrOwner(submission.getSubmitter());
-
-		this.submission = submission;
-		this.displayOrder = 0;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.middleName = middleName;
-		this.chair = chair;
-		this.roles = new ArrayList<String>();
-	}
 	
 	/**
 	 * Create a new JpaCommitteeMemberImpl
@@ -248,20 +204,6 @@ public class JpaCommitteeMemberImpl extends
 	public String getFormattedName(NameFormat format) {
 
 		return NameFormat.format(format, firstName, middleName, lastName, null);
-	}
-
-	@Override
-	@Deprecated
-	public boolean isCommitteeChair() {
-		return this.chair;
-	}
-
-	@Override
-	@Deprecated
-	public void setCommitteeChair(boolean chair) {
-
-		assertReviewerOrOwner(submission.getSubmitter());
-		this.chair = chair;
 	}
 
 	@Override

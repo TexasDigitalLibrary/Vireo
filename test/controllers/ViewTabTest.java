@@ -241,7 +241,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		
 		Person person = personRepo.findPersonByEmail("bthornton@gmail.com");
 		Submission submission = subRepo.createSubmission(person);
-		submission.addCommitteeMember("John", "Doe", "T", true);
+		submission.addCommitteeMember("John", "Doe", "T");
 		submission.save();
 		
 		CommitteeMember member = submission.getCommitteeMembers().get(0);
@@ -252,7 +252,6 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		assertEquals("John", member.getFirstName());
 		assertEquals("Doe", member.getLastName());
 		assertEquals("T", member.getMiddleName());
-		assertTrue(member.isCommitteeChair());
 		
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();

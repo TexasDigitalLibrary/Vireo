@@ -535,15 +535,6 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		return committeeMembers;
 	}
 
-	@Override
-	@Deprecated
-	public CommitteeMember addCommitteeMember(String firstName,
-			String lastName, String middleName, Boolean chair) {
-		CommitteeMember member = new JpaCommitteeMemberImpl(this, firstName,
-				lastName, middleName, chair);
-		committeeMembers.add(member);
-		return member;
-	}
 	
 	@Override
 	public CommitteeMember addCommitteeMember(String firstName,

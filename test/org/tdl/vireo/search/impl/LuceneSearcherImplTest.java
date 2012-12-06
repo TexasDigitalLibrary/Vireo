@@ -410,8 +410,8 @@ public class LuceneSearcherImplTest extends UnitTest{
 		sub1.setEmbargoType(e1);
 		sub1.setDocumentType("ZZZZ");
 		sub1.addAttachment(file1, AttachmentType.SUPPLEMENTAL);
-		sub1.addCommitteeMember("BBBB", "BBBB", "a", false);
-		sub1.addCommitteeMember("CCCC", "CCCC", "a", false);
+		sub1.addCommitteeMember("BBBB", "BBBB", "a");
+		sub1.addCommitteeMember("CCCC", "CCCC", "a");
 		sub1.setSubmissionDate(new Date(2012,5,1));
 		sub1.setApprovalDate(new Date(2012,5,1));
 		sub1.setLicenseAgreementDate(new Date(2012,5,1));
@@ -435,7 +435,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 		sub2.setDocumentType("AAAA");
 		sub2.addAttachment(file2, AttachmentType.PRIMARY);
 		sub2.addAttachment(file1, AttachmentType.SUPPLEMENTAL);
-		sub2.addCommitteeMember("AAAA", "AAAA", "a", false);
+		sub2.addCommitteeMember("AAAA", "AAAA", "a");
 		sub2.setSubmissionDate(new Date(2005,5,1));
 		sub2.setApprovalDate(new Date(2005,5,1));
 		sub2.setLicenseAgreementDate(new Date(2005,5,1));

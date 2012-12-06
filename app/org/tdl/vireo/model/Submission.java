@@ -246,18 +246,6 @@ public interface Submission extends AbstractModel {
 	 * @return The a list of all committee mebers associated with this submission.
 	 */
 	public List<CommitteeMember> getCommitteeMembers();
-
-	/**
-	 * Add a new committeeMember
-	 * @param firstName The first name of the new member.
-	 * @param lastName The last name of the new member.
-	 * @param middleName The middle name of the new member.
-	 * @param chair Weather this member is the chair or a co-chair.
-	 * @return The newly created member.
-	 */
-	@Deprecated
-	public CommitteeMember addCommitteeMember(String firstName, String lastName,
-			String middleName, Boolean chair);
 	
 	/**
 	 * Add a new committeeMember

@@ -48,22 +48,6 @@ public interface CommitteeMember extends AbstractOrderedModel {
 	public void setMiddleName(String middleName);
 	
 	/**
-	 * @return True if this committee member is a chair or co-chair of the
-	 *         student's degree committee.
-	 */
-	@Deprecated
-	public boolean isCommitteeChair();
-
-	/**
-	 * @param chair
-	 *            Set weather this committee member is a chair or co-chair of the
-	 *            student's degree committee.
-	 */
-	@Deprecated
-	public void setCommitteeChair(boolean chair);
-	
-	
-	/**
 	 * @return The list of all roles this committee member has. If no roles have
 	 *         been assigned then an empty list is returned.
 	 */
