@@ -295,6 +295,7 @@
 	<div class="modal-body">
 		<form id="add-file-form" action="@{ViewTab.view()}" method="POST" class="form-horizontal" enctype="multipart/form-data">
 			<input type="hidden" name="attachmentId" value="${attachment.getId()}" />
+			#{if !attachment.getType().toString().equals("PRIMARY")}
 			<ul class="unstyled">
 				<li>
 					<p>New File Name:</p>
@@ -303,21 +304,29 @@
 				<li><p>New Attachment Type:</p>
 					<select name="attachmentType">
 					#{list items:attachmentTypes, as:'type'}
+						#{if !type.toString().equals("PRIMARY")}
 						<option value="${type}"
 						#{if type.toString().equals(attachment.getType().toString())}
 						selected="selected"
 						#{/if}
 						>${type}</option>
+						#{/if}
 					#{/list}
 					</select>
 				</li>
 			</ul>
+			#{/if}
+			#{else}
+			<p>Primary documents can only be deleted.</p>
+			#{/else}
 	</div>
 	
 	<div class="modal-footer">
 			<button type="submit" class="btn btn-danger confirm" name="deleteFile" style="float:left">Delete</button>			
 			<a href="#" class="btn" data-dismiss="modal">Close</a>
+			#{if !attachment.getType().toString().equals("PRIMARY")}
 			<input type="submit" class="btn btn-primary" name="editFile" value="Submit"/>
+			#{/if}
 		</form>                 
 	</div>
     
