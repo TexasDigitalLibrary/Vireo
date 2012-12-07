@@ -9,7 +9,16 @@
 <script src="@{'/public/javascripts/vireo-viewtab.js'}" type="text/javascript" charset="${_response_encoding}"></script>
 <script src="@{'/public/javascripts/bootstrap-datepicker.js'}" type="text/javascript" charset="${_response_encoding}"></script>
 <script type="text/javascript" >
+
+function refreshAll(){
+	updateActionLog("@{ViewTab.refreshActionLogTable()}", ${submission.getId()});
+	updateLeftColumn("@{ViewTab.refreshLeftColumn()}", ${submission.getId()});
+	updateHeader("@{ViewTab.refreshHeader()}", ${submission.getId()});
+}
+
 jQuery(document).ready(function(){
+	
+	var subId = ${submission.getId()};
 	
 	if(jQuery.browser.msie){
 		if(parseInt(jQuery.browser.version, 10) != 7 && parseInt(jQuery.browser.version, 10) != 8){
@@ -19,17 +28,13 @@ jQuery(document).ready(function(){
 		jQuery(".datepicker").datepicker();
 	}
 	
-	 var subId = ${submission.getId()};
-	 var refreshActionLogURL = "@{ViewTab.refreshActionLogTable()}";
-	 var refreshLeftColumnURL = "@{ViewTab.refreshLeftColumn()}";
-	 var refreshHeaderURL = "@{ViewTab.refreshHeader()}";
 	 var updateJSONURL = "@{ViewTab.updateJSON()}";
 	 var updateCommitteeMemberJSONURL = "@{ViewTab.updateCommitteeMemberJSON()}";
 	 var addCommitteeMemberJSONURL = "@{ViewTab.addCommitteeMemberJSON()}";
 	 var removeCommitteeMemberJSONURL = "@{ViewTab.removeCommitteeMemberJSON()}";
 	 var retrieveTemplateJSONURL = "@{ViewTab.retrieveTemplateJSON()}";
-	 var updateCustomActionJSONURL = "@{ViewTab.updateCustomActionsJSON()}";
-	
+	 var updateCustomActionJSONURL = "@{ViewTab.updateCustomActionsJSON()}";	
+	 
 	/**
 	 * Cancel Editing
 	 */
@@ -63,10 +68,7 @@ jQuery(document).ready(function(){
 	 */
 	 jQuery(".remove-committee-member").live("click", function(){
 		 if (jQuery(this).text().indexOf("Are you sure?") >= 0) {
-			 removeCommitteeMemberHandler(removeCommitteeMemberJSONURL, jQuery(this));
-			 updateActionLog(refreshActionLogURL, subId);
-			 updateLeftColumn(refreshLeftColumnURL, subId);
-			 updateHeader(refreshHeaderURL, subId);
+			 removeCommitteeMemberHandler(removeCommitteeMemberJSONURL, jQuery(this));			 
 		 } else {
 			 jQuery(this).text("(Are you sure?)");
 			 return false;
@@ -82,10 +84,7 @@ jQuery(document).ready(function(){
 		} else {			
 			var $this = jQuery(this);
 			commitChangesHandler($this, updateJSONURL, updateCommitteeMemberJSONURL, subId);
-		}
-		updateActionLog(refreshActionLogURL, subId);
-		updateLeftColumn(refreshLeftColumnURL, subId);
-		updateHeader(refreshHeaderURL, subId);		
+		}		
 	});
 	
 	jQuery(document).live("keypress", function(event){
@@ -100,10 +99,7 @@ jQuery(document).ready(function(){
 	 */
 	 jQuery(".custom-action").live("change", function(){
 		 $this = jQuery(this);
-		 updateCustomActionsHandler(updateCustomActionJSONURL, subId, $this.attr("name"), $this.is(':checked'));
-		 updateActionLog(refreshActionLogURL, subId);
-		 updateLeftColumn(refreshLeftColumnURL, subId);
-		 updateHeader(refreshHeaderURL, subId);
+		 updateCustomActionsHandler(updateCustomActionJSONURL, subId, $this.attr("name"), $this.is(':checked'));		 
 	 });
 		
 	/**

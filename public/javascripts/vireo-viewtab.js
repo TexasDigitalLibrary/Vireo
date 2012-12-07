@@ -231,6 +231,7 @@ function commitChangesHandler(eventTarget, jsonURL, committeeURL, subId){
 					jQuery("li."+data.id).html(markup);
 					jQuery('.tooltip-icon').tooltip();
 				}
+				refreshAll();
 			},
 			error:function(){
 				jQuery("div."+id).replaceWith('<span id="'+id+'" class="error '+classValue+'">'+jQuery("#backup").html()+' <a href="#" class="tooltip-icon" rel="tooltip" title="There was an error with your request."><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
@@ -267,6 +268,7 @@ function commitChangesHandler(eventTarget, jsonURL, committeeURL, subId){
 					jQuery("div."+id).replaceWith('<span id="'+id+'" class="error '+classValue+'"><i class="icon-pencil"></i> '+currentValue+' <a href="#" class="tooltip-icon" rel="tooltip" title="'+data.message+'"><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
 					jQuery('.tooltip-icon').tooltip();
 				}
+				refreshAll();
 			},
 			error:function(){
 				jQuery("div."+id).replaceWith('<span id="'+id+'" class="error '+classValue+'">'+jQuery("#backup").html()+' <a href="#" class="tooltip-icon" rel="tooltip" title="There was an error with your request."><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
@@ -281,7 +283,7 @@ function commitChangesHandler(eventTarget, jsonURL, committeeURL, subId){
 /**
  * This function commits adding a new committee member.
  */
-function commitNewCommitteeMemberHandler(id, jsonURL) {
+function commitNewCommitteeMemberHandler(subId, jsonURL) {
 
 	var committeeFirstName = jQuery("#cmFirstName").val();
 	var committeeLastName = jQuery("#cmLastName").val();
@@ -293,7 +295,7 @@ function commitNewCommitteeMemberHandler(id, jsonURL) {
 	jQuery.ajax({
 		url:jsonURL,
 		data:{
-			subId:id,
+			subId:subId,
 			firstName:committeeFirstName,
 			lastName:committeeLastName,
 			middleName:committeeMiddleName,
@@ -337,6 +339,7 @@ function commitNewCommitteeMemberHandler(id, jsonURL) {
 				jQuery("li.add").html(markup);
 				jQuery('.tooltip-icon').tooltip();
 			}
+			refreshAll();
 		},
 		error:function(){
 			jQuery("li.add").replaceWith('<span class="error"><a href="#" class="tooltip-icon" rel="tooltip" title="There was an error with your request."><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
@@ -369,6 +372,7 @@ function removeCommitteeMemberHandler(jsonURL, element){
 			} else {
 				
 			}
+			refreshAll();
 		},
 		error:function(){			
 			jQuery("li."+id).html('<span class="error"><a href="#" class="tooltip-icon" rel="tooltip" title="There was an error with your request."><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
@@ -429,23 +433,23 @@ function cancelEditingHandler(){
  * Function to update custom actions.
  * 
  * @param url (The method to update custom actions)
- * @param id (The submission id)
+ * @param subId (The submission id)
  * @param action (The name of the input field)
  * @param value (The value of the input field)
  */
-function updateCustomActionsHandler(url, id, action, value) {
+function updateCustomActionsHandler(url, subId, action, value) {
 	
 	jQuery.ajax({
 		url:url,
 		data:{
-			id:id,
+			id:subId,
 			action:action,
 			value:value
 		},
 		dataType:'json',
 		type:'POST',
 		success:function(data){
-			
+			refreshAll();
 		},
 		error:function(){
 			alert("Error updating custom action.");
