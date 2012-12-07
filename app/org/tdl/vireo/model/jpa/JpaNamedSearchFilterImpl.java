@@ -8,6 +8,9 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PostLoad;
@@ -46,7 +49,7 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	
 	public boolean publicFlag;
 	
-	@OneToMany(targetEntity=JpaSubmissionImpl.class)
+	@ManyToMany(targetEntity=JpaSubmissionImpl.class)
 	public List<Submission> submissions;
 	
 	@ElementCollection
@@ -57,11 +60,11 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	@CollectionTable(name="search_filter_states")
 	public List<String> states;
 	
-	@OneToMany(targetEntity=JpaPersonImpl.class)
+	@ManyToMany(targetEntity=JpaPersonImpl.class)
 	public List<Person> assignees;
 	public Boolean unassigned;
 
-	@OneToMany(targetEntity=JpaEmbargoTypeImpl.class)
+	@ManyToMany(targetEntity=JpaEmbargoTypeImpl.class)
 	public List<EmbargoType> embargos;
 	
 	@ElementCollection
