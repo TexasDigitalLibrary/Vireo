@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
+import org.tdl.vireo.constant.AppConfig;
+import org.tdl.vireo.constant.AppPref;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
@@ -148,7 +150,7 @@ public class SettingsTabTest extends AbstractVireoFunctionalTest {
 		context.turnOffAuthorization();
 
 		Person person = personRepo.findPersonByEmail("bthornton@gmail.com");
-		Preference originalCCEmail = person.getPreference("ccEmail");
+		Preference originalCCEmail = person.getPreference(AppPref.CC_EMAILS);
 		
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();
@@ -172,8 +174,8 @@ public class SettingsTabTest extends AbstractVireoFunctionalTest {
 		JPA.em().getTransaction().begin();
 		
 		person = personRepo.findPersonByEmail("bthornton@gmail.com");
-		assertNotNull(person.getPreference("ccEmail"));
-		person.getPreference("ccEmail").delete();
+		assertNotNull(person.getPreference(AppPref.CC_EMAILS));
+		person.getPreference(AppPref.CC_EMAILS).delete();
 		person.save();
 		
 		context.restoreAuthorization();
