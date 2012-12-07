@@ -88,7 +88,7 @@ public class SettingsTab extends AbstractVireoController {
 					// remove the setting
 					ccEmail.delete();
 				} else if (value != null && ccEmail == null) {
-					person.addPreference(AppPref.CC_EMAILS, "true").save();
+					person.addPreference(Preference.CC_EMAILS, "true").save();
 				}
 			} else {
 				throw new IllegalArgumentException("Unknown field type.");
