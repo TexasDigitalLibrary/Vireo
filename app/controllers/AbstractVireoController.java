@@ -1,6 +1,7 @@
 package controllers;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.tdl.vireo.constant.FieldConfig;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.SubmissionRepository;
@@ -154,5 +155,17 @@ public abstract class AbstractVireoController extends Controller {
 		html = html.replaceAll("\n", "<br/>");
 
 		return html;
+	}
+	
+	/**
+	 * Return whether the specified field is required. If it is then return
+	 * true, otherwise false.
+	 * 
+	 * @param field
+	 *            The field to check whether it is required.
+	 * @return True if required, otherwise false.
+	 */
+	protected static boolean isFieldRequired(FieldConfig field) {
+		return "required".equals(settingRepo.getConfigValue(field.ENABLED));
 	}
 }

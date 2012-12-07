@@ -1,6 +1,10 @@
 package controllers;
 
 import static org.tdl.vireo.constant.AppConfig.GRANTOR;
+import static org.tdl.vireo.constant.FieldConfig.ADMINISTRATIVE_ATTACHMENT;
+import static org.tdl.vireo.constant.FieldConfig.PRIMARY_ATTACHMENT;
+import static org.tdl.vireo.constant.FieldConfig.SOURCE_ATTACHMENT;
+import static org.tdl.vireo.constant.FieldConfig.SUPPLEMENTAL_ATTACHMENT;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -186,6 +190,8 @@ public class Student extends AbstractVireoController {
 			// If there is no primary document, mark it as in error.
 			if (sub.getPrimaryDocument() == null)
 				validation.addError("primaryDocument", "A primary document is required.");
+			
+			verify(sub);
 			
 			if (params.get("submit_corrections") != null && !validation.hasErrors()) {
 				try {
@@ -420,6 +426,37 @@ public class Student extends AbstractVireoController {
 		} catch (FileNotFoundException ex) {
 			error("File not found");
 		}
+	}
+	
+	/**
+	 * Verify that the user has supplied a primary document. This will be used
+	 * from both the fileUpload form and the confirmation page.
+	 * 
+	 * @return True if the primary document exists, otherwise false.
+	 */
+	public static boolean verify(Submission sub) {
+		
+		int numberOfErrorsBefore = validation.errors().size();
+
+		if (isFieldRequired(PRIMARY_ATTACHMENT) && sub.getPrimaryDocument() == null )
+			validation.addError("primaryDocument", "A manuscript file must be uploaded.");
+
+		if (isFieldRequired(SUPPLEMENTAL_ATTACHMENT) && 
+				sub.getAttachmentsByType(AttachmentType.SUPPLEMENTAL).size() == 0)
+			validation.addError("supplementalDocument", "At least one supplemental file is required.");
+		
+		if (isFieldRequired(SOURCE_ATTACHMENT) && 
+				sub.getAttachmentsByType(AttachmentType.SOURCE).size() == 0)
+			validation.addError("sourceDocument", "At least one source file is required.");
+		
+		if (isFieldRequired(ADMINISTRATIVE_ATTACHMENT) && 
+				sub.getAttachmentsByType(AttachmentType.ADMINISTRATIVE).size() == 0)
+			validation.addError("administrativeDocument", "At least one administrative file is required.");
+		
+		if (numberOfErrorsBefore == validation.errors().size()) 
+			return true;
+		else
+			return false;
 	}
 
 }

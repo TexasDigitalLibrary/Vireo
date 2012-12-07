@@ -11,6 +11,7 @@ import org.tdl.vireo.constant.FieldConfig;
 
 import static org.tdl.vireo.constant.AppConfig.SUBMIT_UPLOAD_FILES_STICKIES;
 import static org.tdl.vireo.constant.FieldConfig.*;
+
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.RoleType;
@@ -107,7 +108,7 @@ public class FileUpload extends AbstractSubmitStep {
 		
 		renderTemplate("Submit/fileUpload.html",subId, primaryAttachment, additionalAttachments, attachmentTypes, stickies);
 	}
-
+	
 	/**
 	 * Verify that the user has supplied a primary document. This will be used
 	 * from both the fileUpload form and the confirmation page.
@@ -138,6 +139,5 @@ public class FileUpload extends AbstractSubmitStep {
 		else
 			return false;
 	}
-
 
 }
