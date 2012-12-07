@@ -122,6 +122,33 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 	}
 	
 	/**
+	 * This is a test to test VIREO-116 which is a bug where a person was only
+	 * able to be referenced once by any filter. The second time that person is
+	 * referenced there would be a DB failure.
+	 */
+	@Test
+	public void testTwoReferencesSamePerson() {
+		
+		Person otherPerson = personRepo.createPerson("other-netid", "other@email.com", "first", "last", RoleType.NONE).save();
+
+		NamedSearchFilter filter1 = subRepo.createSearchFilter(person, "test 1");
+		filter1.addAssignee(otherPerson);
+		filter1.save();
+		
+		NamedSearchFilter filter2 = subRepo.createSearchFilter(person, "test 2").save();
+		filter2.addAssignee(otherPerson);
+		filter2.save();
+		
+		assertEquals(1,filter1.getAssignees().size());
+		assertEquals(1,filter2.getAssignees().size());
+		
+		
+		filter1.delete();
+		filter2.delete();
+		otherPerson.delete();
+	}
+	
+	/**
 	 * Test the id.
 	 */
 	@Test
