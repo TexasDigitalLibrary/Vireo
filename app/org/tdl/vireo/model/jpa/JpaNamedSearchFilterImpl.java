@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PostLoad;
@@ -48,19 +49,19 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	
 	public boolean publicFlag;
 	
-	@OneToMany(targetEntity=JpaSubmissionImpl.class)
+	@ManyToMany(targetEntity=JpaSubmissionImpl.class)
 	@JoinTable(name="search_filter_included_submissions")
 	public List<Submission> includedSubmisisons;
 	
-	@OneToMany(targetEntity=JpaSubmissionImpl.class)
+	@ManyToMany(targetEntity=JpaSubmissionImpl.class)
 	@JoinTable(name="search_filter_excluded_submissions")
 	public List<Submission> excludedSubmisisons;
 	
-	@OneToMany(targetEntity=JpaActionLogImpl.class)
+	@ManyToMany(targetEntity=JpaActionLogImpl.class)
 	@JoinTable(name="search_filter_included_actionlogs")
 	public List<ActionLog> includedActionLogs;
 	
-	@OneToMany(targetEntity=JpaActionLogImpl.class)
+	@ManyToMany(targetEntity=JpaActionLogImpl.class)
 	@JoinTable(name="search_filter_excluded_actionlogs")
 	public List<ActionLog> excludedActionLogs;
 	
@@ -72,11 +73,11 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	@CollectionTable(name="search_filter_states")
 	public List<String> states;
 	
-	@OneToMany(targetEntity=JpaPersonImpl.class)
+	@ManyToMany(targetEntity=JpaPersonImpl.class)
 	public List<Person> assignees;
 	public Boolean unassigned;
 
-	@OneToMany(targetEntity=JpaEmbargoTypeImpl.class)
+	@ManyToMany(targetEntity=JpaEmbargoTypeImpl.class)
 	public List<EmbargoType> embargos;
 	
 	@ElementCollection

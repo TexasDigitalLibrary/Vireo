@@ -496,7 +496,7 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 
 	@Override
 	public Preference getPreference(String name) {
-		return JpaPreferenceImpl.find("person = ? and name = ?", this,name).first();
+		return JpaPreferenceImpl.find("person = (?1) and name = (?2)", this,name).first();
 	}
 	
 	@Override
