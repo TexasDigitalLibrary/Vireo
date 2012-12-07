@@ -50,6 +50,8 @@ import play.mvc.With;
 @With(Authentication.class)
 public class FilterTab extends AbstractVireoController {
 
+	public static final String COOKIE_DURATION = "9999d";
+	
 	// Service to handle batch deposits
 	public static JobManager jobManager = Spring.getBeanOfType(JobManager.class);
 	public static TransitionService transitionService = Spring.getBeanOfType(TransitionService.class);
@@ -138,13 +140,21 @@ public class FilterTab extends AbstractVireoController {
 		
 		// Step 2:  Run the current filter search
 		//////////
-		SearchOrder orderby = SearchOrder.ID;
-		if (session.get(NAMES[SUBMISSION][ORDERBY]) != null) 
-			orderby = SearchOrder.find(Integer.valueOf(session.get(NAMES[SUBMISSION][ORDERBY])));
+		SearchOrder orderby = null;
+		try {
+			Cookie orderByCookie = request.cookies.get(NAMES[SUBMISSION][ORDERBY]);
+			orderby = SearchOrder.find(Integer.valueOf(orderByCookie.value));
+		} catch(RuntimeException re) { /* ignore */	}
+		if (orderby == null)
+			orderby = SearchOrder.ID;
 		
-		SearchDirection direction = SearchDirection.ASCENDING;
-		if (session.get(NAMES[SUBMISSION][DIRECTION]) != null) 
-			direction = SearchDirection.find(Integer.valueOf(session.get(NAMES[SUBMISSION][DIRECTION])));
+		SearchDirection direction = null;
+		try {
+			Cookie directionCookie = request.cookies.get(NAMES[SUBMISSION][DIRECTION]);
+			direction = SearchDirection.find(Integer.valueOf(directionCookie.value));
+		} catch(RuntimeException re) { /* ignore */	}
+		if (direction == null)
+			direction = SearchDirection.ASCENDING;
 		
 		Integer offset = 0;
 		if (session.get(NAMES[SUBMISSION][OFFSET]) != null)
@@ -258,13 +268,21 @@ public class FilterTab extends AbstractVireoController {
 		
 		// Step 2:  Run the current filter search
 		//////////
-		SearchOrder orderby = SearchOrder.ID;
-		if (session.get(NAMES[ACTION_LOG][ORDERBY]) != null) 
-			orderby = SearchOrder.find(Integer.valueOf(session.get(NAMES[ACTION_LOG][ORDERBY])));
+		SearchOrder orderby = null;
+		try {
+			Cookie orderByCookie = request.cookies.get(NAMES[ACTION_LOG][ORDERBY]);
+			orderby = SearchOrder.find(Integer.valueOf(orderByCookie.value));
+		} catch(RuntimeException re) { /* ignore */	}
+		if (orderby == null)
+			orderby = SearchOrder.ID;
 		
-		SearchDirection direction = SearchDirection.ASCENDING;
-		if (session.get(NAMES[ACTION_LOG][DIRECTION]) != null) 
-			direction = SearchDirection.find(Integer.valueOf(session.get(NAMES[ACTION_LOG][DIRECTION])));
+		SearchDirection direction = null;
+		try {
+			Cookie directionCookie = request.cookies.get(NAMES[ACTION_LOG][DIRECTION]);
+			direction = SearchDirection.find(Integer.valueOf(directionCookie.value));
+		} catch(RuntimeException re) { /* ignore */	}
+		if (direction == null)
+			direction = SearchDirection.ASCENDING;
 		
 		Integer offset = 0;
 		if (session.get(NAMES[ACTION_LOG][OFFSET]) != null)
@@ -360,16 +378,17 @@ public class FilterTab extends AbstractVireoController {
 		
 		if (direction != null) {
 			// Toggle the current direction.
-			if (String.valueOf(SearchDirection.DESCENDING.getId()).equals(session.get(NAMES[type][DIRECTION]))) {
-				session.put(NAMES[type][DIRECTION],SearchDirection.ASCENDING.getId());
+			Cookie directionCookie = request.cookies.get(NAMES[type][DIRECTION]);
+			if (directionCookie == null || String.valueOf(SearchDirection.ASCENDING.getId()).equals(directionCookie.value)) {
+				response.setCookie(NAMES[type][DIRECTION], String.valueOf(SearchDirection.DESCENDING.getId()), COOKIE_DURATION);
 			} else {
-				session.put(NAMES[type][DIRECTION],SearchDirection.DESCENDING.getId());
+				response.setCookie(NAMES[type][DIRECTION], String.valueOf(SearchDirection.ASCENDING.getId()), COOKIE_DURATION);
 			}
 			session.remove(NAMES[type][OFFSET]);
 		}
 		
 		if (orderby != null && SearchOrder.find(orderby) != null) {
-			session.put(NAMES[type][ORDERBY], orderby);
+			response.setCookie(NAMES[type][ORDERBY], String.valueOf(orderby), COOKIE_DURATION);
 			session.remove(NAMES[type][OFFSET]);
 		}
 		
@@ -421,13 +440,13 @@ public class FilterTab extends AbstractVireoController {
 			}
 
 			// Save as a cookie.
-			response.setCookie(NAMES[type][COLUMNS], columnsSerialized);
+			response.setCookie(NAMES[type][COLUMNS], columnsSerialized, COOKIE_DURATION);
 		}
 		
 		// Handle results per page
 		Integer resultsPerPage = params.get("resultsPerPage",Integer.class);
 		if (resultsPerPage != null && resultsPerPage > 0 && resultsPerPage <= 1000) {
-			response.setCookie(NAMES[type][RESULTSPERPAGE], String.valueOf(resultsPerPage));
+			response.setCookie(NAMES[type][RESULTSPERPAGE], String.valueOf(resultsPerPage), COOKIE_DURATION);
 			session.remove(NAMES[type][OFFSET]);
 		}
 		
@@ -538,7 +557,7 @@ public class FilterTab extends AbstractVireoController {
 		}
 		
 		// Save the active filter to a cookie
-		response.setCookie(NAMES[type][ACTIVE_FILTER], activeFilter.encode());
+		response.setCookie(NAMES[type][ACTIVE_FILTER], activeFilter.encode(), COOKIE_DURATION);
 		session.remove(NAMES[type][OFFSET]);
 		
 		if ("list".equals(nav))
@@ -567,7 +586,7 @@ public class FilterTab extends AbstractVireoController {
 		activeFilter.addIncludedSubmission(sub);
 		
 		// Save the active filter to a cookie
-		response.setCookie(NAMES[ACTION_LOG][ACTIVE_FILTER], activeFilter.encode());
+		response.setCookie(NAMES[ACTION_LOG][ACTIVE_FILTER], activeFilter.encode(),COOKIE_DURATION);
 		
 		// Redirect back to the log page;
 		log();
@@ -607,7 +626,7 @@ public class FilterTab extends AbstractVireoController {
 		}
 
 		// Save as a cookie.
-		response.setCookie(NAMES[type][FACETS], facetsSerialized);
+		response.setCookie(NAMES[type][FACETS], facetsSerialized, COOKIE_DURATION);
 	
 		
 		
@@ -800,25 +819,22 @@ public class FilterTab extends AbstractVireoController {
 		// and report it to the user on their next page view.
 		
 		// Clear out everything related to submission
-		response.setCookie(NAMES[SUBMISSION][ACTIVE_FILTER],"");
-
-		session.remove(NAMES[SUBMISSION][DIRECTION]);
-		session.remove(NAMES[SUBMISSION][ORDERBY]);
+		response.setCookie(NAMES[SUBMISSION][ACTIVE_FILTER],"",COOKIE_DURATION);
+		response.setCookie(NAMES[SUBMISSION][DIRECTION],"",COOKIE_DURATION);
+		response.setCookie(NAMES[SUBMISSION][ORDERBY],"",COOKIE_DURATION);
+		response.setCookie(NAMES[SUBMISSION][COLUMNS],"",COOKIE_DURATION);
+		response.setCookie(NAMES[SUBMISSION][FACETS],"",COOKIE_DURATION);
+		response.setCookie(NAMES[SUBMISSION][RESULTSPERPAGE],"",COOKIE_DURATION);		
 		session.remove(NAMES[SUBMISSION][OFFSET]);
-		session.remove(NAMES[SUBMISSION][COLUMNS]);
-		session.remove(NAMES[SUBMISSION][FACETS]);
-		session.remove(NAMES[SUBMISSION][RESULTSPERPAGE]);
 
 		// Clear out everything related to action logs
-		response.setCookie(NAMES[ACTION_LOG][ACTIVE_FILTER],"");
-
-		session.remove(NAMES[ACTION_LOG][DIRECTION]);
-		session.remove(NAMES[ACTION_LOG][ORDERBY]);
+		response.setCookie(NAMES[ACTION_LOG][ACTIVE_FILTER],"",COOKIE_DURATION);
+		response.setCookie(NAMES[ACTION_LOG][DIRECTION],"",COOKIE_DURATION);
+		response.setCookie(NAMES[ACTION_LOG][ORDERBY],"",COOKIE_DURATION);
+		response.setCookie(NAMES[ACTION_LOG][COLUMNS],"",COOKIE_DURATION);
+		response.setCookie(NAMES[ACTION_LOG][FACETS],"",COOKIE_DURATION);
+		response.setCookie(NAMES[ACTION_LOG][RESULTSPERPAGE],"",COOKIE_DURATION);		
 		session.remove(NAMES[ACTION_LOG][OFFSET]);
-		session.remove(NAMES[ACTION_LOG][COLUMNS]);
-		session.remove(NAMES[ACTION_LOG][FACETS]);
-		session.remove(NAMES[ACTION_LOG][RESULTSPERPAGE]);
-		
 		
 		// Store the error so it can be displayed.
 		flash.put("error", throwable.getMessage());
