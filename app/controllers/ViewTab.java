@@ -393,7 +393,6 @@ public class ViewTab extends AbstractVireoController {
 		}
 
 		renderJSON(json);
-
 	}
 
 	/**
