@@ -968,9 +968,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	
 	@Override
 	public ActionLog logAction(String entry) {
-		ActionLog log = logAction(entry, null);
-		pendingLogs.add(log);
-		return log;
+		return logAction(entry, null);
 	}
 	
 	/**
@@ -998,7 +996,9 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		//if (actor != null)
 		//	entry += " by " + actor.getFormattedName(NameFormat.FIRST_LAST);
 		
-		return new JpaActionLogImpl(this, this.getState(), actor, new Date(), attachment, entry, false);
+		ActionLog log = new JpaActionLogImpl(this, this.getState(), actor, new Date(), attachment, entry, false);
+		pendingLogs.add(log);
+		return log;
 	}
 
 	/**

@@ -972,7 +972,8 @@ public class ViewTab extends AbstractVireoController {
 		}
 		
 		try{
-			sub.addAttachment(attachment, type);
+			sub.addAttachment(attachment, type).save();
+			sub.save();
 		} catch (IOException e) {
 			validation.addError("supplementDocument","Error uploading supplemental document.");
 		} catch (IllegalArgumentException e) {
@@ -1021,7 +1022,8 @@ public class ViewTab extends AbstractVireoController {
 				currentAttachment.archive();
 				currentAttachment.save();
 			}
-			sub.addAttachment(attachment, AttachmentType.PRIMARY);
+			sub.addAttachment(attachment, AttachmentType.PRIMARY).save();
+			sub.save();
 		} catch (IOException e) {
 			validation.addError("primaryDocument","Error uploading primary document.");
 		} catch (IllegalArgumentException e) {
