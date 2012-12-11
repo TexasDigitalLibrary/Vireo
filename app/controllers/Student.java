@@ -187,10 +187,6 @@ public class Student extends AbstractVireoController {
 			if(params.get("additionalDocument",File.class) != null)
 				uploadAdditional(sub);
 			
-			// If there is no primary document, mark it as in error.
-			if (sub.getPrimaryDocument() == null)
-				validation.addError("primaryDocument", "A primary document is required.");
-			
 			verify(sub);
 			
 			if (params.get("submit_corrections") != null && !validation.hasErrors()) {

@@ -35,6 +35,7 @@ import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
 
 import play.Logger;
+import play.Play;
 import play.db.jpa.JPA;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
@@ -516,6 +517,20 @@ public class TestDataLoader extends Job {
 			settingRepo.createConfiguration("TEST_DATA_LOADER", "true").save();
 			
 			try {
+				// Clean out directories
+				File attachmentsDir = new File(Play.configuration.getProperty("attachments.path"));
+				if (attachmentsDir.exists())
+					FileUtils.deleteQuietly(attachmentsDir);
+				
+				File indexDir = new File(Play.configuration.getProperty("index.path"));
+				if (indexDir.exists())
+					FileUtils.deleteQuietly(indexDir);
+				
+				File depositsDir = new File(Play.configuration.getProperty("deposits.path"));
+				if (depositsDir.exists())
+					FileUtils.deleteQuietly(depositsDir);
+				
+				
 				loadPeople();
 				loadSettings();
 			} finally {
@@ -530,7 +545,7 @@ public class TestDataLoader extends Job {
 			
 			context.logout();
 			
-		} catch (Exception e) {Logger.error(e, "Unable to load test data.");}
+		} catch (Throwable t) {Logger.error(t, "Unable to load test data.");}
 	}
 	
 	/**

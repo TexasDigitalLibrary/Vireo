@@ -196,7 +196,7 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 					this.getName(), 
 					this.getDisplaySize()
 			);
-			((JpaSubmissionImpl) submission).logAction(entry,this).save();
+			((JpaSubmissionImpl) submission).logAction(entry,this);
 
 		} else {
 			
@@ -206,9 +206,11 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 					this.getType().name(),
 					this.getName()
 			);
-			((JpaSubmissionImpl) submission).logAction(entry,this).save();
+			((JpaSubmissionImpl) submission).logAction(entry,this);
 		}
 
+		submission.save();
+		
 		return this;
 	}
 	
@@ -241,7 +243,9 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 				this.getType().name(),
 				this.getName(),
 				displaySize);
-		((JpaSubmissionImpl) submission).logAction(entry).save();
+		((JpaSubmissionImpl) submission).logAction(entry);
+		
+		submission.save();
 		
 		return this;
 	}
