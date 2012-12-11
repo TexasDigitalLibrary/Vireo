@@ -596,6 +596,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		sub.setDocumentAbstract("docAbstract");
 		sub.setDocumentKeywords("docKeywords");
 		sub.setDocumentLanguage("en");
+		sub.setPublishedMaterial("published");
 		sub.setCommitteeContactEmail("contactEmail");
 		sub.setCommitteeEmailHash("hash");
 		sub.setCommitteeApprovalDate(now);
@@ -620,6 +621,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		sub.setDocumentAbstract(null);
 		sub.setDocumentKeywords(null);
 		sub.setDocumentLanguage(null);
+		sub.setPublishedMaterial(null);
 		sub.setCommitteeContactEmail(null);
 		sub.setCommitteeEmailHash(null);
 		sub.setCommitteeApprovalDate(null);
@@ -671,6 +673,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		assertEquals("Committee approval of submission cleared", logItr.next().getEntry());
 		assertEquals("New committee email hash generated", logItr.next().getEntry());
 		assertEquals("Committee contact email address cleared", logItr.next().getEntry());
+		assertEquals("Previously published material cleared", logItr.next().getEntry());
 		assertEquals("Document language cleared", logItr.next().getEntry());
 		assertEquals("Document keywords cleared", logItr.next().getEntry());
 		assertEquals("Document abstract cleared", logItr.next().getEntry());
@@ -694,6 +697,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		assertEquals("Committee approval of submission set", logItr.next().getEntry());
 		assertEquals("New committee email hash generated", logItr.next().getEntry());
 		assertEquals("Committee contact email address changed to 'contactEmail'", logItr.next().getEntry());
+		assertEquals("Previously published material changed to 'published'", logItr.next().getEntry());
 		assertEquals("Document language changed to 'English'", logItr.next().getEntry());
 		assertEquals("Document keywords changed to 'docKeywords'", logItr.next().getEntry());
 		assertEquals("Document abstract changed to 'docAbstract'", logItr.next().getEntry());
@@ -737,6 +741,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		sub.addDocumentSubject("two");
 		sub.addDocumentSubject("three");
 		sub.setDocumentLanguage("en");
+		sub.setPublishedMaterial("published");
 		sub.setCommitteeContactEmail("contactEmail");
 		sub.setCommitteeEmailHash("hash");
 		sub.setCommitteeApprovalDate(now);
@@ -771,6 +776,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		assertEquals("two",sub.getDocumentSubjects().get(1));
 		assertEquals("three",sub.getDocumentSubjects().get(2));
 		assertEquals("en",sub.getDocumentLanguage());
+		assertEquals("published",sub.getPublishedMaterial());
 		assertEquals("contactEmail",sub.getCommitteeContactEmail());
 		assertEquals("hash",sub.getCommitteeEmailHash());
 		assertEquals(now,sub.getCommitteeApprovalDate());

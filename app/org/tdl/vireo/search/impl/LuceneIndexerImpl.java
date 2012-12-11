@@ -105,6 +105,8 @@ import play.Play;
  * 
  * documentLanguage: The document's language both code and name.
  * 
+ * publishedMaterial: The description of previously published material
+ * 
  * primaryDocument: The name of the primary document for sorting.
  * 
  * licenseAgreementDate: The date the license was agreed too for sorting.

@@ -98,7 +98,10 @@ jQuery(document).ready(function(){
 	jQuery(document).live("keypress", function(event){
 		var keycode = (event.keyCode ? event.keyCode : event.which);
 		if(keycode == '13' && !event.shiftKey){
-			jQuery(".icon-ok").click();
+			
+			// Don't auto submit textareas
+			if (jQuery(".icon-ok").closest(".textarea").length == 0)
+			    jQuery(".icon-ok").click();
 		}
 	});
 	
@@ -337,6 +340,10 @@ jQuery(document).ready(function(){
 							class="select empty"><i class="icon-pencil"></i> none
 						#{/else}
 						</span></li>
+				</ul>
+		    </div>
+            <div class="edit-box pull-left">
+                <ul class="unstyled">
 					<li class="edit"><label>Keywords:</label><span id="keywords"
 						#{if submission.getDocumentKeywords()}
 							class="textarea"><i class="icon-pencil"></i> ${submission.getDocumentKeywords()}
@@ -368,18 +375,27 @@ jQuery(document).ready(function(){
                     </span></li>
 				</ul>
 			</div>
-			<div class="edit-box pull-left">
+			
+			<div class="edit-box full-width">
 				<ul class="unstyled">
+				    <li class="edit"><label>Published Material:</label><span id="publishedMaterial"
+                        #{if submission.getPublishedMaterial()}
+                            class="textarea"><i class="icon-pencil"></i> Yes - %{ out.println(submission.getPublishedMaterial()?.replaceAll("\n","<br/>")) }%
+                        #{/if}#{else}
+                            class="textarea empty"><i class="icon-pencil"></i> No -
+                        #{/else}
+                    </span></li>
 					<li class="edit"><label>Abstract:</label><span id="abstract"
 						#{if submission.getDocumentAbstract()}
-							class="textarea"><i class="icon-pencil"></i> ${submission.getDocumentAbstract()}
+							class="textarea"><i class="icon-pencil"></i> %{ out.println(submission.getDocumentAbstract()?.replaceAll("\n","<br/>")) }%
 						#{/if}#{else}
 							class="textarea empty"><i class="icon-pencil"></i> none
 						#{/else}
 					</span></li>
 				</ul>
 			</div>
-			<div class="clear"></div>
+            <div class="clear"></div>
+
 			</div>
 			
 			<div id="degreeInfo" class="edit-box-holder hidden">
@@ -442,10 +458,7 @@ jQuery(document).ready(function(){
 						#{/else}
 						</span></li>
 					#{if submission.getCommitteeContactEmail() && submission.getCommitteeEmailHash()}
-					<li><label></label><span><form action="@{ViewTab.sendAdvisorEmail(submission.getId())}" method="POST"><input type="submit" class="btn" value="Send Advisor Approval Email" /></form></span></li>
-					#{/if}
-					#{if isManager && advisorUrl != null }
-						<li><label>Faculty Review URL:</label><span><a href="${advisorUrl}">${advisorUrl}</a></span></li>
+					<li><label></label><span><form action="@{ViewTab.sendAdvisorEmail(submission.getId())}" method="POST"><input type="submit" class="btn" value="Send Advisor Email" /></form></span></li>
 					#{/if}
 				</ul>				
 			</div>
@@ -482,6 +495,14 @@ jQuery(document).ready(function(){
 					</ul></li>
 				</ul>				
 			</div>
+			#{if isManager && advisorUrl != null }
+			<div class="edit-box full-width">
+			    <ul class="unstyled">
+                    <li><label>Faculty Review URL:</label><span><a href="${advisorUrl}">${advisorUrl}</a></span></li>
+                </ul>
+            </div>
+            #{/if}
+			
 			<div class="clear"></div>
 			</div>
 			

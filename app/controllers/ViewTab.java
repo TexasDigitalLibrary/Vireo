@@ -339,6 +339,11 @@ public class ViewTab extends AbstractVireoController {
 				submission.setDocumentLanguage(value);
 				currentValue = submission.getDocumentLanguageLocale().getDisplayName();
 				
+				//Published Material
+			}else if("publishedMaterial".equals(field)){
+				submission.setPublishedMaterial(value);
+				currentValue = submission.getPublishedMaterial();
+				
 				//Document Abstract
 			} else if("abstract".equals(field)){			
 				submission.setDocumentAbstract(value);

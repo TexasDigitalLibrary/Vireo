@@ -13,6 +13,7 @@ function swapToInputHandler(){
 
 			var editItem = jQuery(this);
 			
+			editItem.find("br").replaceWith("\n");
 			var value = jQuery.trim(escapeQuotes(editItem.text()));
 						
 			var checkValue = value.replace(/\t/g,"");
@@ -36,7 +37,14 @@ function swapToInputHandler(){
 
 			if(editItem.hasClass("textarea")) {
 				//Text Areas
-				editItem.replaceWith('<div id="'+editItem.attr("id")+'" class="editing textarea"><textarea class="field" textarea">'+value+'</textarea><br /><i class="icon-remove" title="cancel"></i>&nbsp<i class="icon-ok" title="commit"></i></div>');
+				if (editItem.is("#publishedMaterial")) {
+					if (value.indexOf("Yes -") == 0)
+						value = value.substring(6);
+					if (value.indexOf("No -") == 0) 
+						value = value.substring(5);
+				}
+				
+				editItem.replaceWith('<div id="'+editItem.attr("id")+'" class="editing textarea"><textarea class="field">'+value+'</textarea><br /><i class="icon-remove" title="cancel"></i>&nbsp<i class="icon-ok" title="commit"></i></div>');
 				
 			} else if(editItem.hasClass("select")) {
 				//Select Drop Downs
@@ -430,6 +438,14 @@ function commitChangesHandler(eventTarget, jsonURL, committeeURL, subId){
 					currentValue = "none";
 					classValue = classValue + 'empty ';
 				}
+				
+				if (id == "publishedMaterial" ) {
+					if (currentValue == "none") 
+						currentValue = " No -";
+					else 
+						currentValue = " Yes - "+currentValue;
+				}
+				
 				
 				if(data.success){
 					jQuery("div."+id).replaceWith('<span id="'+id+'" class="'+classValue+'"><i class="icon-pencil"></i> '+currentValue+'</span>');

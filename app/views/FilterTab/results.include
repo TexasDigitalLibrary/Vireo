@@ -147,6 +147,12 @@ in results.
                         }
                      }
                      break;
+                 case PUBLISHED_MATERIAL:
+                     if (sub.getPublishedMaterial() != null)
+                        out.print("Yes - " + sub.getPublishedMaterial());
+                     else
+                        out.print("No");
+                     break;
                  case PRIMARY_DOCUMENT:
                      if (sub.getPrimaryDocument() != null)
                         out.print(sub.getPrimaryDocument().getName());

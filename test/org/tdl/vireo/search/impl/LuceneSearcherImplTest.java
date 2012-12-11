@@ -407,6 +407,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 
 		sub1.setDocumentLanguage("ak");
 		sub1.addDocumentSubject("BBB");
+		sub1.setPublishedMaterial("BBB");
 		sub1.setEmbargoType(e1);
 		sub1.setDocumentType("ZZZZ");
 		sub1.addAttachment(file1, AttachmentType.SUPPLEMENTAL);
@@ -430,6 +431,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 		
 		sub2.setDocumentLanguage("aa");
 		sub2.addDocumentSubject("AAA");
+		sub2.setPublishedMaterial("AAA");
 		sub2.setAssignee(person);
 		sub2.setEmbargoType(e2);
 		sub2.setDocumentType("AAAA");
@@ -497,6 +499,12 @@ public class LuceneSearcherImplTest extends UnitTest{
 			
 			// Document Language
 			submissions = searcher.submissionSearch(filter, SearchOrder.DOCUMENT_LANGUAGE, SearchDirection.DESCENDING, 0, 20).getResults();
+			assertTrue(submissions.contains(sub1));
+			assertTrue(submissions.contains(sub2));
+			assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));
+			
+			// Published Material
+			submissions = searcher.submissionSearch(filter, SearchOrder.PUBLISHED_MATERIAL, SearchDirection.DESCENDING, 0, 20).getResults();
 			assertTrue(submissions.contains(sub1));
 			assertTrue(submissions.contains(sub2));
 			assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));

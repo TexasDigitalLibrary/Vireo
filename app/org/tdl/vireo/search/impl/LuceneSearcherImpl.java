@@ -66,6 +66,7 @@ public class LuceneSearcherImpl implements Searcher {
 		SORT_SUB_FIELDS[SearchOrder.DOCUMENT_KEYWORDS.ordinal()] = "documentKeywords";
 		SORT_SUB_FIELDS[SearchOrder.DOCUMENT_SUBJECTS.ordinal()] = "documentSubjects";
 		SORT_SUB_FIELDS[SearchOrder.DOCUMENT_LANGUAGE.ordinal()] = "documentLanguage";
+		SORT_SUB_FIELDS[SearchOrder.PUBLISHED_MATERIAL.ordinal()] = "publishedMaterial";
 		SORT_SUB_FIELDS[SearchOrder.PRIMARY_DOCUMENT.ordinal()] = "primaryDocument";
 		SORT_SUB_FIELDS[SearchOrder.GRADUATION_DATE.ordinal()] = "graduationSemester";
 		SORT_SUB_FIELDS[SearchOrder.SUBMISSION_DATE.ordinal()] = "submissionDate";
