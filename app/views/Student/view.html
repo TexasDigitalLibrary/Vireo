@@ -291,7 +291,7 @@ jQuery(document).ready(function() {
 			<tr>
 				<td>${log.getPerson()?.getFormattedName(org.tdl.vireo.model.NameFormat.FIRST_LAST)}</td>
 				<td>${log.getEntry()}</td>
-				<td>${log.getActionDate().format('dd/MM/yyyy hh:mm:ss')}</td>
+				<td>${log.getActionDate().format('dd/MM/yyyy hh:mm:ss a')}</td>
 			</tr>
 			#{/if}
 			#{/list}

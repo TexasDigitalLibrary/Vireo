@@ -225,10 +225,10 @@ in results.
                      break;
                  case LAST_EVENT_TIME:
                      if ("log".equals(nav)) {
-                        out.print(log.getActionDate().format("MM/dd/yyyy hh:mm:ss"));
+                        out.print(log.getActionDate().format("MM/dd/yyyy hh:mm:ss a"));
                      } else {
                          if (sub.getLastLogDate() != null)
-                             out.print(sub.getLastLogDate().format("MM/dd/yyyy hh:mm:ss"));
+                             out.print(sub.getLastLogDate().format("MM/dd/yyyy hh:mm:ss a"));
                      }
                      break;
 
