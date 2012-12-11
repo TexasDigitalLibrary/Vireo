@@ -821,10 +821,11 @@ public class Authentication extends AbstractVireoController {
 		// Clear our session, effectively logging the user out of the application.
 		session.clear();
 		
-		Logger.info("%s (%d: %s) has logged out.",
-				context.getPerson().getFormattedName(NameFormat.FIRST_LAST), 
-				context.getPerson().getId(), 
-				context.getPerson().getEmail());
+		if (context != null && context.getPerson() != null)
+			Logger.info("%s (%d: %s) has logged out.",
+					context.getPerson().getFormattedName(NameFormat.FIRST_LAST), 
+					context.getPerson().getId(), 
+					context.getPerson().getEmail());
 		
 		if (method != null) {
 			// If the user was authenticated by an implicit authentication
