@@ -271,7 +271,7 @@
 						#{/if}#{/else}
 						> CC student's advisor</input></li>
 					</ul>
-					<div id="add-file-email-options" style="display:none;">
+					<div id="add-file-email-options" #{if currentUser.getPreference("attachment_email_student_by_default") == null}style="display:none;"#{/if}>
 					<ul class="unstyled">
 		            	<li>
 		            		Subject:<br />
