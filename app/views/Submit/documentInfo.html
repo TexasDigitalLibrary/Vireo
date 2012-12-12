@@ -7,11 +7,73 @@
 <script src="@{'/public/javascripts/jquery-ui-multiselect-1.13.js'}" type="text/javascript" charset="${_response_encoding}"></script>
 <script type="text/javascript" >
 jQuery(document).ready(function(){
+	
+	
+
+	
+	/**
+	* Auto expand the textareas based upon the current text.
+	*/
+	jQuery("textarea").keyup(function() {
+		// If the user has manualy changed the size of the
+		// textarea then don't autosize.
+		if (jQuery(this).width() != jQuery(this).attr("data-original-width")) {
+			this.style.overflow = 'auto';
+			return;
+		}
+		
+		this.style.overflow = 'hidden';
+		this.style.height = 0;
+		
+		if (this.scrollHeight < 52) {
+            this.style.height = '52px';
+		} else if (this.scrollHeight > 234) {
+			this.style.height = '234px';
+			this.style.overflow = 'auto';
+		} else {
+			this.style.height = this.scrollHeight + 'px';
+		}
+	});
+	jQuery("textarea").trigger('keyup'); 
+	
+	jQuery("textarea").each(function (index, value){
+		jQuery(value).attr("data-original-width",jQuery(value).width());
+	});
+	
+	
+	 /**
+	* Prevent stray returns from changing the enabled field.
+	*
+	jQuery("input").keydown(function(event){
+	if(event.keyCode == 13) {
+	event.preventDefault();
+	return false;
+	}
+	}); **/
+	
+	
+    #{if availableRoles.size() > 1}
+	// Install the multiselect for committee member roles
     jQuery(".multiselect").multiselect({
         header: false,
         selectedList: 1,
         noneSelectedText: "<em>&nbsp;... no role selected</em>"
     });
+	#{/if}
+    
+    #{ifEnabled PUBLISHED_MATERIAL }
+    // Install the slide out for publishedMaterialFlag
+    jQuery("#publishedMaterialFlag").change(function() {
+    	var $div = jQuery("#publishedMaterial").closest(".control-group");
+    	if (jQuery("#publishedMaterialFlag").is(":checked")) {
+    		if ($div.is(":hidden"))
+    		   $div.slideToggle();	
+    	} else {
+            if ($div.is(":visible"))
+                $div.slideToggle();  
+    	}
+    });
+    #{/ifEnabled}
 });
 </script>
 #{/set}
@@ -187,7 +249,7 @@ jQuery(document).ready(function(){
                     currentRoles = committee.get(i-1).roles;
                 }
             }%
-            <table class="committee-member" #{ifError "committee"}class="error"#{/ifError}>
+            <table class="committee-member #{ifError "committee"}error#{/ifError}">
                     <tr>
                         <td><label class="span2">First Name</label></td>
                         <td><label class="span1">MI</label></td>
@@ -241,6 +303,25 @@ jQuery(document).ready(function(){
 		</div>
 	</fieldset>
 	#{/ifEnabled}
+	
+	#{ifEnabled PUBLISHED_MATERIAL }
+    <fieldset class="form-horizontal">
+        <legend>#{ifRequired PUBLISHED_MATERIAL}<strong>#{fieldLabel PUBLISHED_MATERIAL /}</strong>#{/ifRequired}#{else}#{fieldLabel PUBLISHED_MATERIAL /}#{/else}</legend>
+        <div class="control-group #{errorClass 'publishedMaterial'/} #{fieldClass PUBLISHED_MATERIAL /}">
+            <label class="control-label" for="publishedMaterialFlag"><span class="required-star">*</span> #{fieldLabel PUBLISHED_MATERIAL /}:</label>
+            <div class="controls">
+                <input type="checkbox" id="publishedMaterialFlag" name="publishedMaterialFlag" value="true" ${ (publishedMaterialFlag) ? "checked='true'" : "" }/> 
+                #{fieldHelp PUBLISHED_MATERIAL /}
+            </div>
+        </div>   
+        <div class="control-group #{errorClass 'publishedMaterial'/} required" #{if !publishedMaterialFlag}style="display: none;"#{/if}>
+            <label class="control-label" for="publishedMaterial"><span class="required-star">*</span> Identify Material:</label>
+            <div class="controls">
+                <textarea id="publishedMaterial" name="publishedMaterial" class="span4">${publishedMaterial}</textarea>
+            </div>
+        </div>                
+    </fieldset>
+    #{/ifEnabled}
 	
 	#{ifEnabled EMBARGO_TYPE }
 	<fieldset class="form-horizontal">

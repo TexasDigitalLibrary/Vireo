@@ -176,10 +176,11 @@ public interface Submission extends AbstractModel {
 	 * previously published and the contents of this field should indicate which
 	 * material has been published.
 	 * 
-	 * @param previouslyPublished
-	 *            The new previously published flag.
+	 * @param material
+	 *            English description identifying the material previously
+	 *            published.
 	 */
-	public void setPublishedMaterial(String previouslyPublished);
+	public void setPublishedMaterial(String material);
 
 	/**
 	 * Whether this submission contains material which has been previously

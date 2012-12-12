@@ -380,14 +380,14 @@ jQuery(document).ready(function(){
 				<ul class="unstyled">
 				    <li class="edit"><label>Published Material:</label><span id="publishedMaterial"
                         #{if submission.getPublishedMaterial()}
-                            class="textarea"><i class="icon-pencil"></i> Yes - %{ out.println(submission.getPublishedMaterial()?.replaceAll("\n","<br/>")) }%
+                            class="textarea"><i class="icon-pencil"></i> Yes - ${ submission.getPublishedMaterial()?.nl2br() }
                         #{/if}#{else}
                             class="textarea empty"><i class="icon-pencil"></i> No -
                         #{/else}
                     </span></li>
 					<li class="edit"><label>Abstract:</label><span id="abstract"
 						#{if submission.getDocumentAbstract()}
-							class="textarea"><i class="icon-pencil"></i> %{ out.println(submission.getDocumentAbstract()?.replaceAll("\n","<br/>")) }%
+							class="textarea"><i class="icon-pencil"></i> ${ submission.getDocumentAbstract()?.nl2br() }
 						#{/if}#{else}
 							class="textarea empty"><i class="icon-pencil"></i> none
 						#{/else}

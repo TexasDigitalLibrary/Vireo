@@ -443,9 +443,9 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		if (!equals(this.publishedMaterial,material)) {
 			this.publishedMaterial = material;
 			if(material != null)
-				generateChangeLog("Previously published material",material,false);
+				generateChangeLog("Published material",material,false);
 			else
-				generateChangeLog("Previously published material",null,false);
+				generateChangeLog("Published material",null,false);
 		}
 	}
 	

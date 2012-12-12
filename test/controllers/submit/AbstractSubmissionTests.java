@@ -464,7 +464,7 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 	 */
 	public void documentInfo(String title, String degreeMonth, String degreeYear, String docType, String abstractText, String keywords,
 			String subjectPrimary, String subjectSecondary, String subjectTertiary, String language, List<Map<String,String>> committee, String chairEmail, 
-			String embargo, String umi)  {
+			String publishedMaterial, String embargo, String umi)  {
 
 		// Get our URL
 		Map<String,Object> routeArgs = new HashMap<String,Object>();
@@ -496,6 +496,10 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 			params.put("docLanguage", language);
 		if (chairEmail != null)
 			params.put("chairEmail", chairEmail);
+		if (publishedMaterial != null) {
+			params.put("publishedMaterialFlag", "true");
+			params.put("publishedMaterial", publishedMaterial);
+		}
 		if (embargo != null)
 			params.put("embargo", embargo);
 		if (umi != null)
@@ -545,6 +549,8 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 			assertEquals(language,sub.getDocumentLanguage());
 		if (chairEmail != null)
 			assertEquals(chairEmail, sub.getCommitteeContactEmail());
+		if (publishedMaterial != null)
+			assertEquals(publishedMaterial, sub.getPublishedMaterial());
 		if (embargo != null)
 			assertEquals(Long.valueOf(embargo), sub.getEmbargoType().getId());
 		if (umi != null)

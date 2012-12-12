@@ -656,6 +656,11 @@ function cancelEditingHandler(){
 				classValue += "empty ";
 			}
 			
+			if(jQuery(".editing").hasClass("textarea")){
+				currentValue = nl2br(currentValue);
+			}
+			
+			
 			jQuery(".editing").replaceWith('<span id="'+id+'" class="'+classValue+'">'+currentValue+'</span>');
 			
 			if (jQuery("#backup").attr("data-primary"))
