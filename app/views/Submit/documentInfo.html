@@ -1,13 +1,23 @@
 #{extends 'Submit/submitStep.html' /}
 #{set title:'Document Info' /}
 #{set 'moreStyles'}
+<link href="@{'/public/stylesheets/datepicker.css'}" rel="stylesheet" type="text/css">
 <link href="@{'/public/stylesheets/multiselect.css'}" rel="stylesheet" type="text/css">
 #{/set}
 #{set 'moreScripts'}
+<script src="@{'/public/javascripts/bootstrap-datepicker.js'}" type="text/javascript" charset="${_response_encoding}"></script>
 <script src="@{'/public/javascripts/jquery-ui-multiselect-1.13.js'}" type="text/javascript" charset="${_response_encoding}"></script>
 <script type="text/javascript" >
-jQuery(document).ready(function(){
-    jQuery(".multiselect").multiselect({
+jQuery(document).ready(function(){	
+	if(jQuery.browser.msie){
+		if(parseInt(jQuery.browser.version, 10) != 7 && parseInt(jQuery.browser.version, 10) != 8){
+			jQuery(".datepicker").datepicker();
+		}
+	} else {
+		jQuery(".datepicker").datepicker();
+	}
+	
+	jQuery(".multiselect").multiselect({
         header: false,
         selectedList: 1,
         noneSelectedText: "<em>&nbsp;... no role selected</em>"
@@ -36,7 +46,7 @@ jQuery(document).ready(function(){
 	<form action="@{submit.DocumentInfo.documentInfo(subId)}" method="post" class="form-inline">
 	<input type="hidden" name="step" value="documentInfo"/>
 
-	#{ifEnabled [DOCUMENT_TITLE,GRADUATION_DATE,DOCUMENT_TYPE,DOCUMENT_ABSTRACT,DOCUMENT_KEYWORDS,DOCUMENT_SUBJECTS,DOCUMENT_LANGUAGE]}
+	#{ifEnabled [DOCUMENT_TITLE,GRADUATION_DATE,DEFENSE_DATE,DOCUMENT_TYPE,DOCUMENT_ABSTRACT,DOCUMENT_KEYWORDS,DOCUMENT_SUBJECTS,DOCUMENT_LANGUAGE]}
 	<fieldset class="form-horizontal">
 		<legend>Document Information</legend>
 		#{ifEnabled DOCUMENT_TITLE}
@@ -66,6 +76,15 @@ jQuery(document).ready(function(){
 				</select>
 				<a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp GRADUATION_DATE /}"><i class="icon-info-sign"></i></a>
 			</div>
+		</div>
+		#{/ifEnabled}
+		#{ifEnabled DEFENSE_DATE}
+		<div class="control-group #{errorClass 'defenseDate'/} #{fieldClass DEFENSE_DATE /}">
+			<label class="control-label" for="defenseDate"><span class="required-star">*</span> #{fieldLabel DEFENSE_DATE /}:</label>
+			<div class="controls row">
+				<input type="text" name="defenseDate" id="defenseDate" class="span4 datepicker" value="${defenseDate?.format('MM/dd/yyyy')}" />
+				<a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp DEFENSE_DATE /}"><i class="icon-info-sign"></i></a>
+			</div>			
 		</div>
 		#{/ifEnabled}
 		#{ifEnabled DOCUMENT_TYPE}

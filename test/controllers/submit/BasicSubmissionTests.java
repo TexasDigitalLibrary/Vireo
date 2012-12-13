@@ -159,6 +159,7 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				"Clair Danes Thesis on Testing", // title
 				String.valueOf(settingRepo.findAllGraduationMonths().get(0).getMonth()), // degreeMonth 
 				String.valueOf(Calendar.getInstance().get(Calendar.YEAR)), // degreeYear 
+				"12/12/2012", // defenseDate
 				settingRepo.findAllDocumentTypes().get(0).getName(), // docType
 				"This is really cool work!", // abstractText 
 				"one; two; three;", // keywords
@@ -254,7 +255,8 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 		documentInfo(
 				"Clair Danes Thesis on Testing ", // title
 				String.valueOf(settingRepo.findAllGraduationMonths().get(0).getMonth()), // degreeMonth 
-				String.valueOf(Calendar.getInstance().get(Calendar.YEAR)), // degreeYear 
+				String.valueOf(Calendar.getInstance().get(Calendar.YEAR)), // degreeYear
+				null, // defenseDate
 				settingRepo.findAllDocumentTypes().get(0).getName(), // docType
 				"This is really cool work!", // abstractText 
 				"one; two; three;", // keywords
@@ -376,7 +378,8 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 		documentInfo(
 				"Clair Danes Thesis on Testing", // title
 				String.valueOf(settingRepo.findAllGraduationMonths().get(0).getMonth()), // degreeMonth 
-				String.valueOf(Calendar.getInstance().get(Calendar.YEAR)), // degreeYear 
+				String.valueOf(Calendar.getInstance().get(Calendar.YEAR)), // degreeYear
+				"12/12/2012", // defenseDate
 				settingRepo.findAllDocumentTypes().get(0).getName(), // docType
 				"This is really cool work!", // abstractText 
 				"one; two; three;", // keywords
@@ -614,7 +617,8 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 		documentInfo(
 				"Clair Danes Thesis on Testing", // title
 				String.valueOf(settingRepo.findAllGraduationMonths().get(0).getMonth()), // degreeMonth 
-				String.valueOf(Calendar.getInstance().get(Calendar.YEAR)), // degreeYear 
+				String.valueOf(Calendar.getInstance().get(Calendar.YEAR)), // degreeYear
+				"12/12/2012", // defenseDate
 				settingRepo.findAllDocumentTypes().get(0).getName(), // docType
 				"This is really cool work!", // abstractText 
 				"one; two; three;", // keywords
@@ -737,7 +741,8 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 		documentInfo(
 				null, // title
 				null, // degreeMonth 
-				null, // degreeYear 
+				null, // degreeYear
+				null, // defenseDate
 				null, // docType
 				null, // abstractText 
 				null, // keywords
@@ -821,7 +826,8 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 		documentInfo(
 				null, // title
 				null, // degreeMonth 
-				null, // degreeYear 
+				null, // degreeYear
+				null, // defenseDate
 				null, // docType
 				null, // abstractText 
 				null, // keywords

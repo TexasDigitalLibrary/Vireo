@@ -160,6 +160,10 @@ in results.
                      if (monthName != null)
                         out.print(" "+monthName);
                      break;
+                 case DEFENSE_DATE:
+                 	if (sub.getDefenseDate() != null)
+                 		out.print(sub.getDefenseDate().format('MM/dd/yyyy'));
+                 	break;
                  case SUBMISSION_DATE:
                      if (sub.getSubmissionDate() != null)
                         out.print(sub.getSubmissionDate().format('MM/dd/yyyy'));

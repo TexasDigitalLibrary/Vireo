@@ -392,6 +392,25 @@ public class ViewTab extends AbstractVireoController {
 
 				currentValue = gradMonth + " " + submission.getGraduationYear().toString();
 
+				//Defense Date
+			} else if("defenseDate".equals(field)){
+				Logger.info("Defense Date: "+value);
+				Date defenseDate = null;
+				DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+				if(value!=null) {
+					try {					
+						defenseDate = (Date)formatter.parse(value);						
+					} catch (ParseException e) {
+						throw new RuntimeException("The defense date is invalid.");
+					}
+				}
+				submission.setDefenseDate(defenseDate);
+				
+				if(submission.getDefenseDate()!=null)
+					currentValue = formatter.format(submission.getDefenseDate());
+				else
+					currentValue = null;
+				
 				//Advisor Email
 			} else if("advisorEmail".equals(field)){
 				if(value==null || value.length()==0)

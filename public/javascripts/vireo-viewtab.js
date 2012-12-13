@@ -89,9 +89,15 @@ function swapToInputHandler(){
 						jQuery(this).attr("selected","selected");
 					}
 				})
+			} else if(editItem.hasClass("date")) {
+				editItem.replaceWith('<div id="'+editItem.attr("id")+'" class="editing date"><input class="field datepickerDefense" type="text" value="'+value+'" /><br /><i class="icon-remove" title="cancel"></i>&nbsp<i class="icon-ok" title="commit"></i></div>');
+				jQuery(".datepickerDefense").datepicker({
+					"autoclose": true
+				});
+				jQuery(".editing .datepickerDefense").datepicker("show");				
 			} else {
 			
-				//Input Fields
+				//Input Fields				
 				editItem.replaceWith('<div id="'+editItem.attr("id")+'" class="editing"><input class="field" type="text" value="'+value+'" /><br /><i class="icon-remove" title="cancel"></i>&nbsp<i class="icon-ok" title="commit"></i></div>');
 			}			
 
@@ -285,6 +291,9 @@ function commitChangesHandler(eventTarget, jsonURL, committeeURL, subId){
 		primary = jQuery(".editing .primary").val();
 		secondary = jQuery(".editing .secondary").val(); 
 		tertiary = jQuery(".editing .tertiary").val();
+	} else if(jQuery(".editing").hasClass("date")) {
+		classValue = classValue + 'date ';
+		fieldItem = jQuery(".editing input");
 	} else {
 		fieldItem = jQuery(".editing input");
 	}
@@ -627,7 +636,8 @@ function cancelEditingHandler(){
 				fieldItem = jQuery(".editing autocomplete");
 			} else if(jQuery(".editing").hasClass("subject")) {
 				classValue = classValue + 'subject';
-				
+			} else if(jQuery(".editing").hasClass("date")) {
+				classValue = classValue + 'date';
 			} else {		
 				fieldItem = jQuery(".editing input");
 			}
@@ -652,7 +662,6 @@ function cancelEditingHandler(){
 				jQuery("#"+id).attr("data-tertiary",jQuery("#backup").attr("data-tertiary"));
 			
 		}
-		
 		jQuery("#backup").remove();
 	}
 }

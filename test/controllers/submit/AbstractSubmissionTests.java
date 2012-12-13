@@ -5,8 +5,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -462,7 +465,7 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 	 * @param umi
 	 *            UMI release flag.
 	 */
-	public void documentInfo(String title, String degreeMonth, String degreeYear, String docType, String abstractText, String keywords,
+	public void documentInfo(String title, String degreeMonth, String degreeYear, String defenseDate, String docType, String abstractText, String keywords,
 			String subjectPrimary, String subjectSecondary, String subjectTertiary, String language, List<Map<String,String>> committee, String chairEmail, 
 			String embargo, String umi)  {
 
@@ -480,6 +483,8 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 			params.put("degreeMonth",degreeMonth);
 		if (degreeYear != null)
 			params.put("degreeYear",degreeYear);
+		if (defenseDate != null)
+			params.put("defenseDate", defenseDate);
 		if (docType != null)
 			params.put("docType", docType);
 		if (abstractText != null)
@@ -529,6 +534,10 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 			assertEquals(Integer.valueOf(degreeMonth),sub.getGraduationMonth());
 		if (degreeYear != null)
 			assertEquals(Integer.valueOf(degreeYear),sub.getGraduationYear());
+		if (defenseDate != null) {
+			DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+			assertEquals(defenseDate,formatter.format(sub.getDefenseDate()));
+		}
 		if (docType != null)
 			assertEquals(docType,sub.getDocumentType());
 		if (abstractText != null)

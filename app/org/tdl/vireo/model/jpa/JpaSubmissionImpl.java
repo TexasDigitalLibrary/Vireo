@@ -107,6 +107,8 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	public Date approvalDate;
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date licenseAgreementDate;
+	@Temporal(TemporalType.TIMESTAMP)
+	public Date defenseDate;
 	
 	@Column(length=255)
 	public String degree;
@@ -681,6 +683,27 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 				generateLog("Submission license agreement cleared",true);
 			else
 				generateLog("Submission license agreement set",true);
+		}
+	}
+	
+	@Override
+	public Date getDefenseDate() {
+		return defenseDate;
+	}
+	
+	@Override
+	public void setDefenseDate(Date date) {
+		assertReviewerOrOwner(submitter);
+		
+		if (!equals(this.defenseDate,date)) {
+			this.defenseDate = date;
+			
+			if (date == null) {
+				generateLog("Defense date cleared",true);
+			} else {
+				DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+				generateChangeLog("Defense date",formatter.format(date),true);
+			}
 		}
 	}
 

@@ -340,6 +340,16 @@ public interface Submission extends AbstractModel {
 	public void setLicenseAgreementDate(Date date);
 
 	/**
+	 * @return The date of the submitter's defense.
+	 */
+	public Date getDefenseDate();
+	
+	/**
+	 * @param date The date of the submitter's defense.
+	 */
+	public void setDefenseDate(Date date);
+	
+	/**
 	 * 
 	 * @return The degree for this submission.
 	 */

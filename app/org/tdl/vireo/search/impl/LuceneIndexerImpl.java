@@ -64,6 +64,8 @@ import play.Play;
  * graduationSemester: The grad year & month converted into a date object and
  * stored as milliseconds.
  * 
+ * defenseDate: The date of the student's defense.
+ * 
  * program: the program, a single token not analyzed (search and sort)
  * 
  * department: The department, single token not analyzed (search and sort)
