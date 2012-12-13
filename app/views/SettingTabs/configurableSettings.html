@@ -4,11 +4,32 @@
 jQuery(document).ready(function(){
 
 	
+	
+	
 	 // Global handler for stray clicks to cancel editing.
      jQuery(document).click(sortableGlobalCancelEditHandler()); 
 
+     /**
+      * Auto expand the stick-note text boxes based upon the current text.
+      */
+     jQuery("textarea").keyup(function() {
+
+         this.style.overflow = 'hidden';
+         this.style.height = 0;
+         
+         if (this.scrollHeight > 52)
+             this.style.height = this.scrollHeight + 'px';
+         else 
+             this.style.height = '52px';
+         
+     });
+     jQuery("textarea").trigger('keyup');
+	 
 	 
      jQuery('#embargo-type-modal').modal({
+         'show': false
+     });
+     jQuery('#bulk-add-modal').modal({
          'show': false
      });
   
@@ -57,9 +78,13 @@ jQuery(document).ready(function(){
      jQuery("#college-list .icon-remove").live("click",sortableCancelEditHandler());     
      jQuery("#college-list .icon-ok").live("click",sortableSaveEditHandler('college','@{settings.ConfigurableSettingsTab.editCollegeJSON()}'));
      jQuery("#college-list input").live("keypress",sortableSaveEditHandler('college','@{settings.ConfigurableSettingsTab.editCollegeJSON()}'));
-     jQuery("#add-college-link").click(slideToggleHandler("#add-college-dialog"));
+     jQuery("#add-college-link").click(slideToggleHandler("#add-college-dialog","#bulk-add-college-dialog"));
      jQuery("#add-college-save").click(saveAddActionHandler('college','@{settings.ConfigurableSettingsTab.addCollegeJSON()}'));
-     jQuery("#add-college-cancel").click(cancelAddActionHandler('college'));
+     jQuery("#add-college-cancel").click(cancelAddActionHandler('college'));     
+     jQuery("#bulk-add-college-link").click(slideToggleHandler("#bulk-add-college-dialog","#add-college-dialog"));
+     jQuery("#bulk-add-college-cancel").click(cancelAddActionHandler('college'));
+
+
      
   	 // Handlers for the sortable programs list
      jQuery("#program-list, #program-remove").sortable({
@@ -76,9 +101,11 @@ jQuery(document).ready(function(){
      jQuery("#program-list .icon-remove").live("click",sortableCancelEditHandler());     
      jQuery("#program-list .icon-ok").live("click",sortableSaveEditHandler('program','@{settings.ConfigurableSettingsTab.editProgramJSON()}'));
      jQuery("#program-list input").live("keypress",sortableSaveEditHandler('program','@{settings.ConfigurableSettingsTab.editProgramJSON()}'));
-     jQuery("#add-program-link").click(slideToggleHandler("#add-program-dialog"));
+     jQuery("#add-program-link").click(slideToggleHandler("#add-program-dialog","#bulk-add-program-dialog"));
      jQuery("#add-program-save").click(saveAddActionHandler('program','@{settings.ConfigurableSettingsTab.addProgramJSON()}'));
      jQuery("#add-program-cancel").click(cancelAddActionHandler('program'));
+     jQuery("#bulk-add-program-link").click(slideToggleHandler("#bulk-add-program-dialog","#add-program-dialog"));
+     jQuery("#bulk-add-program-cancel").click(cancelAddActionHandler('program'));
      
      // Handlers for the sortable Departments list
      jQuery("#department-list, #department-remove").sortable({
@@ -95,9 +122,11 @@ jQuery(document).ready(function(){
      jQuery("#department-list .icon-remove").live("click",sortableCancelEditHandler());     
      jQuery("#department-list .icon-ok").live("click",sortableSaveEditHandler('department','@{settings.ConfigurableSettingsTab.editDepartmentJSON()}'));
      jQuery("#department-list input").live("keypress",sortableSaveEditHandler('department','@{settings.ConfigurableSettingsTab.editDepartmentJSON()}'));
-     jQuery("#add-department-link").click(slideToggleHandler("#add-department-dialog"));
+     jQuery("#add-department-link").click(slideToggleHandler("#add-department-dialog","#bulk-add-department-dialog"));
      jQuery("#add-department-save").click(saveAddActionHandler('department','@{settings.ConfigurableSettingsTab.addDepartmentJSON()}'));
      jQuery("#add-department-cancel").click(cancelAddActionHandler('department'));
+     jQuery("#bulk-add-department-link").click(slideToggleHandler("#bulk-add-department-dialog","#add-department-dialog"));
+     jQuery("#bulk-add-department-cancel").click(cancelAddActionHandler('department'));
      
      // Handlers for the sortable Majors list
      jQuery("#major-list, #major-remove").sortable({
@@ -114,9 +143,11 @@ jQuery(document).ready(function(){
      jQuery("#major-list .icon-remove").live("click",sortableCancelEditHandler());     
      jQuery("#major-list .icon-ok").live("click",sortableSaveEditHandler('major','@{settings.ConfigurableSettingsTab.editMajorJSON()}'));
      jQuery("#major-list input").live("keypress",sortableSaveEditHandler('major','@{settings.ConfigurableSettingsTab.editMajorJSON()}'));
-     jQuery("#add-major-link").click(slideToggleHandler("#add-major-dialog"));
+     jQuery("#add-major-link").click(slideToggleHandler("#add-major-dialog","#bulk-add-major-dialog"));
      jQuery("#add-major-save").click(saveAddActionHandler('major','@{settings.ConfigurableSettingsTab.addMajorJSON()}'));
      jQuery("#add-major-cancel").click(cancelAddActionHandler('major'));
+     jQuery("#bulk-add-major-link").click(slideToggleHandler("#bulk-add-major-dialog","#add-major-dialog"));
+     jQuery("#bulk-add-major-cancel").click(cancelAddActionHandler('major'));
      
      // Handlers for the sortable degrees list
      jQuery("#degree-list, #degree-remove").sortable({
@@ -231,6 +262,22 @@ jQuery(document).ready(function(){
 		<div id="availableEmbargoTypes" class="accordion-body collapse ${ "availableEmbargoTypes".equals(flash.get("open")) ? "in" : "" }">
 			<div class="accordion-inner">
 			<h2>AVAILABLE EMBARGO TYPES</h2>
+			<p>
+			    <a class="confirm" href="@{settings.ConfigurableSettingsTab.removeAllEmbargoTypes}" 
+			       data-confirm="<em class='icon-trash'></em> (Are you sure you want to <strong>remove all</strong> embargo types?)">
+				    <em class="icon-trash"></em>
+				    Remove all embargo types
+				</a>
+		    </p>
+		    <p>
+				<a class="confirm" href="@{settings.ConfigurableSettingsTab.alphabetizeAllEmbargoTypes}" 
+                   data-confirm="<em class='icon-refresh'></em> (Are you sure you want to sort all embargo types by their duration?)">
+                    <em class="icon-refresh"></em>
+                    Sort embargo types by duration
+                </a>
+		    </p>
+		    
+			
 			<table class="table table-striped table-bordered table-condensed">
 				<thead>
 					<tr>
@@ -248,14 +295,14 @@ jQuery(document).ready(function(){
 				           <td class="embargoType-description-cell">${embargo.getDescription()}</td>
 				           <td class="embargoType-active-cell">#{if embargo.isActive()}Yes#{/if}#{else}No#{/else}</td>
 				           <td class="embargoType-duration-cell">#{if embargo.getDuration() == null}Indefinite#{/if}#{else}${embargo.getDuration()}#{/else}</td>
-				           <td class="embargoType-edit-cell"><a href="#">Edit</a></td>
+				           <td class="embargoType-edit-cell"><a href="javascript:void(0);">Edit</a></td>
 				       </tr>
 				    #{/list}
 				</tbody>
 			</table>
 			
 			
-			<p><a id="add-embargoType-link" href="#">[ADD NEW]</a></p>
+			<p><a id="add-embargoType-link" href="javascript:void(0);">[ADD NEW]</a></p>
 			</div>
 		</div>
 	</div>
@@ -268,6 +315,21 @@ jQuery(document).ready(function(){
 			<div class="accordion-inner">
 				<h2>AVAILABLE COLLEGES</h2>
 				
+	            <p>
+	                <a class="confirm" href="@{settings.ConfigurableSettingsTab.removeAllColleges}" 
+	                   data-confirm="<em class='icon-trash'></em> (Are you sure you want to <strong>remove all</strong> colleges?)">
+	                    <em class="icon-trash"></em>
+	                    Remove all colleges
+	                </a>
+	            </p>
+	            <p>
+	                <a class="confirm" href="@{settings.ConfigurableSettingsTab.alphabetizeAllColleges}" 
+	                   data-confirm="<em class='icon-refresh'></em> (Are you sure you want to alphabetize all colleges?)">
+	                    <em class="icon-refresh"></em>
+	                    Alphabetize colleges
+	                </a>
+                </p>
+				
 				<div class="wrap settings-sortable">
 					<ul id="college-remove" class="college-sortable settings-sortable-remove" #{if colleges.size() == 0}style="display: none;"#{/if}>
 					   <p class="info"><em class="icon-trash"></em> Remove items by dragging them to the trash can</p>
@@ -279,7 +341,7 @@ jQuery(document).ready(function(){
 					</ol>
 				</div>
 				
-				<a id="add-college-link" href="#">[ADD NEW]</a>
+				<a id="add-college-link" href="javascript:void(0);">[ADD NEW]</a> &nbsp; <a href="javascript:void(0);" id="bulk-add-college-link">[BULK ADD]</a>
 				
 				<div id="add-college-dialog" style="display: none;">
 				    <form class="form-horizontal">
@@ -300,6 +362,27 @@ jQuery(document).ready(function(){
 				        </fieldset>
 				    </form>
 				</div>
+				<div id="bulk-add-college-dialog" style="display: none;">
+                    <form class="form-horizontal" method="POST" action="@{settings.ConfigurableSettingsTab.bulkAdd}">
+                        <input type="hidden" name="modelType" value="college"/>
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label" for="bulkAdd">Colleges</label>
+                                <div class="controls">
+                                    <textarea class="span4" name="bulkAdd"></textarea>
+                                    <p class="help-block">Multiple colleges each on a separate line</p>
+                                    
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <div class="controls">
+                                    <button id="bulk-add-college-save" class="btn btn-primary">Bulk Add Colleges</button>
+                                    <button id="bulk-add-college-cancel" class="btn">Cancel</button>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
 				<br/><br/>
 			</div>
 		</div>
@@ -313,6 +396,21 @@ jQuery(document).ready(function(){
 			<div class="accordion-inner">
 				<h2>AVAILABLE PROGRAMS</h2>
 				
+				<p>
+                    <a class="confirm" href="@{settings.ConfigurableSettingsTab.removeAllPrograms}" 
+                       data-confirm="<em class='icon-trash'></em> (Are you sure you want to <strong>remove all</strong> programs?)">
+                        <em class="icon-trash"></em>
+                        Remove all programs
+                    </a>
+                </p>
+                <p>
+                    <a class="confirm" href="@{settings.ConfigurableSettingsTab.alphabetizeAllPrograms}" 
+                       data-confirm="<em class='icon-refresh'></em> (Are you sure you want to alphabetize all programs?)">
+                        <em class="icon-refresh"></em>
+                        Alphabetize programs
+                    </a>
+                </p>
+				
 				<div class="wrap settings-sortable">
 					<ul id="program-remove" class="program-sortable settings-sortable-remove" #{if programs.size() == 0}style="display: none;"#{/if}>
 					   <p class="info"><em class="icon-trash"></em> Remove items by dragging them to the trash can</p>
@@ -324,7 +422,7 @@ jQuery(document).ready(function(){
 					</ol>
 				</div>
 				
-				<a id="add-program-link" href="#">[ADD NEW]</a>
+				<a id="add-program-link" href="javascript:void(0);">[ADD NEW]</a>  &nbsp; <a href="javascript:void(0);" id="bulk-add-program-link">[BULK ADD]</a>
 				
 				<div id="add-program-dialog" style="display: none;">
 				    <form class="form-horizontal">
@@ -345,6 +443,27 @@ jQuery(document).ready(function(){
 				        </fieldset>
 				    </form>
 				</div>
+				<div id="bulk-add-program-dialog" style="display: none;">
+                    <form class="form-horizontal" method="POST" action="@{settings.ConfigurableSettingsTab.bulkAdd}">
+                        <input type="hidden" name="modelType" value="program"/>
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label" for="bulkAdd">Programs</label>
+                                <div class="controls">
+                                    <textarea class="span4" name="bulkAdd"></textarea>
+                                    <p class="help-block">Multiple programs each on a separate line</p>
+                                    
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <div class="controls">
+                                    <button id="bulk-add-program-save" class="btn btn-primary">Bulk Add Programs</button>
+                                    <button id="bulk-add-program-cancel" class="btn">Cancel</button>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
 				<br/><br/>
 			</div>
 		</div>
@@ -359,6 +478,21 @@ jQuery(document).ready(function(){
 			<div class="accordion-inner">
 				<h2>AVAILABLE DEPARTMENTS</h2>
 				
+				<p>
+                    <a class="confirm" href="@{settings.ConfigurableSettingsTab.removeAllDepartments}" 
+                       data-confirm="<em class='icon-trash'></em> (Are you sure you want to <strong>remove all</strong> departments?)">
+                        <em class="icon-trash"></em>
+                        Remove all departments
+                    </a>
+                </p>
+                <p>
+                    <a class="confirm" href="@{settings.ConfigurableSettingsTab.alphabetizeAllDepartments}" 
+                       data-confirm="<em class='icon-refresh'></em> (Are you sure you want to alphabetize all departments?)">
+                        <em class="icon-refresh"></em>
+                        Alphabetize departments
+                    </a>
+                </p>
+				
 				<div class="wrap settings-sortable">
 					<ul id="department-remove" class="department-sortable settings-sortable-remove" #{if departments.size() == 0}style="display: none;"#{/if}>
 					   <p class="info"><em class="icon-trash"></em> Remove items by dragging them to the trash can</p>
@@ -370,7 +504,7 @@ jQuery(document).ready(function(){
 					</ol>
 				</div>
 				
-				<a id="add-department-link" href="#">[ADD NEW]</a>
+				<a id="add-department-link" href="javascript:void(0);">[ADD NEW]</a>  &nbsp; <a href="javascript:void(0);" id="bulk-add-department-link">[BULK ADD]</a>
 				
 				<div id="add-department-dialog" style="display: none;">
 				    <form class="form-horizontal">
@@ -391,6 +525,27 @@ jQuery(document).ready(function(){
 				        </fieldset>
 				    </form>
 				</div>
+                <div id="bulk-add-department-dialog" style="display: none;">
+                    <form class="form-horizontal" method="POST" action="@{settings.ConfigurableSettingsTab.bulkAdd}">
+                        <input type="hidden" name="modelType" value="department"/>
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label" for="bulkAdd">Departments</label>
+                                <div class="controls">
+                                    <textarea class="span4" name="bulkAdd"></textarea>
+                                    <p class="help-block">Multiple departments each on a separate line</p>
+                                    
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <div class="controls">
+                                    <button id="bulk-add-department-save" class="btn btn-primary">Bulk Add Departments</button>
+                                    <button id="bulk-add-department-cancel" class="btn">Cancel</button>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
 				<br/><br/>
 			</div>
 		</div>
@@ -405,6 +560,21 @@ jQuery(document).ready(function(){
 			<div class="accordion-inner">
 				<h2>AVAILABLE MAJORS</h2>
 				
+				<p>
+                    <a class="confirm" href="@{settings.ConfigurableSettingsTab.removeAllMajors}" 
+                       data-confirm="<em class='icon-trash'></em> (Are you sure you want to <strong>remove all</strong> majors?)">
+                        <em class="icon-trash"></em>
+                        Remove all majors
+                    </a>
+                </p>
+                <p>
+                    <a class="confirm" href="@{settings.ConfigurableSettingsTab.alphabetizeAllMajors}" 
+                       data-confirm="<em class='icon-refresh'></em> (Are you sure you want to alphabetize all majors?)">
+                        <em class="icon-refresh"></em>
+                        Alphabetize majors
+                    </a>
+                </p>
+				
 				<div class="wrap settings-sortable">
 				    <ul id="major-remove" class="major-sortable settings-sortable-remove" #{if majors.size() == 0}style="display: none;"#{/if}>
 				       <p class="info"><em class="icon-trash"></em> Remove items by dragging them to the trash can</p>
@@ -416,7 +586,7 @@ jQuery(document).ready(function(){
 				    </ol>
 				</div>
 				
-				<a id="add-major-link" href="#">[ADD NEW]</a>
+				<a id="add-major-link" href="javascript:void(0);">[ADD NEW]</a>  &nbsp; <a href="javascript:void(0);" id="bulk-add-major-link">[BULK ADD]</a>
 				
 				<div id="add-major-dialog" style="display: none;">
 				    <form class="form-horizontal">
@@ -437,6 +607,27 @@ jQuery(document).ready(function(){
 				        </fieldset>
 				    </form>
 				</div>
+				<div id="bulk-add-major-dialog" style="display: none;">
+                    <form class="form-horizontal" method="POST" action="@{settings.ConfigurableSettingsTab.bulkAdd}">
+                        <input type="hidden" name="modelType" value="major"/>
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label" for="bulkAdd">Majors</label>
+                                <div class="controls">
+                                    <textarea class="span4" name="bulkAdd"></textarea>
+                                    <p class="help-block">Multiple majors each on a separate line</p>
+                                    
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <div class="controls">
+                                    <button id="bulk-add-major-save" class="btn btn-primary">Bulk Add Majors</button>
+                                    <button id="bulk-add-major-cancel" class="btn">Cancel</button>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
 				<br/><br/>
 			</div>
 		</div>
@@ -451,6 +642,21 @@ jQuery(document).ready(function(){
 			<div class="accordion-inner">
 				<h2>AVAILABLE DEGREES</h2>
 				
+				<p>
+                    <a class="confirm" href="@{settings.ConfigurableSettingsTab.removeAllDegrees}" 
+                       data-confirm="<em class='icon-trash'></em> (Are you sure you want to <strong>remove all</strong> degrees?)">
+                        <em class="icon-trash"></em>
+                        Remove all degrees
+                    </a>
+                </p>
+                <p>
+                    <a class="confirm" href="@{settings.ConfigurableSettingsTab.alphabetizeAllDegrees}" 
+                       data-confirm="<em class='icon-refresh'></em> (Are you sure you want to sort all Degrees">
+                        <em class="icon-refresh"></em>
+                        Sort degrees
+                    </a>
+                </p>
+				
 				<div class="wrap settings-sortable">
 				    <ul id="degree-remove" class="degree-sortable settings-sortable-remove" #{if degrees.size() == 0}style="display: none;"#{/if}>
 				       <p class="info"><em class="icon-trash"></em> Remove items by dragging them to the trash can</p>
@@ -462,7 +668,7 @@ jQuery(document).ready(function(){
 				    </ol>
 				</div>
 				
-				<a id="add-degree-link" href="#">[ADD NEW]</a>
+				<a id="add-degree-link" href="javascript:void(0);">[ADD NEW]</a>
 				
 				<div id="add-degree-dialog" style="display: none;">
 				    <form class="form-horizontal">
@@ -507,6 +713,21 @@ jQuery(document).ready(function(){
 			<div class="accordion-inner">
 				<h2>AVAILABLE DOCUMENT TYPES</h2>
 				
+				<p>
+                    <a class="confirm" href="@{settings.ConfigurableSettingsTab.removeAllDocumentTypes}" 
+                       data-confirm="<em class='icon-trash'></em> (Are you sure you want to <strong>remove all</strong> document types?)">
+                        <em class="icon-trash"></em>
+                        Remove all document types
+                    </a>
+                </p>
+                <p>
+                    <a class="confirm" href="@{settings.ConfigurableSettingsTab.alphabetizeAllDocumentTypes}" 
+                       data-confirm="<em class='icon-refresh'></em> (Are you sure you want to sort all document types?)">
+                        <em class="icon-refresh"></em>
+                        Sort document types
+                    </a>
+                </p>
+				
 				<div class="wrap settings-sortable">
 				    <ul id="documentType-remove" class="documentType-sortable settings-sortable-remove" #{if docTypes.size() == 0}style="display: none;"#{/if}>
 				       <p class="info"><em class="icon-trash"></em> Remove items by dragging them to the trash can</p>
@@ -518,7 +739,7 @@ jQuery(document).ready(function(){
 				    </ol>
 				</div>
 				
-				<a id="add-documentType-link" href="#">[ADD NEW]</a>
+				<a id="add-documentType-link" href="javascript:void(0);">[ADD NEW]</a>
 				
 				<div id="add-documentType-dialog" style="display: none;">
 				    <form class="form-horizontal">
@@ -563,6 +784,20 @@ jQuery(document).ready(function(){
 			<div class="accordion-inner">
 				<h2>AVAILABLE COMMITTEE MEMBER ROLE TYPES</h2>
 				
+				<p>
+                    <a class="confirm" href="@{settings.ConfigurableSettingsTab.removeAllCommitteeMemberRoleTypes}" 
+                       data-confirm="<em class='icon-trash'></em> (Are you sure you want to <strong>remove all</strong> committee member role types?)">
+                        <em class="icon-trash"></em>
+                        Remove all committee member role types
+                    </a>
+                </p>
+                <p>
+                    <a class="confirm" href="@{settings.ConfigurableSettingsTab.alphabetizeAllCommitteeMemberRoleTypes}" 
+                       data-confirm="<em class='icon-refresh'></em> (Are you sure you want to sort all committee member role types?)">
+                        <em class="icon-refresh"></em>
+                        Sort committee member role types
+                    </a>
+                </p>
 				
 				<div class="wrap settings-sortable">
 				    <ul id="committeeMemberRoleType-remove" class="committeeMemberRoleType-sortable settings-sortable-remove" #{if roleTypes.size() == 0}style="display: none;"#{/if}>
@@ -575,7 +810,7 @@ jQuery(document).ready(function(){
 				    </ol>
 				</div>
 				
-				<a id="add-committeeMemberRoleType-link" href="#">[ADD NEW]</a>
+				<a id="add-committeeMemberRoleType-link" href="javascript:void(0);">[ADD NEW]</a>
 				
 				<div id="add-committeeMemberRoleType-dialog" style="display: none;">
 				    <form class="form-horizontal">
@@ -635,6 +870,21 @@ jQuery(document).ready(function(){
 			<div class="accordion-inner">
 				<h2>AVAILABLE GRADUATION MONTHS</h2>
 				
+				<p>
+                    <a class="confirm" href="@{settings.ConfigurableSettingsTab.removeAllGraduationMonths}" 
+                       data-confirm="<em class='icon-trash'></em> (Are you sure you want to <strong>remove all</strong> graduation months?)">
+                        <em class="icon-trash"></em>
+                        Remove all graduation months
+                    </a>
+                </p>
+                <p>
+                    <a class="confirm" href="@{settings.ConfigurableSettingsTab.alphabetizeAllGraduationMonths}" 
+                       data-confirm="<em class='icon-refresh'></em> (Are you sure you want to sort all graduation months?)">
+                        <em class="icon-refresh"></em>
+                        Sort graduation months
+                    </a>
+                </p>
+				
 				<div class="wrap settings-sortable">
 				    <ul id="graduationMonth-remove" class="graduationMonth-sortable settings-sortable-remove" #{if gradMonths.size() == 0}style="display: none;"#{/if}>
 				       <p class="info"><em class="icon-trash"></em> Remove items by dragging them to the trash can</p>
@@ -646,7 +896,7 @@ jQuery(document).ready(function(){
 				    </ol>
 				</div>
 				
-				<a id="add-graduationMonth-link" href="#">[ADD NEW]</a>
+				<a id="add-graduationMonth-link" href="javascript:void(0);">[ADD NEW]</a>
 				
 				<div id="add-graduationMonth-dialog" style="display: none;">
 				    <form class="form-horizontal">
@@ -680,6 +930,21 @@ jQuery(document).ready(function(){
 			<div class="accordion-inner">
 				<h2>AVAILABLE LANGUAGES</h2>
 				
+				<p>
+                    <a class="confirm" href="@{settings.ConfigurableSettingsTab.removeAllLanguages}" 
+                       data-confirm="<em class='icon-trash'></em> (Are you sure you want to <strong>remove all</strong> languages?)">
+                        <em class="icon-trash"></em>
+                        Remove all languages
+                    </a>
+                </p>
+                <p>
+                    <a class="confirm" href="@{settings.ConfigurableSettingsTab.alphabetizeAllLanguages}" 
+                       data-confirm="<em class='icon-refresh'></em> (Are you sure you want to alphabetize all languages?)">
+                        <em class="icon-refresh"></em>
+                        Alphabetize languages
+                    </a>
+                </p>
+				
 				<div class="wrap settings-sortable">
 				    <ul id="language-remove" class="language-sortable settings-sortable-remove" #{if languages.size() == 0}style="display: none;"#{/if}>
 				       <p class="info"><em class="icon-trash"></em> Remove items by dragging them to the trash can</p>
@@ -694,7 +959,7 @@ jQuery(document).ready(function(){
 				
 				<p id="proquest-note">&diams; &mdash; Denotes a ProQuest / UMI compatable language</p>
 				
-				<a id="add-language-link" href="#">[ADD NEW]</a>
+				<a id="add-language-link" href="javascript:void(0);">[ADD NEW]</a>
 				
 				<div id="add-language-dialog" style="display: none;">
 				    <form class="form-horizontal">
@@ -781,8 +1046,8 @@ jQuery(document).ready(function(){
             </fieldset>
         </div>
         <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <a id="embargoType-remove" href="#" class="btn">Delete Embargo</a>
+            <a href="javascript:void(0);" class="btn" data-dismiss="modal">Close</a>
+            <a id="embargoType-remove" href="javascript:void(0);" class="btn">Delete Embargo</a>
             <input id="embargoType-save" type="submit" class="btn btn-primary" name="submit_save" value="Save Embargo"/>
         </div>
     </form>

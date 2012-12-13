@@ -82,6 +82,7 @@ GET     /admin/settings/submission/?            settings.SubmissionSettingsTab.s
 GET     /admin/settings/theme/?                 settings.ThemeSettingsTab.themeSettings
 GET     /admin/settings/email/?					settings.EmailSettingsTab.emailSettings
 GET     /admin/settings/configurable/?			settings.ConfigurableSettingsTab.configurableSettings
+POST    /admin/settings/configurable/bulk       settings.ConfigurableSettingsTab.bulkAdd
 
 ### Settings tab - General AJAX
 POST	/admin/settings/updateProfile			SettingsTab.updateProfileJSON
@@ -123,59 +124,80 @@ POST    /admin/settings/templates/reorder       settings.EmailSettingsTab.reorde
 POST    /admin/settings/embargos/edit           settings.ConfigurableSettingsTab.editEmbargoTypeJSON
 POST    /admin/settings/embargos/remove         settings.ConfigurableSettingsTab.removeEmbargoTypeJSON
 POST    /admin/settings/embargos/reorder        settings.ConfigurableSettingsTab.reorderEmbargoTypesJSON
+GET     /admin/settings/embargos/removeAll      settings.ConfigurableSettingsTab.removeAllEmbargoTypes
+GET     /admin/settings/embargos/alphabetize    settings.ConfigurableSettingsTab.alphabetizeAllEmbargoTypes
 
 ## Settings tab - Colleges
 POST    /admin/settings/colleges/add            settings.ConfigurableSettingsTab.addCollegeJSON
 POST    /admin/settings/colleges/edit           settings.ConfigurableSettingsTab.editCollegeJSON
 POST    /admin/settings/colleges/remove         settings.ConfigurableSettingsTab.removeCollegeJSON
 POST    /admin/settings/colleges/reorder        settings.ConfigurableSettingsTab.reorderCollegesJSON
+GET     /admin/settings/colleges/removeAll      settings.ConfigurableSettingsTab.removeAllColleges
+GET     /admin/settings/colleges/alphabetize    settings.ConfigurableSettingsTab.alphabetizeAllColleges
+
 
 ## Settings tab - Programs
 POST    /admin/settings/programs/add            settings.ConfigurableSettingsTab.addProgramJSON
 POST    /admin/settings/programs/edit           settings.ConfigurableSettingsTab.editProgramJSON
 POST    /admin/settings/programs/remove         settings.ConfigurableSettingsTab.removeProgramJSON
 POST    /admin/settings/programs/reorder        settings.ConfigurableSettingsTab.reorderProgramsJSON
+GET     /admin/settings/programs/removeAll      settings.ConfigurableSettingsTab.removeAllPrograms
+GET     /admin/settings/programs/alphabetize    settings.ConfigurableSettingsTab.alphabetizeAllPrograms
 
 ## Settings tab - Departments
 POST    /admin/settings/departments/add         settings.ConfigurableSettingsTab.addDepartmentJSON
 POST    /admin/settings/departments/edit        settings.ConfigurableSettingsTab.editDepartmentJSON
 POST    /admin/settings/departments/remove      settings.ConfigurableSettingsTab.removeDepartmentJSON
 POST    /admin/settings/departments/reorder     settings.ConfigurableSettingsTab.reorderDepartmentsJSON
+GET     /admin/settings/departments/removeAll   settings.ConfigurableSettingsTab.removeAllDepartments
+GET     /admin/settings/departments/alphabetize settings.ConfigurableSettingsTab.alphabetizeAllDepartments
 
 ## Settings tab - Majors
 POST    /admin/settings/majors/add              settings.ConfigurableSettingsTab.addMajorJSON
 POST    /admin/settings/majors/edit             settings.ConfigurableSettingsTab.editMajorJSON
 POST    /admin/settings/majors/remove           settings.ConfigurableSettingsTab.removeMajorJSON
 POST    /admin/settings/majors/reorder          settings.ConfigurableSettingsTab.reorderMajorsJSON
+GET     /admin/settings/majors/removeAll        settings.ConfigurableSettingsTab.removeAllMajors
+GET     /admin/settings/majors/alphabetize      settings.ConfigurableSettingsTab.alphabetizeAllMajors
 
 ## Settings tab - Degrees
 POST    /admin/settings/degrees/add             settings.ConfigurableSettingsTab.addDegreeJSON
 POST    /admin/settings/degrees/edit            settings.ConfigurableSettingsTab.editDegreeJSON
 POST    /admin/settings/degrees/remove          settings.ConfigurableSettingsTab.removeDegreeJSON
 POST    /admin/settings/degrees/reorder         settings.ConfigurableSettingsTab.reorderDegreesJSON
+GET     /admin/settings/degrees/removeAll       settings.ConfigurableSettingsTab.removeAllDegrees
+GET     /admin/settings/degrees/alphabetize     settings.ConfigurableSettingsTab.alphabetizeAllDegrees
 
 ## Settings tab - Document Types
 POST    /admin/settings/docTypes/add            settings.ConfigurableSettingsTab.addDocumentTypeJSON
 POST    /admin/settings/docTypes/edit           settings.ConfigurableSettingsTab.editDocumentTypeJSON
 POST    /admin/settings/docTypes/remove         settings.ConfigurableSettingsTab.removeDocumentTypeJSON
 POST    /admin/settings/docTypes/reorder        settings.ConfigurableSettingsTab.reorderDocumentTypesJSON
+GET     /admin/settings/docType/removeAll       settings.ConfigurableSettingsTab.removeAllDocumentTypes
+GET     /admin/settings/docType/alphabetize     settings.ConfigurableSettingsTab.alphabetizeAllDocumentTypes
 
 ## Settings tab - Committee Member Role Types
 POST    /admin/settings/roleTypes/add            settings.ConfigurableSettingsTab.addCommitteeMemberRoleTypeJSON
 POST    /admin/settings/roleTypes/edit           settings.ConfigurableSettingsTab.editCommitteeMemberRoleTypeJSON
 POST    /admin/settings/roleTypes/remove         settings.ConfigurableSettingsTab.removeCommitteeMemberRoleTypeJSON
 POST    /admin/settings/roleTypes/reorder        settings.ConfigurableSettingsTab.reorderCommitteeMemberRoleTypesJSON
+GET     /admin/settings/roleType/removeAll       settings.ConfigurableSettingsTab.removeAllCommitteeMemberRoleTypes
+GET     /admin/settings/roleType/alphabetize     settings.ConfigurableSettingsTab.alphabetizeAllCommitteeMemberRoleTypes
 
 ## Settings tab - Graduation Months
 POST    /admin/settings/gradMonths/add          settings.ConfigurableSettingsTab.addGraduationMonthJSON
 POST    /admin/settings/gradMonths/edit         settings.ConfigurableSettingsTab.editGraduationMonthJSON
 POST    /admin/settings/gradMonths/remove       settings.ConfigurableSettingsTab.removeGraduationMonthJSON
 POST    /admin/settings/gradMonths/reorder      settings.ConfigurableSettingsTab.reorderGraduationMonthsJSON
+GET     /admin/settings/gradMonth/removeAll     settings.ConfigurableSettingsTab.removeAllGraduationMonths
+GET     /admin/settings/gradMonth/alphabetize    settings.ConfigurableSettingsTab.alphabetizeAllGraduationMonths
 
 ## Settings tab - Languages
 POST    /admin/settings/languages/add            settings.ConfigurableSettingsTab.addLanguageJSON
 POST    /admin/settings/languages/remove         settings.ConfigurableSettingsTab.removeLanguageJSON
 POST    /admin/settings/languages/reorder        settings.ConfigurableSettingsTab.reorderLanguagesJSON
+GET     /admin/settings/languages/removeAll      settings.ConfigurableSettingsTab.removeAllLanguages
+GET     /admin/settings/languages/alphabetize    settings.ConfigurableSettingsTab.alphabetizeAllLanguages
 
 ## Job Tab
 GET     /admin/job/{jobId}                      JobTab.adminStatus
