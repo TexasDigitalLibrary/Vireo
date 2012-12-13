@@ -1,5 +1,6 @@
 package controllers.settings;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -60,6 +61,32 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 
 		Response response = GET(URL);
 		assertIsOk(response);
+	}
+	
+	
+	@Test
+	public void testBulkAdd() {
+		LOGIN();
+		
+		final String REDIRECT_URL = Router.reverse("settings.ConfigurableSettingsTab.configurableSettings").url;
+		final String BULK_URL = Router.reverse("settings.ConfigurableSettingsTab.bulkAdd").url;
+
+		
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("modelType", "college");
+		params.put("bulkAdd", "one\ntwo\nthree\n");
+		Response response = POST(BULK_URL,params);
+		
+		assertEquals(REDIRECT_URL,response.getHeader("Location"));
+		
+		List<College> colleges = settingRepo.findAllColleges();
+		assertEquals("three",colleges.get(colleges.size()-1).getName());
+		assertEquals("two",colleges.get(colleges.size()-2).getName());
+		assertEquals("one",colleges.get(colleges.size()-3).getName());
+
+		colleges.get(colleges.size()-1).delete();
+		colleges.get(colleges.size()-2).delete();
+		colleges.get(colleges.size()-3).delete();
 	}
 	
 	/**
@@ -171,6 +198,29 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		embargo2.delete();
 	}
 
+	/**
+	 * Test alphabetizing EmbargoTypes
+	 */
+	@Test
+	public void testAlphabetizingEmbargoTypes() {
+		LOGIN();
+		
+		final String REDIRECT_URL = Router.reverse("settings.ConfigurableSettingsTab.configurableSettings").url;
+		final String ALPHA_URL = Router.reverse("settings.ConfigurableSettingsTab.alphabetizeAllEmbargoTypes").url;
+		
+		Response response = GET(ALPHA_URL);
+		assertEquals(REDIRECT_URL,response.getHeader("Location"));
+		
+		List<EmbargoType> types = settingRepo.findAllEmbargoTypes();
+		String previousName = null;
+		for (EmbargoType type : types) {
+			String name = String.format("%2d - %s", (type.getDuration() == null ? 999 : type.getDuration()),type.getName());
+			if (previousName != null) {
+				assertTrue(previousName.compareTo(name) < 0);
+			} 
+			previousName = name;
+		}
+	}
 	
 	/**
 	 * Test adding, editing, and removing a program.
@@ -267,6 +317,29 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		// Cleanup
 		program1.delete();
 		program2.delete();
+	}
+	
+	/**
+	 * Test alphabetizing porgrams
+	 */
+	@Test
+	public void testAlphabetizingPrograms() {
+		LOGIN();
+		
+		final String REDIRECT_URL = Router.reverse("settings.ConfigurableSettingsTab.configurableSettings").url;
+		final String ALPHA_URL = Router.reverse("settings.ConfigurableSettingsTab.alphabetizeAllPrograms").url;
+		
+		Response response = GET(ALPHA_URL);
+		assertEquals(REDIRECT_URL,response.getHeader("Location"));
+		
+		List<Program> programs = settingRepo.findAllPrograms();
+		String previousName = null;
+		for (Program program : programs) {
+			if (previousName != null) {
+				assertTrue(previousName.compareTo(program.getName()) < 0);
+			} 
+			previousName = program.getName();
+		}
 	}
 	
 	/**
@@ -368,6 +441,29 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 	
 	
 	/**
+	 * Test alphabetizing Colleges
+	 */
+	@Test
+	public void testAlphabetizingColleges() {
+		LOGIN();
+		
+		final String REDIRECT_URL = Router.reverse("settings.ConfigurableSettingsTab.configurableSettings").url;
+		final String ALPHA_URL = Router.reverse("settings.ConfigurableSettingsTab.alphabetizeAllColleges").url;
+		
+		Response response = GET(ALPHA_URL);
+		assertEquals(REDIRECT_URL,response.getHeader("Location"));
+		
+		List<College> colleges = settingRepo.findAllColleges();
+		String previousName = null;
+		for (College college : colleges) {
+			if (previousName != null) {
+				assertTrue(previousName.compareTo(college.getName()) < 0);
+			} 
+			previousName = college.getName();
+		}
+	}
+	
+	/**
 	 * Test adding, editing, and removing a department.
 	 */
 	@Test
@@ -465,6 +561,29 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 	}
 	
 	/**
+	 * Test alphabetizing departments
+	 */
+	@Test
+	public void testAlphabetizingDepartments() {
+		LOGIN();
+		
+		final String REDIRECT_URL = Router.reverse("settings.ConfigurableSettingsTab.configurableSettings").url;
+		final String ALPHA_URL = Router.reverse("settings.ConfigurableSettingsTab.alphabetizeAllDepartments").url;
+		
+		Response response = GET(ALPHA_URL);
+		assertEquals(REDIRECT_URL,response.getHeader("Location"));
+		
+		List<Department> departments = settingRepo.findAllDepartments();
+		String previousName = null;
+		for (Department department : departments) {
+			if (previousName != null) {
+				assertTrue(previousName.compareTo(department.getName()) < 0);
+			} 
+			previousName = department.getName();
+		}
+	}
+	
+	/**
 	 * Test adding, editing, and removing a major.
 	 */
 	@Test
@@ -559,6 +678,29 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		// Cleanup
 		major1.delete();
 		major2.delete();
+	}
+	
+	/**
+	 * Test alphabetizing majors
+	 */
+	@Test
+	public void testAlphabetizingMajors() {
+		LOGIN();
+		
+		final String REDIRECT_URL = Router.reverse("settings.ConfigurableSettingsTab.configurableSettings").url;
+		final String ALPHA_URL = Router.reverse("settings.ConfigurableSettingsTab.alphabetizeAllMajors").url;
+		
+		Response response = GET(ALPHA_URL);
+		assertEquals(REDIRECT_URL,response.getHeader("Location"));
+		
+		List<Major> majors = settingRepo.findAllMajors();
+		String previousName = null;
+		for (Major major : majors) {
+			if (previousName != null) {
+				assertTrue(previousName.compareTo(major.getName()) < 0);
+			} 
+			previousName = major.getName();
+		}
 	}
 	
 	/**
@@ -664,6 +806,30 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 	}
 	
 	/**
+	 * Test alphabetizing degrees
+	 */
+	@Test
+	public void testAlphabetizingDegrees() {
+		LOGIN();
+		
+		final String REDIRECT_URL = Router.reverse("settings.ConfigurableSettingsTab.configurableSettings").url;
+		final String ALPHA_URL = Router.reverse("settings.ConfigurableSettingsTab.alphabetizeAllDegrees").url;
+		
+		Response response = GET(ALPHA_URL);
+		assertEquals(REDIRECT_URL,response.getHeader("Location"));
+		
+		List<Degree> degrees = settingRepo.findAllDegrees();
+		String previousName = null;
+		for (Degree degree : degrees) {
+			String name = (degree.getLevel().getId() - 5) + "-"+degree.getName();
+			if (previousName != null) {
+				assertTrue(previousName.compareTo(name) < 0);
+			} 
+			previousName = name;
+		}
+	}
+	
+	/**
 	 * Test adding, editing, and removing a document type.
 	 */
 	@Test
@@ -763,6 +929,30 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		// Cleanup
 		docType1.delete();
 		docType2.delete();
+	}
+	
+	/**
+	 * Test alphabetizing document types
+	 */
+	@Test
+	public void testAlphabetizingDocumentTypes() {
+		LOGIN();
+			
+		final String REDIRECT_URL = Router.reverse("settings.ConfigurableSettingsTab.configurableSettings").url;
+		final String ALPHA_URL = Router.reverse("settings.ConfigurableSettingsTab.alphabetizeAllDocumentTypes").url;
+		
+		Response response = GET(ALPHA_URL);
+		assertEquals(REDIRECT_URL,response.getHeader("Location"));
+		
+		List<DocumentType> types = settingRepo.findAllDocumentTypes();
+		String previousName = null;
+		for (DocumentType type : types) {
+			String name = (type.getLevel().getId() - 5) + "-"+type.getName();
+			if (previousName != null) {
+				assertTrue(previousName.compareTo(name) <= 0);
+			} 
+			previousName = name;;
+		}
 	}
 	
 	/**
@@ -868,6 +1058,30 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 	}
 	
 	/**
+	 * Test alphabetizing committee member role types
+	 */
+	@Test
+	public void testAlphabetizingCommitteeMemberRoleTypes() {
+		LOGIN();
+		
+		final String REDIRECT_URL = Router.reverse("settings.ConfigurableSettingsTab.configurableSettings").url;
+		final String ALPHA_URL = Router.reverse("settings.ConfigurableSettingsTab.alphabetizeAllCommitteeMemberRoleTypes").url;
+		
+		Response response = GET(ALPHA_URL);
+		assertEquals(REDIRECT_URL,response.getHeader("Location"));
+		
+		List<CommitteeMemberRoleType> types = settingRepo.findAllCommitteeMemberRoleTypes();
+		String previousName = null;
+		for (CommitteeMemberRoleType type : types) {
+			String name = (type.getLevel().getId() - 5) + "-"+type.getName();
+			if (previousName != null) {
+				assertTrue(previousName.compareTo(name) <= 0);
+			} 
+			previousName = name;
+		}
+	}
+	
+	/**
 	 * Test adding, editing, and removing a graduation month.
 	 */
 	@Test
@@ -964,7 +1178,29 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		month2.delete();
 	}
 	
-	
+	/**
+	 * Test alphabetizing Graduation Months
+	 */
+	@Test
+	public void testAlphabetizingGraduationMonths() {
+		LOGIN();
+		
+		final String REDIRECT_URL = Router.reverse("settings.ConfigurableSettingsTab.configurableSettings").url;
+		final String ALPHA_URL = Router.reverse("settings.ConfigurableSettingsTab.alphabetizeAllGraduationMonths").url;
+		
+		Response response = GET(ALPHA_URL);
+		assertEquals(REDIRECT_URL,response.getHeader("Location"));
+		
+		List<GraduationMonth> months = settingRepo.findAllGraduationMonths();
+		String previousName = null;
+		for (GraduationMonth month : months) {
+			String name = String.format("%2d",month.getMonth());
+			if (previousName != null) {
+				assertTrue(previousName.compareTo(name) < 0);
+			} 
+			previousName = name;
+		}
+	}
 	
 	/**
 	 * Test adding, editing, and removing a langauge.
@@ -1047,5 +1283,28 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		// Cleanup
 		lang1.delete();
 		lang2.delete();
+	}
+	
+	/**
+	 * Test alphabetizing languages
+	 */
+	@Test
+	public void testAlphabetizingLanguages() {
+		LOGIN();
+		
+		final String REDIRECT_URL = Router.reverse("settings.ConfigurableSettingsTab.configurableSettings").url;
+		final String ALPHA_URL = Router.reverse("settings.ConfigurableSettingsTab.alphabetizeAllLanguages").url;
+		
+		Response response = GET(ALPHA_URL);
+		assertEquals(REDIRECT_URL,response.getHeader("Location"));
+		
+		List<Language> languages = settingRepo.findAllLanguages();
+		String previousName = null;
+		for (Language language : languages) {
+			if (previousName != null) {
+				assertTrue(previousName.compareTo(language.getLocale().getDisplayName()) < 0);
+			} 
+			previousName = language.getLocale().getDisplayName();
+		}
 	}
 }

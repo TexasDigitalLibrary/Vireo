@@ -590,7 +590,13 @@ function saveAddActionHandler(type, jsonURL) {
 function cancelAddActionHandler(type) {
 
 	return function() {
-		jQuery("#add-"+type+"-dialog").slideToggle();
+		
+		if (jQuery("#add-"+type+"-dialog").is(":visible")) 
+			jQuery("#add-"+type+"-dialog").slideToggle();
+		
+		if (jQuery("#bulk-add-"+type+"-dialog").is(":visible")) 
+			jQuery("#bulk-add-"+type+"-dialog").slideToggle();
+		
 		jQuery("#add-"+type+"-name").val("");
 		if (jQuery("#add-"+type+"-level").length > 0)
 			jQuery("#add-"+type+"-level").val("-1");

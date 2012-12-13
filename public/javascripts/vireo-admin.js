@@ -164,13 +164,25 @@ function fadeInHandler(selector) {
 /**
  * Handle to slide in and slide out selected elements.
  * 
- * @param selector
- *            The element to be slide
+ * @param open
+ *            The element to be opened
+ * @param close1, close2, close3
+ *            Elements to be closed.
  * @returns A Callback function
  */
-function slideToggleHandler(selector) {
+function slideToggleHandler(open,close1,close2,close3) {
 	return function() {
-		jQuery(selector).slideToggle();
+		if (jQuery(open).is(":hidden"))
+			jQuery(open).slideToggle();
+		
+		if (jQuery(close1).is(":visible"))
+			jQuery(close1).slideToggle();
+		
+		if (jQuery(close2).is(":visible"))
+			jQuery(close2).slideToggle();
+		
+		if (jQuery(close3).is(":visible"))
+			jQuery(close3).slideToggle();
 		return false;
 	}
 }

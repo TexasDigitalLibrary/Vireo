@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -11,6 +12,7 @@ import org.apache.commons.lang.LocaleUtils;
 
 import javax.persistence.PersistenceException;
 
+import org.tdl.vireo.model.AbstractOrderedModel;
 import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.CommitteeMember;
 import org.tdl.vireo.model.CommitteeMemberRoleType;
@@ -46,7 +48,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 	 * @throws Exception 
 	 */
 	@Security(RoleType.MANAGER)
-	public static void configurableSettings() throws Exception {
+	public static void configurableSettings() {
 		
 		List<EmbargoType> embargos = settingRepo.findAllEmbargoTypes();
 		List<College> colleges = settingRepo.findAllColleges();
@@ -60,7 +62,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 				
 		Locale locales[] = Locale.getAvailableLocales();
 		List<Locale> localeLanguages = new ArrayList<Locale>(Arrays.asList(locales));
-		Collections.sort(localeLanguages, ascending(getComparator(LocaleComparator.LANGUAGE_SORT, LocaleComparator.COUNTRY_SORT)));
+		Collections.sort(localeLanguages, ascending(getLocaleComparator(LocaleComparator.LANGUAGE_SORT, LocaleComparator.COUNTRY_SORT)));
 		
 		//List<ProquestLanguage> proquestLanguages = proquest.findAllLanguages();
 		List<Language> languages = settingRepo.findAllLanguages();
@@ -85,6 +87,111 @@ public class ConfigurableSettingsTab extends SettingsTab {
 				// Locales
 				localeLanguages);
 	}
+	
+	/**
+	 * Bulk add a set of colleges, programs, departments, or majors. The bulkAdd
+	 * input is expected to be formated as one item per line. After completing
+	 * the user will be redirected back to the configurableSettings tab.
+	 * 
+	 * @param modelType
+	 *            The type of object being added in bulk.
+	 * @param bulkAdd
+	 *            The items to be added in bulk, one per line.
+	 */
+	@Security(RoleType.MANAGER)
+	public static void bulkAdd(String modelType, String bulkAdd) {
+		
+		// Build a list triming out any blank or duplicate values.
+		String[] rawItems = bulkAdd.split("\n");
+		List<String> items = new ArrayList<String>();
+		for (String item : rawItems) {
+			if (item == null)
+				continue;
+			
+			item = item.trim();
+			if (item.length() == 0)
+				continue;
+			
+			if (items.contains(item))
+				continue;
+			
+			items.add(item);
+		}
+		
+		// Retrieve all current models
+		List<AbstractOrderedModel> models;
+		if ("college".equals(modelType)) {
+			models =(List) settingRepo.findAllColleges();
+		} else if ("program".equals(modelType)) {
+			models= (List) settingRepo.findAllPrograms();
+		} else if ("department".equals(modelType)) {
+			models = (List) settingRepo.findAllDepartments();
+		} else if ("major".equals(modelType)) {
+			models = (List) settingRepo.findAllMajors();
+		} else {
+			throw new IllegalArgumentException("Unknown modelType: "+modelType);
+		}	
+		
+		
+		// Eliminate any values allready created.
+		Iterator<String> itr = items.iterator();
+		while (itr.hasNext()) {
+			String item = itr.next();
+			for (AbstractOrderedModel model : models) {
+				if ("college".equals(modelType)) {
+					if (item.equals(((College) model).getName()))
+						itr.remove();
+				} else if ("program".equals(modelType)) {
+					if (item.equals(((Program) model).getName()))
+						itr.remove();
+				} else if ("department".equals(modelType)) {
+					if (item.equals(((Department) model).getName()))
+						itr.remove();
+				} else if ("major".equals(modelType)) {
+					if (item.equals(((Major) model).getName()))
+						itr.remove();
+				} else {
+					throw new IllegalArgumentException("Unknown modelType: "+modelType);
+				}	
+			}
+		}
+		
+		
+		// Create everything that is left.
+		for (String item : items) {
+			item = item.trim();
+			if ("college".equals(modelType)) {
+				models.add(settingRepo.createCollege(item));
+			} else if ("program".equals(modelType)) {
+				models.add(settingRepo.createProgram(item));
+			} else if ("department".equals(modelType)) {
+				models.add(settingRepo.createDepartment(item));
+			} else if ("major".equals(modelType)) {
+				models.add(settingRepo.createMajor(item));
+			} else {
+				throw new IllegalArgumentException("Unknown modelType: "+modelType);
+			}	
+			
+			
+		}
+		saveModelOrder(models);
+
+			
+		// Redirect back the configurable setting tab.
+		if ("college".equals(modelType)) {
+			flash.put("open","availableColleges");
+		} else if ("program".equals(modelType)) {
+			flash.put("open","availablePrograms");
+		} else if ("department".equals(modelType)) {
+			flash.put("open","availableDepartments");
+		} else if ("major".equals(modelType)) {
+			flash.put("open","availableMajors");
+		} else {
+			throw new IllegalArgumentException("Unknown modelType: "+modelType);
+		}
+		configurableSettings();
+	}
+	
 
 	// ////////////////////////////////////////////
 	// EMBARGO TYPES
@@ -104,6 +211,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 	 * @param active
 	 *            Whether this embargo is active.
 	 */
+	@Security(RoleType.MANAGER)
 	public static void editEmbargoTypeJSON(String embargoTypeId, String name, String description, Integer months, boolean active) {
 		
 		try {
@@ -170,6 +278,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 	 * @param embargoId 
 	 * 			  The id of the embargo type to be removed.
 	 */
+	@Security(RoleType.MANAGER)
 	public static void removeEmbargoTypeJSON(String embargoTypeId) {
 		
 		try {
@@ -196,6 +305,32 @@ public class ConfigurableSettingsTab extends SettingsTab {
 		}	
 	}
 	
+	
+	/**
+	 * Remove all existing embargo types.
+	 * 
+	 */
+	@Security(RoleType.MANAGER)
+	public static void removeAllEmbargoTypes() {
+
+		List<EmbargoType> embargos = settingRepo.findAllEmbargoTypes();
+		for (EmbargoType embargo : embargos) {
+			embargo.delete();
+
+			Logger.info(
+					"%s (%d: %s) has deleted embargo #%d.\nEmbargo Name = '%s'\nEmbargo Description = '%s'\nEmbargo Duration = '%d'\nEmbargo Active = '%b'",
+					context.getPerson().getFormattedName(NameFormat.FIRST_LAST),
+					context.getPerson().getId(),
+					context.getPerson().getEmail(), embargo.getId(),
+					embargo.getName(), embargo.getDescription(),
+					embargo.getDuration(), embargo.isActive());
+		}
+
+		flash.put("open","availableEmbargoTypes");
+		configurableSettings();
+	}
+	
+	
 	/**
 	 * Reorder a list of embargo types.
 	 * 
@@ -220,6 +355,21 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
 		}
+	}
+	
+	/**
+	 * Alphabetize all embargo types.
+	 * 
+	 */
+	@Security(RoleType.MANAGER)
+	public static void alphabetizeAllEmbargoTypes() {
+
+		List<EmbargoType> embargos = settingRepo.findAllEmbargoTypes();
+		Collections.sort(embargos, ascending(getModelCompator()));
+		saveModelOrder(embargos);
+		
+		flash.put("open","availableEmbargoTypes");
+		configurableSettings();
 	}
 	
 	// ////////////////////////////////////////////
@@ -327,6 +477,21 @@ public class ConfigurableSettingsTab extends SettingsTab {
 					+ "\" }");
 		}
 	}
+	
+	/**
+	 * Remove all existing colleges
+	 * 
+	 */
+	@Security(RoleType.MANAGER)
+	public static void removeAllColleges() {
+		List<College> colleges = settingRepo.findAllColleges();
+		for (College college : colleges) {
+			college.delete();
+		}
+
+		flash.put("open","availableColleges");
+		configurableSettings();
+	}
 
 	/**
 	 * Reorder a list of colleges.
@@ -353,6 +518,21 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
 					+ "\" }");
 		}
+	}
+	
+	/**
+	 * Alphabetize all colleges.
+	 * 
+	 */
+	@Security(RoleType.MANAGER)
+	public static void alphabetizeAllColleges() {
+
+		List<College> colleges = settingRepo.findAllColleges();
+		Collections.sort(colleges, ascending(getModelCompator()));
+		saveModelOrder(colleges);
+		
+		flash.put("open","availableColleges");
+		configurableSettings();
 	}
 	
 	// ////////////////////////////////////////////
@@ -460,6 +640,21 @@ public class ConfigurableSettingsTab extends SettingsTab {
 					+ "\" }");
 		}
 	}
+	
+	/**
+	 * Remove all existing programs
+	 * 
+	 */
+	@Security(RoleType.MANAGER)
+	public static void removeAllPrograms() {
+		List<Program> programs = settingRepo.findAllPrograms();
+		for (Program program : programs) {
+			program.delete();
+		}
+
+		flash.put("open","availablePrograms");
+		configurableSettings();
+	}
 
 	/**
 	 * Reorder a list of programs.
@@ -486,6 +681,21 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
 					+ "\" }");
 		}
+	}
+	
+	/**
+	 * Alphabetize all programs.
+	 * 
+	 */
+	@Security(RoleType.MANAGER)
+	public static void alphabetizeAllPrograms() {
+
+		List<Program> programs = settingRepo.findAllPrograms();
+		Collections.sort(programs, ascending(getModelCompator()));
+		saveModelOrder(programs);
+		
+		flash.put("open","availablePrograms");
+		configurableSettings();
 	}
 
 	// ////////////////////////////////////////////
@@ -597,6 +807,22 @@ public class ConfigurableSettingsTab extends SettingsTab {
 					+ "\" }");
 		}
 	}
+	
+	/**
+	 * Remove all existing departments
+	 * 
+	 */
+	@Security(RoleType.MANAGER)
+	public static void removeAllDepartments() {
+		List<Department> departments = settingRepo.findAllDepartments();
+		for (Department department : departments) {
+			department.delete();
+		}
+
+		flash.put("open","availableDepartments");
+		configurableSettings();
+	}
+
 
 	/**
 	 * Reorder a list of departments.
@@ -626,6 +852,21 @@ public class ConfigurableSettingsTab extends SettingsTab {
 		}
 	}
 
+	/**
+	 * Alphabetize all departments.
+	 * 
+	 */
+	@Security(RoleType.MANAGER)
+	public static void alphabetizeAllDepartments() {
+
+		List<Department> departments = settingRepo.findAllDepartments();
+		Collections.sort(departments, ascending(getModelCompator()));
+		saveModelOrder(departments);
+		
+		flash.put("open","availableDepartments");
+		configurableSettings();
+	}
+	
 	// ////////////////////////////////////////////
 	// MAJOR AJAX
 	// ////////////////////////////////////////////
@@ -732,6 +973,23 @@ public class ConfigurableSettingsTab extends SettingsTab {
 					+ "\" }");
 		}
 	}
+	
+	/**
+	 * Remove all existing majors
+	 * 
+	 */
+	@Security(RoleType.MANAGER)
+	public static void removeAllMajors() {
+		
+		List<Major> majors = settingRepo.findAllMajors();
+		for (Major major : majors) {
+			major.delete();
+		}
+
+		flash.put("open","availableMajors");
+		configurableSettings();
+	}
+
 
 	/**
 	 * Reorder a list of majors.
@@ -759,6 +1017,21 @@ public class ConfigurableSettingsTab extends SettingsTab {
 		}
 	}
 
+	/**
+	 * Alphabetize all majors.
+	 * 
+	 */
+	@Security(RoleType.MANAGER)
+	public static void alphabetizeAllMajors() {
+
+		List<Major> majors = settingRepo.findAllMajors();
+		Collections.sort(majors, ascending(getModelCompator()));
+		saveModelOrder(majors);
+		
+		flash.put("open","availableMajors");
+		configurableSettings();
+	}
+	
 	// ////////////////////////////////////////////
 	// DEGREE AJAX
 	// ////////////////////////////////////////////
@@ -876,6 +1149,22 @@ public class ConfigurableSettingsTab extends SettingsTab {
 					+ "\" }");
 		}
 	}
+	
+	/**
+	 * Remove all existing degrees
+	 * 
+	 */
+	@Security(RoleType.MANAGER)
+	public static void removeAllDegrees() {
+		List<Degree> degrees = settingRepo.findAllDegrees();
+		for (Degree degree : degrees) {
+			degree.delete();
+		}
+
+		flash.put("open","availableDegrees");
+		configurableSettings();
+	}
+
 
 	/**
 	 * Reorder a list of degrees.
@@ -903,6 +1192,21 @@ public class ConfigurableSettingsTab extends SettingsTab {
 		}
 	}
 
+	/**
+	 * Alphabetize all degrees.
+	 * 
+	 */
+	@Security(RoleType.MANAGER)
+	public static void alphabetizeAllDegrees() {
+
+		List<Degree> degrees = settingRepo.findAllDegrees();
+		Collections.sort(degrees, ascending(getModelCompator()));
+		saveModelOrder(degrees);
+		
+		flash.put("open","availableDegrees");
+		configurableSettings();
+	}
+	
 	// ////////////////////////////////////////////
 	// DOCUMENT TYPES AJAX
 	// ////////////////////////////////////////////
@@ -1020,6 +1324,22 @@ public class ConfigurableSettingsTab extends SettingsTab {
 					+ "\" }");
 		}
 	}
+	
+	/**
+	 * Remove all existing document types
+	 * 
+	 */
+	@Security(RoleType.MANAGER)
+	public static void removeAllDocumentTypes() {
+		List<DocumentType> types = settingRepo.findAllDocumentTypes();
+		for (DocumentType type : types) {
+			type.delete();
+		}
+
+		flash.put("open","availableDocumentTypes");
+		configurableSettings();
+	}
+
 
 	/**
 	 * Reorder a list of documentTypes.
@@ -1047,6 +1367,20 @@ public class ConfigurableSettingsTab extends SettingsTab {
 		}
 	}
 	
+	/**
+	 * Alphabetize all document types.
+	 * 
+	 */
+	@Security(RoleType.MANAGER)
+	public static void alphabetizeAllDocumentTypes() {
+
+		List<DocumentType> types = settingRepo.findAllDocumentTypes();
+		Collections.sort(types, ascending(getModelCompator()));
+		saveModelOrder(types);
+		
+		flash.put("open","availableDocumentTypes");
+		configurableSettings();
+	}
 	
 	// ////////////////////////////////////////////
 	// COMMITTEE MEMBER ROLE TYPES AJAX
@@ -1165,6 +1499,22 @@ public class ConfigurableSettingsTab extends SettingsTab {
 					+ "\" }");
 		}
 	}
+	
+	/**
+	 * Remove all existing committee member role types
+	 * 
+	 */
+	@Security(RoleType.MANAGER)
+	public static void removeAllCommitteeMemberRoleTypes() {
+		List<CommitteeMemberRoleType> types = settingRepo.findAllCommitteeMemberRoleTypes();
+		for (CommitteeMemberRoleType type : types) {
+			type.delete();
+		}
+
+		flash.put("open","availableCommitteeMemberRoleTypes");
+		configurableSettings();
+	}
+
 
 	/**
 	 * Reorder a list of committee member role types.
@@ -1192,6 +1542,20 @@ public class ConfigurableSettingsTab extends SettingsTab {
 		}
 	}
 
+	/**
+	 * Alphabetize all committee member role types.
+	 * 
+	 */
+	@Security(RoleType.MANAGER)
+	public static void alphabetizeAllCommitteeMemberRoleTypes() {
+
+		List<CommitteeMemberRoleType> types = settingRepo.findAllCommitteeMemberRoleTypes();
+		Collections.sort(types, ascending(getModelCompator()));
+		saveModelOrder(types);
+		
+		flash.put("open","availableCommitteeMemberRoleTypes");
+		configurableSettings();
+	}
 
 	// ////////////////////////////////////////////
 	// GRADUATION MONTH AJAX
@@ -1306,6 +1670,22 @@ public class ConfigurableSettingsTab extends SettingsTab {
 	}
 
 	/**
+	 * Remove all existing graduation months
+	 * 
+	 */
+	@Security(RoleType.MANAGER)
+	public static void removeAllGraduationMonths() {
+		List<GraduationMonth> months = settingRepo.findAllGraduationMonths();
+		for (GraduationMonth month : months) {
+			month.delete();
+		}
+
+		flash.put("open", "availableGraduationMonths");
+		configurableSettings();
+	}
+
+	
+	/**
 	 * Reorder a list of graduation months.
 	 * 
 	 * @param graduationMonthIds
@@ -1329,6 +1709,22 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
 		}
+	}
+	
+	/**
+	 * Alphabetize all graduation month.
+	 * 
+	 */
+	@Security(RoleType.MANAGER)
+	public static void alphabetizeAllGraduationMonths() {
+
+		List<GraduationMonth> months = settingRepo.findAllGraduationMonths();
+		Collections.sort(months, ascending(getModelCompator()));
+		
+		saveModelOrder(months);
+		
+		flash.put("open","availableGraduationMonths");
+		configurableSettings();
 	}
 	
 	// ////////////////////////////////////////////
@@ -1403,6 +1799,23 @@ public class ConfigurableSettingsTab extends SettingsTab {
 					+ "\" }");
 		}
 	}
+	
+	/**
+	 * Remove all existing languages
+	 * 
+	 */
+	@Security(RoleType.MANAGER)
+	public static void removeAllLanguages() {
+		List<Language> languages = settingRepo.findAllLanguages();
+		for (Language language : languages) {
+			language.delete();
+		}
+
+		
+		flash.put("open", "availableLanguages");
+		configurableSettings();
+	}
+
 
 	/**
 	 * Reorder a list of languages.
@@ -1432,6 +1845,22 @@ public class ConfigurableSettingsTab extends SettingsTab {
 	}
 	
 	/**
+	 * Alphabetize all languages.
+	 * 
+	 */
+	@Security(RoleType.MANAGER)
+	public static void alphabetizeAllLanguages() {
+
+		List<Language> languages = settingRepo.findAllLanguages();
+		Collections.sort(languages, ascending(getModelCompator()));
+		saveModelOrder(languages);
+		
+		flash.put("open","availableLanguages");
+		configurableSettings();
+	}
+	
+	
+	/**
 	 * Sort Locales
 	 *
 	 */
@@ -1449,23 +1878,23 @@ public class ConfigurableSettingsTab extends SettingsTab {
 		};
     }
 	
-	public static Comparator<Locale> decending(final Comparator<Locale> other) {
-		return new Comparator<Locale>() {
-			public int compare(Locale o1, Locale o2) {
+	public static <T> Comparator<T> decending(final Comparator<T> other) {
+		return new Comparator<T>() {
+			public int compare(T o1, T o2) {
 				return -1 * other.compare(o1, o2);
 			}
 		};
 	}
     
-    public static Comparator<Locale> ascending(final Comparator<Locale> other) {
-		return new Comparator<Locale>() {
-			public int compare(Locale o1, Locale o2) {
+    public static <T> Comparator<T> ascending(final Comparator<T> other) {
+		return new Comparator<T>() {
+			public int compare(T o1, T o2) {
 				return 1 * other.compare(o1, o2);
 			}
 		};
 	}
 	
-	public static Comparator<Locale> getComparator(final LocaleComparator... multipleOptions) {
+	public static Comparator<Locale> getLocaleComparator(final LocaleComparator... multipleOptions) {
 		return new Comparator<Locale>() {
 			public int compare(Locale o1, Locale o2) {
 				for (LocaleComparator option : multipleOptions) {
@@ -1476,6 +1905,76 @@ public class ConfigurableSettingsTab extends SettingsTab {
 				}
 				return 0;
 			}
+		};
+	}
+	
+	/**
+	 * @return A comparator that can sort abstract models. The particular
+	 *         sorting is dependent upon the specific model type but is mostly
+	 *         based upon the model's name, although sometimes another parameter
+	 *         is considered.
+	 */
+	public static Comparator<AbstractOrderedModel> getModelCompator() {
+
+		return new Comparator<AbstractOrderedModel>() {
+
+			private String _getName(AbstractOrderedModel model) {
+
+				if (model == null)
+					return "";
+
+				if (model instanceof EmbargoType) {
+					EmbargoType type = (EmbargoType) model;
+					if (type.getDuration() != null) {
+						// Determinate embargos
+						return String.format("%2d - %s", type.getDuration(),type.getName());
+					} else {
+						return String.format("999 - %s", type.getName());
+					}
+				}
+				if (model instanceof College) {
+					return ((College) model).getName();
+				}
+				if (model instanceof Program) {
+					return ((Program) model).getName();
+				}
+				if (model instanceof Department) {
+					return ((Department) model).getName();
+				}
+				if (model instanceof Major) {
+					return ((Major) model).getName();
+				}
+				if (model instanceof Degree) {
+					Degree degree = ((Degree) model);
+					return (degree.getLevel().getId() - 5) + "-"+degree.getName();
+				}
+				if (model instanceof DocumentType) {
+					DocumentType type = ((DocumentType) model);
+					return (type.getLevel().getId() - 5) + "-"+type.getName();
+				}
+				if (model instanceof CommitteeMemberRoleType) {
+					CommitteeMemberRoleType type = ((CommitteeMemberRoleType) model);
+					return (type.getLevel().getId() - 5) + "-"+type.getName();
+				}
+				if (model instanceof GraduationMonth) {
+					
+					int month = ((GraduationMonth) model).getMonth();
+					if (month < 10)
+						return "0"+month;
+					else
+						return ""+month;
+				}
+				if (model instanceof Language) {
+					return ((Language) model).getLocale().getDisplayName();
+				}
+				throw new IllegalArgumentException("Unknown model type: "+model.getClass().getName());
+			}
+
+
+			public int compare(AbstractOrderedModel o1, AbstractOrderedModel o2) {
+				return _getName(o1).compareTo(_getName(o2));				
+			}
+
 		};
 	}
 
