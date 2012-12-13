@@ -227,7 +227,14 @@ public enum FieldConfig {
 			"The contact email address for the chair of the submitter's committee. This email address will be sent an email requisting approval of the submission."),
 	
 	/** Publication Options **/
-			
+	
+	PUBLISHED_MATERIAL(
+			"Published Material",
+			"submit_published_material_label",
+			"submit_published_material_help",
+			"submit_published_material_enabled",
+			"Allows the author to identify previously published material which may require additional copyright review. If the author answers positively then they will be required to identify the sections which materials have been previously published."),
+		
 	EMBARGO_TYPE(
 			"Embargo Type",
 			"submit_embargo_type_label",
@@ -257,21 +264,21 @@ public enum FieldConfig {
 			"submit_supplemental_attachment_label",
 			"submit_supplemental_attachment_help",
 			"submit_supplemental_attachment_enabled",
-			"Any number of supplemental files in any format."),
+			"Any number of supplemental files in any format. Supplemental files are typically published with the primary document."),
 	
 	SOURCE_ATTACHMENT(
 			"Source Files",
 			"submit_source_attachment_label",
 			"submit_source_attachment_help",
 			"submit_source_attachment_enabled",
-			"Any number of source files in any format."),
+			"Any number of source files in any format. Depending on the destination the source files may be included for preservation purposes."),
 	
 	ADMINISTRATIVE_ATTACHMENT(
 			"Administrative Files",
 			"submit_administrative_attachment_label",
 			"submit_administrative_attachment_help",
 			"submit_administrative_attachment_enabled",
-			"Any number of additional files in any format.");
+			"Any number of additional files in any format. These administrative files are typically never published with the document and are only available within Vireo.");
 
 	/**
 	 * Private internal method to construct a new field configuration
@@ -330,7 +337,7 @@ public enum FieldConfig {
 
 	public static final FieldConfig[] LICENSE_AGREEMENT_FIELDS = {LICENSE_AGREEMENT};
 	
-	public static final FieldConfig[] DOCUMENT_INFO_FIELDS = {DOCUMENT_TITLE, GRADUATION_DATE, DEFENSE_DATE, DOCUMENT_TYPE, DOCUMENT_ABSTRACT, DOCUMENT_KEYWORDS, DOCUMENT_SUBJECTS, DOCUMENT_LANGUAGE, COMMITTEE, COMMITTEE_CONTACT_EMAIL, EMBARGO_TYPE, UMI_RELEASE};
+	public static final FieldConfig[] DOCUMENT_INFO_FIELDS = {DOCUMENT_TITLE, GRADUATION_DATE, DEFENSE_DATE, DOCUMENT_TYPE, DOCUMENT_ABSTRACT, DOCUMENT_KEYWORDS, DOCUMENT_SUBJECTS, DOCUMENT_LANGUAGE, COMMITTEE, COMMITTEE_CONTACT_EMAIL, PUBLISHED_MATERIAL, EMBARGO_TYPE, UMI_RELEASE};
 
 	public static final FieldConfig[] UPLOAD_FILES_FIELDS = {PRIMARY_ATTACHMENT, SUPPLEMENTAL_ATTACHMENT, SOURCE_ATTACHMENT, ADMINISTRATIVE_ATTACHMENT};
 }

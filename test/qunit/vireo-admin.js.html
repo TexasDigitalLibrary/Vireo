@@ -202,8 +202,8 @@ test("test displaying and clearing alert", function() {
 test("test nl2br", function() {
 	reset();
 		
-	equals('aaaa<br />\nbbbb',nl2br("aaaa\nbbbb",true));
-    equals('aaaa<br>\nbbbb',nl2br("aaaa\nbbbb",false));
+	equals('aaaa<br />bbbb',nl2br("aaaa\nbbbb",true));
+    equals('aaaa<br>bbbb',nl2br("aaaa\nbbbb",false));
 });
  
 

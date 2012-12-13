@@ -168,6 +168,30 @@ public interface Submission extends AbstractModel {
 	 */
 	public Locale getDocumentLanguageLocale();
 
+	
+	/**
+	 * Set whether this submission contains any material that has been
+	 * previously published. If the value is null, then no material has been
+	 * previously published. If it is not null then some material may have been
+	 * previously published and the contents of this field should indicate which
+	 * material has been published.
+	 * 
+	 * @param material
+	 *            English description identifying the material previously
+	 *            published.
+	 */
+	public void setPublishedMaterial(String material);
+
+	/**
+	 * Whether this submission contains material which has been previously
+	 * published. Null indicates that no material has been previously published,
+	 * otherwise a human readable description of the published material is
+	 * supplied.
+	 * 
+	 * @return Previously published descriptor
+	 */
+	public String getPublishedMaterial();
+	
 	/**
 	 * 
 	 * @return The type of embargo for this submission. Either requested or

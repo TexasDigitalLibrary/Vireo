@@ -33,6 +33,7 @@ public class MockSubmission extends AbstractMock implements Submission {
 	public String documentKeywords;
 	public List<String> documentSubjects = new ArrayList<String>();
 	public String documentLanguage;
+	public String publishedMaterial;
 	public MockEmbargoType embargoType;
 	public List<Attachment> attachments = new ArrayList<Attachment>();
 	public List<CommitteeMember> committeeMembers = new ArrayList<CommitteeMember>();
@@ -195,6 +196,16 @@ public class MockSubmission extends AbstractMock implements Submission {
 	@Override
 	public Locale getDocumentLanguageLocale() {
 		return MockLanguage.toLocale(this.documentLanguage);
+	}
+	
+	@Override
+	public String getPublishedMaterial() {
+		return publishedMaterial;
+	}
+	
+	@Override
+	public void setPublishedMaterial(String material) {
+		this.publishedMaterial = material;
 	}
 
 	@Override

@@ -80,6 +80,9 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	
 	@Column(length=255)
 	public String documentLanguage;
+	
+	@Column(length=326768) // 2^15
+	public String publishedMaterial;
 
 	@OneToOne(targetEntity = JpaEmbargoTypeImpl.class)
 	public EmbargoType embargoType;
@@ -429,6 +432,26 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		return JpaLanguageImpl._toLocale(documentLanguage);
 	}
 
+	@Override
+	public String getPublishedMaterial() {
+		return publishedMaterial;
+	}
+	
+	@Override
+	public void setPublishedMaterial(String material) {
+		
+		assertReviewerOrOwner(submitter);
+		
+		if (!equals(this.publishedMaterial,material)) {
+			this.publishedMaterial = material;
+			if(material != null)
+				generateChangeLog("Published material",material,false);
+			else
+				generateChangeLog("Published material",null,false);
+		}
+	}
+	
+	
 	@Override
 	public EmbargoType getEmbargoType() {
 		return embargoType;

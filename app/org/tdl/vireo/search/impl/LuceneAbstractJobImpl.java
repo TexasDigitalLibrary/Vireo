@@ -265,6 +265,9 @@ public abstract class LuceneAbstractJobImpl extends Job {
 			documentLanguage = locale.getDisplayName();
 		}
 		
+		String publishedMaterial = sub.getPublishedMaterial();
+		searchText.append(publishedMaterial).append(" ");
+		
 		String primaryDocument = null;
 		if (sub.getPrimaryDocument() != null) {
 			primaryDocument = sub.getPrimaryDocument().getName();
@@ -385,6 +388,9 @@ public abstract class LuceneAbstractJobImpl extends Job {
 		
 		if (documentLanguage != null)
 		doc.add(new Field("documentLanguage",documentLanguage, Field.Store.NO,Index.NOT_ANALYZED));
+
+		if (publishedMaterial != null)
+		doc.add(new Field("publishedMaterial",publishedMaterial, Field.Store.NO,Index.NOT_ANALYZED));
 		
 		if (primaryDocument != null)
 		doc.add(new Field("primaryDocument",primaryDocument, Field.Store.NO,Index.NOT_ANALYZED));
@@ -514,6 +520,9 @@ public abstract class LuceneAbstractJobImpl extends Job {
 			
 			if (documentLanguage != null)
 			doc.add(new Field("documentLanguage",documentLanguage, Field.Store.NO,Index.NOT_ANALYZED));
+			
+			if (publishedMaterial != null)
+			doc.add(new Field("publishedMaterial",publishedMaterial, Field.Store.NO,Index.NOT_ANALYZED));
 			
 			if (primaryDocument != null)
 			doc.add(new Field("primaryDocument",primaryDocument, Field.Store.NO,Index.NOT_ANALYZED));

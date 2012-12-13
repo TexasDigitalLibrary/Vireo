@@ -169,6 +169,7 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				"en", // language
 				committee, // committee
 				"advisor@noreply.org", // committeeEmail
+				"chapter #2 has published material", // publishedMaterial
 				String.valueOf(settingRepo.findAllEmbargoTypes().get(1).getId()), // embargo
 				null // UMI
 				);
@@ -266,6 +267,7 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				null, // language
 				committee, // committee
 				"committee@noreply.org", // committeeEmail
+				"chapter #2 has published material", // publishedMaterial
 				String.valueOf(settingRepo.findAllEmbargoTypes().get(1).getId()), // embargo
 				"true" // UMI 
 				);
@@ -389,6 +391,7 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				null, // language
 				committee, // committee
 				"advisor@noreply.org", // committeeEmail
+				"chapter #2 has published material", // publishedMaterial
 				String.valueOf(settingRepo.findAllEmbargoTypes().get(1).getId()), // embargo
 				null // UMI
 				);
@@ -628,6 +631,7 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				"en", // language
 				committee, // committee
 				"advisor@noreply.org", // committeeEmail
+				"chapter #2 has published material", // publishedMaterial
 				String.valueOf(settingRepo.findAllEmbargoTypes().get(1).getId()), // embargo
 				null // UMI
 				);
@@ -752,6 +756,7 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				null, // language
 				committee, // committee
 				null, // committeeEmail
+				null, // publishedMaterial
 				null, // embargo
 				null // UMI
 				);
@@ -837,6 +842,7 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				null, // language
 				committee, // committee
 				null, // committeeEmail
+				null, // publishedMaterial
 				null, // embargo
 				null // UMI
 				);

@@ -103,6 +103,12 @@ public class DocumentInfo extends AbstractSubmitStep {
 				docLanguage = null;
 		}
 		
+		Boolean publishedMaterialFlag = params.get("publishedMaterialFlag",Boolean.class);
+		if (publishedMaterialFlag == null)
+			publishedMaterialFlag = false;
+		String publishedMaterial = params.get("publishedMaterial");
+		if (!publishedMaterialFlag)
+			publishedMaterial = null;
 		String chairEmail = params.get("chairEmail");
 		String embargo = params.get("embargo");
 		String umi = params.get("umi");
@@ -172,6 +178,13 @@ public class DocumentInfo extends AbstractSubmitStep {
 			if (isFieldEnabled(COMMITTEE_CONTACT_EMAIL))
 				sub.setCommitteeContactEmail(chairEmail);
 			
+			if (isFieldEnabled(PUBLISHED_MATERIAL)) {
+				if (publishedMaterialFlag)
+					sub.setPublishedMaterial(publishedMaterial);
+				else
+					sub.setPublishedMaterial(null);
+			}
+			
 			if (isFieldEnabled(EMBARGO_TYPE)) {
 				try {
 					sub.setEmbargoType(settingRepo.findEmbargoType(Long.parseLong(embargo)));
@@ -236,13 +249,16 @@ public class DocumentInfo extends AbstractSubmitStep {
 				docLanguage = sub.getDocumentLanguage();
 			}
 			
-			if (isFieldEnabled(FieldConfig.COMMITTEE_CONTACT_EMAIL))
+			// Get the list of committee members
+			if (isFieldEnabled(COMMITTEE))
+				committee = loadCommitteeMembers(sub);
+			
+			if (isFieldEnabled(COMMITTEE_CONTACT_EMAIL))
 				chairEmail = sub.getCommitteeContactEmail();
 
-			// Get the list of committee members
-			if (isFieldRequired(COMMITTEE))
-				committee = loadCommitteeMembers(sub);
-
+			if (isFieldEnabled(PUBLISHED_MATERIAL))
+				publishedMaterial = sub.getPublishedMaterial();
+			
 			if (isFieldEnabled(EMBARGO_TYPE) && sub.getEmbargoType() != null)
 				embargo = sub.getEmbargoType().getId().toString();
 
@@ -304,11 +320,15 @@ public class DocumentInfo extends AbstractSubmitStep {
 			}
 		}
 		
+		if (publishedMaterial != null)
+			publishedMaterialFlag = true;
+		
+		
 		renderTemplate("Submit/documentInfo.html", subId, stickies,
 
 				title, degreeMonth, degreeYear, defenseDate, docType, abstractText, keywords, 
 				subjectPrimary, subjectSecondary, subjectTertiary, docLanguage, committeeSlots, 
-				committee, chairEmail, embargo, umi);
+				committee, chairEmail, publishedMaterialFlag, publishedMaterial, embargo, umi);
 	}
 
 	/**
@@ -388,6 +408,13 @@ public class DocumentInfo extends AbstractSubmitStep {
 				new InternetAddress(sub.getCommitteeContactEmail()).validate();
 			} catch (AddressException e) {
 				validation.addError("chairEmail","The committee chair email address '"+sub.getCommitteeContactEmail()+"' you provided is invalid.");
+			}
+		}
+		
+		// Previously Published
+		if (isFieldEnabled(PUBLISHED_MATERIAL)) {
+			if (sub.getPublishedMaterial() != null && sub.getPublishedMaterial().trim().length() < 10) {
+				validation.addError("publishedMaterial", "If the any material being submitted has been previously published then you must identify the material which was published. (i.e. the section or chapter).");
 			}
 		}
 		

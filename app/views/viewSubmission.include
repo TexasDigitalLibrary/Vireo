@@ -193,7 +193,7 @@ Plus all the FieldConfig objects
 <div class="control-group #{errorClass 'keywords' /} ">
     <label class="control-label">#{fieldLabel DOCUMENT_ABSTRACT /}:</label>
     <div class="controls">
-        <p>${ sub.getDocumentAbstract() }</p>
+        <p>${ sub.getDocumentAbstract()?.nl2br() }</p>
     </div>
 </div>
 #{/ifEnabled}
@@ -245,6 +245,20 @@ Plus all the FieldConfig objects
     <label class="control-label">#{fieldLabel COMMITTEE_CONTACT_EMAIL /}:</label>
     <div class="controls">
         <p><a href="mailto:${sub.getCommitteeContactEmail()}">${sub.getCommitteeContactEmail()}</a></p>
+    </div>
+</div>
+#{/ifEnabled}
+
+#{ifEnabled PUBLISHED_MATERIAL}
+<div class="control-group #{errorClass 'publishedMaterial' /} ">
+    <label class="control-label">#{fieldLabel PUBLISHED_MATERIAL /}:</label>
+    <div class="controls">
+        #{if sub.getPublishedMaterial() != null}
+            <p>Yes - ${ sub.getPublishedMaterial().nl2br() }</p>
+        #{/if}
+        #{else}
+            <p>No</p>
+        #{/else}
     </div>
 </div>
 #{/ifEnabled}

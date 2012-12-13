@@ -451,11 +451,12 @@ EDIT HOLDERS & BOXES
 	width:45%;
 	margin-right:15px;
 }
+
 .edit-box li{
 	clear:left;
 }
 .edit-box label{
-	width:45%;
+    width:150px;	
 	text-align:right;
 	padding-right:7px;
 	font-weight:bold;
@@ -487,6 +488,27 @@ EDIT HOLDERS & BOXES
 	width: auto;
 }
 
+.edit-box.full-width {
+    width: 95%;
+    clear: both;
+}
+.edit-box.full-width li.edit span{
+    width: 75%;
+    max-width: 600px;
+    min-width: 200px;
+}
+.edit-box.full-width .editing {
+    width: 73%;
+}
+
+
+.edit-box.full-width textarea {
+    width: 100%;
+    max-width: 600px;
+    min-width: 200px;
+}
+
+
 
 .error .badge{
 	display:inline;
@@ -516,15 +538,18 @@ EDIT HOLDERS & BOXES
 	display:none;
 }
 
-#abstract{
+#abstract,
+#publishedMaterial{
 	max-height:180px;
 	overflow-x:hidden;
 }
-#abstract.editing{
+#abstract.editing,
+#publishedMaterial.editing{
 	max-height:100%;
 	overflow:visible;
 }
-#abstract textarea{
+#abstract textarea,
+#publishedMaterial textarea{
 	min-height:180px;
 }
 
