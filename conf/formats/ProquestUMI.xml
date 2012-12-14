@@ -66,13 +66,6 @@
 	// The name of the institution, we use the grantor field established under
 	// the application settings tab.
 	String institution_name = settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.GRANTOR);
-	
-	// #### Institutional Processing Code
-	// ProQuest says "This is the ETD code assigned to the school instruction
-	// to be used when checking items in Can be blank for external vendors
-	// sending submissions." You're guess as to what this means is as good as
-	// mine, but I think it's okay to leave blank.
-	String institution_processing_code = "";
 
 	// #### Embargo Code
 	// The embargo code can be one of the following values
@@ -260,7 +253,7 @@ ${ address.fullAddress }
 
 	<DISS_description
 		page_count=""
-        type="${ sub.getDegreeLevel()?.name()?.toLowerCase()?.escapeXml() }"
+        type="${ sub.getDegreeLevel()?.name()?.toLowerCase()?.capitalizeWords()?.escapeXml() }"
 		external_id="${ external_id_prefix }${ sub.getId() }"
 		apply_for_copyright="${ apply_for_copyright ? "yes" : "no" }">
 		
@@ -274,11 +267,11 @@ ${ address.fullAddress }
 			<DISS_inst_code>${ institution_code }</DISS_inst_code>
 			<DISS_inst_name>${ institution_name }</DISS_inst_name>
 			<DISS_inst_contact>${ sub.getDepartment() }</DISS_inst_contact>
-			<DISS_processing_code>${ institution_processing_code }</DISS_processing_code>
+			<DISS_processing_code>${ sub.getDegreeLevel()?.name()?.substring(0,1)?.toUpperCase()?.escapeXml() }</DISS_processing_code>
 		</DISS_institution>
 		
 		#{list items:sub.getCommitteeMembers(), as:'member'} 
-		#{if member.hasRole("Chair","Co-Chair","Supervisor","Co-Supervisor","Advisor") }
+		#{if member.hasRole("Chair","Co-Chair","Supervisor","Co-Supervisor","Advisor") } 
 		<DISS_advisor>
             <DISS_name>
                 <DISS_surname>${ member.getLastName() }</DISS_surname>
@@ -286,17 +279,17 @@ ${ address.fullAddress }
                 <DISS_middle>${ member.getMiddleName() }</DISS_middle>
             </DISS_name>
 		</DISS_advisor>
-		#{/if}
-		#{elseif member.hasNoRole() }
+		#{/if} 
+		#{elseif member.hasNoRole() } 
 		<DISS_cmte_member>
 			<DISS_name>
 				<DISS_surname>${ member.getLastName() }</DISS_surname>
 				<DISS_fname>${ member.getFirstName() }</DISS_fname>
 				<DISS_middle>${ member.getMiddleName() }</DISS_middle>
             </DISS_name>			
-		<DISS_cmte_member>
-		#{/elseif}
-		#{/list}
+		</DISS_cmte_member>
+		#{/elseif} 
+		#{/list} 
 		
 		<DISS_categorization>
 		
@@ -308,9 +301,11 @@ ${ address.fullAddress }
 		    #{/list} 
 		
 			#{if sub.getDocumentKeywords() != null}
-			#{list items:sub.getDocumentKeywords().split(";"), as:'keyword'} 
+			#{list items:sub.getDocumentKeywords().split(";"), as:'keyword'}
+			#{if keyword != null && keyword.trim().length() > 0} 
 			<DISS_keyword>${keyword.trim()}</DISS_keyword>
-			#{/list}
+			#{/if} 
+			#{/list} 
 			#{/if} 
 			
 			#{if sub.getDocumentLanguage() != null && proquestUtils.languageCode(sub.getDocumentLanguageLocale()) != null} 
@@ -329,9 +324,9 @@ ${ address.fullAddress }
 		<DISS_abstract>
 			#{if sub.getDocumentAbstract() != null}
 			#{list items:sub.getDocumentAbstract().split("\n"), as:'para'} 
-				<DISS_para>
-					${ para.escapeXml() }
-				</DISS_para>
+			<DISS_para>
+				${ para.escapeXml() }
+			</DISS_para>
 			#{/list}
 			#{/if} 
 		</DISS_abstract>
