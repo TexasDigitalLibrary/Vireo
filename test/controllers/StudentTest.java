@@ -232,6 +232,58 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 	}
 	
 	/**
+	 * Test that when submissons are open, and multiple submissions are
+	 * disallowed, and the student has an archived submission that they
+	 * are able to submit a new submission.
+	 */
+	@Test
+	public void testOpenAndNoMultipleWithOneArchivedSubmission() {
+
+		configure(true,false);
+		
+		Submission sub = subRepo.createSubmission(submitter);
+		for (State state : stateManager.getAllStates()) {
+			if (state.isArchived()) {
+				sub.setState(state);
+				break;
+			}
+		}
+		sub.save();
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
+		LOGIN("student@tdl.org");
+		
+		Map<String,Object> routeArgs = new HashMap<String,Object>();
+		routeArgs.put("subId",sub.getId());
+		final String LIST_URL = Router.reverse("Student.submissionList").url;
+		final String VIEW_URL = Router.reverse("Student.submissionView",routeArgs).url;
+		final String NEW_URL = Router.reverse("submit.PersonalInfo.personalInfo").url;
+
+		
+		Response response = GET(LIST_URL);
+		assertIsOk(response);
+		assertContentMatch("<title>Submission Status</title>",response);	
+		assertContentMatch(VIEW_URL,response);
+		assertContentMatch(NEW_URL,response);
+
+	
+		response = GET(NEW_URL);
+		assertContentMatch("<title>Verify Personal Information</title>",response);
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
+		List<Submission> found = subRepo.findSubmission(submitter);
+		assertEquals(2,found.size());
+		subs.addAll(found);
+		
+	}
+	
+	/**
 	 * Test that if a student has an archived submission they can see the list page to start another submission.
 	 */
 	@Test

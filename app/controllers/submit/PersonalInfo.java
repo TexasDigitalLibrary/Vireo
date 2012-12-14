@@ -81,8 +81,10 @@ public class PersonalInfo extends AbstractSubmitStep {
 				// Check if this user allready has another submission open.
 				List<Submission> otherSubmissions = subRepo.findSubmission(context.getPerson());
 				
-				if (otherSubmissions.size() > 0) {
-					error("Multiple submissions are not allowed, and the submitter allready has another submission.");
+				for (Submission otherSubmission : otherSubmissions) {
+					if (otherSubmission.getState().isActive() || otherSubmission.getState().isInProgress()) {
+						error("Multiple submissions are not allowed, and the submitter allready has another submission.");
+					}
 				}
 			}
 			// Create a submission with default data on it.
