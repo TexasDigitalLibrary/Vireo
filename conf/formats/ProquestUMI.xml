@@ -266,7 +266,7 @@ ${ address.fullAddress }
 		<DISS_institution>
 			<DISS_inst_code>${ institution_code }</DISS_inst_code>
 			<DISS_inst_name>${ institution_name }</DISS_inst_name>
-			<DISS_inst_contact>${ sub.getDepartment() }</DISS_inst_contact>
+			<DISS_inst_contact>${ play.Play.configuration.getProperty("mail.replyto").escapeXml() }</DISS_inst_contact>
 			<DISS_processing_code>${ sub.getDegreeLevel()?.name()?.substring(0,1)?.toUpperCase()?.escapeXml() }</DISS_processing_code>
 		</DISS_institution>
 		
