@@ -145,7 +145,7 @@ Plus all the FieldConfig objects
 #{/if}
 #{/ifEnabled}
 
-#{ifEnabled [DOCUMENT_TITLE,GRADUATION_DATE,DOCUMENT_TYPE,DOCUMENT_ABSTRACT,DOCUMENT_KEYWORDS,DOCUMENT_SUBJECTS,DOCUMENT_LANGUAGE,COMMITTEE,COMMITTEE_CONTACT_EMAIL,EMBARGO_TYPE,UMI_RELEASE]}
+#{ifEnabled [DOCUMENT_TITLE,GRADUATION_DATE,DEFENSE_DATE,DOCUMENT_TYPE,DOCUMENT_ABSTRACT,DOCUMENT_KEYWORDS,DOCUMENT_SUBJECTS,DOCUMENT_LANGUAGE,COMMITTEE,COMMITTEE_CONTACT_EMAIL,EMBARGO_TYPE,UMI_RELEASE]}
 <legend>Document Information</legend>
 
 #{ifEnabled DOCUMENT_TITLE}
@@ -169,6 +169,16 @@ Plus all the FieldConfig objects
             <p>${month} ${sub.getGraduationYear()}</p>
         #{/if}
     </div>
+</div>
+#{/ifEnabled}
+#{ifEnabled DEFENSE_DATE }
+<div class="control-group #{errorClass 'defenseDate' /} ">
+	<label class="control-label">#{fieldLabel DEFENSE_DATE /}:</label>
+	<div class="controls">
+		<p>#{if sub.getDefenseDate() != null}
+		${sub.getDefenseDate()?.format('MM/dd/yyyy')}
+		#{/if}</p>
+	</div>
 </div>
 #{/ifEnabled}
 #{ifEnabled DOCUMENT_TYPE}

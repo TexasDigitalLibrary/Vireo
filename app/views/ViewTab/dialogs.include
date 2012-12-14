@@ -105,7 +105,7 @@
     <form id="submission-date-form" action="@{ViewTab.changeSubmissionDate(submission.getId())}" method="POST" class="form-horizontal"> 
     <div class="modal-body">
     		<p>Dates must be formatted as MM/DD/YYYY.</p>
-	       <input class="datepicker" name="submission-date" type="text" value="${submission.getSubmissionDate()?.format('MM/dd/yyyy')}" />       
+	       <input class="datepickerSubmission" name="submission-date" type="text" value="${submission.getSubmissionDate()?.format('MM/dd/yyyy')}" />       
     </div>
     
     <div class="modal-footer">

@@ -7,9 +7,13 @@ import static org.tdl.vireo.constant.FieldConfig.*;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +77,16 @@ public class DocumentInfo extends AbstractSubmitStep {
 		String title = params.get("title");
 		String degreeMonth = params.get("degreeMonth");
 		String degreeYear = params.get("degreeYear");
+		
+		Date defenseDate = null;
+		DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+		try {
+			if(params.get("defenseDate")!=null)
+				defenseDate = (Date)formatter.parse(params.get("defenseDate"));
+		} catch (ParseException e) {
+			validation.addError("defenseDate","Please format your defense date as mm/dd/yyyy");
+		}
+		
 		String docType = params.get("docType");
 		String abstractText = params.get("abstractText");
 		String keywords = params.get("keywords");
@@ -128,6 +142,10 @@ public class DocumentInfo extends AbstractSubmitStep {
 				} else {
 					sub.setGraduationYear(null);
 				}
+			}
+			
+			if (isFieldEnabled(DEFENSE_DATE)) {
+				sub.setDefenseDate(defenseDate);
 			}
 			
 			if (isFieldEnabled(DOCUMENT_TYPE))
@@ -201,6 +219,9 @@ public class DocumentInfo extends AbstractSubmitStep {
 			if (isFieldEnabled(GRADUATION_DATE) && sub.getGraduationYear() != null)
 				degreeYear = sub.getGraduationYear().toString();
 
+			if (isFieldEnabled(DEFENSE_DATE) && sub.getDefenseDate() != null)
+				defenseDate = sub.getDefenseDate();
+			
 			if (isFieldEnabled(DOCUMENT_TYPE))
 				docType = sub.getDocumentType();
 			
@@ -305,7 +326,7 @@ public class DocumentInfo extends AbstractSubmitStep {
 		
 		renderTemplate("Submit/documentInfo.html", subId, stickies,
 
-				title, degreeMonth, degreeYear, docType, abstractText, keywords, 
+				title, degreeMonth, degreeYear, defenseDate, docType, abstractText, keywords, 
 				subjectPrimary, subjectSecondary, subjectTertiary, docLanguage, committeeSlots, 
 				committee, chairEmail, publishedMaterialFlag, publishedMaterial, embargo, umi);
 	}
@@ -332,6 +353,18 @@ public class DocumentInfo extends AbstractSubmitStep {
 		if (!isValidDegreeYear(sub.getGraduationYear()))
 			validation.addError("degreeYear", "Please select a degree year");
 	
+		// Defense Date
+		Date now = new Date();
+		Date min = new Date(-2208967200000L);
+		Date max = new Date(now.getTime() + (365 * 24 * 60 * 60 * 1000L));
+		
+		DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+		
+		if (isFieldRequired(DEFENSE_DATE) && (sub.getDefenseDate()==null))
+			validation.addError("defenseDate", "Please enter a defense date");
+		else if(sub.getDefenseDate()!=null && (!sub.getDefenseDate().after(min) || !sub.getDefenseDate().before(max)))
+			validation.addError("defenseDate", "Please enter a defense date between "+formatter.format(min)+" and "+formatter.format(max));
+		
 		// Document Type
 		if (!isValidDocType(sub.getDocumentType()))
 			validation.addError("docType", "Please select a Document Type");

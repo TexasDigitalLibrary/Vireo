@@ -44,6 +44,7 @@ public class MockSubmission extends AbstractMock implements Submission {
 	public Date submissionDate;
 	public Date approvalDate;
 	public Date licenseAgreementDate;
+	public Date defenseDate;
 	public String degree;
 	public DegreeLevel level;
 	public String department;
@@ -373,6 +374,16 @@ public class MockSubmission extends AbstractMock implements Submission {
 	@Override
 	public void setLicenseAgreementDate(Date date) {
 		this.licenseAgreementDate = date;
+	}
+	
+	@Override
+	public Date getDefenseDate() {
+		return defenseDate;
+	}
+	
+	@Override
+	public void setDefenseDate(Date date) {
+		this.defenseDate = date;
 	}
 
 	@Override

@@ -204,6 +204,8 @@ public abstract class LuceneAbstractJobImpl extends Job {
 			graduationSemester = cal.getTime();
 		}
 		
+		Date defenseDate = sub.getDefenseDate();
+		
 		String department = sub.getDepartment();
 		String program = sub.getProgram();
 		String college = sub.getCollege();
@@ -336,6 +338,9 @@ public abstract class LuceneAbstractJobImpl extends Job {
 		if (graduationSemester != null)
 		doc.add(new NumericField("graduationSemester",Field.Store.NO,true).setLongValue(graduationSemester.getTime()));
 		
+		if (defenseDate != null)
+		doc.add(new NumericField("defenseDate",Field.Store.NO,true).setLongValue(defenseDate.getTime()));
+		
 		if (department != null)
 		doc.add(new Field("department",department,Field.Store.NO,Index.NOT_ANALYZED));
 		
@@ -467,6 +472,9 @@ public abstract class LuceneAbstractJobImpl extends Job {
 			// Stuff that is the same as the submission.
 			if (graduationSemester != null)
 			doc.add(new NumericField("graduationSemester",Field.Store.NO,true).setLongValue(graduationSemester.getTime()));
+			
+			if (defenseDate != null)
+			doc.add(new NumericField("defenseDate",Field.Store.NO,true).setLongValue(defenseDate.getTime()));
 			
 			if (department != null)
 			doc.add(new Field("department",department,Field.Store.NO,Index.NOT_ANALYZED));

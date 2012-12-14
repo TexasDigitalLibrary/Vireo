@@ -413,6 +413,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 		sub1.addAttachment(file1, AttachmentType.SUPPLEMENTAL);
 		sub1.addCommitteeMember("BBBB", "BBBB", "a");
 		sub1.addCommitteeMember("CCCC", "CCCC", "a");
+		sub1.setDefenseDate(new Date(2012,5,1));
 		sub1.setSubmissionDate(new Date(2012,5,1));
 		sub1.setApprovalDate(new Date(2012,5,1));
 		sub1.setLicenseAgreementDate(new Date(2012,5,1));
@@ -438,6 +439,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 		sub2.addAttachment(file2, AttachmentType.PRIMARY);
 		sub2.addAttachment(file1, AttachmentType.SUPPLEMENTAL);
 		sub2.addCommitteeMember("AAAA", "AAAA", "a");
+		sub2.setDefenseDate(new Date(2005,5,1));
 		sub2.setSubmissionDate(new Date(2005,5,1));
 		sub2.setApprovalDate(new Date(2005,5,1));
 		sub2.setLicenseAgreementDate(new Date(2005,5,1));
@@ -601,6 +603,12 @@ public class LuceneSearcherImplTest extends UnitTest{
 			
 			// Graduation Date
 			submissions = searcher.submissionSearch(filter, SearchOrder.GRADUATION_DATE, SearchDirection.DESCENDING, 0, 20).getResults();
+			assertTrue(submissions.contains(sub1));
+			assertTrue(submissions.contains(sub2));
+			assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));
+			
+			// Defense Date
+			submissions = searcher.submissionSearch(filter, SearchOrder.DEFENSE_DATE, SearchDirection.DESCENDING, 0, 20).getResults();
 			assertTrue(submissions.contains(sub1));
 			assertTrue(submissions.contains(sub2));
 			assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));

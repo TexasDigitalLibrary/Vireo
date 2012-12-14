@@ -25,10 +25,10 @@ jQuery(document).ready(function(){
 	
 	if(jQuery.browser.msie){
 		if(parseInt(jQuery.browser.version, 10) != 7 && parseInt(jQuery.browser.version, 10) != 8){
-			jQuery(".datepicker").datepicker();
+			jQuery(".datepickerSubmission").datepicker();
 		}
 	} else {
-		jQuery(".datepicker").datepicker();
+		jQuery(".datepickerSubmission").datepicker();
 	}
 	
 	 var updateJSONURL = "@{ViewTab.updateJSON()}";
@@ -448,6 +448,13 @@ jQuery(document).ready(function(){
 							><i class="icon-pencil"></i> ${gradMonth} ${submission.getGraduationYear()}
 						#{/if}#{else}
 							class="empty"><i class="icon-pencil"></i> none
+						#{/else}
+						</span></li>
+					<li class="edit"><label>Defense Date:</label><span id="defenseDate"
+						#{if submission.getDefenseDate()}
+							class="date"><i class="icon-pencil"></i> ${submission.getDefenseDate()?.format('MM/dd/yyyy')}
+						#{/if}#{else}
+							class="date empty"><i class="icon-pencil"></i> none
 						#{/else}
 						</span></li>
 					<li class="edit"><label>Advisor Email:</label><span id="advisorEmail"

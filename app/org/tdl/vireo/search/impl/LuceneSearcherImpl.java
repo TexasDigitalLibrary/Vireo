@@ -69,6 +69,7 @@ public class LuceneSearcherImpl implements Searcher {
 		SORT_SUB_FIELDS[SearchOrder.PUBLISHED_MATERIAL.ordinal()] = "publishedMaterial";
 		SORT_SUB_FIELDS[SearchOrder.PRIMARY_DOCUMENT.ordinal()] = "primaryDocument";
 		SORT_SUB_FIELDS[SearchOrder.GRADUATION_DATE.ordinal()] = "graduationSemester";
+		SORT_SUB_FIELDS[SearchOrder.DEFENSE_DATE.ordinal()] = "defenseDate";
 		SORT_SUB_FIELDS[SearchOrder.SUBMISSION_DATE.ordinal()] = "submissionDate";
 		SORT_SUB_FIELDS[SearchOrder.LICENSE_AGREEMENT_DATE.ordinal()] = "licenseAgreementDate";
 		SORT_SUB_FIELDS[SearchOrder.APPROVAL_DATE.ordinal()] = "approvalDate";
@@ -100,6 +101,7 @@ public class LuceneSearcherImpl implements Searcher {
 			SORT_TYPES[i] = SortField.STRING;
 		SORT_TYPES[SearchOrder.ID.ordinal()] = SortField.LONG;
 		SORT_TYPES[SearchOrder.GRADUATION_DATE.ordinal()] = SortField.LONG;
+		SORT_TYPES[SearchOrder.DEFENSE_DATE.ordinal()] = SortField.LONG;
 		SORT_TYPES[SearchOrder.SUBMISSION_DATE.ordinal()] = SortField.LONG;
 		SORT_TYPES[SearchOrder.LICENSE_AGREEMENT_DATE.ordinal()] = SortField.LONG;
 		SORT_TYPES[SearchOrder.APPROVAL_DATE.ordinal()] = SortField.LONG;
@@ -430,7 +432,7 @@ public class LuceneSearcherImpl implements Searcher {
 			}
 			andQuery.add(orQuery,Occur.MUST);
 		}
-		
+				
 		// Degree Filter
 		if (filter.getDegrees().size() > 0) {
 			BooleanQuery orQuery = new BooleanQuery();
