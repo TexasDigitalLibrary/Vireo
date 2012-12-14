@@ -140,8 +140,8 @@ jQuery(document).ready(function(){
             <label>Open Access Publishing:</label>
             <span>
                 <div class="btn-group" data-toggle="buttons-radio">
-                    <button name="${org.tdl.vireo.constant.AppConfig.PROQUEST_OA_PUBLISHING}" class="btn application-toggle #{if PROQUEST_OA_PUBLISHING}active#{/if}" value="true">Yes</button>
-                    <button name="${org.tdl.vireo.constant.AppConfig.PROQUEST_OA_PUBLISHING}" class="btn application-toggle #{if !PROQUEST_OA_PUBLISHING}active#{/if}">No</button>                    
+                    <button name="${org.tdl.vireo.constant.AppConfig.PROQUEST_OA_PUBLISHING}" class="btn application-toggle #{if !"false".equals(PROQUEST_OA_PUBLISHING)}active#{/if}" value="true">Yes</button>
+                    <button name="${org.tdl.vireo.constant.AppConfig.PROQUEST_OA_PUBLISHING}" class="btn application-toggle #{if "false".equals(PROQUEST_OA_PUBLISHING)}active#{/if}" value="false">No</button>                    
                 </div>
                 <a href="#" class="tooltip-icon" rel="tooltip" title="If enabled then all submissions to the ProQuest/UMI catalogue will be publicly accessable. TThere may be a $95 per submission impossed by ProQuest for enabling this option."><i class="icon-info-sign"></i></a>                
             </span>
@@ -150,8 +150,8 @@ jQuery(document).ready(function(){
             <label>Indexed by Search Engines:</label>
             <span>
                 <div class="btn-group" data-toggle="buttons-radio">
-                    <button name="${org.tdl.vireo.constant.AppConfig.PROQUEST_INDEXING}" class="btn application-toggle #{if PROQUEST_INDEXING}active#{/if}" value="true">Yes</button>
-                    <button name="${org.tdl.vireo.constant.AppConfig.PROQUEST_INDEXING}" class="btn application-toggle #{if !PROQUEST_INDEXING}active#{/if}">No</button>
+                    <button name="${org.tdl.vireo.constant.AppConfig.PROQUEST_INDEXING}" class="btn application-toggle #{if !"false".equals(PROQUEST_INDEXING)}active#{/if}" value="true">Yes</button>
+                    <button name="${org.tdl.vireo.constant.AppConfig.PROQUEST_INDEXING}" class="btn application-toggle #{if "false".equals(PROQUEST_INDEXING)}active#{/if}" value="false">No</button>
                 </div>
                 <a href="#" class="tooltip-icon" rel="tooltip" title="If enabled then all submissions to the ProQuest/UMI catalogue will be have their metadata indexed by third parties (i.e. google, yahoo)."><i class="icon-info-sign"></i></a>
             </span>

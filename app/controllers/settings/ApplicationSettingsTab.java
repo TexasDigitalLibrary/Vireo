@@ -108,8 +108,8 @@ public class ApplicationSettingsTab extends SettingsTab {
 			textFields.add(GRANTOR);
 			textFields.add(SUBMIT_LICENSE_TEXT);
 			textFields.add(PROQUEST_INSTITUTION_CODE);
-			booleanFields.add(PROQUEST_OA_PUBLISHING);
-			booleanFields.add(PROQUEST_INDEXING);
+			textFields.add(PROQUEST_OA_PUBLISHING);
+			textFields.add(PROQUEST_INDEXING);
 
 			
 			

@@ -25,13 +25,15 @@
 	// 0 - Traditional publishing
 	// 1 - Open Access, requires an additional $95 fee.
 	int publishing_option = 1;
-	if(!settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.PROQUEST_OA_PUBLISHING))
+	if(settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.PROQUEST_OA_PUBLISHING) == "false" )
 		publishing_option = 0;
 
 	// #### Third Party Search
 	// Indicates the author would like to have his or her metadata indexed by
 	// external search engines.
-	boolean third_party_search = settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.PROQUEST_INDEXING);
+	boolean third_party_search = true;
+	if (settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.PROQUEST_INDEXING) == "false")
+	   third_party_search = false;
 	
 	// #### Third Party Sales
 	// Indicates the author would like to have his or her work sold by 3rd
@@ -253,7 +255,7 @@ ${ address.fullAddress }
 
 	<DISS_description
 		page_count=""
-        type="${ sub.getDegreeLevel()?.name()?.toLowerCase()?.capitalizeWords()?.escapeXml() }"
+        type="${ sub.getDegreeLevel()?.name()?.toLowerCase()?.escapeXml() }"
 		external_id="${ external_id_prefix }${ sub.getId() }"
 		apply_for_copyright="${ apply_for_copyright ? "yes" : "no" }">
 		
@@ -320,7 +322,7 @@ ${ address.fullAddress }
 			
 			#{if sub.getDocumentLanguage() != null && proquestUtils.languageCode(sub.getDocumentLanguageLocale()) != null} 
 			%{ def lang = proquestUtils.languageCode(sub.getDocumentLanguageLocale()) }% 
-			<!-- ${ sub.getDocumentLanguage()?.escapeXml() } - ${ sub.getDocumentLocale()?.getDisplayName()?.escapeXml() } -->
+			<!-- ${ sub.getDocumentLanguage()?.escapeXml() } - ${ sub.getDocumentLanguageLocale()?.getDisplayName()?.escapeXml() } -->
 			<DISS_language>${ lang?.getCode()?.escapeXml() }</DISS_language>
 			#{/if} 
 		</DISS_categorization>
@@ -329,13 +331,21 @@ ${ address.fullAddress }
 	<DISS_content>
 		<DISS_abstract>
 			#{if sub.getDocumentAbstract() != null}
-			#{list items:sub.getDocumentAbstract().split("\n"), as:'para'} 
+			#{list items:sub.getDocumentAbstract().split("\n"), as:'para'}
+			#{if para != null && para.trim().length() != 0} 
 			<DISS_para>
 ${ para.escapeXml() }
 			</DISS_para>
+			#{/if}
 			#{/list}
 			#{/if} 
 		</DISS_abstract>
+		
+		<!-- 
+              MimeType: ${ sub.getPrimaryDocument()?.getMimeType() }
+              Size: ${ sub.getPrimaryDocument()?.getDisplaySize() }
+              Uploaded: ${ sub.getPrimaryDocument()?.getDate()?.format("yyyy/MM/dd 'at' HH:mm:ss")  }
+          -->
 		<DISS_binary type="${ "application/pdf".equals(sub.getPrimaryDocument()?.getMimeType()) ? "PDF" : "other" }">${ sub.getPrimaryDocument()?.getName() }</DISS_binary>
 		
 		#{list items:sub.getAttachmentsByType(org.tdl.vireo.model.AttachmentType.SUPPLEMENTAL), as:'attachment' } 
