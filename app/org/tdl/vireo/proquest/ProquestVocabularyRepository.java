@@ -49,5 +49,25 @@ public interface ProquestVocabularyRepository {
 	 * @return The language found, or null if not found.
 	 */
 	public ProquestLanguage findLanguageByDescription(String description);
+	
+	
+	/**
+	 * @return A list of all degrees
+	 */
+	public List<ProquestDegree> findAllDegrees();
+
+	/**
+	 * @param code
+	 *            The code to search for
+	 * @return The degree found, or null if not found.
+	 */
+	public ProquestDegree findDegreeByCode(String code);
+
+	/**
+	 * @param description
+	 *            The description to search for
+	 * @return The degree found, or null if not found.
+	 */
+	public ProquestDegree findDegreeByDescription(String description);
 
 }

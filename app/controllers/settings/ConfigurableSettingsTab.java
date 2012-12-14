@@ -27,6 +27,7 @@ import org.tdl.vireo.model.Major;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.RoleType;
+import org.tdl.vireo.proquest.ProquestDegree;
 import org.tdl.vireo.proquest.ProquestLanguage;
 import org.tdl.vireo.proquest.ProquestUtilityService;
 import org.tdl.vireo.proquest.ProquestVocabularyRepository;
@@ -64,8 +65,16 @@ public class ConfigurableSettingsTab extends SettingsTab {
 		List<Locale> localeLanguages = new ArrayList<Locale>(Arrays.asList(locales));
 		Collections.sort(localeLanguages, ascending(getLocaleComparator(LocaleComparator.LANGUAGE_SORT, LocaleComparator.COUNTRY_SORT)));
 		
-		//List<ProquestLanguage> proquestLanguages = proquest.findAllLanguages();
 		List<Language> languages = settingRepo.findAllLanguages();
+		List<String> proquestDegrees = new ArrayList<String>();
+		for (ProquestDegree degree : proquest.findAllDegrees()) {
+			if (degree.getDescription() == null)
+				continue;
+			String sanatizedName = degree.getDescription().replaceAll("'","&#39;");
+			if (!proquestDegrees.contains(sanatizedName)) {
+				proquestDegrees.add(sanatizedName);
+			}
+		}
 		
 		renderArgs.put("UNDERGRADUATE", DegreeLevel.UNDERGRADUATE);
 		renderArgs.put("MASTERS", DegreeLevel.MASTERS);
@@ -84,8 +93,8 @@ public class ConfigurableSettingsTab extends SettingsTab {
 				// Sortable lists
 				colleges, programs, departments, majors, degrees, docTypes, roleTypes, gradMonths, languages,
 				
-				// Locales
-				localeLanguages);
+				// Locales & degrees
+				localeLanguages, proquestDegrees);
 	}
 	
 	/**
@@ -1061,9 +1070,13 @@ public class ConfigurableSettingsTab extends SettingsTab {
 
 			saveModelOrder(degrees);
 
+			String proquest = "false";
+			if (degreeLevel != DegreeLevel.UNDERGRADUATE && proquestRepo.findDegreeByDescription(name) != null)
+				proquest = "true";
+			
 			name = escapeJavaScript(degree.getName());
 
-			renderJSON("{ \"success\": \"true\", \"id\": " + degree.getId()	+ ", \"name\": \"" + name + "\", \"level\": "+degreeLevel.getId()+" }");
+			renderJSON("{ \"success\": \"true\", \"id\": " + degree.getId()	+ ", \"name\": \"" + name + "\", \"level\": "+degreeLevel.getId()+", \"proquest\": "+proquest+"}");
 		} catch (IllegalArgumentException iae) {
 			String message = escapeJavaScript(iae.getMessage());			
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
@@ -1108,9 +1121,13 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			degree.setLevel(degreeLevel);
 			degree.save();
 
+			String proquest = "false";
+			if (degreeLevel != DegreeLevel.UNDERGRADUATE && proquestRepo.findDegreeByDescription(name) != null)
+				proquest = "true";
+			
 			name = escapeJavaScript(name);
 
-			renderJSON("{ \"success\": \"true\", \"id\": " + degree.getId() + ", \"name\": \"" + name + "\", \"level\": "+degreeLevel.getId()+" }");
+			renderJSON("{ \"success\": \"true\", \"id\": " + degree.getId() + ", \"name\": \"" + name + "\", \"level\": "+degreeLevel.getId()+", \"proquest\": "+proquest+"}");
 		} catch (IllegalArgumentException iae) {
 			String message = escapeJavaScript(iae.getMessage());			
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");

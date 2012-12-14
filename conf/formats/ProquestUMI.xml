@@ -166,7 +166,7 @@
 			#{if release_student_contact_information } 
 			<!-- Current Contact Information -->
 			<DISS_contact type="current">
-				#{if sub.getGraduationYear() != null } 
+				#{if sub.getSubmissionDate() != null } 
 				<DISS_contact_effdt>
 					${ sub.getSubmissionDate()?.format("MM/dd/yyyy") }
 				</DISS_contact_effdt>
@@ -208,7 +208,7 @@ ${ address.fullAddress }
 			
 			<!-- Permanent Contact Information -->
 			<DISS_contact type="future">
-				#{if sub.getGraduationYear() != null } 
+				#{if sub.getSubmissionDate() != null } 
 				<DISS_contact_effdt>
 					${ sub.getSubmissionDate()?.format("MM/dd/yyyy") }
 				</DISS_contact_effdt>
@@ -262,7 +262,7 @@ ${ address.fullAddress }
 			<DISS_comp_date>${ sub.getGraduationYear() }</DISS_comp_date>
 			<DISS_accept_date>${ sub.getApprovalDate()?.format("MM/dd/yyyy") }</DISS_accept_date>
 		</DISS_dates>
-		<DISS_degree>${ sub.getDegree() }</DISS_degree>
+		<DISS_degree>${ proquestRepo.findDegreeByDescription(sub.getDegree()) != null ? proquestRepo.findDegreeByDescription(sub.getDegree()).getCode() : sub.getDegree()  }</DISS_degree>
 		<DISS_institution>
 			<DISS_inst_code>${ institution_code }</DISS_inst_code>
 			<DISS_inst_name>${ institution_name }</DISS_inst_name>
@@ -294,10 +294,20 @@ ${ address.fullAddress }
 		<DISS_categorization>
 		
 		    #{list items:sub.getDocumentSubjects(), as:'subject'} 
+		    #{if proquestRepo.findSubjectByDescription(subject) != null } 
 		    <DISS_category>
 		        <DISS_cat_code>${ proquestRepo.findSubjectByDescription(subject)?.getCode() }</DISS_cat_code>
 		        <DISS_cat_desc>${ subject }</DISS_cat_desc>
 		    </DISS_category>
+		    #{/if}
+		    #{else}
+		    <!--
+		    <DISS_category> 
+		        No ProQuest category code found.
+		        <DISS_cat_desc>${ subject }</DISS_cat_desc>
+		    </DISS_category>
+		    -->
+		    #{/else}
 		    #{/list} 
 		
 			#{if sub.getDocumentKeywords() != null}
@@ -310,13 +320,9 @@ ${ address.fullAddress }
 			
 			#{if sub.getDocumentLanguage() != null && proquestUtils.languageCode(sub.getDocumentLanguageLocale()) != null} 
 			%{ def lang = proquestUtils.languageCode(sub.getDocumentLanguageLocale()) }% 
-			<!-- ${lang?.getDescription() } -->
-			<DISS_language>${lang?.getCode()?.escapeXml()}</DISS_language>
+			<!-- ${ sub.getDocumentLanguage()?.escapeXml() } - ${ sub.getDocumentLocale()?.getDisplayName()?.escapeXml() } -->
+			<DISS_language>${ lang?.getCode()?.escapeXml() }</DISS_language>
 			#{/if} 
-			#{else} 
-			<!-- No language specified, default to English-->
-			<DISS_language>EN</DISS_language>
-			#{/else} 
 		</DISS_categorization>
 	</DISS_description>
 	
@@ -325,7 +331,7 @@ ${ address.fullAddress }
 			#{if sub.getDocumentAbstract() != null}
 			#{list items:sub.getDocumentAbstract().split("\n"), as:'para'} 
 			<DISS_para>
-				${ para.escapeXml() }
+${ para.escapeXml() }
 			</DISS_para>
 			#{/list}
 			#{/if} 
@@ -334,10 +340,14 @@ ${ address.fullAddress }
 		
 		#{list items:sub.getAttachmentsByType(org.tdl.vireo.model.AttachmentType.SUPPLEMENTAL), as:'attachment' } 
 		<DISS_attachment>
+		  <!-- 
+		      MimeType: ${ attachment.getMimeType() }
+		      Size: ${ attachment.getDisplaySize() }
+		      Uploaded: ${ attachment.getDate()?.format("yyyy/MM/dd 'at' HH:mm:ss")  }
+		  -->
 		  <DISS_file_name>${ attachment.getName().escapeXml() }</DISS_file_name>
 		  <DISS_file_category>${ proquestUtils.categorize(attachment).escapeXml() }</DISS_file_category>
 		  <DISS_file_descr>Supplemental File</DISS_file_descr>
-		  <!-- MimeType: ${ attachment.getMimeType() } -->
 		</DISS_attachment>
 		#{/list} 
 	</DISS_content>

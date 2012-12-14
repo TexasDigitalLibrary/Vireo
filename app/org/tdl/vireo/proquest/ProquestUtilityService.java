@@ -3,6 +3,7 @@ package org.tdl.vireo.proquest;
 import java.util.Locale;
 
 import org.tdl.vireo.model.Attachment;
+import org.tdl.vireo.model.Submission;
 
 
 
@@ -83,11 +84,22 @@ public interface ProquestUtilityService {
 
 		public Phone(String fullPhone, String cntryCode, String areaCode,
 				String number, String ext) {
-			this.fullPhone = fullPhone;
-			this.cntryCode = cntryCode;
-			this.areaCode = areaCode;
-			this.number = number;
-			this.ext = ext;
+			
+			this.fullPhone = _sanatize(fullPhone);
+			this.cntryCode = _sanatize(cntryCode);
+			this.areaCode = _sanatize(areaCode);
+			this.number = _sanatize(number);
+			this.ext = _sanatize(ext);
+		}
+		
+		private static String _sanatize(String input) {
+			if (input == null)
+				return null;
+			input = input.trim();
+			if (input.length() == 0)
+				return null;
+				
+		    return input;	
 		}
 	}
 
@@ -105,12 +117,24 @@ public interface ProquestUtilityService {
 
 		public Address(String fullAddress, String addrline, String city,
 				String state, String zip, String cntry) {
-			this.fullAddress = fullAddress;
-			this.addrline = addrline;
-			this.city = city;
-			this.state = state;
-			this.zip = zip;
-			this.cntry = cntry;
+			
+			this.fullAddress = _sanatize(fullAddress);
+			this.addrline = _sanatize(addrline);
+			this.city = _sanatize(city);
+			this.state = _sanatize(state);
+			this.zip = _sanatize(zip);
+			this.cntry = _sanatize(cntry);
+		}
+		
+		private static String _sanatize(String input) {
+			
+			if (input == null)
+				return null;
+			input = input.trim();
+			if (input.length() == 0)
+				return null;
+		    return input;
+			
 		}
 
 	}

@@ -19,6 +19,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.core.io.Resource;
+import org.tdl.vireo.proquest.ProquestDegree;
 import org.tdl.vireo.proquest.ProquestLanguage;
 import org.tdl.vireo.proquest.ProquestSubject;
 import org.tdl.vireo.proquest.ProquestVocabularyRepository;
@@ -44,7 +45,9 @@ public class ProquestExcelVocabularyRepositoryImpl implements
 	
 	// Internal list of all languages
 	public static List<ProquestLanguage> languages = new ArrayList<ProquestLanguage>();
-	
+
+	// Internal list of all degrees
+	public static List<ProquestDegree> degrees = new ArrayList<ProquestDegree>();
 	
 	private ProquestExcelVocabularyRepositoryImpl() {
 		// Only spring can instantiate this class.
@@ -136,6 +139,50 @@ public class ProquestExcelVocabularyRepositoryImpl implements
 		}
 		
 		Logger.debug("Loaded %d ProQuest controlled vocabulary for languages from the spreadsheet: '%s'.", languages.size(), file.getPath());
+	}
+	
+	/**
+	 * Set the degree vocabulary based upon the injected excel spreadsheet.
+	 * The spreadsheet should consist of two columns; where column A is a
+	 * degree code and column B is the description for that code. The first row
+	 * of the spreadsheet is ignored as a header. Any previously defined
+	 * degree will be removed.
+	 * 
+	 * @param resource
+	 *            A file reference to an excel spread sheet (either hssf or xssf
+	 *            format).
+	 */
+	public void setDegrees(Resource resource) throws IOException {
+		
+		File file = resource.getFile();
+		
+		if (file == null) {
+			throw new IllegalArgumentException("Unable to load the proquest controlled vocabulary for degrees because the file was invalid.");
+		}
+		if (!file.exists()) {
+			throw new IllegalArgumentException("Unable to load the proquest controlled vocabulary for degrees because the path '"+file.getPath()+"' does not exist.");
+		}
+		if (!file.canRead()) {
+			throw new IllegalArgumentException("Unable to load the proquest controlled vocabulary for degrees because the path '"+file.getPath()+"' is not readable.");
+		}
+		
+		List<List<String>> rows = _readSpreadsheet(file);
+
+		// Ignore the heading row
+		if (rows.size() > 0)
+			rows.remove(0);
+
+		// Read each remaining row as a degree.
+		degrees.clear();
+		for(List<String> row : rows) {
+			String code = row.get(0);
+			String description = row.get(1);
+
+			ProquestDegree degree = new ProquestDegreeImpl(code.intern(),description.intern());
+			degrees.add(degree);
+		}
+		
+		Logger.debug("Loaded %d ProQuest controlled vocabulary for degrees from the spreadsheet: '%s'.", degrees.size(), file.getPath());
 
 	}
 	
@@ -202,6 +249,39 @@ public class ProquestExcelVocabularyRepositoryImpl implements
 		for (ProquestLanguage language : languages) {
 			if (description.equals(language.getDescription())) {
 				return language;
+			}
+		}
+		
+		return null;
+	}
+	
+	@Override
+	public List<ProquestDegree> findAllDegrees() {
+		return new ArrayList<ProquestDegree>(degrees);
+	}
+
+	@Override
+	public ProquestDegree findDegreeByCode(String code) {
+		if (code == null)
+			return null;
+		
+		for (ProquestDegree degree : degrees) {
+			if (code.equals(degree.getCode())) {
+				return degree;
+			}
+		}
+		
+		return null;
+	}
+
+	@Override
+	public ProquestDegree findDegreeByDescription(String description) {
+		if (description == null)
+			return null;
+		
+		for (ProquestDegree degree : degrees) {
+			if (description.equals(degree.getDescription())) {
+				return degree;
 			}
 		}
 		

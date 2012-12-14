@@ -97,6 +97,22 @@ public class ProquestExcelVocabularyRepositoryImplTests extends UnitTest {
 		assertEquals("code 3",proquestRepo.findAllLanguages().get(2).getCode());
 	}
 	
+	/**
+	 * Test reading degrees from the older office 97 binary format.
+	 * @throws InterruptedException 
+	 */
+	@Test
+	public void testExcel97Degrees() throws IOException, InterruptedException {
+		
+		proquestRepo.setDegrees(new MockFileResource(hssfTestFile));
+		
+		assertEquals(3,proquestRepo.findAllDegrees().size());
+		assertEquals("description 2",proquestRepo.findDegreeByCode("code 2").getDescription());
+		assertEquals("code 2",proquestRepo.findDegreeByDescription("description 2").getCode());
+		assertEquals("code 1",proquestRepo.findAllDegrees().get(0).getCode());
+		assertEquals("code 3",proquestRepo.findAllDegrees().get(2).getCode());
+	}
+	
 //	/**
 //	 * Test reading subjects from the new XML excel format.
 //	 * @throws InterruptedException 

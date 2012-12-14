@@ -7,6 +7,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.tdl.vireo.model.Attachment;
+import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.proquest.ProquestDegree;
 import org.tdl.vireo.proquest.ProquestLanguage;
 import org.tdl.vireo.proquest.ProquestUtilityService;
 import org.tdl.vireo.proquest.ProquestVocabularyRepository;

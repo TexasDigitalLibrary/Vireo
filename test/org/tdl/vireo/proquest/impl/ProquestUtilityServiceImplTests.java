@@ -64,7 +64,6 @@ public class ProquestUtilityServiceImplTests extends UnitTest {
 		assertEquals(null,service.languageCode(null));
 	}
 	
-	
 	/**
 	 * Test parsing phone numbers
 	 */
@@ -123,7 +122,7 @@ public class ProquestUtilityServiceImplTests extends UnitTest {
 		assertEquals("Somewhere",address.city);
 		assertEquals("TX",address.state);
 		assertEquals("77845",address.zip);
-		assertEquals(" USA",address.cntry);
+		assertEquals("USA",address.cntry);
 		
 		// Without country
 		address = service.parseAddress("4606 Baron Creek Dr APT 11\nSomewhere TX 77845");
@@ -143,7 +142,7 @@ public class ProquestUtilityServiceImplTests extends UnitTest {
 		assertEquals("Somewhere",address.city);
 		assertEquals("TX",address.state);
 		assertEquals("77845",address.zip);
-		assertEquals(" USA",address.cntry);
+		assertEquals("USA",address.cntry);
 		
 		// On one line
 		address = service.parseAddress("4606 Baron Creek Dr APT 11 Somewhere TX 77845 USA");
@@ -153,7 +152,7 @@ public class ProquestUtilityServiceImplTests extends UnitTest {
 		assertEquals("Somewhere",address.city);
 		assertEquals("TX",address.state);
 		assertEquals("77845",address.zip);
-		assertEquals(" USA",address.cntry);
+		assertEquals("USA",address.cntry);
 	}
 
 	/** 
