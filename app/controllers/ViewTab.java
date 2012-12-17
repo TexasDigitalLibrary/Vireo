@@ -1007,8 +1007,12 @@ public class ViewTab extends AbstractVireoController {
 		Attachment attachment = sub.findAttachmentById(id);
 		response.setContentTypeIfNotSet(attachment.getMimeType());
 		
+		// Fix problem with no-cache headers and ie8
+		response.setHeader("Pragma", "public");
+		response.setHeader("Cache-Control","public");
+		
 		try {
-			renderBinary( new FileInputStream(attachment.getFile()), attachment.getFile().length());
+			renderBinary(new FileInputStream(attachment.getFile()), attachment.getName(), attachment.getFile().length(), true);
 		} catch (FileNotFoundException ex) {
 			error("File not found");
 		}
