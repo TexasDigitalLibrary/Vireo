@@ -567,6 +567,25 @@ public class JpaSubmissionImplTests extends UnitTest {
 		assertEquals(null,sub.getDocumentLanguage());
 	}
 	
+	/**
+	 * Test reviewer notes action log are marked as private.
+	 */
+	@Test
+	public void testReviewerNotesLogsArePrivate() {
+		
+		Submission sub = subRepo.createSubmission(person);
+		sub.setReviewerNotes("notes");
+		sub.save();
+		
+		List<ActionLog> logs = subRepo.findActionLog(sub);
+
+		assertEquals(2,logs.size());
+		assertEquals("Reviewer notes changed to 'notes'",logs.get(0).getEntry());
+		assertTrue(logs.get(0).isPrivate());
+		
+		sub.delete();
+	}
+	
 	
 	/**
 	 * Test that action logs are generated appropriately.
@@ -615,6 +634,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		sub.setGraduationYear(2002);
 		sub.setUMIRelease(false);
 		sub.setDepositId("depositId");
+		sub.setReviewerNotes("notes");
 		
 		// Test clearing
 		sub.setDocumentTitle(null);
@@ -640,6 +660,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		sub.setGraduationYear(null);
 		sub.setUMIRelease(null);
 		sub.setDepositId(null);
+		sub.setReviewerNotes(null);
 
 		
 		sub.save();
@@ -654,7 +675,8 @@ public class JpaSubmissionImplTests extends UnitTest {
 		
 		DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
 		String formattedDate = format.format(now);
-		
+
+		assertEquals("Reviewer notes cleared", logItr.next().getEntry());
 		assertEquals("Repository deposit ID cleared", logItr.next().getEntry());
 		assertEquals("UMI Release cleared", logItr.next().getEntry());
 		assertEquals("Graduation year cleared", logItr.next().getEntry());
@@ -679,6 +701,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		assertEquals("Document abstract cleared", logItr.next().getEntry());
 		assertEquals("Document title cleared", logItr.next().getEntry());
 
+		assertEquals("Reviewer notes changed to 'notes'", logItr.next().getEntry());
 		assertEquals("Repository deposit ID changed to 'depositId'", logItr.next().getEntry());
 		assertEquals("UMI Release changed to 'No'", logItr.next().getEntry());
 		assertEquals("Graduation year changed to '2002'", logItr.next().getEntry());
@@ -711,7 +734,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		
 		assertFalse(logItr.hasNext());
 		
-		assertEquals("Repository deposit ID cleared", sub.getLastLogEntry());
+		assertEquals("Reviewer notes cleared", sub.getLastLogEntry());
 	}
 	
 	/**
@@ -760,6 +783,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		sub.setGraduationYear(2002);
 		sub.setUMIRelease(false);
 		sub.setDepositId("depositId");
+		sub.setReviewerNotes("notes");
 		sub.save();
 		
 		
@@ -795,6 +819,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		assertEquals(Integer.valueOf(2002),sub.getGraduationYear());
 		assertEquals(Boolean.valueOf(false),sub.getUMIRelease());
 		assertEquals("depositId",sub.getDepositId());
+		assertEquals("notes",sub.getReviewerNotes());
 
 		
 		sub.delete();
@@ -854,6 +879,28 @@ public class JpaSubmissionImplTests extends UnitTest {
 			sub.setDocumentKeywords("changed");
 			sub.save();
 			fail("Someone else was able to modify a submission.");
+		} catch (SecurityException se) {
+			/* yay */
+		}
+		
+		context.login(MockPerson.getAdministrator());
+		sub.delete();
+	}
+	
+	/**
+	 * Test that reviewer notes have limitted access.
+	 */
+	@Test
+	public void testReviewerNotesAccess() {
+
+		context.login(person);
+		Submission sub = subRepo.createSubmission(person).save();
+		
+
+		// test that the student can't see or edit their own notes.
+		try {
+			sub.setReviewerNotes("notes");
+			fail("student was able to edit their reviewer notes");
 		} catch (SecurityException se) {
 			/* yay */
 		}

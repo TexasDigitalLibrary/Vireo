@@ -123,7 +123,7 @@ in results.
                      break;
                  case DOCUMENT_ABSTRACT:
                      if (sub.getDocumentAbstract() != null)
-                         out.print(sub.getDocumentAbstract());
+                         out.print(sub.getDocumentAbstract()?.nl2br());
                      break;
                  case DOCUMENT_KEYWORDS:
                      if (sub.getDocumentKeywords() != null)
@@ -149,7 +149,7 @@ in results.
                      break;
                  case PUBLISHED_MATERIAL:
                      if (sub.getPublishedMaterial() != null)
-                        out.print("Yes - " + sub.getPublishedMaterial());
+                        out.print("Yes - " + sub.getPublishedMaterial()?.nl2br());
                      else
                         out.print("No");
                      break;
@@ -258,6 +258,10 @@ in results.
                  case DEPOSIT_ID:
                      if (sub.getDepositId() != null)
                          out.print(sub.getDepositId());
+                     break;
+                 case REVIEWER_NOTES:
+                     if (sub.getReviewerNotes() != null)
+                         out.print(sub.getReviewerNotes()?.nl2br());
                      break;
                  case LAST_EVENT_ENTRY:
                      if ("log".equals(nav)) {

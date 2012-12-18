@@ -54,8 +54,10 @@ public enum SearchOrder {
 	
 	DEPOSIT_ID(33),
 	
-	LAST_EVENT_ENTRY(34),
-	LAST_EVENT_TIME(35);
+	REVIEWER_NOTES(34),
+	
+	LAST_EVENT_ENTRY(35),
+	LAST_EVENT_TIME(36);
 	
 	
 	// The id for this search order.

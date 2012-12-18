@@ -59,6 +59,7 @@ public class MockSubmission extends AbstractMock implements Submission {
 	public Boolean UMIRelease;
 	public List<CustomActionValue> customActions = new ArrayList<CustomActionValue>();
 	public String depositId;
+	public String reviewerNotes;
 	public String lastLogEntry;
 	public Date lastLogDate;
 	public List<MockActionLog> logs = new ArrayList<MockActionLog>();
@@ -541,6 +542,16 @@ public class MockSubmission extends AbstractMock implements Submission {
 		this.depositId = depositId;
 	}
 
+	@Override
+	public String getReviewerNotes() {
+		return reviewerNotes;
+	}
+
+	@Override
+	public void setReviewerNotes(String notes) {
+		this.reviewerNotes = notes;
+	}
+	
 	@Override
 	public ActionLog logAction(String entry) {
 		MockActionLog log = new MockActionLog();

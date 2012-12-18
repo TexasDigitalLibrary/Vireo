@@ -553,6 +553,22 @@ public interface Submission extends AbstractModel {
 	 */
 	public void setDepositId(String depositId);
 	
+	
+	/**
+	 * @return Return the current reviewer notes. May only be accessed if a
+	 *         reviewer or above.
+	 */
+	public String getReviewerNotes();
+
+	/**
+	 * Set new reviewer notes, may only be set by reviewers or above. Changes
+	 * are logged in the action log, but will be marked as private.
+	 * 
+	 * @param notes
+	 *            The new notes for this submission.
+	 */
+	public void setReviewerNotes(String notes);
+	
 	/**
 	 * This is a short cut method to improve the performance of displaying
 	 * search results. It is suggested that implementors cache the entry of the

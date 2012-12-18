@@ -133,6 +133,8 @@ import play.Play;
  * 
  * depositId: The deposit id for sorting
  * 
+ * reviewerNotes: The notes from reviewers for sorting
+ * 
  * lastEventEntry: The textual entry of the last log event for sorting.
  * 
  * lastEventTime: The date of the last entry for sorting.

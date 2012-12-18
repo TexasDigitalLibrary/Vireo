@@ -844,6 +844,11 @@ public class TestDataLoader extends Job {
 	
 				if (random.nextInt(100) > 50)
 					sub.addAttachment(new File("test/SampleFeedbackDocument.png"),AttachmentType.FEEDBACK);
+				
+				context.turnOffAuthorization();
+				if (random.nextInt(100) > 50)
+					sub.setReviewerNotes(generateRandomTitle(random));
+				context.restoreAuthorization();
 			}
 			
 			sub.save();

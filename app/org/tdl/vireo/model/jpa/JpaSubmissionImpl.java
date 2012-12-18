@@ -139,8 +139,11 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@OneToMany(targetEntity = JpaCustomActionValueImpl.class, mappedBy = "submission", cascade = CascadeType.ALL)
 	public List<CustomActionValue> customActions;
 	
-	@Column(length=255)
+	@Column(length=1024)
 	public String depositId;
+	
+	@Column(length=326768) // 2^15
+	public String reviewerNotes;
 	
 	@Column(length=326768) // 2^15
 	public String lastActionLogEntry;
@@ -999,6 +1002,36 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 			this.depositId = depositId;
 			generateChangeLog("Repository deposit ID",depositId,false);
 		}
+	}
+	
+	
+	@Override
+	public String getReviewerNotes() {
+		return this.reviewerNotes;
+	}
+	
+	@Override
+	public void setReviewerNotes(String notes) {
+		
+		assertReviewer();
+		
+		if (!equals(this.reviewerNotes,notes)) {
+			
+			this.reviewerNotes = notes;
+			
+			// Generate a private note
+			String entry;
+			if (notes == null)
+				entry = "Reviewer notes cleared";
+			else
+				entry = String.format(
+					"Reviewer notes changed to '%s'",
+					notes);
+			
+			ActionLog log = logAction(entry);
+			log.setPrivate(true);
+		}
+		
 	}
 	
 	@Override

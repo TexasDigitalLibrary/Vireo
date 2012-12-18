@@ -429,6 +429,14 @@ public class ViewTab extends AbstractVireoController {
 
 				submission.setCommitteeContactEmail(value);
 				currentValue = submission.getCommitteeContactEmail();
+				
+				// Reviewer Notes
+			} else if("reviewerNotes".equals(field)){			
+				submission.setReviewerNotes(value);
+				currentValue = submission.getReviewerNotes();
+
+			} else {
+				throw new IllegalArgumentException("Unknown field type: "+field);
 			}
 			submitter.save();
 			submission.save();

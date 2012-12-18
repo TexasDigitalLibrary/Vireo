@@ -312,6 +312,9 @@ public abstract class LuceneAbstractJobImpl extends Job {
 		String depositId = sub.getDepositId();
 		searchText.append(depositId).append(" ");
 		
+		String reviewerNotes = sub.getReviewerNotes();
+		searchText.append(reviewerNotes).append(" ");
+		
 		String lastEventEntry = null;
 		Date lastEventTime = null;
 		
@@ -423,6 +426,9 @@ public abstract class LuceneAbstractJobImpl extends Job {
 		
 		if (depositId != null)
 		doc.add(new Field("depositId",depositId,Field.Store.NO,Index.NOT_ANALYZED));
+		
+		if (reviewerNotes != null)
+		doc.add(new Field("reviewerNotes",reviewerNotes,Field.Store.NO,Index.NOT_ANALYZED));
 		
 		if (lastEventEntry != null)
 		doc.add(new Field("lastEventEntry",lastEventEntry,Field.Store.NO,Index.NOT_ANALYZED));
@@ -555,6 +561,9 @@ public abstract class LuceneAbstractJobImpl extends Job {
 			
 			if (depositId != null)
 			doc.add(new Field("depositId",depositId,Field.Store.NO,Index.NOT_ANALYZED));
+			
+			if (reviewerNotes != null)
+			doc.add(new Field("reviewerNotes",reviewerNotes,Field.Store.NO,Index.NOT_ANALYZED));
 			
 			writer.addDocument(doc);
 			

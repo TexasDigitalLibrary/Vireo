@@ -420,6 +420,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 		sub1.setCommitteeApprovalDate(new Date(2012,5,1));
 		sub1.setCommitteeEmbargoApprovalDate(new Date(2012,5,1));
 		sub1.setDepositId("Z");
+		sub1.setReviewerNotes("Z");
 		sub1.addCustomAction(def, true);
 
 		sub1.save();
@@ -445,7 +446,8 @@ public class LuceneSearcherImplTest extends UnitTest{
 		sub2.setLicenseAgreementDate(new Date(2005,5,1));
 		sub2.setCommitteeApprovalDate(new Date(2002,5,1));
 		sub2.setCommitteeEmbargoApprovalDate(new Date(2002,5,1));
-		sub1.setDepositId("A");
+		sub2.setDepositId("A");
+		sub2.setReviewerNotes("A");
 		sub2.save();
 		
 		
@@ -643,11 +645,17 @@ public class LuceneSearcherImplTest extends UnitTest{
 			assertTrue(submissions.contains(sub2));
 			assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));
 			
+			// Reviewer Notes
+			submissions = searcher.submissionSearch(filter, SearchOrder.REVIEWER_NOTES, SearchDirection.DESCENDING, 0, 20).getResults();
+			assertTrue(submissions.contains(sub1));
+			assertTrue(submissions.contains(sub2));
+			assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));
+			
 			// Last Event Entry
 			submissions = searcher.submissionSearch(filter, SearchOrder.LAST_EVENT_ENTRY, SearchDirection.DESCENDING, 0, 20).getResults();
 			assertTrue(submissions.contains(sub1));
 			assertTrue(submissions.contains(sub2));
-			assertTrue(submissions.indexOf(sub2) < submissions.indexOf(sub1));
+			assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));
 			
 			// Last Event Time
 			submissions = searcher.submissionSearch(filter, SearchOrder.LAST_EVENT_TIME, SearchDirection.DESCENDING, 0, 20).getResults();
