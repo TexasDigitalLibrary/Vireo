@@ -329,12 +329,17 @@ jQuery(document).ready(function(){
                 #{fieldHelp PUBLISHED_MATERIAL /}
             </div>
         </div>   
-        <div class="control-group #{errorClass 'publishedMaterial'/} required" #{if !publishedMaterialFlag}style="display: none;"#{/if}>
+        <div class="control-group #{errorClass 'publishedMaterial'/} required">
             <label class="control-label" for="publishedMaterial"><span class="required-star">*</span> Identify Material:</label>
             <div class="controls">
                 <textarea id="publishedMaterial" name="publishedMaterial" class="span4">${publishedMaterial}</textarea>
             </div>
-        </div>                
+        </div>
+        #{if !publishedMaterialFlag}
+        <script type="text/javascript">
+            jQuery("#publishedMaterial").closest(".control-group").hide();
+        </script>
+        #{/if}             
     </fieldset>
     #{/ifEnabled}
 	
