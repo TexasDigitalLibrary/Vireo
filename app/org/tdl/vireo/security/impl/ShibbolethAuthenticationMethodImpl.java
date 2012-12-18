@@ -54,7 +54,6 @@ public class ShibbolethAuthenticationMethodImpl extends
 	public String headerFirstName = "SHIB_givenname";
 	public String headerMiddleName = "SHIB_initials"; 
 	public String headerLastName = "SHIB_sn"; 
-	public String headerDisplayName = "SHIB_cn"; 
 	public String headerBirthYear = "SHIB_dateOfBirth"; 
 	public String headerAffiliations = "SHIB_eduPersonAffilation";
 	public String headerCurrentPhoneNumber = "SHIB_phone";
@@ -203,7 +202,6 @@ public class ShibbolethAuthenticationMethodImpl extends
 		// Store all the optional attributes.
 		headerInstitutionalIdentifier = attributeMap.get("institutionalIdentifier");
 		headerMiddleName = attributeMap.get("middleName");
-		headerDisplayName = attributeMap.get("displayName");
 		headerBirthYear = attributeMap.get("birthYear");
 		headerAffiliations = attributeMap.get("affiliations");
 		headerCurrentPhoneNumber = attributeMap.get("currentPhoneNumber");
@@ -306,22 +304,17 @@ public class ShibbolethAuthenticationMethodImpl extends
 			// 4. Update Optional attributes:
 			if (headerInstitutionalIdentifier != null) {
 				String identifier = getSingleAttribute(request, headerInstitutionalIdentifier);
-				if (identifier != null)
+				if (!isEmpty(identifier))
 					person.setInstitutionalIdentifier(identifier);
 			}
 			if (headerMiddleName != null) {
 				String middleName = getSingleAttribute(request, headerMiddleName);
-				if (middleName != null)
+				if (!isEmpty(middleName) && person.getMiddleName() == null)
 					person.setMiddleName(middleName);
-			}
-			if (headerDisplayName != null) {
-				String displayName = getSingleAttribute(request, headerDisplayName);
-				if (displayName != null)
-					person.setDisplayName(displayName);
 			}
 			if (headerBirthYear != null) {
 				String birthYearString = getSingleAttribute(request, headerBirthYear);
-				if (birthYearString != null) {
+				if (!isEmpty(birthYearString) && person.getBirthYear() == null) {
 					try {
 						Integer birthYear = Integer.valueOf(birthYearString);
 						person.setBirthYear(birthYear);
@@ -332,7 +325,7 @@ public class ShibbolethAuthenticationMethodImpl extends
 			}
 			if (headerAffiliations != null) {
 				List<String> affiliations = getAttributes(request, headerAffiliations);
-				if (affiliations != null) {
+				if (affiliations != null && affiliations.size() > 0) {
 					person.getAffiliations().clear();
 					if (affiliations != null)
 						person.getAffiliations().addAll(affiliations);
@@ -340,56 +333,57 @@ public class ShibbolethAuthenticationMethodImpl extends
 			}
 			if (headerCurrentPhoneNumber != null) {
 				String currentPhoneNumber = getSingleAttribute(request, headerCurrentPhoneNumber);
-				if (currentPhoneNumber != null)
+				if (!isEmpty(currentPhoneNumber) && person.getCurrentPhoneNumber() == null)
 					person.setCurrentPhoneNumber(currentPhoneNumber);
 			}
 			if (headerCurrentPostalAddress != null) {
 				String currentPostalAddress = getSingleAttribute(request, headerCurrentPostalAddress);
-				if (currentPostalAddress != null) 
+				if (!isEmpty(currentPostalAddress) && person.getCurrentPostalAddress() == null) 
 					person.setCurrentPostalAddress(currentPostalAddress);
 			}
 			if (headerCurrentEmailAddress != null) {
 				String currentEmailAddress = getSingleAttribute(request, headerCurrentEmailAddress);
-				if (currentEmailAddress != null)
+				if (!isEmpty(currentEmailAddress) && person.getCurrentEmailAddress() == null)
 					person.setCurrentEmailAddress(currentEmailAddress);
 			}
 			if (headerPermanentPhoneNumber != null) {
 				String permanentPhoneNumber = getSingleAttribute(request, headerPermanentPhoneNumber);
-				if (permanentPhoneNumber != null)
+				if (!isEmpty(permanentPhoneNumber) && person.getPermanentPhoneNumber() == null)
 					person.setPermanentPhoneNumber(permanentPhoneNumber);
 			}
 			if (headerPermanentPostalAddress != null) {
 				String permanentPostalAddress = getSingleAttribute(request, headerPermanentPostalAddress);
-				if (permanentPostalAddress != null)
+				if (!isEmpty(permanentPostalAddress) && person.getPermanentPostalAddress() == null)
 					person.setPermanentPostalAddress(permanentPostalAddress);
 			}
 			if (headerPermanentEmailAddress != null) {
 				String permanentEmailAddress = getSingleAttribute(request, headerPermanentEmailAddress);
-				if (permanentEmailAddress != null)
+				if (!isEmpty(permanentEmailAddress) && person.getPermanentEmailAddress() == null)
 					person.setPermanentEmailAddress(permanentEmailAddress);
 			}
 			if (headerCurrentDegree != null) {
 				String currentDegree = getSingleAttribute(request, headerCurrentDegree);
-				if (currentDegree != null)
+				if (!isEmpty(currentDegree) && person.getCurrentDegree() == null)
 					person.setCurrentDegree(currentDegree);
 			}
 			if (headerCurrentDepartment != null) {
 				String currentDepartment = getSingleAttribute(request, headerCurrentDepartment);
-				if (currentDepartment != null)
+				if (!isEmpty(currentDepartment) && person.getCurrentDepartment() == null)
 					person.setCurrentDepartment(currentDepartment);
 			}
 			if (headerCurrentCollege != null) {
 				String currentCollege = getSingleAttribute(request, headerCurrentCollege);
-				person.setCurrentCollege(currentCollege);
+				if (!isEmpty(currentCollege) && person.getCurrentCollege() == null)
+					person.setCurrentCollege(currentCollege);
 			}
 			if (headerCurrentMajor != null) {
 				String currentMajor = getSingleAttribute(request, headerCurrentMajor);
-				if (currentMajor != null)
+				if (!isEmpty(currentMajor) && person.getCurrentMajor() == null)
 					person.setCurrentMajor(currentMajor);
 			}
 			if (headerCurrentGraduationYear != null) {
 				String currentGraduationYearString = getSingleAttribute(request, headerCurrentGraduationYear);
-				if (currentGraduationYearString != null) {
+				if (!isEmpty(currentGraduationYearString) && person.getCurrentGraduationYear() == null) {
 					try {
 						Integer currentGraduationYear = Integer.valueOf(currentGraduationYearString);
 						person.setCurrentGraduationYear(currentGraduationYear);
@@ -400,7 +394,7 @@ public class ShibbolethAuthenticationMethodImpl extends
 			}
 			if (headerCurrentGraduationMonth != null) {
 				String currentGraduationMonthString = getSingleAttribute(request, headerCurrentGraduationMonth);
-				if (currentGraduationMonthString != null) {
+				if (!isEmpty(currentGraduationMonthString) && person.getCurrentGraduationMonth() == null) {
 					try {
 						Integer currentGraduationMonth = Integer.valueOf(currentGraduationMonthString);
 						person.setCurrentGraduationMonth(currentGraduationMonth);
@@ -585,6 +579,20 @@ public class ShibbolethAuthenticationMethodImpl extends
 		return valueList;
 	}
 	
-	
+	/**
+	 * @param value
+	 *            The value to be tested.
+	 * @return true if the value is either null, or only consists of whitespace.
+	 *         Otherwise return false.
+	 */
+	private static boolean isEmpty(String value) {
+		if (value == null)
+			return true;
+
+		if (value.trim().length() == 0)
+			return true;
+
+		return false;
+	}
 
 }
