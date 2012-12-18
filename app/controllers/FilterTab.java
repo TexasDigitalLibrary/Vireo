@@ -519,7 +519,7 @@ public class FilterTab extends AbstractVireoController {
 			
 			if (name != null && name.trim().length() > 0 ) {
 			
-				// Check if a filter allready exsits for the name.
+				// Check if a filter already exsits for the name.
 				NamedSearchFilter namedFilter = subRepo.findSearchFilterByCreatorAndName(person, name);
 				if (namedFilter == null) {
 					namedFilter = subRepo.createSearchFilter(person, name);

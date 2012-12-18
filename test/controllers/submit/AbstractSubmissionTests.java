@@ -281,7 +281,7 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 			assertEquals(subId,foundSubId);
 				
 				
-		// If we allready have a subId assigned then get the url scoped to that submission.
+		// If we already have a subId assigned then get the url scoped to that submission.
 		Map<String,Object> routeArgs = new HashMap<String,Object>();
 		routeArgs.put("subId",subId);
 		PERSONAL_INFO_URL = Router.reverse("submit.PersonalInfo.personalInfo",routeArgs).url;

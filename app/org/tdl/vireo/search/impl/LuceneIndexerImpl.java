@@ -470,7 +470,7 @@ public class LuceneIndexerImpl implements Indexer {
 			// The next job is free, so just put it there until ready.
 			nextJob = newJob;
 		} else {
-			// We allready have the next job in the queue, so merge the two jobs together.
+			// We already have the next job in the queue, so merge the two jobs together.
 			nextJob = nextJob.mergeJob(newJob);
 		}
 	}

@@ -297,8 +297,8 @@ public class Student extends AbstractVireoController {
 		} catch (IllegalArgumentException iae) {
 			Logger.error(iae,"Unable to upload primary document");
 			
-			if (iae.getMessage().contains("allready exists for this submission"))
-				validation.addError("primaryDocument", "A file with that name allready exists; please use a different name or remove the other file.");
+			if (iae.getMessage().contains("already exists for this submission"))
+				validation.addError("primaryDocument", "A file with that name already exists; please use a different name or remove the other file.");
 			else
 				validation.addError("primaryDocument","Error uploading primary document.");
 		
@@ -331,8 +331,8 @@ public class Student extends AbstractVireoController {
 		} catch (IllegalArgumentException iae) {
 			Logger.error(iae,"Unable to upload supplementary document");
 			
-			if (iae.getMessage().contains("allready exists for this submission"))
-				validation.addError("supplementaryDocument", "A file with that name allready exists; please use a different name or remove the other file.");
+			if (iae.getMessage().contains("already exists for this submission"))
+				validation.addError("supplementaryDocument", "A file with that name already exists; please use a different name or remove the other file.");
 			else
 				validation.addError("supplementaryDocument","Error uploading primary document.");
 		

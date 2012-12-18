@@ -429,7 +429,7 @@ public class ShibbolethAuthenticationMethodImpl extends
 		StringBuilder msg = new StringBuilder();
 		
 		if (AuthenticationResult.BAD_CREDENTIALS == result ) {
-			msg.append("<p>Shibboleth authentication recieved the required attributes but was unable to create a new account. The most likely cause is because an account with the same netid or email allready exists in the system.</p>");
+			msg.append("<p>Shibboleth authentication recieved the required attributes but was unable to create a new account. The most likely cause is because an account with the same netid or email already exists in the system.</p>");
 		} else {
 			msg.append("<p>Shibboleth authentication failed because it did not recieve enough information from your Shibboleth Identity Provider. Vireo requires four attributes Netid, Email, and your First and Last name. If any of these are missing then authentication will fail. Below is a listing of the attributes we did recieve:</p>");
 		}
