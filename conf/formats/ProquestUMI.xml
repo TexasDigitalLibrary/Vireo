@@ -6,17 +6,6 @@
 	customise the export generated metadata. This ranges from embargo settings,
 	publication identifiers, and whether to release contact information for the
 	student.
-	
-	One thing to remember
-	=====================
-	
-	ProQuest/UMI does not require *any* metadata. I realise that their DTD and
-	specification state that this and that are required fields. However many 
-	schools are not required to provide any metadata at all, just PDFs. So 
-	keep that in mind when working with Proquest that just because they are
-	asking for something does not mean we are required to provide it. They can
-	use all the other open interoperability standards to collect and publish 
-	these works.
 }*
 %{
 	//Configure UMI export options
