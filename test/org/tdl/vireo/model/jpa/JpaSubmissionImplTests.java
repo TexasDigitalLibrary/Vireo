@@ -631,6 +631,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		sub.setDocumentAbstract("docAbstract");
 		sub.setDocumentKeywords("docKeywords");
 		sub.setDocumentLanguage("en");
+		sub.addDocumentSubject("subject");
 		sub.setPublishedMaterial("published");
 		sub.setCommitteeContactEmail("contactEmail");
 		sub.setCommitteeEmailHash("hash");
@@ -652,11 +653,14 @@ public class JpaSubmissionImplTests extends UnitTest {
 		sub.setDepositId("depositId");
 		sub.setReviewerNotes("notes");
 		
+		sub.save();
+		
 		// Test clearing
 		sub.setDocumentTitle(null);
 		sub.setDocumentAbstract(null);
 		sub.setDocumentKeywords(null);
 		sub.setDocumentLanguage(null);
+		sub.removeDocumentSubject("subject");
 		sub.setPublishedMaterial(null);
 		sub.setCommitteeContactEmail(null);
 		sub.setCommitteeEmailHash(null);
@@ -692,6 +696,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
 		String formattedDate = format.format(now);
 
+		assertEquals("Document subjects cleared", logItr.next().getEntry());
 		assertEquals("Reviewer notes cleared", logItr.next().getEntry());
 		assertEquals("Repository deposit ID cleared", logItr.next().getEntry());
 		assertEquals("UMI Release cleared", logItr.next().getEntry());
@@ -717,6 +722,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		assertEquals("Document abstract cleared", logItr.next().getEntry());
 		assertEquals("Document title cleared", logItr.next().getEntry());
 
+		assertEquals("Document subjects changed to 'subject'", logItr.next().getEntry());
 		assertEquals("Reviewer notes changed to 'notes'", logItr.next().getEntry());
 		assertEquals("Repository deposit ID changed to 'depositId'", logItr.next().getEntry());
 		assertEquals("UMI Release changed to 'No'", logItr.next().getEntry());
@@ -750,7 +756,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		
 		assertFalse(logItr.hasNext());
 		
-		assertEquals("Reviewer notes cleared", sub.getLastLogEntry());
+		assertEquals("Document subjects cleared", sub.getLastLogEntry());
 	}
 	
 	/**
