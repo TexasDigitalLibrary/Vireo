@@ -1,18 +1,137 @@
 #{extends 'SettingTabs/settings.html' /}
 #{set 'moreSettingScripts' }
+<link href="@{'/public/bootstrap-colorpicker-master/css/bootstrap-colorpicker.css'}" rel="stylesheet" type="text/css">
+<script src="@{'/public/bootstrap-colorpicker-master/js/bootstrap-colorpicker.js'}" type="text/javascript" charset="${_response_encoding}"></script>
 <script type="text/javascript">
 jQuery(document).ready(function(){
 
 	// Settings toggle and input/textarea fields
      jQuery(".theme-textarea").change(applicationSettingsHandler('@{settings.ThemeSettingsTab.updateThemeSettingsJSON()}'));
-     
+     jQuery(".theme-input").blur(applicationSettingsHandler('@{settings.ThemeSettingsTab.updateThemeSettingsJSON()}')); 
+	
      // Lock the big text areas
      jQuery(".theme-protected .lock-control a").click(applicationUnlockField);
      
+     //Set Colorpicker
+     jQuery(".colorpicker").colorpicker();
+     
+     /*
+ 	 * Initiate tooltip.
+ 	 */
+ 	 
+ 	jQuery('.tooltip-icon').tooltip();
      
 }) // document ready
 </script>
 #{/set}
+
+<h2>LOOK AND FEEL</h2>
+
+<h4 style="display:inline;">Background</h4>
+<a href="#" class="tooltip-icon" rel="tooltip" title="Use hex color values to change the background on the student side. The main color (default #1B333F) fades into the highlight color (default #43606E)."><i class="icon-info-sign"></i></a>
+<table class="gradient-options">
+	<tr>
+		<td>Main Color</td>
+		<td>Highlight Color</td>
+	</tr>
+	<tr>
+		<td>
+			<input type="text" class="colorpicker span2 theme-input" name="${org.tdl.vireo.constant.AppConfig.BACKGROUND_MAIN_COLOR}" value="#{verbatim}${BACKGROUND_MAIN_COLOR}#{/verbatim}" >
+		</td>
+		<td>
+			<input type="text" class="colorpicker span2 theme-input" name="${org.tdl.vireo.constant.AppConfig.BACKGROUND_HIGHLIGHT_COLOR}" value="#{verbatim}${BACKGROUND_HIGHLIGHT_COLOR}#{/verbatim}" >
+		</td>
+	</tr>
+</table>
+	
+<h4 style="display:inline;">Submission Step Button (On)</h4>
+<a href="#" class="tooltip-icon" rel="tooltip" title="Use hex color values to change the look of the submission step buttons when on the current step or on hover. The main color (default #1B333F) fades into the highlight color (default #43606E) and then back to the main color."><i class="icon-info-sign"></i></a>
+<table class="gradient-options">
+	<tr>
+		<td>Main Color</td>
+		<td>Highlight Color</td>
+	</tr>
+	<tr>
+		<td>
+			<input type="text" class="colorpicker span2 theme-input" name="${org.tdl.vireo.constant.AppConfig.BUTTON_MAIN_COLOR_ON}" value="#{verbatim}${BUTTON_MAIN_COLOR_ON}#{/verbatim}" >
+		</td>
+		<td>
+			<input type="text" class="colorpicker span2 theme-input" name="${org.tdl.vireo.constant.AppConfig.BUTTON_HIGHLIGHT_COLOR_ON}" value="#{verbatim}${BUTTON_HIGHLIGHT_COLOR_ON}#{/verbatim}" >
+		</td>
+	</tr>
+</table>
+
+<h4 style="display:inline">Submission Step Button (Off)</h4>
+<a href="#" class="tooltip-icon" rel="tooltip" title="Use hex color values to change the look of the submission step buttons when in a default state. The main color (default #A6A18C) fades into the highlight color (default #C7C2A9) and then back to the main color."><i class="icon-info-sign"></i></a>
+<table class="gradient-options">
+	<tr>
+		<td>Main Color</td>
+		<td>Highlight Color</td>
+	</tr>
+	<tr>
+		<td>
+			<input type="text" class="colorpicker span2 theme-input" name="${org.tdl.vireo.constant.AppConfig.BUTTON_MAIN_COLOR_OFF}" value="#{verbatim}${BUTTON_MAIN_COLOR_OFF}#{/verbatim}" >
+		</td>
+		<td>
+			<input type="text" class="colorpicker span2 theme-input" name="${org.tdl.vireo.constant.AppConfig.BUTTON_HIGHLIGHT_COLOR_OFF}" value="#{verbatim}${BUTTON_HIGHLIGHT_COLOR_OFF}#{/verbatim}" >
+		</td>
+	</tr>
+</table>
+
+<div class="well">
+<h4 style="display:inline;">Logos</h4>
+<a href="#" class="tooltip-icon" rel="tooltip" title="Change the logos located on the student side in the top left and top right corners. The recommended size is 50 x 150 pixels."><i class="icon-info-sign"></i></a>
+<form method="post"  enctype="multipart/form-data" action="@{settings.ThemeSettingsTab.uploadLogos()}">
+	<table class="logo-options">
+		<tr>
+			<td>
+			<p>Left Logo<br />
+				<input type="file" name="leftLogo" />
+			</p>
+			</td>
+			<td>
+			#{if leftLogo.exists()}
+			<div class="preview" style="background-image:url('@{Application.index()}theme/left-logo');"></div>			
+			#{/if}
+			#{else}
+			<div class="preview" style="background-image:url('@{Application.index()}public/images/vireo-logo-sm.png');"></div>
+			#{/else}
+			</td>
+			#{if leftLogo.exists()}
+			<td>
+				<button class="confirm btn btn-small" type="submit" name="deleteLeftLogo">Remove</button>
+			</td>
+			#{/if}
+		</tr>
+		<tr>
+			<td>
+			<p>Right Logo<br />
+				<input type="file" name="rightLogo" />
+			</p>
+			</td>
+			<td>
+			#{if rightLogo.exists()}
+			<div class="preview" style="background-image:url('@{Application.index()}theme/right-logo');"></div>
+			#{/if}
+			#{else}
+			<div class="preview" style="background-image:url('@{Application.index()}public/images/vireo-right.gif');"></div>
+			#{/else}
+			</td>
+			#{if rightLogo.exists()}
+			<td>
+				<button class="confirm btn btn-small" type="submit" name="deleteRightLogo">Remove</button>
+			</td>
+			#{/if}
+		</tr>
+	</table>
+	<p><input class="btn" type="submit" name="submit_upload" value="Upload" /></p>
+</form>
+</div>
+
+<h4 style="display:inline;">Custom CSS</h4>
+<a href="#" class="tooltip-icon" rel="tooltip" title="Customize any styling on the student side using CSS."><i class="icon-info-sign"></i></a>
+<br />
+<textarea class="span6 theme-textarea" name="${org.tdl.vireo.constant.AppConfig.CUSTOM_CSS}">#{verbatim}${CUSTOM_CSS}#{/verbatim}</textarea>
 
 <h2>FRONT PAGE INSTRUCTIONS</h2>
 

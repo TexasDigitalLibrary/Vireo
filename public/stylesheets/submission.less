@@ -11,7 +11,7 @@ html {
 	background: -o-linear-gradient(top,  @bodyGradientBegin 0%,@bodyGradientEnd 100%); /* Opera 11.10+ */
 	background: -ms-linear-gradient(top,  @bodyGradientBegin 0%,@bodyGradientEnd 100%); /* IE10+ */
 	background: linear-gradient(top,  @bodyGradientBegin 0%,@bodyGradientEnd 100%); /* W3C */
-	/*filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='@bodyGradientBegin', endColorstr='@bodyGradientEnd',GradientType=0 ); /* IE6-9 */
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#1b333f', endColorstr='#43606e');
 	height: 100%;
 	background-repeat: no-repeat;
     background-attachment: fixed;
@@ -92,20 +92,13 @@ SPECIFIC OVERIDES
 #header{
     position: relative;
 	height:95px;
-	background:@headerGradientBegin; /* Old browsers */
-	background:-moz-linear-gradient(top, @headerGradientBegin 0%, @headerGradientEnd 100%); /* FF3.6+ */
-	background:-webkit-gradient(linear, left top, left bottom, color-stop(0%,@headerGradientBegin), color-stop(100%,@headerGradientEnd)); /* Chrome,Safari4+ */
-	background:-webkit-linear-gradient(top,  @headerGradientBegin 0%,@headerGradientEnd 100%); /* Chrome10+,Safari5.1+ */
-	background:-o-linear-gradient(top,  @headerGradientBegin 0%,@headerGradientEnd 100%); /* Opera 11.10+ */
-	background:-ms-linear-gradient(top,  @headerGradientBegin 0%,@headerGradientEnd 100%); /* IE10+ */
-	background:linear-gradient(top,  @headerGradientBegin 0%,@headerGradientEnd 100%); /* W3C */
-	/*filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='@headerGradientBegin', endColorstr='@headerGradientEnd',GradientType=0 ); /* IE6-9 */
+	background:@headerGradientBegin;
 	z-index:0;
 }
 
 #left-logo{
 	background:url("../images/vireo-logo-sm.png") no-repeat scroll 0 0 transparent;
-	height:43px;
+	height:50px;
 	position:relative;
 	top:26px;
 	left:13px;
@@ -115,12 +108,12 @@ SPECIFIC OVERIDES
 }
 
 #right-logo{
-	background:url("../images/vireo-right.gif") no-repeat scroll 0 0 transparent;
-	height:42px;
+	background:url("../images/vireo-right.gif") no-repeat scroll top right transparent;
+	height:50px;
     position:absolute;
    	top:30px;
     right:13px;
-    width:144px;
+    width:150px;
     z-index:1;
 }
 
@@ -206,84 +199,74 @@ SUBMIT STEP BUTTONS
 	float:left;
 }
 
-#submitSteps a, #submitSteps span{
+#submitSteps a{
 	display:block;
 	border:none;
-	margin-right:-5px;
 	padding:0;
 	height:40px;
-	width:148px;
+	width:144px;
+}
+
+#submitSteps li{
+	background: #a6a18c; /* Old browsers */
+	background: -moz-linear-gradient(top,  #a6a18c 0%, #c7c2a9 50%, #a6a18c 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#a6a18c), color-stop(50%,#c7c2a9), color-stop(100%,#a6a18c)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #a6a18c 0%,#c7c2a9 50%,#a6a18c 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #a6a18c 0%,#c7c2a9 50%,#a6a18c 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #a6a18c 0%,#c7c2a9 50%,#a6a18c 100%); /* IE10+ */
+	background: linear-gradient(top,  #a6a18c 0%,#c7c2a9 50%,#a6a18c 100%); /* W3C */	
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#a6a18c', endColorstr='#c7c2a9');
 }
 
 #step1Btn a{
-	background:url("../images/step1.gif") no-repeat scroll 0 0 transparent;	
+	background:url("../images/step1_off.png") no-repeat scroll 0 0 transparent;
 }
 
 #step2Btn a{
-	background:url("../images/step2.gif") no-repeat scroll 0 0 transparent;	
+	background:url("../images/step2_off.png") no-repeat scroll 0 0 transparent;
 }
 
 #step3Btn a{
-	background:url("../images/step3.gif") no-repeat scroll 0 0 transparent;	
+	background:url("../images/step3_off.png") no-repeat scroll 0 0 transparent;	
 }
 
 #step4Btn a{
-	background:url("../images/step4.gif") no-repeat scroll 0 0 transparent;	
+	background:url("../images/step4_off.png") no-repeat scroll 0 0 transparent;	
 }
 
 #step5Btn a{
-	background:url("../images/step5.gif") no-repeat scroll 0 0 transparent;	
-}
-
-#step1Btn a.disabled{
-	background:url("../images/step1_disabled.gif") no-repeat scroll 0 0 transparent;	
-}
-
-#step2Btn span.disabled{
-	background:url("../images/step2_disabled.gif") no-repeat scroll 0 0 transparent;	
-}
-
-#step3Btn span.disabled{
-	background:url("../images/step3_disabled.gif") no-repeat scroll 0 0 transparent;	
-}
-
-#step4Btn span.disabled{
-	background:url("../images/step4_disabled.gif") no-repeat scroll 0 0 transparent;	
-}
-
-#step5Btn span.disabled{
-	background:url("../images/step5_disabled.gif") no-repeat scroll 0 0 transparent;	
+	background:url("../images/step5_off.png") no-repeat scroll 0 0 transparent;	
 }
 
 #step1Btn a.current, #step1Btn a:hover{
-	background:url("../images/step1_current.gif") no-repeat scroll 0 0 transparent;	
+	background:url("../images/step1_on.png") no-repeat scroll 0 0 transparent;	
 }
 
 #step2Btn a.current, #step2Btn a:hover{
-	background:url("../images/step2_current.gif") no-repeat scroll 0 0 transparent;	
+	background:url("../images/step2_on.png") no-repeat scroll 0 0 transparent;	
 }
 
 #step3Btn a.current, #step3Btn a:hover{
-	background:url("../images/step3_current.gif") no-repeat scroll 0 0 transparent;	
+	background:url("../images/step3_on.png") no-repeat scroll 0 0 transparent;	
 }
 
 #step4Btn a.current, #step4Btn a:hover{
-	background:url("../images/step4_current.gif") no-repeat scroll 0 0 transparent;	
+	background:url("../images/step4_on.png") no-repeat scroll 0 0 transparent;	
 }
 
 #step5Btn a.current, #step5Btn a:hover{
-	background:url("../images/step5_current.gif") no-repeat scroll 0 0 transparent;	
+	background:url("../images/step5_on.png") no-repeat scroll 0 0 transparent;	
 }
 
-// Add disabled state for items in submit steps
-.nav > li.disabled {
-    .opacity(40);
-    pointer-events: none;
-}
-.nav > li.disabled > a:hover {
-    cursor: default;
-    text-decoration: none;
-    background-color: inherit;
+#submitSteps li.current, #submitSteps li:hover{
+	background: #1B333F; /* Old browsers */
+	background: -moz-linear-gradient(top,  #1B333F 0%, #43606E 50%, #1B333F 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#1B333F), color-stop(50%,#43606E), color-stop(100%,#1B333F)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #1B333F 0%,#43606E 50%, #1B333F 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #1B333F 0%,#43606E 50%, #1B333F 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #1B333F 0%,#43606E 50%, #1B333F 100%); /* IE10+ */
+	background: linear-gradient(top,  #1B333F 0%,#43606E 50%, #1B333F 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#1b333f', endColorstr='#43606e');
 }
 
 /********************

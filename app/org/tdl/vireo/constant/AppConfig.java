@@ -61,6 +61,27 @@ public class AppConfig {
 	public final static String EMAIL_CC_STUDENT = "email_cc_student";
 	
 	// Theme settings
+	/** Background main color */
+	public final static String BACKGROUND_MAIN_COLOR = "background_main_color";
+	
+	/** Background highlight color */
+	public final static String BACKGROUND_HIGHLIGHT_COLOR = "background_highlight_color";
+	
+	/** Submission Step Button main color when in "on" state */
+	public final static String BUTTON_MAIN_COLOR_ON = "button_main_color_on";
+	
+	/** Submission Step Button highlight color when in "on" state */
+	public final static String BUTTON_HIGHLIGHT_COLOR_ON = "button_highlight_color_on";
+	
+	/** Submission Step Button main color when in "off" state */
+	public final static String BUTTON_MAIN_COLOR_OFF = "button_main_color_off";
+	
+	/** Submission Step Button highlight color when in "off" state */
+	public final static String BUTTON_HIGHLIGHT_COLOR_OFF = "button_highlight_color_off";
+	
+	/** Custom CSS */
+	public final static String CUSTOM_CSS = "custom_css";
+	
 	/** Instructions to show on the front page of Vireo. */
 	public final static String FRONT_PAGE_INSTRUCTIONS = "front_page_instructions";
 	
@@ -79,7 +100,7 @@ public class AppConfig {
 	
 	/** Allow proquest indexing by search engines. */
 	public final static String PROQUEST_INDEXING = "proquest_indexing";
-	
+
 	// Submission Sticky notes
 	public final static String SUBMIT_PERSONAL_INFO_STICKIES = "submit_personal_info_stickyies";
 	public final static String SUBMIT_DOCUMENT_INFO_STICKIES = "submit_document_info_stickyies";

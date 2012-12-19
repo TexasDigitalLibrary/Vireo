@@ -90,6 +90,7 @@ POST    /admin/settings/user/update             settings.UserPreferencesTab.upda
 POST    /admin/settings/applications/update     settings.ApplicationSettingsTab.updateApplicationSettingsJSON
 POST    /admin/settings/submission/update       settings.SubmissionSettingsTab.updateSubmissionSettingsJSON
 POST    /admin/settings/themes/update           settings.ThemeSettingsTab.updateThemeSettingsJSON
+POST	/admin/settings/themes/uploadLogos		settings.ThemeSettingsTab.uploadLogos
 POST    /admin/settings/email/update            settings.EmailSettingsTab.updateEmailSettingsJSON
 
 ### Settings tab - Actions
@@ -216,4 +217,6 @@ GET     /system/jobs/?                          System.jobPanel
 GET     /favicon.ico                            404
 
 # Map static resources from the /app/public folder to the /public path
+GET		/theme/left-logo						staticFile:conf/theme/left-logo
+GET		/theme/right-logo				    	staticFile:conf/theme/right-logo
 GET     /public/                                staticDir:public
