@@ -144,9 +144,9 @@
            <lastName>${ member.getLastName().escapeXml() }</lastName>
            #{/if} 
            <roles>
-              #{list items:member.getRole(), as:'role'}
+              #{list items:member.getRoles(), as:'role'} 
               <role>${ role.escapeXml() }</role>
-              #{/list}
+              #{/list} 
            </roles>
         </committeeMember>
         #{/list} 

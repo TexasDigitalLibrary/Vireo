@@ -175,7 +175,7 @@
 				
 				#{if sub.getSubmitter().getCurrentPostalAddress() != null }
 				%{ def address = proquestUtils.parseAddress(sub.getSubmitter().getCurrentPostalAddress()); %} 
-				#{if address.isParsed() }
+				#{if address.isParsed() } 
 				<DISS_address>
 					<DISS_addrline>${ address.addrline }</DISS_addrline>
 					<DISS_city>${ address.city }</DISS_city>
@@ -211,7 +211,7 @@
 				
 				#{if sub.getSubmitter().getPermanentPostalAddress() != null } 
 				%{ def address = proquestUtils.parseAddress(sub.getSubmitter().getPermanentPostalAddress()); %} 
-                #{if address.isParsed() }
+                #{if address.isParsed() } 
 				<DISS_address>
                     <DISS_addrline>${ address.addrline }</DISS_addrline>
                     <DISS_city>${ address.city }</DISS_city>
