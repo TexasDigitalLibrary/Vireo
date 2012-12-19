@@ -66,22 +66,11 @@ public class ConfigurableSettingsTab extends SettingsTab {
 		Collections.sort(localeLanguages, ascending(getLocaleComparator(LocaleComparator.LANGUAGE_SORT, LocaleComparator.COUNTRY_SORT)));
 		
 		List<Language> languages = settingRepo.findAllLanguages();
-		List<String> proquestDegrees = new ArrayList<String>();
-		for (ProquestDegree degree : proquest.findAllDegrees()) {
-			if (degree.getDescription() == null)
-				continue;
-			String sanatizedName = degree.getDescription().replaceAll("'","&#39;");
-			if (!proquestDegrees.contains(sanatizedName)) {
-				proquestDegrees.add(sanatizedName);
-			}
-		}
+		renderArgs.put("proquestUtils",proquestUtils);
 		
 		renderArgs.put("UNDERGRADUATE", DegreeLevel.UNDERGRADUATE);
 		renderArgs.put("MASTERS", DegreeLevel.MASTERS);
 		renderArgs.put("DOCTORAL", DegreeLevel.DOCTORAL);
-
-		
-		renderArgs.put("proquestUtils",proquestUtils);
 		
 		String nav = "settings";
 		String subNav = "config";
@@ -93,8 +82,8 @@ public class ConfigurableSettingsTab extends SettingsTab {
 				// Sortable lists
 				colleges, programs, departments, majors, degrees, docTypes, roleTypes, gradMonths, languages,
 				
-				// Locales & degrees
-				localeLanguages, proquestDegrees);
+				// Locales
+				localeLanguages);
 	}
 	
 	/**
@@ -1069,14 +1058,10 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			degrees.add(degree);
 
 			saveModelOrder(degrees);
-
-			String proquest = "false";
-			if (degreeLevel != DegreeLevel.UNDERGRADUATE && proquestRepo.findDegreeByDescription(name) != null)
-				proquest = "true";
 			
 			name = escapeJavaScript(degree.getName());
 
-			renderJSON("{ \"success\": \"true\", \"id\": " + degree.getId()	+ ", \"name\": \"" + name + "\", \"level\": "+degreeLevel.getId()+", \"proquest\": "+proquest+"}");
+			renderJSON("{ \"success\": \"true\", \"id\": " + degree.getId()	+ ", \"name\": \"" + name + "\", \"level\": "+degreeLevel.getId()+"}");
 		} catch (IllegalArgumentException iae) {
 			String message = escapeJavaScript(iae.getMessage());			
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
@@ -1120,14 +1105,10 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			degree.setName(name);
 			degree.setLevel(degreeLevel);
 			degree.save();
-
-			String proquest = "false";
-			if (degreeLevel != DegreeLevel.UNDERGRADUATE && proquestRepo.findDegreeByDescription(name) != null)
-				proquest = "true";
 			
 			name = escapeJavaScript(name);
 
-			renderJSON("{ \"success\": \"true\", \"id\": " + degree.getId() + ", \"name\": \"" + name + "\", \"level\": "+degreeLevel.getId()+", \"proquest\": "+proquest+"}");
+			renderJSON("{ \"success\": \"true\", \"id\": " + degree.getId() + ", \"name\": \"" + name + "\", \"level\": "+degreeLevel.getId()+"}");
 		} catch (IllegalArgumentException iae) {
 			String message = escapeJavaScript(iae.getMessage());			
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");

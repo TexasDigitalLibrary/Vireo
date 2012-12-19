@@ -72,6 +72,14 @@ public interface ProquestUtilityService {
 	public ProquestLanguage languageCode(Locale locale);
 
 	/**
+	 * Translate Vireo's full degree name into a ProQuest degree code.
+	 * 
+	 * @param degree The degree to translate.
+	 * @return The degree code, or the full degree name if not found.
+	 */
+	public String degreeCode(String degree);
+	
+	/**
 	 * The individual components of a proquest phone number.
 	 */
 	public static class Phone {

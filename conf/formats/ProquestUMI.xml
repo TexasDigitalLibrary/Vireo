@@ -50,7 +50,8 @@
 	String external_id_prefix = "vireo:";
 
 	// #### Institutional Code
-	// Proquest assignes each instutition a code, supply that code here.
+	// Proquest assignes each instutition a code, supply that code on the
+	// Application Settings tab.
 	String institution_code = settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.PROQUEST_INSTITUTION_CODE);
 	
 	// #### Institutional Name
@@ -155,7 +156,6 @@
 			</DISS_name>
 			
 			#{if release_student_contact_information } 
-			<!-- Current Contact Information -->
 			<DISS_contact type="current">
 				#{if sub.getSubmissionDate() != null } 
 				<DISS_contact_effdt>
@@ -165,10 +165,7 @@
 				
 				#{if sub.getSubmitter().getCurrentPhoneNumber() != null} 
 				<DISS_phone_fax type="P">
-				    %{
-				        def phone = proquestUtils.parsePhone(sub.getSubmitter().getCurrentPhoneNumber());
-					}% 
-					<!-- ${ phone.fullPhone } -->
+				    %{ def phone = proquestUtils.parsePhone(sub.getSubmitter().getCurrentPhoneNumber()); }% 
 					<DISS_cntry_cd>${ phone.cntryCode }</DISS_cntry_cd>
 					<DISS_area_code>${ phone.areaCode }</DISS_area_code>
 					<DISS_phone_num>${ phone.number }</DISS_phone_num>
@@ -177,10 +174,8 @@
 				#{/if}
 				
 				#{if sub.getSubmitter().getCurrentPostalAddress() != null }
-				%{ def address = proquestUtils.parseAddress(sub.getSubmitter().getCurrentPostalAddress());%} 
-				<!-- 
-${ address.fullAddress } 
-				${ address.isParsed() ? "-->".raw() : ""}
+				%{ def address = proquestUtils.parseAddress(sub.getSubmitter().getCurrentPostalAddress()); %} 
+				#{if address.isParsed() }
 				<DISS_address>
 					<DISS_addrline>${ address.addrline }</DISS_addrline>
 					<DISS_city>${ address.city }</DISS_city>
@@ -188,7 +183,7 @@ ${ address.fullAddress }
 					<DISS_pcode>${ address.zip }</DISS_pcode>
 					<DISS_country>${ address.cntry != null ? address.cntry : "US"}</DISS_country>
 				</DISS_address>
-				${ address.isParsed() ? "" : "-->".raw() }
+				#{/if}
 				#{/if}
 				
 				<DISS_email>
@@ -197,7 +192,6 @@ ${ address.fullAddress }
 			</DISS_contact>
 			
 			#{if sub.getSubmitter().getPermanentPhoneNumber() != null || sub.getSubmitter().getPermanentPostalAddress() != null || sub.getSubmitter().getPermanentEmailAddress() != null } 
-			<!-- Permanent Contact Information -->
 			<DISS_contact type="future">
 				#{if sub.getSubmissionDate() != null } 
 				<DISS_contact_effdt>
@@ -207,10 +201,7 @@ ${ address.fullAddress }
 				
 				#{if sub.getSubmitter().getPermanentPhoneNumber() != null} 
 				<DISS_phone_fax type="P">
-				    %{
-				        def phone = proquestUtils.parsePhone(sub.getSubmitter().getPermanentPhoneNumber());
-					}% 
-                    <!-- ${ phone.fullPhone } -->
+				    %{ def phone = proquestUtils.parsePhone(sub.getSubmitter().getPermanentPhoneNumber()); }% 
                     <DISS_cntry_cd>${ phone.cntryCode }</DISS_cntry_cd>
                     <DISS_area_code>${ phone.areaCode }</DISS_area_code>
                     <DISS_phone_num>${ phone.number }</DISS_phone_num>
@@ -220,9 +211,7 @@ ${ address.fullAddress }
 				
 				#{if sub.getSubmitter().getPermanentPostalAddress() != null } 
 				%{ def address = proquestUtils.parseAddress(sub.getSubmitter().getPermanentPostalAddress()); %} 
-				<!-- 
-${ address.fullAddress } 
-				${ address.isParsed() ? "-->".raw() : ""}
+                #{if address.isParsed() }
 				<DISS_address>
                     <DISS_addrline>${ address.addrline }</DISS_addrline>
                     <DISS_city>${ address.city }</DISS_city>
@@ -230,7 +219,7 @@ ${ address.fullAddress }
                     <DISS_pcode>${ address.zip }</DISS_pcode>
 					<DISS_country>${ address.cntry != null ? address.cntry : "US"}</DISS_country>
 				</DISS_address>
-				${ address.isParsed() ? "" : "-->".raw() }
+				#{/if}
 				#{/if}
 				
 				#{if sub.getSubmitter().getPermanentEmailAddress() != null } 
@@ -257,7 +246,8 @@ ${ address.fullAddress }
 			<DISS_accept_date>1/${ sub.getGraduationMonth() != null ? sub.getGraduationMonth() + 1 : "1" }/${ sub.getGraduationYear() }</DISS_accept_date>
 		</DISS_dates>
 		#{/if} 
-		<DISS_degree>${ proquestRepo.findDegreeByDescription(sub.getDegree()) != null ? proquestRepo.findDegreeByDescription(sub.getDegree()).getCode() : sub.getDegree()  }</DISS_degree>
+		<DISS_degree>${ proquestUtils.degreeCode(sub.getDegree()) }</DISS_degree>	
+		
 		<DISS_institution>
 			<DISS_inst_code>${ institution_code }</DISS_inst_code>
 			<DISS_inst_name>${ institution_name }</DISS_inst_name>
@@ -295,14 +285,6 @@ ${ address.fullAddress }
 		        <DISS_cat_desc>${ subject }</DISS_cat_desc>
 		    </DISS_category>
 		    #{/if}
-		    #{else}
-		    <!--
-		    <DISS_category> 
-		        No ProQuest category code found.
-		        <DISS_cat_desc>${ subject }</DISS_cat_desc>
-		    </DISS_category>
-		    -->
-		    #{/else}
 		    #{/list} 
 		
 			#{if sub.getDocumentKeywords() != null}
@@ -315,7 +297,6 @@ ${ address.fullAddress }
 			
 			#{if sub.getDocumentLanguage() != null && proquestUtils.languageCode(sub.getDocumentLanguageLocale()) != null} 
 			%{ def lang = proquestUtils.languageCode(sub.getDocumentLanguageLocale()) }% 
-			<!-- ${ sub.getDocumentLanguage()?.escapeXml() } - ${ sub.getDocumentLanguageLocale()?.getDisplayName()?.escapeXml() } -->
 			<DISS_language>${ lang?.getCode()?.escapeXml() }</DISS_language>
 			#{/if} 
 		</DISS_categorization>
@@ -335,21 +316,11 @@ ${ para.escapeXml() }
 		</DISS_abstract>
 		
 		#{if sub.getPrimaryDocument() != null } 
-		<!-- 
-              MimeType: ${ sub.getPrimaryDocument()?.getMimeType() }
-              Size: ${ sub.getPrimaryDocument()?.getDisplaySize() }
-              Uploaded: ${ sub.getPrimaryDocument()?.getDate()?.format("yyyy/MM/dd 'at' HH:mm:ss")  }
-          -->
 		<DISS_binary type="${ "application/pdf".equals(sub.getPrimaryDocument()?.getMimeType()) ? "PDF" : "other" }">${ sub.getPrimaryDocument()?.getName() }</DISS_binary>
 		#{/if} 
 		
 		#{list items:sub.getAttachmentsByType(org.tdl.vireo.model.AttachmentType.SUPPLEMENTAL), as:'attachment' } 
 		<DISS_attachment>
-		  <!-- 
-		      MimeType: ${ attachment.getMimeType() }
-		      Size: ${ attachment.getDisplaySize() }
-		      Uploaded: ${ attachment.getDate()?.format("yyyy/MM/dd 'at' HH:mm:ss")  }
-		  -->
 		  <DISS_file_name>${ attachment.getName().escapeXml() }</DISS_file_name>
 		  <DISS_file_category>${ proquestUtils.categorize(attachment).escapeXml() }</DISS_file_category>
 		  <DISS_file_descr>Supplemental File</DISS_file_descr>

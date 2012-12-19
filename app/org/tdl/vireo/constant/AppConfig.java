@@ -80,12 +80,27 @@ public class AppConfig {
 	/** Allow proquest indexing by search engines. */
 	public final static String PROQUEST_INDEXING = "proquest_indexing";
 	
-	
-	
-	
 	// Submission Sticky notes
 	public final static String SUBMIT_PERSONAL_INFO_STICKIES = "submit_personal_info_stickyies";
 	public final static String SUBMIT_DOCUMENT_INFO_STICKIES = "submit_document_info_stickyies";
 	public final static String SUBMIT_UPLOAD_FILES_STICKIES = "submit_upload_files_stickyies";
+	
+	
+	// Degree code mapping
+	/** The prefix underwhich all degree codes are stored under. Use the getDegreeCodeConfig() method to resolve the name for each degree */
+	public final static String DEGREE_CODE_PREFIX = "degree_code";
+	
+	/**
+	 * Return the configuration name which identifies the abbreviated degree code for a particular degree.
+	 * 
+	 * @param degree The full name of the degree (i.e. "Doctor of Philosophy")
+	 * @return The configuration name of the code.
+	 */
+	public final static String getDegreeCodeConfig(String degree) {
+		if (degree == null)
+			return null;
+		
+		return DEGREE_CODE_PREFIX + "_" + degree.replaceAll(" ", "_").toLowerCase();
+	}
 	
 }

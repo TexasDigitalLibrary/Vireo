@@ -663,14 +663,11 @@ jQuery(document).ready(function(){
 				    </ul>
 				    <ol id="degree-list" class="degree-sortable settings-sortable-list">
 				        #{list items:degrees, as:'degree'}
-				           %{ def proquestDegree = proquestRepo.findDegreeByDescription(degree.getName()); }%
-				           <li id="degree_${degree.getId()}"><a class="degree-editable" href="javascript:void(0);"><em class="icon-pencil"></em> <span class="name">${degree.getName()}</span> <span class="level info">(${degree.getLevel().name()})</span>#{if proquestDegree != null}<span class="proquest">&nbsp;&nbsp; &diams;</span>#{/if}</a></li>    
+				           <li id="degree_${degree.getId()}"><a class="degree-editable" href="javascript:void(0);"><em class="icon-pencil"></em> <span class="name">${degree.getName()}</span> <span class="level info">(${degree.getLevel().name()})</span></a></li>    
 				        #{/list}
 				    </ol>
 				</div>
-				
-				<p id="proquest-note">&diams; &mdash; Denotes a ProQuest / UMI compatable degree name</p>
-				
+								
 				<a id="add-degree-link" href="javascript:void(0);">[ADD NEW]</a>
 				
 				<div id="add-degree-dialog" style="display: none;">
@@ -679,11 +676,7 @@ jQuery(document).ready(function(){
 				            <div class="control-group">
 				                <label class="control-label" for="add-degree-name">New Degree</label>
 				                <div class="controls">
-				                    <input type="text" class="input-large" id="add-degree-name"
-				                        data-provide="typeahead" data-items="20" data-min-length="0"
-                                        data-source='[#{list items:proquestDegrees, as:'degree'}"${degree.escapeJavaScript()}"${ degree_isLast ? "" : ","}#{/list}]'
-                                        autocomplete="off"
-				                    />
+				                    <input type="text" class="input-large" id="add-degree-name"/>
 				                </div>
 				            </div>
 				            <div class="control-group">

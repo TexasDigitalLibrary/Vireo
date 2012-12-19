@@ -186,6 +186,11 @@ public class MockSearcher implements Searcher {
 		public List<String> findAllMajors() {
 			return null;
 		}
+		
+		@Override
+		public List<String> findAllDegrees() {
+			return null;
+		}
 
 		@Override
 		public Attachment findAttachment(Long id) {

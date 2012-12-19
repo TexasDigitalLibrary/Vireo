@@ -123,6 +123,11 @@ public interface SubmissionRepository {
 	public List<String> findAllMajors();
 
 	/**
+	 * @return A list of all degrees for which degrees have been submitted under.
+	 */
+	public List<String> findAllDegrees();
+	
+	/**
 	 * @return A list of all languages
 	 */
 	public List<String> findAllLanguages();

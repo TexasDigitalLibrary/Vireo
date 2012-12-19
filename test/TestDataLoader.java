@@ -9,6 +9,7 @@ import javax.security.auth.Subject;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
+import org.tdl.vireo.constant.AppConfig;
 import org.tdl.vireo.email.SystemEmailTemplateService;
 import org.tdl.vireo.export.Depositor;
 import org.tdl.vireo.export.Packager;
@@ -94,8 +95,18 @@ public class TestDataLoader extends Job {
 		new ConfigurationArray(SUBMISSIONS_OPEN, "true"),
 		new ConfigurationArray(ALLOW_MULTIPLE_SUBMISSIONS, "true"),
 		new ConfigurationArray(CURRENT_SEMESTER, "May 2012"),
-		new ConfigurationArray(GRANTOR, "Texas A&M University")
-
+		new ConfigurationArray(GRANTOR, "Texas A&M University"),
+		
+		new ConfigurationArray(AppConfig.getDegreeCodeConfig("Doctor of Philosophy"), "Ph.D."),
+		new ConfigurationArray(AppConfig.getDegreeCodeConfig("Doctor of Engineering"), "D.Eng."),
+		new ConfigurationArray(AppConfig.getDegreeCodeConfig("Doctor of Education"), "Ed.D."),
+		new ConfigurationArray(AppConfig.getDegreeCodeConfig("Doctor of Musical Arts"), "D.M.A."),
+		new ConfigurationArray(AppConfig.getDegreeCodeConfig("Master of Arts"), "M.A."),
+		new ConfigurationArray(AppConfig.getDegreeCodeConfig("Master of Landscape Architecture"), "MLA"),
+		new ConfigurationArray(AppConfig.getDegreeCodeConfig("Master of Marine Resources Management"), "MMRM"),
+		new ConfigurationArray(AppConfig.getDegreeCodeConfig("Master of Public Affairs"), "M.P.Aff."),
+		new ConfigurationArray(AppConfig.getDegreeCodeConfig("Master of Science"), "M.Sc."),
+		new ConfigurationArray(AppConfig.getDegreeCodeConfig("Master of Urban Planning"), "MUP"),
 	};
 	
 	/**

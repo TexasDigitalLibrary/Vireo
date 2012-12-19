@@ -350,6 +350,22 @@ public class JpaSubmissionImplTests extends UnitTest {
 	}
 	
 	/**
+	 * Test finding all degrees used by submissions.
+	 */
+	@Test
+	public void testFindAllDegrees() {
+		
+		Submission sub = subRepo.createSubmission(person);
+		sub.setDegree("My Degree");
+		sub.save();
+		
+		List<String> degrees = subRepo.findAllDegrees();
+		assertTrue(degrees.contains("My Degree"));
+		
+		sub.delete();
+	}
+	
+	/**
 	 * Test getting and setting state.
 	 */
 	@Test

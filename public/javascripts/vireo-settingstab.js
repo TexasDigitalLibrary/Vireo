@@ -26,7 +26,7 @@
  * @param level
  *            The object's degree level (as an integere, and optional)
  */
-function displaySortableItem(type, editable, $element, id, name, level, proquest) {
+function displaySortableItem(type, editable, $element, id, name, level) {
 		
 	if (
 	    type == "action" ||
@@ -54,13 +54,8 @@ function displaySortableItem(type, editable, $element, id, name, level, proquest
 			
 			// Note: the values for degree levels are hard coded. They should come from the 
 			// Degree level enum.
-			
-			var proquestFlag = "";
-			if (proquest)
-				proquestFlag = "data-proquest='true'";
-			
 			$element.replaceWith(
-					"<li id='" + id + "' "+proquestFlag+">"+
+					"<li id='" + id + "'>"+
 					"<span class='editing'>"+
 					"<input type='text' value='"+name+"' placeholder='"+name+"'/>"+
 					"<select placeholder='"+level+"'>"+
@@ -92,12 +87,7 @@ function displaySortableItem(type, editable, $element, id, name, level, proquest
 			if (level == "4" || level == 4)
 				levelText = "DOCTORAL";
 			
-			var proquestDiamond = "";
-			if (proquest)
-				proquestDiamond = "<span class='proquest'>&nbsp;&nbsp; &diams;</span>";
-			
-			
-			$element.replaceWith("<li id='" + id + "'><a class='"+type+"-editable' href='#'><em class='icon-pencil'></em> <span class='name'>" + name + "</span> <span class='level info'>("+levelText+")</span>"+proquestDiamond+"</a></li>");
+			$element.replaceWith("<li id='" + id + "'><a class='"+type+"-editable' href='#'><em class='icon-pencil'></em> <span class='name'>" + name + "</span> <span class='level info'>("+levelText+")</span></a></li>");
 		}
 		
 	} else if (
@@ -223,9 +213,7 @@ function swapToEditable(element) {
 			name = name.replace("'","&#39;");
 		}
 		
-		var proquest = $element.find(".proquest").length > 0;
-		
-		displaySortableItem(type, true, $element, id, name, level, proquest);
+		displaySortableItem(type, true, $element, id, name, level);
 	} else if (
 		type == "emailTemplate"
 	  ) {
@@ -273,9 +261,8 @@ function swapFromEditable(element) {
 
 		var name = $element.find("input").attr("placeholder");
 		var level = $element.find("select").attr("placeholder");
-		var proquest = $element.attr("data-proquest");
 		
-		displaySortableItem(type, false, $element, id, name, level, proquest);
+		displaySortableItem(type, false, $element, id, name, level);
 	} else if (
 			type == "emailTemplate"
 	  ) {
@@ -366,7 +353,7 @@ function sortableSaveEditHandler(type,jsonURL) {
 			jQuery("#"+id).removeClass("settings-sortable-error");
 
 
-			displaySortableItem(type,false,jQuery("#"+type+"_" + data.id), type+"_"+data.id, data.name, data.level, data.proquest);
+			displaySortableItem(type,false,jQuery("#"+type+"_" + data.id), type+"_"+data.id, data.name, data.level);
 
 		}
 
@@ -530,7 +517,7 @@ function saveAddActionHandler(type, jsonURL) {
 			clearAlert(type+"-add");
 			
 			var $newElement = jQuery("<li/>").appendTo(jQuery("#"+type+"-list"));
-			displaySortableItem(type,false,$newElement, type+"_"+data.id, data.name, data.level, data.proquest);
+			displaySortableItem(type,false,$newElement, type+"_"+data.id, data.name, data.level);
 
 			jQuery("#add-"+type+"-dialog").slideToggle();
 			if (jQuery("#"+type+"-remove").length > 0)

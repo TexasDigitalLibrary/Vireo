@@ -6,7 +6,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.tdl.vireo.constant.AppConfig;
 import org.tdl.vireo.model.Attachment;
+import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.proquest.ProquestDegree;
 import org.tdl.vireo.proquest.ProquestLanguage;
@@ -24,6 +26,7 @@ public class ProquestUtilityServiceImpl implements ProquestUtilityService {
 
 	// Spring dependencies
 	public ProquestVocabularyRepository proquestRepo = null;
+	public SettingsRepository settingRepo = null;
 	
 	/**
 	 * Inject the proquest repository dependency
@@ -34,6 +37,16 @@ public class ProquestUtilityServiceImpl implements ProquestUtilityService {
 	public void setProquestVocabularyRepository(
 			ProquestVocabularyRepository proquestRepo) {
 		this.proquestRepo = proquestRepo;
+	}
+	
+	/**
+	 * Inject the settings repository dependency
+	 * 
+	 * @param settingRepo
+	 *            The settings repository.
+	 */
+	public void setSettingsRepository(SettingsRepository settingRepo) {
+		this.settingRepo = settingRepo;
 	}
 	
 	
@@ -278,6 +291,21 @@ public class ProquestUtilityServiceImpl implements ProquestUtilityService {
 		
 		return lang;
 	}
+
+	@Override
+	public String degreeCode(String degree) {
+		
+		if (degree == null)
+			return null;
+		
+		String code = settingRepo.getConfigValue(AppConfig.getDegreeCodeConfig(degree));
+		if (code != null && code.trim().length() != 0)
+			return code;
+		
+		// fall back to the full degree name
+		return degree;
+	}
+
 	
 	/**
 	 * 

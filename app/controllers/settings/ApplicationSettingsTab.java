@@ -20,12 +20,15 @@ import org.tdl.vireo.export.DepositException.FIELD;
 import org.tdl.vireo.model.CommitteeMember;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.CustomActionDefinition;
+import org.tdl.vireo.model.Degree;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.model.SubmissionRepository;
+import org.tdl.vireo.proquest.ProquestDegree;
 
 import play.Logger;
 import play.modules.spring.Spring;
@@ -65,6 +68,23 @@ public class ApplicationSettingsTab extends SettingsTab {
 		renderArgs.put("PROQUEST_OA_PUBLISHING", settingRepo.getConfigValue(PROQUEST_OA_PUBLISHING));
 		renderArgs.put("PROQUEST_INDEXING", settingRepo.getConfigValue(PROQUEST_INDEXING));
 
+		List<String> degrees = new ArrayList<String>();
+		for(Degree degree : settingRepo.findAllDegrees()) {
+			if (!degrees.contains(degree.getName()))
+				degrees.add(degree.getName());
+		}
+		for (String degree : subRepo.findAllDegrees()) {
+			if (!degrees.contains(degree))
+				degrees.add(degree);
+		}
+		List<String> proquestDegrees = new ArrayList<String>();
+		for (ProquestDegree degree : proquestRepo.findAllDegrees()) {
+			String sanatizedCode = degree.getCode().replaceAll("'","&#39;");
+			if (!proquestDegrees.contains(sanatizedCode)) {
+				proquestDegrees.add(sanatizedCode);
+			}
+		}
+		
 		List<CustomActionDefinition> actions = settingRepo.findAllCustomActionDefinition();
 		
 		List<DepositLocation> locations = settingRepo.findAllDepositLocations();
@@ -81,7 +101,7 @@ public class ApplicationSettingsTab extends SettingsTab {
 		
 		String nav = "settings";
 		String subNav = "application";
-		renderTemplate("SettingTabs/applicationSettings.html",nav, subNav, actions, locations, packagers, depositors, reviewers, searchResults, offset, limit);
+		renderTemplate("SettingTabs/applicationSettings.html",nav, subNav, degrees, proquestDegrees, actions, locations, packagers, depositors, reviewers, searchResults, offset, limit);
 	}
 	
 	/**
@@ -111,8 +131,6 @@ public class ApplicationSettingsTab extends SettingsTab {
 			textFields.add(PROQUEST_OA_PUBLISHING);
 			textFields.add(PROQUEST_INDEXING);
 
-			
-			
 			if (booleanFields.contains(field)) {
 				// This is a boolean field
 				boolean booleanValue = true;
@@ -153,6 +171,20 @@ public class ApplicationSettingsTab extends SettingsTab {
 							oldValue,
 							value);			
 				}
+				
+			} else if (field.startsWith(DEGREE_CODE_PREFIX)) { 
+				// This is a free form degree code.
+				
+				String oldValue = null;
+				Configuration config = settingRepo.findConfigurationByName(field);
+				
+				if (config == null)
+					config = settingRepo.createConfiguration(field, value);
+				else {
+					oldValue = config.getValue();
+					config.setValue(value);
+				}
+				config.save();
 				
 			} else {
 				throw new IllegalArgumentException("Unknown field '"+field+"'");

@@ -173,6 +173,14 @@ public class JpaSubmissionRepositoryImpl implements SubmissionRepository {
 	}
 	
 	@Override
+	public List<String> findAllDegrees() {
+		Query query = JPA.em().createQuery("SELECT DISTINCT degree FROM JpaSubmissionImpl WHERE degree IS NOT NULL ORDER BY degree ASC");
+		
+		List<String> results = query.getResultList();
+		return results;
+	}
+	
+	@Override
 	public List<String> findAllLanguages() {
 		Query query = JPA.em().createQuery("SELECT DISTINCT language FROM JpaLanguageImpl WHERE language IS NOT NULL ORDER BY language ASC");
 		

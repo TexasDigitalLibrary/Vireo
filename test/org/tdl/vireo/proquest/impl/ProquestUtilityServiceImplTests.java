@@ -65,6 +65,17 @@ public class ProquestUtilityServiceImplTests extends UnitTest {
 	}
 	
 	/**
+	 * Test mapping iso1799 language codes into proquest's language codes.
+	 */
+	@Test
+	public void testDegreeCode() {
+		
+		assertEquals("Ph.D.",service.degreeCode("Doctor of Philosophy"));
+		assertEquals("This Does Not Exist",service.degreeCode("This Does Not Exist"));
+		assertEquals(null, service.degreeCode(null));
+	}
+	
+	/**
 	 * Test parsing phone numbers
 	 */
 	@Test

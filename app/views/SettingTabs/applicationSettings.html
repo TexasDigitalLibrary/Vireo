@@ -143,7 +143,7 @@ jQuery(document).ready(function(){
                     <button name="${org.tdl.vireo.constant.AppConfig.PROQUEST_OA_PUBLISHING}" class="btn application-toggle #{if !"false".equals(PROQUEST_OA_PUBLISHING)}active#{/if}" value="true">Yes</button>
                     <button name="${org.tdl.vireo.constant.AppConfig.PROQUEST_OA_PUBLISHING}" class="btn application-toggle #{if "false".equals(PROQUEST_OA_PUBLISHING)}active#{/if}" value="false">No</button>                    
                 </div>
-                <a href="#" class="tooltip-icon" rel="tooltip" title="If enabled then all submissions to the ProQuest/UMI catalogue will be publicly accessable. TThere may be a $95 per submission impossed by ProQuest for enabling this option."><i class="icon-info-sign"></i></a>                
+                <a href="#" class="tooltip-icon" rel="tooltip" title="If enabled then all submissions will be submitted to ProQuest/UMI catalogue under the 'ProQuest Open Access Publishing PLUS' option. There may be additional fees imposed by Prquest for enabeling this option."><i class="icon-info-sign"></i></a>                
             </span>
         </li>
         <li>
@@ -153,9 +153,28 @@ jQuery(document).ready(function(){
                     <button name="${org.tdl.vireo.constant.AppConfig.PROQUEST_INDEXING}" class="btn application-toggle #{if !"false".equals(PROQUEST_INDEXING)}active#{/if}" value="true">Yes</button>
                     <button name="${org.tdl.vireo.constant.AppConfig.PROQUEST_INDEXING}" class="btn application-toggle #{if "false".equals(PROQUEST_INDEXING)}active#{/if}" value="false">No</button>
                 </div>
-                <a href="#" class="tooltip-icon" rel="tooltip" title="If enabled then all submissions to the ProQuest/UMI catalogue will be have their metadata indexed by third parties (i.e. google, yahoo)."><i class="icon-info-sign"></i></a>
+                <a href="#" class="tooltip-icon" rel="tooltip" title="If enabled then all submissions to the ProQuest/UMI catalogue will be have their citations indexed by third parties (i.e. google, yahoo)."><i class="icon-info-sign"></i></a>
             </span>
         </li>
+    </ul>
+</div>
+
+<h2>DEGREE CODES</h2>
+<p>Degree codes are used by some export formats (i.e. ProQuest) to translate degrees into abbreviated codes.</p>
+<div id="degreeCodes" class="submissionAvailability wrap">
+    <ul class="unstyled">
+        #{list items:degrees, as:'degree'}
+        %{ def config = org.tdl.vireo.constant.AppConfig.getDegreeCodeConfig(degree) }%
+        <li>
+            <label>${degree}:</label>
+            <span>
+                 <input name="${ config }" class="application-text" type="text" value="${ settingRepo.getConfigValue(config) }"
+                    data-provide="typeahead" data-items="20" data-min-length="0"
+                    data-source='[#{list items:proquestDegrees, as:'proquestDegree'}"${proquestDegree.escapeJavaScript()}"${ proquestDegree_isLast ? "" : ","}#{/list}]'
+                    autocomplete="off">
+            </span>
+        </li>
+        #{/list}
     </ul>
 </div>
 
