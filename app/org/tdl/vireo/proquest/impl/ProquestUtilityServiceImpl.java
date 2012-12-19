@@ -79,6 +79,40 @@ public class ProquestUtilityServiceImpl implements ProquestUtilityService {
 	@Override
 	public Address parseAddress(final String fullAddress) {
 
+		// First try Bill's Address Parse
+		Address address =  addressParsingAlgorithmByBill(fullAddress);
+		
+		// Second fall back to scott's address parse
+		if (address == null)
+			address = addressParsingAlgorithmByScott(fullAddress);
+		
+		// The final fall back is to just give up.
+		if (address == null)
+			address = new Address(fullAddress, null,null,null,null,null);
+		
+		return address;
+	}
+
+	/**
+	 * Bill Ingram's address parsing algorithm.
+	 * 
+	 * This algorithm works by flattening the address onto one line then it
+	 * tries to identify the address line by common suffixes or apartment
+	 * identifiers. From that it then extracts the city, state, zip, and
+	 * potentially country.
+	 * 
+	 * This algorithm does not match many addresses but those that it does are
+	 * typically 100% accurate. It works on well formed American addresses and
+	 * almost always fails on international addresses.
+	 * 
+	 * 
+	 * @param fullAddress
+	 *            The full address
+	 * @return An address object if the parse was successful, otherwise return
+	 *         null.
+	 */
+	static protected final Address addressParsingAlgorithmByBill(final String fullAddress) {
+		
 		// The address parts that we are trying to extract
 		String addrline = null;
 		String city     = null;
@@ -93,7 +127,7 @@ public class ProquestUtilityServiceImpl implements ProquestUtilityService {
 		// Case Insensitive
 		// This does a <em>good enough</em> job of parsing, but is often incorrect
 		Pattern pattern = Pattern.compile(
-				"(.+(?:(?:STREET|ST|DRIVE|DR|AVENUE|AVE|AV|ROAD|RD|LOOP|COURT|CT|CIRCLE|CR|TERRANCE|TERR|HIGHWAY|HWY|PARKWAY|PRKY|PLACE|PL|WAY|RIDGE|RDG|LANE|LN|BOULEVARD|BLVD)\\.?)(?:(?:,?\\s)(?:APT|UNIT|#)[\\.,]?\\s\\w+)?)(?:,?)" +
+				"(.+(?:(?:STREET|ST|DRIVE|DR|AVENUE|AVE|AV|ROAD|RD|LOOP|COURT|CT|CIRCLE|CR|TERRANCE|TERR|HIGHWAY|HWY|PARKWAY|PRKY|PLACE|PL|WAY|RIDGE|RDG|LANE|LN|BOULEVARD|BLVD)\\.?)(?:(?:,?\\s)(?:APT|UNIT|#)[\\.,]?\\s\\w+)?)(?:,?)\\n" +
 												// address
 				"(?:\\s)([a-zA-Z\\s]+),?"  +	// city
 				"(?:\\s)([a-zA-Z\\s]{2,})" +	// state
@@ -104,19 +138,119 @@ public class ProquestUtilityServiceImpl implements ProquestUtilityService {
 
 		Matcher matcher = pattern.matcher(oneLineAddress);
 
-		if (matcher.matches()) {
-			addrline = matcher.group(1);
-			city     = matcher.group(2);
-			state    = matcher.group(3);
-			zip      = matcher.group(4);
-			cntry    = matcher.group(5);
-		} else {
-			addrline = fullAddress;  // if it fails, put everything in addrline
-		}
+		if (!matcher.matches())
+			return null;
+		
+		addrline = matcher.group(1);
+		city     = matcher.group(2);
+		state    = matcher.group(3);
+		zip      = matcher.group(4);
+		cntry    = matcher.group(5);
 
 		return new Address(fullAddress, addrline, city, state, zip, cntry);
+		
 	}
+	
+	
+	/**
+	 * Reverse the string provided.
+	 */
+	static protected final String reverse(final String string) {
+		return new StringBuilder(string).reverse().toString();
+	}
+	
+	
+	// Patterns for Scott's Address Parse Algorithm
+	static protected final Pattern[] patterns = {
+		// Plan A: State and city are all separated with either a comma or new line and 
+		Pattern.compile(
+			"^([^\\d]*?)[\\s\\n,]*"      + // Country (optional)
+			"([\\d-#]+)[\\s\\n,]+"       + // Zip code (required)
+			"([^,\\n]+?)\\s*[\\n,]+\\s*" + // State (required)
+			"([^,\\n]+?)\\s*[\\n,]+\\s*" + // City (required)
+			"(.+)$" // Address lines (required)
+			,Pattern.DOTALL
+			),
+		
+		// Plan B: allow state & city to be separated by a space
+		Pattern.compile(
+			"^([^\\d]*?)[\\s\\n,]*"      + // Country (optional)
+			"([\\d-#]+)[\\s\\n,]+"       + // Zip code (required)
+			"([^,\\n]+?)[\\s\\n,]+"     + // State (required)
+			"([^,\\n]+?)\\s*[\\n,]+\\s*" + // City (required)
+			"(.+)$" // Address lines (required)
+			,Pattern.DOTALL
+			),
+			
+		// Plan C: allow everything to be separated by a space
+		Pattern.compile(
+			"^([^\\d]*?)[\\s\\n,]*"      + // Country (optional)
+			"([\\d-#]+)[\\s\\n,]+"       + // Zip code (required)
+			"([^,\\n]+?)[\\s\\n,]+"      + // State (required)
+			"([^,\\n]+?)[\\s\\n,]+"      + // City (required)
+			"(.+)$" // Address lines (required)
+			,Pattern.DOTALL
+			),
+	};
+	
+	
+	
+	/**
+	 * Scott Phillips's address parsing algorithm.
+	 * 
+	 * This algorithm works by searching backwards. Starting at the end of the
+	 * address identify the zip code. Once you have that assume anything
+	 * following the zip code is the country, and then the two tokens preceding
+	 * the zip code are the city and state. We do this by performing a series of
+	 * regular expressions on a reverse address string. The difference between
+	 * the regular expressions is how linent they are for extracting the city
+	 * and state. The first one in the list demands that city and state are
+	 * either separated by a new line or a comma. Each of the next versions back
+	 * off of this by allowing spaces between these tokens. This sometimes
+	 * breaks multi-word cities or state, but sometimes people just don't supply
+	 * a city.
+	 * 
+	 * This algorithm works on most international and American addresses.
+	 * However it will sometimes miss identify components like getting the city
+	 * or state wrong. It will often not identify the country if it is specified
+	 * before the zip code.
+	 * 
+	 * 
+	 * @param fullAddress
+	 *            The full address
+	 * @return An address object if the parse was successful, otherwise return
+	 *         null.
+	 */
+	static protected final Address addressParsingAlgorithmByScott(final String fullAddress) {
+		// The address parts that we are trying to extract
+		String addrline = null;
+		String city     = null;
+		String state    = null;
+		String zip      = null;
+		String cntry    = null;
 
+		String reverseAddress = reverse(fullAddress);
+		
+		Matcher matcher = null;
+		for(Pattern pattern : patterns) {
+			matcher = pattern.matcher(reverseAddress);
+			if (matcher.matches())
+				break;
+		}
+		
+		if (!matcher.matches())
+			return null;
+		
+		cntry = reverse(matcher.group(1));
+		zip = reverse(matcher.group(2));
+		state = reverse(matcher.group(3));
+		city = reverse(matcher.group(4));
+		addrline = reverse(matcher.group(5));		
+		
+		return new Address(fullAddress, addrline, city, state, zip, cntry);
+	}
+	
+	
 	@Override
 	public ProquestLanguage languageCode(Locale locale) {
 		

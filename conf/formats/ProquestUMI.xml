@@ -146,9 +146,9 @@
 	<DISS_authorship>
 		<DISS_author type="primary">
 			<DISS_name>
-				<DISS_surname>${sub.getStudentLastName()}</DISS_surname>
-				<DISS_fname>${sub.getStudentFirstName()}</DISS_fname>
-				<DISS_middle>${sub.getStudentMiddleName()}</DISS_middle>
+				<DISS_surname>${ sub.getStudentLastName()?.escapeXml() }</DISS_surname>
+				<DISS_fname>${ sub.getStudentFirstName()?.escapeXml() }</DISS_fname>
+				<DISS_middle>${ sub.getStudentMiddleName()?.escapeXml() }</DISS_middle>
                 <DISS_affiliation>
                     ${ settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.GRANTOR) } 
                 </DISS_affiliation>
@@ -176,20 +176,19 @@
 				</DISS_phone_fax>
 				#{/if}
 				
-				#{if sub.getSubmitter().getCurrentPostalAddress() != null } 
-				<DISS_address>
-					%{
-						def address = proquestUtils.parseAddress(sub.getSubmitter().getCurrentPostalAddress());
-					%} 
-					<!-- 
+				#{if sub.getSubmitter().getCurrentPostalAddress() != null }
+				%{ def address = proquestUtils.parseAddress(sub.getSubmitter().getCurrentPostalAddress());%} 
+				<!-- 
 ${ address.fullAddress } 
-					-->
+				${ address.isParsed() ? "-->".raw() : ""}
+				<DISS_address>
 					<DISS_addrline>${ address.addrline }</DISS_addrline>
 					<DISS_city>${ address.city }</DISS_city>
 					<DISS_st>${ address.state }</DISS_st>
 					<DISS_pcode>${ address.zip }</DISS_pcode>
-					<DISS_country>${ address.cntry }</DISS_country>
+					<DISS_country>${ address.cntry != null ? address.cntry : "US"}</DISS_country>
 				</DISS_address>
+				${ address.isParsed() ? "" : "-->".raw() }
 				#{/if}
 				
 				<DISS_email>
@@ -197,6 +196,7 @@ ${ address.fullAddress }
 				</DISS_email>
 			</DISS_contact>
 			
+			#{if sub.getSubmitter().getPermanentPhoneNumber() != null || sub.getSubmitter().getPermanentPostalAddress() != null || sub.getSubmitter().getPermanentEmailAddress() != null } 
 			<!-- Permanent Contact Information -->
 			<DISS_contact type="future">
 				#{if sub.getSubmissionDate() != null } 
@@ -219,25 +219,27 @@ ${ address.fullAddress }
 				#{/if}
 				
 				#{if sub.getSubmitter().getPermanentPostalAddress() != null } 
-				<DISS_address>
-					%{
-						def address = proquestUtils.parseAddress(sub.getSubmitter().getPermanentPostalAddress());
-					%} 
-					<!-- 
+				%{ def address = proquestUtils.parseAddress(sub.getSubmitter().getPermanentPostalAddress()); %} 
+				<!-- 
 ${ address.fullAddress } 
-                    -->
+				${ address.isParsed() ? "-->".raw() : ""}
+				<DISS_address>
                     <DISS_addrline>${ address.addrline }</DISS_addrline>
                     <DISS_city>${ address.city }</DISS_city>
                     <DISS_st>${ address.state }</DISS_st>
                     <DISS_pcode>${ address.zip }</DISS_pcode>
-                    <DISS_country>${ address.cntry }</DISS_country>
+					<DISS_country>${ address.cntry != null ? address.cntry : "US"}</DISS_country>
 				</DISS_address>
+				${ address.isParsed() ? "" : "-->".raw() }
 				#{/if}
 				
+				#{if sub.getSubmitter().getPermanentEmailAddress() != null } 
 				<DISS_email>
 					${ sub.getSubmitter().getPermanentEmailAddress() }
 				</DISS_email>
+				#{/if} 
 			</DISS_contact>
+			#{/if} 
 			#{/if} 
 		</DISS_author>
 	</DISS_authorship>
@@ -249,10 +251,12 @@ ${ address.fullAddress }
 		apply_for_copyright="${ apply_for_copyright ? "yes" : "no" }">
 		
 		<DISS_title>${ sub.getDocumentTitle() }</DISS_title>
+		#{if sub.getGraduationYear() != null } 
 		<DISS_dates>
 			<DISS_comp_date>${ sub.getGraduationYear() }</DISS_comp_date>
-			<DISS_accept_date>${ sub.getApprovalDate()?.format("MM/dd/yyyy") }</DISS_accept_date>
+			<DISS_accept_date>1/${ sub.getGraduationMonth() != null ? sub.getGraduationMonth() + 1 : "1" }/${ sub.getGraduationYear() }</DISS_accept_date>
 		</DISS_dates>
+		#{/if} 
 		<DISS_degree>${ proquestRepo.findDegreeByDescription(sub.getDegree()) != null ? proquestRepo.findDegreeByDescription(sub.getDegree()).getCode() : sub.getDegree()  }</DISS_degree>
 		<DISS_institution>
 			<DISS_inst_code>${ institution_code }</DISS_inst_code>
@@ -330,12 +334,14 @@ ${ para.escapeXml() }
 			#{/if} 
 		</DISS_abstract>
 		
+		#{if sub.getPrimaryDocument() != null } 
 		<!-- 
               MimeType: ${ sub.getPrimaryDocument()?.getMimeType() }
               Size: ${ sub.getPrimaryDocument()?.getDisplaySize() }
               Uploaded: ${ sub.getPrimaryDocument()?.getDate()?.format("yyyy/MM/dd 'at' HH:mm:ss")  }
           -->
 		<DISS_binary type="${ "application/pdf".equals(sub.getPrimaryDocument()?.getMimeType()) ? "PDF" : "other" }">${ sub.getPrimaryDocument()?.getName() }</DISS_binary>
+		#{/if} 
 		
 		#{list items:sub.getAttachmentsByType(org.tdl.vireo.model.AttachmentType.SUPPLEMENTAL), as:'attachment' } 
 		<DISS_attachment>

@@ -31,10 +31,10 @@ jQuery(document).ready(function(){
 		this.style.overflow = 'hidden';
 		this.style.height = 0;
 		
-		if (this.scrollHeight < 52) {
-            this.style.height = '52px';
-		} else if (this.scrollHeight > 234) {
-			this.style.height = '234px';
+		if (this.scrollHeight < 75) {
+            this.style.height = '75px';
+		} else if (this.scrollHeight > 300) {
+			this.style.height = '300px';
 			this.style.overflow = 'auto';
 		} else {
 			this.style.height = this.scrollHeight + 'px';
@@ -140,7 +140,7 @@ jQuery(document).ready(function(){
 		<div class="control-group #{errorClass 'defenseDate'/} #{fieldClass DEFENSE_DATE /}">
 			<label class="control-label" for="defenseDate"><span class="required-star">*</span> #{fieldLabel DEFENSE_DATE /}:</label>
 			<div class="controls row">
-				<input type="text" name="defenseDate" id="defenseDate" class="span4 datepicker" value="${defenseDate?.format('MM/dd/yyyy')}" />
+				<input type="text" name="defenseDate" id="defenseDate" class="span4 datepicker" value="${defenseDate?.format('MM/dd/yyyy')}" placeholder="MM/DD/YYYY" />
 				<a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp DEFENSE_DATE /}"><i class="icon-info-sign"></i></a>
 			</div>			
 		</div>
@@ -172,7 +172,7 @@ jQuery(document).ready(function(){
 		<div class="control-group #{errorClass 'keywords'/} #{fieldClass DOCUMENT_KEYWORDS /}">
 			<label class="control-label" for="keywords"><span class="required-star">*</span> #{fieldLabel DOCUMENT_KEYWORDS /}:</label>
 			<div class="controls">
-				<textarea class="span4" id="keywords" name="keywords">${keywords}</textarea>
+				<textarea class="span4" id="keywords" name="keywords" placeholder="Keyword one;  Keyword two">${keywords}</textarea>
 				<a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp DOCUMENT_KEYWORDS /}"><i class="icon-info-sign"></i></a>
 			</div>
 		</div>

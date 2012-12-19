@@ -136,6 +136,17 @@ public interface ProquestUtilityService {
 		    return input;
 			
 		}
+		
+		/**
+		 * Note the cntry component is explicitly ignored by this check.
+		 * 
+		 * @return True if the the address was successfully parsed into components. 
+		 */
+		public boolean isParsed() {
+			if (addrline != null && city != null && state != null && zip != null)
+				return true;
+			return false;
+		}
 
 	}
 
