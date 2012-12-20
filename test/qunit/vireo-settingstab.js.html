@@ -329,7 +329,7 @@ test("Test editEmailTemplateHandler AJAX", function() {
 
         
         equals(1,jQuery("#emailTemplate_1").length) 
-        equals(' New Name',jQuery("#emailTemplate_1").text());
+        equals('New Name',jQuery.trim(jQuery("#emailTemplate_1").text()));
         
         start();
     },1000);
@@ -338,7 +338,7 @@ test("Test editEmailTemplateHandler AJAX", function() {
 /**
  * Test updating profile.
  */
-test("test mpProfileHandler AJAX", function() {
+test("test myProfileHandler AJAX", function() {
 	expect(7);
 	reset(); 
 	
@@ -362,7 +362,8 @@ test("test mpProfileHandler AJAX", function() {
 	};
 	
 	// Simulate change in display name
-	jQuery("#displayName").change();
+    jQuery("#displayName").change();
+	
 	options.success({ success: 'true', displayName: 'new name', currentEmailAddress: 'new@email.com'});
 	
 	// Test the result
