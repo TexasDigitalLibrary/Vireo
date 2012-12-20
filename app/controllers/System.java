@@ -107,6 +107,7 @@ public class System extends AbstractVireoController {
 		}
 		
 		// Vireo Information
+		String vireoVersion = Play.configuration.getProperty("vireo.version","Unknown");
 		long personTotal = personRepo.findPersonsTotal();
 		long submissionTotal = subRepo.findSubmissionsTotal();
 		long actionLogTotal = subRepo.findActionLogsTotal();
@@ -139,7 +140,7 @@ public class System extends AbstractVireoController {
 				mailMode, mailHost, mailUser, mailPass, mailChannel, mailFrom, mailReply,
 				
 				// Vireo Info
-				personTotal, submissionTotal, actionLogTotal,
+				vireoVersion, personTotal, submissionTotal, actionLogTotal,
 				
 				// Index Information
 				indexImpl, indexJob
