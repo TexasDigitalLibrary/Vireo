@@ -35,6 +35,8 @@ import org.tdl.vireo.security.impl.ShibbolethAuthenticationMethodImpl;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
 
+import controllers.settings.ThemeSettingsTab;
+
 import play.Logger;
 import play.Play;
 import play.db.jpa.JPA;
@@ -67,9 +69,7 @@ public class TestDataLoader extends Job {
 	public static LuceneIndexerImpl indexer = Spring.getBeanOfType(LuceneIndexerImpl.class);
 	public static ShibbolethAuthenticationMethodImpl shibAuth = Spring.getBeanOfType(ShibbolethAuthenticationMethodImpl.class);
 	public static SystemEmailTemplateService systemEmailService = Spring.getBeanOfType(SystemEmailTemplateService.class);
-
-
-	
+		
 	/**
 	 * How many random submissions to create
 	 */
@@ -541,6 +541,13 @@ public class TestDataLoader extends Job {
 				if (depositsDir.exists())
 					FileUtils.deleteQuietly(depositsDir);
 				
+				File leftLogo = new File(ThemeSettingsTab.LEFT_LOGO_PATH);
+				if(leftLogo.exists())
+					leftLogo.delete();
+				
+				File rightLogo = new File(ThemeSettingsTab.RIGHT_LOGO_PATH);
+				if(rightLogo.exists())
+					rightLogo.delete();
 				
 				loadPeople();
 				loadSettings();
