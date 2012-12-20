@@ -14,6 +14,7 @@ import org.apache.lucene.document.NumericField;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.LockObtainFailedException;
+import org.tdl.vireo.error.ErrorLog;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.CommitteeMember;
 import org.tdl.vireo.model.CustomActionValue;
@@ -22,6 +23,7 @@ import org.tdl.vireo.model.Submission;
 
 import play.Logger;
 import play.jobs.Job;
+import play.modules.spring.Spring;
 
 /**
  * This is an abstract lucene job, from which all lucene jobs must extend. Jobs
@@ -123,20 +125,35 @@ public abstract class LuceneAbstractJobImpl extends Job {
 			// Attempt to automaticall rebuild the index without intervention. To prevent infinate loops we will only rebuild a maximum of 5 times.
 			if (!indexer.corruptIndex) {
 				Logger.error(cie, "Lucene is unable to update index because it is corrupted, attempting to recover by rebuilding the index.");
+				
+				ErrorLog errorLog = Spring.getBeanOfType(ErrorLog.class);
+				errorLog.logError(cie,"Updating search index");
+				
 				indexer.deleteAndRebuild(false);
 				cancel = true;
 				
 			} else {
 				Logger.fatal(cie, "Lucene's attempt to rebuild a corrupted index has failed. No further attempts will be made, and searching is disabled.");
+				
+				ErrorLog errorLog = Spring.getBeanOfType(ErrorLog.class);
+				errorLog.logError(cie, "Updating search index");
 			}
 			throw new RuntimeException(cie);
 			
 		} catch(LockObtainFailedException lofe) {
 			Logger.error(lofe, "Lucene is unable to update search index because it is being locked by another process.");
+			
+			ErrorLog errorLog = Spring.getBeanOfType(ErrorLog.class);
+			errorLog.logError(lofe, "Updating search index");
+			
 			throw new RuntimeException(lofe);
 			
 		} catch (IOException ioe) {
 			Logger.error(ioe, "Lucene is unable to update search index because of IO exception.");
+			
+			ErrorLog errorLog = Spring.getBeanOfType(ErrorLog.class);
+			errorLog.logError(ioe, "Updating search index");
+			
 			throw new RuntimeException(ioe);
 		} catch (InterruptedException ie) {
 			// We were asked to stop.

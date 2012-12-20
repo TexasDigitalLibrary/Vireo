@@ -1,0 +1,69 @@
+#{extends 'main.html' /} #{set title:'System Control Panel' /}
+#{set 'moreScripts'}
+<script type="text/javascript">
+jQuery(document).ready(function () {
+	
+	jQuery(".toggleStackTrace").click(function () {
+		
+		var $toggle = jQuery(this);
+		var $trace = $toggle.closest("dd").find(".stackTrace");
+		
+		if ($trace.is(":visible")) {
+			$trace.slideToggle();
+			$toggle.text("(show trace)");
+		} else {
+	        $trace.slideToggle();
+	        $toggle.text("(close trace)");
+		}
+	});
+});
+</script>
+#{/set}
+
+<br/>
+<div class="row pageHead">
+	<h3>System Control Panel</h3>
+</div>
+<br />
+<div class="system-panel-refresh">
+<a href="@{System.errorPanel()}"><em class="icon-refresh" style="opacity: 0.5;"></em> Refresh</a>
+</div>
+
+#{include 'System/tabs.include' /}
+
+<ul id="errorList" class="unstyled">
+    #{list items:reports, as:'report'}
+    <li>
+        <dl class="dl-horizontal">
+            <dt>When:</dt>
+            <dd>${ report.getWhen()?.format("yyyy/MM/dd hh:mm:ss a") } <span style="float:right; margin-right:3px; font-size: 10px"><em>${ report.getWhen().since() }</em></span></dd>
+            <dt>Who:</dt>
+            <dd>${ report.getWho() == null ? "Anonymous" : report.getWho() }</dd>
+            <dt>Where:</dt>
+            <dd>${ report.getWhere() == null ? "n/a" : report.getWhere() }</dd>
+            <dt>What:<dt>
+            <dd>${ report.getWhat() == null ? "n/a" : report.getWhat() }</dd>
+            #{if report.getStackTrace() != null}
+                <dt></dt>
+                <dd>
+                    <a class="toggleStackTrace" href="javascript: void(0);">(show trace)</a>
+                    <div class="stackTrace" style="display: none;">
+                        ${ report.getStackTrace()?.nl2br() }
+                    </div>
+                </dd>
+            #{/if}
+        </dl>
+    </li>
+    #{/list}
+    #{else}
+    <div style="text-align:center;">
+        <em>No errors have been reported since the server started.</em>
+    </div>
+    #{/else}
+
+</ul>
+
+
+<br/>
+<br/>
+

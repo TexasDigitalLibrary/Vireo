@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.tdl.vireo.error.ErrorLog;
 import org.tdl.vireo.export.DepositService;
 import org.tdl.vireo.export.Depositor;
 import org.tdl.vireo.export.ExportPackage;
@@ -28,6 +29,7 @@ import org.tdl.vireo.state.State;
 import play.Logger;
 import play.db.jpa.JPA;
 import play.jobs.Job;
+import play.modules.spring.Spring;
 
 
 /**
@@ -39,6 +41,7 @@ public class DepositServiceImpl implements DepositService{
 
 	// The repository of people
 	public PersonRepository personRepo;
+	public ErrorLog errorLog;
 	
 	// The security context, who's logged in.
 	public SecurityContext context;
@@ -52,6 +55,14 @@ public class DepositServiceImpl implements DepositService{
 	 */
 	public void setPersonRepository(PersonRepository repo) {
 		this.personRepo = repo;
+	}
+	
+	/**
+	 * @param errorLog
+	 *            The error log
+	 */
+	public void setErrorLog(ErrorLog errorLog) {
+		this.errorLog = errorLog;
 	}
 	
 	/**
@@ -230,6 +241,8 @@ public class DepositServiceImpl implements DepositService{
 					metadata.setStatus(JobStatus.FAILED);
 				}
 				
+				errorLog.logError(re, metadata);
+				
 				throw re;
 				
 			} finally {
@@ -286,6 +299,8 @@ public class DepositServiceImpl implements DepositService{
 				ActionLog log = submission.logAction("Deposit failed while attempting to deposit into repository collection '"+location.getCollection()+"' because of the error '"+re.getMessage()+"' ");
 				log.save();
 				submission.save();
+				
+				errorLog.logError(re, metadata);
 				
 				if (runInThread)
 					throw re;

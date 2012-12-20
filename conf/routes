@@ -210,6 +210,7 @@ POST    /system/general/email                   System.testEmail
 GET		/system/general/submissions				System.testSubmissions
 POST    /system/general/index                   System.rebuildIndex
 GET     /system/jobs/?                          System.jobPanel
+GET     /system/errors/?                        System.errorPanel
 
 
 # Ignore favicon requests

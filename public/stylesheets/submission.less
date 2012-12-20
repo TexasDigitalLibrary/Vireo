@@ -357,3 +357,60 @@ STUDENT VIEWS
 #submit-corrections-warning {
     width: 500px;
 }
+
+/********************
+System Control Panel
+********************/
+
+.system-panel-refresh {
+    position: relative;
+}
+
+.system-panel-refresh a {
+    position: absolute;
+    right: 5px;
+    top: 9px;
+}
+
+#errorList dt,
+#errorList dd {
+    line-height: 22px;
+}
+
+#errorList li {
+    padding: 15px 0;
+}
+#errorList li:nth-child(odd) {
+    background-color: #F6F6F6;
+}
+#errorList .dl-horizontal dt {
+    width: 100px;
+}
+#errorList .dl-horizontal dd {
+    margin-left: 120px;
+}
+#errorList .dl-horizontal {
+    margin-bottom: 0px;
+}
+#errorList dd {
+    position: relative;
+}
+.stackTrace {
+    font-family: Courier New, monospace;
+    white-space:nowrap;
+    font-size: 10px;
+    line-height: 11px;
+    overflow: visible;
+    padding: 10px 0;
+    min-width: 100%;
+    float:left;
+}
+
+#errorList li:nth-child(odd) .stackTrace {
+    background-color: #F9F9F9;
+}
+
+#errorList li:nth-child(even) .stackTrace {
+    background-color: #FFFFFF;
+}
+

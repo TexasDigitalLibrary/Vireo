@@ -43,7 +43,7 @@ public class AssignServiceImplTest extends UnitTest {
 	 * Test a regular assignee update.
 	 */
 	@Test
-	public void testBatchAssignUpdate() throws MalformedURLException {
+	public synchronized void testBatchAssignUpdate() throws MalformedURLException {
 
 		context.turnOffAuthorization();
 		Searcher originalSearcher = service.searcher;
@@ -52,11 +52,12 @@ public class AssignServiceImplTest extends UnitTest {
 
 			// Set up our mock objects.
 			MockPerson person = new MockPerson();
+			person.id = 1L;
 			MockSearchFilter filter = new MockSearchFilter();
 			MockSearcher searcher = new MockSearcher();
 			for (int i=0; i<10; i++)
 				searcher.submissions.add(new MockSubmission());
-
+			assertNotNull(person.getId());
 
 
 			// Change the assignee
@@ -70,6 +71,7 @@ public class AssignServiceImplTest extends UnitTest {
 
 			// Check the assignee.
 			for (MockSubmission submission : searcher.submissions) {
+				assertNotNull(submission.getAssignee());
 				assertEquals(person.getId(), submission.getAssignee().getId());
 			}
 

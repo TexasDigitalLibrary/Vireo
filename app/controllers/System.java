@@ -7,6 +7,8 @@ import java.util.List;
 import org.tdl.vireo.email.EmailService;
 import org.tdl.vireo.email.SystemEmailTemplateService;
 import org.tdl.vireo.email.VireoEmail;
+import org.tdl.vireo.error.ErrorLog;
+import org.tdl.vireo.error.ErrorReport;
 import org.tdl.vireo.job.JobManager;
 import org.tdl.vireo.job.JobMetadata;
 import org.tdl.vireo.job.JobStatus;
@@ -41,6 +43,7 @@ public class System extends AbstractVireoController {
 	public static SystemEmailTemplateService templateService = Spring.getBeanOfType(SystemEmailTemplateService.class);
 	public static SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
 	public static JobManager jobManager = Spring.getBeanOfType(JobManager.class);
+	public static ErrorLog errorLog = Spring.getBeanOfType(ErrorLog.class);
 
 	
 	/**
@@ -161,6 +164,17 @@ public class System extends AbstractVireoController {
 		renderTemplate("System/jobPanel.html",jobs);
 	}
 	
+	/**
+	 * Display recent errors.
+	 */
+	@Security(RoleType.ADMINISTRATOR)
+	public static void errorPanel() {
+	
+		List<ErrorReport> reports = errorLog.getRecentErrorReports();
+		
+		renderTemplate("System/errorPanel.html",reports);
+	}
+	
 	
 	/**
 	 * Send a test email to the provided address.
@@ -260,16 +274,20 @@ public class System extends AbstractVireoController {
 		 */
 		public void doJob() throws Exception {
 			
-			Class clazz = Class.forName("TestDataLoader");
-			
-			Class[] types = { long.class, int.class };
-			Method method = clazz.getMethod("loadSubmissions", types);
-			
-			long seed = java.lang.System.currentTimeMillis();
-			method.invoke(null, seed, howMany);
-			
-			indexer.rollback();
-			indexer.rebuild(false);
+			try {
+				Class clazz = Class.forName("TestDataLoader");
+				
+				Class[] types = { long.class, int.class };
+				Method method = clazz.getMethod("loadSubmissions", types);
+				
+				long seed = java.lang.System.currentTimeMillis();
+				method.invoke(null, seed, howMany);
+				
+				indexer.rollback();
+				indexer.rebuild(false);
+			} catch (Exception e) {
+				errorLog.logError(e, "Loading test submissions");
+			}
 		}
 	}
 	
