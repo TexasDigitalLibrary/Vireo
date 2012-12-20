@@ -2,6 +2,9 @@ package controllers;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.tdl.vireo.constant.FieldConfig;
+import org.tdl.vireo.error.ErrorLog;
+import org.tdl.vireo.model.NameFormat;
+import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.SubmissionRepository;
@@ -11,8 +14,10 @@ import org.tdl.vireo.search.Searcher;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.StateManager;
 
+import play.Logger;
 import play.modules.spring.Spring;
 import play.mvc.Before;
+import play.mvc.Catch;
 import play.mvc.Controller;
 
 /**
@@ -32,6 +37,7 @@ public abstract class AbstractVireoController extends Controller {
 	public static SubmissionRepository subRepo = Spring.getBeanOfType(SubmissionRepository.class);
 	public static SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
 	public static ProquestVocabularyRepository proquestRepo = Spring.getBeanOfType(ProquestVocabularyRepository.class);
+	public static ErrorLog errorLog = Spring.getBeanOfType(ErrorLog.class);
 	public static StateManager stateManager = Spring.getBeanOfType(StateManager.class);
 	public static Indexer indexer = Spring.getBeanOfType(Indexer.class);
 	public static Searcher searcher = Spring.getBeanOfType(Searcher.class);
@@ -66,6 +72,19 @@ public abstract class AbstractVireoController extends Controller {
 		if(firstUser==true)
 			FirstUser.createUser();
 	}
+	
+	/**
+	 * Catch any errors and report them to the log for review under the systems
+	 * control panel.
+	 * 
+	 * @param throwable
+	 *            The error encountered
+	 */
+	@Catch(Throwable.class)
+	public static void handleError(Throwable throwable) {
+		errorLog.logError(throwable, request);
+	}
+	
 	
 	
 	/**

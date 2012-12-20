@@ -16,13 +16,36 @@ in collaboration with [Texas A&M University](http://www.tamu.edu/),
 For more information on Vireo, visit the 
 [Github Project page for Vireo](https://github.com/TexasDigitalLibrary/Vireo).
 
-## Vireo 1.9 - What's New ##
+## Vireo 2.0 - What's New ##
 
-Vireo 1.9 is a feature upgrade to Vireo. It builds upon the past success of 1.8
-and the Java Play Framework to enable new features. Here are some highlights
+Vireo 2.0 is major feature upgrade to Vireo. It builds upon the past success of 
+1.8 and the Java Play Framework to enable new features. Here are some highlights
 
-- New batch processing capabilities
-- More end-user customizability
+**New Fields:**
+- Language
+- Subjects
+- Published Material
+- Defense Date
+- Program
+- Dynamic Committee Member Role Tyes
+- Administrative and Source files
+
+**New Features:**
+- ProQuest Export
+- Remove items individually from filter lists
+- Batch send email to students
+- Batch assign submissions
+- Batch add action log to submissions
+- Batch status change
+
+**New Settings:**
+- ProQuest settings
+- Bulk updates
+- Toggle all fields: Disabled, Optional, or Required.
+- Customize field labels
+- Customize field help text
+- Customize stick notes
+- Degree codes
 
 ## Building and Deploying Vireo ##
 

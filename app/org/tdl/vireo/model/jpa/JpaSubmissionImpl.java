@@ -158,6 +158,10 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@Transient
 	protected List<ActionLog> pendingLogs = new ArrayList<ActionLog>();
 	
+	// Flag whether the subjects list has changed.
+	@Transient
+	protected boolean documentSubjectsChanged = false;
+	
 	/**
 	 * Insure that the pendingLogs array is initialized when loading the object
 	 * from the database.
@@ -194,6 +198,24 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@Override
 	public JpaSubmissionImpl save() {		
 		assertReviewerOrOwner(submitter);
+		
+		if (documentSubjectsChanged) {
+			// Generate a note that the subjects have been updated.
+			String entry = "";
+			if (documentSubjects.size() == 0)
+				entry = "Document subjects cleared";
+			else {
+				for (String subject : documentSubjects) {
+					if (entry.length() != 0)
+						entry += "; ";
+					entry += "'"+subject+"'";
+				}
+				entry = "Document subjects changed to "+entry;
+			}
+			
+			generateLog(entry,false);
+			documentSubjectsChanged = false;
+		}
 		
 		if (pendingLogs.size() > 0) {
 			lastActionLogEntry = pendingLogs.get(pendingLogs.size()-1).getEntry();
@@ -397,11 +419,13 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@Override
 	public void addDocumentSubject(String subject) {
 		documentSubjects.add(subject);
+		documentSubjectsChanged = true;
 	}
 	
 	@Override
 	public void removeDocumentSubject(String subject) {
 		documentSubjects.remove(subject);
+		documentSubjectsChanged = true;
 	}
 	
 	@Override

@@ -16,6 +16,7 @@ import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
+import org.tdl.vireo.error.ErrorLog;
 import org.tdl.vireo.export.ChunkStream;
 import org.tdl.vireo.export.ExportPackage;
 import org.tdl.vireo.export.ExportService;
@@ -37,6 +38,7 @@ import org.tdl.vireo.security.SecurityContext;
 import play.Logger;
 import play.db.jpa.JPA;
 import play.jobs.Job;
+import play.modules.spring.Spring;
 
 
 /**
@@ -52,6 +54,7 @@ public class ExportServiceImpl implements ExportService {
 	// The repositories
 	public PersonRepository personRepo;
 	public SubmissionRepository subRepo;
+	public ErrorLog errorLog;
 	
 	// The searcher used to find submissions in a batch.
 	public Searcher searcher;
@@ -86,6 +89,15 @@ public class ExportServiceImpl implements ExportService {
 	public void setSubmissionRepository(SubmissionRepository repo) {
 		this.subRepo = repo;
 	}
+	
+	/**
+	 * @param errorLog
+	 *            The error log
+	 */
+	public void setErrorLog(ErrorLog errorLog) {
+		this.errorLog = errorLog;
+	}
+	
 
 	/**
 	 * @param context
@@ -247,12 +259,18 @@ public class ExportServiceImpl implements ExportService {
 				Logger.fatal(re,"Unexepcted exception while exporting items. Aborted.");
 				meta.setMessage(re.toString());
 				meta.setStatus(JobStatus.FAILED);
+				
+				errorLog.logError(re, meta);
+				
 				throw re;
 
 			} catch (IOException ioe) {
 				Logger.error(ioe,"Unexpected expection while exporting items. Aborted.");
 				meta.setMessage(ioe.toString());
 				meta.setStatus(JobStatus.FAILED);
+				
+				errorLog.logError(ioe, meta);
+				
 				throw ioe;
 
 			} finally {

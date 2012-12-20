@@ -55,6 +55,11 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 		FirstUser.personRepo = new MockPersonRepository();
 		FirstUser.settingRepo = new MockSettingsRepository();
 		Application.firstUser = null;
+		
+		MockSettingsRepository.mockEmbargos.clear();
+		MockSettingsRepository.mockConfigs.clear();
+		MockSettingsRepository.mockRoleTypes.clear();
+		
 		try {
 			assertEquals(0, Application.personRepo.findAllPersons().size());
 			

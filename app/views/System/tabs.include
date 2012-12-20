@@ -6,5 +6,8 @@
         <li ${"taskPanel".equals(request.actionMethod) ? "class='active'" : ""}>
             <a href="@{System.jobPanel}">Jobs</a>
         </li>
+        <li ${"errorPanel".equals(request.actionMethod) ? "class='active'" : ""}>
+            <a href="@{System.errorPanel}">Errors</a>
+        </li>
     </ul>
 </div>

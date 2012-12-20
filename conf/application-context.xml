@@ -106,8 +106,11 @@
         </property>
     </bean>
     
-    <!-- Job Management -->
+    <!-- Job Management & Error Log-->
     <bean id="JobManager" class="org.tdl.vireo.job.impl.JobManagerImpl" scope="singleton">
+    </bean>
+    <bean id="ErrorLog" class="org.tdl.vireo.error.impl.ErrorLogImpl" scope="singleton">
+        <property name="securityContext" ref="SecurityContext"/>
     </bean>
     
     <!-- Email -->

@@ -5,6 +5,7 @@ import java.util.Iterator;
 import org.tdl.vireo.batch.CommentService;
 import org.tdl.vireo.email.EmailService;
 import org.tdl.vireo.email.VireoEmail;
+import org.tdl.vireo.error.ErrorLog;
 import org.tdl.vireo.job.JobManager;
 import org.tdl.vireo.job.JobMetadata;
 import org.tdl.vireo.job.JobStatus;
@@ -41,6 +42,7 @@ public class CommentServiceImpl implements CommentService {
 	// The repositories
 	public PersonRepository personRepo;
 	public SubmissionRepository subRepo;
+	public ErrorLog errorLog;
 
 	// The searcher used to find submissions in a batch.
 	public Searcher searcher;
@@ -65,6 +67,14 @@ public class CommentServiceImpl implements CommentService {
 	 */
 	public void setSubmissionRepository(SubmissionRepository repo) {
 		this.subRepo = repo;
+	}
+	
+	/**
+	 * @param errorLog
+	 *            The error log
+	 */
+	public void setErrorLog(ErrorLog errorLog) {
+		this.errorLog = errorLog;
 	}
 	
 	/**
@@ -263,6 +273,8 @@ public class CommentServiceImpl implements CommentService {
 				
 			} catch (RuntimeException re) {
 				Logger.fatal(re,"Unexpected exception while attempting to comment/email on items. Aborted, although some items may have been completed.");
+				
+				errorLog.logError(re, metadata);
 				
 				metadata.setMessage(re.toString());
 				metadata.setStatus(JobStatus.FAILED);

@@ -28,6 +28,10 @@ jQuery(document).ready(function() {
 </div>
 <br />
 
+<div class="system-panel-refresh">
+<a href="@{System.generalPanel()}"><em class="icon-refresh" style="opacity: 0.5;"></em> Refresh</a>
+</div>
+
 #{include 'System/tabs.include' /}
 
 <div class="row-fluid">
@@ -146,6 +150,9 @@ jQuery(document).ready(function() {
 	<div class="span6">
 		<h3>Vireo Information</h3>
 		<dl class="dl-horizontal">
+		    <dt>Version</dt>
+            <dd>${vireoVersion}</dd>
+		
 			<dt>Persons</dt>
 			<dd>${personTotal}</dd>
 

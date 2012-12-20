@@ -9,6 +9,7 @@ import org.apache.commons.mail.Email;
 import org.apache.commons.mail.SimpleEmail;
 import org.tdl.vireo.email.EmailService;
 import org.tdl.vireo.email.VireoEmail;
+import org.tdl.vireo.error.ErrorLog;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Submission;
@@ -164,9 +165,12 @@ public class EmailServiceImpl implements EmailService {
 
 			} catch (Throwable t) {
 				Logger.error(t,"Unable to send email because of error.");
-
+				
 				String logError = this.email.getFailureLogMessage(t.getMessage());
 				logMessage(logError);
+				
+				ErrorLog errorLog = Spring.getBeanOfType(ErrorLog.class);
+				errorLog.logError(t, "Sending email");
 				
 				if (wait)
 					throw new RuntimeException(t);

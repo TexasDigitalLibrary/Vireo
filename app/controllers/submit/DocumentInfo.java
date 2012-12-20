@@ -413,7 +413,7 @@ public class DocumentInfo extends AbstractSubmitStep {
 		
 		// Previously Published
 		if (isFieldEnabled(PUBLISHED_MATERIAL)) {
-			if (sub.getPublishedMaterial() != null && sub.getPublishedMaterial().trim().length() < 10) {
+			if (sub.getPublishedMaterial() != null && sub.getPublishedMaterial().trim().length() == 0) {
 				validation.addError("publishedMaterial", "If the any material being submitted has been previously published then you must identify the material which was published. (i.e. the section or chapter).");
 			}
 		}

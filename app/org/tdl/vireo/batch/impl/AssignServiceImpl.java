@@ -3,6 +3,7 @@ package org.tdl.vireo.batch.impl;
 import java.util.Iterator;
 
 import org.tdl.vireo.batch.AssignService;
+import org.tdl.vireo.error.ErrorLog;
 import org.tdl.vireo.job.JobManager;
 import org.tdl.vireo.job.JobMetadata;
 import org.tdl.vireo.job.JobStatus;
@@ -22,6 +23,7 @@ import org.tdl.vireo.state.State;
 import play.Logger;
 import play.db.jpa.JPA;
 import play.jobs.Job;
+import play.modules.spring.Spring;
 
 /**
  * Implement the assign service. This just loops through the submissions and
@@ -34,6 +36,7 @@ public class AssignServiceImpl implements AssignService {
 	// The repositories
 	public PersonRepository personRepo;
 	public SubmissionRepository subRepo;
+	public ErrorLog errorLog;
 
 	// The searcher used to find submissions in a batch.
 	public Searcher searcher;
@@ -58,6 +61,14 @@ public class AssignServiceImpl implements AssignService {
 	 */
 	public void setSubmissionRepository(SubmissionRepository repo) {
 		this.subRepo = repo;
+	}
+	
+	/**
+	 * @param errorLog
+	 *            The error log
+	 */
+	public void setErrorLog(ErrorLog errorLog) {
+		this.errorLog = errorLog;
 	}
 	
 	/**
@@ -162,13 +173,14 @@ public class AssignServiceImpl implements AssignService {
 				metadata.getProgress().total = subIds.length;
 				metadata.getProgress().completed = 0;
 				
+								
 				// Assign!
 				metadata.setMessage("Changing assignee on submissions...");
 				for (long subId : subIds) {
 				
 					Submission sub = subRepo.findSubmission(subId);
 					
-					if(assignTo!=null)
+					if(assignTo!=null) 
 						sub.setAssignee(personRepo.findPerson(assignTo));
 					else
 						sub.setAssignee(null);
@@ -189,10 +201,13 @@ public class AssignServiceImpl implements AssignService {
 				metadata.setStatus(JobStatus.SUCCESS);
 				
 			} catch (RuntimeException re) {
+				
 				Logger.fatal(re,"Unexpected exception while attempting to change assignee on items. Aborted, although some items may have been changed.");
 				
 				metadata.setMessage(re.toString());
 				metadata.setStatus(JobStatus.FAILED);
+				
+				errorLog.logError(re, metadata);
 				
 			} finally {
 

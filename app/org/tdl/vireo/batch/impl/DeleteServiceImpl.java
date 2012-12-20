@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import org.tdl.vireo.batch.DeleteService;
 import org.tdl.vireo.batch.TransitionService;
+import org.tdl.vireo.error.ErrorLog;
 import org.tdl.vireo.export.DepositService;
 import org.tdl.vireo.job.JobManager;
 import org.tdl.vireo.job.JobMetadata;
@@ -24,6 +25,7 @@ import org.tdl.vireo.state.State;
 import play.Logger;
 import play.db.jpa.JPA;
 import play.jobs.Job;
+import play.modules.spring.Spring;
 
 /**
  * Implement the delete service. This just loops through the submissions and
@@ -36,6 +38,7 @@ public class DeleteServiceImpl implements DeleteService {
 	// The repositories
 	public PersonRepository personRepo;
 	public SubmissionRepository subRepo;
+	public ErrorLog errorLog;
 
 	// The searcher used to find submissions in a batch.
 	public Searcher searcher;
@@ -60,6 +63,14 @@ public class DeleteServiceImpl implements DeleteService {
 	 */
 	public void setSubmissionRepository(SubmissionRepository repo) {
 		this.subRepo = repo;
+	}
+	
+	/**
+	 * @param errorLog
+	 *            The error log
+	 */
+	public void setErrorLog(ErrorLog errorLog) {
+		this.errorLog = errorLog;
 	}
 	
 	/**
@@ -182,6 +193,8 @@ public class DeleteServiceImpl implements DeleteService {
 				
 			} catch (RuntimeException re) {
 				Logger.fatal(re,"Unexpected exception while attempting to deleting items. Aborted, although some items may have been deleted.");
+				
+				errorLog.logError(re, metadata);
 				
 				metadata.setMessage(re.toString());
 				metadata.setStatus(JobStatus.FAILED);

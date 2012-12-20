@@ -1,30 +1,13 @@
-    #{extends 'main.html' /} #{set title:'System Control Panel' /}
-
-#{set 'moreScripts'}
-<script type="text/javascript">
-
-function load() {
-    setTimeout("refresh()", 30 * 1000);
-}
-
-function refresh() {
-    window.location.reload();
-    load();
-}
-
-jQuery(document).ready(function() { 
-
-	load();
-	
-});
-</script>
-#{/set}
-
+#{extends 'main.html' /} #{set title:'System Control Panel' /}
 <br/>
 <div class="row pageHead">
 	<h3>System Control Panel</h3>
 </div>
 <br />
+
+<div class="system-panel-refresh">
+<a href="@{System.jobPanel()}"><em class="icon-refresh" style="opacity: 0.5;"></em> Refresh</a>
+</div>
 
 #{include 'System/tabs.include' /}
 
@@ -93,7 +76,7 @@ jQuery(document).ready(function() {
         #{else}
         <tr>
             <td colspan="6" style="text-align:center;">
-                <em>No tasks have been registered since.</em>
+                <em>No tasks have been registered since the server started.</em>
             </td>
         #{/else}
     </tbody>

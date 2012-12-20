@@ -3,6 +3,7 @@ package org.tdl.vireo.batch.impl;
 import java.util.Iterator;
 
 import org.tdl.vireo.batch.TransitionService;
+import org.tdl.vireo.error.ErrorLog;
 import org.tdl.vireo.export.DepositService;
 import org.tdl.vireo.job.JobManager;
 import org.tdl.vireo.job.JobMetadata;
@@ -23,6 +24,7 @@ import org.tdl.vireo.state.State;
 import play.Logger;
 import play.db.jpa.JPA;
 import play.jobs.Job;
+import play.modules.spring.Spring;
 
 /**
  * Implement the transition service. This follows a basic implementation that
@@ -36,6 +38,7 @@ public class TransitionServiceImpl implements TransitionService {
 	// The repositories
 	public PersonRepository personRepo;
 	public SubmissionRepository subRepo;
+	public ErrorLog errorLog;
 
 	// The searcher used to find submissions in a batch.
 	public Searcher searcher;
@@ -63,6 +66,14 @@ public class TransitionServiceImpl implements TransitionService {
 	 */
 	public void setSubmissionRepository(SubmissionRepository repo) {
 		this.subRepo = repo;
+	}
+	
+	/**
+	 * @param errorLog
+	 *            The error log
+	 */
+	public void setErrorLog(ErrorLog errorLog) {
+		this.errorLog = errorLog;
 	}
 	
 	/**
@@ -233,6 +244,8 @@ public class TransitionServiceImpl implements TransitionService {
 				
 			} catch (RuntimeException re) {
 				Logger.fatal(re,"Unexpected exception while attempting to transition items. Aborted.");
+				
+				errorLog.logError(re, metadata);
 				
 				metadata.setMessage(re.toString());
 				metadata.setStatus(JobStatus.FAILED);
