@@ -1,26 +1,4 @@
 #{extends 'main.html' /}
-#{if subId == null}
-
-<div class="row">    
-    #{if SUBMISSIONS_OPEN}
-    	<p class="center red large">Currently accepting submissions for the ${CURRENT_SEMESTER} semester.</p>
-    #{/if}
-    #{else}
-        	<p class="alert alert-error">Submissions are currently closed for new submissions; please contact your thesis office for more information.</p>
-    #{/else}
-    
-    <ul id="submitSteps" class="unstyled span11 nav">
-        <li id="step1Btn"><a href="@{submit.PersonalInfo.personalInfo(subId)}" ${"personalInfo".equals(request.actionMethod) ? "class='current'" : ""}></a></li>
-        <li id="step2Btn"><span class="disabled"></span></li>
-        <li id="step3Btn"><span class="disabled"></span></li>
-        <li id="step4Btn"><span class="disabled"></span></li>
-        <li id="step5Btn"><span class="disabled"></span></li>
-    </ul>
-</div>
-
-#{/if}
-
-#{else}
 
 <div class="row">
 
@@ -32,14 +10,12 @@
     #{/else}
     
     <ul id="submitSteps" class="unstyled span11">
-        <li id="step1Btn"><a href="@{submit.PersonalInfo.personalInfo(subId)}" ${"personalInfo".equals(request.actionMethod) ? "class='current'" : ""}></a></li>
-        <li id="step2Btn"><a href="@{submit.License.license(subId)}" ${"license".equals(request.actionMethod) ? "class='current'" : ""}></a></li>
-        <li id="step3Btn"><a href="@{submit.DocumentInfo.documentInfo(subId)}" ${"documentInfo".equals(request.actionMethod) ? "class='current'" : ""}></a></li>
-        <li id="step4Btn"><a href="@{submit.FileUpload.fileUpload(subId)}" ${"fileUpload".equals(request.actionMethod) ? "class='current'" : ""}></a></li>
-        <li id="step5Btn"><a href="@{Submit.Confirm.confirm(subId)}" ${"confirm".equals(request.actionMethod) ? "class='current'" : ""}></a></li>
+        <li id="step1Btn" ${"personalInfo".equals(request.actionMethod) ? "class='current'" : ""}><a href="@{submit.PersonalInfo.personalInfo(subId)}" ${"personalInfo".equals(request.actionMethod) ? "class='current'" : ""}></a></li>
+        <li id="step2Btn" ${"license".equals(request.actionMethod) ? "class='current'" : ""}><a href="@{submit.License.license(subId)}" ${"license".equals(request.actionMethod) ? "class='current'" : ""}></a></li>
+        <li id="step3Btn" ${"documentInfo".equals(request.actionMethod) ? "class='current'" : ""}><a href="@{submit.DocumentInfo.documentInfo(subId)}" ${"documentInfo".equals(request.actionMethod) ? "class='current'" : ""}></a></li>
+        <li id="step4Btn" ${"fileUpload".equals(request.actionMethod) ? "class='current'" : ""}><a href="@{submit.FileUpload.fileUpload(subId)}" ${"fileUpload".equals(request.actionMethod) ? "class='current'" : ""}></a></li>
+        <li id="step5Btn" ${"confirm".equals(request.actionMethod) ? "class='current'" : ""}><a href="@{Submit.Confirm.confirm(subId)}" ${"confirm".equals(request.actionMethod) ? "class='current'" : ""}></a></li>
     </ul>
 </div>
-
-#{/else}
 
 #{doLayout /}

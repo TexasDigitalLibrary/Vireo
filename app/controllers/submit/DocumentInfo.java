@@ -81,7 +81,7 @@ public class DocumentInfo extends AbstractSubmitStep {
 		Date defenseDate = null;
 		DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 		try {
-			if(params.get("defenseDate")!=null)
+			if(params.get("defenseDate")!=null && !"".equals(params.get("defenseDate").trim()))
 				defenseDate = (Date)formatter.parse(params.get("defenseDate"));
 		} catch (ParseException e) {
 			validation.addError("defenseDate","Please format your defense date as mm/dd/yyyy");
