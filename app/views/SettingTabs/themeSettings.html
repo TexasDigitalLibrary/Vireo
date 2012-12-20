@@ -9,11 +9,21 @@ jQuery(document).ready(function(){
      jQuery(".theme-textarea").change(applicationSettingsHandler('@{settings.ThemeSettingsTab.updateThemeSettingsJSON()}'));
      jQuery(".theme-input").blur(applicationSettingsHandler('@{settings.ThemeSettingsTab.updateThemeSettingsJSON()}')); 
 	
+     // Reset Theme Color
+     jQuery(".color-reset").click(function(){    	
+    	var $this = jQuery(this);
+    	var id = $this.attr('id');    	
+    	var value = $this.text();
+    	jQuery('.'+id).val(value);
+    	jQuery('.'+id).colorpicker('setValue',value);
+    	jQuery('.'+id).blur();
+     });
+     
      // Lock the big text areas
      jQuery(".theme-protected .lock-control a").click(applicationUnlockField);
      
      //Set Colorpicker
-     jQuery(".colorpicker").colorpicker();
+     jQuery(".theme-color").colorpicker();
      
      /*
  	 * Initiate tooltip.
@@ -31,15 +41,15 @@ jQuery(document).ready(function(){
 <a href="#" class="tooltip-icon" rel="tooltip" title="Use hex color values to change the background on the student side. The main color (default #1B333F) fades into the highlight color (default #43606E)."><i class="icon-info-sign"></i></a>
 <table class="gradient-options">
 	<tr>
-		<td>Main Color</td>
-		<td>Highlight Color</td>
+		<td>Main Color <em id="background_main_color" class="icon-refresh color-reset">${org.tdl.vireo.model.Configuration.DEFAULTS.get("background_main_color")}</em></td>
+		<td>Highlight Color <em id="background_highlight_color" class="icon-refresh color-reset">${org.tdl.vireo.model.Configuration.DEFAULTS.get("background_highlight_color")}</em></td>
 	</tr>
 	<tr>
 		<td>
-			<input type="text" class="colorpicker span2 theme-input" name="${org.tdl.vireo.constant.AppConfig.BACKGROUND_MAIN_COLOR}" value="#{verbatim}${BACKGROUND_MAIN_COLOR}#{/verbatim}" >
+			<input type="text" class="theme-color span2 theme-input background_main_color" name="${org.tdl.vireo.constant.AppConfig.BACKGROUND_MAIN_COLOR}" value="#{verbatim}${BACKGROUND_MAIN_COLOR}#{/verbatim}" >
 		</td>
 		<td>
-			<input type="text" class="colorpicker span2 theme-input" name="${org.tdl.vireo.constant.AppConfig.BACKGROUND_HIGHLIGHT_COLOR}" value="#{verbatim}${BACKGROUND_HIGHLIGHT_COLOR}#{/verbatim}" >
+			<input type="text" class="theme-color span2 theme-input background_highlight_color" name="${org.tdl.vireo.constant.AppConfig.BACKGROUND_HIGHLIGHT_COLOR}" value="#{verbatim}${BACKGROUND_HIGHLIGHT_COLOR}#{/verbatim}" >
 		</td>
 	</tr>
 </table>
@@ -48,15 +58,15 @@ jQuery(document).ready(function(){
 <a href="#" class="tooltip-icon" rel="tooltip" title="Use hex color values to change the look of the submission step buttons when on the current step or on hover. The main color (default #1B333F) fades into the highlight color (default #43606E) and then back to the main color."><i class="icon-info-sign"></i></a>
 <table class="gradient-options">
 	<tr>
-		<td>Main Color</td>
-		<td>Highlight Color</td>
+		<td>Main Color <em id="button_main_color_on" class="icon-refresh color-reset">${org.tdl.vireo.model.Configuration.DEFAULTS.get("button_main_color_on")}</em></td>
+		<td>Highlight Color <em id="button_highlight_color_on" class="icon-refresh color-reset">${org.tdl.vireo.model.Configuration.DEFAULTS.get("button_highlight_color_on")}</em></td>
 	</tr>
 	<tr>
 		<td>
-			<input type="text" class="colorpicker span2 theme-input" name="${org.tdl.vireo.constant.AppConfig.BUTTON_MAIN_COLOR_ON}" value="#{verbatim}${BUTTON_MAIN_COLOR_ON}#{/verbatim}" >
+			<input type="text" class="theme-color span2 theme-input button_main_color_on" name="${org.tdl.vireo.constant.AppConfig.BUTTON_MAIN_COLOR_ON}" value="#{verbatim}${BUTTON_MAIN_COLOR_ON}#{/verbatim}" >
 		</td>
 		<td>
-			<input type="text" class="colorpicker span2 theme-input" name="${org.tdl.vireo.constant.AppConfig.BUTTON_HIGHLIGHT_COLOR_ON}" value="#{verbatim}${BUTTON_HIGHLIGHT_COLOR_ON}#{/verbatim}" >
+			<input type="text" class="theme-color span2 theme-input button_highlight_color_on" name="${org.tdl.vireo.constant.AppConfig.BUTTON_HIGHLIGHT_COLOR_ON}" value="#{verbatim}${BUTTON_HIGHLIGHT_COLOR_ON}#{/verbatim}" >
 		</td>
 	</tr>
 </table>
@@ -65,15 +75,15 @@ jQuery(document).ready(function(){
 <a href="#" class="tooltip-icon" rel="tooltip" title="Use hex color values to change the look of the submission step buttons when in a default state. The main color (default #A6A18C) fades into the highlight color (default #C7C2A9) and then back to the main color."><i class="icon-info-sign"></i></a>
 <table class="gradient-options">
 	<tr>
-		<td>Main Color</td>
-		<td>Highlight Color</td>
+		<td>Main Color <em id="button_main_color_off" class="icon-refresh color-reset">${org.tdl.vireo.model.Configuration.DEFAULTS.get("button_main_color_off")}</em></td>
+		<td>Highlight Color <em id="button_highlight_color_off" class="icon-refresh color-reset">${org.tdl.vireo.model.Configuration.DEFAULTS.get("button_highlight_color_off")}</em></td>
 	</tr>
 	<tr>
 		<td>
-			<input type="text" class="colorpicker span2 theme-input" name="${org.tdl.vireo.constant.AppConfig.BUTTON_MAIN_COLOR_OFF}" value="#{verbatim}${BUTTON_MAIN_COLOR_OFF}#{/verbatim}" >
+			<input type="text" class="theme-color span2 theme-input button_main_color_off" name="${org.tdl.vireo.constant.AppConfig.BUTTON_MAIN_COLOR_OFF}" value="#{verbatim}${BUTTON_MAIN_COLOR_OFF}#{/verbatim}" >
 		</td>
 		<td>
-			<input type="text" class="colorpicker span2 theme-input" name="${org.tdl.vireo.constant.AppConfig.BUTTON_HIGHLIGHT_COLOR_OFF}" value="#{verbatim}${BUTTON_HIGHLIGHT_COLOR_OFF}#{/verbatim}" >
+			<input type="text" class="theme-color span2 theme-input button_highlight_color_off" name="${org.tdl.vireo.constant.AppConfig.BUTTON_HIGHLIGHT_COLOR_OFF}" value="#{verbatim}${BUTTON_HIGHLIGHT_COLOR_OFF}#{/verbatim}" >
 		</td>
 	</tr>
 </table>
