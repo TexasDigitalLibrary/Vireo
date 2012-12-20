@@ -141,7 +141,10 @@ jQuery(document).ready(function(){
 <h4 style="display:inline;">Custom CSS</h4>
 <a href="#" class="tooltip-icon" rel="tooltip" title="Customize any styling on the student side using CSS."><i class="icon-info-sign"></i></a>
 <br />
-<textarea class="span6 theme-textarea" name="${org.tdl.vireo.constant.AppConfig.CUSTOM_CSS}">#{verbatim}${CUSTOM_CSS}#{/verbatim}</textarea>
+<div class="wrap theme-protected">
+<p class="lock-control"><a href="#${org.tdl.vireo.constant.AppConfig.CUSTOM_CSS}"><em class="icon-lock"></em> This field is locked to prevent accidental editing, click to unlock.</a></p>
+<textarea class="input-xxlarge theme-textarea" id="${org.tdl.vireo.constant.AppConfig.CUSTOM_CSS}" name="${org.tdl.vireo.constant.AppConfig.CUSTOM_CSS}" readonly="true">#{verbatim}${CUSTOM_CSS}#{/verbatim}</textarea>
+</div>
 
 <h2>FRONT PAGE INSTRUCTIONS</h2>
 
