@@ -71,6 +71,9 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		final String REDIRECT_URL = Router.reverse("settings.ConfigurableSettingsTab.configurableSettings").url;
 		final String BULK_URL = Router.reverse("settings.ConfigurableSettingsTab.bulkAdd").url;
 
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("modelType", "college");
@@ -208,6 +211,10 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		final String REDIRECT_URL = Router.reverse("settings.ConfigurableSettingsTab.configurableSettings").url;
 		final String ALPHA_URL = Router.reverse("settings.ConfigurableSettingsTab.alphabetizeAllEmbargoTypes").url;
 		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
 		Response response = GET(ALPHA_URL);
 		assertEquals(REDIRECT_URL,response.getHeader("Location"));
 		
@@ -328,6 +335,10 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		
 		final String REDIRECT_URL = Router.reverse("settings.ConfigurableSettingsTab.configurableSettings").url;
 		final String ALPHA_URL = Router.reverse("settings.ConfigurableSettingsTab.alphabetizeAllPrograms").url;
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		
 		Response response = GET(ALPHA_URL);
 		assertEquals(REDIRECT_URL,response.getHeader("Location"));
@@ -450,6 +461,10 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		final String REDIRECT_URL = Router.reverse("settings.ConfigurableSettingsTab.configurableSettings").url;
 		final String ALPHA_URL = Router.reverse("settings.ConfigurableSettingsTab.alphabetizeAllColleges").url;
 		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
 		Response response = GET(ALPHA_URL);
 		assertEquals(REDIRECT_URL,response.getHeader("Location"));
 		
@@ -570,6 +585,10 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		final String REDIRECT_URL = Router.reverse("settings.ConfigurableSettingsTab.configurableSettings").url;
 		final String ALPHA_URL = Router.reverse("settings.ConfigurableSettingsTab.alphabetizeAllDepartments").url;
 		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
 		Response response = GET(ALPHA_URL);
 		assertEquals(REDIRECT_URL,response.getHeader("Location"));
 		
@@ -689,6 +708,10 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		
 		final String REDIRECT_URL = Router.reverse("settings.ConfigurableSettingsTab.configurableSettings").url;
 		final String ALPHA_URL = Router.reverse("settings.ConfigurableSettingsTab.alphabetizeAllMajors").url;
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		
 		Response response = GET(ALPHA_URL);
 		assertEquals(REDIRECT_URL,response.getHeader("Location"));
@@ -814,6 +837,10 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		
 		final String REDIRECT_URL = Router.reverse("settings.ConfigurableSettingsTab.configurableSettings").url;
 		final String ALPHA_URL = Router.reverse("settings.ConfigurableSettingsTab.alphabetizeAllDegrees").url;
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		
 		Response response = GET(ALPHA_URL);
 		assertEquals(REDIRECT_URL,response.getHeader("Location"));
@@ -941,6 +968,10 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		final String REDIRECT_URL = Router.reverse("settings.ConfigurableSettingsTab.configurableSettings").url;
 		final String ALPHA_URL = Router.reverse("settings.ConfigurableSettingsTab.alphabetizeAllDocumentTypes").url;
 		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
 		Response response = GET(ALPHA_URL);
 		assertEquals(REDIRECT_URL,response.getHeader("Location"));
 		
@@ -1067,6 +1098,10 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		final String REDIRECT_URL = Router.reverse("settings.ConfigurableSettingsTab.configurableSettings").url;
 		final String ALPHA_URL = Router.reverse("settings.ConfigurableSettingsTab.alphabetizeAllCommitteeMemberRoleTypes").url;
 		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
 		Response response = GET(ALPHA_URL);
 		assertEquals(REDIRECT_URL,response.getHeader("Location"));
 		
@@ -1188,6 +1223,10 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		final String REDIRECT_URL = Router.reverse("settings.ConfigurableSettingsTab.configurableSettings").url;
 		final String ALPHA_URL = Router.reverse("settings.ConfigurableSettingsTab.alphabetizeAllGraduationMonths").url;
 		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		
 		Response response = GET(ALPHA_URL);
 		assertEquals(REDIRECT_URL,response.getHeader("Location"));
 		
@@ -1294,6 +1333,10 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		
 		final String REDIRECT_URL = Router.reverse("settings.ConfigurableSettingsTab.configurableSettings").url;
 		final String ALPHA_URL = Router.reverse("settings.ConfigurableSettingsTab.alphabetizeAllLanguages").url;
+		
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		
 		Response response = GET(ALPHA_URL);
 		assertEquals(REDIRECT_URL,response.getHeader("Location"));

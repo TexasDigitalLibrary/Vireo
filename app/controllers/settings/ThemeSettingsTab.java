@@ -39,7 +39,7 @@ public class ThemeSettingsTab extends SettingsTab {
 		renderArgs.put("SUBMIT_INSTRUCTIONS", settingRepo.getConfigValue(SUBMIT_INSTRUCTIONS));
 		renderArgs.put("CORRECTION_INSTRUCTIONS", settingRepo.getConfigValue(CORRECTION_INSTRUCTIONS));
 		
-		//Colors and CSS
+		// Colors and CSS
 		renderArgs.put("BACKGROUND_MAIN_COLOR", settingRepo.getConfigValue(BACKGROUND_MAIN_COLOR));
 		renderArgs.put("BACKGROUND_HIGHLIGHT_COLOR", settingRepo.getConfigValue(BACKGROUND_HIGHLIGHT_COLOR));
 		renderArgs.put("BUTTON_MAIN_COLOR_ON", settingRepo.getConfigValue(BUTTON_MAIN_COLOR_ON));
@@ -48,18 +48,9 @@ public class ThemeSettingsTab extends SettingsTab {
 		renderArgs.put("BUTTON_HIGHLIGHT_COLOR_OFF", settingRepo.getConfigValue(BUTTON_HIGHLIGHT_COLOR_OFF));
 		renderArgs.put("CUSTOM_CSS", settingRepo.getConfigValue(CUSTOM_CSS));
 				
-		//TODO Logos
+		// Logos
 		File leftLogo = new File(LEFT_LOGO_PATH);
 		File rightLogo = new File(RIGHT_LOGO_PATH);
-
-		/*VirtualFile virtualFile = Play.getVirtualFile(LEFT_LOGO_PATH);
-		if(virtualFile == null) {
-			System.out.println("Virtual file is null");
-		}
-		System.out.println("Virtual file is not null");
-		String leftLogoUrl = Router.reverse(virtualFile);
-		System.out.println(leftLogoUrl);
-		*/
 		
 		String nav = "settings";
 		String subNav = "theme";
