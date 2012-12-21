@@ -226,6 +226,7 @@ jQuery(document).ready(function(){
 			                    <option #{if null != language && docLanguage.equals(language.getName())}selected="true"#{/if} value="${language.getName()}">${language.getLocale().getDisplayName()}</option>
 			                #{/list}
 		            	</select>
+		            	<a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp DOCUMENT_LANGUAGE /}"><i class="icon-info-sign"></i></a>
 		            #{/else}
 	            #{/ifRequired}
 	            #{else}
