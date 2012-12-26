@@ -687,7 +687,7 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 		
 		// Wait for the emails to be recieved.
 		String studentContent = null;
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 50; i++) {
 			Thread.yield();
 			Thread.sleep(100);
 			studentContent = Mail.Mock.getLastMessageReceivedBy(studentEmail);
@@ -698,7 +698,7 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 		
 		if (advisorEmail != null) {
 			String advisorContent = null;
-			for (int i = 0; i < 10; i++) {
+			for (int i = 0; i < 50; i++) {
 				Thread.yield();
 				Thread.sleep(100);
 				advisorContent = Mail.Mock.getLastMessageReceivedBy(advisorEmail);

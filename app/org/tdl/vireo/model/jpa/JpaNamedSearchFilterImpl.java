@@ -8,6 +8,7 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -28,11 +29,22 @@ import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.NamedSearchFilter;
 import org.tdl.vireo.model.Person;
+import org.tdl.vireo.model.PersonRepository;
+import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.model.SubmissionRepository;
 import org.tdl.vireo.search.Semester;
+
+import play.modules.spring.Spring;
 
 /**
  * Jpa specific implementation of Vireo's Named Search Filter interface.
+ * 
+ * Importantly, shortly after Vireo 2.0 this class was modified to remove all
+ * external dependencies on other JPA objects. It was proved problematic to
+ * preserve the forgien key constraints with @ElementCollections because they
+ * can not be referenced by a JPA querey so there was no good way to handle
+ * deleting those elements.
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
@@ -49,66 +61,100 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	
 	public boolean publicFlag;
 	
-	@ManyToMany(targetEntity=JpaSubmissionImpl.class)
-	@JoinTable(name="search_filter_included_submissions")
-	public List<Submission> includedSubmisisons;
-	
-	@ManyToMany(targetEntity=JpaSubmissionImpl.class)
-	@JoinTable(name="search_filter_excluded_submissions")
-	public List<Submission> excludedSubmisisons;
-	
-	@ManyToMany(targetEntity=JpaActionLogImpl.class)
-	@JoinTable(name="search_filter_included_actionlogs")
-	public List<ActionLog> includedActionLogs;
-	
-	@ManyToMany(targetEntity=JpaActionLogImpl.class)
-	@JoinTable(name="search_filter_excluded_actionlogs")
-	public List<ActionLog> excludedActionLogs;
+	// These @ElementCollections have "_" so their names don't 
+	// conflict with getIncludedSubmissions() and play's enhances.
+	@ElementCollection
+	@CollectionTable(
+			name="search_filter_included_submissions",
+			joinColumns=@JoinColumn(name="search_filter_id"))
+	public List<Long> includedSubmissionIds;
 	
 	@ElementCollection
-	@CollectionTable(name="search_filter_text")
+	@CollectionTable(
+			name="search_filter_excluded_submissions",
+			joinColumns=@JoinColumn(name="search_filter_id"))
+	public List<Long> excludedSubmissionIds;
+	
+	@ElementCollection
+	@CollectionTable(
+			name="search_filter_included_actionlogs",
+			joinColumns=@JoinColumn(name="search_filter_id"))
+	public List<Long> includedActionLogIds;
+
+	@ElementCollection
+	@CollectionTable(
+			name="search_filter_excluded_actionlogs",
+			joinColumns=@JoinColumn(name="search_filter_id"))
+	public List<Long> excludedActionLogIds;
+	
+	@ElementCollection
+	@CollectionTable(
+			name="search_filter_text",
+			joinColumns=@JoinColumn(name="search_filter_id"))
 	public List<String> searchText;
 	
 	@ElementCollection
-	@CollectionTable(name="search_filter_states")
+	@CollectionTable(
+			name="search_filter_states",
+			joinColumns=@JoinColumn(name="search_filter_id"))
 	public List<String> states;
 	
-	@ManyToMany(targetEntity=JpaPersonImpl.class)
-	public List<Person> assignees;
-	public Boolean unassigned;
+	// Note: -1 means unassigned
+	@ElementCollection
+	@CollectionTable(
+			name="search_filter_assignees",
+			joinColumns=@JoinColumn(name="search_filter_id"))
+	public List<Long> assigneeIds;
 
-	@ManyToMany(targetEntity=JpaEmbargoTypeImpl.class)
-	public List<EmbargoType> embargos;
+	@ElementCollection
+	@CollectionTable(
+			name="search_filter_embargos",
+			joinColumns=@JoinColumn(name="search_filter_id"))
+	public List<Long> embargoIds;
 	
 	@ElementCollection
-	@CollectionTable(name="search_filter_semesters")
+	@CollectionTable(
+			name="search_filter_semesters",
+			joinColumns=@JoinColumn(name="search_filter_id"))
 	public List<String> semesters;
 	
 	@Transient
 	public List<Semester> cachedSemesters;
 	
 	@ElementCollection
-	@CollectionTable(name="search_filter_degrees")
+	@CollectionTable(
+			name="search_filter_degrees",
+			joinColumns=@JoinColumn(name="search_filter_id"))
 	public List<String> degrees;
 	
 	@ElementCollection
-	@CollectionTable(name="search_filter_departments")
+	@CollectionTable(
+			name="search_filter_departments",
+			joinColumns=@JoinColumn(name="search_filter_id"))
 	public List<String> departments;
 
 	@ElementCollection
-	@CollectionTable(name="search_filter_programs")
+	@CollectionTable(
+			name="search_filter_programs",
+			joinColumns=@JoinColumn(name="search_filter_id"))
 	public List<String> programs;
 	
 	@ElementCollection
-	@CollectionTable(name="search_filter_colleges")
+	@CollectionTable(
+			name="search_filter_colleges",
+			joinColumns=@JoinColumn(name="search_filter_id"))
 	public List<String> colleges;
 		
 	@ElementCollection
-	@CollectionTable(name="search_filter_majors")
+	@CollectionTable(
+			name="search_filter_majors",
+			joinColumns=@JoinColumn(name="search_filter_id"))
 	public List<String> majors;
 	
 	@ElementCollection
-	@CollectionTable(name="search_filter_documenttypes")
+	@CollectionTable(
+			name="search_filter_documenttypes",
+			joinColumns=@JoinColumn(name="search_filter_id"))
 	public List<String> documentTypes;
 	
 	public Boolean umiRelease;
@@ -138,15 +184,14 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 		this.creator = creator;
 		this.name = name;
 		this.publicFlag = false;
-		this.includedSubmisisons = new ArrayList<Submission>();
-		this.excludedSubmisisons = new ArrayList<Submission>();
-		this.includedActionLogs = new ArrayList<ActionLog>();
-		this.excludedActionLogs = new ArrayList<ActionLog>();
+		this.includedSubmissionIds = new ArrayList<Long>();
+		this.excludedSubmissionIds = new ArrayList<Long>();
+		this.includedActionLogIds = new ArrayList<Long>();
+		this.excludedActionLogIds = new ArrayList<Long>();
 		this.searchText = new ArrayList<String>();
 		this.states = new ArrayList<String>();
-		this.assignees = new ArrayList<Person>();
-		this.unassigned = false;
-		this.embargos = new ArrayList<EmbargoType>();
+		this.assigneeIds = new ArrayList<Long>();
+		this.embargoIds = new ArrayList<Long>();
 		this.semesters = new ArrayList<String>();
 		this.cachedSemesters = new ArrayList<Semester>();
 		this.degrees = new ArrayList<String>();
@@ -192,12 +237,6 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 			
 			semesters.add(value);
 		}
-		
-		// 2) Unassigned
-		if (assignees.contains(null)) {
-			assignees.remove(null);
-			unassigned = true;
-		} 
 	}
 
 	/**
@@ -222,13 +261,6 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 			
 			cachedSemesters.add(semester);
 		}
-		
-		// 2) Unassigned
-		if (unassigned) {
-			if (!assignees.contains(null)) {
-				assignees.add(null);
-			}
-		} 
 	}
 	
 	@Override
@@ -275,62 +307,103 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 
 	@Override
 	public List<Submission> getIncludedSubmissions() {
-		return includedSubmisisons;
+		
+		List<Submission> result = new ArrayList<Submission>();
+		for (Long id : includedSubmissionIds) {
+			SubmissionRepository subRepo = Spring.getBeanOfType(SubmissionRepository.class);
+			Submission sub = subRepo.findSubmission(id);
+			if (sub != null)
+				result.add(sub);
+		}
+		
+		return result;
 	}
 
 	@Override
 	public void addIncludedSubmission(Submission sub) {
-		includedSubmisisons.add(sub);
+		
+		includedSubmissionIds.add(sub.getId());
 	}
 
 	@Override
 	public void removeIncludedSubmission(Submission sub) {
-		includedSubmisisons.remove(sub);
+		includedSubmissionIds.remove(sub.getId());
 	}
 	
 	@Override
 	public List<Submission> getExcludedSubmissions() {
-		return excludedSubmisisons;
+		
+		List<Submission> result = new ArrayList<Submission>();
+		for (Long id : excludedSubmissionIds) {
+			SubmissionRepository subRepo = Spring.getBeanOfType(SubmissionRepository.class);
+			Submission sub = subRepo.findSubmission(id);
+			if (sub != null)
+				result.add(sub);
+		}
+		
+		return result;
 	}
 
 	@Override
 	public void addExcludedSubmission(Submission sub) {
-		excludedSubmisisons.add(sub);
+		excludedSubmissionIds.add(sub.getId());
 	}
 
 	@Override
 	public void removeExcludedSubmission(Submission sub) {
-		excludedSubmisisons.remove(sub);
+		excludedSubmissionIds.remove(sub.getId());
 	}
 	
 	@Override
 	public List<ActionLog> getIncludedActionLogs() {
-		return includedActionLogs;
+		
+		List<ActionLog> result = new ArrayList<ActionLog>();
+		for (Long id : includedActionLogIds) {
+			SubmissionRepository subRepo = Spring.getBeanOfType(SubmissionRepository.class);
+			ActionLog log = subRepo.findActionLog(id);
+			if (log != null)
+				result.add(log);
+		}
+		
+		return result;
 	}
 
 	@Override
 	public void addIncludedActionLog(ActionLog log) {
-		includedActionLogs.add(log);
+		
+		List<Long> list = includedActionLogIds;
+		list.add(log.getId());
+		
+		includedActionLogIds.add(log.getId());
 	}
 
 	@Override
 	public void removeIncludedActionLog(ActionLog log) {
-		includedActionLogs.remove(log);
+		includedActionLogIds.remove(log.getId());
 	}
 	
 	@Override
 	public List<ActionLog> getExcludedActionLogs() {
-		return excludedActionLogs;
+		
+		List<ActionLog> result = new ArrayList<ActionLog>();
+		for (Long id : excludedActionLogIds) {
+			SubmissionRepository subRepo = Spring.getBeanOfType(SubmissionRepository.class);
+			ActionLog log = subRepo.findActionLog(id);
+			if (log != null)
+				result.add(log);
+		}
+		
+		return result;
 	}
 
 	@Override
 	public void addExcludedActionLog(ActionLog log) {
-		excludedActionLogs.add(log);
+		excludedActionLogIds.add(log.getId());
 	}
 
 	@Override
 	public void removeExcludedActionLog(ActionLog log) {
-		excludedActionLogs.remove(log);
+		excludedActionLogIds.remove(log.getId());
 	}
 	
 	@Override
@@ -371,7 +444,19 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	@Override
 	public List<Person> getAssignees() {
 		
-		return assignees;
+		List<Person> result = new ArrayList<Person>();
+		for (Long id : assigneeIds) {
+			PersonRepository personRepo = Spring.getBeanOfType(PersonRepository.class);
+			if (id != -1) {
+				Person person = personRepo.findPerson(id);
+				if (person != null)
+					result.add(person);
+			} else {
+				result.add(null);
+			}
+		}
+		
+		return result;
 	}
 
 	@Override
@@ -379,9 +464,10 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 		assertManagerOrOwner(creator);
 		
 		if (assignee == null)
-			unassigned = true;
+			assigneeIds.add(-1L);
+		else
+			assigneeIds.add(assignee.getId());
 		
-		assignees.add(assignee);
 	}
 
 	@Override
@@ -389,26 +475,36 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 		assertManagerOrOwner(creator);
 		
 		if (assignee == null)
-			unassigned = false;
-		
-		assignees.remove(assignee);
-	}
+			assigneeIds.remove(-1L);
+		else
+			assigneeIds.remove(assignee);
+	}	
 	
 	@Override
 	public List<EmbargoType> getEmbargoTypes() {
-		return embargos;
+		
+		List<EmbargoType> result = new ArrayList<EmbargoType>();
+		for (Long id : embargoIds) {
+			SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
+			EmbargoType type = settingRepo.findEmbargoType(id);
+			if (type != null)
+				result.add(type);
+		}
+		
+		return result;
+
 	}
 	
 	@Override
 	public void addEmbargoType(EmbargoType type) {
 		assertManagerOrOwner(creator);
-		embargos.add(type);
+		embargoIds.add(type.getId());
 	}
 	
 	@Override
 	public void removeEmbargoType(EmbargoType type) {
 		assertManagerOrOwner(creator);
-		embargos.remove(type);
+		embargoIds.remove(type.getId());
 	}
 
 	@Override
