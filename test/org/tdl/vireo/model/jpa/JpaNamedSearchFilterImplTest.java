@@ -303,7 +303,7 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		ActionLog log2 = sub2.logAction("log2").save();
 
 		
-		NamedSearchFilter filter = subRepo.createSearchFilter(person, "filter").save();
+		NamedSearchFilter filter = subRepo.createSearchFilter(person, "filter");
 		filter.setPublic(false);
 		filter.addIncludedSubmission(sub1);
 		filter.addIncludedSubmission(sub2);
@@ -432,6 +432,7 @@ public class JpaNamedSearchFilterImplTest extends UnitTest {
 		JPA.em().clear();
 		JPA.em().getTransaction().begin();
 		
+		person = personRepo.findPerson(person.getId());
 		NamedSearchFilter retrieved = subRepo.findSearchFilter(filter.getId());
 		
 		assertTrue(retrieved.getAssignees().contains(person));

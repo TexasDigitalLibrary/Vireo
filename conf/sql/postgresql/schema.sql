@@ -31,13 +31,28 @@ create table college (
 
 create table committee_member (
     id int8 not null,
-    chair bool not null,
     displayOrder int4 not null,
     firstName varchar(255),
     lastName varchar(255),
     middleName varchar(255),
     submission_id int8 not null,
     primary key (id)
+);
+
+create table committee_member_role_type (
+    id int8 not null,
+    displayOrder int4 not null,
+    level int4 not null,
+    name varchar(255) not null,
+    primary key (id),
+    unique (name, level)
+);
+
+create table committee_member_roles (
+    JpaCommitteeMemberImpl_id int8 not null,
+    roles varchar(255),
+    roles_ORDER int4 not null,
+    primary key (JpaCommitteeMemberImpl_id, roles_ORDER)
 );
 
 create table configuration (
@@ -129,6 +144,13 @@ create table graduation_month (
     primary key (id)
 );
 
+create table language (
+    id int8 not null,
+    displayOrder int4 not null,
+    name varchar(255) not null unique,
+    primary key (id)
+);
+
 create table major (
     id int8 not null,
     displayOrder int4 not null,
@@ -148,6 +170,7 @@ create table person (
     currentMajor varchar(255),
     currentPhoneNumber varchar(255),
     currentPostalAddress varchar(255),
+    currentProgram varchar(255),
     displayName varchar(255),
     email varchar(255) not null unique,
     firstName varchar(255),
@@ -177,6 +200,13 @@ create table preference (
     unique (person_id, name)
 );
 
+create table program (
+    id int8 not null,
+    displayOrder int4 not null,
+    name varchar(255) not null unique,
+    primary key (id)
+);
+
 create table search_filter (
     id int8 not null,
     name varchar(255) not null,
@@ -184,85 +214,83 @@ create table search_filter (
     rangeEnd date,
     rangeStart date,
     umiRelease bool,
-    unassigned bool,
     creator_id int8 not null,
     primary key (id),
     unique (creator_id, name)
 );
 
+create table search_filter_assignees (
+    search_filter_id int8 not null,
+    assigneeIds int8
+);
+
 create table search_filter_colleges (
-    JpaNamedSearchFilterImpl_id int8 not null,
+    search_filter_id int8 not null,
     colleges varchar(255)
 );
 
 create table search_filter_degrees (
-    JpaNamedSearchFilterImpl_id int8 not null,
+    search_filter_id int8 not null,
     degrees varchar(255)
 );
 
 create table search_filter_departments (
-    JpaNamedSearchFilterImpl_id int8 not null,
+    search_filter_id int8 not null,
     departments varchar(255)
 );
 
 create table search_filter_documenttypes (
-    JpaNamedSearchFilterImpl_id int8 not null,
+    search_filter_id int8 not null,
     documentTypes varchar(255)
 );
 
-create table search_filter_embargo_type (
+create table search_filter_embargos (
     search_filter_id int8 not null,
-    embargos_id int8 not null,
-    unique (embargos_id)
+    embargoIds int8
 );
 
 create table search_filter_excluded_actionlogs (
     search_filter_id int8 not null,
-    excludedActionLogs_id int8 not null,
-    unique (excludedActionLogs_id)
+    excludedActionLogIds int8
 );
 
 create table search_filter_excluded_submissions (
     search_filter_id int8 not null,
-    excludedSubmisisons_id int8 not null,
-    unique (excludedSubmisisons_id)
+    excludedSubmissionIds int8
 );
 
 create table search_filter_included_actionlogs (
     search_filter_id int8 not null,
-    includedActionLogs_id int8 not null,
-    unique (includedActionLogs_id)
+    includedActionLogIds int8
 );
 
 create table search_filter_included_submissions (
     search_filter_id int8 not null,
-    includedSubmisisons_id int8 not null,
-    unique (includedSubmisisons_id)
+    includedSubmissionIds int8
 );
 
 create table search_filter_majors (
-    JpaNamedSearchFilterImpl_id int8 not null,
+    search_filter_id int8 not null,
     majors varchar(255)
 );
 
-create table search_filter_person (
+create table search_filter_programs (
     search_filter_id int8 not null,
-    assignees_id int8 not null,
-    unique (assignees_id)
+    programs varchar(255)
 );
 
 create table search_filter_semesters (
-    JpaNamedSearchFilterImpl_id int8 not null,
+    search_filter_id int8 not null,
     semesters varchar(255)
 );
 
 create table search_filter_states (
-    JpaNamedSearchFilterImpl_id int8 not null,
+    search_filter_id int8 not null,
     states varchar(255)
 );
 
 create table search_filter_text (
-    JpaNamedSearchFilterImpl_id int8 not null,
+    search_filter_id int8 not null,
     searchText varchar(255)
 );
 
@@ -275,12 +303,14 @@ create table submission (
     committeeContactEmail varchar(255),
     committeeEmailHash varchar(255) unique,
     committeeEmbargoApprovalDate timestamp,
+    defenseDate timestamp,
     degree varchar(255),
     degreeLevel int4,
     department varchar(255),
-    depositId varchar(255),
+    depositId varchar(1024),
     documentAbstract varchar(326768),
     documentKeywords varchar(326768),
+    documentLanguage varchar(255),
     documentTitle varchar(326768),
     documentType varchar(255),
     graduationMonth int4,
@@ -289,6 +319,9 @@ create table submission (
     lastActionLogEntry varchar(326768),
     licenseAgreementDate timestamp,
     major varchar(255),
+    program varchar(255),
+    publishedMaterial varchar(326768),
+    reviewerNotes varchar(326768),
     stateName varchar(255),
     studentBirthYear int4,
     studentFirstName varchar(255),
@@ -299,6 +332,13 @@ create table submission (
     embargoType_id int8,
     submitter_id int8 not null,
     primary key (id)
+);
+
+create table submission_subjects (
+    JpaSubmissionImpl_id int8 not null,
+    documentSubjects varchar(255),
+    documentSubjects_ORDER int4 not null,
+    primary key (JpaSubmissionImpl_id, documentSubjects_ORDER)
 );
 
 alter table actionlog 
@@ -331,6 +371,11 @@ alter table committee_member
     foreign key (submission_id) 
     references submission;
 
+alter table committee_member_roles 
+    add constraint FK205EE65A9A0CF993 
+    foreign key (JpaCommitteeMemberImpl_id) 
+    references committee_member;
+
 alter table custom_action_value 
     add constraint FKE49B30366B22F363 
     foreign key (definition_id) 
@@ -356,50 +401,40 @@ alter table search_filter
     foreign key (creator_id) 
     references person;
 
-alter table search_filter_colleges 
-    add constraint FK32FE0A0C2E6A9C33 
-    foreign key (JpaNamedSearchFilterImpl_id) 
-    references search_filter;
-
-alter table search_filter_degrees 
-    add constraint FK884FE8D72E6A9C33 
-    foreign key (JpaNamedSearchFilterImpl_id) 
-    references search_filter;
-
-alter table search_filter_departments 
-    add constraint FKB38A4D112E6A9C33 
-    foreign key (JpaNamedSearchFilterImpl_id) 
-    references search_filter;
-
-alter table search_filter_documenttypes 
-    add constraint FK208979EE2E6A9C33 
-    foreign key (JpaNamedSearchFilterImpl_id) 
-    references search_filter;
-
-alter table search_filter_embargo_type 
-    add constraint FK63F94FB68E0B1A22 
+alter table search_filter_assignees 
+    add constraint FK110B7E348E0B1A22 
     foreign key (search_filter_id) 
     references search_filter;
 
-alter table search_filter_embargo_type 
-    add constraint FK63F94FB69C9E0205 
-    foreign key (embargos_id) 
-    references embargo_type;
+alter table search_filter_colleges 
+    add constraint FK32FE0A0C8E0B1A22 
+    foreign key (search_filter_id) 
+    references search_filter;
+
+alter table search_filter_degrees 
+    add constraint FK884FE8D78E0B1A22 
+    foreign key (search_filter_id) 
+    references search_filter;
+
+alter table search_filter_departments 
+    add constraint FKB38A4D118E0B1A22 
+    foreign key (search_filter_id) 
+    references search_filter;
+
+alter table search_filter_documenttypes 
+    add constraint FK208979EE8E0B1A22 
+    foreign key (search_filter_id) 
+    references search_filter;
+
+alter table search_filter_embargos 
+    add constraint FK874E5E908E0B1A22 
+    foreign key (search_filter_id) 
+    references search_filter;
 
 alter table search_filter_excluded_actionlogs 
     add constraint FKD187842A8E0B1A22 
     foreign key (search_filter_id) 
     references search_filter;
-
-alter table search_filter_excluded_actionlogs 
-    add constraint FKD187842AF3D6CD77 
-    foreign key (excludedActionLogs_id) 
-    references actionlog;
-
-alter table search_filter_excluded_submissions 
-    add constraint FK2DF4C02CEC613F 
-    foreign key (excludedSubmisisons_id) 
-    references submission;
 
 alter table search_filter_excluded_submissions 
     add constraint FK2DF4C028E0B1A22 
@@ -411,49 +446,34 @@ alter table search_filter_included_actionlogs
     foreign key (search_filter_id) 
     references search_filter;
 
-alter table search_filter_included_actionlogs 
-    add constraint FK5A7E35F819E843C5 
-    foreign key (includedActionLogs_id) 
-    references actionlog;
-
-alter table search_filter_included_submissions 
-    add constraint FK98BED3F4A909B4B1 
-    foreign key (includedSubmisisons_id) 
-    references submission;
-
 alter table search_filter_included_submissions 
     add constraint FK98BED3F48E0B1A22 
     foreign key (search_filter_id) 
     references search_filter;
 
 alter table search_filter_majors 
-    add constraint FKFAC40E2A2E6A9C33 
-    foreign key (JpaNamedSearchFilterImpl_id) 
+    add constraint FKFAC40E2A8E0B1A22 
+    foreign key (search_filter_id) 
     references search_filter;
 
-alter table search_filter_person 
-    add constraint FK1EA7A56F7C2AAD 
-    foreign key (assignees_id) 
-    references person;
-
-alter table search_filter_person 
-    add constraint FK1EA7A58E0B1A22 
+alter table search_filter_programs 
+    add constraint FK1CFDEABF8E0B1A22 
     foreign key (search_filter_id) 
     references search_filter;
 
 alter table search_filter_semesters 
-    add constraint FK8BFDE7EB2E6A9C33 
-    foreign key (JpaNamedSearchFilterImpl_id) 
+    add constraint FK8BFDE7EB8E0B1A22 
+    foreign key (search_filter_id) 
     references search_filter;
 
 alter table search_filter_states 
-    add constraint FK608DA522E6A9C33 
-    foreign key (JpaNamedSearchFilterImpl_id) 
+    add constraint FK608DA528E0B1A22 
+    foreign key (search_filter_id) 
     references search_filter;
 
 alter table search_filter_text 
-    add constraint FK8068257D2E6A9C33 
-    foreign key (JpaNamedSearchFilterImpl_id) 
+    add constraint FK8068257D8E0B1A22 
+    foreign key (search_filter_id) 
     references search_filter;
 
 alter table submission 
@@ -471,6 +491,11 @@ alter table submission
     foreign key (embargoType_id) 
     references embargo_type;
 
+alter table submission_subjects 
+    add constraint FKD56F3C5A8B58B7C1 
+    foreign key (JpaSubmissionImpl_id) 
+    references submission;
+
 create sequence seq_actionlog;
 
 create sequence seq_attachment;
@@ -478,6 +503,8 @@ create sequence seq_attachment;
 create sequence seq_college;
 
 create sequence seq_committee_member;
+
+create sequence seq_committee_member_role_type;
 
 create sequence seq_configuration;
 
@@ -499,11 +526,15 @@ create sequence seq_embargo_type;
 
 create sequence seq_graduation_month;
 
+create sequence seq_language;
+
 create sequence seq_major;
 
 create sequence seq_person;
 
 create sequence seq_preference;
+
+create sequence seq_program;
 
 create sequence seq_search_filter;
 
