@@ -51,7 +51,6 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 	public String originalHeaderFirstName;
 	public String originalHeaderMiddleName;
 	public String originalHeaderLastName;
-	public String originalHeaderDisplayName;
 	public String originalHeaderBirthYear;
 	public String originalHeaderAffilations;
 	public String originalHeaderCurrentPhoneNumber;
@@ -94,7 +93,6 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		originalHeaderFirstName = method.headerFirstName;
 		originalHeaderMiddleName = method.headerMiddleName;
 		originalHeaderLastName = method.headerLastName;
-		originalHeaderDisplayName = method.headerDisplayName;
 		originalHeaderBirthYear = method.headerBirthYear;
 		originalHeaderAffilations = method.headerAffiliations;
 		originalHeaderCurrentPhoneNumber = method.headerCurrentPhoneNumber;
@@ -118,7 +116,6 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		method.headerFirstName = "SHIB_givenName";
 		method.headerMiddleName = "SHIB_initials"; 
 		method.headerLastName = "SHIB_sn"; 
-		method.headerDisplayName = "SHIB_cn"; 
 		method.headerBirthYear = "SHIB_birthYear"; 
 		method.headerAffiliations = "SHIB_eduPersonAffilation";
 		method.headerCurrentPhoneNumber = "SHIB_phone";
@@ -157,7 +154,6 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		method.headerFirstName = originalHeaderFirstName;
 		method.headerMiddleName = originalHeaderMiddleName;
 		method.headerLastName = originalHeaderLastName;
-		method.headerDisplayName = originalHeaderDisplayName;
 		method.headerBirthYear = originalHeaderBirthYear;
 		method.headerAffiliations = originalHeaderAffilations;
 		method.headerCurrentPhoneNumber = originalHeaderCurrentPhoneNumber;
@@ -202,7 +198,6 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		headers.put("SHIB_givenName", "updatedfirst");
 		headers.put("SHIB_sn","updatedlast");
 		headers.put("SHIB_initials","initials");
-		headers.put("SHIB_cn","cn");
 		headers.put("SHIB_birthYear","1950");
 		headers.put("SHIB_eduPersonAffilation","staff;student;affiliate");
 		headers.put("SHIB_phone","phone");
@@ -230,7 +225,6 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		assertEquals("updatedfirst",person1.getFirstName());
 		assertEquals("updatedlast",person1.getLastName());
 		assertEquals("initials",person1.getMiddleName());
-		assertEquals("cn",person1.getDisplayName());
 		assertEquals(Integer.valueOf(1950),person1.getBirthYear());
 		assertTrue(person1.getAffiliations().contains("staff"));
 		assertTrue(person1.getAffiliations().contains("student"));
@@ -264,7 +258,6 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		mockAttributes.put("SHIB_givenName", "updatedfirst");
 		mockAttributes.put("SHIB_sn","updatedlast");
 		mockAttributes.put("SHIB_initials","initials");
-		mockAttributes.put("SHIB_cn","cn");
 		mockAttributes.put("SHIB_birthYear","1950");
 		mockAttributes.put("SHIB_eduPersonAffilation","staff;student;affiliate");
 		mockAttributes.put("SHIB_phone","phone");
@@ -294,7 +287,6 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		assertEquals("updatedfirst",person1.getFirstName());
 		assertEquals("updatedlast",person1.getLastName());
 		assertEquals("initials",person1.getMiddleName());
-		assertEquals("cn",person1.getDisplayName());
 		assertEquals(Integer.valueOf(1950),person1.getBirthYear());
 		assertTrue(person1.getAffiliations().contains("staff"));
 		assertTrue(person1.getAffiliations().contains("student"));
@@ -310,6 +302,92 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		assertEquals("major",person1.getCurrentMajor());
 		assertEquals(Integer.valueOf(2012),person1.getCurrentGraduationYear());
 		assertEquals(Integer.valueOf(05), person1.getCurrentGraduationMonth());
+	}
+	
+	/**
+	 * Test that if a user allready has an attribute set that it is not blown
+	 * away by shibboleth.
+	 */
+	@Test
+	public void testOverridingDefaults() {
+		// Turn off mocking in the method.
+		method.mock = false;
+		method.useNetIdAsIdentifier = true;
+
+		context.turnOffAuthorization();
+		person1.setInstitutionalIdentifier("original");
+		person1.setFirstName("original");
+		person1.setLastName("original");
+		person1.setMiddleName("original");
+		person1.setBirthYear(1900);
+		person1.setCurrentPhoneNumber("original");
+		person1.setCurrentEmailAddress("original");
+		person1.setCurrentPostalAddress("original");
+		person1.setPermanentPhoneNumber("original");
+		person1.setPermanentEmailAddress("original");
+		person1.setPermanentPostalAddress("original");
+		person1.setCurrentDegree("original");
+		person1.setCurrentDepartment("original");
+		person1.setCurrentCollege("original");
+		person1.setCurrentMajor("original");
+		person1.setCurrentGraduationYear(2010);
+		person1.setCurrentGraduationMonth(4);
+		person1.addAffiliation("one");
+		context.restoreAuthorization();
+		
+		
+		
+		Map<String,String> headers = new HashMap<String,String>();
+		headers.put("SHIB_netid","netid");
+		headers.put("SHIB_mail", "updatedemail@email.com");
+		headers.put("SHIB_uin","123456789");
+		headers.put("SHIB_givenName", "updatedfirst");
+		headers.put("SHIB_sn","updatedlast");
+		headers.put("SHIB_initials","initials");
+		headers.put("SHIB_birthYear","1950");
+		headers.put("SHIB_eduPersonAffilation","staff;student;affiliate");
+		headers.put("SHIB_phone","phone");
+		headers.put("SHIB_postal","postal");
+		headers.put("SHIB_permanentPhone","permanentPhone");
+		headers.put("SHIB_permanentPostal","permanentPostal");
+		headers.put("SHIB_permanentMail","permanentEmail");
+		headers.put("SHIB_degree","degree");
+		headers.put("SHIB_department","department");
+		headers.put("SHIB_college","college");
+		headers.put("SHIB_major","major");
+		headers.put("SHIB_gradYear","2012");
+		headers.put("SHIB_gradMonth","05");
+
+		Request request = buildRequest(headers);
+		
+		AuthenticationResult result = method.authenticate(request);
+
+		assertEquals(AuthenticationResult.SUCCESSFULL, result);
+		assertEquals(person1,context.getPerson());
+		
+		// Assert the required stuff was updated.
+		assertEquals("updatedemail@email.com",person1.getEmail());
+		assertEquals("123456789",person1.getInstitutionalIdentifier());
+		assertEquals("updatedfirst",person1.getFirstName());
+		assertEquals("updatedlast",person1.getLastName());
+		assertTrue(person1.getAffiliations().contains("staff"));
+		assertTrue(person1.getAffiliations().contains("student"));
+		assertTrue(person1.getAffiliations().contains("affiliate"));		
+		
+		assertEquals("original",person1.getMiddleName());
+		assertEquals(Integer.valueOf(1900),person1.getBirthYear());
+
+		assertEquals("original",person1.getCurrentPhoneNumber());
+		assertEquals("original",person1.getCurrentPostalAddress());
+		assertEquals("original",person1.getPermanentPhoneNumber());
+		assertEquals("original",person1.getPermanentPostalAddress());
+		assertEquals("original",person1.getPermanentEmailAddress());
+		assertEquals("original",person1.getCurrentDegree());
+		assertEquals("original",person1.getCurrentCollege());
+		assertEquals("original",person1.getCurrentDepartment());
+		assertEquals("original",person1.getCurrentMajor());
+		assertEquals(Integer.valueOf(2010),person1.getCurrentGraduationYear());
+		assertEquals(Integer.valueOf(04), person1.getCurrentGraduationMonth());
 	}
 	
 	/**
