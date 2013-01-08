@@ -470,9 +470,9 @@ public class TestDataLoader extends Job {
 			// Turn off authorizations.
 			context.turnOffAuthorization(); 
 			
-			// Check to see if test data has allready been loaded.
+			// Check to see if test data has already been loaded.
 			if (settingRepo.getConfigBoolean("TEST_DATA_LOADER")) {
-				Logger.debug("Test data has allready been loaded, skiping...");
+				Logger.debug("Test data has already been loaded, skiping...");
 				return;
 			}
 			Logger.debug("Loading test data.");
@@ -818,7 +818,7 @@ public class TestDataLoader extends Job {
 			String proposed = Base64.encodeBase64URLSafeString(randomBytes);
 			proposed = proposed.replaceAll("[^A-Za-z0-9]","");
 						
-			// Check if the hash allready exists
+			// Check if the hash already exists
 			if (subRepo.findSubmissionByEmailHash(proposed) == null) {
 				// We're done, otherwise keep looping.
 				hash = proposed;

@@ -196,7 +196,7 @@ public class ApplicationSettingsTab extends SettingsTab {
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
 		} catch (PersistenceException pe) {
 			name = escapeJavaScript(name);
-			renderJSON("{ \"failure\": \"true\", \"message\": \"Another custom action allready exists with the name: '"+name+"'\" }");
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another custom action already exists with the name: '"+name+"'\" }");
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to add custom action");
 			String message = escapeJavaScript(re.getMessage());			
@@ -235,7 +235,7 @@ public class ApplicationSettingsTab extends SettingsTab {
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
 		} catch (PersistenceException pe) {
 			name = escapeJavaScript(name);
-			renderJSON("{ \"failure\": \"true\", \"message\": \"Another custom action allready exists with the name: '"+name+"'\" }");
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another custom action already exists with the name: '"+name+"'\" }");
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to edit custom action");
 			String message = escapeJavaScript(re.getMessage());			
@@ -495,7 +495,7 @@ public class ApplicationSettingsTab extends SettingsTab {
 				
 				depositLocationId = "depositLocation_"+location.getId();
 			} catch (PersistenceException pe) {
-				validation.addError("name", "Another deposit location allready exists with the name.");
+				validation.addError("name", "Another deposit location already exists with the name.");
 				
 			} catch (RuntimeException re) {
 				Logger.error(re,"Unable to save Deposit Location");

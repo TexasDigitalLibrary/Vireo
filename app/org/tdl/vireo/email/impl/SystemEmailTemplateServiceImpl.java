@@ -86,13 +86,13 @@ public class SystemEmailTemplateServiceImpl implements
 			try {
 				context.turnOffAuthorization();
 
-				// Check if the template allready exists
+				// Check if the template already exists
 				EmailTemplate template = settingRepo.findEmailTemplateByName(name);
 				if (template == null) {
 					// The template dosn't exist, so create a new one.
 					template = settingRepo.createEmailTemplate(name,subject, message);
 				} else {
-					// The template allready exists. Update it's contents.
+					// The template already exists. Update it's contents.
 					template.setSubject(subject);
 					template.setMessage(message);
 				}

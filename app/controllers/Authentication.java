@@ -358,7 +358,7 @@ public class Authentication extends AbstractVireoController {
 			// Check if the account exists.
 			Person person = personRepo.findPersonByEmail(email);
 			if (person != null)
-				error("An account for this email address allready exists.");
+				error("An account for this email address already exists.");
 			
 			
 			String firstName = params.get("firstName");
@@ -435,10 +435,10 @@ public class Authentication extends AbstractVireoController {
 				validation.addError("email", "The email address is invalid.");
 			}
 			
-			// Check if the account allready exists
+			// Check if the account already exists
 			Person person = personRepo.findPersonByEmail(email);
 			if (person != null)
-				validation.addError("email", "An account with this email address allready exists.");
+				validation.addError("email", "An account with this email address already exists.");
 			
 			if (!validation.hasErrors()) {
 				// We're good let's send this off.
@@ -566,7 +566,7 @@ public class Authentication extends AbstractVireoController {
 				}
 			}
 
-			// Check if the account allready exists
+			// Check if the account already exists
 			if (!validation.hasErrors()) {
 				Person person = personRepo.findPersonByEmail(email);
 				if (person == null)

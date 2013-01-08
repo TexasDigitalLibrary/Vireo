@@ -203,7 +203,7 @@ function displayAlert(id, heading, message) {
 		alert.appendTo(jQuery("#alert-area")).fadeIn();
 
 	} else {
-		// An allert of this id allready, exists. Replace it.
+		// An allert of this id already, exists. Replace it.
 		jQuery("#alert-area #" + id).replaceWith(alert);
 	}
 }
