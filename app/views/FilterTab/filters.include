@@ -190,10 +190,10 @@ managing and modifying filters.
         <div class="sub-heading">&{nav.toUpperCase()+'_FACET_DATE'}</div>
         <ul class="unstyled editable">
             #{if activeFilter.getDateRangeStart() != null}
-            <li><strong>Before: </strong><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=rangeStart">${activeFilter.getDateRangeStart().format('MM/dd/yyyy')}</a>
+            <li><strong>After: </strong><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=rangeStart">${activeFilter.getDateRangeStart().format('MM/dd/yyyy')}</a>
             #{/if}
             #{if activeFilter.getDateRangeEnd() != null}
-            <li><strong>After: </strong><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=rangeEnd">${activeFilter.getDateRangeEnd().format('MM/dd/yyyy')}</a>
+            <li><strong>Before: </strong><a class="removable" href="@{FilterTab.ModifyFilters(nav)}?action=remove&type=rangeEnd">${activeFilter.getDateRangeEnd().format('MM/dd/yyyy')}</a>
             #{/if}
         </ul>
         #{/if}
