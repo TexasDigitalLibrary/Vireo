@@ -219,7 +219,7 @@ public class JpaCommitteeMemberImpl extends
 
 		if (this.roles.contains(role))
 			throw new IllegalArgumentException("The role '" + role
-					+ "' allready exists for committee member");
+					+ "' already exists for committee member");
 
 		assertReviewerOrOwner(submission.getSubmitter());
 

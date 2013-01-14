@@ -164,7 +164,7 @@ public class Confirm extends AbstractSubmitStep {
 			String proposed = Base64.encodeBase64URLSafeString(randomBytes);
 			proposed = proposed.replaceAll("[^A-Za-z0-9]","");
 						
-			// Check if the hash allready exists
+			// Check if the hash already exists
 			if (subRepo.findSubmissionByEmailHash(proposed) == null) {
 				// We're done, otherwise keep looping.
 				hash = proposed;

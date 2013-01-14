@@ -305,7 +305,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 	}
 	
 	/**
-	 * Test that if a user allready has an attribute set that it is not blown
+	 * Test that if a user already has an attribute set that it is not blown
 	 * away by shibboleth.
 	 */
 	@Test

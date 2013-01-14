@@ -142,7 +142,7 @@ public class EmailSettingsTab extends SettingsTab {
 			
 		} catch (PersistenceException pe) {
 			name = escapeJavaScript(name);
-			renderJSON("{ \"failure\": \"true\", \"message\": \"Another email template allready exists with the name: '"+name+"'\" }");
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another email template already exists with the name: '"+name+"'\" }");
 			
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to add email template");
@@ -238,7 +238,7 @@ public class EmailSettingsTab extends SettingsTab {
 			
 		} catch (PersistenceException pe) {
 			name = escapeJavaScript(name);
-			renderJSON("{ \"failure\": \"true\", \"message\": \"Another email template allready exists with the name: '"+name+"'\" }");
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another email template already exists with the name: '"+name+"'\" }");
 			
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to edit email template");
