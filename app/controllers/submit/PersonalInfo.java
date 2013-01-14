@@ -79,12 +79,12 @@ public class PersonalInfo extends AbstractSubmitStep {
 			boolean allowMultiple = settingRepo.getConfigBoolean(ALLOW_MULTIPLE_SUBMISSIONS);
 			
 			if (!allowMultiple) {
-				// Check if this user allready has another submission open.
+				// Check if this user already has another submission open.
 				List<Submission> otherSubmissions = subRepo.findSubmission(context.getPerson());
 				
 				for (Submission otherSubmission : otherSubmissions) {
 					if (otherSubmission.getState().isActive() || otherSubmission.getState().isInProgress()) {
-						error("Multiple submissions are not allowed, and the submitter allready has another submission.");
+						error("Multiple submissions are not allowed, and the submitter already has another submission.");
 					}
 				}
 			}

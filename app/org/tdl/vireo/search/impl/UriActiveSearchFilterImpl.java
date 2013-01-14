@@ -462,7 +462,7 @@ public class UriActiveSearchFilterImpl implements ActiveSearchFilter {
 			}
 			
 		} catch (RuntimeException re) {
-			// If anything other than the specific cases we have allready caught
+			// If anything other than the specific cases we have already caught
 			// just wrapped the exception with more information.
 			throw new RuntimeException("Unable to decode the search filter: " + encoded, re);
 		}

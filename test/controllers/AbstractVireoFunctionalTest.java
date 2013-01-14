@@ -38,7 +38,7 @@ public abstract class AbstractVireoFunctionalTest extends FunctionalTest {
 	
 	/**
 	 * Log the user in using PasswordAuthentication. This method will fail if
-	 * another user has allready authenticated, or if the username and password
+	 * another user has already authenticated, or if the username and password
 	 * pair is incorrect.
 	 * 
 	 * @param email

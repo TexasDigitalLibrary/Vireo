@@ -207,7 +207,7 @@ public class ChunkStreamImpl extends OutputStream implements ChunkStream {
         chunks.offer(event);
         
 		if (nextChunk != null) {
-			// A promise allready exists, so now that something has been
+			// A promise already exists, so now that something has been
 			// published into the queue let the consumer know about the new
 			// chunk.
 			nextChunk.invoke(chunks.remove());
