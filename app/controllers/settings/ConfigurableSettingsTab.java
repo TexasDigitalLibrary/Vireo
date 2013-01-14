@@ -131,7 +131,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 		}	
 		
 		
-		// Eliminate any values allready created.
+		// Eliminate any values already created.
 		Iterator<String> itr = items.iterator();
 		while (itr.hasNext()) {
 			String item = itr.next();
@@ -261,7 +261,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
 		} catch (PersistenceException pe) {
 			name = escapeJavaScript(name);
-			renderJSON("{ \"failure\": \"true\", \"message\": \"Another embargo type allready exists with the name: '"+name+"'\" }");
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another embargo type already exists with the name: '"+name+"'\" }");
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to add college");
 			String message = escapeJavaScript(re.getMessage());
@@ -404,7 +404,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
 		} catch (PersistenceException pe) {
 			name = escapeJavaScript(name);
-			renderJSON("{ \"failure\": \"true\", \"message\": \"Another college allready exists with the name: '"+name+"'\" }");
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another college already exists with the name: '"+name+"'\" }");
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to add college");
 			String message = escapeJavaScript(re.getMessage());
@@ -444,7 +444,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
 		} catch (PersistenceException pe) {
 			name = escapeJavaScript(name);
-			renderJSON("{ \"failure\": \"true\", \"message\": \"Another college allready exists with the name: '"+name+"'\" }");
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another college already exists with the name: '"+name+"'\" }");
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to edit college");
 			String message = escapeJavaScript(re.getMessage());
@@ -567,7 +567,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
 		} catch (PersistenceException pe) {
 			name = escapeJavaScript(name);
-			renderJSON("{ \"failure\": \"true\", \"message\": \"Another program allready exists with the name: '"+name+"'\" }");
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another program already exists with the name: '"+name+"'\" }");
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to add program");
 			String message = escapeJavaScript(re.getMessage());
@@ -607,7 +607,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
 		} catch (PersistenceException pe) {
 			name = escapeJavaScript(name);
-			renderJSON("{ \"failure\": \"true\", \"message\": \"Another program allready exists with the name: '"+name+"'\" }");
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another program already exists with the name: '"+name+"'\" }");
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to edit program");
 			String message = escapeJavaScript(re.getMessage());
@@ -730,7 +730,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
 		} catch (PersistenceException pe) {
 			name = escapeJavaScript(name);
-			renderJSON("{ \"failure\": \"true\", \"message\": \"Another department allready exists with the name: '"+name+"'\" }");
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another department already exists with the name: '"+name+"'\" }");
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to add department");
 			String message = escapeJavaScript(re.getMessage());
@@ -772,7 +772,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
 		} catch (PersistenceException pe) {
 			name = escapeJavaScript(name);
-			renderJSON("{ \"failure\": \"true\", \"message\": \"Another department allready exists with the name: '"+name+"'\" }");
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another department already exists with the name: '"+name+"'\" }");
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to edit department");
 			String message = escapeJavaScript(re.getMessage());
@@ -899,7 +899,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
 		} catch (PersistenceException pe) {
 			name = escapeJavaScript(name);
-			renderJSON("{ \"failure\": \"true\", \"message\": \"Another major allready exists with the name: '"+name+"'\" }");
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another major already exists with the name: '"+name+"'\" }");
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to add major");
 			String message = escapeJavaScript(re.getMessage());
@@ -939,7 +939,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
 		} catch (PersistenceException pe) {
 			name = escapeJavaScript(name);
-			renderJSON("{ \"failure\": \"true\", \"message\": \"Another major allready exists with the name: '"+name+"'\" }");
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another major already exists with the name: '"+name+"'\" }");
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to edit major");
 			String message = escapeJavaScript(re.getMessage());
@@ -1068,7 +1068,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			
 		} catch (PersistenceException pe) {
 			name = escapeJavaScript(name);
-			renderJSON("{ \"failure\": \"true\", \"message\": \"Another degree allready exists with the name: '"+name+"'\" }");
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another degree already exists with the name: '"+name+"'\" }");
 			
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to add degree");
@@ -1115,7 +1115,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			
 		} catch (PersistenceException pe) {
 			name = escapeJavaScript(name);
-			renderJSON("{ \"failure\": \"true\", \"message\": \"Another degree allready exists with the name: '"+name+"'\" }");
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another degree already exists with the name: '"+name+"'\" }");
 			
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to edit degree");
@@ -1243,7 +1243,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			
 		} catch (PersistenceException pe) {
 			name = escapeJavaScript(name);
-			renderJSON("{ \"failure\": \"true\", \"message\": \"Another document type allready exists with the name: '"+name+"'\" }");
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another document type already exists with the name: '"+name+"'\" }");
 			
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to add document type");
@@ -1290,7 +1290,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			
 		} catch (PersistenceException pe) {
 			name = escapeJavaScript(name);
-			renderJSON("{ \"failure\": \"true\", \"message\": \"Another document type allready exists with the name: '"+name+"'\" }");
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another document type already exists with the name: '"+name+"'\" }");
 			
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to edit document type");
@@ -1418,7 +1418,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			
 		} catch (PersistenceException pe) {
 			name = escapeJavaScript(name);
-			renderJSON("{ \"failure\": \"true\", \"message\": \"Another committee member role type allready exists with the name: '"+name+"'\" }");
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another committee member role type already exists with the name: '"+name+"'\" }");
 			
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to add committee member role type");
@@ -1465,7 +1465,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			
 		} catch (PersistenceException pe) {
 			name = escapeJavaScript(name);
-			renderJSON("{ \"failure\": \"true\", \"message\": \"Another committee member role type allready exists with the name: '"+name+"'\" }");
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another committee member role type already exists with the name: '"+name+"'\" }");
 			
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to edit committee member role type");
@@ -1591,7 +1591,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			
 		} catch (PersistenceException pe) {
 			name = escapeJavaScript(name);
-			renderJSON("{ \"failure\": \"true\", \"message\": \"Another graduation month allready exists with the name: '"+name+"'\" }");
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another graduation month already exists with the name: '"+name+"'\" }");
 			
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to add graduation month");
@@ -1635,7 +1635,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			
 		} catch (PersistenceException pe) {
 			name = escapeJavaScript(name);
-			renderJSON("{ \"failure\": \"true\", \"message\": \"Another graduation month allready exists with the name: '"+name+"'\" }");
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another graduation month already exists with the name: '"+name+"'\" }");
 			
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to edit graduation month");
@@ -1765,7 +1765,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
 		} catch (PersistenceException pe) {
 			name = escapeJavaScript(name);
-			renderJSON("{ \"failure\": \"true\", \"message\": \"Another language allready exists with the name: '"+name+"'\" }");
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another language already exists with the name: '"+name+"'\" }");
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to add program");
 			String message = escapeJavaScript(re.getMessage());

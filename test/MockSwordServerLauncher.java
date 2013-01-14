@@ -33,10 +33,10 @@ public class MockSwordServerLauncher {
 				MockSwordServer.start(8082);
 				Logger.info("Mock Sword Server started on port: "+PORT);
 			} catch (BindException be) {
-				// If the port is allready in use, then another thread is
+				// If the port is already in use, then another thread is
 				// running the sword server. It's okay, we'll ignore that error.
 				// Everything else we send up the stack.
-				Logger.info("Mock Sword Server failed to started on port "+PORT+" because it is allready in use, ignoring.");
+				Logger.info("Mock Sword Server failed to started on port "+PORT+" because it is already in use, ignoring.");
 			}
 		}
 

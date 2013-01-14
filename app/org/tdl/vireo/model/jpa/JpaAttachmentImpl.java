@@ -68,7 +68,7 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 			throw new IllegalArgumentException("Attachment type is required");
 		
 		if (AttachmentType.PRIMARY == type) {
-			// Check that there is not allready a primary document.	
+			// Check that there is not already a primary document.	
 			if (submission.getPrimaryDocument() != null)
 				throw new IllegalArgumentException("There can only be one primary document associated with a submission. You must remove the current primary document before adding another.");
 		}
@@ -254,7 +254,7 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 	public void archive() {
 		
 		if (type == AttachmentType.ARCHIVED)
-			throw new IllegalStateException("Unable to archive an allready archived attachment.");
+			throw new IllegalStateException("Unable to archive an already archived attachment.");
 		
 		type = AttachmentType.ARCHIVED;
 		
@@ -286,7 +286,7 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 
 		assertReviewerOrOwner(submission.getSubmitter());
 		
-		// Check if this filename has allready exists
+		// Check if this filename has already exists
 		if (submission.getId() != null && submission.findAttachmentByName(name) != null) {
 			// If so, we rename this attachment
 			String basename = FilenameUtils.getBaseName(name);
@@ -443,7 +443,7 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 		if (extension != null && extension.trim().length() > 0)
 			filename += "." + extension;
 		
-		// Step 2) Check if that name allready exists, and if so move it out of the way.
+		// Step 2) Check if that name already exists, and if so move it out of the way.
 		Attachment exists = submission.findAttachmentByName(filename);
 		if (exists != null && exists != this) {
 			String existsBase = FilenameUtils.getBaseName(exists.getName());
