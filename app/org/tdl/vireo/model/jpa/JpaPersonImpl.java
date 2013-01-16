@@ -148,7 +148,7 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 		// While only administrators are able to modify another person's data,
 		// the manager can change the person's role. So when saving we just
 		// allow managers (or above) or the original person to edit the object.
-		assertManagerOrOwner(this);
+		assertReviewerOrOwner(this);
 		
 		// Do the check to ensure that there it at least a first or a last name available.
 		if ((firstName == null || firstName.length() == 0) &&
@@ -189,7 +189,7 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 		if (email == null || email.length() == 0)
 			throw new IllegalArgumentException("Email is required");
 		
-		assertAdministratorOrOwner(this);
+		assertReviewerOrOwner(this);
 
 		this.email = email;
 	}
@@ -231,7 +231,7 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 	@Override
 	public void setFirstName(String firstName) {
 		
-		assertAdministratorOrOwner(this);
+		assertReviewerOrOwner(this);
 		
 		// Convert blanks to nulls.
 		if (firstName != null && firstName.trim().length() == 0)
@@ -258,7 +258,7 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 	@Override
 	public void setLastName(String lastName) {
 		
-		assertAdministratorOrOwner(this);
+		assertReviewerOrOwner(this);
 		
 		// Convert blanks to nulls.
 		if (lastName != null && lastName.trim().length() == 0)
@@ -285,7 +285,7 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 	@Override
 	public void setDisplayName(String displayName) {
 		
-		assertAdministratorOrOwner(this);
+		assertReviewerOrOwner(this);
 		
 		this.displayName = displayName;
 	}
@@ -298,7 +298,7 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 	@Override
 	public void setBirthYear(Integer year) {
 		
-		assertAdministratorOrOwner(this);
+		assertReviewerOrOwner(this);
 		
 		this.birthYear = year;
 	}
@@ -315,18 +315,22 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 
 	@Override
 	public void addAffiliation(String affiliation) {
+		assertReviewerOrOwner(this);
+		
 		affiliations.add(affiliation);
 	}
 
 	@Override
 	public void removeAffilation(String affiliation) {
+		assertReviewerOrOwner(this);
+		
 		affiliations.remove(affiliation);
 	}
 	
 	@Override
 	public void setCurrentPhoneNumber(String phoneNumber) {
 		
-		assertAdministratorOrOwner(this);
+		assertReviewerOrOwner(this);
 		
 		this.currentPhoneNumber = phoneNumber;
 	}
@@ -339,7 +343,7 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 	@Override
 	public void setCurrentPostalAddress(String postalAddress) {
 		
-		assertAdministratorOrOwner(this);
+		assertReviewerOrOwner(this);
 		
 		this.currentPostalAddress = postalAddress;
 	}
@@ -356,7 +360,7 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 	@Override
 	public void setCurrentEmailAddress(String email) {
 		
-		assertAdministratorOrOwner(this);
+		assertReviewerOrOwner(this);
 		
 		this.currentEmailAddress = email;
 	}
@@ -369,7 +373,7 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 	@Override
 	public void setPermanentPhoneNumber(String phoneNumber) {
 		
-		assertAdministratorOrOwner(this);
+		assertReviewerOrOwner(this);
 		
 		this.permanentPhoneNumber = phoneNumber;
 	}
@@ -382,7 +386,7 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 	@Override
 	public void setPermanentPostalAddress(String postalAddress) {
 		
-		assertAdministratorOrOwner(this);
+		assertReviewerOrOwner(this);
 		
 		this.permanentPostalAddress = postalAddress;
 	}
@@ -395,7 +399,7 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 	@Override
 	public void setPermanentEmailAddress(String email) {
 		
-		assertAdministratorOrOwner(this);
+		assertReviewerOrOwner(this);
 		
 		this.permanentEmailAddress = email;
 	}
@@ -408,7 +412,7 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 	@Override
 	public void setCurrentDegree(String degree) {
 		
-		assertAdministratorOrOwner(this);
+		assertReviewerOrOwner(this);
 
 		this.currentDegree = degree;
 	}
@@ -421,7 +425,7 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 	@Override
 	public void setCurrentDepartment(String department) {
 		
-		assertAdministratorOrOwner(this);
+		assertReviewerOrOwner(this);
 		
 		this.currentDepartment = department;
 	}
@@ -434,7 +438,7 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 	@Override
 	public void setCurrentCollege(String college) {
 		
-		assertAdministratorOrOwner(this);
+		assertReviewerOrOwner(this);
 		
 		this.currentCollege = college;
 	}
@@ -447,7 +451,7 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 	@Override
 	public void setCurrentMajor(String major) {
 		
-		assertAdministratorOrOwner(this);
+		assertReviewerOrOwner(this);
 		
 		this.currentMajor = major;
 	}
@@ -460,7 +464,7 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 	@Override
 	public void setCurrentGraduationYear(Integer year) {
 		
-		assertAdministratorOrOwner(this);
+		assertReviewerOrOwner(this);
 		
 		this.currentGraduationYear = year;
 	}
@@ -476,7 +480,7 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 			throw new IllegalArgumentException("Graduation month is out of bounds.");
 		}
 		
-		assertAdministratorOrOwner(this);
+		assertReviewerOrOwner(this);
 		
 		this.currentGraduationMonth = month;
 	}
@@ -493,7 +497,7 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 
 	@Override
 	public Preference addPreference(String name, String value) {
-		assertAdministratorOrOwner(this);
+		assertReviewerOrOwner(this);
 		
 		Preference preference = new JpaPreferenceImpl(this, name, value);
 		this.preferences.add(preference);
@@ -508,7 +512,7 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 	 */
 	protected void removePreference(Preference preference) {
 		
-		assertAdministratorOrOwner(this);
+		assertReviewerOrOwner(this);
 		
 		preferences.remove(preference);
 	}
@@ -524,7 +528,7 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 			throw new IllegalArgumentException("Role is required");
 
 		if (role == RoleType.STUDENT) {
-			assertAdministratorOrOwner(this);
+			assertManagerOrOwner(this);
 			
 		} else if (role == RoleType.REVIEWER || role == RoleType.MANAGER) {
 			assertManager();

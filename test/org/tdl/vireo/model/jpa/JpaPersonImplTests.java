@@ -753,6 +753,9 @@ public class JpaPersonImplTests extends UnitTest {
 		JPA.em().getTransaction().begin();
 	}
 	
+	/**
+	 * Test that access to update a person is restricted.
+	 */
 	@Test
 	public void testAccess() {
 		
@@ -775,6 +778,13 @@ public class JpaPersonImplTests extends UnitTest {
 		} catch (SecurityException se) {
 			/* yay */
 		}
+		
+		// VIREO-133: Test tha reviewer can update student's email
+		context.login(MockPerson.getReviewer());
+		person.setEmail("changed@email.com");
+		person.setLastName("Changed");
+		person.setFirstName("Changed");
+		person.save();
 		
 		// Test that an administrator is able to modify the student object.
 		context.login(MockPerson.getAdministrator());
@@ -801,4 +811,5 @@ public class JpaPersonImplTests extends UnitTest {
 		person.delete();
 		context.logout();
 	}
+	
 }
