@@ -78,7 +78,7 @@
                     <!-- dc.contributor.committeeMember = Committee Members who are not flagged as chair (likely multiple) -->
                     #{list items:sub.getCommitteeMembers(), as:'member'}
                     #{if member.hasNoRole() } 
-                    <dim:field mdschema="dc" element="contributor" qualifier="advisor">
+                    <dim:field mdschema="dc" element="contributor" qualifier="committeeMember">
                         ${ member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH) } 
                     </dim:field>
                     #{/if}

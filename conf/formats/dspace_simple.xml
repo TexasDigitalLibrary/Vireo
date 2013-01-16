@@ -66,7 +66,7 @@ ${ attachment.getName() }	bundle:LICENSE
     <!-- dc.contributor.committeeMember = Committee Members who are not flagged as chair (likely multiple) -->
     #{list items:sub.getCommitteeMembers(), as:'member'}
     #{if member.hasNoRole() } 
-    <dcvalue element="contributor" qualifier="advisor">
+    <dcvalue element="contributor" qualifier="committeeMember">
         ${ member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH) }$
     </dcvalue>
     #{/if}
