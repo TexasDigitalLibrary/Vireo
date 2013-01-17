@@ -47,7 +47,7 @@ jQuery(document).ready(function(){
 			<ul class="unstyled">
 				<li><fieldset class="control-group"><input id="displayName" class="input-medium" type="text" name="displayName" value="${currentUser.getDisplayName()}" /></fieldset></li>
 			</ul>
-			<div class="sub-heading">PREFERED EMAIL</div>
+			<div class="sub-heading">PREFERRED EMAIL</div>
 			<ul class="unstyled">
 				<li><fieldset class="control-group"><input id="currentEmailAddress" class="input-medium" type="text" name="currentEmailAddress" value="${currentUser.getCurrentEmailAddress()}" /></fieldset></li>
 				<li><fieldset class="control-group"><input id="ccEmail" type="checkbox" class="checkbox" name="ccEmail" #{if currentUser.getPreference(org.tdl.vireo.constant.AppPref.CC_EMAILS) != null }checked="true"#{/if}> I want to receive a copy of all emails sent by the system on my behalf.</input></fieldset></li>
