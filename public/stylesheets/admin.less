@@ -640,15 +640,36 @@ div.modal li {
 	top:-60%;
 }
 
+@media (min-height: 800px) and (max-height: 999px) {
+	.modal {
+	    margin: -350px 0 0 -280px;
+	}
+	.modal .modal-body {
+	    max-height: 550px;
+	}
+}
+@media (min-height: 1000px) and (max-height: 1199px) {
+	.modal {
+	    margin: -450px 0 0 -280px;
+	}
+	.modal .modal-body {
+	    max-height: 800px;
+	}
+}
+
+@media (min-height: 1200px) {
+	.modal {
+	    margin: -550px 0 0 -280px;
+	}
+	.modal .modal-body {
+	    max-height: 1000px;
+	}
+}
+
+
 /**********************
 COLUMN SORTING
 **********************/
-#customize-search-modal {
-    margin: -350px 0 0 -280px;
-}
-#customize-search-modal .modal-body {
-    max-height: 550px;
-}
 #filter-customize-modal h4,
 #customize-search-modal h4 {
     text-align: center;
@@ -783,13 +804,6 @@ input.settings-error:focus,
 #add-member-modal .search-empty {
     text-align: center;
     padding: 30px 0;
-}
-
-#deposit-location-modal {
-    margin: -350px 0 0 -280px;
-}
-#deposit-location-modal .modal-body {
-    max-height: 550px;
 }
 
 .application-protected,
