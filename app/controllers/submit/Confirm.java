@@ -200,9 +200,7 @@ public class Confirm extends AbstractSubmitStep {
 
 			email = emailService.createEmail();
 			email.setTemplate(template);
-			email.addParameters(sub);
-			email.addParameter("STUDENT_URL",getStudentURL(sub));
-			
+			email.addParameters(sub);			
 			email.addTo(sub.getSubmitter());
 			
 			email.setLogOnCompletion(null, sub);
@@ -221,8 +219,6 @@ public class Confirm extends AbstractSubmitStep {
 	 */
 	protected static VireoEmail generateAdvisorEmail(Submission sub) {
 		
-		
-		System.out.println("generatingAdvisorEmail");
 		// Check if the email should be sent automatically.
 		if (settingRepo.getConfigBoolean(AppConfig.EMAIL_DELAY_SENDING_ADVISOR_REQUEST))
 			return null;
@@ -241,9 +237,7 @@ public class Confirm extends AbstractSubmitStep {
 		
 		
 		email.setTemplate(template);
-		email.addParameters(sub);
-		email.addParameter("ADVISOR_URL",getAdvisorURL(sub));
-		
+		email.addParameters(sub);		
 		email.addTo(sub.getCommitteeContactEmail());
 		
 		email.setLogOnCompletion(null, sub);
@@ -251,40 +245,6 @@ public class Confirm extends AbstractSubmitStep {
 		email.setFailureLogMessage("Failed to send advisor review request, "+sub.getCommitteeContactEmail());
 		
 		return email;
-	}
-	
-	/**
-	 * Retrieve the url where students may review their submission.
-	 * 
-	 * @param sub
-	 *            The submission
-	 * @return The url
-	 */
-	protected static String getStudentURL(Submission sub) {
-		
-		ActionDefinition studentAction = Router.reverse("Student.submissionList");
-		studentAction.absolute();
-		
-		return studentAction.url;
-	}
-	
-	/**
-	 * Retrieve the url where advisors may approve the submission.
-	 * 
-	 * @param sub
-	 *            The submission.
-	 * @return the url
-	 */
-	protected static String getAdvisorURL(Submission sub) {
-		
-		Map<String,Object> routeArgs = new HashMap<String,Object>();
-		routeArgs.put("token", sub.getCommitteeEmailHash());
-		
-		ActionDefinition advisorAction = Router.reverse("Advisor.review",routeArgs);
-		advisorAction.absolute();
-		
-		
-		return advisorAction.url;
 	}
 	
 }
