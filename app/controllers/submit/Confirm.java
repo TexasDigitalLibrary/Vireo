@@ -41,8 +41,8 @@ import controllers.Security;
  */
 public class Confirm extends AbstractSubmitStep {
 
-	public static final String STUDENT_INITIAL_SUBMISSION_TEMPLATE = "SYSTEM_Initial_Submission";
-	public static final String ADVISOR_INITIAL_SUBMISSION_TEMPLATE = "SYSTEM_Advisor_Review_Request";
+	public static final String STUDENT_INITIAL_SUBMISSION_TEMPLATE = "SYSTEM Initial Submission";
+	public static final String ADVISOR_INITIAL_SUBMISSION_TEMPLATE = "SYSTEM Advisor Review Request";
 	
 	public static EmailService emailService = Spring.getBeanOfType(EmailService.class);
 	public static SystemEmailTemplateService templateService = Spring.getBeanOfType(SystemEmailTemplateService.class);
@@ -196,7 +196,7 @@ public class Confirm extends AbstractSubmitStep {
 
 		VireoEmail email = null;
 		if (sub.getSubmitter().getEmail() != null) {
-			EmailTemplate template = templateService.generateSystemEmailTemplate(STUDENT_INITIAL_SUBMISSION_TEMPLATE);
+			EmailTemplate template = settingRepo.findEmailTemplateByName(STUDENT_INITIAL_SUBMISSION_TEMPLATE);
 
 			email = emailService.createEmail();
 			email.setTemplate(template);
@@ -228,7 +228,7 @@ public class Confirm extends AbstractSubmitStep {
 			return null;
 			
 			
-		EmailTemplate template = templateService.generateSystemEmailTemplate(ADVISOR_INITIAL_SUBMISSION_TEMPLATE);
+		EmailTemplate template = settingRepo.findEmailTemplateByName(ADVISOR_INITIAL_SUBMISSION_TEMPLATE);
 
 		VireoEmail email = emailService.createEmail();
 		email.getTo().clear();
