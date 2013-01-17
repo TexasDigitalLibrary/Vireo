@@ -19,6 +19,8 @@ import org.tdl.vireo.model.SubmissionRepository;
 import org.tdl.vireo.security.SecurityContext;
 
 import play.Play;
+import play.mvc.Router;
+import play.mvc.Router.ActionDefinition;
 
 /**
  * Implementation of the vireo email object.
@@ -282,6 +284,23 @@ public class VireoEmailImpl implements VireoEmail {
 			parameters.put("SUBMISSION_ASSIGNED_TO",sub.getAssignee().getFormattedName(NameFormat.FIRST_LAST));
 		else 
 			parameters.put("SUBMISSION_ASSIGNED_TO", "n/a");
+		
+		
+		// URL for the student to view their submission(s)
+		ActionDefinition studentAction = Router.reverse("Student.submissionList");
+		studentAction.absolute();
+		parameters.put("STUDENT_URL", studentAction.url);
+		
+		// Advisor url for reviews
+		if (sub.getCommitteeEmailHash() != null) {
+			Map<String,Object> routeArgs = new HashMap<String,Object>();
+			routeArgs.put("token", sub.getCommitteeEmailHash());
+			
+			ActionDefinition advisorAction = Router.reverse("Advisor.review",routeArgs);
+			advisorAction.absolute();
+			
+			parameters.put("ADVISOR_URL", advisorAction.url);
+		}
 	}
 
 	@Override

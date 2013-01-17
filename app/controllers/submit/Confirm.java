@@ -37,8 +37,8 @@ import controllers.Security;
  */
 public class Confirm extends AbstractSubmitStep {
 
-	public static final String STUDENT_INITIAL_SUBMISSION_TEMPLATE = "SYSTEM_Initial_Submission";
-	public static final String ADVISOR_INITIAL_SUBMISSION_TEMPLATE = "SYSTEM_Advisor_Review_Request";
+	public static final String STUDENT_INITIAL_SUBMISSION_TEMPLATE = "SYSTEM Initial Submission";
+	public static final String ADVISOR_INITIAL_SUBMISSION_TEMPLATE = "SYSTEM Advisor Review Request";
 	
 	public static EmailService emailService = Spring.getBeanOfType(EmailService.class);
 	public static SystemEmailTemplateService templateService = Spring.getBeanOfType(SystemEmailTemplateService.class);
@@ -217,13 +217,12 @@ public class Confirm extends AbstractSubmitStep {
 
 		VireoEmail email = null;
 		if (sub.getSubmitter().getEmail() != null) {
-			EmailTemplate template = templateService.generateSystemEmailTemplate(STUDENT_INITIAL_SUBMISSION_TEMPLATE);
+			templateService.generateAllSystemEmailTemplates();			
+			EmailTemplate template = settingRepo.findEmailTemplateByName(STUDENT_INITIAL_SUBMISSION_TEMPLATE);
 
 			email = emailService.createEmail();
 			email.setTemplate(template);
-			email.addParameters(sub);
-			email.addParameter("STUDENT_URL",getStudentURL(sub));
-			
+			email.addParameters(sub);			
 			email.addTo(sub.getSubmitter());
 			
 			email.setLogOnCompletion(null, sub);
@@ -237,7 +236,8 @@ public class Confirm extends AbstractSubmitStep {
 	protected static VireoEmail generateAdvisorEmail(Submission sub) {
 		VireoEmail email = null;
 		if (sub.getCommitteeContactEmail() != null) {
-			EmailTemplate template = templateService.generateSystemEmailTemplate(ADVISOR_INITIAL_SUBMISSION_TEMPLATE);
+			templateService.generateAllSystemEmailTemplates();
+			EmailTemplate template = settingRepo.findEmailTemplateByName(ADVISOR_INITIAL_SUBMISSION_TEMPLATE);
 
 			email = emailService.createEmail();
 			email.getTo().clear();
@@ -247,51 +247,14 @@ public class Confirm extends AbstractSubmitStep {
 			
 			email.setTemplate(template);
 			email.addParameters(sub);
-			email.addParameter("ADVISOR_URL",getAdvisorURL(sub));
-			
 			email.addTo(sub.getCommitteeContactEmail());
 			
 			email.setLogOnCompletion(null, sub);
 			email.setSuccessLogMessage("Advisor review request sent to "+sub.getCommitteeContactEmail());
 			email.setFailureLogMessage("Failed to send advisor review request, "+sub.getCommitteeContactEmail());
-
 		}
 		
 		return email;
-	}
-	
-	/**
-	 * Retrieve the url where students may review their submission.
-	 * 
-	 * @param sub
-	 *            The submission
-	 * @return The url
-	 */
-	protected static String getStudentURL(Submission sub) {
-		
-		ActionDefinition studentAction = Router.reverse("Student.submissionList");
-		studentAction.absolute();
-		
-		return studentAction.url;
-	}
-	
-	/**
-	 * Retrieve the url where advisors may approve the submission.
-	 * 
-	 * @param sub
-	 *            The submission.
-	 * @return the url
-	 */
-	protected static String getAdvisorURL(Submission sub) {
-		
-		Map<String,Object> routeArgs = new HashMap<String,Object>();
-		routeArgs.put("token", sub.getCommitteeEmailHash());
-		
-		ActionDefinition advisorAction = Router.reverse("Advisor.review",routeArgs);
-		advisorAction.absolute();
-		
-		
-		return advisorAction.url;
 	}
 	
 }
