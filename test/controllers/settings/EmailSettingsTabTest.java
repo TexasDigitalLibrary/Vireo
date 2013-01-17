@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.SettingsRepository;
@@ -77,9 +78,7 @@ public class EmailSettingsTabTest extends AbstractVireoFunctionalTest {
 		final String URL = Router.reverse("settings.EmailSettingsTab.updateEmailSettingsJSON").url;
 
 		List<String> booleanFields = new ArrayList<String>();
-		booleanFields.add(EMAIL_SHOW_ADDRESSES);
-		booleanFields.add(EMAIL_CC_ADVISOR);
-		booleanFields.add(EMAIL_CC_STUDENT);
+		booleanFields.add(Configuration.EMAIL_DELAY_SENDING_ADVISOR_REQUEST);
 		
 		
 		// Get the field's current state

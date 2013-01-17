@@ -26,9 +26,8 @@ public class EmailSettingsTab extends SettingsTab {
 	public static void emailSettings(){
 		
 		// Get the email checkboxes
-		renderArgs.put("EMAIL_SHOW_ADDRESSES", settingRepo.findConfigurationByName(EMAIL_SHOW_ADDRESSES));
-		renderArgs.put("EMAIL_CC_ADVISOR",     settingRepo.findConfigurationByName(EMAIL_CC_ADVISOR));
-		renderArgs.put("EMAIL_CC_STUDENT",     settingRepo.findConfigurationByName(EMAIL_CC_STUDENT));
+		renderArgs.put("EMAIL_DELAY_SENDING_ADVISOR_REQUEST", settingRepo.findConfigurationByName(EMAIL_DELAY_SENDING_ADVISOR_REQUEST));
+
 
 		
 		// List all templates
@@ -58,9 +57,7 @@ public class EmailSettingsTab extends SettingsTab {
 			
 			
 			List<String> editableFields = new ArrayList<String>();
-			editableFields.add(EMAIL_SHOW_ADDRESSES);
-			editableFields.add(EMAIL_CC_ADVISOR);
-			editableFields.add(EMAIL_CC_STUDENT);
+			editableFields.add(EMAIL_DELAY_SENDING_ADVISOR_REQUEST);
 			
 			if (!editableFields.contains(field))
 				throw new IllegalArgumentException("Unknown field '"+field+"'");

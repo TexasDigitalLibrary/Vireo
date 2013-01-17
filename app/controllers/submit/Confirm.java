@@ -119,35 +119,45 @@ public class Confirm extends AbstractSubmitStep {
 			try {
 				context.turnOffAuthorization();
 				
-				// Generate an committee hash
-				generateCommitteEmailHash(sub);
-				
-				// Clear the approval dates
-				sub.setCommitteeApprovalDate(null);
-				sub.setCommitteeEmbargoApprovalDate(null);
-				
-				// Set the submission date
-				sub.setSubmissionDate(new Date());
+				VireoEmail studentEmail = null;
+				VireoEmail advisorEmail = null;
+				if (sub.getState() == stateManager.getInitialState()) {
+					// Only do these things if this is the first submission.
 					
-				// Transition to the next state
-				State nextState = sub.getState().getTransitions(sub).get(0);
-				sub.setState(nextState);
+					// Generate an committee hash
+					generateCommitteEmailHash(sub);
+					
+					// Clear the approval dates
+					sub.setCommitteeApprovalDate(null);
+					sub.setCommitteeEmbargoApprovalDate(null);
+					
+					// Set the submission date
+					sub.setSubmissionDate(new Date());
+						
+					// Generate the emails
+					studentEmail = generateStudentEmail(sub);
+					advisorEmail = generateAdvisorEmail(sub);
+				}
 				
-				// Generate the emails
-				VireoEmail studentEmail = generateStudentEmail(sub);
-				VireoEmail advisorEmail = generateAdvisorEmail(sub);
+				// Transition to the next state
+				State prevState = sub.getState();
+				State nextState = prevState.getTransitions(sub).get(0);
+				sub.setState(nextState);
 				
 				sub.save();
 
-				Logger.info("%s (%d: %s) has completed and confirmed submission #%d.",
+				Logger.info("%s (%d: %s) has completed %s submission #%d.",
 						submitter.getFormattedName(NameFormat.FIRST_LAST), 
 						submitter.getId(), 
 						submitter.getEmail(),
+						prevState.getDisplayName(),
 						sub.getId());
 				
 				// After we have saved our state do we kick off the emails
-				emailService.sendEmail(studentEmail, false);
-				emailService.sendEmail(advisorEmail, false);
+				if (studentEmail != null)
+					emailService.sendEmail(studentEmail, false);
+				if (advisorEmail != null)
+					emailService.sendEmail(advisorEmail, false);
 			} finally {
 				context.restoreAuthorization();
 
@@ -235,25 +245,32 @@ public class Confirm extends AbstractSubmitStep {
 	
 	protected static VireoEmail generateAdvisorEmail(Submission sub) {
 		VireoEmail email = null;
-		if (sub.getCommitteeContactEmail() != null) {
-			templateService.generateAllSystemEmailTemplates();
-			EmailTemplate template = settingRepo.findEmailTemplateByName(ADVISOR_INITIAL_SUBMISSION_TEMPLATE);
 
-			email = emailService.createEmail();
-			email.getTo().clear();
-			email.getCc().clear();
-			email.getBcc().clear();
-			
-			
-			email.setTemplate(template);
-			email.addParameters(sub);
-			email.addTo(sub.getCommitteeContactEmail());
-			
-			email.setLogOnCompletion(null, sub);
-			email.setSuccessLogMessage("Advisor review request sent to "+sub.getCommitteeContactEmail());
-			email.setFailureLogMessage("Failed to send advisor review request, "+sub.getCommitteeContactEmail());
-		}
+		// Check if the email should be sent automatically.
+		if (settingRepo.getConfigBoolean(Configuration.EMAIL_DELAY_SENDING_ADVISOR_REQUEST))
+			return null;
+
+		// Only send it if we have an actual contact email address.
+		if (sub.getCommitteeContactEmail() == null || sub.getCommitteeContactEmail().trim().length() == 0)
+			return null;
 		
+		templateService.generateAllSystemEmailTemplates();
+		EmailTemplate template = settingRepo.findEmailTemplateByName(ADVISOR_INITIAL_SUBMISSION_TEMPLATE);
+
+		email = emailService.createEmail();
+		email.getTo().clear();
+		email.getCc().clear();
+		email.getBcc().clear();
+		
+		
+		email.setTemplate(template);
+		email.addParameters(sub);
+		email.addTo(sub.getCommitteeContactEmail());
+		
+		email.setLogOnCompletion(null, sub);
+		email.setSuccessLogMessage("Advisor review request sent to "+sub.getCommitteeContactEmail());
+		email.setFailureLogMessage("Failed to send advisor review request, "+sub.getCommitteeContactEmail());
+
 		return email;
 	}
 	

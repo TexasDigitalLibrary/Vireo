@@ -71,6 +71,10 @@ public interface Configuration extends AbstractModel {
 	/** CC the student whenever the system sent an email to someone else. **/
 	public final static String EMAIL_CC_STUDENT = "email_cc_student";
 	
+	/** Weather to skip sending emails to advisor **/
+	public final static String EMAIL_DELAY_SENDING_ADVISOR_REQUEST = "email_delay_advisor_request";
+
+	
 	// Theme settings
 	/** Instructions to show on the front page of Vireo. */
 	public final static String FRONT_PAGE_INSTRUCTIONS = "front_page_instructions";
@@ -80,7 +84,7 @@ public interface Configuration extends AbstractModel {
 
 	/** Instructions to show after submitting corrections */
 	public final static String CORRECTION_INSTRUCTIONS = "correction_instructions";
-	
+		
 	/**
 	 * Configuration defaults
 	 * 
