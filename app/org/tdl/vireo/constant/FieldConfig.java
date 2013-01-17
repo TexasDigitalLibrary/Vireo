@@ -220,7 +220,7 @@ public enum FieldConfig {
 			"The committee members who approved of this submission."),
 	
 	COMMITTEE_CONTACT_EMAIL(
-			"Committee Contaict Email",
+			"Committee Contact Email",
 			"submit_committee_contact_email_label",
 			"submit_committee_contact_email_help",
 			"submit_committee_contact_email_enabled",

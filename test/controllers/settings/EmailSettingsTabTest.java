@@ -77,9 +77,7 @@ public class EmailSettingsTabTest extends AbstractVireoFunctionalTest {
 		final String URL = Router.reverse("settings.EmailSettingsTab.updateEmailSettingsJSON").url;
 
 		List<String> booleanFields = new ArrayList<String>();
-		booleanFields.add(EMAIL_SHOW_ADDRESSES);
-		booleanFields.add(EMAIL_CC_ADVISOR);
-		booleanFields.add(EMAIL_CC_STUDENT);
+		booleanFields.add(EMAIL_DELAY_SENDING_ADVISOR_REQUEST);
 		
 		
 		// Get the field's current state
