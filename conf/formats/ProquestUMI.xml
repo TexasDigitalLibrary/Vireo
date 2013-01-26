@@ -146,10 +146,10 @@
 	<DISS_authorship>
 		<DISS_author type="primary">
 			<DISS_name>
-				<DISS_surname>${ sub.getStudentLastName()?.escapeXml() }</DISS_surname>
-				<DISS_fname>${ sub.getStudentFirstName()?.escapeXml() }</DISS_fname>
-				<DISS_middle>${ sub.getStudentMiddleName()?.escapeXml() }</DISS_middle>
-				<DISS_affiliation>${ settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.GRANTOR) }</DISS_affiliation>
+				<DISS_surname>${ sub.getStudentLastName()?.escapeXml().raw() }</DISS_surname>
+				<DISS_fname>${ sub.getStudentFirstName()?.escapeXml().raw() }</DISS_fname>
+				<DISS_middle>${ sub.getStudentMiddleName()?.escapeXml().raw() }</DISS_middle>
+				<DISS_affiliation>${ settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.GRANTOR).escapeXml().raw() }</DISS_affiliation>
 			</DISS_name>
 #{if release_student_contact_information }
 			<DISS_contact type="current">
@@ -159,24 +159,24 @@
 #{if sub.getSubmitter().getCurrentPhoneNumber() != null}
 				<DISS_phone_fax type="P">
 %{ def phone = proquestUtils.parsePhone(sub.getSubmitter().getCurrentPhoneNumber()); }%
-					<DISS_cntry_cd>${ phone.cntryCode }</DISS_cntry_cd>
-					<DISS_area_code>${ phone.areaCode }</DISS_area_code>
-					<DISS_phone_num>${ phone.number }</DISS_phone_num>
-					<DISS_phone_ext>${ phone.ext }</DISS_phone_ext>
+					<DISS_cntry_cd>${ phone.cntryCode.escapeXml().raw() }</DISS_cntry_cd>
+					<DISS_area_code>${ phone.areaCode.escapeXml().raw() }</DISS_area_code>
+					<DISS_phone_num>${ phone.number.escapeXml().raw() }</DISS_phone_num>
+					<DISS_phone_ext>${ phone.ext.escapeXml().raw() }</DISS_phone_ext>
 				</DISS_phone_fax>
 #{/if}
 #{if sub.getSubmitter().getCurrentPostalAddress() != null }
 %{ def address = proquestUtils.parseAddress(sub.getSubmitter().getCurrentPostalAddress()); %}
 				<DISS_address>
-					<DISS_addrline>${ address.addrline }</DISS_addrline>
-					<DISS_city>${ address.city }</DISS_city>
-					<DISS_st>${ address.state }</DISS_st>
-					<DISS_pcode>${ address.zip }</DISS_pcode>
-					<DISS_country>${ address.cntry != null ? address.cntry : "US"}</DISS_country>
+					<DISS_addrline>${ address.addrline.escapeXml().raw() }</DISS_addrline>
+					<DISS_city>${ address.city.escapeXml().raw() }</DISS_city>
+					<DISS_st>${ address.state.escapeXml().raw() }</DISS_st>
+					<DISS_pcode>${ address.zip.escapeXml().raw() }</DISS_pcode>
+					<DISS_country>${ address.cntry.escapeXml().raw() }</DISS_country>
 				</DISS_address>
 #{/if}
 				<DISS_email>
-					${ sub.getSubmitter().getEmail() }
+					${ sub.getSubmitter().getEmail().escapeXml().raw() }
 				</DISS_email>
 			</DISS_contact>
 #{if sub.getSubmitter().getPermanentPhoneNumber() != null || sub.getSubmitter().getPermanentPostalAddress() != null || sub.getSubmitter().getPermanentEmailAddress() != null }
@@ -189,25 +189,25 @@
 #{if sub.getSubmitter().getPermanentPhoneNumber() != null}
 				<DISS_phone_fax type="P">
 %{ def phone = proquestUtils.parsePhone(sub.getSubmitter().getPermanentPhoneNumber()); }%
-					<DISS_cntry_cd>${ phone.cntryCode }</DISS_cntry_cd>
-					<DISS_area_code>${ phone.areaCode }</DISS_area_code>
-					<DISS_phone_num>${ phone.number }</DISS_phone_num>
-					<DISS_phone_ext>${ phone.ext }</DISS_phone_ext>
+					<DISS_cntry_cd>${ phone.cntryCode.escapeXml().raw() }</DISS_cntry_cd>
+					<DISS_area_code>${ phone.areaCode.escapeXml().raw() }</DISS_area_code>
+					<DISS_phone_num>${ phone.number.escapeXml().raw() }</DISS_phone_num>
+					<DISS_phone_ext>${ phone.ext.escapeXml().raw() }</DISS_phone_ext>
 				</DISS_phone_fax>
 #{/if}
 #{if sub.getSubmitter().getPermanentPostalAddress() != null }
 %{ def address = proquestUtils.parseAddress(sub.getSubmitter().getPermanentPostalAddress()); %}
 				<DISS_address>
-					<DISS_addrline>${ address.addrline }</DISS_addrline>
-					<DISS_city>${ address.city }</DISS_city>
-					<DISS_st>${ address.state }</DISS_st>
-					<DISS_pcode>${ address.zip }</DISS_pcode>
-					<DISS_country>${ address.cntry != null ? address.cntry : "US"}</DISS_country>
+					<DISS_addrline>${ address.addrline.escapeXml().raw() }</DISS_addrline>
+					<DISS_city>${ address.city.escapeXml().raw() }</DISS_city>
+					<DISS_st>${ address.state.escapeXml().raw() }</DISS_st>
+					<DISS_pcode>${ address.zip.escapeXml().raw() }</DISS_pcode>
+					<DISS_country>${ address.cntry.escapeXml().raw() }</DISS_country>
 				</DISS_address>
 #{/if}
 #{if sub.getSubmitter().getPermanentEmailAddress() != null }
 				<DISS_email>
-					${ sub.getSubmitter().getPermanentEmailAddress() }
+					${ sub.getSubmitter().getPermanentEmailAddress().escapeXml().raw() }
 				</DISS_email>
 #{/if}
 			</DISS_contact>
@@ -217,10 +217,10 @@
 	</DISS_authorship>
 	<DISS_description *{ Excess white space breaks ProQuest's import
 	    }*page_count="" *{
-		}*type="${ sub.getDegreeLevel()?.name()?.toLowerCase()?.escapeXml() }" *{
+		}*type="${ sub.getDegreeLevel()?.name()?.toLowerCase()?.escapeXml().raw() }" *{
 		}*external_id="${ external_id_prefix }${ sub.getId() }" *{
 		}*apply_for_copyright="${ apply_for_copyright ? "yes" : "no" }">
-		<DISS_title>${ sub.getDocumentTitle() }</DISS_title>
+		<DISS_title>${ sub.getDocumentTitle().escapeXml().raw() }</DISS_title>
 #{if sub.getGraduationYear() != null }
 		<DISS_dates>
 			<DISS_comp_date>${ sub.getGraduationYear() }</DISS_comp_date>
@@ -231,25 +231,25 @@
 		<DISS_institution>
 			<DISS_inst_code>${ institution_code }</DISS_inst_code>
 			<DISS_inst_name>${ institution_name }</DISS_inst_name>
-			<DISS_inst_contact>${ sub.getDepartment()?.escapeXml() }</DISS_inst_contact>
-			<DISS_processing_code>${ sub.getDegreeLevel()?.name()?.substring(0,1)?.toUpperCase()?.escapeXml() }</DISS_processing_code>
+			<DISS_inst_contact>${ sub.getDepartment()?.escapeXml().raw() }</DISS_inst_contact>
+			<DISS_processing_code>${ sub.getDegreeLevel()?.name()?.substring(0,1)?.toUpperCase()?.escapeXml().raw() }</DISS_processing_code>
 		</DISS_institution>
 #{list items:sub.getCommitteeMembers(), as:'member'}
 #{if member.hasRole("Chair","Co-Chair","Supervisor","Co-Supervisor","Advisor") }
 		<DISS_advisor>
 			<DISS_name>
-				<DISS_surname>${ member.getLastName() }</DISS_surname>
-				<DISS_fname>${ member.getFirstName() }</DISS_fname>
-				<DISS_middle>${ member.getMiddleName() }</DISS_middle>
+				<DISS_surname>${ member.getLastName().escapeXml().raw() }</DISS_surname>
+				<DISS_fname>${ member.getFirstName().escapeXml().raw() }</DISS_fname>
+				<DISS_middle>${ member.getMiddleName().escapeXml().raw() }</DISS_middle>
 			</DISS_name>
 		</DISS_advisor>
 #{/if}
 #{elseif member.hasNoRole() }
 		<DISS_cmte_member>
 			<DISS_name>
-				<DISS_surname>${ member.getLastName() }</DISS_surname>
-				<DISS_fname>${ member.getFirstName() }</DISS_fname>
-				<DISS_middle>${ member.getMiddleName() }</DISS_middle>
+				<DISS_surname>${ member.getLastName().escapeXml().raw() }</DISS_surname>
+				<DISS_fname>${ member.getFirstName().escapeXml().raw() }</DISS_fname>
+				<DISS_middle>${ member.getMiddleName().escapeXml().raw() }</DISS_middle>
 			</DISS_name>			
 		</DISS_cmte_member>
 #{/elseif}
@@ -258,7 +258,7 @@
 #{list items:sub.getDocumentSubjects(), as:'subject'}
 #{if proquestRepo.findSubjectByDescription(subject) != null }
 			<DISS_category>
-				<DISS_cat_code>${ proquestRepo.findSubjectByDescription(subject)?.getCode() }</DISS_cat_code>
+				<DISS_cat_code>${ proquestRepo.findSubjectByDescription(subject)?.getCode().escapeXml().raw() }</DISS_cat_code>
 				<DISS_cat_desc>${ subject }</DISS_cat_desc>
 			</DISS_category>
 #{/if}
@@ -266,13 +266,13 @@
 #{if sub.getDocumentKeywords() != null}
 #{list items:sub.getDocumentKeywords().split(";"), as:'keyword'}
 #{if keyword != null && keyword.trim().length() > 0}
-			<DISS_keyword>${keyword.trim()}</DISS_keyword>
+			<DISS_keyword>${keyword.trim().escapeXml().raw()}</DISS_keyword>
 #{/if}
 #{/list}
 #{/if}
 #{if sub.getDocumentLanguage() != null && proquestUtils.languageCode(sub.getDocumentLanguageLocale()) != null}
 %{ def lang = proquestUtils.languageCode(sub.getDocumentLanguageLocale()) }%
-			<DISS_language>${ lang?.getCode()?.escapeXml() }</DISS_language>
+			<DISS_language>${ lang?.getCode()?.escapeXml().raw() }</DISS_language>
 #{/if}
 		</DISS_categorization>
 	</DISS_description>
@@ -282,19 +282,19 @@
 #{list items:sub.getDocumentAbstract().split("\n"), as:'para'}
 #{if para != null && para.trim().length() != 0}
 			<DISS_para>
-${ para.escapeXml() }
+${ para.escapeXml().raw() }
 			</DISS_para>
 #{/if}
 #{/list}
 #{/if}
 		</DISS_abstract>
 #{if sub.getPrimaryDocument() != null }
-		<DISS_binary type="${ "application/pdf".equals(sub.getPrimaryDocument()?.getMimeType()) ? "PDF" : "other" }">${ sub.getPrimaryDocument()?.getName() }</DISS_binary>
+		<DISS_binary type="${ "application/pdf".equals(sub.getPrimaryDocument()?.getMimeType()) ? "PDF" : "other" }">${ sub.getPrimaryDocument()?.getName().escapeXml().raw() }</DISS_binary>
 #{/if}
 #{list items:sub.getAttachmentsByType(org.tdl.vireo.model.AttachmentType.SUPPLEMENTAL), as:'attachment' }
 		<DISS_attachment>
-			<DISS_file_name>${ attachment.getName().escapeXml() }</DISS_file_name>
-			<DISS_file_category>${ proquestUtils.categorize(attachment).escapeXml() }</DISS_file_category>
+			<DISS_file_name>${ attachment.getName().escapeXml().raw() }</DISS_file_name>
+			<DISS_file_category>${ proquestUtils.categorize(attachment).escapeXml().raw() }</DISS_file_category>
 			<DISS_file_descr>Supplemental File</DISS_file_descr>
 		</DISS_attachment>
 #{/list}
