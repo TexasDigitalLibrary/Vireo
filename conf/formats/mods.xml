@@ -17,7 +17,7 @@
             subTitle = title.substring(title.lastIndexOf(":"),title.length());
     }% 
     <titleInfo>
-        <title>${ title.escapeXml() }</title>
+        <title>${ title.escapeXml().raw() }</title>
         #{if subTitle != null} 
         <subTitle>${subTitle}</subTitle>
         #{/if} 
@@ -27,10 +27,10 @@
     <name type="personal">
         <roleTerm authority="marcrelator" type="text">Author</roleTerm>
         #{if sub.getStudentFirstName() != null} 
-        <namePart type="given">${ sub.getStudentFirstName().escapeXml() }</namePart>
+        <namePart type="given">${ sub.getStudentFirstName().escapeXml().raw() }</namePart>
         #{/if}
         #{if sub.getStudentLastName() != null} 
-        <namePart type="family">${ sub.getStudentLastName().escapeXml() }</namePart>
+        <namePart type="family">${ sub.getStudentLastName().escapeXml().raw() }</namePart>
         #{/if} 
     </name>
     
@@ -38,10 +38,10 @@
     <name type="personal">
         <roleterm authority="marcrelator" type="text">${ member.isCommitteeChair() ? "Thesis advisor" : "Committee member" }</roleterm>
         #{if member.getFirstName() != null} 
-        <namePart type="given">${ member.getFirstName().escapeXml() }</namePart>
+        <namePart type="given">${ member.getFirstName().escapeXml().raw() }</namePart>
         #{/if}
         #{if member.getLastName() != null} 
-        <namePart type="family">${ member.getLastName().escapeXml() }</namePart>
+        <namePart type="family">${ member.getLastName().escapeXml().raw() }</namePart>
         #{/if} 
     </name>
     #{/list}
@@ -49,7 +49,7 @@
     #{ if settingRepo.getConfigValue(org.tdl.vireo.model.Configuration.GRANTOR) != null } 
     <name type="corporate" authority="lcnaf">
         <roleterm authority="marcrelator" type="text">Degree Grantor</roleterm>
-        <namePart>${ settingRepo.getConfigValue(org.tdl.vireo.model.Configuration.GRANTOR).escapeXml() }</namePart>
+        <namePart>${ settingRepo.getConfigValue(org.tdl.vireo.model.Configuration.GRANTOR).escapeXml().raw() }</namePart>
         <namePart>English</namePart>
     </name>
     #{/if}
@@ -83,28 +83,28 @@
     <physicalDescription>
         <form authority="marcform">electronic</form>
         #{if sub.getPrimaryDocument() != null } 
-        <internetMediaType>${ sub.getPrimaryDocument().getMimeType().escapeXml() }</internetMediaType>
+        <internetMediaType>${ sub.getPrimaryDocument().getMimeType().escapeXml().raw() }</internetMediaType>
         #{/if} 
         <digitalOrigin>born digital</digitalOrigin>
     </physicalDescription>
     
     #{if sub.getDocumentAbstract() != null } 
-    <abstract lang="eng">${ sub.getDocumentAbstract().escapeXml() }</abstract>
+    <abstract lang="eng">${ sub.getDocumentAbstract().escapeXml().raw() }</abstract>
     #{/if}
     
     #{if sub.getDocumentKeywords() != null } 
     <subject>
 	    #{list items:sub.getDocumentKeywords().split(";"), as:'keyword'} 
-	    <topic>${ keyword.trim().escapeXml() }</topic>
+	    <topic>${ keyword.trim().escapeXml().raw() }</topic>
 	    #{/list} 
     </subject>
     #{/if} 
     
     #{if sub.getDepositId() != null } 
-    <identifier type="hdl">${ sub.getDepositId().escapeXml() }</identifier>
+    <identifier type="hdl">${ sub.getDepositId().escapeXml().raw() }</identifier>
     
     <location>
-        <url>${ sub.getDepositId().escapeXml() }</url>
+        <url>${ sub.getDepositId().escapeXml().raw() }</url>
     </location>
     #{/if}
     
@@ -112,13 +112,13 @@
     <extension>
         <etd:degree>
             #{if sub.getDegree() != null } 
-            <etd:name>${ sub.getDegree().escapeXml() }</etd:name>
+            <etd:name>${ sub.getDegree().escapeXml().raw() }</etd:name>
             #{/if}
             #{if sub.getDegreeLevel() != null } 
-            <etd:level>${ sub.getDegreeLevel().name().toLowerCase().capitalizeWords().escapeXml() }</etd:level>
+            <etd:level>${ sub.getDegreeLevel().name().toLowerCase().capitalizeWords().escapeXml().raw() }</etd:level>
             #{/if}
             #{if sub.getMajor() != null } 
-            <etd:discipline>${ sub.getMajor().escapeXml() }</etd:discipline>
+            <etd:discipline>${ sub.getMajor().escapeXml().raw() }</etd:discipline>
             #{/if} 
         </etd:degree> 
     </extension>

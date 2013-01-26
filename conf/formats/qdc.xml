@@ -16,13 +16,13 @@
 
     <!-- dc.creator = Student -->
 	<dc:creator>
-	    ${ sub.getStudentFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH).escapeXml() }
+	    ${ sub.getStudentFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH).escapeXml().raw() }
 	</dc:creator>
 	
 	<!-- dc.title = Document Title -->
 	#{if sub.getDocumentTitle() != null } 
 	<dc:title>
-	    ${ sub.getDocumentTitle().escapeXml() }
+	    ${ sub.getDocumentTitle().escapeXml().raw() }
 	</dc:title>
 	#{/if}
 	
@@ -30,7 +30,7 @@
 	#{if sub.getDocumentAbstract() != null } 
 	<dc:description xsi:type="dcterms:abstract">
 	dim:field mdschema="dc" element="description" qualifier="abstract">
-	    ${ sub.getDocumentAbstract().escapeXml() }
+	    ${ sub.getDocumentAbstract().escapeXml().raw() }
 	</dc:description>
 	#{/if}
 	
@@ -38,7 +38,7 @@
 	#{if sub.getDocumentKeywords() != null } 
 	#{list items:sub.getDocumentKeywords().split(";"), as:'keyword'} 
 	<dc:subject>
-	    ${ keyword.trim().escapeXml() }
+	    ${ keyword.trim().escapeXml().raw() }
 	</dc:subject>
 	#{/list}
 	#{/if}
@@ -46,7 +46,7 @@
 	<!-- dc.contributor.advisor = Committee Members, both chairs and members included (Multiple) -->
 	#{list items:sub.getCommitteeMembers(), as:'member'} 
 	<dc:contributor>
-	   ${ member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH).escapeXml() }
+	   ${ member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH).escapeXml().raw() }
 	</dc:contributor>
 	#{/list}
 	
@@ -76,7 +76,7 @@
 	<!-- dc.format = Primary Document's mimetype, almost always "application/pdf" -->
 	#{if sub.getPrimaryDocument() != null } 
 	<dc:format>
-	    ${ sub.getPrimaryDocument().getMimeType().escapeXml() }
+	    ${ sub.getPrimaryDocument().getMimeType().escapeXml().raw() }
 	</dc:format>
 	#{/if}
 	
@@ -89,7 +89,7 @@
 	<!-- dc.identifier.uri == Deposit ID, this would only be available when re-depositing -->
 	#{if sub.getDepositId() != null } 
 	<dc:identifier xsi:type="dcterms:URI">
-	    ${ sub.getDepositId().escapeXml() }
+	    ${ sub.getDepositId().escapeXml().raw() }
 	</dc:identifier>
 	#{/if}
 	
