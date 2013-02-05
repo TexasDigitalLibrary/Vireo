@@ -16,13 +16,13 @@
 
     <!-- dc.creator = Student -->
 	<dc:creator>
-	    ${ sub.getStudentFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH).escapeXml().raw() }
+	    ${ sub.getStudentFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH)?.escapeXml()?.raw() }
 	</dc:creator>
 	
 	<!-- dc.title = Document Title -->
 	#{if sub.getDocumentTitle() != null } 
 	<dc:title>
-	    ${ sub.getDocumentTitle().escapeXml().raw() }
+	    ${ sub.getDocumentTitle()?.escapeXml()?.raw() }
 	</dc:title>
 	#{/if}
 	
@@ -30,7 +30,7 @@
 	#{if sub.getDocumentAbstract() != null } 
 	<dc:description xsi:type="dcterms:abstract">
 	dim:field mdschema="dc" element="description" qualifier="abstract">
-	    ${ sub.getDocumentAbstract().escapeXml().raw() }
+	    ${ sub.getDocumentAbstract()?.escapeXml()?.raw() }
 	</dc:description>
 	#{/if}
 	
@@ -38,7 +38,7 @@
 	#{if sub.getDocumentKeywords() != null } 
 	#{list items:sub.getDocumentKeywords().split(";"), as:'keyword'} 
 	<dc:subject>
-	    ${ keyword.trim().escapeXml().raw() }
+	    ${ keyword.trim()?.escapeXml()?.raw() }
 	</dc:subject>
 	#{/list}
 	#{/if}
@@ -47,7 +47,7 @@
 	#{list items:sub.getCommitteeMembers(), as:'member'}
 	#{if member.hasNoRole() || member.hasRole("Chair","Co-Chair","Supervisor","Co-Supervisor","Advisor") } 
 	<dc:contributor>
-	   ${ member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH).escapeXml().raw() }
+	   ${ member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH)?.escapeXml()?.raw() }
 	</dc:contributor>
 	#{/if}
 	#{/list}
@@ -78,13 +78,13 @@
 	<!-- dc.format = Primary Document's mimetype, almost always "application/pdf" -->
 	#{if sub.getPrimaryDocument() != null } 
 	<dc:format>
-	    ${ sub.getPrimaryDocument().getMimeType().escapeXml().raw() }
+	    ${ sub.getPrimaryDocument().getMimeType()?.escapeXml()?.raw() }
 	</dc:format>
 	#{/if}
 	
 	<!-- dc.language = Document Language -->
     #{if sub.getDocumentLanguage() != null }
-    <dc:language>${ sub.getDocumentLanguage().escapeXml().raw() }</dc:language>
+    <dc:language>${ sub.getDocumentLanguage()?.escapeXml()?.raw() }</dc:language>
     #{/if}
 	
 	<!-- dc.type.text = "thesis" // constant -->
@@ -93,7 +93,7 @@
 	<!-- dc.identifier.uri == Deposit ID, this would only be available when re-depositing -->
 	#{if sub.getDepositId() != null } 
 	<dc:identifier xsi:type="dcterms:URI">
-	    ${ sub.getDepositId().escapeXml().raw() }
+	    ${ sub.getDepositId()?.escapeXml()?.raw() }
 	</dc:identifier>
 	#{/if}
 	

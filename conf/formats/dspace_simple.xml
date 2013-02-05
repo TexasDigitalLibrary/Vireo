@@ -27,20 +27,20 @@ ${ attachment.getName() }	bundle:LICENSE
 
     <!-- dc.creator = Student -->
     <dcvalue element="creator">
-        ${ sub.getStudentFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH).escapeXml().raw() }
+        ${ sub.getStudentFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH)?.escapeXml()?.raw() }
     </dcvalue>
 
     <!-- dc.title = Document Title -->
     #{if sub.getDocumentTitle() != null } 
     <dcvalue element="title">
-        ${ sub.getDocumentTitle().escapeXml().raw() }
+        ${ sub.getDocumentTitle()?.escapeXml()?.raw() }
     </dcvalue>
     #{/if}
     
     <!-- dc.description.abstract = Document Abstract -->
     #{if sub.getDocumentAbstract() != null } 
     <dcvalue element="description" qualifier="abstract">
-        ${ sub.getDocumentAbstract().escapeXml().raw() }
+        ${ sub.getDocumentAbstract()?.escapeXml()?.raw() }
     </dcvalue>
     #{/if}
     
@@ -48,7 +48,7 @@ ${ attachment.getName() }	bundle:LICENSE
     #{if sub.getDocumentKeywords() != null } 
     #{list items:sub.getDocumentKeywords().split(";"), as:'keyword'} 
     <dcvalue element="subject">
-        ${ keyword.trim().escapeXml().raw() }
+        ${ keyword.trim()?.escapeXml()?.raw() }
     </dcvalue>
     #{/list}
     #{/if}
@@ -57,7 +57,7 @@ ${ attachment.getName() }	bundle:LICENSE
     #{list items:sub.getCommitteeMembers(), as:'member'} 
     #{if member.hasRole("Chair","Co-Chair","Supervisor","Co-Supervisor","Advisor") } 
     <dcvalue element="contributor" qualifier="advisor">
-        ${ member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH).escapeXml().raw() }
+        ${ member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH)?.escapeXml()?.raw() }
     </dcvalue>
     #{/if}
     #{/list}
@@ -67,7 +67,7 @@ ${ attachment.getName() }	bundle:LICENSE
     #{list items:sub.getCommitteeMembers(), as:'member'}
     #{if member.hasNoRole() } 
     <dcvalue element="contributor" qualifier="committeeMember">
-        ${ member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH).escapeXml().raw() }$
+        ${ member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH)?.escapeXml()?.raw() }$
     </dcvalue>
     #{/if}
     #{/list}
@@ -108,7 +108,7 @@ ${ attachment.getName() }	bundle:LICENSE
     <!-- dc.format.mimetype = Primary Document's mimetype, almost always "application/pdf" -->
     #{if sub.getPrimaryDocument() != null } 
     <dcvalue element="format" qualifier="mimetype">
-        ${ sub.getPrimaryDocument().getMimeType().escapeXml().raw() }
+        ${ sub.getPrimaryDocument().getMimeType()?.escapeXml()?.raw() }
     </dcvalue>
     #{/if}
     
@@ -126,7 +126,7 @@ ${ attachment.getName() }	bundle:LICENSE
     <!-- dc.identifier.uri == Deposit ID, this would only be available when re-depositing -->
     #{if sub.getDepositId() != null } 
     <dcvalue element="identifier" qualifier="uri">
-        ${ sub.getDepositId().escapeXml().raw() }
+        ${ sub.getDepositId()?.escapeXml()?.raw() }
     </dcvalue>
     #{/if}
     
@@ -135,7 +135,7 @@ ${ attachment.getName() }	bundle:LICENSE
        
        #{if sub.getEmbargoType().getDuration() == null } 
        <dcvalue element="description" qualifier="provenance">
-           Submission original under an indefinite embargo labeled '${ sub.getEmbargoType().getName().escapeXml().raw() }'. The submission was exported from vireo on ${ new java.util.Date().format("yyyy-MM-dd") } without embargo terms
+           Submission original under an indefinite embargo labeled '${ sub.getEmbargoType().getName()?.escapeXml()?.raw() }'. The submission was exported from vireo on ${ new java.util.Date().format("yyyy-MM-dd") } without embargo terms
        </dcvalue>
        #{/if} 
        #{elseif sub.getEmbargoType().getDuration() != 0 } 
@@ -154,12 +154,12 @@ ${ attachment.getName() }	bundle:LICENSE
            java.util.Date liftDate = cal.getTime();
        }% 
        <dcvalue element="description" qualifier="provenance">
-           Submission published under a ${sub.getEmbargoType().getDuration() } month embargo labeled '${ sub.getEmbargoType().getName().escapeXml().raw() }', the embargo will last until ${ liftDate.format("yyyy-MM-dd") }
+           Submission published under a ${sub.getEmbargoType().getDuration() } month embargo labeled '${ sub.getEmbargoType().getName()?.escapeXml()?.raw() }', the embargo will last until ${ liftDate.format("yyyy-MM-dd") }
        </dcvalue>
        #{/elseif} 
        #{else} 
        <dcvalue element="description" qualifier="provenance">
-           Submission originaly under the a zero month embargo labeled '${ sub.getEmbargoType().getName().escapeXml().raw() }'.
+           Submission originaly under the a zero month embargo labeled '${ sub.getEmbargoType().getName()?.escapeXml()?.raw() }'.
        </dcvalue>
        #{/else}
 
@@ -169,35 +169,35 @@ ${ attachment.getName() }	bundle:LICENSE
 		<!-- dc.description.provenance = License Agreement Date -->
 		#{if sub.getLicenseAgreementDate() != null} 
        <dcvalue element="description" qualifier="provenance">
-		    The student, ${ sub.getStudentFormattedName(org.tdl.vireo.model.NameFormat.FIRST_LAST).escapeXml().raw() }, accepted the attached license on ${ sub.getLicenseAgreementDate().format("yyyy-MM-dd 'at' HH:mm") }. 
+		    The student, ${ sub.getStudentFormattedName(org.tdl.vireo.model.NameFormat.FIRST_LAST)?.escapeXml()?.raw() }, accepted the attached license on ${ sub.getLicenseAgreementDate().format("yyyy-MM-dd 'at' HH:mm") }. 
        </dcvalue>
 		#{/if} 
 		
 		<!-- dc.description.provenance = Submission Date -->
 		#{if sub.getSubmissionDate() != null} 
        <dcvalue element="description" qualifier="provenance">
-		    The student, ${ sub.getStudentFormattedName(org.tdl.vireo.model.NameFormat.FIRST_LAST).escapeXml().raw() }, submitted this ${ sub.getDocumentType() == null ? "document" : sub.getDocumentType().escapeXml().raw() } for approval on ${ sub.getSubmissionDate().format("yyyy-MM-dd 'at' HH:mm") }. 
+		    The student, ${ sub.getStudentFormattedName(org.tdl.vireo.model.NameFormat.FIRST_LAST)?.escapeXml()?.raw() }, submitted this ${ sub.getDocumentType() == null ? "document" : sub.getDocumentType()?.escapeXml()?.raw() } for approval on ${ sub.getSubmissionDate().format("yyyy-MM-dd 'at' HH:mm") }. 
        </dcvalue>
 		#{/if} 
 		
 		<!-- dc.description.provenance = Committee Approval Date -->
 		#{if sub.getCommitteeApprovalDate() != null} 
        <dcvalue element="description" qualifier="provenance">
-		    The committee advisor approved this ${ sub.getDocumentType() == null ? "document" : sub.getDocumentType().escapeXml().raw() } on ${ sub.getCommitteeApprovalDate().format("yyyy-MM-dd 'at' HH:mm") }. 
+		    The committee advisor approved this ${ sub.getDocumentType() == null ? "document" : sub.getDocumentType()?.escapeXml()?.raw() } on ${ sub.getCommitteeApprovalDate().format("yyyy-MM-dd 'at' HH:mm") }. 
        </dcvalue>
 		#{/if} 
 		
 		<!-- dc.description.provenance = Committee Embargo Approval Date -->
 		#{if sub.getCommitteeEmbargoApprovalDate() != null} 
        <dcvalue element="description" qualifier="provenance">
-		    The committee advisor approved the embargo selection for this ${ sub.getDocumentType() == null ? "document" : sub.getDocumentType().escapeXml().raw() } on ${ sub.getCommitteeEmbargoApprovalDate().format("yyyy-MM-dd 'at' HH:mm") }. 
+		    The committee advisor approved the embargo selection for this ${ sub.getDocumentType() == null ? "document" : sub.getDocumentType()?.escapeXml()?.raw() } on ${ sub.getCommitteeEmbargoApprovalDate().format("yyyy-MM-dd 'at' HH:mm") }. 
        </dcvalue>
 		#{/if} 
 		
 		<!-- dc.description.provenance = Approval Date -->
 		#{if sub.getApprovalDate() != null} 
        <dcvalue element="description" qualifier="provenance">
-		    This ${ sub.getDocumentType() == null ? "document" : sub.getDocumentType().escapeXml().raw() } was approved for publication on ${ sub.getApprovalDate().format("yyyy-MM-dd 'at' HH:mm") }. 
+		    This ${ sub.getDocumentType() == null ? "document" : sub.getDocumentType()?.escapeXml()?.raw() } was approved for publication on ${ sub.getApprovalDate().format("yyyy-MM-dd 'at' HH:mm") }. 
        </dcvalue>
 		#{/if} 
     
@@ -214,21 +214,21 @@ ${ attachment.getName() }	bundle:LICENSE
     <!-- thesis.degree.name == Degree -->
     #{if sub.getDegree() != null } 
     <dcvalue element="degree" qualifier="name">
-        ${ sub.getDegree().escapeXml().raw() }
+        ${ sub.getDegree()?.escapeXml()?.raw() }
     </dcvalue>
     #{/if}
     
     <!-- thesis.degree.level = Degree Level (Doctoral, Masters, Undergraduate) -->
     #{if sub.getDegreeLevel() != null } 
     <dcvalue element="degree" qualifier="level">
-        ${ sub.getDegreeLevel().name().toLowerCase().capitalizeWords().escapeXml().raw() }
+        ${ sub.getDegreeLevel().name().toLowerCase().capitalizeWords()?.escapeXml()?.raw() }
     </dcvalue>
     #{/if}
     
     <!-- thesis.degree.discipline = Major -->
     #{if sub.getMajor() != null } 
     <dcvalue element="degree" qualifier="discipline">
-        ${ sub.getMajor().escapeXml().raw() }
+        ${ sub.getMajor()?.escapeXml()?.raw() }
     </dcvalue>
     #{/if}
     
@@ -242,7 +242,7 @@ ${ attachment.getName() }	bundle:LICENSE
     <!-- thesis.degree.department = Department -->
     #{if sub.getDepartment() != null } 
     <dcvalue element="degree" qualifier="department">
-        ${ sub.getDepartment().escapeXml().raw() }
+        ${ sub.getDepartment()?.escapeXml()?.raw() }
     </dcvalue>
     #{/if}
     
