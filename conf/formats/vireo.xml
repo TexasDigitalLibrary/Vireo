@@ -17,58 +17,58 @@
 <submission id="${sub.getId() }" generated="${ new java.util.Date().format("yyyy-MM-dd'T'HH:mm:ssZ") }" version="1.0">
 
     <submitter id="${ sub.getSubmitter().getId() }">
-        <email>${ sub.getSubmitter().getEmail().escapeXml() }</email>
+        <email>${ sub.getSubmitter().getEmail()?.escapeXml()?.raw() }</email>
         #{if sub.getSubmitter().getNetId() != null} 
-        <netId>${ sub.getSubmitter().getNetId().escapeXml() }</netId>
+        <netId>${ sub.getSubmitter().getNetId()?.escapeXml()?.raw() }</netId>
         #{/if}
         #{if sub.getSubmitter().getInstitutionalIdentifier() != null} 
-        <institutionalIdentifier>${ sub.getSubmitter().getInstitutionalIdentifier().escapeXml() }</institutionalIdentifier>
+        <institutionalIdentifier>${ sub.getSubmitter().getInstitutionalIdentifier()?.escapeXml()?.raw() }</institutionalIdentifier>
         #{/if}
         #{if sub.getSubmitter().getFirstName() != null} 
-        <firstName>${ sub.getSubmitter().getFirstName().escapeXml() }</firstName>
+        <firstName>${ sub.getSubmitter().getFirstName()?.escapeXml()?.raw() }</firstName>
         #{/if}
         #{if sub.getSubmitter().getMiddleName() != null} 
-        <middleName>${ sub.getSubmitter().getMiddleName().escapeXml() }</middleName>
+        <middleName>${ sub.getSubmitter().getMiddleName()?.escapeXml()?.raw() }</middleName>
         #{/if}
         #{if sub.getSubmitter().getLastName() != null} 
-        <lastName>${ sub.getSubmitter().getLastName().escapeXml() }</lastName>
+        <lastName>${ sub.getSubmitter().getLastName()?.escapeXml()?.raw() }</lastName>
         #{/if}
         #{if sub.getSubmitter().getBirthYear() != null} 
         <birthYear>${ sub.getSubmitter().getBirthYear() }</birthYear>
         #{/if}
         #{if sub.getSubmitter().getCurrentPhoneNumber() != null} 
-        <currentPhoneNumber>${ sub.getSubmitter().getCurrentPhoneNumber().escapeXml() }</currentPhoneNumber>
+        <currentPhoneNumber>${ sub.getSubmitter().getCurrentPhoneNumber()?.escapeXml()?.raw() }</currentPhoneNumber>
         #{/if}
         #{if sub.getSubmitter().getCurrentPostalAddress() != null} 
-        <currentPostalAddress>${ sub.getSubmitter().getCurrentPostalAddress().escapeXml() }</currentPostalAddress>
+        <currentPostalAddress>${ sub.getSubmitter().getCurrentPostalAddress()?.escapeXml()?.raw() }</currentPostalAddress>
         #{/if}
         #{if sub.getSubmitter().getCurrentEmailAddress() != null} 
-        <currentEmailAddress>${ sub.getSubmitter().getCurrentEmailAddress().escapeXml() }</currentEmailAddress>
+        <currentEmailAddress>${ sub.getSubmitter().getCurrentEmailAddress()?.escapeXml()?.raw() }</currentEmailAddress>
         #{/if}
         #{if sub.getSubmitter().getPermanentPhoneNumber() != null}
-        <permanentPhoneNumber>${ sub.getSubmitter().getPermanentPhoneNumber().escapeXml() }</permanentPhoneNumber>
+        <permanentPhoneNumber>${ sub.getSubmitter().getPermanentPhoneNumber()?.escapeXml()?.raw() }</permanentPhoneNumber>
         #{/if}
         #{if sub.getSubmitter().getPermanentPostalAddress() != null} 
-        <permanentPostalAddress>${ sub.getSubmitter().getPermanentPostalAddress().escapeXml() }</permanentPostalAddress>
+        <permanentPostalAddress>${ sub.getSubmitter().getPermanentPostalAddress()?.escapeXml()?.raw() }</permanentPostalAddress>
         #{/if}
         #{if sub.getSubmitter().getPermanentEmailAddress() != null} 
-        <permanentEmailAddress>${ sub.getSubmitter().getPermanentEmailAddress().escapeXml() }</permanentEmailAddress>
+        <permanentEmailAddress>${ sub.getSubmitter().getPermanentEmailAddress()?.escapeXml()?.raw() }</permanentEmailAddress>
         #{/if}
         #{if sub.getSubmitter().getRole() != null} 
-        <role>${ sub.getSubmitter().getRole().name().escapeXml() }</role>
+        <role>${ sub.getSubmitter().getRole().name()?.escapeXml()?.raw() }</role>
         #{/if} 
     </submitter>
 
     #{if sub.getStudentFirstName() != null} 
-    <studentFirstName>${ sub.getStudentFirstName().escapeXml() }</studentFirstName>
+    <studentFirstName>${ sub.getStudentFirstName()?.escapeXml()?.raw() }</studentFirstName>
     #{/if}
     
     #{if sub.getStudentMiddleName() != null} 
-    <studentMiddleName>${ sub.getStudentMiddleName().escapeXml() }</studentMiddleName>
+    <studentMiddleName>${ sub.getStudentMiddleName()?.escapeXml()?.raw() }</studentMiddleName>
     #{/if}
 
     #{if sub.getStudentLastName() != null} 
-    <studentLastName>${ sub.getStudentLastName().escapeXml() }</studentLastName>
+    <studentLastName>${ sub.getStudentLastName()?.escapeXml()?.raw() }</studentLastName>
     #{/if}
     
     #{if sub.getStudentBirthYear() != null} 
@@ -76,22 +76,22 @@
     #{/if}
     
     #{if sub.getDocumentTitle() != null } 
-    <documentTitle>${ sub.getDocumentTitle().escapeXml() }</documentTitle>
+    <documentTitle>${ sub.getDocumentTitle()?.escapeXml()?.raw() }</documentTitle>
     #{/if}
 
     #{if sub.getDocumentAbstract() != null } 
-    <documentAbstract>${ sub.getDocumentAbstract().escapeXml() }</documentAbstract>
+    <documentAbstract>${ sub.getDocumentAbstract()?.escapeXml()?.raw() }</documentAbstract>
     #{/if}
     
     #{if sub.getDocumentKeywords() != null } 
-    <documentKeywords>${ sub.getDocumentKeywords().escapeXml() }</documentKeywords>
+    <documentKeywords>${ sub.getDocumentKeywords()?.escapeXml()?.raw() }</documentKeywords>
     #{/if}
     
     #{if sub.getDocumentSubjects().size() > 0 }
     <documentSubjects>
 	    #{list items:sub.getDocumentSubjects(), as:'subject'}
 	    <documentSubject #{if proquestRepo.findSubjectByDescription(subject) != null }proquestCode="${proquestRepo.findSubjectByDescription(subject).getCode()}"#{/if}>
-	       ${ subject.escapeXml() }
+	       ${ subject?.escapeXml()?.raw() }
 	    </documentSubject>
 	    #{/list}
     </documentSubjects>
@@ -103,8 +103,8 @@
 
     #{if sub.getEmbargoType() != null} 
     <embargoType id="${ sub.getEmbargoType().getId() }" active="#{if sub.getEmbargoType().isActive()}true#{/if}#{else}false#{/else}">
-        <name>${ sub.getEmbargoType().getName().escapeXml() }</name>
-        <description>${ sub.getEmbargoType().getDescription().escapeXml() }</description>
+        <name>${ sub.getEmbargoType().getName()?.escapeXml()?.raw() }</name>
+        <description>${ sub.getEmbargoType().getDescription()?.escapeXml()?.raw() }</description>
         #{if sub.getEmbargoType().getDuration() == null } 
         <duration indefinite="true">Indefinite</duration>
         #{/if}
@@ -135,17 +135,17 @@
         #{list items:sub.getCommitteeMembers(), as:'member'} 
         <committeeMember id="${ member.getId() }">
            #{if member.getFirstName() != null} 
-           <firstName>${ member.getFirstName().escapeXml() }</firstName>
+           <firstName>${ member.getFirstName()?.escapeXml()?.raw() }</firstName>
            #{/if} 
            #{if member.getMiddleName() != null} 
-           <middleName>${ member.getMiddleName().escapeXml() }</middleName>
+           <middleName>${ member.getMiddleName()?.escapeXml()?.raw() }</middleName>
            #{/if} 
            #{if member.getLastName() != null} 
-           <lastName>${ member.getLastName().escapeXml() }</lastName>
+           <lastName>${ member.getLastName()?.escapeXml()?.raw() }</lastName>
            #{/if} 
            <roles>
               #{list items:member.getRoles(), as:'role'} 
-              <role>${ role.escapeXml() }</role>
+              <role>${ role?.escapeXml()?.raw() }</role>
               #{/list} 
            </roles>
         </committeeMember>
@@ -153,7 +153,7 @@
     </committeeMembers>
     
     #{if sub.getCommitteeContactEmail() != null } 
-    <committeeContactEmail>${ sub.getCommitteeContactEmail().escapeXml() }</committeeContactEmail>
+    <committeeContactEmail>${ sub.getCommitteeContactEmail()?.escapeXml()?.raw() }</committeeContactEmail>
     #{/if}
     
     #{if sub.getCommitteeApprovalDate() != null } 
@@ -181,7 +181,7 @@
     #{/if}
     
     #{if sub.getDegreeLevel() != null } 
-    <degreeLevel>${ sub.getDegreeLevel().name().toLowerCase().capitalizeWords().escapeXml() }</degreeLevel>
+    <degreeLevel>${ sub.getDegreeLevel().name().toLowerCase().capitalizeWords()?.escapeXml()?.raw() }</degreeLevel>
     #{/if}
     
     #{if sub.getProgram() != null } 
@@ -242,56 +242,56 @@
     #{if sub.getAssignee() != null } 
     <submitter id="${ sub.getAssignee().getId() }">
         #{if sub.getAssignee().getFirstName() != null} 
-        <firstName>${ sub.getAssignee().getFirstName().escapeXml() }</firstName>
+        <firstName>${ sub.getAssignee().getFirstName()?.escapeXml()?.raw() }</firstName>
         #{/if}
         #{if sub.getAssignee().getMiddleName() != null} 
-        <middleName>${ sub.getAssignee().getMiddleName().escapeXml() }</middleName>
+        <middleName>${ sub.getAssignee().getMiddleName()?.escapeXml()?.raw() }</middleName>
         #{/if}
         #{if sub.getAssignee().getLastName() != null} 
-        <lastName>${ sub.getAssignee().getLastName().escapeXml() }</lastName>
+        <lastName>${ sub.getAssignee().getLastName()?.escapeXml()?.raw() }</lastName>
         #{/if}
         #{if sub.getAssignee().getEmail() != null} 
-        <email>${ sub.getAssignee().getEmail().escapeXml() }</email>
+        <email>${ sub.getAssignee().getEmail()?.escapeXml()?.raw() }</email>
         #{/if}
         #{if sub.getSubmitter().getRole() != null} 
-        <role>${ sub.getSubmitter().getRole().name().escapeXml() }</role>
+        <role>${ sub.getSubmitter().getRole().name()?.escapeXml()?.raw() }</role>
         #{/if} 
     </submitter>
     #{/if}
     
     <customActions>
         #{list items:sub.getCustomActions(), as:'actions'} 
-        <action #{if actions.getValue()}value="true"#{/if}#{else}value="false"#{/else}>${ actions.getDefinition().getLabel().escapeXml() }</action>
+        <action #{if actions.getValue()}value="true"#{/if}#{else}value="false"#{/else}>${ actions.getDefinition().getLabel()?.escapeXml()?.raw() }</action>
         #{/list} 
     </customActions>
 
     <attachments>
         #{list items:sub.getAttachments(), as:'attachment'} 
         <attachment included="#{if attachmentTypes.contains(attachment.getType())}true#{/if}#{else}false#{/else}" type="${attachment.getType().name()}">
-            <name>${ attachment.getName().escapeXml() }</name>
-            <mimeType>${ attachment.getMimeType().escapeXml() }</mimeType>
+            <name>${ attachment.getName()?.escapeXml()?.raw() }</name>
+            <mimeType>${ attachment.getMimeType()?.escapeXml()?.raw() }</mimeType>
             <size bytes="${ attachment.getSize() }">${ attachment.getDisplaySize() }</size>
             <date long="${attachment.getDate().getTime() }">${ attachment.getDate().format("yyyy-MM-dd'T'HH:mm:ssZ") }</date>
-            <internalPath>${ attachment.getFile().getAbsolutePath().escapeXml() }</internalPath>
+            <internalPath>${ attachment.getFile().getAbsolutePath()?.escapeXml()?.raw() }</internalPath>
             #{if attachment.getPerson() != null } 
 		    <person id="${ attachment.getPerson().getId() }">
 		        #{if attachment.getPerson().getEmail() != null} 
-                <email>${ attachment.getPerson().getEmail().escapeXml() }</email>
+                <email>${ attachment.getPerson().getEmail()?.escapeXml()?.raw() }</email>
                 #{/if}
                 #{if attachment.getPerson().getNetId() != null} 
-                <netId>${ attachment.getPerson().getNetId().escapeXml() }</netId>
+                <netId>${ attachment.getPerson().getNetId()?.escapeXml()?.raw() }</netId>
                 #{/if}
 		        #{if attachment.getPerson().getFirstName() != null} 
-		        <firstName>${ attachment.getPerson().getFirstName().escapeXml() }</firstName>
+		        <firstName>${ attachment.getPerson().getFirstName()?.escapeXml()?.raw() }</firstName>
 		        #{/if}
 		        #{if attachment.getPerson().getMiddleName() != null} 
-		        <middleName>${ attachment.getPerson().getMiddleName().escapeXml() }</middleName>
+		        <middleName>${ attachment.getPerson().getMiddleName()?.escapeXml()?.raw() }</middleName>
 		        #{/if}
 		        #{if attachment.getPerson().getLastName() != null} 
-		        <lastName>${ attachment.getPerson().getLastName().escapeXml() }</lastName>
+		        <lastName>${ attachment.getPerson().getLastName()?.escapeXml()?.raw() }</lastName>
 		        #{/if}
 		        #{if attachment.getPerson().getRole() != null} 
-		        <role>${ attachment.getPerson().getRole().name().escapeXml() }</role>
+		        <role>${ attachment.getPerson().getRole().name()?.escapeXml()?.raw() }</role>
 		        #{/if} 
 		    </submitter>
 		    #{/if} 

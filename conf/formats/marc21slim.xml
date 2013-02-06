@@ -120,7 +120,7 @@
             </marc:datafield>
     -->
     <datafield tag="100" ind1="1" ind2=" ">
-	    <subfield code="a">${ sub.getStudentFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH).escapeXml() }</subfield>
+	    <subfield code="a">${ sub.getStudentFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH)?.escapeXml()?.raw() }</subfield>
 	    <subfield code="e">author</subfield>
     </datafield>
     
@@ -147,7 +147,7 @@
             ind2 = 4;
     }% 
     <datafield tag="245" ind1="1" ind2="${ind2}">
-        <subfield code="a">${ title.escapeXml() }</subfield>
+        <subfield code="a">${ title?.escapeXml()?.raw() }</subfield>
     </datafield>
     #{/if}
     
@@ -162,7 +162,7 @@
             </marc:datafield>
     -->
     <datafield tag="260" ind1=" " ind2=" ">
-        <subfield code="b">[${ settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.GRANTOR).escapeXml() }</subfield>
+        <subfield code="b">[${ settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.GRANTOR)?.escapeXml()?.raw() }</subfield>
         #{if sub.getGraduationYear() != null } 
         <subfield code="c">${ sub.getGraduationYear() }.]</subfield>
         #{/if} 
@@ -188,22 +188,22 @@
     -->
     <datafield tag="502" ind1=" " ind2=" ">
         #{if sub.getDegreeLevel() != null} 
-        <subfield code="a">${ sub.getDegreeLevel().name().toLowerCase().capitalizeWords().escapeXml() } thesis.</subfield>
+        <subfield code="a">${ sub.getDegreeLevel().name().toLowerCase().capitalizeWords()?.escapeXml()?.raw() } thesis.</subfield>
         #{/if}
         #{if sub.getDegree() != null } 
-        <subfield code="b">${ sub.getDegree().escapeXml() }</subfield>
+        <subfield code="b">${ sub.getDegree()?.escapeXml()?.raw() }</subfield>
         #{/if}
         #{if settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.GRANTOR) != null } 
-        <subfield code="c">${ settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.GRANTOR).escapeXml() }</subfield>
+        <subfield code="c">${ settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.GRANTOR)?.escapeXml()?.raw() }</subfield>
         #{/if}
         #{if sub.getGraduationYear() != null } 
         <subfield code="d">${ sub.getGraduationYear() }</subfield>
         #{/if}
         #{if sub.getMajor() != null} 
-        <subfield code="g">${ sub.getMajor().escapeXml() }</subfield>
+        <subfield code="g">${ sub.getMajor()?.escapeXml()?.raw() }</subfield>
         #{/if}
         #{if sub.getDepositId() != null} 
-        <subfield code="o">${ sub.getDepositId().escapeXml() }</subfield>
+        <subfield code="o">${ sub.getDepositId()?.escapeXml()?.raw() }</subfield>
         #{/if} 
     </datafield>
     
@@ -246,7 +246,7 @@
      -->
      #{if sub.getDocumentAbstract() != null } 
      <datafield tag="520" ind1="3" ind2=" ">
-         <subfield code="a">${ sub.getDocumentAbstract().escapeXml() }</subfield>
+         <subfield code="a">${ sub.getDocumentAbstract()?.escapeXml()?.raw() }</subfield>
      </datafield>
      #{/if}
      
@@ -261,7 +261,7 @@
      -->
      #{if sub.getMajor() != null } 
      <datafield tag="650" ind1=" " ind2="4">
-         <subfield code="a">${ sub.getMajor().escapeXml() }</subfield>
+         <subfield code="a">${ sub.getMajor()?.escapeXml()?.raw() }</subfield>
      </datafield>
      #{/if}
     
@@ -283,7 +283,7 @@
     #{if sub.getDocumentKeywords() != null } 
     #{list items:sub.getDocumentKeywords().split(";"), as:'keyword' } 
     <datafield tag="653" ind1=" " ind2="0">
-        <subfield code="a">${ keyword.trim().escapeXml() }</subfield>
+        <subfield code="a">${ keyword.trim()?.escapeXml()?.raw() }</subfield>
     </datafield>
     #{/list}
     #{/if}
@@ -314,9 +314,9 @@
     -->
     #{if settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.GRANTOR) != null } 
     <datafield tag="710" ind1="2" ind2=" ">
-        <subfield code="a">${ settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.GRANTOR).escapeXml() }</subfield>
+        <subfield code="a">${ settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.GRANTOR)?.escapeXml()?.raw() }</subfield>
         #{if sub.getDepartment() != null } 
-        <subfield code="b">${ sub.getDepartment().escapeXml() }</subfield>
+        <subfield code="b">${ sub.getDepartment()?.escapeXml()?.raw() }</subfield>
         #{/if} 
     </datafield>
     #{/if} 
@@ -346,7 +346,7 @@
     }%
     #{list items:getCommiteeMembers, as:'member'}
     <datafield tag="720" ind1="1" ind2=" ">
-        <subfield code="a">${ member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH).escapeXml() }</subfield>
+        <subfield code="a">${ member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH)?.escapeXml()?.raw() }</subfield>
         <subfield code="e">${ chairs.size() > 0 ? "co-chair" : "chair" }</subfield>
     </datafield>
     #{/list}
@@ -367,7 +367,7 @@
     -->
     #{list items:members, as:'member'}
     <datafield tag="720" ind1="1" ind2=" ">
-        <subfield code="a">${ member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH).escapeXml() }</subfield>
+        <subfield code="a">${ member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH)?.escapeXml()?.raw() }</subfield>
         <subfield code="e">committee member</subfield>
     </datafield>
     #{/list}
@@ -385,9 +385,9 @@
     -->
     <datafield tag="856" ind1="4" ind2="0">
         #{if sub.getPrimaryDocument() != null } 
-        <subfield code="q">${ sub.getPrimaryDocument().getMimeType().escapeXml() }</subfield>
+        <subfield code="q">${ sub.getPrimaryDocument().getMimeType()?.escapeXml()?.raw() }</subfield>
         #{/if} 
-        <subfield code="u">${ sub.getDepositId().escapeXml() }</subfield>
+        <subfield code="u">${ sub.getDepositId()?.escapeXml()?.raw() }</subfield>
     </datafield>
     #{/if} 
     

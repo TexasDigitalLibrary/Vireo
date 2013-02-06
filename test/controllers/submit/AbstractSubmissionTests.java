@@ -76,12 +76,6 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 
 	// The original configuration, we will restore to these after the test.
 	public Map<String,String> originalSettings = new HashMap<String,String>();
-	public String originalRequestBirth = null;
-	public String originalRequestProgram = null;
-	public String originalRequestCollege = null;
-	public String originalRequestUMI = null;
-	public String originalAllowMultiple = null;
-	public String originalSubmissionsOpen = null;
 
 	/**
 	 * Setup
@@ -127,7 +121,14 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 		} else {
 			originalSettings.put(SUBMISSIONS_OPEN,submissionsOpen.getValue());
 		}
-
+		
+		Configuration delayAdvisorEmail = settingRepo.findConfigurationByName(EMAIL_DELAY_SENDING_ADVISOR_REQUEST);
+		if (delayAdvisorEmail == null) {
+			originalSettings.put(EMAIL_DELAY_SENDING_ADVISOR_REQUEST, null);
+		} else {
+			originalSettings.put(EMAIL_DELAY_SENDING_ADVISOR_REQUEST,delayAdvisorEmail.getValue());
+		}
+		
 		// Turn off authentication for the test thread
 		context.turnOffAuthorization();
 		
@@ -143,7 +144,7 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 	 */
 	@After
 	public void cleanup() {
-
+		
 		// Restore our configuration.
 		for (String name : originalSettings.keySet()) {
 			setConfiguration(name,originalSettings.get(name));
@@ -177,6 +178,15 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 	 */
 	public void setSubmissionsOpen(boolean value) {
 		setConfiguration(SUBMISSIONS_OPEN, value ? "true" : null);
+	}
+	
+	/**
+	 * Set whether to send the advisor email
+	 * 
+	 * @param value open or closed.
+	 */
+	public void setDelayAdvisorEmail(boolean value) {
+		setConfiguration(EMAIL_DELAY_SENDING_ADVISOR_REQUEST, value ? "true" : null);
 	}
 	
 	/**
@@ -644,8 +654,14 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 	 * Confirm the submission. We assume there will be no errors because each
 	 * step before hand should have taken care of that.
 	 * 
-	 * @param studentEmail The email address of the student (so we can verify they received their email)
-	 * @param advisorEmail The email address of the advisor (so we can verify they received their email)
+	 * @param studentEmail
+	 *            The email address of the student (so we can verify they
+	 *            received their email)
+	 * @param advisorEmail
+	 *            The email address of the advisor (so we can verify they
+	 *            received their email) If the advisor email begins with a "!"
+	 *            then this method will check that an email was NOT sent to that
+	 *            address.
 	 */
 	public void confirm(String studentEmail, String advisorEmail) throws InterruptedException {
 		Mail.Mock.reset();
@@ -698,15 +714,30 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 		
 		if (advisorEmail != null) {
 			String advisorContent = null;
-			for (int i = 0; i < 50; i++) {
+			boolean expectEmail = true;
+			if (advisorEmail.startsWith("!")) {
+				advisorEmail = advisorEmail.substring(1);
+				expectEmail = false;
+			}
+			
+			for (int i = 0; i < ( expectEmail ? 50 : 25); i++) {
 				Thread.yield();
 				Thread.sleep(100);
 				advisorContent = Mail.Mock.getLastMessageReceivedBy(advisorEmail);
 				if (advisorContent != null)
 					break;
 			}
-			assertNotNull(advisorContent);
-			assertTrue(advisorContent.contains(sub.getCommitteeEmailHash()));
+			
+			if (expectEmail) {
+				// The email should have been sent.
+				assertNotNull(advisorContent);
+				assertTrue(advisorContent.contains(sub.getCommitteeEmailHash()));
+			} else {
+				// Confirm that no email was sent.
+				assertNull(advisorContent);
+			}
+			
+			// Either way the hash should have been assigned.
 			assertNotNull(sub.getCommitteeEmailHash());
 		}
 		

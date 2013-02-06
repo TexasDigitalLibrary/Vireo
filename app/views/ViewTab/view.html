@@ -177,6 +177,20 @@ jQuery(document).ready(function(){
 	 jQuery("#add-file-modal input[name='uploadType']").live("change", toggleFileOptions());
 	
 	 
+	/** 
+	 * When adding a new attachment, check that a type is set
+	 */
+	 jQuery("#add-file-modal input[name='addFile']").click(function () {
+		 
+		 
+		 if (jQuery("#add-file-modal input[name='uploadType']:checked").val() == "additional" &&
+		     jQuery("#add-file-modal select[name='attachmentType']").val() == "") {
+			 
+			 jQuery("#add-file-modal select[name='attachmentType']").addClass("red");
+			 return false;
+		 }
+		 
+	 });
 	 
 	 jQuery(".state-transition.btn-success").live("click",function () {
 		 

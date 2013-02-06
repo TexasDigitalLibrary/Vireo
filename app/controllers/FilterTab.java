@@ -788,6 +788,10 @@ public class FilterTab extends AbstractVireoController {
 		response.contentType = stream.getContentType();
 		response.setHeader("Content-Disposition", stream.getContentDisposition());
 		
+		// Fix problem with no-cache headers and ie8
+		response.setHeader("Pragma", "public");
+		response.setHeader("Cache-Control","public");
+		
 		while(stream.hasNextChunk()) {
 			Promise<byte[]> nextChunk = stream.nextChunk();
 			byte[] chunk = await(nextChunk);

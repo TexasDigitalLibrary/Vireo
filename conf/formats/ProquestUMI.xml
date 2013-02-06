@@ -1,309 +1,310 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 *{
-	The Proquest/UMI export format. Use this format when publishing records to
-	Proquest for inclusion in their database of Thesis and Dissertations. There 
-	are a mirad of options at the top of this fale that you can use to 
-	customise the export generated metadata. This ranges from embargo settings,
-	publication identifiers, and whether to release contact information for the
-	student.
+    The Proquest/UMI export format. Use this format when publishing records to
+    Proquest for inclusion in their database of Thesis and Dissertations. There 
+    are a mirad of options at the top of this fale that you can use to 
+    customise the export generated metadata. This ranges from embargo settings,
+    publication identifiers, and whether to release contact information for the
+    student.
 }*
 %{
-	//Configure UMI export options
-	
-	// #### Publishing Options
-	// 0 - Traditional publishing
-	// 1 - Open Access, requires an additional $95 fee.
-	int publishing_option = 1;
-	if(settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.PROQUEST_OA_PUBLISHING) == "false" )
-		publishing_option = 0;
+    //Configure UMI export options
+    
+    // #### Publishing Options
+    // 0 - Traditional publishing
+    // 1 - Open Access, requires an additional $95 fee.
+    int publishing_option = 1;
+    if(settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.PROQUEST_OA_PUBLISHING) == "false" )
+        publishing_option = 0;
 
-	// #### Third Party Search
-	// Indicates the author would like to have his or her metadata indexed by
-	// external search engines.
-	boolean third_party_search = true;
-	if (settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.PROQUEST_INDEXING) == "false")
-	   third_party_search = false;
-	
-	// #### Third Party Sales
-	// Indicates the author would like to have his or her work sold by 3rd
-	// party retailers in addition to ProQuest / UMI.
-	boolean third_party_sales = false;
-	
-	// #### Release Student Contact
-	// In addition to the student's name should their phone, mailing address,
-	// and email address be released to ProQuest. Turning this on may violate
-	// FERPA regulations.
-	boolean release_student_contact_information = true;
+    // #### Third Party Search
+    // Indicates the author would like to have his or her metadata indexed by
+    // external search engines.
+    boolean third_party_search = true;
+    if (settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.PROQUEST_INDEXING) == "false")
+       third_party_search = false;
+    
+    // #### Third Party Sales
+    // Indicates the author would like to have his or her work sold by 3rd
+    // party retailers in addition to ProQuest / UMI.
+    boolean third_party_sales = false;
+    
+    // #### Release Student Contact
+    // In addition to the student's name should their phone, mailing address,
+    // and email address be released to ProQuest. Turning this on may violate
+    // FERPA regulations.
+    boolean release_student_contact_information = true;
 
-	// #### Apply for Copyright
-	// Indicate if the author wants us proquest to apply for copyright. There 
-	// is an additional $65 fee for copyright registration, and for FTP sites,
-	// the author must submit a signed paper form with the additional payment.
-	boolean apply_for_copyright = false;
-	
-	// #### External ID
-	// Each record exported to UMI has an 'external_id' which records with
-	// vireo submission generated this record. Proquest suggests it should
-	// begin with a lower case school identifier such as khust or emory,
-	// followed by a colon, and then the school's own unique identifier. In 
-	// this case the vireo submission id will be appended to this prefix.
-	String external_id_prefix = "vireo:";
+    // #### Apply for Copyright
+    // Indicate if the author wants us proquest to apply for copyright. There 
+    // is an additional $65 fee for copyright registration, and for FTP sites,
+    // the author must submit a signed paper form with the additional payment.
+    boolean apply_for_copyright = false;
+    
+    // #### External ID
+    // Each record exported to UMI has an 'external_id' which records with
+    // vireo submission generated this record. Proquest suggests it should
+    // begin with a lower case school identifier such as khust or emory,
+    // followed by a colon, and then the school's own unique identifier. In 
+    // this case the vireo submission id will be appended to this prefix.
+    String external_id_prefix = "vireo:";
 
-	// #### Institutional Code
-	// Proquest assignes each instutition a code, supply that code on the
-	// Application Settings tab.
-	String institution_code = settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.PROQUEST_INSTITUTION_CODE);
-	
-	// #### Institutional Name
-	// The name of the institution, we use the grantor field established under
-	// the application settings tab.
-	String institution_name = settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.GRANTOR);
+    // #### Institutional Code
+    // Proquest assignes each instutition a code, supply that code on the
+    // Application Settings tab.
+    String institution_code = settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.PROQUEST_INSTITUTION_CODE);
+    
+    // #### Institutional Name
+    // The name of the institution, we use the grantor field established under
+    // the application settings tab.
+    String institution_name = settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.GRANTOR);
 
-	// #### Embargo Code
-	// The embargo code can be one of the following values
-	// 0 - No embargo
-	// 1 - 6 months embargo
-	// 2 - 1 year embargo
-	// 3 - 2 year embargo
-	// 4 - flexible delayed release
-	// 
-	// If you choose the #4, flexible delayed release, then you also need to
-	// place sales and format restrictions using the parameters below.
-	int embargoCode = 0;
-	if (embargoCode != 4 && sub.getEmbargoType() != null) {
-		if (sub.getEmbargoType().getDuration() != null) {
-			if (sub.getEmbargoType().getDuration() >= 0)
-				// No duration
-				embargoCode = 0;
-			else if (sub.getEmbargoType().getDuration() >= 6 )
-				// 6 months or under
-				embargoCode = 1;
-			else if (sub.getEmbargoType().getDuration() >= 12)
-				// 6 months to 1 year
-				embargoCode = 2;
-			else
-				// 1 year or greater
-				embargoCode = 3;
-		} else {
-			// The vireo embargo is tagged as indefinite, so the best we can do
-			// with UMI is 2 years. 
-			embargoCode = 3;
-		}
-	}
-	
-	// #### Sales Restrictions (embargo = 4)
-	// 0 - No sales restriction
-	// 1 - Not available for sale
-	// 2 - Sell to author only/copyright
-	// 4 - Sell to author only
-	int sale_restriction_code = 0;
-	String sale_restriction_remove = "";
-	
-	// #### Format Restrictions (embargo = 4)
-	// 0 - no format restriction
-	// X - Xerographic not available
-	// F - Microfiche not available
-	// M - Microfilm not available
-	// C - CD-ROM not available
-	// E - Electronic not available
-	// XF - Xerographic and Microfiche not available
-	// XM - Xerographic and Microfilm not available
-	// XC - Xerographic and CD-ROM not available
-	// XE - Xerographic and Electronic not available
-	// FM - Microform not available
-	// FC - Microfiche and CD-ROM not available
-	// FE - Microfiche and Electronic not available
-	// MC - Microfilm and CD-ROM not available
-	// ME - Microfilm and Electronic not available
-	// CE - CD-ROM and Electronic not available
-	// XFM - Only CD-ROM and Electronic available
-	// XFC - Only Microfilm and Electronic available
-	// XFE - Only Microfilm and CD-ROM available
-	// XMC - Only Microfiche and Electronic available
-	// XME - Only Microfiche and CD-ROM available
-	// XCE - Only Microform available
-	// FMC - Only Xerographic and electronic available
-	// FCE - Only Xerographic and Microfilm available
-	// FME - Only Xerographic and CD-ROM available
-	// MCE - Only Xerographic and Microfiche available
-	// XFMC - Only Electronic available
-	// XFME - Only CD-ROM available
-	// XFCE - Only Microfilm available
-	// XMCE - Only Microfiche available
-	// FMCE - Only Xerographic available
-	String format_restriction_code ="0";
-	String format_restriction_remove = "";
-	
-	
-	def proquestUtils = play.modules.spring.Spring.getBeanOfType(org.tdl.vireo.proquest.ProquestUtilityService.class);
+    // #### Embargo Code
+    // The embargo code can be one of the following values
+    // 0 - No embargo
+    // 1 - 6 months embargo
+    // 2 - 1 year embargo
+    // 3 - 2 year embargo
+    // 4 - flexible delayed release
+    // 
+    // If you choose the #4, flexible delayed release, then you also need to
+    // place sales and format restrictions using the parameters below.
+    int embargoCode = 0;
+    if (embargoCode != 4 && sub.getEmbargoType() != null) {
+        if (sub.getEmbargoType().getDuration() != null) {
+            if (sub.getEmbargoType().getDuration() == 0)
+                // No duration
+                embargoCode = 0;
+            else if (sub.getEmbargoType().getDuration() <= 6 )
+                // 6 months or under
+                embargoCode = 1;
+            else if (sub.getEmbargoType().getDuration() <= 12)
+                // 6 months to 1 year
+                embargoCode = 2;
+            else
+                // 1 year or greater
+                embargoCode = 3;
+        } else {
+            // The vireo embargo is tagged as indefinite, so the best we can do
+            // with UMI is 2 years. 
+            embargoCode = 3;
+        }
+    }
+    
+    // #### Sales Restrictions (embargo = 4)
+    // 0 - No sales restriction
+    // 1 - Not available for sale
+    // 2 - Sell to author only/copyright
+    // 4 - Sell to author only
+    int sale_restriction_code = 0;
+    String sale_restriction_remove = "";
+    
+    // #### Format Restrictions (embargo = 4)
+    // 0 - no format restriction
+    // X - Xerographic not available
+    // F - Microfiche not available
+    // M - Microfilm not available
+    // C - CD-ROM not available
+    // E - Electronic not available
+    // XF - Xerographic and Microfiche not available
+    // XM - Xerographic and Microfilm not available
+    // XC - Xerographic and CD-ROM not available
+    // XE - Xerographic and Electronic not available
+    // FM - Microform not available
+    // FC - Microfiche and CD-ROM not available
+    // FE - Microfiche and Electronic not available
+    // MC - Microfilm and CD-ROM not available
+    // ME - Microfilm and Electronic not available
+    // CE - CD-ROM and Electronic not available
+    // XFM - Only CD-ROM and Electronic available
+    // XFC - Only Microfilm and Electronic available
+    // XFE - Only Microfilm and CD-ROM available
+    // XMC - Only Microfiche and Electronic available
+    // XME - Only Microfiche and CD-ROM available
+    // XCE - Only Microform available
+    // FMC - Only Xerographic and electronic available
+    // FCE - Only Xerographic and Microfilm available
+    // FME - Only Xerographic and CD-ROM available
+    // MCE - Only Xerographic and Microfiche available
+    // XFMC - Only Electronic available
+    // XFME - Only CD-ROM available
+    // XFCE - Only Microfilm available
+    // XMCE - Only Microfiche available
+    // FMCE - Only Xerographic available
+    String format_restriction_code ="0";
+    String format_restriction_remove = "";
+    
+    
+    def proquestUtils = play.modules.spring.Spring.getBeanOfType(org.tdl.vireo.proquest.ProquestUtilityService.class);
 }%
 <DISS_submission *{ Excess white space breaks ProQuest's import
-	}*publishing_option="${ publishing_option }" *{
-	}*embargo_code="${ embargoCode }" *{
-	}*third_party_search="${ third_party_search ? "Y" : "N" }" *{
-	}*third_party_sales="${ third_party_sales ? "Y" : "N" }">
-	<!-- Generated by The Vireo ETD Submission System on ${ new java.util.Date().format("yyyy/MM/dd 'at' HH:mm:ss") }. -->
-	<DISS_authorship>
-		<DISS_author type="primary">
-			<DISS_name>
-				<DISS_surname>${ sub.getStudentLastName()?.escapeXml() }</DISS_surname>
-				<DISS_fname>${ sub.getStudentFirstName()?.escapeXml() }</DISS_fname>
-				<DISS_middle>${ sub.getStudentMiddleName()?.escapeXml() }</DISS_middle>
-				<DISS_affiliation>${ settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.GRANTOR) }</DISS_affiliation>
-			</DISS_name>
+    }*publishing_option="${ publishing_option }" *{
+    }*embargo_code="${ embargoCode }" *{
+    }*third_party_search="${ third_party_search ? "Y" : "N" }" *{
+    }*third_party_sales="${ third_party_sales ? "Y" : "N" }">
+    <!-- Generated by The Vireo ETD Submission System on ${ new java.util.Date().format("yyyy/MM/dd 'at' HH:mm:ss") }. -->
+    <DISS_authorship>
+        <DISS_author type="primary">
+            <DISS_name>
+                <DISS_surname>${ sub.getStudentLastName()?.escapeXml()?.raw() }</DISS_surname>
+                <DISS_fname>${ sub.getStudentFirstName()?.escapeXml()?.raw() }</DISS_fname>
+                <DISS_middle>${ sub.getStudentMiddleName()?.escapeXml()?.raw() }</DISS_middle>
+                <DISS_affiliation>${ settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.GRANTOR)?.escapeXml()?.raw() }</DISS_affiliation>
+            </DISS_name>
 #{if release_student_contact_information }
-			<DISS_contact type="current">
+            <DISS_contact type="current">
 #{if sub.getSubmissionDate() != null }
-				<DISS_contact_effdt>${ sub.getSubmissionDate()?.format("MM/dd/yyyy") }</DISS_contact_effdt>
+                <DISS_contact_effdt>${ sub.getSubmissionDate()?.format("MM/dd/yyyy") }</DISS_contact_effdt>
 #{/if}
 #{if sub.getSubmitter().getCurrentPhoneNumber() != null}
-				<DISS_phone_fax type="P">
+                <DISS_phone_fax type="P">
 %{ def phone = proquestUtils.parsePhone(sub.getSubmitter().getCurrentPhoneNumber()); }%
-					<DISS_cntry_cd>${ phone.cntryCode }</DISS_cntry_cd>
-					<DISS_area_code>${ phone.areaCode }</DISS_area_code>
-					<DISS_phone_num>${ phone.number }</DISS_phone_num>
-					<DISS_phone_ext>${ phone.ext }</DISS_phone_ext>
-				</DISS_phone_fax>
+                    <DISS_cntry_cd>${ phone.cntryCode?.escapeXml()?.raw() }</DISS_cntry_cd>
+                    <DISS_area_code>${ phone.areaCode?.escapeXml()?.raw() }</DISS_area_code>
+                    <DISS_phone_num>${ phone.number?.escapeXml()?.raw() }</DISS_phone_num>
+                    <DISS_phone_ext>${ phone.ext?.escapeXml()?.raw() }</DISS_phone_ext>
+                </DISS_phone_fax>
 #{/if}
 #{if sub.getSubmitter().getCurrentPostalAddress() != null }
 %{ def address = proquestUtils.parseAddress(sub.getSubmitter().getCurrentPostalAddress()); %}
-				<DISS_address>
-					<DISS_addrline>${ address.addrline }</DISS_addrline>
-					<DISS_city>${ address.city }</DISS_city>
-					<DISS_st>${ address.state }</DISS_st>
-					<DISS_pcode>${ address.zip }</DISS_pcode>
-					<DISS_country>${ address.cntry != null ? address.cntry : "US"}</DISS_country>
-				</DISS_address>
+                <DISS_address>
+                    <DISS_addrline>${ address.addrline?.escapeXml()?.raw() }</DISS_addrline>
+                    <DISS_city>${ address.city?.escapeXml()?.raw() }</DISS_city>
+                    <DISS_st>${ address.state?.escapeXml()?.raw() }</DISS_st>
+                    <DISS_pcode>${ address.zip?.escapeXml()?.raw() }</DISS_pcode>
+                    <DISS_country>${ address.cntry?.escapeXml()?.raw() }</DISS_country>
+                </DISS_address>
 #{/if}
-				<DISS_email>
-					${ sub.getSubmitter().getEmail() }
-				</DISS_email>
-			</DISS_contact>
+                <DISS_email>
+                    ${ sub.getSubmitter().getEmail()?.escapeXml()?.raw() }
+                </DISS_email>
+            </DISS_contact>
 #{if sub.getSubmitter().getPermanentPhoneNumber() != null || sub.getSubmitter().getPermanentPostalAddress() != null || sub.getSubmitter().getPermanentEmailAddress() != null }
-			<DISS_contact type="future">
-#{if sub.getSubmissionDate() != null }
-				<DISS_contact_effdt>
-					${ sub.getSubmissionDate()?.format("MM/dd/yyyy") }
-				</DISS_contact_effdt>
+            <DISS_contact type="future">
+#{if sub.getGraduationYear() != null }
+                <DISS_contact_effdt>1/${ sub.getGraduationMonth() != null ? sub.getGraduationMonth() + 1 : "1" }/${ sub.getGraduationYear() }</DISS_contact_effdt>
 #{/if}
+#{elseif sub.getSubmissionDate() != null}
+                <DISS_contact_effdt>${ sub.getSubmissionDate()?.format("MM/dd/yyyy") }</DISS_contact_effdt>
+#{/elseif}
 #{if sub.getSubmitter().getPermanentPhoneNumber() != null}
-				<DISS_phone_fax type="P">
+                <DISS_phone_fax type="P">
 %{ def phone = proquestUtils.parsePhone(sub.getSubmitter().getPermanentPhoneNumber()); }%
-					<DISS_cntry_cd>${ phone.cntryCode }</DISS_cntry_cd>
-					<DISS_area_code>${ phone.areaCode }</DISS_area_code>
-					<DISS_phone_num>${ phone.number }</DISS_phone_num>
-					<DISS_phone_ext>${ phone.ext }</DISS_phone_ext>
-				</DISS_phone_fax>
+                    <DISS_cntry_cd>${ phone.cntryCode?.escapeXml()?.raw() }</DISS_cntry_cd>
+                    <DISS_area_code>${ phone.areaCode?.escapeXml()?.raw() }</DISS_area_code>
+                    <DISS_phone_num>${ phone.number?.escapeXml()?.raw() }</DISS_phone_num>
+                    <DISS_phone_ext>${ phone.ext?.escapeXml()?.raw() }</DISS_phone_ext>
+                </DISS_phone_fax>
 #{/if}
 #{if sub.getSubmitter().getPermanentPostalAddress() != null }
 %{ def address = proquestUtils.parseAddress(sub.getSubmitter().getPermanentPostalAddress()); %}
-				<DISS_address>
-					<DISS_addrline>${ address.addrline }</DISS_addrline>
-					<DISS_city>${ address.city }</DISS_city>
-					<DISS_st>${ address.state }</DISS_st>
-					<DISS_pcode>${ address.zip }</DISS_pcode>
-					<DISS_country>${ address.cntry != null ? address.cntry : "US"}</DISS_country>
-				</DISS_address>
+                <DISS_address>
+                    <DISS_addrline>${ address.addrline?.escapeXml()?.raw() }</DISS_addrline>
+                    <DISS_city>${ address.city?.escapeXml()?.raw() }</DISS_city>
+                    <DISS_st>${ address.state?.escapeXml()?.raw() }</DISS_st>
+                    <DISS_pcode>${ address.zip?.escapeXml()?.raw() }</DISS_pcode>
+                    <DISS_country>${ address.cntry?.escapeXml()?.raw() }</DISS_country>
+                </DISS_address>
 #{/if}
 #{if sub.getSubmitter().getPermanentEmailAddress() != null }
-				<DISS_email>
-					${ sub.getSubmitter().getPermanentEmailAddress() }
-				</DISS_email>
+                <DISS_email>
+                    ${ sub.getSubmitter().getPermanentEmailAddress()?.escapeXml()?.raw() }
+                </DISS_email>
 #{/if}
-			</DISS_contact>
+            </DISS_contact>
 #{/if}
 #{/if}
-		</DISS_author>
-	</DISS_authorship>
-	<DISS_description *{ Excess white space breaks ProQuest's import
-	    }*page_count="" *{
-		}*type="${ sub.getDegreeLevel()?.name()?.toLowerCase()?.escapeXml() }" *{
-		}*external_id="${ external_id_prefix }${ sub.getId() }" *{
-		}*apply_for_copyright="${ apply_for_copyright ? "yes" : "no" }">
-		<DISS_title>${ sub.getDocumentTitle() }</DISS_title>
+        </DISS_author>
+    </DISS_authorship>
+    <DISS_description *{ Excess white space breaks ProQuest's import
+        }*page_count="" *{
+        }*type="${ sub.getDegreeLevel()?.name()?.toLowerCase()?.escapeXml()?.raw() }" *{
+        }*external_id="${ external_id_prefix }${ sub.getId() }" *{
+        }*apply_for_copyright="${ apply_for_copyright ? "yes" : "no" }">
+        <DISS_title>${ sub.getDocumentTitle()?.escapeXml()?.raw() }</DISS_title>
 #{if sub.getGraduationYear() != null }
-		<DISS_dates>
-			<DISS_comp_date>${ sub.getGraduationYear() }</DISS_comp_date>
-			<DISS_accept_date>1/${ sub.getGraduationMonth() != null ? sub.getGraduationMonth() + 1 : "1" }/${ sub.getGraduationYear() }</DISS_accept_date>
-		</DISS_dates>
+        <DISS_dates>
+            <DISS_comp_date>${ sub.getGraduationYear() }</DISS_comp_date>
+            <DISS_accept_date>1/${ sub.getGraduationMonth() != null ? sub.getGraduationMonth() + 1 : "1" }/${ sub.getGraduationYear() }</DISS_accept_date>
+        </DISS_dates>
 #{/if}
-		<DISS_degree>${ proquestUtils.degreeCode(sub.getDegree()) }</DISS_degree>	
-		<DISS_institution>
-			<DISS_inst_code>${ institution_code }</DISS_inst_code>
-			<DISS_inst_name>${ institution_name }</DISS_inst_name>
-			<DISS_inst_contact>${ sub.getDepartment()?.escapeXml() }</DISS_inst_contact>
-			<DISS_processing_code>${ sub.getDegreeLevel()?.name()?.substring(0,1)?.toUpperCase()?.escapeXml() }</DISS_processing_code>
-		</DISS_institution>
+        <DISS_degree>${ proquestUtils.degreeCode(sub.getDegree()) }</DISS_degree>    
+        <DISS_institution>
+            <DISS_inst_code>${ institution_code }</DISS_inst_code>
+            <DISS_inst_name>${ institution_name }</DISS_inst_name>
+            <DISS_inst_contact>${ sub.getDepartment()?.escapeXml()?.raw() }</DISS_inst_contact>
+            <DISS_processing_code>${ sub.getDegreeLevel()?.name()?.substring(0,1)?.toUpperCase()?.escapeXml()?.raw() }</DISS_processing_code>
+        </DISS_institution>
 #{list items:sub.getCommitteeMembers(), as:'member'}
 #{if member.hasRole("Chair","Co-Chair","Supervisor","Co-Supervisor","Advisor") }
-		<DISS_advisor>
-			<DISS_name>
-				<DISS_surname>${ member.getLastName() }</DISS_surname>
-				<DISS_fname>${ member.getFirstName() }</DISS_fname>
-				<DISS_middle>${ member.getMiddleName() }</DISS_middle>
-			</DISS_name>
-		</DISS_advisor>
+        <DISS_advisor>
+            <DISS_name>
+                <DISS_surname>${ member.getLastName()?.escapeXml()?.raw() }</DISS_surname>
+                <DISS_fname>${ member.getFirstName()?.escapeXml()?.raw() }</DISS_fname>
+                <DISS_middle>${ member.getMiddleName()?.escapeXml()?.raw() }</DISS_middle>
+            </DISS_name>
+        </DISS_advisor>
 #{/if}
 #{elseif member.hasNoRole() }
-		<DISS_cmte_member>
-			<DISS_name>
-				<DISS_surname>${ member.getLastName() }</DISS_surname>
-				<DISS_fname>${ member.getFirstName() }</DISS_fname>
-				<DISS_middle>${ member.getMiddleName() }</DISS_middle>
-			</DISS_name>			
-		</DISS_cmte_member>
+        <DISS_cmte_member>
+            <DISS_name>
+                <DISS_surname>${ member.getLastName()?.escapeXml()?.raw() }</DISS_surname>
+                <DISS_fname>${ member.getFirstName()?.escapeXml()?.raw() }</DISS_fname>
+                <DISS_middle>${ member.getMiddleName()?.escapeXml()?.raw() }</DISS_middle>
+            </DISS_name>            
+        </DISS_cmte_member>
 #{/elseif}
 #{/list}
-		<DISS_categorization>
+        <DISS_categorization>
 #{list items:sub.getDocumentSubjects(), as:'subject'}
 #{if proquestRepo.findSubjectByDescription(subject) != null }
-			<DISS_category>
-				<DISS_cat_code>${ proquestRepo.findSubjectByDescription(subject)?.getCode() }</DISS_cat_code>
-				<DISS_cat_desc>${ subject }</DISS_cat_desc>
-			</DISS_category>
+            <DISS_category>
+                <DISS_cat_code>${ proquestRepo.findSubjectByDescription(subject)?.getCode()?.escapeXml()?.raw() }</DISS_cat_code>
+                <DISS_cat_desc>${ subject?.escapeXml()?.raw() }</DISS_cat_desc>
+            </DISS_category>
 #{/if}
 #{/list}
 #{if sub.getDocumentKeywords() != null}
 #{list items:sub.getDocumentKeywords().split(";"), as:'keyword'}
 #{if keyword != null && keyword.trim().length() > 0}
-			<DISS_keyword>${keyword.trim()}</DISS_keyword>
+            <DISS_keyword>${keyword.trim()?.escapeXml()?.raw()}</DISS_keyword>
 #{/if}
 #{/list}
 #{/if}
 #{if sub.getDocumentLanguage() != null && proquestUtils.languageCode(sub.getDocumentLanguageLocale()) != null}
 %{ def lang = proquestUtils.languageCode(sub.getDocumentLanguageLocale()) }%
-			<DISS_language>${ lang?.getCode()?.escapeXml() }</DISS_language>
+            <DISS_language>${ lang?.getCode()?.escapeXml()?.raw() }</DISS_language>
 #{/if}
-		</DISS_categorization>
-	</DISS_description>
-	<DISS_content>
-		<DISS_abstract>
+        </DISS_categorization>
+    </DISS_description>
+    <DISS_content>
+        <DISS_abstract>
 #{if sub.getDocumentAbstract() != null}
 #{list items:sub.getDocumentAbstract().split("\n"), as:'para'}
 #{if para != null && para.trim().length() != 0}
-			<DISS_para>
-${ para.escapeXml() }
-			</DISS_para>
+            <DISS_para>
+${ para?.escapeXml()?.raw() }
+            </DISS_para>
 #{/if}
 #{/list}
 #{/if}
-		</DISS_abstract>
+        </DISS_abstract>
 #{if sub.getPrimaryDocument() != null }
-		<DISS_binary type="${ "application/pdf".equals(sub.getPrimaryDocument()?.getMimeType()) ? "PDF" : "other" }">${ sub.getPrimaryDocument()?.getName() }</DISS_binary>
+        <DISS_binary type="${ "application/pdf".equals(sub.getPrimaryDocument()?.getMimeType()) ? "PDF" : "other" }">${ sub.getPrimaryDocument()?.getName()?.escapeXml()?.raw() }</DISS_binary>
 #{/if}
 #{list items:sub.getAttachmentsByType(org.tdl.vireo.model.AttachmentType.SUPPLEMENTAL), as:'attachment' }
-		<DISS_attachment>
-			<DISS_file_name>${ attachment.getName().escapeXml() }</DISS_file_name>
-			<DISS_file_category>${ proquestUtils.categorize(attachment).escapeXml() }</DISS_file_category>
-			<DISS_file_descr>Supplemental File</DISS_file_descr>
-		</DISS_attachment>
+        <DISS_attachment>
+            <DISS_file_name>${ attachment.getName()?.escapeXml()?.raw() }</DISS_file_name>
+            <DISS_file_category>${ proquestUtils.categorize(attachment)?.escapeXml()?.raw() }</DISS_file_category>
+            <DISS_file_descr>Supplemental File</DISS_file_descr>
+        </DISS_attachment>
 #{/list}
-	</DISS_content>
+    </DISS_content>
 #{if embargoCode == 4}
-	<DISS_restriction>	
-		<DISS_sales_restriction code="${ sale_restriction_code }" remove="${ sale_restriction_remove }"/>
-		<DISS_format_restriction code="${ format_restriction_code }" remove="${ format_restriction_remove }"/>
-		<DISS_note/>
-	</DISS_restriction>
+    <DISS_restriction>    
+        <DISS_sales_restriction code="${ sale_restriction_code }" remove="${ sale_restriction_remove }"/>
+        <DISS_format_restriction code="${ format_restriction_code }" remove="${ format_restriction_remove }"/>
+        <DISS_note/>
+    </DISS_restriction>
 #{/if}
 </DISS_submission>

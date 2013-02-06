@@ -34,18 +34,8 @@ jQuery(document).ready(function(){
 <fieldset class="default settings">
 <legend class="default">Choose email options:</legend>
 	<div>
-	   <input name="${org.tdl.vireo.constant.AppConfig.EMAIL_SHOW_ADDRESSES}" type="checkbox" class="checkbox email-toggle" #{if EMAIL_SHOW_ADDRESSES != null}checked="true"#{/if} value="true">
-	       Make administrative staff email address available to students.
-	   </input>
-	</div>
-	<div>
-	   <input name="${org.tdl.vireo.constant.AppConfig.EMAIL_CC_ADVISOR}" type="checkbox" class="checkbox email-toggle" #{if EMAIL_CC_ADVISOR != null}checked="true"#{/if} value="true">
-	       CC the student's advisor as soon as student submits their work.
-	   </input>
-	</div>
-	<div>
-	   <input name="${org.tdl.vireo.constant.AppConfig.EMAIL_CC_STUDENT}" type="checkbox" class="checkbox email-toggle" #{if EMAIL_CC_STUDENT != null}checked="true"#{/if} value="true">
-	       CC the student whenever the system sends an email to someone else.
+	   <input name="${org.tdl.vireo.constant.AppConfig.EMAIL_DELAY_SENDING_ADVISOR_REQUEST}" type="checkbox" class="checkbox email-toggle" #{if EMAIL_DELAY_SENDING_ADVISOR_REQUEST != null}checked="true"#{/if} value="true">
+	       Do not automatically send the 'Advisor Review Request' email upon initial submission.
 	   </input>
 	</div>
 </fieldset>
@@ -126,7 +116,7 @@ jQuery(document).ready(function(){
 	</tr>
 	<tr>
 		<td><b>STUDENT_URL:</b></td>
-		<td>A URL that will allow the student to view or take action on their submission.</td>
+		<td>The URL that will allow the student to view or take action on their submission.</td>
 	</tr>
 	<tr>
 		<td><b>ADVISOR_URL:</b></td>
@@ -139,6 +129,10 @@ jQuery(document).ready(function(){
 	<tr>
 		<td><b>SUBMISSION_ASSIGNED_TO:</b></td>
 		<td>The name of the staff member to which this submission is currently assigned.</td>
+	</tr>
+	<tr>
+		<td><b>REGISTRATION_URL:</b></td>
+		<td>The URL back to Vireo to validate ownership of an email address. <em>(This variable is only available in select SYSTEM templates)</em></td>
 	</tr>
 </table>
 <p>When these variables are included in a template, the text will be replaced prior to the email being sent (or the comment being recorded in the action log). For example, the string</p>

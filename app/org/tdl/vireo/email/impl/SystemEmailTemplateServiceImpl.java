@@ -170,7 +170,7 @@ public class SystemEmailTemplateServiceImpl implements
 		if (path.endsWith(".email"))
 			path = path.substring(0,path.length() - ".email".length());
 		
-		return path.replace("_", " ");
+		return path.replaceAll("_", " ");
 	}
 
 	/**

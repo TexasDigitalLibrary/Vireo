@@ -51,14 +51,7 @@ public class AppConfig {
 	
 	
 	// Email settings
-	/** Make administrative staff email address available to students. **/
-	public final static String EMAIL_SHOW_ADDRESSES = "email_shown_addresses";
-	
-	/** CC the student's advisor as soon as student submits their work. **/
-	public final static String EMAIL_CC_ADVISOR = "email_cc_advisor";
-	
-	/** CC the student whenever the system sent an email to someone else. **/
-	public final static String EMAIL_CC_STUDENT = "email_cc_student";
+	public final static String EMAIL_DELAY_SENDING_ADVISOR_REQUEST = "email_delay_advisor_request";
 	
 	// Theme settings
 	/** Background main color */

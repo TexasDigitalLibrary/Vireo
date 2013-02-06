@@ -360,4 +360,4 @@
 	marc21 = marc21.replaceAll("RLXXX", recordLength);
 	marc21 = marc21.replaceAll("BADXX", baseAddressOfData);
 
-}%${ marc21.raw() }
+}%${ marc21?.raw() }

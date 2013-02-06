@@ -39,20 +39,20 @@
 
                     <!-- dc.creator = Student -->
                     <dim:field mdschema="dc" element="creator">
-                        ${ sub.getStudentFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH) }
+                        ${ sub.getStudentFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH)?.escapeXml()?.raw() }
                     </dim:field>
 
                     <!-- dc.title = Document Title -->
                     #{if sub.getDocumentTitle() != null } 
                     <dim:field mdschema="dc" element="title">
-                        ${ sub.getDocumentTitle().escapeXml() }
+                        ${ sub.getDocumentTitle()?.escapeXml()?.raw() }
                     </dim:field>
                     #{/if}
                     
                     <!-- dc.description.abstract = Document Abstract -->
                     #{if sub.getDocumentAbstract() != null } 
                     <dim:field mdschema="dc" element="description" qualifier="abstract">
-                        ${ sub.getDocumentAbstract().escapeXml() }
+                        ${ sub.getDocumentAbstract()?.escapeXml()?.raw() }
                     </dim:field>
                     #{/if}
                     
@@ -60,7 +60,7 @@
                     #{if sub.getDocumentKeywords() != null } 
                     #{list items:sub.getDocumentKeywords().split(";"), as:'keyword'} 
                     <dim:field mdschema="dc" element="subject">
-                        ${ keyword.trim().escapeXml() }
+                        ${ keyword.trim()?.escapeXml()?.raw() }
                     </dim:field>
                     #{/list}
                     #{/if}
@@ -69,7 +69,7 @@
                     #{list items:sub.getCommitteeMembers(), as:'member'} 
                     #{if member.hasRole("Chair","Co-Chair","Supervisor","Co-Supervisor","Advisor") }
                     <dim:field mdschema="dc" element="contributor" qualifier="advisor">
-                        ${ member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH) }
+                        ${ member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH)?.escapeXml()?.raw() }
                     </dim:field>
                     #{/if}
                     #{/list}
@@ -78,8 +78,8 @@
                     <!-- dc.contributor.committeeMember = Committee Members who are not flagged as chair (likely multiple) -->
                     #{list items:sub.getCommitteeMembers(), as:'member'}
                     #{if member.hasNoRole() } 
-                    <dim:field mdschema="dc" element="contributor" qualifier="advisor">
-                        ${ member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH) } 
+                    <dim:field mdschema="dc" element="contributor" qualifier="committeeMember">
+                        ${ member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH)?.escapeXml()?.raw() } 
                     </dim:field>
                     #{/if}
                     #{/list}
@@ -120,7 +120,7 @@
                     <!-- dc.format.mimetype = Primary Document's mimetype, almost always "application/pdf" -->
                     #{if sub.getPrimaryDocument() != null } 
                     <dim:field mdschema="dc" element="format" qualifier="mimetype">
-                        ${ sub.getPrimaryDocument().getMimeType().escapeXml() }
+                        ${ sub.getPrimaryDocument().getMimeType()?.escapeXml()?.raw() }
                     </dim:field>
                     #{/if}
                     
@@ -138,7 +138,7 @@
                     <!-- dc.identifier.uri == Deposit ID, this would only be available when re-depositing -->
                     #{if sub.getDepositId() != null } 
                     <dim:field mdschema="dc" element="identifier" qualifier="uri">
-                        ${ sub.getDepositId().escapeXml() }
+                        ${ sub.getDepositId()?.escapeXml()?.raw() }
                     </dim:field>
                     #{/if}
                     
@@ -146,21 +146,21 @@
                     <!-- thesis.degree.name == Degree -->
                     #{if sub.getDegree() != null } 
                     <dim:field mdschema="thesis" element="degree" qualifier="name">
-                        ${ sub.getDegree().escapeXml() }
+                        ${ sub.getDegree()?.escapeXml()?.raw() }
                     </dim:field>
                     #{/if}
                     
                     <!-- thesis.degree.level = Degree Level (Doctoral, Masters, Undergraduate) -->
                     #{if sub.getDegreeLevel() != null } 
                     <dim:field mdschema="thesis" element="degree" qualifier="level">
-                        ${ sub.getDegreeLevel().name().toLowerCase().capitalizeWords().escapeXml() }
+                        ${ sub.getDegreeLevel().name().toLowerCase().capitalizeWords()?.escapeXml()?.raw() }
                     </dim:field>
                     #{/if}
                     
                     <!-- thesis.degree.discipline = Major -->
                     #{if sub.getMajor() != null } 
                     <dim:field mdschema="thesis" element="degree" qualifier="discipline">
-                        ${ sub.getMajor().escapeXml() }
+                        ${ sub.getMajor()?.escapeXml()?.raw() }
                     </dim:field>
                     #{/if}
                     
@@ -174,7 +174,7 @@
                     <!-- thesis.degree.department = Department -->
                     #{if sub.getDepartment() != null } 
                     <dim:field mdschema="thesis" element="degree" qualifier="department">
-                        ${ sub.getDepartment().escapeXml() }
+                        ${ sub.getDepartment()?.escapeXml()?.raw() }
                     </dim:field>
                     #{/if}
                     
@@ -184,7 +184,7 @@
                     
                     #{if sub.getEmbargoType().getDuration() == null } 
                     <dim:field mdschema="dc" element="description" qualifier="provenance">
-                        Submission original under an indefinite embargo labeled '${ sub.getEmbargoType().getName().escapeXml() }'. The submission was deposited into a repository on ${ new java.util.Date().format("yyyy-MM-dd") } without embargo terms
+                        Submission original under an indefinite embargo labeled '${ sub.getEmbargoType().getName()?.escapeXml()?.raw() }'. The submission was deposited into a repository on ${ new java.util.Date().format("yyyy-MM-dd") } without embargo terms
                     </dim:field>
                     #{/if} 
                     #{elseif sub.getEmbargoType().getDuration() != 0 } 
@@ -209,12 +209,12 @@
                         ${ liftDate.format("yyyy-MM-dd") }
                     </dim:field>
                     <dim:field mdschema="dc" element="description" qualifier="provenance">
-                        Submission published under a ${sub.getEmbargoType().getDuration() } month embargo labeled '${ sub.getEmbargoType().getName().escapeXml() }', the embargo will last until ${ liftDate.format("yyyy-MM-dd") }
+                        Submission published under a ${sub.getEmbargoType().getDuration() } month embargo labeled '${ sub.getEmbargoType().getName()?.escapeXml()?.raw() }', the embargo will last until ${ liftDate.format("yyyy-MM-dd") }
                     </dim:field>
                     #{/elseif} 
                     #{else} 
                     <dim:field mdschema="dc" element="description" qualifier="provenance">
-                        Submission original under the a zero month embargo labeled '${ sub.getEmbargoType().getName().escapeXml() }'.
+                        Submission original under the a zero month embargo labeled '${ sub.getEmbargoType().getName()?.escapeXml()?.raw() }'.
                     </dim:field>
                     #{/else}
 
@@ -223,35 +223,35 @@
                     <!-- dc.description.provenance = License Agreement Date -->
                     #{if sub.getLicenseAgreementDate() != null} 
                     <dim:field mdschema="dc" element="description" qualifier="provenance">
-                        The student, ${ sub.getStudentFormattedName(org.tdl.vireo.model.NameFormat.FIRST_LAST) }, accepted the attached license on ${ sub.getLicenseAgreementDate().format("yyyy-MM-dd 'at' HH:mm") }. 
+                        The student, ${ sub.getStudentFormattedName(org.tdl.vireo.model.NameFormat.FIRST_LAST)?.escapeXml()?.raw() }, accepted the attached license on ${ sub.getLicenseAgreementDate().format("yyyy-MM-dd 'at' HH:mm") }. 
                     </dim:field>
                     #{/if} 
                     
                     <!-- dc.description.provenance = Submission Date -->
                     #{if sub.getSubmissionDate() != null} 
                     <dim:field mdschema="dc" element="description" qualifier="provenance">
-                        The student, ${ sub.getStudentFormattedName(org.tdl.vireo.model.NameFormat.FIRST_LAST) }, submitted this ${ sub.getDocumentType() == null ? "document" : sub.getDocumentType() } for approval on ${ sub.getSubmissionDate().format("yyyy-MM-dd 'at' HH:mm") }. 
+                        The student, ${ sub.getStudentFormattedName(org.tdl.vireo.model.NameFormat.FIRST_LAST)?.escapeXml()?.raw() }, submitted this ${ sub.getDocumentType() == null ? "document" : sub.getDocumentType()?.escapeXml()?.raw() } for approval on ${ sub.getSubmissionDate().format("yyyy-MM-dd 'at' HH:mm") }. 
                     </dim:field>
                     #{/if} 
                     
                     <!-- dc.description.provenance = Committee Approval Date -->
                     #{if sub.getCommitteeApprovalDate() != null} 
                     <dim:field mdschema="dc" element="description" qualifier="provenance">
-                        The committee advisor approved this ${ sub.getDocumentType() == null ? "document" : sub.getDocumentType() } on ${ sub.getCommitteeApprovalDate().format("yyyy-MM-dd 'at' HH:mm") }. 
+                        The committee advisor approved this ${ sub.getDocumentType() == null ? "document" : sub.getDocumentType()?.escapeXml()?.raw() } on ${ sub.getCommitteeApprovalDate().format("yyyy-MM-dd 'at' HH:mm") }. 
                     </dim:field>
                     #{/if} 
                     
                     <!-- dc.description.provenance = Committee Embargo Approval Date -->
                     #{if sub.getCommitteeEmbargoApprovalDate() != null} 
                     <dim:field mdschema="dc" element="description" qualifier="provenance">
-                        The committee advisor approved the embargo selection for this ${ sub.getDocumentType() == null ? "document" : sub.getDocumentType() } on ${ sub.getCommitteeEmbargoApprovalDate().format("yyyy-MM-dd 'at' HH:mm") }. 
+                        The committee advisor approved the embargo selection for this ${ sub.getDocumentType() == null ? "document" : sub.getDocumentType()?.escapeXml()?.raw() } on ${ sub.getCommitteeEmbargoApprovalDate().format("yyyy-MM-dd 'at' HH:mm") }. 
                     </dim:field>
                     #{/if} 
                     
                     <!-- dc.description.provenance = Approval Date -->
                     #{if sub.getApprovalDate() != null} 
                     <dim:field mdschema="dc" element="description" qualifier="provenance">
-                        This ${ sub.getDocumentType() == null ? "document" : sub.getDocumentType() } was approved for publication on ${ sub.getApprovalDate().format("yyyy-MM-dd 'at' HH:mm") }. 
+                        This ${ sub.getDocumentType() == null ? "document" : sub.getDocumentType()?.escapeXml()?.raw() } was approved for publication on ${ sub.getApprovalDate().format("yyyy-MM-dd 'at' HH:mm") }. 
                     </dim:field>
                     #{/if} 
                     
@@ -275,9 +275,9 @@
             #{if sub.getPrimaryDocument() != null } 
             <file GROUPID="piper-mets-file-group-${ sub.getPrimaryDocument().getType().ordinal() }" 
                   ID="piper-mets-file-${ sub.getPrimaryDocument().getId() }" 
-                  MIMETYPE="${ sub.getPrimaryDocument().getMimeType().escapeXml() }"
+                  MIMETYPE="${ sub.getPrimaryDocument().getMimeType()?.escapeXml()?.raw() }"
                   SEQ="1">
-                  <FLocat LOCTYPE="URL" xlink:href="${ sub.getPrimaryDocument().getName().escapeXml() }"/>
+                  <FLocat LOCTYPE="URL" xlink:href="${ sub.getPrimaryDocument().getName()?.escapeXml()?.raw() }"/>
             </file>
             #{/if}
             
@@ -286,9 +286,9 @@
             #{list items:sub.getAttachmentsByType(org.tdl.vireo.model.AttachmentType.SUPPLEMENTAL,org.tdl.vireo.model.AttachmentType.SOURCE), as:'attachment'} 
             <file GROUPID="piper-mets-file-group-${ attachment.getType().ordinal() }" 
                   ID="piper-mets-file-${ attachment.getId() }" 
-                  MIMETYPE="${ attachment.getMimeType().escapeXml() }"
+                  MIMETYPE="${ attachment.getMimeType()?.escapeXml()?.raw() }"
                   SEQ="${ sub.getAttachmentsByType(org.tdl.vireo.model.AttachmentType.SUPPLEMENTAL,org.tdl.vireo.model.AttachmentType.SOURCE).indexOf(attachment) + 2 }">
-                  <FLocat LOCTYPE="URL" xlink:href="${ attachment.getName().escapeXml() }"/>
+                  <FLocat LOCTYPE="URL" xlink:href="${ attachment.getName()?.escapeXml()?.raw() }"/>
             </file>
             #{/list}
  
@@ -301,8 +301,8 @@
             #{list items:sub.getAttachmentsByType(org.tdl.vireo.model.AttachmentType.LICENSE), as:'attachment'}             
             <file GROUPID="piper-mets-file-group-${ attachment.getType().ordinal() }" 
                   ID="piper-mets-file-${ attachment.getId() }" 
-                  MIMETYPE="${ attachment.getMimeType().escapeXml() }">
-                  <FLocat LOCTYPE="URL" xlink:href="${ attachment.getName().escapeXml() }"/>
+                  MIMETYPE="${ attachment.getMimeType()?.escapeXml()?.raw() }">
+                  <FLocat LOCTYPE="URL" xlink:href="${ attachment.getName()?.escapeXml()?.raw() }"/>
             </file>
             #{/list}
         

@@ -814,6 +814,7 @@ public class ViewTab extends AbstractVireoController {
 				email.addCc(submission.getCommitteeContactEmail());
 			}
 			
+			email.setFrom(context.getPerson());
 			email.setReplyTo(context.getPerson());
 						
 			if(params.get("email_student") != null && "public".equals(params.get("visibility"))) {	
@@ -911,6 +912,7 @@ public class ViewTab extends AbstractVireoController {
 			uploadAdditional(sub);
 		}
 		
+		VireoEmail email = null;
 		if(params.get("email_student") != null) {			
 						
 			String subject = params.get("subject");
@@ -923,9 +925,10 @@ public class ViewTab extends AbstractVireoController {
 				validation.addError("addFileComment", "You must include a comment when sending an email.");
 			
 			if(!validation.hasErrors()){
-				VireoEmail email = emailService.createEmail();
+				email = emailService.createEmail();
 				email.addParameters(sub);
 				email.addTo(sub.getSubmitter());
+				email.setFrom(context.getPerson());
 				email.setReplyTo(context.getPerson());
 				
 				//Create list of carbon copies
@@ -937,8 +940,6 @@ public class ViewTab extends AbstractVireoController {
 				email.setMessage(comment);
 				
 				email.setLogOnCompletion(context.getPerson(), sub);
-				
-				emailService.sendEmail(email,false);
 			}			
 		}		
 
@@ -947,7 +948,10 @@ public class ViewTab extends AbstractVireoController {
 				sub.setState(stateManager.getState("NeedsCorrection"));
 						
 			sub.save();
-		}		
+		}	
+		
+		if (email != null)
+			emailService.sendEmail(email,false);
 	}
 	
 	/**
@@ -1116,6 +1120,8 @@ public class ViewTab extends AbstractVireoController {
 		email.getBcc().clear();
 		
 		email.addTo(advisorEmail);
+		email.setFrom(context.getPerson());
+		email.setReplyTo(context.getPerson());
 						
 		//Setup Params
 		email.setTemplate(template);
