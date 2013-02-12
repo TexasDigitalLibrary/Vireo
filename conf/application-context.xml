@@ -162,6 +162,7 @@
         <property name="searcher" ref="Searcher"/>
         <property name="depositService" ref="DepositService"/>
         <property name="jobManager" ref="JobManager"/>
+        <property name="errorLog" ref="ErrorLog"/>
     </bean>
     <bean id="BatchDelete" class="org.tdl.vireo.batch.impl.DeleteServiceImpl" scope="singleton">
         <property name="personRepository" ref="PersonRepository"/>
@@ -169,6 +170,7 @@
         <property name="securityContext" ref="SecurityContext"/>
         <property name="searcher" ref="Searcher"/>
         <property name="jobManager" ref="JobManager"/>
+        <property name="errorLog" ref="ErrorLog"/>
     </bean>
     <bean id="BatchAssign" class="org.tdl.vireo.batch.impl.AssignServiceImpl" scope="singleton">
     	<property name="personRepository" ref="PersonRepository"/>
@@ -176,6 +178,7 @@
     	<property name="securityContext" ref="SecurityContext"/>
     	<property name="searcher" ref="Searcher"/>
     	<property name="jobManager" ref="JobManager"/>
+    	<property name="errorLog" ref="ErrorLog"/>
     </bean>
     <bean id="BatchComment" class="org.tdl.vireo.batch.impl.CommentServiceImpl" scope="singleton">
     	<property name="personRepository" ref="PersonRepository"/>
@@ -184,6 +187,7 @@
     	<property name="searcher" ref="Searcher"/>
     	<property name="jobManager" ref="JobManager"/>
     	<property name="emailService" ref="EmailService"/>
+    	<property name="errorLog" ref="ErrorLog"/>
     </bean>
     
     <!-- Export/Deposit -->
@@ -191,6 +195,7 @@
         <property name="personRepository" ref="PersonRepository"/>
         <property name="securityContext" ref="SecurityContext"/>
         <property name="jobManager" ref="JobManager"/>
+        <property name="errorLog" ref="ErrorLog"/>
     </bean>
     <bean id="ExportService" class="org.tdl.vireo.export.impl.ExportServiceImpl" scope="singleton">
         <property name="personRepository" ref="PersonRepository"/>
@@ -198,6 +203,7 @@
         <property name="securityContext" ref="SecurityContext"/>
         <property name="searcher" ref="Searcher"/>
         <property name="jobManager" ref="JobManager"/>
+        <property name="errorLog" ref="ErrorLog"/>
     </bean>
     
     <!-- Deposit Protocols -->
