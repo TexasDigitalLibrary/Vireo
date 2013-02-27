@@ -180,12 +180,12 @@
 #{if sub.getSubmitter().getPermanentPhoneNumber() != null || sub.getSubmitter().getPermanentPostalAddress() != null || sub.getSubmitter().getPermanentEmailAddress() != null }
             <DISS_contact type="future">
 #{if sub.getGraduationYear() != null }
-                <DISS_contact_effdt>1/${ sub.getGraduationMonth() != null ? sub.getGraduationMonth() + 1 : "1" }/${ sub.getGraduationYear() }</DISS_contact_effdt>
+                <DISS_contact_effdt>${ sub.getGraduationMonth() != null ? (sub.getGraduationMonth() + 1).format("00") : "01" }/01/${ sub.getGraduationYear() }</DISS_contact_effdt>
 #{/if}
 #{elseif sub.getSubmissionDate() != null}
                 <DISS_contact_effdt>${ sub.getSubmissionDate()?.format("MM/dd/yyyy") }</DISS_contact_effdt>
 #{/elseif}
-#{if sub.getSubmitter().getPermanentPhoneNumber() != null sub.getSubmitter().getPermanentPhoneNumber().trim().length() > 0}
+#{if sub.getSubmitter().getPermanentPhoneNumber() != null && sub.getSubmitter().getPermanentPhoneNumber().trim().length() > 0}
                 <DISS_phone_fax type="P">
 %{ def phone = proquestUtils.parsePhone(sub.getSubmitter().getPermanentPhoneNumber()); }%
                     <DISS_cntry_cd>${ phone.cntryCode?.escapeXml()?.raw() }</DISS_cntry_cd>
@@ -221,7 +221,7 @@
 #{if sub.getGraduationYear() != null }
         <DISS_dates>
             <DISS_comp_date>${ sub.getGraduationYear() }</DISS_comp_date>
-            <DISS_accept_date>1/${ sub.getGraduationMonth() != null ? sub.getGraduationMonth() + 1 : "1" }/${ sub.getGraduationYear() }</DISS_accept_date>
+            <DISS_accept_date>${ sub.getGraduationMonth() != null ? (sub.getGraduationMonth() + 1).format("00") : "01" }/01/${ sub.getGraduationYear() }</DISS_accept_date>
         </DISS_dates>
 #{/if}
         <DISS_degree>${ proquestUtils.degreeCode(sub.getDegree()) }</DISS_degree>    
