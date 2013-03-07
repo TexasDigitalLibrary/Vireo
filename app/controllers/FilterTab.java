@@ -504,11 +504,11 @@ public class FilterTab extends AbstractVireoController {
 		
 		String action = params.get("action");
 		if ("add".equals(action)) {
-			// The user is going to modify the existing active filter by adding a new paramater.
+			// The user is going to modify the existing active filter by adding a new parameter.
 			doAddFilterParameter(activeFilter);
 		
 		} else if ("remove".equals(action)) {
-			// The user is going to modify the existing active filter by removing an existing paramater.
+			// The user is going to modify the existing active filter by removing an existing parameter.
 			doRemoveFilterParamater(activeFilter);
 			
 		} else if ("save".equals(action)) {
@@ -519,7 +519,7 @@ public class FilterTab extends AbstractVireoController {
 			
 			if (name != null && name.trim().length() > 0 ) {
 			
-				// Check if a filter already exsits for the name.
+				// Check if a filter already exists for the name.
 				NamedSearchFilter namedFilter = subRepo.findSearchFilterByCreatorAndName(person, name);
 				if (namedFilter == null) {
 					namedFilter = subRepo.createSearchFilter(person, name);
