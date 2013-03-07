@@ -54,7 +54,7 @@ public interface ActiveSearchFilter extends SearchFilter {
 	public void copyTo(SearchFilter otherFilter);
 
 	/**
-	 * Modiy the state of this search filter so that it copies the exact state
+	 * Modify the state of this search filter so that it copies the exact state
 	 * of the other filter. The other filter will not be modified.
 	 * 
 	 * Note, the current state of this filter will be completely lost.

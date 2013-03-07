@@ -120,8 +120,8 @@ ${ attachment.getName() }	bundle:LICENSE
     <!-- dc.type.material = "text" // constant -->
     <dcvalue element="type" qualifier="material">text</dcvalue>
     
-    <!-- dc.type.genre = "thesis" // constant -->
-    <dcvalue element="type" qualifier="genre">thesis</dcvalue>
+    <!-- dc.type = "thesis" // constant -->
+    <dcvalue element="type">Thesis</dcvalue>
     
     <!-- dc.identifier.uri == Deposit ID, this would only be available when re-depositing -->
     #{if sub.getDepositId() != null } 

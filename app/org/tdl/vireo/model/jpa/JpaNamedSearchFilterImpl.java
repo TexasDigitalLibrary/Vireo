@@ -25,6 +25,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
+import org.mortbay.log.Log;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.NamedSearchFilter;
@@ -42,8 +43,8 @@ import play.modules.spring.Spring;
  * 
  * Importantly, shortly after Vireo 2.0 this class was modified to remove all
  * external dependencies on other JPA objects. It was proved problematic to
- * preserve the forgien key constraints with @ElementCollections because they
- * can not be referenced by a JPA querey so there was no good way to handle
+ * preserve the foreign key constraints with @ElementCollections because they
+ * can not be referenced by a JPA query so there was no good way to handle
  * deleting those elements.
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
@@ -442,8 +443,7 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	}
 
 	@Override
-	public List<Person> getAssignees() {
-		
+	public List<Person> getAssignees() {		
 		List<Person> result = new ArrayList<Person>();
 		for (Long id : assigneeIds) {
 			PersonRepository personRepo = Spring.getBeanOfType(PersonRepository.class);
@@ -455,7 +455,6 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 				result.add(null);
 			}
 		}
-		
 		return result;
 	}
 
