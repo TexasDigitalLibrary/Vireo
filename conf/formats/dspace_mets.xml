@@ -201,13 +201,15 @@
                         
                         cal.add(java.util.Calendar.MONTH, sub.getEmbargoType().getDuration());
                         java.util.Date liftDate = cal.getTime();
-                    }% 
-                    <dim:field mdschema="local" element="embargo" qualifier="terms">
-                        ${ liftDate.format("yyyy-MM-dd") }
-                    </dim:field>
-                    <dim:field mdschema="local" element="embargo" qualifier="lift">
-                        ${ liftDate.format("yyyy-MM-dd") }
-                    </dim:field>
+                    }%
+	                    #{if liftDate.after(new Date())} 
+	                    <dim:field mdschema="local" element="embargo" qualifier="terms">
+	                        ${ liftDate.format("yyyy-MM-dd") }
+	                    </dim:field>
+	                    <dim:field mdschema="local" element="embargo" qualifier="lift">
+	                        ${ liftDate.format("yyyy-MM-dd") }
+	                    </dim:field>
+	                    #{/if}
                     <dim:field mdschema="dc" element="description" qualifier="provenance">
                         Submission published under a ${sub.getEmbargoType().getDuration() } month embargo labeled '${ sub.getEmbargoType().getName()?.escapeXml()?.raw() }', the embargo will last until ${ liftDate.format("yyyy-MM-dd") }
                     </dim:field>
