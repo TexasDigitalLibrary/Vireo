@@ -147,10 +147,13 @@ public class Student extends AbstractVireoController {
 	public static void submissionView(Long subId) {		
 
 		// Locate the submission 
-
 		Submission sub = subRepo.findSubmission(subId);
+		
+		// Check that we are the owner of the submission.
 		Person submitter = context.getPerson();
-
+		if (sub.getSubmitter() != submitter)
+		    unauthorized();		
+		
 		Logger.info("%s (%d: %s) has viewed submission #%d.",
 				submitter.getFormattedName(NameFormat.FIRST_LAST), 
 				submitter.getId(), 
