@@ -253,9 +253,13 @@ public class Student extends AbstractVireoController {
 	@Security(RoleType.STUDENT)
 	public static void submissionDelete(Long subId) {
 		Submission sub = getSubmission();
-		sub.delete();
 		
+		// Check that we are the owner of the submission.
 		Person submitter = context.getPerson();
+		if (sub.getSubmitter() != submitter)
+		    unauthorized();		
+		
+		sub.delete();
 		
 		Logger.info("%s (%d: %s) has deleted submission #%d.",
 				submitter.getFormattedName(NameFormat.FIRST_LAST), 
@@ -410,7 +414,12 @@ public class Student extends AbstractVireoController {
 		if (attachmentId == null)
 			error();
 
-		Submission sub = getSubmission();    	
+		Submission sub = getSubmission();
+		// Check that we are the owner of the submission.
+		Person submitter = context.getPerson();
+		if (sub.getSubmitter() != submitter)
+		    unauthorized();		
+				
 		Attachment attachment = subRepo.findAttachment(attachmentId);
 
 		if (attachment == null)
