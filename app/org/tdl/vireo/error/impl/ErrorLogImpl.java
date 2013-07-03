@@ -90,9 +90,13 @@ public class ErrorLogImpl implements ErrorLog {
 	@Override
 	public ErrorReport logError(Throwable exception, JobMetadata job) {
 
+		String jobName = "unknown";
+		if(null != job) {
+			jobName = job.getName();
+		}
 		String message = String.format(
 				"Background job: %s", 
-				job.getName());
+				jobName);
 
 		return logError(exception, message);
 	}
