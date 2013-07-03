@@ -21,6 +21,7 @@ import au.com.bytecode.opencsv.CSVReader;
 
 import controllers.Security;
 import controllers.Student;
+import play.Play;
 
 /**
  * The fourth step of the submission process where students upload their files.
@@ -133,6 +134,42 @@ public class FileUpload extends AbstractSubmitStep {
 		if (isFieldRequired(ADMINISTRATIVE_ATTACHMENT) && 
 				sub.getAttachmentsByType(AttachmentType.ADMINISTRATIVE).size() == 0)
 			validation.addError("administrativeDocument", "At least one administrative file is required.");
+
+        // file size validation
+        boolean validateFileSize = false;
+        validateFileSize = Play.configuration.getProperty("fileSize.validate", "false").equals("true");
+        if (validateFileSize) {
+            // NOTE: this information is also expressed in a sticky note on the page.
+            // As this cannot easily be generated from the same source,
+            // it will need to be kept in sync manually.
+            int maxFileSize = 512; // default, in MB
+            try {
+                maxFileSize = Integer.parseInt(Play.configuration.getProperty("fileSize.maxFileSize"));
+            } catch (Exception e) {
+                // just keep the default
+            	String err = e.getMessage();
+            }
+            int maxFileSizeTotal = 4096; // default, in MB
+            try {
+                maxFileSizeTotal = Integer.parseInt(Play.configuration.getProperty("fileSize.maxFileSizeTotal"));
+            } catch (Exception e) {
+                // just keep the default
+            	String err = e.getMessage();
+            }
+            long fileSizeTotal = 0;
+            for (Attachment a : sub.getAttachments()) {
+                // get file size and convert to k
+                long fileSizeInBytes = a.getSize();
+                long fileSizeInMB = (fileSizeInBytes / 1024) / 1024;
+                if (fileSizeInMB > maxFileSize) {
+                    validation.addError("fileSize", "No individual file may exceed " + maxFileSize + " MB.");
+                }
+                fileSizeTotal += fileSizeInMB;
+            }
+            if (fileSizeTotal > maxFileSizeTotal) {
+                validation.addError("fileSizeTotal", "The total of all files must not exceed " + maxFileSizeTotal + " MB (" + maxFileSizeTotal / 1024 + " GB).");
+            }
+        }
 		
 		if (numberOfErrorsBefore == validation.errors().size()) 
 			return true;
