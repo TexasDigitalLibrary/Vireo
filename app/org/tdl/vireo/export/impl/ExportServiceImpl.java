@@ -225,7 +225,12 @@ public class ExportServiceImpl implements ExportService {
 
 						ExportPackage pkg = packager.generatePackage(sub);
 						try {
-							String entryName = archiveFolder + "submission_" + sub.getId();
+							String entryName = null;
+							if(packager.getBeanName().equals("Proquest")){
+								entryName = "upload_"+sub.getStudentLastName()+"_"+sub.getStudentFirstName();
+							} else {
+								entryName = archiveFolder + "submission_" + sub.getId();
+							}							
 							if (pkg.getFile().isDirectory()) {
 								zipDirectory(entryName + File.separator, pkg.getFile(), zos);
 							} else {
@@ -294,6 +299,7 @@ public class ExportServiceImpl implements ExportService {
 		 *            The directory to include in the archive.
 		 * @param zos
 		 *            The archive's output stream.
+		 * @throws IOException 
 		 */
 		protected void zipDirectory(String baseName, File directory, ZipOutputStream zos) throws IOException
 		{
@@ -321,7 +327,7 @@ public class ExportServiceImpl implements ExportService {
 				}	
 			}
 		}
-
+		
 		/**
 		 * Zip a single file and include it in the archive. This method will use
 		 * the baseName for the entry name, with the extension of the actual
@@ -358,6 +364,5 @@ public class ExportServiceImpl implements ExportService {
 		}
 		
 	}
-	
 
 }

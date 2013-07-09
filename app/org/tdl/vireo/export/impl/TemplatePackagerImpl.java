@@ -1,15 +1,21 @@
 package org.tdl.vireo.export.impl;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.tdl.vireo.export.ExportPackage;
+import org.tdl.vireo.export.ExportService;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.PersonRepository;
@@ -18,6 +24,7 @@ import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionRepository;
 import org.tdl.vireo.proquest.ProquestVocabularyRepository;
 
+import play.Logger;
 import play.Play;
 import play.exceptions.TemplateNotFoundException;
 import play.modules.spring.Spring;
@@ -39,6 +46,8 @@ import play.vfs.VirtualFile;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 public class TemplatePackagerImpl extends AbstractPackagerImpl {
+	
+	private ExportService exportService;
 	
 	/* Spring injected paramaters */
 	public VirtualFile templateFile = null;
@@ -215,7 +224,11 @@ public class TemplatePackagerImpl extends AbstractPackagerImpl {
 			templateBinding.put("subRepo",subRepo);
 			templateBinding.put("settingRepo",settingRepo);
 			templateBinding.put("proquestRepo",proquestRepo);
-			templateBinding.put("manifestName", manifestName);
+			
+			if(beanName.equals("Proquest"))
+				manifestName = submission.getStudentLastName()+"_"+submission.getStudentFirstName()+"_DATA.xml";
+			
+			templateBinding.put("manifestName",manifestName);			
 			templateBinding.put("format", format);
 			templateBinding.put("mimeType", mimeType);
 			templateBinding.put("attachmentTypes", attachmentTypes);
@@ -223,46 +236,139 @@ public class TemplatePackagerImpl extends AbstractPackagerImpl {
 				templateBinding.putAll(templateArguments);
 			Template template = TemplateLoader.load(templateFile);
 			String manifest = template.render(templateBinding);
-					
 			
 			File pkg = null;
 			
-			if (attachmentTypes.size() > 0 ) {
+			if(beanName.equals("Proquest")) {				
 				
-				// The package has more than one file, so export as a directory.
-				pkg = File.createTempFile("template-export-", ".dir");
-				pkg.delete();
-				pkg.mkdir();
-				
-				
-				// Copy the manifest
-				File manifestFile = new File(pkg.getPath(),manifestName);
-				FileUtils.writeStringToFile(manifestFile, manifest);
-				
-				
-				// Add all the attachments
-				for(Attachment attachment : submission.getAttachments())
-				{
-					// Do we include this type?
-					if (!attachmentTypes.contains(attachment.getType()))
-						continue;
-	
-					File exportFile = new File(pkg.getPath(),attachment.getName());
-					FileUtils.copyFile(
-							attachment.getFile(),
-							exportFile
-							);
+				if (attachmentTypes.size() > 0 ) {
+					
+					pkg = File.createTempFile("tempFile", ".zip");
+					
+					FileOutputStream fos = new FileOutputStream(pkg);
+					ZipOutputStream zos = new ZipOutputStream(fos);
+					
+					// Copy the manifest
+					File manifestFile = new File(manifestName);
+					FileUtils.writeStringToFile(manifestFile, manifest);
+					
+					ZipEntry ze = new ZipEntry(manifestName);
+					zos.putNextEntry(ze);
+					FileInputStream in = new FileInputStream(manifestFile);
+					
+					byte[] buf = new byte[1024];
+					int len;
+					while ((len = in.read(buf)) > 0) {
+						zos.write(buf, 0, len);
+					}
+					
+					in.close();
+					zos.closeEntry();
+					
+					manifestFile.delete();
+					
+					// Add all the attachments
+					for(Attachment attachment : submission.getAttachments())
+					{
+						// Do we include this type?
+						if (!attachmentTypes.contains(attachment.getType()))
+							continue;
+		
+						if(attachment.getType()==AttachmentType.PRIMARY){
+							String fileName = submission.getStudentLastName()+"_"+submission.getStudentFirstName()+"."+FilenameUtils.getExtension(attachment.getName());
+							File exportFile = new File(fileName);
+							FileUtils.copyFile(
+									attachment.getFile(),
+									exportFile
+									);
+							ze = new ZipEntry(fileName);
+							zos.putNextEntry(ze);
+							in = new FileInputStream(exportFile);
+							
+							while ((len = in.read(buf)) > 0) {
+								zos.write(buf, 0, len);
+							}
+							
+							in.close();
+							zos.closeEntry();
+							
+							exportFile.delete();
+							
+						} else {
+							String fileName = "supp_file_"+attachment.getName();
+							String dirName = submission.getStudentLastName()+"_"+submission.getStudentFirstName()+"_media"+File.separator;		
+														
+							File exportFile = new File(dirName,fileName);
+							FileUtils.copyFile(
+									attachment.getFile(),
+									exportFile
+									);
+							ze = new ZipEntry(dirName+fileName);
+							zos.putNextEntry(ze);
+							in = new FileInputStream(exportFile);
+							
+							while ((len = in.read(buf)) > 0) {
+								zos.write(buf, 0, len);
+							}
+							
+							in.close();
+							zos.closeEntry();
+							
+							FileUtils.deleteDirectory(exportFile);
+						}						
+					}
+					
+					zos.close();
+					
+				} else {
+					
+					// There's only one file, so export as a single file.
+					String extension = FilenameUtils.getExtension(manifestName);
+					if (extension.length() > 0)
+						extension = "."+extension;
+					
+					pkg = File.createTempFile("template-export", extension);
+					FileUtils.writeStringToFile(pkg, manifest);
 				}
-				
 			} else {
 				
-				// There's only one file, so export as a single file.
-				String extension = FilenameUtils.getExtension(manifestName);
-				if (extension.length() > 0)
-					extension = "."+extension;
-				
-				pkg = File.createTempFile("template-export", extension);
-				FileUtils.writeStringToFile(pkg, manifest);
+				if (attachmentTypes.size() > 0 ) {
+					
+					// The package has more than one file, so export as a directory.
+					pkg = File.createTempFile("template-export-", ".dir");
+					pkg.delete();
+					pkg.mkdir();
+
+
+					// Copy the manifest
+					File manifestFile = new File(pkg.getPath(),manifestName);
+					FileUtils.writeStringToFile(manifestFile, manifest);
+
+
+					// Add all the attachments
+					for(Attachment attachment : submission.getAttachments())
+					{
+						// Do we include this type?
+						if (!attachmentTypes.contains(attachment.getType()))
+							continue;
+
+						File exportFile = new File(pkg.getPath(),attachment.getName());
+						FileUtils.copyFile(
+								attachment.getFile(),
+								exportFile
+								);
+					}
+					
+				} else {
+					
+					// There's only one file, so export as a single file.
+					String extension = FilenameUtils.getExtension(manifestName);
+					if (extension.length() > 0)
+						extension = "."+extension;
+					
+					pkg = File.createTempFile("template-export", extension);
+					FileUtils.writeStringToFile(pkg, manifest);
+				}
 			}
 		
 			// Create the actual package!
