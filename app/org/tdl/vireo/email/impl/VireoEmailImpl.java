@@ -18,6 +18,7 @@ import org.tdl.vireo.model.Preference;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionRepository;
 import org.tdl.vireo.security.SecurityContext;
+import org.tdl.vireo.services.StringVariableReplacement;
 
 import play.Play;
 import play.mvc.Router;
@@ -251,68 +252,16 @@ public class VireoEmailImpl implements VireoEmail {
 	@Override
 	public void addParameters(Submission sub) {
 		
-		if (sub.getStudentFirstName() != null || sub.getStudentLastName() != null)
-			parameters.put("FULL_NAME", sub.getStudentFormattedName(NameFormat.FIRST_LAST));
-		
-		if (sub.getStudentFirstName() != null)
-			parameters.put("FIRST_NAME", sub.getStudentFirstName());
-		
-		if (sub.getStudentLastName() != null)
-			parameters.put("LAST_NAME", sub.getStudentLastName());
-		
-		if (sub.getDocumentTitle() != null)
-			parameters.put("DOCUMENT_TITLE", sub.getDocumentTitle());
-		
-		if (sub.getDocumentType() != null)
-			parameters.put("DOCUMENT_TYPE", sub.getDocumentType());
-		
-		if (sub.getState() != null)
-			parameters.put("SUBMISSION_STATUS",sub.getState().getDisplayName());
-		
-		if (sub.getGraduationYear() != null) {
-			String gradSemester = String.valueOf(sub.getGraduationYear());
-			if (sub.getGraduationMonth() != null) {
-				Integer monthInt = sub.getGraduationMonth();
-				String monthName = new DateFormatSymbols().getMonths()[monthInt];
-				
-				gradSemester = monthName+", "+gradSemester;
-			}
-			
-			parameters.put("GRAD_SEMESTER", gradSemester);
-		}
-		
-		if (sub.getAssignee() != null)
-			parameters.put("SUBMISSION_ASSIGNED_TO",sub.getAssignee().getFormattedName(NameFormat.FIRST_LAST));
-		else 
-			parameters.put("SUBMISSION_ASSIGNED_TO", "n/a");
-		
-		
-		// URL for the student to view their submission(s)
-		ActionDefinition studentAction = Router.reverse("Student.submissionList");
-		studentAction.absolute();
-		parameters.put("STUDENT_URL", studentAction.url);
-		
-		// Advisor url for reviews
-		if (sub.getCommitteeEmailHash() != null) {
-			Map<String,Object> routeArgs = new HashMap<String,Object>();
-			routeArgs.put("token", sub.getCommitteeEmailHash());
-			
-			ActionDefinition advisorAction = Router.reverse("Advisor.review",routeArgs);
-			advisorAction.absolute();
-			
-			parameters.put("ADVISOR_URL", advisorAction.url);
-		}
+		this.parameters = StringVariableReplacement.setParameters(sub);
+
 	}
 
 	@Override
 	public void applyParameterSubstitution() {
 
-		for (String name : parameters.keySet()) {
-			String value = parameters.get(name);
-			
-			subject = subject.replaceAll("\\{"+name+"\\}", value);
-			message = message.replaceAll("\\{"+name+"\\}", value);
-		}
+		subject = StringVariableReplacement.applyParameterSubstitution(subject, parameters);
+		message = StringVariableReplacement.applyParameterSubstitution(message, parameters);
+	
 	}
 
 	@Override

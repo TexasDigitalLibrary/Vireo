@@ -2,12 +2,18 @@ package org.tdl.vireo.export.impl;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
+import org.apache.commons.io.FileUtils;
 import org.jdom.Document;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
@@ -25,9 +31,16 @@ import org.tdl.vireo.model.jpa.JpaSettingsRepositoryImpl;
 import org.tdl.vireo.model.jpa.JpaSubmissionRepositoryImpl;
 import org.tdl.vireo.proquest.ProquestVocabularyRepository;
 import org.tdl.vireo.security.SecurityContext;
+import org.tdl.vireo.services.StringVariableReplacement;
 
+import play.Logger;
 import play.modules.spring.Spring;
 import play.test.UnitTest;
+
+import java.lang.management.GarbageCollectorMXBean;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryPoolMXBean;
+import java.lang.management.MemoryUsage;
 
 /**
  * Test the generic template package.
@@ -101,7 +114,20 @@ public class TemplatePackagerImplTest extends UnitTest {
 	 * Clean up our submission.
 	 */
 	@After
-	public void cleanup() {
+	public void cleanup() {		
+
+		ManagementFactory.getMemoryMXBean().getHeapMemoryUsage();
+		Logger.info("Heap", ManagementFactory.getMemoryMXBean().getHeapMemoryUsage());
+		Logger.info("NonHeap", ManagementFactory.getMemoryMXBean().getNonHeapMemoryUsage());
+		List<MemoryPoolMXBean> beans = ManagementFactory.getMemoryPoolMXBeans();
+		for (MemoryPoolMXBean bean: beans) {
+		    Logger.info(bean.getName(), bean.getUsage());
+		}
+
+		for (GarbageCollectorMXBean bean: ManagementFactory.getGarbageCollectorMXBeans()) {
+		    Logger.info(bean.getName(), bean.getCollectionCount(), bean.getCollectionTime());
+		}
+		
 		sub.delete();
 		person.delete();
 		context.restoreAuthorization();
@@ -122,11 +148,13 @@ public class TemplatePackagerImplTest extends UnitTest {
 			
 			ExportPackage pkg = packager.generatePackage(sub);
 			
+			//Since the manifest name can be customized, create a temporary manifest name to compare with.
+			Map<String, String> parameters = StringVariableReplacement.setParameters(sub);
+			String manifestName = StringVariableReplacement.applyParameterSubstitution(packager.manifestName, parameters);
+			
 			assertNotNull(pkg);
 			assertEquals(packager.format,pkg.getFormat());
 			assertEquals(packager.mimeType,pkg.getMimeType());
-			
-			
 			
 			
 			File exportFile = pkg.getFile();
@@ -140,20 +168,76 @@ public class TemplatePackagerImplTest extends UnitTest {
 				Map<String, File> fileMap = getFileMap(exportFile);
 				
 				// There should be three files
-				assertTrue(fileMap.containsKey(packager.manifestName));
-				assertTrue(fileMap.containsKey("LASTNAME-SELECTEDDOCUMENTTYPE-2002.pdf"));
-				assertTrue(fileMap.containsKey("fluff.jpg"));
+				assertTrue(fileMap.containsKey(manifestName));
+				assertEquals(3, fileMap.size());
+				//TODO Test for custom file names.
+				//assertTrue(fileMap.containsKey("LASTNAME-SELECTEDDOCUMENTTYPE-2002.pdf"));
+				//assertTrue(fileMap.containsKey("fluff.jpg"));
 				
 				// Load up the manifest and make sure it's valid XML.
 				SAXBuilder builder = new SAXBuilder();
-				Document doc = builder.build(fileMap.get(packager.manifestName));
+				Document doc = builder.build(fileMap.get(manifestName));
 				
 				// Check that the manifest contains important data
-				String manifest = readFile(fileMap.get(packager.manifestName));
+				String manifest = readFile(fileMap.get(manifestName));
 				assertTrue(manifest.contains(sub.getStudentFirstName()));
 				assertTrue(manifest.contains(sub.getStudentLastName()));
 				assertTrue(manifest.contains(sub.getDocumentTitle()));
 				assertTrue(manifest.contains(sub.getDocumentAbstract()));
+			} else if(".zip".equals(exportFile.getName().substring(exportFile.getName().lastIndexOf('.')))){
+				
+				byte[] buffer = new byte[1024];
+				
+				File tempFolder = new File("tempFolder");
+				tempFolder.mkdir();
+				
+				ZipInputStream zis = new ZipInputStream(new FileInputStream(exportFile));
+				ZipEntry ze = zis.getNextEntry();
+				
+				while(ze!=null) {
+					
+					String fileName = ze.getName();
+					File newFile = new File(tempFolder.getPath() + File.separator + fileName);
+					
+					new File(newFile.getParent()).mkdirs();
+					
+					FileOutputStream fos = new FileOutputStream(newFile);
+					
+					int len;
+					while ((len = zis.read(buffer)) > 0) {
+						fos.write(buffer, 0, len);
+					}
+					
+					fos.close();
+					ze = zis.getNextEntry();
+				}
+				
+				zis.closeEntry();
+				zis.close();
+				
+				// The export is a directory of multiple files
+				Map<String, File> fileMap = getFileMap(tempFolder);
+				
+				// There should be three files
+				assertTrue(fileMap.containsKey(manifestName));
+				assertEquals(3, fileMap.size());
+				//TODO Test for custom file names.
+				//assertTrue(fileMap.containsKey("LASTNAME-SELECTEDDOCUMENTTYPE-2002.pdf"));
+				//assertTrue(fileMap.containsKey("fluff.jpg"));
+				
+				// Load up the manifest and make sure it's valid XML.
+				SAXBuilder builder = new SAXBuilder();
+				Document doc = builder.build(fileMap.get(manifestName));
+				
+				// Check that the manifest contains important data
+				String manifest = readFile(fileMap.get(manifestName));
+				assertTrue(manifest.contains(sub.getStudentFirstName()));
+				assertTrue(manifest.contains(sub.getStudentLastName()));
+				assertTrue(manifest.contains(sub.getDocumentTitle()));
+				assertTrue(manifest.contains(sub.getDocumentAbstract()));
+				
+				FileUtils.deleteDirectory(tempFolder);
+				
 			} else {
 				
 				if(".xml".equals(exportFile.getName().substring(exportFile.getName().lastIndexOf('.')))){

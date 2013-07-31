@@ -226,8 +226,8 @@ public class ExportServiceImpl implements ExportService {
 						ExportPackage pkg = packager.generatePackage(sub);
 						try {
 							String entryName = null;
-							if(packager.getBeanName().equals("Proquest")){
-								entryName = "upload_"+sub.getStudentLastName()+"_"+sub.getStudentFirstName();
+							if(pkg.getEntryName()!=null){
+								entryName = pkg.getEntryName();
 							} else {
 								entryName = archiveFolder + "submission_" + sub.getId();
 							}							
@@ -254,7 +254,7 @@ public class ExportServiceImpl implements ExportService {
 				} finally {
 					// Ensure the ziparchive is closed.
 					try {
-					zos.close();
+						zos.close();
 					} catch (Exception e) {
 						Logger.error(e,"Unable to close export zip archive, Ignoring.");
 					}
@@ -302,16 +302,14 @@ public class ExportServiceImpl implements ExportService {
 		 * @throws IOException 
 		 */
 		protected void zipDirectory(String baseName, File directory, ZipOutputStream zos) throws IOException
-		{
+		{			
 			// Add all the files
 			File[] files = directory.listFiles();
 			for (File file : files) {
-
-				if (file.isDirectory()) {
-
-					zipDirectory(baseName + directory.getName() + File.separator, file, zos);
-				} else {
-
+				
+				if (file.isDirectory()) {					
+					zipDirectory(baseName + file.getName() + File.separator, file, zos);
+				} else {					
 					InputStream is = new BufferedInputStream(new FileInputStream(file));
 					
 					zos.putNextEntry(new ZipEntry(baseName + file.getName()));

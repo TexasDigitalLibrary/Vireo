@@ -17,6 +17,7 @@ public class MockExportPackage implements ExportPackage {
 	public String mimeType = "application/zip";
 	public String format = "http://something/";
 	public File file;
+	public String entryName;
 
 	public MockExportPackage() {
 		try {
@@ -51,6 +52,11 @@ public class MockExportPackage implements ExportPackage {
 	public void delete() {
 		if (file != null)
 			file.delete();
+	}
+
+	@Override
+	public String getEntryName() {
+		return entryName;
 	}
 
 }

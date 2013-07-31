@@ -284,11 +284,11 @@
 #{/if}
         </DISS_abstract>
 #{if sub.getPrimaryDocument() != null }
-        <DISS_binary type="${ "application/pdf".equals(sub.getPrimaryDocument()?.getMimeType()) ? "PDF" : "other" }">${ sub.getPrimaryDocument()?.getName()?.escapeXml()?.raw() }</DISS_binary>
+        <DISS_binary type="${ "application/pdf".equals(sub.getPrimaryDocument()?.getMimeType()) ? "PDF" : "other" }">${ sub.getStudentLastName()?.escapeXml()?.raw() }_${ sub.getStudentFirstName()?.escapeXml()?.raw() }.${ org.apache.commons.io.FilenameUtils.getExtension(sub.getPrimaryDocument().getName())?.escapeXml()?.raw() }</DISS_binary>
 #{/if}
 #{list items:sub.getAttachmentsByType(org.tdl.vireo.model.AttachmentType.SUPPLEMENTAL), as:'attachment' }
         <DISS_attachment>
-            <DISS_file_name>${ attachment.getName()?.escapeXml()?.raw() }</DISS_file_name>
+            <DISS_file_name>supp_file_${ attachment.getName()?.escapeXml()?.raw() }</DISS_file_name>
             <DISS_file_category>${ proquestUtils.categorize(attachment)?.escapeXml()?.raw() }</DISS_file_category>
             <DISS_file_descr>Supplemental File</DISS_file_descr>
         </DISS_attachment>
