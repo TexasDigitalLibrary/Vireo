@@ -244,6 +244,11 @@ public class ViewTab extends AbstractVireoController {
 					submission.setStudentBirthYear(null);
 				}
 				currentValue = submission.getStudentBirthYear();
+				
+				//ORCID
+			} else if("orcid".equals(field)) {
+				submission.setOrcid(value);				
+				currentValue = submission.getOrcid();	
 
 				//Permanent Phone
 			} else if("permPhone".equals(field)){
