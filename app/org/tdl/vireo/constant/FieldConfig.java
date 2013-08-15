@@ -61,6 +61,13 @@ public enum FieldConfig {
 			"submit_student_birth_year_enabled",
 			"The year the author was born. This field may be configured to be locked if supplied by the authentication plugin."),
 
+	STUDENT_ORCID(
+			"ORCID author identifier",
+			"submit_student_orcid_label",
+			"submit_student_orcid_help",
+			"submit_student_orcid_enabled",
+			"The author's ORCID persistent digital identifier (orcid.org). It is usually optional."),
+
 	/** Verify Personal Information :: Affiliations **/		
 	GRANTOR(
 			"Grantor",
