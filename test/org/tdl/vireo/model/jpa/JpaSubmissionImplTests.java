@@ -651,6 +651,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		sub.setGraduationYear(2002);
 		sub.setUMIRelease(false);
 		sub.setDepositId("depositId");
+		sub.setDepositDate(now);
 		sub.setReviewerNotes("notes");
 		
 		sub.save();
@@ -680,6 +681,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		sub.setGraduationYear(null);
 		sub.setUMIRelease(null);
 		sub.setDepositId(null);
+		sub.setDepositDate(null);
 		sub.setReviewerNotes(null);
 
 		
@@ -805,6 +807,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		sub.setGraduationYear(2002);
 		sub.setUMIRelease(false);
 		sub.setDepositId("depositId");
+		sub.setDepositDate(now);
 		sub.setReviewerNotes("notes");
 		sub.save();
 		
@@ -841,6 +844,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		assertEquals(Integer.valueOf(2002),sub.getGraduationYear());
 		assertEquals(Boolean.valueOf(false),sub.getUMIRelease());
 		assertEquals("depositId",sub.getDepositId());
+		assertEquals(now,sub.getDepositDate());
 		assertEquals("notes",sub.getReviewerNotes());
 
 		

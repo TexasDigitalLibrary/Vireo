@@ -1,6 +1,7 @@
 package org.tdl.vireo.export.impl;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -284,6 +285,7 @@ public class DepositServiceImpl implements DepositService{
 				
 				if (depositId != null)
 					submission.setDepositId(depositId);
+					submission.setDepositDate(new Date());
 				if (successState != null)
 					submission.setState(successState);
 				
