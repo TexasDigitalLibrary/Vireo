@@ -225,7 +225,12 @@ public class ExportServiceImpl implements ExportService {
 
 						ExportPackage pkg = packager.generatePackage(sub);
 						try {
-							String entryName = archiveFolder + "submission_" + sub.getId();
+							String entryName = null;
+							if(pkg.getEntryName()!=null){
+								entryName = pkg.getEntryName();
+							} else {
+								entryName = archiveFolder + "submission_" + sub.getId();
+							}							
 							if (pkg.getFile().isDirectory()) {
 								zipDirectory(entryName + File.separator, pkg.getFile(), zos);
 							} else {
@@ -249,7 +254,7 @@ public class ExportServiceImpl implements ExportService {
 				} finally {
 					// Ensure the ziparchive is closed.
 					try {
-					zos.close();
+						zos.close();
 					} catch (Exception e) {
 						Logger.error(e,"Unable to close export zip archive, Ignoring.");
 					}
@@ -294,18 +299,17 @@ public class ExportServiceImpl implements ExportService {
 		 *            The directory to include in the archive.
 		 * @param zos
 		 *            The archive's output stream.
+		 * @throws IOException 
 		 */
 		protected void zipDirectory(String baseName, File directory, ZipOutputStream zos) throws IOException
-		{
+		{			
 			// Add all the files
 			File[] files = directory.listFiles();
 			for (File file : files) {
-
-				if (file.isDirectory()) {
-
-					zipDirectory(baseName + directory.getName() + File.separator, file, zos);
-				} else {
-
+				
+				if (file.isDirectory()) {					
+					zipDirectory(baseName + file.getName() + File.separator, file, zos);
+				} else {					
 					InputStream is = new BufferedInputStream(new FileInputStream(file));
 					
 					zos.putNextEntry(new ZipEntry(baseName + file.getName()));
@@ -321,7 +325,7 @@ public class ExportServiceImpl implements ExportService {
 				}	
 			}
 		}
-
+		
 		/**
 		 * Zip a single file and include it in the archive. This method will use
 		 * the baseName for the entry name, with the extension of the actual
@@ -358,6 +362,5 @@ public class ExportServiceImpl implements ExportService {
 		}
 		
 	}
-	
 
 }

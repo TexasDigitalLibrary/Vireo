@@ -81,7 +81,6 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 		booleanFields.add(SUBMISSIONS_OPEN);
 		booleanFields.add(ALLOW_MULTIPLE_SUBMISSIONS);
 //		booleanFields.add(PROQUEST_INDEXING);
-//		booleanFields.add(PROQUEST_OA_PUBLISHING);
 		
 		
 		// Get the current list of 

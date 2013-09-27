@@ -854,6 +854,12 @@ public class TestDataLoader extends Job {
 					sub.setLicenseAgreementDate(agreementDate);
 				}
 				
+				if (random.nextInt(100) > 35) {
+					Date agreementDate = generateRandomDate(random,2,2010);
+					String stampedLicense = stampLicense(settingRepo.getConfigValue(PROQUEST_LICENSE_TEXT), agreementDate);
+					sub.addAttachment(stampedLicense.getBytes(), "PROQUEST_LICENSE.txt", AttachmentType.LICENSE);
+				}
+				
 				if (random.nextInt(100) > 75)
 					sub.addAttachment(new File("test/SampleSupplementalDocument.doc"),AttachmentType.SUPPLEMENTAL);
 				

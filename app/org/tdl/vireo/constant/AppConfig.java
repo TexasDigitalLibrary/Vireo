@@ -48,8 +48,7 @@ public class AppConfig {
 	
 	/** The license students must agree to during submission  */
 	public final static String SUBMIT_LICENSE_TEXT = "submit_license";
-	
-	
+		
 	// Email settings
 	public final static String EMAIL_DELAY_SENDING_ADVISOR_REQUEST = "email_delay_advisor_request";
 	
@@ -86,13 +85,13 @@ public class AppConfig {
 	
 	//Proquest settings
 	/** The proquest institution code visible during export. */
-	public final static String PROQUEST_INSTITUTION_CODE = "proquest_institution_code";
-	
-	/** Allow proquest open access publishing. */
-	public final static String PROQUEST_OA_PUBLISHING = "proquest_oa_publishing";
+	public final static String PROQUEST_INSTITUTION_CODE = "proquest_institution_code";	
 	
 	/** Allow proquest indexing by search engines. */
 	public final static String PROQUEST_INDEXING = "proquest_indexing";
+
+	/** The ProQuest license students may have to agree to during submission */
+	public final static String PROQUEST_LICENSE_TEXT = "proquest_license";
 
 	// Submission Sticky notes
 	public final static String SUBMIT_PERSONAL_INFO_STICKIES = "submit_personal_info_stickyies";

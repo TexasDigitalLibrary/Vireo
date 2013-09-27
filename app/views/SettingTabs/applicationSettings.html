@@ -137,16 +137,6 @@ jQuery(document).ready(function(){
             </span>
         </li>
         <li>
-            <label>Open Access Publishing:</label>
-            <span>
-                <div class="btn-group" data-toggle="buttons-radio">
-                    <button name="${org.tdl.vireo.constant.AppConfig.PROQUEST_OA_PUBLISHING}" class="btn application-toggle #{if !"false".equals(PROQUEST_OA_PUBLISHING)}active#{/if}" value="true">Yes</button>
-                    <button name="${org.tdl.vireo.constant.AppConfig.PROQUEST_OA_PUBLISHING}" class="btn application-toggle #{if "false".equals(PROQUEST_OA_PUBLISHING)}active#{/if}" value="false">No</button>                    
-                </div>
-                <a href="#" class="tooltip-icon" rel="tooltip" title="If enabled then all submissions will be submitted to ProQuest/UMI catalogue under the 'ProQuest Open Access Publishing PLUS' option. There may be additional fees imposed by Prquest for enabeling this option and you may need to vett student postal addresses so that they meet ProQuest's standards."><i class="icon-info-sign"></i></a>                
-            </span>
-        </li>
-        <li>
             <label>Indexed by Search Engines:</label>
             <span>
                 <div class="btn-group" data-toggle="buttons-radio">
@@ -156,8 +146,21 @@ jQuery(document).ready(function(){
                 <a href="#" class="tooltip-icon" rel="tooltip" title="If enabled then all submissions to the ProQuest/UMI catalogue will be have their citations indexed by third parties (i.e. google, yahoo)."><i class="icon-info-sign"></i></a>
             </span>
         </li>
+        <li>
+        	<h4>ProQuest License Agreement</h4>
+        	
+        	<div class="wrap application-protected">
+			    <div class="span9">
+			    <p class="lock-control"><a href="#${org.tdl.vireo.constant.AppConfig.PROQUEST_LICENSE_TEXT}"><em class="icon-lock"></em> This field is locked to prevent accidental editing, click to unlock.</a></p>
+				<textarea class="input-xxlarge application-textarea" id="${org.tdl.vireo.constant.AppConfig.PROQUEST_LICENSE_TEXT}" name="${org.tdl.vireo.constant.AppConfig.PROQUEST_LICENSE_TEXT}" readonly="true">#{verbatim}${PROQUEST_LICENSE_TEXT}#{/verbatim}</textarea>
+					
+				<p class="info">Students may be required to accept this license as part of their submission. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically.</p>
+				</div>				
+			</div>
+        </li>
     </ul>
 </div>
+<div class="clear"></div>
 
 <h2>DEGREE CODES</h2>
 <p>Degree codes are used by some export formats (i.e. ProQuest) to translate degrees into abbreviated codes.</p>

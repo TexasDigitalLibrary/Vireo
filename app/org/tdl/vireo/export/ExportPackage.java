@@ -45,6 +45,11 @@ public interface ExportPackage {
 	public File getFile();
 
 	/**
+	 * @return The customized entry name set in the beans.
+	 */
+	public String getEntryName();
+	
+	/**
 	 * Release all resources used by this package. All callers who generate
 	 * a package must call the delete() method when finished.
 	 */

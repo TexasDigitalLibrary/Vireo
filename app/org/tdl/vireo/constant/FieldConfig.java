@@ -151,6 +151,13 @@ public enum FieldConfig {
 			"submit_license_agreement_enabled",
 			"The standard license agreement that the author must agree to before continuing the submission. The text of the license is editable under the Application Settings Tab"),
 	
+	UMI_RELEASE(
+			"UMI Release",
+			"submit_umi_release_label",
+			"submit_umi_release_help",
+			"submit_umi_release_enabled",
+			"Request release to the Proquest / UMI database."),
+			
 			
 	/** Document Information **/
 			
@@ -240,15 +247,7 @@ public enum FieldConfig {
 			"submit_embargo_type_label",
 			"submit_embargo_type_help",
 			"submit_embargo_type_enabled",
-			"Request a delay in publication. The options available are customizable under the Configurable Settings Tab."),
-	
-	UMI_RELEASE(
-			"UMI Release",
-			"submit_umi_release_label",
-			"submit_umi_release_help",
-			"submit_umi_release_enabled",
-			"Request release to the Proquest / UMI database."),
-	
+			"Request a delay in publication. The options available are customizable under the Configurable Settings Tab."),	
 			
 	/** File Upload **/
 			
@@ -335,9 +334,9 @@ public enum FieldConfig {
 	
 	public static final FieldConfig[] PERSONAL_INFO_FIELDS = {STUDENT_FIRST_NAME,STUDENT_MIDDLE_NAME,STUDENT_LAST_NAME,STUDENT_EMAIL,STUDENT_BIRTH_YEAR,GRANTOR,COLLEGE,PROGRAM,DEPARTMENT,DEGREE,MAJOR,PERMANENT_PHONE_NUMBER,PERMANENT_POSTAL_ADDRESS,PERMANENT_EMAIL_ADDRESS,CURRENT_PHONE_NUMBER,CURRENT_POSTAL_ADDRESS};
 
-	public static final FieldConfig[] LICENSE_AGREEMENT_FIELDS = {LICENSE_AGREEMENT};
+	public static final FieldConfig[] LICENSE_AGREEMENT_FIELDS = {LICENSE_AGREEMENT, UMI_RELEASE};
 	
-	public static final FieldConfig[] DOCUMENT_INFO_FIELDS = {DOCUMENT_TITLE, GRADUATION_DATE, DEFENSE_DATE, DOCUMENT_TYPE, DOCUMENT_ABSTRACT, DOCUMENT_KEYWORDS, DOCUMENT_SUBJECTS, DOCUMENT_LANGUAGE, COMMITTEE, COMMITTEE_CONTACT_EMAIL, PUBLISHED_MATERIAL, EMBARGO_TYPE, UMI_RELEASE};
+	public static final FieldConfig[] DOCUMENT_INFO_FIELDS = {DOCUMENT_TITLE, GRADUATION_DATE, DEFENSE_DATE, DOCUMENT_TYPE, DOCUMENT_ABSTRACT, DOCUMENT_KEYWORDS, DOCUMENT_SUBJECTS, DOCUMENT_LANGUAGE, COMMITTEE, COMMITTEE_CONTACT_EMAIL, PUBLISHED_MATERIAL, EMBARGO_TYPE};
 
 	public static final FieldConfig[] UPLOAD_FILES_FIELDS = {PRIMARY_ATTACHMENT, SUPPLEMENTAL_ATTACHMENT, SOURCE_ATTACHMENT, ADMINISTRATIVE_ATTACHMENT};
 }

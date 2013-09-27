@@ -361,19 +361,6 @@ jQuery(document).ready(function(){
 	</fieldset>
 	#{/ifEnabled}
 	
-	#{ifEnabled UMI_RELEASE}
-	<fieldset class="form-horizontal">
-        <legend>#{fieldLabel UMI_RELEASE /}</legend>
-        <div class="control-group #{ifError 'umi'}error#{/ifError}">
-            <label class="control-label" for="umi">UMI Publication:</label>
-            <div class="controls">
-                <input type="checkbox" id="umi" name="umi" value="release" ${ (umi != null) ? "checked='true'" : "" }/> 
-                #{fieldHelp UMI_RELEASE /}
-            </div>
-        </div>            
-    </fieldset>
-    #{/ifEnabled}
-    
 	<div class="span10 center">
 		<input type="submit" name="submit_next" value="Save and Continue >>" class="btn btn-primary">
 	</div>

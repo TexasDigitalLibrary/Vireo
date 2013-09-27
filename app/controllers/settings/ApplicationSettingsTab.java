@@ -65,8 +65,8 @@ public class ApplicationSettingsTab extends SettingsTab {
 		renderArgs.put("SUBMIT_LICENSE_TEXT", settingRepo.getConfigValue(SUBMIT_LICENSE_TEXT));
 		
 		renderArgs.put("PROQUEST_INSTITUTION_CODE", settingRepo.getConfigValue(PROQUEST_INSTITUTION_CODE));
-		renderArgs.put("PROQUEST_OA_PUBLISHING", settingRepo.getConfigValue(PROQUEST_OA_PUBLISHING));
 		renderArgs.put("PROQUEST_INDEXING", settingRepo.getConfigValue(PROQUEST_INDEXING));
+		renderArgs.put("PROQUEST_LICENSE_TEXT", settingRepo.getConfigValue(PROQUEST_LICENSE_TEXT));
 
 		List<String> degrees = new ArrayList<String>();
 		for(Degree degree : settingRepo.findAllDegrees()) {
@@ -128,8 +128,8 @@ public class ApplicationSettingsTab extends SettingsTab {
 			textFields.add(GRANTOR);
 			textFields.add(SUBMIT_LICENSE_TEXT);
 			textFields.add(PROQUEST_INSTITUTION_CODE);
-			textFields.add(PROQUEST_OA_PUBLISHING);
 			textFields.add(PROQUEST_INDEXING);
+			textFields.add(PROQUEST_LICENSE_TEXT);
 
 			if (booleanFields.contains(field)) {
 				// This is a boolean field
@@ -170,6 +170,15 @@ public class ApplicationSettingsTab extends SettingsTab {
 							context.getPerson().getEmail(),
 							oldValue,
 							value);			
+				}
+				
+				if(PROQUEST_LICENSE_TEXT.equals(field)){
+					Logger.info("%s (%d: %s) has updated proquest license aggreement from '%s' to '%s'.",
+							context.getPerson().getFormattedName(NameFormat.FIRST_LAST), 
+							context.getPerson().getId(), 
+							context.getPerson().getEmail(),
+							oldValue,
+							value);	
 				}
 				
 			} else if (field.startsWith(DEGREE_CODE_PREFIX)) { 

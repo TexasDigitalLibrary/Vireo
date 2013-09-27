@@ -380,6 +380,7 @@ public class Sword1DepositorImplTest extends UnitTest {
 		public String mimeType;
 		public String format;
 		public File file;
+		public String entryName;
 		
 		public MockPackage(String mimeType, String format, File file) {
 			this.mimeType = mimeType;
@@ -410,6 +411,11 @@ public class Sword1DepositorImplTest extends UnitTest {
 
 		@Override
 		public void delete() {
+		}
+
+		@Override
+		public String getEntryName() {
+			return entryName;
 		}
 	}
 }

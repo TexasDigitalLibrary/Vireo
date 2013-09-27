@@ -24,6 +24,7 @@ import org.tdl.vireo.model.jpa.JpaSubmissionRepositoryImpl;
 import org.tdl.vireo.proquest.ProquestVocabularyRepository;
 import org.tdl.vireo.security.SecurityContext;
 
+import play.Logger;
 import play.modules.spring.Spring;
 import play.test.UnitTest;
 
