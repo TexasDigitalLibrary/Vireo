@@ -145,6 +145,8 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	
 	@Column(length=1024)
 	public String depositId;
+	@Temporal(TemporalType.TIMESTAMP)
+	public Date depositDate;	
 	
 	@Column(length=326768) // 2^15
 	public String reviewerNotes;
@@ -1049,6 +1051,18 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 			this.depositId = depositId;
 			generateChangeLog("Repository deposit ID",depositId,false);
 		}
+	}
+	
+	@Override
+	public Date getDepositDate() {
+		return depositDate;
+	}
+	
+	@Override
+	public void setDepositDate(Date depositDate) {
+		assertReviewerOrOwner(submitter);
+		
+		this.depositDate = depositDate;
 	}
 	
 	

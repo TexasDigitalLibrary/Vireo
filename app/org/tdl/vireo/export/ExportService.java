@@ -1,5 +1,9 @@
 package org.tdl.vireo.export;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.zip.ZipOutputStream;
+
 import org.tdl.vireo.search.SearchFilter;
 
 /**

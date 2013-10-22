@@ -46,22 +46,34 @@ public class License extends AbstractSubmitStep {
 		String licenseAgreement = params.get("licenseAgreement");
 		String licenseText = settingRepo.getConfigValue(SUBMIT_LICENSE_TEXT);
 
+		String proquestAgreement = params.get("proquestAgreement");
+		String proquestText = settingRepo.getConfigValue(PROQUEST_LICENSE_TEXT);
+		
 		// If it's blank, make it null.
 		if (licenseAgreement != null && licenseAgreement.trim().length() == 0)
 			licenseAgreement = null;
 		
+		if (proquestAgreement != null && proquestAgreement.trim().length() == 0)
+			proquestAgreement = null;
+		
 		if ("license".equals(params.get("step"))) {
 			// Save the state
 			if (licenseAgreement == null) {
-				recordDisagreement(sub);
+				recordDisagreement(sub, "LICENSE", true);
 			} else {
-				recordAgreement(sub,licenseText);
+				recordAgreement(sub, licenseText, "LICENSE", true);
+			}
+			if(proquestAgreement == null) {
+				recordDisagreement(sub, "PROQUEST_LICENSE", false);
+			} else {
+				recordAgreement(sub, proquestText,"PROQUEST_LICENSE", false);
 			}
 			sub.save();
 			
 		} else {
 			// load the state
-			licenseAgreement = sub.getLicenseAgreementDate() != null ? "true" : null; 
+			licenseAgreement = sub.getLicenseAgreementDate() != null ? "true" : null;
+			proquestAgreement = sub.getLicenseAgreementDate() != null ? "true" :null;
 		}
 		
 		// Verify the form if we are submitting or if jumping from the confirm step.
@@ -78,8 +90,9 @@ public class License extends AbstractSubmitStep {
 
 		// Format the license text for display
 		licenseText = text2html(licenseText);
+		proquestText = text2html(proquestText);
 
-		renderTemplate("Submit/license.html",subId,licenseText,licenseAgreement);
+		renderTemplate("Submit/license.html",subId,licenseText,licenseAgreement,proquestText,proquestAgreement);
 
 	}
 
@@ -92,35 +105,66 @@ public class License extends AbstractSubmitStep {
 	public static boolean verify(Submission sub) {
 		
 		if (isFieldRequired(LICENSE_AGREEMENT)) {
-			Date agreementDate = sub.getLicenseAgreementDate();
 			List<Attachment> licenses = sub.getAttachmentsByType(AttachmentType.LICENSE);
 			
-			if (agreementDate == null || licenses.size() == 0) {
-				validation.addError("licenseAgreement","You must agree to the license agreement before continuing");
-				return false;
+			boolean hasLicense = false;
+			for(Attachment license : licenses) {
+				if ("LICENSE.txt".equals(license.getName()))
+					hasLicense = true;
+			}
+			
+			if (hasLicense == false) {
+				validation.addError("licenseAgreement","You must agree to the license agreement before continuing");				
 			}
 		} // isRequired
+		
+		if (isFieldRequired(UMI_RELEASE)) {
+			List<Attachment> licenses = sub.getAttachmentsByType(AttachmentType.LICENSE);
+			
+			boolean hasLicense = false;
+			for(Attachment license : licenses) {
+				if ("PROQUEST_LICENSE.txt".equals(license.getName()))
+					hasLicense = true;
+			}
+			
+			if (hasLicense == false) {
+				validation.addError("proquestAgreement","You must agree to the ProQuest license agreement before continuing");				
+			}
+		}
+		
+		if(validation.hasErrors()) {
+			return false;
+		}
 		
 		return true;
 	}
 	
 	/**
-	 * Record that the user has disagreed with the license. We'll allow the user
+	 * Record that the user has disagreed with a license. We'll allow the user
 	 * to change their mind and remove their previous agreement however we'll
 	 * still count that as an error.
 	 * 
 	 * 
 	 * @param sub
 	 *            The submission
+	 * @param licenseName
+	 * 			  The string to name the file
+	 * @param primaryAgreement
+	 * 			  A boolean to designate if this the primary license to remove the License Agreement Date 
+	 * 			on the submission. There must always be one license that is the primary license
+	 * 			if you don't want the License Agreement Date to be null.
 	 */
-	protected static void recordDisagreement(Submission sub) {
+	protected static void recordDisagreement(Submission sub, String licenseName, Boolean primaryAgreement) {
 		
-		// Remove the license agreement date
-		sub.setLicenseAgreementDate(null);
+		// Remove the submission agreement date
+		if (primaryAgreement)
+			sub.setLicenseAgreementDate(null);
+		
+		licenseName += ".txt";
 		
 		// Remove any license text
 		for (Attachment attachment : sub.getAttachments()) {
-			if (attachment.getType() == AttachmentType.LICENSE && attachment.getName() == "LICENSE.txt") {
+			if (attachment.getType() == AttachmentType.LICENSE && licenseName.equals(attachment.getName())) {
 				attachment.delete();
 				break;
 			}
@@ -129,20 +173,32 @@ public class License extends AbstractSubmitStep {
 	}
 	
 	/**
-	 * Record that the user has aggreed to the license. We save the date, and the current license text.
+	 * Record that the user has agreed a license. We save the date, and the current license text.
 	 * 
-	 * @param sub The submission.
-	 * @param licenseText The license text agreed to.
+	 * @param sub
+	 * 			  The submission.
+	 * @param licenseText
+	 * 			  The license text agreed to.
+	 *  * @param licenseName
+	 * 			  The string to name the file
+	 * @param primaryAgreement
+	 * 			  A boolean to designate if this the primary license to set the License Agreement Date 
+	 * 			on the submission. There must always be one license that is the primary license
+	 * 			if you don't want the License Agreement Date to be null.
 	 */
-	protected static void recordAgreement(Submission sub, String licenseText) {
+	protected static void recordAgreement(Submission sub, String licenseText, String licenseName, Boolean primaryAgreement) {
 		
 		Date agreementDate = new Date();
-		sub.setLicenseAgreementDate(agreementDate);
+		
+		// Set submission agreement date
+		if (primaryAgreement)
+			sub.setLicenseAgreementDate(agreementDate);
 
-
+		licenseName += ".txt";
+		
 		// Check if another license has been selected been saved.
 		for (Attachment attachment : sub.getAttachments()) {
-			if (attachment.getType() == AttachmentType.LICENSE && attachment.getName() == "LICENSE.txt") {
+			if (attachment.getType() == AttachmentType.LICENSE && licenseName.equals(attachment.getName())) {
 				// Remove the old license, and save the new one.
 				attachment.delete();
 				break;
@@ -151,9 +207,9 @@ public class License extends AbstractSubmitStep {
 
 		licenseText = stampLicense(licenseText,agreementDate);
 
-		// Save the text that the student aggreed too.
+		// Save the text that the student agreed too.
 		try {
-			sub.addAttachment(licenseText.getBytes(),"LICENSE.txt",AttachmentType.LICENSE).save();
+			sub.addAttachment(licenseText.getBytes(), licenseName, AttachmentType.LICENSE).save();
 		} catch (IOException ioe) {
 			throw new RuntimeException("Unable to save license aggreement.",ioe);
 		}

@@ -566,6 +566,17 @@ public interface Submission extends AbstractModel {
 	
 	
 	/**
+	 * @return The date the submission was deposited.
+	 */
+	public Date getDepositDate();
+	
+	/**
+	 * @param depositDate
+	 * 			The date the submission was deposited.
+	 */
+	public void setDepositDate(Date depositDate);
+	
+	/**
 	 * @return Return the current reviewer notes. May only be accessed if a
 	 *         reviewer or above.
 	 */
