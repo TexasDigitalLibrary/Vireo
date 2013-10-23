@@ -282,6 +282,10 @@ in results.
                              out.print(sub.getLastLogDate().format("MM/dd/yyyy hh:mm:ss a"));
                      }
                      break;
+                 case ORCID:
+                 	if (sub.getOrcid() != null)
+                 		out.print(sub.getOrcid());
+                     break;
 
                      
              } // switch (column)

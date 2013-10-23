@@ -335,6 +335,8 @@ public abstract class LuceneAbstractJobImpl extends Job {
 		String lastEventEntry = null;
 		Date lastEventTime = null;
 		
+		String orcid = sub.getOrcid();
+		
 		List<ActionLog> logs = indexer.subRepo.findActionLog(sub);
 		if (logs.size() > 0) {
 			lastEventEntry = logs.get(0).getEntry();
@@ -452,6 +454,9 @@ public abstract class LuceneAbstractJobImpl extends Job {
 		
 		if (lastEventTime != null)
 		doc.add(new NumericField("lastEventTime",Field.Store.NO,true).setLongValue(lastEventTime.getTime()));
+		
+		if (orcid !=null)
+		doc.add(new Field("orcid",orcid,Field.Store.NO,Index.NOT_ANALYZED));
 		
 		writer.addDocument(doc);
 		
@@ -581,6 +586,9 @@ public abstract class LuceneAbstractJobImpl extends Job {
 			
 			if (reviewerNotes != null)
 			doc.add(new Field("reviewerNotes",reviewerNotes,Field.Store.NO,Index.NOT_ANALYZED));
+			
+			if (orcid != null)
+			doc.add(new Field("orcid",orcid,Field.Store.NO,Index.NOT_ANALYZED));
 			
 			writer.addDocument(doc);
 			

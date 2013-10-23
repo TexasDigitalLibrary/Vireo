@@ -139,6 +139,7 @@ import play.Play;
  * 
  * lastEventTime: The date of the last entry for sorting.
  * 
+ * orcid: The ORCID of the student.
  * 
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
