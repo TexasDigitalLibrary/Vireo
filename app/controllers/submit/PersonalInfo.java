@@ -108,6 +108,8 @@ public class PersonalInfo extends AbstractSubmitStep {
 				sub.setDegree(submitter.getCurrentDegree());
 			if (isFieldEnabled(MAJOR))
 				sub.setMajor(submitter.getCurrentMajor());
+			if (isFieldEnabled(STUDENT_ORCID))
+				sub.setOrcid(submitter.getOrcid());
 			sub.save();
 			subId = sub.getId();
 			Logger.info("%s (%d: %s) has started submission #%d.",
@@ -335,6 +337,7 @@ public class PersonalInfo extends AbstractSubmitStep {
 			permEmail = submitter.getPermanentEmailAddress();
 			currentPhone = submitter.getCurrentPhoneNumber();
 			currentAddress = submitter.getCurrentPostalAddress();
+			orcid = submitter.getOrcid();
 		}
 	
 	

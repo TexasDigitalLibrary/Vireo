@@ -98,6 +98,9 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 	
 	@Column(nullable = false)
 	public RoleType role;
+	
+	@Column(length=255)
+	public String orcid;
 
 	/**
 	 * Create a new JpaPersonImpl
@@ -551,6 +554,18 @@ public class JpaPersonImpl extends JpaAbstractModel<JpaPersonImpl> implements Pe
 		}
 		
 		this.role = role;
+	}
+	
+	@Override
+	public void setOrcid(String orcid) {		
+		assertReviewerOrOwner(this);
+		
+		this.orcid = orcid;
+	}
+	
+	@Override
+	public String getOrcid() {
+		return orcid;
 	}
 	
 	/**

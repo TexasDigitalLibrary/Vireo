@@ -724,6 +724,13 @@ public class TestDataLoader extends Job {
 							random.nextInt(9) + random.nextInt(9) + random.nextInt(9) +
 							random.nextInt(9) + random.nextInt(9) +random.nextInt(9)
 							);
+					if(random.nextInt(100) > 50)
+						student.setOrcid(
+								"" + random.nextInt(9) + random.nextInt(9) + random.nextInt(9) + random.nextInt(9) +
+								"-" + random.nextInt(9) + random.nextInt(9) + random.nextInt(9) + random.nextInt(9) +
+								"-" + random.nextInt(9) + random.nextInt(9) + random.nextInt(9) + random.nextInt(9) +
+								"-" + random.nextInt(9) + random.nextInt(9) + random.nextInt(9) + random.nextInt(9)
+								);
 				}
 				student.save();
 			}
@@ -743,6 +750,9 @@ public class TestDataLoader extends Job {
 				sub.setStudentMiddleName(studentName[2]);
 				if (random.nextInt(100) > 30)
 					sub.setStudentBirthYear(random.nextInt(20)+1980);
+				
+				if (student.getOrcid()!=null)
+					sub.setOrcid(student.getOrcid());
 				
 				if (random.nextInt(100) > 5)
 					sub.setEmbargoType(embargos.get(random.nextInt(embargos.size()-1)));

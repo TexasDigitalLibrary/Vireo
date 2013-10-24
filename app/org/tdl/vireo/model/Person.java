@@ -376,4 +376,16 @@ public interface Person extends AbstractModel {
 	 */
 	public void setRole(RoleType role);
 
+	
+	/**
+	 * @param orcid
+	 * 			The orcid id of this person.
+	 */
+	public void setOrcid(String orcid);
+	
+	/**
+	 * 
+	 * @return Return the orcid id of this person.
+	 */
+	public String getOrcid();
 }
