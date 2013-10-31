@@ -69,7 +69,7 @@
 	
 	<!-- dc.date.dateAccepted = Approval date in "YYYY-MM-DD" format -->
 	#{if sub.getApprovalDate() != null } 
-	<dc:date" xsi:type="dcterms:dateAccepted">
+	<dc:date xsi:type="dcterms:dateAccepted">
 	    ${ sub.getApprovalDate().format("yyyy-MM-dd") }
 	</dc:date>
 	#{/if}
