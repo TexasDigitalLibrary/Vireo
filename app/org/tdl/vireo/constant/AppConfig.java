@@ -83,6 +83,10 @@ public class AppConfig {
 	/** Instructions to show after submitting corrections */
 	public final static String CORRECTION_INSTRUCTIONS = "correction_instructions";
 	
+	//ORCID settings
+	/** Whether or not to validate ORCID IDs when changed */
+	public final static String ORCID_VALIDATION = "orcid_validation";
+	
 	//Proquest settings
 	/** The proquest institution code visible during export. */
 	public final static String PROQUEST_INSTITUTION_CODE = "proquest_institution_code";	

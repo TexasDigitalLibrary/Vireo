@@ -124,6 +124,22 @@ jQuery(document).ready(function(){
 	</ul>
 </div>
 
+<h2>ORCID SETTINGS</h2>
+
+<div class="submissionAvailability wrap">
+	<ul class="unstyled">
+		<li>
+			<label>Validate ORCID IDs:</label>
+			<span>
+                <div class="btn-group" data-toggle="buttons-radio">
+                    <button name="${org.tdl.vireo.constant.AppConfig.ORCID_VALIDATION}" class="btn application-toggle #{if ORCID_VALIDATION}active#{/if}" value="true">Yes</button>
+                    <button name="${org.tdl.vireo.constant.AppConfig.ORCID_VALIDATION}" class="btn application-toggle #{if !ORCID_VALIDATION}active#{/if}">No</button>
+                </div>
+            </span>
+        </li>
+	</ul>
+</div>
+
 <h2>PROQUEST / UMI SETTINGS</h2>
 
 <div class="submissionAvailability wrap">
