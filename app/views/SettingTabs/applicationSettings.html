@@ -124,6 +124,33 @@ jQuery(document).ready(function(){
 	</ul>
 </div>
 
+<h2>ORCID SETTINGS</h2>
+
+<div class="submissionAvailability wrap">
+	<ul class="unstyled">
+		<li>
+			<label>Validate ORCID ID:</label>
+			<span>
+                <div class="btn-group" data-toggle="buttons-radio">
+                    <button name="${org.tdl.vireo.constant.AppConfig.ORCID_VALIDATION}" class="btn application-toggle #{if ORCID_VALIDATION}active#{/if}" value="true">Yes</button>
+                    <button name="${org.tdl.vireo.constant.AppConfig.ORCID_VALIDATION}" class="btn application-toggle #{if !ORCID_VALIDATION}active#{/if}">No</button>                    
+                </div>
+                <a href="#" class="tooltip-icon" rel="tooltip" title="This will validate the given ORCID ID with ORCID's API."><i class="icon-info-sign"></i></a>
+            </span>
+        </li>
+        <li>
+			<label>Authenticate ORCID ID:</label>
+			<span>
+                <div class="btn-group" data-toggle="buttons-radio">
+                    <button name="${org.tdl.vireo.constant.AppConfig.ORCID_AUTHENTICATION}" class="btn application-toggle #{if ORCID_AUTHENTICATION}active#{/if}" value="true">Yes</button>
+                    <button name="${org.tdl.vireo.constant.AppConfig.ORCID_AUTHENTICATION}" class="btn application-toggle #{if !ORCID_AUTHENTICATION}active#{/if}">No</button>                    
+                </div>
+                <a href="#" class="tooltip-icon" rel="tooltip" title="This will compare the user information obtained from ORCID with the Student's first and last name."><i class="icon-info-sign"></i></a>
+            </span>
+        </li>
+	</ul>
+</div>
+
 <h2>PROQUEST / UMI SETTINGS</h2>
 
 <div class="submissionAvailability wrap">
