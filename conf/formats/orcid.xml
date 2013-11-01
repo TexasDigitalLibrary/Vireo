@@ -28,9 +28,10 @@
 					        if (title.lastIndexOf(":") > 0)
 					            subTitle = title.substring(title.lastIndexOf(":"),title.length());
 					    }% 
+					    <titleInfo>
 					    <title>${ title?.escapeXml()?.raw() }</title>
-						    #{if subTitle != null
-						    }<subtitle>${subTitle}</subTitle>#{/if} 
+						    #{if subTitle != null }
+						    <subtitle>${subTitle}</subTitle>#{/if} 
 					    </titleInfo>
 					    #{/if} 
 					</work-title>
