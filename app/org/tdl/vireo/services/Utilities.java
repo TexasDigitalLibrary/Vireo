@@ -122,7 +122,7 @@ public class Utilities {
 						return false;
 					}
 					else if (!firstName.equals(orcidFirstName.getTextNormalize()) || 
-							!lastName.equals(orcidFirstName.getTextNormalize())) {
+							!lastName.equals(orcidLastName.getTextNormalize())) {
 						Log.warn("ORCID response had wrong name. Expected " + firstName + " " + lastName + ", but got " + 
 							orcidFirstName.getTextNormalize() + " " + orcidLastName.getTextNormalize() + ".");
 						return false;
