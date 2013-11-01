@@ -82,7 +82,7 @@ public class Utilities {
 		
 		try {
 			URL orcidURL = new URL(ORCID_API.replace("#", orcid));
-			
+
 			SAXBuilder builder = new SAXBuilder();
 			Document doc = builder.build(orcidURL);
 			
@@ -101,12 +101,13 @@ public class Utilities {
 				return false;		
 			}
 			// Validate the name
-			Element personalDetails = singleXPath(doc, "//personal-details", ns);
+			Element personalDetails = singleXPath(doc, "//orcid:personal-details", ns);
 			
 			if (personalDetails != null) {
 				// If we are not actually checking the name, we are done
-				if (firstName == null || lastName == null)
+				if (firstName == null || lastName == null) {
 					return true;
+				}
 				// Otherwise, do the comparison
 				/* <personal-details>
 	                <given-names>Alexey</given-names>
@@ -132,8 +133,17 @@ public class Utilities {
 				}
 			}
 						
-		} catch (Exception e) {
-			Log.warn("Error occured while validating ORCID: " + e.getMessage());
+		} catch (MalformedURLException muex) {
+			Log.warn("URL error occured while validating ORCID: " + muex.getMessage());
+			//muex.printStackTrace();
+			return false;
+		} catch (JDOMException jdex) {
+			Log.warn("JDOM error occured while validating ORCID: " + jdex.getMessage());
+			//jdex.printStackTrace();
+			return false;
+		} catch (IOException ioex) {
+			Log.warn("IO error occured while validating ORCID: " + ioex.getMessage());
+			//ioex.printStackTrace();
 			return false;
 		} 
 		

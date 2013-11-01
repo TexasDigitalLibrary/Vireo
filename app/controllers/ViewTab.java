@@ -21,6 +21,7 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import org.apache.commons.io.FilenameUtils;
+import org.tdl.vireo.constant.AppConfig;
 import org.tdl.vireo.email.EmailService;
 import org.tdl.vireo.email.VireoEmail;
 import org.tdl.vireo.export.DepositService;
@@ -250,7 +251,14 @@ public class ViewTab extends AbstractVireoController {
 			} else if("orcid".equals(field)) {
 				
 				// Verify the ORCID id by pinging their API
-				if (!Utilities.verifyOrcid(value))
+				boolean orcidVerify = true;
+				if (settingRepo.getConfigBoolean(AppConfig.ORCID_VALIDATION)) {
+					if (settingRepo.getConfigBoolean(AppConfig.ORCID_AUTHENTICATION))
+						orcidVerify = Utilities.verifyOrcid(value, submission.getStudentFirstName(), submission.getStudentLastName());
+					else
+						orcidVerify = Utilities.verifyOrcid(value);
+				}
+				if (!orcidVerify)
 					throw new RuntimeException("The provided ORCID could not be validated.");
 				
 				submission.setOrcid(value);
