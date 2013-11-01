@@ -37,6 +37,7 @@ import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.proquest.ProquestVocabularyRepository;
+import org.tdl.vireo.services.Utilities;
 import org.tdl.vireo.state.State;
 
 import play.Logger;
@@ -247,7 +248,12 @@ public class ViewTab extends AbstractVireoController {
 				
 				//ORCID
 			} else if("orcid".equals(field)) {
-				submission.setOrcid(value);				
+				
+				// Verify the ORCID id by pinging their API
+				if (!Utilities.verifyOrcid(value))
+					throw new RuntimeException("The provided ORCID could not be validated.");
+				
+				submission.setOrcid(value);
 				currentValue = submission.getOrcid();	
 
 				//Permanent Phone
