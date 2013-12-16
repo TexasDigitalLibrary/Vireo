@@ -65,8 +65,10 @@ public class License extends AbstractSubmitStep {
 			}
 			if(proquestAgreement == null) {
 				recordDisagreement(sub, "PROQUEST_LICENSE", false);
+				sub.setUMIRelease(false);
 			} else {
 				recordAgreement(sub, proquestText,"PROQUEST_LICENSE", false);
+				sub.setUMIRelease(true);
 			}
 			sub.save();
 			
