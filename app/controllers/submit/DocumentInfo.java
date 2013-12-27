@@ -111,7 +111,6 @@ public class DocumentInfo extends AbstractSubmitStep {
 			publishedMaterial = null;
 		String chairEmail = params.get("chairEmail");
 		String embargo = params.get("embargo");
-		String umi = params.get("umi");
 
 		List<TransientMember> committee = parseCommitteeMembers();
 
@@ -193,13 +192,6 @@ public class DocumentInfo extends AbstractSubmitStep {
 						validation.addError("embargo", "Please select a valid embargo option");
 				}
 			}
-			
-			if (isFieldEnabled(UMI_RELEASE)) {
-				if (umi != null && umi.trim().length() > 0) 
-					sub.setUMIRelease(true);
-				else
-					sub.setUMIRelease(false);
-			}
 	
 			if (isFieldEnabled(COMMITTEE)) {
 				try {
@@ -261,9 +253,6 @@ public class DocumentInfo extends AbstractSubmitStep {
 			
 			if (isFieldEnabled(EMBARGO_TYPE) && sub.getEmbargoType() != null)
 				embargo = sub.getEmbargoType().getId().toString();
-
-			if (isFieldEnabled(UMI_RELEASE) && sub.getUMIRelease() != null && sub.getUMIRelease() != false)
-				umi = "true";
 		}
 		
 		// Verify the form if we are submitting or if jumping from the confirm step.
@@ -328,7 +317,7 @@ public class DocumentInfo extends AbstractSubmitStep {
 
 				title, degreeMonth, degreeYear, defenseDate, docType, abstractText, keywords, 
 				subjectPrimary, subjectSecondary, subjectTertiary, docLanguage, committeeSlots, 
-				committee, chairEmail, publishedMaterialFlag, publishedMaterial, embargo, umi);
+				committee, chairEmail, publishedMaterialFlag, publishedMaterial, embargo);
 	}
 
 	/**
@@ -421,10 +410,6 @@ public class DocumentInfo extends AbstractSubmitStep {
 		// Embargo
 		if (isFieldRequired(EMBARGO_TYPE) && sub.getEmbargoType() == null)
 			validation.addError("embargo", "Please choose an embargo option");
-
-		// UMI
-		if (isFieldRequired(UMI_RELEASE) && sub.getUMIRelease() == null)
-			validation.addError("umi", "Please select whether to release to UMI.");
 		
 		// Check if we've added any new errors. If so return false;
 		if (numberOfErrorsBefore == validation.errors().size()) 
