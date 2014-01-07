@@ -878,6 +878,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		Date now = new Date();
 		
 		// "\u0000-\u0009", // CO Control (including: Bell, Backspace, and Horizontal Tab)
+		// "\u000B-\u000C", // CO Control (Line Tab and Form Feed)
 		// "\u000E-\u001F", // CO Control (including: Escape)
 		// "\u007F",        // CO Control (Delete Character)
 		// "\u0080-\u009F"  // C1 Control
@@ -885,7 +886,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		// Adding a few control characters from each range
 		sub.setDocumentTitle("doc\u0005Title\u0007");
 		sub.setDocumentAbstract("doc\u000FAbstract\u0018");
-		sub.setDocumentKeywords("doc\u007FKeywords");
+		sub.setDocumentKeywords("doc\u007FKeywords\u000Btest\u000C");
 		sub.addDocumentSubject("one");
 		sub.addDocumentSubject("two");
 		sub.addDocumentSubject("three");
@@ -922,7 +923,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		
 		assertEquals("docTitle",sub.getDocumentTitle());
 		assertEquals("doc Abstract ",sub.getDocumentAbstract());
-		assertEquals("doc Keywords",sub.getDocumentKeywords());
+		assertEquals("doc Keywords test ",sub.getDocumentKeywords());
 		assertEquals("one",sub.getDocumentSubjects().get(0));
 		assertEquals("two",sub.getDocumentSubjects().get(1));
 		assertEquals("three",sub.getDocumentSubjects().get(2));
