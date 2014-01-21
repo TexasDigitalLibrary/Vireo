@@ -36,6 +36,7 @@ import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
 
+import play.Logger;
 import play.Play;
 import play.db.jpa.JPA;
 import play.libs.Mail;
@@ -57,6 +58,7 @@ import static org.tdl.vireo.constant.AppConfig.*;
  * 
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
+ * @author Micah Cooper
  * 
  */
 public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTest {
@@ -411,8 +413,10 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 	 * the submission verified that it's state was updated. The license
 	 * agreement date, and that a license attachment was added.
 	 */
-	public void license() {
+	public void license(Boolean umi) {
 
+		int numAttachments = umi ? 2 : 1;
+		
 		Map<String,Object> routeArgs = new HashMap<String,Object>();
 		routeArgs.put("subId",subId);
 		final String LICENSE_URL = Router.reverse("submit.License.license",routeArgs).url;
@@ -420,9 +424,15 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 		// Build the form data
 		Map<String, String> params= new HashMap<String, String>();
 		params.put("step","license");
-		params.put("licenseAgreement","checked");
 		params.put("submit_next", "Save and Continue");
+		
+		// Apply License Agreement
+		params.put("licenseAgreement","checked");		
 
+		// Apply UMI Agreement
+		if(umi)
+			params.put("proquestAgreement", "checked");		
+		
 		// Post the form
 		Response response = POST(LICENSE_URL,params);
 		assertNotNull(response.getHeader("Location"));
@@ -436,9 +446,23 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 		// Check the license agreement date
 		assertNotNull(sub.getLicenseAgreementDate());
 
-		// Check for the license attachment. (it should be the only one)
-		assertEquals(1,sub.getAttachments().size());
+		// Check for the license attachments.		
+		assertEquals(numAttachments,sub.getAttachments().size());
 		assertEquals(AttachmentType.LICENSE,sub.getAttachments().get(0).getType());
+		
+		if(umi) {			
+			assertEquals(AttachmentType.LICENSE,sub.getAttachments().get(1).getType());
+			assertTrue(sub.getUMIRelease());
+		} else {
+			assertFalse(sub.getUMIRelease());
+		}
+	}
+	
+	/**
+	 * A helper method for not passing whether or not umi is accepted.	 * 
+	 */
+	public void license(){
+		license(false);
 	}
 
 	/**
@@ -477,7 +501,7 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 	 */
 	public void documentInfo(String title, String degreeMonth, String degreeYear, String defenseDate, String docType, String abstractText, String keywords,
 			String subjectPrimary, String subjectSecondary, String subjectTertiary, String language, List<Map<String,String>> committee, String chairEmail, 
-			String publishedMaterial, String embargo, String umi)  {
+			String publishedMaterial, String embargo)  {
 
 		// Get our URL
 		Map<String,Object> routeArgs = new HashMap<String,Object>();
@@ -516,9 +540,7 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 			params.put("publishedMaterial", publishedMaterial);
 		}
 		if (embargo != null)
-			params.put("embargo", embargo);
-		if (umi != null)
-			params.put("umi",umi);
+			params.put("embargo", embargo);		
 		for (int i = 0; i < committee.size(); i++) {
 			Map<String,String> member = committee.get(i);
 
@@ -571,9 +593,7 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 		if (publishedMaterial != null)
 			assertEquals(publishedMaterial, sub.getPublishedMaterial());
 		if (embargo != null)
-			assertEquals(Long.valueOf(embargo), sub.getEmbargoType().getId());
-		if (umi != null)
-			assertEquals(true, sub.getUMIRelease());
+			assertEquals(Long.valueOf(embargo), sub.getEmbargoType().getId());		
 		
 		assertEquals(committee.size(), sub.getCommitteeMembers().size());
 	}
