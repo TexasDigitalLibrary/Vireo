@@ -1,5 +1,6 @@
 package controllers;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -7,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.tdl.vireo.batch.CommentService;
 import org.tdl.vireo.batch.DeleteService;
 import org.tdl.vireo.batch.TransitionService;
@@ -40,6 +42,8 @@ import play.modules.spring.Spring;
 import play.mvc.Catch;
 import play.mvc.Http.Cookie;
 import play.mvc.With;
+
+import org.tdl.vireo.search.impl.ExcelExport;
 
 /**
  * The controller to handle the reviewer interface for searching, filtering,
@@ -1195,4 +1199,72 @@ public class FilterTab extends AbstractVireoController {
 		
 		return facets;
 	}
+
+    /**
+     * Download excel export
+     *
+     * The format will be xslx and will include all of the currently viewed results, including filters and
+     * selected columns. The file will be downloaded as an attachment and the filename will include a timestamp.
+     *
+     */
+    @Security(RoleType.REVIEWER)
+    public static void downloadExcelReport() {
+
+        ActiveSearchFilter filter = Spring.getBeanOfType(ActiveSearchFilter.class);
+        Cookie filterCookie = request.cookies.get(NAMES[SUBMISSION][ACTIVE_FILTER]);
+        if (filterCookie != null && filterCookie.value != null && filterCookie.value.trim().length() > 0) {
+            try {
+                filter.decode(filterCookie.value);
+            } catch (RuntimeException re) {
+                Logger.warn(re,"Unable to decode search filter: "+filterCookie.value);
+            }
+        }
+        SearchOrder orderby = null;
+        try {
+            Cookie orderByCookie = request.cookies.get(NAMES[SUBMISSION][ORDERBY]);
+            orderby = SearchOrder.find(Integer.valueOf(orderByCookie.value));
+        } catch(RuntimeException re) { /* ignore */	}
+        if (orderby == null)
+            orderby = SearchOrder.ID;
+
+        SearchDirection direction = null;
+        try {
+            Cookie directionCookie = request.cookies.get(NAMES[SUBMISSION][DIRECTION]);
+            direction = SearchDirection.find(Integer.valueOf(directionCookie.value));
+        } catch(RuntimeException re) { /* ignore */	}
+        if (direction == null)
+            direction = SearchDirection.ASCENDING;
+
+        List<SearchOrder> columns = new ArrayList<SearchOrder>();
+        Cookie columnsCookie = request.cookies.get(NAMES[SUBMISSION][COLUMNS]);
+        if (columnsCookie != null && columnsCookie.value != null && columnsCookie.value.trim().length() > 0) {
+            try {
+                String[] ids = columnsCookie.value.split(",");
+                for(String id : ids)
+                    columns.add(SearchOrder.find(Integer.valueOf(id)));
+            } catch (RuntimeException re) {
+                Logger.warn(re,"Unable to decode column order: "+columnsCookie.value);
+            }
+        }
+        if (columns.size() == 0)
+            columns = getDefaultColumns(SUBMISSION);
+
+
+        List<Submission> submissions = searcher.submissionSearch(filter, orderby, direction, 0, 5000).getResults();
+
+        ExcelExport export = new ExcelExport(submissions, columns);
+        XSSFWorkbook wb = export.getWorkbook();
+
+        String timestamp = Long.toString(java.lang.System.currentTimeMillis());
+        response.setContentTypeIfNotSet("application/vnd.ms-excel");
+        response.setHeader("Content-Disposition","attachment; filename=vireo-excel-" + timestamp + ".xlsx;");
+
+        try {
+            wb.write(response.out);
+        } catch (IOException ioe) {
+            Logger.error("Error exporting excel report: "+ ioe.getMessage());
+        }
+
+    }
+
 }

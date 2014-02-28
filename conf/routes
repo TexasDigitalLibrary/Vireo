@@ -54,6 +54,7 @@ POST    /admin/list/batch/transition            FilterTab.batchTransition
 POST    /admin/list/batch/export                FilterTab.batchExport
 POST	/admin/list/batch/assign				FilterTab.batchAssign
 POST	/admin/list/batch/comment				FilterTab.batchComment
+GET     /admin/list/excel                       FilterTab.downloadExcelReport
 
 ### View Tab
 *       /admin/view/?                           ViewTab.view
