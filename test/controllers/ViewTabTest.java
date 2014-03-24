@@ -540,6 +540,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		params.put("subject", "The subject");
 		params.put("comment", "This is the comment.");
 		params.put("visibility", "public");
+		params.put("status_change", "true");
 		params.put("addActionLogComment", "true");
 		
 		Response response = POST(UPDATE_URL,params);
@@ -548,6 +549,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		submission = subRepo.findSubmission(id);
 		assertTrue(subRepo.findActionLog(submission).size()>numActionLogs);
 		assertEquals("The subject: This is the comment.", subRepo.findActionLog(submission).get(0).getEntry());
+		assertEquals(submission.getState(),stateManager.getState("NeedsCorrection"));
 		
 		submission.delete();
 		
@@ -659,6 +661,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		params.put("subId", id.toString());
 		params.put("uploadType", "additional");
 		params.put("attachmentType", "SUPPLEMENTAL");
+		params.put("status_change", "true");
 		params.put("addFile", "true");
 		
 		Map<String,File> files = new HashMap<String,File>();
@@ -677,6 +680,8 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		submission = subRepo.findSubmission(id);
 		
 		assertNotNull(submission.getSupplementalDocuments().get(0));
+		assertEquals(submission.getState(),stateManager.getState("NeedsCorrection"));
+		
 		Attachment attachment = submission.getSupplementalDocuments().get(0);
 		
 		attachment.delete();		
@@ -726,6 +731,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		params = new HashMap<String,String>();
 		params.put("subId", id.toString());
 		params.put("uploadType", "primary");
+		params.put("status_change", "true");
 		params.put("addFile", "true");
 		
 		files = new HashMap<String,File>();
@@ -740,6 +746,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		submission = subRepo.findSubmission(id);
 		assertEquals("PRIMARY-DOCUMENT.pdf",submission.getPrimaryDocument().getName());
 		assertEquals("PRIMARY-DOCUMENT-archived-on-"+JpaAttachmentImpl.dateFormat.format(new Date())+".pdf",submission.getAttachmentsByType(AttachmentType.ARCHIVED).get(0).getName());
+		assertEquals(submission.getState(),stateManager.getState("NeedsCorrection"));
 		
 		submission.delete();
 		
