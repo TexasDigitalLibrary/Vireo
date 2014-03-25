@@ -60,9 +60,10 @@ jQuery(document).ready(function() {
 	</ul>
 	</br>
 	#{/ifErrors}
-	<div class="control-group #{if errors.forKey('primaryDocument')}error#{/if}">
-		<label class="control-label">#{fieldLabel PRIMARY_ATTACHMENT /}:</label>
-		<div class="controls">
+		#{ifEnabled PRIMARY_ATTACHMENT}
+		<div class="control-group #{if errors.forKey('primaryDocument')}error#{/if}">
+			<label class="control-label">#{fieldLabel PRIMARY_ATTACHMENT /}:</label>
+			<div class="controls">
 			#{if sub.getState().isEditableByStudent()}
 				#{if primaryDocument == null}
 					<input type="file" id="primaryFile" class="input-file" name="primaryDocument"><br/>
@@ -91,6 +92,7 @@ jQuery(document).ready(function() {
 			#{/else}
 		</div>
 	</div>
+	#{/ifEnabled}
 	#{ifEnabled [SUPPLEMENTAL_ATTACHMENT,SOURCE_ATTACHMENT,ADMINISTRATIVE_ATTACHMENT]}
     <div class="control-group #{if errors.forKey('additionalDocument')}error#{/if}">
         <label class="control-label">Additional Documents:</label>
