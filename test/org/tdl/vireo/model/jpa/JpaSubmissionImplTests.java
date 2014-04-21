@@ -859,7 +859,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		
 	
 	/**
-	 * Test that submission is persistent
+	 * Test that submission is scrubbed of control characters.
 	 */
 	@Test
 	public void testControlScrubbing() {
