@@ -15,7 +15,6 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.xpath.XPath;
 import org.mortbay.log.Log;
 
-
 /**
  * A catch-all class for various Vireo utilities
  * 
@@ -25,15 +24,15 @@ public class Utilities {
 
 	private static final String[] CONTROL_RANGES = {
 		"\u0000-\u0009", // CO Control (including: Bell, Backspace, and Horizontal Tab)
+		"\u000B-\u000C", // CO Control (Line Tab and Form Feed)
 		"\u000E-\u001F", // CO Control (including: Escape)
 		"\u007F",        // CO Control (Delete Character)
 		"\u0080-\u009F"  // C1 Control
 	};
-	
+
 	private static final String ORCID_API = "http://pub.orcid.org/#/orcid-bio";
 	private static final Namespace ORCIDns = Namespace.getNamespace("orcid", "http://www.orcid.org/ns/orcid");
-	
-	
+
 	/**
 	 * Scrub UNICODE control characters out of the provided string, deleteing them 
 	 * @param input
@@ -58,9 +57,8 @@ public class Utilities {
 			return "";
 		
 		return input.replaceAll("[" + CONTROL_RANGES[0] + CONTROL_RANGES[1] + 
-				CONTROL_RANGES[2] + CONTROL_RANGES[3] + "]", replace);
-	}
-	
+				CONTROL_RANGES[2] + CONTROL_RANGES[3] + CONTROL_RANGES[4] + "]", replace);
+	}	
 	
 	/**
 	 * Given an ORCID identifier, this function will ping the ORCID public API and return
@@ -179,5 +177,4 @@ public class Utilities {
 		else
 			return results.get(0);
 	}
-	
 }

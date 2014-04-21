@@ -42,6 +42,7 @@ import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.proquest.ProquestLanguage;
 import org.tdl.vireo.security.SecurityContext;
+import org.tdl.vireo.services.Utilities;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
 import org.tdl.vireo.services.Utilities;
@@ -229,6 +230,12 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 			lastActionLogDate = pendingLogs.get(pendingLogs.size()-1).getActionDate();
 		}
 				
+		// Scrub all user-exposed String fields of Unicode control stuff   
+		this.documentTitle = Utilities.scrubControl(this.documentTitle, "");
+		this.documentAbstract = Utilities.scrubControl(this.documentAbstract, " ");
+		this.documentKeywords = Utilities.scrubControl(this.documentKeywords, " ");
+		this.publishedMaterial = Utilities.scrubControl(this.publishedMaterial, " ");
+		
 		// Scrub all user-exposed String fields of Unicode control stuff   
 		this.documentTitle = Utilities.scrubControl(this.documentTitle, "");
 		this.documentAbstract = Utilities.scrubControl(this.documentAbstract, " ");

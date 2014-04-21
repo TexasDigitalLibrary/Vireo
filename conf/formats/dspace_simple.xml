@@ -210,7 +210,7 @@ ${ attachment.getName() }	bundle:LICENSE
 #{/elseif}
 #{elseif "metadata_thesis.xml".equals(template) }
 <?xml version="1.0" encoding="utf-8"?>
-<dublin_core schema="degree">
+<dublin_core schema="thesis">
     <!-- thesis.degree.name == Degree -->
     #{if sub.getDegree() != null } 
     <dcvalue element="degree" qualifier="name">

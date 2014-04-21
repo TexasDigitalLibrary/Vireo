@@ -140,7 +140,7 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				);	
 
 		// License Step
-		license();
+		license(true);
 
 		// DocumentInfo Step
 		List<Map<String,String>> committee = new ArrayList<Map<String,String>>();
@@ -170,8 +170,7 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				committee, // committee
 				"advisor@noreply.org", // committeeEmail
 				"chapter #2 has published material", // publishedMaterial
-				String.valueOf(settingRepo.findAllEmbargoTypes().get(1).getId()), // embargo
-				null // UMI
+				String.valueOf(settingRepo.findAllEmbargoTypes().get(1).getId()) // embargo
 				);
 
 		// FileUpload Step
@@ -185,7 +184,7 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 
 	/**
 	 * Test a full submission with all the additional paramaters turned on:
-	 * birth year, college, and umi release.
+	 * birth year and college.
 	 */
 	@Test
 	public void testFullSubmissionWithOptionalParamaters() throws IOException, InterruptedException {    
@@ -268,8 +267,7 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				committee, // committee
 				"committee@noreply.org", // committeeEmail
 				"chapter #2 has published material", // publishedMaterial
-				String.valueOf(settingRepo.findAllEmbargoTypes().get(1).getId()), // embargo
-				"true" // UMI 
+				String.valueOf(settingRepo.findAllEmbargoTypes().get(1).getId()) // embargo
 				);
 
 		// FileUpload Step
@@ -392,8 +390,7 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				committee, // committee
 				"advisor@noreply.org", // committeeEmail
 				"chapter #2 has published material", // publishedMaterial
-				String.valueOf(settingRepo.findAllEmbargoTypes().get(1).getId()), // embargo
-				null // UMI
+				String.valueOf(settingRepo.findAllEmbargoTypes().get(1).getId()) // embargo
 				);
 
 		// FileUpload Step
@@ -522,8 +519,7 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				committee, // committee
 				"advisor@noreply.org", // committeeEmail
 				"chapter #2 has published material", // publishedMaterial
-				String.valueOf(settingRepo.findAllEmbargoTypes().get(1).getId()), // embargo
-				null // UMI
+				String.valueOf(settingRepo.findAllEmbargoTypes().get(1).getId()) // embargo
 				);
 
 		// FileUpload Step
@@ -731,8 +727,7 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				committee, // committee
 				"advisor@noreply.org", // committeeEmail
 				"chapter #2 has published material", // publishedMaterial
-				String.valueOf(settingRepo.findAllEmbargoTypes().get(1).getId()), // embargo
-				null // UMI
+				String.valueOf(settingRepo.findAllEmbargoTypes().get(1).getId()) // embargo
 				);
 
 		
@@ -856,8 +851,7 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				committee, // committee
 				null, // committeeEmail
 				null, // publishedMaterial
-				null, // embargo
-				null // UMI
+				null // embargo
 				);
 
 		// FileUpload Step
@@ -942,8 +936,7 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				committee, // committee
 				null, // committeeEmail
 				null, // publishedMaterial
-				null, // embargo
-				null // UMI
+				null // embargo
 				);
 
 		// FileUpload Step

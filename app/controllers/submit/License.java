@@ -65,15 +65,17 @@ public class License extends AbstractSubmitStep {
 			}
 			if(proquestAgreement == null) {
 				recordDisagreement(sub, "PROQUEST_LICENSE", false);
+				sub.setUMIRelease(false);
 			} else {
 				recordAgreement(sub, proquestText,"PROQUEST_LICENSE", false);
+				sub.setUMIRelease(true);
 			}
 			sub.save();
 			
 		} else {
 			// load the state
 			licenseAgreement = sub.getLicenseAgreementDate() != null ? "true" : null;
-			proquestAgreement = sub.getLicenseAgreementDate() != null ? "true" :null;
+			proquestAgreement = sub.getUMIRelease() != null && sub.getUMIRelease() ? "true" : null;
 		}
 		
 		// Verify the form if we are submitting or if jumping from the confirm step.

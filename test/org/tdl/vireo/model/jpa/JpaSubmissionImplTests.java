@@ -962,6 +962,109 @@ public class JpaSubmissionImplTests extends UnitTest {
 	
 	
 	/**
+	 * Test that submission is scrubbed of control characters.
+	 */
+	@Test
+	public void testControlScrubbing() {
+		
+		// Commit and reopen a new transaction because some of the other tests
+		// may have caused exceptions which set the transaction to be rolled
+		// back.
+		if (JPA.em().getTransaction().getRollbackOnly())
+			JPA.em().getTransaction().rollback();
+		else
+			JPA.em().getTransaction().commit();
+		JPA.em().getTransaction().begin();
+		
+		
+		Submission sub = subRepo.createSubmission(person);
+
+		Date now = new Date();
+		
+		// "\u0000-\u0009", // CO Control (including: Bell, Backspace, and Horizontal Tab)
+		// "\u000B-\u000C", // CO Control (Line Tab and Form Feed)
+		// "\u000E-\u001F", // CO Control (including: Escape)
+		// "\u007F",        // CO Control (Delete Character)
+		// "\u0080-\u009F"  // C1 Control
+		
+		// Adding a few control characters from each range
+		sub.setDocumentTitle("doc\u0005Title\u0007");
+		sub.setDocumentAbstract("doc\u000FAbstract\u0018");
+		sub.setDocumentKeywords("doc\u007FKeywords\u000Btest\u000C");
+		sub.addDocumentSubject("one");
+		sub.addDocumentSubject("two");
+		sub.addDocumentSubject("three");
+		sub.setDocumentLanguage("en");
+		sub.setPublishedMaterial("published\u0088");
+		sub.setCommitteeContactEmail("contactEmail");
+		sub.setCommitteeEmailHash("hash");
+		sub.setCommitteeApprovalDate(now);
+		sub.setCommitteeEmbargoApprovalDate(now);
+		sub.setSubmissionDate(now);
+		sub.setApprovalDate(now);
+		sub.setLicenseAgreementDate(now);
+		sub.setDegree("degree");
+		sub.setDegreeLevel(DegreeLevel.UNDERGRADUATE);
+		sub.setDepartment("department");
+		sub.setProgram("program");
+		sub.setCollege("college");
+		sub.setMajor("major");
+		sub.setDocumentType("docType");
+		sub.setGraduationMonth(0);
+		sub.setGraduationYear(2002);
+		sub.setUMIRelease(false);
+		sub.setDepositId("depositId");
+		sub.setDepositDate(now);
+		sub.setReviewerNotes("notes");
+		sub.save();
+		
+		
+		// Commit and reopen a new transaction.
+		JPA.em().getTransaction().commit();
+		JPA.em().getTransaction().begin();
+		
+		sub = subRepo.findSubmission(sub.getId());
+		
+		assertEquals("docTitle",sub.getDocumentTitle());
+		assertEquals("doc Abstract ",sub.getDocumentAbstract());
+		assertEquals("doc Keywords test ",sub.getDocumentKeywords());
+		assertEquals("one",sub.getDocumentSubjects().get(0));
+		assertEquals("two",sub.getDocumentSubjects().get(1));
+		assertEquals("three",sub.getDocumentSubjects().get(2));
+		assertEquals("en",sub.getDocumentLanguage());
+		assertEquals("published ",sub.getPublishedMaterial());
+		assertEquals("contactEmail",sub.getCommitteeContactEmail());
+		assertEquals("hash",sub.getCommitteeEmailHash());
+		assertEquals(now,sub.getCommitteeApprovalDate());
+		assertEquals(now,sub.getCommitteeEmbargoApprovalDate());
+		assertEquals(now,sub.getSubmissionDate());
+		assertEquals(now,sub.getApprovalDate());
+		assertEquals(now,sub.getLicenseAgreementDate());
+		assertEquals("degree",sub.getDegree());
+		assertEquals(DegreeLevel.UNDERGRADUATE,sub.getDegreeLevel());
+		assertEquals("department",sub.getDepartment());
+		assertEquals("program",sub.getProgram());
+		assertEquals("college",sub.getCollege());
+		assertEquals("major",sub.getMajor());
+		assertEquals("docType",sub.getDocumentType());
+		assertEquals(Integer.valueOf(0),sub.getGraduationMonth());
+		assertEquals(Integer.valueOf(2002),sub.getGraduationYear());
+		assertEquals(Boolean.valueOf(false),sub.getUMIRelease());
+		assertEquals("depositId",sub.getDepositId());
+		assertEquals(now,sub.getDepositDate());
+		assertEquals("notes",sub.getReviewerNotes());
+
+		
+		sub.delete();
+		person.delete();
+		person = null;
+		
+		// Commit and reopen a new transaction.
+		JPA.em().getTransaction().commit();
+		JPA.em().getTransaction().begin();
+	}
+	
+	/**
 	 * Test that a person with a submission may not be deleted.
 	 */
 	@Test
