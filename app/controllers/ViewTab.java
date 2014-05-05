@@ -223,8 +223,8 @@ public class ViewTab extends AbstractVireoController {
 					throw new RuntimeException("The Email provided is invalid.");
 				}
 
-				submitter.setEmail(value);
-				currentValue = submitter.getEmail();
+				submitter.setCurrentEmailAddress(value);
+				currentValue = submitter.getCurrentEmailAddress();
 
 				//Year of Birth
 			} else if("birthYear".equals(field)) {						
