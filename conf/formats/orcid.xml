@@ -12,9 +12,9 @@
     http://support.orcid.org/knowledgebase/articles/171893-tutorial-add-works-with-curl
 }*
 <orcid-message xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.orcid.org/ns/orcid http://orcid.github.com/ORCID-Parent/schemas/orcid-message/1.0.10/orcid-message-1.0.10.xsd"
+	xsi:schemaLocation="https://raw.github.com/ORCID/ORCID-Source/master/orcid-model/src/main/resources/orcid-message-1.1.xsd"
 	xmlns="http://www.orcid.org/ns/orcid">
-	<message-version>1.0.10</message-version>
+	<message-version>1.1</message-version>
 	<orcid-profile>
 		<orcid-activities>
 			<orcid-works>
@@ -22,17 +22,16 @@
 					<!-- Title and subtitle split -->
 					<work-title>
 						#{if sub.getDocumentTitle() != null }
-					    %{
-					        def title = sub.getDocumentTitle();
-					        def subTitle = null;
-					        if (title.lastIndexOf(":") > 0)
-					            subTitle = title.substring(title.lastIndexOf(":"),title.length());
-					    }% 
-					    <titleInfo>
-					    <title>${ title?.escapeXml()?.raw() }</title>
-						    #{if subTitle != null }
-						    <subtitle>${subTitle}</subTitle>#{/if} 
-					    </titleInfo>
+						    %{
+						        def title = sub.getDocumentTitle();
+						        def subTitle = null;
+						        if (title.lastIndexOf(":") > 0)
+						            subTitle = title.substring(title.lastIndexOf(":"),title.length());
+						    }%
+						    <title>${ title?.escapeXml()?.raw() }</title>
+							#{if subTitle != null }
+							    <subtitle>${subTitle}</subTitle>
+							#{/if}
 					    #{/if} 
 					</work-title>
 					
@@ -84,6 +83,8 @@
 						<contributor>
 							<credit-name>${sub.getStudentLastName()?.escapeXml()?.raw() }, ${sub.getStudentFirstName()?.escapeXml()?.raw() }</credit-name>
 							<contributor-attributes>
+								<contributor-orcid>${sub.getOrcid()?.escapeXml()?.raw() }</contributor-orcid>
+								<contributor-email>${sub.getSubmitter()?.getEmail()?.escapeXml()?.raw() }</contributor-email>
 								<contributor-sequence>first</contributor-sequence>
 								<contributor-role>author</contributor-role>
 							</contributor-attributes>
@@ -100,6 +101,22 @@
 						#{/if}
 						#{/list}
 					</work-contributors>
+					<language-code>
+						#{if sub.getDocumentLanguage() != null }
+							${ sub.getDocumentLanguage() }
+						#{/if}
+						#{else}
+							en
+						#{/else}
+					</language-code>
+					<country>
+						#{if sub.getDocumentLanguageLocale() != null }
+							${ sub.getDocumentLanguageLocale() }
+						#{/if}
+						#{else}
+							US
+						#{/else}
+					</country>
 						
 				</orcid-work>
 			</orcid-works>
