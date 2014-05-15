@@ -13,7 +13,8 @@ import org.jdom.Namespace;
 import org.jdom.input.DOMBuilder;
 import org.jdom.input.SAXBuilder;
 import org.jdom.xpath.XPath;
-import org.mortbay.log.Log;
+
+import play.Logger;
 
 /**
  * A catch-all class for various Vireo utilities
@@ -89,13 +90,13 @@ public class Utilities {
 			
 			// Basic sanity check on the document itself
 			if (singleXPath(doc, "/orcid:orcid-message", ns) == null) {
-				Log.warn("Failed to get an ORCID message");
+				Logger.warn("Failed to get an ORCID message");
 				return false;
 			}
 			// Check for the error (orcid not found) message 
 			if (singleXPath(doc, "//orcid:error-desc", ns) != null)
 			{
-				Log.info("Invalid ORCID specified");
+				Logger.info("Invalid ORCID specified");
 				return false;		
 			}
 			// Validate the name
@@ -116,12 +117,12 @@ public class Utilities {
 					Element orcidLastName = personalDetails.getChild("family-name", ORCIDns);
 					
 					if (orcidFirstName == null || orcidLastName == null) {
-						Log.warn("ORCID response had missing names");
+						Logger.warn("ORCID response had missing names");
 						return false;
 					}
 					else if (!firstName.equals(orcidFirstName.getTextNormalize()) || 
 							!lastName.equals(orcidLastName.getTextNormalize())) {
-						Log.warn("ORCID response had wrong name. Expected " + firstName + " " + lastName + ", but got " + 
+						Logger.warn("ORCID response had wrong name. Expected " + firstName + " " + lastName + ", but got " + 
 							orcidFirstName.getTextNormalize() + " " + orcidLastName.getTextNormalize() + ".");
 						return false;
 					}
@@ -132,15 +133,15 @@ public class Utilities {
 			}
 						
 		} catch (MalformedURLException muex) {
-			Log.warn("URL error occured while validating ORCID: " + muex.getMessage());
+			Logger.warn("URL error occured while validating ORCID: " + muex.getMessage());
 			//muex.printStackTrace();
 			return false;
 		} catch (JDOMException jdex) {
-			Log.warn("JDOM error occured while validating ORCID: " + jdex.getMessage());
+			Logger.warn("JDOM error occured while validating ORCID: " + jdex.getMessage());
 			//jdex.printStackTrace();
 			return false;
 		} catch (IOException ioex) {
-			Log.warn("IO error occured while validating ORCID: " + ioex.getMessage());
+			Logger.warn("IO error occured while validating ORCID: " + ioex.getMessage());
 			//ioex.printStackTrace();
 			return false;
 		} 
