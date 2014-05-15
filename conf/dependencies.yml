@@ -12,6 +12,7 @@ require:
     - net.sf.opencsv -> opencsv 2.3
     - org.apache.poi -> poi 3.8
     - org.apache.poi -> poi-ooxml 3.8
+    - org.jdom -> jdom 1.1.3
     - play -> qunit 1.0:
         id: test
     - edu.tamu.mock -> mock-swordserver 1.3:
