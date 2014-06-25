@@ -263,9 +263,11 @@ jQuery(document).ready(function(){
 						#{/else}
 						</span></li>
 					<li class="edit"><label>Email:</label><span id="email"
-						#{if submitter.getEmail()}
+						#{if submitter.getCurrentEmailAddress()}
+							><i class="icon-pencil"></i> ${submitter.getCurrentEmailAddress()}
+						#{/if}#{elseif submitter.getEmail()}
 							><i class="icon-pencil"></i> ${submitter.getEmail()}
-						#{/if}#{else}
+						#{/elseif}#{else}
 							class="empty"><i class="icon-pencil"></i> none
 						#{/else}
 						</span></li>
