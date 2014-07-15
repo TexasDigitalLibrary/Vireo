@@ -1,6 +1,5 @@
 # Self declaration
-self: org.tdl -> vireo 2.0.1
-
+self: org.tdl -> vireo 2.0.7.1
 
 # Application dependencies
 require:
@@ -18,6 +17,9 @@ require:
         id: test
     - play -> db 1.1.1:
         id: test
+    - net.sf.oval -> oval 1.82:
+        transitive: false
+        force: true
 
 # Repositories
 repositories:
