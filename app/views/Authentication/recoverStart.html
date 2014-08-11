@@ -1,5 +1,5 @@
 #{extends 'main.html' /}
-#{set title:"Forgot Password Recovery" /}
+#{set title:"Vireo Thesis and Dissertaion Submital System - Forgot Password Recovery" /}
 
 <div class="row pageHead">
     <h3>Forgot Password Recovery</h3>
@@ -8,6 +8,7 @@
 
 <div class="row">
     <div class="span7">
+    	<h4>Instructions:</h4>
         <p>Please provide the email address used when registering your account. We will send you an email to that address with a special token. Clicking on the token link back to Vireo will allow us to verify your identity. Then you will be able to reset your password.</p>
     </div>
 </div>
@@ -26,16 +27,14 @@
 
 
 <form action="@{Authentication.recover()}" method="POST" class="form-horizontal">
-<fieldset>
     <div class="control-group #{ifError 'email'}error#{/ifError}">
         <label class="control-label" for="email"><b>Email Address:</b></label>
         <div class="controls">
-            <input type="text" name="email" value="${email}" />
+            <input type="text" id="email" name="email" value="${email}" />
         </div>
     </div>
     <div class="form-actions">
         <input type="submit" class="btn btn-primary" name="submit_recover" value="Verify Email Address" />
         <input type="submit" class="btn" name="submit_cancel" value="Cancel" />        
     </div>
-</fieldset>
 </form>

@@ -1,5 +1,5 @@
 #{extends 'main.html' /}
-#{set title:"${method.getDisplayName()} Login" /}
+#{set title:"Vireo Thesis and Dissertaion Submital System - ${method.getDisplayName()} Login" /}
 
 <div class="row pageHead">
 	<h3>${method.getDisplayName()} Login</h3>
@@ -8,6 +8,7 @@
 
 <div class="row">
 	<div class="span7">
+               <h4>Instructions:</h4>
 		<p>
 	    ${method.getAuthenticationNote()} 
 		#{if method.getAllowNewRegistration() }
@@ -33,16 +34,17 @@
 <form action="@{Authentication.loginMethod(method.getBeanName())}" method="POST" class="form-horizontal">
 
 	<fieldset>
+		<legend><label>${method.getDisplayName()} Login Form</label></legend>
 		<div class="control-group #{ifError 'login'}error#{/ifError}">
 			<label class="control-label" for="username"><b>${method.getUsernameLabel()}:</b></label>
 			<div class="controls">
-				<input type="text" name="username" value="${username}" />
+				<input type="text" name="username" id="username" value="${username}" />
 			</div>
 		</div>
 		<div class="control-group #{ifError 'login'}error#{/ifError}">
 			<label class="control-label" for="password"><b>Password:</b></label>
 			<div class="controls">
-				<input type="password" name="password" value="${password}" />
+				<input type="password" name="password" id="password" value="${password}" />
 				#{if method.getAllowPasswordRecovery() }
 				<p class="help-block"><a href="@{Authentication.recover()}">Did you forget your password?</a></p>
 				#{/if}

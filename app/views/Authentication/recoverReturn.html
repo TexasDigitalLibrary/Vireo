@@ -1,4 +1,5 @@
-#{extends 'main.html' /} #{set title:"Forgot Password Recovery" /}
+#{extends 'main.html' /}
+#{set title:"Vireo Thesis and Dissertaion Submital System - Forgot Password Recovery" /}
 
 <div class="row pageHead">
 	<h3>Forgot Password Recovery</h3>
@@ -7,6 +8,7 @@
 
 <div class="row">
 	<div class="span7">
+		<h4>Instructions:</h4>
 		<p>Your email address has been verified. Please use the form below
 			to reset your password.</p>
 	</div>
@@ -27,8 +29,6 @@
 
 <form action="@{Authentication.recover()}" method="POST" class="form-horizontal">
 <input type="hidden" name="token" value="${token}" />
-
-<fieldset>
 	<div class="control-group">
 		<label class="control-label" for="email"><b>Email Address:</b></label>
 		<div class="controls">
@@ -38,18 +38,17 @@
 	<div class="control-group #{ifError 'password1'}error#{/ifError}">
 		<label class="control-label" for="password1"><b>Password:</b></label>
 		<div class="controls">
-			<input type="password" name="password1" value="${password1}" />
+			<input type="password" id="password1" name="password1" value="${password1}" />
 		</div>
 	</div>
 	<div class="control-group #{ifError 'password2'}error#{/ifError}">
 		<label class="control-label" for="password2"><b>Verify Password:</b></label>
 		<div class="controls">
-			<input type="password" name="password2" value="${password2}" />
+			<input type="password" id="password2" name="password2" value="${password2}" />
 		</div>
 	</div>
 	<div class="form-actions">
 		<input type="submit" class="btn btn-primary" name="submit_recover" value="Reset Password" />
 		<input type="submit" class="btn" name="submit_cancel" value="Cancel" />
 	</div>
-</fieldset>
 </form>

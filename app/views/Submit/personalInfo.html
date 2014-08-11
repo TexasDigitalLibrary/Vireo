@@ -1,5 +1,5 @@
 #{extends 'Submit/submitStep.html' /}
-#{set title:'Verify Personal Information' /}
+#{set title:'Vireo Thesis and Dissertaion Submital System - Submission - Verify Your Information' /}
 #{set 'moreScripts'}
 <script type="text/javascript" >
 jQuery(document).ready(function() {
@@ -73,9 +73,10 @@ jQuery(document).ready(function() {
 </div>
 <br />
 <div class="row">
-<div class="span7">
-<p>Please verify all of your personal information. Some of the information has been provided by your school; if this information is in error, you will need to correct it through the appropriate office at your school.</p>
-<p>Required fields are indicated with an asterisk.</p>
+	<div class="span7">
+		<h4>Instructions:</h4>
+		<p>Please verify all of your personal information. Some of the information has been provided by your school; if this information is in error, you will need to correct it through the appropriate office at your school.</p>
+		<p>Required fields are indicated with an asterisk.</p>
 
 #{ifErrors}
 <ul class="red">
@@ -99,8 +100,8 @@ jQuery(document).ready(function() {
                 <p>${firstName}</p>
                 #{/if} 
                 #{else}
-                <input type="text" name="firstName" value="${firstName}">
-                <a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp STUDENT_FIRST_NAME /}"><i class="icon-info-sign"></i></a>
+                <input type="text" name="firstName" id="firstName" value="${firstName}">
+                <span class="tooltip-icon" title="#{fieldHelp STUDENT_FIRST_NAME /}"><i class="icon-info-sign"></i></span>
                 #{/else}
             </div>
         </div>
@@ -113,8 +114,8 @@ jQuery(document).ready(function() {
                 <p>${middleName}</p>
                 #{/if} 
                 #{else}
-                <input type="text" class="span1" name="middleName" value="${middleName}">
-                <a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp STUDENT_MIDDLE_NAME /}"><i class="icon-info-sign"></i></a>
+                <input type="text" class="span1" id="middleName" name="middleName" value="${middleName}">
+                <span class="tooltip-icon" title="#{fieldHelp STUDENT_MIDDLE_NAME /}"><i class="icon-info-sign"></i></span>
                 #{/else}
             </div>
         </div>
@@ -127,8 +128,8 @@ jQuery(document).ready(function() {
                 <p>${lastName}</p>
                 #{/if} 
                 #{else}
-                <input type="text" name="lastName" value="${lastName}">
-                <a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp STUDENT_LAST_NAME /}"><i class="icon-info-sign"></i></a>
+                <input type="text" name="lastName" id="lastName" value="${lastName}">
+                <span class="tooltip-icon" title="#{fieldHelp STUDENT_LAST_NAME /}"><i class="icon-info-sign"></i></span>
                 #{/else}
             </div>
         </div>
@@ -149,9 +150,8 @@ jQuery(document).ready(function() {
                 <p>${birthYear}</p>
                 #{/if} 
                 #{else}
-                <input type="text" class="span3" name="birthYear" value="${birthYear}">             
-                <a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp STUDENT_BIRTH_YEAR /}"><i class="icon-info-sign">               
-                </i></a>
+                               <input type="text" class="span3" id="birthYear" name="birthYear" value="${birthYear}">
+                <span class="tooltip-icon" title="#{fieldHelp STUDENT_BIRTH_YEAR /}"><i class="icon-info-sign"></i></span>
                 #{/else}
             </div>
         </div>
@@ -180,7 +180,7 @@ jQuery(document).ready(function() {
                 #{/if} 
                 #{else}
                     #{if settingRepo.findAllColleges().size() > 0 }
-		                <select name="college">
+		                <select name="college" id="college">
 		                    <option #{if college == null}selected="true"#{/if} value="">...choose</option>
 		                    #{list items:settingRepo.findAllColleges(), as:'collegeObject'}
 		                    <option #{if college == collegeObject.getName()}selected="true"#{/if} value="${collegeObject.getName()}">${collegeObject.getName()}</option>
@@ -188,9 +188,9 @@ jQuery(document).ready(function() {
 		                </select>
 		            #{/if}
 		            #{else}
-		                <input name="college" value="${college}"/>
+		                <input name="college" id="college" value="${college}"/>
 		            #{/else}
-		            <a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp COLLEGE /}"><i class="icon-info-sign"></i></a>
+		            <span class="tooltip-icon" title="#{fieldHelp COLLEGE /}"><i class="icon-info-sign"></i></span>
                 #{/else}
             </div>
         </div>
@@ -204,7 +204,7 @@ jQuery(document).ready(function() {
                 #{/if} 
                 #{else}
                     #{if settingRepo.findAllPrograms().size() > 0 }
-		                <select name="program">
+		                <select name="program" id="program">
 		                    <option #{if program == null}selected="true"#{/if} value="">...choose</option>
 		                    #{list items:settingRepo.findAllPrograms(), as:'programObject'}
 		                    <option #{if program == programObject.getName()}selected="true"#{/if} value="${programObject.getName()}">${programObject.getName()}</option>
@@ -212,9 +212,9 @@ jQuery(document).ready(function() {
 		                </select>
 		            #{/if}
 		            #{else}
-		                <input name="program" value="${program}"/>
+		                <input name="program" id="program" value="${program}"/>
 		            #{/else}
-		            <a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp PROGRAM /}"><i class="icon-info-sign"></i></a>
+		            <span class="tooltip-icon" title="#{fieldHelp PROGRAM /}"><i class="icon-info-sign"></i></span>
                 #{/else}
             </div>
         </div>
@@ -228,7 +228,7 @@ jQuery(document).ready(function() {
                 #{/if} 
                 #{else}
                     #{if settingRepo.findAllDepartments().size() > 0 }
-					    <select name="department">
+					    <select name="department" id="department">
 					        <option #{if department == null}selected="true"#{/if} value="">...choose</option>
 						    #{list items:settingRepo.findAllDepartments(), as:'dept'}
 						    <option #{if department == dept.getName()}selected="true"#{/if} value="${dept.getName()}">${dept.getName()}</option>
@@ -236,10 +236,9 @@ jQuery(document).ready(function() {
 					    </select>
 					#{/if}
 					#{else}
-					   <input name="department" value="${department}"/>
+					   <input name="department" id="department" value="${department}"/>
 					#{/else}
-					<a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp DEPARTMENT /}"><i class="icon-info-sign">				
-					</i></a>
+					<span class="tooltip-icon" title="#{fieldHelp DEPARTMENT /}"><i class="icon-info-sign"></i></span>
 			    #{/else}
 			</div>
 		</div>
@@ -258,7 +257,7 @@ jQuery(document).ready(function() {
                     <option #{if degree == degreeObject.getName()}selected="true"#{/if} value="${degreeObject.getName()}">${degreeObject.getName()}</option>
                     #{/list}
 				</select>
-				<a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp DEGREE /}"><i class="icon-info-sign"></i></a>
+				<span class="tooltip-icon" title="#{fieldHelp DEGREE /}"><i class="icon-info-sign"></i></span>
 				#{/else}
 			</div>
 		</div>
@@ -280,9 +279,9 @@ jQuery(document).ready(function() {
 						</select>
 					#{/if}
 					#{else}
-					   <input name="major" value="${major}"/>
+					   <input name="major" id="major" value="${major}"/>
 					#{/else}
-					<a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp MAJOR /}"><i class="icon-info-sign"></i></a>
+					<span class="tooltip-icon" title="#{fieldHelp MAJOR /}"><i class="icon-info-sign"></i></span>
 				#{/else}
 			</div>
 		</div>
@@ -301,9 +300,8 @@ jQuery(document).ready(function() {
                 <p>${permPhone}</p>
                 #{/if} 
                 #{else}
-				<input type="text" class="span3" name="permPhone" value="${permPhone}" placeholder="(###) ###-####">
-				<a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp PERMANENT_PHONE_NUMBER /}"><i class="icon-info-sign">				
-				</i></a>
+				<input type="text" class="span3" id="permPhone" name="permPhone" value="${permPhone}" placeholder="(###) ###-####">
+				<span class="tooltip-icon" title="#{fieldHelp PERMANENT_PHONE_NUMBER /}"><i class="icon-info-sign"></i></span>
 				#{/else}
 			</div>
 		</div>
@@ -316,8 +314,8 @@ jQuery(document).ready(function() {
                 <p>${permAddress}</p>
                 #{/if} 
                 #{else}
-				<textarea class="span4 address" name="permAddress">${permAddress}</textarea>
-				<a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp PERMANENT_POSTAL_ADDRESS /}"><i class="icon-info-sign"></i></a>
+				<textarea class="span4 address" id="permAddress" name="permAddress">${permAddress}</textarea>
+				<span class="tooltip-icon" title="#{fieldHelp PERMANENT_POSTAL_ADDRESS /}"><i class="icon-info-sign"></i></span>
 				#{/else}
 			</div>
 		</div>
@@ -330,8 +328,8 @@ jQuery(document).ready(function() {
                 <p>${permEmail}</p>
                 #{/if} 
                 #{else}
-				<input type="text" class="span3" name="permEmail" value="${permEmail}">
-				<a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp PERMANENT_EMAIL_ADDRESS /}"><i class="icon-info-sign"></i></a>
+				<input type="text" class="span3" id="permEmail" name="permEmail" value="${permEmail}">
+				<span class="tooltip-icon" title="#{fieldHelp PERMANENT_EMAIL_ADDRESS /}"><i class="icon-info-sign"></i></span>
 				#{/else}
 			</div>
 		</div>
@@ -344,8 +342,8 @@ jQuery(document).ready(function() {
                 <p>${currentPhone}</p>
                 #{/if} 
                 #{else}
-				<input type="text" class="span3" name="currentPhone" value="${currentPhone}" placeholder="(###) ###-####">
-				<a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp CURRENT_PHONE_NUMBER /}"><i class="icon-info-sign"></i></a>
+				<input type="text" class="span3" id="currentPhone" name="currentPhone" value="${currentPhone}" placeholder="(###) ###-####">
+				<span class="tooltip-icon" title="#{fieldHelp CURRENT_PHONE_NUMBER /}"><i class="icon-info-sign"></i></span>
 				#{/else}
 			</div>
 		</div>
@@ -358,20 +356,18 @@ jQuery(document).ready(function() {
                 <p>${currentAddress}</p>
                 #{/if} 
                 #{else}
-				<textarea class="span4 address" name="currentAddress">${currentAddress}</textarea>
-				<a href="#" class="tooltip-icon" rel="tooltip" title="#{fieldHelp CURRENT_POSTAL_ADDRESS /}"><i class="icon-info-sign"></i></a>
+				<textarea class="span4 address" id="currentAddress" name="currentAddress">${currentAddress}</textarea>
+				<span class="tooltip-icon" title="#{fieldHelp CURRENT_POSTAL_ADDRESS /}"><i class="icon-info-sign"></i></span>
 				#{/else}
 			</div>
 		</div>
 		#{/ifEnabled}
 	</fieldset>
 	#{/ifEnabled}
-	<fieldset>
-        <div class="form-actions">
-            <input type="submit" class="btn btn-primary" name="submit_next" value="Save and Continue" />
-            <input type="submit" class="btn" name="submit_cancel" value="Cancel" />            
-        </div>   
-    </fieldset>
+	<div class="form-actions">
+		<input type="submit" class="btn btn-primary" name="submit_next" value="Save and Continue" />
+		<input type="submit" class="btn" name="submit_cancel" value="Cancel" />
+	</div>
 </form>            
 </div>
 	<div id="stickyNotes" class="span3">

@@ -80,7 +80,14 @@ $.widget("ech.multiselect", {
 						return '';
 					}
 				})
-				.append('<li class="ui-multiselect-close"><a href="#" class="ui-multiselect-close"><span class="ui-icon ui-icon-circle-close"></span></a></li>')
+				.append(function(){
+					if( o.header === true || typeof o.header === "string"){
+						return '<li class="ui-multiselect-close"><a href="#" class="ui-multiselect-close"><span class="ui-icon ui-icon-circle-close"></span></a></li>'
+					}
+					else {
+						return '';
+						}
+				})
 				.appendTo( header ),
 
 			checkboxContainer = (this.checkboxContainer = $('<ul />'))
