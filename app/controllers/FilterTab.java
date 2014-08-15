@@ -56,7 +56,6 @@ public class FilterTab extends AbstractVireoController {
 	public static JobManager jobManager = Spring.getBeanOfType(JobManager.class);
 	public static TransitionService transitionService = Spring.getBeanOfType(TransitionService.class);
 	public static DeleteService deleteService = Spring.getBeanOfType(DeleteService.class);
-	public static ExportService exportService = Spring.getBeanOfType(ExportService.class);
 	public static AssignService assignService = Spring.getBeanOfType(AssignService.class);
 	public static CommentService commentService = Spring.getBeanOfType(CommentService.class);
 
@@ -783,6 +782,7 @@ public class FilterTab extends AbstractVireoController {
 				filter==null ? "null" : filter.encode());
 		
 		// Step 3, Stream the chunks.
+		ExportService exportService = (ExportService) Spring.getBean(exportPackage.getExportServiceBeanName());
 		ChunkStream stream = exportService.export(exportPackage,filter);
 		
 		response.contentType = stream.getContentType();
@@ -1147,7 +1147,7 @@ public class FilterTab extends AbstractVireoController {
 	 *            The screen type, either ACTION_LOG or SUBMISSION
 	 * @return A list of default columns.
 	 */
-	protected static List<SearchOrder> getDefaultColumns(int type) {
+	public static List<SearchOrder> getDefaultColumns(int type) {
 		
 		List<SearchOrder> columns = new ArrayList<SearchOrder>();
 		if (type == ACTION_LOG) {
