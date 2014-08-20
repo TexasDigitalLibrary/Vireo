@@ -152,7 +152,7 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 		Response response = GET(LIST_URL);
 		assertEquals(PERSONAL_INFO_URL,response.getHeader("Location"));
 		response = GET(PERSONAL_INFO_URL);
-		assertContentMatch("<title>Verify Personal Information</title>",response);		
+		assertContentMatch("<title>Vireo Thesis and Dissertaion Submital System - Submission - Verify Your Information</title>",response);
 	}
 
 	/**
@@ -271,7 +271,7 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 
 	
 		response = GET(NEW_URL);
-		assertContentMatch("<title>Verify Personal Information</title>",response);
+		assertContentMatch("<title>Vireo Thesis and Dissertaion Submital System - Submission - Verify Your Information</title>",response);
 		
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();
@@ -557,7 +557,7 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 		Response response = GET(VIEW_URL);
 		assertIsOk(response);
 		assertContentMatch("<title>View Application</title>",response);
-		assertTrue(getContent(response).contains("Upload additional files"));
+		assertTrue(getContent(response).contains("Browse for Additional Document"));
 		
 		File testPDF = getResourceFile("SamplePrimaryDocument.pdf");
 		
