@@ -180,6 +180,8 @@ public class LuceneSearcherImpl implements Searcher {
 					sortedIds.add(Long.valueOf(doc.get("subId")));
 				}
 				
+				searcher.close();
+				
 				List<Submission> results = subRepo.findSubmissions(sortedIds);
 				Collections.sort(results,new ModelComparator(sortedIds));
 				
@@ -228,6 +230,8 @@ public class LuceneSearcherImpl implements Searcher {
 					sortedIds.add(Long.valueOf(doc.get("logId")));
 				}
 				
+				searcher.close();
+				
 				List<ActionLog> results = subRepo.findActionLogs(sortedIds);
 				Collections.sort(results,new ModelComparator(sortedIds));
 
@@ -269,7 +273,9 @@ public class LuceneSearcherImpl implements Searcher {
 					Document doc = searcher.doc(topDocs.scoreDocs[i].doc);
 					sortedIds[i] = Long.valueOf(doc.get("subId")).longValue();
 				}
-
+				
+				searcher.close();
+				
 				return sortedIds;
 				
 			} finally {
@@ -310,7 +316,8 @@ public class LuceneSearcherImpl implements Searcher {
 					Document doc = searcher.doc(topDocs.scoreDocs[i].doc);
 					sortedIds[i] = Long.valueOf(doc.get("logId")).longValue();
 				}
-
+				searcher.close();
+				
 				return sortedIds;
 				
 			} finally {

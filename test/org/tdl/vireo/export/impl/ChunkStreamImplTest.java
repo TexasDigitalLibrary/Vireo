@@ -26,6 +26,7 @@ public class ChunkStreamImplTest extends UnitTest{
 		assertEquals("disposition",stream.getContentDisposition());
 		assertEquals(100,stream.bufferSize);
 		
+		stream.close();
 	}
 	
 	/**
@@ -51,6 +52,8 @@ public class ChunkStreamImplTest extends UnitTest{
 			String chunk = new String(nextChunk.get());
 			assertEquals("Chunk #"+i, chunk);
 		}
+		
+		stream.close();
 	}
 	
 	/**
@@ -81,6 +84,7 @@ public class ChunkStreamImplTest extends UnitTest{
 			nextChunk = stream.nextChunk();
 			assertFalse(nextChunk.isDone());
 		}
+		stream.close();
 	}
 	
 	

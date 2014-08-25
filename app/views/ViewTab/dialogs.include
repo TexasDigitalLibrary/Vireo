@@ -268,7 +268,7 @@
 					</ul>
 					</div>
 				</li>
-				<li><input type="checkbox" class="checkbox" name="needsCorrection" value="true"
+				<li><input type="checkbox" class="checkbox" name="status_change" value="true"
 				#{if currentUser.getPreference("attachment_flag_submission_as_needs_corrections_by_default") != null}
 		         checked="true"
 		        #{/if}

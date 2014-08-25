@@ -795,8 +795,10 @@ public class ViewTab extends AbstractVireoController {
 		}
 		
 		if(!validation.hasErrors()) {
-			if(params.get("status_change") != null)
+			if(params.get("status_change") != null) {
 				submission.setState(stateManager.getState("NeedsCorrection"));
+				submission.save();
+			}
 						
 			VireoEmail email = emailService.createEmail();
 			
@@ -810,9 +812,8 @@ public class ViewTab extends AbstractVireoController {
 			email.addTo(submission.getSubmitter());
 			
 			//Create list of carbon copies
-			if(params.get("cc_advisor") != null && submission.getCommitteeContactEmail() != null) {
+			if(params.get("cc_advisor") != null && submission.getCommitteeContactEmail() != null)
 				email.addCc(submission.getCommitteeContactEmail());
-			}
 			
 			email.setFrom(context.getPerson());
 			email.setReplyTo(context.getPerson());
@@ -821,9 +822,8 @@ public class ViewTab extends AbstractVireoController {
 				// Send the email and log it after completion
 				email.setLogOnCompletion(context.getPerson(), submission);
 				emailService.sendEmail(email,false);
-				
 			} else {
-				// Otherwise just log it.
+				// Generate log.
 				subject = email.getSubject();
 				message = email.getMessage();
 				
@@ -837,7 +837,6 @@ public class ViewTab extends AbstractVireoController {
 				if("private".equals(params.get("visibility")))
 					log.setPrivate(true);
 				
-				submission.save();
 				log.save();
 			}
 		}
@@ -910,6 +909,8 @@ public class ViewTab extends AbstractVireoController {
 			uploadPrimary(sub);
 		}else if("additional".equals(uploadType)){
 			uploadAdditional(sub);
+		} else {
+			validation.addError("addFile", "You must choose to replace the Primary file or add an additional file.");
 		}
 		
 		VireoEmail email = null;
@@ -944,14 +945,14 @@ public class ViewTab extends AbstractVireoController {
 		}		
 
 		if(!validation.hasErrors()) {
-			if(params.get("needsCorrection") != null)
+			if(params.get("status_change") != null)
 				sub.setState(stateManager.getState("NeedsCorrection"));
 						
 			sub.save();
-		}	
-		
-		if (email != null)
-			emailService.sendEmail(email,false);
+			
+			if (email != null)
+				emailService.sendEmail(email,false);
+		}
 	}
 	
 	/**

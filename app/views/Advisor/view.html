@@ -19,6 +19,7 @@
     #{include 'viewSubmission.include' /}
 	
 	<legend>Uploaded Files</legend>
+	#{ifEnabled PRIMARY_ATTACHMENT}
 	<div class="control-group #{if errors.forKey('primaryDocument')}error#{/if}">
 		<label class="control-label">#{fieldLabel PRIMARY_ATTACHMENT /}:</label>
 		<div class="controls">
@@ -33,6 +34,8 @@
 			#{/else}
 		</div>
 	</div>
+	#{/ifEnabled}
+	#{ifEnabled [SUPPLEMENTAL_ATTACHMENT,SOURCE_ATTACHMENT,ADMINISTRATIVE_ATTACHMENT]}
     <div class="control-group #{if errors.forKey('additionalDocument')}error#{/if}">
         <label class="control-label">Additional Documents:</label>
         <div class="controls">
@@ -47,6 +50,7 @@
             #{/else}
         </div>
     </div>
+    #{/ifEnabled}
     #{if feedbackDocuments != null && feedbackDocuments.size() > 0}
     <div class="control-group #{if errors.forKey('feedbackDocument')}error#{/if}">
         <label class="control-label"><b>Feedback Document${ feedbackDocuments.pluralize() }:</b></label>

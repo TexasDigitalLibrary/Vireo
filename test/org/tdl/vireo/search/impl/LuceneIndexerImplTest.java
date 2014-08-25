@@ -188,6 +188,7 @@ public class LuceneIndexerImplTest extends UnitTest {
 		Document doc = searcher.doc(topDocs.scoreDocs[0].doc);
 		assertNotNull(doc);
 		assertEquals(String.valueOf(lastSubId),doc.get("subId"));
+		searcher.close();
 	}
 	
 	/**
@@ -232,6 +233,8 @@ public class LuceneIndexerImplTest extends UnitTest {
 		Document doc = searcher.doc(topDocs.scoreDocs[0].doc);
 		assertNotNull(doc);
 		assertEquals(String.valueOf(sub.getId()),doc.get("subId"));
+		
+		searcher.close();
 	}
 	
 	
