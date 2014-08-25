@@ -61,6 +61,13 @@ public enum FieldConfig {
 			"submit_student_birth_year_enabled",
 			"The year the author was born. This field may be configured to be locked if supplied by the authentication plugin."),
 
+	STUDENT_ORCID(
+			"ORCID author identifier",
+			"submit_student_orcid_label",
+			"submit_student_orcid_help",
+			"submit_student_orcid_enabled",
+			"The author's ORCID persistent digital identifier (orcid.org). It is usually optional."),
+
 	/** Verify Personal Information :: Affiliations **/		
 	GRANTOR(
 			"Grantor",
@@ -332,7 +339,7 @@ public enum FieldConfig {
 	
 	// Groups of fields
 	
-	public static final FieldConfig[] PERSONAL_INFO_FIELDS = {STUDENT_FIRST_NAME,STUDENT_MIDDLE_NAME,STUDENT_LAST_NAME,STUDENT_EMAIL,STUDENT_BIRTH_YEAR,GRANTOR,COLLEGE,PROGRAM,DEPARTMENT,DEGREE,MAJOR,PERMANENT_PHONE_NUMBER,PERMANENT_POSTAL_ADDRESS,PERMANENT_EMAIL_ADDRESS,CURRENT_PHONE_NUMBER,CURRENT_POSTAL_ADDRESS};
+	public static final FieldConfig[] PERSONAL_INFO_FIELDS = {STUDENT_FIRST_NAME,STUDENT_MIDDLE_NAME,STUDENT_LAST_NAME,STUDENT_EMAIL,STUDENT_ORCID,STUDENT_BIRTH_YEAR,GRANTOR,COLLEGE,PROGRAM,DEPARTMENT,DEGREE,MAJOR,PERMANENT_PHONE_NUMBER,PERMANENT_POSTAL_ADDRESS,PERMANENT_EMAIL_ADDRESS,CURRENT_PHONE_NUMBER,CURRENT_POSTAL_ADDRESS};
 
 	public static final FieldConfig[] LICENSE_AGREEMENT_FIELDS = {LICENSE_AGREEMENT, UMI_RELEASE};
 	

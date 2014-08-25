@@ -422,6 +422,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 		sub1.setDepositId("Z");
 		sub1.setReviewerNotes("Z");
 		sub1.addCustomAction(def, true);
+		sub1.setOrcid("2222-2222-2222-2222");
 
 		sub1.save();
 		
@@ -448,6 +449,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 		sub2.setCommitteeEmbargoApprovalDate(new Date(2002,5,1));
 		sub2.setDepositId("A");
 		sub2.setReviewerNotes("A");
+		sub2.setOrcid("1111-1111-1111-1111");
 		sub2.save();
 		
 		
@@ -662,6 +664,12 @@ public class LuceneSearcherImplTest extends UnitTest{
 			assertTrue(submissions.contains(sub1));
 			assertTrue(submissions.contains(sub2));
 			assertTrue(submissions.indexOf(sub2) < submissions.indexOf(sub1));
+			
+			// ORCID
+			submissions = searcher.submissionSearch(filter, SearchOrder.ORCID, SearchDirection.DESCENDING, 0, 20).getResults();
+			assertTrue(submissions.contains(sub1));
+			assertTrue(submissions.contains(sub2));
+			assertTrue(submissions.indexOf(sub1) < submissions.indexOf(sub2));
 			
 		} finally {
 			// Cleanup

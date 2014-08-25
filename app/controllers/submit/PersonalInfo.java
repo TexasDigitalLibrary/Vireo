@@ -108,6 +108,8 @@ public class PersonalInfo extends AbstractSubmitStep {
 				sub.setDegree(submitter.getCurrentDegree());
 			if (isFieldEnabled(MAJOR))
 				sub.setMajor(submitter.getCurrentMajor());
+			if (isFieldEnabled(STUDENT_ORCID))
+				sub.setOrcid(submitter.getOrcid());
 			sub.save();
 			subId = sub.getId();
 			Logger.info("%s (%d: %s) has started submission #%d.",
@@ -125,6 +127,7 @@ public class PersonalInfo extends AbstractSubmitStep {
 		String firstName = params.get("firstName");
 		String middleName = params.get("middleName");
 		String lastName = params.get("lastName");
+		String orcid = params.get("orcid");
 		String birthYear = params.get("birthYear");
 		String program = params.get("program");
 		String college = params.get("college");
@@ -155,6 +158,10 @@ public class PersonalInfo extends AbstractSubmitStep {
 			if (submitter.getLastName() != null) {
 				disabledFields.add("lastName");
 				lastName = submitter.getLastName();
+			}
+			if (sub.getOrcid() != null) {
+				disabledFields.add("orcid");
+				orcid = sub.getOrcid();
 			}
 			if (submitter.getBirthYear() != null) {
 				if (submitter.getBirthYear() == null)
@@ -228,6 +235,8 @@ public class PersonalInfo extends AbstractSubmitStep {
 				sub.setStudentMiddleName(middleName);
 			if (isFieldEnabled(STUDENT_LAST_NAME))
 				sub.setStudentLastName(lastName);
+			if (isFieldEnabled(STUDENT_ORCID))
+				sub.setOrcid(orcid);
 			if (isFieldEnabled(STUDENT_BIRTH_YEAR)) {
 				// Don't fail if the year is invalid
 				if (birthYear != null && birthYear.trim().length() > 0) {
@@ -316,6 +325,7 @@ public class PersonalInfo extends AbstractSubmitStep {
 			firstName = sub.getStudentFirstName();
 			middleName = sub.getStudentMiddleName();
 			lastName = sub.getStudentLastName();
+			orcid = sub.getOrcid();
 			birthYear = sub.getStudentBirthYear() != null ? String.valueOf(sub.getStudentBirthYear()) : null;
 			program = sub.getProgram();
 			college = sub.getCollege();
@@ -327,6 +337,7 @@ public class PersonalInfo extends AbstractSubmitStep {
 			permEmail = submitter.getPermanentEmailAddress();
 			currentPhone = submitter.getCurrentPhoneNumber();
 			currentAddress = submitter.getCurrentPostalAddress();
+			orcid = submitter.getOrcid();
 		}
 	
 	
@@ -349,7 +360,7 @@ public class PersonalInfo extends AbstractSubmitStep {
 		renderTemplate("Submit/personalInfo.html",submitter, subId, disabledFields, stickies,
 
 				// Form data
-				firstName, middleName, lastName, birthYear, grantor, program, college, department, 
+				firstName, middleName, lastName, orcid, birthYear, grantor, program, college, department, 
 				degree, major, permPhone, permAddress, permEmail, currentPhone, currentAddress
 				);
 	}
@@ -381,6 +392,8 @@ public class PersonalInfo extends AbstractSubmitStep {
 		}
 		if (isFieldRequired(STUDENT_MIDDLE_NAME) && isEmpty(sub.getStudentMiddleName()))
 			validation.addError("middleName","Your middle name is required");
+		if (isFieldRequired(STUDENT_ORCID) && isEmpty(sub.getOrcid()))
+			validation.addError("orcid","Your ORCID id is required");
 	
 		// Birth year
 		if (sub.getStudentBirthYear() != null && sub.getStudentBirthYear() < 1900)

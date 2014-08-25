@@ -64,6 +64,9 @@ public class ApplicationSettingsTab extends SettingsTab {
 		renderArgs.put("GRANTOR", settingRepo.getConfigValue(GRANTOR, ""));
 		renderArgs.put("SUBMIT_LICENSE_TEXT", settingRepo.getConfigValue(SUBMIT_LICENSE_TEXT));
 		
+		renderArgs.put("ORCID_VALIDATION", settingRepo.getConfigValue(ORCID_VALIDATION));
+		renderArgs.put("ORCID_AUTHENTICATION", settingRepo.getConfigValue(ORCID_AUTHENTICATION));
+		
 		renderArgs.put("PROQUEST_INSTITUTION_CODE", settingRepo.getConfigValue(PROQUEST_INSTITUTION_CODE));
 		renderArgs.put("PROQUEST_INDEXING", settingRepo.getConfigValue(PROQUEST_INDEXING));
 		renderArgs.put("PROQUEST_LICENSE_TEXT", settingRepo.getConfigValue(PROQUEST_LICENSE_TEXT));
@@ -127,6 +130,8 @@ public class ApplicationSettingsTab extends SettingsTab {
 			textFields.add(CURRENT_SEMESTER);
 			textFields.add(GRANTOR);
 			textFields.add(SUBMIT_LICENSE_TEXT);
+			textFields.add(ORCID_VALIDATION);
+			textFields.add(ORCID_AUTHENTICATION);
 			textFields.add(PROQUEST_INSTITUTION_CODE);
 			textFields.add(PROQUEST_INDEXING);
 			textFields.add(PROQUEST_LICENSE_TEXT);

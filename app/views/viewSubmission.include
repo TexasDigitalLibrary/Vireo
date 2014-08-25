@@ -16,13 +16,21 @@ Plus all the FieldConfig objects
 
 }*
 
-#{ifEnabled [STUDENT_FIRST_NAME,STUDENT_MIDDLE_NAME,STUDENT_EMAIL,STUDENT_BIRTH_YEAR]}
+#{ifEnabled [STUDENT_FIRST_NAME,STUDENT_MIDDLE_NAME,STUDENT_EMAIL,STUDENT_ORCID,STUDENT_BIRTH_YEAR]}
 <legend>About You</legend>
 #{ifEnabled [STUDENT_FIRST_NAME,STUDENT_MIDDLE_NAME]}
 <div class="control-group #{errorClass 'firstName' /} #{errorClass 'lastName' /} #{errorClass 'middleName' /} #{errorClass 'birthYear' /} ">
     <label class="control-label ">Name:</label>
     <div class="controls">
         <p>${sub?.getStudentFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH)}</p>
+    </div>
+</div>
+#{/ifEnabled}
+#{ifEnabled STUDENT_ORCID }
+<div class="control-group #{errorClass 'orcid' /} ">
+    <label class="control-label">#{fieldLabel STUDENT_ORCID /}:</label>
+    <div class="controls">
+        <p>${sub?.getOrcid() }</p>
     </div>
 </div>
 #{/ifEnabled}

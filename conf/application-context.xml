@@ -74,7 +74,8 @@
         		<entry key="currentCollege" value="${auth.shib.attribute.currentCollege}"/>
         		<entry key="currentMajor" value="${auth.shib.attribute.currentMajor}"/>
         		<entry key="currentGraduationYear" value="${auth.shib.attribute.currentGraduationYear}"/>
-        		<entry key="currentGRaduationMonth" value="${auth.shib.attribute.currentGraduationMonth}"/>
+        		<entry key="currentGraduationMonth" value="${auth.shib.attribute.currentGraduationMonth}"/>
+        		<entry key="orcid" value="${auth.shib.attribute.orcid}"/>
         	</util:map>
         </property>
         <property name="mockAttributes">
@@ -102,6 +103,7 @@
         		<entry key="${auth.shib.attribute.currentMajor}" value="Performance Studies"/>
         		<entry key="${auth.shib.attribute.currentGraduationYear}" value="2012"/>
         		<entry key="${auth.shib.attribute.currentGraduationMonth}" value="04"/>
+        		<entry key="${auth.shib.attribute.orcid}" value="1234-1234-1234-1234"/>
         	</util:map>
         </property>
     </bean>
@@ -503,6 +505,17 @@
         		</entry>
         	</map>
         </property>
+    </bean>
+    <bean id="ORCID" class="org.tdl.vireo.export.impl.TemplatePackagerImpl" scope="prototype">
+        <property name="personRepository" ref="PersonRepository"/>
+        <property name="submissionRepository" ref="SubmissionRepository"/>
+        <property name="settingsRepository" ref="SettingsRepository"/>
+        <property name="proquestVocabularyRepository" ref="ProquestVocabularyRepository"/>
+        <property name="displayName" value="ORCID Work"/>
+        <property name="mimeType" value="text/xml"/>
+        <property name="format" value="http://orcid.github.com/ORCID-Parent/schemas/orcid-message/1.0.10/orcid-message-1.0.10.xsd"/>
+        <property name="manifestTemplatePath" value="conf/formats/orcid.xml"/>
+        <property name="manifestName" value="orcid.xml"/>
     </bean>
     
 </beans>

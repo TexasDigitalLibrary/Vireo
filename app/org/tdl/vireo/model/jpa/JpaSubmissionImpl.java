@@ -45,6 +45,7 @@ import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.services.Utilities;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
+import org.tdl.vireo.services.Utilities;
 
 import play.modules.spring.Spring;
 
@@ -68,6 +69,10 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	public String studentMiddleName;
 	public Integer studentBirthYear;
 	
+	// The new ORCID field
+	@Column(length=255)
+	public String orcid;
+		
 	@Column(length=326768) // 2^15
 	public String documentTitle;
 	@Column(length=326768) // 2^15
@@ -224,6 +229,12 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 			lastActionLogEntry = pendingLogs.get(pendingLogs.size()-1).getEntry();
 			lastActionLogDate = pendingLogs.get(pendingLogs.size()-1).getActionDate();
 		}
+				
+		// Scrub all user-exposed String fields of Unicode control stuff   
+		this.documentTitle = Utilities.scrubControl(this.documentTitle, "");
+		this.documentAbstract = Utilities.scrubControl(this.documentAbstract, " ");
+		this.documentKeywords = Utilities.scrubControl(this.documentKeywords, " ");
+		this.publishedMaterial = Utilities.scrubControl(this.publishedMaterial, " ");
 		
 		// Scrub all user-exposed String fields of Unicode control stuff   
 		this.documentTitle = Utilities.scrubControl(this.documentTitle, "");
@@ -364,6 +375,25 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 				generateChangeLog("Student birth year", null,false);
 			else
 				generateChangeLog("Student birth year", String.valueOf(year),false);
+		}
+	}
+	
+	@Override
+	public String getOrcid() {
+		return orcid;
+	}
+
+	@Override
+	public void setOrcid(String orcidString) {
+		
+		assertReviewerOrOwner(submitter);
+
+		if (orcidString != null && orcidString.trim().length() == 0)
+			orcidString = null;
+		
+		if (!equals(this.orcid,orcidString)) {
+			this.orcid = orcidString;
+			generateChangeLog("Student's ORCID identifier", orcidString, false);
 		}
 	}
 	

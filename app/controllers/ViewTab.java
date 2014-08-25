@@ -21,6 +21,7 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import org.apache.commons.io.FilenameUtils;
+import org.tdl.vireo.constant.AppConfig;
 import org.tdl.vireo.email.EmailService;
 import org.tdl.vireo.email.VireoEmail;
 import org.tdl.vireo.export.DepositService;
@@ -37,6 +38,7 @@ import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.proquest.ProquestVocabularyRepository;
+import org.tdl.vireo.services.Utilities;
 import org.tdl.vireo.state.State;
 
 import play.Logger;
@@ -244,6 +246,23 @@ public class ViewTab extends AbstractVireoController {
 					submission.setStudentBirthYear(null);
 				}
 				currentValue = submission.getStudentBirthYear();
+				
+				//ORCID
+			} else if("orcid".equals(field)) {
+				
+				// Verify the ORCID id by pinging their API
+				boolean orcidVerify = true;
+				if (settingRepo.getConfigBoolean(AppConfig.ORCID_VALIDATION)) {
+					if (settingRepo.getConfigBoolean(AppConfig.ORCID_AUTHENTICATION))
+						orcidVerify = Utilities.verifyOrcid(value, submission.getStudentFirstName(), submission.getStudentLastName());
+					else
+						orcidVerify = Utilities.verifyOrcid(value);
+				}
+				if (!orcidVerify)
+					throw new RuntimeException("The provided ORCID could not be validated.");
+				
+				submission.setOrcid(value);
+				currentValue = submission.getOrcid();	
 
 				//Permanent Phone
 			} else if("permPhone".equals(field)){

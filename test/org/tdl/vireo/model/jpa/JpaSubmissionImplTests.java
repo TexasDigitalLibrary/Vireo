@@ -855,7 +855,7 @@ public class JpaSubmissionImplTests extends UnitTest {
 		// Commit and reopen a new transaction.
 		JPA.em().getTransaction().commit();
 		JPA.em().getTransaction().begin();
-	}
+	}	
 	
 	/**
 	 * Test that submission is scrubbed of control characters.

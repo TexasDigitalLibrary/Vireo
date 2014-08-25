@@ -75,6 +75,7 @@ public class ShibbolethAuthenticationMethodImpl extends
 	public String headerCurrentMajor = "SHIB_major";
 	public String headerCurrentGraduationYear = "SHIB_gradYear";
 	public String headerCurrentGraduationMonth = "SHIB_gradMonth";
+	public String headerOrcid = "SHIB_orcid";
 	
 	// Map of mock shibboleth attributes
 	public Map<String,String> mockAttributes = new HashMap<String,String>();
@@ -229,6 +230,7 @@ public class ShibbolethAuthenticationMethodImpl extends
 		headerCurrentMajor = attributeMap.get("currentMajor");
 		headerCurrentGraduationYear = attributeMap.get("currentGraduationYear");
 		headerCurrentGraduationMonth = attributeMap.get("currentGraduationMonth");
+		headerOrcid = attributeMap.get("orcid");
 	}
 
 	
@@ -439,6 +441,12 @@ public class ShibbolethAuthenticationMethodImpl extends
 					}
 				}
 			}
+			if (headerOrcid != null) {
+				String orcidString = getSingleAttribute(request, headerOrcid);
+				if (!isEmpty(orcidString) && person.getOrcid() == null)
+					person.setOrcid(orcidString);
+			}
+			
 			person.save();
 
 		} finally {

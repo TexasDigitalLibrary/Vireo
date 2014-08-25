@@ -278,6 +278,13 @@ jQuery(document).ready(function(){
 							class="empty"><i class="icon-pencil"></i> none
 						#{/else}
 					</span></li>
+					<li class="edit"><label>ORCID:</label><span id="orcid"
+						#{if submission.getOrcid()}
+							><i class="icon-pencil"></i> ${submission.getOrcid()}
+						#{/if}#{else}
+							class="empty"><i class="icon-pencil"></i> none
+						#{/else}
+					</span></li>
 					<li><label>Institutional ID:</label><span id="institutionalIdentifier"
                         #{if submission.getSubmitter().getInstitutionalIdentifier()}
                             ><i class="icon-none"></i>${submission.getSubmitter().getInstitutionalIdentifier()}

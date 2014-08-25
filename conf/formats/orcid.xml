@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+*{
+    This is the ORCID export format. It encompasses a submission's metadata in the ORCID schema 
+    according to the schema provided by their API. 
+    
+    http://support.orcid.org/knowledgebase/articles/177528-add-works-technical-developer
+
+    It is not very useful at the moment, since ORCID does not provide a non-API means of submitting
+    a work encoded in this format to their systems. As such, this is mostly laying down the frame-
+    work for future ORCID integration. 
+    
+    http://support.orcid.org/knowledgebase/articles/171893-tutorial-add-works-with-curl
+}*
+<orcid-message xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="https://raw.github.com/ORCID/ORCID-Source/master/orcid-model/src/main/resources/orcid-message-1.1.xsd"
+	xmlns="http://www.orcid.org/ns/orcid">
+	<message-version>1.1</message-version>
+	<orcid-profile>
+		<orcid-activities>
+			<orcid-works>
+				<orcid-work>
+					<!-- Title and subtitle split -->
+					<work-title>
+						#{if sub.getDocumentTitle() != null }
+						    %{
+						        def title = sub.getDocumentTitle();
+						        def subTitle = null;
+						        if (title.lastIndexOf(":") > 0)
+						            subTitle = title.substring(title.lastIndexOf(":"),title.length());
+						    }%
+						    <title>${ title?.escapeXml()?.raw() }</title>
+							#{if subTitle != null }
+							    <subtitle>${subTitle}</subTitle>
+							#{/if}
+					    #{/if} 
+					</work-title>
+					
+					<!-- Technically other things can go here as well (since a work can be many things), 
+						but in our case it's the abstract  -->
+					#{if sub.getDocumentAbstract() != null }
+					<short-description>${ sub.getDocumentAbstract()?.escapeXml()?.raw() }</short-description>
+					#{/if}
+					
+					<!-- ORCID requires a proper formatted citation be included with a work. Going with 
+						Chicago formatting, because they have an example. -->
+					<work-citation>
+						<work-citation-type>formatted-chicago</work-citation-type>
+						<citation>${
+							sub.getStudentLastName()?.escapeXml()?.raw() }, ${sub.getStudentFirstName()?.escapeXml()?.raw() }. "${ 
+							sub.getDocumentTitle()?.escapeXml()?.raw() }." ${
+							sub.getDegreeLevel().toString()?.escapeXml()?.raw() } ${
+							sub.getDocumentType()?.escapeXml()?.raw() }., Texas A&amp;M University, ${ 
+							sub.getGraduationYear() }.</citation>
+					</work-citation>
+						
+					<!-- ORCID types Dissertation and Thesis neatly map to our own  -->
+					<work-type>${ sub.getDocumentType()?.escapeXml()?.raw() }</work-type>
+					
+					<!-- ORCID only wants year and month -->
+					#{if sub.getGraduationYear() != null }				
+					<publication-date>
+						<year>${ sub.getGraduationYear() }</year>
+						#{if sub.getGraduationMonth() != null }
+						<month>${ sub.getGraduationMonth() + 1 }</month>
+						#{/if}
+					</publication-date>
+					#{/if}
+					
+					<!--  As of now, ORCID does not directly support CNRI handles for some reason  -->
+					#{if sub.getDepositId() != null } 
+					<work-external-identifiers>
+						<work-external-identifier>
+							<work-external-identifier-type>other-id</work-external-identifier-type>
+							<work-external-identifier-id>${ sub.getDepositId()?.escapeXml()?.raw() }</work-external-identifier-id>
+						</work-external-identifier>
+					</work-external-identifiers>
+					<url>${ sub.getDepositId()?.escapeXml()?.raw() }</url>
+					#{/if}
+
+					<!-- The author is included first. The committee chair is also included here. Weirdly,
+						ORCID doesn't seem to have a type for committee member, so I omitted them. -->
+					<work-contributors>
+						<contributor>
+							<credit-name>${sub.getStudentLastName()?.escapeXml()?.raw() }, ${sub.getStudentFirstName()?.escapeXml()?.raw() }</credit-name>
+							<contributor-attributes>
+								<contributor-orcid>${sub.getOrcid()?.escapeXml()?.raw() }</contributor-orcid>
+								<contributor-email>${sub.getSubmitter()?.getEmail()?.escapeXml()?.raw() }</contributor-email>
+								<contributor-sequence>first</contributor-sequence>
+								<contributor-role>author</contributor-role>
+							</contributor-attributes>
+						</contributor>
+						#{list items:sub.getCommitteeMembers(), as:'member'}
+						#{if member.hasRole("Chair","Co-Chair","Supervisor","Co-Supervisor","Advisor") }
+						<contributor>
+							<credit-name>${ member.getLastName()?.escapeXml()?.raw() }, ${ member.getFirstName()?.escapeXml()?.raw() }</credit-name>
+							<contributor-attributes>
+								<contributor-sequence>additional</contributor-sequence>
+								<contributor-role>chair-or-translator</contributor-role>
+							</contributor-attributes>
+						</contributor>
+						#{/if}
+						#{/list}
+					</work-contributors>
+					<language-code>
+						#{if sub.getDocumentLanguage() != null }
+							${ sub.getDocumentLanguage() }
+						#{/if}
+						#{else}
+							en
+						#{/else}
+					</language-code>
+					<country>
+						#{if sub.getDocumentLanguageLocale() != null }
+							${ sub.getDocumentLanguageLocale() }
+						#{/if}
+						#{else}
+							US
+						#{/else}
+					</country>
+						
+				</orcid-work>
+			</orcid-works>
+		</orcid-activities>
+	</orcid-profile>
+</orcid-message>

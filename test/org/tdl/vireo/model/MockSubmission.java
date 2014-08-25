@@ -27,6 +27,7 @@ public class MockSubmission extends AbstractMock implements Submission {
 	public String studentFirstName;
 	public String studentLastName;
 	public String studentMiddleName;
+	public String orcid;
 	public Integer studentBirthYear;
 	public String documentTitle;
 	public String documentAbstract;
@@ -132,6 +133,15 @@ public class MockSubmission extends AbstractMock implements Submission {
 	@Override
 	public void setStudentBirthYear(Integer year) {
 		this.studentBirthYear = year;
+	}
+	
+	@Override
+	public String getOrcid() {
+		return orcid;
+	}
+
+	public void setOrcid(String orcidString) {
+		this.orcid = orcidString;
 	}
 
 	@Override

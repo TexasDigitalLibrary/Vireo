@@ -41,6 +41,13 @@
                     <dim:field mdschema="dc" element="creator">
                         ${ sub.getStudentFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH)?.escapeXml()?.raw() }
                     </dim:field>
+                    
+                    <!--  dc.creator.orcid = Student ORCID -->
+                    #{if sub.getOrcid() != null }
+                    <dim:field mdschema="dc" element="creator" qualifier="orcid">
+                    	${ sub.getOrcid()?.raw() }
+                    </dim:field>
+                    #{/if}
 
                     <!-- dc.title = Document Title -->
                     #{if sub.getDocumentTitle() != null } 

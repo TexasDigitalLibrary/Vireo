@@ -88,7 +88,7 @@ jQuery(document).ready(function() {
   <form action="@{submit.PersonalInfo.personalInfo(subId)}" method="post" class="form-horizontal">
     <input type="hidden" name="step" value="personalInfo"/>
 	
-	#{ifEnabled [STUDENT_FIRST_NAME,STUDENT_MIDDLE_NAME,STUDENT_LAST_NAME,STUDENT_EMAIL,STUDENT_BIRTH_YEAR] }
+	#{ifEnabled [STUDENT_FIRST_NAME,STUDENT_MIDDLE_NAME,STUDENT_LAST_NAME,STUDENT_ORCID,STUDENT_EMAIL,STUDENT_BIRTH_YEAR] }
     <fieldset>
         <legend>Personal Information</legend>
         #{ifEnabled STUDENT_FIRST_NAME }
@@ -138,6 +138,20 @@ jQuery(document).ready(function() {
             <label class="control-label" for="email"><span class="required-star">*</span> #{fieldLabel STUDENT_EMAIL /}:</label>
             <div class="controls">
                 <p>${submitter.getEmail()}</p>
+            </div>
+        </div>
+        #{/ifEnabled}
+        #{ifEnabled STUDENT_ORCID }
+        <div class="control-group #{errorClass 'orcid' /} #{fieldClass STUDENT_ORCID /}">
+            <label class="control-label" for="orcid"><span class="required-star">*</span> #{fieldLabel STUDENT_ORCID /}:</label>
+            <div class="controls">
+                #{if disabledFields.contains("orcid")}
+                <p>${orcid}</p>
+                #{/if} 
+                #{else}
+                <input type="text" class="span3" name="orcid" value="${orcid}">
+                <p><small>#{fieldHelp STUDENT_ORCID /}</small></p>
+                #{/else}
             </div>
         </div>
         #{/ifEnabled}

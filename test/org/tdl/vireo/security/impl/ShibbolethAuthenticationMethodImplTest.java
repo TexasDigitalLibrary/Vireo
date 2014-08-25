@@ -65,6 +65,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 	public String originalHeaderCurrentMajor;
 	public String originalHeaderCurrentGraduationYear;
 	public String originalHeaderCurrentGraduationMonth;
+	public String originalHeaderOrcid;
 	public Map<String,String> originalMockAttributes;
 	
 	/**
@@ -107,6 +108,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		originalHeaderCurrentMajor = method.headerCurrentMajor;
 		originalHeaderCurrentGraduationYear = method.headerCurrentGraduationYear;
 		originalHeaderCurrentGraduationMonth = method.headerCurrentGraduationMonth;
+		originalHeaderOrcid = method.headerOrcid;
 		originalMockAttributes = method.mockAttributes;
 		
 		// Set the method's state to what the test expect.
@@ -130,6 +132,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		method.headerCurrentMajor = "SHIB_major";
 		method.headerCurrentGraduationYear = "SHIB_gradYear";
 		method.headerCurrentGraduationMonth = "SHIB_gradMonth";
+		method.headerOrcid = "SHIB_orcid";
 		
 	}
 	
@@ -168,6 +171,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		method.headerCurrentMajor = originalHeaderCurrentMajor;
 		method.headerCurrentGraduationYear = originalHeaderCurrentGraduationYear;
 		method.headerCurrentGraduationMonth = originalHeaderCurrentGraduationMonth;
+		method.headerOrcid = originalHeaderOrcid;
 		method.mockAttributes = originalMockAttributes;
 
 		context.turnOffAuthorization();
@@ -211,6 +215,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		headers.put("SHIB_major","major");
 		headers.put("SHIB_gradYear","2012");
 		headers.put("SHIB_gradMonth","05");
+		headers.put("SHIB_orcid","1234-1234-1234-1234");
 
 		Request request = buildRequest(headers);
 		
@@ -240,6 +245,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		assertEquals("major",person1.getCurrentMajor());
 		assertEquals(Integer.valueOf(2012),person1.getCurrentGraduationYear());
 		assertEquals(Integer.valueOf(05), person1.getCurrentGraduationMonth());
+		assertEquals("1234-1234-1234-1234", person1.getOrcid());
 	}
 	
 	/**
@@ -271,6 +277,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		mockAttributes.put("SHIB_major","major");
 		mockAttributes.put("SHIB_gradYear","2012");
 		mockAttributes.put("SHIB_gradMonth","05");
+		mockAttributes.put("SHIB_orcid","1234-1234-1234-1234");
 		method.setMockAttributes(mockAttributes);
 		
 		Request request = buildRequest(new HashMap<String,String>());
@@ -302,6 +309,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		assertEquals("major",person1.getCurrentMajor());
 		assertEquals(Integer.valueOf(2012),person1.getCurrentGraduationYear());
 		assertEquals(Integer.valueOf(05), person1.getCurrentGraduationMonth());
+		assertEquals("1234-1234-1234-1234", person1.getOrcid());
 	}
 	
 	/**
@@ -332,6 +340,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		person1.setCurrentMajor("original");
 		person1.setCurrentGraduationYear(2010);
 		person1.setCurrentGraduationMonth(4);
+		person1.setOrcid("original");
 		person1.addAffiliation("one");
 		context.restoreAuthorization();
 		
@@ -357,6 +366,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		headers.put("SHIB_major","major");
 		headers.put("SHIB_gradYear","2012");
 		headers.put("SHIB_gradMonth","05");
+		headers.put("SHIB_orcid","1234-1234-1234-1234");
 
 		Request request = buildRequest(headers);
 		
@@ -388,6 +398,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		assertEquals("original",person1.getCurrentMajor());
 		assertEquals(Integer.valueOf(2010),person1.getCurrentGraduationYear());
 		assertEquals(Integer.valueOf(04), person1.getCurrentGraduationMonth());
+		assertEquals("original",person1.getOrcid());
 	}
 	
 	/**
