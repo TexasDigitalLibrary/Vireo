@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import org.hibernate.HibernateException;
-import org.hibernate.engine.SessionImplementor;
+import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.type.StringType;
 import org.hibernate.usertype.UserType;
 
@@ -27,6 +27,7 @@ import play.libs.IO;
  * 
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
+ * @author Gad Krumholz
  * 
  */
 public class HashedBlob implements BinaryField, UserType {
@@ -128,20 +129,22 @@ public class HashedBlob implements BinaryField, UserType {
         return o.hashCode();
     }
 
-    public Object nullSafeGet(ResultSet resultSet, String[] names, Object o) throws HibernateException, SQLException {
-       	String val = (String) StringType.INSTANCE.get(resultSet, names[0]);
+    @Override
+    public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException {
+        String val = (String) StringType.INSTANCE.get(rs, names[0], session);
 
         if(val == null || val.length() == 0 || !val.contains("|")) {
             return new HashedBlob();
         }
         return new HashedBlob(val.split("[|]")[0], val.split("[|]")[1]);
     }
-
-    public void nullSafeSet(PreparedStatement ps, Object o, int i) throws HibernateException, SQLException {
-         if(o != null) {
-            ps.setString(i, ((HashedBlob)o).UUID + "|" + ((HashedBlob)o).type);
+    
+    @Override
+    public void nullSafeSet(PreparedStatement st, Object value, int index, SessionImplementor session) throws HibernateException, SQLException {
+        if(value != null) {
+            st.setString(index, ((HashedBlob)value).UUID + "|" + ((HashedBlob)value).type);
         } else {
-            ps.setNull(i, Types.VARCHAR);
+            st.setNull(index, Types.VARCHAR);
         }
     }
 
