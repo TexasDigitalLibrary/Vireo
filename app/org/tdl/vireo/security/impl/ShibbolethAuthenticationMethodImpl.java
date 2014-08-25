@@ -31,8 +31,15 @@ public class ShibbolethAuthenticationMethodImpl extends
 
 	/* Injected configuration */
 	
-	// Weather shibboleth will be mocked or real.
-	public boolean mock = (Play.mode == Mode.DEV);
+	// Whether shibboleth will be mocked or real.
+	// In order to remotely debug, Play must be in dev mode.
+	// Therefore, if we want to debug shibboleth authentication, 
+	// we will need another configuration setting to separate mode from mock.
+	public String mockShib = Play.configuration.getProperty("auth.shib.mock");
+	public boolean mock = false;
+	
+	// flag to allow logging Shibboleth, independent of other logging
+	public boolean logShib = Play.configuration.getProperty("auth.shib.log").equals("true");
 	
 	// The location to start a shibboleth session.
 	public String loginURL = "/Shibboleth.sso/Login?target=%1s";
@@ -121,6 +128,12 @@ public class ShibbolethAuthenticationMethodImpl extends
 	 *            actualy running behind a shibboleth.
 	 */
 	public void setMock(boolean mock) {
+		if (null != mockShib) {
+			mock = mockShib.equals("true");
+		} else {
+			// if our dedicated property is not set, use mode as we did previously
+			mock = (Play.mode == Mode.DEV);
+		}
 		this.mock = mock;
 	}
 	
@@ -245,14 +258,35 @@ public class ShibbolethAuthenticationMethodImpl extends
 	public AuthenticationResult authenticate(Request request) {
 		
 		// 1. Log all headers received, if tracing (it fills up the logs fast!)
-		if (Logger.isTraceEnabled()) {
+		if (Logger.isTraceEnabled() || logShib) {
 			String log = "Shib: Recieved the following headers: \n";
 			for (String name : request.headers.keySet()) {
 				for (String value : request.headers.get(name).values) {
 					log += "    '" + name + "' = '" + value + "'\n";
 				}
 			}
-			Logger.trace(log);
+
+			// save configured level
+	        String configuredLogLevel = Play.configuration.getProperty("application.log", "");
+	        //only override log-level if:
+			// 1) Logger is not already at TRACE level
+			// 2) Logger was not configured manually
+			// and
+			// 3) we can put it back
+	        if(!Logger.isTraceEnabled() && !Logger.configuredManually && !configuredLogLevel.isEmpty()) {
+	            Logger.setUp("TRACE");
+	        }
+	        else {
+	        	configuredLogLevel = "";
+	        }
+			if (Logger.isTraceEnabled()) {
+				Logger.trace(log);
+			}
+	        // if we overrode the log-level, put it back
+	        if(!configuredLogLevel.isEmpty()) {
+				// restore configured level
+	            Logger.setUp(configuredLogLevel);
+	        }
 		}
 
 		// 2. Get required attributes.
