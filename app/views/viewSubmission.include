@@ -62,7 +62,7 @@ Plus all the FieldConfig objects
 <div class="control-group #{errorClass 'permEmail' /} ">
     <label class="control-label">#{fieldLabel PERMANENT_EMAIL_ADDRESS /}:</label>
     <div class="controls">
-        <p><a href="mailto:${submitter?.getPermanentEmailAddress()}">${submitter?.getPermanentEmailAddress()}</a></p>
+        <p>${submitter?.getPermanentEmailAddress() != null ? submitter?.getPermanentEmailAddress().length() > 0 ? "<a href='mailto:${submitter?.getPermanentEmailAddress()}'>${submitter?.getPermanentEmailAddress()}</a>" : "" : ""}</p>
     </div>
 </div>
 #{/ifEnabled}
@@ -252,7 +252,7 @@ Plus all the FieldConfig objects
 <div class="control-group #{errorClass 'chairEmail' /} ">
     <label class="control-label">#{fieldLabel COMMITTEE_CONTACT_EMAIL /}:</label>
     <div class="controls">
-        <p><a href="mailto:${sub.getCommitteeContactEmail()}">${sub.getCommitteeContactEmail()}</a></p>
+        <p>${sub.getCommitteeContactEmail() != null ? sub.getCommitteeContactEmail().length() > 0 ? "<a href='mailto:${sub.getCommitteeContactEmail()}'>${sub.getCommitteeContactEmail()}</a>" : "" : ""}</p>
     </div>
 </div>
 #{/ifEnabled}

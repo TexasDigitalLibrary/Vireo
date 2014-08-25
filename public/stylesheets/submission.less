@@ -14,7 +14,7 @@ html {
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#1b333f', endColorstr='#43606e');
 	height: 100%;
 	background-repeat: no-repeat;
-    background-attachment: fixed;
+       background-attachment: fixed;
 }
 
 body {
@@ -54,6 +54,10 @@ legend{
 	padding:0 0 0 20px;
 	border:none;
 	margin:0;
+}
+
+legend.strong {
+       font-weight: bold;
 }
 
 fieldset{
@@ -148,6 +152,7 @@ SPECIFIC OVERIDES
 #footer a, #footer a:hover{
 	text-decoration:underline;
 	color:@white;
+       background-color:@bodyGradientEnd;
 }
 
 .pageHead h3{
@@ -218,58 +223,6 @@ SUBMIT STEP BUTTONS
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#a6a18c', endColorstr='#c7c2a9');
 }
 
-#step1Btn a{
-	background:url("../images/step1_off.png") no-repeat scroll 0 0 transparent;
-}
-
-#step2Btn a{
-	background:url("../images/step2_off.png") no-repeat scroll 0 0 transparent;
-}
-
-#step3Btn a{
-	background:url("../images/step3_off.png") no-repeat scroll 0 0 transparent;	
-}
-
-#step4Btn a{
-	background:url("../images/step4_off.png") no-repeat scroll 0 0 transparent;	
-}
-
-#step5Btn a{
-	background:url("../images/step5_off.png") no-repeat scroll 0 0 transparent;	
-}
-
-#step1Btn a.current, #step1Btn a:hover{
-	background:url("../images/step1_on.png") no-repeat scroll 0 0 transparent;
-	/**IE6 Hack*/
-	_background:url("../images/step1_off.png") no-repeat scroll 0 0 transparent;
-}
-
-#step2Btn a.current, #step2Btn a:hover{
-	background:url("../images/step2_on.png") no-repeat scroll 0 0 transparent;
-	/**IE6 Hack*/
-	_background:url("../images/step2_off.png") no-repeat scroll 0 0 transparent;	
-}
-
-#step3Btn a.current, #step3Btn a:hover{
-	background:url("../images/step3_on.png") no-repeat scroll 0 0 transparent;
-	/**IE6 Hack*/
-	_background:url("../images/step3_off.png") no-repeat scroll 0 0 transparent;	
-}
-
-#step4Btn a.current, #step4Btn a:hover{
-	background:url("../images/step4_on.png") no-repeat scroll 0 0 transparent;
-	/**IE6 Hack*/
-	_background:url("../images/step4_off.png") no-repeat scroll 0 0 transparent;	
-}
-
-#step5Btn a.current, #step5Btn a:hover{
-	background:url("../images/step5_on.png") no-repeat scroll 0 0 transparent;
-	/**IE6 Hack*/
-	_background:url("../images/step5_off.png") no-repeat scroll 0 0 transparent;	
-}
-
-
-
 #submitSteps li.current, #submitSteps li:hover{
 	background: #1B333F; /* Old browsers */
 	background: -moz-linear-gradient(top,  #1B333F 0%, #43606E 50%, #1B333F 100%); /* FF3.6+ */
@@ -334,7 +287,6 @@ textarea#publishedMaterial {
 textarea.address.placeholder {
 	color: #999999;
 }
-
 
 /********************
 STUDENT VIEWS
@@ -409,3 +361,15 @@ System Control Panel
     background-color: #FFFFFF;
 }
 
+/********************
+jQuery UI Overrides
+********************/
+
+button.ui-multiselect.ui-widget.ui-state-default.ui-corner-all span i {
+    color: #333;
+}
+
+button.ui-multiselect.ui-widget.ui-state-default.ui-corner-all {
+    background: #FFF;
+    background-color: #FFF;
+}

@@ -1,11 +1,17 @@
 #{extends 'Submit/submitStep.html' /}
-#{set title:'Confirm & Submit' /}
+#{set title:'Vireo Thesis and Dissertaion Submital System - Submission - Confirm & Submit' /}
 
 <br />
 <div class="row pageHead">
 	<h3 class="span11">Confirm & Submit</h3>
 </div>
 <br />
+<div class="row">
+       <div class="span11">
+               <h4>Instructions:</h4>
+               <p>Please verify all the information displayed below before proceeding. Once you click the button to approve this document, you cannot make any more changes to the form's data without contacting your local thesis office.</p> 
+       </div>
+</div>
 
 #{ifErrors}
 <ul class="red">
@@ -73,7 +79,12 @@
 	#{/ifEnabled}
 	
 	<legend>Final Submission</legend>
-	<p>Please verify all the information displayed below before proceeding. Once you click the button to approve this document, you cannot make any more changes to the form's data without contacting your local thesis office.</p>
+	<div class="row">
+		<div class="span11">
+			<h4>Warning:</h4>
+			<p>After pressing "Confirm and Submit" you cannot make any more changes to the form's data without contacting your local thesis office.</p>
+		</div>
+	</div>
 	<div class="span11 center"><input type="submit" name="submit_confirm" value="Confirm and Submit" class="btn btn-primary #{ifErrors} disabled #{/ifErrors}"/></div>
 	
 </form>

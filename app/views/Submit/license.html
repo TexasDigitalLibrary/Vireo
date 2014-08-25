@@ -1,5 +1,5 @@
 #{extends 'Submit/submitStep.html' /}
-#{set title:'License' /}
+#{set title:'Vireo Thesis and Dissertaion Submital System - Submission - License Agreement' /}
 
 <br />
 <div class="row pageHead">
@@ -33,11 +33,11 @@
 		<div class="well">#{verbatim}${licenseText}#{/verbatim}</div>
 		
 		<div class="row center">
-			<fieldset style="margin:0 0 10px;">
+			<div style="margin:0 0 10px;">
 				<label id="lalabel" class="checkbox #{if errors.forKey('licenseAgreement')}red#{/if}">
 		            <input id="licenseAgreement" type="checkbox" name="licenseAgreement" ${ licenseAgreement != null ? "checked='true'" : "" }/> #{fieldHelp LICENSE_AGREEMENT /}
 				</label>
-			</fieldset>
+			</div>
 		</div>
 		#{/ifEnabled}
 		
@@ -53,11 +53,9 @@
 		<div class="well">#{verbatim}${proquestText}#{/verbatim}</div>
 		
 		<div class="row center">
-			<fieldset style="margin:0 0 10px;">
-				<label id="palabel" class="checkbox #{if errors.forKey('proquestAgreement')}red#{/if}">
-		            <input id="proquestAgreement" type="checkbox" name="proquestAgreement" ${ proquestAgreement != null ? "checked='true'" : "" }/> #{fieldHelp UMI_RELEASE /}
-				</label>
-			</fieldset>	
+			<label id="palabel" class="checkbox #{if errors.forKey('proquestAgreement')}red#{/if}">
+				<input id="proquestAgreement" type="checkbox" name="proquestAgreement" ${ proquestAgreement != null ? "checked='true'" : "" }/> #{fieldHelp UMI_RELEASE /}
+			</label>
 		</div>	
 	    #{/ifEnabled}
 		

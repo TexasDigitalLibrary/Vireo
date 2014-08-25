@@ -31,12 +31,20 @@ jQuery(document).ready(function() {
 <br/>
 #{if sub.getState().isEditableByStudent() }
 	<div class="alert alert-error">
-		<p><strong>${sub.getState().getDisplayName()}</strong>!</p>
+		<p><strong><h4>Current Submission State: </h4>${sub.getState().getDisplayName()}!</strong></p>
 		<p>The application requires you to make corrections. Please make the indicated corrections and upload the
 		 new manuscript. After clicking the "Completing Corrections" button at the bottom of the page you will no
 		 longer be able to edit the application.</p>
 	</div>
 #{/if}
+#{else}
+	<div class="row">
+		<div class="alert">
+			<p><strong><h4>Current Submission State:</h4> ${sub.getState().getDisplayName()}</strong></p>
+			<p>Your Submission cannot be changed at this time.</p>
+		</div>
+	</div>
+#{/else}
 #{ifErrors}
 <br/>
 <ul class="red">
@@ -127,9 +135,9 @@ jQuery(document).ready(function() {
 	<br/>
 	<br/>
 	<div class="control-group">
-        <label class="control-label"><b>Upload additional files:</b></label>
+        <label for="documentType" class="control-label"><b>Document type:</b></label>
         <div class="controls">
-        	<select id="attachmentType" class="input-select" name="attachmentType" style="margin-bottom:7px;">
+		<select id="documentType" class="input-select" name="attachmentType" style="margin-bottom:7px;">
             	<option value="">choose type...</option>
             	#{ifEnabled SUPPLEMENTAL_ATTACHMENT}
                	<option value="SUPPLEMENTAL">#{fieldLabel SUPPLEMENTAL_ATTACHMENT /}</option>
@@ -141,10 +149,12 @@ jQuery(document).ready(function() {
                	<option value="ADMINISTRATIVE">#{fieldLabel ADMINISTRATIVE_ATTACHMENT /}</option>
                	#{/ifEnabled}
             </select>
-            <br />
-        	<input type="file" id="additionalFile" class="input-file" name="additionalDocument"><br/>
-            <input type="submit" value="Upload" class="uploadBtn btn" name="uploadAdditional">
         </div>
+		<label class="control-label" for="additionalFile"><span class="required-star">*</span>Browse for Additional Document:</label>
+			<div class="controls">
+				<input type="file" id="additionalFile" class="input-file" name="additionalDocument"><br/>
+				<input type="submit" value="Upload" class="uploadBtn btn" name="uploadAdditional">
+			</div>
     </div>
     #{/if}
     #{/ifEnabled}
@@ -167,12 +177,12 @@ jQuery(document).ready(function() {
     
 	<legend>Application Activity</legend>
 	<div id="student-log-view">
-	<table class="span10 table table-striped table-bordered table-condensed">
+	<table role="presentation" class="span10 table table-striped table-bordered table-condensed">
 		<thead>
 			<tr>
-				<td>Name</td>
-				<td>Action</td>
-				<td>Time</td>
+				<th>Name</th>
+				<th>Action</th>
+				<th>Time</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -191,9 +201,9 @@ jQuery(document).ready(function() {
 
 	<legend>Leave a message</legend>
 	<div class="control-group">
-		<label class="control-label"><b>Message:</b></label>
+		<label for="studentMessage" class="control-label"><b>Message:</b></label>
 		<div class="controls">
-			<textarea class="span6" style="height:200px;" name="studentMessage"></textarea>
+			<textarea id="studentMessage" class="span6" style="height:200px;" name="studentMessage"></textarea>
             <input class="btn" id="addmsg" name="submit_addMessage" type="submit" value="Add Message" />
             <br/>
 		</div>

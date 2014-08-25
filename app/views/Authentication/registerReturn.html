@@ -1,5 +1,5 @@
 #{extends 'main.html' /}
-#{set title:"New User Registration" /}
+#{set title:"Vireo Thesis and Dissertaion Submital System - New User Registration" /}
 
 <div class="row pageHead">
 <h3>New User Registration</h3>
@@ -7,7 +7,8 @@
 
 <div class="row">
 <div class="span7">
-<p>Your email address has been verified. Please the provide required information to complete your account registration.</p>
+	<h4>Instructions:</h4>
+	<p>Your email address has been verified. Please the provide required information to complete your account registration.</p>
 </div>
 </div>
 
@@ -28,6 +29,7 @@
 <input type="hidden" name="token" value="${token}"/>
 
 <fieldset>
+		<legend>Personal Information:</legend>
         <div class="control-group">
             <label class="control-label" for="email"><b>Email Address:</b></label>
             <div class="controls">
@@ -37,25 +39,25 @@
         <div class="control-group #{ifError 'firstName'}error#{/ifError}">
             <label class="control-label" for="firstName"><b>First Name:</b></label>
             <div class="controls">
-                <input type="text" name="firstName" value="${firstName}" />
+                <input type="text" id="firstName" name="firstName" value="${firstName}" />
             </div>
         </div>
         <div class="control-group #{ifError 'lastName'}error#{/ifError}">
             <label class="control-label" for="lastName"><b>Last Name:</b></label>
             <div class="controls">
-                <input type="text" name="lastName" value="${lastName}" />
+                <input type="text" id="lastName" name="lastName" value="${lastName}" />
             </div>
         </div>
         <div class="control-group #{ifError 'password1'}error#{/ifError}">
             <label class="control-label" for="password1"><b>Password:</b></label>
             <div class="controls">
-                <input type="password" name="password1" value="${password1}" />
+                <input type="password" id="password1" name="password1" value="${password1}" />
             </div>
         </div>
         <div class="control-group #{ifError 'password2'}error#{/ifError}">
             <label class="control-label" for="password2"><b>Verify Password:</b></label>
             <div class="controls">
-                <input type="password" name="password2" value="${password2}" />
+                <input type="password" id="password2" name="password2" value="${password2}" />
             </div>
         </div>
         <div class="form-actions">

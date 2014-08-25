@@ -1,4 +1,5 @@
-#{extends 'main.html' /} #{set title:"New User Registration" /}
+#{extends 'main.html' /}
+#{set title:"Vireo Thesis and Dissertaion Submital System - New User Registration" /}
 
 <div class="row pageHead">
 	<h3>New User Registration</h3>
@@ -7,6 +8,7 @@
 
 <div class="row">
 	<div class="span7">
+		<h4>Instructions:</h4>
 		<p>Begin by providing your email address. We will then send you an
 		   email with a special token, click on the token to come back to Vireo
 		   where you will be able to complete your account registration.</p>
@@ -28,16 +30,14 @@
 
 
 <form action="@{Authentication.register()}" method="POST" class="form-horizontal">
-<fieldset>
 	<div class="control-group #{ifError 'email'}error#{/ifError}">
 		<label class="control-label" for="email"><b>Email Address</b></label>
 		<div class="controls">
-			<input type="text" name="email" value="${email}" />
+			<input type="text" id="email" name="email" value="${email}" />
 		</div>
 	</div>
 	<div class="form-actions">
 		<input type="submit" class="btn btn-primary" name="submit_register" value="Register" />
 		<input type="submit" class="btn" name="submit_cancel" value="Cancel" />		
 	</div>
-</fieldset>
 </form>

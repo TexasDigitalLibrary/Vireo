@@ -10,11 +10,36 @@
     #{/else}
     
     <ul id="submitSteps" class="unstyled span11">
-        <li id="step1Btn" ${"personalInfo".equals(request.actionMethod) ? "class='current'" : ""}><a href="@{submit.PersonalInfo.personalInfo(subId)}" ${"personalInfo".equals(request.actionMethod) ? "class='current'" : ""}></a></li>
-        <li id="step2Btn" ${"license".equals(request.actionMethod) ? "class='current'" : ""}><a href="@{submit.License.license(subId)}" ${"license".equals(request.actionMethod) ? "class='current'" : ""}></a></li>
-        <li id="step3Btn" ${"documentInfo".equals(request.actionMethod) ? "class='current'" : ""}><a href="@{submit.DocumentInfo.documentInfo(subId)}" ${"documentInfo".equals(request.actionMethod) ? "class='current'" : ""}></a></li>
-        <li id="step4Btn" ${"fileUpload".equals(request.actionMethod) ? "class='current'" : ""}><a href="@{submit.FileUpload.fileUpload(subId)}" ${"fileUpload".equals(request.actionMethod) ? "class='current'" : ""}></a></li>
-        <li id="step5Btn" ${"confirm".equals(request.actionMethod) ? "class='current'" : ""}><a href="@{Submit.Confirm.confirm(subId)}" ${"confirm".equals(request.actionMethod) ? "class='current'" : ""}></a></li>
+		<li id="step1Btn" ${"personalInfo".equals(request.actionMethod) ? "class='current'" : ""}>
+				<a href="@{submit.PersonalInfo.personalInfo(subId)}" ${"personalInfo".equals(request.actionMethod) ? "class='current'" : ""}>
+				<img alt="Verify Your Information" id="step1BtnON" src="/public/images/step1_on.png" ${"personalInfo".equals(request.actionMethod) ? "style=\"display:block;\"".raw() : "style=\"display:none;\" onmouseout=\"this.style.display='none'; document.getElementById('step1BtnOFF').style.display='block';\"".raw()} />
+				<img alt="Verify Your Information" id="step1BtnOFF" src="/public/images/step1_off.png" ${"personalInfo".equals(request.actionMethod) ? "style=\"display:none;\"".raw() : "style=\"display:block;\" onmouseover=\"this.style.display='none'; document.getElementById('step1BtnON').style.display='block';\"".raw()} />
+			</a>
+		</li>
+		<li id="step2Btn" ${"license".equals(request.actionMethod) ? "class='current'" : ""}>
+				<a href="@{submit.License.license(subId)}" ${"license".equals(request.actionMethod) ? "class='current'" : ""}>
+				<img alt="License Agreement" id="step2BtnON" src="/public/images/step2_on.png" ${"license".equals(request.actionMethod) ? "style=\"display:block;\"".raw() : "style=\"display:none;\" onmouseout=\"this.style.display='none'; document.getElementById('step2BtnOFF').style.display='block';\"".raw()} />
+				<img alt="License Agreement" id="step2BtnOFF" src="/public/images/step2_off.png" ${"license".equals(request.actionMethod) ? "style=\"display:none;\"".raw() : "style=\"display:block;\" onmouseover=\"this.style.display='none'; document.getElementById('step2BtnON').style.display='block';\"".raw()} />
+			</a>
+		</li>
+		<li id="step3Btn" ${"documentInfo".equals(request.actionMethod) ? "class='current'" : ""}>
+				<a href="@{submit.DocumentInfo.documentInfo(subId)}" ${"documentInfo".equals(request.actionMethod) ? "class='current'" : ""}>
+				<img alt="Document Information" id="step3BtnON" src="/public/images/step3_on.png" ${"documentInfo".equals(request.actionMethod) ? "style=\"display:block;\"".raw() : "style=\"display:none;\" onmouseout=\"this.style.display='none'; document.getElementById('step3BtnOFF').style.display='block';\"".raw()} />
+				<img alt="Document Information" id="step3BtnOFF" src="/public/images/step3_off.png" ${"documentInfo".equals(request.actionMethod) ? "style=\"display:none;\"".raw() : "style=\"display:block;\" onmouseover=\"this.style.display='none'; document.getElementById('step3BtnON').style.display='block';\"".raw()} />
+			</a>
+		</li>
+		<li id="step4Btn" ${"fileUpload".equals(request.actionMethod) ? "class='current'" : ""}>
+				<a href="@{submit.FileUpload.fileUpload(subId)}" ${"fileUpload".equals(request.actionMethod) ? "class='current'" : ""}>
+				<img alt="Upload Your Files" id="step4BtnON" src="/public/images/step4_on.png" ${"fileUpload".equals(request.actionMethod) ? "style=\"display:block;\"".raw() : "style=\"display:none;\" onmouseout=\"this.style.display='none'; document.getElementById('step4BtnOFF').style.display='block';\"".raw()} />
+				<img alt="Upload Your Files" id="step4BtnOFF" src="/public/images/step4_off.png" ${"fileUpload".equals(request.actionMethod) ? "style=\"display:none;\"".raw() : "style=\"display:block;\" onmouseover=\"this.style.display='none'; document.getElementById('step4BtnON').style.display='block';\"".raw()} />
+			</a>
+		</li>
+		<li id="step5Btn" ${"confirm".equals(request.actionMethod) ? "class='current'" : ""}>
+				<a href="@{Submit.Confirm.confirm(subId)}" ${"confirm".equals(request.actionMethod) ? "class='current'" : ""}>
+				<img alt="Confirm & Submit" id="step5BtnON" src="/public/images/step5_on.png" ${"confirm".equals(request.actionMethod) ? "style=\"display:block;\"".raw() : "style=\"display:none;\" onmouseout=\"this.style.display='none'; document.getElementById('step5BtnOFF').style.display='block';\"".raw()} />
+				<img alt="Confirm & Submit" id="step5BtnOFF" src="/public/images/step5_off.png" ${"confirm".equals(request.actionMethod) ? "style=\"display:none;\"".raw() : "style=\"display:block;\" onmouseover=\"this.style.display='none'; document.getElementById('step5BtnON').style.display='block';\"".raw()} />
+			</a>
+		</li>
     </ul>
 </div>
 
