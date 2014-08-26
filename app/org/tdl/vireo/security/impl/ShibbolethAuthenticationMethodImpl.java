@@ -35,8 +35,7 @@ public class ShibbolethAuthenticationMethodImpl extends
 	// In order to remotely debug, Play must be in dev mode.
 	// Therefore, if we want to debug shibboleth authentication, 
 	// we will need another configuration setting to separate mode from mock.
-	public String mockShib = Play.configuration.getProperty("auth.shib.mock");
-	public boolean mock = false;
+	public boolean mock = (Play.configuration.getProperty("auth.shib.mock").equals("true") || Play.mode == Mode.DEV);
 	
 	// flag to allow logging Shibboleth, independent of other logging
 	public boolean logShib = Play.configuration.getProperty("auth.shib.log").equals("true");
@@ -129,12 +128,6 @@ public class ShibbolethAuthenticationMethodImpl extends
 	 *            actualy running behind a shibboleth.
 	 */
 	public void setMock(boolean mock) {
-		if (null != mockShib) {
-			mock = mockShib.equals("true");
-		} else {
-			// if our dedicated property is not set, use mode as we did previously
-			mock = (Play.mode == Mode.DEV);
-		}
 		this.mock = mock;
 	}
 	
@@ -262,10 +255,14 @@ public class ShibbolethAuthenticationMethodImpl extends
 		// 1. Log all headers received, if tracing (it fills up the logs fast!)
 		if (Logger.isTraceEnabled() || logShib) {
 			String log = "Shib: Recieved the following headers: \n";
-			for (String name : request.headers.keySet()) {
-				for (String value : request.headers.get(name).values) {
-					log += "    '" + name + "' = '" + value + "'\n";
+			if(request != null) {
+				for (String name : request.headers.keySet()) {
+					for (String value : request.headers.get(name).values) {
+						log += "    '" + name + "' = '" + value + "'\n";
+					}
 				}
+			} else {
+			    log += "NONE!";
 			}
 
 			// save configured level
