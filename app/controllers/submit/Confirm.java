@@ -119,9 +119,9 @@ public class Confirm extends AbstractSubmitStep {
 				
 				// After we have saved our state do we kick off the emails
 				if (studentEmail != null)
-					emailService.sendEmail(studentEmail, false);
+					emailService.sendEmail(studentEmail, true);
 				if (advisorEmail != null)
-					emailService.sendEmail(advisorEmail, false);
+					emailService.sendEmail(advisorEmail, true);
 			} finally {
 				context.restoreAuthorization();
 

@@ -101,6 +101,10 @@ public class ViewTab extends AbstractVireoController {
 		if(params.get("addActionLogComment")!=null)
 			addActionLogComment(submission);
 		
+		//Check for "Flag submission as "Needs Corrections""
+		if(params.get("status_change") != null)
+		    changeStatus(submission);
+
 		//Check for "Add File"
 		if(params.get("addFile")!=null)
 			addFile(submission);		
@@ -814,11 +818,6 @@ public class ViewTab extends AbstractVireoController {
 		}
 		
 		if(!validation.hasErrors()) {
-			if(params.get("status_change") != null) {
-				submission.setState(stateManager.getState("NeedsCorrection"));
-				submission.save();
-			}
-						
 			VireoEmail email = emailService.createEmail();
 			
 			// Run the parameters
@@ -837,10 +836,10 @@ public class ViewTab extends AbstractVireoController {
 			email.setFrom(context.getPerson());
 			email.setReplyTo(context.getPerson());
 						
-			if(params.get("email_student") != null && "public".equals(params.get("visibility"))) {	
+			if(params.get("email_student") != null && params.get("visibility").equals("public")) {
 				// Send the email and log it after completion
 				email.setLogOnCompletion(context.getPerson(), submission);
-				emailService.sendEmail(email,false);
+				emailService.sendEmail(email,true);
 			} else {
 				// Generate log.
 				subject = email.getSubject();
@@ -913,6 +912,19 @@ public class ViewTab extends AbstractVireoController {
 	}
 	
 	/**
+	 * The method to change the status of a submission to Needs Correction
+	 *
+	 * @param sub
+	 */
+	@Security(RoleType.REVIEWER)
+	private static void changeStatus(Submission sub){
+	    if(!validation.hasErrors()) {
+	        sub.setState(stateManager.getState("NeedsCorrection"));
+	        sub.save();
+	    }
+	}
+
+	/**
 	 * The method to add a file to the submission being viewed.
 	 * This checks the type of file being uploaded (note, primary, supplement)
 	 * and calls the appropriate private method.
@@ -963,15 +975,8 @@ public class ViewTab extends AbstractVireoController {
 			}			
 		}		
 
-		if(!validation.hasErrors()) {
-			if(params.get("status_change") != null)
-				sub.setState(stateManager.getState("NeedsCorrection"));
-						
-			sub.save();
-			
-			if (email != null)
-				emailService.sendEmail(email,false);
-		}
+		if(!validation.hasErrors() && email != null)
+				emailService.sendEmail(email,true);
 	}
 	
 	/**
@@ -1153,7 +1158,7 @@ public class ViewTab extends AbstractVireoController {
 		email.setFailureLogMessage("Failed to resend advisor request to "+advisorEmail);
 		
 		
-		emailService.sendEmail(email,false);
+		emailService.sendEmail(email,true);
 		
 		view();
 	}

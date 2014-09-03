@@ -454,7 +454,7 @@ public class Authentication extends AbstractVireoController {
 				vireoEmail.addParameter("REGISTRATION_URL", action.url + "?token="+token);
 				vireoEmail.addTo(email);
 				
-				emailService.sendEmail(vireoEmail,false);
+				emailService.sendEmail(vireoEmail,true);
 				
 				renderTemplate("Authentication/registerSent.html",email);
 			}
@@ -587,7 +587,7 @@ public class Authentication extends AbstractVireoController {
 				vireoEmail.addParameter("REGISTRATION_URL", action.url + "?token="+token);
 				vireoEmail.addTo(email);
 				
-				emailService.sendEmail(vireoEmail,false);
+				emailService.sendEmail(vireoEmail,true);
 				
 				renderTemplate("Authentication/recoverSent.html",email);
 			}
