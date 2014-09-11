@@ -30,7 +30,6 @@ function displaySortableItem(type, editable, $element, id, name, level) {
 		
 	if (
 	    type == "action" ||
-	    type == "college" ||
 	    type == "program" ||
 	    type == "department" ||
 	    type == "major" ||
@@ -44,6 +43,16 @@ function displaySortableItem(type, editable, $element, id, name, level) {
 			$element.replaceWith("<li id='" + id + "'><a class='"+type+"-editable' href='#'><em class='icon-pencil'></em> " + name + "</a></li>");
 		}
 	
+	} else if(
+		type == "college" 
+	) {
+
+		if (editable) {
+			$element.replaceWith("<li id='" + id + "'><span class='editing'><input type='text' value='"+name+"' placeholder='"+name+"'/><i class='icon-remove'></i><i class='icon-ok'></i></span></li>");
+		} else {
+			$element.replaceWith("<li id='" + id + "'><a class='"+type+"-editable' href='#'><em class='icon-pencil'></em> " + name + "</a></li>");
+		}
+
 	} else if (
 		type == "degree" ||
 		type == "documentType" ||
@@ -548,6 +557,9 @@ function saveAddActionHandler(type, jsonURL) {
 		data.name = jQuery("#add-"+type+"-name").val();
 		if (jQuery("#add-"+type+"-level").length > 0)
 			data.level = jQuery("#add-"+type+"-level").val();
+
+		if (jQuery("#add-"+type+"-emails").length > 0)
+			data.emails = jQuery("#add-"+type+"-emails").val();
 		
 		if (jQuery("#add-"+type+"-subject").length > 0)
 			data.subject = jQuery("#add-"+type+"-subject").val();
@@ -1285,6 +1297,72 @@ function embargoDurationToggleHandler() {
  * @returns A Callback function
  */
 function embargoOpenDialogHandler() {
+	return function () {
+
+		if (jQuery(this).closest("tr").length > 0) {
+			// Loading an existing type
+			var $row = jQuery(this).closest("tr"); 
+			jQuery("#embargoType-id").val($row.attr("id"));
+			jQuery("#embargoType-name").val(jQuery.trim($row.find(".embargoType-name-cell").text()));
+			jQuery("#embargoType-description").val(jQuery.trim($row.find(".embargoType-description-cell").text()));
+
+			if ($row.find(".embargoType-active-cell").text().indexOf("Yes") > -1)
+				jQuery("#embargoType-active").attr("checked","true");
+			else
+				jQuery("#embargoType-active").attr("checked");
+
+			if ($row.find(".embargoType-duration-cell").text().indexOf("Indefinite") > -1) {
+				jQuery("#timeframe-indeterminate").attr("checked","true");
+				jQuery("#embargoType-months").val("");
+				jQuery("#embargoType-months").attr("disabled","true");
+				jQuery("#duration-group").hide();
+			} else {
+				jQuery("#timeframe-determinate").attr("checked","true");
+				jQuery("#embargoType-months").val(jQuery.trim($row.find(".embargoType-duration-cell").text()));
+				jQuery("#embargoType-months").attr("disabled",null);
+				jQuery("#duration-group").show();
+			}
+			
+			jQuery("#embargo-type-modal .modal-header h3").text("Edit Embargo Type");
+			jQuery("#embargo-type-modal .modal-footer #embargoType-save").val("Save Embargo");
+			jQuery("#embargoType-remove").show();
+
+
+		} else {
+			// Adding a new embargo type
+			jQuery("#embargoType-id").val("");
+			jQuery("#embargoType-name").val("");
+			jQuery("#embargoType-description").val("");
+			jQuery("#embargoType-active").attr("checked","true");
+			jQuery("#timeframe-determinate").attr("checked","true");
+			jQuery("#embargoType-months").val("");
+			jQuery("#embargoType-months").attr("disabled",null);
+			jQuery("#duration-group").show();
+			
+			jQuery("#embargo-type-modal .modal-header h3").text("Add Embargo Type");
+			jQuery("#embargo-type-modal .modal-footer #embargoType-save").val("Add Embargo");
+			jQuery("#embargoType-remove").hide();
+
+		}
+
+		// Clear out any previous errors
+		jQuery("#embargoType-errors").html("");
+		jQuery("#embargo-type-modal .control-group").each(function () {
+			jQuery(this).removeClass("error"); 
+		});
+
+		jQuery('#embargo-type-modal').modal('show');
+
+	}
+}
+
+/**
+ * Open the embargo type dialog box. This will work for opening an existing
+ * embargo, or adding a new embargo.
+ * 
+ * @returns A Callback function
+ */
+function collegeEmailOpenDialogHandler() {
 	return function () {
 
 		if (jQuery(this).closest("tr").length > 0) {

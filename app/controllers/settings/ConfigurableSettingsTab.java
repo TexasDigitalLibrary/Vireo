@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.apache.commons.lang.LocaleUtils;
 
@@ -381,7 +382,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 	 *            The name of the new college
 	 */
 	@Security(RoleType.MANAGER)
-	public static void addCollegeJSON(String name) {
+	public static void addCollegeJSON(String name,String emails) {
 
 		try {
 			if (name == null || name.trim().length() == 0)
@@ -390,15 +391,38 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			// Add the new college to the end of the list.
 			List<College> colleges = settingRepo.findAllColleges();
 
-			College college = settingRepo.createCollege(name);
+			College college = null;
+			String jsonEmails = "";
+			if (emails != null) {
+				String[] newEmails = emails.split(",");
+				college = settingRepo.createCollege(name,Arrays.asList(newEmails));
+				jsonEmails = "[";
+				int i = 0;
+				for (Map.Entry<Integer, String> entry : college.getEmails().entrySet()) {
+					
+					Integer key = entry.getKey();
+				    String value = entry.getValue();
+				    jsonEmails += "{\"id\":" +key+ ",\"email\":\""+value+"\"}";
+				    
+				    i++;
+				
+				    if(i != college.getEmails().size()) jsonEmails += ",";
+				
+				}
+				jsonEmails += "]";
+			} else {
+				Logger.info("no");
+				college = settingRepo.createCollege(name);
+			}
 			colleges.add(college);
 
 			saveModelOrder(colleges);
 
 			name = escapeJavaScript(college.getName());
+//			name = escapeJavaScript(college.getName());
 
 			renderJSON("{ \"success\": \"true\", \"id\": " + college.getId()
-					+ ", \"name\": \"" + name + "\" }");
+					+ ", \"name\": \"" + name + "\", \"emails\": " + jsonEmails+" }");
 		} catch (IllegalArgumentException iae) {
 			String message = escapeJavaScript(iae.getMessage());			
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");

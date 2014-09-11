@@ -69,7 +69,12 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	@Override
 	public College createCollege(String name) {
 		return new JpaCollegeImpl(name);
-		}
+	}
+
+	@Override
+	public College createCollege(String name,List<String> emails) {
+		return new JpaCollegeImpl(name,emails);
+	}
 
 	@Override
 	public College findCollege(Long id) {

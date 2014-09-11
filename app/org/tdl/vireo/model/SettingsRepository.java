@@ -89,6 +89,17 @@ public interface SettingsRepository {
 	public College createCollege(String name);
 
 	/**
+	 * Create a new college object with email.
+	 * 
+	 * @param name
+	 *            The name of the college.
+	 * @param emails
+	 *            A list of emails.
+	 * @return A new college object.
+	 */
+	public College createCollege(String name,List<String> emails);
+
+	/**
 	 * Find a college by unique id.
 	 * 
 	 * @param id

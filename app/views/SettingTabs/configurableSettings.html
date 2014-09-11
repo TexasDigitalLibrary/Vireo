@@ -26,6 +26,10 @@ jQuery(document).ready(function(){
      jQuery("textarea").trigger('keyup');
 	 
 	 
+
+     jQuery('#college-email-modal').modal({
+         'show': false
+     });
      jQuery('#embargo-type-modal').modal({
          'show': false
      });
@@ -35,6 +39,7 @@ jQuery(document).ready(function(){
   
 	 jQuery(".embargoType-edit-cell a").live("click",embargoOpenDialogHandler());
 	 jQuery("#add-embargoType-link").click(embargoOpenDialogHandler());
+     jQuery("#college-email-link").click(collegeEmailOpenDialogHandler());
 	 jQuery("#timeframe-indeterminate, #timeframe-determinate").change(embargoDurationToggleHandler());
 	 jQuery("#embargoType-save").click(embargoSaveDialogHandler('@{settings.ConfigurableSettingsTab.editEmbargoTypeJSON()}'));
 	 jQuery("#embargoType-remove").click(embargoRemoveDialogHandler('@{settings.ConfigurableSettingsTab.removeEmbargoTypeJSON()}'));
@@ -336,7 +341,7 @@ jQuery(document).ready(function(){
 					</ul>
 					<ol id="college-list" class="college-sortable settings-sortable-list">
 					    #{list items:colleges, as:'college'}
-					       <li id="college_${college.getId()}"><a class="college-editable" href="javascript:void(0);"><em class="icon-pencil"></em> ${college.getName()}</a></li>    
+					       <li id="college_${college.getId()}"><a class="college-editable" href="javascript:void(0);"><em class="icon-pencil"></em> ${college.getName()}</a> <a id="college-email-link" href="javascript:void(0);">[edit college emails]</a> </li>    
 					    #{/list}
 					</ol>
 				</div>
@@ -352,6 +357,10 @@ jQuery(document).ready(function(){
 				                    <input type="text" class="input-large" id="add-college-name"/>
 				                    <p class="help-block">Name of the new college</p>
 				                </div>
+                                <div class="controls">
+                                    <input type="text" class="input-large" id="add-college-emails"/>
+                                    <p class="help-block">Email(s) of the new college</p>
+                                </div>
 				            </div>
 				            <div class="control-group">
 				                <div class="controls">
@@ -1031,6 +1040,68 @@ jQuery(document).ready(function(){
 			                Indeterminate
 			            </label>
 			            <label class="radio">
+                            <input type="radio" checked="" value="determinate" id="timeframe-determinate" name="embargoType-timeframe">
+                            Determinate
+                        </label>
+                    </div>
+                </div>
+                <div class="control-group" id="duration-group">
+                    <label class="control-label" for="embargoType-months"><strong>Embargo Duration</strong>:</label>
+                    <div class="controls">
+                        <input type="text" name="embargoType-months" id="embargoType-months" value="" class="input-mini"/>
+                        <p class="help-block">How many months a submission should be embargoed.</p>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="modal-footer">
+            <a href="javascript:void(0);" class="btn" data-dismiss="modal">Close</a>
+            <a id="embargoType-remove" href="javascript:void(0);" class="btn">Delete Embargo</a>
+            <input id="embargoType-save" type="submit" class="btn btn-primary" name="submit_save" value="Save Embargo"/>
+        </div>
+    </form>
+</div>
+
+<div class="modal fade" id="college-email-modal">
+    <form class="form-horizontal">
+        <input type="hidden" name="embargoType-id" id="embargoType-id" value=""/>
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">X</button>
+            <h3>College Email</h3>
+        </div>
+        <div class="modal-body">
+            <ul id="embargoType-errors" class="red">
+            </ul>
+            <fieldset>
+                <div class="control-group">
+                    <label class="control-label" for="embargoType-name"><strong>Embargo Name</strong>:</label>
+                    <div class="controls">
+                        <input type="text" class="input-xlarge" name="embargoType-name" id="embargoType-name"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="embargoType-description"><strong>Description</strong>:</label>
+                    <div class="controls">
+                        <textarea class="input-xlarge" name="embargoType-description" id="embargoType-description"></textarea>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="embargoType-active"><strong>Display</strong>:</label>
+                    <div class="controls">
+                        <label class="checkbox">
+                            <input type="checkbox" name="embargoType-active" id="embargoType-active" value="true"/>
+                            This embargo option will be available for<br/>new submissions.
+                        </label>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label"><strong>Expiration Timeframe</strong>:</label>
+                    <div class="controls">
+                        <label class="radio">
+                            <input type="radio" checked="" value="indeterminate" id="timeframe-indeterminate" name="embargoType-timeframe">
+                            Indeterminate
+                        </label>
+                        <label class="radio">
                             <input type="radio" checked="" value="determinate" id="timeframe-determinate" name="embargoType-timeframe">
                             Determinate
                         </label>

@@ -2,6 +2,7 @@ package org.tdl.vireo.model.jpa;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,7 +26,7 @@ public class JpaCollegeImpl extends JpaAbstractModel<JpaCollegeImpl> implements 
 	@Column(nullable = false, unique = true, length=255)
 	public String name;
 	
-	@ManyToOne
+	@Column
 	public HashMap<Integer, String> emails = new HashMap<Integer, String>();
 	
 	/**
@@ -44,6 +45,16 @@ public class JpaCollegeImpl extends JpaAbstractModel<JpaCollegeImpl> implements 
 		this.displayOrder = 0;
 		this.name = name;
 	}
+	
+	protected JpaCollegeImpl(String name,List<String> emails) {
+		this(name);
+		int x = 0;
+		for (String email : emails) {
+			this.emails.put(x,email);
+			x++;
+		}
+	}
+
 	
 	@Override
 	public JpaCollegeImpl save() {
