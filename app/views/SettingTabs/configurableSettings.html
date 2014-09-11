@@ -1,6 +1,9 @@
 #{extends 'SettingTabs/settings.html' /}
 #{set 'moreSettingScripts' }
+#{include 'SettingTabs/jsDataObject.include' /}
 <script type="text/javascript">
+
+console.log(testObject.data);
 jQuery(document).ready(function(){
 
 	

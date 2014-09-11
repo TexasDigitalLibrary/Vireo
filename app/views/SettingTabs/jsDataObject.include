@@ -1,0 +1,19 @@
+<script type="text/avascript">
+
+	collagesArray = [
+		#{list items:org.tdl.vireo.model.jpa.JpaSettingsRepositoryImpl.findAllColleges, as:'college'}
+			
+			{ 
+				"name": ${college.getName()}, 
+				"emails": [
+
+
+
+
+				]
+			},
+			
+		#{/list}
+	]
+
+</script>
