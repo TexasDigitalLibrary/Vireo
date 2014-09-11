@@ -1,7 +1,11 @@
 package org.tdl.vireo.model.jpa;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.tdl.vireo.model.College;
@@ -20,7 +24,10 @@ public class JpaCollegeImpl extends JpaAbstractModel<JpaCollegeImpl> implements 
 
 	@Column(nullable = false, unique = true, length=255)
 	public String name;
-
+	
+	@ManyToOne
+	public HashMap<Integer, String> emails = new HashMap<Integer, String>();
+	
 	/**
 	 * Construct a new JpaCollegeImpl
 	 * 
@@ -77,6 +84,27 @@ public class JpaCollegeImpl extends JpaAbstractModel<JpaCollegeImpl> implements 
 		assertManager();
 
 		this.name = name;
+	}
+
+	@Override
+	public HashMap<Integer, String> getEmails() {
+		return this.emails;
+	}
+
+	@Override
+	public void setEmails(HashMap emails) {
+		this.emails = emails;
+	}
+
+	@Override
+	public void addEmail(String email) {
+		Integer index = this.emails.size();
+		this.emails.put(index, email);
+	}
+
+	@Override
+	public void removeEmail(int index) {
+		this.emails.remove(index);
 	}
 
 }
