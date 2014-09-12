@@ -9,7 +9,13 @@ jsDataObjects = {
 				"name": "${college.getName()}", 
 				"emails": [	#{if college.getEmails() != null}
 								#{list items:college.getEmails()?.keySet(), as:'key'}
-   									"${college.getEmails().get(key)}",
+									{
+   									"id":${key},
+   									"email":"${college.getEmails().get(key)}"
+   									}
+   									#{if key != college.getEmails().size()}
+   									,
+   									#{/if}
 								#{/list}
 							#{/if}
 				]

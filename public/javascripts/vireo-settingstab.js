@@ -1615,9 +1615,10 @@ function collegeOpenDialogHandler(isNew, id) {
 		var emails = college.emails;
 		$.each(emails, function(key, val) {
 			if (val.email != "") {
-				emails_string += val + ", ";
+				emails_string += val.email + ", ";
 			}
 		});
+
 		jQuery("#college-emails").val(emails_string.substring(0, emails_string.length-2));
 		
 		jQuery("#college-modal .modal-header h3").text("Edit College");
