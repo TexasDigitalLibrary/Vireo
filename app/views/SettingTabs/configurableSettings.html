@@ -3,7 +3,7 @@
 #{include 'SettingTabs/jsDataObject.include' /}
 <script type="text/javascript">
 
-console.log(collegesArray);
+console.log(jsDataObjects);
 jQuery(document).ready(function(){
 
 	
@@ -30,7 +30,7 @@ jQuery(document).ready(function(){
 	 
 	 
 
-     jQuery('#college-email-modal').modal({
+     jQuery('#college-modal').modal({
          'show': false
      });
      jQuery('#embargo-type-modal').modal({
@@ -42,7 +42,6 @@ jQuery(document).ready(function(){
   
 	 jQuery(".embargoType-edit-cell a").live("click",embargoOpenDialogHandler());
 	 jQuery("#add-embargoType-link").click(embargoOpenDialogHandler());
-     jQuery("#college-email-link").click(collegeEmailOpenDialogHandler());
 	 jQuery("#timeframe-indeterminate, #timeframe-determinate").change(embargoDurationToggleHandler());
 	 jQuery("#embargoType-save").click(embargoSaveDialogHandler('@{settings.ConfigurableSettingsTab.editEmbargoTypeJSON()}'));
 	 jQuery("#embargoType-remove").click(embargoRemoveDialogHandler('@{settings.ConfigurableSettingsTab.removeEmbargoTypeJSON()}'));
@@ -69,8 +68,34 @@ jQuery(document).ready(function(){
 		  }
 	 });
 	 
+	 jQuery(".college-edit-cell a").click(collegeOpenDialogHandler());
+	 jQuery("#add-college-link").click(collegeOpenDialogHandler());
 	 
-	 
+	 jQuery("#college-save").click(collegeSaveDialogHandler('@{settings.ConfigurableSettingsTab.editCollegeJSON()}'));
+	 jQuery("#college-remove").click(collegeRemoveDialogHandler('@{settings.ConfigurableSettingsTab.removeCollegeJSON()}'));
+	 jQuery("#college-list").sortable({
+		 placeholder: "placeholder",
+		 update: collegeSortableUpdateHandler('@{settings.ConfigurableSettingsTab.reorderCollegesJSON()}'),
+		 
+		 // This function keeps the cell size consistent when sorting.
+		 helper: function(e, tr)
+		  {
+		    var $originals = tr.children();
+		    var $helper = tr.clone();
+		    $helper.children().each(function(index)
+		    {
+		      // Set helper cell sizes to match the original sizes
+		      $(this).width($originals.eq(index).width())
+		    });
+		    return $helper;
+		  },
+		  
+		  // This allows the placeholder to have a background color
+		  'start': function (event, ui) {
+		        ui.placeholder.html('<td colspan="5">&nbsp;</td>');
+		  }
+	 });
+	 /*
      // Handlers for the sortable colleges list
      jQuery("#college-list, #college-remove").sortable({
          connectWith: ".college-sortable",
@@ -91,7 +116,7 @@ jQuery(document).ready(function(){
      jQuery("#add-college-cancel").click(cancelAddActionHandler('college'));     
      jQuery("#bulk-add-college-link").click(slideToggleHandler("#bulk-add-college-dialog","#add-college-dialog"));
      jQuery("#bulk-add-college-cancel").click(cancelAddActionHandler('college'));
-
+	*/
 
      
   	 // Handlers for the sortable programs list
@@ -322,7 +347,36 @@ jQuery(document).ready(function(){
 		<div id="availableColleges" class="accordion-body collapse ${ "availableColleges".equals(flash.get("open")) ? "in" : "" }">
 			<div class="accordion-inner">
 				<h2>AVAILABLE COLLEGES</h2>
-				
+				<p>
+					<a class="confirm" href="@{settings.ConfigurableSettingsTab.removeAllColleges}" data-confirm="<em class='icon-trash'></em> (Are you sure you want to <strong>remove all</strong> colleges?)"> <em class="icon-trash"></em> Remove all colleges
+					</a>
+				</p>
+				<p>
+					<a class="confirm" href="@{settings.ConfigurableSettingsTab.alphabetizeAllColleges}" data-confirm="<em class='icon-refresh'></em> (Are you sure you want to alphabetize all colleges?)"> <em class="icon-refresh"></em> Alphabetize all colleges
+					</a>
+				</p>
+
+
+				<table class="table table-striped table-bordered table-condensed">
+					<thead>
+						<tr>
+							<td>Name</td>
+							<td>Emails</td>
+							<td>Action</td>
+						</tr>
+					</thead>
+					<tbody id="colleges-list">
+						#{list items:colleges, as:'college'}
+						<tr id="college_${college.getId()}">
+							<td class="college-name-cell">${college.getName()}</td>
+							<td class="college-emails-cell">#{list items:college.getEmails()?.keySet(), as:'key'} ${college.getEmails().get(key)}, #{/list}</td>
+							<td class="college-edit-cell"><a href="javascript:void(0);">Edit</a></td>
+						</tr>
+						#{/list}
+					</tbody>
+				</table>
+				<p><a id="add-college-link" href="javascript:void(0);">[ADD NEW]</a> &nbsp <a href="javascript:void(0);" id="bulk-add-college-link">[BULK ADD]</a></p>				
+				<!--  OLD CODE
 	            <p>
 	                <a class="confirm" href="@{settings.ConfigurableSettingsTab.removeAllColleges}" 
 	                   data-confirm="<em class='icon-trash'></em> (Are you sure you want to <strong>remove all</strong> colleges?)">
@@ -344,7 +398,7 @@ jQuery(document).ready(function(){
 					</ul>
 					<ol id="college-list" class="college-sortable settings-sortable-list">
 					    #{list items:colleges, as:'college'}
-					       <li id="college_${college.getId()}"><a class="college-editable" href="javascript:void(0);"><em class="icon-pencil"></em> ${college.getName()}</a> <a id="college-email-link" href="javascript:void(0);">[edit college emails]</a> </li>    
+					       <li id="college_${college.getId()}"><a class="college-editable" href="javascript:void(0);"><em class="icon-pencil"></em> ${college.getName()}</a> <a class="college-email-link" href="javascript:void(0);">[edit college emails]</a> </li>    
 					    #{/list}
 					</ol>
 				</div>
@@ -396,6 +450,7 @@ jQuery(document).ready(function(){
                     </form>
                 </div>
 				<br/><br/>
+				 -->
 			</div>
 		</div>
 	</div>
@@ -1065,19 +1120,19 @@ jQuery(document).ready(function(){
     </form>
 </div>
 
-<div class="modal fade" id="college-email-modal">
+<div class="modal fade" id="college-modal">
     <form class="form-horizontal">
-        <input type="hidden" name="embargoType-id" id="embargoType-id" value=""/>
+        <input type="hidden" name="college-id" id="college-id" value=""/>
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">X</button>
-            <h3>College Email</h3>
+            <h3>College</h3>
         </div>
         <div class="modal-body">
-            <ul id="embargoType-errors" class="red">
+            <ul id="college-errors" class="red">
             </ul>
             <fieldset>
                 <div class="control-group">
-                    <label class="control-label" for="embargoType-name"><strong>Embargo Name</strong>:</label>
+                    <label class="control-label" for="embargoType-name"><strong>College Name</strong>:</label>
                     <div class="controls">
                         <input type="text" class="input-xlarge" name="embargoType-name" id="embargoType-name"/>
                     </div>
@@ -1121,8 +1176,8 @@ jQuery(document).ready(function(){
         </div>
         <div class="modal-footer">
             <a href="javascript:void(0);" class="btn" data-dismiss="modal">Close</a>
-            <a id="embargoType-remove" href="javascript:void(0);" class="btn">Delete Embargo</a>
-            <input id="embargoType-save" type="submit" class="btn btn-primary" name="submit_save" value="Save Embargo"/>
+            <a id="embargoType-remove" href="javascript:void(0);" class="btn">Delete College</a>
+            <input id="embargoType-save" type="submit" class="btn btn-primary" name="submit_save" value="Save College"/>
         </div>
     </form>
 </div>

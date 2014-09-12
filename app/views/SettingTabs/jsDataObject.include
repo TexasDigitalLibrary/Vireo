@@ -1,17 +1,21 @@
 <script type="text/javascript">
 
-	collegesArray = [
+jsDataObjects = {
+	"collegesArray" : [
 		#{list items:colleges, as:'college'}
 			
-			{ 
-				"name": "${college.getName()}"#{if college.getEmails() != null}, 
-				"emails": [	#{list items:college.getEmails()?.keySet(), as:'key'}
-   								"${college.getEmails().get(key)}",
-							#{/list}
-				]#{/if}
+			{
+				"id": ${college.getId()},
+				"name": "${college.getName()}", 
+				"emails": [	#{if college.getEmails() != null}
+								#{list items:college.getEmails()?.keySet(), as:'key'}
+   									"${college.getEmails().get(key)}",
+								#{/list}
+							#{/if}
+				]
 			},
 			
 		#{/list}
 	]
-
+}
 </script>
