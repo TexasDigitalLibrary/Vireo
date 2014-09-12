@@ -4,18 +4,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.commons.lang.LocaleUtils;
-
 import javax.persistence.PersistenceException;
 
 import org.tdl.vireo.model.AbstractOrderedModel;
 import org.tdl.vireo.model.College;
-import org.tdl.vireo.model.CommitteeMember;
 import org.tdl.vireo.model.CommitteeMemberRoleType;
 import org.tdl.vireo.model.Degree;
 import org.tdl.vireo.model.DegreeLevel;
@@ -28,10 +26,7 @@ import org.tdl.vireo.model.Major;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.RoleType;
-import org.tdl.vireo.proquest.ProquestDegree;
-import org.tdl.vireo.proquest.ProquestLanguage;
 import org.tdl.vireo.proquest.ProquestUtilityService;
-import org.tdl.vireo.proquest.ProquestVocabularyRepository;
 
 import play.Logger;
 import play.modules.spring.Spring;
@@ -382,44 +377,61 @@ public class ConfigurableSettingsTab extends SettingsTab {
 	 *            The name of the new college
 	 */
 	@Security(RoleType.MANAGER)
-	public static void addCollegeJSON(String name,String emails) {
+	public static void editCollegeJSON(String collegeId, String name, String emails) {
 
 		try {
 			if (name == null || name.trim().length() == 0)
 				throw new IllegalArgumentException("Name is required");
-
+			
 			// Add the new college to the end of the list.
-			List<College> colleges = settingRepo.findAllColleges();
-
+            List<College> colleges = settingRepo.findAllColleges();
+			
+			// Create or modify the college
 			College college = null;
 			String jsonEmails = "";
-			if (emails != null) {
-				String[] newEmails = emails.split(",");
-				college = settingRepo.createCollege(name,Arrays.asList(newEmails));
-				jsonEmails = "[";
-				int i = 0;
-				for (Map.Entry<Integer, String> entry : college.getEmails().entrySet()) {
-					
-					Integer key = entry.getKey();
-				    String value = entry.getValue();
-				    jsonEmails += "{\"id\":" +key+ ",\"email\":\""+value+"\"}";
-				    
-				    i++;
-				
-				    if(i != college.getEmails().size()) jsonEmails += ",";
-				
-				}
-				jsonEmails += "]";
-			} else {
-				Logger.info("no");
-				college = settingRepo.createCollege(name);
-			}
-			colleges.add(college);
+            if (collegeId != null && collegeId.trim().length() > 0) {
+                Long id = Long.valueOf(collegeId);
+                college = settingRepo.findCollege(id);
+                college.setName(name);
+                HashMap<Integer, String> emails_map = new HashMap<Integer, String>();
+                String[] emails_array = emails.split(",");
+                int i =0;
+                for(String email : Arrays.asList(emails_array)) {
+                    emails_map.put(i, email);
+                    jsonEmails += "{\"id\":" +i+ ",\"email\":\""+email+"\"}";
+                    if(i != college.getEmails().size()) jsonEmails += ",";
+                    i++;
+                }
+                college.setEmails(emails_map);
+                college.save();
+            } else {
+    			if (emails != null) {
+    				String[] newEmails = emails.split(",");
+    				college = settingRepo.createCollege(name,Arrays.asList(newEmails));
+    				jsonEmails = "[";
+    				int i = 0;
+    				for (Map.Entry<Integer, String> entry : college.getEmails().entrySet()) {
+    					
+    					Integer key = entry.getKey();
+    				    String value = entry.getValue();
+    				    jsonEmails += "{\"id\":" +key+ ",\"email\":\""+value+"\"}";
+    				    
+    				    i++;
+    				
+    				    if(i != college.getEmails().size()) jsonEmails += ",";
+    				
+    				}
+    				jsonEmails += "]";
+    			} else {
+    				Logger.info("no");
+    				college = settingRepo.createCollege(name);
+    			}
+    			colleges.add(college);
+            }
 
 			saveModelOrder(colleges);
 
 			name = escapeJavaScript(college.getName());
-//			name = escapeJavaScript(college.getName());
 
 			renderJSON("{ \"success\": \"true\", \"id\": " + college.getId()
 					+ ", \"name\": \"" + name + "\", \"emails\": " + jsonEmails+" }");
@@ -447,7 +459,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 	 *            The new name
 	 */
 	@Security(RoleType.MANAGER)
-	public static void editCollegeJSON(String collegeId, String name) {
+	public static void old_editCollegeJSON(String collegeId, String name) {
 		try {
 			// Check input
 			if (name == null || name.trim().length() == 0)

@@ -68,10 +68,14 @@ jQuery(document).ready(function(){
 		  }
 	 });
 	 
-	 jQuery(".college-edit-cell a").click(collegeOpenDialogHandler());
-	 jQuery("#add-college-link").click(collegeOpenDialogHandler());
+	 jQuery(".college-edit-cell a").live("click", function() {
+		 collegeOpenDialogHandler(false, $(this).attr("data-id"));
+	 });
+	 jQuery("#add-college-link").live("click", function() {
+		 collegeOpenDialogHandler(true);
+	 });
 	 
-	 jQuery("#college-save").click(collegeSaveDialogHandler('@{settings.ConfigurableSettingsTab.addCollegeJSON()}'));
+	 jQuery("#college-save").click(collegeSaveDialogHandler('@{settings.ConfigurableSettingsTab.editCollegeJSON()}'));
 	 jQuery("#college-remove").click(collegeRemoveDialogHandler('@{settings.ConfigurableSettingsTab.removeCollegeJSON()}'));
 	 jQuery("#college-list").sortable({
 		 placeholder: "placeholder",
@@ -95,29 +99,6 @@ jQuery(document).ready(function(){
 		        ui.placeholder.html('<td colspan="5">&nbsp;</td>');
 		  }
 	 });
-	 /*
-     // Handlers for the sortable colleges list
-     jQuery("#college-list, #college-remove").sortable({
-         connectWith: ".college-sortable",
-         placeholder: "placeholder",
-         update: sortableUpdateHandler(
-                    'college',
-                    '@{settings.ConfigurableSettingsTab.reorderCollegesJSON()}',
-                    '@{settings.ConfigurableSettingsTab.removeCollegeJSON()}'
-                    )
-     }).disableSelection().enableSelection();
-        
-     jQuery("#college-list .college-editable").live("click",sortableStartEditHandler());
-     jQuery("#college-list .icon-remove").live("click",sortableCancelEditHandler());     
-     jQuery("#college-list .icon-ok").live("click",sortableSaveEditHandler('college','@{settings.ConfigurableSettingsTab.editCollegeJSON()}'));
-     jQuery("#college-list input").live("keypress",sortableSaveEditHandler('college','@{settings.ConfigurableSettingsTab.editCollegeJSON()}'));
-     jQuery("#add-college-link").click(slideToggleHandler("#add-college-dialog","#bulk-add-college-dialog"));
-     jQuery("#add-college-save").click(saveAddActionHandler('college','@{settings.ConfigurableSettingsTab.addCollegeJSON()}'));
-     jQuery("#add-college-cancel").click(cancelAddActionHandler('college'));     
-     jQuery("#bulk-add-college-link").click(slideToggleHandler("#bulk-add-college-dialog","#add-college-dialog"));
-     jQuery("#bulk-add-college-cancel").click(cancelAddActionHandler('college'));
-	*/
-
      
   	 // Handlers for the sortable programs list
      jQuery("#program-list, #program-remove").sortable({
@@ -369,88 +350,13 @@ jQuery(document).ready(function(){
 						#{list items:colleges, as:'college'}
 						<tr id="college_${college.getId()}">
 							<td class="college-name-cell">${college.getName()}</td>
-							<td class="college-emails-cell">#{list items:college.getEmails()?.keySet(), as:'key'} ${college.getEmails().get(key)}, #{/list}</td>
-							<td class="college-edit-cell"><a href="javascript:void(0);">Edit</a></td>
+							<td class="college-emails-cell">#{list items:college.getEmails()?.keySet(), as:'key'}${college.getEmails().get(key)}#{if key != college.getEmails().size()-1}, #{/if}#{/list}</td>
+							<td class="college-edit-cell"><a data-id="${college.getId()}" href="javascript:void(0);">Edit</a></td>
 						</tr>
 						#{/list}
 					</tbody>
 				</table>
-				<p><a id="add-college-link" href="javascript:void(0);">[ADD NEW]</a> &nbsp <a href="javascript:void(0);" id="bulk-add-college-link">[BULK ADD]</a></p>				
-				<!--  OLD CODE
-	            <p>
-	                <a class="confirm" href="@{settings.ConfigurableSettingsTab.removeAllColleges}" 
-	                   data-confirm="<em class='icon-trash'></em> (Are you sure you want to <strong>remove all</strong> colleges?)">
-	                    <em class="icon-trash"></em>
-	                    Remove all colleges
-	                </a>
-	            </p>
-	            <p>
-	                <a class="confirm" href="@{settings.ConfigurableSettingsTab.alphabetizeAllColleges}" 
-	                   data-confirm="<em class='icon-refresh'></em> (Are you sure you want to alphabetize all colleges?)">
-	                    <em class="icon-refresh"></em>
-	                    Alphabetize colleges
-	                </a>
-                </p>
-				
-				<div class="wrap settings-sortable">
-					<ul id="college-remove" class="college-sortable settings-sortable-remove" #{if colleges.size() == 0}style="display: none;"#{/if}>
-					   <p class="info"><em class="icon-trash"></em> Remove items by dragging them to the trash can</p>
-					</ul>
-					<ol id="college-list" class="college-sortable settings-sortable-list">
-					    #{list items:colleges, as:'college'}
-					       <li id="college_${college.getId()}"><a class="college-editable" href="javascript:void(0);"><em class="icon-pencil"></em> ${college.getName()}</a> <a class="college-email-link" href="javascript:void(0);">[edit college emails]</a> </li>    
-					    #{/list}
-					</ol>
-				</div>
-				
-				<a id="add-college-link" href="javascript:void(0);">[ADD NEW]</a> &nbsp; <a href="javascript:void(0);" id="bulk-add-college-link">[BULK ADD]</a>
-				
-				<div id="add-college-dialog" style="display: none;">
-				    <form class="form-horizontal">
-				        <fieldset>
-				            <div class="control-group">
-				                <label class="control-label" for="add-college-name">New College</label>
-				                <div class="controls">
-				                    <input type="text" class="input-large" id="add-college-name"/>
-				                    <p class="help-block">Name of the new college</p>
-				                </div>
-                                <div class="controls">
-                                    <input type="text" class="input-large" id="add-college-emails"/>
-                                    <p class="help-block">Email(s) of the new college</p>
-                                </div>
-				            </div>
-				            <div class="control-group">
-				                <div class="controls">
-				                    <button id="add-college-save" class="btn btn-primary">Add College</button>
-				                    <button id="add-college-cancel" class="btn">Cancel</button>
-				                </div>
-				            </div>
-				        </fieldset>
-				    </form>
-				</div>
-				<div id="bulk-add-college-dialog" style="display: none;">
-                    <form class="form-horizontal" method="POST" action="@{settings.ConfigurableSettingsTab.bulkAdd}">
-                        <input type="hidden" name="modelType" value="college"/>
-                        <fieldset>
-                            <div class="control-group">
-                                <label class="control-label" for="bulkAdd">Colleges</label>
-                                <div class="controls">
-                                    <textarea class="span4" name="bulkAdd"></textarea>
-                                    <p class="help-block">Multiple colleges each on a separate line</p>
-                                    
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <div class="controls">
-                                    <button id="bulk-add-college-save" class="btn btn-primary">Bulk Add Colleges</button>
-                                    <button id="bulk-add-college-cancel" class="btn">Cancel</button>
-                                </div>
-                            </div>
-                        </fieldset>
-                    </form>
-                </div>
-				<br/><br/>
-				 -->
+				<p><a id="add-college-link" href="javascript:void(0);">[ADD NEW]</a> &nbsp <a href="javascript:void(0);" id="bulk-add-college-link">[BULK ADD]</a></p>
 			</div>
 		</div>
 	</div>

@@ -1592,65 +1592,55 @@ var embargoSortableUpdateHandler = function(jsonURL) {
  * 
  * @returns A Callback function
  */
-function collegeOpenDialogHandler() {
-	return function () {
+function collegeOpenDialogHandler(isNew, id) {
+	if(isNew == null && typeof(isNew) == "undefined") {
+		isNew = false;
+	}
 
-		if (jQuery(this).closest("tr").length > 0) {
-			// Loading an existing type
-			var $row = jQuery(this).closest("tr"); 
-			jQuery("#college-id").val($row.attr("id"));
-			jQuery("#college-name").val(jQuery.trim($row.find(".college-name-cell").text()));
-			jQuery("#embargoType-description").val(jQuery.trim($row.find(".embargoType-description-cell").text()));
-
-			if ($row.find(".embargoType-active-cell").text().indexOf("Yes") > -1)
-				jQuery("#embargoType-active").attr("checked","true");
-			else
-				jQuery("#embargoType-active").attr("checked");
-
-			if ($row.find(".embargoType-duration-cell").text().indexOf("Indefinite") > -1) {
-				jQuery("#timeframe-indeterminate").attr("checked","true");
-				jQuery("#embargoType-months").val("");
-				jQuery("#embargoType-months").attr("disabled","true");
-				jQuery("#duration-group").hide();
-			} else {
-				jQuery("#timeframe-determinate").attr("checked","true");
-				jQuery("#embargoType-months").val(jQuery.trim($row.find(".embargoType-duration-cell").text()));
-				jQuery("#embargoType-months").attr("disabled",null);
-				jQuery("#duration-group").show();
+	if (!isNew) {
+		// Loading an existing type
+		var array_key = -1;
+		for(college in jsDataObjects.collegesArray) {
+			if(jsDataObjects.collegesArray[college].id == id) {
+				array_key = college;
 			}
-			
-			jQuery("#college-modal .modal-header h3").text("Edit College");
-			jQuery("#college-modal .modal-footer #college-save").val("Save College");
-			jQuery("#college-remove").show();
-
-
-		} else {
-			// Adding a new embargo type
-			jQuery("#college-id").val("");
-			jQuery("#college-name").val("");
-			jQuery("#embargoType-description").val("");
-			jQuery("#embargoType-active").attr("checked","true");
-			jQuery("#timeframe-determinate").attr("checked","true");
-			jQuery("#embargoType-months").val("");
-			jQuery("#embargoType-months").attr("disabled",null);
-			jQuery("#duration-group").show();
-			
-			jQuery("#college-modal .modal-header h3").text("Add College");
-			jQuery("#college-modal .modal-footer #college-save").val("Add College");
-			jQuery("#college-remove").hide();
-
 		}
-
-		// Clear out any previous errors
-		jQuery("#college-errors").html("");
-		jQuery("#college-modal .control-group").each(function () {
-			jQuery(this).removeClass("error"); 
+		if(array_key == -1) {
+			return;
+		}
+		college = jsDataObjects.collegesArray[array_key];
+		jQuery("#college-id").val(id);
+		jQuery("#college-name").val(college.name);
+		var emails_string = "";
+		var emails = college.emails;
+		$.each(emails, function(key, val) {
+			emails_string += val + ", ";
 		});
-
-		jQuery('#college-modal').modal('show');
-
+		
+		jQuery("#college-emails").val(emails_string.substring(0, emails_string.length-2));
+		
+		jQuery("#college-modal .modal-header h3").text("Edit College");
+		jQuery("#college-modal .modal-footer #college-save").val("Save College");
+		jQuery("#college-remove").show();
+	} else {
+		// Adding a new college
+		jQuery("#college-id").val("");
+		jQuery("#college-name").val("");
+		jQuery("#college-emails").val("");
+		
+		jQuery("#college-modal .modal-header h3").text("Add College");
+		jQuery("#college-modal .modal-footer #college-save").val("Add College");
+		jQuery("#college-remove").hide();
 
 	}
+
+	// Clear out any previous errors
+	jQuery("#college-errors").html("");
+	jQuery("#college-modal .control-group").each(function () {
+		jQuery(this).removeClass("error"); 
+	});
+
+	jQuery('#college-modal').modal('show');
 }
 
 /**
@@ -1663,7 +1653,7 @@ function collegeOpenDialogHandler() {
  */
 function collegeSaveDialogHandler(jsonURL) {
 	return function () {
-
+		
 		var name = jQuery("#college-name").val();
 		var emails = jQuery("#college-emails").val();
 		
@@ -1690,14 +1680,20 @@ function collegeSaveDialogHandler(jsonURL) {
 						"    <td class='college-emails-cell'></td>"+
 						"    <td class='college-edit-cell'><a href='#'>Edit</a></td>" +
 						"</tr>"
-				).appendTo(jQuery("#college-list"));
+				).appendTo(jQuery("#colleges-list"));
 			}
 
 			$row.find(".college-name-cell").text(data.name);
-			$row.find(".college-email-cell").text(data.email);
-
+			var emails_string = "";
+			var emails = data.emails;
+			$.each(emails, function(key, val) {
+				emails_string += val.email;
+			});
+			$row.find(".college-emails-cell").text(emails_string);
+			
 			jQuery('#college-modal').modal('hide');
-
+			
+			jsDataObjects.collegesArray.push(data);
 		}
 
 		var failureCallback = function (message) {
