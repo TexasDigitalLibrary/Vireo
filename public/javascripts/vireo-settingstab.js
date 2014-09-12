@@ -1664,81 +1664,60 @@ function collegeOpenDialogHandler() {
 function collegeSaveDialogHandler(jsonURL) {
 	return function () {
 
-		var embargoTypeId = jQuery("#embargoType-id").val();
-		var name = jQuery("#embargoType-name").val();
-		var description = jQuery("#embargoType-description").val();
-		var active = null;
-		if (jQuery("#embargoType-active:checked").length > 0)
-			active = "true";
-
-		var months = null
-		if (jQuery("#timeframe-determinate:checked").length > 0)
-			months = jQuery("#embargoType-months").val();
-		jQuery("#embargo-type-modal").addClass("waiting");
+		var name = jQuery("#college-name").val();
+		var emails = jQuery("#college-emails").val();
+		
+		jQuery("#college-modal").addClass("waiting");
 
 		var successCallback = function(data) {
 
 			// Remove the ajax loading indicators & alerts
-			jQuery("#embargo-type-modal").removeClass("waiting");
-			jQuery("#embargoType-errors").html("");
-			jQuery("#embargo-type-modal .control-group").each(function () {
+			jQuery("#college-modal").removeClass("waiting");
+			jQuery("#college-errors").html("");
+			jQuery("#college-modal .control-group").each(function () {
 				jQuery(this).removeClass("error"); 
 			});
 
-			var $row
-			if (jQuery("#embargoType_"+data.id).length > 0) {
+			var $row;
+			if (jQuery("#college_"+data.id).length > 0) {
 				// Look up the old row
-				$row = jQuery("#embargoType_"+data.id);
+				$row = jQuery("#college_"+data.id);
 			} else {
 				// Add a new row to the end of the list.
 				$row = jQuery( 
-						"<tr id='embargoType_"+data.id+"'>"+
-						"    <td class='embargoType-name-cell'></td>"+
-						"    <td class='embargoType-description-cell'></td>"+
-						"    <td class='embargoType-active-cell'></td>"+
-						"    <td class='embargoType-duration-cell'></td>"+
-						"    <td class='embargoType-edit-cell'><a href='#'>Edit</a></td>" +
+						"<tr id='college_"+data.id+"'>"+
+						"    <td class='college-name-cell'></td>"+
+						"    <td class='college-emails-cell'></td>"+
+						"    <td class='college-edit-cell'><a href='#'>Edit</a></td>" +
 						"</tr>"
-				).appendTo(jQuery("#embargoType-list"));
+				).appendTo(jQuery("#college-list"));
 			}
 
-			$row.find(".embargoType-name-cell").text(data.name);
-			$row.find(".embargoType-description-cell").text(data.description);
-			if (data.active == "true")
-				$row.find(".embargoType-active-cell").text("Yes");
-			else
-				$row.find(".embargoType-active-cell").text("No");
+			$row.find(".college-name-cell").text(data.name);
+			$row.find(".college-email-cell").text(data.email);
 
-			if (data.months == "null")
-				$row.find(".embargoType-duration-cell").text("Indefinite");
-			else
-				$row.find(".embargoType-duration-cell").text(data.months);
-
-			jQuery('#embargo-type-modal').modal('hide');
+			jQuery('#college-modal').modal('hide');
 
 		}
 
 		var failureCallback = function (message) {
 
 			// Add failure indicators
-			jQuery("#embargo-type-modal").removeClass("waiting");
-			jQuery("#embargo-type-modal .control-group").each(function () {
+			jQuery("#college-modal").removeClass("waiting");
+			jQuery("#college-modal .control-group").each(function () {
 				jQuery(this).addClass("error"); 
 			});
 
 			// Display the error
-			jQuery("#embargoType-errors").html("<li><strong>Unable to save embargo</strong>: "+message);
+			jQuery("#college-errors").html("<li><strong>Unable to save college</strong>: "+message);
 
 		}
 
 		jQuery.ajax({
 			url:jsonURL,
 			data:{
-				'embargoTypeId': embargoTypeId,
 				'name': name,
-				'description': description,
-				'months': months,
-				'active': active
+				'emails': emails,
 			},
 			dataType:'json',
 			type:'POST',
