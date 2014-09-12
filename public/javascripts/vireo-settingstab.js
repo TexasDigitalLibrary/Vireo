@@ -1680,7 +1680,7 @@ function collegeSaveDialogHandler(jsonURL) {
 						"<tr id='college_"+data.id+"'>"+
 						"    <td class='college-name-cell'></td>"+
 						"    <td class='college-emails-cell'></td>"+
-						"    <td class='college-edit-cell'><a data-id='"+collegeId+"' href='javascript:void(0);'>Edit</a></td>" +
+						"    <td class='college-edit-cell'><a data-id='"+data.id+"' href='javascript:void(0);'>Edit</a></td>" +
 						"</tr>"
 				).appendTo(jQuery("#colleges-list"));
 			}
@@ -1689,9 +1689,9 @@ function collegeSaveDialogHandler(jsonURL) {
 			var emails_string = "";
 			var emails = data.emails;
 			$.each(emails, function(key, val) {
-				emails_string += val.email;
+				emails_string += val.email + ", ";
 			});
-			$row.find(".college-emails-cell").text(emails_string);
+			$row.find(".college-emails-cell").text(emails_string.substring(0, emails_string.length-2));
 			
 			jQuery('#college-modal').modal('hide');
 			var array_key = -1;
