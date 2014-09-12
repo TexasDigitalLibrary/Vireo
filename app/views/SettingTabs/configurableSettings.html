@@ -80,7 +80,7 @@ jQuery(document).ready(function(){
 	 jQuery("#college-list").sortable({
 		 placeholder: "placeholder",
 		 update: collegeSortableUpdateHandler('@{settings.ConfigurableSettingsTab.reorderCollegesJSON()}'),
-		 
+
 		 // This function keeps the cell size consistent when sorting.
 		 helper: function(e, tr)
 		  {
@@ -99,7 +99,9 @@ jQuery(document).ready(function(){
 		        ui.placeholder.html('<td colspan="5">&nbsp;</td>');
 		  }
 	 });
-     
+     jQuery("#bulk-add-college-link").click(slideToggleHandler("#bulk-add-college-dialog"));
+     jQuery("#bulk-add-college-cancel").click(cancelAddActionHandler('college'));
+
   	 // Handlers for the sortable programs list
      jQuery("#program-list, #program-remove").sortable({
          connectWith: ".program-sortable",
@@ -357,6 +359,29 @@ jQuery(document).ready(function(){
 					</tbody>
 				</table>
 				<p><a id="add-college-link" href="javascript:void(0);">[ADD NEW]</a> &nbsp <a href="javascript:void(0);" id="bulk-add-college-link">[BULK ADD]</a></p>
+
+                <div id="bulk-add-college-dialog" style="display: none;">
+                    <form class="form-horizontal" method="POST" action="@{settings.ConfigurableSettingsTab.bulkAdd}">
+                        <input type="hidden" name="modelType" value="college"/>
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label" for="bulkAdd">Colleges</label>
+                                <div class="controls">
+                                    <textarea class="span4" name="bulkAdd"></textarea>
+                                    <p class="help-block">Multiple colleges each on a separate line</p>
+                                    
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <div class="controls">
+                                    <button id="bulk-add-college-save" class="btn btn-primary">Bulk Add Colleges</button>
+                                    <button id="bulk-add-college-cancel" class="btn">Cancel</button>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+
 			</div>
 		</div>
 	</div>
