@@ -1653,7 +1653,7 @@ function collegeOpenDialogHandler(isNew, id) {
  */
 function collegeSaveDialogHandler(jsonURL) {
 	return function () {
-		
+		var collegeId = jQuery("#college-id").val();
 		var name = jQuery("#college-name").val();
 		var emails = jQuery("#college-emails").val();
 		
@@ -1712,6 +1712,7 @@ function collegeSaveDialogHandler(jsonURL) {
 		jQuery.ajax({
 			url:jsonURL,
 			data:{
+				'collegeId':collegeId,
 				'name': name,
 				'emails': emails,
 			},
