@@ -399,10 +399,10 @@ public class ConfigurableSettingsTab extends SettingsTab {
 				jsonEmails = "[";                
                 for(String email : Arrays.asList(emails_array)) {
                     emails_map.put(i, email);
-                    jsonEmails += "{\"id\":" +i+ ",\"email\":\""+email+"\"}";
+                    jsonEmails += "{\"id\":" +i+ ",\"email\":\""+email+"\"},";
                     i++;
-                    if(i != college.getEmails().size()) jsonEmails += ",";
                 }
+                jsonEmails = jsonEmails.substring(0,jsonEmails.length()-1);
 				jsonEmails += "]";
 				college.setEmails(emails_map);
                 college.save();
