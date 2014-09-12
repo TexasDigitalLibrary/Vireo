@@ -1614,9 +1614,10 @@ function collegeOpenDialogHandler(isNew, id) {
 		var emails_string = "";
 		var emails = college.emails;
 		$.each(emails, function(key, val) {
-			emails_string += val + ", ";
+			if (val.email != "") {
+				emails_string += val + ", ";
+			}
 		});
-		
 		jQuery("#college-emails").val(emails_string.substring(0, emails_string.length-2));
 		
 		jQuery("#college-modal .modal-header h3").text("Edit College");
@@ -1678,7 +1679,7 @@ function collegeSaveDialogHandler(jsonURL) {
 						"<tr id='college_"+data.id+"'>"+
 						"    <td class='college-name-cell'></td>"+
 						"    <td class='college-emails-cell'></td>"+
-						"    <td class='college-edit-cell'><a href='#'>Edit</a></td>" +
+						"    <td class='college-edit-cell'><a data-id='"+collegeId+"' href='javascript:void(0);'>Edit</a></td>" +
 						"</tr>"
 				).appendTo(jQuery("#colleges-list"));
 			}
@@ -1692,8 +1693,17 @@ function collegeSaveDialogHandler(jsonURL) {
 			$row.find(".college-emails-cell").text(emails_string);
 			
 			jQuery('#college-modal').modal('hide');
-			
-			jsDataObjects.collegesArray.push(data);
+			var array_key = -1;
+			for(college in jsDataObjects.collegesArray) {
+				if(jsDataObjects.collegesArray[college].id == collegeId) {
+					array_key = college;
+				}
+			}
+			if(array_key == -1) {
+				jsDataObjects.collegesArray.push(data);
+			} else {
+				jsDataObjects.collegesArray[array_key] = data;
+			}
 		}
 
 		var failureCallback = function (message) {
@@ -1714,7 +1724,7 @@ function collegeSaveDialogHandler(jsonURL) {
 			data:{
 				'collegeId':collegeId,
 				'name': name,
-				'emails': emails,
+				'emails': emails
 			},
 			dataType:'json',
 			type:'POST',
@@ -1725,8 +1735,9 @@ function collegeSaveDialogHandler(jsonURL) {
 					failureCallback(data.message)
 				}
 			},
-			error:function(){
-				failureCallback("Unable to communicate with the server.");
+			error:function(e){
+				console.log(e);
+				failureCallback("Unable to communicate with the server."+e);
 			}
 
 		});

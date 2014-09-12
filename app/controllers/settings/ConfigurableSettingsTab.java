@@ -396,13 +396,15 @@ public class ConfigurableSettingsTab extends SettingsTab {
                 HashMap<Integer, String> emails_map = new HashMap<Integer, String>();
                 String[] emails_array = emails.split(",");
                 int i =0;
+				jsonEmails = "[";                
                 for(String email : Arrays.asList(emails_array)) {
                     emails_map.put(i, email);
                     jsonEmails += "{\"id\":" +i+ ",\"email\":\""+email+"\"}";
-                    if(i != college.getEmails().size()) jsonEmails += ",";
                     i++;
+                    if(i != college.getEmails().size()) jsonEmails += ",";
                 }
-                college.setEmails(emails_map);
+				jsonEmails += "]";
+				college.setEmails(emails_map);
                 college.save();
             } else {
     			if (emails != null) {
