@@ -395,7 +395,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
                 college = settingRepo.findCollege(id);
                 college.setName(name);
                 HashMap<Integer, String> emails_map = new HashMap<Integer, String>();
-                String[] emails_array = emails.split(",");
+                String[] emails_array = (emails != null ? emails.split(",") : new String[0]);
                 int i =0;
 				jsonEmails = "[";                
                 for(String email : Arrays.asList(emails_array)) {
@@ -561,7 +561,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
                 program = settingRepo.findProgram(id);
                 program.setName(name);
                 HashMap<Integer, String> emails_map = new HashMap<Integer, String>();
-                String[] emails_array = emails.split(",");
+                String[] emails_array = (emails != null ? emails.split(",") : new String[0]);
                 int i =0;
 				jsonEmails = "[";                
                 for(String email : Arrays.asList(emails_array)) {
@@ -727,7 +727,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
                 department = settingRepo.findDepartment(id);
                 department.setName(name);
                 HashMap<Integer, String> emails_map = new HashMap<Integer, String>();
-                String[] emails_array = emails.split(",");
+                String[] emails_array = (emails != null ? emails.split(",") : new String[0]);
                 int i =0;
 				jsonEmails = "[";                
                 for(String email : Arrays.asList(emails_array)) {
