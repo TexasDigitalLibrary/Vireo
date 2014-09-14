@@ -332,6 +332,17 @@ in results.
     #{/else}
     
      </ul>
+
+     %{
+        String homeUrl = play.mvc.Router.reverse("Application.index").url;
+        String excelUrl = play.mvc.Router.reverse("FilterTab.downloadExcelReport").url;
+     }%
+
+    <div>
+        <a href="${excelUrl}" title="Download Excel spreadsheet"><img src="${homeUrl}public/images/excel-icon.png" /></a>
+    </div>
+
+
 </div>
 #{/if}
 #{elseif indexer.isJobRunning() }

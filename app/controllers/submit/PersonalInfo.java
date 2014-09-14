@@ -376,7 +376,7 @@ public class PersonalInfo extends AbstractSubmitStep {
 			}
 		} else if (isFieldRequired(STUDENT_FIRST_NAME) && isEmpty(sub.getStudentFirstName())) {
 			validation.addError("firstName","Your first name is required");
-		} else if (isFieldRequired(STUDENT_LAST_NAME) && isEmpty(sub.getStudentFirstName())) {
+		} else if (isFieldRequired(STUDENT_LAST_NAME) && isEmpty(sub.getStudentLastName())) {
 			validation.addError("lastName","Your last name is required");
 		}
 		if (isFieldRequired(STUDENT_MIDDLE_NAME) && isEmpty(sub.getStudentMiddleName()))

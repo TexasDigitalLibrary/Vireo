@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.tdl.vireo.constant.FieldConfig;
-
 import static org.tdl.vireo.constant.AppConfig.SUBMIT_UPLOAD_FILES_STICKIES;
 import static org.tdl.vireo.constant.FieldConfig.*;
 
@@ -21,6 +19,7 @@ import au.com.bytecode.opencsv.CSVReader;
 
 import controllers.Security;
 import controllers.Student;
+import play.Play;
 
 /**
  * The fourth step of the submission process where students upload their files.
@@ -133,8 +132,12 @@ public class FileUpload extends AbstractSubmitStep {
 		if (isFieldRequired(ADMINISTRATIVE_ATTACHMENT) && 
 				sub.getAttachmentsByType(AttachmentType.ADMINISTRATIVE).size() == 0)
 			validation.addError("administrativeDocument", "At least one administrative file is required.");
-		
-		if (numberOfErrorsBefore == validation.errors().size()) 
+
+        if ("true".equalsIgnoreCase(Play.configuration.getProperty("pdf.validate", "false"))) {
+            PdfValidator.doValidation(sub, validation);
+        }
+
+		if (numberOfErrorsBefore == validation.errors().size())
 			return true;
 		else
 			return false;
