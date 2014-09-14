@@ -27,12 +27,7 @@ jQuery(document).ready(function(){
          
      });
      jQuery("textarea").trigger('keyup');
-	 
-	 
 
-     jQuery('#college-modal').modal({
-         'show': false
-     });
      jQuery('#embargo-type-modal').modal({
          'show': false
      });
@@ -68,6 +63,10 @@ jQuery(document).ready(function(){
 		  }
 	 });
 	 
+	 // Handlers for colleges table
+	 jQuery('#college-modal').modal({
+         'show': false
+     });
 	 jQuery(".college-edit-cell a").live("click", function() {
 		 collegeOpenDialogHandler(false, $(this).attr("data-id"));
 	 });
@@ -77,7 +76,7 @@ jQuery(document).ready(function(){
 	 
 	 jQuery("#college-save").click(collegeSaveDialogHandler('@{settings.ConfigurableSettingsTab.editCollegeJSON()}'));
 	 jQuery("#college-remove").click(collegeRemoveDialogHandler('@{settings.ConfigurableSettingsTab.removeCollegeJSON()}'));
-	 jQuery("#college-list").sortable({
+	 jQuery("#colleges-list").sortable({
 		 placeholder: "placeholder",
 		 update: collegeSortableUpdateHandler('@{settings.ConfigurableSettingsTab.reorderCollegesJSON()}'),
 
@@ -102,46 +101,80 @@ jQuery(document).ready(function(){
      jQuery("#bulk-add-college-link").click(slideToggleHandler("#bulk-add-college-dialog"));
      jQuery("#bulk-add-college-cancel").click(cancelAddActionHandler('college'));
 
-  	 // Handlers for the sortable programs list
-     jQuery("#program-list, #program-remove").sortable({
-         connectWith: ".program-sortable",
-         placeholder: "placeholder",
-         update: sortableUpdateHandler(
-                    'program',
-                    '@{settings.ConfigurableSettingsTab.reorderProgramsJSON()}',
-                    '@{settings.ConfigurableSettingsTab.removeProgramJSON()}'
-                    )
-     }).disableSelection().enableSelection();
-        
-     jQuery("#program-list .program-editable").live("click",sortableStartEditHandler());
-     jQuery("#program-list .icon-remove").live("click",sortableCancelEditHandler());     
-     jQuery("#program-list .icon-ok").live("click",sortableSaveEditHandler('program','@{settings.ConfigurableSettingsTab.editProgramJSON()}'));
-     jQuery("#program-list input").live("keypress",sortableSaveEditHandler('program','@{settings.ConfigurableSettingsTab.editProgramJSON()}'));
-     jQuery("#add-program-link").click(slideToggleHandler("#add-program-dialog","#bulk-add-program-dialog"));
-     jQuery("#add-program-save").click(saveAddActionHandler('program','@{settings.ConfigurableSettingsTab.addProgramJSON()}'));
-     jQuery("#add-program-cancel").click(cancelAddActionHandler('program'));
-     jQuery("#bulk-add-program-link").click(slideToggleHandler("#bulk-add-program-dialog","#add-program-dialog"));
+	// Handlers for programs table
+	jQuery('#program-modal').modal({
+		'show': false
+	});
+	jQuery(".program-edit-cell a").live("click", function() {
+		programOpenDialogHandler(false, $(this).attr("data-id"));
+	});
+	jQuery("#add-program-link").live("click", function() {
+		programOpenDialogHandler(true);
+	});
+	 
+	 jQuery("#program-save").click(programSaveDialogHandler('@{settings.ConfigurableSettingsTab.editProgramJSON()}'));
+	 jQuery("#program-remove").click(programRemoveDialogHandler('@{settings.ConfigurableSettingsTab.removeProgramJSON()}'));
+	 jQuery("#programs-list").sortable({
+		 placeholder: "placeholder",
+		 update: programSortableUpdateHandler('@{settings.ConfigurableSettingsTab.reorderProgramsJSON()}'),
+
+		 // This function keeps the cell size consistent when sorting.
+		 helper: function(e, tr)
+		  {
+		    var $originals = tr.children();
+		    var $helper = tr.clone();
+		    $helper.children().each(function(index)
+		    {
+		      // Set helper cell sizes to match the original sizes
+		      $(this).width($originals.eq(index).width())
+		    });
+		    return $helper;
+		  },
+		  
+		  // This allows the placeholder to have a background color
+		  'start': function (event, ui) {
+		        ui.placeholder.html('<td colspan="5">&nbsp;</td>');
+		  }
+	 });
+     jQuery("#bulk-add-program-link").click(slideToggleHandler("#bulk-add-program-dialog"));
      jQuery("#bulk-add-program-cancel").click(cancelAddActionHandler('program'));
      
-     // Handlers for the sortable Departments list
-     jQuery("#department-list, #department-remove").sortable({
-         connectWith: ".department-sortable",
-         placeholder: "placeholder",
-         update: sortableUpdateHandler(
-                    'department',
-                    '@{settings.ConfigurableSettingsTab.reorderDepartmentsJSON()}',
-                    '@{settings.ConfigurableSettingsTab.removeDepartmentJSON()}'
-                    )
-     }).disableSelection().enableSelection();
-        
-     jQuery("#department-list .department-editable").live("click",sortableStartEditHandler());
-     jQuery("#department-list .icon-remove").live("click",sortableCancelEditHandler());     
-     jQuery("#department-list .icon-ok").live("click",sortableSaveEditHandler('department','@{settings.ConfigurableSettingsTab.editDepartmentJSON()}'));
-     jQuery("#department-list input").live("keypress",sortableSaveEditHandler('department','@{settings.ConfigurableSettingsTab.editDepartmentJSON()}'));
-     jQuery("#add-department-link").click(slideToggleHandler("#add-department-dialog","#bulk-add-department-dialog"));
-     jQuery("#add-department-save").click(saveAddActionHandler('department','@{settings.ConfigurableSettingsTab.addDepartmentJSON()}'));
-     jQuery("#add-department-cancel").click(cancelAddActionHandler('department'));
-     jQuery("#bulk-add-department-link").click(slideToggleHandler("#bulk-add-department-dialog","#add-department-dialog"));
+  	// Handlers for departments table
+  	jQuery('#department-modal').modal({
+		'show': false
+	});
+  	jQuery(".department-edit-cell a").live("click", function() {
+  		departmentOpenDialogHandler(false, $(this).attr("data-id"));
+	 });
+	 jQuery("#add-department-link").live("click", function() {
+		 departmentOpenDialogHandler(true);
+	 });
+	 
+	 jQuery("#department-save").click(departmentSaveDialogHandler('@{settings.ConfigurableSettingsTab.editDepartmentJSON()}'));
+	 jQuery("#department-remove").click(departmentRemoveDialogHandler('@{settings.ConfigurableSettingsTab.removeDepartmentJSON()}'));
+	 jQuery("#departments-list").sortable({
+		 placeholder: "placeholder",
+		 update: departmentSortableUpdateHandler('@{settings.ConfigurableSettingsTab.reorderDepartmentsJSON()}'),
+
+		 // This function keeps the cell size consistent when sorting.
+		 helper: function(e, tr)
+		  {
+		    var $originals = tr.children();
+		    var $helper = tr.clone();
+		    $helper.children().each(function(index)
+		    {
+		      // Set helper cell sizes to match the original sizes
+		      $(this).width($originals.eq(index).width())
+		    });
+		    return $helper;
+		  },
+		  
+		  // This allows the placeholder to have a background color
+		  'start': function (event, ui) {
+		        ui.placeholder.html('<td colspan="5">&nbsp;</td>');
+		  }
+	 });
+     jQuery("#bulk-add-department-link").click(slideToggleHandler("#bulk-add-department-dialog"));
      jQuery("#bulk-add-department-cancel").click(cancelAddActionHandler('department'));
      
      // Handlers for the sortable Majors list
@@ -271,7 +304,7 @@ jQuery(document).ready(function(){
 <P>Customize the data that appears in various selectable options.</P>
 
 <div class="accordion settings-accordion configurable-settings" id="configurable-settings">	
-	<div class="accordion-group">
+	<div class="accordion-group" id="embargo-types-accordion">
 		<div class="accordion-heading">
 			<a class="accordion-toggle" data-toggle="collapse" href="#availableEmbargoTypes"><strong>Available Embargo Types</strong></a>			
 		</div>
@@ -323,7 +356,7 @@ jQuery(document).ready(function(){
 		</div>
 	</div>
 
-	<div class="accordion-group">
+	<div class="accordion-group" id="colleges-accordion">
 		<div class="accordion-heading">
 			<a class="accordion-toggle" data-toggle="collapse" href="#availableColleges"><strong>Available Colleges</strong></a>			
 		</div>
@@ -381,19 +414,69 @@ jQuery(document).ready(function(){
                         </fieldset>
                     </form>
                 </div>
-
 			</div>
 		</div>
 	</div>
 
-	<div class="accordion-group">
+	<div class="accordion-group" id="programs-accordion">
 		<div class="accordion-heading">
 			<a class="accordion-toggle" data-toggle="collapse" href="#availablePrograms"><strong>Available Programs</strong></a>			
 		</div>
 		<div id="availablePrograms" class="accordion-body collapse ${ "availablePrograms".equals(flash.get("open")) ? "in" : "" }">
 			<div class="accordion-inner">
 				<h2>AVAILABLE PROGRAMS</h2>
-				
+				<p>
+					<a class="confirm" href="@{settings.ConfigurableSettingsTab.removeAllPrograms}" data-confirm="<em class='icon-trash'></em> (Are you sure you want to <strong>remove all</strong> programs?)"> <em class="icon-trash"></em> Remove all programs
+					</a>
+				</p>
+				<p>
+					<a class="confirm" href="@{settings.ConfigurableSettingsTab.alphabetizeAllPrograms}" data-confirm="<em class='icon-refresh'></em> (Are you sure you want to alphabetize all programs?)"> <em class="icon-refresh"></em> Alphabetize all programs
+					</a>
+				</p>
+
+
+				<table class="table table-striped table-bordered table-condensed">
+					<thead>
+						<tr>
+							<td>Name</td>
+							<td>Emails</td>
+							<td>Action</td>
+						</tr>
+					</thead>
+					<tbody id="programs-list">
+						#{list items:programs, as:'program'}
+						<tr id="program_${program.getId()}">
+							<td class="program-name-cell">${program.getName()}</td>
+							<td class="program-emails-cell">#{list items:program.getEmails()?.keySet(), as:'key'}${program.getEmails().get(key)}#{if key != program.getEmails().size()-1}, #{/if}#{/list}</td>
+							<td class="program-edit-cell"><a data-id="${program.getId()}" href="javascript:void(0);">Edit</a></td>
+						</tr>
+						#{/list}
+					</tbody>
+				</table>
+				<p><a id="add-program-link" href="javascript:void(0);">[ADD NEW]</a> &nbsp <a href="javascript:void(0);" id="bulk-add-program-link">[BULK ADD]</a></p>
+
+                <div id="bulk-add-program-dialog" style="display: none;">
+                    <form class="form-horizontal" method="POST" action="@{settings.ConfigurableSettingsTab.bulkAdd}">
+                        <input type="hidden" name="modelType" value="program"/>
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label" for="bulkAdd">Programs</label>
+                                <div class="controls">
+                                    <textarea class="span4" name="bulkAdd"></textarea>
+                                    <p class="help-block">Multiple programs each on a separate line</p>
+                                    
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <div class="controls">
+                                    <button id="bulk-add-program-save" class="btn btn-primary">Bulk Add Programs</button>
+                                    <button id="bulk-add-program-cancel" class="btn">Cancel</button>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+				<!-- OLD CODE
 				<p>
                     <a class="confirm" href="@{settings.ConfigurableSettingsTab.removeAllPrograms}" 
                        data-confirm="<em class='icon-trash'></em> (Are you sure you want to <strong>remove all</strong> programs?)">
@@ -463,19 +546,71 @@ jQuery(document).ready(function(){
                     </form>
                 </div>
 				<br/><br/>
+				 -->
 			</div>
 		</div>
 	</div>
 
 
-	<div class="accordion-group">
+	<div class="accordion-group" id="departments-accordion">
 		<div class="accordion-heading">
 			<a class="accordion-toggle" data-toggle="collapse" href="#availableDepartments"><strong>Available Departments</strong></a>			
 		</div>
 		<div id="availableDepartments" class="accordion-body collapse ${ "availableDepartments".equals(flash.get("open")) ? "in" : "" }">
 			<div class="accordion-inner">
 				<h2>AVAILABLE DEPARTMENTS</h2>
-				
+				<p>
+					<a class="confirm" href="@{settings.ConfigurableSettingsTab.removeAllDepartments}" data-confirm="<em class='icon-trash'></em> (Are you sure you want to <strong>remove all</strong> departments?)"> <em class="icon-trash"></em> Remove all departments
+					</a>
+				</p>
+				<p>
+					<a class="confirm" href="@{settings.ConfigurableSettingsTab.alphabetizeAllDepartments}" data-confirm="<em class='icon-refresh'></em> (Are you sure you want to alphabetize all departments?)"> <em class="icon-refresh"></em> Alphabetize all departments
+					</a>
+				</p>
+
+
+				<table class="table table-striped table-bordered table-condensed">
+					<thead>
+						<tr>
+							<td>Name</td>
+							<td>Emails</td>
+							<td>Action</td>
+						</tr>
+					</thead>
+					<tbody id="departments-list">
+						#{list items:departments, as:'department'}
+						<tr id="department_${department.getId()}">
+							<td class="department-name-cell">${department.getName()}</td>
+							<td class="department-emails-cell">#{list items:department.getEmails()?.keySet(), as:'key'}${department.getEmails().get(key)}#{if key != department.getEmails().size()-1}, #{/if}#{/list}</td>
+							<td class="department-edit-cell"><a data-id="${department.getId()}" href="javascript:void(0);">Edit</a></td>
+						</tr>
+						#{/list}
+					</tbody>
+				</table>
+				<p><a id="add-department-link" href="javascript:void(0);">[ADD NEW]</a> &nbsp <a href="javascript:void(0);" id="bulk-add-department-link">[BULK ADD]</a></p>
+
+                <div id="bulk-add-department-dialog" style="display: none;">
+                    <form class="form-horizontal" method="POST" action="@{settings.ConfigurableSettingsTab.bulkAdd}">
+                        <input type="hidden" name="modelType" value="department"/>
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label" for="bulkAdd">Departments</label>
+                                <div class="controls">
+                                    <textarea class="span4" name="bulkAdd"></textarea>
+                                    <p class="help-block">Multiple departments each on a separate line</p>
+                                    
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <div class="controls">
+                                    <button id="bulk-add-department-save" class="btn btn-primary">Bulk Add Departments</button>
+                                    <button id="bulk-add-department-cancel" class="btn">Cancel</button>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+				<!-- OLD CODE
 				<p>
                     <a class="confirm" href="@{settings.ConfigurableSettingsTab.removeAllDepartments}" 
                        data-confirm="<em class='icon-trash'></em> (Are you sure you want to <strong>remove all</strong> departments?)">
@@ -545,12 +680,13 @@ jQuery(document).ready(function(){
                     </form>
                 </div>
 				<br/><br/>
+				 -->
 			</div>
 		</div>
 	</div>
 				
 
-	<div class="accordion-group">
+	<div class="accordion-group" id="majors-accordion">
 		<div class="accordion-heading">
 			<a class="accordion-toggle" data-toggle="collapse" href="#availableMajors"><strong>Available Majors</strong></a>			
 		</div>
@@ -632,7 +768,7 @@ jQuery(document).ready(function(){
 	</div>
 
 
-	<div class="accordion-group">
+	<div class="accordion-group" id="degrees-accordion">
 		<div class="accordion-heading">
 			<a class="accordion-toggle" data-toggle="collapse" href="#availableDegrees"><strong>Available Degrees</strong></a>			
 		</div>
@@ -703,7 +839,7 @@ jQuery(document).ready(function(){
 	</div>
 
 
-	<div class="accordion-group">
+	<div class="accordion-group" id="document-types-accordion">
 		<div class="accordion-heading">
 			<a class="accordion-toggle" data-toggle="collapse" href="#availableDocumentTypes"><strong>Available Document Types</strong></a>			
 		</div>
@@ -774,7 +910,7 @@ jQuery(document).ready(function(){
 	</div>
 	
 	
-	<div class="accordion-group">
+	<div class="accordion-group" id="committee-member-role-types-accordion">
 		<div class="accordion-heading">
 			<a class="accordion-toggle" data-toggle="collapse" href="#availableCommitteeMemberRoleTypes"><strong>Available Committee Member Role Types</strong></a>			
 		</div>
@@ -860,7 +996,7 @@ jQuery(document).ready(function(){
 	</div>
 
 				
-	<div class="accordion-group">
+	<div class="accordion-group" id="graduation-months-accordion">
 		<div class="accordion-heading">
 			<a class="accordion-toggle" data-toggle="collapse" href="#availableGraduationMonths"><strong>Available Graduation Months</strong></a>			
 		</div>
@@ -920,7 +1056,7 @@ jQuery(document).ready(function(){
 		</div>
 	</div>
 	
-	<div class="accordion-group">
+	<div class="accordion-group" id="languages-accordion">
 		<div class="accordion-heading">
 			<a class="accordion-toggle" data-toggle="collapse" href="#availableLanguages"><strong>Available Languages</strong></a>			
 		</div>
@@ -1080,6 +1216,70 @@ jQuery(document).ready(function(){
             <a href="javascript:void(0);" class="btn" data-dismiss="modal">Close</a>
             <a id="college-remove" href="javascript:void(0);" class="btn">Delete College</a>
             <input id="college-save" type="submit" class="btn btn-primary" name="submit_save" value="Save College"/>
+        </div>
+    </form>
+</div>
+<div class="modal fade" id="program-modal">
+    <form class="form-horizontal">
+        <input type="hidden" name="program-id" id="program-id" value=""/>
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">X</button>
+            <h3>Program</h3>
+        </div>
+        <div class="modal-body">
+            <ul id="program-errors" class="red">
+            </ul>
+            <fieldset>
+                <div class="control-group">
+                    <label class="control-label" for="program-name"><strong>Program Name</strong>:</label>
+                    <div class="controls">
+                        <input type="text" class="input-xlarge" name="program-name" id="program-name"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="program-emails"><strong>Program Emails</strong>:</label>
+                    <div class="controls">
+						<textarea name="program-emails" id="program-emails" class="input-xlarge"></textarea>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="modal-footer">
+            <a href="javascript:void(0);" class="btn" data-dismiss="modal">Close</a>
+            <a id="program-remove" href="javascript:void(0);" class="btn">Delete Program</a>
+            <input id="program-save" type="submit" class="btn btn-primary" name="submit_save" value="Save Program"/>
+        </div>
+    </form>
+</div>
+<div class="modal fade" id="department-modal">
+    <form class="form-horizontal">
+        <input type="hidden" name="department-id" id="department-id" value=""/>
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">X</button>
+            <h3>Department</h3>
+        </div>
+        <div class="modal-body">
+            <ul id="department-errors" class="red">
+            </ul>
+            <fieldset>
+                <div class="control-group">
+                    <label class="control-label" for="department-name"><strong>Department Name</strong>:</label>
+                    <div class="controls">
+                        <input type="text" class="input-xlarge" name="department-name" id="department-name"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="department-emails"><strong>Department Emails</strong>:</label>
+                    <div class="controls">
+						<textarea name="department-emails" id="department-emails" class="input-xlarge"></textarea>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="modal-footer">
+            <a href="javascript:void(0);" class="btn" data-dismiss="modal">Close</a>
+            <a id="department-remove" href="javascript:void(0);" class="btn">Delete Department</a>
+            <input id="department-save" type="submit" class="btn btn-primary" name="submit_save" value="Save Department"/>
         </div>
     </form>
 </div>

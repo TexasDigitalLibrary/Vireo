@@ -1,5 +1,7 @@
 package org.tdl.vireo.model;
 
+import java.util.HashMap;
+
 /**
  * This is a simple mock program class that may be useful for testing. Feel free
  * to extend this to add in extra parameters that you feel appropriate.
@@ -16,6 +18,7 @@ public class MockProgram extends AbstractMock implements Program {
 	public Long id;
 	public int displayOrder;
 	public String name;
+	public HashMap<Integer, String> emails = new HashMap<Integer, String>();
 
 	@Override
 	public MockProgram save() {
@@ -60,6 +63,27 @@ public class MockProgram extends AbstractMock implements Program {
 	@Override
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	@Override
+	public HashMap<Integer, String> getEmails() {
+		return this.emails;
+	}
+
+	@Override
+	public void setEmails(HashMap emails) {
+		this.emails = emails;
+	}
+
+	@Override
+	public void addEmail(String email) {
+		int i = this.emails.size();
+		this.emails.put(i, email);
+	}
+
+	@Override
+	public void removeEmail(int index) {
+		this.emails.remove(index);
 	}
 
 }

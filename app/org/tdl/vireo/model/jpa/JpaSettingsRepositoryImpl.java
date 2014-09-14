@@ -92,6 +92,11 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	}
 	
 	@Override
+	public Program createProgram(String name,List<String> emails) {
+		return new JpaProgramImpl(name,emails);
+	}
+	
+	@Override
 	public Program findProgram(Long id) {
 		return (Program) JpaProgramImpl.findById(id);
 	}
@@ -104,6 +109,11 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	@Override
 	public Department createDepartment(String name) {
 		return new JpaDepartmentImpl(name);
+	}
+	
+	@Override
+	public Department createDepartment(String name,List<String> emails) {
+		return new JpaDepartmentImpl(name,emails);
 	}
 
 	@Override

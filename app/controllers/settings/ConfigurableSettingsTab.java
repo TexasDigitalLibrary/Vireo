@@ -371,10 +371,11 @@ public class ConfigurableSettingsTab extends SettingsTab {
 	// ////////////////////////////////////////////
 
 	/**
-	 * Create a new College. The id of the new college will be returned.
+	 * Create or edit a new College. The id of the new college will be returned.
 	 * 
-	 * @param name
-	 *            The name of the new college
+	 * @param collegeId - The id of the college we're editing
+	 * @param name - The name of the new college
+	 * @param emails - The list of email addresses to associate with this college
 	 */
 	@Security(RoleType.MANAGER)
 	public static void editCollegeJSON(String collegeId, String name, String emails) {
@@ -452,56 +453,16 @@ public class ConfigurableSettingsTab extends SettingsTab {
 	}
 
 	/**
-	 * Edit an existing college's name. Both the id and new name will be
-	 * returned.
-	 * 
-	 * @param collegeId
-	 *            The id of the college to be edited, in the form "college_id"
-	 * @param name
-	 *            The new name
-	 */
-	@Security(RoleType.MANAGER)
-	public static void old_editCollegeJSON(String collegeId, String name) {
-		try {
-			// Check input
-			if (name == null || name.trim().length() == 0)
-				throw new IllegalArgumentException("Name is required");
-
-			// Save the new college
-			String[] parts = collegeId.split("_");
-			Long id = Long.valueOf(parts[1]);
-			College college = settingRepo.findCollege(id);
-			college.setName(name);
-			college.save();
-
-			name = escapeJavaScript(name);
-
-			renderJSON("{ \"success\": \"true\", \"id\": " + college.getId() + ", \"name\": \"" + name + "\" }");
-		} catch (IllegalArgumentException iae) {
-			String message = escapeJavaScript(iae.getMessage());			
-			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
-		} catch (PersistenceException pe) {
-			name = escapeJavaScript(name);
-			renderJSON("{ \"failure\": \"true\", \"message\": \"Another college already exists with the name: '"+name+"'\" }");
-		} catch (RuntimeException re) {
-			Logger.error(re,"Unable to edit college");
-			String message = escapeJavaScript(re.getMessage());
-			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
-		}
-	}
-
-	/**
 	 * Remove an existing college
 	 * 
 	 * @param collegeId
-	 *            The id of the college to be removed of the form "college_id"
+	 *            The id of the college to be removed
 	 */
 	@Security(RoleType.MANAGER)
 	public static void removeCollegeJSON(String collegeId) {
 		try {
 			// Delete the old college
-			String[] parts = collegeId.split("_");
-			Long id = Long.valueOf(parts[1]);
+			Long id = Long.valueOf(collegeId);
 			College college = settingRepo.findCollege(id);
 			college.delete();
 
@@ -576,30 +537,73 @@ public class ConfigurableSettingsTab extends SettingsTab {
 	// ////////////////////////////////////////////
 
 	/**
-	 * Create a new Program. The id of the new program will be returned.
+	 * Create or edit a new Program. The id of the new program will be returned.
 	 * 
-	 * @param name
-	 *            The name of the new program
+	 * @param programId - The id of the program we're editing
+	 * @param name - The name of the new program
+	 * @param emails - The list of email addresses to associate with this program
 	 */
 	@Security(RoleType.MANAGER)
-	public static void addProgramJSON(String name) {
+	public static void editProgramJSON(String programId, String name, String emails) {
 
 		try {
 			if (name == null || name.trim().length() == 0)
 				throw new IllegalArgumentException("Name is required");
-
-			// Add the new program to the end of the list.
-			List<Program> programs = settingRepo.findAllPrograms();
-
-			Program program = settingRepo.createProgram(name);
-			programs.add(program);
+			
+			// Add the new college to the end of the list.
+            List<Program> programs = settingRepo.findAllPrograms();
+			
+			// Create or modify the college
+            Program program = null;
+			String jsonEmails = "";
+            if (programId != null && programId.trim().length() > 0) {
+                Long id = Long.valueOf(programId);
+                program = settingRepo.findProgram(id);
+                program.setName(name);
+                HashMap<Integer, String> emails_map = new HashMap<Integer, String>();
+                String[] emails_array = emails.split(",");
+                int i =0;
+				jsonEmails = "[";                
+                for(String email : Arrays.asList(emails_array)) {
+                    emails_map.put(i, email);
+                    jsonEmails += "{\"id\":" +i+ ",\"email\":\""+email+"\"},";
+                    i++;
+                }
+                jsonEmails = jsonEmails.substring(0,jsonEmails.length()-1);
+				jsonEmails += "]";
+				program.setEmails(emails_map);
+				program.save();
+            } else {
+    			if (emails != null) {
+    				String[] newEmails = emails.split(",");
+    				program = settingRepo.createProgram(name,Arrays.asList(newEmails));
+    				jsonEmails = "[";
+    				int i = 0;
+    				for (Map.Entry<Integer, String> entry : program.getEmails().entrySet()) {
+    					
+    					Integer key = entry.getKey();
+    				    String value = entry.getValue();
+    				    jsonEmails += "{\"id\":" +key+ ",\"email\":\""+value+"\"}";
+    				    
+    				    i++;
+    				
+    				    if(i != program.getEmails().size()) jsonEmails += ",";
+    				
+    				}
+    				jsonEmails += "]";
+    			} else {
+    				Logger.info("no");
+    				program = settingRepo.createProgram(name);
+    			}
+    			programs.add(program);
+            }
 
 			saveModelOrder(programs);
 
 			name = escapeJavaScript(program.getName());
 
 			renderJSON("{ \"success\": \"true\", \"id\": " + program.getId()
-					+ ", \"name\": \"" + name + "\" }");
+					+ ", \"name\": \"" + name + "\", \"emails\": " + jsonEmails+" }");
 		} catch (IllegalArgumentException iae) {
 			String message = escapeJavaScript(iae.getMessage());			
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
@@ -615,45 +619,6 @@ public class ConfigurableSettingsTab extends SettingsTab {
 	}
 
 	/**
-	 * Edit an existing program's name. Both the id and new name will be
-	 * returned.
-	 * 
-	 * @param programId
-	 *            The id of the program to be edited, in the form "program_id"
-	 * @param name
-	 *            The new name
-	 */
-	@Security(RoleType.MANAGER)
-	public static void editProgramJSON(String programId, String name) {
-		try {
-			// Check input
-			if (name == null || name.trim().length() == 0)
-				throw new IllegalArgumentException("Name is required");
-
-			// Save the new program
-			String[] parts = programId.split("_");
-			Long id = Long.valueOf(parts[1]);
-			Program program = settingRepo.findProgram(id);
-			program.setName(name);
-			program.save();
-
-			name = escapeJavaScript(name);
-
-			renderJSON("{ \"success\": \"true\", \"id\": " + program.getId() + ", \"name\": \"" + name + "\" }");
-		} catch (IllegalArgumentException iae) {
-			String message = escapeJavaScript(iae.getMessage());			
-			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
-		} catch (PersistenceException pe) {
-			name = escapeJavaScript(name);
-			renderJSON("{ \"failure\": \"true\", \"message\": \"Another program already exists with the name: '"+name+"'\" }");
-		} catch (RuntimeException re) {
-			Logger.error(re,"Unable to edit program");
-			String message = escapeJavaScript(re.getMessage());
-			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
-		}
-	}
-
-	/**
 	 * Remove an existing program
 	 * 
 	 * @param programId
@@ -662,9 +627,8 @@ public class ConfigurableSettingsTab extends SettingsTab {
 	@Security(RoleType.MANAGER)
 	public static void removeProgramJSON(String programId) {
 		try {
-			// Delete the old college
-			String[] parts = programId.split("_");
-			Long id = Long.valueOf(parts[1]);
+			// Delete the old program
+			Long id = Long.valueOf(programId);
 			Program program = settingRepo.findProgram(id);
 			program.delete();
 
@@ -739,30 +703,73 @@ public class ConfigurableSettingsTab extends SettingsTab {
 	// ////////////////////////////////////////////
 
 	/**
-	 * Create a new Department. The id of the new department will be returned.
+	 * Create or edit a new Department. The id of the new department will be returned.
 	 * 
-	 * @param name
-	 *            The name of the new department
+	 * @param departmentId - The id of the department we're editing
+	 * @param name - The name of the new department
+	 * @param emails - The list of email addresses to associate with this department
 	 */
 	@Security(RoleType.MANAGER)
-	public static void addDepartmentJSON(String name) {
+	public static void editDepartmentJSON(String departmentId, String name, String emails) {
 
 		try {
 			if (name == null || name.trim().length() == 0)
 				throw new IllegalArgumentException("Name is required");
-
-			// Add the new department to the end of the list.
-			List<Department> departments = settingRepo.findAllDepartments();
-
-			Department department = settingRepo.createDepartment(name);
-			departments.add(department);
+			
+			// Add the new college to the end of the list.
+            List<Department> departments = settingRepo.findAllDepartments();
+			
+			// Create or modify the college
+            Department department = null;
+			String jsonEmails = "";
+            if (departmentId != null && departmentId.trim().length() > 0) {
+                Long id = Long.valueOf(departmentId);
+                department = settingRepo.findDepartment(id);
+                department.setName(name);
+                HashMap<Integer, String> emails_map = new HashMap<Integer, String>();
+                String[] emails_array = emails.split(",");
+                int i =0;
+				jsonEmails = "[";                
+                for(String email : Arrays.asList(emails_array)) {
+                    emails_map.put(i, email);
+                    jsonEmails += "{\"id\":" +i+ ",\"email\":\""+email+"\"},";
+                    i++;
+                }
+                jsonEmails = jsonEmails.substring(0,jsonEmails.length()-1);
+				jsonEmails += "]";
+				department.setEmails(emails_map);
+				department.save();
+            } else {
+    			if (emails != null) {
+    				String[] newEmails = emails.split(",");
+    				department = settingRepo.createDepartment(name,Arrays.asList(newEmails));
+    				jsonEmails = "[";
+    				int i = 0;
+    				for (Map.Entry<Integer, String> entry : department.getEmails().entrySet()) {
+    					
+    					Integer key = entry.getKey();
+    				    String value = entry.getValue();
+    				    jsonEmails += "{\"id\":" +key+ ",\"email\":\""+value+"\"}";
+    				    
+    				    i++;
+    				
+    				    if(i != department.getEmails().size()) jsonEmails += ",";
+    				
+    				}
+    				jsonEmails += "]";
+    			} else {
+    				Logger.info("no");
+    				department = settingRepo.createDepartment(name);
+    			}
+    			departments.add(department);
+            }
 
 			saveModelOrder(departments);
 
 			name = escapeJavaScript(department.getName());
 
 			renderJSON("{ \"success\": \"true\", \"id\": " + department.getId()
-					+ ", \"name\": \"" + name + "\" }");
+					+ ", \"name\": \"" + name + "\", \"emails\": " + jsonEmails+" }");
 		} catch (IllegalArgumentException iae) {
 			String message = escapeJavaScript(iae.getMessage());			
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
@@ -771,48 +778,6 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			renderJSON("{ \"failure\": \"true\", \"message\": \"Another department already exists with the name: '"+name+"'\" }");
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to add department");
-			String message = escapeJavaScript(re.getMessage());
-			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
-					+ "\" }");
-		}
-	}
-
-	/**
-	 * Edit an existing department's name. Both the id and new name will be
-	 * returned.
-	 * 
-	 * @param departmentId
-	 *            The id of the department to be edited, in the form
-	 *            "department_id"
-	 * @param name
-	 *            The new name
-	 */
-	@Security(RoleType.MANAGER)
-	public static void editDepartmentJSON(String departmentId, String name) {
-		try {
-			// Check input
-			if (name == null || name.trim().length() == 0)
-				throw new IllegalArgumentException("Name is required");
-
-			// Save the new department
-			String[] parts = departmentId.split("_");
-			Long id = Long.valueOf(parts[1]);
-			Department department = settingRepo.findDepartment(id);
-			department.setName(name);
-			department.save();
-
-			name = escapeJavaScript(name);
-
-			renderJSON("{ \"success\": \"true\", \"id\": " + department.getId()
-					+ ", \"name\": \"" + name + "\" }");
-		} catch (IllegalArgumentException iae) {
-			String message = escapeJavaScript(iae.getMessage());			
-			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
-		} catch (PersistenceException pe) {
-			name = escapeJavaScript(name);
-			renderJSON("{ \"failure\": \"true\", \"message\": \"Another department already exists with the name: '"+name+"'\" }");
-		} catch (RuntimeException re) {
-			Logger.error(re,"Unable to edit department");
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
 					+ "\" }");
@@ -830,8 +795,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 	public static void removeDepartmentJSON(String departmentId) {
 		try {
 			// Delete the old department
-			String[] parts = departmentId.split("_");
-			Long id = Long.valueOf(parts[1]);
+			Long id = Long.valueOf(departmentId);
 			Department department = settingRepo.findDepartment(id);
 			department.delete();
 

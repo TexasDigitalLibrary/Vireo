@@ -39,42 +39,42 @@ import play.mvc.Http.Response;
 import play.mvc.Router;
 
 public class FirstUserTest extends AbstractVireoFunctionalTest {
-	
+
 	public static SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
 	public static PersonRepository personRepo = Spring.getBeanOfType(PersonRepository.class);
 	public static SubmissionRepository subRepo = Spring.getBeanOfType(SubmissionRepository.class);
 	public static SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
 	public static StateManager stateManager = Spring.getBeanOfType(StateManager.class);
-	
+
 	/**
 	 * Test that the create user page loads.
 	 */
 	@Test
-	public void testPageLoad() {			
+	public void testPageLoad() {
 		Application.personRepo = new MockPersonRepository();
 		FirstUser.personRepo = new MockPersonRepository();
 		FirstUser.settingRepo = new MockSettingsRepository();
 		Application.firstUser = null;
-		
+
 		MockSettingsRepository.mockEmbargos.clear();
 		MockSettingsRepository.mockConfigs.clear();
 		MockSettingsRepository.mockRoleTypes.clear();
-		
+
 		try {
 			assertEquals(0, Application.personRepo.findAllPersons().size());
-			
+
 			String URL = Router.reverse("Application.index").url;
-			
+
 			Response response = GET(URL);
-			assertStatus(302, response);			
+			assertStatus(302, response);
 			assertTrue(Application.firstUser);
-			
+
 			response = GET(URL);
-			assertStatus(302, response);			
-			
+			assertStatus(302, response);
+
 			URL = Router.reverse("FirstUser.createUser").url;
-			
-			Map<String,String> params = new HashMap<String,String>();
+
+			Map<String, String> params = new HashMap<String, String>();
 			params.put("firstName", "John");
 			params.put("lastName", "Doe");
 			params.put("email", "john@email.com");
@@ -83,41 +83,39 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 			params.put("netid1", "jdoe");
 			params.put("netid2", "jdoe");
 			params.put("createFirstUser", "true");
-			
-			response = POST(URL,params);
+
+			response = POST(URL, params);
 			assertStatus(302, response);
 			assertNotNull(MockPersonRepository.lastPersonCreated);
 			assertFalse(Application.firstUser);
-			
-			// Test that the default values were created.
-			assertEquals(4,MockSettingsRepository.mockEmbargos.size());
-			assertEquals(3,MockSettingsRepository.mockRoleTypes.size());
 
-			
+			// Test that the default values were created.
+			assertEquals(4, MockSettingsRepository.mockEmbargos.size());
+			assertEquals(3, MockSettingsRepository.mockRoleTypes.size());
+
 		} finally {
 			Application.personRepo = personRepo;
 			FirstUser.personRepo = personRepo;
-			FirstUser.settingRepo = settingRepo;			
+			FirstUser.settingRepo = settingRepo;
 		}
 	}
-	
+
 	public static class MockPersonRepository implements PersonRepository {
 
 		public static MockPerson lastPersonCreated;
-		
+
 		@Override
-		public Person createPerson(String netId, String email,
-				String firstName, String lastName, RoleType role) {
-			
+		public Person createPerson(String netId, String email, String firstName, String lastName, RoleType role) {
+
 			MockPerson mockPerson = new MockPerson();
 			mockPerson.netid = netId;
 			mockPerson.email = email;
 			mockPerson.firstName = firstName;
 			mockPerson.lastName = lastName;
 			mockPerson.role = role;
-			
+
 			lastPersonCreated = mockPerson;
-			
+
 			return mockPerson;
 		}
 
@@ -156,7 +154,7 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 			// TODO Auto-generated method stub
 			return new ArrayList<Person>();
 		}
-		
+
 		@Override
 		public long findPersonsTotal() {
 			return 0L;
@@ -167,15 +165,15 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 			// TODO Auto-generated method stub
 			return null;
 		}
-		
+
 	}
-	
+
 	public static class MockSettingsRepository implements SettingsRepository {
 
 		public static List<MockEmbargoType> mockEmbargos = new ArrayList<MockEmbargoType>();
 		public static List<MockConfiguration> mockConfigs = new ArrayList<MockConfiguration>();
 		public static List<MockCommitteeMemberRoleType> mockRoleTypes = new ArrayList<MockCommitteeMemberRoleType>();
-		
+
 		@Override
 		public Degree createDegree(String name, DegreeLevel level) {
 			// TODO Auto-generated method stub
@@ -225,6 +223,12 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 		}
 
 		@Override
+		public College createCollege(String name, List<String> emails) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
 		public College findCollege(Long id) {
 			// TODO Auto-generated method stub
 			return null;
@@ -235,9 +239,15 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 			// TODO Auto-generated method stub
 			return null;
 		}
-		
+
 		@Override
 		public Program createProgram(String name) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+		@Override
+		public Program createProgram(String name, List<String> emails) {
 			// TODO Auto-generated method stub
 			return null;
 		}
@@ -256,6 +266,12 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 
 		@Override
 		public Department createDepartment(String name) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+		@Override
+		public Department createDepartment(String name, List<String> emails) {
 			// TODO Auto-generated method stub
 			return null;
 		}
@@ -297,17 +313,16 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 		}
 
 		@Override
-		public EmbargoType createEmbargoType(String name, String description,
-				Integer duration, boolean active) {
+		public EmbargoType createEmbargoType(String name, String description, Integer duration, boolean active) {
 
 			MockEmbargoType mockEmbargoType = new MockEmbargoType();
 			mockEmbargoType.name = name;
 			mockEmbargoType.description = description;
 			mockEmbargoType.duration = duration;
 			mockEmbargoType.active = active;
-			
+
 			mockEmbargos.add(mockEmbargoType);
-			
+
 			return mockEmbargoType;
 		}
 
@@ -346,16 +361,16 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 			// TODO Auto-generated method stub
 			return null;
 		}
-		
+
 		@Override
 		public CommitteeMemberRoleType createCommitteeMemberRoleType(String name, DegreeLevel level) {
-			
+
 			MockCommitteeMemberRoleType roleType = new MockCommitteeMemberRoleType();
 			roleType.name = name;
 			roleType.level = level;
-			
+
 			mockRoleTypes.add(roleType);
-			
+
 			return roleType;
 		}
 
@@ -378,8 +393,7 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 		}
 
 		@Override
-		public EmailTemplate createEmailTemplate(String name, String subject,
-				String message) {
+		public EmailTemplate createEmailTemplate(String name, String subject, String message) {
 			// TODO Auto-generated method stub
 			return null;
 		}
@@ -426,9 +440,9 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 			MockConfiguration mockConfig = new MockConfiguration();
 			mockConfig.name = name;
 			mockConfig.value = value;
-			
+
 			mockConfigs.add(mockConfig);
-			
+
 			return mockConfig;
 		}
 
@@ -455,7 +469,7 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 			// TODO Auto-generated method stub
 			return null;
 		}
-		
+
 		@Override
 		public boolean getConfigBoolean(String name) {
 			// TODO Auto-generated method stub
@@ -515,6 +529,5 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 			// TODO Auto-generated method stub
 			return null;
 		}
-		
 	}
 }

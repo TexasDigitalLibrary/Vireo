@@ -1558,7 +1558,7 @@ var embargoSortableUpdateHandler = function(jsonURL) {
 		}
 
 		var failureCallback = function(message) {
-			displayAlert("embargoType-reorder", "Unable to reorder " + type,
+			displayAlert("embargoType-reorder", "Unable to reorder embargo",
 					message);
 			jQuery("#embargoType-list").removeClass("waiting");
 		}
@@ -1608,7 +1608,8 @@ function collegeOpenDialogHandler(isNew, id) {
 		if(array_key == -1) {
 			return;
 		}
-		college = jsDataObjects.collegesArray[array_key];
+		// get our college data from JS cache
+		var college = jsDataObjects.collegesArray[array_key];
 		jQuery("#college-id").val(id);
 		jQuery("#college-name").val(college.name);
 		var emails_string = "";
@@ -1646,11 +1647,11 @@ function collegeOpenDialogHandler(isNew, id) {
 }
 
 /**
- * Create or Edit an existing embargo type. This callback function handles
- * saving the embargo dialog box.
+ * Create or Edit an existing college. This callback function handles
+ * saving the college dialog box.
  * 
  * @param jsonURL
- *            The url where embargos should be updated.
+ *            The url where colleges should be updated.
  * @returns A Callback Function
  */
 function collegeSaveDialogHandler(jsonURL) {
@@ -1694,15 +1695,20 @@ function collegeSaveDialogHandler(jsonURL) {
 			$row.find(".college-emails-cell").text(emails_string.substring(0, emails_string.length-2));
 			
 			jQuery('#college-modal').modal('hide');
+			// refresh local JS cache of collegesArray data
 			var array_key = -1;
+			// look for the array index of this college in the array
 			for(college in jsDataObjects.collegesArray) {
 				if(jsDataObjects.collegesArray[college].id == collegeId) {
 					array_key = college;
 				}
 			}
+			// if the index position was not found
 			if(array_key == -1) {
+				// add new data
 				jsDataObjects.collegesArray.push(data);
 			} else {
+				// change existing data
 				jsDataObjects.collegesArray[array_key] = data;
 			}
 		}
@@ -1748,55 +1754,75 @@ function collegeSaveDialogHandler(jsonURL) {
 }
 
 /**
- * Delete an existing embargo type. This will confirm that this is what the user wants to do.
+ * Delete an existing college. This will confirm that this is what the user wants to do.
  * 
  * @param jsonURL
- *            The url where embargos are deleted.
+ *            The url where colleges are deleted.
  * @returns A Callback Function
  */
 function collegeRemoveDialogHandler(jsonURL) {
 	return function () {
 
 		// Confirm before deleting
-		var really = confirm("Alert! All submissions which use this embargo type will have their embargo settings deleted with no way to recover. Are you REALLY sure you want to delete this embargo type?");
+		var really = confirm("Alert! All submissions which use this college will have their college settings deleted with no way to recover. Are you REALLY sure you want to delete this college?");
 		if (!really)
 			return false;
 		
-		var embargoTypeId = jQuery("#embargoType-id").val();
-		jQuery("#embargo-type-modal").addClass("waiting");
+		var collegeId = jQuery("#college-id").val();
+		jQuery("#college-modal").addClass("waiting");
 		
 		var successCallback = function(data) {
 
 			// Remove the ajax loading indicators & alerts
-			jQuery("#embargo-type-modal").removeClass("waiting");
-			jQuery("#embargoType-errors").html("");
-			jQuery("#embargo-type-modal .control-group").each(function () {
+			jQuery("#college-modal").removeClass("waiting");
+			jQuery("#college-errors").html("");
+			jQuery("#college-modal .control-group").each(function () {
 				jQuery(this).removeClass("error"); 
 			});
-			jQuery("#"+embargoTypeId).remove();
+			jQuery("#college_"+collegeId).remove();
 			
 			// Go back to the list
-			jQuery('#embargo-type-modal').modal('hide');
-
+			jQuery('#college-modal').modal('hide');
+			
+			// refresh local JS cache of collegesArray data
+			var array_key = -1;
+			// look for the array index of this college in the array
+			for(college in jsDataObjects.collegesArray) {
+				if(jsDataObjects.collegesArray[college].id == collegeId) {
+					array_key = parseInt(college);
+				}
+			}
+			// if the index position was found
+			if(array_key != -1) {
+				// remove old data
+				var arrayBefore = jsDataObjects.collegesArray.slice(0, array_key);
+				var arrayAfter = new Array();
+				// avoid index out of bounds (in case we're removing last element in array)
+				if(array_key+1 < jsDataObjects.collegesArray.length) {
+					arrayAfter = jsDataObjects.collegesArray.slice(array_key+1, jsDataObjects.collegesArray.length);
+				}
+				var newArray = arrayBefore.concat(arrayAfter);
+				jsDataObjects.collegesArray = newArray;
+			}
 		}
 
 		var failureCallback = function (message) {
 
 			// Add failure indicators
-			jQuery("#embargo-type-modal").removeClass("waiting");
-			jQuery("#embargo-type-modal .control-group").each(function () {
+			jQuery("#college-modal").removeClass("waiting");
+			jQuery("#college-modal .control-group").each(function () {
 				jQuery(this).addClass("error"); 
 			});
 
 			// Display the error
-			jQuery("#embargoType-errors").html("<li><strong>Unable to save embargo</strong>: "+message);
+			jQuery("#college-errors").html("<li><strong>Unable to remove college</strong>: "+message);
 
 		}
 
 		jQuery.ajax({
 			url:jsonURL,
 			data:{
-				'embargoTypeId': embargoTypeId
+				'collegeId': collegeId
 			},
 			dataType:'json',
 			type:'POST',
@@ -1818,33 +1844,645 @@ function collegeRemoveDialogHandler(jsonURL) {
 }
 
 /**
- * Sortable update handler for embargo types. This callback is called whenever
- * re-sorts the list of embargos, saving the new order in the system.
+ * Sortable update handler for colleges. This callback is called whenever
+ * re-sorts the list of colleges, saving the new order in the system.
  * 
  * @param jsonURL
- *            The json url to update embargo order.
+ *            The json url to update colleges order.
  * @returns A Callback function
  */
 var collegeSortableUpdateHandler = function(jsonURL) {
 	return function(event, ui) {
 
-		var list = jQuery("#embargoType-list").sortable('toArray').toString();
-		jQuery("#embargoType-list").addClass("waiting");
+		var list = jQuery("#colleges-list").sortable('toArray').toString();
+		jQuery("#colleges-list").addClass("waiting");
 
 		var successCallback = function(data) {
 			// Remove the ajax loading indicators & alerts
-			clearAlert("embargoType-reorder");
-			jQuery("#embargoType-list").removeClass("waiting");
+			clearAlert("college-reorder");
+			jQuery("#colleges-list").removeClass("waiting");
 		}
 
 		var failureCallback = function(message) {
-			displayAlert("embargoType-reorder", "Unable to reorder " + type,
+			displayAlert("college-reorder", "Unable to reorder college",
 					message);
-			jQuery("#embargoType-list").removeClass("waiting");
+			jQuery("#colleges-list").removeClass("waiting");
 		}
 
 		var data = {};
-		data['embargoTypeIds'] = list;
+		data['collegeIds'] = list;
+
+		jQuery.ajax({
+			url : jsonURL,
+			data : data,
+			dataType : 'json',
+			type : 'POST',
+			success : function(data) {
+				if (data.success) {
+					successCallback(data);
+				} else {
+					failureCallback(data.message)
+				}
+			},
+			error : function() {
+				failureCallback("Unable to communicate with the server.");
+			}
+
+		});
+	};
+}
+
+/**
+ * Open the program dialog box. This will work for opening an existing
+ * program, or adding a new program.
+ * 
+ * @returns A Callback function
+ */
+function programOpenDialogHandler(isNew, id) {
+	if(isNew == null && typeof(isNew) == "undefined") {
+		isNew = false;
+	}
+
+	if (!isNew) {
+		// Loading an existing type
+		var array_key = -1;
+		for(program in jsDataObjects.programsArray) {
+			if(jsDataObjects.programsArray[program].id == id) {
+				array_key = program;
+			}
+		}
+		if(array_key == -1) {
+			return;
+		}
+		// get our program data from JS cache
+		var program = jsDataObjects.programsArray[array_key];
+		jQuery("#program-id").val(id);
+		jQuery("#program-name").val(program.name);
+		var emails_string = "";
+		var emails = program.emails;
+		$.each(emails, function(key, val) {
+			if (val.email != "") {
+				emails_string += val.email + ", ";
+			}
+		});
+
+		jQuery("#program-emails").val(emails_string.substring(0, emails_string.length-2));
+		
+		jQuery("#program-modal .modal-header h3").text("Edit Program");
+		jQuery("#program-modal .modal-footer #program-save").val("Save Program");
+		jQuery("#program-remove").show();
+	} else {
+		// Adding a new college
+		jQuery("#program-id").val("");
+		jQuery("#program-name").val("");
+		jQuery("#program-emails").val("");
+		
+		jQuery("#program-modal .modal-header h3").text("Add Program");
+		jQuery("#program-modal .modal-footer #program-save").val("Add Program");
+		jQuery("#program-remove").hide();
+
+	}
+
+	// Clear out any previous errors
+	jQuery("#program-errors").html("");
+	jQuery("#program-modal .control-group").each(function () {
+		jQuery(this).removeClass("error"); 
+	});
+
+	jQuery('#program-modal').modal('show');
+}
+
+/**
+ * Create or Edit an existing program. This callback function handles
+ * saving the program dialog box.
+ * 
+ * @param jsonURL
+ *            The url where program should be updated.
+ * @returns A Callback Function
+ */
+function programSaveDialogHandler(jsonURL) {
+	return function () {
+		var programId = jQuery("#program-id").val();
+		var name = jQuery("#program-name").val();
+		var emails = jQuery("#program-emails").val();
+		
+		jQuery("#program-modal").addClass("waiting");
+
+		var successCallback = function(data) {
+
+			// Remove the ajax loading indicators & alerts
+			jQuery("#program-modal").removeClass("waiting");
+			jQuery("#program-errors").html("");
+			jQuery("#program-modal .control-group").each(function () {
+				jQuery(this).removeClass("error"); 
+			});
+
+			var $row;
+			if (jQuery("#college_"+data.id).length > 0) {
+				// Look up the old row
+				$row = jQuery("#program_"+data.id);
+			} else {
+				// Add a new row to the end of the list.
+				$row = jQuery( 
+						"<tr id='program_"+data.id+"'>"+
+						"    <td class='program-name-cell'></td>"+
+						"    <td class='program-emails-cell'></td>"+
+						"    <td class='program-edit-cell'><a data-id='"+data.id+"' href='javascript:void(0);'>Edit</a></td>" +
+						"</tr>"
+				).appendTo(jQuery("#programs-list"));
+			}
+
+			$row.find(".program-name-cell").text(data.name);
+			var emails_string = "";
+			var emails = data.emails;
+			$.each(emails, function(key, val) {
+				emails_string += val.email + ", ";
+			});
+			$row.find(".program-emails-cell").text(emails_string.substring(0, emails_string.length-2));
+			
+			jQuery('#program-modal').modal('hide');
+			// refresh local JS cache of programsArray data
+			var array_key = -1;
+			// look for the array index of this program in the array
+			for(program in jsDataObjects.programsArray) {
+				if(jsDataObjects.programsArray[program].id == programId) {
+					array_key = program;
+				}
+			}
+			// if the index position was not found
+			if(array_key == -1) {
+				// add new data
+				jsDataObjects.programsArray.push(data);
+			} else {
+				// change existing data
+				jsDataObjects.programsArray[array_key] = data;
+			}
+		}
+
+		var failureCallback = function (message) {
+
+			// Add failure indicators
+			jQuery("#program-modal").removeClass("waiting");
+			jQuery("#program-modal .control-group").each(function () {
+				jQuery(this).addClass("error"); 
+			});
+
+			// Display the error
+			jQuery("#program-errors").html("<li><strong>Unable to save program</strong>: "+message);
+
+		}
+
+		jQuery.ajax({
+			url:jsonURL,
+			data:{
+				'programId':programId,
+				'name': name,
+				'emails': emails
+			},
+			dataType:'json',
+			type:'POST',
+			success:function(data){
+				if (data.success) {
+					successCallback(data);
+				} else {
+					failureCallback(data.message)
+				}
+			},
+			error:function(e){
+				console.log(e);
+				failureCallback("Unable to communicate with the server."+e);
+			}
+
+		});
+
+		return false;
+	}
+}
+
+/**
+ * Delete an existing program. This will confirm that this is what the user wants to do.
+ * 
+ * @param jsonURL
+ *            The url where programs are deleted.
+ * @returns A Callback Function
+ */
+function programRemoveDialogHandler(jsonURL) {
+	return function () {
+
+		// Confirm before deleting
+		var really = confirm("Alert! All submissions which use this program will have their program settings deleted with no way to recover. Are you REALLY sure you want to delete this program?");
+		if (!really)
+			return false;
+		
+		var programId = jQuery("#program-id").val();
+		jQuery("#program-modal").addClass("waiting");
+		
+		var successCallback = function(data) {
+
+			// Remove the ajax loading indicators & alerts
+			jQuery("#program-modal").removeClass("waiting");
+			jQuery("#program-errors").html("");
+			jQuery("#program-modal .control-group").each(function () {
+				jQuery(this).removeClass("error"); 
+			});
+			jQuery("#program_"+programId).remove();
+			
+			// Go back to the list
+			jQuery('#program-modal').modal('hide');
+			
+			// refresh local JS cache of programsArray data
+			var array_key = -1;
+			// look for the array index of this program in the array
+			for(program in jsDataObjects.programsArray) {
+				if(jsDataObjects.programsArray[program].id == programId) {
+					array_key = parseInt(program);
+				}
+			}
+			// if the index position was found
+			if(array_key != -1) {
+				// remove old data
+				var arrayBefore = jsDataObjects.programsArray.slice(0, array_key);
+				var arrayAfter = new Array();
+				// avoid index out of bounds (in case we're removing last element in array)
+				if(array_key+1 < jsDataObjects.programsArray.length) {
+					arrayAfter = jsDataObjects.programsArray.slice(array_key+1, jsDataObjects.programsArray.length);
+				}
+				var newArray = arrayBefore.concat(arrayAfter);
+				jsDataObjects.programsArray = newArray;
+			}
+		}
+
+		var failureCallback = function (message) {
+
+			// Add failure indicators
+			jQuery("#program-modal").removeClass("waiting");
+			jQuery("#program-modal .control-group").each(function () {
+				jQuery(this).addClass("error"); 
+			});
+
+			// Display the error
+			jQuery("#program-errors").html("<li><strong>Unable to remove program</strong>: "+message);
+
+		}
+
+		jQuery.ajax({
+			url:jsonURL,
+			data:{
+				'programId': programId
+			},
+			dataType:'json',
+			type:'POST',
+			success:function(data){
+				if (data.success) {
+					successCallback(data);
+				} else {
+					failureCallback(data.message)
+				}
+			},
+			error:function(){
+				failureCallback("Unable to communicate with the server.");
+			}
+
+		});
+
+		return false;
+	}
+}
+
+/**
+ * Sortable update handler for programs. This callback is called whenever
+ * re-sorts the list of programs, saving the new order in the system.
+ * 
+ * @param jsonURL
+ *            The json url to update programs order.
+ * @returns A Callback function
+ */
+var programSortableUpdateHandler = function(jsonURL) {
+	return function(event, ui) {
+
+		var list = jQuery("#programs-list").sortable('toArray').toString();
+		jQuery("#programs-list").addClass("waiting");
+
+		var successCallback = function(data) {
+			// Remove the ajax loading indicators & alerts
+			clearAlert("program-reorder");
+			jQuery("#programs-list").removeClass("waiting");
+		}
+
+		var failureCallback = function(message) {
+			displayAlert("program-reorder", "Unable to reorder program",
+					message);
+			jQuery("#programs-list").removeClass("waiting");
+		}
+
+		var data = {};
+		data['programIds'] = list;
+
+		jQuery.ajax({
+			url : jsonURL,
+			data : data,
+			dataType : 'json',
+			type : 'POST',
+			success : function(data) {
+				if (data.success) {
+					successCallback(data);
+				} else {
+					failureCallback(data.message)
+				}
+			},
+			error : function() {
+				failureCallback("Unable to communicate with the server.");
+			}
+
+		});
+	};
+}
+
+/**
+ * Open the department dialog box. This will work for opening an existing
+ * department, or adding a new department.
+ * 
+ * @returns A Callback function
+ */
+function departmentOpenDialogHandler(isNew, id) {
+	if(isNew == null && typeof(isNew) == "undefined") {
+		isNew = false;
+	}
+
+	if (!isNew) {
+		// Loading an existing type
+		var array_key = -1;
+		for(department in jsDataObjects.departmentsArray) {
+			if(jsDataObjects.departmentsArray[department].id == id) {
+				array_key = department;
+			}
+		}
+		if(array_key == -1) {
+			return;
+		}
+		// get our college data from JS cache
+		var department = jsDataObjects.departmentsArray[array_key];
+		jQuery("#department-id").val(id);
+		jQuery("#department-name").val(department.name);
+		var emails_string = "";
+		var emails = department.emails;
+		$.each(emails, function(key, val) {
+			if (val.email != "") {
+				emails_string += val.email + ", ";
+			}
+		});
+
+		jQuery("#department-emails").val(emails_string.substring(0, emails_string.length-2));
+		
+		jQuery("#department-modal .modal-header h3").text("Edit Department");
+		jQuery("#department-modal .modal-footer #department-save").val("Save Department");
+		jQuery("#department-remove").show();
+	} else {
+		// Adding a new department
+		jQuery("#department-id").val("");
+		jQuery("#department-name").val("");
+		jQuery("#department-emails").val("");
+		
+		jQuery("#department-modal .modal-header h3").text("Add Department");
+		jQuery("#department-modal .modal-footer #department-save").val("Add Department");
+		jQuery("#department-remove").hide();
+
+	}
+
+	// Clear out any previous errors
+	jQuery("#department-errors").html("");
+	jQuery("#department-modal .control-group").each(function () {
+		jQuery(this).removeClass("error"); 
+	});
+
+	jQuery('#department-modal').modal('show');
+}
+
+/**
+ * Create or Edit an existing department. This callback function handles
+ * saving the department dialog box.
+ * 
+ * @param jsonURL
+ *            The url where departments should be updated.
+ * @returns A Callback Function
+ */
+function departmentSaveDialogHandler(jsonURL) {
+	return function () {
+		var departmentId = jQuery("#department-id").val();
+		var name = jQuery("#department-name").val();
+		var emails = jQuery("#department-emails").val();
+		
+		jQuery("#department-modal").addClass("waiting");
+
+		var successCallback = function(data) {
+
+			// Remove the ajax loading indicators & alerts
+			jQuery("#department-modal").removeClass("waiting");
+			jQuery("#department-errors").html("");
+			jQuery("#department-modal .control-group").each(function () {
+				jQuery(this).removeClass("error"); 
+			});
+
+			var $row;
+			if (jQuery("#department_"+data.id).length > 0) {
+				// Look up the old row
+				$row = jQuery("#department_"+data.id);
+			} else {
+				// Add a new row to the end of the list.
+				$row = jQuery( 
+						"<tr id='department_"+data.id+"'>"+
+						"    <td class='department-name-cell'></td>"+
+						"    <td class='department-emails-cell'></td>"+
+						"    <td class='department-edit-cell'><a data-id='"+data.id+"' href='javascript:void(0);'>Edit</a></td>" +
+						"</tr>"
+				).appendTo(jQuery("#departments-list"));
+			}
+
+			$row.find(".department-name-cell").text(data.name);
+			var emails_string = "";
+			var emails = data.emails;
+			$.each(emails, function(key, val) {
+				emails_string += val.email + ", ";
+			});
+			$row.find(".department-emails-cell").text(emails_string.substring(0, emails_string.length-2));
+			
+			jQuery('#department-modal').modal('hide');
+			// refresh local JS cache of departmentsArray data
+			var array_key = -1;
+			// look for the array index of this department in the array
+			for(department in jsDataObjects.departmentsArray) {
+				if(jsDataObjects.departmentsArray[department].id == departmentId) {
+					array_key = department;
+				}
+			}
+			// if the index position was not found
+			if(array_key == -1) {
+				// add new data
+				jsDataObjects.departmentsArray.push(data);
+			} else {
+				// change existing data
+				jsDataObjects.departmentsArray[array_key] = data;
+			}
+		}
+
+		var failureCallback = function (message) {
+
+			// Add failure indicators
+			jQuery("#department-modal").removeClass("waiting");
+			jQuery("#department-modal .control-group").each(function () {
+				jQuery(this).addClass("error"); 
+			});
+
+			// Display the error
+			jQuery("#department-errors").html("<li><strong>Unable to save department</strong>: "+message);
+
+		}
+
+		jQuery.ajax({
+			url:jsonURL,
+			data:{
+				'departmentId':departmentId,
+				'name': name,
+				'emails': emails
+			},
+			dataType:'json',
+			type:'POST',
+			success:function(data){
+				if (data.success) {
+					successCallback(data);
+				} else {
+					failureCallback(data.message)
+				}
+			},
+			error:function(e){
+				console.log(e);
+				failureCallback("Unable to communicate with the server."+e);
+			}
+
+		});
+
+		return false;
+	}
+}
+
+/**
+ * Delete an existing department. This will confirm that this is what the user wants to do.
+ * 
+ * @param jsonURL
+ *            The url where departments are deleted.
+ * @returns A Callback Function
+ */
+function departmentRemoveDialogHandler(jsonURL) {
+	return function () {
+
+		// Confirm before deleting
+		var really = confirm("Alert! All submissions which use this department will have their department settings deleted with no way to recover. Are you REALLY sure you want to delete this department?");
+		if (!really)
+			return false;
+		
+		var departmentId = jQuery("#department-id").val();
+		jQuery("#department-modal").addClass("waiting");
+		
+		var successCallback = function(data) {
+
+			// Remove the ajax loading indicators & alerts
+			jQuery("#department-modal").removeClass("waiting");
+			jQuery("#department-errors").html("");
+			jQuery("#department-modal .control-group").each(function () {
+				jQuery(this).removeClass("error"); 
+			});
+			jQuery("#department_"+departmentId).remove();
+			
+			// Go back to the list
+			jQuery('#department-modal').modal('hide');
+			
+			// refresh local JS cache of departmentsArray data
+			var array_key = -1;
+			// look for the array index of this department in the array
+			for(department in jsDataObjects.departmentsArray) {
+				if(jsDataObjects.departmentsArray[department].id == departmentId) {
+					array_key = parseInt(department);
+				}
+			}
+			// if the index position was found
+			if(array_key != -1) {
+				// remove old data
+				var arrayBefore = jsDataObjects.departmentsArray.slice(0, array_key);
+				var arrayAfter = new Array();
+				// avoid index out of bounds (in case we're removing last element in array)
+				if(array_key+1 < jsDataObjects.departmentsArray.length) {
+					arrayAfter = jsDataObjects.departmentsArray.slice(array_key+1, jsDataObjects.departmentsArray.length);
+				}
+				var newArray = arrayBefore.concat(arrayAfter);
+				jsDataObjects.departmentsArray = newArray;
+			}
+		}
+
+		var failureCallback = function (message) {
+
+			// Add failure indicators
+			jQuery("#department-modal").removeClass("waiting");
+			jQuery("#department-modal .control-group").each(function () {
+				jQuery(this).addClass("error"); 
+			});
+
+			// Display the error
+			jQuery("#department-errors").html("<li><strong>Unable to remove department</strong>: "+message);
+
+		}
+
+		jQuery.ajax({
+			url:jsonURL,
+			data:{
+				'departmentId': departmentId
+			},
+			dataType:'json',
+			type:'POST',
+			success:function(data){
+				if (data.success) {
+					successCallback(data);
+				} else {
+					failureCallback(data.message)
+				}
+			},
+			error:function(){
+				failureCallback("Unable to communicate with the server.");
+			}
+
+		});
+
+		return false;
+	}
+}
+
+/**
+ * Sortable update handler for departments. This callback is called whenever
+ * re-sorts the list of departments, saving the new order in the system.
+ * 
+ * @param jsonURL
+ *            The json url to update departments order.
+ * @returns A Callback function
+ */
+var departmentSortableUpdateHandler = function(jsonURL) {
+	return function(event, ui) {
+
+		var list = jQuery("#departments-list").sortable('toArray').toString();
+		jQuery("#departments-list").addClass("waiting");
+
+		var successCallback = function(data) {
+			// Remove the ajax loading indicators & alerts
+			clearAlert("department-reorder");
+			jQuery("#departments-list").removeClass("waiting");
+		}
+
+		var failureCallback = function(message) {
+			displayAlert("department-reorder", "Unable to reorder department",
+					message);
+			jQuery("#departments-list").removeClass("waiting");
+		}
+
+		var data = {};
+		data['departmentIds'] = list;
 
 		jQuery.ajax({
 			url : jsonURL,

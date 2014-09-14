@@ -556,7 +556,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		
 		submission = subRepo.findSubmission(id);
 		assertTrue(subRepo.findActionLog(submission).size()>numActionLogs);
-		assertEquals("The subject: This is the comment.", subRepo.findActionLog(submission).get(0).getEntry());
+		assertEquals("Submission status changed to 'Needs Correction'", subRepo.findActionLog(submission).get(0).getEntry());
 		assertEquals(submission.getState(),stateManager.getState("NeedsCorrection"));
 		
 		submission.delete();

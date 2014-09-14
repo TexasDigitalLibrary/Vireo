@@ -125,6 +125,17 @@ public interface SettingsRepository {
 	public Program createProgram(String name);
 	
 	/**
+	 * Create a new program object with email.
+	 * 
+	 * @param name
+	 *            The name of the program.
+	 * @param emails
+	 *            A list of emails.
+	 * @return A new program object.
+	 */
+	public Program createProgram(String name,List<String> emails);
+	
+	/**
 	 * Find a program by unique id.
 	 * 
 	 * @param id
@@ -149,6 +160,17 @@ public interface SettingsRepository {
 	 * @return A new department object.
 	 */
 	public Department createDepartment(String name);
+	
+	/**
+	 * Create a new department object with email.
+	 * 
+	 * @param name
+	 *            The name of the department.
+	 * @param emails
+	 *            A list of emails.
+	 * @return A new department object.
+	 */
+	public Department createDepartment(String name,List<String> emails);
 
 	/**
 	 * Find department by unique id

@@ -238,14 +238,14 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		LOGIN();
 		
 		// Get our urls and a list of fields.
-		final String ADD_URL = Router.reverse("settings.ConfigurableSettingsTab.addProgramJSON").url;
+		//final String ADD_URL = Router.reverse("settings.ConfigurableSettingsTab.addProgramJSON").url;
 		final String EDIT_URL = Router.reverse("settings.ConfigurableSettingsTab.editProgramJSON").url;
 		final String REMOVE_URL = Router.reverse("settings.ConfigurableSettingsTab.removeProgramJSON").url;
 
 		// Add a new custom action
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("name","New Program");
-		Response response = POST(ADD_URL,params);
+		Response response = POST(EDIT_URL,params);
 		assertContentMatch("\"success\": \"true\"", response);
 		
 		// Extract the id of the newly created action.
@@ -266,7 +266,7 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		
 		// Now edit the custom action
 		params.clear();
-		params.put("programId","program_"+id);
+		params.put("programId",String.valueOf(id));
 		params.put("name", "Changed Name");
 		response = POST(EDIT_URL,params);
 		
@@ -278,7 +278,7 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		
 		// Now remove the custom action
 		params.clear();
-		params.put("programId","program_"+id);
+		params.put("programId",String.valueOf(id));
 		response = POST(REMOVE_URL,params);
 		assertContentMatch("\"success\": \"true\"", response);
 		
@@ -362,14 +362,14 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		LOGIN();
 		
 		// Get our urls and a list of fields.
-		final String ADD_URL = Router.reverse("settings.ConfigurableSettingsTab.addCollegeJSON").url;
+		//final String ADD_URL = Router.reverse("settings.ConfigurableSettingsTab.addCollegeJSON").url;
 		final String EDIT_URL = Router.reverse("settings.ConfigurableSettingsTab.editCollegeJSON").url;
 		final String REMOVE_URL = Router.reverse("settings.ConfigurableSettingsTab.removeCollegeJSON").url;
 
 		// Add a new custom action
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("name","New College");
-		Response response = POST(ADD_URL,params);
+		Response response = POST(EDIT_URL,params);
 		assertContentMatch("\"success\": \"true\"", response);
 		
 		// Extract the id of the newly created action.
@@ -390,7 +390,7 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		
 		// Now edit the custom action
 		params.clear();
-		params.put("collegeId","college_"+id);
+		params.put("collegeId",String.valueOf(id));
 		params.put("name", "Changed Name");
 		response = POST(EDIT_URL,params);
 		
@@ -402,7 +402,7 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		
 		// Now remove the custom action
 		params.clear();
-		params.put("collegeId","college_"+id);
+		params.put("collegeId",String.valueOf(id));
 		response = POST(REMOVE_URL,params);
 		assertContentMatch("\"success\": \"true\"", response);
 		
@@ -487,14 +487,14 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		LOGIN();
 		
 		// Get our urls and a list of fields.
-		final String ADD_URL = Router.reverse("settings.ConfigurableSettingsTab.addDepartmentJSON").url;
+		//final String ADD_URL = Router.reverse("settings.ConfigurableSettingsTab.addDepartmentJSON").url;
 		final String EDIT_URL = Router.reverse("settings.ConfigurableSettingsTab.editDepartmentJSON").url;
 		final String REMOVE_URL = Router.reverse("settings.ConfigurableSettingsTab.removeDepartmentJSON").url;
 
 		// Add a new custom action
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("name","New Department");
-		Response response = POST(ADD_URL,params);
+		Response response = POST(EDIT_URL,params);
 		assertContentMatch("\"success\": \"true\"", response);
 		
 		// Extract the id of the newly created action.
@@ -515,7 +515,7 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		
 		// Now edit the custom action
 		params.clear();
-		params.put("departmentId","department_"+id);
+		params.put("departmentId",String.valueOf(id));
 		params.put("name", "Changed Name");
 		response = POST(EDIT_URL,params);
 		
@@ -527,7 +527,7 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		
 		// Now remove the custom action
 		params.clear();
-		params.put("departmentId","department_"+id);
+		params.put("departmentId",String.valueOf(id));
 		response = POST(REMOVE_URL,params);
 		assertContentMatch("\"success\": \"true\"", response);
 		
