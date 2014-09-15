@@ -15,6 +15,39 @@ jQuery(document).ready(function() {
         jQuery("#submit-corrections-warning").slideToggle(500);
         return false;
     });
+    
+    jQuery("#addmsg").click(function(e) {
+    	e.preventDefault();
+		submitterId = jQuery(this).attr("id");
+		statusId = submitterId+"Status";
+		jQuery("#"+submitterId).prop("disabled",true);
+		jQuery.ajax({
+			url: '@{Student.submissionAddMessageJSON(subId)}',
+			data:{
+				'message': jQuery("#studentMessage").val(),
+			},
+			dataType:'json',
+			type:'POST',
+			success:function(data){
+				if (data.success) {
+					jQuery("#student-log-view").fadeTo("slow",0.5,function() {
+						jQuery("#student-log-view").load("@{Student.submissionView(subId)} #student-log-view table",function() {
+							jQuery("#student-log-view").fadeTo("fast",1);
+							jQuery("#studentMessage").val("");
+							jQuery("#"+submitterId).prop("disabled",false);
+						});
+					});
+				} else {
+					jQuery("#"+statusId).html("Error adding message.");
+					jQuery("#"+submitterId).prop("disabled",false);
+				}
+			},
+			error:function(){
+				jQuery("#"+statusId).html("Error communicating with the server.");
+				jQuery("#"+submitterId).prop("disabled",false);
+			}
+		});
+    });
 })
 </script>
 #{/set}
@@ -205,6 +238,8 @@ jQuery(document).ready(function() {
 		<div class="controls">
 			<textarea id="studentMessage" class="span6" style="height:200px;" name="studentMessage"></textarea>
             <input class="btn" id="addmsg" name="submit_addMessage" type="submit" value="Add Message" />
+            <div id="addmsgStatus"></div>
+            
             <br/>
 		</div>
 	</div>			

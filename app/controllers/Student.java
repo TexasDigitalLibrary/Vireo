@@ -132,6 +132,19 @@ public class Student extends AbstractVireoController {
 		
 		renderTemplate("Student/list.html",submissions, showStartSubmissionButton);
 	}
+	
+	@Security(RoleType.STUDENT)
+	public static void submissionAddMessageJSON(Long subId) {
+		String studentMessage = null;
+		if (!params.get("message").equals("")) {
+			studentMessage = params.get("message");
+			// Locate the submission 
+			Submission sub = subRepo.findSubmission(subId);
+			sub.logAction("Message added : '" +	studentMessage + "'").save();
+			renderJSON("{ \"success\": \"true\"}");
+		}
+		renderJSON("{ \"success\": \"false\"}");
+	}
 
 	/**
 	 * Student view of the submission. The form in all cases allows the student
@@ -161,12 +174,6 @@ public class Student extends AbstractVireoController {
 				sub.getId());
 		
 		boolean allowMultiple = settingRepo.getConfigBoolean(AppConfig.ALLOW_MULTIPLE_SUBMISSIONS);
-		
-		// Handle add message button. Just add the message to the submission
-		if (params.get("submit_addMessage") != null) {   
-			if (!params.get("studentMessage").equals(""))
-				sub.logAction("Message added : '" +	params.get("studentMessage") + "'").save();
-		}
 		
 		if (sub.getState().isEditableByStudent()) {
 			// If the replace manuscript button is pressed - then delete the manuscript 
