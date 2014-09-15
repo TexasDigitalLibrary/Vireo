@@ -9,10 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.PostLoad;
 import javax.persistence.PostPersist;
 import javax.persistence.PostUpdate;
@@ -33,6 +30,7 @@ import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionRepository;
+import org.tdl.vireo.search.SearchOrder;
 import org.tdl.vireo.search.Semester;
 
 import play.modules.spring.Spring;
@@ -61,6 +59,8 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	
 	public boolean publicFlag;
 	
+	public boolean hasColumnsFlag;
+
 	// These @ElementCollections have "_" so their names don't 
 	// conflict with getIncludedSubmissions() and play's enhances.
 	@ElementCollection
@@ -157,6 +157,12 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 			joinColumns=@JoinColumn(name="search_filter_id"))
 	public List<String> documentTypes;
 	
+	@ElementCollection
+	@CollectionTable(
+			name="search_filter_columns",
+			joinColumns=@JoinColumn(name="search_filter_id"))
+	public List<SearchOrder> columns;
+
 	public Boolean umiRelease;
 
 	@Temporal(TemporalType.DATE)
@@ -303,6 +309,16 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 			
 			this.publicFlag = false;
 		}
+	}
+
+	@Override
+	public boolean hasColumns() {
+		return hasColumnsFlag;
+	}
+
+	@Override
+	public void setHasColumns(boolean hasColumnsFlag) {
+		this.hasColumnsFlag = hasColumnsFlag;
 	}
 
 	@Override
@@ -666,5 +682,15 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	@Override
 	public void setDateRangeEnd(Date end) {
 		rangeEnd = end;
+	}
+
+	@Override
+	public List<SearchOrder> getColumns() {
+		return columns;
+	}
+
+	@Override
+	public void setColumns(List<SearchOrder> columns) {
+		this.columns = columns;
 	}
 }

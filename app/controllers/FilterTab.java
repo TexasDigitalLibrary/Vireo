@@ -501,6 +501,21 @@ public class FilterTab extends AbstractVireoController {
 			}
 		}
 		
+		// Load the active SearchOrder from the cookie
+		List<SearchOrder> columns = new ArrayList<SearchOrder>();
+        Cookie columnsCookie = request.cookies.get(NAMES[ACTION_LOG][COLUMNS]);
+        if (columnsCookie != null && columnsCookie.value != null && columnsCookie.value.trim().length() > 0) {
+            try {
+                String[] ids = columnsCookie.value.split(",");
+                for(String id : ids)
+                    columns.add(SearchOrder.find(Integer.valueOf(id)));
+            } catch (RuntimeException re) {
+                Logger.warn(re,"Unable to decode column order: "+columnsCookie.value);
+            }
+        }
+        if (columns.size() == 0)
+            columns = getDefaultColumns(ACTION_LOG);
+		
 		String action = params.get("action");
 		if ("add".equals(action)) {
 			// The user is going to modify the existing active filter by adding a new parameter.
@@ -525,6 +540,7 @@ public class FilterTab extends AbstractVireoController {
 				}
 				
 				namedFilter.setPublic(publicFlag);
+				namedFilter.setColumns(columns);
 				activeFilter.copyTo(namedFilter);
 				namedFilter.save();
 			}
