@@ -9,10 +9,15 @@ import static org.tdl.vireo.constant.FieldConfig.SUPPLEMENTAL_ATTACHMENT;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
 import org.tdl.vireo.constant.AppConfig;
 import org.tdl.vireo.constant.FieldConfig;
 import org.tdl.vireo.model.ActionLog;
@@ -26,6 +31,7 @@ import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.state.State;
 
 import play.Logger;
+import play.Play;
 import play.libs.MimeTypes;
 import play.mvc.With;
 import controllers.submit.PersonalInfo;
@@ -131,6 +137,37 @@ public class Student extends AbstractVireoController {
 		renderArgs.put("CURRENT_SEMESTER", settingRepo.getConfigValue(AppConfig.CURRENT_SEMESTER, "current"));
 		
 		renderTemplate("Student/list.html",submissions, showStartSubmissionButton);
+	}
+	
+	@Security(RoleType.STUDENT)
+	public static void submissionUploadPrimaryDocumentJSON(Long subId,File primaryDocument) {
+		Logger.info("test: ", primaryDocument.getAbsolutePath());
+
+/*		Iterator it = request.params.all().entrySet().iterator();
+
+		while (it.hasNext()) {
+			Map.Entry pairs = (Map.Entry)it.next();
+			Logger.info(pairs.getKey() + " = " + pairs.getValue());
+		}
+*/
+/*			    		
+			    try {
+
+			        InputStream data = request.body;
+
+			        moveTo = new FileOutputStream(new File(Play.getFile("").getAbsolutePath()) + File.separator + "tmp"+File.separator + "uploads" + File.separator + filename);
+			        IOUtils.copy(data, moveTo);
+
+			    } catch (Exception ex) {
+
+			        // catch file exception
+			        // catch IO Exception later on
+			        renderJSON("{success: false}");
+			    }
+			    */
+			renderJSON("{ \"success\": \"true\"}");
+//		}
+//		renderJSON("{ \"success\": \"false\"}");
 	}
 	
 	@Security(RoleType.STUDENT)

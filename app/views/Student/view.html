@@ -16,6 +16,30 @@ jQuery(document).ready(function() {
         return false;
     });
     
+    jQuery("#uploadPrimary").click(function() {
+    	var theFileSelector = document.getElementById("primaryFile");
+		var theFiles = theFileSelector.files;
+    	var formData = new FormData();
+   		var file = theFiles[0];
+		if (file.type.match('application/pdf')) {
+   		    formData.append('primaryDocument', file, file.name);
+   		 	var xhr = new XMLHttpRequest();
+			xhr.open('POST', '@{Student.submissionUploadPrimaryDocumentJSON(subId)}', true);
+			xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+//			xhr.setRequestHeader("X-File-Name", "test.pdf");
+			xhr.onload = function () {
+			  if (xhr.status === 200) {
+				console.log("File Uploaded");
+			  } else {
+				console.log("Error uploading file");
+			  }
+			};
+			xhr.send(formData);
+		}
+
+    	return false;
+    });
+    
     jQuery("#addmsg").click(function(e) {
     	e.preventDefault();
 		submitterId = jQuery(this).attr("id");
@@ -108,7 +132,7 @@ jQuery(document).ready(function() {
 			#{if sub.getState().isEditableByStudent()}
 				#{if primaryDocument == null}
 					<input type="file" id="primaryFile" class="input-file" name="primaryDocument"><br/>
-			        <input type="submit" value="Upload" class="uploadBtn btn" name="uploadPrimary">
+			        <input type="submit" value="Upload" class="uploadBtn btn" id="uploadPrimary" name="uploadPrimary">
 			        <br/>
 			        <br/>               
 		        #{/if}
