@@ -121,6 +121,11 @@ jQuery(document).ready(function() {
                         <input type="checkbox" name="public" value="true"/>
                         <p class="help-block">I would like this filter to be available to all users.</p>
                     </div>
+                    <label class="control-label" for="columns"><strong>Columns</strong>:</label>
+                    <div class="controls">
+                        <input type="checkbox" name="columns" value="true"/>
+                        <p class="help-block">I would like this filter to include visible columns.</p>
+                    </div>
                 </div>
             </fieldset>
         </div>

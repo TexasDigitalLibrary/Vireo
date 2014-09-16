@@ -59,10 +59,6 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	
 	public boolean publicFlag;
 	
-	// set columnDefinition to upgrade old databases with a default value
-	@Column(columnDefinition="boolean NOT NULL default false")
-	public boolean hasColumnsFlag;
-
 	// These @ElementCollections have "_" so their names don't 
 	// conflict with getIncludedSubmissions() and play's enhances.
 	@ElementCollection
@@ -316,12 +312,7 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 
 	@Override
 	public boolean hasColumns() {
-		return hasColumnsFlag;
-	}
-
-	@Override
-	public void setHasColumns(boolean hasColumnsFlag) {
-		this.hasColumnsFlag = hasColumnsFlag;
+		return (this.columns.size() > 0);
 	}
 
 	@Override

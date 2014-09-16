@@ -47,9 +47,4 @@ public interface NamedSearchFilter extends AbstractModel, SearchFilter {
 	 */
 	public boolean hasColumns();
 	
-	/**
-	 * @param hasColumnsFlag - Set this filter search to include columns
-	 */
-	public void setHasColumns(boolean hasColumnsFlag);
-
 }
