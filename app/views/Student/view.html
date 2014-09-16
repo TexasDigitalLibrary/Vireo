@@ -26,15 +26,23 @@ jQuery(document).ready(function() {
    		 	var xhr = new XMLHttpRequest();
 			xhr.open('POST', '@{Student.submissionUploadPrimaryDocumentJSON(subId)}', true);
 			xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-//			xhr.setRequestHeader("X-File-Name", "test.pdf");
 			xhr.onload = function () {
-			  if (xhr.status === 200) {
-				console.log("File Uploaded");
+			if (xhr.status === 200) {
+				data = JSON.parse(xhr.response);
+				if (data.success) {
+					jQuery("#primaryDocumentWrap").fadeTo("slow",0.5,function() {
+						jQuery("#primaryDocumentWrap").load("@{Student.submissionView(subId)} #primaryDocumentWrap",function() {
+							jQuery("#primaryDocumentWrap").fadeTo("fast",1);
+						});
+					});
+    			}
 			  } else {
 				console.log("Error uploading file");
 			  }
 			};
 			xhr.send(formData);
+		} else {
+			alert("The manuscript must be in PDF format");
 		}
 
     	return false;
@@ -130,6 +138,7 @@ jQuery(document).ready(function() {
 			<label class="control-label">#{fieldLabel PRIMARY_ATTACHMENT /}:</label>
 			<div class="controls">
 			#{if sub.getState().isEditableByStudent()}
+				<div id="primaryDocumentWrap">
 				#{if primaryDocument == null}
 					<input type="file" id="primaryFile" class="input-file" name="primaryDocument"><br/>
 			        <input type="submit" value="Upload" class="uploadBtn btn" id="uploadPrimary" name="uploadPrimary">
@@ -143,6 +152,7 @@ jQuery(document).ready(function() {
 	                    <input type="submit" value="Replace Manuscript" class="uploadBtn btn" name="replacePrimary">
 	                </p>
 		        #{/else}
+		        </div>
 	        #{/if}		
 			#{else}
 				#{if primaryDocument != null}

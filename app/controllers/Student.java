@@ -140,8 +140,11 @@ public class Student extends AbstractVireoController {
 	}
 	
 	@Security(RoleType.STUDENT)
-	public static void submissionUploadPrimaryDocumentJSON(Long subId,File primaryDocument) {
-		Logger.info("test: ", primaryDocument.getAbsolutePath());
+	public static void submissionUploadPrimaryDocumentJSON(Long subId) {
+		// Locate the submission 
+		Submission sub = subRepo.findSubmission(subId);
+		if(params.get("primaryDocument",File.class) != null) 
+			uploadPrimaryDocument(sub);
 
 /*		Iterator it = request.params.all().entrySet().iterator();
 
