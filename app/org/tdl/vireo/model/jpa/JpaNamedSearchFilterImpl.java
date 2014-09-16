@@ -59,6 +59,8 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	
 	public boolean publicFlag;
 	
+	// set columnDefinition to upgrade old databases with a default value
+	@Column(columnDefinition="boolean NOT NULL default false")
 	public boolean hasColumnsFlag;
 
 	// These @ElementCollections have "_" so their names don't 
@@ -206,6 +208,7 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 		this.colleges = new ArrayList<String>();
 		this.majors = new ArrayList<String>();
 		this.documentTypes = new ArrayList<String>();
+		this.columns = new ArrayList<SearchOrder>();
 	}
 
 	/**

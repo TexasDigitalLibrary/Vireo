@@ -1,7 +1,7 @@
 package org.tdl.vireo.export.impl;
 
 
-import static controllers.FilterTab.COLUMNS;
+import static controllers.FilterTab.ACTIVE_FILTER;
 import static controllers.FilterTab.NAMES;
 import static controllers.FilterTab.SUBMISSION;
 import static controllers.FilterTab.getDefaultColumns;
@@ -29,9 +29,12 @@ import org.tdl.vireo.export.ExportPackage;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.search.ActiveSearchFilter;
 import org.tdl.vireo.search.SearchOrder;
 import org.tdl.vireo.services.StringVariableReplacement;
 
+import play.Logger;
+import play.modules.spring.Spring;
 import play.mvc.Http.Cookie;
 import play.mvc.Http.Request;
 
@@ -428,24 +431,24 @@ public class ExcelPackagerImpl extends AbstractExcelPackagerImpl {
     }
 
     private List<SearchOrder> getColumnsFromCookies() {
-        List<SearchOrder> columns = new ArrayList<SearchOrder>();
+    	ActiveSearchFilter activeFilter = Spring.getBeanOfType(ActiveSearchFilter.class);
+    	// default to showing all columns
+    	List<SearchOrder> columns = Arrays.asList(SearchOrder.values());
+    	// unless we're filtered, then limit columns
         if (filtered) {
-            Cookie columnsCookie = request.cookies.get(NAMES[SUBMISSION][COLUMNS]);
-            if (columnsCookie != null && columnsCookie.value != null && columnsCookie.value.trim().length() > 0) {
-                try {
-                    String[] ids = columnsCookie.value.split(",");
-                    for (String id : ids)
-                        columns.add(SearchOrder.find(Integer.valueOf(id)));
-                } catch (RuntimeException re) {
-                    play.Logger.warn(re, "Unable to decode column order: " + columnsCookie.value);
-                }
-            }
+        	Cookie filterCookie = request.cookies.get(NAMES[SUBMISSION][ACTIVE_FILTER]);
+    		if (filterCookie != null && filterCookie.value != null && filterCookie.value.trim().length() > 0) {
+    			try {
+    				activeFilter.decode(filterCookie.value);
+    			} catch (RuntimeException re) {
+    				Logger.warn(re,"Unable to decode search filter: "+filterCookie.value);
+    			}
+    		}
+    		columns = activeFilter.getColumns();
             if (columns.size() == 0)
                 columns = getDefaultColumns(SUBMISSION);
 
             // play.Logger.info("columns: " + columns, (Object) null);
-        } else {
-            columns = Arrays.asList(SearchOrder.values());
         }
         return columns;
     }

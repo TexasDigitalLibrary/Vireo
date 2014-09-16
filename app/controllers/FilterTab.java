@@ -72,7 +72,6 @@ public class FilterTab extends AbstractVireoController {
 			"SubmissionDirection",
 			"SubmissionOrderBy",
 			"SubmissionOffset",
-			"SubmissionColumns",
 			"SubmissionFacets",
 			"SubmissionResultsPerPage",
 		},
@@ -81,7 +80,6 @@ public class FilterTab extends AbstractVireoController {
 			"ActionLogDirection",
 			"ActionLogOrderBy",
 			"ActionLogOffset",
-			"ActionLogColumns",
 			"ActionLogFacets",
 			"ActionLogResultsPerPage"
 		}
@@ -96,9 +94,8 @@ public class FilterTab extends AbstractVireoController {
 	public final static int DIRECTION = 1;
 	public final static int ORDERBY = 2;
 	public final static int OFFSET = 3;
-	public final static int COLUMNS = 4;
-	public final static int FACETS = 5;
-	public final static int RESULTSPERPAGE = 6;
+	public final static int FACETS = 4;
+	public final static int RESULTSPERPAGE = 5;
 	
 	/**
 	 * Redirect to the list page.
@@ -178,17 +175,7 @@ public class FilterTab extends AbstractVireoController {
 		String nav = "list";
 		
 		// Get a list of columns to display
-		List<SearchOrder> columns = new ArrayList<SearchOrder>();
-		Cookie columnsCookie = request.cookies.get(NAMES[SUBMISSION][COLUMNS]);
-		if (columnsCookie != null && columnsCookie.value != null && columnsCookie.value.trim().length() > 0) {
-			try {
-				String[] ids = columnsCookie.value.split(",");
-				for(String id : ids)
-					columns.add(SearchOrder.find(Integer.valueOf(id)));
-			} catch (RuntimeException re) {
-				Logger.warn(re,"Unable to decode column order: "+columnsCookie.value);
-			}
-		}
+		List<SearchOrder> columns = activeFilter.getColumns();
 		if (columns.size() == 0)
 			columns = getDefaultColumns(SUBMISSION);
 		
@@ -307,17 +294,7 @@ public class FilterTab extends AbstractVireoController {
 		String nav = "log";
 		
 		// Get a list of columns to display
-		List<SearchOrder> columns = new ArrayList<SearchOrder>();
-		Cookie columnsCookie = request.cookies.get(NAMES[ACTION_LOG][COLUMNS]);
-		if (columnsCookie != null && columnsCookie.value != null && columnsCookie.value.trim().length() > 0) {
-			try {
-				String[] ids = columnsCookie.value.split(",");
-				for(String id : ids)
-					columns.add(SearchOrder.find(Integer.valueOf(id)));
-			} catch (RuntimeException re) {
-				Logger.warn(re,"Unable to decode column order: "+columnsCookie.value);
-			}
-		}
+		List<SearchOrder> columns = activeFilter.getColumns();
 		if (columns.size() == 0)
 			columns = getDefaultColumns(ACTION_LOG);
 		
@@ -437,9 +414,10 @@ public class FilterTab extends AbstractVireoController {
 					columnsSerialized += ",";
 				columnsSerialized += column.getId();
 			}
-
+			ActiveSearchFilter activeFilter = Spring.getBeanOfType(ActiveSearchFilter.class);
+			activeFilter.setColumns(columns);
 			// Save as a cookie.
-			response.setCookie(NAMES[type][COLUMNS], columnsSerialized, COOKIE_DURATION);
+			response.setCookie(NAMES[type][ACTIVE_FILTER], activeFilter.encode(), COOKIE_DURATION);
 		}
 		
 		// Handle results per page
@@ -502,17 +480,7 @@ public class FilterTab extends AbstractVireoController {
 		}
 		
 		// Load the active SearchOrder from the cookie
-		List<SearchOrder> columns = new ArrayList<SearchOrder>();
-        Cookie columnsCookie = request.cookies.get(NAMES[ACTION_LOG][COLUMNS]);
-        if (columnsCookie != null && columnsCookie.value != null && columnsCookie.value.trim().length() > 0) {
-            try {
-                String[] ids = columnsCookie.value.split(",");
-                for(String id : ids)
-                    columns.add(SearchOrder.find(Integer.valueOf(id)));
-            } catch (RuntimeException re) {
-                Logger.warn(re,"Unable to decode column order: "+columnsCookie.value);
-            }
-        }
+		List<SearchOrder> columns = activeFilter.getColumns();
         if (columns.size() == 0)
             columns = getDefaultColumns(ACTION_LOG);
 		
@@ -842,7 +810,6 @@ public class FilterTab extends AbstractVireoController {
 		response.setCookie(NAMES[SUBMISSION][ACTIVE_FILTER],"",COOKIE_DURATION);
 		response.setCookie(NAMES[SUBMISSION][DIRECTION],"",COOKIE_DURATION);
 		response.setCookie(NAMES[SUBMISSION][ORDERBY],"",COOKIE_DURATION);
-		response.setCookie(NAMES[SUBMISSION][COLUMNS],"",COOKIE_DURATION);
 		response.setCookie(NAMES[SUBMISSION][FACETS],"",COOKIE_DURATION);
 		response.setCookie(NAMES[SUBMISSION][RESULTSPERPAGE],"",COOKIE_DURATION);		
 		session.remove(NAMES[SUBMISSION][OFFSET]);
@@ -851,7 +818,6 @@ public class FilterTab extends AbstractVireoController {
 		response.setCookie(NAMES[ACTION_LOG][ACTIVE_FILTER],"",COOKIE_DURATION);
 		response.setCookie(NAMES[ACTION_LOG][DIRECTION],"",COOKIE_DURATION);
 		response.setCookie(NAMES[ACTION_LOG][ORDERBY],"",COOKIE_DURATION);
-		response.setCookie(NAMES[ACTION_LOG][COLUMNS],"",COOKIE_DURATION);
 		response.setCookie(NAMES[ACTION_LOG][FACETS],"",COOKIE_DURATION);
 		response.setCookie(NAMES[ACTION_LOG][RESULTSPERPAGE],"",COOKIE_DURATION);		
 		session.remove(NAMES[ACTION_LOG][OFFSET]);
