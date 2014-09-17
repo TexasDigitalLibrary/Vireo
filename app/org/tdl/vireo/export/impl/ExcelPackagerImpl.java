@@ -1,6 +1,5 @@
 package org.tdl.vireo.export.impl;
 
-
 import static controllers.FilterTab.ACTIVE_FILTER;
 import static controllers.FilterTab.NAMES;
 import static controllers.FilterTab.SUBMISSION;
@@ -48,7 +47,7 @@ public class ExcelPackagerImpl extends AbstractExcelPackagerImpl {
 
     /* Spring injected paramaters */
     public List<AttachmentType> attachmentTypes = new ArrayList<AttachmentType>();
-    public Boolean filtered = false;
+    //public Boolean filtered = false;
     public Boolean aggregated = false;
 
     /* Global statics */
@@ -68,10 +67,15 @@ public class ExcelPackagerImpl extends AbstractExcelPackagerImpl {
     }
 
     /**
+     * This function is used by Unit Test to export a {@link XSSFWorkbook} with all of the submissions as separate rows
      * 
-     * @return The Excel workbook file (xssf format only)
+     * This is needed because the Unit Test does not run through the ExportService (which is the iterator of {@link List} {@link Submission})
+     * 
+     * @param submissions - list of submissions
+     * @param columns - the columns to include in the sheet
+     * @return - The Excel workbook file (xssf format only)
      */
-    public XSSFWorkbook getWorkbook(List<Submission> submissions, List<SearchOrder> columns) {
+    public XSSFWorkbook testWorkbook(List<Submission> submissions, List<SearchOrder> columns) {
 
         XSSFWorkbook wb = new XSSFWorkbook();
         XSSFSheet sheet = wb.createSheet(sheetName);
@@ -96,13 +100,15 @@ public class ExcelPackagerImpl extends AbstractExcelPackagerImpl {
      * 
      * @param wb - the workbook to modify in-place
      * @param sub - the submission to add to the workbook
-     * @param SearchOrderList - the columns to include in the sheet
+     * @param columns - the columns to include in the sheet
      */
-    public void writeWorkbook(XSSFWorkbook wb, Submission sub, List<SearchOrder> SearchOrderList) {
+    public XSSFWorkbook writeWorkbook(Submission sub, List<SearchOrder> columns) {
+    	XSSFWorkbook wb = new XSSFWorkbook();
         XSSFSheet sheet = wb.createSheet(sheetName);
         XSSFRow header = sheet.createRow(0);
         XSSFRow row = sheet.createRow(1);
-        processWorkbookRow(header, row, sub, SearchOrderList);
+        processWorkbookRow(header, row, sub, columns);
+        return wb;
     }
 
     private void processWorkbookRow(XSSFRow header, XSSFRow row, Submission sub, List<SearchOrder> SearchOrderList) {
@@ -411,16 +417,6 @@ public class ExcelPackagerImpl extends AbstractExcelPackagerImpl {
     }
 
     /**
-     * (OPTIONAL) Inject whether we're exporting with TabView filters
-     * 
-     * @param filtered
-     *            Boolean of whether we're filtering our export or not
-     */
-    public void setFiltered(Boolean filtered) {
-        this.filtered = filtered;
-    }
-
-    /**
      * (OPTIONAL) Inject whether we're aggregating Excel data into one file, no file attachments
      * 
      * @param filtered
@@ -429,27 +425,24 @@ public class ExcelPackagerImpl extends AbstractExcelPackagerImpl {
     public void setAggregated(Boolean aggregated) {
         this.aggregated = aggregated;
     }
-
+    
+    /**
+     * Used to help generatePackage to create an {@link ExportPackage}
+     * @return - {@link List} of {@link SearchOrder} columns from {@link Cookie}
+     */
     private List<SearchOrder> getColumnsFromCookies() {
     	ActiveSearchFilter activeFilter = Spring.getBeanOfType(ActiveSearchFilter.class);
-    	// default to showing all columns
-    	List<SearchOrder> columns = Arrays.asList(SearchOrder.values());
-    	// unless we're filtered, then limit columns
-        if (filtered) {
-        	Cookie filterCookie = request.cookies.get(NAMES[SUBMISSION][ACTIVE_FILTER]);
-    		if (filterCookie != null && filterCookie.value != null && filterCookie.value.trim().length() > 0) {
-    			try {
-    				activeFilter.decode(filterCookie.value);
-    			} catch (RuntimeException re) {
-    				Logger.warn(re,"Unable to decode search filter: "+filterCookie.value);
-    			}
-    		}
-    		columns = activeFilter.getColumns();
-            if (columns.size() == 0)
-                columns = getDefaultColumns(SUBMISSION);
-
-            // play.Logger.info("columns: " + columns, (Object) null);
-        }
+    	Cookie filterCookie = request.cookies.get(NAMES[SUBMISSION][ACTIVE_FILTER]);
+		if (filterCookie != null && filterCookie.value != null && filterCookie.value.trim().length() > 0) {
+			try {
+				activeFilter.decode(filterCookie.value);
+			} catch (RuntimeException re) {
+				Logger.warn(re,"Unable to decode search filter: "+filterCookie.value);
+			}
+		}
+		List<SearchOrder> columns = activeFilter.getColumns();
+        if (columns.size() == 0)
+            columns = getDefaultColumns(SUBMISSION);
         return columns;
     }
 
@@ -462,13 +455,27 @@ public class ExcelPackagerImpl extends AbstractExcelPackagerImpl {
         return ret;
     }
 
+    /**
+     * This is used for ExportExcel implementations
+     * @param submission - the {@link Submission}
+     * @param columns - the {@link SearchOrder} columns to export
+     * @return - the {@link ExportExcel} object
+     */
     @Override
-    public ExportExcel generateExcelPackage(Submission submission) {
-        XSSFWorkbook wbook = new XSSFWorkbook();
-        writeWorkbook(wbook, submission, getColumnsFromCookies());
+    public ExportExcel generateExcelPackage(Submission submission, List<SearchOrder> columns) {
+        // make sure we have columns to export
+        if(columns.size() == 0) {
+        	columns = getDefaultColumns(SUBMISSION);
+        }
+        XSSFWorkbook wbook = writeWorkbook(submission, columns);
         return new ExcelWorkbookPackage(submission, wbook);
     }
 
+    /**
+     * This is used for ExportPackage implementations
+     * @param submission - the {@link Submission}
+     * @return - the {@link ExportPackage} object
+     */
     @Override
     public ExportPackage generatePackage(Submission submission) {
         if (attachmentTypes.size() == 0) {
@@ -498,9 +505,8 @@ public class ExcelPackagerImpl extends AbstractExcelPackagerImpl {
                 xl.delete();
                 xl.createNewFile();
             }
-            XSSFWorkbook wbook = new XSSFWorkbook();
+            XSSFWorkbook wbook = writeWorkbook(submission, getColumnsFromCookies());
             FileOutputStream os = new FileOutputStream(xl);
-            writeWorkbook(wbook, submission, getColumnsFromCookies());
             wbook.write(os);
             os.close();
 
@@ -539,7 +545,6 @@ public class ExcelPackagerImpl extends AbstractExcelPackagerImpl {
                 FileUtils.copyFile(attachment.getFile(), exportFile);
             }// End for loop
 
-            // TODO Auto-generated method stub
             // Create the actual package!
             return new ExcelFilePackage(submission, pkg, null);
         } catch (Exception ioe) {

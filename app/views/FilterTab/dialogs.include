@@ -70,9 +70,38 @@ jQuery(document).ready(function() {
     var list = jQuery("#shownFacets").sortable('toArray').toString();
     jQuery("#facets-field").val(list);
     
+    // Export modal
     jQuery("#submit_download_export").click(function () {
         jQuery("#batch-export-modal").modal('hide');
         return true;
+    });
+    var batchExportExtraSelectLabel = "<label class=\"control-label\" for=\"packager-extra\" id=\"packager-extra-label\"><strong>Export Columns</strong>:</label>";
+    var batchExportExtraSelectDiv = "<div class=\"controls\" id=\"batch-export-extra-controls\"><select class=\"input-xlarge\" name=\"packager-extra\" id=\"packager-extra\"><option value=\"Active\">Active Filter</option><option value=\"Saved\">Saved Filter</option></select></div>";
+    var batchExportSavedFiltersLabel = "<label class=\"control-label\" for=\"packager-extra-saved-filters\" id=\"packager-extra-saved-filters-label\"><strong>Saved Filters</strong>:</label>";
+    var batchExportSavedFiltersDiv = "<div class=\"controls\" id=\"batch-export-extra-saved-filters-controls\"><select class=\"input-xlarge\" name=\"packager-extra-saved-filters\" id=\"packager-extra-saved-filters\">#{list items:allFilters, as:'exportingFilter'}<option value=\"${exportingFilter.getId()}\">${exportingFilter.getName()}</option>#{/list}</select></div>";
+    jQuery("#packager").on("change", function() {
+    	var selectedOption = $("#packager option:selected").text();
+    	if(selectedOption == "Excel Export"){
+    		var div = $("#batch-export-control-group");
+    		div.append(batchExportExtraSelectLabel);
+    		div.append(batchExportExtraSelectDiv);
+    		jQuery("#packager-extra").on("change", function() {
+    			var selectedOption = $("#packager-extra option:selected").text();
+    			if(selectedOption == "Saved Filter"){
+    				var div = $("#batch-export-control-group");
+		    		div.append(batchExportSavedFiltersLabel);
+    				div.append(batchExportSavedFiltersDiv);
+    			} else {
+    				var div = $("#batch-export-control-group");
+    				div.find("#packager-extra-saved-filters-label").remove();
+    				div.find("#batch-export-extra-saved-filters-controls").remove();
+    			}
+    		});
+    	} else {
+    		var div = $("#batch-export-control-group");
+    		div.find("#packager-extra-label").remove();
+    		div.find("#batch-export-extra-controls").remove();
+    	}
     });
     
     // Batch Update Status dialog box
@@ -467,7 +496,7 @@ jQuery(document).ready(function() {
             provide an estimate of when the download is complete.</p>
             
             <fieldset>
-                <div class="control-group">
+                <div class="control-group" id="batch-export-control-group">
                     <label class="control-label" for="packager"><strong>Export Format</strong>:</label>
                     <div class="controls">
                         <select class="input-xlarge" name="packager" id="packager">

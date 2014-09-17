@@ -211,7 +211,7 @@ public class ExportExcelServiceImpl implements ExportService {
                 for (long subId : subIds) {
                     Submission sub = subRepo.findSubmission(subId);
                     if (sub != null && packager instanceof AbstractExcelPackagerImpl) {
-                        ExportExcel pkg = ((AbstractExcelPackagerImpl) packager).generateExcelPackage(sub);
+                        ExportExcel pkg = ((AbstractExcelPackagerImpl) packager).generateExcelPackage(sub, filter.getColumns());
                         XSSFSheet pkgSheet = pkg.getWorkbook().getSheet(ExcelPackagerImpl.sheetName);
 
                         // if this is the first submission, copy over its header (row 0)

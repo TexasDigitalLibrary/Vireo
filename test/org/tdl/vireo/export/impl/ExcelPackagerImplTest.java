@@ -135,7 +135,7 @@ public class ExcelPackagerImplTest extends UnitTest {
 
             // get the workbook
             ExcelPackagerImpl export = new ExcelPackagerImpl();
-            XSSFWorkbook wb = export.getWorkbook(submissions, columns);
+            XSSFWorkbook wb = export.testWorkbook(submissions, columns);
 
             // get the sheet
             Sheet sheet = wb.getSheet("vireo-export");

@@ -507,8 +507,15 @@ public class FilterTab extends AbstractVireoController {
 			Long filterId = params.get("filter",Long.class);
 			NamedSearchFilter savedFilter = subRepo.findSearchFilter(filterId);
 			
-			if (savedFilter.isPublic() || savedFilter.getCreator() == person)
-				activeFilter.copyFrom(savedFilter);
+			if (savedFilter.isPublic() || savedFilter.getCreator() == person) {
+				if(!savedFilter.hasColumns()) {
+					List<SearchOrder> activeColumns = activeFilter.getColumns();
+					activeFilter.copyFrom(savedFilter);
+					activeFilter.setColumns(activeColumns);
+				} else {
+					activeFilter.copyFrom(savedFilter);
+				}
+			}
 			
 		} else if ("clear".equals(action)) {
 			// Reset the users current filter by clearing it completely.
@@ -697,10 +704,19 @@ public class FilterTab extends AbstractVireoController {
 	 * @param packager The packager to use for the export.
 	 */
 	@Security(RoleType.REVIEWER)
-	public static void batchExport(String packager) {
+	public static void batchExport() {
+		String packager = params.get("packager");
+		String packager_extra = params.get("packager-extra");
+		long saved_filter_id = -1;
+		if(packager_extra != null && packager_extra.equals("Saved")){
+			saved_filter_id = Long.parseLong(params.get("packager-extra-saved-filters"));
+		}
 			
-		// Step 1, get the current filter
-		ActiveSearchFilter filter = getActiveSearchFilter(SUBMISSION);
+		// Step 1, get the correct filter (either active or saved)
+		SearchFilter filter = getActiveSearchFilter(SUBMISSION);
+		if(saved_filter_id >=0) {
+			filter = subRepo.findSearchFilter(saved_filter_id);
+		}
 		
 		// Step 2, locate the packager
 		Packager exportPackage = (Packager) Spring.getBean(packager);
@@ -710,7 +726,7 @@ public class FilterTab extends AbstractVireoController {
 				context.getPerson().getId(), 
 				context.getPerson().getEmail(),
 				exportPackage==null ? "null" : exportPackage.getBeanName(),
-				filter==null ? "null" : filter.encode());
+				filter==null ? "null" : (filter instanceof ActiveSearchFilter ? ((ActiveSearchFilter)filter).encode(): filter instanceof NamedSearchFilter ? ((NamedSearchFilter)filter).getName() : "unsupported filter"));
 		
 		// Step 3, Stream the chunks.
 		ExportService exportService = (ExportService) Spring.getBean(exportPackage.getExportServiceBeanName());
