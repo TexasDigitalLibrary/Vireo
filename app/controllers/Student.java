@@ -155,40 +155,18 @@ public class Student extends AbstractVireoController {
 			uploadAdditional(sub);
 			renderJSON("{ \"success\": \"true\"}");
 		}
+		renderJSON("{ \"success\": \"false\"}");
 	}
 	
 	@Security(RoleType.STUDENT)
 	public static void submissionUploadPrimaryDocumentJSON(Long subId) {
 		// Locate the submission 
 		Submission sub = subRepo.findSubmission(subId);
-		if(params.get("primaryDocument",File.class) != null) 
+		if(params.get("primaryDocument",File.class) != null) { 
 			uploadPrimaryDocument(sub);
-
-/*		Iterator it = request.params.all().entrySet().iterator();
-
-		while (it.hasNext()) {
-			Map.Entry pairs = (Map.Entry)it.next();
-			Logger.info(pairs.getKey() + " = " + pairs.getValue());
-		}
-*/
-/*			    		
-			    try {
-
-			        InputStream data = request.body;
-
-			        moveTo = new FileOutputStream(new File(Play.getFile("").getAbsolutePath()) + File.separator + "tmp"+File.separator + "uploads" + File.separator + filename);
-			        IOUtils.copy(data, moveTo);
-
-			    } catch (Exception ex) {
-
-			        // catch file exception
-			        // catch IO Exception later on
-			        renderJSON("{success: false}");
-			    }
-			    */
 			renderJSON("{ \"success\": \"true\"}");
-//		}
-//		renderJSON("{ \"success\": \"false\"}");
+		}
+		renderJSON("{ \"success\": \"false\"}");
 	}
 	
 	@Security(RoleType.STUDENT)
