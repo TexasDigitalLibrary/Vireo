@@ -33,6 +33,7 @@ jQuery(document).ready(function() {
 					jQuery("#primaryDocumentWrap").fadeTo("slow",0.5,function() {
 						jQuery("#primaryDocumentWrap").load("@{Student.submissionView(subId)} #primaryDocumentWrap",function() {
 							jQuery("#primaryDocumentWrap").fadeTo("fast",1);
+							updateActionLog();
 						});
 					});
     			}
@@ -62,13 +63,9 @@ jQuery(document).ready(function() {
 			type:'POST',
 			success:function(data){
 				if (data.success) {
-					jQuery("#student-log-view").fadeTo("slow",0.5,function() {
-						jQuery("#student-log-view").load("@{Student.submissionView(subId)} #student-log-view table",function() {
-							jQuery("#student-log-view").fadeTo("fast",1);
-							jQuery("#studentMessage").val("");
-							jQuery("#"+submitterId).prop("disabled",false);
-						});
-					});
+					updateActionLog();
+					jQuery("#studentMessage").val("");
+					jQuery("#"+submitterId).prop("disabled",false);
 				} else {
 					jQuery("#"+statusId).html("Error adding message.");
 					jQuery("#"+submitterId).prop("disabled",false);
@@ -80,7 +77,15 @@ jQuery(document).ready(function() {
 			}
 		});
     });
-})
+
+	function updateActionLog() {
+	    jQuery("#student-log-view").fadeTo("slow",0.5,function() {
+			jQuery("#student-log-view").load("@{Student.submissionView(subId)} #student-log-view table",function() {
+				jQuery("#student-log-view").fadeTo("fast",1);
+			});
+		});
+	}
+});
 </script>
 #{/set}
 <ul class="breadcrumb">
