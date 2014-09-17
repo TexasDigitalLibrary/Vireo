@@ -301,8 +301,60 @@ STUDENT VIEWS
 	width: 700px;
 }
 
-#submit-corrections-warning {
-    width: 500px;
+@media (min-width: 1540px) {
+	#correctionsWrap {
+		position: fixed;
+		width: 300px;
+		bottom: 5%;
+		right: 2%;
+		padding: 10px 20px;
+	}
+	
+	#correctionsWrap .form-actions {
+		padding-left: 0;
+		padding-right: 0;
+	}
+	
+	#correctionsWrap .row {
+		margin-left: 0;
+	}
+}
+
+@media (max-width: 1540px) {
+	#confirmSubmit {
+		padding-bottom: 190px;
+	}
+	
+	#correctionsWrap {
+		opacity: .9;
+		position: fixed;
+		bottom: 6%;
+		left: 50%;
+		width: 50%;
+		margin-left: -26%; 
+		padding: 10px 20px;
+	}
+	
+	#correctionsWrap .form-actions {
+		padding-left: 0;
+		padding-right: 0;
+	}
+	
+	#correctionsWrap .row {
+		margin-left: 0;
+	}
+}
+
+@media (max-width: 1000px) {
+	#correctionsWrap {
+		opacity: .9;
+		position: fixed;
+		bottom: 6%;
+		left: 50%;
+		width: 80%;
+		margin-left: -42%; 
+		padding: 10px 20px;
+	}
 }
 
 /********************
