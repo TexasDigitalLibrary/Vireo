@@ -30,34 +30,45 @@ jQuery(document).ready(function() {
     if( window.FormData !== undefined ) {
 	    jQuery("#uploadPrimary").live("click",function() {
 	    	var theFileSelector = document.getElementById("primaryFile");
-			var theFiles = theFileSelector.files;
-	   		var file = theFiles[0];
-	   		if (file.type.match('application/pdf')) {
-	   			var fData = {"file":{"name":"primaryDocument","file":file,"filename":file.name}};
-	   			var postPath = "@{Student.submissionUploadPrimaryDocumentJSON(subId)}";
-	   			var updateData = {"path":"@{Student.submissionView(subId)}","id":"#primaryDocumentWrap"};
-				uploadFile(fData,postPath,updateData);
-	   		} else {
-				alert("The manuscript must be in PDF format");
-			}
-	    	return false;
+	    	if (validateFile(theFileSelector)) {
+				var theFiles = theFileSelector.files;
+		   		var file = theFiles[0];
+		   		if (file.type.match('application/pdf')) {
+		   			var fData = {"file":{"name":"primaryDocument","file":file,"filename":file.name}};
+		   			var postPath = "@{Student.submissionUploadPrimaryDocumentJSON(subId)}";
+		   			var updateData = {"path":"@{Student.submissionView(subId)}","id":"#primaryDocumentWrap"};
+					uploadFile(fData,postPath,updateData);
+		   		} else {
+					alert("The manuscript must be in PDF format");
+				}
+		    }
+			return false;
 	    });
 	
 	    jQuery("#uploadAdditional").click(function() {
-	    	if ($("#documentType").val() != '') {
+	    	if (($("#documentType").val() != '')) {
 		    	var theFileSelector = document.getElementById("additionalFile");
-				var theFiles = theFileSelector.files;
-		   		var file = theFiles[0];
-				var fData = {"file":{"name":"additionalDocument","file":file,"filename":file.name},
-							 "inputs":[{"name":"attachmentType","value":$("#documentType").val()}]};
-				var postPath = "@{Student.submissionUploadAdditionalDocumentJSON(subId)}";
-				var updateData = {"path":"@{Student.submissionView(subId)}","id":"#doAdditionalUploadWrap"};
-				uploadFile(fData,postPath,updateData);
+		    	if (validateFile(theFileSelector)) {
+					var theFiles = theFileSelector.files;
+			   		var file = theFiles[0];
+					var fData = {"file":{"name":"additionalDocument","file":file,"filename":file.name},
+								 "inputs":[{"name":"attachmentType","value":$("#documentType").val()}]};
+					var postPath = "@{Student.submissionUploadAdditionalDocumentJSON(subId)}";
+					var updateData = {"path":"@{Student.submissionView(subId)}","id":"#doAdditionalUploadWrap"};
+					uploadFile(fData,postPath,updateData);
+	    		} 
 	    	} else {
-				alert("You must specify the Document Type.");
+				alert("Please specify the Document Type.");
 	    	}
 			return false;
 	    });
+
+	    function validateFile(theFiler) {
+	    	if (theFiler.files.length > 0) {
+	    		return true;
+	    	}
+	    	alert("Please specifcy a file for upload.");
+	    }
 
 	    function uploadFile(fData,postPath,updateData) {
 			var formData = new FormData();
