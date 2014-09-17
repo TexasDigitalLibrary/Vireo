@@ -27,34 +27,69 @@ jQuery(document).ready(function() {
     	return false;
     });
     
-    jQuery("#uploadPrimary").live("click",function() {
-    	var theFileSelector = document.getElementById("primaryFile");
-		var theFiles = theFileSelector.files;
-   		var file = theFiles[0];
-   		if (file.type.match('application/pdf')) {
-   			var fData = {"file":{"name":"primaryDocument","file":file,"filename":file.name}};
-   			var postPath = "@{Student.submissionUploadPrimaryDocumentJSON(subId)}";
-   			var updateData = {"path":"@{Student.submissionView(subId)}","id":"#primaryDocumentWrap"};
+    if( window.FormData !== undefined ) {
+	    jQuery("#uploadPrimary").live("click",function() {
+	    	var theFileSelector = document.getElementById("primaryFile");
+			var theFiles = theFileSelector.files;
+	   		var file = theFiles[0];
+	   		if (file.type.match('application/pdf')) {
+	   			var fData = {"file":{"name":"primaryDocument","file":file,"filename":file.name}};
+	   			var postPath = "@{Student.submissionUploadPrimaryDocumentJSON(subId)}";
+	   			var updateData = {"path":"@{Student.submissionView(subId)}","id":"#primaryDocumentWrap"};
+				uploadFile(fData,postPath,updateData);
+	   		} else {
+				alert("The manuscript must be in PDF format");
+			}
+	    	return false;
+	    });
+	
+	    jQuery("#uploadAdditional").click(function() {
+	    	var theFileSelector = document.getElementById("additionalFile");
+			var theFiles = theFileSelector.files;
+	   		var file = theFiles[0];
+			var fData = {"file":{"name":"additionalDocument","file":file,"filename":file.name},
+						 "inputs":[{"name":"attachmentType","value":$("#documentType").val()}]};
+			var postPath = "@{Student.submissionUploadAdditionalDocumentJSON(subId)}";
+			var updateData = {"path":"@{Student.submissionView(subId)}","id":"#doAdditionalUploadWrap"};
 			uploadFile(fData,postPath,updateData);
-   		} else {
-			alert("The manuscript must be in PDF format");
+	
+			return false;
+	    });
+
+	    function uploadFile(fData,postPath,updateData) {
+			var formData = new FormData();
+			formData.append(fData.file.name, fData.file.file, fData.file.filename);
+
+			if (fData.inputs) {
+				$.each(fData.inputs,function(key,input) {
+		   			formData.append(input.name,input.value);
+				});
+			}
+
+		 	var xhr = new XMLHttpRequest();
+			xhr.open('POST', postPath, true);
+			xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+			xhr.onload = function () {
+							if (xhr.status === 200) {
+							data = JSON.parse(xhr.response);
+							if (data.success) {
+								jQuery(updateData.id).fadeTo("slow",0.5,function() {
+										jQuery(updateData.id).load(updateData.path+" "+updateData.id,function() {
+											jQuery(updateData.id).fadeTo("fast",1);
+											updateActionLog();
+										});
+									});
+				    			}
+							  } else {
+								alert("Error uploading file");
+							  }
+							};
+			xhr.send(formData);
+
+			return false;
 		}
-    	return false;
-    });
+	}
 
-    jQuery("#uploadAdditional").click(function() {
-    	var theFileSelector = document.getElementById("additionalFile");
-		var theFiles = theFileSelector.files;
-   		var file = theFiles[0];
-		var fData = {"file":{"name":"additionalDocument","file":file,"filename":file.name},
-					 "inputs":[{"name":"attachmentType","value":$("#documentType").val()}]};
-		var postPath = "@{Student.submissionUploadAdditionalDocumentJSON(subId)}";
-		var updateData = {"path":"@{Student.submissionView(subId)}","id":"#doAdditionalUploadWrap"};
-		uploadFile(fData,postPath,updateData);
-
-		return false;
-    });
-    
     jQuery("#addmsg").click(function(e) {
     	e.preventDefault();
 		submitterId = jQuery(this).attr("id");
@@ -117,39 +152,6 @@ jQuery(document).ready(function() {
 		return false;
     });
     
-	function uploadFile(fData,postPath,updateData) {
-		var formData = new FormData();
-		formData.append(fData.file.name, fData.file.file, fData.file.filename);
-
-		if (fData.inputs) {
-			$.each(fData.inputs,function(key,input) {
-	   			formData.append(input.name,input.value);
-			});
-		}
-
-	 	var xhr = new XMLHttpRequest();
-		xhr.open('POST', postPath, true);
-		xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-		xhr.onload = function () {
-						if (xhr.status === 200) {
-						data = JSON.parse(xhr.response);
-						if (data.success) {
-							jQuery(updateData.id).fadeTo("slow",0.5,function() {
-									jQuery(updateData.id).load(updateData.path+" "+updateData.id,function() {
-										jQuery(updateData.id).fadeTo("fast",1);
-										updateActionLog();
-									});
-								});
-			    			}
-						  } else {
-							alert("Error uploading file");
-						  }
-						};
-		xhr.send(formData);
-
-		return false;
-	}
-
     function updateActionLog() {
 	    jQuery("#student-log-view").fadeTo("slow",0.5,function() {
 			jQuery("#student-log-view").load("@{Student.submissionView(subId)} #student-log-view table",function() {
