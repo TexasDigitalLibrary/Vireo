@@ -140,6 +140,14 @@ public class Student extends AbstractVireoController {
 	}
 	
 	@Security(RoleType.STUDENT)
+	public static void submissionRemoveAdditionalDocumentsJSON(Long subId) {
+		// Locate the submission 
+		Submission sub = subRepo.findSubmission(subId);
+		removeAdditional(sub); 
+		renderJSON("{ \"success\": \"true\"}");
+	}
+	
+	@Security(RoleType.STUDENT)
 	public static void submissionUploadAdditionalDocumentJSON(Long subId) {
 		// Locate the submission 
 		Submission sub = subRepo.findSubmission(subId);
@@ -430,10 +438,9 @@ public class Student extends AbstractVireoController {
 	 *            The submission to remove attachments from.
 	 */
 	public static boolean removeAdditional(Submission sub) {
-
 		// Get values from all check boxes
-		String[] idsToRemove = params.getAll("attachmentToRemove");
-		
+		String[] idsToRemove = params.getAll("attachmentToRemove[]");
+
 		if (idsToRemove != null) {
 		
 			// Iterate over all checked check boxes - removing attachments as we go

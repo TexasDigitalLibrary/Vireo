@@ -40,6 +40,7 @@ GET     /profile                                Authentication.profile
 *	    /submit/{subId}/addMessage				Student.submissionAddMessageJSON
 *	    /submit/{subId}/uploadPrimaryDocument	Student.submissionUploadPrimaryDocumentJSON
 *	    /submit/{subId}/uploadAdditionalDocument Student.submissionUploadAdditionalDocumentJSON
+*	    /submit/{subId}/removeAdditionalDocuments Student.submissionRemoveAdditionalDocumentsJSON
 
 GET     /submit/{subId}/file/{attachmentId}/{name} Student.viewAttachment
 

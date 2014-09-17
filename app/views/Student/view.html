@@ -73,6 +73,39 @@ jQuery(document).ready(function() {
 		});
     });
 
+    jQuery("#removeAdditional").live("click",function() {
+    	var attachmentToRemove = [];
+    	$(".doRemoveAttachmentIds:checked").each(function() {
+    		attachmentToRemove.push($(this).val());
+    	});
+    	if (attachmentToRemove.length > 0) {
+			var updateData = {"path":"@{Student.submissionView(subId)}","id":"#doAdditionalUploadWrap"};
+			jQuery.ajax({
+				url: '@{Student.submissionRemoveAdditionalDocumentsJSON(subId)}',
+				data:{
+					'attachmentToRemove': attachmentToRemove,
+				},
+				dataType:'json',
+				type:'POST',
+				success:function(data){
+					if (data.success) {
+						jQuery(updateData.id).fadeTo("slow",0.5,function() {
+							jQuery(updateData.id).load(updateData.path+" "+updateData.id,function() {
+								jQuery(updateData.id).fadeTo("fast",1);
+								updateActionLog();
+							});
+						});
+						updateActionLog();
+					}
+				},
+				error:function(){
+					alert("Error communicating with the server.");
+				}
+			});    	
+    	}
+		return false;
+    });
+    
 	function uploadFile(fData,postPath,updateData) {
 		var formData = new FormData();
 		formData.append(fData.file.name, fData.file.file, fData.file.filename);
@@ -105,7 +138,7 @@ jQuery(document).ready(function() {
 
 		return false;
 	}
-	
+
     function updateActionLog() {
 	    jQuery("#student-log-view").fadeTo("slow",0.5,function() {
 			jQuery("#student-log-view").load("@{Student.submissionView(subId)} #student-log-view table",function() {
@@ -209,7 +242,7 @@ jQuery(document).ready(function() {
             <p>
             	#{if sub.getState().isEditableByStudent()}
             	<label>
-            		<input type="checkbox" value="${attachment.getId()}" name="attachmentToRemove">
+            		<input type="checkbox" value="${attachment.getId()}" class="doRemoveAttachmentIds" name="attachmentToRemove">
                     <a href="@{Student.viewAttachment(subId,attachment.getId(),attachment.getName())}" target="_blank">
                     	${attachment.getName()}
                     </a> 
@@ -227,7 +260,7 @@ jQuery(document).ready(function() {
             #{/else}
             
             #{if sub.getState().isEditableByStudent() && additionalDocuments.size() > 0 }
-            	<input type="submit" value="Remove Selected" class="uploadBtn btn" name="removeAdditional">                        
+            	<input type="submit" value="Remove Selected" class="uploadBtn btn" id="removeAdditional" name="removeAdditional">                        
             #{/if}
         </div>
     </div>
