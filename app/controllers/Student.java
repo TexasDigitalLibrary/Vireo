@@ -139,6 +139,10 @@ public class Student extends AbstractVireoController {
 		renderTemplate("Student/list.html",submissions, showStartSubmissionButton);
 	}
 	
+	/**
+	 * Remove additional document(s) via AJAX request
+	 * @param subId The submission id.
+	 */
 	@Security(RoleType.STUDENT)
 	public static void submissionRemoveAdditionalDocumentsJSON(Long subId) {
 		// Locate the submission 
@@ -147,6 +151,10 @@ public class Student extends AbstractVireoController {
 		renderJSON("{ \"success\": \"true\"}");
 	}
 	
+	/**
+	 * Handle uploading an Additional Document from an AJAX request
+	 * @param subId The submission id.
+	 */
 	@Security(RoleType.STUDENT)
 	public static void submissionUploadAdditionalDocumentJSON(Long subId) {
 		// Locate the submission 
@@ -158,6 +166,10 @@ public class Student extends AbstractVireoController {
 		renderJSON("{ \"success\": \"false\"}");
 	}
 	
+	/**
+	 * Handle uploading a Primary Document from an AJAX request
+	 * @param subId The submission id.
+	 */
 	@Security(RoleType.STUDENT)
 	public static void submissionUploadPrimaryDocumentJSON(Long subId) {
 		// Locate the submission 
@@ -169,6 +181,10 @@ public class Student extends AbstractVireoController {
 		renderJSON("{ \"success\": \"false\"}");
 	}
 	
+	/**
+	 * Handle adding a message from an AJAX request
+	 * @param subId The submission id.
+	 */
 	@Security(RoleType.STUDENT)
 	public static void submissionAddMessageJSON(Long subId) {
 		String studentMessage = null;
