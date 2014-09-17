@@ -9,7 +9,7 @@ import org.tdl.vireo.state.State;
  * This object follows the spring repository pattern, where this is the source
  * for creating and locating all persistent model objects.
  * 
- * @author Jeremy Huff, huff@library.tamu.edu
+ * @author <a href="mailto:huff@library.tamu.edu">Jeremy Huff</a>
  */
 public interface WorkflowEmailRuleRepository {
 

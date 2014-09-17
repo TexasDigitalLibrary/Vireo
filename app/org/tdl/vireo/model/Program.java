@@ -6,7 +6,7 @@ import java.util.HashMap;
  * This class represents programs.
  * 
  * @author Micah Cooper
- * @author Jeremy Huff, huff@library.tamu.edu
+ * @author <a href="mailto:huff@library.tamu.edu">Jeremy Huff</a>
  * 
  */
 public interface Program extends EmailGroup {

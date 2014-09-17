@@ -114,6 +114,9 @@ POST    /admin/settings/members/update          settings.ApplicationSettingsTab.
 POST    /admin/settings/submission/sticky       settings.SubmissionSettingsTab.updateStickySettingsJSON
 GET     /admin/settings/submission/reset        settings.SubmissionSettingsTab.resetSettings
 
+### Settings tab - Workflow Email Rules
+POST    /admin/settings/email/rules/add         settings.EmailSettingsTab.addEmailWorkflowRuleJSON
+
 ### Settings tab - Email Templates
 POST    /admin/settings/templates/add           settings.EmailSettingsTab.addEmailTemplateJSON
 POST    /admin/settings/templates/retrieve      settings.EmailSettingsTab.retrieveEmailTemplateJSON

@@ -7,7 +7,7 @@ import org.tdl.vireo.state.State;
  * starting point for any future worklflow rules. Common elements to all workflow
  * rules will be condition, action and state.
  * 
- * @author Jeremy Huff, huff@library.tamu.edu 
+ * @author <a href="mailto:huff@library.tamu.edu">Jeremy Huff</a>
  */
 public abstract interface AbstractWorkflowRule extends AbstractModel {
 	
@@ -32,21 +32,6 @@ public abstract interface AbstractWorkflowRule extends AbstractModel {
 	 *            The condition upon which the rule relies. This could be a college or
 	 *            a department or a program, etc.
 	 */
-	public void setCondition(College condition);
+	public void setCondition(EmailGroup condition);
 	
-	/**
-	 * @param condition
-	 *            The condition upon which the rule relies. This could be a college or
-	 *            a department or a program, etc.
-	 */
-	public void setCondition(Department condition);
-	
-	/**
-	 * @param condition
-	 *            The condition upon which the rule relies. This could be a college or
-	 *            a department or a program, etc.
-	 */
-	public void setCondition(Program condition);
-	
-
 }

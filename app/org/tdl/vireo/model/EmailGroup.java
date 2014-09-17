@@ -7,7 +7,7 @@ import java.util.HashMap;
  * ability for the objects to be sorted based upon a relative display order value placed
  * on each object.
  * 
- * @author Jeremy Huff, huff@library.tamu.edu
+ * @author <a href="mailto:huff@library.tamu.edu">Jeremy Huff</a>
  */
 public abstract interface EmailGroup extends AbstractOrderedModel {
 
@@ -33,5 +33,10 @@ public abstract interface EmailGroup extends AbstractOrderedModel {
 	 *            Remove a email to this program.
 	 */
 	public void removeEmail(int index);
+
+	/**
+	 * @return The name of this email group member.
+	 */
+	public String getName();
 
 }

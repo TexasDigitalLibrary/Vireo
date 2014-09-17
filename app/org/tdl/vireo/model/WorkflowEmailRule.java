@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * This class represents the email rules which may be created in Vireo
  * 
- * @author Jeremy Huff, huff@library.tamu.edu
+ * @author <a href="mailto:huff@library.tamu.edu">Jeremy Huff</a>
  */
 public interface WorkflowEmailRule extends AbstractWorkflowRule {
 
@@ -26,13 +26,13 @@ public interface WorkflowEmailRule extends AbstractWorkflowRule {
 	 * @param emailAddress
 	 *            Set the email address associated with this rule
 	 */
-	public void setEmail(String emailAddress);
+	public void setRecipient(String emailAddress);
 
 	/**
 	 * @param emailGroup
 	 *            Set the email group associated with this rule
 	 */
-	public void setEmail(EmailGroup emailGroup);
+	public void setRecipient(EmailGroup emailGroup);
 	
 	/**
 	 * @return The email group associated with this rule

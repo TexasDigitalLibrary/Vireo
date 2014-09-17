@@ -357,7 +357,7 @@ function sortableSaveEditHandler(type,jsonURL) {
 
 		var successCallback = function(data) {
 			// Remove the ajax loading indicators & alerts
-			clearAlert(type + "-edit-" + id);
+			Alert(type + "-edit-" + id);
 			jQuery("#"+type+"-list").removeClass("waiting");
 			jQuery("#"+id).removeClass("settings-sortable-error");
 
@@ -426,7 +426,7 @@ function sortableUpdateHandler(type, reorderURL, removeURL) {
 
 			var successCallback = function(data) {
 				// Remove the ajax loading indicators & alerts
-				clearAlert(type + "-remove-" + id);
+				Alert(type + "-remove-" + id);
 
 				// Check to see if we need to hide the trashcan
 				if (jQuery("#"+type+"-list li").length == 0) {
@@ -467,7 +467,7 @@ function sortableUpdateHandler(type, reorderURL, removeURL) {
 
 			var successCallback = function(data) {
 				// Remove the ajax loading indicators & alerts
-				clearAlert(type + "-reorder");
+				Alert(type + "-reorder");
 			}
 
 			var failureCallback = function (message) {
@@ -523,7 +523,7 @@ function saveAddActionHandler(type, jsonURL) {
 				jQuery("#add-"+type+"-subject").closest('.control-group').removeClass("error");
 			if (jQuery("#add-"+type+"-message").length > 0)
 				jQuery("#add-"+type+"-message").closest('.control-group').removeClass("error");
-			clearAlert(type+"-add");
+			Alert(type+"-add");
 			
 			var $newElement = jQuery("<li/>").appendTo(jQuery("#"+type+"-list"));
 			displaySortableItem(type,false,$newElement, type+"_"+data.id, data.name, data.level);
@@ -590,7 +590,7 @@ function saveAddActionHandler(type, jsonURL) {
 }
 
 /**
- * Handler for the cancel button when adding an action. This will clear out the
+ * Handler for the cancel button when adding an action. This will  out the
  * form and fadeout dialog form.
  * 
  * @param type
@@ -642,7 +642,7 @@ function retrieveEmailTemplateHandler(jsonURL) {
 		var successCallback = function(data) {
 			// Remove loading indicator and alerts
 			jQuery("#"+id).removeClass("waiting");
-			clearAlert("emailTemplate-retrieve-"+id);
+			Alert("emailTemplate-retrieve-"+id);
 			
 			jQuery("#"+id+" #edit-emailTemplate-name").val(data.name);
 			jQuery("#"+id+" #edit-emailTemplate-subject").val(data.subject);
@@ -722,7 +722,7 @@ function removeEmailTemplateHandler(jsonURL) {
 		var successCallback = function(data) {
 			// Remove loading indicator and alerts
 			jQuery("#"+id).removeClass("waiting");
-			clearAlert("emailTemplate-delete-"+id);
+			Alert("emailTemplate-delete-"+id);
 			
 			jQuery("#"+id).slideToggle(null, function () {
 				jQuery("#"+id).remove();
@@ -762,6 +762,96 @@ function removeEmailTemplateHandler(jsonURL) {
 }
 
 /**
+ * Handles the ui interactions for the workflow email rules
+ * 
+ * @param jsonURL
+ *            The url where templates may be saved.
+ * @returns A Callback function
+ */
+function workflowEmailRuleHandler($this, $select, options) {
+
+	$select.html("");	
+	
+	var message = options.length > 0 ? "Choose a "+$this.children("option:selected").text() : "No " +$this.children("option:selected").text()+ " added"
+	$select.html("")
+	$select.html("<option value=''>"+message+"</option>");
+
+	jQuery(options).each(function(key, val) {
+		var option = "<option value="+val.id+">"+val.name+"</option>"
+		$select.append(option);
+	});
+}
+
+/**
+ * Create a workflow email rule
+ * 
+ * @param jsonURL
+ *            The url where templates may be saved.
+ * @returns A Callback function
+ */
+function createWorkflowEmailRuleHandler(jsonURL) {
+	return function() {
+		var target = $(this).attr("data-target");
+		var id = "#"+ target + "-workflow-add";
+		var $element = $(id);
+
+		var data = new Object;
+		data.condition = $("#"+target+"-workflow-add-conditionSelector").val();
+		data.recipient = $("#"+target+"-workflow-add-recipientSelector").val();
+		data.template = $("#"+target+"-workflow-add-templateSelector").val();
+
+		$element.addClass("waiting");
+		
+		var successCallback = function(data) {
+			// Remove loading indicator and alerts
+			$element.removeClass("waiting");
+			resetForm();
+		}
+
+		var failureCallback = function(message) {
+			$element.removeClass("waiting");
+			resetForm();
+		}
+
+		var resetForm = function() {
+			$("#"+target+"-workflow-add-conditionCatagorySelector").val("");
+			$("#"+target+"-workflow-add-conditionSelector").val("");
+			$("#"+target+"-workflow-add-recipientSelector").val("");
+			$("#"+target+"-workflow-add-templateSelector").val("");
+		}
+		
+		jQuery.ajax({
+			url : jsonURL,
+			data : {
+				state: target,
+				condition: data.condition,
+				recipient: data.recipient,
+				template: data.template
+			},
+			dataType : 'json',
+			type : 'POST',
+			success : function(data) {
+
+				console.log(data);
+
+				if (data.success) {
+					successCallback(data);
+				} else {
+					failureCallback(data.message)
+				}
+
+			},
+			error : function() {
+				failureCallback("Unable to communicate with the server.");
+			}
+
+		});
+
+		return false;
+	};
+}
+
+/**
  * Save an email template.
  * 
  * @param jsonURL
@@ -783,7 +873,7 @@ function editEmailTemplateHandler(jsonURL) {
 		var successCallback = function(data) {
 			// Remove loading indicator and alerts
 			jQuery("#"+id).removeClass("waiting");
-			clearAlert("emailTemplate-delete-"+id);
+			Alert("emailTemplate-delete-"+id);
 			
 			jQuery("#"+id+" .control-group").each( function() {
 				jQuery(this).removeClass("error");
@@ -860,9 +950,9 @@ function myProfileHandler(jsonURL) {
 			jQuery("#my-profile").removeClass("waiting");
 			jQuery("#my-preferences").removeClass("waiting");
 
-			// Clear any previous errors
+			//  any previous errors
 			$this.parent("fieldset").removeClass("error");
-			clearAlert("profile-alert-"+field);
+			Alert("profile-alert-"+field);
 
 			// Username at the upper left hand corner
 			jQuery("#personal-bar a:first-of-type b").text(data.displayName);
@@ -932,7 +1022,7 @@ function userPreferenceHandler(jsonURL) {
 			// Remove the ajax loading indicators & alerts
 			$this.closest("fieldset").removeClass("waiting");
 			$this.closest("fieldset").removeClass("error");
-			clearAlert("user-preference-"+field);
+			Alert("user-preference-"+field);
 		}
 
 		var failureCallback = function (message) {
@@ -991,7 +1081,7 @@ function applicationSettingsHandler(jsonURL) {
 			// Remove the ajax loading indicators & alerts
 			$this.parent().removeClass("waiting");
 			$this.removeClass("settings-error");
-			clearAlert("application-setting-"+field);
+			Alert("application-setting-"+field);
 		}
 
 		var failureCallback = function (message) {
@@ -1232,7 +1322,7 @@ function emailSettingsHandler(jsonURL) {
 		var successCallback = function(data) {
 			// Remove the ajax loading indicators & alerts
 			$this.parent().removeClass("waiting");
-			clearAlert("email-setting-"+field);
+			Alert("email-setting-"+field);
 		}
 
 		var failureCallback = function (message) {
@@ -1345,7 +1435,7 @@ function embargoOpenDialogHandler() {
 
 		}
 
-		// Clear out any previous errors
+		//  out any previous errors
 		jQuery("#embargoType-errors").html("");
 		jQuery("#embargo-type-modal .control-group").each(function () {
 			jQuery(this).removeClass("error"); 
@@ -1553,7 +1643,7 @@ var embargoSortableUpdateHandler = function(jsonURL) {
 
 		var successCallback = function(data) {
 			// Remove the ajax loading indicators & alerts
-			clearAlert("embargoType-reorder");
+			Alert("embargoType-reorder");
 			jQuery("#embargoType-list").removeClass("waiting");
 		}
 
@@ -1637,7 +1727,7 @@ function collegeOpenDialogHandler(isNew, id) {
 
 	}
 
-	// Clear out any previous errors
+	//  out any previous errors
 	jQuery("#college-errors").html("");
 	jQuery("#college-modal .control-group").each(function () {
 		jQuery(this).removeClass("error"); 
@@ -1859,7 +1949,7 @@ var collegeSortableUpdateHandler = function(jsonURL) {
 
 		var successCallback = function(data) {
 			// Remove the ajax loading indicators & alerts
-			clearAlert("college-reorder");
+			Alert("college-reorder");
 			jQuery("#colleges-list").removeClass("waiting");
 		}
 
@@ -1943,7 +2033,7 @@ function programOpenDialogHandler(isNew, id) {
 
 	}
 
-	// Clear out any previous errors
+	//  out any previous errors
 	jQuery("#program-errors").html("");
 	jQuery("#program-modal .control-group").each(function () {
 		jQuery(this).removeClass("error"); 
@@ -2165,7 +2255,7 @@ var programSortableUpdateHandler = function(jsonURL) {
 
 		var successCallback = function(data) {
 			// Remove the ajax loading indicators & alerts
-			clearAlert("program-reorder");
+			Alert("program-reorder");
 			jQuery("#programs-list").removeClass("waiting");
 		}
 
@@ -2249,7 +2339,7 @@ function departmentOpenDialogHandler(isNew, id) {
 
 	}
 
-	// Clear out any previous errors
+	//  out any previous errors
 	jQuery("#department-errors").html("");
 	jQuery("#department-modal .control-group").each(function () {
 		jQuery(this).removeClass("error"); 
@@ -2471,7 +2561,7 @@ var departmentSortableUpdateHandler = function(jsonURL) {
 
 		var successCallback = function(data) {
 			// Remove the ajax loading indicators & alerts
-			clearAlert("department-reorder");
+			Alert("department-reorder");
 			jQuery("#departments-list").removeClass("waiting");
 		}
 
@@ -2755,7 +2845,7 @@ function submissionSettingsHandler(jsonURL) {
 			// Remove the ajax loading indicators & alerts
 			$this.removeClass("waiting");
 			$this.removeClass("settings-error");
-			clearAlert("submission-setting-"+field);
+			Alert("submission-setting-"+field);
 			
 			// Update the label if required
 			if (data.field.indexOf("_enabled") > -1) {
@@ -2818,7 +2908,7 @@ function stickySettingsHandler(jsonURL) {
 			// Remove the ajax loading indicators & alerts
 			$this.removeClass("waiting");
 			$this.removeClass("settings-error");
-			clearAlert("submission-setting-"+field);
+			Alert("submission-setting-"+field);
 			
 			if (!data.value) {
 				$this.closest('li').slideUp(500, function() {

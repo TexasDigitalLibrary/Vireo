@@ -17,7 +17,7 @@ import play.db.jpa.JPA;
 /**
  * Jpa specific implementation of the Vireo Workflow Email Rule Repository interface.
  * 
- * @author Jeremy Huff, huff@library.tamu.edu
+ * @author <a href="mailto:huff@library.tamu.edu">Jeremy Huff</a>
  */
 public class JpaWorkflowEmailRuleRepositoryImpl implements WorkflowEmailRuleRepository {
 	

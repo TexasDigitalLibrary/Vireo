@@ -29,7 +29,7 @@ import play.modules.spring.Spring;
 /**
  * Jpa specific implementation of Vireo's WorkflowEmailRule interface.
  * 
- * @author Jeremy Huff, huff@library.tamu.edu
+ * @author <a href="mailto:huff@library.tamu.edu">Jeremy Huff</a>
  * 
  */
 @Entity
@@ -42,7 +42,7 @@ public class JpaWorkflowEmailRuleImpl extends JpaAbstractModel<JpaWorkflowEmailR
 	
     @Column
 	@ElementCollection(targetClass=String.class)
-	public List<String> emailAddresses;
+	public List<String> recipients;
 	
     @OneToOne(targetEntity = JpaEmailTemplateImpl.class)
 	public EmailTemplate emailTemplate;
@@ -59,13 +59,13 @@ public class JpaWorkflowEmailRuleImpl extends JpaAbstractModel<JpaWorkflowEmailR
 	 *            Workflow Email Rules's Associated State.
 	 * @param condition
 	 * 			  Workflow Email Rule's condition
-	 * @param emailAddresses
+	 * @param recipients
 	 * 			  Workflow Email Rule's email addresses   
 	 * @param emailTemplate
 	 * 			  Workflow Email Rule's email template                
 	 */
 	protected JpaWorkflowEmailRuleImpl(State associatedState, AbstractOrderedModel condition, 
-			List<String> emailAddresses, EmailTemplate emailTemplate) {
+			List<String> recipients, EmailTemplate emailTemplate) {
 		
 		assertManager();
 		
@@ -73,16 +73,10 @@ public class JpaWorkflowEmailRuleImpl extends JpaAbstractModel<JpaWorkflowEmailR
 			throw new IllegalArgumentException("associatedState is required");
 		} 
 				
-		if (emailAddresses == null) {
-			this.emailAddresses = new ArrayList<String>();
+		if (recipients == null) {
+			this.recipients = new ArrayList<String>();
 		} else {
-			this.emailAddresses = emailAddresses;
-		}
-		
-		if (condition == emailAddresses) {
-			this.emailAddresses = new ArrayList<String>();
-		} else {
-			this.emailAddresses = emailAddresses;
+			this.recipients = recipients;
 		}
 		
 		this.associatedState = associatedState.getBeanName();
@@ -97,20 +91,20 @@ public class JpaWorkflowEmailRuleImpl extends JpaAbstractModel<JpaWorkflowEmailR
 	}
 
 	@Override
-	public void setEmail(String emailAddress) {
-		this.emailAddresses.add(emailAddress);
+	public void setRecipient(String emailAddress) {
+		this.recipients.add(emailAddress);
 	}
 
 	@Override
-	public void setEmail(EmailGroup emailGroup) {	
+	public void setRecipient(EmailGroup emailGroup) {	
 	 	for(String emailAddress: emailGroup.getEmails().values()) {
-	 		this.emailAddresses.add(emailAddress);
+	 		this.recipients.add(emailAddress);
 	 	}
 	}
 
 	@Override
 	public List<String> getEmails() {
-		return this.emailAddresses;
+		return this.recipients;
 	}
 
 	@Override
@@ -130,18 +124,8 @@ public class JpaWorkflowEmailRuleImpl extends JpaAbstractModel<JpaWorkflowEmailR
 	}
 
 	@Override
-	public void setCondition(College condition) {
+	public void setCondition(EmailGroup condition) {
 		this.condition = condition.getName();
-	}
-
-	@Override
-	public void setCondition(Department condition) {
-		this.condition = condition.getName();		
-	}
-
-	@Override
-	public void setCondition(Program condition) {
-		this.condition = condition.getName();		
 	}
 
 }

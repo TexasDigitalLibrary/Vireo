@@ -1,11 +1,29 @@
 #{extends 'SettingTabs/settings.html' /}
 #{set 'moreSettingScripts' }
+#{include 'SettingTabs/jsDataObject.include' /}
 <script type="text/javascript">
 jQuery(document).ready(function(){
 
 	// Email settings at the top of the page.
     jQuery(".email-toggle").click(emailSettingsHandler('@{settings.EmailSettingsTab.updateEmailSettingsJSON()}'));
 
+
+    #{list items:STATES, as:'state'}
+    	#{if state.inWorkflow}
+	jQuery("#add-${state.getBeanName()}-workflowEmailRule-link").on("click", slideToggleHandler("#add-${state.getBeanName()}-workflowEmailRule-dialog"));
+	jQuery("#add-${state.getBeanName()}-workflowEmailRule-cancel").click(cancelAddActionHandler('${state.getBeanName()}-workflowEmailRule'));
+	jQuery("#add-${state.getBeanName()}-workflowEmailRule-save").click(createWorkflowEmailRuleHandler('@{settings.EmailSettingsTab.addEmailWorkflowRuleJSON()}'));
+
+	   	#{/if}
+	#{/list}
+
+	jQuery(".conditionCatagorySelector").change(function() {
+		var $this = $(this)
+		var $select = $(this).next(".conditionSelector");
+		var options = jsDataObjects[$(this).val()];
+
+		workflowEmailRuleHandler($this, $select, options);
+	});
 	
      // Handlers for the sortable emailTemplates list
      jQuery("#emailTemplate-list").sortable({

@@ -48,7 +48,7 @@ import play.vfs.VirtualFile;
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  * @author Micah Cooper
- * @author Jeremy Huff
+ * @author <a href="mailto:huff@library.tamu.edu">Jeremy Huff</a>
  */
 public class TemplatePackagerImpl extends AbstractPackagerImpl {
 		

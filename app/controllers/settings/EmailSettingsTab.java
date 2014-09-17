@@ -7,9 +7,12 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
+import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.Configuration;
+import org.tdl.vireo.model.Department;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.NameFormat;
+import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
@@ -29,10 +32,14 @@ public class EmailSettingsTab extends SettingsTab {
 	@Security(RoleType.MANAGER)
 	public static void emailSettings(){
 		
-		
+		List<College> colleges = settingRepo.findAllColleges();
+		List<Program> programs = settingRepo.findAllPrograms();
+		List<Department> departments = settingRepo.findAllDepartments();
 		
 		// Get the email checkboxes
 		renderArgs.put("EMAIL_DELAY_SENDING_ADVISOR_REQUEST", settingRepo.findConfigurationByName(EMAIL_DELAY_SENDING_ADVISOR_REQUEST));
+		
+		renderArgs.put("STATES", stateManager.getAllStates());
 		
 		renderArgs.put("STATES", stateManager.getAllStates());
 		
@@ -41,7 +48,12 @@ public class EmailSettingsTab extends SettingsTab {
 		
 		String nav = "settings";
 		String subNav = "email";
-		renderTemplate("SettingTabs/emailSettings.html",nav, subNav, templates);
+		renderTemplate("SettingTabs/emailSettings.html",nav, subNav, templates,
+				
+				// Sortable lists
+				colleges, programs, departments
+				
+				);
 	}
 	
 	
@@ -84,7 +96,20 @@ public class EmailSettingsTab extends SettingsTab {
 		}
 	}
 	
+	// ////////////////////////////////////////////
+	// WORKFLOW EMAIL RULES
+	// ////////////////////////////////////////////
 	
+	@Security(RoleType.MANAGER)
+	public static void addEmailWorkflowRuleJSON(String state, String condition, String recipient, String template) {
+		try {		
+			renderJSON("{ \"success\": \"true\",\"state\": \""+state+"\",\"condition\": \""+condition+"\",\"recipient\": \""+recipient+"\",\"template\": \""+template+"\" }");
+		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to update email settings");
+			String message = escapeJavaScript(re.getMessage());
+			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
+		}
+	}
 	
 	// ////////////////////////////////////////////
 	// EMAIL TEMPLATES
