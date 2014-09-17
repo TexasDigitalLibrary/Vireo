@@ -29,16 +29,23 @@ jQuery(document).ready(function(){
 </script>
 #{/set}
 
-<h2>EMAIL OPTIONS</h2>
+<h2>WORKFLOW OPTIONS</h2>
 
-<fieldset class="default settings">
+<div class="accordion settings-accordion">
+	#{list items:STATES, as:'state'}
+    	#{if state.inWorkflow}	
+			#{include 'SettingTabs/workflow.include' /}
+	   	#{/if}
+	#{/list}
+</div>
+<!-- <fieldset class="default settings">
 <legend class="default">Choose email options:</legend>
 	<div>
 	   <input name="${org.tdl.vireo.constant.AppConfig.EMAIL_DELAY_SENDING_ADVISOR_REQUEST}" type="checkbox" class="checkbox email-toggle" #{if EMAIL_DELAY_SENDING_ADVISOR_REQUEST != null}checked="true"#{/if} value="true">
 	       Do not automatically send the 'Advisor Review Request' email upon initial submission.
 	   </input>
 	</div>
-</fieldset>
+</fieldset> -->
 
 <h2>EMAIL TEMPLATES</h2>
 

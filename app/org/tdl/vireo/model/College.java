@@ -7,7 +7,7 @@ import java.util.HashMap;
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
-public interface College extends AbstractOrderedModel {
+public interface College extends EmailGroup {
 
 	/**
 	 * @return The name of the college
@@ -19,28 +19,5 @@ public interface College extends AbstractOrderedModel {
 	 *            Set the new name of this college.
 	 */
 	public void setName(String name);
-	
-	/**
-	 * @return The email addresses of the college
-	 */
-	public HashMap<Integer, String> getEmails();
-
-	/**
-	 * @param emails
-	 *            Set the new email of this college.
-	 */
-	public void setEmails(HashMap emails);
-
-	/**
-	 * @param email
-	 *            Add a new email to this college.
-	 */
-	public void addEmail(String email);
-	
-	/**
-	 * @param email
-	 *            Remove a email to this college.
-	 */
-	public void removeEmail(int index);
 
 }

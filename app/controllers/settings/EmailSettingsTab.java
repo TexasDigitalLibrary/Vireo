@@ -11,8 +11,11 @@ import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.RoleType;
+import org.tdl.vireo.state.State;
+import org.tdl.vireo.state.StateManager;
 
 import play.Logger;
+import play.modules.spring.Spring;
 import play.mvc.With;
 import controllers.Authentication;
 import controllers.Security;
@@ -21,14 +24,17 @@ import controllers.SettingsTab;
 @With(Authentication.class)
 public class EmailSettingsTab extends SettingsTab {
 
-
+	public static StateManager stateManager = Spring.getBeanOfType(StateManager.class);
+	
 	@Security(RoleType.MANAGER)
 	public static void emailSettings(){
 		
+		
+		
 		// Get the email checkboxes
 		renderArgs.put("EMAIL_DELAY_SENDING_ADVISOR_REQUEST", settingRepo.findConfigurationByName(EMAIL_DELAY_SENDING_ADVISOR_REQUEST));
-
-
+		
+		renderArgs.put("STATES", stateManager.getAllStates());
 		
 		// List all templates
 		List<EmailTemplate> templates = settingRepo.findAllEmailTemplates();

@@ -78,4 +78,6 @@ public interface State {
 	 */
 	public List<State> getTransitions(Submission submission);
 
+	boolean isInWorkflow();
+
 }

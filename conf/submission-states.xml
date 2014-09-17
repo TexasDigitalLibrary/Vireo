@@ -45,6 +45,7 @@
 				<ref bean="InReview" />
 			</util:list>
 		</property>
+		<property name="inWorkflow" value="true" />
 	</bean>
 
 	<bean id="InReview" class="org.tdl.vireo.state.impl.StateImpl"
@@ -88,6 +89,7 @@
                 <ref bean="Approved" />
             </util:list>
         </property>
+        <property name="inWorkflow" value="true" />
     </bean>
 
 	<bean id="WaitingOnRequirements" class="org.tdl.vireo.state.impl.StateImpl"
@@ -126,6 +128,7 @@
 				<ref bean="OnHold" />
 			</util:list>
 		</property>
+		<property name="inWorkflow" value="true" />
 	</bean>
 
 	<bean id="PendingPublication" class="org.tdl.vireo.state.impl.StateImpl"
@@ -138,6 +141,7 @@
 				<ref bean="Published" />
 			</util:list>
 		</property>
+		<property name="inWorkflow" value="true" />
 	</bean>
 
 	<bean id="Published" class="org.tdl.vireo.state.impl.StateImpl"
@@ -151,6 +155,7 @@
 				<ref bean="PendingPublication" />
 			</util:list>
 		</property>
+		<property name="inWorkflow" value="true" />
 	</bean>
 
 	<!-- Out of Workflow states -->
