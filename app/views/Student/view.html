@@ -188,13 +188,13 @@ jQuery(document).ready(function() {
 		<div id="correctionsWrap" class="alert alert-error">
 			<p><strong><h4>Current Submission State: </h4>${sub.getState().getDisplayName()}!</strong></p>
 			<p>The application requires you to make corrections. Please make the indicated corrections and upload the
-			 new manuscript. After clicking the "Completing Corrections" button at the bottom of the page you will no
+			 new manuscript. After clicking the "Corrections Completed" button you will no
 			 longer be able to edit the application.</p>
 			<div class="form-actions row center">
 			    <p id="submit-corrections-warning" class="hidden red">
 			      After completing your corrections you will no longer be able to edit this application. Did you complete all the required changes, and upload a new manuscript?
 			    </p>
-				<input id="submit_corrections" type="submit" class="btn btn-primary ${sub.getPrimaryDocument() == null ? "disabled" : ""}" name="submit_corrections" value="Complete Corrections"/>
+				<input id="submit_corrections" type="submit" class="btn btn-primary ${sub.getPrimaryDocument() == null ? "disabled" : ""}" name="submit_corrections" value="Corrections Completed"/>
 			</div>		
 		</div>
 	#{/if}
