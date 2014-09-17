@@ -16,7 +16,18 @@ jQuery(document).ready(function() {
         return false;
     });
     
-    jQuery("#uploadPrimary").click(function() {
+    jQuery("#replacePrimary").live("click",function() {
+		var updateData = {"path":"@{Student.submissionView(subId)}","id":"#primaryDocumentWrap"};
+		jQuery(updateData.id).fadeTo("slow",0.5,function() {
+			jQuery(updateData.id).load(updateData.path+" "+updateData.id,{"replacePrimary":$(this).val()},function() {
+				jQuery(updateData.id).fadeTo("fast",1);
+				updateActionLog();
+			});
+		});
+    	return false;
+    });
+    
+    jQuery("#uploadPrimary").live("click",function() {
     	var theFileSelector = document.getElementById("primaryFile");
 		var theFiles = theFileSelector.files;
    		var file = theFiles[0];
@@ -215,7 +226,7 @@ jQuery(document).ready(function() {
 	                <p>
 	                    <a href="@{Student.viewAttachment(subId,primaryDocument.getId(),primaryDocument.getName())}">${primaryDocument.getName()}</a>
 	                    (${primaryDocument.getDisplaySize()})
-	                    <input type="submit" value="Replace Manuscript" class="uploadBtn btn" name="replacePrimary">
+	                    <input type="submit" value="Replace Manuscript" class="uploadBtn btn" id="replacePrimary" name="replacePrimary">
 	                </p>
 		        #{/else}
 		        </div>
