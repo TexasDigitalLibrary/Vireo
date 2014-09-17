@@ -223,16 +223,14 @@ jQuery(document).ready(function() {
 	</br>
 	#{/ifErrors}
 		#{ifEnabled PRIMARY_ATTACHMENT}
-		<div class="control-group #{if errors.forKey('primaryDocument')}error#{/if}">
+		<div class="control-group control-group-tall #{if errors.forKey('primaryDocument')}error#{/if}">
 			<label class="control-label">#{fieldLabel PRIMARY_ATTACHMENT /}:</label>
 			<div class="controls">
 			#{if sub.getState().isEditableByStudent()}
 				<div id="primaryDocumentWrap">
 				#{if primaryDocument == null}
-					<input type="file" id="primaryFile" class="input-file" name="primaryDocument"><br/>
 			        <input type="submit" value="Upload" class="uploadBtn btn" id="uploadPrimary" name="uploadPrimary">
-			        <br/>
-			        <br/>               
+					<input type="file" id="primaryFile" class="input-file" name="primaryDocument">
 		        #{/if}
 		        #{else}
 	                <p>
@@ -258,7 +256,7 @@ jQuery(document).ready(function() {
 	</div>
 	#{/ifEnabled}
 	#{ifEnabled [SUPPLEMENTAL_ATTACHMENT,SOURCE_ATTACHMENT,ADMINISTRATIVE_ATTACHMENT]}
-    <div id="doAdditionalUploadWrap" class="control-group #{if errors.forKey('additionalDocument')}error#{/if}">
+    <div id="doAdditionalUploadWrap" class="control-group control-group-tall #{if errors.forKey('additionalDocument')}error#{/if}">
         <label class="control-label">Additional Documents:</label>
         <div class="controls">
             #{list items:additionalDocuments, as:'attachment'}
@@ -288,28 +286,23 @@ jQuery(document).ready(function() {
         </div>
     </div>
 	#{if sub.getState().isEditableByStudent()}	
-	<br/>
-	<br/>
-	<div class="control-group">
-        <label for="documentType" class="control-label"><b>Document type:</b></label>
-        <div class="controls">
-		<select id="documentType" class="input-select" name="attachmentType" style="margin-bottom:7px;">
-            	<option value="">choose type...</option>
-            	#{ifEnabled SUPPLEMENTAL_ATTACHMENT}
-               	<option value="SUPPLEMENTAL">#{fieldLabel SUPPLEMENTAL_ATTACHMENT /}</option>
-               	#{/ifEnabled}
-               	#{ifEnabled SOURCE_ATTACHMENT}
-               	<option value="SOURCE">#{fieldLabel SOURCE_ATTACHMENT /}</option>
-               	#{/ifEnabled}
-               	#{ifEnabled ADMINISTRATIVE_ATTACHMENT}
-               	<option value="ADMINISTRATIVE">#{fieldLabel ADMINISTRATIVE_ATTACHMENT /}</option>
-               	#{/ifEnabled}
-            </select>
-        </div>
+	<div class="control-group control-group-tall">
 		<label class="control-label" for="additionalFile"><span class="required-star">*</span>Browse for Additional Document:</label>
 			<div class="controls">
-				<input type="file" id="additionalFile" class="input-file" name="additionalDocument"><br/>
+				<select id="documentType" class="input-select" name="attachmentType" style="margin-bottom:7px;">
+	            	<option value="">choose type...</option>
+	            	#{ifEnabled SUPPLEMENTAL_ATTACHMENT}
+	               	<option value="SUPPLEMENTAL">#{fieldLabel SUPPLEMENTAL_ATTACHMENT /}</option>
+	               	#{/ifEnabled}
+	               	#{ifEnabled SOURCE_ATTACHMENT}
+	               	<option value="SOURCE">#{fieldLabel SOURCE_ATTACHMENT /}</option>
+	               	#{/ifEnabled}
+	               	#{ifEnabled ADMINISTRATIVE_ATTACHMENT}
+	               	<option value="ADMINISTRATIVE">#{fieldLabel ADMINISTRATIVE_ATTACHMENT /}</option>
+	               	#{/ifEnabled}
+	            </select>
 				<input id="uploadAdditional" type="submit" value="Upload" class="uploadBtn btn" name="uploadAdditional">
+				<input type="file" id="additionalFile" class="input-file" name="additionalDocument">
 			</div>
     </div>
     #{/if}
