@@ -44,15 +44,18 @@ jQuery(document).ready(function() {
 	    });
 	
 	    jQuery("#uploadAdditional").click(function() {
-	    	var theFileSelector = document.getElementById("additionalFile");
-			var theFiles = theFileSelector.files;
-	   		var file = theFiles[0];
-			var fData = {"file":{"name":"additionalDocument","file":file,"filename":file.name},
-						 "inputs":[{"name":"attachmentType","value":$("#documentType").val()}]};
-			var postPath = "@{Student.submissionUploadAdditionalDocumentJSON(subId)}";
-			var updateData = {"path":"@{Student.submissionView(subId)}","id":"#doAdditionalUploadWrap"};
-			uploadFile(fData,postPath,updateData);
-	
+	    	if ($("#documentType").val() != '') {
+		    	var theFileSelector = document.getElementById("additionalFile");
+				var theFiles = theFileSelector.files;
+		   		var file = theFiles[0];
+				var fData = {"file":{"name":"additionalDocument","file":file,"filename":file.name},
+							 "inputs":[{"name":"attachmentType","value":$("#documentType").val()}]};
+				var postPath = "@{Student.submissionUploadAdditionalDocumentJSON(subId)}";
+				var updateData = {"path":"@{Student.submissionView(subId)}","id":"#doAdditionalUploadWrap"};
+				uploadFile(fData,postPath,updateData);
+	    	} else {
+				alert("You must specify the Document Type.");
+	    	}
 			return false;
 	    });
 
