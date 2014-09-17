@@ -48,6 +48,35 @@ jQuery(document).ready(function() {
 
     	return false;
     });
+
+    jQuery("#uploadAdditional").click(function() {
+    	var theFileSelector = document.getElementById("additionalFile");
+		var theFiles = theFileSelector.files;
+    	var formData = new FormData();
+   		var file = theFiles[0];
+   		formData.append('attachmentType',$("#documentType").val());
+	    formData.append('additionalDocument', file, file.name);
+   		 	var xhr = new XMLHttpRequest();
+			xhr.open('POST', '@{Student.submissionUploadAdditionalDocumentJSON(subId)}', true);
+			xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+			xhr.onload = function () {
+			if (xhr.status === 200) {
+				data = JSON.parse(xhr.response);
+				if (data.success) {
+					jQuery("#doAdditionalUploadWrap").fadeTo("slow",0.5,function() {
+						jQuery("#doAdditionalUploadWrap").load("@{Student.submissionView(subId)} #doAdditionalUploadWrap",function() {
+							jQuery("#doAdditionalUploadWrap").fadeTo("fast",1);
+							updateActionLog();
+						});
+					});
+    			}
+			  } else {
+				console.log("Error uploading file");
+			  }
+			};
+			xhr.send(formData);
+    	return false;
+    });
     
     jQuery("#addmsg").click(function(e) {
     	e.preventDefault();
@@ -174,7 +203,7 @@ jQuery(document).ready(function() {
 	</div>
 	#{/ifEnabled}
 	#{ifEnabled [SUPPLEMENTAL_ATTACHMENT,SOURCE_ATTACHMENT,ADMINISTRATIVE_ATTACHMENT]}
-    <div class="control-group #{if errors.forKey('additionalDocument')}error#{/if}">
+    <div id="doAdditionalUploadWrap" class="control-group #{if errors.forKey('additionalDocument')}error#{/if}">
         <label class="control-label">Additional Documents:</label>
         <div class="controls">
             #{list items:additionalDocuments, as:'attachment'}
@@ -225,7 +254,7 @@ jQuery(document).ready(function() {
 		<label class="control-label" for="additionalFile"><span class="required-star">*</span>Browse for Additional Document:</label>
 			<div class="controls">
 				<input type="file" id="additionalFile" class="input-file" name="additionalDocument"><br/>
-				<input type="submit" value="Upload" class="uploadBtn btn" name="uploadAdditional">
+				<input id="uploadAdditional" type="submit" value="Upload" class="uploadBtn btn" name="uploadAdditional">
 			</div>
     </div>
     #{/if}
