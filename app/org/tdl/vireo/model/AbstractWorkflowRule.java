@@ -9,7 +9,7 @@ import org.tdl.vireo.state.State;
  * 
  * @author <a href="mailto:huff@library.tamu.edu">Jeremy Huff</a>
  */
-public abstract interface AbstractWorkflowRule extends AbstractOrderedModel {
+public interface AbstractWorkflowRule extends AbstractOrderedModel {
 	
 	/**
 	 * @return The status to which this rule has been attached  
@@ -25,13 +25,13 @@ public abstract interface AbstractWorkflowRule extends AbstractOrderedModel {
 	/**
 	 * @return The condition upon which this rule relies 
 	 */
-	public String getCondition();
+	public AbstractWorkflowRuleCondition getCondition();
 
 	/**
 	 * @param condition
 	 *            The condition upon which the rule relies. This could be a college or
 	 *            a department or a program, etc.
 	 */
-	public void setCondition(EmailGroup condition);
+	public void setCondition(AbstractWorkflowRuleCondition condition);
 	
 }

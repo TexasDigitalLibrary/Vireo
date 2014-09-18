@@ -3,6 +3,9 @@ package org.tdl.vireo.model;
 import java.util.HashMap;
 import java.util.List;
 
+import org.tdl.vireo.email.RecipientType;
+import org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleConditionImpl;
+
 /**
  * This class represents the email rules which may be created in Vireo
  * 
@@ -20,16 +23,9 @@ public interface WorkflowEmailRule extends AbstractWorkflowRule {
 	 *            Set the email template associated with this rule
 	 */
 	public void setEmailTemplate(EmailTemplate emailTemplate);
-	
-	
-	/**
-	 * @param emailAddress
-	 *            Set the email address associated with this rule
-	 */
-	public void setRecipient(String emailAddress);
 
 	/**
-	 * @param emailGroup
+	 * @param emailWorkflowRuleContion
 	 *            Set the email group associated with this rule
 	 */
 	public void setRecipient(EmailGroup emailGroup);
@@ -37,6 +33,18 @@ public interface WorkflowEmailRule extends AbstractWorkflowRule {
 	/**
 	 * @return The email group associated with this rule
 	 */
-	public List<String> getRecipients();
+	public List<String> getRecipients(Submission submission);
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public RecipientType getRecipientType();
+	
+	/**
+	 * 
+	 * @param recipientType
+	 */
+	public void setRecipientType(RecipientType recipientType);
 
 }

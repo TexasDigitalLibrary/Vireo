@@ -2,6 +2,8 @@ package org.tdl.vireo.model;
 
 import java.util.List;
 
+import org.tdl.vireo.email.RecipientType;
+import org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleConditionImpl;
 import org.tdl.vireo.state.State;
 
 /**
@@ -404,8 +406,7 @@ public interface SettingsRepository {
 	 * 			  Workflow Email Rule's email template                
 	 * @param template 
 	 */
-	public WorkflowEmailRule createWorkflowEmailRule(State associatedState, String conditionCategory, 
-			Long conditionID, String recipients, EmailTemplate template);
+	public WorkflowEmailRule createWorkflowEmailRule(State associatedState, String conditionCategory, JpaEmailWorkflowRuleConditionImpl condition, RecipientType recipientType, EmailTemplate template);
 
 	/**
 	 * Find a workflow email rule based upon their unique id.

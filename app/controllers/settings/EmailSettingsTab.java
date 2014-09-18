@@ -8,16 +8,17 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
+import org.tdl.vireo.email.RecipientType;
 import org.tdl.vireo.model.AbstractOrderedModel;
 import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.Department;
-import org.tdl.vireo.model.EmailGroup;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.WorkflowEmailRule;
+import org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleConditionImpl;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
 
@@ -135,7 +136,8 @@ public class EmailSettingsTab extends SettingsTab {
 			State associatedState = stateManager.getState(stateString);
 			
 			List<WorkflowEmailRule> rules = settingRepo.findWorkflowEmailRulesByState(associatedState);
-			WorkflowEmailRule rule = settingRepo.createWorkflowEmailRule(associatedState, conditionCategory, conditionID, recipient, template);
+			
+			WorkflowEmailRule rule = settingRepo.createWorkflowEmailRule(associatedState, conditionCategory, condition, recipientType, template);
 			
 			rules.add(rule);
 			
@@ -145,7 +147,7 @@ public class EmailSettingsTab extends SettingsTab {
 			
 			String stateJSON = rule.getAssociatedState().getBeanName();
 			
-			renderJSON("{ \"success\": \"true\", \"id\": "+rule.getId()+", \"state\": \""+stateJSON+"\",\"conditionCatagory\": \""+conditionCategory+"\",\"conditionId\": \""+rule.getCondition()+"\",\"recipient\": \""+rule.getRecipients()+"\",\"template\": \""+rule.getEmailTemplate()+"\" }");
+			renderJSON("{ \"success\": \"true\", \"id\": "+rule.getId()+", \"state\": \""+stateJSON+"\",\"conditionCatagory\": \""+conditionCategory+"\",\"conditionId\": \""+rule.getCondition()+"\",\"recipientType\": \""+rule.getRecipientType().name()+"\",\"template\": \""+rule.getEmailTemplate()+"\" }");
 				
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to create the workflow email rule.");
