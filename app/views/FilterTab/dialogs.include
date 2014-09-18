@@ -78,7 +78,7 @@ jQuery(document).ready(function() {
     var batchExportExtraSelectLabel = "<label class=\"control-label\" for=\"packager-extra\" id=\"packager-extra-label\"><strong>Export Columns</strong>:</label>";
     var batchExportExtraSelectDiv = "<div class=\"controls\" id=\"batch-export-extra-controls\"><select class=\"input-xlarge\" name=\"packager-extra\" id=\"packager-extra\"><option value=\"Active\">Active Filter</option><option value=\"Saved\">Saved Filter</option></select></div>";
     var batchExportSavedFiltersLabel = "<label class=\"control-label\" for=\"packager-extra-saved-filters\" id=\"packager-extra-saved-filters-label\"><strong>Saved Filters</strong>:</label>";
-    var batchExportSavedFiltersDiv = "<div class=\"controls\" id=\"batch-export-extra-saved-filters-controls\"><select class=\"input-xlarge\" name=\"packager-extra-saved-filters\" id=\"packager-extra-saved-filters\">#{list items:allFilters, as:'exportingFilter'}<option value=\"${exportingFilter.getId()}\">${exportingFilter.getName()}</option>#{/list}</select></div>";
+    var batchExportSavedFiltersDiv = "<div class=\"controls\" id=\"batch-export-extra-saved-filters-controls\"><select class=\"input-xlarge\" name=\"packager-extra-saved-filters\" id=\"packager-extra-saved-filters\">#{list items:allFilters, as:'exportingFilter'}<option value=\"${exportingFilter.getId()}\">#{if exportingFilter.hasColumns()}[*]#{/if}${exportingFilter.getName()}</option>#{/list}</select></div>";
     jQuery("#packager").on("change", function() {
     	var selectedOption = $("#packager option:selected").text();
     	if(selectedOption == "Excel Export"){
@@ -311,6 +311,7 @@ jQuery(document).ready(function() {
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
             <input type="submit" class="btn btn-primary" name="submit_save" value="Save"/>
+            <input type="submit" class="btn btn-primary" name="default_columns" value="Default Columns"/>
         </div>
     </form>
 </div>

@@ -375,16 +375,18 @@ public class FilterTab extends AbstractVireoController {
 		// will split these up and retrieve the actual search object for each
 		// one and arrange in a list. This will ensure that they are all valid
 		// ids.
-		List<SearchOrder> columns = new ArrayList<SearchOrder>();
-		String columnsString = params.get("columns");
-		String[] columnIds = columnsString.split(",");
-		for (String columnId : columnIds) {
-			String[] parts = columnId.split("_");
-
-			SearchOrder column = SearchOrder.find(Integer.valueOf(parts[1]));
-			columns.add(column);
+		boolean set_default_columns = (params.get("default_columns") != null);
+		List<SearchOrder> columns = getDefaultColumns(type);
+		if(!set_default_columns){
+			String columnsString = params.get("columns");
+			String[] columnIds = columnsString.split(",");
+			for (String columnId : columnIds) {
+				String[] parts = columnId.split("_");
+	
+				SearchOrder column = SearchOrder.find(Integer.valueOf(parts[1]));
+				columns.add(column);
+			}
 		}
-
 		// Check that column has at least the ID field.
 		if (columns.contains(SearchOrder.ID)) {
 
@@ -713,10 +715,10 @@ public class FilterTab extends AbstractVireoController {
 		}
 			
 		// Step 1, get the correct filter (either active or saved)
-		SearchFilter filter = getActiveSearchFilter(SUBMISSION);
-		if(saved_filter_id >=0) {
-			filter = subRepo.findSearchFilter(saved_filter_id);
-		}
+		ActiveSearchFilter filter = getActiveSearchFilter(SUBMISSION);
+		if(saved_filter_id >= 0) {
+			filter.copyFrom(subRepo.findSearchFilter(saved_filter_id));
+		} 
 		
 		// Step 2, locate the packager
 		Packager exportPackage = (Packager) Spring.getBean(packager);
@@ -726,7 +728,7 @@ public class FilterTab extends AbstractVireoController {
 				context.getPerson().getId(), 
 				context.getPerson().getEmail(),
 				exportPackage==null ? "null" : exportPackage.getBeanName(),
-				filter==null ? "null" : (filter instanceof ActiveSearchFilter ? ((ActiveSearchFilter)filter).encode(): filter instanceof NamedSearchFilter ? ((NamedSearchFilter)filter).getName() : "unsupported filter"));
+				filter==null ? "null" : filter.encode());
 		
 		// Step 3, Stream the chunks.
 		ExportService exportService = (ExportService) Spring.getBean(exportPackage.getExportServiceBeanName());

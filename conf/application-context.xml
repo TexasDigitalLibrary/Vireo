@@ -434,7 +434,7 @@
 	        </map>
 	    </property>
     </bean>
-    <bean id="ExcelExport" class="org.tdl.vireo.export.impl.ExcelPackagerImpl" scope="prototype">
+    <bean id="ExcelPackageExport" class="org.tdl.vireo.export.impl.ExcelPackagerImpl" scope="prototype">
         <property name="displayName" value="Excel Package Export"/>
         <property name="aggregated">
           <value type="java.lang.Boolean">false</value>
@@ -468,7 +468,7 @@
           </map>
       </property>
     </bean>
-    <bean id="ExcelExportAggregate" class="org.tdl.vireo.export.impl.ExcelPackagerImpl" scope="prototype">
+    <bean id="ExcelExport" class="org.tdl.vireo.export.impl.ExcelPackagerImpl" scope="prototype">
         <property name="displayName" value="Excel Export"/>
         <property name="aggregated">
           <value type="java.lang.Boolean">true</value>
