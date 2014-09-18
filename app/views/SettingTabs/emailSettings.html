@@ -10,10 +10,7 @@ jQuery(document).ready(function(){
 
     #{list items:STATES, as:'state'}
     	#{if state.inWorkflow}
-	jQuery("#add-${state.getBeanName()}-workflowEmailRule-link").on("click", slideToggleHandler("#add-${state.getBeanName()}-workflowEmailRule-dialog"));
-	jQuery("#add-${state.getBeanName()}-workflowEmailRule-cancel").click(cancelAddActionHandler('${state.getBeanName()}-workflowEmailRule'));
-	jQuery("#add-${state.getBeanName()}-workflowEmailRule-save").click(createWorkflowEmailRuleHandler('@{settings.EmailSettingsTab.addEmailWorkflowRuleJSON()}'));
-
+			jQuery("#${state.getBeanName()}-add-workflowEmailRule").on("click", createWorkflowEmailRuleHandler('@{settings.EmailSettingsTab.addEmailWorkflowRuleJSON()}'));
 	   	#{/if}
 	#{/list}
 
@@ -42,7 +39,7 @@ jQuery(document).ready(function(){
      jQuery("#add-emailTemplate-link").click(slideToggleHandler("#add-emailTemplate-dialog"));
      jQuery("#add-emailTemplate-save").click(saveAddActionHandler('emailTemplate','@{settings.EmailSettingsTab.addEmailTemplateJSON()}'));
      jQuery("#add-emailTemplate-cancel").click(cancelAddActionHandler('emailTemplate'));
-     
+     console.log(jsDataObjects)
 }) // document ready
 </script>
 #{/set}

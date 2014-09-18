@@ -114,5 +114,10 @@ public class JpaProgramImpl extends JpaAbstractModel<JpaProgramImpl> implements 
 	public void removeEmail(int index) {
 		this.emails.remove(index);
 	}
+	
+	@Override
+	public String getEmailGroupName() {
+		return "Program";
+	}
 
 }

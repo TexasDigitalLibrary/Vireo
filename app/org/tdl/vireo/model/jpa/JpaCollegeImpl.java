@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.College;
 
 /**
@@ -116,6 +117,11 @@ public class JpaCollegeImpl extends JpaAbstractModel<JpaCollegeImpl> implements 
 	@Override
 	public void removeEmail(int index) {
 		this.emails.remove(index);
+	}
+	
+	@Override
+	public String getEmailGroupName() {
+		return "College";
 	}
 
 }

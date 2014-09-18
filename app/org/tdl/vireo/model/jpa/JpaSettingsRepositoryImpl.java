@@ -1,8 +1,12 @@
 package org.tdl.vireo.model.jpa;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.TypedQuery;
+
+import org.tdl.vireo.model.AbstractOrderedModel;
 import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.CommitteeMemberRoleType;
 import org.tdl.vireo.model.Configuration;
@@ -19,6 +23,10 @@ import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.Major;
 import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.SettingsRepository;
+import org.tdl.vireo.model.WorkflowEmailRule;
+import org.tdl.vireo.state.State;
+
+import play.db.jpa.JPA;
 
 /**
  * Jpa specific implementation of the Vireo Repository interface.
@@ -225,6 +233,41 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 		return (List) JpaCommitteeMemberRoleTypeImpl.find("order by displayOrder").fetch();
 	}
 	
+	// //////////////
+	// WorkflowEmailRule Model
+	// //////////////
+	
+	@Override
+	public WorkflowEmailRule createWorkflowEmailRule(State associatedState, String conditionCategory, 
+			Long conditionID, String recipients, EmailTemplate template) {
+		   return new JpaWorkflowEmailRuleImpl(associatedState, conditionCategory, conditionID, recipients, template);
+	}
+
+	@Override
+	public WorkflowEmailRule findWorkflowEmailRule(Long id) {
+		return (WorkflowEmailRule) JpaWorkflowEmailRuleImpl.findById(id);
+	}
+
+	@Override
+	public List<WorkflowEmailRule> findWorkflowEmailRulesByState(State state) {
+		List<WorkflowEmailRule> rules = (List) JpaWorkflowEmailRuleImpl.findAll();
+		List<WorkflowEmailRule> rulesByState = new ArrayList<WorkflowEmailRule>();
+		for(WorkflowEmailRule rule: rules) {
+			
+			State thisRulesState = rule.getAssociatedState();
+			if(thisRulesState.equals(state))
+				rulesByState.add(rule);
+		
+		}
+		
+		return rulesByState;
+	}
+
+	@Override
+	public List<WorkflowEmailRule> findAllWorkflowEmailRules() {
+		return (List) JpaWorkflowEmailRuleImpl.find("order by displayOrder").fetch();
+	}
+	
 	// //////////////////////
 	// Email Template Model
 	// //////////////////////
@@ -376,4 +419,5 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	public List<DepositLocation> findAllDepositLocations() {
 		return (List) JpaDepositLocationImpl.find("order by displayOrder").fetch();
 	}
+
 }

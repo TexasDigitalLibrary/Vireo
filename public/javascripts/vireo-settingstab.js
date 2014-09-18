@@ -780,6 +780,56 @@ function workflowEmailRuleHandler($this, $select, options) {
 		var option = "<option value="+val.id+">"+val.name+"</option>"
 		$select.append(option);
 	});
+
+
+	/**
+	 * Cancel Editing
+	 */
+	jQuery(".icon-remove").live("click", cancelEditingHandler());
+	
+	jQuery(document).click(function(event){		
+		if(jQuery(event.target).closest(".editing").length == 0) {
+			
+			// Second check, make sure it's not a multiselect floating div either.
+			if(jQuery(event.target).closest(".ui-multiselect-menu").length == 0) {
+			
+				if(jQuery(".editing").length > 0) {
+					jQuery(".icon-remove").click();
+				}
+			}
+		}
+	});
+	 
+	/**
+	 * Swap from span to input field.
+	 */ 
+	jQuery("ul li.edit span").live("click", function() {
+		//swapToInputHandler()
+		console.log("foo");
+	});
+
+	/*
+	 * Commit changes
+	 */
+	jQuery(".icon-ok").live("click", function(){		
+		if(jQuery(this).closest(".add").length){
+			commitNewCommitteeMemberHandler(subId, addCommitteeMemberJSONURL);
+		} else {			
+			var $this = jQuery(this);
+			commitChangesHandler($this, updateJSONURL, updateCommitteeMemberJSONURL, subId);
+		}		
+	});
+	
+	jQuery(document).live("keypress", function(event){
+		var keycode = (event.keyCode ? event.keyCode : event.which);
+		if(keycode == '13' && !event.shiftKey){
+			
+			// Don't auto submit textareas
+			if (jQuery(".icon-ok").closest(".textarea").length == 0)
+			    jQuery(".icon-ok").click();
+		}
+	});
+
 }
 
 /**
@@ -791,31 +841,72 @@ function workflowEmailRuleHandler($this, $select, options) {
  */
 function createWorkflowEmailRuleHandler(jsonURL) {
 	return function() {
-		var target = $(this).attr("data-target");
+		var target = $(this).attr("data-state");
+		console.log(target);
 		var id = "#"+ target + "-workflow-add";
 		var $element = $(id);
+		var $targetElem = $("#"+target+"-workflow-list")
 
-		var data = new Object;
-		data.condition = $("#"+target+"-workflow-add-conditionSelector").val();
-		data.recipient = $("#"+target+"-workflow-add-recipientSelector").val();
-		data.template = $("#"+target+"-workflow-add-templateSelector").val();
-
-		$element.addClass("waiting");
+		var reqData = new Object;
+		reqData.state = target;
+		reqData.conditionCategory = $("#"+target+"-workflow-add-conditionCatagorySelector").children("option:selected").text();
+		reqData.conditionIDString = $("#"+target+"-workflow-add-conditionSelector").val();
+		reqData.recipient = $("#"+target+"-workflow-add-recipientSelector").val();
+		reqData.templateString = $("#"+target+"-workflow-add-templateSelector").val();
+		$targetElem.addClass("waiting");
 		
 		var successCallback = function(data) {
-			// Remove loading indicator and alerts
-			$element.removeClass("waiting");
+			$targetElem.removeClass("waiting");
+			console.log(data);
 			resetForm();
+
+			var newRow = "<tr> \
+							<td>if</td> \
+							<td class=\"edit-box\"> \
+								<ul class=\"unstyled\"> \
+									<li class=\"edit\"> \
+										<span id=\""+data.state+"-"+data.id+"-condition\" class=\"empty\"> \
+											<i class=\"icon-pencil\"></i> none \
+										</span> \
+									</li> \
+								</ul> \
+							</td> \
+							<td>then email</td> \
+							<td class=\"edit-box\"> \
+								<ul class=\"unstyled\"> \
+									<li class=\"edit\"> \
+										<span id=\""+data.state+"-"+data.id+"-template\" class=\"empty\"> \
+											<i class=\"icon-pencil\"></i> none \
+										</span> \
+									</li> \
+								</ul> \
+							</td> \
+							<td class=\"edit-box\"> \
+								<ul class=\"unstyled\"> \
+									<li class=\"edit\"> \
+										<span id=\""+data.state+"-"+data.id+"-recipient\" class=\"empty\"> \
+											<i class=\"icon-pencil\"></i> none \
+										</span> \
+									</li> \
+								</ul> \
+							</td> \
+						</tr>"
+
+			$targetElem.append(newRow);
+
+
+			return false;
 		}
 
 		var failureCallback = function(message) {
-			$element.removeClass("waiting");
+			$targetElem.removeClass("waiting");
 			resetForm();
+			return false;
 		}
 
 		var resetForm = function() {
 			$("#"+target+"-workflow-add-conditionCatagorySelector").val("");
-			$("#"+target+"-workflow-add-conditionSelector").val("");
+			$("#"+target+"-workflow-add-conditionSelector").html("");
 			$("#"+target+"-workflow-add-recipientSelector").val("");
 			$("#"+target+"-workflow-add-templateSelector").val("");
 		}
@@ -823,16 +914,15 @@ function createWorkflowEmailRuleHandler(jsonURL) {
 		jQuery.ajax({
 			url : jsonURL,
 			data : {
-				state: target,
-				condition: data.condition,
-				recipient: data.recipient,
-				template: data.template
+				stateString: target,
+				conditionCategory: reqData.conditionCategory,
+				conditionIDString: reqData.conditionIDString,
+				recipient: reqData.recipient,
+				templateString: reqData.templateString
 			},
 			dataType : 'json',
 			type : 'POST',
 			success : function(data) {
-
-				console.log(data);
 
 				if (data.success) {
 					successCallback(data);
@@ -841,7 +931,8 @@ function createWorkflowEmailRuleHandler(jsonURL) {
 				}
 
 			},
-			error : function() {
+			error : function(e) {
+				console.log(e);
 				failureCallback("Unable to communicate with the server.");
 			}
 

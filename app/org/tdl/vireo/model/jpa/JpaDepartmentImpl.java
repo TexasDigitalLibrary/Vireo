@@ -116,5 +116,10 @@ public class JpaDepartmentImpl extends JpaAbstractModel<JpaDepartmentImpl> imple
 	public void removeEmail(int index) {
 		this.emails.remove(index);
 	}
+	
+	@Override
+	public String getEmailGroupName() {
+		return "Department";
+	}
 
 }

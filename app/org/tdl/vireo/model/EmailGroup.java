@@ -38,5 +38,10 @@ public abstract interface EmailGroup extends AbstractOrderedModel {
 	 * @return The name of this email group member.
 	 */
 	public String getName();
+	
+	/**
+	 * @return The name of this email group type.
+	 */
+	public String getEmailGroupName();
 
 }

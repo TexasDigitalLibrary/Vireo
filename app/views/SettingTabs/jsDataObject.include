@@ -66,6 +66,29 @@ jsDataObjects = {
 			},
 			
 		#{/list}
-	]
+	],
+	"workflowRules": {
+		"email": {
+			#{list items:STATES, as:'state'}
+		    	#{if state.inWorkflow}	
+					"${state.getBeanName()}": [
+						#{list items:RULES, as:'rule'}
+							#{if state == rule.getAssociatedState()}
+							{
+								"id": "${rule.getId()}",
+								"stateString": "${rule.getAssociatedState().getBeanName()}",
+								"conditionCategory": "${rule.getCondition()}",
+								"conditionIDString": "${rule.getCondition()}",
+								"recipient": "${rule.getRecipient()}",
+								"templateString": "${rule.getTemplate()}"
+							},
+							#{/if}
+						#{/list}
+					],
+			   	#{/if}
+			#{/list}
+		}
+	}
+
 }
 </script>

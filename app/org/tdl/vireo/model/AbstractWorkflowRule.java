@@ -9,7 +9,7 @@ import org.tdl.vireo.state.State;
  * 
  * @author <a href="mailto:huff@library.tamu.edu">Jeremy Huff</a>
  */
-public abstract interface AbstractWorkflowRule extends AbstractModel {
+public abstract interface AbstractWorkflowRule extends AbstractOrderedModel {
 	
 	/**
 	 * @return The status to which this rule has been attached  

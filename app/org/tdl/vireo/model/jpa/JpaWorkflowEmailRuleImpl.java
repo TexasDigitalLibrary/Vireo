@@ -1,8 +1,10 @@
 package org.tdl.vireo.model.jpa;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -19,6 +21,7 @@ import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.RoleType;
+import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.WorkflowEmailRule;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
@@ -36,21 +39,21 @@ import play.modules.spring.Spring;
 @Table(name = "WorkflowEmailRule")
 public class JpaWorkflowEmailRuleImpl extends JpaAbstractModel<JpaWorkflowEmailRuleImpl> implements WorkflowEmailRule {
 	
+	@Column(nullable = false)
+	public int displayOrder;
+	
 	public String associatedState;
 	
 	public String condition;
 	
-    @Column
-	@ElementCollection(targetClass=String.class)
-	public List<String> recipients;
+	public String recipientIndividual;
+		
+	public String recipientGroup;
+	
+	public String recipientGroupName;
 	
     @OneToOne(targetEntity = JpaEmailTemplateImpl.class)
 	public EmailTemplate emailTemplate;
-
-	@Override
-	public EmailTemplate getEmailTemplate() {
-		return this.emailTemplate;
-	}
 	
 	/**
 	 * Create a new WorkflowEmailRule model. 
@@ -64,25 +67,41 @@ public class JpaWorkflowEmailRuleImpl extends JpaAbstractModel<JpaWorkflowEmailR
 	 * @param emailTemplate
 	 * 			  Workflow Email Rule's email template                
 	 */
-	protected JpaWorkflowEmailRuleImpl(State associatedState, AbstractOrderedModel condition, 
-			List<String> recipients, EmailTemplate emailTemplate) {
+	protected JpaWorkflowEmailRuleImpl(State associatedState, String conditionCategory, 
+			Long conditionID, String recipient, EmailTemplate template) {
 		
 		assertManager();
 		
 		if (associatedState == null) {
 			throw new IllegalArgumentException("associatedState is required");
-		} 
-				
-		if (recipients == null) {
-			this.recipients = new ArrayList<String>();
+		} 	
+
+		this.associatedState = associatedState.getBeanName();
+		
+		if(conditionID == null) {
+			this.condition = "";
 		} else {
-			this.recipients = recipients;
+			this.condition = conditionID.toString();
 		}
 		
-		this.associatedState = associatedState.getBeanName();
-		this.condition = condition.toString();
-		this.emailTemplate = emailTemplate;	
+		this.emailTemplate = template;
+		
+		this.displayOrder = 0;
+	
+	}
+	
+	@Override
+	public JpaWorkflowEmailRuleImpl save() {
+		assertManager();
 
+		return super.save();
+	}
+	
+	@Override
+	public JpaWorkflowEmailRuleImpl delete() {
+		assertManager();
+
+		return super.delete();
 	}
 
 	@Override
@@ -92,19 +111,47 @@ public class JpaWorkflowEmailRuleImpl extends JpaAbstractModel<JpaWorkflowEmailR
 
 	@Override
 	public void setRecipient(String emailAddress) {
-		this.recipients.add(emailAddress);
+		this.recipientIndividual = emailAddress;
 	}
 
 	@Override
-	public void setRecipient(EmailGroup emailGroup) {	
-	 	for(String emailAddress: emailGroup.getEmails().values()) {
-	 		this.recipients.add(emailAddress);
-	 	}
+	public void setRecipient(EmailGroup emailGroup) {
+		this.recipientGroupName = emailGroup.getEmailGroupName();
+	 	this.recipientGroup = emailGroup.getName();
 	}
 
 	@Override
-	public List<String> getEmails() {
-		return this.recipients;
+	public List<String> getRecipients() {
+		List<String> recipients = new ArrayList<String>();
+		
+		if(this.recipientIndividual != null) {
+			recipients.add(this.recipientIndividual);
+		} else if(this.recipientGroup != null) {
+			
+			SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
+			
+			EmailGroup emailGroup = null;
+			
+			if(this.recipientGroupName.equals("College"))
+				emailGroup = settingRepo.findCollege(Long.parseLong(this.recipientGroup));
+			
+			if(this.recipientGroupName.equals("Department"))
+				emailGroup = settingRepo.findDepartment(Long.parseLong(this.recipientGroup));
+			
+			if(this.recipientGroupName.equals("Program"))
+				emailGroup = settingRepo.findProgram(Long.parseLong(this.recipientGroup));
+			
+			if(emailGroup.equals(null))
+				return recipients;
+			
+			Collection<String> emailAddresses = emailGroup.getEmails().values();
+			
+			for(String emailAddress: emailAddresses) {
+				recipients.add(emailAddress);
+			}
+		}
+		
+		return recipients;
 	}
 
 	@Override
@@ -127,5 +174,22 @@ public class JpaWorkflowEmailRuleImpl extends JpaAbstractModel<JpaWorkflowEmailR
 	public void setCondition(EmailGroup condition) {
 		this.condition = condition.getName();
 	}
+	
+	@Override
+	public EmailTemplate getEmailTemplate() {
+		return this.emailTemplate;
+	}
 
+	@Override
+	public int getDisplayOrder() {
+		return displayOrder;
+	}
+
+	@Override
+	public void setDisplayOrder(int displayOrder) {
+		
+		assertManager();
+		this.displayOrder = displayOrder;
+	}
+	
 }

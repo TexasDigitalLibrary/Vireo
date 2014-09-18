@@ -37,6 +37,6 @@ public interface WorkflowEmailRule extends AbstractWorkflowRule {
 	/**
 	 * @return The email group associated with this rule
 	 */
-	public List<String> getEmails();
+	public List<String> getRecipients();
 
 }
