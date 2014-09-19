@@ -406,7 +406,7 @@ public interface SettingsRepository {
 	 * 			  Workflow Email Rule's email template                
 	 * @param template 
 	 */
-	public WorkflowEmailRule createWorkflowEmailRule(State associatedState, String conditionCategory, JpaEmailWorkflowRuleConditionImpl condition, RecipientType recipientType, EmailTemplate template);
+	public WorkflowEmailRule createWorkflowEmailRule(State associatedState, JpaEmailWorkflowRuleConditionImpl condition, RecipientType recipientType, EmailTemplate template);
 
 	/**
 	 * Find a workflow email rule based upon their unique id.

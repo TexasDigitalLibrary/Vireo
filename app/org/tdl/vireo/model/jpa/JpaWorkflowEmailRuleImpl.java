@@ -61,7 +61,7 @@ public class JpaWorkflowEmailRuleImpl extends JpaAbstractModel<JpaWorkflowEmailR
 	 * @param emailTemplate
 	 *            Workflow Email Rule's email template
 	 */
-	protected JpaWorkflowEmailRuleImpl(State associatedState, String conditionCategory, JpaEmailWorkflowRuleConditionImpl condition, RecipientType recipientType, EmailTemplate template) {
+	protected JpaWorkflowEmailRuleImpl(State associatedState, JpaEmailWorkflowRuleConditionImpl condition, RecipientType recipientType, EmailTemplate template) {
 
 		assertManager();
 

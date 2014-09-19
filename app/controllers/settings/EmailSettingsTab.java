@@ -119,9 +119,6 @@ public class EmailSettingsTab extends SettingsTab {
 			
 			State associatedState = stateManager.getState(stateString);
 			
-			if (conditionCategory == null || conditionCategory.trim().length() == 0)
-				conditionCategory = "";
-			
 			JpaEmailWorkflowRuleConditionImpl condition;
 			if (conditionCategory == null || conditionCategory.trim().length() == 0) {
 				condition = null;
@@ -154,7 +151,7 @@ public class EmailSettingsTab extends SettingsTab {
 				rule.setRecipientType(RecipientType.valueOf(recipientString));
 				rule.setEmailTemplate(template);
 			} else {
-				rule = settingRepo.createWorkflowEmailRule(associatedState, conditionCategory, condition, recipient, template);
+				rule = settingRepo.createWorkflowEmailRule(associatedState, condition, recipient, template);
 			}
 			
 			rules.add(rule);

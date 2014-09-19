@@ -14,14 +14,6 @@ jQuery(document).ready(function(){
 			jQuery("#${state.getBeanName()}-add-workflowEmailRule").on("click", createWorkflowEmailRuleHandler('@{settings.EmailSettingsTab.addEditEmailWorkflowRuleJSON()}'));
 	   	#{/if}
 	#{/list}
-
-	jQuery(".conditionCatagorySelector").change(function() {
-		var $this = $(this)
-		var $select = $(this).next(".conditionSelector");
-		var options = jsDataObjects[$(this).val()];
-
-		workflowEmailRuleHandler($this, $select, options);
-	});
 	
      // Handlers for the sortable emailTemplates list
      jQuery("#emailTemplate-list").sortable({
@@ -41,8 +33,6 @@ jQuery(document).ready(function(){
      jQuery("#add-emailTemplate-save").click(saveAddActionHandler('emailTemplate','@{settings.EmailSettingsTab.addEmailTemplateJSON()}'));
      jQuery("#add-emailTemplate-cancel").click(cancelAddActionHandler('emailTemplate'));
      
-     console.log(jsDataObjects)
-
      /**
 	 * Cancel Editing
 	 */
