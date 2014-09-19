@@ -386,6 +386,9 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			if (name == null || name.trim().length() == 0)
 				throw new IllegalArgumentException("Name is required");
 			
+			// remove whitespace from email address string
+			emails = emails.replaceAll("\\s+","");
+
 			// Add the new college to the end of the list.
             List<College> colleges = settingRepo.findAllColleges();
 			
@@ -397,8 +400,6 @@ public class ConfigurableSettingsTab extends SettingsTab {
                 college = settingRepo.findCollege(id);
                 college.setName(name);
                 HashMap<Integer, String> emails_map = new HashMap<Integer, String>();
-                // remove whitespace from email address string
-                emails = emails.replaceAll("\\s+","");
                 // make a String[] of email addresses
                 String[] emails_array = (emails != null ? emails.split(",") : new String[0]);
                 int i =0;
@@ -418,8 +419,14 @@ public class ConfigurableSettingsTab extends SettingsTab {
                 college.save();
             } else {
     			if (emails != null) {
-    				String[] newEmails = emails.split(",");
-    				college = settingRepo.createCollege(name,Arrays.asList(newEmails));
+					List<String> newEmails = Arrays.asList(emails.split(","));
+					for (String email : newEmails) {
+						// validate email
+						if(!validateEmailAddress(email)){
+							throw new IllegalArgumentException("Invalid E-Mail Address detected! [" + email + "]");
+						}
+	                }
+					college = settingRepo.createCollege(name, newEmails);
     				jsonEmails = "[";
     				int i = 0;
     				for (Map.Entry<Integer, String> entry : college.getEmails().entrySet()) {
@@ -559,6 +566,9 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			if (name == null || name.trim().length() == 0)
 				throw new IllegalArgumentException("Name is required");
 			
+			// remove whitespace from email address string
+            emails = emails.replaceAll("\\s+","");
+
 			// Add the new college to the end of the list.
             List<Program> programs = settingRepo.findAllPrograms();
 			
@@ -570,8 +580,6 @@ public class ConfigurableSettingsTab extends SettingsTab {
                 program = settingRepo.findProgram(id);
                 program.setName(name);
                 HashMap<Integer, String> emails_map = new HashMap<Integer, String>();
-                // remove whitespace from email address string
-                emails = emails.replaceAll("\\s+","");
                 // make a String[] of email addresses
                 String[] emails_array = (emails != null ? emails.split(",") : new String[0]);
                 int i =0;
@@ -591,8 +599,14 @@ public class ConfigurableSettingsTab extends SettingsTab {
 				program.save();
             } else {
     			if (emails != null) {
-    				String[] newEmails = emails.split(",");
-    				program = settingRepo.createProgram(name,Arrays.asList(newEmails));
+					List<String> newEmails = Arrays.asList(emails.split(","));
+					for (String email : newEmails) {
+						// validate email
+						if(!validateEmailAddress(email)){
+							throw new IllegalArgumentException("Invalid E-Mail Address detected! [" + email + "]");
+						}
+	                }
+					program = settingRepo.createProgram(name, newEmails);
     				jsonEmails = "[";
     				int i = 0;
     				for (Map.Entry<Integer, String> entry : program.getEmails().entrySet()) {
@@ -732,6 +746,9 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			if (name == null || name.trim().length() == 0)
 				throw new IllegalArgumentException("Name is required");
 			
+			// remove whitespace from email address string
+            emails = emails.replaceAll("\\s+","");
+
 			// Add the new college to the end of the list.
             List<Department> departments = settingRepo.findAllDepartments();
 			
@@ -743,8 +760,6 @@ public class ConfigurableSettingsTab extends SettingsTab {
                 department = settingRepo.findDepartment(id);
                 department.setName(name);
                 HashMap<Integer, String> emails_map = new HashMap<Integer, String>();
-                // remove whitespace from email address string
-                emails = emails.replaceAll("\\s+","");
                 // make a String[] of email addresses
                 String[] emails_array = (emails != null ? emails.split(",") : new String[0]);
                 int i =0;
@@ -764,8 +779,14 @@ public class ConfigurableSettingsTab extends SettingsTab {
 				department.save();
             } else {
     			if (emails != null) {
-    				String[] newEmails = emails.split(",");
-    				department = settingRepo.createDepartment(name,Arrays.asList(newEmails));
+					List<String> newEmails = Arrays.asList(emails.split(","));
+					for (String email : newEmails) {
+						// validate email
+						if(!validateEmailAddress(email)){
+							throw new IllegalArgumentException("Invalid E-Mail Address detected! [" + email + "]");
+						}
+	                }
+					department = settingRepo.createDepartment(name, newEmails);
     				jsonEmails = "[";
     				int i = 0;
     				for (Map.Entry<Integer, String> entry : department.getEmails().entrySet()) {
