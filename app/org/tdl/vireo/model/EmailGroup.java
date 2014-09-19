@@ -3,13 +3,13 @@ package org.tdl.vireo.model;
 import java.util.HashMap;
 
 /**
- * This abstract parent interface extends the base AbstractModel and adds the
+ * This abstract parent interface extends the base AbstractOrderedModel and adds the
  * ability for the objects to be sorted based upon a relative display order value placed
  * on each object.
  * 
  * @author <a href="mailto:huff@library.tamu.edu">Jeremy Huff</a>
  */
-public abstract interface EmailGroup extends AbstractOrderedModel {
+public interface EmailGroup extends AbstractOrderedModel {
 
 	/**
 	 * @return The email addresses of the program
@@ -33,15 +33,4 @@ public abstract interface EmailGroup extends AbstractOrderedModel {
 	 *            Remove a email to this program.
 	 */
 	public void removeEmail(int index);
-
-	/**
-	 * @return The name of this email group member.
-	 */
-	public String getName();
-	
-	/**
-	 * @return The name of this email group type.
-	 */
-	public String getEmailGroupName();
-
 }

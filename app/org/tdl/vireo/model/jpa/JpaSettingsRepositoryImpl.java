@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.TypedQuery;
-
-import org.tdl.vireo.model.AbstractOrderedModel;
+import org.tdl.vireo.email.RecipientType;
 import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.CommitteeMemberRoleType;
 import org.tdl.vireo.model.Configuration;
@@ -25,8 +23,6 @@ import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.WorkflowEmailRule;
 import org.tdl.vireo.state.State;
-
-import play.db.jpa.JPA;
 
 /**
  * Jpa specific implementation of the Vireo Repository interface.
@@ -238,9 +234,8 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	// //////////////
 	
 	@Override
-	public WorkflowEmailRule createWorkflowEmailRule(State associatedState, String conditionCategory, 
-			Long conditionID, String recipients, EmailTemplate template) {
-		   return new JpaWorkflowEmailRuleImpl(associatedState, conditionCategory, conditionID, recipients, template);
+	public WorkflowEmailRule createWorkflowEmailRule(State associatedState, String conditionCategory, JpaEmailWorkflowRuleConditionImpl condition, RecipientType recipientType, EmailTemplate template) {
+		   return new JpaWorkflowEmailRuleImpl(associatedState, conditionCategory, condition, recipientType, template);
 	}
 
 	@Override

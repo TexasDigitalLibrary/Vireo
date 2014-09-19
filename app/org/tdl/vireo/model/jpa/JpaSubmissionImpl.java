@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -967,7 +968,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		if (!equals(this.stateName,state.getBeanName())) {
 			this.stateName = state.getBeanName();
 			generateChangeLog("Submission status",state.getDisplayName(),true);
-			
+			//TODO: RUN Workflow Email Rule
 			// Check if this state is approved
 			if (this.approvalDate == null && state.isApproved())
 				this.setApprovalDate(new Date());
@@ -1239,6 +1240,4 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 			return a.equals(b);
 		}	
 	}
-	
-
 }
