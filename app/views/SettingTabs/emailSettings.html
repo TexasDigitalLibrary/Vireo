@@ -4,9 +4,10 @@
 <script type="text/javascript">
 jQuery(document).ready(function(){
 
+	 var updateJSONURL = "@{settings.EmailSettingsTab.addEmailWorkflowRuleJSON()}";
+
 	// Email settings at the top of the page.
     jQuery(".email-toggle").click(emailSettingsHandler('@{settings.EmailSettingsTab.updateEmailSettingsJSON()}'));
-
 
     #{list items:STATES, as:'state'}
     	#{if state.inWorkflow}
@@ -44,7 +45,7 @@ jQuery(document).ready(function(){
      /**
 	 * Cancel Editing
 	 */
-	//jQuery(".icon-remove").live("click", cancelEditingHandler());
+	jQuery(".icon-remove").live("click", cancelEditingHandler());
 	
 	jQuery(document).click(function(event){		
 		if(jQuery(event.target).closest(".editing").length == 0) {
@@ -62,21 +63,16 @@ jQuery(document).ready(function(){
 	/**
 	 * Swap from span to input field.
 	 */ 
-	jQuery("ul li.edit span").live("click", function() {
-		//swapToInputHandler()
-		console.log("foo");
-	});
+	jQuery("ul li.edit span").live("click", swapToInputHandler());
 
 	/*
 	 * Commit changes
 	 */
 	jQuery(".icon-ok").live("click", function(){		
-		if(jQuery(this).closest(".add").length){
-			commitNewCommitteeMemberHandler(subId, addCommitteeMemberJSONURL);
-		} else {			
-			var $this = jQuery(this);
-			commitChangesHandler($this, updateJSONURL, updateCommitteeMemberJSONURL, subId);
-		}		
+					
+		var $this = jQuery(this);
+		commitChangesHandler($this, updateJSONURL);
+				
 	});
 	
 	jQuery(document).live("keypress", function(event){
