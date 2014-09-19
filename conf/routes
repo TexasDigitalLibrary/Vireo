@@ -132,8 +132,7 @@ GET     /admin/settings/embargos/removeAll      settings.ConfigurableSettingsTab
 GET     /admin/settings/embargos/alphabetize    settings.ConfigurableSettingsTab.alphabetizeAllEmbargoTypes
 
 ## Settings tab - Colleges
-POST    /admin/settings/colleges/add            settings.ConfigurableSettingsTab.addCollegeJSON
-POST    /admin/settings/colleges/edit           settings.ConfigurableSettingsTab.editCollegeJSON
+POST    /admin/settings/colleges/edit           settings.ConfigurableSettingsTab.addEditCollegeJSON
 POST    /admin/settings/colleges/remove         settings.ConfigurableSettingsTab.removeCollegeJSON
 POST    /admin/settings/colleges/reorder        settings.ConfigurableSettingsTab.reorderCollegesJSON
 GET     /admin/settings/colleges/removeAll      settings.ConfigurableSettingsTab.removeAllColleges
@@ -141,16 +140,14 @@ GET     /admin/settings/colleges/alphabetize    settings.ConfigurableSettingsTab
 
 
 ## Settings tab - Programs
-POST    /admin/settings/programs/add            settings.ConfigurableSettingsTab.addProgramJSON
-POST    /admin/settings/programs/edit           settings.ConfigurableSettingsTab.editProgramJSON
+POST    /admin/settings/programs/edit           settings.ConfigurableSettingsTab.addEditProgramJSON
 POST    /admin/settings/programs/remove         settings.ConfigurableSettingsTab.removeProgramJSON
 POST    /admin/settings/programs/reorder        settings.ConfigurableSettingsTab.reorderProgramsJSON
 GET     /admin/settings/programs/removeAll      settings.ConfigurableSettingsTab.removeAllPrograms
 GET     /admin/settings/programs/alphabetize    settings.ConfigurableSettingsTab.alphabetizeAllPrograms
 
 ## Settings tab - Departments
-POST    /admin/settings/departments/add         settings.ConfigurableSettingsTab.addDepartmentJSON
-POST    /admin/settings/departments/edit        settings.ConfigurableSettingsTab.editDepartmentJSON
+POST    /admin/settings/departments/edit        settings.ConfigurableSettingsTab.addEditDepartmentJSON
 POST    /admin/settings/departments/remove      settings.ConfigurableSettingsTab.removeDepartmentJSON
 POST    /admin/settings/departments/reorder     settings.ConfigurableSettingsTab.reorderDepartmentsJSON
 GET     /admin/settings/departments/removeAll   settings.ConfigurableSettingsTab.removeAllDepartments
