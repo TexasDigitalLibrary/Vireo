@@ -395,18 +395,10 @@ public interface SettingsRepository {
 	 * Create a new WorkflowEmailRule model. 
 	 *
 	 * @param associatedState
-	 *            Workflow Email Rules's Associated State.
-	 * @param conditionCatagory
-	 * 			 Workflow Email Rule's condition category 
-	 * @param condition
-	 * 			  Workflow Email Rule's condition
-	 * @param recipients
-	 * 			  Workflow Email Rule's email addresses   
-	 * @param emailTemplate
-	 * 			  Workflow Email Rule's email template                
+	 *            Workflow Email Rules's Associated State.               
 	 * @param template 
 	 */
-	public WorkflowEmailRule createWorkflowEmailRule(State associatedState, JpaEmailWorkflowRuleConditionImpl condition, RecipientType recipientType, EmailTemplate template);
+	public WorkflowEmailRule createWorkflowEmailRule(State associatedState);
 
 	/**
 	 * Find a workflow email rule based upon their unique id.

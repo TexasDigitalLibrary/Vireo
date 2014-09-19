@@ -234,8 +234,8 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	// //////////////
 	
 	@Override
-	public WorkflowEmailRule createWorkflowEmailRule(State associatedState, JpaEmailWorkflowRuleConditionImpl condition, RecipientType recipientType, EmailTemplate template) {
-		   return new JpaWorkflowEmailRuleImpl(associatedState, condition, recipientType, template);
+	public WorkflowEmailRule createWorkflowEmailRule(State associatedState) {
+		   return new JpaWorkflowEmailRuleImpl(associatedState);
 	}
 
 	@Override
