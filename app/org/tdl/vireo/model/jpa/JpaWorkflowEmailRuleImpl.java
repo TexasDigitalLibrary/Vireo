@@ -110,7 +110,9 @@ public class JpaWorkflowEmailRuleImpl extends JpaAbstractModel<JpaWorkflowEmailR
 		
 		List<String> recipients = new ArrayList<String>();
 		SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
-
+		
+		if(recipientType == null) return recipients;
+		
 		switch (recipientType) {
 		case Student:
 			recipients.add(submission.getSubmitter().getCurrentEmailAddress());

@@ -79,8 +79,8 @@ jsDataObjects = {
 								"stateString": "${rule.getAssociatedState().getBeanName()}",
 								"conditionCategory": "${rule.getCondition()}",
 								"conditionIDString": "${rule.getCondition()}",
-								"recipientString": "${rule.getRecipient()}",
-								"templateString": "${rule.getTemplate()}"
+								"recipientString": "${rule.getRecipients()}",
+								"templateString": "${rule.getEmailTemplate()}"
 							},
 							#{/if}
 						#{/list}

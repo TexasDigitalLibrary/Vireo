@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
+import org.apache.commons.codec.language.bm.Rule;
 import org.tdl.vireo.email.RecipientType;
 import org.tdl.vireo.model.AbstractOrderedModel;
 import org.tdl.vireo.model.AbstractWorkflowRuleCondition.ConditionType;
@@ -111,8 +112,12 @@ public class EmailSettingsTab extends SettingsTab {
 	public static void addEditEmailWorkflowRuleJSON(String id, String stateString, String conditionCategory, String conditionIDString, String recipientString, String templateString) {
 		try {
 			
+			
+			
 			if (stateString == null || stateString.trim().length() == 0)
 				throw new IllegalArgumentException("State could not be determined");
+			
+			State associatedState = stateManager.getState(stateString);
 			
 			if (conditionCategory == null || conditionCategory.trim().length() == 0)
 				conditionCategory = "";
@@ -133,30 +138,34 @@ public class EmailSettingsTab extends SettingsTab {
 				template = settingRepo.findEmailTemplateByName(templateString);
 			}
 			
-			State associatedState = stateManager.getState(stateString);
-			
+			RecipientType recipient = null;
+			if((recipientString != null) || (templateString.trim().length() == 0) || (templateString != "null")) {
+				recipient = RecipientType.valueOf(recipientString);
+			}
+
 			List<WorkflowEmailRule> rules = settingRepo.findWorkflowEmailRulesByState(associatedState);
 			WorkflowEmailRule rule;
-			if (id != null && id.trim().length() > 0 && id != (null)) {				
+			if (false) {
+				Logger.info(id);
 				// Modify an existing rule
-				Long ruleID = Long.valueOf(id);
+				Long ruleID = Long.parseLong(id);
 				rule = settingRepo.findWorkflowEmailRule(ruleID);
 				rule.setCondition(condition);
 				rule.setRecipientType(RecipientType.valueOf(recipientString));
 				rule.setEmailTemplate(template);
 			} else {
-				rule = settingRepo.createWorkflowEmailRule(associatedState, conditionCategory, condition, RecipientType.valueOf(recipientString), template);
+				rule = settingRepo.createWorkflowEmailRule(associatedState, conditionCategory, condition, recipient, template);
 			}
 			
 			rules.add(rule);
-			
-			saveModelOrder(rules);
+						
+			//saveModelOrder(rules);
 			
 			Logger.info("%s (%d: %s) has added workflow email rule #%d.\n");
 			
 			String stateJSON = rule.getAssociatedState().getBeanName();
 			
-			renderJSON("{ \"success\": \"true\", \"id\": "+rule.getId()+", \"state\": \""+stateJSON+"\",\"conditionCatagory\": \""+conditionCategory+"\",\"conditionId\": \""+rule.getCondition()+"\",\"recipientType\": \""+rule.getRecipientType().name()+"\",\"template\": \""+rule.getEmailTemplate()+"\" }");
+			renderJSON("{ \"success\": \"true\", \"id\": "+rule.getId()+", \"state\": \""+stateJSON+"\",\"conditionCatagory\": \""+rule.getCondition().getConditionType()+"\",\"conditionId\": \""+rule.getCondition().getConditionId()+"\",\"recipientType\": \""+rule.getRecipientType().name()+"\",\"template\": \""+rule.getEmailTemplate()+"\" }");
 				
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to create the workflow email rule.");

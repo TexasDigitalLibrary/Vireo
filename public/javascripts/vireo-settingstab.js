@@ -1086,19 +1086,19 @@ function cancelEditingHandler(){
  * @param subId (The submission id)
  */
 function commitChangesHandler(eventTarget, jsonURL){
-	var classValue = '';
-	var $ruleField = jQuery(".editing input");
-	var parent = eventTarget.parent();
+	var classValue = ''
+	, $ruleField = jQuery(".editing input")
+	, parent = eventTarget.parent()
 	
-	var $ruleFieldName = $ruleField..attr("data-ruleFieldName");
-	var theValue = $ruleField.val();
+	, $ruleFieldName = $ruleField.attr("data-ruleFieldName")
+	, theValue = $ruleField.val()
 	
-	var id = $ruleField.attr("data-id");
-	var stateString = $ruleField..attr("data-stateString");
-	var conditionCategory = "",
-	var conditionIDString = "",
-	var recipientString = "",
-	var templateString = ""
+	, id = $ruleField.attr("data-id")
+	, stateString = $ruleField.attr("data-stateString")
+	, conditionCategory = ""
+	, conditionIDString = ""
+	, recipientString = ""
+	, templateString = ""
 
 	switch($ruleFieldName) {
 	    case "conditionCategory":
@@ -1114,7 +1114,7 @@ function commitChangesHandler(eventTarget, jsonURL){
 	        templateString = theValue;
 	        break;    
 	    default:
-	        default break;
+	        break;
 	}
 
 
