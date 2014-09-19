@@ -32,36 +32,36 @@
 				<tbody class="workflow-list" id="${state.getBeanName()}-workflow-list">
 					#{list items:RULES, as:'rule'}
 						#{if state == rule.getAssociatedState()}
-						    <tr>
-								<td>if</td>
-								<td>
-									<select class="conditionCatagorySelector">
-										<option value="">Choose a condition</option>
-										<option value="collegesArray">College</option>
-										<option value="departmentsArray">Department</option>
-										<option value="programsArray">Program</option>
-									</select>
-									=
-									<select class="conditionSelector">
-
-									</select>
-								</td>
-								<td>then email</td>
-								<td>
-									<select class="templateSelector">
-										<option value="">Choose a Template</>
-										#{list items:templates, as:'template'}
-									         <option value="emailTemplate_${template.getId()}">${template.getName()}</option>    
-									      #{/list}
-									</select>
-								</td>
-								<td>
-									<select id="recipientSelector">
-										<option>College</option>
-										<option>Department</option>
-										<option>Program</option>
-									</select>
-								</td>
+						    <tr> 
+								<td>if</td> 
+								<td class="edit-box"> 
+									<ul class="unstyled"> 
+										<li class="edit"> 
+											<span id="${state.getBeanName()}-${rule.getId()}-condition" class="empty" data-id="${rule.getId()}" data-state="${state.getBeanName()}" data-ruleFieldName="conditionCategory"> 
+												<i class="icon-pencil"></i> ${rule.getCondition()?.getConditionType()?.name()} 
+											</span> 
+										</li> 
+									</ul> 
+								</td> 
+								<td>then email</td> 
+								<td class="edit-box"> 
+									<ul class="unstyled"> 
+										<li class="edit"> 
+											<span id="${state.getBeanName()}-${rule.getId()}-template" class="empty"  data-state="${state.getBeanName()}" data-ruleFieldName="templateString"> 
+												<i class="icon-pencil"></i> ${rule.getEmailTemplate()?.getName()} 
+											</span> 
+										</li> 
+									</ul> 
+								</td> 
+								<td class="edit-box"> 
+									<ul class="unstyled"> 
+										<li class="edit"> 
+											<span id="${state.getBeanName()}-${rule.getId()}-recipientString" class="empty" data-id="${rule.getId()}" data-state="${state.getBeanName()}" data-ruleFieldName="recipientString"> 
+												<i class="icon-pencil"></i> ${rule.getRecipientType()?.name()} 
+											</span> 
+										</li> 
+									</ul> 
+								</td> 
 							</tr>
 					
 						#{/if}
