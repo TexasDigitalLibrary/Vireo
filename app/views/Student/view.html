@@ -49,7 +49,7 @@ jQuery(document).ready(function() {
 		   			var updateData = {"path":"@{Student.submissionView(subId)}","id":"#primaryDocumentWrap"};
 					uploadFile(fData,postPath,updateData);
 		   		} else {
-					alert("The manuscript must be in PDF format");
+					generateAjaxError("The manuscript must be in PDF format");
 				}
 		    }
 			return false;
@@ -68,7 +68,7 @@ jQuery(document).ready(function() {
 					uploadFile(fData,postPath,updateData);
 	    		} 
 	    	} else {
-				alert("Please specify the Document Type.");
+				generateAjaxError("Please specify the Document Type.");
 	    	}
 			return false;
 	    });
@@ -77,7 +77,7 @@ jQuery(document).ready(function() {
 	    	if (theFiler.files.length > 0) {
 	    		return true;
 	    	}
-	    	alert("Please specifcy a file for upload.");
+			generateAjaxError("Please specify a file for upload.");
 	    }
 
 	    function uploadFile(fData,postPath,updateData) {
@@ -105,7 +105,7 @@ jQuery(document).ready(function() {
 									});
 				    			}
 							  } else {
-								alert("Error uploading file");
+								generateAjaxError("Error uploading file.");
 							  }
 							};
 			xhr.send(formData);
@@ -132,12 +132,12 @@ jQuery(document).ready(function() {
 					jQuery("#studentMessage").val("");
 					jQuery("#"+submitterId).prop("disabled",false);
 				} else {
-					jQuery("#"+statusId).html("Error adding message.");
+					generateAjaxError("Error adding message.");
 					jQuery("#"+submitterId).prop("disabled",false);
 				}
 			},
 			error:function(){
-				jQuery("#"+statusId).html("Error communicating with the server.");
+				generateAjaxError("Error adding message.");
 				jQuery("#"+submitterId).prop("disabled",false);
 			}
 		});
@@ -166,10 +166,12 @@ jQuery(document).ready(function() {
 							});
 						});
 						updateActionLog();
+					} else {
+						generateAjaxError("Error removing file.");
 					}
 				},
 				error:function(){
-					alert("Error communicating with the server.");
+					generateAjaxError("Error communicating with the server.");
 				}
 			});    	
     	}
@@ -183,6 +185,14 @@ jQuery(document).ready(function() {
 			});
 		});
 	}
+    
+    function generateAjaxError(error) {
+    	$("#confirmSubmit").append('<div id="ajaxErrors" class="alert alert-warning alert-dismissible" role="alert">'+
+  	  						'<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>'+
+  	  						'<span>'+error+'</span>'+
+  						 '</div>');
+
+    }
 });
 </script>
 #{/set}
@@ -207,188 +217,188 @@ jQuery(document).ready(function() {
 </br>
 #{/ifErrors}
 <div id="confirmSubmit" class="row">
-<form action="@{Student.submissionView(subId)}" method="post" class="form-horizontal" enctype="multipart/form-data">
-	#{if sub.getState().isEditableByStudent() }
-		<div id="correctionsWrap" class="alert alert-error">
-			<a href="#toggleDetails" class="doToggle">[-]</a>
-			<div id="stateDetails">
-				<h4>Current Submission State: </h4>
-				<strong>${sub.getState().getDisplayName()}!</strong>
-				<p>The application requires you to make corrections. Please make the indicated corrections and upload the
-				 new manuscript. After clicking the "Corrections Completed" button you will no
-				 longer be able to edit the application.
-				</p>
+	<form action="@{Student.submissionView(subId)}" method="post" class="form-horizontal" enctype="multipart/form-data">
+		#{if sub.getState().isEditableByStudent() }
+			<div id="correctionsWrap" class="alert alert-error">
+				<a href="#toggleDetails" class="doToggle">[-]</a>
+				<div id="stateDetails">
+					<h4>Current Submission State: </h4>
+					<strong>${sub.getState().getDisplayName()}!</strong>
+					<p>The application requires you to make corrections. Please make the indicated corrections and upload the
+					 new manuscript. After clicking the "Corrections Completed" button you will no
+					 longer be able to edit the application.
+					</p>
+				</div>
+				<div class="form-actions row center">
+				    <p id="submit-corrections-warning" class="hidden red">
+				      After completing your corrections you will no longer be able to edit this application. Did you complete all the required changes, and upload a new manuscript?
+				    </p>
+					<input id="submit_corrections" type="submit" class="btn btn-primary ${sub.getPrimaryDocument() == null ? "disabled" : ""}" name="submit_corrections" value="Corrections Completed"/>
+				</div>		
 			</div>
-			<div class="form-actions row center">
-			    <p id="submit-corrections-warning" class="hidden red">
-			      After completing your corrections you will no longer be able to edit this application. Did you complete all the required changes, and upload a new manuscript?
-			    </p>
-				<input id="submit_corrections" type="submit" class="btn btn-primary ${sub.getPrimaryDocument() == null ? "disabled" : ""}" name="submit_corrections" value="Corrections Completed"/>
-			</div>		
-		</div>
-	#{/if}
-	#{else}
-		<div class="row">
-			<div class="alert">
-				<p><strong><h4>Current Submission State:</h4> ${sub.getState().getDisplayName()}</strong></p>
-				<p>Your Submission cannot be changed at this time.</p>
+		#{/if}
+		#{else}
+			<div class="row">
+				<div class="alert">
+					<p><strong><h4>Current Submission State:</h4> ${sub.getState().getDisplayName()}</strong></p>
+					<p>Your Submission cannot be changed at this time.</p>
+				</div>
 			</div>
-		</div>
-	#{/else}
-
-    #{include 'viewSubmission.include' /}
+		#{/else}
 	
-	<legend>Uploaded Files</legend>
-	#{ifErrors}
-	<br/>
-	<ul class="red">
-	    #{errors}
-	        <li>${error}</li>
-	    #{/errors}
-	</ul>
-	</br>
-	#{/ifErrors}
-		#{ifEnabled PRIMARY_ATTACHMENT}
-		<div class="control-group control-group-tall #{if errors.forKey('primaryDocument')}error#{/if}">
-			<label class="control-label">#{fieldLabel PRIMARY_ATTACHMENT /}:</label>
-			<div class="controls">
-			#{if sub.getState().isEditableByStudent()}
-				<div id="primaryDocumentWrap">
-				#{if primaryDocument == null}
-			        <input type="submit" value="Upload" class="uploadBtn btn" id="uploadPrimary" name="uploadPrimary">
-					<input type="file" id="primaryFile" class="input-file" name="primaryDocument">
-					(Your file will be renamed)
-		        #{/if}
-		        #{else}
-	                <p>
-	                    <a href="@{Student.viewAttachment(subId,primaryDocument.getId(),primaryDocument.getName())}">${primaryDocument.getName()}</a>
-	                    (${primaryDocument.getDisplaySize()})
-	                    <input type="submit" value="Replace Manuscript" class="uploadBtn btn" id="replacePrimary" name="replacePrimary">
-	                </p>
-		        #{/else}
-		        </div>
-	        #{/if}		
-			#{else}
-				#{if primaryDocument != null}
-				    <p>
-				         <a href="@{Student.viewAttachment(subId,primaryDocument.getId(),primaryDocument.getName())}" target="_blank">${primaryDocument.getName()}</a>
-				         (${primaryDocument.getDisplaySize()})
-				     </p>
-				#{/if}
+	    #{include 'viewSubmission.include' /}
+		
+		<legend>Uploaded Files</legend>
+		#{ifErrors}
+		<br/>
+		<ul class="red">
+		    #{errors}
+		        <li>${error}</li>
+		    #{/errors}
+		</ul>
+		</br>
+		#{/ifErrors}
+			#{ifEnabled PRIMARY_ATTACHMENT}
+			<div class="control-group control-group-tall #{if errors.forKey('primaryDocument')}error#{/if}">
+				<label class="control-label">#{fieldLabel PRIMARY_ATTACHMENT /}:</label>
+				<div class="controls">
+				#{if sub.getState().isEditableByStudent()}
+					<div id="primaryDocumentWrap">
+					#{if primaryDocument == null}
+				        <input type="submit" value="Upload" class="uploadBtn btn" id="uploadPrimary" name="uploadPrimary">
+						<input type="file" id="primaryFile" class="input-file" name="primaryDocument">
+						(Your file will be renamed)
+			        #{/if}
+			        #{else}
+		                <p>
+		                    <a href="@{Student.viewAttachment(subId,primaryDocument.getId(),primaryDocument.getName())}">${primaryDocument.getName()}</a>
+		                    (${primaryDocument.getDisplaySize()})
+		                    <input type="submit" value="Replace Manuscript" class="uploadBtn btn" id="replacePrimary" name="replacePrimary">
+		                </p>
+			        #{/else}
+			        </div>
+		        #{/if}		
 				#{else}
-				     <p><em>No primary document uploaded</em></p>
+					#{if primaryDocument != null}
+					    <p>
+					         <a href="@{Student.viewAttachment(subId,primaryDocument.getId(),primaryDocument.getName())}" target="_blank">${primaryDocument.getName()}</a>
+					         (${primaryDocument.getDisplaySize()})
+					     </p>
+					#{/if}
+					#{else}
+					     <p><em>No primary document uploaded</em></p>
+					#{/else}
 				#{/else}
-			#{/else}
-		</div>
-	</div>
-	#{/ifEnabled}
-	#{ifEnabled [SUPPLEMENTAL_ATTACHMENT,SOURCE_ATTACHMENT,ADMINISTRATIVE_ATTACHMENT]}
-    <div id="doAdditionalUploadWrap" class="control-group control-group-tall #{if errors.forKey('additionalDocument')}error#{/if}">
-        <label class="control-label">Additional Documents:</label>
-        <div class="controls">
-            #{list items:additionalDocuments, as:'attachment'}
-            <p>
-            	#{if sub.getState().isEditableByStudent()}
-            	<label>
-            		<input type="checkbox" value="${attachment.getId()}" class="doRemoveAttachmentIds" name="attachmentToRemove">
-                    <a href="@{Student.viewAttachment(subId,attachment.getId(),attachment.getName())}" target="_blank">
-                    	${attachment.getName()}
-                    </a> 
-                    (${attachment.getType()} - ${attachment.getDisplaySize()})
-                 </label>  
-            	#{/if}
-            	#{else}
-	                <a href="@{Student.viewAttachment(subId,attachment.getId(),attachment.getName())}" target="_blank">${attachment.getName()}</a>
-	                (${attachment.getType()} - ${attachment.getDisplaySize()})
-	            #{/else}
-            </p>
-            #{/list}
-            #{else}
-            	<p><em>No additional documents uploaded</em></p>
-            #{/else}
-            
-            #{if sub.getState().isEditableByStudent() && additionalDocuments.size() > 0 }
-            	<input type="submit" value="Remove Selected" class="uploadBtn btn" id="removeAdditional" name="removeAdditional">                        
-            #{/if}
-        </div>
-    </div>
-	#{if sub.getState().isEditableByStudent()}	
-	<div class="control-group control-group-tall">
-		<label class="control-label" for="additionalFile"><span class="required-star">*</span>Browse for Additional Document:</label>
-			<div class="controls">
-				<select id="documentType" class="input-select" name="attachmentType" style="margin-bottom:7px;">
-	            	<option value="">choose type...</option>
-	            	#{ifEnabled SUPPLEMENTAL_ATTACHMENT}
-	               	<option value="SUPPLEMENTAL">#{fieldLabel SUPPLEMENTAL_ATTACHMENT /}</option>
-	               	#{/ifEnabled}
-	               	#{ifEnabled SOURCE_ATTACHMENT}
-	               	<option value="SOURCE">#{fieldLabel SOURCE_ATTACHMENT /}</option>
-	               	#{/ifEnabled}
-	               	#{ifEnabled ADMINISTRATIVE_ATTACHMENT}
-	               	<option value="ADMINISTRATIVE">#{fieldLabel ADMINISTRATIVE_ATTACHMENT /}</option>
-	               	#{/ifEnabled}
-	            </select>
-				<input id="uploadAdditional" type="submit" value="Upload" class="uploadBtn btn" name="uploadAdditional">
-				<input type="file" id="additionalFile" class="input-file" name="additionalDocument">
 			</div>
-    </div>
-    #{/if}
-    #{/ifEnabled}
-    
-    #{if feedbackDocuments != null && feedbackDocuments.size() > 0}
-    <div class="control-group #{if errors.forKey('feedbackDocument')}error#{/if}">
-        <label class="control-label"><b>Feedback Document${ feedbackDocuments.pluralize() }:</b></label>
-        <div class="controls">
-            #{list items:feedbackDocuments, as:'attachment'}
-            <p>
-	            <a href="@{Student.viewAttachment(subId,attachment.getId(),attachment.getName())}" target="_blank">${attachment.getName()}</a>
-	            (${attachment.getDisplaySize()})
-            </p>
-            #{/list}
-        </div>
-    </div>
-    #{/if}
-    
-    
-    
-	<legend>Application Activity</legend>
-	<div id="student-log-view">
-	<table role="presentation" class="span10 table table-striped table-bordered table-condensed">
-		<thead>
-			<tr>
-				<th>Name</th>
-				<th>Action</th>
-				<th>Time</th>
-			</tr>
-		</thead>
-		<tbody>
-			#{list items:logs, as:'log'}
-			#{if !log.isPrivate() }
-			<tr>
-				<td>${log.getPerson()?.getFormattedName(org.tdl.vireo.model.NameFormat.FIRST_LAST)}</td>
-				<td>${log.getEntry()}</td>
-				<td>${log.getActionDate().format('dd/MM/yyyy hh:mm:ss a')}</td>
-			</tr>
-			#{/if}
-			#{/list}
-		</tbody>
-	</table>
-	</div>
-
-	<legend>Leave a message</legend>
-	<div class="control-group">
-		<label for="studentMessage" class="control-label"><b>Message:</b></label>
-		<div class="controls">
-			<textarea id="studentMessage" class="span6" style="height:200px;" name="studentMessage"></textarea>
-            <input class="btn" id="addmsg" name="submit_addMessage" type="submit" value="Add Message" />
-            <div id="addmsgStatus"></div>
-            
-            <br/>
 		</div>
-	</div>			
-	<br/>
-	<br/>
-	<br/>
-	<br/>
-</form>
+		#{/ifEnabled}
+		#{ifEnabled [SUPPLEMENTAL_ATTACHMENT,SOURCE_ATTACHMENT,ADMINISTRATIVE_ATTACHMENT]}
+	    <div id="doAdditionalUploadWrap" class="control-group control-group-tall #{if errors.forKey('additionalDocument')}error#{/if}">
+	        <label class="control-label">Additional Documents:</label>
+	        <div class="controls">
+	            #{list items:additionalDocuments, as:'attachment'}
+	            <p>
+	            	#{if sub.getState().isEditableByStudent()}
+	            	<label>
+	            		<input type="checkbox" value="${attachment.getId()}" class="doRemoveAttachmentIds" name="attachmentToRemove">
+	                    <a href="@{Student.viewAttachment(subId,attachment.getId(),attachment.getName())}" target="_blank">
+	                    	${attachment.getName()}
+	                    </a> 
+	                    (${attachment.getType()} - ${attachment.getDisplaySize()})
+	                 </label>  
+	            	#{/if}
+	            	#{else}
+		                <a href="@{Student.viewAttachment(subId,attachment.getId(),attachment.getName())}" target="_blank">${attachment.getName()}</a>
+		                (${attachment.getType()} - ${attachment.getDisplaySize()})
+		            #{/else}
+	            </p>
+	            #{/list}
+	            #{else}
+	            	<p><em>No additional documents uploaded</em></p>
+	            #{/else}
+	            
+	            #{if sub.getState().isEditableByStudent() && additionalDocuments.size() > 0 }
+	            	<input type="submit" value="Remove Selected" class="uploadBtn btn" id="removeAdditional" name="removeAdditional">                        
+	            #{/if}
+	        </div>
+	    </div>
+		#{if sub.getState().isEditableByStudent()}	
+		<div class="control-group control-group-tall">
+			<label class="control-label" for="additionalFile"><span class="required-star">*</span>Browse for Additional Document:</label>
+				<div class="controls">
+					<select id="documentType" class="input-select" name="attachmentType" style="margin-bottom:7px;">
+		            	<option value="">choose type...</option>
+		            	#{ifEnabled SUPPLEMENTAL_ATTACHMENT}
+		               	<option value="SUPPLEMENTAL">#{fieldLabel SUPPLEMENTAL_ATTACHMENT /}</option>
+		               	#{/ifEnabled}
+		               	#{ifEnabled SOURCE_ATTACHMENT}
+		               	<option value="SOURCE">#{fieldLabel SOURCE_ATTACHMENT /}</option>
+		               	#{/ifEnabled}
+		               	#{ifEnabled ADMINISTRATIVE_ATTACHMENT}
+		               	<option value="ADMINISTRATIVE">#{fieldLabel ADMINISTRATIVE_ATTACHMENT /}</option>
+		               	#{/ifEnabled}
+		            </select>
+					<input id="uploadAdditional" type="submit" value="Upload" class="uploadBtn btn" name="uploadAdditional">
+					<input type="file" id="additionalFile" class="input-file" name="additionalDocument">
+				</div>
+	    </div>
+	    #{/if}
+	    #{/ifEnabled}
+	    
+	    #{if feedbackDocuments != null && feedbackDocuments.size() > 0}
+	    <div class="control-group #{if errors.forKey('feedbackDocument')}error#{/if}">
+	        <label class="control-label"><b>Feedback Document${ feedbackDocuments.pluralize() }:</b></label>
+	        <div class="controls">
+	            #{list items:feedbackDocuments, as:'attachment'}
+	            <p>
+		            <a href="@{Student.viewAttachment(subId,attachment.getId(),attachment.getName())}" target="_blank">${attachment.getName()}</a>
+		            (${attachment.getDisplaySize()})
+	            </p>
+	            #{/list}
+	        </div>
+	    </div>
+	    #{/if}
+	    
+	    
+	    
+		<legend>Application Activity</legend>
+		<div id="student-log-view">
+			<table role="presentation" class="span10 table table-striped table-bordered table-condensed">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Action</th>
+						<th>Time</th>
+					</tr>
+				</thead>
+				<tbody>
+					#{list items:logs, as:'log'}
+					#{if !log.isPrivate() }
+					<tr>
+						<td>${log.getPerson()?.getFormattedName(org.tdl.vireo.model.NameFormat.FIRST_LAST)}</td>
+						<td>${log.getEntry()}</td>
+						<td>${log.getActionDate().format('dd/MM/yyyy hh:mm:ss a')}</td>
+					</tr>
+					#{/if}
+					#{/list}
+				</tbody>
+			</table>
+		</div>
+	
+		<legend>Leave a message</legend>
+		<div class="control-group">
+			<label for="studentMessage" class="control-label"><b>Message:</b></label>
+			<div class="controls">
+				<textarea id="studentMessage" class="span6" style="height:200px;" name="studentMessage"></textarea>
+	            <input class="btn" id="addmsg" name="submit_addMessage" type="submit" value="Add Message" />
+	            <div id="addmsgStatus"></div>
+	            
+	            <br/>
+			</div>
+		</div>			
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+	</form>
 </div>

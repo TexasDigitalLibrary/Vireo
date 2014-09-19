@@ -147,6 +147,11 @@ public class Student extends AbstractVireoController {
 	public static void submissionRemoveAdditionalDocumentsJSON(Long subId) {
 		// Locate the submission 
 		Submission sub = subRepo.findSubmission(subId);
+		// Check that we are the owner of the submission.
+		Person submitter = context.getPerson();
+		if (sub.getSubmitter() != submitter)
+		    unauthorized();		
+
 		removeAdditional(sub); 
 		renderJSON("{ \"success\": \"true\"}");
 	}
@@ -160,6 +165,10 @@ public class Student extends AbstractVireoController {
 		// Locate the submission 
 		Submission sub = subRepo.findSubmission(subId);
 		if(params.get("additionalDocument",File.class) != null) { 
+			// Check that we are the owner of the submission.
+			Person submitter = context.getPerson();
+			if (sub.getSubmitter() != submitter)
+			    unauthorized();		
 			uploadAdditional(sub);
 			renderJSON("{ \"success\": \"true\"}");
 		}
@@ -172,9 +181,13 @@ public class Student extends AbstractVireoController {
 	 */
 	@Security(RoleType.STUDENT)
 	public static void submissionUploadPrimaryDocumentJSON(Long subId) {
-		// Locate the submission 
-		Submission sub = subRepo.findSubmission(subId);
 		if(params.get("primaryDocument",File.class) != null) { 
+			// Locate the submission 
+			Submission sub = subRepo.findSubmission(subId);
+			// Check that we are the owner of the submission.
+			Person submitter = context.getPerson();
+			if (sub.getSubmitter() != submitter)
+			    unauthorized();		
 			uploadPrimaryDocument(sub);
 			renderJSON("{ \"success\": \"true\"}");
 		}
@@ -192,6 +205,10 @@ public class Student extends AbstractVireoController {
 			studentMessage = params.get("message");
 			// Locate the submission 
 			Submission sub = subRepo.findSubmission(subId);
+			// Check that we are the owner of the submission.
+			Person submitter = context.getPerson();
+			if (sub.getSubmitter() != submitter)
+			    unauthorized();		
 			sub.logAction("Message added : '" +	studentMessage + "'").save();
 			renderJSON("{ \"success\": \"true\"}");
 		}
