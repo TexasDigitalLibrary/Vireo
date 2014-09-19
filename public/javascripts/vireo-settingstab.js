@@ -801,7 +801,7 @@ function createWorkflowEmailRuleHandler(jsonURL) {
 		reqData.state = target;
 		reqData.conditionCategory = $("#"+target+"-workflow-add-conditionCatagorySelector").children("option:selected").text();
 		reqData.conditionIDString = $("#"+target+"-workflow-add-conditionSelector").val();
-		reqData.recipient = $("#"+target+"-workflow-add-recipientSelector").val();
+		reqData.recipientString = $("#"+target+"-workflow-add-recipientStringSelector").val();
 		reqData.templateString = $("#"+target+"-workflow-add-templateSelector").val();
 		$targetElem.addClass("waiting");
 		
@@ -834,7 +834,7 @@ function createWorkflowEmailRuleHandler(jsonURL) {
 							<td class=\"edit-box\"> \
 								<ul class=\"unstyled\"> \
 									<li class=\"edit\"> \
-										<span id=\""+data.state+"-"+data.id+"-recipient\" class=\"empty\" data-id=\""+data.id+"\" data-state=\""+data.state+"\" data-ruleFieldName=\"recipient\"> \
+										<span id=\""+data.state+"-"+data.id+"-recipientString\" class=\"empty\" data-id=\""+data.id+"\" data-state=\""+data.state+"\" data-ruleFieldName=\"recipientString\"> \
 											<i class=\"icon-pencil\"></i> none \
 										</span> \
 									</li> \
@@ -857,7 +857,7 @@ function createWorkflowEmailRuleHandler(jsonURL) {
 		var resetForm = function() {
 			$("#"+target+"-workflow-add-conditionCatagorySelector").val("");
 			$("#"+target+"-workflow-add-conditionSelector").html("");
-			$("#"+target+"-workflow-add-recipientSelector").val("");
+			$("#"+target+"-workflow-add-recipientStringSelector").val("");
 			$("#"+target+"-workflow-add-templateSelector").val("");
 		}
 		
@@ -868,7 +868,7 @@ function createWorkflowEmailRuleHandler(jsonURL) {
 				stateString: target,
 				conditionCategory: reqData.conditionCategory,
 				conditionIDString: reqData.conditionIDString,
-				recipient: reqData.recipient,
+				recipientString: reqData.recipientString,
 				templateString: reqData.templateString
 			},
 			dataType : 'json',
@@ -1097,7 +1097,7 @@ function commitChangesHandler(eventTarget, jsonURL){
 	var stateString = $ruleField..attr("data-stateString");
 	var conditionCategory = "",
 	var conditionIDString = "",
-	var recipient = "",
+	var recipientString = "",
 	var templateString = ""
 
 	switch($ruleFieldName) {
@@ -1107,8 +1107,8 @@ function commitChangesHandler(eventTarget, jsonURL){
 	    case "conditionIDString":
 	        conditionIDString = theValue;
 	        break;
-	    case "recipient":
-	        recipient = theValue;	        
+	    case "recipientString":
+	        recipientString = theValue;	        
 	        break;
 	    case "templateString":
 	        templateString = theValue;
@@ -1127,7 +1127,7 @@ function commitChangesHandler(eventTarget, jsonURL){
 			id: id,
 			conditionCategory: conditionCategory,
 			conditionIDString: conditionIDString,
-			recipient: recipient,
+			recipientString: recipientString,
 			templateString: templateString
 		},
 		dataType:'json',

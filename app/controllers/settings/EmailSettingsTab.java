@@ -10,10 +10,12 @@ import javax.persistence.PersistenceException;
 
 import org.tdl.vireo.email.RecipientType;
 import org.tdl.vireo.model.AbstractOrderedModel;
+import org.tdl.vireo.model.AbstractWorkflowRuleCondition.ConditionType;
 import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.Department;
 import org.tdl.vireo.model.EmailTemplate;
+import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.RoleType;
@@ -106,9 +108,7 @@ public class EmailSettingsTab extends SettingsTab {
 	// ////////////////////////////////////////////
 	
 	@Security(RoleType.MANAGER)
-	public static void addEmailWorkflowRuleJSON(String stateString, String conditionCategory, String conditionIDString, String recipient, String templateString) {
-		Logger.info("The params are " + stateString + " " + conditionCategory + " " + conditionIDString + " " + recipient + " " + templateString);
-
+	public static void addEditEmailWorkflowRuleJSON(String id, String stateString, String conditionCategory, String conditionIDString, String recipientString, String templateString) {
 		try {
 			
 			if (stateString == null || stateString.trim().length() == 0)
@@ -122,10 +122,10 @@ public class EmailSettingsTab extends SettingsTab {
 				condition = null;
 			} else {
 				condition = new JpaEmailWorkflowRuleConditionImpl();
+				condition.setConditionId(Long.parseLong(conditionIDString));
+				condition.setConditionType(ConditionType.valueOf(conditionCategory));
 			}
 			
-			if (recipient == null || recipient.trim().length() == 0)
-				recipient = "";
 			EmailTemplate template;
 			if (templateString == null || templateString.trim().length() == 0) {
 				template = null;
@@ -136,12 +136,21 @@ public class EmailSettingsTab extends SettingsTab {
 			State associatedState = stateManager.getState(stateString);
 			
 			List<WorkflowEmailRule> rules = settingRepo.findWorkflowEmailRulesByState(associatedState);
-			
-			WorkflowEmailRule rule = settingRepo.createWorkflowEmailRule(associatedState, conditionCategory, condition, recipientType, template);
+			WorkflowEmailRule rule;
+			if (id != null && id.trim().length() > 0 && id != (null)) {				
+				// Modify an existing rule
+				Long ruleID = Long.valueOf(id);
+				rule = settingRepo.findWorkflowEmailRule(ruleID);
+				rule.setCondition(condition);
+				rule.setRecipientType(RecipientType.valueOf(recipientString));
+				rule.setEmailTemplate(template);
+			} else {
+				rule = settingRepo.createWorkflowEmailRule(associatedState, conditionCategory, condition, RecipientType.valueOf(recipientString), template);
+			}
 			
 			rules.add(rule);
 			
-			//saveModelOrder(rules);
+			saveModelOrder(rules);
 			
 			Logger.info("%s (%d: %s) has added workflow email rule #%d.\n");
 			
