@@ -43,6 +43,7 @@ import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.proquest.ProquestLanguage;
 import org.tdl.vireo.security.SecurityContext;
+import org.tdl.vireo.services.EmailRuleService;
 import org.tdl.vireo.services.Utilities;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
@@ -968,7 +969,8 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		if (!equals(this.stateName,state.getBeanName())) {
 			this.stateName = state.getBeanName();
 			generateChangeLog("Submission status",state.getDisplayName(),true);
-			//TODO: RUN Workflow Email Rule
+			// RUN Workflow Email Rule
+			EmailRuleService.runEmailRules(this);
 			// Check if this state is approved
 			if (this.approvalDate == null && state.isApproved())
 				this.setApprovalDate(new Date());
