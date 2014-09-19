@@ -908,6 +908,7 @@ function swapToInputHandler(){
 			jQuery("#backup").remove()
 
 			var editItem = jQuery(this);
+
 			
 			editItem.find("br").replaceWith("\n");
 			var value = jQuery.trim(escapeQuotes(editItem.text()));
@@ -916,6 +917,7 @@ function swapToInputHandler(){
 			checkValue = checkValue.replace(/\n/g,"");
 			checkValue = checkValue.replace(/\r/g,"");
 			checkValue = checkValue.replace(" ","");
+			
 			if(checkValue=="none" || checkValue=="null"){
 				value="";
 				jQuery("body").append('<div id="backup"></div>')
@@ -931,30 +933,7 @@ function swapToInputHandler(){
 					jQuery("#backup").attr("data-tertiary",editItem.attr("data-tertiary"));
 			}
 
-			if(editItem.hasClass("textarea")) {
-				//Text Areas
-				if (editItem.is("#publishedMaterial")) {
-					if (value.indexOf("Yes -") == 0)
-						value = value.substring(6);
-					if (value.indexOf("No -") == 0) 
-						value = value.substring(5);
-				}
-				
-				editItem.replaceWith('<div id="'+editItem.attr("id")+'" class="editing textarea"><textarea class="field">'+value+'</textarea><br /><i class="icon-remove" title="cancel"></i>&nbsp<i class="icon-ok" title="commit"></i></div>');
-				
-			} else if(editItem.hasClass("select")) {
-				//Select Drop Downs
-				var selectCode = '<div id="'+editItem.attr("id")+'" class="editing select">';
-				selectCode += jQuery("#"+editItem.attr("id")+"Options").html();
-				selectCode += '<br /><i class="icon-remove" title="cancel"></i>&nbsp<i class="icon-ok" title="commit"></i></div>';
-				editItem.replaceWith(selectCode);
-				jQuery("#"+editItem.attr("id")+" .field option").each(function(){
-					if(jQuery(this).text()==value){
-						jQuery(this).attr("selected","selected");
-					}
-				})
-				
-			} else if(editItem.hasClass("autocomplete")) { 
+			if(editItem.hasClass("autocomplete")) { 
 				// Autocomplete fields
 				var selectCode = '<div id="'+editItem.attr("id")+'" class="editing autocomplete">';
 				selectCode += jQuery("#"+editItem.attr("id")+"Options").html();
@@ -963,44 +942,7 @@ function swapToInputHandler(){
 				
 				jQuery("#"+editItem.attr("id")+" .field").val(value);
 				
-			} else if(editItem.hasClass("subject")) {
-				// The three subject fields;
-				
-				var primary = editItem.attr("data-primary");
-				var secondary = editItem.attr("data-secondary");
-				var tertiary = editItem.attr("data-tertiary");
-				
-				var selectCode = '<div id="'+editItem.attr("id")+'" class="editing subject">';
-				selectCode += jQuery("#"+editItem.attr("id")+"Options").html();
-				selectCode += '<br /><i class="icon-remove" title="cancel"></i>&nbsp<i class="icon-ok" title="commit"></i></div>';
-				editItem.replaceWith(selectCode);
-
-				
-				jQuery("#"+editItem.attr("id")+" .primary option").each(function(){
-					if(jQuery(this).text()==primary){
-						jQuery(this).attr("selected","selected");
-					}
-				})
-
-				jQuery("#"+editItem.attr("id")+" .secondary option").each(function(){
-					if(jQuery(this).text()==secondary){
-						jQuery(this).attr("selected","selected");
-					}
-				})
-				
-				jQuery("#"+editItem.attr("id")+" .tertiary option").each(function(){
-					if(jQuery(this).text()==tertiary){
-						jQuery(this).attr("selected","selected");
-					}
-				})
-			} else if(editItem.hasClass("date")) {
-				editItem.replaceWith('<div id="'+editItem.attr("id")+'" class="editing date"><input class="field datepickerDefense" type="text" value="'+value+'" /><br /><i class="icon-remove" title="cancel"></i>&nbsp<i class="icon-ok" title="commit"></i></div>');
-				jQuery(".datepickerDefense").datepicker({
-					"autoclose": true
-				});
-				jQuery(".editing .datepickerDefense").datepicker("show");				
 			} else {
-			
 				//Input Fields				
 				editItem.replaceWith('<div id="'+editItem.attr("id")+'" class="editing"><input class="field" type="text" value="'+value+'" data-id="'+editItem.attr("data-id")+'" /><br /><i class="icon-remove" title="cancel"></i>&nbsp<i class="icon-ok" title="commit"></i></div>');
 			}			
@@ -1118,6 +1060,7 @@ function commitChangesHandler(eventTarget, jsonURL){
 	        break;
 	}
 
+	console.log(id);
 
 	jQuery(".editing").replaceWith('<div class="'+id+' progress progress-striped active"><div class="bar" style="width:100%"></div></div>');
 
