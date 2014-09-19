@@ -38,7 +38,7 @@
 									<ul class="unstyled"> 
 										<li class="edit"> 
 											<span id="${state.getBeanName()}-${rule.getId()}-condition" class="empty" data-id="${rule.getId()}" data-state="${state.getBeanName()}" data-ruleFieldName="conditionCategory"> 
-												<i class="icon-pencil"></i> ${rule.getCondition()?.getConditionType()?.name()} 
+												<i class="icon-pencil"></i> ${rule.getCondition()?.getConditionType()?.name()} #{if !rule.getCondition()} none#{/if}
 											</span> 
 										</li> 
 									</ul> 
@@ -48,7 +48,7 @@
 									<ul class="unstyled"> 
 										<li class="edit"> 
 											<span id="${state.getBeanName()}-${rule.getId()}-template" class="empty"  data-state="${state.getBeanName()}" data-ruleFieldName="templateString"> 
-												<i class="icon-pencil"></i> ${rule.getEmailTemplate()?.getName()} 
+												<i class="icon-pencil"></i> ${rule.getEmailTemplate()?.getName()} #{if !rule.getEmailTemplate()} none#{/if}
 											</span> 
 										</li> 
 									</ul> 
@@ -57,7 +57,7 @@
 									<ul class="unstyled"> 
 										<li class="edit"> 
 											<span id="${state.getBeanName()}-${rule.getId()}-recipientString" class="empty" data-id="${rule.getId()}" data-state="${state.getBeanName()}" data-ruleFieldName="recipientString"> 
-												<i class="icon-pencil"></i> ${rule.getRecipientType()?.name()} 
+												<i class="icon-pencil"></i> ${rule.getRecipientType()?.name()} #{if !rule.getRecipientType()} none#{/if}
 											</span> 
 										</li> 
 									</ul> 

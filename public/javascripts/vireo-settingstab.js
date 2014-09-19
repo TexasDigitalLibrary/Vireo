@@ -799,7 +799,6 @@ function createWorkflowEmailRuleHandler(jsonURL) {
 
 		var reqData = new Object;
 		reqData.state = target;
-		console.log(target);
 		reqData.conditionCategory = $("#"+target+"-workflow-add-conditionCatagorySelector").children("option:selected").text();
 		reqData.conditionIDString = $("#"+target+"-workflow-add-conditionSelector").val();
 		reqData.recipientString = $("#"+target+"-workflow-add-recipientStringSelector").val();
@@ -944,7 +943,7 @@ function swapToInputHandler(){
 				
 			} else {
 				//Input Fields				
-				editItem.replaceWith('<div id="'+editItem.attr("id")+'" class="editing"><input class="field" type="text" value="'+value+'" data-id="'+editItem.attr("data-id")+'" /><br /><i class="icon-remove" title="cancel"></i>&nbsp<i class="icon-ok" title="commit"></i></div>');
+				editItem.replaceWith('<div id="'+editItem.attr("id")+'" class="editing"><input class="field" type="text" value="'+value+'" data-id="'+editItem.attr("data-id")+'" data-state="'+editItem.attr("data-state")+'" data-ruleFieldName="'+editItem.attr("data-ruleFieldName")+'" /><br /><i class="icon-remove" title="cancel"></i>&nbsp<i class="icon-ok" title="commit"></i></div>');
 			}			
 
 			event.stopPropagation();
@@ -1029,19 +1028,19 @@ function cancelEditingHandler(){
  * @param subId (The submission id)
  */
 function commitChangesHandler(eventTarget, jsonURL){
-	var classValue = ''
-	, $ruleField = jQuery(".editing input")
-	, parent = eventTarget.parent()
+	var classValue = '';
+	var $ruleField = jQuery(".editing input");
+	var parent = eventTarget.parent();
 	
-	, $ruleFieldName = $ruleField.attr("data-ruleFieldName")
-	, theValue = $ruleField.val()
+	var $ruleFieldName = $ruleField.attr("data-ruleFieldName");
+	var theValue = $ruleField.val();
 	
-	, id = $ruleField.attr("data-id")
-	, stateString = $ruleField.attr("data-stateString")
-	, conditionCategory = ""
-	, conditionIDString = ""
-	, recipientString = ""
-	, templateString = ""
+	var id = $ruleField.attr("data-id");
+	var stateString = $ruleField.attr("data-state");
+	var conditionCategory = "";
+	var conditionIDString = "";
+	var recipientString = "";
+	var templateString = "";
 
 	switch($ruleFieldName) {
 	    case "conditionCategory":
@@ -1060,20 +1059,20 @@ function commitChangesHandler(eventTarget, jsonURL){
 	        break;
 	}
 
-	console.log(id);
-
 	jQuery(".editing").replaceWith('<div class="'+id+' progress progress-striped active"><div class="bar" style="width:100%"></div></div>');
+	
+	var reqObj = {
+		stateString: stateString,
+		id: id,
+		conditionCategory: conditionCategory,
+		conditionIDString: conditionIDString,
+		recipientString: recipientString,
+		templateString: templateString
+	}
 
 	jQuery.ajax({
 		url:jsonURL,
-		data:{
-			stateString: stateString,
-			id: id,
-			conditionCategory: conditionCategory,
-			conditionIDString: conditionIDString,
-			recipientString: recipientString,
-			templateString: templateString
-		},
+		data: reqObj,
 		dataType:'json',
 		type:'POST',
 		

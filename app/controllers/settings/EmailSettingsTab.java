@@ -112,23 +112,10 @@ public class EmailSettingsTab extends SettingsTab {
 	public static void addEditEmailWorkflowRuleJSON(String id, String stateString, String conditionCategory, String conditionIDString, String recipientString, String templateString) {
 		try {
 			
+			if (stateString == null || stateString.trim().length() == 0)
+				throw new IllegalArgumentException("State could not be determined");
+			
 			State associatedState = stateManager.getState(stateString);
-			
-			JpaEmailWorkflowRuleConditionImpl condition;
-			if (conditionCategory == null || conditionCategory.trim().length() == 0) {
-				condition = null;
-			} else {
-				condition = new JpaEmailWorkflowRuleConditionImpl();
-				condition.setConditionId(Long.parseLong(conditionIDString));
-				condition.setConditionType(ConditionType.valueOf(conditionCategory));
-			}
-			
-			EmailTemplate template;
-			if (templateString == null || templateString.trim().length() == 0) {
-				template = null;
-			} else {
-				template = settingRepo.findEmailTemplateByName(templateString);
-			}
 
 			List<WorkflowEmailRule> rules = settingRepo.findWorkflowEmailRulesByState(associatedState);
 			WorkflowEmailRule rule;
@@ -136,25 +123,37 @@ public class EmailSettingsTab extends SettingsTab {
 			String conditionIdJSON = "";
 			String recipientTypeJSON = "";
 			String templateJSON = "";
-			Logger.info("Not null" + (id != null));
-			Logger.info("Not empty string" + (id.trim().length() != 0));
-			Logger.info("Not 'null'" + (!id.equals("null")));
+			
 			if ((id != null) && (id.trim().length() != 0) && (!id.equals("null"))) {
 				// Modify an existing rule
-				Logger.info("Attempting to edir rul " +id);
 				Long ruleID = Long.parseLong(id);
-				rule = settingRepo.findWorkflowEmailRule(ruleID);
-				rule.setCondition(condition);
-				rule.setRecipientType(RecipientType.valueOf(recipientString));
-				rule.setEmailTemplate(template);
 				
-				conditionCatagoryJSON = rule.getCondition().getConditionType().name();
-				conditionIdJSON = rule.getCondition().getConditionId().toString();
-				recipientTypeJSON = rule.getRecipientType().name();
-				templateJSON = rule.getEmailTemplate().getName();
+				rule = settingRepo.findWorkflowEmailRule(ruleID);
+					
+				JpaEmailWorkflowRuleConditionImpl condition;
+				if (conditionCategory != null && conditionCategory.trim().length() != 0) {
+					condition = new JpaEmailWorkflowRuleConditionImpl();
+					condition.setConditionId(Long.parseLong(conditionIDString));
+					condition.setConditionType(ConditionType.valueOf(conditionCategory));
+					rule.setCondition(condition);
+					conditionCatagoryJSON = rule.getCondition().getConditionType().name();
+					conditionIdJSON = rule.getCondition().getConditionId().toString();
+				} 
+				
+				EmailTemplate template;
+				if (templateString != null && templateString.trim().length() != 0) {
+					template = settingRepo.findEmailTemplateByName(templateString);
+					rule.setEmailTemplate(template);
+					
+				} 
+				
+				if (recipientString != null && recipientString.trim().length() != 0) {
+					rule.setRecipientType(RecipientType.valueOf(recipientString));
+					recipientTypeJSON = rule.getRecipientType().name();
+					templateJSON = rule.getEmailTemplate().getName();
+				}
 				
 			} else {
-				Logger.info("Attempting to create a new rule");
 				rule = settingRepo.createWorkflowEmailRule(associatedState);
 			}
 			
