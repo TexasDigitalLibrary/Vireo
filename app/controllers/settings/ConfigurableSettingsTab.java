@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import javax.persistence.PersistenceException;
 
 import org.tdl.vireo.model.AbstractOrderedModel;
@@ -378,7 +380,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 	 * @param emails - The list of email addresses to associate with this college
 	 */
 	@Security(RoleType.MANAGER)
-	public static void editCollegeJSON(String collegeId, String name, String emails) {
+	public static void addEditCollegeJSON(String collegeId, String name, String emails) {
 
 		try {
 			if (name == null || name.trim().length() == 0)
@@ -395,10 +397,17 @@ public class ConfigurableSettingsTab extends SettingsTab {
                 college = settingRepo.findCollege(id);
                 college.setName(name);
                 HashMap<Integer, String> emails_map = new HashMap<Integer, String>();
+                // remove whitespace from email address string
+                emails = emails.replaceAll("\\s+","");
+                // make a String[] of email addresses
                 String[] emails_array = (emails != null ? emails.split(",") : new String[0]);
                 int i =0;
 				jsonEmails = "[";                
                 for(String email : Arrays.asList(emails_array)) {
+					// validate email
+					if(!validateEmailAddress(email)){
+						throw new IllegalArgumentException("Invalid E-Mail Address detected! [" + email + "]");
+					}
                     emails_map.put(i, email);
                     jsonEmails += "{\"id\":" +i+ ",\"email\":\""+email+"\"},";
                     i++;
@@ -544,7 +553,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 	 * @param emails - The list of email addresses to associate with this program
 	 */
 	@Security(RoleType.MANAGER)
-	public static void editProgramJSON(String programId, String name, String emails) {
+	public static void addEditProgramJSON(String programId, String name, String emails) {
 
 		try {
 			if (name == null || name.trim().length() == 0)
@@ -561,10 +570,17 @@ public class ConfigurableSettingsTab extends SettingsTab {
                 program = settingRepo.findProgram(id);
                 program.setName(name);
                 HashMap<Integer, String> emails_map = new HashMap<Integer, String>();
+                // remove whitespace from email address string
+                emails = emails.replaceAll("\\s+","");
+                // make a String[] of email addresses
                 String[] emails_array = (emails != null ? emails.split(",") : new String[0]);
                 int i =0;
 				jsonEmails = "[";                
                 for(String email : Arrays.asList(emails_array)) {
+					// validate email
+					if(!validateEmailAddress(email)){
+						throw new IllegalArgumentException("Invalid E-Mail Address detected! [" + email + "]");
+					}
                     emails_map.put(i, email);
                     jsonEmails += "{\"id\":" +i+ ",\"email\":\""+email+"\"},";
                     i++;
@@ -710,7 +726,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 	 * @param emails - The list of email addresses to associate with this department
 	 */
 	@Security(RoleType.MANAGER)
-	public static void editDepartmentJSON(String departmentId, String name, String emails) {
+	public static void addEditDepartmentJSON(String departmentId, String name, String emails) {
 
 		try {
 			if (name == null || name.trim().length() == 0)
@@ -727,10 +743,17 @@ public class ConfigurableSettingsTab extends SettingsTab {
                 department = settingRepo.findDepartment(id);
                 department.setName(name);
                 HashMap<Integer, String> emails_map = new HashMap<Integer, String>();
+                // remove whitespace from email address string
+                emails = emails.replaceAll("\\s+","");
+                // make a String[] of email addresses
                 String[] emails_array = (emails != null ? emails.split(",") : new String[0]);
                 int i =0;
 				jsonEmails = "[";                
                 for(String email : Arrays.asList(emails_array)) {
+					// validate email
+					if(!validateEmailAddress(email)){
+						throw new IllegalArgumentException("Invalid E-Mail Address detected! [" + email + "]");
+					}
                     emails_map.put(i, email);
                     jsonEmails += "{\"id\":" +i+ ",\"email\":\""+email+"\"},";
                     i++;
@@ -1859,6 +1882,15 @@ public class ConfigurableSettingsTab extends SettingsTab {
 		configurableSettings();
 	}
 	
+	private static boolean validateEmailAddress(String email){
+		try {
+			new InternetAddress(email).validate();
+		} catch (AddressException ae) {
+			validation.addError("email", "The email provided is invalid.["+email+"]");
+			return false;
+		}
+		return true;
+	}
 	
 	/**
 	 * Sort Locales

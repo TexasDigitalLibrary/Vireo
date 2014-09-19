@@ -2329,7 +2329,7 @@ function programSaveDialogHandler(jsonURL) {
 			});
 
 			var $row;
-			if (jQuery("#college_"+data.id).length > 0) {
+			if (jQuery("#program_"+data.id).length > 0) {
 				// Look up the old row
 				$row = jQuery("#program_"+data.id);
 			} else {

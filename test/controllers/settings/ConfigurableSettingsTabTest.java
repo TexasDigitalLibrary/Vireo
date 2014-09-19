@@ -238,7 +238,7 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		LOGIN();
 		
 		// Get our urls and a list of fields.
-		final String EDIT_URL = Router.reverse("settings.ConfigurableSettingsTab.editProgramJSON").url;
+		final String EDIT_URL = Router.reverse("settings.ConfigurableSettingsTab.addEditProgramJSON").url;
 		final String REMOVE_URL = Router.reverse("settings.ConfigurableSettingsTab.removeProgramJSON").url;
 
 		// Add a new custom action
@@ -361,7 +361,7 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		LOGIN();
 		
 		// Get our urls and a list of fields.
-		final String EDIT_URL = Router.reverse("settings.ConfigurableSettingsTab.editCollegeJSON").url;
+		final String EDIT_URL = Router.reverse("settings.ConfigurableSettingsTab.addEditCollegeJSON").url;
 		final String REMOVE_URL = Router.reverse("settings.ConfigurableSettingsTab.removeCollegeJSON").url;
 
 		// Add a new custom action
@@ -485,7 +485,7 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		LOGIN();
 		
 		// Get our urls and a list of fields.
-		final String EDIT_URL = Router.reverse("settings.ConfigurableSettingsTab.editDepartmentJSON").url;
+		final String EDIT_URL = Router.reverse("settings.ConfigurableSettingsTab.addEditDepartmentJSON").url;
 		final String REMOVE_URL = Router.reverse("settings.ConfigurableSettingsTab.removeDepartmentJSON").url;
 
 		// Add a new custom action
