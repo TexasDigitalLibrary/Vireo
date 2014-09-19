@@ -14,7 +14,6 @@ import org.tdl.vireo.email.RecipientType;
 import org.tdl.vireo.model.AbstractWorkflowRuleCondition;
 import org.tdl.vireo.model.EmailGroup;
 import org.tdl.vireo.model.EmailTemplate;
-import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.WorkflowEmailRule;
 import org.tdl.vireo.state.State;

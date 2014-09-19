@@ -117,11 +117,11 @@ public class EmailSettingsTab extends SettingsTab {
 			if (conditionCategory == null || conditionCategory.trim().length() == 0)
 				conditionCategory = "";
 			
-			Long conditionID;
+			JpaEmailWorkflowRuleConditionImpl condition;
 			if (conditionCategory == null || conditionCategory.trim().length() == 0) {
-				conditionID = null;
+				condition = null;
 			} else {
-				conditionID = Long.parseLong(conditionIDString);
+				condition = new JpaEmailWorkflowRuleConditionImpl();
 			}
 			
 			if (recipient == null || recipient.trim().length() == 0)

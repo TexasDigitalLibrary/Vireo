@@ -815,7 +815,7 @@ function createWorkflowEmailRuleHandler(jsonURL) {
 							<td class=\"edit-box\"> \
 								<ul class=\"unstyled\"> \
 									<li class=\"edit\"> \
-										<span id=\""+data.state+"-"+data.id+"-condition\" class=\"empty\" data-id=\""+data.id+"\"> \
+										<span id=\""+data.state+"-"+data.id+"-condition\" class=\"empty\" data-id=\""+data.id+"\" data-state=\""+data.state+"\" data-ruleFieldName=\"conditionCategory\"> \
 											<i class=\"icon-pencil\"></i> none \
 										</span> \
 									</li> \
@@ -825,7 +825,7 @@ function createWorkflowEmailRuleHandler(jsonURL) {
 							<td class=\"edit-box\"> \
 								<ul class=\"unstyled\"> \
 									<li class=\"edit\"> \
-										<span id=\""+data.state+"-"+data.id+"-template\" class=\"empty\"> \
+										<span id=\""+data.state+"-"+data.id+"-template\" class=\"empty\"  data-state=\""+data.state+"\" data-ruleFieldName=\"templateString\"> \
 											<i class=\"icon-pencil\"></i> none \
 										</span> \
 									</li> \
@@ -834,7 +834,7 @@ function createWorkflowEmailRuleHandler(jsonURL) {
 							<td class=\"edit-box\"> \
 								<ul class=\"unstyled\"> \
 									<li class=\"edit\"> \
-										<span id=\""+data.state+"-"+data.id+"-recipient\" class=\"empty\"> \
+										<span id=\""+data.state+"-"+data.id+"-recipient\" class=\"empty\" data-id=\""+data.id+"\" data-state=\""+data.state+"\" data-ruleFieldName=\"recipient\"> \
 											<i class=\"icon-pencil\"></i> none \
 										</span> \
 									</li> \
@@ -1087,20 +1087,20 @@ function cancelEditingHandler(){
  */
 function commitChangesHandler(eventTarget, jsonURL){
 	var classValue = '';
-	var ruleField = jQuery(".editing input");
+	var $ruleField = jQuery(".editing input");
 	var parent = eventTarget.parent();
 	
-	var ruleFieldName = "";
-	var theValue = ruleField.val();
+	var $ruleFieldName = $ruleField..attr("data-ruleFieldName");
+	var theValue = $ruleField.val();
 	
-	var id = ruleField.attr("data-id");
-	var stateString = "";
+	var id = $ruleField.attr("data-id");
+	var stateString = $ruleField..attr("data-stateString");
 	var conditionCategory = "",
 	var conditionIDString = "",
 	var recipient = "",
 	var templateString = ""
 
-	switch(ruleFieldName) {
+	switch($ruleFieldName) {
 	    case "conditionCategory":
 	        conditionCategory = theValue;
 	        break;
