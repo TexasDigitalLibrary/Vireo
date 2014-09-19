@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -14,8 +15,10 @@ import org.tdl.vireo.email.RecipientType;
 import org.tdl.vireo.model.AbstractWorkflowRuleCondition;
 import org.tdl.vireo.model.EmailGroup;
 import org.tdl.vireo.model.EmailTemplate;
+import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.WorkflowEmailRule;
+import org.tdl.vireo.model.AbstractWorkflowRuleCondition.ConditionType;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
 
@@ -36,13 +39,12 @@ public class JpaWorkflowEmailRuleImpl extends JpaAbstractModel<JpaWorkflowEmailR
 
 	public String associatedState;
 
+	@Enumerated
 	public RecipientType recipientType;
 
 	public JpaEmailWorkflowRuleConditionImpl condition;
 
-	public EmailGroup emailGroup;
-
-	public Submission submission;
+	public Long emailGroupId;
 
 	@OneToOne(targetEntity = JpaEmailTemplateImpl.class)
 	public EmailTemplate emailTemplate;
@@ -99,14 +101,15 @@ public class JpaWorkflowEmailRuleImpl extends JpaAbstractModel<JpaWorkflowEmailR
 	}
 
 	@Override
-	public void setRecipient(EmailGroup emailGroup) {
-		this.emailGroup = emailGroup;
+	public void setRecipient(Long emailGroupId) {
+		this.emailGroupId = emailGroupId;
 	}
 
 	@Override
 	public List<String> getRecipients(Submission submission) {
 		
 		List<String> recipients = new ArrayList<String>();
+		SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
 
 		switch (recipientType) {
 		case Student:
@@ -116,9 +119,13 @@ public class JpaWorkflowEmailRuleImpl extends JpaAbstractModel<JpaWorkflowEmailR
 			recipients.add(submission.getCommitteeContactEmail());
 			break;
 		case College:
+			recipients.addAll(settingRepo.findCollege(this.emailGroupId).getEmails().values());
+			break;
 		case Department:
+			recipients.addAll(settingRepo.findDepartment(this.emailGroupId).getEmails().values());
+			break;
 		case Program:
-			recipients.addAll(this.emailGroup.getEmails().values());
+			recipients.addAll(settingRepo.findProgram(this.emailGroupId).getEmails().values());
 			break;
 		default:
 			throw new UnsupportedOperationException();

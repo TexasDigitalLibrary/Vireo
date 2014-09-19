@@ -26,9 +26,9 @@ public interface WorkflowEmailRule extends AbstractWorkflowRule {
 
 	/**
 	 * @param emailWorkflowRuleContion
-	 *            Set the email group associated with this rule
+	 *            Set the email group id associated with this rule
 	 */
-	public void setRecipient(EmailGroup emailGroup);
+	public void setRecipient(Long emailGroupId);
 	
 	/**
 	 * @return The email group associated with this rule
