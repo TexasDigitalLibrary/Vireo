@@ -112,8 +112,6 @@ public class EmailSettingsTab extends SettingsTab {
 	public static void addEditEmailWorkflowRuleJSON(String id, String stateString, String conditionCategory, String conditionIDString, String recipientString, String templateString) {
 		try {
 			
-			
-			
 			if (stateString == null || stateString.trim().length() == 0)
 				throw new IllegalArgumentException("State could not be determined");
 			
@@ -134,35 +132,39 @@ public class EmailSettingsTab extends SettingsTab {
 			} else {
 				template = settingRepo.findEmailTemplateByName(templateString);
 			}
-			
-			RecipientType recipient = null;
-			if((recipientString != null) || (templateString.trim().length() == 0) || (templateString != "null")) {
-				recipient = RecipientType.valueOf(recipientString);
-			}
 
 			List<WorkflowEmailRule> rules = settingRepo.findWorkflowEmailRulesByState(associatedState);
 			WorkflowEmailRule rule;
-			if (false) {
-				Logger.info(id);
+			String conditionCatagoryJSON = "";
+			String conditionIdJSON = "";
+			String recipientTypeJSON = "";
+			String templateJSON = "";
+			
+			Logger.info(id);
+			if ((id != null) && (id.trim().length() != 0) && (!id.equals("null"))) {
 				// Modify an existing rule
 				Long ruleID = Long.parseLong(id);
 				rule = settingRepo.findWorkflowEmailRule(ruleID);
 				rule.setCondition(condition);
 				rule.setRecipientType(RecipientType.valueOf(recipientString));
 				rule.setEmailTemplate(template);
+				
+				conditionCatagoryJSON = rule.getCondition().getConditionType().name();
+				conditionIdJSON = rule.getCondition().getConditionId().toString();
+				recipientTypeJSON = rule.getRecipientType().name();
+				templateJSON = rule.getEmailTemplate().getName();
+				
 			} else {
-				rule = settingRepo.createWorkflowEmailRule(associatedState, condition, recipient, template);
+				rule = settingRepo.createWorkflowEmailRule(associatedState);
 			}
 			
 			rules.add(rule);
 						
-			//saveModelOrder(rules);
+			saveModelOrder(rules);
 			
 			Logger.info("%s (%d: %s) has added workflow email rule #%d.\n");
 			
-			String stateJSON = rule.getAssociatedState().getBeanName();
-			
-			renderJSON("{ \"success\": \"true\", \"id\": "+rule.getId()+", \"state\": \""+stateJSON+"\",\"conditionCatagory\": \""+rule.getCondition().getConditionType()+"\",\"conditionId\": \""+rule.getCondition().getConditionId()+"\",\"recipientType\": \""+rule.getRecipientType().name()+"\",\"template\": \""+rule.getEmailTemplate()+"\" }");
+			renderJSON("{ \"success\": \"true\", \"id\": "+rule.getId()+", \"state\": \""+rule.getAssociatedState().getBeanName()+"\",\"conditionCatagory\": \""+conditionCatagoryJSON+"\",\"conditionId\": \""+conditionIdJSON+"\",\"recipientType\": \""+recipientTypeJSON+"\",\"template\": \""+templateJSON+"\" }");
 				
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to create the workflow email rule.");

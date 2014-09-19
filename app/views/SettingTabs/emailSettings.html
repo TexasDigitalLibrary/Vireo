@@ -3,8 +3,8 @@
 #{include 'SettingTabs/jsDataObject.include' /}
 <script type="text/javascript">
 jQuery(document).ready(function(){
-
-	 var updateJSONURL = "@{settings.EmailSettingsTab.addEditEmailWorkflowRuleJSON()}";
+	console.log(jsDataObjects);
+	var updateJSONURL = "@{settings.EmailSettingsTab.addEditEmailWorkflowRuleJSON()}";
 
 	// Email settings at the top of the page.
     jQuery(".email-toggle").click(emailSettingsHandler('@{settings.EmailSettingsTab.updateEmailSettingsJSON()}'));

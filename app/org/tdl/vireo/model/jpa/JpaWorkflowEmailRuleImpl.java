@@ -36,16 +36,19 @@ public class JpaWorkflowEmailRuleImpl extends JpaAbstractModel<JpaWorkflowEmailR
 
 	@Column(nullable = false)
 	public int displayOrder;
-
+	
 	public String associatedState;
 
+	@Column(nullable = true)
 	@Enumerated
 	public RecipientType recipientType;
 
+	@Column(nullable = true)
 	public JpaEmailWorkflowRuleConditionImpl condition;
-
+	
+	@Column(nullable = true)
 	public Long emailGroupId;
-
+	
 	@OneToOne(targetEntity = JpaEmailTemplateImpl.class)
 	public EmailTemplate emailTemplate;
 
@@ -61,7 +64,7 @@ public class JpaWorkflowEmailRuleImpl extends JpaAbstractModel<JpaWorkflowEmailR
 	 * @param emailTemplate
 	 *            Workflow Email Rule's email template
 	 */
-	protected JpaWorkflowEmailRuleImpl(State associatedState, JpaEmailWorkflowRuleConditionImpl condition, RecipientType recipientType, EmailTemplate template) {
+	protected JpaWorkflowEmailRuleImpl(State associatedState) {
 
 		assertManager();
 
@@ -70,12 +73,6 @@ public class JpaWorkflowEmailRuleImpl extends JpaAbstractModel<JpaWorkflowEmailR
 		}
 
 		this.associatedState = associatedState.getBeanName();
-
-		this.condition = condition;
-		
-		this.recipientType = recipientType;
-
-		this.emailTemplate = template;
 
 		this.displayOrder = 0;
 

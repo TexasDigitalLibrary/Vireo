@@ -799,6 +799,7 @@ function createWorkflowEmailRuleHandler(jsonURL) {
 
 		var reqData = new Object;
 		reqData.state = target;
+		console.log(target);
 		reqData.conditionCategory = $("#"+target+"-workflow-add-conditionCatagorySelector").children("option:selected").text();
 		reqData.conditionIDString = $("#"+target+"-workflow-add-conditionSelector").val();
 		reqData.recipientString = $("#"+target+"-workflow-add-recipientStringSelector").val();
