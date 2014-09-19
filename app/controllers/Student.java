@@ -260,11 +260,14 @@ public class Student extends AbstractVireoController {
 				removeAdditional(sub);           	            	
 			}
 			
-			if(params.get("primaryDocument",File.class) != null) 
+			if(params.get("primaryDocument",File.class) != null) {
 				uploadPrimaryDocument(sub);
-			
-			if(params.get("additionalDocument",File.class) != null)
+				renderArgs.put("formSubmitter","replacePrimary");
+			}			
+			if(params.get("additionalDocument",File.class) != null) {
 				uploadAdditional(sub);
+				renderArgs.put("formSubmitter","removeAdditional");
+			}
 			
 			verify(sub);
 			

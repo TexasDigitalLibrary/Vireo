@@ -112,6 +112,11 @@ jQuery(document).ready(function() {
 
 			return false;
 		}
+	} else {
+		var formSubmitter = "${formSubmitter ?:''}";
+		if (formSubmitter) {
+			$("#"+formSubmitter).focus();
+		}
 	}
 
     jQuery("#addmsg").click(function(e) {
