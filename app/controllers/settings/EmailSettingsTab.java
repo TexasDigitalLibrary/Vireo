@@ -11,6 +11,8 @@ import javax.persistence.PersistenceException;
 import org.apache.commons.codec.language.bm.Rule;
 import org.tdl.vireo.email.RecipientType;
 import org.tdl.vireo.model.AbstractOrderedModel;
+import org.tdl.vireo.model.AbstractWorkflowRule;
+import org.tdl.vireo.model.AbstractWorkflowRuleCondition;
 import org.tdl.vireo.model.AbstractWorkflowRuleCondition.ConditionType;
 import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.Configuration;
@@ -130,15 +132,23 @@ public class EmailSettingsTab extends SettingsTab {
 				
 				rule = settingRepo.findWorkflowEmailRule(ruleID);
 					
-				JpaEmailWorkflowRuleConditionImpl condition;
-				if (conditionCategory != null && conditionCategory.trim().length() != 0) {
+				AbstractWorkflowRuleCondition condition;
+				//Check if condition exist
+				if((condition = rule.getCondition()) != null) {
 					condition = new JpaEmailWorkflowRuleConditionImpl();
-					condition.setConditionId(Long.parseLong(conditionIDString));
+				} 
+				
+				if (conditionCategory != null && conditionCategory.trim().length() != 0) {
 					condition.setConditionType(ConditionType.valueOf(conditionCategory));
 					rule.setCondition(condition);
 					conditionCatagoryJSON = rule.getCondition().getConditionType().name();
+				}
+				
+				if (conditionIDString != null && conditionIDString.trim().length() != 0) {
+					condition.setConditionId(Long.parseLong(conditionIDString));
+					rule.setCondition(condition);
 					conditionIdJSON = rule.getCondition().getConditionId().toString();
-				} 
+				}
 				
 				EmailTemplate template;
 				if (templateString != null && templateString.trim().length() != 0) {
