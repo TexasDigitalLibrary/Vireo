@@ -37,7 +37,7 @@
 								<td class="edit-box"> 
 									<ul class="unstyled"> 
 										<li class="edit"> 
-											<span id="${state.getBeanName()}-${rule.getId()}-condition" class="empty" data-id="${rule.getId()}" data-state="${state.getBeanName()}" data-ruleFieldName="conditionCategory"> 
+											<span id="${state.getBeanName()}-${rule.getId()}-condition" class="empty select" data-id="${rule.getId()}" data-state="${state.getBeanName()}" data-ruleFieldName="conditionCategory"> 
 												<i class="icon-pencil"></i> ${rule.getCondition()?.getConditionType()?.name()} #{if !rule.getCondition()} none#{/if}
 											</span> 
 										</li> 
@@ -70,6 +70,17 @@
 			</table>
 			
 			<p><a id="${state.getBeanName()}-add-workflowEmailRule" href="javascript:void(0);" data-state="${state.getBeanName()}">[ADD NEW]</a></p>
+
+			<div id="${state.getBeanName()}-workflowRuleOptions" style="display:none;" id="${state.getBeanName()}-${rule.getId()}-condition" class="empty select">
+				<select class="field" data-id="${rule.getId()}" data-state="${state.getBeanName()}" data-ruleFieldName="conditionCategory">
+					<option value="">Choose a condition...</option>
+					<option value="Always">Always</option>
+					<option value="College">College</option>
+					<option value="Department">Department</option>
+					<option value="Program">Program</option>
+				</select>
+			</div>
+
 		</div>
 	</div>
 </div>

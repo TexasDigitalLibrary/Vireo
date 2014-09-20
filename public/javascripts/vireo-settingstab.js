@@ -920,6 +920,18 @@ function swapToInputHandler(){
 			if(checkValue=="none" || checkValue=="null"){
 				value="";
 				jQuery("body").append('<div id="backup"></div>')
+			} else if(editItem.hasClass("select")) {
+				//Select Drop Downs
+				var selectCode = '<div id="'+editItem.attr("data-state")+'-workflowRuleOptions" class="editing select">';
+				selectCode += jQuery("#"+editItem.attr("data-state")+"-workflowRuleOptions").html();
+				selectCode += '<br /><i class="icon-remove" title="cancel"></i>&nbsp<i class="icon-ok" title="commit"></i></div>';
+				editItem.replaceWith(selectCode);
+				jQuery("#"+editItem.attr("data-state")+"-workflowRuleOptions .field option").each(function(){
+					if(jQuery(this).text()==value){
+						jQuery(this).attr("selected","selected");
+					}
+				})
+				
 			} else {
 				//Make back up info			
 				jQuery("body").append('<div id="backup">'+editItem.html()+'</div>')
@@ -934,7 +946,7 @@ function swapToInputHandler(){
 
 			if(editItem.hasClass("autocomplete")) { 
 				// Autocomplete fields
-				var selectCode = '<div id="'+editItem.attr("id")+'" class="editing autocomplete">';
+				var selectCode = '<div id="'+editItem.attr("id")+'" class="editing autocomplete" data-id="'+editItem.attr("data-id")+'" data-state="'+editItem.attr("data-state")+'" data-ruleFieldName="'+editItem.attr("data-ruleFieldName")+'">';
 				selectCode += jQuery("#"+editItem.attr("id")+"Options").html();
 				selectCode += '<br /><i class="icon-remove" title="cancel"></i>&nbsp<i class="icon-ok" title="commit"></i></div>';
 				editItem.replaceWith(selectCode);
@@ -1029,7 +1041,16 @@ function cancelEditingHandler(){
  */
 function commitChangesHandler(eventTarget, jsonURL){
 	var classValue = '';
-	var $ruleField = jQuery(".editing input");
+	var ruleField;
+
+	if(jQuery(".editing").hasClass("select")){
+		$ruleField = jQuery(".editing select");
+	} else if(jQuery(".editing").hasClass("autocomplete")){
+		$ruleField = jQuery(".editing autocomplete");
+	} else {
+		$ruleField = jQuery(".editing input");
+	}
+	
 	var parent = eventTarget.parent();
 	
 	var $ruleFieldName = $ruleField.attr("data-ruleFieldName");
@@ -1041,6 +1062,7 @@ function commitChangesHandler(eventTarget, jsonURL){
 	var conditionIDString = "";
 	var recipientString = "";
 	var templateString = "";
+
 
 	switch($ruleFieldName) {
 	    case "conditionCategory":
@@ -1080,6 +1102,11 @@ function commitChangesHandler(eventTarget, jsonURL){
 			
 			var currentValue;
 			
+
+			console.log(data.state)
+			
+
+
 			if(data.value){
 				currentValue = nl2br(data.value);
 			} else {
@@ -1088,7 +1115,8 @@ function commitChangesHandler(eventTarget, jsonURL){
 			}
 			
 			if(data.success){
-				jQuery("div."+id).replaceWith('<span id="'+id+'" class="'+classValue+'"><i class="icon-pencil"></i> '+currentValue+'</span>');
+				
+				jQuery("div."+id).replaceWith('<span id="'+id+'" class="'+classValue+'"><i class="icon-pencil"></i> '+data.conditionCatagory+'</span>');
 				if(data.degreeLevel != null){
 					jQuery("#degreeLevel").text(data.degreeLevel);
 					jQuery("#degreeLevel").removeClass("empty");
