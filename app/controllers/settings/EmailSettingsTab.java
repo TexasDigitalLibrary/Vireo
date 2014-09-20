@@ -134,20 +134,22 @@ public class EmailSettingsTab extends SettingsTab {
 					
 				AbstractWorkflowRuleCondition condition;
 				//Check if condition exist
-				if((condition = rule.getCondition()) != null) {
+				if((condition = rule.getCondition()) == null) {
 					condition = new JpaEmailWorkflowRuleConditionImpl();
+					condition.save();
+					rule.setCondition(condition);
 				} 
 				
 				if (conditionCategory != null && conditionCategory.trim().length() != 0) {
 					condition.setConditionType(ConditionType.valueOf(conditionCategory));
-					rule.setCondition(condition);
 					conditionCatagoryJSON = rule.getCondition().getConditionType().name();
+					condition.save();
 				}
 				
 				if (conditionIDString != null && conditionIDString.trim().length() != 0) {
 					condition.setConditionId(Long.parseLong(conditionIDString));
-					rule.setCondition(condition);
 					conditionIdJSON = rule.getCondition().getConditionId().toString();
+					condition.save();
 				}
 				
 				EmailTemplate template;
