@@ -44,7 +44,8 @@ public class JpaWorkflowEmailRuleImpl extends JpaAbstractModel<JpaWorkflowEmailR
 	@Enumerated
 	public RecipientType recipientType;
 	
-	@OneToOne(mappedBy="ruleId")
+	@OneToOne
+	@JoinColumn(name = "conditionID")
 	public JpaEmailWorkflowRuleConditionImpl condition;
 	
 	@Column(nullable = true)

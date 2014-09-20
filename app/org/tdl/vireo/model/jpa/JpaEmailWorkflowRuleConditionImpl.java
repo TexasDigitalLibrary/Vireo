@@ -20,8 +20,7 @@ public class JpaEmailWorkflowRuleConditionImpl extends JpaAbstractModel<JpaEmail
 	@Column
 	public Long conditionId;
 	
-	@OneToOne
-	@JoinColumn(name = "frn_rule_id")
+	@OneToOne(mappedBy = "condition")
     private JpaWorkflowEmailRuleImpl ruleId;
 	
 	@Enumerated
