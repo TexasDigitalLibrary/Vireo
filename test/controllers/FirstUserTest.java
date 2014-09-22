@@ -225,7 +225,7 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 		}
 
 		@Override
-		public College createCollege(String name, List<String> emails) {
+		public College createCollege(String name, HashMap<Integer, String> emails) {
 			// TODO Auto-generated method stub
 			return null;
 		}
@@ -249,7 +249,7 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 		}
 		
 		@Override
-		public Program createProgram(String name, List<String> emails) {
+		public Program createProgram(String name, HashMap<Integer, String> emails) {
 			// TODO Auto-generated method stub
 			return null;
 		}
@@ -273,7 +273,7 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 		}
 		
 		@Override
-		public Department createDepartment(String name, List<String> emails) {
+		public Department createDepartment(String name, HashMap<Integer, String> emails) {
 			// TODO Auto-generated method stub
 			return null;
 		}

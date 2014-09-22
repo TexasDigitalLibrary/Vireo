@@ -1,10 +1,10 @@
 package org.tdl.vireo.model.jpa;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.tdl.vireo.email.RecipientType;
 import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.CommitteeMemberRoleType;
 import org.tdl.vireo.model.Configuration;
@@ -76,8 +76,8 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	}
 
 	@Override
-	public College createCollege(String name,List<String> emails) {
-		return new JpaCollegeImpl(name,emails);
+	public College createCollege(String name, HashMap<Integer, String> emails) {
+		return new JpaCollegeImpl(name, emails);
 	}
 
 	@Override
@@ -96,8 +96,8 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	}
 	
 	@Override
-	public Program createProgram(String name,List<String> emails) {
-		return new JpaProgramImpl(name,emails);
+	public Program createProgram(String name, HashMap<Integer, String> emails) {
+		return new JpaProgramImpl(name, emails);
 	}
 	
 	@Override
@@ -116,8 +116,8 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	}
 	
 	@Override
-	public Department createDepartment(String name,List<String> emails) {
-		return new JpaDepartmentImpl(name,emails);
+	public Department createDepartment(String name, HashMap<Integer, String> emails) {
+		return new JpaDepartmentImpl(name, emails);
 	}
 
 	@Override

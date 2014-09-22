@@ -46,13 +46,9 @@ public class JpaCollegeImpl extends JpaAbstractModel<JpaCollegeImpl> implements 
 		this.name = name;
 	}
 	
-	protected JpaCollegeImpl(String name,List<String> emails) {
+	protected JpaCollegeImpl(String name, HashMap<Integer, String> emails) {
 		this(name);
-		int x = 0;
-		for (String email : emails) {
-			this.emails.put(x,email);
-			x++;
-		}
+		this.setEmails(emails);
 	}
 
 	
