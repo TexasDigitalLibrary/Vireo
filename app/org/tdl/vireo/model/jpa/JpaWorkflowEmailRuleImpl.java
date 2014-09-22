@@ -114,10 +114,14 @@ public class JpaWorkflowEmailRuleImpl extends JpaAbstractModel<JpaWorkflowEmailR
 		
 		switch (recipientType) {
 		case Student:
-			recipients.add(submission.getSubmitter().getCurrentEmailAddress());
+			if(submission.getSubmitter().getCurrentEmailAddress() != null && submission.getSubmitter().getCurrentEmailAddress().length() > 0) {
+				recipients.add(submission.getSubmitter().getCurrentEmailAddress());
+			}
 			break;
 		case Advisor:
-			recipients.add(submission.getCommitteeContactEmail());
+			if(submission.getCommitteeContactEmail() != null && submission.getCommitteeContactEmail().length() > 0) {
+				recipients.add(submission.getCommitteeContactEmail());
+			}
 			break;
 		case College:
 			recipients.addAll(settingRepo.findCollege(this.emailGroupId).getEmails().values());

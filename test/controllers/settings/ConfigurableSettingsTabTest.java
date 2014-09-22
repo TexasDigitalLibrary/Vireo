@@ -246,7 +246,6 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("name","New Program");
 		Response response = POST(EDIT_URL,params);
-		Logger.info("+++++++++++++++++response: %s", getContent(response));
 		assertContentMatch("\"success\": \"true\"", response);
 		
 		// Extract the id of the newly created action.
@@ -269,13 +268,17 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		params.clear();
 		params.put("programId",String.valueOf(id));
 		params.put("name", "Changed Name");
+		params.put("emails", "me@me.com, test@test.com");
 		response = POST(EDIT_URL,params);
 		
 		// Verify the action was updated in the database.
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();
 		JPA.em().getTransaction().begin();
-		assertEquals("Changed Name",settingRepo.findProgram(id).getName());
+		Program program = settingRepo.findProgram(id);
+		assertEquals("Changed Name", program.getName());
+		assertEquals("me@me.com", program.getEmails().get(0));
+		assertEquals("test@test.com", program.getEmails().get(1));
 		
 		// Now remove the custom action
 		params.clear();
@@ -392,13 +395,17 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		params.clear();
 		params.put("collegeId",String.valueOf(id));
 		params.put("name", "Changed Name");
+		params.put("emails", "me@me.com, test@test.com");
 		response = POST(EDIT_URL,params);
 		
 		// Verify the action was updated in the database.
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();
 		JPA.em().getTransaction().begin();
-		assertEquals("Changed Name",settingRepo.findCollege(id).getName());
+		College college = settingRepo.findCollege(id);
+		assertEquals("Changed Name", college.getName());
+		assertEquals("me@me.com", college.getEmails().get(0));
+		assertEquals("test@test.com", college.getEmails().get(1));
 		
 		// Now remove the custom action
 		params.clear();
@@ -511,18 +518,21 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		assertNotNull(settingRepo.findDepartment(id));
 		assertEquals("New Department",settingRepo.findDepartment(id).getName());
 		
-		
 		// Now edit the custom action
 		params.clear();
 		params.put("departmentId",String.valueOf(id));
 		params.put("name", "Changed Name");
+		params.put("emails", "me@me.com, test@test.com");
 		response = POST(EDIT_URL,params);
 		
 		// Verify the action was updated in the database.
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();
 		JPA.em().getTransaction().begin();
-		assertEquals("Changed Name",settingRepo.findDepartment(id).getName());
+		Department department = settingRepo.findDepartment(id);
+		assertEquals("Changed Name", department.getName());
+		assertEquals("me@me.com", department.getEmails().get(0));
+		assertEquals("test@test.com", department.getEmails().get(1));
 		
 		// Now remove the custom action
 		params.clear();

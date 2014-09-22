@@ -48,9 +48,6 @@ public class AppConfig {
 	
 	/** The license students must agree to during submission  */
 	public final static String SUBMIT_LICENSE_TEXT = "submit_license";
-		
-	// Email settings
-	public final static String EMAIL_DELAY_SENDING_ADVISOR_REQUEST = "email_delay_advisor_request";
 	
 	// Theme settings
 	/** Background main color */

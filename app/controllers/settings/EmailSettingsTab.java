@@ -47,11 +47,10 @@ public class EmailSettingsTab extends SettingsTab {
 		List<Program> programs = settingRepo.findAllPrograms();
 		List<Department> departments = settingRepo.findAllDepartments();
 		
-		// Get the email checkboxes
-		renderArgs.put("EMAIL_DELAY_SENDING_ADVISOR_REQUEST", settingRepo.findConfigurationByName(EMAIL_DELAY_SENDING_ADVISOR_REQUEST));
-		
+		// Get all the states
 		renderArgs.put("STATES", stateManager.getAllStates());
 		
+		// Get all the email workflow rules
 		renderArgs.put("RULES", settingRepo.findAllWorkflowEmailRules());
 		
 		// List all templates
@@ -65,46 +64,6 @@ public class EmailSettingsTab extends SettingsTab {
 				colleges, programs, departments
 				
 				);
-	}
-	
-	
-	/**
-	 * Receive updates for email configuration (the checkboxs at the top of the page, not the templates)
-	 * 
-	 * @param field
-	 *            The field being updated.
-	 * @param value
-	 *            The value (either something or null)
-	 */
-	@Security(RoleType.REVIEWER)
-	public static void updateEmailSettingsJSON(String field, String value) {
-		
-		try {
-			boolean booleanValue = true;
-			if (value == null || value.trim().length() == 0)
-				booleanValue = false;
-			
-			
-			List<String> editableFields = new ArrayList<String>();
-			editableFields.add(EMAIL_DELAY_SENDING_ADVISOR_REQUEST);
-			
-			if (!editableFields.contains(field))
-				throw new IllegalArgumentException("Unknown field '"+field+"'");
-			
-			Configuration configuration = settingRepo.findConfigurationByName(field);
-
-			if (!booleanValue && configuration != null)
-				configuration.delete();
-			else if (booleanValue && configuration == null)
-				settingRepo.createConfiguration(field, "true").save();
-
-			
-			renderJSON("{ \"success\": \"true\" }");
-		} catch (RuntimeException re) {
-			Logger.error(re,"Unable to update email settings");
-			String message = escapeJavaScript(re.getMessage());
-			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
-		}
 	}
 	
 	// ////////////////////////////////////////////

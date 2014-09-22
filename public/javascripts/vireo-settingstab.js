@@ -1662,59 +1662,6 @@ function memberUpdateHandler(htmlURL) {
  **********************************************************/
 
 
-/**
- * Handler for the email settings fields to save their state via ajax. This
- * method only supports the three toggleable settings at the top of the page,
- * not the templates further down, those are sortables.
- * 
- * 
- * @param jsonURL
- *            The JSON url to submit updates too.
- * @returns A Callback function
- */
-function emailSettingsHandler(jsonURL) {
-
-	return function () {
-		var $this = jQuery(this);
-		var field = $this.attr('name');
-		var value = $this.attr('checked');
-
-		$this.parent().addClass("waiting");
-
-		var successCallback = function(data) {
-			// Remove the ajax loading indicators & alerts
-			$this.parent().removeClass("waiting");
-			Alert("email-setting-"+field);
-		}
-
-		var failureCallback = function (message) {
-			$this.parent().removeClass("waiting");
-			displayAlert("email-setting-"+field,"Unable to update setting",message);
-		}
-
-		jQuery.ajax({
-			url:jsonURL,
-			data:{
-				'field': field,
-				'value': value
-			},
-			dataType:'json',
-			type:'POST',
-			success:function(data){
-				if (data.success) {
-					successCallback(data);
-				} else {
-					failureCallback(data.message)
-				}
-			},
-			error:function(){
-				failureCallback("Unable to communicate with the server.");
-			}
-
-		});  
-	};
-}
-
 /**********************************************************
  * Configurable Settings Tab (Embargos)
  **********************************************************/

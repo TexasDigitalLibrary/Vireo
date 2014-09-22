@@ -7,9 +7,6 @@ jQuery(document).ready(function(){
 	var updateJSONURL = "@{settings.EmailSettingsTab.addEditEmailWorkflowRuleJSON()}";
 	var removeJSONURL = "@{settings.EmailSettingsTab.removeEmailWorkflowRuleJSON()}";
 
-	// Email settings at the top of the page.
-    jQuery(".email-toggle").click(emailSettingsHandler('@{settings.EmailSettingsTab.updateEmailSettingsJSON()}'));
-
     #{list items:STATES, as:'state'}
     	#{if state.inWorkflow}
 			jQuery("#${state.getBeanName()}-add-workflowEmailRule").on("click", createWorkflowEmailRuleHandler('@{settings.EmailSettingsTab.addEditEmailWorkflowRuleJSON()}'));

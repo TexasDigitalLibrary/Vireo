@@ -67,70 +67,6 @@ public class EmailSettingsTabTest extends AbstractVireoFunctionalTest {
 	}
 	
 	/**
-	 * Test setting and unsetting all the email settings (the check boxes not the templates)
-	 */
-	@Test
-	public void testToggelingEmailSettings() {
-		LOGIN();
-		
-		// Get our urls and a list of fields.
-		final String URL = Router.reverse("settings.EmailSettingsTab.updateEmailSettingsJSON").url;
-
-		List<String> booleanFields = new ArrayList<String>();
-		booleanFields.add(EMAIL_DELAY_SENDING_ADVISOR_REQUEST);
-		
-		
-		// Get the field's current state
-		List<String> originalState = new ArrayList<String>();
-		JPA.em().getTransaction().commit();
-		JPA.em().clear();
-		JPA.em().getTransaction().begin();		for (String field : booleanFields) {
-			if (settingRepo.findConfigurationByName(field) != null)
-				originalState.add(field);
-		}
-		
-		// Set each field.
-		for (String field : booleanFields) {
-			
-			Map<String,String> params = new HashMap<String,String>();
-			params.put("field", field);
-			params.put("value","checked");
-			Response response = POST(URL,params);
-			assertContentMatch("\"success\": \"true\"", response);
-		}
-		
-		// Check that all the fields are set.
-		JPA.em().getTransaction().commit();
-		JPA.em().clear();
-		JPA.em().getTransaction().begin();		for (String field : booleanFields) {
-			assertNotNull(settingRepo.findConfigurationByName(field));
-		}
-		
-		// Turn off each field.
-		for (String field : booleanFields) {
-			
-			Map<String,String> params = new HashMap<String,String>();
-			params.put("field", field);
-			params.put("value","");
-			Response response = POST(URL,params);
-			assertContentMatch("\"success\": \"true\"", response);
-		}
-		
-		// Check that all the fields are turned off.
-		JPA.em().getTransaction().commit();
-		JPA.em().clear();
-		JPA.em().getTransaction().begin();		for (String field : booleanFields) {
-			assertNull(settingRepo.findConfigurationByName(field));
-		}
-		
-		// Restore to original state
-		for (String field : originalState) {
-			settingRepo.createConfiguration(field, "true");
-		}
-	}
-
-	
-	/**
 	 * Test adding, editing, and removing an Email Template.
 	 */
 	@Test
@@ -164,7 +100,8 @@ public class EmailSettingsTabTest extends AbstractVireoFunctionalTest {
 		// Verify the action exists in the database.
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();
-		JPA.em().getTransaction().begin();		assertNotNull(settingRepo.findEmailTemplate(id));
+		JPA.em().getTransaction().begin();
+		assertNotNull(settingRepo.findEmailTemplate(id));
 		assertEquals("New Template",settingRepo.findEmailTemplate(id).getName());
 		assertEquals("New Subject",settingRepo.findEmailTemplate(id).getSubject());
 		assertEquals("New Message",settingRepo.findEmailTemplate(id).getMessage());
@@ -244,7 +181,4 @@ public class EmailSettingsTabTest extends AbstractVireoFunctionalTest {
 		template1.delete();
 		template2.delete();
 	}
-	
-	
-	
 }

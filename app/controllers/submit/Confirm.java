@@ -38,15 +38,9 @@ import controllers.Security;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  * @author <a href="bill-ingram.com">Bill Ingram</a>
  * @author Dan Galewsky
+ * @author Gad Krumholz
  */
 public class Confirm extends AbstractSubmitStep {
-
-	public static final String STUDENT_INITIAL_SUBMISSION_TEMPLATE = "SYSTEM Initial Submission";
-	public static final String ADVISOR_INITIAL_SUBMISSION_TEMPLATE = "SYSTEM Advisor Review Request";
-	
-	public static EmailService emailService = Spring.getBeanOfType(EmailService.class);
-	public static SystemEmailTemplateService templateService = Spring.getBeanOfType(SystemEmailTemplateService.class);
-
 	
 	/**
 	 * Confirm the submission has passed the verification from all the previous
@@ -83,8 +77,6 @@ public class Confirm extends AbstractSubmitStep {
 			try {
 				context.turnOffAuthorization();
 				
-				VireoEmail studentEmail = null;
-				VireoEmail advisorEmail = null;
 				if (sub.getState() == stateManager.getInitialState()) {
 					// Only do these things if this is the first submission.
 					
@@ -97,15 +89,12 @@ public class Confirm extends AbstractSubmitStep {
 					
 					// Set the submission date
 					sub.setSubmissionDate(new Date());
-						
-					// Generate the emails
-					studentEmail = generateStudentEmail(sub);
-					advisorEmail = generateAdvisorEmail(sub);
 				}
 				
 				// Transition to the next state
 				State prevState = sub.getState();
 				State nextState = prevState.getTransitions(sub).get(0);
+				// This will trigger emails being sent out if they are configured in email workflow rules
 				sub.setState(nextState);
 				
 				sub.save();
@@ -116,12 +105,6 @@ public class Confirm extends AbstractSubmitStep {
 						submitter.getEmail(),
 						prevState.getDisplayName(),
 						sub.getId());
-				
-				// After we have saved our state do we kick off the emails
-				if (studentEmail != null)
-					emailService.sendEmail(studentEmail, true);
-				if (advisorEmail != null)
-					emailService.sendEmail(advisorEmail, true);
 			} finally {
 				context.restoreAuthorization();
 
@@ -184,67 +167,4 @@ public class Confirm extends AbstractSubmitStep {
 		sub.setCommitteeEmailHash(hash);
 		return hash;
 	}
-	
-	/**
-	 * Generate an email to the student using the default template.
-	 * 
-	 * @param sub The submission to generate an email about.
-	 * @return A vireo email, or null if no email address exists.
-	 */
-	protected static VireoEmail generateStudentEmail(Submission sub) {
-		templateService.generateAllSystemEmailTemplates();
-
-		VireoEmail email = null;
-		if (sub.getSubmitter().getEmail() != null) {
-			EmailTemplate template = settingRepo.findEmailTemplateByName(STUDENT_INITIAL_SUBMISSION_TEMPLATE);
-
-			email = emailService.createEmail();
-			email.setTemplate(template);
-			email.addParameters(sub);			
-			email.addTo(sub.getSubmitter());
-			
-			email.setLogOnCompletion(null, sub);
-			email.setSuccessLogMessage("Student confirmation sent to "+sub.getSubmitter().getEmail());
-			email.setFailureLogMessage("Failed to send student confirmation, "+sub.getSubmitter().getEmail());
-		}
-		
-		return email;
-	}
-	
-	/**
-	 * Generate an email to the advisor using the default template.
-	 * 
-	 * @param sub The submission to generate an email about.
-	 * @return A viero email, or null if no advisor email address exists.
-	 */
-	protected static VireoEmail generateAdvisorEmail(Submission sub) {
-		
-		// Check if the email should be sent automatically.
-		if (settingRepo.getConfigBoolean(AppConfig.EMAIL_DELAY_SENDING_ADVISOR_REQUEST))
-			return null;
-		
-		// Only send it if we have an actual contact email address.
-		if (sub.getCommitteeContactEmail() == null || sub.getCommitteeContactEmail().trim().length() == 0)
-			return null;
-			
-			
-		EmailTemplate template = settingRepo.findEmailTemplateByName(ADVISOR_INITIAL_SUBMISSION_TEMPLATE);
-
-		VireoEmail email = emailService.createEmail();
-		email.getTo().clear();
-		email.getCc().clear();
-		email.getBcc().clear();
-		
-		
-		email.setTemplate(template);
-		email.addParameters(sub);		
-		email.addTo(sub.getCommitteeContactEmail());
-		
-		email.setLogOnCompletion(null, sub);
-		email.setSuccessLogMessage("Advisor review request sent to "+sub.getCommitteeContactEmail());
-		email.setFailureLogMessage("Failed to send advisor review request, "+sub.getCommitteeContactEmail());
-		
-		return email;
-	}
-	
 }
