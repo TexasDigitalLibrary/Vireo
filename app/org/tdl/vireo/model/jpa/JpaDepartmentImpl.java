@@ -45,13 +45,9 @@ public class JpaDepartmentImpl extends JpaAbstractModel<JpaDepartmentImpl> imple
 		this.name = name;
 	}
 	
-	protected JpaDepartmentImpl(String name,List<String> emails) {
+	protected JpaDepartmentImpl(String name, HashMap<Integer, String> emails) {
 		this(name);
-		int x = 0;
-		for (String email : emails) {
-			this.emails.put(x,email);
-			x++;
-		}
+		this.setEmails(emails);
 	}
 	
 	@Override

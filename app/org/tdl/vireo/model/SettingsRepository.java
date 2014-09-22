@@ -1,5 +1,6 @@
 package org.tdl.vireo.model;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.tdl.vireo.email.RecipientType;
@@ -101,7 +102,7 @@ public interface SettingsRepository {
 	 *            A list of emails.
 	 * @return A new college object.
 	 */
-	public College createCollege(String name,List<String> emails);
+	public College createCollege(String name, HashMap<Integer, String> emails);
 
 	/**
 	 * Find a college by unique id.
@@ -137,7 +138,7 @@ public interface SettingsRepository {
 	 *            A list of emails.
 	 * @return A new program object.
 	 */
-	public Program createProgram(String name,List<String> emails);
+	public Program createProgram(String name, HashMap<Integer, String> emails);
 	
 	/**
 	 * Find a program by unique id.
@@ -174,7 +175,7 @@ public interface SettingsRepository {
 	 *            A list of emails.
 	 * @return A new department object.
 	 */
-	public Department createDepartment(String name,List<String> emails);
+	public Department createDepartment(String name, HashMap<Integer, String> emails);
 
 	/**
 	 * Find department by unique id

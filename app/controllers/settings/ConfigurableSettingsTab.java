@@ -399,52 +399,20 @@ public class ConfigurableSettingsTab extends SettingsTab {
                 Long id = Long.valueOf(collegeId);
                 college = settingRepo.findCollege(id);
                 college.setName(name);
+                // create a new hashMap for the new emails
                 HashMap<Integer, String> emails_map = new HashMap<Integer, String>();
-                // make a String[] of email addresses
-                String[] emails_array = (emails != null ? emails.split(",") : new String[0]);
-                int i =0;
-				jsonEmails = "[";                
-                for(String email : Arrays.asList(emails_array)) {
-					// validate email
-					if(!validateEmailAddress(email)){
-						throw new IllegalArgumentException("Invalid E-Mail Address detected! [" + email + "]");
-					}
-                    emails_map.put(i, email);
-                    jsonEmails += "{\"id\":" +i+ ",\"email\":\""+email+"\"},";
-                    i++;
-                }
-                jsonEmails = jsonEmails.substring(0,jsonEmails.length()-1);
-				jsonEmails += "]";
+                // create the json for the response and also add them to the created hashMap
+                jsonEmails = createEmailsJsonAndAddToMap(emails, emails_map);
+                // set the new emails with the hashMap
 				college.setEmails(emails_map);
                 college.save();
             } else {
-    			if (emails != null) {
-					List<String> newEmails = Arrays.asList(emails.split(","));
-					for (String email : newEmails) {
-						// validate email
-						if(!validateEmailAddress(email)){
-							throw new IllegalArgumentException("Invalid E-Mail Address detected! [" + email + "]");
-						}
-	                }
-					college = settingRepo.createCollege(name, newEmails);
-    				jsonEmails = "[";
-    				int i = 0;
-    				for (Map.Entry<Integer, String> entry : college.getEmails().entrySet()) {
-    					
-    					Integer key = entry.getKey();
-    				    String value = entry.getValue();
-    				    jsonEmails += "{\"id\":" +key+ ",\"email\":\""+value+"\"}";
-    				    
-    				    i++;
-    				
-    				    if(i != college.getEmails().size()) jsonEmails += ",";
-    				
-    				}
-    				jsonEmails += "]";
-    			} else {
-    				Logger.info("no");
-    				college = settingRepo.createCollege(name);
-    			}
+				// create a new hashMap for the new emails
+                HashMap<Integer, String> emails_map = new HashMap<Integer, String>();
+                // create the json for the response and also add them to the created hashMap
+                jsonEmails = createEmailsJsonAndAddToMap(emails, emails_map);
+                // create the new college with the passed-in emails
+				college = settingRepo.createCollege(name, emails_map);
     			colleges.add(college);
             }
 
@@ -467,7 +435,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 					+ "\" }");
 		}
 	}
-
+	
 	/**
 	 * Remove an existing college
 	 * 
@@ -579,52 +547,18 @@ public class ConfigurableSettingsTab extends SettingsTab {
                 Long id = Long.valueOf(programId);
                 program = settingRepo.findProgram(id);
                 program.setName(name);
+                // create a new hashMap for the new emails
                 HashMap<Integer, String> emails_map = new HashMap<Integer, String>();
-                // make a String[] of email addresses
-                String[] emails_array = (emails != null ? emails.split(",") : new String[0]);
-                int i =0;
-				jsonEmails = "[";                
-                for(String email : Arrays.asList(emails_array)) {
-					// validate email
-					if(!validateEmailAddress(email)){
-						throw new IllegalArgumentException("Invalid E-Mail Address detected! [" + email + "]");
-					}
-                    emails_map.put(i, email);
-                    jsonEmails += "{\"id\":" +i+ ",\"email\":\""+email+"\"},";
-                    i++;
-                }
-                jsonEmails = jsonEmails.substring(0,jsonEmails.length()-1);
-				jsonEmails += "]";
+                // create the json for the response and also add them to the created hashMap
+                jsonEmails = createEmailsJsonAndAddToMap(emails, emails_map);
 				program.setEmails(emails_map);
 				program.save();
             } else {
-    			if (emails != null) {
-					List<String> newEmails = Arrays.asList(emails.split(","));
-					for (String email : newEmails) {
-						// validate email
-						if(!validateEmailAddress(email)){
-							throw new IllegalArgumentException("Invalid E-Mail Address detected! [" + email + "]");
-						}
-	                }
-					program = settingRepo.createProgram(name, newEmails);
-    				jsonEmails = "[";
-    				int i = 0;
-    				for (Map.Entry<Integer, String> entry : program.getEmails().entrySet()) {
-    					
-    					Integer key = entry.getKey();
-    				    String value = entry.getValue();
-    				    jsonEmails += "{\"id\":" +key+ ",\"email\":\""+value+"\"}";
-    				    
-    				    i++;
-    				
-    				    if(i != program.getEmails().size()) jsonEmails += ",";
-    				
-    				}
-    				jsonEmails += "]";
-    			} else {
-    				Logger.info("no");
-    				program = settingRepo.createProgram(name);
-    			}
+				// create a new hashMap for the new emails
+                HashMap<Integer, String> emails_map = new HashMap<Integer, String>();
+                // create the json for the response and also add them to the created hashMap
+                jsonEmails = createEmailsJsonAndAddToMap(emails, emails_map);
+				program = settingRepo.createProgram(name, emails_map);
     			programs.add(program);
             }
 
@@ -759,52 +693,18 @@ public class ConfigurableSettingsTab extends SettingsTab {
                 Long id = Long.valueOf(departmentId);
                 department = settingRepo.findDepartment(id);
                 department.setName(name);
+                // create a new hashMap for the new emails
                 HashMap<Integer, String> emails_map = new HashMap<Integer, String>();
-                // make a String[] of email addresses
-                String[] emails_array = (emails != null ? emails.split(",") : new String[0]);
-                int i =0;
-				jsonEmails = "[";                
-                for(String email : Arrays.asList(emails_array)) {
-					// validate email
-					if(!validateEmailAddress(email)){
-						throw new IllegalArgumentException("Invalid E-Mail Address detected! [" + email + "]");
-					}
-                    emails_map.put(i, email);
-                    jsonEmails += "{\"id\":" +i+ ",\"email\":\""+email+"\"},";
-                    i++;
-                }
-                jsonEmails = jsonEmails.substring(0,jsonEmails.length()-1);
-				jsonEmails += "]";
+                // create the json for the response and also add them to the created hashMap
+                jsonEmails = createEmailsJsonAndAddToMap(emails, emails_map);
 				department.setEmails(emails_map);
 				department.save();
             } else {
-    			if (emails != null) {
-					List<String> newEmails = Arrays.asList(emails.split(","));
-					for (String email : newEmails) {
-						// validate email
-						if(!validateEmailAddress(email)){
-							throw new IllegalArgumentException("Invalid E-Mail Address detected! [" + email + "]");
-						}
-	                }
-					department = settingRepo.createDepartment(name, newEmails);
-    				jsonEmails = "[";
-    				int i = 0;
-    				for (Map.Entry<Integer, String> entry : department.getEmails().entrySet()) {
-    					
-    					Integer key = entry.getKey();
-    				    String value = entry.getValue();
-    				    jsonEmails += "{\"id\":" +key+ ",\"email\":\""+value+"\"}";
-    				    
-    				    i++;
-    				
-    				    if(i != department.getEmails().size()) jsonEmails += ",";
-    				
-    				}
-    				jsonEmails += "]";
-    			} else {
-    				Logger.info("no");
-    				department = settingRepo.createDepartment(name);
-    			}
+            	// create a new hashMap for the new emails
+                HashMap<Integer, String> emails_map = new HashMap<Integer, String>();
+                // create the json for the response and also add them to the created hashMap
+                jsonEmails = createEmailsJsonAndAddToMap(emails, emails_map);
+				department = settingRepo.createDepartment(name, emails_map);
     			departments.add(department);
             }
 
@@ -1903,6 +1803,42 @@ public class ConfigurableSettingsTab extends SettingsTab {
 		configurableSettings();
 	}
 	
+	/**
+	 * Helper function to create a JSON encoded string for a hashMap of email addresses
+	 * 
+	 * Will also modify the passed-in hashMap to add the email addresses
+	 * 
+	 * Will validate the email addresses in the process 
+	 * 
+	 * @param emails - the emails String from the request
+	 * @param emails_map - a blank map to add emails to
+	 * @return - JSON encoded string representing the hashMap of emails
+	 */
+	private static String createEmailsJsonAndAddToMap(String emails, HashMap<Integer, String> emails_map){
+		List<String> emails_list = Arrays.asList(emails != null ? emails.split(",") : new String[0]);
+		int i =0;
+		String jsonEmails = "[";                
+        for(String email : emails_list) {
+			// validate email
+			if(!validateEmailAddress(email)){
+				throw new IllegalArgumentException("Invalid E-Mail Address detected! [" + email + "]");
+			}
+            emails_map.put(i, email);
+            jsonEmails += "{\"id\":" +i+ ",\"email\":\""+email+"\"},";
+            i++;
+        }
+        jsonEmails = jsonEmails.substring(0,jsonEmails.length()-1);
+		jsonEmails += "]";
+		
+		return jsonEmails;
+	}
+	
+	/**
+	 * Helper function to validate a single email address as a String
+	 * 
+	 * @param email - the String of the email address to validate
+	 * @return - true or false if email address is valid
+	 */
 	private static boolean validateEmailAddress(String email){
 		try {
 			new InternetAddress(email).validate();

@@ -44,13 +44,9 @@ public class JpaProgramImpl extends JpaAbstractModel<JpaProgramImpl> implements 
 		this.name = name;
 	}
 	
-	protected JpaProgramImpl(String name,List<String> emails) {
+	protected JpaProgramImpl(String name, HashMap<Integer, String> emails) {
 		this(name);
-		int x = 0;
-		for (String email : emails) {
-			this.emails.put(x,email);
-			x++;
-		}
+		this.setEmails(emails);
 	}
 	
 	@Override
