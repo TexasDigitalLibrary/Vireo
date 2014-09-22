@@ -81,7 +81,7 @@ public class EmailSettingsTab extends SettingsTab {
 
 			List<WorkflowEmailRule> rules = settingRepo.findWorkflowEmailRulesByState(associatedState);
 			WorkflowEmailRule rule;
-			String conditionCatagoryJSON = "";
+			String conditionCategoryJSON = "";
 			String conditionIdJSON = "";
 			String conditionDisplayJSON = "";
 			String recipientTypeJSON = "";
@@ -103,12 +103,15 @@ public class EmailSettingsTab extends SettingsTab {
 				
 				if (conditionCategory != null && conditionCategory.trim().length() != 0) {
 					condition.setConditionType(ConditionType.valueOf(conditionCategory));
-					conditionCatagoryJSON = rule.getCondition().getConditionType().name();
+					condition.setConditionId(null);
+					conditionCategoryJSON = rule.getCondition().getConditionType().name();
 					condition.save();
 				}
 				
 				if (conditionIDString != null && conditionIDString.trim().length() != 0) {
 					condition.setConditionId(Long.parseLong(conditionIDString));
+					if(rule.getCondition().getConditionType() != null)
+						conditionCategoryJSON = rule.getCondition().getConditionType().name();
 					conditionIdJSON = rule.getCondition().getConditionId().toString();
 					//conditionDisplayJSON = settingRepo.findCollege(Long.parseLong(conditionIDString)).getName();
 					condition.save();
@@ -141,7 +144,7 @@ public class EmailSettingsTab extends SettingsTab {
 			
 			Logger.info("%s (%d: %s) has added workflow email rule #%d.\n");
 			
-			renderJSON("{ \"success\": \"true\", \"id\": "+rule.getId()+", \"state\": \""+rule.getAssociatedState().getBeanName()+"\",\"conditionCategory\": \""+conditionCatagoryJSON+"\",\"conditionId\": \""+conditionIdJSON+"\",\"conditionDisplayJSON\": \""+conditionDisplayJSON+"\",\"recipientType\": \""+recipientTypeJSON+"\",\"templateString\": \""+templateJSON+"\" }");
+			renderJSON("{ \"success\": \"true\", \"id\": "+rule.getId()+", \"state\": \""+rule.getAssociatedState().getBeanName()+"\",\"conditionCategory\": \""+conditionCategoryJSON+"\",\"conditionId\": \""+conditionIdJSON+"\",\"conditionDisplayJSON\": \""+conditionDisplayJSON+"\",\"recipientType\": \""+recipientTypeJSON+"\",\"templateString\": \""+templateJSON+"\" }");
 			
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to create the workflow email rule.");
