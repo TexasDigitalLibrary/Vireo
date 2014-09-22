@@ -26,7 +26,8 @@ public class EmailRuleService {
 	 * 
 	 * to decide if an email needs to be sent (and to whom) depending on the rule's condition and recipients
 	 * 
-	 * @param submission - the submission
+	 * @param submission
+	 *            - the submission
 	 */
 	public static void runEmailRules(Submission submission) {
 
@@ -35,60 +36,90 @@ public class EmailRuleService {
 		List<WorkflowEmailRule> rules = settingRepo.findAllWorkflowEmailRules();
 		// for every rule in JPA
 		for (WorkflowEmailRule workflowEmailRule : rules) {
-			// if the rule's state matches the transitioned state in the submission
-			if (workflowEmailRule.getAssociatedState().equals(submission.getState().getBeanName())) {
-				// apply condition to send only when condition is met
-				switch (workflowEmailRule.getCondition().getConditionType()) {
-				case Always:
-					// send the email
-					sendEmail(workflowEmailRule, submission);
-					break;
-				case College:
-					// get the collegeId out of the rule
-					Long collegeId = workflowEmailRule.getCondition().getConditionId();
-					// get the college out of JPA
-					College ruleCollege = settingRepo.findCollege(collegeId);
-					// compare the rule's college with the submission's college
-					if (ruleCollege.getName().equals(submission.getCollege())) {
+			// verify the rule is valid/complete before running it
+			if (ruleIsValid(workflowEmailRule, submission)) {
+				// if the rule's state matches the transitioned state in the submission
+				if (workflowEmailRule.getAssociatedState().equals(submission.getState().getBeanName())) {
+					// apply condition to send only when condition is met
+					switch (workflowEmailRule.getCondition().getConditionType()) {
+					case Always:
 						// send the email
 						sendEmail(workflowEmailRule, submission);
+						break;
+					case College:
+						// get the collegeId out of the rule
+						Long collegeId = workflowEmailRule.getCondition().getConditionId();
+						// get the college out of JPA
+						College ruleCollege = settingRepo.findCollege(collegeId);
+						// compare the rule's college with the submission's college
+						if (ruleCollege.getName().equals(submission.getCollege())) {
+							// send the email
+							sendEmail(workflowEmailRule, submission);
+						}
+						break;
+					case Department:
+						// get the departmentId out of the rule
+						Long departmentId = workflowEmailRule.getCondition().getConditionId();
+						// get the department out of JPA
+						Department ruleDepartment = settingRepo.findDepartment(departmentId);
+						// compare the rule's department with the submission's department
+						if (ruleDepartment.getName().equals(submission.getDepartment())) {
+							// send the email
+							sendEmail(workflowEmailRule, submission);
+						}
+						break;
+					case Program:
+						// get the programId out of the rule
+						Long programId = workflowEmailRule.getCondition().getConditionId();
+						// get the program out of JPA
+						Program ruleProgram = settingRepo.findProgram(programId);
+						// compare the rule's program with the submission's program
+						if (ruleProgram.getName().equals(submission.getProgram())) {
+							// send the email
+							sendEmail(workflowEmailRule, submission);
+						}
+						break;
+					default:
+						// what are we doing here?!
+						throw new UnsupportedOperationException();
 					}
-					break;
-				case Department:
-					// get the departmentId out of the rule
-					Long departmentId = workflowEmailRule.getCondition().getConditionId();
-					// get the department out of JPA
-					Department ruleDepartment = settingRepo.findDepartment(departmentId);
-					// compare the rule's department with the submission's department
-					if (ruleDepartment.getName().equals(submission.getDepartment())) {
-						// send the email
-						sendEmail(workflowEmailRule, submission);
-					}
-					break;
-				case Program:
-					// get the programId out of the rule
-					Long programId = workflowEmailRule.getCondition().getConditionId();
-					// get the program out of JPA
-					Program ruleProgram = settingRepo.findProgram(programId);
-					// compare the rule's program with the submission's program
-					if (ruleProgram.getName().equals(submission.getProgram())) {
-						// send the email
-						sendEmail(workflowEmailRule, submission);
-					}
-					break;
-				default:
-					// what are we doing here?!
-					throw new UnsupportedOperationException();
 				}
 			}
 		}
 	}
 
 	/**
+	 * Checks the validity of a rule to make sure it should run or not
+	 * 
+	 * @param workflowEmailRule - the workflow email rule to check
+	 * @param submission - the submission to check against
+	 * @return - returns true if rule is valid, false if condition is not set or recipients is emtpy
+	 */
+	private static boolean ruleIsValid(WorkflowEmailRule workflowEmailRule, Submission submission) {
+		boolean ret = true;
+		// check condition != null
+		if (workflowEmailRule.getCondition() != null) {
+			// check condition type and id != null
+			if (workflowEmailRule.getCondition().getConditionType() == null || workflowEmailRule.getCondition().getConditionId() == null) {
+				ret = false;
+			}
+		} else {
+			ret = false;
+		}
+		// check recipients
+		if(workflowEmailRule.getRecipients(submission).size() == 0) {
+			ret = false;
+		}
+		return ret;
+	}
+
+	/**
 	 * This will generate and send the email to the right recipients from the rule
 	 * 
-	 * @param workflowEmailRule - the workflow email rule
-	 * @param submission - the submission
+	 * @param workflowEmailRule
+	 *            - the workflow email rule
+	 * @param submission
+	 *            - the submission
 	 */
 	private static void sendEmail(WorkflowEmailRule workflowEmailRule, Submission submission) {
 		// get the EmailService from Spring
@@ -102,9 +133,12 @@ public class EmailRuleService {
 	/**
 	 * This will generate a VireoEmail from the right recipients from the rule
 	 * 
-	 * @param emailService - the emailService from Spring
-	 * @param workflowEmailRule - the workflow email rule
-	 * @param submission - the submission
+	 * @param emailService
+	 *            - the emailService from Spring
+	 * @param workflowEmailRule
+	 *            - the workflow email rule
+	 * @param submission
+	 *            - the submission
 	 * @return - a new VireoEmail with the correct email template and recipients
 	 */
 	private static VireoEmail createEmail(EmailService emailService, WorkflowEmailRule workflowEmailRule, Submission submission) {
