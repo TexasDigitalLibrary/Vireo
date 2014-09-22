@@ -1831,7 +1831,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 	 */
 	private static String createEmailsJsonAndAddToMap(String emails, HashMap<Integer, String> emails_map){
 		String jsonEmails = "[";
-		try {
+		if(emails != null) {
 			int i = 0;
 			List<String> emails_list = (emails.length() == 0 ? new ArrayList<String>() : Arrays.asList(emails.split(",")));
 	        for(String email : emails_list) {
@@ -1844,8 +1844,6 @@ public class ConfigurableSettingsTab extends SettingsTab {
 	            i++;
 	        }
 	        jsonEmails = jsonEmails.substring(0,jsonEmails.length()-1);
-		} catch (NullPointerException e) {
-			// Do nothing! (in case emails was null)
 		}
 		jsonEmails += "]";
 		
