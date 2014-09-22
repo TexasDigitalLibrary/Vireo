@@ -998,7 +998,7 @@ function swapToInputHandler(){
 
 				//Select Drop Downs
 				var selectCode = '<div id="'+editItem.attr("data-state")+'-workflowRule-'+editItem.attr("data-ruleFieldName")+'" class="editing select" >';
-				selectCode += jQuery("#"+editItem.attr("data-state")+"-workflowRule-"+editItem.attr("data-ruleFieldName")+"").html();
+				selectCode += jQuery("#"+editItem.attr("data-state")+"-workflowRule-"+editItem.attr("data-ruleFieldName")).html();
 				selectCode += '<br /><i class="icon-remove" title="cancel"></i>&nbsp<i class="icon-ok" title="commit"></i></div>';
 				editItem.replaceWith(selectCode);
 				jQuery("#"+editItem.attr("data-state")+"-workflowRule-"+editItem.attr("data-ruleFieldName")+" .field option").each(function(){
@@ -1008,6 +1008,15 @@ function swapToInputHandler(){
 				})
 
 
+				
+			} else if(editItem.hasClass("autocomplete")) { 
+				// Autocomplete fields
+				var selectCode = '<div id="'+editItem.attr("data-state")+'-workflowRule-'+editItem.attr("data-ruleFieldName")+'" class="editing autocomplete">';
+				selectCode += jQuery("#"+editItem.attr("data-state")+"-workflowRule-"+editItem.attr("data-ruleFieldName")).html();
+				selectCode += '<br /><i class="icon-remove" title="cancel"></i>&nbsp<i class="icon-ok" title="commit"></i></div>';
+				editItem.replaceWith(selectCode);
+				
+				jQuery("#"+editItem.attr("id")+" .field").val(value);
 				
 			} else {
 				//Make back up info			
@@ -1106,7 +1115,7 @@ function commitChangesHandler(eventTarget, jsonURL){
 	var parent = eventTarget.parent();
 	console.log(parent)
 	
-	var $ruleFieldName = $ruleField.attr("data-ruleFieldName");
+	var ruleFieldName = $ruleField.attr("data-ruleFieldName");
 	var theValue = $ruleField.val();
 	
 	var id = $ruleField.attr("data-id");
@@ -1118,7 +1127,7 @@ function commitChangesHandler(eventTarget, jsonURL){
 	var recipientString = "";
 	var templateString = "";
 
-	switch($ruleFieldName) {
+	switch(ruleFieldName) {
 	    case "conditionCategory":
 	        conditionCategory = theValue;
 	        break;
@@ -1156,12 +1165,28 @@ function commitChangesHandler(eventTarget, jsonURL){
 			
 			if(data.success) {
 
-				console.log(data[$ruleField.attr("data-ruleFieldName")]);
-				console.log(data.conditionCategory != "Always" && data.conditionCatagory != "none");
-
-				jQuery("div."+attrID).replaceWith('<span id="'+attrID+'" class="'+classValue+'" data-state="'+$ruleField.attr("data-state")+'" data-id="'+$ruleField.attr("data-id")+'" data-ruleFieldName="'+$ruleField.attr("data-ruleFieldName")+'"><i class="icon-pencil"></i> '+data[$ruleField.attr("data-ruleFieldName")]+'</span>');
+				jQuery("div."+attrID).replaceWith('<span id="'+attrID+'" class="'+classValue+'" data-state="'+$ruleField.attr("data-state")+'" data-id="'+$ruleField.attr("data-id")+'" data-ruleFieldName="'+ruleFieldName+'"><i class="icon-pencil"></i> '+data[ruleFieldName]+'</span>');
 				
 				if(data.conditionCategory != "Always" && data.conditionCatagory != "none" && data.conditionCatagory != "") {
+					
+					var $hiddenAutoComplete = jQuery("#"+$ruleField.attr("data-state")+"-workflowRule-"+ruleFieldName);
+
+					$hiddenAutoComplete.attr("data-source", $hiddenAutoComplete.attr("data-"+data.conditionCategory));
+
+					switch(data.conditionCategory) {
+				    case "College":
+				        conditionCategory = theValue;
+				        break;
+				    case "Department":
+				        conditionIDString = theValue;
+				        break;
+				    case "Program":
+				        recipientString = theValue;	        
+				        break;
+				    default:
+				        break;
+				}
+
 					$("."+data.state+"-"+data.id+"-condition").show();	
 				} else {
 					$("."+data.state+"-"+data.id+"-condition").hide();	
