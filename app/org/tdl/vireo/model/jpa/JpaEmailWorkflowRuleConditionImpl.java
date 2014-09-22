@@ -78,34 +78,30 @@ public class JpaEmailWorkflowRuleConditionImpl extends JpaAbstractModel<JpaEmail
 
 
 	@Override
-	public String getConditionDisplayName() {
-		String displayName = "";
-		String type = this.conditionType.name();
+	public String getConditionIdDisplayName() {
+		String displayName = "none";
 		
-		
-		if(this.conditionId == null) return "none";
-		
-		if(this.conditionType == null) return "none";
+		if(this.conditionId == null || this.conditionType == null) {
+			return displayName;
+		}
 		
 		SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
 		
-		switch (type) {
-		case "College":
-			displayName = settingRepo.findCollege(this.conditionId).getName();
-			break;
-		case "Department":
-			displayName = settingRepo.findDepartment(this.conditionId).getName();
-			break;
-		case "Program":
-			displayName = settingRepo.findProgram(this.conditionId).getName();
-			break;
-		case "Always":
-		case "":
-			displayName = "none";
-			break;
-		default:
-			throw new UnsupportedOperationException();
-		}		
+		switch(this.conditionType) {
+			case College:
+				displayName = settingRepo.findCollege(this.conditionId).getName();
+				break;
+			case Department:
+				displayName = settingRepo.findDepartment(this.conditionId).getName();
+				break;
+			case Program:
+				displayName = settingRepo.findProgram(this.conditionId).getName();
+				break;
+			case Always:
+			default:
+				displayName = "none";
+				break;
+		}
 		
 		return displayName;
 	}
