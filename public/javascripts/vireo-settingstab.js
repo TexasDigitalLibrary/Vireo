@@ -1167,25 +1167,28 @@ function commitChangesHandler(eventTarget, jsonURL){
 
 				jQuery("div."+attrID).replaceWith('<span id="'+attrID+'" class="'+classValue+'" data-state="'+$ruleField.attr("data-state")+'" data-id="'+$ruleField.attr("data-id")+'" data-ruleFieldName="'+ruleFieldName+'"><i class="icon-pencil"></i> '+data[ruleFieldName]+'</span>');
 				
-				if(data.conditionCategory != "Always" && data.conditionCatagory != "none" && data.conditionCatagory != "") {
+				if(data.conditionCategory != "Always" && data.conditionCategory != "none" && data.conditionCategory != "") {
 					
 					var $hiddenAutoComplete = jQuery("#"+$ruleField.attr("data-state")+"-workflowRule-"+ruleFieldName);
 
 					$hiddenAutoComplete.attr("data-source", $hiddenAutoComplete.attr("data-"+data.conditionCategory));
 
 					switch(data.conditionCategory) {
-				    case "College":
-				        conditionCategory = theValue;
-				        break;
-				    case "Department":
-				        conditionIDString = theValue;
-				        break;
-				    case "Program":
-				        recipientString = theValue;	        
-				        break;
-				    default:
-				        break;
-				}
+					    case "College":
+					        conditionCategory = theValue;
+					        $("#Submitted-workflowRule-condition input").attr("data-source",$("#Submitted-workflowRule-condition input").attr("data-Colleges"));
+					        break;
+					    case "Department":
+					        conditionIDString = theValue;
+					        $("#Submitted-workflowRule-condition input").attr("data-source",$("#Submitted-workflowRule-condition input").attr("data-Departments"));
+					        break;
+					    case "Program":
+					        recipientString = theValue;	        
+					        $("#Submitted-workflowRule-condition input").attr("data-source",$("#Submitted-workflowRule-condition input").attr("data-Programs"));
+					        break;
+					    default:
+					        break;
+					}
 
 					$("."+data.state+"-"+data.id+"-condition").show();	
 				} else {
