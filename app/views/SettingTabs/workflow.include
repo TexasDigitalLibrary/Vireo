@@ -117,28 +117,16 @@
 				</select>
 			</div>
 			<div id="${state.getBeanName()}-workflowRule-condition" style="display:none;">
-			    %{
-			       // fill type ahead with the list of pre-defined colleges, or if there are none of those then all colleges actually used
-			       def colleges = [];
-			       for (def college : settingRepo.findAllColleges()) {
-			           colleges.push(college.getName());
-			       }
-			       if (colleges.size() == 0) {
-			           for (String college : subRepo.findAllColleges()) {
-			             colleges.push(college);
-			           }
-			       }
-			    }%
-                <input id="${state.getBeanName()}-workflowRule-condition-colleges" class="field"
+                <input class="field"
                   data-id=""
                   data-state=""
                   data-ruleFieldName=""
                   data-items="20"
                   data-provide="typeahead"
                   data-min-length="0"
-                  data-Colleges='[#{list items:colleges, as:'college'}"${college}"${ college_isLast ? "" : ","}#{/list}]'
-                  data-Departments='[#{list items:departments, as:'department'}"${department}"${ department_isLast ? "" : ","}#{/list}]'
-                  data-Programs='[#{list items:programs, as:'program'}"${program}"${ program_isLast ? "" : ","}#{/list}]'
+                  data-Colleges='[#{list items:colleges, as:'college'}"${college.getName()}"${ college_isLast ? "" : ","}#{/list}]'
+                  data-Departments='[#{list items:departments, as:'department'}"${department.getName()}"${ department_isLast ? "" : ","}#{/list}]'
+                  data-Programs='[#{list items:programs, as:'program'}"${program.getName()}"${ program_isLast ? "" : ","}#{/list}]'
                   data-source=""
                   />
 			</div>
