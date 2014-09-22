@@ -813,7 +813,7 @@ function createWorkflowEmailRuleHandler(jsonURL) {
 +	"<td class='edit-box'>" 
 +		"<ul class='unstyled'>" 
 +			"<li class='edit'>" 
-+				"<span id='"+data.state+"-"+data.id+"-conditionCategory' class='select' data-state='"+data.state+"' state-id='"+data.id+"' data-rulefieldname='conditionCategory'><i class='icon-pencil'></i> none</span>"
++				"<span id='"+data.state+"-"+data.id+"-conditionCategory' class='select' data-state='"+data.state+"' data-id='"+data.id+"' data-rulefieldname='conditionCategory'><i class='icon-pencil'></i> none</span>"
 +			"</li>"
 +		"</ul>" 
 +	"</td>"
@@ -833,7 +833,7 @@ function createWorkflowEmailRuleHandler(jsonURL) {
 +	"<td class='edit-box'>" 
 +		"<ul class='unstyled'>" 
 +			"<li class='edit'>" 
-+				"<span id='"+data.state+"-"+data.id+"-template' class='empty select' data-state='"+data.state+"' data-rulefieldname='templateString'>" 
++				"<span id='"+data.state+"-"+data.id+"-template' class='empty select' data-id='"+data.id+"' data-state='"+data.state+"' data-rulefieldname='templateString'>" 
 +					"<i class='icon-pencil'></i>   none"											
 +				"</span>"
 +			"</li>" 
@@ -842,7 +842,7 @@ function createWorkflowEmailRuleHandler(jsonURL) {
 +	"<td class='edit-box'>" 
 +		"<ul class='unstyled'>" 
 +			"<li class='edit'>" 
-+				"<span id='"+data.state+"-"+data.id+"-recipientString' class='empty' data-id='"+data.id+"' data-state='"+data.state+"' data-rulefieldname='recipientString'>" 
++				"<span id='"+data.state+"-"+data.id+"-recipientType' class='empty select' data-id='"+data.id+"' data-state='"+data.state+"' data-rulefieldname='recipientType'>" 
 +					"<i class='icon-pencil'></i>   none"											
 +				"</span>"
 +			"</li>" 
@@ -1073,7 +1073,7 @@ function cancelEditingHandler(){
 			}
 			
 			
-			jQuery(".editing").replaceWith('<span id="'+id+'" class="'+classValue+'" data-state="'+fieldItem.attr("data-state")+'" state-id="'+fieldItem.attr("data-id")+'" data-ruleFieldName="'+fieldItem.attr("data-ruleFieldName")+'">'+currentValue+'</span>');
+			jQuery(".editing").replaceWith('<span id="'+id+'" class="'+classValue+'" data-state="'+fieldItem.attr("data-state")+'" data-id="'+fieldItem.attr("data-id")+'" data-ruleFieldName="'+fieldItem.attr("data-ruleFieldName")+'">'+currentValue+'</span>');
 			
 		}
 		jQuery("#backup").remove();
@@ -1168,13 +1168,13 @@ function commitChangesHandler(eventTarget, jsonURL){
 				}
 
 			} else {
-				jQuery("div."+attrID).replaceWith('<span id="'+attrID+'" class="error '+classValue+' data-state="'+$ruleField.attr("data-state")+'" state-id="'+$ruleField.attr("data-id")+'" data-ruleFieldName="'+$ruleField.attr("data-ruleFieldName")+'"><i class="icon-pencil"></i> '+currentValue+' <a href="#" class="tooltip-icon" rel="tooltip" title="'+data.message+'"><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
+				jQuery("div."+attrID).replaceWith('<span id="'+attrID+'" class="error '+classValue+' data-state="'+$ruleField.attr("data-state")+'" data-id="'+$ruleField.attr("data-id")+'" data-ruleFieldName="'+$ruleField.attr("data-ruleFieldName")+'"><i class="icon-pencil"></i> '+currentValue+' <a href="#" class="tooltip-icon" rel="tooltip" title="'+data.message+'"><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
 				jQuery('.tooltip-icon').tooltip();
 			}
 			//refreshAll();
 		},
 		error:function(){
-			jQuery("div."+attrID).replaceWith('<span id="'+attrID+'" class="error '+classValue+'" data-state="'+$ruleField.attr("data-state")+'" state-id="'+$ruleField.attr("data-id")+'" data-ruleFieldName="'+$ruleField.attr("data-ruleFieldName")+'">'+jQuery("#backup").html()+' <a href="#" class="tooltip-icon" rel="tooltip" title="There was an error with your request."><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
+			jQuery("div."+attrID).replaceWith('<span id="'+attrID+'" class="error '+classValue+'" data-state="'+$ruleField.attr("data-state")+'" data-id="'+$ruleField.attr("data-id")+'" data-ruleFieldName="'+$ruleField.attr("data-ruleFieldName")+'">'+jQuery("#backup").html()+' <a href="#" class="tooltip-icon" rel="tooltip" title="There was an error with your request."><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
 			jQuery('.tooltip-icon').tooltip();
 		}
 		
