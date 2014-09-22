@@ -791,56 +791,67 @@ function workflowEmailRuleHandler($this, $select, options) {
  */
 function createWorkflowEmailRuleHandler(jsonURL) {
 	return function() {
-		var target = $(this).attr("data-state");
-		console.log(target);
-		var id = "#"+ target + "-workflow-add";
+		var state = $(this).attr("data-state");
+		console.log(state);
+		var id = "#"+ state + "-workflow-add";
 		var $element = $(id);
-		var $targetElem = $("#"+target+"-workflow-list")
+		var $targetElem = $("#"+state+"-workflow-list")
 
 		var reqData = new Object;
-		reqData.state = target;
-		reqData.conditionCategory = $("#"+target+"-workflow-add-conditionCatagorySelector").children("option:selected").text();
-		reqData.conditionIDString = $("#"+target+"-workflow-add-conditionSelector").val();
-		reqData.recipientString = $("#"+target+"-workflow-add-recipientStringSelector").val();
-		reqData.templateString = $("#"+target+"-workflow-add-templateSelector").val();
+		reqData.state = state;
+		reqData.conditionCategory = ""
+		reqData.conditionIDString = ""
+		reqData.recipientType = ""
+		reqData.templateString = ""
 		$targetElem.addClass("waiting");
 		
 		var successCallback = function(data) {
 			$targetElem.removeClass("waiting");
-			console.log(data);
-			resetForm();
 
-			var newRow = "<tr> \
-							<td>if</td> \
-							<td class=\"edit-box\"> \
-								<ul class=\"unstyled\"> \
-									<li class=\"edit\"> \
-										<span id=\""+data.state+"-"+data.id+"-condition\" class=\"empty\" data-id=\""+data.id+"\" data-state=\""+data.state+"\" data-ruleFieldName=\"conditionCategory\"> \
-											<i class=\"icon-pencil\"></i> none \
-										</span> \
-									</li> \
-								</ul> \
-							</td> \
-							<td>then email</td> \
-							<td class=\"edit-box\"> \
-								<ul class=\"unstyled\"> \
-									<li class=\"edit\"> \
-										<span id=\""+data.state+"-"+data.id+"-template\" class=\"empty\"  data-state=\""+data.state+"\" data-ruleFieldName=\"templateString\"> \
-											<i class=\"icon-pencil\"></i> none \
-										</span> \
-									</li> \
-								</ul> \
-							</td> \
-							<td class=\"edit-box\"> \
-								<ul class=\"unstyled\"> \
-									<li class=\"edit\"> \
-										<span id=\""+data.state+"-"+data.id+"-recipientString\" class=\"empty\" data-id=\""+data.id+"\" data-state=\""+data.state+"\" data-ruleFieldName=\"recipientString\"> \
-											<i class=\"icon-pencil\"></i> none \
-										</span> \
-									</li> \
-								</ul> \
-							</td> \
-						</tr>"
+			var newRow = "<tr id='"+data.state+"-'"+data.id+">" 
++	"<td><span class='"+data.state+"-"+data.id+"-condition' style='display: none;'>if</span></td>" 
++	"<td class='edit-box'>" 
++		"<ul class='unstyled'>" 
++			"<li class='edit'>" 
++				"<span id='"+data.state+"-"+data.id+"-conditionCategory' class='select' data-state='"+data.state+"' state-id='"+data.id+"' data-rulefieldname='conditionCategory'><i class='icon-pencil'></i> none</span>"
++			"</li>"
++		"</ul>" 
++	"</td>"
++	"<td>"
++	"<span class='"+data.state+"-"+data.id+"-condition' style='display: none;'>=</span>"
++	"</td>"
++	"<td class='edit-box'>" 
++		"<ul class='unstyled "+data.state+"-"+data.id+"-condition' style='display: none;''>"
++			"<li class='edit'>" 
++				"<span id='"+data.state+"-"+data.id+"-condition' class='empty autoComplete' data-id='"+data.id+"' data-state='"+data.state+"' data-rulefieldname='condition'>" 
++					"<i class='icon-pencil'></i> none" 											
++				"</span>" 
++			"</li>" 
++		"</ul>" 
++	"</td>" 
++	"<td><span class='"+data.state+"-"+data.id+"-condition' style='display: none;''>then </span>email</td>" 
++	"<td class='edit-box'>" 
++		"<ul class='unstyled'>" 
++			"<li class='edit'>" 
++				"<span id='"+data.state+"-"+data.id+"-template' class='empty select' data-state='"+data.state+"' data-rulefieldname='templateString'>" 
++					"<i class='icon-pencil'></i>   none"											
++				"</span>"
++			"</li>" 
++		"</ul>" 
++	"</td>" 
++	"<td class='edit-box'>" 
++		"<ul class='unstyled'>" 
++			"<li class='edit'>" 
++				"<span id='"+data.state+"-"+data.id+"-recipientString' class='empty' data-id='"+data.id+"' data-state='"+data.state+"' data-rulefieldname='recipientString'>" 
++					"<i class='icon-pencil'></i>   none"											
++				"</span>"
++			"</li>" 
++		"</ul>" 
++	"</td>"
++	"<td>"
++		"<a href='#' class='removeRule' data-id='"+data.id+"'><em class='icon-trash'></em>"
++	"</a></td>"
++ "</tr>"
 
 			$targetElem.append(newRow);
 
@@ -850,22 +861,15 @@ function createWorkflowEmailRuleHandler(jsonURL) {
 
 		var failureCallback = function(message) {
 			$targetElem.removeClass("waiting");
-			resetForm();
 			return false;
 		}
 
-		var resetForm = function() {
-			$("#"+target+"-workflow-add-conditionCatagorySelector").val("");
-			$("#"+target+"-workflow-add-conditionSelector").html("");
-			$("#"+target+"-workflow-add-recipientStringSelector").val("");
-			$("#"+target+"-workflow-add-templateSelector").val("");
-		}
 		
 		jQuery.ajax({
 			url : jsonURL,
 			data : {
 				id: null,
-				stateString: target,
+				stateString: state,
 				conditionCategory: reqData.conditionCategory,
 				conditionIDString: reqData.conditionIDString,
 				recipientString: reqData.recipientString,
@@ -874,7 +878,7 @@ function createWorkflowEmailRuleHandler(jsonURL) {
 			dataType : 'json',
 			type : 'POST',
 			success : function(data) {
-
+				console.log(data);
 				if (data.success) {
 					successCallback(data);
 				} else {
@@ -894,6 +898,66 @@ function createWorkflowEmailRuleHandler(jsonURL) {
 }
 
 /**
+ * Remove a workflow email rule
+ * 
+ * @param jsonURL
+ *            The url where templates may be saved.
+ * @returns A Callback function
+ */
+function removeWorkflowEmailRuleHandler(jsonURL) {
+	return function() {
+		
+		$this = $(this);
+
+		$this.html("confirm remove?");
+
+		
+		$this.click(function() {
+			
+			var backupHTML = $this.html();
+			$this.html("");	
+			$this.parents("tr").addClass("waiting");
+
+			successCallback = function() {
+				$this.parents("tr").fadeOut(300);
+			}
+
+			var failureCallback = function(message) {
+				$this.html(backupHTML);	
+				$this.parents("tr").removeClass("waiting");
+				return false;
+			}
+			console.log($this.attr('data-id'));
+			jQuery.ajax({
+				url : jsonURL,
+				data : {
+					ruleID: $this.attr('data-id')
+				},
+				dataType : 'json',
+				type : 'POST',
+				success : function(data) {
+
+					if (data.success) {
+						successCallback(data);
+					} else {
+						failureCallback(data.message)
+					}
+
+				},
+				error : function(e) {
+					console.log(e);
+					failureCallback("Unable to communicate with the server.");
+				}
+			});
+
+		});
+		
+
+		return false;
+	}
+}
+
+/**
  * Swap to input field function
  */
 function swapToInputHandler(){	
@@ -907,9 +971,7 @@ function swapToInputHandler(){
 			jQuery("#backup").remove()
 
 			var editItem = jQuery(this);
-
 			
-			editItem.find("br").replaceWith("\n");
 			var value = jQuery.trim(escapeQuotes(editItem.text()));
 						
 			var checkValue = value.replace(/\t/g,"");
@@ -920,17 +982,32 @@ function swapToInputHandler(){
 			if(checkValue=="none" || checkValue=="null"){
 				value="";
 				jQuery("body").append('<div id="backup"></div>')
-			} else if(editItem.hasClass("select")) {
+			} else {
+				//Make back up info			
+				jQuery("body").append('<div id="backup">'+editItem.html()+'</div>')
+				
+			} 
+
+			if(editItem.hasClass("select")) {
+
+				console.log(editItem.attr("data-ruleFieldName"));
+
+				jQuery("#"+editItem.attr("data-state")+"-workflowRule-"+editItem.attr("data-ruleFieldName")+" select").attr("data-id", editItem.attr("data-id"));
+				jQuery("#"+editItem.attr("data-state")+"-workflowRule-"+editItem.attr("data-ruleFieldName")+" select").attr("data-state", editItem.attr("data-state"));
+				jQuery("#"+editItem.attr("data-state")+"-workflowRule-"+editItem.attr("data-ruleFieldName")+" select").attr("data-ruleFieldName", editItem.attr("data-ruleFieldName"));
+
 				//Select Drop Downs
-				var selectCode = '<div id="'+editItem.attr("data-state")+'-workflowRuleOptions" class="editing select">';
-				selectCode += jQuery("#"+editItem.attr("data-state")+"-workflowRuleOptions").html();
+				var selectCode = '<div id="'+editItem.attr("data-state")+'-workflowRule-'+editItem.attr("data-ruleFieldName")+'" class="editing select" >';
+				selectCode += jQuery("#"+editItem.attr("data-state")+"-workflowRule-"+editItem.attr("data-ruleFieldName")+"").html();
 				selectCode += '<br /><i class="icon-remove" title="cancel"></i>&nbsp<i class="icon-ok" title="commit"></i></div>';
 				editItem.replaceWith(selectCode);
-				jQuery("#"+editItem.attr("data-state")+"-workflowRuleOptions .field option").each(function(){
+				jQuery("#"+editItem.attr("data-state")+"-workflowRule-"+editItem.attr("data-ruleFieldName")+" .field option").each(function(){
 					if(jQuery(this).text()==value){
 						jQuery(this).attr("selected","selected");
 					}
 				})
+
+
 				
 			} else {
 				//Make back up info			
@@ -946,7 +1023,7 @@ function swapToInputHandler(){
 
 			if(editItem.hasClass("autocomplete")) { 
 				// Autocomplete fields
-				var selectCode = '<div id="'+editItem.attr("id")+'" class="editing autocomplete" data-id="'+editItem.attr("data-id")+'" data-state="'+editItem.attr("data-state")+'" data-ruleFieldName="'+editItem.attr("data-ruleFieldName")+'">';
+				var selectCode = '<div id="'+editItem.attr("id")+'" class="editing autocomplete" data-id="'+editItem.attr("data-id")+'" data-state="'+editItem.attr("data-state")+'" data-ruleFieldName="'+editItem.attr("data-ruleFieldName")+' data-oldID="'+$(this).attr("id")+'">';
 				selectCode += jQuery("#"+editItem.attr("id")+"Options").html();
 				selectCode += '<br /><i class="icon-remove" title="cancel"></i>&nbsp<i class="icon-ok" title="commit"></i></div>';
 				editItem.replaceWith(selectCode);
@@ -973,56 +1050,30 @@ function cancelEditingHandler(){
 		$this = jQuery(".icon-remove");
 		if($this.closest(".add").length){
 			jQuery(".add").remove();
-		}else if($this.closest("#committeeMembers").length){
-
-			var oldValue = jQuery("#backup").html();			
-			var swap = jQuery(".editing");
-			swap.removeClass("editing");
-			swap.addClass("editCommitteeMember")
-			swap.html(oldValue);			
 		} else {
 			var classValue = '';
 			var fieldItem;
-			if(jQuery(".editing").hasClass("textarea")){
-				classValue = classValue + 'textarea ';
-				fieldItem = jQuery(".editing textarea");
-			} else if(jQuery(".editing").hasClass("select")){
+			if(jQuery(".editing").hasClass("select")){
 				classValue = classValue + 'select ';
 				fieldItem = jQuery(".editing select");
 			} else if(jQuery(".editing").hasClass("autocomplete")) { 
 				classValue = classValue + 'autocomplete';
 				fieldItem = jQuery(".editing autocomplete");
-			} else if(jQuery(".editing").hasClass("subject")) {
-				classValue = classValue + 'subject';
-			} else if(jQuery(".editing").hasClass("date")) {
-				classValue = classValue + 'date';
 			} else {		
 				fieldItem = jQuery(".editing input");
 			}
-			var id=jQuery(".editing").attr("id");
+
+			var id=fieldItem.attr("id");
 			
 			var currentValue = jQuery("#backup").html();
 			
 			if(!currentValue){
 				currentValue = '<i class="icon-pencil"></i> none';
-				classValue += "empty ";
-			}
-			
-			if(jQuery(".editing").hasClass("textarea")){
-				currentValue = nl2br(currentValue);
+				classValue += " empty ";
 			}
 			
 			
-			jQuery(".editing").replaceWith('<span id="'+id+'" class="'+classValue+'">'+currentValue+'</span>');
-			
-			if (jQuery("#backup").attr("data-primary"))
-				jQuery("#"+id).attr("data-primary",jQuery("#backup").attr("data-primary"));
-			
-			if (jQuery("#backup").attr("data-secondary"))
-				jQuery("#"+id).attr("data-secondary",jQuery("#backup").attr("data-secondary"));
-			
-			if (jQuery("#backup").attr("data-tertiary"))
-				jQuery("#"+id).attr("data-tertiary",jQuery("#backup").attr("data-tertiary"));
+			jQuery(".editing").replaceWith('<span id="'+id+'" class="'+classValue+'" data-state="'+fieldItem.attr("data-state")+'" state-id="'+fieldItem.attr("data-id")+'" data-ruleFieldName="'+fieldItem.attr("data-ruleFieldName")+'">'+currentValue+'</span>');
 			
 		}
 		jQuery("#backup").remove();
@@ -1040,29 +1091,32 @@ function cancelEditingHandler(){
  * @param subId (The submission id)
  */
 function commitChangesHandler(eventTarget, jsonURL){
-	var classValue = '';
-	var ruleField;
-
+	var classValue = "";
+	var ruleField;  
 	if(jQuery(".editing").hasClass("select")){
+		classValue = classValue + 'select ';
 		$ruleField = jQuery(".editing select");
 	} else if(jQuery(".editing").hasClass("autocomplete")){
+		classValue = classValue + 'autocomplete ';
 		$ruleField = jQuery(".editing autocomplete");
 	} else {
 		$ruleField = jQuery(".editing input");
 	}
 	
 	var parent = eventTarget.parent();
+	console.log(parent)
 	
 	var $ruleFieldName = $ruleField.attr("data-ruleFieldName");
 	var theValue = $ruleField.val();
 	
 	var id = $ruleField.attr("data-id");
+	var attrID = $ruleField.attr("data-state") +"-"+ $ruleField.attr("data-id") +"-"+ $ruleField.attr("data-ruleFieldName");
+	console.log(classValue);
 	var stateString = $ruleField.attr("data-state");
 	var conditionCategory = "";
 	var conditionIDString = "";
 	var recipientString = "";
 	var templateString = "";
-
 
 	switch($ruleFieldName) {
 	    case "conditionCategory":
@@ -1071,7 +1125,7 @@ function commitChangesHandler(eventTarget, jsonURL){
 	    case "conditionIDString":
 	        conditionIDString = theValue;
 	        break;
-	    case "recipientString":
+	    case "recipientType":
 	        recipientString = theValue;	        
 	        break;
 	    case "templateString":
@@ -1081,7 +1135,7 @@ function commitChangesHandler(eventTarget, jsonURL){
 	        break;
 	}
 
-	jQuery(".editing").replaceWith('<div class="'+id+' progress progress-striped active"><div class="bar" style="width:100%"></div></div>');
+	jQuery(".editing").replaceWith('<div class="'+attrID+' progress progress-striped active"><div class="bar" style="width:100%"></div></div>');
 	
 	var reqObj = {
 		stateString: stateString,
@@ -1100,35 +1154,27 @@ function commitChangesHandler(eventTarget, jsonURL){
 		
 		success:function(data){
 			
-			var currentValue;
-			
+			if(data.success) {
 
-			console.log(data.state)
-			
+				console.log(data[$ruleField.attr("data-ruleFieldName")]);
+				console.log(data.conditionCategory != "Always" && data.conditionCatagory != "none");
 
-
-			if(data.value){
-				currentValue = nl2br(data.value);
-			} else {
-				currentValue = "none";
-				classValue = classValue + 'empty ';
-			}
-			
-			if(data.success){
+				jQuery("div."+attrID).replaceWith('<span id="'+attrID+'" class="'+classValue+'" data-state="'+$ruleField.attr("data-state")+'" data-id="'+$ruleField.attr("data-id")+'" data-ruleFieldName="'+$ruleField.attr("data-ruleFieldName")+'"><i class="icon-pencil"></i> '+data[$ruleField.attr("data-ruleFieldName")]+'</span>');
 				
-				jQuery("div."+id).replaceWith('<span id="'+id+'" class="'+classValue+'"><i class="icon-pencil"></i> '+data.conditionCatagory+'</span>');
-				if(data.degreeLevel != null){
-					jQuery("#degreeLevel").text(data.degreeLevel);
-					jQuery("#degreeLevel").removeClass("empty");
+				if(data.conditionCategory != "Always" && data.conditionCatagory != "none" && data.conditionCatagory != "") {
+					$("."+data.state+"-"+data.id+"-condition").show();	
+				} else {
+					$("."+data.state+"-"+data.id+"-condition").hide();	
 				}
+
 			} else {
-				jQuery("div."+id).replaceWith('<span id="'+id+'" class="error '+classValue+'"><i class="icon-pencil"></i> '+currentValue+' <a href="#" class="tooltip-icon" rel="tooltip" title="'+data.message+'"><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
+				jQuery("div."+attrID).replaceWith('<span id="'+attrID+'" class="error '+classValue+' data-state="'+$ruleField.attr("data-state")+'" state-id="'+$ruleField.attr("data-id")+'" data-ruleFieldName="'+$ruleField.attr("data-ruleFieldName")+'"><i class="icon-pencil"></i> '+currentValue+' <a href="#" class="tooltip-icon" rel="tooltip" title="'+data.message+'"><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
 				jQuery('.tooltip-icon').tooltip();
 			}
 			//refreshAll();
 		},
 		error:function(){
-			jQuery("div."+id).replaceWith('<span id="'+id+'" class="error '+classValue+'">'+jQuery("#backup").html()+' <a href="#" class="tooltip-icon" rel="tooltip" title="There was an error with your request."><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
+			jQuery("div."+attrID).replaceWith('<span id="'+attrID+'" class="error '+classValue+'" data-state="'+$ruleField.attr("data-state")+'" state-id="'+$ruleField.attr("data-id")+'" data-ruleFieldName="'+$ruleField.attr("data-ruleFieldName")+'">'+jQuery("#backup").html()+' <a href="#" class="tooltip-icon" rel="tooltip" title="There was an error with your request."><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
 			jQuery('.tooltip-icon').tooltip();
 		}
 		

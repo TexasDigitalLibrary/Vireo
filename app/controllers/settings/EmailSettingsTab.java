@@ -23,6 +23,7 @@ import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.WorkflowEmailRule;
+import org.tdl.vireo.model.jpa.JpaEmailTemplateImpl;
 import org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleConditionImpl;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
@@ -113,7 +114,7 @@ public class EmailSettingsTab extends SettingsTab {
 	@Security(RoleType.MANAGER)
 	public static void addEditEmailWorkflowRuleJSON(String id, String stateString, String conditionCategory, String conditionIDString, String recipientString, String templateString) {
 		try {
-			
+			Logger.info(recipientString);
 			if (stateString == null || stateString.trim().length() == 0)
 				throw new IllegalArgumentException("State could not be determined");
 			
@@ -123,6 +124,7 @@ public class EmailSettingsTab extends SettingsTab {
 			WorkflowEmailRule rule;
 			String conditionCatagoryJSON = "";
 			String conditionIdJSON = "";
+			String conditionDisplayJSON = "";
 			String recipientTypeJSON = "";
 			String templateJSON = "";
 			
@@ -149,20 +151,25 @@ public class EmailSettingsTab extends SettingsTab {
 				if (conditionIDString != null && conditionIDString.trim().length() != 0) {
 					condition.setConditionId(Long.parseLong(conditionIDString));
 					conditionIdJSON = rule.getCondition().getConditionId().toString();
+					//conditionDisplayJSON = settingRepo.findCollege(Long.parseLong(conditionIDString)).getName();
 					condition.save();
 				}
 				
 				EmailTemplate template;
 				if (templateString != null && templateString.trim().length() != 0) {
-					template = settingRepo.findEmailTemplateByName(templateString);
-					rule.setEmailTemplate(template);
+										
+					template = settingRepo.findEmailTemplate(Long.parseLong(templateString));
+					rule.setEmailTemplate((JpaEmailTemplateImpl)template);
+					templateJSON = rule.getEmailTemplate().name;
 					
 				} 
 				
 				if (recipientString != null && recipientString.trim().length() != 0) {
+					
+					Logger.info(recipientString);
+					
 					rule.setRecipientType(RecipientType.valueOf(recipientString));
 					recipientTypeJSON = rule.getRecipientType().name();
-					templateJSON = rule.getEmailTemplate().getName();
 				}
 				
 			} else {
@@ -175,13 +182,29 @@ public class EmailSettingsTab extends SettingsTab {
 			
 			Logger.info("%s (%d: %s) has added workflow email rule #%d.\n");
 			
-			renderJSON("{ \"success\": \"true\", \"id\": "+rule.getId()+", \"state\": \""+rule.getAssociatedState().getBeanName()+"\",\"conditionCatagory\": \""+conditionCatagoryJSON+"\",\"conditionId\": \""+conditionIdJSON+"\",\"recipientType\": \""+recipientTypeJSON+"\",\"template\": \""+templateJSON+"\" }");
-				
+			renderJSON("{ \"success\": \"true\", \"id\": "+rule.getId()+", \"state\": \""+rule.getAssociatedState().getBeanName()+"\",\"conditionCategory\": \""+conditionCatagoryJSON+"\",\"conditionId\": \""+conditionIdJSON+"\",\"conditionDisplayJSON\": \""+conditionDisplayJSON+"\",\"recipientType\": \""+recipientTypeJSON+"\",\"templateString\": \""+templateJSON+"\" }");
+			
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to create the workflow email rule.");
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
 		
+		}
+	}
+	
+	@Security(RoleType.MANAGER)
+	public static void removeEmailWorkflowRuleJSON(String ruleID, String stateString) { 
+		try {
+			
+			WorkflowEmailRule rule = settingRepo.findWorkflowEmailRule(Long.parseLong(ruleID));
+			
+			rule.delete();
+
+			renderJSON("{ \"success\": \"true\" }");
+		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to remove email template");
+			String message = escapeJavaScript(re.getMessage());
+			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
 		}
 	}
 	

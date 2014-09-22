@@ -2,6 +2,7 @@ package org.tdl.vireo.model.jpa;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.tdl.vireo.model.EmailTemplate;
@@ -29,6 +30,12 @@ public class JpaEmailTemplateImpl extends JpaAbstractModel<JpaEmailTemplateImpl>
 	
 	@Column(nullable = false)
 	public Boolean systemRequired;
+	
+	@Column
+	public Long templateId;
+	
+	@OneToOne(mappedBy = "emailTemplate")
+    private JpaWorkflowEmailRuleImpl ruleId;
 
 	/**
 	 * Create a new JpaEmailTemplateImpl

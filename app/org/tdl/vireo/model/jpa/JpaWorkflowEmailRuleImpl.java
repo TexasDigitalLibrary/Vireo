@@ -16,7 +16,6 @@ import javax.persistence.Table;
 
 import org.tdl.vireo.email.RecipientType;
 import org.tdl.vireo.model.AbstractWorkflowRuleCondition;
-import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.WorkflowEmailRule;
@@ -51,8 +50,9 @@ public class JpaWorkflowEmailRuleImpl extends JpaAbstractModel<JpaWorkflowEmailR
 	@Column(nullable = true)
 	public Long emailGroupId;
 	
-	@OneToOne(targetEntity = JpaEmailTemplateImpl.class)
-	public EmailTemplate emailTemplate;
+	@OneToOne
+	@JoinColumn(name = "templateId")
+	public JpaEmailTemplateImpl emailTemplate;
 
 	/**
 	 * Create a new WorkflowEmailRule model.
@@ -95,7 +95,7 @@ public class JpaWorkflowEmailRuleImpl extends JpaAbstractModel<JpaWorkflowEmailR
 	}
 
 	@Override
-	public void setEmailTemplate(EmailTemplate emailTemplate) {
+	public void setEmailTemplate(JpaEmailTemplateImpl emailTemplate) {
 		this.emailTemplate = emailTemplate;
 	}
 
@@ -160,7 +160,7 @@ public class JpaWorkflowEmailRuleImpl extends JpaAbstractModel<JpaWorkflowEmailR
 	}
 
 	@Override
-	public EmailTemplate getEmailTemplate() {
+	public JpaEmailTemplateImpl getEmailTemplate() {
 		return this.emailTemplate;
 	}
 

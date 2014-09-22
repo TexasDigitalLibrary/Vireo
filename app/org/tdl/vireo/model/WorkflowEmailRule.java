@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.tdl.vireo.email.RecipientType;
+import org.tdl.vireo.model.jpa.JpaEmailTemplateImpl;
 import org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleConditionImpl;
 
 /**
@@ -16,13 +17,13 @@ public interface WorkflowEmailRule extends AbstractWorkflowRule {
 	/**
 	 * @return The email template attached to this rule
 	 */
-	public EmailTemplate getEmailTemplate();
+	public JpaEmailTemplateImpl getEmailTemplate();
 
 	/**
 	 * @param emailTemplate
 	 *            Set the email template associated with this rule
 	 */
-	public void setEmailTemplate(EmailTemplate emailTemplate);
+	public void setEmailTemplate(JpaEmailTemplateImpl emailTemplate);
 
 	/**
 	 * @param emailWorkflowRuleContion

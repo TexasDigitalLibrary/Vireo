@@ -6,6 +6,7 @@ public interface AbstractWorkflowRuleCondition extends AbstractOrderedModel {
 	 * @return The id of this workflow rule condition
 	 */
 	public Long getConditionId();
+	public String getConditionDisplayName();
 	public void setConditionId(Long id);
 	
 	/**
