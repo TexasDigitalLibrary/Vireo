@@ -795,7 +795,7 @@ function createWorkflowEmailRuleHandler(jsonURL) {
 		console.log(state);
 		var id = "#"+ state + "-workflow-add";
 		var $element = $(id);
-		var $targetElem = $("#"+state+"-workflow-list")
+		var $targetElem = $("#"+state+"-workflow-list");
 
 		var reqData = new Object;
 		reqData.state = state;
@@ -808,7 +808,7 @@ function createWorkflowEmailRuleHandler(jsonURL) {
 		var successCallback = function(data) {
 			$targetElem.removeClass("waiting");
 
-			var newRow = "<tr id='"+data.state+"-'"+data.id+">" 
+			var newRow = "<tr id='"+data.state+"-"+data.id+"'>" 
 +	"<td><span class='"+data.state+"-"+data.id+"-condition' style='display: none;'>if</span></td>" 
 +	"<td class='edit-box'>" 
 +		"<ul class='unstyled'>" 
@@ -821,7 +821,7 @@ function createWorkflowEmailRuleHandler(jsonURL) {
 +	"<span class='"+data.state+"-"+data.id+"-condition' style='display: none;'>=</span>"
 +	"</td>"
 +	"<td class='edit-box'>" 
-+		"<ul class='unstyled "+data.state+"-"+data.id+"-condition' style='display: none;''>"
++		"<ul class='unstyled "+data.state+"-"+data.id+"-condition' style='display: none;'>"
 +			"<li class='edit'>" 
 +				"<span id='"+data.state+"-"+data.id+"-condition' class='empty autoComplete' data-id='"+data.id+"' data-state='"+data.state+"' data-rulefieldname='condition'>" 
 +					"<i class='icon-pencil'></i> none" 											
@@ -884,7 +884,6 @@ function createWorkflowEmailRuleHandler(jsonURL) {
 				} else {
 					failureCallback(data.message)
 				}
-
 			},
 			error : function(e) {
 				console.log(e);
@@ -990,8 +989,6 @@ function swapToInputHandler(){
 
 			if(editItem.hasClass("select")) {
 
-				console.log(editItem.attr("data-ruleFieldName"));
-
 				jQuery("#"+editItem.attr("data-state")+"-workflowRule-"+editItem.attr("data-ruleFieldName")+" select").attr("data-id", editItem.attr("data-id"));
 				jQuery("#"+editItem.attr("data-state")+"-workflowRule-"+editItem.attr("data-ruleFieldName")+" select").attr("data-state", editItem.attr("data-state"));
 				jQuery("#"+editItem.attr("data-state")+"-workflowRule-"+editItem.attr("data-ruleFieldName")+" select").attr("data-ruleFieldName", editItem.attr("data-ruleFieldName"));
@@ -1009,7 +1006,14 @@ function swapToInputHandler(){
 
 
 				
-			} else if(editItem.hasClass("autocomplete")) { 
+			} else if(editItem.hasClass("autocomplete")) {
+
+				jQuery("#"+editItem.attr("data-state")+"-workflowRule-"+editItem.attr("data-ruleFieldName")+" input").attr("data-id", editItem.attr("data-id"));
+				jQuery("#"+editItem.attr("data-state")+"-workflowRule-"+editItem.attr("data-ruleFieldName")+" input").attr("data-state", editItem.attr("data-state"));
+				jQuery("#"+editItem.attr("data-state")+"-workflowRule-"+editItem.attr("data-ruleFieldName")+" input").attr("data-ruleFieldName", editItem.attr("data-ruleFieldName"));
+
+
+
 				// Autocomplete fields
 				var selectCode = '<div id="'+editItem.attr("data-state")+'-workflowRule-'+editItem.attr("data-ruleFieldName")+'" class="editing autocomplete">';
 				selectCode += jQuery("#"+editItem.attr("data-state")+"-workflowRule-"+editItem.attr("data-ruleFieldName")).html();
@@ -1017,6 +1021,22 @@ function swapToInputHandler(){
 				editItem.replaceWith(selectCode);
 				
 				jQuery("#"+editItem.attr("id")+" .field").val(value);
+
+				var $categoryElem = $("#"+editItem.attr("id")+"Category");
+
+				switch($categoryElem.text().trim()) {
+				    case "College":
+				        $("#Submitted-workflowRule-condition input").attr("data-source",$("#Submitted-workflowRule-condition input").attr("data-Colleges"));
+				        break;
+				    case "Department":
+				        $("#Submitted-workflowRule-condition input").attr("data-source",$("#Submitted-workflowRule-condition input").attr("data-Departments"));
+				        break;
+				    case "Program":
+				        $("#Submitted-workflowRule-condition input").attr("data-source",$("#Submitted-workflowRule-condition input").attr("data-Programs"));
+				        break;
+				    default:
+				        break;
+				}
 				
 			} else {
 				//Make back up info			
@@ -1066,8 +1086,8 @@ function cancelEditingHandler(){
 				classValue = classValue + 'select ';
 				fieldItem = jQuery(".editing select");
 			} else if(jQuery(".editing").hasClass("autocomplete")) { 
-				classValue = classValue + 'autocomplete';
-				fieldItem = jQuery(".editing autocomplete");
+				classValue = classValue + ' autocomplete';
+				fieldItem = jQuery(".editing input");
 			} else {		
 				fieldItem = jQuery(".editing input");
 			}
@@ -1107,7 +1127,7 @@ function commitChangesHandler(eventTarget, jsonURL){
 		$ruleField = jQuery(".editing select");
 	} else if(jQuery(".editing").hasClass("autocomplete")){
 		classValue = classValue + 'autocomplete ';
-		$ruleField = jQuery(".editing autocomplete");
+		$ruleField = jQuery(".editing input");
 	} else {
 		$ruleField = jQuery(".editing input");
 	}
@@ -1120,19 +1140,28 @@ function commitChangesHandler(eventTarget, jsonURL){
 	
 	var id = $ruleField.attr("data-id");
 	var attrID = $ruleField.attr("data-state") +"-"+ $ruleField.attr("data-id") +"-"+ $ruleField.attr("data-ruleFieldName");
-	console.log(classValue);
 	var stateString = $ruleField.attr("data-state");
 	var conditionCategory = "";
 	var conditionIDString = "";
 	var recipientString = "";
 	var templateString = "";
 
+
+	var currentConditionCategory = $("#"+attrID+"Category").text().trim().toLowerCase()+"sArray";
+
 	switch(ruleFieldName) {
 	    case "conditionCategory":
 	        conditionCategory = theValue;
 	        break;
-	    case "conditionIDString":
-	        conditionIDString = theValue;
+	    case "condition":
+
+	        conditionString = theValue;
+
+	        $(jsDataObjects[currentConditionCategory]).each(function(key, condition) {
+	        	if(condition.name == theValue)
+	        		conditionIDString = condition.id;
+	        });
+
 	        break;
 	    case "recipientType":
 	        recipientString = theValue;	        
@@ -1173,18 +1202,21 @@ function commitChangesHandler(eventTarget, jsonURL){
 
 					$hiddenAutoComplete.attr("data-source", $hiddenAutoComplete.attr("data-"+data.conditionCategory));
 
+					if(data.conditionId != "") {
+						var $correspondingCodition = $(attrID.replace("Category", ""));
+						$correspondingCodition.html("i class='icon-pencil'></i> none");
+					}
+
+
 					switch(data.conditionCategory) {
 					    case "College":
 					        conditionCategory = theValue;
-					        $("#Submitted-workflowRule-condition input").attr("data-source",$("#Submitted-workflowRule-condition input").attr("data-Colleges"));
 					        break;
 					    case "Department":
 					        conditionIDString = theValue;
-					        $("#Submitted-workflowRule-condition input").attr("data-source",$("#Submitted-workflowRule-condition input").attr("data-Departments"));
 					        break;
 					    case "Program":
 					        recipientString = theValue;	        
-					        $("#Submitted-workflowRule-condition input").attr("data-source",$("#Submitted-workflowRule-condition input").attr("data-Programs"));
 					        break;
 					    default:
 					        break;

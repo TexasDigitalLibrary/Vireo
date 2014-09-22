@@ -20,7 +20,7 @@
 				<tbody class="workflow-list" id="${state.getBeanName()}-workflow-list">
 					#{list items:RULES, as:'rule'}
 						#{if state == rule.getAssociatedState()}
-						    <tr id="${state.getBeanName()}-"> 
+						    <tr id="${state.getBeanName()}-${rule.getId()}"> 
 								<td><span class="${state.getBeanName()}-${rule.getId()}-condition"
 								#{if !rule.getCondition()?.getConditionType()?.name() || rule.getCondition()?.getConditionType()?.name() == "Always"}
 										style="display:none";
@@ -50,7 +50,7 @@
 									> 
 										<li class="edit"> 
 											<span id="${state.getBeanName()}-${rule.getId()}-condition" class="empty autocomplete" data-id="${rule.getId()}" data-state="${state.getBeanName()}" data-ruleFieldName="condition"> 
-												<i class="icon-pencil"></i> #{if !rule.getCondition()?.getConditionType()} none#{/if}
+												<i class="icon-pencil"></i> ${rule?.getCondition()?.getConditionIdDisplayName()}
 											</span> 
 										</li> 
 									</ul> 
@@ -116,7 +116,30 @@
 					<option value="Student">Student</option>
 				</select>
 			</div>
-			<div id="${state.getBeanName()}-workflowRule-condition" style="display:none;">
+			<div id="${state.getBeanName()}-workflowRule-condition" style="display:none;" class="empty autocomplete">
+                
+                %{
+			       def autoCompleteValues = [];
+
+			       if(rule?.getCondition()?.getConditionType()?.name() == "College") {
+				       for (def college : colleges) {
+				           autoCompleteValues.push(college.getName());
+				       }
+				    }
+			       
+			        if(rule?.getCondition()?.getConditionType()?.name() == "Department") {
+				       for (def department : departments) {
+				           autoCompleteValues.push(department.getName());
+				       }
+				    }
+
+				    if(rule?.getCondition()?.getConditionType()?.name() == "Program") {
+				       for (def program : programs) {
+				           autoCompleteValues.push(program.getName());
+				       }
+				    }
+
+			    }%
                 <input class="field"
                   data-id=""
                   data-state=""
@@ -127,7 +150,7 @@
                   data-Colleges='[#{list items:colleges, as:'college'}"${college.getName()}"${ college_isLast ? "" : ","}#{/list}]'
                   data-Departments='[#{list items:departments, as:'department'}"${department.getName()}"${ department_isLast ? "" : ","}#{/list}]'
                   data-Programs='[#{list items:programs, as:'program'}"${program.getName()}"${ program_isLast ? "" : ","}#{/list}]'
-                  data-source=""
+                  data-source=''
                   />
 			</div>
 
