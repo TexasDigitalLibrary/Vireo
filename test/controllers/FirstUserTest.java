@@ -31,7 +31,9 @@ import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.SubmissionRepository;
+import org.tdl.vireo.model.WorkflowEmailRule;
 import org.tdl.vireo.security.SecurityContext;
+import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
 
 import play.modules.spring.Spring;
@@ -529,5 +531,29 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 			// TODO Auto-generated method stub
 			return null;
 		}
+
+		@Override
+        public WorkflowEmailRule createWorkflowEmailRule(State associatedState) {
+	        // TODO Auto-generated method stub
+	        return null;
+        }
+
+		@Override
+        public WorkflowEmailRule findWorkflowEmailRule(Long id) {
+	        // TODO Auto-generated method stub
+	        return null;
+        }
+
+		@Override
+        public List<WorkflowEmailRule> findWorkflowEmailRulesByState(State type) {
+	        // TODO Auto-generated method stub
+	        return null;
+        }
+
+		@Override
+        public List<WorkflowEmailRule> findAllWorkflowEmailRules() {
+	        // TODO Auto-generated method stub
+	        return null;
+        }
 	}
 }
