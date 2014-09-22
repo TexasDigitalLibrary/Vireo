@@ -386,6 +386,11 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			if (name == null || name.trim().length() == 0)
 				throw new IllegalArgumentException("Name is required");
 			
+			// make sure emails isn't null
+			if(emails == null) {
+				emails = "";
+			}
+			
 			// remove whitespace from email address string
 			emails = emails.replaceAll("\\s+","");
 
@@ -534,6 +539,11 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			if (name == null || name.trim().length() == 0)
 				throw new IllegalArgumentException("Name is required");
 			
+			// make sure emails isn't null
+			if(emails == null) {
+				emails = "";
+			}
+			
 			// remove whitespace from email address string
             emails = emails.replaceAll("\\s+","");
 
@@ -679,6 +689,11 @@ public class ConfigurableSettingsTab extends SettingsTab {
 		try {
 			if (name == null || name.trim().length() == 0)
 				throw new IllegalArgumentException("Name is required");
+			
+			// make sure emails isn't null
+			if(emails == null) {
+				emails = "";
+			}
 			
 			// remove whitespace from email address string
             emails = emails.replaceAll("\\s+","");
@@ -1815,19 +1830,23 @@ public class ConfigurableSettingsTab extends SettingsTab {
 	 * @return - JSON encoded string representing the hashMap of emails
 	 */
 	private static String createEmailsJsonAndAddToMap(String emails, HashMap<Integer, String> emails_map){
-		List<String> emails_list = Arrays.asList(emails != null ? emails.split(",") : new String[0]);
-		int i =0;
-		String jsonEmails = "[";                
-        for(String email : emails_list) {
-			// validate email
-			if(!validateEmailAddress(email)){
-				throw new IllegalArgumentException("Invalid E-Mail Address detected! [" + email + "]");
-			}
-            emails_map.put(i, email);
-            jsonEmails += "{\"id\":" +i+ ",\"email\":\""+email+"\"},";
-            i++;
-        }
-        jsonEmails = jsonEmails.substring(0,jsonEmails.length()-1);
+		String jsonEmails = "[";
+		try {
+			int i = 0;
+			List<String> emails_list = (emails.length() == 0 ? new ArrayList<String>() : Arrays.asList(emails.split(",")));
+	        for(String email : emails_list) {
+				// validate email
+				if(!validateEmailAddress(email)){
+					throw new IllegalArgumentException("Invalid E-Mail Address detected! [" + email + "]");
+				}
+	            emails_map.put(i, email);
+	            jsonEmails += "{\"id\":" +i+ ",\"email\":\""+email+"\"},";
+	            i++;
+	        }
+	        jsonEmails = jsonEmails.substring(0,jsonEmails.length()-1);
+		} catch (NullPointerException e) {
+			// Do nothing! (in case emails was null)
+		}
 		jsonEmails += "]";
 		
 		return jsonEmails;

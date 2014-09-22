@@ -23,6 +23,7 @@ import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.security.SecurityContext;
 
+import play.Logger;
 import play.db.jpa.JPA;
 import play.modules.spring.Spring;
 import play.mvc.Http.Response;
@@ -245,6 +246,7 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("name","New Program");
 		Response response = POST(EDIT_URL,params);
+		Logger.info("+++++++++++++++++response: %s", getContent(response));
 		assertContentMatch("\"success\": \"true\"", response);
 		
 		// Extract the id of the newly created action.
