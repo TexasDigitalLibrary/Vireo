@@ -98,7 +98,7 @@ jQuery(document).ready(function() {
 							data = JSON.parse(xhr.response);
 							if (data.success) {
 								jQuery(updateData.id).fadeTo("slow",0.5,function() {
-										jQuery(updateData.id).load(updateData.path+" "+updateData.id,function() {
+										jQuery(updateData.id).load(updateData.path+" "+updateData.id+" > *",function() {
 											jQuery(updateData.id).fadeTo("fast",1);
 											updateActionLog();
 										});
@@ -165,7 +165,7 @@ jQuery(document).ready(function() {
 				success:function(data){
 					if (data.success) {
 						jQuery(updateData.id).fadeTo("slow",0.5,function() {
-							jQuery(updateData.id).load(updateData.path+" "+updateData.id,function() {
+							jQuery(updateData.id).load(updateData.path+" "+updateData.id+" > *",function() {
 								jQuery(updateData.id).fadeTo("fast",1);
 								updateActionLog();
 							});
