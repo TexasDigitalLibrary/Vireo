@@ -145,6 +145,7 @@ public class EmailSettingsTab extends SettingsTab {
 				if (conditionCategory != null && conditionCategory.trim().length() != 0) {
 					condition.setConditionType(ConditionType.valueOf(conditionCategory));
 					condition.setConditionId(null);
+					conditionIdJSON = null;
 					conditionCategoryJSON = rule.getCondition().getConditionType().name();
 					condition.save();
 				}
@@ -178,14 +179,14 @@ public class EmailSettingsTab extends SettingsTab {
 			} else {
 				rule = settingRepo.createWorkflowEmailRule(associatedState);
 			}
-			
+
 			rules.add(rule);
 						
 			saveModelOrder(rules);
 			
 			Logger.info("%s (%d: %s) has added workflow email rule #%d.\n");
 			
-			renderJSON("{ \"success\": \"true\", \"id\": "+rule.getId()+", \"state\": \""+rule.getAssociatedState().getBeanName()+"\",\"conditionCategory\": \""+conditionCategoryJSON+"\",\"conditionId\": \""+conditionIdJSON+"\",\"conditionDisplayJSON\": \""+conditionDisplayJSON+"\",\"recipientType\": \""+recipientTypeJSON+"\",\"templateString\": \""+templateJSON+"\" }");
+			renderJSON("{ \"success\": \"true\", \"id\": "+rule.getId()+", \"state\": \""+rule.getAssociatedState().getBeanName()+"\",\"conditionCategory\": \""+conditionCategoryJSON+"\",\"condition\": \""+conditionIdJSON+"\",\"conditionDisplayJSON\": \""+conditionDisplayJSON+"\",\"recipientType\": \""+recipientTypeJSON+"\",\"templateString\": \""+templateJSON+"\" }");
 			
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to create the workflow email rule.");

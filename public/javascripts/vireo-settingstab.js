@@ -823,7 +823,7 @@ function createWorkflowEmailRuleHandler(jsonURL) {
 +	"<td class='edit-box'>" 
 +		"<ul class='unstyled "+data.state+"-"+data.id+"-condition' style='display: none;'>"
 +			"<li class='edit'>" 
-+				"<span id='"+data.state+"-"+data.id+"-condition' class='empty autoComplete' data-id='"+data.id+"' data-state='"+data.state+"' data-rulefieldname='condition'>" 
++				"<span id='"+data.state+"-"+data.id+"-condition' class='empty autocomplete' data-id='"+data.id+"' data-state='"+data.state+"' data-rulefieldname='condition'>" 
 +					"<i class='icon-pencil'></i> none" 											
 +				"</span>" 
 +			"</li>" 
@@ -1092,7 +1092,7 @@ function cancelEditingHandler(){
 				fieldItem = jQuery(".editing input");
 			}
 
-			var id=fieldItem.attr("id");
+			var id=fieldItem.attr(fieldItem.attr("data-state")+"-"+fieldItem.attr("data-id")+"-"+fieldItem.attr("data-ruleFieldName"));
 			
 			var currentValue = jQuery("#backup").html();
 			
@@ -1198,6 +1198,15 @@ function commitChangesHandler(eventTarget, jsonURL){
 				
 				if(data.conditionCategory != "Always" && data.conditionCategory != "none" && data.conditionCategory != "") {
 					
+					$(jsDataObjects[data.conditionCategory.trim().toLowerCase()+"sArray"]).each(function() {
+						if(this.id == data[ruleFieldName]){
+							$("#"+attrID).html("<i class='icon-pencil'></i> "+this.name);
+						}
+					});
+
+					if(data.condition == "null") $("#"+attrID.replace("Category", "")).html("<i class='icon-pencil'></i> none");
+
+
 					var $hiddenAutoComplete = jQuery("#"+$ruleField.attr("data-state")+"-workflowRule-"+ruleFieldName);
 
 					$hiddenAutoComplete.attr("data-source", $hiddenAutoComplete.attr("data-"+data.conditionCategory));
@@ -1207,15 +1216,17 @@ function commitChangesHandler(eventTarget, jsonURL){
 						$correspondingCodition.html("i class='icon-pencil'></i> none");
 					}
 
-
 					switch(data.conditionCategory) {
 					    case "College":
+					    	$("#Submitted-workflowRule-condition input").attr("data-source",$("#Submitted-workflowRule-condition input").attr("data-colleges"));
 					        conditionCategory = theValue;
 					        break;
 					    case "Department":
+					    	$("#Submitted-workflowRule-condition input").attr("data-source",$("#Submitted-workflowRule-condition input").attr("data-departments"));
 					        conditionIDString = theValue;
 					        break;
 					    case "Program":
+					    	$("#Submitted-workflowRule-condition input").attr("data-source",$("#Submitted-workflowRule-condition input").attr("data-programs"));
 					        recipientString = theValue;	        
 					        break;
 					    default:
