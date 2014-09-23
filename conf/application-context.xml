@@ -207,6 +207,14 @@
         <property name="jobManager" ref="JobManager"/>
         <property name="errorLog" ref="ErrorLog"/>
     </bean>
+    <bean id="ExportExcelService" class="org.tdl.vireo.export.impl.ExportExcelServiceImpl" scope="singleton">
+        <property name="personRepository" ref="PersonRepository"/>
+        <property name="submissionRepository" ref="SubmissionRepository"/>
+        <property name="securityContext" ref="SecurityContext"/>
+        <property name="searcher" ref="Searcher"/>
+        <property name="jobManager" ref="JobManager"/>
+        <property name="errorLog" ref="ErrorLog"/>
+    </bean>
     
     <!-- Deposit Protocols -->
     <bean id="Sword1Deposit" class="org.tdl.vireo.export.impl.Sword1DepositorImpl" scope="singleton">
@@ -425,6 +433,46 @@
 	        	</entry>
 	        </map>
 	    </property>
+    </bean>
+    <bean id="ExcelPackageExport" class="org.tdl.vireo.export.impl.ExcelPackagerImpl" scope="prototype">
+        <property name="displayName" value="Excel Package Export"/>
+        <property name="aggregated">
+          <value type="java.lang.Boolean">false</value>
+        </property>
+        <property name="attachmentTypeNames">
+          <map>
+              <entry key="UNKNOWN" >
+                <props></props>
+              </entry>
+              <entry key="PRIMARY">
+                <props></props>
+              </entry>
+              <entry key="SUPPLEMENTAL">
+                <props></props>
+              </entry>
+              <entry key="LICENSE">
+                <props></props>
+              </entry>
+              <entry key="ARCHIVED">
+                <props></props>
+              </entry>
+              <entry key="FEEDBACK">
+                <props></props>
+              </entry>
+              <entry key="SOURCE">
+                <props></props>
+              </entry>
+              <entry key="ADMINISTRATIVE">
+                <props></props>
+              </entry>
+          </map>
+      </property>
+    </bean>
+    <bean id="ExcelExport" class="org.tdl.vireo.export.impl.ExcelPackagerImpl" scope="prototype">
+        <property name="displayName" value="Excel Export"/>
+        <property name="aggregated">
+          <value type="java.lang.Boolean">true</value>
+        </property>
     </bean>
     <bean id="Marc21" class="org.tdl.vireo.export.impl.TemplatePackagerImpl" scope="prototype">
         <property name="personRepository" ref="PersonRepository"/>

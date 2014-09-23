@@ -11,6 +11,7 @@ import org.tdl.vireo.model.Submission;
  * Depositor.
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
+ * @author Gad Krumholz ( gad.krumholz@austin.utexas.edu )
  */
 public interface Packager {
 
@@ -18,6 +19,11 @@ public interface Packager {
 	 * @return The technical spring bean name of this packager implementation.
 	 */
 	public String getBeanName();
+
+	/**
+	 * @return The technical spring bean name of this packager's ExportService implementation.
+	 */
+	public String getExportServiceBeanName();
 
 	/**
 	 * @return The displayable name of this bean.

@@ -258,7 +258,12 @@ different blocks this gets around this problem because each is independent.
         <div class="sub-heading">SAVED FILTERS</div>
         <ul class="unstyled">
             #{list items:subRepo.findSearchFiltersByCreatorOrPublic(securityContext.getPerson()), as:'filter'}
-            <li><a href="@{FilterTab.ModifyFilters(nav)}?action=load&filter=${filter.getId()}">${filter.getName()}</a></li>
+				#{if filter.hasColumns()}
+					<li><a href="@{FilterTab.ModifyFilters(nav)}?action=load&filter=${filter.getId()}">[*]${filter.getName()}</a></li>
+				#{/if}
+				#{else}
+					<li><a href="@{FilterTab.ModifyFilters(nav)}?action=load&filter=${filter.getId()}">${filter.getName()}</a></li>
+				#{/else}
             #{/list}
         </ul>
     </div>

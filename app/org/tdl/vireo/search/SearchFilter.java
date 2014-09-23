@@ -342,4 +342,14 @@ public interface SearchFilter {
 	 *            The new end of the date range, may be null for infinite
 	 */
 	public void setDateRangeEnd(Date end);
+	
+	/**
+	 * @return The list of columns associated with this SearchFilter
+	 */
+	public List<SearchOrder> getColumns();
+	
+	/**
+	 * @param columns - The list of columns associated with this SearchFilter
+	 */
+	public void setColumns(List<SearchOrder> columns);
 }

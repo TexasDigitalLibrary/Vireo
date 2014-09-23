@@ -5,14 +5,12 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
+import org.tdl.vireo.batch.AssignService;
 import org.tdl.vireo.batch.CommentService;
 import org.tdl.vireo.batch.DeleteService;
 import org.tdl.vireo.batch.TransitionService;
-import org.tdl.vireo.batch.AssignService;
 import org.tdl.vireo.export.ChunkStream;
-import org.tdl.vireo.export.DepositService;
 import org.tdl.vireo.export.ExportService;
 import org.tdl.vireo.export.Packager;
 import org.tdl.vireo.job.JobManager;
@@ -56,7 +54,6 @@ public class FilterTab extends AbstractVireoController {
 	public static JobManager jobManager = Spring.getBeanOfType(JobManager.class);
 	public static TransitionService transitionService = Spring.getBeanOfType(TransitionService.class);
 	public static DeleteService deleteService = Spring.getBeanOfType(DeleteService.class);
-	public static ExportService exportService = Spring.getBeanOfType(ExportService.class);
 	public static AssignService assignService = Spring.getBeanOfType(AssignService.class);
 	public static CommentService commentService = Spring.getBeanOfType(CommentService.class);
 
@@ -73,7 +70,6 @@ public class FilterTab extends AbstractVireoController {
 			"SubmissionDirection",
 			"SubmissionOrderBy",
 			"SubmissionOffset",
-			"SubmissionColumns",
 			"SubmissionFacets",
 			"SubmissionResultsPerPage",
 		},
@@ -82,7 +78,6 @@ public class FilterTab extends AbstractVireoController {
 			"ActionLogDirection",
 			"ActionLogOrderBy",
 			"ActionLogOffset",
-			"ActionLogColumns",
 			"ActionLogFacets",
 			"ActionLogResultsPerPage"
 		}
@@ -97,9 +92,8 @@ public class FilterTab extends AbstractVireoController {
 	public final static int DIRECTION = 1;
 	public final static int ORDERBY = 2;
 	public final static int OFFSET = 3;
-	public final static int COLUMNS = 4;
-	public final static int FACETS = 5;
-	public final static int RESULTSPERPAGE = 6;
+	public final static int FACETS = 4;
+	public final static int RESULTSPERPAGE = 5;
 	
 	/**
 	 * Redirect to the list page.
@@ -128,15 +122,7 @@ public class FilterTab extends AbstractVireoController {
 		//////////
 		
 		// Load the acive filter from the cookie
-		ActiveSearchFilter activeFilter = Spring.getBeanOfType(ActiveSearchFilter.class);
-		Cookie filterCookie = request.cookies.get(NAMES[SUBMISSION][ACTIVE_FILTER]);
-		if (filterCookie != null && filterCookie.value != null && filterCookie.value.trim().length() > 0) {
-			try {
-				activeFilter.decode(filterCookie.value);
-			} catch (RuntimeException re) {
-				Logger.warn(re,"Unable to decode search filter: "+filterCookie.value);
-			}
-		}
+		ActiveSearchFilter activeFilter = getActiveSearchFilter(SUBMISSION);
 		
 		// Step 2:  Run the current filter search
 		//////////
@@ -179,17 +165,7 @@ public class FilterTab extends AbstractVireoController {
 		String nav = "list";
 		
 		// Get a list of columns to display
-		List<SearchOrder> columns = new ArrayList<SearchOrder>();
-		Cookie columnsCookie = request.cookies.get(NAMES[SUBMISSION][COLUMNS]);
-		if (columnsCookie != null && columnsCookie.value != null && columnsCookie.value.trim().length() > 0) {
-			try {
-				String[] ids = columnsCookie.value.split(",");
-				for(String id : ids)
-					columns.add(SearchOrder.find(Integer.valueOf(id)));
-			} catch (RuntimeException re) {
-				Logger.warn(re,"Unable to decode column order: "+columnsCookie.value);
-			}
-		}
+		List<SearchOrder> columns = activeFilter.getColumns();
 		if (columns.size() == 0)
 			columns = getDefaultColumns(SUBMISSION);
 		
@@ -256,15 +232,7 @@ public class FilterTab extends AbstractVireoController {
 		//////////
 		
 		// Load the acive filter from the cookie
-		ActiveSearchFilter activeFilter = Spring.getBeanOfType(ActiveSearchFilter.class);
-		Cookie cookie = request.cookies.get(NAMES[ACTION_LOG][ACTIVE_FILTER]);
-		if (cookie != null && cookie.value != null && cookie.value.trim().length() > 0) {
-			try {
-				activeFilter.decode(cookie.value);
-			} catch (RuntimeException re) {
-				Logger.warn(re,"Unable to decode search filter: "+cookie.value);
-			}
-		}
+		ActiveSearchFilter activeFilter = getActiveSearchFilter(ACTION_LOG);
 		
 		// Step 2:  Run the current filter search
 		//////////
@@ -308,17 +276,7 @@ public class FilterTab extends AbstractVireoController {
 		String nav = "log";
 		
 		// Get a list of columns to display
-		List<SearchOrder> columns = new ArrayList<SearchOrder>();
-		Cookie columnsCookie = request.cookies.get(NAMES[ACTION_LOG][COLUMNS]);
-		if (columnsCookie != null && columnsCookie.value != null && columnsCookie.value.trim().length() > 0) {
-			try {
-				String[] ids = columnsCookie.value.split(",");
-				for(String id : ids)
-					columns.add(SearchOrder.find(Integer.valueOf(id)));
-			} catch (RuntimeException re) {
-				Logger.warn(re,"Unable to decode column order: "+columnsCookie.value);
-			}
-		}
+		List<SearchOrder> columns = activeFilter.getColumns();
 		if (columns.size() == 0)
 			columns = getDefaultColumns(ACTION_LOG);
 		
@@ -417,16 +375,18 @@ public class FilterTab extends AbstractVireoController {
 		// will split these up and retrieve the actual search object for each
 		// one and arrange in a list. This will ensure that they are all valid
 		// ids.
-		List<SearchOrder> columns = new ArrayList<SearchOrder>();
-		String columnsString = params.get("columns");
-		String[] columnIds = columnsString.split(",");
-		for (String columnId : columnIds) {
-			String[] parts = columnId.split("_");
-
-			SearchOrder column = SearchOrder.find(Integer.valueOf(parts[1]));
-			columns.add(column);
+		boolean set_default_columns = (params.get("default_columns") != null);
+		List<SearchOrder> columns = getDefaultColumns(type);
+		if(!set_default_columns){
+			String columnsString = params.get("columns");
+			String[] columnIds = columnsString.split(",");
+			for (String columnId : columnIds) {
+				String[] parts = columnId.split("_");
+	
+				SearchOrder column = SearchOrder.find(Integer.valueOf(parts[1]));
+				columns.add(column);
+			}
 		}
-
 		// Check that column has at least the ID field.
 		if (columns.contains(SearchOrder.ID)) {
 
@@ -438,9 +398,10 @@ public class FilterTab extends AbstractVireoController {
 					columnsSerialized += ",";
 				columnsSerialized += column.getId();
 			}
-
+			ActiveSearchFilter activeFilter = getActiveSearchFilter(type);
+			activeFilter.setColumns(columns);
 			// Save as a cookie.
-			response.setCookie(NAMES[type][COLUMNS], columnsSerialized, COOKIE_DURATION);
+			response.setCookie(NAMES[type][ACTIVE_FILTER], activeFilter.encode(), COOKIE_DURATION);
 		}
 		
 		// Handle results per page
@@ -458,7 +419,6 @@ public class FilterTab extends AbstractVireoController {
 		
 		error("Unknown customize navigation control type");
 	}
-
 	
 	/**
 	 * Modify the current active filter.
@@ -492,15 +452,12 @@ public class FilterTab extends AbstractVireoController {
 			type = ACTION_LOG;
 		
 		// Load the active filter from the cookie
-		ActiveSearchFilter activeFilter = Spring.getBeanOfType(ActiveSearchFilter.class);
-		Cookie cookie = request.cookies.get(NAMES[type][ACTIVE_FILTER]);
-		if (cookie != null && cookie.value != null && cookie.value.trim().length() > 0) {
-			try {
-				activeFilter.decode(cookie.value);
-			} catch (RuntimeException re) {
-				Logger.warn(re,"Unable to decode search filter: "+cookie.value);
-			}
-		}
+		ActiveSearchFilter activeFilter = getActiveSearchFilter(type);
+		
+		// Load the active SearchOrder from the cookie
+		List<SearchOrder> columns = activeFilter.getColumns();
+        if (columns.size() == 0)
+            columns = getDefaultColumns(ACTION_LOG);
 		
 		String action = params.get("action");
 		if ("add".equals(action)) {
@@ -514,8 +471,11 @@ public class FilterTab extends AbstractVireoController {
 		} else if ("save".equals(action)) {
 			String name = params.get("name");
 			boolean publicFlag = false;
+			boolean hasColumnsFlag = false;
 			if (params.get("public") != null)
 				publicFlag = true;
+			if (params.get("columns") != null)
+				hasColumnsFlag = true;
 			
 			if (name != null && name.trim().length() > 0 ) {
 			
@@ -525,8 +485,12 @@ public class FilterTab extends AbstractVireoController {
 					namedFilter = subRepo.createSearchFilter(person, name);
 				}
 				
-				namedFilter.setPublic(publicFlag);
 				activeFilter.copyTo(namedFilter);
+				namedFilter.setPublic(publicFlag);
+				// if we are not saving the columns clear them out (in case they got copied over from activeFilter)
+				if(!hasColumnsFlag) {
+					namedFilter.setColumns(new ArrayList<SearchOrder>());
+				}
 				namedFilter.save();
 			}
 			
@@ -545,8 +509,15 @@ public class FilterTab extends AbstractVireoController {
 			Long filterId = params.get("filter",Long.class);
 			NamedSearchFilter savedFilter = subRepo.findSearchFilter(filterId);
 			
-			if (savedFilter.isPublic() || savedFilter.getCreator() == person)
-				activeFilter.copyFrom(savedFilter);
+			if (savedFilter.isPublic() || savedFilter.getCreator() == person) {
+				if(!savedFilter.hasColumns()) {
+					List<SearchOrder> activeColumns = activeFilter.getColumns();
+					activeFilter.copyFrom(savedFilter);
+					activeFilter.setColumns(activeColumns);
+				} else {
+					activeFilter.copyFrom(savedFilter);
+				}
+			}
 			
 		} else if ("clear".equals(action)) {
 			// Reset the users current filter by clearing it completely.
@@ -654,15 +625,7 @@ public class FilterTab extends AbstractVireoController {
 	public static void batchTransition(String state, Long depositLocationId) {
 
 		// Step 1, get the current filter
-		ActiveSearchFilter filter = Spring.getBeanOfType(ActiveSearchFilter.class);
-		Cookie filterCookie = request.cookies.get(NAMES[SUBMISSION][ACTIVE_FILTER]);
-		if (filterCookie != null && filterCookie.value != null && filterCookie.value.trim().length() > 0) {
-			try {
-				filter.decode(filterCookie.value);
-			} catch (RuntimeException re) {
-				Logger.warn(re,"Unable to decode search filter: "+filterCookie.value);
-			}
-		}
+		ActiveSearchFilter filter = getActiveSearchFilter(SUBMISSION);
 		
 		// Step 2, Lookup the location.
 		DepositLocation location = null;
@@ -696,15 +659,7 @@ public class FilterTab extends AbstractVireoController {
 	public static void batchAssign(Long assignTo) {
 		
 		// Get the current filter
-		ActiveSearchFilter filter = Spring.getBeanOfType(ActiveSearchFilter.class);
-		Cookie filterCookie = request.cookies.get(NAMES[SUBMISSION][ACTIVE_FILTER]);
-		if (filterCookie != null && filterCookie.value != null && filterCookie.value.trim().length() > 0) {
-			try {
-				filter.decode(filterCookie.value);
-			} catch (RuntimeException re) {
-				Logger.warn(re,"Unable to decode search filter: "+filterCookie.value);
-			}
-		}
+		ActiveSearchFilter filter = getActiveSearchFilter(SUBMISSION);
 		
 		// Kick off the batch assign to
 		JobMetadata job = assignService.assign(filter, assignTo);
@@ -734,15 +689,7 @@ public class FilterTab extends AbstractVireoController {
 		}
 		
 		// Get the current filter
-		ActiveSearchFilter filter = Spring.getBeanOfType(ActiveSearchFilter.class);
-		Cookie filterCookie = request.cookies.get(NAMES[SUBMISSION][ACTIVE_FILTER]);
-		if (filterCookie != null && filterCookie.value != null && filterCookie.value.trim().length() > 0) {
-			try {
-				filter.decode(filterCookie.value);
-			} catch (RuntimeException re) {
-				Logger.warn(re,"Unable to decode search filter: "+filterCookie.value);
-			}
-		}
+		ActiveSearchFilter filter = getActiveSearchFilter(SUBMISSION);
 		
 		// Kick off the batch comment/email
 		JobMetadata job = commentService.comment(filter, comment, subject, visibility, sendEmail, ccAdvisor);
@@ -759,18 +706,19 @@ public class FilterTab extends AbstractVireoController {
 	 * @param packager The packager to use for the export.
 	 */
 	@Security(RoleType.REVIEWER)
-	public static void batchExport(String packager) {
-			
-		// Step 1, get the current filter
-		ActiveSearchFilter filter = Spring.getBeanOfType(ActiveSearchFilter.class);
-		Cookie filterCookie = request.cookies.get(NAMES[SUBMISSION][ACTIVE_FILTER]);
-		if (filterCookie != null && filterCookie.value != null && filterCookie.value.trim().length() > 0) {
-			try {
-				filter.decode(filterCookie.value);
-			} catch (RuntimeException re) {
-				Logger.warn(re,"Unable to decode search filter: "+filterCookie.value);
-			}
+	public static void batchExport() {
+		String packager = params.get("packager");
+		String packager_extra = params.get("packager-extra");
+		long saved_filter_id = -1;
+		if(packager_extra != null && packager_extra.equals("Saved")){
+			saved_filter_id = Long.parseLong(params.get("packager-extra-saved-filters"));
 		}
+			
+		// Step 1, get the correct filter (either active or saved)
+		ActiveSearchFilter filter = getActiveSearchFilter(SUBMISSION);
+		if(saved_filter_id >= 0) {
+			filter.copyFrom(subRepo.findSearchFilter(saved_filter_id));
+		} 
 		
 		// Step 2, locate the packager
 		Packager exportPackage = (Packager) Spring.getBean(packager);
@@ -783,6 +731,7 @@ public class FilterTab extends AbstractVireoController {
 				filter==null ? "null" : filter.encode());
 		
 		// Step 3, Stream the chunks.
+		ExportService exportService = (ExportService) Spring.getBean(exportPackage.getExportServiceBeanName());
 		ChunkStream stream = exportService.export(exportPackage,filter);
 		
 		response.contentType = stream.getContentType();
@@ -826,7 +775,6 @@ public class FilterTab extends AbstractVireoController {
 		response.setCookie(NAMES[SUBMISSION][ACTIVE_FILTER],"",COOKIE_DURATION);
 		response.setCookie(NAMES[SUBMISSION][DIRECTION],"",COOKIE_DURATION);
 		response.setCookie(NAMES[SUBMISSION][ORDERBY],"",COOKIE_DURATION);
-		response.setCookie(NAMES[SUBMISSION][COLUMNS],"",COOKIE_DURATION);
 		response.setCookie(NAMES[SUBMISSION][FACETS],"",COOKIE_DURATION);
 		response.setCookie(NAMES[SUBMISSION][RESULTSPERPAGE],"",COOKIE_DURATION);		
 		session.remove(NAMES[SUBMISSION][OFFSET]);
@@ -835,7 +783,6 @@ public class FilterTab extends AbstractVireoController {
 		response.setCookie(NAMES[ACTION_LOG][ACTIVE_FILTER],"",COOKIE_DURATION);
 		response.setCookie(NAMES[ACTION_LOG][DIRECTION],"",COOKIE_DURATION);
 		response.setCookie(NAMES[ACTION_LOG][ORDERBY],"",COOKIE_DURATION);
-		response.setCookie(NAMES[ACTION_LOG][COLUMNS],"",COOKIE_DURATION);
 		response.setCookie(NAMES[ACTION_LOG][FACETS],"",COOKIE_DURATION);
 		response.setCookie(NAMES[ACTION_LOG][RESULTSPERPAGE],"",COOKIE_DURATION);		
 		session.remove(NAMES[ACTION_LOG][OFFSET]);
@@ -1141,13 +1088,31 @@ public class FilterTab extends AbstractVireoController {
 	}
 	
 	/**
+	 * Return the current active filter
+	 * @param type - SUBMISSION or ACTION_LOG
+	 * @return - {@link ActiveSearchFilter}
+	 */
+	private static ActiveSearchFilter getActiveSearchFilter(int type){
+		ActiveSearchFilter activeFilter = Spring.getBeanOfType(ActiveSearchFilter.class);
+		Cookie cookie = request.cookies.get(NAMES[type][ACTIVE_FILTER]);
+		if (cookie != null && cookie.value != null && cookie.value.trim().length() > 0) {
+			try {
+				activeFilter.decode(cookie.value);
+			} catch (RuntimeException re) {
+				Logger.warn(re,"Unable to decode search filter: "+cookie.value);
+			}
+		}
+		return activeFilter;
+	}
+
+	/**
 	 * Return the default columns when none are set.
 	 * 
 	 * @param type
 	 *            The screen type, either ACTION_LOG or SUBMISSION
 	 * @return A list of default columns.
 	 */
-	protected static List<SearchOrder> getDefaultColumns(int type) {
+	public static List<SearchOrder> getDefaultColumns(int type) {
 		
 		List<SearchOrder> columns = new ArrayList<SearchOrder>();
 		if (type == ACTION_LOG) {
