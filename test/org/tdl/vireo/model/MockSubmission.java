@@ -49,8 +49,11 @@ public class MockSubmission extends AbstractMock implements Submission {
 	public String degree;
 	public DegreeLevel level;
 	public String department;
+	public Long departmentId;
 	public String college;
+	public Long collegeId;
 	public String program;
+	public Long programId;
 	public String major;
 	public String documentType;
 	public Integer graduationYear;
@@ -427,6 +430,16 @@ public class MockSubmission extends AbstractMock implements Submission {
 	public void setDepartment(String department) {
 		this.department = department;
 	}
+	
+	@Override
+	public Long getDepartmentId() {
+	    return this.departmentId;
+	}
+	
+	@Override
+	public void setDepartmentId(Long id) {
+	    this.departmentId = id;
+	}
 
 	@Override
 	public String getCollege() {
@@ -439,6 +452,16 @@ public class MockSubmission extends AbstractMock implements Submission {
 	}
 	
 	@Override
+	public Long getCollegeId() {
+	    return this.collegeId;
+	}
+	
+	@Override
+	public void setCollegeId(Long id) {
+	    this.collegeId = id;
+	}
+	
+	@Override
 	public String getProgram() {
 		return program;
 	}
@@ -446,6 +469,16 @@ public class MockSubmission extends AbstractMock implements Submission {
 	@Override
 	public void setProgram(String program) {
 		this.program = program;
+	}
+	
+	@Override
+	public Long getProgramId() {
+	    return this.programId;
+	}
+	
+	@Override
+	public void setProgramId(Long id) {
+	    this.programId = id;
 	}
 
 	@Override

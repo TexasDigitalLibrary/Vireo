@@ -235,6 +235,12 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 			// TODO Auto-generated method stub
 			return null;
 		}
+		
+		@Override
+		public College findCollegeByName(String name) {
+		    // TODO Auto-generated method stub
+		    return null;
+		}
 
 		@Override
 		public List<College> findAllColleges() {
@@ -259,6 +265,12 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 			// TODO Auto-generated method stub
 			return null;
 		}
+		
+		@Override
+		public Program findProgramByName(String name) {
+		    // TODO Auto-generated method stub
+		    return null;
+		}
 
 		@Override
 		public List<Program> findAllPrograms() {
@@ -282,6 +294,12 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 		public Department findDepartment(Long id) {
 			// TODO Auto-generated method stub
 			return null;
+		}
+		
+		@Override
+		public Department findDepartmentByName(String name) {
+		    // TODO Auto-generated method stub
+		    return null;
 		}
 
 		@Override

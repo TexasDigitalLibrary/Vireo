@@ -84,6 +84,16 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	public College findCollege(Long id) {
 		return (College) JpaCollegeImpl.findById(id);
 	}
+	
+	@Override
+	public College findCollegeByName(String name) {
+	    for(College college : findAllColleges()) {
+	    	if(college.getName().equals(name)) {
+	    		return college;
+	    	}
+	    }
+	    return null;
+	}
 
 	@Override
 	public List<College> findAllColleges() {
@@ -106,6 +116,16 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	}
 	
 	@Override
+	public Program findProgramByName(String name) {
+	    for(Program program : findAllPrograms()) {
+	    	if(program.getName().equals(name)) {
+	    		return program;
+	    	}
+	    }
+	    return null;
+	}
+	
+	@Override
 	public List<Program> findAllPrograms() {
 		return (List) JpaProgramImpl.find("order by displayOrder").fetch();
 	}
@@ -124,6 +144,16 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	public Department findDepartment(Long id) {
 		return (Department) JpaDepartmentImpl.findById(id);
 
+	}
+	
+	@Override
+	public Department findDepartmentByName(String name) {
+	    for(Department department : findAllDepartments()) {
+	    	if(department.getName().equals(name)) {
+	    		return department;
+	    	}
+	    }
+	    return null;
 	}
 
 	@Override

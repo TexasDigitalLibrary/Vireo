@@ -2,7 +2,6 @@ package controllers.settings;
 
 import static org.tdl.vireo.constant.AppConfig.*;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,10 +12,14 @@ import java.util.regex.Pattern;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.tdl.vireo.email.RecipientType;
+import org.tdl.vireo.model.AbstractWorkflowRuleCondition.ConditionType;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.SettingsRepository;
+import org.tdl.vireo.model.WorkflowEmailRule;
 import org.tdl.vireo.security.SecurityContext;
+import org.tdl.vireo.state.State;
 
 import play.db.jpa.JPA;
 import play.modules.spring.Spring;
@@ -64,6 +67,73 @@ public class EmailSettingsTabTest extends AbstractVireoFunctionalTest {
 
 		Response response = GET(URL);
 		assertIsOk(response);
+	}
+	
+	/**
+	 * Test adding, editing, and removing Email Workflow Rules
+	 */
+	@Test
+	public void testAddingEditingRemovingEmailWorkflowRules() {
+		LOGIN();
+		
+		final String ADDEDIT_URL = Router.reverse("settings.EmailSettingsTab.addEditEmailWorkflowRuleJSON").url;
+		final String REMOVE_URL = Router.reverse("settings.EmailSettingsTab.removeEmailWorkflowRuleJSON").url;
+
+		Map<String,String> params = new HashMap<String,String>();
+		
+		// create an email workflow rule
+		params.put("stateString", "Submitted");
+		Response response = POST(ADDEDIT_URL, params);
+		assertIsOk(response);
+		assertContentMatch("\"success\": \"true\"", response);
+		// Extract the id of the newly created action.
+		Pattern ID_PATTERN = Pattern.compile("\"id\": ([0-9]+), ");
+		Matcher tokenMatcher = ID_PATTERN.matcher(getContent(response));
+		assertTrue(tokenMatcher.find());
+		String idString = tokenMatcher.group(1);
+		assertNotNull(idString);
+		Long id = Long.valueOf(idString);
+		
+		// Verify the action exists in the database.
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();		
+		WorkflowEmailRule emailRule = settingRepo.findWorkflowEmailRule(id);
+		assertEquals("Submitted", emailRule.getAssociatedState().getBeanName());
+		
+		// edit an email workflow rule
+		params.clear();
+		params.put("id", String.valueOf(id));
+		params.put("stateString", "Submitted");
+		params.put("conditionCategory", ConditionType.College.name());
+		params.put("conditionIDString", "1"); // College of Agriculture and Life Sciences [FROM TEST DATA]
+		params.put("recipientString", RecipientType.College.name());
+		params.put("templateString", "1"); // SYSTEM Initial Submission [FROM TEST DATA]
+		response = POST(ADDEDIT_URL, params);
+		assertIsOk(response);
+		assertContentMatch("\"success\": \"true\"", response);
+		// Verify the action exists in the database.
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		emailRule = settingRepo.findWorkflowEmailRule(id);
+		assertEquals("Submitted", emailRule.getAssociatedState().getBeanName());
+		assertEquals(ConditionType.College, emailRule.getCondition().getConditionType());
+		assertEquals(new Long(1), emailRule.getCondition().getConditionId());
+		assertEquals(RecipientType.College, emailRule.getRecipientType());
+		assertEquals(new Long(1), emailRule.getEmailTemplate().getId());
+		
+		// remove an email workflow rule
+		params.clear();
+		params.put("ruleID", String.valueOf(id));
+		response = POST(REMOVE_URL, params);
+		assertIsOk(response);
+		assertContentMatch("\"success\": \"true\"", response);
+		// Verify the action exists in the database.
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
+		assertNull(settingRepo.findWorkflowEmailRule(id));
 	}
 	
 	/**

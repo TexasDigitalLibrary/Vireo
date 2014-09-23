@@ -24,12 +24,6 @@ public interface WorkflowEmailRule extends AbstractWorkflowRule {
 	 *            Set the email template associated with this rule
 	 */
 	public void setEmailTemplate(JpaEmailTemplateImpl emailTemplate);
-
-	/**
-	 * @param emailWorkflowRuleContion
-	 *            Set the email group id associated with this rule
-	 */
-	public void setRecipient(Long emailGroupId);
 	
 	/**
 	 * @return The email group associated with this rule

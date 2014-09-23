@@ -114,6 +114,15 @@ public interface SettingsRepository {
 	public College findCollege(Long id);
 
 	/**
+	 * Find a college by unique name.
+	 * 
+	 * @param name
+	 *            The college's name.
+	 * @return The college object or null if not found.
+	 */
+	public College findCollegeByName(String name);
+	
+	/**
 	 * Find all college objects in order.
 	 * 
 	 * @return A list of all colleges, or an empty list if there are none.
@@ -148,6 +157,15 @@ public interface SettingsRepository {
 	 * @return The program object or null if not found.
 	 */
 	public Program findProgram(Long id);
+	
+	/**
+	 * Find a program by unique name.
+	 * 
+	 * @param name
+	 * 			The program's name.
+	 * @return The program object or null if not found.
+	 */
+	public Program findProgramByName(String name);
 	
 	/**
 	 * Find all program objects in order.
@@ -185,6 +203,15 @@ public interface SettingsRepository {
 	 * @return The department object or null if not found.
 	 */
 	public Department findDepartment(Long id);
+	
+	/**
+	 * Find department by unique name
+	 * 
+	 * @param name
+	 *            The department's name.
+	 * @return The department object or null if not found.
+	 */
+	public Department findDepartmentByName(String name);
 
 	/**
 	 * Find all department objects in order.
