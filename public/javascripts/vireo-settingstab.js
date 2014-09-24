@@ -1195,8 +1195,10 @@ function commitChangesHandler(eventTarget, jsonURL){
 			if(data.success) {
 
 				jQuery("div."+attrID).replaceWith('<span id="'+attrID+'" class="'+classValue+'" data-state="'+$ruleField.attr("data-state")+'" data-id="'+$ruleField.attr("data-id")+'" data-ruleFieldName="'+ruleFieldName+'"><i class="icon-pencil"></i> '+data[ruleFieldName]+'</span>');
-				
-				if(data.conditionCategory != "Always" && data.conditionCategory != "none" && data.conditionCategory != "") {
+
+				console.log(recipientString+templateString != "");
+
+				if(data.conditionCategory != "Always" && data.conditionCategory != "none" && data.conditionCategory != "") { //this condition is satisfied when selcting college, department or program
 					
 					$(jsDataObjects[data.conditionCategory.trim().toLowerCase()+"sArray"]).each(function() {
 						if(this.id == data[ruleFieldName]){
@@ -1235,7 +1237,8 @@ function commitChangesHandler(eventTarget, jsonURL){
 
 					$("."+data.state+"-"+data.id+"-condition").show();	
 				} else {
-					$("."+data.state+"-"+data.id+"-condition").hide();	
+					if(data.recipientType + data.templateString === "") //checks to make sure that template or recipient were not the fields being checked
+						$("."+data.state+"-"+data.id+"-condition").hide();					
 				}
 
 			} else {
