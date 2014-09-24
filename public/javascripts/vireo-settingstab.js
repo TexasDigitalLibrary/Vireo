@@ -1026,13 +1026,13 @@ function swapToInputHandler(){
 
 				switch($categoryElem.text().trim()) {
 				    case "College":
-				        $("#Submitted-workflowRule-condition input").attr("data-source",$("#Submitted-workflowRule-condition input").attr("data-Colleges"));
+				        $("#"+editItem.attr("data-state")+"-workflowRule-condition input").attr("data-source",$("#Submitted-workflowRule-condition input").attr("data-Colleges"));
 				        break;
 				    case "Department":
-				        $("#Submitted-workflowRule-condition input").attr("data-source",$("#Submitted-workflowRule-condition input").attr("data-Departments"));
+				        $("#"+editItem.attr("data-state")+"-workflowRule-condition input").attr("data-source",$("#Submitted-workflowRule-condition input").attr("data-Departments"));
 				        break;
 				    case "Program":
-				        $("#Submitted-workflowRule-condition input").attr("data-source",$("#Submitted-workflowRule-condition input").attr("data-Programs"));
+				        $("#"+editItem.attr("data-state")+"-workflowRule-condition input").attr("data-source",$("#Submitted-workflowRule-condition input").attr("data-Programs"));
 				        break;
 				    default:
 				        break;
@@ -1200,7 +1200,7 @@ function commitChangesHandler(eventTarget, jsonURL){
 
 				if(data.conditionCategory != "Always" && data.conditionCategory != "none" && data.conditionCategory != "") { //this condition is satisfied when selcting college, department or program
 					
-					$(jsDataObjects[data.conditionCategory.trim().toLowerCase()+"sArray"]).each(function() {
+					$(jsDataObjects[data.conditionCategory.trim().toLowerCase()+"sArray"]).each(function() {//this sets the calue of 
 						if(this.id == data[ruleFieldName]){
 							$("#"+attrID).html("<i class='icon-pencil'></i> "+this.name);
 						}
