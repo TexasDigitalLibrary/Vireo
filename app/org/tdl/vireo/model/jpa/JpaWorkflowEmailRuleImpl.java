@@ -9,12 +9,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.tdl.vireo.email.RecipientType;
 import org.tdl.vireo.model.AbstractWorkflowRuleCondition;
-import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.WorkflowEmailRule;
@@ -46,8 +46,8 @@ public class JpaWorkflowEmailRuleImpl extends JpaAbstractModel<JpaWorkflowEmailR
 	@JoinColumn(name = "conditionID")
 	public JpaEmailWorkflowRuleConditionImpl condition;
 		
-	@OneToOne
-	@JoinColumn(name = "templateId")
+	@ManyToOne
+	@JoinColumn(name = "emailTemplateId")
 	public JpaEmailTemplateImpl emailTemplate;
 
 	/**

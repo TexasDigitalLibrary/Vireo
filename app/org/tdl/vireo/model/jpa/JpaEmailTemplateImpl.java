@@ -30,12 +30,6 @@ public class JpaEmailTemplateImpl extends JpaAbstractModel<JpaEmailTemplateImpl>
 	
 	@Column(nullable = false)
 	public Boolean systemRequired;
-	
-	@Column
-	public Long templateId;
-	
-	@OneToOne(mappedBy = "emailTemplate")
-    private JpaWorkflowEmailRuleImpl ruleId;
 
 	/**
 	 * Create a new JpaEmailTemplateImpl
