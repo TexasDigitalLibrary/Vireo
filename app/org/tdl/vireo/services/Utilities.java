@@ -62,6 +62,18 @@ public class Utilities {
 	}	
 	
 	/**
+	 * Vireo expects an ORCiD to be in the form "xxxx-xxxx-xxxx-xxxy",
+	 * where x is numeric and y is alpha-numeric. This function will
+	 * determine is a give string is in the expected format.
+	 * @param orcid A string that should be an ORCiD.
+	 * @return true if the string is in the proper format.
+	 */
+	public static boolean validateOrcidFormat(String orcid) {
+		String pattern = "[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9a-zA-Z]";
+		return orcid.matches(pattern);
+	}
+	
+	/**
 	 * Given an ORCID identifier, this function will ping the ORCID public API and return
 	 * true if a user is found.  
 	 * @param orcid id in standard ORCID form "xxxx-xxxx-xxxx-xxxx"
