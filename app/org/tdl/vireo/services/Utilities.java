@@ -63,14 +63,62 @@ public class Utilities {
 	
 	/**
 	 * Vireo expects an ORCiD to be in the form "xxxx-xxxx-xxxx-xxxy",
-	 * where x is numeric and y is alpha-numeric. This function will
+	 * where x is numeric and y can be numeric or X. This function will
 	 * determine is a give string is in the expected format.
 	 * @param orcid A string that should be an ORCiD.
 	 * @return true if the string is in the proper format.
 	 */
 	public static boolean validateOrcidFormat(String orcid) {
-		String pattern = "[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9a-zA-Z]";
+		String pattern = "[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9X]";
 		return orcid.matches(pattern);
+	}
+	
+	/**
+	 * Vireo expects an ORCiD to be in the form "xxxx-xxxx-xxxx-xxxy",
+	 * where x is numeric and y can be numeric or X. Sometimes you might 
+	 * receive an ORCiD as a URL such as "http://www.orcid.org/xxxx-xxxx-xxxx-xxxy",
+	 * or without dashes. This function attempts to format a given string
+	 * into the format Vireo would prefer.
+	 * @param unformattedOrcid - An orcid as a string in various formats.
+	 * @return formattedOrcid - An orcid formatted as just an id with dashes.	 * 
+	 */
+	public static String formatOrcidAsDashedId(String unformattedOrcid) {
+		String formattedOrcid = unformattedOrcid.toUpperCase();
+		formattedOrcid = formattedOrcid.replace("HTTPS","");
+		Logger.info("Pass 1: " + formattedOrcid);
+		formattedOrcid = formattedOrcid.replace("HTTP","");
+		Logger.info("Pass 2: " + formattedOrcid);
+		formattedOrcid = formattedOrcid.replace("WWW","");
+		Logger.info("Pass 3: " + formattedOrcid);
+		formattedOrcid = formattedOrcid.replace("ORCID","");
+		Logger.info("Pass 4: " + formattedOrcid);
+		formattedOrcid = formattedOrcid.replace("ORG","");
+		Logger.info("Pass 5: " + formattedOrcid);
+		formattedOrcid = formattedOrcid.replace("COM","");
+		Logger.info("Pass 6: " + formattedOrcid);
+		formattedOrcid = formattedOrcid.replace("NET","");
+		Logger.info("Pass 7: " + formattedOrcid);
+		formattedOrcid = formattedOrcid.replace("/","");
+		Logger.info("Pass 8: " + formattedOrcid);
+		formattedOrcid = formattedOrcid.replace(":","");
+		Logger.info("Pass 9: " + formattedOrcid);
+		formattedOrcid = formattedOrcid.replace(".","");
+		Logger.info("Pass 10: " + formattedOrcid);
+		formattedOrcid = formattedOrcid.replace("\\s","");
+		Logger.info("Pass 11: " + formattedOrcid);
+		
+		if (validateOrcidFormat(formattedOrcid)) {
+			return formattedOrcid;
+		} else if (formattedOrcid.matches("[0-9]{15}[0-9X]")) {
+			formattedOrcid = insertPeriodically(formattedOrcid, "-", 4);
+			Logger.info("Pass 12: " + formattedOrcid);
+			if(validateOrcidFormat(formattedOrcid))
+				return formattedOrcid;
+			else
+				return unformattedOrcid;
+		} else {
+			return unformattedOrcid;
+		}		
 	}
 	
 	/**
@@ -190,4 +238,28 @@ public class Utilities {
 		else
 			return results.get(0);
 	}
+	
+	/**
+	 * A helper method to insert a specific character every X characters in a string.
+	 */
+	public static String insertPeriodically(
+		    String text, String insert, int period)
+		{
+		    StringBuilder builder = new StringBuilder(
+		         text.length() + insert.length() * (text.length()/period)+1);
+
+		    int index = 0;
+		    String prefix = "";
+		    while (index < text.length())
+		    {
+		        // Don't put the insert in the very first iteration.
+		        // This is easier than appending it *after* each substring
+		        builder.append(prefix);
+		        prefix = insert;
+		        builder.append(text.substring(index, 
+		            Math.min(index + period, text.length())));
+		        index += period;
+		    }
+		    return builder.toString();
+		}
 }
