@@ -103,7 +103,7 @@
         		<entry key="${auth.shib.attribute.currentMajor}" value="Performance Studies"/>
         		<entry key="${auth.shib.attribute.currentGraduationYear}" value="2012"/>
         		<entry key="${auth.shib.attribute.currentGraduationMonth}" value="04"/>
-        		<entry key="${auth.shib.attribute.orcid}" value="1234-1234-1234-1234"/>
+        		<entry key="${auth.shib.attribute.orcid}" value="http://orcid.org/1337-1337-1337-007X"/>
         	</util:map>
         </property>
     </bean>

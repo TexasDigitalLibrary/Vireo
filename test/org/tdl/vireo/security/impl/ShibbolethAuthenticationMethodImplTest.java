@@ -215,7 +215,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		headers.put("SHIB_major","major");
 		headers.put("SHIB_gradYear","2012");
 		headers.put("SHIB_gradMonth","05");
-		headers.put("SHIB_orcid","1234-1234-1234-1234");
+		headers.put("SHIB_orcid","http://orcid.org/1234-1234-1234-1234");
 
 		Request request = buildRequest(headers);
 		
@@ -245,6 +245,7 @@ public class ShibbolethAuthenticationMethodImplTest extends UnitTest {
 		assertEquals("major",person1.getCurrentMajor());
 		assertEquals(Integer.valueOf(2012),person1.getCurrentGraduationYear());
 		assertEquals(Integer.valueOf(05), person1.getCurrentGraduationMonth());
+		//The orcid should be stored just as a dashed id.
 		assertEquals("1234-1234-1234-1234", person1.getOrcid());
 	}
 	

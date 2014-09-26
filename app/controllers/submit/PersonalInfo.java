@@ -1,7 +1,6 @@
 package controllers.submit;
 
 import static org.tdl.vireo.constant.AppConfig.*;
-
 import static org.tdl.vireo.constant.FieldConfig.*;
 
 import java.io.IOException;
@@ -27,9 +26,9 @@ import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.services.Utilities;
 
 import au.com.bytecode.opencsv.CSVReader;
-
 import play.Logger;
 import play.Play;
 import controllers.Application;
@@ -127,7 +126,9 @@ public class PersonalInfo extends AbstractSubmitStep {
 		String firstName = params.get("firstName");
 		String middleName = params.get("middleName");
 		String lastName = params.get("lastName");
-		String orcid = params.get("orcid");
+		String orcid = null;
+		if(params.get("orcid")!=null)
+			orcid = Utilities.formatOrcidAsDashedId(params.get("orcid"));			
 		String birthYear = params.get("birthYear");
 		String program = params.get("program");
 		String college = params.get("college");
@@ -337,7 +338,6 @@ public class PersonalInfo extends AbstractSubmitStep {
 			permEmail = submitter.getPermanentEmailAddress();
 			currentPhone = submitter.getCurrentPhoneNumber();
 			currentAddress = submitter.getCurrentPostalAddress();
-			orcid = submitter.getOrcid();
 		}
 	
 	
@@ -392,8 +392,14 @@ public class PersonalInfo extends AbstractSubmitStep {
 		}
 		if (isFieldRequired(STUDENT_MIDDLE_NAME) && isEmpty(sub.getStudentMiddleName()))
 			validation.addError("middleName","Your middle name is required");
+		
+		//ORCiD
 		if (isFieldRequired(STUDENT_ORCID) && isEmpty(sub.getOrcid()))
-			validation.addError("orcid","Your ORCID id is required");
+			validation.addError("orcid","Your ORCiD is required");
+		if(sub.getOrcid()!=null) {
+			if (!Utilities.validateOrcidFormat(Utilities.formatOrcidAsDashedId(sub.getOrcid())))
+				validation.addError("orcid","Your ORCiD must be formatted XXXX-XXXX-XXXX-XXXX");
+		}
 	
 		// Birth year
 		if (sub.getStudentBirthYear() != null && sub.getStudentBirthYear() < 1900)
