@@ -15,6 +15,7 @@ import javax.mail.internet.InternetAddress;
 import javax.persistence.PersistenceException;
 
 import org.tdl.vireo.model.AbstractOrderedModel;
+import org.tdl.vireo.model.AdministrativeGroup;
 import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.CommitteeMemberRoleType;
 import org.tdl.vireo.model.Degree;
@@ -53,6 +54,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 		List<College> colleges = settingRepo.findAllColleges();
 		List<Program> programs = settingRepo.findAllPrograms();
 		List<Department> departments = settingRepo.findAllDepartments();
+		List<AdministrativeGroup> adminGroups = settingRepo.findAllAdministrativeGroups();
 		List<Major> majors = settingRepo.findAllMajors();
 		List<Degree> degrees = settingRepo.findAllDegrees();
 		List<DocumentType> docTypes = settingRepo.findAllDocumentTypes();
@@ -78,7 +80,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 				embargos,
 				
 				// Sortable lists
-				colleges, programs, departments, majors, degrees, docTypes, roleTypes, gradMonths, languages,
+				colleges, programs, departments, adminGroups, majors, degrees, docTypes, roleTypes, gradMonths, languages,
 				
 				// Locales
 				localeLanguages);
@@ -122,6 +124,8 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			models= (List) settingRepo.findAllPrograms();
 		} else if ("department".equals(modelType)) {
 			models = (List) settingRepo.findAllDepartments();
+		} else if ("adminGroup".equals(modelType)) {
+			models = (List) settingRepo.findAllAdministrativeGroups();
 		} else if ("major".equals(modelType)) {
 			models = (List) settingRepo.findAllMajors();
 		} else {
@@ -143,6 +147,9 @@ public class ConfigurableSettingsTab extends SettingsTab {
 				} else if ("department".equals(modelType)) {
 					if (item.equals(((Department) model).getName()))
 						itr.remove();
+				} else if ("adminGroup".equals(modelType)) {
+					if (item.equals(((AdministrativeGroup) model).getName()))
+						itr.remove();
 				} else if ("major".equals(modelType)) {
 					if (item.equals(((Major) model).getName()))
 						itr.remove();
@@ -162,6 +169,8 @@ public class ConfigurableSettingsTab extends SettingsTab {
 				models.add(settingRepo.createProgram(item));
 			} else if ("department".equals(modelType)) {
 				models.add(settingRepo.createDepartment(item));
+			} else if ("adminGroup".equals(modelType)) {
+				models.add(settingRepo.createAdministrativeGroup(item));
 			} else if ("major".equals(modelType)) {
 				models.add(settingRepo.createMajor(item));
 			} else {
@@ -180,6 +189,8 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			flash.put("open","availablePrograms");
 		} else if ("department".equals(modelType)) {
 			flash.put("open","availableDepartments");
+		} else if ("adminGroup".equals(modelType)) {
+			flash.put("open","availableAdminGroups");
 		} else if ("major".equals(modelType)) {
 			flash.put("open","availableMajors");
 		} else {
@@ -823,6 +834,159 @@ public class ConfigurableSettingsTab extends SettingsTab {
 		saveModelOrder(departments);
 		
 		flash.put("open","availableDepartments");
+		configurableSettings();
+	}
+	
+	// ////////////////////////////////////////////
+	// ADMINISTRATIVE GROUP AJAX
+	// ////////////////////////////////////////////
+
+	/**
+	 * Create or edit a new Administrative Group. The id of the new administrative group will be returned.
+	 * 
+	 * @param adminGroupId - The id of the administrative group we're editing
+	 * @param name - The name of the new administrative group
+	 * @param emails - The list of email addresses to associate with this administrative group
+	 */
+	@Security(RoleType.MANAGER)
+	public static void addEditAdministrativeGroupJSON(String adminGroupId, String name, String emails) {
+
+		try {
+			if (name == null || name.trim().length() == 0)
+				throw new IllegalArgumentException("Name is required");
+			
+			// make sure emails isn't null
+			if(emails == null) {
+				emails = "";
+			}
+			
+			// remove whitespace from email address string
+			emails = emails.replaceAll("\\s+","");
+
+			// Add the new administrative groups to the end of the list.
+            List<AdministrativeGroup> adminGroups = settingRepo.findAllAdministrativeGroups();
+			
+			// Create or modify the administrative group
+            AdministrativeGroup adminGroup = null;
+			String jsonEmails = "";
+            if (adminGroupId != null && adminGroupId.trim().length() > 0) {
+                Long id = Long.valueOf(adminGroupId);
+                adminGroup = settingRepo.findAdministrativeGroup(id);
+                adminGroup.setName(name);
+                // create a new hashMap for the new emails
+                HashMap<Integer, String> emails_map = new HashMap<Integer, String>();
+                // create the json for the response and also add them to the created hashMap
+                jsonEmails = createEmailsJsonAndAddToMap(emails, emails_map);
+                // set the new emails with the hashMap
+                adminGroup.setEmails(emails_map);
+                adminGroup.save();
+            } else {
+				// create a new hashMap for the new emails
+                HashMap<Integer, String> emails_map = new HashMap<Integer, String>();
+                // create the json for the response and also add them to the created hashMap
+                jsonEmails = createEmailsJsonAndAddToMap(emails, emails_map);
+                // create the new administrative group with the passed-in emails
+                adminGroup = settingRepo.createAdministrativeGroup(name, emails_map);
+                adminGroups.add(adminGroup);
+            }
+
+			saveModelOrder(adminGroups);
+
+			name = escapeJavaScript(adminGroup.getName());
+
+			renderJSON("{ \"success\": \"true\", \"id\": " + adminGroup.getId()
+					+ ", \"name\": \"" + name + "\", \"emails\": " + jsonEmails+" }");
+		} catch (IllegalArgumentException iae) {
+			String message = escapeJavaScript(iae.getMessage());			
+			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
+		} catch (PersistenceException pe) {
+			name = escapeJavaScript(name);
+			renderJSON("{ \"failure\": \"true\", \"message\": \"Another administrative group already exists with the name: '"+name+"'\" }");
+		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to add administrative group");
+			String message = escapeJavaScript(re.getMessage());
+			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
+					+ "\" }");
+		}
+	}
+	
+	/**
+	 * Remove an existing administrative group
+	 * 
+	 * @param adminGroupId
+	 *            The id of the administrative group to be removed
+	 */
+	@Security(RoleType.MANAGER)
+	public static void removeAdministrativeGroupJSON(String adminGroupId) {
+		try {
+			// Delete the old administrative group
+			Long id = Long.valueOf(adminGroupId);
+			AdministrativeGroup adminGroup = settingRepo.findAdministrativeGroup(id);
+			adminGroup.delete();
+
+			renderJSON("{ \"success\": \"true\" }");
+		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to remove administrative group");
+			String message = escapeJavaScript(re.getMessage());
+			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
+					+ "\" }");
+		}
+	}
+	
+	/**
+	 * Remove all existing administrative groups
+	 * 
+	 */
+	@Security(RoleType.MANAGER)
+	public static void removeAllAdministrativeGroups() {
+		List<AdministrativeGroup> adminGroups = settingRepo.findAllAdministrativeGroups();
+		for (AdministrativeGroup adminGroup : adminGroups) {
+			adminGroup.delete();
+		}
+
+		flash.put("open","availableAdminGroups");
+		configurableSettings();
+	}
+
+	/**
+	 * Reorder a list of administrative groups.
+	 * 
+	 * @param adminGroupIds
+	 *            An ordered list of ids in the form:
+	 *            "adminGroup_1,adminGroup_3,adminGroup_2"
+	 */
+	@Security(RoleType.MANAGER)
+	public static void reorderAdministrativeGroupsJSON(String adminGroupIds) {
+
+		try {
+
+			if (adminGroupIds != null && adminGroupIds.trim().length() > 0) {
+				// Save the new order
+				List<AdministrativeGroup> adminGroups = resolveIds(adminGroupIds, AdministrativeGroup.class);
+				saveModelOrder(adminGroups);
+			}
+
+			renderJSON("{ \"success\": \"true\" }");
+		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to reorder administrative groups");
+			String message = escapeJavaScript(re.getMessage());
+			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
+					+ "\" }");
+		}
+	}
+	
+	/**
+	 * Alphabetize all administrative groups.
+	 * 
+	 */
+	@Security(RoleType.MANAGER)
+	public static void alphabetizeAllAdministrativeGroups() {
+
+		List<AdministrativeGroup> adminGroups = settingRepo.findAllAdministrativeGroups();
+		Collections.sort(adminGroups, ascending(getModelCompator()));
+		saveModelOrder(adminGroups);
+		
+		flash.put("open","availableAdminGroups");
 		configurableSettings();
 	}
 	
@@ -1946,6 +2110,9 @@ public class ConfigurableSettingsTab extends SettingsTab {
 				}
 				if (model instanceof Department) {
 					return ((Department) model).getName();
+				}
+				if (model instanceof AdministrativeGroup) {
+					return ((AdministrativeGroup) model).getName();
 				}
 				if (model instanceof Major) {
 					return ((Major) model).getName();

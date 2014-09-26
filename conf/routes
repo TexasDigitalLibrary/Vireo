@@ -153,6 +153,13 @@ POST    /admin/settings/departments/reorder     settings.ConfigurableSettingsTab
 GET     /admin/settings/departments/removeAll   settings.ConfigurableSettingsTab.removeAllDepartments
 GET     /admin/settings/departments/alphabetize settings.ConfigurableSettingsTab.alphabetizeAllDepartments
 
+## Settings tab - Administrative Groups
+POST    /admin/settings/adminGroups/edit        settings.ConfigurableSettingsTab.addEditAdministrativeGroupJSON
+POST    /admin/settings/adminGroups/remove      settings.ConfigurableSettingsTab.removeAdministrativeGroupJSON
+POST    /admin/settings/adminGroups/reorder     settings.ConfigurableSettingsTab.reorderAdministrativeGroupsJSON
+GET     /admin/settings/adminGroups/removeAll   settings.ConfigurableSettingsTab.removeAllAdministrativeGroups
+GET     /admin/settings/adminGroups/alphabetize settings.ConfigurableSettingsTab.alphabetizeAllAdministrativeGroups
+
 ## Settings tab - Majors
 POST    /admin/settings/majors/add              settings.ConfigurableSettingsTab.addMajorJSON
 POST    /admin/settings/majors/edit             settings.ConfigurableSettingsTab.editMajorJSON

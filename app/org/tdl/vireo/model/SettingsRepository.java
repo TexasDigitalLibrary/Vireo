@@ -219,6 +219,51 @@ public interface SettingsRepository {
 	 * @return A list of all departments, or an empty list if there are none.
 	 */
 	public List<Department> findAllDepartments();
+	
+	/**
+	 * Create a new administrative group object.
+	 * 
+	 * @param name
+	 *            The name of the administrative group.
+	 * @return A new administrative group object.
+	 */
+	public AdministrativeGroup createAdministrativeGroup(String name);
+
+	/**
+	 * Create a new administrative group object with email.
+	 * 
+	 * @param name
+	 *            The name of the administrative group.
+	 * @param emails
+	 *            A list of emails.
+	 * @return A new administrative group object.
+	 */
+	public AdministrativeGroup createAdministrativeGroup(String name, HashMap<Integer, String> emails);
+
+	/**
+	 * Find a administrative group by unique id.
+	 * 
+	 * @param id
+	 *            The administrative group's id.
+	 * @return The administrative group object or null if not found.
+	 */
+	public AdministrativeGroup findAdministrativeGroup(Long id);
+
+	/**
+	 * Find a administrative group by unique name.
+	 * 
+	 * @param name
+	 *            The administrative group's name.
+	 * @return The administrative group object or null if not found.
+	 */
+	public AdministrativeGroup findAdministrativeGroupByName(String name);
+	
+	/**
+	 * Find all administrative groups objects in order.
+	 * 
+	 * @return A list of all administrative groups, or an empty list if there are none.
+	 */
+	public List<AdministrativeGroup> findAllAdministrativeGroups();
 
 	// /////////////////////
 	// Document Type Model

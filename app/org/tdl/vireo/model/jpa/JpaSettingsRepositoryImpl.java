@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.tdl.vireo.model.AdministrativeGroup;
 import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.CommitteeMemberRoleType;
 import org.tdl.vireo.model.Configuration;
@@ -160,6 +161,36 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	public List<Department> findAllDepartments() {
 		return (List) JpaDepartmentImpl.find("order by displayOrder").fetch();
 	}
+	
+	@Override
+    public AdministrativeGroup createAdministrativeGroup(String name) {
+	    return new JpaAdministrativeGroupImpl(name);
+    }
+
+	@Override
+    public AdministrativeGroup createAdministrativeGroup(String name, HashMap<Integer, String> emails) {
+	    return new JpaAdministrativeGroupImpl(name, emails);
+    }
+
+	@Override
+    public AdministrativeGroup findAdministrativeGroup(Long id) {
+	    return (AdministrativeGroup) JpaAdministrativeGroupImpl.findById(id);
+    }
+
+	@Override
+    public AdministrativeGroup findAdministrativeGroupByName(String name) {
+		for(AdministrativeGroup adminGroup : findAllAdministrativeGroups()) {
+	    	if(adminGroup.getName().equals(name)) {
+	    		return adminGroup;
+	    	}
+	    }
+	    return null;
+    }
+
+	@Override
+    public List<AdministrativeGroup> findAllAdministrativeGroups() {
+		return (List) JpaAdministrativeGroupImpl.find("order by displayOrder").fetch();
+    }
 
 	// /////////////////////
 	// Document Type Model
@@ -444,5 +475,4 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	public List<DepositLocation> findAllDepositLocations() {
 		return (List) JpaDepositLocationImpl.find("order by displayOrder").fetch();
 	}
-
 }

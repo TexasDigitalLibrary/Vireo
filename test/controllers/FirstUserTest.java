@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
+import org.tdl.vireo.model.AdministrativeGroup;
 import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.CommitteeMemberRoleType;
 import org.tdl.vireo.model.Configuration;
@@ -570,6 +571,36 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 
 		@Override
         public List<WorkflowEmailRule> findAllWorkflowEmailRules() {
+	        // TODO Auto-generated method stub
+	        return null;
+        }
+
+		@Override
+        public AdministrativeGroup createAdministrativeGroup(String name) {
+	        // TODO Auto-generated method stub
+	        return null;
+        }
+
+		@Override
+        public AdministrativeGroup createAdministrativeGroup(String name, HashMap<Integer, String> emails) {
+	        // TODO Auto-generated method stub
+	        return null;
+        }
+
+		@Override
+        public AdministrativeGroup findAdministrativeGroup(Long id) {
+	        // TODO Auto-generated method stub
+	        return null;
+        }
+
+		@Override
+        public AdministrativeGroup findAdministrativeGroupByName(String name) {
+	        // TODO Auto-generated method stub
+	        return null;
+        }
+
+		@Override
+        public List<AdministrativeGroup> findAllAdministrativeGroups() {
 	        // TODO Auto-generated method stub
 	        return null;
         }

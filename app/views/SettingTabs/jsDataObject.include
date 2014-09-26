@@ -67,6 +67,28 @@ jsDataObjects = {
 			
 		#{/list}
 	],
+	"adminGroupsArray" : [
+		#{list items:adminGroups, as:'adminGroup'}
+			
+			{
+				"id": ${adminGroup.getId()},
+				"name": "${adminGroup.getName()}", 
+				"emails": [	#{if adminGroup.getEmails() != null}
+								#{list items:adminGroup.getEmails()?.keySet(), as:'key'}
+									{
+   									"id":${key},
+   									"email":"${adminGroup.getEmails().get(key)}"
+   									}
+   									#{if key != adminGroup.getEmails().size()}
+   									,
+   									#{/if}
+								#{/list}
+							#{/if}
+				]
+			},
+			
+		#{/list}
+	],
 	"workflowRules": {
 		"email": {
 			#{list items:STATES, as:'state'}

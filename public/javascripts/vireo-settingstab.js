@@ -2304,7 +2304,7 @@ var collegeSortableUpdateHandler = function(jsonURL) {
 
 		var successCallback = function(data) {
 			// Remove the ajax loading indicators & alerts
-			Alert("college-reorder");
+			clearAlert("college-reorder");
 			jQuery("#colleges-list").removeClass("waiting");
 		}
 
@@ -2610,7 +2610,7 @@ var programSortableUpdateHandler = function(jsonURL) {
 
 		var successCallback = function(data) {
 			// Remove the ajax loading indicators & alerts
-			Alert("program-reorder");
+			clearAlert("program-reorder");
 			jQuery("#programs-list").removeClass("waiting");
 		}
 
@@ -2916,7 +2916,7 @@ var departmentSortableUpdateHandler = function(jsonURL) {
 
 		var successCallback = function(data) {
 			// Remove the ajax loading indicators & alerts
-			Alert("department-reorder");
+			clearAlert("department-reorder");
 			jQuery("#departments-list").removeClass("waiting");
 		}
 
@@ -2928,6 +2928,312 @@ var departmentSortableUpdateHandler = function(jsonURL) {
 
 		var data = {};
 		data['departmentIds'] = list;
+
+		jQuery.ajax({
+			url : jsonURL,
+			data : data,
+			dataType : 'json',
+			type : 'POST',
+			success : function(data) {
+				if (data.success) {
+					successCallback(data);
+				} else {
+					failureCallback(data.message)
+				}
+			},
+			error : function() {
+				failureCallback("Unable to communicate with the server.");
+			}
+
+		});
+	};
+}
+
+/**
+ * Open the administrative group dialog box. This will work for opening an existing
+ * administrative group, or adding a new administrative group.
+ * 
+ * @returns A Callback function
+ */
+function adminGroupOpenDialogHandler(isNew, id) {
+	if(isNew == null && typeof(isNew) == "undefined") {
+		isNew = false;
+	}
+
+	if (!isNew) {
+		// Loading an existing type
+		var array_key = -1;
+		for(adminGroup in jsDataObjects.adminGroupsArray) {
+			if(jsDataObjects.adminGroupsArray[adminGroup].id == id) {
+				array_key = adminGroup;
+			}
+		}
+		if(array_key == -1) {
+			return;
+		}
+		// get our college data from JS cache
+		var adminGroup = jsDataObjects.adminGroupsArray[array_key];
+		jQuery("#adminGroup-id").val(id);
+		jQuery("#adminGroup-name").val(adminGroup.name);
+		var emails_string = "";
+		var emails = adminGroup.emails;
+		$.each(emails, function(key, val) {
+			if (val.email != "") {
+				emails_string += val.email + ", ";
+			}
+		});
+
+		jQuery("#adminGroup-emails").val(emails_string.substring(0, emails_string.length-2));
+		
+		jQuery("#adminGroup-modal .modal-header h3").text("Edit Administrative Group");
+		jQuery("#adminGroup-modal .modal-footer #adminGroup-save").val("Save Administrative Group");
+		jQuery("#adminGroup-remove").show();
+	} else {
+		// Adding a new administrative group
+		jQuery("#adminGroup-id").val("");
+		jQuery("#adminGroup-name").val("");
+		jQuery("#adminGroup-emails").val("");
+		
+		jQuery("#adminGroup-modal .modal-header h3").text("Add Administrative Group");
+		jQuery("#adminGroup-modal .modal-footer #adminGroup-save").val("Add Administrative Group");
+		jQuery("#adminGroup-remove").hide();
+
+	}
+
+	//  out any previous errors
+	jQuery("#adminGroup-errors").html("");
+	jQuery("#adminGroup-modal .control-group").each(function () {
+		jQuery(this).removeClass("error"); 
+	});
+
+	jQuery('#adminGroup-modal').modal('show');
+}
+
+/**
+ * Create or Edit an existing administrative group. This callback function handles
+ * saving the administrative group dialog box.
+ * 
+ * @param jsonURL
+ *            The url where administrative groups should be updated.
+ * @returns A Callback Function
+ */
+function adminGroupSaveDialogHandler(jsonURL) {
+	return function () {
+		var adminGroupId = jQuery("#adminGroup-id").val();
+		var name = jQuery("#adminGroup-name").val();
+		var emails = jQuery("#adminGroup-emails").val();
+		
+		jQuery("#adminGroup-modal").addClass("waiting");
+
+		var successCallback = function(data) {
+
+			// Remove the ajax loading indicators & alerts
+			jQuery("#adminGroup-modal").removeClass("waiting");
+			jQuery("#adminGroup-errors").html("");
+			jQuery("#adminGroup-modal .control-group").each(function () {
+				jQuery(this).removeClass("error"); 
+			});
+
+			var $row;
+			if (jQuery("#adminGroup_"+data.id).length > 0) {
+				// Look up the old row
+				$row = jQuery("#adminGroup_"+data.id);
+			} else {
+				// Add a new row to the end of the list.
+				$row = jQuery( 
+						"<tr id='adminGroup_"+data.id+"'>"+
+						"    <td class='adminGroup-name-cell'></td>"+
+						"    <td class='adminGroup-emails-cell'></td>"+
+						"    <td class='adminGroup-edit-cell'><a data-id='"+data.id+"' href='javascript:void(0);'>Edit</a></td>" +
+						"</tr>"
+				).appendTo(jQuery("#adminGroups-list"));
+			}
+
+			$row.find(".adminGroup-name-cell").text(data.name);
+			var emails_string = "";
+			var emails = data.emails;
+			$.each(emails, function(key, val) {
+				emails_string += val.email + ", ";
+			});
+			$row.find(".adminGroup-emails-cell").text(emails_string.substring(0, emails_string.length-2));
+			
+			jQuery('#adminGroup-modal').modal('hide');
+			// refresh local JS cache of adminGroupsArray data
+			var array_key = -1;
+			// look for the array index of this adminGroup in the array
+			for(adminGroup in jsDataObjects.adminGroupsArray) {
+				if(jsDataObjects.adminGroupsArray[adminGroup].id == adminGroupId) {
+					array_key = adminGroup;
+				}
+			}
+			// if the index position was not found
+			if(array_key == -1) {
+				// add new data
+				jsDataObjects.adminGroupsArray.push(data);
+			} else {
+				// change existing data
+				jsDataObjects.adminGroupsArray[array_key] = data;
+			}
+		}
+
+		var failureCallback = function (message) {
+
+			// Add failure indicators
+			jQuery("#adminGroup-modal").removeClass("waiting");
+			jQuery("#adminGroup-modal .control-group").each(function () {
+				jQuery(this).addClass("error"); 
+			});
+
+			// Display the error
+			jQuery("#adminGroup-errors").html("<li><strong>Unable to save administrative group</strong>: "+message);
+
+		}
+
+		jQuery.ajax({
+			url:jsonURL,
+			data:{
+				'adminGroupId':adminGroupId,
+				'name': name,
+				'emails': emails
+			},
+			dataType:'json',
+			type:'POST',
+			success:function(data){
+				if (data.success) {
+					successCallback(data);
+				} else {
+					failureCallback(data.message)
+				}
+			},
+			error:function(e){
+				console.log(e);
+				failureCallback("Unable to communicate with the server."+e);
+			}
+
+		});
+
+		return false;
+	}
+}
+
+/**
+ * Delete an existing administrative group. This will confirm that this is what the user wants to do.
+ * 
+ * @param jsonURL
+ *            The url where administrative groups are deleted.
+ * @returns A Callback Function
+ */
+function adminGroupRemoveDialogHandler(jsonURL) {
+	return function () {
+
+		// Confirm before deleting
+		var really = confirm("Alert! All email workflow rules which use this administrative group will have their recipient settings deleted with no way to recover. Are you REALLY sure you want to delete this administrative group?");
+		if (!really)
+			return false;
+		
+		var adminGroupId = jQuery("#adminGroup-id").val();
+		jQuery("#adminGroup-modal").addClass("waiting");
+		
+		var successCallback = function(data) {
+
+			// Remove the ajax loading indicators & alerts
+			jQuery("#adminGroup-modal").removeClass("waiting");
+			jQuery("#adminGroup-errors").html("");
+			jQuery("#adminGroup-modal .control-group").each(function () {
+				jQuery(this).removeClass("error"); 
+			});
+			jQuery("#adminGroup_"+adminGroupId).remove();
+			
+			// Go back to the list
+			jQuery('#adminGroup-modal').modal('hide');
+			
+			// refresh local JS cache of departmentsArray data
+			var array_key = -1;
+			// look for the array index of this department in the array
+			for(adminGroup in jsDataObjects.adminGroupsArray) {
+				if(jsDataObjects.adminGroupsArray[adminGroup].id == adminGroupId) {
+					array_key = parseInt(adminGroup);
+				}
+			}
+			// if the index position was found
+			if(array_key != -1) {
+				// remove old data
+				var arrayBefore = jsDataObjects.adminGroupsArray.slice(0, array_key);
+				var arrayAfter = new Array();
+				// avoid index out of bounds (in case we're removing last element in array)
+				if(array_key+1 < jsDataObjects.adminGroupsArray.length) {
+					arrayAfter = jsDataObjects.adminGroupsArray.slice(array_key+1, jsDataObjects.adminGroupsArray.length);
+				}
+				var newArray = arrayBefore.concat(arrayAfter);
+				jsDataObjects.adminGroupsArray = newArray;
+			}
+		}
+
+		var failureCallback = function (message) {
+
+			// Add failure indicators
+			jQuery("#adminGroup-modal").removeClass("waiting");
+			jQuery("#adminGroup-modal .control-group").each(function () {
+				jQuery(this).addClass("error"); 
+			});
+
+			// Display the error
+			jQuery("#adminGroup-errors").html("<li><strong>Unable to remove administrative group</strong>: "+message);
+
+		}
+
+		jQuery.ajax({
+			url:jsonURL,
+			data:{
+				'adminGroupId': adminGroupId
+			},
+			dataType:'json',
+			type:'POST',
+			success:function(data){
+				if (data.success) {
+					successCallback(data);
+				} else {
+					failureCallback(data.message)
+				}
+			},
+			error:function(){
+				failureCallback("Unable to communicate with the server.");
+			}
+
+		});
+
+		return false;
+	}
+}
+
+/**
+ * Sortable update handler for administrative groups. This callback is called whenever
+ * re-sorts the list of administrative groups, saving the new order in the system.
+ * 
+ * @param jsonURL
+ *            The json url to update administrative groups order.
+ * @returns A Callback function
+ */
+var adminGroupSortableUpdateHandler = function(jsonURL) {
+	return function(event, ui) {
+
+		var list = jQuery("#adminGroups-list").sortable('toArray').toString();
+		jQuery("#adminGroups-list").addClass("waiting");
+
+		var successCallback = function(data) {
+			// Remove the ajax loading indicators & alerts
+			clearAlert("adminGroup-reorder");
+			jQuery("#adminGroups-list").removeClass("waiting");
+		}
+
+		var failureCallback = function(message) {
+			displayAlert("adminGroup-reorder", "Unable to reorder administrative group",
+					message);
+			jQuery("#adminGroups-list").removeClass("waiting");
+		}
+
+		var data = {};
+		data['adminGroupIds'] = list;
 
 		jQuery.ajax({
 			url : jsonURL,

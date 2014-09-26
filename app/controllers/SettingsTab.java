@@ -9,6 +9,7 @@ import javax.mail.internet.InternetAddress;
 
 import org.tdl.vireo.constant.AppPref;
 import org.tdl.vireo.model.AbstractOrderedModel;
+import org.tdl.vireo.model.AdministrativeGroup;
 import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.CommitteeMemberRoleType;
 import org.tdl.vireo.model.CustomActionDefinition;
@@ -180,6 +181,10 @@ public class SettingsTab extends AbstractVireoController {
 			} else if (type.equals(Department.class)) {
 				Department department = settingRepo.findDepartment(id);
 				models.add((T) department);
+				
+			} else if (type.equals(AdministrativeGroup.class)) {
+				AdministrativeGroup adminGroup = settingRepo.findAdministrativeGroup(id);
+				models.add((T) adminGroup);
 				
 			} else if (type.equals(Major.class)) {
 				Major major = settingRepo.findMajor(id);

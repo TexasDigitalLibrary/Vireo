@@ -176,6 +176,44 @@ jQuery(document).ready(function(){
      jQuery("#bulk-add-department-link").click(slideToggleHandler("#bulk-add-department-dialog"));
      jQuery("#bulk-add-department-cancel").click(cancelAddActionHandler('department'));
      
+    // Handlers for administrative groups table
+   	jQuery('#adminGroup-modal').modal({
+		'show': false
+ 	});
+   	jQuery(".adminGroup-edit-cell a").live("click", function() {
+  		adminGroupOpenDialogHandler(false, $(this).attr("data-id"));
+	});
+	jQuery("#add-adminGroup-link").live("click", function() {
+		adminGroupOpenDialogHandler(true);
+	});
+ 	 
+	jQuery("#adminGroup-save").click(adminGroupSaveDialogHandler('@{settings.ConfigurableSettingsTab.addEditAdministrativeGroupJSON()}'));
+	jQuery("#adminGroup-remove").click(adminGroupRemoveDialogHandler('@{settings.ConfigurableSettingsTab.removeAdministrativeGroupJSON()}'));
+	jQuery("#adminGroups-list").sortable({
+		placeholder: "placeholder",
+		update: adminGroupSortableUpdateHandler('@{settings.ConfigurableSettingsTab.reorderAdministrativeGroupsJSON()}'),
+
+		// This function keeps the cell size consistent when sorting.
+		helper: function(e, tr)
+		{
+			var $originals = tr.children();
+			var $helper = tr.clone();
+			$helper.children().each(function(index)
+			{
+				// Set helper cell sizes to match the original sizes
+				$(this).width($originals.eq(index).width())
+			});
+			return $helper;
+		},
+
+		// This allows the placeholder to have a background color
+		'start': function (event, ui) {
+			ui.placeholder.html('<td colspan="5">&nbsp;</td>');
+		}
+	});
+	jQuery("#bulk-add-adminGroup-link").click(slideToggleHandler("#bulk-add-adminGroup-dialog"));
+	jQuery("#bulk-add-adminGroup-cancel").click(cancelAddActionHandler('adminGroup'));
+     
      // Handlers for the sortable Majors list
      jQuery("#major-list, #major-remove").sortable({
          connectWith: ".major-sortable",
@@ -475,77 +513,6 @@ jQuery(document).ready(function(){
                         </fieldset>
                     </form>
                 </div>
-				<!-- OLD CODE
-				<p>
-                    <a class="confirm" href="@{settings.ConfigurableSettingsTab.removeAllPrograms}" 
-                       data-confirm="<em class='icon-trash'></em> (Are you sure you want to <strong>remove all</strong> programs?)">
-                        <em class="icon-trash"></em>
-                        Remove all programs
-                    </a>
-                </p>
-                <p>
-                    <a class="confirm" href="@{settings.ConfigurableSettingsTab.alphabetizeAllPrograms}" 
-                       data-confirm="<em class='icon-refresh'></em> (Are you sure you want to alphabetize all programs?)">
-                        <em class="icon-refresh"></em>
-                        Alphabetize programs
-                    </a>
-                </p>
-				
-				<div class="wrap settings-sortable">
-					<ul id="program-remove" class="program-sortable settings-sortable-remove" #{if programs.size() == 0}style="display: none;"#{/if}>
-					   <p class="info"><em class="icon-trash"></em> Remove items by dragging them to the trash can</p>
-					</ul>
-					<ol id="program-list" class="program-sortable settings-sortable-list">
-					    #{list items:programs, as:'program'}
-					       <li id="program_${program.getId()}"><a class="program-editable" href="javascript:void(0);"><em class="icon-pencil"></em> ${program.getName()}</a></li>    
-					    #{/list}
-					</ol>
-				</div>
-				
-				<a id="add-program-link" href="javascript:void(0);">[ADD NEW]</a>  &nbsp; <a href="javascript:void(0);" id="bulk-add-program-link">[BULK ADD]</a>
-				
-				<div id="add-program-dialog" style="display: none;">
-				    <form class="form-horizontal">
-				        <fieldset>
-				            <div class="control-group">
-				                <label class="control-label" for="add-program-name">New Program</label>
-				                <div class="controls">
-				                    <input type="text" class="input-large" id="add-program-name"/>
-				                    <p class="help-block">Name of the new program</p>
-				                </div>
-				            </div>
-				            <div class="control-group">
-				                <div class="controls">
-				                    <button id="add-program-save" class="btn btn-primary">Add Program</button>
-				                    <button id="add-program-cancel" class="btn">Cancel</button>
-				                </div>
-				            </div>
-				        </fieldset>
-				    </form>
-				</div>
-				<div id="bulk-add-program-dialog" style="display: none;">
-                    <form class="form-horizontal" method="POST" action="@{settings.ConfigurableSettingsTab.bulkAdd}">
-                        <input type="hidden" name="modelType" value="program"/>
-                        <fieldset>
-                            <div class="control-group">
-                                <label class="control-label" for="bulkAdd">Programs</label>
-                                <div class="controls">
-                                    <textarea class="span4" name="bulkAdd"></textarea>
-                                    <p class="help-block">Multiple programs each on a separate line</p>
-                                    
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <div class="controls">
-                                    <button id="bulk-add-program-save" class="btn btn-primary">Bulk Add Programs</button>
-                                    <button id="bulk-add-program-cancel" class="btn">Cancel</button>
-                                </div>
-                            </div>
-                        </fieldset>
-                    </form>
-                </div>
-				<br/><br/>
-				 -->
 			</div>
 		</div>
 	</div>
@@ -609,77 +576,69 @@ jQuery(document).ready(function(){
                         </fieldset>
                     </form>
                 </div>
-				<!-- OLD CODE
+			</div>
+		</div>
+	</div>
+	
+	
+	<div class="accordion-group" id="adminGroups-accordion">
+		<div class="accordion-heading">
+			<a class="accordion-toggle" data-toggle="collapse" href="#availableAdminGroups"><strong>Available Administrative Groups</strong></a>			
+		</div>
+		<div id="availableAdminGroups" class="accordion-body collapse ${ "availableAdminGroups".equals(flash.get("open")) ? "in" : "" }">
+			<div class="accordion-inner">
+				<h2>AVAILABLE ADMINISTRATIVE GROUPS</h2>
 				<p>
-                    <a class="confirm" href="@{settings.ConfigurableSettingsTab.removeAllDepartments}" 
-                       data-confirm="<em class='icon-trash'></em> (Are you sure you want to <strong>remove all</strong> departments?)">
-                        <em class="icon-trash"></em>
-                        Remove all departments
-                    </a>
-                </p>
-                <p>
-                    <a class="confirm" href="@{settings.ConfigurableSettingsTab.alphabetizeAllDepartments}" 
-                       data-confirm="<em class='icon-refresh'></em> (Are you sure you want to alphabetize all departments?)">
-                        <em class="icon-refresh"></em>
-                        Alphabetize departments
-                    </a>
-                </p>
-				
-				<div class="wrap settings-sortable">
-					<ul id="department-remove" class="department-sortable settings-sortable-remove" #{if departments.size() == 0}style="display: none;"#{/if}>
-					   <p class="info"><em class="icon-trash"></em> Remove items by dragging them to the trash can</p>
-					</ul>
-					<ol id="department-list" class="department-sortable settings-sortable-list">
-					    #{list items:departments, as:'department'}
-					       <li id="department_${department.getId()}"><a class="department-editable" href="javascript:void(0);"><em class="icon-pencil"></em> ${department.getName()}</a></li>    
-					    #{/list}
-					</ol>
-				</div>
-				
-				<a id="add-department-link" href="javascript:void(0);">[ADD NEW]</a>  &nbsp; <a href="javascript:void(0);" id="bulk-add-department-link">[BULK ADD]</a>
-				
-				<div id="add-department-dialog" style="display: none;">
-				    <form class="form-horizontal">
-				        <fieldset>
-				            <div class="control-group">
-				                <label class="control-label" for="add-department-name">New Department</label>
-				                <div class="controls">
-				                    <input type="text" class="input-large" id="add-department-name"/>
-				                    <p class="help-block">Name of the new department</p>
-				                </div>
-				            </div>
-				            <div class="control-group">
-				                <div class="controls">
-				                    <button id="add-department-save" class="btn btn-primary">Add Department</button>
-				                    <button id="add-department-cancel" class="btn">Cancel</button>
-				                </div>
-				            </div>
-				        </fieldset>
-				    </form>
-				</div>
-                <div id="bulk-add-department-dialog" style="display: none;">
+					<a class="confirm" href="@{settings.ConfigurableSettingsTab.removeAllAdministrativeGroups}" data-confirm="<em class='icon-trash'></em> (Are you sure you want to <strong>remove all</strong> administrative groups?)"> <em class="icon-trash"></em> Remove all administrative groups
+					</a>
+				</p>
+				<p>
+					<a class="confirm" href="@{settings.ConfigurableSettingsTab.alphabetizeAllAdministrativeGroups}" data-confirm="<em class='icon-refresh'></em> (Are you sure you want to alphabetize all administrative groups?)"> <em class="icon-refresh"></em> Alphabetize all administrative groups
+					</a>
+				</p>
+
+
+				<table class="table table-striped table-bordered table-condensed">
+					<thead>
+						<tr>
+							<td>Name</td>
+							<td>Emails</td>
+							<td>Action</td>
+						</tr>
+					</thead>
+					<tbody id="adminGroups-list">
+						#{list items:adminGroups, as:'adminGroup'}
+						<tr id="adminGroup_${adminGroup.getId()}">
+							<td class="adminGroup-name-cell">${adminGroup.getName()}</td>
+							<td class="adminGroup-emails-cell">#{list items:adminGroup.getEmails()?.keySet(), as:'key'}${adminGroup.getEmails().get(key)}#{if key != adminGroup.getEmails().size()-1}, #{/if}#{/list}</td>
+							<td class="adminGroup-edit-cell"><a data-id="${adminGroup.getId()}" href="javascript:void(0);">Edit</a></td>
+						</tr>
+						#{/list}
+					</tbody>
+				</table>
+				<p><a id="add-adminGroup-link" href="javascript:void(0);">[ADD NEW]</a> &nbsp <a href="javascript:void(0);" id="bulk-add-adminGroup-link">[BULK ADD]</a></p>
+
+                <div id="bulk-add-adminGroup-dialog" style="display: none;">
                     <form class="form-horizontal" method="POST" action="@{settings.ConfigurableSettingsTab.bulkAdd}">
-                        <input type="hidden" name="modelType" value="department"/>
+                        <input type="hidden" name="modelType" value="adminGroup"/>
                         <fieldset>
                             <div class="control-group">
-                                <label class="control-label" for="bulkAdd">Departments</label>
+                                <label class="control-label" for="bulkAdd">Administrative Groups</label>
                                 <div class="controls">
                                     <textarea class="span4" name="bulkAdd"></textarea>
-                                    <p class="help-block">Multiple departments each on a separate line</p>
+                                    <p class="help-block">Multiple administrative groups each on a separate line</p>
                                     
                                 </div>
                             </div>
                             <div class="control-group">
                                 <div class="controls">
-                                    <button id="bulk-add-department-save" class="btn btn-primary">Bulk Add Departments</button>
-                                    <button id="bulk-add-department-cancel" class="btn">Cancel</button>
+                                    <button id="bulk-add-adminGroup-save" class="btn btn-primary">Bulk Add Administrative Groups</button>
+                                    <button id="bulk-add-adminGroup-cancel" class="btn">Cancel</button>
                                 </div>
                             </div>
                         </fieldset>
                     </form>
                 </div>
-				<br/><br/>
-				 -->
 			</div>
 		</div>
 	</div>
@@ -1279,6 +1238,38 @@ jQuery(document).ready(function(){
             <a href="javascript:void(0);" class="btn" data-dismiss="modal">Close</a>
             <a id="department-remove" href="javascript:void(0);" class="btn">Delete Department</a>
             <input id="department-save" type="submit" class="btn btn-primary" name="submit_save" value="Save Department"/>
+        </div>
+    </form>
+</div>
+<div class="modal fade" id="adminGroup-modal">
+    <form class="form-horizontal">
+        <input type="hidden" name="adminGroup-id" id="adminGroup-id" value=""/>
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">X</button>
+            <h3>Administrative Group</h3>
+        </div>
+        <div class="modal-body">
+            <ul id="adminGroup-errors" class="red">
+            </ul>
+            <fieldset>
+                <div class="control-group">
+                    <label class="control-label" for="adminGroup-name"><strong>Administrative Group Name</strong>:</label>
+                    <div class="controls">
+                        <input type="text" class="input-xlarge" name="adminGroup-name" id="adminGroup-name"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="adminGroup-emails"><strong>Administrative Group Emails</strong>:</label>
+                    <div class="controls">
+						<textarea name="adminGroup-emails" id="adminGroup-emails" class="input-xlarge"></textarea>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="modal-footer">
+            <a href="javascript:void(0);" class="btn" data-dismiss="modal">Close</a>
+            <a id="adminGroup-remove" href="javascript:void(0);" class="btn">Delete Administrative Group</a>
+            <input id="adminGroup-save" type="submit" class="btn btn-primary" name="submit_save" value="Save Administrative Group"/>
         </div>
     </form>
 </div>
