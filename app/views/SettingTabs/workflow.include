@@ -73,7 +73,7 @@
 									<ul class="unstyled"> 
 										<li class="edit"> 
 											<span id="${state.getBeanName()}-${rule.getId()}-recipientType" class="empty select" data-id="${rule.getId()}" data-state="${state.getBeanName()}" data-ruleFieldName="recipientType"> 
-												<i class="icon-pencil"></i> ${rule.getRecipientType()?.name()} #{if !rule.getRecipientType()} none#{/if}
+												<i class="icon-pencil"></i> ${rule.getRecipientType()} #{if !rule.getRecipientType()} none#{/if}
 											</span> 
 										</li> 
 									</ul> 
@@ -109,11 +109,9 @@
 			<div id="${state.getBeanName()}-workflowRule-recipientType" style="display:none;" class="empty select">
 				<select class="field" data-id="" data-state="" data-ruleFieldName="">
 					<option value="">Choose a recipient type...</option>
-					<option value="Advisor">Advisor</option>
-					<option value="College">College</option>
-					<option value="Department">Department</option>
-					<option value="Program">Program</option>
-					<option value="Student">Student</option>
+				#{list items:recipientTypes, as:'recipientType'}
+					<option value="${recipientType.name()}">${recipientType}</option>
+				#{/list}
 				</select>
 			</div>
 			<div id="${state.getBeanName()}-workflowRule-condition" style="display:none;" class="empty autocomplete">

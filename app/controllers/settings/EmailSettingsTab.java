@@ -1,28 +1,22 @@
 package controllers.settings;
 
-import static org.tdl.vireo.constant.AppConfig.*;
-
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
 
-import org.apache.commons.codec.language.bm.Rule;
 import org.tdl.vireo.email.RecipientType;
-import org.tdl.vireo.model.AbstractOrderedModel;
-import org.tdl.vireo.model.AbstractWorkflowRule;
 import org.tdl.vireo.model.AbstractWorkflowRuleCondition;
 import org.tdl.vireo.model.AbstractWorkflowRuleCondition.ConditionType;
+import org.tdl.vireo.model.AdministrativeGroup;
 import org.tdl.vireo.model.College;
-import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.Department;
 import org.tdl.vireo.model.EmailTemplate;
-import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.WorkflowEmailRule;
+import org.tdl.vireo.model.jpa.JpaAdministrativeGroupImpl;
 import org.tdl.vireo.model.jpa.JpaEmailTemplateImpl;
 import org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleConditionImpl;
 import org.tdl.vireo.state.State;
@@ -46,6 +40,7 @@ public class EmailSettingsTab extends SettingsTab {
 		List<College> colleges = settingRepo.findAllColleges();
 		List<Program> programs = settingRepo.findAllPrograms();
 		List<Department> departments = settingRepo.findAllDepartments();
+		List<AdministrativeGroup> adminGroups = settingRepo.findAllAdministrativeGroups();
 		
 		// Get all the states
 		renderArgs.put("STATES", stateManager.getAllStates());
@@ -56,12 +51,15 @@ public class EmailSettingsTab extends SettingsTab {
 		// List all templates
 		List<EmailTemplate> templates = settingRepo.findAllEmailTemplates();
 		
+		// List all email recipient types
+		List<RecipientType> recipientTypes = Arrays.asList(RecipientType.values());
+		
 		String nav = "settings";
 		String subNav = "email";
-		renderTemplate("SettingTabs/emailSettings.html",nav, subNav, templates,
+		renderTemplate("SettingTabs/emailSettings.html",nav, subNav, templates, recipientTypes,
 				
 				// Sortable lists
-				colleges, programs, departments
+				colleges, programs, departments, adminGroups
 				
 				);
 	}
@@ -132,7 +130,18 @@ public class EmailSettingsTab extends SettingsTab {
 					Logger.info(recipientString);
 					
 					rule.setRecipientType(RecipientType.valueOf(recipientString));
-					recipientTypeJSON = rule.getRecipientType().name();
+					if(rule.getRecipientType() == RecipientType.AdminGroup) {
+						String adminGroupString = params.get("AdminGroupId");
+						if(adminGroupString == null) {
+							throw new IllegalArgumentException("Can't save an AdminGroup type of recipient without AdminGroupId to link to!");
+						}
+						Long adminGroupId = Long.parseLong(adminGroupString);
+						AdministrativeGroup adminGroup = settingRepo.findAdministrativeGroup(adminGroupId);
+						rule.setAdminGroupRecipient((JpaAdministrativeGroupImpl)adminGroup);
+					} else {
+						rule.setAdminGroupRecipient(null);
+					}
+					recipientTypeJSON = rule.getRecipientType().toString();
 				}
 				
 			} else {

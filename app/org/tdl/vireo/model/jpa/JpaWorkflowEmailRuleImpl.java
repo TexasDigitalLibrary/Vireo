@@ -15,6 +15,7 @@ import javax.persistence.Table;
 
 import org.tdl.vireo.email.RecipientType;
 import org.tdl.vireo.model.AbstractWorkflowRuleCondition;
+import org.tdl.vireo.model.AdministrativeGroup;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.WorkflowEmailRule;
@@ -41,6 +42,10 @@ public class JpaWorkflowEmailRuleImpl extends JpaAbstractModel<JpaWorkflowEmailR
 	@Column(nullable = true)
 	@Enumerated
 	public RecipientType recipientType;
+	
+	@ManyToOne
+	@JoinColumn(name="adminGroupRecipientId")
+	public JpaAdministrativeGroupImpl adminGroupRecipient;
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "conditionID")
@@ -94,6 +99,16 @@ public class JpaWorkflowEmailRuleImpl extends JpaAbstractModel<JpaWorkflowEmailR
 	public void setEmailTemplate(JpaEmailTemplateImpl emailTemplate) {
 		this.emailTemplate = emailTemplate;
 	}
+	
+	@Override
+	public JpaAdministrativeGroupImpl getAdminGroupRecipient() {
+	    return this.adminGroupRecipient;
+	}
+	
+	@Override
+	public void setAdminGroupRecipient(JpaAdministrativeGroupImpl adminGroup) {
+	    this.adminGroupRecipient = adminGroup;
+	}
 
 	@Override
 	public List<String> getRecipients(Submission submission) {
@@ -130,6 +145,11 @@ public class JpaWorkflowEmailRuleImpl extends JpaAbstractModel<JpaWorkflowEmailR
 			Long programId = submission.getProgramId();
 			if(programId != null) {
 				recipients.addAll(settingRepo.findProgram(programId).getEmails().values());
+			}
+			break;
+		case AdminGroup:
+			if(this.adminGroupRecipient != null) {
+				recipients.addAll(adminGroupRecipient.getEmails().values());
 			}
 			break;
 		default:

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.tdl.vireo.email.RecipientType;
+import org.tdl.vireo.model.jpa.JpaAdministrativeGroupImpl;
 import org.tdl.vireo.model.jpa.JpaEmailTemplateImpl;
 import org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleConditionImpl;
 
@@ -26,19 +27,29 @@ public interface WorkflowEmailRule extends AbstractWorkflowRule {
 	public void setEmailTemplate(JpaEmailTemplateImpl emailTemplate);
 	
 	/**
-	 * @return The email group associated with this rule
+	 * @return The runtime generated list of recipients for this current rule+submission combination
 	 */
 	public List<String> getRecipients(Submission submission);
 	
 	/**
 	 * 
-	 * @return
+	 * @return RecipientType enum
 	 */
 	public RecipientType getRecipientType();
 	
 	/**
+	 * @param adminGroup - Set the administrative group recipient for this rule if any (null if none)
+	 */
+	public void setAdminGroupRecipient(JpaAdministrativeGroupImpl adminGroup);
+	
+	/**
 	 * 
-	 * @param recipientType
+	 * @return the administrative group associated with this rule if any (null if none)
+	 */
+	public JpaAdministrativeGroupImpl getAdminGroupRecipient();
+	
+	/**
+	 * @param recipientType - Set the {@link RecipientType} for this rule
 	 */
 	public void setRecipientType(RecipientType recipientType);
 
