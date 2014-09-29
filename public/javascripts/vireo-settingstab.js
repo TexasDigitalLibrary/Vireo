@@ -994,16 +994,38 @@ function swapToInputHandler(){
 				jQuery("#"+editItem.attr("data-state")+"-workflowRule-"+editItem.attr("data-ruleFieldName")+" select").attr("data-ruleFieldName", editItem.attr("data-ruleFieldName"));
 
 				//Select Drop Downs
-				var selectCode = '<div id="'+editItem.attr("data-state")+'-workflowRule-'+editItem.attr("data-ruleFieldName")+'" class="editing select" >';
-				selectCode += jQuery("#"+editItem.attr("data-state")+"-workflowRule-"+editItem.attr("data-ruleFieldName")).html();
+				var divID = editItem.attr("data-state")+'-workflowRule-'+editItem.attr("data-ruleFieldName");
+				var selectCode = '<div id="'+divID+'" class="editing select" >';
+				selectCode += jQuery("#"+divID).html();
 				selectCode += '<br /><i class="icon-remove" title="cancel"></i>&nbsp<i class="icon-ok" title="commit"></i></div>';
 				editItem.replaceWith(selectCode);
-				jQuery("#"+editItem.attr("data-state")+"-workflowRule-"+editItem.attr("data-ruleFieldName")+" .field option").each(function(){
+				jQuery("#"+divID+" .field option").each(function(){
 					if(jQuery(this).text()==value){
 						jQuery(this).attr("selected","selected");
 					}
-				})
-
+				});
+				
+				// if we're selecting AdminGroup as recipientType we need to dynamically add a new <select> with all of the jsDataObjects.adminGroupsArray as <options>
+				if(editItem.attr("data-ruleFieldName") == "recipientType") {
+					var div = jQuery("#"+divID);
+					var select = div.find(".field"); 
+					select.on("change", function() {
+						var selectedOption = $(this).find("option:selected").val();
+						if(selectedOption == "AdminGroup") {
+							var newSelect = "<select id=\"adminGroupsSelect\">";
+							var options = "<option>Choose a group...</option>";
+							jsDataObjects.adminGroupsArray.forEach( function(element, index, array) {
+								options += "<option value=\""+element.id+"\">"+element.name+"</option>";
+							});
+							newSelect += options;
+							newSelect += "</select>";
+							// append the new <select> after the original <select>
+							select.after(newSelect);
+						} else {
+							div.find("#adminGroupsSelect").remove();
+						}
+					});
+				}
 
 				
 			} else if(editItem.hasClass("autocomplete")) {
@@ -1183,7 +1205,12 @@ function commitChangesHandler(eventTarget, jsonURL){
 		recipientString: recipientString,
 		templateString: templateString
 	}
-
+	
+	if(ruleFieldName == "recipientType" && recipientString == "AdminGroup") {
+		var adminGroup = jQuery("#adminGroupsSelect option:selected").val();
+		reqObj.AdminGroupId = adminGroup;
+	}
+debugger;
 	jQuery.ajax({
 		url:jsonURL,
 		data: reqObj,
