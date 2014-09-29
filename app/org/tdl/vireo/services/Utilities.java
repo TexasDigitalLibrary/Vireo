@@ -84,34 +84,12 @@ public class Utilities {
 	 */
 	public static String formatOrcidAsDashedId(String unformattedOrcid) {
 		String formattedOrcid = unformattedOrcid.toUpperCase();
-		formattedOrcid = formattedOrcid.replace("HTTPS","");
-		Logger.info("Pass 1: " + formattedOrcid);
-		formattedOrcid = formattedOrcid.replace("HTTP","");
-		Logger.info("Pass 2: " + formattedOrcid);
-		formattedOrcid = formattedOrcid.replace("WWW","");
-		Logger.info("Pass 3: " + formattedOrcid);
-		formattedOrcid = formattedOrcid.replace("ORCID","");
-		Logger.info("Pass 4: " + formattedOrcid);
-		formattedOrcid = formattedOrcid.replace("ORG","");
-		Logger.info("Pass 5: " + formattedOrcid);
-		formattedOrcid = formattedOrcid.replace("COM","");
-		Logger.info("Pass 6: " + formattedOrcid);
-		formattedOrcid = formattedOrcid.replace("NET","");
-		Logger.info("Pass 7: " + formattedOrcid);
-		formattedOrcid = formattedOrcid.replace("/","");
-		Logger.info("Pass 8: " + formattedOrcid);
-		formattedOrcid = formattedOrcid.replace(":","");
-		Logger.info("Pass 9: " + formattedOrcid);
-		formattedOrcid = formattedOrcid.replace(".","");
-		Logger.info("Pass 10: " + formattedOrcid);
-		formattedOrcid = formattedOrcid.replace("\\s","");
-		Logger.info("Pass 11: " + formattedOrcid);
+		formattedOrcid = formattedOrcid.replaceAll("(HTTPS|HTTP|WWW|ORCID|ORG|COM|NET|[/:.\\s])","");
 		
 		if (validateOrcidFormat(formattedOrcid)) {
 			return formattedOrcid;
 		} else if (formattedOrcid.matches("[0-9]{15}[0-9X]")) {
 			formattedOrcid = insertPeriodically(formattedOrcid, "-", 4);
-			Logger.info("Pass 12: " + formattedOrcid);
 			if(validateOrcidFormat(formattedOrcid))
 				return formattedOrcid;
 			else
