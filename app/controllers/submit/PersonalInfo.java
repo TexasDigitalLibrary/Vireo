@@ -128,7 +128,7 @@ public class PersonalInfo extends AbstractSubmitStep {
 		String lastName = params.get("lastName");
 		String orcid = null;
 		if(params.get("orcid")!=null)
-			orcid = Utilities.formatOrcidAsDashedId(params.get("orcid"));			
+			orcid = Utilities.formatOrcidAsDashedId(params.get("orcid"));
 		String birthYear = params.get("birthYear");
 		String program = params.get("program");
 		String college = params.get("college");
@@ -161,7 +161,10 @@ public class PersonalInfo extends AbstractSubmitStep {
 				lastName = submitter.getLastName();
 			}
 			if (sub.getOrcid() != null) {
-				disabledFields.add("orcid");
+				if(Utilities.validateOrcidFormat(sub.getOrcid()))
+					disabledFields.add("orcid");
+				else
+					validation.addError("orcid","Your ORCiD must be formatted XXXX-XXXX-XXXX-XXXX");
 				orcid = sub.getOrcid();
 			}
 			if (submitter.getBirthYear() != null) {
@@ -173,7 +176,7 @@ public class PersonalInfo extends AbstractSubmitStep {
 				disabledFields.add("birthYear");
 			}
 		}
-
+		
 		// Should the affiliation group be locked.
 		if (isFieldGroupLocked("affiliation")) {
 			if (isValidProgram(submitter.getCurrentProgram())) {
@@ -236,8 +239,16 @@ public class PersonalInfo extends AbstractSubmitStep {
 				sub.setStudentMiddleName(middleName);
 			if (isFieldEnabled(STUDENT_LAST_NAME))
 				sub.setStudentLastName(lastName);
-			if (isFieldEnabled(STUDENT_ORCID))
-				sub.setOrcid(orcid);
+			if (isFieldEnabled(STUDENT_ORCID)) {
+				// Don't set the ORCiD if it's formatted incorrect.
+				if(orcid != null && orcid.trim().length() > 0) {
+					if(Utilities.validateOrcidFormat(Utilities.formatOrcidAsDashedId(orcid)))
+						sub.setOrcid(orcid);
+					else
+						validation.addError("orcid","Your ORCiD must be formatted XXXX-XXXX-XXXX-XXXX");
+						
+				}
+			}
 			if (isFieldEnabled(STUDENT_BIRTH_YEAR)) {
 				// Don't fail if the year is invalid
 				if (birthYear != null && birthYear.trim().length() > 0) {
@@ -322,7 +333,7 @@ public class PersonalInfo extends AbstractSubmitStep {
 		} 
 		
 		// Has this form ever been displayed before, if not then load all the data.
-		if (params.get("form_submit") == null) {
+		if (params.get("submit_next") == null) {
 			firstName = sub.getStudentFirstName();
 			middleName = sub.getStudentMiddleName();
 			lastName = sub.getStudentLastName();
@@ -339,8 +350,6 @@ public class PersonalInfo extends AbstractSubmitStep {
 			currentPhone = submitter.getCurrentPhoneNumber();
 			currentAddress = submitter.getCurrentPostalAddress();
 		}
-	
-	
 	
 		// Get display settings
 		List<String> stickies = new ArrayList<String>();
