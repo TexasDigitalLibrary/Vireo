@@ -160,12 +160,11 @@ public class PersonalInfo extends AbstractSubmitStep {
 				disabledFields.add("lastName");
 				lastName = submitter.getLastName();
 			}
-			if (sub.getOrcid() != null) {
-				if(Utilities.validateOrcidFormat(sub.getOrcid()))
-					disabledFields.add("orcid");
-				else
-					validation.addError("orcid","Your ORCiD must be formatted XXXX-XXXX-XXXX-XXXX");
-				orcid = sub.getOrcid();
+			if (submitter.getOrcid() != null) {
+				if(Utilities.validateOrcidFormat(Utilities.formatOrcidAsDashedId(submitter.getOrcid()))) {
+					disabledFields.add("orcid");				
+					orcid = submitter.getOrcid();
+				}
 			}
 			if (submitter.getBirthYear() != null) {
 				if (submitter.getBirthYear() == null)
@@ -247,6 +246,8 @@ public class PersonalInfo extends AbstractSubmitStep {
 					else
 						validation.addError("orcid","Your ORCiD must be formatted XXXX-XXXX-XXXX-XXXX");
 						
+				} else {
+					sub.setOrcid(orcid);
 				}
 			}
 			if (isFieldEnabled(STUDENT_BIRTH_YEAR)) {
@@ -350,7 +351,7 @@ public class PersonalInfo extends AbstractSubmitStep {
 			currentPhone = submitter.getCurrentPhoneNumber();
 			currentAddress = submitter.getCurrentPostalAddress();
 		}
-	
+			
 		// Get display settings
 		List<String> stickies = new ArrayList<String>();
 		String stickiesRaw = settingRepo.getConfigValue(SUBMIT_PERSONAL_INFO_STICKIES);
