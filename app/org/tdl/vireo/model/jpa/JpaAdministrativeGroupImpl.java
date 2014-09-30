@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 import org.tdl.vireo.model.AdministrativeGroup;
 
@@ -15,6 +16,7 @@ import org.tdl.vireo.model.AdministrativeGroup;
  *
  */
 @Entity
+@Table(name = "administrative_groups")
 public class JpaAdministrativeGroupImpl extends JpaAbstractModel<JpaAdministrativeGroupImpl> implements AdministrativeGroup {
 
 	@Column(nullable = false)

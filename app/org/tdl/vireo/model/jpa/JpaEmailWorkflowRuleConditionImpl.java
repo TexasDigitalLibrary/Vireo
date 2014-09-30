@@ -15,7 +15,7 @@ import org.tdl.vireo.model.WorkflowEmailRule;
 import play.modules.spring.Spring;
 
 @Entity
-@Table(name = "email_workflow_rule_condition")
+@Table(name = "email_workflow_rule_conditions")
 public class JpaEmailWorkflowRuleConditionImpl extends JpaAbstractModel<JpaEmailWorkflowRuleConditionImpl> implements AbstractWorkflowRuleCondition {
 
 	@Column(nullable = false)

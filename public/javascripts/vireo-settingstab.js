@@ -978,53 +978,75 @@ function swapToInputHandler(){
 			checkValue = checkValue.replace(/\r/g,"");
 			checkValue = checkValue.replace(" ","");
 			
-			if(checkValue=="none" || checkValue=="null"){
+			if(checkValue=="none" || checkValue=="null" || checkValue == ""){
 				value="";
-				jQuery("body").append('<div id="backup"></div>')
+				jQuery("body").append('<div id="backup"></div>');
 			} else {
 				//Make back up info			
-				jQuery("body").append('<div id="backup">'+editItem.html()+'</div>')
-				
+				jQuery("body").append('<div id="backup">'+editItem.html()+'</div>');
 			} 
 
 			if(editItem.hasClass("select")) {
+				var divID = editItem.attr("data-state")+'-workflowRule-'+editItem.attr("data-ruleFieldName");
 
-				jQuery("#"+editItem.attr("data-state")+"-workflowRule-"+editItem.attr("data-ruleFieldName")+" select").attr("data-id", editItem.attr("data-id"));
-				jQuery("#"+editItem.attr("data-state")+"-workflowRule-"+editItem.attr("data-ruleFieldName")+" select").attr("data-state", editItem.attr("data-state"));
-				jQuery("#"+editItem.attr("data-state")+"-workflowRule-"+editItem.attr("data-ruleFieldName")+" select").attr("data-ruleFieldName", editItem.attr("data-ruleFieldName"));
+				var selectObj = jQuery("#"+divID+" select");
+				selectObj.attr("data-id", editItem.attr("data-id"));
+				selectObj.attr("data-state", editItem.attr("data-state"));
+				selectObj.attr("data-ruleFieldName", editItem.attr("data-ruleFieldName"));
 
 				//Select Drop Downs
-				var divID = editItem.attr("data-state")+'-workflowRule-'+editItem.attr("data-ruleFieldName");
 				var selectCode = '<div id="'+divID+'" class="editing select" >';
 				selectCode += jQuery("#"+divID).html();
 				selectCode += '<br /><i class="icon-remove" title="cancel"></i>&nbsp<i class="icon-ok" title="commit"></i></div>';
 				editItem.replaceWith(selectCode);
-				jQuery("#"+divID+" .field option").each(function(){
-					if(jQuery(this).text()==value){
-						jQuery(this).attr("selected","selected");
-					}
-				});
-				
+				// if we're selecting recipientType, make sure to split string value
+				if(editItem.attr("data-ruleFieldName") == "recipientType" && value.indexOf('(') != -1) {
+					var newValue = value.substr(0, value.indexOf('(')-1);
+					jQuery("#"+divID+" .field option").each(function(){
+						if(jQuery(this).text()==newValue){
+							jQuery(this).attr("selected","selected");
+						} else {
+							jQuery(this).attr("selected", null);
+						}
+					});
+				} else {
+					jQuery("#"+divID+" .field option").each(function(){
+						if(jQuery(this).text()==value){
+							jQuery(this).attr("selected","selected");
+						}  else {
+							jQuery(this).attr("selected", null);
+						}
+					});
+				}
 				// if we're selecting AdminGroup as recipientType we need to dynamically add a new <select> with all of the jsDataObjects.adminGroupsArray as <options>
 				if(editItem.attr("data-ruleFieldName") == "recipientType") {
 					var div = jQuery("#"+divID);
-					var select = div.find(".field"); 
-					select.on("change", function() {
-						var selectedOption = $(this).find("option:selected").val();
-						if(selectedOption == "AdminGroup") {
-							var newSelect = "<select id=\"adminGroupsSelect\">";
-							var options = "<option>Choose a group...</option>";
-							jsDataObjects.adminGroupsArray.forEach( function(element, index, array) {
-								options += "<option value=\""+element.id+"\">"+element.name+"</option>";
-							});
-							newSelect += options;
-							newSelect += "</select>";
-							// append the new <select> after the original <select>
-							select.after(newSelect);
-						} else {
-							div.find("#adminGroupsSelect").remove();
+					var select = div.find(".field");
+					var addRemoveAdminGroup = function(obj) {
+						if(this instanceof Window != true) {
+							obj = this;
 						}
-					});
+						var selectedOption = $(obj).find("option:selected").val();
+						var newDivId = editItem.attr("data-state")+"-workflowRule-adminGroup";
+						if(selectedOption == "AdminGroup") {
+							var newSelectObj = jQuery("#"+newDivId+" select");
+							newSelectObj.attr("id", newDivId+"-select");
+							var newSelect = jQuery("#"+ newDivId).html();
+							select.after(newSelect);
+							var newValue = value.substring(value.indexOf('(')+1, value.indexOf(')'));
+							jQuery("#"+newDivId+"-select option").each(function(){
+								if(jQuery(this).text()==newValue){
+									jQuery(this).attr("selected","selected");
+								}
+							});
+						} else {
+							div.find("#"+newDivId+"-select").remove();
+						}
+					};
+					// set the on change listener
+					select.on("change", addRemoveAdminGroup);
+					// if we're editing, we need to set the default selected option
+					addRemoveAdminGroup(select);
 				}
 
 				
@@ -1143,7 +1165,7 @@ function cancelEditingHandler(){
  */
 function commitChangesHandler(eventTarget, jsonURL){
 	var classValue = "";
-	var ruleField;  
+	var ruleField;
 	if(jQuery(".editing").hasClass("select")){
 		classValue = classValue + 'select ';
 		$ruleField = jQuery(".editing select");
@@ -1157,12 +1179,12 @@ function commitChangesHandler(eventTarget, jsonURL){
 	var parent = eventTarget.parent();
 	console.log(parent)
 	
-	var ruleFieldName = $ruleField.attr("data-ruleFieldName");
-	var theValue = $ruleField.val();
+	var ruleFieldName = $($ruleField[0]).attr("data-ruleFieldName");
+	var theValue = $($ruleField[0]).val();
 	
-	var id = $ruleField.attr("data-id");
-	var attrID = $ruleField.attr("data-state") +"-"+ $ruleField.attr("data-id") +"-"+ $ruleField.attr("data-ruleFieldName");
-	var stateString = $ruleField.attr("data-state");
+	var id = $($ruleField[0]).attr("data-id");
+	var attrID = $($ruleField[0]).attr("data-state") +"-"+ $($ruleField[0]).attr("data-id") +"-"+ $($ruleField[0]).attr("data-ruleFieldName");
+	var stateString = $($ruleField[0]).attr("data-state");
 	var conditionCategory = "";
 	var conditionIDString = "";
 	var recipientString = "";
@@ -1171,26 +1193,29 @@ function commitChangesHandler(eventTarget, jsonURL){
 
 	var currentConditionCategory = $("#"+attrID+"Category").text().trim().toLowerCase()+"sArray";
 
+	var adminGroupId = null;
+
 	switch(ruleFieldName) {
 	    case "conditionCategory":
 	        conditionCategory = theValue;
 	        break;
 	    case "condition":
-
 	        conditionString = theValue;
-
 	        $(jsDataObjects[currentConditionCategory]).each(function(key, condition) {
 	        	if(condition.name == theValue)
 	        		conditionIDString = condition.id;
 	        });
-
 	        break;
 	    case "recipientType":
-	        recipientString = theValue;	        
+	        recipientString = theValue;
+	        // if recipientType is AdminGroup, set the adminGroupId too
+	        if(recipientString == "AdminGroup") {
+				adminGroupId = parseInt($($ruleField[1]).find("option:selected").val());
+	        }
 	        break;
 	    case "templateString":
 	        templateString = theValue;
-	        break;    
+	        break;
 	    default:
 	        break;
 	}
@@ -1206,11 +1231,11 @@ function commitChangesHandler(eventTarget, jsonURL){
 		templateString: templateString
 	}
 	
-	if(ruleFieldName == "recipientType" && recipientString == "AdminGroup") {
-		var adminGroup = jQuery("#adminGroupsSelect option:selected").val();
-		reqObj.AdminGroupId = adminGroup;
+	// only pass adminGroup to ajax if it's set
+	if(adminGroupId != null) {
+		reqObj.AdminGroupId = adminGroupId;
 	}
-debugger;
+
 	jQuery.ajax({
 		url:jsonURL,
 		data: reqObj,
@@ -1221,7 +1246,7 @@ debugger;
 			
 			if(data.success) {
 
-				jQuery("div."+attrID).replaceWith('<span id="'+attrID+'" class="'+classValue+'" data-state="'+$ruleField.attr("data-state")+'" data-id="'+$ruleField.attr("data-id")+'" data-ruleFieldName="'+ruleFieldName+'"><i class="icon-pencil"></i> '+data[ruleFieldName]+'</span>');
+				jQuery("div."+attrID).replaceWith('<span id="'+attrID+'" class="'+classValue+'" data-state="'+$($ruleField[0]).attr("data-state")+'" data-id="'+$($ruleField[0]).attr("data-id")+'" data-ruleFieldName="'+ruleFieldName+'"><i class="icon-pencil"></i> '+data[ruleFieldName]+'</span>');
 
 				console.log(recipientString+templateString != "");
 
@@ -1236,7 +1261,7 @@ debugger;
 					if(data.condition == "null") $("#"+attrID.replace("Category", "")).html("<i class='icon-pencil'></i> none");
 
 
-					var $hiddenAutoComplete = jQuery("#"+$ruleField.attr("data-state")+"-workflowRule-"+ruleFieldName);
+					var $hiddenAutoComplete = jQuery("#"+$($ruleField[0]).attr("data-state")+"-workflowRule-"+ruleFieldName);
 
 					$hiddenAutoComplete.attr("data-source", $hiddenAutoComplete.attr("data-"+data.conditionCategory));
 
@@ -1269,13 +1294,13 @@ debugger;
 				}
 
 			} else {
-				jQuery("div."+attrID).replaceWith('<span id="'+attrID+'" class="error '+classValue+'" data-state="'+$ruleField.attr("data-state")+'" data-id="'+$ruleField.attr("data-id")+'" data-ruleFieldName="'+$ruleField.attr("data-ruleFieldName")+'"><i class="icon-pencil"></i> Error! <a href="#" class="tooltip-icon" rel="tooltip" title="'+data.message+'"><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
+				jQuery("div."+attrID).replaceWith('<span id="'+attrID+'" class="error '+classValue+'" data-state="'+$($ruleField[0]).attr("data-state")+'" data-id="'+$($ruleField[0]).attr("data-id")+'" data-ruleFieldName="'+$($ruleField[0]).attr("data-ruleFieldName")+'"><i class="icon-pencil"></i> Error! <a href="#" class="tooltip-icon" rel="tooltip" title="'+data.message+'"><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
 				jQuery('.tooltip-icon').tooltip();
 			}
 			//refreshAll();
 		},
 		error:function(){
-			jQuery("div."+attrID).replaceWith('<span id="'+attrID+'" class="error '+classValue+'" data-state="'+$ruleField.attr("data-state")+'" data-id="'+$ruleField.attr("data-id")+'" data-ruleFieldName="'+$ruleField.attr("data-ruleFieldName")+'">'+jQuery("#backup").html()+' <a href="#" class="tooltip-icon" rel="tooltip" title="There was an error with your request."><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
+			jQuery("div."+attrID).replaceWith('<span id="'+attrID+'" class="error '+classValue+'" data-state="'+$($ruleField[0]).attr("data-state")+'" data-id="'+$($ruleField[0]).attr("data-id")+'" data-ruleFieldName="'+$($ruleField[0]).attr("data-ruleFieldName")+'">'+jQuery("#backup").html()+' <a href="#" class="tooltip-icon" rel="tooltip" title="There was an error with your request."><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
 			jQuery('.tooltip-icon').tooltip();
 		}
 		

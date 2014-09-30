@@ -92,13 +92,14 @@ public class EmailSettingsTab extends SettingsTab {
 				rule = settingRepo.findWorkflowEmailRule(ruleID);
 					
 				AbstractWorkflowRuleCondition condition;
-				//Check if condition exist
+				//Check if condition exists
 				if((condition = rule.getCondition()) == null) {
 					condition = new JpaEmailWorkflowRuleConditionImpl();
 					condition.save();
 					rule.setCondition(condition);
 				} 
 				
+				//Check if condition category exists
 				if (conditionCategory != null && conditionCategory.trim().length() != 0) {
 					condition.setConditionType(ConditionType.valueOf(conditionCategory));
 					condition.setConditionId(null);
@@ -107,6 +108,7 @@ public class EmailSettingsTab extends SettingsTab {
 					condition.save();
 				}
 				
+				//Check if conditionID exists
 				if (conditionIDString != null && conditionIDString.trim().length() != 0) {
 					condition.setConditionId(Long.parseLong(conditionIDString));
 					if(rule.getCondition().getConditionType() != null)
@@ -117,21 +119,20 @@ public class EmailSettingsTab extends SettingsTab {
 				}
 				
 				EmailTemplate template;
+				//Check if email template exists
 				if (templateString != null && templateString.trim().length() != 0) {
-										
 					template = settingRepo.findEmailTemplate(Long.parseLong(templateString));
 					rule.setEmailTemplate((JpaEmailTemplateImpl)template);
 					templateJSON = rule.getEmailTemplate().name;
-					
 				} 
 				
+				//Check if recipient type exists
 				if (recipientString != null && recipientString.trim().length() != 0) {
-					
-					Logger.info(recipientString);
-					
 					rule.setRecipientType(RecipientType.valueOf(recipientString));
+					// if recipient type is AdminGroup
 					if(rule.getRecipientType() == RecipientType.AdminGroup) {
 						String adminGroupString = params.get("AdminGroupId");
+						// Check if adminGroup Id exists
 						if(adminGroupString == null) {
 							throw new IllegalArgumentException("Can't save an AdminGroup type of recipient without AdminGroupId to link to!");
 						}
@@ -141,7 +142,7 @@ public class EmailSettingsTab extends SettingsTab {
 					} else {
 						rule.setAdminGroupRecipient(null);
 					}
-					recipientTypeJSON = rule.getRecipientType().toString();
+					recipientTypeJSON = rule.getRecipientType().toString() + (rule.getAdminGroupRecipient() != null ? " (" + rule.getAdminGroupRecipient().getName() + ")" : "");
 				}
 				
 			} else {
@@ -152,7 +153,7 @@ public class EmailSettingsTab extends SettingsTab {
 						
 			saveModelOrder(rules);
 			
-			Logger.info("%s (%d: %s) has added workflow email rule #%d.\n");
+			Logger.info("%s (%d: %s) has added workflow email rule #%d.\n","user",0,"string",rule.getId());
 			
 			renderJSON("{ \"success\": \"true\", \"id\": "+rule.getId()+", \"state\": \""+rule.getAssociatedState().getBeanName()+"\",\"conditionCategory\": \""+conditionCategoryJSON+"\",\"condition\": \""+conditionIdJSON+"\",\"conditionDisplayJSON\": \""+conditionDisplayJSON+"\",\"recipientType\": \""+recipientTypeJSON+"\",\"templateString\": \""+templateJSON+"\" }");
 			

@@ -31,7 +31,7 @@ import play.modules.spring.Spring;
  * 
  */
 @Entity
-@Table(name = "WorkflowEmailRule")
+@Table(name = "email_workflow_rules")
 public class JpaWorkflowEmailRuleImpl extends JpaAbstractModel<JpaWorkflowEmailRuleImpl> implements WorkflowEmailRule {
 
 	@Column(nullable = false)
