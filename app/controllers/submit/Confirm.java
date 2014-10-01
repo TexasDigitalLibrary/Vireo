@@ -1,23 +1,16 @@
 package controllers.submit;
 
+import static org.tdl.vireo.constant.AppConfig.GRANTOR;
+import static org.tdl.vireo.constant.AppConfig.SUBMIT_INSTRUCTIONS;
+
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
-import static org.tdl.vireo.constant.AppConfig.*;
-
 import org.apache.commons.codec.binary.Base64;
-import org.tdl.vireo.constant.AppConfig;
-import org.tdl.vireo.email.EmailService;
-import org.tdl.vireo.email.SystemEmailTemplateService;
-import org.tdl.vireo.email.VireoEmail;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.AttachmentType;
-import org.tdl.vireo.model.Configuration;
-import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
@@ -25,9 +18,6 @@ import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.state.State;
 
 import play.Logger;
-import play.modules.spring.Spring;
-import play.mvc.Router;
-import play.mvc.Router.ActionDefinition;
 import controllers.Security;
 
 /**

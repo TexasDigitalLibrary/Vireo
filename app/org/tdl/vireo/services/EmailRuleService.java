@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.tdl.vireo.email.EmailService;
 import org.tdl.vireo.email.VireoEmail;
+import org.tdl.vireo.model.AbstractWorkflowRuleCondition.ConditionType;
 import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.Department;
 import org.tdl.vireo.model.Program;
@@ -39,7 +40,7 @@ public class EmailRuleService {
 			// verify the rule is valid/complete before running it
 			if (ruleIsValid(workflowEmailRule, submission)) {
 				// if the rule's state matches the transitioned state in the submission
-				if (workflowEmailRule.getAssociatedState().equals(submission.getState().getBeanName())) {
+				if (workflowEmailRule.getAssociatedState().getBeanName().equals(submission.getState().getBeanName())) {
 					// apply condition to send only when condition is met
 					switch (workflowEmailRule.getCondition().getConditionType()) {
 					case Always:
@@ -52,7 +53,7 @@ public class EmailRuleService {
 						// get the college out of JPA
 						College ruleCollege = settingRepo.findCollege(collegeId);
 						// compare the rule's college with the submission's college
-						if (ruleCollege.getName().equals(submission.getCollege())) {
+						if (ruleCollege != null && ruleCollege.getName().equals(submission.getCollege())) {
 							// send the email
 							sendEmail(workflowEmailRule, submission);
 						}
@@ -63,7 +64,7 @@ public class EmailRuleService {
 						// get the department out of JPA
 						Department ruleDepartment = settingRepo.findDepartment(departmentId);
 						// compare the rule's department with the submission's department
-						if (ruleDepartment.getName().equals(submission.getDepartment())) {
+						if (ruleDepartment != null && ruleDepartment.getName().equals(submission.getDepartment())) {
 							// send the email
 							sendEmail(workflowEmailRule, submission);
 						}
@@ -74,7 +75,7 @@ public class EmailRuleService {
 						// get the program out of JPA
 						Program ruleProgram = settingRepo.findProgram(programId);
 						// compare the rule's program with the submission's program
-						if (ruleProgram.getName().equals(submission.getProgram())) {
+						if (ruleProgram != null && ruleProgram.getName().equals(submission.getProgram())) {
 							// send the email
 							sendEmail(workflowEmailRule, submission);
 						}
@@ -100,8 +101,21 @@ public class EmailRuleService {
 		// check condition != null
 		if (workflowEmailRule.getCondition() != null) {
 			// check condition type and id != null
-			if (workflowEmailRule.getCondition().getConditionType() == null || workflowEmailRule.getCondition().getConditionId() == null) {
+			if (workflowEmailRule.getCondition().getConditionType() == null) {
 				ret = false;
+			}
+			switch(workflowEmailRule.getCondition().getConditionType()){
+			case College:
+			case Department:
+			case Program:
+				if(workflowEmailRule.getCondition().getConditionId() == null) {
+					ret = false;
+				}
+				break;
+			case Always:
+				break;
+			default:
+				throw new UnsupportedOperationException();
 			}
 		} else {
 			ret = false;
@@ -127,7 +141,7 @@ public class EmailRuleService {
 		// generate the email with the right template and recipients
 		VireoEmail email = createEmail(emailService, workflowEmailRule, submission);
 		// send the email NOW (not as a Job)
-		emailService.sendEmail(email, false);
+		emailService.sendEmail(email, true);
 	}
 
 	/**
@@ -152,6 +166,8 @@ public class EmailRuleService {
 		}
 		// set the correct email template for this rule
 		vireoEmail.setTemplate(workflowEmailRule.getEmailTemplate());
+		// add the parameters into the email body
+		vireoEmail.addParameters(submission);
 		return vireoEmail;
 	}
 

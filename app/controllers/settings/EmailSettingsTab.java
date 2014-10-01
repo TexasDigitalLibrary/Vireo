@@ -13,6 +13,7 @@ import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.Department;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.NameFormat;
+import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.WorkflowEmailRule;
@@ -31,8 +32,6 @@ import controllers.SettingsTab;
 
 @With(Authentication.class)
 public class EmailSettingsTab extends SettingsTab {
-
-	public static StateManager stateManager = Spring.getBeanOfType(StateManager.class);
 	
 	@Security(RoleType.MANAGER)
 	public static void emailSettings(){
@@ -153,7 +152,7 @@ public class EmailSettingsTab extends SettingsTab {
 						
 			saveModelOrder(rules);
 			
-			Logger.info("%s (%d: %s) has added workflow email rule #%d.\n","user",0,"string",rule.getId());
+			Logger.info("%s (%d: %s) has added workflow email rule #%d.\n",context.getPerson().getDisplayName(),context.getPerson().getId(),context.getPerson().getRole(),rule.getId());
 			
 			renderJSON("{ \"success\": \"true\", \"id\": "+rule.getId()+", \"state\": \""+rule.getAssociatedState().getBeanName()+"\",\"conditionCategory\": \""+conditionCategoryJSON+"\",\"condition\": \""+conditionIdJSON+"\",\"conditionDisplayJSON\": \""+conditionDisplayJSON+"\",\"recipientType\": \""+recipientTypeJSON+"\",\"templateString\": \""+templateJSON+"\" }");
 			

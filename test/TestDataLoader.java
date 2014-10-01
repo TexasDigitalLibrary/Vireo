@@ -2,14 +2,23 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.security.auth.Subject;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
+import org.junit.internal.runners.rules.RuleFieldValidator;
 import org.tdl.vireo.constant.AppConfig;
+import org.tdl.vireo.email.RecipientType;
 import org.tdl.vireo.email.SystemEmailTemplateService;
 import org.tdl.vireo.export.Depositor;
 import org.tdl.vireo.export.Packager;
@@ -19,6 +28,7 @@ import org.tdl.vireo.model.CommitteeMember;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.DepositLocation;
+import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
@@ -27,6 +37,12 @@ import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionRepository;
+import org.tdl.vireo.model.AbstractWorkflowRuleCondition.ConditionType;
+import org.tdl.vireo.model.WorkflowEmailRule;
+import org.tdl.vireo.model.jpa.JpaAdministrativeGroupImpl;
+import org.tdl.vireo.model.jpa.JpaEmailTemplateImpl;
+import org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleConditionImpl;
+import org.tdl.vireo.model.jpa.JpaWorkflowEmailRuleImpl;
 import org.tdl.vireo.proquest.ProquestSubject;
 import org.tdl.vireo.proquest.ProquestVocabularyRepository;
 import org.tdl.vireo.search.impl.LuceneIndexerImpl;
@@ -36,14 +52,12 @@ import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
 
 import controllers.settings.ThemeSettingsTab;
-
 import play.Logger;
 import play.Play;
 import play.db.jpa.JPA;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
 import play.modules.spring.Spring;
-
 import static org.tdl.vireo.constant.AppConfig.*;
 
 
@@ -110,112 +124,128 @@ public class TestDataLoader extends Job {
 	};
 	
 	/**
+	 * Initial Emails hashMap to use for email addresses for programs, colleges and departments
+	 */
+	private static HashMap<Integer, String> testEmails = new HashMap<Integer, String>();
+	static
+	{
+		testEmails.put(0, "vireo-test-email-0@gmail.com");
+		testEmails.put(1, "vireo-test-email-1@gmail.com");
+	}
+	
+	/**
 	 * Initial Programs to create
 	 */
-	private static final String[] PROGRAMS_DEFINITIONS = {
-		"Graduate Studies",
-		"Undergraduate Honors Fellows",
-		"Undergraduate Scholars"
+	private static final ProgramsArray[] PROGRAMS_DEFINITIONS = {
+		new ProgramsArray("Graduate Studies", testEmails),
+		new ProgramsArray("Undergraduate Honors Fellows", testEmails),
+		new ProgramsArray("Undergraduate Scholars", testEmails)
 	};
 	
 	/**
 	 * Initial Colleges to create
 	 */
-	private static final String[] COLLEGES_DEFINITIONS = {
-		"College of Agriculture and Life Sciences",
-		"College of Architecture",
-		"College of Education and Human Development",
-		"College of Geosciences",
-		"College of Liberal Arts",
-		"College of Science",
-		"College of Veterinary Medicine and Biomedical Sciences",
-		"Dwight Look College of Engineering",
-		"Interdisciplinary Degree Programs",
-		"Mays Business School",
-		"Texas A&M University at Galveston",
-		"Texas A&M University at Qatar"
+	private static final CollegesArray[] COLLEGES_DEFINITIONS = {
+		new CollegesArray("College of Agriculture and Life Sciences", testEmails),
+		new CollegesArray("College of Architecture", testEmails),
+		new CollegesArray("College of Education and Human Development", testEmails),
+		new CollegesArray("College of Geosciences", testEmails),
+		new CollegesArray("College of Liberal Arts", testEmails),
+		new CollegesArray("College of Science", testEmails),
+		new CollegesArray("College of Veterinary Medicine and Biomedical Sciences", testEmails),
+		new CollegesArray("Dwight Look College of Engineering", testEmails),
+		new CollegesArray("Interdisciplinary Degree Programs", testEmails),
+		new CollegesArray("Mays Business School", testEmails),
+		new CollegesArray("Texas A&M University at Galveston", testEmails),
+		new CollegesArray("Texas A&M University at Qatar", testEmails)
 	};
 	
 	/**
 	 * Initial Departments to create
 	 */
 	
-	private static final String[] DEPARTMENTS_DEFINITIONS = {
-		"Accounting",
-		"Aerospace Engineering",
-		"Agricultural Economics",
-		"Agricultural Leadership, Education, and Communications",
-		"Animal Science",
-		"Anthropology",
-		"Architecture",
-		"Atmospheric Sciences",
-		"Biochemistry and Biophysics",
-		"Biological and Agricultural Engineering",
-		"Biology",
-		"Biomedical Engineering",
-		"Chemical Engineering",
-		"Chemistry",
-		"Civil Engineering",
-		"College of Agriculture and Life Sciences",
-		"College of Architecture",
-		"College of Education and Human Development",
-		"College of Engineering",
-		"College of Geosciences",
-		"College of Liberal Arts",
-		"College of Science",
-		"College of Veterinary Medicine and Biomedical Sciences",
-		"Communication",
-		"Computer Science and Engineering",
-		"Construction Science",
-		"Economics",
-		"Ecosystem Science and Management",
-		"Educational Administration and Human Resource Development",
-		"Educational Psychology",
-		"Electrical and Computer Engineering",
-		"English",
-		"Entomology",
-		"Finance",
-		"Geography",
-		"Geology and Geophysics",
-		"Health and Kinesiology",
-		"Hispanic Studies",
-		"History",
-		"Horticultural Sciences",
-		"Industrial and Systems Engineering",
-		"Information and Operations Management",
-		"Landscape Architecture and Urban Planning",
-		"Management",
-		"Marine Biology",
-		"Marine Sciences",
-		"Marketing",
-		"Mathematics",
-		"Mays Business School",
-		"Mechanical Engineering",
-		"Nuclear Engineering",
-		"Nutrition and Food Science",
-		"Oceanography",
-		"Performance Studies",
-		"Petroleum Engineering",
-		"Philosophy and Humanities",
-		"Physics and Astronomy",
-		"Plant Pathology and Microbiology",
-		"Political Science",
-		"Poultry Science",
-		"Psychology",
-		"Recreation, Park, and Tourism Sciences",
-		"Sociology",
-		"Soil and Crop Sciences",
-		"Statistics",
-		"Teaching, Learning, and Culture",
-		"Veterinary Integrative Biosciences",
-		"Veterinary Large Animal Clinical Sciences",
-		"Veterinary Pathobiology",
-		"Veterinary Physiology and Pharmacology",
-		"Veterinary Small Animal Clinical Sciences",
-		"Visualization",
-		"Wildlife and Fisheries Sciences"
+	private static final DepartmentsArray[] DEPARTMENTS_DEFINITIONS = {
+		new DepartmentsArray("Accounting", testEmails),
+		new DepartmentsArray("Aerospace Engineering", testEmails),
+		new DepartmentsArray("Agricultural Economics", testEmails),
+		new DepartmentsArray("Agricultural Leadership, Education, and Communications", testEmails),
+		new DepartmentsArray("Animal Science", testEmails),
+		new DepartmentsArray("Anthropology", testEmails),
+		new DepartmentsArray("Architecture", testEmails),
+		new DepartmentsArray("Atmospheric Sciences", testEmails),
+		new DepartmentsArray("Biochemistry and Biophysics", testEmails),
+		new DepartmentsArray("Biological and Agricultural Engineering", testEmails),
+		new DepartmentsArray("Biology", testEmails),
+		new DepartmentsArray("Biomedical Engineering", testEmails),
+		new DepartmentsArray("Chemical Engineering", testEmails),
+		new DepartmentsArray("Chemistry", testEmails),
+		new DepartmentsArray("Civil Engineering", testEmails),
+		new DepartmentsArray("College of Agriculture and Life Sciences", testEmails),
+		new DepartmentsArray("College of Architecture", testEmails),
+		new DepartmentsArray("College of Education and Human Development", testEmails),
+		new DepartmentsArray("College of Engineering", testEmails),
+		new DepartmentsArray("College of Geosciences", testEmails),
+		new DepartmentsArray("College of Liberal Arts", testEmails),
+		new DepartmentsArray("College of Science", testEmails),
+		new DepartmentsArray("College of Veterinary Medicine and Biomedical Sciences", testEmails),
+		new DepartmentsArray("Communication", testEmails),
+		new DepartmentsArray("Computer Science and Engineering", testEmails),
+		new DepartmentsArray("Construction Science", testEmails),
+		new DepartmentsArray("Economics", testEmails),
+		new DepartmentsArray("Ecosystem Science and Management", testEmails),
+		new DepartmentsArray("Educational Administration and Human Resource Development", testEmails),
+		new DepartmentsArray("Educational Psychology", testEmails),
+		new DepartmentsArray("Electrical and Computer Engineering", testEmails),
+		new DepartmentsArray("English", testEmails),
+		new DepartmentsArray("Entomology", testEmails),
+		new DepartmentsArray("Finance", testEmails),
+		new DepartmentsArray("Geography", testEmails),
+		new DepartmentsArray("Geology and Geophysics", testEmails),
+		new DepartmentsArray("Health and Kinesiology", testEmails),
+		new DepartmentsArray("Hispanic Studies", testEmails),
+		new DepartmentsArray("History", testEmails),
+		new DepartmentsArray("Horticultural Sciences", testEmails),
+		new DepartmentsArray("Industrial and Systems Engineering", testEmails),
+		new DepartmentsArray("Information and Operations Management", testEmails),
+		new DepartmentsArray("Landscape Architecture and Urban Planning", testEmails),
+		new DepartmentsArray("Management", testEmails),
+		new DepartmentsArray("Marine Biology", testEmails),
+		new DepartmentsArray("Marine Sciences", testEmails),
+		new DepartmentsArray("Marketing", testEmails),
+		new DepartmentsArray("Mathematics", testEmails),
+		new DepartmentsArray("Mays Business School", testEmails),
+		new DepartmentsArray("Mechanical Engineering", testEmails),
+		new DepartmentsArray("Nuclear Engineering", testEmails),
+		new DepartmentsArray("Nutrition and Food Science", testEmails),
+		new DepartmentsArray("Oceanography", testEmails),
+		new DepartmentsArray("Performance Studies", testEmails),
+		new DepartmentsArray("Petroleum Engineering", testEmails),
+		new DepartmentsArray("Philosophy and Humanities", testEmails),
+		new DepartmentsArray("Physics and Astronomy", testEmails),
+		new DepartmentsArray("Plant Pathology and Microbiology", testEmails),
+		new DepartmentsArray("Political Science", testEmails),
+		new DepartmentsArray("Poultry Science", testEmails),
+		new DepartmentsArray("Psychology", testEmails),
+		new DepartmentsArray("Recreation, Park, and Tourism Sciences", testEmails),
+		new DepartmentsArray("Sociology", testEmails),
+		new DepartmentsArray("Soil and Crop Sciences", testEmails),
+		new DepartmentsArray("Statistics", testEmails),
+		new DepartmentsArray("Teaching, Learning, and Culture", testEmails),
+		new DepartmentsArray("Veterinary Integrative Biosciences", testEmails),
+		new DepartmentsArray("Veterinary Large Animal Clinical Sciences", testEmails),
+		new DepartmentsArray("Veterinary Pathobiology", testEmails),
+		new DepartmentsArray("Veterinary Physiology and Pharmacology", testEmails),
+		new DepartmentsArray("Veterinary Small Animal Clinical Sciences", testEmails),
+		new DepartmentsArray("Visualization", testEmails),
+		new DepartmentsArray("Wildlife and Fisheries Sciences", testEmails)
 	};
 	
+	private static final AdministrativeGroupsArray[] ADMINISTRATIVE_GROUPS = {
+		new AdministrativeGroupsArray("Overseer", testEmails),
+		new AdministrativeGroupsArray("Grad School", testEmails),
+		new AdministrativeGroupsArray("Librarians", testEmails)
+	};
+
 	/**
 	 * Initial Majors to create
 	 */
@@ -508,6 +538,39 @@ public class TestDataLoader extends Job {
 		"es",
 		"fr"
 	};
+
+	/**
+	 * Initial Email Workflow Rules Conditions
+	 */
+	private static final EmailWorkflowRuleConditionsArray[] EMAIL_WORKFLOW_RULE_CONDITIONS = {
+		new EmailWorkflowRuleConditionsArray(null, ConditionType.Always), // always
+		new EmailWorkflowRuleConditionsArray(Long.valueOf(1), ConditionType.College), // when submission's College is College with ID 1
+		new EmailWorkflowRuleConditionsArray(Long.valueOf(1), ConditionType.Department), // when submission's Department is Department with ID 1
+		new EmailWorkflowRuleConditionsArray(Long.valueOf(1), ConditionType.Program) // when submission's Program is Program with ID 1
+		
+	};
+	
+	/**
+	 * Initial Email Workflow Rules
+	 */
+	private static final EmailWorkflowRulesArray[] EMAIL_WORKFLOW_RULES = {
+		// Test all condition types
+		new EmailWorkflowRulesArray("Submitted", RecipientType.Advisor, null, EMAIL_WORKFLOW_RULE_CONDITIONS[0], EMAIL_TEMPLATE_DEFINITIONS[1]), // When State is "Submitted" Always send to submission's Advisor (*DEFAULT RULE, needs to be sent using email template 1 as it contains the advisor hash)
+		new EmailWorkflowRulesArray("Submitted", RecipientType.Advisor, null, EMAIL_WORKFLOW_RULE_CONDITIONS[1], EMAIL_TEMPLATE_DEFINITIONS[0]), // When State is "Submitted" and College ID is 0 send to submission's Advisor
+		new EmailWorkflowRulesArray("Submitted", RecipientType.Advisor, null, EMAIL_WORKFLOW_RULE_CONDITIONS[2], EMAIL_TEMPLATE_DEFINITIONS[0]), // When State is "Submitted" and Department ID is 0 send to submission's Advisor
+		new EmailWorkflowRulesArray("Submitted", RecipientType.Advisor, null, EMAIL_WORKFLOW_RULE_CONDITIONS[3], EMAIL_TEMPLATE_DEFINITIONS[0]), // When State is "Submitted" and Program ID is 0 send to submission's Advisor		
+		// Test all recipient types
+		new EmailWorkflowRulesArray("Submitted", RecipientType.Student, null, EMAIL_WORKFLOW_RULE_CONDITIONS[0], EMAIL_TEMPLATE_DEFINITIONS[1]), // When State is "Submitted" Always send to submission's Student (*DEFAULT RULE, needs to be sent using email template 1 as it contains the advisor hash)		
+		new EmailWorkflowRulesArray("Submitted", RecipientType.College, null, EMAIL_WORKFLOW_RULE_CONDITIONS[0], EMAIL_TEMPLATE_DEFINITIONS[0]), // When State is "Submitted" Always send to submission's College
+		new EmailWorkflowRulesArray("Submitted", RecipientType.Department, null, EMAIL_WORKFLOW_RULE_CONDITIONS[0], EMAIL_TEMPLATE_DEFINITIONS[0]), // When State is "Submitted" Always send to submission's Department
+		new EmailWorkflowRulesArray("Submitted", RecipientType.Program, null, EMAIL_WORKFLOW_RULE_CONDITIONS[0], EMAIL_TEMPLATE_DEFINITIONS[0]), // When State is "Submitted" Always send to submission's Program
+		new EmailWorkflowRulesArray("Submitted", RecipientType.AdminGroup, Long.valueOf(1), EMAIL_WORKFLOW_RULE_CONDITIONS[0], EMAIL_TEMPLATE_DEFINITIONS[0]), // When State is "Submitted" Always send to Administrative Group with ID 1
+		// Test all State types		
+		new EmailWorkflowRulesArray("CorrectionsReceived", RecipientType.Advisor, null, EMAIL_WORKFLOW_RULE_CONDITIONS[0], EMAIL_TEMPLATE_DEFINITIONS[0]), // When State is "CorrectionsReceived" Always send to submission's Advisor
+		new EmailWorkflowRulesArray("Approved", RecipientType.Advisor, null, EMAIL_WORKFLOW_RULE_CONDITIONS[0], EMAIL_TEMPLATE_DEFINITIONS[0]), // When State is "Approved" Always send to submission's Advisor
+		new EmailWorkflowRulesArray("PendingPublication", RecipientType.Advisor, null, EMAIL_WORKFLOW_RULE_CONDITIONS[0], EMAIL_TEMPLATE_DEFINITIONS[0]), // When State is "PendingPublication" Always send to submission's Advisor
+		new EmailWorkflowRulesArray("Published", RecipientType.Advisor, null, EMAIL_WORKFLOW_RULE_CONDITIONS[0], EMAIL_TEMPLATE_DEFINITIONS[0]) // When State is "Published" Always send to submission's Advisor
+	};
 	
 	/**
 	 * This is the driver method which will call the three types of load methods
@@ -602,18 +665,18 @@ public class TestDataLoader extends Job {
 		}
 		
 		// Create all programs
-		for(String programDefinition : PROGRAMS_DEFINITIONS) {
-			settingRepo.createProgram(programDefinition).save();
+		for(ProgramsArray programDefinition : PROGRAMS_DEFINITIONS) {
+			settingRepo.createProgram(programDefinition.name, programDefinition.emails).save();
 		}
 		
 		// Create all colleges
-		for(String collegeDefinition : COLLEGES_DEFINITIONS) {
-			settingRepo.createCollege(collegeDefinition).save();
+		for(CollegesArray collegeDefinition : COLLEGES_DEFINITIONS) {
+			settingRepo.createCollege(collegeDefinition.name, collegeDefinition.emails).save();
 		}
 		
 		// Create all departments
-		for(String departmentDefinition : DEPARTMENTS_DEFINITIONS) {
-			settingRepo.createDepartment(departmentDefinition).save();
+		for(DepartmentsArray departmentDefinition : DEPARTMENTS_DEFINITIONS) {
+			settingRepo.createDepartment(departmentDefinition.name, departmentDefinition.emails).save();
 		}
 		
 		// Create all majors
@@ -655,6 +718,32 @@ public class TestDataLoader extends Job {
 		systemEmailService.generateAllSystemEmailTemplates();
 		for(EmailTemplateArray templateDefinition : EMAIL_TEMPLATE_DEFINITIONS) {
 			settingRepo.createEmailTemplate(templateDefinition.name, templateDefinition.subject, templateDefinition.message).save();
+		}
+		
+		// Create all administrative groups
+		for(AdministrativeGroupsArray adminGroupDefinition : ADMINISTRATIVE_GROUPS) {
+			settingRepo.createAdministrativeGroup(adminGroupDefinition.name, adminGroupDefinition.emails).save();
+		}
+		
+		// Create all email workflow rules
+		for(EmailWorkflowRulesArray ruleDefinition: EMAIL_WORKFLOW_RULES) {
+			State ruleState = stateManager.getState(ruleDefinition.associatedState);
+			WorkflowEmailRule wferule = settingRepo.createWorkflowEmailRule(ruleState);
+			JpaEmailWorkflowRuleConditionImpl condition = new JpaEmailWorkflowRuleConditionImpl();
+			condition.setConditionId(ruleDefinition.condition.conditionId);
+			condition.setConditionType(ruleDefinition.condition.conditionType);
+			condition.save();
+			wferule.setCondition(condition);
+			JpaEmailTemplateImpl emailTemplate = (JpaEmailTemplateImpl)settingRepo.findEmailTemplateByName(ruleDefinition.emailTemplate.name);
+			wferule.setEmailTemplate(emailTemplate);
+			wferule.setRecipientType(ruleDefinition.recipientType);
+			if(ruleDefinition.adminGroupRecipient != null) {
+				JpaAdministrativeGroupImpl adminGroup = (JpaAdministrativeGroupImpl) settingRepo.findAdministrativeGroup(ruleDefinition.adminGroupRecipient);
+				wferule.setAdminGroupRecipient(adminGroup);
+			} else {
+				wferule.setAdminGroupRecipient(null);
+			}
+			wferule.save();
 		}
 		
 		// Create all deposit locations
@@ -814,13 +903,13 @@ public class TestDataLoader extends Job {
 				}
 				
 				if (random.nextInt(100) > 5)
-					sub.setDepartment(DEPARTMENTS_DEFINITIONS[random.nextInt(DEPARTMENTS_DEFINITIONS.length-1)]);
+					sub.setDepartment(DEPARTMENTS_DEFINITIONS[random.nextInt(DEPARTMENTS_DEFINITIONS.length-1)].name);
 				
 				if (random.nextInt(100) > 5)
-					sub.setProgram(PROGRAMS_DEFINITIONS[random.nextInt(PROGRAMS_DEFINITIONS.length-1)]);
+					sub.setProgram(PROGRAMS_DEFINITIONS[random.nextInt(PROGRAMS_DEFINITIONS.length-1)].name);
 				
 				if (random.nextInt(100) > 5)
-					sub.setCollege(COLLEGES_DEFINITIONS[random.nextInt(COLLEGES_DEFINITIONS.length-1)]);
+					sub.setCollege(COLLEGES_DEFINITIONS[random.nextInt(COLLEGES_DEFINITIONS.length-1)].name);
 				
 				if (random.nextInt(100) > 5)
 					sub.setMajor(MAJORS_DEFINITIONS[random.nextInt(MAJORS_DEFINITIONS.length-1)]);
@@ -1192,7 +1281,73 @@ public class TestDataLoader extends Job {
 		}
 	}
 	
-	private static class EmbargoArray{
+	private static class CollegesArray {
+		String name;
+		HashMap<Integer, String> emails;
+		
+		public CollegesArray(String name, HashMap<Integer, String> emails) {
+	        this.name = name;
+	        this.emails = emails;
+        }
+	}
+	
+	private static class ProgramsArray {
+		String name;
+		HashMap<Integer, String> emails;
+		
+		public ProgramsArray(String name, HashMap<Integer, String> emails) {
+	        this.name = name;
+	        this.emails = emails;
+        }
+	}
+	
+	private static class DepartmentsArray {
+		String name;
+		HashMap<Integer, String> emails;
+		
+		public DepartmentsArray(String name, HashMap<Integer, String> emails) {
+	        this.name = name;
+	        this.emails = emails;
+        }
+	}
+	
+	private static class AdministrativeGroupsArray {
+		public String name;
+		public HashMap<Integer, String> emails;
+		
+		public AdministrativeGroupsArray(String name, HashMap<Integer, String> emails) {
+			this.name = name;
+			this.emails = emails;
+        }
+	}
+	
+	private static class EmailWorkflowRuleConditionsArray {
+		public Long conditionId;
+		public ConditionType conditionType;
+		
+		public EmailWorkflowRuleConditionsArray(Long conditionId, ConditionType conditionType) {
+			this.conditionId = conditionId;
+			this.conditionType = conditionType;
+        }
+	}
+	
+	private static class EmailWorkflowRulesArray {
+		public String associatedState;
+		public RecipientType recipientType;
+		public Long adminGroupRecipient;
+		public EmailWorkflowRuleConditionsArray condition;
+		public EmailTemplateArray emailTemplate;
+		
+		public EmailWorkflowRulesArray(String associatedState, RecipientType recipientType, Long adminGroupRecipient, EmailWorkflowRuleConditionsArray condition, EmailTemplateArray emailTemplate) {
+	        this.associatedState = associatedState;
+	        this.recipientType = recipientType;
+	        this.adminGroupRecipient = adminGroupRecipient;
+	        this.condition = condition;
+	        this.emailTemplate = emailTemplate;
+        }
+	}
+	
+	private static class EmbargoArray {
 		
 		String name;
 		String description;
