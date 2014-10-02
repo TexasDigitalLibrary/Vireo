@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
+import org.tdl.vireo.model.AbstractWorkflowRuleCondition;
+import org.tdl.vireo.model.AbstractWorkflowRuleCondition.ConditionType;
 import org.tdl.vireo.model.AdministrativeGroup;
 import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.CommitteeMemberRoleType;
@@ -17,6 +19,7 @@ import org.tdl.vireo.model.Department;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.EmailTemplate;
+import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.Language;
@@ -32,7 +35,6 @@ import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.SubmissionRepository;
-import org.tdl.vireo.model.WorkflowEmailRule;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
@@ -552,25 +554,25 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 		}
 
 		@Override
-        public WorkflowEmailRule createWorkflowEmailRule(State associatedState) {
+        public EmailWorkflowRule createEmailWorkflowRule(State associatedState) {
 	        // TODO Auto-generated method stub
 	        return null;
         }
 
 		@Override
-        public WorkflowEmailRule findWorkflowEmailRule(Long id) {
+        public EmailWorkflowRule findEmailWorkflowRule(Long id) {
 	        // TODO Auto-generated method stub
 	        return null;
         }
 
 		@Override
-        public List<WorkflowEmailRule> findWorkflowEmailRulesByState(State type) {
+        public List<EmailWorkflowRule> findEmailWorkflowRulesByState(State type) {
 	        // TODO Auto-generated method stub
 	        return null;
         }
 
 		@Override
-        public List<WorkflowEmailRule> findAllWorkflowEmailRules() {
+        public List<EmailWorkflowRule> findAllEmailWorkflowRules() {
 	        // TODO Auto-generated method stub
 	        return null;
         }
@@ -601,6 +603,24 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 
 		@Override
         public List<AdministrativeGroup> findAllAdministrativeGroups() {
+	        // TODO Auto-generated method stub
+	        return null;
+        }
+
+		@Override
+        public AbstractWorkflowRuleCondition createEmailWorkflowRuleCondition(ConditionType condition) {
+	        // TODO Auto-generated method stub
+	        return null;
+        }
+
+		@Override
+        public List<AbstractWorkflowRuleCondition> findAllEmailWorkflowRuleConditions() {
+	        // TODO Auto-generated method stub
+	        return null;
+        }
+
+		@Override
+        public AbstractWorkflowRuleCondition findEmailWorkflowRuleCondition(Long id) {
 	        // TODO Auto-generated method stub
 	        return null;
         }

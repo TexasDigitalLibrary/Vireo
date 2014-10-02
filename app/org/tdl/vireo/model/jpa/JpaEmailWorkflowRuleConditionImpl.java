@@ -3,14 +3,10 @@ package org.tdl.vireo.model.jpa;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.AbstractWorkflowRuleCondition;
 import org.tdl.vireo.model.SettingsRepository;
-import org.tdl.vireo.model.WorkflowEmailRule;
 
 import play.modules.spring.Spring;
 
@@ -23,13 +19,18 @@ public class JpaEmailWorkflowRuleConditionImpl extends JpaAbstractModel<JpaEmail
 
 	@Column
 	public Long conditionId;
-	
-	@OneToOne(mappedBy = "condition")
-    private JpaWorkflowEmailRuleImpl ruleId;
-	
+		
 	@Enumerated
 	public ConditionType conditionType;
 
+	public JpaEmailWorkflowRuleConditionImpl() {
+		this(null);
+    }
+	
+	public JpaEmailWorkflowRuleConditionImpl(ConditionType conditionType) {
+	    this.conditionType = conditionType;
+    }
+	
 	@Override
 	public JpaEmailWorkflowRuleConditionImpl save() {
 		assertManager();

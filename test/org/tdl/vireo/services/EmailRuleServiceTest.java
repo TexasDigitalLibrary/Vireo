@@ -17,11 +17,11 @@ import org.tdl.vireo.model.AdministrativeGroup;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionRepository;
-import org.tdl.vireo.model.WorkflowEmailRule;
+import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.jpa.JpaAdministrativeGroupImpl;
 import org.tdl.vireo.model.jpa.JpaEmailTemplateImpl;
 import org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleConditionImpl;
-import org.tdl.vireo.model.jpa.JpaWorkflowEmailRuleImpl;
+import org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleImpl;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.State;
 
@@ -40,7 +40,7 @@ public class EmailRuleServiceTest extends UnitTest {
 	private static SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
 
 	private JpaAdministrativeGroupImpl adminGroup = null;
-	List<JpaWorkflowEmailRuleImpl> rules = new ArrayList<JpaWorkflowEmailRuleImpl>();
+	List<JpaEmailWorkflowRuleImpl> rules = new ArrayList<JpaEmailWorkflowRuleImpl>();
 
 	@Before
 	public void setup() {
@@ -71,9 +71,8 @@ public class EmailRuleServiceTest extends UnitTest {
 		for (String key : stateBeanMap.keySet()) {
 			State state = stateBeanMap.get(key);
 			if (state != null) {
-				JpaWorkflowEmailRuleImpl rule = (JpaWorkflowEmailRuleImpl) settingRepo.createWorkflowEmailRule(state);
-				JpaEmailWorkflowRuleConditionImpl condition = new JpaEmailWorkflowRuleConditionImpl();
-				condition.setConditionType(ConditionType.Always);
+				JpaEmailWorkflowRuleImpl rule = (JpaEmailWorkflowRuleImpl) settingRepo.createEmailWorkflowRule(state);
+				JpaEmailWorkflowRuleConditionImpl condition = (JpaEmailWorkflowRuleConditionImpl) settingRepo.createEmailWorkflowRuleCondition(ConditionType.Always);
 				condition.save();
 				rule.setCondition(condition);
 				JpaEmailTemplateImpl emailTemplate = (JpaEmailTemplateImpl) settingRepo.findEmailTemplateByName("SYSTEM New User Registration");
@@ -91,8 +90,8 @@ public class EmailRuleServiceTest extends UnitTest {
 
 	private void deleteData() {
 		// remove all the rules we created during setup
-		for (JpaWorkflowEmailRuleImpl rule : rules) {
-			settingRepo.findWorkflowEmailRule(rule.getId()).delete();
+		for (JpaEmailWorkflowRuleImpl rule : rules) {
+			settingRepo.findEmailWorkflowRule(rule.getId()).delete();
 		}
 		// remove the administrative group we created during setup
 		if (adminGroup != null) {

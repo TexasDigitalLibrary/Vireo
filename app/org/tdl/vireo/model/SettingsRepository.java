@@ -3,8 +3,7 @@ package org.tdl.vireo.model;
 import java.util.HashMap;
 import java.util.List;
 
-import org.tdl.vireo.email.RecipientType;
-import org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleConditionImpl;
+import org.tdl.vireo.model.AbstractWorkflowRuleCondition.ConditionType;
 import org.tdl.vireo.state.State;
 
 /**
@@ -461,17 +460,38 @@ public interface SettingsRepository {
 	public List<CommitteeMemberRoleType> findAllCommitteeMemberRoleTypes();
 	
 	// //////////////////////////
-	// WorkflowEmailRule Model //
+	// EmailWorkflowRule Model //
 	// //////////////////////////
 
 	/**
-	 * Create a new WorkflowEmailRule model. 
-	 *
-	 * @param associatedState
-	 *            Workflow Email Rules's Associated State.               
-	 * @param template 
+	 * Create a new EmailWorkflowRuleCondition
+	 * 
+	 * @param condition - Workflow Rule's associated condition type
+	 * @return - a new {@link EmailWorkflowRuleCondition}
 	 */
-	public WorkflowEmailRule createWorkflowEmailRule(State associatedState);
+	public AbstractWorkflowRuleCondition createEmailWorkflowRuleCondition(ConditionType condition);
+	
+	/**
+	 * Find a workflow rule condition base upon their unique id.
+	 * 
+	 * @param id - the workflow email rule condition's id.
+	 * @return - the workflow email rule condition or null if not found.
+	 */
+	public AbstractWorkflowRuleCondition findEmailWorkflowRuleCondition(Long id);
+
+	/**
+	 * 
+	 * @return - All of the {@link EmailWorkflowRuleCondition} objects
+	 */
+	public List<AbstractWorkflowRuleCondition> findAllEmailWorkflowRuleConditions();
+	
+	/**
+	 * Create a new {@link EmailWorkflowRule} model. 
+	 *
+	 * @param associatedState - Workflow Email Rules's Associated State.               
+	 * @return - a new {@link EmailWorkflowRule} 
+	 */
+	public EmailWorkflowRule createEmailWorkflowRule(State associatedState);
 
 	/**
 	 * Find a workflow email rule based upon their unique id.
@@ -480,21 +500,21 @@ public interface SettingsRepository {
 	 *            Workflow Email Rules's id.
 	 * @return The Workflow Email Rule object or null if not found.
 	 */
-	public WorkflowEmailRule findWorkflowEmailRule(Long id);
+	public EmailWorkflowRule findEmailWorkflowRule(Long id);
 
 	/**
 	 * Find a Workflow Email Rule based on their associated state.
 	 * 
 	 * @param state
 	 *            The Workflow Email Rule's associated state.
-	 * @return The person object or null if not found.
+	 * @return The Workflow Email Rule object or null if not found.
 	 */
-	 public List<WorkflowEmailRule> findWorkflowEmailRulesByState(State type);
+	 public List<EmailWorkflowRule> findEmailWorkflowRulesByState(State type);
 
 	/**
-	 * @return All person objects
+	 * @return All Workflow Email Rule objects
 	 */
-	public List<WorkflowEmailRule> findAllWorkflowEmailRules();
+	public List<EmailWorkflowRule> findAllEmailWorkflowRules();
 	
 	// //////////////////////
 	// Email Template Model

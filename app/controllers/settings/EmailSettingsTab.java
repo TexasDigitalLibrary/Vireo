@@ -16,7 +16,7 @@ import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.RoleType;
-import org.tdl.vireo.model.WorkflowEmailRule;
+import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.jpa.JpaAdministrativeGroupImpl;
 import org.tdl.vireo.model.jpa.JpaEmailTemplateImpl;
 import org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleConditionImpl;
@@ -45,7 +45,7 @@ public class EmailSettingsTab extends SettingsTab {
 		renderArgs.put("STATES", stateManager.getAllStates());
 		
 		// Get all the email workflow rules
-		renderArgs.put("RULES", settingRepo.findAllWorkflowEmailRules());
+		renderArgs.put("RULES", settingRepo.findAllEmailWorkflowRules());
 		
 		// List all templates
 		List<EmailTemplate> templates = settingRepo.findAllEmailTemplates();
@@ -76,8 +76,8 @@ public class EmailSettingsTab extends SettingsTab {
 			
 			State associatedState = stateManager.getState(stateString);
 
-			List<WorkflowEmailRule> rules = settingRepo.findWorkflowEmailRulesByState(associatedState);
-			WorkflowEmailRule rule;
+			List<EmailWorkflowRule> rules = settingRepo.findEmailWorkflowRulesByState(associatedState);
+			EmailWorkflowRule rule;
 			String conditionCategoryJSON = "";
 			String conditionIdJSON = "";
 			String conditionDisplayJSON = "";
@@ -88,12 +88,12 @@ public class EmailSettingsTab extends SettingsTab {
 				// Modify an existing rule
 				Long ruleID = Long.parseLong(id);
 				
-				rule = settingRepo.findWorkflowEmailRule(ruleID);
+				rule = settingRepo.findEmailWorkflowRule(ruleID);
 					
 				AbstractWorkflowRuleCondition condition;
 				//Check if condition exists
 				if((condition = rule.getCondition()) == null) {
-					condition = new JpaEmailWorkflowRuleConditionImpl();
+					condition = settingRepo.createEmailWorkflowRuleCondition(null);
 					condition.save();
 					rule.setCondition(condition);
 				} 
@@ -145,7 +145,7 @@ public class EmailSettingsTab extends SettingsTab {
 				}
 				
 			} else {
-				rule = settingRepo.createWorkflowEmailRule(associatedState);
+				rule = settingRepo.createEmailWorkflowRule(associatedState);
 			}
 
 			rules.add(rule);
@@ -168,7 +168,7 @@ public class EmailSettingsTab extends SettingsTab {
 	public static void removeEmailWorkflowRuleJSON(String ruleID, String stateString) { 
 		try {
 			
-			WorkflowEmailRule rule = settingRepo.findWorkflowEmailRule(Long.parseLong(ruleID));
+			EmailWorkflowRule rule = settingRepo.findEmailWorkflowRule(Long.parseLong(ruleID));
 			
 			rule.delete();
 

@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.tdl.vireo.model.AbstractWorkflowRuleCondition;
+import org.tdl.vireo.model.AbstractWorkflowRuleCondition.ConditionType;
 import org.tdl.vireo.model.AdministrativeGroup;
 import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.CommitteeMemberRoleType;
@@ -16,13 +18,13 @@ import org.tdl.vireo.model.Department;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.EmailTemplate;
+import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.Major;
 import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.SettingsRepository;
-import org.tdl.vireo.model.WorkflowEmailRule;
 import org.tdl.vireo.state.State;
 
 /**
@@ -291,24 +293,39 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	}
 	
 	// //////////////
-	// WorkflowEmailRule Model
+	// EmailWorkflowRule Model
 	// //////////////
 	
 	@Override
-	public WorkflowEmailRule createWorkflowEmailRule(State associatedState) {
-		   return new JpaWorkflowEmailRuleImpl(associatedState);
+    public AbstractWorkflowRuleCondition createEmailWorkflowRuleCondition(ConditionType condition) {
+	    return new JpaEmailWorkflowRuleConditionImpl(condition);
+    }
+
+	@Override
+    public AbstractWorkflowRuleCondition findEmailWorkflowRuleCondition(Long id) {
+	    return (AbstractWorkflowRuleCondition) JpaEmailWorkflowRuleConditionImpl.findById(id);
+    }
+	
+	@Override
+    public List<AbstractWorkflowRuleCondition> findAllEmailWorkflowRuleConditions() {
+		return (List) JpaEmailWorkflowRuleConditionImpl.find("order by displayOrder").fetch();
+    }	
+	
+	@Override
+	public EmailWorkflowRule createEmailWorkflowRule(State associatedState) {
+		   return new JpaEmailWorkflowRuleImpl(associatedState);
 	}
 
 	@Override
-	public WorkflowEmailRule findWorkflowEmailRule(Long id) {
-		return (WorkflowEmailRule) JpaWorkflowEmailRuleImpl.findById(id);
+	public EmailWorkflowRule findEmailWorkflowRule(Long id) {
+		return (EmailWorkflowRule) JpaEmailWorkflowRuleImpl.findById(id);
 	}
 
 	@Override
-	public List<WorkflowEmailRule> findWorkflowEmailRulesByState(State state) {
-		List<WorkflowEmailRule> rules = (List) JpaWorkflowEmailRuleImpl.findAll();
-		List<WorkflowEmailRule> rulesByState = new ArrayList<WorkflowEmailRule>();
-		for(WorkflowEmailRule rule: rules) {
+	public List<EmailWorkflowRule> findEmailWorkflowRulesByState(State state) {
+		List<EmailWorkflowRule> rules = (List) JpaEmailWorkflowRuleImpl.findAll();
+		List<EmailWorkflowRule> rulesByState = new ArrayList<EmailWorkflowRule>();
+		for(EmailWorkflowRule rule: rules) {
 			
 			State thisRulesState = rule.getAssociatedState();
 			if(thisRulesState.equals(state))
@@ -320,8 +337,8 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	}
 
 	@Override
-	public List<WorkflowEmailRule> findAllWorkflowEmailRules() {
-		return (List) JpaWorkflowEmailRuleImpl.find("order by displayOrder").fetch();
+	public List<EmailWorkflowRule> findAllEmailWorkflowRules() {
+		return (List) JpaEmailWorkflowRuleImpl.find("order by displayOrder").fetch();
 	}
 	
 	// //////////////////////
@@ -474,5 +491,5 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	@Override
 	public List<DepositLocation> findAllDepositLocations() {
 		return (List) JpaDepositLocationImpl.find("order by displayOrder").fetch();
-	}
+	}	
 }

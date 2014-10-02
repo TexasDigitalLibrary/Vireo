@@ -17,7 +17,7 @@ import org.tdl.vireo.model.AbstractWorkflowRuleCondition.ConditionType;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.SettingsRepository;
-import org.tdl.vireo.model.WorkflowEmailRule;
+import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.State;
 
@@ -98,17 +98,19 @@ public class EmailSettingsTabTest extends AbstractVireoFunctionalTest {
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();
 		JPA.em().getTransaction().begin();		
-		WorkflowEmailRule emailRule = settingRepo.findWorkflowEmailRule(id);
+		EmailWorkflowRule emailRule = settingRepo.findEmailWorkflowRule(id);
 		assertEquals("Submitted", emailRule.getAssociatedState().getBeanName());
 		
 		// edit an email workflow rule
+		Long collegeId = settingRepo.findCollegeByName("College of Agriculture and Life Sciences").getId(); // College of Agriculture and Life Sciences [FROM TEST DATA]
+		Long templateId = settingRepo.findEmailTemplateByName("SYSTEM Initial Submission").getId(); // SYSTEM Initial Submission [FROM TEST DATA]
 		params.clear();
 		params.put("id", String.valueOf(id));
 		params.put("stateString", "Submitted");
 		params.put("conditionCategory", ConditionType.College.name());
-		params.put("conditionIDString", "1"); // College of Agriculture and Life Sciences [FROM TEST DATA]
+		params.put("conditionIDString", String.valueOf(collegeId));
 		params.put("recipientString", RecipientType.College.name());
-		params.put("templateString", "1"); // SYSTEM Initial Submission [FROM TEST DATA]
+		params.put("templateString", String.valueOf(templateId));
 		response = POST(ADDEDIT_URL, params);
 		assertIsOk(response);
 		assertContentMatch("\"success\": \"true\"", response);
@@ -116,12 +118,12 @@ public class EmailSettingsTabTest extends AbstractVireoFunctionalTest {
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();
 		JPA.em().getTransaction().begin();
-		emailRule = settingRepo.findWorkflowEmailRule(id);
+		emailRule = settingRepo.findEmailWorkflowRule(id);
 		assertEquals("Submitted", emailRule.getAssociatedState().getBeanName());
 		assertEquals(ConditionType.College, emailRule.getCondition().getConditionType());
-		assertEquals(new Long(1), emailRule.getCondition().getConditionId());
+		assertEquals(collegeId, emailRule.getCondition().getConditionId());
 		assertEquals(RecipientType.College, emailRule.getRecipientType());
-		assertEquals(new Long(1), emailRule.getEmailTemplate().getId());
+		assertEquals(templateId, emailRule.getEmailTemplate().getId());
 		
 		// remove an email workflow rule
 		params.clear();
@@ -133,7 +135,7 @@ public class EmailSettingsTabTest extends AbstractVireoFunctionalTest {
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();
 		JPA.em().getTransaction().begin();
-		assertNull(settingRepo.findWorkflowEmailRule(id));
+		assertNull(settingRepo.findEmailWorkflowRule(id));
 	}
 	
 	/**

@@ -38,11 +38,11 @@ import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionRepository;
 import org.tdl.vireo.model.AbstractWorkflowRuleCondition.ConditionType;
-import org.tdl.vireo.model.WorkflowEmailRule;
+import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.jpa.JpaAdministrativeGroupImpl;
 import org.tdl.vireo.model.jpa.JpaEmailTemplateImpl;
 import org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleConditionImpl;
-import org.tdl.vireo.model.jpa.JpaWorkflowEmailRuleImpl;
+import org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleImpl;
 import org.tdl.vireo.proquest.ProquestSubject;
 import org.tdl.vireo.proquest.ProquestVocabularyRepository;
 import org.tdl.vireo.search.impl.LuceneIndexerImpl;
@@ -728,10 +728,9 @@ public class TestDataLoader extends Job {
 		// Create all email workflow rules
 		for(EmailWorkflowRulesArray ruleDefinition: EMAIL_WORKFLOW_RULES) {
 			State ruleState = stateManager.getState(ruleDefinition.associatedState);
-			WorkflowEmailRule wferule = settingRepo.createWorkflowEmailRule(ruleState);
-			JpaEmailWorkflowRuleConditionImpl condition = new JpaEmailWorkflowRuleConditionImpl();
+			EmailWorkflowRule wferule = settingRepo.createEmailWorkflowRule(ruleState);
+			JpaEmailWorkflowRuleConditionImpl condition = (JpaEmailWorkflowRuleConditionImpl) settingRepo.createEmailWorkflowRuleCondition(ruleDefinition.condition.conditionType);
 			condition.setConditionId(ruleDefinition.condition.conditionId);
-			condition.setConditionType(ruleDefinition.condition.conditionType);
 			condition.save();
 			wferule.setCondition(condition);
 			JpaEmailTemplateImpl emailTemplate = (JpaEmailTemplateImpl)settingRepo.findEmailTemplateByName(ruleDefinition.emailTemplate.name);

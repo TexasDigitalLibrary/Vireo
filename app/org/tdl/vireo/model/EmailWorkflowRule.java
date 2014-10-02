@@ -13,7 +13,7 @@ import org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleConditionImpl;
  * 
  * @author <a href="mailto:huff@library.tamu.edu">Jeremy Huff</a>
  */
-public interface WorkflowEmailRule extends AbstractWorkflowRule {
+public interface EmailWorkflowRule extends AbstractWorkflowRule {
 
 	/**
 	 * @return The email template attached to this rule

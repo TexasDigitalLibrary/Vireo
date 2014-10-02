@@ -15,10 +15,9 @@ import javax.persistence.Table;
 
 import org.tdl.vireo.email.RecipientType;
 import org.tdl.vireo.model.AbstractWorkflowRuleCondition;
-import org.tdl.vireo.model.AdministrativeGroup;
+import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
-import org.tdl.vireo.model.WorkflowEmailRule;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
 
@@ -32,7 +31,7 @@ import play.modules.spring.Spring;
  */
 @Entity
 @Table(name = "email_workflow_rules")
-public class JpaWorkflowEmailRuleImpl extends JpaAbstractModel<JpaWorkflowEmailRuleImpl> implements WorkflowEmailRule {
+public class JpaEmailWorkflowRuleImpl extends JpaAbstractModel<JpaEmailWorkflowRuleImpl> implements EmailWorkflowRule {
 
 	@Column(nullable = false)
 	public int displayOrder;
@@ -67,7 +66,7 @@ public class JpaWorkflowEmailRuleImpl extends JpaAbstractModel<JpaWorkflowEmailR
 	 * @param emailTemplate
 	 *            Workflow Email Rule's email template
 	 */
-	protected JpaWorkflowEmailRuleImpl(State associatedState) {
+	protected JpaEmailWorkflowRuleImpl(State associatedState) {
 
 		assertManager();
 
@@ -82,14 +81,14 @@ public class JpaWorkflowEmailRuleImpl extends JpaAbstractModel<JpaWorkflowEmailR
 	}
 
 	@Override
-	public JpaWorkflowEmailRuleImpl save() {
+	public JpaEmailWorkflowRuleImpl save() {
 		assertManager();
 
 		return super.save();
 	}
 
 	@Override
-	public JpaWorkflowEmailRuleImpl delete() {
+	public JpaEmailWorkflowRuleImpl delete() {
 		assertManager();
 
 		return super.delete();
@@ -97,6 +96,9 @@ public class JpaWorkflowEmailRuleImpl extends JpaAbstractModel<JpaWorkflowEmailR
 
 	@Override
 	public void setEmailTemplate(JpaEmailTemplateImpl emailTemplate) {
+
+		assertManager();
+		
 		this.emailTemplate = emailTemplate;
 	}
 	
@@ -107,6 +109,9 @@ public class JpaWorkflowEmailRuleImpl extends JpaAbstractModel<JpaWorkflowEmailR
 	
 	@Override
 	public void setAdminGroupRecipient(JpaAdministrativeGroupImpl adminGroup) {
+		
+		assertManager();
+		
 	    this.adminGroupRecipient = adminGroup;
 	}
 
@@ -166,6 +171,11 @@ public class JpaWorkflowEmailRuleImpl extends JpaAbstractModel<JpaWorkflowEmailR
 
 	@Override
 	public void setAssociatedState(State state) {
+		
+		if (state == null)
+			throw new IllegalArgumentException("State is required");
+		assertManager();
+		
 		this.associatedState = state.getBeanName();
 	}
 
@@ -176,6 +186,10 @@ public class JpaWorkflowEmailRuleImpl extends JpaAbstractModel<JpaWorkflowEmailR
 
 	@Override
 	public void setCondition(AbstractWorkflowRuleCondition condition) {
+		if (condition == null)
+			throw new IllegalArgumentException("Condition is required");
+		assertManager();
+		
 		if (condition instanceof JpaEmailWorkflowRuleConditionImpl) {
 			this.condition = (JpaEmailWorkflowRuleConditionImpl) condition;
 		} else {
@@ -207,6 +221,10 @@ public class JpaWorkflowEmailRuleImpl extends JpaAbstractModel<JpaWorkflowEmailR
 
 	@Override
 	public void setRecipientType(RecipientType recipientType) {
+		if (recipientType == null)
+			throw new IllegalArgumentException("Recipient type is required");
+		assertManager();
+		
 		this.recipientType = recipientType;
 	}
 
