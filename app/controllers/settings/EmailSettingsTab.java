@@ -75,8 +75,7 @@ public class EmailSettingsTab extends SettingsTab {
 				throw new IllegalArgumentException("State could not be determined");
 			
 			State associatedState = stateManager.getState(stateString);
-
-			List<EmailWorkflowRule> rules = settingRepo.findEmailWorkflowRulesByState(associatedState);
+			
 			EmailWorkflowRule rule;
 			String conditionCategoryJSON = "";
 			String conditionIdJSON = "";
@@ -90,12 +89,16 @@ public class EmailSettingsTab extends SettingsTab {
 				Long ruleID = Long.parseLong(id);
 				
 				rule = settingRepo.findEmailWorkflowRule(ruleID);
+				
+				// make sure we're not trying to edit a system workflow rule
+				if(rule.isSystem()) {
+					throw new UnsupportedOperationException("Cannot edit a system email workflow rule!");
+				}
 					
 				AbstractWorkflowRuleCondition condition;
 				//Check if condition exists
 				if((condition = rule.getCondition()) == null) {
 					condition = settingRepo.createEmailWorkflowRuleCondition(null);
-					condition.save();
 					rule.setCondition(condition);
 				} 
 				
@@ -105,7 +108,6 @@ public class EmailSettingsTab extends SettingsTab {
 					condition.setConditionId(null);
 					conditionIdJSON = null;
 					conditionCategoryJSON = rule.getCondition().getConditionType().name();
-					condition.save();
 				}
 				
 				//Check if conditionID exists
@@ -114,8 +116,6 @@ public class EmailSettingsTab extends SettingsTab {
 					if(rule.getCondition().getConditionType() != null)
 						conditionCategoryJSON = rule.getCondition().getConditionType().name();
 					conditionIdJSON = rule.getCondition().getConditionId().toString();
-					//conditionDisplayJSON = settingRepo.findCollege(Long.parseLong(conditionIDString)).getName();
-					condition.save();
 				}
 				
 				EmailTemplate template;
@@ -149,9 +149,12 @@ public class EmailSettingsTab extends SettingsTab {
 				rule = settingRepo.createEmailWorkflowRule(associatedState);
 			}
 
-			rules.add(rule);
-						
-			saveModelOrder(rules);
+			// save the condition if it exists
+			if(rule.getCondition() != null) {
+				rule.getCondition().save();
+			}
+			// save the rule
+			rule.save();
 			
 			Logger.info("%s (%d: %s) has "+(newRule ? "added a new" : "edited an existing")+" workflow email rule #%d.",
 					context.getPerson().getFormattedName(NameFormat.FIRST_LAST), 
@@ -159,7 +162,7 @@ public class EmailSettingsTab extends SettingsTab {
 					context.getPerson().getEmail(),
 					rule.getId());
 			
-			renderJSON("{ \"success\": \"true\", \"id\": "+rule.getId()+", \"state\": \""+rule.getAssociatedState().getBeanName()+"\",\"conditionCategory\": \""+conditionCategoryJSON+"\",\"condition\": \""+conditionIdJSON+"\",\"conditionDisplayJSON\": \""+conditionDisplayJSON+"\",\"recipientType\": \""+recipientTypeJSON+"\",\"templateString\": \""+templateJSON+"\" }");
+			renderJSON("{ \"success\": true, \"id\": "+rule.getId()+", \"state\": \""+rule.getAssociatedState().getBeanName()+"\",\"conditionCategory\": \""+conditionCategoryJSON+"\",\"condition\": \""+conditionIdJSON+"\",\"conditionDisplayJSON\": \""+conditionDisplayJSON+"\",\"recipientType\": \""+recipientTypeJSON+"\",\"templateString\": \""+templateJSON+"\",\"isDisabled\": "+rule.isDisabled()+",\"isSystem\": "+rule.isSystem()+" }");
 			
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to create the workflow email rule.");
@@ -179,7 +182,41 @@ public class EmailSettingsTab extends SettingsTab {
 
 			renderJSON("{ \"success\": \"true\" }");
 		} catch (RuntimeException re) {
-			Logger.error(re,"Unable to remove email template");
+			Logger.error(re,"Unable to remove email workflow rule");
+			String message = escapeJavaScript(re.getMessage());
+			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
+		}
+	}
+	
+	@Security(RoleType.MANAGER)
+	public static void enableEmailWorkflowRuleJSON(String ruleID, String stateString) { 
+		try {
+			
+			EmailWorkflowRule rule = settingRepo.findEmailWorkflowRule(Long.parseLong(ruleID));
+			
+			rule.enable();
+			rule.save();
+
+			renderJSON("{ \"success\": \"true\" }");
+		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to enable email workflow rule");
+			String message = escapeJavaScript(re.getMessage());
+			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
+		}
+	}
+	
+	@Security(RoleType.MANAGER)
+	public static void disableEmailWorkflowRuleJSON(String ruleID, String stateString) { 
+		try {
+			
+			EmailWorkflowRule rule = settingRepo.findEmailWorkflowRule(Long.parseLong(ruleID));
+			
+			rule.disable();
+			rule.save();
+
+			renderJSON("{ \"success\": \"true\" }");
+		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to enable email workflow rule");
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
 		}

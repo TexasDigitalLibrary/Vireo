@@ -9,10 +9,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.ForeignKey;
 import org.tdl.vireo.email.RecipientType;
 import org.tdl.vireo.model.AbstractWorkflowRuleCondition;
 import org.tdl.vireo.model.EmailWorkflowRule;
@@ -36,6 +38,13 @@ public class JpaEmailWorkflowRuleImpl extends JpaAbstractModel<JpaEmailWorkflowR
 	@Column(nullable = false)
 	public int displayOrder;
 	
+	@Column
+	public boolean isSystem = false;
+	
+	@Column
+	public boolean isDisabled = false;
+	
+	@Column
 	public String associatedState;
 
 	@Column(nullable = true)
@@ -76,6 +85,37 @@ public class JpaEmailWorkflowRuleImpl extends JpaAbstractModel<JpaEmailWorkflowR
 
 		this.associatedState = associatedState.getBeanName();
 	}
+	
+	@Override
+	public void setIsSystem(boolean isSystem) {
+		assertManager();
+		
+		this.isSystem = isSystem;
+	}
+	
+	@Override
+	public boolean isSystem() {
+	    return this.isSystem;
+	}
+	
+	@Override
+	public void disable() {
+		assertManager();
+		
+	    this.isDisabled = true;
+    }
+	
+	@Override
+	public void enable() {
+		assertManager();
+		
+		this.isDisabled = false;
+    }
+	
+	@Override
+	public boolean isDisabled() {
+	    return this.isDisabled;
+    }
 
 	@Override
 	public JpaEmailWorkflowRuleImpl save() {

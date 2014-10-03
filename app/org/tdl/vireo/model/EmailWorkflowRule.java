@@ -16,6 +16,34 @@ import org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleConditionImpl;
 public interface EmailWorkflowRule extends AbstractWorkflowRule {
 
 	/**
+	 * Mark this rule as a system-installed rule or not
+	 * @param isSystem - whether this rule is a system-installed rule or not
+	 */
+	public void setIsSystem(boolean isSystem);
+	
+	/**
+	 * Gets whether this rule is a system-installed rule
+	 * @return - true if it's a system-installed rule
+	 */
+	public boolean isSystem();
+	
+	/**
+	 * Marks this rule as disabled
+	 */
+	public void disable();
+	
+	/**
+	 * Marks this rule as enabled
+	 */
+	public void enable();
+	
+	/**
+	 * Gets whether this rule is disabled
+	 * @return - true if disabled
+	 */
+	public boolean isDisabled();
+	
+	/**
 	 * @return The email template attached to this rule
 	 */
 	public JpaEmailTemplateImpl getEmailTemplate();

@@ -13,6 +13,8 @@ jQuery(document).ready(function(){
 	#{/list}
 
 	$(".removeRule").live("click", removeWorkflowEmailRuleHandler('@{settings.EmailSettingsTab.removeEmailWorkflowRuleJSON()}'));
+	$(".enableRule").live("click", toggleWorkflowEmailRuleHandler('@{settings.EmailSettingsTab.enableEmailWorkflowRuleJSON()}', false));
+	$(".disableRule").live("click", toggleWorkflowEmailRuleHandler('@{settings.EmailSettingsTab.disableEmailWorkflowRuleJSON()}', true));
 	
      // Handlers for the sortable emailTemplates list
      jQuery("#emailTemplate-list").sortable({

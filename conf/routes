@@ -116,6 +116,8 @@ GET     /admin/settings/submission/reset        settings.SubmissionSettingsTab.r
 ### Settings tab - Workflow Email Rules
 POST    /admin/settings/email/rules/add         settings.EmailSettingsTab.addEditEmailWorkflowRuleJSON
 POST    /admin/settings/email/rules/remove      settings.EmailSettingsTab.removeEmailWorkflowRuleJSON
+POST    /admin/settings/email/rules/enable      settings.EmailSettingsTab.enableEmailWorkflowRuleJSON
+POST    /admin/settings/email/rules/disable     settings.EmailSettingsTab.disableEmailWorkflowRuleJSON
 
 ### Settings tab - Email Templates
 POST    /admin/settings/templates/add           settings.EmailSettingsTab.addEmailTemplateJSON

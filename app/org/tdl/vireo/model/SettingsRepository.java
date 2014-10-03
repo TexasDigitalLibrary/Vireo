@@ -468,6 +468,7 @@ public interface SettingsRepository {
 	 * 
 	 * @param condition - Workflow Rule's associated condition type
 	 * @return - a new {@link EmailWorkflowRuleCondition}
+	 * @throws SecurityException
 	 */
 	public AbstractWorkflowRuleCondition createEmailWorkflowRuleCondition(ConditionType condition);
 	
@@ -490,6 +491,7 @@ public interface SettingsRepository {
 	 *
 	 * @param associatedState - Workflow Email Rules's Associated State.               
 	 * @return - a new {@link EmailWorkflowRule} 
+	 * @throws SecurityException
 	 */
 	public EmailWorkflowRule createEmailWorkflowRule(State associatedState);
 

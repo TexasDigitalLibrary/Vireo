@@ -3,6 +3,9 @@ package org.tdl.vireo.model.jpa;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.tdl.vireo.model.AbstractWorkflowRuleCondition;
@@ -19,7 +22,7 @@ public class JpaEmailWorkflowRuleConditionImpl extends JpaAbstractModel<JpaEmail
 
 	@Column(nullable = false)
 	public int displayOrder;
-
+	
 	@Column
 	public Long conditionId;
 		

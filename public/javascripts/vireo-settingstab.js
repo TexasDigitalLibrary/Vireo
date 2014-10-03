@@ -357,7 +357,7 @@ function sortableSaveEditHandler(type,jsonURL) {
 
 		var successCallback = function(data) {
 			// Remove the ajax loading indicators & alerts
-			Alert(type + "-edit-" + id);
+			clearAlert(type + "-edit-" + id);
 			jQuery("#"+type+"-list").removeClass("waiting");
 			jQuery("#"+id).removeClass("settings-sortable-error");
 
@@ -426,7 +426,7 @@ function sortableUpdateHandler(type, reorderURL, removeURL) {
 
 			var successCallback = function(data) {
 				// Remove the ajax loading indicators & alerts
-				Alert(type + "-remove-" + id);
+				clearAlert(type + "-remove-" + id);
 
 				// Check to see if we need to hide the trashcan
 				if (jQuery("#"+type+"-list li").length == 0) {
@@ -467,7 +467,7 @@ function sortableUpdateHandler(type, reorderURL, removeURL) {
 
 			var successCallback = function(data) {
 				// Remove the ajax loading indicators & alerts
-				Alert(type + "-reorder");
+				clearAlert(type + "-reorder");
 			}
 
 			var failureCallback = function (message) {
@@ -523,7 +523,7 @@ function saveAddActionHandler(type, jsonURL) {
 				jQuery("#add-"+type+"-subject").closest('.control-group').removeClass("error");
 			if (jQuery("#add-"+type+"-message").length > 0)
 				jQuery("#add-"+type+"-message").closest('.control-group').removeClass("error");
-			Alert(type+"-add");
+			clearAlert(type+"-add");
 			
 			var $newElement = jQuery("<li/>").appendTo(jQuery("#"+type+"-list"));
 			displaySortableItem(type,false,$newElement, type+"_"+data.id, data.name, data.level);
@@ -642,7 +642,7 @@ function retrieveEmailTemplateHandler(jsonURL) {
 		var successCallback = function(data) {
 			// Remove loading indicator and alerts
 			jQuery("#"+id).removeClass("waiting");
-			Alert("emailTemplate-retrieve-"+id);
+			clearAlert("emailTemplate-retrieve-"+id);
 			
 			jQuery("#"+id+" #edit-emailTemplate-name").val(data.name);
 			jQuery("#"+id+" #edit-emailTemplate-subject").val(data.subject);
@@ -722,7 +722,7 @@ function removeEmailTemplateHandler(jsonURL) {
 		var successCallback = function(data) {
 			// Remove loading indicator and alerts
 			jQuery("#"+id).removeClass("waiting");
-			Alert("emailTemplate-delete-"+id);
+			clearAlert("emailTemplate-delete-"+id);
 			
 			jQuery("#"+id).slideToggle(null, function () {
 				jQuery("#"+id).remove();
@@ -806,9 +806,11 @@ function createWorkflowEmailRuleHandler(jsonURL) {
 		$targetElem.addClass("waiting");
 		
 		var successCallback = function(data) {
+			
 			$targetElem.removeClass("waiting");
 
-			var newRow = "<tr id='"+data.state+"-"+data.id+"'>" 
+			var newRow = "<tr id='"+data.state+"-"+data.id+"'>"
++   "<td class=\"td-icon\">"+(data.isSystem ? "<em class=\"icon-globe\"></em>" : "<em class=\"icon-user\"></em>")+"</td>"
 +	"<td><span class='"+data.state+"-"+data.id+"-condition' style='display: none;'>if</span></td>" 
 +	"<td class='edit-box'>" 
 +		"<ul class='unstyled'>" 
@@ -848,9 +850,10 @@ function createWorkflowEmailRuleHandler(jsonURL) {
 +			"</li>" 
 +		"</ul>" 
 +	"</td>"
-+	"<td>"
++	"<td class=\"td-icon\">"
 +		"<a href='#' class='removeRule' data-id='"+data.id+"'><em class='icon-trash'></em>"
 +	"</a></td>"
++   "<td class=\"td-icon\"><a href=\"#\" " + (data.isDisabled ? "class=\"enableRule\"" : "class=\"disableRule\"") + "data-id=\""+data.id+"\"><em class=\"icon-"+ (data.isDisabled ? "play" : "pause")+"\"></em></a></td>"
 + "</tr>"
 
 			$targetElem.append(newRow);
@@ -926,7 +929,68 @@ function removeWorkflowEmailRuleHandler(jsonURL) {
 				$this.parents("tr").removeClass("waiting");
 				return false;
 			}
-			console.log($this.attr('data-id'));
+			
+			jQuery.ajax({
+				url : jsonURL,
+				data : {
+					ruleID: $this.attr('data-id')
+				},
+				dataType : 'json',
+				type : 'POST',
+				success : function(data) {
+
+					if (data.success) {
+						successCallback(data);
+					} else {
+						failureCallback(data.message)
+					}
+
+				},
+				error : function(e) {
+					console.log(e);
+					failureCallback("Unable to communicate with the server.");
+				}
+			});
+
+		});
+		
+
+		return false;
+	}
+}
+
+/**
+ * Toggle a workflow email rule being disabled
+ * 
+ * @param jsonURL
+ *            The url where templates may be saved.
+ * @returns A Callback function
+ */
+function toggleWorkflowEmailRuleHandler(jsonURL, disable) {
+	return function() {
+		
+		$this = $(this);
+
+		$this.html("confirm "+(disable ? "disable" : "enable")+"?");
+
+		
+		$this.click(function() {
+			
+			var backupHTML = $this.html();
+			$this.html("");	
+			$this.parents("tr").addClass("waiting");
+
+			successCallback = function() {
+				$this.parents("tr").removeClass("waiting");
+				$this.parents("td").html((disable ? "<a href=\"#\" class=\"enableRule\" data-id=\""+$this.attr('data-id')+"\"><em class=\"icon-play\"></em></a>" : "<a href=\"#\" class=\"disableRule\" data-id=\""+$this.attr('data-id')+"\"><em class=\"icon-pause\"></em></a>"));
+			}
+
+			var failureCallback = function(message) {
+				$this.html(backupHTML);	
+				$this.parents("tr").removeClass("waiting");
+				return false;
+			}
+			
 			jQuery.ajax({
 				url : jsonURL,
 				data : {
@@ -1327,7 +1391,7 @@ function editEmailTemplateHandler(jsonURL) {
 		var successCallback = function(data) {
 			// Remove loading indicator and alerts
 			jQuery("#"+id).removeClass("waiting");
-			Alert("emailTemplate-delete-"+id);
+			clearAlert("emailTemplate-delete-"+id);
 			
 			jQuery("#"+id+" .control-group").each( function() {
 				jQuery(this).removeClass("error");
@@ -1406,7 +1470,7 @@ function myProfileHandler(jsonURL) {
 
 			//  any previous errors
 			$this.parent("fieldset").removeClass("error");
-			Alert("profile-alert-"+field);
+			clearAlert("profile-alert-"+field);
 
 			// Username at the upper left hand corner
 			jQuery("#personal-bar a:first-of-type b").text(data.displayName);
@@ -1476,7 +1540,7 @@ function userPreferenceHandler(jsonURL) {
 			// Remove the ajax loading indicators & alerts
 			$this.closest("fieldset").removeClass("waiting");
 			$this.closest("fieldset").removeClass("error");
-			Alert("user-preference-"+field);
+			clearAlert("user-preference-"+field);
 		}
 
 		var failureCallback = function (message) {
@@ -1535,7 +1599,7 @@ function applicationSettingsHandler(jsonURL) {
 			// Remove the ajax loading indicators & alerts
 			$this.parent().removeClass("waiting");
 			$this.removeClass("settings-error");
-			Alert("application-setting-"+field);
+			clearAlert("application-setting-"+field);
 		}
 
 		var failureCallback = function (message) {
@@ -2044,7 +2108,7 @@ var embargoSortableUpdateHandler = function(jsonURL) {
 
 		var successCallback = function(data) {
 			// Remove the ajax loading indicators & alerts
-			Alert("embargoType-reorder");
+			clearAlert("embargoType-reorder");
 			jQuery("#embargoType-list").removeClass("waiting");
 		}
 

@@ -7,20 +7,23 @@
 		    <table class="table table-striped table-bordered table-condensed">
 				<thead>
 					<tr>
-						<td></td>
-						<td>Condition</td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td>Template</td>
-						<td>Recipient</td>
-						<td></td>
+						<th class="td-icon"><em class="icon-globe"></em> / <em class="icon-user"></th>
+						<th></th>
+						<th>Condition</th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th>Template</th>
+						<th>Recipient</th>
+						<th></th>
+						<th class="td-icon"><em class="icon-play"></em> / <em class="icon-pause"></th>
 					</tr>
 				</thead>
 				<tbody class="workflow-list" id="${state.getBeanName()}-workflow-list">
 					#{list items:RULES, as:'rule'}
 						#{if state == rule.getAssociatedState()}
 						    <tr id="${state.getBeanName()}-${rule.getId()}"> 
+						    	<td class="td-icon">#{if rule.isSystem()}<em class="icon-globe"></em>#{/if}#{else}<em class="icon-user"></em>#{/else}</td>
 								<td><span class="${state.getBeanName()}-${rule.getId()}-condition"
 								#{if !rule.getCondition()?.getConditionType()?.name() || rule.getCondition()?.getConditionType()?.name() == "Always"}
 										style="display:none";
@@ -28,9 +31,9 @@
 								>if</span></td> 
 								<td class="edit-box"> 
 									<ul class="unstyled"> 
-										<li class="edit"> 
+										<li #{if !rule.isSystem()}class="edit"#{/if}> 
 											<span id="${state.getBeanName()}-${rule.getId()}-conditionCategory" class="empty select" data-id="${rule.getId()}" data-state="${state.getBeanName()}" data-ruleFieldName="conditionCategory"> 
-												<i class="icon-pencil"></i> ${rule.getCondition()?.getConditionType()?.name()} #{if !rule.getCondition()} none#{/if}
+												#{if !rule.isSystem()}<i class="icon-pencil"></i>#{/if}${rule.getCondition()?.getConditionType()?.name()} #{if !rule.getCondition()} none#{/if}
 											</span> 
 										</li> 
 									</ul> 
@@ -53,7 +56,7 @@
 												<i class="icon-pencil"></i> ${rule?.getCondition()?.getConditionIdDisplayName()}
 											</span>
 										</li>
-										#{if rule?.getCondition()?.getConditionIdDisplayName().contains("Link to ") && rule?.getCondition()?.getConditionIdDisplayName().contains("Lost!")}<span id="${state.getBeanName()}-${rule.getId()}-condition-error" style="float:right;width:35px;"><a href="#" class="tooltip-icon" rel="tooltip" data-original-title="The Link to this condition's value has been lost!"><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span><script lang="text/javascript">jQuery('.tooltip-icon').tooltip();</script>#{/if}
+										#{if rule?.getCondition()?.getConditionIdDisplayName()?.contains("Link to ") && rule?.getCondition()?.getConditionIdDisplayName()?.contains("Lost!")}<span id="${state.getBeanName()}-${rule.getId()}-condition-error" style="float:right;width:35px;"><a href="#" class="tooltip-icon" rel="tooltip" data-original-title="The Link to this condition's value has been lost!"><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span><script lang="text/javascript">jQuery('.tooltip-icon').tooltip();</script>#{/if}
 									</ul> 
 								</td> 
 								<td><span class="${state.getBeanName()}-${rule.getId()}-condition"
@@ -63,25 +66,26 @@
 								>then </span>email</td> 
 								<td class="edit-box"> 
 									<ul class="unstyled"> 
-										<li class="edit"> 
-											<span id="${state.getBeanName()}-${rule.getId()}-template" class="empty select"  data-state="${state.getBeanName()}" data-id="${rule.getId()}" data-ruleFieldName="templateString"> 
-												<i class="icon-pencil"></i> ${rule.getEmailTemplate()?.getName()} #{if !rule.getEmailTemplate()} none#{/if}
+										<li #{if !rule.isSystem()}class="edit"#{/if}> 
+											<span id="${state.getBeanName()}-${rule.getId()}-template" class="empty select" data-state="${state.getBeanName()}" data-id="${rule.getId()}" data-ruleFieldName="templateString"> 
+												#{if !rule.isSystem()}<i class="icon-pencil"></i>#{/if}${rule.getEmailTemplate()?.getName()} #{if !rule.getEmailTemplate()} none#{/if}
 											</span> 
 										</li> 
 									</ul> 
 								</td> 
 								<td class="edit-box"> 
 									<ul class="unstyled"> 
-										<li class="edit"> 
+										<li #{if !rule.isSystem()}class="edit"#{/if}> 
 											<span id="${state.getBeanName()}-${rule.getId()}-recipientType" class="empty select" data-id="${rule.getId()}" data-state="${state.getBeanName()}" data-ruleFieldName="recipientType"> 
-												<i class="icon-pencil"></i>#{if rule.getRecipientType()}${rule.getRecipientType()}#{if rule.getRecipientType().name() == "AdminGroup"} (#{if rule.getAdminGroupRecipient()}${rule.getAdminGroupRecipient().getName()}#{/if}#{else} none#{/else})#{/if}#{/if}#{else} none#{/else}
+												#{if !rule.isSystem()}<i class="icon-pencil"></i>#{/if}#{if rule.getRecipientType()}${rule.getRecipientType()}#{if rule.getRecipientType().name() == "AdminGroup"} (#{if rule.getAdminGroupRecipient()}${rule.getAdminGroupRecipient().getName()}#{/if}#{else} none#{/else})#{/if}#{/if}#{else} none#{/else}
 											</span> 
 										</li>
 									</ul> 
 								</td>
-								<td>
-									<a href="#" class="removeRule" data-id="${rule.getId()}"><em class="icon-trash"></em>
+								<td class="td-icon">
+									#{if !rule.isSystem()}<a href="#" class="removeRule" data-id="${rule.getId()}"><em class="icon-trash"></em></a>#{/if}
 								</td>
+								<td class="td-icon">#{if rule.isDisabled()}<a href="#" class="enableRule" data-id="${rule.getId()}"><em class="icon-play"></a></em>#{/if}#{else}<a href="#" class="disableRule" data-id="${rule.getId()}"><em class="icon-pause"></em></a>#{/else}</td>
 							</tr>
 					
 						#{/if}
