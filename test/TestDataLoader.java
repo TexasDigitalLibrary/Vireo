@@ -544,9 +544,9 @@ public class TestDataLoader extends Job {
 	 */
 	private static final EmailWorkflowRuleConditionsArray[] EMAIL_WORKFLOW_RULE_CONDITIONS = {
 		new EmailWorkflowRuleConditionsArray(null, ConditionType.Always), // always
-		new EmailWorkflowRuleConditionsArray(Long.valueOf(1), ConditionType.College), // when submission's College is College with ID 1
-		new EmailWorkflowRuleConditionsArray(Long.valueOf(1), ConditionType.Department), // when submission's Department is Department with ID 1
-		new EmailWorkflowRuleConditionsArray(Long.valueOf(1), ConditionType.Program) // when submission's Program is Program with ID 1
+		new EmailWorkflowRuleConditionsArray(null, ConditionType.College), // when submission's College is College with an ID that gets assigned at runtime
+		new EmailWorkflowRuleConditionsArray(null, ConditionType.Department), // when submission's Department is Department with an ID that gets assigned at runtime
+		new EmailWorkflowRuleConditionsArray(null, ConditionType.Program) // when submission's Program is Program with an ID that gets assigned at runtime
 		
 	};
 	
@@ -564,7 +564,7 @@ public class TestDataLoader extends Job {
 		new EmailWorkflowRulesArray("Submitted", RecipientType.College, null, EMAIL_WORKFLOW_RULE_CONDITIONS[0], EMAIL_TEMPLATE_DEFINITIONS[0]), // When State is "Submitted" Always send to submission's College
 		new EmailWorkflowRulesArray("Submitted", RecipientType.Department, null, EMAIL_WORKFLOW_RULE_CONDITIONS[0], EMAIL_TEMPLATE_DEFINITIONS[0]), // When State is "Submitted" Always send to submission's Department
 		new EmailWorkflowRulesArray("Submitted", RecipientType.Program, null, EMAIL_WORKFLOW_RULE_CONDITIONS[0], EMAIL_TEMPLATE_DEFINITIONS[0]), // When State is "Submitted" Always send to submission's Program
-		new EmailWorkflowRulesArray("Submitted", RecipientType.AdminGroup, Long.valueOf(1), EMAIL_WORKFLOW_RULE_CONDITIONS[0], EMAIL_TEMPLATE_DEFINITIONS[0]), // When State is "Submitted" Always send to Administrative Group with ID 1
+		new EmailWorkflowRulesArray("Submitted", RecipientType.AdminGroup, null, EMAIL_WORKFLOW_RULE_CONDITIONS[0], EMAIL_TEMPLATE_DEFINITIONS[0]), // When State is "Submitted" Always send to Administrative Group with an ID that gets assigned at runtime
 		// Test all State types		
 		new EmailWorkflowRulesArray("CorrectionsReceived", RecipientType.Advisor, null, EMAIL_WORKFLOW_RULE_CONDITIONS[0], EMAIL_TEMPLATE_DEFINITIONS[0]), // When State is "CorrectionsReceived" Always send to submission's Advisor
 		new EmailWorkflowRulesArray("Approved", RecipientType.Advisor, null, EMAIL_WORKFLOW_RULE_CONDITIONS[0], EMAIL_TEMPLATE_DEFINITIONS[0]), // When State is "Approved" Always send to submission's Advisor
@@ -730,12 +730,33 @@ public class TestDataLoader extends Job {
 			State ruleState = stateManager.getState(ruleDefinition.associatedState);
 			EmailWorkflowRule wferule = settingRepo.createEmailWorkflowRule(ruleState);
 			JpaEmailWorkflowRuleConditionImpl condition = (JpaEmailWorkflowRuleConditionImpl) settingRepo.createEmailWorkflowRuleCondition(ruleDefinition.condition.conditionType);
+			if(ruleDefinition.condition.conditionId == null) {
+				switch(condition.conditionType) {
+					case Always:
+						break;
+					case College:
+						ruleDefinition.condition.conditionId = settingRepo.findAllColleges().get(0).getId();
+						break;
+					case Department:
+						ruleDefinition.condition.conditionId = settingRepo.findAllDepartments().get(0).getId();
+						break;
+					case Program:
+						ruleDefinition.condition.conditionId = settingRepo.findAllPrograms().get(0).getId();
+						break;
+					default:
+						throw new UnsupportedOperationException();
+				}
+				Logger.info("Set conditionId to: %d", ruleDefinition.condition.conditionId);
+			}			
 			condition.setConditionId(ruleDefinition.condition.conditionId);
 			condition.save();
 			wferule.setCondition(condition);
 			JpaEmailTemplateImpl emailTemplate = (JpaEmailTemplateImpl)settingRepo.findEmailTemplateByName(ruleDefinition.emailTemplate.name);
 			wferule.setEmailTemplate(emailTemplate);
 			wferule.setRecipientType(ruleDefinition.recipientType);
+			if(ruleDefinition.adminGroupRecipient == null && ruleDefinition.recipientType == RecipientType.AdminGroup) {
+				ruleDefinition.adminGroupRecipient = settingRepo.findAllAdministrativeGroups().get(0).getId();
+			}
 			if(ruleDefinition.adminGroupRecipient != null) {
 				JpaAdministrativeGroupImpl adminGroup = (JpaAdministrativeGroupImpl) settingRepo.findAdministrativeGroup(ruleDefinition.adminGroupRecipient);
 				wferule.setAdminGroupRecipient(adminGroup);

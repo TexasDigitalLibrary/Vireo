@@ -69,8 +69,8 @@ public class EmailSettingsTab extends SettingsTab {
 	
 	@Security(RoleType.MANAGER)
 	public static void addEditEmailWorkflowRuleJSON(String id, String stateString, String conditionCategory, String conditionIDString, String recipientString, String templateString) {
+		boolean newRule = true;
 		try {
-			Logger.info(recipientString);
 			if (stateString == null || stateString.trim().length() == 0)
 				throw new IllegalArgumentException("State could not be determined");
 			
@@ -85,6 +85,7 @@ public class EmailSettingsTab extends SettingsTab {
 			String templateJSON = "";
 			
 			if ((id != null) && (id.trim().length() != 0) && (!id.equals("null"))) {
+				newRule = false;
 				// Modify an existing rule
 				Long ruleID = Long.parseLong(id);
 				
@@ -152,7 +153,11 @@ public class EmailSettingsTab extends SettingsTab {
 						
 			saveModelOrder(rules);
 			
-			Logger.info("%s (%d: %s) has added workflow email rule #%d.\n",context.getPerson().getDisplayName(),context.getPerson().getId(),context.getPerson().getRole(),rule.getId());
+			Logger.info("%s (%d: %s) has "+(newRule ? "added a new" : "edited an existing")+" workflow email rule #%d.",
+					context.getPerson().getFormattedName(NameFormat.FIRST_LAST), 
+					context.getPerson().getId(), 
+					context.getPerson().getEmail(),
+					rule.getId());
 			
 			renderJSON("{ \"success\": \"true\", \"id\": "+rule.getId()+", \"state\": \""+rule.getAssociatedState().getBeanName()+"\",\"conditionCategory\": \""+conditionCategoryJSON+"\",\"condition\": \""+conditionIdJSON+"\",\"conditionDisplayJSON\": \""+conditionDisplayJSON+"\",\"recipientType\": \""+recipientTypeJSON+"\",\"templateString\": \""+templateJSON+"\" }");
 			

@@ -75,16 +75,25 @@ public class JpaEmailWorkflowRuleImpl extends JpaAbstractModel<JpaEmailWorkflowR
 		}
 
 		this.associatedState = associatedState.getBeanName();
-
-		this.displayOrder = 0;
-
 	}
 
 	@Override
 	public JpaEmailWorkflowRuleImpl save() {
 		assertManager();
 
-		return super.save();
+		// make sure we have a display order in the order that we're created
+		JpaEmailWorkflowRuleImpl ret;
+		if(this.getId() == null) {
+			ret = super.save();
+			ret.setDisplayOrder(Integer.parseInt(String.valueOf(ret.getId())));
+		} else {
+			if(this.getDisplayOrder() != this.getId()){
+				this.setDisplayOrder(Integer.parseInt(String.valueOf(this.getId())));
+			}
+		}
+		ret = super.save();
+
+		return ret;
 	}
 
 	@Override

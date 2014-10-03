@@ -6,6 +6,9 @@ import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
 import org.tdl.vireo.model.AbstractWorkflowRuleCondition;
+import org.tdl.vireo.model.College;
+import org.tdl.vireo.model.Department;
+import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.SettingsRepository;
 
 import play.modules.spring.Spring;
@@ -34,8 +37,20 @@ public class JpaEmailWorkflowRuleConditionImpl extends JpaAbstractModel<JpaEmail
 	@Override
 	public JpaEmailWorkflowRuleConditionImpl save() {
 		assertManager();
+		
+		// make sure we have a display order in the order that we're created
+		JpaEmailWorkflowRuleConditionImpl ret;
+		if(this.getId() == null) {
+			ret = super.save();
+			ret.setDisplayOrder(Integer.parseInt(String.valueOf(ret.getId())));
+		} else {
+			if(this.getDisplayOrder() != this.getId()){
+				this.setDisplayOrder(Integer.parseInt(String.valueOf(this.getId())));
+			}
+		}
+		ret = super.save();
 
-		return super.save();
+		return ret;
 	}
 
 	@Override
@@ -87,16 +102,31 @@ public class JpaEmailWorkflowRuleConditionImpl extends JpaAbstractModel<JpaEmail
 		}
 		
 		SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
-		
+		 
 		switch(this.conditionType) {
 			case College:
-				displayName = settingRepo.findCollege(this.conditionId).getName();
+				College college = settingRepo.findCollege(this.conditionId);
+				if(college != null){
+					displayName = college.getName();
+				} else {
+					displayName = "Link to College Lost!";
+				}
 				break;
 			case Department:
-				displayName = settingRepo.findDepartment(this.conditionId).getName();
+				Department department = settingRepo.findDepartment(this.conditionId);
+				if(department != null) {
+					displayName = department.getName();
+				} else {
+					displayName = "Link to Department Lost!";
+				}
 				break;
 			case Program:
-				displayName = settingRepo.findProgram(this.conditionId).getName();
+				Program program = settingRepo.findProgram(this.conditionId);
+				if(program != null) {
+					displayName = program.getName();
+				} else {
+					displayName = "Link to Program Lost!";
+				}
 				break;
 			case Always:
 			default:

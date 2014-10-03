@@ -13,6 +13,7 @@ import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.state.State;
 
+import play.Logger;
 import play.modules.spring.Spring;
 
 /**
@@ -56,6 +57,8 @@ public class EmailRuleService {
 						if (ruleCollege != null && ruleCollege.getName().equals(submission.getCollege())) {
 							// send the email
 							sendEmail(EmailWorkflowRule, submission);
+						} else {
+							Logger.error("This rule's college with id #%d doesn't exist! ", collegeId);
 						}
 						break;
 					case Department:
@@ -67,6 +70,8 @@ public class EmailRuleService {
 						if (ruleDepartment != null && ruleDepartment.getName().equals(submission.getDepartment())) {
 							// send the email
 							sendEmail(EmailWorkflowRule, submission);
+						} else {
+							Logger.error("This rule's department with id #%d doesn't exist! ", departmentId);
 						}
 						break;
 					case Program:
@@ -78,6 +83,8 @@ public class EmailRuleService {
 						if (ruleProgram != null && ruleProgram.getName().equals(submission.getProgram())) {
 							// send the email
 							sendEmail(EmailWorkflowRule, submission);
+						} else {
+							Logger.error("This rule's program with id #%d doesn't exist! ", programId);
 						}
 						break;
 					default:

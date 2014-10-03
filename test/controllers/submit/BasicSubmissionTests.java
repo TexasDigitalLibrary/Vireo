@@ -18,10 +18,16 @@ import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.model.jpa.JpaCollegeImpl;
+import org.tdl.vireo.model.jpa.JpaDepartmentImpl;
+import org.tdl.vireo.model.jpa.JpaLanguageImpl;
+import org.tdl.vireo.model.jpa.JpaMajorImpl;
+import org.tdl.vireo.model.jpa.JpaProgramImpl;
 
+import play.Logger;
 import play.db.jpa.JPA;
-import play.mvc.Router;
 import play.mvc.Http.Response;
+import play.mvc.Router;
 
 /**
  * Submission tests.
@@ -289,33 +295,37 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 		enableFields(FieldConfig.values());
 		disableFields(FieldConfig.STUDENT_BIRTH_YEAR);
 		disableFields(FieldConfig.COLLEGE);
+		disableFields(FieldConfig.DEPARTMENT);
+		disableFields(FieldConfig.PROGRAM);
+		disableFields(FieldConfig.MAJOR);
+		disableFields(FieldConfig.DOCUMENT_LANGUAGE);
 		disableFields(FieldConfig.UMI_RELEASE);
 		setAllowMultipleSubmissions(false);
 		
 		// clear out colleges, department, majors, programs, and languages
-		List<String> originalPrograms = new ArrayList<String>();
+		List<JpaProgramImpl> originalPrograms = new ArrayList<JpaProgramImpl>();
 		for (Program program : settingRepo.findAllPrograms()) {
-			originalPrograms.add(program.getName());
+			originalPrograms.add((JpaProgramImpl) program);
 			program.delete();
 		}
-		List<String> originalColleges = new ArrayList<String>();
+		List<JpaCollegeImpl> originalColleges = new ArrayList<JpaCollegeImpl>();
 		for (College college : settingRepo.findAllColleges()) {
-			originalColleges.add(college.getName());
+			originalColleges.add((JpaCollegeImpl) college);
 			college.delete();
 		}
-		List<String> originalDepartments = new ArrayList<String>();
+		List<JpaDepartmentImpl> originalDepartments = new ArrayList<JpaDepartmentImpl>();
 		for (Department department : settingRepo.findAllDepartments()) {
-			originalDepartments.add(department.getName());
+			originalDepartments.add((JpaDepartmentImpl) department);
 			department.delete();
 		}
-		List<String> originalMajors = new ArrayList<String>();
+		List<JpaMajorImpl> originalMajors = new ArrayList<JpaMajorImpl>();
 		for (Major major : settingRepo.findAllMajors()) {
-			originalMajors.add(major.getName());
+			originalMajors.add((JpaMajorImpl) major);
 			major.delete();
 		}
-		List<String> originalLanguages = new ArrayList<String>();
+		List<JpaLanguageImpl> originalLanguages = new ArrayList<JpaLanguageImpl>();
 		for (Language language : settingRepo.findAllLanguages()) {
-			originalLanguages.add(language.getName());
+			originalLanguages.add((JpaLanguageImpl) language);
 			language.delete();
 		}
 		
@@ -399,37 +409,25 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 		// Finaly, confirm
 		confirm("cdanes@gmail.com","advisor@noreply.org");
 
-		// Restore all Colleges, Departments, and Majors
+		// Restore all Programs, Colleges, Departments, Majors, and Languages
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();
 		JPA.em().getTransaction().begin();
 		
-		// clear out colleges, department, majors
-		int i = 0;
-		for (String name : originalPrograms) {
-			Program program = settingRepo.createProgram(name);
-			program.setDisplayOrder(i++);
-			program.save();
+		for (JpaProgramImpl originalProgram : originalPrograms) {
+			originalProgram.merge().save();
 		}
-		for (String name : originalColleges) {
-			College college = settingRepo.createCollege(name);
-			college.setDisplayOrder(i++);
-			college.save();
+		for (JpaCollegeImpl originalCollege : originalColleges) {
+			originalCollege.merge().save();
 		}
-		for (String name : originalDepartments) {
-			Department department = settingRepo.createDepartment(name);
-			department.setDisplayOrder(i++);
-			department.save();
+		for (JpaDepartmentImpl originalDepartment : originalDepartments) {
+			originalDepartment.merge().save();
 		}
-		for (String name : originalMajors) {
-			Major major = settingRepo.createMajor(name);
-			major.setDisplayOrder(i++);
-			major.save();
+		for (JpaMajorImpl originalMajor : originalMajors) {
+			originalMajor.merge().save();
 		}
-		for (String name : originalLanguages) {
-			Language language = settingRepo.createLanguage(name);
-			language.setDisplayOrder(i++);
-			language.save();
+		for (JpaLanguageImpl originalLanguage : originalLanguages) {
+			originalLanguage.merge().save();
 		}
 	}	
 	
