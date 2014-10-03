@@ -86,10 +86,6 @@ public class JpaEmailWorkflowRuleImpl extends JpaAbstractModel<JpaEmailWorkflowR
 		if(this.getId() == null) {
 			ret = super.save();
 			ret.setDisplayOrder(Integer.parseInt(String.valueOf(ret.getId())));
-		} else {
-			if(this.getDisplayOrder() != this.getId()){
-				this.setDisplayOrder(Integer.parseInt(String.valueOf(this.getId())));
-			}
 		}
 		ret = super.save();
 
