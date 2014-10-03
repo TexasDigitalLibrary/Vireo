@@ -1177,7 +1177,6 @@ function commitChangesHandler(eventTarget, jsonURL){
 	}
 	
 	var parent = eventTarget.parent();
-	console.log(parent)
 	
 	var ruleFieldName = $($ruleField[0]).attr("data-ruleFieldName");
 	var theValue = $($ruleField[0]).val();
@@ -1248,8 +1247,6 @@ function commitChangesHandler(eventTarget, jsonURL){
 
 				jQuery("div."+attrID).replaceWith('<span id="'+attrID+'" class="'+classValue+'" data-state="'+$($ruleField[0]).attr("data-state")+'" data-id="'+$($ruleField[0]).attr("data-id")+'" data-ruleFieldName="'+ruleFieldName+'"><i class="icon-pencil"></i> '+data[ruleFieldName]+'</span>');
 
-				console.log(recipientString+templateString != "");
-
 				if(data.conditionCategory != "Always" && data.conditionCategory != "none" && data.conditionCategory != "") { //this condition is satisfied when selcting college, department or program
 					
 					$(jsDataObjects[data.conditionCategory.trim().toLowerCase()+"sArray"]).each(function() {//this sets the calue of 
@@ -1273,26 +1270,23 @@ function commitChangesHandler(eventTarget, jsonURL){
 					switch(data.conditionCategory) {
 					    case "College":
 					    	$("#Submitted-workflowRule-condition input").attr("data-source",$("#Submitted-workflowRule-condition input").attr("data-colleges"));
-					        conditionCategory = theValue;
 					        break;
 					    case "Department":
 					    	$("#Submitted-workflowRule-condition input").attr("data-source",$("#Submitted-workflowRule-condition input").attr("data-departments"));
-					        conditionIDString = theValue;
 					        break;
 					    case "Program":
 					    	$("#Submitted-workflowRule-condition input").attr("data-source",$("#Submitted-workflowRule-condition input").attr("data-programs"));
-					        recipientString = theValue;	        
 					        break;
 					    default:
 					        break;
 					}
-
 					$("."+data.state+"-"+data.id+"-condition").show();	
 				} else {
 					if(data.recipientType + data.templateString === "") //checks to make sure that template or recipient were not the fields being checked
 						$("."+data.state+"-"+data.id+"-condition").hide();					
 				}
-
+				// make sure we remove any old errors
+				$("#Submitted-"+data.id+"-condition-error").remove();
 			} else {
 				jQuery("div."+attrID).replaceWith('<span id="'+attrID+'" class="error '+classValue+'" data-state="'+$($ruleField[0]).attr("data-state")+'" data-id="'+$($ruleField[0]).attr("data-id")+'" data-ruleFieldName="'+$($ruleField[0]).attr("data-ruleFieldName")+'"><i class="icon-pencil"></i> Error! <a href="#" class="tooltip-icon" rel="tooltip" title="'+data.message+'"><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
 				jQuery('.tooltip-icon').tooltip();

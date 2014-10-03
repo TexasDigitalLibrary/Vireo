@@ -51,8 +51,9 @@
 										<li class="edit"> 
 											<span id="${state.getBeanName()}-${rule.getId()}-condition" class="empty autocomplete" data-id="${rule.getId()}" data-state="${state.getBeanName()}" data-ruleFieldName="condition"> 
 												<i class="icon-pencil"></i> ${rule?.getCondition()?.getConditionIdDisplayName()}
-											</span> 
-										</li> 
+											</span>
+										</li>
+										#{if rule?.getCondition()?.getConditionIdDisplayName().contains("Link to ") && rule?.getCondition()?.getConditionIdDisplayName().contains("Lost!")}<span id="${state.getBeanName()}-${rule.getId()}-condition-error" style="float:right;width:35px;"><a href="#" class="tooltip-icon" rel="tooltip" data-original-title="The Link to this condition's value has been lost!"><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span><script lang="text/javascript">jQuery('.tooltip-icon').tooltip();</script>#{/if}
 									</ul> 
 								</td> 
 								<td><span class="${state.getBeanName()}-${rule.getId()}-condition"
