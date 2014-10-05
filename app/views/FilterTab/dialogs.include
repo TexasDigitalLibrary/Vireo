@@ -101,6 +101,8 @@ jQuery(document).ready(function() {
     		var div = $("#batch-export-control-group");
     		div.find("#packager-extra-label").remove();
     		div.find("#batch-export-extra-controls").remove();
+    		div.find("#packager-extra-saved-filters-label").remove();
+    		div.find("#batch-export-extra-saved-filters-controls").remove();
     	}
     });
     
