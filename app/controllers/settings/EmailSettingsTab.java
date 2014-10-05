@@ -153,6 +153,7 @@ public class EmailSettingsTab extends SettingsTab {
 			if(rule.getCondition() != null) {
 				rule.getCondition().save();
 			}
+			
 			// save the rule
 			rule.save();
 			
@@ -167,7 +168,7 @@ public class EmailSettingsTab extends SettingsTab {
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to create the workflow email rule.");
 			String message = escapeJavaScript(re.getMessage());
-			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
+			renderJSON("{ \"success\": false, \"message\": \""+message+"\" }");
 		
 		}
 	}
@@ -178,13 +179,18 @@ public class EmailSettingsTab extends SettingsTab {
 			
 			EmailWorkflowRule rule = settingRepo.findEmailWorkflowRule(Long.parseLong(ruleID));
 			
+			// make sure we're not trying to remove a system workflow rule
+			if(rule.isSystem()) {
+				throw new UnsupportedOperationException("Cannot remove a system email workflow rule!");
+			}
+			
 			rule.delete();
 
-			renderJSON("{ \"success\": \"true\" }");
+			renderJSON("{ \"success\": true }");
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to remove email workflow rule");
 			String message = escapeJavaScript(re.getMessage());
-			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
+			renderJSON("{ \"success\": false, \"message\": \"" + message + "\" }");
 		}
 	}
 	
@@ -197,11 +203,11 @@ public class EmailSettingsTab extends SettingsTab {
 			rule.enable();
 			rule.save();
 
-			renderJSON("{ \"success\": \"true\" }");
+			renderJSON("{ \"success\": true }");
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to enable email workflow rule");
 			String message = escapeJavaScript(re.getMessage());
-			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
+			renderJSON("{ \"success\": false, \"message\": \"" + message + "\" }");
 		}
 	}
 	
@@ -214,11 +220,11 @@ public class EmailSettingsTab extends SettingsTab {
 			rule.disable();
 			rule.save();
 
-			renderJSON("{ \"success\": \"true\" }");
+			renderJSON("{ \"success\": true }");
 		} catch (RuntimeException re) {
 			Logger.error(re,"Unable to enable email workflow rule");
 			String message = escapeJavaScript(re.getMessage());
-			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
+			renderJSON("{ \"success\": false, \"message\": \"" + message + "\" }");
 		}
 	}
 	

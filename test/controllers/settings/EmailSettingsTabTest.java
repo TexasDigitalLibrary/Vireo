@@ -21,6 +21,7 @@ import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.State;
 
+import play.Logger;
 import play.db.jpa.JPA;
 import play.modules.spring.Spring;
 import play.mvc.Http.Response;
@@ -85,7 +86,7 @@ public class EmailSettingsTabTest extends AbstractVireoFunctionalTest {
 		params.put("stateString", "Submitted");
 		Response response = POST(ADDEDIT_URL, params);
 		assertIsOk(response);
-		assertContentMatch("\"success\": \"true\"", response);
+		assertContentMatch("\"success\": true", response);
 		// Extract the id of the newly created action.
 		Pattern ID_PATTERN = Pattern.compile("\"id\": ([0-9]+), ");
 		Matcher tokenMatcher = ID_PATTERN.matcher(getContent(response));
@@ -113,7 +114,7 @@ public class EmailSettingsTabTest extends AbstractVireoFunctionalTest {
 		params.put("templateString", String.valueOf(templateId));
 		response = POST(ADDEDIT_URL, params);
 		assertIsOk(response);
-		assertContentMatch("\"success\": \"true\"", response);
+		assertContentMatch("\"success\": true", response);
 		// Verify the action exists in the database.
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();
@@ -130,7 +131,7 @@ public class EmailSettingsTabTest extends AbstractVireoFunctionalTest {
 		params.put("ruleID", String.valueOf(id));
 		response = POST(REMOVE_URL, params);
 		assertIsOk(response);
-		assertContentMatch("\"success\": \"true\"", response);
+		assertContentMatch("\"success\": true", response);
 		// Verify the action exists in the database.
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();

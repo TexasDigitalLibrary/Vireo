@@ -119,19 +119,19 @@ public class EmailRuleService {
 	 * @return - returns true if rule is valid, false if condition is not set or recipients is emtpy
 	 */
 	private static boolean ruleIsValid(EmailWorkflowRule ewflRule, Submission submission) {
-		boolean ret = true;
+		boolean conditionValid = true, recipientsValid = true, ruleEnabled = true;
 		// check condition != null
 		if (ewflRule.getCondition() != null) {
 			// check condition type and id != null
 			if (ewflRule.getCondition().getConditionType() == null) {
-				ret = false;
+				conditionValid = false;
 			}
 			switch (ewflRule.getCondition().getConditionType()) {
 			case College:
 			case Department:
 			case Program:
 				if (ewflRule.getCondition().getConditionId() == null) {
-					ret = false;
+					conditionValid = false;
 				}
 				break;
 			case Always:
@@ -140,15 +140,15 @@ public class EmailRuleService {
 				throw new UnsupportedOperationException();
 			}
 		} else {
-			ret = false;
+			conditionValid = false;
 		}
 		// check recipients
 		if (ewflRule.getRecipients(submission).size() == 0) {
-			ret = false;
+			recipientsValid = false;
 		}
 		// check to see if rule is disabled
-		ret = (!ewflRule.isDisabled()); // if rule isDisabled(true) return false(rule is not valid)
-		return ret;
+		ruleEnabled = (!ewflRule.isDisabled()); // if rule isDisabled(true) return false(rule is not enabled)
+		return (conditionValid && recipientsValid && ruleEnabled);
 	}
 
 	/**
@@ -230,18 +230,19 @@ public class EmailRuleService {
 		// our Always conditions
 		JpaEmailWorkflowRuleConditionImpl conditionAdvisor = (JpaEmailWorkflowRuleConditionImpl) settingRepo.createEmailWorkflowRuleCondition(ConditionType.Always);
 		JpaEmailWorkflowRuleConditionImpl conditionStudent = (JpaEmailWorkflowRuleConditionImpl) settingRepo.createEmailWorkflowRuleCondition(ConditionType.Always);
-		// our email template to use for the default system email rules
-		JpaEmailTemplateImpl emailTemplate = (JpaEmailTemplateImpl) settingRepo.findEmailTemplateByName("SYSTEM Initial Submission");
+		// our email templates to use for the default system email rules
+		JpaEmailTemplateImpl advisorEmailTemplate = (JpaEmailTemplateImpl) settingRepo.findEmailTemplateByName("SYSTEM Advisor Review Request");
+		JpaEmailTemplateImpl studentEmailTemplate = (JpaEmailTemplateImpl) settingRepo.findEmailTemplateByName("SYSTEM Initial Submission");
 		// always send to advisor on submission
 		JpaEmailWorkflowRuleImpl advisorRule = (JpaEmailWorkflowRuleImpl) settingRepo.createEmailWorkflowRule(submitted);
 		advisorRule.setCondition(conditionAdvisor); // always save a new copy of condition
-		advisorRule.setEmailTemplate(emailTemplate);
+		advisorRule.setEmailTemplate(advisorEmailTemplate);
 		advisorRule.setRecipientType(RecipientType.Advisor);
 		advisorRule.setIsSystem(true);
 		// always send to student on submission
 		JpaEmailWorkflowRuleImpl studentRule = (JpaEmailWorkflowRuleImpl) settingRepo.createEmailWorkflowRule(submitted);
 		studentRule.setCondition(conditionStudent); // always save a new copy of condition
-		studentRule.setEmailTemplate(emailTemplate);
+		studentRule.setEmailTemplate(studentEmailTemplate);
 		studentRule.setRecipientType(RecipientType.Student);
 		studentRule.setIsSystem(true);
 
