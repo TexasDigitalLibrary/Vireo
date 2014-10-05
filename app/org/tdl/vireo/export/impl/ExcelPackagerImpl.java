@@ -25,12 +25,11 @@ import org.tdl.vireo.export.ExportExcel;
 import org.tdl.vireo.export.ExportPackage;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.AttachmentType;
+import org.tdl.vireo.model.CommitteeMember;
+import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.search.SearchOrder;
 import org.tdl.vireo.services.StringVariableReplacement;
-
-import play.mvc.Http.Cookie;
-import play.mvc.Http.Request;
 
 /**
  * This will export the current FilterTab results as an Excel spreadsheet.
@@ -245,10 +244,15 @@ public class ExcelPackagerImpl extends AbstractExcelPackagerImpl {
             case COMMITTEE_MEMBERS:
                 header.createCell(j).setCellValue("Committee members");
                 StringBuilder cm = new StringBuilder();
-                for (org.tdl.vireo.model.CommitteeMember member : sub.getCommitteeMembers()) {
-                    cm.append(member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST));
+                int i = 0;
+                for (i = 0; i < sub.getCommitteeMembers().size(); i++) {
+                	CommitteeMember member = sub.getCommitteeMembers().get(i);
+                    cm.append(member.getFormattedName(NameFormat.LAST_FIRST));
                     if (member.getRoles().size() > 0) {
                         cm.append(" (").append(member.getFormattedRoles()).append(")");
+                    }
+                    if((i+1) < sub.getCommitteeMembers().size()) {
+                    	cm.append("\n");
                     }
                 }
                 row.createCell(j).setCellValue(cm.toString());
