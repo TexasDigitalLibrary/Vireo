@@ -1,7 +1,5 @@
 package org.tdl.vireo.export.impl;
 
-import static controllers.FilterTab.ACTIVE_FILTER;
-import static controllers.FilterTab.NAMES;
 import static controllers.FilterTab.SUBMISSION;
 import static controllers.FilterTab.getDefaultColumns;
 
@@ -28,12 +26,9 @@ import org.tdl.vireo.export.ExportPackage;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.Submission;
-import org.tdl.vireo.search.ActiveSearchFilter;
 import org.tdl.vireo.search.SearchOrder;
 import org.tdl.vireo.services.StringVariableReplacement;
 
-import play.Logger;
-import play.modules.spring.Spring;
 import play.mvc.Http.Cookie;
 import play.mvc.Http.Request;
 
@@ -47,7 +42,6 @@ public class ExcelPackagerImpl extends AbstractExcelPackagerImpl {
 
     /* Spring injected paramaters */
     public List<AttachmentType> attachmentTypes = new ArrayList<AttachmentType>();
-    //public Boolean filtered = false;
     public Boolean aggregated = false;
 
     /* Global statics */
@@ -56,15 +50,6 @@ public class ExcelPackagerImpl extends AbstractExcelPackagerImpl {
 
     /* Global Dynamics */
     public LinkedHashMap<String, Properties> attachmentAttributes = new LinkedHashMap<String, Properties>();
-    private Request request;
-
-    /**
-     * Constructor that sets up a global {@link Request} to use to get {@link Cookie}s later
-     */
-    public ExcelPackagerImpl() {
-        // request to store Cookies so we can get the Column options for List<SearchOrder>
-        request = Request.current();
-    }
 
     /**
      * This function is used by Unit Test to export a {@link XSSFWorkbook} with all of the submissions as separate rows
@@ -426,26 +411,6 @@ public class ExcelPackagerImpl extends AbstractExcelPackagerImpl {
         this.aggregated = aggregated;
     }
     
-    /**
-     * Used to help generatePackage to create an {@link ExportPackage}
-     * @return - {@link List} of {@link SearchOrder} columns from {@link Cookie}
-     */
-    private List<SearchOrder> getColumnsFromCookies() {
-    	ActiveSearchFilter activeFilter = Spring.getBeanOfType(ActiveSearchFilter.class);
-    	Cookie filterCookie = request.cookies.get(NAMES[SUBMISSION][ACTIVE_FILTER]);
-		if (filterCookie != null && filterCookie.value != null && filterCookie.value.trim().length() > 0) {
-			try {
-				activeFilter.decode(filterCookie.value);
-			} catch (RuntimeException re) {
-				Logger.warn(re,"Unable to decode search filter: "+filterCookie.value);
-			}
-		}
-		List<SearchOrder> columns = activeFilter.getColumns();
-        if (columns.size() == 0)
-            columns = getDefaultColumns(SUBMISSION);
-        return columns;
-    }
-
     @Override
     public String getExportServiceBeanName() {
         String ret = "ExportService";
@@ -505,7 +470,7 @@ public class ExcelPackagerImpl extends AbstractExcelPackagerImpl {
                 xl.delete();
                 xl.createNewFile();
             }
-            XSSFWorkbook wbook = writeWorkbook(submission, getColumnsFromCookies());
+            XSSFWorkbook wbook = writeWorkbook(submission, Arrays.asList(SearchOrder.values()));
             FileOutputStream os = new FileOutputStream(xl);
             wbook.write(os);
             os.close();

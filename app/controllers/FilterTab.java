@@ -492,7 +492,9 @@ public class FilterTab extends AbstractVireoController {
 				// if we are not saving the columns clear them out (in case they got copied over from activeFilter)
 				if(!hasColumnsFlag) {
 					namedFilter.setColumns(new ArrayList<SearchOrder>());
-				} else if (hasColumnsFlag && namedFilter.getColumns().size() == 0) {
+				}
+				// else if we're saving columns but there weren't any in the copied-over active filter, save the default ones
+				else if (hasColumnsFlag && namedFilter.getColumns().size() == 0) {
 					namedFilter.setColumns(getDefaultColumns(type));
 				}
 				namedFilter.save();
