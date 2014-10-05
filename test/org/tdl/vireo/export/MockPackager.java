@@ -9,6 +9,7 @@ import org.tdl.vireo.model.Submission;
  * Mock implementation of the packager interface.
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
+ * @author Gad Krumholz ( gad.krumholz@austin.utexas.edu )
  */
 public class MockPackager implements Packager {
 
@@ -37,5 +38,10 @@ public class MockPackager implements Packager {
 		generated.add(pkg);
 		return pkg;
 	}
+
+    @Override
+    public String getExportServiceBeanName() {
+        return "ExportService";
+    }
 
 }

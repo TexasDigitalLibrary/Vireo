@@ -41,5 +41,10 @@ public interface NamedSearchFilter extends AbstractModel, SearchFilter {
 	 *            Set this filter search as public or not.
 	 */
 	public void setPublic(boolean publicFlag);
-
+	
+	/**
+	 * @return - whether this filter search includes columns
+	 */
+	public boolean hasColumns();
+	
 }

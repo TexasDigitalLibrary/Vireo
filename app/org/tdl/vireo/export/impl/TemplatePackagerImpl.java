@@ -49,6 +49,7 @@ import play.vfs.VirtualFile;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  * @author Micah Cooper
  * @author <a href="mailto:huff@library.tamu.edu">Jeremy Huff</a>
+ * @author Gad Krumholz ( gad.krumholz@austin.utexas.edu )
  */
 public class TemplatePackagerImpl extends AbstractPackagerImpl {
 		
@@ -228,6 +229,10 @@ public class TemplatePackagerImpl extends AbstractPackagerImpl {
 		templateArguments = arguments;
 	}
 	
+	@Override
+    public String getExportServiceBeanName() {
+        return "ExportService";
+    }
 	
 	@Override
 	public ExportPackage generatePackage(Submission submission) {

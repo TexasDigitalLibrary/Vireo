@@ -31,6 +31,7 @@ public class MockSearchFilter implements SearchFilter {
 	public List<String> colleges = new ArrayList<String>();
 	public List<String> majors = new ArrayList<String>();
 	public List<String> documentTypes = new ArrayList<String>();
+	public List<SearchOrder> columns = new ArrayList<SearchOrder>();
 	public Boolean umiRelease = null;
 	public Date rangeStart = null;
 	public Date rangeEnd = null;
@@ -299,5 +300,14 @@ public class MockSearchFilter implements SearchFilter {
 	public void setDateRangeEnd(Date end) {
 		rangeEnd = end;
 	}
-
+	
+	@Override
+	public List<SearchOrder> getColumns() {
+	    return this.columns;
+	}
+	
+	@Override
+	public void setColumns(List<SearchOrder> columns) {
+	    this.columns = columns;	    
+	}
 }

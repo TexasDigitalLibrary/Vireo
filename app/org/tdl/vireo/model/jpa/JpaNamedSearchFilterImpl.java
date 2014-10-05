@@ -9,10 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.PostLoad;
 import javax.persistence.PostPersist;
 import javax.persistence.PostUpdate;
@@ -33,6 +30,7 @@ import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionRepository;
+import org.tdl.vireo.search.SearchOrder;
 import org.tdl.vireo.search.Semester;
 
 import play.modules.spring.Spring;
@@ -157,6 +155,12 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 			joinColumns=@JoinColumn(name="search_filter_id"))
 	public List<String> documentTypes;
 	
+	@ElementCollection
+	@CollectionTable(
+			name="search_filter_columns",
+			joinColumns=@JoinColumn(name="search_filter_id"))
+	public List<SearchOrder> columns;
+
 	public Boolean umiRelease;
 
 	@Temporal(TemporalType.DATE)
@@ -200,6 +204,7 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 		this.colleges = new ArrayList<String>();
 		this.majors = new ArrayList<String>();
 		this.documentTypes = new ArrayList<String>();
+		this.columns = new ArrayList<SearchOrder>();
 	}
 
 	/**
@@ -303,6 +308,11 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 			
 			this.publicFlag = false;
 		}
+	}
+
+	@Override
+	public boolean hasColumns() {
+		return (this.columns.size() > 0);
 	}
 
 	@Override
@@ -666,5 +676,15 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	@Override
 	public void setDateRangeEnd(Date end) {
 		rangeEnd = end;
+	}
+
+	@Override
+	public List<SearchOrder> getColumns() {
+		return columns;
+	}
+
+	@Override
+	public void setColumns(List<SearchOrder> columns) {
+		this.columns = columns;
 	}
 }
