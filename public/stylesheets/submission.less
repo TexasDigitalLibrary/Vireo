@@ -176,6 +176,9 @@ SPECIFIC OVERIDES
 	margin-bottom:0;
 }
 
+#confirmSubmit .control-group-tall {
+	margin-bottom: inherit;
+}
 
 div.control-group.required label.control-label, label.required {
     font-weight: bold;
@@ -301,8 +304,77 @@ STUDENT VIEWS
 	width: 700px;
 }
 
-#submit-corrections-warning {
-    width: 500px;
+#correctionsWrap .doToggle {
+	float: right;
+}
+
+@media (min-width: 1540px) {
+	#correctionsWrap {
+		position: fixed;
+		width: 300px;
+		bottom: 5%;
+		right: 2%;
+		padding: 10px 20px;
+	}
+	
+	#correctionsWrap .form-actions {
+		padding-left: 0;
+		padding-right: 0;
+	}
+	
+	#correctionsWrap .row {
+		margin-left: 0;
+	}
+}
+
+@media (max-width: 1540px) {
+	#confirmSubmit {
+		padding-bottom: 140px;
+	}
+	
+	#correctionsWrap {
+		opacity: .9;
+		position: fixed;
+		bottom: 1%;
+		left: 50%;
+		width: 50%;
+		margin-left: -26%; 
+		padding: 10px 20px;
+	}
+	
+	#correctionsWrap .form-actions {
+		padding-left: 0;
+		padding-right: 0;
+	}
+	
+	#correctionsWrap .row {
+		margin-left: 0;
+	}
+}
+
+@media (max-width: 1000px) {
+	#confirmSubmit {
+		padding-bottom: 140px;
+	}
+
+	#correctionsWrap {
+		opacity: .9;
+		position: fixed;
+		bottom: 1%;
+		left: 50%;
+		width: 80%;
+		margin-left: -42%; 
+		padding: 10px 20px;
+	}
+	
+	#correctionsWrap .form-actions {
+		padding-left: 0;
+		padding-right: 0;
+	}
+	
+	#correctionsWrap .row {
+		margin-left: 0;
+	}
 }
 
 /********************
@@ -359,6 +431,14 @@ System Control Panel
 
 #errorList li:nth-child(even) .stackTrace {
     background-color: #FFFFFF;
+}
+
+#confirmSubmit #ajaxErrors {
+	position: fixed;
+	top: 6%;
+	left: 50%;
+	margin-left: -20%; 
+	width: 40%;
 }
 
 /********************

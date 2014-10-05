@@ -9,10 +9,15 @@ import static org.tdl.vireo.constant.FieldConfig.SUPPLEMENTAL_ATTACHMENT;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
 import org.tdl.vireo.constant.AppConfig;
 import org.tdl.vireo.constant.FieldConfig;
 import org.tdl.vireo.model.ActionLog;
@@ -26,6 +31,7 @@ import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.state.State;
 
 import play.Logger;
+import play.Play;
 import play.libs.MimeTypes;
 import play.mvc.With;
 import controllers.submit.PersonalInfo;
@@ -132,6 +138,82 @@ public class Student extends AbstractVireoController {
 		
 		renderTemplate("Student/list.html",submissions, showStartSubmissionButton);
 	}
+	
+	/**
+	 * Remove additional document(s) via AJAX request
+	 * @param subId The submission id.
+	 */
+	@Security(RoleType.STUDENT)
+	public static void submissionRemoveAdditionalDocumentsJSON(Long subId) {
+		// Locate the submission 
+		Submission sub = subRepo.findSubmission(subId);
+		// Check that we are the owner of the submission.
+		Person submitter = context.getPerson();
+		if (sub.getSubmitter() != submitter)
+		    unauthorized();		
+
+		removeAdditional(sub); 
+		renderJSON("{ \"success\": \"true\"}");
+	}
+	
+	/**
+	 * Handle uploading an Additional Document from an AJAX request
+	 * @param subId The submission id.
+	 */
+	@Security(RoleType.STUDENT)
+	public static void submissionUploadAdditionalDocumentJSON(Long subId) {
+		// Locate the submission 
+		Submission sub = subRepo.findSubmission(subId);
+		if(params.get("additionalDocument",File.class) != null) { 
+			// Check that we are the owner of the submission.
+			Person submitter = context.getPerson();
+			if (sub.getSubmitter() != submitter)
+			    unauthorized();		
+			uploadAdditional(sub);
+			renderJSON("{ \"success\": \"true\"}");
+		}
+		renderJSON("{ \"success\": \"false\"}");
+	}
+	
+	/**
+	 * Handle uploading a Primary Document from an AJAX request
+	 * @param subId The submission id.
+	 */
+	@Security(RoleType.STUDENT)
+	public static void submissionUploadPrimaryDocumentJSON(Long subId) {
+		if(params.get("primaryDocument",File.class) != null) { 
+			// Locate the submission 
+			Submission sub = subRepo.findSubmission(subId);
+			// Check that we are the owner of the submission.
+			Person submitter = context.getPerson();
+			if (sub.getSubmitter() != submitter)
+			    unauthorized();		
+			uploadPrimaryDocument(sub);
+			renderJSON("{ \"success\": \"true\"}");
+		}
+		renderJSON("{ \"success\": \"false\"}");
+	}
+	
+	/**
+	 * Handle adding a message from an AJAX request
+	 * @param subId The submission id.
+	 */
+	@Security(RoleType.STUDENT)
+	public static void submissionAddMessageJSON(Long subId) {
+		String studentMessage = null;
+		if (!params.get("message").equals("")) {
+			studentMessage = params.get("message");
+			// Locate the submission 
+			Submission sub = subRepo.findSubmission(subId);
+			// Check that we are the owner of the submission.
+			Person submitter = context.getPerson();
+			if (sub.getSubmitter() != submitter)
+			    unauthorized();		
+			sub.logAction("Message added : '" +	studentMessage + "'").save();
+			renderJSON("{ \"success\": \"true\"}");
+		}
+		renderJSON("{ \"success\": \"false\"}");
+	}
 
 	/**
 	 * Student view of the submission. The form in all cases allows the student
@@ -162,12 +244,6 @@ public class Student extends AbstractVireoController {
 		
 		boolean allowMultiple = settingRepo.getConfigBoolean(AppConfig.ALLOW_MULTIPLE_SUBMISSIONS);
 		
-		// Handle add message button. Just add the message to the submission
-		if (params.get("submit_addMessage") != null) {   
-			if (!params.get("studentMessage").equals(""))
-				sub.logAction("Message added : '" +	params.get("studentMessage") + "'").save();
-		}
-		
 		if (sub.getState().isEditableByStudent()) {
 			// If the replace manuscript button is pressed - then delete the manuscript 
 			if (params.get("replacePrimary") != null) {
@@ -184,11 +260,14 @@ public class Student extends AbstractVireoController {
 				removeAdditional(sub);           	            	
 			}
 			
-			if(params.get("primaryDocument",File.class) != null) 
+			if(params.get("primaryDocument",File.class) != null) {
 				uploadPrimaryDocument(sub);
-			
-			if(params.get("additionalDocument",File.class) != null)
+				renderArgs.put("formSubmitter","replacePrimary");
+			}			
+			if(params.get("additionalDocument",File.class) != null) {
 				uploadAdditional(sub);
+				renderArgs.put("formSubmitter","removeAdditional");
+			}
 			
 			verify(sub);
 			
@@ -373,10 +452,9 @@ public class Student extends AbstractVireoController {
 	 *            The submission to remove attachments from.
 	 */
 	public static boolean removeAdditional(Submission sub) {
-
 		// Get values from all check boxes
-		String[] idsToRemove = params.getAll("attachmentToRemove");
-		
+		String[] idsToRemove = params.getAll("attachmentToRemove[]");
+
 		if (idsToRemove != null) {
 		
 			// Iterate over all checked check boxes - removing attachments as we go
