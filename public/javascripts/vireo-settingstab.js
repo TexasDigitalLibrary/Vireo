@@ -3616,7 +3616,7 @@ function submissionSettingsHandler(jsonURL) {
 			// Remove the ajax loading indicators & alerts
 			$this.removeClass("waiting");
 			$this.removeClass("settings-error");
-			cleanAlert("submission-setting-"+field);
+			clearAlert("submission-setting-"+field);
 			
 			// Update the label if required
 			if (data.field.indexOf("_enabled") > -1) {
