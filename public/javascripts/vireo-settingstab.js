@@ -3616,7 +3616,7 @@ function submissionSettingsHandler(jsonURL) {
 			// Remove the ajax loading indicators & alerts
 			$this.removeClass("waiting");
 			$this.removeClass("settings-error");
-			Alert("submission-setting-"+field);
+			cleanAlert("submission-setting-"+field);
 			
 			// Update the label if required
 			if (data.field.indexOf("_enabled") > -1) {
@@ -3679,7 +3679,7 @@ function stickySettingsHandler(jsonURL) {
 			// Remove the ajax loading indicators & alerts
 			$this.removeClass("waiting");
 			$this.removeClass("settings-error");
-			Alert("submission-setting-"+field);
+			clearAlert("submission-setting-"+field);
 			
 			if (!data.value) {
 				$this.closest('li').slideUp(500, function() {
