@@ -42,7 +42,7 @@ import play.mvc.Scope.Session;
  * Test the methods of the view tab.
  * 
  * @author Micah Cooper
- * @author Gad Krumholz
+ * @author <a href="mailto:gad.krumholz@austin.utexas.edu">Gad Krumholz</a>
  *
  */
 public class ViewTabTest extends AbstractVireoFunctionalTest {

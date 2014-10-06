@@ -29,7 +29,7 @@ import play.modules.spring.Spring;
 import play.test.UnitTest;
 
 /**
- * @author Gad Krumholz
+ * @author <a href="mailto:gad.krumholz@austin.utexas.edu">Gad Krumholz</a>
  *
  */
 public class EmailRuleServiceTest extends UnitTest {

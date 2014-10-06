@@ -28,7 +28,7 @@ import controllers.Security;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  * @author <a href="bill-ingram.com">Bill Ingram</a>
  * @author Dan Galewsky
- * @author Gad Krumholz
+ * @author <a href="mailto:gad.krumholz@austin.utexas.edu">Gad Krumholz</a>
  */
 public class Confirm extends AbstractSubmitStep {
 	

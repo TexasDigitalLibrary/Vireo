@@ -5,7 +5,7 @@ import java.util.HashMap;
 /**
  * This class represents an administrative group to be used with email workflow rules.
  * 
- * @author Gad Krumholz
+ * @author <a href="mailto:gad.krumholz@austin.utexas.edu">Gad Krumholz</a>
  */
 public interface AdministrativeGroup extends EmailGroup {
 

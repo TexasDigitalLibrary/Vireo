@@ -11,7 +11,7 @@ import org.tdl.vireo.model.Submission;
  * Depositor.
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
- * @author Gad Krumholz ( gad.krumholz@austin.utexas.edu )
+ * @author <a href="mailto:gad.krumholz@austin.utexas.edu">Gad Krumholz</a>
  */
 public interface Packager {
 

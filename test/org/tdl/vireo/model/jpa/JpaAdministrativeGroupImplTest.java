@@ -16,7 +16,7 @@ import play.test.UnitTest;
 /**
  * Jpa specific implementation of the administrative group interface
  * 
- * @author Gad Krumholz
+ * @author <a href="mailto:gad.krumholz@austin.utexas.edu">Gad Krumholz</a>
  */
 public class JpaAdministrativeGroupImplTest extends UnitTest {
 	
