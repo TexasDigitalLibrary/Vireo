@@ -338,7 +338,8 @@ public class PersonalInfo extends AbstractSubmitStep {
 			firstName = sub.getStudentFirstName();
 			middleName = sub.getStudentMiddleName();
 			lastName = sub.getStudentLastName();
-			orcid = sub.getOrcid();
+			if(sub.getOrcid() != null)
+				orcid = sub.getOrcid();
 			birthYear = sub.getStudentBirthYear() != null ? String.valueOf(sub.getStudentBirthYear()) : null;
 			program = sub.getProgram();
 			college = sub.getCollege();
