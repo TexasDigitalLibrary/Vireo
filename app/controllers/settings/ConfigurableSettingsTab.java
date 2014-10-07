@@ -2007,7 +2007,9 @@ public class ConfigurableSettingsTab extends SettingsTab {
 	            jsonEmails += "{\"id\":" +i+ ",\"email\":\""+email+"\"},";
 	            i++;
 	        }
-	        jsonEmails = jsonEmails.substring(0,jsonEmails.length()-1);
+	        if(jsonEmails.length() > 1) {
+	        	jsonEmails = jsonEmails.substring(0,jsonEmails.length()-1);
+	        }
 		}
 		jsonEmails += "]";
 		
