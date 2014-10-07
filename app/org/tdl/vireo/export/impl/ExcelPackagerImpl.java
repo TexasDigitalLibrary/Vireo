@@ -253,7 +253,7 @@ public class ExcelPackagerImpl extends AbstractExcelPackagerImpl {
                         cm.append(" (").append(member.getFormattedRoles()).append(")");
                     }
                     if((i+1) < sub.getCommitteeMembers().size()) {
-                    	cm.append("; ");
+                    	cm.append(";");
                     }
                 }
                 row.createCell(j).setCellValue(cm.toString());
