@@ -26,6 +26,7 @@ import org.tdl.vireo.export.ExportPackage;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.CommitteeMember;
+import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.search.SearchOrder;
@@ -252,7 +253,7 @@ public class ExcelPackagerImpl extends AbstractExcelPackagerImpl {
                         cm.append(" (").append(member.getFormattedRoles()).append(")");
                     }
                     if((i+1) < sub.getCommitteeMembers().size()) {
-                    	cm.append("\n");
+                    	cm.append("; ");
                     }
                 }
                 row.createCell(j).setCellValue(cm.toString());
@@ -337,7 +338,7 @@ public class ExcelPackagerImpl extends AbstractExcelPackagerImpl {
             case CUSTOM_ACTIONS:
                 header.createCell(j).setCellValue("Custom actions");
                 int actions = 0;
-                for (org.tdl.vireo.model.CustomActionValue action : sub.getCustomActions()) {
+                for (CustomActionValue action : sub.getCustomActions()) {
                     if (action.getValue()) {
                         actions++;
                     }
@@ -362,19 +363,19 @@ public class ExcelPackagerImpl extends AbstractExcelPackagerImpl {
                 break;
             case DOCUMENT_KEYWORDS:
                 header.createCell(j).setCellValue("Document Keywords");
-                if (sub.getReviewerNotes() != null)
+                if (sub.getDocumentKeywords() != null)
                     row.createCell(j).setCellValue(sub.getDocumentKeywords());
                 j++;
                 break;
             case LAST_EVENT_ENTRY:
                 header.createCell(j).setCellValue("Last Event Entry");
-                if (sub.getReviewerNotes() != null)
+                if (sub.getLastLogEntry() != null)
                     row.createCell(j).setCellValue(sub.getLastLogEntry());
                 j++;
                 break;
             case LAST_EVENT_TIME:
                 header.createCell(j).setCellValue("Last Event Time");
-                if (sub.getReviewerNotes() != null)
+                if (sub.getLastLogDate() != null)
                     row.createCell(j).setCellValue(sub.getLastLogDate());
                 j++;
                 break;
