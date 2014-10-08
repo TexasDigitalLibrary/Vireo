@@ -233,6 +233,9 @@ jQuery(document).ready(function() {
 					 new manuscript. After clicking the "Corrections Completed" button you will no
 					 longer be able to edit the application.
 					</p>
+					<p>
+					<a href="#upload_manuscripts">Click here to jump down to upload a new manuscript</a>
+					</p>
 				</div>
 				<div class="form-actions row center">
 				    <p id="submit-corrections-warning" class="hidden red">
@@ -243,8 +246,9 @@ jQuery(document).ready(function() {
 			</div>
 		#{/if}
 		#{else}
-			<div class="row">
-				<div class="alert">
+			<div id="correctionsWrap" class="alert">
+				<a href="#toggleDetails" class="doToggle">[-]</a>
+				<div id="stateDetails">
 					<p><strong><h4>Current Submission State:</h4> ${sub.getState().getDisplayName()}</strong></p>
 					<p>Your Submission cannot be changed at this time.</p>
 				</div>
@@ -253,7 +257,7 @@ jQuery(document).ready(function() {
 	
 	    #{include 'viewSubmission.include' /}
 		
-		<legend>Uploaded Files</legend>
+		<legend id="upload_manuscripts">Uploaded Files</legend>
 		#{ifErrors}
 		<br/>
 		<ul class="red">
