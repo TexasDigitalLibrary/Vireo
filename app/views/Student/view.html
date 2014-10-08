@@ -234,7 +234,7 @@ jQuery(document).ready(function() {
 					 longer be able to edit the application.
 					</p>
 					<p>
-					<a href="#upload_manuscripts">Click here to jump down to upload a new manuscript</a>
+					<a href="#upload_manuscripts">Click here to jump down to replace manuscript</a>
 					</p>
 				</div>
 				<div class="form-actions row center">
@@ -257,7 +257,7 @@ jQuery(document).ready(function() {
 	
 	    #{include 'viewSubmission.include' /}
 		
-		<legend id="upload_manuscripts">Uploaded Files</legend>
+		<legend#{if sub.getState().isEditableByStudent() } class="alert-error"#{/if} id="upload_manuscripts">Uploaded Files</legend>
 		#{ifErrors}
 		<br/>
 		<ul class="red">
