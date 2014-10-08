@@ -565,6 +565,7 @@ public class TestDataLoader extends Job {
 		new EmailWorkflowRulesArray("Submitted", RecipientType.Department, null, EMAIL_WORKFLOW_RULE_CONDITIONS[0], EMAIL_TEMPLATE_DEFINITIONS[0]), // When State is "Submitted" Always send to submission's Department
 		new EmailWorkflowRulesArray("Submitted", RecipientType.Program, null, EMAIL_WORKFLOW_RULE_CONDITIONS[0], EMAIL_TEMPLATE_DEFINITIONS[0]), // When State is "Submitted" Always send to submission's Program
 		new EmailWorkflowRulesArray("Submitted", RecipientType.AdminGroup, null, EMAIL_WORKFLOW_RULE_CONDITIONS[0], EMAIL_TEMPLATE_DEFINITIONS[0]), // When State is "Submitted" Always send to Administrative Group with an ID that gets assigned at runtime
+		new EmailWorkflowRulesArray("Submitted", RecipientType.Assignee, null, EMAIL_WORKFLOW_RULE_CONDITIONS[0], EMAIL_TEMPLATE_DEFINITIONS[0]), // When State is "Submitted" Always send to submission's Assignee
 		// Test all State types		
 		new EmailWorkflowRulesArray("CorrectionsReceived", RecipientType.Advisor, null, EMAIL_WORKFLOW_RULE_CONDITIONS[0], EMAIL_TEMPLATE_DEFINITIONS[0]), // When State is "CorrectionsReceived" Always send to submission's Advisor
 		new EmailWorkflowRulesArray("Approved", RecipientType.Advisor, null, EMAIL_WORKFLOW_RULE_CONDITIONS[0], EMAIL_TEMPLATE_DEFINITIONS[0]), // When State is "Approved" Always send to submission's Advisor

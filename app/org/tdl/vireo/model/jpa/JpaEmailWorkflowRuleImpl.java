@@ -202,6 +202,11 @@ public class JpaEmailWorkflowRuleImpl extends JpaAbstractModel<JpaEmailWorkflowR
 				recipients.addAll(adminGroupRecipient.getEmails().values());
 			}
 			break;
+		case Assignee:
+			if(submission.getAssignee() != null) {
+				recipients.add(submission.getAssignee().getCurrentEmailAddress());
+			}
+			break;
 		default:
 			throw new UnsupportedOperationException();
 		}		
