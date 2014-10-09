@@ -1,10 +1,6 @@
 package controllers.settings;
 
-import static org.tdl.vireo.constant.AppConfig.*;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,15 +9,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.tdl.vireo.email.RecipientType;
-import org.tdl.vireo.model.AbstractWorkflowRuleCondition.ConditionType;
+import org.tdl.vireo.model.ConditionType;
 import org.tdl.vireo.model.EmailTemplate;
+import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.SettingsRepository;
-import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.security.SecurityContext;
-import org.tdl.vireo.state.State;
 
-import play.Logger;
 import play.db.jpa.JPA;
 import play.modules.spring.Spring;
 import play.mvc.Http.Response;

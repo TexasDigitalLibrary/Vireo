@@ -9,7 +9,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.tdl.vireo.model.AbstractWorkflowRuleCondition;
-import org.tdl.vireo.model.AbstractWorkflowRuleCondition.ConditionType;
+import org.tdl.vireo.model.ConditionType;
 import org.tdl.vireo.model.MockPerson;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.security.SecurityContext;

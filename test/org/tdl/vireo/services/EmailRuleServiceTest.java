@@ -12,7 +12,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.tdl.vireo.email.RecipientType;
-import org.tdl.vireo.model.AbstractWorkflowRuleCondition.ConditionType;
+import org.tdl.vireo.model.ConditionType;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionRepository;

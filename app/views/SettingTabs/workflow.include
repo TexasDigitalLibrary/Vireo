@@ -97,11 +97,10 @@
 
 			<div id="${state.getBeanName()}-workflowRule-conditionCategory" style="display:none;" class="empty select">
 				<select class="field" data-id="" data-state="" data-ruleFieldName="">
-					<option value="">Choose a condition...</option>
-					<option value="Always">Always</option>
-					<option value="College">College</option>
-					<option value="Department">Department</option>
-					<option value="Program">Program</option>
+					<option value="">Choose a condition type...</option>
+				#{list items:conditionTypes, as:'conditionType'}
+					<option value="${conditionType.name()}">${conditionType}</option>
+				#{/list}
 				</select>
 			</div>
 			<div id="${state.getBeanName()}-workflowRule-templateString" style="display:none;" class="empty select">

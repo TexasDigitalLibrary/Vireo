@@ -3,6 +3,7 @@
  */
 package org.tdl.vireo.model.jpa;
 
+import java.util.Comparator;
 import java.util.HashMap;
 
 import javax.persistence.Column;
@@ -12,8 +13,7 @@ import javax.persistence.Table;
 import org.tdl.vireo.model.AdministrativeGroup;
 
 /**
- * @author gad
- *
+ * @author <a href="mailto:gad.krumholz@austin.utexas.edu">Gad Krumholz</a>
  */
 @Entity
 @Table(name = "administrative_groups")
@@ -111,4 +111,14 @@ public class JpaAdministrativeGroupImpl extends JpaAbstractModel<JpaAdministrati
 	public void removeEmail(int index) {
 		this.emails.remove(index);
 	}
+	
+	public static class AdminGroupsComparator implements Comparator<AdministrativeGroup> {
+
+        public final static Comparator<AdministrativeGroup> INSTANCE = new AdminGroupsComparator();
+
+        public int compare(AdministrativeGroup adminGroup1, AdministrativeGroup adminGroup2) {
+            return adminGroup1.getName().compareTo(adminGroup2.getName());
+        }
+
+    }
 }

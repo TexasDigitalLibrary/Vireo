@@ -3,7 +3,6 @@ package org.tdl.vireo.model;
 import java.util.HashMap;
 import java.util.List;
 
-import org.tdl.vireo.model.AbstractWorkflowRuleCondition.ConditionType;
 import org.tdl.vireo.state.State;
 
 /**

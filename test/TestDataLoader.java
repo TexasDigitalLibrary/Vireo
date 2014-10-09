@@ -1,3 +1,10 @@
+import static org.tdl.vireo.constant.AppConfig.ALLOW_MULTIPLE_SUBMISSIONS;
+import static org.tdl.vireo.constant.AppConfig.CURRENT_SEMESTER;
+import static org.tdl.vireo.constant.AppConfig.GRANTOR;
+import static org.tdl.vireo.constant.AppConfig.PROQUEST_LICENSE_TEXT;
+import static org.tdl.vireo.constant.AppConfig.SUBMISSIONS_OPEN;
+import static org.tdl.vireo.constant.AppConfig.SUBMIT_LICENSE_TEXT;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -6,17 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Enumerated;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.security.auth.Subject;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
-import org.junit.internal.runners.rules.RuleFieldValidator;
 import org.tdl.vireo.constant.AppConfig;
 import org.tdl.vireo.email.RecipientType;
 import org.tdl.vireo.email.SystemEmailTemplateService;
@@ -25,10 +23,10 @@ import org.tdl.vireo.export.Packager;
 import org.tdl.vireo.export.impl.FileDepositorImpl;
 import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.CommitteeMember;
-import org.tdl.vireo.model.Configuration;
+import org.tdl.vireo.model.ConditionType;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.DepositLocation;
-import org.tdl.vireo.model.EmailTemplate;
+import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
@@ -37,12 +35,9 @@ import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionRepository;
-import org.tdl.vireo.model.AbstractWorkflowRuleCondition.ConditionType;
-import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.jpa.JpaAdministrativeGroupImpl;
 import org.tdl.vireo.model.jpa.JpaEmailTemplateImpl;
 import org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleConditionImpl;
-import org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleImpl;
 import org.tdl.vireo.proquest.ProquestSubject;
 import org.tdl.vireo.proquest.ProquestVocabularyRepository;
 import org.tdl.vireo.search.impl.LuceneIndexerImpl;
@@ -51,14 +46,13 @@ import org.tdl.vireo.security.impl.ShibbolethAuthenticationMethodImpl;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
 
-import controllers.settings.ThemeSettingsTab;
 import play.Logger;
 import play.Play;
 import play.db.jpa.JPA;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
 import play.modules.spring.Spring;
-import static org.tdl.vireo.constant.AppConfig.*;
+import controllers.settings.ThemeSettingsTab;
 
 
 /**
@@ -747,7 +741,6 @@ public class TestDataLoader extends Job {
 					default:
 						throw new UnsupportedOperationException();
 				}
-				Logger.info("Set conditionId to: %d", ruleDefinition.condition.conditionId);
 			}			
 			condition.setConditionId(ruleDefinition.condition.conditionId);
 			condition.save();

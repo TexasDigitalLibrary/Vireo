@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.tdl.vireo.model.AbstractWorkflowRuleCondition;
-import org.tdl.vireo.model.AbstractWorkflowRuleCondition.ConditionType;
 import org.tdl.vireo.model.AdministrativeGroup;
 import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.CommitteeMemberRoleType;
+import org.tdl.vireo.model.ConditionType;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.Degree;

@@ -1,30 +1,28 @@
 package controllers.settings;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
 
 import org.tdl.vireo.email.RecipientType;
 import org.tdl.vireo.model.AbstractWorkflowRuleCondition;
-import org.tdl.vireo.model.AbstractWorkflowRuleCondition.ConditionType;
 import org.tdl.vireo.model.AdministrativeGroup;
 import org.tdl.vireo.model.College;
+import org.tdl.vireo.model.ConditionType;
 import org.tdl.vireo.model.Department;
 import org.tdl.vireo.model.EmailTemplate;
+import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.NameFormat;
-import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.RoleType;
-import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.jpa.JpaAdministrativeGroupImpl;
+import org.tdl.vireo.model.jpa.JpaAdministrativeGroupImpl.AdminGroupsComparator;
 import org.tdl.vireo.model.jpa.JpaEmailTemplateImpl;
-import org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleConditionImpl;
 import org.tdl.vireo.state.State;
-import org.tdl.vireo.state.StateManager;
 
 import play.Logger;
-import play.modules.spring.Spring;
 import play.mvc.With;
 import controllers.Authentication;
 import controllers.Security;
@@ -36,10 +34,15 @@ public class EmailSettingsTab extends SettingsTab {
 	@Security(RoleType.MANAGER)
 	public static void emailSettings(){
 		
+		// List all colleges
 		List<College> colleges = settingRepo.findAllColleges();
+		// List all programs
 		List<Program> programs = settingRepo.findAllPrograms();
+		// List all departments
 		List<Department> departments = settingRepo.findAllDepartments();
+		// List all administrative groups (sorted)
 		List<AdministrativeGroup> adminGroups = settingRepo.findAllAdministrativeGroups();
+		Collections.sort(adminGroups, AdminGroupsComparator.INSTANCE);
 		
 		// Get all the states
 		renderArgs.put("STATES", stateManager.getAllStates());
@@ -50,12 +53,15 @@ public class EmailSettingsTab extends SettingsTab {
 		// List all templates
 		List<EmailTemplate> templates = settingRepo.findAllEmailTemplates();
 		
-		// List all email recipient types
-		List<RecipientType> recipientTypes = Arrays.asList(RecipientType.values());
+		// List all email recipient types (sorted)
+		List<RecipientType> recipientTypes = Arrays.asList(RecipientType.sortedValues());
+		
+		// List all email recipient types (sorted)
+		List<ConditionType> conditionTypes = Arrays.asList(ConditionType.sortedValues());
 		
 		String nav = "settings";
 		String subNav = "email";
-		renderTemplate("SettingTabs/emailSettings.html",nav, subNav, templates, recipientTypes,
+		renderTemplate("SettingTabs/emailSettings.html",nav, subNav, templates, recipientTypes, conditionTypes,
 				
 				// Sortable lists
 				colleges, programs, departments, adminGroups

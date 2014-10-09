@@ -3,13 +3,11 @@ package org.tdl.vireo.model.jpa;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
-import javax.persistence.JoinColumn;
-import javax.persistence.MapsId;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.tdl.vireo.model.AbstractWorkflowRuleCondition;
 import org.tdl.vireo.model.College;
+import org.tdl.vireo.model.ConditionType;
 import org.tdl.vireo.model.Department;
 import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.SettingsRepository;

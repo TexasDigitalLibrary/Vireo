@@ -1,22 +1,17 @@
 package org.tdl.vireo.services;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.tdl.vireo.email.EmailService;
 import org.tdl.vireo.email.RecipientType;
 import org.tdl.vireo.email.VireoEmail;
-import org.tdl.vireo.email.impl.SystemEmailTemplateServiceImpl;
-import org.tdl.vireo.model.AbstractModel;
-import org.tdl.vireo.model.AbstractWorkflowRuleCondition;
 import org.tdl.vireo.model.College;
+import org.tdl.vireo.model.ConditionType;
 import org.tdl.vireo.model.Department;
-import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
-import org.tdl.vireo.model.AbstractWorkflowRuleCondition.ConditionType;
 import org.tdl.vireo.model.jpa.JpaEmailTemplateImpl;
 import org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleConditionImpl;
 import org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleImpl;
@@ -31,7 +26,7 @@ import play.modules.spring.Spring;
 
 /**
  * 
- * @author gad
+ * @author <a href="mailto:gad.krumholz@austin.utexas.edu">Gad Krumholz</a>
  *
  */
 public class EmailRuleService {

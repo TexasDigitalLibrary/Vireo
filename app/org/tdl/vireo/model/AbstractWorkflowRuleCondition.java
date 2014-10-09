@@ -29,11 +29,4 @@ public interface AbstractWorkflowRuleCondition extends AbstractOrderedModel {
 	 * @param conditionType
 	 */
 	public void setConditionType(ConditionType conditionType);
-
-	/**
-	 * 
-	 * @author gad
-	 *
-	 */
-	public enum ConditionType{Always, College, Department, Program};
 }
