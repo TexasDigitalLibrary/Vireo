@@ -233,18 +233,22 @@ jQuery(document).ready(function() {
 					 new manuscript. After clicking the "Corrections Completed" button you will no
 					 longer be able to edit the application.
 					</p>
+					<p>
+					<a href="#upload_manuscripts">Click here to jump down to replace manuscript</a>
+					</p>
 				</div>
 				<div class="form-actions row center">
 				    <p id="submit-corrections-warning" class="hidden red">
 				      After completing your corrections you will no longer be able to edit this application. Did you complete all the required changes, and upload a new manuscript?
 				    </p>
-					<input id="submit_corrections" type="submit" class="btn btn-primary ${sub.getPrimaryDocument() == null ? "disabled" : ""}" name="submit_corrections" value="Corrections Completed"/>
+					<input id="submit_corrections" type="submit" class="btn btn-primary${sub.getPrimaryDocument() == null ? " disabled" : ""}" name="submit_corrections" value="Corrections Completed"/>
 				</div>		
 			</div>
 		#{/if}
 		#{else}
-			<div class="row">
-				<div class="alert">
+			<div id="correctionsWrap" class="alert">
+				<a href="#toggleDetails" class="doToggle">[-]</a>
+				<div id="stateDetails">
 					<p><strong><h4>Current Submission State:</h4> ${sub.getState().getDisplayName()}</strong></p>
 					<p>Your Submission cannot be changed at this time.</p>
 				</div>
@@ -253,7 +257,7 @@ jQuery(document).ready(function() {
 	
 	    #{include 'viewSubmission.include' /}
 		
-		<legend>Uploaded Files</legend>
+		<legend#{if sub.getState().isEditableByStudent() } class="alert-error"#{/if} id="upload_manuscripts">Uploaded Files</legend>
 		#{ifErrors}
 		<br/>
 		<ul class="red">
@@ -272,7 +276,7 @@ jQuery(document).ready(function() {
 					#{if primaryDocument == null}
 				        <input type="submit" value="Upload" class="uploadBtn btn" id="uploadPrimary" name="uploadPrimary">
 						<input type="file" id="primaryFile" class="input-file" name="primaryDocument">
-						(Your file will be renamed)
+						<b><span class="red">(Your file will be renamed)</span></b>
 			        #{/if}
 			        #{else}
 		                <p>

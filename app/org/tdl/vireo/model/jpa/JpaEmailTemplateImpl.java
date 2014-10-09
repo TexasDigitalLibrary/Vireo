@@ -2,6 +2,7 @@ package org.tdl.vireo.model.jpa;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.tdl.vireo.model.EmailTemplate;

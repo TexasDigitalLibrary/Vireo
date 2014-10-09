@@ -23,6 +23,7 @@ import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.security.SecurityContext;
 
+import play.Logger;
 import play.db.jpa.JPA;
 import play.modules.spring.Spring;
 import play.mvc.Http.Response;
@@ -238,14 +239,13 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		LOGIN();
 		
 		// Get our urls and a list of fields.
-		final String ADD_URL = Router.reverse("settings.ConfigurableSettingsTab.addProgramJSON").url;
-		final String EDIT_URL = Router.reverse("settings.ConfigurableSettingsTab.editProgramJSON").url;
+		final String EDIT_URL = Router.reverse("settings.ConfigurableSettingsTab.addEditProgramJSON").url;
 		final String REMOVE_URL = Router.reverse("settings.ConfigurableSettingsTab.removeProgramJSON").url;
 
 		// Add a new custom action
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("name","New Program");
-		Response response = POST(ADD_URL,params);
+		Response response = POST(EDIT_URL,params);
 		assertContentMatch("\"success\": \"true\"", response);
 		
 		// Extract the id of the newly created action.
@@ -266,19 +266,23 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		
 		// Now edit the custom action
 		params.clear();
-		params.put("programId","program_"+id);
+		params.put("programId",String.valueOf(id));
 		params.put("name", "Changed Name");
+		params.put("emails", "me@me.com, test@test.com");
 		response = POST(EDIT_URL,params);
 		
 		// Verify the action was updated in the database.
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();
 		JPA.em().getTransaction().begin();
-		assertEquals("Changed Name",settingRepo.findProgram(id).getName());
+		Program program = settingRepo.findProgram(id);
+		assertEquals("Changed Name", program.getName());
+		assertEquals("me@me.com", program.getEmails().get(0));
+		assertEquals("test@test.com", program.getEmails().get(1));
 		
 		// Now remove the custom action
 		params.clear();
-		params.put("programId","program_"+id);
+		params.put("programId",String.valueOf(id));
 		response = POST(REMOVE_URL,params);
 		assertContentMatch("\"success\": \"true\"", response);
 		
@@ -362,14 +366,13 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		LOGIN();
 		
 		// Get our urls and a list of fields.
-		final String ADD_URL = Router.reverse("settings.ConfigurableSettingsTab.addCollegeJSON").url;
-		final String EDIT_URL = Router.reverse("settings.ConfigurableSettingsTab.editCollegeJSON").url;
+		final String EDIT_URL = Router.reverse("settings.ConfigurableSettingsTab.addEditCollegeJSON").url;
 		final String REMOVE_URL = Router.reverse("settings.ConfigurableSettingsTab.removeCollegeJSON").url;
 
 		// Add a new custom action
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("name","New College");
-		Response response = POST(ADD_URL,params);
+		Response response = POST(EDIT_URL,params);
 		assertContentMatch("\"success\": \"true\"", response);
 		
 		// Extract the id of the newly created action.
@@ -390,19 +393,23 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		
 		// Now edit the custom action
 		params.clear();
-		params.put("collegeId","college_"+id);
+		params.put("collegeId",String.valueOf(id));
 		params.put("name", "Changed Name");
+		params.put("emails", "me@me.com, test@test.com");
 		response = POST(EDIT_URL,params);
 		
 		// Verify the action was updated in the database.
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();
 		JPA.em().getTransaction().begin();
-		assertEquals("Changed Name",settingRepo.findCollege(id).getName());
+		College college = settingRepo.findCollege(id);
+		assertEquals("Changed Name", college.getName());
+		assertEquals("me@me.com", college.getEmails().get(0));
+		assertEquals("test@test.com", college.getEmails().get(1));
 		
 		// Now remove the custom action
 		params.clear();
-		params.put("collegeId","college_"+id);
+		params.put("collegeId",String.valueOf(id));
 		response = POST(REMOVE_URL,params);
 		assertContentMatch("\"success\": \"true\"", response);
 		
@@ -487,14 +494,13 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		LOGIN();
 		
 		// Get our urls and a list of fields.
-		final String ADD_URL = Router.reverse("settings.ConfigurableSettingsTab.addDepartmentJSON").url;
-		final String EDIT_URL = Router.reverse("settings.ConfigurableSettingsTab.editDepartmentJSON").url;
+		final String EDIT_URL = Router.reverse("settings.ConfigurableSettingsTab.addEditDepartmentJSON").url;
 		final String REMOVE_URL = Router.reverse("settings.ConfigurableSettingsTab.removeDepartmentJSON").url;
 
 		// Add a new custom action
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("name","New Department");
-		Response response = POST(ADD_URL,params);
+		Response response = POST(EDIT_URL,params);
 		assertContentMatch("\"success\": \"true\"", response);
 		
 		// Extract the id of the newly created action.
@@ -512,22 +518,25 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		assertNotNull(settingRepo.findDepartment(id));
 		assertEquals("New Department",settingRepo.findDepartment(id).getName());
 		
-		
 		// Now edit the custom action
 		params.clear();
-		params.put("departmentId","department_"+id);
+		params.put("departmentId",String.valueOf(id));
 		params.put("name", "Changed Name");
+		params.put("emails", "me@me.com, test@test.com");
 		response = POST(EDIT_URL,params);
 		
 		// Verify the action was updated in the database.
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();
 		JPA.em().getTransaction().begin();
-		assertEquals("Changed Name",settingRepo.findDepartment(id).getName());
+		Department department = settingRepo.findDepartment(id);
+		assertEquals("Changed Name", department.getName());
+		assertEquals("me@me.com", department.getEmails().get(0));
+		assertEquals("test@test.com", department.getEmails().get(1));
 		
 		// Now remove the custom action
 		params.clear();
-		params.put("departmentId","department_"+id);
+		params.put("departmentId",String.valueOf(id));
 		response = POST(REMOVE_URL,params);
 		assertContentMatch("\"success\": \"true\"", response);
 		

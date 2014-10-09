@@ -16,7 +16,7 @@ import play.mvc.Router.ActionDefinition;
  * place holder replacements.
  *  
  * @author Micah Cooper
- * @author Jeremy Huff
+ * @author <a href="mailto:huff@library.tamu.edu">Jeremy Huff</a>
  */
 public class StringVariableReplacement {
 	

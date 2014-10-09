@@ -42,7 +42,7 @@ import play.mvc.Scope.Session;
  * Test the methods of the view tab.
  * 
  * @author Micah Cooper
- * @author Gad Krumholz
+ * @author <a href="mailto:gad.krumholz@austin.utexas.edu">Gad Krumholz</a>
  *
  */
 public class ViewTabTest extends AbstractVireoFunctionalTest {
@@ -556,7 +556,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		
 		submission = subRepo.findSubmission(id);
 		assertTrue(subRepo.findActionLog(submission).size()>numActionLogs);
-		assertEquals("The subject: This is the comment.", subRepo.findActionLog(submission).get(0).getEntry());
+		assertEquals("Submission status changed to 'Needs Correction'", subRepo.findActionLog(submission).get(0).getEntry());
 		assertEquals(submission.getState(),stateManager.getState("NeedsCorrection"));
 		
 		submission.delete();

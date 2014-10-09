@@ -1,0 +1,169 @@
+<div class="accordion-group" id="${state.getBeanName()}-accordion">
+	<div class="accordion-heading">
+		<a class="accordion-toggle" data-toggle="collapse" href="#${state.getBeanName()}"><strong>${state.getDisplayName()}</strong></a>
+	</div>
+	<div id="${state.getBeanName()}" class="accordion-body collapse">
+		<div class="accordion-inner">
+		    <table class="table table-striped table-bordered table-condensed">
+				<thead>
+					<tr>
+						<th class="td-icon"><em class="icon-globe"></em> / <em class="icon-user"></th>
+						<th></th>
+						<th>Condition</th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th>Template</th>
+						<th>Recipient</th>
+						<th></th>
+						<th class="td-icon"><em class="icon-play"></em> / <em class="icon-pause"></th>
+					</tr>
+				</thead>
+				<tbody class="workflow-list" id="${state.getBeanName()}-workflow-list">
+					#{list items:RULES, as:'rule'}
+						#{if state == rule.getAssociatedState()}
+						    <tr id="${state.getBeanName()}-${rule.getId()}"> 
+						    	<td class="td-icon">#{if rule.isSystem()}<em class="icon-globe"></em>#{/if}#{else}<em class="icon-user"></em>#{/else}</td>
+								<td><span class="${state.getBeanName()}-${rule.getId()}-condition"
+								#{if !rule.getCondition()?.getConditionType()?.name() || rule.getCondition()?.getConditionType()?.name() == "Always"}
+										style="display:none";
+									#{/if}
+								>if</span></td> 
+								<td class="edit-box"> 
+									<ul class="unstyled"> 
+										<li #{if !rule.isSystem()}class="edit"#{/if}> 
+											<span id="${state.getBeanName()}-${rule.getId()}-conditionCategory" class="empty select" data-id="${rule.getId()}" data-state="${state.getBeanName()}" data-ruleFieldName="conditionCategory"> 
+												#{if !rule.isSystem()}<i class="icon-pencil"></i>#{/if}${rule.getCondition()?.getConditionType()?.name()} #{if !rule.getCondition()} none#{/if}
+											</span> 
+										</li> 
+									</ul> 
+								</td>
+								<td>
+								<span class="${state.getBeanName()}-${rule.getId()}-condition"
+								#{if !rule.getCondition()?.getConditionType()?.name() || rule.getCondition()?.getConditionType()?.name() == "Always"}
+										style="display:none";
+									#{/if}
+								>=</span>
+								</td>
+								<td class="edit-box"> 
+									<ul class="unstyled ${state.getBeanName()}-${rule.getId()}-condition" 
+									#{if !rule.getCondition()?.getConditionType()?.name() || rule.getCondition()?.getConditionType()?.name() == "Always"}
+										style="display:none";
+									#{/if}
+									> 
+										<li class="edit"> 
+											<span id="${state.getBeanName()}-${rule.getId()}-condition" class="empty autocomplete" data-id="${rule.getId()}" data-state="${state.getBeanName()}" data-ruleFieldName="condition"> 
+												<i class="icon-pencil"></i> ${rule?.getCondition()?.getConditionIdDisplayName()}
+											</span>
+										</li>
+										#{if rule?.getCondition()?.getConditionIdDisplayName()?.contains("Link to ") && rule?.getCondition()?.getConditionIdDisplayName()?.contains("Lost!")}<span id="${state.getBeanName()}-${rule.getId()}-condition-error" style="float:right;width:35px;"><a href="#" class="tooltip-icon" rel="tooltip" data-original-title="The Link to this condition's value has been lost!"><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span><script lang="text/javascript">jQuery('.tooltip-icon').tooltip();</script>#{/if}
+									</ul> 
+								</td> 
+								<td><span class="${state.getBeanName()}-${rule.getId()}-condition"
+									#{if !rule.getCondition()?.getConditionType()?.name() || rule.getCondition()?.getConditionType()?.name() == "Always"}
+										style="display:none";
+									#{/if}
+								>then </span>email</td> 
+								<td class="edit-box"> 
+									<ul class="unstyled"> 
+										<li #{if !rule.isSystem()}class="edit"#{/if}> 
+											<span id="${state.getBeanName()}-${rule.getId()}-template" class="empty select" data-state="${state.getBeanName()}" data-id="${rule.getId()}" data-ruleFieldName="templateString"> 
+												#{if !rule.isSystem()}<i class="icon-pencil"></i>#{/if}${rule.getEmailTemplate()?.getName()} #{if !rule.getEmailTemplate()} none#{/if}
+											</span> 
+										</li> 
+									</ul> 
+								</td> 
+								<td class="edit-box"> 
+									<ul class="unstyled"> 
+										<li #{if !rule.isSystem()}class="edit"#{/if}> 
+											<span id="${state.getBeanName()}-${rule.getId()}-recipientType" class="empty select" data-id="${rule.getId()}" data-state="${state.getBeanName()}" data-ruleFieldName="recipientType"> 
+												#{if !rule.isSystem()}<i class="icon-pencil"></i>#{/if}#{if rule.getRecipientType()}${rule.getRecipientType()}#{if rule.getRecipientType().name() == "AdminGroup"} (#{if rule.getAdminGroupRecipient()}${rule.getAdminGroupRecipient().getName()}#{/if}#{else} none#{/else})#{/if}#{/if}#{else} none#{/else}
+											</span> 
+										</li>
+									</ul> 
+								</td>
+								<td class="td-icon">
+									#{if !rule.isSystem()}<a href="#" class="removeRule" data-id="${rule.getId()}"><em class="icon-trash"></em></a>#{/if}
+								</td>
+								<td class="td-icon">#{if rule.isDisabled()}<a href="#" class="enableRule" data-id="${rule.getId()}"><em class="icon-play"></a></em>#{/if}#{else}<a href="#" class="disableRule" data-id="${rule.getId()}"><em class="icon-pause"></em></a>#{/else}</td>
+							</tr>
+					
+						#{/if}
+					#{/list}
+				</tbody>
+			</table>
+			
+			<p><a id="${state.getBeanName()}-add-workflowEmailRule" href="javascript:void(0);" data-state="${state.getBeanName()}">[ADD NEW]</a></p>
+
+			<div id="${state.getBeanName()}-workflowRule-conditionCategory" style="display:none;" class="empty select">
+				<select class="field" data-id="" data-state="" data-ruleFieldName="">
+					<option value="">Choose a condition type...</option>
+				#{list items:conditionTypes, as:'conditionType'}
+					<option value="${conditionType.name()}">${conditionType}</option>
+				#{/list}
+				</select>
+			</div>
+			<div id="${state.getBeanName()}-workflowRule-templateString" style="display:none;" class="empty select">
+				<select class="field" data-id="" data-state="" data-ruleFieldName="">
+					#{list items:templates, as:'template'}
+			         <option value="${template.getId()}">${template.getName()}</option>
+			      #{/list}
+				</select>
+			</div>
+			<div id="${state.getBeanName()}-workflowRule-recipientType" style="display:none;" class="empty select">
+				<select class="field" data-id="" data-state="" data-ruleFieldName="">
+					<option value="">Choose a recipient type...</option>
+				#{list items:recipientTypes, as:'recipientType'}
+					<option value="${recipientType.name()}">${recipientType}</option>
+				#{/list}
+				</select>
+			</div>
+			<div id="${state.getBeanName()}-workflowRule-adminGroup" style="display:none;" class="empty select">
+				<select class="field" data-id="" data-state="" data-ruleFieldName="">
+					<option value="">Choose a group...</option>
+				#{list items:adminGroups, as:'adminGroup'}
+					<option value="${adminGroup.getId()}">${adminGroup.getName()}</option>
+				#{/list}
+				</select>
+			</div>
+			<div id="${state.getBeanName()}-workflowRule-condition" style="display:none;" class="empty autocomplete">
+                
+                %{
+			       def autoCompleteValues = [];
+
+			       if(rule?.getCondition()?.getConditionType()?.name() == "College") {
+				       for (def college : colleges) {
+				           autoCompleteValues.push(college.getName());
+				       }
+				    }
+			       
+			        if(rule?.getCondition()?.getConditionType()?.name() == "Department") {
+				       for (def department : departments) {
+				           autoCompleteValues.push(department.getName());
+				       }
+				    }
+
+				    if(rule?.getCondition()?.getConditionType()?.name() == "Program") {
+				       for (def program : programs) {
+				           autoCompleteValues.push(program.getName());
+				       }
+				    }
+
+			    }%
+                <input class="field"
+                  data-id=""
+                  data-state=""
+                  data-ruleFieldName=""
+                  data-items="20"
+                  data-provide="typeahead"
+                  data-min-length="0"
+                  data-Colleges='[#{list items:colleges, as:'college'}"${college.getName()}"${ college_isLast ? "" : ","}#{/list}]'
+                  data-Departments='[#{list items:departments, as:'department'}"${department.getName()}"${ department_isLast ? "" : ","}#{/list}]'
+                  data-Programs='[#{list items:programs, as:'program'}"${program.getName()}"${ program_isLast ? "" : ","}#{/list}]'
+                  data-source=''
+                  />
+			</div>
+
+		</div>
+	</div>
+</div>

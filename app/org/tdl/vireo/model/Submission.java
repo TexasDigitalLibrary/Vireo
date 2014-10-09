@@ -420,6 +420,18 @@ public interface Submission extends AbstractModel {
 
 	/**
 	 * 
+	 * @return - The department id that will award this degree
+	 */
+	public Long getDepartmentId();
+	
+	/**
+	 * 
+	 * @param id - the department id that will award this degree
+	 */
+	public void setDepartmentId(Long id);
+	
+	/**
+	 * 
 	 * @return The college that will award this degree.
 	 */
 	public String getCollege();	
@@ -432,6 +444,18 @@ public interface Submission extends AbstractModel {
 	
 	/**
 	 * 
+	 * @return - The college id that will award this degree
+	 */
+	public Long getCollegeId();
+	
+	/**
+	 * 
+	 * @param id - the college id that will award this degree
+	 */
+	public void setCollegeId(Long id);
+	
+	/**
+	 * 
 	 * @return The program associated with the submission
 	 */
 	public String getProgram();
@@ -441,6 +465,18 @@ public interface Submission extends AbstractModel {
 	 * @param program The program associated with the submission
 	 */
 	public void setProgram(String program);
+	
+	/**
+	 * 
+	 * @return - The program id that will award this degree
+	 */
+	public Long getProgramId();
+	
+	/**
+	 * 
+	 * @param id - the program id that will award this degree
+	 */
+	public void setProgramId(Long id);
 
 	/**
 	 * 

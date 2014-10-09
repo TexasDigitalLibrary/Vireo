@@ -124,13 +124,6 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 			originalSettings.put(SUBMISSIONS_OPEN,submissionsOpen.getValue());
 		}
 		
-		Configuration delayAdvisorEmail = settingRepo.findConfigurationByName(EMAIL_DELAY_SENDING_ADVISOR_REQUEST);
-		if (delayAdvisorEmail == null) {
-			originalSettings.put(EMAIL_DELAY_SENDING_ADVISOR_REQUEST, null);
-		} else {
-			originalSettings.put(EMAIL_DELAY_SENDING_ADVISOR_REQUEST,delayAdvisorEmail.getValue());
-		}
-		
 		// Turn off authentication for the test thread
 		context.turnOffAuthorization();
 		
@@ -180,15 +173,6 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 	 */
 	public void setSubmissionsOpen(boolean value) {
 		setConfiguration(SUBMISSIONS_OPEN, value ? "true" : null);
-	}
-	
-	/**
-	 * Set whether to send the advisor email
-	 * 
-	 * @param value open or closed.
-	 */
-	public void setDelayAdvisorEmail(boolean value) {
-		setConfiguration(EMAIL_DELAY_SENDING_ADVISOR_REQUEST, value ? "true" : null);
 	}
 	
 	/**

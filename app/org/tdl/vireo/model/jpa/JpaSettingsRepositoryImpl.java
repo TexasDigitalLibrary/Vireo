@@ -1,10 +1,15 @@
 package org.tdl.vireo.model.jpa;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.tdl.vireo.model.AbstractWorkflowRuleCondition;
+import org.tdl.vireo.model.AdministrativeGroup;
 import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.CommitteeMemberRoleType;
+import org.tdl.vireo.model.ConditionType;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.Degree;
@@ -13,12 +18,14 @@ import org.tdl.vireo.model.Department;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.EmailTemplate;
+import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.Major;
 import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.SettingsRepository;
+import org.tdl.vireo.state.State;
 
 /**
  * Jpa specific implementation of the Vireo Repository interface.
@@ -69,11 +76,26 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	@Override
 	public College createCollege(String name) {
 		return new JpaCollegeImpl(name);
-		}
+	}
+
+	@Override
+	public College createCollege(String name, HashMap<Integer, String> emails) {
+		return new JpaCollegeImpl(name, emails);
+	}
 
 	@Override
 	public College findCollege(Long id) {
 		return (College) JpaCollegeImpl.findById(id);
+	}
+	
+	@Override
+	public College findCollegeByName(String name) {
+	    for(College college : findAllColleges()) {
+	    	if(college.getName().equals(name)) {
+	    		return college;
+	    	}
+	    }
+	    return null;
 	}
 
 	@Override
@@ -87,8 +109,23 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	}
 	
 	@Override
+	public Program createProgram(String name, HashMap<Integer, String> emails) {
+		return new JpaProgramImpl(name, emails);
+	}
+	
+	@Override
 	public Program findProgram(Long id) {
 		return (Program) JpaProgramImpl.findById(id);
+	}
+	
+	@Override
+	public Program findProgramByName(String name) {
+	    for(Program program : findAllPrograms()) {
+	    	if(program.getName().equals(name)) {
+	    		return program;
+	    	}
+	    }
+	    return null;
 	}
 	
 	@Override
@@ -100,17 +137,62 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	public Department createDepartment(String name) {
 		return new JpaDepartmentImpl(name);
 	}
+	
+	@Override
+	public Department createDepartment(String name, HashMap<Integer, String> emails) {
+		return new JpaDepartmentImpl(name, emails);
+	}
 
 	@Override
 	public Department findDepartment(Long id) {
 		return (Department) JpaDepartmentImpl.findById(id);
 
 	}
+	
+	@Override
+	public Department findDepartmentByName(String name) {
+	    for(Department department : findAllDepartments()) {
+	    	if(department.getName().equals(name)) {
+	    		return department;
+	    	}
+	    }
+	    return null;
+	}
 
 	@Override
 	public List<Department> findAllDepartments() {
 		return (List) JpaDepartmentImpl.find("order by displayOrder").fetch();
 	}
+	
+	@Override
+    public AdministrativeGroup createAdministrativeGroup(String name) {
+	    return new JpaAdministrativeGroupImpl(name);
+    }
+
+	@Override
+    public AdministrativeGroup createAdministrativeGroup(String name, HashMap<Integer, String> emails) {
+	    return new JpaAdministrativeGroupImpl(name, emails);
+    }
+
+	@Override
+    public AdministrativeGroup findAdministrativeGroup(Long id) {
+	    return (AdministrativeGroup) JpaAdministrativeGroupImpl.findById(id);
+    }
+
+	@Override
+    public AdministrativeGroup findAdministrativeGroupByName(String name) {
+		for(AdministrativeGroup adminGroup : findAllAdministrativeGroups()) {
+	    	if(adminGroup.getName().equals(name)) {
+	    		return adminGroup;
+	    	}
+	    }
+	    return null;
+    }
+
+	@Override
+    public List<AdministrativeGroup> findAllAdministrativeGroups() {
+		return (List) JpaAdministrativeGroupImpl.find("order by displayOrder").fetch();
+    }
 
 	// /////////////////////
 	// Document Type Model
@@ -208,6 +290,55 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	@Override
 	public List<CommitteeMemberRoleType> findAllCommitteeMemberRoleTypes() {
 		return (List) JpaCommitteeMemberRoleTypeImpl.find("order by displayOrder").fetch();
+	}
+	
+	// //////////////
+	// EmailWorkflowRule Model
+	// //////////////
+	
+	@Override
+    public AbstractWorkflowRuleCondition createEmailWorkflowRuleCondition(ConditionType condition) {
+	    return new JpaEmailWorkflowRuleConditionImpl(condition);
+    }
+
+	@Override
+    public AbstractWorkflowRuleCondition findEmailWorkflowRuleCondition(Long id) {
+	    return (AbstractWorkflowRuleCondition) JpaEmailWorkflowRuleConditionImpl.findById(id);
+    }
+	
+	@Override
+    public List<AbstractWorkflowRuleCondition> findAllEmailWorkflowRuleConditions() {
+		return (List) JpaEmailWorkflowRuleConditionImpl.find("order by displayOrder").fetch();
+    }	
+	
+	@Override
+	public EmailWorkflowRule createEmailWorkflowRule(State associatedState) {
+		   return new JpaEmailWorkflowRuleImpl(associatedState);
+	}
+
+	@Override
+	public EmailWorkflowRule findEmailWorkflowRule(Long id) {
+		return (EmailWorkflowRule) JpaEmailWorkflowRuleImpl.findById(id);
+	}
+
+	@Override
+	public List<EmailWorkflowRule> findEmailWorkflowRulesByState(State state) {
+		List<EmailWorkflowRule> rules = (List) JpaEmailWorkflowRuleImpl.findAll();
+		List<EmailWorkflowRule> rulesByState = new ArrayList<EmailWorkflowRule>();
+		for(EmailWorkflowRule rule: rules) {
+			
+			State thisRulesState = rule.getAssociatedState();
+			if(thisRulesState.equals(state))
+				rulesByState.add(rule);
+		
+		}
+		
+		return rulesByState;
+	}
+
+	@Override
+	public List<EmailWorkflowRule> findAllEmailWorkflowRules() {
+		return (List) JpaEmailWorkflowRuleImpl.find("order by displayOrder").fetch();
 	}
 	
 	// //////////////////////
@@ -360,5 +491,5 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	@Override
 	public List<DepositLocation> findAllDepositLocations() {
 		return (List) JpaDepositLocationImpl.find("order by displayOrder").fetch();
-	}
+	}	
 }

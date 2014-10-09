@@ -376,7 +376,7 @@ public class FilterTab extends AbstractVireoController {
 		// one and arrange in a list. This will ensure that they are all valid
 		// ids.
 		boolean set_default_columns = (params.get("default_columns") != null);
-		List<SearchOrder> columns = getDefaultColumns(type);
+		List<SearchOrder> columns = new ArrayList<SearchOrder>();
 		if(!set_default_columns){
 			String columnsString = params.get("columns");
 			String[] columnIds = columnsString.split(",");
@@ -386,6 +386,8 @@ public class FilterTab extends AbstractVireoController {
 				SearchOrder column = SearchOrder.find(Integer.valueOf(parts[1]));
 				columns.add(column);
 			}
+		} else {
+			columns = getDefaultColumns(type);
 		}
 		// Check that column has at least the ID field.
 		if (columns.contains(SearchOrder.ID)) {
@@ -457,7 +459,7 @@ public class FilterTab extends AbstractVireoController {
 		// Load the active SearchOrder from the cookie
 		List<SearchOrder> columns = activeFilter.getColumns();
         if (columns.size() == 0)
-            columns = getDefaultColumns(ACTION_LOG);
+            columns = getDefaultColumns(type);
 		
 		String action = params.get("action");
 		if ("add".equals(action)) {
@@ -490,6 +492,10 @@ public class FilterTab extends AbstractVireoController {
 				// if we are not saving the columns clear them out (in case they got copied over from activeFilter)
 				if(!hasColumnsFlag) {
 					namedFilter.setColumns(new ArrayList<SearchOrder>());
+				}
+				// else if we're saving columns but there weren't any in the copied-over active filter, save the default ones
+				else if (hasColumnsFlag && namedFilter.getColumns().size() == 0) {
+					namedFilter.setColumns(getDefaultColumns(type));
 				}
 				namedFilter.save();
 			}

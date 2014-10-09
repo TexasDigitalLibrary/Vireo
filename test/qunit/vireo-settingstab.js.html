@@ -831,42 +831,6 @@ test("test memberUpdateHandler AJAX", function() {
 });
 
 /**
- * Test the toggeling email settings
- */
-test("test emailSettingsHandler AJAX", function() {
-    expect(5);
-    reset();
-    
-    // Create the buttons markup we will use for testing
-    jQuery("body").append("<input name='email_show_address' type='checkbox' class='checkbox email-toggle' value='true'>");
-    
-    
-    // Register the handler
-    var handler = emailSettingsHandler("/ajax/test/url");
-    jQuery(".email-toggle").click(handler);
-
-    // Mock AJAX
-    var options = null;
-    jQuery.ajax = function(param) {
-        options = param;
-    };
-    
-    
-    // Simulate a click & ajax return
-    jQuery(".email-toggle").click();
-    
-    options.success({ success: 'true'})
-        
-    equals('/ajax/test/url',options.url);
-    equals('POST',options.type);
-    equals('json',options.dataType);
-    equals('email_show_address',options.data.field);
-    
-    equals('checked',jQuery("input").attr("checked"));
-
-});
-
-/**
  * Test opening the embargo dialog box
  */
 test("test embargoOpenDialogHandler", function() {

@@ -28,12 +28,12 @@ import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
 
+import play.Logger;
 import play.Play;
 import play.db.jpa.JPA;
 import play.modules.spring.Spring;
 import play.mvc.Http.Response;
 import play.mvc.Router;
-
 import static org.tdl.vireo.constant.AppConfig.*;
 
 
@@ -503,6 +503,7 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 		
 		Map<String,Object> routeArgs = new HashMap<String,Object>();
 		routeArgs.put("subId",sub.getId());
+		final String ADD_MSG_URL = Router.reverse("Student.submissionAddMessageJSON",routeArgs).url;
 		final String VIEW_URL = Router.reverse("Student.submissionView",routeArgs).url;
 
 		Response response = GET(VIEW_URL);
@@ -512,10 +513,13 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 		
 		// Post a message
 		Map<String,String> params = new HashMap<String,String>();
-		params.put("studentMessage","This is an action log");
-		params.put("submit_addMessage","Add Message");
-		response = POST(VIEW_URL,params);
+		params.put("message","This is an action log");
+		response = POST(ADD_MSG_URL, params);
+		assertIsOk(response);
+		assertContentMatch("\"success\": \"true\"", response);
 		
+		// Verify the message
+		response = GET(VIEW_URL);
 		assertIsOk(response);
 		assertContentMatch("<title>View Application</title>",response);
 		assertContentMatch("This is an action log",response);
@@ -613,7 +617,7 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 		Response response = GET(VIEW_URL);
 		assertIsOk(response);
 		assertContentMatch("<title>View Application</title>",response);
-		assertContentMatch("class=\"btn btn-primary disabled\" name=\"submit_corrections\" value=\"Complete Corrections\"",response);
+		assertContentMatch("class=\"btn btn-primary disabled\" name=\"submit_corrections\" value=\"Corrections Completed\"",response);
 		
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("submit_corrections","Confirm Corrections");
@@ -621,7 +625,7 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 		
 		assertIsOk(response);
 		assertContentMatch("<title>View Application</title>",response);
-		assertContentMatch("class=\"btn btn-primary disabled\" name=\"submit_corrections\" value=\"Complete Corrections\"",response);
+		assertContentMatch("class=\"btn btn-primary disabled\" name=\"submit_corrections\" value=\"Corrections Completed\"",response);
 
 		File primaryFile = getResourceFile("SamplePrimaryDocument.pdf");
 		

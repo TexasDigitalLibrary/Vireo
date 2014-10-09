@@ -1,11 +1,6 @@
 package controllers.settings;
 
-import static org.tdl.vireo.constant.AppConfig.*;
-
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,7 +8,10 @@ import java.util.regex.Pattern;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.tdl.vireo.email.RecipientType;
+import org.tdl.vireo.model.ConditionType;
 import org.tdl.vireo.model.EmailTemplate;
+import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.security.SecurityContext;
@@ -67,68 +65,73 @@ public class EmailSettingsTabTest extends AbstractVireoFunctionalTest {
 	}
 	
 	/**
-	 * Test setting and unsetting all the email settings (the check boxes not the templates)
+	 * Test adding, editing, and removing Email Workflow Rules
 	 */
 	@Test
-	public void testToggelingEmailSettings() {
+	public void testAddingEditingRemovingEmailWorkflowRules() {
 		LOGIN();
 		
-		// Get our urls and a list of fields.
-		final String URL = Router.reverse("settings.EmailSettingsTab.updateEmailSettingsJSON").url;
+		final String ADDEDIT_URL = Router.reverse("settings.EmailSettingsTab.addEditEmailWorkflowRuleJSON").url;
+		final String REMOVE_URL = Router.reverse("settings.EmailSettingsTab.removeEmailWorkflowRuleJSON").url;
 
-		List<String> booleanFields = new ArrayList<String>();
-		booleanFields.add(EMAIL_DELAY_SENDING_ADVISOR_REQUEST);
+		Map<String,String> params = new HashMap<String,String>();
 		
+		// create an email workflow rule
+		params.put("stateString", "Submitted");
+		Response response = POST(ADDEDIT_URL, params);
+		assertIsOk(response);
+		assertContentMatch("\"success\": true", response);
+		// Extract the id of the newly created action.
+		Pattern ID_PATTERN = Pattern.compile("\"id\": ([0-9]+), ");
+		Matcher tokenMatcher = ID_PATTERN.matcher(getContent(response));
+		assertTrue(tokenMatcher.find());
+		String idString = tokenMatcher.group(1);
+		assertNotNull(idString);
+		Long id = Long.valueOf(idString);
 		
-		// Get the field's current state
-		List<String> originalState = new ArrayList<String>();
+		// Verify the action exists in the database.
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();
-		JPA.em().getTransaction().begin();		for (String field : booleanFields) {
-			if (settingRepo.findConfigurationByName(field) != null)
-				originalState.add(field);
-		}
+		JPA.em().getTransaction().begin();		
+		EmailWorkflowRule emailRule = settingRepo.findEmailWorkflowRule(id);
+		assertEquals("Submitted", emailRule.getAssociatedState().getBeanName());
 		
-		// Set each field.
-		for (String field : booleanFields) {
-			
-			Map<String,String> params = new HashMap<String,String>();
-			params.put("field", field);
-			params.put("value","checked");
-			Response response = POST(URL,params);
-			assertContentMatch("\"success\": \"true\"", response);
-		}
-		
-		// Check that all the fields are set.
+		// edit an email workflow rule
+		Long collegeId = settingRepo.findCollegeByName("College of Agriculture and Life Sciences").getId(); // College of Agriculture and Life Sciences [FROM TEST DATA]
+		Long templateId = settingRepo.findEmailTemplateByName("SYSTEM Initial Submission").getId(); // SYSTEM Initial Submission [FROM TEST DATA]
+		params.clear();
+		params.put("id", String.valueOf(id));
+		params.put("stateString", "Submitted");
+		params.put("conditionCategory", ConditionType.College.name());
+		params.put("conditionIDString", String.valueOf(collegeId));
+		params.put("recipientString", RecipientType.College.name());
+		params.put("templateString", String.valueOf(templateId));
+		response = POST(ADDEDIT_URL, params);
+		assertIsOk(response);
+		assertContentMatch("\"success\": true", response);
+		// Verify the action exists in the database.
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();
-		JPA.em().getTransaction().begin();		for (String field : booleanFields) {
-			assertNotNull(settingRepo.findConfigurationByName(field));
-		}
+		JPA.em().getTransaction().begin();
+		emailRule = settingRepo.findEmailWorkflowRule(id);
+		assertEquals("Submitted", emailRule.getAssociatedState().getBeanName());
+		assertEquals(ConditionType.College, emailRule.getCondition().getConditionType());
+		assertEquals(collegeId, emailRule.getCondition().getConditionId());
+		assertEquals(RecipientType.College, emailRule.getRecipientType());
+		assertEquals(templateId, emailRule.getEmailTemplate().getId());
 		
-		// Turn off each field.
-		for (String field : booleanFields) {
-			
-			Map<String,String> params = new HashMap<String,String>();
-			params.put("field", field);
-			params.put("value","");
-			Response response = POST(URL,params);
-			assertContentMatch("\"success\": \"true\"", response);
-		}
-		
-		// Check that all the fields are turned off.
+		// remove an email workflow rule
+		params.clear();
+		params.put("ruleID", String.valueOf(id));
+		response = POST(REMOVE_URL, params);
+		assertIsOk(response);
+		assertContentMatch("\"success\": true", response);
+		// Verify the action exists in the database.
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();
-		JPA.em().getTransaction().begin();		for (String field : booleanFields) {
-			assertNull(settingRepo.findConfigurationByName(field));
-		}
-		
-		// Restore to original state
-		for (String field : originalState) {
-			settingRepo.createConfiguration(field, "true");
-		}
+		JPA.em().getTransaction().begin();
+		assertNull(settingRepo.findEmailWorkflowRule(id));
 	}
-
 	
 	/**
 	 * Test adding, editing, and removing an Email Template.
@@ -164,7 +167,8 @@ public class EmailSettingsTabTest extends AbstractVireoFunctionalTest {
 		// Verify the action exists in the database.
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();
-		JPA.em().getTransaction().begin();		assertNotNull(settingRepo.findEmailTemplate(id));
+		JPA.em().getTransaction().begin();
+		assertNotNull(settingRepo.findEmailTemplate(id));
 		assertEquals("New Template",settingRepo.findEmailTemplate(id).getName());
 		assertEquals("New Subject",settingRepo.findEmailTemplate(id).getSubject());
 		assertEquals("New Message",settingRepo.findEmailTemplate(id).getMessage());
@@ -244,7 +248,4 @@ public class EmailSettingsTabTest extends AbstractVireoFunctionalTest {
 		template1.delete();
 		template2.delete();
 	}
-	
-	
-	
 }

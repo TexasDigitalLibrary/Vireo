@@ -1,0 +1,116 @@
+<script type="text/javascript">
+
+jsDataObjects = {
+	"collegesArray" : [
+		#{list items:colleges, as:'college'}
+			
+			{
+				"id": ${college.getId()},
+				"name": "${college.getName()}", 
+				"emails": [	#{if college.getEmails() != null}
+								#{list items:college.getEmails()?.keySet(), as:'key'}
+									{
+   									"id":${key},
+   									"email":"${college.getEmails().get(key)}"
+   									}
+   									#{if key != college.getEmails().size()}
+   									,
+   									#{/if}
+								#{/list}
+							#{/if}
+				]
+			},
+			
+		#{/list}
+	],
+	"departmentsArray" : [
+		#{list items:departments, as:'department'}
+			
+			{
+				"id": ${department.getId()},
+				"name": "${department.getName()}", 
+				"emails": [	#{if department.getEmails() != null}
+								#{list department.getEmails()?.keySet(), as:'key'}
+									{
+   									"id":${key},
+   									"email":"${department.getEmails().get(key)}"
+   									}
+   									#{if key != department.getEmails().size()}
+   									,
+   									#{/if}
+								#{/list}
+							#{/if}
+				]
+			},
+			
+		#{/list}
+	],
+	"programsArray" : [
+		#{list items:programs, as:'program'}
+			
+			{
+				"id": ${program.getId()},
+				"name": "${program.getName()}", 
+				"emails": [	#{if program.getEmails() != null}
+								#{list program.getEmails()?.keySet(), as:'key'}
+									{
+   									"id":${key},
+   									"email":"${program.getEmails().get(key)}"
+   									}
+   									#{if key != program.getEmails().size()}
+   									,
+   									#{/if}
+								#{/list}
+							#{/if}
+				]
+			},
+			
+		#{/list}
+	],
+	"adminGroupsArray" : [
+		#{list items:adminGroups, as:'adminGroup'}
+			
+			{
+				"id": ${adminGroup.getId()},
+				"name": "${adminGroup.getName()}", 
+				"emails": [	#{if adminGroup.getEmails() != null}
+								#{list items:adminGroup.getEmails()?.keySet(), as:'key'}
+									{
+   									"id":${key},
+   									"email":"${adminGroup.getEmails().get(key)}"
+   									}
+   									#{if key != adminGroup.getEmails().size()}
+   									,
+   									#{/if}
+								#{/list}
+							#{/if}
+				]
+			},
+			
+		#{/list}
+	],
+	"workflowRules": {
+		"email": {
+			#{list items:STATES, as:'state'}
+		    	#{if state.inWorkflow}	
+					"${state.getBeanName()}": [
+						#{list items:RULES, as:'rule'}
+							#{if state == rule.getAssociatedState()}
+							{
+								"id": "${rule.getId()}",
+								"stateString": "${rule.getAssociatedState().getBeanName()}",
+								"conditionCategory": "${rule.getCondition()?.getConditionType()?.name()}",
+								"conditionIDString": "",
+								"recipientString": "${rule.getRecipientType()?.name()}",
+								"templateString": "${rule.getEmailTemplate()}"
+							},
+							#{/if}
+						#{/list}
+					],
+			   	#{/if}
+			#{/list}
+		}
+	}
+
+}
+</script>

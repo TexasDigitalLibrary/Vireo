@@ -22,6 +22,7 @@ public class StateImpl implements State, BeanNameAware {
 	/** Injected properties **/
 	public String beanName;
 	public String displayName = "Unknown";
+	public boolean inWorkflow = false;
 	public boolean inProgress = false;
 	public boolean active = false;
 	public boolean archived = false;
@@ -57,6 +58,18 @@ public class StateImpl implements State, BeanNameAware {
 	 */
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
+	}
+	
+	@Override
+	public boolean isInWorkflow() {
+		return inWorkflow;
+	}
+	
+	/**
+	 * @param archived Whether this state is considered archived.
+	 */
+	public void setInWorkflow(boolean inWorkflow) {
+		this.inWorkflow = inWorkflow;
 	}
 
 	@Override

@@ -30,7 +30,7 @@ public class MockSwordServerLauncher {
 
 		public void doJob() throws Exception {
 			try {
-				MockSwordServer.start(8082);
+				MockSwordServer.start(PORT);
 				Logger.info("Mock Sword Server started on port: "+PORT);
 			} catch (BindException be) {
 				// If the port is already in use, then another thread is

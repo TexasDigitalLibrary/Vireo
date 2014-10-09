@@ -2,9 +2,9 @@ package org.tdl.vireo.model.jpa;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -27,25 +27,26 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
-import org.apache.commons.lang.LocaleUtils;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.AttachmentType;
+import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.CommitteeMember;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.DegreeLevel;
+import org.tdl.vireo.model.Department;
 import org.tdl.vireo.model.EmbargoType;
-import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
+import org.tdl.vireo.model.Program;
+import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
-import org.tdl.vireo.proquest.ProquestLanguage;
 import org.tdl.vireo.security.SecurityContext;
+import org.tdl.vireo.services.EmailRuleService;
 import org.tdl.vireo.services.Utilities;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
-import org.tdl.vireo.services.Utilities;
 
 import play.modules.spring.Spring;
 
@@ -122,12 +123,22 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@Column(length=255)
 	public String degree;
 	public DegreeLevel degreeLevel;
+	
 	@Column(length=255)
 	public String department;
+	@Column(nullable=true)
+	public Long departmentId;
+	
 	@Column(length=255)
 	public String college;
+	@Column(nullable=true)
+	public Long collegeId;
+	
 	@Column(length=255)
 	public String program;
+	@Column(nullable=true)
+	public Long programId;
+	
 	@Column(length=255)
 	public String major;
 	@Column(length=255)
@@ -841,8 +852,24 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		if (!equals(this.department,department)) {
 			this.department = department;
 			generateChangeLog("Department",department,false);
+			// set departmentId column
+			SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
+			Department departmentJPA = settingRepo.findDepartmentByName(department);
+			if(departmentJPA != null) {
+				setDepartmentId(departmentJPA.getId());
+			}
 		}
 	}
+	
+	@Override
+	public Long getDepartmentId() {
+	    return departmentId;
+    }
+	
+	@Override
+	public void setDepartmentId(Long departmentId) {
+	    this.departmentId = departmentId;
+    }
 
 	@Override
 	public String getCollege() {
@@ -856,8 +883,24 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		if (!equals(this.college,college)) {
 			this.college = college;
 			generateChangeLog("College",college,false);
+			// set collegeId column
+			SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
+			College collegeJPA =settingRepo.findCollegeByName(college);
+			if(collegeJPA != null) {
+				setCollegeId(collegeJPA.getId());
+			}
 		}
 	}
+	
+	@Override
+	public Long getCollegeId() {
+	    return collegeId;
+    }
+	
+	@Override
+	public void setCollegeId(Long id) {
+	    this.collegeId = id;
+    }
 	
 	@Override
 	public String getProgram() {
@@ -871,8 +914,24 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		if (!equals(this.program,program)) {
 			this.program = program;
 			generateChangeLog("Program",program,false);
+			// set programId column
+			SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
+			Program programJPA = settingRepo.findProgramByName(program);
+			if(programJPA != null) {
+				setProgramId(programJPA.getId());
+			}
 		}
 	}
+	
+	@Override
+	public Long getProgramId() {
+	    return programId;
+    }
+	
+	@Override
+	public void setProgramId(Long programId) {
+	    this.programId = programId;
+    }
 
 	@Override
 	public String getMajor() {
@@ -967,7 +1026,8 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		if (!equals(this.stateName,state.getBeanName())) {
 			this.stateName = state.getBeanName();
 			generateChangeLog("Submission status",state.getDisplayName(),true);
-			
+			// RUN Workflow Email Rule
+			EmailRuleService.runEmailRules(this);
 			// Check if this state is approved
 			if (this.approvalDate == null && state.isApproved())
 				this.setApprovalDate(new Date());
@@ -1239,6 +1299,4 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 			return a.equals(b);
 		}	
 	}
-	
-
 }

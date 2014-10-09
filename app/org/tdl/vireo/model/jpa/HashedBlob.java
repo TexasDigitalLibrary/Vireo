@@ -27,7 +27,7 @@ import play.libs.IO;
  * 
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
- * @author Gad Krumholz
+ * @author <a href="mailto:gad.krumholz@austin.utexas.edu">Gad Krumholz</a>
  * 
  */
 public class HashedBlob implements BinaryField, UserType {

@@ -1,11 +1,13 @@
 package org.tdl.vireo.model;
 
+import java.util.HashMap;
+
 /**
  * This class represents colleges which may award degree status by Vireo.
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
-public interface College extends AbstractOrderedModel {
+public interface College extends EmailGroup {
 
 	/**
 	 * @return The name of the college

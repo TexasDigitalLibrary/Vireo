@@ -1,7 +1,5 @@
 package org.tdl.vireo.export.impl;
 
-import static controllers.FilterTab.ACTIVE_FILTER;
-import static controllers.FilterTab.NAMES;
 import static controllers.FilterTab.SUBMISSION;
 import static controllers.FilterTab.getDefaultColumns;
 
@@ -27,15 +25,12 @@ import org.tdl.vireo.export.ExportExcel;
 import org.tdl.vireo.export.ExportPackage;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.AttachmentType;
+import org.tdl.vireo.model.CommitteeMember;
+import org.tdl.vireo.model.CustomActionValue;
+import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Submission;
-import org.tdl.vireo.search.ActiveSearchFilter;
 import org.tdl.vireo.search.SearchOrder;
 import org.tdl.vireo.services.StringVariableReplacement;
-
-import play.Logger;
-import play.modules.spring.Spring;
-import play.mvc.Http.Cookie;
-import play.mvc.Http.Request;
 
 /**
  * This will export the current FilterTab results as an Excel spreadsheet.
@@ -47,7 +42,6 @@ public class ExcelPackagerImpl extends AbstractExcelPackagerImpl {
 
     /* Spring injected paramaters */
     public List<AttachmentType> attachmentTypes = new ArrayList<AttachmentType>();
-    //public Boolean filtered = false;
     public Boolean aggregated = false;
 
     /* Global statics */
@@ -56,15 +50,6 @@ public class ExcelPackagerImpl extends AbstractExcelPackagerImpl {
 
     /* Global Dynamics */
     public LinkedHashMap<String, Properties> attachmentAttributes = new LinkedHashMap<String, Properties>();
-    private Request request;
-
-    /**
-     * Constructor that sets up a global {@link Request} to use to get {@link Cookie}s later
-     */
-    public ExcelPackagerImpl() {
-        // request to store Cookies so we can get the Column options for List<SearchOrder>
-        request = Request.current();
-    }
 
     /**
      * This function is used by Unit Test to export a {@link XSSFWorkbook} with all of the submissions as separate rows
@@ -260,10 +245,15 @@ public class ExcelPackagerImpl extends AbstractExcelPackagerImpl {
             case COMMITTEE_MEMBERS:
                 header.createCell(j).setCellValue("Committee members");
                 StringBuilder cm = new StringBuilder();
-                for (org.tdl.vireo.model.CommitteeMember member : sub.getCommitteeMembers()) {
-                    cm.append(member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST));
+                int i = 0;
+                for (i = 0; i < sub.getCommitteeMembers().size(); i++) {
+                	CommitteeMember member = sub.getCommitteeMembers().get(i);
+                    cm.append(member.getFormattedName(NameFormat.LAST_FIRST));
                     if (member.getRoles().size() > 0) {
                         cm.append(" (").append(member.getFormattedRoles()).append(")");
+                    }
+                    if((i+1) < sub.getCommitteeMembers().size()) {
+                    	cm.append(";");
                     }
                 }
                 row.createCell(j).setCellValue(cm.toString());
@@ -348,7 +338,7 @@ public class ExcelPackagerImpl extends AbstractExcelPackagerImpl {
             case CUSTOM_ACTIONS:
                 header.createCell(j).setCellValue("Custom actions");
                 int actions = 0;
-                for (org.tdl.vireo.model.CustomActionValue action : sub.getCustomActions()) {
+                for (CustomActionValue action : sub.getCustomActions()) {
                     if (action.getValue()) {
                         actions++;
                     }
@@ -373,19 +363,19 @@ public class ExcelPackagerImpl extends AbstractExcelPackagerImpl {
                 break;
             case DOCUMENT_KEYWORDS:
                 header.createCell(j).setCellValue("Document Keywords");
-                if (sub.getReviewerNotes() != null)
+                if (sub.getDocumentKeywords() != null)
                     row.createCell(j).setCellValue(sub.getDocumentKeywords());
                 j++;
                 break;
             case LAST_EVENT_ENTRY:
                 header.createCell(j).setCellValue("Last Event Entry");
-                if (sub.getReviewerNotes() != null)
+                if (sub.getLastLogEntry() != null)
                     row.createCell(j).setCellValue(sub.getLastLogEntry());
                 j++;
                 break;
             case LAST_EVENT_TIME:
                 header.createCell(j).setCellValue("Last Event Time");
-                if (sub.getReviewerNotes() != null)
+                if (sub.getLastLogDate() != null)
                     row.createCell(j).setCellValue(sub.getLastLogDate());
                 j++;
                 break;
@@ -426,26 +416,6 @@ public class ExcelPackagerImpl extends AbstractExcelPackagerImpl {
         this.aggregated = aggregated;
     }
     
-    /**
-     * Used to help generatePackage to create an {@link ExportPackage}
-     * @return - {@link List} of {@link SearchOrder} columns from {@link Cookie}
-     */
-    private List<SearchOrder> getColumnsFromCookies() {
-    	ActiveSearchFilter activeFilter = Spring.getBeanOfType(ActiveSearchFilter.class);
-    	Cookie filterCookie = request.cookies.get(NAMES[SUBMISSION][ACTIVE_FILTER]);
-		if (filterCookie != null && filterCookie.value != null && filterCookie.value.trim().length() > 0) {
-			try {
-				activeFilter.decode(filterCookie.value);
-			} catch (RuntimeException re) {
-				Logger.warn(re,"Unable to decode search filter: "+filterCookie.value);
-			}
-		}
-		List<SearchOrder> columns = activeFilter.getColumns();
-        if (columns.size() == 0)
-            columns = getDefaultColumns(SUBMISSION);
-        return columns;
-    }
-
     @Override
     public String getExportServiceBeanName() {
         String ret = "ExportService";
@@ -505,7 +475,7 @@ public class ExcelPackagerImpl extends AbstractExcelPackagerImpl {
                 xl.delete();
                 xl.createNewFile();
             }
-            XSSFWorkbook wbook = writeWorkbook(submission, getColumnsFromCookies());
+            XSSFWorkbook wbook = writeWorkbook(submission, Arrays.asList(SearchOrder.values()));
             FileOutputStream os = new FileOutputStream(xl);
             wbook.write(os);
             os.close();

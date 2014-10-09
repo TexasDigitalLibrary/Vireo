@@ -1,5 +1,8 @@
 package org.tdl.vireo.model.jpa;
 
+import java.util.HashMap;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -21,6 +24,9 @@ public class JpaDepartmentImpl extends JpaAbstractModel<JpaDepartmentImpl> imple
 
 	@Column(nullable = false, unique = true, length=255) 
 	public String name;
+	
+	@Column
+	public HashMap<Integer, String> emails = new HashMap<Integer, String>();
 
 	/**
 	 * Create a new JpaDepartmentImpl
@@ -37,6 +43,11 @@ public class JpaDepartmentImpl extends JpaAbstractModel<JpaDepartmentImpl> imple
 		
 		this.displayOrder = 0;
 		this.name = name;
+	}
+	
+	protected JpaDepartmentImpl(String name, HashMap<Integer, String> emails) {
+		this(name);
+		this.setEmails(emails);
 	}
 	
 	@Override
@@ -80,5 +91,26 @@ public class JpaDepartmentImpl extends JpaAbstractModel<JpaDepartmentImpl> imple
 		
 		this.name = name;
 	}
+	
+	@Override
+	public HashMap<Integer, String> getEmails() {
+		return this.emails;
+	}
 
+	@Override
+	public void setEmails(HashMap emails) {
+		this.emails = emails;
+	}
+
+	@Override
+	public void addEmail(String email) {
+		Integer index = this.emails.size();
+		this.emails.put(index, email);
+	}
+
+	@Override
+	public void removeEmail(int index) {
+		this.emails.remove(index);
+	}
+	
 }

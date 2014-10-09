@@ -83,4 +83,10 @@ public class MockState implements State {
 		return (List) transitions;
 	}
 
+	@Override
+	public boolean isInWorkflow() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

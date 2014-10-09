@@ -1,11 +1,20 @@
 #{extends 'SettingTabs/settings.html' /}
 #{set 'moreSettingScripts' }
+#{include 'SettingTabs/jsDataObject.include' /}
 <script type="text/javascript">
 jQuery(document).ready(function(){
+	var updateJSONURL = "@{settings.EmailSettingsTab.addEditEmailWorkflowRuleJSON()}";
+	var removeJSONURL = "@{settings.EmailSettingsTab.removeEmailWorkflowRuleJSON()}";
 
-	// Email settings at the top of the page.
-    jQuery(".email-toggle").click(emailSettingsHandler('@{settings.EmailSettingsTab.updateEmailSettingsJSON()}'));
+    #{list items:STATES, as:'state'}
+    	#{if state.inWorkflow}
+			jQuery("#${state.getBeanName()}-add-workflowEmailRule").on("click", createWorkflowEmailRuleHandler('@{settings.EmailSettingsTab.addEditEmailWorkflowRuleJSON()}'));
+	   	#{/if}
+	#{/list}
 
+	$(".removeRule").live("click", removeWorkflowEmailRuleHandler('@{settings.EmailSettingsTab.removeEmailWorkflowRuleJSON()}'));
+	$(".enableRule").live("click", toggleWorkflowEmailRuleHandler('@{settings.EmailSettingsTab.enableEmailWorkflowRuleJSON()}', false));
+	$(".disableRule").live("click", toggleWorkflowEmailRuleHandler('@{settings.EmailSettingsTab.disableEmailWorkflowRuleJSON()}', true));
 	
      // Handlers for the sortable emailTemplates list
      jQuery("#emailTemplate-list").sortable({
@@ -25,20 +34,62 @@ jQuery(document).ready(function(){
      jQuery("#add-emailTemplate-save").click(saveAddActionHandler('emailTemplate','@{settings.EmailSettingsTab.addEmailTemplateJSON()}'));
      jQuery("#add-emailTemplate-cancel").click(cancelAddActionHandler('emailTemplate'));
      
+     /**
+	 * Cancel Editing
+	 */
+	jQuery(".icon-remove").live("click", cancelEditingHandler());
+	
+	jQuery(document).click(function(event){		
+		if(jQuery(event.target).closest(".editing").length == 0) {
+			
+			// Second check, make sure it's not a multiselect floating div either.
+			if(jQuery(event.target).closest(".ui-multiselect-menu").length == 0) {
+			
+				if(jQuery(".editing").length > 0) {
+					jQuery(".icon-remove").click();
+				}
+			}
+		}
+	});
+	 
+	/**
+	 * Swap from span to input field.
+	 */ 
+	jQuery("ul li.edit span").live("click", swapToInputHandler());
+
+	/*
+	 * Commit changes
+	 */
+	jQuery(".icon-ok").live("click", function(){		
+					
+		var $this = jQuery(this);
+		commitChangesHandler($this, updateJSONURL);
+				
+	});
+	
+	jQuery(document).live("keypress", function(event){
+		var keycode = (event.keyCode ? event.keyCode : event.which);
+		if(keycode == '13' && !event.shiftKey){
+			
+			// Don't auto submit textareas
+			if (jQuery(".icon-ok").closest(".textarea").length == 0)
+			    jQuery(".icon-ok").click();
+		}
+	});
+
 }) // document ready
 </script>
 #{/set}
 
-<h2>EMAIL OPTIONS</h2>
+<h2>WORKFLOW OPTIONS</h2>
 
-<fieldset class="default settings">
-<legend class="default">Choose email options:</legend>
-	<div>
-	   <input name="${org.tdl.vireo.constant.AppConfig.EMAIL_DELAY_SENDING_ADVISOR_REQUEST}" type="checkbox" class="checkbox email-toggle" #{if EMAIL_DELAY_SENDING_ADVISOR_REQUEST != null}checked="true"#{/if} value="true">
-	       Do not automatically send the 'Advisor Review Request' email upon initial submission.
-	   </input>
-	</div>
-</fieldset>
+<div class="accordion settings-accordion">
+	#{list items:STATES, as:'state'}
+    	#{if state.inWorkflow}	
+			#{include 'SettingTabs/workflow.include' /}
+	   	#{/if}
+	#{/list}
+</div>
 
 <h2>EMAIL TEMPLATES</h2>
 

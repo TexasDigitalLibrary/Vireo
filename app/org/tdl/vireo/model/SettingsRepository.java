@@ -1,6 +1,9 @@
 package org.tdl.vireo.model;
 
+import java.util.HashMap;
 import java.util.List;
+
+import org.tdl.vireo.state.State;
 
 /**
  * The Vireo persistent repository for application-level settings. This object
@@ -89,6 +92,17 @@ public interface SettingsRepository {
 	public College createCollege(String name);
 
 	/**
+	 * Create a new college object with email.
+	 * 
+	 * @param name
+	 *            The name of the college.
+	 * @param emails
+	 *            A list of emails.
+	 * @return A new college object.
+	 */
+	public College createCollege(String name, HashMap<Integer, String> emails);
+
+	/**
 	 * Find a college by unique id.
 	 * 
 	 * @param id
@@ -97,6 +111,15 @@ public interface SettingsRepository {
 	 */
 	public College findCollege(Long id);
 
+	/**
+	 * Find a college by unique name.
+	 * 
+	 * @param name
+	 *            The college's name.
+	 * @return The college object or null if not found.
+	 */
+	public College findCollegeByName(String name);
+	
 	/**
 	 * Find all college objects in order.
 	 * 
@@ -114,6 +137,17 @@ public interface SettingsRepository {
 	public Program createProgram(String name);
 	
 	/**
+	 * Create a new program object with email.
+	 * 
+	 * @param name
+	 *            The name of the program.
+	 * @param emails
+	 *            A list of emails.
+	 * @return A new program object.
+	 */
+	public Program createProgram(String name, HashMap<Integer, String> emails);
+	
+	/**
 	 * Find a program by unique id.
 	 * 
 	 * @param id
@@ -121,6 +155,15 @@ public interface SettingsRepository {
 	 * @return The program object or null if not found.
 	 */
 	public Program findProgram(Long id);
+	
+	/**
+	 * Find a program by unique name.
+	 * 
+	 * @param name
+	 * 			The program's name.
+	 * @return The program object or null if not found.
+	 */
+	public Program findProgramByName(String name);
 	
 	/**
 	 * Find all program objects in order.
@@ -138,6 +181,17 @@ public interface SettingsRepository {
 	 * @return A new department object.
 	 */
 	public Department createDepartment(String name);
+	
+	/**
+	 * Create a new department object with email.
+	 * 
+	 * @param name
+	 *            The name of the department.
+	 * @param emails
+	 *            A list of emails.
+	 * @return A new department object.
+	 */
+	public Department createDepartment(String name, HashMap<Integer, String> emails);
 
 	/**
 	 * Find department by unique id
@@ -147,6 +201,15 @@ public interface SettingsRepository {
 	 * @return The department object or null if not found.
 	 */
 	public Department findDepartment(Long id);
+	
+	/**
+	 * Find department by unique name
+	 * 
+	 * @param name
+	 *            The department's name.
+	 * @return The department object or null if not found.
+	 */
+	public Department findDepartmentByName(String name);
 
 	/**
 	 * Find all department objects in order.
@@ -154,6 +217,51 @@ public interface SettingsRepository {
 	 * @return A list of all departments, or an empty list if there are none.
 	 */
 	public List<Department> findAllDepartments();
+	
+	/**
+	 * Create a new administrative group object.
+	 * 
+	 * @param name
+	 *            The name of the administrative group.
+	 * @return A new administrative group object.
+	 */
+	public AdministrativeGroup createAdministrativeGroup(String name);
+
+	/**
+	 * Create a new administrative group object with email.
+	 * 
+	 * @param name
+	 *            The name of the administrative group.
+	 * @param emails
+	 *            A list of emails.
+	 * @return A new administrative group object.
+	 */
+	public AdministrativeGroup createAdministrativeGroup(String name, HashMap<Integer, String> emails);
+
+	/**
+	 * Find a administrative group by unique id.
+	 * 
+	 * @param id
+	 *            The administrative group's id.
+	 * @return The administrative group object or null if not found.
+	 */
+	public AdministrativeGroup findAdministrativeGroup(Long id);
+
+	/**
+	 * Find a administrative group by unique name.
+	 * 
+	 * @param name
+	 *            The administrative group's name.
+	 * @return The administrative group object or null if not found.
+	 */
+	public AdministrativeGroup findAdministrativeGroupByName(String name);
+	
+	/**
+	 * Find all administrative groups objects in order.
+	 * 
+	 * @return A list of all administrative groups, or an empty list if there are none.
+	 */
+	public List<AdministrativeGroup> findAllAdministrativeGroups();
 
 	// /////////////////////
 	// Document Type Model
@@ -349,7 +457,66 @@ public interface SettingsRepository {
 	 * @return A list of all role types, or an empty list if there are none.
 	 */
 	public List<CommitteeMemberRoleType> findAllCommitteeMemberRoleTypes();
+	
+	// //////////////////////////
+	// EmailWorkflowRule Model //
+	// //////////////////////////
 
+	/**
+	 * Create a new EmailWorkflowRuleCondition
+	 * 
+	 * @param condition - Workflow Rule's associated condition type
+	 * @return - a new {@link EmailWorkflowRuleCondition}
+	 * @throws SecurityException
+	 */
+	public AbstractWorkflowRuleCondition createEmailWorkflowRuleCondition(ConditionType condition);
+	
+	/**
+	 * Find a workflow rule condition base upon their unique id.
+	 * 
+	 * @param id - the workflow email rule condition's id.
+	 * @return - the workflow email rule condition or null if not found.
+	 */
+	public AbstractWorkflowRuleCondition findEmailWorkflowRuleCondition(Long id);
+
+	/**
+	 * 
+	 * @return - All of the {@link EmailWorkflowRuleCondition} objects
+	 */
+	public List<AbstractWorkflowRuleCondition> findAllEmailWorkflowRuleConditions();
+	
+	/**
+	 * Create a new {@link EmailWorkflowRule} model. 
+	 *
+	 * @param associatedState - Workflow Email Rules's Associated State.               
+	 * @return - a new {@link EmailWorkflowRule} 
+	 * @throws SecurityException
+	 */
+	public EmailWorkflowRule createEmailWorkflowRule(State associatedState);
+
+	/**
+	 * Find a workflow email rule based upon their unique id.
+	 * 
+	 * @param id
+	 *            Workflow Email Rules's id.
+	 * @return The Workflow Email Rule object or null if not found.
+	 */
+	public EmailWorkflowRule findEmailWorkflowRule(Long id);
+
+	/**
+	 * Find a Workflow Email Rule based on their associated state.
+	 * 
+	 * @param state
+	 *            The Workflow Email Rule's associated state.
+	 * @return The Workflow Email Rule object or null if not found.
+	 */
+	 public List<EmailWorkflowRule> findEmailWorkflowRulesByState(State type);
+
+	/**
+	 * @return All Workflow Email Rule objects
+	 */
+	public List<EmailWorkflowRule> findAllEmailWorkflowRules();
+	
 	// //////////////////////
 	// Email Template Model
 	// //////////////////////
