@@ -76,6 +76,13 @@ public class StringVariableReplacement {
 		studentAction.absolute();
 		parameters.put("STUDENT_URL", studentAction.url);
 		
+		// URL for the submission directly
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("subId", String.valueOf(sub.getId()));
+		ActionDefinition submissionAction = Router.reverse("Student.submissionView", params);
+		submissionAction.absolute();
+		parameters.put("SUBMISSION_URL", submissionAction.url);
+		
 		// Advisor url for reviews
 		if (sub.getCommitteeEmailHash() != null) {
 			Map<String,Object> routeArgs = new HashMap<String,Object>();
