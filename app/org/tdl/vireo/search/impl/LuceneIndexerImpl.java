@@ -172,7 +172,7 @@ public class LuceneIndexerImpl implements Indexer {
 	 * Construct a new LuceneIndexer
 	 */
 	public LuceneIndexerImpl() throws IOException {
-		indexFile = new File(Play.configuration.getProperty("index.path","data/indexes"));
+		indexFile = new File(Play.applicationPath + File.separator + Play.configuration.getProperty("index.path","data/indexes"));
 		index = FSDirectory.open(indexFile);
 	}
 	

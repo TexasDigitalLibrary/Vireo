@@ -188,8 +188,8 @@ public class FileDepositorImplTest extends UnitTest {
 	protected static MockDepositLocation getDepositLocation() {
 		
 		MockDepositLocation location = new MockDepositLocation();
-		location.repository = "data/deposits";
-		location.collection = "data/deposits";
+		location.repository = Play.applicationPath + File.separator + "data/deposits";
+		location.collection = Play.applicationPath + File.separator + "data/deposits";
 		location.username = "";
 		location.password = "";
 		return location;

@@ -1,5 +1,6 @@
 package controllers;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.List;
@@ -87,8 +88,8 @@ public class System extends AbstractVireoController {
 		String logLevel = Play.configuration.getProperty("application.log","n/a");
 		String db = Play.configuration.getProperty("db","n/a");
 		String appPath = Play.applicationPath.getPath();
-		String attachmentsPath = Play.configuration.getProperty("attachments.path","n/a");
-		String indexPath = Play.configuration.getProperty("index.path","n/a");
+		String attachmentsPath = appPath + File.separator + Play.configuration.getProperty("attachments.path","n/a");
+		String indexPath = appPath + File.separator + Play.configuration.getProperty("index.path","n/a");
 
 
 		// Mail Information

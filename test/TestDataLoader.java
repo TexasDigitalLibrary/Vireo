@@ -529,15 +529,15 @@ public class TestDataLoader extends Job {
 			
 			try {
 				// Clean out directories
-				File attachmentsDir = new File(Play.configuration.getProperty("attachments.path"));
+				File attachmentsDir = new File(Play.applicationPath + File.separator + Play.configuration.getProperty("attachments.path"));
 				if (attachmentsDir.exists())
 					FileUtils.deleteQuietly(attachmentsDir);
 				
-				File indexDir = new File(Play.configuration.getProperty("index.path"));
+				File indexDir = new File(Play.applicationPath + File.separator + Play.configuration.getProperty("index.path"));
 				if (indexDir.exists())
 					FileUtils.deleteQuietly(indexDir);
 				
-				File depositsDir = new File(Play.configuration.getProperty("deposits.path"));
+				File depositsDir = new File(Play.applicationPath + File.separator + Play.configuration.getProperty("deposits.path"));
 				if (depositsDir.exists())
 					FileUtils.deleteQuietly(depositsDir);
 				
@@ -845,7 +845,7 @@ public class TestDataLoader extends Job {
 					sub.setCommitteeEmailHash(generateCommitteEmailHash());
 				
 				if (random.nextInt(100) > 5) 
-					sub.addAttachment(new File("test/SamplePrimaryDocument.pdf"),AttachmentType.PRIMARY);
+					sub.addAttachment(new File(Play.applicationPath + File.separator + "test/SamplePrimaryDocument.pdf"),AttachmentType.PRIMARY);
 				
 				if (random.nextInt(100) > 20) {
 					Date agreementDate = generateRandomDate(random,2,2010);
@@ -861,13 +861,13 @@ public class TestDataLoader extends Job {
 				}
 				
 				if (random.nextInt(100) > 75)
-					sub.addAttachment(new File("test/SampleSupplementalDocument.doc"),AttachmentType.SUPPLEMENTAL);
+					sub.addAttachment(new File(Play.applicationPath + File.separator + "test/SampleSupplementalDocument.doc"),AttachmentType.SUPPLEMENTAL);
 				
 				if (random.nextInt(100) > 75)
-					sub.addAttachment(new File("test/SampleSupplementalDocument.xls"),AttachmentType.SUPPLEMENTAL);
+					sub.addAttachment(new File(Play.applicationPath + File.separator + "test/SampleSupplementalDocument.xls"),AttachmentType.SUPPLEMENTAL);
 	
 				if (random.nextInt(100) > 50)
-					sub.addAttachment(new File("test/SampleFeedbackDocument.png"),AttachmentType.FEEDBACK);
+					sub.addAttachment(new File(Play.applicationPath + File.separator + "test/SampleFeedbackDocument.png"),AttachmentType.FEEDBACK);
 				
 				context.turnOffAuthorization();
 				if (random.nextInt(100) > 50)
