@@ -15,6 +15,7 @@ import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.Submission;
 
 import play.Logger;
+import play.Play;
 
 /**
  * A simple file depositor. This implementation will just copy the deposit
@@ -56,7 +57,7 @@ public class FileDepositorImpl implements Depositor, BeanNameAware {
 	}
 
 	public void setBaseDirectory(String path) {
-		this.baseDir = new File(path);
+		this.baseDir = new File(Play.applicationPath + File.separator + path);
 	}
 	
 

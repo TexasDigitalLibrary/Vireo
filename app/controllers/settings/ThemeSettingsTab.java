@@ -28,7 +28,7 @@ import controllers.SettingsTab;
 @With(Authentication.class)
 public class ThemeSettingsTab extends SettingsTab {
 	
-	public static final String THEME_PATH = "conf"+File.separator+"theme"+File.separator;
+	public static final String THEME_PATH = Play.applicationPath + File.separator + "conf"+File.separator+"theme"+File.separator;
 	public static final String LEFT_LOGO_PATH = THEME_PATH + "left-logo";
 	public static final String RIGHT_LOGO_PATH = THEME_PATH + "right-logo";
 			

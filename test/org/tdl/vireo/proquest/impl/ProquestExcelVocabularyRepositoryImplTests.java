@@ -16,6 +16,7 @@ import org.tdl.vireo.proquest.ProquestLanguage;
 import org.tdl.vireo.proquest.ProquestSubject;
 import org.tdl.vireo.proquest.ProquestVocabularyRepository;
 
+import play.Play;
 import play.modules.spring.Spring;
 import play.test.UnitTest;
 
@@ -34,7 +35,7 @@ import play.test.UnitTest;
 public class ProquestExcelVocabularyRepositoryImplTests extends UnitTest {
 
 	// Test file in old Excel 97 binary format
-	public static final File hssfTestFile = new File("test/org/tdl/vireo/proquest/impl/test_vocabulary.xls");
+	public static final File hssfTestFile = new File(Play.applicationPath + File.separator + "test/org/tdl/vireo/proquest/impl/test_vocabulary.xls");
 	
 //	// Test file in newer Excel XML format
 //	public static final File xssfTestFile = new File("test/org/tdl/vireo/proquest/impl/test_vocabulary.xlsx");
