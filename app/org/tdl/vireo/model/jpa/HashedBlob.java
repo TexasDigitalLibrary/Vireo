@@ -178,7 +178,7 @@ public class HashedBlob implements BinaryField, UserType {
     }
 
     public static File getStore() {
-        String name = Play.configuration.getProperty("attachments.path", "attachments");
+        String name = Play.applicationPath + File.separator + Play.configuration.getProperty("attachments.path", "attachments");
         File store = null;
         if(new File(name).isAbsolute()) {
             store = new File(name);

@@ -188,8 +188,16 @@ public class TemplatePackagerImplTest extends UnitTest {
 				
 				byte[] buffer = new byte[1024];
 				
-				File tempFolder = new File("tempFolder");
-				tempFolder.mkdir();
+				File tempFolder = File.createTempFile("tempFolder", null);
+				if(!(tempFolder.delete()))
+			    {
+			        throw new IOException("Could not delete temp file: " + tempFolder.getAbsolutePath());
+			    }
+
+			    if(!(tempFolder.mkdir()))
+			    {
+			        throw new IOException("Could not create temp directory: " + tempFolder.getAbsolutePath());
+			    }
 				
 				ZipInputStream zis = new ZipInputStream(new FileInputStream(exportFile));
 				ZipEntry ze = zis.getNextEntry();
