@@ -1,7 +1,9 @@
 package controllers;
 
+import java.util.Date;
+
 import org.tdl.vireo.constant.AppConfig;
-import org.tdl.vireo.model.Configuration;
+import org.tdl.vireo.model.Submission;
 
 import play.mvc.With;
 
@@ -46,8 +48,30 @@ public class Application extends AbstractVireoController {
 			instructionsBefore = instructions;
 		}
 
+		// see if multiple submissions are enabled
+		boolean allowMultiple = settingRepo.getConfigBoolean(AppConfig.ALLOW_MULTIPLE_SUBMISSIONS);
+
+		// see if current student has any submissions already started for this semester
+		String currentSemester = settingRepo.getConfigValue(AppConfig.CURRENT_SEMESTER); // in the format "Month Year"
+		String[] parts = currentSemester.split(" ");
+
+		boolean submissionStartedCurrentSemester = false;
+        if (parts.length == 2) {
+	        Integer month = ViewTab.monthNameToInt(parts[0]);
+	        Integer year = Integer.valueOf(parts[1]);
+	        
+			for(Submission submission : subRepo.findSubmission(context.getPerson())) {
+				//submission.getDefenseDate();
+				if(submission.getGraduationMonth() != null && submission.getGraduationMonth() <= month && submission.getGraduationYear() != null && submission.getGraduationYear() <= year && submission.getState().isInProgress()) {
+					submissionStartedCurrentSemester = true;
+				}
+				if ((submission.getGraduationMonth() == null || submission.getGraduationYear() == null) && submission.getState().isInProgress()){
+					submissionStartedCurrentSemester = true;
+				}
+			}
+        }
 		// Render the Application/index.html template
-		render(instructionsBefore, instructionsAfter);
+		render(instructionsBefore, instructionsAfter, allowMultiple, submissionStartedCurrentSemester);
 	}
 
 }

@@ -5,7 +5,27 @@
 #{verbatim}${ instructionsBefore }#{/verbatim}
 </div>
 <div class="form-actions row center">
-	<a href="@{Student.submissionList}" class="btn btn-primary">Start your submission</a>
+	#{if currentUser != null && securityContext.isAuthenticated()}
+		#{if allowMultiple}
+			#{if submissionStartedCurrentSemester}
+			<a href="@{Student.submissionList}" class="btn btn-primary">Manage/View your submission(s)</a>
+			#{/if}
+			#{else}
+			<a href="@{Student.submissionList}" class="btn btn-primary">Start your submission</a>
+			#{/else}
+		#{/if}
+		#{else}
+			#{if submissionStartedCurrentSemester}
+			<a href="@{Student.submissionList}" class="btn btn-primary">Continue your submission</a>
+			#{/if}
+			#{else}
+			<a href="@{Student.submissionList}" class="btn btn-primary">Start your submission</a>
+			#{/else}
+		#{/else}
+	#{/if}
+	#{else}
+	<a href="@{Authentication.loginList()}"  class="btn btn-primary">Login</a>
+	#{/else}
 </div>
 <div class="row">
 #{verbatim}${ instructionsAfter }#{/verbatim}
