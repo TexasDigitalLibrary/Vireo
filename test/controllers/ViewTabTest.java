@@ -42,6 +42,7 @@ import play.mvc.Scope.Session;
  * Test the methods of the view tab.
  * 
  * @author Micah Cooper
+ * @author <a href="mailto:gad.krumholz@austin.utexas.edu">Gad Krumholz</a>
  *
  */
 public class ViewTabTest extends AbstractVireoFunctionalTest {
@@ -52,6 +53,13 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 	public static SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
 	public static StateManager stateManager = Spring.getBeanOfType(StateManager.class);
 	
+	/**
+	 * Create a fake Session since ThreadLocal Session.current() doesn't work from within FunctionalTest
+	 */
+	public ViewTabTest() {
+		Session.current.set(new Session());
+	}
+
 	/**
 	 * Simple test to make sure we can view a blank document in the viewTab
 	 * without generating errors.
