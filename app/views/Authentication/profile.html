@@ -10,13 +10,13 @@
 #{if updateProfile || updatePassword}
 <div class="row">
 	#{if updateProfile }
-	<div class="span3 offset1">
+	<div class="span3 offset2">
 		<p>
 			<a href="@{Authentication.updateProfile()}" class="btn btn-primary">Update profile information</a>
 		</p>
 	</div>
 	#{/if} #{if updatePassword}
-	<div class="span3">
+	<div class="span3 offset1">
 		<p>
 			<a href="@{Authentication.updatePassword()}" class="btn btn-primary">Change your password</a>
 		</p>

@@ -5,26 +5,47 @@
 #{verbatim}${ instructionsBefore }#{/verbatim}
 </div>
 <div class="form-actions row center">
-	#{if currentUser != null && securityContext.isAuthenticated()}
-		#{if allowMultiple}
-			#{if submissionStartedCurrentSemester}
-			<a href="@{Student.submissionList}" class="btn btn-primary">Manage/View your submission(s)</a>
+	#{if subStatus.getSubmissionsOpen()}
+		#{if currentUser != null && securityContext.isAuthenticated()}
+			#{if subStatus.getSubmissionInProgress() || subStatus.getSubmissionNeedsCorrections()}
+				#{if subStatus.getAllowMultiple() || (subStatus.getSubmissionInProgress() && subStatus.getSubmissionNeedsCorrections())}
+				<a href="@{Student.submissionList()}" class="btn btn-primary">Manage/View your submission(s)</a>
+				#{/if}
+				#{else}
+					#{if subStatus.getSubmissionInProgress()}
+					<a href="@{submit.PersonalInfo.personalInfo(subStatus.getIpSubmissionId())}" class="btn btn-primary">Continue your submission</a>
+					#{/if}
+					#{elseif subStatus.getSubmissionNeedsCorrections()}
+					<a href="@{submit.PersonalInfo.personalInfo(subStatus.getNcSubmissionId())}" class="btn btn-primary">Correct your submission</a>
+					#{/elseif}
+				#{/else}
 			#{/if}
 			#{else}
-			<a href="@{Student.submissionList}" class="btn btn-primary">Start your submission</a>
+				#{if subStatus.getAllowMultiple()}
+					#{if subStatus.getSubmissionSubmittedCurrentSemester()}
+					<a href="@{Student.submissionList()}" class="btn btn-primary">Manage/View your submission(s)</a>
+					#{/if}
+					#{else}
+					<a href="@{submit.PersonalInfo.personalInfo()}" class="btn btn-primary">Start your submission</a>
+					#{/else}
+				#{/if}
+				#{else}
+					#{if subStatus.getSubmissionSubmittedCurrentSemester()}
+					<p class="alert alert-error">You've already submitted an ETD this semester</p>
+					<a href="@{Student.submissionList()}" class="btn btn-primary">Submission History</a>
+					#{/if}
+					#{else}
+					<a href="@{submit.PersonalInfo.personalInfo()}" class="btn btn-primary">Start your submission</a>
+					#{/else}
+				#{/else}
 			#{/else}
 		#{/if}
 		#{else}
-			#{if submissionStartedCurrentSemester}
-			<a href="@{Student.submissionList}" class="btn btn-primary">Continue your submission</a>
-			#{/if}
-			#{else}
-			<a href="@{Student.submissionList}" class="btn btn-primary">Start your submission</a>
-			#{/else}
+		<a href="@{Authentication.loginList()}"  class="btn btn-primary">Login</a>
 		#{/else}
 	#{/if}
 	#{else}
-	<a href="@{Authentication.loginList()}"  class="btn btn-primary">Login</a>
+		<p class="alert alert-error">Submissions are currently closed for new submissions; please contact your thesis office for more information.</p>
 	#{/else}
 </div>
 <div class="row">

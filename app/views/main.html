@@ -86,6 +86,7 @@
 						#{if securityContext.isReviewer()}
 						<a href="@{FilterTab.list()}">Admin</a> |
 						#{/if}
+						<a href="@{Student.submissionList}">Submission History</a> |
 						<a href="@{Authentication.logout()}">Logout</a>
 					#{/if}
 					#{else}

@@ -1,7 +1,6 @@
 package controllers.submit;
 
 import static org.tdl.vireo.constant.AppConfig.*;
-
 import static org.tdl.vireo.constant.FieldConfig.*;
 
 import java.io.IOException;
@@ -29,10 +28,10 @@ import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
 
 import au.com.bytecode.opencsv.CSVReader;
-
 import play.Logger;
 import play.Play;
 import controllers.Application;
+import controllers.Application.SubmissionStatus;
 import controllers.Security;
 
 /**
@@ -75,18 +74,10 @@ public class PersonalInfo extends AbstractSubmitStep {
 		Submission sub;
 		// Check if this is a new submission.
 		if (subId == null) {
-			// Do we allow multiple submissions?
-			boolean allowMultiple = settingRepo.getConfigBoolean(ALLOW_MULTIPLE_SUBMISSIONS);
-			
-			if (!allowMultiple) {
-				// Check if this user already has another submission open.
-				List<Submission> otherSubmissions = subRepo.findSubmission(context.getPerson());
-				
-				for (Submission otherSubmission : otherSubmissions) {
-					if (otherSubmission.getState().isActive() || otherSubmission.getState().isInProgress()) {
-						error("Multiple submissions are not allowed, and the submitter already has another submission.");
-					}
-				}
+			SubmissionStatus subStatus = new SubmissionStatus();
+			// if we don't allow multiple submissions and (we currently don't have one InProgress in NeedsCorrections or a submitted one this semester)
+			if (!subStatus.getAllowMultiple() && (subStatus.getSubmissionInProgress() || subStatus.getSubmissionNeedsCorrections() || subStatus.getSubmissionSubmittedCurrentSemester())) {
+				error("Multiple submissions are not allowed, and the submitter already has another submission.");
 			}
 			// Create a submission with default data on it.
 			sub = subRepo.createSubmission(submitter);

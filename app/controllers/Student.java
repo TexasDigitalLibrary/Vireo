@@ -34,6 +34,7 @@ import play.Logger;
 import play.Play;
 import play.libs.MimeTypes;
 import play.mvc.With;
+import controllers.Application.SubmissionStatus;
 import controllers.submit.PersonalInfo;
 
 /**
@@ -84,59 +85,12 @@ public class Student extends AbstractVireoController {
 	 * the previous submission.
 	 */
 	@Security(RoleType.STUDENT)
-	public static void submissionList() {	
-
-		Person submitter = context.getPerson();
-		List<Submission> submissions = subRepo.findSubmission(submitter);
-
-
-		boolean submissionsOpen = settingRepo.getConfigBoolean(AppConfig.SUBMISSIONS_OPEN);
-		boolean allowMultiple = settingRepo.getConfigBoolean(AppConfig.ALLOW_MULTIPLE_SUBMISSIONS);
+	public static void submissionList() {
+		List<Submission> submissions = subRepo.findSubmission(context.getPerson());
 		
-		// Check to see there are no submissions, start a new one.
-		if (submissions.size() == 0 && submissionsOpen) {
-			// First time, here let's start a new sub.
-			PersonalInfo.personalInfo(null);
-		}
+		SubmissionStatus subStatus = new SubmissionStatus();
 		
-		
-		// Check to see if we should skip the list page.
-		if (submissions.size() == 1 && !allowMultiple && !submissions.get(0).getState().isArchived()) {
-			// The only condition when a user should skip the list page is, when allow multiple 
-			// submissions is turned off AND they have one *active* submission.
-			Submission sub = submissions.get(0);
-		
-			if (submissionsOpen && sub.getState().isInProgress()) {
-				// The one submission isn't complete yet.
-				PersonalInfo.personalInfo(sub.getId());
-			} else if (!sub.getState().isInProgress()){
-				// Go straight to view the status page.
-				submissionView(sub.getId());
-			}
-		}
-
-		// Should we allow the student to start another submission.
-		boolean showStartSubmissionButton = allowMultiple;
-		
-		// Check if we should allow the user to start another submission.
-		boolean allArchived = true;
-		for (Submission sub : submissions) {
-			if (!sub.getState().isArchived())
-				allArchived = false;
-		}
-		if (allArchived) {
-			// If all the current submissions are archived, allow the user to submit another submission.
-			showStartSubmissionButton = true;
-		}
-		
-		if (!submissionsOpen)
-			// If we're not open, then no one can start a new submission.
-			showStartSubmissionButton = false;
-		
-		renderArgs.put("SUBMISSIONS_OPEN", settingRepo.findConfigurationByName(AppConfig.SUBMISSIONS_OPEN));
-		renderArgs.put("CURRENT_SEMESTER", settingRepo.getConfigValue(AppConfig.CURRENT_SEMESTER, "current"));
-		
-		renderTemplate("Student/list.html",submissions, showStartSubmissionButton);
+		renderTemplate("Student/list.html",submissions, subStatus);
 	}
 	
 	/**
