@@ -1,23 +1,36 @@
 package controllers.submit;
 
-import static org.tdl.vireo.constant.AppConfig.*;
-import static org.tdl.vireo.constant.FieldConfig.*;
+import static org.tdl.vireo.constant.AppConfig.SUBMIT_PERSONAL_INFO_STICKIES;
+import static org.tdl.vireo.constant.AppConfig.CURRENT_SEMESTER;
+import static org.tdl.vireo.constant.FieldConfig.COLLEGE;
+import static org.tdl.vireo.constant.FieldConfig.CURRENT_PHONE_NUMBER;
+import static org.tdl.vireo.constant.FieldConfig.CURRENT_POSTAL_ADDRESS;
+import static org.tdl.vireo.constant.FieldConfig.DEGREE;
+import static org.tdl.vireo.constant.FieldConfig.DEPARTMENT;
+import static org.tdl.vireo.constant.FieldConfig.MAJOR;
+import static org.tdl.vireo.constant.FieldConfig.PERMANENT_EMAIL_ADDRESS;
+import static org.tdl.vireo.constant.FieldConfig.PERMANENT_PHONE_NUMBER;
+import static org.tdl.vireo.constant.FieldConfig.PERMANENT_POSTAL_ADDRESS;
+import static org.tdl.vireo.constant.FieldConfig.PROGRAM;
+import static org.tdl.vireo.constant.FieldConfig.STUDENT_BIRTH_YEAR;
+import static org.tdl.vireo.constant.FieldConfig.STUDENT_FIRST_NAME;
+import static org.tdl.vireo.constant.FieldConfig.STUDENT_LAST_NAME;
+import static org.tdl.vireo.constant.FieldConfig.STUDENT_MIDDLE_NAME;
+import static org.tdl.vireo.constant.FieldConfig.STUDENT_ORCID;
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import org.tdl.vireo.constant.AppConfig;
-import org.tdl.vireo.constant.FieldConfig;
 import org.tdl.vireo.model.College;
-import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.Degree;
 import org.tdl.vireo.model.Department;
 import org.tdl.vireo.model.Major;
@@ -27,9 +40,11 @@ import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
 
-import au.com.bytecode.opencsv.CSVReader;
 import play.Logger;
 import play.Play;
+import play.mvc.Router;
+import play.mvc.Router.ActionDefinition;
+import au.com.bytecode.opencsv.CSVReader;
 import controllers.Application;
 import controllers.Application.SubmissionStatus;
 import controllers.Security;
@@ -109,6 +124,11 @@ public class PersonalInfo extends AbstractSubmitStep {
 					submitter.getEmail(),
 					sub.getId());
 			
+			// make sure we redirect to the new submission's personalInfo page so we don't re-create new submissions on page refreshes
+			Map<String,Object> routeArgs = new HashMap<String,Object>();
+			routeArgs.put("subId", sub.getId());
+			ActionDefinition newSub = Router.reverse("submit.PersonalInfo.personalInfo", routeArgs);
+			redirect(newSub.url);
 			
 		} else {
 			// Retrieve the existing submission
@@ -347,8 +367,18 @@ public class PersonalInfo extends AbstractSubmitStep {
 		}
 		
 		String grantor = settingRepo.getConfigValue(AppConfig.GRANTOR,"Unknown Institution");
+		
+		// Get a list of disabled Degree+Majors for this semester for this user
+		List<Submission> submissions = subRepo.findSubmission(submitter);
+		HashMap<String,String> disabledDegMaj = new HashMap<String, String>();
+		String currentSemester = settingRepo.getConfigValue(CURRENT_SEMESTER);
+		for(Submission submission : submissions) {
+			if(Application.SubmissionStatus.IsSubmissionSubmittedCurrentSemester(currentSemester, submission)){
+				disabledDegMaj.put(submission.getDegree(), submission.getMajor());
+			}
+		}
 
-		renderTemplate("Submit/personalInfo.html",submitter, subId, disabledFields, stickies,
+		renderTemplate("Submit/personalInfo.html",submitter, subId, disabledFields, stickies, disabledDegMaj,
 
 				// Form data
 				firstName, middleName, lastName, orcid, birthYear, grantor, program, college, department, 
@@ -419,7 +449,7 @@ public class PersonalInfo extends AbstractSubmitStep {
 		// Major
 		if (sub.getMajor() != null && !isValidMajor(sub.getMajor()))
 			validation.addError("major","The major selected is not valid");
-		if (isFieldRequired(COLLEGE) && isEmpty(sub.getMajor())) 
+		if (isFieldRequired(MAJOR) && isEmpty(sub.getMajor())) 
 			validation.addError("major","Major is required");
 		
 		// Permanent Phone
