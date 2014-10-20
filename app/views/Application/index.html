@@ -15,28 +15,23 @@
 					#{if subStatus.getSubmissionInProgress()}
 					<a href="@{submit.PersonalInfo.personalInfo(subStatus.getIpSubmissionId())}" class="btn btn-primary">Continue your submission</a>
 					#{/if}
-					#{elseif subStatus.getSubmissionNeedsCorrections()}
+					#{else}
 					<a href="@{submit.PersonalInfo.personalInfo(subStatus.getNcSubmissionId())}" class="btn btn-primary">Correct your submission</a>
-					#{/elseif}
+					#{/else}
 				#{/else}
 			#{/if}
 			#{else}
-				#{if subStatus.getAllowMultiple()}
-					#{if subStatus.getSubmissionSubmittedCurrentSemester()}
+				#{if subStatus.getSubmissionSubmittedCurrentSemester()}
+					#{if subStatus.getAllowMultiple()}
 					<a href="@{Student.submissionList()}" class="btn btn-primary">Manage/View your submission(s)</a>
 					#{/if}
 					#{else}
-					<a href="@{submit.PersonalInfo.personalInfo()}" class="btn btn-primary">Start your submission</a>
+					<p class="alert alert-error">You've already submitted an ETD this semester</p>
+					<a href="@{Student.submissionList()}" class="btn btn-primary">Submission History</a>
 					#{/else}
 				#{/if}
 				#{else}
-					#{if subStatus.getSubmissionSubmittedCurrentSemester()}
-					<p class="alert alert-error">You've already submitted an ETD this semester</p>
-					<a href="@{Student.submissionList()}" class="btn btn-primary">Submission History</a>
-					#{/if}
-					#{else}
-					<a href="@{submit.PersonalInfo.personalInfo()}" class="btn btn-primary">Start your submission</a>
-					#{/else}
+				<a href="@{submit.PersonalInfo.personalInfo()}" class="btn btn-primary">Start your submission</a>
 				#{/else}
 			#{/else}
 		#{/if}
