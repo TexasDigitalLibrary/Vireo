@@ -58,9 +58,9 @@ public class Application extends AbstractVireoController {
 	 */
 	public static class SubmissionStatus {
 		// see if current student has any submissions already started
+		private Boolean hasSubmissions = false;
 		private Boolean submissionInProgress = false;
 		private Boolean submissionNeedsCorrections = false;
-		private Boolean submissionSubmittedCurrentSemester = false;
 		// the id of the pending submission if it exists (otherwise 0)
 		private Long ipSubmissionId = (long) 0;
 		// the id of the needs corrections submission if it exists (otherwise 0)
@@ -85,6 +85,9 @@ public class Application extends AbstractVireoController {
 //				Logger.debug("isInProgress: %s", submission.getState().isInProgress()); // In Progress
 //				Logger.debug("isInWorkflow: %s", submission.getState().isInWorkflow()); // Submitted, Corrections Received, Approved, Pending Pub, Published
 
+				// if we have any submissions
+				hasSubmissions = true;
+				
 				// if submission has "In Progress" state
 				if (submission.getState().isInProgress()) {
 					submissionInProgress = true;
@@ -95,44 +98,13 @@ public class Application extends AbstractVireoController {
 					submissionNeedsCorrections = true;
 					ncSubmissionId = submission.getId();
 				}
-				// if submission is any other state this semester (except for "Cancelled" or "Withdrawn")
-				submissionSubmittedCurrentSemester = IsSubmissionSubmittedCurrentSemester(currentSemester, submission);
 			}
 		} // end SubmissionStatus()
 
-		public static Boolean IsSubmissionSubmittedCurrentSemester(String currentSemester, Submission submission) {
-			Boolean ret = false;
-			// get the parts of the current semester date
-			String[] parts = currentSemester.split(" ");
-			Integer csMonth = -1;
-			Integer csYear = -1;
-			if (parts.length == 2) {
-				csMonth = SettingsTab.monthNameToInt(parts[0]); // 0-11
-				csYear = Integer.valueOf(parts[1]); // 2014
-			}
-
-			// if submission is any other state this semester (except for "Cancelled" or "Withdrawn")
-			if (!submission.getState().isDeletable() && submission.getSubmissionDate() != null) {
-				if (parts.length == 2) {
-					// submission's calendar
-					Calendar subCal = Calendar.getInstance();
-					subCal.setTime(submission.getSubmissionDate());
-					// current semester should be over by the 28th of the csMonth/csYear
-					Calendar csCal = Calendar.getInstance();
-					csCal.set(csYear, csMonth, 28);
-					// begining of semester was csDate - 5 months
-					Calendar csStartCal = Calendar.getInstance();
-					csStartCal.set(csYear, csMonth, 28);
-					csStartCal.add(Calendar.MONTH, -5);
-					// if the submission was published after the begining of the current semester AND before the end of the current semester
-					if (subCal.after(csStartCal) && subCal.before(csCal)) {
-						ret = true;
-					}
-				}
-			}
-			return ret;
-		}
-
+		public Boolean getHasSubmissions() {
+	        return hasSubmissions;
+        }
+		
 		public Boolean getAllowMultiple() {
 			return allowMultiple;
 		}
@@ -155,10 +127,6 @@ public class Application extends AbstractVireoController {
 
 		public Boolean getSubmissionInProgress() {
 			return submissionInProgress;
-		}
-
-		public Boolean getSubmissionSubmittedCurrentSemester() {
-			return submissionSubmittedCurrentSemester;
 		}
 
 		public Boolean getSubmissionsOpen() {

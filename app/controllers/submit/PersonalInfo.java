@@ -90,8 +90,8 @@ public class PersonalInfo extends AbstractSubmitStep {
 		// Check if this is a new submission.
 		if (subId == null) {
 			SubmissionStatus subStatus = new SubmissionStatus();
-			// if we don't allow multiple submissions and (we currently don't have one InProgress in NeedsCorrections or a submitted one this semester)
-			if (!subStatus.getAllowMultiple() && (subStatus.getSubmissionInProgress() || subStatus.getSubmissionNeedsCorrections() || subStatus.getSubmissionSubmittedCurrentSemester())) {
+			// if we don't allow multiple submissions and we already submitted once before
+			if (!subStatus.getAllowMultiple() && subStatus.getHasSubmissions()) {
 				error("Multiple submissions are not allowed, and the submitter already has another submission.");
 			}
 			// Create a submission with default data on it.
@@ -371,11 +371,8 @@ public class PersonalInfo extends AbstractSubmitStep {
 		// Get a list of disabled Degree+Majors for this semester for this user
 		List<Submission> submissions = subRepo.findSubmission(submitter);
 		HashMap<String,String> disabledDegMaj = new HashMap<String, String>();
-		String currentSemester = settingRepo.getConfigValue(CURRENT_SEMESTER);
 		for(Submission submission : submissions) {
-			if(Application.SubmissionStatus.IsSubmissionSubmittedCurrentSemester(currentSemester, submission)){
-				disabledDegMaj.put(submission.getDegree(), submission.getMajor());
-			}
+			disabledDegMaj.put(submission.getDegree(), submission.getMajor());
 		}
 
 		renderTemplate("Submit/personalInfo.html",submitter, subId, disabledFields, stickies, disabledDegMaj,

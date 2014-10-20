@@ -95,17 +95,13 @@ function startNewSub() {
 		</tr>
 	</thead>
 		<tbody>
-        
         #{list items:submissions, as:"sub"}
-        
-	        <tr${ (sub.getState().isInProgress() || sub.getState().isEditableByStudent() || subStatus.IsSubmissionSubmittedCurrentSemester(subStatus.getCurrentSemester(), sub)) ? " class='sub-inprogress'" : ""}>
+	        <tr${ (sub.getState().isInProgress() || sub.getState().isEditableByStudent()) ? " class='sub-inprogress'" : ""}>
 	            <td>${sub.getDocumentTitle()}</td>
 				<td>${sub.getPrimaryDocument() == null ? "none" : sub.getPrimaryDocument().getName()}
-				
 				#{if sub.getPrimaryDocument() != null}
 				    <a href="@{Student.viewAttachment(sub.getId(),sub.getPrimaryDocument().getId(),sub.getPrimaryDocument().getName())}">[view]</a>
 				#{/if}
-				
 				</td>
 				<td ${sub.getState().isEditableByStudent() ? "class='red'" : ""}>
 				    ${sub.getState().getDisplayName()}
@@ -130,21 +126,19 @@ function startNewSub() {
 				     </a>				 
 				#{/else}
 				</td>
-				
 	        </tr>
         #{/list}
-
         </tbody>
 	</table>
 	#{if subStatus.getSubmissionsOpen()}
-		#{if subStatus.getAllowMultiple() || !(subStatus.getSubmissionInProgress() || subStatus.getSubmissionNeedsCorrections() || subStatus.getSubmissionSubmittedCurrentSemester())}
+		#{if subStatus.getAllowMultiple() || !subStatus.getHasSubmissions()}
 		<div class="form-actions row center">
 			<a href="javascript:void(0)" onclick="checkBeforeNewSub()" class="btn btn-primary">Start a new submission</a>
 		</div>
 		#{/if}
 		#{else}
 		<div class="form-actions row center">
-			<p class="alert alert-error">You've already submitted an ETD this semester or have one in progress!</p>
+			<p class="alert alert-error">You've already submitted an ETD or have one in progress!</p>
 		</div>
 		#{/else}
 	#{/if}

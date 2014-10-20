@@ -21,12 +21,12 @@
 				#{/else}
 			#{/if}
 			#{else}
-				#{if subStatus.getSubmissionSubmittedCurrentSemester()}
+				#{if subStatus.getHasSubmissions()}
 					#{if subStatus.getAllowMultiple()}
 					<a href="@{Student.submissionList()}" class="btn btn-primary">Manage/View your submission(s)</a>
 					#{/if}
 					#{else}
-					<p class="alert alert-error">You've already submitted an ETD this semester</p>
+					<p class="alert alert-error">You've already submitted an ETD</p>
 					<a href="@{Student.submissionList()}" class="btn btn-primary">Submission History</a>
 					#{/else}
 				#{/if}
