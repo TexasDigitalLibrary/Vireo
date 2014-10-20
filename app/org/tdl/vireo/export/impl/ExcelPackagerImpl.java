@@ -36,7 +36,7 @@ import org.tdl.vireo.services.StringVariableReplacement;
  * This will export the current FilterTab results as an Excel spreadsheet.
  * 
  * @author william_mckinney@harvard.edu
- * @author Gad Krumholz ( gad.krumholz@austin.utexas.edu )
+ * @author <a href=mailto:gad.krumholz@austin.utexas.edu>Gad Krumholz</a>
  */
 public class ExcelPackagerImpl extends AbstractExcelPackagerImpl {
 

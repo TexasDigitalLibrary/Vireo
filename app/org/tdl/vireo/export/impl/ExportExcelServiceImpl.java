@@ -34,7 +34,7 @@ import play.jobs.Job;
 /**
  * Implementation of the export service interface.
  * 
- * @author Gad Krumholz ( gad.krumholz@austin.utexas.edu )
+ * @author <a href=mailto:gad.krumholz@austin.utexas.edu>Gad Krumholz</a>
  */
 public class ExportExcelServiceImpl implements ExportService {
 

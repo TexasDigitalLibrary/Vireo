@@ -13,7 +13,7 @@ import org.tdl.vireo.search.SearchOrder;
  * Specifically used when using the {@link ExportExcel} package type
  * Extends {@link AbstractPackagerImpl}
  * 
- * @author Gad Krumholz ( gad.krumholz@austin.utexas.edu )
+ * @author <a href=mailto:gad.krumholz@austin.utexas.edu>Gad Krumholz</a>
  */
 public abstract class AbstractExcelPackagerImpl extends AbstractPackagerImpl {
     
