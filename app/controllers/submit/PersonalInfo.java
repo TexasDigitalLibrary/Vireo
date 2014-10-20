@@ -368,11 +368,33 @@ public class PersonalInfo extends AbstractSubmitStep {
 		
 		String grantor = settingRepo.getConfigValue(AppConfig.GRANTOR,"Unknown Institution");
 		
-		// Get a list of disabled Degree+Majors for this semester for this user
+		// Get a list of disabled Degree+Majors for this user
 		List<Submission> submissions = subRepo.findSubmission(submitter);
-		HashMap<String,String> disabledDegMaj = new HashMap<String, String>();
+		// helper class to keep degree/major pairs
+		class DegMaj{
+			public String degree;
+			public String major;
+			// overriden to get .contains() to work with this object type
+			@Override
+			public boolean equals(Object obj) {
+			    if(obj instanceof DegMaj) {
+			    	DegMaj myObj = (DegMaj)obj;
+			    	if(this.degree.equals(myObj.degree) && this.major.equals(myObj.major)) {
+			    		return true;
+			    	}
+			    }
+			    return false;
+			}
+		}
+		List<DegMaj> disabledDegMaj = new ArrayList<DegMaj>();
 		for(Submission submission : submissions) {
-			disabledDegMaj.put(submission.getDegree(), submission.getMajor());
+			DegMaj temp = new DegMaj();
+			temp.degree = submission.getDegree(); 
+			temp.major = submission.getMajor();
+			// only add it if it's not already in the list and if it's not the one for the current submission
+			if(!disabledDegMaj.contains(temp) && !(sub.getDegree().equals(temp.degree) && sub.getMajor().equals(temp.major))) {
+				disabledDegMaj.add(temp);
+			}
 		}
 
 		renderTemplate("Submit/personalInfo.html",submitter, subId, disabledFields, stickies, disabledDegMaj,

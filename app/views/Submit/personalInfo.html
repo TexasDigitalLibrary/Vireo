@@ -23,11 +23,11 @@
 <script type="text/javascript" >
 //when degree is changed, make sure major is allowed
 var disabledDegMaj = [
-	#{list items:disabledDegMaj?.keySet(), as:'degree'}
-		#{if degree != null && degree.length() > 0 && disabledDegMaj.get(degree) != null && disabledDegMaj.get(degree).length() > 0}
+	#{list items:disabledDegMaj, as:'degMaj'}
+		#{if degMaj != null && degMaj.degree != null && degMaj.degree.length() > 0 && degMaj.major != null && degMaj.major.length() > 0}
 	{
-		"degree": "${degree}",
-		"major": "${disabledDegMaj.get(degree)}"
+		"degree": "${degMaj.degree}",
+		"major": "${degMaj.major}"
 	},
 		#{/if}
 	#{/list}
