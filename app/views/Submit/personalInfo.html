@@ -110,15 +110,6 @@ jQuery(document).ready(function() {
 	jQuery('#checkMajor-modal').modal({
 		'show': false
  	});
-	
-	jQuery("#checkMajor-abandon").live("click", function() {
-		if (jQuery(this).text().indexOf("Are you sure?") >= 0) {
-			return true;
-		} else {
-			jQuery(this).text("Are you sure?");
-			return false;
-		}
-	});
 });
 
 function onMajorChange(){
@@ -494,12 +485,9 @@ function abandonSub(){
 		</ul>
 		<table id="checkMajor-submission-table" class="table table-striped table-bordered table-condensed">
 			<caption>
-				<h4>
-					<p class="center red">You've already submitted an ETD for this degree/major combination!</p>
-				</h4>
 				<h5>
 					<div id="checkMajor-wrap" class="alert alert-danger">
-						<p>If you are providing edits or revisions to an existing submission you should continue with the submission and not start a new one.</p>
+						<p>If you have a document which Needs Corrections, return to Submission History  and click Edit next to your submission.</p>
 					</div>
 				</h5>
 			</caption>
@@ -511,6 +499,6 @@ function abandonSub(){
 	</div>
 	<div class="modal-footer">
 		<a id="checkMajor-cancel" href="javascript:void(0);" class="btn" data-dismiss="modal"><span>Cancel<br/>(Select a Different Degree/Major)</span></a>
-		<a id="checkMajor-abandon" href="@{Student.submissionDelete(subId)}" class="btn btn-primary"><span>Abandon this submission<br/>(Go Back to Submission History)</span></a>
+		<a id="checkMajor-abandon" href="@{Student.submissionDelete(subId)}" class="btn btn-primary"><span>I need to edit my submission<br/>(Go back to Submission History)</span></a>
 	</div>
 </div>

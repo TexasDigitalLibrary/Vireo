@@ -381,6 +381,8 @@ public class PersonalInfo extends AbstractSubmitStep {
 			    	DegMaj myObj = (DegMaj)obj;
 			    	if(this.degree != null && this.degree.equals(myObj.degree) && this.major != null && this.major.equals(myObj.major)) {
 			    		return true;
+			    	} else if (this.degree == myObj.degree && this.major == myObj.major) {
+			    		return true;
 			    	}
 			    }
 			    return false;
