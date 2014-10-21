@@ -379,7 +379,7 @@ public class PersonalInfo extends AbstractSubmitStep {
 			public boolean equals(Object obj) {
 			    if(obj instanceof DegMaj) {
 			    	DegMaj myObj = (DegMaj)obj;
-			    	if(this.degree.equals(myObj.degree) && this.major.equals(myObj.major)) {
+			    	if(this.degree != null && this.degree.equals(myObj.degree) && this.major != null && this.major.equals(myObj.major)) {
 			    		return true;
 			    	}
 			    }
@@ -392,7 +392,9 @@ public class PersonalInfo extends AbstractSubmitStep {
 			temp.degree = submission.getDegree(); 
 			temp.major = submission.getMajor();
 			// only add it if it's not already in the list and if it's not the one for the current submission
-			if(!disabledDegMaj.contains(temp) && !(sub.getDegree().equals(temp.degree) && sub.getMajor().equals(temp.major))) {
+			if(!disabledDegMaj.contains(temp) && (sub.getDegree() != null && sub.getMajor() != null) && !(sub.getDegree().equals(temp.degree) && sub.getMajor().equals(temp.major))) {
+				disabledDegMaj.add(temp);
+			} else if (!disabledDegMaj.contains(temp) && (sub.getDegree() == null || sub.getMajor() == null)) {
 				disabledDegMaj.add(temp);
 			}
 		}
