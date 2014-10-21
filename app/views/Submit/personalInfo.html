@@ -123,15 +123,20 @@ function onMajorChange(){
 }
 
 function checkMajorsForSelectedDegree(){
+	resetDisabledMajors();
 	jQuery("#major option").each(function(index, element){
 		jQuery.each(disabledDegMaj, function(indexInArray, value) {
 			var degreeSelectedOption = $("#degree option:selected").text();
 			if(element.text == value.major && degreeSelectedOption == value.degree) {
 				$(element).addClass("major-used");
-			} else {
-				$(element).removeClass("major-used");
 			}
     	});
+	});
+}
+
+function resetDisabledMajors() {
+	jQuery("#major option").each(function(index, element){
+		$(element).removeClass("major-used");
 	});
 }
 
