@@ -150,8 +150,15 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 
 		
 		Response response = GET(LIST_URL);
-		assertEquals(PERSONAL_INFO_URL,response.getHeader("Location"));
+		assertContentMatch(">Start a new submission</a>",response);
 		response = GET(PERSONAL_INFO_URL);
+		assertNotNull(response.getHeader("Location"));
+		int lastSlash = response.getHeader("Location").indexOf('/', 8);
+		String part1 = response.getHeader("Location").substring(0, 8);
+		String part2 = response.getHeader("Location").substring(lastSlash, response.getHeader("Location").length());
+		assertEquals("/submit/", part1);
+		assertEquals("/personalInfo", part2);
+		response = GET(response.getHeader("Location"));
 		assertContentMatch("<title>Vireo Thesis and Dissertaion Submital System - Submission - Verify Your Information</title>",response);
 	}
 
@@ -226,7 +233,7 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 
 		
 		Response response = GET(LIST_URL);
-		assertEquals(VIEW_URL,response.getHeader("Location"));
+		assertContentMatch("You've already submitted an ETD or have one in progress!", response);
 		response = GET(VIEW_URL);
 		assertContentMatch("<title>View Application</title>",response);	
 	}
@@ -234,7 +241,7 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 	/**
 	 * Test that when submissons are open, and multiple submissions are
 	 * disallowed, and the student has an archived submission that they
-	 * are able to submit a new submission.
+	 * are NOT able to submit a new submission.
 	 */
 	@Test
 	public void testOpenAndNoMultipleWithOneArchivedSubmission() {
@@ -271,14 +278,15 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 
 	
 		response = GET(NEW_URL);
-		assertContentMatch("<title>Vireo Thesis and Dissertaion Submital System - Submission - Verify Your Information</title>",response);
+		assertNull(response.getHeader("Location"));
+		assertContentMatch("<h1>Multiple submissions are not allowed, and the submitter already has another submission.</h1>",response);
 		
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();
 		JPA.em().getTransaction().begin();
 		
 		List<Submission> found = subRepo.findSubmission(submitter);
-		assertEquals(2,found.size());
+		assertEquals(1,found.size());
 		subs.addAll(found);
 		
 	}
@@ -287,9 +295,9 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 	 * Test that if a student has an archived submission they can see the list page to start another submission.
 	 */
 	@Test
-	public void testOpenAndMultipleArchivedSubmission() {
+	public void testOpenAndMultipleWithOneArchivedSubmission() {
 		
-		configure(true,false);
+		configure(true,true);
 		
 		Submission sub = subRepo.createSubmission(submitter);
 		sub.setState(sub.getState().getTransitions(sub).get(0));
@@ -314,7 +322,6 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 		assertIsOk(response);
 		assertContentMatch("<title>Submission Status</title>",response);
 		assertContentMatch(">Start a new submission</a>",response);
-		
 	}
 
 	/**
@@ -347,7 +354,7 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 
 	/**
 	 * Test that when submissions are closed, and multiple submissions are
-	 * disallowed, and the user has one submission that the view page is shown.
+	 * disallowed, and the user has one submission that the view page can be shown.
 	 */
 	@Test
 	public void testClosedAndNoMultipleWithOneSubmission() {
@@ -372,7 +379,7 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 
 		
 		Response response = GET(LIST_URL);
-		assertEquals(VIEW_URL,response.getHeader("Location"));
+		assertContentMatch("The system is currently closed for new submissions; please contact your thesis office for more information.", response);
 		response = GET(VIEW_URL);
 		assertContentMatch("<title>View Application</title>",response);
 	}
