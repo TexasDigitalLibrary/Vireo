@@ -922,7 +922,7 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 			
 			Response response = GET(LIST_URL);
 			// Check that we have at least some submissions
-			assertContentMatch("<a href=\"/admin/view\\?subId=\\d+\">\\d+</a>",response);
+			assertContentMatch("<a href=\"/admin/view/\\d+\">\\d+</a>",response);
 			
 			
 			// Change the filter status
@@ -931,7 +931,7 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 			
 			response = GET(LIST_URL);
 			// Check that our pagination was switched so that we show at least some records.
-			assertContentMatch("<a href=\"/admin/view\\?subId=\\d+\">\\d+</a>",response);
+			assertContentMatch("<a href=\"/admin/view/\\d+\">\\d+</a>",response);
 			
 		}
 

@@ -124,7 +124,7 @@
 	</div>
         
 	<div class="modal-body">
-		<form id="add-comment-form" action="@{ViewTab.view()}" method="POST" class="form-horizontal" enctype="multipart/form-data"> 
+		<form id="add-comment-form" action="@{ViewTab.view(submission.getId())}" method="POST" class="form-horizontal" enctype="multipart/form-data"> 
             <ul class="unstyled">
             	<li>
             		Subject:<br />
@@ -209,7 +209,7 @@
 	</div>
         
 	<div class="modal-body">
-		<form id="add-file-form" action="@{ViewTab.view()}" method="POST" class="form-horizontal" enctype="multipart/form-data">
+		<form id="add-file-form" action="@{ViewTab.view(submission.getId())}" method="POST" class="form-horizontal" enctype="multipart/form-data">
 			<ul class="unstyled">				
 				<li><input type="radio" class="radio" name="uploadType" value="primary"> Replace the primary document</input>
 					<ul class="unstyled fileContainer" style="padding-left:15px; display:none;">
@@ -293,7 +293,7 @@
 	</div>
         
 	<div class="modal-body">
-		<form id="add-file-form" action="@{ViewTab.view()}" method="POST" class="form-horizontal" enctype="multipart/form-data">
+		<form id="add-file-form" action="@{ViewTab.view(submission.getId())}" method="POST" class="form-horizontal" enctype="multipart/form-data">
 			<input type="hidden" name="attachmentId" value="${attachment.getId()}" />
 			#{if !attachment.getType().toString().equals("PRIMARY")}
 			<ul class="unstyled">

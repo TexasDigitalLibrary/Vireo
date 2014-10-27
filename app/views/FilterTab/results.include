@@ -74,7 +74,7 @@ in results.
 	             }
              }
            
-             out.print("<a href=\""+viewTabUrl+"?subId="+sub.getId()+"\">");
+             out.print("<a href=\""+viewTabUrl+"/"+sub.getId()+"\">");
 
              switch (column) {
                  case ID:

@@ -33,6 +33,12 @@
 		    <p>Your filter has been reset.</p>
 	    </div>
 	    #{/if}
+	    #{if flash.get("noSubmission") != null}
+	    <div class="alert alert-error">
+	    	<button class="close" data-dismiss="alert" type="button">×</button>
+		    <p><strong>Oops, an error occurred: </strong> ${flash.get("noSubmission")}</p>
+		</div>
+	    #{/if}
 	
 		<h1>List ETDs</h1>
 		

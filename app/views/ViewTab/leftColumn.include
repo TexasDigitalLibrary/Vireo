@@ -5,9 +5,9 @@
 	</div>
 	<div class="box-body">
 		#{if submission.getPrimaryDocument()}
-			<img class="pull-left" src="../public/images/pdf-logo.gif" />
+			<img class="pull-left" src="@{'/public/images/pdf-logo.gif'}" />
 			<p>${submission.getPrimaryDocument().getName()}<br />
-			<a href="@{ViewTab.viewFile(submission.getPrimaryDocument().getId(), submission.getPrimaryDocument().getName())}" target="_blank"><b>Download</b></a></p>
+			<a href="@{ViewTab.viewFile(submission.getId(), submission.getPrimaryDocument().getId(), submission.getPrimaryDocument().getName())}" target="_blank"><b>Download</b></a></p>
 			<div class="clear"></div>
 		#{/if}#{else}
 			<p>none</p>
