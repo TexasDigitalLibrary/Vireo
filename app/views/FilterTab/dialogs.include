@@ -107,7 +107,7 @@ jQuery(document).ready(function() {
     });
     
     // Batch Update Status dialog box
-    jQuery("#state").click(function() {
+    jQuery("#state").change(function() {
     
         // Toggle the deposit location field display
         if (jQuery("#state option:selected").hasClass("ask-for-depositLocation") && jQuery("#ask-for-depositLocation-group").is(":hidden")) {

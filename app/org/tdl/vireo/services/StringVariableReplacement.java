@@ -94,6 +94,11 @@ public class StringVariableReplacement {
 			parameters.put("ADVISOR_URL", advisorAction.url);
 		}
 		
+		//Deposit ID
+		String depositID = "No deposit ID found!"; 
+		if(sub.getDepositId() != null) depositID = sub.getDepositId();
+	    parameters.put("DEPOSIT_URI", depositID);
+		
 		parameters.put("SEPARATOR", File.separator);
 		
 		return parameters;
