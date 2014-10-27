@@ -121,12 +121,16 @@ public class SystemEmailTemplateServiceImplTest extends UnitTest {
 		List<String> names = systemEmailService.getAllSystemEmailTemplateNames();
 		
 		assertNotNull(names);
+		assertTrue(names.contains("SYSTEM Advisor Review Request"));
+		assertTrue(names.contains("SYSTEM Deposit Notification"));
+		assertTrue(names.contains("SYSTEM Email Test"));
+		assertTrue(names.contains("SYSTEM Initial Submission"));
+		assertTrue(names.contains("SYSTEM Needs Corrections"));
 		assertTrue(names.contains("SYSTEM New User Registration"));
 		assertTrue(names.contains("SYSTEM Verify Email Address"));
-		assertTrue(names.contains("SYSTEM Email Test"));
-
+		
 		// There may be more added in the future.
-		assertTrue(names.size() >= 3);
+		assertTrue(names.size() >= 7);
 
 	}
 	
