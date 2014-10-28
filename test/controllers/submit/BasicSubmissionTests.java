@@ -44,7 +44,7 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 	 * Test that there is not an endless redirect bug when submissions are closed and a student has a submission in progress. This condition only occurs when multiple submissions are turned off.
 	 */
 	@Test
-	public void testVIERO90() throws IOException, InterruptedException {    
+	public void testVIREO90() throws IOException, InterruptedException {    
 
 		// Turn off any of the extra parameters
 		enableFields(FieldConfig.values());
@@ -76,13 +76,14 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 		// View the homepage
 		Response response = GET(INDEX_URL);
 		assertIsOk(response);
-		assertContentMatch("Start your submission",response); // the start button is there.
+		assertContentMatch("The system is currently closed for new submissions; please contact your thesis office for more information.<br/><br/>If you need to make corrections, please click on <a href=\"/submit\">Submission History</a>.",response); // the start button is there.
 		assertContentMatch(LIST_URL,response); // and it's url.
 
+		// View submission history
 		response = GET(LIST_URL);
 		assertIsOk(response);
 		// There should be a message telling the user that submissions are closed.
-		assertContentMatch("Submissions are currently closed",response);
+		assertContentMatch("The system is currently closed for new submissions; please contact your thesis office for more information.",response);
 		assertContentMatch("This submission was not completed by the deadline. Please contact the thesis office.",response);
 		
 		// There should be no edit links.
@@ -115,17 +116,12 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 		// Get our URLs
 		final String INDEX_URL = Router.reverse("Application.index").url;
 		final String LIST_URL = Router.reverse("Student.submissionList").url;
-		final String PERSONAL_INFO_URL = Router.reverse("submit.PersonalInfo.personalInfo").url;
-
 
 		// View the homepage
 		Response response = GET(INDEX_URL);
 		assertIsOk(response);
 		assertContentMatch("Start your submission",response); // the start button is there.
 		assertContentMatch(LIST_URL,response); // and it's url.
-
-		response = GET(LIST_URL);
-		assertEquals(PERSONAL_INFO_URL,response.getHeader("Location"));
 
 		// PersonalInfo step
 		personalInfo(
@@ -212,17 +208,12 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 		// Get our URLs
 		final String INDEX_URL = Router.reverse("Application.index").url;
 		final String LIST_URL = Router.reverse("Student.submissionList").url;
-		final String PERSONAL_INFO_URL = Router.reverse("submit.PersonalInfo.personalInfo").url;
 
 		// View the homepage
 		Response response = GET(INDEX_URL);
 		assertIsOk(response);
 		assertContentMatch("Start your submission",response); // the start button is there.
 		assertContentMatch(LIST_URL,response); // and it's url.
-
-		response = GET(LIST_URL);
-		assertEquals(PERSONAL_INFO_URL,response.getHeader("Location"));
-
 
 		// PersonalInfo step
 		personalInfo(
@@ -339,18 +330,13 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 		// Get our URLs
 		final String INDEX_URL = Router.reverse("Application.index").url;
 		final String LIST_URL = Router.reverse("Student.submissionList").url;
-		final String PERSONAL_INFO_URL = Router.reverse("submit.PersonalInfo.personalInfo").url;
-
 
 		// View the homepage
 		Response response = GET(INDEX_URL);
 		assertIsOk(response);
 		assertContentMatch("Start your submission",response); // the start button is there.
 		assertContentMatch(LIST_URL,response); // and it's url.
-
-		response = GET(LIST_URL);
-		assertEquals(PERSONAL_INFO_URL,response.getHeader("Location"));
-
+		
 		// PersonalInfo step
 		personalInfo(
 				null, // firstName
@@ -567,17 +553,12 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 		// Get our URLs
 		final String INDEX_URL = Router.reverse("Application.index").url;
 		final String LIST_URL = Router.reverse("Student.submissionList").url;
-		final String PERSONAL_INFO_URL = Router.reverse("submit.PersonalInfo.personalInfo").url;
-
 
 		// View the homepage
 		Response response = GET(INDEX_URL);
 		assertIsOk(response);
 		assertContentMatch("Start your submission",response); // the start button is there.
 		assertContentMatch(LIST_URL,response); // and it's url.
-
-		response = GET(LIST_URL);
-		assertEquals(PERSONAL_INFO_URL,response.getHeader("Location"));
 
 		// PersonalInfo step
 		personalInfo(
@@ -700,17 +681,12 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 		// Get our URLs
 		final String INDEX_URL = Router.reverse("Application.index").url;
 		final String LIST_URL = Router.reverse("Student.submissionList").url;
-		final String PERSONAL_INFO_URL = Router.reverse("submit.PersonalInfo.personalInfo").url;
-
 
 		// View the homepage
 		Response response = GET(INDEX_URL);
 		assertIsOk(response);
 		assertContentMatch("Start your submission",response); // the start button is there.
 		assertContentMatch(LIST_URL,response); // and it's url.
-
-		response = GET(LIST_URL);
-		assertEquals(PERSONAL_INFO_URL,response.getHeader("Location"));
 
 		// PersonalInfo step
 		personalInfo(
@@ -785,17 +761,12 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 		// Get our URLs
 		final String INDEX_URL = Router.reverse("Application.index").url;
 		final String LIST_URL = Router.reverse("Student.submissionList").url;
-		final String PERSONAL_INFO_URL = Router.reverse("submit.PersonalInfo.personalInfo").url;
-
 
 		// View the homepage
 		Response response = GET(INDEX_URL);
 		assertIsOk(response);
 		assertContentMatch("Start your submission",response); // the start button is there.
 		assertContentMatch(LIST_URL,response); // and it's url.
-
-		response = GET(LIST_URL);
-		assertEquals(PERSONAL_INFO_URL,response.getHeader("Location"));
 
 		// PersonalInfo step
 		personalInfo(
