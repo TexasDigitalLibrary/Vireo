@@ -263,6 +263,14 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 		
 		// Get the form without posting any data first
 		Response response = GET(PERSONAL_INFO_URL);
+		assertNotNull(response.getHeader("Location"));
+		int lastSlash = response.getHeader("Location").indexOf('/', 8);
+		String part1 = response.getHeader("Location").substring(0, 8);
+		String part2 = response.getHeader("Location").substring(lastSlash, response.getHeader("Location").length());
+		assertEquals("/submit/", part1);
+		assertEquals("/personalInfo", part2);
+		response = GET(response.getHeader("Location"));
+		
 		assertIsOk(response);
 		assertContentMatch("Verify Your Information",response);
 		
