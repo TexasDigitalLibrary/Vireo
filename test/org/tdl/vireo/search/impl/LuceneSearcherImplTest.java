@@ -158,7 +158,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 				"documentType", 2002, 5, true);
 		sub1.setAssignee(otherPerson);
 		sub1.setSubmissionDate(new Date(2012,5,1));
-		sub1.setEmbargoType(embargo2);
+		sub1.addEmbargoType(embargo2);
 		sub1.setState(sub1.getState().getTransitions(sub1).get(0));
 		sub1.save();
 		
@@ -167,7 +167,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 				"anotherCommittee@email.com", "another", "another", "another", "another", "another",
 				"another", 2003, 6, null);
 		sub2.setSubmissionDate(new Date(2005,5,1));
-		sub2.setEmbargoType(embargo1);
+		sub2.addEmbargoType(embargo1);
 		sub2.save();
 				
 		// Save our new submissions and add them to the index.
@@ -408,7 +408,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 		sub1.setDocumentLanguage("ak");
 		sub1.addDocumentSubject("BBB");
 		sub1.setPublishedMaterial("BBB");
-		sub1.setEmbargoType(e1);
+		sub1.addEmbargoType(e1);
 		sub1.setDocumentType("ZZZZ");
 		sub1.addAttachment(file1, AttachmentType.SUPPLEMENTAL);
 		sub1.addCommitteeMember("BBBB", "BBBB", "a");
@@ -436,7 +436,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 		sub2.addDocumentSubject("AAA");
 		sub2.setPublishedMaterial("AAA");
 		sub2.setAssignee(person);
-		sub2.setEmbargoType(e2);
+		sub2.addEmbargoType(e2);
 		sub2.setDocumentType("AAAA");
 		sub2.addAttachment(file2, AttachmentType.PRIMARY);
 		sub2.addAttachment(file1, AttachmentType.SUPPLEMENTAL);
@@ -704,7 +704,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 				"documentType", 2002, 5, true);
 		sub1.setAssignee(otherPerson);
 		sub1.setSubmissionDate(new Date(2012,5,1));
-		sub1.setEmbargoType(embargo2);
+		sub1.addEmbargoType(embargo2);
 		sub1.save();
 		
 		Submission sub2 = subRepo.createSubmission(person);
@@ -712,7 +712,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 				"anotherCommittee@email.com", "another", "another", "another", "another", "another",
 				"another", 2003, 6, null);
 		sub2.setSubmissionDate(new Date(2005,5,1));
-		sub2.setEmbargoType(embargo1);
+		sub2.addEmbargoType(embargo1);
 		sub2.setAssignee(otherPerson);
 		sub2.save();
 		

@@ -25,6 +25,7 @@ import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.CommitteeMember;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.Department;
+import org.tdl.vireo.model.EmbargoGuarantor;
 import org.tdl.vireo.model.Major;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
@@ -44,7 +45,6 @@ import play.modules.spring.Spring;
 import play.mvc.Http.Response;
 import play.mvc.Router;
 import controllers.AbstractVireoFunctionalTest;
-
 import static org.tdl.vireo.constant.AppConfig.*;
 
 
@@ -585,7 +585,7 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 		if (publishedMaterial != null)
 			assertEquals(publishedMaterial, sub.getPublishedMaterial());
 		if (embargo != null)
-			assertEquals(Long.valueOf(embargo), sub.getEmbargoType().getId());		
+			assertEquals(Long.valueOf(embargo), sub.getEmbargoTypeByGuarantor(EmbargoGuarantor.DEFAULT).getId());		
 		
 		assertEquals(committee.size(), sub.getCommitteeMembers().size());
 	}

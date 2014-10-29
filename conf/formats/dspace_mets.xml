@@ -187,14 +187,14 @@
                     
                     
                     <!-- local.embargo.terms, lift, and embargo provenance-->
-                    #{if sub.getEmbargoType() != null } 
+                    #{if sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT) != null } 
                     
-                    #{if sub.getEmbargoType().getDuration() == null } 
+                    #{if sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT).getDuration() == null } 
                     <dim:field mdschema="dc" element="description" qualifier="provenance">
-                        Submission original under an indefinite embargo labeled '${ sub.getEmbargoType().getName()?.escapeXml()?.raw() }'. The submission was deposited into a repository on ${ new java.util.Date().format("yyyy-MM-dd") } without embargo terms
+                        Submission original under an indefinite embargo labeled '${ sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT).getName()?.escapeXml()?.raw() }'. The submission was deposited into a repository on ${ new java.util.Date().format("yyyy-MM-dd") } without embargo terms
                     </dim:field>
                     #{/if} 
-                    #{elseif sub.getEmbargoType().getDuration() != 0 } 
+                    #{elseif sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT).getDuration() != 0 } 
                     %{
                         // Calculate the embargo lift date.
                         java.util.Calendar cal = java.util.Calendar.getInstance();
@@ -206,7 +206,7 @@
                                 cal.set(java.util.Calendar.MONTH,sub.getGraduationMonth());
                         }
                         
-                        cal.add(java.util.Calendar.MONTH, sub.getEmbargoType().getDuration());
+                        cal.add(java.util.Calendar.MONTH, sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT).getDuration());
                         java.util.Date liftDate = cal.getTime();
                     }%
 	                    #{if liftDate.after(new Date())} 
@@ -218,12 +218,12 @@
 	                    </dim:field>
 	                    #{/if}
                     <dim:field mdschema="dc" element="description" qualifier="provenance">
-                        Submission published under a ${sub.getEmbargoType().getDuration() } month embargo labeled '${ sub.getEmbargoType().getName()?.escapeXml()?.raw() }', the embargo will last until ${ liftDate.format("yyyy-MM-dd") }
+                        Submission published under a ${sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT).getDuration() } month embargo labeled '${ sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT).getName()?.escapeXml()?.raw() }', the embargo will last until ${ liftDate.format("yyyy-MM-dd") }
                     </dim:field>
                     #{/elseif} 
                     #{else} 
                     <dim:field mdschema="dc" element="description" qualifier="provenance">
-                        Submission original under the a zero month embargo labeled '${ sub.getEmbargoType().getName()?.escapeXml()?.raw() }'.
+                        Submission original under the a zero month embargo labeled '${ sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT).getName()?.escapeXml()?.raw() }'.
                     </dim:field>
                     #{/else}
 

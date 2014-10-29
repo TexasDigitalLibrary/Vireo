@@ -858,7 +858,7 @@ public class TestDataLoader extends Job {
 					sub.setOrcid(student.getOrcid());
 				
 				if (random.nextInt(100) > 5)
-					sub.setEmbargoType(embargos.get(random.nextInt(embargos.size()-1)));
+					sub.addEmbargoType(embargos.get(random.nextInt(embargos.size()-1)));
 				
 				int members = random.nextInt(5);
 				String[] firstMemberName = null;

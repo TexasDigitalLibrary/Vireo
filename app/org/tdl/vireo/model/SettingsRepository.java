@@ -360,7 +360,10 @@ public interface SettingsRepository {
 	 * @return A new embargo type.
 	 */
 	public EmbargoType createEmbargoType(String name, String description,
-			Integer duration, boolean active );
+			Integer duration, boolean active);
+	
+	public EmbargoType createEmbargoType(String name, String description,
+			Integer duration, boolean active, EmbargoGuarantor guarantor);
 
 	/**
 	 * Find embargo type by id.

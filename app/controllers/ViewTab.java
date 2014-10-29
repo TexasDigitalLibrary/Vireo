@@ -34,6 +34,8 @@ import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.EmailTemplate;
+import org.tdl.vireo.model.EmbargoGuarantor;
+import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
@@ -316,9 +318,10 @@ public class ViewTab extends AbstractVireoController {
 				currentValue = submission.getDocumentTitle();
 
 				//Embargo
-			} else if("embargo".equals(field)){			
-				submission.setEmbargoType(settingRepo.findEmbargoType(Long.parseLong(value)));
-				currentValue = submission.getEmbargoType().getName();
+			} else if("embargo".equals(field)){	
+				EmbargoType embargo = settingRepo.findEmbargoType(Long.parseLong(value));
+				submission.addEmbargoType(embargo);
+				currentValue = submission.getEmbargoTypeByGuarantor(EmbargoGuarantor.DEFAULT).getName();
 
 				//UMI Release
 			} else if("umiRelease".equals(field)){

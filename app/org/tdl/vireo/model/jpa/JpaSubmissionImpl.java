@@ -16,6 +16,9 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -36,6 +39,7 @@ import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.Department;
+import org.tdl.vireo.model.EmbargoGuarantor;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
@@ -91,9 +95,10 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@Column(length=326768) // 2^15
 	public String publishedMaterial;
 
-	@OneToOne(targetEntity = JpaEmbargoTypeImpl.class)
-	public EmbargoType embargoType;
-
+	@ManyToMany(targetEntity = JpaEmbargoTypeImpl.class,
+			cascade = CascadeType.ALL)
+	public List<EmbargoType> embargoTypes;
+	
 	@OneToMany(targetEntity = JpaAttachmentImpl.class, mappedBy = "submission", cascade = CascadeType.ALL)
 	public List<Attachment> attachments;
 
@@ -205,6 +210,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		
 		this.submitter = submitter;
 		this.documentSubjects = new ArrayList<String>();
+		this.embargoTypes = new ArrayList<EmbargoType>();
 		this.attachments = new ArrayList<Attachment>();
 		this.committeeMembers = new ArrayList<CommitteeMember>();
 		this.customActions = new ArrayList<CustomActionValue>();
@@ -289,7 +295,9 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 					"WHERE Submission_Id = ? " 
 			).setParameter(1, this.getId())
 			.executeUpdate();
-
+		
+		embargoTypes.clear();
+		
 		return super.delete();
 	}
 	
@@ -299,8 +307,10 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		submitter.detach();
 		if (assignee != null)
 			assignee.detach();
-		if (embargoType != null)
-			embargoType.detach();
+//		if (embargoTypes != null) {
+//			for (EmbargoType embargoType : embargoTypes)
+//				embargoType.detach();
+//		}
 		return super.detach();
 	}
 
@@ -530,19 +540,36 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	
 	
 	@Override
-	public EmbargoType getEmbargoType() {
-		return embargoType;
+	public List<EmbargoType> getEmbargoTypes() {
+		return embargoTypes;
 	}
 
 	@Override
-	public void setEmbargoType(EmbargoType embargo) {
+	public void addEmbargoType(EmbargoType embargo) {
 		
 		assertReviewerOrOwner(submitter);
 		
-		if (!equals(this.embargoType,embargo)) {
-			this.embargoType = embargo;
-			generateChangeLog("Embargo type",embargo.getName(), false);
+		if (!this.embargoTypes.contains(embargo)) {
+			List<EmbargoType> temp = new ArrayList(embargoTypes);
+			for(EmbargoType embargoType : temp) {
+				if(embargoType.getGuarantor()==embargo.getGuarantor())
+					embargoTypes.remove(embargoType);
+			}
+			this.embargoTypes.add(embargo);
+			generateChangeLog("Embargo type",embargo.getName()+"("+embargo.getGuarantor()+")", false);
 		}
+	}
+	
+	@Override
+	public EmbargoType getEmbargoTypeByGuarantor(EmbargoGuarantor guarantor) {
+		if(embargoTypes.size()>0) {
+			for(EmbargoType embargo : embargoTypes) {
+				if(embargo.getGuarantor()==guarantor)
+					return embargo;
+			}
+		}
+		
+		return null;
 	}
 
 	@Override

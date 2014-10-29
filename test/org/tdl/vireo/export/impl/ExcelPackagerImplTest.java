@@ -98,14 +98,14 @@ public class ExcelPackagerImplTest extends UnitTest {
         createSubmission(sub1, "B Title", "This is really important work", "One; Two; Three;", "committee@email.com", "degree", "department", "program", "college", "major", "documentType", 2002, 5, true);
         sub1.setAssignee(otherPerson);
         sub1.setSubmissionDate(new Date(2012, 5, 1));
-        sub1.setEmbargoType(embargo2);
+        sub1.addEmbargoType(embargo2);
         sub1.setState(sub1.getState().getTransitions(sub1).get(0));
         sub1.save();
 
         Submission sub2 = subRepo.createSubmission(person);
         createSubmission(sub2, "A Title", "I really like this work", "One; Four; Five;", "anotherCommittee@email.com", "another", "another", "another", "another", "another", "another", 2003, 6, null);
         sub2.setSubmissionDate(new Date(2005, 5, 1));
-        sub2.setEmbargoType(embargo1);
+        sub2.addEmbargoType(embargo1);
         sub2.save();
 
         // Save our new submissions and add them to the index.
@@ -149,10 +149,10 @@ public class ExcelPackagerImplTest extends UnitTest {
 
         } finally {
             filter.delete();
-            subRepo.findSubmission(sub1.getId()).delete();
-            subRepo.findSubmission(sub2.getId()).delete();
             settingRepo.findEmbargoType(embargo1.getId()).delete();
             settingRepo.findEmbargoType(embargo2.getId()).delete();
+            subRepo.findSubmission(sub1.getId()).delete();
+            subRepo.findSubmission(sub2.getId()).delete();
             personRepo.findPerson(otherPerson.getId()).delete();
         }
     }

@@ -131,14 +131,14 @@ ${ attachment.getName() }	bundle:LICENSE
     #{/if}
     
     <!-- dc.description.proveance = Embargo Notes -->
-       #{if sub.getEmbargoType() != null } 
+       #{if sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT) != null } 
        
-       #{if sub.getEmbargoType().getDuration() == null } 
+       #{if sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT).getDuration() == null } 
        <dcvalue element="description" qualifier="provenance">
-           Submission original under an indefinite embargo labeled '${ sub.getEmbargoType().getName()?.escapeXml()?.raw() }'. The submission was exported from vireo on ${ new java.util.Date().format("yyyy-MM-dd") } without embargo terms
+           Submission original under an indefinite embargo labeled '${ sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT).getName()?.escapeXml()?.raw() }'. The submission was exported from vireo on ${ new java.util.Date().format("yyyy-MM-dd") } without embargo terms
        </dcvalue>
        #{/if} 
-       #{elseif sub.getEmbargoType().getDuration() != 0 } 
+       #{elseif sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT).getDuration() != 0 } 
        %{
            // Calculate the embargo lift date.
            java.util.Calendar cal = java.util.Calendar.getInstance();
@@ -150,16 +150,16 @@ ${ attachment.getName() }	bundle:LICENSE
                    cal.set(java.util.Calendar.MONTH,sub.getGraduationMonth());
            }
            
-           cal.add(java.util.Calendar.MONTH, sub.getEmbargoType().getDuration());
+           cal.add(java.util.Calendar.MONTH, sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT).getDuration());
            java.util.Date liftDate = cal.getTime();
        }% 
        <dcvalue element="description" qualifier="provenance">
-           Submission published under a ${sub.getEmbargoType().getDuration() } month embargo labeled '${ sub.getEmbargoType().getName()?.escapeXml()?.raw() }', the embargo will last until ${ liftDate.format("yyyy-MM-dd") }
+           Submission published under a ${sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT).getDuration() } month embargo labeled '${ sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT).getName()?.escapeXml()?.raw() }', the embargo will last until ${ liftDate.format("yyyy-MM-dd") }
        </dcvalue>
        #{/elseif} 
        #{else} 
        <dcvalue element="description" qualifier="provenance">
-           Submission originaly under the a zero month embargo labeled '${ sub.getEmbargoType().getName()?.escapeXml()?.raw() }'.
+           Submission originaly under the a zero month embargo labeled '${ sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT).getName()?.escapeXml()?.raw() }'.
        </dcvalue>
        #{/else}
 
@@ -252,7 +252,7 @@ ${ attachment.getName() }	bundle:LICENSE
 <?xml version="1.0" encoding="utf-8"?>
 <dublin_core schema="local">
 	<!-- local.embargo.terms and lift-->
-	#{if sub.getEmbargoType() != null && sub.getEmbargoType().getDuration() != null && sub.getEmbargoType().getDuration() != 0 } 
+	#{if sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT) != null && sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT).getDuration() != null && sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT).getDuration() != 0 } 
 	%{
 	    // Calculate the embargo lift date.
 	    java.util.Calendar cal = java.util.Calendar.getInstance();
@@ -264,7 +264,7 @@ ${ attachment.getName() }	bundle:LICENSE
 	            cal.set(java.util.Calendar.MONTH,sub.getGraduationMonth());
 	    }
 	    
-	    cal.add(java.util.Calendar.MONTH, sub.getEmbargoType().getDuration());
+	    cal.add(java.util.Calendar.MONTH, sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT).getDuration());
 	    java.util.Date liftDate = cal.getTime();
 	}% 
 	<dcvalue element="embargo" qualifier="terms">

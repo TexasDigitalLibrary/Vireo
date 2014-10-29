@@ -27,6 +27,7 @@ import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.CommitteeMember;
 import org.tdl.vireo.model.CustomActionValue;
+import org.tdl.vireo.model.EmbargoGuarantor;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.search.SearchOrder;
@@ -311,8 +312,8 @@ public class ExcelPackagerImpl extends AbstractExcelPackagerImpl {
 
             case EMBARGO_TYPE:
                 header.createCell(j).setCellValue("Embargo type");
-                if (sub.getEmbargoType() != null)
-                    row.createCell(j).setCellValue(sub.getEmbargoType().getName());
+                if (sub.getEmbargoTypeByGuarantor(EmbargoGuarantor.DEFAULT) != null)
+                    row.createCell(j).setCellValue(sub.getEmbargoTypeByGuarantor(EmbargoGuarantor.DEFAULT).getName());
                 j++;
                 break;
 

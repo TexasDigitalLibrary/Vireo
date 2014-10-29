@@ -349,7 +349,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		State state = stateManager.getState("InReview");
 		submission.setState(state);
 		EmbargoType embargo = settingRepo.findAllEmbargoTypes().get(0);
-		submission.setEmbargoType(embargo);
+		submission.addEmbargoType(embargo);
 		submission.save();
 		Long id = submission.getId();
 		

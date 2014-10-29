@@ -28,6 +28,7 @@ import org.tdl.vireo.model.CommitteeMember;
 import org.tdl.vireo.model.CommitteeMemberRoleType;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.DocumentType;
+import org.tdl.vireo.model.EmbargoGuarantor;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.Language;
@@ -37,9 +38,7 @@ import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.proquest.ProquestSubject;
 
 import play.Logger;
-
 import au.com.bytecode.opencsv.CSVReader;
-
 import controllers.Security;
 
 /**
@@ -186,7 +185,7 @@ public class DocumentInfo extends AbstractSubmitStep {
 			
 			if (isFieldEnabled(EMBARGO_TYPE)) {
 				try {
-					sub.setEmbargoType(settingRepo.findEmbargoType(Long.parseLong(embargo)));
+					sub.addEmbargoType(settingRepo.findEmbargoType(Long.parseLong(embargo)));
 				} catch (RuntimeException re){
 					if (isFieldRequired(EMBARGO_TYPE))
 						validation.addError("embargo", "Please select a valid embargo option");
@@ -251,8 +250,8 @@ public class DocumentInfo extends AbstractSubmitStep {
 			if (isFieldEnabled(PUBLISHED_MATERIAL))
 				publishedMaterial = sub.getPublishedMaterial();
 			
-			if (isFieldEnabled(EMBARGO_TYPE) && sub.getEmbargoType() != null)
-				embargo = sub.getEmbargoType().getId().toString();
+			if (isFieldEnabled(EMBARGO_TYPE) && sub.getEmbargoTypeByGuarantor(EmbargoGuarantor.DEFAULT) != null)
+				embargo = sub.getEmbargoTypeByGuarantor(EmbargoGuarantor.DEFAULT).getId().toString();
 		}
 		
 		// Verify the form if we are submitting or if jumping from the confirm step.
@@ -408,7 +407,7 @@ public class DocumentInfo extends AbstractSubmitStep {
 		}
 		
 		// Embargo
-		if (isFieldRequired(EMBARGO_TYPE) && sub.getEmbargoType() == null)
+		if (isFieldRequired(EMBARGO_TYPE) && sub.getEmbargoTypeByGuarantor(EmbargoGuarantor.DEFAULT) == null)
 			validation.addError("embargo", "Please choose an embargo option");
 
 		// Check if we've added any new errors. If so return false;

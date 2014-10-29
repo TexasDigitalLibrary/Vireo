@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
+import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.MockEmbargoType;
 import org.tdl.vireo.model.MockSubmission;
 import org.tdl.vireo.state.State;
@@ -100,14 +101,18 @@ public class StateImplTest extends UnitTest {
 		MockSubmission nullEmbargoedSub = new MockSubmission();
 		
 		// Normaly embargoed submission (12 months)
-		MockSubmission normalEmbargoedSub = new MockSubmission();
-		normalEmbargoedSub.embargoType = new MockEmbargoType();
-		normalEmbargoedSub.embargoType.duration = 12;
+		MockSubmission normalEmbargoedSub = new MockSubmission();		
+		normalEmbargoedSub.embargoTypes = new ArrayList<EmbargoType>();
+		MockEmbargoType normEmbargo = new MockEmbargoType();
+		normEmbargo.duration = 12;
+		normalEmbargoedSub.embargoTypes.add(normEmbargo);
 		
 		// Embargoe type set, but is duration zero. 
 		MockSubmission zeroEmbargoedSub = new MockSubmission();
-		zeroEmbargoedSub.embargoType = new MockEmbargoType();
-		zeroEmbargoedSub.embargoType.duration = 0;
+		zeroEmbargoedSub.embargoTypes = new ArrayList<EmbargoType>();
+		MockEmbargoType zeroEmbargo = new MockEmbargoType();
+		zeroEmbargo.duration = 0;
+		zeroEmbargoedSub.embargoTypes.add(zeroEmbargo);
 		
 		// Test an embargoed submission with two sets of transitions defined.
 		List<State> resultWhenEmbargoed = one.getTransitions(normalEmbargoedSub);

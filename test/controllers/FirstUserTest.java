@@ -20,6 +20,7 @@ import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmailWorkflowRule;
+import org.tdl.vireo.model.EmbargoGuarantor;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.Language;
@@ -176,6 +177,7 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 	public static class MockSettingsRepository implements SettingsRepository {
 
 		public static List<MockEmbargoType> mockEmbargos = new ArrayList<MockEmbargoType>();
+		public static List<MockEmbargoType> mockProQuestEmbargos = new ArrayList<MockEmbargoType>();
 		public static List<MockConfiguration> mockConfigs = new ArrayList<MockConfiguration>();
 		public static List<MockCommitteeMemberRoleType> mockRoleTypes = new ArrayList<MockCommitteeMemberRoleType>();
 
@@ -343,6 +345,22 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 			mockEmbargoType.description = description;
 			mockEmbargoType.duration = duration;
 			mockEmbargoType.active = active;
+			mockEmbargoType.guarantor = null;
+
+			mockEmbargos.add(mockEmbargoType);
+
+			return mockEmbargoType;
+		}
+		
+		@Override
+		public EmbargoType createEmbargoType(String name, String description, Integer duration, boolean active, EmbargoGuarantor guarantor) {
+
+			MockEmbargoType mockEmbargoType = new MockEmbargoType();
+			mockEmbargoType.name = name;
+			mockEmbargoType.description = description;
+			mockEmbargoType.duration = duration;
+			mockEmbargoType.active = active;
+			mockEmbargoType.guarantor = guarantor;
 
 			mockEmbargos.add(mockEmbargoType);
 
@@ -624,5 +642,6 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 	        // TODO Auto-generated method stub
 	        return null;
         }
+		
 	}
 }
