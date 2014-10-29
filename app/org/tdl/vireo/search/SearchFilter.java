@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.tdl.vireo.model.ActionLog;
+import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Submission;
@@ -342,6 +343,23 @@ public interface SearchFilter {
 	 *            The new end of the date range, may be null for infinite
 	 */
 	public void setDateRangeEnd(Date end);
+	
+	/**
+	 * @return The custom actions
+	 */
+	public List<CustomActionDefinition> getCustomActions();
+	
+	/**
+	 * @param customAction
+	 *            The custom action to add to the filter.
+	 */
+	public void addCustomAction(CustomActionDefinition customAction);
+
+	/**
+	 * @param customAction
+	 *            The custom action to remove from the filter.
+	 */
+	public void removeCustomAction(CustomActionDefinition customAction);
 	
 	/**
 	 * @return The list of columns associated with this SearchFilter

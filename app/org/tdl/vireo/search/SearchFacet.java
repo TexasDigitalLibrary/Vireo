@@ -23,7 +23,8 @@ public enum SearchFacet {
 	DOCUMENT_TYPE(11),
 	UMI_RELEASE(12),
 	DATE_CHOOSE(13),
-	DATE_RANGE(14);
+	DATE_RANGE(14),
+	CUSTOM_ACTIONS(15);
 	
 	// The id for this search facet.
 	private int id;

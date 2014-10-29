@@ -246,14 +246,21 @@ in results.
                      }
                      break;
                  case CUSTOM_ACTIONS:
-                     int actions = 0;
-                     for (org.tdl.vireo.model.CustomActionValue action : sub.getCustomActions()) {
-                        if (action.getValue()) {
-                            actions++;
-                        }
+                     String sActions = "";
+                     for (org.tdl.vireo.model.jpa.JpaCustomActionDefinitionImpl systemAction : actions) {
+                     	def found = false;
+	                    for (org.tdl.vireo.model.CustomActionValue subAction : sub.getCustomActions()) {
+	                    	if(systemAction.equals(subAction.getDefinition())) {
+	                    		sActions += "<input type=\"checkbox\" class=\"checkbox custom-action\" disabled=\"disabled\" checked=\"checked\"/> " + subAction.getDefinition().getLabel();
+	                    		found = true;
+	                    	}
+	                    }
+	                    if(!found){
+	                    	sActions += "<input type=\"checkbox\" class=\"checkbox custom-action\" disabled=\"disabled\"/> " + systemAction.getLabel();
+	                    }
+	                    sActions += "<br/>";
                      }
-                     if (actions > 0)
-                        out.print(actions);
+                     out.print(sActions);
                      break;
                  case DEPOSIT_ID:
                      if (sub.getDepositId() != null)

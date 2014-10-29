@@ -23,6 +23,7 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.model.ActionLog;
+import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.NamedSearchFilter;
 import org.tdl.vireo.model.Person;
@@ -169,6 +170,12 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	@Temporal(TemporalType.DATE)
 	public Date rangeEnd;
 	
+	@ElementCollection
+	@CollectionTable(
+			name="search_filter_customactions",
+			joinColumns=@JoinColumn(name="search_filter_id"))
+	public List<Long> customActionIds;
+	
 	/**
 	 * Construct a new Named Search Filter
 	 * 
@@ -205,6 +212,7 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 		this.majors = new ArrayList<String>();
 		this.documentTypes = new ArrayList<String>();
 		this.columns = new ArrayList<SearchOrder>();
+		this.customActionIds = new ArrayList<Long>();
 	}
 
 	/**
@@ -243,7 +251,7 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 			semesters.add(value);
 		}
 	}
-
+	
 	/**
 	 * After being loaded from the database update our cached copy of the
 	 * semester data structure and unassigned assignees.
@@ -319,8 +327,8 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	public List<Submission> getIncludedSubmissions() {
 		
 		List<Submission> result = new ArrayList<Submission>();
+		SubmissionRepository subRepo = Spring.getBeanOfType(SubmissionRepository.class);
 		for (Long id : includedSubmissionIds) {
-			SubmissionRepository subRepo = Spring.getBeanOfType(SubmissionRepository.class);
 			Submission sub = subRepo.findSubmission(id);
 			if (sub != null)
 				result.add(sub);
@@ -344,8 +352,8 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	public List<Submission> getExcludedSubmissions() {
 		
 		List<Submission> result = new ArrayList<Submission>();
+		SubmissionRepository subRepo = Spring.getBeanOfType(SubmissionRepository.class);
 		for (Long id : excludedSubmissionIds) {
-			SubmissionRepository subRepo = Spring.getBeanOfType(SubmissionRepository.class);
 			Submission sub = subRepo.findSubmission(id);
 			if (sub != null)
 				result.add(sub);
@@ -687,4 +695,27 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	public void setColumns(List<SearchOrder> columns) {
 		this.columns = columns;
 	}
+
+	@Override
+    public List<CustomActionDefinition> getCustomActions() {
+		List<CustomActionDefinition> result = new ArrayList<CustomActionDefinition>();
+		
+		SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
+		for (Long id : customActionIds) {
+			CustomActionDefinition customActionDefinition = settingRepo.findCustomActionDefinition(id);
+			if (customActionDefinition != null)
+				result.add(customActionDefinition);
+		}
+	    return result;
+    }
+
+	@Override
+    public void addCustomAction(CustomActionDefinition customAction) {
+		this.customActionIds.add(customAction.getId());
+    }
+
+	@Override
+    public void removeCustomAction(CustomActionDefinition customAction) {
+		this.customActionIds.remove(customAction.getId());
+    }
 }
