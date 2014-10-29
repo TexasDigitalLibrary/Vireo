@@ -24,6 +24,7 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.util.NumericUtils;
 import org.tdl.vireo.model.AbstractModel;
 import org.tdl.vireo.model.ActionLog;
+import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Submission;
@@ -521,6 +522,14 @@ public class LuceneSearcherImpl implements Searcher {
 			else
 				andQuery.add(NumericRangeQuery.newLongRange("lastEventTime", startTime, endTime, true,true),Occur.MUST);
 
+		}
+		// Custom Action Filter
+		if (filter.getCustomActions().size() > 0) {
+			BooleanQuery orQuery = new BooleanQuery();
+			for(CustomActionDefinition customAction : filter.getCustomActions()) {
+				orQuery.add(new TermQuery(new Term("customAction", customAction.getLabel())), Occur.SHOULD);
+			}			
+			andQuery.add(orQuery,Occur.MUST);
 		}
 	}
 	

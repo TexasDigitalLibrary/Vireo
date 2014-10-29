@@ -315,7 +315,10 @@ public class FilterTab extends AbstractVireoController {
 		renderArgs.put(SearchDirection.ASCENDING.name(), SearchDirection.ASCENDING);
 		renderArgs.put(SearchDirection.DESCENDING.name(), SearchDirection.DESCENDING);
 		
-		render(nav, allFilters, activeFilter, results, orderby, columns, facets, direction, resultsPerPage);
+		// get all the custom actions available in the system
+		List<CustomActionDefinition> actions = settingRepo.findAllCustomActionDefinition();
+		
+		render(nav, allFilters, activeFilter, results, orderby, columns, facets, direction, resultsPerPage, actions);
 	}
 	
 	/**
