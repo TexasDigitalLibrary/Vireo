@@ -1,6 +1,7 @@
 package org.tdl.vireo.model.jpa;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -103,7 +104,6 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 	@Override
 	public JpaEmbargoTypeImpl delete() {
 		assertManager();
-		Logger.info("Submission size: "+submissions.size());
 		
 		JpaSubmissionRepositoryImpl subRepo = Spring.getBeanOfType(JpaSubmissionRepositoryImpl.class);
 		// Tell the indexer about all the submissions that will be effected by
@@ -115,18 +115,21 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 //				Long.class);
 //		effectedQuery.setParameter("embargo", this);
 		List<Long> effectedIds = new ArrayList<Long>();
-		while(subRepo.findAllSubmissions().hasNext()) {
-			Submission sub = subRepo.findAllSubmissions().next();
-			effectedIds.add(sub.getId());
-			sub.getEmbargoTypes().remove(this);
+		Iterator<Submission> submissionsItr = subRepo.findAllSubmissions();
+		while(submissionsItr.hasNext()) {
+			Submission sub = submissionsItr.next();
+			
+			if(sub.getEmbargoTypes().contains(this)) {
+				effectedIds.add(sub.getId());
+				sub.getEmbargoTypes().remove(this);
+			}
+			
 		}
 		Logger.info("Indexer effected IDs: " + effectedIds.size());
 		Indexer indexer = Spring.getBeanOfType(Indexer.class);
-		indexer.updated(effectedIds);
+		indexer.updated(effectedIds);		
 		
-		submissions.clear();
-		
-			// Delete all values associated with this definition
+		// Delete all values associated with this definition
 //		em().createQuery(
 //			"UPDATE JpaSubmissionImpl AS sub "+
 //		    "SET sub.embargoType = null "+
