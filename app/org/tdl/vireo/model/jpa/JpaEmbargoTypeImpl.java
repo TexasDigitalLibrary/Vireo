@@ -10,11 +10,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.TypedQuery;
+import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.model.EmbargoGuarantor;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.search.Indexer;
+import org.tdl.vireo.state.StateManager;
 
 import play.Logger;
 import play.modules.spring.Spring;
@@ -25,7 +27,8 @@ import play.modules.spring.Spring;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 @Entity
-@Table(name = "embargo_type")
+@Table(name = "embargo_type",
+	uniqueConstraints = @UniqueConstraint(columnNames={"guarantor", "name"}))
 public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> implements EmbargoType {
 	
 	@ManyToMany(targetEntity=JpaSubmissionImpl.class, 
@@ -36,7 +39,7 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 	@Column(nullable = false)
 	public int displayOrder;
 	
-	@Column(nullable = false, unique = true, length=255)
+	@Column(nullable = false, length=255)
 	public String name;
 
 	@Column(nullable = false, length=32768) // 2^15
@@ -100,7 +103,9 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 	@Override
 	public JpaEmbargoTypeImpl delete() {
 		assertManager();
-
+		Logger.info("Submission size: "+submissions.size());
+		
+		JpaSubmissionRepositoryImpl subRepo = Spring.getBeanOfType(JpaSubmissionRepositoryImpl.class);
 		// Tell the indexer about all the submissions that will be effected by
 		// this deletion.
 //		TypedQuery<Long> effectedQuery = em().createQuery(
@@ -110,9 +115,10 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 //				Long.class);
 //		effectedQuery.setParameter("embargo", this);
 		List<Long> effectedIds = new ArrayList<Long>();
-		for(Submission sub : submissions) {
+		while(subRepo.findAllSubmissions().hasNext()) {
+			Submission sub = subRepo.findAllSubmissions().next();
 			effectedIds.add(sub.getId());
-			//sub.getEmbargoTypes().remove(this);
+			sub.getEmbargoTypes().remove(this);
 		}
 		Logger.info("Indexer effected IDs: " + effectedIds.size());
 		Indexer indexer = Spring.getBeanOfType(Indexer.class);
