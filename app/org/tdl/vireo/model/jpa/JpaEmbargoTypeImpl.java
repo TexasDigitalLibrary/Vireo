@@ -4,20 +4,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.TypedQuery;
-import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.model.EmbargoGuarantor;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.search.Indexer;
-import org.tdl.vireo.state.StateManager;
 
 import play.Logger;
 import play.modules.spring.Spring;
@@ -28,19 +23,16 @@ import play.modules.spring.Spring;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 @Entity
-@Table(name = "embargo_type",
-	uniqueConstraints = @UniqueConstraint(columnNames={"guarantor", "name"}))
+@Table(name = "embargo_type")
 public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> implements EmbargoType {
 	
-	@ManyToMany(targetEntity=JpaSubmissionImpl.class, 
-			cascade = CascadeType.ALL,
-			mappedBy = "embargoTypes")
-	public List<Submission> submissions;
+//	@OneToMany(targetEntity=JpaSubmissionImpl.class, mappedBy="embargoTypes")
+//	public List<Submission> submission;
 	
 	@Column(nullable = false)
 	public int displayOrder;
 	
-	@Column(nullable = false, length=255)
+	@Column(nullable = false, unique=true, length=255)
 	public String name;
 
 	@Column(nullable = false, length=32768) // 2^15
@@ -91,7 +83,7 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 		else
 			this.guarantor = guarantor;
 		
-		this.submissions = new ArrayList<Submission>();
+		//this.submissions = new ArrayList<Submission>();
 	}
 
 	@Override
@@ -105,7 +97,7 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 	public JpaEmbargoTypeImpl delete() {
 		assertManager();
 		
-		JpaSubmissionRepositoryImpl subRepo = Spring.getBeanOfType(JpaSubmissionRepositoryImpl.class);
+//		JpaSubmissionRepositoryImpl subRepo = Spring.getBeanOfType(JpaSubmissionRepositoryImpl.class);
 		// Tell the indexer about all the submissions that will be effected by
 		// this deletion.
 //		TypedQuery<Long> effectedQuery = em().createQuery(
@@ -115,16 +107,23 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 //				Long.class);
 //		effectedQuery.setParameter("embargo", this);
 		List<Long> effectedIds = new ArrayList<Long>();
-		Iterator<Submission> submissionsItr = subRepo.findAllSubmissions();
-		while(submissionsItr.hasNext()) {
-			Submission sub = submissionsItr.next();
-			
-			if(sub.getEmbargoTypes().contains(this)) {
-				effectedIds.add(sub.getId());
-				sub.getEmbargoTypes().remove(this);
-			}
-			
-		}
+		
+//		Iterator<Submission> submissionsItr = subRepo.findAllSubmissions();
+//		while(submissionsItr.hasNext()) {
+//			Submission sub = submissionsItr.next();
+//			if(sub.getEmbargoTypes().contains(this)) {
+//				effectedIds.add(sub.getId());
+//				sub.getEmbargoTypes().remove(this);
+//				sub.save();
+//			}
+//		}
+		
+		for (Submission sub : getSubmissions()) {
+			effectedIds.add(sub.getId());
+			sub.removeEmbargoType(this);
+			sub.save();
+        }
+		
 		Logger.info("Indexer effected IDs: " + effectedIds.size());
 		Indexer indexer = Spring.getBeanOfType(Indexer.class);
 		indexer.updated(effectedIds);		
@@ -219,7 +218,16 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 
 	@Override
 	public List<Submission> getSubmissions() {
-		return this.submissions;
+		List<Submission> ret = new ArrayList<Submission>();
+		JpaSubmissionRepositoryImpl subRepo = Spring.getBeanOfType(JpaSubmissionRepositoryImpl.class);
+		Iterator<Submission> submissionsItr = subRepo.findAllSubmissions();
+		while(submissionsItr.hasNext()) {
+			Submission sub = submissionsItr.next();
+			if(sub.getEmbargoTypes().contains(this)) {
+				ret.add(sub);
+			}
+		}
+		return ret;
 	}
 	
 }

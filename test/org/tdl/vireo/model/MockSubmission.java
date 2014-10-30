@@ -234,6 +234,11 @@ public class MockSubmission extends AbstractMock implements Submission {
 	}
 	
 	@Override
+    public void removeEmbargoType(EmbargoType embargo) {
+		this.embargoTypes.remove((MockEmbargoType) embargo);
+    }
+	
+	@Override
 	public EmbargoType getEmbargoTypeByGuarantor(EmbargoGuarantor guarantor) {
 		if(embargoTypes.size()>0) {
 			for(EmbargoType embargo : embargoTypes) {
@@ -642,5 +647,5 @@ public class MockSubmission extends AbstractMock implements Submission {
 	@Override
 	public Date getLastLogDate() {
 		return lastLogDate;
-	}
+	}	
 }

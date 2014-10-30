@@ -293,8 +293,8 @@ public class JpaEmbargoTypeImplTest extends UnitTest {
 	 */
 	@Test
 	public void testDeletetion() {
-		EmbargoType embargo = settingRepo.createEmbargoType("name", "description", 0, true, EmbargoGuarantor.PROQUEST);
-		Person person = personRepo.createPerson("netid", "email@email.com", "first", "last", RoleType.NONE);
+		EmbargoType embargo = settingRepo.createEmbargoType("name", "description", 0, true, EmbargoGuarantor.PROQUEST).save();
+		Person person = personRepo.createPerson("netid", "email@email.com", "first", "last", RoleType.NONE).save();
 		Submission sub = subRepo.createSubmission(person);
 		sub.addEmbargoType(embargo);
 		Logger.info("Submission has " + sub.getEmbargoTypes().size() + " embargos.");

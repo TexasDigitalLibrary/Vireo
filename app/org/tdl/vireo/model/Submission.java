@@ -218,6 +218,12 @@ public interface Submission extends AbstractModel {
 
 	/**
 	 * 
+	 * @param embargo The new embargo type.
+	 */
+	public void removeEmbargoType(EmbargoType embargo);	
+	
+	/**
+	 * 
 	 * @param guarantor The guarantor of the embargo.
 	 * 
 	 * @return The type of embargo for this submission, affiliated with

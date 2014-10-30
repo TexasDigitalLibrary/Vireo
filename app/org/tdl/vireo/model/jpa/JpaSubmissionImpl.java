@@ -95,9 +95,12 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@Column(length=326768) // 2^15
 	public String publishedMaterial;
 
-	@ManyToMany(targetEntity = JpaEmbargoTypeImpl.class,
-			cascade = CascadeType.ALL)
-	public List<EmbargoType> embargoTypes;
+	//@ManyToOne(targetEntity = JpaEmbargoTypeImpl.class, optional=true)
+	@ElementCollection
+	@CollectionTable(
+			name="submission_embargotypes",
+			joinColumns=@JoinColumn(name="submission_id"))
+	public List<Long> embargoTypeIds;
 	
 	@OneToMany(targetEntity = JpaAttachmentImpl.class, mappedBy = "submission", cascade = CascadeType.ALL)
 	public List<Attachment> attachments;
@@ -210,7 +213,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		
 		this.submitter = submitter;
 		this.documentSubjects = new ArrayList<String>();
-		this.embargoTypes = new ArrayList<EmbargoType>();
+		this.embargoTypeIds = new ArrayList<Long>();
 		this.attachments = new ArrayList<Attachment>();
 		this.committeeMembers = new ArrayList<CommitteeMember>();
 		this.customActions = new ArrayList<CustomActionValue>();
@@ -296,7 +299,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 			).setParameter(1, this.getId())
 			.executeUpdate();
 		
-		embargoTypes.clear();
+		embargoTypeIds.clear();
 		
 		return super.delete();
 	}
@@ -307,10 +310,13 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		submitter.detach();
 		if (assignee != null)
 			assignee.detach();
-//		if (embargoTypes != null) {
-//			for (EmbargoType embargoType : embargoTypes)
-//				embargoType.detach();
+//		if (embargoTypeIds != null) {
+//			for (Long embargoTypeId : embargoTypeIds)
+//				embargoTypeId
 //		}
+		for (EmbargoType embargoType : getEmbargoTypes()) {
+	        embargoType.detach();
+        }
 		return super.detach();
 	}
 
@@ -541,7 +547,15 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	
 	@Override
 	public List<EmbargoType> getEmbargoTypes() {
-		return embargoTypes;
+		SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
+		List<EmbargoType> ret = new ArrayList<EmbargoType>();
+		for (Long embargoTypeId : embargoTypeIds) {
+			EmbargoType embargoType = settingRepo.findEmbargoType(embargoTypeId);
+			if(embargoType!=null) {
+				ret.add(embargoType);
+			}
+        }
+		return ret;
 	}
 
 	@Override
@@ -549,23 +563,34 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		
 		assertReviewerOrOwner(submitter);
 		
-		if (!this.embargoTypes.contains(embargo)) {
-			List<EmbargoType> temp = new ArrayList(embargoTypes);
+		if (!this.embargoTypeIds.contains(embargo.getId())) {
+			List<EmbargoType> temp = getEmbargoTypes();
 			for(EmbargoType embargoType : temp) {
 				if(embargoType.getGuarantor()==embargo.getGuarantor())
-					embargoTypes.remove(embargoType);
+					embargoTypeIds.remove(embargoType.getId());
 			}
-			this.embargoTypes.add(embargo);
+			this.embargoTypeIds.add(embargo.getId());
 			generateChangeLog("Embargo type",embargo.getName()+"("+embargo.getGuarantor()+")", false);
 		}
 	}
 	
 	@Override
+	public void removeEmbargoType(EmbargoType embargo) {
+	    if(embargoTypeIds.contains(embargo.getId())){
+	    	embargoTypeIds.remove(embargo.getId());
+	    }	    
+	}
+	
+	@Override
 	public EmbargoType getEmbargoTypeByGuarantor(EmbargoGuarantor guarantor) {
-		if(embargoTypes.size()>0) {
-			for(EmbargoType embargo : embargoTypes) {
-				if(embargo.getGuarantor()==guarantor)
-					return embargo;
+		if(embargoTypeIds.size()>0) {
+			SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
+			for(Long embargo : embargoTypeIds) {
+				EmbargoType embargoType = settingRepo.findEmbargoType(embargo);
+				if(embargoType != null) {
+					if(embargoType.getGuarantor()==guarantor)
+						return embargoType;
+				}
 			}
 		}
 		

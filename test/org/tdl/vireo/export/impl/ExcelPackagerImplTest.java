@@ -63,6 +63,8 @@ public class ExcelPackagerImplTest extends UnitTest {
         context.login(MockPerson.getAdministrator());
 
         person = personRepo.createPerson("netid", "email@email.com", "first", "last", RoleType.NONE).save();
+//        JPA.em().getTransaction().commit();
+//        JPA.em().getTransaction().begin();
     }
 
     /**
@@ -75,8 +77,8 @@ public class ExcelPackagerImplTest extends UnitTest {
             personRepo.findPerson(person.getId()).delete();
         context.logout();
 
-        JPA.em().getTransaction().commit();
-        JPA.em().getTransaction().begin();
+//        JPA.em().getTransaction().commit();
+//        JPA.em().getTransaction().begin();
 
         indexer.rebuild(true);
         assertFalse(indexer.isJobRunning());
