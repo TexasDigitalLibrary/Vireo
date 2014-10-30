@@ -52,6 +52,7 @@ import org.tdl.vireo.services.Utilities;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
 
+import play.Logger;
 import play.modules.spring.Spring;
 
 /**
@@ -314,9 +315,9 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 //			for (Long embargoTypeId : embargoTypeIds)
 //				embargoTypeId
 //		}
-		for (EmbargoType embargoType : getEmbargoTypes()) {
-	        embargoType.detach();
-        }
+//		for (EmbargoType embargoType : getEmbargoTypes()) {
+//	        embargoType.detach();
+//        }
 		return super.detach();
 	}
 
@@ -576,7 +577,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	
 	@Override
 	public void removeEmbargoType(EmbargoType embargo) {
-	    if(embargoTypeIds.contains(embargo.getId())){
+		if(embargoTypeIds.contains(embargo.getId())){
 	    	embargoTypeIds.remove(embargo.getId());
 	    }	    
 	}

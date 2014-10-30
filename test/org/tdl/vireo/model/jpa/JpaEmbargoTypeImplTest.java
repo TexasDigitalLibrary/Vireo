@@ -300,22 +300,22 @@ public class JpaEmbargoTypeImplTest extends UnitTest {
 		Logger.info("Submission has " + sub.getEmbargoTypes().size() + " embargos.");
 		sub.save();
 		Logger.info("Submission now has " + sub.getEmbargoTypes().size() + " embargos.");
-		
+
 		// Clear out the indexer transaction.
 		indexer.rollback();
 		assertFalse(indexer.isUpdated(sub));
 
 		embargo.delete();
-		
+
 		// Check that the submission was queued up in the indexer.
 		assertTrue("The submission was not updated in the index.",indexer.isUpdated(sub));
-		
+
 		// check that the value associated with it was also deleted, once refreshed
 		JPA.em().clear();
 		sub = subRepo.findSubmission(sub.getId());
-		
+
 		assertEquals(0,sub.getEmbargoTypes().size());
-		
+
 		subRepo.findSubmission(sub.getId()).delete();
 		personRepo.findPerson(person.getId()).delete();
 	}

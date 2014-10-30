@@ -121,7 +121,6 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 		for (Submission sub : getSubmissions()) {
 			effectedIds.add(sub.getId());
 			sub.removeEmbargoType(this);
-			sub.save();
         }
 		
 		Logger.info("Indexer effected IDs: " + effectedIds.size());
