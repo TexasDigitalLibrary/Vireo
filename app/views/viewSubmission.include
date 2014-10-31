@@ -295,7 +295,7 @@ Plus all the FieldConfig objects
     <div class="controls">
         #{if sub.getEmbargoTypes().size() > 0}
         	#{list items:sub.getEmbargoTypes(), as:'embargo'}
-            	<p><strong>${embargo.getName()} (${embargo.getGuarantor()})</strong> - ${embargo.getDescription()}</p>
+            	<p><strong>${embargo.getName()}#{if !embargo.getGuarantor().toString().equals("DEFAULT")} (${embargo.getGuarantor()})#{/if}</strong> - ${embargo.getDescription()}</p>
             #{/list}
         #{/if}
         #{else}
@@ -310,7 +310,7 @@ Plus all the FieldConfig objects
     <div class="controls">
     	#{list items:settingRepo.findAllEmbargoTypes(), as:'embargo'}
             #{if !sub.getEmbargoTypes().contains(embargo)}
-                <p><strong>${embargo.getName()} (${embargo.getGuarantor()})</strong> - ${embargo.getDescription()}</p>
+                <p><strong>${embargo.getName()}#{if !embargo.getGuarantor().toString().equals("DEFAULT")} (${embargo.getGuarantor()})#{/if}</strong> - ${embargo.getDescription()}</p>
             #{/if}
         #{/list}
     </div>
