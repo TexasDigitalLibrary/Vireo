@@ -234,7 +234,7 @@ Plus all the FieldConfig objects
 #{/ifEnabled}
 
 #{ifEnabled COMMITTEE}
-#{list items:sub.getCommitteeMembers(), as:"member"}    
+#{list items:sub.getCommitteeMembers(), as:"member"}
 <div class="control-group #{errorClass 'committee' /} ">
     <label class="control-label">#{fieldLabel COMMITTEE /}:</label>
     <div class="controls">
@@ -293,8 +293,10 @@ Plus all the FieldConfig objects
 <div class="control-group #{errorClass 'embargo' /}">
     <label class="control-label">#{fieldLabel EMBARGO_TYPE /}:#{if !sub.getState().isInProgress() }<br/><em>(selected)</em>#{/if}</label>
     <div class="controls">
-        #{if sub.getEmbargoType() != null}
-            <p><strong>${sub.getEmbargoType().getName()}</strong> - ${sub.getEmbargoType().getDescription()}</p>
+        #{if sub.getEmbargoTypes().size() > 0}
+        	#{list items:sub.getEmbargoTypes(), as:'embargo'}
+            	<p><strong>${embargo.getName()} (${embargo.getGuarantor()})</strong> - ${embargo.getDescription()}</p>
+            #{/list}
         #{/if}
         #{else}
             <p>None</p>
@@ -306,9 +308,9 @@ Plus all the FieldConfig objects
 <div class="control-group">
     <label class="control-label">Alternative Options:<br/> <em>(not selected)</em></label>
     <div class="controls">
-        #{list items:settingRepo.findAllEmbargoTypes(), as:'embargo'}
-            #{if embargo != sub.getEmbargoType()}
-                <p><strong>${embargo.getName()}</strong> - ${embargo.getDescription()}</p>
+    	#{list items:settingRepo.findAllEmbargoTypes(), as:'embargo'}
+            #{if !sub.getEmbargoTypes().contains(embargo)}
+                <p><strong>${embargo.getName()} (${embargo.getGuarantor()})</strong> - ${embargo.getDescription()}</p>
             #{/if}
         #{/list}
     </div>
