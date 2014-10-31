@@ -240,7 +240,7 @@ public class MockSubmission extends AbstractMock implements Submission {
 	
 	@Override
 	public EmbargoType getEmbargoTypeByGuarantor(EmbargoGuarantor guarantor) {
-		if(embargoTypes.size()>0) {
+		if(embargoTypes != null && embargoTypes.size()>0) {
 			for(EmbargoType embargo : embargoTypes) {
 				if(embargo.getGuarantor()==guarantor)
 					return embargo;

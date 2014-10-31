@@ -584,7 +584,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	
 	@Override
 	public EmbargoType getEmbargoTypeByGuarantor(EmbargoGuarantor guarantor) {
-		if(embargoTypeIds.size()>0) {
+		if(embargoTypeIds != null && embargoTypeIds.size()>0) {
 			SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
 			for(Long embargo : embargoTypeIds) {
 				EmbargoType embargoType = settingRepo.findEmbargoType(embargo);

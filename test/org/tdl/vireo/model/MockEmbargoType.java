@@ -21,7 +21,7 @@ public class MockEmbargoType extends AbstractMock implements EmbargoType {
 	public String description;
 	public Integer duration;
 	public boolean active;
-	public EmbargoGuarantor guarantor;
+	public EmbargoGuarantor guarantor = EmbargoGuarantor.DEFAULT;
 	public List<Submission> submissions;
 
 	@Override
