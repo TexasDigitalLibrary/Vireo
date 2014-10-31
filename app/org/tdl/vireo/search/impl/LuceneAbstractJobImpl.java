@@ -377,8 +377,11 @@ public abstract class LuceneAbstractJobImpl extends Job {
 		if (major != null)
 		doc.add(new Field("major",major,Field.Store.NO,Index.NOT_ANALYZED));
 		
-		if (embargos != null)
-		doc.add(new Field("embargo",embargos,Field.Store.NO,Index.NOT_ANALYZED));
+		if (embargos != null) {
+			for (EmbargoType embargo : sub.getEmbargoTypes()) {
+				doc.add(new Field("embargo",embargo.getName(), Field.Store.NO,Index.NOT_ANALYZED));
+			}
+		}
 		
 		if (degree != null)
 		doc.add(new Field("degree",degree,Field.Store.NO,Index.NOT_ANALYZED));
@@ -518,8 +521,11 @@ public abstract class LuceneAbstractJobImpl extends Job {
 			if (major != null)
 			doc.add(new Field("major",major,Field.Store.NO,Index.NOT_ANALYZED));
 			
-			if (embargos != null)
-			doc.add(new Field("embargo",embargos,Field.Store.NO,Index.NOT_ANALYZED));
+			if (embargos != null) {
+				for (EmbargoType embargo : sub.getEmbargoTypes()) {
+					doc.add(new Field("embargo",embargo.getName(), Field.Store.NO,Index.NOT_ANALYZED));
+				}
+			}
 			
 			if (degree != null)
 			doc.add(new Field("degree",degree,Field.Store.NO,Index.NOT_ANALYZED));
