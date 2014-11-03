@@ -22,6 +22,7 @@ import org.tdl.vireo.model.Degree;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.Department;
 import org.tdl.vireo.model.DocumentType;
+import org.tdl.vireo.model.EmbargoGuarantor;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.Language;
@@ -74,7 +75,10 @@ public class ConfigurableSettingsTab extends SettingsTab {
 		
 		String nav = "settings";
 		String subNav = "config";
-		renderTemplate("SettingTabs/configurableSettings.html", nav, subNav, 
+		
+		EmbargoGuarantor[] guarantors = EmbargoGuarantor.values();
+		
+		renderTemplate("SettingTabs/configurableSettings.html", guarantors, nav, subNav, 
 				
 				// The lonely tabel on the page
 				embargos,
@@ -219,7 +223,9 @@ public class ConfigurableSettingsTab extends SettingsTab {
 	 *            Whether this embargo is active.
 	 */
 	@Security(RoleType.MANAGER)
-	public static void editEmbargoTypeJSON(String embargoTypeId, String name, String description, Integer months, boolean active) {
+	public static void editEmbargoTypeJSON(String embargoTypeId, String name, String description, Integer months, boolean active, String guarantor) {
+		
+		Logger.info(embargoTypeId +" - "+ name +" - "+ description +" - "+ guarantor);
 		
 		try {
 			if (name == null || name.trim().length() == 0)
@@ -231,21 +237,20 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			// Create or modify the embargo
 			EmbargoType embargo = null;
 			if (embargoTypeId != null && embargoTypeId.trim().length() > 0) {
-				
 				// Modify an existing embargo
-				String[] parts = embargoTypeId.split("_");
-				Long id = Long.valueOf(parts[1]);
+				Long id = Long.valueOf(embargoTypeId);
 				embargo = settingRepo.findEmbargoType(id);
 				embargo.setName(name);
 				embargo.setDescription(description);
 				embargo.setDuration(months);
 				embargo.setActive(active);
+				embargo.setGuarantor(EmbargoGuarantor.valueOf(guarantor));
 				embargo.save();
 			} else {
 				List<EmbargoType> embargos = settingRepo.findAllEmbargoTypes();
 
 				// Create a new embargo
-				embargo = settingRepo.createEmbargoType(name, description, months, active);
+				embargo = settingRepo.createEmbargoType(name, description, months, active, EmbargoGuarantor.valueOf(guarantor));
 				embargos.add(embargo);
 
 				saveModelOrder(embargos);
@@ -259,12 +264,13 @@ public class ConfigurableSettingsTab extends SettingsTab {
 					embargo.getName(),
 					embargo.getDescription(),
 					embargo.getDuration(),
-					embargo.isActive());
+					embargo.isActive(),
+					embargo.getGuarantor());
 
 			name = escapeJavaScript(embargo.getName());
 			description = escapeJavaScript(embargo.getDescription());
 
-			renderJSON("{ \"success\": \"true\", \"id\": " + embargo.getId() + ", \"name\": \"" + name + "\", \"description\": \"" + description + "\", \"active\": \"" + active + "\", \"months\": \"" + months + "\" }");
+			renderJSON("{ \"success\": \"true\", \"id\": " + embargo.getId() + ", \"name\": \"" + name + "\", \"description\": \"" + description + "\", \"active\": \"" + active + "\", \"months\": \"" + months + "\", \"guarantor\": \"" + guarantor + "\" }");
 		} catch (IllegalArgumentException iae) {
 			String message = escapeJavaScript(iae.getMessage());			
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
@@ -272,7 +278,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			name = escapeJavaScript(name);
 			renderJSON("{ \"failure\": \"true\", \"message\": \"Another embargo type already exists with the name: '"+name+"'\" }");
 		} catch (RuntimeException re) {
-			Logger.error(re,"Unable to add college");
+			Logger.error(re,"Unable to add/edit embargo.");
 			String message = escapeJavaScript(re.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message
 					+ "\" }");
@@ -302,7 +308,8 @@ public class ConfigurableSettingsTab extends SettingsTab {
 					embargo.getName(),
 					embargo.getDescription(),
 					embargo.getDuration(),
-					embargo.isActive());
+					embargo.isActive(),
+					embargo.getGuarantor());
 			
 			renderJSON("{ \"success\": \"true\" }");
 		} catch (RuntimeException re) {

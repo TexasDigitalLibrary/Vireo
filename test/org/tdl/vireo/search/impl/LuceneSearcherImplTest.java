@@ -33,6 +33,7 @@ import org.tdl.vireo.search.Searcher;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.StateManager;
 
+import play.Logger;
 import play.db.jpa.JPA;
 import play.modules.spring.Spring;
 import play.test.UnitTest;
@@ -780,23 +781,31 @@ public class LuceneSearcherImplTest extends UnitTest{
 			filter.addAssignee(otherPerson);
 			filter.save();
 			
+			Logger.info("Filter Info for Assignee: " + filter.toString());
+			
 			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.DESCENDING, 0, 20).getResults();
 			
 			assertEquals(sub2,logs.get(0).getSubmission());
 			assertEquals("Assignee changed to 'first last'", logs.get(0).getEntry());
 			filter.delete();
 			
+			Logger.info("********************* START TEST *********************");
 			// Embargo Filter
 			filter = subRepo.createSearchFilter(person, "test-embargo");
 			filter.addAssignee(otherPerson);
 			filter.addEmbargoType(embargo1);
 			filter.save();
 			
+			Logger.info("Filter Info: " + filter.toString());
+			
 			logs = searcher.actionLogSearch(filter, SearchOrder.ID, SearchDirection.DESCENDING, 0, 20).getResults();
+			Logger.info("Logs Size: " + logs.size());
 			
 			assertEquals(sub2,logs.get(0).getSubmission());
 			assertEquals("Assignee changed to 'first last'", logs.get(0).getEntry());
 			filter.delete();
+			Logger.info("********************* END TEST *********************");
+			
 			
 			// Graduation Semester Filter
 			filter = subRepo.createSearchFilter(person, "test-semester1");

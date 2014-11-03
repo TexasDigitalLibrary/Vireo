@@ -32,7 +32,7 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 	@Column(nullable = false)
 	public int displayOrder;
 	
-	@Column(nullable = false, unique=true, length=255)
+	@Column(nullable = false, length=255)
 	public String name;
 
 	@Column(nullable = false, length=32768) // 2^15
@@ -213,6 +213,10 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 	@Override
 	public EmbargoGuarantor getGuarantor() {
 		return this.guarantor;
+	}
+	
+	public void setGuarantor(EmbargoGuarantor guarantor) {
+		this.guarantor = guarantor;
 	}
 
 	@Override

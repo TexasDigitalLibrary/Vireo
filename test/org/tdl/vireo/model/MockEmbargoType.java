@@ -105,6 +105,11 @@ public class MockEmbargoType extends AbstractMock implements EmbargoType {
 	}
 	
 	@Override
+	public void setGuarantor(EmbargoGuarantor guarantor) {
+		this.guarantor = guarantor;
+	}
+	
+	@Override
 	public List<Submission> getSubmissions() {
 		return submissions;
 	}

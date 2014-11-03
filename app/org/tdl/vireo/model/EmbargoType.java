@@ -69,6 +69,11 @@ public interface EmbargoType extends AbstractOrderedModel {
 	public EmbargoGuarantor getGuarantor();
 	
 	/**
+	 * @param guarantor The guarantor of the embargo.
+	 */
+	public void setGuarantor(EmbargoGuarantor guarantor);
+	
+	/**
 	 * 
 	 * @return The list of associated submissions.
 	 */
