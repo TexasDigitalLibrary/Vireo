@@ -346,13 +346,19 @@ jQuery(document).ready(function(){
 							class="empty"><i class="icon-pencil"></i> none
 						#{/else}
 						</span></li>
-					<li class="edit"><label>Embargo:</label><span id="embargo"
-						#{if submission.getEmbargoType()}
-							class="select"><i class="icon-pencil"></i> ${submission.getEmbargoType().getName()}
-						#{/if}#{else}
-							class="select empty"><i class="icon-pencil"></i> none
-						#{/else}
-						</span></li>
+
+					<li id="embargos" class="edit"><label>Embargos:</label><span id="embargo" class="autocomplete"><i class="icon-pencil"></i>
+					<ul>
+					#{if submission.getEmbargoTypes()}
+					#{list items:submission.getEmbargoTypes(), as:'embargo'}
+						<li class="${embargo.getId()}">${embargo.getName()}#{if embargo.getGuarantor() != org.tdl.vireo.model.EmbargoGuarantor.DEFAULT} (${embargo.getGuarantor()})#{/if}</li>
+					#{/list}
+					#{/if}
+					<li id="add_new_embargo"><button class="btn">Add New Embargo</button></li>
+					</ul>
+					</span>
+					</li>
+
 					<li class="edit"><label>UMI Release:</label><span id="umiRelease"
 						#{if submission.getUMIRelease() != null}
 							class="select"><i class="icon-pencil"></i> ${submission.getUMIRelease() ? "yes" : "no"}
@@ -544,7 +550,7 @@ jQuery(document).ready(function(){
 			<div id="embargoOptions" style="display:none;">
 				<select class="field">
 				#{list items:settingRepo.findAllEmbargoTypes(), as:'embargo'}
-					<option value="${embargo.getId()}">${embargo.getName()}</option>
+					<option value="${embargo.getId()}">${embargo.getName()}#{if embargo.getGuarantor() != org.tdl.vireo.model.EmbargoGuarantor.DEFAULT} (${embargo.getGuarantor()})#{/if}</option>
 				#{/list}
 				</select>
 			</div>

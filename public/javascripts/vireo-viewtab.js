@@ -1,4 +1,10 @@
 /**
+ * This function swaps the embargo content
+ * into an editable field.
+ */
+
+
+/**
  * This function swaps the committee member content
  * into editable fields.
  */
