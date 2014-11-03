@@ -254,7 +254,14 @@ public enum FieldConfig {
 			"submit_embargo_type_label",
 			"submit_embargo_type_help",
 			"submit_embargo_type_enabled",
-			"Request a delay in publication. The options available are customizable under the Configurable Settings Tab."),	
+			"Request a delay in publication. The options available are customizable under the Configurable Settings Tab."),
+	
+	EMBARGO_TYPE_PROQUEST(
+					"Proquest Embargo Type",
+					"submit_embargo_type_label",
+					"submit_embargo_type_help",
+					"submit_embargo_type_enabled",
+					"Request a delay in publication. The options available are customizable under the Configurable Settings Tab."),	
 			
 	/** File Upload **/
 			
@@ -343,7 +350,7 @@ public enum FieldConfig {
 
 	public static final FieldConfig[] LICENSE_AGREEMENT_FIELDS = {LICENSE_AGREEMENT, UMI_RELEASE};
 	
-	public static final FieldConfig[] DOCUMENT_INFO_FIELDS = {DOCUMENT_TITLE, GRADUATION_DATE, DEFENSE_DATE, DOCUMENT_TYPE, DOCUMENT_ABSTRACT, DOCUMENT_KEYWORDS, DOCUMENT_SUBJECTS, DOCUMENT_LANGUAGE, COMMITTEE, COMMITTEE_CONTACT_EMAIL, PUBLISHED_MATERIAL, EMBARGO_TYPE};
+	public static final FieldConfig[] DOCUMENT_INFO_FIELDS = {DOCUMENT_TITLE, GRADUATION_DATE, DEFENSE_DATE, DOCUMENT_TYPE, DOCUMENT_ABSTRACT, DOCUMENT_KEYWORDS, DOCUMENT_SUBJECTS, DOCUMENT_LANGUAGE, COMMITTEE, COMMITTEE_CONTACT_EMAIL, PUBLISHED_MATERIAL, EMBARGO_TYPE, EMBARGO_TYPE_PROQUEST};
 
 	public static final FieldConfig[] UPLOAD_FILES_FIELDS = {PRIMARY_ATTACHMENT, SUPPLEMENTAL_ATTACHMENT, SOURCE_ATTACHMENT, ADMINISTRATIVE_ATTACHMENT};
 }

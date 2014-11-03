@@ -88,24 +88,11 @@ jQuery(document).ready(function(){
     #{/ifEnabled}
 
 
+
     jQuery("#additional-embargos-btn").on("click", function(e) {
     	e.preventDefault();
-    	jQuery(this).fadeOut(300);
-    	jQuery("#embargo-type-title").fadeOut(300, function() {
-			jQuery("#embargo-type-selector").fadeIn(300);
-		});
-    });
-
-    jQuery("#embargo-type-selector").change(function() {
-    	var $this = $(this);
-    	var selection = jQuery(this).val();
-    	jQuery("#embargo-type-title span").html(selection);
-    	jQuery(".embargo-gaurentor-set").fadeOut(300, function() {
-    		$this.fadeOut(300, function() {
-    			jQuery("#additional-embargos-btn").fadeIn(300);
-    			jQuery("#embargo-type-title").fadeIn(300);
-    			jQuery("#embargo-"+selection).fadeIn(300);
-    		});
+    	jQuery(this).fadeOut(300, function() {
+    		jQuery(".embargo-addition-type").fadeIn(300);
     	});
     });
 
@@ -118,6 +105,12 @@ jQuery(document).ready(function(){
 	<h3 class="span11">Document Information</h3>
 </div>
 <br />
+<div id="stickyNotes" class="span3">
+     #{list items:stickies, as:'sticky'}
+       <div class="sticky-top"></div>
+       <div class="sticky-bottom">#{verbatim}${sticky}#{/verbatim}</div>
+    #{/list}
+</div>
 <div class="row">
 <div class="span7">
 <h4>Instructions:</h4>
@@ -382,46 +375,33 @@ jQuery(document).ready(function(){
 		#{ifRequired EMBARGO_TYPE}<legend class="strong">#{fieldLabel EMBARGO_TYPE /}</legend>#{/ifRequired}#{else}<legend>#{fieldLabel EMBARGO_TYPE /}</legend>#{/else}
 		<p>#{fieldHelp EMBARGO_TYPE /}</p>
             
+				
+				<div id="embargo-sets">
+					#{list org.tdl.vireo.model.EmbargoGuarantor.values(), as: 'embargoSet'}
+						
+						<div id="embargo-${embargoSet}" 
+							class="embargo-gaurentor-set  #{if embargoSet.toString() != 'DEFAULT'} embargo-addition-type #{/if}"  
+							#{if embargoSet.toString() != 'DEFAULT'} style="display:none;" #{/if}>
+							<h4>${embargoSet}</h4>
+							#{list embargoTypes, as: 'et'}
+				                #{if et.getGuarantor().toString() == embargoSet.toString()}
+				                <div class="control-group #{errorClass 'embargo' /}">
+				                    <label class="control-label">${et.getName()}:</label>
+				                    <div class="controls">
+				                        <label class="radio">
+											<input type="radio" id="embargo_${et_index}" name="embargo" selected="selected" value="${et.getId()}" #{if embargo == et.getId().toString()} checked=true #{/if}>&nbsp;&nbsp;${et.getDescription()}
+				                        </label>
+				                    </div>
+				                </div>
+				                #{/if}
+				            #{/list}
+						</div>
+						#{if embargoSet.toString() == 'DEFAULT'}
+							<a href="#" id="additional-embargos-btn">Additional Embargos</a>
+						#{/if}
 
-			<h4 id="embargo-type-title"><span>Default</span> Embargos</h4> 
-			<select id="embargo-type-selector">
-				<option value="Default">Default Embargos</option>
-				<option value="Proquest">Progest Embargos</option>
-			</select>
-			<a href="#" id="additional-embargos-btn">Additional Embargos</a>
-
-			<div id="embargo-sets">
-	            <div id="embargo-Default" class="embargo-gaurentor-set">
-		            #{list embargoTypes, as: 'et'}
-		                #{if et.getGuarantor() == org.tdl.vireo.model.EmbargoGuarantor.DEFAULT}
-			                <div class="control-group #{errorClass 'embargo' /}">
-			                    <label class="control-label">${et.getName()}:</label>
-			                    <div class="controls">
-			                        <label class="radio">
-										<input type="radio" id="embargo_${et_index}" name="embargo" selected="selected" value="${et.getId()}" #{if embargo == et.getId().toString()} checked=true #{/if}>&nbsp;&nbsp;${et.getDescription()}
-			                        </label>
-			                    </div>
-			                </div>
-		            	#{/if}
-		            #{/list}
-	            </div>
-	            
-	            #{ifEnabled EMBARGO_TYPE }
-	            	<div id="embargo-Proquest" class="embargo-gaurentor-set ">
-		            	#{list embargoTypes, as: 'et'}
-			                #{if et.getGuarantor() == org.tdl.vireo.model.EmbargoGuarantor.DEFAULT}
-			                <div class="control-group #{errorClass 'embargo' /}">
-			                    <label class="control-label">${et.getName()}:</label>
-			                    <div class="controls">
-			                        <label class="radio">
-										<input type="radio" id="embargo_${et_index}" name="embargo" selected="selected" value="${et.getId()}" #{if embargo == et.getId().toString()} checked=true #{/if}>&nbsp;&nbsp;${et.getDescription()}
-			                        </label>
-			                    </div>
-			                </div>
-			                #{/if}
-			            #{/list}
-			        </div>               
-		        #{/ifEnabled}
+					#{/list}
+				</div>
 		    </div> 
 	</fieldset>
 	
@@ -433,10 +413,5 @@ jQuery(document).ready(function(){
 	</div>
 	</form>
 </div>
-<div id="stickyNotes" class="span3">
-     #{list items:stickies, as:'sticky'}
-       <div class="sticky-top"></div>
-       <div class="sticky-bottom">#{verbatim}${sticky}#{/verbatim}</div>
-    #{/list}
 </div>
-</div>
+	
