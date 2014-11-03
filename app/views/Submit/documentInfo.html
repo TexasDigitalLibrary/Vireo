@@ -86,6 +86,29 @@ jQuery(document).ready(function(){
     	}
     });
     #{/ifEnabled}
+
+
+    jQuery("#additional-embargos-btn").on("click", function(e) {
+    	e.preventDefault();
+    	jQuery(this).fadeOut(300);
+    	jQuery("#embargo-type-title").fadeOut(300, function() {
+			jQuery("#embargo-type-selector").fadeIn(300);
+		});
+    });
+
+    jQuery("#embargo-type-selector").change(function() {
+    	var $this = $(this);
+    	var selection = jQuery(this).val();
+    	jQuery("#embargo-type-title span").html(selection);
+    	jQuery(".embargo-gaurentor-set").fadeOut(300, function() {
+    		$this.fadeOut(300, function() {
+    			jQuery("#additional-embargos-btn").fadeIn(300);
+    			jQuery("#embargo-type-title").fadeIn(300);
+    			jQuery("#embargo-"+selection).fadeIn(300);
+    		});
+    	});
+    });
+
 });
 </script>
 #{/set}
@@ -354,20 +377,55 @@ jQuery(document).ready(function(){
     #{/ifEnabled}
 	
 	#{ifEnabled EMBARGO_TYPE }
+
 	<fieldset class="form-horizontal">
 		#{ifRequired EMBARGO_TYPE}<legend class="strong">#{fieldLabel EMBARGO_TYPE /}</legend>#{/ifRequired}#{else}<legend>#{fieldLabel EMBARGO_TYPE /}</legend>#{/else}
 		<p>#{fieldHelp EMBARGO_TYPE /}</p>
-                #{list embargoTypes, as: 'et'}
-                    <div class="control-group #{errorClass 'embargo' /}">
-                        <label class="control-label">${et.getName()}:</label>
-                        <div class="controls">
-                            <label class="radio">
-								<input type="radio" id="embargo_${et_index}" name="embargo" selected="selected" value="${et.getId()}" #{if embargo == et.getId().toString()} checked=true #{/if}>&nbsp;&nbsp;${et.getDescription()}
-                            </label>
-                        </div>
-                    </div>
-                #{/list}                
+            
+
+			<h4 id="embargo-type-title"><span>Default</span> Embargos</h4> 
+			<select id="embargo-type-selector">
+				<option value="Default">Default Embargos</option>
+				<option value="Proquest">Progest Embargos</option>
+			</select>
+			<a href="#" id="additional-embargos-btn">Additional Embargos</a>
+
+			<div id="embargo-sets">
+	            <div id="embargo-Default" class="embargo-gaurentor-set">
+		            #{list embargoTypes, as: 'et'}
+		                #{if et.getGuarantor() == org.tdl.vireo.model.EmbargoGuarantor.DEFAULT}
+			                <div class="control-group #{errorClass 'embargo' /}">
+			                    <label class="control-label">${et.getName()}:</label>
+			                    <div class="controls">
+			                        <label class="radio">
+										<input type="radio" id="embargo_${et_index}" name="embargo" selected="selected" value="${et.getId()}" #{if embargo == et.getId().toString()} checked=true #{/if}>&nbsp;&nbsp;${et.getDescription()}
+			                        </label>
+			                    </div>
+			                </div>
+		            	#{/if}
+		            #{/list}
+	            </div>
+	            
+	            #{ifEnabled EMBARGO_TYPE }
+	            	<div id="embargo-Proquest" class="embargo-gaurentor-set ">
+		            	#{list embargoTypes, as: 'et'}
+			                #{if et.getGuarantor() == org.tdl.vireo.model.EmbargoGuarantor.DEFAULT}
+			                <div class="control-group #{errorClass 'embargo' /}">
+			                    <label class="control-label">${et.getName()}:</label>
+			                    <div class="controls">
+			                        <label class="radio">
+										<input type="radio" id="embargo_${et_index}" name="embargo" selected="selected" value="${et.getId()}" #{if embargo == et.getId().toString()} checked=true #{/if}>&nbsp;&nbsp;${et.getDescription()}
+			                        </label>
+			                    </div>
+			                </div>
+			                #{/if}
+			            #{/list}
+			        </div>               
+		        #{/ifEnabled}
+		    </div> 
 	</fieldset>
+	
+
 	#{/ifEnabled}
 	
 	<div class="span10 center">
