@@ -109,8 +109,14 @@ public class DocumentInfo extends AbstractSubmitStep {
 		if (!publishedMaterialFlag)
 			publishedMaterial = null;
 		String chairEmail = params.get("chairEmail");
-		String embargo = params.get("embargo");
-
+		
+		String embargosString = params.get("embargo");
+		List<String> embargos = new ArrayList<String>();
+		if(embargosString != null)
+			for(String embargo : embargosString.split(",")) {
+				embargos.add(embargo);
+			}
+		
 		List<TransientMember> committee = parseCommitteeMembers();
 
 		if ("documentInfo".equals(params.get("step"))) {
@@ -184,11 +190,13 @@ public class DocumentInfo extends AbstractSubmitStep {
 			}
 			
 			if (isFieldEnabled(EMBARGO_TYPE)) {
-				try {
-					sub.addEmbargoType(settingRepo.findEmbargoType(Long.parseLong(embargo)));
-				} catch (RuntimeException re){
-					if (isFieldRequired(EMBARGO_TYPE))
-						validation.addError("embargo", "Please select a valid embargo option");
+				for(String embargo : embargos) {
+					try {
+						sub.addEmbargoType(settingRepo.findEmbargoType(Long.parseLong(embargo)));	
+					} catch (RuntimeException re){
+						if (isFieldRequired(EMBARGO_TYPE))
+							validation.addError("embargo", "Please select a valid embargo option");
+					}
 				}
 			}			
 	
@@ -250,8 +258,8 @@ public class DocumentInfo extends AbstractSubmitStep {
 			if (isFieldEnabled(PUBLISHED_MATERIAL))
 				publishedMaterial = sub.getPublishedMaterial();
 			
-			if (isFieldEnabled(EMBARGO_TYPE) && sub.getEmbargoTypeByGuarantor(EmbargoGuarantor.DEFAULT) != null)
-				embargo = sub.getEmbargoTypeByGuarantor(EmbargoGuarantor.DEFAULT).getId().toString();
+			//if (isFieldEnabled(EMBARGO_TYPE) && sub.getEmbargoTypeByGuarantor(EmbargoGuarantor.DEFAULT) != null)
+				//embargo = sub.getEmbargoTypeByGuarantor(EmbargoGuarantor.DEFAULT).getId().toString();
 		}
 		
 		// Verify the form if we are submitting or if jumping from the confirm step.
@@ -313,10 +321,9 @@ public class DocumentInfo extends AbstractSubmitStep {
 		
 		
 		renderTemplate("Submit/documentInfo.html", subId, stickies,
-
 				title, degreeMonth, degreeYear, defenseDate, docType, abstractText, keywords, 
 				subjectPrimary, subjectSecondary, subjectTertiary, docLanguage, committeeSlots, 
-				committee, chairEmail, publishedMaterialFlag, publishedMaterial, embargo);
+				committee, chairEmail, publishedMaterialFlag, publishedMaterial, embargos);
 	}
 
 	/**
