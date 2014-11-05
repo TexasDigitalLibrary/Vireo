@@ -114,7 +114,6 @@ public class DocumentInfo extends AbstractSubmitStep {
 		List<String> embargos = new ArrayList<String>();
 		if(embargosString != null)
 			for(String embargo : embargosString.split(",")) {
-				Logger.info(embargo);
 				embargos.add(embargo);
 			}
 		

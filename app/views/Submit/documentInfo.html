@@ -95,13 +95,30 @@ jQuery(document).ready(function(){
     });
 
     jQuery(".embargo-radio").on("click", function() {
+    	getAllSelectedEmbargos(false);
+    });
+
+    getAllSelectedEmbargos(true);
+
+    function getAllSelectedEmbargos(initLoad) {
     	var selectedEmbargos = ""
     	jQuery(".embargo-radio:checked").each(function() {
     		selectedEmbargos += this.value+","
+
+    		if(initLoad) {
+    			var embargoSet = $(this).attr("data-embargoSet");
+    			$("#embargo-"+embargoSet).show();    			
+    		}
+
     	});
+
+    	if((jQuery(".embargo-addition-type .embargo-radio:checked").length == jQuery(".embargo-addition-type").length) && initLoad)
+    		jQuery("#additional-embargos-btn").hide();
+    
     	selectedEmbargos = selectedEmbargos.substr(0, selectedEmbargos.length-1);
-    	$("#embargo-input-field").val(selectedEmbargos);
-    });
+    	$("#embargo-input-field").val(selectedEmbargos); 
+
+    }
 
 });
 </script>
@@ -376,9 +393,38 @@ jQuery(document).ready(function(){
     </fieldset>
     #{/ifEnabled}
 
+ 			
 
-	#{ifEnabled EMBARGO_TYPE }
+
 	#{list org.tdl.vireo.model.EmbargoGuarantor.values(), as: 'embargoSet'}
+		
+		%{
+			def EMBARGO_TYPE = EMBARGO_TYPE;
+		}%
+
+		
+		#{list org.tdl.vireo.constant.FieldConfig.values(), as: 'field'}
+			
+			%{
+        	
+    			def currentEmbargoSet = ["EMBARGO_TYPE_",embargoSet].join("");
+
+    			if(field.name() == currentEmbargoSet.toString()) {
+    				EMBARGO_TYPE = field;
+    			}	
+	        		
+	        	
+	        
+	        }%
+
+		#{/list}
+
+
+
+		#{ifEnabled EMBARGO_TYPE}
+			blah
+		#{/ifEnabled}
+
 		<fieldset class="form-horizontal">
 			#{if embargoSet.toString() == 'DEFAULT'}
 				#{ifRequired EMBARGO_TYPE}<legend class="strong">#{fieldLabel EMBARGO_TYPE /}</legend>#{/ifRequired}#{else}<legend>#{fieldLabel EMBARGO_TYPE /}</legend>#{/else}
@@ -396,7 +442,7 @@ jQuery(document).ready(function(){
 		                    <label class="control-label">${et.getName()}:</label>
 		                    <div class="controls">
 		                        <label class="radio">
-									<input type="radio" id="embargo_${et_index}" class="embargo-radio" name="embargo-${embargoSet}" selected="selected" value="${et.getId()}" 
+									<input type="radio" id="embargo_${et_index}" class="embargo-radio" name="embargo-${embargoSet}" selected="selected"  data-embargoSet="${embargoSet}"  value="${et.getId()}" 
 									#{list embargos, as: 'selectedEmbargoId'}
 										#{if selectedEmbargoId == et.getId().toString()} checked=true #{/if}
 									#{/list}
@@ -407,14 +453,11 @@ jQuery(document).ready(function(){
 		                #{/if}
 		            #{/list}
 				</div>
-				#{if embargoSet.toString() == 'DEFAULT'}
-					<a href="#" id="additional-embargos-btn">Additional Embargos</a>
-				#{/if}
 			</div>	
 		</fieldset>
 	#{/list}
-	<input type="hidden" id="embargo-input-field" name="embargo" value="" />     
-	#{/ifEnabled}
+	<a href="#" id="additional-embargos-btn">Additional Embargos</a>
+	<input type="hidden" id="embargo-input-field" name="embargo" value="" />
 	
 	<div class="span10 center">
 		<input type="submit" name="submit_next" value="Save and Continue >>" class="btn btn-primary">
