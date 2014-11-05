@@ -258,9 +258,9 @@ public enum FieldConfig {
 	
 	EMBARGO_TYPE_PROQUEST(
 					"Proquest Embargo Type",
-					"submit_embargo_type_label",
-					"submit_embargo_type_help",
-					"submit_embargo_type_enabled",
+					"submit_embargo_type_proquest_label",
+					"submit_embargo_type_proquest_help",
+					"submit_embargo_type_proquest_enabled",
 					"Request a delay in publication. The options available are customizable under the Configurable Settings Tab."),	
 			
 	/** File Upload **/
