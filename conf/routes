@@ -60,8 +60,6 @@ POST	/admin/list/batch/assign				FilterTab.batchAssign
 POST	/admin/list/batch/comment				FilterTab.batchComment
 
 ### View Tab
-*       /admin/view/?                           ViewTab.view
-GET		/admin/view/{subId}						ViewTab.view
 POST	/admin/view/sendAdvisorEmail			ViewTab.sendAdvisorEmail
 POST	/admin/view/update						ViewTab.updateJSON
 POST	/admin/view/updateGraduationDate		ViewTab.updateGraduationDateJSON
@@ -76,7 +74,9 @@ POST	/admin/view/changeAssignedTo			ViewTab.changeAssignedTo
 POST	/admin/view/changeSubmissionDate		ViewTab.changeSubmissionDate
 POST	/admin/view/retrieveTemplate			ViewTab.retrieveTemplateJSON
 POST	/admin/view/updateCustomAction			ViewTab.updateCustomActionsJSON
-GET		/admin/view/viewFile/{id}/{name}		ViewTab.viewFile
+*		/admin/view/{subId}						ViewTab.view
+GET		/admin/view/{subId}/viewFile/{id}/{name} ViewTab.viewFile
+*       /admin/view/?                           ViewTab.view
 
 ### Settings Tab
 GET     /admin/settings/?                       SettingsTab.settingsRedirect

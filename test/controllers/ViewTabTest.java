@@ -949,6 +949,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		String fileName = submission.getAttachments().get(0).getName();
 		
 		Map<String,Object> routeArgs = new HashMap<String,Object>();
+		routeArgs.put("subId", id.toString());
 		routeArgs.put("id", fileId.toString());
 		routeArgs.put("name", fileName);
 		

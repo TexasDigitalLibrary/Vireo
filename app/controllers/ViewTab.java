@@ -83,16 +83,12 @@ public class ViewTab extends AbstractVireoController {
 	 * The main view method.
 	 */
 	@Security(RoleType.REVIEWER)
-	public static void view() {			
-		
-		if(params.get("subId") != null){
-			session.put("submission", params.get("subId"));
-		}
+	public static void view(Long subId) {	
 
-		Long id = null;
-		if(session.contains("submission")){
-			id = Long.valueOf(session.get("submission"));
-		} else {
+		Long id = subId;
+		
+		if (id == null) {
+			flash.put("noSubmission", "Please select a submission to view.");
 			FilterTab.list();
 		}
 		Submission submission = subRepo.findSubmission(id);
@@ -729,13 +725,13 @@ public class ViewTab extends AbstractVireoController {
 				// Deposit the item
 				DepositLocation location = settingRepo.findDepositLocation(depositLocationId);
 				depositService.deposit(location, submission, state, true);
-				view();
+				view(id);
 			}
 			
 			// Normal state transition, update & save.
 			submission.setState(state);
 			submission.save();
-			view();
+			view(id);
 		}
 	}
 
@@ -763,7 +759,7 @@ public class ViewTab extends AbstractVireoController {
 		
 		submission.save();
 
-		view();
+		view(id);
 
 	}
 	
@@ -791,7 +787,7 @@ public class ViewTab extends AbstractVireoController {
 			validation.addError("changeSubmissionDate", "The date provided was not formatted correctly. Please format your date like MM/DD/YYYY.");
 		}
 		
-		view();
+		view(id);
 		
 	}
 	
@@ -1099,14 +1095,7 @@ public class ViewTab extends AbstractVireoController {
 	 * @param name (The name of the file)
 	 */
 	@Security(RoleType.REVIEWER)
-	public static void viewFile(Long id, String name){
-		
-		Long subId = null;
-		if(session.contains("submission")){
-			subId = Long.valueOf(session.get("submission"));
-		} else {
-			FilterTab.list();
-		}
+	public static void viewFile(Long subId, Long id, String name){
 		
 		Submission sub = subRepo.findSubmission(subId);
 		
@@ -1160,7 +1149,7 @@ public class ViewTab extends AbstractVireoController {
 		
 		emailService.sendEmail(email,true);
 		
-		view();
+		view(id);
 	}
 
 	/**
