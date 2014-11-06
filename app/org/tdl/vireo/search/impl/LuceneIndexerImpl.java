@@ -87,6 +87,8 @@ import play.Play;
  * submissionDate: The submission date for the submission as a numeric date
  * stored as milliseconds.
  * 
+ * customAction: The submission's completed custom actions (search and sort)
+ * 
  * 
  * 
  * ONLY USED FOR SORTING:
@@ -125,9 +127,6 @@ import play.Play;
  * name for sorting.
  * 
  * committeeContactEmail: The committee email for sorting
- * 
- * customActions: The count of custom actions that have been checked off on the
- * submission for sorting.
  * 
  * degreeLevel: the degree level, single token not analyzed just for sorting
  * 

@@ -16,6 +16,7 @@ import org.tdl.vireo.export.Packager;
 import org.tdl.vireo.job.JobManager;
 import org.tdl.vireo.job.JobMetadata;
 import org.tdl.vireo.model.ActionLog;
+import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmbargoType;
@@ -24,6 +25,7 @@ import org.tdl.vireo.model.NamedSearchFilter;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.model.jpa.JpaNamedSearchFilterImpl;
 import org.tdl.vireo.search.ActiveSearchFilter;
 import org.tdl.vireo.search.SearchDirection;
 import org.tdl.vireo.search.SearchFacet;
@@ -212,7 +214,10 @@ public class FilterTab extends AbstractVireoController {
 		List<Person> assignees = personRepo.findPersonsByRole(RoleType.REVIEWER);
 		List<EmailTemplate> templates = settingRepo.findAllEmailTemplates();
 		
-		render(nav, allFilters, activeFilter, results, orderby, columns, facets, direction, resultsPerPage, assignees, templates);
+		// get all the custom actions available in the system
+		List<CustomActionDefinition> actions = settingRepo.findAllCustomActionDefinition();
+		
+		render(nav, allFilters, activeFilter, results, orderby, columns, facets, direction, resultsPerPage, assignees, templates, actions);
 	}
 	
 	/**
@@ -310,7 +315,10 @@ public class FilterTab extends AbstractVireoController {
 		renderArgs.put(SearchDirection.ASCENDING.name(), SearchDirection.ASCENDING);
 		renderArgs.put(SearchDirection.DESCENDING.name(), SearchDirection.DESCENDING);
 		
-		render(nav, allFilters, activeFilter, results, orderby, columns, facets, direction, resultsPerPage);
+		// get all the custom actions available in the system
+		List<CustomActionDefinition> actions = settingRepo.findAllCustomActionDefinition();
+		
+		render(nav, allFilters, activeFilter, results, orderby, columns, facets, direction, resultsPerPage, actions);
 	}
 	
 	/**
@@ -392,7 +400,7 @@ public class FilterTab extends AbstractVireoController {
 		// Check that column has at least the ID field.
 		if (columns.contains(SearchOrder.ID)) {
 
-			// Now that everythinghas been checked, reform the list into a comma
+			// Now that everything has been checked, reform the list into a comma
 			// separated list: "1,2,4,5" (notice not the column_part as before)
 			String columnsSerialized = "";
 			for (SearchOrder column : columns) {
@@ -482,9 +490,9 @@ public class FilterTab extends AbstractVireoController {
 			if (name != null && name.trim().length() > 0 ) {
 			
 				// Check if a filter already exists for the name.
-				NamedSearchFilter namedFilter = subRepo.findSearchFilterByCreatorAndName(person, name);
+				JpaNamedSearchFilterImpl namedFilter = (JpaNamedSearchFilterImpl) subRepo.findSearchFilterByCreatorAndName(person, name);
 				if (namedFilter == null) {
-					namedFilter = subRepo.createSearchFilter(person, name);
+					namedFilter = (JpaNamedSearchFilterImpl) subRepo.createSearchFilter(person, name);
 				}
 				
 				activeFilter.copyTo(namedFilter);
@@ -990,6 +998,10 @@ public class FilterTab extends AbstractVireoController {
 			// Set the range
 			activeFilter.setDateRangeStart(start.getTime());
 			activeFilter.setDateRangeEnd(end.getTime());			
+		} else if ("customAction".equals(type)){
+			Long customActionId = params.get("value",Long.class);
+			CustomActionDefinition customAction = settingRepo.findCustomActionDefinition(customActionId);
+			activeFilter.addCustomAction(customAction);
 		} else {
 			error("Unable to add an unknown filter paramater.");
 		}
@@ -1088,6 +1100,10 @@ public class FilterTab extends AbstractVireoController {
 		} else if ("rangeEnd".equals(type)) {
 			activeFilter.setDateRangeEnd(null);
 
+		} else if ("customAction".equals(type)){
+			Long customActionId = params.get("value",Long.class);
+			CustomActionDefinition customAction = settingRepo.findCustomActionDefinition(customActionId);
+			activeFilter.removeCustomAction(customAction);
 		} else {	
 			error("Unable to remove an unknown filter paramater.");
 		}
