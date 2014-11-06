@@ -110,13 +110,16 @@ public class DocumentInfo extends AbstractSubmitStep {
 			publishedMaterial = null;
 		String chairEmail = params.get("chairEmail");
 		
-		String embargosString = params.get("embargo");
-		List<String> embargos = new ArrayList<String>();
-		if(embargosString != null)
-			for(String embargo : embargosString.split(",")) {
-				embargos.add(embargo);
-			}
 		
+		
+		List<String> embargos = new ArrayList<String>();
+		for(EmbargoGuarantor gaurantor : EmbargoGuarantor.values() ) {
+			String embargoString = params.get("embargo-"+gaurantor.name()); 
+			
+			if(embargoString != null && embargoString.trim().length() != 0)
+				embargos.add(embargoString);
+		}
+				
 		List<TransientMember> committee = parseCommitteeMembers();
 
 		if ("documentInfo".equals(params.get("step"))) {
@@ -192,6 +195,7 @@ public class DocumentInfo extends AbstractSubmitStep {
 			if (isFieldEnabled(EMBARGO_TYPE)) {
 				for(String embargo : embargos) {
 					try {
+						Logger.info(embargo);
 						sub.addEmbargoType(settingRepo.findEmbargoType(Long.parseLong(embargo)));	
 					} catch (RuntimeException re){
 						if (isFieldRequired(EMBARGO_TYPE))
@@ -257,6 +261,19 @@ public class DocumentInfo extends AbstractSubmitStep {
 
 			if (isFieldEnabled(PUBLISHED_MATERIAL))
 				publishedMaterial = sub.getPublishedMaterial();
+			
+			for(EmbargoGuarantor eg : EmbargoGuarantor.values()) {
+				
+				String fieldName = eg.name().equals("DEFAULT") ? "EMBARGO_TYPE" : "EMBARGO_TYPE_"+eg.name();
+				
+				FieldConfig field = FieldConfig.valueOf(fieldName);
+				
+				System.out.println(sub.getEmbargoTypeByGuarantor(eg) != null);
+				
+				if (isFieldEnabled(field) && sub.getEmbargoTypeByGuarantor(eg) != null) {
+					embargos.add(sub.getEmbargoTypeByGuarantor(eg).getId().toString());
+				}
+			}
 			
 			//if (isFieldEnabled(EMBARGO_TYPE) && sub.getEmbargoTypeByGuarantor(EmbargoGuarantor.DEFAULT) != null)
 				//embargo = sub.getEmbargoTypeByGuarantor(EmbargoGuarantor.DEFAULT).getId().toString();
@@ -414,8 +431,22 @@ public class DocumentInfo extends AbstractSubmitStep {
 		}
 		
 		// Embargo
-		if (isFieldRequired(EMBARGO_TYPE) && sub.getEmbargoTypeByGuarantor(EmbargoGuarantor.DEFAULT) == null)
-			validation.addError("embargo", "Please choose an embargo option");
+		
+		for(EmbargoGuarantor eg : EmbargoGuarantor.values()) {
+			
+			String fieldName = eg.name().equals("DEFAULT") ? "EMBARGO_TYPE" : "EMBARGO_TYPE_"+eg.name();
+			
+			FieldConfig field = FieldConfig.valueOf(fieldName);
+			
+			System.out.println(sub.getEmbargoTypeByGuarantor(eg) != null);
+			
+			if (isFieldRequired(field) && sub.getEmbargoTypeByGuarantor(eg) == null)
+				validation.addError("embargo", "Please choose a "+eg.name().toLowerCase()+" embargo option");
+		}
+		
+		
+		
+		
 
 		// Check if we've added any new errors. If so return false;
 		if (numberOfErrorsBefore == validation.errors().size()) 
@@ -716,11 +747,6 @@ public class DocumentInfo extends AbstractSubmitStep {
 		return true;
 	}
 
-	
-	
-	
-	
-	
 	
 	/**
 	 * Simple data structure to keep committee members while being processed.

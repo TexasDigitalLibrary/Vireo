@@ -94,31 +94,22 @@ jQuery(document).ready(function(){
     	});
     });
 
-    jQuery(".embargo-radio").on("click", function() {
-    	getAllSelectedEmbargos(false);
-    });
+    jQuery(".embargo-radio:checked").each(function() {
+		var embargoSet = $(this).attr("data-embargoSet");
+		$("#embargo-"+embargoSet).show();    			
+	});
 
-    getAllSelectedEmbargos(true);
-
-    function getAllSelectedEmbargos(initLoad) {
-    	var selectedEmbargos = ""
-    	jQuery(".embargo-radio:checked").each(function() {
-    		selectedEmbargos += this.value+","
-
-    		if(initLoad) {
-    			var embargoSet = $(this).attr("data-embargoSet");
-    			$("#embargo-"+embargoSet).show();    			
-    		}
-
-    	});
-
-    	if((jQuery(".embargo-addition-type .embargo-radio:checked").length == jQuery(".embargo-addition-type").length) && initLoad)
-    		jQuery("#additional-embargos-btn").hide();
+    var allEmbargoSectionsUsed = jQuery(".embargo-addition-type .embargo-radio:checked").length == jQuery(".embargo-addition-type").length;
+    var allEmbargoSectionsReq =  jQuery(".embargo-addition-type").length == jQuery(".embargoReq").length;
     
-    	selectedEmbargos = selectedEmbargos.substr(0, selectedEmbargos.length-1);
-    	$("#embargo-input-field").val(selectedEmbargos); 
+    console.log("allEmbargoSectionsUsed " + allEmbargoSectionsUsed);
+    console.log("allEmbargoSectionsReq " + allEmbargoSectionsReq);
 
-    }
+
+    if(allEmbargoSectionsUsed || allEmbargoSectionsReq)
+    		jQuery("#additional-embargos-btn").hide();
+
+    jQuery(".embargoReq").show();
 
 });
 </script>
@@ -393,11 +384,13 @@ jQuery(document).ready(function(){
     </fieldset>
     #{/ifEnabled}
 
- 			
 
-
-	#{list org.tdl.vireo.model.EmbargoGuarantor.values(), as: 'embargoSet'}
-		
+    %{
+		def activeEmbargosMap = new java.util.LinkedHashMap<org.tdl.vireo.constant.FieldConfig, org.tdl.vireo.model.EmbargoGuarantor>();
+	}%
+	
+    #{list org.tdl.vireo.model.EmbargoGuarantor.values(), as: 'embargoSet'}
+				
 		%{
 			def EMBARGO_TYPE = EMBARGO_TYPE;
 		}%
@@ -406,58 +399,58 @@ jQuery(document).ready(function(){
 		#{list org.tdl.vireo.constant.FieldConfig.values(), as: 'field'}
 			
 			%{
-        	
-    			def currentEmbargoSet = ["EMBARGO_TYPE_",embargoSet].join("");
+				def currentEmbargoSet = ["EMBARGO_TYPE_",embargoSet].join("");
 
-    			if(field.name() == currentEmbargoSet.toString()) {
-    				EMBARGO_TYPE = field;
-    			}	
-	        		
-	        	
-	        
-	        }%
+				if(field.name() == currentEmbargoSet.toString()) {
+					EMBARGO_TYPE = field;
+				}	
+           }%
 
 		#{/list}
 
-
-
 		#{ifEnabled EMBARGO_TYPE}
-			blah
+			%{
+				activeEmbargosMap.put(EMBARGO_TYPE, embargoSet); 
+			}%
 		#{/ifEnabled}
+	#{/list}
 
-		<fieldset class="form-horizontal">
-			#{if embargoSet.toString() == 'DEFAULT'}
-				#{ifRequired EMBARGO_TYPE}<legend class="strong">#{fieldLabel EMBARGO_TYPE /}</legend>#{/ifRequired}#{else}<legend>#{fieldLabel EMBARGO_TYPE /}</legend>#{/else}
-				<p>#{fieldHelp EMBARGO_TYPE /}</p>
-			#{/if}	
+	#{if activeEmbargosMap.size() > 0}
+	<fieldset class="form-horizontal">
+		<legend>Embargo Options</legend>
+		<div id="embargo-sets">	
 
-			<div id="embargo-sets">	
+			#{list items:activeEmbargosMap.keySet(), as: 'EMBARGO_TYPE'}
 				<div id="embargo-${embargoSet}" 
-					class="embargo-gaurentor-set  #{if embargoSet.toString() != 'DEFAULT'} embargo-addition-type #{/if}"  
+					class="embargo-gaurentor-set  
+					#{if embargoSet.toString() != 'DEFAULT'} embargo-addition-type #{/if}  
+					#{ifRequired EMBARGO_TYPE}#{if embargoSet.toString() != "DEFAULT"}embargoReq#{/if}#{/ifRequired}"  
 					#{if embargoSet.toString() != 'DEFAULT'} style="display:none;" #{/if}>
-					<h4>${embargoSet}</h4>
+					<h4>#{ifRequired EMBARGO_TYPE}* #{/ifRequired}#{fieldLabel EMBARGO_TYPE /}</h4>
+					<p>#{fieldHelp EMBARGO_TYPE /}</p>
 					#{list embargoTypes, as: 'et'}
-		                #{if et.getGuarantor().toString() == embargoSet.toString()}
+		                #{if et.getGuarantor().toString() == activeEmbargosMap.get(EMBARGO_TYPE).toString()}
 		                <div class="control-group #{errorClass 'embargo' /}">
 		                    <label class="control-label">${et.getName()}:</label>
 		                    <div class="controls">
 		                        <label class="radio">
-									<input type="radio" id="embargo_${et_index}" class="embargo-radio" name="embargo-${embargoSet}" selected="selected"  data-embargoSet="${embargoSet}"  value="${et.getId()}" 
-									#{list embargos, as: 'selectedEmbargoId'}
-										#{if selectedEmbargoId == et.getId().toString()} checked=true #{/if}
-									#{/list}
-									>&nbsp;&nbsp;${et.getDescription()}
+						<input type="radio" id="embargo_${et_index}" class="embargo-radio" name="embargo-${embargoSet}" selected="selected"  data-embargoSet="${embargoSet}"  value="${et.getId()}" 
+							#{list embargos, as: 'selectedEmbargoId'}
+								#{if selectedEmbargoId == et.getId().toString()} checked=true #{/if}
+							#{/list}
+						>&nbsp;&nbsp;${et.getDescription()}
 		                        </label>
 		                    </div>
 		                </div>
 		                #{/if}
 		            #{/list}
 				</div>
-			</div>	
-		</fieldset>
-	#{/list}
+			#{/list}
+		</div>	
+	</fieldset>
+	#{/if}
+
 	<a href="#" id="additional-embargos-btn">Additional Embargos</a>
-	<input type="hidden" id="embargo-input-field" name="embargo" value="" />
 	
 	<div class="span10 center">
 		<input type="submit" name="submit_next" value="Save and Continue >>" class="btn btn-primary">
