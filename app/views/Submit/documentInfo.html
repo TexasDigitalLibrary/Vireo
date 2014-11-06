@@ -90,7 +90,7 @@ jQuery(document).ready(function(){
     jQuery("#additional-embargos-btn").on("click", function(e) {
     	e.preventDefault();
     	jQuery(this).fadeOut(300, function() {
-    		jQuery(".embargo-addition-type").fadeIn(300);
+    		jQuery(".embargo-type-additional").fadeIn(300);
     	});
     });
 
@@ -99,15 +99,16 @@ jQuery(document).ready(function(){
 		$("#embargo-"+embargoSet).show();    			
 	});
 
-    var allEmbargoSectionsUsed = jQuery(".embargo-addition-type .embargo-radio:checked").length == jQuery(".embargo-addition-type").length;
-    var allEmbargoSectionsReq =  jQuery(".embargo-addition-type").length == jQuery(".embargoReq").length;
+    var allEmbargoSectionsUsed = jQuery(".embargo-type-additional .embargo-radio:checked").length == jQuery(".embargo-type-additional").length;
+    var allEmbargoSectionsReq =  jQuery(".embargo-type-additional").length == jQuery(".embargoReq").length;
     
-    console.log("allEmbargoSectionsUsed " + allEmbargoSectionsUsed);
-    console.log("allEmbargoSectionsReq " + allEmbargoSectionsReq);
-
-
     if(allEmbargoSectionsUsed || allEmbargoSectionsReq)
-    		jQuery("#additional-embargos-btn").hide();
+    	jQuery("#additional-embargos-btn").hide();
+
+    if(jQuery("#embargo-DEFAULT").length == 0) {
+    	jQuery(".embargo-type-additional").first().show();
+    	if(jQuery(".embargo-type-additional").length = 1) jQuery("#additional-embargos-btn").hide();     	
+    }
 
     jQuery(".embargoReq").show();
 
@@ -421,20 +422,26 @@ jQuery(document).ready(function(){
 		<div id="embargo-sets">	
 
 			#{list items:activeEmbargosMap.keySet(), as: 'EMBARGO_TYPE'}
-				<div id="embargo-${embargoSet}" 
+				
+				%{
+					def embargoErrorClass = ["embargo-",activeEmbargosMap.get(EMBARGO_TYPE).toString()].join("")
+				}%
+
+				<div id="embargo-${activeEmbargosMap.get(EMBARGO_TYPE).toString()}" 
 					class="embargo-gaurentor-set  
-					#{if embargoSet.toString() != 'DEFAULT'} embargo-addition-type #{/if}  
-					#{ifRequired EMBARGO_TYPE}#{if embargoSet.toString() != "DEFAULT"}embargoReq#{/if}#{/ifRequired}"  
-					#{if embargoSet.toString() != 'DEFAULT'} style="display:none;" #{/if}>
-					<h4>#{ifRequired EMBARGO_TYPE}* #{/ifRequired}#{fieldLabel EMBARGO_TYPE /}</h4>
+					#{if activeEmbargosMap.get(EMBARGO_TYPE).toString() != 'DEFAULT'} embargo-type-additional #{/if} 
+					#{ifRequired EMBARGO_TYPE}#{if activeEmbargosMap.get(EMBARGO_TYPE).toString() != "DEFAULT"}embargoReq#{/if}#{/ifRequired}"  
+					#{if activeEmbargosMap.get(EMBARGO_TYPE).toString() != 'DEFAULT'} style="display:none;" #{/if}>
+					
+					<h4 class="#{errorClass embargoErrorClass /}">#{ifRequired EMBARGO_TYPE}* #{/ifRequired}#{fieldLabel EMBARGO_TYPE /}</h4>
 					<p>#{fieldHelp EMBARGO_TYPE /}</p>
 					#{list embargoTypes, as: 'et'}
 		                #{if et.getGuarantor().toString() == activeEmbargosMap.get(EMBARGO_TYPE).toString()}
-		                <div class="control-group #{errorClass 'embargo' /}">
+		                <div class="control-group">
 		                    <label class="control-label">${et.getName()}:</label>
 		                    <div class="controls">
 		                        <label class="radio">
-						<input type="radio" id="embargo_${et_index}" class="embargo-radio" name="embargo-${embargoSet}" selected="selected"  data-embargoSet="${embargoSet}"  value="${et.getId()}" 
+						<input type="radio" id="embargo_${et_index}" class="embargo-radio" name="embargo-${activeEmbargosMap.get(EMBARGO_TYPE).toString()}" selected="selected"  data-embargoSet="${activeEmbargosMap.get(EMBARGO_TYPE).toString()}"  value="${et.getId()}" 
 							#{list embargos, as: 'selectedEmbargoId'}
 								#{if selectedEmbargoId == et.getId().toString()} checked=true #{/if}
 							#{/list}

@@ -248,20 +248,20 @@ public enum FieldConfig {
 			"submit_published_material_help",
 			"submit_published_material_enabled",
 			"Allows the author to identify previously published material which may require additional copyright review. If the author answers positively then they will be required to identify the sections which materials have been previously published."),
-	
-	EMBARGO_TYPE_PROQUEST(
-			"Proquest Embargo Type",
-			"submit_embargo_type_proquest_label",
-			"submit_embargo_type_proquest_help",
-			"submit_embargo_type_proquest_enabled",
-			"Request a delay in publication. The options available are customizable under the Configurable Settings Tab."),			
-			
+		
 	EMBARGO_TYPE(
 			"Default Embargo Type",
 			"submit_embargo_type_label",
 			"submit_embargo_type_help",
 			"submit_embargo_type_enabled",
 			"Request a delay in publication. The options available are customizable under the Configurable Settings Tab."),
+	
+	EMBARGO_TYPE_PROQUEST(
+					"Proquest Embargo Type",
+					"submit_embargo_type_proquest_label",
+					"submit_embargo_type_proquest_help",
+					"submit_embargo_type_proquest_enabled",
+					"Request a delay in publication. The options available are customizable under the Configurable Settings Tab."),	
 			
 	/** File Upload **/
 			

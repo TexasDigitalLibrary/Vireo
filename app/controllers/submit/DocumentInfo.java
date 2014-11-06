@@ -195,7 +195,6 @@ public class DocumentInfo extends AbstractSubmitStep {
 			if (isFieldEnabled(EMBARGO_TYPE)) {
 				for(String embargo : embargos) {
 					try {
-						Logger.info(embargo);
 						sub.addEmbargoType(settingRepo.findEmbargoType(Long.parseLong(embargo)));	
 					} catch (RuntimeException re){
 						if (isFieldRequired(EMBARGO_TYPE))
@@ -275,8 +274,6 @@ public class DocumentInfo extends AbstractSubmitStep {
 				}
 			}
 			
-			//if (isFieldEnabled(EMBARGO_TYPE) && sub.getEmbargoTypeByGuarantor(EmbargoGuarantor.DEFAULT) != null)
-				//embargo = sub.getEmbargoTypeByGuarantor(EmbargoGuarantor.DEFAULT).getId().toString();
 		}
 		
 		// Verify the form if we are submitting or if jumping from the confirm step.
@@ -441,13 +438,9 @@ public class DocumentInfo extends AbstractSubmitStep {
 			System.out.println(sub.getEmbargoTypeByGuarantor(eg) != null);
 			
 			if (isFieldRequired(field) && sub.getEmbargoTypeByGuarantor(eg) == null)
-				validation.addError("embargo", "Please choose a "+eg.name().toLowerCase()+" embargo option");
+				validation.addError("embargo-"+eg.name(), "Please choose a "+eg.name().toLowerCase()+" embargo option");
 		}
 		
-		
-		
-		
-
 		// Check if we've added any new errors. If so return false;
 		if (numberOfErrorsBefore == validation.errors().size()) 
 			return true;
