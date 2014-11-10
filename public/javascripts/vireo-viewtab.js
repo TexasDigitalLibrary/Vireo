@@ -7,10 +7,32 @@ function embargoHandler(action, id) {
 
 	switch(action) {
 		case "add":
+
+			var markup = '<select>';
+					jQuery(jsDataObjects.embargoTypesArray).each(function() {
+						var embargoType = this;
+						markup += '<option value="'+embargoType.id+'">'+embargoType.name+' ('+embargoType.guarantor+')</option>';
+					});	
+				markup += '</select>';
+				markup += '<i class="icon-remove" title="cancel"></i>&nbsp;<i class="icon-ok confirmEmbargoSelect" title="commit"></i>';
+
+			jQuery("#add_new_embargo button").fadeOut(300);
+			jQuery("#addEmbargoSelect").html(markup);
+
 			console.log(action+" "+id);
 			jQuery("#addEmbargoSelect").fadeIn(300);
 			break
+		case "confirmAdd":
 
+			//call and ajax function
+
+			console.log(action+" "+id);
+			jQuery("#addEmbargoSelect").fadeOut(300);
+			break
+		case "cancelAdd":
+			console.log(action+" "+id);
+			jQuery("#addEmbargoSelect").fadeOut(300);
+			break
 		case "remove":
 			console.log(action+" "+id);
 			break
@@ -807,7 +829,7 @@ function swapToInputHandler(){
  */
 function cancelEditingHandler(){
 	return function() {
-		$this = jQuery(".icon-remove");
+		var $this = jQuery(".icon-remove");
 		if($this.closest(".add").length){
 			jQuery(".add").remove();
 		}else if($this.closest("#committeeMembers").length){
