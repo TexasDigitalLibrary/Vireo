@@ -1,156 +1,25 @@
 /**
- * This function swaps the embargo content
- * into an editable field.
+ * This will handle the adding, deleteing and editing of 
+ * embargos
+ .
  */
+function embargoHandler(action, id) {
 
+	switch(action) {
+		case "add":
+			console.log(action+" "+id);
+			jQuery("#addEmbargoSelect").fadeIn(300);
+			break
 
-/**
- * This function swaps the committee member content
- * into editable fields.
- */
-function editCommitteeMemberHandler(){	
-	return function(event){
-		if(jQuery(this).closest(".editing").length == 0) {
-			jQuery(".icon-remove").click();
+		case "remove":
+			console.log(action+" "+id);
+			break
 
-			//Clean up
-			jQuery(".tooltip").remove();
-			jQuery(this).find(".tooltip-icon").remove();
-			jQuery("#backup").remove();
-
-			//Backup
-			jQuery("body").append('<div id="backup">'+jQuery(this).html()+'</div>');
-
-			var memberId = jQuery(this).parent("li").attr("class");		
-			var firstName = jQuery.trim(escapeQuotes(jQuery(this).find(".firstName").text()));
-			var lastName = jQuery.trim(escapeQuotes(jQuery(this).find(".lastName").text()));
-			var middleName = jQuery.trim(escapeQuotes(jQuery(this).find(".middleName").text()));
-			var currentRoles = new Array();
-			jQuery(this).find(".role").each(function () {
-				currentRoles.push(jQuery.trim(escapeQuotes(jQuery(this).text())));
-			});
-			
-			// get available roles
-			var availableRoles = jQuery.parseJSON(jQuery("#committeeMembers").attr("data-roles"));
-
-			var markup = '<div class="editing"><table>';
-			markup += '<tr><td><b>Last Name</b></td><td><b>First Name</b></td><td><b>Middle Name</b></td><td></td></tr>'
-			markup += '<tr>'
-			markup += '<td><input id="memberId" class="hidden" type="hidden" value="'+memberId+'" />';
-			markup += '<input id="cmLastName" class="span2" type="text" value="'+lastName+'" /></td>';
-			markup += '<td><input id="cmFirstName" class="span2" type="text" value="'+firstName+'" /></td>';
-			markup += '<td><input id="cmMiddleName" class="span2" type="text" value="'+middleName+'" /></td>';
-			
-			if (availableRoles.length == 1 && ( currentRoles.length == 0 || currentRoles[0] == availableRoles[0] )) {
-				// Only one role, so just show a checkbox
-				
-				var checked = "";
-				if (currentRoles[0] == availableRoles[0]) 
-					checked = 'checked="checked"'
-				
-				markup += '</tr>';
-				markup += '<tr><td style="text-align:right;"><b>Role:</b> </td>';
-				markup += '<td colspan="2"> ';
-				markup += '<input class="single-role" id="cmRoles" type="checkbox" value="'+availableRoles[0]+'" '+checked+'> '+availableRoles[0];
-				markup += '</td>';
-				markup += '</tr>';
-				
-			} else {
-				// Otherwise show a full drop down list
-				markup += '</tr>';
-				markup += '<tr><td style="text-align:right;"><b>Roles:</b></td>';
-				markup += '<td colspan="2"><select id="cmRoles" multiple="multiple">';	
-				
-				// List all of the normal roles
-				jQuery.each(availableRoles, function(index, value) {
-					var selected = '';				
-					if (currentRoles.indexOf(value) > -1)
-						var selected = 'selected="selected"';
-					
-					markup += '<option value="'+value+'" '+selected+'>'+value+'</option>'
-				});
-				// If a current role is not in the list of available roles, add it to the end of the list.
-				jQuery.each(currentRoles, function(index, value) {
-					if (availableRoles.indexOf(value) == -1)
-						markup += '<option value="'+value+'" selected="selected">'+value+'</option>'
-				});
-	
-				markup += '</select></td>';
-				markup += '</tr>';
-			}
-			
-			markup += '</table><div style="padding:5px;"><a class="btn btn-danger btn-mini remove-committee-member" style="margin-right:10px;">delete</a>&nbsp;<i class="icon-remove" title="cancel"></i>&nbsp;<i class="icon-ok" title="commit"></i></div></div>';
-
-			jQuery(this).replaceWith(markup);
-
-			event.stopPropagation();
-			
-			jQuery("select#cmRoles").multiselect({
-				header: false,
-				selectedList: 1,
-				noneSelectedText: "No roles selected"
-			});
-		}
+		case "edit":
+			console.log(action +" "+ id);
+			break
 	}
-}
 
-/**
- * This function adds fields to add a new committee member.
- */
-function addCommitteeMemberHandler(){
-	return function(event) {
-		if(jQuery(this).closest(".editing").length == 0) {
-			jQuery(".icon-remove").click();
-
-			//Clean up
-			jQuery(".tooltip").remove();
-			jQuery(this).find(".tooltip-icon").remove();
-			jQuery("#backup").remove();
-
-			// get available roles
-			var availableRoles = jQuery.parseJSON(jQuery("#committeeMembers").attr("data-roles"));
-			
-			var markup = '<li class="add"><div class="editing"><table>';
-			markup += '<tr><td><b>Last Name</b></td><td><b>First Name</b></td><td><b>Middle Name</b></td><td></td></tr>'
-			markup += '<tr>'
-			markup += '<td><input id="cmLastName" class="span2" type="text" /></td>';
-			markup += '<td><input id="cmFirstName" class="span2" type="text" /></td>';
-			markup += '<td><input id="cmMiddleName" class="span2" type="text" /></td>';
-			if (availableRoles.length == 1 ) {
-				// Only one role, so just show a checkbox
-				markup += '</tr>';
-				markup += '<tr><td style="text-align:right;"><b>Role:</b> </td>';
-				markup += '<td colspan="2"> ';
-				markup += '<input class="single-role" id="cmRoles" type="checkbox" value="'+availableRoles[0]+'"> '+availableRoles[0];
-				markup += '</td>';
-				markup += '</tr>';
-				
-			} else {
-				// Otherwise show a full drop down list
-				markup += '</tr>';
-				markup += '<tr><td style="text-align:right;"><b>Roles:</b></td>';
-				markup += '<td colspan="2"><select id="cmRoles" multiple="multiple">';	
-				
-				// List all of the normal roles
-				jQuery.each(availableRoles, function(index, value) {
-					markup += '<option value="'+value+'">'+value+'</option>'
-				});
-				markup += '</select></td>';
-				markup += '</tr>';
-			}
-			markup += '</table><i class="icon-remove" title="cancel"></i>&nbsp<i class="icon-ok" title="commit"></i></div></li>';
-
-			jQuery(markup).insertBefore('#add_new_member');
-
-			event.stopPropagation();
-			
-			jQuery("select#cmRoles").multiselect({
-				header: false,
-				selectedList: 1,
-				noneSelectedText: "No roles selected"
-			});
-		}
-	}
 }
 
 /**
@@ -367,6 +236,157 @@ function commitChangesHandler(eventTarget, jsonURL, committeeURL, subId){
 	}	
 	jQuery("#backup").remove();
 }
+
+/**
+ * This function swaps the committee member content
+ * into editable fields.
+ */
+function editCommitteeMemberHandler(){	
+	return function(event){
+		if(jQuery(this).closest(".editing").length == 0) {
+			jQuery(".icon-remove").click();
+
+			//Clean up
+			jQuery(".tooltip").remove();
+			jQuery(this).find(".tooltip-icon").remove();
+			jQuery("#backup").remove();
+
+			//Backup
+			jQuery("body").append('<div id="backup">'+jQuery(this).html()+'</div>');
+
+			var memberId = jQuery(this).parent("li").attr("class");		
+			var firstName = jQuery.trim(escapeQuotes(jQuery(this).find(".firstName").text()));
+			var lastName = jQuery.trim(escapeQuotes(jQuery(this).find(".lastName").text()));
+			var middleName = jQuery.trim(escapeQuotes(jQuery(this).find(".middleName").text()));
+			var currentRoles = new Array();
+			jQuery(this).find(".role").each(function () {
+				currentRoles.push(jQuery.trim(escapeQuotes(jQuery(this).text())));
+			});
+			
+			// get available roles
+			var availableRoles = jQuery.parseJSON(jQuery("#committeeMembers").attr("data-roles"));
+
+			var markup = '<div class="editing"><table>';
+			markup += '<tr><td><b>Last Name</b></td><td><b>First Name</b></td><td><b>Middle Name</b></td><td></td></tr>'
+			markup += '<tr>'
+			markup += '<td><input id="memberId" class="hidden" type="hidden" value="'+memberId+'" />';
+			markup += '<input id="cmLastName" class="span2" type="text" value="'+lastName+'" /></td>';
+			markup += '<td><input id="cmFirstName" class="span2" type="text" value="'+firstName+'" /></td>';
+			markup += '<td><input id="cmMiddleName" class="span2" type="text" value="'+middleName+'" /></td>';
+			
+			if (availableRoles.length == 1 && ( currentRoles.length == 0 || currentRoles[0] == availableRoles[0] )) {
+				// Only one role, so just show a checkbox
+				
+				var checked = "";
+				if (currentRoles[0] == availableRoles[0]) 
+					checked = 'checked="checked"'
+				
+				markup += '</tr>';
+				markup += '<tr><td style="text-align:right;"><b>Role:</b> </td>';
+				markup += '<td colspan="2"> ';
+				markup += '<input class="single-role" id="cmRoles" type="checkbox" value="'+availableRoles[0]+'" '+checked+'> '+availableRoles[0];
+				markup += '</td>';
+				markup += '</tr>';
+				
+			} else {
+				// Otherwise show a full drop down list
+				markup += '</tr>';
+				markup += '<tr><td style="text-align:right;"><b>Roles:</b></td>';
+				markup += '<td colspan="2"><select id="cmRoles" multiple="multiple">';	
+				
+				// List all of the normal roles
+				jQuery.each(availableRoles, function(index, value) {
+					var selected = '';				
+					if (currentRoles.indexOf(value) > -1)
+						var selected = 'selected="selected"';
+					
+					markup += '<option value="'+value+'" '+selected+'>'+value+'</option>'
+				});
+				// If a current role is not in the list of available roles, add it to the end of the list.
+				jQuery.each(currentRoles, function(index, value) {
+					if (availableRoles.indexOf(value) == -1)
+						markup += '<option value="'+value+'" selected="selected">'+value+'</option>'
+				});
+	
+				markup += '</select></td>';
+				markup += '</tr>';
+			}
+			
+			markup += '</table><div style="padding:5px;"><a class="btn btn-danger btn-mini remove-committee-member" style="margin-right:10px;">delete</a>&nbsp;<i class="icon-remove" title="cancel"></i>&nbsp;<i class="icon-ok" title="commit"></i></div></div>';
+
+			jQuery(this).replaceWith(markup);
+
+			event.stopPropagation();
+			
+			jQuery("select#cmRoles").multiselect({
+				header: false,
+				selectedList: 1,
+				noneSelectedText: "No roles selected"
+			});
+		}
+	}
+}
+
+/**
+ * This function adds fields to add a new committee member.
+ */
+function addCommitteeMemberHandler(){
+	return function(event) {
+		if(jQuery(this).closest(".editing").length == 0) {
+			jQuery(".icon-remove").click();
+
+			//Clean up
+			jQuery(".tooltip").remove();
+			jQuery(this).find(".tooltip-icon").remove();
+			jQuery("#backup").remove();
+
+			// get available roles
+			var availableRoles = jQuery.parseJSON(jQuery("#committeeMembers").attr("data-roles"));
+			
+			var markup = '<li class="add"><div class="editing"><table>';
+			markup += '<tr><td><b>Last Name</b></td><td><b>First Name</b></td><td><b>Middle Name</b></td><td></td></tr>'
+			markup += '<tr>'
+			markup += '<td><input id="cmLastName" class="span2" type="text" /></td>';
+			markup += '<td><input id="cmFirstName" class="span2" type="text" /></td>';
+			markup += '<td><input id="cmMiddleName" class="span2" type="text" /></td>';
+			if (availableRoles.length == 1 ) {
+				// Only one role, so just show a checkbox
+				markup += '</tr>';
+				markup += '<tr><td style="text-align:right;"><b>Role:</b> </td>';
+				markup += '<td colspan="2"> ';
+				markup += '<input class="single-role" id="cmRoles" type="checkbox" value="'+availableRoles[0]+'"> '+availableRoles[0];
+				markup += '</td>';
+				markup += '</tr>';
+				
+			} else {
+				// Otherwise show a full drop down list
+				markup += '</tr>';
+				markup += '<tr><td style="text-align:right;"><b>Roles:</b></td>';
+				markup += '<td colspan="2"><select id="cmRoles" multiple="multiple">';	
+				
+				// List all of the normal roles
+				jQuery.each(availableRoles, function(index, value) {
+					markup += '<option value="'+value+'">'+value+'</option>'
+				});
+				markup += '</select></td>';
+				markup += '</tr>';
+			}
+			markup += '</table><i class="icon-remove" title="cancel"></i>&nbsp<i class="icon-ok" title="commit"></i></div></li>';
+
+			jQuery(markup).insertBefore('#add_new_member');
+
+			event.stopPropagation();
+			
+			jQuery("select#cmRoles").multiselect({
+				header: false,
+				selectedList: 1,
+				noneSelectedText: "No roles selected"
+			});
+		}
+	}
+}
+
+
 
 /**
  * This function commits adding a new committee member.
@@ -844,219 +864,4 @@ function cancelEditingHandler(){
 		}
 		jQuery("#backup").remove();
 	}
-}
-
-/**
- * This function commits changes for the currently
- * edited field.
- * 
- * @param eventTarget (The reference element)
- * @param jsonURL (The method to update generic items)
- * @param graduationURL (The method to update graduation semester)
- * @param committeeURL (The method to update committee members)
- * @param subId (The submission id)
- */
-function commitChangesHandler(eventTarget, jsonURL, committeeURL, subId){
-	var classValue = '';
-	var fieldItem;
-	var parent = eventTarget.parent();
-	
-	var subjectsField = false;
-	var primary;
-	var secondary;
-	var tertiary;
-	
-	if(jQuery(".editing").hasClass("textarea")){
-		classValue = classValue + 'textarea ';
-		fieldItem = jQuery(".editing textarea");
-	} else if(jQuery(".editing").hasClass("select")){
-		classValue = classValue + 'select ';
-		fieldItem = jQuery(".editing select");
-	} else if(jQuery(".editing").hasClass("autocomplete")){
-		classValue = classValue + 'autocomplete ';
-		fieldItem = jQuery(".editing input");
-	} else if(jQuery(".editing").hasClass("subject")){
-		classValue = classValue + 'subject ';
-		
-		subjectsField = true;
-		primary = jQuery(".editing .primary").val();
-		secondary = jQuery(".editing .secondary").val(); 
-		tertiary = jQuery(".editing .tertiary").val();
-	} else if(jQuery(".editing").hasClass("date")) {
-		classValue = classValue + 'date ';
-		fieldItem = jQuery(".editing input");
-	} else {
-		fieldItem = jQuery(".editing input");
-	}
-	var id=jQuery(".editing").attr("id");
-	var theValue;
-	if(fieldItem && fieldItem.val()){
-		theValue = fieldItem.val();
-	}
-	
-	var committeeMember;
-	var committeeFirstName;
-	var committeeLastName;
-	var committeeMiddleName;
-	var committeeRoles;
-	var committeeId;
-	
-	if(eventTarget.closest("#committeeMembers").length){
-		committeeMember = true;
-		committeeFirstName = jQuery("#cmFirstName").val();
-		committeeLastName = jQuery("#cmLastName").val();
-		committeeMiddleName = jQuery("#cmMiddleName").val();
-		
-		if (jQuery("#cmRoles").is("select")) {
-			committeeRoles = jQuery("#cmRoles").val();
-		} else {
-			if (jQuery("#cmRoles").is(":checked"))
-				committeeRoles = jQuery("#cmRoles").val();
-		}
-		
-	    if (committeeRoles == null)
-	    	committeeRoles = new Array();
-		committeeId = jQuery("#memberId").val();
-	}
-	
-	jQuery(".editing").replaceWith('<div class="'+id+' progress progress-striped active"><div class="bar" style="width:100%"></div></div>');
-	
-	if(committeeMember) {
-		jQuery.ajax({
-			url:committeeURL,
-			data:{
-				id:committeeId,
-				firstName:committeeFirstName,
-				lastName:committeeLastName,
-				middleName:committeeMiddleName,
-				roles:committeeRoles
-			},
-			dataType:'json',
-			type:'POST',
-			success:function(data){	
-				if(data.success){
-					markup = '<div class="editCommitteeMember">';
-					markup += '<span class="lastName">'+data.lastName+'</span><span class="seperator">,&nbsp;</span>';
-					markup += '<span class="firstName">'+data.firstName+'&nbsp;</span>';
-					markup += '<span class="middleName">'+data.middleName+'&nbsp;</span>';	
-					jQuery.each(data.roles,function(index,value) {
-						markup += ' <span class="role label label-info">'+value+'</span> '
-					
-					});
-					markup += '</div>';
-					
-					jQuery("li."+data.id).html(markup);
-				} else {
-					markup = '<div class="editCommitteeMember">';
-					markup += '<span class="lastName">'+data.lastName+'</span><span class="seperator">,&nbsp;</span>';
-					markup += '<span class="firstName">'+data.firstName+'&nbsp;</span>';
-					markup += '<span class="middleName">'+data.middleName+'&nbsp;</span>';						
-					jQuery.each(data.roles,function(index,value) {
-						markup += ' <span class="role label label-info">'+value+'</span> '
-					
-					});
-					markup += '<span><a href="#" class="tooltip-icon" rel="tooltip" title="'+data.message+'"><span class="badge badge-important"><i class="icon-warning-sign icon-white"></i></span></a></span>';
-					markup += '</div>';
-					
-					jQuery("li."+data.id).html(markup);
-					jQuery('.tooltip-icon').tooltip();
-				}
-				refreshAll();
-			},
-			error:function(){
-				jQuery("div."+id).replaceWith('<span id="'+id+'" class="error '+classValue+'">'+jQuery("#backup").html()+' <a href="#" class="tooltip-icon" rel="tooltip" title="There was an error with your request."><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
-				jQuery('.tooltip-icon').tooltip();
-			}
-			
-		});
-	} else if (subjectsField) { 
-		jQuery.ajax({
-			url:jsonURL,
-			data:{
-				subId:subId,
-				field:id,
-				primary:primary,
-				secondary:secondary,
-				tertiary:tertiary
-			},
-			dataType:'json',
-			type:'POST',
-			success:function(data) {
-				
-				
-				currentValue = "<ul>";
-				if (primary)
-					currentValue += "<li>"+primary + "</li>";
-				if (secondary)
-					currentValue += "<li>"+secondary + "</li>";
-				if (tertiary)
-					currentValue += "<li>"+tertiary + "</li>";
-				currentValue += "</ul>"
-				
-				if (!primary && !secondary && !tertiary) {
-					classValue = classValue + 'empty';
-					currentValue = "none";
-				}
-				
-				if(data.success){
-					jQuery("div."+id).replaceWith('<span id="'+id+'" class="'+classValue+'" data-primary="'+primary+'" data-secondary="'+secondary+'" data-tertiary="'+tertiary+'"><i class="icon-pencil"></i>'+currentValue+'</span>');
-				} else {
-					jQuery("div."+id).replaceWith('<span id="'+id+'" class="error '+classValue+'"><i class="icon-pencil"></i> '+currentValue+' <a href="#" class="tooltip-icon" rel="tooltip" title="'+data.message+'"><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
-					jQuery('.tooltip-icon').tooltip();
-				}
-				refreshAll();
-			},
-			error:function(){
-				jQuery("div."+id).replaceWith('<span id="'+id+'" class="error subjects">'+jQuery("#backup").html()+' <a href="#" class="tooltip-icon" rel="tooltip" title="There was an error with your request."><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
-				jQuery('.tooltip-icon').tooltip();
-			}
-			
-		});
-	} else {
-		jQuery.ajax({
-			url:jsonURL,
-			data:{
-				subId:subId,
-				field:id,
-				value:theValue
-			},
-			dataType:'json',
-			type:'POST',
-			success:function(data){
-				var currentValue;
-				if(data.value){
-					currentValue = nl2br(data.value);
-				} else {
-					currentValue = "none";
-					classValue = classValue + 'empty ';
-				}
-				
-				if (id == "publishedMaterial" ) {
-					if (currentValue == "none") 
-						currentValue = " No -";
-					else 
-						currentValue = " Yes - "+currentValue;
-				}
-				
-				
-				if(data.success){
-					jQuery("div."+id).replaceWith('<span id="'+id+'" class="'+classValue+'"><i class="icon-pencil"></i> '+currentValue+'</span>');
-					if(data.degreeLevel != null){
-						jQuery("#degreeLevel").text(data.degreeLevel);
-						jQuery("#degreeLevel").removeClass("empty");
-					}
-				} else {
-					jQuery("div."+id).replaceWith('<span id="'+id+'" class="error '+classValue+'"><i class="icon-pencil"></i> '+currentValue+' <a href="#" class="tooltip-icon" rel="tooltip" title="'+data.message+'"><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
-					jQuery('.tooltip-icon').tooltip();
-				}
-				refreshAll();
-			},
-			error:function(){
-				jQuery("div."+id).replaceWith('<span id="'+id+'" class="error '+classValue+'">'+jQuery("#backup").html()+' <a href="#" class="tooltip-icon" rel="tooltip" title="There was an error with your request."><div class="badge badge-important"><i class="icon-warning-sign icon-white"></i></div></a></span>');
-				jQuery('.tooltip-icon').tooltip();
-			}
-			
-		});
-	}	
-	jQuery("#backup").remove();
 }

@@ -15,7 +15,6 @@
 #{include 'ViewTab/jsDataObjects.inlcude' /}
 
 <script type="text/javascript" >
-console.log(jsDataObjects.embargosArray);
 function refreshAll(){
 	updateActionLog("@{ViewTab.refreshActionLogTable()}", ${submission.getId()});
 	updateLeftColumn("@{ViewTab.refreshLeftColumn()}", ${submission.getId()});
@@ -65,14 +64,25 @@ jQuery(document).ready(function(){
 	jQuery(".edit-box ul li.edit span").live("click", swapToInputHandler());
 
 	/*
-	 * Swap embargo content into editable fields.
-	 */
-	jQuery("#embargo").on("click", editEmbargoHandler());
-	
-	/*
 	 * Add new emabrgo event
 	 */
-	 jQuery("#add_new_embargo button").on("click", addEmbargoHandler());
+	jQuery("#add_new_embargo button").on("click", function() {
+		embargoHandler("add")
+	});
+
+	/*
+	 * Remove an emabrgo event
+	 */
+	jQuery("#remove_new_embargo button").on("click", function() {
+		embargoHandler("remove", $(this).attr("data-id"))
+	});
+
+	/*
+	 * Swap embargo content into editable fields.
+	 */
+	jQuery(".embargo").on("click", function() {
+		embargoHandler("edit", $(this).attr("data-id"))
+	});
 	
 	/*
 	 * Swap committee member content into editable fields.
@@ -100,10 +110,13 @@ jQuery(document).ready(function(){
 	 * Commit changes
 	 */
 	jQuery(".icon-ok").live("click", function(){		
+		var $this = jQuery(this);
+		console.log($this.hasClass("confirmEmbargoSelect"));
 		if(jQuery(this).closest(".add").length){
 			commitNewCommitteeMemberHandler(subId, addCommitteeMemberJSONURL);
-		} else {			
-			var $this = jQuery(this);
+		} else if($this.hasClass("confirmEmbargoSelect")) {
+			console.log("gotcha");
+		} else {						
 			commitChangesHandler($this, updateJSONURL, updateCommitteeMemberJSONURL, subId);
 		}		
 	});
@@ -368,6 +381,14 @@ jQuery(document).ready(function(){
 									</li>
 								#{/list}
 								#{/if}
+								<li id="addEmbargoSelect">
+									<select>
+										#{list items:embargoTypes, as:'embargoType'}
+											<option value="${embargoType.getId()}">${embargoType.getName()} (${embargo.getGuarantor()})</option>
+										#{/list}
+									</select>
+									<i class="icon-remove" title="cancel"></i>&nbsp;<i class="icon-ok confirmEmbargoSelect" title="commit"></i>
+								</li>
 								<li id="add_new_embargo" style="margin: 5px 0px;"><button class="btn btn-small">Add New Embargo</button></li>
 							</ul>
 						</span>

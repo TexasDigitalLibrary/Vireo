@@ -157,6 +157,8 @@ public class ViewTab extends AbstractVireoController {
 		for(AttachmentType type : AttachmentType.values()){
 			attachmentTypes.add(type.toString());
 		}
+		
+		List<EmbargoType> embargoTypes = settingRepo.findAllEmbargoTypes();
 				
 		String nav = "view";
 		render(	nav,
@@ -175,7 +177,8 @@ public class ViewTab extends AbstractVireoController {
 				actionValues,
 				depositLocations,
 				attachments,
-				attachmentTypes
+				attachmentTypes,
+				embargoTypes
 				);
 	}
 

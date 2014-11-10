@@ -1,8 +1,8 @@
 <script type="text/javascript">
 
 jsDataObjects = {
-	"embargosArray" : [
-		#{list items:embargos, as:'embargo'}
+	"embargoTypesArray" : [
+		#{list items:embargoTypes, as:'embargo'}
 			{
 				"id": ${embargo.getId()},
 				"name": "${embargo.getName()}",
