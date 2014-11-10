@@ -266,9 +266,7 @@ public class DocumentInfo extends AbstractSubmitStep {
 				String fieldName = eg.name().equals("DEFAULT") ? "EMBARGO_TYPE" : "EMBARGO_TYPE_"+eg.name();
 				
 				FieldConfig field = FieldConfig.valueOf(fieldName);
-				
-				System.out.println(sub.getEmbargoTypeByGuarantor(eg) != null);
-				
+								
 				if (isFieldEnabled(field) && sub.getEmbargoTypeByGuarantor(eg) != null) {
 					embargos.add(sub.getEmbargoTypeByGuarantor(eg).getId().toString());
 				}
@@ -427,16 +425,12 @@ public class DocumentInfo extends AbstractSubmitStep {
 			}
 		}
 		
-		// Embargo
-		
+		// Embargo		
 		for(EmbargoGuarantor eg : EmbargoGuarantor.values()) {
 			
-			String fieldName = eg.name().equals("DEFAULT") ? "EMBARGO_TYPE" : "EMBARGO_TYPE_"+eg.name();
-			
+			String fieldName = eg.name().equals("DEFAULT") ? "EMBARGO_TYPE" : "EMBARGO_TYPE_"+eg.name();		
 			FieldConfig field = FieldConfig.valueOf(fieldName);
-			
-			System.out.println(sub.getEmbargoTypeByGuarantor(eg) != null);
-			
+						
 			if (isFieldRequired(field) && sub.getEmbargoTypeByGuarantor(eg) == null)
 				validation.addError("embargo-"+eg.name(), "Please choose a "+eg.name().toLowerCase()+" embargo option");
 		}
