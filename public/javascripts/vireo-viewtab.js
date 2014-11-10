@@ -1,5 +1,5 @@
 /**
- * This will handle the adding, deleteing and editing of 
+ * This will handle the adding, deleting and editing of 
  * embargos
  .
  */
@@ -8,15 +8,14 @@ function embargoHandler(action, id) {
 	switch(action) {
 		case "add":
 
-			var markup = '<select>';
+			var markup = '<select id="addEmbargoSelectSelector">';
 					jQuery(jsDataObjects.embargoTypesArray).each(function() {
 						var embargoType = this;
 						markup += '<option value="'+embargoType.id+'">'+embargoType.name+' ('+embargoType.guarantor+')</option>';
 					});	
 				markup += '</select>';
 				markup += '<i class="icon-remove" title="cancel"></i>&nbsp;<i class="icon-ok confirmEmbargoSelect" title="commit"></i>';
-
-			jQuery("#add_new_embargo button").fadeOut(300);
+			
 			jQuery("#addEmbargoSelect").html(markup);
 
 			console.log(action+" "+id);
@@ -30,11 +29,12 @@ function embargoHandler(action, id) {
 			jQuery("#addEmbargoSelect").fadeOut(300);
 			break
 		case "cancelAdd":
+			//TODO:  did not avail ourselves of this branch, employing instead the cancelEditingHandler in this file
 			console.log(action+" "+id);
-			jQuery("#addEmbargoSelect").fadeOut(300);
 			break
 		case "remove":
 			console.log(action+" "+id);
+			
 			break
 
 		case "edit":
@@ -832,8 +832,10 @@ function cancelEditingHandler(){
 		var $this = jQuery(".icon-remove");
 		if($this.closest(".add").length){
 			jQuery(".add").remove();
-		}else if($this.closest("#committeeMembers").length){
-
+		} else if($this.siblings("#addEmbargoSelectSelector").length) {
+			//unstyle the addEmbargoSelect li and remove the dynamically created selector and buttons created in it 
+			jQuery("#addEmbargoSelect").css("display", "none").children().remove();
+		} else if($this.closest("#committeeMembers").length){
 			var oldValue = jQuery("#backup").html();			
 			var swap = jQuery(".editing");
 			swap.removeClass("editing");
