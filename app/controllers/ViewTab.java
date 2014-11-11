@@ -498,7 +498,7 @@ public class ViewTab extends AbstractVireoController {
 	}
 	
 	/**
-	 * A method to add/remove the submission's embargos.
+	 * A method to add/edit the submission's embargos.
 	 * 
 	 * @param subId (The submission id)
 	 * @param embargoId (The embargo to be added)
