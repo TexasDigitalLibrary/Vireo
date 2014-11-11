@@ -228,23 +228,27 @@ public class ApplicationSettingsTab extends SettingsTab {
 	 *            The label of the new action
 	 */
 	@Security(RoleType.MANAGER)
-	public static void addCustomActionJSON(String name) {
+	public static void addCustomActionJSON(String name, Boolean isStudentVisible) {
 		
 		try {
 			if (name == null || name.trim().length() == 0)
 				throw new IllegalArgumentException("Label is required");
 			
+			if(isStudentVisible == null) {
+				throw new IllegalArgumentException("isStudentVisible is required");
+			}
+			
 			// Add the new action to the end of the list.
 			List<CustomActionDefinition> actions = settingRepo.findAllCustomActionDefinition();
 			
-			CustomActionDefinition action = settingRepo.createCustomActionDefinition(name);
+			CustomActionDefinition action = settingRepo.createCustomActionDefinition(name, isStudentVisible);
 			actions.add(action);
 			
 			saveModelOrder(actions);
 			
 			name = escapeJavaScript(name);
 			
-			renderJSON("{ \"success\": \"true\", \"id\": "+action.getId()+", \"name\": \""+name+"\" }");
+			renderJSON("{ \"success\": \"true\", \"id\": "+action.getId()+", \"name\": \""+name+"\", \"level\": " + isStudentVisible + "}");
 		} catch (IllegalArgumentException iae) {
 			String message = escapeJavaScript(iae.getMessage());			
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
@@ -268,22 +272,27 @@ public class ApplicationSettingsTab extends SettingsTab {
 	 *            The new label of the action.
 	 */
 	@Security(RoleType.MANAGER)
-	public static void editCustomActionJSON(String actionId, String name) {
+	public static void editCustomActionJSON(String actionId, String name, Boolean level) {
 		try {
 			// Check input
 			if (name == null || name.trim().length() == 0)
 				throw new IllegalArgumentException("Label is required");
+			
+			if(level == null) {
+				throw new IllegalArgumentException("isStudentVisible is required");
+			}
 			
 			// Save the new label
 			String[] parts = actionId.split("_");
 			Long id = Long.valueOf(parts[1]);
 			CustomActionDefinition action = settingRepo.findCustomActionDefinition(id);
 			action.setLabel(name);
+			action.setIsStudentVisible(level);
 			action.save();
 			
 			name = escapeJavaScript(name);
 			
-			renderJSON("{ \"success\": \"true\", \"id\": "+action.getId()+", \"name\": \""+name+"\" }");
+			renderJSON("{ \"success\": \"true\", \"id\": "+action.getId()+", \"name\": \""+name+"\", \"level\": " + level + "}");
 		} catch (IllegalArgumentException iae) {
 			String message = escapeJavaScript(iae.getMessage());			
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");

@@ -612,7 +612,7 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		
 		assertEquals(submission.getAssignee().getCurrentEmailAddress(), "bthornton@gmail.com");
 		
-		CustomActionDefinition actionDef = settingRepo.createCustomActionDefinition("Passed Classes").save();
+		CustomActionDefinition actionDef = settingRepo.createCustomActionDefinition("Passed Classes", false).save();
 		
 		Long actionId = actionDef.getId();
 		

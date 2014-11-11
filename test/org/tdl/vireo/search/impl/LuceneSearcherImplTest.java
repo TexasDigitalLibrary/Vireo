@@ -389,7 +389,7 @@ public class LuceneSearcherImplTest extends UnitTest{
 		EmbargoType e2 = settingRepo.createEmbargoType("Embargo Two", "two", null, true);
 		e2.setDisplayOrder(10);
 		e2.save();
-		CustomActionDefinition def = settingRepo.createCustomActionDefinition("Action 1").save();
+		CustomActionDefinition def = settingRepo.createCustomActionDefinition("Action 1", false).save();
 
 		
 		File file1 = File.createTempFile("Asearch-test", ".dat");

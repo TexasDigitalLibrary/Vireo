@@ -19,14 +19,16 @@ import play.modules.spring.Spring;
  */
 @Entity
 @Table(name = "custom_action_definition")
-public class JpaCustomActionDefinitionImpl extends JpaAbstractModel<JpaCustomActionDefinitionImpl> implements
-		CustomActionDefinition {
+public class JpaCustomActionDefinitionImpl extends JpaAbstractModel<JpaCustomActionDefinitionImpl> implements CustomActionDefinition {
 
 	@Column(nullable = false)
 	public int displayOrder;
 
-	@Column(nullable = false, unique = true, length=255)
+	@Column(nullable = false, unique = true, length = 255)
 	public String label;
+
+	@Column
+	private Boolean isStudentVisible;
 
 	/**
 	 * Construct a new JpaCustomActionDefinitonImpl
@@ -34,17 +36,18 @@ public class JpaCustomActionDefinitionImpl extends JpaAbstractModel<JpaCustomAct
 	 * @param label
 	 *            The new label for this action definition
 	 */
-	protected JpaCustomActionDefinitionImpl(String label) {
-		
+	protected JpaCustomActionDefinitionImpl(String label, Boolean isStudentVisible) {
+
 		if (label == null || label.length() == 0)
 			throw new IllegalArgumentException("Label is required");
 
 		assertManager();
-		
+
 		this.displayOrder = 0;
 		this.label = label;
+		this.isStudentVisible = isStudentVisible;
 	}
-	
+
 	@Override
 	public JpaCustomActionDefinitionImpl save() {
 		assertManager();
@@ -54,9 +57,9 @@ public class JpaCustomActionDefinitionImpl extends JpaAbstractModel<JpaCustomAct
 
 	@Override
 	public JpaCustomActionDefinitionImpl delete() {
-		
+
 		assertManager();
-		
+
 		// Tell the indexer about all the submissions that will be effected by
 		// this deletion.
 		TypedQuery<Long> effectedQuery = em().createQuery(
@@ -69,28 +72,28 @@ public class JpaCustomActionDefinitionImpl extends JpaAbstractModel<JpaCustomAct
 		List<Long> effectedIds = effectedQuery.getResultList();
 		Indexer indexer = Spring.getBeanOfType(Indexer.class);
 		indexer.updated(effectedIds);
-		
+
 		// Delete all values associated with this definition
 		em().createQuery(
 			"DELETE FROM JpaCustomActionValueImpl " +
 					"WHERE Definition_Id = ? " 
 			).setParameter(1, this.getId())
 			.executeUpdate();
-		
+
 		return super.delete();
 	}
 
-    @Override
-    public int getDisplayOrder() {
-        return displayOrder;
-    }
+	@Override
+	public int getDisplayOrder() {
+		return displayOrder;
+	}
 
-    @Override
-    public void setDisplayOrder(int displayOrder) {
-    	
-    	assertManager();
-        this.displayOrder = displayOrder;
-    }
+	@Override
+	public void setDisplayOrder(int displayOrder) {
+
+		assertManager();
+		this.displayOrder = displayOrder;
+	}
 
 	@Override
 	public String getLabel() {
@@ -99,13 +102,26 @@ public class JpaCustomActionDefinitionImpl extends JpaAbstractModel<JpaCustomAct
 
 	@Override
 	public void setLabel(String label) {
-		
+
 		if (label == null || label.length() == 0)
 			throw new IllegalArgumentException("Label is required");
-		
+
 		assertManager();
-		
+
 		this.label = label;
 	}
 
+	@Override
+	public Boolean isStudentVisible() {
+		return isStudentVisible;
+	}
+
+	@Override
+	public void setIsStudentVisible(Boolean isStudentVisible) {
+		if (isStudentVisible == null)
+			throw new IllegalArgumentException("isStudentVisible is required");
+
+		assertManager();
+		this.isStudentVisible = isStudentVisible;
+	}
 }

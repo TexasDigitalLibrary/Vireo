@@ -266,24 +266,26 @@ jQuery(document).ready(function() {
 			</div>
 		#{/else}
 		#{if actions.size() > 0}
-		<div id="customActionsWrap" class="alert-info">
+		<div id="customActionsWrap" class="alert alert-info">
 			<a href="#toggleDetails" class="doToggle">[-]</a>
 			<p><strong><h4>Custom Actions:</h4></strong></p>
 			<div id="customActionsDetails">
 				%{
 					String sActions = "";
 		            for (org.tdl.vireo.model.jpa.JpaCustomActionDefinitionImpl systemAction : actions) {
-		            	def found = false;
-		            for (org.tdl.vireo.model.CustomActionValue subAction : sub.getCustomActions()) {
-		            	if(systemAction.equals(subAction.getDefinition())) {
-		            		sActions += "<input type=\"checkbox\" class=\"checkbox custom-action\" disabled=\"disabled\" checked=\"checked\"/> " + subAction.getDefinition().getLabel();
-		            		found = true;
+		            	if(systemAction.isStudentVisible()) {
+			            	def found = false;
+			            	for (org.tdl.vireo.model.CustomActionValue subAction : sub.getCustomActions()) {
+			            		if(systemAction.equals(subAction.getDefinition())) {
+			            			sActions += "<input type=\"checkbox\" class=\"checkbox custom-action\" disabled=\"disabled\" checked=\"checked\"/> " + subAction.getDefinition().getLabel();
+			            			found = true;
+			            		}
+			            	}
+			            	if(!found){
+			            		sActions += "<input type=\"checkbox\" class=\"checkbox custom-action\" disabled=\"disabled\"/> " + systemAction.getLabel();
+			            	}
+			            	sActions += "<br/>";
 		            	}
-		            }
-		            if(!found){
-		            	sActions += "<input type=\"checkbox\" class=\"checkbox custom-action\" disabled=\"disabled\"/> " + systemAction.getLabel();
-		            }
-		            sActions += "<br/>";
 		            }
 		            out.print(sActions);
 				}%

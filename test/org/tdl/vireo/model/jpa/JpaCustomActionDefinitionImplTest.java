@@ -51,7 +51,7 @@ public class JpaCustomActionDefinitionImplTest extends UnitTest {
 	@Test
 	public void testCreate() {
 		
-		CustomActionDefinition def = settingRepo.createCustomActionDefinition("label").save();
+		CustomActionDefinition def = settingRepo.createCustomActionDefinition("label", false).save();
 		
 		assertNotNull(def);
 		assertEquals("label",def.getLabel());
@@ -65,14 +65,14 @@ public class JpaCustomActionDefinitionImplTest extends UnitTest {
 	@Test
 	public void testBadCreate() {
 		try {
-			settingRepo.createCustomActionDefinition(null);
+			settingRepo.createCustomActionDefinition(null, null);
 			fail("Able to create null label");
 		} catch (IllegalArgumentException iae) {
 			/* yay */
 		}
 		
 		try {
-			settingRepo.createCustomActionDefinition("");
+			settingRepo.createCustomActionDefinition("", false);
 			fail("Able to create blank label");
 		} catch (IllegalArgumentException iae) {
 			/* yay */
@@ -85,10 +85,10 @@ public class JpaCustomActionDefinitionImplTest extends UnitTest {
 	@Test
 	public void testCreateDuplicate() {
 		
-		CustomActionDefinition def = settingRepo.createCustomActionDefinition("label").save();
+		CustomActionDefinition def = settingRepo.createCustomActionDefinition("label", false).save();
 		
 		try {
-			settingRepo.createCustomActionDefinition("label").save();
+			settingRepo.createCustomActionDefinition("label", false).save();
 			fail("Able to create duplicate custom action definition");
 		} catch (RuntimeException re) {
 			/* yay */
@@ -105,7 +105,7 @@ public class JpaCustomActionDefinitionImplTest extends UnitTest {
 	@Test
 	public void testId() {
 		
-		CustomActionDefinition def = settingRepo.createCustomActionDefinition("label").save();
+		CustomActionDefinition def = settingRepo.createCustomActionDefinition("label", false).save();
 
 		assertNotNull(def.getId());
 		
@@ -117,7 +117,7 @@ public class JpaCustomActionDefinitionImplTest extends UnitTest {
 	 */
 	@Test
 	public void testFindById() {
-		CustomActionDefinition def = settingRepo.createCustomActionDefinition("label").save();
+		CustomActionDefinition def = settingRepo.createCustomActionDefinition("label", false).save();
 
 		
 		CustomActionDefinition retrieved = settingRepo.findCustomActionDefinition(def.getId());
@@ -135,8 +135,8 @@ public class JpaCustomActionDefinitionImplTest extends UnitTest {
 
 		int initialSize = settingRepo.findAllCustomActionDefinition().size();
 		
-		CustomActionDefinition def1 = settingRepo.createCustomActionDefinition("label1").save();
-		CustomActionDefinition def2 = settingRepo.createCustomActionDefinition("label2").save();
+		CustomActionDefinition def1 = settingRepo.createCustomActionDefinition("label1", false).save();
+		CustomActionDefinition def2 = settingRepo.createCustomActionDefinition("label2", false).save();
 
 		int postSize = settingRepo.findAllCustomActionDefinition().size();
 		
@@ -151,8 +151,8 @@ public class JpaCustomActionDefinitionImplTest extends UnitTest {
 	 */
 	@Test 
 	public void testLabelValidation() {
-		CustomActionDefinition def = settingRepo.createCustomActionDefinition("label").save();
-		CustomActionDefinition test = settingRepo.createCustomActionDefinition("test").save();
+		CustomActionDefinition def = settingRepo.createCustomActionDefinition("label", false).save();
+		CustomActionDefinition test = settingRepo.createCustomActionDefinition("test", false).save();
 		
 		try {
 			test.setLabel(null);
@@ -187,10 +187,10 @@ public class JpaCustomActionDefinitionImplTest extends UnitTest {
 	@Test
 	public void testOrder() {
 		
-		CustomActionDefinition def4 = settingRepo.createCustomActionDefinition("label4").save();
-		CustomActionDefinition def1 = settingRepo.createCustomActionDefinition("label1").save();
-		CustomActionDefinition def3 = settingRepo.createCustomActionDefinition("label3").save();
-		CustomActionDefinition def2 = settingRepo.createCustomActionDefinition("label2").save();
+		CustomActionDefinition def4 = settingRepo.createCustomActionDefinition("label4", false).save();
+		CustomActionDefinition def1 = settingRepo.createCustomActionDefinition("label1", false).save();
+		CustomActionDefinition def3 = settingRepo.createCustomActionDefinition("label3", false).save();
+		CustomActionDefinition def2 = settingRepo.createCustomActionDefinition("label2", false).save();
 		
 		def1.setDisplayOrder(0);
 		def2.setDisplayOrder(1);
@@ -225,7 +225,7 @@ public class JpaCustomActionDefinitionImplTest extends UnitTest {
 	@Test
 	public void testPersistance() {
 		
-		CustomActionDefinition def = settingRepo.createCustomActionDefinition("label").save();
+		CustomActionDefinition def = settingRepo.createCustomActionDefinition("label", false).save();
 		
 		// Commit and reopen a new transaction.
 		JPA.em().getTransaction().commit();
@@ -250,7 +250,7 @@ public class JpaCustomActionDefinitionImplTest extends UnitTest {
 	 */
 	@Test
 	public void testDeletetion() {
-		CustomActionDefinition def = settingRepo.createCustomActionDefinition("label").save();
+		CustomActionDefinition def = settingRepo.createCustomActionDefinition("label", false).save();
 		Person person = personRepo.createPerson("netid", "email@email.com", "first", "last", RoleType.NONE).save();
 		Submission sub = subRepo.createSubmission(person);
 		
@@ -284,11 +284,11 @@ public class JpaCustomActionDefinitionImplTest extends UnitTest {
 	public void testAccess() {
 		
 		context.login(MockPerson.getManager());
-		settingRepo.createCustomActionDefinition("label").save().delete();
+		settingRepo.createCustomActionDefinition("label", false).save().delete();
 		
 		try {
 			context.login(MockPerson.getReviewer());
-			settingRepo.createCustomActionDefinition("label").save();
+			settingRepo.createCustomActionDefinition("label", false).save();
 			fail("A reviewer was able to create a new object.");
 		} catch (SecurityException se) {
 			/* yay */
