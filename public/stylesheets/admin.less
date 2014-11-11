@@ -635,13 +635,31 @@ EDIT HOLDERS & BOXES
     
 }
 
-#addEmbargoSelect {
-	display: none;
-	margin: 5px 0px;
+#emabrgos label {
+	display: inline;
 }
 
-#add_new_embargo button{
-	margin: 5px 0px;
+#addEmbargoSelect {
+	display:none;
+	list-style:none;
+}
+
+#addEmbargoSelect i:first-child {
+	display: block;
+}
+
+#add_new_embargo {
+	margin: 5px 0px; 
+	list-style:none;
+}
+
+.remove_new_embargo {
+	margin-left: 10px;
+}
+
+#confirmEmbargoRemove {
+	display:none; 
+	margin-left:20px;
 }
 
 #addEmbargoSelect .icon-remove:hover,
@@ -653,16 +671,12 @@ EDIT HOLDERS & BOXES
 	list-style: none;
 }
 
-.edit-box-holder .embargo:hover {
+.edit-box-holder .embargo i:hover {
 	cursor: pointer;
 }
 
-.edit-box-holder #embargos {
-	margin-left: 70px;
-}
-
 .edit-box-holder #embargos ul {
-	margin-left:105px;
+	display: inline-block;
 }
 
 .edit ul {

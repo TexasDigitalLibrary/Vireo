@@ -3,45 +3,95 @@
  * embargos
  .
  */
-function embargoHandler(action, id) {
+function embargoHandler(action, embargoID) {
 
 	switch(action) {
-		case "add":
+		case "addNew":
+			
+			if(jQuery(".editing").length != 0) break;
 
 			var markup = '<select id="addEmbargoSelectSelector">';
 					jQuery(jsDataObjects.embargoTypesArray).each(function() {
 						var embargoType = this;
-						markup += '<option value="'+embargoType.id+'">'+embargoType.name+' ('+embargoType.guarantor+')</option>';
+						var guarantor = embargoType.guarantor != "DEFAULT" ? "("+embargoType.guarantor+")": "";
+						markup += '<option value="'+embargoType.id+'">'+embargoType.name+' '+guarantor+'</option>';
 					});	
 				markup += '</select>';
 				markup += '<i class="icon-remove" title="cancel"></i>&nbsp;<i class="icon-ok confirmEmbargoSelect" title="commit"></i>';
 			
 			jQuery("#addEmbargoSelect").html(markup);
-
-			console.log(action+" "+id);
-			jQuery("#addEmbargoSelect").fadeIn(300);
-			break
-		case "confirmAdd":
-
-			//call and ajax function
-
-			console.log(action+" "+id);
-			jQuery("#addEmbargoSelect").fadeOut(300);
-			break
-		case "cancelAdd":
-			//TODO:  did not avail ourselves of this branch, employing instead the cancelEditingHandler in this file
-			console.log(action+" "+id);
-			break
-		case "remove":
-			console.log(action+" "+id);
+			
+			jQuery("#add_new_embargo").fadeOut(300, function() {
+				jQuery("#addEmbargoSelect").fadeIn(300);
+			});
 			
 			break
-
+		
+		case "add":
+		case "remove":
 		case "edit":
-			console.log(action +" "+ id);
+			emabrgoAJAX(subId, embargoID, action);
 			break
 	}
 
+}
+
+function emabrgoAJAX(subID, embargoID, action) {
+	jQuery.ajax({
+		url: embargoJSONURL,
+		data:{
+			subID: subID,
+			embargoID: embargoID,
+			action: action
+		},
+		dataType:'json',
+		type:'POST',
+		success: function(data) {
+
+			if(!data.success) {
+				
+				var markup = '<span id="embargo_tooltip_container">';
+					markup += 	'<a href="#" class="tooltip-icon" rel="tooltip" data-original-title="'+data.error+'">';
+					markup += 		'<span class="badge badge-important"><i class="icon-warning-sign icon-white"></i></span>';
+					markup += 	'</a>';
+					markup += '</span>';
+
+					jQuery("#addEmbargoSelect").fadeOut(300, function() {
+						jQuery("#add_new_embargo").fadeIn(300);
+						jQuery("#add_new_embargo #embargo_tooltip_container").remove();
+						jQuery("#add_new_embargo").append(markup);
+						jQuery('.tooltip-icon').tooltip();
+					});
+
+			} else {
+				var embargos = data.embargoIDs;
+
+				jQuery(".embargo").remove();
+
+				jQuery(embargos).each(function() {
+					var embargoID = this;
+					jQuery(jsDataObjects.embargoTypesArray).each(function() {
+						var embargoType = this;
+						if(embargoID == embargoType.id) {
+							var guarantor = embargoType.guarantor != "DEFAULT" ? "("+embargoType.guarantor+")": "";
+							jQuery("#embargos ul").prepend('<li class="embargo" data-id="'+embargoType.id+'">'+embargoType.name+' '+guarantor+'</li>');
+						}
+					});
+				});
+
+				jQuery("#addEmbargoSelect").fadeOut(300, function() {
+					jQuery("#add_new_embargo #embargo_tooltip_container").remove();
+					jQuery("#add_new_embargo").fadeIn(300);
+				});
+
+			}
+
+
+		},
+		error: function(e) { 
+			console.log(e);
+		}
+	});
 }
 
 /**
@@ -835,6 +885,7 @@ function cancelEditingHandler(){
 		} else if($this.siblings("#addEmbargoSelectSelector").length) {
 			//unstyle the addEmbargoSelect li and remove the dynamically created selector and buttons created in it 
 			jQuery("#addEmbargoSelect").css("display", "none").children().remove();
+			jQuery("#add_new_embargo").show();
 		} else if($this.closest("#committeeMembers").length){
 			var oldValue = jQuery("#backup").html();			
 			var swap = jQuery(".editing");

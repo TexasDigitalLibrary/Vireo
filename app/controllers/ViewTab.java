@@ -496,6 +496,60 @@ public class ViewTab extends AbstractVireoController {
 
 		renderJSON(json);
 	}
+	
+	/**
+	 * A method to add/remove the submission's embargos.
+	 * 
+	 * @param subId (The submission id)
+	 * @param embargoId (The embargo to be added)
+	 * @param action (The action to be carried out)
+	 * 
+	 */
+	public static void embargoJSON(Long subID, Long embargoID, String action){
+		
+		String json = "{ \"success\": false, \"error\": \"Something has gone wrong\"}";
+		
+		boolean validSubID = subID != null && subID.toString().trim().length() != 0;
+		boolean validEmbargoID = embargoID != null && embargoID.toString().trim().length() != 0;
+		boolean validAction = action != null && action.trim().length() != 0;
+		
+		if(validSubID && validEmbargoID && validAction) { 
+
+			Submission sub = subRepo.findSubmission(subID);
+			EmbargoType targetEmbargo = settingRepo.findEmbargoType(embargoID);
+			
+			if(action.equals("add")) 
+				sub.addEmbargoType(targetEmbargo);
+			if(action.equals("remove"))
+				sub.removeEmbargoType(targetEmbargo);
+			
+			sub.save();
+			
+			String embargosObject = "[";
+			List<EmbargoType> currentEmbargos = sub.getEmbargoTypes();
+			
+			if(currentEmbargos.size() == 0)	embargosObject += "]";
+			
+			int n = 1;
+			for(EmbargoType currentEmbargo : currentEmbargos) {
+				embargosObject += currentEmbargo.getId();
+				if(currentEmbargos.size() != n) {
+					embargosObject += ",";
+				} else {
+					embargosObject += "]";
+				}
+				n++;
+			}
+						
+			json = "{ \"success\": true, \"subID\": \""+subID+"\", \"embargoIDs\": "+embargosObject+", \"action\": \""+action+"\" }";
+			
+		} else {
+			json = "{ \"success\": false, \"error\": \"Your request had missing paramaters\"}";
+		}
+		
+		renderJSON(json);
+		
+	}
 
 	/**
 	 * A method to add a new committee member.

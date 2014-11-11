@@ -65,6 +65,7 @@ GET		/admin/view/{subId}						ViewTab.view
 POST	/admin/view/sendAdvisorEmail			ViewTab.sendAdvisorEmail
 POST	/admin/view/update						ViewTab.updateJSON
 POST	/admin/view/updateGraduationDate		ViewTab.updateGraduationDateJSON
+POST	/admin/view/updateEmbargos			ViewTab.embargoJSON
 POST	/admin/view/updateCommitteeMember		ViewTab.updateCommitteeMemberJSON
 POST	/admin/view/addCommitteeMember			ViewTab.addCommitteeMemberJSON
 POST	/admin/view/removeCommitteeMember		ViewTab.removeCommitteeMemberJSON

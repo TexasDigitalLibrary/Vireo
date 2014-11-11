@@ -8,11 +8,25 @@
 #{/set}
 
 #{set 'moreScripts'}
+<script>
+	
+	// These variables are defined right off so that
+	// all subsequent scripts can use them
+
+	var subId = ${submission.getId()};
+	var updateJSONURL = "@{ViewTab.updateJSON()}";
+	var embargoJSONURL = "@{ViewTab.embargoJSON()}";
+	var updateCommitteeMemberJSONURL = "@{ViewTab.updateCommitteeMemberJSON()}";
+	var addCommitteeMemberJSONURL = "@{ViewTab.addCommitteeMemberJSON()}";
+	var removeCommitteeMemberJSONURL = "@{ViewTab.removeCommitteeMemberJSON()}";
+	var retrieveTemplateJSONURL = "@{ViewTab.retrieveTemplateJSON()}";
+	var updateCustomActionJSONURL = "@{ViewTab.updateCustomActionsJSON()}";	
+
+</script>
+#{include 'ViewTab/jsDataObjects.inlcude' /}
 <script src="@{'/public/javascripts/vireo-viewtab.js'}" type="text/javascript" charset="${_response_encoding}"></script>
 <script src="@{'/public/javascripts/bootstrap-datepicker.js'}" type="text/javascript" charset="${_response_encoding}"></script>
 <script src="@{'/public/javascripts/jquery-ui-multiselect-1.13.js'}" type="text/javascript" charset="${_response_encoding}"></script>
-
-#{include 'ViewTab/jsDataObjects.inlcude' /}
 
 <script type="text/javascript" >
 function refreshAll(){
@@ -23,8 +37,6 @@ function refreshAll(){
 
 jQuery(document).ready(function(){
 	
-	var subId = ${submission.getId()};
-	
 	if(jQuery.browser.msie){
 		if(parseInt(jQuery.browser.version, 10) != 7 && parseInt(jQuery.browser.version, 10) != 8){
 			jQuery(".datepickerSubmission").datepicker();
@@ -32,13 +44,6 @@ jQuery(document).ready(function(){
 	} else {
 		jQuery(".datepickerSubmission").datepicker();
 	}
-	
-	 var updateJSONURL = "@{ViewTab.updateJSON()}";
-	 var updateCommitteeMemberJSONURL = "@{ViewTab.updateCommitteeMemberJSON()}";
-	 var addCommitteeMemberJSONURL = "@{ViewTab.addCommitteeMemberJSON()}";
-	 var removeCommitteeMemberJSONURL = "@{ViewTab.removeCommitteeMemberJSON()}";
-	 var retrieveTemplateJSONURL = "@{ViewTab.retrieveTemplateJSON()}";
-	 var updateCustomActionJSONURL = "@{ViewTab.updateCustomActionsJSON()}";	
 	 
 	/**
 	 * Cancel Editing
@@ -64,25 +69,32 @@ jQuery(document).ready(function(){
 	jQuery(".edit-box ul li.edit span").live("click", swapToInputHandler());
 
 	/*
-	 * Add new emabrgo event
+	 * emabrgo events
 	 */
+
+	//add
 	jQuery("#add_new_embargo button").on("click", function() {
-		embargoHandler("add")
+		embargoHandler("addNew")
 	});
 
-	/*
-	 * Remove an emabrgo event
-	 */
-	jQuery("#remove_new_embargo button").on("click", function() {
-		embargoHandler("remove", $(this).attr("data-id"))
+	//remove
+	jQuery("#embargos ul").on("mouseenter", ".embargo", function() {
+		jQuery(this).append('<i data-id="'+$(this).attr("data-id")+'" class="icon-trash remove_embargo_icon"><span id="confirmEmbargoRemove">Confirm?</span></i>');
+		jQuery(".remove_embargo_icon").on("click", function() {
+			
+			jQuery("#confirmEmbargoRemove").show(300);
+			jQuery(this).addClass("remove_embargo");
+			jQuery(".remove_embargo").on("click", function() {
+				embargoHandler("remove", $(this).attr("data-id"));
+			});	
+
+		});
 	});
 
-	/*
-	 * Swap embargo content into editable fields.
-	 */
-	jQuery(".embargo").on("click", function() {
-		embargoHandler("edit", $(this).attr("data-id"))
+	jQuery("#embargos ul").on("mouseleave", ".embargo", function() {
+		$(".remove_embargo_icon").remove();
 	});
+
 	
 	/*
 	 * Swap committee member content into editable fields.
@@ -115,7 +127,7 @@ jQuery(document).ready(function(){
 			commitNewCommitteeMemberHandler(subId, addCommitteeMemberJSONURL);
 		} else if($this.hasClass("confirmEmbargoSelect")) {
 			
-			embargoHandler("confirmAdd", $("#addEmbargoSelect select").val());
+			embargoHandler("add", $("#addEmbargoSelect select").val());
 
 		} else {						
 			commitChangesHandler($this, updateJSONURL, updateCommitteeMemberJSONURL, subId);
@@ -374,16 +386,20 @@ jQuery(document).ready(function(){
 							#{/else}
 							</span></li>
 						<li id="embargos">
-							<b>Embargos:</b>
-							<ul class="unstyled">
+							<label>Embargos:</label>
+							<ul>
 								#{if submission.getEmbargoTypes()}
 								#{list items:submission.getEmbargoTypes(), as:'embargo'}
-									<li class="embargo" data-id="${embargo.getId()}"><i class="icon-pencil"></i> ${embargo.getName()} (${embargo.getGuarantor()})
-									</li>
+									
+									%{
+										def guarantor = embargo.getGuarantor().toString() != "DEFAULT" ? ["(",embargo.getGuarantor(),")"].join(""): "";
+									}%
+
+									<li class="embargo" data-id="${embargo.getId()}">${embargo.getName()} ${guarantor}</li>
 								#{/list}
 								#{/if}
 								<li id="addEmbargoSelect"></li>
-								<li id="add_new_embargo" style="margin: 5px 0px;"><button class="btn btn-small">Add New Embargo</button></li>
+								<li id="add_new_embargo"><button class="btn btn-mini">Add New Embargo</button></li>
 							</ul>
 						</span>
 						</li>
