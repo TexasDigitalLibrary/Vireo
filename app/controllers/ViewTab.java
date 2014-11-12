@@ -873,6 +873,21 @@ public class ViewTab extends AbstractVireoController {
 			if(message == null || message.isEmpty())
 				validation.addError("addActionLogComment", "You must include a comment when sending an email.");
 			
+			for(String email_address : primary_recipients)
+			{
+				Utilities.validateEmailAddress(email_address, validation);
+			}
+			
+			for(String email_address : cc_recipients)
+			{
+				Utilities.validateEmailAddress(email_address, validation);
+			}
+				
+			
+		}
+		else
+		{
+			validation.addError("addActionLogRecipient", "You must include at least one primary (not cc) recipient when sending an email.");
 		}
 		
 		if(!validation.hasErrors()) {
