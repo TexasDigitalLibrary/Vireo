@@ -6,6 +6,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -15,11 +18,13 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.xpath.XPath;
 
 import play.Logger;
+import play.data.validation.Validation;
 
 /**
  * A catch-all class for various Vireo utilities
  * 
  * @author Alexey Maslov
+ * @author James Creel (http://www.jamescreel.net)
  */
 public class Utilities {
 
@@ -178,4 +183,23 @@ public class Utilities {
 		else
 			return results.get(0);
 	}
+	
+	
+	/**
+	 * Helper function to validate a single email address as a String
+	 * 
+	 * @param email - the String of the email address to validate
+	 * @param validation - Play validation object of the calling controller that wants an email validated
+	 * @return - true or false if email address is valid
+	 */
+	public static boolean validateEmailAddress(String email, Validation validation){
+		try {
+			new InternetAddress(email).validate();
+		} catch (AddressException ae) {
+			validation.addError("email", "The email provided is invalid.["+email+"]");
+			return false;
+		}
+		return true;
+	}
+	
 }
