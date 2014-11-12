@@ -250,11 +250,17 @@ function escapeQuotes (str) {
 function toggleAddCommentEmailOptions(){
 	return function(){
 		if(jQuery(".emailOptions input[name='visibility']:checked").val()=="public"){
-			jQuery(".emailOptions input[name='email_student']").removeAttr("disabled");
+			jQuery(".emailOptions input[name='primary_recipients_toggle']").removeAttr("disabled");
 		} else {
 			jQuery("#comment-email-options input").each(function(){
 				jQuery(this).attr("disabled","true");
 				jQuery(this).removeAttr("checked");
+				jQuery("#primary_recipients").hide(300, function() {
+					jQuery("#primary_recipients input").val("");
+				});
+				jQuery("#cc_recipients").hide(300, function() {
+					jQuery("#cc_recipients input").val("");
+				});
 			});
 		}
 	}
@@ -265,15 +271,25 @@ function toggleAddCommentEmailOptions(){
  */
 function toggleCarbonCopyAdvisor(){
 	return function(){
+		
+		jQuery("#primary_recipients").toggle(300, function() {
+			if(jQuery("#primary_recipients").css("display") == "none") {
+		 		jQuery("#primary_recipients input").val("");
+		 	}
+		});
+
 		if(jQuery(this).closest(".modal").is("#add-file-modal")){
 			toggleAddFileEmailOptions();
 		}
 		var parent = jQuery(this).parents(".emailCarbon").first();
-		if(parent.find("input[name='email_student']:checked").length){
-			parent.find("input[name='cc_advisor']").removeAttr("disabled");
+		if(parent.find("input[name='primary_recipients_toggle']:checked").length){
+			parent.find("input[name='cc_recipients_toggle']").removeAttr("disabled");
 		} else {
-			parent.find("input[name='cc_advisor']").removeAttr("checked");
-			parent.find("input[name='cc_advisor']").attr("disabled","true");
+			parent.find("input[name='cc_recipients_toggle']").removeAttr("checked");
+			jQuery("#cc_recipients").hide(300, function() {
+				jQuery("#cc_recipients input").val("");
+			});
+			parent.find("input[name='cc_recipients_toggle']").attr("disabled","true");
 		}
 	}
 }
