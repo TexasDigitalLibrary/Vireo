@@ -806,9 +806,20 @@ public class ViewTab extends AbstractVireoController {
 		String[] primary_recipients_string = params.get("primary_recipients").split(",");
 		List<String> primary_recipients = new ArrayList<String>();
 		for(String recipient: primary_recipients_string) {
-			if(recipient.trim() != "") {
+			if(recipient.trim().length() != 0) {
 
-				RecipientType recipientType = RecipientType.valueOf(recipient.trim());
+				RecipientType recipientType = null;
+				
+				for(RecipientType oneRecipientType : RecipientType.values())
+				{
+					if(oneRecipientType.name().equals(recipient.trim()))
+					{
+						recipientType = RecipientType.valueOf(recipient.trim());
+						break;
+					}
+				}
+				
+				
 				if(recipientType != null) {
 					
 					List<String> recipientEmailAddresses = EmailByRecipientType.getRecipients(submission, recipientType);
@@ -818,23 +829,43 @@ public class ViewTab extends AbstractVireoController {
 				} else {
 					primary_recipients.add(recipient.trim());
 				}
-				
-				
 			}
 		}
 		
 		String[] cc_recipients_string = params.get("cc_recipients").split(",");
 		List<String> cc_recipients = new ArrayList<String>();
 		for(String recipient: cc_recipients_string) {
-			
-			if(recipient.trim() != "") 
-				cc_recipients.add(recipient.trim());
+			if(recipient.trim().length() != 0){
+
+				RecipientType recipientType = null;
+				
+				for(RecipientType oneRecipientType : RecipientType.values())
+				{
+					if(oneRecipientType.name().equals(recipient.trim()))
+					{
+						recipientType = RecipientType.valueOf(recipient.trim());
+						break;
+					}
+				}
+				
+				if(recipientType != null) {
+					
+					List<String> recipientEmailAddresses = EmailByRecipientType.getRecipients(submission, recipientType);
+					for(String recipientEmailAddress : recipientEmailAddresses)
+						cc_recipients.add(recipientEmailAddress);
+				
+				} else {
+					cc_recipients.add(recipient.trim());
+				}	
+			}
 		}
+		
+		
 		
 		String subject = params.get("subject");
 		String message = params.get("comment");
 		
-		if(params.get("email_student")!=null) {
+		if(primary_recipients.size() > 0) {
 			
 			if(subject == null || subject.isEmpty())
 				validation.addError("addActionLogSubject", "You must include a subject when sending an email.");
@@ -856,14 +887,27 @@ public class ViewTab extends AbstractVireoController {
 			//Create list of recipients
 			email.addTo(submission.getSubmitter());
 			
+			for(String email_address : primary_recipients)
+			{
+				email.addTo(email_address);
+			}
+			
+			
 			//Create list of carbon copies
 			if(params.get("cc_advisor") != null && submission.getCommitteeContactEmail() != null)
 				email.addCc(submission.getCommitteeContactEmail());
 			
+			for(String email_address : cc_recipients)
+			{
+				email.addCc(email_address);
+			}
+			
+			
+			
 			email.setFrom(context.getPerson());
 			email.setReplyTo(context.getPerson());
 						
-			if(params.get("email_student") != null && params.get("visibility").equals("public")) {
+			if(primary_recipients.size() > 0 && params.get("visibility").equals("public")) {
 				// Send the email and log it after completion
 				email.setLogOnCompletion(context.getPerson(), submission);
 				emailService.sendEmail(email,true);
