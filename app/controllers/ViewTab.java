@@ -39,6 +39,7 @@ import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.proquest.ProquestVocabularyRepository;
+import org.tdl.vireo.services.EmailByRecipientType;
 import org.tdl.vireo.services.Utilities;
 import org.tdl.vireo.state.State;
 
@@ -806,16 +807,19 @@ public class ViewTab extends AbstractVireoController {
 		List<String> primary_recipients = new ArrayList<String>();
 		for(String recipient: primary_recipients_string) {
 			if(recipient.trim() != "") {
-				
-				String recipientEmail = "";
+
 				RecipientType recipientType = RecipientType.valueOf(recipient.trim());
 				if(recipientType != null) {
 					
+					List<String> recipientEmailAddresses = EmailByRecipientType.getRecipients(submission, recipientType);
+					for(String recipientEmailAddress : recipientEmailAddresses)
+						primary_recipients.add(recipientEmailAddress);
+				
 				} else {
-					recipientEmail = recipient.trim();
+					primary_recipients.add(recipient.trim());
 				}
 				
-				primary_recipients.add(recipientEmail);
+				
 			}
 		}
 		
