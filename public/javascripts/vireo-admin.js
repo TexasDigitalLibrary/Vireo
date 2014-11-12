@@ -271,6 +271,7 @@ function toggleAddCommentEmailOptions(){
  */
 function toggleCarbonCopyAdvisor(){
 	return function(){
+		var parent = jQuery(this).parents(".emailCarbon").first();
 		
 		jQuery("#primary_recipients").toggle(300, function() {
 			if(jQuery("#primary_recipients").css("display") == "none") {
@@ -278,10 +279,14 @@ function toggleCarbonCopyAdvisor(){
 		 	}
 		});
 
+		console.log(parent.find("input[name='cc_recipients_toggle']").attr("checked"));
+
+		if(parent.find("input[name='cc_recipients_toggle']").attr("checked")) jQuery("#cc_recipients").toggle(300);
+
 		if(jQuery(this).closest(".modal").is("#add-file-modal")){
 			toggleAddFileEmailOptions();
 		}
-		var parent = jQuery(this).parents(".emailCarbon").first();
+		
 		if(parent.find("input[name='primary_recipients_toggle']:checked").length){
 			parent.find("input[name='cc_recipients_toggle']").removeAttr("disabled");
 		} else {
