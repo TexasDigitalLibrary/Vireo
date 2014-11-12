@@ -149,6 +149,7 @@ public class EmailServiceImpl implements EmailService {
 
 				// Send the email
 				email = Mail.buildMessage(email);
+				email.setCharset("UTF-8");
 				if (Play.configuration.getProperty("mail.smtp", "").equals("mock") && Play.mode == Play.Mode.DEV) {
 					// Send using the mock server.
 					Mail.send(email).get();
