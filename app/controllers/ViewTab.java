@@ -23,6 +23,7 @@ import javax.mail.internet.InternetAddress;
 import org.apache.commons.io.FilenameUtils;
 import org.tdl.vireo.constant.AppConfig;
 import org.tdl.vireo.email.EmailService;
+import org.tdl.vireo.email.RecipientType;
 import org.tdl.vireo.email.VireoEmail;
 import org.tdl.vireo.export.DepositService;
 import org.tdl.vireo.model.ActionLog;
@@ -799,7 +800,33 @@ public class ViewTab extends AbstractVireoController {
 	
 	@Security(RoleType.REVIEWER)
 	private static void addActionLogComment(Submission submission){
+		
+		
+		String[] primary_recipients_string = params.get("primary_recipients").split(",");
+		List<String> primary_recipients = new ArrayList<String>();
+		for(String recipient: primary_recipients_string) {
+			if(recipient.trim() != "") {
 				
+				String recipientEmail = "";
+				RecipientType recipientType = RecipientType.valueOf(recipient.trim());
+				if(recipientType != null) {
+					
+				} else {
+					recipientEmail = recipient.trim();
+				}
+				
+				primary_recipients.add(recipientEmail);
+			}
+		}
+		
+		String[] cc_recipients_string = params.get("cc_recipients").split(",");
+		List<String> cc_recipients = new ArrayList<String>();
+		for(String recipient: cc_recipients_string) {
+			
+			if(recipient.trim() != "") 
+				cc_recipients.add(recipient.trim());
+		}
+		
 		String subject = params.get("subject");
 		String message = params.get("comment");
 		
