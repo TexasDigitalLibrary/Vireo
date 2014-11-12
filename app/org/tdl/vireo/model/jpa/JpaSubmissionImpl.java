@@ -1,6 +1,7 @@
 package org.tdl.vireo.model.jpa;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
@@ -27,6 +28,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.AttachmentType;
@@ -49,6 +53,7 @@ import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
 
 import play.modules.spring.Spring;
+import play.vfs.VirtualFile;
 
 /**
  * JPA specific implementation of Vireo's Submission interface.
@@ -568,17 +573,103 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		
 		List<Attachment> filteredAttachments = new ArrayList<Attachment>();
 		for (AttachmentType type : types) {
-			for (Attachment attachment : attachments) {
-				if (type == attachment.getType())
-					filteredAttachments.add(attachment);
+			// generate an action log attachment
+			if(type == AttachmentType.ACTIONLOG) {
+				filteredAttachments.add(generateActionLogAttachment());
+			}
+			// get an attachment from JPA
+			else {
+				for (Attachment attachment : attachments) {
+					if (type == attachment.getType())
+						filteredAttachments.add(attachment);
+				}
 			}
 		}
 		
 		return filteredAttachments;
 	}
+	
+	private Attachment generateActionLogAttachment(){
+		// create an Excel Workbook to store the action log as an attachment
+		Attachment actionLogAttachment = null;
+		String sheetName = "ActionLog";
+		XSSFWorkbook wb = new XSSFWorkbook();
+        XSSFSheet sheet = wb.createSheet(sheetName);
+        XSSFRow header = sheet.createRow(0);
+        int rowNum = 1;
+        XSSFRow row = sheet.createRow(rowNum);
+        int colNum = 0;
+		for(ActionLog actionLog : actionLogs){
+			if(rowNum == 1) {
+				header.createCell(colNum).setCellValue("Action Date");
+			}
+			row.createCell(colNum).setCellValue(actionLog.getActionDate());
+			colNum++;
+			
+			if(rowNum == 1) {
+				header.createCell(colNum).setCellValue("Attachment Type");
+			}
+			if(actionLog.getAttachment() != null) {
+				row.createCell(colNum).setCellValue(actionLog.getAttachment().getType().name());
+			}
+			colNum++;
+			
+			if(rowNum == 1) {
+				header.createCell(colNum).setCellValue("Attachment Date");
+			}
+			if(actionLog.getAttachment() != null) {
+				row.createCell(colNum).setCellValue(actionLog.getAttachment().getDate());
+			}
+			colNum++;
+			
+			if(rowNum == 1) {
+				header.createCell(colNum).setCellValue("Attachment Name");
+			}
+			if(actionLog.getAttachment() != null) {
+				row.createCell(colNum).setCellValue(actionLog.getAttachment().getName());
+			}
+			colNum++;
+			
+			if(rowNum == 1) {
+				header.createCell(colNum).setCellValue("Attachment Size");
+			}
+			if(actionLog.getAttachment() != null) {
+				row.createCell(colNum).setCellValue(actionLog.getAttachment().getSize());
+			}
+			colNum++;
+			
+			if(rowNum == 1) {
+				header.createCell(colNum).setCellValue("Action Entry");
+			}
+			row.createCell(colNum).setCellValue(actionLog.getEntry());
+			colNum++;
+			
+			if(rowNum == 1) {
+				header.createCell(colNum).setCellValue("Submission State");
+			}
+			row.createCell(colNum).setCellValue(actionLog.getSubmissionState().getBeanName());
+			colNum++;
+			
+			rowNum++;
+			row = sheet.createRow(rowNum);
+			colNum = 0;
+		}
+		try {
+			File actionLogFile = File.createTempFile("actionlog-", ".xlsx");
+			actionLogFile.deleteOnExit();
+			FileOutputStream actionLogFileOS = new FileOutputStream(actionLogFile);
+			wb.write(actionLogFileOS);
+			actionLogFileOS.flush();
+			actionLogFileOS.close();
+			actionLogAttachment = new ActionLogAttachment(this, actionLogFile);
+		} catch (IOException e){
+			play.Logger.error("Error while generating Action Log Attachment! [%s]", e);
+		}
+		return actionLogAttachment;
+	}
 
 	@Override
-	public List<Attachment> getAttachments() {		
+	public List<Attachment> getAttachments() {
 		return attachments;
 	}
 

@@ -1,574 +1,531 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
-	xsi:schemaLocation="
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util" xsi:schemaLocation="
         http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
         http://www.springframework.org/schema/util
         http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 
-	<import resource="classpath:submission-states.xml" />
-    <util:properties id="ConfigurationDefaults" location="classpath:defaults.properties" />
+  <import resource="classpath:submission-states.xml" />
+  <util:properties id="ConfigurationDefaults" location="classpath:defaults.properties" />
 
-	<!-- Vireo Persistence Repositories -->
-	<bean id="PersonRepository" class="org.tdl.vireo.model.jpa.JpaPersonRepositoryImpl" scope="singleton" />
-	<bean id="SubmissionRepository" class="org.tdl.vireo.model.jpa.JpaSubmissionRepositoryImpl" scope="singleton" />
-	<bean id="SettingsRepository" class="org.tdl.vireo.model.jpa.JpaSettingsRepositoryImpl" scope="singleton" >
-	   <property name="configurationDefaults" ref="ConfigurationDefaults"/>	   
-	</bean>
+  <!-- Vireo Persistence Repositories -->
+  <bean id="PersonRepository" class="org.tdl.vireo.model.jpa.JpaPersonRepositoryImpl" scope="singleton" />
+  <bean id="SubmissionRepository" class="org.tdl.vireo.model.jpa.JpaSubmissionRepositoryImpl" scope="singleton" />
+  <bean id="SettingsRepository" class="org.tdl.vireo.model.jpa.JpaSettingsRepositoryImpl" scope="singleton">
+    <property name="configurationDefaults" ref="ConfigurationDefaults" />
+  </bean>
 
-	<!-- Security & Authentication -->
-	<bean id="SecurityContext" class="org.tdl.vireo.security.impl.SecurityContextImpl" scope="singleton" />
-	<bean id="PasswordAuthentication" class="org.tdl.vireo.security.impl.PasswordAuthenticationMethodImpl" scope="singleton">
-        <property name="enabled" value="${auth.pass.enabled}"/>
-        <property name="visible" value="${auth.pass.visible}"/>
-        <property name="displayName" value="${auth.pass.name}"/>
-        <property name="displayDescription" value="${auth.pass.description}"/>
-        <property name="allowNewRegistration" value="true"/>
-        <property name="allowPasswordRecovery" value="true"/>
-        <property name="allowUpdatePassword" value="true"/>
-        <property name="allowUpdateProfile" value="true"/>
-        <property name="usernameLabel" value="Email Address"/>
-        <property name="authenticationNote" value="Please provide your email address and password to login to the system."/>
-        <property name="personRepository" ref="PersonRepository"/>
-        <property name="securityContext" ref="SecurityContext"/>
-	</bean>
+  <!-- Security & Authentication -->
+  <bean id="SecurityContext" class="org.tdl.vireo.security.impl.SecurityContextImpl" scope="singleton" />
+  <bean id="PasswordAuthentication" class="org.tdl.vireo.security.impl.PasswordAuthenticationMethodImpl" scope="singleton">
+    <property name="enabled" value="${auth.pass.enabled}" />
+    <property name="visible" value="${auth.pass.visible}" />
+    <property name="displayName" value="${auth.pass.name}" />
+    <property name="displayDescription" value="${auth.pass.description}" />
+    <property name="allowNewRegistration" value="true" />
+    <property name="allowPasswordRecovery" value="true" />
+    <property name="allowUpdatePassword" value="true" />
+    <property name="allowUpdateProfile" value="true" />
+    <property name="usernameLabel" value="Email Address" />
+    <property name="authenticationNote" value="Please provide your email address and password to login to the system." />
+    <property name="personRepository" ref="PersonRepository" />
+    <property name="securityContext" ref="SecurityContext" />
+  </bean>
 
-    <bean id="ShibbolethAuthentication" class="org.tdl.vireo.security.impl.ShibbolethAuthenticationMethodImpl" scope="singleton">
-        <property name="enabled" value="${auth.shib.enabled}"/>
-        <property name="visible" value="${auth.shib.visible}"/>
-        <property name="displayName" value="${auth.shib.name}"/>
-        <property name="displayDescription" value="${auth.shib.description}"/>
-        <property name="allowNewRegistration" value="false"/>
-        <property name="allowPasswordRecovery" value="false"/>
-        <property name="allowUpdatePassword" value="false"/>
-        <property name="allowUpdateProfile" value="false"/>
-        <property name="personRepository" ref="PersonRepository"/>
-        <property name="securityContext" ref="SecurityContext"/>
-        <property name="loginForceSSL" value="${auth.shib.login.forceSSL}"/>
-        <property name="loginURL" value="${auth.shib.login.url}"/>
-        <property name="logoutURL" value="${auth.shib.logout.url}"/>
-        <property name="logoutEnabled" value="${auth.shib.logout.enabled}"/>
-        <property name="primaryIdentifier" value="${auth.shib.primaryIdentifier}"/>     
-        <property name="attributeMap">
-        	<util:map>
-        		<!-- Required -->
-        		<entry key="netId" value="${auth.shib.attribute.netid}"/>
-        		<entry key="email" value="${auth.shib.attribute.email}"/>
-        		<entry key="firstName" value="${auth.shib.attribute.firstName}"/>
-        		<entry key="lastName" value="${auth.shib.attribute.lastName}"/>
-        		
-        		<!-- Optional -->
-        		<entry key="institutionalIdentifier" value="${auth.shib.attribute.institutionalIdentifier}"/>
-        		<entry key="middleName" value="${auth.shib.attribute.middleName}"/>
-        		<entry key="birthYear" value="${auth.shib.attribute.birthYear}"/>
-        		<entry key="affiliations" value="${auth.shib.attribute.affiliations}"/>
-        		<entry key="currentPhoneNumber" value="${auth.shib.attribute.currentPhoneNumber}"/>
-        		<entry key="currentPostalAddress" value="${auth.shib.attribute.currentPostalAddress}"/>
-        		<entry key="currentEmailAddress" value="${auth.shib.attribute.currentEmailAddress}"/>
-        		<entry key="permanentPhoneNumber" value="${auth.shib.attribute.permanentPhoneNumber}"/>
-        		<entry key="permanentPostalAddress" value="${auth.shib.attribute.permanentPostalAddress}"/>
-        		<entry key="permanentEmailAddress" value="${auth.shib.attribute.permanentEmailAddress}"/>
-        		<entry key="currentDegree" value="${auth.shib.attribute.currentDegree}"/>
-        		<entry key="currentDepartment" value="${auth.shib.attribute.currentDepartment}"/>
-        		<entry key="currentCollege" value="${auth.shib.attribute.currentCollege}"/>
-        		<entry key="currentMajor" value="${auth.shib.attribute.currentMajor}"/>
-        		<entry key="currentGraduationYear" value="${auth.shib.attribute.currentGraduationYear}"/>
-        		<entry key="currentGraduationMonth" value="${auth.shib.attribute.currentGraduationMonth}"/>
-        		<entry key="orcid" value="${auth.shib.attribute.orcid}"/>
-        	</util:map>
-        </property>
-        <property name="mockAttributes">
-            <util:map>
-        		<!-- Required -->
-        		<entry key="${auth.shib.attribute.netid}" value="000000001"/>
-        		<entry key="${auth.shib.attribute.email}" value="bthornton@gmail.com"/>
-        		<entry key="${auth.shib.attribute.firstName}" value="Billy"/>
-        		<entry key="${auth.shib.attribute.lastName}" value="Thornton"/>
-        		
-        		<!-- Optional -->
-        		<entry key="${auth.shib.attribute.institutionalIdentifier}" value="123456789"/>
-        		<entry key="${auth.shib.attribute.middleName}" value="Bob"/>
-        		<entry key="${auth.shib.attribute.birthYear}" value="1955"/>
-        		<entry key="${auth.shib.attribute.affiliations}" value="staff;faculty;affiliate"/>
-        		<entry key="${auth.shib.attribute.currentPhoneNumber}" value="555-555-1931"/>
-        		<entry key="${auth.shib.attribute.currentPostalAddress}" value="Any City, Any State 12345"/>
-        		<entry key="${auth.shib.attribute.currentEmailAddress}" value="bthornton@gmail.com"/>
-        		<entry key="${auth.shib.attribute.permanentPhoneNumber}" value="555-555-1932"/>
-        		<entry key="${auth.shib.attribute.permanentPostalAddress}" value="Another City, Another State 54321"/>
-        		<entry key="${auth.shib.attribute.permanentEmailAddress}" value="bthornton@yahoo.com"/>
-        		<entry key="${auth.shib.attribute.currentDegree}" value="Bachelor of Science"/>
-        		<entry key="${auth.shib.attribute.currentDepartment}" value="Performance Studies"/>
-        		<entry key="${auth.shib.attribute.currentCollege}" value="College of Liberal Arts"/>
-        		<entry key="${auth.shib.attribute.currentMajor}" value="Performance Studies"/>
-        		<entry key="${auth.shib.attribute.currentGraduationYear}" value="2012"/>
-        		<entry key="${auth.shib.attribute.currentGraduationMonth}" value="04"/>
-        		<entry key="${auth.shib.attribute.orcid}" value="1234-1234-1234-1234"/>
-        	</util:map>
-        </property>
-    </bean>
-    
-    <!-- Job Management & Error Log-->
-    <bean id="JobManager" class="org.tdl.vireo.job.impl.JobManagerImpl" scope="singleton">
-    </bean>
-    <bean id="ErrorLog" class="org.tdl.vireo.error.impl.ErrorLogImpl" scope="singleton">
-        <property name="securityContext" ref="SecurityContext"/>
-    </bean>
-    
-    <!-- Email -->
-    <bean id="EmailService" class="org.tdl.vireo.email.impl.EmailServiceImpl" scope="singleton">
-        <property name="securityContext" ref="SecurityContext"/>
-    </bean>
-	<bean id="VireoEmail" class="org.tdl.vireo.email.impl.VireoEmailImpl" scope="prototype">
-	     <constructor-arg ref="SecurityContext"/>
-	     <constructor-arg ref="PersonRepository"/>
-	     <constructor-arg ref="SubmissionRepository"/>
-	</bean>
-	<bean id="SystemEmailTemplateService" class="org.tdl.vireo.email.impl.SystemEmailTemplateServiceImpl" scope="singleton">
-        <property name="settingsRepository" ref="SettingsRepository"/>
-        <property name="securityContext" ref="SecurityContext"/>
-    </bean>
-    <bean id="SystemEmailRulesService" class="org.tdl.vireo.services.EmailRuleService" scope="singleton">
-        <property name="settingsRepository" ref="SettingsRepository"/>
-        <property name="securityContext" ref="SecurityContext"/>
-    </bean>
-    
-    
-    <!-- Search -->
-    <bean id="Indexer" class="org.tdl.vireo.search.impl.LuceneIndexerImpl" scope="singleton">
-        <property name="submissionRepository" ref="SubmissionRepository"/>
-    </bean>
-    <bean id="Searcher" class="org.tdl.vireo.search.impl.LuceneSearcherImpl" scope="singleton">
-        <property name="luceneIndexerImpl" ref="Indexer"/>
-        <property name="submissionRepository" ref="SubmissionRepository"/>
-        <property name="stateManager" ref="StateManager"/>
-    </bean>
-    <bean id="ActiveSearchFilter" class="org.tdl.vireo.search.impl.UriActiveSearchFilterImpl" scope="prototype">
-        <property name="personRepository" ref="PersonRepository"/>
-        <property name="submissionRepository" ref="SubmissionRepository"/>
-        <property name="settingsRepository" ref="SettingsRepository"/>
-    </bean>
-    
-    <!-- Proquest -->
-    <bean id="ProquestVocabularyRepository" class="org.tdl.vireo.proquest.impl.ProquestExcelVocabularyRepositoryImpl" scope="singleton">
-        <property name="subjects"  value="classpath:proquest/umi_subjects.xls"/>
-        <property name="languages" value="classpath:proquest/language_codes.xls"/>
-        <property name="degrees" value="classpath:proquest/degree_codes.xls"/>
-    </bean>
-    <bean id="ProquestUtilityService" class="org.tdl.vireo.proquest.impl.ProquestUtilityServiceImpl" scope="singleton">
-        <property name="settingsRepository" ref="SettingsRepository"/>
-        <property name="proquestVocabularyRepository" ref="ProquestVocabularyRepository"/>
-    </bean>
-    
-    <!-- Batch -->
-    <bean id="BatchTransition" class="org.tdl.vireo.batch.impl.TransitionServiceImpl" scope="singleton">
-        <property name="personRepository" ref="PersonRepository"/>
-        <property name="submissionRepository" ref="SubmissionRepository"/>
-        <property name="securityContext" ref="SecurityContext"/>
-        <property name="searcher" ref="Searcher"/>
-        <property name="depositService" ref="DepositService"/>
-        <property name="jobManager" ref="JobManager"/>
-        <property name="errorLog" ref="ErrorLog"/>
-    </bean>
-    <bean id="BatchDelete" class="org.tdl.vireo.batch.impl.DeleteServiceImpl" scope="singleton">
-        <property name="personRepository" ref="PersonRepository"/>
-        <property name="submissionRepository" ref="SubmissionRepository"/>
-        <property name="securityContext" ref="SecurityContext"/>
-        <property name="searcher" ref="Searcher"/>
-        <property name="jobManager" ref="JobManager"/>
-        <property name="errorLog" ref="ErrorLog"/>
-    </bean>
-    <bean id="BatchAssign" class="org.tdl.vireo.batch.impl.AssignServiceImpl" scope="singleton">
-    	<property name="personRepository" ref="PersonRepository"/>
-    	<property name="submissionRepository" ref="SubmissionRepository"/>
-    	<property name="securityContext" ref="SecurityContext"/>
-    	<property name="searcher" ref="Searcher"/>
-    	<property name="jobManager" ref="JobManager"/>
-    	<property name="errorLog" ref="ErrorLog"/>
-    </bean>
-    <bean id="BatchComment" class="org.tdl.vireo.batch.impl.CommentServiceImpl" scope="singleton">
-    	<property name="personRepository" ref="PersonRepository"/>
-    	<property name="submissionRepository" ref="SubmissionRepository"/>
-    	<property name="securityContext" ref="SecurityContext"/>
-    	<property name="searcher" ref="Searcher"/>
-    	<property name="jobManager" ref="JobManager"/>
-    	<property name="emailService" ref="EmailService"/>
-    	<property name="errorLog" ref="ErrorLog"/>
-    </bean>
-    
-    <!-- Export/Deposit -->
-    <bean id="DepositService" class="org.tdl.vireo.export.impl.DepositServiceImpl" scope="singleton">
-        <property name="personRepository" ref="PersonRepository"/>
-        <property name="securityContext" ref="SecurityContext"/>
-        <property name="jobManager" ref="JobManager"/>
-        <property name="errorLog" ref="ErrorLog"/>
-    </bean>
-    <bean id="ExportService" class="org.tdl.vireo.export.impl.ExportServiceImpl" scope="singleton">
-        <property name="personRepository" ref="PersonRepository"/>
-        <property name="submissionRepository" ref="SubmissionRepository"/>
-        <property name="securityContext" ref="SecurityContext"/>
-        <property name="searcher" ref="Searcher"/>
-        <property name="jobManager" ref="JobManager"/>
-        <property name="errorLog" ref="ErrorLog"/>
-    </bean>
-    <bean id="ExportExcelService" class="org.tdl.vireo.export.impl.ExportExcelServiceImpl" scope="singleton">
-        <property name="personRepository" ref="PersonRepository"/>
-        <property name="submissionRepository" ref="SubmissionRepository"/>
-        <property name="securityContext" ref="SecurityContext"/>
-        <property name="searcher" ref="Searcher"/>
-        <property name="jobManager" ref="JobManager"/>
-        <property name="errorLog" ref="ErrorLog"/>
-    </bean>
-    
-    <!-- Deposit Protocols -->
-    <bean id="Sword1Deposit" class="org.tdl.vireo.export.impl.Sword1DepositorImpl" scope="singleton">
-        <property name="displayName" value="SWORD Version 1"/>
-    </bean>
-    <bean id="FileDeposit" class="org.tdl.vireo.export.impl.FileDepositorImpl" scope="singleton">
-        <property name="displayName" value="File Deposit"/>
-        <property name="baseDirectory" value="${deposits.path}"/>
-    </bean>
-    
-    <!-- Package Formats -->
-    <!-- 
-    	You can assign different package types to any export. Currently there are 2 options: "dir" and "zip" structures.
-    		<property name="packageType" value="zip"/>    	
-    	If no packageType is assigned, the default is "dir".
-    	
-    	The package type applies to each submission, for example a directory structure will be:
-    		VireoExport.zip
-    			submission_1/
-    				manifest.xml
-    				primary.pdf
-    			submission_2/
-    				manifest.xml
-    				supplimental.doc
-    				
-    	and a zip structure will be:
-    		Proquest.zip
-    			submission_1.zip
-    				manifest.xml
-    				primary.pdf
-    			submission_2.zip
-    				manifest.xml
-    				supplimental.doc
-    	
-    	Certain string attributes can be customized in the export packages by using placeholder.
-    	The format of these place holders are: {LAST_NAME}, {FIRST_NAME}
-    	    	
-    	Available for Customization
-    	
-    		The Manifest Name - The name given to the XML manifest document.
-    			<property name="manifestName" value="{CUSTOMIZABLE}"/>
-    		
-    		The Entry Name - The name given to each submissions containing package type.
-    			<property name="entryName" value="{CUSTOMIZABLE}"/>
-    		
-    		Template Paths - The key value is the same as the manifest name.
-    			<property name="templatePaths">
-        			<util:map>
-		        		<entry key="{CUSTOMIZABLE}"     value="conf/formats/dspace_simple.xml"/>
-		        	</util:map>
-		        </property>
-		    
-		    Files: You can add properties to files to change the name and tell the export if they
-		    	should be placed in a directory. If there are no customization, be sure to still 
-		    	include an empty <props></props> markup.
-		    	
-		    	<property name="attachmentTypeNames">    
-			        <map>
-				        <entry key="UNKNOWN" >
-			        		<props></props>
-			        	</entry>
-			        	<entry key="PRIMARY">
-		        			<props>
-		        				<prop key="customName">{CUSTOMIZABLE}</prop>
-		        			</props>
-		        		</entry>
-		        		<entry key="SUPPLEMENTAL">
-		        			<props>
-		        				<prop key="customName">{CUSTOMIZABLE}</prop>
-		        				<prop key="directory">{CUSTOMIZABLE}</prop>
-		        			</props>
-		        		</entry>				        		
-			        </map>
-			    </property>
-		    
-     -->
-    <bean id="VireoExport" class="org.tdl.vireo.export.impl.TemplatePackagerImpl" scope="prototype">
-        <property name="personRepository" ref="PersonRepository"/>
-        <property name="submissionRepository" ref="SubmissionRepository"/>
-        <property name="settingsRepository" ref="SettingsRepository"/>
-        <property name="proquestVocabularyRepository" ref="ProquestVocabularyRepository"/>
-        <property name="displayName" value="Vireo Export"/>
-        <property name="format" value="http://purl.org/dc/elements/1.1/"/>
-        <property name="manifestTemplatePath" value="conf/formats/vireo.xml"/>
-        <property name="manifestName" value="vireo.xml"/>
-	    <property name="attachmentTypeNames">    
-	        <map>
-	        	<entry key="UNKNOWN" >
-	        		<props></props>
-	        	</entry>
-	        	<entry key="PRIMARY">
-        			<props></props>
-        		</entry>
-        		<entry key="SUPPLEMENTAL">
-        			<props></props>
-        		</entry>
-	        	<entry key="LICENSE">
-	        		<props></props>
-	        	</entry>
-	        	<entry key="ARCHIVED">
-	        		<props></props>
-	        	</entry>
-	        	<entry key="FEEDBACK">
-	        		<props></props>
-	        	</entry>
-	        	<entry key="SOURCE">
-	        		<props></props>
-	        	</entry>
-	        	<entry key="ADMINISTRATIVE">
-	        		<props></props>
-	        	</entry>
-	        </map>
-	    </property>
-    </bean>
-    <bean id="DSpaceMETS" class="org.tdl.vireo.export.impl.TemplatePackagerImpl" scope="prototype">
-        <property name="personRepository" ref="PersonRepository"/>
-        <property name="submissionRepository" ref="SubmissionRepository"/>
-        <property name="settingsRepository" ref="SettingsRepository"/>
-        <property name="proquestVocabularyRepository" ref="ProquestVocabularyRepository"/>
-        <property name="displayName" value="DSpace METS"/>
-        <property name="format" value="http://purl.org/net/sword-types/METSDSpaceSIP"/>
-        <property name="manifestTemplatePath" value="conf/formats/dspace_mets.xml"/>
-        <property name="manifestName" value="mets.xml"/>
-        <property name="manifestTemplateArguments">
-            <util:map>
-                <entry key="agent" value="Vireo DSpace METS packager"/>
-            </util:map>
-        </property>
-        <property name="attachmentTypeNames">
-            <map>
-            	<entry key="PRIMARY">
-            		<props></props>
-            	</entry>
-            	<entry key="SUPPLEMENTAL">
-            		<props></props>
-            	</entry>
-            	<entry key="LICENSE">
-            		<props></props>
-            	</entry>
-            	<entry key="SOURCE">
-            		<props></props>
-            	</entry>
-            </map>
-        </property>
-    </bean>
-    <bean id="DSpaceSimpleArchive" class="org.tdl.vireo.export.impl.MultipleTemplatePackagerImpl" scope="prototype">
-        <property name="personRepository" ref="PersonRepository"/>
-        <property name="submissionRepository" ref="SubmissionRepository"/>
-        <property name="settingsRepository" ref="SettingsRepository"/>
-        <property name="proquestVocabularyRepository" ref="ProquestVocabularyRepository"/>
-        <property name="displayName" value="DSpace Simple Archive"/>
-        <property name="format" value="http://www.dspace.org/xmlns/dspace"/>
-        <property name="templatePaths">
-        	<util:map>
-        		<entry key="dublin_core.xml"     value="conf/formats/dspace_simple.xml"/>
-        		<entry key="metadata_thesis.xml" value="conf/formats/dspace_simple.xml"/>
-        		<entry key="metadata_local.xml"  value="conf/formats/dspace_simple.xml"/>
-        		<entry key="contents"            value="conf/formats/dspace_simple.xml"/>
-        	</util:map>
-        </property>
-       <property name="attachmentTypeNames">
-        	<map>
-        		<entry key="PRIMARY">
-        			<props></props>
-        		</entry>
-        		<entry key="SUPPLEMENTAL">
-        			<props></props>
-        		</entry>
-        		<entry key="LICENSE">
-        			<props></props>
-        		</entry>
-        		<entry key="SOURCE">
-        			<props></props>
-        		</entry>
-        	</map>
-        </property>
-    </bean>
-    <bean id="GenericQDC" class="org.tdl.vireo.export.impl.TemplatePackagerImpl" scope="prototype">
-        <property name="personRepository" ref="PersonRepository"/>
-        <property name="submissionRepository" ref="SubmissionRepository"/>
-        <property name="settingsRepository" ref="SettingsRepository"/>
-        <property name="proquestVocabularyRepository" ref="ProquestVocabularyRepository"/>
-        <property name="displayName" value="Generic Qualified Dublin Core"/>
-        <property name="format" value="http://purl.org/dc/elements/1.1/"/>
-        <property name="manifestTemplatePath" value="conf/formats/qdc.xml"/>
-        <property name="manifestName" value="metadata.xml"/>
-        <property name="attachmentTypeNames">
-        	<map>
-        		<entry key="PRIMARY">
-        			<props></props>
-        		</entry>
-        		<entry key="SUPPLEMENTAL">
-        			<props></props>
-        		</entry>
-        		<entry key="LICENSE">
-        			<props></props>
-        		</entry>
-        		<entry key="SOURCE">
-        			<props></props>
-        		</entry>
-        	</map>
-        </property>
-    </bean>
-    <bean id="FileExport" class="org.tdl.vireo.export.impl.FilePackagerImpl" scope="prototype">
-        <property name="displayName" value="File Export"/>
-        <property name="attachmentTypeNames">    
-	        <map>
-	        	<entry key="PRIMARY">
-	        		<props></props>
-	        	</entry>
-	        	<entry key="SUPPLEMENTAL">
-	        		<props></props>
-	        	</entry>
-	        	<entry key="SOURCE">
-	        		<props></props>
-	        	</entry>
-	        </map>
-	    </property>
-    </bean>
-    <bean id="ExcelPackageExport" class="org.tdl.vireo.export.impl.ExcelPackagerImpl" scope="prototype">
-        <property name="displayName" value="Excel Package Export"/>
-        <property name="aggregated">
-          <value type="java.lang.Boolean">false</value>
-        </property>
-        <property name="attachmentTypeNames">
-          <map>
-              <entry key="UNKNOWN" >
-                <props></props>
-              </entry>
-              <entry key="PRIMARY">
-                <props></props>
-              </entry>
-              <entry key="SUPPLEMENTAL">
-                <props></props>
-              </entry>
-              <entry key="LICENSE">
-                <props></props>
-              </entry>
-              <entry key="ARCHIVED">
-                <props></props>
-              </entry>
-              <entry key="FEEDBACK">
-                <props></props>
-              </entry>
-              <entry key="SOURCE">
-                <props></props>
-              </entry>
-              <entry key="ADMINISTRATIVE">
-                <props></props>
-              </entry>
-          </map>
-      </property>
-    </bean>
-    <bean id="ExcelExport" class="org.tdl.vireo.export.impl.ExcelPackagerImpl" scope="prototype">
-        <property name="displayName" value="Excel Export"/>
-        <property name="aggregated">
-          <value type="java.lang.Boolean">true</value>
-        </property>
-    </bean>
-    <bean id="Marc21" class="org.tdl.vireo.export.impl.TemplatePackagerImpl" scope="prototype">
-        <property name="personRepository" ref="PersonRepository"/>
-        <property name="submissionRepository" ref="SubmissionRepository"/>
-        <property name="settingsRepository" ref="SettingsRepository"/>
-        <property name="proquestVocabularyRepository" ref="ProquestVocabularyRepository"/>
-        <property name="displayName" value="MARC21"/>
-        <property name="mimeType" value="text/plain"/>
-        <property name="format" value="http://www.loc.gov/marc/umb/um11to12.html"/>
-        <property name="manifestTemplatePath" value="conf/formats/marc21.xml"/>
-        <property name="manifestName" value="marc21.bib"/>
-    </bean>
-    <bean id="MarcXML21" class="org.tdl.vireo.export.impl.TemplatePackagerImpl" scope="prototype">
-        <property name="personRepository" ref="PersonRepository"/>
-        <property name="submissionRepository" ref="SubmissionRepository"/>
-        <property name="settingsRepository" ref="SettingsRepository"/>
-        <property name="proquestVocabularyRepository" ref="ProquestVocabularyRepository"/>
-        <property name="displayName" value="MARC21 XML"/>
-        <property name="mimeType" value="text/xml"/>
-        <property name="format" value="http://www.loc.gov/MARC21/slim"/>
-        <property name="manifestTemplatePath" value="conf/formats/marc21slim.xml"/>
-        <property name="manifestName" value="marc.xml"/>
-    </bean>
-    <bean id="MODS" class="org.tdl.vireo.export.impl.TemplatePackagerImpl" scope="prototype">
-        <property name="personRepository" ref="PersonRepository"/>
-        <property name="submissionRepository" ref="SubmissionRepository"/>
-        <property name="settingsRepository" ref="SettingsRepository"/>
-        <property name="proquestVocabularyRepository" ref="ProquestVocabularyRepository"/>
-        <property name="displayName" value="MODS"/>
-        <property name="format" value="http://www.loc.gov/standards/mods/v3/mods.xsd"/>
-        <property name="manifestTemplatePath" value="conf/formats/mods.xml"/>
-        <property name="manifestName" value="mods.xml"/>
-        <property name="attachmentTypeNames">    
-	        <map>
-	        	<entry key="PRIMARY">
-	        		<props></props>
-	        	</entry>
-	        	<entry key="SUPPLEMENTAL">
-	        		<props></props>
-	        	</entry>
-	        	<entry key="LICENSE">
-	        		<props></props>
-	        	</entry>
-	        	<entry key="SOURCE">
-	        		<props></props>
-	        	</entry>
-	        </map>
-	    </property>
-    </bean>
-    <bean id="Proquest" class="org.tdl.vireo.export.impl.TemplatePackagerImpl" scope="prototype">
-    	<property name="personRepository" ref="PersonRepository"/>
-        <property name="submissionRepository" ref="SubmissionRepository"/>
-        <property name="settingsRepository" ref="SettingsRepository"/>
-        <property name="packageType" value="zip"/>
-        <property name="proquestVocabularyRepository" ref="ProquestVocabularyRepository"/>
-        <property name="displayName" value="ProQuest UMI"/>
-        <property name="format" value="http://www.proquest.com/assets/downloads/products/ftp_submissions.pdf"/>
-        <property name="manifestTemplatePath" value="conf/formats/ProquestUMI.xml"/>
-        <property name="manifestName" value="{LAST_NAME}_{FIRST_NAME}_DATA.xml"/>
-        <property name="entryName" value="upload_{LAST_NAME}_{FIRST_NAME}"/>
-        <property name="attachmentTypeNames">
-        	<map>
-        		<entry key="PRIMARY">
-        			<props>
-        				<prop key="customName">{LAST_NAME}_{FIRST_NAME}</prop>
-        			</props>
-        		</entry>
-        		<entry key="SUPPLEMENTAL">
-        			<props>
-        				<prop key="customName">supp_file_{FILE_NAME}</prop>
-        				<prop key="directory">{LAST_NAME}_{FIRST_NAME}_media{SEPARATOR}</prop>
-        			</props>
-        		</entry>
-        		<entry key="LICENSE">
-        			<props>
-        				<prop key="directory">{LAST_NAME}_{FIRST_NAME}_permission{SEPARATOR}</prop>
-        			</props>
-        		</entry>
-        	</map>
-        </property>
-    </bean>
-    <bean id="ORCID" class="org.tdl.vireo.export.impl.TemplatePackagerImpl" scope="prototype">
-        <property name="personRepository" ref="PersonRepository"/>
-        <property name="submissionRepository" ref="SubmissionRepository"/>
-        <property name="settingsRepository" ref="SettingsRepository"/>
-        <property name="proquestVocabularyRepository" ref="ProquestVocabularyRepository"/>
-        <property name="displayName" value="ORCID Work"/>
-        <property name="mimeType" value="text/xml"/>
-        <property name="format" value="http://orcid.github.com/ORCID-Parent/schemas/orcid-message/1.0.10/orcid-message-1.0.10.xsd"/>
-        <property name="manifestTemplatePath" value="conf/formats/orcid.xml"/>
-        <property name="manifestName" value="orcid.xml"/>
-    </bean>
-    
+  <bean id="ShibbolethAuthentication" class="org.tdl.vireo.security.impl.ShibbolethAuthenticationMethodImpl" scope="singleton">
+    <property name="enabled" value="${auth.shib.enabled}" />
+    <property name="visible" value="${auth.shib.visible}" />
+    <property name="displayName" value="${auth.shib.name}" />
+    <property name="displayDescription" value="${auth.shib.description}" />
+    <property name="allowNewRegistration" value="false" />
+    <property name="allowPasswordRecovery" value="false" />
+    <property name="allowUpdatePassword" value="false" />
+    <property name="allowUpdateProfile" value="false" />
+    <property name="personRepository" ref="PersonRepository" />
+    <property name="securityContext" ref="SecurityContext" />
+    <property name="loginForceSSL" value="${auth.shib.login.forceSSL}" />
+    <property name="loginURL" value="${auth.shib.login.url}" />
+    <property name="logoutURL" value="${auth.shib.logout.url}" />
+    <property name="logoutEnabled" value="${auth.shib.logout.enabled}" />
+    <property name="primaryIdentifier" value="${auth.shib.primaryIdentifier}" />
+    <property name="attributeMap">
+      <util:map>
+        <!-- Required -->
+        <entry key="netId" value="${auth.shib.attribute.netid}" />
+        <entry key="email" value="${auth.shib.attribute.email}" />
+        <entry key="firstName" value="${auth.shib.attribute.firstName}" />
+        <entry key="lastName" value="${auth.shib.attribute.lastName}" />
+
+        <!-- Optional -->
+        <entry key="institutionalIdentifier" value="${auth.shib.attribute.institutionalIdentifier}" />
+        <entry key="middleName" value="${auth.shib.attribute.middleName}" />
+        <entry key="birthYear" value="${auth.shib.attribute.birthYear}" />
+        <entry key="affiliations" value="${auth.shib.attribute.affiliations}" />
+        <entry key="currentPhoneNumber" value="${auth.shib.attribute.currentPhoneNumber}" />
+        <entry key="currentPostalAddress" value="${auth.shib.attribute.currentPostalAddress}" />
+        <entry key="currentEmailAddress" value="${auth.shib.attribute.currentEmailAddress}" />
+        <entry key="permanentPhoneNumber" value="${auth.shib.attribute.permanentPhoneNumber}" />
+        <entry key="permanentPostalAddress" value="${auth.shib.attribute.permanentPostalAddress}" />
+        <entry key="permanentEmailAddress" value="${auth.shib.attribute.permanentEmailAddress}" />
+        <entry key="currentDegree" value="${auth.shib.attribute.currentDegree}" />
+        <entry key="currentDepartment" value="${auth.shib.attribute.currentDepartment}" />
+        <entry key="currentCollege" value="${auth.shib.attribute.currentCollege}" />
+        <entry key="currentMajor" value="${auth.shib.attribute.currentMajor}" />
+        <entry key="currentGraduationYear" value="${auth.shib.attribute.currentGraduationYear}" />
+        <entry key="currentGraduationMonth" value="${auth.shib.attribute.currentGraduationMonth}" />
+        <entry key="orcid" value="${auth.shib.attribute.orcid}" />
+      </util:map>
+    </property>
+    <property name="mockAttributes">
+      <util:map>
+        <!-- Required -->
+        <entry key="${auth.shib.attribute.netid}" value="000000001" />
+        <entry key="${auth.shib.attribute.email}" value="bthornton@gmail.com" />
+        <entry key="${auth.shib.attribute.firstName}" value="Billy" />
+        <entry key="${auth.shib.attribute.lastName}" value="Thornton" />
+
+        <!-- Optional -->
+        <entry key="${auth.shib.attribute.institutionalIdentifier}" value="123456789" />
+        <entry key="${auth.shib.attribute.middleName}" value="Bob" />
+        <entry key="${auth.shib.attribute.birthYear}" value="1955" />
+        <entry key="${auth.shib.attribute.affiliations}" value="staff;faculty;affiliate" />
+        <entry key="${auth.shib.attribute.currentPhoneNumber}" value="555-555-1931" />
+        <entry key="${auth.shib.attribute.currentPostalAddress}" value="Any City, Any State 12345" />
+        <entry key="${auth.shib.attribute.currentEmailAddress}" value="bthornton@gmail.com" />
+        <entry key="${auth.shib.attribute.permanentPhoneNumber}" value="555-555-1932" />
+        <entry key="${auth.shib.attribute.permanentPostalAddress}" value="Another City, Another State 54321" />
+        <entry key="${auth.shib.attribute.permanentEmailAddress}" value="bthornton@yahoo.com" />
+        <entry key="${auth.shib.attribute.currentDegree}" value="Bachelor of Science" />
+        <entry key="${auth.shib.attribute.currentDepartment}" value="Performance Studies" />
+        <entry key="${auth.shib.attribute.currentCollege}" value="College of Liberal Arts" />
+        <entry key="${auth.shib.attribute.currentMajor}" value="Performance Studies" />
+        <entry key="${auth.shib.attribute.currentGraduationYear}" value="2012" />
+        <entry key="${auth.shib.attribute.currentGraduationMonth}" value="04" />
+        <entry key="${auth.shib.attribute.orcid}" value="1234-1234-1234-1234" />
+      </util:map>
+    </property>
+  </bean>
+
+  <!-- Job Management & Error Log -->
+  <bean id="JobManager" class="org.tdl.vireo.job.impl.JobManagerImpl" scope="singleton">
+  </bean>
+  <bean id="ErrorLog" class="org.tdl.vireo.error.impl.ErrorLogImpl" scope="singleton">
+    <property name="securityContext" ref="SecurityContext" />
+  </bean>
+
+  <!-- Email -->
+  <bean id="EmailService" class="org.tdl.vireo.email.impl.EmailServiceImpl" scope="singleton">
+    <property name="securityContext" ref="SecurityContext" />
+  </bean>
+  <bean id="VireoEmail" class="org.tdl.vireo.email.impl.VireoEmailImpl" scope="prototype">
+    <constructor-arg ref="SecurityContext" />
+    <constructor-arg ref="PersonRepository" />
+    <constructor-arg ref="SubmissionRepository" />
+  </bean>
+  <bean id="SystemEmailTemplateService" class="org.tdl.vireo.email.impl.SystemEmailTemplateServiceImpl" scope="singleton">
+    <property name="settingsRepository" ref="SettingsRepository" />
+    <property name="securityContext" ref="SecurityContext" />
+  </bean>
+  <bean id="SystemEmailRulesService" class="org.tdl.vireo.services.EmailRuleService" scope="singleton">
+    <property name="settingsRepository" ref="SettingsRepository" />
+    <property name="securityContext" ref="SecurityContext" />
+  </bean>
+
+
+  <!-- Search -->
+  <bean id="Indexer" class="org.tdl.vireo.search.impl.LuceneIndexerImpl" scope="singleton">
+    <property name="submissionRepository" ref="SubmissionRepository" />
+  </bean>
+  <bean id="Searcher" class="org.tdl.vireo.search.impl.LuceneSearcherImpl" scope="singleton">
+    <property name="luceneIndexerImpl" ref="Indexer" />
+    <property name="submissionRepository" ref="SubmissionRepository" />
+    <property name="stateManager" ref="StateManager" />
+  </bean>
+  <bean id="ActiveSearchFilter" class="org.tdl.vireo.search.impl.UriActiveSearchFilterImpl" scope="prototype">
+    <property name="personRepository" ref="PersonRepository" />
+    <property name="submissionRepository" ref="SubmissionRepository" />
+    <property name="settingsRepository" ref="SettingsRepository" />
+  </bean>
+
+  <!-- Proquest -->
+  <bean id="ProquestVocabularyRepository" class="org.tdl.vireo.proquest.impl.ProquestExcelVocabularyRepositoryImpl" scope="singleton">
+    <property name="subjects" value="classpath:proquest/umi_subjects.xls" />
+    <property name="languages" value="classpath:proquest/language_codes.xls" />
+    <property name="degrees" value="classpath:proquest/degree_codes.xls" />
+  </bean>
+  <bean id="ProquestUtilityService" class="org.tdl.vireo.proquest.impl.ProquestUtilityServiceImpl" scope="singleton">
+    <property name="settingsRepository" ref="SettingsRepository" />
+    <property name="proquestVocabularyRepository" ref="ProquestVocabularyRepository" />
+  </bean>
+
+  <!-- Batch -->
+  <bean id="BatchTransition" class="org.tdl.vireo.batch.impl.TransitionServiceImpl" scope="singleton">
+    <property name="personRepository" ref="PersonRepository" />
+    <property name="submissionRepository" ref="SubmissionRepository" />
+    <property name="securityContext" ref="SecurityContext" />
+    <property name="searcher" ref="Searcher" />
+    <property name="depositService" ref="DepositService" />
+    <property name="jobManager" ref="JobManager" />
+    <property name="errorLog" ref="ErrorLog" />
+  </bean>
+  <bean id="BatchDelete" class="org.tdl.vireo.batch.impl.DeleteServiceImpl" scope="singleton">
+    <property name="personRepository" ref="PersonRepository" />
+    <property name="submissionRepository" ref="SubmissionRepository" />
+    <property name="securityContext" ref="SecurityContext" />
+    <property name="searcher" ref="Searcher" />
+    <property name="jobManager" ref="JobManager" />
+    <property name="errorLog" ref="ErrorLog" />
+  </bean>
+  <bean id="BatchAssign" class="org.tdl.vireo.batch.impl.AssignServiceImpl" scope="singleton">
+    <property name="personRepository" ref="PersonRepository" />
+    <property name="submissionRepository" ref="SubmissionRepository" />
+    <property name="securityContext" ref="SecurityContext" />
+    <property name="searcher" ref="Searcher" />
+    <property name="jobManager" ref="JobManager" />
+    <property name="errorLog" ref="ErrorLog" />
+  </bean>
+  <bean id="BatchComment" class="org.tdl.vireo.batch.impl.CommentServiceImpl" scope="singleton">
+    <property name="personRepository" ref="PersonRepository" />
+    <property name="submissionRepository" ref="SubmissionRepository" />
+    <property name="securityContext" ref="SecurityContext" />
+    <property name="searcher" ref="Searcher" />
+    <property name="jobManager" ref="JobManager" />
+    <property name="emailService" ref="EmailService" />
+    <property name="errorLog" ref="ErrorLog" />
+  </bean>
+
+  <!-- Export/Deposit -->
+  <bean id="DepositService" class="org.tdl.vireo.export.impl.DepositServiceImpl" scope="singleton">
+    <property name="personRepository" ref="PersonRepository" />
+    <property name="securityContext" ref="SecurityContext" />
+    <property name="jobManager" ref="JobManager" />
+    <property name="errorLog" ref="ErrorLog" />
+  </bean>
+  <bean id="ExportService" class="org.tdl.vireo.export.impl.ExportServiceImpl" scope="singleton">
+    <property name="personRepository" ref="PersonRepository" />
+    <property name="submissionRepository" ref="SubmissionRepository" />
+    <property name="securityContext" ref="SecurityContext" />
+    <property name="searcher" ref="Searcher" />
+    <property name="jobManager" ref="JobManager" />
+    <property name="errorLog" ref="ErrorLog" />
+  </bean>
+  <bean id="ExportExcelService" class="org.tdl.vireo.export.impl.ExportExcelServiceImpl" scope="singleton">
+    <property name="personRepository" ref="PersonRepository" />
+    <property name="submissionRepository" ref="SubmissionRepository" />
+    <property name="securityContext" ref="SecurityContext" />
+    <property name="searcher" ref="Searcher" />
+    <property name="jobManager" ref="JobManager" />
+    <property name="errorLog" ref="ErrorLog" />
+  </bean>
+
+  <!-- Deposit Protocols -->
+  <bean id="Sword1Deposit" class="org.tdl.vireo.export.impl.Sword1DepositorImpl" scope="singleton">
+    <property name="displayName" value="SWORD Version 1" />
+  </bean>
+  <bean id="FileDeposit" class="org.tdl.vireo.export.impl.FileDepositorImpl" scope="singleton">
+    <property name="displayName" value="File Deposit" />
+    <property name="baseDirectory" value="${deposits.path}" />
+  </bean>
+
+  <!-- Package Formats -->
+  <!-- You can assign different package types to any export. Currently there are 2 options: "dir" and "zip" structures. <property name="packageType" value="zip"/> If no packageType is assigned, the default is "dir". The package type applies to each submission, for example a directory structure will be: VireoExport.zip submission_1/ manifest.xml primary.pdf submission_2/ manifest.xml supplimental.doc and a zip structure will be: Proquest.zip submission_1.zip manifest.xml primary.pdf submission_2.zip manifest.xml supplimental.doc Certain string attributes can be customized in the export packages by using placeholder. The format of these place holders are: {LAST_NAME}, {FIRST_NAME} Available for Customization The Manifest Name - The name given to the XML manifest document. <property name="manifestName" 
+    value="{CUSTOMIZABLE}"/> The Entry Name - The name given to each submissions containing package type. <property name="entryName" value="{CUSTOMIZABLE}"/> Template Paths - The key value is the same as the manifest name. <property name="templatePaths"> <util:map> <entry key="{CUSTOMIZABLE}" value="conf/formats/dspace_simple.xml"/> </util:map> </property> Files: You can add properties to files to change the name and tell the export if they should be placed in a directory. If there are no customization, be sure to still include an empty <props></props> markup. <property name="attachmentTypeNames"> <map> <entry key="UNKNOWN" > <props></props> </entry> <entry key="PRIMARY"> <props> <prop key="customName">{CUSTOMIZABLE}</prop> </props> </entry> <entry key="SUPPLEMENTAL"> <props> <prop key="customName">{CUSTOMIZABLE}</prop> 
+    <prop key="directory">{CUSTOMIZABLE}</prop> </props> </entry> </map> </property> -->
+  <bean id="VireoExport" class="org.tdl.vireo.export.impl.TemplatePackagerImpl" scope="prototype">
+    <property name="personRepository" ref="PersonRepository" />
+    <property name="submissionRepository" ref="SubmissionRepository" />
+    <property name="settingsRepository" ref="SettingsRepository" />
+    <property name="proquestVocabularyRepository" ref="ProquestVocabularyRepository" />
+    <property name="displayName" value="Vireo Export" />
+    <property name="format" value="http://purl.org/dc/elements/1.1/" />
+    <property name="manifestTemplatePath" value="conf/formats/vireo.xml" />
+    <property name="manifestName" value="vireo.xml" />
+    <property name="attachmentTypeNames">
+      <map>
+        <entry key="UNKNOWN">
+          <props></props>
+        </entry>
+        <entry key="PRIMARY">
+          <props></props>
+        </entry>
+        <entry key="SUPPLEMENTAL">
+          <props></props>
+        </entry>
+        <entry key="LICENSE">
+          <props></props>
+        </entry>
+        <entry key="ARCHIVED">
+          <props></props>
+        </entry>
+        <entry key="FEEDBACK">
+          <props></props>
+        </entry>
+        <entry key="SOURCE">
+          <props></props>
+        </entry>
+        <entry key="ADMINISTRATIVE">
+          <props></props>
+        </entry>
+      </map>
+    </property>
+  </bean>
+  <bean id="DSpaceMETS" class="org.tdl.vireo.export.impl.TemplatePackagerImpl" scope="prototype">
+    <property name="personRepository" ref="PersonRepository" />
+    <property name="submissionRepository" ref="SubmissionRepository" />
+    <property name="settingsRepository" ref="SettingsRepository" />
+    <property name="proquestVocabularyRepository" ref="ProquestVocabularyRepository" />
+    <property name="displayName" value="DSpace METS" />
+    <property name="format" value="http://purl.org/net/sword-types/METSDSpaceSIP" />
+    <property name="manifestTemplatePath" value="conf/formats/dspace_mets.xml" />
+    <property name="manifestName" value="mets.xml" />
+    <property name="manifestTemplateArguments">
+      <util:map>
+        <entry key="agent" value="Vireo DSpace METS packager" />
+      </util:map>
+    </property>
+    <property name="attachmentTypeNames">
+      <map>
+        <entry key="PRIMARY">
+          <props></props>
+        </entry>
+        <entry key="SUPPLEMENTAL">
+          <props></props>
+        </entry>
+        <entry key="LICENSE">
+          <props></props>
+        </entry>
+        <entry key="SOURCE">
+          <props></props>
+        </entry>
+      </map>
+    </property>
+  </bean>
+  <bean id="DSpaceSimpleArchive" class="org.tdl.vireo.export.impl.MultipleTemplatePackagerImpl" scope="prototype">
+    <property name="personRepository" ref="PersonRepository" />
+    <property name="submissionRepository" ref="SubmissionRepository" />
+    <property name="settingsRepository" ref="SettingsRepository" />
+    <property name="proquestVocabularyRepository" ref="ProquestVocabularyRepository" />
+    <property name="displayName" value="DSpace Simple Archive" />
+    <property name="format" value="http://www.dspace.org/xmlns/dspace" />
+    <property name="templatePaths">
+      <util:map>
+        <entry key="dublin_core.xml" value="conf/formats/dspace_simple.xml" />
+        <entry key="metadata_thesis.xml" value="conf/formats/dspace_simple.xml" />
+        <entry key="metadata_local.xml" value="conf/formats/dspace_simple.xml" />
+        <entry key="contents" value="conf/formats/dspace_simple.xml" />
+      </util:map>
+    </property>
+    <property name="attachmentTypeNames">
+      <map>
+        <entry key="PRIMARY">
+          <props></props>
+        </entry>
+        <entry key="SUPPLEMENTAL">
+          <props></props>
+        </entry>
+        <entry key="LICENSE">
+          <props></props>
+        </entry>
+        <entry key="SOURCE">
+          <props></props>
+        </entry>
+      </map>
+    </property>
+  </bean>
+  <bean id="GenericQDC" class="org.tdl.vireo.export.impl.TemplatePackagerImpl" scope="prototype">
+    <property name="personRepository" ref="PersonRepository" />
+    <property name="submissionRepository" ref="SubmissionRepository" />
+    <property name="settingsRepository" ref="SettingsRepository" />
+    <property name="proquestVocabularyRepository" ref="ProquestVocabularyRepository" />
+    <property name="displayName" value="Generic Qualified Dublin Core" />
+    <property name="format" value="http://purl.org/dc/elements/1.1/" />
+    <property name="manifestTemplatePath" value="conf/formats/qdc.xml" />
+    <property name="manifestName" value="metadata.xml" />
+    <property name="attachmentTypeNames">
+      <map>
+        <entry key="PRIMARY">
+          <props></props>
+        </entry>
+        <entry key="SUPPLEMENTAL">
+          <props></props>
+        </entry>
+        <entry key="LICENSE">
+          <props></props>
+        </entry>
+        <entry key="SOURCE">
+          <props></props>
+        </entry>
+      </map>
+    </property>
+  </bean>
+  <bean id="FileExport" class="org.tdl.vireo.export.impl.FilePackagerImpl" scope="prototype">
+    <property name="displayName" value="File Export" />
+    <property name="attachmentTypeNames">
+      <map>
+        <entry key="UNKNOWN">
+          <props></props>
+        </entry>
+        <entry key="PRIMARY">
+          <props></props>
+        </entry>
+        <entry key="SUPPLEMENTAL">
+          <props></props>
+        </entry>
+        <entry key="LICENSE">
+          <props></props>
+        </entry>
+        <entry key="ARCHIVED">
+          <props></props>
+        </entry>
+        <entry key="FEEDBACK">
+          <props></props>
+        </entry>
+        <entry key="SOURCE">
+          <props></props>
+        </entry>
+        <entry key="ADMINISTRATIVE">
+          <props></props>
+        </entry>
+        <entry key="ACTIONLOG">
+          <props></props>
+        </entry>
+      </map>
+    </property>
+  </bean>
+  <bean id="ExcelPackageExport" class="org.tdl.vireo.export.impl.ExcelPackagerImpl" scope="prototype">
+    <property name="displayName" value="Excel Package Export" />
+    <property name="aggregated">
+      <value type="java.lang.Boolean">false</value>
+    </property>
+    <property name="attachmentTypeNames">
+      <map>
+        <entry key="UNKNOWN">
+          <props></props>
+        </entry>
+        <entry key="PRIMARY">
+          <props></props>
+        </entry>
+        <entry key="SUPPLEMENTAL">
+          <props></props>
+        </entry>
+        <entry key="LICENSE">
+          <props></props>
+        </entry>
+        <entry key="ARCHIVED">
+          <props></props>
+        </entry>
+        <entry key="FEEDBACK">
+          <props></props>
+        </entry>
+        <entry key="SOURCE">
+          <props></props>
+        </entry>
+        <entry key="ADMINISTRATIVE">
+          <props></props>
+        </entry>
+        <entry key="ACTIONLOG">
+          <props></props>
+        </entry>
+      </map>
+    </property>
+  </bean>
+  <bean id="ExcelExport" class="org.tdl.vireo.export.impl.ExcelPackagerImpl" scope="prototype">
+    <property name="displayName" value="Excel Export" />
+    <property name="aggregated">
+      <value type="java.lang.Boolean">true</value>
+    </property>
+  </bean>
+  <bean id="Marc21" class="org.tdl.vireo.export.impl.TemplatePackagerImpl" scope="prototype">
+    <property name="personRepository" ref="PersonRepository" />
+    <property name="submissionRepository" ref="SubmissionRepository" />
+    <property name="settingsRepository" ref="SettingsRepository" />
+    <property name="proquestVocabularyRepository" ref="ProquestVocabularyRepository" />
+    <property name="displayName" value="MARC21" />
+    <property name="mimeType" value="text/plain" />
+    <property name="format" value="http://www.loc.gov/marc/umb/um11to12.html" />
+    <property name="manifestTemplatePath" value="conf/formats/marc21.xml" />
+    <property name="manifestName" value="marc21.bib" />
+  </bean>
+  <bean id="MarcXML21" class="org.tdl.vireo.export.impl.TemplatePackagerImpl" scope="prototype">
+    <property name="personRepository" ref="PersonRepository" />
+    <property name="submissionRepository" ref="SubmissionRepository" />
+    <property name="settingsRepository" ref="SettingsRepository" />
+    <property name="proquestVocabularyRepository" ref="ProquestVocabularyRepository" />
+    <property name="displayName" value="MARC21 XML" />
+    <property name="mimeType" value="text/xml" />
+    <property name="format" value="http://www.loc.gov/MARC21/slim" />
+    <property name="manifestTemplatePath" value="conf/formats/marc21slim.xml" />
+    <property name="manifestName" value="marc.xml" />
+  </bean>
+  <bean id="MODS" class="org.tdl.vireo.export.impl.TemplatePackagerImpl" scope="prototype">
+    <property name="personRepository" ref="PersonRepository" />
+    <property name="submissionRepository" ref="SubmissionRepository" />
+    <property name="settingsRepository" ref="SettingsRepository" />
+    <property name="proquestVocabularyRepository" ref="ProquestVocabularyRepository" />
+    <property name="displayName" value="MODS" />
+    <property name="format" value="http://www.loc.gov/standards/mods/v3/mods.xsd" />
+    <property name="manifestTemplatePath" value="conf/formats/mods.xml" />
+    <property name="manifestName" value="mods.xml" />
+    <property name="attachmentTypeNames">
+      <map>
+        <entry key="PRIMARY">
+          <props></props>
+        </entry>
+        <entry key="SUPPLEMENTAL">
+          <props></props>
+        </entry>
+        <entry key="LICENSE">
+          <props></props>
+        </entry>
+        <entry key="SOURCE">
+          <props></props>
+        </entry>
+      </map>
+    </property>
+  </bean>
+  <bean id="Proquest" class="org.tdl.vireo.export.impl.TemplatePackagerImpl" scope="prototype">
+    <property name="personRepository" ref="PersonRepository" />
+    <property name="submissionRepository" ref="SubmissionRepository" />
+    <property name="settingsRepository" ref="SettingsRepository" />
+    <property name="packageType" value="zip" />
+    <property name="proquestVocabularyRepository" ref="ProquestVocabularyRepository" />
+    <property name="displayName" value="ProQuest UMI" />
+    <property name="format" value="http://www.proquest.com/assets/downloads/products/ftp_submissions.pdf" />
+    <property name="manifestTemplatePath" value="conf/formats/ProquestUMI.xml" />
+    <property name="manifestName" value="{LAST_NAME}_{FIRST_NAME}_DATA.xml" />
+    <property name="entryName" value="upload_{LAST_NAME}_{FIRST_NAME}" />
+    <property name="attachmentTypeNames">
+      <map>
+        <entry key="PRIMARY">
+          <props>
+            <prop key="customName">{LAST_NAME}_{FIRST_NAME}</prop>
+          </props>
+        </entry>
+        <entry key="SUPPLEMENTAL">
+          <props>
+            <prop key="customName">supp_file_{FILE_NAME}</prop>
+            <prop key="directory">{LAST_NAME}_{FIRST_NAME}_media{SEPARATOR}</prop>
+          </props>
+        </entry>
+        <entry key="LICENSE">
+          <props>
+            <prop key="directory">{LAST_NAME}_{FIRST_NAME}_permission{SEPARATOR}</prop>
+          </props>
+        </entry>
+      </map>
+    </property>
+  </bean>
+  <bean id="ORCID" class="org.tdl.vireo.export.impl.TemplatePackagerImpl" scope="prototype">
+    <property name="personRepository" ref="PersonRepository" />
+    <property name="submissionRepository" ref="SubmissionRepository" />
+    <property name="settingsRepository" ref="SettingsRepository" />
+    <property name="proquestVocabularyRepository" ref="ProquestVocabularyRepository" />
+    <property name="displayName" value="ORCID Work" />
+    <property name="mimeType" value="text/xml" />
+    <property name="format" value="http://orcid.github.com/ORCID-Parent/schemas/orcid-message/1.0.10/orcid-message-1.0.10.xsd" />
+    <property name="manifestTemplatePath" value="conf/formats/orcid.xml" />
+    <property name="manifestName" value="orcid.xml" />
+  </bean>
+
 </beans>
 
