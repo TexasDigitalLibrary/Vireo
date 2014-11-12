@@ -126,6 +126,30 @@
 	<div class="modal-body">
 		<form id="add-comment-form" action="@{ViewTab.view(submission.getId())}" method="POST" class="form-horizontal" enctype="multipart/form-data"> 
             <ul class="unstyled">
+            	<li id="primary_recipients"  class="autocomplete" style="display: none;">
+            		To:<br />
+            		<input type="text" 
+            		name="primary_recipients" 
+            		class="span8" 
+            		data-items="20" 
+            		data-provide="typeahead" 
+            		data-min-length="0" 
+            		data-source="[#{list items:org.tdl.vireo.email.RecipientType.values(), as:'recipientType'}&quot;${recipientType}&quot;${recipientType_isLast ? '' : ','}#{/list}]" 
+            		data-mode="multiple" 
+            		placeholder="i.e. Student, College or myEmail@myProvider.com" />
+            	</li>
+            	<li id="cc_recipients" style="display: none;" class="autocomplete">
+            		CC:<br />
+            		<input type="text"
+            		name="cc_recipients" 
+            		class="span8" 
+            		data-items="20" 
+            		data-provide="typeahead" 
+            		data-min-length="0" 
+            		data-source="[#{list items:org.tdl.vireo.email.RecipientType.values(), as:'recipientType'}&quot;${recipientType}&quot;${recipientType_isLast ? '' : ','}#{/list}]"
+            		data-mode="multiple"  
+            		placeholder="i.e. Student, College or myEmail@myProvider.com" />
+            	</li>
             	<li>
             		Subject:<br />
             		<input type="text" name="subject" class="span8" />
@@ -155,31 +179,9 @@
             		#{/if}
             		> Comment is public</input><br />
             		<ul class="unstyled emailCarbon" style="padding-left:15px;" id="comment-email-options">
-            			<li>
-            				<input type="checkbox" name="email_student" class="checkbox"
-            			#{if currentUser.getPreference("notes_mark_comment_as_private_by_default") == null}
-            		 		#{if currentUser.getPreference("notes_email_student_by_default") != null}
-            		 			checked="true"
-            		 		#{/if}
-            			#{/if}#{else}
-            				disabled="true"
-            			#{/else}
-            			> Email the student</input><br />
-            			</li>
-            			<li>
-            				<input type="checkbox" name="cc_advisor" class="checkbox" 
-            				#{if currentUser.getPreference("notes_mark_comment_as_private_by_default") == null}
-            					#{if currentUser.getPreference("notes_email_student_by_default") != null}
-            						#{if currentUser.getPreference("notes_cc_student_advisor_by_default") != null}
-            		 					checked="true"
-            		 				#{/if}
-            		 			#{/if}#{else}
-            		 				disabled="true"
-            		 			#{/else}
-            				#{/if}#{else}
-            					disabled="true"
-            				#{/else}
-            				> CC student's advisor</input><br />
+            			<li class="cc_recipients_toggle">
+            				<input type="checkbox" name="primary_recipients_toggle" class="checkbox"> Add Email Recipients </input> <br>
+            				<input type="checkbox" name="cc_recipients_toggle" class="checkbox" disabled="true"> Add CC Recipients </input> 
             			</li>
             		</ul>
             	</li>
