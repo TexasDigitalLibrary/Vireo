@@ -272,12 +272,14 @@ function toggleAddCommentEmailOptions(){
 function toggleCarbonCopyAdvisor(){
 	return function(){
 		var parent = jQuery(this).parents(".emailCarbon").first();
-		var modal = jQuery(this).attr("data-modal-type");
-
-		jQuery("#"+modal+" .primary_recipients").toggle(300, function() {
+		var modalsPrimaryRecipientsName = "#" + jQuery(this).attr("data-modal-name") + " .primary_recipients";
+		var modalsCCRecipientsName = "#" + jQuery(this).attr("data-modal-name") + " .cc_recipients";
+		
+		console.log(jQuery(this));
+		jQuery(modalsPrimaryRecipientsName).toggle(300, function() {
 			console.log("got here");
-			if(jQuery("#"+modal+" .primary_recipients").css("display") == "none") {
-		 		jQuery("#"+modal+" .primary_recipients input").val("");
+			if(jQuery(modalsPrimaryRecipientsName).css("display") == "none") {
+		 		jQuery(modalsPrimaryRecipientsName + " input").val("");
 		 	}
 		});
 
@@ -291,8 +293,8 @@ function toggleCarbonCopyAdvisor(){
 			parent.find("input[name='cc_recipients_toggle']").removeAttr("disabled");
 		} else {
 			parent.find("input[name='cc_recipients_toggle']").removeAttr("checked");
-			jQuery("#"+modal+" .cc_recipients").hide(300, function() {
-				jQuery("#"+modal+" .cc_recipients input").val("");
+			jQuery(modalsCCRecipientsName).hide(300, function() {
+				jQuery(modalsCCRecipientsName + " input").val("");
 			});
 			parent.find("input[name='cc_recipients_toggle']").attr("disabled","true");
 		}
