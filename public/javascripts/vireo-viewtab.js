@@ -639,7 +639,7 @@ function assignSpecialValueAndSubmit(form, value){
  * in the "add file" dialog box.
  */
 function toggleAddFileEmailOptions(){
-	if(jQuery("#add-file-modal input[name='email_student']:checked").length){
+	if(jQuery("#add-file-modal input[name='primary_recipients_toggle']:checked").length){
 		jQuery("#add-file-email-options").slideDown(500);
 	} else {
 		jQuery("#add-file-email-options").slideUp(500);

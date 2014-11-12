@@ -126,7 +126,7 @@
 	<div class="modal-body">
 		<form id="add-comment-form" action="@{ViewTab.view(submission.getId())}" method="POST" class="form-horizontal" enctype="multipart/form-data"> 
             <ul class="unstyled">
-            	<li id="primary_recipients"  class="autocomplete" 
+            	<li  class="autocomplete primary_recipients" 
             		#{if currentUser.getPreference("notes_mark_comment_as_private_by_default") == null}
 			      		#{if currentUser.getPreference("notes_email_student_by_default") != null}
 			      			style="display=list-item"
@@ -152,7 +152,7 @@
 		      		placeholder="i.e. Student, College or myEmail@myProvider.com"/>
             		
             	</li>
-            	<li id="cc_recipients" class="autocomplete"
+            	<li class="autocomplete cc_recipients"
             		#{if currentUser.getPreference("notes_mark_comment_as_private_by_default") == null}
 						#{if currentUser.getPreference("notes_email_student_by_default") != null}
 							#{if currentUser.getPreference("notes_cc_student_advisor_by_default") != null}
@@ -208,7 +208,7 @@
             		> Comment is public</input><br />
             		<ul class="unstyled emailCarbon" style="padding-left:15px;" id="comment-email-options">
             			<li class="cc_recipients_toggle">
-            				<input type="checkbox" name="primary_recipients_toggle" class="checkbox"
+            				<input data-modal-name="add-comment-modal" type="checkbox" name="primary_recipients_toggle" class="checkbox"
             					#{if currentUser.getPreference("notes_mark_comment_as_private_by_default") == null}
 						      		#{if currentUser.getPreference("notes_email_student_by_default") != null}
 						      			checked="true"
@@ -217,7 +217,7 @@
 						      		disabled="true"
 						        #{/else}
             				> Add Email Recipients </input> <br>
-            				<input type="checkbox" name="cc_recipients_toggle" class="checkbox" 
+            				<input data-modal-name="add-comment-modal" type="checkbox" name="cc_recipients_toggle" class="checkbox" 
             					#{if currentUser.getPreference("notes_mark_comment_as_private_by_default") == null}
 									#{if currentUser.getPreference("notes_email_student_by_default") == null}
 										disabled="true"
@@ -281,23 +281,84 @@
 						</li>
 					</ul>
 				</li>				
-				<li class="emailCarbon"><input type="checkbox" class="checkbox" name="email_student"
-				#{if currentUser.getPreference("attachment_email_student_by_default") != null}
-				 checked="true"
-				#{/if}
-				> Email the student</input>
+				<li class="emailCarbon">
 					<ul class="unstyled" style="padding-left:15px;">
-						<li><input type="checkbox" class="checkbox" name="cc_advisor"
-						#{if currentUser.getPreference("attachment_email_student_by_default") == null}
-							disabled="true"
-						#{/if}
-						#{else}#{if currentUser.getPreference("attachment_cc_student_advisor_by_default") != null}
-							checked="true"
-						#{/if}#{/else}
-						> CC student's advisor</input></li>
+						<li class="cc_recipients_toggle">
+                            <input type="checkbox" name="primary_recipients_toggle" class="checkbox"
+	                          #{if currentUser.getPreference("notes_mark_comment_as_private_by_default") == null}
+	                                      #{if currentUser.getPreference("notes_email_student_by_default") != null}
+	                                            checked="true"
+	                                      #{/if}
+	                                #{/if}#{else}
+	                                      disabled="true"
+	                            #{/else}> Add Email Recipients </input> <br>
+                            <input type="checkbox" name="cc_recipients_toggle" class="checkbox" 
+                                  #{if currentUser.getPreference("notes_mark_comment_as_private_by_default") == null}
+                                  #{if currentUser.getPreference("notes_email_student_by_default") == null}
+                                        disabled="true"
+                                  #{/if}
+                                  #{if currentUser.getPreference("notes_cc_student_advisor_by_default") != null}
+                                        checked="true"
+                                  #{/if}
+                            #{/if}#{else}
+                                  disabled="true"
+                            #{/else}> Add CC Recipients </input> 
+                      </li>
 					</ul>
 					<div id="add-file-email-options" #{if currentUser.getPreference("attachment_email_student_by_default") == null}style="display:none;"#{/if}>
 					<ul class="unstyled">
+		            	<li class="autocomplete primary_recipients" 
+	                        #{if currentUser.getPreference("notes_mark_comment_as_private_by_default") == null}
+	                                    #{if currentUser.getPreference("notes_email_student_by_default") != null}
+	                                          style="display=list-item"
+	                                    #{/if}
+	                                    #{else}
+	                                          style="display:none;"
+	                                    #{/else}
+	                              #{/if}#{else}
+	                                    style="display:none;"
+	                          #{/else}>
+	                        To:<br />
+	                        <input type="text" 
+	                        name="primary_recipients" 
+	                        class="span8" 
+	                        data-items="20" 
+	                        data-provide="typeahead" 
+	                        data-min-length="0" 
+	                        data-source="[#{list items:org.tdl.vireo.email.RecipientType.values(), as:'recipientType'}&quot;${recipientType}&quot;${recipientType_isLast ? '' : ','}#{/list}]" 
+	                        data-mode="multiple"
+	                        #{if currentUser.getPreference("notes_email_student_by_default") != null}
+	                                    value="Student"
+	                              #{/if}
+	                              placeholder="i.e. Student, College or myEmail@myProvider.com"/>
+	                        
+	                  </li>
+	                  <li class="autocomplete cc_recipients"
+	                        #{if currentUser.getPreference("notes_mark_comment_as_private_by_default") == null}
+	                                    #{if currentUser.getPreference("notes_email_student_by_default") != null}
+	                                          #{if currentUser.getPreference("notes_cc_student_advisor_by_default") != null}
+	                                                      style="display:list-item;"
+	                                                #{/if}
+	                                          #{/if}#{else}
+	                                                style="display:none;"
+	                                          #{/else}
+	                              #{/if}#{else}
+	                                    style="display:none;"
+	                              #{/else}
+	                        CC:<br />
+	                        <input type="text"
+	                        name="cc_recipients" 
+	                        class="span8" 
+	                        data-items="20" 
+	                        data-provide="typeahead" 
+	                        data-min-length="0" 
+	                        data-source="[#{list items:org.tdl.vireo.email.RecipientType.values(), as:'recipientType'}&quot;${recipientType}&quot;${recipientType_isLast ? '' : ','}#{/list}]"
+	                        data-mode="multiple"
+	                        #{if currentUser.getPreference("notes_cc_student_advisor_by_default") != null}
+	                                    value="Advisor"
+	                              #{/if}
+	                              placeholder="i.e. Advisor, College or myEmail@myProvider.com"/>
+	                  </li>
 		            	<li>
 		            		Subject:<br />
 		            		<input type="text" name="subject" class="span8" />

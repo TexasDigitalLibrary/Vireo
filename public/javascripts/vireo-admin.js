@@ -255,11 +255,11 @@ function toggleAddCommentEmailOptions(){
 			jQuery("#comment-email-options input").each(function(){
 				jQuery(this).attr("disabled","true");
 				jQuery(this).removeAttr("checked");
-				jQuery("#primary_recipients").hide(300, function() {
-					jQuery("#primary_recipients input").val("");
+				jQuery(".primary_recipients").hide(300, function() {
+					jQuery(".primary_recipients input").val("");
 				});
-				jQuery("#cc_recipients").hide(300, function() {
-					jQuery("#cc_recipients input").val("");
+				jQuery(".cc_recipients").hide(300, function() {
+					jQuery(".cc_recipients input").val("");
 				});
 			});
 		}
@@ -272,16 +272,16 @@ function toggleAddCommentEmailOptions(){
 function toggleCarbonCopyAdvisor(){
 	return function(){
 		var parent = jQuery(this).parents(".emailCarbon").first();
-		
-		jQuery("#primary_recipients").toggle(300, function() {
-			if(jQuery("#primary_recipients").css("display") == "none") {
-		 		jQuery("#primary_recipients input").val("");
+		var modal = jQuery(this).attr("data-modal-type");
+
+		jQuery("#"+modal+" .primary_recipients").toggle(300, function() {
+			console.log("got here");
+			if(jQuery("#"+modal+" .primary_recipients").css("display") == "none") {
+		 		jQuery("#"+modal+" .primary_recipients input").val("");
 		 	}
 		});
 
-		console.log(parent.find("input[name='cc_recipients_toggle']").attr("checked"));
-
-		if(parent.find("input[name='cc_recipients_toggle']").attr("checked")) jQuery("#cc_recipients").toggle(300);
+		if(parent.find("input[name='cc_recipients_toggle']").attr("checked")) jQuery(".cc_recipients").toggle(300);
 
 		if(jQuery(this).closest(".modal").is("#add-file-modal")){
 			toggleAddFileEmailOptions();
@@ -291,8 +291,8 @@ function toggleCarbonCopyAdvisor(){
 			parent.find("input[name='cc_recipients_toggle']").removeAttr("disabled");
 		} else {
 			parent.find("input[name='cc_recipients_toggle']").removeAttr("checked");
-			jQuery("#cc_recipients").hide(300, function() {
-				jQuery("#cc_recipients input").val("");
+			jQuery("#"+modal+" .cc_recipients").hide(300, function() {
+				jQuery("#"+modal+" .cc_recipients input").val("");
 			});
 			parent.find("input[name='cc_recipients_toggle']").attr("disabled","true");
 		}

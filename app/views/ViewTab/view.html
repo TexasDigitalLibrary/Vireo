@@ -171,9 +171,11 @@ jQuery(document).ready(function(){
 	 jQuery(".emailOptions input[name='visibility']").on("click", toggleAddCommentEmailOptions());
 	 jQuery("input[name='primary_recipients_toggle']").on("click", toggleCarbonCopyAdvisor());
 	 jQuery("input[name='cc_recipients_toggle']").on("click", function() {
-	 	jQuery("#cc_recipients").toggle(300, function() {
-		 	if(jQuery("#cc_recipients").css("display") == "none") {
-		 		jQuery("#cc_recipients input").val("");
+		var modal = jQuery(this).attr("data-modal-type");
+
+	 	jQuery("#"+modal+" .cc_recipients").toggle(300, function() {
+		 	if(jQuery("#"+modal+" .cc_recipients").css("display") == "none") {
+		 		jQuery("#"+modal+" .cc_recipients input").val("");
 		 	}
 	 	});
 	 });
