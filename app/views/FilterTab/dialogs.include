@@ -24,7 +24,18 @@ jQuery(document).ready(function() {
 	 * Add Comment Disable/Enable Events
 	 */
 	 jQuery(".emailOptions input[name='visibility']").live("click", toggleAddCommentEmailOptions());
-	 jQuery("input[name='email_student']").live("click", toggleCarbonCopyAdvisor());
+	 jQuery("input[name='primary_recipients_toggle']").on("click", toggleCarbonCopyAdvisor());
+     jQuery("input[name='cc_recipients_toggle']").on("click", function() {
+        
+        var modalsCCRecipientsName = "#" + jQuery(this).attr("data-modal-name") + " .cc_recipients";
+        
+        jQuery(modalsCCRecipientsName).toggle(300, function() {
+            if(jQuery(modalsCCRecipientsName).css("display") == "none") {
+                jQuery(modalsCCRecipientsName + " input").val("");
+             }
+        });
+     
+     });
 	
 	// Batch Confirm links
 	jQuery('.batchConfirm').click(batchConfirmHandler(${results?.getTotal()}));
@@ -417,6 +428,60 @@ jQuery(document).ready(function() {
 	<div class="modal-body">
 		<form id="batch-comment-form" action="@{FilterTab.batchComment()}" method="POST" class="form-horizontal" enctype="multipart/form-data"> 
             <ul class="unstyled">
+                <li  class="autocomplete primary_recipients" 
+                    #{if currentUser.getPreference("notes_mark_comment_as_private_by_default") == null}
+                        #{if currentUser.getPreference("notes_email_student_by_default") != null}
+                            style="display=list-item"
+                        #{/if}
+                        #{else}
+                            style="display:none;"
+                        #{/else}
+                    #{/if}#{else}
+                        style="display:none;"
+                    #{/else}>
+                    To:<br />
+                    <input type="text" 
+                    name="primary_recipients"
+                    autocomplete="off" 
+                    class="span8" 
+                    data-items="20" 
+                    data-provide="typeahead" 
+                    data-min-length="0" 
+                    data-source="[#{list items:org.tdl.vireo.email.RecipientType.values(), as:'recipientType'}&quot;${recipientType}&quot;${recipientType_isLast ? '' : ','}#{/list}]" 
+                    data-mode="multiple"
+                    #{if currentUser.getPreference("notes_email_student_by_default") != null}
+                        value="Student"
+                    #{/if}
+                    placeholder="i.e. Student, College or myEmail@myProvider.com"/>
+                    
+                </li>
+                <li class="autocomplete cc_recipients"
+                    #{if currentUser.getPreference("notes_mark_comment_as_private_by_default") == null}
+                        #{if currentUser.getPreference("notes_email_student_by_default") != null}
+                            #{if currentUser.getPreference("notes_cc_student_advisor_by_default") != null}
+                                    style="display:list-item;"
+                                #{/if}
+                            #{/if}#{else}
+                                style="display:none;"
+                            #{/else}
+                    #{/if}#{else}
+                        style="display:none;"
+                    #{/else}>
+                    CC:<br />
+                    <input type="text"
+                    name="cc_recipients"
+                    autocomplete="off" 
+                    class="span8" 
+                    data-items="20" 
+                    data-provide="typeahead" 
+                    data-min-length="0" 
+                    data-source="[#{list items:org.tdl.vireo.email.RecipientType.values(), as:'recipientType'}&quot;${recipientType}&quot;${recipientType_isLast ? '' : ','}#{/list}]"
+                    data-mode="multiple"
+                    #{if currentUser.getPreference("notes_cc_student_advisor_by_default") != null}
+                        value="Advisor"
+                    #{/if}
+                    placeholder="i.e. Advisor, College or myEmail@myProvider.com"/>
+                </li>
             	<li>
             		Subject:<br />
             		<input type="text" name="subject" class="span8" />
@@ -439,32 +504,28 @@ jQuery(document).ready(function() {
             		#{/if}
             		> Comment is public</input><br />
             		<ul class="unstyled emailCarbon" style="padding-left:15px;" id="comment-email-options">
-            			<li>
-            				<input type="checkbox" name="email_student" class="checkbox"
-            			#{if currentUser.getPreference("notes_mark_comment_as_private_by_default") == null}
-            		 		#{if currentUser.getPreference("notes_email_student_by_default") != null}
-            		 			checked="true"
-            		 		#{/if}
-            			#{/if}#{else}
-            				disabled="true"
-            			#{/else}
-            			> Email the student</input><br />
-            			</li>
-            			<li>
-            				<input type="checkbox" name="cc_advisor" class="checkbox" 
-            				#{if currentUser.getPreference("notes_mark_comment_as_private_by_default") == null}
-            					#{if currentUser.getPreference("notes_email_student_by_default") != null}
-            						#{if currentUser.getPreference("notes_cc_student_advisor_by_default") != null}
-            		 					checked="true"
-            		 				#{/if}
-            		 			#{/if}#{else}
-            		 				disabled="true"
-            		 			#{/else}
-            				#{/if}#{else}
-            					disabled="true"
-            				#{/else}
-            				> CC student's advisor</input><br />
-            			</li>
+            			<li class="cc_recipients_toggle">
+                            <input data-modal-name="batch-comment-modal" type="checkbox" name="primary_recipients_toggle" class="checkbox"
+                                #{if currentUser.getPreference("notes_mark_comment_as_private_by_default") == null}
+                                    #{if currentUser.getPreference("notes_email_student_by_default") != null}
+                                        checked="true"
+                                    #{/if}
+                                #{/if}#{else}
+                                    disabled="true"
+                                #{/else}
+                            > Add Email Recipients </input> <br>
+                            <input data-modal-name="batch-comment-modal" type="checkbox" name="cc_recipients_toggle" class="checkbox" 
+                                #{if currentUser.getPreference("notes_mark_comment_as_private_by_default") == null}
+                                    #{if currentUser.getPreference("notes_email_student_by_default") == null}
+                                        disabled="true"
+                                    #{/if}
+                                    #{if currentUser.getPreference("notes_cc_student_advisor_by_default") != null}
+                                        checked="true"
+                                    #{/if}
+                                #{/if}#{else}
+                                    disabled="true"
+                                #{/else}> Add CC Recipients </input> 
+                        </li>
             		</ul>
             	</li>
             	<li>            	

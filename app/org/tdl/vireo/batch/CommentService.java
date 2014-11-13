@@ -40,7 +40,7 @@ public interface CommentService {
 	 *         this object to keep track of the task's progress.
 	 */
 	public JobMetadata comment(SearchFilter filter, String comment,
-			String subject, Boolean visibility, Boolean sendEmail,
-			Boolean ccAdvisor);
+			String subject, Boolean visibility, String primary_recipients_string,
+			String cc_recipients_string);
 
 }

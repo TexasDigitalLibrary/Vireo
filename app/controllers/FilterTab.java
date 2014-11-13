@@ -691,22 +691,24 @@ public class FilterTab extends AbstractVireoController {
 		String comment = params.get("comment");
 		String subject = params.get("subject");
 		Boolean visibility = false;
-		Boolean sendEmail = false;
-		Boolean ccAdvisor = false;
+		
+		String primary_recipients_string = null;
+		String cc_recipients_string = null;
+		
 		if("public".equals(params.get("visibility"))){
 			visibility = true;
-			if(params.get("email_student") != null){
-				sendEmail = true;
-				if(params.get("cc_advisor") != null)
-					ccAdvisor = true;
-			}
+			primary_recipients_string = params.get("primary_recipients");
+			cc_recipients_string = params.get("cc_recipients");
 		}
+		
+		
+		
 		
 		// Get the current filter
 		ActiveSearchFilter filter = getActiveSearchFilter(SUBMISSION);
 		
 		// Kick off the batch comment/email
-		JobMetadata job = commentService.comment(filter, comment, subject, visibility, sendEmail, ccAdvisor);
+		JobMetadata job = commentService.comment(filter, comment, subject, visibility, primary_recipients_string, cc_recipients_string);
 	
 		// Show a progress bar
 		JobTab.adminStatus(job.getId().toString());

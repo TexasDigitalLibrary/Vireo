@@ -139,7 +139,8 @@
 			        #{/else}>
             		To:<br />
             		<input type="text" 
-            		name="primary_recipients" 
+            		name="primary_recipients"
+                    autocomplete="off" 
             		class="span8" 
             		data-items="20" 
             		data-provide="typeahead" 
@@ -163,10 +164,11 @@
 							#{/else}
 					#{/if}#{else}
 						style="display:none;"
-					#{/else}
+					#{/else}>
             		CC:<br />
             		<input type="text"
-            		name="cc_recipients" 
+            		name="cc_recipients"
+                    autocomplete="off" 
             		class="span8" 
             		data-items="20" 
             		data-provide="typeahead" 
@@ -320,7 +322,8 @@
 	                          #{/else}>
 	                        To:<br />
 	                        <input type="text" 
-	                        name="primary_recipients" 
+	                        name="primary_recipients"
+                            autocomplete="off" 
 	                        class="span8" 
 	                        data-items="20" 
 	                        data-provide="typeahead" 
@@ -344,10 +347,11 @@
 	                                          #{/else}
 	                              #{/if}#{else}
 	                                    style="display:none;"
-	                              #{/else}
+	                              #{/else}>
 	                        CC:<br />
 	                        <input type="text"
 	                        name="cc_recipients" 
+                            autocomplete="off"
 	                        class="span8" 
 	                        data-items="20" 
 	                        data-provide="typeahead" 

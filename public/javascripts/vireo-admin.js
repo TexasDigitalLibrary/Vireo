@@ -276,6 +276,11 @@ function toggleCarbonCopyAdvisor(){
 		var modalsCCRecipientsName = "#" + jQuery(this).attr("data-modal-name") + " .cc_recipients";
 		
 		jQuery(modalsPrimaryRecipientsName).toggle(300, function() {
+
+			if(jQuery(this).closest(".modal").is("#add-file-modal")){
+				toggleAddFileEmailOptions();
+			}
+
 			if(jQuery(modalsPrimaryRecipientsName).css("display") == "none") {
 		 		jQuery(modalsPrimaryRecipientsName + " input").val("");
 		 	}
@@ -283,10 +288,6 @@ function toggleCarbonCopyAdvisor(){
 
 		if(parent.find("input[name='cc_recipients_toggle']").attr("checked")) jQuery(".cc_recipients").toggle(300);
 
-		if(jQuery(this).closest(".modal").is("#add-file-modal")){
-			toggleAddFileEmailOptions();
-		}
-		
 		if(parent.find("input[name='primary_recipients_toggle']:checked").length){
 			parent.find("input[name='cc_recipients_toggle']").removeAttr("disabled");
 		} else {

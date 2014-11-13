@@ -1,9 +1,12 @@
 package org.tdl.vireo.batch.impl;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.tdl.vireo.batch.CommentService;
 import org.tdl.vireo.email.EmailService;
+import org.tdl.vireo.email.RecipientType;
 import org.tdl.vireo.email.VireoEmail;
 import org.tdl.vireo.error.ErrorLog;
 import org.tdl.vireo.job.JobManager;
@@ -21,6 +24,7 @@ import org.tdl.vireo.search.SearchOrder;
 import org.tdl.vireo.search.SearchResult;
 import org.tdl.vireo.search.Searcher;
 import org.tdl.vireo.security.SecurityContext;
+import org.tdl.vireo.services.EmailByRecipientType;
 import org.tdl.vireo.state.State;
 
 import play.Logger;
@@ -110,7 +114,7 @@ public class CommentServiceImpl implements CommentService {
 
 	@Override
 	public JobMetadata comment(SearchFilter filter, String comment,
-			String subject, Boolean visibility, Boolean sendEmail, Boolean ccAdvisor) {
+			String subject, Boolean visibility, String primary_recipients_string, String cc_recipients_string) {
 		if (filter == null)
 			throw new IllegalArgumentException("A search filter is required");
 		
@@ -120,7 +124,7 @@ public class CommentServiceImpl implements CommentService {
 		if (context.isAuthorizationActive() && !context.isReviewer())
 			throw new SecurityException("Unauthorized to transition submissions.");
 
-		CommentJob job = new CommentJob(filter, comment, subject, visibility, ccAdvisor, sendEmail);
+		CommentJob job = new CommentJob(filter, comment, subject, visibility, primary_recipients_string, cc_recipients_string);
 
 		job.now();
 
@@ -137,8 +141,9 @@ public class CommentServiceImpl implements CommentService {
 		public final String comment;
 		public final String subject;
 		public final Boolean visibility;
-		public final Boolean ccAdvisor;
-		public final Boolean sendEmail;
+		public final String[] primary_recipients_string_array;
+		public boolean sendEmail;
+		public final String[] cc_recipients_string_array;
 		public final Long personId;
 		public final JobMetadata metadata;
 
@@ -160,15 +165,22 @@ public class CommentServiceImpl implements CommentService {
 		 *            Whether to send email, or just leave a comment.
 		 */
 		public CommentJob(SearchFilter filter, String comment, String subject, Boolean visibility,
-				Boolean ccAdvisor, Boolean sendEmail) {
+				String primary_recipients_string, String cc_recipients_string) {
 
 			this.filter = filter;
 			this.comment = comment;
 			this.subject = subject;
 			this.visibility = visibility;
-			this.ccAdvisor = ccAdvisor;
-			this.sendEmail = sendEmail;
-
+			this.primary_recipients_string_array = primary_recipients_string.split(",");
+			this.sendEmail = false;
+			for(String recipient: primary_recipients_string_array) {
+				if(recipient.trim().length() != 0) {
+					this.sendEmail = true;
+					break;
+				}
+			}
+			this.cc_recipients_string_array = cc_recipients_string.split(",");
+			
 			if (context.getPerson() != null) 
 				personId = context.getPerson().getId();
 			else
@@ -219,6 +231,61 @@ public class CommentServiceImpl implements CommentService {
 
 					Submission sub = subRepo.findSubmission(subId);
 					
+					List<String> primary_recipients = new ArrayList<String>();
+					for(String recipient: primary_recipients_string_array) {
+						if(recipient.trim().length() != 0) {
+
+							RecipientType recipientType = null;
+							
+							for(RecipientType oneRecipientType : RecipientType.values())
+							{
+								if(oneRecipientType.name().equals(recipient.trim()))
+								{
+									recipientType = RecipientType.valueOf(recipient.trim());
+									break;
+								}
+							}
+							
+							
+							if(recipientType != null) {
+								
+								List<String> recipientEmailAddresses = EmailByRecipientType.getRecipients(sub, recipientType);
+								for(String recipientEmailAddress : recipientEmailAddresses)
+									primary_recipients.add(recipientEmailAddress);
+							
+							} else {
+								primary_recipients.add(recipient.trim());
+							}
+						}
+					}
+					
+					List<String> cc_recipients = new ArrayList<String>();
+					for(String recipient: cc_recipients_string_array) {
+						if(recipient.trim().length() != 0){
+
+							RecipientType recipientType = null;
+							
+							for(RecipientType oneRecipientType : RecipientType.values())
+							{
+								if(oneRecipientType.name().equals(recipient.trim()))
+								{
+									recipientType = RecipientType.valueOf(recipient.trim());
+									break;
+								}
+							}
+							
+							if(recipientType != null) {
+								
+								List<String> recipientEmailAddresses = EmailByRecipientType.getRecipients(sub, recipientType);
+								for(String recipientEmailAddress : recipientEmailAddresses)
+									cc_recipients.add(recipientEmailAddress);
+							
+							} else {
+								cc_recipients.add(recipient.trim());
+							}	
+						}
+					}
+										
 					if(sendEmail){
 						VireoEmail email = emailService.createEmail();
 						
@@ -228,12 +295,18 @@ public class CommentServiceImpl implements CommentService {
 						email.setMessage(comment);
 						email.applyParameterSubstitution();
 						
-						// Create list of recipients
-						email.addTo(sub.getSubmitter());
+						//Create list of recipients
+						for(String email_address : primary_recipients)
+						{
+							email.addTo(email_address);
+						}
 						
-						// Create list of carbon copies
-						if(ccAdvisor && sub.getCommitteeContactEmail() != null)
-							email.addCc(sub.getCommitteeContactEmail());
+						
+						//Create list of carbon copies
+						for(String email_address : cc_recipients)
+						{
+							email.addCc(email_address);
+						}
 						
 						if(context.getPerson()!=null)
 							email.setReplyTo(context.getPerson());
