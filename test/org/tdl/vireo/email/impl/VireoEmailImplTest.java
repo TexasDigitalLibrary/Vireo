@@ -114,20 +114,20 @@ public class VireoEmailImplTest extends UnitTest {
 		assertEquals("four@email.com",email.getBcc().get(3).getAddress());
 		assertEquals("First Last",email.getBcc().get(3).getPersonal());
 		
-		// From field
-		email.setFrom("from1@email.com");
-		assertEquals("from1@email.com",email.getFrom().getAddress());
-
-		email.setFrom("from2@email.com","From");
-		assertEquals("from2@email.com",email.getFrom().getAddress());
-		assertEquals("From",email.getFrom().getPersonal());
-
-		email.setFrom(new InternetAddress("from3@email.com"));
-		assertEquals("from3@email.com",email.getFrom().getAddress());
-		
-		email.setFrom(person);
-		assertEquals("four@email.com",email.getFrom().getAddress());
-		assertEquals("First Last",email.getFrom().getPersonal());
+//		// From field - no longer used as it causes bounced emails
+//		email.setFrom("from1@email.com");
+//		assertEquals("from1@email.com",email.getFrom().getAddress());
+//
+//		email.setFrom("from2@email.com","From");
+//		assertEquals("from2@email.com",email.getFrom().getAddress());
+//		assertEquals("From",email.getFrom().getPersonal());
+//
+//		email.setFrom(new InternetAddress("from3@email.com"));
+//		assertEquals("from3@email.com",email.getFrom().getAddress());
+//		
+//		email.setFrom(person);
+//		assertEquals("four@email.com",email.getFrom().getAddress());
+//		assertEquals("First Last",email.getFrom().getPersonal());
 
 		// ReplyTo field
 		email.setReplyTo("reply1@email.com");

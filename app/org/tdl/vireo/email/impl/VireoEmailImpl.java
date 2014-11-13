@@ -192,24 +192,54 @@ public class VireoEmailImpl implements VireoEmail {
 	public InternetAddress getFrom() {
 		return _from;
 	}
-
-	@Override
+	
+	
+	/**
+	 * Set the from address.
+	 * 
+	 * @param email
+	 *            An email address
+	 */
 	public void setFrom(String email) {
 		setFrom(email, null);
 	}
 
-	@Override
-	public void setFrom(String email, String name) {
+	
+
+	
+
+	
+
+	
+	/**
+	 * Set the from address.
+	 * 
+	 * @param email
+	 *            An email address
+	 * @param name
+	 *            A descriptive name.
+	 */
+	private void setFrom(String email, String name) {
 		setFrom(createAddress(email, name));
 	}
 
-	@Override
-	public void setFrom(Person person) {
+	/**
+	 * Set the new from address
+	 * 
+	 * @param person
+	 *            The person object.
+	 */
+	private void setFrom(Person person) {
 		setFrom(createAddress(person));
 	}
 	
-	@Override
-	public void setFrom(InternetAddress address) {
+	/**
+	 * Set the from address
+	 * 
+	 * @param address
+	 *            The address
+	 */
+	private void setFrom(InternetAddress address) {
 		_from = validateAddress(address);
 	}
 
