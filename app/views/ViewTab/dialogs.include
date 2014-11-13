@@ -145,8 +145,8 @@
             		data-items="20" 
             		data-provide="typeahead" 
             		data-min-length="0" 
-            		data-source="[#{list items:org.tdl.vireo.email.RecipientType.values(), as:'recipientType'}&quot;${recipientType}&quot;${recipientType_isLast ? '' : ','}#{/list}]" 
-            		data-mode="multiple"
+                    data-source="[#{list items:org.tdl.vireo.email.RecipientType.values(), as:'recipientType'}#{if recipientType.name() != "AdminGroup"}&quot;${recipientType}&quot;${recipientType_isLast ? '' : ','}#{/if}#{else}#{list items:settingRepo.findAllAdministrativeGroups() , as: "adminGroup"}&quot;${adminGroup.getName()}&quot;,#{/list}#{/else}#{/list}]"            		
+                    data-mode="multiple"
             		#{if currentUser.getPreference("notes_email_student_by_default") != null}
 		      			value="Student"
 		      		#{/if}
@@ -173,7 +173,7 @@
             		data-items="20" 
             		data-provide="typeahead" 
             		data-min-length="0" 
-            		data-source="[#{list items:org.tdl.vireo.email.RecipientType.values(), as:'recipientType'}&quot;${recipientType}&quot;${recipientType_isLast ? '' : ','}#{/list}]"
+            		data-source="[#{list items:org.tdl.vireo.email.RecipientType.values(), as:'recipientType'}#{if recipientType.name() != "AdminGroup"}&quot;${recipientType}&quot;${recipientType_isLast ? '' : ','}#{/if}#{else}#{list items:settingRepo.findAllAdministrativeGroups() , as: "adminGroup"}&quot;${adminGroup.getName()}&quot;,#{/list}#{/else}#{/list}]"
             		data-mode="multiple"
             		#{if currentUser.getPreference("notes_cc_student_advisor_by_default") != null}
 		      			value="Advisor"
@@ -311,15 +311,15 @@
 					<ul class="unstyled">
 		            	<li class="autocomplete primary_recipients" 
 	                        #{if currentUser.getPreference("notes_mark_comment_as_private_by_default") == null}
-	                                    #{if currentUser.getPreference("notes_email_student_by_default") != null}
-	                                          style="display=list-item"
-	                                    #{/if}
-	                                    #{else}
-	                                          style="display:none;"
-	                                    #{/else}
-	                              #{/if}#{else}
-	                                    style="display:none;"
-	                          #{/else}>
+                                #{if currentUser.getPreference("notes_email_student_by_default") != null}
+                                      style="display=list-item"
+                                #{/if}
+                                #{else}
+                                      style="display:none;"
+                                #{/else}
+                          #{/if}#{else}
+                                style="display:none;"
+                          #{/else}>
 	                        To:<br />
 	                        <input type="text" 
 	                        name="primary_recipients"
@@ -328,7 +328,7 @@
 	                        data-items="20" 
 	                        data-provide="typeahead" 
 	                        data-min-length="0" 
-	                        data-source="[#{list items:org.tdl.vireo.email.RecipientType.values(), as:'recipientType'}&quot;${recipientType}&quot;${recipientType_isLast ? '' : ','}#{/list}]" 
+	                        data-source="[#{list items:org.tdl.vireo.email.RecipientType.values(), as:'recipientType'}#{if recipientType.name() != "AdminGroup"}&quot;${recipientType}&quot;${recipientType_isLast ? '' : ','}#{/if}#{else}#{list items:settingRepo.findAllAdministrativeGroups() , as: "adminGroup"}&quot;${adminGroup.getName()}&quot;,#{/list}#{/else}#{/list}]" 
 	                        data-mode="multiple"
 	                        #{if currentUser.getPreference("notes_email_student_by_default") != null}
 	                                    value="Student"
@@ -356,7 +356,7 @@
 	                        data-items="20" 
 	                        data-provide="typeahead" 
 	                        data-min-length="0" 
-	                        data-source="[#{list items:org.tdl.vireo.email.RecipientType.values(), as:'recipientType'}&quot;${recipientType}&quot;${recipientType_isLast ? '' : ','}#{/list}]"
+	                        data-source="[#{list items:org.tdl.vireo.email.RecipientType.values(), as:'recipientType'}#{if recipientType.name() != "AdminGroup"}&quot;${recipientType}&quot;${recipientType_isLast ? '' : ','}#{/if}#{else}#{list items:settingRepo.findAllAdministrativeGroups() , as: "adminGroup"}&quot;${adminGroup.getName()}&quot;,#{/list}#{/else}#{/list}]" 
 	                        data-mode="multiple"
 	                        #{if currentUser.getPreference("notes_cc_student_advisor_by_default") != null}
 	                                    value="Advisor"

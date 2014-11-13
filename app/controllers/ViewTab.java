@@ -27,6 +27,7 @@ import org.tdl.vireo.email.RecipientType;
 import org.tdl.vireo.email.VireoEmail;
 import org.tdl.vireo.export.DepositService;
 import org.tdl.vireo.model.ActionLog;
+import org.tdl.vireo.model.AdministrativeGroup;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.CommitteeMember;
@@ -802,7 +803,6 @@ public class ViewTab extends AbstractVireoController {
 	@Security(RoleType.REVIEWER)
 	private static void addActionLogComment(Submission submission){
 		
-		
 		String[] primary_recipients_string = params.get("primary_recipients").split(",");
 		List<String> primary_recipients = new ArrayList<String>();
 		for(String recipient: primary_recipients_string) {
@@ -814,11 +814,10 @@ public class ViewTab extends AbstractVireoController {
 				{
 					if(oneRecipientType.name().equals(recipient.trim()))
 					{
-						recipientType = RecipientType.valueOf(recipient.trim());
+						recipientType = oneRecipientType;
 						break;
 					}
 				}
-				
 				
 				if(recipientType != null) {
 					
@@ -827,7 +826,29 @@ public class ViewTab extends AbstractVireoController {
 						primary_recipients.add(recipientEmailAddress);
 				
 				} else {
-					primary_recipients.add(recipient.trim());
+				
+					AdministrativeGroup admingroup = null;
+					
+					for(AdministrativeGroup oneAdmingroup : settingRepo.findAllAdministrativeGroups())
+					{
+						if(oneAdmingroup.getName().equals(recipient.trim()))
+						{
+							admingroup = oneAdmingroup;
+							break;
+						}
+					}
+					
+					//if adminGroup is still null then the recipient is an arbitrary email address
+					if(admingroup == null) {
+						primary_recipients.add(recipient.trim());
+					} else {
+						
+						for(String emailAddr : admingroup.getEmails().values()) {
+							primary_recipients.add(emailAddr);
+						}
+						
+					}
+				
 				}
 			}
 		}
