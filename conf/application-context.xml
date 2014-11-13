@@ -189,6 +189,7 @@
     <bean id="BatchComment" class="org.tdl.vireo.batch.impl.CommentServiceImpl" scope="singleton">
     	<property name="personRepository" ref="PersonRepository"/>
     	<property name="submissionRepository" ref="SubmissionRepository"/>
+    	<property name="settingsRepository" ref="SettingsRepository"/>
     	<property name="securityContext" ref="SecurityContext"/>
     	<property name="searcher" ref="Searcher"/>
     	<property name="jobManager" ref="JobManager"/>

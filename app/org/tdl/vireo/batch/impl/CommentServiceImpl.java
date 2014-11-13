@@ -13,9 +13,11 @@ import org.tdl.vireo.job.JobManager;
 import org.tdl.vireo.job.JobMetadata;
 import org.tdl.vireo.job.JobStatus;
 import org.tdl.vireo.model.ActionLog;
+import org.tdl.vireo.model.AdministrativeGroup;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
+import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionRepository;
 import org.tdl.vireo.search.SearchDirection;
@@ -46,6 +48,7 @@ public class CommentServiceImpl implements CommentService {
 	// The repositories
 	public PersonRepository personRepo;
 	public SubmissionRepository subRepo;
+	public SettingsRepository settingRepo;
 	public ErrorLog errorLog;
 
 	// The searcher used to find submissions in a batch.
@@ -71,6 +74,14 @@ public class CommentServiceImpl implements CommentService {
 	 */
 	public void setSubmissionRepository(SubmissionRepository repo) {
 		this.subRepo = repo;
+	}
+	
+	/**
+	 * @param repo
+	 *            The settings repository
+	 */
+	public void setSettingsRepository(SettingsRepository repo) {
+		this.settingRepo = repo;
 	}
 	
 	/**
@@ -159,10 +170,10 @@ public class CommentServiceImpl implements CommentService {
 		 * 			  The subject of the comment or email message.
 		 * @param visibility
 		 * 			  Whether the comment should be marked private.
-		 * @param ccAdvisor
-		 *            Whether the advisior should be CC'ed.
-		 * @param sendEmail
-		 *            Whether to send email, or just leave a comment.
+		 * @param primary_recipients_string
+		 *            A comma delimited list of email addresses, RecipientType's enums or AdminGroup's names for the TO line of the email
+		 * @param cc_recipients_string
+		 *            A comma delimited list of email addresses, RecipientType's enums or AdminGroup's names for the CC line of the email
 		 */
 		public CommentJob(SearchFilter filter, String comment, String subject, Boolean visibility,
 				String primary_recipients_string, String cc_recipients_string) {
@@ -254,7 +265,27 @@ public class CommentServiceImpl implements CommentService {
 									primary_recipients.add(recipientEmailAddress);
 							
 							} else {
-								primary_recipients.add(recipient.trim());
+								AdministrativeGroup admingroup = null;
+								
+								for(AdministrativeGroup oneAdmingroup : settingRepo.findAllAdministrativeGroups())
+								{
+									if(oneAdmingroup.getName().equals(recipient.trim()))
+									{
+										admingroup = oneAdmingroup;
+										break;
+									}
+								}
+								
+								//if adminGroup is still null then the recipient is an arbitrary email address
+								if(admingroup == null) {
+									primary_recipients.add(recipient.trim());
+								} else {
+									
+									for(String emailAddr : admingroup.getEmails().values()) {
+										primary_recipients.add(emailAddr);
+									}
+									
+								}
 							}
 						}
 					}
@@ -281,8 +312,27 @@ public class CommentServiceImpl implements CommentService {
 									cc_recipients.add(recipientEmailAddress);
 							
 							} else {
-								cc_recipients.add(recipient.trim());
-							}	
+								AdministrativeGroup admingroup = null;
+								
+								for(AdministrativeGroup oneAdmingroup : settingRepo.findAllAdministrativeGroups())
+								{
+									if(oneAdmingroup.getName().equals(recipient.trim()))
+									{
+										admingroup = oneAdmingroup;
+										break;
+									}
+								}
+								
+								//if adminGroup is still null then the recipient is an arbitrary email address
+								if(admingroup == null) {
+									cc_recipients.add(recipient.trim());
+								} else {
+									
+									for(String emailAddr : admingroup.getEmails().values()) {
+										cc_recipients.add(emailAddr);
+									}
+									
+								}							}	
 						}
 					}
 										
