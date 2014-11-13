@@ -876,7 +876,27 @@ public class ViewTab extends AbstractVireoController {
 						cc_recipients.add(recipientEmailAddress);
 				
 				} else {
-					cc_recipients.add(recipient.trim());
+					AdministrativeGroup admingroup = null;
+					
+					for(AdministrativeGroup oneAdmingroup : settingRepo.findAllAdministrativeGroups())
+					{
+						if(oneAdmingroup.getName().equals(recipient.trim()))
+						{
+							admingroup = oneAdmingroup;
+							break;
+						}
+					}
+					
+					//if adminGroup is still null then the recipient is an arbitrary email address
+					if(admingroup == null) {
+						cc_recipients.add(recipient.trim());
+					} else {
+						
+						for(String emailAddr : admingroup.getEmails().values()) {
+							cc_recipients.add(emailAddr);
+						}
+						
+					}
 				}	
 			}
 		}
@@ -1071,7 +1091,27 @@ public class ViewTab extends AbstractVireoController {
 							primary_recipients.add(recipientEmailAddress);
 					
 					} else {
-						primary_recipients.add(recipient.trim());
+						AdministrativeGroup admingroup = null;
+						
+						for(AdministrativeGroup oneAdmingroup : settingRepo.findAllAdministrativeGroups())
+						{
+							if(oneAdmingroup.getName().equals(recipient.trim()))
+							{
+								admingroup = oneAdmingroup;
+								break;
+							}
+						}
+						
+						//if adminGroup is still null then the recipient is an arbitrary email address
+						if(admingroup == null) {
+							primary_recipients.add(recipient.trim());
+						} else {
+							
+							for(String emailAddr : admingroup.getEmails().values()) {
+								primary_recipients.add(emailAddr);
+							}
+							
+						}
 					}
 				}
 			}
@@ -1099,7 +1139,28 @@ public class ViewTab extends AbstractVireoController {
 							cc_recipients.add(recipientEmailAddress);
 					
 					} else {
-						cc_recipients.add(recipient.trim());
+						
+						AdministrativeGroup admingroup = null;
+						
+						for(AdministrativeGroup oneAdmingroup : settingRepo.findAllAdministrativeGroups())
+						{
+							if(oneAdmingroup.getName().equals(recipient.trim()))
+							{
+								admingroup = oneAdmingroup;
+								break;
+							}
+						}
+						
+						//if adminGroup is still null then the recipient is an arbitrary email address
+						if(admingroup == null) {
+							cc_recipients.add(recipient.trim());
+						} else {
+							
+							for(String emailAddr : admingroup.getEmails().values()) {
+								cc_recipients.add(emailAddr);
+							}
+							
+						}
 					}	
 				}
 			}
