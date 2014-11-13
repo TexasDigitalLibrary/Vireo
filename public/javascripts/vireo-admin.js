@@ -275,9 +275,7 @@ function toggleCarbonCopyAdvisor(){
 		var modalsPrimaryRecipientsName = "#" + jQuery(this).attr("data-modal-name") + " .primary_recipients";
 		var modalsCCRecipientsName = "#" + jQuery(this).attr("data-modal-name") + " .cc_recipients";
 		
-		console.log(jQuery(this));
 		jQuery(modalsPrimaryRecipientsName).toggle(300, function() {
-			console.log("got here");
 			if(jQuery(modalsPrimaryRecipientsName).css("display") == "none") {
 		 		jQuery(modalsPrimaryRecipientsName + " input").val("");
 		 	}

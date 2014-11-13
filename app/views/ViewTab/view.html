@@ -171,13 +171,15 @@ jQuery(document).ready(function(){
 	 jQuery(".emailOptions input[name='visibility']").on("click", toggleAddCommentEmailOptions());
 	 jQuery("input[name='primary_recipients_toggle']").on("click", toggleCarbonCopyAdvisor());
 	 jQuery("input[name='cc_recipients_toggle']").on("click", function() {
-		var modal = jQuery(this).attr("data-modal-type");
-
-	 	jQuery("#"+modal+" .cc_recipients").toggle(300, function() {
-		 	if(jQuery("#"+modal+" .cc_recipients").css("display") == "none") {
-		 		jQuery("#"+modal+" .cc_recipients input").val("");
-		 	}
+		
+		var modalsCCRecipientsName = "#" + jQuery(this).attr("data-modal-name") + " .cc_recipients";
+		
+		jQuery(modalsCCRecipientsName).toggle(300, function() {
+			if(jQuery(modalsCCRecipientsName).css("display") == "none") {
+			 	jQuery(modalsCCRecipientsName + " input").val("");
+			 }
 	 	});
+	 
 	 });
 
 	    // function extractor(query)

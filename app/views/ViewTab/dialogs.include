@@ -284,7 +284,7 @@
 				<li class="emailCarbon">
 					<ul class="unstyled" style="padding-left:15px;">
 						<li class="cc_recipients_toggle">
-                            <input type="checkbox" name="primary_recipients_toggle" class="checkbox"
+                            <input data-modal-name="add-file-modal" type="checkbox" name="primary_recipients_toggle" class="checkbox"
 	                          #{if currentUser.getPreference("notes_mark_comment_as_private_by_default") == null}
 	                                      #{if currentUser.getPreference("notes_email_student_by_default") != null}
 	                                            checked="true"
@@ -292,7 +292,7 @@
 	                                #{/if}#{else}
 	                                      disabled="true"
 	                            #{/else}> Add Email Recipients </input> <br>
-                            <input type="checkbox" name="cc_recipients_toggle" class="checkbox" 
+                            <input data-modal-name="add-file-modal" type="checkbox" name="cc_recipients_toggle" class="checkbox" 
                                   #{if currentUser.getPreference("notes_mark_comment_as_private_by_default") == null}
                                   #{if currentUser.getPreference("notes_email_student_by_default") == null}
                                         disabled="true"

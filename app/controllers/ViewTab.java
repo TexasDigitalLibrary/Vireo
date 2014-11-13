@@ -900,8 +900,6 @@ public class ViewTab extends AbstractVireoController {
 			email.applyParameterSubstitution();
 			
 			//Create list of recipients
-			email.addTo(submission.getSubmitter());
-			
 			for(String email_address : primary_recipients)
 			{
 				email.addTo(email_address);
@@ -909,15 +907,10 @@ public class ViewTab extends AbstractVireoController {
 			
 			
 			//Create list of carbon copies
-			if(params.get("cc_advisor") != null && submission.getCommitteeContactEmail() != null)
-				email.addCc(submission.getCommitteeContactEmail());
-			
 			for(String email_address : cc_recipients)
 			{
 				email.addCc(email_address);
 			}
-			
-			
 			
 			email.setFrom(context.getPerson());
 			email.setReplyTo(context.getPerson());
@@ -1020,7 +1013,7 @@ public class ViewTab extends AbstractVireoController {
 	@Security(RoleType.REVIEWER)
 	private static void addFile(Submission sub){
 		
-		String uploadType = params.get("uploadType");		
+		String uploadType = params.get("uploadType");
 		
 		if("primary".equals(uploadType)) {
 			uploadPrimary(sub);
@@ -1031,8 +1024,65 @@ public class ViewTab extends AbstractVireoController {
 		}
 		
 		VireoEmail email = null;
-		if(params.get("email_student") != null) {			
+		if(params.get("primary_recipients") != null) {			
+			
+			String[] primary_recipients_string = params.get("primary_recipients").split(",");
+			List<String> primary_recipients = new ArrayList<String>();
+			for(String recipient: primary_recipients_string) {
+				if(recipient.trim().length() != 0) {
+
+					RecipientType recipientType = null;
+					
+					for(RecipientType oneRecipientType : RecipientType.values())
+					{
+						if(oneRecipientType.name().equals(recipient.trim()))
+						{
+							recipientType = RecipientType.valueOf(recipient.trim());
+							break;
+						}
+					}
+					
+					
+					if(recipientType != null) {
 						
+						List<String> recipientEmailAddresses = EmailByRecipientType.getRecipients(sub, recipientType);
+						for(String recipientEmailAddress : recipientEmailAddresses)
+							primary_recipients.add(recipientEmailAddress);
+					
+					} else {
+						primary_recipients.add(recipient.trim());
+					}
+				}
+			}
+			
+			String[] cc_recipients_string = params.get("cc_recipients").split(",");
+			List<String> cc_recipients = new ArrayList<String>();
+			for(String recipient: cc_recipients_string) {
+				if(recipient.trim().length() != 0){
+
+					RecipientType recipientType = null;
+					
+					for(RecipientType oneRecipientType : RecipientType.values())
+					{
+						if(oneRecipientType.name().equals(recipient.trim()))
+						{
+							recipientType = RecipientType.valueOf(recipient.trim());
+							break;
+						}
+					}
+					
+					if(recipientType != null) {
+						
+						List<String> recipientEmailAddresses = EmailByRecipientType.getRecipients(sub, recipientType);
+						for(String recipientEmailAddress : recipientEmailAddresses)
+							cc_recipients.add(recipientEmailAddress);
+					
+					} else {
+						cc_recipients.add(recipient.trim());
+					}	
+				}
+			}
+			
 			String subject = params.get("subject");
 			String comment = params.get("comment");
 			
@@ -1045,7 +1095,19 @@ public class ViewTab extends AbstractVireoController {
 			if(!validation.hasErrors()){
 				email = emailService.createEmail();
 				email.addParameters(sub);
-				email.addTo(sub.getSubmitter());
+				
+				//Create list of recipients
+				for(String email_address : primary_recipients)
+				{
+					email.addTo(email_address);
+				}
+				
+				//Create list of carbon copies
+				for(String email_address : cc_recipients)
+				{
+					email.addCc(email_address);
+				}
+				
 				email.setFrom(context.getPerson());
 				email.setReplyTo(context.getPerson());
 				
