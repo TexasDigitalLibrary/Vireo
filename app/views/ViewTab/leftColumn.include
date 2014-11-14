@@ -71,14 +71,13 @@
 		</ul>
 		<ul class="unstyled">
 			<li>Embargo Options</li>
-			<li><b>#{if submission.getEmbargoTypes() != null && submission.getEmbargoTypes().size() > 0}
+			#{if submission.getEmbargoTypes() != null && submission.getEmbargoTypes().size() > 0}
 				#{list items:submission.getEmbargoTypes(), as:'embargo'}
-				${embargo.getName()}#{if embargo.getGuarantor() != org.tdl.vireo.model.EmbargoGuarantor.DEFAULT} (${embargo.getGuarantor()})#{/if}
+				<li class="discListItem"><b>${embargo.getName()}#{if embargo.getGuarantor() != org.tdl.vireo.model.EmbargoGuarantor.DEFAULT} (${embargo.getGuarantor()})#{/if}</b></li>
 				#{/list}
 			#{/if}#{else}
-				none
-			#{/else}
-			</b></li>
+				<li><b>none</b></li>
+			#{/else}			
 		</ul>
 		<ul class="unstyled">
 			<li>Submission Date</li>
