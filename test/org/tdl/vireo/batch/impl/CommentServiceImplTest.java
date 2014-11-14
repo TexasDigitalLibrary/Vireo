@@ -160,7 +160,7 @@ public class CommentServiceImplTest extends UnitTest {
 			// Add the comment
 			service.searcher = searcher;
 			service.subRepo = searcher.subRepo;
-			service.comment(filter, "This is the comment", "Subject", true, "Student", null);
+			service.comment(filter, "This is the comment", "Subject", true, "email@email.com", null);
 
 			// Wait for job to finish.
 			jobManager.waitForJobs();

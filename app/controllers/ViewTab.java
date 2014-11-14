@@ -866,8 +866,8 @@ public class ViewTab extends AbstractVireoController {
 	private static void addActionLogComment(Submission submission){
 		
 		
-		List<String> primary_recipients = Utilities.processEmailDesigneeArray(params.get("primary_recipients").split(","), submission);
-		List<String> cc_recipients = Utilities.processEmailDesigneeArray(params.get("cc_recipients").split(","), submission);
+		List<String> primary_recipients = params.get("primary_recipients") == null ? new ArrayList<String>() : Utilities.processEmailDesigneeArray(params.get("primary_recipients").split(","), submission);
+		List<String> cc_recipients =  params.get("cc_recipients") == null ? new ArrayList<String>() :  Utilities.processEmailDesigneeArray(params.get("cc_recipients").split(","), submission);
 		
 		
 		String subject = params.get("subject");
@@ -1033,8 +1033,9 @@ public class ViewTab extends AbstractVireoController {
 		VireoEmail email = null;
 		if(params.get("primary_recipients") != null) {			
 			
-			List<String> primary_recipients = Utilities.processEmailDesigneeArray(params.get("primary_recipients").split(","), sub);
-			List<String> cc_recipients = Utilities.processEmailDesigneeArray(params.get("cc_recipients").split(","), sub);
+			List<String> primary_recipients = params.get("primary_recipients") == null ? new ArrayList<String>() : Utilities.processEmailDesigneeArray(params.get("primary_recipients").split(","), sub);
+			List<String> cc_recipients =  params.get("cc_recipients") == null ? new ArrayList<String>() :  Utilities.processEmailDesigneeArray(params.get("cc_recipients").split(","), sub);
+
 			
 			String subject = params.get("subject");
 			String comment = params.get("comment");
