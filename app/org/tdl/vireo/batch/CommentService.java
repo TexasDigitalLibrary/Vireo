@@ -10,6 +10,7 @@ import org.tdl.vireo.state.State;
  * a comment and the option of sending an email on a set of submissions.
  * 
  * @author Micah Cooper
+ * @author James Creel (http://www.jamescreel.net)
  * 
  */
 public interface CommentService {

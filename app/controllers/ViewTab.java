@@ -55,6 +55,8 @@ import play.mvc.With;
  * The controller for the view tab.
  * 
  * @author Micah Cooper
+ * @author Jeremy Huff
+ * @author James Creel (http://www.jamescreel.net)
  *
  */
 
@@ -803,104 +805,9 @@ public class ViewTab extends AbstractVireoController {
 	@Security(RoleType.REVIEWER)
 	private static void addActionLogComment(Submission submission){
 		
-		String[] primary_recipients_string = params.get("primary_recipients").split(",");
-		List<String> primary_recipients = new ArrayList<String>();
-		for(String recipient: primary_recipients_string) {
-			if(recipient.trim().length() != 0) {
-
-				RecipientType recipientType = null;
-				
-				for(RecipientType oneRecipientType : RecipientType.values())
-				{
-					if(oneRecipientType.name().equals(recipient.trim()))
-					{
-						recipientType = oneRecipientType;
-						break;
-					}
-				}
-				
-				if(recipientType != null) {
-					
-					List<String> recipientEmailAddresses = EmailByRecipientType.getRecipients(submission, recipientType);
-					for(String recipientEmailAddress : recipientEmailAddresses)
-						primary_recipients.add(recipientEmailAddress);
-				
-				} else {
-				
-					AdministrativeGroup admingroup = null;
-					
-					for(AdministrativeGroup oneAdmingroup : settingRepo.findAllAdministrativeGroups())
-					{
-						if(oneAdmingroup.getName().equals(recipient.trim()))
-						{
-							admingroup = oneAdmingroup;
-							break;
-						}
-					}
-					
-					//if adminGroup is still null then the recipient is an arbitrary email address
-					if(admingroup == null) {
-						primary_recipients.add(recipient.trim());
-					} else {
-						
-						for(String emailAddr : admingroup.getEmails().values()) {
-							primary_recipients.add(emailAddr);
-						}
-						
-					}
-				
-				}
-			}
-		}
 		
-		String[] cc_recipients_string = params.get("cc_recipients").split(",");
-		List<String> cc_recipients = new ArrayList<String>();
-		for(String recipient: cc_recipients_string) {
-			if(recipient.trim().length() != 0){
-
-				RecipientType recipientType = null;
-				
-				for(RecipientType oneRecipientType : RecipientType.values())
-				{
-					if(oneRecipientType.name().equals(recipient.trim()))
-					{
-						recipientType = RecipientType.valueOf(recipient.trim());
-						break;
-					}
-				}
-				
-				if(recipientType != null) {
-					
-					List<String> recipientEmailAddresses = EmailByRecipientType.getRecipients(submission, recipientType);
-					for(String recipientEmailAddress : recipientEmailAddresses)
-						cc_recipients.add(recipientEmailAddress);
-				
-				} else {
-					AdministrativeGroup admingroup = null;
-					
-					for(AdministrativeGroup oneAdmingroup : settingRepo.findAllAdministrativeGroups())
-					{
-						if(oneAdmingroup.getName().equals(recipient.trim()))
-						{
-							admingroup = oneAdmingroup;
-							break;
-						}
-					}
-					
-					//if adminGroup is still null then the recipient is an arbitrary email address
-					if(admingroup == null) {
-						cc_recipients.add(recipient.trim());
-					} else {
-						
-						for(String emailAddr : admingroup.getEmails().values()) {
-							cc_recipients.add(emailAddr);
-						}
-						
-					}
-				}	
-			}
-		}
-		
+		List<String> primary_recipients = Utilities.processEmailDesigneeArray(params.get("primary_recipients").split(","), submission);
+		List<String> cc_recipients = Utilities.processEmailDesigneeArray(params.get("cc_recipients").split(","), submission);
 		
 		
 		String subject = params.get("subject");
@@ -1067,103 +974,8 @@ public class ViewTab extends AbstractVireoController {
 		VireoEmail email = null;
 		if(params.get("primary_recipients") != null) {			
 			
-			String[] primary_recipients_string = params.get("primary_recipients").split(",");
-			List<String> primary_recipients = new ArrayList<String>();
-			for(String recipient: primary_recipients_string) {
-				if(recipient.trim().length() != 0) {
-
-					RecipientType recipientType = null;
-					
-					for(RecipientType oneRecipientType : RecipientType.values())
-					{
-						if(oneRecipientType.name().equals(recipient.trim()))
-						{
-							recipientType = RecipientType.valueOf(recipient.trim());
-							break;
-						}
-					}
-					
-					
-					if(recipientType != null) {
-						
-						List<String> recipientEmailAddresses = EmailByRecipientType.getRecipients(sub, recipientType);
-						for(String recipientEmailAddress : recipientEmailAddresses)
-							primary_recipients.add(recipientEmailAddress);
-					
-					} else {
-						AdministrativeGroup admingroup = null;
-						
-						for(AdministrativeGroup oneAdmingroup : settingRepo.findAllAdministrativeGroups())
-						{
-							if(oneAdmingroup.getName().equals(recipient.trim()))
-							{
-								admingroup = oneAdmingroup;
-								break;
-							}
-						}
-						
-						//if adminGroup is still null then the recipient is an arbitrary email address
-						if(admingroup == null) {
-							primary_recipients.add(recipient.trim());
-						} else {
-							
-							for(String emailAddr : admingroup.getEmails().values()) {
-								primary_recipients.add(emailAddr);
-							}
-							
-						}
-					}
-				}
-			}
-			
-			String[] cc_recipients_string = params.get("cc_recipients").split(",");
-			List<String> cc_recipients = new ArrayList<String>();
-			for(String recipient: cc_recipients_string) {
-				if(recipient.trim().length() != 0){
-
-					RecipientType recipientType = null;
-					
-					for(RecipientType oneRecipientType : RecipientType.values())
-					{
-						if(oneRecipientType.name().equals(recipient.trim()))
-						{
-							recipientType = RecipientType.valueOf(recipient.trim());
-							break;
-						}
-					}
-					
-					if(recipientType != null) {
-						
-						List<String> recipientEmailAddresses = EmailByRecipientType.getRecipients(sub, recipientType);
-						for(String recipientEmailAddress : recipientEmailAddresses)
-							cc_recipients.add(recipientEmailAddress);
-					
-					} else {
-						
-						AdministrativeGroup admingroup = null;
-						
-						for(AdministrativeGroup oneAdmingroup : settingRepo.findAllAdministrativeGroups())
-						{
-							if(oneAdmingroup.getName().equals(recipient.trim()))
-							{
-								admingroup = oneAdmingroup;
-								break;
-							}
-						}
-						
-						//if adminGroup is still null then the recipient is an arbitrary email address
-						if(admingroup == null) {
-							cc_recipients.add(recipient.trim());
-						} else {
-							
-							for(String emailAddr : admingroup.getEmails().values()) {
-								cc_recipients.add(emailAddr);
-							}
-							
-						}
-					}	
-				}
-			}
+			List<String> primary_recipients = Utilities.processEmailDesigneeArray(params.get("primary_recipients").split(","), sub);
+			List<String> cc_recipients = Utilities.processEmailDesigneeArray(params.get("cc_recipients").split(","), sub);
 			
 			String subject = params.get("subject");
 			String comment = params.get("comment");

@@ -46,6 +46,7 @@ import play.mvc.With;
  * display, and managing ETDS (aka the list, view and log tabs)
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
+ * @author James Creel (http://www.jamescreel.net)
  */
 @With(Authentication.class)
 public class FilterTab extends AbstractVireoController {

@@ -27,6 +27,7 @@ import org.tdl.vireo.search.SearchResult;
 import org.tdl.vireo.search.Searcher;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.services.EmailByRecipientType;
+import org.tdl.vireo.services.Utilities;
 import org.tdl.vireo.state.State;
 
 import play.Logger;
@@ -35,10 +36,11 @@ import play.jobs.Job;
 import play.modules.spring.Spring;
 
 /**
- * Implement the assign service. This just loops through the submissions and
- * changes the assignee. Simple as that.
+ * Implement the comment service. This loops through the submissions and
+ * generates comments on each.
  * 
  * @author Micah Cooper
+ * @author James Creel
  */
 public class CommentServiceImpl implements CommentService {
 
@@ -242,99 +244,9 @@ public class CommentServiceImpl implements CommentService {
 
 					Submission sub = subRepo.findSubmission(subId);
 					
-					List<String> primary_recipients = new ArrayList<String>();
-					for(String recipient: primary_recipients_string_array) {
-						if(recipient.trim().length() != 0) {
-
-							RecipientType recipientType = null;
-							
-							for(RecipientType oneRecipientType : RecipientType.values())
-							{
-								if(oneRecipientType.name().equals(recipient.trim()))
-								{
-									recipientType = RecipientType.valueOf(recipient.trim());
-									break;
-								}
-							}
-							
-							
-							if(recipientType != null) {
-								
-								List<String> recipientEmailAddresses = EmailByRecipientType.getRecipients(sub, recipientType);
-								for(String recipientEmailAddress : recipientEmailAddresses)
-									primary_recipients.add(recipientEmailAddress);
-							
-							} else {
-								AdministrativeGroup admingroup = null;
-								
-								for(AdministrativeGroup oneAdmingroup : settingRepo.findAllAdministrativeGroups())
-								{
-									if(oneAdmingroup.getName().equals(recipient.trim()))
-									{
-										admingroup = oneAdmingroup;
-										break;
-									}
-								}
-								
-								//if adminGroup is still null then the recipient is an arbitrary email address
-								if(admingroup == null) {
-									primary_recipients.add(recipient.trim());
-								} else {
-									
-									for(String emailAddr : admingroup.getEmails().values()) {
-										primary_recipients.add(emailAddr);
-									}
-									
-								}
-							}
-						}
-					}
+					List<String> primary_recipients = Utilities.processEmailDesigneeArray(primary_recipients_string_array, sub);
 					
-					List<String> cc_recipients = new ArrayList<String>();
-					for(String recipient: cc_recipients_string_array) {
-						if(recipient.trim().length() != 0){
-
-							RecipientType recipientType = null;
-							
-							for(RecipientType oneRecipientType : RecipientType.values())
-							{
-								if(oneRecipientType.name().equals(recipient.trim()))
-								{
-									recipientType = RecipientType.valueOf(recipient.trim());
-									break;
-								}
-							}
-							
-							if(recipientType != null) {
-								
-								List<String> recipientEmailAddresses = EmailByRecipientType.getRecipients(sub, recipientType);
-								for(String recipientEmailAddress : recipientEmailAddresses)
-									cc_recipients.add(recipientEmailAddress);
-							
-							} else {
-								AdministrativeGroup admingroup = null;
-								
-								for(AdministrativeGroup oneAdmingroup : settingRepo.findAllAdministrativeGroups())
-								{
-									if(oneAdmingroup.getName().equals(recipient.trim()))
-									{
-										admingroup = oneAdmingroup;
-										break;
-									}
-								}
-								
-								//if adminGroup is still null then the recipient is an arbitrary email address
-								if(admingroup == null) {
-									cc_recipients.add(recipient.trim());
-								} else {
-									
-									for(String emailAddr : admingroup.getEmails().values()) {
-										cc_recipients.add(emailAddr);
-									}
-									
-								}							}	
-						}
-					}
+					List<String> cc_recipients = Utilities.processEmailDesigneeArray(cc_recipients_string_array, sub);
 										
 					if(sendEmail){
 						VireoEmail email = emailService.createEmail();
