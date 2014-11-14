@@ -458,7 +458,7 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 		}
 
 		@Override
-		public CustomActionDefinition createCustomActionDefinition(String label) {
+		public CustomActionDefinition createCustomActionDefinition(String label, Boolean isStudentVisible) {
 			// TODO Auto-generated method stub
 			return null;
 		}

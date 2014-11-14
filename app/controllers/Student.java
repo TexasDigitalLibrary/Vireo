@@ -24,6 +24,7 @@ import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.Configuration;
+import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
@@ -185,6 +186,10 @@ public class Student extends AbstractVireoController {
 		// Locate the submission 
 		Submission sub = subRepo.findSubmission(subId);
 		
+		if(sub == null){
+			error("Submission with id: " + subId + " was not found!");
+		}
+		
 		// Check that we are the owner of the submission.
 		Person submitter = context.getPerson();
 		if (sub.getSubmitter() != submitter)
@@ -256,8 +261,11 @@ public class Student extends AbstractVireoController {
 		for(AttachmentType type : AttachmentType.values()){
 			attachmentTypes.add(type.toString());
 		}
+		
+		// get all the custom actions available in the system
+		List<CustomActionDefinition> actions = settingRepo.findAllCustomActionDefinition();
 
-		renderTemplate("Student/view.html",subId, sub, submitter, logs, primaryDocument, additionalDocuments, feedbackDocuments, allSubmissions, grantor, allowMultiple, attachmentTypes);		
+		renderTemplate("Student/view.html",subId, sub, submitter, logs, primaryDocument, additionalDocuments, feedbackDocuments, allSubmissions, grantor, allowMultiple, attachmentTypes, actions);		
 	}
 
 	/**

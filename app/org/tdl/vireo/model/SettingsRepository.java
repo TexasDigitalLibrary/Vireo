@@ -574,7 +574,7 @@ public interface SettingsRepository {
 	 *            The action's label
 	 * @return A new custom action definition.
 	 */
-	public CustomActionDefinition createCustomActionDefinition(String label);
+	public CustomActionDefinition createCustomActionDefinition(String label, Boolean isStudentVisible);
 
 	/**
 	 * Find custom action definition by id.

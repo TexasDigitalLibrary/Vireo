@@ -228,7 +228,7 @@ jQuery(document).ready(function(){
 </ul>
 <ol id="action-list" class="action-sortable settings-sortable-list">
     #{list items:actions, as:'action'}
-       <li id="action_${action.getId()}"><a class="action-editable" href="javascript:void(0);"><em class="icon-pencil"></em> ${action.getLabel()}</a></li>    
+       <li id="action_${action.getId()}"><a class="action-editable" href="javascript:void(0);"><em class="icon-pencil"></em> ${action.getLabel()} <em class="icon-#{if action.isStudentVisible()}globe#{/if}#{else}user#{/else}"></em></a></li>    
     #{/list}
 </ol>
 
@@ -244,6 +244,11 @@ jQuery(document).ready(function(){
                 <div class="controls">
                     <input type="text" class="input-large" id="add-action-name"/>
                     <p class="help-block">Label of the new custom action</p>
+                </div>
+                <label class="control-label" for="add-action-isStudentVisible">Is Student Visible</label>
+                <div class="controls">
+                    <input type="checkbox" class="input-large" id="add-action-isstudentvisible"/>
+                    <p class="help-block">Is this action visible to the student?</p>
                 </div>
             </div>
             <div class="control-group">

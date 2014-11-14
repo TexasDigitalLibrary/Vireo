@@ -377,8 +377,8 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	// ///////////////////////////
 	
 	@Override
-	public CustomActionDefinition createCustomActionDefinition(String label) {
-		return new JpaCustomActionDefinitionImpl(label);
+	public CustomActionDefinition createCustomActionDefinition(String label, Boolean isStudentVisible) {
+		return new JpaCustomActionDefinitionImpl(label, isStudentVisible);
 	}
 
 	@Override

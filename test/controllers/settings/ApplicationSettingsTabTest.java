@@ -356,8 +356,8 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 		
 		
 		// Create two custom actions:
-		CustomActionDefinition action1 = settingRepo.createCustomActionDefinition("test one").save();
-		CustomActionDefinition action2 = settingRepo.createCustomActionDefinition("test two").save();
+		CustomActionDefinition action1 = settingRepo.createCustomActionDefinition("test one", false).save();
+		CustomActionDefinition action2 = settingRepo.createCustomActionDefinition("test two", false).save();
 		JPA.em().getTransaction().commit();
 		JPA.em().clear();
 		JPA.em().getTransaction().begin();

@@ -27,9 +27,24 @@
  *            The object's degree level (as an integere, and optional)
  */
 function displaySortableItem(type, editable, $element, id, name, level) {
-		
+	
 	if (
-	    type == "action" ||
+		type == "action"
+	   ) {
+		
+		if (editable) {
+			$element.replaceWith("<li id='" + id + "'><span class='editing'><input type='text' value='"+name+"' placeholder='"+name+"' id=\"name\"/>" +
+					"<label class=\"control-label\" for=\"add-action-isStudentVisible\">Is Student Visible</label>" +
+					"<div class=\"controls\">" +
+                    "<input type=\"checkbox\" "+(level ? "checked=\"checked\"" : "")+" placeholder=\"" + (level ? "true" : "") + "\" class=\"input-large\" id=\"add-action-isstudentvisible\"/>" +
+                    "<p class=\"help-block\">Is this action visible to the student?</p>" +
+                    "</div>" +
+                	"<i class='icon-remove'></i><i class='icon-ok'></i></span></li>");
+		} else {
+			$element.replaceWith("<li id='" + id + "'><a class='"+type+"-editable' href='#'><em class='icon-pencil'></em> " + name + (level ? " <em class=\"icon-globe\"></em>" : " <em class=\"icon-user\"></em>") + "</a></li>");
+		}
+		
+	} else if (
 	    type == "program" ||
 	    type == "department" ||
 	    type == "major" ||
@@ -185,7 +200,17 @@ function swapToEditable(element) {
 	var type = id.substring(0,id.indexOf("_"));
 	
 	if (
-		type == "action" ||
+		type == "action"
+	   ) {
+		// Make the field editable
+		var name = jQuery.trim($element.find("a."+type+"-editable").text());
+		var isStudentVisible = ($element.find("em.icon-globe").length > 0);
+		while (name.indexOf("'") > -1) {
+			name = name.replace("'","&#39;");
+		}
+		
+		displaySortableItem(type, true, $element, id, name, isStudentVisible);
+	} else if (
 		type == "college" ||
 		type == "program" ||
 		type == "department" ||
@@ -252,7 +277,14 @@ function swapFromEditable(element) {
 
 	
 	if (
-		type == "action" ||
+		type == "action"
+	   ) {
+		// Make the field editable
+		var name = $element.find("input#name").attr("placeholder");
+		var isStudentVisible = $element.find("input#add-action-isstudentvisible").attr("placeholder");
+		
+		displaySortableItem(type, false, $element, id, name, isStudentVisible);
+	} else if (
 		type == "college" ||
 		type == "program" ||
 		type == "department" ||
@@ -352,7 +384,10 @@ function sortableSaveEditHandler(type,jsonURL) {
 
 		var id = jQuery(this).closest("li").attr('id');
 		var name = jQuery(this).closest("li").find("input").val();
-		var level = jQuery(this).closest("li").find("select").val(); 
+		var level = jQuery(this).closest("li").find("select").val();
+		if(type == "action") {
+			level = jQuery(this).closest("li").find("input#add-action-isstudentvisible").prop("checked");
+		}
 		jQuery("#"+type+"-list").addClass("waiting");
 
 		var successCallback = function(data) {
@@ -375,7 +410,7 @@ function sortableSaveEditHandler(type,jsonURL) {
 		var data = {};
 		data[type+'Id'] = id;
 		data["name"] = name;
-		if (level)
+		if (typeof(level) != "undefined")
 			data["level"] = level;
 				
 		jQuery.ajax({
@@ -523,6 +558,10 @@ function saveAddActionHandler(type, jsonURL) {
 				jQuery("#add-"+type+"-subject").closest('.control-group').removeClass("error");
 			if (jQuery("#add-"+type+"-message").length > 0)
 				jQuery("#add-"+type+"-message").closest('.control-group').removeClass("error");
+			if(type == "action") {
+				jQuery("#add-action-isstudentvisible").closest('.control-group').removeClass("error");
+			}
+			
 			clearAlert(type+"-add");
 			
 			var $newElement = jQuery("<li/>").appendTo(jQuery("#"+type+"-list"));
@@ -534,6 +573,9 @@ function saveAddActionHandler(type, jsonURL) {
 			jQuery("#add-"+type+"-name").val("");
 			if (jQuery("#add-"+type+"-level").length > 0)
 				jQuery("#add-"+type+"-level").val("-1");
+			if(type == "action") {
+				jQuery("#add-action-isstudentvisible").attr('checked', false);
+			}
 			jQuery("#add-"+type+"-dialog .control-group").removeClass("error");
 		}
 
@@ -548,6 +590,10 @@ function saveAddActionHandler(type, jsonURL) {
 			
 			if (jQuery("#add-"+type+"-message").length > 0)
 				jQuery("#add-"+type+"-message").closest('.control-group').addClass("error");
+			
+			if(type == "action") {
+				jQuery("#add-action-isstudentvisible").closest('.control-group').addClass("error");
+			}
 			
 			displayAlert(type+"-add","Unable to add "+type, message);
 		}
@@ -566,6 +612,10 @@ function saveAddActionHandler(type, jsonURL) {
 		
 		if (jQuery("#add-"+type+"-message").length > 0)
 			data.message = jQuery("#add-"+type+"-message").val();
+		
+		if(type == "action") {
+			data.isStudentVisible = jQuery("#add-action-isstudentvisible").prop('checked');
+		}
 
 		jQuery.ajax({
 			url : jsonURL,
@@ -622,7 +672,6 @@ function cancelAddActionHandler(type) {
 	};
 
 }
-
 
 /**
  * Retrieve an email template from the server and fill in it's editable fields.

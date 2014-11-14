@@ -21,4 +21,15 @@ public interface CustomActionDefinition extends AbstractOrderedModel {
 	 *            The new label of this custom action.
 	 */
 	public void setLabel(String label);
+	
+	/**
+	 * @return The boolean value of this custom action being visible to the student
+	 */
+	public Boolean isStudentVisible();
+	
+	/**
+	 * @param isStudentVisible
+	 * 				The boolean value of this custom action being visible to the student
+	 */
+	public void setIsStudentVisible(Boolean isStudentVisible);
 }

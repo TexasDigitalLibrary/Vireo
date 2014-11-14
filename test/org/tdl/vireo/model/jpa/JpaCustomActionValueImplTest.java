@@ -49,7 +49,7 @@ public class JpaCustomActionValueImplTest extends UnitTest {
 		context.login(MockPerson.getAdministrator());
 		person = personRepo.createPerson("netid", "email@email.com", "first", "last", RoleType.NONE).save();
 		sub = subRepo.createSubmission(person).save();
-		def = settingRepo.createCustomActionDefinition("custom action").save();
+		def = settingRepo.createCustomActionDefinition("custom action", false).save();
 	}
 	
 	/**
@@ -241,7 +241,7 @@ public class JpaCustomActionValueImplTest extends UnitTest {
 		
 		person = personRepo.createPerson("netid", "email@email.com", "first", "last", RoleType.NONE).save();
 		sub = subRepo.createSubmission(person).save();
-		def = settingRepo.createCustomActionDefinition("custom action").save();
+		def = settingRepo.createCustomActionDefinition("custom action", false).save();
 
 		CustomActionValue value = sub.addCustomAction(def, true);
 		value.save();

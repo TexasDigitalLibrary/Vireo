@@ -731,7 +731,7 @@ public class TestDataLoader extends Job {
 		
 		// Create all custom actions
 		for(String actionDefinition : CUSTOM_ACTIONS_DEFINITIONS) {
-			settingRepo.createCustomActionDefinition(actionDefinition).save();
+			settingRepo.createCustomActionDefinition(actionDefinition, false).save();
 		}
 		
 		// Create all email templates

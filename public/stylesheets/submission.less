@@ -354,6 +354,7 @@ STUDENT VIEWS
 		width: 50%;
 		margin-left: -26%; 
 		padding: 10px 20px;
+		z-index: 1;
 	}
 	
 	#correctionsWrap .form-actions {
@@ -387,6 +388,70 @@ STUDENT VIEWS
 	}
 	
 	#correctionsWrap .row {
+		margin-left: 0;
+	}
+}
+
+#customActionsWrap .doToggle {
+	float: right;
+}
+
+@media (min-width: 1540px) {
+	#customActionsWrap {
+		position: fixed;
+		width: 300px;
+		bottom: 5%;
+		left: 2%;
+		padding: 10px 20px;
+	}
+	
+	#customActionsWrap .form-actions {
+		padding-left: 0;
+		padding-right: 0;
+	}
+	
+	#customActionsWrap .row {
+		margin-left: 0;
+	}
+}
+
+@media (max-width: 1540px) {
+	#customActionsWrap {
+		opacity: .9;
+		position: relative;
+		left: 25%;
+		width: 50%;
+		margin-left: -2%; 
+		padding: 10px 20px;
+	}
+	
+	#customActionsWrap .form-actions {
+		padding-left: 0;
+		padding-right: 0;
+	}
+	
+	#customActionsWrap .row {
+		margin-left: 0;
+	}
+}
+
+@media (max-width: 1000px) {
+	#customActionsWrap {
+		opacity: .9;
+		position: fixed;
+		bottom: 1%;
+		left: 50%;
+		width: 80%;
+		margin-left: -42%; 
+		padding: 10px 20px;
+	}
+	
+	#customActionsWrap .form-actions {
+		padding-left: 0;
+		padding-right: 0;
+	}
+	
+	#customActionsWrap .row {
 		margin-left: 0;
 	}
 }
