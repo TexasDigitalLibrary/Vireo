@@ -1,0 +1,17 @@
+<script type="text/javascript">
+
+jsDataObjects = {
+	"embargoTypesArray" : [
+		#{list items:embargoTypes, as:'embargo'}
+			{
+				"id": ${embargo.getId()},
+				"name": "${embargo.getName()}",
+				"description": "${embargo.getDescription()}",
+				"duration": #{if embargo.getDuration() != null}${embargo.getDuration()}#{/if}#{else}null#{/else},
+				"active": ${embargo.isActive()},
+				"guarantor": "${embargo.getGuarantor()}"
+			},
+		#{/list}
+	]
+}
+</script>

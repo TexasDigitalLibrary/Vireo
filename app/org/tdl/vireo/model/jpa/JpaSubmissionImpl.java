@@ -16,6 +16,9 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -36,6 +39,7 @@ import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.Department;
+import org.tdl.vireo.model.EmbargoGuarantor;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
@@ -48,6 +52,7 @@ import org.tdl.vireo.services.Utilities;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
 
+import play.Logger;
 import play.modules.spring.Spring;
 
 /**
@@ -91,9 +96,13 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	@Column(length=326768) // 2^15
 	public String publishedMaterial;
 
-	@OneToOne(targetEntity = JpaEmbargoTypeImpl.class)
-	public EmbargoType embargoType;
-
+	//@ManyToOne(targetEntity = JpaEmbargoTypeImpl.class, optional=true)
+	@ElementCollection
+	@CollectionTable(
+			name="submission_embargotypes",
+			joinColumns=@JoinColumn(name="submission_id"))
+	public List<Long> embargoTypeIds;
+	
 	@OneToMany(targetEntity = JpaAttachmentImpl.class, mappedBy = "submission", cascade = CascadeType.ALL)
 	public List<Attachment> attachments;
 
@@ -205,6 +214,7 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		
 		this.submitter = submitter;
 		this.documentSubjects = new ArrayList<String>();
+		this.embargoTypeIds = new ArrayList<Long>();
 		this.attachments = new ArrayList<Attachment>();
 		this.committeeMembers = new ArrayList<CommitteeMember>();
 		this.customActions = new ArrayList<CustomActionValue>();
@@ -289,7 +299,9 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 					"WHERE Submission_Id = ? " 
 			).setParameter(1, this.getId())
 			.executeUpdate();
-
+		
+		embargoTypeIds.clear();
+		
 		return super.delete();
 	}
 	
@@ -299,8 +311,13 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		submitter.detach();
 		if (assignee != null)
 			assignee.detach();
-		if (embargoType != null)
-			embargoType.detach();
+//		if (embargoTypeIds != null) {
+//			for (Long embargoTypeId : embargoTypeIds)
+//				embargoTypeId
+//		}
+//		for (EmbargoType embargoType : getEmbargoTypes()) {
+//	        embargoType.detach();
+//        }
 		return super.detach();
 	}
 
@@ -530,19 +547,55 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	
 	
 	@Override
-	public EmbargoType getEmbargoType() {
-		return embargoType;
+	public List<EmbargoType> getEmbargoTypes() {
+		SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
+		List<EmbargoType> ret = new ArrayList<EmbargoType>();
+		for (Long embargoTypeId : embargoTypeIds) {
+			EmbargoType embargoType = settingRepo.findEmbargoType(embargoTypeId);
+			if(embargoType!=null) {
+				ret.add(embargoType);
+			}
+        }
+		return ret;
 	}
 
 	@Override
-	public void setEmbargoType(EmbargoType embargo) {
+	public void addEmbargoType(EmbargoType embargo) {
 		
 		assertReviewerOrOwner(submitter);
 		
-		if (!equals(this.embargoType,embargo)) {
-			this.embargoType = embargo;
-			generateChangeLog("Embargo type",embargo.getName(), false);
+		if (!this.embargoTypeIds.contains(embargo.getId())) {
+			List<EmbargoType> temp = getEmbargoTypes();
+			for(EmbargoType embargoType : temp) {
+				if(embargoType.getGuarantor()==embargo.getGuarantor())
+					embargoTypeIds.remove(embargoType.getId());
+			}
+			this.embargoTypeIds.add(embargo.getId());
+			generateChangeLog("Embargo type",embargo.getName()+"("+embargo.getGuarantor()+")", false);
 		}
+	}
+	
+	@Override
+	public void removeEmbargoType(EmbargoType embargo) {
+		if(embargoTypeIds.contains(embargo.getId())){
+	    	embargoTypeIds.remove(embargo.getId());
+	    }	    
+	}
+	
+	@Override
+	public EmbargoType getEmbargoTypeByGuarantor(EmbargoGuarantor guarantor) {
+		if(embargoTypeIds != null && embargoTypeIds.size()>0) {
+			SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
+			for(Long embargo : embargoTypeIds) {
+				EmbargoType embargoType = settingRepo.findEmbargoType(embargo);
+				if(embargoType != null) {
+					if(embargoType.getGuarantor()==guarantor)
+						return embargoType;
+				}
+			}
+		}
+		
+		return null;
 	}
 
 	@Override

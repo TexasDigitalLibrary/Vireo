@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.DegreeLevel;
+import org.tdl.vireo.model.EmbargoGuarantor;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.MockPerson;
@@ -502,9 +503,9 @@ public class JpaSubmissionImplTests extends UnitTest {
 		Submission sub = subRepo.createSubmission(person);
 		EmbargoType embargo = settingRepo.createEmbargoType("embargo", "embargo description", 12, true).save();
 		
-		sub.setEmbargoType(embargo);
+		sub.addEmbargoType(embargo);
 		sub.save();
-		assertEquals(embargo,sub.getEmbargoType());		
+		assertEquals(embargo,sub.getEmbargoTypeByGuarantor(EmbargoGuarantor.DEFAULT));		
 		
 		sub.delete();
 		embargo.delete();

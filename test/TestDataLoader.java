@@ -27,6 +27,7 @@ import org.tdl.vireo.model.ConditionType;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.EmailWorkflowRule;
+import org.tdl.vireo.model.EmbargoGuarantor;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
@@ -415,24 +416,48 @@ public class TestDataLoader extends Job {
 	 */
 	
 	private static final EmbargoArray[] EMBARGO_DEFINTITIONS = {
-		new EmbargoArray("None", "The work will be published after approval.", 0, true),
+		new EmbargoArray("None", "The work will be published after approval.", 0, true, null),
 		new EmbargoArray("Journal Hold",
 				"The full text of this work will be held/restricted from worldwide access on the internet for one year from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication. For doctoral students, the abstract of the work will be available through ProQuest/UMI during this time.", 
 				12,
-				true),
+				true,
+				null),
 		new EmbargoArray("Patent Hold",
 				"The full text of this work will be held/restricted from public access temporarily because of patent related activities or for proprietary purposes. The faculty chair will be contacted on an annual basis, and the work will be released following the chair's approval.",
 				24,
-				true
-				),
+				true,
+				null),
 	    new EmbargoArray("Other Embargo Period",
 	    		"The work will be delayed for publication by an indefinite amount of time.",
 	    		null,
-	    		false),
+	    		false,
+	    		null),
 	    new EmbargoArray("2-year Journal Hold",
 	    		"The full text of this work will be held/restricted from worldwide access on the internet for two years from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication. The abstract of the work will be available through Texas A&M Libraries and, for doctoral students, through ProQuest/UMI during this time.",
 	    		null,
-	    		true)
+	    		true,
+	    		null),
+	    new EmbargoArray("None", "The work will be published after approval.", 0, true, EmbargoGuarantor.PROQUEST),
+	    new EmbargoArray("6-month Journal Hold",
+				"The full text of this work will be held/restricted from worldwide access on the internet for six months from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication.", 
+				6,
+				true,
+				EmbargoGuarantor.PROQUEST),
+		new EmbargoArray("1-year Journal Hold",
+				"The full text of this work will be held/restricted from worldwide access on the internet for one year from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication.", 
+				12,
+				true,
+				EmbargoGuarantor.PROQUEST),
+		new EmbargoArray("2-year Journal Hold",
+				"The full text of this work will be held/restricted from worldwide access on the internet for two years from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication.", 
+				24,
+				true,
+				EmbargoGuarantor.PROQUEST),
+		new EmbargoArray("Flexible/Delayed Release Embargo Period",
+	    		"The work will be delayed for publication by an indefinite amount of time.",
+	    		null,
+	    		false,
+	    		EmbargoGuarantor.PROQUEST)
 	};
 	
 	/**
@@ -701,7 +726,7 @@ public class TestDataLoader extends Job {
 		
 		// Create all embargo types
 		for(EmbargoArray embargoDefinition : EMBARGO_DEFINTITIONS) {
-			settingRepo.createEmbargoType(embargoDefinition.name, embargoDefinition.description, embargoDefinition.duration, embargoDefinition.active).save();
+			settingRepo.createEmbargoType(embargoDefinition.name, embargoDefinition.description, embargoDefinition.duration, embargoDefinition.active, embargoDefinition.guarantor).save();
 		}
 		
 		// Create all custom actions
@@ -858,7 +883,7 @@ public class TestDataLoader extends Job {
 					sub.setOrcid(student.getOrcid());
 				
 				if (random.nextInt(100) > 5)
-					sub.setEmbargoType(embargos.get(random.nextInt(embargos.size()-1)));
+					sub.addEmbargoType(embargos.get(random.nextInt(embargos.size()-1)));
 				
 				int members = random.nextInt(5);
 				String[] firstMemberName = null;
@@ -1367,12 +1392,14 @@ public class TestDataLoader extends Job {
 		String description;
 		Integer duration;
 		boolean active;
+		EmbargoGuarantor guarantor;
 		
-		EmbargoArray(String name, String description, Integer duration, boolean active) {
+		EmbargoArray(String name, String description, Integer duration, boolean active, EmbargoGuarantor guarantor) {
 			this.name = name;
 			this.description = description;
 			this.duration = duration;
 			this.active = active;
+			this.guarantor = guarantor;
 		}
 		
 		

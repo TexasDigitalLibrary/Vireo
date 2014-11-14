@@ -1851,64 +1851,75 @@ function embargoDurationToggleHandler() {
  * 
  * @returns A Callback function
  */
-function embargoOpenDialogHandler() {
-	return function () {
+function embargoOpenDialogHandler(isNew, id) {
 
-		if (jQuery(this).closest("tr").length > 0) {
-			// Loading an existing type
-			var $row = jQuery(this).closest("tr"); 
-			jQuery("#embargoType-id").val($row.attr("id"));
-			jQuery("#embargoType-name").val(jQuery.trim($row.find(".embargoType-name-cell").text()));
-			jQuery("#embargoType-description").val(jQuery.trim($row.find(".embargoType-description-cell").text()));
+	if(isNew == null && typeof(isNew) == "undefined") {
+		isNew = false;
+	}
 
-			if ($row.find(".embargoType-active-cell").text().indexOf("Yes") > -1)
-				jQuery("#embargoType-active").attr("checked","true");
-			else
-				jQuery("#embargoType-active").attr("checked");
-
-			if ($row.find(".embargoType-duration-cell").text().indexOf("Indefinite") > -1) {
-				jQuery("#timeframe-indeterminate").attr("checked","true");
-				jQuery("#embargoType-months").val("");
-				jQuery("#embargoType-months").attr("disabled","true");
-				jQuery("#duration-group").hide();
-			} else {
-				jQuery("#timeframe-determinate").attr("checked","true");
-				jQuery("#embargoType-months").val(jQuery.trim($row.find(".embargoType-duration-cell").text()));
-				jQuery("#embargoType-months").attr("disabled",null);
-				jQuery("#duration-group").show();
+	if (!isNew) {
+		// Loading an existing type
+		var array_key = -1;
+		for(embargo in jsDataObjects.embargosArray) {
+			if(jsDataObjects.embargosArray[embargo].id == id) {
+				array_key = embargo;
 			}
-			
-			jQuery("#embargo-type-modal .modal-header h3").text("Edit Embargo Type");
-			jQuery("#embargo-type-modal .modal-footer #embargoType-save").val("Save Embargo");
-			jQuery("#embargoType-remove").show();
-
-
-		} else {
-			// Adding a new embargo type
-			jQuery("#embargoType-id").val("");
-			jQuery("#embargoType-name").val("");
-			jQuery("#embargoType-description").val("");
-			jQuery("#embargoType-active").attr("checked","true");
-			jQuery("#timeframe-determinate").attr("checked","true");
-			jQuery("#embargoType-months").val("");
-			jQuery("#embargoType-months").attr("disabled",null);
-			jQuery("#duration-group").show();
-			
-			jQuery("#embargo-type-modal .modal-header h3").text("Add Embargo Type");
-			jQuery("#embargo-type-modal .modal-footer #embargoType-save").val("Add Embargo");
-			jQuery("#embargoType-remove").hide();
-
+		}
+		if(array_key == -1) {
+			return;
 		}
 
-		//  out any previous errors
-		jQuery("#embargoType-errors").html("");
-		jQuery("#embargo-type-modal .control-group").each(function () {
-			jQuery(this).removeClass("error"); 
-		});
+		// get our embargo data from JS cache
+		var embargo = jsDataObjects.embargosArray[array_key];
+		jQuery("#embargoType-id").val(id);
+		jQuery("#embargoType-name").val(embargo.name);
+		jQuery("#embargoType-description").val(embargo.description);
 
-		jQuery('#embargo-type-modal').modal('show');
+		if (embargo.active)
+			jQuery("#embargoType-active").attr("checked","true");
+		else
+			jQuery("#embargoType-active").attr("checked","true");
 
+		if (embargo.duration === undefined) {
+			jQuery("#timeframe-indeterminate").attr("checked","true");
+			jQuery("#embargoType-months").val("");
+			jQuery("#embargoType-months").attr("disabled","true");
+			jQuery("#duration-group").hide();
+		} else {
+			jQuery("#timeframe-determinate").attr("checked","true");
+			jQuery("#embargoType-months").val(embargo.duration);
+			jQuery("#embargoType-months").attr("disabled",null);
+			jQuery("#duration-group").show();
+		}
+
+
+		
+		jQuery("#embargo-type-modal .modal-header h3").text("Edit Embargo Type");
+		jQuery("#embargo-type-modal .modal-footer #embargoType-save").val("Save Embargo");
+		jQuery("#embargoType-remove").show();
+	} else {
+		// Adding a new embargo type
+		jQuery("#embargoType-id").val("");
+		jQuery("#embargoType-name").val("");
+		jQuery("#embargoType-description").val("");
+		jQuery("#embargoType-active").attr("checked","true");
+		jQuery("#timeframe-determinate").attr("checked","true");
+		jQuery("#embargoType-months").val("");
+		jQuery("#embargoType-months").attr("disabled",null);
+		jQuery("#duration-group").show();
+		
+		jQuery("#embargo-type-modal .modal-header h3").text("Add Embargo Type");
+		jQuery("#embargo-type-modal .modal-footer #embargoType-save").val("Add Embargo");
+		jQuery("#embargoType-remove").hide();
 	}
+
+	//  out any previous errors
+	jQuery("#embargoType-errors").html("");
+	jQuery("#embargo-type-modal .control-group").each(function () {
+		jQuery(this).removeClass("error"); 
+	});
+
+	jQuery('#embargo-type-modal').modal('show');
 }
 
 /**
@@ -1924,8 +1935,9 @@ function embargoSaveDialogHandler(jsonURL) {
 
 		var embargoTypeId = jQuery("#embargoType-id").val();
 		var name = jQuery("#embargoType-name").val();
+		var guarantor = jQuery("#embargoType-guarantor").val();
 		var description = jQuery("#embargoType-description").val();
-		var active = null;
+		var active = null;		
 		if (jQuery("#embargoType-active:checked").length > 0)
 			active = "true";
 
@@ -1957,7 +1969,7 @@ function embargoSaveDialogHandler(jsonURL) {
 						"    <td class='embargoType-duration-cell'></td>"+
 						"    <td class='embargoType-edit-cell'><a href='#'>Edit</a></td>" +
 						"</tr>"
-				).appendTo(jQuery("#embargoType-list"));
+				).appendTo(jQuery("#embargoType-"+data.guarantor+"-list"));
 			}
 
 			$row.find(".embargoType-name-cell").text(data.name);
@@ -1996,7 +2008,8 @@ function embargoSaveDialogHandler(jsonURL) {
 				'name': name,
 				'description': description,
 				'months': months,
-				'active': active
+				'active': active,
+				'guarantor': guarantor
 			},
 			dataType:'json',
 			type:'POST',
@@ -2103,19 +2116,27 @@ function embargoRemoveDialogHandler(jsonURL) {
 var embargoSortableUpdateHandler = function(jsonURL) {
 	return function(event, ui) {
 
-		var list = jQuery("#embargoType-list").sortable('toArray').toString();
-		jQuery("#embargoType-list").addClass("waiting");
+		var list = [];
+		jQuery(".embargoType-sortable").each(function(){
+			var tl = jQuery(this).sortable('toArray');
+			jQuery(tl).each(function(){
+				list.push(this);
+			});
+		});
+		list = list.toString();
+		console.log(list);
+		jQuery(".embargoType-sortable").addClass("waiting");
 
 		var successCallback = function(data) {
 			// Remove the ajax loading indicators & alerts
 			clearAlert("embargoType-reorder");
-			jQuery("#embargoType-list").removeClass("waiting");
+			jQuery(".embargoType-sortable").removeClass("waiting");
 		}
 
 		var failureCallback = function(message) {
 			displayAlert("embargoType-reorder", "Unable to reorder embargo",
 					message);
-			jQuery("#embargoType-list").removeClass("waiting");
+			jQuery(".embargoType-sortable").removeClass("waiting");
 		}
 
 		var data = {};

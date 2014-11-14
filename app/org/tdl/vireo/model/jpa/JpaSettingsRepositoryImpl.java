@@ -19,6 +19,7 @@ import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmailWorkflowRule;
+import org.tdl.vireo.model.EmbargoGuarantor;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.Language;
@@ -228,7 +229,13 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	@Override
 	public EmbargoType createEmbargoType(String name, String description,
 			Integer duration, boolean active) {
-		return new JpaEmbargoTypeImpl(name, description, duration, active);
+		return new JpaEmbargoTypeImpl(name, description, duration, active, null);
+	}
+	
+	@Override
+	public EmbargoType createEmbargoType(String name, String description,
+			Integer duration, boolean active, EmbargoGuarantor guarantor) {
+		return new JpaEmbargoTypeImpl(name, description, duration, active, guarantor);
 	}
 
 	@Override

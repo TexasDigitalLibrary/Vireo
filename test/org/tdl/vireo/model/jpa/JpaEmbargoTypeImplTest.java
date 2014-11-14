@@ -5,6 +5,7 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.tdl.vireo.model.EmbargoGuarantor;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.MockPerson;
 import org.tdl.vireo.model.Person;
@@ -15,6 +16,7 @@ import org.tdl.vireo.model.SubmissionRepository;
 import org.tdl.vireo.search.Indexer;
 import org.tdl.vireo.security.SecurityContext;
 
+import play.Logger;
 import play.db.jpa.JPA;
 import play.modules.spring.Spring;
 import play.test.UnitTest;
@@ -291,27 +293,29 @@ public class JpaEmbargoTypeImplTest extends UnitTest {
 	 */
 	@Test
 	public void testDeletetion() {
-		EmbargoType embargo = settingRepo.createEmbargoType("name", "description", 0, true).save();
+		EmbargoType embargo = settingRepo.createEmbargoType("name", "description", 0, true, EmbargoGuarantor.PROQUEST).save();
 		Person person = personRepo.createPerson("netid", "email@email.com", "first", "last", RoleType.NONE).save();
 		Submission sub = subRepo.createSubmission(person);
-		sub.setEmbargoType(embargo);
+		sub.addEmbargoType(embargo);
+		Logger.info("Submission has " + sub.getEmbargoTypes().size() + " embargos.");
 		sub.save();
-		
+		Logger.info("Submission now has " + sub.getEmbargoTypes().size() + " embargos.");
+
 		// Clear out the indexer transaction.
 		indexer.rollback();
 		assertFalse(indexer.isUpdated(sub));
 
 		embargo.delete();
-		
+
 		// Check that the submission was queued up in the indexer.
-		assertTrue(indexer.isUpdated(sub));
-		
+		assertTrue("The submission was not updated in the index.",indexer.isUpdated(sub));
+
 		// check that the value associated with it was also deleted, once refreshed
 		JPA.em().clear();
 		sub = subRepo.findSubmission(sub.getId());
-		
-		assertNull(sub.getEmbargoType());
-		
+
+		assertEquals(0,sub.getEmbargoTypes().size());
+
 		subRepo.findSubmission(sub.getId()).delete();
 		personRepo.findPerson(person.getId()).delete();
 	}

@@ -208,14 +208,29 @@ public interface Submission extends AbstractModel {
 	 * @return The type of embargo for this submission. Either requested or
 	 *         approved.
 	 */
-	public EmbargoType getEmbargoType();
+	public List<EmbargoType> getEmbargoTypes();
 
 	/**
 	 * 
 	 * @param embargo The new embargo type.
 	 */
-	public void setEmbargoType(EmbargoType embargo);
+	public void addEmbargoType(EmbargoType embargo);
 
+	/**
+	 * 
+	 * @param embargo The new embargo type.
+	 */
+	public void removeEmbargoType(EmbargoType embargo);	
+	
+	/**
+	 * 
+	 * @param guarantor The guarantor of the embargo.
+	 * 
+	 * @return The type of embargo for this submission, affiliated with
+	 * the specifed guarantor.
+	 */
+	public EmbargoType getEmbargoTypeByGuarantor(EmbargoGuarantor guarantor);
+	
 	/**
 	 * 
 	 * @return The attachment who's type is PRIMARY.

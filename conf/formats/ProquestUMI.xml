@@ -63,15 +63,18 @@
     // If you choose the #4, flexible delayed release, then you also need to
     // place sales and format restrictions using the parameters below.
     int embargoCode = 0;
-    if (embargoCode != 4 && sub.getEmbargoType() != null) {
-        if (sub.getEmbargoType().getDuration() != null) {
-            if (sub.getEmbargoType().getDuration() == 0)
+    
+    def embargoType = sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.PROQUEST) != null ? sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.PROQUEST): sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT);
+    
+    if (embargoCode != 4 && embargoType != null) {
+        if (embargoType.getDuration() != null) {
+            if (embargoType.getDuration() == 0)
                 // No duration
                 embargoCode = 0;
-            else if (sub.getEmbargoType().getDuration() <= 6 )
+            else if (embargoType.getDuration() <= 6 )
                 // 6 months or under
                 embargoCode = 1;
-            else if (sub.getEmbargoType().getDuration() <= 12)
+            else if (embargoType.getDuration() <= 12)
                 // 6 months to 1 year
                 embargoCode = 2;
             else

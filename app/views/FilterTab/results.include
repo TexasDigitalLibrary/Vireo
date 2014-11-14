@@ -229,8 +229,9 @@ in results.
                          out.print(sub.getMajor());
                      break;
                  case EMBARGO_TYPE:
-                     if (sub.getEmbargoType() != null)
-                         out.print(sub.getEmbargoType().getName());
+                     if (sub.getEmbargoTypes().size() > 0)
+                     	for(org.tdl.vireo.model.EmbargoType embargo : sub.getEmbargoTypes())
+                        	out.print("<p>" + embargo.getName() + " (" + embargo.getGuarantor() + ")</p>");
                      break;
                  case DOCUMENT_TYPE:
                      if (sub.getDocumentType() != null)

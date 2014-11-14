@@ -20,6 +20,7 @@ import org.tdl.vireo.model.CommitteeMember;
 import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.model.EmbargoType;
 
 import play.Logger;
 import play.jobs.Job;
@@ -229,11 +230,12 @@ public abstract class LuceneAbstractJobImpl extends Job {
 		String major = sub.getMajor();
 		searchText.append(department).append(" ").append(program).append(" ").append(college).append(" ").append(major).append(" ");
 		
-		String embargo = null;
-		if (sub.getEmbargoType() != null) {
-			embargo = sub.getEmbargoType().getName();
-			searchText.append(embargo).append(" ");
+		String embargos = "";
+		if (sub.getEmbargoTypes().size() > 0) {
+			for(EmbargoType embargo : sub.getEmbargoTypes())
+			embargos += embargo.getName() + " ";			
 		}
+		searchText.append(embargos).append(" ");
 		
 		String degree = sub.getDegree();
 		String documentType = sub.getDocumentType();
@@ -375,8 +377,11 @@ public abstract class LuceneAbstractJobImpl extends Job {
 		if (major != null)
 		doc.add(new Field("major",major,Field.Store.NO,Index.NOT_ANALYZED));
 		
-		if (embargo != null)
-		doc.add(new Field("embargo",embargo,Field.Store.NO,Index.NOT_ANALYZED));
+		if (embargos != null) {
+			for (EmbargoType embargo : sub.getEmbargoTypes()) {
+				doc.add(new Field("embargo",embargo.getName(), Field.Store.NO,Index.NOT_ANALYZED));
+			}
+		}
 		
 		if (degree != null)
 		doc.add(new Field("degree",degree,Field.Store.NO,Index.NOT_ANALYZED));
@@ -519,8 +524,11 @@ public abstract class LuceneAbstractJobImpl extends Job {
 			if (major != null)
 			doc.add(new Field("major",major,Field.Store.NO,Index.NOT_ANALYZED));
 			
-			if (embargo != null)
-			doc.add(new Field("embargo",embargo,Field.Store.NO,Index.NOT_ANALYZED));
+			if (embargos != null) {
+				for (EmbargoType embargo : sub.getEmbargoTypes()) {
+					doc.add(new Field("embargo",embargo.getName(), Field.Store.NO,Index.NOT_ANALYZED));
+				}
+			}
 			
 			if (degree != null)
 			doc.add(new Field("degree",degree,Field.Store.NO,Index.NOT_ANALYZED));

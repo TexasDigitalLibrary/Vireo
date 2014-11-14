@@ -70,9 +70,11 @@
 			</b></li>
 		</ul>
 		<ul class="unstyled">
-			<li>Embargo Option</li>
-			<li><b>#{if submission.getEmbargoType() != null}
-				${submission.getEmbargoType().getName()}
+			<li>Embargo Options</li>
+			<li><b>#{if submission.getEmbargoTypes() != null && submission.getEmbargoTypes().size() > 0}
+				#{list items:submission.getEmbargoTypes(), as:'embargo'}
+				${embargo.getName()}#{if embargo.getGuarantor() != org.tdl.vireo.model.EmbargoGuarantor.DEFAULT} (${embargo.getGuarantor()})#{/if}
+				#{/list}
 			#{/if}#{else}
 				none
 			#{/else}

@@ -101,17 +101,17 @@
     <documentLanguage>${sub.getDocumentLanguage()}</documentLanguage>
     #{/if}
 
-    #{if sub.getEmbargoType() != null} 
-    <embargoType id="${ sub.getEmbargoType().getId() }" active="#{if sub.getEmbargoType().isActive()}true#{/if}#{else}false#{/else}">
-        <name>${ sub.getEmbargoType().getName()?.escapeXml()?.raw() }</name>
-        <description>${ sub.getEmbargoType().getDescription()?.escapeXml()?.raw() }</description>
-        #{if sub.getEmbargoType().getDuration() == null } 
+    #{if sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT) != null} 
+    <embargoType id="${ sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT).getId() }" active="#{if sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT).isActive()}true#{/if}#{else}false#{/else}">
+        <name>${ sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT).getName()?.escapeXml()?.raw() }</name>
+        <description>${ sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT).getDescription()?.escapeXml()?.raw() }</description>
+        #{if sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT).getDuration() == null } 
         <duration indefinite="true">Indefinite</duration>
         #{/if}
         #{else} 
-        <duration months="${ sub.getEmbargoType().getDuration() }">${sub.getEmbargoType().getDuration()} Months</duration>
+        <duration months="${ sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT).getDuration() }">${sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT).getDuration()} Months</duration>
         #{/else}
-        #{if sub.getEmbargoType().getDuration() != null && sub.getEmbargoType().getDuration() != 0 && sub.getGraduationYear() != null} 
+        #{if sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT).getDuration() != null && sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT).getDuration() != 0 && sub.getGraduationYear() != null} 
         %{
             // Calculate the embargo lift date.
             java.util.Calendar cal = java.util.Calendar.getInstance();
@@ -123,7 +123,7 @@
                     cal.set(java.util.Calendar.MONTH,sub.getGraduationMonth());
             }
             
-            cal.add(java.util.Calendar.MONTH, sub.getEmbargoType().getDuration());
+            cal.add(java.util.Calendar.MONTH, sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT).getDuration());
             java.util.Date expireDate = cal.getTime();
         }% 
         <expireDate long="${expireDate.getTime() }">${ expireDate.format("yyyy-MM-dd'T'HH:mm:ssZ") }</expireDate>

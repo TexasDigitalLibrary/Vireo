@@ -35,7 +35,7 @@ public class MockSubmission extends AbstractMock implements Submission {
 	public List<String> documentSubjects = new ArrayList<String>();
 	public String documentLanguage;
 	public String publishedMaterial;
-	public MockEmbargoType embargoType;
+	public List<EmbargoType> embargoTypes;
 	public List<Attachment> attachments = new ArrayList<Attachment>();
 	public List<CommitteeMember> committeeMembers = new ArrayList<CommitteeMember>();
 	public String committeeContactEmail;
@@ -224,13 +224,30 @@ public class MockSubmission extends AbstractMock implements Submission {
 	}
 
 	@Override
-	public EmbargoType getEmbargoType() {
-		return embargoType;
+	public List<EmbargoType> getEmbargoTypes() {
+		return embargoTypes;
 	}
 
 	@Override
-	public void setEmbargoType(EmbargoType embargo) {
-		this.embargoType = (MockEmbargoType) embargo;
+	public void addEmbargoType(EmbargoType embargo) {
+		this.embargoTypes.add((MockEmbargoType) embargo);
+	}
+	
+	@Override
+    public void removeEmbargoType(EmbargoType embargo) {
+		this.embargoTypes.remove((MockEmbargoType) embargo);
+    }
+	
+	@Override
+	public EmbargoType getEmbargoTypeByGuarantor(EmbargoGuarantor guarantor) {
+		if(embargoTypes != null && embargoTypes.size()>0) {
+			for(EmbargoType embargo : embargoTypes) {
+				if(embargo.getGuarantor()==guarantor)
+					return embargo;
+			}
+		}
+		
+		return null;
 	}
 
 	@Override
@@ -630,5 +647,5 @@ public class MockSubmission extends AbstractMock implements Submission {
 	@Override
 	public Date getLastLogDate() {
 		return lastLogDate;
-	}
+	}	
 }

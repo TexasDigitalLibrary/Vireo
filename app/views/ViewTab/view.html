@@ -8,11 +8,27 @@
 #{/set}
 
 #{set 'moreScripts'}
+<script>
+	
+	// These variables are defined right off so that
+	// all subsequent scripts can use them
+
+	var subId = ${submission.getId()};
+	var updateJSONURL = "@{ViewTab.updateJSON()}";
+	var embargoJSONURL = "@{ViewTab.embargoJSON()}";
+	var updateCommitteeMemberJSONURL = "@{ViewTab.updateCommitteeMemberJSON()}";
+	var addCommitteeMemberJSONURL = "@{ViewTab.addCommitteeMemberJSON()}";
+	var removeCommitteeMemberJSONURL = "@{ViewTab.removeCommitteeMemberJSON()}";
+	var retrieveTemplateJSONURL = "@{ViewTab.retrieveTemplateJSON()}";
+	var updateCustomActionJSONURL = "@{ViewTab.updateCustomActionsJSON()}";	
+
+</script>
+#{include 'ViewTab/jsDataObjects.inlcude' /}
 <script src="@{'/public/javascripts/vireo-viewtab.js'}" type="text/javascript" charset="${_response_encoding}"></script>
 <script src="@{'/public/javascripts/bootstrap-datepicker.js'}" type="text/javascript" charset="${_response_encoding}"></script>
 <script src="@{'/public/javascripts/jquery-ui-multiselect-1.13.js'}" type="text/javascript" charset="${_response_encoding}"></script>
-<script type="text/javascript" >
 
+<script type="text/javascript" >
 function refreshAll(){
 	updateActionLog("@{ViewTab.refreshActionLogTable()}", ${submission.getId()});
 	updateLeftColumn("@{ViewTab.refreshLeftColumn()}", ${submission.getId()});
@@ -21,8 +37,6 @@ function refreshAll(){
 
 jQuery(document).ready(function(){
 	
-	var subId = ${submission.getId()};
-	
 	if(jQuery.browser.msie){
 		if(parseInt(jQuery.browser.version, 10) != 7 && parseInt(jQuery.browser.version, 10) != 8){
 			jQuery(".datepickerSubmission").datepicker();
@@ -30,13 +44,6 @@ jQuery(document).ready(function(){
 	} else {
 		jQuery(".datepickerSubmission").datepicker();
 	}
-	
-	 var updateJSONURL = "@{ViewTab.updateJSON()}";
-	 var updateCommitteeMemberJSONURL = "@{ViewTab.updateCommitteeMemberJSON()}";
-	 var addCommitteeMemberJSONURL = "@{ViewTab.addCommitteeMemberJSON()}";
-	 var removeCommitteeMemberJSONURL = "@{ViewTab.removeCommitteeMemberJSON()}";
-	 var retrieveTemplateJSONURL = "@{ViewTab.retrieveTemplateJSON()}";
-	 var updateCustomActionJSONURL = "@{ViewTab.updateCustomActionsJSON()}";	
 	 
 	/**
 	 * Cancel Editing
@@ -60,6 +67,34 @@ jQuery(document).ready(function(){
 	 * Swap from span to input field.
 	 */ 
 	jQuery(".edit-box ul li.edit span").live("click", swapToInputHandler());
+
+	/*
+	 * emabrgo events
+	 */
+
+	//add
+	jQuery("#add_new_embargo button").on("click", function() {
+		embargoHandler("addNew")
+	});
+
+	//remove
+	jQuery("#embargos ul").on("mouseenter", ".embargo", function() {
+		jQuery(this).append('<i data-id="'+$(this).attr("data-id")+'" class="icon-trash remove_embargo_icon"><span id="confirmEmbargoRemove">Confirm?</span></i>');
+		jQuery(".remove_embargo_icon").on("click", function() {
+			
+			jQuery("#confirmEmbargoRemove").show(300);
+			jQuery(this).addClass("remove_embargo");
+			jQuery(".remove_embargo").on("click", function() {
+				embargoHandler("remove", $(this).attr("data-id"));
+			});	
+
+		});
+	});
+
+	jQuery("#embargos ul").on("mouseleave", ".embargo", function() {
+		$(".remove_embargo_icon").remove();
+	});
+
 	
 	/*
 	 * Swap committee member content into editable fields.
@@ -87,10 +122,14 @@ jQuery(document).ready(function(){
 	 * Commit changes
 	 */
 	jQuery(".icon-ok").live("click", function(){		
+		var $this = jQuery(this);
 		if(jQuery(this).closest(".add").length){
 			commitNewCommitteeMemberHandler(subId, addCommitteeMemberJSONURL);
-		} else {			
-			var $this = jQuery(this);
+		} else if($this.hasClass("confirmEmbargoSelect")) {
+			
+			embargoHandler("add", $("#addEmbargoSelect select").val());
+
+		} else {						
 			commitChangesHandler($this, updateJSONURL, updateCommitteeMemberJSONURL, subId);
 		}		
 	});
@@ -337,38 +376,50 @@ jQuery(document).ready(function(){
 			</div>
 			
 			<div id="docInfo" class="edit-box-holder hidden">
-			<div class="edit-box pull-left">
-				<ul class="unstyled">
-					<li class="edit"><label>Title:</label><span id="title"
-						#{if submission.getDocumentTitle()}
-							><i class="icon-pencil"></i> ${submission.getDocumentTitle()}
-						#{/if}#{else}
-							class="empty"><i class="icon-pencil"></i> none
-						#{/else}
-						</span></li>
-					<li class="edit"><label>Embargo:</label><span id="embargo"
-						#{if submission.getEmbargoType()}
-							class="select"><i class="icon-pencil"></i> ${submission.getEmbargoType().getName()}
-						#{/if}#{else}
-							class="select empty"><i class="icon-pencil"></i> none
-						#{/else}
-						</span></li>
-					<li class="edit"><label>UMI Release:</label><span id="umiRelease"
-						#{if submission.getUMIRelease() != null}
-							class="select"><i class="icon-pencil"></i> ${submission.getUMIRelease() ? "yes" : "no"}
-						#{/if}#{else}
-							class="select empty"><i class="icon-pencil"></i> none
-						#{/else}
-						</span></li>
-					<li class="edit"><label>Document Type:</label><span id="docType"
-						#{if submission.getDocumentType()}
-							class="select"><i class="icon-pencil"></i> ${submission.getDocumentType()}
-						#{/if}#{else}
-							class="select empty"><i class="icon-pencil"></i> none
-						#{/else}
-						</span></li>
-				</ul>
-		    </div>
+				<div class="edit-box pull-left">
+					<ul class="unstyled">
+						<li class="edit"><label>Title:</label><span id="title"
+							#{if submission.getDocumentTitle()}
+								><i class="icon-pencil"></i> ${submission.getDocumentTitle()}
+							#{/if}#{else}
+								class="empty"><i class="icon-pencil"></i> none
+							#{/else}
+							</span></li>
+						<li id="embargos">
+							<label>Embargos:</label>
+							<ul>
+								#{if submission.getEmbargoTypes()}
+								#{list items:submission.getEmbargoTypes(), as:'embargo'}
+									
+									%{
+										def guarantor = embargo.getGuarantor().toString() != "DEFAULT" ? ["(",embargo.getGuarantor(),")"].join(""): "";
+									}%
+
+									<li class="embargo" data-id="${embargo.getId()}">${embargo.getName()} ${guarantor}</li>
+								#{/list}
+								#{/if}
+								<li id="addEmbargoSelect"></li>
+								<li id="add_new_embargo"><button class="btn btn-mini">Add New Embargo</button></li>
+							</ul>
+						</span>
+						</li>
+
+						<li class="edit"><label>UMI Release:</label><span id="umiRelease"
+							#{if submission.getUMIRelease() != null}
+								class="select"><i class="icon-pencil"></i> ${submission.getUMIRelease() ? "yes" : "no"}
+							#{/if}#{else}
+								class="select empty"><i class="icon-pencil"></i> none
+							#{/else}
+							</span></li>
+						<li class="edit"><label>Document Type:</label><span id="docType"
+							#{if submission.getDocumentType()}
+								class="select"><i class="icon-pencil"></i> ${submission.getDocumentType()}
+							#{/if}#{else}
+								class="select empty"><i class="icon-pencil"></i> none
+							#{/else}
+							</span></li>
+					</ul>
+			    </div>
             <div class="edit-box pull-left">
                 <ul class="unstyled">
 					<li class="edit"><label>Keywords:</label><span id="keywords"
@@ -507,13 +558,14 @@ jQuery(document).ready(function(){
             }%
 			<div id="committeeMembers" class="edit-box pull-left" data-roles='[#{list items:roles, as:'role'}"${role.escapeJavaScript()}"${ role_isLast ? "" : ","}#{/list}]'>
 				<ul class="unstyled">
-					<li><i class="icon-pencil"></i> <b>Committee Members:</b>
+					<li><b>Committee Members:</b>
 					<ul class="unstyled" style="padding:10px 0 0 30px;">
 					#{if submission.getCommitteeMembers()}
 					#{list items:submission.getCommitteeMembers(), as:'value'}
 						
 						<li class="${value.getId()}">
 							<div class="editCommitteeMember">
+								<i class="icon-pencil"></i>
 								<span class="lastName">${value.getLastName()}</span><span class="seperator">,</span>
 								<span class="firstName">${value.getFirstName()}</span> 
 								<span class="middleName">${value.getMiddleName()}</span>
@@ -544,7 +596,7 @@ jQuery(document).ready(function(){
 			<div id="embargoOptions" style="display:none;">
 				<select class="field">
 				#{list items:settingRepo.findAllEmbargoTypes(), as:'embargo'}
-					<option value="${embargo.getId()}">${embargo.getName()}</option>
+					<option value="${embargo.getId()}">${embargo.getName()}#{if embargo.getGuarantor() != org.tdl.vireo.model.EmbargoGuarantor.DEFAULT} (${embargo.getGuarantor()})#{/if}</option>
 				#{/list}
 				</select>
 			</div>
