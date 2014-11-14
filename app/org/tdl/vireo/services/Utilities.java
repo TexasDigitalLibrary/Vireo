@@ -13,11 +13,9 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
-import org.jdom.input.DOMBuilder;
 import org.jdom.input.SAXBuilder;
 import org.jdom.xpath.XPath;
 import org.tdl.vireo.email.RecipientType;
-import org.tdl.vireo.export.DepositService;
 import org.tdl.vireo.model.AdministrativeGroup;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
@@ -273,5 +271,18 @@ public class Utilities {
 	
 	}
 
-	
+	/*
+	 * Helper function to validate a single email address as a String
+	 * 
+	 * @param email - the String of the email address to validate
+	 * @return - true or false if email address is valid
+	 */
+	public static boolean validateEmailAddress(String email){
+		try {
+			new InternetAddress(email).validate();
+		} catch (AddressException ae) {
+			return false;
+		}
+		return true;
+	}
 }

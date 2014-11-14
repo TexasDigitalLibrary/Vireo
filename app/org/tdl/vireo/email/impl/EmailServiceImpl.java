@@ -54,7 +54,6 @@ public class EmailServiceImpl implements EmailService {
 		return Spring.getBeanOfType(VireoEmail.class);
 	}
 	
-
 	@Override
 	public void sendEmail(VireoEmail email, boolean wait) {
 
@@ -129,7 +128,7 @@ public class EmailServiceImpl implements EmailService {
 				if (this.email.getBcc().size() > 0)
 					email.setBcc(this.email.getBcc());
 
-				// Who's sending this
+				// Who's sending this (note that we no longer use setFrom for VireoEmail as it results in bounced emails)
 				if (this.email.getFrom() != null)
 					email.setFrom(
 							this.email.getFrom().getAddress(),

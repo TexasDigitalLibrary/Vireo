@@ -1,5 +1,20 @@
 package controllers.settings;
 
+import static org.tdl.vireo.constant.AppConfig.ALLOW_MULTIPLE_SUBMISSIONS;
+import static org.tdl.vireo.constant.AppConfig.CURRENT_SEMESTER;
+import static org.tdl.vireo.constant.AppConfig.DEGREE_CODE_PREFIX;
+import static org.tdl.vireo.constant.AppConfig.EMAIL_FROM;
+import static org.tdl.vireo.constant.AppConfig.EMAIL_REPLY_TO;
+import static org.tdl.vireo.constant.AppConfig.GRANTOR;
+import static org.tdl.vireo.constant.AppConfig.ORCID_AUTHENTICATION;
+import static org.tdl.vireo.constant.AppConfig.ORCID_VALIDATION;
+import static org.tdl.vireo.constant.AppConfig.PROQUEST_INDEXING;
+import static org.tdl.vireo.constant.AppConfig.PROQUEST_INSTITUTION_CODE;
+import static org.tdl.vireo.constant.AppConfig.PROQUEST_LICENSE_TEXT;
+import static org.tdl.vireo.constant.AppConfig.SUBMISSIONS_OPEN;
+import static org.tdl.vireo.constant.AppConfig.SUBMIT_LICENSE_TEXT;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -11,6 +26,7 @@ import org.tdl.vireo.model.AbstractWorkflowRuleCondition;
 import org.tdl.vireo.model.AdministrativeGroup;
 import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.ConditionType;
+import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.Department;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmailWorkflowRule;
@@ -20,6 +36,7 @@ import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.jpa.JpaAdministrativeGroupImpl;
 import org.tdl.vireo.model.jpa.JpaAdministrativeGroupImpl.AdminGroupsComparator;
 import org.tdl.vireo.model.jpa.JpaEmailTemplateImpl;
+import org.tdl.vireo.services.Utilities;
 import org.tdl.vireo.state.State;
 
 import play.Logger;
@@ -49,6 +66,9 @@ public class EmailSettingsTab extends SettingsTab {
 		
 		// Get all the email workflow rules
 		renderArgs.put("RULES", settingRepo.findAllEmailWorkflowRules());
+		
+		renderArgs.put("EMAIL_FROM", settingRepo.getConfigValue(EMAIL_FROM));
+		renderArgs.put("EMAIL_REPLY_TO", settingRepo.getConfigValue(EMAIL_REPLY_TO));
 		
 		// List all templates
 		List<EmailTemplate> templates = settingRepo.findAllEmailTemplates();
@@ -153,7 +173,7 @@ public class EmailSettingsTab extends SettingsTab {
 				
 			} else {
 				rule = settingRepo.createEmailWorkflowRule(associatedState);
-			}
+							}
 
 			// save the condition if it exists
 			if(rule.getCondition() != null) {
@@ -455,4 +475,67 @@ public class EmailSettingsTab extends SettingsTab {
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
 		}
 	}
+	
+	/**
+	 * Handle updating the individual values under the application settings tab.
+	 * 
+	 * If the field is defined as a boolean, then value should either be an
+	 * null/empty string to be turned off, otherwise any other value will be
+	 * interpreted as on.
+	 * 
+	 * @param field
+	 *            The field being updated.
+	 * @param value
+	 *            The value of the new field.
+	 */
+	@Security(RoleType.MANAGER)
+	public static void updateEmailSettingsJSON(String field, String value) {
+
+		try {
+			List<String> textFields = new ArrayList<String>();
+			textFields.add(EMAIL_FROM);
+			textFields.add(EMAIL_REPLY_TO);
+
+			if (textFields.contains(field)) {
+				// This is a free-form text field
+				if (EMAIL_FROM.toString().equals(field) && !Utilities.validateEmailAddress(value)) {
+					throw new IllegalArgumentException("The current email is invalid");
+				}
+				
+				if (EMAIL_REPLY_TO.toString().equals(field) && !Utilities.validateEmailAddress(value)) {
+					throw new IllegalArgumentException("The current email is invalid");
+				}
+				
+				String oldValue = null;
+				Configuration config = settingRepo.findConfigurationByName(field);
+				
+				if (config == null)
+					config = settingRepo.createConfiguration(field, value);
+				else {
+					oldValue = config.getValue();
+					config.setValue(value);
+				}
+				config.save();
+				
+				
+			} else {
+				throw new IllegalArgumentException("Unknown field '"+field+"'");
+			}
+			
+		
+			field = escapeJavaScript(field);
+			value = escapeJavaScript(value);
+			
+			
+			renderJSON("{ \"success\": \"true\", \"field\": \""+field+"\", \"value\": \""+value+"\" }");
+		} catch (IllegalArgumentException iae) {
+			String message = escapeJavaScript(iae.getMessage());			
+			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
+		} catch (RuntimeException re) {
+			Logger.error(re,"Unable to update application settings");
+			String message = escapeJavaScript(re.getMessage());			
+			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
+		}
+	}
+	
 }

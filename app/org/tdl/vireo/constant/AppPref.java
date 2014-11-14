@@ -16,7 +16,7 @@ package org.tdl.vireo.constant;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 public class AppPref {
-
+	
 	/** When sending any emails, CC the current user. **/
 	public final static String CC_EMAILS = "cc_emails";
 	

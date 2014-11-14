@@ -195,39 +195,9 @@ public interface VireoEmail {
 	 */
 	public InternetAddress getFrom();
 
-	/**
-	 * Set the from address.
-	 * 
-	 * @param email
-	 *            An email address
-	 */
-	public void setFrom(String email);
 
-	/**
-	 * Set the from address.
-	 * 
-	 * @param email
-	 *            An email address
-	 * @param name
-	 *            A descriptive name.
-	 */
-	public void setFrom(String email, String name);
 
-	/**
-	 * Set the new from address
-	 * 
-	 * @param person
-	 *            The person object.
-	 */
-	public void setFrom(Person person);
 	
-	/**
-	 * Set the from address
-	 * 
-	 * @param address
-	 *            The address
-	 */
-	public void setFrom(InternetAddress address);
 
 	// Subject and Message
 

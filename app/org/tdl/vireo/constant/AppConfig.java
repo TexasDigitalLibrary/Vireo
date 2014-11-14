@@ -49,6 +49,12 @@ public class AppConfig {
 	/** The license students must agree to during submission  */
 	public final static String SUBMIT_LICENSE_TEXT = "submit_license";
 	
+	/**The from address attached to every email by default **/
+	public final static String EMAIL_FROM = "email_from";
+	
+	/**The replyTo address attached to every email by default **/
+	public final static String EMAIL_REPLY_TO = "email_reply_to";
+	
 	// Theme settings
 	/** Background main color */
 	public final static String BACKGROUND_MAIN_COLOR = "background_main_color";

@@ -15,12 +15,14 @@ import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.Preference;
+import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionRepository;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.services.StringVariableReplacement;
 
 import play.Play;
+import play.modules.spring.Spring;
 import play.mvc.Router;
 import play.mvc.Router.ActionDefinition;
 
@@ -32,6 +34,7 @@ import play.mvc.Router.ActionDefinition;
 public class VireoEmailImpl implements VireoEmail {
 
 	// Spring dependencies
+	public SettingsRepository settingRepo;
 	public PersonRepository personRepo;
 	public SubmissionRepository subRepo;
 
@@ -63,16 +66,12 @@ public class VireoEmailImpl implements VireoEmail {
 	 * @param subRepo
 	 *            The submisison repository.
 	 */
-	protected VireoEmailImpl(SecurityContext context, PersonRepository personRepo, SubmissionRepository subRepo) {
-	
-		// Check our play requirements
-		if (Play.configuration.getProperty("mail.from") == null ||
-			Play.configuration.getProperty("mail.replyto") == null)
-			throw new IllegalArgumentException("The configuration parameters \"mail.from\" and \"mail.replyto\" are required for sending email and must be defined in the application.conf");
+	protected VireoEmailImpl(SecurityContext context, PersonRepository personRepo, SubmissionRepository subRepo, SettingsRepository settingRepo) {
 		
+		this.settingRepo = settingRepo;
 		this.personRepo = personRepo;
 		this.subRepo = subRepo;
-	
+
 		// Set the default from address
 		this.setFrom(Play.configuration.getProperty("mail.from"));
 		this.setReplyTo(Play.configuration.getProperty("mail.replyto"));
@@ -192,24 +191,54 @@ public class VireoEmailImpl implements VireoEmail {
 	public InternetAddress getFrom() {
 		return _from;
 	}
-
-	@Override
+	
+	
+	/**
+	 * Set the from address.
+	 * 
+	 * @param email
+	 *            An email address
+	 */
 	public void setFrom(String email) {
 		setFrom(email, null);
 	}
 
-	@Override
-	public void setFrom(String email, String name) {
+	
+
+	
+
+	
+
+	
+	/**
+	 * Set the from address.
+	 * 
+	 * @param email
+	 *            An email address
+	 * @param name
+	 *            A descriptive name.
+	 */
+	private void setFrom(String email, String name) {
 		setFrom(createAddress(email, name));
 	}
 
-	@Override
-	public void setFrom(Person person) {
+	/**
+	 * Set the new from address
+	 * 
+	 * @param person
+	 *            The person object.
+	 */
+	private void setFrom(Person person) {
 		setFrom(createAddress(person));
 	}
 	
-	@Override
-	public void setFrom(InternetAddress address) {
+	/**
+	 * Set the from address
+	 * 
+	 * @param address
+	 *            The address
+	 */
+	private void setFrom(InternetAddress address) {
 		_from = validateAddress(address);
 	}
 

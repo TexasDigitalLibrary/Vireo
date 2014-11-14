@@ -920,7 +920,6 @@ public class ViewTab extends AbstractVireoController {
 				email.addCc(email_address);
 			}
 			
-			email.setFrom(context.getPerson());
 			email.setReplyTo(context.getPerson());
 						
 			if(primary_recipients.size() > 0 && params.get("visibility").equals("public")) {
@@ -1061,8 +1060,8 @@ public class ViewTab extends AbstractVireoController {
 				{
 					email.addCc(email_address);
 				}
-				
-				email.setFrom(context.getPerson());
+		
+				email.addTo(sub.getSubmitter());
 				email.setReplyTo(context.getPerson());
 				
 				//Create list of carbon copies
@@ -1240,9 +1239,11 @@ public class ViewTab extends AbstractVireoController {
 		email.getBcc().clear();
 		
 		email.addTo(advisorEmail);
-		email.setFrom(context.getPerson());
-		email.setReplyTo(context.getPerson());
-						
+		
+		//TODO:  delete me
+//		email.setFrom(context.getPerson());
+//		email.setReplyTo(context.getPerson());
+//						
 		//Setup Params
 		email.setTemplate(template);
 		email.addParameters(submission);
