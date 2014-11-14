@@ -121,6 +121,7 @@
     </bean>
 	<bean id="VireoEmail" class="org.tdl.vireo.email.impl.VireoEmailImpl" scope="prototype">
 	     <constructor-arg ref="SecurityContext"/>
+	     <constructor-arg ref="SettingsRepository"/>
 	     <constructor-arg ref="PersonRepository"/>
 	     <constructor-arg ref="SubmissionRepository"/>
 	</bean>

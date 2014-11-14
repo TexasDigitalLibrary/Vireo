@@ -92,6 +92,7 @@ POST    /admin/settings/configurable/bulk       settings.ConfigurableSettingsTab
 POST	/admin/settings/updateProfile			SettingsTab.updateProfileJSON
 POST    /admin/settings/user/update             settings.UserPreferencesTab.updateUserPreferencesJSON
 POST    /admin/settings/applications/update     settings.ApplicationSettingsTab.updateApplicationSettingsJSON
+POST    /admin/settings/email/update     		settings.EmailSettingsTab.updateEmailSettingsJSON
 POST    /admin/settings/submission/update       settings.SubmissionSettingsTab.updateSubmissionSettingsJSON
 POST    /admin/settings/themes/update           settings.ThemeSettingsTab.updateThemeSettingsJSON
 POST	/admin/settings/themes/uploadLogos		settings.ThemeSettingsTab.uploadLogos

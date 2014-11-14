@@ -15,12 +15,14 @@ import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
 import org.tdl.vireo.model.Preference;
+import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionRepository;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.services.StringVariableReplacement;
 
 import play.Play;
+import play.modules.spring.Spring;
 import play.mvc.Router;
 import play.mvc.Router.ActionDefinition;
 
@@ -32,6 +34,7 @@ import play.mvc.Router.ActionDefinition;
 public class VireoEmailImpl implements VireoEmail {
 
 	// Spring dependencies
+	public SettingsRepository settingRepo;
 	public PersonRepository personRepo;
 	public SubmissionRepository subRepo;
 
@@ -63,16 +66,12 @@ public class VireoEmailImpl implements VireoEmail {
 	 * @param subRepo
 	 *            The submisison repository.
 	 */
-	protected VireoEmailImpl(SecurityContext context, PersonRepository personRepo, SubmissionRepository subRepo) {
-	
-		// Check our play requirements
-		if (Play.configuration.getProperty("mail.from") == null ||
-			Play.configuration.getProperty("mail.replyto") == null)
-			throw new IllegalArgumentException("The configuration parameters \"mail.from\" and \"mail.replyto\" are required for sending email and must be defined in the application.conf");
+	protected VireoEmailImpl(SecurityContext context, PersonRepository personRepo, SubmissionRepository subRepo, SettingsRepository settingRepo) {
 		
+		this.settingRepo = settingRepo;
 		this.personRepo = personRepo;
 		this.subRepo = subRepo;
-	
+
 		// Set the default from address
 		this.setFrom(Play.configuration.getProperty("mail.from"));
 		this.setReplyTo(Play.configuration.getProperty("mail.replyto"));
