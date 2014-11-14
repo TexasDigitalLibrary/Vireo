@@ -13,5 +13,6 @@ public enum AttachmentType {
 	ARCHIVED,
 	FEEDBACK,
 	ADMINISTRATIVE,
-	SOURCE
+	SOURCE,
+	ACTIONLOG
 }

@@ -464,6 +464,7 @@ public class ExcelPackagerImpl extends AbstractExcelPackagerImpl {
             parameters = StringVariableReplacement.setParameters(submission);
 
             File pkg = null;
+            List<Attachment> actionLogAttachments = new ArrayList<Attachment>();
 
             pkg = File.createTempFile("template-export-", ".dir");
 
@@ -482,7 +483,13 @@ public class ExcelPackagerImpl extends AbstractExcelPackagerImpl {
             os.close();
 
             // Add all the attachments
-            for (Attachment attachment : submission.getAttachments()) {
+            List<Attachment> attachments = submission.getAttachments();
+            List<Attachment> actionLogs = submission.getAttachmentsByType(AttachmentType.ACTIONLOG);
+            // add them to this list to delete the temp files later
+			actionLogAttachments.addAll(actionLogs);
+			// add them to this list to add them to export
+            attachments.addAll(actionLogs);
+            for (Attachment attachment : attachments) {
                 // Do we include this type?
                 if (!attachmentTypes.contains(attachment.getType()))
                     continue;
@@ -517,7 +524,7 @@ public class ExcelPackagerImpl extends AbstractExcelPackagerImpl {
             }// End for loop
 
             // Create the actual package!
-            return new ExcelFilePackage(submission, pkg, null);
+            return new ExcelFilePackage(submission, pkg, null, actionLogAttachments);
         } catch (Exception ioe) {
             throw new RuntimeException("Unable to generate package", ioe);
         }
@@ -535,11 +542,13 @@ public class ExcelPackagerImpl extends AbstractExcelPackagerImpl {
         public final Submission submission;
         public final File file;
         public final String entryName;
+        private final List<Attachment> actionLogAttachments;
 
-        public ExcelFilePackage(Submission submission, File file, String entryName) {
+        public ExcelFilePackage(Submission submission, File file, String entryName, List<Attachment> actionLogAttachments) {
             this.submission = submission;
             this.file = file;
             this.entryName = entryName;
+            this.actionLogAttachments = actionLogAttachments;
         }
 
         @Override
@@ -580,6 +589,21 @@ public class ExcelPackagerImpl extends AbstractExcelPackagerImpl {
                     file.delete();
                 }
             }
+            // clean up tempoarary action logs too
+ 			if(actionLogAttachments != null && actionLogAttachments.size() > 0) {
+ 				for(Attachment actionLogAttachment : actionLogAttachments) {
+ 					File actionLogFile = actionLogAttachment.getFile();
+ 					if (actionLogFile.isDirectory()) {
+ 						try {
+ 							FileUtils.deleteDirectory(actionLogFile);
+ 						} catch (IOException ioe) {
+ 							throw new RuntimeException("Unable to cleanup export package: " + actionLogFile.getAbsolutePath(),ioe);
+ 						}
+ 					} else {
+ 						actionLogFile.delete();
+ 					}
+ 				}
+ 			}
         }
     }
 
