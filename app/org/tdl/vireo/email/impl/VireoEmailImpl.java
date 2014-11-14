@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.mail.internet.InternetAddress;
 
+import org.tdl.vireo.constant.AppConfig;
 import org.tdl.vireo.constant.AppPref;
 import org.tdl.vireo.email.VireoEmail;
 import org.tdl.vireo.model.EmailTemplate;
@@ -73,8 +74,8 @@ public class VireoEmailImpl implements VireoEmail {
 		this.subRepo = subRepo;
 
 		// Set the default from address
-		this.setFrom(Play.configuration.getProperty("mail.from"));
-		this.setReplyTo(Play.configuration.getProperty("mail.replyto"));
+		this.setFrom(settingRepo.getConfigValue(AppConfig.EMAIL_FROM));
+	 	this.setReplyTo(settingRepo.getConfigValue(AppConfig.EMAIL_REPLY_TO));
 		
 		// Check to see if the current person want's to be CC'ed
 		Person person = context.getPerson();
