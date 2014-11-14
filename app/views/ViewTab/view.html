@@ -207,9 +207,23 @@ jQuery(document).ready(function(){
 	/**
 	 * Add Comment Disable/Enable Events
 	 */
-	 jQuery(".emailOptions input[name='visibility']").live("click", toggleAddCommentEmailOptions());
-	 jQuery("input[name='email_student']").live("click", toggleCarbonCopyAdvisor());
+	 jQuery(".emailOptions input[name='visibility']").on("click", toggleAddCommentEmailOptions());
+	 jQuery("input[name='primary_recipients_toggle']").on("click", toggleCarbonCopyAdvisor());
+	 jQuery("input[name='cc_recipients_toggle']").on("click", function() {
+		
+		var modalsCCRecipientsName = "#" + jQuery(this).attr("data-modal-name") + " .cc_recipients";
+		
+		jQuery(modalsCCRecipientsName).toggle(300, function() {
+			if(jQuery(modalsCCRecipientsName).css("display") == "none") {
+			 	jQuery(modalsCCRecipientsName + " input").val("");
+			 }
+	 	});
 	 
+	 });
+
+	    // function extractor(query)
+	    
+
 	/**
 	 * Add File Events
 	 */
@@ -244,7 +258,6 @@ jQuery(document).ready(function(){
 			 } 
 		 }
 		 
-		 // All other cases we just submit the form.
 	 });
 	 
 });

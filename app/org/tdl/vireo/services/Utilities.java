@@ -6,6 +6,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -13,16 +16,26 @@ import org.jdom.Namespace;
 import org.jdom.input.DOMBuilder;
 import org.jdom.input.SAXBuilder;
 import org.jdom.xpath.XPath;
+import org.tdl.vireo.email.RecipientType;
+import org.tdl.vireo.export.DepositService;
+import org.tdl.vireo.model.AdministrativeGroup;
+import org.tdl.vireo.model.SettingsRepository;
+import org.tdl.vireo.model.Submission;
 
 import play.Logger;
+import play.data.validation.Validation;
+import play.modules.spring.Spring;
 
 /**
  * A catch-all class for various Vireo utilities
  * 
  * @author Alexey Maslov
+ * @author James Creel (http://www.jamescreel.net)
  */
 public class Utilities {
 
+	private static SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
+	
 	private static final String[] CONTROL_RANGES = {
 		"\u0000-\u0009", // CO Control (including: Bell, Backspace, and Horizontal Tab)
 		"\u000B-\u000C", // CO Control (Line Tab and Form Feed)
@@ -178,4 +191,87 @@ public class Utilities {
 		else
 			return results.get(0);
 	}
+	
+	
+	/**
+	 * Helper function to validate a single email address as a String
+	 * 
+	 * @param email - the String of the email address to validate
+	 * @param validation - Play validation object of the calling controller that wants an email validated
+	 * @return - true or false if email address is valid
+	 */
+	public static boolean validateEmailAddress(String email, Validation validation){
+		try {
+			new InternetAddress(email).validate();
+		} catch (AddressException ae) {
+			validation.addError("email", "The email provided is invalid.["+email+"]");
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Helper function to take an array of strings as (supplied from parameters in a form request with an autocomplete email field) 
+	 * These strings may be email addresses, RecipientType enum names, or AdminGroup names. Process it into an actual list of strings 
+	 * that are proper email addresses.
+	 * 
+	 *  @param designee_string_array - the heterogeneous string array of email addresses, RecipientTypes, and AdminGroups
+	 *  @return - a list of strings that are proper email addresses
+	 */
+	
+	public static List<String> processEmailDesigneeArray(String[] designees, Submission sub)
+	{
+		
+		List<String> addresses = new ArrayList<String>();
+		for(String designee: designees) {
+			if(designee.trim().length() != 0) {
+
+				RecipientType recipientType = null;
+				
+				for(RecipientType oneRecipientType : RecipientType.values())
+				{
+					if(oneRecipientType.name().equals(designee.trim()))
+					{
+						recipientType = RecipientType.valueOf(designee.trim());
+						break;
+					}
+				}
+				
+				
+				if(recipientType != null) {
+					
+					List<String> recipientEmailAddresses = EmailByRecipientType.getRecipients(sub, recipientType);
+					for(String recipientEmailAddress : recipientEmailAddresses)
+						addresses.add(recipientEmailAddress);
+				
+				} else {
+					AdministrativeGroup admingroup = null;
+					
+					for(AdministrativeGroup oneAdmingroup : settingRepo.findAllAdministrativeGroups())
+					{
+						if(oneAdmingroup.getName().equals(designee.trim()))
+						{
+							admingroup = oneAdmingroup;
+							break;
+						}
+					}
+					
+					//if adminGroup is still null then the recipient is an arbitrary email address
+					if(admingroup == null) {
+						addresses.add(designee.trim());
+					} else {
+						
+						for(String emailAddr : admingroup.getEmails().values()) {
+							addresses.add(emailAddr);
+						}
+						
+					}
+				}
+			}
+		}
+		return addresses;
+	
+	}
+
+	
 }

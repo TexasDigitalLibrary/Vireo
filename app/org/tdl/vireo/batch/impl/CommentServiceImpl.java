@@ -1,18 +1,23 @@
 package org.tdl.vireo.batch.impl;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.tdl.vireo.batch.CommentService;
 import org.tdl.vireo.email.EmailService;
+import org.tdl.vireo.email.RecipientType;
 import org.tdl.vireo.email.VireoEmail;
 import org.tdl.vireo.error.ErrorLog;
 import org.tdl.vireo.job.JobManager;
 import org.tdl.vireo.job.JobMetadata;
 import org.tdl.vireo.job.JobStatus;
 import org.tdl.vireo.model.ActionLog;
+import org.tdl.vireo.model.AdministrativeGroup;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.PersonRepository;
+import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionRepository;
 import org.tdl.vireo.search.SearchDirection;
@@ -21,6 +26,8 @@ import org.tdl.vireo.search.SearchOrder;
 import org.tdl.vireo.search.SearchResult;
 import org.tdl.vireo.search.Searcher;
 import org.tdl.vireo.security.SecurityContext;
+import org.tdl.vireo.services.EmailByRecipientType;
+import org.tdl.vireo.services.Utilities;
 import org.tdl.vireo.state.State;
 
 import play.Logger;
@@ -29,10 +36,11 @@ import play.jobs.Job;
 import play.modules.spring.Spring;
 
 /**
- * Implement the assign service. This just loops through the submissions and
- * changes the assignee. Simple as that.
+ * Implement the comment service. This loops through the submissions and
+ * generates comments on each.
  * 
  * @author Micah Cooper
+ * @author James Creel
  */
 public class CommentServiceImpl implements CommentService {
 
@@ -42,6 +50,7 @@ public class CommentServiceImpl implements CommentService {
 	// The repositories
 	public PersonRepository personRepo;
 	public SubmissionRepository subRepo;
+	public SettingsRepository settingRepo;
 	public ErrorLog errorLog;
 
 	// The searcher used to find submissions in a batch.
@@ -67,6 +76,14 @@ public class CommentServiceImpl implements CommentService {
 	 */
 	public void setSubmissionRepository(SubmissionRepository repo) {
 		this.subRepo = repo;
+	}
+	
+	/**
+	 * @param repo
+	 *            The settings repository
+	 */
+	public void setSettingsRepository(SettingsRepository repo) {
+		this.settingRepo = repo;
 	}
 	
 	/**
@@ -110,7 +127,7 @@ public class CommentServiceImpl implements CommentService {
 
 	@Override
 	public JobMetadata comment(SearchFilter filter, String comment,
-			String subject, Boolean visibility, Boolean sendEmail, Boolean ccAdvisor) {
+			String subject, Boolean visibility, String primary_recipients_string, String cc_recipients_string) {
 		if (filter == null)
 			throw new IllegalArgumentException("A search filter is required");
 		
@@ -120,7 +137,7 @@ public class CommentServiceImpl implements CommentService {
 		if (context.isAuthorizationActive() && !context.isReviewer())
 			throw new SecurityException("Unauthorized to transition submissions.");
 
-		CommentJob job = new CommentJob(filter, comment, subject, visibility, ccAdvisor, sendEmail);
+		CommentJob job = new CommentJob(filter, comment, subject, visibility, primary_recipients_string, cc_recipients_string);
 
 		job.now();
 
@@ -137,8 +154,9 @@ public class CommentServiceImpl implements CommentService {
 		public final String comment;
 		public final String subject;
 		public final Boolean visibility;
-		public final Boolean ccAdvisor;
-		public final Boolean sendEmail;
+		public final String[] primary_recipients_string_array;
+		public boolean sendEmail;
+		public final String[] cc_recipients_string_array;
 		public final Long personId;
 		public final JobMetadata metadata;
 
@@ -154,21 +172,28 @@ public class CommentServiceImpl implements CommentService {
 		 * 			  The subject of the comment or email message.
 		 * @param visibility
 		 * 			  Whether the comment should be marked private.
-		 * @param ccAdvisor
-		 *            Whether the advisior should be CC'ed.
-		 * @param sendEmail
-		 *            Whether to send email, or just leave a comment.
+		 * @param primary_recipients_string
+		 *            A comma delimited list of email addresses, RecipientType's enums or AdminGroup's names for the TO line of the email
+		 * @param cc_recipients_string
+		 *            A comma delimited list of email addresses, RecipientType's enums or AdminGroup's names for the CC line of the email
 		 */
 		public CommentJob(SearchFilter filter, String comment, String subject, Boolean visibility,
-				Boolean ccAdvisor, Boolean sendEmail) {
+				String primary_recipients_string, String cc_recipients_string) {
 
 			this.filter = filter;
 			this.comment = comment;
 			this.subject = subject;
 			this.visibility = visibility;
-			this.ccAdvisor = ccAdvisor;
-			this.sendEmail = sendEmail;
-
+			this.primary_recipients_string_array = primary_recipients_string.split(",");
+			this.sendEmail = false;
+			for(String recipient: primary_recipients_string_array) {
+				if(recipient.trim().length() != 0) {
+					this.sendEmail = true;
+					break;
+				}
+			}
+			this.cc_recipients_string_array = cc_recipients_string.split(",");
+			
 			if (context.getPerson() != null) 
 				personId = context.getPerson().getId();
 			else
@@ -219,6 +244,10 @@ public class CommentServiceImpl implements CommentService {
 
 					Submission sub = subRepo.findSubmission(subId);
 					
+					List<String> primary_recipients = Utilities.processEmailDesigneeArray(primary_recipients_string_array, sub);
+					
+					List<String> cc_recipients = Utilities.processEmailDesigneeArray(cc_recipients_string_array, sub);
+										
 					if(sendEmail){
 						VireoEmail email = emailService.createEmail();
 						
@@ -228,12 +257,18 @@ public class CommentServiceImpl implements CommentService {
 						email.setMessage(comment);
 						email.applyParameterSubstitution();
 						
-						// Create list of recipients
-						email.addTo(sub.getSubmitter());
+						//Create list of recipients
+						for(String email_address : primary_recipients)
+						{
+							email.addTo(email_address);
+						}
 						
-						// Create list of carbon copies
-						if(ccAdvisor && sub.getCommitteeContactEmail() != null)
-							email.addCc(sub.getCommitteeContactEmail());
+						
+						//Create list of carbon copies
+						for(String email_address : cc_recipients)
+						{
+							email.addCc(email_address);
+						}
 						
 						if(context.getPerson()!=null)
 							email.setReplyTo(context.getPerson());

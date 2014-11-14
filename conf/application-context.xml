@@ -186,6 +186,7 @@
   </bean>
   <bean id="BatchComment" class="org.tdl.vireo.batch.impl.CommentServiceImpl" scope="singleton">
     <property name="personRepository" ref="PersonRepository" />
+    <property name="settingsRepository" ref="SettingsRepository" />
     <property name="submissionRepository" ref="SubmissionRepository" />
     <property name="securityContext" ref="SecurityContext" />
     <property name="searcher" ref="Searcher" />
@@ -526,6 +527,5 @@
     <property name="manifestTemplatePath" value="conf/formats/orcid.xml" />
     <property name="manifestName" value="orcid.xml" />
   </bean>
-
 </beans>
 

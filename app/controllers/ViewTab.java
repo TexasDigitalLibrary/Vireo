@@ -23,9 +23,11 @@ import javax.mail.internet.InternetAddress;
 import org.apache.commons.io.FilenameUtils;
 import org.tdl.vireo.constant.AppConfig;
 import org.tdl.vireo.email.EmailService;
+import org.tdl.vireo.email.RecipientType;
 import org.tdl.vireo.email.VireoEmail;
 import org.tdl.vireo.export.DepositService;
 import org.tdl.vireo.model.ActionLog;
+import org.tdl.vireo.model.AdministrativeGroup;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.CommitteeMember;
@@ -40,6 +42,7 @@ import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.proquest.ProquestVocabularyRepository;
+import org.tdl.vireo.services.EmailByRecipientType;
 import org.tdl.vireo.services.Utilities;
 import org.tdl.vireo.state.State;
 
@@ -54,6 +57,8 @@ import play.mvc.With;
  * The controller for the view tab.
  * 
  * @author Micah Cooper
+ * @author Jeremy Huff
+ * @author James Creel (http://www.jamescreel.net)
  *
  */
 
@@ -859,11 +864,16 @@ public class ViewTab extends AbstractVireoController {
 	
 	@Security(RoleType.REVIEWER)
 	private static void addActionLogComment(Submission submission){
-				
+		
+		
+		List<String> primary_recipients = Utilities.processEmailDesigneeArray(params.get("primary_recipients").split(","), submission);
+		List<String> cc_recipients = Utilities.processEmailDesigneeArray(params.get("cc_recipients").split(","), submission);
+		
+		
 		String subject = params.get("subject");
 		String message = params.get("comment");
 		
-		if(params.get("email_student")!=null) {
+		if(primary_recipients.size() > 0) {
 			
 			if(subject == null || subject.isEmpty())
 				validation.addError("addActionLogSubject", "You must include a subject when sending an email.");
@@ -871,6 +881,21 @@ public class ViewTab extends AbstractVireoController {
 			if(message == null || message.isEmpty())
 				validation.addError("addActionLogComment", "You must include a comment when sending an email.");
 			
+			for(String email_address : primary_recipients)
+			{
+				Utilities.validateEmailAddress(email_address, validation);
+			}
+			
+			for(String email_address : cc_recipients)
+			{
+				Utilities.validateEmailAddress(email_address, validation);
+			}
+				
+			
+		}
+		else
+		{
+			validation.addError("addActionLogRecipient", "You must include at least one primary (not cc) recipient when sending an email.");
 		}
 		
 		if(!validation.hasErrors()) {
@@ -883,16 +908,22 @@ public class ViewTab extends AbstractVireoController {
 			email.applyParameterSubstitution();
 			
 			//Create list of recipients
-			email.addTo(submission.getSubmitter());
+			for(String email_address : primary_recipients)
+			{
+				email.addTo(email_address);
+			}
+			
 			
 			//Create list of carbon copies
-			if(params.get("cc_advisor") != null && submission.getCommitteeContactEmail() != null)
-				email.addCc(submission.getCommitteeContactEmail());
+			for(String email_address : cc_recipients)
+			{
+				email.addCc(email_address);
+			}
 			
 			email.setFrom(context.getPerson());
 			email.setReplyTo(context.getPerson());
 						
-			if(params.get("email_student") != null && params.get("visibility").equals("public")) {
+			if(primary_recipients.size() > 0 && params.get("visibility").equals("public")) {
 				// Send the email and log it after completion
 				email.setLogOnCompletion(context.getPerson(), submission);
 				emailService.sendEmail(email,true);
@@ -990,7 +1021,7 @@ public class ViewTab extends AbstractVireoController {
 	@Security(RoleType.REVIEWER)
 	private static void addFile(Submission sub){
 		
-		String uploadType = params.get("uploadType");		
+		String uploadType = params.get("uploadType");
 		
 		if("primary".equals(uploadType)) {
 			uploadPrimary(sub);
@@ -1001,8 +1032,11 @@ public class ViewTab extends AbstractVireoController {
 		}
 		
 		VireoEmail email = null;
-		if(params.get("email_student") != null) {			
-						
+		if(params.get("primary_recipients") != null) {			
+			
+			List<String> primary_recipients = Utilities.processEmailDesigneeArray(params.get("primary_recipients").split(","), sub);
+			List<String> cc_recipients = Utilities.processEmailDesigneeArray(params.get("cc_recipients").split(","), sub);
+			
 			String subject = params.get("subject");
 			String comment = params.get("comment");
 			
@@ -1015,7 +1049,19 @@ public class ViewTab extends AbstractVireoController {
 			if(!validation.hasErrors()){
 				email = emailService.createEmail();
 				email.addParameters(sub);
-				email.addTo(sub.getSubmitter());
+				
+				//Create list of recipients
+				for(String email_address : primary_recipients)
+				{
+					email.addTo(email_address);
+				}
+				
+				//Create list of carbon copies
+				for(String email_address : cc_recipients)
+				{
+					email.addCc(email_address);
+				}
+				
 				email.setFrom(context.getPerson());
 				email.setReplyTo(context.getPerson());
 				

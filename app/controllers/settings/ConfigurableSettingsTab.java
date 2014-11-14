@@ -31,6 +31,7 @@ import org.tdl.vireo.model.NameFormat;
 import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.proquest.ProquestUtilityService;
+import org.tdl.vireo.services.Utilities;
 
 import play.Logger;
 import play.modules.spring.Spring;
@@ -2007,7 +2008,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			List<String> emails_list = (emails.length() == 0 ? new ArrayList<String>() : Arrays.asList(emails.split(",")));
 	        for(String email : emails_list) {
 				// validate email
-				if(!validateEmailAddress(email)){
+				if(!Utilities.validateEmailAddress(email, validation)){
 					throw new IllegalArgumentException("Invalid E-Mail Address detected! [" + email + "]");
 				}
 	            emails_map.put(i, email);
@@ -2023,21 +2024,6 @@ public class ConfigurableSettingsTab extends SettingsTab {
 		return jsonEmails;
 	}
 	
-	/**
-	 * Helper function to validate a single email address as a String
-	 * 
-	 * @param email - the String of the email address to validate
-	 * @return - true or false if email address is valid
-	 */
-	private static boolean validateEmailAddress(String email){
-		try {
-			new InternetAddress(email).validate();
-		} catch (AddressException ae) {
-			validation.addError("email", "The email provided is invalid.["+email+"]");
-			return false;
-		}
-		return true;
-	}
 	
 	/**
 	 * Sort Locales

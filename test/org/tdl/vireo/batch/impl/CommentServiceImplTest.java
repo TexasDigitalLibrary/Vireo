@@ -65,7 +65,7 @@ public class CommentServiceImplTest extends UnitTest {
 			// Add the comment
 			service.searcher = searcher;
 			service.subRepo = searcher.subRepo;
-			service.comment(filter, "This is the comment", null, true, false, false);
+			service.comment(filter, "This is the comment", null, true, null, null);
 
 			// Wait for job to finish.
 			jobManager.waitForJobs();
@@ -110,7 +110,7 @@ public class CommentServiceImplTest extends UnitTest {
 			// Add the comment
 			service.searcher = searcher;
 			service.subRepo = searcher.subRepo;
-			service.comment(filter, "This is the comment", null, false, false, false);
+			service.comment(filter, "This is the comment", null, false, null, null);
 
 			// Wait for job to finish.
 			jobManager.waitForJobs();
@@ -160,7 +160,7 @@ public class CommentServiceImplTest extends UnitTest {
 			// Add the comment
 			service.searcher = searcher;
 			service.subRepo = searcher.subRepo;
-			service.comment(filter, "This is the comment", "Subject", true, true, false);
+			service.comment(filter, "This is the comment", "Subject", true, "Student", null);
 
 			// Wait for job to finish.
 			jobManager.waitForJobs();
