@@ -1,5 +1,8 @@
 package controllers.settings;
 
+import static org.tdl.vireo.constant.AppConfig.EMAIL_FROM;
+import static org.tdl.vireo.constant.AppConfig.EMAIL_REPLY_TO;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -49,6 +52,9 @@ public class EmailSettingsTab extends SettingsTab {
 		
 		// Get all the email workflow rules
 		renderArgs.put("RULES", settingRepo.findAllEmailWorkflowRules());
+		
+		renderArgs.put("EMAIL_FROM", settingRepo.getConfigValue(EMAIL_FROM));
+		renderArgs.put("EMAIL_REPLY_TO", settingRepo.getConfigValue(EMAIL_REPLY_TO));
 		
 		// List all templates
 		List<EmailTemplate> templates = settingRepo.findAllEmailTemplates();
@@ -153,7 +159,7 @@ public class EmailSettingsTab extends SettingsTab {
 				
 			} else {
 				rule = settingRepo.createEmailWorkflowRule(associatedState);
-			}
+							}
 
 			// save the condition if it exists
 			if(rule.getCondition() != null) {

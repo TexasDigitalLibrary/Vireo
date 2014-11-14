@@ -54,7 +54,6 @@ public class EmailServiceImpl implements EmailService {
 		return Spring.getBeanOfType(VireoEmail.class);
 	}
 	
-
 	@Override
 	public void sendEmail(VireoEmail email, boolean wait) {
 

@@ -34,6 +34,8 @@ jQuery(document).ready(function(){
      jQuery("#add-emailTemplate-save").click(saveAddActionHandler('emailTemplate','@{settings.EmailSettingsTab.addEmailTemplateJSON()}'));
      jQuery("#add-emailTemplate-cancel").click(cancelAddActionHandler('emailTemplate'));
      
+     jQuery(".application-text").change(applicationSettingsHandler('@{settings.EmailSettingsTab.updateEmailSettingsJSON()}'));
+
      /**
 	 * Cancel Editing
 	 */
@@ -198,3 +200,24 @@ jQuery(document).ready(function(){
 <code>Dear {FIRST_NAME} {LAST_NAME}:</code>
 <p>would be replaced with:</p>
 <code>Dear John Doe:</code>
+
+<h2>EMAIL HEADERS</h2>
+
+<div class="emailHeaders wrap">
+	<ul class="unstyled">
+		<li id="emailFrom">
+			<label>From:</label>
+			<span>
+			     <input name="${org.tdl.vireo.constant.AppConfig.EMAIL_FROM}" class="application-text" type="text" value="${EMAIL_FROM}">
+			     <div class="info">i.e. noreply@vireoteam.org</div>
+			</span>
+		</li>
+		<li id="emailReplyTo">
+			<label>Reply To:</label>
+			<span>
+			     <input name="${org.tdl.vireo.constant.AppConfig.EMAIL_REPLY_TO}" class="application-text" type="text" value="${EMAIL_REPLY_TO}">
+			     <div class="info">i.e. noreply@vireoteam.org</div>
+			</span>
+		</li>
+	</ul>
+</div>
