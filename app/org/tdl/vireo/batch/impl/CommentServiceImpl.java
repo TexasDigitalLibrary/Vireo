@@ -184,7 +184,8 @@ public class CommentServiceImpl implements CommentService {
 			this.comment = comment;
 			this.subject = subject;
 			this.visibility = visibility;
-			this.primary_recipients_string_array = primary_recipients_string.split(",");
+			String[] tmp = {};
+			this.primary_recipients_string_array =  primary_recipients_string == null ? tmp : primary_recipients_string.split(",");
 			this.sendEmail = false;
 			for(String recipient: primary_recipients_string_array) {
 				if(recipient.trim().length() != 0) {
@@ -192,7 +193,7 @@ public class CommentServiceImpl implements CommentService {
 					break;
 				}
 			}
-			this.cc_recipients_string_array = cc_recipients_string.split(",");
+			this.cc_recipients_string_array = cc_recipients_string == null ? tmp : cc_recipients_string.split(",");
 			
 			if (context.getPerson() != null) 
 				personId = context.getPerson().getId();
@@ -245,7 +246,6 @@ public class CommentServiceImpl implements CommentService {
 					Submission sub = subRepo.findSubmission(subId);
 					
 					List<String> primary_recipients = Utilities.processEmailDesigneeArray(primary_recipients_string_array, sub);
-					
 					List<String> cc_recipients = Utilities.processEmailDesigneeArray(cc_recipients_string_array, sub);
 										
 					if(sendEmail){
