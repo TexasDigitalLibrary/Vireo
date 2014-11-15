@@ -43,6 +43,7 @@ import play.mvc.Scope.Session;
  * 
  * @author Micah Cooper
  * @author <a href="mailto:gad.krumholz@austin.utexas.edu">Gad Krumholz</a>
+ * @author James Creel (http://www.jamescreel.net)
  *
  */
 public class ViewTabTest extends AbstractVireoFunctionalTest {
