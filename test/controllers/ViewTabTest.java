@@ -544,6 +544,8 @@ public class ViewTabTest extends AbstractVireoFunctionalTest {
 		String UPDATE_URL = Router.reverse("ViewTab.view").url;
 		
 		Map<String,String> params = new HashMap<String,String>();
+		params.put("primary_recipients", "Student, Librarians, bob@bob.com");
+		params.put("cc_recipients", "Advisor, ted@ted.com");
 		params.put("subId", id.toString());
 		params.put("subject", "The subject");
 		params.put("comment", "This is the comment.");
