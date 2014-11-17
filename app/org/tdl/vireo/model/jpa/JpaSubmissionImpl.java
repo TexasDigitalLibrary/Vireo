@@ -268,6 +268,14 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 		this.documentKeywords = Utilities.scrubControl(this.documentKeywords, " ");
 		this.publishedMaterial = Utilities.scrubControl(this.publishedMaterial, " ");
 		
+		// make sure we don't try to save an ActionLogAttachment
+		for(int i=0; i < attachments.size(); i++) {
+			Attachment attachment = attachments.get(i);
+			if(attachment instanceof ActionLogAttachment) {
+				attachments.remove(i);
+			}
+		}
+		
 		super.save();
 		
 		// After saving save all pending actionlogs

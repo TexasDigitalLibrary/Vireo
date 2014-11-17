@@ -22,7 +22,7 @@ import play.libs.MimeTypes;
  * 
  * @author <a href=mailto:gad.krumholz@austin.utexas.edu>Gad Krumholz</a>
  */
-public class ActionLogAttachment implements Attachment {
+public class ActionLogAttachment extends JpaAbstractModel<ActionLogAttachment> implements Attachment {
 	private File file;
 	private Submission submission;
 	private String name, mimeType;
@@ -56,63 +56,32 @@ public class ActionLogAttachment implements Attachment {
 	 */
 	@Override
 	public Long getId() {
-		// DO NOTHING
-		return null;
+		return id;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.tdl.vireo.model.AbstractModel#save()
-	 */
 	@Override
-	public <T extends AbstractModel> T save() {
-		// DO NOTHING
-		return null;
+	public ActionLogAttachment save() {
+		return this;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.tdl.vireo.model.AbstractModel#delete()
-	 */
 	@Override
-	public <T extends AbstractModel> T delete() {
-		// DO NOTHING
-		return null;
+	public ActionLogAttachment delete() {
+		return this;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.tdl.vireo.model.AbstractModel#refresh()
-	 */
 	@Override
-	public <T extends AbstractModel> T refresh() {
-		// DO NOTHING
-		return null;
+	public ActionLogAttachment detach() {
+		return this;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.tdl.vireo.model.AbstractModel#merge()
-	 */
 	@Override
-	public <T extends AbstractModel> T merge() {
-		// DO NOTHING
-		return null;
+	public ActionLogAttachment merge() {
+		return this;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.tdl.vireo.model.AbstractModel#detach()
-	 */
 	@Override
-	public <T extends AbstractModel> T detach() {
-		// DO NOTHING
-		return null;
+	public ActionLogAttachment refresh() {
+		return this;
 	}
 
 	/*
