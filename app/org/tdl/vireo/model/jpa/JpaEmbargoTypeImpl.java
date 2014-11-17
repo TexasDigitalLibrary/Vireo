@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.model.EmbargoGuarantor;
 import org.tdl.vireo.model.EmbargoType;
@@ -23,7 +24,8 @@ import play.modules.spring.Spring;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 @Entity
-@Table(name = "embargo_type")
+@Table(name = "embargo_type", uniqueConstraints=
+@UniqueConstraint(columnNames = {"name", "guarantor"}))
 public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> implements EmbargoType {
 	
 //	@OneToMany(targetEntity=JpaSubmissionImpl.class, mappedBy="embargoTypes")
@@ -69,7 +71,7 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 		
 		if (duration != null && duration < 0)
 			throw new IllegalArgumentException("Duration must be positive, or null");
-
+		
 		assertManager();
 		
 		this.displayOrder = 0;

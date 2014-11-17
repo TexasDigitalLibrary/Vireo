@@ -112,10 +112,10 @@ public class JpaEmbargoTypeImplTest extends UnitTest {
 	 */
 	@Test
 	public void testCreateDuplicate() {
-		EmbargoType type = settingRepo.createEmbargoType("name", "description", 12, true).save();
+		EmbargoType type = settingRepo.createEmbargoType("name", "description", 12, true, EmbargoGuarantor.PROQUEST).save();
 
 		try {
-			settingRepo.createEmbargoType("name", "other description", 13, false).save();
+			settingRepo.createEmbargoType("name", "other description", 13, false, EmbargoGuarantor.PROQUEST).save();
 			fail("able to create duplicate embargo type");
 		} catch (RuntimeException re) {
 			/* yay */
