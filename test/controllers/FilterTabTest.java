@@ -35,6 +35,7 @@ import play.mvc.Router;
  * Test the FilterTab controller
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
+ * @author James Creel (http://www.jamescreel.net)
  */
 public class FilterTabTest extends AbstractVireoFunctionalTest {
 	
@@ -68,7 +69,7 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 		EmbargoType embargo1 = settingRepo.findAllEmbargoTypes().get(0);
 		EmbargoType embargo2 = settingRepo.findAllEmbargoTypes().get(1);
 		
-	
+		
 		// Run for both the list and log tabs
 		String[] possibleNavs = {"list","log"};
 		for (String nav : possibleNavs) {
@@ -149,7 +150,7 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 			
 			// Now that we are at the apex, check that everything is still there.
 			response = GET(LIST_URL);
-
+			
 			assertTrue(getContent(response).contains("filter?action=remove&type=include_sub&value=1"));
 			assertTrue(getContent(response).contains("filter?action=remove&type=exclude_sub&value=2"));
 			assertTrue(getContent(response).contains("filter?action=remove&type=state&value=Submitted"));
@@ -177,9 +178,10 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 			assertTrue(getContent(response).contains("filter?action=remove&type=major&value=Accounting"));
 			assertFalse(getContent(response).contains("filter?action=add&type=major&value=Accounting"));
 			assertTrue(getContent(response).contains("filter?action=remove&type=major&value=Zoology"));
-			assertFalse(getContent(response).contains("filter?action=add&type=major&value=Zoology"));		
-			assertTrue(getContent(response).contains("filter?action=remove&type=embargo&value="+embargo1.getId()));
-			assertFalse(getContent(response).contains("filter?action=add&type=embargo&value="+embargo1.getId()));		
+			assertFalse(getContent(response).contains("filter?action=add&type=major&value=Zoology"));
+			//specify the closing quote on these hrefs, since substring 'value=1' deceptively matches 'value=10' 
+			assertTrue(getContent(response).contains("filter?action=remove&type=embargo&value="+embargo1.getId()+"\""));
+			assertFalse(getContent(response).contains("filter?action=add&type=embargo&value="+embargo1.getId()+"\""));		
 			assertTrue(getContent(response).contains("filter?action=remove&type=embargo&value="+embargo2.getId()));
 			assertFalse(getContent(response).contains("filter?action=add&type=embargo&value="+embargo2.getId()));
 			assertTrue(getContent(response).contains("filter?action=remove&type=degree&value=Doctor+of+Philosophy"));
