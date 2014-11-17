@@ -110,7 +110,7 @@ public class LuceneSearcherImpl implements Searcher {
 		SORT_TYPES[SearchOrder.APPROVAL_DATE.ordinal()] = SortField.LONG;
 		SORT_TYPES[SearchOrder.COMMITTEE_APPROVAL_DATE.ordinal()] = SortField.LONG;
 		SORT_TYPES[SearchOrder.COMMITTEE_EMBARGO_APPROVAL_DATE.ordinal()] = SortField.LONG;
-		SORT_TYPES[SearchOrder.CUSTOM_ACTIONS.ordinal()] = SortField.INT;
+		SORT_TYPES[SearchOrder.CUSTOM_ACTIONS.ordinal()] = SortField.STRING;
 		SORT_TYPES[SearchOrder.LAST_EVENT_TIME.ordinal()] = SortField.LONG;
 	}
 	

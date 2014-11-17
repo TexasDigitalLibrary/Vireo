@@ -443,11 +443,10 @@ public abstract class LuceneAbstractJobImpl extends Job {
 		if (umiRelease != null)
 		doc.add(new Field("umiRelease",umiRelease,Field.Store.NO,Index.NOT_ANALYZED));
 		
-		if (customActions != null) {
-			for (CustomActionValue customActionValue : sub.getCustomActions()) {
-				doc.add(new Field("customAction",customActionValue.getDefinition().getLabel(), Field.Store.NO,Index.NOT_ANALYZED));
-			}
+		for (CustomActionValue customActionValue : sub.getCustomActions()) {
+			doc.add(new Field("customAction",customActionValue.getDefinition().getLabel(), Field.Store.NO,Index.NOT_ANALYZED));
 		}
+		
 		if (degreeLevel != null)
 		doc.add(new Field("degreeLevel",degreeLevel,Field.Store.NO,Index.NOT_ANALYZED));
 		
@@ -587,10 +586,8 @@ public abstract class LuceneAbstractJobImpl extends Job {
 			if (umiRelease != null)
 			doc.add(new Field("umiRelease",umiRelease,Field.Store.NO,Index.NOT_ANALYZED));
 			
-			if (customActions != null) {
-				for (CustomActionValue customActionValue : sub.getCustomActions()) {
-					doc.add(new Field("customAction",customActionValue.getDefinition().getLabel(), Field.Store.NO,Index.NOT_ANALYZED));
-				}
+			for (CustomActionValue customActionValue : sub.getCustomActions()) {
+				doc.add(new Field("customAction",customActionValue.getDefinition().getLabel(), Field.Store.NO,Index.NOT_ANALYZED));
 			}
 			
 			if (degreeLevel != null)
