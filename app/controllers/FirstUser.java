@@ -8,13 +8,19 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import org.tdl.vireo.email.SystemEmailTemplateService;
-import org.tdl.vireo.model.CommitteeMemberRoleType;
 import org.tdl.vireo.model.DegreeLevel;
+import org.tdl.vireo.model.EmbargoGuarantor;
+import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
+import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.search.Indexer;
 import org.tdl.vireo.security.AuthenticationMethod;
 
+import play.Logger;
+import play.Play;
+import play.jobs.Job;
+import play.jobs.OnApplicationStart;
 import play.modules.spring.Spring;
 
 public class FirstUser extends AbstractVireoController {
@@ -61,9 +67,7 @@ public class FirstUser extends AbstractVireoController {
 				systemEmailService.generateAllSystemEmailTemplates();
 				
 				// Setup Embargos
-				for(EmbargoArray embargoDefinition : EMBARGO_DEFINTITIONS) {
-					settingRepo.createEmbargoType(embargoDefinition.name, embargoDefinition.description, embargoDefinition.duration, embargoDefinition.active).save();
-				}
+				new InitializeEmbargos().doJob();
 				
 				// Setup default Committee Member Role Types
 				for(String roleType : COMMITTEE_MEMBER_ROLE_TYPES_DEFINITIONS) {
@@ -170,20 +174,47 @@ public class FirstUser extends AbstractVireoController {
 	 */
 	
 	private static final EmbargoArray[] EMBARGO_DEFINTITIONS = {
-		new EmbargoArray("None", "The work will be published after approval.", 0, true),
+		new EmbargoArray("None",
+				"The work will be published after approval.",
+				0,
+				true,
+				EmbargoGuarantor.DEFAULT),
 		new EmbargoArray("Journal Hold",
 				"The work will be delayed for publication by one year because of a restriction from publication in an academic journal.", 
 				12,
-				true),
+				true,
+				EmbargoGuarantor.DEFAULT),
 		new EmbargoArray("Patent Hold",
 				"The work will be delayed for publication by two years because of patent related activities.",
 				24,
-				true
+				true,
+				EmbargoGuarantor.DEFAULT
 				),
 	    new EmbargoArray("Other Embargo Period",
 	    		"The work will be delayed for publication by an indefinite amount of time.",
 	    		null,
-	    		true)
+	    		true,
+				EmbargoGuarantor.DEFAULT),
+		new EmbargoArray("6-month Journal Hold",
+				"The full text of this work will be held/restricted from worldwide access on the internet for six months from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication.", 
+				6,
+				true,
+				EmbargoGuarantor.PROQUEST),
+		new EmbargoArray("1-year Journal Hold",
+				"The full text of this work will be held/restricted from worldwide access on the internet for one year from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication.", 
+				12,
+				true,
+				EmbargoGuarantor.PROQUEST),
+		new EmbargoArray("2-year Journal Hold",
+				"The full text of this work will be held/restricted from worldwide access on the internet for two years from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication.", 
+				24,
+				true,
+				EmbargoGuarantor.PROQUEST),
+		new EmbargoArray("Flexible/Delayed Release Embargo Period",
+	    		"The work will be delayed for publication by an indefinite amount of time.",
+	    		null,
+	    		false,
+	    		EmbargoGuarantor.PROQUEST)
 	};
 	
 	private static class EmbargoArray{
@@ -192,14 +223,49 @@ public class FirstUser extends AbstractVireoController {
 		String description;
 		Integer duration;
 		boolean active;
+		EmbargoGuarantor guarantor;
 		
-		EmbargoArray(String name, String description, Integer duration, boolean active) {
+		EmbargoArray(String name, String description, Integer duration, boolean active, EmbargoGuarantor guarantor) {
 			this.name = name;
 			this.description = description;
 			this.duration = duration;
 			this.active = active;
+			this.guarantor = guarantor;
 		}
+		
+		
 	}
 	
-	
+	@OnApplicationStart
+	public static class InitializeEmbargos extends Job {
+		public void doJob() {
+			// only initialize the embargos if we're in production mode
+			if (Play.mode.isProd()) {
+				try {
+					// turn off authorization if we're saving
+					context.turnOffAuthorization();
+					
+					SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
+					List<EmbargoType> embargoTypes = settingRepo.findAllEmbargoTypes();
+					// Setup Embargos
+					for(EmbargoArray embargoDefinition : EMBARGO_DEFINTITIONS) {
+						boolean found = false;
+						for(EmbargoType installedEmbargo : embargoTypes) {
+							if( installedEmbargo.getName().equals(embargoDefinition.name) ) {
+								found = true;
+							}
+						}
+						if(!found) {
+							settingRepo.createEmbargoType(embargoDefinition.name, embargoDefinition.description, embargoDefinition.duration, embargoDefinition.active, embargoDefinition.guarantor).save();
+						}
+					}
+				} catch (RuntimeException re) {
+					Logger.error(re, "Unable to initialize default embargos.");
+				} finally {
+					// turn on authorization after we're done
+					context.restoreAuthorization();
+				}
+			}
+		}
+	}
 }
