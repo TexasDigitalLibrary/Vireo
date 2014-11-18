@@ -263,9 +263,16 @@ public class Student extends AbstractVireoController {
 		}
 		
 		// get all the custom actions available in the system
-		List<CustomActionDefinition> actions = settingRepo.findAllCustomActionDefinition();
-
-		renderTemplate("Student/view.html",subId, sub, submitter, logs, primaryDocument, additionalDocuments, feedbackDocuments, allSubmissions, grantor, allowMultiple, attachmentTypes, actions);		
+		List<CustomActionDefinition> allActions = settingRepo.findAllCustomActionDefinition();
+		List<CustomActionDefinition> visibleActions = new ArrayList<CustomActionDefinition>();
+		
+		for(CustomActionDefinition action : allActions) {
+			if(action.isStudentVisible()) {
+				visibleActions.add(action);
+			}
+		}
+		
+		renderTemplate("Student/view.html",subId, sub, submitter, logs, primaryDocument, additionalDocuments, feedbackDocuments, allSubmissions, grantor, allowMultiple, attachmentTypes, visibleActions);		
 	}
 
 	/**
