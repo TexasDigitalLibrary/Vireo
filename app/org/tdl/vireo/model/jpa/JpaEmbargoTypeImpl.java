@@ -28,9 +28,6 @@ import play.modules.spring.Spring;
 @UniqueConstraint(columnNames = {"name", "guarantor"}))
 public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> implements EmbargoType {
 	
-//	@OneToMany(targetEntity=JpaSubmissionImpl.class, mappedBy="embargoTypes")
-//	public List<Submission> submission;
-	
 	@Column(nullable = false)
 	public int displayOrder;
 	
@@ -45,7 +42,8 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 	@Column(nullable = false)
 	public boolean active;
 
-	@Column(nullable = false)
+	// this requires a column definition in order to update the table column on old DB's (default value) 
+	@Column(nullable = false, columnDefinition="int4 default '0'")
 	public EmbargoGuarantor guarantor;
 	
 	/**
