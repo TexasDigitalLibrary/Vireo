@@ -87,30 +87,32 @@ jQuery(document).ready(function(){
 	    });
     #{/ifEnabled}
 
-    jQuery("#additional-embargos-btn").on("click", function(e) {
-    	e.preventDefault();
-    	jQuery(this).fadeOut(300, function() {
-    		jQuery(".embargo-type-additional").fadeIn(300);
-    	});
-    });
 
-    jQuery(".embargo-radio:checked").each(function() {
-		var embargoSet = $(this).attr("data-embargoSet");
-		$("#embargo-"+embargoSet).show();    			
-	});
+ /*The feature to hide additional embargos by default has been removed*/
+ //    jQuery("#additional-embargos-btn").on("click", function(e) {
+ //    	e.preventDefault();
+ //    	jQuery(this).fadeOut(300, function() {
+ //    		jQuery(".embargo-type-additional").fadeIn(300);
+ //    	});
+ //    });
 
-    var allEmbargoSectionsUsed = jQuery(".embargo-type-additional .embargo-radio:checked").length == jQuery(".embargo-type-additional").length;
-    var allEmbargoSectionsReq =  jQuery(".embargo-type-additional").length == jQuery(".embargoReq").length;
+ //    jQuery(".embargo-radio:checked").each(function() {
+	// 	var embargoSet = $(this).attr("data-embargoSet");
+	// 	$("#embargo-"+embargoSet).show();    			
+	// });
+
+ //    var allEmbargoSectionsUsed = jQuery(".embargo-type-additional .embargo-radio:checked").length == jQuery(".embargo-type-additional").length;
+ //    var allEmbargoSectionsReq =  jQuery(".embargo-type-additional").length == jQuery(".embargoReq").length;
     
-    if(allEmbargoSectionsUsed || allEmbargoSectionsReq)
-    	jQuery("#additional-embargos-btn").hide();
+ //    if(allEmbargoSectionsUsed || allEmbargoSectionsReq)
+ //    	jQuery("#additional-embargos-btn").hide();
 
-    if(jQuery("#embargo-DEFAULT").length == 0) {
-    	jQuery(".embargo-type-additional").first().show();
-    	if(jQuery(".embargo-type-additional").length = 1) jQuery("#additional-embargos-btn").hide();     	
-    }
+ //    if(jQuery("#embargo-DEFAULT").length == 0) {
+ //    	jQuery(".embargo-type-additional").first().show();
+ //    	if(jQuery(".embargo-type-additional").length = 1) jQuery("#additional-embargos-btn").hide();     	
+ //    }
 
-    jQuery(".embargoReq").show();
+ //    jQuery(".embargoReq").show();
 
 });
 </script>
@@ -430,8 +432,7 @@ jQuery(document).ready(function(){
 				<div id="embargo-${activeEmbargosMap.get(EMBARGO_TYPE).toString()}" 
 					class="embargo-gaurentor-set  
 					#{if activeEmbargosMap.get(EMBARGO_TYPE).toString() != 'DEFAULT'} embargo-type-additional #{/if} 
-					#{ifRequired EMBARGO_TYPE}#{if activeEmbargosMap.get(EMBARGO_TYPE).toString() != "DEFAULT"}embargoReq#{/if}#{/ifRequired}"  
-					#{if activeEmbargosMap.get(EMBARGO_TYPE).toString() != 'DEFAULT'} style="display:none;" #{/if}>
+					#{ifRequired EMBARGO_TYPE}#{if activeEmbargosMap.get(EMBARGO_TYPE).toString() != "DEFAULT"}embargoReq#{/if}#{/ifRequired}">
 					
 					<h4 class="#{errorClass embargoErrorClass /}">#{ifRequired EMBARGO_TYPE}* #{/ifRequired}#{fieldLabel EMBARGO_TYPE /}</h4>
 					<p>#{fieldHelp EMBARGO_TYPE /}</p>
@@ -457,7 +458,8 @@ jQuery(document).ready(function(){
 	</fieldset>
 	#{/if}
 
-	<a href="#" id="additional-embargos-btn">Additional Embargos</a>
+	<!--The feature to hide additional embargos by default has been removed-->
+	<!--<a href="#" id="additional-embargos-btn">Additional Embargos</a>-->
 	
 	<div class="span10 center">
 		<input type="submit" name="submit_next" value="Save and Continue >>" class="btn btn-primary">
