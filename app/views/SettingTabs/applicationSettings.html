@@ -226,7 +226,7 @@ jQuery(document).ready(function(){
 <ul id="action-remove" class="action-sortable settings-sortable-remove" #{if actions.size() == 0}style="display: none;"#{/if}>
 <p class="info"><em class="icon-trash"></em> Remove items by dragging them to the trash can</p>
 </ul>
-<ol id="action-list" class="action-sortable settings-sortable-list">
+<ol id="action-list" class="action-sortable">
     #{list items:actions, as:'action'}
        <li id="action_${action.getId()}"><a class="action-editable" href="javascript:void(0);"><em class="icon-pencil"></em> ${action.getLabel()} <em class="icon-#{if action.isStudentVisible()}globe#{/if}#{else}user#{/else}"></em></a></li>    
     #{/list}
