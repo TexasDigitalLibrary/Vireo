@@ -266,13 +266,17 @@ different blocks this gets around this problem because each is independent.
     <div class="box-body">
         <div class="sub-heading">SAVED FILTERS</div>
         <ul class="unstyled">
+        	<span class="sub-heading">Without Columns</span>
+            #{list items:subRepo.findSearchFiltersByCreatorOrPublic(securityContext.getPerson()), as:'filter'}
+				#{if !filter.hasColumns()}
+					<li><a href="@{FilterTab.ModifyFilters(nav)}?action=load&filter=${filter.getId()}">${filter.getName()}</a></li>
+				#{/if}
+            #{/list}
+            <span class="sub-heading">With Columns</span>
             #{list items:subRepo.findSearchFiltersByCreatorOrPublic(securityContext.getPerson()), as:'filter'}
 				#{if filter.hasColumns()}
-					<li><a href="@{FilterTab.ModifyFilters(nav)}?action=load&filter=${filter.getId()}">[*]${filter.getName()}</a></li>
-				#{/if}
-				#{else}
 					<li><a href="@{FilterTab.ModifyFilters(nav)}?action=load&filter=${filter.getId()}">${filter.getName()}</a></li>
-				#{/else}
+				#{/if}
             #{/list}
         </ul>
     </div>
@@ -340,7 +344,7 @@ different blocks this gets around this problem because each is independent.
             
             <!-- List Active states -->
             #{if expandActive != null}
-            <li>#{if !expandActive}<span class="more">+ Active...</span>#{/if}<span #{if !expandActive}class="hidden"#{/if}>+ Active</span>
+            <li>#{if !expandActive}<span class="sub-heading more">+ Active...</span>#{/if}<span #{if !expandActive}class="sub-heading hidden"#{/if}>+ Active</span>
             <ul class="unstyled#{if !expandActive} hidden#{/if}">
             #{list items:stateManager.getAllStates(), as:'state'}
             #{if state.isActive() && !activeFilter.getStates().contains(state.getBeanName())}
@@ -353,7 +357,7 @@ different blocks this gets around this problem because each is independent.
             
             <!-- List Archived states -->
             #{if expandArchived != null}
-           <li>#{if !expandArchived}<span class="more">+ Archived...</span>#{/if}<span #{if !expandArchived}class="hidden"#{/if}>+ Archived</span>
+           <li>#{if !expandArchived}<span class="sub-heading more">+ Archived...</span>#{/if}<span #{if !expandArchived}class="sub-heading hidden"#{/if}>+ Archived</span>
             <ul class="unstyled#{if !expandArchived} hidden#{/if}">
             #{list items:stateManager.getAllStates(), as:'state'}
             #{if state.isArchived() && !activeFilter.getStates().contains(state.getBeanName())}
@@ -375,7 +379,7 @@ different blocks this gets around this problem because each is independent.
             #{list items:personRepo.findPersonsByRole(org.tdl.vireo.model.RoleType.REVIEWER), as:'person'}
             #{if !activeFilter.getAssignees().contains(person) }{% shown++ %}
             #{if shown == 6}
-            <li class="more">more...</li>
+            <li class="sub-heading more">more...</li>
             #{/if}
             <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=assignee&value=${person.getId()}">${person.getFormattedName(org.tdl.vireo.model.NameFormat.FIRST_LAST)}</a></li>
             #{/if}
@@ -389,7 +393,7 @@ different blocks this gets around this problem because each is independent.
             #{list items:subRepo.findAllGraduationSemesters(), as:'semester'}
             #{if !activeFilter.getGraduationSemesters().contains(semester) }{% shown++ %}
             #{if shown == 6}
-            <li class="more">more...</li>
+            <li class="sub-heading more">more...</li>
             #{/if}
             %{ String monthName = new java.text.DateFormatSymbols().getMonths()[semester.month]; }%
             <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=semester&year=${semester.year}&month=${semester.month}">${semester.year} ${monthName}</a></li>
@@ -405,7 +409,7 @@ different blocks this gets around this problem because each is independent.
             #{list items:subRepo.findAllDepartments(), as:'dept'}
             #{if !activeFilter.getDepartments().contains(dept) }{% shown++ %}
             #{if shown == 6}
-            <li class="more">more...</li>
+            <li class="sub-heading more">more...</li>
             #{/if}
             <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=department&value=${dept.urlEncode()}">${dept}</a></li>
             #{/if}
@@ -421,7 +425,7 @@ different blocks this gets around this problem because each is independent.
             #{list items:subRepo.findAllPrograms(), as:'program'}
             #{if !activeFilter.getPrograms().contains(program) }{% shown++ %}
             #{if shown == 6}
-            <li class="more">more...</li>
+            <li class="sub-heading more">more...</li>
             #{/if}
             <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=program&value=${program.urlEncode()}">${program}</a></li>
             #{/if}
@@ -437,7 +441,7 @@ different blocks this gets around this problem because each is independent.
             #{list items:subRepo.findAllColleges(), as:'college'}
             #{if !activeFilter.getColleges().contains(college) }{% shown++ %}
             #{if shown == 6}
-            <li class="more">more...</li>
+            <li class="sub-heading more">more...</li>
             #{/if}
             <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=college&value=${college.urlEncode()}">${college}</a></li>
             #{/if}
@@ -453,7 +457,7 @@ different blocks this gets around this problem because each is independent.
             #{list items:subRepo.findAllMajors(), as:'major'}
             #{if !activeFilter.getMajors().contains(major) }{% shown++ %}
             #{if shown == 6}
-            <li class="more">more...</li>
+            <li class="sub-heading more">more...</li>
             #{/if}
             <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=major&value=${major.urlEncode()}">${major}</a></li>
             #{/if}
@@ -468,7 +472,7 @@ different blocks this gets around this problem because each is independent.
             #{list items:settingRepo.findAllEmbargoTypes(), as:'embargo'}
             #{if !activeFilter.getEmbargoTypes().contains(embargo) }{% shown++ %}
             #{if shown == 6}
-            <li class="more">more...</li>
+            <li class="sub-heading more">more...</li>
             #{/if}
             <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=embargo&value=${embargo.getId()}">${embargo.getName()}</a></li>
             #{/if}
@@ -482,7 +486,7 @@ different blocks this gets around this problem because each is independent.
             #{list items:settingRepo.findAllDegrees(), as:'degree'}
             #{if !activeFilter.getDegrees().contains(degree.getName()) }{% shown++ %}
             #{if shown == 6}
-            <li class="more">more...</li>
+            <li class="sub-heading more">more...</li>
             #{/if}
             <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=degree&value=${degree.getName().urlEncode()}">${degree.getName()}</a></li>
             #{/if}
@@ -496,7 +500,7 @@ different blocks this gets around this problem because each is independent.
             #{list items:settingRepo.findAllDocumentTypes(), as:'docType'}
             #{if !activeFilter.getDocumentTypes().contains(docType.getName()) }{% shown++ %}
              #{if shown == 6}
-            <li class="more">more...</li>
+            <li class="sub-heading more">more...</li>
             #{/if}
             <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=docType&value=${docType.getName().urlEncode()}">${docType.getName()}</a></li>
             #{/if}
@@ -523,7 +527,7 @@ different blocks this gets around this problem because each is independent.
             #{if start == null && end == null }
             #{list items:subRepo.findAllSubmissionYears(), as:'year'}
             #{if year_index == 6}
-            <li class="more">more...</li>
+            <li class="sub-heading more">more...</li>
             #{/if}
             <li #{if year_index >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=rangeChoose&year=${year}">${year}</a></li>
             #{/list}
@@ -536,7 +540,7 @@ different blocks this gets around this problem because each is independent.
             int year = start.getYear() + 1900;
             }%
             #{if month_index == 6}
-            <li class="more">more...</li>
+            <li class="sub-heading more">more...</li>
             #{/if}
             <li #{if month_index >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=rangeChoose&year=${year}&month=${month}">${monthName}</a></li>
             #{/list}
@@ -581,7 +585,7 @@ different blocks this gets around this problem because each is independent.
             #{list items:actions, as:'action'}
             #{if !activeFilter.getEmbargoTypes().contains(action) }{% shown++ %}
             #{if shown == 6}
-            <li class="more">more...</li>
+            <li class="sub-heading more">more...</li>
             #{/if}
             <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=customAction&value=${action.getId()}">${action.getLabel()}</a></li>
             #{/if}

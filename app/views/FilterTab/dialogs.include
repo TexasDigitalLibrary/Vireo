@@ -89,7 +89,33 @@ jQuery(document).ready(function() {
     var batchExportExtraSelectLabel = "<label class=\"control-label\" for=\"packager-extra\" id=\"packager-extra-label\"><strong>Export Columns</strong>:</label>";
     var batchExportExtraSelectDiv = "<div class=\"controls\" id=\"batch-export-extra-controls\"><select class=\"input-xlarge\" name=\"packager-extra\" id=\"packager-extra\"><option value=\"Active\">Active Filter</option><option value=\"Saved\">Saved Filter</option></select></div>";
     var batchExportSavedFiltersLabel = "<label class=\"control-label\" for=\"packager-extra-saved-filters\" id=\"packager-extra-saved-filters-label\"><strong>Saved Filters</strong>:</label>";
-    var batchExportSavedFiltersDiv = "<div class=\"controls\" id=\"batch-export-extra-saved-filters-controls\"><select class=\"input-xlarge\" name=\"packager-extra-saved-filters\" id=\"packager-extra-saved-filters\">#{list items:allFilters, as:'exportingFilter'}<option value=\"${exportingFilter.getId()}\">#{if exportingFilter.hasColumns()}[*]#{/if}${exportingFilter.getName()}</option>#{/list}</select></div>";
+    var batchExportSavedFiltersDiv = 	"<div class=\"controls\" id=\"batch-export-extra-saved-filters-controls\">" +
+    									"<select class=\"input-xlarge\" name=\"packager-extra-saved-filters\" id=\"packager-extra-saved-filters\">" +
+    									"<optgroup label=\"Without Columns\">" +
+    									%{boolean foundWithoutColumns = false;}%
+    									#{list items:allFilters, as:'exportingFilter'}
+    										#{if !exportingFilter.hasColumns()}
+    										%{foundWithoutColumns = true;}%
+    										"<option value=\"${exportingFilter.getId()}\">${exportingFilter.getName()}</option>" +
+    										#{/if}
+    									#{/list}
+    									#{if !foundWithoutColumns}
+    									"<option disabled=\"disabled\">None...</option>" +
+    									#{/if}
+    									"</optgroup>" +
+    									"<optgroup label=\"With Columns\">" +
+    									%{boolean foundWithColumns = false;}%
+    									#{list items:allFilters, as:'exportingFilter'}
+    										#{if exportingFilter.hasColumns()}
+    										%{foundWithColumns = true;}%
+    										"<option value=\"${exportingFilter.getId()}\">${exportingFilter.getName()}</option>" +
+    										#{/if}
+    									#{/list}
+    									#{if !foundWithColumns}
+    									"<option disabled=\"disabled\">None...</option>" +
+    									#{/if}
+    									"</optgroup>" +
+    									"</select></div>";
     jQuery("#packager").on("change", function() {
     	var selectedOption = $("#packager option:selected").text();
     	if(selectedOption == "Excel Export"){
@@ -192,6 +218,7 @@ jQuery(document).ready(function() {
                 <tr>
                     <th>Remove</th>
                     <th>Filter Name</th>
+                    <th>Has Columns</th>
                     <th>Status</th>
                 </tr>
                 #{list items:subRepo.findSearchFiltersByCreatorOrPublic(securityContext.getPerson()), as:'filter'}
@@ -202,6 +229,7 @@ jQuery(document).ready(function() {
                         #{/if}
                     </td>
                     <td>${filter.getName()}</td>
+                    <td>${filter.hasColumns()}</td>
                     <td>
                         #{if filter.getCreator() == securityContext.getPerson() && filter.isPublic() }
                         Your public filter

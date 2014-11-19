@@ -728,14 +728,20 @@ public class FilterTab extends AbstractVireoController {
 		String packager_extra = params.get("packager-extra");
 		long saved_filter_id = -1;
 		if(packager_extra != null && packager_extra.equals("Saved")){
-			saved_filter_id = Long.parseLong(params.get("packager-extra-saved-filters"));
+			if(params.get("packager-extra-saved-filters") != null) {
+				saved_filter_id = Long.parseLong(params.get("packager-extra-saved-filters"));
+			} else {
+				// Store the error so it can be displayed.
+				flash.put("error", "Tried to batch export using a saved filter, but none was selected!");
+				list();
+			}
 		}
 			
 		// Step 1, get the correct filter (either active or saved)
 		ActiveSearchFilter filter = getActiveSearchFilter(SUBMISSION);
 		if(saved_filter_id >= 0) {
 			filter.copyFrom(subRepo.findSearchFilter(saved_filter_id));
-		} 
+		}
 		
 		// Step 2, locate the packager
 		Packager exportPackage = (Packager) Spring.getBean(packager);
@@ -789,19 +795,19 @@ public class FilterTab extends AbstractVireoController {
 		// and report it to the user on their next page view.
 		
 		// Clear out everything related to submission
-		response.setCookie(NAMES[SUBMISSION][ACTIVE_FILTER],"",COOKIE_DURATION);
-		response.setCookie(NAMES[SUBMISSION][DIRECTION],"",COOKIE_DURATION);
-		response.setCookie(NAMES[SUBMISSION][ORDERBY],"",COOKIE_DURATION);
-		response.setCookie(NAMES[SUBMISSION][FACETS],"",COOKIE_DURATION);
-		response.setCookie(NAMES[SUBMISSION][RESULTSPERPAGE],"",COOKIE_DURATION);		
+		response.removeCookie(NAMES[SUBMISSION][ACTIVE_FILTER]);
+		response.removeCookie(NAMES[SUBMISSION][DIRECTION]);
+		response.removeCookie(NAMES[SUBMISSION][ORDERBY]);
+		response.removeCookie(NAMES[SUBMISSION][FACETS]);
+		response.removeCookie(NAMES[SUBMISSION][RESULTSPERPAGE]);
 		session.remove(NAMES[SUBMISSION][OFFSET]);
 
 		// Clear out everything related to action logs
-		response.setCookie(NAMES[ACTION_LOG][ACTIVE_FILTER],"",COOKIE_DURATION);
-		response.setCookie(NAMES[ACTION_LOG][DIRECTION],"",COOKIE_DURATION);
-		response.setCookie(NAMES[ACTION_LOG][ORDERBY],"",COOKIE_DURATION);
-		response.setCookie(NAMES[ACTION_LOG][FACETS],"",COOKIE_DURATION);
-		response.setCookie(NAMES[ACTION_LOG][RESULTSPERPAGE],"",COOKIE_DURATION);		
+		response.removeCookie(NAMES[ACTION_LOG][ACTIVE_FILTER]);
+		response.removeCookie(NAMES[ACTION_LOG][DIRECTION]);
+		response.removeCookie(NAMES[ACTION_LOG][ORDERBY]);
+		response.removeCookie(NAMES[ACTION_LOG][FACETS]);
+		response.removeCookie(NAMES[ACTION_LOG][RESULTSPERPAGE]);
 		session.remove(NAMES[ACTION_LOG][OFFSET]);
 		
 		// Store the error so it can be displayed.
