@@ -1,0 +1,5 @@
+<map id="org.tdl.vireo.model.jpa.JpaPersonImpl" name="org.tdl.vireo.model.jpa.JpaPersonImpl">
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person.html" title="org.tdl.vireo.model.Person" alt="" coords="254,71,429,97"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="org.tdl.vireo.model.Abstract\lModel" alt="" coords="6,63,189,105"/>
+<area shape="rect" id="node7" href="$enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html" title="org.tdl.vireo.model.RoleType" alt="" coords="247,239,436,265"/>
+</map>

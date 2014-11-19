@@ -1,0 +1,5 @@
+<map id="org.tdl.vireo.model.jpa.JpaDepositLocationImpl" name="org.tdl.vireo.model.jpa.JpaDepositLocationImpl">
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html" title="org.tdl.vireo.model.Deposit\lLocation" alt="" coords="235,187,413,229"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_ordered_model.html" title="org.tdl.vireo.model.Abstract\lOrderedModel" alt="" coords="233,97,415,138"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="org.tdl.vireo.model.Abstract\lModel" alt="" coords="233,6,415,47"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="controllers.JobTab.updateJSON" name="controllers.JobTab.updateJSON">
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1job_1_1_job_metadata.html#ae41d999b59f46ae5ca5c4dd1d4a3e032" title="org.tdl.vireo.job.JobMetadata.get\lMessage" alt="" coords="279,5,491,46"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1job_1_1_job_metadata.html#a1806999b4e97ba71397f75338d0f28f4" title="org.tdl.vireo.job.JobMetadata.getName" alt="" coords="262,71,509,97"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1job_1_1_job_metadata.html#af1c29a2ea78d22115e9999d6804c20f6" title="org.tdl.vireo.job.JobMetadata.get\lProgress" alt="" coords="279,122,491,163"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1job_1_1_job_metadata.html#a5379261b3fdf58606d27ee3ccfe1c08d" title="org.tdl.vireo.job.JobMetadata.get\lStatus" alt="" coords="279,187,491,229"/>
+</map>

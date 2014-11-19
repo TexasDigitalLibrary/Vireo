@@ -1,0 +1,5 @@
+<map id="org.tdl.vireo.search.impl.LuceneSearcherImpl.LuceneSearchResults&lt; T extends AbstractModel &gt;" name="org.tdl.vireo.search.impl.LuceneSearcherImpl.LuceneSearchResults&lt; T extends AbstractModel &gt;">
+<area shape="rect" id="node3" href="$enumorg_1_1tdl_1_1vireo_1_1search_1_1_search_direction.html" title="org.tdl.vireo.search.Search\lDirection" alt="" coords="5,70,184,111"/>
+<area shape="rect" id="node4" href="$enumorg_1_1tdl_1_1vireo_1_1search_1_1_search_order.html" title="org.tdl.vireo.search.Search\lOrder" alt="" coords="5,135,184,177"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1search_1_1_search_filter.html" title="org.tdl.vireo.search.Search\lFilter" alt="" coords="5,201,184,242"/>
+</map>

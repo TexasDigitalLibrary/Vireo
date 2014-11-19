@@ -1,0 +1,5 @@
+<map id="org.tdl.vireo.services.EmailByRecipientType.getRecipients" name="org.tdl.vireo.services.EmailByRecipientType.getRecipients">
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html#af1da2c7ef98749d97529654a2ec4c9e6" title="org.tdl.vireo.model.Submission.get\lAssignee" alt="" coords="262,5,485,46"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html#a3987c9b9dbe14ee575e2b6a506669519" title="org.tdl.vireo.model.Submission.get\lCommitteeContactEmail" alt="" coords="262,70,485,111"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html#af9b587de51d9888b4fe4660a4c8c5ef0" title="org.tdl.vireo.model.Submission.get\lSubmitter" alt="" coords="262,135,485,177"/>
+</map>

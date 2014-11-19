@@ -1,0 +1,5 @@
+<map id="org.tdl.vireo.model.Person.getCurrentEmailAddress" name="org.tdl.vireo.model.Person.getCurrentEmailAddress">
+<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1security_1_1impl_1_1_shibboleth_authentication_method_impl.html#a81143e5bafe3220c04698c5a9e85c78b" title="org.tdl.vireo.security.impl.\lShibbolethAuthenticationMethodImpl.authenticate" alt="" coords="251,5,560,46"/>
+<area shape="rect" id="node3" href="$classorg_1_1tdl_1_1vireo_1_1email_1_1impl_1_1_vireo_email_impl.html#a15ca197e81fb8bbbb546e5a1a5a5915f" title="org.tdl.vireo.email.impl.\lVireoEmailImpl.createAddress" alt="" coords="306,70,505,111"/>
+<area shape="rect" id="node4" href="$classorg_1_1tdl_1_1vireo_1_1email_1_1impl_1_1_vireo_email_impl.html#aceacd2f2439d88db67248e9ef50a0ee0" title="org.tdl.vireo.email.impl.\lVireoEmailImpl.VireoEmailImpl" alt="" coords="304,135,507,177"/>
+</map>

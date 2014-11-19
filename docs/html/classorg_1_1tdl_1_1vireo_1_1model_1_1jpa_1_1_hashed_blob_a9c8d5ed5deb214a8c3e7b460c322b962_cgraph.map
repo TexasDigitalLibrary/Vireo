@@ -1,0 +1,6 @@
+<map id="org.tdl.vireo.model.jpa.HashedBlob.set" name="org.tdl.vireo.model.jpa.HashedBlob.set">
+<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_hashed_blob.html#ab514ef460493b2102a71f336fad9bde9" title="org.tdl.vireo.model.jpa.\lHashedBlob.getFile" alt="" coords="208,37,363,78"/>
+<area shape="rect" id="node5" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_hashed_blob.html#ad7ebcad09c34d4385c36f7abb3d97397" title="org.tdl.vireo.model.jpa.\lHashedBlob.type" alt="" coords="208,102,363,143"/>
+<area shape="rect" id="node3" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_hashed_blob.html#a9be28ad818c42d5d2cdd3388f9fe98e0" title="org.tdl.vireo.model.jpa.\lHashedBlob.getStore" alt="" coords="411,5,565,46"/>
+<area shape="rect" id="node4" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_hashed_blob.html#a4fd9b3ba8aa1d69f8599044fe29606db" title="org.tdl.vireo.model.jpa.\lHashedBlob.getUUID" alt="" coords="411,70,565,111"/>
+</map>

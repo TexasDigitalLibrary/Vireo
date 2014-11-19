@@ -1,0 +1,6 @@
+<map id="org.tdl.vireo.export.impl.Sword1DepositorImpl.getCollections" name="org.tdl.vireo.export.impl.Sword1DepositorImpl.getCollections">
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#adb0cb2c72c0dd1b084eb2d0bc626722b" title="org.tdl.vireo.model.Deposit\lLocation.getOnBehalfOf" alt="" coords="288,5,467,46"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#abba95e358b73b0dbc12d6d6a81f770be" title="org.tdl.vireo.model.Deposit\lLocation.getPassword" alt="" coords="288,70,467,111"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#a863308510dd7bc99e26ca21774d011e1" title="org.tdl.vireo.model.Deposit\lLocation.getRepository" alt="" coords="288,135,467,177"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#ab5ba7e746008d30cf4f686899072a42d" title="org.tdl.vireo.model.Deposit\lLocation.getUsername" alt="" coords="288,201,467,242"/>
+</map>

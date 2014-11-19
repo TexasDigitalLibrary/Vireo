@@ -1,0 +1,9 @@
+<map id="controllers.Application.index" name="controllers.Application.index">
+<area shape="rect" id="node2" href="$classcontrollers_1_1_authentication.html#adf6397cef8c55953e2f296e75952c599" title="controllers.Authentication.login\lMethod" alt="" coords="248,5,448,46"/>
+<area shape="rect" id="node5" href="$classcontrollers_1_1submit_1_1_personal_info.html#a6d5f730f0dbc8dae768eabf605c4e676" title="controllers.submit.Personal\lInfo.personalInfo" alt="" coords="258,70,438,111"/>
+<area shape="rect" id="node6" href="$classcontrollers_1_1_authentication.html#ab004894c24554ede162be6f607e1c004" title="controllers.Authentication.recover" alt="" coords="240,136,456,163"/>
+<area shape="rect" id="node7" href="$classcontrollers_1_1_authentication.html#ab24f7228fdf3f67ad806db32a274f935" title="controllers.Authentication.register" alt="" coords="240,187,456,213"/>
+<area shape="rect" id="node8" href="$classcontrollers_1_1_student.html#a5f492e420b7dd83bc8e76b669a0f5e45" title="controllers.Student.submission\lDelete" alt="" coords="247,238,449,279"/>
+<area shape="rect" id="node3" href="$classcontrollers_1_1_authentication.html#a7a095587b4bed7e0728d8258a37868a2" title="controllers.Authentication.loginList" alt="" coords="504,12,725,39"/>
+<area shape="rect" id="node4" href="$classcontrollers_1_1_authentication.html#a5181c04a9e0d7bf76a9025de1700b621" title="controllers.Authentication.security\lCheck" alt="" coords="773,5,992,46"/>
+</map>

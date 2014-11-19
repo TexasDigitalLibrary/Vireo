@@ -1,0 +1,5 @@
+<map id="org.tdl.vireo.model.CommitteeMemberRoleType" name="org.tdl.vireo.model.CommitteeMemberRoleType">
+<area shape="rect" id="node4" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_committee_member_role_type_impl.html" title="org.tdl.vireo.model.jpa.\lJpaCommitteeMemberRoleTypeImpl" alt="" coords="4,278,237,319"/>
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_ordered_model.html" title="org.tdl.vireo.model.Abstract\lOrderedModel" alt="" coords="30,97,212,138"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="org.tdl.vireo.model.Abstract\lModel" alt="" coords="30,6,212,47"/>
+</map>

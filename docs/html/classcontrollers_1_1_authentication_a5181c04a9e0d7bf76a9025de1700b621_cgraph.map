@@ -1,0 +1,12 @@
+<map id="controllers.Authentication.securityCheck" name="controllers.Authentication.securityCheck">
+<area shape="rect" id="node2" href="$classcontrollers_1_1_authentication.html#a41747450a9a3100e2d516a662fc40dc7" title="controllers.Authentication.check\lForceSSL" alt="" coords="799,5,1007,46"/>
+<area shape="rect" id="node4" href="$classcontrollers_1_1_authentication.html#a7a095587b4bed7e0728d8258a37868a2" title="controllers.Authentication.loginList" alt="" coords="272,101,493,128"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1security_1_1_security_context.html#a8c6e40abd179176f16572dd321676d5e" title="org.tdl.vireo.security.Security\lContext.getPerson" alt="" coords="1064,63,1256,105"/>
+<area shape="rect" id="node5" href="$classcontrollers_1_1_authentication.html#ac124e2f1bfb15ecab0ba3a0ad35a284f" title="controllers.Authentication.get\lVisibleAuthenticationMethods" alt="" coords="544,271,739,313"/>
+<area shape="rect" id="node7" href="$classcontrollers_1_1_authentication.html#adf6397cef8c55953e2f296e75952c599" title="controllers.Authentication.login\lMethod" alt="" coords="541,122,741,163"/>
+<area shape="rect" id="node6" href="$classcontrollers_1_1_authentication.html#aeea97a341ec30a1a3b976b8a51f2963a" title="controllers.Authentication.get\lEnabledAuthenticationMethods" alt="" coords="801,355,1004,397"/>
+<area shape="rect" id="node8" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html#adf9b6814dd10bc0848d4f17341c6e7b1" title="org.tdl.vireo.model.Abstract\lModel.getId" alt="" coords="1069,154,1251,195"/>
+<area shape="rect" id="node9" href="$classcontrollers_1_1_application.html#a14ac8441c797a55a17b0741849b89a48" title="controllers.Application.index" alt="" coords="810,239,995,265"/>
+<area shape="rect" id="node10" href="$interfaceorg_1_1tdl_1_1vireo_1_1security_1_1_authentication_method.html#a05660a57f2e72f59ab14a4e8eea55616" title="org.tdl.vireo.security.Authentication\lMethod.isEnabled" alt="" coords="789,290,1016,331"/>
+<area shape="rect" id="node11" href="$classcontrollers_1_1_authentication.html#a5dc7db8a593eb4e94be0809ec945ffc3" title="controllers.Authentication.login\lReturn" alt="" coords="803,122,1003,163"/>
+</map>

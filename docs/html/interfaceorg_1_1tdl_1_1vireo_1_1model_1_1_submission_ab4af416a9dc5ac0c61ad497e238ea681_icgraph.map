@@ -1,0 +1,11 @@
+<map id="org.tdl.vireo.model.Submission.getAttachments" name="org.tdl.vireo.model.Submission.getAttachments">
+<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_multiple_template_packager_impl.html#a9b87f8aed6b050b46c8520703d52401b" title="org.tdl.vireo.export.impl.\lMultipleTemplatePackagerImpl.generate\lPackage" alt="" coords="281,5,535,61"/>
+<area shape="rect" id="node3" href="$classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_template_packager_impl.html#ae4d4a645d171a8d89c2a5da1b971ad42" title="org.tdl.vireo.export.impl.\lTemplatePackagerImpl.generatePackage" alt="" coords="277,85,539,126"/>
+<area shape="rect" id="node4" href="$classcontrollers_1_1submit_1_1_license.html#aae2d96a07d02b410dabfcda1b2615836" title="controllers.submit.License.record\lAgreement" alt="" coords="301,150,515,191"/>
+<area shape="rect" id="node8" href="$classcontrollers_1_1submit_1_1_license.html#a4d1e6d178393c66aaddf7adf82044de8" title="controllers.submit.License.record\lDisagreement" alt="" coords="301,215,515,257"/>
+<area shape="rect" id="node9" href="$classcontrollers_1_1submit_1_1_file_upload.html#ae7d40084978c042d09d7f83acec3cd4f" title="controllers.submit.FileUpload.verify" alt="" coords="295,281,521,308"/>
+<area shape="rect" id="node5" href="$classcontrollers_1_1submit_1_1_license.html#a3556dea151226de6af9c5ce70f903c67" title="controllers.submit.License.license" alt="" coords="587,197,805,224"/>
+<area shape="rect" id="node6" href="$classcontrollers_1_1submit_1_1_license.html#a4da0bc2b73a39c263d4c2267c9afbe18" title="controllers.submit.License.verify" alt="" coords="853,197,1064,224"/>
+<area shape="rect" id="node7" href="$classcontrollers_1_1submit_1_1_confirm.html#a79cbc166f7bdc264268d6318544ce4fb" title="controllers.submit.Confirm.confirm" alt="" coords="1113,223,1335,249"/>
+<area shape="rect" id="node10" href="$classcontrollers_1_1submit_1_1_file_upload.html#ab03c80d000956edc13d2f7072495655a" title="controllers.submit.FileUpload.file\lUpload" alt="" coords="590,299,802,341"/>
+</map>

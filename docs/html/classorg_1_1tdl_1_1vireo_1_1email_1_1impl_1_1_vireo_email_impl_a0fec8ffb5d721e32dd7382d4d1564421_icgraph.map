@@ -1,0 +1,8 @@
+<map id="org.tdl.vireo.email.impl.VireoEmailImpl.createAddress" name="org.tdl.vireo.email.impl.VireoEmailImpl.createAddress">
+<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1email_1_1impl_1_1_vireo_email_impl.html#a7e4d4227a12e70020bb33bb36a28288b" title="org.tdl.vireo.email.impl.\lVireoEmailImpl.addBcc" alt="" coords="274,5,433,46"/>
+<area shape="rect" id="node3" href="$classorg_1_1tdl_1_1vireo_1_1email_1_1impl_1_1_vireo_email_impl.html#afb14c5575013796107ab0a7af3e40a46" title="org.tdl.vireo.email.impl.\lVireoEmailImpl.addCc" alt="" coords="275,70,432,111"/>
+<area shape="rect" id="node4" href="$classorg_1_1tdl_1_1vireo_1_1email_1_1impl_1_1_vireo_email_impl.html#a96697f9be58240ff69569f58d6f7d15c" title="org.tdl.vireo.email.impl.\lVireoEmailImpl.addTo" alt="" coords="275,135,432,177"/>
+<area shape="rect" id="node5" href="$classorg_1_1tdl_1_1vireo_1_1email_1_1impl_1_1_vireo_email_impl.html#a15ca197e81fb8bbbb546e5a1a5a5915f" title="org.tdl.vireo.email.impl.\lVireoEmailImpl.createAddress" alt="" coords="254,201,453,242"/>
+<area shape="rect" id="node6" href="$classorg_1_1tdl_1_1vireo_1_1email_1_1impl_1_1_vireo_email_impl.html#a290bdf037b57132e1e119c5c329965b0" title="org.tdl.vireo.email.impl.\lVireoEmailImpl.setFrom" alt="" coords="272,266,435,307"/>
+<area shape="rect" id="node7" href="$classorg_1_1tdl_1_1vireo_1_1email_1_1impl_1_1_vireo_email_impl.html#ae3d9e0f8ca8571d05874c916d2ee3027" title="org.tdl.vireo.email.impl.\lVireoEmailImpl.setReplyTo" alt="" coords="263,331,444,373"/>
+</map>

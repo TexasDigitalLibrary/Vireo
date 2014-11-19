@@ -1,0 +1,5 @@
+<map id="org.tdl.vireo.batch.impl.CommentServiceImpl.CommentJob.doJob" name="org.tdl.vireo.batch.impl.CommentServiceImpl.CommentJob.doJob">
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1security_1_1_security_context.html#a8c6e40abd179176f16572dd321676d5e" title="org.tdl.vireo.security.Security\lContext.getPerson" alt="" coords="333,5,525,46"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1job_1_1_job_metadata.html#af1c29a2ea78d22115e9999d6804c20f6" title="org.tdl.vireo.job.JobMetadata.get\lProgress" alt="" coords="323,70,535,111"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#a846e74b50204cf7950fcc65cacebeb95" title="org.tdl.vireo.email.Vireo\lEmail.setReplyTo" alt="" coords="350,135,509,177"/>
+</map>

@@ -1,0 +1,8 @@
+<map id="org.tdl.vireo.model.jpa.JpaAttachmentImpl" name="org.tdl.vireo.model.jpa.JpaAttachmentImpl">
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_attachment.html" title="org.tdl.vireo.model.Attachment" alt="" coords="273,71,473,97"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="org.tdl.vireo.model.Abstract\lModel" alt="" coords="6,114,189,155"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person.html" title="org.tdl.vireo.model.Person" alt="" coords="286,121,461,148"/>
+<area shape="rect" id="node6" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html" title="org.tdl.vireo.model.Submission" alt="" coords="273,172,474,199"/>
+<area shape="rect" id="node8" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_hashed_blob.html" title="org.tdl.vireo.model.jpa.\lHashedBlob" alt="" coords="296,274,451,315"/>
+<area shape="rect" id="node12" href="$enumorg_1_1tdl_1_1vireo_1_1model_1_1_attachment_type.html" title="org.tdl.vireo.model.AttachmentType" alt="" coords="259,340,488,367"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="org.tdl.vireo.model.jpa.JpaDepartmentImpl" name="org.tdl.vireo.model.jpa.JpaDepartmentImpl">
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_department.html" title="org.tdl.vireo.model.Department" alt="" coords="257,285,457,312"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_email_group.html" title="org.tdl.vireo.model.Email\lGroup" alt="" coords="274,187,440,229"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_ordered_model.html" title="org.tdl.vireo.model.Abstract\lOrderedModel" alt="" coords="266,97,448,138"/>
+<area shape="rect" id="node6" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="org.tdl.vireo.model.Abstract\lModel" alt="" coords="266,6,448,47"/>
+</map>

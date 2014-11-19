@@ -1,0 +1,8 @@
+<map id="controllers.submit.AbstractSubmitStep.getSubmission" name="controllers.submit.AbstractSubmitStep.getSubmission">
+<area shape="rect" id="node2" href="$classcontrollers_1_1submit_1_1_confirm.html#a79cbc166f7bdc264268d6318544ce4fb" title="controllers.submit.Confirm.confirm" alt="" coords="761,84,983,111"/>
+<area shape="rect" id="node3" href="$classcontrollers_1_1submit_1_1_document_info.html#a9d7a14e8e3ceec8696f2c2625ef10da6" title="controllers.submit.Document\lInfo.documentInfo" alt="" coords="249,44,439,85"/>
+<area shape="rect" id="node4" href="$classcontrollers_1_1submit_1_1_file_upload.html#ab03c80d000956edc13d2f7072495655a" title="controllers.submit.FileUpload.file\lUpload" alt="" coords="238,109,450,150"/>
+<area shape="rect" id="node5" href="$classcontrollers_1_1submit_1_1_license.html#a3556dea151226de6af9c5ce70f903c67" title="controllers.submit.License.license" alt="" coords="235,175,453,202"/>
+<area shape="rect" id="node7" href="$classcontrollers_1_1submit_1_1_personal_info.html#a6d5f730f0dbc8dae768eabf605c4e676" title="controllers.submit.Personal\lInfo.personalInfo" alt="" coords="254,226,434,268"/>
+<area shape="rect" id="node6" href="$classcontrollers_1_1submit_1_1_license.html#a4da0bc2b73a39c263d4c2267c9afbe18" title="controllers.submit.License.verify" alt="" coords="501,175,712,202"/>
+</map>

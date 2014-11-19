@@ -1,0 +1,7 @@
+<map id="controllers.settings.ConfigurableSettingsTab.editEmbargoTypeJSON" name="controllers.settings.ConfigurableSettingsTab.editEmbargoTypeJSON">
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_embargo_type.html#a9e486cfa005e9e9f8c952d55e2a7152a" title="org.tdl.vireo.model.Embargo\lType.getDescription" alt="" coords="289,5,474,46"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_embargo_type.html#a7a8d82d92e486654d3556e7044fa39db" title="org.tdl.vireo.model.Embargo\lType.getDuration" alt="" coords="289,70,474,111"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_embargo_type.html#a2edb3982f6d84e48b21c1ca60dc6be7e" title="org.tdl.vireo.model.Embargo\lType.getGuarantor" alt="" coords="289,135,474,177"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html#adf9b6814dd10bc0848d4f17341c6e7b1" title="org.tdl.vireo.model.Abstract\lModel.getId" alt="" coords="290,201,473,242"/>
+<area shape="rect" id="node6" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_embargo_type.html#a9423fd9c5b423e73ab5f223a5858c2ea" title="org.tdl.vireo.model.Embargo\lType.getName" alt="" coords="289,266,474,307"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="org.tdl.vireo.search.impl.LuceneIndexerImpl" name="org.tdl.vireo.search.impl.LuceneIndexerImpl">
+<area shape="rect" id="node8" href="$classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_abstract_job_impl.html" title="org.tdl.vireo.search.impl.\lLuceneAbstractJobImpl" alt="" coords="637,86,803,127"/>
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1search_1_1_indexer.html" title="org.tdl.vireo.search.Indexer" alt="" coords="17,5,197,32"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission_repository.html" title="org.tdl.vireo.model.Submission\lRepository" alt="" coords="6,158,207,199"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="org.tdl.vireo.security.impl.SecurityContextImpl.getRole" name="org.tdl.vireo.security.impl.SecurityContextImpl.getRole">
+<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1security_1_1impl_1_1_security_context_impl.html#ab1791fb19017536ca7138a1b00b67be6" title="org.tdl.vireo.security.impl.\lSecurityContextImpl.isAdministrator" alt="" coords="245,5,477,46"/>
+<area shape="rect" id="node3" href="$classorg_1_1tdl_1_1vireo_1_1security_1_1impl_1_1_security_context_impl.html#a542eda9fa6f1c04d5cca92957e64dd6b" title="org.tdl.vireo.security.impl.\lSecurityContextImpl.isManager" alt="" coords="259,70,464,111"/>
+<area shape="rect" id="node4" href="$classorg_1_1tdl_1_1vireo_1_1security_1_1impl_1_1_security_context_impl.html#a7bcf13498ed76cd0f11d89abe24bbdfa" title="org.tdl.vireo.security.impl.\lSecurityContextImpl.isReviewer" alt="" coords="256,135,467,177"/>
+<area shape="rect" id="node5" href="$classorg_1_1tdl_1_1vireo_1_1security_1_1impl_1_1_security_context_impl.html#a9f822b6bf1b5a21340f7bcb9dc8c9764" title="org.tdl.vireo.security.impl.\lSecurityContextImpl.isStudent" alt="" coords="261,201,461,242"/>
+</map>

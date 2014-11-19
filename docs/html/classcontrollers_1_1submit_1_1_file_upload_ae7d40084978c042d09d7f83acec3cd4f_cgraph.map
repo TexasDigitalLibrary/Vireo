@@ -1,0 +1,6 @@
+<map id="controllers.submit.FileUpload.verify" name="controllers.submit.FileUpload.verify">
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html#ab4af416a9dc5ac0c61ad497e238ea681" title="org.tdl.vireo.model.Submission.get\lAttachments" alt="" coords="281,5,503,46"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html#a66b21dbdb952c528481d70ed66ecb5c9" title="org.tdl.vireo.model.Submission.get\lAttachmentsByType" alt="" coords="281,70,503,111"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html#a2e2c4bf32b09c6c9e97c2623fdc4ee19" title="org.tdl.vireo.model.Submission.get\lPrimaryDocument" alt="" coords="281,135,503,177"/>
+<area shape="rect" id="node5" href="$classcontrollers_1_1submit_1_1_abstract_submit_step.html#abd3785630db14a874bf5dcfb666fe0a7" title="controllers.submit.Abstract\lSubmitStep.isFieldRequired" alt="" coords="300,201,484,242"/>
+</map>

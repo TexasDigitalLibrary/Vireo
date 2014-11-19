@@ -1,0 +1,11 @@
+<map id="org.tdl.vireo.batch.impl.CommentServiceImpl" name="org.tdl.vireo.batch.impl.CommentServiceImpl">
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1batch_1_1_comment_service.html" title="org.tdl.vireo.batch.Comment\lService" alt="" coords="13,5,200,46"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1job_1_1_job_manager.html" title="org.tdl.vireo.job.JobManager" alt="" coords="13,71,200,97"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1search_1_1_searcher.html" title="org.tdl.vireo.search.Searcher" alt="" coords="12,121,201,148"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_settings_repository.html" title="org.tdl.vireo.model.Settings\lRepository" alt="" coords="16,173,197,214"/>
+<area shape="rect" id="node6" href="$interfaceorg_1_1tdl_1_1vireo_1_1error_1_1_error_log.html" title="org.tdl.vireo.error.ErrorLog" alt="" coords="20,239,193,265"/>
+<area shape="rect" id="node7" href="$interfaceorg_1_1tdl_1_1vireo_1_1security_1_1_security_context.html" title="org.tdl.vireo.security.Security\lContext" alt="" coords="11,290,203,331"/>
+<area shape="rect" id="node8" href="$interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_email_service.html" title="org.tdl.vireo.email.Email\lService" alt="" coords="25,355,188,397"/>
+<area shape="rect" id="node9" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission_repository.html" title="org.tdl.vireo.model.Submission\lRepository" alt="" coords="6,421,207,462"/>
+<area shape="rect" id="node10" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person_repository.html" title="org.tdl.vireo.model.Person\lRepository" alt="" coords="19,486,194,527"/>
+</map>

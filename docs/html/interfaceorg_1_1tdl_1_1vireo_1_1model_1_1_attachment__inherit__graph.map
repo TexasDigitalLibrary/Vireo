@@ -1,0 +1,5 @@
+<map id="org.tdl.vireo.model.Attachment" name="org.tdl.vireo.model.Attachment">
+<area shape="rect" id="node3" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_action_log_attachment.html" title="org.tdl.vireo.model.jpa.\lActionLogAttachment" alt="" coords="485,5,640,46"/>
+<area shape="rect" id="node4" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_attachment_impl.html" title="org.tdl.vireo.model.jpa.\lJpaAttachmentImpl" alt="" coords="485,70,640,111"/>
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="org.tdl.vireo.model.Abstract\lModel" alt="" coords="6,38,189,79"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="org.tdl.vireo.model.AbstractWorkflowRule" name="org.tdl.vireo.model.AbstractWorkflowRule">
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_email_workflow_rule.html" title="org.tdl.vireo.model.Email\lWorkflowRule" alt="" coords="13,278,179,319"/>
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_ordered_model.html" title="org.tdl.vireo.model.Abstract\lOrderedModel" alt="" coords="5,97,187,138"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="org.tdl.vireo.model.Abstract\lModel" alt="" coords="5,6,187,47"/>
+<area shape="rect" id="node5" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl.html" title="org.tdl.vireo.model.jpa.\lJpaEmailWorkflowRuleImpl" alt="" coords="5,369,187,410"/>
+</map>

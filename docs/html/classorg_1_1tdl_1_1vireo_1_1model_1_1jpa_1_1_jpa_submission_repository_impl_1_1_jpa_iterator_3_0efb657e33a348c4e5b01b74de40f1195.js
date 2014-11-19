@@ -1,0 +1,12 @@
+var classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_submission_repository_impl_1_1_jpa_iterator_3_0efb657e33a348c4e5b01b74de40f1195 =
+[
+    [ "JpaIterator", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_submission_repository_impl_1_1_jpa_iterator_3_0efb657e33a348c4e5b01b74de40f1195.html#a93bedaafaa4f77e674497dc44c6b93d7", null ],
+    [ "hasNext", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_submission_repository_impl_1_1_jpa_iterator_3_0efb657e33a348c4e5b01b74de40f1195.html#a0868a65d35e82de4ead2479f32a21158", null ],
+    [ "loadNextBatch", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_submission_repository_impl_1_1_jpa_iterator_3_0efb657e33a348c4e5b01b74de40f1195.html#a988a4e220b4f858d5eed5b60a46ab4e9", null ],
+    [ "loadNextBatch", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_submission_repository_impl_1_1_jpa_iterator_3_0efb657e33a348c4e5b01b74de40f1195.html#a3bb3a6278c76848abba7cad53c8892c2", null ],
+    [ "next", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_submission_repository_impl_1_1_jpa_iterator_3_0efb657e33a348c4e5b01b74de40f1195.html#a8cbf27780a40aa9b577a532bfc9b73a5", null ],
+    [ "remove", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_submission_repository_impl_1_1_jpa_iterator_3_0efb657e33a348c4e5b01b74de40f1195.html#aaa90e14ab0a93a8837e47771794c654a", null ],
+    [ "currentPointer", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_submission_repository_impl_1_1_jpa_iterator_3_0efb657e33a348c4e5b01b74de40f1195.html#ad13e23d49c6500320aec8f04c8020d70", null ],
+    [ "offset", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_submission_repository_impl_1_1_jpa_iterator_3_0efb657e33a348c4e5b01b74de40f1195.html#a821adca777c5ad69c2a595feb608245f", null ],
+    [ "retrieved", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_submission_repository_impl_1_1_jpa_iterator_3_0efb657e33a348c4e5b01b74de40f1195.html#ab4649207a370cdff3c6d7cae4ed8d1a5", null ]
+];

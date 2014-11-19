@@ -1,0 +1,4 @@
+<map id="controllers.submit.AbstractSubmitStep.getSubmission" name="controllers.submit.AbstractSubmitStep.getSubmission">
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html#adaf1abee3596ca1a245b1f982216cdb1" title="org.tdl.vireo.model.Submission.get\lState" alt="" coords="235,5,458,46"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html#af9b587de51d9888b4fe4660a4c8c5ef0" title="org.tdl.vireo.model.Submission.get\lSubmitter" alt="" coords="235,70,458,111"/>
+</map>

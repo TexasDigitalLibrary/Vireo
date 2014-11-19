@@ -1,0 +1,25 @@
+var classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl =
+[
+    [ "JpaEmbargoTypeImpl", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#ae18c52b4c324275c716f4f31f22cf366", null ],
+    [ "delete", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#a483c9beb41b8c723986a4faa070544fa", null ],
+    [ "getDescription", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#a1b52974d66655d79af60fdfa35998466", null ],
+    [ "getDisplayOrder", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#a23d74647e76714f80ea155bb6420698b", null ],
+    [ "getDuration", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#a33036228e624a900238556ce02fcc7f6", null ],
+    [ "getGuarantor", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#a9c73dfd6619e6370651709ccc965a831", null ],
+    [ "getName", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#a5d04a9de83e344c80dc0d3311027c680", null ],
+    [ "getSubmissions", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#a154a9023630a996b6254daf51dbd2022", null ],
+    [ "isActive", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#aa5384ec13b943847930b37a38c1953b5", null ],
+    [ "save", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#a2b27153a68cf38708e146d8ddbc7d81c", null ],
+    [ "setActive", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#aeb774c1d8cf64c2121facf287beab701", null ],
+    [ "setDescription", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#ab6305384b9e9117d343435cefa230795", null ],
+    [ "setDisplayOrder", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#a97604cd3503e273eee14f268a5c634d6", null ],
+    [ "setDuration", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#afa4695605600793a13fed43eed10e70e", null ],
+    [ "setGuarantor", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#aacb7a66c9a3f97cd75c0ea085556c8ec", null ],
+    [ "setName", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#aa5d8ac6e2245f51cedcc35258f672345", null ],
+    [ "active", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#a87381a8825cf82a864c32ad846b44795", null ],
+    [ "description", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#affdeb28db7975787b74af943ed0eee0b", null ],
+    [ "displayOrder", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#ae30213de9a217bc76614cca7232a4312", null ],
+    [ "duration", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#a4521e4f677a22a8f707c1c31cc18e47d", null ],
+    [ "guarantor", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#a7a4fd423790f8c8278e05af8fa162061", null ],
+    [ "name", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#ae5356bb5b4efa09c3af24c8acbd12d49", null ]
+];

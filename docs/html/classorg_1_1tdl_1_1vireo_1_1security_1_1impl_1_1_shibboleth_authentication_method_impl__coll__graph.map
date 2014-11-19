@@ -1,0 +1,8 @@
+<map id="org.tdl.vireo.security.impl.ShibbolethAuthenticationMethodImpl" name="org.tdl.vireo.security.impl.ShibbolethAuthenticationMethodImpl">
+<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1security_1_1impl_1_1_abstract_authentication_method_impl_1_1_abstracc9c94446c8831ec7f0b78eba6ed6f5b2.html" title="org.tdl.vireo.security.impl.\lAbstractAuthenticationMethodImpl.\lAbstractImplicitAuthenticationMethod" alt="" coords="633,64,871,120"/>
+<area shape="rect" id="node3" href="$classorg_1_1tdl_1_1vireo_1_1security_1_1impl_1_1_abstract_authentication_method_impl.html" title="org.tdl.vireo.security.impl.\lAbstractAuthenticationMethodImpl" alt="" coords="357,73,579,114"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1security_1_1_authentication_method.html" title="org.tdl.vireo.security.Authentication\lMethod" alt="" coords="5,10,232,51"/>
+<area shape="rect" id="node8" href="$interfaceorg_1_1tdl_1_1vireo_1_1security_1_1_authentication_method_1_1_implicit.html" title="org.tdl.vireo.security.Authentication\lMethod.Implicit" alt="" coords="355,6,581,47"/>
+<area shape="rect" id="node6" href="$interfaceorg_1_1tdl_1_1vireo_1_1security_1_1_security_context.html" title="org.tdl.vireo.security.Security\lContext" alt="" coords="23,129,215,170"/>
+<area shape="rect" id="node7" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person_repository.html" title="org.tdl.vireo.model.Person\lRepository" alt="" coords="31,194,206,235"/>
+</map>

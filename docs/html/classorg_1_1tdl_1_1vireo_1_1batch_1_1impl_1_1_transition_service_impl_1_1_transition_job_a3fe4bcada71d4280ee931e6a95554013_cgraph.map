@@ -1,0 +1,4 @@
+<map id="org.tdl.vireo.batch.impl.TransitionServiceImpl.TransitionJob.TransitionJob" name="org.tdl.vireo.batch.impl.TransitionServiceImpl.TransitionJob.TransitionJob">
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1security_1_1_security_context.html#a8c6e40abd179176f16572dd321676d5e" title="org.tdl.vireo.security.Security\lContext.getPerson" alt="" coords="264,5,456,46"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1state_1_1_state.html#aef42db198ecc5278c044c02f8104f90d" title="org.tdl.vireo.state.State.is\lDepositable" alt="" coords="274,70,446,111"/>
+</map>

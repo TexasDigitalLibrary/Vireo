@@ -1,0 +1,4 @@
+<map id="org.tdl.vireo.job.impl.JobManagerImpl.register" name="org.tdl.vireo.job.impl.JobManagerImpl.register">
+<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1job_1_1impl_1_1_job_manager_impl.html#abc0de9550d522b270422d92ad56d6f07" title="org.tdl.vireo.job.impl.Job\lManagerImpl._prune" alt="" coords="249,5,413,46"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1job_1_1_job_metadata.html#a0cc4336d7fca0b4c32810e2bf68df940" title="org.tdl.vireo.job.JobMetadata.getId" alt="" coords="219,71,442,97"/>
+</map>

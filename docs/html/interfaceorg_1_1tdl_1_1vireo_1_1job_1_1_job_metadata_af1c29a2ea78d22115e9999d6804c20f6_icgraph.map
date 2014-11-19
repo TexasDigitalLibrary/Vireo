@@ -1,0 +1,9 @@
+<map id="org.tdl.vireo.job.JobMetadata.getProgress" name="org.tdl.vireo.job.JobMetadata.getProgress">
+<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1batch_1_1impl_1_1_delete_service_impl_1_1_delete_job.html#ac1fb58f174fe1df842d9eed5fe4b080f" title="org.tdl.vireo.batch.impl.\lDeleteServiceImpl.DeleteJob.doJob" alt="" coords="286,5,517,46"/>
+<area shape="rect" id="node3" href="$classorg_1_1tdl_1_1vireo_1_1batch_1_1impl_1_1_assign_service_impl_1_1_assign_job.html#a6660e2bfe706f94e472eeb69c76a141c" title="org.tdl.vireo.batch.impl.\lAssignServiceImpl.AssignJob.doJob" alt="" coords="284,70,519,111"/>
+<area shape="rect" id="node4" href="$classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_export_excel_service_impl_1_1_export_job.html#a5b4b82bc0cf635a81ac011254ebac3da" title="org.tdl.vireo.export.impl.\lExportExcelServiceImpl.ExportJob.doJob" alt="" coords="269,135,533,177"/>
+<area shape="rect" id="node5" href="$classorg_1_1tdl_1_1vireo_1_1batch_1_1impl_1_1_transition_service_impl_1_1_transition_job.html#a145d6359800d7c2fe06f002679339b55" title="org.tdl.vireo.batch.impl.\lTransitionServiceImpl.Transition\lJob.doJob" alt="" coords="297,200,506,256"/>
+<area shape="rect" id="node6" href="$classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_export_service_impl_1_1_export_job.html#ad9197bbb74adbd1b652e0f30215be23f" title="org.tdl.vireo.export.impl.\lExportServiceImpl.ExportJob.doJob" alt="" coords="286,279,517,321"/>
+<area shape="rect" id="node7" href="$classorg_1_1tdl_1_1vireo_1_1batch_1_1impl_1_1_comment_service_impl_1_1_comment_job.html#a2e1cc1d3d1a5b3407db6fedae31e588d" title="org.tdl.vireo.batch.impl.\lCommentServiceImpl.CommentJob.doJob" alt="" coords="267,345,536,386"/>
+<area shape="rect" id="node8" href="$classcontrollers_1_1_job_tab.html#a6d7b4bcbe75c737546b92f3d42808e48" title="controllers.JobTab.updateJSON" alt="" coords="297,411,505,437"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="org.tdl.vireo.model.SettingsRepository.findAllMajors" name="org.tdl.vireo.model.SettingsRepository.findAllMajors">
+<area shape="rect" id="node2" href="$classcontrollers_1_1submit_1_1_personal_info.html#abf4bfc9d444dba5fd4a59e252fb8e157" title="controllers.submit.Personal\lInfo.isValidMajor" alt="" coords="235,34,415,75"/>
+<area shape="rect" id="node3" href="$classcontrollers_1_1submit_1_1_personal_info.html#a6d5f730f0dbc8dae768eabf605c4e676" title="controllers.submit.Personal\lInfo.personalInfo" alt="" coords="715,5,895,46"/>
+<area shape="rect" id="node4" href="$classcontrollers_1_1submit_1_1_personal_info.html#ad53c8714a33f61576bb69d25f45cf8cf" title="controllers.submit.Personal\lInfo.verify" alt="" coords="465,63,645,105"/>
+<area shape="rect" id="node5" href="$classcontrollers_1_1submit_1_1_confirm.html#a79cbc166f7bdc264268d6318544ce4fb" title="controllers.submit.Confirm.confirm" alt="" coords="694,71,917,97"/>
+</map>

@@ -1,0 +1,19 @@
+var classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_searcher_impl_1_1_lucene_search_results_3_1a2166c63a573bf4bbe5001c9a8f02a4 =
+[
+    [ "LuceneSearchResults", "classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_searcher_impl_1_1_lucene_search_results_3_1a2166c63a573bf4bbe5001c9a8f02a4.html#afcaeb28bde8a2c56b10b34be30c6f574", null ],
+    [ "getDirection", "classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_searcher_impl_1_1_lucene_search_results_3_1a2166c63a573bf4bbe5001c9a8f02a4.html#afcfc39cefeef20649a3623595f918cca", null ],
+    [ "getFilter", "classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_searcher_impl_1_1_lucene_search_results_3_1a2166c63a573bf4bbe5001c9a8f02a4.html#a19fa90d6f40562da60c8038f16b36df0", null ],
+    [ "getLimit", "classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_searcher_impl_1_1_lucene_search_results_3_1a2166c63a573bf4bbe5001c9a8f02a4.html#ac57150a8862cec6249c49e53c1bcc619", null ],
+    [ "getOffset", "classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_searcher_impl_1_1_lucene_search_results_3_1a2166c63a573bf4bbe5001c9a8f02a4.html#a76cd4bfe3bf180bafe0ae8fbef9e4190", null ],
+    [ "getOrderBy", "classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_searcher_impl_1_1_lucene_search_results_3_1a2166c63a573bf4bbe5001c9a8f02a4.html#a6320df0fac19ddb5e0b5c1596ca6f999", null ],
+    [ "getPagination", "classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_searcher_impl_1_1_lucene_search_results_3_1a2166c63a573bf4bbe5001c9a8f02a4.html#a806295ceec951f3a0b3d098c99555e5c", null ],
+    [ "getResults", "classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_searcher_impl_1_1_lucene_search_results_3_1a2166c63a573bf4bbe5001c9a8f02a4.html#ada6ecb09e94b805b9f8c775cd5ab7759", null ],
+    [ "getTotal", "classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_searcher_impl_1_1_lucene_search_results_3_1a2166c63a573bf4bbe5001c9a8f02a4.html#a0f3f6c1c14d35bdaf2d3147e4f12e2f5", null ],
+    [ "direction", "classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_searcher_impl_1_1_lucene_search_results_3_1a2166c63a573bf4bbe5001c9a8f02a4.html#a81a374fd53796f171c2218d1cba9d286", null ],
+    [ "filter", "classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_searcher_impl_1_1_lucene_search_results_3_1a2166c63a573bf4bbe5001c9a8f02a4.html#a1bb4ffd54b10b9db93f49183d17a61d8", null ],
+    [ "limit", "classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_searcher_impl_1_1_lucene_search_results_3_1a2166c63a573bf4bbe5001c9a8f02a4.html#aa50bf1ad8e3d840dfd24b27c00bf15f1", null ],
+    [ "offset", "classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_searcher_impl_1_1_lucene_search_results_3_1a2166c63a573bf4bbe5001c9a8f02a4.html#a2f8336f8a1754dd178a3439149ffaaa6", null ],
+    [ "orderBy", "classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_searcher_impl_1_1_lucene_search_results_3_1a2166c63a573bf4bbe5001c9a8f02a4.html#abe333cb9a2b6f2a397a71e586386ec14", null ],
+    [ "results", "classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_searcher_impl_1_1_lucene_search_results_3_1a2166c63a573bf4bbe5001c9a8f02a4.html#a3e217b8032710921669497ab92bb4d7c", null ],
+    [ "total", "classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_searcher_impl_1_1_lucene_search_results_3_1a2166c63a573bf4bbe5001c9a8f02a4.html#acc0643dbeb05a9d49f0f86c2cd749826", null ]
+];

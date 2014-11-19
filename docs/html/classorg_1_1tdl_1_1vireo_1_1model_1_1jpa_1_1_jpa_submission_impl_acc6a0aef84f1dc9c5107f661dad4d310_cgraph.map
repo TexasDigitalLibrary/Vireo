@@ -1,0 +1,5 @@
+<map id="org.tdl.vireo.model.jpa.JpaSubmissionImpl.setState" name="org.tdl.vireo.model.jpa.JpaSubmissionImpl.setState">
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1state_1_1_state.html#a47a9a6a682166037da8f4b361a864494" title="org.tdl.vireo.state.State.get\lBeanName" alt="" coords="243,5,423,46"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1state_1_1_state.html#adbbbfbef6ecd0095bd9e3cfe674c5b77" title="org.tdl.vireo.state.State.get\lDisplayName" alt="" coords="243,70,423,111"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1state_1_1_state.html#a8af92ae300438d6d0b28d4a1825f5608" title="org.tdl.vireo.state.State.is\lApproved" alt="" coords="247,135,419,177"/>
+</map>

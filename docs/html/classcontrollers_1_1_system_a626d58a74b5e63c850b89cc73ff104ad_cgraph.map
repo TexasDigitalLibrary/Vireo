@@ -1,0 +1,5 @@
+<map id="controllers.System.generalPanel" name="controllers.System.generalPanel">
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1search_1_1_indexer.html#a756e0edac080fb05969f0877fdbba4c7" title="org.tdl.vireo.search.Indexer.get\lCurrentJobProgress" alt="" coords="232,5,435,46"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1search_1_1_indexer.html#a6adf073d50032c17155786ee1497a9be" title="org.tdl.vireo.search.Indexer.get\lCurrentJobTotal" alt="" coords="232,70,435,111"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1search_1_1_indexer.html#a1854e20fe4dadc53054c36ab58e1e0b9" title="org.tdl.vireo.search.Indexer.is\lJobRunning" alt="" coords="236,135,431,177"/>
+</map>

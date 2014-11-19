@@ -1,0 +1,6 @@
+<map id="org.tdl.vireo.email.impl.SystemEmailTemplateServiceImpl.generateAllSystemEmailTemplates" name="org.tdl.vireo.email.impl.SystemEmailTemplateServiceImpl.generateAllSystemEmailTemplates">
+<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1email_1_1impl_1_1_system_email_template_service_impl.html#af5fedc4c8a1468472681a303c32c3982" title="org.tdl.vireo.email.impl.\lSystemEmailTemplateServiceImpl.generate\lSystemEmailTemplate" alt="" coords="331,4,608,60"/>
+<area shape="rect" id="node4" href="$classorg_1_1tdl_1_1vireo_1_1email_1_1impl_1_1_system_email_template_service_impl.html#aeab6370b5dde0e1bb7037c66269d8f50" title="org.tdl.vireo.email.impl.\lSystemEmailTemplateServiceImpl.get\lAllSystemEmailTemplateNames" alt="" coords="347,84,592,140"/>
+<area shape="rect" id="node3" href="$classorg_1_1tdl_1_1vireo_1_1email_1_1impl_1_1_system_email_template_service_impl.html#a9bb7cdd7aed33da43255768c86783b81" title="org.tdl.vireo.email.impl.\lSystemEmailTemplateServiceImpl.encode\lTemplateName" alt="" coords="656,4,925,60"/>
+<area shape="rect" id="node5" href="$classorg_1_1tdl_1_1vireo_1_1email_1_1impl_1_1_system_email_template_service_impl.html#a6ea528a8605d1c568a738dedab7eacae" title="org.tdl.vireo.email.impl.\lSystemEmailTemplateServiceImpl.decode\lTemplateName" alt="" coords="656,84,925,140"/>
+</map>

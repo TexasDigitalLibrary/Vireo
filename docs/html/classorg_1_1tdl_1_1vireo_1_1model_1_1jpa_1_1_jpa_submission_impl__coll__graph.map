@@ -1,0 +1,6 @@
+<map id="org.tdl.vireo.model.jpa.JpaSubmissionImpl" name="org.tdl.vireo.model.jpa.JpaSubmissionImpl">
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html" title="org.tdl.vireo.model.Submission" alt="" coords="254,71,455,97"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="org.tdl.vireo.model.Abstract\lModel" alt="" coords="6,87,189,129"/>
+<area shape="rect" id="node11" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person.html" title="org.tdl.vireo.model.Person" alt="" coords="267,121,442,148"/>
+<area shape="rect" id="node10" href="$enumorg_1_1tdl_1_1vireo_1_1model_1_1_degree_level.html" title="org.tdl.vireo.model.Degree\lLevel" alt="" coords="267,473,442,514"/>
+</map>

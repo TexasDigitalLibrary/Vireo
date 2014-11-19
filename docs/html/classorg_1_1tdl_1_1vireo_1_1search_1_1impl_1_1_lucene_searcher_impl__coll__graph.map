@@ -1,0 +1,8 @@
+<map id="org.tdl.vireo.search.impl.LuceneSearcherImpl" name="org.tdl.vireo.search.impl.LuceneSearcherImpl">
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1search_1_1_searcher.html" title="org.tdl.vireo.search.Searcher" alt="" coords="363,161,552,188"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1state_1_1_state_manager.html" title="org.tdl.vireo.state.State\lManager" alt="" coords="378,33,537,74"/>
+<area shape="rect" id="node4" href="$classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_indexer_impl.html" title="org.tdl.vireo.search.impl.\lLuceneIndexerImpl" alt="" coords="375,213,540,254"/>
+<area shape="rect" id="node11" href="$classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_abstract_job_impl.html" title="org.tdl.vireo.search.impl.\lLuceneAbstractJobImpl" alt="" coords="685,266,851,307"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1search_1_1_indexer.html" title="org.tdl.vireo.search.Indexer" alt="" coords="17,5,197,32"/>
+<area shape="rect" id="node8" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission_repository.html" title="org.tdl.vireo.model.Submission\lRepository" alt="" coords="6,109,207,150"/>
+</map>

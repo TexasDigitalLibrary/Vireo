@@ -1,0 +1,4 @@
+<map id="org.tdl.vireo.services.Utilities.processEmailDesigneeArray" name="org.tdl.vireo.services.Utilities.processEmailDesigneeArray">
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_settings_repository.html#a21f946de4ba3f044094a6c66fb838a35" title="org.tdl.vireo.model.Settings\lRepository.findAllAdministrative\lGroups" alt="" coords="296,5,504,61"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_email_group.html#a5c006b0c7141273d17424068b99157c0" title="org.tdl.vireo.model.Email\lGroup.getEmails" alt="" coords="317,85,483,126"/>
+</map>

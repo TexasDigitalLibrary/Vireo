@@ -1,0 +1,6 @@
+<map id="org.tdl.vireo.search.impl.LuceneRebuildJobImpl.writeIndex" name="org.tdl.vireo.search.impl.LuceneRebuildJobImpl.writeIndex">
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission_repository.html#a891cc521193f0b510a1f00c8650f0834" title="org.tdl.vireo.model.Submission\lRepository.findSubmissionsTotal" alt="" coords="297,5,511,46"/>
+<area shape="rect" id="node3" href="$classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_rebuild_job_impl.html#a3c5da227a56cbb888adf8828d5fe9129" title="org.tdl.vireo.search.impl.\lLuceneRebuildJobImpl.getLabel" alt="" coords="301,70,507,111"/>
+<area shape="rect" id="node4" href="$classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_abstract_job_impl.html#acac8f674cc39959e92b2d8411c396ef6" title="org.tdl.vireo.search.impl.\lLuceneAbstractJobImpl.indexSubmission" alt="" coords="273,135,535,177"/>
+<area shape="rect" id="node5" href="$classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_abstract_job_impl.html#ab9cac05e85b07b632c83354e7c759810" title="org.tdl.vireo.search.impl.\lLuceneAbstractJobImpl.getLabel" alt="" coords="585,135,797,177"/>
+</map>

@@ -1,0 +1,5 @@
+var classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_table_name_sequence_postgres_dialect =
+[
+    [ "TableNameSequenceGenerator", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_table_name_sequence_postgres_dialect_1_1_table_name_sequence_generator.html", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_table_name_sequence_postgres_dialect_1_1_table_name_sequence_generator" ],
+    [ "getNativeIdentifierGeneratorClass", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_table_name_sequence_postgres_dialect.html#ab459ff41d56c5d87bbced35920f95742", null ]
+];

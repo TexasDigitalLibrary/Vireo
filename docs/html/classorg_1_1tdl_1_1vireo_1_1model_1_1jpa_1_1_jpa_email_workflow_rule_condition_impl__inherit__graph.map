@@ -1,0 +1,5 @@
+<map id="org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleConditionImpl" name="org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleConditionImpl">
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_workflow_rule_condition.html" title="org.tdl.vireo.model.Abstract\lWorkflowRuleCondition" alt="" coords="477,70,659,111"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_ordered_model.html" title="org.tdl.vireo.model.Abstract\lOrderedModel" alt="" coords="238,70,421,111"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="org.tdl.vireo.model.Abstract\lModel" alt="" coords="6,70,189,111"/>
+</map>

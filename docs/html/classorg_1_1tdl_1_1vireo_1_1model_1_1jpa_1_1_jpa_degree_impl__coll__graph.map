@@ -1,0 +1,6 @@
+<map id="org.tdl.vireo.model.jpa.JpaDegreeImpl" name="org.tdl.vireo.model.jpa.JpaDegreeImpl">
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_degree.html" title="org.tdl.vireo.model.Degree" alt="" coords="489,71,663,97"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_ordered_model.html" title="org.tdl.vireo.model.Abstract\lOrderedModel" alt="" coords="241,63,423,105"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="org.tdl.vireo.model.Abstract\lModel" alt="" coords="6,63,189,105"/>
+<area shape="rect" id="node6" href="$enumorg_1_1tdl_1_1vireo_1_1model_1_1_degree_level.html" title="org.tdl.vireo.model.Degree\lLevel" alt="" coords="489,122,663,163"/>
+</map>

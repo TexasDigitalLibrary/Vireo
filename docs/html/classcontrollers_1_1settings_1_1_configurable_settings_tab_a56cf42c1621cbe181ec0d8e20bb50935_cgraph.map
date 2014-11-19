@@ -1,0 +1,7 @@
+<map id="controllers.settings.ConfigurableSettingsTab.getModelCompator" name="controllers.settings.ConfigurableSettingsTab.getModelCompator">
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_embargo_type.html#a7a8d82d92e486654d3556e7044fa39db" title="org.tdl.vireo.model.Embargo\lType.getDuration" alt="" coords="270,5,455,46"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_committee_member_role_type.html#a51fdd56091f9c617f51036313eb317ca" title="org.tdl.vireo.model.Committee\lMemberRoleType.getLevel" alt="" coords="264,70,461,111"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_degree.html#a3f9e3fff236b1d5b1a9985255729e993" title="org.tdl.vireo.model.Degree.get\lLevel" alt="" coords="264,135,461,177"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_document_type.html#abcc20ccbb478c7ddca1f895dedaa82be" title="org.tdl.vireo.model.Document\lType.getLevel" alt="" coords="266,201,459,242"/>
+<area shape="rect" id="node6" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_embargo_type.html#a9423fd9c5b423e73ab5f223a5858c2ea" title="org.tdl.vireo.model.Embargo\lType.getName" alt="" coords="270,266,455,307"/>
+</map>

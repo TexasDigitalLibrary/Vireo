@@ -1,0 +1,13 @@
+<map id="controllers.settings.ThemeSettingsTab" name="controllers.settings.ThemeSettingsTab">
+<area shape="rect" id="node2" href="$classcontrollers_1_1_settings_tab.html" title="controllers.SettingsTab" alt="" coords="558,269,714,296"/>
+<area shape="rect" id="node3" href="$classcontrollers_1_1_abstract_vireo_controller.html" title="controllers.AbstractVireo\lController" alt="" coords="341,262,507,303"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1state_1_1_state_manager.html" title="org.tdl.vireo.state.State\lManager" alt="" coords="27,57,186,98"/>
+<area shape="rect" id="node6" href="$interfaceorg_1_1tdl_1_1vireo_1_1search_1_1_searcher.html" title="org.tdl.vireo.search.Searcher" alt="" coords="12,123,201,149"/>
+<area shape="rect" id="node7" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_settings_repository.html" title="org.tdl.vireo.model.Settings\lRepository" alt="" coords="16,174,197,215"/>
+<area shape="rect" id="node8" href="$interfaceorg_1_1tdl_1_1vireo_1_1error_1_1_error_log.html" title="org.tdl.vireo.error.ErrorLog" alt="" coords="20,240,193,267"/>
+<area shape="rect" id="node9" href="$interfaceorg_1_1tdl_1_1vireo_1_1security_1_1_security_context.html" title="org.tdl.vireo.security.Security\lContext" alt="" coords="11,291,203,333"/>
+<area shape="rect" id="node10" href="$interfaceorg_1_1tdl_1_1vireo_1_1search_1_1_indexer.html" title="org.tdl.vireo.search.Indexer" alt="" coords="17,357,197,384"/>
+<area shape="rect" id="node11" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission_repository.html" title="org.tdl.vireo.model.Submission\lRepository" alt="" coords="6,409,207,450"/>
+<area shape="rect" id="node12" href="$interfaceorg_1_1tdl_1_1vireo_1_1proquest_1_1_proquest_vocabulary_repository.html" title="org.tdl.vireo.proquest.Proquest\lVocabularyRepository" alt="" coords="7,474,207,515"/>
+<area shape="rect" id="node13" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person_repository.html" title="org.tdl.vireo.model.Person\lRepository" alt="" coords="19,539,194,581"/>
+</map>

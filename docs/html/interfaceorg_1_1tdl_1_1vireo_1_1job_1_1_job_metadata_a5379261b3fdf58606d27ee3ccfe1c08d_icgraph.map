@@ -1,0 +1,4 @@
+<map id="org.tdl.vireo.job.JobMetadata.getStatus" name="org.tdl.vireo.job.JobMetadata.getStatus">
+<area shape="rect" id="node2" href="$classcontrollers_1_1_job_tab.html#a6d7b4bcbe75c737546b92f3d42808e48" title="controllers.JobTab.updateJSON" alt="" coords="267,5,475,32"/>
+<area shape="rect" id="node3" href="$classorg_1_1tdl_1_1vireo_1_1job_1_1impl_1_1_job_manager_impl.html#a42d19be98dcda29dc5b7a0d9bb685a19" title="org.tdl.vireo.job.impl.Job\lManagerImpl.waitForJobs" alt="" coords="285,57,457,98"/>
+</map>

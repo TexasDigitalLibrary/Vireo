@@ -1,0 +1,5 @@
+var searchData=
+[
+  ['_5binstance_20initializer_5d',['[instance initializer]',['../classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_searcher_impl.html#aff8720e2b7ca8faa3116c1d7dc4d570e',1,'org::tdl::vireo::search::impl::LuceneSearcherImpl']]],
+  ['_5bstatic_20initializer_5d',['[static initializer]',['../classcontrollers_1_1settings_1_1_submission_settings_tab.html#a3b39d9a9f2407c61ac29a020dff27f82',1,'controllers.settings.SubmissionSettingsTab.[static initializer]'],['../classcontrollers_1_1settings_1_1_submission_settings_tab.html#a3b39d9a9f2407c61ac29a020dff27f82',1,'controllers.settings.SubmissionSettingsTab.[static initializer]'],['../classorg_1_1tdl_1_1vireo_1_1proquest_1_1impl_1_1_proquest_utility_service_impl.html#a54f280df48ba89a8bcd2520fcf9aae93',1,'org.tdl.vireo.proquest.impl.ProquestUtilityServiceImpl.[static initializer]'],['../classorg_1_1tdl_1_1vireo_1_1proquest_1_1impl_1_1_proquest_utility_service_impl.html#a54f280df48ba89a8bcd2520fcf9aae93',1,'org.tdl.vireo.proquest.impl.ProquestUtilityServiceImpl.[static initializer]']]]
+];

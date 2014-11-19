@@ -1,0 +1,7 @@
+<map id="org.tdl.vireo.model.jpa.JpaActionLogImpl" name="org.tdl.vireo.model.jpa.JpaActionLogImpl">
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_action_log.html" title="org.tdl.vireo.model.ActionLog" alt="" coords="246,71,437,97"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="org.tdl.vireo.model.Abstract\lModel" alt="" coords="6,141,189,182"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_attachment.html" title="org.tdl.vireo.model.Attachment" alt="" coords="241,121,441,148"/>
+<area shape="rect" id="node6" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person.html" title="org.tdl.vireo.model.Person" alt="" coords="254,172,429,199"/>
+<area shape="rect" id="node7" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html" title="org.tdl.vireo.model.Submission" alt="" coords="241,223,442,249"/>
+</map>

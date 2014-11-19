@@ -1,0 +1,7 @@
+<map id="org.tdl.vireo.model.jpa.HashedBlob.getUUID" name="org.tdl.vireo.model.jpa.HashedBlob.getUUID">
+<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_hashed_blob.html#ab514ef460493b2102a71f336fad9bde9" title="org.tdl.vireo.model.jpa.\lHashedBlob.getFile" alt="" coords="208,93,363,134"/>
+<area shape="rect" id="node3" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_hashed_blob.html#af1073b534a3fe7b4ed3119b91a7f5f10" title="org.tdl.vireo.model.jpa.\lHashedBlob.exists" alt="" coords="411,5,565,46"/>
+<area shape="rect" id="node4" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_hashed_blob.html#a7f28fc4acc288683c14bbb7c8bd49e2a" title="org.tdl.vireo.model.jpa.\lHashedBlob.get" alt="" coords="613,34,768,75"/>
+<area shape="rect" id="node5" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_hashed_blob.html#a2487ad646094def746819e0b4b5dfc9d" title="org.tdl.vireo.model.jpa.\lHashedBlob.length" alt="" coords="411,122,565,163"/>
+<area shape="rect" id="node6" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_hashed_blob.html#a9c8d5ed5deb214a8c3e7b460c322b962" title="org.tdl.vireo.model.jpa.\lHashedBlob.set" alt="" coords="411,187,565,229"/>
+</map>

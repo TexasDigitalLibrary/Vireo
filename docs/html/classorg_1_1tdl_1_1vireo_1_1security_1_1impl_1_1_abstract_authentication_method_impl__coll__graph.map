@@ -1,0 +1,5 @@
+<map id="org.tdl.vireo.security.impl.AbstractAuthenticationMethodImpl" name="org.tdl.vireo.security.impl.AbstractAuthenticationMethodImpl">
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1security_1_1_authentication_method.html" title="org.tdl.vireo.security.Authentication\lMethod" alt="" coords="5,5,232,46"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1security_1_1_security_context.html" title="org.tdl.vireo.security.Security\lContext" alt="" coords="23,122,215,163"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person_repository.html" title="org.tdl.vireo.model.Person\lRepository" alt="" coords="31,187,206,229"/>
+</map>

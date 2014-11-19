@@ -1,0 +1,6 @@
+<map id="controllers.Student.viewAttachment" name="controllers.Student.viewAttachment">
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_attachment.html#acc14f9485ccdf3db9f6ad2fa1c209df1" title="org.tdl.vireo.model.Attachment.getFile" alt="" coords="224,5,467,32"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_attachment.html#acdffab7374c1fff854ea3b89b5791ac4" title="org.tdl.vireo.model.Attachment.getName" alt="" coords="217,56,474,83"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_attachment.html#ad396aeecbe4d8e9dbc8b827d6914f2f2" title="org.tdl.vireo.model.Attachment.get\lSubmission" alt="" coords="234,107,457,149"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html#af9b587de51d9888b4fe4660a4c8c5ef0" title="org.tdl.vireo.model.Submission.get\lSubmitter" alt="" coords="234,173,457,214"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="org.tdl.vireo.security.impl.AbstractAuthenticationMethodImpl.AbstractImplicitAuthenticationMethod" name="org.tdl.vireo.security.impl.AbstractAuthenticationMethodImpl.AbstractImplicitAuthenticationMethod">
+<area shape="rect" id="node6" href="$classorg_1_1tdl_1_1vireo_1_1security_1_1impl_1_1_shibboleth_authentication_method_impl.html" title="org.tdl.vireo.security.impl.\lShibbolethAuthenticationMethodImpl" alt="" coords="843,38,1077,79"/>
+<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1security_1_1impl_1_1_abstract_authentication_method_impl.html" title="org.tdl.vireo.security.impl.\lAbstractAuthenticationMethodImpl" alt="" coords="282,5,505,46"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1security_1_1_authentication_method.html" title="org.tdl.vireo.security.Authentication\lMethod" alt="" coords="5,67,232,109"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1security_1_1_authentication_method_1_1_implicit.html" title="org.tdl.vireo.security.Authentication\lMethod.Implicit" alt="" coords="280,70,507,111"/>
+</map>

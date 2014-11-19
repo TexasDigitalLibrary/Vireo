@@ -1,0 +1,6 @@
+<map id="org.tdl.vireo.model.jpa.JpaAdministrativeGroupImpl" name="org.tdl.vireo.model.jpa.JpaAdministrativeGroupImpl">
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_administrative_group.html" title="org.tdl.vireo.model.Administrative\lGroup" alt="" coords="707,70,923,111"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_email_group.html" title="org.tdl.vireo.model.Email\lGroup" alt="" coords="475,70,642,111"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_ordered_model.html" title="org.tdl.vireo.model.Abstract\lOrderedModel" alt="" coords="241,70,423,111"/>
+<area shape="rect" id="node6" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="org.tdl.vireo.model.Abstract\lModel" alt="" coords="6,70,189,111"/>
+</map>

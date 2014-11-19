@@ -1,0 +1,8 @@
+<map id="org.tdl.vireo.batch.impl.TransitionServiceImpl.TransitionJob" name="org.tdl.vireo.batch.impl.TransitionServiceImpl.TransitionJob">
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1job_1_1_job_metadata.html" title="org.tdl.vireo.job.JobMetadata" alt="" coords="475,56,666,83"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1state_1_1_state.html" title="org.tdl.vireo.state.State" alt="" coords="491,107,650,133"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html" title="org.tdl.vireo.model.Deposit\lLocation" alt="" coords="481,158,660,199"/>
+<area shape="rect" id="node6" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_ordered_model.html" title="org.tdl.vireo.model.Abstract\lOrderedModel" alt="" coords="241,158,423,199"/>
+<area shape="rect" id="node7" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="org.tdl.vireo.model.Abstract\lModel" alt="" coords="6,158,189,199"/>
+<area shape="rect" id="node8" href="$interfaceorg_1_1tdl_1_1vireo_1_1search_1_1_search_filter.html" title="org.tdl.vireo.search.Search\lFilter" alt="" coords="481,223,660,265"/>
+</map>

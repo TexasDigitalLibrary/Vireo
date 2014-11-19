@@ -1,0 +1,9 @@
+<map id="controllers.SettingsTab" name="controllers.SettingsTab">
+<area shape="rect" id="node4" href="$classcontrollers_1_1settings_1_1_application_settings_tab.html" title="controllers.settings.Application\lSettingsTab" alt="" coords="557,5,757,46"/>
+<area shape="rect" id="node5" href="$classcontrollers_1_1settings_1_1_configurable_settings_tab.html" title="controllers.settings.Configurable\lSettingsTab" alt="" coords="553,70,762,111"/>
+<area shape="rect" id="node6" href="$classcontrollers_1_1settings_1_1_email_settings_tab.html" title="controllers.settings.Email\lSettingsTab" alt="" coords="573,135,742,177"/>
+<area shape="rect" id="node7" href="$classcontrollers_1_1settings_1_1_submission_settings_tab.html" title="controllers.settings.Submission\lSettingsTab" alt="" coords="555,201,759,242"/>
+<area shape="rect" id="node8" href="$classcontrollers_1_1settings_1_1_theme_settings_tab.html" title="controllers.settings.Theme\lSettingsTab" alt="" coords="569,266,745,307"/>
+<area shape="rect" id="node9" href="$classcontrollers_1_1settings_1_1_user_preferences_tab.html" title="controllers.settings.User\lPreferencesTab" alt="" coords="575,331,739,373"/>
+<area shape="rect" id="node2" href="$classcontrollers_1_1_abstract_vireo_controller.html" title="controllers.AbstractVireo\lController" alt="" coords="133,169,299,210"/>
+</map>

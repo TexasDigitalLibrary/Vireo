@@ -1,0 +1,15 @@
+<map id="controllers.FirstUser" name="controllers.FirstUser">
+<area shape="rect" id="node2" href="$classcontrollers_1_1_abstract_vireo_controller.html" title="controllers.AbstractVireo\lController" alt="" coords="357,305,523,346"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1state_1_1_state_manager.html" title="org.tdl.vireo.state.State\lManager" alt="" coords="27,187,186,229"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1search_1_1_searcher.html" title="org.tdl.vireo.search.Searcher" alt="" coords="12,253,201,280"/>
+<area shape="rect" id="node6" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_settings_repository.html" title="org.tdl.vireo.model.Settings\lRepository" alt="" coords="16,305,197,346"/>
+<area shape="rect" id="node7" href="$interfaceorg_1_1tdl_1_1vireo_1_1error_1_1_error_log.html" title="org.tdl.vireo.error.ErrorLog" alt="" coords="20,371,193,397"/>
+<area shape="rect" id="node8" href="$interfaceorg_1_1tdl_1_1vireo_1_1security_1_1_security_context.html" title="org.tdl.vireo.security.Security\lContext" alt="" coords="11,422,203,463"/>
+<area shape="rect" id="node9" href="$interfaceorg_1_1tdl_1_1vireo_1_1search_1_1_indexer.html" title="org.tdl.vireo.search.Indexer" alt="" coords="17,559,197,585"/>
+<area shape="rect" id="node10" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission_repository.html" title="org.tdl.vireo.model.Submission\lRepository" alt="" coords="6,487,207,529"/>
+<area shape="rect" id="node11" href="$interfaceorg_1_1tdl_1_1vireo_1_1proquest_1_1_proquest_vocabulary_repository.html" title="org.tdl.vireo.proquest.Proquest\lVocabularyRepository" alt="" coords="7,5,207,46"/>
+<area shape="rect" id="node12" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person_repository.html" title="org.tdl.vireo.model.Person\lRepository" alt="" coords="19,70,194,111"/>
+<area shape="rect" id="node13" href="$interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_system_email_template_service.html" title="org.tdl.vireo.email.System\lEmailTemplateService" alt="" coords="353,623,527,665"/>
+<area shape="rect" id="node14" href="$classcontrollers_1_1_first_user_1_1_embargo_array.html" title="controllers.FirstUser.Embargo\lArray" alt="" coords="342,689,538,730"/>
+<area shape="rect" id="node15" href="$enumorg_1_1tdl_1_1vireo_1_1model_1_1_embargo_guarantor.html" title="org.tdl.vireo.model.Embargo\lGuarantor" alt="" coords="14,689,199,730"/>
+</map>

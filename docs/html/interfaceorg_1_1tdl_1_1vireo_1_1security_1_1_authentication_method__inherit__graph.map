@@ -1,0 +1,9 @@
+<map id="org.tdl.vireo.security.AuthenticationMethod" name="org.tdl.vireo.security.AuthenticationMethod">
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1security_1_1_authentication_method_1_1_explicit.html" title="org.tdl.vireo.security.Authentication\lMethod.Explicit" alt="" coords="280,11,507,53"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1security_1_1_authentication_method_1_1_implicit.html" title="org.tdl.vireo.security.Authentication\lMethod.Implicit" alt="" coords="280,142,507,183"/>
+<area shape="rect" id="node8" href="$classorg_1_1tdl_1_1vireo_1_1security_1_1impl_1_1_abstract_authentication_method_impl.html" title="org.tdl.vireo.security.impl.\lAbstractAuthenticationMethodImpl" alt="" coords="282,77,505,118"/>
+<area shape="rect" id="node3" href="$classorg_1_1tdl_1_1vireo_1_1security_1_1impl_1_1_abstract_authentication_method_impl_1_1_abstrac82000742499bf442875473c9675ba683.html" title="org.tdl.vireo.security.impl.\lAbstractAuthenticationMethodImpl.\lAbstractExplicitAuthenticationMethod" alt="" coords="555,29,795,85"/>
+<area shape="rect" id="node4" href="$classorg_1_1tdl_1_1vireo_1_1security_1_1impl_1_1_password_authentication_method_impl.html" title="org.tdl.vireo.security.impl.\lPasswordAuthenticationMethodImpl" alt="" coords="845,5,1075,46"/>
+<area shape="rect" id="node6" href="$classorg_1_1tdl_1_1vireo_1_1security_1_1impl_1_1_abstract_authentication_method_impl_1_1_abstracc9c94446c8831ec7f0b78eba6ed6f5b2.html" title="org.tdl.vireo.security.impl.\lAbstractAuthenticationMethodImpl.\lAbstractImplicitAuthenticationMethod" alt="" coords="555,109,794,165"/>
+<area shape="rect" id="node7" href="$classorg_1_1tdl_1_1vireo_1_1security_1_1impl_1_1_shibboleth_authentication_method_impl.html" title="org.tdl.vireo.security.impl.\lShibbolethAuthenticationMethodImpl" alt="" coords="843,149,1077,190"/>
+</map>

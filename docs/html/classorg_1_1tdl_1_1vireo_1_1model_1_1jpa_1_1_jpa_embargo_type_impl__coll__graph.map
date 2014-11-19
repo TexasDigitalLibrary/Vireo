@@ -1,0 +1,6 @@
+<map id="org.tdl.vireo.model.jpa.JpaEmbargoTypeImpl" name="org.tdl.vireo.model.jpa.JpaEmbargoTypeImpl">
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_embargo_type.html" title="org.tdl.vireo.model.EmbargoType" alt="" coords="475,71,690,97"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_ordered_model.html" title="org.tdl.vireo.model.Abstract\lOrderedModel" alt="" coords="241,63,423,105"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="org.tdl.vireo.model.Abstract\lModel" alt="" coords="6,63,189,105"/>
+<area shape="rect" id="node6" href="$enumorg_1_1tdl_1_1vireo_1_1model_1_1_embargo_guarantor.html" title="org.tdl.vireo.model.Embargo\lGuarantor" alt="" coords="490,122,675,163"/>
+</map>

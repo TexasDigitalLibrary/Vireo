@@ -1,0 +1,12 @@
+<map id="org.tdl.vireo.services.StringVariableReplacement.setParameters" name="org.tdl.vireo.services.StringVariableReplacement.setParameters">
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html#af1da2c7ef98749d97529654a2ec4c9e6" title="org.tdl.vireo.model.Submission.get\lAssignee" alt="" coords="289,5,511,46"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html#a0d9df3ba7db52c4189e5c39c49718c62" title="org.tdl.vireo.model.Submission.get\lCommitteeEmailHash" alt="" coords="289,70,511,111"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html#a8784d8e327758dfa3a19d615690ee15f" title="org.tdl.vireo.model.Submission.get\lDepositId" alt="" coords="289,135,511,177"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html#ac66bb12ff61032ad2534025300d2704e" title="org.tdl.vireo.model.Submission.get\lDocumentTitle" alt="" coords="289,201,511,242"/>
+<area shape="rect" id="node6" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html#ac228d412099273b8bcfb111b87ae67b3" title="org.tdl.vireo.model.Submission.get\lDocumentType" alt="" coords="289,266,511,307"/>
+<area shape="rect" id="node7" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html#a4212bff5f2a1a664da77ec94d158188e" title="org.tdl.vireo.model.Submission.get\lGraduationMonth" alt="" coords="289,331,511,373"/>
+<area shape="rect" id="node8" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html#a93e4fdcc0a6a373790c221f9695c90d5" title="org.tdl.vireo.model.Submission.get\lGraduationYear" alt="" coords="289,397,511,438"/>
+<area shape="rect" id="node9" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html#adaf1abee3596ca1a245b1f982216cdb1" title="org.tdl.vireo.model.Submission.get\lState" alt="" coords="289,462,511,503"/>
+<area shape="rect" id="node10" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html#ab11751ec21c581c370fd72ec6f553f7a" title="org.tdl.vireo.model.Submission.get\lStudentFirstName" alt="" coords="289,527,511,569"/>
+<area shape="rect" id="node11" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html#a016178c1e773edbe66ebe9cedca30236" title="org.tdl.vireo.model.Submission.get\lStudentLastName" alt="" coords="289,593,511,634"/>
+</map>

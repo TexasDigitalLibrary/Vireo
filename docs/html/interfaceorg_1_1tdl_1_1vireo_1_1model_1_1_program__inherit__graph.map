@@ -1,0 +1,6 @@
+<map id="org.tdl.vireo.model.Program" name="org.tdl.vireo.model.Program">
+<area shape="rect" id="node5" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_program_impl.html" title="org.tdl.vireo.model.jpa.\lJpaProgramImpl" alt="" coords="19,353,172,394"/>
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_email_group.html" title="org.tdl.vireo.model.Email\lGroup" alt="" coords="13,187,179,229"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_ordered_model.html" title="org.tdl.vireo.model.Abstract\lOrderedModel" alt="" coords="5,97,187,138"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="org.tdl.vireo.model.Abstract\lModel" alt="" coords="5,6,187,47"/>
+</map>

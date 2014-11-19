@@ -1,0 +1,7 @@
+<map id="org.tdl.vireo.model.jpa.JpaCustomActionValueImpl" name="org.tdl.vireo.model.jpa.JpaCustomActionValueImpl">
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_custom_action_value.html" title="org.tdl.vireo.model.Custom\lActionValue" alt="" coords="460,65,639,106"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="org.tdl.vireo.model.Abstract\lModel" alt="" coords="6,115,189,157"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html" title="org.tdl.vireo.model.Submission" alt="" coords="449,123,650,149"/>
+<area shape="rect" id="node7" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_ordered_model.html" title="org.tdl.vireo.model.Abstract\lOrderedModel" alt="" coords="241,177,423,218"/>
+<area shape="rect" id="node6" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_custom_action_definition.html" title="org.tdl.vireo.model.Custom\lActionDefinition" alt="" coords="689,185,868,226"/>
+</map>

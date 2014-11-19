@@ -1,0 +1,4 @@
+<map id="org.tdl.vireo.services.EmailRuleService.createEmail" name="org.tdl.vireo.services.EmailRuleService.createEmail">
+<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1services_1_1_email_rule_service.html#a0023378ac28f42838a21a4cb63d37f33" title="org.tdl.vireo.services.Email\lRuleService.sendEmail" alt="" coords="235,5,415,46"/>
+<area shape="rect" id="node3" href="$classorg_1_1tdl_1_1vireo_1_1services_1_1_email_rule_service.html#ae538cb06618a7b5d68d8a004dcfe938f" title="org.tdl.vireo.services.Email\lRuleService.runEmailRules" alt="" coords="465,5,647,46"/>
+</map>

@@ -47,7 +47,7 @@ a small {
 }
 
 .wrapper {
-  width:860px;
+  width:905px;
   margin:0 auto;
 }
 
@@ -104,7 +104,7 @@ header {
 
 header ul {
   list-style:none;
-  height:40px;
+  height:50px;
   
   padding:0;
   
@@ -119,14 +119,14 @@ header ul {
   border-radius:5px;
   border:1px solid #d2d2d2;
   box-shadow:inset #fff 0 1px 0, inset rgba(0,0,0,0.03) 0 -1px 0;
-  width:270px;
+  width:390px;
 }
 
 header li {
   width:89px;
   float:left;
   border-right:1px solid #d2d2d2;
-  height:40px;
+  height:50px;
 }
 
 header ul a {
@@ -136,7 +136,7 @@ header ul a {
   display:block;
   text-align:center;
   padding-top:6px;
-  height:40px;
+  height:50px;
 }
 
 strong {
@@ -150,9 +150,15 @@ header ul li + li {
 }
 
 header ul li + li + li {
-  border-right:none;
-  width:89px;
+  width:88px;
+  border-left:1px solid #fff;
 }
+
+header ul li + li + li + li {
+  border-right:none;
+  width:119px;
+}
+
 
 header ul a strong {
   font-size:14px;

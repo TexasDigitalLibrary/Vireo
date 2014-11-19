@@ -1,0 +1,8 @@
+<map id="controllers.submit.AbstractSubmitStep" name="controllers.submit.AbstractSubmitStep">
+<area shape="rect" id="node4" href="$classcontrollers_1_1submit_1_1_confirm.html" title="controllers.submit.Confirm" alt="" coords="591,5,766,32"/>
+<area shape="rect" id="node5" href="$classcontrollers_1_1submit_1_1_document_info.html" title="controllers.submit.DocumentInfo" alt="" coords="573,56,784,83"/>
+<area shape="rect" id="node6" href="$classcontrollers_1_1submit_1_1_file_upload.html" title="controllers.submit.FileUpload" alt="" coords="583,107,774,133"/>
+<area shape="rect" id="node7" href="$classcontrollers_1_1submit_1_1_license.html" title="controllers.submit.License" alt="" coords="591,157,766,184"/>
+<area shape="rect" id="node8" href="$classcontrollers_1_1submit_1_1_personal_info.html" title="controllers.submit.PersonalInfo" alt="" coords="577,208,780,235"/>
+<area shape="rect" id="node2" href="$classcontrollers_1_1_abstract_vireo_controller.html" title="controllers.AbstractVireo\lController" alt="" coords="133,99,299,141"/>
+</map>

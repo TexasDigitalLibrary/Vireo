@@ -1,0 +1,11 @@
+<map id="org.tdl.vireo.services.EmailRuleService.runEmailRules" name="org.tdl.vireo.services.EmailRuleService.runEmailRules">
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_college.html#af6f2b2605c1a2156941a6a82cb73d475" title="org.tdl.vireo.model.College.getName" alt="" coords="249,5,484,32"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_department.html#a163fab3ec05abb8c62f280576abc7a97" title="org.tdl.vireo.model.Department.getName" alt="" coords="237,56,496,83"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_program.html#a7b7c8095ddf6c88508fb1d936404f9da" title="org.tdl.vireo.model.Program.getName" alt="" coords="247,107,486,133"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html#adaf1abee3596ca1a245b1f982216cdb1" title="org.tdl.vireo.model.Submission.get\lState" alt="" coords="255,158,478,199"/>
+<area shape="rect" id="node6" href="$classorg_1_1tdl_1_1vireo_1_1services_1_1_email_rule_service.html#afa11b8a2067a13c41442a007d7b55864" title="org.tdl.vireo.services.Email\lRuleService.ruleIsValid" alt="" coords="277,223,457,265"/>
+<area shape="rect" id="node9" href="$classorg_1_1tdl_1_1vireo_1_1services_1_1_email_rule_service.html#a0023378ac28f42838a21a4cb63d37f33" title="org.tdl.vireo.services.Email\lRuleService.sendEmail" alt="" coords="277,289,457,330"/>
+<area shape="rect" id="node7" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_workflow_rule.html#a097d215566c7b7fe7e2925778abe28f1" title="org.tdl.vireo.model.Abstract\lWorkflowRule.getCondition" alt="" coords="547,158,730,199"/>
+<area shape="rect" id="node8" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_email_workflow_rule.html#aa7d3acc70aef2d652efe8cd4553885fb" title="org.tdl.vireo.model.Email\lWorkflowRule.getRecipients" alt="" coords="545,223,733,265"/>
+<area shape="rect" id="node10" href="$classorg_1_1tdl_1_1vireo_1_1services_1_1_email_rule_service.html#a279626f6febb9d74e91347cde3e8d12c" title="org.tdl.vireo.services.Email\lRuleService.createEmail" alt="" coords="549,289,729,330"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="org.tdl.vireo.batch.impl.TransitionServiceImpl.transition" name="org.tdl.vireo.batch.impl.TransitionServiceImpl.transition">
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#a812d047095dfde01900112b9562a64cf" title="org.tdl.vireo.model.Deposit\lLocation.getCollection" alt="" coords="267,5,445,46"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#afd128195d776489de5059cdcc47c5d2d" title="org.tdl.vireo.model.Deposit\lLocation.getDepositor" alt="" coords="267,70,445,111"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#ae0b2a31611d53155df550ecdecabfcfd" title="org.tdl.vireo.model.Deposit\lLocation.getPackager" alt="" coords="267,135,445,177"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#a863308510dd7bc99e26ca21774d011e1" title="org.tdl.vireo.model.Deposit\lLocation.getRepository" alt="" coords="267,201,445,242"/>
+<area shape="rect" id="node6" href="$interfaceorg_1_1tdl_1_1vireo_1_1security_1_1_security_context.html#ada196b7acfd53ee9097467ab3d8f4446" title="org.tdl.vireo.security.Security\lContext.isAuthorizationActive" alt="" coords="259,266,453,307"/>
+</map>

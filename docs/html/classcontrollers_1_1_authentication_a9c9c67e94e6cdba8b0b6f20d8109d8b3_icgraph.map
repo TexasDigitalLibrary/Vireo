@@ -1,0 +1,6 @@
+<map id="controllers.Authentication.updateProfile" name="controllers.Authentication.updateProfile">
+<area shape="rect" id="node2" href="$classcontrollers_1_1_authentication.html#a9f24ff7bbf5b97becb6a0cfb32d35c25" title="controllers.Authentication.profile" alt="" coords="267,85,475,112"/>
+<area shape="rect" id="node3" href="$classcontrollers_1_1_authentication.html#ab004894c24554ede162be6f607e1c004" title="controllers.Authentication.recover" alt="" coords="523,5,739,32"/>
+<area shape="rect" id="node4" href="$classcontrollers_1_1_authentication.html#ab24f7228fdf3f67ad806db32a274f935" title="controllers.Authentication.register" alt="" coords="523,56,739,83"/>
+<area shape="rect" id="node5" href="$classcontrollers_1_1_authentication.html#ab1baa4b198fce87fa119f53a7a51f1ae" title="controllers.Authentication.update\lPassword" alt="" coords="525,107,737,149"/>
+</map>

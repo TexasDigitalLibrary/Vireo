@@ -1,0 +1,5 @@
+<map id="org.tdl.vireo.model.GraduationMonth" name="org.tdl.vireo.model.GraduationMonth">
+<area shape="rect" id="node4" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_graduation_month_impl.html" title="org.tdl.vireo.model.jpa.\lJpaGraduationMonthImpl" alt="" coords="19,278,185,319"/>
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_ordered_model.html" title="org.tdl.vireo.model.Abstract\lOrderedModel" alt="" coords="11,97,193,138"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="org.tdl.vireo.model.Abstract\lModel" alt="" coords="11,6,193,47"/>
+</map>

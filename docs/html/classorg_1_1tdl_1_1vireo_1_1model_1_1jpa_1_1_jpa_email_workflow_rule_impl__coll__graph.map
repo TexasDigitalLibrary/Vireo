@@ -1,0 +1,15 @@
+<map id="org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleImpl" name="org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleImpl">
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_email_workflow_rule.html" title="org.tdl.vireo.model.Email\lWorkflowRule" alt="" coords="1193,230,1359,271"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_workflow_rule.html" title="org.tdl.vireo.model.Abstract\lWorkflowRule" alt="" coords="718,262,901,303"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_ordered_model.html" title="org.tdl.vireo.model.Abstract\lOrderedModel" alt="" coords="241,239,423,281"/>
+<area shape="rect" id="node9" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_workflow_rule_condition.html" title="org.tdl.vireo.model.Abstract\lWorkflowRuleCondition" alt="" coords="493,5,675,46"/>
+<area shape="rect" id="node14" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_email_group.html" title="org.tdl.vireo.model.Email\lGroup" alt="" coords="501,203,667,245"/>
+<area shape="rect" id="node19" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_email_template.html" title="org.tdl.vireo.model.Email\lTemplate" alt="" coords="501,386,667,427"/>
+<area shape="rect" id="node6" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="org.tdl.vireo.model.Abstract\lModel" alt="" coords="6,239,189,281"/>
+<area shape="rect" id="node7" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_condition_impl.html" title="org.tdl.vireo.model.jpa.\lJpaEmailWorkflowRuleConditionImpl" alt="" coords="927,21,1166,62"/>
+<area shape="rect" id="node10" href="$enumorg_1_1tdl_1_1vireo_1_1model_1_1_condition_type.html" title="org.tdl.vireo.model.ConditionType" alt="" coords="475,136,693,163"/>
+<area shape="rect" id="node11" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_administrative_group_impl.html" title="org.tdl.vireo.model.jpa.\lJpaAdministrativeGroupImpl" alt="" coords="1397,147,1584,189"/>
+<area shape="rect" id="node13" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_administrative_group.html" title="org.tdl.vireo.model.Administrative\lGroup" alt="" coords="939,203,1155,245"/>
+<area shape="rect" id="node16" href="$enumorg_1_1tdl_1_1vireo_1_1email_1_1_recipient_type.html" title="org.tdl.vireo.email.RecipientType" alt="" coords="1384,340,1597,367"/>
+<area shape="rect" id="node17" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html" title="org.tdl.vireo.model.jpa.\lJpaEmailTemplateImpl" alt="" coords="969,321,1124,362"/>
+</map>

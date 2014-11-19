@@ -1,0 +1,10 @@
+<map id="org.tdl.vireo.batch.impl.TransitionServiceImpl" name="org.tdl.vireo.batch.impl.TransitionServiceImpl">
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1batch_1_1_transition_service.html" title="org.tdl.vireo.batch.Transition\lService" alt="" coords="13,5,200,46"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1job_1_1_job_manager.html" title="org.tdl.vireo.job.JobManager" alt="" coords="13,71,200,97"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1search_1_1_searcher.html" title="org.tdl.vireo.search.Searcher" alt="" coords="12,121,201,148"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1error_1_1_error_log.html" title="org.tdl.vireo.error.ErrorLog" alt="" coords="20,172,193,199"/>
+<area shape="rect" id="node6" href="$interfaceorg_1_1tdl_1_1vireo_1_1security_1_1_security_context.html" title="org.tdl.vireo.security.Security\lContext" alt="" coords="11,223,203,265"/>
+<area shape="rect" id="node7" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission_repository.html" title="org.tdl.vireo.model.Submission\lRepository" alt="" coords="6,289,207,330"/>
+<area shape="rect" id="node8" href="$interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_service.html" title="org.tdl.vireo.export.Deposit\lService" alt="" coords="17,354,196,395"/>
+<area shape="rect" id="node9" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person_repository.html" title="org.tdl.vireo.model.Person\lRepository" alt="" coords="19,419,194,461"/>
+</map>

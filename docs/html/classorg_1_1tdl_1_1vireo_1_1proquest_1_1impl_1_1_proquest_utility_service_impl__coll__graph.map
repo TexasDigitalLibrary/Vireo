@@ -1,0 +1,5 @@
+<map id="org.tdl.vireo.proquest.impl.ProquestUtilityServiceImpl" name="org.tdl.vireo.proquest.impl.ProquestUtilityServiceImpl">
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1proquest_1_1_proquest_utility_service.html" title="org.tdl.vireo.proquest.Proquest\lUtilityService" alt="" coords="5,5,205,46"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_settings_repository.html" title="org.tdl.vireo.model.Settings\lRepository" alt="" coords="15,70,196,111"/>
+<area shape="rect" id="node6" href="$interfaceorg_1_1tdl_1_1vireo_1_1proquest_1_1_proquest_vocabulary_repository.html" title="org.tdl.vireo.proquest.Proquest\lVocabularyRepository" alt="" coords="5,238,205,279"/>
+</map>

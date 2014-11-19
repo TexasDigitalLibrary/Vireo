@@ -1,0 +1,8 @@
+<map id="org.tdl.vireo.export.impl.DepositServiceImpl.DepositJob" name="org.tdl.vireo.export.impl.DepositServiceImpl.DepositJob">
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html" title="org.tdl.vireo.model.Submission" alt="" coords="449,59,650,85"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="org.tdl.vireo.model.Abstract\lModel" alt="" coords="6,77,189,118"/>
+<area shape="rect" id="node8" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_ordered_model.html" title="org.tdl.vireo.model.Abstract\lOrderedModel" alt="" coords="241,113,423,154"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1job_1_1_job_metadata.html" title="org.tdl.vireo.job.JobMetadata" alt="" coords="675,185,866,212"/>
+<area shape="rect" id="node6" href="$interfaceorg_1_1tdl_1_1vireo_1_1state_1_1_state.html" title="org.tdl.vireo.state.State" alt="" coords="691,236,850,263"/>
+<area shape="rect" id="node7" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html" title="org.tdl.vireo.model.Deposit\lLocation" alt="" coords="681,119,860,161"/>
+</map>

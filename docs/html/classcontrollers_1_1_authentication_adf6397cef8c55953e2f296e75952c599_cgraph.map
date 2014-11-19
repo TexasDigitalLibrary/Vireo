@@ -1,0 +1,8 @@
+<map id="controllers.Authentication.loginMethod" name="controllers.Authentication.loginMethod">
+<area shape="rect" id="node2" href="$classcontrollers_1_1_authentication.html#a41747450a9a3100e2d516a662fc40dc7" title="controllers.Authentication.check\lForceSSL" alt="" coords="263,5,471,46"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1security_1_1_security_context.html#a8c6e40abd179176f16572dd321676d5e" title="org.tdl.vireo.security.Security\lContext.getPerson" alt="" coords="528,63,720,105"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html#adf9b6814dd10bc0848d4f17341c6e7b1" title="org.tdl.vireo.model.Abstract\lModel.getId" alt="" coords="533,213,715,254"/>
+<area shape="rect" id="node5" href="$classcontrollers_1_1_application.html#a14ac8441c797a55a17b0741849b89a48" title="controllers.Application.index" alt="" coords="274,188,459,215"/>
+<area shape="rect" id="node6" href="$interfaceorg_1_1tdl_1_1vireo_1_1security_1_1_authentication_method.html#a05660a57f2e72f59ab14a4e8eea55616" title="org.tdl.vireo.security.Authentication\lMethod.isEnabled" alt="" coords="253,239,480,281"/>
+<area shape="rect" id="node7" href="$classcontrollers_1_1_authentication.html#a5dc7db8a593eb4e94be0809ec945ffc3" title="controllers.Authentication.login\lReturn" alt="" coords="267,122,467,163"/>
+</map>

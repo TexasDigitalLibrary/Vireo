@@ -1,0 +1,14 @@
+<map id="controllers.Authentication.getEnabledAuthenticationMethods" name="controllers.Authentication.getEnabledAuthenticationMethods">
+<area shape="rect" id="node2" href="$classcontrollers_1_1_authentication.html#ac124e2f1bfb15ecab0ba3a0ad35a284f" title="controllers.Authentication.get\lVisibleAuthenticationMethods" alt="" coords="256,5,451,46"/>
+<area shape="rect" id="node5" href="$classcontrollers_1_1_authentication.html#af7679a788286c6c9756190318f7a147b" title="controllers.Authentication.is\lPasswordRecoveryEnabled" alt="" coords="518,122,701,163"/>
+<area shape="rect" id="node6" href="$classcontrollers_1_1_authentication.html#ab004894c24554ede162be6f607e1c004" title="controllers.Authentication.recover" alt="" coords="769,129,985,156"/>
+<area shape="rect" id="node7" href="$classcontrollers_1_1_authentication.html#ac2e13f3a280964c8a199e1f3867630c6" title="controllers.Authentication.is\lRegistrationEnabled" alt="" coords="518,239,701,281"/>
+<area shape="rect" id="node8" href="$classcontrollers_1_1_authentication.html#ab24f7228fdf3f67ad806db32a274f935" title="controllers.Authentication.register" alt="" coords="769,247,985,273"/>
+<area shape="rect" id="node9" href="$classcontrollers_1_1_authentication.html#a84c1703bd2a227a85c6443bc31fd453b" title="controllers.Authentication.is\lUpdatePasswordEnabled" alt="" coords="262,361,445,402"/>
+<area shape="rect" id="node13" href="$classcontrollers_1_1_authentication.html#a3a7ddecca3ddd0a51f4ab399761125c9" title="controllers.Authentication.is\lUpdateProfileEnabled" alt="" coords="262,295,445,337"/>
+<area shape="rect" id="node3" href="$classcontrollers_1_1_authentication.html#a7a095587b4bed7e0728d8258a37868a2" title="controllers.Authentication.loginList" alt="" coords="499,12,720,39"/>
+<area shape="rect" id="node4" href="$classcontrollers_1_1_authentication.html#a5181c04a9e0d7bf76a9025de1700b621" title="controllers.Authentication.security\lCheck" alt="" coords="768,5,987,46"/>
+<area shape="rect" id="node10" href="$classcontrollers_1_1_authentication.html#a9f24ff7bbf5b97becb6a0cfb32d35c25" title="controllers.Authentication.profile" alt="" coords="505,356,713,383"/>
+<area shape="rect" id="node12" href="$classcontrollers_1_1_authentication.html#ab1baa4b198fce87fa119f53a7a51f1ae" title="controllers.Authentication.update\lPassword" alt="" coords="771,381,983,422"/>
+<area shape="rect" id="node11" href="$classcontrollers_1_1_authentication.html#a9c9c67e94e6cdba8b0b6f20d8109d8b3" title="controllers.Authentication.update\lProfile" alt="" coords="771,315,983,357"/>
+</map>

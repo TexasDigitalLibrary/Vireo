@@ -1,0 +1,5 @@
+<map id="org.tdl.vireo.export.impl.DepositServiceImpl.DepositJob.DepositJob" name="org.tdl.vireo.export.impl.DepositServiceImpl.DepositJob.DepositJob">
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1security_1_1_security_context.html#a8c6e40abd179176f16572dd321676d5e" title="org.tdl.vireo.security.Security\lContext.getPerson" alt="" coords="265,5,457,46"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1security_1_1_security_context.html#ada196b7acfd53ee9097467ab3d8f4446" title="org.tdl.vireo.security.Security\lContext.isAuthorizationActive" alt="" coords="264,70,459,111"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1security_1_1_security_context.html#a4327e4a28fa8325b790db7bdaae52c03" title="org.tdl.vireo.security.Security\lContext.isReviewer" alt="" coords="265,135,457,177"/>
+</map>

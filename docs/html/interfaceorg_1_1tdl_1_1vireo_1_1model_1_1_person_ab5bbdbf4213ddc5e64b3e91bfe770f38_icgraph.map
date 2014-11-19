@@ -1,0 +1,9 @@
+<map id="org.tdl.vireo.model.Person.getCurrentPhoneNumber" name="org.tdl.vireo.model.Person.getCurrentPhoneNumber">
+<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1security_1_1impl_1_1_shibboleth_authentication_method_impl.html#a81143e5bafe3220c04698c5a9e85c78b" title="org.tdl.vireo.security.impl.\lShibbolethAuthenticationMethodImpl.authenticate" alt="" coords="251,5,560,46"/>
+<area shape="rect" id="node3" href="$classcontrollers_1_1submit_1_1_personal_info.html#a6d5f730f0dbc8dae768eabf605c4e676" title="controllers.submit.Personal\lInfo.personalInfo" alt="" coords="315,70,495,111"/>
+<area shape="rect" id="node4" href="$classcontrollers_1_1_authentication.html#a9c9c67e94e6cdba8b0b6f20d8109d8b3" title="controllers.Authentication.update\lProfile" alt="" coords="299,135,511,177"/>
+<area shape="rect" id="node5" href="$classcontrollers_1_1_authentication.html#a9f24ff7bbf5b97becb6a0cfb32d35c25" title="controllers.Authentication.profile" alt="" coords="608,143,816,169"/>
+<area shape="rect" id="node6" href="$classcontrollers_1_1_authentication.html#ab004894c24554ede162be6f607e1c004" title="controllers.Authentication.recover" alt="" coords="864,63,1080,89"/>
+<area shape="rect" id="node7" href="$classcontrollers_1_1_authentication.html#ab24f7228fdf3f67ad806db32a274f935" title="controllers.Authentication.register" alt="" coords="864,113,1080,140"/>
+<area shape="rect" id="node8" href="$classcontrollers_1_1_authentication.html#ab1baa4b198fce87fa119f53a7a51f1ae" title="controllers.Authentication.update\lPassword" alt="" coords="866,165,1078,206"/>
+</map>

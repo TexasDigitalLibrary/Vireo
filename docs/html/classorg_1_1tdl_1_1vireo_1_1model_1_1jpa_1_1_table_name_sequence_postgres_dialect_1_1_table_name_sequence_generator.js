@@ -1,0 +1,4 @@
+var classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_table_name_sequence_postgres_dialect_1_1_table_name_sequence_generator =
+[
+    [ "configure", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_table_name_sequence_postgres_dialect_1_1_table_name_sequence_generator.html#a5dab4c135706dc5764ff7fa3071d3e88", null ]
+];

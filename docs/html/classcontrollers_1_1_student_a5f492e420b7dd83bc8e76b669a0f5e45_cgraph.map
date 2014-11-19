@@ -1,0 +1,5 @@
+<map id="controllers.Student.submissionDelete" name="controllers.Student.submissionDelete">
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html#adf9b6814dd10bc0848d4f17341c6e7b1" title="org.tdl.vireo.model.Abstract\lModel.getId" alt="" coords="277,5,459,46"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html#af9b587de51d9888b4fe4660a4c8c5ef0" title="org.tdl.vireo.model.Submission.get\lSubmitter" alt="" coords="257,70,479,111"/>
+<area shape="rect" id="node4" href="$classcontrollers_1_1_application.html#a14ac8441c797a55a17b0741849b89a48" title="controllers.Application.index" alt="" coords="275,136,461,163"/>
+</map>

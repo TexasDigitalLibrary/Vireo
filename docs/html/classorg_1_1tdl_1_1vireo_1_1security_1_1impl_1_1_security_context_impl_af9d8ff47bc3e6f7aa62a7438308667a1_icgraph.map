@@ -1,0 +1,5 @@
+<map id="org.tdl.vireo.security.impl.SecurityContextImpl.resetAuthorizationStack" name="org.tdl.vireo.security.impl.SecurityContextImpl.resetAuthorizationStack">
+<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1security_1_1impl_1_1_security_context_impl.html#a1b03268bd16b7b2c5fa5d519d94cbd93" title="org.tdl.vireo.security.impl.\lSecurityContextImpl.login" alt="" coords="383,5,555,46"/>
+<area shape="rect" id="node3" href="$classorg_1_1tdl_1_1vireo_1_1security_1_1impl_1_1_security_context_impl.html#a882b372b3ba14c298193ee2e97bdccb4" title="org.tdl.vireo.security.impl.\lSecurityContextImpl.logout" alt="" coords="379,70,559,111"/>
+<area shape="rect" id="node4" href="$classorg_1_1tdl_1_1vireo_1_1security_1_1impl_1_1_security_context_impl.html#aaf9986cd583aa874981b98c1c2267847" title="org.tdl.vireo.security.impl.\lSecurityContextImpl.turnOffAuthorization" alt="" coords="339,135,600,177"/>
+</map>

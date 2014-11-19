@@ -1,0 +1,6 @@
+<map id="org.tdl.vireo.export.impl.FileDepositorImpl.deposit" name="org.tdl.vireo.export.impl.FileDepositorImpl.deposit">
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#a812d047095dfde01900112b9562a64cf" title="org.tdl.vireo.model.Deposit\lLocation.getCollection" alt="" coords="227,5,405,46"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_export_package.html#a8e573cfb0e8447d01671ff296119bbf7" title="org.tdl.vireo.export.Export\lPackage.getFile" alt="" coords="230,70,402,111"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html#adf9b6814dd10bc0848d4f17341c6e7b1" title="org.tdl.vireo.model.Abstract\lModel.getId" alt="" coords="225,135,407,177"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#a863308510dd7bc99e26ca21774d011e1" title="org.tdl.vireo.model.Deposit\lLocation.getRepository" alt="" coords="227,201,405,242"/>
+</map>
