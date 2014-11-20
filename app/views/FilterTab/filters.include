@@ -263,21 +263,31 @@ different blocks this gets around this problem because each is independent.
         </ul>
     </div>
     #{if subRepo.findSearchFiltersByCreatorOrPublic(securityContext.getPerson()).size() > 0 }
-    <div class="box-body">
+    <div class="box-body" id="saved-filters-left-column">
         <div class="sub-heading">SAVED FILTERS</div>
         <ul class="unstyled">
         	<span class="sub-heading">Without Columns</span>
+        	%{boolean foundWithout=false;}%
             #{list items:subRepo.findSearchFiltersByCreatorOrPublic(securityContext.getPerson()), as:'filter'}
 				#{if !filter.hasColumns()}
+					%{foundWithout=true;}%
 					<li><a href="@{FilterTab.ModifyFilters(nav)}?action=load&filter=${filter.getId()}">${filter.getName()}</a></li>
 				#{/if}
             #{/list}
+            #{if !foundWithout}
+            		<li><a href="javascript:void(0)">None...</a></li>
+            #{/if}
             <span class="sub-heading">With Columns</span>
+            %{boolean foundWith=false;}%
             #{list items:subRepo.findSearchFiltersByCreatorOrPublic(securityContext.getPerson()), as:'filter'}
 				#{if filter.hasColumns()}
+					%{foundWith=true;}%
 					<li><a href="@{FilterTab.ModifyFilters(nav)}?action=load&filter=${filter.getId()}">${filter.getName()}</a></li>
 				#{/if}
             #{/list}
+            #{if !foundWith}
+            		<li><a href="javascript:void(0)">None...</a></li>
+            #{/if}
         </ul>
     </div>
     #{/if}
