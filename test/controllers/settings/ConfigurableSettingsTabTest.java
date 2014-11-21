@@ -14,6 +14,7 @@ import org.tdl.vireo.model.Degree;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.Department;
 import org.tdl.vireo.model.DocumentType;
+import org.tdl.vireo.model.EmbargoGuarantor;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.Language;
@@ -111,6 +112,7 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		params.put("description","New Description");
 		params.put("months","4");
 		params.put("active", "true");
+		params.put("guarantor", "DEFAULT");
 
 		Response response = POST(EDIT_URL,params);
 		assertContentMatch("\"success\": \"true\"", response);
@@ -135,9 +137,10 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		
 		// Now edit the embargo
 		params.clear();
-		params.put("embargoTypeId","embargoType_"+id);
+		params.put("embargoTypeId", String.valueOf(id));
 		params.put("name", "Changed Name");
 		params.put("description", "Changed Description");
+		params.put("guarantor", "DEFAULT");
 		//params.put("months", null);
 		//params.put("active", false);
 		response = POST(EDIT_URL,params);
@@ -221,12 +224,17 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		
 		List<EmbargoType> types = settingRepo.findAllEmbargoTypes();
 		String previousName = null;
+		EmbargoGuarantor previousGuarantor = null;
 		for (EmbargoType type : types) {
 			String name = String.format("%2d - %s", (type.getDuration() == null ? 999 : type.getDuration()),type.getName());
-			if (previousName != null) {
-				assertTrue(previousName.compareTo(name) < 0);
+			if (previousName != null && previousGuarantor != null) {
+				// only compare with previous if the guarantors are the same (otherwise the names can be the same)
+				if(previousGuarantor == type.getGuarantor()) {
+					assertTrue(previousName.compareTo(name) < 0);
+				}
 			} 
 			previousName = name;
+			previousGuarantor = type.getGuarantor();
 		}
 	}
 	

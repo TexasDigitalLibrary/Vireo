@@ -67,7 +67,7 @@ public class FirstUser extends AbstractVireoController {
 				systemEmailService.generateAllSystemEmailTemplates();
 				
 				// Setup Embargos
-				new InitializeEmbargos().doJob();
+				new InitializeEmbargos().doJob(settingRepo);
 				
 				// Setup default Committee Member Role Types
 				for(String roleType : COMMITTEE_MEMBER_ROLE_TYPES_DEFINITIONS) {
@@ -238,33 +238,29 @@ public class FirstUser extends AbstractVireoController {
 	
 	@OnApplicationStart
 	public static class InitializeEmbargos extends Job {
-		public void doJob() {
-			// only initialize the embargos if we're in production mode
-			if (Play.mode.isProd()) {
-				try {
-					// turn off authorization if we're saving
-					context.turnOffAuthorization();
-					
-					SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
-					List<EmbargoType> embargoTypes = settingRepo.findAllEmbargoTypes();
-					// Setup Embargos
-					for(EmbargoArray embargoDefinition : EMBARGO_DEFINTITIONS) {
-						boolean found = false;
-						for(EmbargoType installedEmbargo : embargoTypes) {
-							if( installedEmbargo.getName().equals(embargoDefinition.name) ) {
-								found = true;
-							}
-						}
-						if(!found) {
-							settingRepo.createEmbargoType(embargoDefinition.name, embargoDefinition.description, embargoDefinition.duration, embargoDefinition.active, embargoDefinition.guarantor).save();
+		public void doJob(SettingsRepository settingRepo) {
+			try {
+				// turn off authorization if we're saving
+				context.turnOffAuthorization();
+				
+				List<EmbargoType> embargoTypes = settingRepo.findAllEmbargoTypes();
+				// Setup Embargos
+				for(EmbargoArray embargoDefinition : EMBARGO_DEFINTITIONS) {
+					boolean found = false;
+					for(EmbargoType installedEmbargo : embargoTypes) {
+						if( installedEmbargo.getName().equals(embargoDefinition.name) ) {
+							found = true;
 						}
 					}
-				} catch (RuntimeException re) {
-					Logger.error(re, "Unable to initialize default embargos.");
-				} finally {
-					// turn on authorization after we're done
-					context.restoreAuthorization();
+					if(!found) {
+						settingRepo.createEmbargoType(embargoDefinition.name, embargoDefinition.description, embargoDefinition.duration, embargoDefinition.active, embargoDefinition.guarantor).save();
+					}
 				}
+			} catch (RuntimeException re) {
+				Logger.error(re, "Unable to initialize default embargos.");
+			} finally {
+				// turn on authorization after we're done
+				context.restoreAuthorization();
 			}
 		}
 	}

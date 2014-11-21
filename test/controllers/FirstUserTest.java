@@ -96,7 +96,7 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 			assertFalse(Application.firstUser);
 
 			// Test that the default values were created.
-			assertEquals(4, MockSettingsRepository.mockEmbargos.size());
+			assertEquals(8, MockSettingsRepository.mockEmbargos.size());
 			assertEquals(3, MockSettingsRepository.mockRoleTypes.size());
 
 		} finally {
@@ -127,37 +127,37 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 
 		@Override
 		public Person findPerson(Long id) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public Person findPersonByEmail(String email) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public Person findPersonByNetId(String netId) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public List<Person> findPersonsByRole(RoleType type) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public List<Person> searchPersons(String query, int offset, int limit) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public List<Person> findAllPersons() {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return new ArrayList<Person>();
 		}
 
@@ -168,7 +168,7 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 
 		@Override
 		public Preference findPreference(Long id) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
@@ -183,157 +183,157 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 
 		@Override
 		public Degree createDegree(String name, DegreeLevel level) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public Degree findDegree(Long id) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public Degree findDegreeByName(String name) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public List<Degree> findAllDegrees() {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public Major createMajor(String name) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public Major findMajor(Long id) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public List<Major> findAllMajors() {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public College createCollege(String name) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public College createCollege(String name, HashMap<Integer, String> emails) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public College findCollege(Long id) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 		
 		@Override
 		public College findCollegeByName(String name) {
-		    // TODO Auto-generated method stub
+		    // DO NOTHING
 		    return null;
 		}
 
 		@Override
 		public List<College> findAllColleges() {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public Program createProgram(String name) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 		
 		@Override
 		public Program createProgram(String name, HashMap<Integer, String> emails) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public Program findProgram(Long id) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 		
 		@Override
 		public Program findProgramByName(String name) {
-		    // TODO Auto-generated method stub
+		    // DO NOTHING
 		    return null;
 		}
 
 		@Override
 		public List<Program> findAllPrograms() {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public Department createDepartment(String name) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 		
 		@Override
 		public Department createDepartment(String name, HashMap<Integer, String> emails) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public Department findDepartment(Long id) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 		
 		@Override
 		public Department findDepartmentByName(String name) {
-		    // TODO Auto-generated method stub
+		    // DO NOTHING
 		    return null;
 		}
 
 		@Override
 		public List<Department> findAllDepartments() {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public DocumentType createDocumentType(String name, DegreeLevel level) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public DocumentType findDocumentType(Long id) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public List<DocumentType> findAllDocumentTypes(DegreeLevel level) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public List<DocumentType> findAllDocumentTypes() {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
@@ -369,37 +369,36 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 
 		@Override
 		public EmbargoType findEmbargoType(Long id) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public List<EmbargoType> findAllEmbargoTypes() {
-			// TODO Auto-generated method stub
-			return null;
+			return new ArrayList<EmbargoType>();
 		}
 
 		@Override
 		public List<EmbargoType> findAllActiveEmbargoTypes() {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public GraduationMonth createGraduationMonth(int month) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public GraduationMonth findGraduationMonth(Long id) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public List<GraduationMonth> findAllGraduationMonths() {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
@@ -417,61 +416,61 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 
 		@Override
 		public CommitteeMemberRoleType findCommitteeMemberRoleType(Long id) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public List<CommitteeMemberRoleType> findAllCommitteeMemberRoleTypes(DegreeLevel level) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public List<CommitteeMemberRoleType> findAllCommitteeMemberRoleTypes() {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public EmailTemplate createEmailTemplate(String name, String subject, String message) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public EmailTemplate findEmailTemplate(Long id) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public EmailTemplate findEmailTemplateByName(String name) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public List<EmailTemplate> findAllEmailTemplates() {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public CustomActionDefinition createCustomActionDefinition(String label, Boolean isStudentVisible) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public CustomActionDefinition findCustomActionDefinition(Long id) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public List<CustomActionDefinition> findAllCustomActionDefinition() {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
@@ -489,157 +488,157 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 
 		@Override
 		public Configuration findConfiguration(Long id) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public Configuration findConfigurationByName(String name) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public String getConfigValue(String name, String defaultValue) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public String getConfigValue(String name) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public boolean getConfigBoolean(String name) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return false;
 		}
 
 		@Override
 		public List<Configuration> findAllConfigurations() {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public DepositLocation createDepositLocation(String name) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public DepositLocation findDepositLocation(Long id) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public DepositLocation findDepositLocationByName(String name) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public List<DepositLocation> findAllDepositLocations() {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public Language findLanguage(Long id) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public List<Language> findAllLanguages() {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public Language createLanguage(String name) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
 		public Language findLanguageByName(String name) {
-			// TODO Auto-generated method stub
+			// DO NOTHING
 			return null;
 		}
 
 		@Override
         public EmailWorkflowRule createEmailWorkflowRule(State associatedState) {
-	        // TODO Auto-generated method stub
+	        // DO NOTHING
 	        return null;
         }
 
 		@Override
         public EmailWorkflowRule findEmailWorkflowRule(Long id) {
-	        // TODO Auto-generated method stub
+	        // DO NOTHING
 	        return null;
         }
 
 		@Override
         public List<EmailWorkflowRule> findEmailWorkflowRulesByState(State type) {
-	        // TODO Auto-generated method stub
+	        // DO NOTHING
 	        return null;
         }
 
 		@Override
         public List<EmailWorkflowRule> findAllEmailWorkflowRules() {
-	        // TODO Auto-generated method stub
+	        // DO NOTHING
 	        return null;
         }
 
 		@Override
         public AdministrativeGroup createAdministrativeGroup(String name) {
-	        // TODO Auto-generated method stub
+	        // DO NOTHING
 	        return null;
         }
 
 		@Override
         public AdministrativeGroup createAdministrativeGroup(String name, HashMap<Integer, String> emails) {
-	        // TODO Auto-generated method stub
+	        // DO NOTHING
 	        return null;
         }
 
 		@Override
         public AdministrativeGroup findAdministrativeGroup(Long id) {
-	        // TODO Auto-generated method stub
+	        // DO NOTHING
 	        return null;
         }
 
 		@Override
         public AdministrativeGroup findAdministrativeGroupByName(String name) {
-	        // TODO Auto-generated method stub
+	        // DO NOTHING
 	        return null;
         }
 
 		@Override
         public List<AdministrativeGroup> findAllAdministrativeGroups() {
-	        // TODO Auto-generated method stub
+	        // DO NOTHING
 	        return null;
         }
 
 		@Override
         public AbstractWorkflowRuleCondition createEmailWorkflowRuleCondition(ConditionType condition) {
-	        // TODO Auto-generated method stub
+	        // DO NOTHING
 	        return null;
         }
 
 		@Override
         public List<AbstractWorkflowRuleCondition> findAllEmailWorkflowRuleConditions() {
-	        // TODO Auto-generated method stub
+	        // DO NOTHING
 	        return null;
         }
 
 		@Override
         public AbstractWorkflowRuleCondition findEmailWorkflowRuleCondition(Long id) {
-	        // TODO Auto-generated method stub
+	        // DO NOTHING
 	        return null;
         }
 		

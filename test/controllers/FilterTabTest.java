@@ -516,13 +516,13 @@ public class FilterTabTest extends AbstractVireoFunctionalTest {
 	
 				response = GET(LIST_URL);
 				String labelName = Messages.get(nav.toUpperCase()+"_COLUMN_"+order.name());
-				assertContentMatch("<th class=\"orderby selected ascending\">\\s*<a href=\"[^\"]*\\?direction=toggle\">"+labelName+"</a>",response);
+				assertContentMatch("<th style='width:[^\"]*\\%' class=\"orderby selected ascending\">\\s*<a href=\"[^\"]*\\?direction=toggle\">"+labelName+"</a>",response);
 				
 				GET(SEARCH_URL+"?orderby="+order.getId());
 				GET(SEARCH_URL+"?direction=toggle");
 	
 				response = GET(LIST_URL);
-				assertContentMatch("<th class=\"orderby selected descending\">\\s*<a href=\"[^\"]*\\?direction=toggle\">"+labelName+"</a>",response);
+				assertContentMatch("<th style='width:[^\"]*\\%' class=\"orderby selected descending\">\\s*<a href=\"[^\"]*\\?direction=toggle\">"+labelName+"</a>",response);
 				
 				GET(SEARCH_URL+"?direction=toggle");
 			//}
