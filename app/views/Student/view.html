@@ -1,6 +1,14 @@
 #{extends 'main.html' /}
 #{set title:'View Application' /}
 #{set 'moreScripts'}
+
+<style type="text/css">
+#customActionsDetails > label {
+    display: inline-block;
+    margin-left: 5px;
+}
+</style>
+
 <script type="text/javascript" >
 
 jQuery(document).ready(function() {
@@ -277,12 +285,16 @@ jQuery(document).ready(function() {
 				            	def found = false;
 				            	for (org.tdl.vireo.model.CustomActionValue subAction : sub.getCustomActions()) {
 				            		if(action.equals(subAction.getDefinition())) {
-				            			sActions += "<input type=\"checkbox\" class=\"checkbox custom-action\" disabled=\"disabled\" checked=\"checked\"/> " + subAction.getDefinition().getLabel();
+				            			String id = URLEncoder.encode(subAction.getDefinition().getLabel().replaceAll("\\s+",""), "UTF-8");
+				            			sActions += "<input id=\"" + id + "\" type=\"checkbox\" class=\"checkbox custom-action\" disabled=\"disabled\" checked=\"checked\"/>";
+				            			sActions += "<label for=\"" + id + "\">" + subAction.getDefinition().getLabel() + "</label>";
 				            			found = true;
 				            		}
 				            	}
 				            	if(!found){
-				            		sActions += "<input type=\"checkbox\" class=\"checkbox custom-action\" disabled=\"disabled\"/> " + action.getLabel();
+									String id = URLEncoder.encode(action.getLabel().replaceAll("\\s+",""), "UTF-8");
+				            		sActions += "<input id=\"" + id + "\" type=\"checkbox\" class=\"checkbox custom-action\" disabled=\"disabled\"/>";
+				            		sActions += "<label for=\"" + id + "\">" + action.getLabel() + "</label>";
 				            	}
 				            	sActions += "<br/>";
 				            	
@@ -307,7 +319,7 @@ jQuery(document).ready(function() {
 		</br>
 		#{/ifErrors}
 			#{ifEnabled PRIMARY_ATTACHMENT}
-			<div class="control-group control-group-tall #{if errors.forKey('primaryDocument')}error#{/if}">
+			<div class="control-group control-group-tall#{if errors.forKey('primaryDocument')} error#{/if}">
 				<label class="control-label">#{fieldLabel PRIMARY_ATTACHMENT /}:</label>
 				<div class="controls">
 				#{if sub.getState().isEditableByStudent()}
@@ -341,7 +353,7 @@ jQuery(document).ready(function() {
 		</div>
 		#{/ifEnabled}
 		#{ifEnabled [SUPPLEMENTAL_ATTACHMENT,SOURCE_ATTACHMENT,ADMINISTRATIVE_ATTACHMENT]}
-	    <div id="doAdditionalUploadWrap" class="control-group control-group-tall #{if errors.forKey('additionalDocument')}error#{/if}">
+	    <div id="doAdditionalUploadWrap" class="control-group control-group-tall#{if errors.forKey('additionalDocument')} error#{/if}">
 	        <label class="control-label">Additional Documents:</label>
 	        <div class="controls">
 	            #{list items:additionalDocuments, as:'attachment'}
@@ -394,7 +406,7 @@ jQuery(document).ready(function() {
 	    #{/ifEnabled}
 	    
 	    #{if feedbackDocuments != null && feedbackDocuments.size() > 0}
-	    <div class="control-group #{if errors.forKey('feedbackDocument')}error#{/if}">
+	    <div class="control-group#{if errors.forKey('feedbackDocument')} error#{/if}">
 	        <label class="control-label"><b>Feedback Document${ feedbackDocuments.pluralize() }:</b></label>
 	        <div class="controls">
 	            #{list items:feedbackDocuments, as:'attachment'}
@@ -410,8 +422,9 @@ jQuery(document).ready(function() {
 	    
 	    
 		<legend>Application Activity</legend>
-		<div id="student-log-view">
-			<table role="presentation" class="span10 table table-striped table-bordered table-condensed">
+		<div id="student-log-view" class="control-group control-group-tall">
+			<table class="span10 table table-striped table-bordered table-condensed">
+				<caption><h4><p class="center">Submission Action Log</p></h4></caption>
 				<thead>
 					<tr>
 						<th>Name</th>
