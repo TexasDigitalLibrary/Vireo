@@ -12,6 +12,7 @@ import org.tdl.vireo.constant.FieldConfig;
 import org.tdl.vireo.model.College;
 import org.tdl.vireo.model.CommitteeMember;
 import org.tdl.vireo.model.Department;
+import org.tdl.vireo.model.EmbargoGuarantor;
 import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.Major;
 import org.tdl.vireo.model.NameFormat;
@@ -172,7 +173,8 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				committee, // committee
 				"advisor@noreply.org", // committeeEmail
 				"chapter #2 has published material", // publishedMaterial
-				String.valueOf(settingRepo.findAllEmbargoTypes().get(1).getId()) // embargo
+				String.valueOf(settingRepo.findAllEmbargoTypes().get(1).getId()), // embargo
+				settingRepo.findAllEmbargoTypes().get(1).getGuarantor() // embargo Guarantor
 				);
 
 		// FileUpload Step
@@ -264,7 +266,8 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				committee, // committee
 				"committee@noreply.org", // committeeEmail
 				"chapter #2 has published material", // publishedMaterial
-				String.valueOf(settingRepo.findAllEmbargoTypes().get(1).getId()) // embargo
+				String.valueOf(settingRepo.findAllEmbargoTypes().get(1).getId()), // embargo
+				settingRepo.findAllEmbargoTypes().get(1).getGuarantor() // embargo Guarantor
 				);
 
 		// FileUpload Step
@@ -386,7 +389,8 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				committee, // committee
 				"advisor@noreply.org", // committeeEmail
 				"chapter #2 has published material", // publishedMaterial
-				String.valueOf(settingRepo.findAllEmbargoTypes().get(1).getId()) // embargo
+				String.valueOf(settingRepo.findAllEmbargoTypes().get(1).getId()), // embargo
+				settingRepo.findAllEmbargoTypes().get(1).getGuarantor() // embargo Guarantor
 				);
 
 		// FileUpload Step
@@ -608,7 +612,8 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				committee, // committee
 				"advisor@noreply.org", // committeeEmail
 				"chapter #2 has published material", // publishedMaterial
-				String.valueOf(settingRepo.findAllEmbargoTypes().get(1).getId()) // embargo
+				String.valueOf(settingRepo.findAllEmbargoTypes().get(1).getId()), // embargo
+				settingRepo.findAllEmbargoTypes().get(1).getGuarantor() // embargo Guarantor
 				);
 
 		
@@ -727,7 +732,8 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				committee, // committee
 				null, // committeeEmail
 				null, // publishedMaterial
-				null // embargo
+				null, // embargo
+				null // embargo Guarantor
 				);
 
 		// FileUpload Step
@@ -807,7 +813,8 @@ public class BasicSubmissionTests extends AbstractSubmissionTests {
 				committee, // committee
 				null, // committeeEmail
 				null, // publishedMaterial
-				null // embargo
+				null, // embargo
+				null // embargo Guarantor
 				);
 
 		// FileUpload Step

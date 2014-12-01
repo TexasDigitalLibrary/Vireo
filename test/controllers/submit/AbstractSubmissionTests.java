@@ -488,12 +488,13 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 	 *            The committee contact email.
 	 * @param embargo
 	 *            The embargo settings.
+	 * @param embargoGuarantor 
 	 * @param umi
 	 *            UMI release flag.
 	 */
 	public void documentInfo(String title, String degreeMonth, String degreeYear, String defenseDate, String docType, String abstractText, String keywords,
 			String subjectPrimary, String subjectSecondary, String subjectTertiary, String language, List<Map<String,String>> committee, String chairEmail, 
-			String publishedMaterial, String embargo)  {
+			String publishedMaterial, String embargo, EmbargoGuarantor embargoGuarantor)  {
 
 		// Get our URL
 		Map<String,Object> routeArgs = new HashMap<String,Object>();
@@ -532,7 +533,8 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 			params.put("publishedMaterial", publishedMaterial);
 		}
 		if (embargo != null)
-			params.put("embargo", embargo);		
+			if (embargoGuarantor != null)
+				params.put("embargo-"+embargoGuarantor.name(), embargo);
 		for (int i = 0; i < committee.size(); i++) {
 			Map<String,String> member = committee.get(i);
 
@@ -585,7 +587,7 @@ public abstract class AbstractSubmissionTests extends AbstractVireoFunctionalTes
 		if (publishedMaterial != null)
 			assertEquals(publishedMaterial, sub.getPublishedMaterial());
 		if (embargo != null)
-			assertEquals(Long.valueOf(embargo), sub.getEmbargoTypeByGuarantor(EmbargoGuarantor.DEFAULT).getId());		
+			assertEquals(Long.valueOf(embargo), sub.getEmbargoTypeByGuarantor(embargoGuarantor).getId());		
 		
 		assertEquals(committee.size(), sub.getCommitteeMembers().size());
 	}
