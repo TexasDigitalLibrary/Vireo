@@ -14,6 +14,7 @@
 </head>
 <body>
 </body>
+#{include 'SettingTabs/jsDataObject.include' /}
 <script language="JavaScript">
 
 /** Functions to reset the dom between tests **/
@@ -35,7 +36,7 @@ test("test displaySortableItem", function() {
 	equals(0,jQuery("#original-li").length);
 	equals(1,jQuery("#action-12").length);
 	equals(1,jQuery("#test-list li").length);
-	equals(1,jQuery("#action-12 input").length);
+	equals(2,jQuery("#action-12 input").length);
 });
 
 /**
@@ -908,8 +909,8 @@ test("test embargoOpenDialogHandler", function() {
     var handler = embargoOpenDialogHandler();
     jQuery("#open-link").click(handler);
     jQuery("#open-link").click();
-    
-    equals("Add Embargo Type",jQuery("#embargo-type-modal .modal-header h3").text())
+
+    equals("Edit Embargo",jQuery("#embargo-type-modal .modal-header h3").text())
 })
 
 
@@ -921,69 +922,79 @@ test("test embargoSaveDialogHandler AJAX", function() {
     reset();
     
     // Mock the table
-    jQuery("body").append("<tbody id='embargoType-list'></tbody>");
+    jQuery("body").append("<tbody id='embargoType-DEFAULT-list'></tbody>");
     
     // Mock the modal
-    jQuery("body").append(
-            "<div class='modal fade' id='embargo-type-modal'>" + 
-            "   <form class='form-horizontal'>" + 
-            "       <input type='hidden' name='embargoType-id' id='embargoType-id' value=''/>" + 
-            "       <div class='modal-header'>" + 
-            "           <button type='button' class='close' data-dismiss='modal'>×</button>" + 
-            "           <h3>Edit Embargo</h3>" + 
-            "       </div>" + 
-            "       <div class='modal-body'>" + 
-            "           <ul id='embargoType-errors' class='red'>" + 
-            "           </ul>" + 
-            "           <fieldset>" + 
-            "               <div class='control-group'>" + 
-            "                   <label class='control-label' for='embargoType-name'><strong>Embargo Name</strong>:</label>" + 
-            "                   <div class='controls'>" + 
-            "                       <input type='text' class='input-xlarge' name='embargoType-name' id='embargoType-name' value='Embargo Name'/>" + 
-            "                   </div>" + 
-            "               </div>" + 
-            "               <div class='control-group'>" + 
-            "                   <label class='control-label' for='embargoType-description'><strong>Description</strong>:</label>" + 
-            "                   <div class='controls'>" + 
-            "                       <textarea class='input-xlarge' name='embargoType-description' id='embargoType-description'>Embargo Description</textarea>" + 
-            "                   </div>" + 
-            "               </div>" + 
-            "               <div class='control-group'>" + 
-            "                   <label class='control-label' for='embargoType-active'><strong>Display</strong>:</label>" + 
-            "                   <div class='controls'>" + 
-            "                       <input type='checkbox' name='embargoType-active' id='embargoType-active' value='true'/>" + 
-            "                       <p class='help-block'>This embargo option should be available for new submissions.</p>" + 
-            "                   </div>" + 
-            "               </div>" + 
-            "               <div class='control-group'>" + 
-            "                   <label class='control-label'><strong>Expiration Timeframe</strong>:</label>" + 
-            "                   <div class='controls'>" + 
-            "                       <label class='radio'>" + 
-            "                           <input type='radio' checked='true' value='indeterminate' id='timeframe-indeterminate' name='embargoType-timeframe'>" + 
-            "                           Indeterminate" + 
-            "                       </label>" + 
-            "                       <label class='radio'>" + 
-            "                           <input type='radio' checked='' value='determinate' id='timeframe-determinate' name='embargoType-timeframe'>" + 
-            "                           Determinate" + 
-            "                       </label>" + 
-            "                   </div>" + 
-            "               </div>" + 
-            "               <div class='control-group' id='duration-group'>" + 
-            "                   <label class='control-label' for='embargoType-months'><strong>Embargo Duration</strong>:</label>" + 
-            "                   <div class='controls'>" + 
-            "                       <input type='text' name='embargoType-months' id='embargoType-months' value='' class='input-mini'/>" + 
-            "                       <p class='help-block'>How many months a submission should be embargoed.</p>" + 
-            "                   </div>" + 
-            "               </div>" + 
-            "           </fieldset>" + 
-            "       </div>" + 
-            "       <div class='modal-footer'>" + 
-            "           <a href='#' class='btn' data-dismiss='modal'>Close</a>" + 
-            "           <input id='embargoType-save' type='submit' class='btn btn-primary' name='submit_save' value='Save Embargo'/>" + 
-            "       </div>" + 
-            "   </form>" + 
-            "</div>     "
-            );
+    jQuery("body").append("<div class=\"modal fade\" id=\"embargo-type-modal\">" +
+    "<form class=\"form-horizontal\">" +
+        "<input type=\"hidden\" name=\"embargoType-id\" id=\"embargoType-id\" value=\"\">" +
+        "<div class=\"modal-header\">" +
+            "<button type=\"button\" class=\"close\" data-dismiss=\"modal\">X</button>" +
+            "<h3>Add Embargo Type</h3>" +
+        "</div>" +
+        "<div class=\"modal-body\">" +
+			"<ul id=\"embargoType-errors\" class=\"red\"></ul>" +
+            "<fieldset>" +
+                "<div class=\"control-group\">" +
+                    "<label class=\"control-label\" for=\"embargoType-name\"><strong>Embargo Name</strong>:</label>" +
+                    "<div class=\"controls\">" +
+                        "<input type=\"text\" class=\"input-xlarge\" name=\"embargoType-name\" id=\"embargoType-name\" value=\"Embargo Name\">" +
+                    "</div>" +
+                "</div>" +
+                "<div class=\"control-group\">" +
+                	"<label class=\"control-label\" for=\"embargoType-guarantor\"><strong>Embargo Guarantor</strong>:</label>" +
+                	"<div class=\"controls\">" +
+                		"<select name=\"embargoType-guarantor\" id=\"embargoType-guarantor\">" +
+                		                			"<option value=\"DEFAULT\">DEFAULT</option>" +
+                		                			"<option value=\"PROQUEST\">PROQUEST</option>" +
+                		                		"</select>" +
+                	"</div>" +
+                "</div>" +
+                "<div class=\"control-group\">" +
+                    "<label class=\"control-label\" for=\"embargoType-description\"><strong>Description</strong>:</label>" +
+                    "<div class=\"controls\">" +
+                        "<textarea class=\"input-xlarge\" name=\"embargoType-description\" id=\"embargoType-description\" style=\"overflow: hidden; height: 52px;\">Embargo Description</textarea>" +
+                    "</div>" +
+                "</div>" +
+                "<div class=\"control-group\">" +
+                    "<label class=\"control-label\" for=\"embargoType-active\"><strong>Display</strong>:</label>" +
+                    "<div class=\"controls\">" +
+                        "<label class=\"checkbox\">" +
+                            "<input type=\"checkbox\" name=\"embargoType-active\" id=\"embargoType-active\" value=\"true\" checked=\"checked\">" +
+                            "This embargo option will be available for<br>new submissions." +
+                        "</label>" +
+                    "</div>" +
+                "</div>" +
+                "<div class=\"control-group\">" +
+                    "<label class=\"control-label\"><strong>Expiration Timeframe</strong>:</label>" +
+                    "<div class=\"controls\">" +
+                        "<label class=\"radio\">" +
+			                "<input type=\"radio\" checked=\"checked\" value=\"indeterminate\" id=\"timeframe-indeterminate\" name=\"embargoType-timeframe\">" +
+			                "Indeterminate" +
+			            "</label>" +
+			            "<label class=\"radio\">" +
+                            "<input type=\"radio\" value=\"determinate\" id=\"timeframe-determinate\" name=\"embargoType-timeframe\">" +
+                            "Determinate" +
+                        "</label>" +
+                    "</div>" +
+                "</div>" +
+                "<div class=\"control-group\" id=\"duration-group\">" +
+                    "<label class=\"control-label\" for=\"embargoType-months\"><strong>Embargo Duration</strong>:</label>" +
+                    "<div class=\"controls\">" +
+                        "<input type=\"text\" name=\"embargoType-months\" id=\"embargoType-months\" value=\"\" class=\"input-mini\">" +
+                        "<p class=\"help-block\">How many months a submission should be embargoed.</p>" +
+                    "</div>" +
+                "</div>" +
+            "</fieldset>" +
+        "</div>" +
+        "<div class=\"modal-footer\">" +
+            "<a href=\"javascript:void(0);\" class=\"btn\" data-dismiss=\"modal\">Close</a>" +
+            "<a id=\"embargoType-remove\" href=\"javascript:void(0);\" class=\"btn\" style=\"display: none;\">Delete Embargo</a>" +
+            "<input id=\"embargoType-save\" type=\"submit\" class=\"btn btn-primary\" name=\"submit_save\" value=\"Add Embargo\">" +
+        "</div>" +
+    "</form>" +
+"</div>"
+    		);
     
     // Register the handler
     var handler = embargoSaveDialogHandler("/ajax/test/url");
@@ -997,8 +1008,8 @@ test("test embargoSaveDialogHandler AJAX", function() {
     
     // Simulate a click & ajax return
     jQuery("#embargoType-save").click();
-    
-    options.success({ success: "true", id: 1, name: "Name", description: "Description", active: "true", months: "null" });
+
+    options.success({ success: "true", id: 1, name: "Embargo Name", description: "Embargo Description", active: "true", months: "null", guarantor: "DEFAULT"});
 
     
     
@@ -1008,10 +1019,10 @@ test("test embargoSaveDialogHandler AJAX", function() {
     equals('',options.data.embargoTypeId);
     equals('Embargo Name',options.data.name);
     equals('Embargo Description',options.data.description);
-    equals('',options.data.months);
-    equals(null,options.data.active);
+    equals(null,options.data.months);
+    equals('true',options.data.active);
 
-    equals(1,jQuery("#embargoType-list tr").length);
+    equals(1,jQuery("#embargoType-DEFAULT-list tr").length);
 });
 
 
@@ -1024,7 +1035,7 @@ test("test embargoSortableUpdateHandler AJAX", function() {
     
     // Create the markup we will use for testing
     jQuery("body").append(
-		"<tbody id='embargoType-list' class='ui-sortable'>" +
+		"<tbody id='embargoType-DEFAULT-list' class='embargoType-sortable'>" +
 		"  <tr id='embargoType_1'></tr>" +
 		"  <tr id='embargoType_2'></tr>" +
 		"</tbody>"
@@ -1032,7 +1043,7 @@ test("test embargoSortableUpdateHandler AJAX", function() {
     
     // Register the handler
     var handler = embargoSortableUpdateHandler("/ajax/reorder/url");    
-    var embargoList = jQuery("#embargoType-list");
+    var embargoList = jQuery("#embargoType-DEFAULT-list");
     embargoList.sortable({ }).disableSelection();
     embargoList.bind("sortupdate",handler)
 
@@ -1050,6 +1061,7 @@ test("test embargoSortableUpdateHandler AJAX", function() {
     equals('/ajax/reorder/url',options.url);
     equals('POST',options.type);
     equals('json',options.dataType);
+
     equals('embargoType_1,embargoType_2',options.data.embargoTypeIds);
 });
 
