@@ -14,11 +14,15 @@
 </head>
 <body>
 </body>
+#{include 'ViewTab/jsDataObjects.inlcude' /}
 <script language="JavaScript">
 
 /** Functions to reset the dom between tests **/
 function reset() {
     jQuery("body").empty();
+}
+
+function refreshAll(){
 }
 
 /**
@@ -45,14 +49,14 @@ test("test swapToInputHandler generic input" , function() {
 	//Simulate click
 	jQuery("#firstName").click();
 	
-	equal(0, jQuery("span").length, "The span has been removed.");
-	equal(1, jQuery("input").length, "There is one input field.");
-	equal("Audrey", jQuery("input").val(), "The input value is accurate.");
-	equal(1, jQuery("div#firstName").length, "The surrounding div has the correct id.");
-	equal(1, jQuery(".icon-remove").length, "There is one cancel icon.");
-	equal(1, jQuery(".icon-ok").length, "There is one submit icon.");
-	equal(1, jQuery("#backup").length, "The backup was created.");
-	equal('<i class="icon-pencil"></i>Audrey', jQuery("#backup").html(), "The backup is accurate.");
+	equal(jQuery("span").length, 0, "The span has been removed.");
+	equal(jQuery("input").length, 1, "There is one input field.");
+	equal(jQuery("input").val(), "Audrey", "The input value is accurate.");
+	equal(jQuery("div#firstName").length, 1, "The surrounding div has the correct id.");
+	equal(jQuery(".icon-remove").length, 1, "There is one cancel icon.");
+	equal(jQuery(".icon-ok").length, 1, "There is one submit icon.");
+	equal(jQuery("#backup").length, 1, "The backup was created.");
+	equal(jQuery("#backup").html(), '<i class="icon-pencil"></i>Audrey', "The backup is accurate.");
 
 });
 
@@ -63,11 +67,11 @@ test("test swapToInputHandler generic input" , function() {
 	 reset();
 	
 	 //Create markup to test
-	 var markup =  '<div class="edit-box">';
-	 	 markup += '<ul><li class="edit">';
-	 	 markup += '<label>Defense Date:</label><span id="defenseDate" class="date"><i class="icon-pencil"></i>12/12/2012</span>';
-		 markup += '</li></ul>';
-	     markup += '</div>';
+	 var markup =	'<div class="edit-box pull-left">' +
+	 				'<ul class="unstyled">' +
+	 				'<li class="edit"><label>Defense Date:</label><span id="defenseDate" class="date"><i class="icon-pencil"></i> 12/12/2012</span></li>' +
+					'</ul>' +
+	     			'</div>';
 	     
 	//Append markup to body
 	jQuery("body").append(markup);
@@ -79,15 +83,15 @@ test("test swapToInputHandler generic input" , function() {
 	//Simulate click
 	jQuery("#defenseDate").click();
 	
-	equal(0, jQuery("span").length, "The span had been removed.");
-	equal(1, jQuery("input").length, "There is one input field.");
-	equal("12/12/2012", jQuery("input").val(), "The input value is correct.");
-	equal(1, jQuery("div#defenseDate").length, "The surrounding div has the correct id.");
-	equal(1, jQuery(".icon-remove").length, "There is one cancel icon.");
-	equal(1, jQuery(".icon-ok").length, "There is one submit icon.");
-	equal(1, jQuery("#backup").length, "The backup was created.");
-	equal('<i class="icon-pencil"></i>12/12/2012', jQuery("#backup").html(), "The backup is accurate.");
-	equal(1, jQuery(".datepicker").length, "The datepicker was loaded.");
+	equal(jQuery("span").length, 24, "The span came up.");
+	equal(jQuery("input").length, 1, "There is one input field.");
+	equal(jQuery("input").val(),"12/12/2012", "The input value is correct.");
+	equal(jQuery("div#defenseDate").length, 1, "The surrounding div has the correct id.");
+	equal(jQuery(".icon-remove").length, 1, "There is one cancel icon.");
+	equal(jQuery(".icon-ok").length, 1, "There is one submit icon.");
+	equal(jQuery("#backup").length, 1, "The backup was created.");
+	equal(jQuery("#backup").html(), '<i class="icon-pencil"></i> 12/12/2012', "The backup is accurate.");
+	equal(jQuery(".datepicker").length, 1, "The datepicker was loaded.");
  });
 
 /**
@@ -118,15 +122,15 @@ test("test swapToInputHandler select drop down", function(){
 	//Simulate click
 	jQuery("#umiRelease").click();
 	
-	equal(0, jQuery("span").length, "The span has been removed.");
-	equal(2, jQuery("select").length, "There are two select fields.");
-	equal(2, jQuery("#umiRelease select option").length, "There are two options.");
-	equal(1, jQuery("#umiRelease select option[value='false']:selected").length, "The proper option is selected.");
-	equal(1, jQuery("div#umiRelease").length, "The surrounding div has the correct id.");
-	equal(1, jQuery(".icon-remove").length, "There is one cancel icon.");
-	equal(1, jQuery(".icon-ok").length, "There is one submit icon.");
-	equal(1, jQuery("#backup").length, "The backup was created.");
-	equal('<i class="icon-pencil"></i>false', jQuery("#backup").html(), "The backup is accurate.");
+	equal(jQuery("span").length, 0, "The span has been removed.");
+	equal(jQuery("select").length, 2, "There are two select fields.");
+	equal(jQuery("#umiRelease select option").length, 2, "There are two options.");
+	equal(jQuery("#umiRelease select option[value='false']:selected").length, 1, "The proper option is selected.");
+	equal(jQuery("div#umiRelease").length, 1, "The surrounding div has the correct id.");
+	equal(jQuery(".icon-remove").length, 1, "There is one cancel icon.");
+	equal(jQuery(".icon-ok").length, 1, "There is one submit icon.");
+	equal(jQuery("#backup").length, 1, "The backup was created.");
+	equal(jQuery("#backup").html(), '<i class="icon-pencil"></i>false', "The backup is accurate.");
 	
 });
 
@@ -157,13 +161,13 @@ test("test swapToInputHandler select autocomplete", function(){
     //Simulate click
     jQuery("#major").click();
     
-    equal(0, jQuery("span").length, "The span has been removed.");
-    equal(2, jQuery("input").length, "There are two input fields.");
-    equal(1, jQuery("div#major").length, "The surrounding div has the correct id.");
-    equal(1, jQuery(".icon-remove").length, "There is one cancel icon.");
-    equal(1, jQuery(".icon-ok").length, "There is one submit icon.");
-    equal(1, jQuery("#backup").length, "The backup was created.");
-    equal('<i class="icon-pencil"></i>My Major', jQuery("#backup").html(), "The backup is accurate.");
+    equal(jQuery("span").length, 0, "The span has been removed.");
+    equal(jQuery("input").length, 2, "There are two input fields.");
+    equal(jQuery("div#major").length, 1, "The surrounding div has the correct id.");
+    equal(jQuery(".icon-remove").length, 1, "There is one cancel icon.");
+    equal(jQuery(".icon-ok").length, 1, "There is one submit icon.");
+    equal(jQuery("#backup").length, 1, "The backup was created.");
+    equal(jQuery("#backup").html(), '<i class="icon-pencil"></i>My Major', "The backup is accurate.");
     
 });
 
@@ -212,12 +216,12 @@ test("test swapToInputHandler select subject", function(){
     //Simulate click
     jQuery("#subjects").click();
     
-    equal(0, jQuery("span").length, "The span has been removed.");
-    equal(6, jQuery("select").length, "There are six select fields.");
-    equal(1, jQuery("div#subjects").length, "The surrounding div has the correct id.");
-    equal(1, jQuery(".icon-remove").length, "There is one cancel icon.");
-    equal(1, jQuery(".icon-ok").length, "There is one submit icon.");
-    equal(1, jQuery("#backup").length, "The backup was created.");
+    equal(jQuery("span").length, 0, "The span has been removed.");
+    equal(jQuery("select").length, 6, "There are six select fields.");
+    equal(jQuery("div#subjects").length, 1, "The surrounding div has the correct id.");
+    equal(jQuery(".icon-remove").length, 1, "There is one cancel icon.");
+    equal(jQuery(".icon-ok").length, 1, "There is one submit icon.");
+    equal(jQuery("#backup").length, 1, "The backup was created.");
     
 });
  
@@ -246,13 +250,13 @@ test("test swapToInputHandler text area", function(){
 	//Simulate click
 	jQuery("#permAddress").click();
 	
-	equal(0, jQuery("span").length, "The span has been removed.");
-	equal(1, jQuery("textarea").length, "There is one text area.");
-	equal(1, jQuery("div#permAddress").length, "The surrounding div has the correct id.");
-	equal(1, jQuery(".icon-remove").length, "There is one cancel icon.");
-	equal(1, jQuery(".icon-ok").length, "There is one submit icon.");
-	equal(1, jQuery("#backup").length, "The backup was created.");
-	equal('<i class="icon-pencil"></i>123 Street Name<br>City, ST 12345', jQuery("#backup").html(), "The backup is accurate.");
+	equal(jQuery("span").length, 0, "The span has been removed.");
+	equal(jQuery("textarea").length, 1, "There is one text area.");
+	equal(jQuery("div#permAddress").length, 1, "The surrounding div has the correct id.");
+	equal(jQuery(".icon-remove").length, 1, "There is one cancel icon.");
+	equal(jQuery(".icon-ok").length, 1, "There is one submit icon.");
+	equal(jQuery("#backup").length, 1, "The backup was created.");
+	equal(jQuery("#backup").html(), '<i class="icon-pencil"></i>123 Street Name\nCity, ST 12345', "The backup is accurate.");
 });
 
 /**
@@ -284,15 +288,15 @@ test("test editCommitteeMemberHandler", function(){
 	//Simulate click
 	jQuery(".editCommitteeMember").click();
 	
-	equal(6, jQuery("input").length, "There are three input fields.");
-	equal("John", jQuery("#cmFirstName").val(), "The first name field has the correct value.");
-	equal("W", jQuery("#cmMiddleName").val(), "The middle name field has the correct value.");
-	equal("Smith", jQuery("#cmLastName").val(), "The last name field has the correct value.");
-	equal("Member", jQuery("#cmRoles").val(), "The role field has the correct value.");
-	equal(1, jQuery(".icon-remove").length, "There is one cancel icon.");
-	equal(1, jQuery(".icon-ok").length, "There is one submit icon.");
-	equal(1, jQuery("#backup").length, "The backup was created.");
-	equal('<span class="lastName">Smith</span><span class="seperator">,</span><span class="firstName">John</span><span class="middleName">W</span><span class="role">Member</span>', jQuery("#backup").html(), "The backup is accurate.");
+	equal(jQuery("input").length, 6, "There are three input fields.");
+	equal(jQuery("#cmFirstName").val(), "John", "The first name field has the correct value.");
+	equal(jQuery("#cmMiddleName").val(), "W", "The middle name field has the correct value.");
+	equal(jQuery("#cmLastName").val(), "Smith", "The last name field has the correct value.");
+	equal(jQuery("#cmRoles").val(), "Member", "The role field has the correct value.");
+	equal(jQuery(".icon-remove").length, 1, "There is one cancel icon.");
+	equal(jQuery(".icon-ok").length, 1, "There is one submit icon.");
+	equal(jQuery("#backup").length, 1, "The backup was created.");
+	equal(jQuery("#backup").html(), '<span class="lastName">Smith</span><span class="seperator">,</span><span class="firstName">John</span><span class="middleName">W</span><span class="role">Member</span>', "The backup is accurate.");
 });
 
 /**
@@ -319,9 +323,9 @@ test("test cancelEditingHandler", function(){
 	//Simulate click
 	jQuery("#firstName").click();
 	
-	equal(0, jQuery("span").length, "The span has been removed.");
-	equal(1, jQuery("input").length, "There is one input field.");
-	equal('<i class="icon-pencil"></i>Audrey', jQuery("#backup").html(), "The backup is accurate.");
+	equal(jQuery("span").length, 0, "The span has been removed.");
+	equal(jQuery("input").length, 1, "There is one input field.");
+	equal(jQuery("#backup").html(), '<i class="icon-pencil"></i>Audrey', "The backup is accurate.");
 	
 	//Register Cancel Handler
 	var cancelHandler = cancelEditingHandler();
@@ -330,10 +334,10 @@ test("test cancelEditingHandler", function(){
 	//Simulate click
 	jQuery(".icon-remove").click();
 	
-	equal(0, jQuery("input").length, "The input is now removed.");
-	equal(0, jQuery("#backup").length, "The backup has been removed.");
-	equal(1, jQuery("span").length, "There is one span.");
-	equal('<i class="icon-pencil"></i>Audrey', jQuery("span#firstName").html(), "The restored markup is accurate.");
+	equal(jQuery("input").length, 0, "The input is now removed.");
+	equal(jQuery("#backup").length, 0, "The backup has been removed.");
+	equal(jQuery("span").length, 1, "There is one span.");
+	equal(jQuery("span#firstName").html(), '<i class="icon-pencil"></i>Audrey', "The restored markup is accurate.");
 });
  
 /**
@@ -371,16 +375,16 @@ test("test commitChangesHandler AJAX General", function(){
 	
 	options.success({ success: 'true', value: 'Susie' });
 	
-	equal('/jsonURL',options.url,"The ajax url is correct.");
-    equal('POST',options.type,"The ajax type is correct.");
-    equal('json',options.dataType,"The ajax dataType is correct.");
-    equal('Audrey',options.data.value.replace(" ",""),"The ajax data value is correct.");
-    equal(1,options.data.subId,"The ajax data subId is correct.");
-    equal('firstName',options.data.field,"The ajax data field is correct.");
+	equal(options.url, '/jsonURL', "The ajax url is correct.");
+    equal(options.type, 'POST', "The ajax type is correct.");
+    equal(options.dataType, 'json', "The ajax dataType is correct.");
+    equal(options.data.value.replace(" ",""), 'Audrey', "The ajax data value is correct.");
+    equal(options.data.subId, 1, "The ajax data subId is correct.");
+    equal(options.data.field, 'firstName', "The ajax data field is correct.");
     
-    equal('<i class="icon-pencil"></i> Susie',jQuery("span").html(),"The data returned is correct.");
-    equal(0, jQuery(".icon-remove").length,"There are zero remove icons.");
-    equal(0, jQuery(".icon-ok").length,"There are zero ok icons.");
+    equal(jQuery("span").html(), '<i class="icon-pencil"></i> Susie', "The data returned is correct.");
+    equal(jQuery(".icon-remove").length, 0, "There are zero remove icons.");
+    equal(jQuery(".icon-ok").length, 0, "There are zero ok icons.");
 	
 });
 
@@ -442,17 +446,17 @@ test("test commitChangesHandler AJAX Subject", function(){
     options.success({ success: 'true', value: '' });
     
     
-    equal('/jsonURL',options.url,"The ajax url is correct.");
-    equal('POST',options.type,"The ajax type is correct.");
-    equal('json',options.dataType,"The ajax dataType is correct.");
-    equal('one',options.data.primary,"Primary parameter is correct.");
-    equal('two',options.data.secondary,"Secondary parameter is correct.");
-    equal('',options.data.tertiary,"Tertiary parameter is correct.");
-    equal(1,options.data.subId,"The ajax data subId is correct.");
-    equal('subjects',options.data.field,"The ajax data field is correct.");
+    equal(options.url, '/jsonURL', "The ajax url is correct.");
+    equal(options.type, 'POST', "The ajax type is correct.");
+    equal(options.dataType, 'json', "The ajax dataType is correct.");
+    equal(options.data.primary, 'one', "Primary parameter is correct.");
+    equal(options.data.secondary, 'two', "Secondary parameter is correct.");
+    equal(options.data.tertiary, '', "Tertiary parameter is correct.");
+    equal(options.data.subId, 1, "The ajax data subId is correct.");
+    equal(options.data.field, 'subjects', "The ajax data field is correct.");
     
-    equal(0, jQuery(".icon-remove").length,"There are zero remove icons.");
-    equal(0, jQuery(".icon-ok").length,"There are zero ok icons.");
+    equal(jQuery(".icon-remove").length, 0, "There are zero remove icons.");
+    equal(jQuery(".icon-ok").length, 0, "There are zero ok icons.");
     
 });
   
@@ -496,21 +500,21 @@ test("test commitChangesHandler AJAX committee members", function(){
 	
 	options.success({ success: 'true', id: 1, firstName: 'John', lastName: 'Smith', middleName: 'W', roles: ['Member'] });
 	
-	equal('/committeeURL', options.url,"The ajax url is correct.");
-    equal('POST', options.type,"The ajax type is correct.");
-    equal('json', options.dataType,"The ajax dataType is correct.");    
-    equal(1, options.data.id,"The ajax data id is correct.");
-    equal('John', options.data.firstName,"The ajax data firstName is correct.");
-    equal('W', options.data.middleName,"The ajax data middleName is correct.");
-    equal('Smith', options.data.lastName,"The ajax data lastName is correct.");
+	equal(options.url, '/committeeURL', "The ajax url is correct.");
+    equal(options.type, 'POST', "The ajax type is correct.");
+    equal(options.dataType, 'json', "The ajax dataType is correct.");    
+    equal(options.data.id, 1, "The ajax data id is correct.");
+    equal(options.data.firstName, 'John', "The ajax data firstName is correct.");
+    equal(options.data.middleName, 'W', "The ajax data middleName is correct.");
+    equal(options.data.lastName, 'Smith', "The ajax data lastName is correct.");
     
     
-    equal('John', jQuery("span.firstName").text().trim(),"The first name returned is correct.");
-    equal('W', jQuery("span.middleName").text().trim(),"The middle name returned is correct.");
-    equal('Smith', jQuery("span.lastName").text().trim(),"The last name returned is correct.");
-    equal('Member', jQuery("span.role").text().trim(),"The roles returned is correct.");
-    equal(0, jQuery(".icon-remove").length,"There are zero remove icons.");
-    equal(0, jQuery(".icon-ok").length,"There are zero ok icons.");
+    equal(jQuery("span.firstName").text().trim(), 'John', "The first name returned is correct.");
+    equal(jQuery("span.middleName").text().trim(), 'W', "The middle name returned is correct.");
+    equal(jQuery("span.lastName").text().trim(), 'Smith', "The last name returned is correct.");
+    equal(jQuery("span.role").text().trim(), 'Member', "The roles returned is correct.");
+    equal(jQuery(".icon-remove").length, 0, "There are zero remove icons.");
+    equal(jQuery(".icon-ok").length, 0, "There are zero ok icons.");
     
 });
 
@@ -539,13 +543,13 @@ test("test retrieveTemplateJSON AJAX", function(){
 	
 	options.success({ success: 'true', subject: 'This is my subject.', message: 'This is the body of the email.' });
 	
-	equal('/jsonURL', options.url,"The ajax url is correct.");
-	equal('POST', options.type,"The ajax type is correct.");
-	equal('json', options.dataType,"The ajax dataType is correct.");
-	equal(1, options.data.id,"The ajax data id is correct.");
+	equal(options.url, '/jsonURL', "The ajax url is correct.");
+	equal(options.type, 'POST', "The ajax type is correct.");
+	equal(options.dataType, 'json', "The ajax dataType is correct.");
+	equal(options.data.id, 1, "The ajax data id is correct.");
 	
-	equal("This is the body of the email.", jQuery("textarea").html(),"The message was updated correctly.");
-	equal("This is my subject.", jQuery("input").val(),"The subject was updated correctly.");
+	equal(jQuery("textarea").html(), "This is the body of the email.", "The message was updated correctly.");
+	equal(jQuery("input").val(), "This is my subject.", "The subject was updated correctly.");
 });
 
 /**
@@ -570,10 +574,10 @@ test("test addCommitteeMemberHandler", function(){
 	//Simulate click
 	jQuery("#add_new_member").click();
 	
-	equal(1, jQuery("#cmLastName").length, "There is 1 input for last name.");
-	equal(1, jQuery("#cmFirstName").length, "There is 1 input for first name.");
-	equal(1, jQuery("#cmMiddleName").length, "There is 1 input for middle name.");
-	equal(1, jQuery("#cmRoles").length, "There is 1 input for chair.");	
+	equal(jQuery("#cmLastName").length, 1, "There is 1 input for last name.");
+	equal(jQuery("#cmFirstName").length, 1, "There is 1 input for first name.");
+	equal(jQuery("#cmMiddleName").length, 1, "There is 1 input for middle name.");
+	equal(jQuery("#cmRoles").length, 1, "There is 1 input for chair.");	
 	
  });
  
@@ -584,13 +588,17 @@ test("test commitNewCommitteeMemberHandler", function(){
 	expect(13);
 	reset();
 	
-	var markup += '<div id="committeeMembers" data-roles=\'["Member","Chair"]\'>';
-	    markup += '<ul><li class="add">';
-		markup += '<input type="text" id="cmFirstName" value="Judy" />';
-		markup += '<input type="text" id="cmLastName" value="Jetson" />';
-		markup += '<input type="text" id="cmMiddleName" value="L" />';
-		markup += '<input type="text" id="cmRoles" value="Chair" />';
-		markup += '</li></ul></div>';
+	var markup = '<div id="committeeMembers" data-roles=\'["Member","Chair"]\'>';
+	markup += '<ul><li class="add">';
+	markup += '<input type="text" id="cmFirstName" value="Judy" />';
+	markup += '<input type="text" id="cmLastName" value="Jetson" />';
+	markup += '<input type="text" id="cmMiddleName" value="L" />';
+	markup += '<select id="cmRoles" multiple="multiple">';
+	markup += '<option value="Chair" selected>Chair</option>';
+	markup += '<option value="Co-Chair">Co-Chair</option>';
+	markup += '<option value="Director of Research">Director of Research</option>';
+	markup += '</select>';
+	markup += '</li></ul></div>';
 	
 	jQuery("body").append(markup);
 	
@@ -605,21 +613,20 @@ test("test commitNewCommitteeMemberHandler", function(){
 	
 	options.success({ success: 'true', id: '2', firstName: 'Sam', lastName: 'Colt', middleName: 'T', roles: ['Chair'] });
 	
-	equal('/jsonURL', options.url,"The ajax url is correct.");
-	equal('POST', options.type,"The ajax type is correct.");
-	equal('json', options.dataType,"The ajax dataType is correct.");
-	equal(1, options.data.subId,"The ajax data id is correct.");
-	equal('Judy', options.data.firstName, "The ajax data firstName is correct.");
-	equal('Jetson', options.data.lastName, "The ajax data lastName is correct.");
-	equal('L', options.data.middleName, "The ajax data middleName is correct.");
-	equal(['Chair'], options.data.roles, "The ajax data roles is correct.");
+	equal(options.url, '/jsonURL', "The ajax url is correct.");
+	equal(options.type, 'POST', "The ajax type is correct.");
+	equal(options.dataType, 'json', "The ajax dataType is correct.");
+	equal(options.data.subId, 1, "The ajax data id is correct.");
+	equal(options.data.firstName, 'Judy', "The ajax data firstName is correct.");
+	equal(options.data.lastName, 'Jetson', "The ajax data lastName is correct.");
+	equal(options.data.middleName, 'L', "The ajax data middleName is correct.");
+	equal(options.data.roles.toString(), 'Chair', "The ajax data roles is correct.");
 	
-	equal('Sam', jQuery(".firstName").text().trim(), "The first name is correct.");
-	equal('T', jQuery(".middleName").text().trim(), "The middle name is correct.");
-	equal('Colt', jQuery(".lastName").text().trim(), "The last name is correct.");
-	equal('Chair', jQuery(".role").text().trim(), "The member is chair.");
-	equal(0, jQuery(".add").length, "There are 0 list items with the class 'add'.");
-	
+	equal(jQuery(".firstName").text().trim(), 'Sam', "The first name is correct.");
+	equal(jQuery(".middleName").text().trim(), 'T', "The middle name is correct.");
+	equal(jQuery(".lastName").text().trim(), 'Colt', "The last name is correct.");
+	equal(jQuery(".role").text().trim(), 'Chair', "The member is chair.");
+	equal(jQuery(".add").length, 0, "There are 0 list items with the class 'add'.");
 });
  
 /**
@@ -648,11 +655,11 @@ test("test removeCommitteeMemberHandler", function(){
 	
 	options.success({ success: 'true', id: '1' });
 	
-	equal('/jsonURL', options.url,"The ajax url is correct.");
-	equal('POST', options.type,"The ajax type is correct.");
-	equal('json', options.dataType,"The ajax dataType is correct.");
+	equal(options.url, '/jsonURL', "The ajax url is correct.");
+	equal(options.type, 'POST', "The ajax type is correct.");
+	equal(options.dataType, 'json', "The ajax dataType is correct.");
 
-	equal(0, jQuery("li").length, "The committee member was removed.");
+	equal(jQuery("li").length, 0, "The committee member was removed.");
 });
   
 </script>
