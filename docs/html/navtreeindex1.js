@@ -239,7 +239,7 @@ var NAVTREEINDEX1 =
 "classcontrollers_1_1_first_user_1_1_embargo_array.html#ad1da61bed2f1f831369f7719ad0911c2":[1,0,0,7,0,0],
 "classcontrollers_1_1_first_user_1_1_embargo_array.html#afa2c2420f2518cf413b09cc7aaeb4e9d":[1,0,0,7,0,4],
 "classcontrollers_1_1_first_user_1_1_initialize_embargos.html":[1,0,0,7,1],
-"classcontrollers_1_1_first_user_1_1_initialize_embargos.html#a0d412103431e5a18c74204738cb7bb84":[1,0,0,7,1,0],
+"classcontrollers_1_1_first_user_1_1_initialize_embargos.html#a76d88d03bcecae18c2d1ae0852c56b43":[1,0,0,7,1,0],
 "classcontrollers_1_1_job_tab.html":[1,0,0,8],
 "classcontrollers_1_1_job_tab.html#a6d7b4bcbe75c737546b92f3d42808e48":[1,0,0,8,1],
 "classcontrollers_1_1_job_tab.html#a8a7d709d42f82f32c54ab129fba3e7db":[1,0,0,8,0],
