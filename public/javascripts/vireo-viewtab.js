@@ -372,12 +372,12 @@ function editCommitteeMemberHandler(){
 					if (currentRoles.indexOf(value) > -1)
 						var selected = 'selected="selected"';
 					
-					markup += '<option value="'+value+'" '+selected+'>'+value+'</option>'
+					markup += '<option value="'+decodeURIComponent(value)+'" '+selected+'>'+decodeURIComponent(value)+'</option>'
 				});
 				// If a current role is not in the list of available roles, add it to the end of the list.
 				jQuery.each(currentRoles, function(index, value) {
 					if (availableRoles.indexOf(value) == -1)
-						markup += '<option value="'+value+'" selected="selected">'+value+'</option>'
+						markup += '<option value="'+decodeURIComponent(value)+'" selected="selected">'+decodeURIComponent(value)+'</option>'
 				});
 	
 				markup += '</select></td>';
@@ -426,7 +426,7 @@ function addCommitteeMemberHandler(){
 				markup += '</tr>';
 				markup += '<tr><td style="text-align:right;"><b>Role:</b> </td>';
 				markup += '<td colspan="2"> ';
-				markup += '<input class="single-role" id="cmRoles" type="checkbox" value="'+availableRoles[0]+'"> '+availableRoles[0];
+				markup += '<input class="single-role" id="cmRoles" type="checkbox" value="'+decodeURIComponent(availableRoles[0])+'"> '+decodeURIComponent(availableRoles[0]);
 				markup += '</td>';
 				markup += '</tr>';
 				
@@ -438,7 +438,7 @@ function addCommitteeMemberHandler(){
 				
 				// List all of the normal roles
 				jQuery.each(availableRoles, function(index, value) {
-					markup += '<option value="'+value+'">'+value+'</option>'
+					markup += '<option value="'+decodeURIComponent(value)+'">'+decodeURIComponent(value)+'</option>'
 				});
 				markup += '</select></td>';
 				markup += '</tr>';

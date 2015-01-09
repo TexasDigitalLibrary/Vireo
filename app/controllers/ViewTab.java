@@ -20,17 +20,15 @@ import java.util.Map;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
-import org.apache.commons.io.FilenameUtils;
 import org.tdl.vireo.constant.AppConfig;
 import org.tdl.vireo.email.EmailService;
-import org.tdl.vireo.email.RecipientType;
 import org.tdl.vireo.email.VireoEmail;
 import org.tdl.vireo.export.DepositService;
 import org.tdl.vireo.model.ActionLog;
-import org.tdl.vireo.model.AdministrativeGroup;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.CommitteeMember;
+import org.tdl.vireo.model.CommitteeMemberRoleType;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.DegreeLevel;
@@ -41,8 +39,6 @@ import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
-import org.tdl.vireo.proquest.ProquestVocabularyRepository;
-import org.tdl.vireo.services.EmailByRecipientType;
 import org.tdl.vireo.services.Utilities;
 import org.tdl.vireo.state.State;
 
@@ -160,6 +156,14 @@ public class ViewTab extends AbstractVireoController {
 		}
 		
 		List<EmbargoType> embargoTypes = settingRepo.findAllEmbargoTypes();
+		
+		ArrayList<String> roles = new ArrayList<String>();
+		for(CommitteeMemberRoleType role : settingRepo.findAllCommitteeMemberRoleTypes()) {
+			String encodedName = URIEncode(role.getName());
+			if(!roles.contains(encodedName)){
+				roles.add(encodedName);
+			}
+		}
 				
 		String nav = "view";
 		render(	nav,
@@ -179,7 +183,8 @@ public class ViewTab extends AbstractVireoController {
 				depositLocations,
 				attachments,
 				attachmentTypes,
-				embargoTypes
+				embargoTypes,
+				roles
 				);
 	}
 

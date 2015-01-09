@@ -560,16 +560,7 @@ jQuery(document).ready(function(){
 					#{/if}
 				</ul>				
 			</div>
-			
-			%{
-			   // Store the available roles as an attribute.
-			   def roles = [];
-			   for (def role : settingRepo.findAllCommitteeMemberRoleTypes())  {
-			   		if (!roles.contains(role.getName()))
-			   			roles.push(role.getName());
-			   }
-            }%
-			<div id="committeeMembers" class="edit-box pull-left" data-roles='[#{list items:roles, as:'role'}"${role.escapeJavaScript()}"${ role_isLast ? "" : ","}#{/list}]'>
+			<div id="committeeMembers" class="edit-box pull-left" data-roles='[#{list items:roles, as:'role'}"${role}"${ role_isLast ? "" : ","}#{/list}]'>
 				<ul class="unstyled">
 					<li><b>Committee Members:</b>
 					<ul class="unstyled" style="padding:10px 0 0 30px;">
