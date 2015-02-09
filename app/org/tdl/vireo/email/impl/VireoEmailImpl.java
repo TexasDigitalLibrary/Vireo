@@ -332,17 +332,26 @@ public class VireoEmailImpl implements VireoEmail {
 		}
 		
 		// Build a default success message
-		String recipients = "";
+		String TOrecipients = "";
 		for (InternetAddress address : to) {
-			if (recipients.length() != 0)
-				recipients += ", ";
+			if (TOrecipients.length() != 0)
+				TOrecipients += ", ";
 			if (address.getPersonal() != null)
-				recipients += address.getPersonal();
+				TOrecipients += address.getPersonal();
 			else
-				recipients += address.getAddress();
+				TOrecipients += address.getAddress();
+		}
+		String CCrecipients = "";
+		for (InternetAddress address : cc) {
+			if (CCrecipients.length() != 0)
+				CCrecipients += ", ";
+			if (address.getPersonal() != null)
+				CCrecipients += address.getPersonal();
+			else
+				CCrecipients += address.getAddress();
 		}
 		
-		return String.format("Email sent to %1s; %2s: '%3s'",recipients,subject,message);
+		return String.format("Email sent to: < %1s > and cc to: < %2s >; %3s: '%4s'",TOrecipients, CCrecipients,subject,message);
 		
 	}
 
