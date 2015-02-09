@@ -1031,8 +1031,6 @@ public class ViewTab extends AbstractVireoController {
 			uploadPrimary(sub);
 		}else if("additional".equals(uploadType)){
 			uploadAdditional(sub);
-		} else {
-			validation.addError("addFile", "You must choose to replace the Primary file or add an additional file.");
 		}
 		
 		VireoEmail email = null;
