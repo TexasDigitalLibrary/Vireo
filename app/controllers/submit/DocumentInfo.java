@@ -332,7 +332,7 @@ public class DocumentInfo extends AbstractSubmitStep {
 			publishedMaterialFlag = true;
 		
 		
-		renderTemplate("Submit/documentInfo.html", subId, stickies,
+		renderTemplate("Submit/documentInfo.html", subId, sub, stickies,
 				title, degreeMonth, degreeYear, defenseDate, docType, abstractText, keywords, 
 				subjectPrimary, subjectSecondary, subjectTertiary, docLanguage, committeeSlots, 
 				committee, chairEmail, publishedMaterialFlag, publishedMaterial, embargos);
@@ -431,8 +431,10 @@ public class DocumentInfo extends AbstractSubmitStep {
 			String fieldName = eg.name().equals("DEFAULT") ? "EMBARGO_TYPE" : "EMBARGO_TYPE_"+eg.name();		
 			FieldConfig field = FieldConfig.valueOf(fieldName);
 						
-			if (isFieldRequired(field) && sub.getEmbargoTypeByGuarantor(eg) == null)
-				validation.addError("embargo-"+eg.name(), "Please choose a "+eg.name().toLowerCase()+" embargo option");
+			if (isFieldRequired(field) && sub.getEmbargoTypeByGuarantor(eg) == null) {
+				if(eg != EmbargoGuarantor.PROQUEST || sub.getUMIRelease())
+					validation.addError("embargo-"+eg.name(), "Please choose a "+eg.name().toLowerCase()+" embargo option");
+			}
 		}
 		
 		// Check if we've added any new errors. If so return false;

@@ -142,7 +142,7 @@ jQuery(document).ready(function(){
 </ul>
 #{/ifErrors}
 <br/>
-	<form action="@{submit.DocumentInfo.documentInfo(subId)}" method="post" class="form-inline">
+	<form action="@{submit.DocumentInfo.documentInfo(sub.getId())}" method="post" class="form-inline">
 	<input type="hidden" name="step" value="documentInfo"/>
 
 	#{ifEnabled [DOCUMENT_TITLE,GRADUATION_DATE,DEFENSE_DATE,DOCUMENT_TYPE,DOCUMENT_ABSTRACT,DOCUMENT_KEYWORDS,DOCUMENT_SUBJECTS,DOCUMENT_LANGUAGE]}
@@ -428,11 +428,11 @@ jQuery(document).ready(function(){
 				%{
 					def embargoErrorClass = ["embargo-",activeEmbargosMap.get(EMBARGO_TYPE).toString()].join("")
 				}%
-
-				<div id="embargo-${activeEmbargosMap.get(EMBARGO_TYPE).toString()}" 
+				#{if (activeEmbargosMap.get(EMBARGO_TYPE) != org.tdl.vireo.model.EmbargoGuarantor.PROQUEST || sub.getUMIRelease())}
+					<div id="embargo-${activeEmbargosMap.get(EMBARGO_TYPE).toString()}" 
 					class="embargo-gaurentor-set  
 					#{if activeEmbargosMap.get(EMBARGO_TYPE).toString() != 'DEFAULT'} embargo-type-additional #{/if} 
-					#{ifRequired EMBARGO_TYPE}#{if activeEmbargosMap.get(EMBARGO_TYPE).toString() != "DEFAULT"}embargoReq#{/if}#{/ifRequired}">
+					#{ifRequired EMBARGO_TYPE}#{if activeEmbargosMap.get(EMBARGO_TYPE) != org.tdl.vireo.model.EmbargoGuarantor.DEFAULT}embargoReq#{/if}#{/ifRequired}">
 					
 					<h4 class="#{errorClass embargoErrorClass /}">#{ifRequired EMBARGO_TYPE}* #{/ifRequired}#{fieldLabel EMBARGO_TYPE /}</h4>
 					<p>#{fieldHelp EMBARGO_TYPE /}</p>
@@ -453,6 +453,7 @@ jQuery(document).ready(function(){
 		                #{/if}
 		            #{/list}
 				</div>
+				#{/if}
 			#{/list}
 		</div>	
 	</fieldset>
