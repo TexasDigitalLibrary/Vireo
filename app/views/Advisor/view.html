@@ -6,12 +6,18 @@
 	<h3 class="span11">Review Application</h3>
 </div>
 <br/>
-#{if inputRecieved }
+#{if inputRecieved && error == null}
 <div class="alert alert-success">
 	<button class="close" data-dismiss="alert">x</button>
 	<p><strong>Your input has been recorded.</strong> You may return to this page to follow the application's progress, or provide additional input in the future.</p>
 </div>
 #{/if}
+#{elseif error != null}
+<div class="alert alert-error">
+	<button class="close" data-dismiss="alert">x</button>
+	<p><strong>Your input has NOT been recorded.</strong> ${error}</p>
+</div>
+#{/elseif}
 
 <div id="confirmSubmit" class="row">
 <form action="@{Advisor.review(token)}" method="post" class="form-horizontal">
@@ -94,7 +100,10 @@
 		<label class="control-label"><b>Approve Embargo:</b></label>
 		<div class="controls">
 			#{if sub.getCommitteeEmbargoApprovalDate() != null }
-			<p>Approved on ${ sub.getCommitteeEmbargoApprovalDate().format("dd MMMM yyyy 'at' hh:mm a") }</p>
+			<p>Approved on ${ sub.getCommitteeEmbargoApprovalDate().format("dd MMMM yyyy 'at' hh:mm a") }<label class="checkbox alert">
+				<input type="checkbox" name="embargoApproval" value="unapprove"/> I unapprove this embargo.
+			</label>
+			</p>
 			#{/if}
 			#{else}
 			<label class="checkbox">
@@ -111,7 +120,11 @@
 		<label class="control-label"><b>Approve Application:</b></label>
 		<div class="controls">
 			#{if sub.getCommitteeApprovalDate() != null }
-			<p>Approved on ${ sub.getCommitteeApprovalDate().format("dd MMMM yyyy 'at' hh:mm a") }</p>
+			<p>Approved on ${ sub.getCommitteeApprovalDate().format("dd MMMM yyyy 'at' hh:mm a") }
+			<label class="checkbox alert">
+				<input type="checkbox" name="committeeApproval" value="unapprove"/> I unapprove this application.
+			</label>
+			</p>
 			#{/if}
 			#{else}
 			<label class="checkbox">

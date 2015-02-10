@@ -73,22 +73,39 @@ public class Advisor extends AbstractVireoController {
 				sub.getId());
 		
 		boolean inputRecieved = false;
+		String error = null;
 		try {
 			context.turnOffAuthorization();
 			Date agreementDate = new Date();
+			boolean messageReceived = false;
 			if (params.get("advisorMessage") != null && params.get("advisorMessage").trim().length() > 0) {
 				sub.logAction("Advisor comments : '" +	params.get("advisorMessage") + "'").save();
 				inputRecieved = true;
+				messageReceived = true;
 			}
 
 			if ("approve".equals(params.get("embargoApproval"))) {
 				sub.setCommitteeEmbargoApprovalDate(agreementDate);
 				inputRecieved = true;
+			} else if ("unapprove".equals(params.get("embargoApproval")) || "reject".equals(params.get("embargoApproval"))) {
+				if(messageReceived) {
+					sub.setCommitteeEmbargoApprovalDate(null);
+					inputRecieved = true;
+				} else {
+					error = "You need to enter in a comment to " + params.get("embargoApproval") + " an embargo approval";
+				}
 			}
 
 			if ("approve".equals(params.get("committeeApproval"))) {
 				sub.setCommitteeApprovalDate(agreementDate);
 				inputRecieved = true;
+			} else if ("unapprove".equals(params.get("committeeApproval")) || "reject".equals(params.get("committeeApproval"))) {
+				if(messageReceived) {
+					sub.setCommitteeApprovalDate(null);
+					inputRecieved = true;
+				} else {
+					error = "You need to enter in a comment to " + params.get("committeeApproval") + " an application approval";
+				}
 			}
 			
 			sub.save();
@@ -108,7 +125,7 @@ public class Advisor extends AbstractVireoController {
 			renderArgs.put(field.name(),field );
 		}
 		
-		renderTemplate("Advisor/view.html", token, sub, submitter, logs, primaryDocument, additionalDocuments, feedbackDocuments, grantor,allEmbargos,inputRecieved);
+		renderTemplate("Advisor/view.html", token, sub, submitter, logs, primaryDocument, additionalDocuments, feedbackDocuments, grantor,allEmbargos,inputRecieved,error);
 
 	}
 	
