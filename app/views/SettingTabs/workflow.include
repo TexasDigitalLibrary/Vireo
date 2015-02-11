@@ -32,7 +32,7 @@
 								<td class="edit-box"> 
 									<ul class="unstyled"> 
 										<li #{if !rule.isSystem()}class="edit"#{/if}> 
-											<span id="${state.getBeanName()}-${rule.getId()}-conditionCategory" class="empty select" data-id="${rule.getId()}" data-state="${state.getBeanName()}" data-ruleFieldName="conditionCategory"> 
+											<span id="${state.getBeanName()}-${rule.getId()}-conditionCategory" class="select" data-id="${rule.getId()}" data-state="${state.getBeanName()}" data-ruleFieldName="conditionCategory"> 
 												#{if !rule.isSystem()}<i class="icon-pencil"></i>#{/if}${rule.getCondition()?.getConditionType()?.name()} #{if !rule.getCondition()} none#{/if}
 											</span> 
 										</li> 
@@ -52,7 +52,7 @@
 									#{/if}
 									> 
 										<li class="edit"> 
-											<span id="${state.getBeanName()}-${rule.getId()}-condition" class="empty autocomplete" data-id="${rule.getId()}" data-state="${state.getBeanName()}" data-ruleFieldName="condition"> 
+											<span id="${state.getBeanName()}-${rule.getId()}-condition" class="autocomplete" data-id="${rule.getId()}" data-state="${state.getBeanName()}" data-ruleFieldName="condition"> 
 												<i class="icon-pencil"></i> ${rule?.getCondition()?.getConditionIdDisplayName()}
 											</span>
 										</li>
@@ -67,7 +67,7 @@
 								<td class="edit-box"> 
 									<ul class="unstyled"> 
 										<li #{if !rule.isSystem()}class="edit"#{/if}> 
-											<span id="${state.getBeanName()}-${rule.getId()}-template" class="empty select" data-state="${state.getBeanName()}" data-id="${rule.getId()}" data-ruleFieldName="templateString"> 
+											<span id="${state.getBeanName()}-${rule.getId()}-template" class="select" data-state="${state.getBeanName()}" data-id="${rule.getId()}" data-ruleFieldName="templateString"> 
 												#{if !rule.isSystem()}<i class="icon-pencil"></i>#{/if}${rule.getEmailTemplate()?.getName()} #{if !rule.getEmailTemplate()} none#{/if}
 											</span> 
 										</li> 
@@ -76,7 +76,7 @@
 								<td class="edit-box"> 
 									<ul class="unstyled"> 
 										<li #{if !rule.isSystem()}class="edit"#{/if}> 
-											<span id="${state.getBeanName()}-${rule.getId()}-recipientType" class="empty select" data-id="${rule.getId()}" data-state="${state.getBeanName()}" data-ruleFieldName="recipientType"> 
+											<span id="${state.getBeanName()}-${rule.getId()}-recipientType" class="select" data-id="${rule.getId()}" data-state="${state.getBeanName()}" data-ruleFieldName="recipientType"> 
 												#{if !rule.isSystem()}<i class="icon-pencil"></i>#{/if}#{if rule.getRecipientType()}${rule.getRecipientType()}#{if rule.getRecipientType().name() == "AdminGroup"} (#{if rule.getAdminGroupRecipient()}${rule.getAdminGroupRecipient().getName()}#{/if}#{else} none#{/else})#{/if}#{/if}#{else} none#{/else}
 											</span> 
 										</li>
@@ -95,7 +95,7 @@
 			
 			<p><a id="${state.getBeanName()}-add-workflowEmailRule" href="javascript:void(0);" data-state="${state.getBeanName()}">[ADD NEW]</a></p>
 
-			<div id="${state.getBeanName()}-workflowRule-conditionCategory" style="display:none;" class="empty select">
+			<div id="${state.getBeanName()}-workflowRule-conditionCategory" style="display:none;" class="select">
 				<select class="field" data-id="" data-state="" data-ruleFieldName="">
 					<option value="">Choose a condition type...</option>
 				#{list items:conditionTypes, as:'conditionType'}
@@ -103,14 +103,14 @@
 				#{/list}
 				</select>
 			</div>
-			<div id="${state.getBeanName()}-workflowRule-templateString" style="display:none;" class="empty select">
+			<div id="${state.getBeanName()}-workflowRule-templateString" style="display:none;" class="select">
 				<select class="field" data-id="" data-state="" data-ruleFieldName="">
 					#{list items:templates, as:'template'}
 			         <option value="${template.getId()}">${template.getName()}</option>
 			      #{/list}
 				</select>
 			</div>
-			<div id="${state.getBeanName()}-workflowRule-recipientType" style="display:none;" class="empty select">
+			<div id="${state.getBeanName()}-workflowRule-recipientType" style="display:none;" class="select">
 				<select class="field" data-id="" data-state="" data-ruleFieldName="">
 					<option value="">Choose a recipient type...</option>
 				#{list items:recipientTypes, as:'recipientType'}
@@ -118,7 +118,7 @@
 				#{/list}
 				</select>
 			</div>
-			<div id="${state.getBeanName()}-workflowRule-adminGroup" style="display:none;" class="empty select">
+			<div id="${state.getBeanName()}-workflowRule-adminGroup" style="display:none;" class="select">
 				<select class="field" data-id="" data-state="" data-ruleFieldName="">
 					<option value="">Choose a group...</option>
 				#{list items:adminGroups, as:'adminGroup'}
@@ -126,7 +126,7 @@
 				#{/list}
 				</select>
 			</div>
-			<div id="${state.getBeanName()}-workflowRule-condition" style="display:none;" class="empty autocomplete">
+			<div id="${state.getBeanName()}-workflowRule-condition" style="display:none;" class="autocomplete">
                 
                 %{
 			       def autoCompleteValues = [];
