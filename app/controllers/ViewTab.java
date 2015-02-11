@@ -870,37 +870,35 @@ public class ViewTab extends AbstractVireoController {
 	@Security(RoleType.REVIEWER)
 	private static void addActionLogComment(Submission submission){
 		
-		
 		List<String> primary_recipients = params.get("primary_recipients") == null ? new ArrayList<String>() : Utilities.processEmailDesigneeArray(params.get("primary_recipients").split(","), submission);
 		List<String> cc_recipients =  params.get("cc_recipients") == null ? new ArrayList<String>() :  Utilities.processEmailDesigneeArray(params.get("cc_recipients").split(","), submission);
 		
-		
 		String subject = params.get("subject");
 		String message = params.get("comment");
+			
+		if(subject == null || subject.isEmpty())
+			validation.addError("addActionLogSubject", "You must include a subject when sending an email.");
+	
+		if(message == null || message.isEmpty())
+			validation.addError("addActionLogComment", "You must include a comment when sending an email.");
 		
-		if(primary_recipients.size() > 0) {
-			
-			if(subject == null || subject.isEmpty())
-				validation.addError("addActionLogSubject", "You must include a subject when sending an email.");
 		
-			if(message == null || message.isEmpty())
-				validation.addError("addActionLogComment", "You must include a comment when sending an email.");
-			
-			for(String email_address : primary_recipients)
-			{
-				Utilities.validateEmailAddress(email_address, validation);
-			}
-			
-			for(String email_address : cc_recipients)
-			{
-				Utilities.validateEmailAddress(email_address, validation);
-			}
-				
-			
-		}
-		else
+		for(String email_address : primary_recipients)
 		{
-			validation.addError("addActionLogRecipient", "You must include at least one primary (not cc) recipient when sending an email.");
+			Utilities.validateEmailAddress(email_address, validation);
+		}
+		
+		for(String email_address : cc_recipients)
+		{
+			Utilities.validateEmailAddress(email_address, validation);
+		}
+		
+		if((params.get("primary_recipients_toggle") != null && primary_recipients.size() == 0) || (params.get("primary_recipients_toggle") == null && params.get("cc_recipients_toggle") != null)) {
+			validation.addError("addActionLogComment", "You must include at least one primary recipient (not cc) when sending an email.");
+		}
+		
+		if(params.get("cc_recipients_toggle") != null && cc_recipients.size() == 0) {
+			validation.addError("addActionLogComment", "You must include at least one cc recipient when cc'ing an email.");
 		}
 		
 		if(!validation.hasErrors()) {
