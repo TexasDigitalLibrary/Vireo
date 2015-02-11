@@ -325,7 +325,7 @@ public class ExcelPackagerImpl extends AbstractExcelPackagerImpl {
 				List<EmbargoType> embargoTypes = sub.getEmbargoTypes();
 				for (int k = 0; k < embargoTypes.size(); k++) {
 					EmbargoType embargoType = embargoTypes.get(k);
-					sEmbargos += embargoType.getName() + (embargoType.getGuarantor() != EmbargoGuarantor.DEFAULT ? " (" + embargoType.getGuarantor().name() + ")" : "") + ((k + 1) < embargoTypes.size() ? '\n' : "");
+					sEmbargos += embargoType.getName() + (embargoType.getGuarantor() != EmbargoGuarantor.DEFAULT ? " (" + embargoType.getGuarantor().name() + ")" : "") + ((k + 1) < embargoTypes.size() ? ";" : "");
 				}
 				row.createCell(j).setCellValue(sEmbargos);
 				j++;
@@ -404,6 +404,12 @@ public class ExcelPackagerImpl extends AbstractExcelPackagerImpl {
 				header.createCell(j).setCellValue("Last Event Time");
 				if (sub.getLastLogDate() != null)
 					row.createCell(j).setCellValue(sub.getLastLogDate());
+				j++;
+				break;
+			case ORCID:
+				header.createCell(j).setCellValue("ORCID");
+				if (sub.getOrcid() != null)
+					row.createCell(j).setCellValue(sub.getOrcid());
 				j++;
 				break;
 			}
