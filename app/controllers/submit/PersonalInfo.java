@@ -39,6 +39,7 @@ import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.services.Utilities;
 
 import play.Logger;
 import play.Play;
@@ -170,9 +171,9 @@ public class PersonalInfo extends AbstractSubmitStep {
 				disabledFields.add("lastName");
 				lastName = submitter.getLastName();
 			}
-			if (sub.getOrcid() != null) {
+			if (sub.getOrcid() != null || submitter.getOrcid() != null) {
 				disabledFields.add("orcid");
-				orcid = sub.getOrcid();
+				orcid = (sub.getOrcid() != null ? sub.getOrcid() : submitter.getOrcid());
 			}
 			if (submitter.getBirthYear() != null) {
 				if (submitter.getBirthYear() == null)
@@ -246,8 +247,22 @@ public class PersonalInfo extends AbstractSubmitStep {
 				sub.setStudentMiddleName(middleName);
 			if (isFieldEnabled(STUDENT_LAST_NAME))
 				sub.setStudentLastName(lastName);
-			if (isFieldEnabled(STUDENT_ORCID))
-				sub.setOrcid(orcid);
+			if (isFieldEnabled(STUDENT_ORCID)) {
+				// Verify the ORCID id by pinging their API
+				boolean orcidVerify = true;
+				if (settingRepo.getConfigBoolean(AppConfig.ORCID_VALIDATION)) {
+					if (settingRepo.getConfigBoolean(AppConfig.ORCID_AUTHENTICATION))
+						orcidVerify = Utilities.verifyOrcid(orcid, sub.getStudentFirstName(), sub.getStudentLastName());
+					else
+						orcidVerify = Utilities.verifyOrcid(orcid);
+				}
+				if (!orcidVerify) {
+					validation.addError("orcid", "Your ORCID could not be verified as valid!");
+				} else {
+					sub.setOrcid(orcid);
+					submitter.setOrcid(orcid);
+				}
+			}
 			if (isFieldEnabled(STUDENT_BIRTH_YEAR)) {
 				// Don't fail if the year is invalid
 				if (birthYear != null && birthYear.trim().length() > 0) {
