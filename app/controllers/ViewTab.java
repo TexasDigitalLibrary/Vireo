@@ -276,8 +276,8 @@ public class ViewTab extends AbstractVireoController {
 				if (!orcidVerify)
 					throw new RuntimeException("The provided ORCID could not be validated.");
 				
-				submission.setOrcid(value);
-				currentValue = submission.getOrcid();	
+				submitter.setOrcid(value);
+				currentValue = submitter.getOrcid();	
 
 				//Permanent Phone
 			} else if("permPhone".equals(field)){

@@ -70,7 +70,9 @@ public class LuceneSearcherImplTest extends UnitTest{
 		
 		context.login(MockPerson.getAdministrator());
 		
-		person = personRepo.createPerson("netid", "email@email.com", "first", "last", RoleType.NONE).save();
+		person = personRepo.createPerson("netid", "email@email.com", "first", "last", RoleType.NONE);
+		person.setOrcid("2222-2222-2222-2222");
+		person.save();
 	}
 	
 	/**
@@ -383,7 +385,9 @@ public class LuceneSearcherImplTest extends UnitTest{
 	public void testSubmissionFilterSearchOrdering() throws IOException, InterruptedException {
 		
 		// Setup some other objects to be used, like embargo types, other people, file attachments.
-		Person otherPerson = personRepo.createPerson("another-netid", "other@email.com", "zzzz", "zzzz", RoleType.REVIEWER).save();
+		Person otherPerson = personRepo.createPerson("another-netid", "other@email.com", "zzzz", "zzzz", RoleType.REVIEWER);
+		otherPerson.setOrcid("1111-1111-1111-1111");
+		otherPerson.save();
 		EmbargoType e1 = settingRepo.createEmbargoType("Embargo One", "one", null, true);
 		e1.setDisplayOrder(100);
 		e1.save();
@@ -423,7 +427,6 @@ public class LuceneSearcherImplTest extends UnitTest{
 		sub1.setDepositId("Z");
 		sub1.setReviewerNotes("Z");
 		sub1.addCustomAction(def, true);
-		sub1.setOrcid("2222-2222-2222-2222");
 
 		sub1.save();
 		
@@ -450,7 +453,6 @@ public class LuceneSearcherImplTest extends UnitTest{
 		sub2.setCommitteeEmbargoApprovalDate(new Date(2002,5,1));
 		sub2.setDepositId("A");
 		sub2.setReviewerNotes("A");
-		sub2.setOrcid("1111-1111-1111-1111");
 		sub2.save();
 		
 		

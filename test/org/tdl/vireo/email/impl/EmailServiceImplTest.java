@@ -81,7 +81,7 @@ public class EmailServiceImplTest extends UnitTest {
 		
 		// Verify the log message
 		List<ActionLog> logs = subRepo.findActionLog(sub);
-		assertEquals("Email sent to email@email.com; This is a really important email: 'Here's the meat of what is really cool.'",logs.get(0).getEntry());
+		assertEquals("Email sent to: [ email@email.com ]; This is a really important email: 'Here's the meat of what is really cool.'",logs.get(0).getEntry());
 		assertEquals(person,logs.get(0).getPerson());
 		
 		context.turnOffAuthorization();

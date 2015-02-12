@@ -200,17 +200,11 @@ public class VireoEmailImpl implements VireoEmail {
 	 * @param email
 	 *            An email address
 	 */
+	@Override
 	public void setFrom(String email) {
 		setFrom(email, null);
 	}
 
-	
-
-	
-
-	
-
-	
 	/**
 	 * Set the from address.
 	 * 
@@ -219,7 +213,8 @@ public class VireoEmailImpl implements VireoEmail {
 	 * @param name
 	 *            A descriptive name.
 	 */
-	private void setFrom(String email, String name) {
+	@Override
+	public void setFrom(String email, String name) {
 		setFrom(createAddress(email, name));
 	}
 
@@ -229,7 +224,8 @@ public class VireoEmailImpl implements VireoEmail {
 	 * @param person
 	 *            The person object.
 	 */
-	private void setFrom(Person person) {
+	@Override
+	public void setFrom(Person person) {
 		setFrom(createAddress(person));
 	}
 	
@@ -239,7 +235,8 @@ public class VireoEmailImpl implements VireoEmail {
 	 * @param address
 	 *            The address
 	 */
-	private void setFrom(InternetAddress address) {
+	@Override
+	public void setFrom(InternetAddress address) {
 		_from = validateAddress(address);
 	}
 
@@ -350,8 +347,11 @@ public class VireoEmailImpl implements VireoEmail {
 			else
 				CCrecipients += address.getAddress();
 		}
-		
-		return String.format("Email sent to: < %1s > and cc to: < %2s >; %3s: '%4s'",TOrecipients, CCrecipients,subject,message);
+		String ccString = "";
+		if ( CCrecipients.length() > 0) {
+			ccString = String.format(" and cc to: [ %1s ]", CCrecipients);
+		}
+		return String.format("Email sent to: [ %1s ]" + ccString + "; %2s: '%3s'",TOrecipients,subject,message);
 		
 	}
 

@@ -879,9 +879,6 @@ public class TestDataLoader extends Job {
 				if (random.nextInt(100) > 30)
 					sub.setStudentBirthYear(random.nextInt(20)+1980);
 				
-				if (student.getOrcid()!=null)
-					sub.setOrcid(student.getOrcid());
-				
 				if (random.nextInt(100) > 5)
 					sub.addEmbargoType(embargos.get(random.nextInt(embargos.size()-1)));
 				

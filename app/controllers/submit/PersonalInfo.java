@@ -115,8 +115,6 @@ public class PersonalInfo extends AbstractSubmitStep {
 				sub.setDegree(submitter.getCurrentDegree());
 			if (isFieldEnabled(MAJOR))
 				sub.setMajor(submitter.getCurrentMajor());
-			if (isFieldEnabled(STUDENT_ORCID))
-				sub.setOrcid(submitter.getOrcid());
 			sub.save();
 			subId = sub.getId();
 			Logger.info("%s (%d: %s) has started submission #%d.",
@@ -171,9 +169,9 @@ public class PersonalInfo extends AbstractSubmitStep {
 				disabledFields.add("lastName");
 				lastName = submitter.getLastName();
 			}
-			if (sub.getOrcid() != null || submitter.getOrcid() != null) {
+			if (submitter.getOrcid() != null) {
 				disabledFields.add("orcid");
-				orcid = (sub.getOrcid() != null ? sub.getOrcid() : submitter.getOrcid());
+				orcid = submitter.getOrcid();
 			}
 			if (submitter.getBirthYear() != null) {
 				if (submitter.getBirthYear() == null)
@@ -256,10 +254,13 @@ public class PersonalInfo extends AbstractSubmitStep {
 					else
 						orcidVerify = Utilities.verifyOrcid(orcid);
 				}
+				// if we didn't verify
 				if (!orcidVerify) {
-					validation.addError("orcid", "Your ORCID could not be verified as valid!");
+					// only throw a validation error if we're a required field or the length of the orcid > 0
+					if(orcid.length() > 0 || isFieldRequired(STUDENT_ORCID)){
+						validation.addError("orcid", "Your ORCID could not be verified as valid!");
+					}
 				} else {
-					sub.setOrcid(orcid);
 					submitter.setOrcid(orcid);
 				}
 			}
@@ -351,7 +352,6 @@ public class PersonalInfo extends AbstractSubmitStep {
 			firstName = sub.getStudentFirstName();
 			middleName = sub.getStudentMiddleName();
 			lastName = sub.getStudentLastName();
-			orcid = sub.getOrcid();
 			birthYear = sub.getStudentBirthYear() != null ? String.valueOf(sub.getStudentBirthYear()) : null;
 			program = sub.getProgram();
 			college = sub.getCollege();
@@ -451,7 +451,7 @@ public class PersonalInfo extends AbstractSubmitStep {
 		}
 		if (isFieldRequired(STUDENT_MIDDLE_NAME) && isEmpty(sub.getStudentMiddleName()))
 			validation.addError("middleName","Your middle name is required");
-		if (isFieldRequired(STUDENT_ORCID) && isEmpty(sub.getOrcid()))
+		if (isFieldRequired(STUDENT_ORCID) && isEmpty(sub.getSubmitter().getOrcid()))
 			validation.addError("orcid","Your ORCID id is required");
 	
 		// Birth year

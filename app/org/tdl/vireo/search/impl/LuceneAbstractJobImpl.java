@@ -337,7 +337,7 @@ public abstract class LuceneAbstractJobImpl extends Job {
 		String lastEventEntry = null;
 		Date lastEventTime = null;
 		
-		String orcid = sub.getOrcid();
+		String orcid = sub.getSubmitter().getOrcid();
 		
 		List<ActionLog> logs = indexer.subRepo.findActionLog(sub);
 		if (logs.size() > 0) {

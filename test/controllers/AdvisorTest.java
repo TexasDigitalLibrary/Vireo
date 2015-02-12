@@ -245,8 +245,8 @@ public class AdvisorTest extends AbstractVireoFunctionalTest {
 		response = POST(ADVISOR_URL,params);
 		assertIsOk(response);
 		assertContentMatch("Your input has been recorded.",response);
-		assertFalse(getContent(response).contains("name=\"embargoApproval\""));
-		assertFalse(getContent(response).contains("name=\"committeeApproval\""));
+		assertContentMatch("I unapprove this embargo.", response);
+		assertContentMatch("I unapprove this application.", response);
 		
 		// verify the submission.
 		JPA.em().getTransaction().commit();

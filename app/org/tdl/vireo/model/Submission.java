@@ -83,17 +83,6 @@ public interface Submission extends AbstractModel {
 	public void setStudentBirthYear(Integer year);
 	
 	/**
-	 * @return The ORCID identifier of the student who authored this submission.
-	 */
-	public String getOrcid();
-
-	/**
-	 * @param orcidString
-	 *            The ORCID identifier of the student who authored this submission.
-	 */
-	public void setOrcid(String orcidString);	
-	
-	/**
 	 * @param format
 	 *            The format specifying how the name should be constructed.
 	 * 
