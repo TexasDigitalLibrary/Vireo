@@ -238,7 +238,8 @@ public class Utilities {
 				
 				if(recipientType != null) {
 					
-					List<String> recipientEmailAddresses = EmailByRecipientType.getRecipients(sub, recipientType);
+					// this will work for all recipients except ones that are in Administrative Groups.
+					List<String> recipientEmailAddresses = EmailByRecipientType.getRecipients(sub, recipientType, null);
 					for(String recipientEmailAddress : recipientEmailAddresses)
 						addresses.add(recipientEmailAddress);
 				

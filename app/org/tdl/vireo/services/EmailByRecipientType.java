@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.tdl.vireo.email.RecipientType;
+import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleImpl;
@@ -18,7 +19,7 @@ import play.modules.spring.Spring;
  */
 public class EmailByRecipientType {
 
-	public static List<String> getRecipients(Submission submission, RecipientType recipientType) {
+	public static List<String> getRecipients(Submission submission, RecipientType recipientType, EmailWorkflowRule rule) {
 		
 		List<String> recipients = new ArrayList<String>();
 		SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
@@ -55,8 +56,8 @@ public class EmailByRecipientType {
 			}
 			break;
 		case AdminGroup:
-			if(JpaEmailWorkflowRuleImpl.adminGroupRecipient != null) {
-				recipients.addAll(JpaEmailWorkflowRuleImpl.adminGroupRecipient.getEmails().values());
+			if(rule != null && rule.getAdminGroupRecipient() != null) {
+				recipients.addAll(rule.getAdminGroupRecipient().getEmails().values());
 			}
 			break;
 		case Assignee:

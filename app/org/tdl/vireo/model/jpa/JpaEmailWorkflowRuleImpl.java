@@ -54,7 +54,7 @@ public class JpaEmailWorkflowRuleImpl extends JpaAbstractModel<JpaEmailWorkflowR
 	
 	@ManyToOne
 	@JoinColumn(name="adminGroupRecipientId")
-	public static JpaAdministrativeGroupImpl adminGroupRecipient;
+	public JpaAdministrativeGroupImpl adminGroupRecipient;
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "conditionID")
@@ -163,7 +163,7 @@ public class JpaEmailWorkflowRuleImpl extends JpaAbstractModel<JpaEmailWorkflowR
 
 	@Override
 	public List<String> getRecipients(Submission submission) {	
-		return EmailByRecipientType.getRecipients(submission, recipientType);
+		return EmailByRecipientType.getRecipients(submission, recipientType, this);
 	}
 
 	@Override
