@@ -422,7 +422,7 @@ public class Student extends AbstractVireoController {
 	 */
 	public static boolean removeAdditional(Submission sub) {
 		// Get values from all check boxes
-		String[] idsToRemove = params.getAll("attachmentToRemove[]");
+		String[] idsToRemove = params.getAll("attachmentToRemove");
 
 		if (idsToRemove != null) {
 		
