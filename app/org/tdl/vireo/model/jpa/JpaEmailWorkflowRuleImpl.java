@@ -43,7 +43,7 @@ public class JpaEmailWorkflowRuleImpl extends JpaAbstractModel<JpaEmailWorkflowR
 	public boolean isSystem = false;
 	
 	@Column
-	public boolean isDisabled = false;
+	public boolean isDisabled = true;
 	
 	@Column
 	public String associatedState;

@@ -1019,13 +1019,12 @@ function toggleWorkflowEmailRuleHandler(jsonURL, disable) {
 	return function() {
 		
 		$this = $(this);
-
+		var backupHTML = $this.html();
 		$this.html("confirm "+(disable ? "disable" : "enable")+"?");
 
 		
 		$this.click(function() {
 			
-			var backupHTML = $this.html();
 			$this.html("");	
 			$this.parents("tr").addClass("waiting");
 
@@ -1035,8 +1034,11 @@ function toggleWorkflowEmailRuleHandler(jsonURL, disable) {
 			}
 
 			var failureCallback = function(message) {
-				$this.html(backupHTML);	
-				$this.parents("tr").removeClass("waiting");
+				if(backupHTML.length > 0) {
+					$this.html(backupHTML);	
+					$this.parents("tr").removeClass("waiting");
+					displayAlert("emailWorkflowRule-toggle","Unable to toggle email workflow rule: ", message);
+				}
 				return false;
 			}
 			

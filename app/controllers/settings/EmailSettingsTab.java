@@ -36,6 +36,7 @@ import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.jpa.JpaAdministrativeGroupImpl;
 import org.tdl.vireo.model.jpa.JpaAdministrativeGroupImpl.AdminGroupsComparator;
 import org.tdl.vireo.model.jpa.JpaEmailTemplateImpl;
+import org.tdl.vireo.services.EmailRuleService;
 import org.tdl.vireo.services.Utilities;
 import org.tdl.vireo.state.State;
 
@@ -226,8 +227,13 @@ public class EmailSettingsTab extends SettingsTab {
 			
 			EmailWorkflowRule rule = settingRepo.findEmailWorkflowRule(Long.parseLong(ruleID));
 			
-			rule.enable();
-			rule.save();
+			// validate rule
+			if(EmailRuleService.checkRuleIsValid(rule)) {
+				rule.enable();
+				rule.save();
+			} else {
+				throw new RuntimeException("The Email Workflow Rule is incomplete/invalid and cannot be enabled!");
+			}
 
 			renderJSON("{ \"success\": true }");
 		} catch (RuntimeException re) {

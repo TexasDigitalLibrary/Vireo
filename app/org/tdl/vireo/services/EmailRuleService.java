@@ -104,10 +104,14 @@ public class EmailRuleService {
 		}
 	}
 
+	public static boolean checkRuleIsValid(EmailWorkflowRule ewflRule) {
+		return isConditionValid(ewflRule);
+	}
+	
 	/**
 	 * Checks the validity of a rule to make sure it should run or not
 	 * 
-	 * @param EmailWorkflowRule
+	 * @param ewflRule
 	 *            - the workflow email rule to check
 	 * @param submission
 	 *            - the submission to check against
@@ -115,6 +119,23 @@ public class EmailRuleService {
 	 */
 	private static boolean ruleIsValid(EmailWorkflowRule ewflRule, Submission submission) {
 		boolean conditionValid = true, recipientsValid = true, ruleEnabled = true;
+		
+		conditionValid = isConditionValid(ewflRule);
+		recipientsValid = areRecipientsValid(ewflRule, submission);
+		// check to see if rule is disabled
+		ruleEnabled = (!ewflRule.isDisabled()); // if rule isDisabled(true) return false(rule is not enabled)
+		
+		return (conditionValid && recipientsValid && ruleEnabled);
+	}
+	
+	/**
+	 * Checks the validity of a rule's condition
+	 * 
+	 * @param ewflRule
+	 * @return - true if the condition is not null and is configured properly
+	 */
+	private static boolean isConditionValid(EmailWorkflowRule ewflRule) {
+		boolean conditionValid = true;
 		// check condition != null
 		if (ewflRule.getCondition() != null) {
 			// check condition type and id != null
@@ -137,13 +158,23 @@ public class EmailRuleService {
 		} else {
 			conditionValid = false;
 		}
+		return conditionValid;
+	}
+	
+	/**
+	 * Check to make sure the current rule will have recipients for the current submission
+	 * 
+	 * @param ewflRule
+	 * @param submission
+	 * @return - true if this rule will have recipients for this submission
+	 */
+	private static boolean areRecipientsValid(EmailWorkflowRule ewflRule, Submission submission) {
+		boolean recipientsValid = true;
 		// check recipients
 		if (ewflRule.getRecipients(submission).size() == 0) {
 			recipientsValid = false;
 		}
-		// check to see if rule is disabled
-		ruleEnabled = (!ewflRule.isDisabled()); // if rule isDisabled(true) return false(rule is not enabled)
-		return (conditionValid && recipientsValid && ruleEnabled);
+		return recipientsValid;
 	}
 
 	/**
@@ -267,12 +298,14 @@ public class EmailRuleService {
 			if(advisorRule.getCondition() != null) {
 				advisorRule.getCondition().save();
 			}
+			advisorRule.enable();
 			advisorRule.save();
 		}
 		if (!foundStudent) {
 			if(studentRule.getCondition() != null) {
 				studentRule.getCondition().save();
 			}
+			studentRule.enable();
 			studentRule.save();
 		}
 

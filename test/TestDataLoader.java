@@ -782,6 +782,7 @@ public class TestDataLoader extends Job {
 			} else {
 				wferule.setAdminGroupRecipient(null);
 			}
+			wferule.enable();
 			wferule.save();
 		}
 		
