@@ -585,7 +585,7 @@ jQuery(document).ready(function(){
 					</ul></li>
 				</ul>				
 			</div>
-			#{if isManager && advisorUrl != null }
+			#{if (isManager || isReviewer) && advisorUrl != null }
 			<div class="edit-box full-width">
 			    <ul class="unstyled">
                     <li><label>Faculty Review URL:</label><span><a href="${advisorUrl}">${advisorUrl}</a></span></li>

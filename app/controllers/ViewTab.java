@@ -119,7 +119,8 @@ public class ViewTab extends AbstractVireoController {
 		JPA.em().detach(submission);
 		submission = subRepo.findSubmission(id);
 		
-		Boolean isManager = context.isManager();		
+		Boolean isManager = context.isManager();
+		Boolean isReviewer = context.isReviewer();
 
 		if(submission==null){
 			FilterTab.list();
@@ -170,6 +171,7 @@ public class ViewTab extends AbstractVireoController {
 				submission,
 				submitter,
 				isManager,
+				isReviewer,
 				advisorUrl,
 				gradMonth, 
 				actionLogs, 

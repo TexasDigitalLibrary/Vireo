@@ -57,7 +57,13 @@
             <div class="controls">
                 <input type="text" name="birthYear" value="${birthYear}"/>
             </div>
-        </div> 
+        </div>
+        <div class="control-group #{ifError 'orcid'}error#{/ifError}">
+            <label class="control-label" for="orcid">ORCID:</label>
+            <div class="controls">
+                <input type="text" name="orcid" value="${orcid}"/>
+            </div>
+        </div>
 </fieldset>
 <fieldset>
         <legend>Phone & Address</legend>
