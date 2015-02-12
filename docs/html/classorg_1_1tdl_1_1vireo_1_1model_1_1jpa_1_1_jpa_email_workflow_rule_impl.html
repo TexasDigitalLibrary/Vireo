@@ -30,7 +30,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Vireo
-   &#160;<span id="projectnumber">3.0.x-RC</span>
+   &#160;<span id="projectnumber">3.0.x-RC4</span>
    </div>
    <div id="projectbrief">Vireo Electronic Thesis and Dissertation Submission System</div>
   </td>
@@ -108,7 +108,6 @@ $(document).ready(function(){initNavTree('classorg_1_1tdl_1_1vireo_1_1model_1_1j
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -194,15 +193,12 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a76ebc9d032d76315c98a7198b22c30e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7043cd726dbd73773b59a4396f4adafc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="enumorg_1_1tdl_1_1vireo_1_1email_1_1_recipient_type.html">RecipientType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl.html#a7043cd726dbd73773b59a4396f4adafc">recipientType</a></td></tr>
 <tr class="separator:a7043cd726dbd73773b59a4396f4adafc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea80b6635df3adeeb8d83254cbde8db3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_administrative_group_impl.html">JpaAdministrativeGroupImpl</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl.html#aea80b6635df3adeeb8d83254cbde8db3">adminGroupRecipient</a></td></tr>
+<tr class="separator:aea80b6635df3adeeb8d83254cbde8db3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9a9e3f4c40731ecfb2ba419122295111"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_condition_impl.html">JpaEmailWorkflowRuleConditionImpl</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl.html#a9a9e3f4c40731ecfb2ba419122295111">condition</a></td></tr>
 <tr class="separator:a9a9e3f4c40731ecfb2ba419122295111"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a28c4d930cddf978d481330c51f43d16a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html">JpaEmailTemplateImpl</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl.html#a28c4d930cddf978d481330c51f43d16a">emailTemplate</a></td></tr>
 <tr class="separator:a28c4d930cddf978d481330c51f43d16a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
-Static Public Attributes</h2></td></tr>
-<tr class="memitem:aea80b6635df3adeeb8d83254cbde8db3"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_administrative_group_impl.html">JpaAdministrativeGroupImpl</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl.html#aea80b6635df3adeeb8d83254cbde8db3">adminGroupRecipient</a></td></tr>
-<tr class="separator:aea80b6635df3adeeb8d83254cbde8db3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -486,7 +482,7 @@ Here is the caller graph for this function:</div>
 
 <p>Definition at line <a class="el" href="_jpa_email_workflow_rule_impl_8java_source.html#l00165">165</a> of file <a class="el" href="_jpa_email_workflow_rule_impl_8java_source.html">JpaEmailWorkflowRuleImpl.java</a>.</p>
 <div class="fragment"><div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;                                                             {  </div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;        <span class="keywordflow">return</span> EmailByRecipientType.getRecipients(submission, <a class="code" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl.html#a7043cd726dbd73773b59a4396f4adafc">recipientType</a>);</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;        <span class="keywordflow">return</span> EmailByRecipientType.getRecipients(submission, <a class="code" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl.html#a7043cd726dbd73773b59a4396f4adafc">recipientType</a>, <span class="keyword">this</span>);</div>
 <div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    }</div>
 <div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl_html_a7043cd726dbd73773b59a4396f4adafc"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl.html#a7043cd726dbd73773b59a4396f4adafc">org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleImpl.recipientType</a></div><div class="ttdeci">RecipientType recipientType</div><div class="ttdef"><b>Definition:</b> <a href="_jpa_email_workflow_rule_impl_8java_source.html#l00053">JpaEmailWorkflowRuleImpl.java:53</a></div></div>
 </div><!-- fragment -->
@@ -840,24 +836,14 @@ Here is the caller graph for this function:</div>
 <a class="anchor" id="aea80b6635df3adeeb8d83254cbde8db3"></a>
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_administrative_group_impl.html">JpaAdministrativeGroupImpl</a> org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleImpl.adminGroupRecipient</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Definition at line <a class="el" href="_jpa_email_workflow_rule_impl_8java_source.html#l00057">57</a> of file <a class="el" href="_jpa_email_workflow_rule_impl_8java_source.html">JpaEmailWorkflowRuleImpl.java</a>.</p>
-
-<p>Referenced by <a class="el" href="_email_by_recipient_type_8java_source.html#l00021">org.tdl.vireo.services.EmailByRecipientType.getRecipients()</a>.</p>
 
 </div>
 </div>
@@ -968,7 +954,7 @@ Here is the caller graph for this function:</div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceorg.html">org</a></li><li class="navelem"><a class="el" href="namespaceorg_1_1tdl.html">tdl</a></li><li class="navelem"><a class="el" href="namespaceorg_1_1tdl_1_1vireo.html">vireo</a></li><li class="navelem"><a class="el" href="namespaceorg_1_1tdl_1_1vireo_1_1model.html">model</a></li><li class="navelem"><a class="el" href="namespaceorg_1_1tdl_1_1vireo_1_1model_1_1jpa.html">jpa</a></li><li class="navelem"><a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl.html">JpaEmailWorkflowRuleImpl</a></li>
-    <li class="footer">Generated on Wed Dec 3 2014 12:37:03 for Vireo by
+    <li class="footer">Generated on Thu Feb 12 2015 12:31:08 for Vireo by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

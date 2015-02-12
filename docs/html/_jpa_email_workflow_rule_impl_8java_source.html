@@ -30,7 +30,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Vireo
-   &#160;<span id="projectnumber">3.0.x-RC</span>
+   &#160;<span id="projectnumber">3.0.x-RC4</span>
    </div>
    <div id="projectbrief">Vireo Electronic Thesis and Dissertation Submission System</div>
   </td>
@@ -156,7 +156,7 @@ $(document).ready(function(){initNavTree('_jpa_email_workflow_rule_impl_8java_so
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    </div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    @ManyToOne</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    @JoinColumn(name=&quot;adminGroupRecipientId&quot;)</div>
-<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl.html#aea80b6635df3adeeb8d83254cbde8db3">   57</a></span>&#160;    public static <a class="code" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_administrative_group_impl.html">JpaAdministrativeGroupImpl</a> adminGroupRecipient;</div>
+<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl.html#aea80b6635df3adeeb8d83254cbde8db3">   57</a></span>&#160;    public <a class="code" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_administrative_group_impl.html">JpaAdministrativeGroupImpl</a> adminGroupRecipient;</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    </div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    @OneToOne(cascade = CascadeType.ALL)</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    @JoinColumn(name = &quot;conditionID&quot;)</div>
@@ -253,7 +253,7 @@ $(document).ready(function(){initNavTree('_jpa_email_workflow_rule_impl_8java_so
 <div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;</div>
 <div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    @Override</div>
 <div class="line"><a name="l00165"></a><span class="lineno"><a class="line" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl.html#ade08d2c4446c7a87b0db2fc98137184a">  165</a></span>&#160;    <span class="keyword">public</span> List&lt;String&gt; <a class="code" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl.html#ade08d2c4446c7a87b0db2fc98137184a">getRecipients</a>(<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html">Submission</a> submission) {  </div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;        <span class="keywordflow">return</span> EmailByRecipientType.getRecipients(submission, recipientType);</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;        <span class="keywordflow">return</span> EmailByRecipientType.getRecipients(submission, recipientType, <span class="keyword">this</span>);</div>
 <div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    }</div>
 <div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;</div>
 <div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    @Override</div>
@@ -344,7 +344,7 @@ $(document).ready(function(){initNavTree('_jpa_email_workflow_rule_impl_8java_so
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission_html"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html">org.tdl.vireo.model.Submission</a></div><div class="ttdef"><b>Definition:</b> <a href="_submission_8java_source.html#l00029">Submission.java:29</a></div></div>
 <div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl_html_a652a5b2696dd43006ba1d8b1d48ac12e"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl.html#a652a5b2696dd43006ba1d8b1d48ac12e">org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleImpl.isSystem</a></div><div class="ttdeci">boolean isSystem()</div><div class="ttdef"><b>Definition:</b> <a href="_jpa_email_workflow_rule_impl_8java_source.html#l00098">JpaEmailWorkflowRuleImpl.java:98</a></div></div>
 <div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl_html_aeeca7431fe23959e060ebf2e1d5a08c8"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl.html#aeeca7431fe23959e060ebf2e1d5a08c8">org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleImpl.setIsSystem</a></div><div class="ttdeci">void setIsSystem(boolean isSystem)</div><div class="ttdef"><b>Definition:</b> <a href="_jpa_email_workflow_rule_impl_8java_source.html#l00091">JpaEmailWorkflowRuleImpl.java:91</a></div></div>
-<div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1services_1_1_email_by_recipient_type_html"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1services_1_1_email_by_recipient_type.html">org.tdl.vireo.services.EmailByRecipientType</a></div><div class="ttdef"><b>Definition:</b> <a href="_email_by_recipient_type_8java_source.html#l00019">EmailByRecipientType.java:19</a></div></div>
+<div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1services_1_1_email_by_recipient_type_html"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1services_1_1_email_by_recipient_type.html">org.tdl.vireo.services.EmailByRecipientType</a></div><div class="ttdef"><b>Definition:</b> <a href="_email_by_recipient_type_8java_source.html#l00020">EmailByRecipientType.java:20</a></div></div>
 <div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl_html_ade08d2c4446c7a87b0db2fc98137184a"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl.html#ade08d2c4446c7a87b0db2fc98137184a">org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleImpl.getRecipients</a></div><div class="ttdeci">List&lt; String &gt; getRecipients(Submission submission)</div><div class="ttdef"><b>Definition:</b> <a href="_jpa_email_workflow_rule_impl_8java_source.html#l00165">JpaEmailWorkflowRuleImpl.java:165</a></div></div>
 <div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_administrative_group_impl_html"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_administrative_group_impl.html">org.tdl.vireo.model.jpa.JpaAdministrativeGroupImpl</a></div><div class="ttdef"><b>Definition:</b> <a href="_jpa_administrative_group_impl_8java_source.html#l00020">JpaAdministrativeGroupImpl.java:20</a></div></div>
 <div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl_html_ae7a8ed6077d1912254c395834ff1cc2d"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl.html#ae7a8ed6077d1912254c395834ff1cc2d">org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleImpl.enable</a></div><div class="ttdeci">void enable()</div><div class="ttdef"><b>Definition:</b> <a href="_jpa_email_workflow_rule_impl_8java_source.html#l00110">JpaEmailWorkflowRuleImpl.java:110</a></div></div>
@@ -359,7 +359,7 @@ $(document).ready(function(){initNavTree('_jpa_email_workflow_rule_impl_8java_so
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d422163b96683743ed3963d4aac17747.html">app</a></li><li class="navelem"><a class="el" href="dir_8dd784b59b4a9f97c6acd22cdbadb1c6.html">org</a></li><li class="navelem"><a class="el" href="dir_60dc62e39f90ceabe5ec09af2c2445af.html">tdl</a></li><li class="navelem"><a class="el" href="dir_07e49d88b1874552035fba0b7e33a8b8.html">vireo</a></li><li class="navelem"><a class="el" href="dir_3050b76c36909bb4538f647305a7b9db.html">model</a></li><li class="navelem"><a class="el" href="dir_a33884d908d7a936654aadd95219a732.html">jpa</a></li><li class="navelem"><a class="el" href="_jpa_email_workflow_rule_impl_8java.html">JpaEmailWorkflowRuleImpl.java</a></li>
-    <li class="footer">Generated on Wed Dec 3 2014 12:37:01 for Vireo by
+    <li class="footer">Generated on Thu Feb 12 2015 12:31:07 for Vireo by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

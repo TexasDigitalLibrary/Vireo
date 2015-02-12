@@ -1,5 +1,6 @@
 var NAVTREEINDEX2 =
 {
+"classcontrollers_1_1_settings_tab.html#ae40d2a4e490575a0d4480f5c995a7f48":[1,0,0,10,2],
 "classcontrollers_1_1_student.html":[1,0,0,11],
 "classcontrollers_1_1_student.html#a11f56e93f4546cf54db06cccf8426214":[1,0,0,11,11],
 "classcontrollers_1_1_student.html#a3f34aed8ecedc402110593adf6fb0e30":[1,0,0,11,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX2 =
 "classorg_1_1tdl_1_1vireo_1_1batch_1_1impl_1_1_assign_service_impl.html#a3cd8566e5a046c196eabf96a2188238c":[1,0,1,0,0,0,0,0,1],
 "classorg_1_1tdl_1_1vireo_1_1batch_1_1impl_1_1_assign_service_impl.html#a4ac5981baefb976f5755fac8c03c10a9":[1,0,1,0,0,0,0,0,5],
 "classorg_1_1tdl_1_1vireo_1_1batch_1_1impl_1_1_assign_service_impl.html#a6d129dd03e41dd7277154ef0f698b9f5":[1,0,1,0,0,0,0,0,4],
-"classorg_1_1tdl_1_1vireo_1_1batch_1_1impl_1_1_assign_service_impl.html#a7c33733c6307e38a3fa102fa5fa282ef":[1,0,1,0,0,0,0,0,9],
-"classorg_1_1tdl_1_1vireo_1_1batch_1_1impl_1_1_assign_service_impl.html#a815ab8064bf3a9ee12cff721d98d13be":[1,0,1,0,0,0,0,0,12]
+"classorg_1_1tdl_1_1vireo_1_1batch_1_1impl_1_1_assign_service_impl.html#a7c33733c6307e38a3fa102fa5fa282ef":[1,0,1,0,0,0,0,0,9]
 };

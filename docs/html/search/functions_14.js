@@ -23,5 +23,6 @@ var searchData=
   ['uploadprimary',['uploadPrimary',['../classcontrollers_1_1_view_tab.html#a742102f2863b1ba9fc6aa66538b86281',1,'controllers::ViewTab']]],
   ['uploadprimarydocument',['uploadPrimaryDocument',['../classcontrollers_1_1_student.html#a11f56e93f4546cf54db06cccf8426214',1,'controllers::Student']]],
   ['uriactivesearchfilterimpl',['UriActiveSearchFilterImpl',['../classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_uri_active_search_filter_impl.html#aa3f74e1a2e244d48d159dc2055f2ebc6',1,'org::tdl::vireo::search::impl::UriActiveSearchFilterImpl']]],
+  ['uriencode',['URIEncode',['../classcontrollers_1_1_abstract_vireo_controller.html#a283238d203c91cfe97837c02ce587966',1,'controllers::AbstractVireoController']]],
   ['userpreferences',['userPreferences',['../classcontrollers_1_1settings_1_1_user_preferences_tab.html#a7d93ab2a2be9b13c99437d9068ab9752',1,'controllers::settings::UserPreferencesTab']]]
 ];

@@ -9,6 +9,7 @@ var classcontrollers_1_1_abstract_vireo_controller =
     [ "isNotEmpty", "classcontrollers_1_1_abstract_vireo_controller.html#a5b14cfdcbcdada6eac4b378fd1443bf9", null ],
     [ "text2html", "classcontrollers_1_1_abstract_vireo_controller.html#aabf7ef41b3dfa3b5da6e791cff34cc5e", null ],
     [ "toJSON", "classcontrollers_1_1_abstract_vireo_controller.html#af0eb2078265d2db560324097ac54d2df", null ],
+    [ "URIEncode", "classcontrollers_1_1_abstract_vireo_controller.html#a283238d203c91cfe97837c02ce587966", null ],
     [ "context", "classcontrollers_1_1_abstract_vireo_controller.html#a2a91bb7a42b88190f809630b9b1e7f46", null ],
     [ "errorLog", "classcontrollers_1_1_abstract_vireo_controller.html#a220b8640fe7d439ccb7657973bc84c82", null ],
     [ "firstUser", "classcontrollers_1_1_abstract_vireo_controller.html#aa3d62fa6612416ab8f2b876aaf8f982c", null ],

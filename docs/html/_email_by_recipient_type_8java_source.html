@@ -30,7 +30,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Vireo
-   &#160;<span id="projectnumber">3.0.x-RC</span>
+   &#160;<span id="projectnumber">3.0.x-RC4</span>
    </div>
    <div id="projectbrief">Vireo Electronic Thesis and Dissertation Submission System</div>
   </td>
@@ -112,77 +112,79 @@ $(document).ready(function(){initNavTree('_email_by_recipient_type_8java_source.
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="keyword">import</span> java.util.List;</div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;</div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keyword">import</span> <a class="code" href="enumorg_1_1tdl_1_1vireo_1_1email_1_1_recipient_type.html">org.tdl.vireo.email.RecipientType</a>;</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">import</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_settings_repository.html">org.tdl.vireo.model.SettingsRepository</a>;</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">import</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html">org.tdl.vireo.model.Submission</a>;</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keyword">import</span> <a class="code" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl.html">org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleImpl</a>;</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">import</span> play.modules.spring.Spring;</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;</div>
-<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="classorg_1_1tdl_1_1vireo_1_1services_1_1_email_by_recipient_type.html">   19</a></span>&#160;<span class="keyword">public</span> <span class="keyword">class </span><a class="code" href="classorg_1_1tdl_1_1vireo_1_1services_1_1_email_by_recipient_type.html">EmailByRecipientType</a> {</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;</div>
-<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="classorg_1_1tdl_1_1vireo_1_1services_1_1_email_by_recipient_type.html#a81abeacc1e4c3b3376de8ea89897b51e">   21</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">static</span> List&lt;String&gt; <a class="code" href="classorg_1_1tdl_1_1vireo_1_1services_1_1_email_by_recipient_type.html#a81abeacc1e4c3b3376de8ea89897b51e">getRecipients</a>(<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html">Submission</a> submission, <a class="code" href="enumorg_1_1tdl_1_1vireo_1_1email_1_1_recipient_type.html">RecipientType</a> recipientType) {</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        </div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        List&lt;String&gt; recipients = <span class="keyword">new</span> ArrayList&lt;String&gt;();</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_settings_repository.html">SettingsRepository</a> settingRepo = Spring.getBeanOfType(SettingsRepository.class);</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <span class="keywordflow">if</span>(recipientType == null) <span class="keywordflow">return</span> recipients;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        </div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="keywordflow">switch</span> (recipientType) {</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keywordflow">case</span> Student:</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;            <span class="keywordflow">if</span>(submission.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html#af9b587de51d9888b4fe4660a4c8c5ef0">getSubmitter</a>().getCurrentEmailAddress() != null &amp;&amp; submission.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html#af9b587de51d9888b4fe4660a4c8c5ef0">getSubmitter</a>().getCurrentEmailAddress().length() &gt; 0) {</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;                recipients.add(submission.getSubmitter().getCurrentEmailAddress());</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;            }</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;            <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        <span class="keywordflow">case</span> Advisor:</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;            <span class="keywordflow">if</span>(submission.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html#a3987c9b9dbe14ee575e2b6a506669519">getCommitteeContactEmail</a>() != null &amp;&amp; submission.getCommitteeContactEmail().length() &gt; 0) {</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;                recipients.add(submission.getCommitteeContactEmail());</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;            }</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;            <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <span class="keywordflow">case</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_college.html">College</a>:</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;            Long collegeId = submission.getCollegeId();</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;            <span class="keywordflow">if</span>(collegeId != null) {</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;                recipients.addAll(settingRepo.findCollege(collegeId).getEmails().values());</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;            }</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;            <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <span class="keywordflow">case</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_department.html">Department</a>:</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;            Long departmentId = submission.getDepartmentId();</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;            <span class="keywordflow">if</span>(departmentId != null) {</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;                recipients.addAll(settingRepo.findDepartment(departmentId).getEmails().values());</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;            }</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <span class="keywordflow">case</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_program.html">Program</a>:</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;            Long programId = submission.getProgramId();</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;            <span class="keywordflow">if</span>(programId != null) {</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;                recipients.addAll(settingRepo.findProgram(programId).getEmails().values());</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;            }</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="keywordflow">case</span> AdminGroup:</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            <span class="keywordflow">if</span>(<a class="code" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl.html">JpaEmailWorkflowRuleImpl</a>.<a class="code" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl.html#aea80b6635df3adeeb8d83254cbde8db3">adminGroupRecipient</a> != null) {</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;                recipients.addAll(JpaEmailWorkflowRuleImpl.adminGroupRecipient.getEmails().values());</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;            }</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;            <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="keywordflow">case</span> Assignee:</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;            <span class="keywordflow">if</span>(submission.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html#af1da2c7ef98749d97529654a2ec4c9e6">getAssignee</a>() != null) {</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;                recipients.add(submission.getAssignee().getCurrentEmailAddress());</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;            }</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="keywordflow">default</span>:</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> UnsupportedOperationException();</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        }       </div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="keywordflow">return</span> recipients;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    }</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;}</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">import</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_email_workflow_rule.html">org.tdl.vireo.model.EmailWorkflowRule</a>;</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">import</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_settings_repository.html">org.tdl.vireo.model.SettingsRepository</a>;</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keyword">import</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html">org.tdl.vireo.model.Submission</a>;</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">import</span> <a class="code" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl.html">org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleImpl</a>;</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">import</span> play.modules.spring.Spring;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;</div>
+<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="classorg_1_1tdl_1_1vireo_1_1services_1_1_email_by_recipient_type.html">   20</a></span>&#160;<span class="keyword">public</span> <span class="keyword">class </span><a class="code" href="classorg_1_1tdl_1_1vireo_1_1services_1_1_email_by_recipient_type.html">EmailByRecipientType</a> {</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
+<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="classorg_1_1tdl_1_1vireo_1_1services_1_1_email_by_recipient_type.html#afbdffc93d3854a594b519ffe747ff2b0">   22</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">static</span> List&lt;String&gt; <a class="code" href="classorg_1_1tdl_1_1vireo_1_1services_1_1_email_by_recipient_type.html#afbdffc93d3854a594b519ffe747ff2b0">getRecipients</a>(<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html">Submission</a> submission, <a class="code" href="enumorg_1_1tdl_1_1vireo_1_1email_1_1_recipient_type.html">RecipientType</a> recipientType, <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_email_workflow_rule.html">EmailWorkflowRule</a> rule) {</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        </div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        List&lt;String&gt; recipients = <span class="keyword">new</span> ArrayList&lt;String&gt;();</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_settings_repository.html">SettingsRepository</a> settingRepo = Spring.getBeanOfType(SettingsRepository.class);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        </div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <span class="keywordflow">if</span>(recipientType == null) <span class="keywordflow">return</span> recipients;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        </div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keywordflow">switch</span> (recipientType) {</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <span class="keywordflow">case</span> Student:</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;            <span class="keywordflow">if</span>(submission.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html#af9b587de51d9888b4fe4660a4c8c5ef0">getSubmitter</a>().getCurrentEmailAddress() != null &amp;&amp; submission.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html#af9b587de51d9888b4fe4660a4c8c5ef0">getSubmitter</a>().getCurrentEmailAddress().length() &gt; 0) {</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;                recipients.add(submission.getSubmitter().getCurrentEmailAddress());</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;            }</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;            <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <span class="keywordflow">case</span> Advisor:</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;            <span class="keywordflow">if</span>(submission.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html#a3987c9b9dbe14ee575e2b6a506669519">getCommitteeContactEmail</a>() != null &amp;&amp; submission.getCommitteeContactEmail().length() &gt; 0) {</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;                recipients.add(submission.getCommitteeContactEmail());</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;            }</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;            <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <span class="keywordflow">case</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_college.html">College</a>:</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;            Long collegeId = submission.getCollegeId();</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;            <span class="keywordflow">if</span>(collegeId != null) {</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;                recipients.addAll(settingRepo.findCollege(collegeId).getEmails().values());</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;            }</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;            <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="keywordflow">case</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_department.html">Department</a>:</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;            Long departmentId = submission.getDepartmentId();</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;            <span class="keywordflow">if</span>(departmentId != null) {</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;                recipients.addAll(settingRepo.findDepartment(departmentId).getEmails().values());</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            }</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;            <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <span class="keywordflow">case</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_program.html">Program</a>:</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;            Long programId = submission.getProgramId();</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;            <span class="keywordflow">if</span>(programId != null) {</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;                recipients.addAll(settingRepo.findProgram(programId).getEmails().values());</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            }</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;            <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <span class="keywordflow">case</span> AdminGroup:</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;            <span class="keywordflow">if</span>(rule != null &amp;&amp; rule.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_email_workflow_rule.html#acd3a8db0e395bcea462d27f5c302c3aa">getAdminGroupRecipient</a>() != null) {</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;                recipients.addAll(rule.getAdminGroupRecipient().getEmails().values());</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;            }</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <span class="keywordflow">case</span> Assignee:</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;            <span class="keywordflow">if</span>(submission.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html#af1da2c7ef98749d97529654a2ec4c9e6">getAssignee</a>() != null) {</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;                recipients.add(submission.getAssignee().getCurrentEmailAddress());</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            }</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="keywordflow">default</span>:</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> UnsupportedOperationException();</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        }       </div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="keywordflow">return</span> recipients;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    }</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;}</div>
+<div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_email_workflow_rule_html_acd3a8db0e395bcea462d27f5c302c3aa"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_email_workflow_rule.html#acd3a8db0e395bcea462d27f5c302c3aa">org.tdl.vireo.model.EmailWorkflowRule.getAdminGroupRecipient</a></div><div class="ttdeci">JpaAdministrativeGroupImpl getAdminGroupRecipient()</div></div>
+<div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_email_workflow_rule_html"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_email_workflow_rule.html">org.tdl.vireo.model.EmailWorkflowRule</a></div><div class="ttdef"><b>Definition:</b> <a href="_email_workflow_rule_8java_source.html#l00016">EmailWorkflowRule.java:16</a></div></div>
+<div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1services_1_1_email_by_recipient_type_html_afbdffc93d3854a594b519ffe747ff2b0"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1services_1_1_email_by_recipient_type.html#afbdffc93d3854a594b519ffe747ff2b0">org.tdl.vireo.services.EmailByRecipientType.getRecipients</a></div><div class="ttdeci">static List&lt; String &gt; getRecipients(Submission submission, RecipientType recipientType, EmailWorkflowRule rule)</div><div class="ttdef"><b>Definition:</b> <a href="_email_by_recipient_type_8java_source.html#l00022">EmailByRecipientType.java:22</a></div></div>
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission_html_af9b587de51d9888b4fe4660a4c8c5ef0"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html#af9b587de51d9888b4fe4660a4c8c5ef0">org.tdl.vireo.model.Submission.getSubmitter</a></div><div class="ttdeci">Person getSubmitter()</div></div>
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_department_html"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_department.html">org.tdl.vireo.model.Department</a></div><div class="ttdef"><b>Definition:</b> <a href="_department_8java_source.html#l00010">Department.java:10</a></div></div>
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_college_html"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_college.html">org.tdl.vireo.model.College</a></div><div class="ttdef"><b>Definition:</b> <a href="_college_8java_source.html#l00010">College.java:10</a></div></div>
 <div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl_html"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl.html">org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleImpl</a></div><div class="ttdef"><b>Definition:</b> <a href="_jpa_email_workflow_rule_impl_8java_source.html#l00037">JpaEmailWorkflowRuleImpl.java:37</a></div></div>
 <div class="ttc" id="enumorg_1_1tdl_1_1vireo_1_1email_1_1_recipient_type_html"><div class="ttname"><a href="enumorg_1_1tdl_1_1vireo_1_1email_1_1_recipient_type.html">org.tdl.vireo.email.RecipientType</a></div><div class="ttdef"><b>Definition:</b> <a href="_recipient_type_8java_source.html#l00009">RecipientType.java:9</a></div></div>
-<div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl_html_aea80b6635df3adeeb8d83254cbde8db3"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl.html#aea80b6635df3adeeb8d83254cbde8db3">org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleImpl.adminGroupRecipient</a></div><div class="ttdeci">static JpaAdministrativeGroupImpl adminGroupRecipient</div><div class="ttdef"><b>Definition:</b> <a href="_jpa_email_workflow_rule_impl_8java_source.html#l00057">JpaEmailWorkflowRuleImpl.java:57</a></div></div>
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission_html_af1da2c7ef98749d97529654a2ec4c9e6"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html#af1da2c7ef98749d97529654a2ec4c9e6">org.tdl.vireo.model.Submission.getAssignee</a></div><div class="ttdeci">Person getAssignee()</div></div>
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission_html"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html">org.tdl.vireo.model.Submission</a></div><div class="ttdef"><b>Definition:</b> <a href="_submission_8java_source.html#l00029">Submission.java:29</a></div></div>
-<div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1services_1_1_email_by_recipient_type_html"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1services_1_1_email_by_recipient_type.html">org.tdl.vireo.services.EmailByRecipientType</a></div><div class="ttdef"><b>Definition:</b> <a href="_email_by_recipient_type_8java_source.html#l00019">EmailByRecipientType.java:19</a></div></div>
+<div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1services_1_1_email_by_recipient_type_html"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1services_1_1_email_by_recipient_type.html">org.tdl.vireo.services.EmailByRecipientType</a></div><div class="ttdef"><b>Definition:</b> <a href="_email_by_recipient_type_8java_source.html#l00020">EmailByRecipientType.java:20</a></div></div>
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_program_html"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_program.html">org.tdl.vireo.model.Program</a></div><div class="ttdef"><b>Definition:</b> <a href="_program_8java_source.html#l00012">Program.java:12</a></div></div>
-<div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1services_1_1_email_by_recipient_type_html_a81abeacc1e4c3b3376de8ea89897b51e"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1services_1_1_email_by_recipient_type.html#a81abeacc1e4c3b3376de8ea89897b51e">org.tdl.vireo.services.EmailByRecipientType.getRecipients</a></div><div class="ttdeci">static List&lt; String &gt; getRecipients(Submission submission, RecipientType recipientType)</div><div class="ttdef"><b>Definition:</b> <a href="_email_by_recipient_type_8java_source.html#l00021">EmailByRecipientType.java:21</a></div></div>
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission_html_a3987c9b9dbe14ee575e2b6a506669519"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html#a3987c9b9dbe14ee575e2b6a506669519">org.tdl.vireo.model.Submission.getCommitteeContactEmail</a></div><div class="ttdeci">String getCommitteeContactEmail()</div></div>
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_settings_repository_html"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_settings_repository.html">org.tdl.vireo.model.SettingsRepository</a></div><div class="ttdef"><b>Definition:</b> <a href="_settings_repository_8java_source.html#l00017">SettingsRepository.java:17</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
@@ -191,7 +193,7 @@ $(document).ready(function(){initNavTree('_email_by_recipient_type_8java_source.
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d422163b96683743ed3963d4aac17747.html">app</a></li><li class="navelem"><a class="el" href="dir_8dd784b59b4a9f97c6acd22cdbadb1c6.html">org</a></li><li class="navelem"><a class="el" href="dir_60dc62e39f90ceabe5ec09af2c2445af.html">tdl</a></li><li class="navelem"><a class="el" href="dir_07e49d88b1874552035fba0b7e33a8b8.html">vireo</a></li><li class="navelem"><a class="el" href="dir_23e8b9d48ec9add2c7903753b7586f1e.html">services</a></li><li class="navelem"><a class="el" href="_email_by_recipient_type_8java.html">EmailByRecipientType.java</a></li>
-    <li class="footer">Generated on Wed Dec 3 2014 12:37:02 for Vireo by
+    <li class="footer">Generated on Thu Feb 12 2015 12:31:07 for Vireo by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

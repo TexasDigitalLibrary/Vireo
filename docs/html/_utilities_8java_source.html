@@ -30,7 +30,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Vireo
-   &#160;<span id="projectnumber">3.0.x-RC</span>
+   &#160;<span id="projectnumber">3.0.x-RC4</span>
    </div>
    <div id="projectbrief">Vireo Electronic Thesis and Dissertation Submission System</div>
   </td>
@@ -293,54 +293,55 @@ $(document).ready(function(){initNavTree('_utilities_8java_source.html','');});
 <div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;                </div>
 <div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;                <span class="keywordflow">if</span>(recipientType != null) {</div>
 <div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;                    </div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;                    List&lt;String&gt; recipientEmailAddresses = EmailByRecipientType.getRecipients(sub, recipientType);</div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;                    <span class="keywordflow">for</span>(String recipientEmailAddress : recipientEmailAddresses)</div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;                        addresses.add(recipientEmailAddress);</div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;                </div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;                } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;                    <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_administrative_group.html">AdministrativeGroup</a> admingroup = null;</div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;                    </div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;                    <span class="keywordflow">for</span>(<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_administrative_group.html">AdministrativeGroup</a> oneAdmingroup : <a class="code" href="classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities.html#a6855f56b35eb0678b91ede1325d07f1e">settingRepo</a>.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_settings_repository.html#a21f946de4ba3f044094a6c66fb838a35">findAllAdministrativeGroups</a>())</div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;                    {</div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;                        <span class="keywordflow">if</span>(oneAdmingroup.getName().equals(designee.trim()))</div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;                        {</div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;                            admingroup = oneAdmingroup;</div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;                            <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;                        }</div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;                    }</div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;                    </div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;                    <span class="comment">//if adminGroup is still null then the recipient is an arbitrary email address</span></div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;                    <span class="keywordflow">if</span>(admingroup == null) {</div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;                        addresses.add(designee.trim());</div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;                    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;                        </div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;                        <span class="keywordflow">for</span>(String emailAddr : admingroup.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_email_group.html#a5c006b0c7141273d17424068b99157c0">getEmails</a>().values()) {</div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;                            addresses.add(emailAddr);</div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;                        }</div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;                        </div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;                    }</div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;                }</div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;            }</div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;        }</div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;        <span class="keywordflow">return</span> addresses;</div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;    </div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;    }</div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;</div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;    <span class="comment">/*</span></div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;<span class="comment">     * Helper function to validate a single email address as a String</span></div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;<span class="comment">     * </span></div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;<span class="comment">     * @param email - the String of the email address to validate</span></div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;<span class="comment">     * @return - true or false if email address is valid</span></div>
-<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00280"></a><span class="lineno"><a class="line" href="classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities.html#acfc47d5104cc6186512e660f417ec9af">  280</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keywordtype">boolean</span> <a class="code" href="classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities.html#acfc47d5104cc6186512e660f417ec9af">validateEmailAddress</a>(String email){</div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;        <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;            <span class="keyword">new</span> InternetAddress(email).validate();</div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;        } <span class="keywordflow">catch</span> (AddressException ae) {</div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;        }</div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;    }</div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;}</div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;                    <span class="comment">// this will work for all recipients except ones that are in Administrative Groups.</span></div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;                    List&lt;String&gt; recipientEmailAddresses = EmailByRecipientType.getRecipients(sub, recipientType, null);</div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;                    <span class="keywordflow">for</span>(String recipientEmailAddress : recipientEmailAddresses)</div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;                        addresses.add(recipientEmailAddress);</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;                </div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;                } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;                    <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_administrative_group.html">AdministrativeGroup</a> admingroup = null;</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;                    </div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;                    <span class="keywordflow">for</span>(<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_administrative_group.html">AdministrativeGroup</a> oneAdmingroup : <a class="code" href="classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities.html#a6855f56b35eb0678b91ede1325d07f1e">settingRepo</a>.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_settings_repository.html#a21f946de4ba3f044094a6c66fb838a35">findAllAdministrativeGroups</a>())</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;                    {</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;                        <span class="keywordflow">if</span>(oneAdmingroup.getName().equals(designee.trim()))</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;                        {</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;                            admingroup = oneAdmingroup;</div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;                            <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;                        }</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;                    }</div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;                    </div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;                    <span class="comment">//if adminGroup is still null then the recipient is an arbitrary email address</span></div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;                    <span class="keywordflow">if</span>(admingroup == null) {</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;                        addresses.add(designee.trim());</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;                    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;                        </div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;                        <span class="keywordflow">for</span>(String emailAddr : admingroup.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_email_group.html#a5c006b0c7141273d17424068b99157c0">getEmails</a>().values()) {</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;                            addresses.add(emailAddr);</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;                        }</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;                        </div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;                    }</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;                }</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;            }</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;        }</div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;        <span class="keywordflow">return</span> addresses;</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;    </div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;    }</div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;    <span class="comment">/*</span></div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;<span class="comment">     * Helper function to validate a single email address as a String</span></div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;<span class="comment">     * </span></div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;<span class="comment">     * @param email - the String of the email address to validate</span></div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;<span class="comment">     * @return - true or false if email address is valid</span></div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;<span class="comment">     */</span></div>
+<div class="line"><a name="l00281"></a><span class="lineno"><a class="line" href="classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities.html#acfc47d5104cc6186512e660f417ec9af">  281</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keywordtype">boolean</span> <a class="code" href="classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities.html#acfc47d5104cc6186512e660f417ec9af">validateEmailAddress</a>(String email){</div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;        <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;            <span class="keyword">new</span> InternetAddress(email).validate();</div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;        } <span class="keywordflow">catch</span> (AddressException ae) {</div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;        }</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;    }</div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;}</div>
 <div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities_html_a6855f56b35eb0678b91ede1325d07f1e"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities.html#a6855f56b35eb0678b91ede1325d07f1e">org.tdl.vireo.services.Utilities.settingRepo</a></div><div class="ttdeci">static SettingsRepository settingRepo</div><div class="ttdef"><b>Definition:</b> <a href="_utilities_8java_source.html#l00035">Utilities.java:35</a></div></div>
 <div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities_html"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities.html">org.tdl.vireo.services.Utilities</a></div><div class="ttdef"><b>Definition:</b> <a href="_utilities_8java_source.html#l00033">Utilities.java:33</a></div></div>
 <div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities_html_a67ae1d942cbe5bae1bb4df2ebab9c99b"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities.html#a67ae1d942cbe5bae1bb4df2ebab9c99b">org.tdl.vireo.services.Utilities.scrubControl</a></div><div class="ttdeci">static String scrubControl(String input)</div><div class="ttdef"><b>Definition:</b> <a href="_utilities_8java_source.html#l00054">Utilities.java:54</a></div></div>
@@ -351,7 +352,7 @@ $(document).ready(function(){initNavTree('_utilities_8java_source.html','');});
 <div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities_html_ac61b8084bd981515953f24d34c6f135c"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities.html#ac61b8084bd981515953f24d34c6f135c">org.tdl.vireo.services.Utilities.ORCIDns</a></div><div class="ttdeci">static final Namespace ORCIDns</div><div class="ttdef"><b>Definition:</b> <a href="_utilities_8java_source.html#l00046">Utilities.java:46</a></div></div>
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission_html"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html">org.tdl.vireo.model.Submission</a></div><div class="ttdef"><b>Definition:</b> <a href="_submission_8java_source.html#l00029">Submission.java:29</a></div></div>
 <div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities_html_abf7201049c75d701c5fffa67d354be2a"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities.html#abf7201049c75d701c5fffa67d354be2a">org.tdl.vireo.services.Utilities.scrubControl</a></div><div class="ttdeci">static String scrubControl(String input, String replace)</div><div class="ttdef"><b>Definition:</b> <a href="_utilities_8java_source.html#l00064">Utilities.java:64</a></div></div>
-<div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities_html_acfc47d5104cc6186512e660f417ec9af"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities.html#acfc47d5104cc6186512e660f417ec9af">org.tdl.vireo.services.Utilities.validateEmailAddress</a></div><div class="ttdeci">static boolean validateEmailAddress(String email)</div><div class="ttdef"><b>Definition:</b> <a href="_utilities_8java_source.html#l00280">Utilities.java:280</a></div></div>
+<div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities_html_acfc47d5104cc6186512e660f417ec9af"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities.html#acfc47d5104cc6186512e660f417ec9af">org.tdl.vireo.services.Utilities.validateEmailAddress</a></div><div class="ttdeci">static boolean validateEmailAddress(String email)</div><div class="ttdef"><b>Definition:</b> <a href="_utilities_8java_source.html#l00281">Utilities.java:281</a></div></div>
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_administrative_group_html"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_administrative_group.html">org.tdl.vireo.model.AdministrativeGroup</a></div><div class="ttdef"><b>Definition:</b> <a href="_administrative_group_8java_source.html#l00010">AdministrativeGroup.java:10</a></div></div>
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_settings_repository_html_a21f946de4ba3f044094a6c66fb838a35"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_settings_repository.html#a21f946de4ba3f044094a6c66fb838a35">org.tdl.vireo.model.SettingsRepository.findAllAdministrativeGroups</a></div><div class="ttdeci">List&lt; AdministrativeGroup &gt; findAllAdministrativeGroups()</div></div>
 <div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities_html_a314b6cac55da0e9ed2c2c84b3c7ebbb2"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities.html#a314b6cac55da0e9ed2c2c84b3c7ebbb2">org.tdl.vireo.services.Utilities.CONTROL_RANGES</a></div><div class="ttdeci">static final String[] CONTROL_RANGES</div><div class="ttdef"><b>Definition:</b> <a href="_utilities_8java_source.html#l00037">Utilities.java:37</a></div></div>
@@ -367,7 +368,7 @@ $(document).ready(function(){initNavTree('_utilities_8java_source.html','');});
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d422163b96683743ed3963d4aac17747.html">app</a></li><li class="navelem"><a class="el" href="dir_8dd784b59b4a9f97c6acd22cdbadb1c6.html">org</a></li><li class="navelem"><a class="el" href="dir_60dc62e39f90ceabe5ec09af2c2445af.html">tdl</a></li><li class="navelem"><a class="el" href="dir_07e49d88b1874552035fba0b7e33a8b8.html">vireo</a></li><li class="navelem"><a class="el" href="dir_23e8b9d48ec9add2c7903753b7586f1e.html">services</a></li><li class="navelem"><a class="el" href="_utilities_8java.html">Utilities.java</a></li>
-    <li class="footer">Generated on Wed Dec 3 2014 12:37:02 for Vireo by
+    <li class="footer">Generated on Thu Feb 12 2015 12:31:07 for Vireo by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

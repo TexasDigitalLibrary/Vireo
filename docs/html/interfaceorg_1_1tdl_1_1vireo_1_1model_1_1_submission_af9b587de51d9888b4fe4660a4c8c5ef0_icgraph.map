@@ -1,5 +1,5 @@
 <map id="org.tdl.vireo.model.Submission.getSubmitter" name="org.tdl.vireo.model.Submission.getSubmitter">
-<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1services_1_1_email_by_recipient_type.html#a81abeacc1e4c3b3376de8ea89897b51e" title="org.tdl.vireo.services.Email\lByRecipientType.getRecipients" alt="" coords="310,57,517,98"/>
+<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1services_1_1_email_by_recipient_type.html#afbdffc93d3854a594b519ffe747ff2b0" title="org.tdl.vireo.services.Email\lByRecipientType.getRecipients" alt="" coords="310,57,517,98"/>
 <area shape="rect" id="node3" href="$classcontrollers_1_1submit_1_1_abstract_submit_step.html#a1c8273b4b36c4006597ac1dc6e5fb234" title="controllers.submit.Abstract\lSubmitStep.getSubmission" alt="" coords="323,122,503,163"/>
 <area shape="rect" id="node10" href="$classcontrollers_1_1_student.html#a7a07194cd82e98205e366e70f3ca1d91" title="controllers.Student.getSubmission" alt="" coords="303,188,524,215"/>
 <area shape="rect" id="node11" href="$classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_excel_packager_impl.html#a56a59ce7421c6f590f242efab80d3388" title="org.tdl.vireo.export.impl.\lExcelPackagerImpl.processWorkbookRow" alt="" coords="278,618,549,659"/>

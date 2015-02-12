@@ -1,5 +1,6 @@
 var NAVTREEINDEX3 =
 {
+"classorg_1_1tdl_1_1vireo_1_1batch_1_1impl_1_1_assign_service_impl.html#a815ab8064bf3a9ee12cff721d98d13be":[1,0,1,0,0,0,0,0,12],
 "classorg_1_1tdl_1_1vireo_1_1batch_1_1impl_1_1_assign_service_impl.html#aab000657e25f58754cc302f7db9f7e1e":[1,0,1,0,0,0,0,0,11],
 "classorg_1_1tdl_1_1vireo_1_1batch_1_1impl_1_1_assign_service_impl.html#aac2ade204f948dec8e83696f6c4069a5":[1,0,1,0,0,0,0,0,2],
 "classorg_1_1tdl_1_1vireo_1_1batch_1_1impl_1_1_assign_service_impl.html#acbffc7dfd8e22a11d662722c66cbde89":[1,0,1,0,0,0,0,0,13],
@@ -248,6 +249,5 @@ var NAVTREEINDEX3 =
 "classorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception.html#a2c0af0adb3d3e0e8d67c218dbae1f637":[1,0,1,0,0,4,2,1],
 "classorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception.html#a410622be9915b62748ad434534eb7595":[1,0,1,0,0,4,2,2],
 "classorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception.html#a43835306352b2a48da9f4caec041b410":[1,0,1,0,0,4,2,4],
-"classorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception.html#a568200c67a3833921059d44b2502d408":[1,0,1,0,0,4,2,6],
-"classorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception.html#a79c10a1e1160ff18ad18c6c9f388b34c":[1,0,1,0,0,4,2,3]
+"classorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception.html#a568200c67a3833921059d44b2502d408":[1,0,1,0,0,4,2,6]
 };

@@ -30,7 +30,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Vireo
-   &#160;<span id="projectnumber">3.0.x-RC</span>
+   &#160;<span id="projectnumber">3.0.x-RC4</span>
    </div>
    <div id="projectbrief">Vireo Electronic Thesis and Dissertation Submission System</div>
   </td>
@@ -175,6 +175,8 @@ Static Protected Member Functions</h2></td></tr>
 <tr class="separator:a5b14cfdcbcdada6eac4b378fd1443bf9 inherit pro_static_methods_classcontrollers_1_1_abstract_vireo_controller"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a03c6891fcfa455d7a8aadb9aa1750c1d inherit pro_static_methods_classcontrollers_1_1_abstract_vireo_controller"><td class="memItemLeft" align="right" valign="top">static String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcontrollers_1_1_abstract_vireo_controller.html#a03c6891fcfa455d7a8aadb9aa1750c1d">escapeJavaScript</a> (String value)</td></tr>
 <tr class="separator:a03c6891fcfa455d7a8aadb9aa1750c1d inherit pro_static_methods_classcontrollers_1_1_abstract_vireo_controller"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a283238d203c91cfe97837c02ce587966 inherit pro_static_methods_classcontrollers_1_1_abstract_vireo_controller"><td class="memItemLeft" align="right" valign="top">static String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcontrollers_1_1_abstract_vireo_controller.html#a283238d203c91cfe97837c02ce587966">URIEncode</a> (String value)</td></tr>
+<tr class="separator:a283238d203c91cfe97837c02ce587966 inherit pro_static_methods_classcontrollers_1_1_abstract_vireo_controller"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af0eb2078265d2db560324097ac54d2df inherit pro_static_methods_classcontrollers_1_1_abstract_vireo_controller"><td class="memItemLeft" align="right" valign="top">static String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcontrollers_1_1_abstract_vireo_controller.html#af0eb2078265d2db560324097ac54d2df">toJSON</a> (String[] values)</td></tr>
 <tr class="separator:af0eb2078265d2db560324097ac54d2df inherit pro_static_methods_classcontrollers_1_1_abstract_vireo_controller"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aabf7ef41b3dfa3b5da6e791cff34cc5e inherit pro_static_methods_classcontrollers_1_1_abstract_vireo_controller"><td class="memItemLeft" align="right" valign="top">static String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcontrollers_1_1_abstract_vireo_controller.html#aabf7ef41b3dfa3b5da6e791cff34cc5e">text2html</a> (String value)</td></tr>
@@ -254,7 +256,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;        renderTemplate(<span class="stringliteral">&quot;Student/complete.html&quot;</span>,instructions);</div>
 <div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;        </div>
 <div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;    }</div>
-<div class="ttc" id="classcontrollers_1_1_abstract_vireo_controller_html_aabf7ef41b3dfa3b5da6e791cff34cc5e"><div class="ttname"><a href="classcontrollers_1_1_abstract_vireo_controller.html#aabf7ef41b3dfa3b5da6e791cff34cc5e">controllers.AbstractVireoController.text2html</a></div><div class="ttdeci">static String text2html(String value)</div><div class="ttdef"><b>Definition:</b> <a href="_abstract_vireo_controller_8java_source.html#l00164">AbstractVireoController.java:164</a></div></div>
+<div class="ttc" id="classcontrollers_1_1_abstract_vireo_controller_html_aabf7ef41b3dfa3b5da6e791cff34cc5e"><div class="ttname"><a href="classcontrollers_1_1_abstract_vireo_controller.html#aabf7ef41b3dfa3b5da6e791cff34cc5e">controllers.AbstractVireoController.text2html</a></div><div class="ttdeci">static String text2html(String value)</div><div class="ttdef"><b>Definition:</b> <a href="_abstract_vireo_controller_8java_source.html#l00175">AbstractVireoController.java:175</a></div></div>
 <div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1constant_1_1_app_config_html_a4645d2d136103a38c7ffa1475592dae1"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1constant_1_1_app_config.html#a4645d2d136103a38c7ffa1475592dae1">org.tdl.vireo.constant.AppConfig.CORRECTION_INSTRUCTIONS</a></div><div class="ttdeci">static final String CORRECTION_INSTRUCTIONS</div><div class="ttdef"><b>Definition:</b> <a href="_app_config_8java_source.html#l00087">AppConfig.java:87</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -353,7 +355,7 @@ Here is the call graph for this function:</div>
 <p>Referenced by <a class="el" href="_file_upload_8java_source.html#l00046">controllers.submit.FileUpload.fileUpload()</a>.</p>
 <div class="fragment"><div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;                                                           {</div>
 <div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;        <span class="comment">// Get values from all check boxes</span></div>
-<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;        String[] idsToRemove = params.getAll(<span class="stringliteral">&quot;attachmentToRemove[]&quot;</span>);</div>
+<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;        String[] idsToRemove = params.getAll(<span class="stringliteral">&quot;attachmentToRemove&quot;</span>);</div>
 <div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;</div>
 <div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;        <span class="keywordflow">if</span> (idsToRemove != null) {</div>
 <div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;        </div>
@@ -1076,7 +1078,7 @@ Here is the caller graph for this function:</div>
 <div class="line"><a name="l00517"></a><span class="lineno">  517</span>&#160;        <span class="keywordflow">else</span></div>
 <div class="line"><a name="l00518"></a><span class="lineno">  518</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00519"></a><span class="lineno">  519</span>&#160;    }</div>
-<div class="ttc" id="classcontrollers_1_1_abstract_vireo_controller_html_a76be37eaa99c3319f808038bc0fc63d8"><div class="ttname"><a href="classcontrollers_1_1_abstract_vireo_controller.html#a76be37eaa99c3319f808038bc0fc63d8">controllers.AbstractVireoController.isFieldRequired</a></div><div class="ttdeci">static boolean isFieldRequired(FieldConfig field)</div><div class="ttdef"><b>Definition:</b> <a href="_abstract_vireo_controller_8java_source.html#l00186">AbstractVireoController.java:186</a></div></div>
+<div class="ttc" id="classcontrollers_1_1_abstract_vireo_controller_html_a76be37eaa99c3319f808038bc0fc63d8"><div class="ttname"><a href="classcontrollers_1_1_abstract_vireo_controller.html#a76be37eaa99c3319f808038bc0fc63d8">controllers.AbstractVireoController.isFieldRequired</a></div><div class="ttdeci">static boolean isFieldRequired(FieldConfig field)</div><div class="ttdef"><b>Definition:</b> <a href="_abstract_vireo_controller_8java_source.html#l00197">AbstractVireoController.java:197</a></div></div>
 <div class="ttc" id="enumorg_1_1tdl_1_1vireo_1_1model_1_1_attachment_type_html_a7276adfa25425bc247c7ad2e976a2057"><div class="ttname"><a href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_attachment_type.html#a7276adfa25425bc247c7ad2e976a2057">org.tdl.vireo.model.AttachmentType.SOURCE</a></div><div class="ttdeci">SOURCE</div><div class="ttdef"><b>Definition:</b> <a href="_attachment_type_8java_source.html#l00016">AttachmentType.java:16</a></div></div>
 </div><!-- fragment -->
 <p><div class="dynheader">
@@ -1192,7 +1194,7 @@ Here is the call graph for this function:</div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacecontrollers.html">controllers</a></li><li class="navelem"><a class="el" href="classcontrollers_1_1_student.html">Student</a></li>
-    <li class="footer">Generated on Wed Dec 3 2014 12:37:02 for Vireo by
+    <li class="footer">Generated on Thu Feb 12 2015 12:31:07 for Vireo by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>
