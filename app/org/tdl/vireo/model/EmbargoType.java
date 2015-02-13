@@ -63,6 +63,19 @@ public interface EmbargoType extends AbstractOrderedModel {
 	public void setActive(boolean active);
 
 	/**
+	 * @return True, if this embargo is required by the system. These
+	 *         embargos may not be deleted.
+	 */
+	public boolean isSystemRequired();
+	
+	/**
+	 * @param required
+	 *            Set weather this embargo is required by the system. These
+	 *            embargos bay not be renamed or deleted.
+	 */
+	public void setSystemRequired(boolean required);
+	
+	/**
 	 * 
 	 * @return The guarantor of the embargo in enum.
 	 */

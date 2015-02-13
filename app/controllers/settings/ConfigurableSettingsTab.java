@@ -296,8 +296,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 	public static void removeEmbargoTypeJSON(String embargoTypeId) {
 		
 		try {
-			String[] parts = embargoTypeId.split("_");
-			Long id = Long.valueOf(parts[1]);
+			Long id = Long.valueOf(embargoTypeId);
 			EmbargoType embargo = settingRepo.findEmbargoType(id);			
 			embargo.delete();
 			
@@ -330,15 +329,18 @@ public class ConfigurableSettingsTab extends SettingsTab {
 
 		List<EmbargoType> embargos = settingRepo.findAllEmbargoTypes();
 		for (EmbargoType embargo : embargos) {
-			embargo.delete();
-
-			Logger.info(
-					"%s (%d: %s) has deleted embargo #%d.\nEmbargo Name = '%s'\nEmbargo Description = '%s'\nEmbargo Duration = '%d'\nEmbargo Active = '%b'",
-					context.getPerson().getFormattedName(NameFormat.FIRST_LAST),
-					context.getPerson().getId(),
-					context.getPerson().getEmail(), embargo.getId(),
-					embargo.getName(), embargo.getDescription(),
-					embargo.getDuration(), embargo.isActive());
+			// don't delete system embargos
+			if(!embargo.isSystemRequired()) {
+				embargo.delete();
+	
+				Logger.info(
+						"%s (%d: %s) has deleted embargo #%d.\nEmbargo Name = '%s'\nEmbargo Description = '%s'\nEmbargo Duration = '%d'\nEmbargo Active = '%b'",
+						context.getPerson().getFormattedName(NameFormat.FIRST_LAST),
+						context.getPerson().getId(),
+						context.getPerson().getEmail(), embargo.getId(),
+						embargo.getName(), embargo.getDescription(),
+						embargo.getDuration(), embargo.isActive());
+			}
 		}
 
 		flash.put("open","availableEmbargoTypes");

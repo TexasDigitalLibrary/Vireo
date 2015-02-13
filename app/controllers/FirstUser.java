@@ -66,9 +66,6 @@ public class FirstUser extends AbstractVireoController {
 				//Generate System Email Templates
 				systemEmailService.generateAllSystemEmailTemplates();
 				
-				// Setup Embargos
-				new InitializeEmbargos().doJob(settingRepo);
-				
 				// Setup default Committee Member Role Types
 				for(String roleType : COMMITTEE_MEMBER_ROLE_TYPES_DEFINITIONS) {
 					settingRepo.createCommitteeMemberRoleType(roleType, DegreeLevel.UNDERGRADUATE).save();
@@ -238,7 +235,8 @@ public class FirstUser extends AbstractVireoController {
 	
 	@OnApplicationStart
 	public static class InitializeEmbargos extends Job {
-		public void doJob(SettingsRepository settingRepo) {
+		public void doJob() {
+			SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
 			try {
 				// turn off authorization if we're saving
 				context.turnOffAuthorization();
@@ -250,6 +248,8 @@ public class FirstUser extends AbstractVireoController {
 					for(EmbargoType installedEmbargo : embargoTypes) {
 						if( installedEmbargo.getName().equals(embargoDefinition.name) ) {
 							found = true;
+							installedEmbargo.setSystemRequired(true);
+							installedEmbargo.save();
 						}
 					}
 					if(!found) {

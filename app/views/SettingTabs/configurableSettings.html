@@ -382,6 +382,7 @@ jQuery(document).ready(function(){
 			<table class="table table-striped table-bordered table-condensed">
 				<thead>
 					<tr>
+						<td>System</td>
 						<td>Name</td>
 						<td>Description</td>
 						<td>Display</td>
@@ -393,6 +394,7 @@ jQuery(document).ready(function(){
 				    #{list items:embargos, as:'embargo'}
 				      #{if embargo.getGuarantor() == org.tdl.vireo.model.EmbargoGuarantor.DEFAULT}
 				       <tr id="embargoType_${embargo.getId()}">
+				           <td class="td-icon embargoType-system-cell">#{if embargo.isSystemRequired()}<em class="icon-globe"></em>#{/if}#{else}<em class="icon-user"></em>#{/else}</td>
 				           <td class="embargoType-name-cell">${embargo.getName()}</td>
 				           <td class="embargoType-description-cell">${embargo.getDescription()}</td>
 				           <td class="embargoType-active-cell">#{if embargo.isActive()}Yes#{/if}#{else}No#{/else}</td>
@@ -410,6 +412,7 @@ jQuery(document).ready(function(){
 			<table class="table table-striped table-bordered table-condensed">
 				<thead>
 					<tr>
+						<td>System</td>
 						<td>Name</td>
 						<td>Description</td>
 						<td>Display</td>
@@ -421,6 +424,7 @@ jQuery(document).ready(function(){
 				    #{list items:embargos, as:'embargo'}
 				      #{if embargo.getGuarantor() == org.tdl.vireo.model.EmbargoGuarantor.PROQUEST}
 				       <tr id="embargoType_${embargo.getId()}">
+				           <td class="td-icon embargoType-system-cell">#{if embargo.isSystemRequired()}<em class="icon-globe"></em>#{/if}#{else}<em class="icon-user"></em>#{/else}</td>
 				           <td class="embargoType-name-cell">${embargo.getName()}</td>
 				           <td class="embargoType-description-cell">${embargo.getDescription()}</td>
 				           <td class="embargoType-active-cell">#{if embargo.isActive()}Yes#{/if}#{else}No#{/else}</td>

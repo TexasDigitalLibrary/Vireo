@@ -41,6 +41,9 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 	
 	@Column(nullable = false)
 	public boolean active;
+	
+	@Column(nullable = false)
+	public Boolean systemRequired;
 
 	// this requires a column definition in order to update the table column on old DB's (default value) 
 	@Column(nullable = false, columnDefinition="int4 default '0'")
@@ -72,6 +75,7 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 		
 		assertManager();
 		
+		this.systemRequired = false;
 		this.displayOrder = 0;
 		this.name = name;
 		this.description = description;
@@ -96,6 +100,9 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 	@Override
 	public JpaEmbargoTypeImpl delete() {
 		assertManager();
+		
+		if (isSystemRequired())
+			throw new IllegalStateException("Unable to delete the embargo '"+name+"' because it is required by the system.");
 		
 //		JpaSubmissionRepositoryImpl subRepo = Spring.getBeanOfType(JpaSubmissionRepositoryImpl.class);
 		// Tell the indexer about all the submissions that will be effected by
@@ -165,6 +172,13 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 		
 		assertManager();
 		
+		// Just to be nice so that if you're not changing it we won't do the system required check.
+		if (name.equals(this.name))
+			return;
+		
+		if (isSystemRequired())
+			throw new IllegalStateException("Unable to rename the embargo '"+this.name+"' because it is required by the system.");
+		
 		this.name = name;
 	}
 	
@@ -208,6 +222,18 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 		
 		assertManager();
 		this.active = active;
+	}
+	
+	@Override
+	public boolean isSystemRequired() {
+		return systemRequired;
+	}
+	
+	@Override
+	public void setSystemRequired(boolean systemRequired) {
+		assertAdministrator();
+		
+		this.systemRequired = systemRequired;
 	}
 	
 	@Override

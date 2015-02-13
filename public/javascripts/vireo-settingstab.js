@@ -1019,12 +1019,11 @@ function toggleWorkflowEmailRuleHandler(jsonURL, disable) {
 	return function() {
 		
 		$this = $(this);
-		var backupHTML = $this.html();
 		$this.html("confirm "+(disable ? "disable" : "enable")+"?");
 
 		
 		$this.click(function() {
-			
+			var backupHTML = $this.html();
 			$this.html("");	
 			$this.parents("tr").addClass("waiting");
 
@@ -1035,8 +1034,8 @@ function toggleWorkflowEmailRuleHandler(jsonURL, disable) {
 
 			var failureCallback = function(message) {
 				if(backupHTML.length > 0) {
-					$this.html(backupHTML);	
 					$this.parents("tr").removeClass("waiting");
+					$this.parents("td").html((disable ? "<a href=\"#\" class=\"disableRule\" data-id=\""+$this.attr('data-id')+"\"><em class=\"icon-pause\"></em></a>" : "<a href=\"#\" class=\"enableRule\" data-id=\""+$this.attr('data-id')+"\"><em class=\"icon-play\"></em></a>"));
 					displayAlert("emailWorkflowRule-toggle","Unable to toggle email workflow rule: ", message);
 				}
 				return false;
@@ -2014,6 +2013,7 @@ function embargoSaveDialogHandler(jsonURL) {
 				// Add a new row to the end of the list.
 				$row = jQuery( 
 						"<tr id='embargoType_"+data.id+"'>"+
+						"    <td class='td-icon embargoType-system-cell'><em class='icon-user'></em></td>"+
 						"    <td class='embargoType-name-cell'></td>"+
 						"    <td class='embargoType-description-cell'></td>"+
 						"    <td class='embargoType-active-cell'></td>"+

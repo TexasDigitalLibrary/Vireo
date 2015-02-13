@@ -21,6 +21,7 @@ public class MockEmbargoType extends AbstractMock implements EmbargoType {
 	public String description;
 	public Integer duration;
 	public boolean active;
+	public boolean systemRequired;
 	public EmbargoGuarantor guarantor = EmbargoGuarantor.DEFAULT;
 	public List<Submission> submissions;
 
@@ -100,6 +101,16 @@ public class MockEmbargoType extends AbstractMock implements EmbargoType {
 	}
 	
 	@Override
+    public boolean isSystemRequired() {
+		return systemRequired;
+    }
+
+	@Override
+    public void setSystemRequired(boolean required) {
+	    this.systemRequired = required;
+    }
+	
+	@Override
 	public EmbargoGuarantor getGuarantor() {
 		return guarantor;
 	}
@@ -113,5 +124,4 @@ public class MockEmbargoType extends AbstractMock implements EmbargoType {
 	public List<Submission> getSubmissions() {
 		return submissions;
 	}
-
 }
