@@ -42,7 +42,7 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 	@Column(nullable = false)
 	public boolean active;
 	
-	@Column(nullable = false, columnDefinition="boolean(1) NOT NULL DEFAULT false")
+	@Column(nullable = false, columnDefinition="boolean(1) DEFAULT false")
 	public Boolean systemRequired;
 
 	// this requires a column definition in order to update the table column on old DB's (default value) 
