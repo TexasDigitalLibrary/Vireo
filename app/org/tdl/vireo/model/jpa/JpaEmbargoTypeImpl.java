@@ -194,6 +194,14 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 			throw new IllegalArgumentException("Description is required");
 		
 		assertManager();
+		
+		// Just to be nice so that if you're not changing it we won't do the system required check.
+		if (description.equals(this.description))
+			return;
+		
+		if (isSystemRequired())
+			throw new IllegalStateException("Unable to change the embargo '"+name+"' because it is required by the system.");
+		
 		this.description = description;
 	}
 
@@ -209,6 +217,14 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 			throw new IllegalArgumentException("Duration must be positive, or null");
 		
 		assertManager();
+		
+		// Just to be nice so that if you're not changing it we won't do the system required check.
+		if (duration.equals(this.duration))
+			return;
+		
+		if (isSystemRequired())
+			throw new IllegalStateException("Unable to change the embargo '"+name+"' because it is required by the system.");
+		
 		this.duration = duration;
 	}
 	
@@ -242,6 +258,15 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 	}
 	
 	public void setGuarantor(EmbargoGuarantor guarantor) {
+		assertManager();
+		
+		// Just to be nice so that if you're not changing it we won't do the system required check.
+		if (guarantor.equals(this.guarantor))
+			return;
+		
+		if (isSystemRequired())
+			throw new IllegalStateException("Unable to change the embargo '"+name+"' because it is required by the system.");
+				
 		this.guarantor = guarantor;
 	}
 

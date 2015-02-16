@@ -253,7 +253,9 @@ public class FirstUser extends AbstractVireoController {
 						}
 					}
 					if(!found) {
-						settingRepo.createEmbargoType(embargoDefinition.name, embargoDefinition.description, embargoDefinition.duration, embargoDefinition.active, embargoDefinition.guarantor).save();
+						EmbargoType newembargo = settingRepo.createEmbargoType(embargoDefinition.name, embargoDefinition.description, embargoDefinition.duration, embargoDefinition.active, embargoDefinition.guarantor);
+						newembargo.setSystemRequired(true);
+						newembargo.save();
 					}
 				}
 			} catch (RuntimeException re) {
