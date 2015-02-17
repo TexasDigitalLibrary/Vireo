@@ -86,6 +86,7 @@ public class Sword1DepositorImpl implements Depositor, BeanNameAware {
 			
 			//Building the client
 			Client client = new Client();
+			client.setSocketTimeout(60000);
 			client.setServer(repositoryURL.getHost(), repositoryURL.getPort());
 			client.setUserAgent(USER_AGENT);
 			
@@ -204,6 +205,7 @@ public class Sword1DepositorImpl implements Depositor, BeanNameAware {
 			
 			//Building the client
 			Client client = new Client();
+			client.setSocketTimeout(60000);
 			client.setServer(
 					repositoryURL.getHost(), 
 					repositoryURL.getPort());
