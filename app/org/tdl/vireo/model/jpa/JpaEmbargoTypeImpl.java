@@ -219,7 +219,9 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 		assertManager();
 		
 		// Just to be nice so that if you're not changing it we won't do the system required check.
-		if (duration.equals(this.duration))
+		if(duration == null && duration == this.duration)
+			return;
+		else if (duration.equals(this.duration))
 			return;
 		
 		if (isSystemRequired())
@@ -258,6 +260,9 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 	}
 	
 	public void setGuarantor(EmbargoGuarantor guarantor) {
+		if (guarantor == null)
+			throw new IllegalArgumentException("Guarantor is required");
+		
 		assertManager();
 		
 		// Just to be nice so that if you're not changing it we won't do the system required check.

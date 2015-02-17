@@ -1924,21 +1924,22 @@ function embargoOpenDialogHandler(isNew, id) {
 		jQuery("#embargoType-id").val(id);
 		jQuery("#embargoType-name").val(embargo.name);
 		jQuery("#embargoType-description").val(embargo.description);
+		jQuery('#embargoType-guarantor option[value="'+embargo.guarantor+'"]').attr("selected",true);
 
 		if (embargo.active)
-			jQuery("#embargoType-active").attr("checked","true");
+			jQuery("#embargoType-active").attr("checked",true);
 		else
-			jQuery("#embargoType-active").attr("checked","true");
+			jQuery("#embargoType-active").attr("checked",false);
 
-		if (embargo.duration === undefined) {
-			jQuery("#timeframe-indeterminate").attr("checked","true");
+		if (embargo.duration == null) {
+			jQuery("#timeframe-indeterminate").attr("checked",true);
 			jQuery("#embargoType-months").val("");
-			jQuery("#embargoType-months").attr("disabled","true");
+			jQuery("#embargoType-months").attr("disabled",true);
 			jQuery("#duration-group").hide();
 		} else {
-			jQuery("#timeframe-determinate").attr("checked","true");
+			jQuery("#timeframe-determinate").attr("checked",true);
 			jQuery("#embargoType-months").val(embargo.duration);
-			jQuery("#embargoType-months").attr("disabled",null);
+			jQuery("#embargoType-months").attr("disabled",false);
 			jQuery("#duration-group").show();
 		}
 
@@ -1952,10 +1953,10 @@ function embargoOpenDialogHandler(isNew, id) {
 		jQuery("#embargoType-id").val("");
 		jQuery("#embargoType-name").val("");
 		jQuery("#embargoType-description").val("");
-		jQuery("#embargoType-active").attr("checked","true");
-		jQuery("#timeframe-determinate").attr("checked","true");
+		jQuery("#embargoType-active").attr("checked",true);
+		jQuery("#timeframe-determinate").attr("checked",true);
 		jQuery("#embargoType-months").val("");
-		jQuery("#embargoType-months").attr("disabled",null);
+		jQuery("#embargoType-months").attr("disabled",false);
 		jQuery("#duration-group").show();
 		
 		jQuery("#embargo-type-modal .modal-header h3").text("Add Embargo Type");
@@ -2018,25 +2019,50 @@ function embargoSaveDialogHandler(jsonURL) {
 						"    <td class='embargoType-description-cell'></td>"+
 						"    <td class='embargoType-active-cell'></td>"+
 						"    <td class='embargoType-duration-cell'></td>"+
-						"    <td class='embargoType-edit-cell'><a href='#'>Edit</a></td>" +
+						"    <td class='embargoType-edit-cell'><a data-id='"+data.id+"' href='javascript:void(0);'>Edit</a></td>" +
 						"</tr>"
 				).appendTo(jQuery("#embargoType-"+data.guarantor+"-list"));
 			}
 
 			$row.find(".embargoType-name-cell").text(data.name);
 			$row.find(".embargoType-description-cell").text(data.description);
-			if (data.active == "true")
+			if (data.active == true)
 				$row.find(".embargoType-active-cell").text("Yes");
 			else
 				$row.find(".embargoType-active-cell").text("No");
 
-			if (data.months == "null")
+			if (data.months == null)
 				$row.find(".embargoType-duration-cell").text("Indefinite");
 			else
 				$row.find(".embargoType-duration-cell").text(data.months);
-
+						
 			jQuery('#embargo-type-modal').modal('hide');
-
+			
+			// update our embargo data for JS cache
+			var array_key = -1;
+			for(embargo in jsDataObjects.embargosArray) {
+				if(jsDataObjects.embargosArray[embargo].id == data.id) {
+					array_key = embargo;
+				}
+			}
+			// if we're a new embargo (that hasn't been cached yet)
+			if(array_key == -1) {
+				var embargo = {};
+				embargo.id = data.id;
+				embargo.name = data.name;
+				embargo.description = data.description;
+				embargo.duration = data.months;
+				embargo.guarantor = data.guarantor;
+				embargo.active = data.active;
+				jsDataObjects.embargosArray.push(embargo);
+			} else {
+				// set our embargo data for JS cache
+				jsDataObjects.embargosArray[array_key].name = data.name;
+				jsDataObjects.embargosArray[array_key].description = data.description;
+				jsDataObjects.embargosArray[array_key].duration = data.months;
+				jsDataObjects.embargosArray[array_key].guarantor = data.guarantor;
+				jsDataObjects.embargosArray[array_key].active = data.active;	
+			}			
 		}
 
 		var failureCallback = function (message) {
@@ -2108,7 +2134,7 @@ function embargoRemoveDialogHandler(jsonURL) {
 			jQuery("#embargo-type-modal .control-group").each(function () {
 				jQuery(this).removeClass("error"); 
 			});
-			jQuery("#"+embargoTypeId).remove();
+			jQuery("#embargoType_"+embargoTypeId).remove();
 			
 			// Go back to the list
 			jQuery('#embargo-type-modal').modal('hide');

@@ -271,7 +271,7 @@ public class ConfigurableSettingsTab extends SettingsTab {
 			name = escapeJavaScript(embargo.getName());
 			description = escapeJavaScript(embargo.getDescription());
 
-			renderJSON("{ \"success\": \"true\", \"id\": " + embargo.getId() + ", \"name\": \"" + name + "\", \"description\": \"" + description + "\", \"active\": \"" + active + "\", \"months\": \"" + months + "\", \"guarantor\": \"" + guarantor + "\" }");
+			renderJSON("{ \"success\": \"true\", \"id\": " + embargo.getId() + ", \"name\": \"" + name + "\", \"description\": \"" + description + "\", \"active\": " + active + ", \"months\": " + months + ", \"guarantor\": \"" + guarantor + "\" }");
 		} catch (IllegalArgumentException iae) {
 			String message = escapeJavaScript(iae.getMessage());			
 			renderJSON("{ \"failure\": \"true\", \"message\": \""+message+"\" }");
