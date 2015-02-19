@@ -22,6 +22,8 @@ import org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleConditionImpl;
 import org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleImpl;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.State;
+import org.tdl.vireo.state.StateManager;
+import org.tdl.vireo.state.impl.StateManagerImpl;
 
 import play.db.jpa.JPA;
 import play.libs.Mail;
@@ -65,10 +67,10 @@ public class EmailRuleServiceTest extends UnitTest {
 		adminGroup.save();
 
 		Map<String, State> stateBeanMap = Spring.getBeansOfType(State.class);
-		// create an email rule for every state
+		// create an email rule for every state that an Email Workflow Rule is allowed to have
 		for (String key : stateBeanMap.keySet()) {
 			State state = stateBeanMap.get(key);
-			if (state != null) {
+			if (state != null && EmailRuleService.doesStateMatchEWFLRuleStates(state)) {
 				JpaEmailWorkflowRuleImpl rule = (JpaEmailWorkflowRuleImpl) settingRepo.createEmailWorkflowRule(state);
 				JpaEmailWorkflowRuleConditionImpl condition = (JpaEmailWorkflowRuleConditionImpl) settingRepo.createEmailWorkflowRuleCondition(ConditionType.Always);
 				condition.save();
@@ -77,6 +79,7 @@ public class EmailRuleServiceTest extends UnitTest {
 				rule.setEmailTemplate(emailTemplate);
 				rule.setRecipientType(RecipientType.AdminGroup);
 				rule.setAdminGroupRecipient(adminGroup);
+				rule.enable();
 				rule.save();
 				rules.add(rule);
 			}
@@ -118,7 +121,13 @@ public class EmailRuleServiceTest extends UnitTest {
 				if (emailContent != null)
 					break;
 			}
-			assertNotNull(emailContent);
+			
+			if(EmailRuleService.doesSubStateMatchEWFLRuleStates(submission)) {
+				assertNotNull(emailContent);
+			} else {
+				assertNull(emailContent);
+			}
+			Mail.Mock.reset();
 		}
 	}
 }

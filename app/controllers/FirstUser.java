@@ -17,6 +17,7 @@ import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.search.Indexer;
 import org.tdl.vireo.security.AuthenticationMethod;
 
+import controllers.FirstUserTest.MockSettingsRepository;
 import play.Logger;
 import play.Play;
 import play.jobs.Job;
@@ -65,6 +66,10 @@ public class FirstUser extends AbstractVireoController {
 				
 				//Generate System Email Templates
 				systemEmailService.generateAllSystemEmailTemplates();
+				
+				// Setup Embargos
+				if(settingRepo instanceof MockSettingsRepository)
+					new InitializeEmbargos().doJob(settingRepo);
 				
 				// Setup default Committee Member Role Types
 				for(String roleType : COMMITTEE_MEMBER_ROLE_TYPES_DEFINITIONS) {
@@ -235,8 +240,15 @@ public class FirstUser extends AbstractVireoController {
 	
 	@OnApplicationStart
 	public static class InitializeEmbargos extends Job {
+		SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
+		
+		public void doJob(SettingsRepository settingRepo) {
+			this.settingRepo = settingRepo;
+			doJob();
+		}
+		
 		public void doJob() {
-			SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
+			
 			try {
 				// turn off authorization if we're saving
 				context.turnOffAuthorization();

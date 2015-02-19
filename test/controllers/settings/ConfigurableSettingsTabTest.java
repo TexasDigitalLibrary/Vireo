@@ -158,7 +158,7 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 		
 		// Now remove the embargo type
 		params.clear();
-		params.put("embargoTypeId","embargoType_"+id);
+		params.put("embargoTypeId",String.valueOf(id));
 		response = POST(REMOVE_URL,params);
 		assertContentMatch("\"success\": \"true\"", response);
 		

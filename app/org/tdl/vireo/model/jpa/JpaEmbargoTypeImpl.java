@@ -221,6 +221,9 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 		// Just to be nice so that if you're not changing it we won't do the system required check.
 		if(duration == null && duration == this.duration)
 			return;
+		else if (duration == null && duration != this.duration) {
+			// do nothing
+		}
 		else if (duration.equals(this.duration))
 			return;
 		

@@ -108,6 +108,15 @@ public class EmailRuleService {
 		return isConditionValid(ewflRule);
 	}
 	
+	public static boolean doesSubStateMatchEWFLRuleStates(Submission sub){
+		return doesStateMatchEWFLRuleStates(sub.getState());
+	}
+	
+	public static boolean doesStateMatchEWFLRuleStates(State state) {
+		String stateBeanName = state.getBeanName();
+		return (stateBeanName.equals("Submitted") || stateBeanName.equals("CorrectionsReceived") || stateBeanName.equals("Approved") || stateBeanName.equals("PendingPublication") || stateBeanName.equals("Published"));
+	}
+	
 	/**
 	 * Checks the validity of a rule to make sure it should run or not
 	 * 
