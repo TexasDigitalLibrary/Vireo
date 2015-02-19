@@ -267,19 +267,32 @@ public class ViewTab extends AbstractVireoController {
 				//ORCID
 			} else if("orcid".equals(field)) {
 				
-				// Verify the ORCID id by pinging their API
-				boolean orcidVerify = true;
-				if (settingRepo.getConfigBoolean(AppConfig.ORCID_VALIDATION)) {
-					if (settingRepo.getConfigBoolean(AppConfig.ORCID_AUTHENTICATION))
-						orcidVerify = Utilities.verifyOrcid(value, submission.getStudentFirstName(), submission.getStudentLastName());
-					else
-						orcidVerify = Utilities.verifyOrcid(value);
+				if (value == null || value.length()==0) {
+					submission.setOrcid(null);
+				} else {
+					value = Utilities.formatOrcidAsDashedId(value);
+					
+					if(!Utilities.validateOrcidFormat(value))
+						throw new RuntimeException("The given ORCiD is not in a valid format.");
+					
+					// Verify the ORCID id by pinging their API
+					boolean orcidVerify = true;
+					if (settingRepo.getConfigBoolean(AppConfig.ORCID_VALIDATION)) {
+						if (settingRepo.getConfigBoolean(AppConfig.ORCID_AUTHENTICATION))
+							orcidVerify = Utilities.verifyOrcid(value, submission.getStudentFirstName(), submission.getStudentLastName());
+						else
+							orcidVerify = Utilities.verifyOrcid(value);
+					}
+					if (!orcidVerify) {
+						if (settingRepo.getConfigBoolean(AppConfig.ORCID_AUTHENTICATION))
+							throw new RuntimeException("The given ORCiD could not be either validated or authenticated.");
+						else
+							throw new RuntimeException("The given ORCiD could not be validated.");
+					}
+					
+					submission.setOrcid(value);
 				}
-				if (!orcidVerify)
-					throw new RuntimeException("The provided ORCID could not be validated.");
-				
-				submitter.setOrcid(value);
-				currentValue = submitter.getOrcid();	
+				currentValue = submission.getOrcid();
 
 				//Permanent Phone
 			} else if("permPhone".equals(field)){

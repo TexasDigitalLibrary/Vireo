@@ -1,7 +1,6 @@
 package controllers.submit;
 
 import static org.tdl.vireo.constant.AppConfig.SUBMIT_PERSONAL_INFO_STICKIES;
-import static org.tdl.vireo.constant.AppConfig.CURRENT_SEMESTER;
 import static org.tdl.vireo.constant.FieldConfig.COLLEGE;
 import static org.tdl.vireo.constant.FieldConfig.CURRENT_PHONE_NUMBER;
 import static org.tdl.vireo.constant.FieldConfig.CURRENT_POSTAL_ADDRESS;
@@ -137,7 +136,9 @@ public class PersonalInfo extends AbstractSubmitStep {
 		String firstName = params.get("firstName");
 		String middleName = params.get("middleName");
 		String lastName = params.get("lastName");
-		String orcid = params.get("orcid");
+		String orcid = null;
+		if(params.get("orcid")!=null)
+			orcid = Utilities.formatOrcidAsDashedId(params.get("orcid"));
 		String birthYear = params.get("birthYear");
 		String program = params.get("program");
 		String college = params.get("college");
@@ -170,8 +171,10 @@ public class PersonalInfo extends AbstractSubmitStep {
 				lastName = submitter.getLastName();
 			}
 			if (submitter.getOrcid() != null) {
-				disabledFields.add("orcid");
-				orcid = submitter.getOrcid();
+				if(Utilities.validateOrcidFormat(Utilities.formatOrcidAsDashedId(submitter.getOrcid()))) {
+					disabledFields.add("orcid");				
+					orcid = submitter.getOrcid();
+				}
 			}
 			if (submitter.getBirthYear() != null) {
 				if (submitter.getBirthYear() == null)
@@ -182,7 +185,7 @@ public class PersonalInfo extends AbstractSubmitStep {
 				disabledFields.add("birthYear");
 			}
 		}
-
+		
 		// Should the affiliation group be locked.
 		if (isFieldGroupLocked("affiliation")) {
 			if (isValidProgram(submitter.getCurrentProgram())) {
@@ -246,22 +249,30 @@ public class PersonalInfo extends AbstractSubmitStep {
 			if (isFieldEnabled(STUDENT_LAST_NAME))
 				sub.setStudentLastName(lastName);
 			if (isFieldEnabled(STUDENT_ORCID)) {
-				// Verify the ORCID id by pinging their API
-				boolean orcidVerify = true;
-				if (settingRepo.getConfigBoolean(AppConfig.ORCID_VALIDATION)) {
-					if (settingRepo.getConfigBoolean(AppConfig.ORCID_AUTHENTICATION))
-						orcidVerify = Utilities.verifyOrcid(orcid, sub.getStudentFirstName(), sub.getStudentLastName());
-					else
-						orcidVerify = Utilities.verifyOrcid(orcid);
-				}
-				// if we didn't verify
-				if (!orcidVerify) {
-					// only throw a validation error if we're a required field or the length of the orcid > 0
-					if(orcid.length() > 0 || isFieldRequired(STUDENT_ORCID)){
-						validation.addError("orcid", "Your ORCID could not be verified as valid!");
+				// Don't set the ORCiD if it's formatted incorrect.
+				if(orcid != null && orcid.trim().length() > 0) {
+					if(Utilities.validateOrcidFormat(Utilities.formatOrcidAsDashedId(orcid))) {
+						// Verify the ORCID id by pinging their API
+						boolean orcidVerify = true;
+						if (settingRepo.getConfigBoolean(AppConfig.ORCID_VALIDATION)) {
+							if (settingRepo.getConfigBoolean(AppConfig.ORCID_AUTHENTICATION))
+								orcidVerify = Utilities.verifyOrcid(orcid, sub.getStudentFirstName(), sub.getStudentLastName());
+							else
+								orcidVerify = Utilities.verifyOrcid(orcid);
+						}
+						if (!orcidVerify) {
+							if (settingRepo.getConfigBoolean(AppConfig.ORCID_AUTHENTICATION))
+								validation.addError("orcid","The given ORCiD could not be either validated or authenticated.");
+							else
+								validation.addError("orcid","The given ORCiD could not be validated.");
+						}
+						sub.setOrcid(orcid);
 					}
+					else {
+						validation.addError("orcid","Your ORCiD must be formatted XXXX-XXXX-XXXX-XXXX");
+					}						
 				} else {
-					submitter.setOrcid(orcid);
+					sub.setOrcid(orcid);
 				}
 			}
 			if (isFieldEnabled(STUDENT_BIRTH_YEAR)) {
@@ -348,10 +359,12 @@ public class PersonalInfo extends AbstractSubmitStep {
 		} 
 		
 		// Has this form ever been displayed before, if not then load all the data.
-		if (params.get("form_submit") == null) {
+		if (params.get("submit_next") == null) {
 			firstName = sub.getStudentFirstName();
 			middleName = sub.getStudentMiddleName();
 			lastName = sub.getStudentLastName();
+			if(sub.getOrcid() != null)
+				orcid = sub.getOrcid();
 			birthYear = sub.getStudentBirthYear() != null ? String.valueOf(sub.getStudentBirthYear()) : null;
 			program = sub.getProgram();
 			college = sub.getCollege();
@@ -363,11 +376,8 @@ public class PersonalInfo extends AbstractSubmitStep {
 			permEmail = submitter.getPermanentEmailAddress();
 			currentPhone = submitter.getCurrentPhoneNumber();
 			currentAddress = submitter.getCurrentPostalAddress();
-			orcid = submitter.getOrcid();
 		}
-	
-	
-	
+			
 		// Get display settings
 		List<String> stickies = new ArrayList<String>();
 		String stickiesRaw = settingRepo.getConfigValue(SUBMIT_PERSONAL_INFO_STICKIES);
@@ -451,8 +461,14 @@ public class PersonalInfo extends AbstractSubmitStep {
 		}
 		if (isFieldRequired(STUDENT_MIDDLE_NAME) && isEmpty(sub.getStudentMiddleName()))
 			validation.addError("middleName","Your middle name is required");
-		if (isFieldRequired(STUDENT_ORCID) && isEmpty(sub.getSubmitter().getOrcid()))
-			validation.addError("orcid","Your ORCID id is required");
+
+		//ORCiD
+		if (isFieldRequired(STUDENT_ORCID) && isEmpty(sub.getOrcid()))
+			validation.addError("orcid","Your ORCiD is required");
+		if(sub.getOrcid()!=null) {
+			if (!Utilities.validateOrcidFormat(Utilities.formatOrcidAsDashedId(sub.getOrcid())))
+				validation.addError("orcid","Your ORCiD must be formatted XXXX-XXXX-XXXX-XXXX");
+		}
 	
 		// Birth year
 		if (sub.getStudentBirthYear() != null && sub.getStudentBirthYear() < 1900)

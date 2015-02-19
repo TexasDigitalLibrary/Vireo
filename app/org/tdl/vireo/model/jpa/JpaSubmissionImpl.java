@@ -420,6 +420,25 @@ public class JpaSubmissionImpl extends JpaAbstractModel<JpaSubmissionImpl> imple
 	}
 	
 	@Override
+	public String getOrcid() {
+		return orcid;
+	}
+
+	@Override
+	public void setOrcid(String orcidString) {
+		
+		assertReviewerOrOwner(submitter);
+
+		if (orcidString != null && orcidString.trim().length() == 0)
+			orcidString = null;
+		
+		if (!equals(this.orcid,orcidString)) {
+			this.orcid = orcidString;
+			generateChangeLog("Student's ORCID identifier", orcidString, false);
+		}
+	}
+	
+	@Override
 	public String getStudentFormattedName(NameFormat format) {
 		
 		return NameFormat.format(format, studentFirstName, studentMiddleName, studentLastName, studentBirthYear);

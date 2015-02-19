@@ -10,6 +10,7 @@ import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.security.AuthenticationMethod;
 import org.tdl.vireo.security.AuthenticationResult;
+import org.tdl.vireo.services.Utilities;
 
 import play.Logger;
 import play.Play;
@@ -441,7 +442,7 @@ public class ShibbolethAuthenticationMethodImpl extends
 			if (headerOrcid != null) {
 				String orcidString = getSingleAttribute(request, headerOrcid);
 				if (!isEmpty(orcidString) && person.getOrcid() == null)
-					person.setOrcid(orcidString);
+					person.setOrcid(Utilities.formatOrcidAsDashedId(orcidString));
 			}
 			
 			person.save();
