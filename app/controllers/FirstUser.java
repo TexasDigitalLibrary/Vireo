@@ -14,12 +14,11 @@ import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.SettingsRepository;
+import org.tdl.vireo.model.jpa.JpaSettingsRepositoryImpl;
 import org.tdl.vireo.search.Indexer;
 import org.tdl.vireo.security.AuthenticationMethod;
 
-import controllers.FirstUserTest.MockSettingsRepository;
 import play.Logger;
-import play.Play;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
 import play.modules.spring.Spring;
@@ -68,7 +67,7 @@ public class FirstUser extends AbstractVireoController {
 				systemEmailService.generateAllSystemEmailTemplates();
 				
 				// Setup Embargos
-				if(settingRepo instanceof MockSettingsRepository)
+				if(!(settingRepo instanceof JpaSettingsRepositoryImpl))
 					new InitializeEmbargos().doJob(settingRepo);
 				
 				// Setup default Committee Member Role Types
