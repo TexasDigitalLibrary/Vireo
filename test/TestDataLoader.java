@@ -416,47 +416,59 @@ public class TestDataLoader extends Job {
 	 */
 	
 	private static final EmbargoArray[] EMBARGO_DEFINTITIONS = {
-		new EmbargoArray("None", "The work will be published after approval.", 0, true, null),
+		new EmbargoArray("None",
+				"You do not desire to place any holds on your thesis.  It is ready to be published to the Digital Library right away.",
+				0,
+				true,
+				true,
+				EmbargoGuarantor.DEFAULT),
 		new EmbargoArray("Journal Hold",
-				"The full text of this work will be held/restricted from worldwide access on the internet for one year from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication. For doctoral students, the abstract of the work will be available through ProQuest/UMI during this time.", 
+				"The work will be delayed for publication by one year because of a restriction from publication in an academic journal.", 
 				12,
 				true,
-				null),
+				true,
+				EmbargoGuarantor.DEFAULT),
 		new EmbargoArray("Patent Hold",
-				"The full text of this work will be held/restricted from public access temporarily because of patent related activities or for proprietary purposes. The faculty chair will be contacted on an annual basis, and the work will be released following the chair's approval.",
+				"You request that we withhold your thesis from publication in the Digital Library for two years for proprietary purposes or for securing a patent.",
 				24,
 				true,
-				null),
+				true,
+				EmbargoGuarantor.DEFAULT),
 	    new EmbargoArray("Other Embargo Period",
 	    		"The work will be delayed for publication by an indefinite amount of time.",
 	    		null,
 	    		false,
-	    		null),
-	    new EmbargoArray("2-year Journal Hold",
-	    		"The full text of this work will be held/restricted from worldwide access on the internet for two years from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication. The abstract of the work will be available through Texas A&M Libraries and, for doctoral students, through ProQuest/UMI during this time.",
-	    		null,
+				true,
+				EmbargoGuarantor.DEFAULT),
+	    new EmbargoArray("None",
+	    		"The work will be published after approval.",
+	    		0,
 	    		true,
-	    		null),
-	    new EmbargoArray("None", "The work will be published after approval.", 0, true, EmbargoGuarantor.PROQUEST),
+				true,
+	    		EmbargoGuarantor.PROQUEST),
 	    new EmbargoArray("6-month Journal Hold",
 				"The full text of this work will be held/restricted from worldwide access on the internet for six months from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication.", 
 				6,
+				true,
 				true,
 				EmbargoGuarantor.PROQUEST),
 		new EmbargoArray("1-year Journal Hold",
 				"The full text of this work will be held/restricted from worldwide access on the internet for one year from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication.", 
 				12,
 				true,
+				true,
 				EmbargoGuarantor.PROQUEST),
 		new EmbargoArray("2-year Journal Hold",
 				"The full text of this work will be held/restricted from worldwide access on the internet for two years from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication.", 
 				24,
+				true,
 				true,
 				EmbargoGuarantor.PROQUEST),
 		new EmbargoArray("Flexible/Delayed Release Embargo Period",
 	    		"The work will be delayed for publication by an indefinite amount of time.",
 	    		null,
 	    		false,
+				true,
 	    		EmbargoGuarantor.PROQUEST)
 	};
 	
@@ -726,7 +738,9 @@ public class TestDataLoader extends Job {
 		
 		// Create all embargo types
 		for(EmbargoArray embargoDefinition : EMBARGO_DEFINTITIONS) {
-			settingRepo.createEmbargoType(embargoDefinition.name, embargoDefinition.description, embargoDefinition.duration, embargoDefinition.active, embargoDefinition.guarantor).save();
+			EmbargoType embargo = settingRepo.createEmbargoType(embargoDefinition.name, embargoDefinition.description, embargoDefinition.duration, embargoDefinition.active, embargoDefinition.guarantor);
+			embargo.setSystemRequired(embargoDefinition.isSystem);
+			embargo.save();
 		}
 		
 		// Create all custom actions
@@ -1390,13 +1404,15 @@ public class TestDataLoader extends Job {
 		String description;
 		Integer duration;
 		boolean active;
+		boolean isSystem;
 		EmbargoGuarantor guarantor;
 		
-		EmbargoArray(String name, String description, Integer duration, boolean active, EmbargoGuarantor guarantor) {
+		EmbargoArray(String name, String description, Integer duration, boolean active, boolean isSystem, EmbargoGuarantor guarantor) {
 			this.name = name;
 			this.description = description;
 			this.duration = duration;
 			this.active = active;
+			this.isSystem = isSystem;
 			this.guarantor = guarantor;
 		}
 		

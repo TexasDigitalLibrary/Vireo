@@ -176,61 +176,76 @@ public class FirstUser extends AbstractVireoController {
 	
 	private static final EmbargoArray[] EMBARGO_DEFINTITIONS = {
 		new EmbargoArray("None",
-				"The work will be published after approval.",
+				"You do not desire to place any holds on your thesis.  It is ready to be published to the Digital Library right away.",
 				0,
+				true,
 				true,
 				EmbargoGuarantor.DEFAULT),
 		new EmbargoArray("Journal Hold",
 				"The work will be delayed for publication by one year because of a restriction from publication in an academic journal.", 
 				12,
 				true,
+				true,
 				EmbargoGuarantor.DEFAULT),
 		new EmbargoArray("Patent Hold",
-				"The work will be delayed for publication by two years because of patent related activities.",
+				"You request that we withhold your thesis from publication in the Digital Library for two years for proprietary purposes or for securing a patent.",
 				24,
 				true,
-				EmbargoGuarantor.DEFAULT
-				),
+				true,
+				EmbargoGuarantor.DEFAULT),
 	    new EmbargoArray("Other Embargo Period",
 	    		"The work will be delayed for publication by an indefinite amount of time.",
 	    		null,
-	    		true,
+	    		false,
+				true,
 				EmbargoGuarantor.DEFAULT),
-		new EmbargoArray("6-month Journal Hold",
+	    new EmbargoArray("None",
+	    		"The work will be published after approval.",
+	    		0,
+	    		true,
+				true,
+	    		EmbargoGuarantor.PROQUEST),
+	    new EmbargoArray("6-month Journal Hold",
 				"The full text of this work will be held/restricted from worldwide access on the internet for six months from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication.", 
 				6,
+				true,
 				true,
 				EmbargoGuarantor.PROQUEST),
 		new EmbargoArray("1-year Journal Hold",
 				"The full text of this work will be held/restricted from worldwide access on the internet for one year from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication.", 
 				12,
 				true,
+				true,
 				EmbargoGuarantor.PROQUEST),
 		new EmbargoArray("2-year Journal Hold",
 				"The full text of this work will be held/restricted from worldwide access on the internet for two years from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication.", 
 				24,
+				true,
 				true,
 				EmbargoGuarantor.PROQUEST),
 		new EmbargoArray("Flexible/Delayed Release Embargo Period",
 	    		"The work will be delayed for publication by an indefinite amount of time.",
 	    		null,
 	    		false,
+				true,
 	    		EmbargoGuarantor.PROQUEST)
 	};
 	
-	private static class EmbargoArray{
+	private static class EmbargoArray {
 		
 		String name;
 		String description;
 		Integer duration;
 		boolean active;
+		boolean isSystem;
 		EmbargoGuarantor guarantor;
 		
-		EmbargoArray(String name, String description, Integer duration, boolean active, EmbargoGuarantor guarantor) {
+		EmbargoArray(String name, String description, Integer duration, boolean active, boolean isSystem, EmbargoGuarantor guarantor) {
 			this.name = name;
 			this.description = description;
 			this.duration = duration;
 			this.active = active;
+			this.isSystem = isSystem;
 			this.guarantor = guarantor;
 		}
 		
@@ -257,15 +272,17 @@ public class FirstUser extends AbstractVireoController {
 				for(EmbargoArray embargoDefinition : EMBARGO_DEFINTITIONS) {
 					boolean found = false;
 					for(EmbargoType installedEmbargo : embargoTypes) {
-						if( installedEmbargo.getName().equals(embargoDefinition.name) ) {
+						if( installedEmbargo.getName().equals(embargoDefinition.name) && installedEmbargo.getGuarantor().toString().equals(embargoDefinition.guarantor.toString())) {
 							found = true;
-							installedEmbargo.setSystemRequired(true);
+							installedEmbargo.setDescription(embargoDefinition.description);
+							installedEmbargo.setDuration(embargoDefinition.duration);
+							installedEmbargo.setSystemRequired(embargoDefinition.isSystem);
 							installedEmbargo.save();
 						}
 					}
 					if(!found) {
 						EmbargoType newembargo = settingRepo.createEmbargoType(embargoDefinition.name, embargoDefinition.description, embargoDefinition.duration, embargoDefinition.active, embargoDefinition.guarantor);
-						newembargo.setSystemRequired(true);
+						newembargo.setSystemRequired(embargoDefinition.isSystem);
 						newembargo.save();
 					}
 				}

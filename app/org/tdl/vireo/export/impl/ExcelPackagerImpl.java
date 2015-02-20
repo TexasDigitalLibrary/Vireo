@@ -408,8 +408,8 @@ public class ExcelPackagerImpl extends AbstractExcelPackagerImpl {
 				break;
 			case ORCID:
 				header.createCell(j).setCellValue("ORCID");
-				if (sub.getSubmitter().getOrcid() != null)
-					row.createCell(j).setCellValue(sub.getSubmitter().getOrcid());
+				if (sub.getOrcid() != null)
+					row.createCell(j).setCellValue(sub.getOrcid());
 				j++;
 				break;
 			}
