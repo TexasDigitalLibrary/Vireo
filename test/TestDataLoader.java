@@ -53,6 +53,7 @@ import play.db.jpa.JPA;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
 import play.modules.spring.Spring;
+import controllers.FirstUser.EmbargoArray;
 import controllers.settings.ThemeSettingsTab;
 
 
@@ -417,7 +418,7 @@ public class TestDataLoader extends Job {
 	
 	private static final EmbargoArray[] EMBARGO_DEFINTITIONS = {
 		new EmbargoArray("None",
-				"You do not desire to place any holds on your thesis.  It is ready to be published to the Digital Library right away.",
+				"The work will be published after approval.",
 				0,
 				true,
 				true,
@@ -429,7 +430,7 @@ public class TestDataLoader extends Job {
 				true,
 				EmbargoGuarantor.DEFAULT),
 		new EmbargoArray("Patent Hold",
-				"You request that we withhold your thesis from publication in the Digital Library for two years for proprietary purposes or for securing a patent.",
+				"The work will be delayed for publication by two years because of patent related activities.",
 				24,
 				true,
 				true,
