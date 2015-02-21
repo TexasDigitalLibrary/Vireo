@@ -228,7 +228,7 @@ public class EmailSettingsTab extends SettingsTab {
 			EmailWorkflowRule rule = settingRepo.findEmailWorkflowRule(Long.parseLong(ruleID));
 			
 			// validate rule
-			if(EmailRuleService.checkRuleIsValid(rule)) {
+			if(EmailRuleService.ruleIsValid(rule)) {
 				rule.enable();
 				rule.save();
 			} else {

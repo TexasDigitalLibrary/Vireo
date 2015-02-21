@@ -47,7 +47,7 @@ public class EmailRuleService {
 		// for every rule in JPA
 		for (EmailWorkflowRule ewflRule : rules) {
 			// verify the rule is valid/complete before running it
-			if (ruleIsValid(ewflRule, submission)) {
+			if (ruleIsValid(ewflRule) && ruleCanRun(ewflRule, submission)) {
 				// if the rule's state matches the transitioned state in the submission
 				if (ewflRule.getAssociatedState().getBeanName().equals(submission.getState().getBeanName())) {
 					// apply condition to send only when condition is met
@@ -104,19 +104,19 @@ public class EmailRuleService {
 		}
 	}
 
-	public static boolean checkRuleIsValid(EmailWorkflowRule ewflRule) {
-		return isConditionValid(ewflRule);
+	public static boolean ruleIsValid(EmailWorkflowRule ewflRule) {
+		return ((ewflRule.getCondition() != null) && (ewflRule.getEmailTemplate() != null) && (ewflRule.getRecipientType() != null));
 	}
-	
-	public static boolean doesSubStateMatchEWFLRuleStates(Submission sub){
+
+	public static boolean doesSubStateMatchEWFLRuleStates(Submission sub) {
 		return doesStateMatchEWFLRuleStates(sub.getState());
 	}
-	
+
 	public static boolean doesStateMatchEWFLRuleStates(State state) {
 		String stateBeanName = state.getBeanName();
 		return (stateBeanName.equals("Submitted") || stateBeanName.equals("CorrectionsReceived") || stateBeanName.equals("Approved") || stateBeanName.equals("PendingPublication") || stateBeanName.equals("Published"));
 	}
-	
+
 	/**
 	 * Checks the validity of a rule to make sure it should run or not
 	 * 
@@ -126,17 +126,17 @@ public class EmailRuleService {
 	 *            - the submission to check against
 	 * @return - returns true if rule is valid, false if condition is not set or recipients is emtpy
 	 */
-	private static boolean ruleIsValid(EmailWorkflowRule ewflRule, Submission submission) {
+	private static boolean ruleCanRun(EmailWorkflowRule ewflRule, Submission submission) {
 		boolean conditionValid = true, recipientsValid = true, ruleEnabled = true;
-		
+
 		conditionValid = isConditionValid(ewflRule);
 		recipientsValid = areRecipientsValid(ewflRule, submission);
 		// check to see if rule is disabled
 		ruleEnabled = (!ewflRule.isDisabled()); // if rule isDisabled(true) return false(rule is not enabled)
-		
+
 		return (conditionValid && recipientsValid && ruleEnabled);
 	}
-	
+
 	/**
 	 * Checks the validity of a rule's condition
 	 * 
@@ -169,7 +169,7 @@ public class EmailRuleService {
 		}
 		return conditionValid;
 	}
-	
+
 	/**
 	 * Check to make sure the current rule will have recipients for the current submission
 	 * 
@@ -285,7 +285,7 @@ public class EmailRuleService {
 
 		for (EmailWorkflowRule rule : submittedRules) {
 			// if this is a system-installed rule
-			if(rule.isSystem()) {
+			if (rule.isSystem()) {
 				// compare conditions for advisor rule
 				if (rule.getCondition().getConditionType() == advisorRule.getCondition().getConditionType()) {
 					// compare recipients for advisor rule
@@ -304,14 +304,14 @@ public class EmailRuleService {
 		}
 		// if the rules weren't found, add them
 		if (!foundAdvisor) {
-			if(advisorRule.getCondition() != null) {
+			if (advisorRule.getCondition() != null) {
 				advisorRule.getCondition().save();
 			}
 			advisorRule.enable();
 			advisorRule.save();
 		}
 		if (!foundStudent) {
-			if(studentRule.getCondition() != null) {
+			if (studentRule.getCondition() != null) {
 				studentRule.getCondition().save();
 			}
 			studentRule.enable();
