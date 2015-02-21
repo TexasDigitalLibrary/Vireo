@@ -53,7 +53,6 @@ import play.db.jpa.JPA;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
 import play.modules.spring.Spring;
-import controllers.FirstUser.EmbargoArray;
 import controllers.settings.ThemeSettingsTab;
 
 
