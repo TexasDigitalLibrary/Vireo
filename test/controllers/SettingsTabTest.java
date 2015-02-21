@@ -33,6 +33,9 @@ public class SettingsTabTest extends AbstractVireoFunctionalTest {
 	 */
 	@Test
 	public void testUpdateProfileDisplayName() {
+		JPA.em().getTransaction().commit();
+		JPA.em().clear();
+		JPA.em().getTransaction().begin();
 		context.turnOffAuthorization();
 		Person person = personRepo.findPersonByEmail("bthornton@gmail.com");
 		String originalDisplayName = person.getDisplayName();
