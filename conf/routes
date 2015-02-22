@@ -22,6 +22,7 @@ GET     /profile                                Authentication.profile
 ### Advisor URL
 *       /advisor/{token}/review                 Advisor.review
 *       /advisor/{token}/file/{attachmentId}/{name}	Advisor.viewAttachment
+*       /advisor/{token}/reviewJSON             Advisor.reviewJSON
 
 ### New Submissions
 *       /submit/{subId}/personalInfo            submit.PersonalInfo.personalInfo

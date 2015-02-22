@@ -131,6 +131,7 @@ public class AdvisorTest extends AbstractVireoFunctionalTest {
 		Map<String,Object> routeArgs = new HashMap<String,Object>();
 		routeArgs.put("token", token);
 		final String ADVISOR_URL = Router.reverse("Advisor.review",routeArgs).url;
+		final String ADVISOR_URL_JSON = Router.reverse("Advisor.reviewJSON",routeArgs).url;
 		
 		Response response = GET(ADVISOR_URL);
 		assertIsOk(response);
@@ -141,9 +142,9 @@ public class AdvisorTest extends AbstractVireoFunctionalTest {
 		params.put("advisorMessage","Hi this is my super cool message.");
 		params.put("submit_advisor","Submit");
 		
-		response = POST(ADVISOR_URL,params);
+		response = POST(ADVISOR_URL_JSON,params);
 		assertIsOk(response);
-		assertContentMatch("Your input has been recorded.",response);
+		assertContentMatch(" \"success\": true, \"inputReceived\": true",response);
 		
 		
 		// verify the action log.
@@ -173,6 +174,7 @@ public class AdvisorTest extends AbstractVireoFunctionalTest {
 		Map<String,Object> routeArgs = new HashMap<String,Object>();
 		routeArgs.put("token", token);
 		final String ADVISOR_URL = Router.reverse("Advisor.review",routeArgs).url;
+		final String ADVISOR_URL_JSON = Router.reverse("Advisor.reviewJSON",routeArgs).url;
 		
 		Response response = GET(ADVISOR_URL);
 		assertIsOk(response);
@@ -185,11 +187,9 @@ public class AdvisorTest extends AbstractVireoFunctionalTest {
 		params.put("advisorMessage","Hi this is my super cool rejection message.");
 		params.put("submit_advisor","Submit");
 		
-		response = POST(ADVISOR_URL,params);
+		response = POST(ADVISOR_URL_JSON,params);
 		assertIsOk(response);
-		assertContentMatch("Your input has been recorded.",response);
-		assertContentMatch("name=\"embargoApproval\" value=\"reject\" checked='true'",response);
-		assertContentMatch("name=\"committeeApproval\" value=\"reject\" checked='true'",response);
+		assertContentMatch(" \"success\": true, \"inputReceived\": true",response);
 
 		
 		// verify the submission.
@@ -230,6 +230,7 @@ public class AdvisorTest extends AbstractVireoFunctionalTest {
 		Map<String,Object> routeArgs = new HashMap<String,Object>();
 		routeArgs.put("token", token);
 		final String ADVISOR_URL = Router.reverse("Advisor.review",routeArgs).url;
+		final String ADVISOR_URL_JSON = Router.reverse("Advisor.reviewJSON",routeArgs).url;
 		
 		Response response = GET(ADVISOR_URL);
 		assertIsOk(response);
@@ -242,11 +243,9 @@ public class AdvisorTest extends AbstractVireoFunctionalTest {
 		params.put("advisorMessage","Hi this is my super cool approval message.");
 		params.put("submit_advisor","Submit");
 		
-		response = POST(ADVISOR_URL,params);
+		response = POST(ADVISOR_URL_JSON,params);
 		assertIsOk(response);
-		assertContentMatch("Your input has been recorded.",response);
-		assertContentMatch("I unapprove this embargo.", response);
-		assertContentMatch("I unapprove this application.", response);
+		assertContentMatch(" \"success\": true, \"inputReceived\": true",response);
 		
 		// verify the submission.
 		JPA.em().getTransaction().commit();
