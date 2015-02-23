@@ -27,7 +27,7 @@ public class JpaCustomActionDefinitionImpl extends JpaAbstractModel<JpaCustomAct
 	@Column(nullable = false, unique = true, length = 255)
 	public String label;
 
-	@Column
+	@Column(nullable = false, columnDefinition="BOOLEAN DEFAULT false")
 	private Boolean isStudentVisible;
 
 	/**
