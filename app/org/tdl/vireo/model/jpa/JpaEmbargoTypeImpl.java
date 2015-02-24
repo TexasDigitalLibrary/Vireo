@@ -46,7 +46,7 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 	public Boolean systemRequired;
 
 	// this requires a column definition in order to update the table column on old DB's (default value) 
-	@Column(nullable = false, columnDefinition="int4 default '0'")
+	@Column(nullable = false, columnDefinition="INTEGER DEFAULT '0'")
 	public EmbargoGuarantor guarantor;
 	
 	/**

@@ -32,6 +32,7 @@ public class MockDepositLocation extends AbstractMock implements
 	public String onBehalfOf;
 	public Packager packager;
 	public Depositor depositor;
+	public Integer timeout;
 
 	@Override
 	public MockDepositLocation save() {
@@ -147,5 +148,15 @@ public class MockDepositLocation extends AbstractMock implements
 	public void setDepositor(Depositor depositor) {
 		this.depositor = depositor;
 	}
+
+	@Override
+    public void setTimeout(Integer seconds) {
+	    this.timeout = seconds;
+    }
+
+	@Override
+    public Integer getTimeout() {
+	    return timeout;
+    }
 
 }

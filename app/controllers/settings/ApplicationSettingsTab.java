@@ -386,6 +386,7 @@ public class ApplicationSettingsTab extends SettingsTab {
 		String password = null;
 		String onBehalfOf = null;
 		String repository = null;
+		Integer timeout = null;
 		String collection = null;
 		
 		
@@ -403,6 +404,7 @@ public class ApplicationSettingsTab extends SettingsTab {
 			password = location.getPassword();
 			onBehalfOf = location.getOnBehalfOf();
 			repository = location.getRepository();
+			timeout = location.getTimeout();
 			collection = location.getCollection();
 						
 // Don't try to connect on inital load because it could take too long.
@@ -435,7 +437,7 @@ public class ApplicationSettingsTab extends SettingsTab {
 		renderTemplate("SettingTabs/editDepositLocation.include",nav, subNav, packagers, depositors, collectionsMap, connectionOk,
 				
 				// Deposit location
-				depositLocationId, name, packager, depositor, username, password, onBehalfOf, repository, collection
+				depositLocationId, name, packager, depositor, username, password, onBehalfOf, repository, timeout, collection
 				);
 	}
 	
@@ -463,6 +465,7 @@ public class ApplicationSettingsTab extends SettingsTab {
 		String password = params.get("password");
 		String onBehalfOf = params.get("onBehalfOf");
 		String repository = params.get("repository");
+		String sTimeout = params.get("timeout");
 		String collection = params.get("collection");
 				
 		// Nullify things
@@ -472,7 +475,8 @@ public class ApplicationSettingsTab extends SettingsTab {
 			password = null;
 		if (onBehalfOf != null && onBehalfOf.trim().length() == 0)
 			onBehalfOf = null;
-		
+		if (sTimeout != null && sTimeout.trim().length() == 0)
+			sTimeout = null;
 		
 		// Validation and format conversions
 		if (name == null || name.trim().length() == 0)
@@ -494,6 +498,13 @@ public class ApplicationSettingsTab extends SettingsTab {
 		
 		if (repository == null || repository.trim().length() == 0)
 			validation.addError("repository", "The repository location is required");
+		
+		Integer timeout = null;
+		try {
+			timeout = Integer.parseInt(sTimeout);
+		} catch (NumberFormatException e) {
+			validation.addError("timeout", "The timeout value was invalid");
+		}
 		
 		// If no errors then try and save location
 		DepositLocation location = null;
@@ -536,6 +547,7 @@ public class ApplicationSettingsTab extends SettingsTab {
 				location.setUsername(username);
 				location.setOnBehalfOf(onBehalfOf);
 				location.setRepository(repository);
+				location.setTimeout(timeout);
 				location.setCollection(collection);
 				location.setPackager(packager);
 				location.setDepositor(depositor);
@@ -622,7 +634,7 @@ public class ApplicationSettingsTab extends SettingsTab {
 		renderTemplate("SettingTabs/editDepositLocation.include", packagers, depositors, collectionsMap, testDepositId, connectionOk, action,
 			
 			// Deposit location
-			depositLocationId, name, packager, depositor, username, password, onBehalfOf, repository, collection);
+			depositLocationId, name, packager, depositor, username, password, onBehalfOf, repository, timeout, collection);
 	}
 
 	/**

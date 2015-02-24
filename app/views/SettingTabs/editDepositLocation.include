@@ -53,6 +53,12 @@
                     <input type="text" class="input-xlarge" name="depositLocation-repository" id="depositLocation-repository" value="${repository}"/>
                 </div>
             </div>
+            <div class="control-group ${ errors.forKey("timeout")  ? "error" : "" }">
+                <label class="control-label" for="dpositLocation-repository"><strong>Repository Timeout</strong>:</label>
+                <div class="controls">
+                    <input type="text" class="input-xlarge" name="depositLocation-timeout" id="depositLocation-timeout" value="${timeout}"/>
+                </div>
+            </div>
             <div class="control-group ${ errors.forKey("auth") ? "error" : "" }">
                 <label class="control-label" for="depositLocation-username"><strong>Username</strong>:</label>
                 <div class="controls">

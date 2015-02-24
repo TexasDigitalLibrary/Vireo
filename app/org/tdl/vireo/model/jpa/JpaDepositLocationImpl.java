@@ -52,6 +52,9 @@ public class JpaDepositLocationImpl extends JpaAbstractModel<JpaDepositLocationI
 	@Column(length=255)
 	public String depositor;
 	
+	@Column(columnDefinition="INTEGER DEFAULT '60'")
+	public Integer timeout;
+	
 	/**
 	 * Construct a new JpaDepositLocation
 	 * 
@@ -67,6 +70,7 @@ public class JpaDepositLocationImpl extends JpaAbstractModel<JpaDepositLocationI
 		
 		this.displayOrder = 0;
 		this.name = name;
+		this.timeout = DEFAULT_TIMEOUT;
 	}
 	
 	@Override
@@ -226,5 +230,20 @@ public class JpaDepositLocationImpl extends JpaAbstractModel<JpaDepositLocationI
 		else 
 			this.depositor = depositor.getBeanName();
 	}
-	
+
+	@Override
+    public void setTimeout(Integer seconds) {
+		assertManager();
+		
+		if(seconds == null) {
+			this.timeout = DEFAULT_TIMEOUT;
+		} else {
+			this.timeout = seconds;
+		}
+    }
+
+	@Override
+    public Integer getTimeout() {
+	    return (this.timeout == null ? DEFAULT_TIMEOUT : this.timeout);
+    }	
 }

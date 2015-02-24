@@ -3604,6 +3604,7 @@ function depositSaveHandler(closeOnSave, saveURL, updateURL) {
 		var depositor = jQuery("#depositLocation-depositor").val();
 		var packager = jQuery("#depositLocation-packager").val();
 		var repository = jQuery("#depositLocation-repository").val();
+		var timeout = jQuery("#depositLocation-timeout").val();
 		var username = jQuery("#depositLocation-username").val();
 		var password = jQuery("#depositLocation-password").val();
 		var onBehalfOf = jQuery("#depositLocation-onBehalfOf").val();
@@ -3621,6 +3622,7 @@ function depositSaveHandler(closeOnSave, saveURL, updateURL) {
 				depositor: depositor,
 				packager: packager,
 				repository: repository,
+				timeout: timeout,
 				username: username,
 				password: password,
 				onBehalfOf: onBehalfOf,

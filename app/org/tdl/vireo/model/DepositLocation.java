@@ -15,6 +15,7 @@ import org.tdl.vireo.export.Packager;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 public interface DepositLocation extends AbstractOrderedModel {
+	public static Integer DEFAULT_TIMEOUT = 60;
 
 	/**
 	 * @return The name of this deposit location.
@@ -110,4 +111,16 @@ public interface DepositLocation extends AbstractOrderedModel {
 	 *            The new depositor implementation
 	 */
 	public void setDepositor(Depositor depositor);
+	
+	/**
+	 * @param seconds
+	 * 				The number of seconds to wait for a succesful deposit
+	 */
+	public void setTimeout(Integer seconds);
+	
+	/**
+	 * 
+	 * @return The number of seconds to wait for a succesful deposit, should never be null!
+	 */
+	public Integer getTimeout();
 }
