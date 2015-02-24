@@ -539,6 +539,7 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 		params.put("packager","DSpaceMETS");
 		params.put("depositor","Sword1Deposit");
 		params.put("repository","http://localhost:8082/servicedocument");
+		params.put("timeout", "60");
 		params.put("username","testUser");
 		params.put("password","testPassword");
 		params.put("onBehalfOf","");
@@ -639,6 +640,7 @@ public class ApplicationSettingsTabTest extends AbstractVireoFunctionalTest {
 		params.put("packager","DSpaceMETS");
 		params.put("depositor","Sword1Deposit");
 		params.put("repository","http://localhost:8082/servicedocument");
+		params.put("timeout", "60");
 		params.put("username","testUser");
 		params.put("password","testPassword");
 		params.put("onBehalfOf","");
