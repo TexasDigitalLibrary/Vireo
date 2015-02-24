@@ -554,7 +554,7 @@ public class ApplicationSettingsTab extends SettingsTab {
 				location.setName(name);
 				location.save();
 				
-				Logger.info("%s (%d: %s) has %s deposit location #%d.\nDeposit Name = '%s'\nDeposit Packager = '%s'\nDeposit Depositor = '%s'\nDeposit Repository = '%s'\nDeposit Username = '%s'\nDeposit On Behalf Of = '%s'\nDeposit Collection = '%s'",
+				Logger.info("%s (%d: %s) has %s deposit location #%d.\nDeposit Name = '%s'\nDeposit Packager = '%s'\nDeposit Depositor = '%s'\nDeposit Repository = '%s'\nDeposit Timeout = '%s'\nDeposit Username = '%s'\nDeposit On Behalf Of = '%s'\nDeposit Collection = '%s'",
 						context.getPerson().getFormattedName(NameFormat.FIRST_LAST), 
 						context.getPerson().getId(), 
 						context.getPerson().getEmail(),
@@ -564,6 +564,7 @@ public class ApplicationSettingsTab extends SettingsTab {
 						location.getPackager()==null ? "null" : location.getPackager().getBeanName(),
 						location.getDepositor()==null ? "null" : location.getDepositor().getBeanName(),
 						location.getRepository(),
+						location.getTimeout(),
 						location.getUsername(),
 						location.getOnBehalfOf(),
 						location.getCollection());
@@ -653,7 +654,7 @@ public class ApplicationSettingsTab extends SettingsTab {
 			DepositLocation location = settingRepo.findDepositLocation(id);
 			location.delete();
 
-			Logger.info("%s (%d: %s) has deleted deposit location #%d.\nDeposit Name = '%s'\nDeposit Packager = '%s'\nDeposit Depositor = '%s'\nDeposit Repository = '%s'\nDeposit Username = '%s'\nDeposit On Behalf Of = '%s'\nDeposit Collection = '%s'",
+			Logger.info("%s (%d: %s) has deleted deposit location #%d.\nDeposit Name = '%s'\nDeposit Packager = '%s'\nDeposit Depositor = '%s'\nDeposit Repository = '%s'\nDeposit Timeout = '%s'\nDeposit Username = '%s'\nDeposit On Behalf Of = '%s'\nDeposit Collection = '%s'",
 					context.getPerson().getFormattedName(NameFormat.FIRST_LAST), 
 					context.getPerson().getId(), 
 					context.getPerson().getEmail(),
@@ -662,6 +663,7 @@ public class ApplicationSettingsTab extends SettingsTab {
 					location.getPackager()==null ? "null" : location.getPackager().getBeanName(),
 					location.getDepositor()==null ? "null" : location.getDepositor().getBeanName(),
 					location.getRepository(),
+					location.getTimeout(),
 					location.getUsername(),
 					location.getOnBehalfOf(),
 					location.getCollection());
