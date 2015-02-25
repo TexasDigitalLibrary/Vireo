@@ -37,6 +37,7 @@ import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.SubmissionRepository;
 import org.tdl.vireo.security.SecurityContext;
+import org.tdl.vireo.services.SystemDataLoader;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
 
@@ -65,7 +66,13 @@ public class FirstUserTest extends AbstractVireoFunctionalTest {
 		MockSettingsRepository.mockEmbargos.clear();
 		MockSettingsRepository.mockConfigs.clear();
 		MockSettingsRepository.mockRoleTypes.clear();
-
+		
+		SystemDataLoader systemDataLoader = Spring.getBeanOfType(SystemDataLoader.class);
+		systemDataLoader.setSettingsRepository(FirstUser.settingRepo);
+		//systemDataLoader.generateAllSystemEmailTemplates();
+		systemDataLoader.generateAllSystemEmbargos();
+		systemDataLoader.setSettingsRepository(settingRepo);
+		
 		try {
 			assertEquals(0, Application.personRepo.findAllPersons().size());
 

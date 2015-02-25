@@ -60,18 +60,18 @@ public class JpaCustomActionDefinitionImpl extends JpaAbstractModel<JpaCustomAct
 
 		assertManager();
 
-		// Tell the indexer about all the submissions that will be effected by
+		// Tell the indexer about all the submissions that will be affected by
 		// this deletion.
-		TypedQuery<Long> effectedQuery = em().createQuery(
+		TypedQuery<Long> affectedQuery = em().createQuery(
 				"SELECT sub.id "+
 				"FROM JpaSubmissionImpl AS sub "+
 				"JOIN sub.customActions as action "+
 				"WHERE action.definition = :definition ",
 				Long.class);
-		effectedQuery.setParameter("definition", this);
-		List<Long> effectedIds = effectedQuery.getResultList();
+		affectedQuery.setParameter("definition", this);
+		List<Long> affectedIds = affectedQuery.getResultList();
 		Indexer indexer = Spring.getBeanOfType(Indexer.class);
-		indexer.updated(effectedIds);
+		indexer.updated(affectedIds);
 
 		// Delete all values associated with this definition
 		em().createQuery(

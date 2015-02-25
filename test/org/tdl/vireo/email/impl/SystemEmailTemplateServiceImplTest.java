@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.security.SecurityContext;
+import org.tdl.vireo.services.SystemDataLoader;
 
 import play.modules.spring.Spring;
 import play.test.UnitTest;
@@ -22,7 +23,7 @@ public class SystemEmailTemplateServiceImplTest extends UnitTest {
 	// Spring dependencies
 	public static SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
 	public static SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
-	public static SystemEmailTemplateServiceImpl systemEmailService = Spring.getBeanOfType(SystemEmailTemplateServiceImpl.class);
+	public static SystemDataLoader systemDataLoader = Spring.getBeanOfType(SystemDataLoader.class);
 	
 	
 	/**
@@ -50,7 +51,7 @@ public class SystemEmailTemplateServiceImplTest extends UnitTest {
 	@After
 	public void cleanup() {
 		
-		systemEmailService.generateAllSystemEmailTemplates();	
+		systemDataLoader.generateAllSystemEmailTemplates();	
 		
 		context.restoreAuthorization();
 		context.logout(); // Resets the context incase of error.
@@ -65,7 +66,7 @@ public class SystemEmailTemplateServiceImplTest extends UnitTest {
 		// Check the two currently (at the time the test was written) email templates.
 		
 		// New User Registration
- 		EmailTemplate template = systemEmailService.generateSystemEmailTemplate("SYSTEM New User Registration");
+ 		EmailTemplate template = systemDataLoader.generateSystemEmailTemplate("SYSTEM New User Registration");
 		
 		assertEquals("SYSTEM New User Registration", template.getName());
 		assertEquals("Vireo Account Registration",template.getSubject());
@@ -77,7 +78,7 @@ public class SystemEmailTemplateServiceImplTest extends UnitTest {
 		template.delete();
 
 		// Change Password Registration
-		template = systemEmailService.generateSystemEmailTemplate("SYSTEM Verify Email Address");
+		template = systemDataLoader.generateSystemEmailTemplate("SYSTEM Verify Email Address");
 		
 		assertEquals("SYSTEM Verify Email Address", template.getName());
 		assertEquals("Verify Email Address",template.getSubject());
@@ -99,7 +100,7 @@ public class SystemEmailTemplateServiceImplTest extends UnitTest {
 		settingRepo.createEmailTemplate("SYSTEM New User Registration", "subject", "message").save();
 
 		// Generate it and check that it replaces the data.
-		EmailTemplate template = systemEmailService.generateSystemEmailTemplate("SYSTEM New User Registration");
+		EmailTemplate template = systemDataLoader.generateSystemEmailTemplate("SYSTEM New User Registration");
 		
 		assertEquals("SYSTEM New User Registration", template.getName());
 		assertEquals("Vireo Account Registration",template.getSubject());
@@ -118,7 +119,7 @@ public class SystemEmailTemplateServiceImplTest extends UnitTest {
 	@Test
 	public void testGetTemplateNames() {
 		
-		List<String> names = systemEmailService.getAllSystemEmailTemplateNames();
+		List<String> names = systemDataLoader.getAllSystemEmailTemplateNames();
 		
 		assertNotNull(names);
 		assertTrue(names.contains("SYSTEM Advisor Review Request"));
@@ -140,7 +141,7 @@ public class SystemEmailTemplateServiceImplTest extends UnitTest {
 	@Test
 	public void testCreateAllSystemEmailTemplates() {
 		
-		List<EmailTemplate> templates = systemEmailService.generateAllSystemEmailTemplates();
+		List<EmailTemplate> templates = systemDataLoader.generateAllSystemEmailTemplates();
 		
 		assertNotNull(templates);
 		assertTrue(templates.size() >= 2);

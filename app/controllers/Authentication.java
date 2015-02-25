@@ -14,7 +14,6 @@ import javax.mail.internet.InternetAddress;
 import org.apache.commons.codec.binary.Base64;
 import org.tdl.vireo.constant.AppConfig;
 import org.tdl.vireo.email.EmailService;
-import org.tdl.vireo.email.SystemEmailTemplateService;
 import org.tdl.vireo.email.VireoEmail;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.NameFormat;
@@ -53,7 +52,6 @@ public class Authentication extends AbstractVireoController {
 	
 	// Spring dependencies
 	public static EmailService emailService = Spring.getBeanOfType(EmailService.class);
-	public static SystemEmailTemplateService systemEmailService = Spring.getBeanOfType(SystemEmailTemplateService.class);
 	
 	// Constants
 	public static final String REGISTRATION_TEMPLATE = "SYSTEM New User Registration";
@@ -444,7 +442,6 @@ public class Authentication extends AbstractVireoController {
 			
 			if (!validation.hasErrors()) {
 				// We're good let's send this off.
-				systemEmailService.generateAllSystemEmailTemplates();
 				EmailTemplate template = settingRepo.findEmailTemplateByName(REGISTRATION_TEMPLATE);
 				
 				ActionDefinition action = Router.reverse("Authentication.register");
@@ -577,7 +574,6 @@ public class Authentication extends AbstractVireoController {
 
 			if (!validation.hasErrors()) {
 				// We're good let's send this off.
-				systemEmailService.generateAllSystemEmailTemplates();
 				EmailTemplate template = settingRepo.findEmailTemplateByName(RECOVER_TEMPLATE);
 				
 				ActionDefinition action = Router.reverse("Authentication.recover");

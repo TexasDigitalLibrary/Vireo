@@ -17,7 +17,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.tdl.vireo.constant.AppConfig;
 import org.tdl.vireo.email.RecipientType;
-import org.tdl.vireo.email.SystemEmailTemplateService;
 import org.tdl.vireo.export.Depositor;
 import org.tdl.vireo.export.Packager;
 import org.tdl.vireo.export.impl.FileDepositorImpl;
@@ -44,6 +43,7 @@ import org.tdl.vireo.proquest.ProquestVocabularyRepository;
 import org.tdl.vireo.search.impl.LuceneIndexerImpl;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.security.impl.ShibbolethAuthenticationMethodImpl;
+import org.tdl.vireo.services.SystemDataLoader;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
 
@@ -77,7 +77,7 @@ public class TestDataLoader extends Job {
 	public static SecurityContext context = Spring.getBeanOfType(SecurityContext.class);
 	public static LuceneIndexerImpl indexer = Spring.getBeanOfType(LuceneIndexerImpl.class);
 	public static ShibbolethAuthenticationMethodImpl shibAuth = Spring.getBeanOfType(ShibbolethAuthenticationMethodImpl.class);
-	public static SystemEmailTemplateService systemEmailService = Spring.getBeanOfType(SystemEmailTemplateService.class);
+	public static SystemDataLoader systemDataLoader = Spring.getBeanOfType(SystemDataLoader.class);
 		
 	/**
 	 * How many random submissions to create
@@ -749,7 +749,7 @@ public class TestDataLoader extends Job {
 		}
 		
 		// Create all email templates
-		systemEmailService.generateAllSystemEmailTemplates();
+		systemDataLoader.generateAllSystemEmailTemplates();
 		for(EmailTemplateArray templateDefinition : EMAIL_TEMPLATE_DEFINITIONS) {
 			settingRepo.createEmailTemplate(templateDefinition.name, templateDefinition.subject, templateDefinition.message).save();
 		}

@@ -105,34 +105,34 @@ public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> imp
 			throw new IllegalStateException("Unable to delete the embargo '"+name+"' because it is required by the system.");
 		
 //		JpaSubmissionRepositoryImpl subRepo = Spring.getBeanOfType(JpaSubmissionRepositoryImpl.class);
-		// Tell the indexer about all the submissions that will be effected by
+		// Tell the indexer about all the submissions that will be affected by
 		// this deletion.
-//		TypedQuery<Long> effectedQuery = em().createQuery(
+//		TypedQuery<Long> affectedQuery = em().createQuery(
 //				"SELECT sub.id "+
 //				"FROM JpaSubmissionImpl AS sub "+
 //				"WHERE sub.embargoType = :embargo ",
 //				Long.class);
-//		effectedQuery.setParameter("embargo", this);
-		List<Long> effectedIds = new ArrayList<Long>();
+//		affectedQuery.setParameter("embargo", this);
+		List<Long> affectedIds = new ArrayList<Long>();
 		
 //		Iterator<Submission> submissionsItr = subRepo.findAllSubmissions();
 //		while(submissionsItr.hasNext()) {
 //			Submission sub = submissionsItr.next();
 //			if(sub.getEmbargoTypes().contains(this)) {
-//				effectedIds.add(sub.getId());
+//				affectedIds.add(sub.getId());
 //				sub.getEmbargoTypes().remove(this);
 //				sub.save();
 //			}
 //		}
 		
 		for (Submission sub : getSubmissions()) {
-			effectedIds.add(sub.getId());
+			affectedIds.add(sub.getId());
 			sub.removeEmbargoType(this);
         }
 		
-		Logger.info("Indexer effected IDs: " + effectedIds.size());
+		Logger.info("Indexer affected IDs: " + affectedIds.size());
 		Indexer indexer = Spring.getBeanOfType(Indexer.class);
-		indexer.updated(effectedIds);		
+		indexer.updated(affectedIds);		
 		
 		// Delete all values associated with this definition
 //		em().createQuery(
