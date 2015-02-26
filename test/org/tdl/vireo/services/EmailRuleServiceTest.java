@@ -12,18 +12,16 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.tdl.vireo.email.RecipientType;
+import org.tdl.vireo.model.AbstractWorkflowRuleCondition;
 import org.tdl.vireo.model.ConditionType;
+import org.tdl.vireo.model.EmailTemplate;
+import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionRepository;
 import org.tdl.vireo.model.jpa.JpaAdministrativeGroupImpl;
-import org.tdl.vireo.model.jpa.JpaEmailTemplateImpl;
-import org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleConditionImpl;
-import org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleImpl;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.State;
-import org.tdl.vireo.state.StateManager;
-import org.tdl.vireo.state.impl.StateManagerImpl;
 
 import play.db.jpa.JPA;
 import play.libs.Mail;
@@ -40,7 +38,7 @@ public class EmailRuleServiceTest extends UnitTest {
 	private static SettingsRepository settingRepo = Spring.getBeanOfType(SettingsRepository.class);
 
 	private JpaAdministrativeGroupImpl adminGroup = null;
-	List<JpaEmailWorkflowRuleImpl> rules = new ArrayList<JpaEmailWorkflowRuleImpl>();
+	List<EmailWorkflowRule> rules = new ArrayList<EmailWorkflowRule>();
 
 	@Before
 	public void setup() {
@@ -71,11 +69,11 @@ public class EmailRuleServiceTest extends UnitTest {
 		for (String key : stateBeanMap.keySet()) {
 			State state = stateBeanMap.get(key);
 			if (state != null && EmailRuleService.doesStateMatchEWFLRuleStates(state)) {
-				JpaEmailWorkflowRuleImpl rule = (JpaEmailWorkflowRuleImpl) settingRepo.createEmailWorkflowRule(state);
-				JpaEmailWorkflowRuleConditionImpl condition = (JpaEmailWorkflowRuleConditionImpl) settingRepo.createEmailWorkflowRuleCondition(ConditionType.Always);
+				EmailWorkflowRule rule = settingRepo.createEmailWorkflowRule(state);
+				AbstractWorkflowRuleCondition condition = settingRepo.createEmailWorkflowRuleCondition(ConditionType.Always);
 				condition.save();
 				rule.setCondition(condition);
-				JpaEmailTemplateImpl emailTemplate = (JpaEmailTemplateImpl) settingRepo.findEmailTemplateByName("SYSTEM New User Registration");
+				EmailTemplate emailTemplate = settingRepo.findEmailTemplateByName("SYSTEM New User Registration");
 				rule.setEmailTemplate(emailTemplate);
 				rule.setRecipientType(RecipientType.AdminGroup);
 				rule.setAdminGroupRecipient(adminGroup);
@@ -91,7 +89,7 @@ public class EmailRuleServiceTest extends UnitTest {
 
 	private void deleteData() {
 		// remove all the rules we created during setup
-		for (JpaEmailWorkflowRuleImpl rule : rules) {
+		for (EmailWorkflowRule rule : rules) {
 			settingRepo.findEmailWorkflowRule(rule.getId()).delete();
 		}
 		// remove the administrative group we created during setup
@@ -121,8 +119,8 @@ public class EmailRuleServiceTest extends UnitTest {
 				if (emailContent != null)
 					break;
 			}
-			
-			if(EmailRuleService.doesSubStateMatchEWFLRuleStates(submission)) {
+
+			if (EmailRuleService.doesSubStateMatchEWFLRuleStates(submission)) {
 				assertNotNull(emailContent);
 			} else {
 				assertNull(emailContent);

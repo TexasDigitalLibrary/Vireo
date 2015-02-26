@@ -123,11 +123,7 @@
     <constructor-arg ref="PersonRepository" />
     <constructor-arg ref="SubmissionRepository" />
   </bean>
-  <bean id="SystemEmailTemplateService" class="org.tdl.vireo.email.impl.SystemEmailTemplateServiceImpl" scope="singleton">
-    <property name="settingsRepository" ref="SettingsRepository" />
-    <property name="securityContext" ref="SecurityContext" />
-  </bean>
-  <bean id="SystemEmailRulesService" class="org.tdl.vireo.services.EmailRuleService" scope="singleton">
+  <bean id="SystemDataLoader" class="org.tdl.vireo.services.SystemDataLoader" scope="singleton">
     <property name="settingsRepository" ref="SettingsRepository" />
     <property name="securityContext" ref="SecurityContext" />
   </bean>

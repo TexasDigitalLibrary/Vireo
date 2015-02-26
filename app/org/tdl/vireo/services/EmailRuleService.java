@@ -3,25 +3,16 @@ package org.tdl.vireo.services;
 import java.util.List;
 
 import org.tdl.vireo.email.EmailService;
-import org.tdl.vireo.email.RecipientType;
 import org.tdl.vireo.email.VireoEmail;
 import org.tdl.vireo.model.College;
-import org.tdl.vireo.model.ConditionType;
 import org.tdl.vireo.model.Department;
 import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.Program;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
-import org.tdl.vireo.model.jpa.JpaEmailTemplateImpl;
-import org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleConditionImpl;
-import org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleImpl;
-import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.State;
-import org.tdl.vireo.state.StateManager;
 
 import play.Logger;
-import play.jobs.Job;
-import play.jobs.OnApplicationStart;
 import play.modules.spring.Spring;
 
 /**

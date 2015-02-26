@@ -11,13 +11,13 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.tdl.vireo.email.RecipientType;
+import org.tdl.vireo.model.AbstractWorkflowRuleCondition;
 import org.tdl.vireo.model.ConditionType;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.EmbargoGuarantor;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.SettingsRepository;
-import org.tdl.vireo.model.jpa.JpaEmailTemplateImpl;
 import org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleConditionImpl;
 import org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleImpl;
 import org.tdl.vireo.security.SecurityContext;
@@ -59,7 +59,7 @@ public class SystemDataLoader {
 		this.context = context;
 	}
 
-	private void generateAllSystemEmailRules() {
+	public void generateAllSystemEmailRules() {
 		// turn off authorization if we're saving
 		context.turnOffAuthorization();
 
@@ -68,19 +68,19 @@ public class SystemDataLoader {
 		// get all of the current Submitted rules
 		List<EmailWorkflowRule> submittedRules = settingRepo.findEmailWorkflowRulesByState(submitted);
 		// our Always conditions
-		JpaEmailWorkflowRuleConditionImpl conditionAdvisor = (JpaEmailWorkflowRuleConditionImpl) settingRepo.createEmailWorkflowRuleCondition(ConditionType.Always);
-		JpaEmailWorkflowRuleConditionImpl conditionStudent = (JpaEmailWorkflowRuleConditionImpl) settingRepo.createEmailWorkflowRuleCondition(ConditionType.Always);
+		AbstractWorkflowRuleCondition conditionAdvisor = settingRepo.createEmailWorkflowRuleCondition(ConditionType.Always);
+		AbstractWorkflowRuleCondition conditionStudent = settingRepo.createEmailWorkflowRuleCondition(ConditionType.Always);
 		// our email templates to use for the default system email rules
-		JpaEmailTemplateImpl advisorEmailTemplate = (JpaEmailTemplateImpl) settingRepo.findEmailTemplateByName("SYSTEM Advisor Review Request");
-		JpaEmailTemplateImpl studentEmailTemplate = (JpaEmailTemplateImpl) settingRepo.findEmailTemplateByName("SYSTEM Initial Submission");
+		EmailTemplate advisorEmailTemplate = settingRepo.findEmailTemplateByName("SYSTEM Advisor Review Request");
+		EmailTemplate studentEmailTemplate = settingRepo.findEmailTemplateByName("SYSTEM Initial Submission");
 		// always send to advisor on submission
-		JpaEmailWorkflowRuleImpl advisorRule = (JpaEmailWorkflowRuleImpl) settingRepo.createEmailWorkflowRule(submitted);
+		EmailWorkflowRule advisorRule = settingRepo.createEmailWorkflowRule(submitted);
 		advisorRule.setCondition(conditionAdvisor); // always save a new copy of condition
 		advisorRule.setEmailTemplate(advisorEmailTemplate);
 		advisorRule.setRecipientType(RecipientType.Advisor);
 		advisorRule.setIsSystem(true);
 		// always send to student on submission
-		JpaEmailWorkflowRuleImpl studentRule = (JpaEmailWorkflowRuleImpl) settingRepo.createEmailWorkflowRule(submitted);
+		EmailWorkflowRule studentRule = settingRepo.createEmailWorkflowRule(submitted);
 		studentRule.setCondition(conditionStudent); // always save a new copy of condition
 		studentRule.setEmailTemplate(studentEmailTemplate);
 		studentRule.setRecipientType(RecipientType.Student);
@@ -148,7 +148,7 @@ public class SystemDataLoader {
 	public static final String BASE_PATH = Play.applicationPath + File.separator + "conf" + File.separator + "emails" + File.separator;
 	public static final Pattern SUBJECT_PATTERN = Pattern.compile("\\s*Subject:(.*)[\\n\\r]{1}");
 
-	public EmailTemplate generateSystemEmailTemplate(String name) {
+	public EmailTemplate loadSystemEmailTemplate(String name) {
 		try {
 			String templatePath = BASE_PATH + encodeTemplateName(name);
 			File templateFile = new File(templatePath);
@@ -211,7 +211,7 @@ public class SystemDataLoader {
 			EmailTemplate template = settingRepo.findEmailTemplateByName(name);
 
 			if (template == null) {
-				template = generateSystemEmailTemplate(name);
+				template = loadSystemEmailTemplate(name);
 				created.add(template);
 			}
 		}
@@ -243,7 +243,7 @@ public class SystemDataLoader {
 	 *            The template name.
 	 * @return The file path.
 	 */
-	protected String encodeTemplateName(String name) {
+	private String encodeTemplateName(String name) {
 
 		return name.replaceAll(" ", "_") + ".email";
 	}
@@ -255,7 +255,7 @@ public class SystemDataLoader {
 	 *            The file name.
 	 * @return The template name.
 	 */
-	protected String decodeTemplateName(String path) {
+	private String decodeTemplateName(String path) {
 
 		if (path.endsWith(".email"))
 			path = path.substring(0, path.length() - ".email".length());

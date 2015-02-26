@@ -20,11 +20,14 @@ import org.tdl.vireo.email.RecipientType;
 import org.tdl.vireo.export.Depositor;
 import org.tdl.vireo.export.Packager;
 import org.tdl.vireo.export.impl.FileDepositorImpl;
+import org.tdl.vireo.model.AbstractWorkflowRuleCondition;
+import org.tdl.vireo.model.AdministrativeGroup;
 import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.CommitteeMember;
 import org.tdl.vireo.model.ConditionType;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.DepositLocation;
+import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.EmbargoGuarantor;
 import org.tdl.vireo.model.EmbargoType;
@@ -35,8 +38,6 @@ import org.tdl.vireo.model.RoleType;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionRepository;
-import org.tdl.vireo.model.jpa.JpaAdministrativeGroupImpl;
-import org.tdl.vireo.model.jpa.JpaEmailTemplateImpl;
 import org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleConditionImpl;
 import org.tdl.vireo.proquest.ProquestSubject;
 import org.tdl.vireo.proquest.ProquestVocabularyRepository;
@@ -763,9 +764,9 @@ public class TestDataLoader extends Job {
 		for(EmailWorkflowRulesArray ruleDefinition: EMAIL_WORKFLOW_RULES) {
 			State ruleState = stateManager.getState(ruleDefinition.associatedState);
 			EmailWorkflowRule wferule = settingRepo.createEmailWorkflowRule(ruleState);
-			JpaEmailWorkflowRuleConditionImpl condition = (JpaEmailWorkflowRuleConditionImpl) settingRepo.createEmailWorkflowRuleCondition(ruleDefinition.condition.conditionType);
+			AbstractWorkflowRuleCondition condition = settingRepo.createEmailWorkflowRuleCondition(ruleDefinition.condition.conditionType);
 			if(ruleDefinition.condition.conditionId == null) {
-				switch(condition.conditionType) {
+				switch(condition.getConditionType()) {
 					case Always:
 						break;
 					case College:
@@ -784,14 +785,14 @@ public class TestDataLoader extends Job {
 			condition.setConditionId(ruleDefinition.condition.conditionId);
 			condition.save();
 			wferule.setCondition(condition);
-			JpaEmailTemplateImpl emailTemplate = (JpaEmailTemplateImpl)settingRepo.findEmailTemplateByName(ruleDefinition.emailTemplate.name);
+			EmailTemplate emailTemplate = settingRepo.findEmailTemplateByName(ruleDefinition.emailTemplate.name);
 			wferule.setEmailTemplate(emailTemplate);
 			wferule.setRecipientType(ruleDefinition.recipientType);
 			if(ruleDefinition.adminGroupRecipient == null && ruleDefinition.recipientType == RecipientType.AdminGroup) {
 				ruleDefinition.adminGroupRecipient = settingRepo.findAllAdministrativeGroups().get(0).getId();
 			}
 			if(ruleDefinition.adminGroupRecipient != null) {
-				JpaAdministrativeGroupImpl adminGroup = (JpaAdministrativeGroupImpl) settingRepo.findAdministrativeGroup(ruleDefinition.adminGroupRecipient);
+				AdministrativeGroup adminGroup = settingRepo.findAdministrativeGroup(ruleDefinition.adminGroupRecipient);
 				wferule.setAdminGroupRecipient(adminGroup);
 			} else {
 				wferule.setAdminGroupRecipient(null);

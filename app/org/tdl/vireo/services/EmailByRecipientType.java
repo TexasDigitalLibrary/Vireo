@@ -7,7 +7,6 @@ import org.tdl.vireo.email.RecipientType;
 import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
-import org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleImpl;
 
 import play.modules.spring.Spring;
 

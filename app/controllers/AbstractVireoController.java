@@ -174,6 +174,10 @@ public abstract class AbstractVireoController extends Controller {
 	 */
 	protected static String text2html(String value) {
 
+		// null check
+		if(value == null)
+			value = "";
+		
 		String html = value.replaceAll("  ", "&nbsp;&nbsp;");
 		String[] paragraphs = html.split("\n\\s*\n");
 		html = "";
