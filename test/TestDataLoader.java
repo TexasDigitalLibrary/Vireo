@@ -534,7 +534,30 @@ public class TestDataLoader extends Job {
 				"\n"+
 				"Thank you,\n"+
 				"\n"+
-				"The Vireo Team\n")
+				"The Vireo Team\n"),
+		new EmailTemplateArray(
+				"SYSTEM_Advisor_Review_Request",
+				"Review: {FULL_NAME}'s {DOCUMENT_TYPE} submission",
+				"Dear Committee Chair:" +
+				"\n" +
+				"You are receiving this message because {FULL_NAME} has submitted a thesis or dissertation for final review, and has listed this email address as the contact email for their committee. We are giving you access to the submission in order to verify that the document is the correct, final version that you and the committee have approved." +
+				"\n" +
+				"The submission is available for your review at:" +
+				"\n" +
+				"    {ADVISOR_URL} " +
+				"\n" +
+				"The following information is included for your convenience:" +
+				"\n" +
+				"Title: {DOCUMENT_TITLE}" +
+				"Type: {DOCUMENT_TYPE}" +
+				"Status: {SUBMISSION_STATUS}" +
+				"Assigned to: {SUBMISSION_ASSIGNED_TO}" +
+				"\n" +
+				"You do not need to reply to this message. Your approval can be noted, along any necessary comments or information, at the web address listed above." +
+				"\n" +
+				"If you have any questions about this submission, feel free to contact our office." + 
+				"\n" +
+				"The Vireo Testing Team")
 	};
 		
 	/**

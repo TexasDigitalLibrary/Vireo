@@ -18,8 +18,6 @@ import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.EmbargoGuarantor;
 import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.SettingsRepository;
-import org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleConditionImpl;
-import org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleImpl;
 import org.tdl.vireo.security.SecurityContext;
 import org.tdl.vireo.state.State;
 import org.tdl.vireo.state.StateManager;
@@ -176,26 +174,10 @@ public class SystemDataLoader {
 			if (message == null || message.length() == 0)
 				throw new IllegalStateException("Unable to identify the template's message.");
 
-			try {
-				context.turnOffAuthorization();
+			EmailTemplate template = settingRepo.createEmailTemplate(name, subject, message);
+			template.setSystemRequired(true);
 
-				// Check if the template already exists
-				EmailTemplate template = settingRepo.findEmailTemplateByName(name);
-				if (template == null) {
-					// The template dosn't exist, so create a new one.
-					template = settingRepo.createEmailTemplate(name, subject, message);
-				} else {
-					// The template already exists. Update it's contents.
-					template.setSubject(subject);
-					template.setMessage(message);
-				}
-				template.setSystemRequired(true);
-
-				template.save();
-				return template;
-			} finally {
-				context.restoreAuthorization();
-			}
+			return template;
 
 		} catch (Exception e) {
 			throw new IllegalStateException("Unable to generate system email template: " + name, e);
@@ -203,20 +185,27 @@ public class SystemDataLoader {
 
 	}
 
-	public List<EmailTemplate> generateAllSystemEmailTemplates() {
-
-		List<EmailTemplate> created = new ArrayList<EmailTemplate>();
+	public void generateAllSystemEmailTemplates() {
+		// turn off authorization if we're saving
+		context.turnOffAuthorization();
 		for (String name : getAllSystemEmailTemplateNames()) {
 
 			EmailTemplate template = settingRepo.findEmailTemplateByName(name);
 
+			// create template or upgrade the old one
 			if (template == null) {
 				template = loadSystemEmailTemplate(name);
-				created.add(template);
+				template.save();
+			} else {
+				EmailTemplate temp = loadSystemEmailTemplate(name);
+				// if the template in the DB doesn't match in content with the one loaded from .email file
+				if (!(temp.getMessage().equals(template.getMessage())) || !(temp.getSubject().equals(template.getSubject()))) {
+					
+				}
 			}
 		}
-
-		return created;
+		// turn on authorization after we're done
+		context.restoreAuthorization();
 	}
 
 	public List<String> getAllSystemEmailTemplateNames() {
@@ -284,7 +273,62 @@ public class SystemDataLoader {
 	 * Initial Embargo Types to create
 	 */
 
-	private static final EmbargoArray[] EMBARGO_DEFINTITIONS = { new EmbargoArray("None", "The work will be published after approval.", 0, true, true, EmbargoGuarantor.DEFAULT), new EmbargoArray("Journal Hold", "The work will be delayed for publication by one year because of a restriction from publication in an academic journal.", 12, true, true, EmbargoGuarantor.DEFAULT), new EmbargoArray("Patent Hold", "The work will be delayed for publication by two years because of patent related activities.", 24, true, true, EmbargoGuarantor.DEFAULT), new EmbargoArray("Other Embargo Period", "The work will be delayed for publication by an indefinite amount of time.", null, false, true, EmbargoGuarantor.DEFAULT), new EmbargoArray("None", "The work will be published after approval.", 0, true, true, EmbargoGuarantor.PROQUEST), new EmbargoArray("6-month Journal Hold", "The full text of this work will be held/restricted from worldwide access on the internet for six months from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication.", 6, true, true, EmbargoGuarantor.PROQUEST), new EmbargoArray("1-year Journal Hold", "The full text of this work will be held/restricted from worldwide access on the internet for one year from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication.", 12, true, true, EmbargoGuarantor.PROQUEST), new EmbargoArray("2-year Journal Hold", "The full text of this work will be held/restricted from worldwide access on the internet for two years from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication.", 24, true, true, EmbargoGuarantor.PROQUEST), new EmbargoArray("Flexible/Delayed Release Embargo Period", "The work will be delayed for publication by an indefinite amount of time.", null, false, true, EmbargoGuarantor.PROQUEST) };
+	private static final EmbargoArray[] EMBARGO_DEFINTITIONS = {
+		new EmbargoArray("None",
+				"The work will be published after approval.",
+				0,
+				true,
+				true,
+				EmbargoGuarantor.DEFAULT),
+		new EmbargoArray("Journal Hold",
+				"The work will be delayed for publication by one year because of a restriction from publication in an academic journal.", 
+				12,
+				true,
+				true,
+				EmbargoGuarantor.DEFAULT),
+		new EmbargoArray("Patent Hold",
+				"The work will be delayed for publication by two years because of patent related activities.",
+				24,
+				true,
+				true,
+				EmbargoGuarantor.DEFAULT),
+	    new EmbargoArray("Other Embargo Period",
+	    		"The work will be delayed for publication by an indefinite amount of time.",
+	    		null,
+	    		false,
+				true,
+				EmbargoGuarantor.DEFAULT),
+	    new EmbargoArray("None",
+	    		"The work will be published after approval.",
+	    		0,
+	    		true,
+				true,
+	    		EmbargoGuarantor.PROQUEST),
+	    new EmbargoArray("6-month Journal Hold",
+				"The full text of this work will be held/restricted from worldwide access on the internet for six months from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication.", 
+				6,
+				true,
+				true,
+				EmbargoGuarantor.PROQUEST),
+		new EmbargoArray("1-year Journal Hold",
+				"The full text of this work will be held/restricted from worldwide access on the internet for one year from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication.", 
+				12,
+				true,
+				true,
+				EmbargoGuarantor.PROQUEST),
+		new EmbargoArray("2-year Journal Hold",
+				"The full text of this work will be held/restricted from worldwide access on the internet for two years from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication.", 
+				24,
+				true,
+				true,
+				EmbargoGuarantor.PROQUEST),
+		new EmbargoArray("Flexible/Delayed Release Embargo Period",
+	    		"The work will be delayed for publication by an indefinite amount of time.",
+	    		null,
+	    		false,
+				true,
+	    		EmbargoGuarantor.PROQUEST)
+	};
 
 	private static class EmbargoArray {
 

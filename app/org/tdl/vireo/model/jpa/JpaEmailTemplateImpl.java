@@ -2,8 +2,8 @@ package org.tdl.vireo.model.jpa;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.model.EmailTemplate;
 
@@ -13,13 +13,13 @@ import org.tdl.vireo.model.EmailTemplate;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 @Entity
-@Table(name = "email_template")
+@Table(name = "email_template", uniqueConstraints={@UniqueConstraint(columnNames = { "name", "systemRequired" })})
 public class JpaEmailTemplateImpl extends JpaAbstractModel<JpaEmailTemplateImpl> implements EmailTemplate {
 
 	@Column(nullable = false)
 	public int displayOrder;
 
-	@Column(nullable = false, unique = true, length=255) 
+	@Column(nullable = false, length=255) 
 	public String name;
 	
 	@Column(nullable = false, length=32768) // 2^15
