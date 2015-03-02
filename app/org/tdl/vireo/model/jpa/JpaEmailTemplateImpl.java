@@ -108,7 +108,7 @@ public class JpaEmailTemplateImpl extends JpaAbstractModel<JpaEmailTemplateImpl>
 			return;
 		
 		if (isSystemRequired())
-			throw new IllegalStateException("Unable to rename the email template '"+name+"' because it is required by the system.");
+			throw new IllegalStateException("Unable to rename the email template '"+name+"' because it is required by the system. Please make a copy of it and modify that one instead.");
 		
 		this.name = name;
 	}
@@ -127,6 +127,9 @@ public class JpaEmailTemplateImpl extends JpaAbstractModel<JpaEmailTemplateImpl>
 		
 		assertManager();
 		
+		if (isSystemRequired())
+			throw new IllegalStateException("Unable to modify the email template '"+name+"' because it is required by the system. Please make a copy of it and modify that one instead.");
+		
 		this.subject = subject;
 	}
 
@@ -142,6 +145,9 @@ public class JpaEmailTemplateImpl extends JpaAbstractModel<JpaEmailTemplateImpl>
 			throw new IllegalArgumentException("Message is required");
 		
 		assertManager();
+		
+		if (isSystemRequired())
+			throw new IllegalStateException("Unable to modify the email template '"+name+"' because it is required by the system. Please make a copy of it and modify that one instead.");
 		
 		this.message = message;
 	}

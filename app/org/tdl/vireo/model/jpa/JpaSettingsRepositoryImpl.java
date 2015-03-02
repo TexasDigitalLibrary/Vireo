@@ -364,7 +364,25 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	
 	@Override
 	public EmailTemplate findEmailTemplateByName(String name) {
-		return JpaEmailTemplateImpl.find("name = (?1)", name).first();
+		// return a custom version if it exists
+		EmailTemplate ret = findNonSystemEmailTemplateByName(name);
+		// otherwise return the system version if it exists
+		if (ret == null) {
+			ret = findSystemEmailTemplateByName(name);
+		}
+		return ret;
+	}
+	
+	@Override
+	public EmailTemplate findNonSystemEmailTemplateByName(String name) {
+		// return a custom version if it exists
+	    return JpaEmailTemplateImpl.find("name = (?1) AND systemRequired = FALSE", name).first();
+	}
+	
+	@Override
+	public EmailTemplate findSystemEmailTemplateByName(String name) {
+		// return the system version if it exists
+		return JpaEmailTemplateImpl.find("name = (?1) AND systemRequired = TRUE", name).first();
 	}
 
 	@Override

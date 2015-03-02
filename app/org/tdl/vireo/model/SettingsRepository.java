@@ -549,12 +549,32 @@ public interface SettingsRepository {
 	/**
 	 * Find an email template by it's name.
 	 * 
+	 * If a System email template name is passed in, a Custom version will be returned if it exists.
+	 * 
 	 * @param name
 	 *            The name of the template.
 	 * @return The email template found, or null if not found.
 	 */
 	public EmailTemplate findEmailTemplateByName(String name);
+	
+	/**
+	 * Find a System email template by it's name.
+	 * 
+	 * @param name
+	 *            The name of the System template.
+	 * @return The System email template found, or null if not found.
+	 */
+	public EmailTemplate findSystemEmailTemplateByName(String name);
 
+	/**
+	 * Find a NonSystem email template by it's name.
+	 * 
+	 * @param name
+	 *            The name of the NonSystem template.
+	 * @return The NonSystem email template found, or null if not found.
+	 */
+	public EmailTemplate findNonSystemEmailTemplateByName(String name);
+	
 	/**
 	 * Find all email templates in order.
 	 * 

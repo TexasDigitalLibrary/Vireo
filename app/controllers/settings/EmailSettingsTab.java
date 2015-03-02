@@ -49,7 +49,8 @@ public class EmailSettingsTab extends SettingsTab {
 		List<Department> departments = settingRepo.findAllDepartments();
 		// List all administrative groups (sorted)
 		List<AdministrativeGroup> adminGroups = settingRepo.findAllAdministrativeGroups();
-		Collections.sort(adminGroups, AdminGroupsComparator.INSTANCE);
+		if (adminGroups != null)
+			Collections.sort(adminGroups, AdminGroupsComparator.INSTANCE);
 
 		// Get all the states
 		renderArgs.put("STATES", stateManager.getAllStates());
@@ -285,12 +286,9 @@ public class EmailSettingsTab extends SettingsTab {
 			name = escapeJavaScript(template.getName());
 			subject = escapeJavaScript(template.getSubject());
 			message = escapeJavaScript(template.getMessage());
+			String custom = "<strong class=\\\"custom_system_email_template\\\">" + (template.isSystemRequired() ? "" : " (*)" ) + "</strong>";
 
-			String system = " ";
-			if (template.isSystemRequired())
-				system = ", \"system\": \"true\" ";
-
-			renderJSON("{ \"success\": \"true\", \"id\": " + template.getId() + ", \"name\": \"" + name + "\", \"subject\": \"" + subject + "\", \"message\": \"" + message + "\"" + system + "}");
+			renderJSON("{ \"success\": \"true\", \"id\": " + template.getId() + ", \"name\": \"" + name + "\", \"subject\": \"" + subject + "\", \"message\": \"" + message + "\", \"system\": " + template.isSystemRequired() + ", \"custom\": \"" + custom + "\" }");
 		} catch (IllegalArgumentException iae) {
 			String errorMessage = escapeJavaScript(iae.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + errorMessage + "\" }");
@@ -323,15 +321,11 @@ public class EmailSettingsTab extends SettingsTab {
 			String subject = escapeJavaScript(template.getSubject());
 			String message = escapeJavaScript(template.getMessage());
 
-			String system = " ";
-			if (template.isSystemRequired())
-				system = ", \"system\": \"true\" ";
-
-			renderJSON("{ \"success\": \"true\", \"id\": " + template.getId() + ", \"name\": \"" + name + "\", \"subject\": \"" + subject + "\", \"message\": \"" + message + "\"" + system + "}");
+			renderJSON("{ \"success\": true, \"id\": " + template.getId() + ", \"name\": \"" + name + "\", \"subject\": \"" + subject + "\", \"message\": \"" + message + "\", \"system\": " + template.isSystemRequired() + " }");
 		} catch (RuntimeException re) {
 			Logger.error(re, "Unable to retrieve email template");
 			String message = escapeJavaScript(re.getMessage());
-			renderJSON("{ \"failure\": \"true\", \"message\": \"" + message + "\" }");
+			renderJSON("{ \"failure\": true, \"message\": \"" + message + "\" }");
 		}
 	}
 
@@ -374,12 +368,9 @@ public class EmailSettingsTab extends SettingsTab {
 			name = escapeJavaScript(template.getName());
 			subject = escapeJavaScript(template.getSubject());
 			message = escapeJavaScript(template.getMessage());
+			String custom = "<strong class=\\\"custom_system_email_template\\\">" + (template.isSystemRequired() ? "" : " (*)" ) + "</strong>";
 
-			String system = " ";
-			if (template.isSystemRequired())
-				system = ", \"system\": \"true\" ";
-
-			renderJSON("{ \"success\": \"true\", \"id\": " + template.getId() + ", \"name\": \"" + name + "\", \"subject\": \"" + subject + "\", \"message\": \"" + message + "\"" + system + "}");
+			renderJSON("{ \"success\": \"true\", \"id\": " + template.getId() + ", \"name\": \"" + name + "\", \"subject\": \"" + subject + "\", \"message\": \"" + message + "\", \"system\": " + template.isSystemRequired() + ", \"custom\": \"" + custom + "\" }");
 		} catch (IllegalArgumentException iae) {
 			String errorMessage = escapeJavaScript(iae.getMessage());
 			renderJSON("{ \"failure\": \"true\", \"message\": \"" + errorMessage + "\" }");

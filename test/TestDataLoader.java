@@ -504,7 +504,8 @@ public class TestDataLoader extends Job {
 				"\n"+
 				"Thank you,\n"+
 				"\n"+
-				"The Vireo Team\n"),
+				"The Vireo Team\n",
+				false),
 		new EmailTemplateArray(
 				"First Round Manuscript Corrects Ready for Download",
 				"[ETD] First round corrects ready",
@@ -524,7 +525,8 @@ public class TestDataLoader extends Job {
 				"\n"+
 				"Thank you,\n"+
 				"\n"+
-				"The Vireo Team\n"),
+				"The Vireo Team\n",
+				false),
 		new EmailTemplateArray(
 				"Apply for Graduation Reminder",
 				"[ETD] Apply for Graduation", 
@@ -534,30 +536,60 @@ public class TestDataLoader extends Job {
 				"\n"+
 				"Thank you,\n"+
 				"\n"+
-				"The Vireo Team\n"),
+				"The Vireo Team\n",
+				false),
 		new EmailTemplateArray(
-				"SYSTEM_Advisor_Review_Request",
+				"SYSTEM New User Registration",
+				"Vireo Account Registration",
+				"To complete registration of your Vireo account, please click the link\n" +
+				"below:\n" +
+				"\n" +
+				"  {REGISTRATION_URL}\n" +
+				"\n" +
+				"If you need assistance with your account, please email\n" +
+				"vireo@myuniversity.edu or call us at xxx-555-xxxx.\n" +
+				"\n" +
+				"The Vireo Old System Team\n" +
+				"\n",
+				true),
+		new EmailTemplateArray(
+				"SYSTEM New User Registration",
+				"Vireo Account Registration",
+				"To complete registration of your Vireo account, please click the link\n" +
+				"below:\n" +
+				"\n" +
+				"  {REGISTRATION_URL}\n" +
+				"\n" +
+				"If you need assistance with your account, please email\n" +
+				"vireo@myuniversity.edu or call us at xxx-555-xxxx.\n" +
+				"\n" +
+				"The Vireo New Custom Team\n" +
+				"\n",
+				false),
+		new EmailTemplateArray(
+				"SYSTEM Advisor Review Request",
 				"Review: {FULL_NAME}'s {DOCUMENT_TYPE} submission",
-				"Dear Committee Chair:" +
+				"Dear Committee Chair:\n" +
 				"\n" +
-				"You are receiving this message because {FULL_NAME} has submitted a thesis or dissertation for final review, and has listed this email address as the contact email for their committee. We are giving you access to the submission in order to verify that the document is the correct, final version that you and the committee have approved." +
+				"You are receiving this message because {FULL_NAME} has submitted a thesis or dissertation for final review, and has listed this email address as the contact email for their committee. We are giving you access to the submission in order to verify that the document is the correct, final version that you and the committee have approved.\n" +
 				"\n" +
-				"The submission is available for your review at:" +
+				"The submission is available for your review at:\n" +
 				"\n" +
-				"    {ADVISOR_URL} " +
+				"    {ADVISOR_URL} \n" +
 				"\n" +
-				"The following information is included for your convenience:" +
+				"The following information is included for your convenience:\n" +
 				"\n" +
-				"Title: {DOCUMENT_TITLE}" +
-				"Type: {DOCUMENT_TYPE}" +
-				"Status: {SUBMISSION_STATUS}" +
-				"Assigned to: {SUBMISSION_ASSIGNED_TO}" +
+				"Title: {DOCUMENT_TITLE}\n" +
+				"Type: {DOCUMENT_TYPE}\n" +
+				"Status: {SUBMISSION_STATUS}\n" +
+				"Assigned to: {SUBMISSION_ASSIGNED_TO}\n" +
 				"\n" +
-				"You do not need to reply to this message. Your approval can be noted, along any necessary comments or information, at the web address listed above." +
+				"You do not need to reply to this message. Your approval can be noted, along any necessary comments or information, at the web address listed above.\n" +
 				"\n" +
-				"If you have any questions about this submission, feel free to contact our office." + 
+				"If you have any questions about this submission, feel free to contact our office.\n" + 
 				"\n" +
-				"The Vireo Testing Team")
+				"The Vireo Old Custom Team\n",
+				true)
 	};
 		
 	/**
@@ -772,10 +804,25 @@ public class TestDataLoader extends Job {
 			settingRepo.createCustomActionDefinition(actionDefinition, false).save();
 		}
 		
-		// Create all email templates
+		// Create all System email templates from .email files, load them into settingRepo
 		systemDataLoader.generateAllSystemEmailTemplates();
+		// Load the EMAIL_TEMPLATE_DEFINITONS for testing
 		for(EmailTemplateArray templateDefinition : EMAIL_TEMPLATE_DEFINITIONS) {
-			settingRepo.createEmailTemplate(templateDefinition.name, templateDefinition.subject, templateDefinition.message).save();
+			EmailTemplate template = settingRepo.createEmailTemplate(templateDefinition.name, templateDefinition.subject, templateDefinition.message);
+			template.setSystemRequired(templateDefinition.isSystemRequired);
+			// get a system template if we're trying to override it, otherwise override the new non-system custom one
+			EmailTemplate sTemplate = (template.isSystemRequired() ?  settingRepo.findSystemEmailTemplateByName(template.getName()) : settingRepo.findNonSystemEmailTemplateByName(template.getName()));
+			// if we're replacing a generated System email template (to test migrating/upgrading modified system templates from Vireo2 > Vireo3)
+			if(sTemplate != null) {
+				sTemplate.setSystemRequired(false);
+				sTemplate.setMessage(template.getMessage());
+				sTemplate.setSubject(template.getSubject());
+				sTemplate.setSystemRequired(template.isSystemRequired());
+				sTemplate.save();
+			} else {
+				// we're adding a new template
+				template.save();
+			}
 		}
 		
 		// Create all administrative groups
@@ -1448,11 +1495,13 @@ public class TestDataLoader extends Job {
 		String name;
 		String subject;
 		String message;
+		Boolean isSystemRequired;
 		
-		EmailTemplateArray(String name, String subject, String message) {
+		EmailTemplateArray(String name, String subject, String message, Boolean isSystemRequired) {
 			this.name= name;
 			this.subject=subject;
 			this.message=message;
+			this.isSystemRequired=isSystemRequired;
 		}
 	}
 	

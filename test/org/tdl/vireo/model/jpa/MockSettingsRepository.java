@@ -315,8 +315,25 @@ public class MockSettingsRepository implements SettingsRepository {
 
 	@Override
 	public EmailTemplate findEmailTemplateByName(String name) {
+		EmailTemplate ret = null;
+		for (EmailTemplate emailTemplate : mockEmailTemplates) {
+			if (emailTemplate.getName().equals(name)) {
+				ret = emailTemplate;
+			}
+		}
+		return ret;
+	}
+	
+	@Override
+	public EmailTemplate findNonSystemEmailTemplateByName(String name) {
 		// DO NOTHING
-		return null;
+	    return null;
+	}
+	
+	@Override
+	public EmailTemplate findSystemEmailTemplateByName(String name) {
+	    // DO NOTHING
+	    return null;
 	}
 
 	@Override

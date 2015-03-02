@@ -48,6 +48,7 @@ public class SystemDataLoaderTest extends AbstractVireoFunctionalTest {
 	public void cleanup() {
 		context.restoreAuthorization();
 		systemDataLoader.setSettingsRepository(settingRepo);
+		mockSettingsRepository = new MockSettingsRepository();
 	}
 
 	/**
@@ -98,22 +99,27 @@ public class SystemDataLoaderTest extends AbstractVireoFunctionalTest {
 	}
 
 	/**
-	 * Test that email templates over write existing version.
+	 * Test that Sysetm email templates over write existing version.
 	 */
 	@Test
-	public void testOverwritingEmailTemplate() {
+	public void testOverwritingSystemEmailTemplate() {
 		// Create the template.
-		settingRepo.createEmailTemplate("SYSTEM New User Registration", "subject", "message").save();
-
+		
+		EmailTemplate template = settingRepo.createEmailTemplate("SYSTEM Email Test", "subject", "message").save();
+		assertEquals("SYSTEM Email Test", template.getName());
+		assertEquals("subject", template.getSubject());
+		assertEquals("message", template.getMessage());
+		assertFalse(template.isSystemRequired());
+		
 		// Generate it and check that it replaces the data.
-		EmailTemplate template = systemDataLoader.loadSystemEmailTemplate("SYSTEM New User Registration");
+		template = systemDataLoader.loadSystemEmailTemplate("SYSTEM Email Test");
 		template.save();
 
-		assertEquals("SYSTEM New User Registration", template.getName());
-		assertEquals("Vireo Account Registration", template.getSubject());
+		assertEquals("SYSTEM Email Test", template.getName());
+		assertEquals("Vireo Email Test", template.getSubject());
 		assertTrue(template.isSystemRequired());
-		assertTrue(template.getMessage().contains("To complete registration of your Vireo account, please click the link"));
-		assertTrue(template.getMessage().contains("{REGISTRATION_URL}"));
+		assertTrue(template.getMessage().contains("A Vireo system administrator has sent this email address a test email. You may"));
+		assertTrue(template.getMessage().contains("If you need assistance with your account, please email"));
 		assertTrue(template.getMessage().contains("The Vireo Team"));
 	}
 

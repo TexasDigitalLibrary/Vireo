@@ -189,18 +189,36 @@ public class SystemDataLoader {
 		// turn off authorization if we're saving
 		context.turnOffAuthorization();
 		for (String name : getAllSystemEmailTemplateNames()) {
-
-			EmailTemplate template = settingRepo.findEmailTemplateByName(name);
+			
+			EmailTemplate dbTemplate = settingRepo.findSystemEmailTemplateByName(name);
 
 			// create template or upgrade the old one
-			if (template == null) {
-				template = loadSystemEmailTemplate(name);
-				template.save();
+			if (dbTemplate == null) {
+				dbTemplate = loadSystemEmailTemplate(name);
+				Logger.info("New System Email template being installed [%s]", dbTemplate.getName());
+				dbTemplate.save();
 			} else {
-				EmailTemplate temp = loadSystemEmailTemplate(name);
+				EmailTemplate loadedTemplate = loadSystemEmailTemplate(name);
 				// if the template in the DB doesn't match in content with the one loaded from .email file
-				if (!(temp.getMessage().equals(template.getMessage())) || !(temp.getSubject().equals(template.getSubject()))) {
-					
+				if (!(dbTemplate.getMessage().equals(loadedTemplate.getMessage())) || !(dbTemplate.getSubject().equals(loadedTemplate.getSubject()))) {
+					EmailTemplate possibleCustomTemplate = settingRepo.findNonSystemEmailTemplateByName(name);
+					// if this System template already has a custom template (meaning one named the same but that is !isSystemRequired)
+					if(possibleCustomTemplate != null) {
+						// a custom version of this System email template already exists, it's safe to override dbTemplate's data and save
+						dbTemplate.setSystemRequired(false);
+						dbTemplate.setMessage(loadedTemplate.getMessage());
+						dbTemplate.setSubject(loadedTemplate.getSubject());
+						dbTemplate.setSystemRequired(true);
+						Logger.info("Upgrading Old System Email Template for [%s]", dbTemplate.getName());
+						dbTemplate.save();
+					}
+					// there is no custom one yet, we need to make the dbTemplate !isSystemRequired and the save loadedTemplate
+					else {
+						Logger.info("Upgrading Old System Email Template and creating custom version for [%s]", dbTemplate.getName());
+						dbTemplate.setSystemRequired(false);
+						dbTemplate.save();
+						loadedTemplate.save();
+					}
 				}
 			}
 		}
@@ -232,7 +250,7 @@ public class SystemDataLoader {
 	 *            The template name.
 	 * @return The file path.
 	 */
-	private String encodeTemplateName(String name) {
+	private static String encodeTemplateName(String name) {
 
 		return name.replaceAll(" ", "_") + ".email";
 	}

@@ -28,6 +28,7 @@ jQuery(document).ready(function(){
      jQuery("#emailTemplate-list .emailTemplate-editable").live("click",sortableStartEditHandler());
      jQuery("#emailTemplate-list #edit-emailTemplate-cancel").live("click",sortableCancelEditHandler());
      jQuery("#emailTemplate-list #edit-emailTemplate-save").live("click",editEmailTemplateHandler('@{settings.EmailSettingsTab.editEmailTemplateJSON()}'));
+     jQuery("#emailTemplate-list #edit-emailTemplate-copy").live("click",copyActionHandler("emailTemplate"));
      jQuery("#emailTemplate-list #edit-emailTemplate-delete").live("click",removeEmailTemplateHandler('@{settings.EmailSettingsTab.removeEmailTemplateJSON()}'));     
      jQuery("#emailTemplate-list .retrieve").live("click",retrieveEmailTemplateHandler('@{settings.EmailSettingsTab.retrieveEmailTemplateJSON()}')); 
      jQuery("#add-emailTemplate-link").click(slideToggleHandler("#add-emailTemplate-dialog"));
@@ -98,7 +99,7 @@ jQuery(document).ready(function(){
 <div class="wrap settings-sortable">
 	<ol id="emailTemplate-list" class="emailTemplate-sortable settings-sortable-list">
 	      #{list items:templates, as:'template'}
-	         <li id="emailTemplate_${template.getId()}"><a class="emailTemplate-editable" href="javascript:void(0);"><em class="icon-pencil"></em> ${template.getName()}</a></li>    
+	         <li id="emailTemplate_${template.getId()}"><a class="emailTemplate-editable" href="javascript:void(0);"><em class="icon-pencil"></em> ${template.getName()}</a><strong class="custom_system_email_template">${template.isSystemRequired()?'':' (*)'}</strong></li>    
 	      #{/list}
 	</ol>
 </div>
