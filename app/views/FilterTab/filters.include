@@ -480,12 +480,24 @@ different blocks this gets around this problem because each is independent.
         <ul class="unstyled">
             %{ shown = 0 }%
             #{list items:settingRepo.findAllEmbargoTypes(), as:'embargo'}
-            #{if !activeFilter.getEmbargoTypes().contains(embargo) }{% shown++ %}
-            #{if shown == 6}
-            <li class="sub-heading more">more...</li>
-            #{/if}
-            <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=embargo&value=${embargo.getId()}">${embargo.getName()}</a></li>
-            #{/if}
+                #{if !activeFilter.getEmbargoTypes().contains(embargo) }{% shown++ %}
+                    #{if shown == 6}
+                        <li class="sub-heading more">more...</li>
+                    #{/if}
+                    #{if embargo.isActive()}
+                        <li #{if shown >= 6}class="hidden"#{/if}><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=embargo&value=${embargo.getId()}">${embargo.getName()}#{if !embargo.getGuarantor().equals(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT)} (${embargo.getGuarantor()})#{/if}#{if !embargo.isSystemRequired()} <em class="icon-user"></em>#{/if}#{else}<em class="icon-globe"></em>#{/else}</a></li>
+                    #{/if}
+                #{/if}
+            #{/list}
+        </ul>
+        <ul class="unstyled">
+            <span class="sub-heading more">+ Inactive...</span><span class="sub-heading hidden">+ Inactive</span>
+            #{list items:settingRepo.findAllEmbargoTypes(), as:'embargo'}
+                #{if !activeFilter.getEmbargoTypes().contains(embargo) }
+                    #{if !embargo.isActive()}
+                        <li class="hidden"><a href="@{FilterTab.ModifyFilters(nav)}?action=add&type=embargo&value=${embargo.getId()}">${embargo.getName()}#{if !embargo.getGuarantor().equals(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT)} (${embargo.getGuarantor()})#{/if}#{if !embargo.isSystemRequired()} <em class="icon-user"></em>#{/if}#{else}<em class="icon-globe"></em>#{/else}</a></li>
+                    #{/if}
+                #{/if}
             #{/list}
         </ul>
         #{/if}

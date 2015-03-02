@@ -358,7 +358,8 @@ public class SystemDataLoader {
 						if (possibleCustomEmbargo != null) {
 							// a custom version of this System email template already exists, it's safe to override dbTemplate's data and save
 							dbEmbargo.setSystemRequired(false);
-							dbEmbargo.setActive(loadedEmbargo.isActive());
+							// upgraded system embargos that have a custom version are disabled by default
+							dbEmbargo.setActive(false);
 							dbEmbargo.setDescription(loadedEmbargo.getDescription());
 							dbEmbargo.setDuration(loadedEmbargo.getDuration());
 							dbEmbargo.setGuarantor(loadedEmbargo.getGuarantor());
