@@ -222,6 +222,7 @@ public class MockSettingsRepository implements SettingsRepository {
 	public EmbargoType createEmbargoType(String name, String description, Integer duration, boolean active, EmbargoGuarantor guarantor) {
 
 		MockEmbargoType mockEmbargoType = new MockEmbargoType();
+		mockEmbargoType.id = System.currentTimeMillis();
 		mockEmbargoType.name = name;
 		mockEmbargoType.description = description;
 		mockEmbargoType.duration = duration;
@@ -243,6 +244,28 @@ public class MockSettingsRepository implements SettingsRepository {
 	public List<EmbargoType> findAllEmbargoTypes() {
 		return mockEmbargos;
 	}
+	
+	@Override
+    public EmbargoType findSystemEmbargoTypeByNameAndGuarantor(String name, EmbargoGuarantor guarantor) {
+	    EmbargoType ret = null;
+	    for (EmbargoType mockEmbargo : mockEmbargos) {
+	        if(mockEmbargo.getName().equals(name) && mockEmbargo.getGuarantor().equals(guarantor) && mockEmbargo.isSystemRequired()) {
+	        	ret = mockEmbargo;
+	        }
+        }
+	    return ret;
+    }
+
+	@Override
+    public EmbargoType findNonSystemEmbargoTypeByNameAndGuarantor(String name, EmbargoGuarantor guarantor) {
+		EmbargoType ret = null;
+	    for (EmbargoType mockEmbargo : mockEmbargos) {
+	        if(mockEmbargo.getName().equals(name) && mockEmbargo.getGuarantor().equals(guarantor) && !mockEmbargo.isSystemRequired()) {
+	        	ret = mockEmbargo;
+	        }
+        }
+	    return ret;
+    }
 
 	@Override
 	public List<EmbargoType> findAllActiveEmbargoTypes() {
@@ -300,6 +323,7 @@ public class MockSettingsRepository implements SettingsRepository {
 	@Override
 	public EmailTemplate createEmailTemplate(String name, String subject, String message) {
 		MockEmailTemplate mockEmailTemplate = new MockEmailTemplate();
+		mockEmailTemplate.id = System.currentTimeMillis();
 		mockEmailTemplate.setName(name);
 		mockEmailTemplate.setSubject(subject);
 		mockEmailTemplate.setMessage(message);
@@ -315,13 +339,17 @@ public class MockSettingsRepository implements SettingsRepository {
 
 	@Override
 	public EmailTemplate findEmailTemplateByName(String name) {
-		EmailTemplate ret = null;
+		EmailTemplate sysRet = null, custRet = null;
+		
 		for (EmailTemplate emailTemplate : mockEmailTemplates) {
 			if (emailTemplate.getName().equals(name)) {
-				ret = emailTemplate;
+				if(emailTemplate.isSystemRequired())
+					sysRet = emailTemplate;
+				else
+					custRet = emailTemplate;
 			}
 		}
-		return ret;
+		return (custRet != null ? custRet : sysRet);
 	}
 	
 	@Override
@@ -332,8 +360,15 @@ public class MockSettingsRepository implements SettingsRepository {
 	
 	@Override
 	public EmailTemplate findSystemEmailTemplateByName(String name) {
-	    // DO NOTHING
-	    return null;
+		EmailTemplate sysRet = null;
+		
+		for (EmailTemplate emailTemplate : mockEmailTemplates) {
+			if (emailTemplate.getName().equals(name)) {
+				if(emailTemplate.isSystemRequired())
+					sysRet = emailTemplate;
+			}
+		}
+		return sysRet;
 	}
 
 	@Override
@@ -531,5 +566,4 @@ public class MockSettingsRepository implements SettingsRepository {
 		// DO NOTHING
 		return null;
 	}
-
 }

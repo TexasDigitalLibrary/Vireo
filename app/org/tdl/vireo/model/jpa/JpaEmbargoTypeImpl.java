@@ -25,7 +25,7 @@ import play.modules.spring.Spring;
  */
 @Entity
 @Table(name = "embargo_type", uniqueConstraints=
-@UniqueConstraint(columnNames = {"name", "guarantor"}))
+@UniqueConstraint(columnNames = {"name", "guarantor", "systemRequired"}))
 public class JpaEmbargoTypeImpl extends JpaAbstractModel<JpaEmbargoTypeImpl> implements EmbargoType {
 	
 	@Column(nullable = false)

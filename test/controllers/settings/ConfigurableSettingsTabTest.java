@@ -230,7 +230,7 @@ public class ConfigurableSettingsTabTest extends AbstractVireoFunctionalTest {
 			if (previousName != null && previousGuarantor != null) {
 				// only compare with previous if the guarantors are the same (otherwise the names can be the same)
 				if(previousGuarantor == type.getGuarantor()) {
-					assertTrue(previousName.compareTo(name) < 0);
+					assertTrue(previousName.compareTo(name) <= 0);
 				}
 			} 
 			previousName = name;

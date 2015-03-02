@@ -418,20 +418,26 @@ public class TestDataLoader extends Job {
 	
 	private static final EmbargoArray[] EMBARGO_DEFINTITIONS = {
 		new EmbargoArray("None",
-				"The work will be published after approval.",
+				"The work will be New Custom published after approval.",
 				0,
 				true,
 				true,
 				EmbargoGuarantor.DEFAULT),
+		new EmbargoArray("None",
+				"The work will be Old Custom published after approval.",
+				0,
+				true,
+				false,
+				EmbargoGuarantor.DEFAULT),
 		new EmbargoArray("Journal Hold",
-				"The work will be delayed for publication by one year because of a restriction from publication in an academic journal.", 
-				12,
+				"The work will be delayed for publication by six months because of a restriction from publication in an academic journal.", 
+				6,
 				true,
 				true,
 				EmbargoGuarantor.DEFAULT),
 		new EmbargoArray("Patent Hold",
-				"The work will be delayed for publication by two years because of patent related activities.",
-				24,
+				"The work will be delayed for publication by one year because of patent related activities.",
+				12,
 				true,
 				true,
 				EmbargoGuarantor.DEFAULT),
@@ -796,7 +802,20 @@ public class TestDataLoader extends Job {
 		for(EmbargoArray embargoDefinition : EMBARGO_DEFINTITIONS) {
 			EmbargoType embargo = settingRepo.createEmbargoType(embargoDefinition.name, embargoDefinition.description, embargoDefinition.duration, embargoDefinition.active, embargoDefinition.guarantor);
 			embargo.setSystemRequired(embargoDefinition.isSystem);
-			embargo.save();
+			
+			// get a system template if we're trying to override it, otherwise override the new non-system custom one
+			EmbargoType sEmbargo = (embargo.isSystemRequired() ?  settingRepo.findSystemEmbargoTypeByNameAndGuarantor(embargo.getName(), embargo.getGuarantor()) : settingRepo.findNonSystemEmbargoTypeByNameAndGuarantor(embargo.getName(), embargo.getGuarantor()));
+			// if we're replacing a generated System email template (to test migrating/upgrading modified system templates from Vireo2 > Vireo3)
+			if(sEmbargo != null) {
+				sEmbargo.setSystemRequired(false);
+				sEmbargo.setDescription(embargo.getDescription());
+				sEmbargo.setDuration(embargo.getDuration());
+				sEmbargo.setSystemRequired(embargo.isSystemRequired());
+				sEmbargo.save();
+			} else {
+				// we're adding a new template
+				embargo.save();
+			}
 		}
 		
 		// Create all custom actions

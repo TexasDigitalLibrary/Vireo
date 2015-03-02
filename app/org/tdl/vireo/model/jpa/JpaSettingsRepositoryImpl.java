@@ -247,6 +247,16 @@ public class JpaSettingsRepositoryImpl implements SettingsRepository {
 	public List<EmbargoType> findAllEmbargoTypes() {
 		return (List) JpaEmbargoTypeImpl.find("order by displayOrder").fetch();
 	}
+	
+	@Override
+	public EmbargoType findSystemEmbargoTypeByNameAndGuarantor(String name, EmbargoGuarantor guarantor) {
+		return (EmbargoType) JpaEmbargoTypeImpl.find("name = (?1) AND guarantor = (?2) AND systemRequired = TRUE", name, guarantor).first();
+	}
+	
+	@Override
+	public EmbargoType findNonSystemEmbargoTypeByNameAndGuarantor(String name, EmbargoGuarantor guarantor) {
+		return (EmbargoType) JpaEmbargoTypeImpl.find("name = (?1) AND guarantor = (?2) AND systemRequired = FALSE", name, guarantor).first();
+	}
 
 	@Override
 	public List<EmbargoType> findAllActiveEmbargoTypes() {

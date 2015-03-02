@@ -9,6 +9,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.tdl.vireo.model.EmailTemplate;
+import org.tdl.vireo.model.EmbargoGuarantor;
+import org.tdl.vireo.model.EmbargoType;
 import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.jpa.MockSettingsRepository;
 import org.tdl.vireo.security.SecurityContext;
@@ -73,7 +75,7 @@ public class SystemDataLoaderTest extends AbstractVireoFunctionalTest {
 	}
 
 	/**
-	 * Test that the create user page loads.
+	 * Test that the System data is loaded to a mock repository.
 	 */
 	@Test
 	public void testSystemDataLoaded() {
@@ -104,13 +106,13 @@ public class SystemDataLoaderTest extends AbstractVireoFunctionalTest {
 	@Test
 	public void testOverwritingSystemEmailTemplate() {
 		// Create the template.
-		
+
 		EmailTemplate template = settingRepo.createEmailTemplate("SYSTEM Email Test", "subject", "message").save();
 		assertEquals("SYSTEM Email Test", template.getName());
 		assertEquals("subject", template.getSubject());
 		assertEquals("message", template.getMessage());
 		assertFalse(template.isSystemRequired());
-		
+
 		// Generate it and check that it replaces the data.
 		template = systemDataLoader.loadSystemEmailTemplate("SYSTEM Email Test");
 		template.save();
@@ -128,6 +130,64 @@ public class SystemDataLoaderTest extends AbstractVireoFunctionalTest {
 	 */
 	@Test
 	public void testSystemDataUpgrade() {
+		mockSettingsRepository = new MockSettingsRepository();
+		Application.settingRepo = mockSettingsRepository;
+		systemDataLoader.setSettingsRepository(mockSettingsRepository);
 
+		// Create the template.
+		EmailTemplate oldTemplate = mockSettingsRepository.createEmailTemplate("SYSTEM Email Test", "subject", "message").save();
+		assertEquals("SYSTEM Email Test", oldTemplate.getName());
+		assertEquals("subject", oldTemplate.getSubject());
+		assertEquals("message", oldTemplate.getMessage());
+		assertFalse(oldTemplate.isSystemRequired());
+
+		// load all system templates, force upgdate/upgrade of data
+		systemDataLoader.generateAllSystemEmailTemplates();
+
+		// should give us our custom non-system one (after data upgrade)
+		EmailTemplate customTemplate = mockSettingsRepository.findEmailTemplateByName("SYSTEM Email Test");
+		assertEquals("SYSTEM Email Test", customTemplate.getName());
+		assertEquals("subject", customTemplate.getSubject());
+		assertEquals("message", customTemplate.getMessage());
+		assertFalse(customTemplate.isSystemRequired());
+		// make sure our Id's still match
+		assertEquals(oldTemplate.getId(), customTemplate.getId());
+
+		// should give us our system one (after data upgrade)
+		EmailTemplate newSystemTemplate = mockSettingsRepository.findSystemEmailTemplateByName("SYSTEM Email Test");
+		assertEquals("SYSTEM Email Test", newSystemTemplate.getName());
+		assertEquals("Vireo Email Test", newSystemTemplate.getSubject());
+		assertTrue(newSystemTemplate.isSystemRequired());
+		assertTrue(newSystemTemplate.getMessage().contains("A Vireo system administrator has sent this email address a test email. You may"));
+		assertTrue(newSystemTemplate.getMessage().contains("If you need assistance with your account, please email"));
+		assertTrue(newSystemTemplate.getMessage().contains("The Vireo Team"));
+
+		// Create the embargo.
+		EmbargoType oldEmbargo = mockSettingsRepository.createEmbargoType("None", "Nonya", 60, false, EmbargoGuarantor.DEFAULT).save();
+		assertEquals("None", oldEmbargo.getName());
+		assertEquals("Nonya", oldEmbargo.getDescription());
+		assertEquals((Integer)(60), oldEmbargo.getDuration());
+		assertFalse(oldTemplate.isSystemRequired());
+
+		// load all system templates, force upgdate/upgrade of data
+		systemDataLoader.generateAllSystemEmbargos();
+
+		// should give us our custom non-system one (after data upgrade)
+		EmbargoType customEmbargo = mockSettingsRepository.findNonSystemEmbargoTypeByNameAndGuarantor("None", EmbargoGuarantor.DEFAULT);
+		assertEquals("None", customEmbargo.getName());
+		assertEquals("Nonya", customEmbargo.getDescription());
+		assertEquals((Integer)(60), customEmbargo.getDuration());
+		assertFalse(customEmbargo.isSystemRequired());
+		// make sure our Id's still match
+		assertEquals(oldEmbargo.getId(), customEmbargo.getId());
+
+		// should give us our system one (after data upgrade)
+		EmbargoType newSystemEmbargo = mockSettingsRepository.findSystemEmbargoTypeByNameAndGuarantor("None", EmbargoGuarantor.DEFAULT);
+		assertEquals("None", newSystemEmbargo.getName());
+		assertEquals("The work will be published after approval.", newSystemEmbargo.getDescription());
+		assertEquals((Integer)(0), newSystemEmbargo.getDuration());
+		assertTrue(newSystemEmbargo.isSystemRequired());
+
+		systemDataLoader.setSettingsRepository(settingRepo);
 	}
 }

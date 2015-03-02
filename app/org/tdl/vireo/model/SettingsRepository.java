@@ -380,6 +380,20 @@ public interface SettingsRepository {
 	 * @return A list of all embargo types, or an empty list if there are none.
 	 */
 	public List<EmbargoType> findAllEmbargoTypes();
+	
+	/**
+	 * Find the System embargo types object that matches name.
+	 * @param name
+	 * @return
+	 */
+	public EmbargoType findSystemEmbargoTypeByNameAndGuarantor(String name, EmbargoGuarantor guarantor);
+	
+	/**
+	 * Find the NonSystem embargo types object that matches name.
+	 * @param name
+	 * @return
+	 */
+	public EmbargoType findNonSystemEmbargoTypeByNameAndGuarantor(String name, EmbargoGuarantor guarantor);
 
 	/**
 	 * Find all embargo types objects in order.

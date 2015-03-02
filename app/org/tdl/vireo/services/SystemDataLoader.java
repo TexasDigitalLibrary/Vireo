@@ -189,7 +189,8 @@ public class SystemDataLoader {
 		// turn off authorization if we're saving
 		context.turnOffAuthorization();
 		for (String name : getAllSystemEmailTemplateNames()) {
-			
+
+			// try to see if it already exists in the DB
 			EmailTemplate dbTemplate = settingRepo.findSystemEmailTemplateByName(name);
 
 			// create template or upgrade the old one
@@ -203,7 +204,7 @@ public class SystemDataLoader {
 				if (!(dbTemplate.getMessage().equals(loadedTemplate.getMessage())) || !(dbTemplate.getSubject().equals(loadedTemplate.getSubject()))) {
 					EmailTemplate possibleCustomTemplate = settingRepo.findNonSystemEmailTemplateByName(name);
 					// if this System template already has a custom template (meaning one named the same but that is !isSystemRequired)
-					if(possibleCustomTemplate != null) {
+					if (possibleCustomTemplate != null) {
 						// a custom version of this System email template already exists, it's safe to override dbTemplate's data and save
 						dbTemplate.setSystemRequired(false);
 						dbTemplate.setMessage(loadedTemplate.getMessage());
@@ -291,62 +292,17 @@ public class SystemDataLoader {
 	 * Initial Embargo Types to create
 	 */
 
-	private static final EmbargoArray[] EMBARGO_DEFINTITIONS = {
-		new EmbargoArray("None",
-				"The work will be published after approval.",
-				0,
-				true,
-				true,
-				EmbargoGuarantor.DEFAULT),
-		new EmbargoArray("Journal Hold",
-				"The work will be delayed for publication by one year because of a restriction from publication in an academic journal.", 
-				12,
-				true,
-				true,
-				EmbargoGuarantor.DEFAULT),
-		new EmbargoArray("Patent Hold",
-				"The work will be delayed for publication by two years because of patent related activities.",
-				24,
-				true,
-				true,
-				EmbargoGuarantor.DEFAULT),
-	    new EmbargoArray("Other Embargo Period",
-	    		"The work will be delayed for publication by an indefinite amount of time.",
-	    		null,
-	    		false,
-				true,
-				EmbargoGuarantor.DEFAULT),
-	    new EmbargoArray("None",
-	    		"The work will be published after approval.",
-	    		0,
-	    		true,
-				true,
-	    		EmbargoGuarantor.PROQUEST),
-	    new EmbargoArray("6-month Journal Hold",
-				"The full text of this work will be held/restricted from worldwide access on the internet for six months from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication.", 
-				6,
-				true,
-				true,
-				EmbargoGuarantor.PROQUEST),
-		new EmbargoArray("1-year Journal Hold",
-				"The full text of this work will be held/restricted from worldwide access on the internet for one year from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication.", 
-				12,
-				true,
-				true,
-				EmbargoGuarantor.PROQUEST),
-		new EmbargoArray("2-year Journal Hold",
-				"The full text of this work will be held/restricted from worldwide access on the internet for two years from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication.", 
-				24,
-				true,
-				true,
-				EmbargoGuarantor.PROQUEST),
-		new EmbargoArray("Flexible/Delayed Release Embargo Period",
-	    		"The work will be delayed for publication by an indefinite amount of time.",
-	    		null,
-	    		false,
-				true,
-	    		EmbargoGuarantor.PROQUEST)
-	};
+	private static final EmbargoArray[] EMBARGO_DEFINTITIONS = { 
+		new EmbargoArray("None", "The work will be published after approval.", 0, true, true, EmbargoGuarantor.DEFAULT),
+		new EmbargoArray("Journal Hold", "The work will be delayed for publication by one year because of a restriction from publication in an academic journal.", 12, true, true, EmbargoGuarantor.DEFAULT),
+		new EmbargoArray("Patent Hold", "The work will be delayed for publication by two years because of patent related activities.", 24, true, true, EmbargoGuarantor.DEFAULT),
+		new EmbargoArray("Other Embargo Period", "The work will be delayed for publication by an indefinite amount of time.", null, false, true, EmbargoGuarantor.DEFAULT),
+		new EmbargoArray("None", "The work will be published after approval.", 0, true, true, EmbargoGuarantor.PROQUEST),
+		new EmbargoArray("6-month Journal Hold", "The full text of this work will be held/restricted from worldwide access on the internet for six months from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication.", 6, true, true, EmbargoGuarantor.PROQUEST),
+		new EmbargoArray("1-year Journal Hold", "The full text of this work will be held/restricted from worldwide access on the internet for one year from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication.", 12, true, true, EmbargoGuarantor.PROQUEST),
+		new EmbargoArray("2-year Journal Hold", "The full text of this work will be held/restricted from worldwide access on the internet for two years from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication.", 24, true, true, EmbargoGuarantor.PROQUEST),
+		new EmbargoArray("Flexible/Delayed Release Embargo Period", "The work will be delayed for publication by an indefinite amount of time.", null, false, true, EmbargoGuarantor.PROQUEST)
+		};
 
 	private static class EmbargoArray {
 
@@ -372,24 +328,46 @@ public class SystemDataLoader {
 			// turn off authorization if we're saving
 			context.turnOffAuthorization();
 
-			List<EmbargoType> embargoTypes = settingRepo.findAllEmbargoTypes();
 			// Setup Embargos
+			// for every System Defined Embargo
 			for (EmbargoArray embargoDefinition : EMBARGO_DEFINTITIONS) {
-				boolean found = false;
-				for (EmbargoType installedEmbargo : embargoTypes) {
-					if (installedEmbargo.getName().equals(embargoDefinition.name) && installedEmbargo.getGuarantor().toString().equals(embargoDefinition.guarantor.toString())) {
-						found = true;
+				EmbargoType dbEmbargo = settingRepo.findSystemEmbargoTypeByNameAndGuarantor(embargoDefinition.name, embargoDefinition.guarantor);
 
-						installedEmbargo.setDescription(embargoDefinition.description);
-						installedEmbargo.setDuration(embargoDefinition.duration);
-						installedEmbargo.setSystemRequired(embargoDefinition.isSystem);
-						installedEmbargo.save();
+				// create template or upgrade the old one
+				if (dbEmbargo == null) {
+					dbEmbargo = settingRepo.createEmbargoType(embargoDefinition.name, embargoDefinition.description, embargoDefinition.duration, embargoDefinition.active);
+					dbEmbargo.setGuarantor(embargoDefinition.guarantor);
+					dbEmbargo.setSystemRequired(true);
+					Logger.info("New System Embargo Type being installed [%s]", dbEmbargo.getName());
+					dbEmbargo.save();
+				} else {
+					EmbargoType loadedEmbargo = settingRepo.createEmbargoType(embargoDefinition.name, embargoDefinition.description, embargoDefinition.duration, embargoDefinition.active);
+					loadedEmbargo.setGuarantor(embargoDefinition.guarantor);
+					loadedEmbargo.setSystemRequired(true);
+
+					// if the embargo in the DB doesn't match in content with the one loaded from array
+					if (!(dbEmbargo.getDescription().equals(loadedEmbargo.getDescription())) || !( dbEmbargo.getDuration() == loadedEmbargo.getDuration()) || !(dbEmbargo.getGuarantor().ordinal() == loadedEmbargo.getGuarantor().ordinal())) {
+						EmbargoType possibleCustomEmbargo = settingRepo.findNonSystemEmbargoTypeByNameAndGuarantor(embargoDefinition.name, embargoDefinition.guarantor);
+						// if this System template already has a custom template (meaning one named the same but that is !isSystemRequired)
+						if (possibleCustomEmbargo != null) {
+							// a custom version of this System email template already exists, it's safe to override dbTemplate's data and save
+							dbEmbargo.setSystemRequired(false);
+							dbEmbargo.setActive(loadedEmbargo.isActive());
+							dbEmbargo.setDescription(loadedEmbargo.getDescription());
+							dbEmbargo.setDuration(loadedEmbargo.getDuration());
+							dbEmbargo.setGuarantor(loadedEmbargo.getGuarantor());
+							dbEmbargo.setSystemRequired(true);
+							Logger.info("Upgrading Old System Embargo Type for [%s]", dbEmbargo.getName());
+							dbEmbargo.save();
+						}
+						// there is no custom one yet, we need to make the dbEmbargo !isSystemRequired and the save loadedEmbargo
+						else {
+							Logger.info("Upgrading Old System Embargo Type and creating custom version for [%s]", dbEmbargo.getName());
+							dbEmbargo.setSystemRequired(false);
+							dbEmbargo.save();
+							loadedEmbargo.save();
+						}
 					}
-				}
-				if (!found) {
-					EmbargoType newembargo = settingRepo.createEmbargoType(embargoDefinition.name, embargoDefinition.description, embargoDefinition.duration, embargoDefinition.active, embargoDefinition.guarantor);
-					newembargo.setSystemRequired(embargoDefinition.isSystem);
-					newembargo.save();
 				}
 			}
 		} catch (RuntimeException re) {
