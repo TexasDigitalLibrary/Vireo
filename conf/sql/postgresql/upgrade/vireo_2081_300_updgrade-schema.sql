@@ -5,13 +5,21 @@ DECLARE
    _constraint_name TEXT;
 BEGIN
 
-   _constraint_name := (SELECT constraint_name
+   _constraint_name = (SELECT constraint_name
                         FROM information_schema.key_column_usage
                         WHERE table_name = 'embargo_type'
                         AND column_name = 'name'
                         LIMIT 1); -- there should only be 1
 
    EXECUTE 'ALTER TABLE embargo_type DROP CONSTRAINT ' || _constraint_name;
+
+   _constraint_name = (SELECT constraint_name
+                        FROM information_schema.key_column_usage
+                        WHERE table_name = 'email_template'
+                        AND column_name = 'name'
+                        LIMIT 1); -- there should only be 1
+
+   EXECUTE 'ALTER TABLE email_template DROP CONSTRAINT ' || _constraint_name;
 
 END;
 $$
