@@ -333,12 +333,18 @@ public class SystemDataLoader {
 			for (EmbargoArray embargoDefinition : EMBARGO_DEFINTITIONS) {
 				EmbargoType dbEmbargo = settingRepo.findSystemEmbargoTypeByNameAndGuarantor(embargoDefinition.name, embargoDefinition.guarantor);
 
-				// create template or upgrade the old one
+				// create template or upgrade the old one, new system embargos are enabled by default unless they have a custom one that already exists
 				if (dbEmbargo == null) {
+					EmbargoType possibleCustomEmbargo = settingRepo.findNonSystemEmbargoTypeByNameAndGuarantor(embargoDefinition.name, embargoDefinition.guarantor);
+					
 					dbEmbargo = settingRepo.createEmbargoType(embargoDefinition.name, embargoDefinition.description, embargoDefinition.duration, embargoDefinition.active);
 					dbEmbargo.setGuarantor(embargoDefinition.guarantor);
 					dbEmbargo.setSystemRequired(true);
-					Logger.info("New System Embargo Type being installed [%s]", dbEmbargo.getName());
+					// if we have a custom one that's named the same, make sure this new one is not active by default
+					if(possibleCustomEmbargo != null) {
+						dbEmbargo.setActive(false);
+					}
+					Logger.info("New System Embargo Type being installed [%s]@[%s]", dbEmbargo.getName(), dbEmbargo.getGuarantor().name());
 					dbEmbargo.save();
 				} else {
 					EmbargoType loadedEmbargo = settingRepo.createEmbargoType(embargoDefinition.name, embargoDefinition.description, embargoDefinition.duration, embargoDefinition.active);
@@ -357,14 +363,16 @@ public class SystemDataLoader {
 							dbEmbargo.setDuration(loadedEmbargo.getDuration());
 							dbEmbargo.setGuarantor(loadedEmbargo.getGuarantor());
 							dbEmbargo.setSystemRequired(true);
-							Logger.info("Upgrading Old System Embargo Type for [%s]", dbEmbargo.getName());
+							Logger.info("Upgrading Old System Embargo Type for [%s]@[%s]", dbEmbargo.getName(), dbEmbargo.getGuarantor().name());
 							dbEmbargo.save();
 						}
 						// there is no custom one yet, we need to make the dbEmbargo !isSystemRequired and the save loadedEmbargo
 						else {
-							Logger.info("Upgrading Old System Embargo Type and creating custom version for [%s]", dbEmbargo.getName());
+							Logger.info("Upgrading Old System Embargo Type and creating custom version for [%s]@[%s]", dbEmbargo.getName(), dbEmbargo.getGuarantor().name());
 							dbEmbargo.setSystemRequired(false);
 							dbEmbargo.save();
+							// upgraded system embargos are disabled by default
+							loadedEmbargo.setActive(false);
 							loadedEmbargo.save();
 						}
 					}
