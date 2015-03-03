@@ -58,7 +58,6 @@ jQuery(document).ready(function() {
     jQuery("#shownColumns, #hiddenColumns").sortable({
         connectWith: ".columnsSortable",
         placeholder: "placeholder",
-        cancel: '#column_1', // ID
         update: function(event,ui) {
             var list = jQuery("#shownColumns").sortable('toArray').toString();
             jQuery("#columns-field").val(list);

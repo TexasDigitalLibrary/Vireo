@@ -389,6 +389,16 @@ public class FilterTab extends AbstractVireoController {
 		List<SearchOrder> columns = new ArrayList<SearchOrder>();
 		if(!set_default_columns){
 			String columnsString = params.get("columns");
+			if((columnsString == null || columnsString.length() == 0)) {
+				flash.put("error", "You need to at least select 1 visible column!");
+				// Send the user off to the appropriate filter tab.
+				if ("list".equals(nav))
+					list();
+				else if ("log".equals(nav))
+					log(null);
+				else
+					error("Unknown customize navigation control type");
+			}
 			String[] columnIds = columnsString.split(",");
 			for (String columnId : columnIds) {
 				String[] parts = columnId.split("_");
@@ -399,22 +409,19 @@ public class FilterTab extends AbstractVireoController {
 		} else {
 			columns = getDefaultColumns(type);
 		}
-		// Check that column has at least the ID field.
-		if (columns.contains(SearchOrder.ID)) {
 
-			// Now that everything has been checked, reform the list into a comma
-			// separated list: "1,2,4,5" (notice not the column_part as before)
-			String columnsSerialized = "";
-			for (SearchOrder column : columns) {
-				if (columnsSerialized.length() > 0)
-					columnsSerialized += ",";
-				columnsSerialized += column.getId();
-			}
-			ActiveSearchFilter activeFilter = getActiveSearchFilter(type);
-			activeFilter.setColumns(columns);
-			// Save as a cookie.
-			response.setCookie(NAMES[type][ACTIVE_FILTER], activeFilter.encode(), COOKIE_DURATION);
+		// Now that everything has been checked, reform the list into a comma
+		// separated list: "1,2,4,5" (notice not the column_part as before)
+		String columnsSerialized = "";
+		for (SearchOrder column : columns) {
+			if (columnsSerialized.length() > 0)
+				columnsSerialized += ",";
+			columnsSerialized += column.getId();
 		}
+		ActiveSearchFilter activeFilter = getActiveSearchFilter(type);
+		activeFilter.setColumns(columns);
+		// Save as a cookie.
+		response.setCookie(NAMES[type][ACTIVE_FILTER], activeFilter.encode(), COOKIE_DURATION);
 		
 		// Handle results per page
 		Integer resultsPerPage = params.get("resultsPerPage",Integer.class);
@@ -426,10 +433,10 @@ public class FilterTab extends AbstractVireoController {
 		// Send the user off to the appropriate filter tab.
 		if ("list".equals(nav))
 			list();
-		if ("log".equals(nav))
+		else if ("log".equals(nav))
 			log(null);
-		
-		error("Unknown customize navigation control type");
+		else
+			error("Unknown customize navigation control type");
 	}
 	
 	/**
