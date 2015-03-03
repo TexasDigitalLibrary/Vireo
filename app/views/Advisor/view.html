@@ -35,14 +35,14 @@ jQuery(document).ready(function() {
 					jQuery("#advisorMessage").val("");
 					if(data.inputReceived) {
 						generateAjaxSuccess("<p><strong>Your input has been recorded.</strong> You may return to this page to follow the application's progress, or provide additional input in the future.</p>");
-						updateActionLog();
-						updateAdvisorControls();
 					} else {
 						generateAjaxSuccess("<p><strong>NO input was recorded.</strong></p>");
 					}
 				} else {
 					generateAjaxError("Your input has NOT been recorded because: " + data.error);
 				}
+				updateActionLog();
+				updateAdvisorControls();
 				jQuery("#embargoApproval").attr('checked', false);
 				jQuery("#committeeApproval").attr('checked', false);
 				jQuery("#"+submitterId).prop("disabled",false);
