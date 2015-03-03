@@ -163,7 +163,7 @@ public enum FieldConfig {
 			"submit_umi_release_label",
 			"submit_umi_release_help",
 			"submit_umi_release_enabled",
-			"Request release to the Proquest / UMI database."),
+			"Request release to the ProQuest / UMI database."),
 			
 			
 	/** Document Information **/
@@ -257,7 +257,7 @@ public enum FieldConfig {
 			"Request a delay in publication. The options available are customizable under the Configurable Settings Tab."),
 	
 	EMBARGO_TYPE_PROQUEST(
-					"Proquest Embargo Type",
+					"ProQuest Embargo Type",
 					"submit_embargo_type_proquest_label",
 					"submit_embargo_type_proquest_help",
 					"submit_embargo_type_proquest_enabled",
