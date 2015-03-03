@@ -73,7 +73,7 @@
 			<li>Embargo Options</li>
 			#{if submission.getEmbargoTypes() != null && submission.getEmbargoTypes().size() > 0}
 				#{list items:submission.getEmbargoTypes(), as:'embargo'}
-				<li class="discListItem"><b>${embargo.getName()}#{if embargo.getGuarantor() != org.tdl.vireo.model.EmbargoGuarantor.DEFAULT} (${embargo.getGuarantor()})#{/if}</b></li>
+				<li class="discListItem"><b>${embargo.getName()}#{if embargo.getGuarantor() != org.tdl.vireo.model.EmbargoGuarantor.DEFAULT} (${embargo.getGuarantor()})#{/if}#{if !embargo.isSystemRequired()} <em class="icon-user"></em>#{/if}#{else} <em class="icon-globe"></em>#{/else}</b></li>
 				#{/list}
 			#{/if}#{else}
 				<li><b>none</b></li>

@@ -1047,7 +1047,7 @@ public class ViewTab extends AbstractVireoController {
 		}
 		
 		VireoEmail email = null;
-		if(params.get("primary_recipients") != null) {			
+		if(params.get("primary_recipients_toggle") != null || params.get("cc_recipients_toggle") != null) {			
 			
 			List<String> primary_recipients = params.get("primary_recipients") == null ? new ArrayList<String>() : Utilities.processEmailDesigneeArray(params.get("primary_recipients").split(","), sub);
 			List<String> cc_recipients =  params.get("cc_recipients") == null ? new ArrayList<String>() :  Utilities.processEmailDesigneeArray(params.get("cc_recipients").split(","), sub);
@@ -1061,6 +1061,14 @@ public class ViewTab extends AbstractVireoController {
 			
 			if(comment==null || comment.isEmpty())
 				validation.addError("addFileComment", "You must include a comment when sending an email.");
+			
+			if((params.get("primary_recipients_toggle") != null && primary_recipients.size() == 0) || (params.get("primary_recipients_toggle") == null && params.get("cc_recipients_toggle") != null)) {
+				validation.addError("addFileTo", "You must include at least one primary recipient (not cc) when sending an email.");
+			}
+			
+			if(params.get("cc_recipients_toggle") != null && cc_recipients.size() == 0) {
+				validation.addError("addFileCc", "You must include at least one cc recipient when cc'ing an email.");
+			}
 			
 			if(!validation.hasErrors()){
 				email = emailService.createEmail();
