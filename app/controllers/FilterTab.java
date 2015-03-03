@@ -228,9 +228,10 @@ public class FilterTab extends AbstractVireoController {
 	 * results. This method does not change any state, instead the
 	 * modifyFilter() and modifySearch() methods will handle those modifications
 	 * and then redirect back to this method to display the results.
+	 * @param subId 
 	 */
 	@Security(RoleType.REVIEWER)
-	public static void log() {
+	public static void log(Long subId) {
 		// Get current parameters
 		Person person = context.getPerson();
 		
@@ -319,7 +320,7 @@ public class FilterTab extends AbstractVireoController {
 		// get all the custom actions available in the system
 		List<CustomActionDefinition> actions = settingRepo.findAllCustomActionDefinition();
 		
-		render(nav, allFilters, activeFilter, results, orderby, columns, facets, direction, resultsPerPage, actions);
+		render(nav, allFilters, activeFilter, results, orderby, columns, facets, direction, resultsPerPage, actions, subId);
 	}
 	
 	/**
@@ -365,7 +366,7 @@ public class FilterTab extends AbstractVireoController {
 		if ("list".equals(nav))
 			list();
 		if ("log".equals(nav))
-			log();
+			log(null);
 	}
 	
 	/**
@@ -426,7 +427,7 @@ public class FilterTab extends AbstractVireoController {
 		if ("list".equals(nav))
 			list();
 		if ("log".equals(nav))
-			log();
+			log(null);
 		
 		error("Unknown customize navigation control type");
 	}
@@ -549,7 +550,7 @@ public class FilterTab extends AbstractVireoController {
 		if ("list".equals(nav))
 			list();
 		if ("log".equals(nav))
-			log();
+			log(null);
 		
 		error("Unknown modify navigation control type");
 	}
@@ -575,7 +576,7 @@ public class FilterTab extends AbstractVireoController {
 		response.setCookie(NAMES[ACTION_LOG][ACTIVE_FILTER], activeFilter.encode(),COOKIE_DURATION);
 		
 		// Redirect back to the log page;
-		log();
+		log(subId);
 	}
 	
 	@Security(RoleType.REVIEWER)
@@ -620,7 +621,7 @@ public class FilterTab extends AbstractVireoController {
 		if ("list".equals(nav))
 			list();
 		if ("log".equals(nav))
-			log();
+			log(null);
 		
 		error("Unknown customize filter navigation control type");
 	}
@@ -820,13 +821,13 @@ public class FilterTab extends AbstractVireoController {
 		if (errorLoop == null) {
 			// Only redirect if no error loop is detected.
 			if ("log".equals(request.actionMethod)) 
-				FilterTab.log();
+				FilterTab.log(null);
 			
 			if ("list".equals(request.actionMethod)) 
 				FilterTab.list();
 			
 			if ("log".equals(request.routeArgs.get("nav")))
-				FilterTab.log();
+				FilterTab.log(null);
 			
 			if ("list".equals(request.routeArgs.get("nav")))
 				FilterTab.list();

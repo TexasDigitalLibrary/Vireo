@@ -86,15 +86,13 @@ public class ViewTab extends AbstractVireoController {
 	 * The main view method.
 	 */
 	@Security(RoleType.REVIEWER)
-	public static void view(Long subId) {	
-
-		Long id = subId;
+	public static void view(Long subId) {
 		
-		if (id == null) {
+		if (subId == null) {
 			flash.put("noSubmission", "Please select a submission to view.");
 			FilterTab.list();
 		}
-		Submission submission = subRepo.findSubmission(id);
+		Submission submission = subRepo.findSubmission(subId);
 		
 		//Check for "Add Action Log Comment"
 		if(params.get("addActionLogComment")!=null)
@@ -117,7 +115,7 @@ public class ViewTab extends AbstractVireoController {
 			deleteFile(submission);
 		
 		JPA.em().detach(submission);
-		submission = subRepo.findSubmission(id);
+		submission = subRepo.findSubmission(subId);
 		
 		Boolean isManager = context.isManager();
 		Boolean isReviewer = context.isReviewer();
