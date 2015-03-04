@@ -14,38 +14,39 @@ in collaboration with [Texas A&M University](http://www.tamu.edu/),
 [Massachusetts Institute of Technology](http://web.mit.edu/).
 
 For more information on Vireo, visit the 
-[Github Project page for Vireo](https://github.com/TexasDigitalLibrary/Vireo).
+[Github Project page for Vireo](https://github.com/TexasDigitalLibrary/Vireo)
+OR
+[Github Project wiki for Vireo](https://github.com/TexasDigitalLibrary/Vireo/wiki)
+OR
+[Github page for Vireo](http://texasdigitallibrary.github.io/Vireo/)
 
-## Vireo 2.0 - What's New ##
+## Vireo 3.0 - What's New ##
 
-Vireo 2.0 is major feature upgrade to Vireo. It builds upon the past success of 
-1.8 and the Java Play Framework to enable new features. Here are some highlights
+Vireo 3.0 is major feature upgrade to Vireo. It builds upon the past success of 
+2.0 and the Java Play Framework to enable new features. Here are some highlights
 
 **New Fields:**
-- Language
-- Subjects
-- Published Material
-- Defense Date
-- Program
-- Dynamic Committee Member Role Tyes
-- Administrative and Source files
+- ORCID
+- ProQuest Embargoes
 
 **New Features:**
-- ProQuest Export
-- Remove items individually from filter lists
-- Batch send email to students
-- Batch assign submissions
-- Batch add action log to submissions
-- Batch status change
+- Revised Needs Corrections workflow: Vireo 3 includes a more intuitive student workflow for submitting corrected manuscripts, including better validations to minimize student errors.
+- Email: Vireo 3 adds the ability to set up rules for sending automated emails to configurable groups of stakeholders.
+- Reporting and Exports: Vireo 3 allows administrative users to create custom, exportable Excel reports by using saved filters and columns. It also includes the addition of the Action Log to a file export package.
+- Multiple submissions: Vireo 3 overhauls the functionality for allowing multiple submissions by a single student. Specifically, it adds more sophisticated validations to prevent students from creating a new submission for the same degree, while allowing legitimate multiple submissions (for different degrees) by the same student.
+- Embargoes: Vireo 3 adds a separate, optional embargo period for submissions going to ProQuest.
+- Custom Action Checklist: In Vireo 3, administrative users have the ability to filter an ETD list by individual Custom Actions. Additionally, Vireo 3 can be configured to display certain Checklist items in the student view.
 
 **New Settings:**
-- ProQuest settings
-- Bulk updates
-- Toggle all fields: Disabled, Optional, or Required.
-- Customize field labels
-- Customize field help text
-- Customize stick notes
-- Degree codes
+- Email "From" and "ReplyTo" are now in administrative settings instead of application.conf
+- Deposit locations can now be configured to have a timeout (defaulted to 60 seconds, used to be 10 seconds) for the SWORD client when depositing large items into DSpace
+- Email Workflow Rules
+- Administrative Groups
+- Separate "Default" and "ProQuest" embargoes
+
+**Other New Features:**
+- An ADA-compliant student submission interface
+- Several bug fixes
 
 ## Building and Deploying Vireo ##
 
@@ -54,7 +55,7 @@ for instructions on deploying Vireo from scratch or updating a previous release.
 
 ## License and Copyright ##
 
-Copyright (c) 2012, Texas Digital Library  
+Copyright (c) 2015, Texas Digital Library
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without 
