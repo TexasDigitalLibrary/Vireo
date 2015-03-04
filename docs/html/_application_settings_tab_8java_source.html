@@ -28,9 +28,10 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="vireo-logo-sm.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">Vireo
-   &#160;<span id="projectnumber">3.0.x-RC4</span>
+   &#160;<span id="projectnumber">3.0.0</span>
    </div>
    <div id="projectbrief">Vireo Electronic Thesis and Dissertation Submission System</div>
   </td>
@@ -433,414 +434,429 @@ $(document).ready(function(){initNavTree('_application_settings_tab_8java_source
 <div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;        String password = null;</div>
 <div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;        String onBehalfOf = null;</div>
 <div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;        String repository = null;</div>
-<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;        String collection = null;</div>
-<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;        </div>
+<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;        Integer timeout = null;</div>
+<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;        String collection = null;</div>
 <div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;        </div>
-<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;        <span class="keywordtype">boolean</span> connectionOk = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;        Map&lt;String,String&gt; collectionsMap = null;</div>
-<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;        <span class="keywordflow">if</span> (depositLocationId != null) {</div>
-<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;            String[] parts = depositLocationId.split(<span class="stringliteral">&quot;_&quot;</span>);</div>
-<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;            Long <span class="keywordtype">id</span> = Long.valueOf(parts[1]);</div>
-<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;            <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html">DepositLocation</a> location = settingRepo.findDepositLocation(id);</div>
-<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;            </div>
-<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;            name = location.getName();</div>
-<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;            packager = location.getPackager();</div>
-<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;            depositor = location.getDepositor();</div>
-<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;            username = location.getUsername();</div>
-<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;            password = location.getPassword();</div>
-<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;            onBehalfOf = location.getOnBehalfOf();</div>
-<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;            repository = location.getRepository();</div>
-<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;            collection = location.getCollection();</div>
-<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;                        </div>
-<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;<span class="comment">// Don&#39;t try to connect on inital load because it could take too long.</span></div>
-<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;<span class="comment">//          try {</span></div>
-<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;<span class="comment">//              collectionsMap = depositor.getCollections(location);</span></div>
-<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;<span class="comment">//              connectionOk = true;</span></div>
-<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;<span class="comment">//              </span></div>
-<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;<span class="comment">//              if (collectionsMap == null || collectionsMap.size() == 0)</span></div>
-<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;<span class="comment">//                  validation.addError(&quot;collection&quot;,&quot;The repository is not able to provide a list of collections.&quot;);</span></div>
-<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;<span class="comment">//          } catch (DepositException de) {</span></div>
-<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;<span class="comment">//              </span></div>
-<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;<span class="comment">//              if (de.isField(FIELD.REPOSITORY)) {</span></div>
-<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;<span class="comment">//                  validation.addError(&quot;repository&quot;,de.getMessage());</span></div>
-<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;<span class="comment">//              } else if (de.isField(FIELD.AUTHENTICATION)) {</span></div>
-<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;<span class="comment">//                  validation.addError(&quot;auth&quot;,de.getMessage());</span></div>
-<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;<span class="comment">//              } else {</span></div>
-<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;<span class="comment">//                  validation.addError(&quot;general&quot;,&quot;Unable to communicate with deposit location: &quot;+de.getMessage());</span></div>
-<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;<span class="comment">//              }</span></div>
-<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;<span class="comment">//              </span></div>
-<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;<span class="comment">//          } catch (RuntimeException re) {</span></div>
-<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;<span class="comment">//              validation.addError(&quot;general&quot;,&quot;Unable to communicate with deposit location: &quot;+re.getMessage());</span></div>
-<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;<span class="comment">//          }</span></div>
-<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;        } </div>
-<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;        </div>
-<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;        List&lt;Packager&gt; packagers = <span class="keyword">new</span> ArrayList&lt;Packager&gt;( (Collection) Spring.getBeansOfType(<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_packager.html">Packager</a>.class).values() );</div>
-<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;        List&lt;Depositor&gt; depositors = <span class="keyword">new</span> ArrayList&lt;Depositor&gt;( (Collection) Spring.getBeansOfType(<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_depositor.html">Depositor</a>.class).values() );</div>
-<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;        </div>
-<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;        String nav = <span class="stringliteral">&quot;settings&quot;</span>;</div>
-<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;        String subNav = <span class="stringliteral">&quot;deposit&quot;</span>;</div>
-<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;        renderTemplate(<span class="stringliteral">&quot;SettingTabs/editDepositLocation.include&quot;</span>,nav, subNav, packagers, depositors, collectionsMap, connectionOk,</div>
-<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;                </div>
-<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;                <span class="comment">// Deposit location</span></div>
-<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;                depositLocationId, name, packager, depositor, username, password, onBehalfOf, repository, collection</div>
-<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;                );</div>
-<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;    }</div>
-<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;    </div>
-<div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160;    @<a class="code" href="interfacecontrollers_1_1_security.html">Security</a>(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html">RoleType</a>.<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html#a8cf8c1082d8c621c923d57e426ae6e30">MANAGER</a>)</div>
-<div class="line"><a name="l00455"></a><span class="lineno"><a class="line" href="classcontrollers_1_1settings_1_1_application_settings_tab.html#a5783ad3fed40608e23604f38fdfccbe4">  455</a></span>&#160;    public static <span class="keywordtype">void</span> saveDepositLocation(String depositLocationId) {</div>
-<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;        </div>
-<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;        <span class="comment">// Get our paramaters</span></div>
-<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;        String action = params.get(<span class="stringliteral">&quot;action&quot;</span>);</div>
-<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;        String name = params.get(<span class="stringliteral">&quot;name&quot;</span>);</div>
-<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;        String packagerBeanName = params.get(<span class="stringliteral">&quot;packager&quot;</span>);</div>
-<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;        String depositorBeanName = params.get(<span class="stringliteral">&quot;depositor&quot;</span>);</div>
-<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;        String username = params.get(<span class="stringliteral">&quot;username&quot;</span>);</div>
-<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;        String password = params.get(<span class="stringliteral">&quot;password&quot;</span>);</div>
-<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;        String onBehalfOf = params.get(<span class="stringliteral">&quot;onBehalfOf&quot;</span>);</div>
-<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;        String repository = params.get(<span class="stringliteral">&quot;repository&quot;</span>);</div>
-<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;        String collection = params.get(<span class="stringliteral">&quot;collection&quot;</span>);</div>
-<div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;                </div>
-<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;        <span class="comment">// Nullify things</span></div>
-<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;        <span class="keywordflow">if</span> (username != null &amp;&amp; username.trim().length() == 0)</div>
-<div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;            username = null;</div>
-<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;        <span class="keywordflow">if</span> (password != null &amp;&amp; password.length() == 0)</div>
-<div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;            password = null;</div>
-<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;        <span class="keywordflow">if</span> (onBehalfOf != null &amp;&amp; onBehalfOf.trim().length() == 0)</div>
-<div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160;            onBehalfOf = null;</div>
-<div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;        </div>
-<div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;        </div>
-<div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160;        <span class="comment">// Validation and format conversions</span></div>
-<div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160;        <span class="keywordflow">if</span> (name == null || name.trim().length() == 0)</div>
-<div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;            validation.addError(<span class="stringliteral">&quot;name&quot;</span>, <span class="stringliteral">&quot;A name is required&quot;</span>);</div>
+<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;        </div>
+<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;        <span class="keywordtype">boolean</span> connectionOk = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;        Map&lt;String,String&gt; collectionsMap = null;</div>
+<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;        <span class="keywordflow">if</span> (depositLocationId != null) {</div>
+<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;            String[] parts = depositLocationId.split(<span class="stringliteral">&quot;_&quot;</span>);</div>
+<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;            Long <span class="keywordtype">id</span> = Long.valueOf(parts[1]);</div>
+<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;            <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html">DepositLocation</a> location = settingRepo.findDepositLocation(id);</div>
+<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;            </div>
+<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;            name = location.getName();</div>
+<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;            packager = location.getPackager();</div>
+<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;            depositor = location.getDepositor();</div>
+<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;            username = location.getUsername();</div>
+<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;            password = location.getPassword();</div>
+<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;            onBehalfOf = location.getOnBehalfOf();</div>
+<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;            repository = location.getRepository();</div>
+<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;            timeout = location.getTimeout();</div>
+<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;            collection = location.getCollection();</div>
+<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;                        </div>
+<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;<span class="comment">// Don&#39;t try to connect on inital load because it could take too long.</span></div>
+<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;<span class="comment">//          try {</span></div>
+<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;<span class="comment">//              collectionsMap = depositor.getCollections(location);</span></div>
+<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;<span class="comment">//              connectionOk = true;</span></div>
+<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;<span class="comment">//              </span></div>
+<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;<span class="comment">//              if (collectionsMap == null || collectionsMap.size() == 0)</span></div>
+<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;<span class="comment">//                  validation.addError(&quot;collection&quot;,&quot;The repository is not able to provide a list of collections.&quot;);</span></div>
+<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;<span class="comment">//          } catch (DepositException de) {</span></div>
+<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;<span class="comment">//              </span></div>
+<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;<span class="comment">//              if (de.isField(FIELD.REPOSITORY)) {</span></div>
+<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;<span class="comment">//                  validation.addError(&quot;repository&quot;,de.getMessage());</span></div>
+<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;<span class="comment">//              } else if (de.isField(FIELD.AUTHENTICATION)) {</span></div>
+<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;<span class="comment">//                  validation.addError(&quot;auth&quot;,de.getMessage());</span></div>
+<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;<span class="comment">//              } else {</span></div>
+<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;<span class="comment">//                  validation.addError(&quot;general&quot;,&quot;Unable to communicate with deposit location: &quot;+de.getMessage());</span></div>
+<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;<span class="comment">//              }</span></div>
+<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;<span class="comment">//              </span></div>
+<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;<span class="comment">//          } catch (RuntimeException re) {</span></div>
+<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;<span class="comment">//              validation.addError(&quot;general&quot;,&quot;Unable to communicate with deposit location: &quot;+re.getMessage());</span></div>
+<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;<span class="comment">//          }</span></div>
+<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;        } </div>
+<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;        </div>
+<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;        List&lt;Packager&gt; packagers = <span class="keyword">new</span> ArrayList&lt;Packager&gt;( (Collection) Spring.getBeansOfType(<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_packager.html">Packager</a>.class).values() );</div>
+<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;        List&lt;Depositor&gt; depositors = <span class="keyword">new</span> ArrayList&lt;Depositor&gt;( (Collection) Spring.getBeansOfType(<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_depositor.html">Depositor</a>.class).values() );</div>
+<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;        </div>
+<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;        String nav = <span class="stringliteral">&quot;settings&quot;</span>;</div>
+<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;        String subNav = <span class="stringliteral">&quot;deposit&quot;</span>;</div>
+<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;        renderTemplate(<span class="stringliteral">&quot;SettingTabs/editDepositLocation.include&quot;</span>,nav, subNav, packagers, depositors, collectionsMap, connectionOk,</div>
+<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;                </div>
+<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;                <span class="comment">// Deposit location</span></div>
+<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;                depositLocationId, name, packager, depositor, username, password, onBehalfOf, repository, timeout, collection</div>
+<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;                );</div>
+<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;    }</div>
+<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;    </div>
+<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;    @<a class="code" href="interfacecontrollers_1_1_security.html">Security</a>(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html">RoleType</a>.<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html#a8cf8c1082d8c621c923d57e426ae6e30">MANAGER</a>)</div>
+<div class="line"><a name="l00457"></a><span class="lineno"><a class="line" href="classcontrollers_1_1settings_1_1_application_settings_tab.html#a5783ad3fed40608e23604f38fdfccbe4">  457</a></span>&#160;    public static <span class="keywordtype">void</span> saveDepositLocation(String depositLocationId) {</div>
+<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;        </div>
+<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;        <span class="comment">// Get our paramaters</span></div>
+<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;        String action = params.get(<span class="stringliteral">&quot;action&quot;</span>);</div>
+<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;        String name = params.get(<span class="stringliteral">&quot;name&quot;</span>);</div>
+<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;        String packagerBeanName = params.get(<span class="stringliteral">&quot;packager&quot;</span>);</div>
+<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;        String depositorBeanName = params.get(<span class="stringliteral">&quot;depositor&quot;</span>);</div>
+<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;        String username = params.get(<span class="stringliteral">&quot;username&quot;</span>);</div>
+<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;        String password = params.get(<span class="stringliteral">&quot;password&quot;</span>);</div>
+<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;        String onBehalfOf = params.get(<span class="stringliteral">&quot;onBehalfOf&quot;</span>);</div>
+<div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;        String repository = params.get(<span class="stringliteral">&quot;repository&quot;</span>);</div>
+<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;        String sTimeout = params.get(<span class="stringliteral">&quot;timeout&quot;</span>);</div>
+<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;        String collection = params.get(<span class="stringliteral">&quot;collection&quot;</span>);</div>
+<div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;                </div>
+<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;        <span class="comment">// Nullify things</span></div>
+<div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;        <span class="keywordflow">if</span> (username != null &amp;&amp; username.trim().length() == 0)</div>
+<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;            username = null;</div>
+<div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160;        <span class="keywordflow">if</span> (password != null &amp;&amp; password.length() == 0)</div>
+<div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;            password = null;</div>
+<div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;        <span class="keywordflow">if</span> (onBehalfOf != null &amp;&amp; onBehalfOf.trim().length() == 0)</div>
+<div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160;            onBehalfOf = null;</div>
+<div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160;        <span class="keywordflow">if</span> (sTimeout != null &amp;&amp; sTimeout.trim().length() == 0)</div>
+<div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;            sTimeout = null;</div>
 <div class="line"><a name="l00480"></a><span class="lineno">  480</span>&#160;        </div>
-<div class="line"><a name="l00481"></a><span class="lineno">  481</span>&#160;        <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_packager.html">Packager</a> packager = null;</div>
-<div class="line"><a name="l00482"></a><span class="lineno">  482</span>&#160;        <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00483"></a><span class="lineno">  483</span>&#160;            packager = (<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_packager.html">Packager</a>) Spring.getBean(packagerBeanName);</div>
-<div class="line"><a name="l00484"></a><span class="lineno">  484</span>&#160;        } <span class="keywordflow">catch</span> (RuntimeException re) {</div>
-<div class="line"><a name="l00485"></a><span class="lineno">  485</span>&#160;            validation.addError(<span class="stringliteral">&quot;packager&quot;</span>, <span class="stringliteral">&quot;The format is invalid.&quot;</span>);</div>
-<div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160;        }</div>
-<div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;        </div>
-<div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160;        <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_depositor.html">Depositor</a> depositor = null;</div>
-<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160;        <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160;            depositor = (<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_depositor.html">Depositor</a>) Spring.getBean(depositorBeanName);</div>
-<div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160;        } <span class="keywordflow">catch</span> (RuntimeException re) {</div>
-<div class="line"><a name="l00492"></a><span class="lineno">  492</span>&#160;            validation.addError(<span class="stringliteral">&quot;depositor&quot;</span>, <span class="stringliteral">&quot;The protocol is invalid.&quot;</span>);</div>
-<div class="line"><a name="l00493"></a><span class="lineno">  493</span>&#160;        }</div>
-<div class="line"><a name="l00494"></a><span class="lineno">  494</span>&#160;        </div>
-<div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160;        <span class="keywordflow">if</span> (repository == null || repository.trim().length() == 0)</div>
-<div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160;            validation.addError(<span class="stringliteral">&quot;repository&quot;</span>, <span class="stringliteral">&quot;The repository location is required&quot;</span>);</div>
-<div class="line"><a name="l00497"></a><span class="lineno">  497</span>&#160;        </div>
-<div class="line"><a name="l00498"></a><span class="lineno">  498</span>&#160;        <span class="comment">// If no errors then try and save location</span></div>
-<div class="line"><a name="l00499"></a><span class="lineno">  499</span>&#160;        <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html">DepositLocation</a> location = null;</div>
-<div class="line"><a name="l00500"></a><span class="lineno">  500</span>&#160;        <span class="keywordflow">if</span> (!validation.hasErrors()) {</div>
-<div class="line"><a name="l00501"></a><span class="lineno">  501</span>&#160;            <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00502"></a><span class="lineno">  502</span>&#160;                <span class="comment">// Save the values</span></div>
-<div class="line"><a name="l00503"></a><span class="lineno">  503</span>&#160;                Boolean created = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00504"></a><span class="lineno">  504</span>&#160;                <span class="keywordflow">if</span> (depositLocationId != null &amp;&amp; depositLocationId.trim().length() &gt; 0) {</div>
-<div class="line"><a name="l00505"></a><span class="lineno">  505</span>&#160;                    String[] parts = depositLocationId.split(<span class="stringliteral">&quot;_&quot;</span>);</div>
-<div class="line"><a name="l00506"></a><span class="lineno">  506</span>&#160;                    Long <span class="keywordtype">id</span> = Long.valueOf(parts[1]);</div>
-<div class="line"><a name="l00507"></a><span class="lineno">  507</span>&#160;                    location = settingRepo.findDepositLocation(id);</div>
-<div class="line"><a name="l00508"></a><span class="lineno">  508</span>&#160;                } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00509"></a><span class="lineno">  509</span>&#160;                    location = settingRepo.createDepositLocation(name);</div>
-<div class="line"><a name="l00510"></a><span class="lineno">  510</span>&#160;                    created = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00511"></a><span class="lineno">  511</span>&#160;                    </div>
-<div class="line"><a name="l00512"></a><span class="lineno">  512</span>&#160;                    <span class="comment">// Make sure the new location is last on the list.</span></div>
-<div class="line"><a name="l00513"></a><span class="lineno">  513</span>&#160;                    List&lt;DepositLocation&gt; locations = settingRepo.findAllDepositLocations();</div>
-<div class="line"><a name="l00514"></a><span class="lineno">  514</span>&#160;                    locations.add(location);</div>
-<div class="line"><a name="l00515"></a><span class="lineno">  515</span>&#160;                    saveModelOrder(locations);</div>
-<div class="line"><a name="l00516"></a><span class="lineno">  516</span>&#160;                }</div>
-<div class="line"><a name="l00517"></a><span class="lineno">  517</span>&#160;                </div>
-<div class="line"><a name="l00518"></a><span class="lineno">  518</span>&#160;                <span class="comment">// Check if we should update the password. We we display the</span></div>
-<div class="line"><a name="l00519"></a><span class="lineno">  519</span>&#160;                <span class="comment">// password we use blanks. So if it&#39;s the same number of blanks</span></div>
-<div class="line"><a name="l00520"></a><span class="lineno">  520</span>&#160;                <span class="comment">// leave the password alone.</span></div>
-<div class="line"><a name="l00521"></a><span class="lineno">  521</span>&#160;                String originalPassword = location.getPassword();</div>
-<div class="line"><a name="l00522"></a><span class="lineno">  522</span>&#160;                <span class="keywordflow">if</span> (originalPassword != null &amp;&amp; password != null) {                 </div>
-<div class="line"><a name="l00523"></a><span class="lineno">  523</span>&#160;                    <span class="comment">// Convert the original password to all spaces.</span></div>
-<div class="line"><a name="l00524"></a><span class="lineno">  524</span>&#160;                    originalPassword = originalPassword.replaceAll(<span class="stringliteral">&quot;.&quot;</span>, <span class="stringliteral">&quot; &quot;</span>);</div>
-<div class="line"><a name="l00525"></a><span class="lineno">  525</span>&#160;                    </div>
-<div class="line"><a name="l00526"></a><span class="lineno">  526</span>&#160;                    <span class="comment">// Sometimes the browser gives us non breaking spaces, switch those out with normal ones.</span></div>
-<div class="line"><a name="l00527"></a><span class="lineno">  527</span>&#160;                    password = password.replaceAll(<span class="stringliteral">&quot;\u00A0&quot;</span>,<span class="stringliteral">&quot; &quot;</span>);</div>
-<div class="line"><a name="l00528"></a><span class="lineno">  528</span>&#160;                    </div>
-<div class="line"><a name="l00529"></a><span class="lineno">  529</span>&#160;                    <span class="keywordflow">if</span> (!(originalPassword.length() == password.length() &amp;&amp; password.trim().length() == 0)) {</div>
-<div class="line"><a name="l00530"></a><span class="lineno">  530</span>&#160;                        location.setPassword(password);</div>
-<div class="line"><a name="l00531"></a><span class="lineno">  531</span>&#160;                    }</div>
-<div class="line"><a name="l00532"></a><span class="lineno">  532</span>&#160;                } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00533"></a><span class="lineno">  533</span>&#160;                    location.setPassword(password);</div>
-<div class="line"><a name="l00534"></a><span class="lineno">  534</span>&#160;                }</div>
-<div class="line"><a name="l00535"></a><span class="lineno">  535</span>&#160;                </div>
-<div class="line"><a name="l00536"></a><span class="lineno">  536</span>&#160;                location.setUsername(username);</div>
-<div class="line"><a name="l00537"></a><span class="lineno">  537</span>&#160;                location.setOnBehalfOf(onBehalfOf);</div>
-<div class="line"><a name="l00538"></a><span class="lineno">  538</span>&#160;                location.setRepository(repository);</div>
-<div class="line"><a name="l00539"></a><span class="lineno">  539</span>&#160;                location.setCollection(collection);</div>
-<div class="line"><a name="l00540"></a><span class="lineno">  540</span>&#160;                location.setPackager(packager);</div>
-<div class="line"><a name="l00541"></a><span class="lineno">  541</span>&#160;                location.setDepositor(depositor);</div>
-<div class="line"><a name="l00542"></a><span class="lineno">  542</span>&#160;                location.setName(name);</div>
-<div class="line"><a name="l00543"></a><span class="lineno">  543</span>&#160;                location.save();</div>
-<div class="line"><a name="l00544"></a><span class="lineno">  544</span>&#160;                </div>
-<div class="line"><a name="l00545"></a><span class="lineno">  545</span>&#160;                Logger.info(<span class="stringliteral">&quot;%s (%d: %s) has %s deposit location #%d.\nDeposit Name = &#39;%s&#39;\nDeposit Packager = &#39;%s&#39;\nDeposit Depositor = &#39;%s&#39;\nDeposit Repository = &#39;%s&#39;\nDeposit Username = &#39;%s&#39;\nDeposit On Behalf Of = &#39;%s&#39;\nDeposit Collection = &#39;%s&#39;&quot;</span>,</div>
-<div class="line"><a name="l00546"></a><span class="lineno">  546</span>&#160;                        context.getPerson().getFormattedName(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_name_format.html">NameFormat</a>.<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_name_format.html#a2b7e2e6dc26a8468e5af4312a3ea423a">FIRST_LAST</a>), </div>
-<div class="line"><a name="l00547"></a><span class="lineno">  547</span>&#160;                        context.getPerson().getId(), </div>
-<div class="line"><a name="l00548"></a><span class="lineno">  548</span>&#160;                        context.getPerson().getEmail(),</div>
-<div class="line"><a name="l00549"></a><span class="lineno">  549</span>&#160;                        created ? <span class="stringliteral">&quot;added&quot;</span> : <span class="stringliteral">&quot;edited&quot;</span>,</div>
-<div class="line"><a name="l00550"></a><span class="lineno">  550</span>&#160;                        location.getId(),</div>
-<div class="line"><a name="l00551"></a><span class="lineno">  551</span>&#160;                        location.getName(),</div>
-<div class="line"><a name="l00552"></a><span class="lineno">  552</span>&#160;                        location.getPackager()==null ? <span class="stringliteral">&quot;null&quot;</span> : location.getPackager().getBeanName(),</div>
-<div class="line"><a name="l00553"></a><span class="lineno">  553</span>&#160;                        location.getDepositor()==null ? <span class="stringliteral">&quot;null&quot;</span> : location.getDepositor().getBeanName(),</div>
-<div class="line"><a name="l00554"></a><span class="lineno">  554</span>&#160;                        location.getRepository(),</div>
-<div class="line"><a name="l00555"></a><span class="lineno">  555</span>&#160;                        location.getUsername(),</div>
-<div class="line"><a name="l00556"></a><span class="lineno">  556</span>&#160;                        location.getOnBehalfOf(),</div>
-<div class="line"><a name="l00557"></a><span class="lineno">  557</span>&#160;                        location.getCollection());</div>
-<div class="line"><a name="l00558"></a><span class="lineno">  558</span>&#160;                </div>
-<div class="line"><a name="l00559"></a><span class="lineno">  559</span>&#160;                depositLocationId = <span class="stringliteral">&quot;depositLocation_&quot;</span>+location.getId();</div>
-<div class="line"><a name="l00560"></a><span class="lineno">  560</span>&#160;            } <span class="keywordflow">catch</span> (PersistenceException pe) {</div>
-<div class="line"><a name="l00561"></a><span class="lineno">  561</span>&#160;                validation.addError(<span class="stringliteral">&quot;name&quot;</span>, <span class="stringliteral">&quot;Another deposit location already exists with the name.&quot;</span>);</div>
-<div class="line"><a name="l00562"></a><span class="lineno">  562</span>&#160;                </div>
-<div class="line"><a name="l00563"></a><span class="lineno">  563</span>&#160;            } <span class="keywordflow">catch</span> (RuntimeException re) {</div>
-<div class="line"><a name="l00564"></a><span class="lineno">  564</span>&#160;                Logger.error(re,<span class="stringliteral">&quot;Unable to save Deposit Location&quot;</span>);</div>
-<div class="line"><a name="l00565"></a><span class="lineno">  565</span>&#160;                validation.addError(<span class="stringliteral">&quot;general&quot;</span>, <span class="stringliteral">&quot;Unable to save form because: &quot;</span>+re.getMessage());</div>
-<div class="line"><a name="l00566"></a><span class="lineno">  566</span>&#160;            }</div>
-<div class="line"><a name="l00567"></a><span class="lineno">  567</span>&#160;        }</div>
-<div class="line"><a name="l00568"></a><span class="lineno">  568</span>&#160;</div>
-<div class="line"><a name="l00569"></a><span class="lineno">  569</span>&#160;        </div>
-<div class="line"><a name="l00570"></a><span class="lineno">  570</span>&#160;        <span class="comment">// If there are still no errors, then try and get a list of all collections</span></div>
-<div class="line"><a name="l00571"></a><span class="lineno">  571</span>&#160;        Map&lt;String,String&gt; collectionsMap = <span class="keyword">new</span> HashMap&lt;String,String&gt;();</div>
-<div class="line"><a name="l00572"></a><span class="lineno">  572</span>&#160;        <span class="keywordtype">boolean</span> connectionOk = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00573"></a><span class="lineno">  573</span>&#160;        <span class="keywordflow">if</span> (!validation.hasErrors() &amp;&amp; location != null) {</div>
-<div class="line"><a name="l00574"></a><span class="lineno">  574</span>&#160;</div>
-<div class="line"><a name="l00575"></a><span class="lineno">  575</span>&#160;            <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00576"></a><span class="lineno">  576</span>&#160;                collectionsMap = depositor.getCollections(location);</div>
-<div class="line"><a name="l00577"></a><span class="lineno">  577</span>&#160;                <span class="keywordflow">if</span> (collectionsMap == null || collectionsMap.size() == 0)</div>
-<div class="line"><a name="l00578"></a><span class="lineno">  578</span>&#160;                    validation.addError(<span class="stringliteral">&quot;collection&quot;</span>,<span class="stringliteral">&quot;The repository is not able to provide a list of collections.&quot;</span>);</div>
-<div class="line"><a name="l00579"></a><span class="lineno">  579</span>&#160;                </div>
-<div class="line"><a name="l00580"></a><span class="lineno">  580</span>&#160;                connectionOk = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00581"></a><span class="lineno">  581</span>&#160;            } <span class="keywordflow">catch</span> (<a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception.html">DepositException</a> de) {</div>
-<div class="line"><a name="l00582"></a><span class="lineno">  582</span>&#160;                </div>
-<div class="line"><a name="l00583"></a><span class="lineno">  583</span>&#160;                <span class="keywordflow">if</span> (de.<a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception.html#a18288907951904651caa193955d3f839">isField</a>(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html">FIELD</a>.<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a69df11e68be730801f4c574f75340eeb">REPOSITORY</a>)) {</div>
-<div class="line"><a name="l00584"></a><span class="lineno">  584</span>&#160;                    validation.addError(<span class="stringliteral">&quot;repository&quot;</span>,de.getMessage());</div>
-<div class="line"><a name="l00585"></a><span class="lineno">  585</span>&#160;                } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (de.<a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception.html#a18288907951904651caa193955d3f839">isField</a>(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html">FIELD</a>.<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a450228aa357079a98fd4975a4c1556f2">AUTHENTICATION</a>)) {</div>
-<div class="line"><a name="l00586"></a><span class="lineno">  586</span>&#160;                    validation.addError(<span class="stringliteral">&quot;auth&quot;</span>,de.getMessage());</div>
-<div class="line"><a name="l00587"></a><span class="lineno">  587</span>&#160;                } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00588"></a><span class="lineno">  588</span>&#160;                    validation.addError(<span class="stringliteral">&quot;general&quot;</span>,<span class="stringliteral">&quot;Unable to communicate with deposit location: &quot;</span>+de.getMessage());</div>
-<div class="line"><a name="l00589"></a><span class="lineno">  589</span>&#160;                }</div>
-<div class="line"><a name="l00590"></a><span class="lineno">  590</span>&#160;                </div>
-<div class="line"><a name="l00591"></a><span class="lineno">  591</span>&#160;            } <span class="keywordflow">catch</span> (RuntimeException re) {</div>
-<div class="line"><a name="l00592"></a><span class="lineno">  592</span>&#160;                validation.addError(<span class="stringliteral">&quot;general&quot;</span>,<span class="stringliteral">&quot;Unable to communicate with deposit location: &quot;</span>+re.getMessage());</div>
-<div class="line"><a name="l00593"></a><span class="lineno">  593</span>&#160;            }</div>
-<div class="line"><a name="l00594"></a><span class="lineno">  594</span>&#160;            </div>
-<div class="line"><a name="l00595"></a><span class="lineno">  595</span>&#160;            </div>
-<div class="line"><a name="l00596"></a><span class="lineno">  596</span>&#160;            <span class="comment">// Now at the end do a check to make sure the user has selected a collection url.</span></div>
-<div class="line"><a name="l00597"></a><span class="lineno">  597</span>&#160;            <span class="keywordflow">if</span> (!validation.hasErrors() &amp;&amp; <span class="stringliteral">&quot;depositLocation-save&quot;</span>.equals(action) &amp;&amp; collection == null) {</div>
-<div class="line"><a name="l00598"></a><span class="lineno">  598</span>&#160;                validation.addError(<span class="stringliteral">&quot;collection&quot;</span>,<span class="stringliteral">&quot;A collection is required.&quot;</span>);</div>
-<div class="line"><a name="l00599"></a><span class="lineno">  599</span>&#160;            }</div>
-<div class="line"><a name="l00600"></a><span class="lineno">  600</span>&#160;                </div>
-<div class="line"><a name="l00601"></a><span class="lineno">  601</span>&#160;        }</div>
-<div class="line"><a name="l00602"></a><span class="lineno">  602</span>&#160;</div>
-<div class="line"><a name="l00603"></a><span class="lineno">  603</span>&#160;        <span class="comment">// IF the user want&#39;s let&#39;s test a real submission.</span></div>
-<div class="line"><a name="l00604"></a><span class="lineno">  604</span>&#160;        String testDepositId = null;</div>
-<div class="line"><a name="l00605"></a><span class="lineno">  605</span>&#160;        <span class="keywordflow">if</span> (!validation.hasErrors() &amp;&amp; location != null &amp;&amp; <span class="stringliteral">&quot;depositLocation-test-submit&quot;</span>.equals(action)) {</div>
-<div class="line"><a name="l00606"></a><span class="lineno">  606</span>&#160;            </div>
-<div class="line"><a name="l00607"></a><span class="lineno">  607</span>&#160;            <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00608"></a><span class="lineno">  608</span>&#160;                testDepositId = submitTestItem(location);</div>
-<div class="line"><a name="l00609"></a><span class="lineno">  609</span>&#160;            } <span class="keywordflow">catch</span> (RuntimeException re) {</div>
-<div class="line"><a name="l00610"></a><span class="lineno">  610</span>&#160;                Logger.warn(re,<span class="stringliteral">&quot;Unable to submit test item.&quot;</span>);</div>
-<div class="line"><a name="l00611"></a><span class="lineno">  611</span>&#160;                validation.addError(<span class="stringliteral">&quot;general&quot;</span>, <span class="stringliteral">&quot;Unable to submit test item because: &quot;</span>+re.getMessage());</div>
+<div class="line"><a name="l00481"></a><span class="lineno">  481</span>&#160;        <span class="comment">// Validation and format conversions</span></div>
+<div class="line"><a name="l00482"></a><span class="lineno">  482</span>&#160;        <span class="keywordflow">if</span> (name == null || name.trim().length() == 0)</div>
+<div class="line"><a name="l00483"></a><span class="lineno">  483</span>&#160;            validation.addError(<span class="stringliteral">&quot;name&quot;</span>, <span class="stringliteral">&quot;A name is required&quot;</span>);</div>
+<div class="line"><a name="l00484"></a><span class="lineno">  484</span>&#160;        </div>
+<div class="line"><a name="l00485"></a><span class="lineno">  485</span>&#160;        <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_packager.html">Packager</a> packager = null;</div>
+<div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160;        <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;            packager = (<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_packager.html">Packager</a>) Spring.getBean(packagerBeanName);</div>
+<div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160;        } <span class="keywordflow">catch</span> (RuntimeException re) {</div>
+<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160;            validation.addError(<span class="stringliteral">&quot;packager&quot;</span>, <span class="stringliteral">&quot;The format is invalid.&quot;</span>);</div>
+<div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160;        }</div>
+<div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160;        </div>
+<div class="line"><a name="l00492"></a><span class="lineno">  492</span>&#160;        <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_depositor.html">Depositor</a> depositor = null;</div>
+<div class="line"><a name="l00493"></a><span class="lineno">  493</span>&#160;        <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00494"></a><span class="lineno">  494</span>&#160;            depositor = (<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_depositor.html">Depositor</a>) Spring.getBean(depositorBeanName);</div>
+<div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160;        } <span class="keywordflow">catch</span> (RuntimeException re) {</div>
+<div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160;            validation.addError(<span class="stringliteral">&quot;depositor&quot;</span>, <span class="stringliteral">&quot;The protocol is invalid.&quot;</span>);</div>
+<div class="line"><a name="l00497"></a><span class="lineno">  497</span>&#160;        }</div>
+<div class="line"><a name="l00498"></a><span class="lineno">  498</span>&#160;        </div>
+<div class="line"><a name="l00499"></a><span class="lineno">  499</span>&#160;        <span class="keywordflow">if</span> (repository == null || repository.trim().length() == 0)</div>
+<div class="line"><a name="l00500"></a><span class="lineno">  500</span>&#160;            validation.addError(<span class="stringliteral">&quot;repository&quot;</span>, <span class="stringliteral">&quot;The repository location is required&quot;</span>);</div>
+<div class="line"><a name="l00501"></a><span class="lineno">  501</span>&#160;        </div>
+<div class="line"><a name="l00502"></a><span class="lineno">  502</span>&#160;        Integer timeout = null;</div>
+<div class="line"><a name="l00503"></a><span class="lineno">  503</span>&#160;        <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00504"></a><span class="lineno">  504</span>&#160;            timeout = Integer.parseInt(sTimeout);</div>
+<div class="line"><a name="l00505"></a><span class="lineno">  505</span>&#160;        } <span class="keywordflow">catch</span> (NumberFormatException e) {</div>
+<div class="line"><a name="l00506"></a><span class="lineno">  506</span>&#160;            validation.addError(<span class="stringliteral">&quot;timeout&quot;</span>, <span class="stringliteral">&quot;The timeout value was invalid&quot;</span>);</div>
+<div class="line"><a name="l00507"></a><span class="lineno">  507</span>&#160;        }</div>
+<div class="line"><a name="l00508"></a><span class="lineno">  508</span>&#160;        </div>
+<div class="line"><a name="l00509"></a><span class="lineno">  509</span>&#160;        <span class="comment">// If no errors then try and save location</span></div>
+<div class="line"><a name="l00510"></a><span class="lineno">  510</span>&#160;        <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html">DepositLocation</a> location = null;</div>
+<div class="line"><a name="l00511"></a><span class="lineno">  511</span>&#160;        <span class="keywordflow">if</span> (!validation.hasErrors()) {</div>
+<div class="line"><a name="l00512"></a><span class="lineno">  512</span>&#160;            <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00513"></a><span class="lineno">  513</span>&#160;                <span class="comment">// Save the values</span></div>
+<div class="line"><a name="l00514"></a><span class="lineno">  514</span>&#160;                Boolean created = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00515"></a><span class="lineno">  515</span>&#160;                <span class="keywordflow">if</span> (depositLocationId != null &amp;&amp; depositLocationId.trim().length() &gt; 0) {</div>
+<div class="line"><a name="l00516"></a><span class="lineno">  516</span>&#160;                    String[] parts = depositLocationId.split(<span class="stringliteral">&quot;_&quot;</span>);</div>
+<div class="line"><a name="l00517"></a><span class="lineno">  517</span>&#160;                    Long <span class="keywordtype">id</span> = Long.valueOf(parts[1]);</div>
+<div class="line"><a name="l00518"></a><span class="lineno">  518</span>&#160;                    location = settingRepo.findDepositLocation(id);</div>
+<div class="line"><a name="l00519"></a><span class="lineno">  519</span>&#160;                } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00520"></a><span class="lineno">  520</span>&#160;                    location = settingRepo.createDepositLocation(name);</div>
+<div class="line"><a name="l00521"></a><span class="lineno">  521</span>&#160;                    created = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00522"></a><span class="lineno">  522</span>&#160;                    </div>
+<div class="line"><a name="l00523"></a><span class="lineno">  523</span>&#160;                    <span class="comment">// Make sure the new location is last on the list.</span></div>
+<div class="line"><a name="l00524"></a><span class="lineno">  524</span>&#160;                    List&lt;DepositLocation&gt; locations = settingRepo.findAllDepositLocations();</div>
+<div class="line"><a name="l00525"></a><span class="lineno">  525</span>&#160;                    locations.add(location);</div>
+<div class="line"><a name="l00526"></a><span class="lineno">  526</span>&#160;                    saveModelOrder(locations);</div>
+<div class="line"><a name="l00527"></a><span class="lineno">  527</span>&#160;                }</div>
+<div class="line"><a name="l00528"></a><span class="lineno">  528</span>&#160;                </div>
+<div class="line"><a name="l00529"></a><span class="lineno">  529</span>&#160;                <span class="comment">// Check if we should update the password. We we display the</span></div>
+<div class="line"><a name="l00530"></a><span class="lineno">  530</span>&#160;                <span class="comment">// password we use blanks. So if it&#39;s the same number of blanks</span></div>
+<div class="line"><a name="l00531"></a><span class="lineno">  531</span>&#160;                <span class="comment">// leave the password alone.</span></div>
+<div class="line"><a name="l00532"></a><span class="lineno">  532</span>&#160;                String originalPassword = location.getPassword();</div>
+<div class="line"><a name="l00533"></a><span class="lineno">  533</span>&#160;                <span class="keywordflow">if</span> (originalPassword != null &amp;&amp; password != null) {                 </div>
+<div class="line"><a name="l00534"></a><span class="lineno">  534</span>&#160;                    <span class="comment">// Convert the original password to all spaces.</span></div>
+<div class="line"><a name="l00535"></a><span class="lineno">  535</span>&#160;                    originalPassword = originalPassword.replaceAll(<span class="stringliteral">&quot;.&quot;</span>, <span class="stringliteral">&quot; &quot;</span>);</div>
+<div class="line"><a name="l00536"></a><span class="lineno">  536</span>&#160;                    </div>
+<div class="line"><a name="l00537"></a><span class="lineno">  537</span>&#160;                    <span class="comment">// Sometimes the browser gives us non breaking spaces, switch those out with normal ones.</span></div>
+<div class="line"><a name="l00538"></a><span class="lineno">  538</span>&#160;                    password = password.replaceAll(<span class="stringliteral">&quot;\u00A0&quot;</span>,<span class="stringliteral">&quot; &quot;</span>);</div>
+<div class="line"><a name="l00539"></a><span class="lineno">  539</span>&#160;                    </div>
+<div class="line"><a name="l00540"></a><span class="lineno">  540</span>&#160;                    <span class="keywordflow">if</span> (!(originalPassword.length() == password.length() &amp;&amp; password.trim().length() == 0)) {</div>
+<div class="line"><a name="l00541"></a><span class="lineno">  541</span>&#160;                        location.setPassword(password);</div>
+<div class="line"><a name="l00542"></a><span class="lineno">  542</span>&#160;                    }</div>
+<div class="line"><a name="l00543"></a><span class="lineno">  543</span>&#160;                } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00544"></a><span class="lineno">  544</span>&#160;                    location.setPassword(password);</div>
+<div class="line"><a name="l00545"></a><span class="lineno">  545</span>&#160;                }</div>
+<div class="line"><a name="l00546"></a><span class="lineno">  546</span>&#160;                </div>
+<div class="line"><a name="l00547"></a><span class="lineno">  547</span>&#160;                location.setUsername(username);</div>
+<div class="line"><a name="l00548"></a><span class="lineno">  548</span>&#160;                location.setOnBehalfOf(onBehalfOf);</div>
+<div class="line"><a name="l00549"></a><span class="lineno">  549</span>&#160;                location.setRepository(repository);</div>
+<div class="line"><a name="l00550"></a><span class="lineno">  550</span>&#160;                location.setTimeout(timeout);</div>
+<div class="line"><a name="l00551"></a><span class="lineno">  551</span>&#160;                location.setCollection(collection);</div>
+<div class="line"><a name="l00552"></a><span class="lineno">  552</span>&#160;                location.setPackager(packager);</div>
+<div class="line"><a name="l00553"></a><span class="lineno">  553</span>&#160;                location.setDepositor(depositor);</div>
+<div class="line"><a name="l00554"></a><span class="lineno">  554</span>&#160;                location.setName(name);</div>
+<div class="line"><a name="l00555"></a><span class="lineno">  555</span>&#160;                location.save();</div>
+<div class="line"><a name="l00556"></a><span class="lineno">  556</span>&#160;                </div>
+<div class="line"><a name="l00557"></a><span class="lineno">  557</span>&#160;                Logger.info(<span class="stringliteral">&quot;%s (%d: %s) has %s deposit location #%d.\nDeposit Name = &#39;%s&#39;\nDeposit Packager = &#39;%s&#39;\nDeposit Depositor = &#39;%s&#39;\nDeposit Repository = &#39;%s&#39;\nDeposit Timeout = &#39;%s&#39;\nDeposit Username = &#39;%s&#39;\nDeposit On Behalf Of = &#39;%s&#39;\nDeposit Collection = &#39;%s&#39;&quot;</span>,</div>
+<div class="line"><a name="l00558"></a><span class="lineno">  558</span>&#160;                        context.getPerson().getFormattedName(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_name_format.html">NameFormat</a>.<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_name_format.html#a2b7e2e6dc26a8468e5af4312a3ea423a">FIRST_LAST</a>), </div>
+<div class="line"><a name="l00559"></a><span class="lineno">  559</span>&#160;                        context.getPerson().getId(), </div>
+<div class="line"><a name="l00560"></a><span class="lineno">  560</span>&#160;                        context.getPerson().getEmail(),</div>
+<div class="line"><a name="l00561"></a><span class="lineno">  561</span>&#160;                        created ? <span class="stringliteral">&quot;added&quot;</span> : <span class="stringliteral">&quot;edited&quot;</span>,</div>
+<div class="line"><a name="l00562"></a><span class="lineno">  562</span>&#160;                        location.getId(),</div>
+<div class="line"><a name="l00563"></a><span class="lineno">  563</span>&#160;                        location.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#ac1de6b2514f7432c76a3daf1578f7f7e">getName</a>(),</div>
+<div class="line"><a name="l00564"></a><span class="lineno">  564</span>&#160;                        location.getPackager()==null ? <span class="stringliteral">&quot;null&quot;</span> : location.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#ae0b2a31611d53155df550ecdecabfcfd">getPackager</a>().getBeanName(),</div>
+<div class="line"><a name="l00565"></a><span class="lineno">  565</span>&#160;                        location.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#afd128195d776489de5059cdcc47c5d2d">getDepositor</a>()==null ? <span class="stringliteral">&quot;null&quot;</span> : location.getDepositor().getBeanName(),</div>
+<div class="line"><a name="l00566"></a><span class="lineno">  566</span>&#160;                        location.getRepository(),</div>
+<div class="line"><a name="l00567"></a><span class="lineno">  567</span>&#160;                        location.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#a8416e4eba35e9f363426b19c9e05bac6">getTimeout</a>(),</div>
+<div class="line"><a name="l00568"></a><span class="lineno">  568</span>&#160;                        location.getUsername(),</div>
+<div class="line"><a name="l00569"></a><span class="lineno">  569</span>&#160;                        location.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#adb0cb2c72c0dd1b084eb2d0bc626722b">getOnBehalfOf</a>(),</div>
+<div class="line"><a name="l00570"></a><span class="lineno">  570</span>&#160;                        location.getCollection());</div>
+<div class="line"><a name="l00571"></a><span class="lineno">  571</span>&#160;                </div>
+<div class="line"><a name="l00572"></a><span class="lineno">  572</span>&#160;                depositLocationId = <span class="stringliteral">&quot;depositLocation_&quot;</span>+location.getId();</div>
+<div class="line"><a name="l00573"></a><span class="lineno">  573</span>&#160;            } <span class="keywordflow">catch</span> (PersistenceException pe) {</div>
+<div class="line"><a name="l00574"></a><span class="lineno">  574</span>&#160;                validation.addError(<span class="stringliteral">&quot;name&quot;</span>, <span class="stringliteral">&quot;Another deposit location already exists with the name.&quot;</span>);</div>
+<div class="line"><a name="l00575"></a><span class="lineno">  575</span>&#160;                </div>
+<div class="line"><a name="l00576"></a><span class="lineno">  576</span>&#160;            } <span class="keywordflow">catch</span> (RuntimeException re) {</div>
+<div class="line"><a name="l00577"></a><span class="lineno">  577</span>&#160;                Logger.error(re,<span class="stringliteral">&quot;Unable to save Deposit Location&quot;</span>);</div>
+<div class="line"><a name="l00578"></a><span class="lineno">  578</span>&#160;                validation.addError(<span class="stringliteral">&quot;general&quot;</span>, <span class="stringliteral">&quot;Unable to save form because: &quot;</span>+re.getMessage());</div>
+<div class="line"><a name="l00579"></a><span class="lineno">  579</span>&#160;            }</div>
+<div class="line"><a name="l00580"></a><span class="lineno">  580</span>&#160;        }</div>
+<div class="line"><a name="l00581"></a><span class="lineno">  581</span>&#160;</div>
+<div class="line"><a name="l00582"></a><span class="lineno">  582</span>&#160;        </div>
+<div class="line"><a name="l00583"></a><span class="lineno">  583</span>&#160;        <span class="comment">// If there are still no errors, then try and get a list of all collections</span></div>
+<div class="line"><a name="l00584"></a><span class="lineno">  584</span>&#160;        Map&lt;String,String&gt; collectionsMap = <span class="keyword">new</span> HashMap&lt;String,String&gt;();</div>
+<div class="line"><a name="l00585"></a><span class="lineno">  585</span>&#160;        <span class="keywordtype">boolean</span> connectionOk = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00586"></a><span class="lineno">  586</span>&#160;        <span class="keywordflow">if</span> (!validation.hasErrors() &amp;&amp; location != null) {</div>
+<div class="line"><a name="l00587"></a><span class="lineno">  587</span>&#160;</div>
+<div class="line"><a name="l00588"></a><span class="lineno">  588</span>&#160;            <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00589"></a><span class="lineno">  589</span>&#160;                collectionsMap = depositor.getCollections(location);</div>
+<div class="line"><a name="l00590"></a><span class="lineno">  590</span>&#160;                <span class="keywordflow">if</span> (collectionsMap == null || collectionsMap.size() == 0)</div>
+<div class="line"><a name="l00591"></a><span class="lineno">  591</span>&#160;                    validation.addError(<span class="stringliteral">&quot;collection&quot;</span>,<span class="stringliteral">&quot;The repository is not able to provide a list of collections.&quot;</span>);</div>
+<div class="line"><a name="l00592"></a><span class="lineno">  592</span>&#160;                </div>
+<div class="line"><a name="l00593"></a><span class="lineno">  593</span>&#160;                connectionOk = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00594"></a><span class="lineno">  594</span>&#160;            } <span class="keywordflow">catch</span> (<a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception.html">DepositException</a> de) {</div>
+<div class="line"><a name="l00595"></a><span class="lineno">  595</span>&#160;                </div>
+<div class="line"><a name="l00596"></a><span class="lineno">  596</span>&#160;                <span class="keywordflow">if</span> (de.<a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception.html#a18288907951904651caa193955d3f839">isField</a>(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html">FIELD</a>.<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a69df11e68be730801f4c574f75340eeb">REPOSITORY</a>)) {</div>
+<div class="line"><a name="l00597"></a><span class="lineno">  597</span>&#160;                    validation.addError(<span class="stringliteral">&quot;repository&quot;</span>,de.getMessage());</div>
+<div class="line"><a name="l00598"></a><span class="lineno">  598</span>&#160;                } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (de.<a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception.html#a18288907951904651caa193955d3f839">isField</a>(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html">FIELD</a>.<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a450228aa357079a98fd4975a4c1556f2">AUTHENTICATION</a>)) {</div>
+<div class="line"><a name="l00599"></a><span class="lineno">  599</span>&#160;                    validation.addError(<span class="stringliteral">&quot;auth&quot;</span>,de.getMessage());</div>
+<div class="line"><a name="l00600"></a><span class="lineno">  600</span>&#160;                } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00601"></a><span class="lineno">  601</span>&#160;                    validation.addError(<span class="stringliteral">&quot;general&quot;</span>,<span class="stringliteral">&quot;Unable to communicate with deposit location: &quot;</span>+de.getMessage());</div>
+<div class="line"><a name="l00602"></a><span class="lineno">  602</span>&#160;                }</div>
+<div class="line"><a name="l00603"></a><span class="lineno">  603</span>&#160;                </div>
+<div class="line"><a name="l00604"></a><span class="lineno">  604</span>&#160;            } <span class="keywordflow">catch</span> (RuntimeException re) {</div>
+<div class="line"><a name="l00605"></a><span class="lineno">  605</span>&#160;                validation.addError(<span class="stringliteral">&quot;general&quot;</span>,<span class="stringliteral">&quot;Unable to communicate with deposit location: &quot;</span>+re.getMessage());</div>
+<div class="line"><a name="l00606"></a><span class="lineno">  606</span>&#160;            }</div>
+<div class="line"><a name="l00607"></a><span class="lineno">  607</span>&#160;            </div>
+<div class="line"><a name="l00608"></a><span class="lineno">  608</span>&#160;            </div>
+<div class="line"><a name="l00609"></a><span class="lineno">  609</span>&#160;            <span class="comment">// Now at the end do a check to make sure the user has selected a collection url.</span></div>
+<div class="line"><a name="l00610"></a><span class="lineno">  610</span>&#160;            <span class="keywordflow">if</span> (!validation.hasErrors() &amp;&amp; <span class="stringliteral">&quot;depositLocation-save&quot;</span>.equals(action) &amp;&amp; collection == null) {</div>
+<div class="line"><a name="l00611"></a><span class="lineno">  611</span>&#160;                validation.addError(<span class="stringliteral">&quot;collection&quot;</span>,<span class="stringliteral">&quot;A collection is required.&quot;</span>);</div>
 <div class="line"><a name="l00612"></a><span class="lineno">  612</span>&#160;            }</div>
-<div class="line"><a name="l00613"></a><span class="lineno">  613</span>&#160;            </div>
-<div class="line"><a name="l00614"></a><span class="lineno">  614</span>&#160;        }       </div>
-<div class="line"><a name="l00615"></a><span class="lineno">  615</span>&#160;        </div>
-<div class="line"><a name="l00616"></a><span class="lineno">  616</span>&#160;        List&lt;Packager&gt; packagers = <span class="keyword">new</span> ArrayList&lt;Packager&gt;( (Collection) Spring.getBeansOfType(<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_packager.html">Packager</a>.class).values() );</div>
-<div class="line"><a name="l00617"></a><span class="lineno">  617</span>&#160;        List&lt;Depositor&gt; depositors = <span class="keyword">new</span> ArrayList&lt;Depositor&gt;( (Collection) Spring.getBeansOfType(<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_depositor.html">Depositor</a>.class).values() );</div>
-<div class="line"><a name="l00618"></a><span class="lineno">  618</span>&#160;        </div>
-<div class="line"><a name="l00619"></a><span class="lineno">  619</span>&#160;        <span class="keywordflow">if</span> (depositLocationId != null &amp;&amp; depositLocationId.trim().length() == 0)</div>
-<div class="line"><a name="l00620"></a><span class="lineno">  620</span>&#160;            depositLocationId = null;</div>
-<div class="line"><a name="l00621"></a><span class="lineno">  621</span>&#160;        </div>
-<div class="line"><a name="l00622"></a><span class="lineno">  622</span>&#160;        renderTemplate(<span class="stringliteral">&quot;SettingTabs/editDepositLocation.include&quot;</span>, packagers, depositors, collectionsMap, testDepositId, connectionOk, action,</div>
-<div class="line"><a name="l00623"></a><span class="lineno">  623</span>&#160;            </div>
-<div class="line"><a name="l00624"></a><span class="lineno">  624</span>&#160;            <span class="comment">// Deposit location</span></div>
-<div class="line"><a name="l00625"></a><span class="lineno">  625</span>&#160;            depositLocationId, name, packager, depositor, username, password, onBehalfOf, repository, collection);</div>
-<div class="line"><a name="l00626"></a><span class="lineno">  626</span>&#160;    }</div>
-<div class="line"><a name="l00627"></a><span class="lineno">  627</span>&#160;</div>
-<div class="line"><a name="l00634"></a><span class="lineno">  634</span>&#160;    @<a class="code" href="interfacecontrollers_1_1_security.html">Security</a>(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html">RoleType</a>.<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html#a8cf8c1082d8c621c923d57e426ae6e30">MANAGER</a>)</div>
-<div class="line"><a name="l00635"></a><span class="lineno"><a class="line" href="classcontrollers_1_1settings_1_1_application_settings_tab.html#ad6c7cde628ba946625235b51178cf1e2">  635</a></span>&#160;    public static <span class="keywordtype">void</span> removeDepositLocationJSON(String depositLocationId) {</div>
-<div class="line"><a name="l00636"></a><span class="lineno">  636</span>&#160;        </div>
-<div class="line"><a name="l00637"></a><span class="lineno">  637</span>&#160;        <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00638"></a><span class="lineno">  638</span>&#160;            <span class="comment">// Delete the old template</span></div>
-<div class="line"><a name="l00639"></a><span class="lineno">  639</span>&#160;            String[] parts = depositLocationId.split(<span class="stringliteral">&quot;_&quot;</span>);</div>
-<div class="line"><a name="l00640"></a><span class="lineno">  640</span>&#160;            Long <span class="keywordtype">id</span> = Long.valueOf(parts[1]);</div>
-<div class="line"><a name="l00641"></a><span class="lineno">  641</span>&#160;            <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html">DepositLocation</a> location = settingRepo.findDepositLocation(id);</div>
-<div class="line"><a name="l00642"></a><span class="lineno">  642</span>&#160;            location.delete();</div>
-<div class="line"><a name="l00643"></a><span class="lineno">  643</span>&#160;</div>
-<div class="line"><a name="l00644"></a><span class="lineno">  644</span>&#160;            Logger.info(<span class="stringliteral">&quot;%s (%d: %s) has deleted deposit location #%d.\nDeposit Name = &#39;%s&#39;\nDeposit Packager = &#39;%s&#39;\nDeposit Depositor = &#39;%s&#39;\nDeposit Repository = &#39;%s&#39;\nDeposit Username = &#39;%s&#39;\nDeposit On Behalf Of = &#39;%s&#39;\nDeposit Collection = &#39;%s&#39;&quot;</span>,</div>
-<div class="line"><a name="l00645"></a><span class="lineno">  645</span>&#160;                    context.getPerson().getFormattedName(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_name_format.html">NameFormat</a>.<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_name_format.html#a2b7e2e6dc26a8468e5af4312a3ea423a">FIRST_LAST</a>), </div>
-<div class="line"><a name="l00646"></a><span class="lineno">  646</span>&#160;                    context.getPerson().getId(), </div>
-<div class="line"><a name="l00647"></a><span class="lineno">  647</span>&#160;                    context.getPerson().getEmail(),</div>
-<div class="line"><a name="l00648"></a><span class="lineno">  648</span>&#160;                    location.getId(),</div>
-<div class="line"><a name="l00649"></a><span class="lineno">  649</span>&#160;                    location.getName(),</div>
-<div class="line"><a name="l00650"></a><span class="lineno">  650</span>&#160;                    location.getPackager()==null ? <span class="stringliteral">&quot;null&quot;</span> : location.getPackager().getBeanName(),</div>
-<div class="line"><a name="l00651"></a><span class="lineno">  651</span>&#160;                    location.getDepositor()==null ? <span class="stringliteral">&quot;null&quot;</span> : location.getDepositor().getBeanName(),</div>
-<div class="line"><a name="l00652"></a><span class="lineno">  652</span>&#160;                    location.getRepository(),</div>
-<div class="line"><a name="l00653"></a><span class="lineno">  653</span>&#160;                    location.getUsername(),</div>
-<div class="line"><a name="l00654"></a><span class="lineno">  654</span>&#160;                    location.getOnBehalfOf(),</div>
-<div class="line"><a name="l00655"></a><span class="lineno">  655</span>&#160;                    location.getCollection());</div>
-<div class="line"><a name="l00656"></a><span class="lineno">  656</span>&#160;            </div>
-<div class="line"><a name="l00657"></a><span class="lineno">  657</span>&#160;            renderJSON(<span class="stringliteral">&quot;{ \&quot;success\&quot;: \&quot;true\&quot; }&quot;</span>);</div>
-<div class="line"><a name="l00658"></a><span class="lineno">  658</span>&#160;        } <span class="keywordflow">catch</span> (RuntimeException re) {</div>
-<div class="line"><a name="l00659"></a><span class="lineno">  659</span>&#160;            Logger.error(re,<span class="stringliteral">&quot;Unable to remove deposit location&quot;</span>);</div>
-<div class="line"><a name="l00660"></a><span class="lineno">  660</span>&#160;            String message = escapeJavaScript(re.getMessage());</div>
-<div class="line"><a name="l00661"></a><span class="lineno">  661</span>&#160;            renderJSON(<span class="stringliteral">&quot;{ \&quot;failure\&quot;: \&quot;true\&quot;, \&quot;message\&quot;: \&quot;&quot;</span> + message + <span class="stringliteral">&quot;\&quot; }&quot;</span>);</div>
-<div class="line"><a name="l00662"></a><span class="lineno">  662</span>&#160;        }</div>
-<div class="line"><a name="l00663"></a><span class="lineno">  663</span>&#160;    }</div>
-<div class="line"><a name="l00664"></a><span class="lineno">  664</span>&#160;</div>
-<div class="line"><a name="l00671"></a><span class="lineno">  671</span>&#160;    @<a class="code" href="interfacecontrollers_1_1_security.html">Security</a>(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html">RoleType</a>.<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html#a8cf8c1082d8c621c923d57e426ae6e30">MANAGER</a>)</div>
-<div class="line"><a name="l00672"></a><span class="lineno"><a class="line" href="classcontrollers_1_1settings_1_1_application_settings_tab.html#a10a89e03c442a724a32c8ee86fbca1b5">  672</a></span>&#160;    public static <span class="keywordtype">void</span> reorderDepositLocationsJSON(String depositLocationIds) {</div>
-<div class="line"><a name="l00673"></a><span class="lineno">  673</span>&#160;        <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00674"></a><span class="lineno">  674</span>&#160;</div>
-<div class="line"><a name="l00675"></a><span class="lineno">  675</span>&#160;            <span class="keywordflow">if</span> (depositLocationIds != null &amp;&amp; depositLocationIds.trim().length() &gt; 0) {</div>
-<div class="line"><a name="l00676"></a><span class="lineno">  676</span>&#160;                <span class="comment">// Save the new order</span></div>
-<div class="line"><a name="l00677"></a><span class="lineno">  677</span>&#160;                List&lt;DepositLocation&gt; locations = resolveIds(depositLocationIds, <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html">DepositLocation</a>.class);</div>
-<div class="line"><a name="l00678"></a><span class="lineno">  678</span>&#160;                saveModelOrder(locations);</div>
-<div class="line"><a name="l00679"></a><span class="lineno">  679</span>&#160;            }</div>
-<div class="line"><a name="l00680"></a><span class="lineno">  680</span>&#160;</div>
-<div class="line"><a name="l00681"></a><span class="lineno">  681</span>&#160;            renderJSON(<span class="stringliteral">&quot;{ \&quot;success\&quot;: \&quot;true\&quot; }&quot;</span>);</div>
-<div class="line"><a name="l00682"></a><span class="lineno">  682</span>&#160;        } <span class="keywordflow">catch</span> (RuntimeException re) {</div>
-<div class="line"><a name="l00683"></a><span class="lineno">  683</span>&#160;            Logger.error(re,<span class="stringliteral">&quot;Unable to reorder deposit locations&quot;</span>);</div>
-<div class="line"><a name="l00684"></a><span class="lineno">  684</span>&#160;            String message = escapeJavaScript(re.getMessage());</div>
-<div class="line"><a name="l00685"></a><span class="lineno">  685</span>&#160;            renderJSON(<span class="stringliteral">&quot;{ \&quot;failure\&quot;: \&quot;true\&quot;, \&quot;message\&quot;: \&quot;&quot;</span> + message + <span class="stringliteral">&quot;\&quot; }&quot;</span>);</div>
-<div class="line"><a name="l00686"></a><span class="lineno">  686</span>&#160;        }</div>
-<div class="line"><a name="l00687"></a><span class="lineno">  687</span>&#160;    }</div>
-<div class="line"><a name="l00688"></a><span class="lineno">  688</span>&#160;    </div>
-<div class="line"><a name="l00689"></a><span class="lineno">  689</span>&#160;    </div>
-<div class="line"><a name="l00690"></a><span class="lineno">  690</span>&#160;    </div>
-<div class="line"><a name="l00702"></a><span class="lineno">  702</span>&#160;    @<a class="code" href="interfacecontrollers_1_1_security.html">Security</a>(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html">RoleType</a>.<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html#a8cf8c1082d8c621c923d57e426ae6e30">MANAGER</a>)</div>
-<div class="line"><a name="l00703"></a><span class="lineno"><a class="line" href="classcontrollers_1_1settings_1_1_application_settings_tab.html#a6e83769666fcb12f27d8608a234d70cc">  703</a></span>&#160;    public static <span class="keywordtype">void</span> searchMembers(String query, Integer offset) {</div>
-<div class="line"><a name="l00704"></a><span class="lineno">  704</span>&#160;        </div>
-<div class="line"><a name="l00705"></a><span class="lineno">  705</span>&#160;        <span class="keywordflow">if</span> (offset == null || offset &lt; 0)</div>
-<div class="line"><a name="l00706"></a><span class="lineno">  706</span>&#160;            offset = 0;</div>
-<div class="line"><a name="l00707"></a><span class="lineno">  707</span>&#160;        </div>
-<div class="line"><a name="l00708"></a><span class="lineno">  708</span>&#160;        <span class="keywordtype">int</span> limit = SEARCH_MEMBERS_RESULTS_PER_PAGE;</div>
-<div class="line"><a name="l00709"></a><span class="lineno">  709</span>&#160;        List&lt;Person&gt; searchResults = personRepo.searchPersons(query, offset, limit);</div>
-<div class="line"><a name="l00710"></a><span class="lineno">  710</span>&#160;        List&lt;Person&gt; reviewers = personRepo.findPersonsByRole(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html#a0b7f53ed1e50883892659ab70823e867">RoleType.REVIEWER</a>);</div>
-<div class="line"><a name="l00711"></a><span class="lineno">  711</span>&#160;</div>
-<div class="line"><a name="l00712"></a><span class="lineno">  712</span>&#160;        </div>
-<div class="line"><a name="l00713"></a><span class="lineno">  713</span>&#160;        renderTemplate(<span class="stringliteral">&quot;SettingTabs/searchMembers.include&quot;</span>,query, offset, limit, searchResults, reviewers);</div>
-<div class="line"><a name="l00714"></a><span class="lineno">  714</span>&#160;    }</div>
-<div class="line"><a name="l00715"></a><span class="lineno">  715</span>&#160;    </div>
-<div class="line"><a name="l00726"></a><span class="lineno">  726</span>&#160;    @<a class="code" href="interfacecontrollers_1_1_security.html">Security</a>(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html">RoleType</a>.<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html#a8cf8c1082d8c621c923d57e426ae6e30">MANAGER</a>)</div>
-<div class="line"><a name="l00727"></a><span class="lineno"><a class="line" href="classcontrollers_1_1settings_1_1_application_settings_tab.html#a2d2b6f826705b535219911a185c4aa5f">  727</a></span>&#160;    public static <span class="keywordtype">void</span> updatePersonRole(String personId, <span class="keywordtype">int</span> role) {</div>
-<div class="line"><a name="l00728"></a><span class="lineno">  728</span>&#160;        </div>
-<div class="line"><a name="l00729"></a><span class="lineno">  729</span>&#160;        <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00730"></a><span class="lineno">  730</span>&#160;</div>
-<div class="line"><a name="l00731"></a><span class="lineno">  731</span>&#160;            <a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html">RoleType</a> newRole = RoleType.find(role);</div>
-<div class="line"><a name="l00732"></a><span class="lineno">  732</span>&#160;            </div>
-<div class="line"><a name="l00733"></a><span class="lineno">  733</span>&#160;            <span class="keywordflow">if</span> (newRole.ordinal() &gt; context.getPerson().getRole().ordinal())</div>
-<div class="line"><a name="l00734"></a><span class="lineno">  734</span>&#160;                <span class="keywordflow">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="stringliteral">&quot;Unable to set a user&#39;s role to a higher level that the current user.&quot;</span>);</div>
-<div class="line"><a name="l00735"></a><span class="lineno">  735</span>&#160;            </div>
-<div class="line"><a name="l00736"></a><span class="lineno">  736</span>&#160;            </div>
-<div class="line"><a name="l00737"></a><span class="lineno">  737</span>&#160;            String[] parts = personId.split(<span class="stringliteral">&quot;_&quot;</span>);</div>
-<div class="line"><a name="l00738"></a><span class="lineno">  738</span>&#160;            Long <span class="keywordtype">id</span> = Long.valueOf(parts[1]);</div>
-<div class="line"><a name="l00739"></a><span class="lineno">  739</span>&#160;            <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person.html">Person</a> updated = personRepo.findPerson(id);</div>
-<div class="line"><a name="l00740"></a><span class="lineno">  740</span>&#160;            <a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html">RoleType</a> oldRole = updated.getRole();</div>
-<div class="line"><a name="l00741"></a><span class="lineno">  741</span>&#160;            updated.setRole(newRole);</div>
-<div class="line"><a name="l00742"></a><span class="lineno">  742</span>&#160;            updated.save();</div>
-<div class="line"><a name="l00743"></a><span class="lineno">  743</span>&#160;            </div>
-<div class="line"><a name="l00744"></a><span class="lineno">  744</span>&#160;            Logger.info(<span class="stringliteral">&quot;%s (%d: %s) has changed %s (%d: %s) role from %s to %s.&quot;</span>,</div>
-<div class="line"><a name="l00745"></a><span class="lineno">  745</span>&#160;                    context.getPerson().getFormattedName(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_name_format.html">NameFormat</a>.<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_name_format.html#a2b7e2e6dc26a8468e5af4312a3ea423a">FIRST_LAST</a>), </div>
-<div class="line"><a name="l00746"></a><span class="lineno">  746</span>&#160;                    context.getPerson().getId(), </div>
-<div class="line"><a name="l00747"></a><span class="lineno">  747</span>&#160;                    context.getPerson().getEmail(),</div>
-<div class="line"><a name="l00748"></a><span class="lineno">  748</span>&#160;                    updated.getFormattedName(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_name_format.html#a2b7e2e6dc26a8468e5af4312a3ea423a">NameFormat.FIRST_LAST</a>), </div>
-<div class="line"><a name="l00749"></a><span class="lineno">  749</span>&#160;                    updated.getId(), </div>
-<div class="line"><a name="l00750"></a><span class="lineno">  750</span>&#160;                    updated.getEmail(),</div>
-<div class="line"><a name="l00751"></a><span class="lineno">  751</span>&#160;                    oldRole.name(),</div>
-<div class="line"><a name="l00752"></a><span class="lineno">  752</span>&#160;                    newRole.name());</div>
-<div class="line"><a name="l00753"></a><span class="lineno">  753</span>&#160;            </div>
-<div class="line"><a name="l00754"></a><span class="lineno">  754</span>&#160;            List&lt;Person&gt; reviewers = personRepo.findPersonsByRole(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html#a0b7f53ed1e50883892659ab70823e867">RoleType.REVIEWER</a>);</div>
-<div class="line"><a name="l00755"></a><span class="lineno">  755</span>&#160;</div>
-<div class="line"><a name="l00756"></a><span class="lineno">  756</span>&#160;            renderTemplate(<span class="stringliteral">&quot;SettingTabs/listMembers.include&quot;</span>,reviewers,updated);</div>
+<div class="line"><a name="l00613"></a><span class="lineno">  613</span>&#160;                </div>
+<div class="line"><a name="l00614"></a><span class="lineno">  614</span>&#160;        }</div>
+<div class="line"><a name="l00615"></a><span class="lineno">  615</span>&#160;</div>
+<div class="line"><a name="l00616"></a><span class="lineno">  616</span>&#160;        <span class="comment">// IF the user want&#39;s let&#39;s test a real submission.</span></div>
+<div class="line"><a name="l00617"></a><span class="lineno">  617</span>&#160;        String testDepositId = null;</div>
+<div class="line"><a name="l00618"></a><span class="lineno">  618</span>&#160;        <span class="keywordflow">if</span> (!validation.hasErrors() &amp;&amp; location != null &amp;&amp; <span class="stringliteral">&quot;depositLocation-test-submit&quot;</span>.equals(action)) {</div>
+<div class="line"><a name="l00619"></a><span class="lineno">  619</span>&#160;            </div>
+<div class="line"><a name="l00620"></a><span class="lineno">  620</span>&#160;            <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00621"></a><span class="lineno">  621</span>&#160;                testDepositId = submitTestItem(location);</div>
+<div class="line"><a name="l00622"></a><span class="lineno">  622</span>&#160;            } <span class="keywordflow">catch</span> (RuntimeException re) {</div>
+<div class="line"><a name="l00623"></a><span class="lineno">  623</span>&#160;                Logger.warn(re,<span class="stringliteral">&quot;Unable to submit test item.&quot;</span>);</div>
+<div class="line"><a name="l00624"></a><span class="lineno">  624</span>&#160;                validation.addError(<span class="stringliteral">&quot;general&quot;</span>, <span class="stringliteral">&quot;Unable to submit test item because: &quot;</span>+re.getMessage());</div>
+<div class="line"><a name="l00625"></a><span class="lineno">  625</span>&#160;            }</div>
+<div class="line"><a name="l00626"></a><span class="lineno">  626</span>&#160;            </div>
+<div class="line"><a name="l00627"></a><span class="lineno">  627</span>&#160;        }       </div>
+<div class="line"><a name="l00628"></a><span class="lineno">  628</span>&#160;        </div>
+<div class="line"><a name="l00629"></a><span class="lineno">  629</span>&#160;        List&lt;Packager&gt; packagers = <span class="keyword">new</span> ArrayList&lt;Packager&gt;( (Collection) Spring.getBeansOfType(<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_packager.html">Packager</a>.class).values() );</div>
+<div class="line"><a name="l00630"></a><span class="lineno">  630</span>&#160;        List&lt;Depositor&gt; depositors = <span class="keyword">new</span> ArrayList&lt;Depositor&gt;( (Collection) Spring.getBeansOfType(<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_depositor.html">Depositor</a>.class).values() );</div>
+<div class="line"><a name="l00631"></a><span class="lineno">  631</span>&#160;        </div>
+<div class="line"><a name="l00632"></a><span class="lineno">  632</span>&#160;        <span class="keywordflow">if</span> (depositLocationId != null &amp;&amp; depositLocationId.trim().length() == 0)</div>
+<div class="line"><a name="l00633"></a><span class="lineno">  633</span>&#160;            depositLocationId = null;</div>
+<div class="line"><a name="l00634"></a><span class="lineno">  634</span>&#160;        </div>
+<div class="line"><a name="l00635"></a><span class="lineno">  635</span>&#160;        renderTemplate(<span class="stringliteral">&quot;SettingTabs/editDepositLocation.include&quot;</span>, packagers, depositors, collectionsMap, testDepositId, connectionOk, action,</div>
+<div class="line"><a name="l00636"></a><span class="lineno">  636</span>&#160;            </div>
+<div class="line"><a name="l00637"></a><span class="lineno">  637</span>&#160;            <span class="comment">// Deposit location</span></div>
+<div class="line"><a name="l00638"></a><span class="lineno">  638</span>&#160;            depositLocationId, name, packager, depositor, username, password, onBehalfOf, repository, timeout, collection);</div>
+<div class="line"><a name="l00639"></a><span class="lineno">  639</span>&#160;    }</div>
+<div class="line"><a name="l00640"></a><span class="lineno">  640</span>&#160;</div>
+<div class="line"><a name="l00647"></a><span class="lineno">  647</span>&#160;    @<a class="code" href="interfacecontrollers_1_1_security.html">Security</a>(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html">RoleType</a>.<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html#a8cf8c1082d8c621c923d57e426ae6e30">MANAGER</a>)</div>
+<div class="line"><a name="l00648"></a><span class="lineno"><a class="line" href="classcontrollers_1_1settings_1_1_application_settings_tab.html#ad6c7cde628ba946625235b51178cf1e2">  648</a></span>&#160;    public static <span class="keywordtype">void</span> removeDepositLocationJSON(String depositLocationId) {</div>
+<div class="line"><a name="l00649"></a><span class="lineno">  649</span>&#160;        </div>
+<div class="line"><a name="l00650"></a><span class="lineno">  650</span>&#160;        <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00651"></a><span class="lineno">  651</span>&#160;            <span class="comment">// Delete the old template</span></div>
+<div class="line"><a name="l00652"></a><span class="lineno">  652</span>&#160;            String[] parts = depositLocationId.split(<span class="stringliteral">&quot;_&quot;</span>);</div>
+<div class="line"><a name="l00653"></a><span class="lineno">  653</span>&#160;            Long <span class="keywordtype">id</span> = Long.valueOf(parts[1]);</div>
+<div class="line"><a name="l00654"></a><span class="lineno">  654</span>&#160;            <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html">DepositLocation</a> location = settingRepo.findDepositLocation(id);</div>
+<div class="line"><a name="l00655"></a><span class="lineno">  655</span>&#160;            location.delete();</div>
+<div class="line"><a name="l00656"></a><span class="lineno">  656</span>&#160;</div>
+<div class="line"><a name="l00657"></a><span class="lineno">  657</span>&#160;            Logger.info(<span class="stringliteral">&quot;%s (%d: %s) has deleted deposit location #%d.\nDeposit Name = &#39;%s&#39;\nDeposit Packager = &#39;%s&#39;\nDeposit Depositor = &#39;%s&#39;\nDeposit Repository = &#39;%s&#39;\nDeposit Timeout = &#39;%s&#39;\nDeposit Username = &#39;%s&#39;\nDeposit On Behalf Of = &#39;%s&#39;\nDeposit Collection = &#39;%s&#39;&quot;</span>,</div>
+<div class="line"><a name="l00658"></a><span class="lineno">  658</span>&#160;                    context.getPerson().getFormattedName(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_name_format.html">NameFormat</a>.<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_name_format.html#a2b7e2e6dc26a8468e5af4312a3ea423a">FIRST_LAST</a>), </div>
+<div class="line"><a name="l00659"></a><span class="lineno">  659</span>&#160;                    context.getPerson().getId(), </div>
+<div class="line"><a name="l00660"></a><span class="lineno">  660</span>&#160;                    context.getPerson().getEmail(),</div>
+<div class="line"><a name="l00661"></a><span class="lineno">  661</span>&#160;                    location.getId(),</div>
+<div class="line"><a name="l00662"></a><span class="lineno">  662</span>&#160;                    location.getName(),</div>
+<div class="line"><a name="l00663"></a><span class="lineno">  663</span>&#160;                    location.getPackager()==null ? <span class="stringliteral">&quot;null&quot;</span> : location.getPackager().getBeanName(),</div>
+<div class="line"><a name="l00664"></a><span class="lineno">  664</span>&#160;                    location.getDepositor()==null ? <span class="stringliteral">&quot;null&quot;</span> : location.getDepositor().getBeanName(),</div>
+<div class="line"><a name="l00665"></a><span class="lineno">  665</span>&#160;                    location.getRepository(),</div>
+<div class="line"><a name="l00666"></a><span class="lineno">  666</span>&#160;                    location.getTimeout(),</div>
+<div class="line"><a name="l00667"></a><span class="lineno">  667</span>&#160;                    location.getUsername(),</div>
+<div class="line"><a name="l00668"></a><span class="lineno">  668</span>&#160;                    location.getOnBehalfOf(),</div>
+<div class="line"><a name="l00669"></a><span class="lineno">  669</span>&#160;                    location.getCollection());</div>
+<div class="line"><a name="l00670"></a><span class="lineno">  670</span>&#160;            </div>
+<div class="line"><a name="l00671"></a><span class="lineno">  671</span>&#160;            renderJSON(<span class="stringliteral">&quot;{ \&quot;success\&quot;: \&quot;true\&quot; }&quot;</span>);</div>
+<div class="line"><a name="l00672"></a><span class="lineno">  672</span>&#160;        } <span class="keywordflow">catch</span> (RuntimeException re) {</div>
+<div class="line"><a name="l00673"></a><span class="lineno">  673</span>&#160;            Logger.error(re,<span class="stringliteral">&quot;Unable to remove deposit location&quot;</span>);</div>
+<div class="line"><a name="l00674"></a><span class="lineno">  674</span>&#160;            String message = escapeJavaScript(re.getMessage());</div>
+<div class="line"><a name="l00675"></a><span class="lineno">  675</span>&#160;            renderJSON(<span class="stringliteral">&quot;{ \&quot;failure\&quot;: \&quot;true\&quot;, \&quot;message\&quot;: \&quot;&quot;</span> + message + <span class="stringliteral">&quot;\&quot; }&quot;</span>);</div>
+<div class="line"><a name="l00676"></a><span class="lineno">  676</span>&#160;        }</div>
+<div class="line"><a name="l00677"></a><span class="lineno">  677</span>&#160;    }</div>
+<div class="line"><a name="l00678"></a><span class="lineno">  678</span>&#160;</div>
+<div class="line"><a name="l00685"></a><span class="lineno">  685</span>&#160;    @<a class="code" href="interfacecontrollers_1_1_security.html">Security</a>(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html">RoleType</a>.<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html#a8cf8c1082d8c621c923d57e426ae6e30">MANAGER</a>)</div>
+<div class="line"><a name="l00686"></a><span class="lineno"><a class="line" href="classcontrollers_1_1settings_1_1_application_settings_tab.html#a10a89e03c442a724a32c8ee86fbca1b5">  686</a></span>&#160;    public static <span class="keywordtype">void</span> reorderDepositLocationsJSON(String depositLocationIds) {</div>
+<div class="line"><a name="l00687"></a><span class="lineno">  687</span>&#160;        <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00688"></a><span class="lineno">  688</span>&#160;</div>
+<div class="line"><a name="l00689"></a><span class="lineno">  689</span>&#160;            <span class="keywordflow">if</span> (depositLocationIds != null &amp;&amp; depositLocationIds.trim().length() &gt; 0) {</div>
+<div class="line"><a name="l00690"></a><span class="lineno">  690</span>&#160;                <span class="comment">// Save the new order</span></div>
+<div class="line"><a name="l00691"></a><span class="lineno">  691</span>&#160;                List&lt;DepositLocation&gt; locations = resolveIds(depositLocationIds, <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html">DepositLocation</a>.class);</div>
+<div class="line"><a name="l00692"></a><span class="lineno">  692</span>&#160;                saveModelOrder(locations);</div>
+<div class="line"><a name="l00693"></a><span class="lineno">  693</span>&#160;            }</div>
+<div class="line"><a name="l00694"></a><span class="lineno">  694</span>&#160;</div>
+<div class="line"><a name="l00695"></a><span class="lineno">  695</span>&#160;            renderJSON(<span class="stringliteral">&quot;{ \&quot;success\&quot;: \&quot;true\&quot; }&quot;</span>);</div>
+<div class="line"><a name="l00696"></a><span class="lineno">  696</span>&#160;        } <span class="keywordflow">catch</span> (RuntimeException re) {</div>
+<div class="line"><a name="l00697"></a><span class="lineno">  697</span>&#160;            Logger.error(re,<span class="stringliteral">&quot;Unable to reorder deposit locations&quot;</span>);</div>
+<div class="line"><a name="l00698"></a><span class="lineno">  698</span>&#160;            String message = escapeJavaScript(re.getMessage());</div>
+<div class="line"><a name="l00699"></a><span class="lineno">  699</span>&#160;            renderJSON(<span class="stringliteral">&quot;{ \&quot;failure\&quot;: \&quot;true\&quot;, \&quot;message\&quot;: \&quot;&quot;</span> + message + <span class="stringliteral">&quot;\&quot; }&quot;</span>);</div>
+<div class="line"><a name="l00700"></a><span class="lineno">  700</span>&#160;        }</div>
+<div class="line"><a name="l00701"></a><span class="lineno">  701</span>&#160;    }</div>
+<div class="line"><a name="l00702"></a><span class="lineno">  702</span>&#160;    </div>
+<div class="line"><a name="l00703"></a><span class="lineno">  703</span>&#160;    </div>
+<div class="line"><a name="l00704"></a><span class="lineno">  704</span>&#160;    </div>
+<div class="line"><a name="l00716"></a><span class="lineno">  716</span>&#160;    @<a class="code" href="interfacecontrollers_1_1_security.html">Security</a>(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html">RoleType</a>.<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html#a8cf8c1082d8c621c923d57e426ae6e30">MANAGER</a>)</div>
+<div class="line"><a name="l00717"></a><span class="lineno"><a class="line" href="classcontrollers_1_1settings_1_1_application_settings_tab.html#a6e83769666fcb12f27d8608a234d70cc">  717</a></span>&#160;    public static <span class="keywordtype">void</span> searchMembers(String query, Integer offset) {</div>
+<div class="line"><a name="l00718"></a><span class="lineno">  718</span>&#160;        </div>
+<div class="line"><a name="l00719"></a><span class="lineno">  719</span>&#160;        <span class="keywordflow">if</span> (offset == null || offset &lt; 0)</div>
+<div class="line"><a name="l00720"></a><span class="lineno">  720</span>&#160;            offset = 0;</div>
+<div class="line"><a name="l00721"></a><span class="lineno">  721</span>&#160;        </div>
+<div class="line"><a name="l00722"></a><span class="lineno">  722</span>&#160;        <span class="keywordtype">int</span> limit = SEARCH_MEMBERS_RESULTS_PER_PAGE;</div>
+<div class="line"><a name="l00723"></a><span class="lineno">  723</span>&#160;        List&lt;Person&gt; searchResults = personRepo.searchPersons(query, offset, limit);</div>
+<div class="line"><a name="l00724"></a><span class="lineno">  724</span>&#160;        List&lt;Person&gt; reviewers = personRepo.findPersonsByRole(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html#a0b7f53ed1e50883892659ab70823e867">RoleType.REVIEWER</a>);</div>
+<div class="line"><a name="l00725"></a><span class="lineno">  725</span>&#160;</div>
+<div class="line"><a name="l00726"></a><span class="lineno">  726</span>&#160;        </div>
+<div class="line"><a name="l00727"></a><span class="lineno">  727</span>&#160;        renderTemplate(<span class="stringliteral">&quot;SettingTabs/searchMembers.include&quot;</span>,query, offset, limit, searchResults, reviewers);</div>
+<div class="line"><a name="l00728"></a><span class="lineno">  728</span>&#160;    }</div>
+<div class="line"><a name="l00729"></a><span class="lineno">  729</span>&#160;    </div>
+<div class="line"><a name="l00740"></a><span class="lineno">  740</span>&#160;    @<a class="code" href="interfacecontrollers_1_1_security.html">Security</a>(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html">RoleType</a>.<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html#a8cf8c1082d8c621c923d57e426ae6e30">MANAGER</a>)</div>
+<div class="line"><a name="l00741"></a><span class="lineno"><a class="line" href="classcontrollers_1_1settings_1_1_application_settings_tab.html#a2d2b6f826705b535219911a185c4aa5f">  741</a></span>&#160;    public static <span class="keywordtype">void</span> updatePersonRole(String personId, <span class="keywordtype">int</span> role) {</div>
+<div class="line"><a name="l00742"></a><span class="lineno">  742</span>&#160;        </div>
+<div class="line"><a name="l00743"></a><span class="lineno">  743</span>&#160;        <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00744"></a><span class="lineno">  744</span>&#160;</div>
+<div class="line"><a name="l00745"></a><span class="lineno">  745</span>&#160;            <a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html">RoleType</a> newRole = RoleType.find(role);</div>
+<div class="line"><a name="l00746"></a><span class="lineno">  746</span>&#160;            </div>
+<div class="line"><a name="l00747"></a><span class="lineno">  747</span>&#160;            <span class="keywordflow">if</span> (newRole.ordinal() &gt; context.getPerson().getRole().ordinal())</div>
+<div class="line"><a name="l00748"></a><span class="lineno">  748</span>&#160;                <span class="keywordflow">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="stringliteral">&quot;Unable to set a user&#39;s role to a higher level that the current user.&quot;</span>);</div>
+<div class="line"><a name="l00749"></a><span class="lineno">  749</span>&#160;            </div>
+<div class="line"><a name="l00750"></a><span class="lineno">  750</span>&#160;            </div>
+<div class="line"><a name="l00751"></a><span class="lineno">  751</span>&#160;            String[] parts = personId.split(<span class="stringliteral">&quot;_&quot;</span>);</div>
+<div class="line"><a name="l00752"></a><span class="lineno">  752</span>&#160;            Long <span class="keywordtype">id</span> = Long.valueOf(parts[1]);</div>
+<div class="line"><a name="l00753"></a><span class="lineno">  753</span>&#160;            <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person.html">Person</a> updated = personRepo.findPerson(id);</div>
+<div class="line"><a name="l00754"></a><span class="lineno">  754</span>&#160;            <a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html">RoleType</a> oldRole = updated.getRole();</div>
+<div class="line"><a name="l00755"></a><span class="lineno">  755</span>&#160;            updated.setRole(newRole);</div>
+<div class="line"><a name="l00756"></a><span class="lineno">  756</span>&#160;            updated.save();</div>
 <div class="line"><a name="l00757"></a><span class="lineno">  757</span>&#160;            </div>
-<div class="line"><a name="l00758"></a><span class="lineno">  758</span>&#160;            </div>
-<div class="line"><a name="l00759"></a><span class="lineno">  759</span>&#160;            </div>
-<div class="line"><a name="l00760"></a><span class="lineno">  760</span>&#160;        } <span class="keywordflow">catch</span> (RuntimeException re) {</div>
-<div class="line"><a name="l00761"></a><span class="lineno">  761</span>&#160;            Logger.error(re,<span class="stringliteral">&quot;Unable to update person&#39;s role&quot;</span>);</div>
-<div class="line"><a name="l00762"></a><span class="lineno">  762</span>&#160;            String error = re.getMessage();</div>
-<div class="line"><a name="l00763"></a><span class="lineno">  763</span>&#160;            renderTemplate(<span class="stringliteral">&quot;SettingTabs/listMembers.include&quot;</span>,error);</div>
-<div class="line"><a name="l00764"></a><span class="lineno">  764</span>&#160;        }       </div>
-<div class="line"><a name="l00765"></a><span class="lineno">  765</span>&#160;    }</div>
-<div class="line"><a name="l00766"></a><span class="lineno">  766</span>&#160;    </div>
-<div class="line"><a name="l00767"></a><span class="lineno">  767</span>&#160;    </div>
-<div class="line"><a name="l00768"></a><span class="lineno">  768</span>&#160;    </div>
-<div class="line"><a name="l00769"></a><span class="lineno">  769</span>&#160;    </div>
-<div class="line"><a name="l00770"></a><span class="lineno">  770</span>&#160;    </div>
-<div class="line"><a name="l00771"></a><span class="lineno">  771</span>&#160;    </div>
-<div class="line"><a name="l00772"></a><span class="lineno">  772</span>&#160;    </div>
-<div class="line"><a name="l00773"></a><span class="lineno">  773</span>&#160;    </div>
-<div class="line"><a name="l00774"></a><span class="lineno">  774</span>&#160;    </div>
-<div class="line"><a name="l00775"></a><span class="lineno">  775</span>&#160;    </div>
-<div class="line"><a name="l00776"></a><span class="lineno">  776</span>&#160;    </div>
-<div class="line"><a name="l00777"></a><span class="lineno">  777</span>&#160;</div>
-<div class="line"><a name="l00778"></a><span class="lineno">  778</span>&#160;    </div>
-<div class="line"><a name="l00787"></a><span class="lineno"><a class="line" href="classcontrollers_1_1settings_1_1_application_settings_tab.html#af1439c2d71d2254f7aa7625c474f114a">  787</a></span>&#160;    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keywordtype">boolean</span> <a class="code" href="classcontrollers_1_1settings_1_1_application_settings_tab.html#af1439c2d71d2254f7aa7625c474f114a">isValidCurrentSemester</a>(String value) {</div>
-<div class="line"><a name="l00788"></a><span class="lineno">  788</span>&#160;</div>
-<div class="line"><a name="l00789"></a><span class="lineno">  789</span>&#160;        <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00790"></a><span class="lineno">  790</span>&#160;            <span class="keywordflow">if</span> (value == null || value.trim().length() == 0)</div>
-<div class="line"><a name="l00791"></a><span class="lineno">  791</span>&#160;                <span class="comment">// The blank value is also acceptable.</span></div>
-<div class="line"><a name="l00792"></a><span class="lineno">  792</span>&#160;                <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00793"></a><span class="lineno">  793</span>&#160;            </div>
-<div class="line"><a name="l00794"></a><span class="lineno">  794</span>&#160;            String[] parts = value.split(<span class="stringliteral">&quot; &quot;</span>);</div>
-<div class="line"><a name="l00795"></a><span class="lineno">  795</span>&#160;</div>
-<div class="line"><a name="l00796"></a><span class="lineno">  796</span>&#160;            <span class="keywordflow">if</span> (parts.length != 2)</div>
-<div class="line"><a name="l00797"></a><span class="lineno">  797</span>&#160;                <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00798"></a><span class="lineno">  798</span>&#160;</div>
-<div class="line"><a name="l00799"></a><span class="lineno">  799</span>&#160;            Integer month = monthNameToInt(parts[0]);</div>
-<div class="line"><a name="l00800"></a><span class="lineno">  800</span>&#160;            Integer year = Integer.valueOf(parts[1]);</div>
-<div class="line"><a name="l00801"></a><span class="lineno">  801</span>&#160;</div>
-<div class="line"><a name="l00802"></a><span class="lineno">  802</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00803"></a><span class="lineno">  803</span>&#160;        } <span class="keywordflow">catch</span> (RuntimeException re) {</div>
-<div class="line"><a name="l00804"></a><span class="lineno">  804</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00805"></a><span class="lineno">  805</span>&#160;        }</div>
-<div class="line"><a name="l00806"></a><span class="lineno">  806</span>&#160;    }</div>
-<div class="line"><a name="l00807"></a><span class="lineno">  807</span>&#160;    </div>
-<div class="line"><a name="l00816"></a><span class="lineno"><a class="line" href="classcontrollers_1_1settings_1_1_application_settings_tab.html#ab73c960a23ad51340e42cb78a9daf619">  816</a></span>&#160;    <span class="keyword">protected</span> <span class="keyword">static</span> String <a class="code" href="classcontrollers_1_1settings_1_1_application_settings_tab.html#ab73c960a23ad51340e42cb78a9daf619">submitTestItem</a>(<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html">DepositLocation</a> location) {</div>
-<div class="line"><a name="l00817"></a><span class="lineno">  817</span>&#160;        </div>
-<div class="line"><a name="l00818"></a><span class="lineno">  818</span>&#160;        <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html">Submission</a> sub = subRepo.createSubmission(context.getPerson());</div>
-<div class="line"><a name="l00819"></a><span class="lineno">  819</span>&#160;        <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00820"></a><span class="lineno">  820</span>&#160;            sub.save();</div>
-<div class="line"><a name="l00821"></a><span class="lineno">  821</span>&#160;            sub.setStudentFirstName(<span class="stringliteral">&quot;Test&quot;</span>);</div>
-<div class="line"><a name="l00822"></a><span class="lineno">  822</span>&#160;            sub.setStudentLastName(<span class="stringliteral">&quot;Submitter&quot;</span>);</div>
-<div class="line"><a name="l00823"></a><span class="lineno">  823</span>&#160;            sub.setDocumentTitle(<span class="stringliteral">&quot;Test Submission&quot;</span>);</div>
-<div class="line"><a name="l00824"></a><span class="lineno">  824</span>&#160;            sub.setDocumentAbstract(<span class="stringliteral">&quot;This is a sample submission generated by Vireo to test the repository deposit features.&quot;</span>);</div>
-<div class="line"><a name="l00825"></a><span class="lineno">  825</span>&#160;            sub.setDocumentKeywords(<span class="stringliteral">&quot;Test; Vireo; Repository Deposit&quot;</span>);</div>
-<div class="line"><a name="l00826"></a><span class="lineno">  826</span>&#160;            sub.setDegree(<span class="stringliteral">&quot;Test Degree&quot;</span>);</div>
-<div class="line"><a name="l00827"></a><span class="lineno">  827</span>&#160;            sub.setDegreeLevel(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_degree_level.html#ab8203f7d5abda0707309a14d2d6868ce">DegreeLevel.MASTERS</a>);</div>
-<div class="line"><a name="l00828"></a><span class="lineno">  828</span>&#160;            sub.setDepartment(<span class="stringliteral">&quot;Test Department&quot;</span>);</div>
-<div class="line"><a name="l00829"></a><span class="lineno">  829</span>&#160;            sub.setCollege(<span class="stringliteral">&quot;Test College&quot;</span>);</div>
-<div class="line"><a name="l00830"></a><span class="lineno">  830</span>&#160;            sub.setMajor(<span class="stringliteral">&quot;Test Major&quot;</span>);</div>
-<div class="line"><a name="l00831"></a><span class="lineno">  831</span>&#160;            sub.setDocumentType(<span class="stringliteral">&quot;Test Document Type&quot;</span>);</div>
-<div class="line"><a name="l00832"></a><span class="lineno">  832</span>&#160;            sub.setGraduationMonth(<span class="keyword">new</span> Date().getMonth());</div>
-<div class="line"><a name="l00833"></a><span class="lineno">  833</span>&#160;            sub.setGraduationYear(<span class="keyword">new</span> Date().getYear()+1900);</div>
-<div class="line"><a name="l00834"></a><span class="lineno">  834</span>&#160;            </div>
-<div class="line"><a name="l00835"></a><span class="lineno">  835</span>&#160;            <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_committee_member.html">CommitteeMember</a> member = sub.addCommitteeMember(<span class="stringliteral">&quot;Test&quot;</span>, <span class="stringliteral">&quot;Advisor&quot;</span>, null).save();</div>
-<div class="line"><a name="l00836"></a><span class="lineno">  836</span>&#160;            member.addRole(<span class="stringliteral">&quot;Chair&quot;</span>);</div>
-<div class="line"><a name="l00837"></a><span class="lineno">  837</span>&#160;            member.save();</div>
-<div class="line"><a name="l00838"></a><span class="lineno">  838</span>&#160;            sub.addCommitteeMember(<span class="stringliteral">&quot;Test&quot;</span>, <span class="stringliteral">&quot;Member 1&quot;</span>, null).save();</div>
-<div class="line"><a name="l00839"></a><span class="lineno">  839</span>&#160;            sub.addCommitteeMember(<span class="stringliteral">&quot;Test&quot;</span>, <span class="stringliteral">&quot;Member 2&quot;</span>, null).save();</div>
-<div class="line"><a name="l00840"></a><span class="lineno">  840</span>&#160;    </div>
-<div class="line"><a name="l00841"></a><span class="lineno">  841</span>&#160;            sub.save();</div>
-<div class="line"><a name="l00842"></a><span class="lineno">  842</span>&#160;            </div>
-<div class="line"><a name="l00843"></a><span class="lineno">  843</span>&#160;            depositService.deposit(location, sub, null, <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00844"></a><span class="lineno">  844</span>&#160;                        </div>
-<div class="line"><a name="l00845"></a><span class="lineno">  845</span>&#160;            <span class="keywordflow">return</span> sub.getDepositId();</div>
-<div class="line"><a name="l00846"></a><span class="lineno">  846</span>&#160;        </div>
-<div class="line"><a name="l00847"></a><span class="lineno">  847</span>&#160;        } <span class="keywordflow">finally</span> {</div>
-<div class="line"><a name="l00848"></a><span class="lineno">  848</span>&#160;            <span class="keywordflow">if</span> (sub != null)</div>
-<div class="line"><a name="l00849"></a><span class="lineno">  849</span>&#160;                sub.delete();</div>
-<div class="line"><a name="l00850"></a><span class="lineno">  850</span>&#160;        }</div>
-<div class="line"><a name="l00851"></a><span class="lineno">  851</span>&#160;    }</div>
-<div class="line"><a name="l00852"></a><span class="lineno">  852</span>&#160;    </div>
-<div class="line"><a name="l00853"></a><span class="lineno">  853</span>&#160;    </div>
+<div class="line"><a name="l00758"></a><span class="lineno">  758</span>&#160;            Logger.info(<span class="stringliteral">&quot;%s (%d: %s) has changed %s (%d: %s) role from %s to %s.&quot;</span>,</div>
+<div class="line"><a name="l00759"></a><span class="lineno">  759</span>&#160;                    context.getPerson().getFormattedName(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_name_format.html">NameFormat</a>.<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_name_format.html#a2b7e2e6dc26a8468e5af4312a3ea423a">FIRST_LAST</a>), </div>
+<div class="line"><a name="l00760"></a><span class="lineno">  760</span>&#160;                    context.getPerson().getId(), </div>
+<div class="line"><a name="l00761"></a><span class="lineno">  761</span>&#160;                    context.getPerson().getEmail(),</div>
+<div class="line"><a name="l00762"></a><span class="lineno">  762</span>&#160;                    updated.getFormattedName(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_name_format.html#a2b7e2e6dc26a8468e5af4312a3ea423a">NameFormat.FIRST_LAST</a>), </div>
+<div class="line"><a name="l00763"></a><span class="lineno">  763</span>&#160;                    updated.getId(), </div>
+<div class="line"><a name="l00764"></a><span class="lineno">  764</span>&#160;                    updated.getEmail(),</div>
+<div class="line"><a name="l00765"></a><span class="lineno">  765</span>&#160;                    oldRole.name(),</div>
+<div class="line"><a name="l00766"></a><span class="lineno">  766</span>&#160;                    newRole.name());</div>
+<div class="line"><a name="l00767"></a><span class="lineno">  767</span>&#160;            </div>
+<div class="line"><a name="l00768"></a><span class="lineno">  768</span>&#160;            List&lt;Person&gt; reviewers = personRepo.findPersonsByRole(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html#a0b7f53ed1e50883892659ab70823e867">RoleType.REVIEWER</a>);</div>
+<div class="line"><a name="l00769"></a><span class="lineno">  769</span>&#160;</div>
+<div class="line"><a name="l00770"></a><span class="lineno">  770</span>&#160;            renderTemplate(<span class="stringliteral">&quot;SettingTabs/listMembers.include&quot;</span>,reviewers,updated);</div>
+<div class="line"><a name="l00771"></a><span class="lineno">  771</span>&#160;            </div>
+<div class="line"><a name="l00772"></a><span class="lineno">  772</span>&#160;            </div>
+<div class="line"><a name="l00773"></a><span class="lineno">  773</span>&#160;            </div>
+<div class="line"><a name="l00774"></a><span class="lineno">  774</span>&#160;        } <span class="keywordflow">catch</span> (RuntimeException re) {</div>
+<div class="line"><a name="l00775"></a><span class="lineno">  775</span>&#160;            Logger.error(re,<span class="stringliteral">&quot;Unable to update person&#39;s role&quot;</span>);</div>
+<div class="line"><a name="l00776"></a><span class="lineno">  776</span>&#160;            String error = re.getMessage();</div>
+<div class="line"><a name="l00777"></a><span class="lineno">  777</span>&#160;            renderTemplate(<span class="stringliteral">&quot;SettingTabs/listMembers.include&quot;</span>,error);</div>
+<div class="line"><a name="l00778"></a><span class="lineno">  778</span>&#160;        }       </div>
+<div class="line"><a name="l00779"></a><span class="lineno">  779</span>&#160;    }</div>
+<div class="line"><a name="l00780"></a><span class="lineno">  780</span>&#160;    </div>
+<div class="line"><a name="l00781"></a><span class="lineno">  781</span>&#160;    </div>
+<div class="line"><a name="l00782"></a><span class="lineno">  782</span>&#160;    </div>
+<div class="line"><a name="l00783"></a><span class="lineno">  783</span>&#160;    </div>
+<div class="line"><a name="l00784"></a><span class="lineno">  784</span>&#160;    </div>
+<div class="line"><a name="l00785"></a><span class="lineno">  785</span>&#160;    </div>
+<div class="line"><a name="l00786"></a><span class="lineno">  786</span>&#160;    </div>
+<div class="line"><a name="l00787"></a><span class="lineno">  787</span>&#160;    </div>
+<div class="line"><a name="l00788"></a><span class="lineno">  788</span>&#160;    </div>
+<div class="line"><a name="l00789"></a><span class="lineno">  789</span>&#160;    </div>
+<div class="line"><a name="l00790"></a><span class="lineno">  790</span>&#160;    </div>
+<div class="line"><a name="l00791"></a><span class="lineno">  791</span>&#160;</div>
+<div class="line"><a name="l00792"></a><span class="lineno">  792</span>&#160;    </div>
+<div class="line"><a name="l00801"></a><span class="lineno"><a class="line" href="classcontrollers_1_1settings_1_1_application_settings_tab.html#af1439c2d71d2254f7aa7625c474f114a">  801</a></span>&#160;    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keywordtype">boolean</span> <a class="code" href="classcontrollers_1_1settings_1_1_application_settings_tab.html#af1439c2d71d2254f7aa7625c474f114a">isValidCurrentSemester</a>(String value) {</div>
+<div class="line"><a name="l00802"></a><span class="lineno">  802</span>&#160;</div>
+<div class="line"><a name="l00803"></a><span class="lineno">  803</span>&#160;        <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00804"></a><span class="lineno">  804</span>&#160;            <span class="keywordflow">if</span> (value == null || value.trim().length() == 0)</div>
+<div class="line"><a name="l00805"></a><span class="lineno">  805</span>&#160;                <span class="comment">// The blank value is also acceptable.</span></div>
+<div class="line"><a name="l00806"></a><span class="lineno">  806</span>&#160;                <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00807"></a><span class="lineno">  807</span>&#160;            </div>
+<div class="line"><a name="l00808"></a><span class="lineno">  808</span>&#160;            String[] parts = value.split(<span class="stringliteral">&quot; &quot;</span>);</div>
+<div class="line"><a name="l00809"></a><span class="lineno">  809</span>&#160;</div>
+<div class="line"><a name="l00810"></a><span class="lineno">  810</span>&#160;            <span class="keywordflow">if</span> (parts.length != 2)</div>
+<div class="line"><a name="l00811"></a><span class="lineno">  811</span>&#160;                <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00812"></a><span class="lineno">  812</span>&#160;</div>
+<div class="line"><a name="l00813"></a><span class="lineno">  813</span>&#160;            Integer month = monthNameToInt(parts[0]);</div>
+<div class="line"><a name="l00814"></a><span class="lineno">  814</span>&#160;            Integer year = Integer.valueOf(parts[1]);</div>
+<div class="line"><a name="l00815"></a><span class="lineno">  815</span>&#160;</div>
+<div class="line"><a name="l00816"></a><span class="lineno">  816</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00817"></a><span class="lineno">  817</span>&#160;        } <span class="keywordflow">catch</span> (RuntimeException re) {</div>
+<div class="line"><a name="l00818"></a><span class="lineno">  818</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00819"></a><span class="lineno">  819</span>&#160;        }</div>
+<div class="line"><a name="l00820"></a><span class="lineno">  820</span>&#160;    }</div>
+<div class="line"><a name="l00821"></a><span class="lineno">  821</span>&#160;    </div>
+<div class="line"><a name="l00830"></a><span class="lineno"><a class="line" href="classcontrollers_1_1settings_1_1_application_settings_tab.html#ab73c960a23ad51340e42cb78a9daf619">  830</a></span>&#160;    <span class="keyword">protected</span> <span class="keyword">static</span> String <a class="code" href="classcontrollers_1_1settings_1_1_application_settings_tab.html#ab73c960a23ad51340e42cb78a9daf619">submitTestItem</a>(<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html">DepositLocation</a> location) {</div>
+<div class="line"><a name="l00831"></a><span class="lineno">  831</span>&#160;        </div>
+<div class="line"><a name="l00832"></a><span class="lineno">  832</span>&#160;        <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html">Submission</a> sub = subRepo.createSubmission(context.getPerson());</div>
+<div class="line"><a name="l00833"></a><span class="lineno">  833</span>&#160;        <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00834"></a><span class="lineno">  834</span>&#160;            sub.save();</div>
+<div class="line"><a name="l00835"></a><span class="lineno">  835</span>&#160;            sub.setStudentFirstName(<span class="stringliteral">&quot;Test&quot;</span>);</div>
+<div class="line"><a name="l00836"></a><span class="lineno">  836</span>&#160;            sub.setStudentLastName(<span class="stringliteral">&quot;Submitter&quot;</span>);</div>
+<div class="line"><a name="l00837"></a><span class="lineno">  837</span>&#160;            sub.setDocumentTitle(<span class="stringliteral">&quot;Test Submission&quot;</span>);</div>
+<div class="line"><a name="l00838"></a><span class="lineno">  838</span>&#160;            sub.setDocumentAbstract(<span class="stringliteral">&quot;This is a sample submission generated by Vireo to test the repository deposit features.&quot;</span>);</div>
+<div class="line"><a name="l00839"></a><span class="lineno">  839</span>&#160;            sub.setDocumentKeywords(<span class="stringliteral">&quot;Test; Vireo; Repository Deposit&quot;</span>);</div>
+<div class="line"><a name="l00840"></a><span class="lineno">  840</span>&#160;            sub.setDegree(<span class="stringliteral">&quot;Test Degree&quot;</span>);</div>
+<div class="line"><a name="l00841"></a><span class="lineno">  841</span>&#160;            sub.setDegreeLevel(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_degree_level.html#ab8203f7d5abda0707309a14d2d6868ce">DegreeLevel.MASTERS</a>);</div>
+<div class="line"><a name="l00842"></a><span class="lineno">  842</span>&#160;            sub.setDepartment(<span class="stringliteral">&quot;Test Department&quot;</span>);</div>
+<div class="line"><a name="l00843"></a><span class="lineno">  843</span>&#160;            sub.setCollege(<span class="stringliteral">&quot;Test College&quot;</span>);</div>
+<div class="line"><a name="l00844"></a><span class="lineno">  844</span>&#160;            sub.setMajor(<span class="stringliteral">&quot;Test Major&quot;</span>);</div>
+<div class="line"><a name="l00845"></a><span class="lineno">  845</span>&#160;            sub.setDocumentType(<span class="stringliteral">&quot;Test Document Type&quot;</span>);</div>
+<div class="line"><a name="l00846"></a><span class="lineno">  846</span>&#160;            sub.setGraduationMonth(<span class="keyword">new</span> Date().getMonth());</div>
+<div class="line"><a name="l00847"></a><span class="lineno">  847</span>&#160;            sub.setGraduationYear(<span class="keyword">new</span> Date().getYear()+1900);</div>
+<div class="line"><a name="l00848"></a><span class="lineno">  848</span>&#160;            </div>
+<div class="line"><a name="l00849"></a><span class="lineno">  849</span>&#160;            <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_committee_member.html">CommitteeMember</a> member = sub.addCommitteeMember(<span class="stringliteral">&quot;Test&quot;</span>, <span class="stringliteral">&quot;Advisor&quot;</span>, null).save();</div>
+<div class="line"><a name="l00850"></a><span class="lineno">  850</span>&#160;            member.addRole(<span class="stringliteral">&quot;Chair&quot;</span>);</div>
+<div class="line"><a name="l00851"></a><span class="lineno">  851</span>&#160;            member.save();</div>
+<div class="line"><a name="l00852"></a><span class="lineno">  852</span>&#160;            sub.addCommitteeMember(<span class="stringliteral">&quot;Test&quot;</span>, <span class="stringliteral">&quot;Member 1&quot;</span>, null).save();</div>
+<div class="line"><a name="l00853"></a><span class="lineno">  853</span>&#160;            sub.addCommitteeMember(<span class="stringliteral">&quot;Test&quot;</span>, <span class="stringliteral">&quot;Member 2&quot;</span>, null).save();</div>
 <div class="line"><a name="l00854"></a><span class="lineno">  854</span>&#160;    </div>
-<div class="line"><a name="l00855"></a><span class="lineno">  855</span>&#160;}</div>
+<div class="line"><a name="l00855"></a><span class="lineno">  855</span>&#160;            sub.save();</div>
+<div class="line"><a name="l00856"></a><span class="lineno">  856</span>&#160;            </div>
+<div class="line"><a name="l00857"></a><span class="lineno">  857</span>&#160;            depositService.deposit(location, sub, null, <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00858"></a><span class="lineno">  858</span>&#160;                        </div>
+<div class="line"><a name="l00859"></a><span class="lineno">  859</span>&#160;            <span class="keywordflow">return</span> sub.getDepositId();</div>
+<div class="line"><a name="l00860"></a><span class="lineno">  860</span>&#160;        </div>
+<div class="line"><a name="l00861"></a><span class="lineno">  861</span>&#160;        } <span class="keywordflow">finally</span> {</div>
+<div class="line"><a name="l00862"></a><span class="lineno">  862</span>&#160;            <span class="keywordflow">if</span> (sub != null)</div>
+<div class="line"><a name="l00863"></a><span class="lineno">  863</span>&#160;                sub.delete();</div>
+<div class="line"><a name="l00864"></a><span class="lineno">  864</span>&#160;        }</div>
+<div class="line"><a name="l00865"></a><span class="lineno">  865</span>&#160;    }</div>
+<div class="line"><a name="l00866"></a><span class="lineno">  866</span>&#160;    </div>
+<div class="line"><a name="l00867"></a><span class="lineno">  867</span>&#160;    </div>
+<div class="line"><a name="l00868"></a><span class="lineno">  868</span>&#160;    </div>
+<div class="line"><a name="l00869"></a><span class="lineno">  869</span>&#160;}</div>
 <div class="ttc" id="enumorg_1_1tdl_1_1vireo_1_1model_1_1_degree_level_html_ab8203f7d5abda0707309a14d2d6868ce"><div class="ttname"><a href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_degree_level.html#ab8203f7d5abda0707309a14d2d6868ce">org.tdl.vireo.model.DegreeLevel.MASTERS</a></div><div class="ttdeci">MASTERS</div><div class="ttdef"><b>Definition:</b> <a href="_degree_level_8java_source.html#l00012">DegreeLevel.java:12</a></div></div>
 <div class="ttc" id="enumorg_1_1tdl_1_1vireo_1_1model_1_1_degree_level_html"><div class="ttname"><a href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_degree_level.html">org.tdl.vireo.model.DegreeLevel</a></div><div class="ttdef"><b>Definition:</b> <a href="_degree_level_8java_source.html#l00009">DegreeLevel.java:9</a></div></div>
+<div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location_html_afd128195d776489de5059cdcc47c5d2d"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#afd128195d776489de5059cdcc47c5d2d">org.tdl.vireo.model.DepositLocation.getDepositor</a></div><div class="ttdeci">Depositor getDepositor()</div></div>
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location_html"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html">org.tdl.vireo.model.DepositLocation</a></div><div class="ttdef"><b>Definition:</b> <a href="_deposit_location_8java_source.html#l00017">DepositLocation.java:17</a></div></div>
 <div class="ttc" id="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d_html_a69df11e68be730801f4c574f75340eeb"><div class="ttname"><a href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a69df11e68be730801f4c574f75340eeb">org.tdl.vireo.export.DepositException.FIELD.REPOSITORY</a></div><div class="ttdeci">REPOSITORY</div><div class="ttdef"><b>Definition:</b> <a href="_deposit_exception_8java_source.html#l00066">DepositException.java:66</a></div></div>
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_service_html"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_service.html">org.tdl.vireo.export.DepositService</a></div><div class="ttdef"><b>Definition:</b> <a href="_deposit_service_8java_source.html#l00017">DepositService.java:17</a></div></div>
@@ -848,6 +864,7 @@ $(document).ready(function(){initNavTree('_application_settings_tab_8java_source
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_custom_action_definition_html"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_custom_action_definition.html">org.tdl.vireo.model.CustomActionDefinition</a></div><div class="ttdef"><b>Definition:</b> <a href="_custom_action_definition_8java_source.html#l00012">CustomActionDefinition.java:12</a></div></div>
 <div class="ttc" id="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type_html"><div class="ttname"><a href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html">org.tdl.vireo.model.RoleType</a></div><div class="ttdef"><b>Definition:</b> <a href="_role_type_8java_source.html#l00008">RoleType.java:8</a></div></div>
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission_repository_html"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission_repository.html">org.tdl.vireo.model.SubmissionRepository</a></div><div class="ttdef"><b>Definition:</b> <a href="_submission_repository_8java_source.html#l00017">SubmissionRepository.java:17</a></div></div>
+<div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location_html_ac1de6b2514f7432c76a3daf1578f7f7e"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#ac1de6b2514f7432c76a3daf1578f7f7e">org.tdl.vireo.model.DepositLocation.getName</a></div><div class="ttdeci">String getName()</div></div>
 <div class="ttc" id="interfacecontrollers_1_1_security_html"><div class="ttname"><a href="interfacecontrollers_1_1_security.html">controllers.Security</a></div><div class="ttdef"><b>Definition:</b> <a href="_security_8java_source.html#l00043">Security.java:43</a></div></div>
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_packager_html"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_packager.html">org.tdl.vireo.export.Packager</a></div><div class="ttdef"><b>Definition:</b> <a href="_packager_8java_source.html#l00016">Packager.java:16</a></div></div>
 <div class="ttc" id="enumorg_1_1tdl_1_1vireo_1_1model_1_1_name_format_html"><div class="ttname"><a href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_name_format.html">org.tdl.vireo.model.NameFormat</a></div><div class="ttdef"><b>Definition:</b> <a href="_name_format_8java_source.html#l00008">NameFormat.java:8</a></div></div>
@@ -861,22 +878,25 @@ $(document).ready(function(){initNavTree('_application_settings_tab_8java_source
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_configuration_html"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_configuration.html">org.tdl.vireo.model.Configuration</a></div><div class="ttdef"><b>Definition:</b> <a href="_configuration_8java_source.html#l00011">Configuration.java:11</a></div></div>
 <div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1constant_1_1_app_config_html"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1constant_1_1_app_config.html">org.tdl.vireo.constant.AppConfig</a></div><div class="ttdef"><b>Definition:</b> <a href="_app_config_8java_source.html#l00019">AppConfig.java:19</a></div></div>
 <div class="ttc" id="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d_html"><div class="ttname"><a href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html">org.tdl.vireo.export.DepositException.FIELD</a></div><div class="ttdef"><b>Definition:</b> <a href="_deposit_exception_8java_source.html#l00065">DepositException.java:65</a></div></div>
-<div class="ttc" id="classcontrollers_1_1settings_1_1_application_settings_tab_html_af1439c2d71d2254f7aa7625c474f114a"><div class="ttname"><a href="classcontrollers_1_1settings_1_1_application_settings_tab.html#af1439c2d71d2254f7aa7625c474f114a">controllers.settings.ApplicationSettingsTab.isValidCurrentSemester</a></div><div class="ttdeci">static boolean isValidCurrentSemester(String value)</div><div class="ttdef"><b>Definition:</b> <a href="_application_settings_tab_8java_source.html#l00787">ApplicationSettingsTab.java:787</a></div></div>
+<div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location_html_adb0cb2c72c0dd1b084eb2d0bc626722b"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#adb0cb2c72c0dd1b084eb2d0bc626722b">org.tdl.vireo.model.DepositLocation.getOnBehalfOf</a></div><div class="ttdeci">String getOnBehalfOf()</div></div>
+<div class="ttc" id="classcontrollers_1_1settings_1_1_application_settings_tab_html_af1439c2d71d2254f7aa7625c474f114a"><div class="ttname"><a href="classcontrollers_1_1settings_1_1_application_settings_tab.html#af1439c2d71d2254f7aa7625c474f114a">controllers.settings.ApplicationSettingsTab.isValidCurrentSemester</a></div><div class="ttdeci">static boolean isValidCurrentSemester(String value)</div><div class="ttdef"><b>Definition:</b> <a href="_application_settings_tab_8java_source.html#l00801">ApplicationSettingsTab.java:801</a></div></div>
+<div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location_html_a8416e4eba35e9f363426b19c9e05bac6"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#a8416e4eba35e9f363426b19c9e05bac6">org.tdl.vireo.model.DepositLocation.getTimeout</a></div><div class="ttdeci">Integer getTimeout()</div></div>
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_committee_member_html"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_committee_member.html">org.tdl.vireo.model.CommitteeMember</a></div><div class="ttdef"><b>Definition:</b> <a href="_committee_member_8java_source.html#l00010">CommitteeMember.java:10</a></div></div>
 <div class="ttc" id="enumorg_1_1tdl_1_1vireo_1_1model_1_1_name_format_html_a2b7e2e6dc26a8468e5af4312a3ea423a"><div class="ttname"><a href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_name_format.html#a2b7e2e6dc26a8468e5af4312a3ea423a">org.tdl.vireo.model.NameFormat.FIRST_LAST</a></div><div class="ttdeci">FIRST_LAST</div><div class="ttdef"><b>Definition:</b> <a href="_name_format_8java_source.html#l00013">NameFormat.java:13</a></div></div>
-<div class="ttc" id="classcontrollers_1_1settings_1_1_application_settings_tab_html_ab73c960a23ad51340e42cb78a9daf619"><div class="ttname"><a href="classcontrollers_1_1settings_1_1_application_settings_tab.html#ab73c960a23ad51340e42cb78a9daf619">controllers.settings.ApplicationSettingsTab.submitTestItem</a></div><div class="ttdeci">static String submitTestItem(DepositLocation location)</div><div class="ttdef"><b>Definition:</b> <a href="_application_settings_tab_8java_source.html#l00816">ApplicationSettingsTab.java:816</a></div></div>
+<div class="ttc" id="classcontrollers_1_1settings_1_1_application_settings_tab_html_ab73c960a23ad51340e42cb78a9daf619"><div class="ttname"><a href="classcontrollers_1_1settings_1_1_application_settings_tab.html#ab73c960a23ad51340e42cb78a9daf619">controllers.settings.ApplicationSettingsTab.submitTestItem</a></div><div class="ttdeci">static String submitTestItem(DepositLocation location)</div><div class="ttdef"><b>Definition:</b> <a href="_application_settings_tab_8java_source.html#l00830">ApplicationSettingsTab.java:830</a></div></div>
 <div class="ttc" id="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type_html_a0b7f53ed1e50883892659ab70823e867"><div class="ttname"><a href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html#a0b7f53ed1e50883892659ab70823e867">org.tdl.vireo.model.RoleType.REVIEWER</a></div><div class="ttdeci">REVIEWER</div><div class="ttdef"><b>Definition:</b> <a href="_role_type_8java_source.html#l00011">RoleType.java:11</a></div></div>
 <div class="ttc" id="classcontrollers_1_1_settings_tab_html"><div class="ttname"><a href="classcontrollers_1_1_settings_tab.html">controllers.SettingsTab</a></div><div class="ttdef"><b>Definition:</b> <a href="_settings_tab_8java_source.html#l00045">SettingsTab.java:45</a></div></div>
+<div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location_html_ae0b2a31611d53155df550ecdecabfcfd"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#ae0b2a31611d53155df550ecdecabfcfd">org.tdl.vireo.model.DepositLocation.getPackager</a></div><div class="ttdeci">Packager getPackager()</div></div>
 <div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_html"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception.html">org.tdl.vireo.export.DepositException</a></div><div class="ttdef"><b>Definition:</b> <a href="_deposit_exception_8java_source.html#l00011">DepositException.java:11</a></div></div>
 <div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_html_a18288907951904651caa193955d3f839"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception.html#a18288907951904651caa193955d3f839">org.tdl.vireo.export.DepositException.isField</a></div><div class="ttdeci">boolean isField(FIELD field)</div><div class="ttdef"><b>Definition:</b> <a href="_deposit_exception_8java_source.html#l00057">DepositException.java:57</a></div></div>
-<div class="ttc" id="classcontrollers_1_1_authentication_html"><div class="ttname"><a href="classcontrollers_1_1_authentication.html">controllers.Authentication</a></div><div class="ttdef"><b>Definition:</b> <a href="_authentication_8java_source.html#l00050">Authentication.java:50</a></div></div>
+<div class="ttc" id="classcontrollers_1_1_authentication_html"><div class="ttname"><a href="classcontrollers_1_1_authentication.html">controllers.Authentication</a></div><div class="ttdef"><b>Definition:</b> <a href="_authentication_8java_source.html#l00051">Authentication.java:51</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d422163b96683743ed3963d4aac17747.html">app</a></li><li class="navelem"><a class="el" href="dir_dc174da80912bcbdd5eca1a5dc2fb1f6.html">controllers</a></li><li class="navelem"><a class="el" href="dir_8dde48b71140153d6605238f050f6cf7.html">settings</a></li><li class="navelem"><a class="el" href="_application_settings_tab_8java.html">ApplicationSettingsTab.java</a></li>
-    <li class="footer">Generated on Thu Feb 12 2015 12:31:07 for Vireo by
+    <li class="footer">Generated on Wed Mar 4 2015 13:41:24 for Vireo by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

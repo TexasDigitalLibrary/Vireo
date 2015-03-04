@@ -1,6 +1,0 @@
-<map id="org.tdl.vireo.services.EmailRuleService.generateAllSystemEmailRules" name="org.tdl.vireo.services.EmailRuleService.generateAllSystemEmailRules">
-<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_settings_repository.html#a623416562ca04bdfccb09dfd86e64c6b" title="org.tdl.vireo.model.Settings\lRepository.createEmailWorkflowRule" alt="" coords="332,5,572,46"/>
-<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_settings_repository.html#a590932fe4889086b28e8006dced90d00" title="org.tdl.vireo.model.Settings\lRepository.createEmailWorkflowRule\lCondition" alt="" coords="332,69,572,125"/>
-<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_settings_repository.html#a305ff672b6f55ad2c98ac1b645b57783" title="org.tdl.vireo.model.Settings\lRepository.findEmailTemplateByName" alt="" coords="328,149,576,190"/>
-<area shape="rect" id="node5" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl.html#a613cba73c1c29217d59f075c9b19e6d7" title="org.tdl.vireo.model.jpa.\lJpaEmailWorkflowRuleImpl.get\lCondition" alt="" coords="349,213,555,269"/>
-</map>

@@ -1,5 +1,5 @@
 <map id="org.tdl.vireo.model.jpa.JpaCustomActionDefinitionImpl" name="org.tdl.vireo.model.jpa.JpaCustomActionDefinitionImpl">
-<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_custom_action_definition.html" title="org.tdl.vireo.model.Custom\lActionDefinition" alt="" coords="484,70,663,111"/>
-<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_ordered_model.html" title="org.tdl.vireo.model.Abstract\lOrderedModel" alt="" coords="238,70,421,111"/>
-<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="org.tdl.vireo.model.Abstract\lModel" alt="" coords="6,70,189,111"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_custom_action_definition.html" title="{org.tdl.vireo.model.Custom\lActionDefinition\n||+ getLabel()\l+ setLabel()\l+ isStudentVisible()\l+ setIsStudentVisible()\l}" alt="" coords="236,373,415,509"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_ordered_model.html" title="{org.tdl.vireo.model.Abstract\lOrderedModel\n||+ getDisplayOrder()\l+ setDisplayOrder()\l}" alt="" coords="234,219,416,325"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="{org.tdl.vireo.model.Abstract\lModel\n||+ getId()\l+ save()\l+ delete()\l+ refresh()\l+ merge()\l+ detach()\l}" alt="" coords="234,5,416,171"/>
 </map>

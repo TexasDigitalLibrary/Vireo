@@ -28,9 +28,10 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="vireo-logo-sm.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">Vireo
-   &#160;<span id="projectnumber">3.0.x-RC4</span>
+   &#160;<span id="projectnumber">3.0.0</span>
    </div>
    <div id="projectbrief">Vireo Electronic Thesis and Dissertation Submission System</div>
   </td>
@@ -153,6 +154,9 @@ $(document).ready(function(){initNavTree('functions_func_i.html','');});
 <li>injectRepositories()
 : <a class="el" href="classcontrollers_1_1_abstract_vireo_controller.html#af33a92dee39e4e4abb1bee6fef0b6dc0">controllers.AbstractVireoController</a>
 </li>
+<li>insertPeriodically()
+: <a class="el" href="classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities.html#a03f0a1a1b0af7df1688eed1ea50e04b3">org.tdl.vireo.services.Utilities</a>
+</li>
 <li>invocationFinally()
 : <a class="el" href="classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_play_plugin_impl.html#aa7d4dd6ee70bcb4c8c9a6a644e6b2d8e">org.tdl.vireo.search.impl.LucenePlayPluginImpl</a>
 </li>
@@ -182,6 +186,9 @@ $(document).ready(function(){initNavTree('functions_func_i.html','');});
 <li>isAuthorizationActive()
 : <a class="el" href="classorg_1_1tdl_1_1vireo_1_1security_1_1impl_1_1_security_context_impl.html#aa9e06cdd91480141683533f99a8bf47b">org.tdl.vireo.security.impl.SecurityContextImpl</a>
 , <a class="el" href="interfaceorg_1_1tdl_1_1vireo_1_1security_1_1_security_context.html#ada196b7acfd53ee9097467ab3d8f4446">org.tdl.vireo.security.SecurityContext</a>
+</li>
+<li>isConditionValid()
+: <a class="el" href="classorg_1_1tdl_1_1vireo_1_1services_1_1_email_rule_service.html#aa157aefbc7c7f68ce2401f740812a037">org.tdl.vireo.services.EmailRuleService</a>
 </li>
 <li>isDeletable()
 : <a class="el" href="classorg_1_1tdl_1_1vireo_1_1state_1_1impl_1_1_state_impl.html#aac20f08a891e51f42e2afb6aecc9f6a9">org.tdl.vireo.state.impl.StateImpl</a>
@@ -287,11 +294,13 @@ $(document).ready(function(){initNavTree('functions_func_i.html','');});
 </li>
 <li>isSystemRequired()
 : <a class="el" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_email_template.html#a08d6c50d9419665fb2a0e9368b1ed6a0">org.tdl.vireo.model.EmailTemplate</a>
+, <a class="el" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_embargo_type.html#a1acde0fef15e7a23e4a147cbb7d0a91f">org.tdl.vireo.model.EmbargoType</a>
 , <a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#aafbbde03455b90479e66ea24382ec0fc">org.tdl.vireo.model.jpa.JpaEmailTemplateImpl</a>
+, <a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#a80df238995c9b8ba4b2074a5cd808971">org.tdl.vireo.model.jpa.JpaEmbargoTypeImpl</a>
 </li>
 <li>isUpdated()
-: <a class="el" href="classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_indexer_impl.html#ac5456d50a54faf53b6692cb853e8ad59">org.tdl.vireo.search.impl.LuceneIndexerImpl</a>
-, <a class="el" href="interfaceorg_1_1tdl_1_1vireo_1_1search_1_1_indexer.html#ac7172075572756625aef9366d391d499">org.tdl.vireo.search.Indexer</a>
+: <a class="el" href="classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_indexer_impl.html#af38eeec350fc765bea0d91ffc547d723">org.tdl.vireo.search.impl.LuceneIndexerImpl</a>
+, <a class="el" href="interfaceorg_1_1tdl_1_1vireo_1_1search_1_1_indexer.html#a0c9743bd509f628d37ae7b865774b3f1">org.tdl.vireo.search.Indexer</a>
 </li>
 <li>isUpdatePasswordEnabled()
 : <a class="el" href="classcontrollers_1_1_authentication.html#a84c1703bd2a227a85c6443bc31fd453b">controllers.Authentication</a>
@@ -339,7 +348,7 @@ $(document).ready(function(){initNavTree('functions_func_i.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Feb 12 2015 12:31:09 for Vireo by
+    <li class="footer">Generated on Wed Mar 4 2015 13:41:26 for Vireo by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

@@ -135,7 +135,7 @@ var hierarchy =
     [ "org.tdl.vireo.email.EmailService", "interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_email_service.html", [
       [ "org.tdl.vireo.email.impl.EmailServiceImpl", "classorg_1_1tdl_1_1vireo_1_1email_1_1impl_1_1_email_service_impl.html", null ]
     ] ],
-    [ "controllers.FirstUser.EmbargoArray", "classcontrollers_1_1_first_user_1_1_embargo_array.html", null ],
+    [ "org.tdl.vireo.services.SystemDataLoader.EmbargoArray", "classorg_1_1tdl_1_1vireo_1_1services_1_1_system_data_loader_1_1_embargo_array.html", null ],
     [ "org.tdl.vireo.model.EmbargoGuarantor", "enumorg_1_1tdl_1_1vireo_1_1model_1_1_embargo_guarantor.html", null ],
     [ "org.tdl.vireo.error.ErrorLog", "interfaceorg_1_1tdl_1_1vireo_1_1error_1_1_error_log.html", [
       [ "org.tdl.vireo.error.impl.ErrorLogImpl", "classorg_1_1tdl_1_1vireo_1_1error_1_1impl_1_1_error_log_impl.html", null ]
@@ -269,9 +269,7 @@ var hierarchy =
       [ "org.tdl.vireo.model.jpa.JpaSubmissionRepositoryImpl", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_submission_repository_impl.html", null ]
     ] ],
     [ "controllers.Application.SubmissionStatus", "classcontrollers_1_1_application_1_1_submission_status.html", null ],
-    [ "org.tdl.vireo.email.SystemEmailTemplateService", "interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_system_email_template_service.html", [
-      [ "org.tdl.vireo.email.impl.SystemEmailTemplateServiceImpl", "classorg_1_1tdl_1_1vireo_1_1email_1_1impl_1_1_system_email_template_service_impl.html", null ]
-    ] ],
+    [ "org.tdl.vireo.services.SystemDataLoader", "classorg_1_1tdl_1_1vireo_1_1services_1_1_system_data_loader.html", null ],
     [ "controllers.submit.DocumentInfo.TransientMember", "classcontrollers_1_1submit_1_1_document_info_1_1_transient_member.html", null ],
     [ "org.tdl.vireo.batch.TransitionService", "interfaceorg_1_1tdl_1_1vireo_1_1batch_1_1_transition_service.html", [
       [ "org.tdl.vireo.batch.impl.TransitionServiceImpl", "classorg_1_1tdl_1_1vireo_1_1batch_1_1impl_1_1_transition_service_impl.html", null ]
@@ -332,14 +330,12 @@ var hierarchy =
       [ "org.tdl.vireo.model.jpa.JpaSubmissionRepositoryImpl.JpaIterator< T extends AbstractModel >", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_submission_repository_impl_1_1_jpa_iterator_3_0efb657e33a348c4e5b01b74de40f1195.html", null ]
     ] ],
     [ "Job", null, [
-      [ "controllers.FirstUser.InitializeEmbargos", "classcontrollers_1_1_first_user_1_1_initialize_embargos.html", null ],
       [ "controllers.System.TestSubmissionsJob", "classcontrollers_1_1_system_1_1_test_submissions_job.html", null ],
       [ "org.tdl.vireo.batch.impl.AssignServiceImpl.AssignJob", "classorg_1_1tdl_1_1vireo_1_1batch_1_1impl_1_1_assign_service_impl_1_1_assign_job.html", null ],
       [ "org.tdl.vireo.batch.impl.CommentServiceImpl.CommentJob", "classorg_1_1tdl_1_1vireo_1_1batch_1_1impl_1_1_comment_service_impl_1_1_comment_job.html", null ],
       [ "org.tdl.vireo.batch.impl.DeleteServiceImpl.DeleteJob", "classorg_1_1tdl_1_1vireo_1_1batch_1_1impl_1_1_delete_service_impl_1_1_delete_job.html", null ],
       [ "org.tdl.vireo.batch.impl.TransitionServiceImpl.TransitionJob", "classorg_1_1tdl_1_1vireo_1_1batch_1_1impl_1_1_transition_service_impl_1_1_transition_job.html", null ],
       [ "org.tdl.vireo.email.impl.EmailServiceImpl.EmailJob", "classorg_1_1tdl_1_1vireo_1_1email_1_1impl_1_1_email_service_impl_1_1_email_job.html", null ],
-      [ "org.tdl.vireo.email.impl.SystemEmailTemplateServiceImpl.initializeSystemEmailTemplates", "classorg_1_1tdl_1_1vireo_1_1email_1_1impl_1_1_system_email_template_service_impl_1_1initialize_system_email_templates.html", null ],
       [ "org.tdl.vireo.export.impl.DepositServiceImpl.DepositJob", "classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_deposit_service_impl_1_1_deposit_job.html", null ],
       [ "org.tdl.vireo.export.impl.ExportExcelServiceImpl.ExportJob", "classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_export_excel_service_impl_1_1_export_job.html", null ],
       [ "org.tdl.vireo.export.impl.ExportServiceImpl.ExportJob", "classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_export_service_impl_1_1_export_job.html", null ],
@@ -347,7 +343,9 @@ var hierarchy =
         [ "org.tdl.vireo.search.impl.LuceneRebuildJobImpl", "classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_rebuild_job_impl.html", null ],
         [ "org.tdl.vireo.search.impl.LuceneUpdateJob", "classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_update_job.html", null ]
       ] ],
-      [ "org.tdl.vireo.services.EmailRuleService.initializeSystemEmailWorkflowRules", "classorg_1_1tdl_1_1vireo_1_1services_1_1_email_rule_service_1_1initialize_system_email_workflow_rules.html", null ]
+      [ "org.tdl.vireo.services.SystemDataLoader.initializeSystemEmailTemplates", "classorg_1_1tdl_1_1vireo_1_1services_1_1_system_data_loader_1_1initialize_system_email_templates.html", null ],
+      [ "org.tdl.vireo.services.SystemDataLoader.initializeSystemEmailWorkflowRules", "classorg_1_1tdl_1_1vireo_1_1services_1_1_system_data_loader_1_1initialize_system_email_workflow_rules.html", null ],
+      [ "org.tdl.vireo.services.SystemDataLoader.initializeSystemEmbargos", "classorg_1_1tdl_1_1vireo_1_1services_1_1_system_data_loader_1_1initialize_system_embargos.html", null ]
     ] ],
     [ "Model", null, [
       [ "org.tdl.vireo.model.jpa.JpaAbstractModel< T extends JpaAbstractModel >", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_abstract_model_3_01_t_01extends_01_jpa_abstract_model_01_4.html", null ]

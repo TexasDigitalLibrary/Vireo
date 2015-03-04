@@ -13,6 +13,5 @@ var classcontrollers_1_1_system =
     [ "indexer", "classcontrollers_1_1_system.html#abda9bebad50da1942ac741b43dd882ae", null ],
     [ "jobManager", "classcontrollers_1_1_system.html#ad04c254b6908dab46b372cf7f8e1a90f", null ],
     [ "settingRepo", "classcontrollers_1_1_system.html#af16f5408d5d59b74127f2c003a286bae", null ],
-    [ "templateService", "classcontrollers_1_1_system.html#a04efbd1720a5825be54123e609e13657", null ],
     [ "TEST_EMAIL_TEMPLATE", "classcontrollers_1_1_system.html#a5ac1c1ecbcfbf047838d89582dd0c8ac", null ]
 ];

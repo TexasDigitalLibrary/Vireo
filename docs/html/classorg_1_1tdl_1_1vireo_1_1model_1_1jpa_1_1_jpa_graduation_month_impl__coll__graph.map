@@ -1,5 +1,5 @@
 <map id="org.tdl.vireo.model.jpa.JpaGraduationMonthImpl" name="org.tdl.vireo.model.jpa.JpaGraduationMonthImpl">
-<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_graduation_month.html" title="org.tdl.vireo.model.Graduation\lMonth" alt="" coords="251,187,447,229"/>
-<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_ordered_model.html" title="org.tdl.vireo.model.Abstract\lOrderedModel" alt="" coords="258,97,440,138"/>
-<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="org.tdl.vireo.model.Abstract\lModel" alt="" coords="258,6,440,47"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_graduation_month.html" title="{org.tdl.vireo.model.Graduation\lMonth\n||+ getMonth()\l+ getMonthName()\l+ setMonth()\l}" alt="" coords="251,374,447,495"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_ordered_model.html" title="{org.tdl.vireo.model.Abstract\lOrderedModel\n||+ getDisplayOrder()\l+ setDisplayOrder()\l}" alt="" coords="258,219,440,325"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="{org.tdl.vireo.model.Abstract\lModel\n||+ getId()\l+ save()\l+ delete()\l+ refresh()\l+ merge()\l+ detach()\l}" alt="" coords="258,5,440,171"/>
 </map>

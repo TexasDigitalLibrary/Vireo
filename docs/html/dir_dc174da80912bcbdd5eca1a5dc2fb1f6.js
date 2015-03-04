@@ -19,9 +19,7 @@ var dir_dc174da80912bcbdd5eca1a5dc2fb1f6 =
       [ "FilterTab", "classcontrollers_1_1_filter_tab.html", "classcontrollers_1_1_filter_tab" ]
     ] ],
     [ "FirstUser.java", "_first_user_8java.html", [
-      [ "FirstUser", "classcontrollers_1_1_first_user.html", "classcontrollers_1_1_first_user" ],
-      [ "EmbargoArray", "classcontrollers_1_1_first_user_1_1_embargo_array.html", "classcontrollers_1_1_first_user_1_1_embargo_array" ],
-      [ "InitializeEmbargos", "classcontrollers_1_1_first_user_1_1_initialize_embargos.html", "classcontrollers_1_1_first_user_1_1_initialize_embargos" ]
+      [ "FirstUser", "classcontrollers_1_1_first_user.html", "classcontrollers_1_1_first_user" ]
     ] ],
     [ "JobTab.java", "_job_tab_8java.html", [
       [ "JobTab", "classcontrollers_1_1_job_tab.html", "classcontrollers_1_1_job_tab" ]

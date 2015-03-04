@@ -1,3 +1,3 @@
 <map id="org.tdl.vireo.export.DepositService" name="org.tdl.vireo.export.DepositService">
-<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_deposit_service_impl.html" title="org.tdl.vireo.export.impl.\lDepositServiceImpl" alt="" coords="13,97,176,138"/>
+<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_deposit_service_impl.html" title="{org.tdl.vireo.export.impl.\lDepositServiceImpl\n|+ personRepo\l+ errorLog\l+ context\l+ jobManager\l|+ setPersonRepository()\l+ setErrorLog()\l+ setSecurityContext()\l+ setJobManager()\l+ deposit()\l}" alt="" coords="13,147,176,341"/>
 </map>

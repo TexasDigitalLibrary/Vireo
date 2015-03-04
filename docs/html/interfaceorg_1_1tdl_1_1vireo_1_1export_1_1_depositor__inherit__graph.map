@@ -1,4 +1,4 @@
 <map id="org.tdl.vireo.export.Depositor" name="org.tdl.vireo.export.Depositor">
-<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_file_depositor_impl.html" title="org.tdl.vireo.export.impl.\lFileDepositorImpl" alt="" coords="245,5,408,46"/>
-<area shape="rect" id="node3" href="$classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html" title="org.tdl.vireo.export.impl.\lSword1DepositorImpl" alt="" coords="245,70,408,111"/>
+<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_file_depositor_impl.html" title="{org.tdl.vireo.export.impl.\lFileDepositorImpl\n|+ beanName\l+ displayName\l+ baseDir\l|+ getBeanName()\l+ setBeanName()\l+ getDisplayName()\l+ setDisplayName()\l+ setBaseDirectory()\l+ getCollections()\l+ getCollectionName()\l+ deposit()\l# FileDepositorImpl()\l}" alt="" coords="5,197,168,435"/>
+<area shape="rect" id="node3" href="$classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html" title="{org.tdl.vireo.export.impl.\lSword1DepositorImpl\n|&#45; beanName\l&#45; displayName\l&#45; USER_AGENT\l|+ getBeanName()\l+ setBeanName()\l+ getDisplayName()\l+ setDisplayName()\l+ getCollections()\l+ getCollectionName()\l+ deposit()\l# Sword1DepositorImpl()\l# zipPackage()\l# zipDirectory()\l}" alt="" coords="193,189,359,443"/>
 </map>

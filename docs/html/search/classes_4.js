@@ -9,7 +9,7 @@ var searchData=
   ['emailsettingstab',['EmailSettingsTab',['../classcontrollers_1_1settings_1_1_email_settings_tab.html',1,'controllers::settings']]],
   ['emailtemplate',['EmailTemplate',['../interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_email_template.html',1,'org::tdl::vireo::model']]],
   ['emailworkflowrule',['EmailWorkflowRule',['../interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_email_workflow_rule.html',1,'org::tdl::vireo::model']]],
-  ['embargoarray',['EmbargoArray',['../classcontrollers_1_1_first_user_1_1_embargo_array.html',1,'controllers::FirstUser']]],
+  ['embargoarray',['EmbargoArray',['../classorg_1_1tdl_1_1vireo_1_1services_1_1_system_data_loader_1_1_embargo_array.html',1,'org::tdl::vireo::services::SystemDataLoader']]],
   ['embargoguarantor',['EmbargoGuarantor',['../enumorg_1_1tdl_1_1vireo_1_1model_1_1_embargo_guarantor.html',1,'org::tdl::vireo::model']]],
   ['embargotype',['EmbargoType',['../interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_embargo_type.html',1,'org::tdl::vireo::model']]],
   ['enumbystringcomparator',['EnumByStringComparator',['../classorg_1_1tdl_1_1vireo_1_1services_1_1_enum_by_string_comparator.html',1,'org::tdl::vireo::services']]],

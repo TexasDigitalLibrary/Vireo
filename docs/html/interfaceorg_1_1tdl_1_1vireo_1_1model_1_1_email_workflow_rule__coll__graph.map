@@ -1,5 +1,5 @@
 <map id="org.tdl.vireo.model.EmailWorkflowRule" name="org.tdl.vireo.model.EmailWorkflowRule">
-<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_workflow_rule.html" title="org.tdl.vireo.model.Abstract\lWorkflowRule" alt="" coords="5,187,187,229"/>
-<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_ordered_model.html" title="org.tdl.vireo.model.Abstract\lOrderedModel" alt="" coords="5,97,187,138"/>
-<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="org.tdl.vireo.model.Abstract\lModel" alt="" coords="5,6,187,47"/>
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_workflow_rule.html" title="{org.tdl.vireo.model.Abstract\lWorkflowRule\n||+ getAssociatedState()\l+ setAssociatedState()\l+ getCondition()\l+ setCondition()\l}" alt="" coords="7,373,189,509"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_ordered_model.html" title="{org.tdl.vireo.model.Abstract\lOrderedModel\n||+ getDisplayOrder()\l+ setDisplayOrder()\l}" alt="" coords="7,219,189,325"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="{org.tdl.vireo.model.Abstract\lModel\n||+ getId()\l+ save()\l+ delete()\l+ refresh()\l+ merge()\l+ detach()\l}" alt="" coords="7,5,189,171"/>
 </map>

@@ -1,3 +1,8 @@
 <map id="controllers.settings.ApplicationSettingsTab.saveDepositLocation" name="controllers.settings.ApplicationSettingsTab.saveDepositLocation">
-<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception.html#a18288907951904651caa193955d3f839" title="org.tdl.vireo.export.Deposit\lException.isField" alt="" coords="272,5,451,46"/>
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#afd128195d776489de5059cdcc47c5d2d" title="org.tdl.vireo.model.Deposit\lLocation.getDepositor" alt="" coords="272,5,451,46"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#ac1de6b2514f7432c76a3daf1578f7f7e" title="org.tdl.vireo.model.Deposit\lLocation.getName" alt="" coords="272,70,451,111"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#adb0cb2c72c0dd1b084eb2d0bc626722b" title="org.tdl.vireo.model.Deposit\lLocation.getOnBehalfOf" alt="" coords="272,135,451,177"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#ae0b2a31611d53155df550ecdecabfcfd" title="org.tdl.vireo.model.Deposit\lLocation.getPackager" alt="" coords="272,201,451,242"/>
+<area shape="rect" id="node6" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#a8416e4eba35e9f363426b19c9e05bac6" title="org.tdl.vireo.model.Deposit\lLocation.getTimeout" alt="" coords="272,266,451,307"/>
+<area shape="rect" id="node7" href="$classorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception.html#a18288907951904651caa193955d3f839" title="org.tdl.vireo.export.Deposit\lException.isField" alt="" coords="272,331,451,373"/>
 </map>

@@ -14,7 +14,7 @@ var classcontrollers_1_1_filter_tab =
     [ "handleError", "classcontrollers_1_1_filter_tab.html#aafd2078e3113e94a93743192823b5452", null ],
     [ "list", "classcontrollers_1_1_filter_tab.html#ae9765405b234191230d7cdb27065b1bd", null ],
     [ "listRedirect", "classcontrollers_1_1_filter_tab.html#afc4c3ab196d435f54d6423a3efb82a46", null ],
-    [ "log", "classcontrollers_1_1_filter_tab.html#a2efba07b7f2461278ae0d05eece7deee", null ],
+    [ "log", "classcontrollers_1_1_filter_tab.html#a6cbff1ba793a6120eaba614654d18128", null ],
     [ "modifyFilters", "classcontrollers_1_1_filter_tab.html#a40c0225adf5f7d6fa74437f9b61e5eb1", null ],
     [ "modifySearch", "classcontrollers_1_1_filter_tab.html#a8e3b59902bbe5b73ac766868d0e50681", null ],
     [ "resetLogFilterToOneSubmission", "classcontrollers_1_1_filter_tab.html#ac49b9bf9e5d77311d208b609552d5fd3", null ],

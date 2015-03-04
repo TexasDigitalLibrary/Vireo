@@ -3,7 +3,7 @@ var searchData=
   ['background_5fhighlight_5fcolor',['BACKGROUND_HIGHLIGHT_COLOR',['../classorg_1_1tdl_1_1vireo_1_1constant_1_1_app_config.html#a03675ed88f22a7631b5fef828569f017',1,'org::tdl::vireo::constant::AppConfig']]],
   ['background_5fmain_5fcolor',['BACKGROUND_MAIN_COLOR',['../classorg_1_1tdl_1_1vireo_1_1constant_1_1_app_config.html#acf750808b3145cd9d4b6e2e1b5318119',1,'org::tdl::vireo::constant::AppConfig']]],
   ['bad_5fcredentials',['BAD_CREDENTIALS',['../enumorg_1_1tdl_1_1vireo_1_1security_1_1_authentication_result.html#a89911941d9f1ebd8490e05911000ccd7',1,'org::tdl::vireo::security::AuthenticationResult']]],
-  ['base_5fpath',['BASE_PATH',['../classorg_1_1tdl_1_1vireo_1_1email_1_1impl_1_1_system_email_template_service_impl.html#a1e87bf38a6cd8abc2ca039d206c4ac2e',1,'org::tdl::vireo::email::impl::SystemEmailTemplateServiceImpl']]],
+  ['base_5fpath',['BASE_PATH',['../classorg_1_1tdl_1_1vireo_1_1services_1_1_system_data_loader.html#a18d9dbaf25af2821dba5755bedb6627c',1,'org::tdl::vireo::services::SystemDataLoader']]],
   ['basedir',['baseDir',['../classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_file_depositor_impl.html#aa65b871a4d2d4e59453802a090ccc912',1,'org::tdl::vireo::export::impl::FileDepositorImpl']]],
   ['batchassign',['batchAssign',['../classcontrollers_1_1_filter_tab.html#a6c0297e7215eb8f2702a569eae02971c',1,'controllers::FilterTab']]],
   ['batchcomment',['batchComment',['../classcontrollers_1_1_filter_tab.html#a96290d4c1092cca15f847c726da30e3b',1,'controllers::FilterTab']]],

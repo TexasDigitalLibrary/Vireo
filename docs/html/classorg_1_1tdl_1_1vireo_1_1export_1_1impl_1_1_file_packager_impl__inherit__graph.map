@@ -1,4 +1,4 @@
 <map id="org.tdl.vireo.export.impl.FilePackagerImpl" name="org.tdl.vireo.export.impl.FilePackagerImpl">
-<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_abstract_packager_impl.html" title="org.tdl.vireo.export.impl.\lAbstractPackagerImpl" alt="" coords="109,81,272,122"/>
-<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_packager.html" title="org.tdl.vireo.export.Packager" alt="" coords="5,5,195,32"/>
+<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_abstract_packager_impl.html" title="{org.tdl.vireo.export.impl.\lAbstractPackagerImpl\n|+ beanName\l+ displayName\l|+ getBeanName()\l+ setBeanName()\l+ getDisplayName()\l+ setDisplayName()\l}" alt="" coords="121,177,284,327"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_packager.html" title="{org.tdl.vireo.export.Packager\n||+ getBeanName()\l+ getExportServiceBeanName()\l+ getDisplayName()\l+ generatePackage()\l}" alt="" coords="5,6,211,127"/>
 </map>

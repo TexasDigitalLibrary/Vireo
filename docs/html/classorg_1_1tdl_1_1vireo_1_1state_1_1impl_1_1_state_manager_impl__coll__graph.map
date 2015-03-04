@@ -1,4 +1,4 @@
 <map id="org.tdl.vireo.state.impl.StateManagerImpl" name="org.tdl.vireo.state.impl.StateManagerImpl">
-<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1state_1_1_state_manager.html" title="org.tdl.vireo.state.State\lManager" alt="" coords="6,5,165,46"/>
-<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1state_1_1_state.html" title="org.tdl.vireo.state.State" alt="" coords="6,137,165,164"/>
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1state_1_1_state_manager.html" title="{org.tdl.vireo.state.State\lManager\n||+ getState()\l+ getAllStates()\l+ getInitialState()\l+ getCancelState()\l}" alt="" coords="5,57,163,193"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1state_1_1_state.html" title="{org.tdl.vireo.state.State\n||+ getBeanName()\l+ getDisplayName()\l+ isInProgress()\l+ isActive()\l+ isArchived()\l+ isEditableByStudent()\l+ isEditableByReviewer()\l+ isDeletable()\l+ isDepositable()\l+ isApproved()\l+ getTransitions()\l+ isInWorkflow()\l}" alt="" coords="372,6,543,245"/>
 </map>

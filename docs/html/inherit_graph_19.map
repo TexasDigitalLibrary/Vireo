@@ -1,4 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$interfaceorg_1_1tdl_1_1vireo_1_1error_1_1_error_log.html" title="org.tdl.vireo.error.ErrorLog" alt="" coords="5,12,179,39"/>
-<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1error_1_1impl_1_1_error_log_impl.html" title="org.tdl.vireo.error.impl.\lErrorLogImpl" alt="" coords="227,5,379,46"/>
+<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_chunk_stream_impl.html" title="org.tdl.vireo.export.impl.\lChunkStreamImpl" alt="" coords="227,27,389,69"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_chunk_stream.html" title="org.tdl.vireo.export.Chunk\lStream" alt="" coords="6,57,178,98"/>
 </map>

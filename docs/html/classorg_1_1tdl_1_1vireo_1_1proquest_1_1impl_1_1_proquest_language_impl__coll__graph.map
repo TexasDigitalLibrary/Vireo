@@ -1,3 +1,3 @@
 <map id="org.tdl.vireo.proquest.impl.ProquestLanguageImpl" name="org.tdl.vireo.proquest.impl.ProquestLanguageImpl">
-<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1proquest_1_1_proquest_language.html" title="org.tdl.vireo.proquest.Proquest\lLanguage" alt="" coords="4,6,203,47"/>
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1proquest_1_1_proquest_language.html" title="{org.tdl.vireo.proquest.Proquest\lLanguage\n||+ getCode()\l+ getDescription()\l}" alt="" coords="4,5,203,112"/>
 </map>

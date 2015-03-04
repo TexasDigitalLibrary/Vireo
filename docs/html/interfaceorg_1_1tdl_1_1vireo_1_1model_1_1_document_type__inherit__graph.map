@@ -1,5 +1,5 @@
 <map id="org.tdl.vireo.model.DocumentType" name="org.tdl.vireo.model.DocumentType">
-<area shape="rect" id="node4" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_document_type_impl.html" title="org.tdl.vireo.model.jpa.\lJpaDocumentTypeImpl" alt="" coords="37,262,195,303"/>
-<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_ordered_model.html" title="org.tdl.vireo.model.Abstract\lOrderedModel" alt="" coords="25,97,207,138"/>
-<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="org.tdl.vireo.model.Abstract\lModel" alt="" coords="25,6,207,47"/>
+<area shape="rect" id="node4" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_document_type_impl.html" title="{org.tdl.vireo.model.jpa.\lJpaDocumentTypeImpl\n|+ displayOrder\l+ name\l+ level\l|+ save()\l+ delete()\l+ getDisplayOrder()\l+ setDisplayOrder()\l+ getName()\l+ setName()\l+ getLevel()\l+ setLevel()\l# JpaDocumentTypeImpl()\l}" alt="" coords="28,545,204,783"/>
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_ordered_model.html" title="{org.tdl.vireo.model.Abstract\lOrderedModel\n||+ getDisplayOrder()\l+ setDisplayOrder()\l}" alt="" coords="25,219,207,325"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="{org.tdl.vireo.model.Abstract\lModel\n||+ getId()\l+ save()\l+ delete()\l+ refresh()\l+ merge()\l+ detach()\l}" alt="" coords="25,5,207,171"/>
 </map>

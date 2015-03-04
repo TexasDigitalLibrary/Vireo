@@ -1,8 +1,8 @@
 <map id="controllers.submit.AbstractSubmitStep" name="controllers.submit.AbstractSubmitStep">
-<area shape="rect" id="node4" href="$classcontrollers_1_1submit_1_1_confirm.html" title="controllers.submit.Confirm" alt="" coords="591,5,766,32"/>
-<area shape="rect" id="node5" href="$classcontrollers_1_1submit_1_1_document_info.html" title="controllers.submit.DocumentInfo" alt="" coords="573,56,784,83"/>
-<area shape="rect" id="node6" href="$classcontrollers_1_1submit_1_1_file_upload.html" title="controllers.submit.FileUpload" alt="" coords="583,107,774,133"/>
-<area shape="rect" id="node7" href="$classcontrollers_1_1submit_1_1_license.html" title="controllers.submit.License" alt="" coords="591,157,766,184"/>
-<area shape="rect" id="node8" href="$classcontrollers_1_1submit_1_1_personal_info.html" title="controllers.submit.PersonalInfo" alt="" coords="577,208,780,235"/>
-<area shape="rect" id="node2" href="$classcontrollers_1_1_abstract_vireo_controller.html" title="controllers.AbstractVireo\lController" alt="" coords="133,99,299,141"/>
+<area shape="rect" id="node4" href="$classcontrollers_1_1submit_1_1_confirm.html" title="{controllers.submit.Confirm\n||+ confirm()\l+ complete()\l# generateCommitteEmailHash()\l}" alt="" coords="5,787,216,893"/>
+<area shape="rect" id="node5" href="$classcontrollers_1_1submit_1_1_document_info.html" title="{controllers.submit.DocumentInfo\n||+ documentInfo()\l+ verify()\l+ loadCommitteeMembers()\l+ validateCommitteeMembers()\l+ parseCommitteeMembers()\l+ saveCommitteeMembers()\l# isValidDegreeMonth()\l# isValidDegreeYear()\l# isValidDocType()\l# isValidRoleType()\l# getDegreeYears()\l# getValidDocumentTypes()\l}" alt="" coords="240,721,449,959"/>
+<area shape="rect" id="node6" href="$classcontrollers_1_1submit_1_1_file_upload.html" title="{controllers.submit.FileUpload\n||+ fileUpload()\l+ verify()\l}" alt="" coords="475,794,665,886"/>
+<area shape="rect" id="node7" href="$classcontrollers_1_1submit_1_1_license.html" title="{controllers.submit.License\n||+ license()\l+ verify()\l# recordDisagreement()\l# recordAgreement()\l# stampLicense()\l}" alt="" coords="690,772,864,908"/>
+<area shape="rect" id="node8" href="$classcontrollers_1_1submit_1_1_personal_info.html" title="{controllers.submit.PersonalInfo\n||+ personalInfo()\l+ verify()\l# isValidProgram()\l# isValidCollege()\l# isValidDepartment()\l# isValidDegree()\l# isValidMajor()\l&#45; isFieldGroupLocked()\l}" alt="" coords="889,750,1092,930"/>
+<area shape="rect" id="node2" href="$classcontrollers_1_1_abstract_vireo_controller.html" title="{controllers.AbstractVireo\lController\n|+ context\l+ personRepo\l+ subRepo\l+ settingRepo\l+ proquestRepo\l+ errorLog\l+ stateManager\l+ indexer\l+ searcher\l+ firstUser\l|+ injectRepositories()\l+ checkForFirstUser()\l+ handleError()\l# isEmpty()\l# isNotEmpty()\l# escapeJavaScript()\l# URIEncode()\l# toJSON()\l# text2html()\l# isFieldRequired()\l}" alt="" coords="488,131,652,487"/>
 </map>

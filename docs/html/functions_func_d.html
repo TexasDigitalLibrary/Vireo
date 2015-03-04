@@ -28,9 +28,10 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="vireo-logo-sm.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">Vireo
-   &#160;<span id="projectnumber">3.0.x-RC4</span>
+   &#160;<span id="projectnumber">3.0.0</span>
    </div>
    <div id="projectbrief">Vireo Electronic Thesis and Dissertation Submission System</div>
   </td>
@@ -155,7 +156,7 @@ $(document).ready(function(){initNavTree('functions_func_d.html','');});
 : <a class="el" href="classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_uri_active_search_filter_impl.html#a0e297ea52bcd28aae7cf3800676df07d">org.tdl.vireo.search.impl.UriActiveSearchFilterImpl</a>
 </li>
 <li>decodeTemplateName()
-: <a class="el" href="classorg_1_1tdl_1_1vireo_1_1email_1_1impl_1_1_system_email_template_service_impl.html#a6ea528a8605d1c568a738dedab7eacae">org.tdl.vireo.email.impl.SystemEmailTemplateServiceImpl</a>
+: <a class="el" href="classorg_1_1tdl_1_1vireo_1_1services_1_1_system_data_loader.html#a18887ee457af78121b461f74e8575ea9">org.tdl.vireo.services.SystemDataLoader</a>
 </li>
 <li>deepCopy()
 : <a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_hashed_blob.html#a7ca2a4a4f8ba48ec81ee2642db072403">org.tdl.vireo.model.jpa.HashedBlob</a>
@@ -224,7 +225,7 @@ $(document).ready(function(){initNavTree('functions_func_d.html','');});
 , <a class="el" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a1d6294d3caa0860f8296f0769a883737">org.tdl.vireo.export.impl.Sword1DepositorImpl</a>
 </li>
 <li>DepositException()
-: <a class="el" href="classorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception.html#a410622be9915b62748ad434534eb7595">org.tdl.vireo.export.DepositException</a>
+: <a class="el" href="classorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception.html#a568200c67a3833921059d44b2502d408">org.tdl.vireo.export.DepositException</a>
 </li>
 <li>DepositJob()
 : <a class="el" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_deposit_service_impl_1_1_deposit_job.html#a132ad931d52e8b70b6dbd8fd80bd8769">org.tdl.vireo.export.impl.DepositServiceImpl.DepositJob</a>
@@ -259,20 +260,26 @@ $(document).ready(function(){initNavTree('functions_func_d.html','');});
 <li>documentInfo()
 : <a class="el" href="classcontrollers_1_1submit_1_1_document_info.html#a9d7a14e8e3ceec8696f2c2625ef10da6">controllers.submit.DocumentInfo</a>
 </li>
+<li>doesStateMatchEWFLRuleStates()
+: <a class="el" href="classorg_1_1tdl_1_1vireo_1_1services_1_1_email_rule_service.html#a7dd7ed4dc191c0bb451e06a34c20641e">org.tdl.vireo.services.EmailRuleService</a>
+</li>
+<li>doesSubStateMatchEWFLRuleStates()
+: <a class="el" href="classorg_1_1tdl_1_1vireo_1_1services_1_1_email_rule_service.html#a387239adb9a5702291f4b6ef9ba224f9">org.tdl.vireo.services.EmailRuleService</a>
+</li>
 <li>doJob()
-: <a class="el" href="classcontrollers_1_1_first_user_1_1_initialize_embargos.html#a76d88d03bcecae18c2d1ae0852c56b43">controllers.FirstUser.InitializeEmbargos</a>
-, <a class="el" href="classcontrollers_1_1_system_1_1_test_submissions_job.html#a15f831e869834428f35a6359436e9922">controllers.System.TestSubmissionsJob</a>
+: <a class="el" href="classcontrollers_1_1_system_1_1_test_submissions_job.html#a15f831e869834428f35a6359436e9922">controllers.System.TestSubmissionsJob</a>
 , <a class="el" href="classorg_1_1tdl_1_1vireo_1_1batch_1_1impl_1_1_assign_service_impl_1_1_assign_job.html#a6660e2bfe706f94e472eeb69c76a141c">org.tdl.vireo.batch.impl.AssignServiceImpl.AssignJob</a>
 , <a class="el" href="classorg_1_1tdl_1_1vireo_1_1batch_1_1impl_1_1_comment_service_impl_1_1_comment_job.html#a2e1cc1d3d1a5b3407db6fedae31e588d">org.tdl.vireo.batch.impl.CommentServiceImpl.CommentJob</a>
 , <a class="el" href="classorg_1_1tdl_1_1vireo_1_1batch_1_1impl_1_1_delete_service_impl_1_1_delete_job.html#ac1fb58f174fe1df842d9eed5fe4b080f">org.tdl.vireo.batch.impl.DeleteServiceImpl.DeleteJob</a>
 , <a class="el" href="classorg_1_1tdl_1_1vireo_1_1batch_1_1impl_1_1_transition_service_impl_1_1_transition_job.html#a145d6359800d7c2fe06f002679339b55">org.tdl.vireo.batch.impl.TransitionServiceImpl.TransitionJob</a>
 , <a class="el" href="classorg_1_1tdl_1_1vireo_1_1email_1_1impl_1_1_email_service_impl_1_1_email_job.html#a2e0a3b78db5f226792d01e97b6142fd6">org.tdl.vireo.email.impl.EmailServiceImpl.EmailJob</a>
-, <a class="el" href="classorg_1_1tdl_1_1vireo_1_1email_1_1impl_1_1_system_email_template_service_impl_1_1initialize_system_email_templates.html#aa7e0d969d8e7171f4b33a16bdb363b28">org.tdl.vireo.email.impl.SystemEmailTemplateServiceImpl.initializeSystemEmailTemplates</a>
 , <a class="el" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_deposit_service_impl_1_1_deposit_job.html#a89543ed8a802de2cea85cb47c76ce8b0">org.tdl.vireo.export.impl.DepositServiceImpl.DepositJob</a>
 , <a class="el" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_export_excel_service_impl_1_1_export_job.html#a5b4b82bc0cf635a81ac011254ebac3da">org.tdl.vireo.export.impl.ExportExcelServiceImpl.ExportJob</a>
 , <a class="el" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_export_service_impl_1_1_export_job.html#ad9197bbb74adbd1b652e0f30215be23f">org.tdl.vireo.export.impl.ExportServiceImpl.ExportJob</a>
 , <a class="el" href="classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_abstract_job_impl.html#ae637521c670df26aba0badb489b55d49">org.tdl.vireo.search.impl.LuceneAbstractJobImpl</a>
-, <a class="el" href="classorg_1_1tdl_1_1vireo_1_1services_1_1_email_rule_service_1_1initialize_system_email_workflow_rules.html#a3062a1f943aaaed600f835d63e3ea422">org.tdl.vireo.services.EmailRuleService.initializeSystemEmailWorkflowRules</a>
+, <a class="el" href="classorg_1_1tdl_1_1vireo_1_1services_1_1_system_data_loader_1_1initialize_system_email_templates.html#a8d46299ce13da4542b359b7a34af8853">org.tdl.vireo.services.SystemDataLoader.initializeSystemEmailTemplates</a>
+, <a class="el" href="classorg_1_1tdl_1_1vireo_1_1services_1_1_system_data_loader_1_1initialize_system_email_workflow_rules.html#a77849e996948a2eff4889cbb5f4e36e5">org.tdl.vireo.services.SystemDataLoader.initializeSystemEmailWorkflowRules</a>
+, <a class="el" href="classorg_1_1tdl_1_1vireo_1_1services_1_1_system_data_loader_1_1initialize_system_embargos.html#a503281de6a4fb62d9177a81fa8a4cd49">org.tdl.vireo.services.SystemDataLoader.initializeSystemEmbargos</a>
 </li>
 <li>doRemoveFilterParamater()
 : <a class="el" href="classcontrollers_1_1_filter_tab.html#a7bd6c9a589aed67457444f1a2f1abcce">controllers.FilterTab</a>
@@ -283,7 +290,7 @@ $(document).ready(function(){initNavTree('functions_func_d.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Feb 12 2015 12:31:09 for Vireo by
+    <li class="footer">Generated on Wed Mar 4 2015 13:41:26 for Vireo by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

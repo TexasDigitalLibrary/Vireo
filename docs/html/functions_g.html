@@ -28,9 +28,10 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="vireo-logo-sm.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">Vireo
-   &#160;<span id="projectnumber">3.0.x-RC4</span>
+   &#160;<span id="projectnumber">3.0.0</span>
    </div>
    <div id="projectbrief">Vireo Electronic Thesis and Dissertation Submission System</div>
   </td>
@@ -152,11 +153,13 @@ $(document).ready(function(){initNavTree('functions_g.html','');});
 : <a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_submission_impl.html#a03e5b5658372bc691dbc11c4c048aec1">org.tdl.vireo.model.jpa.JpaSubmissionImpl</a>
 </li>
 <li>generateAllSystemEmailRules()
-: <a class="el" href="classorg_1_1tdl_1_1vireo_1_1services_1_1_email_rule_service.html#a438c3ac89b5575773999e2aa516669d5">org.tdl.vireo.services.EmailRuleService</a>
+: <a class="el" href="classorg_1_1tdl_1_1vireo_1_1services_1_1_system_data_loader.html#a81d5a3293a6fbec528c6f7695b9246a0">org.tdl.vireo.services.SystemDataLoader</a>
 </li>
 <li>generateAllSystemEmailTemplates()
-: <a class="el" href="classorg_1_1tdl_1_1vireo_1_1email_1_1impl_1_1_system_email_template_service_impl.html#ac24b41287d47e2c854966e5a1e2561f2">org.tdl.vireo.email.impl.SystemEmailTemplateServiceImpl</a>
-, <a class="el" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_system_email_template_service.html#a0065e356bec4a0a1dc1f818c5c164013">org.tdl.vireo.email.SystemEmailTemplateService</a>
+: <a class="el" href="classorg_1_1tdl_1_1vireo_1_1services_1_1_system_data_loader.html#a537366d1177b1c736468bbcf5c22ecf5">org.tdl.vireo.services.SystemDataLoader</a>
+</li>
+<li>generateAllSystemEmbargos()
+: <a class="el" href="classorg_1_1tdl_1_1vireo_1_1services_1_1_system_data_loader.html#ad04f4814c9b9fad12b275303569ca2f7">org.tdl.vireo.services.SystemDataLoader</a>
 </li>
 <li>generateChangeLog()
 : <a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_submission_impl.html#a9b28cc03368f7d934c2cc8ae132654df">org.tdl.vireo.model.jpa.JpaSubmissionImpl</a>
@@ -181,10 +184,6 @@ $(document).ready(function(){initNavTree('functions_g.html','');});
 , <a class="el" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_template_packager_impl.html#ae4d4a645d171a8d89c2a5da1b971ad42">org.tdl.vireo.export.impl.TemplatePackagerImpl</a>
 , <a class="el" href="interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_packager.html#a2a7f656b04d59dd07ec54312c34da432">org.tdl.vireo.export.Packager</a>
 </li>
-<li>generateSystemEmailTemplate()
-: <a class="el" href="classorg_1_1tdl_1_1vireo_1_1email_1_1impl_1_1_system_email_template_service_impl.html#af5fedc4c8a1468472681a303c32c3982">org.tdl.vireo.email.impl.SystemEmailTemplateServiceImpl</a>
-, <a class="el" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_system_email_template_service.html#aaeed3a0468fdcbef6f592f755a687eb0">org.tdl.vireo.email.SystemEmailTemplateService</a>
-</li>
 <li>generateToken()
 : <a class="el" href="classcontrollers_1_1_authentication.html#ab5992cfcb1bc36f3c0e954e6d9d49c0e">controllers.Authentication</a>
 </li>
@@ -200,8 +199,8 @@ $(document).ready(function(){initNavTree('functions_g.html','');});
 : <a class="el" href="classcontrollers_1_1_filter_tab.html#a39951b6f27d0f4e5a7637703e31f7a34">controllers.FilterTab</a>
 </li>
 <li>getAdminGroupRecipient()
-: <a class="el" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_email_workflow_rule.html#acd3a8db0e395bcea462d27f5c302c3aa">org.tdl.vireo.model.EmailWorkflowRule</a>
-, <a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl.html#aa19ce1c163848ffd084b0245ef746ef8">org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleImpl</a>
+: <a class="el" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_email_workflow_rule.html#ae2e05d4850fb07659b74fb8822b59cdc">org.tdl.vireo.model.EmailWorkflowRule</a>
+, <a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl.html#ad8ee1a84c34ff8c5d5029311625ea41d">org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleImpl</a>
 </li>
 <li>getAdvisorURL()
 : <a class="el" href="classcontrollers_1_1_view_tab.html#af31f89911c06e38e086d07e0dfb38587">controllers.ViewTab</a>
@@ -234,8 +233,7 @@ $(document).ready(function(){initNavTree('functions_g.html','');});
 , <a class="el" href="interfaceorg_1_1tdl_1_1vireo_1_1state_1_1_state_manager.html#a4e2d90ccd3ef8c019cad031407e324ee">org.tdl.vireo.state.StateManager</a>
 </li>
 <li>getAllSystemEmailTemplateNames()
-: <a class="el" href="classorg_1_1tdl_1_1vireo_1_1email_1_1impl_1_1_system_email_template_service_impl.html#aeab6370b5dde0e1bb7037c66269d8f50">org.tdl.vireo.email.impl.SystemEmailTemplateServiceImpl</a>
-, <a class="el" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_system_email_template_service.html#a4fc78794151dd6b12d5fdbbd01da12f4">org.tdl.vireo.email.SystemEmailTemplateService</a>
+: <a class="el" href="classorg_1_1tdl_1_1vireo_1_1services_1_1_system_data_loader.html#aa5f1ef8d24f07a49504e9d098b52f3bd">org.tdl.vireo.services.SystemDataLoader</a>
 </li>
 <li>getApprovalDate()
 : <a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_submission_impl.html#ad345bcd7ef3a43540387201a3d1618b4">org.tdl.vireo.model.jpa.JpaSubmissionImpl</a>
@@ -643,8 +641,8 @@ $(document).ready(function(){initNavTree('functions_g.html','');});
 , <a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_program_impl.html#ae6502e4e9f4cd5a0e103fd09c57c57ae">org.tdl.vireo.model.jpa.JpaProgramImpl</a>
 </li>
 <li>getEmailTemplate()
-: <a class="el" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_email_workflow_rule.html#a3b2b04771b613186aeddb1b19d5a1deb">org.tdl.vireo.model.EmailWorkflowRule</a>
-, <a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl.html#acdd016b415abc8eee9c1ec0465e70bed">org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleImpl</a>
+: <a class="el" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_email_workflow_rule.html#ac188b947feb1d1719e76c124d3866b64">org.tdl.vireo.model.EmailWorkflowRule</a>
+, <a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl.html#aea7d716477f3bbadb82fad9cc776d61b">org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleImpl</a>
 </li>
 <li>getEmbargoTypeByGuarantor()
 : <a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_submission_impl.html#ac1f03c7b3914ee09333580eb41d4ccda">org.tdl.vireo.model.jpa.JpaSubmissionImpl</a>
@@ -1201,6 +1199,10 @@ $(document).ready(function(){initNavTree('functions_g.html','');});
 : <a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_submission_impl.html#af165898160af0fc6f07c141a97407f6e">org.tdl.vireo.model.jpa.JpaSubmissionImpl</a>
 , <a class="el" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html#a605e65c52d9a38391066f3baf98baf71">org.tdl.vireo.model.Submission</a>
 </li>
+<li>getTimeout()
+: <a class="el" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#a8416e4eba35e9f363426b19c9e05bac6">org.tdl.vireo.model.DepositLocation</a>
+, <a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_deposit_location_impl.html#ab3db4e21ebfb943a4331e85794024f74">org.tdl.vireo.model.jpa.JpaDepositLocationImpl</a>
+</li>
 <li>getTo()
 : <a class="el" href="classorg_1_1tdl_1_1vireo_1_1email_1_1impl_1_1_vireo_email_impl.html#a232ecae9a5411d42bbd2aae5006fe963">org.tdl.vireo.email.impl.VireoEmailImpl</a>
 , <a class="el" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#a4689a490e33ff627021fcd77ab15f062">org.tdl.vireo.email.VireoEmail</a>
@@ -1236,7 +1238,7 @@ $(document).ready(function(){initNavTree('functions_g.html','');});
 , <a class="el" href="classorg_1_1tdl_1_1vireo_1_1security_1_1impl_1_1_abstract_authentication_method_impl_1_1_abstrac82000742499bf442875473c9675ba683.html#a65bc564523e81a158842e38d28996b0b">org.tdl.vireo.security.impl.AbstractAuthenticationMethodImpl.AbstractExplicitAuthenticationMethod</a>
 </li>
 <li>getUUID()
-: <a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_hashed_blob.html#a4fd9b3ba8aa1d69f8599044fe29606db">org.tdl.vireo.model.jpa.HashedBlob</a>
+: <a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_hashed_blob.html#a6a5f32c6ada1017464b8809cf71b5150">org.tdl.vireo.model.jpa.HashedBlob</a>
 </li>
 <li>getValidDocumentTypes()
 : <a class="el" href="classcontrollers_1_1submit_1_1_document_info.html#aae4de862e31e44a9ab96f8c2b5663318">controllers.submit.DocumentInfo</a>
@@ -1290,8 +1292,8 @@ $(document).ready(function(){initNavTree('functions_g.html','');});
 , <a class="el" href="enumorg_1_1tdl_1_1vireo_1_1constant_1_1_field_config.html#a1348974a43e8154e23390b14c143541c">org.tdl.vireo.constant.FieldConfig</a>
 </li>
 <li>guarantor
-: <a class="el" href="classcontrollers_1_1_first_user_1_1_embargo_array.html#afa2c2420f2518cf413b09cc7aaeb4e9d">controllers.FirstUser.EmbargoArray</a>
-, <a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#a7a4fd423790f8c8278e05af8fa162061">org.tdl.vireo.model.jpa.JpaEmbargoTypeImpl</a>
+: <a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#a7a4fd423790f8c8278e05af8fa162061">org.tdl.vireo.model.jpa.JpaEmbargoTypeImpl</a>
+, <a class="el" href="classorg_1_1tdl_1_1vireo_1_1services_1_1_system_data_loader_1_1_embargo_array.html#aa440a4628c7e7b1f0060109da99491a1">org.tdl.vireo.services.SystemDataLoader.EmbargoArray</a>
 </li>
 </ul>
 </div><!-- contents -->
@@ -1299,7 +1301,7 @@ $(document).ready(function(){initNavTree('functions_g.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Feb 12 2015 12:31:09 for Vireo by
+    <li class="footer">Generated on Wed Mar 4 2015 13:41:26 for Vireo by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

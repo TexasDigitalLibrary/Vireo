@@ -1,0 +1,8 @@
+<map id="org.tdl.vireo.services.Utilities.validateOrcidFormat" name="org.tdl.vireo.services.Utilities.validateOrcidFormat">
+<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities.html#a495fcedbd277df633c10a79158166434" title="org.tdl.vireo.services.Utilities.format\lOrcidAsDashedId" alt="" coords="293,97,525,139"/>
+<area shape="rect" id="node4" href="$classcontrollers_1_1submit_1_1_personal_info.html#a6d5f730f0dbc8dae768eabf605c4e676" title="controllers.submit.Personal\lInfo.personalInfo" alt="" coords="953,97,1133,139"/>
+<area shape="rect" id="node5" href="$classcontrollers_1_1submit_1_1_personal_info.html#ad53c8714a33f61576bb69d25f45cf8cf" title="controllers.submit.Personal\lInfo.verify" alt="" coords="638,156,818,197"/>
+<area shape="rect" id="node7" href="$classcontrollers_1_1_view_tab.html#a016a7dfb1a8e2ebf59937cb7abc11c03" title="controllers.ViewTab.updateJSON" alt="" coords="301,214,517,241"/>
+<area shape="rect" id="node3" href="$classorg_1_1tdl_1_1vireo_1_1security_1_1impl_1_1_shibboleth_authentication_method_impl.html#a81143e5bafe3220c04698c5a9e85c78b" title="org.tdl.vireo.security.impl.\lShibbolethAuthenticationMethodImpl.authenticate" alt="" coords="573,39,883,80"/>
+<area shape="rect" id="node6" href="$classcontrollers_1_1submit_1_1_confirm.html#a79cbc166f7bdc264268d6318544ce4fb" title="controllers.submit.Confirm.confirm" alt="" coords="931,163,1154,190"/>
+</map>

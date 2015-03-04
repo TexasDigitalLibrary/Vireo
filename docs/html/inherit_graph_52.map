@@ -1,3 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classorg_1_1tdl_1_1vireo_1_1proquest_1_1_proquest_utility_service_1_1_address.html" title="org.tdl.vireo.proquest.Proquest\lUtilityService.Address" alt="" coords="5,5,205,46"/>
+<area shape="rect" id="node1" href="$interfaceorg_1_1tdl_1_1vireo_1_1proquest_1_1_proquest_vocabulary_repository.html" title="org.tdl.vireo.proquest.Proquest\lVocabularyRepository" alt="" coords="5,5,205,46"/>
+<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1proquest_1_1impl_1_1_proquest_excel_vocabulary_repository_impl.html" title="org.tdl.vireo.proquest.impl.\lProquestExcelVocabularyRepositoryImpl" alt="" coords="254,5,514,46"/>
 </map>

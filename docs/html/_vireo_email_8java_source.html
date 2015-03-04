@@ -28,9 +28,10 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="vireo-logo-sm.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">Vireo
-   &#160;<span id="projectnumber">3.0.x-RC4</span>
+   &#160;<span id="projectnumber">3.0.0</span>
    </div>
    <div id="projectbrief">Vireo Electronic Thesis and Dissertation Submission System</div>
   </td>
@@ -171,51 +172,57 @@ $(document).ready(function(){initNavTree('_vireo_email_8java_source.html','');})
 <div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;</div>
 <div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;    <span class="keyword">public</span> InternetAddress <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#a13fe3ed6f2817222a81f21d12d3061e0">getFrom</a>();</div>
 <div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;</div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;    </div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;    <span class="comment">// Subject and Message</span></div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;</div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;    <span class="keyword">public</span> String <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#a66aa7785e35bbbffc93f02dcef5a8581">getSubject</a>();</div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;</div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#ae62261420ba81c3eee4f37df86249cd5">setSubject</a>(String subject);</div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;</div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;    <span class="keyword">public</span> String <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#a4baced537dcdb8ad3d5a5d8444cc27cb">getMessage</a>();</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#a427718a8a5147e79905eacad4bebd653">setFrom</a>(String email);</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;    </div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#a427718a8a5147e79905eacad4bebd653">setFrom</a>(String email, String name);</div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;    </div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#a427718a8a5147e79905eacad4bebd653">setFrom</a>(<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person.html">Person</a> person);</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;    </div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#a427718a8a5147e79905eacad4bebd653">setFrom</a>(InternetAddress address);</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;    </div>
 <div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;</div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#a93ef506c9208233a42270cfb33af08d7">setMessage</a>(String message);</div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;</div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#a9fe34d6a4f35864904c95d1260df0dff">setTemplate</a>(<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_email_template.html">EmailTemplate</a> <span class="keyword">template</span>);</div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;</div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;    <span class="comment">// Parameters</span></div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;</div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;    <span class="keyword">public</span> Map&lt;String, String&gt; <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#a4ed94bdf400dd3300cf34a5ad140c845">getParameters</a>();</div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;</div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#ad8950f800f5881cf4682c3cbc2497cc1">addParameter</a>(String name, String value);</div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;</div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#a56e04e4911a666ff39fe7af433108477">addParameters</a>(<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html">Submission</a> submission);</div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;</div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#a0bf8ff7bd68b2bd7724eb57c2252e9f0">applyParameterSubstitution</a>();</div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;</div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;    <span class="comment">// Action Logs</span></div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;</div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;    <span class="keyword">public</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person.html">Person</a> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#a0542510ab91a72a57179a0b92f8ef776">getLogPerson</a>();</div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;</div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;    <span class="keyword">public</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html">Submission</a> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#a3e35dff90405c7794855e31fa75cbc2c">getLogSubmission</a>();</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;    <span class="comment">// Subject and Message</span></div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;</div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;    <span class="keyword">public</span> String <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#a66aa7785e35bbbffc93f02dcef5a8581">getSubject</a>();</div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#ae62261420ba81c3eee4f37df86249cd5">setSubject</a>(String subject);</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;</div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;    <span class="keyword">public</span> String <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#a4baced537dcdb8ad3d5a5d8444cc27cb">getMessage</a>();</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;</div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#a93ef506c9208233a42270cfb33af08d7">setMessage</a>(String message);</div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#a9fe34d6a4f35864904c95d1260df0dff">setTemplate</a>(<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_email_template.html">EmailTemplate</a> <span class="keyword">template</span>);</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;    <span class="comment">// Parameters</span></div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;    <span class="keyword">public</span> Map&lt;String, String&gt; <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#a4ed94bdf400dd3300cf34a5ad140c845">getParameters</a>();</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;</div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#ad8950f800f5881cf4682c3cbc2497cc1">addParameter</a>(String name, String value);</div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;</div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#a56e04e4911a666ff39fe7af433108477">addParameters</a>(<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html">Submission</a> submission);</div>
 <div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;</div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#ad8c810c8079784031bb51578d22ef9ef">setLogOnCompletion</a>(<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person.html">Person</a> person, <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html">Submission</a> submission);</div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;</div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;    <span class="keyword">public</span> String <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#aaedaf087e8c560ec0660e11062a0a50f">getSuccessLogMessage</a>();</div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;</div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#a6375c0f75d99454ea645572bf31d17ac">setSuccessLogMessage</a>(String message);</div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;</div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;    <span class="keyword">public</span> String <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#a34acefd7dae63e609ff99f3fa330f17f">getFailureLogMessage</a>(String reason);</div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;</div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#a507bf7d9349ca6537dad6384670c09c5">setFailureLogMessage</a>(String message);</div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;</div>
-<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;}</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#a0bf8ff7bd68b2bd7724eb57c2252e9f0">applyParameterSubstitution</a>();</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;    <span class="comment">// Action Logs</span></div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;</div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;    <span class="keyword">public</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person.html">Person</a> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#a0542510ab91a72a57179a0b92f8ef776">getLogPerson</a>();</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;</div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;    <span class="keyword">public</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html">Submission</a> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#a3e35dff90405c7794855e31fa75cbc2c">getLogSubmission</a>();</div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;</div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#ad8c810c8079784031bb51578d22ef9ef">setLogOnCompletion</a>(<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person.html">Person</a> person, <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html">Submission</a> submission);</div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;</div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;    <span class="keyword">public</span> String <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#aaedaf087e8c560ec0660e11062a0a50f">getSuccessLogMessage</a>();</div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;</div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#a6375c0f75d99454ea645572bf31d17ac">setSuccessLogMessage</a>(String message);</div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;</div>
+<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;    <span class="keyword">public</span> String <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#a34acefd7dae63e609ff99f3fa330f17f">getFailureLogMessage</a>(String reason);</div>
+<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;</div>
+<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#a507bf7d9349ca6537dad6384670c09c5">setFailureLogMessage</a>(String message);</div>
+<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;</div>
+<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;}</div>
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email_html_ad8950f800f5881cf4682c3cbc2497cc1"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#ad8950f800f5881cf4682c3cbc2497cc1">org.tdl.vireo.email.VireoEmail.addParameter</a></div><div class="ttdeci">void addParameter(String name, String value)</div></div>
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email_html_aa6621fc6c384a2a0fa54dd6f506608bd"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#aa6621fc6c384a2a0fa54dd6f506608bd">org.tdl.vireo.email.VireoEmail.getBcc</a></div><div class="ttdeci">List&lt; InternetAddress &gt; getBcc()</div></div>
+<div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email_html_a427718a8a5147e79905eacad4bebd653"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#a427718a8a5147e79905eacad4bebd653">org.tdl.vireo.email.VireoEmail.setFrom</a></div><div class="ttdeci">void setFrom(String email)</div></div>
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email_html_a4689a490e33ff627021fcd77ab15f062"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#a4689a490e33ff627021fcd77ab15f062">org.tdl.vireo.email.VireoEmail.getTo</a></div><div class="ttdeci">List&lt; InternetAddress &gt; getTo()</div></div>
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email_html_a0542510ab91a72a57179a0b92f8ef776"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#a0542510ab91a72a57179a0b92f8ef776">org.tdl.vireo.email.VireoEmail.getLogPerson</a></div><div class="ttdeci">Person getLogPerson()</div></div>
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email_html_acf6615aa821d5805831d1ce59ce22155"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_vireo_email.html#acf6615aa821d5805831d1ce59ce22155">org.tdl.vireo.email.VireoEmail.getReplyTo</a></div><div class="ttdeci">InternetAddress getReplyTo()</div></div>
@@ -249,7 +256,7 @@ $(document).ready(function(){initNavTree('_vireo_email_8java_source.html','');})
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d422163b96683743ed3963d4aac17747.html">app</a></li><li class="navelem"><a class="el" href="dir_8dd784b59b4a9f97c6acd22cdbadb1c6.html">org</a></li><li class="navelem"><a class="el" href="dir_60dc62e39f90ceabe5ec09af2c2445af.html">tdl</a></li><li class="navelem"><a class="el" href="dir_07e49d88b1874552035fba0b7e33a8b8.html">vireo</a></li><li class="navelem"><a class="el" href="dir_23ed9c1bcd8d75102f30a04353f7b497.html">email</a></li><li class="navelem"><a class="el" href="_vireo_email_8java.html">VireoEmail.java</a></li>
-    <li class="footer">Generated on Thu Feb 12 2015 12:31:07 for Vireo by
+    <li class="footer">Generated on Wed Mar 4 2015 13:41:24 for Vireo by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

@@ -28,9 +28,10 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="vireo-logo-sm.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">Vireo
-   &#160;<span id="projectnumber">3.0.x-RC4</span>
+   &#160;<span id="projectnumber">3.0.0</span>
    </div>
    <div id="projectbrief">Vireo Electronic Thesis and Dissertation Submission System</div>
   </td>
@@ -225,22 +226,26 @@ $(document).ready(function(){initNavTree('_abstract_vireo_controller_8java_sourc
 <div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    </div>
 <div class="line"><a name="l00175"></a><span class="lineno"><a class="line" href="classcontrollers_1_1_abstract_vireo_controller.html#aabf7ef41b3dfa3b5da6e791cff34cc5e">  175</a></span>&#160;    <span class="keyword">protected</span> <span class="keyword">static</span> String <a class="code" href="classcontrollers_1_1_abstract_vireo_controller.html#aabf7ef41b3dfa3b5da6e791cff34cc5e">text2html</a>(String value) {</div>
 <div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;        String html = value.replaceAll(<span class="stringliteral">&quot;  &quot;</span>, <span class="stringliteral">&quot;&amp;nbsp;&amp;nbsp;&quot;</span>);</div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;        String[] paragraphs = html.split(<span class="stringliteral">&quot;\n\\s*\n&quot;</span>);</div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;        html = <span class="stringliteral">&quot;&quot;</span>;</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;        <span class="keywordflow">for</span> (String paragraph : paragraphs) {</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;            html += <span class="stringliteral">&quot;&lt;p&gt;&quot;</span> + paragraph + <span class="stringliteral">&quot;&lt;/p&gt;&quot;</span>;</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;        }</div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;        html = html.replaceAll(<span class="stringliteral">&quot;\n&quot;</span>, <span class="stringliteral">&quot;&lt;br/&gt;&quot;</span>);</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;        <span class="keywordflow">return</span> html;</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    }</div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    </div>
-<div class="line"><a name="l00197"></a><span class="lineno"><a class="line" href="classcontrollers_1_1_abstract_vireo_controller.html#a76be37eaa99c3319f808038bc0fc63d8">  197</a></span>&#160;    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keywordtype">boolean</span> <a class="code" href="classcontrollers_1_1_abstract_vireo_controller.html#a76be37eaa99c3319f808038bc0fc63d8">isFieldRequired</a>(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1constant_1_1_field_config.html">FieldConfig</a> field) {</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;        <span class="keywordflow">return</span> <span class="stringliteral">&quot;required&quot;</span>.equals(settingRepo.getConfigValue(field.ENABLED));</div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;    }</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;}</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;        <span class="comment">// null check</span></div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;        <span class="keywordflow">if</span>(value == null)</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;            value = <span class="stringliteral">&quot;&quot;</span>;</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;        </div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;        String html = value.replaceAll(<span class="stringliteral">&quot;  &quot;</span>, <span class="stringliteral">&quot;&amp;nbsp;&amp;nbsp;&quot;</span>);</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;        String[] paragraphs = html.split(<span class="stringliteral">&quot;\n\\s*\n&quot;</span>);</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;        html = <span class="stringliteral">&quot;&quot;</span>;</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;        <span class="keywordflow">for</span> (String paragraph : paragraphs) {</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;            html += <span class="stringliteral">&quot;&lt;p&gt;&quot;</span> + paragraph + <span class="stringliteral">&quot;&lt;/p&gt;&quot;</span>;</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;        }</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;        html = html.replaceAll(<span class="stringliteral">&quot;\n&quot;</span>, <span class="stringliteral">&quot;&lt;br/&gt;&quot;</span>);</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;        <span class="keywordflow">return</span> html;</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;    }</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;    </div>
+<div class="line"><a name="l00201"></a><span class="lineno"><a class="line" href="classcontrollers_1_1_abstract_vireo_controller.html#a76be37eaa99c3319f808038bc0fc63d8">  201</a></span>&#160;    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keywordtype">boolean</span> <a class="code" href="classcontrollers_1_1_abstract_vireo_controller.html#a76be37eaa99c3319f808038bc0fc63d8">isFieldRequired</a>(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1constant_1_1_field_config.html">FieldConfig</a> field) {</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;        <span class="keywordflow">return</span> <span class="stringliteral">&quot;required&quot;</span>.equals(settingRepo.getConfigValue(field.ENABLED));</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;    }</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;}</div>
 <div class="ttc" id="classcontrollers_1_1_abstract_vireo_controller_html"><div class="ttname"><a href="classcontrollers_1_1_abstract_vireo_controller.html">controllers.AbstractVireoController</a></div><div class="ttdef"><b>Definition:</b> <a href="_abstract_vireo_controller_8java_source.html#l00033">AbstractVireoController.java:33</a></div></div>
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person_repository_html_af089145d971d40c602fe79bdc1abafbd"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person_repository.html#af089145d971d40c602fe79bdc1abafbd">org.tdl.vireo.model.PersonRepository.findPersonsTotal</a></div><div class="ttdeci">long findPersonsTotal()</div></div>
 <div class="ttc" id="classcontrollers_1_1_abstract_vireo_controller_html_a55b13e29596aa29a7dfff3690f3973ff"><div class="ttname"><a href="classcontrollers_1_1_abstract_vireo_controller.html#a55b13e29596aa29a7dfff3690f3973ff">controllers.AbstractVireoController.subRepo</a></div><div class="ttdeci">static SubmissionRepository subRepo</div><div class="ttdef"><b>Definition:</b> <a href="_abstract_vireo_controller_8java_source.html#l00038">AbstractVireoController.java:38</a></div></div>
@@ -266,7 +271,7 @@ $(document).ready(function(){initNavTree('_abstract_vireo_controller_8java_sourc
 <div class="ttc" id="classcontrollers_1_1_abstract_vireo_controller_html_a0fb44183996b4a88719fcfd5fb091729"><div class="ttname"><a href="classcontrollers_1_1_abstract_vireo_controller.html#a0fb44183996b4a88719fcfd5fb091729">controllers.AbstractVireoController.checkForFirstUser</a></div><div class="ttdeci">static void checkForFirstUser()</div><div class="ttdef"><b>Definition:</b> <a href="_abstract_vireo_controller_8java_source.html#l00065">AbstractVireoController.java:65</a></div></div>
 <div class="ttc" id="classcontrollers_1_1_abstract_vireo_controller_html_aa8388233eb6954734e3ad79d112738ee"><div class="ttname"><a href="classcontrollers_1_1_abstract_vireo_controller.html#aa8388233eb6954734e3ad79d112738ee">controllers.AbstractVireoController.personRepo</a></div><div class="ttdeci">static PersonRepository personRepo</div><div class="ttdef"><b>Definition:</b> <a href="_abstract_vireo_controller_8java_source.html#l00037">AbstractVireoController.java:37</a></div></div>
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person_repository_html"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person_repository.html">org.tdl.vireo.model.PersonRepository</a></div><div class="ttdef"><b>Definition:</b> <a href="_person_repository_8java_source.html#l00014">PersonRepository.java:14</a></div></div>
-<div class="ttc" id="classcontrollers_1_1_abstract_vireo_controller_html_a76be37eaa99c3319f808038bc0fc63d8"><div class="ttname"><a href="classcontrollers_1_1_abstract_vireo_controller.html#a76be37eaa99c3319f808038bc0fc63d8">controllers.AbstractVireoController.isFieldRequired</a></div><div class="ttdeci">static boolean isFieldRequired(FieldConfig field)</div><div class="ttdef"><b>Definition:</b> <a href="_abstract_vireo_controller_8java_source.html#l00197">AbstractVireoController.java:197</a></div></div>
+<div class="ttc" id="classcontrollers_1_1_abstract_vireo_controller_html_a76be37eaa99c3319f808038bc0fc63d8"><div class="ttname"><a href="classcontrollers_1_1_abstract_vireo_controller.html#a76be37eaa99c3319f808038bc0fc63d8">controllers.AbstractVireoController.isFieldRequired</a></div><div class="ttdeci">static boolean isFieldRequired(FieldConfig field)</div><div class="ttdef"><b>Definition:</b> <a href="_abstract_vireo_controller_8java_source.html#l00201">AbstractVireoController.java:201</a></div></div>
 <div class="ttc" id="classcontrollers_1_1_abstract_vireo_controller_html_aa3d62fa6612416ab8f2b876aaf8f982c"><div class="ttname"><a href="classcontrollers_1_1_abstract_vireo_controller.html#aa3d62fa6612416ab8f2b876aaf8f982c">controllers.AbstractVireoController.firstUser</a></div><div class="ttdeci">static Boolean firstUser</div><div class="ttdef"><b>Definition:</b> <a href="_abstract_vireo_controller_8java_source.html#l00046">AbstractVireoController.java:46</a></div></div>
 <div class="ttc" id="classcontrollers_1_1_abstract_vireo_controller_html_a03c6891fcfa455d7a8aadb9aa1750c1d"><div class="ttname"><a href="classcontrollers_1_1_abstract_vireo_controller.html#a03c6891fcfa455d7a8aadb9aa1750c1d">controllers.AbstractVireoController.escapeJavaScript</a></div><div class="ttdeci">static String escapeJavaScript(String value)</div><div class="ttdef"><b>Definition:</b> <a href="_abstract_vireo_controller_8java_source.html#l00124">AbstractVireoController.java:124</a></div></div>
 <div class="ttc" id="classcontrollers_1_1_abstract_vireo_controller_html_a2a91bb7a42b88190f809630b9b1e7f46"><div class="ttname"><a href="classcontrollers_1_1_abstract_vireo_controller.html#a2a91bb7a42b88190f809630b9b1e7f46">controllers.AbstractVireoController.context</a></div><div class="ttdeci">static SecurityContext context</div><div class="ttdef"><b>Definition:</b> <a href="_abstract_vireo_controller_8java_source.html#l00036">AbstractVireoController.java:36</a></div></div>
@@ -279,7 +284,7 @@ $(document).ready(function(){initNavTree('_abstract_vireo_controller_8java_sourc
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d422163b96683743ed3963d4aac17747.html">app</a></li><li class="navelem"><a class="el" href="dir_dc174da80912bcbdd5eca1a5dc2fb1f6.html">controllers</a></li><li class="navelem"><a class="el" href="_abstract_vireo_controller_8java.html">AbstractVireoController.java</a></li>
-    <li class="footer">Generated on Thu Feb 12 2015 12:31:07 for Vireo by
+    <li class="footer">Generated on Wed Mar 4 2015 13:41:24 for Vireo by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

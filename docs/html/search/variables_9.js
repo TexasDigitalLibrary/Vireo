@@ -18,6 +18,6 @@ var searchData=
   ['ipsubmissionid',['ipSubmissionId',['../classcontrollers_1_1_application_1_1_submission_status.html#a43659a2c07de73427e101fd62071afce',1,'controllers::Application::SubmissionStatus']]],
   ['isdisabled',['isDisabled',['../classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl.html#a95c63dd0c7620d7bebd41723d68b7af7',1,'org::tdl::vireo::model::jpa::JpaEmailWorkflowRuleImpl']]],
   ['isstudentvisible',['isStudentVisible',['../classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_custom_action_definition_impl.html#aa0bb0cc0fffd6238ccf8ccf33b2b771c',1,'org::tdl::vireo::model::jpa::JpaCustomActionDefinitionImpl']]],
-  ['issystem',['isSystem',['../classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl.html#aa2a10cc1929a5bf87b01689203ee1987',1,'org::tdl::vireo::model::jpa::JpaEmailWorkflowRuleImpl']]],
+  ['issystem',['isSystem',['../classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_impl.html#aa2a10cc1929a5bf87b01689203ee1987',1,'org.tdl.vireo.model.jpa.JpaEmailWorkflowRuleImpl.isSystem()'],['../classorg_1_1tdl_1_1vireo_1_1services_1_1_system_data_loader_1_1_embargo_array.html#ac9a588325a2da5e06e3eefa7cae81424',1,'org.tdl.vireo.services.SystemDataLoader.EmbargoArray.isSystem()']]],
   ['iterator_5fbatch_5fsize',['ITERATOR_BATCH_SIZE',['../classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_submission_repository_impl.html#a2d19967046777595c791d77cdf876d86',1,'org::tdl::vireo::model::jpa::JpaSubmissionRepositoryImpl']]]
 ];

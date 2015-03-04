@@ -1,5 +1,0 @@
-<map id="org.tdl.vireo.email.impl.SystemEmailTemplateServiceImpl" name="org.tdl.vireo.email.impl.SystemEmailTemplateServiceImpl">
-<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_system_email_template_service.html" title="org.tdl.vireo.email.System\lEmailTemplateService" alt="" coords="14,5,189,46"/>
-<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_settings_repository.html" title="org.tdl.vireo.model.Settings\lRepository" alt="" coords="11,70,192,111"/>
-<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1security_1_1_security_context.html" title="org.tdl.vireo.security.Security\lContext" alt="" coords="5,135,197,177"/>
-</map>

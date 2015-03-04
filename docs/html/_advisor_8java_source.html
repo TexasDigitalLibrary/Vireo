@@ -28,9 +28,10 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="vireo-logo-sm.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">Vireo
-   &#160;<span id="projectnumber">3.0.x-RC4</span>
+   &#160;<span id="projectnumber">3.0.0</span>
    </div>
    <div id="projectbrief">Vireo Electronic Thesis and Dissertation Submission System</div>
   </td>
@@ -131,134 +132,141 @@ $(document).ready(function(){initNavTree('_advisor_8java_source.html','');});
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;@With(Authentication.class)</div>
 <div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="classcontrollers_1_1_advisor.html">   25</a></span>&#160;public class <a class="code" href="classcontrollers_1_1_advisor.html">Advisor</a> extends <a class="code" href="classcontrollers_1_1_abstract_vireo_controller.html">AbstractVireoController</a> {</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    </div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;</div>
 <div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="classcontrollers_1_1_advisor.html#a9629cb8116ab723f6d4ea027ba77cc92">   27</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String AFFILIATION_CONFIG = <span class="stringliteral">&quot;advisor.affiliation.restrict&quot;</span>;</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    @<a class="code" href="interfacecontrollers_1_1_security.html">Security</a>(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html">RoleType</a>.<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html#ae235aef75c2bd1b07dd20961f6d98fc8">NONE</a>)</div>
-<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="classcontrollers_1_1_advisor.html#aa66da04243813108a589cf196759f435">   41</a></span>&#160;    public static <span class="keywordtype">void</span> review(String token) {</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="comment">// Security check:</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <span class="comment">// 1) Managers can access this page, with no other checks</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <span class="comment">// 2) Non-managers need to have a specific affiliation before they can</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="comment">//    access this page. (Optional)</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="comment">//</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="comment">// If there is no affiliation check, then basically anyone who has</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        <span class="comment">// access to the security token can access this page.</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person.html">Person</a> person = context.getPerson();</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="keywordflow">if</span> (context.isManager()) {</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;            String affiliationConfig = Play.configuration.getProperty(AFFILIATION_CONFIG, <span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;            <span class="keywordflow">if</span> (<span class="stringliteral">&quot;&quot;</span>.equals(affiliationConfig)) {</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;                <span class="comment">// We are configured to require affiliations before accessing this page.</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;                <span class="keywordflow">for</span> (String affiliation : affiliationConfig.split(<span class="stringliteral">&quot;;&quot;</span>)) {</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;                    <span class="keywordflow">if</span> (person.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person.html#a3d58281c54334366eb07c61f582a41d3">getAffiliations</a>().contains(affiliation.trim())) {</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;                        unauthorized(<span class="stringliteral">&quot;Only those with an affiliation of &quot;</span>+affiliationConfig+<span class="stringliteral">&quot; or managers are able to access this advisor review page.&quot;</span>);</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;                    }</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;                }</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            } </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        }</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        </div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        notFoundIfNull(token);</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html">Submission</a> sub = subRepo.findSubmissionByEmailHash(token);</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        notFoundIfNull(sub);</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        Logger.info(<span class="stringliteral">&quot;%s (%d: %s) has viewed submission #%d.&quot;</span>,</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;                person.getFormattedName(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_name_format.html#a2b7e2e6dc26a8468e5af4312a3ea423a">NameFormat.FIRST_LAST</a>), </div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;                person.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html#adf9b6814dd10bc0848d4f17341c6e7b1">getId</a>(), </div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;                person.getEmail(),</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;                sub.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html#adf9b6814dd10bc0848d4f17341c6e7b1">getId</a>());</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="keywordtype">boolean</span> inputRecieved = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        String error = null;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            context.turnOffAuthorization();</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            Date agreementDate = <span class="keyword">new</span> Date();</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            <span class="keywordtype">boolean</span> messageReceived = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            <span class="keywordflow">if</span> (params.get(<span class="stringliteral">&quot;advisorMessage&quot;</span>) != null &amp;&amp; params.get(<span class="stringliteral">&quot;advisorMessage&quot;</span>).trim().length() &gt; 0) {</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;                sub.logAction(<span class="stringliteral">&quot;Advisor comments : &#39;&quot;</span> +  params.get(<span class="stringliteral">&quot;advisorMessage&quot;</span>) + <span class="stringliteral">&quot;&#39;&quot;</span>).save();</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;                inputRecieved = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;                messageReceived = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            }</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            <span class="keywordflow">if</span> (<span class="stringliteral">&quot;approve&quot;</span>.equals(params.get(<span class="stringliteral">&quot;embargoApproval&quot;</span>))) {</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;                sub.setCommitteeEmbargoApprovalDate(agreementDate);</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;                inputRecieved = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<span class="stringliteral">&quot;unapprove&quot;</span>.equals(params.get(<span class="stringliteral">&quot;embargoApproval&quot;</span>)) || <span class="stringliteral">&quot;reject&quot;</span>.equals(params.get(<span class="stringliteral">&quot;embargoApproval&quot;</span>))) {</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;                <span class="keywordflow">if</span>(messageReceived) {</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;                    sub.setCommitteeEmbargoApprovalDate(null);</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;                    inputRecieved = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;                } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;                    error = <span class="stringliteral">&quot;You need to enter in a comment to &quot;</span> + params.get(<span class="stringliteral">&quot;embargoApproval&quot;</span>) + <span class="stringliteral">&quot; an embargo approval&quot;</span>;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;                }</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            }</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;            <span class="keywordflow">if</span> (<span class="stringliteral">&quot;approve&quot;</span>.equals(params.get(<span class="stringliteral">&quot;committeeApproval&quot;</span>))) {</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;                sub.setCommitteeApprovalDate(agreementDate);</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;                inputRecieved = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;            } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<span class="stringliteral">&quot;unapprove&quot;</span>.equals(params.get(<span class="stringliteral">&quot;committeeApproval&quot;</span>)) || <span class="stringliteral">&quot;reject&quot;</span>.equals(params.get(<span class="stringliteral">&quot;committeeApproval&quot;</span>))) {</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;                <span class="keywordflow">if</span>(messageReceived) {</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;                    sub.setCommitteeApprovalDate(null);</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;                    inputRecieved = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;                } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;                    error = <span class="stringliteral">&quot;You need to enter in a comment to &quot;</span> + params.get(<span class="stringliteral">&quot;committeeApproval&quot;</span>) + <span class="stringliteral">&quot; an application approval&quot;</span>;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;                }</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;            }</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;            </div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;            sub.save();</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        } <span class="keywordflow">finally</span> {</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;            context.restoreAuthorization();</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        }</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        String grantor = settingRepo.getConfigValue(<a class="code" href="classorg_1_1tdl_1_1vireo_1_1constant_1_1_app_config.html#a0c4650b7d7aa8a0f44c094301ea88ebe">AppConfig.GRANTOR</a>,<span class="stringliteral">&quot;Unknown Institution&quot;</span>);</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        List&lt;EmbargoType&gt; allEmbargos = settingRepo.findAllEmbargoTypes();</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person.html">Person</a> submitter = sub.getSubmitter();</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        List&lt;ActionLog&gt; logs = subRepo.findActionLog(sub);</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_attachment.html">Attachment</a> primaryDocument = sub.getPrimaryDocument();</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        List&lt;Attachment&gt; additionalDocuments = sub.getAttachmentsByType(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_attachment_type.html#acbf0b5e778a5202cd60f7bd838aaf758">AttachmentType.SUPPLEMENTAL</a>,<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_attachment_type.html#aaa0f17e17597cac801ec7ca16960d2e5">AttachmentType.ADMINISTRATIVE</a>,<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_attachment_type.html#a7276adfa25425bc247c7ad2e976a2057">AttachmentType.SOURCE</a>);</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        List&lt;Attachment&gt; feedbackDocuments = sub.getAttachmentsByType(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_attachment_type.html#af244eddaeae2195006ec065ac91ae8b3">AttachmentType.FEEDBACK</a>);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    @<a class="code" href="interfacecontrollers_1_1_security.html">Security</a>(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html">RoleType</a>.<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html#ae235aef75c2bd1b07dd20961f6d98fc8">NONE</a>)</div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="classcontrollers_1_1_advisor.html#a23ec66b7cf8948d5be16150c68dc28b6">   36</a></span>&#160;    public static <span class="keywordtype">void</span> reviewJSON(String token) {</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person.html">Person</a> person = context.getPerson();</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        notFoundIfNull(token);</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html">Submission</a> sub = subRepo.findSubmissionByEmailHash(token);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        notFoundIfNull(sub);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        Logger.info(<span class="stringliteral">&quot;%s (%d: %s) has viewed submission #%d.&quot;</span>, person.getFormattedName(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_name_format.html#a2b7e2e6dc26a8468e5af4312a3ea423a">NameFormat.FIRST_LAST</a>), person.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html#adf9b6814dd10bc0848d4f17341c6e7b1">getId</a>(), person.getEmail(), sub.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html#adf9b6814dd10bc0848d4f17341c6e7b1">getId</a>());</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <span class="keywordtype">boolean</span> inputRecieved = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        String error = <span class="stringliteral">&quot;&quot;</span>;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;            context.turnOffAuthorization();</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;            Date agreementDate = <span class="keyword">new</span> Date();</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;            <span class="keywordtype">boolean</span> messageReceived = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            <span class="keywordflow">if</span> (params.get(<span class="stringliteral">&quot;advisorMessage&quot;</span>) != null &amp;&amp; params.get(<span class="stringliteral">&quot;advisorMessage&quot;</span>).trim().length() &gt; 0) {</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;                sub.logAction(<span class="stringliteral">&quot;Advisor comments : &#39;&quot;</span> + params.get(<span class="stringliteral">&quot;advisorMessage&quot;</span>) + <span class="stringliteral">&quot;&#39;&quot;</span>);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;                inputRecieved = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;                messageReceived = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;            }</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            <span class="keywordflow">if</span> (<span class="stringliteral">&quot;approve&quot;</span>.equals(params.get(<span class="stringliteral">&quot;embargoApproval&quot;</span>))) {</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;                sub.setCommitteeEmbargoApprovalDate(agreementDate);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;                inputRecieved = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;            } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<span class="stringliteral">&quot;unapprove&quot;</span>.equals(params.get(<span class="stringliteral">&quot;embargoApproval&quot;</span>)) || <span class="stringliteral">&quot;reject&quot;</span>.equals(params.get(<span class="stringliteral">&quot;embargoApproval&quot;</span>))) {</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;                <span class="keywordflow">if</span> (messageReceived) {</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;                    sub.setCommitteeEmbargoApprovalDate(null);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;                    inputRecieved = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;                } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;                    error += <span class="stringliteral">&quot;You need to enter in a comment to &quot;</span> + params.get(<span class="stringliteral">&quot;embargoApproval&quot;</span>) + <span class="stringliteral">&quot; an embargo approval&lt;br/&gt;&quot;</span>;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;                }</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            }</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            <span class="keywordflow">if</span> (<span class="stringliteral">&quot;approve&quot;</span>.equals(params.get(<span class="stringliteral">&quot;committeeApproval&quot;</span>))) {</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;                sub.setCommitteeApprovalDate(agreementDate);</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;                inputRecieved = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;            } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<span class="stringliteral">&quot;unapprove&quot;</span>.equals(params.get(<span class="stringliteral">&quot;committeeApproval&quot;</span>)) || <span class="stringliteral">&quot;reject&quot;</span>.equals(params.get(<span class="stringliteral">&quot;committeeApproval&quot;</span>))) {</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;                <span class="keywordflow">if</span> (messageReceived) {</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;                    sub.setCommitteeApprovalDate(null);</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;                    inputRecieved = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;                } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;                    error += <span class="stringliteral">&quot;You need to enter in a comment to &quot;</span> + params.get(<span class="stringliteral">&quot;committeeApproval&quot;</span>) + <span class="stringliteral">&quot; an application approval&lt;br/&gt;&quot;</span>;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;                }</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            }</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            sub.save();</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        } <span class="keywordflow">finally</span> {</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            context.restoreAuthorization();</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        }</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="keywordflow">if</span>(error == <span class="stringliteral">&quot;&quot;</span>)</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            renderJSON(<span class="stringliteral">&quot;{ \&quot;success\&quot;: true, \&quot;inputReceived\&quot;: &quot;</span>+inputRecieved+<span class="stringliteral">&quot;}&quot;</span>);</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            renderJSON(<span class="stringliteral">&quot;{ \&quot;success\&quot;: false, \&quot;error\&quot;: \&quot;&quot;</span>+error+<span class="stringliteral">&quot;\&quot;}&quot;</span>);</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    }</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    @<a class="code" href="interfacecontrollers_1_1_security.html">Security</a>(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html">RoleType</a>.<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html#ae235aef75c2bd1b07dd20961f6d98fc8">NONE</a>)</div>
+<div class="line"><a name="l00096"></a><span class="lineno"><a class="line" href="classcontrollers_1_1_advisor.html#aa66da04243813108a589cf196759f435">   96</a></span>&#160;    public static <span class="keywordtype">void</span> review(String token) {</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        <span class="comment">// Security check:</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="comment">// 1) Managers can access this page, with no other checks</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <span class="comment">// 2) Non-managers need to have a specific affiliation before they can</span></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        <span class="comment">// access this page. (Optional)</span></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <span class="comment">//</span></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <span class="comment">// If there is no affiliation check, then basically anyone who has</span></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        <span class="comment">// access to the security token can access this page.</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person.html">Person</a> person = context.getPerson();</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        <span class="keywordflow">if</span> (context.isManager()) {</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;            String affiliationConfig = Play.configuration.getProperty(AFFILIATION_CONFIG, <span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;            <span class="keywordflow">if</span> (<span class="stringliteral">&quot;&quot;</span>.equals(affiliationConfig)) {</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;                <span class="comment">// We are configured to require affiliations before accessing this page.</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;                <span class="keywordflow">for</span> (String affiliation : affiliationConfig.split(<span class="stringliteral">&quot;;&quot;</span>)) {</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;                    <span class="keywordflow">if</span> (person.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person.html#a3d58281c54334366eb07c61f582a41d3">getAffiliations</a>().contains(affiliation.trim())) {</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;                        unauthorized(<span class="stringliteral">&quot;Only those with an affiliation of &quot;</span> + affiliationConfig + <span class="stringliteral">&quot; or managers are able to access this advisor review page.&quot;</span>);</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;                    }</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;                }</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;            }</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        }</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        notFoundIfNull(token);</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html">Submission</a> sub = subRepo.findSubmissionByEmailHash(token);</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        notFoundIfNull(sub);</div>
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        <span class="keywordflow">for</span>(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1constant_1_1_field_config.html">FieldConfig</a> field : <a class="code" href="enumorg_1_1tdl_1_1vireo_1_1constant_1_1_field_config.html">FieldConfig</a>.values()) {</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;            renderArgs.put(field.name(),field );</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        }</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        </div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        renderTemplate(<span class="stringliteral">&quot;Advisor/view.html&quot;</span>, token, sub, submitter, logs, primaryDocument, additionalDocuments, feedbackDocuments, grantor,allEmbargos,inputRecieved,error);</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    }</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    </div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    </div>
-<div class="line"><a name="l00144"></a><span class="lineno"><a class="line" href="classcontrollers_1_1_advisor.html#a24ae21bb586509c5d8662669ef5d4e0b">  144</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classcontrollers_1_1_advisor.html#a24ae21bb586509c5d8662669ef5d4e0b">viewAttachment</a>(String token, Long attachmentId, String name) {</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;        notFoundIfNull(token);</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;        notFoundIfNull(attachmentId);</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;        <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html">Submission</a> sub = subRepo.findSubmissionByEmailHash(token);      </div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;        <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_attachment.html">Attachment</a> attachment = subRepo.findAttachment(attachmentId);</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;        notFoundIfNull(sub);</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;        notFoundIfNull(attachment);</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        Logger.info(<span class="stringliteral">&quot;%s (%d: %s) has viewed submission #%d.&quot;</span>, person.getFormattedName(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_name_format.html#a2b7e2e6dc26a8468e5af4312a3ea423a">NameFormat.FIRST_LAST</a>), person.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html#adf9b6814dd10bc0848d4f17341c6e7b1">getId</a>(), person.getEmail(), sub.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html#adf9b6814dd10bc0848d4f17341c6e7b1">getId</a>());</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        String grantor = settingRepo.getConfigValue(<a class="code" href="classorg_1_1tdl_1_1vireo_1_1constant_1_1_app_config.html#a0c4650b7d7aa8a0f44c094301ea88ebe">AppConfig.GRANTOR</a>, <span class="stringliteral">&quot;Unknown Institution&quot;</span>);</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        List&lt;EmbargoType&gt; allEmbargos = settingRepo.findAllEmbargoTypes();</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person.html">Person</a> submitter = sub.getSubmitter();</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        List&lt;ActionLog&gt; logs = subRepo.findActionLog(sub);</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_attachment.html">Attachment</a> primaryDocument = sub.getPrimaryDocument();</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        List&lt;Attachment&gt; additionalDocuments = sub.getAttachmentsByType(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_attachment_type.html#acbf0b5e778a5202cd60f7bd838aaf758">AttachmentType.SUPPLEMENTAL</a>, <a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_attachment_type.html#aaa0f17e17597cac801ec7ca16960d2e5">AttachmentType.ADMINISTRATIVE</a>, <a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_attachment_type.html#a7276adfa25425bc247c7ad2e976a2057">AttachmentType.SOURCE</a>);</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;        List&lt;Attachment&gt; feedbackDocuments = sub.getAttachmentsByType(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_attachment_type.html#af244eddaeae2195006ec065ac91ae8b3">AttachmentType.FEEDBACK</a>);</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        <span class="keywordflow">for</span> (<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1constant_1_1_field_config.html">FieldConfig</a> field : <a class="code" href="enumorg_1_1tdl_1_1vireo_1_1constant_1_1_field_config.html">FieldConfig</a>.values()) {</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;            renderArgs.put(field.name(), field);</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;        }</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;        renderTemplate(<span class="stringliteral">&quot;Advisor/view.html&quot;</span>, token, sub, submitter, logs, primaryDocument, additionalDocuments, feedbackDocuments, grantor, allEmbargos);</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;    }</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;</div>
+<div class="line"><a name="l00153"></a><span class="lineno"><a class="line" href="classcontrollers_1_1_advisor.html#a24ae21bb586509c5d8662669ef5d4e0b">  153</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classcontrollers_1_1_advisor.html#a24ae21bb586509c5d8662669ef5d4e0b">viewAttachment</a>(String token, Long attachmentId, String name) {</div>
 <div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;        response.setContentTypeIfNotSet(attachment.getMimeType()); </div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;        </div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;        <span class="comment">// Fix problem with no-cache headers and ie8</span></div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;        response.setHeader(<span class="stringliteral">&quot;Pragma&quot;</span>, <span class="stringliteral">&quot;public&quot;</span>);</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;        response.setHeader(<span class="stringliteral">&quot;Cache-Control&quot;</span>,<span class="stringliteral">&quot;public&quot;</span>);</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;        </div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;            renderBinary(<span class="keyword">new</span> FileInputStream(attachment.getFile()), attachment.getName(), attachment.getFile().length(), <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;        } <span class="keywordflow">catch</span> (FileNotFoundException ex) {</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;            error(<span class="stringliteral">&quot;File not found&quot;</span>);</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;        }</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    }</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    </div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;}</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;        notFoundIfNull(token);</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;        notFoundIfNull(attachmentId);</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;        <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_submission.html">Submission</a> sub = subRepo.findSubmissionByEmailHash(token);</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;        <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_attachment.html">Attachment</a> attachment = subRepo.findAttachment(attachmentId);</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        notFoundIfNull(sub);</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;        notFoundIfNull(attachment);</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;        response.setContentTypeIfNotSet(attachment.getMimeType());</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;        <span class="comment">// Fix problem with no-cache headers and ie8</span></div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;        response.setHeader(<span class="stringliteral">&quot;Pragma&quot;</span>, <span class="stringliteral">&quot;public&quot;</span>);</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;        response.setHeader(<span class="stringliteral">&quot;Cache-Control&quot;</span>, <span class="stringliteral">&quot;public&quot;</span>);</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;        <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;            renderBinary(<span class="keyword">new</span> FileInputStream(attachment.getFile()), attachment.getName(), attachment.getFile().length(), <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;        } <span class="keywordflow">catch</span> (FileNotFoundException ex) {</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;            error(<span class="stringliteral">&quot;File not found&quot;</span>);</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;        }</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;    }</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;}</div>
 <div class="ttc" id="classcontrollers_1_1_abstract_vireo_controller_html"><div class="ttname"><a href="classcontrollers_1_1_abstract_vireo_controller.html">controllers.AbstractVireoController</a></div><div class="ttdef"><b>Definition:</b> <a href="_abstract_vireo_controller_8java_source.html#l00033">AbstractVireoController.java:33</a></div></div>
 <div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1constant_1_1_app_config_html_a0c4650b7d7aa8a0f44c094301ea88ebe"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1constant_1_1_app_config.html#a0c4650b7d7aa8a0f44c094301ea88ebe">org.tdl.vireo.constant.AppConfig.GRANTOR</a></div><div class="ttdeci">static final String GRANTOR</div><div class="ttdef"><b>Definition:</b> <a href="_app_config_8java_source.html#l00047">AppConfig.java:47</a></div></div>
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model_html_adf9b6814dd10bc0848d4f17341c6e7b1"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html#adf9b6814dd10bc0848d4f17341c6e7b1">org.tdl.vireo.model.AbstractModel.getId</a></div><div class="ttdeci">Long getId()</div></div>
 <div class="ttc" id="enumorg_1_1tdl_1_1vireo_1_1model_1_1_attachment_type_html_acbf0b5e778a5202cd60f7bd838aaf758"><div class="ttname"><a href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_attachment_type.html#acbf0b5e778a5202cd60f7bd838aaf758">org.tdl.vireo.model.AttachmentType.SUPPLEMENTAL</a></div><div class="ttdeci">SUPPLEMENTAL</div><div class="ttdef"><b>Definition:</b> <a href="_attachment_type_8java_source.html#l00011">AttachmentType.java:11</a></div></div>
 <div class="ttc" id="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type_html"><div class="ttname"><a href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html">org.tdl.vireo.model.RoleType</a></div><div class="ttdef"><b>Definition:</b> <a href="_role_type_8java_source.html#l00008">RoleType.java:8</a></div></div>
-<div class="ttc" id="classcontrollers_1_1_advisor_html_a24ae21bb586509c5d8662669ef5d4e0b"><div class="ttname"><a href="classcontrollers_1_1_advisor.html#a24ae21bb586509c5d8662669ef5d4e0b">controllers.Advisor.viewAttachment</a></div><div class="ttdeci">static void viewAttachment(String token, Long attachmentId, String name)</div><div class="ttdef"><b>Definition:</b> <a href="_advisor_8java_source.html#l00144">Advisor.java:144</a></div></div>
+<div class="ttc" id="classcontrollers_1_1_advisor_html_a24ae21bb586509c5d8662669ef5d4e0b"><div class="ttname"><a href="classcontrollers_1_1_advisor.html#a24ae21bb586509c5d8662669ef5d4e0b">controllers.Advisor.viewAttachment</a></div><div class="ttdeci">static void viewAttachment(String token, Long attachmentId, String name)</div><div class="ttdef"><b>Definition:</b> <a href="_advisor_8java_source.html#l00153">Advisor.java:153</a></div></div>
 <div class="ttc" id="enumorg_1_1tdl_1_1vireo_1_1model_1_1_attachment_type_html_aaa0f17e17597cac801ec7ca16960d2e5"><div class="ttname"><a href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_attachment_type.html#aaa0f17e17597cac801ec7ca16960d2e5">org.tdl.vireo.model.AttachmentType.ADMINISTRATIVE</a></div><div class="ttdeci">ADMINISTRATIVE</div><div class="ttdef"><b>Definition:</b> <a href="_attachment_type_8java_source.html#l00015">AttachmentType.java:15</a></div></div>
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person_html_a3d58281c54334366eb07c61f582a41d3"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person.html#a3d58281c54334366eb07c61f582a41d3">org.tdl.vireo.model.Person.getAffiliations</a></div><div class="ttdeci">List&lt; String &gt; getAffiliations()</div></div>
 <div class="ttc" id="interfacecontrollers_1_1_security_html"><div class="ttname"><a href="interfacecontrollers_1_1_security.html">controllers.Security</a></div><div class="ttdef"><b>Definition:</b> <a href="_security_8java_source.html#l00043">Security.java:43</a></div></div>
@@ -283,7 +291,7 @@ $(document).ready(function(){initNavTree('_advisor_8java_source.html','');});
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d422163b96683743ed3963d4aac17747.html">app</a></li><li class="navelem"><a class="el" href="dir_dc174da80912bcbdd5eca1a5dc2fb1f6.html">controllers</a></li><li class="navelem"><a class="el" href="_advisor_8java.html">Advisor.java</a></li>
-    <li class="footer">Generated on Thu Feb 12 2015 12:31:07 for Vireo by
+    <li class="footer">Generated on Wed Mar 4 2015 13:41:24 for Vireo by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

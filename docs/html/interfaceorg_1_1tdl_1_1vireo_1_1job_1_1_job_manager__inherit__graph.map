@@ -1,3 +1,3 @@
 <map id="org.tdl.vireo.job.JobManager" name="org.tdl.vireo.job.JobManager">
-<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1job_1_1impl_1_1_job_manager_impl.html" title="org.tdl.vireo.job.impl.Job\lManagerImpl" alt="" coords="17,81,180,122"/>
+<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1job_1_1impl_1_1_job_manager_impl.html" title="{org.tdl.vireo.job.impl.Job\lManagerImpl\n|+ maxSize\l# jobs\l|+ findJob()\l+ findAllJobs()\l+ findJobsByStatus()\l+ findJobsByOwner()\l+ findJobsByType()\l+ waitForJobs()\l+ waitForJobs()\l+ waitForJobs()\l+ waitForJobs()\l+ register()\l+ register()\l+ deregister()\l+ setMaxSize()\l+ toString()\l&#45; _prune()\l}" alt="" coords="17,293,180,605"/>
 </map>

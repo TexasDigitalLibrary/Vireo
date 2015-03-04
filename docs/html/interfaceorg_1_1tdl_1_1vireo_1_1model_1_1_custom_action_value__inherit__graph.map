@@ -1,4 +1,4 @@
 <map id="org.tdl.vireo.model.CustomActionValue" name="org.tdl.vireo.model.CustomActionValue">
-<area shape="rect" id="node3" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_custom_action_value_impl.html" title="org.tdl.vireo.model.jpa.\lJpaCustomActionValueImpl" alt="" coords="5,187,189,229"/>
-<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="org.tdl.vireo.model.Abstract\lModel" alt="" coords="6,6,188,47"/>
+<area shape="rect" id="node3" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_custom_action_value_impl.html" title="{org.tdl.vireo.model.jpa.\lJpaCustomActionValueImpl\n|+ submission\l+ definition\l+ value\l|+ save()\l+ delete()\l+ getSubmission()\l+ getDefinition()\l+ getValue()\l+ setValue()\l# JpaCustomActionValueImpl()\l}" alt="" coords="5,403,208,613"/>
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="{org.tdl.vireo.model.Abstract\lModel\n||+ getId()\l+ save()\l+ delete()\l+ refresh()\l+ merge()\l+ detach()\l}" alt="" coords="15,5,197,171"/>
 </map>

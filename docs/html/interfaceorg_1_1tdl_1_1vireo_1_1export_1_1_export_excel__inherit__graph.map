@@ -1,3 +1,3 @@
 <map id="org.tdl.vireo.export.ExportExcel" name="org.tdl.vireo.export.ExportExcel">
-<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_excel_packager_impl_1_1_excel_workbook_package.html" title="org.tdl.vireo.export.impl.\lExcelPackagerImpl.ExcelWorkbook\lPackage" alt="" coords="5,96,235,152"/>
+<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_excel_packager_impl_1_1_excel_workbook_package.html" title="{org.tdl.vireo.export.impl.\lExcelPackagerImpl.ExcelWorkbook\lPackage\n|+ submission\l+ workbook\l|+ ExcelWorkbookPackage()\l+ getSubmission()\l+ getMimeType()\l+ getFormat()\l+ getWorkbook()\l}" alt="" coords="5,190,235,370"/>
 </map>

@@ -1,3 +1,3 @@
 <map id="org.tdl.vireo.search.Searcher" name="org.tdl.vireo.search.Searcher">
-<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_searcher_impl.html" title="org.tdl.vireo.search.impl.\lLuceneSearcherImpl" alt="" coords="17,81,181,122"/>
+<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_searcher_impl.html" title="{org.tdl.vireo.search.impl.\lLuceneSearcherImpl\n|+ indexer\l+ subRepo\l+ stateManager\l+ SORT_SUB_FIELDS\l+ SORT_LOG_FIELDS\l+ SORT_TYPES\l|+ setLuceneIndexerImpl()\l+ setSubmissionRepository()\l+ setStateManager()\l+ submissionSearch()\l+ actionLogSearch()\l+ submissionSearch()\l+ actionLogSearch()\l+ buildQuery()\l~ [instance initializer]()\l}" alt="" coords="5,176,195,459"/>
 </map>

@@ -1,5 +1,5 @@
 <map id="org.tdl.vireo.model.AbstractWorkflowRuleCondition" name="org.tdl.vireo.model.AbstractWorkflowRuleCondition">
-<area shape="rect" id="node4" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_condition_impl.html" title="org.tdl.vireo.model.jpa.\lJpaEmailWorkflowRuleConditionImpl" alt="" coords="5,278,243,319"/>
-<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_ordered_model.html" title="org.tdl.vireo.model.Abstract\lOrderedModel" alt="" coords="33,97,215,138"/>
-<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="org.tdl.vireo.model.Abstract\lModel" alt="" coords="33,6,215,47"/>
+<area shape="rect" id="node4" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_workflow_rule_condition_impl.html" title="{org.tdl.vireo.model.jpa.\lJpaEmailWorkflowRuleConditionImpl\n|+ displayOrder\l+ conditionId\l+ conditionType\l|+ JpaEmailWorkflowRuleConditionImpl()\l+ JpaEmailWorkflowRuleConditionImpl()\l+ save()\l+ delete()\l+ getDisplayOrder()\l+ setDisplayOrder()\l+ getConditionId()\l+ setConditionId()\l+ getConditionType()\l+ setConditionType()\l+ getConditionIdDisplayName()\l}" alt="" coords="4,574,261,842"/>
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_ordered_model.html" title="{org.tdl.vireo.model.Abstract\lOrderedModel\n||+ getDisplayOrder()\l+ setDisplayOrder()\l}" alt="" coords="42,219,224,325"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="{org.tdl.vireo.model.Abstract\lModel\n||+ getId()\l+ save()\l+ delete()\l+ refresh()\l+ merge()\l+ detach()\l}" alt="" coords="42,5,224,171"/>
 </map>

@@ -67,8 +67,12 @@ var interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_settings_repository =
     [ "findLanguage", "interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_settings_repository.html#a202b0dcc29da6b7729e6564778efd3c3", null ],
     [ "findLanguageByName", "interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_settings_repository.html#ab30c6baf17b9730258f24931212f19f1", null ],
     [ "findMajor", "interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_settings_repository.html#aa4c7e4a40a0956f56604a77e16cbe28f", null ],
+    [ "findNonSystemEmailTemplateByName", "interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_settings_repository.html#aa5992c08c6246f416854e82847cae513", null ],
+    [ "findNonSystemEmbargoTypeByNameAndGuarantor", "interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_settings_repository.html#a0ac8d0a55d85b3ad7702316317262ed0", null ],
     [ "findProgram", "interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_settings_repository.html#a7b99b7fe92816cbb09162921c994a39f", null ],
     [ "findProgramByName", "interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_settings_repository.html#ad54333c6e3a269ddade4ca14d5ef831f", null ],
+    [ "findSystemEmailTemplateByName", "interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_settings_repository.html#a67301311db8754b74b4f086ef1c8c33a", null ],
+    [ "findSystemEmbargoTypeByNameAndGuarantor", "interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_settings_repository.html#a294874ca746121c2ad168593a169ead5", null ],
     [ "getConfigBoolean", "interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_settings_repository.html#a66d6fe00d747507b42b9387b537322a9", null ],
     [ "getConfigValue", "interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_settings_repository.html#aad1094890eb4ab0099df391e6192be97", null ],
     [ "getConfigValue", "interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_settings_repository.html#a647d8023d009cb7cbd7e95db1e144970", null ]

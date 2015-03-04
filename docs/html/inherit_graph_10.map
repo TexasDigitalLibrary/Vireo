@@ -1,4 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$interfaceorg_1_1tdl_1_1vireo_1_1batch_1_1_delete_service.html" title="org.tdl.vireo.batch.Delete\lService" alt="" coords="5,5,173,46"/>
-<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1batch_1_1impl_1_1_delete_service_impl.html" title="org.tdl.vireo.batch.impl.\lDeleteServiceImpl" alt="" coords="222,5,381,46"/>
+<area shape="rect" id="node1" href="$interfaceorg_1_1tdl_1_1vireo_1_1batch_1_1_transition_service.html" title="org.tdl.vireo.batch.Transition\lService" alt="" coords="5,5,192,46"/>
+<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1batch_1_1impl_1_1_transition_service_impl.html" title="org.tdl.vireo.batch.impl.\lTransitionServiceImpl" alt="" coords="241,5,399,46"/>
 </map>

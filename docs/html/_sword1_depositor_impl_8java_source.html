@@ -28,9 +28,10 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="vireo-logo-sm.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">Vireo
-   &#160;<span id="projectnumber">3.0.x-RC4</span>
+   &#160;<span id="projectnumber">3.0.0</span>
    </div>
    <div id="projectbrief">Vireo Electronic Thesis and Dissertation Submission System</div>
   </td>
@@ -184,269 +185,275 @@ $(document).ready(function(){initNavTree('_sword1_depositor_impl_8java_source.ht
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            </div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            <span class="comment">//Building the client</span></div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;            Client client = <span class="keyword">new</span> Client();</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            client.setServer(repositoryURL.getHost(), repositoryURL.getPort());</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            client.setUserAgent(<a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a425196d94de0397b06a99d3851743e77">USER_AGENT</a>);</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;            </div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            <span class="comment">//If the credentials include a username and password, set those on the client.</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            <span class="keywordflow">if</span>(location.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#ab5ba7e746008d30cf4f686899072a42d">getUsername</a>() != null &amp;&amp; location.getPassword() != null)</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;                client.setCredentials(location.getUsername(), location.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#abba95e358b73b0dbc12d6d6a81f770be">getPassword</a>());</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            <span class="comment">//Obtaining the service document</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            <span class="comment">//If the credentials contain an onbehalfof user, retrieve the service document on behalf of that user.  Otherwise, simply retrieve the service document.</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;            ServiceDocument serviceDocument = null;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;            <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;                <span class="keywordflow">if</span>(location.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#adb0cb2c72c0dd1b084eb2d0bc626722b">getOnBehalfOf</a>() != null)</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;                {           </div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;                    serviceDocument = client.getServiceDocument(location.getRepository(), location.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#adb0cb2c72c0dd1b084eb2d0bc626722b">getOnBehalfOf</a>());</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;                }</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;                <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;                {</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;                    serviceDocument = client.getServiceDocument(location.getRepository());</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;                }</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;            } <span class="keywordflow">catch</span> (SWORDClientException e) {</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;                <span class="keywordflow">throw</span> <span class="keyword">new</span> RuntimeException(e);</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;            }</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;            </div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;            <span class="comment">//Getting the service from the service document</span></div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;            Service service = serviceDocument.getService();</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;            <span class="comment">//Building the map of collections from the service</span></div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;            <span class="keywordflow">for</span>(Workspace workspace : service.getWorkspacesList())</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;            {</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;                <span class="keywordflow">for</span>(Collection collection : workspace.getCollections())</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;                {</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;                    foundCollections.put(collection.getTitle(), collection.getLocation());</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;                }</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;            }       </div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;            </div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;            <span class="keywordflow">return</span> foundCollections;</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        } <span class="keywordflow">catch</span> (MalformedURLException murle) {</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception.html">DepositException</a>(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html">FIELD</a>.<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a69df11e68be730801f4c574f75340eeb">REPOSITORY</a>,<span class="stringliteral">&quot;The repository is an invalid URL&quot;</span>,murle);</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        </div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        } <span class="keywordflow">catch</span> (RuntimeException re) {</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;            Logger.error(re,<span class="stringliteral">&quot;Unable to getCollections()&quot;</span>);</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;            </div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;            <a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html">FIELD</a> field = <a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a072411acf93ba85191ece06161b6c3dc">FIELD.OTHER</a>;</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;            String message = re.getMessage();</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;            <span class="keywordflow">if</span> (re.getMessage().contains(<span class="stringliteral">&quot;Code: 401&quot;</span>)) {</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;                field = <a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a450228aa357079a98fd4975a4c1556f2">FIELD.AUTHENTICATION</a>;</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;                message = <span class="stringliteral">&quot;Unauthorized credentials&quot;</span>;</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;            } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (re.getMessage().contains(<span class="stringliteral">&quot;Code: 404&quot;</span>)) {</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;                field = <a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a69df11e68be730801f4c574f75340eeb">FIELD.REPOSITORY</a>;</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;                message = <span class="stringliteral">&quot;Repository URL not found&quot;</span>;</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;            } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (re.getMessage().contains(<span class="stringliteral">&quot;Connection refused&quot;</span>)) {</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;                field = <a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a69df11e68be730801f4c574f75340eeb">FIELD.REPOSITORY</a>;</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;                message = <span class="stringliteral">&quot;Connection refused&quot;</span>;</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;            } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (re.getMessage().contains(<span class="stringliteral">&quot;Unable to parse the XML&quot;</span>)) {</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;                field = <a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a69df11e68be730801f4c574f75340eeb">FIELD.REPOSITORY</a>;</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;                message = <span class="stringliteral">&quot;The repository does not appear to be a valid SWORD server.&quot;</span>;</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;            } </div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception.html">DepositException</a>(field, message, re);</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;        } </div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;    }</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    @Override</div>
-<div class="line"><a name="l00155"></a><span class="lineno"><a class="line" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#ae6ecccae59f5b3a39e63173535785fa1">  155</a></span>&#160;    <span class="keyword">public</span> String <a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#ae6ecccae59f5b3a39e63173535785fa1">getCollectionName</a>(<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html">DepositLocation</a> location, String collection) {</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;        Map&lt;String, String&gt; namesToCollections = this.getCollections(location);</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;        <span class="keywordflow">for</span>( String name : namesToCollections.keySet())</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;        {</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;            <span class="keywordflow">if</span>(namesToCollections.get(name).equals(collection))</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;                <span class="keywordflow">return</span> name;</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        }</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;        <span class="keywordflow">return</span> null;</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    }</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    @Override</div>
-<div class="line"><a name="l00166"></a><span class="lineno"><a class="line" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a1d6294d3caa0860f8296f0769a883737">  166</a></span>&#160;    <span class="keyword">public</span> String <a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a1d6294d3caa0860f8296f0769a883737">deposit</a>(<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html">DepositLocation</a> location, <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_export_package.html">ExportPackage</a> exportPackage) {</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;        <span class="keywordtype">boolean</span> zippedExport = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;        File exportFile = null;</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;        </div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;        <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;            <span class="comment">// Check our input</span></div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;            <span class="keywordflow">if</span> (location == null)</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;                <span class="keywordflow">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="stringliteral">&quot;The deposit location is required.&quot;</span>);</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;    </div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;            <span class="keywordflow">if</span> (exportPackage == null)</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;                <span class="keywordflow">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="stringliteral">&quot;The deposit package is required.&quot;</span>);</div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    </div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;            <span class="keywordflow">if</span> ( exportPackage.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_export_package.html#a8e573cfb0e8447d01671ff296119bbf7">getFile</a>() == null ||  !exportPackage.getFile().exists())</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;                <span class="keywordflow">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="stringliteral">&quot;The deposit package does not exist on disk or is inaccessable.&quot;</span>);</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;    </div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;            <span class="keywordflow">if</span> (location.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#a863308510dd7bc99e26ca21774d011e1">getRepository</a>() == null)</div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;                <span class="keywordflow">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="stringliteral">&quot;The deposit location must have a repository URL defined.&quot;</span>);</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    </div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;            <span class="keywordflow">if</span> (location.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#a812d047095dfde01900112b9562a64cf">getCollection</a>() == null)</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;                <span class="keywordflow">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="stringliteral">&quot;The deposit location must have a collection URL defined.&quot;</span>);</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;</div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;</div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;            URL repositoryURL = <span class="keyword">new</span> URL(location.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#a863308510dd7bc99e26ca21774d011e1">getRepository</a>());</div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;        </div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;            <span class="comment">// Check the package</span></div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;            exportFile = exportPackage.getFile();</div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;            String exportMimeType = exportPackage.getMimeType();</div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;            </div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;            <span class="comment">// If we are given a directory, zip it up because sword requires one file submissions.</span></div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;            <span class="keywordflow">if</span> (exportFile.isDirectory()) {</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;                File zipFile = File.createTempFile(exportFile.getName()+<span class="stringliteral">&quot;-&quot;</span>, <span class="stringliteral">&quot;.zip&quot;</span>);</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;                <a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a4fef1baa34325be3adb87dcaa3f6e7c0">zipPackage</a>(zipFile, exportFile);</div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;                exportFile = zipFile;</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;                exportMimeType = <span class="stringliteral">&quot;application/zip&quot;</span>;</div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;                zippedExport = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;            }</div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;            </div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;            </div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;            <span class="comment">//Building the client</span></div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;            Client client = <span class="keyword">new</span> Client();</div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;            client.setServer(</div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;                    repositoryURL.getHost(), </div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;                    repositoryURL.getPort());</div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;            client.setUserAgent(<a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a425196d94de0397b06a99d3851743e77">USER_AGENT</a>);</div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;    </div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;            <span class="comment">//If the credentials include a username and password, set those on the client.</span></div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;            <span class="keywordflow">if</span> (location.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#ab5ba7e746008d30cf4f686899072a42d">getUsername</a>() != null &amp;&amp; location.getPassword() != null)</div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;                client.setCredentials(location.getUsername(), location.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#abba95e358b73b0dbc12d6d6a81f770be">getPassword</a>());</div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;            </div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;            PostMessage message = <span class="keyword">new</span> PostMessage();</div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;</div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;            message.setFilepath(exportFile.getAbsolutePath());</div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;            message.setDestination(location.getCollection());</div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;            message.setFiletype(exportMimeType);</div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;            message.setUseMD5(<span class="keyword">false</span>);</div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;            message.setVerbose(<span class="keyword">false</span>);</div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;            message.setNoOp(<span class="keyword">false</span>);</div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;            message.setFormatNamespace(exportPackage.getFormat());</div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;            message.setSlug(<span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;            message.setChecksumError(<span class="keyword">false</span>);</div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;            message.setUserAgent(<a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a425196d94de0397b06a99d3851743e77">USER_AGENT</a>);</div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;            <span class="keywordflow">if</span> (location.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#adb0cb2c72c0dd1b084eb2d0bc626722b">getOnBehalfOf</a>() != null)</div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;                message.setOnBehalfOf(location.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#adb0cb2c72c0dd1b084eb2d0bc626722b">getOnBehalfOf</a>());</div>
-<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;</div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;            DepositResponse response = client.postFile(message);</div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;</div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;</div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;            <span class="keywordflow">if</span> (response.getHttpResponse() &lt; 200 || response.getHttpResponse() &gt; 204 )</div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;                <span class="keywordflow">throw</span> <span class="keyword">new</span> RuntimeException(<span class="stringliteral">&quot;Sword server responed with a non success HTTP status code: &quot;</span>+response.getHttpResponse());</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            <span class="comment">// get the timeout from the location, or default it to the default</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            client.setSocketTimeout(location.getTimeout() == null ? <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html">DepositLocation</a>.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#a5181ad7d8ca62246bcdd3bea52ba7057">DEFAULT_TIMEOUT</a> : (location.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#a8416e4eba35e9f363426b19c9e05bac6">getTimeout</a>() * 1000));</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;            client.setServer(repositoryURL.getHost(), repositoryURL.getPort());</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            client.setUserAgent(<a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a425196d94de0397b06a99d3851743e77">USER_AGENT</a>);</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            </div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;            <span class="comment">//If the credentials include a username and password, set those on the client.</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            <span class="keywordflow">if</span>(location.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#ab5ba7e746008d30cf4f686899072a42d">getUsername</a>() != null &amp;&amp; location.getPassword() != null)</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;                client.setCredentials(location.getUsername(), location.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#abba95e358b73b0dbc12d6d6a81f770be">getPassword</a>());</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;            <span class="comment">//Obtaining the service document</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;            <span class="comment">//If the credentials contain an onbehalfof user, retrieve the service document on behalf of that user.  Otherwise, simply retrieve the service document.</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;            ServiceDocument serviceDocument = null;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;            <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;                <span class="keywordflow">if</span>(location.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#adb0cb2c72c0dd1b084eb2d0bc626722b">getOnBehalfOf</a>() != null)</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;                {           </div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;                    serviceDocument = client.getServiceDocument(location.getRepository(), location.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#adb0cb2c72c0dd1b084eb2d0bc626722b">getOnBehalfOf</a>());</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;                }</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;                <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;                {</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;                    serviceDocument = client.getServiceDocument(location.getRepository());</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;                }</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;            } <span class="keywordflow">catch</span> (SWORDClientException e) {</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;                <span class="keywordflow">throw</span> <span class="keyword">new</span> RuntimeException(e);</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;            }</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;            </div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;            <span class="comment">//Getting the service from the service document</span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;            Service service = serviceDocument.getService();</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;            <span class="comment">//Building the map of collections from the service</span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;            <span class="keywordflow">for</span>(Workspace workspace : service.getWorkspacesList())</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;            {</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;                <span class="keywordflow">for</span>(Collection collection : workspace.getCollections())</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;                {</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;                    foundCollections.put(collection.getTitle(), collection.getLocation());</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;                }</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;            }       </div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;            </div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;            <span class="keywordflow">return</span> foundCollections;</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        } <span class="keywordflow">catch</span> (MalformedURLException murle) {</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception.html">DepositException</a>(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html">FIELD</a>.<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a69df11e68be730801f4c574f75340eeb">REPOSITORY</a>,<span class="stringliteral">&quot;The repository is an invalid URL&quot;</span>,murle);</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        </div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        } <span class="keywordflow">catch</span> (RuntimeException re) {</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;            Logger.error(re,<span class="stringliteral">&quot;Unable to getCollections()&quot;</span>);</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;            </div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;            <a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html">FIELD</a> field = <a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a072411acf93ba85191ece06161b6c3dc">FIELD.OTHER</a>;</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;            String message = re.getMessage();</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;            <span class="keywordflow">if</span> (re.getMessage().contains(<span class="stringliteral">&quot;Code: 401&quot;</span>)) {</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;                field = <a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a450228aa357079a98fd4975a4c1556f2">FIELD.AUTHENTICATION</a>;</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;                message = <span class="stringliteral">&quot;Unauthorized credentials&quot;</span>;</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;            } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (re.getMessage().contains(<span class="stringliteral">&quot;Code: 404&quot;</span>)) {</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;                field = <a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a69df11e68be730801f4c574f75340eeb">FIELD.REPOSITORY</a>;</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;                message = <span class="stringliteral">&quot;Repository URL not found&quot;</span>;</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;            } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (re.getMessage().contains(<span class="stringliteral">&quot;Connection refused&quot;</span>)) {</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;                field = <a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a69df11e68be730801f4c574f75340eeb">FIELD.REPOSITORY</a>;</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;                message = <span class="stringliteral">&quot;Connection refused&quot;</span>;</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;            } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (re.getMessage().contains(<span class="stringliteral">&quot;Unable to parse the XML&quot;</span>)) {</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;                field = <a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a69df11e68be730801f4c574f75340eeb">FIELD.REPOSITORY</a>;</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;                message = <span class="stringliteral">&quot;The repository does not appear to be a valid SWORD server.&quot;</span>;</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;            } </div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception.html">DepositException</a>(field, message, re);</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;        } </div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    }</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    @Override</div>
+<div class="line"><a name="l00157"></a><span class="lineno"><a class="line" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#ae6ecccae59f5b3a39e63173535785fa1">  157</a></span>&#160;    <span class="keyword">public</span> String <a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#ae6ecccae59f5b3a39e63173535785fa1">getCollectionName</a>(<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html">DepositLocation</a> location, String collection) {</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;        Map&lt;String, String&gt; namesToCollections = this.getCollections(location);</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;        <span class="keywordflow">for</span>( String name : namesToCollections.keySet())</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;        {</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;            <span class="keywordflow">if</span>(namesToCollections.get(name).equals(collection))</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;                <span class="keywordflow">return</span> name;</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;        }</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;        <span class="keywordflow">return</span> null;</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    }</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    @Override</div>
+<div class="line"><a name="l00168"></a><span class="lineno"><a class="line" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a1d6294d3caa0860f8296f0769a883737">  168</a></span>&#160;    <span class="keyword">public</span> String <a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a1d6294d3caa0860f8296f0769a883737">deposit</a>(<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html">DepositLocation</a> location, <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_export_package.html">ExportPackage</a> exportPackage) {</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;        <span class="keywordtype">boolean</span> zippedExport = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;        File exportFile = null;</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;        </div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;        <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;            <span class="comment">// Check our input</span></div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;            <span class="keywordflow">if</span> (location == null)</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;                <span class="keywordflow">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="stringliteral">&quot;The deposit location is required.&quot;</span>);</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    </div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;            <span class="keywordflow">if</span> (exportPackage == null)</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;                <span class="keywordflow">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="stringliteral">&quot;The deposit package is required.&quot;</span>);</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;    </div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;            <span class="keywordflow">if</span> ( exportPackage.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_export_package.html#a8e573cfb0e8447d01671ff296119bbf7">getFile</a>() == null ||  !exportPackage.getFile().exists())</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;                <span class="keywordflow">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="stringliteral">&quot;The deposit package does not exist on disk or is inaccessable.&quot;</span>);</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;    </div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;            <span class="keywordflow">if</span> (location.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#a863308510dd7bc99e26ca21774d011e1">getRepository</a>() == null)</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;                <span class="keywordflow">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="stringliteral">&quot;The deposit location must have a repository URL defined.&quot;</span>);</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;    </div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;            <span class="keywordflow">if</span> (location.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#a812d047095dfde01900112b9562a64cf">getCollection</a>() == null)</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;                <span class="keywordflow">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="stringliteral">&quot;The deposit location must have a collection URL defined.&quot;</span>);</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;            URL repositoryURL = <span class="keyword">new</span> URL(location.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#a863308510dd7bc99e26ca21774d011e1">getRepository</a>());</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;        </div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;            <span class="comment">// Check the package</span></div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;            exportFile = exportPackage.getFile();</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;            String exportMimeType = exportPackage.getMimeType();</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;            </div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;            <span class="comment">// If we are given a directory, zip it up because sword requires one file submissions.</span></div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;            <span class="keywordflow">if</span> (exportFile.isDirectory()) {</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;                File zipFile = File.createTempFile(exportFile.getName()+<span class="stringliteral">&quot;-&quot;</span>, <span class="stringliteral">&quot;.zip&quot;</span>);</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;                <a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a4fef1baa34325be3adb87dcaa3f6e7c0">zipPackage</a>(zipFile, exportFile);</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;                exportFile = zipFile;</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;                exportMimeType = <span class="stringliteral">&quot;application/zip&quot;</span>;</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;                zippedExport = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;            }</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;            </div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;            </div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;            <span class="comment">//Building the client</span></div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;            Client client = <span class="keyword">new</span> Client();</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;            <span class="comment">// get the timeout from the location, or default it to the default</span></div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;            client.setSocketTimeout(location.getTimeout() == null ? <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html">DepositLocation</a>.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#a5181ad7d8ca62246bcdd3bea52ba7057">DEFAULT_TIMEOUT</a> : (location.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#a8416e4eba35e9f363426b19c9e05bac6">getTimeout</a>() * 1000));</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;            client.setServer(</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;                    repositoryURL.getHost(), </div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;                    repositoryURL.getPort());</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;            client.setUserAgent(<a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a425196d94de0397b06a99d3851743e77">USER_AGENT</a>);</div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;    </div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;            <span class="comment">//If the credentials include a username and password, set those on the client.</span></div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;            <span class="keywordflow">if</span> (location.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#ab5ba7e746008d30cf4f686899072a42d">getUsername</a>() != null &amp;&amp; location.getPassword() != null)</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;                client.setCredentials(location.getUsername(), location.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#abba95e358b73b0dbc12d6d6a81f770be">getPassword</a>());</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;            </div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;            PostMessage message = <span class="keyword">new</span> PostMessage();</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;            message.setFilepath(exportFile.getAbsolutePath());</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;            message.setDestination(location.getCollection());</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;            message.setFiletype(exportMimeType);</div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;            message.setUseMD5(<span class="keyword">false</span>);</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;            message.setVerbose(<span class="keyword">false</span>);</div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;            message.setNoOp(<span class="keyword">false</span>);</div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;            message.setFormatNamespace(exportPackage.getFormat());</div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;            message.setSlug(<span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;            message.setChecksumError(<span class="keyword">false</span>);</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;            message.setUserAgent(<a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a425196d94de0397b06a99d3851743e77">USER_AGENT</a>);</div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;            <span class="keywordflow">if</span> (location.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#adb0cb2c72c0dd1b084eb2d0bc626722b">getOnBehalfOf</a>() != null)</div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;                message.setOnBehalfOf(location.<a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#adb0cb2c72c0dd1b084eb2d0bc626722b">getOnBehalfOf</a>());</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;</div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;            DepositResponse response = client.postFile(message);</div>
 <div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;</div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;            String depositId = response.getEntry().getId();</div>
-<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;            <span class="keywordflow">if</span> (depositId == null)</div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;                <span class="keywordflow">throw</span> <span class="keyword">new</span> RuntimeException(<span class="stringliteral">&quot;Sword server failed to return a deposit id.&quot;</span>);</div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;            <span class="keywordflow">return</span> depositId;</div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;            </div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;        } <span class="keywordflow">catch</span> (MalformedURLException murle) {</div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;            Logger.error(murle,<span class="stringliteral">&quot;Unable to deposit()&quot;</span>);</div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;</div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception.html">DepositException</a>(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html">FIELD</a>.<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a69df11e68be730801f4c574f75340eeb">REPOSITORY</a>,<span class="stringliteral">&quot;The repository is an invalid URL&quot;</span>,murle);</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;            </div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;        } <span class="keywordflow">catch</span>(SWORDClientException sce) {</div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;            Logger.error(sce,<span class="stringliteral">&quot;Unable to deposit()&quot;</span>);</div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;</div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;</div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;            <span class="keywordflow">if</span> (response.getHttpResponse() &lt; 200 || response.getHttpResponse() &gt; 204 )</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;                <span class="keywordflow">throw</span> <span class="keyword">new</span> RuntimeException(<span class="stringliteral">&quot;Sword server responed with a non success HTTP status code: &quot;</span>+response.getHttpResponse());</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;</div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;            String depositId = response.getEntry().getId();</div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;            <span class="keywordflow">if</span> (depositId == null)</div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;                <span class="keywordflow">throw</span> <span class="keyword">new</span> RuntimeException(<span class="stringliteral">&quot;Sword server failed to return a deposit id.&quot;</span>);</div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;            <span class="keywordflow">return</span> depositId;</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;            </div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;        } <span class="keywordflow">catch</span> (MalformedURLException murle) {</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;            Logger.error(murle,<span class="stringliteral">&quot;Unable to deposit()&quot;</span>);</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception.html">DepositException</a>(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html">FIELD</a>.<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a69df11e68be730801f4c574f75340eeb">REPOSITORY</a>,<span class="stringliteral">&quot;The repository is an invalid URL&quot;</span>,murle);</div>
 <div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;            </div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;            <a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html">FIELD</a> field = <a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a072411acf93ba85191ece06161b6c3dc">FIELD.OTHER</a>;</div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;            String message = sce.getMessage();</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;        } <span class="keywordflow">catch</span>(SWORDClientException sce) {</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;            Logger.error(sce,<span class="stringliteral">&quot;Unable to deposit()&quot;</span>);</div>
 <div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;</div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;            <span class="keywordflow">if</span> (sce.getMessage().contains(<span class="stringliteral">&quot;Code: 401&quot;</span>)) {</div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;                field = <a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a450228aa357079a98fd4975a4c1556f2">FIELD.AUTHENTICATION</a>;</div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;                message = <span class="stringliteral">&quot;Unauthorized credentials&quot;</span>;</div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;            } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (sce.getMessage().contains(<span class="stringliteral">&quot;Code: 404&quot;</span>)) {</div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;                field = <a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a69df11e68be730801f4c574f75340eeb">FIELD.REPOSITORY</a>;</div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;                message = <span class="stringliteral">&quot;Repository URL not found&quot;</span>;</div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;            } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (sce.getMessage().contains(<span class="stringliteral">&quot;Connection refused&quot;</span>)) {</div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;                field = <a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a69df11e68be730801f4c574f75340eeb">FIELD.REPOSITORY</a>;</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;                message = <span class="stringliteral">&quot;Connection refused&quot;</span>;</div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;            } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (sce.getMessage().contains(<span class="stringliteral">&quot;Unable to parse the XML&quot;</span>)) {</div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;                field = <a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a69df11e68be730801f4c574f75340eeb">FIELD.REPOSITORY</a>;</div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;                message = <span class="stringliteral">&quot;The repository does not appear to be a valid SWORD server.&quot;</span>;</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;            } </div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;</div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception.html">DepositException</a>(field, message, sce);</div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;        } <span class="keywordflow">catch</span> (IOException ioe) {</div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;            Logger.error(ioe, <span class="stringliteral">&quot;Unable to deposit()&quot;</span>);</div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;            </div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception.html">DepositException</a>(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html">FIELD</a>.<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a072411acf93ba85191ece06161b6c3dc">OTHER</a>,ioe.getMessage(),ioe);</div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;            </div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;        } <span class="keywordflow">catch</span> (RuntimeException re) {</div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;            Logger.error(re,<span class="stringliteral">&quot;Unable to deposit()&quot;</span>);</div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;            </div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception.html">DepositException</a>(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html">FIELD</a>.<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a072411acf93ba85191ece06161b6c3dc">OTHER</a>, re.getMessage(), re);</div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;        } <span class="keywordflow">finally</span> {</div>
-<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;            <span class="comment">// If we created a zip file make sure it gets cleaned up.</span></div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;            </div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;            <a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html">FIELD</a> field = <a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a072411acf93ba85191ece06161b6c3dc">FIELD.OTHER</a>;</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;            String message = sce.getMessage();</div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;</div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;            <span class="keywordflow">if</span> (sce.getMessage().contains(<span class="stringliteral">&quot;Code: 401&quot;</span>)) {</div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;                field = <a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a450228aa357079a98fd4975a4c1556f2">FIELD.AUTHENTICATION</a>;</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;                message = <span class="stringliteral">&quot;Unauthorized credentials&quot;</span>;</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;            } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (sce.getMessage().contains(<span class="stringliteral">&quot;Code: 404&quot;</span>)) {</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;                field = <a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a69df11e68be730801f4c574f75340eeb">FIELD.REPOSITORY</a>;</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;                message = <span class="stringliteral">&quot;Repository URL not found&quot;</span>;</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;            } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (sce.getMessage().contains(<span class="stringliteral">&quot;Connection refused&quot;</span>)) {</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;                field = <a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a69df11e68be730801f4c574f75340eeb">FIELD.REPOSITORY</a>;</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;                message = <span class="stringliteral">&quot;Connection refused&quot;</span>;</div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;            } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (sce.getMessage().contains(<span class="stringliteral">&quot;Unable to parse the XML&quot;</span>)) {</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;                field = <a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a69df11e68be730801f4c574f75340eeb">FIELD.REPOSITORY</a>;</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;                message = <span class="stringliteral">&quot;The repository does not appear to be a valid SWORD server.&quot;</span>;</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;            } </div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception.html">DepositException</a>(field, message, sce);</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;        } <span class="keywordflow">catch</span> (IOException ioe) {</div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;            Logger.error(ioe, <span class="stringliteral">&quot;Unable to deposit()&quot;</span>);</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;            </div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception.html">DepositException</a>(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html">FIELD</a>.<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a072411acf93ba85191ece06161b6c3dc">OTHER</a>,ioe.getMessage(),ioe);</div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;            </div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;        } <span class="keywordflow">catch</span> (RuntimeException re) {</div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;            Logger.error(re,<span class="stringliteral">&quot;Unable to deposit()&quot;</span>);</div>
 <div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;            </div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;            <span class="keywordflow">if</span> (zippedExport &amp;&amp; exportFile != null)</div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;                exportFile.delete();</div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;        }</div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;    }   </div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;</div>
-<div class="line"><a name="l00298"></a><span class="lineno"><a class="line" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a4fef1baa34325be3adb87dcaa3f6e7c0">  298</a></span>&#160;    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a4fef1baa34325be3adb87dcaa3f6e7c0">zipPackage</a>(File zipFile, File dirFile) <span class="keywordflow">throws</span> IOException {</div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;</div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;        <span class="comment">// The result is a directory, so we need to zip the directory up.</span></div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;        FileOutputStream fos = <span class="keyword">new</span> FileOutputStream(zipFile);</div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;        ZipOutputStream zos  = <span class="keyword">new</span> ZipOutputStream(fos);</div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;        byte[] buffer = <span class="keyword">new</span> byte[1024];</div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;        <span class="keywordtype">int</span> bufferLength;</div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;        </div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;        </div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;        <a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a357d9055bd854a458efb5d7585b95a9b">zipDirectory</a>(<span class="stringliteral">&quot;&quot;</span>,dirFile,zos);</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;        </div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;        zos.close();</div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;    }</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;    </div>
-<div class="line"><a name="l00323"></a><span class="lineno"><a class="line" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a357d9055bd854a458efb5d7585b95a9b">  323</a></span>&#160;    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a357d9055bd854a458efb5d7585b95a9b">zipDirectory</a>(String baseName, File directory, ZipOutputStream zos) <span class="keywordflow">throws</span> IOException</div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;    {</div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;        <span class="comment">// Add all the files</span></div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;        File[] files = directory.listFiles();</div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;        <span class="keywordflow">for</span> (File file : files) {</div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;            </div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;            <span class="keywordflow">if</span> (file.isDirectory()) {</div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;</div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;                <a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a357d9055bd854a458efb5d7585b95a9b">zipDirectory</a>(baseName + directory.getName() + File.separator, file, zos);</div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;                </div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;                InputStream is = <span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(file));</div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;                </div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;                zos.putNextEntry(<span class="keyword">new</span> ZipEntry(baseName + file.getName()));</div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> <a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception.html">DepositException</a>(<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html">FIELD</a>.<a class="code" href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a072411acf93ba85191ece06161b6c3dc">OTHER</a>, re.getMessage(), re);</div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;        } <span class="keywordflow">finally</span> {</div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;            <span class="comment">// If we created a zip file make sure it gets cleaned up.</span></div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;            </div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;            <span class="keywordflow">if</span> (zippedExport &amp;&amp; exportFile != null)</div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;                exportFile.delete();</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;        }</div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;    }   </div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;</div>
+<div class="line"><a name="l00302"></a><span class="lineno"><a class="line" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a4fef1baa34325be3adb87dcaa3f6e7c0">  302</a></span>&#160;    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a4fef1baa34325be3adb87dcaa3f6e7c0">zipPackage</a>(File zipFile, File dirFile) <span class="keywordflow">throws</span> IOException {</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;        <span class="comment">// The result is a directory, so we need to zip the directory up.</span></div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;        FileOutputStream fos = <span class="keyword">new</span> FileOutputStream(zipFile);</div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;        ZipOutputStream zos  = <span class="keyword">new</span> ZipOutputStream(fos);</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;        byte[] buffer = <span class="keyword">new</span> byte[1024];</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;        <span class="keywordtype">int</span> bufferLength;</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;        </div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;        </div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;        <a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a357d9055bd854a458efb5d7585b95a9b">zipDirectory</a>(<span class="stringliteral">&quot;&quot;</span>,dirFile,zos);</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;        </div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;        zos.close();</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;    }</div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;    </div>
+<div class="line"><a name="l00327"></a><span class="lineno"><a class="line" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a357d9055bd854a458efb5d7585b95a9b">  327</a></span>&#160;    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a357d9055bd854a458efb5d7585b95a9b">zipDirectory</a>(String baseName, File directory, ZipOutputStream zos) <span class="keywordflow">throws</span> IOException</div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;    {</div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;        <span class="comment">// Add all the files</span></div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;        File[] files = directory.listFiles();</div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;        <span class="keywordflow">for</span> (File file : files) {</div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;            </div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;            <span class="keywordflow">if</span> (file.isDirectory()) {</div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;</div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;                <a class="code" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a357d9055bd854a458efb5d7585b95a9b">zipDirectory</a>(baseName + directory.getName() + File.separator, file, zos);</div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;            } <span class="keywordflow">else</span> {</div>
 <div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;                </div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;                byte[] buf = <span class="keyword">new</span> byte[1024];</div>
-<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;                <span class="keywordtype">int</span> len;</div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;                <span class="keywordflow">while</span> ((len = is.read(buf)) &gt; 0) {</div>
-<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;                    zos.write(buf, 0, len);</div>
-<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;                }</div>
-<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;                </div>
-<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;                is.close();</div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;                zos.closeEntry();</div>
-<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;            }   </div>
-<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;        }</div>
-<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;    }</div>
-<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;    </div>
-<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;    </div>
-<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;}</div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;                InputStream is = <span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(file));</div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;                </div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;                zos.putNextEntry(<span class="keyword">new</span> ZipEntry(baseName + file.getName()));</div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;                </div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;                byte[] buf = <span class="keyword">new</span> byte[1024];</div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;                <span class="keywordtype">int</span> len;</div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;                <span class="keywordflow">while</span> ((len = is.read(buf)) &gt; 0) {</div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;                    zos.write(buf, 0, len);</div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;                }</div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;                </div>
+<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;                is.close();</div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;                zos.closeEntry();</div>
+<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;            }   </div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;        }</div>
+<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;    }</div>
+<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;    </div>
+<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;    </div>
+<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;}</div>
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location_html_ab5ba7e746008d30cf4f686899072a42d"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#ab5ba7e746008d30cf4f686899072a42d">org.tdl.vireo.model.DepositLocation.getUsername</a></div><div class="ttdeci">String getUsername()</div></div>
-<div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl_html_a357d9055bd854a458efb5d7585b95a9b"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a357d9055bd854a458efb5d7585b95a9b">org.tdl.vireo.export.impl.Sword1DepositorImpl.zipDirectory</a></div><div class="ttdeci">static void zipDirectory(String baseName, File directory, ZipOutputStream zos)</div><div class="ttdef"><b>Definition:</b> <a href="_sword1_depositor_impl_8java_source.html#l00323">Sword1DepositorImpl.java:323</a></div></div>
+<div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl_html_a357d9055bd854a458efb5d7585b95a9b"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a357d9055bd854a458efb5d7585b95a9b">org.tdl.vireo.export.impl.Sword1DepositorImpl.zipDirectory</a></div><div class="ttdeci">static void zipDirectory(String baseName, File directory, ZipOutputStream zos)</div><div class="ttdef"><b>Definition:</b> <a href="_sword1_depositor_impl_8java_source.html#l00327">Sword1DepositorImpl.java:327</a></div></div>
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location_html"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html">org.tdl.vireo.model.DepositLocation</a></div><div class="ttdef"><b>Definition:</b> <a href="_deposit_location_8java_source.html#l00017">DepositLocation.java:17</a></div></div>
 <div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl_html"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html">org.tdl.vireo.export.impl.Sword1DepositorImpl</a></div><div class="ttdef"><b>Definition:</b> <a href="_sword1_depositor_impl_8java_source.html#l00039">Sword1DepositorImpl.java:39</a></div></div>
+<div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location_html_a5181ad7d8ca62246bcdd3bea52ba7057"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#a5181ad7d8ca62246bcdd3bea52ba7057">org.tdl.vireo.model.DepositLocation.DEFAULT_TIMEOUT</a></div><div class="ttdeci">static Integer DEFAULT_TIMEOUT</div><div class="ttdef"><b>Definition:</b> <a href="_deposit_location_8java_source.html#l00018">DepositLocation.java:18</a></div></div>
 <div class="ttc" id="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d_html_a69df11e68be730801f4c574f75340eeb"><div class="ttname"><a href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a69df11e68be730801f4c574f75340eeb">org.tdl.vireo.export.DepositException.FIELD.REPOSITORY</a></div><div class="ttdeci">REPOSITORY</div><div class="ttdef"><b>Definition:</b> <a href="_deposit_exception_8java_source.html#l00066">DepositException.java:66</a></div></div>
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_export_package_html"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_export_package.html">org.tdl.vireo.export.ExportPackage</a></div><div class="ttdef"><b>Definition:</b> <a href="_export_package_8java_source.html#l00014">ExportPackage.java:14</a></div></div>
 <div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl_html_aa45713c8bd712238a04fb98edbc3c44b"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#aa45713c8bd712238a04fb98edbc3c44b">org.tdl.vireo.export.impl.Sword1DepositorImpl.Sword1DepositorImpl</a></div><div class="ttdeci">Sword1DepositorImpl()</div><div class="ttdef"><b>Definition:</b> <a href="_sword1_depositor_impl_8java_source.html#l00050">Sword1DepositorImpl.java:50</a></div></div>
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location_html_a812d047095dfde01900112b9562a64cf"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#a812d047095dfde01900112b9562a64cf">org.tdl.vireo.model.DepositLocation.getCollection</a></div><div class="ttdeci">String getCollection()</div></div>
 <div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl_html_a213f021379358694c415ecf3e6b2eb98"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a213f021379358694c415ecf3e6b2eb98">org.tdl.vireo.export.impl.Sword1DepositorImpl.beanName</a></div><div class="ttdeci">String beanName</div><div class="ttdef"><b>Definition:</b> <a href="_sword1_depositor_impl_8java_source.html#l00045">Sword1DepositorImpl.java:45</a></div></div>
-<div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl_html_ae6ecccae59f5b3a39e63173535785fa1"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#ae6ecccae59f5b3a39e63173535785fa1">org.tdl.vireo.export.impl.Sword1DepositorImpl.getCollectionName</a></div><div class="ttdeci">String getCollectionName(DepositLocation location, String collection)</div><div class="ttdef"><b>Definition:</b> <a href="_sword1_depositor_impl_8java_source.html#l00155">Sword1DepositorImpl.java:155</a></div></div>
+<div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl_html_ae6ecccae59f5b3a39e63173535785fa1"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#ae6ecccae59f5b3a39e63173535785fa1">org.tdl.vireo.export.impl.Sword1DepositorImpl.getCollectionName</a></div><div class="ttdeci">String getCollectionName(DepositLocation location, String collection)</div><div class="ttdef"><b>Definition:</b> <a href="_sword1_depositor_impl_8java_source.html#l00157">Sword1DepositorImpl.java:157</a></div></div>
 <div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl_html_a4b990a149f8c3bdf09ce5a3056e847da"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a4b990a149f8c3bdf09ce5a3056e847da">org.tdl.vireo.export.impl.Sword1DepositorImpl.getCollections</a></div><div class="ttdeci">Map&lt; String, String &gt; getCollections(DepositLocation location)</div><div class="ttdef"><b>Definition:</b> <a href="_sword1_depositor_impl_8java_source.html#l00076">Sword1DepositorImpl.java:76</a></div></div>
-<div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl_html_a1d6294d3caa0860f8296f0769a883737"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a1d6294d3caa0860f8296f0769a883737">org.tdl.vireo.export.impl.Sword1DepositorImpl.deposit</a></div><div class="ttdeci">String deposit(DepositLocation location, ExportPackage exportPackage)</div><div class="ttdef"><b>Definition:</b> <a href="_sword1_depositor_impl_8java_source.html#l00166">Sword1DepositorImpl.java:166</a></div></div>
+<div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl_html_a1d6294d3caa0860f8296f0769a883737"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a1d6294d3caa0860f8296f0769a883737">org.tdl.vireo.export.impl.Sword1DepositorImpl.deposit</a></div><div class="ttdeci">String deposit(DepositLocation location, ExportPackage exportPackage)</div><div class="ttdef"><b>Definition:</b> <a href="_sword1_depositor_impl_8java_source.html#l00168">Sword1DepositorImpl.java:168</a></div></div>
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location_html_a863308510dd7bc99e26ca21774d011e1"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#a863308510dd7bc99e26ca21774d011e1">org.tdl.vireo.model.DepositLocation.getRepository</a></div><div class="ttdeci">String getRepository()</div></div>
 <div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl_html_a4bef05c05479e24f9c4228a188c22e45"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a4bef05c05479e24f9c4228a188c22e45">org.tdl.vireo.export.impl.Sword1DepositorImpl.displayName</a></div><div class="ttdeci">String displayName</div><div class="ttdef"><b>Definition:</b> <a href="_sword1_depositor_impl_8java_source.html#l00046">Sword1DepositorImpl.java:46</a></div></div>
 <div class="ttc" id="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d_html_a450228aa357079a98fd4975a4c1556f2"><div class="ttname"><a href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a450228aa357079a98fd4975a4c1556f2">org.tdl.vireo.export.DepositException.FIELD.AUTHENTICATION</a></div><div class="ttdeci">AUTHENTICATION</div><div class="ttdef"><b>Definition:</b> <a href="_deposit_exception_8java_source.html#l00066">DepositException.java:66</a></div></div>
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_depositor_html"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_depositor.html">org.tdl.vireo.export.Depositor</a></div><div class="ttdef"><b>Definition:</b> <a href="_depositor_8java_source.html#l00015">Depositor.java:15</a></div></div>
 <div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl_html_a425196d94de0397b06a99d3851743e77"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a425196d94de0397b06a99d3851743e77">org.tdl.vireo.export.impl.Sword1DepositorImpl.USER_AGENT</a></div><div class="ttdeci">final String USER_AGENT</div><div class="ttdef"><b>Definition:</b> <a href="_sword1_depositor_impl_8java_source.html#l00047">Sword1DepositorImpl.java:47</a></div></div>
-<div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl_html_a4fef1baa34325be3adb87dcaa3f6e7c0"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a4fef1baa34325be3adb87dcaa3f6e7c0">org.tdl.vireo.export.impl.Sword1DepositorImpl.zipPackage</a></div><div class="ttdeci">static void zipPackage(File zipFile, File dirFile)</div><div class="ttdef"><b>Definition:</b> <a href="_sword1_depositor_impl_8java_source.html#l00298">Sword1DepositorImpl.java:298</a></div></div>
+<div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl_html_a4fef1baa34325be3adb87dcaa3f6e7c0"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a4fef1baa34325be3adb87dcaa3f6e7c0">org.tdl.vireo.export.impl.Sword1DepositorImpl.zipPackage</a></div><div class="ttdeci">static void zipPackage(File zipFile, File dirFile)</div><div class="ttdef"><b>Definition:</b> <a href="_sword1_depositor_impl_8java_source.html#l00302">Sword1DepositorImpl.java:302</a></div></div>
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location_html_abba95e358b73b0dbc12d6d6a81f770be"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#abba95e358b73b0dbc12d6d6a81f770be">org.tdl.vireo.model.DepositLocation.getPassword</a></div><div class="ttdeci">String getPassword()</div></div>
 <div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl_html_aeb72fa4a520e8394e4ff6563d03eb751"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#aeb72fa4a520e8394e4ff6563d03eb751">org.tdl.vireo.export.impl.Sword1DepositorImpl.setDisplayName</a></div><div class="ttdeci">void setDisplayName(String displayName)</div><div class="ttdef"><b>Definition:</b> <a href="_sword1_depositor_impl_8java_source.html#l00070">Sword1DepositorImpl.java:70</a></div></div>
 <div class="ttc" id="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d_html"><div class="ttname"><a href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html">org.tdl.vireo.export.DepositException.FIELD</a></div><div class="ttdef"><b>Definition:</b> <a href="_deposit_exception_8java_source.html#l00065">DepositException.java:65</a></div></div>
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location_html_adb0cb2c72c0dd1b084eb2d0bc626722b"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#adb0cb2c72c0dd1b084eb2d0bc626722b">org.tdl.vireo.model.DepositLocation.getOnBehalfOf</a></div><div class="ttdeci">String getOnBehalfOf()</div></div>
 <div class="ttc" id="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d_html_a072411acf93ba85191ece06161b6c3dc"><div class="ttname"><a href="enumorg_1_1tdl_1_1vireo_1_1export_1_1_deposit_exception_1_1_f_i_e_l_d.html#a072411acf93ba85191ece06161b6c3dc">org.tdl.vireo.export.DepositException.FIELD.OTHER</a></div><div class="ttdeci">OTHER</div><div class="ttdef"><b>Definition:</b> <a href="_deposit_exception_8java_source.html#l00066">DepositException.java:66</a></div></div>
+<div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location_html_a8416e4eba35e9f363426b19c9e05bac6"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#a8416e4eba35e9f363426b19c9e05bac6">org.tdl.vireo.model.DepositLocation.getTimeout</a></div><div class="ttdeci">Integer getTimeout()</div></div>
 <div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl_html_ab02322f526e5bdcc571d26f60f184c3c"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#ab02322f526e5bdcc571d26f60f184c3c">org.tdl.vireo.export.impl.Sword1DepositorImpl.setBeanName</a></div><div class="ttdeci">void setBeanName(String beanName)</div><div class="ttdef"><b>Definition:</b> <a href="_sword1_depositor_impl_8java_source.html#l00060">Sword1DepositorImpl.java:60</a></div></div>
 <div class="ttc" id="interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_export_package_html_a8e573cfb0e8447d01671ff296119bbf7"><div class="ttname"><a href="interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_export_package.html#a8e573cfb0e8447d01671ff296119bbf7">org.tdl.vireo.export.ExportPackage.getFile</a></div><div class="ttdeci">File getFile()</div></div>
 <div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl_html_a83954a3ba8ca1e3423be4513ed495bae"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html#a83954a3ba8ca1e3423be4513ed495bae">org.tdl.vireo.export.impl.Sword1DepositorImpl.getBeanName</a></div><div class="ttdeci">String getBeanName()</div><div class="ttdef"><b>Definition:</b> <a href="_sword1_depositor_impl_8java_source.html#l00055">Sword1DepositorImpl.java:55</a></div></div>
@@ -458,7 +465,7 @@ $(document).ready(function(){initNavTree('_sword1_depositor_impl_8java_source.ht
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d422163b96683743ed3963d4aac17747.html">app</a></li><li class="navelem"><a class="el" href="dir_8dd784b59b4a9f97c6acd22cdbadb1c6.html">org</a></li><li class="navelem"><a class="el" href="dir_60dc62e39f90ceabe5ec09af2c2445af.html">tdl</a></li><li class="navelem"><a class="el" href="dir_07e49d88b1874552035fba0b7e33a8b8.html">vireo</a></li><li class="navelem"><a class="el" href="dir_ea4b730fc7f0052adf03cfc14fb64479.html">export</a></li><li class="navelem"><a class="el" href="dir_ea0e1dbb65927f21d2d1c9e7740fa43e.html">impl</a></li><li class="navelem"><a class="el" href="_sword1_depositor_impl_8java.html">Sword1DepositorImpl.java</a></li>
-    <li class="footer">Generated on Thu Feb 12 2015 12:31:07 for Vireo by
+    <li class="footer">Generated on Wed Mar 4 2015 13:41:24 for Vireo by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

@@ -28,9 +28,10 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="vireo-logo-sm.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">Vireo
-   &#160;<span id="projectnumber">3.0.x-RC4</span>
+   &#160;<span id="projectnumber">3.0.0</span>
    </div>
    <div id="projectbrief">Vireo Electronic Thesis and Dissertation Submission System</div>
   </td>
@@ -163,6 +164,9 @@ $(document).ready(function(){initNavTree('functions_vars_d.html','');});
 <li>DEFAULT
 : <a class="el" href="enumorg_1_1tdl_1_1vireo_1_1model_1_1_embargo_guarantor.html#a1868d6635a620094f12ee6154687a0bc">org.tdl.vireo.model.EmbargoGuarantor</a>
 </li>
+<li>DEFAULT_TIMEOUT
+: <a class="el" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_deposit_location.html#a5181ad7d8ca62246bcdd3bea52ba7057">org.tdl.vireo.model.DepositLocation</a>
+</li>
 <li>DEFENSE_DATE
 : <a class="el" href="enumorg_1_1tdl_1_1vireo_1_1constant_1_1_field_config.html#ac9b73db40a5a3df2380c925e6b46af3a">org.tdl.vireo.constant.FieldConfig</a>
 , <a class="el" href="enumorg_1_1tdl_1_1vireo_1_1search_1_1_search_order.html#a8e00efcff70648a26f7cb38e3d82bb0e">org.tdl.vireo.search.SearchOrder</a>
@@ -248,11 +252,11 @@ $(document).ready(function(){initNavTree('functions_vars_d.html','');});
 : <a class="el" href="enumorg_1_1tdl_1_1vireo_1_1search_1_1_search_direction.html#a37940bce645ffebe8838dfc4a27f3617">org.tdl.vireo.search.SearchDirection</a>
 </li>
 <li>description
-: <a class="el" href="classcontrollers_1_1_first_user_1_1_embargo_array.html#a97334f0d15ab5294eec418fa0579f2c9">controllers.FirstUser.EmbargoArray</a>
-, <a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#affdeb28db7975787b74af943ed0eee0b">org.tdl.vireo.model.jpa.JpaEmbargoTypeImpl</a>
+: <a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#affdeb28db7975787b74af943ed0eee0b">org.tdl.vireo.model.jpa.JpaEmbargoTypeImpl</a>
 , <a class="el" href="classorg_1_1tdl_1_1vireo_1_1proquest_1_1impl_1_1_proquest_degree_impl.html#aff5c8960d9f6df298a9f37ee558f4440">org.tdl.vireo.proquest.impl.ProquestDegreeImpl</a>
 , <a class="el" href="classorg_1_1tdl_1_1vireo_1_1proquest_1_1impl_1_1_proquest_language_impl.html#ac039b6938ad783bcc6f02050c85acbfe">org.tdl.vireo.proquest.impl.ProquestLanguageImpl</a>
 , <a class="el" href="classorg_1_1tdl_1_1vireo_1_1proquest_1_1impl_1_1_proquest_subject_impl.html#a0cbd505d0cd044919047de08616f62ae">org.tdl.vireo.proquest.impl.ProquestSubjectImpl</a>
+, <a class="el" href="classorg_1_1tdl_1_1vireo_1_1services_1_1_system_data_loader_1_1_embargo_array.html#aa3b7227a4d012da6a832f2bb15a62fa1">org.tdl.vireo.services.SystemDataLoader.EmbargoArray</a>
 </li>
 <li>DIRECTION
 : <a class="el" href="classcontrollers_1_1_filter_tab.html#aa5e2da38b0b2369adba9dabc00b3a1b3">controllers.FilterTab</a>
@@ -347,8 +351,8 @@ $(document).ready(function(){initNavTree('functions_vars_d.html','');});
 , <a class="el" href="classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_uri_active_search_filter_impl.html#a31d862e205dc27af58764c1f79021823">org.tdl.vireo.search.impl.UriActiveSearchFilterImpl</a>
 </li>
 <li>duration
-: <a class="el" href="classcontrollers_1_1_first_user_1_1_embargo_array.html#a327c16c7ea8251b021025559af56b398">controllers.FirstUser.EmbargoArray</a>
-, <a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#a4521e4f677a22a8f707c1c31cc18e47d">org.tdl.vireo.model.jpa.JpaEmbargoTypeImpl</a>
+: <a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#a4521e4f677a22a8f707c1c31cc18e47d">org.tdl.vireo.model.jpa.JpaEmbargoTypeImpl</a>
+, <a class="el" href="classorg_1_1tdl_1_1vireo_1_1services_1_1_system_data_loader_1_1_embargo_array.html#ae373577297c2ff2ced30cab8a2d12c2e">org.tdl.vireo.services.SystemDataLoader.EmbargoArray</a>
 </li>
 </ul>
 </div><!-- contents -->
@@ -356,7 +360,7 @@ $(document).ready(function(){initNavTree('functions_vars_d.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Feb 12 2015 12:31:09 for Vireo by
+    <li class="footer">Generated on Wed Mar 4 2015 13:41:26 for Vireo by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

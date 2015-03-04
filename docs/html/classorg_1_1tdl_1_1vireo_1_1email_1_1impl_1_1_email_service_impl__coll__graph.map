@@ -1,4 +1,4 @@
 <map id="org.tdl.vireo.email.impl.EmailServiceImpl" name="org.tdl.vireo.email.impl.EmailServiceImpl">
-<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_email_service.html" title="org.tdl.vireo.email.Email\lService" alt="" coords="21,5,184,46"/>
-<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1security_1_1_security_context.html" title="org.tdl.vireo.security.Security\lContext" alt="" coords="7,70,199,111"/>
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_email_service.html" title="{org.tdl.vireo.email.Email\lService\n||+ createEmail()\l+ sendEmail()\l+ isJobRunning()\l}" alt="" coords="5,65,168,186"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1security_1_1_security_context.html" title="{org.tdl.vireo.security.Security\lContext\n||+ login()\l+ logout()\l+ getPerson()\l+ isAdministrator()\l+ isManager()\l+ isReviewer()\l+ isStudent()\l+ isAuthenticated()\l+ turnOffAuthorization()\l+ restoreAuthorization()\l+ isAuthorizationActive()\l}" alt="" coords="192,6,384,245"/>
 </map>

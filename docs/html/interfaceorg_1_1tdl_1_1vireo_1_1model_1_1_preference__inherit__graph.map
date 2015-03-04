@@ -1,4 +1,4 @@
 <map id="org.tdl.vireo.model.Preference" name="org.tdl.vireo.model.Preference">
-<area shape="rect" id="node3" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_preference_impl.html" title="org.tdl.vireo.model.jpa.\lJpaPreferenceImpl" alt="" coords="25,171,179,213"/>
-<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="org.tdl.vireo.model.Abstract\lModel" alt="" coords="11,6,193,47"/>
+<area shape="rect" id="node3" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_preference_impl.html" title="{org.tdl.vireo.model.jpa.\lJpaPreferenceImpl\n|+ person\l+ name\l+ value\l|+ save()\l+ delete()\l+ getPerson()\l+ getName()\l+ setName()\l+ getValue()\l+ setValue()\l# JpaPreferenceImpl()\l}" alt="" coords="25,403,179,627"/>
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="{org.tdl.vireo.model.Abstract\lModel\n||+ getId()\l+ save()\l+ delete()\l+ refresh()\l+ merge()\l+ detach()\l}" alt="" coords="11,5,193,171"/>
 </map>

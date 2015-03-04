@@ -1,5 +1,7 @@
 var classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities =
 [
+    [ "formatOrcidAsDashedId", "classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities.html#a495fcedbd277df633c10a79158166434", null ],
+    [ "insertPeriodically", "classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities.html#a03f0a1a1b0af7df1688eed1ea50e04b3", null ],
     [ "processEmailDesigneeArray", "classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities.html#ae5095c74612f60bd45daa62d04b88294", null ],
     [ "scrubControl", "classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities.html#a67ae1d942cbe5bae1bb4df2ebab9c99b", null ],
     [ "scrubControl", "classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities.html#abf7201049c75d701c5fffa67d354be2a", null ],
@@ -7,6 +9,7 @@ var classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities =
     [ "singleXPath", "classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities.html#ae1069268e3dddc7909535d44096f8ca6", null ],
     [ "validateEmailAddress", "classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities.html#ad696f7a33e5a8e9a5347a3f14653826a", null ],
     [ "validateEmailAddress", "classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities.html#acfc47d5104cc6186512e660f417ec9af", null ],
+    [ "validateOrcidFormat", "classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities.html#af53353c019ba07541e7dc9630706630e", null ],
     [ "verifyOrcid", "classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities.html#aae75884abaf7bd3fd273a4b762639c9a", null ],
     [ "verifyOrcid", "classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities.html#a03ec2e50ae5dd5c6aa6c8c504104b06b", null ],
     [ "CONTROL_RANGES", "classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities.html#a314b6cac55da0e9ed2c2c84b3c7ebbb2", null ],

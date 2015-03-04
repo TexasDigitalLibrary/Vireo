@@ -1,3 +1,3 @@
 <map id="org.tdl.vireo.security.SecurityContext" name="org.tdl.vireo.security.SecurityContext">
-<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1security_1_1impl_1_1_security_context_impl.html" title="org.tdl.vireo.security.impl.\lSecurityContextImpl" alt="" coords="15,97,187,138"/>
+<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1security_1_1impl_1_1_security_context_impl.html" title="{org.tdl.vireo.security.impl.\lSecurityContextImpl\n|+ personLocal\l+ authorizationStateHistory\l|+ login()\l+ logout()\l+ getPerson()\l+ getRole()\l+ isAdministrator()\l+ isManager()\l+ isReviewer()\l+ isStudent()\l+ isAuthenticated()\l+ turnOffAuthorization()\l+ restoreAuthorization()\l+ isAuthorizationActive()\l&#45; resetAuthorizationStack()\l}" alt="" coords="11,293,192,576"/>
 </map>

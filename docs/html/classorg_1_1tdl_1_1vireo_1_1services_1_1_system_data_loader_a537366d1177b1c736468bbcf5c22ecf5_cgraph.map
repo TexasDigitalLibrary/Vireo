@@ -1,0 +1,8 @@
+<map id="org.tdl.vireo.services.SystemDataLoader.generateAllSystemEmailTemplates" name="org.tdl.vireo.services.SystemDataLoader.generateAllSystemEmailTemplates">
+<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1services_1_1_system_data_loader.html#aa5f1ef8d24f07a49504e9d098b52f3bd" title="org.tdl.vireo.services.System\lDataLoader.getAllSystemEmailTemplateNames" alt="" coords="291,5,591,46"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_email_template.html#a99946c79b200d84f898eec54f01309c0" title="org.tdl.vireo.model.Email\lTemplate.getMessage" alt="" coords="358,70,525,111"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_email_template.html#aadcd28d20982298c013fbaee468438f6" title="org.tdl.vireo.model.Email\lTemplate.getSubject" alt="" coords="358,135,525,177"/>
+<area shape="rect" id="node6" href="$classorg_1_1tdl_1_1vireo_1_1services_1_1_system_data_loader.html#ac8beb2eaf37aa7417e45977afdd0dece" title="org.tdl.vireo.services.System\lDataLoader.loadSystemEmailTemplate" alt="" coords="317,201,566,242"/>
+<area shape="rect" id="node3" href="$classorg_1_1tdl_1_1vireo_1_1services_1_1_system_data_loader.html#a18887ee457af78121b461f74e8575ea9" title="org.tdl.vireo.services.System\lDataLoader.decodeTemplateName" alt="" coords="640,5,864,46"/>
+<area shape="rect" id="node7" href="$classorg_1_1tdl_1_1vireo_1_1services_1_1_system_data_loader.html#a12574e8702deb9b0b4b6010479988294" title="org.tdl.vireo.services.System\lDataLoader.encodeTemplateName" alt="" coords="640,201,864,242"/>
+</map>

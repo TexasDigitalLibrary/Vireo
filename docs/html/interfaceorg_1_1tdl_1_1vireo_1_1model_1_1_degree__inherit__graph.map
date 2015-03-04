@@ -1,5 +1,5 @@
 <map id="org.tdl.vireo.model.Degree" name="org.tdl.vireo.model.Degree">
-<area shape="rect" id="node4" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_degree_impl.html" title="org.tdl.vireo.model.jpa.\lJpaDegreeImpl" alt="" coords="19,262,172,303"/>
-<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_ordered_model.html" title="org.tdl.vireo.model.Abstract\lOrderedModel" alt="" coords="5,97,187,138"/>
-<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="org.tdl.vireo.model.Abstract\lModel" alt="" coords="5,6,187,47"/>
+<area shape="rect" id="node4" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_degree_impl.html" title="{org.tdl.vireo.model.jpa.\lJpaDegreeImpl\n|+ displayOrder\l+ name\l+ level\l|+ save()\l+ delete()\l+ getDisplayOrder()\l+ setDisplayOrder()\l+ getName()\l+ setName()\l+ getLevel()\l+ setLevel()\l# JpaDegreeImpl()\l}" alt="" coords="19,545,172,783"/>
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_ordered_model.html" title="{org.tdl.vireo.model.Abstract\lOrderedModel\n||+ getDisplayOrder()\l+ setDisplayOrder()\l}" alt="" coords="5,219,187,325"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="{org.tdl.vireo.model.Abstract\lModel\n||+ getId()\l+ save()\l+ delete()\l+ refresh()\l+ merge()\l+ detach()\l}" alt="" coords="5,5,187,171"/>
 </map>

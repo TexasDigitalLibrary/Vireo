@@ -1,6 +1,6 @@
 <map id="org.tdl.vireo.model.jpa.JpaCollegeImpl" name="org.tdl.vireo.model.jpa.JpaCollegeImpl">
-<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_college.html" title="org.tdl.vireo.model.College" alt="" coords="233,285,409,312"/>
-<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_email_group.html" title="org.tdl.vireo.model.Email\lGroup" alt="" coords="238,187,404,229"/>
-<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_ordered_model.html" title="org.tdl.vireo.model.Abstract\lOrderedModel" alt="" coords="230,97,412,138"/>
-<area shape="rect" id="node6" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="org.tdl.vireo.model.Abstract\lModel" alt="" coords="230,6,412,47"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_college.html" title="{org.tdl.vireo.model.College\n||+ getName()\l+ setName()\l}" alt="" coords="233,558,409,650"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_email_group.html" title="{org.tdl.vireo.model.Email\lGroup\n||+ getEmails()\l+ setEmails()\l+ addEmail()\l+ removeEmail()\l}" alt="" coords="238,373,404,509"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_ordered_model.html" title="{org.tdl.vireo.model.Abstract\lOrderedModel\n||+ getDisplayOrder()\l+ setDisplayOrder()\l}" alt="" coords="230,219,412,325"/>
+<area shape="rect" id="node6" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="{org.tdl.vireo.model.Abstract\lModel\n||+ getId()\l+ save()\l+ delete()\l+ refresh()\l+ merge()\l+ detach()\l}" alt="" coords="230,5,412,171"/>
 </map>

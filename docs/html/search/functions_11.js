@@ -89,9 +89,11 @@ var searchData=
   ['returnedclass',['returnedClass',['../classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_hashed_blob.html#a1c7c3feeda71b023740ab583cf191b1b',1,'org::tdl::vireo::model::jpa::HashedBlob']]],
   ['reverse',['reverse',['../classorg_1_1tdl_1_1vireo_1_1proquest_1_1impl_1_1_proquest_utility_service_impl.html#acdbedbfc27e75aaddca7341e9b80522e',1,'org::tdl::vireo::proquest::impl::ProquestUtilityServiceImpl']]],
   ['review',['review',['../classcontrollers_1_1_advisor.html#aa66da04243813108a589cf196759f435',1,'controllers::Advisor']]],
+  ['reviewjson',['reviewJSON',['../classcontrollers_1_1_advisor.html#a23ec66b7cf8948d5be16150c68dc28b6',1,'controllers::Advisor']]],
   ['roletype',['RoleType',['../enumorg_1_1tdl_1_1vireo_1_1model_1_1_role_type.html#a753e536a8df70ead398e6eea952050cd',1,'org::tdl::vireo::model::RoleType']]],
   ['rollback',['rollback',['../classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_indexer_impl.html#afceeb9c9d265a8728d4f33ccd745c8e6',1,'org.tdl.vireo.search.impl.LuceneIndexerImpl.rollback()'],['../interfaceorg_1_1tdl_1_1vireo_1_1search_1_1_indexer.html#a46e8df3f8151957b2849f4a430a081c5',1,'org.tdl.vireo.search.Indexer.rollback()']]],
-  ['ruleisvalid',['ruleIsValid',['../classorg_1_1tdl_1_1vireo_1_1services_1_1_email_rule_service.html#afa11b8a2067a13c41442a007d7b55864',1,'org::tdl::vireo::services::EmailRuleService']]],
+  ['rulecanrun',['ruleCanRun',['../classorg_1_1tdl_1_1vireo_1_1services_1_1_email_rule_service.html#ab0e6926b6a42054b7147ab83f36a8f5c',1,'org::tdl::vireo::services::EmailRuleService']]],
+  ['ruleisvalid',['ruleIsValid',['../classorg_1_1tdl_1_1vireo_1_1services_1_1_email_rule_service.html#a106053f42277e675bf23d4d95f6143bf',1,'org::tdl::vireo::services::EmailRuleService']]],
   ['runemailrules',['runEmailRules',['../classorg_1_1tdl_1_1vireo_1_1services_1_1_email_rule_service.html#ae538cb06618a7b5d68d8a004dcfe938f',1,'org::tdl::vireo::services::EmailRuleService']]],
   ['runnextjob',['runNextJob',['../classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_indexer_impl.html#a2d2e7ba1209bd161dec6f42948deac87',1,'org::tdl::vireo::search::impl::LuceneIndexerImpl']]]
 ];

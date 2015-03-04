@@ -1,4 +1,5 @@
 <map id="org.tdl.vireo.model.DepositLocation.getPackager" name="org.tdl.vireo.model.DepositLocation.getPackager">
-<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_deposit_service_impl.html#a41a22434e5261a524564ebf68d180064" title="org.tdl.vireo.export.impl.\lDepositServiceImpl.deposit" alt="" coords="243,5,426,46"/>
-<area shape="rect" id="node3" href="$classorg_1_1tdl_1_1vireo_1_1batch_1_1impl_1_1_transition_service_impl.html#a9bd87b0b10bcce2475f65ee1d03bae4d" title="org.tdl.vireo.batch.impl.\lTransitionServiceImpl.transition" alt="" coords="232,70,437,111"/>
+<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_deposit_service_impl.html#a41a22434e5261a524564ebf68d180064" title="org.tdl.vireo.export.impl.\lDepositServiceImpl.deposit" alt="" coords="250,5,433,46"/>
+<area shape="rect" id="node3" href="$classcontrollers_1_1settings_1_1_application_settings_tab.html#a5783ad3fed40608e23604f38fdfccbe4" title="controllers.settings.Application\lSettingsTab.saveDepositLocation" alt="" coords="232,70,451,111"/>
+<area shape="rect" id="node4" href="$classorg_1_1tdl_1_1vireo_1_1batch_1_1impl_1_1_transition_service_impl.html#a9bd87b0b10bcce2475f65ee1d03bae4d" title="org.tdl.vireo.batch.impl.\lTransitionServiceImpl.transition" alt="" coords="239,135,444,177"/>
 </map>

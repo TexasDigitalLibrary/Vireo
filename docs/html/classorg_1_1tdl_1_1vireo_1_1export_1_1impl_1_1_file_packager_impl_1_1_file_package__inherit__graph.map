@@ -1,3 +1,3 @@
 <map id="org.tdl.vireo.export.impl.FilePackagerImpl.FilePackage" name="org.tdl.vireo.export.impl.FilePackagerImpl.FilePackage">
-<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_export_package.html" title="org.tdl.vireo.export.Export\lPackage" alt="" coords="18,6,189,47"/>
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1export_1_1_export_package.html" title="{org.tdl.vireo.export.Export\lPackage\n||+ getSubmission()\l+ getMimeType()\l+ getFormat()\l+ getFile()\l+ getEntryName()\l+ delete()\l}" alt="" coords="18,5,189,171"/>
 </map>

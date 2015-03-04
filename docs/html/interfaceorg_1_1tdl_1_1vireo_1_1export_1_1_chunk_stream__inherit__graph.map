@@ -1,3 +1,3 @@
 <map id="org.tdl.vireo.export.ChunkStream" name="org.tdl.vireo.export.ChunkStream">
-<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_chunk_stream_impl.html" title="org.tdl.vireo.export.impl.\lChunkStreamImpl" alt="" coords="9,97,172,138"/>
+<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_chunk_stream_impl.html" title="{org.tdl.vireo.export.impl.\lChunkStreamImpl\n|+ contentType\l+ contentDisposition\l# bufferSize\l# chunks\l# nextChunk\l# open\l|+ ChunkStreamImpl()\l+ getContentType()\l+ getContentDisposition()\l+ close()\l+ hasNextChunk()\l+ nextChunk()\l+ write()\l+ write()\l+ write()\l+ flush()\l# writeOrWait()\l&#45; synchronizedWrite()\l}" alt="" coords="5,190,176,517"/>
 </map>

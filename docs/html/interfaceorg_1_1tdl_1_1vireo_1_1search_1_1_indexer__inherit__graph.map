@@ -1,3 +1,3 @@
 <map id="org.tdl.vireo.search.Indexer" name="org.tdl.vireo.search.Indexer">
-<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_indexer_impl.html" title="org.tdl.vireo.search.impl.\lLuceneIndexerImpl" alt="" coords="12,81,176,122"/>
+<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_indexer_impl.html" title="{org.tdl.vireo.search.impl.\lLuceneIndexerImpl\n|+ transactionLocal\l+ indexFile\l+ index\l+ version\l+ standardAnalyzer\l+ subRepo\l+ corruptIndex\l&#45; currentJob\l&#45; nextJob\l|+ LuceneIndexerImpl()\l+ setSubmissionRepository()\l+ updated()\l+ updated()\l+ isUpdated()\l+ isUpdated()\l+ rollback()\l+ commit()\l+ rebuild()\l+ deleteAndRebuild()\l+ isJobRunning()\l+ getCurrentJobLabel()\l+ getCurrentJobProgress()\l+ getCurrentJobTotal()\l+ runNextJob()\l~ updated()\l}" alt="" coords="5,307,195,736"/>
 </map>

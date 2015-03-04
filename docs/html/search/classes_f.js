@@ -25,6 +25,5 @@ var searchData=
   ['submissionstatus',['SubmissionStatus',['../classcontrollers_1_1_application_1_1_submission_status.html',1,'controllers::Application']]],
   ['sword1depositorimpl',['Sword1DepositorImpl',['../classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_sword1_depositor_impl.html',1,'org::tdl::vireo::export::impl']]],
   ['system',['System',['../classcontrollers_1_1_system.html',1,'controllers']]],
-  ['systememailtemplateservice',['SystemEmailTemplateService',['../interfaceorg_1_1tdl_1_1vireo_1_1email_1_1_system_email_template_service.html',1,'org::tdl::vireo::email']]],
-  ['systememailtemplateserviceimpl',['SystemEmailTemplateServiceImpl',['../classorg_1_1tdl_1_1vireo_1_1email_1_1impl_1_1_system_email_template_service_impl.html',1,'org::tdl::vireo::email::impl']]]
+  ['systemdataloader',['SystemDataLoader',['../classorg_1_1tdl_1_1vireo_1_1services_1_1_system_data_loader.html',1,'org::tdl::vireo::services']]]
 ];

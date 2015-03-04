@@ -1,3 +1,3 @@
 <map id="org.tdl.vireo.batch.TransitionService" name="org.tdl.vireo.batch.TransitionService">
-<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1batch_1_1impl_1_1_transition_service_impl.html" title="org.tdl.vireo.batch.impl.\lTransitionServiceImpl" alt="" coords="19,97,177,138"/>
+<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1batch_1_1impl_1_1_transition_service_impl.html" title="{org.tdl.vireo.batch.impl.\lTransitionServiceImpl\n|+ personRepo\l+ subRepo\l+ errorLog\l+ searcher\l+ context\l+ jobManager\l+ depositService\l|+ setPersonRepository()\l+ setSubmissionRepository()\l+ setErrorLog()\l+ setSearcher()\l+ setSecurityContext()\l+ setJobManager()\l+ transition()\l+ transition()\l}" alt="" coords="5,160,195,443"/>
 </map>

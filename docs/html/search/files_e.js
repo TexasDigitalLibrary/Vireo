@@ -24,6 +24,5 @@ var searchData=
   ['submissionsettingstab_2ejava',['SubmissionSettingsTab.java',['../_submission_settings_tab_8java.html',1,'']]],
   ['sword1depositorimpl_2ejava',['Sword1DepositorImpl.java',['../_sword1_depositor_impl_8java.html',1,'']]],
   ['system_2ejava',['System.java',['../_system_8java.html',1,'']]],
-  ['systememailtemplateservice_2ejava',['SystemEmailTemplateService.java',['../_system_email_template_service_8java.html',1,'']]],
-  ['systememailtemplateserviceimpl_2ejava',['SystemEmailTemplateServiceImpl.java',['../_system_email_template_service_impl_8java.html',1,'']]]
+  ['systemdataloader_2ejava',['SystemDataLoader.java',['../_system_data_loader_8java.html',1,'']]]
 ];

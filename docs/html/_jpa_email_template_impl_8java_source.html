@@ -28,9 +28,10 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="vireo-logo-sm.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">Vireo
-   &#160;<span id="projectnumber">3.0.x-RC4</span>
+   &#160;<span id="projectnumber">3.0.0</span>
    </div>
    <div id="projectbrief">Vireo Electronic Thesis and Dissertation Submission System</div>
   </td>
@@ -110,19 +111,19 @@ $(document).ready(function(){initNavTree('_jpa_email_template_impl_8java_source.
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;</div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="keyword">import</span> javax.persistence.Column;</div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="keyword">import</span> javax.persistence.Entity;</div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="keyword">import</span> javax.persistence.OneToOne;</div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keyword">import</span> javax.persistence.Table;</div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="keyword">import</span> javax.persistence.Table;</div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keyword">import</span> javax.persistence.UniqueConstraint;</div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;</div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">import</span> <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_email_template.html">org.tdl.vireo.model.EmailTemplate</a>;</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;@Entity</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;@Table(name = <span class="stringliteral">&quot;email_template&quot;</span>)</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;@Table(name = <span class="stringliteral">&quot;email_template&quot;</span>, uniqueConstraints={@UniqueConstraint(columnNames = { <span class="stringliteral">&quot;name&quot;</span>, <span class="stringliteral">&quot;systemRequired&quot;</span> })})</div>
 <div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html">   17</a></span>&#160;public class <a class="code" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html">JpaEmailTemplateImpl</a> extends JpaAbstractModel&lt;<a class="code" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html">JpaEmailTemplateImpl</a>&gt; implements <a class="code" href="interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_email_template.html">EmailTemplate</a> {</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    @Column(nullable = <span class="keyword">false</span>)</div>
 <div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#afa394adf7062bff33237edaca63443c6">   20</a></span>&#160;    public <span class="keywordtype">int</span> displayOrder;</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    @Column(nullable = false, unique = true, length=255) </div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    @Column(nullable = false, length=255) </div>
 <div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#a290e816f65d54f505482e6150b414a13">   23</a></span>&#160;    public String name;</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    </div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    @Column(nullable = false, length=32768) <span class="comment">// 2^15</span></div>
@@ -131,7 +132,7 @@ $(document).ready(function(){initNavTree('_jpa_email_template_impl_8java_source.
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    @Column(nullable = false, length=32768) <span class="comment">// 2^15</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#ae168bc732492e328489dae1bf84fc0ea">   29</a></span>&#160;    public String message;</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    @Column(nullable = false)</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    @Column(nullable = false, columnDefinition=&quot;BOOLEAN DEFAULT false&quot;)</div>
 <div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#a0fa2178f3feef4ac02015f746cd832b0">   32</a></span>&#160;    public Boolean systemRequired;</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
 <div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#a42e4207c784bc23d0f301e508fdce9e7">   44</a></span>&#160;    protected <a class="code" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html">JpaEmailTemplateImpl</a>(String name, String subject, String message) {</div>
@@ -201,7 +202,7 @@ $(document).ready(function(){initNavTree('_jpa_email_template_impl_8java_source.
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;            <span class="keywordflow">return</span>;</div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        </div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        <span class="keywordflow">if</span> (isSystemRequired())</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="stringliteral">&quot;Unable to rename the email template &#39;&quot;</span>+name+<span class="stringliteral">&quot;&#39; because it is required by the system.&quot;</span>);</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="stringliteral">&quot;Unable to rename the email template &#39;&quot;</span>+name+<span class="stringliteral">&quot;&#39; because it is required by the system. Please make a copy of it and modify that one instead.&quot;</span>);</div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        </div>
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        this.name = name;</div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    }</div>
@@ -220,47 +221,53 @@ $(document).ready(function(){initNavTree('_jpa_email_template_impl_8java_source.
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        </div>
 <div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        assertManager();</div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        </div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        this.subject = subject;</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    }</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    @Override</div>
-<div class="line"><a name="l00134"></a><span class="lineno"><a class="line" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#ae253059138fb3a78b6ee42019980f672">  134</a></span>&#160;    <span class="keyword">public</span> String <a class="code" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#ae253059138fb3a78b6ee42019980f672">getMessage</a>() {</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        <span class="keywordflow">return</span> message;</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    }</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    @Override</div>
-<div class="line"><a name="l00139"></a><span class="lineno"><a class="line" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#adf7907ffac0b951c2afc1fc9a7f7c9d5">  139</a></span>&#160;    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#adf7907ffac0b951c2afc1fc9a7f7c9d5">setMessage</a>(String message) {</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;        </div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;        <span class="keywordflow">if</span> (message == null || message.length() == 0)</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="stringliteral">&quot;Message is required&quot;</span>);</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        <span class="keywordflow">if</span> (isSystemRequired())</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="stringliteral">&quot;Unable to modify the email template &#39;&quot;</span>+name+<span class="stringliteral">&quot;&#39; because it is required by the system. Please make a copy of it and modify that one instead.&quot;</span>);</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;        </div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        this.subject = subject;</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    }</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    @Override</div>
+<div class="line"><a name="l00137"></a><span class="lineno"><a class="line" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#ae253059138fb3a78b6ee42019980f672">  137</a></span>&#160;    <span class="keyword">public</span> String <a class="code" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#ae253059138fb3a78b6ee42019980f672">getMessage</a>() {</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;        <span class="keywordflow">return</span> message;</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;    }</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    @Override</div>
+<div class="line"><a name="l00142"></a><span class="lineno"><a class="line" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#adf7907ffac0b951c2afc1fc9a7f7c9d5">  142</a></span>&#160;    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#adf7907ffac0b951c2afc1fc9a7f7c9d5">setMessage</a>(String message) {</div>
 <div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;        </div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;        assertManager();</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;        </div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;        this.message = message;</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;    }</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    </div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    @Override</div>
-<div class="line"><a name="l00150"></a><span class="lineno"><a class="line" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#aafbbde03455b90479e66ea24382ec0fc">  150</a></span>&#160;    <span class="keyword">public</span> <span class="keywordtype">boolean</span> <a class="code" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#aafbbde03455b90479e66ea24382ec0fc">isSystemRequired</a>() {</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;        <span class="keywordflow">return</span> systemRequired;</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    }</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    </div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    @Override</div>
-<div class="line"><a name="l00155"></a><span class="lineno"><a class="line" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#a480f5d2a9e3abade54b182b651eb16c5">  155</a></span>&#160;    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#a480f5d2a9e3abade54b182b651eb16c5">setSystemRequired</a>(<span class="keywordtype">boolean</span> systemRequired) {</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;        assertAdministrator();</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;        </div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;        this.systemRequired = systemRequired;</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    }</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;}</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;        <span class="keywordflow">if</span> (message == null || message.length() == 0)</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="stringliteral">&quot;Message is required&quot;</span>);</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;        </div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;        assertManager();</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;        </div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;        <span class="keywordflow">if</span> (isSystemRequired())</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="stringliteral">&quot;Unable to modify the email template &#39;&quot;</span>+name+<span class="stringliteral">&quot;&#39; because it is required by the system. Please make a copy of it and modify that one instead.&quot;</span>);</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;        </div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;        this.message = message;</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    }</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    </div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    @Override</div>
+<div class="line"><a name="l00156"></a><span class="lineno"><a class="line" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#aafbbde03455b90479e66ea24382ec0fc">  156</a></span>&#160;    <span class="keyword">public</span> <span class="keywordtype">boolean</span> <a class="code" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#aafbbde03455b90479e66ea24382ec0fc">isSystemRequired</a>() {</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;        <span class="keywordflow">return</span> systemRequired;</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    }</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    </div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    @Override</div>
+<div class="line"><a name="l00161"></a><span class="lineno"><a class="line" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#a480f5d2a9e3abade54b182b651eb16c5">  161</a></span>&#160;    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#a480f5d2a9e3abade54b182b651eb16c5">setSystemRequired</a>(<span class="keywordtype">boolean</span> systemRequired) {</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;        assertAdministrator();</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;        </div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;        this.systemRequired = systemRequired;</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    }</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;}</div>
 <div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl_html_aee4ff5e8cbdd6ab6ab31d4935eab3ae4"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#aee4ff5e8cbdd6ab6ab31d4935eab3ae4">org.tdl.vireo.model.jpa.JpaEmailTemplateImpl.getName</a></div><div class="ttdeci">String getName()</div><div class="ttdef"><b>Definition:</b> <a href="_jpa_email_template_impl_8java_source.html#l00094">JpaEmailTemplateImpl.java:94</a></div></div>
-<div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl_html_ae253059138fb3a78b6ee42019980f672"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#ae253059138fb3a78b6ee42019980f672">org.tdl.vireo.model.jpa.JpaEmailTemplateImpl.getMessage</a></div><div class="ttdeci">String getMessage()</div><div class="ttdef"><b>Definition:</b> <a href="_jpa_email_template_impl_8java_source.html#l00134">JpaEmailTemplateImpl.java:134</a></div></div>
+<div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl_html_ae253059138fb3a78b6ee42019980f672"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#ae253059138fb3a78b6ee42019980f672">org.tdl.vireo.model.jpa.JpaEmailTemplateImpl.getMessage</a></div><div class="ttdeci">String getMessage()</div><div class="ttdef"><b>Definition:</b> <a href="_jpa_email_template_impl_8java_source.html#l00137">JpaEmailTemplateImpl.java:137</a></div></div>
 <div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl_html_a5169ab4cdcbb62cedd529004361f4dbf"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#a5169ab4cdcbb62cedd529004361f4dbf">org.tdl.vireo.model.jpa.JpaEmailTemplateImpl.getDisplayOrder</a></div><div class="ttdeci">int getDisplayOrder()</div><div class="ttdef"><b>Definition:</b> <a href="_jpa_email_template_impl_8java_source.html#l00082">JpaEmailTemplateImpl.java:82</a></div></div>
-<div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl_html_aafbbde03455b90479e66ea24382ec0fc"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#aafbbde03455b90479e66ea24382ec0fc">org.tdl.vireo.model.jpa.JpaEmailTemplateImpl.isSystemRequired</a></div><div class="ttdeci">boolean isSystemRequired()</div><div class="ttdef"><b>Definition:</b> <a href="_jpa_email_template_impl_8java_source.html#l00150">JpaEmailTemplateImpl.java:150</a></div></div>
-<div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl_html_a480f5d2a9e3abade54b182b651eb16c5"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#a480f5d2a9e3abade54b182b651eb16c5">org.tdl.vireo.model.jpa.JpaEmailTemplateImpl.setSystemRequired</a></div><div class="ttdeci">void setSystemRequired(boolean systemRequired)</div><div class="ttdef"><b>Definition:</b> <a href="_jpa_email_template_impl_8java_source.html#l00155">JpaEmailTemplateImpl.java:155</a></div></div>
+<div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl_html_aafbbde03455b90479e66ea24382ec0fc"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#aafbbde03455b90479e66ea24382ec0fc">org.tdl.vireo.model.jpa.JpaEmailTemplateImpl.isSystemRequired</a></div><div class="ttdeci">boolean isSystemRequired()</div><div class="ttdef"><b>Definition:</b> <a href="_jpa_email_template_impl_8java_source.html#l00156">JpaEmailTemplateImpl.java:156</a></div></div>
+<div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl_html_a480f5d2a9e3abade54b182b651eb16c5"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#a480f5d2a9e3abade54b182b651eb16c5">org.tdl.vireo.model.jpa.JpaEmailTemplateImpl.setSystemRequired</a></div><div class="ttdeci">void setSystemRequired(boolean systemRequired)</div><div class="ttdef"><b>Definition:</b> <a href="_jpa_email_template_impl_8java_source.html#l00161">JpaEmailTemplateImpl.java:161</a></div></div>
 <div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl_html_a6b4a04d2c992dfccaed06cd79b7d7247"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#a6b4a04d2c992dfccaed06cd79b7d7247">org.tdl.vireo.model.jpa.JpaEmailTemplateImpl.setDisplayOrder</a></div><div class="ttdeci">void setDisplayOrder(int displayOrder)</div><div class="ttdef"><b>Definition:</b> <a href="_jpa_email_template_impl_8java_source.html#l00087">JpaEmailTemplateImpl.java:87</a></div></div>
 <div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl_html_a9c13e59a1173f946440b1e48c1fb9f3a"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#a9c13e59a1173f946440b1e48c1fb9f3a">org.tdl.vireo.model.jpa.JpaEmailTemplateImpl.getSubject</a></div><div class="ttdeci">String getSubject()</div><div class="ttdef"><b>Definition:</b> <a href="_jpa_email_template_impl_8java_source.html#l00118">JpaEmailTemplateImpl.java:118</a></div></div>
 <div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl_html_a0961c30a83ce92db6ccf35f21e721cde"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#a0961c30a83ce92db6ccf35f21e721cde">org.tdl.vireo.model.jpa.JpaEmailTemplateImpl.setName</a></div><div class="ttdeci">void setName(String name)</div><div class="ttdef"><b>Definition:</b> <a href="_jpa_email_template_impl_8java_source.html#l00099">JpaEmailTemplateImpl.java:99</a></div></div>
-<div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl_html_adf7907ffac0b951c2afc1fc9a7f7c9d5"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#adf7907ffac0b951c2afc1fc9a7f7c9d5">org.tdl.vireo.model.jpa.JpaEmailTemplateImpl.setMessage</a></div><div class="ttdeci">void setMessage(String message)</div><div class="ttdef"><b>Definition:</b> <a href="_jpa_email_template_impl_8java_source.html#l00139">JpaEmailTemplateImpl.java:139</a></div></div>
+<div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl_html_adf7907ffac0b951c2afc1fc9a7f7c9d5"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#adf7907ffac0b951c2afc1fc9a7f7c9d5">org.tdl.vireo.model.jpa.JpaEmailTemplateImpl.setMessage</a></div><div class="ttdeci">void setMessage(String message)</div><div class="ttdef"><b>Definition:</b> <a href="_jpa_email_template_impl_8java_source.html#l00142">JpaEmailTemplateImpl.java:142</a></div></div>
 <div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl_html_aabc492d73fc9d3df5f43a2f13a36f3eb"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#aabc492d73fc9d3df5f43a2f13a36f3eb">org.tdl.vireo.model.jpa.JpaEmailTemplateImpl.save</a></div><div class="ttdeci">JpaEmailTemplateImpl save()</div><div class="ttdef"><b>Definition:</b> <a href="_jpa_email_template_impl_8java_source.html#l00065">JpaEmailTemplateImpl.java:65</a></div></div>
 <div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl_html"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html">org.tdl.vireo.model.jpa.JpaEmailTemplateImpl</a></div><div class="ttdef"><b>Definition:</b> <a href="_jpa_email_template_impl_8java_source.html#l00017">JpaEmailTemplateImpl.java:17</a></div></div>
 <div class="ttc" id="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl_html_a4ed5103d3023e288ec339a8b9ede648a"><div class="ttname"><a href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#a4ed5103d3023e288ec339a8b9ede648a">org.tdl.vireo.model.jpa.JpaEmailTemplateImpl.setSubject</a></div><div class="ttdeci">void setSubject(String subject)</div><div class="ttdef"><b>Definition:</b> <a href="_jpa_email_template_impl_8java_source.html#l00123">JpaEmailTemplateImpl.java:123</a></div></div>
@@ -271,7 +278,7 @@ $(document).ready(function(){initNavTree('_jpa_email_template_impl_8java_source.
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d422163b96683743ed3963d4aac17747.html">app</a></li><li class="navelem"><a class="el" href="dir_8dd784b59b4a9f97c6acd22cdbadb1c6.html">org</a></li><li class="navelem"><a class="el" href="dir_60dc62e39f90ceabe5ec09af2c2445af.html">tdl</a></li><li class="navelem"><a class="el" href="dir_07e49d88b1874552035fba0b7e33a8b8.html">vireo</a></li><li class="navelem"><a class="el" href="dir_3050b76c36909bb4538f647305a7b9db.html">model</a></li><li class="navelem"><a class="el" href="dir_a33884d908d7a936654aadd95219a732.html">jpa</a></li><li class="navelem"><a class="el" href="_jpa_email_template_impl_8java.html">JpaEmailTemplateImpl.java</a></li>
-    <li class="footer">Generated on Thu Feb 12 2015 12:31:07 for Vireo by
+    <li class="footer">Generated on Wed Mar 4 2015 13:41:24 for Vireo by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

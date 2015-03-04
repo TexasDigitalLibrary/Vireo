@@ -1,4 +1,4 @@
 <map id="org.tdl.vireo.model.ActionLog" name="org.tdl.vireo.model.ActionLog">
-<area shape="rect" id="node3" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_action_log_impl.html" title="org.tdl.vireo.model.jpa.\lJpaActionLogImpl" alt="" coords="23,171,176,213"/>
-<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="org.tdl.vireo.model.Abstract\lModel" alt="" coords="9,6,191,47"/>
+<area shape="rect" id="node3" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_action_log_impl.html" title="{org.tdl.vireo.model.jpa.\lJpaActionLogImpl\n|+ submission\l+ submissionState\l+ person\l+ actionDate\l+ attachment\l+ entry\l+ privateFlag\l|+ save()\l+ delete()\l+ detach()\l+ getSubmission()\l+ getSubmissionState()\l+ getPerson()\l+ getActionDate()\l+ getAttachment()\l+ getEntry()\l+ isPrivate()\l+ setPrivate()\l# JpaActionLogImpl()\l}" alt="" coords="21,448,179,789"/>
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="{org.tdl.vireo.model.Abstract\lModel\n||+ getId()\l+ save()\l+ delete()\l+ refresh()\l+ merge()\l+ detach()\l}" alt="" coords="9,5,191,171"/>
 </map>

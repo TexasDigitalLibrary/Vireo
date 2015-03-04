@@ -1,17 +1,19 @@
 <map id="controllers.Authentication.profile" name="controllers.Authentication.profile">
-<area shape="rect" id="node2" href="$classcontrollers_1_1_authentication.html#a41747450a9a3100e2d516a662fc40dc7" title="controllers.Authentication.check\lForceSSL" alt="" coords="531,202,739,243"/>
-<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person.html#a6674aa143335ab5bdd3d2a95b0c5a63d" title="org.tdl.vireo.model.Person.get\lBirthYear" alt="" coords="537,333,733,374"/>
-<area shape="rect" id="node5" href="$classcontrollers_1_1_authentication.html#a84c1703bd2a227a85c6443bc31fd453b" title="controllers.Authentication.is\lUpdatePasswordEnabled" alt="" coords="543,6,726,47"/>
-<area shape="rect" id="node7" href="$classcontrollers_1_1_authentication.html#a3a7ddecca3ddd0a51f4ab399761125c9" title="controllers.Authentication.is\lUpdateProfileEnabled" alt="" coords="543,267,726,309"/>
-<area shape="rect" id="node8" href="$classcontrollers_1_1_authentication.html#ab1baa4b198fce87fa119f53a7a51f1ae" title="controllers.Authentication.update\lPassword" alt="" coords="262,141,474,182"/>
-<area shape="rect" id="node11" href="$classcontrollers_1_1_authentication.html#a9c9c67e94e6cdba8b0b6f20d8109d8b3" title="controllers.Authentication.update\lProfile" alt="" coords="262,362,474,403"/>
-<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1security_1_1_security_context.html#a8c6e40abd179176f16572dd321676d5e" title="org.tdl.vireo.security.Security\lContext.getPerson" alt="" coords="800,202,992,243"/>
-<area shape="rect" id="node6" href="$classcontrollers_1_1_authentication.html#aeea97a341ec30a1a3b976b8a51f2963a" title="controllers.Authentication.get\lEnabledAuthenticationMethods" alt="" coords="795,71,997,113"/>
-<area shape="rect" id="node9" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person.html#a7d42d0bb053b7e58479d58f0db2620e4" title="org.tdl.vireo.model.Person.validate\lPassword" alt="" coords="523,71,746,113"/>
-<area shape="rect" id="node10" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html#adf9b6814dd10bc0848d4f17341c6e7b1" title="org.tdl.vireo.model.Abstract\lModel.getId" alt="" coords="543,137,726,178"/>
-<area shape="rect" id="node12" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person.html#a554ff42293726bc12285071775552435" title="org.tdl.vireo.model.Person.get\lFirstName" alt="" coords="537,594,733,635"/>
-<area shape="rect" id="node13" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person.html#a0be1298e441f9a99abd909c385ca295e" title="org.tdl.vireo.model.Person.get\lMiddleName" alt="" coords="537,659,733,701"/>
-<area shape="rect" id="node14" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person.html#ab5bbdbf4213ddc5e64b3e91bfe770f38" title="org.tdl.vireo.model.Person.get\lCurrentPhoneNumber" alt="" coords="537,398,733,439"/>
-<area shape="rect" id="node15" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person.html#abb6bdc9bccf1e0930597eeb34887e193" title="org.tdl.vireo.model.Person.get\lPermanentPhoneNumber" alt="" coords="537,463,733,505"/>
-<area shape="rect" id="node16" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person.html#a0597e4bd38e23cb7cae3e1075703af5c" title="org.tdl.vireo.model.Person.get\lPermanentEmailAddress" alt="" coords="537,529,733,570"/>
+<area shape="rect" id="node2" href="$classcontrollers_1_1_authentication.html#a41747450a9a3100e2d516a662fc40dc7" title="controllers.Authentication.check\lForceSSL" alt="" coords="532,202,740,243"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person.html#a6674aa143335ab5bdd3d2a95b0c5a63d" title="org.tdl.vireo.model.Person.get\lBirthYear" alt="" coords="538,333,734,374"/>
+<area shape="rect" id="node5" href="$classcontrollers_1_1_authentication.html#a84c1703bd2a227a85c6443bc31fd453b" title="controllers.Authentication.is\lUpdatePasswordEnabled" alt="" coords="545,6,727,47"/>
+<area shape="rect" id="node7" href="$classcontrollers_1_1_authentication.html#a3a7ddecca3ddd0a51f4ab399761125c9" title="controllers.Authentication.is\lUpdateProfileEnabled" alt="" coords="545,267,727,309"/>
+<area shape="rect" id="node8" href="$classcontrollers_1_1_authentication.html#ab1baa4b198fce87fa119f53a7a51f1ae" title="controllers.Authentication.update\lPassword" alt="" coords="262,139,474,181"/>
+<area shape="rect" id="node11" href="$classcontrollers_1_1_authentication.html#a9c9c67e94e6cdba8b0b6f20d8109d8b3" title="controllers.Authentication.update\lProfile" alt="" coords="262,398,474,439"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1security_1_1_security_context.html#a8c6e40abd179176f16572dd321676d5e" title="org.tdl.vireo.security.Security\lContext.getPerson" alt="" coords="803,202,995,243"/>
+<area shape="rect" id="node6" href="$classcontrollers_1_1_authentication.html#aeea97a341ec30a1a3b976b8a51f2963a" title="controllers.Authentication.get\lEnabledAuthenticationMethods" alt="" coords="797,71,1000,113"/>
+<area shape="rect" id="node9" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person.html#a7d42d0bb053b7e58479d58f0db2620e4" title="org.tdl.vireo.model.Person.validate\lPassword" alt="" coords="525,71,747,113"/>
+<area shape="rect" id="node10" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html#adf9b6814dd10bc0848d4f17341c6e7b1" title="org.tdl.vireo.model.Abstract\lModel.getId" alt="" coords="545,137,727,178"/>
+<area shape="rect" id="node12" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_settings_repository.html#a66d6fe00d747507b42b9387b537322a9" title="org.tdl.vireo.model.Settings\lRepository.getConfigBoolean" alt="" coords="540,659,732,701"/>
+<area shape="rect" id="node13" href="$classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities.html#aae75884abaf7bd3fd273a4b762639c9a" title="org.tdl.vireo.services.Utilities.verify\lOrcid" alt="" coords="523,725,749,766"/>
+<area shape="rect" id="node14" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person.html#a554ff42293726bc12285071775552435" title="org.tdl.vireo.model.Person.get\lFirstName" alt="" coords="538,790,734,831"/>
+<area shape="rect" id="node15" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person.html#a0be1298e441f9a99abd909c385ca295e" title="org.tdl.vireo.model.Person.get\lMiddleName" alt="" coords="538,398,734,439"/>
+<area shape="rect" id="node16" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person.html#aa2263b12eee55b8a2f2f775203f61747" title="org.tdl.vireo.model.Person.get\lOrcid" alt="" coords="538,463,734,505"/>
+<area shape="rect" id="node17" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person.html#a946a5c2d2689b7ec08292446ee8e8213" title="org.tdl.vireo.model.Person.get\lCurrentPostalAddress" alt="" coords="538,529,734,570"/>
+<area shape="rect" id="node18" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_person.html#a0946389781924307bc0ca27dc123e9ad" title="org.tdl.vireo.model.Person.get\lPermanentPostalAddress" alt="" coords="538,594,734,635"/>
 </map>

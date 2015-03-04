@@ -1,3 +1,3 @@
 <map id="org.tdl.vireo.state.impl.StateManagerImpl" name="org.tdl.vireo.state.impl.StateManagerImpl">
-<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1state_1_1_state_manager.html" title="org.tdl.vireo.state.State\lManager" alt="" coords="5,6,163,47"/>
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1state_1_1_state_manager.html" title="{org.tdl.vireo.state.State\lManager\n||+ getState()\l+ getAllStates()\l+ getInitialState()\l+ getCancelState()\l}" alt="" coords="5,5,163,141"/>
 </map>

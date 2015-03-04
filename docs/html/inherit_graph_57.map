@@ -1,4 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$interfaceorg_1_1tdl_1_1vireo_1_1search_1_1_indexer.html" title="org.tdl.vireo.search.Indexer" alt="" coords="6,12,186,39"/>
-<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_indexer_impl.html" title="org.tdl.vireo.search.impl.\lLuceneIndexerImpl" alt="" coords="235,5,400,46"/>
+<area shape="rect" id="node1" href="$interfaceorg_1_1tdl_1_1vireo_1_1search_1_1_searcher.html" title="org.tdl.vireo.search.Searcher" alt="" coords="5,12,195,39"/>
+<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_searcher_impl.html" title="org.tdl.vireo.search.impl.\lLuceneSearcherImpl" alt="" coords="243,5,408,46"/>
 </map>

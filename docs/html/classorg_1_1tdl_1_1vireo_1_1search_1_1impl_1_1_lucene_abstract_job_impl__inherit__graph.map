@@ -1,4 +1,4 @@
 <map id="org.tdl.vireo.search.impl.LuceneAbstractJobImpl" name="org.tdl.vireo.search.impl.LuceneAbstractJobImpl">
-<area shape="rect" id="node3" href="$classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_rebuild_job_impl.html" title="org.tdl.vireo.search.impl.\lLuceneRebuildJobImpl" alt="" coords="309,5,475,46"/>
-<area shape="rect" id="node4" href="$classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_update_job.html" title="org.tdl.vireo.search.impl.\lLuceneUpdateJob" alt="" coords="309,70,475,111"/>
+<area shape="rect" id="node3" href="$classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_rebuild_job_impl.html" title="{org.tdl.vireo.search.impl.\lLuceneRebuildJobImpl\n||+ LuceneRebuildJobImpl()\l+ getLabel()\l+ mergeJob()\l+ writeIndex()\l}" alt="" coords="5,440,179,576"/>
+<area shape="rect" id="node4" href="$classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_lucene_update_job.html" title="{org.tdl.vireo.search.impl.\lLuceneUpdateJob\n|&#45; subIds\l&#45; indexing\l|+ LuceneUpdateJob()\l+ getLabel()\l+ mergeJob()\l+ writeIndex()\l}" alt="" coords="204,433,368,583"/>
 </map>

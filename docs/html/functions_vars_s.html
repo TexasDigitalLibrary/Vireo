@@ -28,9 +28,10 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="vireo-logo-sm.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">Vireo
-   &#160;<span id="projectnumber">3.0.x-RC4</span>
+   &#160;<span id="projectnumber">3.0.0</span>
    </div>
    <div id="projectbrief">Vireo Electronic Thesis and Dissertation Submission System</div>
   </td>
@@ -175,13 +176,12 @@ $(document).ready(function(){initNavTree('functions_vars_s.html','');});
 , <a class="el" href="classcontrollers_1_1submit_1_1_field_tags.html#ac53fd4c1d494ae695642216180a4f966">controllers.submit.FieldTags</a>
 , <a class="el" href="classcontrollers_1_1_system.html#af16f5408d5d59b74127f2c003a286bae">controllers.System</a>
 , <a class="el" href="classorg_1_1tdl_1_1vireo_1_1batch_1_1impl_1_1_comment_service_impl.html#abdbcd0c38f94637b17457aba60134032">org.tdl.vireo.batch.impl.CommentServiceImpl</a>
-, <a class="el" href="classorg_1_1tdl_1_1vireo_1_1email_1_1impl_1_1_system_email_template_service_impl.html#ac878dd099f166faa44ea99ac9c03db2a">org.tdl.vireo.email.impl.SystemEmailTemplateServiceImpl</a>
 , <a class="el" href="classorg_1_1tdl_1_1vireo_1_1email_1_1impl_1_1_vireo_email_impl.html#a8babcac81b36e7abd9a1b3f544cc881a">org.tdl.vireo.email.impl.VireoEmailImpl</a>
 , <a class="el" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_multiple_template_packager_impl.html#a66e9fbb82e099e4f15711fdee165fe24">org.tdl.vireo.export.impl.MultipleTemplatePackagerImpl</a>
 , <a class="el" href="classorg_1_1tdl_1_1vireo_1_1export_1_1impl_1_1_template_packager_impl.html#afc9faefc909c051313ba8b65de291130">org.tdl.vireo.export.impl.TemplatePackagerImpl</a>
 , <a class="el" href="classorg_1_1tdl_1_1vireo_1_1proquest_1_1impl_1_1_proquest_utility_service_impl.html#a5a42c74baecdeff08ec3d051285b7253">org.tdl.vireo.proquest.impl.ProquestUtilityServiceImpl</a>
 , <a class="el" href="classorg_1_1tdl_1_1vireo_1_1search_1_1impl_1_1_uri_active_search_filter_impl.html#a67dd4a2bc6b4a6b5edfd12be83249be7">org.tdl.vireo.search.impl.UriActiveSearchFilterImpl</a>
-, <a class="el" href="classorg_1_1tdl_1_1vireo_1_1services_1_1_email_rule_service.html#a6dece8c368b917246c9933b5e0a9751c">org.tdl.vireo.services.EmailRuleService</a>
+, <a class="el" href="classorg_1_1tdl_1_1vireo_1_1services_1_1_system_data_loader.html#a6b7bd36e05fc8834993c3e244d78de47">org.tdl.vireo.services.SystemDataLoader</a>
 , <a class="el" href="classorg_1_1tdl_1_1vireo_1_1services_1_1_utilities.html#a6855f56b35eb0678b91ede1325d07f1e">org.tdl.vireo.services.Utilities</a>
 </li>
 <li>sheetName
@@ -294,7 +294,7 @@ $(document).ready(function(){initNavTree('functions_vars_s.html','');});
 , <a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#a3082655dca2befff8cd23ea5e868164e">org.tdl.vireo.model.jpa.JpaEmailTemplateImpl</a>
 </li>
 <li>SUBJECT_PATTERN
-: <a class="el" href="classorg_1_1tdl_1_1vireo_1_1email_1_1impl_1_1_system_email_template_service_impl.html#a33a8787de3ab55af60c634f718c9cede">org.tdl.vireo.email.impl.SystemEmailTemplateServiceImpl</a>
+: <a class="el" href="classorg_1_1tdl_1_1vireo_1_1services_1_1_system_data_loader.html#a8dcb97f61e4ea1f0d847b5cb75ee0fd2">org.tdl.vireo.services.SystemDataLoader</a>
 </li>
 <li>subjects
 : <a class="el" href="classorg_1_1tdl_1_1vireo_1_1proquest_1_1impl_1_1_proquest_excel_vocabulary_repository_impl.html#a88113f1d5475f809f30ce6afb1d07515">org.tdl.vireo.proquest.impl.ProquestExcelVocabularyRepositoryImpl</a>
@@ -393,12 +393,9 @@ $(document).ready(function(){initNavTree('functions_vars_s.html','');});
 <li>SUPPLEMENTAL_ATTACHMENT
 : <a class="el" href="enumorg_1_1tdl_1_1vireo_1_1constant_1_1_field_config.html#a8eeb50f869b4c5997b54686ddbdc2316">org.tdl.vireo.constant.FieldConfig</a>
 </li>
-<li>systemEmailService
-: <a class="el" href="classcontrollers_1_1_authentication.html#aa7c056e5e1cd84ce9c89b17f4d8d7a35">controllers.Authentication</a>
-, <a class="el" href="classcontrollers_1_1_first_user.html#abe77b960b0c95aedf24aeb50b54764d1">controllers.FirstUser</a>
-</li>
 <li>systemRequired
 : <a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_email_template_impl.html#a0fa2178f3feef4ac02015f746cd832b0">org.tdl.vireo.model.jpa.JpaEmailTemplateImpl</a>
+, <a class="el" href="classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#ae0ed9fa61f7f3598271d6096b2b8bc81">org.tdl.vireo.model.jpa.JpaEmbargoTypeImpl</a>
 </li>
 </ul>
 </div><!-- contents -->
@@ -406,7 +403,7 @@ $(document).ready(function(){initNavTree('functions_vars_s.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Feb 12 2015 12:31:09 for Vireo by
+    <li class="footer">Generated on Wed Mar 4 2015 13:41:26 for Vireo by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

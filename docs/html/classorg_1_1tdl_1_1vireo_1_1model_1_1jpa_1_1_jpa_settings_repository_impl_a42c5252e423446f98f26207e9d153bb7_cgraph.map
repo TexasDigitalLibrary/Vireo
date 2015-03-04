@@ -1,0 +1,4 @@
+<map id="org.tdl.vireo.model.jpa.JpaSettingsRepositoryImpl.findEmailTemplateByName" name="org.tdl.vireo.model.jpa.JpaSettingsRepositoryImpl.findEmailTemplateByName">
+<area shape="rect" id="node2" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_settings_repository_impl.html#af98057efc6a6d7edda2a9d8b50c102e9" title="org.tdl.vireo.model.jpa.\lJpaSettingsRepositoryImpl.find\lNonSystemEmailTemplateByName" alt="" coords="259,5,488,61"/>
+<area shape="rect" id="node3" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_settings_repository_impl.html#a9782cf278d736d875984141a46afb630" title="org.tdl.vireo.model.jpa.\lJpaSettingsRepositoryImpl.find\lSystemEmailTemplateByName" alt="" coords="271,85,476,141"/>
+</map>

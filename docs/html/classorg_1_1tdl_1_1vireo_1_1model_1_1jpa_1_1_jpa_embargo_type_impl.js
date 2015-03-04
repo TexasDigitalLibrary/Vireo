@@ -9,6 +9,7 @@ var classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl =
     [ "getName", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#a5d04a9de83e344c80dc0d3311027c680", null ],
     [ "getSubmissions", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#a154a9023630a996b6254daf51dbd2022", null ],
     [ "isActive", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#aa5384ec13b943847930b37a38c1953b5", null ],
+    [ "isSystemRequired", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#a80df238995c9b8ba4b2074a5cd808971", null ],
     [ "save", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#a2b27153a68cf38708e146d8ddbc7d81c", null ],
     [ "setActive", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#aeb774c1d8cf64c2121facf287beab701", null ],
     [ "setDescription", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#ab6305384b9e9117d343435cefa230795", null ],
@@ -16,10 +17,12 @@ var classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl =
     [ "setDuration", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#afa4695605600793a13fed43eed10e70e", null ],
     [ "setGuarantor", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#aacb7a66c9a3f97cd75c0ea085556c8ec", null ],
     [ "setName", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#aa5d8ac6e2245f51cedcc35258f672345", null ],
+    [ "setSystemRequired", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#a4187cb570f3fa485e2ffc1445b65501e", null ],
     [ "active", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#a87381a8825cf82a864c32ad846b44795", null ],
     [ "description", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#affdeb28db7975787b74af943ed0eee0b", null ],
     [ "displayOrder", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#ae30213de9a217bc76614cca7232a4312", null ],
     [ "duration", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#a4521e4f677a22a8f707c1c31cc18e47d", null ],
     [ "guarantor", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#a7a4fd423790f8c8278e05af8fa162061", null ],
-    [ "name", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#ae5356bb5b4efa09c3af24c8acbd12d49", null ]
+    [ "name", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#ae5356bb5b4efa09c3af24c8acbd12d49", null ],
+    [ "systemRequired", "classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_embargo_type_impl.html#ae0ed9fa61f7f3598271d6096b2b8bc81", null ]
 ];

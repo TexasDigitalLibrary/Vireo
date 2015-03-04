@@ -1,4 +1,4 @@
 <map id="org.tdl.vireo.job.impl.JobMetadataImpl" name="org.tdl.vireo.job.impl.JobMetadataImpl">
-<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1job_1_1_job_metadata.html" title="org.tdl.vireo.job.JobMetadata" alt="" coords="5,5,195,32"/>
-<area shape="rect" id="node3" href="$enumorg_1_1tdl_1_1vireo_1_1job_1_1_job_status.html" title="org.tdl.vireo.job.JobStatus" alt="" coords="219,5,393,32"/>
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1job_1_1_job_metadata.html" title="{org.tdl.vireo.job.JobMetadata\n||+ getId()\l+ getStartTime()\l+ getOwnerId()\l+ getName()\l+ getStatus()\l+ setStatus()\l+ getProgress()\l+ getJob()\l+ setJob()\l+ getMessage()\l+ setMessage()\l}" alt="" coords="5,5,195,229"/>
+<area shape="rect" id="node3" href="$enumorg_1_1tdl_1_1vireo_1_1job_1_1_job_status.html" title="{org.tdl.vireo.job.JobStatus\n|+ WAITING\l+ READY\l+ RUNNING\l+ SUCCESS\l+ FAILED\l+ CANCELLED\l+ ACTIVE\l+ COMPLETED\l&#45; active\l|+ JobStatus()\l+ isActive()\l}" alt="" coords="219,13,393,222"/>
 </map>

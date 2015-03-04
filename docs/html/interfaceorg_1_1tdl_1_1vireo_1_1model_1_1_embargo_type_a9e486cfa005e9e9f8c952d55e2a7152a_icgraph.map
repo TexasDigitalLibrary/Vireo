@@ -1,3 +1,4 @@
 <map id="org.tdl.vireo.model.EmbargoType.getDescription" name="org.tdl.vireo.model.EmbargoType.getDescription">
-<area shape="rect" id="node2" href="$classcontrollers_1_1settings_1_1_configurable_settings_tab.html#aebbe1be86577dd8f4054a27e6983ba2c" title="controllers.settings.Configurable\lSettingsTab.editEmbargoTypeJSON" alt="" coords="240,5,475,46"/>
+<area shape="rect" id="node2" href="$classcontrollers_1_1settings_1_1_configurable_settings_tab.html#aebbe1be86577dd8f4054a27e6983ba2c" title="controllers.settings.Configurable\lSettingsTab.editEmbargoTypeJSON" alt="" coords="255,5,489,46"/>
+<area shape="rect" id="node3" href="$classorg_1_1tdl_1_1vireo_1_1services_1_1_system_data_loader.html#ad04f4814c9b9fad12b275303569ca2f7" title="org.tdl.vireo.services.System\lDataLoader.generateAllSystemEmbargos" alt="" coords="241,70,503,111"/>
 </map>

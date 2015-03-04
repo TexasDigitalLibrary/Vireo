@@ -1,5 +1,5 @@
 <map id="org.tdl.vireo.model.jpa.JpaCommitteeMemberRoleTypeImpl" name="org.tdl.vireo.model.jpa.JpaCommitteeMemberRoleTypeImpl">
-<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_committee_member_role_type.html" title="org.tdl.vireo.model.Committee\lMemberRoleType" alt="" coords="483,70,680,111"/>
-<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_ordered_model.html" title="org.tdl.vireo.model.Abstract\lOrderedModel" alt="" coords="238,70,421,111"/>
-<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="org.tdl.vireo.model.Abstract\lModel" alt="" coords="6,70,189,111"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_committee_member_role_type.html" title="{org.tdl.vireo.model.Committee\lMemberRoleType\n||+ getName()\l+ setName()\l+ getLevel()\l+ setLevel()\l}" alt="" coords="252,373,449,509"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_ordered_model.html" title="{org.tdl.vireo.model.Abstract\lOrderedModel\n||+ getDisplayOrder()\l+ setDisplayOrder()\l}" alt="" coords="259,219,441,325"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="{org.tdl.vireo.model.Abstract\lModel\n||+ getId()\l+ save()\l+ delete()\l+ refresh()\l+ merge()\l+ detach()\l}" alt="" coords="259,5,441,171"/>
 </map>

@@ -22,6 +22,5 @@ var classcontrollers_1_1_authentication =
     [ "validateToken", "classcontrollers_1_1_authentication.html#a29c778467c778fbf0220b6855eaa3e2f", null ],
     [ "emailService", "classcontrollers_1_1_authentication.html#a6656a808315ebec3c78971b6b2b501d3", null ],
     [ "RECOVER_TEMPLATE", "classcontrollers_1_1_authentication.html#a1537cfaec5e647419e8d6496273e6e79", null ],
-    [ "REGISTRATION_TEMPLATE", "classcontrollers_1_1_authentication.html#af5faeaee32563bfbb4ba34c365376cae", null ],
-    [ "systemEmailService", "classcontrollers_1_1_authentication.html#aa7c056e5e1cd84ce9c89b17f4d8d7a35", null ]
+    [ "REGISTRATION_TEMPLATE", "classcontrollers_1_1_authentication.html#af5faeaee32563bfbb4ba34c365376cae", null ]
 ];

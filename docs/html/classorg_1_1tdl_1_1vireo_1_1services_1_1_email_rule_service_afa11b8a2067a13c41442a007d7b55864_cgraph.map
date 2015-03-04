@@ -1,4 +1,0 @@
-<map id="org.tdl.vireo.services.EmailRuleService.ruleIsValid" name="org.tdl.vireo.services.EmailRuleService.ruleIsValid">
-<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_workflow_rule.html#a097d215566c7b7fe7e2925778abe28f1" title="org.tdl.vireo.model.Abstract\lWorkflowRule.getCondition" alt="" coords="238,5,421,46"/>
-<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_email_workflow_rule.html#aa7d3acc70aef2d652efe8cd4553885fb" title="org.tdl.vireo.model.Email\lWorkflowRule.getRecipients" alt="" coords="235,70,423,111"/>
-</map>

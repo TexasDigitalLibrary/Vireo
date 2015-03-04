@@ -1,3 +1,3 @@
 <map id="controllers.Advisor" name="controllers.Advisor">
-<area shape="rect" id="node2" href="$classcontrollers_1_1_abstract_vireo_controller.html" title="controllers.AbstractVireo\lController" alt="" coords="4,81,168,122"/>
+<area shape="rect" id="node2" href="$classcontrollers_1_1_abstract_vireo_controller.html" title="{controllers.AbstractVireo\lController\n|+ context\l+ personRepo\l+ subRepo\l+ settingRepo\l+ proquestRepo\l+ errorLog\l+ stateManager\l+ indexer\l+ searcher\l+ firstUser\l|+ injectRepositories()\l+ checkForFirstUser()\l+ handleError()\l# isEmpty()\l# isNotEmpty()\l# escapeJavaScript()\l# URIEncode()\l# toJSON()\l# text2html()\l# isFieldRequired()\l}" alt="" coords="9,131,173,487"/>
 </map>

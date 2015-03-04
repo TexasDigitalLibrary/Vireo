@@ -1,5 +1,5 @@
 <map id="org.tdl.vireo.model.Language" name="org.tdl.vireo.model.Language">
-<area shape="rect" id="node4" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_language_impl.html" title="org.tdl.vireo.model.jpa.\lJpaLanguageImpl" alt="" coords="23,262,176,303"/>
-<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_ordered_model.html" title="org.tdl.vireo.model.Abstract\lOrderedModel" alt="" coords="9,97,191,138"/>
-<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="org.tdl.vireo.model.Abstract\lModel" alt="" coords="9,6,191,47"/>
+<area shape="rect" id="node4" href="$classorg_1_1tdl_1_1vireo_1_1model_1_1jpa_1_1_jpa_language_impl.html" title="{org.tdl.vireo.model.jpa.\lJpaLanguageImpl\n|+ displayOrder\l+ name\l|+ save()\l+ delete()\l+ getDisplayOrder()\l+ setDisplayOrder()\l+ getName()\l+ setName()\l+ getLocale()\l# JpaLanguageImpl()\l# _toLocale()\l}" alt="" coords="23,528,176,752"/>
+<area shape="rect" id="node2" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_ordered_model.html" title="{org.tdl.vireo.model.Abstract\lOrderedModel\n||+ getDisplayOrder()\l+ setDisplayOrder()\l}" alt="" coords="9,219,191,325"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1tdl_1_1vireo_1_1model_1_1_abstract_model.html" title="{org.tdl.vireo.model.Abstract\lModel\n||+ getId()\l+ save()\l+ delete()\l+ refresh()\l+ merge()\l+ detach()\l}" alt="" coords="9,5,191,171"/>
 </map>

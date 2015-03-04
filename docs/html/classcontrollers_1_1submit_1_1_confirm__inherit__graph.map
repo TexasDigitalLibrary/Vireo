@@ -1,4 +1,4 @@
 <map id="controllers.submit.Confirm" name="controllers.submit.Confirm">
-<area shape="rect" id="node2" href="$classcontrollers_1_1submit_1_1_abstract_submit_step.html" title="controllers.submit.Abstract\lSubmitStep" alt="" coords="5,171,184,213"/>
-<area shape="rect" id="node3" href="$classcontrollers_1_1_abstract_vireo_controller.html" title="controllers.AbstractVireo\lController" alt="" coords="12,81,176,122"/>
+<area shape="rect" id="node2" href="$classcontrollers_1_1submit_1_1_abstract_submit_step.html" title="{controllers.submit.Abstract\lSubmitStep\n||~ beforeSubmit()\l# getSubmission()\l# isFieldEnabled()\l# isFieldRequired()\l}" alt="" coords="21,536,200,672"/>
+<area shape="rect" id="node3" href="$classcontrollers_1_1_abstract_vireo_controller.html" title="{controllers.AbstractVireo\lController\n|+ context\l+ personRepo\l+ subRepo\l+ settingRepo\l+ proquestRepo\l+ errorLog\l+ stateManager\l+ indexer\l+ searcher\l+ firstUser\l|+ injectRepositories()\l+ checkForFirstUser()\l+ handleError()\l# isEmpty()\l# isNotEmpty()\l# escapeJavaScript()\l# URIEncode()\l# toJSON()\l# text2html()\l# isFieldRequired()\l}" alt="" coords="28,131,192,487"/>
 </map>
