@@ -1,174 +1,68 @@
--- MySQL dump 10.13  Distrib 5.5.11, for osx10.5 (i386)
+-- phpMyAdmin SQL Dump
+-- version 4.0.10deb1
+-- http://www.phpmyadmin.net
 --
--- Host: localhost    Database: vireo
--- ------------------------------------------------------
--- Server version	5.5.11
+-- Host: localhost
+-- Generation Time: Mar 04, 2015 at 12:11 PM
+-- Server version: 5.5.41-0ubuntu0.14.04.1
+-- PHP Version: 5.5.9-1ubuntu4.6
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `JpaNamedSearchFilterImpl_colleges`
+-- Database: `vireo`
 --
 
-DROP TABLE IF EXISTS `JpaNamedSearchFilterImpl_colleges`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `JpaNamedSearchFilterImpl_colleges` (
-  `JpaNamedSearchFilterImpl_id` bigint(20) NOT NULL,
-  `colleges` varchar(255) DEFAULT NULL,
-  KEY `FK613A5EFD2E6A9C33` (`JpaNamedSearchFilterImpl_id`),
-  CONSTRAINT `FK613A5EFD2E6A9C33` FOREIGN KEY (`JpaNamedSearchFilterImpl_id`) REFERENCES `search_filter` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `JpaNamedSearchFilterImpl_degrees`
---
-
-DROP TABLE IF EXISTS `JpaNamedSearchFilterImpl_degrees`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `JpaNamedSearchFilterImpl_degrees` (
-  `JpaNamedSearchFilterImpl_id` bigint(20) NOT NULL,
-  `degrees` varchar(255) DEFAULT NULL,
-  KEY `FK5ACB1C62E6A9C33` (`JpaNamedSearchFilterImpl_id`),
-  CONSTRAINT `FK5ACB1C62E6A9C33` FOREIGN KEY (`JpaNamedSearchFilterImpl_id`) REFERENCES `search_filter` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `JpaNamedSearchFilterImpl_departments`
---
-
-DROP TABLE IF EXISTS `JpaNamedSearchFilterImpl_departments`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `JpaNamedSearchFilterImpl_departments` (
-  `JpaNamedSearchFilterImpl_id` bigint(20) NOT NULL,
-  `departments` varchar(255) DEFAULT NULL,
-  KEY `FK326B06802E6A9C33` (`JpaNamedSearchFilterImpl_id`),
-  CONSTRAINT `FK326B06802E6A9C33` FOREIGN KEY (`JpaNamedSearchFilterImpl_id`) REFERENCES `search_filter` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `JpaNamedSearchFilterImpl_documentTypes`
---
-
-DROP TABLE IF EXISTS `JpaNamedSearchFilterImpl_documentTypes`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `JpaNamedSearchFilterImpl_documentTypes` (
-  `JpaNamedSearchFilterImpl_id` bigint(20) NOT NULL,
-  `documentTypes` varchar(255) DEFAULT NULL,
-  KEY `FK685EA37D2E6A9C33` (`JpaNamedSearchFilterImpl_id`),
-  CONSTRAINT `FK685EA37D2E6A9C33` FOREIGN KEY (`JpaNamedSearchFilterImpl_id`) REFERENCES `search_filter` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `JpaNamedSearchFilterImpl_majors`
---
-
-DROP TABLE IF EXISTS `JpaNamedSearchFilterImpl_majors`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `JpaNamedSearchFilterImpl_majors` (
-  `JpaNamedSearchFilterImpl_id` bigint(20) NOT NULL,
-  `majors` varchar(255) DEFAULT NULL,
-  KEY `FKCD42EB5B2E6A9C33` (`JpaNamedSearchFilterImpl_id`),
-  CONSTRAINT `FKCD42EB5B2E6A9C33` FOREIGN KEY (`JpaNamedSearchFilterImpl_id`) REFERENCES `search_filter` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `JpaNamedSearchFilterImpl_searchText`
---
-
-DROP TABLE IF EXISTS `JpaNamedSearchFilterImpl_searchText`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `JpaNamedSearchFilterImpl_searchText` (
-  `JpaNamedSearchFilterImpl_id` bigint(20) NOT NULL,
-  `searchText` varchar(255) DEFAULT NULL,
-  KEY `FK395E4BF62E6A9C33` (`JpaNamedSearchFilterImpl_id`),
-  CONSTRAINT `FK395E4BF62E6A9C33` FOREIGN KEY (`JpaNamedSearchFilterImpl_id`) REFERENCES `search_filter` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `JpaNamedSearchFilterImpl_semesters`
---
-
-DROP TABLE IF EXISTS `JpaNamedSearchFilterImpl_semesters`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `JpaNamedSearchFilterImpl_semesters` (
-  `JpaNamedSearchFilterImpl_id` bigint(20) NOT NULL,
-  `semesters` varchar(255) DEFAULT NULL,
-  KEY `FK254C311A2E6A9C33` (`JpaNamedSearchFilterImpl_id`),
-  CONSTRAINT `FK254C311A2E6A9C33` FOREIGN KEY (`JpaNamedSearchFilterImpl_id`) REFERENCES `search_filter` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `JpaNamedSearchFilterImpl_states`
---
-
-DROP TABLE IF EXISTS `JpaNamedSearchFilterImpl_states`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `JpaNamedSearchFilterImpl_states` (
-  `JpaNamedSearchFilterImpl_id` bigint(20) NOT NULL,
-  `states` varchar(255) DEFAULT NULL,
-  KEY `FKD887B7832E6A9C33` (`JpaNamedSearchFilterImpl_id`),
-  CONSTRAINT `FKD887B7832E6A9C33` FOREIGN KEY (`JpaNamedSearchFilterImpl_id`) REFERENCES `search_filter` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `actionlog`
 --
 
-DROP TABLE IF EXISTS `actionlog`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `actionlog` (
+CREATE TABLE IF NOT EXISTS `actionlog` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `actionDate` datetime DEFAULT NULL,
   `entry` longtext NOT NULL,
-  `privateFlag` bit(1) NOT NULL,
+  `privateFlag` tinyint(1) NOT NULL,
   `submissionState` varchar(255) NOT NULL,
   `attachment_id` bigint(20) DEFAULT NULL,
   `person_id` bigint(20) DEFAULT NULL,
   `submission_id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `FKBD1F14E936E2B7C` (`attachment_id`),
-  KEY `FKBD1F14EF967E3C` (`person_id`),
-  KEY `FKBD1F14E2D7E525C` (`submission_id`),
-  CONSTRAINT `FKBD1F14E2D7E525C` FOREIGN KEY (`submission_id`) REFERENCES `submission` (`id`),
-  CONSTRAINT `FKBD1F14E936E2B7C` FOREIGN KEY (`attachment_id`) REFERENCES `attachment` (`id`),
-  CONSTRAINT `FKBD1F14EF967E3C` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=953 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  KEY `FK_9ud0hhk9umt2gcffwi4ipxhrb` (`attachment_id`),
+  KEY `FK_4norsqa704bntket913ub5bpx` (`person_id`),
+  KEY `FK_ahsjgamx6y6m5g7cgr8xnkjq6` (`submission_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `administrative_groups`
+--
+
+CREATE TABLE IF NOT EXISTS `administrative_groups` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `displayOrder` int(11) NOT NULL,
+  `emails` tinyblob,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_g0arithcbc2y7mqw06l9f53yv` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `attachment`
 --
 
-DROP TABLE IF EXISTS `attachment`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `attachment` (
+CREATE TABLE IF NOT EXISTS `attachment` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `data` varchar(255) DEFAULT NULL,
   `date` datetime NOT NULL,
@@ -177,145 +71,155 @@ CREATE TABLE `attachment` (
   `person_id` bigint(20) DEFAULT NULL,
   `submission_id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `submission_id` (`submission_id`,`name`),
-  KEY `FK8AF75923F967E3C` (`person_id`),
-  KEY `FK8AF759232D7E525C` (`submission_id`),
-  CONSTRAINT `FK8AF759232D7E525C` FOREIGN KEY (`submission_id`) REFERENCES `submission` (`id`),
-  CONSTRAINT `FK8AF75923F967E3C` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=86 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  UNIQUE KEY `UK_ruw2i1tqm58ytj13n6o8n49r6` (`submission_id`,`name`),
+  KEY `FK_8se0vn1c9y2lviiun4a877q7h` (`person_id`),
+  KEY `FK_xrwsik7ddccorroc9m86mtmy` (`submission_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `college`
 --
 
-DROP TABLE IF EXISTS `college`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `college` (
+CREATE TABLE IF NOT EXISTS `college` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `displayOrder` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
+  `emails` tinyblob,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  UNIQUE KEY `UK_nyc2rxbj71rdhcw055436agb5` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `committee_member`
 --
 
-DROP TABLE IF EXISTS `committee_member`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `committee_member` (
+CREATE TABLE IF NOT EXISTS `committee_member` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `chair` bit(1) NOT NULL,
   `displayOrder` int(11) NOT NULL,
   `firstName` varchar(255) DEFAULT NULL,
   `lastName` varchar(255) DEFAULT NULL,
   `middleName` varchar(255) DEFAULT NULL,
   `submission_id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `FK1792999C2D7E525C` (`submission_id`),
-  CONSTRAINT `FK1792999C2D7E525C` FOREIGN KEY (`submission_id`) REFERENCES `submission` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  KEY `FK_4eqjy8xt9agdgnkygu1jhib6b` (`submission_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `configuration`
+-- Table structure for table `committee_member_roles`
 --
 
-DROP TABLE IF EXISTS `configuration`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `configuration` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `value` longtext,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+CREATE TABLE IF NOT EXISTS `committee_member_roles` (
+  `JpaCommitteeMemberImpl_id` bigint(20) NOT NULL,
+  `roles` varchar(255) DEFAULT NULL,
+  `roles_ORDER` int(11) NOT NULL,
+  PRIMARY KEY (`JpaCommitteeMemberImpl_id`,`roles_ORDER`),
+  KEY `FK_lhstcjubx3ok7jsd4sur6dpmu` (`JpaCommitteeMemberImpl_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `custom_action_definition`
+-- Table structure for table `committee_member_role_type`
 --
 
-DROP TABLE IF EXISTS `custom_action_definition`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `custom_action_definition` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `displayOrder` int(11) NOT NULL,
-  `label` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `label` (`label`)
-) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `custom_action_value`
---
-
-DROP TABLE IF EXISTS `custom_action_value`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `custom_action_value` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `value` bit(1) NOT NULL,
-  `definition_id` bigint(20) NOT NULL,
-  `submission_id` bigint(20) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `submission_id` (`submission_id`,`definition_id`),
-  KEY `FKE49B30366B22F363` (`definition_id`),
-  KEY `FKE49B30362D7E525C` (`submission_id`),
-  CONSTRAINT `FKE49B30362D7E525C` FOREIGN KEY (`submission_id`) REFERENCES `submission` (`id`),
-  CONSTRAINT `FKE49B30366B22F363` FOREIGN KEY (`definition_id`) REFERENCES `custom_action_definition` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `degree`
---
-
-DROP TABLE IF EXISTS `degree`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `degree` (
+CREATE TABLE IF NOT EXISTS `committee_member_role_type` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `displayOrder` int(11) NOT NULL,
   `level` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`,`level`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  UNIQUE KEY `UK_f8fg81yj2rftvrw9drj6t32c5` (`name`,`level`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `configuration`
+--
+
+CREATE TABLE IF NOT EXISTS `configuration` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `value` longtext,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_c3pprgpekt3nw1vmv98sqjqce` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `custom_action_definition`
+--
+
+CREATE TABLE IF NOT EXISTS `custom_action_definition` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `displayOrder` int(11) NOT NULL,
+  `label` varchar(255) NOT NULL,
+  `isStudentVisible` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_vws65okmwb4j72n41daph650` (`label`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `custom_action_value`
+--
+
+CREATE TABLE IF NOT EXISTS `custom_action_value` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `value` tinyint(1) NOT NULL,
+  `definition_id` bigint(20) NOT NULL,
+  `submission_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_sfhufnuq27bp4rvau3p418gej` (`submission_id`,`definition_id`),
+  KEY `FK_3brcld4o5axxxtpqvtx5jlhty` (`definition_id`),
+  KEY `FK_784g0grh0a7si8baguih2eu93` (`submission_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `degree`
+--
+
+CREATE TABLE IF NOT EXISTS `degree` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `displayOrder` int(11) NOT NULL,
+  `level` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_gbfqltywj1fafp78jeloxu0ef` (`name`,`level`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `department`
 --
 
-DROP TABLE IF EXISTS `department`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `department` (
+CREATE TABLE IF NOT EXISTS `department` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `displayOrder` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
+  `emails` tinyblob,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=91 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  UNIQUE KEY `UK_1t68827l97cwyxo9r1u6t4p7d` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `deposit_location`
 --
 
-DROP TABLE IF EXISTS `deposit_location`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `deposit_location` (
+CREATE TABLE IF NOT EXISTS `deposit_location` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `collection` longtext,
   `depositor` varchar(255) DEFAULT NULL,
@@ -326,106 +230,147 @@ CREATE TABLE `deposit_location` (
   `password` varchar(255) DEFAULT NULL,
   `repository` longtext,
   `username` varchar(255) DEFAULT NULL,
+  `timeout` int(11) DEFAULT '60',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  UNIQUE KEY `UK_dovfybuq9gk43yqlfept9xc42` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `document_type`
 --
 
-DROP TABLE IF EXISTS `document_type`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `document_type` (
+CREATE TABLE IF NOT EXISTS `document_type` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `displayOrder` int(11) NOT NULL,
   `level` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`,`level`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  UNIQUE KEY `UK_gu9uufujcobcnd1g0auqi6sxo` (`name`,`level`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `email_template`
 --
 
-DROP TABLE IF EXISTS `email_template`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `email_template` (
+CREATE TABLE IF NOT EXISTS `email_template` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `displayOrder` int(11) NOT NULL,
   `message` longtext NOT NULL,
   `name` varchar(255) NOT NULL,
   `subject` longtext NOT NULL,
-  `systemRequired` bit(1) NOT NULL,
+  `systemRequired` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  UNIQUE KEY `UK_2qlliow884c9ci671eliwiydu` (`name`,`systemRequired`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `email_workflow_rules`
+--
+
+CREATE TABLE IF NOT EXISTS `email_workflow_rules` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `associatedState` varchar(255) DEFAULT NULL,
+  `displayOrder` int(11) NOT NULL,
+  `isDisabled` tinyint(1) DEFAULT NULL,
+  `isSystem` tinyint(1) DEFAULT NULL,
+  `recipientType` int(11) DEFAULT NULL,
+  `adminGroupRecipientId` bigint(20) DEFAULT NULL,
+  `conditionID` bigint(20) DEFAULT NULL,
+  `emailTemplateId` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_5it9i77coc0sut7nt4ivl5taj` (`adminGroupRecipientId`),
+  KEY `FK_bs7ru7e7sy0824bei7ldbyhcv` (`conditionID`),
+  KEY `FK_282jvq0q662qfl3c8g09pprim` (`emailTemplateId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `email_workflow_rule_conditions`
+--
+
+CREATE TABLE IF NOT EXISTS `email_workflow_rule_conditions` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `conditionId` bigint(20) DEFAULT NULL,
+  `conditionType` int(11) DEFAULT NULL,
+  `displayOrder` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `embargo_type`
 --
 
-DROP TABLE IF EXISTS `embargo_type`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `embargo_type` (
+CREATE TABLE IF NOT EXISTS `embargo_type` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `active` bit(1) NOT NULL,
+  `active` tinyint(1) NOT NULL,
   `description` longtext NOT NULL,
   `displayOrder` int(11) NOT NULL,
   `duration` int(11) DEFAULT NULL,
   `name` varchar(255) NOT NULL,
+  `guarantor` int(11) NOT NULL DEFAULT '0',
+  `systemRequired` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  UNIQUE KEY `UK_rrrhycsns6ohf9uvxrs5i61jk` (`name`,`guarantor`,`systemRequired`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `graduation_month`
 --
 
-DROP TABLE IF EXISTS `graduation_month`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `graduation_month` (
+CREATE TABLE IF NOT EXISTS `graduation_month` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `displayOrder` int(11) NOT NULL,
   `month` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `month` (`month`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  UNIQUE KEY `UK_dv0ctus1ai651v35jvpdyhuyx` (`month`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `language`
+--
+
+CREATE TABLE IF NOT EXISTS `language` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `displayOrder` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_g8hr207ijpxlwu10pewyo65gv` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `major`
 --
 
-DROP TABLE IF EXISTS `major`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `major` (
+CREATE TABLE IF NOT EXISTS `major` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `displayOrder` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=130 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  UNIQUE KEY `UK_oi0ctjbjvktdcfxws9w2exiwb` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `person`
 --
 
-DROP TABLE IF EXISTS `person`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `person` (
+CREATE TABLE IF NOT EXISTS `person` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `birthYear` int(11) DEFAULT NULL,
   `currentCollege` varchar(255) DEFAULT NULL,
@@ -437,6 +382,7 @@ CREATE TABLE `person` (
   `currentMajor` varchar(255) DEFAULT NULL,
   `currentPhoneNumber` varchar(255) DEFAULT NULL,
   `currentPostalAddress` varchar(255) DEFAULT NULL,
+  `currentProgram` varchar(255) DEFAULT NULL,
   `displayName` varchar(255) DEFAULT NULL,
   `email` varchar(255) NOT NULL,
   `firstName` varchar(255) DEFAULT NULL,
@@ -444,269 +390,307 @@ CREATE TABLE `person` (
   `lastName` varchar(255) DEFAULT NULL,
   `middleName` varchar(255) DEFAULT NULL,
   `netid` varchar(255) DEFAULT NULL,
+  `orcid` varchar(255) DEFAULT NULL,
   `passwordHash` varchar(255) DEFAULT NULL,
   `permanentEmailAddress` varchar(255) DEFAULT NULL,
   `permanentPhoneNumber` varchar(255) DEFAULT NULL,
   `permanentPostalAddress` varchar(255) DEFAULT NULL,
   `role` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `email` (`email`),
-  UNIQUE KEY `netid` (`netid`)
-) ENGINE=InnoDB AUTO_INCREMENT=215 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  UNIQUE KEY `UK_fwmwi44u55bo4rvwsv0cln012` (`email`),
+  UNIQUE KEY `UK_7lave14pgltnfmvs342s9qco8` (`netid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `person_affiliations`
 --
 
-DROP TABLE IF EXISTS `person_affiliations`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `person_affiliations` (
+CREATE TABLE IF NOT EXISTS `person_affiliations` (
   `JpaPersonImpl_id` bigint(20) NOT NULL,
   `affiliations` varchar(255) DEFAULT NULL,
-  KEY `FKE29E7C2DF4A0EAA1` (`JpaPersonImpl_id`),
-  CONSTRAINT `FKE29E7C2DF4A0EAA1` FOREIGN KEY (`JpaPersonImpl_id`) REFERENCES `person` (`id`)
+  KEY `FK_2u4d124bh89lkfo4o5gysf0do` (`JpaPersonImpl_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `preference`
 --
 
-DROP TABLE IF EXISTS `preference`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `preference` (
+CREATE TABLE IF NOT EXISTS `preference` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `value` longtext,
   `person_id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `person_id` (`person_id`,`name`),
-  KEY `FKA8FCBCDBF967E3C` (`person_id`),
-  CONSTRAINT `FKA8FCBCDBF967E3C` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  UNIQUE KEY `UK_kpjn6eigbd3yxtc9dbr4ytpyp` (`person_id`,`name`),
+  KEY `FK_h918mhr9wiqqvqbjcgxga8sj2` (`person_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `program`
+--
+
+CREATE TABLE IF NOT EXISTS `program` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `displayOrder` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `emails` tinyblob,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_ha1ojetw3fv9tfdrrvfy99yuf` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `search_filter`
 --
 
-DROP TABLE IF EXISTS `search_filter`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `search_filter` (
+CREATE TABLE IF NOT EXISTS `search_filter` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `publicFlag` bit(1) NOT NULL,
+  `publicFlag` tinyint(1) NOT NULL,
   `rangeEnd` date DEFAULT NULL,
   `rangeStart` date DEFAULT NULL,
-  `umiRelease` bit(1) DEFAULT NULL,
-  `unassigned` bit(1) DEFAULT NULL,
+  `umiRelease` tinyint(1) DEFAULT NULL,
   `creator_id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `creator_id` (`creator_id`,`name`),
-  KEY `FK40B835EF2EF2D605` (`creator_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  UNIQUE KEY `UK_hcac87nf5end9s93gfb1lygyp` (`creator_id`,`name`),
+  KEY `FK_3j48541vurjef5am8q0rnipmk` (`creator_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `search_filter_assignees`
+--
+
+CREATE TABLE IF NOT EXISTS `search_filter_assignees` (
+  `search_filter_id` bigint(20) NOT NULL,
+  `assigneeIds` bigint(20) DEFAULT NULL,
+  KEY `FK_b1r4dxhoyq31751qlo822cav5` (`search_filter_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `search_filter_colleges`
 --
 
-DROP TABLE IF EXISTS `search_filter_colleges`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `search_filter_colleges` (
-  `JpaNamedSearchFilterImpl_id` bigint(20) NOT NULL,
+CREATE TABLE IF NOT EXISTS `search_filter_colleges` (
+  `search_filter_id` bigint(20) NOT NULL,
   `colleges` varchar(255) DEFAULT NULL,
-  KEY `FK32FE0A0C2E6A9C33` (`JpaNamedSearchFilterImpl_id`),
-  CONSTRAINT `FK32FE0A0C2E6A9C33` FOREIGN KEY (`JpaNamedSearchFilterImpl_id`) REFERENCES `search_filter` (`id`)
+  KEY `FK_cys8fjpqxkvcyde4beis0n3lx` (`search_filter_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `search_filter_columns`
+--
+
+CREATE TABLE IF NOT EXISTS `search_filter_columns` (
+  `search_filter_id` bigint(20) NOT NULL,
+  `columns` int(11) DEFAULT NULL,
+  KEY `FK_k6e868fvh8225894xuyplaxri` (`search_filter_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `search_filter_customactions`
+--
+
+CREATE TABLE IF NOT EXISTS `search_filter_customactions` (
+  `search_filter_id` bigint(20) NOT NULL,
+  `customActionIds` bigint(20) DEFAULT NULL,
+  KEY `FK_82hut8geqdkp89x0uyl3n6iub` (`search_filter_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `search_filter_degrees`
 --
 
-DROP TABLE IF EXISTS `search_filter_degrees`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `search_filter_degrees` (
-  `JpaNamedSearchFilterImpl_id` bigint(20) NOT NULL,
+CREATE TABLE IF NOT EXISTS `search_filter_degrees` (
+  `search_filter_id` bigint(20) NOT NULL,
   `degrees` varchar(255) DEFAULT NULL,
-  KEY `FK884FE8D72E6A9C33` (`JpaNamedSearchFilterImpl_id`),
-  CONSTRAINT `FK884FE8D72E6A9C33` FOREIGN KEY (`JpaNamedSearchFilterImpl_id`) REFERENCES `search_filter` (`id`)
+  KEY `FK_3rkguuxiipf4dcn38yt6nryj4` (`search_filter_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `search_filter_departments`
 --
 
-DROP TABLE IF EXISTS `search_filter_departments`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `search_filter_departments` (
-  `JpaNamedSearchFilterImpl_id` bigint(20) NOT NULL,
+CREATE TABLE IF NOT EXISTS `search_filter_departments` (
+  `search_filter_id` bigint(20) NOT NULL,
   `departments` varchar(255) DEFAULT NULL,
-  KEY `FKB38A4D112E6A9C33` (`JpaNamedSearchFilterImpl_id`),
-  CONSTRAINT `FKB38A4D112E6A9C33` FOREIGN KEY (`JpaNamedSearchFilterImpl_id`) REFERENCES `search_filter` (`id`)
+  KEY `FK_7vinqqsd2j0kidubm1ofpyc87` (`search_filter_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `search_filter_documenttypes`
 --
 
-DROP TABLE IF EXISTS `search_filter_documenttypes`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `search_filter_documenttypes` (
-  `JpaNamedSearchFilterImpl_id` bigint(20) NOT NULL,
-  `documentTypes` varchar(255) DEFAULT NULL,
-  KEY `FK208979EE2E6A9C33` (`JpaNamedSearchFilterImpl_id`),
-  CONSTRAINT `FK208979EE2E6A9C33` FOREIGN KEY (`JpaNamedSearchFilterImpl_id`) REFERENCES `search_filter` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `search_filter_embargo_type`
---
-
-DROP TABLE IF EXISTS `search_filter_embargo_type`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `search_filter_embargo_type` (
+CREATE TABLE IF NOT EXISTS `search_filter_documenttypes` (
   `search_filter_id` bigint(20) NOT NULL,
-  `embargos_id` bigint(20) NOT NULL,
-  UNIQUE KEY `embargos_id` (`embargos_id`),
-  KEY `FK63F94FB68E0B1A22` (`search_filter_id`),
-  KEY `FK63F94FB69C9E0205` (`embargos_id`),
-  CONSTRAINT `FK63F94FB69C9E0205` FOREIGN KEY (`embargos_id`) REFERENCES `embargo_type` (`id`),
-  CONSTRAINT `FK63F94FB68E0B1A22` FOREIGN KEY (`search_filter_id`) REFERENCES `search_filter` (`id`)
+  `documentTypes` varchar(255) DEFAULT NULL,
+  KEY `FK_ji793qo35mmcehjs1y8y5luy6` (`search_filter_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `search_filter_embargos`
+--
+
+CREATE TABLE IF NOT EXISTS `search_filter_embargos` (
+  `search_filter_id` bigint(20) NOT NULL,
+  `embargoIds` bigint(20) DEFAULT NULL,
+  KEY `FK_mf5xk637mx8l8scb9m1iu2hod` (`search_filter_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `search_filter_excluded_actionlogs`
+--
+
+CREATE TABLE IF NOT EXISTS `search_filter_excluded_actionlogs` (
+  `search_filter_id` bigint(20) NOT NULL,
+  `excludedActionLogIds` bigint(20) DEFAULT NULL,
+  KEY `FK_5o8iokop2rxq2ciq162j0xca0` (`search_filter_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `search_filter_excluded_submissions`
+--
+
+CREATE TABLE IF NOT EXISTS `search_filter_excluded_submissions` (
+  `search_filter_id` bigint(20) NOT NULL,
+  `excludedSubmissionIds` bigint(20) DEFAULT NULL,
+  KEY `FK_7s000trks1u9ir2nn1vsida74` (`search_filter_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `search_filter_included_actionlogs`
+--
+
+CREATE TABLE IF NOT EXISTS `search_filter_included_actionlogs` (
+  `search_filter_id` bigint(20) NOT NULL,
+  `includedActionLogIds` bigint(20) DEFAULT NULL,
+  KEY `FK_mg0crds89wdjejct5ly9nub5o` (`search_filter_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `search_filter_included_submissions`
+--
+
+CREATE TABLE IF NOT EXISTS `search_filter_included_submissions` (
+  `search_filter_id` bigint(20) NOT NULL,
+  `includedSubmissionIds` bigint(20) DEFAULT NULL,
+  KEY `FK_15qdawr540viu5in5mem02w62` (`search_filter_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `search_filter_majors`
 --
 
-DROP TABLE IF EXISTS `search_filter_majors`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `search_filter_majors` (
-  `JpaNamedSearchFilterImpl_id` bigint(20) NOT NULL,
-  `majors` varchar(255) DEFAULT NULL,
-  KEY `FKFAC40E2A2E6A9C33` (`JpaNamedSearchFilterImpl_id`),
-  CONSTRAINT `FKFAC40E2A2E6A9C33` FOREIGN KEY (`JpaNamedSearchFilterImpl_id`) REFERENCES `search_filter` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `search_filter_person`
---
-
-DROP TABLE IF EXISTS `search_filter_person`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `search_filter_person` (
+CREATE TABLE IF NOT EXISTS `search_filter_majors` (
   `search_filter_id` bigint(20) NOT NULL,
-  `assignees_id` bigint(20) NOT NULL,
-  UNIQUE KEY `assignees_id` (`assignees_id`),
-  KEY `FK1EA7A56F7C2AAD` (`assignees_id`),
-  KEY `FK1EA7A58E0B1A22` (`search_filter_id`),
-  CONSTRAINT `FK1EA7A58E0B1A22` FOREIGN KEY (`search_filter_id`) REFERENCES `search_filter` (`id`),
-  CONSTRAINT `FK1EA7A56F7C2AAD` FOREIGN KEY (`assignees_id`) REFERENCES `person` (`id`)
+  `majors` varchar(255) DEFAULT NULL,
+  KEY `FK_3wwtaloot4o2yv8ue7jg8cyo0` (`search_filter_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `search_filter_programs`
+--
+
+CREATE TABLE IF NOT EXISTS `search_filter_programs` (
+  `search_filter_id` bigint(20) NOT NULL,
+  `programs` varchar(255) DEFAULT NULL,
+  KEY `FK_x3e9uwkkebwkloegbyfayceh` (`search_filter_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `search_filter_semesters`
 --
 
-DROP TABLE IF EXISTS `search_filter_semesters`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `search_filter_semesters` (
-  `JpaNamedSearchFilterImpl_id` bigint(20) NOT NULL,
+CREATE TABLE IF NOT EXISTS `search_filter_semesters` (
+  `search_filter_id` bigint(20) NOT NULL,
   `semesters` varchar(255) DEFAULT NULL,
-  KEY `FK8BFDE7EB2E6A9C33` (`JpaNamedSearchFilterImpl_id`),
-  CONSTRAINT `FK8BFDE7EB2E6A9C33` FOREIGN KEY (`JpaNamedSearchFilterImpl_id`) REFERENCES `search_filter` (`id`)
+  KEY `FK_miqf877rp21ethhtf3mep607r` (`search_filter_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `search_filter_states`
 --
 
-DROP TABLE IF EXISTS `search_filter_states`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `search_filter_states` (
-  `JpaNamedSearchFilterImpl_id` bigint(20) NOT NULL,
-  `states` varchar(255) DEFAULT NULL,
-  KEY `FK608DA522E6A9C33` (`JpaNamedSearchFilterImpl_id`),
-  CONSTRAINT `FK608DA522E6A9C33` FOREIGN KEY (`JpaNamedSearchFilterImpl_id`) REFERENCES `search_filter` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `search_filter_submission`
---
-
-DROP TABLE IF EXISTS `search_filter_submission`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `search_filter_submission` (
+CREATE TABLE IF NOT EXISTS `search_filter_states` (
   `search_filter_id` bigint(20) NOT NULL,
-  `submissions_id` bigint(20) NOT NULL,
-  UNIQUE KEY `submissions_id` (`submissions_id`),
-  KEY `FK57729F9C8E0B1A22` (`search_filter_id`),
-  KEY `FK57729F9C4783DD21` (`submissions_id`),
-  CONSTRAINT `FK57729F9C4783DD21` FOREIGN KEY (`submissions_id`) REFERENCES `submission` (`id`),
-  CONSTRAINT `FK57729F9C8E0B1A22` FOREIGN KEY (`search_filter_id`) REFERENCES `search_filter` (`id`)
+  `states` varchar(255) DEFAULT NULL,
+  KEY `FK_85a9ru0277s4n4y19iqt2veo7` (`search_filter_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `search_filter_text`
 --
 
-DROP TABLE IF EXISTS `search_filter_text`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `search_filter_text` (
-  `JpaNamedSearchFilterImpl_id` bigint(20) NOT NULL,
+CREATE TABLE IF NOT EXISTS `search_filter_text` (
+  `search_filter_id` bigint(20) NOT NULL,
   `searchText` varchar(255) DEFAULT NULL,
-  KEY `FK8068257D2E6A9C33` (`JpaNamedSearchFilterImpl_id`),
-  CONSTRAINT `FK8068257D2E6A9C33` FOREIGN KEY (`JpaNamedSearchFilterImpl_id`) REFERENCES `search_filter` (`id`)
+  KEY `FK_5csq0a20x6lkhhddxl1mxflum` (`search_filter_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `submission`
 --
 
-DROP TABLE IF EXISTS `submission`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `submission` (
+CREATE TABLE IF NOT EXISTS `submission` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `UMIRelease` bit(1) DEFAULT NULL,
+  `UMIRelease` tinyint(1) DEFAULT NULL,
   `approvalDate` datetime DEFAULT NULL,
   `college` varchar(255) DEFAULT NULL,
   `committeeApprovalDate` datetime DEFAULT NULL,
   `committeeContactEmail` varchar(255) DEFAULT NULL,
   `committeeEmailHash` varchar(255) DEFAULT NULL,
   `committeeEmbargoApprovalDate` datetime DEFAULT NULL,
+  `defenseDate` datetime DEFAULT NULL,
   `degree` varchar(255) DEFAULT NULL,
   `degreeLevel` int(11) DEFAULT NULL,
   `department` varchar(255) DEFAULT NULL,
-  `depositId` varchar(255) DEFAULT NULL,
+  `depositDate` datetime DEFAULT NULL,
+  `depositId` longtext,
   `documentAbstract` longtext,
   `documentKeywords` longtext,
+  `documentLanguage` varchar(255) DEFAULT NULL,
   `documentTitle` longtext,
   `documentType` varchar(255) DEFAULT NULL,
   `graduationMonth` int(11) DEFAULT NULL,
@@ -715,6 +699,10 @@ CREATE TABLE `submission` (
   `lastActionLogEntry` longtext,
   `licenseAgreementDate` datetime DEFAULT NULL,
   `major` varchar(255) DEFAULT NULL,
+  `orcid` varchar(255) DEFAULT NULL,
+  `program` varchar(255) DEFAULT NULL,
+  `publishedMaterial` longtext,
+  `reviewerNotes` longtext,
   `stateName` varchar(255) DEFAULT NULL,
   `studentBirthYear` int(11) DEFAULT NULL,
   `studentFirstName` varchar(255) DEFAULT NULL,
@@ -724,24 +712,228 @@ CREATE TABLE `submission` (
   `assignee_id` bigint(20) DEFAULT NULL,
   `embargoType_id` bigint(20) DEFAULT NULL,
   `submitter_id` bigint(20) NOT NULL,
+  `collegeId` bigint(20) DEFAULT NULL,
+  `departmentId` bigint(20) DEFAULT NULL,
+  `programId` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `committeeEmailHash` (`committeeEmailHash`),
-  KEY `FK84363B4C62B46408` (`submitter_id`),
-  KEY `FK84363B4C44904182` (`assignee_id`),
-  KEY `FK84363B4CC6F816D8` (`embargoType_id`),
-  CONSTRAINT `FK84363B4CC6F816D8` FOREIGN KEY (`embargoType_id`) REFERENCES `embargo_type` (`id`),
-  CONSTRAINT `FK84363B4C44904182` FOREIGN KEY (`assignee_id`) REFERENCES `person` (`id`),
-  CONSTRAINT `FK84363B4C62B46408` FOREIGN KEY (`submitter_id`) REFERENCES `person` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=433 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+  UNIQUE KEY `UK_k7sos9qjyyos23e4hw2c5gqgh` (`committeeEmailHash`),
+  KEY `FK_bsnfsllpukyx681rjx6t7kw0q` (`assignee_id`),
+  KEY `FK_q1frkfciq469vm81v1n44y6ev` (`embargoType_id`),
+  KEY `FK_5tcephlarb35bwrijkqdrg0uu` (`submitter_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `submission_embargotypes`
+--
+
+CREATE TABLE IF NOT EXISTS `submission_embargotypes` (
+  `submission_id` bigint(20) NOT NULL,
+  `embargoTypeIds` bigint(20) DEFAULT NULL,
+  KEY `FK_b3h9qu258ulj5cu8crm175d5i` (`submission_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `submission_subjects`
+--
+
+CREATE TABLE IF NOT EXISTS `submission_subjects` (
+  `JpaSubmissionImpl_id` bigint(20) NOT NULL,
+  `documentSubjects` varchar(255) DEFAULT NULL,
+  `documentSubjects_ORDER` int(11) NOT NULL,
+  PRIMARY KEY (`JpaSubmissionImpl_id`,`documentSubjects_ORDER`),
+  KEY `FK_rexg1ed7ej7dng9e9aq6whvn3` (`JpaSubmissionImpl_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `actionlog`
+--
+ALTER TABLE `actionlog`
+  ADD CONSTRAINT `FK_ahsjgamx6y6m5g7cgr8xnkjq6` FOREIGN KEY (`submission_id`) REFERENCES `submission` (`id`),
+  ADD CONSTRAINT `FK_4norsqa704bntket913ub5bpx` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`),
+  ADD CONSTRAINT `FK_9ud0hhk9umt2gcffwi4ipxhrb` FOREIGN KEY (`attachment_id`) REFERENCES `attachment` (`id`);
+
+--
+-- Constraints for table `attachment`
+--
+ALTER TABLE `attachment`
+  ADD CONSTRAINT `FK_xrwsik7ddccorroc9m86mtmy` FOREIGN KEY (`submission_id`) REFERENCES `submission` (`id`),
+  ADD CONSTRAINT `FK_8se0vn1c9y2lviiun4a877q7h` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`);
+
+--
+-- Constraints for table `committee_member`
+--
+ALTER TABLE `committee_member`
+  ADD CONSTRAINT `FK_4eqjy8xt9agdgnkygu1jhib6b` FOREIGN KEY (`submission_id`) REFERENCES `submission` (`id`);
+
+--
+-- Constraints for table `committee_member_roles`
+--
+ALTER TABLE `committee_member_roles`
+  ADD CONSTRAINT `FK_lhstcjubx3ok7jsd4sur6dpmu` FOREIGN KEY (`JpaCommitteeMemberImpl_id`) REFERENCES `committee_member` (`id`);
+
+--
+-- Constraints for table `custom_action_value`
+--
+ALTER TABLE `custom_action_value`
+  ADD CONSTRAINT `FK_784g0grh0a7si8baguih2eu93` FOREIGN KEY (`submission_id`) REFERENCES `submission` (`id`),
+  ADD CONSTRAINT `FK_3brcld4o5axxxtpqvtx5jlhty` FOREIGN KEY (`definition_id`) REFERENCES `custom_action_definition` (`id`);
+
+--
+-- Constraints for table `email_workflow_rules`
+--
+ALTER TABLE `email_workflow_rules`
+  ADD CONSTRAINT `FK_282jvq0q662qfl3c8g09pprim` FOREIGN KEY (`emailTemplateId`) REFERENCES `email_template` (`id`),
+  ADD CONSTRAINT `FK_5it9i77coc0sut7nt4ivl5taj` FOREIGN KEY (`adminGroupRecipientId`) REFERENCES `administrative_groups` (`id`),
+  ADD CONSTRAINT `FK_bs7ru7e7sy0824bei7ldbyhcv` FOREIGN KEY (`conditionID`) REFERENCES `email_workflow_rule_conditions` (`id`);
+
+--
+-- Constraints for table `person_affiliations`
+--
+ALTER TABLE `person_affiliations`
+  ADD CONSTRAINT `FK_2u4d124bh89lkfo4o5gysf0do` FOREIGN KEY (`JpaPersonImpl_id`) REFERENCES `person` (`id`);
+
+--
+-- Constraints for table `preference`
+--
+ALTER TABLE `preference`
+  ADD CONSTRAINT `FK_h918mhr9wiqqvqbjcgxga8sj2` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`);
+
+--
+-- Constraints for table `search_filter`
+--
+ALTER TABLE `search_filter`
+  ADD CONSTRAINT `FK_3j48541vurjef5am8q0rnipmk` FOREIGN KEY (`creator_id`) REFERENCES `person` (`id`);
+
+--
+-- Constraints for table `search_filter_assignees`
+--
+ALTER TABLE `search_filter_assignees`
+  ADD CONSTRAINT `FK_b1r4dxhoyq31751qlo822cav5` FOREIGN KEY (`search_filter_id`) REFERENCES `search_filter` (`id`);
+
+--
+-- Constraints for table `search_filter_colleges`
+--
+ALTER TABLE `search_filter_colleges`
+  ADD CONSTRAINT `FK_cys8fjpqxkvcyde4beis0n3lx` FOREIGN KEY (`search_filter_id`) REFERENCES `search_filter` (`id`);
+
+--
+-- Constraints for table `search_filter_columns`
+--
+ALTER TABLE `search_filter_columns`
+  ADD CONSTRAINT `FK_k6e868fvh8225894xuyplaxri` FOREIGN KEY (`search_filter_id`) REFERENCES `search_filter` (`id`);
+
+--
+-- Constraints for table `search_filter_customactions`
+--
+ALTER TABLE `search_filter_customactions`
+  ADD CONSTRAINT `FK_82hut8geqdkp89x0uyl3n6iub` FOREIGN KEY (`search_filter_id`) REFERENCES `search_filter` (`id`);
+
+--
+-- Constraints for table `search_filter_degrees`
+--
+ALTER TABLE `search_filter_degrees`
+  ADD CONSTRAINT `FK_3rkguuxiipf4dcn38yt6nryj4` FOREIGN KEY (`search_filter_id`) REFERENCES `search_filter` (`id`);
+
+--
+-- Constraints for table `search_filter_departments`
+--
+ALTER TABLE `search_filter_departments`
+  ADD CONSTRAINT `FK_7vinqqsd2j0kidubm1ofpyc87` FOREIGN KEY (`search_filter_id`) REFERENCES `search_filter` (`id`);
+
+--
+-- Constraints for table `search_filter_documenttypes`
+--
+ALTER TABLE `search_filter_documenttypes`
+  ADD CONSTRAINT `FK_ji793qo35mmcehjs1y8y5luy6` FOREIGN KEY (`search_filter_id`) REFERENCES `search_filter` (`id`);
+
+--
+-- Constraints for table `search_filter_embargos`
+--
+ALTER TABLE `search_filter_embargos`
+  ADD CONSTRAINT `FK_mf5xk637mx8l8scb9m1iu2hod` FOREIGN KEY (`search_filter_id`) REFERENCES `search_filter` (`id`);
+
+--
+-- Constraints for table `search_filter_excluded_actionlogs`
+--
+ALTER TABLE `search_filter_excluded_actionlogs`
+  ADD CONSTRAINT `FK_5o8iokop2rxq2ciq162j0xca0` FOREIGN KEY (`search_filter_id`) REFERENCES `search_filter` (`id`);
+
+--
+-- Constraints for table `search_filter_excluded_submissions`
+--
+ALTER TABLE `search_filter_excluded_submissions`
+  ADD CONSTRAINT `FK_7s000trks1u9ir2nn1vsida74` FOREIGN KEY (`search_filter_id`) REFERENCES `search_filter` (`id`);
+
+--
+-- Constraints for table `search_filter_included_actionlogs`
+--
+ALTER TABLE `search_filter_included_actionlogs`
+  ADD CONSTRAINT `FK_mg0crds89wdjejct5ly9nub5o` FOREIGN KEY (`search_filter_id`) REFERENCES `search_filter` (`id`);
+
+--
+-- Constraints for table `search_filter_included_submissions`
+--
+ALTER TABLE `search_filter_included_submissions`
+  ADD CONSTRAINT `FK_15qdawr540viu5in5mem02w62` FOREIGN KEY (`search_filter_id`) REFERENCES `search_filter` (`id`);
+
+--
+-- Constraints for table `search_filter_majors`
+--
+ALTER TABLE `search_filter_majors`
+  ADD CONSTRAINT `FK_3wwtaloot4o2yv8ue7jg8cyo0` FOREIGN KEY (`search_filter_id`) REFERENCES `search_filter` (`id`);
+
+--
+-- Constraints for table `search_filter_programs`
+--
+ALTER TABLE `search_filter_programs`
+  ADD CONSTRAINT `FK_x3e9uwkkebwkloegbyfayceh` FOREIGN KEY (`search_filter_id`) REFERENCES `search_filter` (`id`);
+
+--
+-- Constraints for table `search_filter_semesters`
+--
+ALTER TABLE `search_filter_semesters`
+  ADD CONSTRAINT `FK_miqf877rp21ethhtf3mep607r` FOREIGN KEY (`search_filter_id`) REFERENCES `search_filter` (`id`);
+
+--
+-- Constraints for table `search_filter_states`
+--
+ALTER TABLE `search_filter_states`
+  ADD CONSTRAINT `FK_85a9ru0277s4n4y19iqt2veo7` FOREIGN KEY (`search_filter_id`) REFERENCES `search_filter` (`id`);
+
+--
+-- Constraints for table `search_filter_text`
+--
+ALTER TABLE `search_filter_text`
+  ADD CONSTRAINT `FK_5csq0a20x6lkhhddxl1mxflum` FOREIGN KEY (`search_filter_id`) REFERENCES `search_filter` (`id`);
+
+--
+-- Constraints for table `submission`
+--
+ALTER TABLE `submission`
+  ADD CONSTRAINT `FK_5tcephlarb35bwrijkqdrg0uu` FOREIGN KEY (`submitter_id`) REFERENCES `person` (`id`),
+  ADD CONSTRAINT `FK_bsnfsllpukyx681rjx6t7kw0q` FOREIGN KEY (`assignee_id`) REFERENCES `person` (`id`),
+  ADD CONSTRAINT `FK_q1frkfciq469vm81v1n44y6ev` FOREIGN KEY (`embargoType_id`) REFERENCES `embargo_type` (`id`);
+
+--
+-- Constraints for table `submission_embargotypes`
+--
+ALTER TABLE `submission_embargotypes`
+  ADD CONSTRAINT `FK_b3h9qu258ulj5cu8crm175d5i` FOREIGN KEY (`submission_id`) REFERENCES `submission` (`id`);
+
+--
+-- Constraints for table `submission_subjects`
+--
+ALTER TABLE `submission_subjects`
+  ADD CONSTRAINT `FK_rexg1ed7ej7dng9e9aq6whvn3` FOREIGN KEY (`JpaSubmissionImpl_id`) REFERENCES `submission` (`id`);
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2012-09-26  9:44:28
