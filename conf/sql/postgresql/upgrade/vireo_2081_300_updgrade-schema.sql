@@ -1,6 +1,6 @@
--- DO function to help remove the old unique constraint (name) in embargo_type that Hibernate 4.2 won't remove even with jpa.ddl=update
+-- Temporary function to help remove the old unique constraint (name) in embargo_type and email_template that Hibernate 4.2 won't remove even with jpa.ddl=update
 -- It needs to be a function because EXECUTE cannot have a sub-query within it.
-DO $$
+CREATE FUNCTION schema_upgrade_v2_to_v3() RETURNS VOID AS $$
 DECLARE
    _constraint_name TEXT;
 BEGIN
@@ -26,3 +26,5 @@ BEGIN
 END;
 $$
 language plpgsql;
+SELECT schema_upgrade_v2_to_v3();
+DROP FUNCTION schema_upgrade_v2_to_v3();
