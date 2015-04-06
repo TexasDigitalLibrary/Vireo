@@ -1,6 +1,8 @@
 package org.tdl.vireo.services;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 import org.tdl.vireo.email.RecipientType;
@@ -38,29 +40,53 @@ public class EmailByRecipientType {
 			break;
 		case College:
 			Long collegeId = submission.getCollegeId();
-			if(collegeId != null) {
-				recipients.addAll(settingRepo.findCollege(collegeId).getEmails().values());
+			if(collegeId != null && settingRepo.findCollege(collegeId) != null) {
+				HashMap<Integer, String> collegeRecipients = settingRepo.findCollege(collegeId).getEmails();
+				if (collegeRecipients != null && collegeRecipients.size() > 0) {
+					Collection<String> collegeRecipientsEmails = collegeRecipients.values();
+					if(collegeRecipientsEmails != null && collegeRecipientsEmails.size() > 0) {
+						recipients.addAll(collegeRecipientsEmails);
+					}
+				}
 			}
 			break;
 		case Department:
 			Long departmentId = submission.getDepartmentId();
-			if(departmentId != null) {
-				recipients.addAll(settingRepo.findDepartment(departmentId).getEmails().values());
+			if(departmentId != null && settingRepo.findDepartment(departmentId) != null) {
+				HashMap<Integer, String> departmentRecipients = settingRepo.findDepartment(departmentId).getEmails();
+				if (departmentRecipients != null && departmentRecipients.size() > 0) {
+					Collection<String> departmentRecipientsEmails = departmentRecipients.values();
+					if(departmentRecipientsEmails != null && departmentRecipientsEmails.size() > 0) {
+						recipients.addAll(departmentRecipientsEmails);
+					}
+				}
 			}
 			break;
 		case Program:
 			Long programId = submission.getProgramId();
-			if(programId != null) {
-				recipients.addAll(settingRepo.findProgram(programId).getEmails().values());
+			if(programId != null && settingRepo.findProgram(programId) != null) {
+				HashMap<Integer, String> programRecipients = settingRepo.findProgram(programId).getEmails();
+				if (programRecipients != null && programRecipients.size() > 0) {
+					Collection<String> programRecipientsEmails = programRecipients.values();
+					if(programRecipientsEmails != null && programRecipientsEmails.size() > 0) {
+						recipients.addAll(programRecipientsEmails);
+					}
+				}
 			}
 			break;
 		case AdminGroup:
 			if(rule != null && rule.getAdminGroupRecipient() != null) {
-				recipients.addAll(rule.getAdminGroupRecipient().getEmails().values());
+				HashMap<Integer, String> adminRecipients = rule.getAdminGroupRecipient().getEmails();
+				if(adminRecipients != null && adminRecipients.size() > 0) {
+					Collection<String> adminRecipientsEmails = adminRecipients.values();
+					if(adminRecipientsEmails != null && adminRecipientsEmails.size() > 0) {
+						recipients.addAll(adminRecipientsEmails);
+					}
+				}
 			}
 			break;
 		case Assignee:
-			if(submission.getAssignee() != null) {
+			if(submission.getAssignee() != null && submission.getAssignee().getCurrentEmailAddress() != null) {
 				recipients.add(submission.getAssignee().getCurrentEmailAddress());
 			}
 			break;
