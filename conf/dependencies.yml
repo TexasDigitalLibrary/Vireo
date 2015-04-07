@@ -1,5 +1,5 @@
 # Self declaration
-self: org.tdl -> vireo 3.0.0
+self: org.tdl -> vireo 3.0.1
 
 # Application dependencies
 require:
