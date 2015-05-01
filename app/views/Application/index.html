@@ -16,7 +16,7 @@
 					<a href="@{submit.PersonalInfo.personalInfo(subStatus.getIpSubmissionId())}" class="btn btn-primary">Continue your submission</a>
 					#{/if}
 					#{else}
-					<a href="@{submit.PersonalInfo.personalInfo(subStatus.getNcSubmissionId())}" class="btn btn-primary">Correct your submission</a>
+					<a href="@{Student.submissionView(subStatus.getNcSubmissionId())}" class="btn btn-primary">Correct your submission</a>
 					#{/else}
 				#{/else}
 			#{/if}
