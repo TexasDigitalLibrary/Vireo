@@ -9,15 +9,68 @@ function embargoHandler(action, embargoID) {
 		case "addNew":
 			
 			if(jQuery(".editing").length != 0) break;
+			var splitembargoTypes = {
+				active: {
+					system:[],
+					custom:[]
+				},
+				inactive: {
+					system:[],
+					custom:[]
+				}
+			};
+			jQuery(jsDataObjects.embargoTypesArray).each(function() {
+				var embargoType = this;
+				if (embargoType.active && embargoType.systemRequired) {
+					splitembargoTypes.active.system.push(embargoType);
+				} else if (embargoType.active && !embargoType.systemRequired) {
+					splitembargoTypes.active.custom.push(embargoType);
+				} else if (!embargoType.active && embargoType.systemRequired) {
+					splitembargoTypes.inactive.system.push(embargoType);
+				} else if (!embargoType.active && !embargoType.systemRequired) {
+					splitembargoTypes.inactive.custom.push(embargoType);
+				}
+			});
 
 			var markup = '<select id="addEmbargoSelectSelector">';
-					jQuery(jsDataObjects.embargoTypesArray).each(function() {
-						var embargoType = this;
-						var guarantor = embargoType.guarantor != "DEFAULT" ? "("+embargoType.guarantor+")": "";
-						markup += '<option value="'+embargoType.id+'">'+embargoType.name+' '+guarantor+'</option>';
-					});	
-				markup += '</select>';
-				markup += '<i class="icon-remove" title="cancel"></i>&nbsp;<i class="icon-ok confirmEmbargoSelect" title="commit"></i>';
+			if(splitembargoTypes.active.system.length > 0) {
+				markup += '<optgroup class="active" label="Active->System">';
+				jQuery(splitembargoTypes.active.system).each(function() {
+					var embargoType = this;
+					var guarantor = embargoType.guarantor != "DEFAULT" ? "("+embargoType.guarantor+")": "";
+					markup += '<option value="'+embargoType.id+'">'+embargoType.name+' '+guarantor+'</option>';
+				});
+				markup += '</optgroup>';
+			}
+			if(splitembargoTypes.active.custom.length > 0) {
+				markup += '<optgroup class="active" label="Active->Custom">';
+				jQuery(splitembargoTypes.active.custom).each(function() {
+					var embargoType = this;
+					var guarantor = embargoType.guarantor != "DEFAULT" ? "("+embargoType.guarantor+")": "";
+					markup += '<option value="'+embargoType.id+'">'+embargoType.name+' '+guarantor+'</option>';
+				});
+				markup += '</optgroup>';
+			}
+			if(splitembargoTypes.inactive.system.length > 0) {
+				markup += '<optgroup class="inactive" label="Inactive->System">';
+				jQuery(splitembargoTypes.inactive.system).each(function() {
+					var embargoType = this;
+					var guarantor = embargoType.guarantor != "DEFAULT" ? "("+embargoType.guarantor+")": "";
+					markup += '<option value="'+embargoType.id+'">'+embargoType.name+' '+guarantor+'</option>';
+				});
+				markup += '</optgroup>';
+			}
+			if(splitembargoTypes.inactive.custom.length > 0) {
+				markup += '<optgroup class="inactive" label="Inactive->Custom">';
+				jQuery(splitembargoTypes.inactive.custom).each(function() {
+					var embargoType = this;
+					var guarantor = embargoType.guarantor != "DEFAULT" ? "("+embargoType.guarantor+")": "";
+					markup += '<option value="'+embargoType.id+'">'+embargoType.name+' '+guarantor+'</option>';
+				});
+				markup += '</optgroup>';
+			}
+			markup += '</select>';
+			markup += '<i class="icon-remove" title="cancel"></i>&nbsp;<i class="icon-ok confirmEmbargoSelect" title="commit"></i>';
 			
 			jQuery("#addEmbargoSelect").html(markup);
 			

@@ -9,6 +9,7 @@ jsDataObjects = {
 				"description": "${embargo.getDescription()}",
 				"duration": #{if embargo.getDuration() != null}${embargo.getDuration()}#{/if}#{else}null#{/else},
 				"active": ${embargo.isActive()},
+				"systemRequired": ${embargo.isSystemRequired()},
 				"guarantor": "${embargo.getGuarantor()}"
 			},
 		#{/list}
