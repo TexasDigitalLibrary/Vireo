@@ -20,7 +20,6 @@
 		<url>http://www.tdl.org</url>
 	</organization>
 	<properties>
-		<main.basedir>${basedir}/../..</main.basedir>
 		<m2eclipse.wtp.contextRoot>/</m2eclipse.wtp.contextRoot>
 		<tomcat.version>7.0.59</tomcat.version>
 		<java.version>1.8</java.version>
