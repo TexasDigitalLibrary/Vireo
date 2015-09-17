@@ -1,0 +1,17 @@
+{
+  "name": "Vireo",
+  "description": "Vireo 4",
+  "version": "4.0.0",
+  "homepage": "https://github.com/TexasDigitalLibrary/Vireo",
+  "license": "BSD",
+  "private": true,
+  "dependencies": {
+    "angular": "latest",
+    "angular-mocks": "latest",
+    "jquery": "latest",
+    "bootstrap": "latest",
+    "angular-route": "latest",
+    "angular-resource": "latest",
+    "angular-animate": "latest"
+  }
+}

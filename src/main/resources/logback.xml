@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<include resource="org/springframework/boot/logging/logback/base.xml" />
+
+	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
+		<file>vireo.log</file>
+		<append>true</append>
+
+		<encoder>
+			<!-- only log 2 lines of stack trace per cause of an exception -->
+			<pattern>%d{YYYY-MM-dd HH:mm:ss,SSS} [%thread] %-5level %logger{36} - %m %throwable{2}%n</pattern>
+		</encoder>
+	</appender>
+
+    <logger name="org.tdl.vireo" level="INFO" />
+    <logger name="org.springframework" level="INFO" />
+	
+
+	<root level="INFO">
+		<appender-ref ref="FILE" />
+	</root>
+
+</configuration>
