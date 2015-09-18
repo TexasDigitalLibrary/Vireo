@@ -3,11 +3,16 @@ package org.tdl.vireo.model;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Organization extends BaseEntity {
+	@ManyToMany
 	Set<Organization> parentOrganizations;
+	@ManyToMany
 	Set<Organization> childrenOrganizations;
+	@ManyToOne
 	Workflow workflow;
 	String name;
 	Set<String> emails;

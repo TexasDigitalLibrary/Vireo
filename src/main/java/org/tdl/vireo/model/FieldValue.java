@@ -1,10 +1,13 @@
 package org.tdl.vireo.model;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class FieldValue extends BaseEntity {
+	@ManyToOne
 	FieldProfile fieldProfile;
+	@ManyToOne
 	Submission submission;
 	String value;
 

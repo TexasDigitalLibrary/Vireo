@@ -3,9 +3,11 @@ package org.tdl.vireo.model;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 
 @Entity
 public class Workflow extends BaseEntity {
+	@ManyToMany
 	Set<WorkflowStep> workflowSteps;
 	String name;
 	Boolean isInheritable;

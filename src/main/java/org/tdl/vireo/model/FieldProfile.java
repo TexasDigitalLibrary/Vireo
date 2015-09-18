@@ -4,12 +4,18 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class FieldProfile extends BaseEntity {
+	@ManyToMany
 	Set<WorkflowStep> workflowSteps;
+	@ManyToMany
 	Map<String, FieldGloss> fieldGlosses;
+	@ManyToOne
 	FieldPredicate predicate;
+	@ManyToMany
 	Set<ControlledVocabulary> controlledVocab;
 	Boolean repeatable, required;
 	String type;

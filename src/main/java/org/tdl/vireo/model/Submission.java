@@ -3,11 +3,15 @@ package org.tdl.vireo.model;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.OneToOne;
+import javax.persistence.ManyToMany;
 
 @Entity
 public class Submission extends BaseEntity {
+	@ManyToMany
 	Set<Organization> organizations;
 	Set<FieldValue> fieldvalues;
+	@OneToOne
 	SubmissionState state;
 
 	/**
