@@ -5,6 +5,6 @@ import java.util.Set;
 import javax.persistence.Entity;
 
 @Entity
-public class ControlledVocabulary {
+public class ControlledVocabulary extends BaseEntity {
 	Set<String> values;
 }

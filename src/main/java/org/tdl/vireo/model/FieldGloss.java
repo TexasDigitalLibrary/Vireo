@@ -2,6 +2,6 @@ package org.tdl.vireo.model;
 import javax.persistence.Entity;
 
 @Entity
-public class FieldGloss {
+public class FieldGloss extends BaseEntity {
 	String value;
 }

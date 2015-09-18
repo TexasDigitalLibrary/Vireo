@@ -5,7 +5,7 @@ import java.util.Set;
 import javax.persistence.Entity;
 
 @Entity
-public class Submission {
+public class Submission extends BaseEntity {
 	Set<Organization> organizations;
 	Set<FieldValue> fieldvalues;
 	SubmissionState state;

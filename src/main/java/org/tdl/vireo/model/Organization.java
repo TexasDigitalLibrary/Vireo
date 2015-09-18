@@ -5,7 +5,7 @@ import java.util.Set;
 import javax.persistence.Entity;
 
 @Entity
-public class Organization {
+public class Organization extends BaseEntity {
 	Set<Organization> parentOrganizations;
 	Set<Organization> childrenOrganizations;
 	Workflow workflow;
