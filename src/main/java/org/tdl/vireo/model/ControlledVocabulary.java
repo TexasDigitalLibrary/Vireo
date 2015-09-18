@@ -3,10 +3,12 @@ package org.tdl.vireo.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 
 @Entity
 public class ControlledVocabulary extends BaseEntity {
+	@ElementCollection
 	Set<String> values = new HashSet<String>();
 
 	/**

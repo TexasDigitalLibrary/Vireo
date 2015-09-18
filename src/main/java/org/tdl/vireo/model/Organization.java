@@ -3,6 +3,7 @@ package org.tdl.vireo.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -16,6 +17,7 @@ public class Organization extends BaseEntity {
 	@ManyToOne
 	Workflow workflow;
 	String name;
+	@ElementCollection
 	Set<String> emails = new HashSet<String>();
 	
 	/**

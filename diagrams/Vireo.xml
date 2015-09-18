@@ -3,8 +3,8 @@
 		<entity-name>org.tdl.vireo.model.FieldValue</entity-name>
 		<entity-width>120</entity-width>
 		<entity-height>30</entity-height>
-		<entity-X-Coordinate>710</entity-X-Coordinate>
-		<entity-Y-Coordinate>290</entity-Y-Coordinate>
+		<entity-X-Coordinate>630</entity-X-Coordinate>
+		<entity-Y-Coordinate>254</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
