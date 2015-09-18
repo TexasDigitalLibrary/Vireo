@@ -1,5 +1,6 @@
 package org.tdl.vireo.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -10,7 +11,7 @@ public class SubmissionState extends BaseEntity {
 	String name;
 	Boolean archived, publishable, deletable, editableByReviewer, editableByStudent, active;
 	@ManyToOne(targetEntity = org.tdl.vireo.model.SubmissionState.class)
-	Set<SubmissionState> transitionSubmissionStates;
+	Set<SubmissionState> transitionSubmissionStates = new HashSet<SubmissionState>();
 
 	/**
 	 * @return the name

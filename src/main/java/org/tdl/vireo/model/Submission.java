@@ -1,16 +1,19 @@
 package org.tdl.vireo.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Submission extends BaseEntity {
 	@ManyToMany
-	Set<Organization> organizations;
-	Set<FieldValue> fieldvalues;
+	Set<Organization> organizations = new HashSet<Organization>();
+	@OneToMany
+	Set<FieldValue> fieldvalues = new HashSet<FieldValue>();
 	@OneToOne
 	SubmissionState state;
 

@@ -1,5 +1,6 @@
 package org.tdl.vireo.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -9,14 +10,14 @@ import javax.persistence.ManyToOne;
 @Entity
 public class Organization extends BaseEntity {
 	@ManyToMany
-	Set<Organization> parentOrganizations;
+	Set<Organization> parentOrganizations = new HashSet<Organization>();
 	@ManyToMany
-	Set<Organization> childrenOrganizations;
+	Set<Organization> childrenOrganizations = new HashSet<Organization>();
 	@ManyToOne
 	Workflow workflow;
 	String name;
-	Set<String> emails;
-
+	Set<String> emails = new HashSet<String>();
+	
 	/**
 	 * @return the parentOrganizations
 	 */

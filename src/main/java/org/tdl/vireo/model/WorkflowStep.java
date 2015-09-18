@@ -1,5 +1,6 @@
 package org.tdl.vireo.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -8,7 +9,7 @@ import javax.persistence.ManyToMany;
 @Entity
 public class WorkflowStep extends BaseEntity {
 	@ManyToMany
-	Set<Workflow> workflows;
+	Set<Workflow> workflows = new HashSet<Workflow>();
 	String name;
 
 	/**

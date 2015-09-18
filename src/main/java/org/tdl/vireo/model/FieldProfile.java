@@ -1,5 +1,7 @@
 package org.tdl.vireo.model;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -10,13 +12,13 @@ import javax.persistence.ManyToOne;
 @Entity
 public class FieldProfile extends BaseEntity {
 	@ManyToMany
-	Set<WorkflowStep> workflowSteps;
+	Set<WorkflowStep> workflowSteps = new HashSet<WorkflowStep>();
 	@ManyToMany
-	Map<String, FieldGloss> fieldGlosses;
+	Map<String, FieldGloss> fieldGlosses = new HashMap<String, FieldGloss>();
 	@ManyToOne
 	FieldPredicate predicate;
 	@ManyToMany
-	Set<ControlledVocabulary> controlledVocab;
+	Set<ControlledVocabulary> controlledVocab = new HashSet<ControlledVocabulary>();
 	Boolean repeatable, required;
 	String type;
 

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><entities>
+	<entity>
+		<entity-name>org.tdl.vireo.model.FieldValue</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>30</entity-height>
+		<entity-X-Coordinate>710</entity-X-Coordinate>
+		<entity-Y-Coordinate>290</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.Submission</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>30</entity-height>
+		<entity-X-Coordinate>630</entity-X-Coordinate>
+		<entity-Y-Coordinate>127</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.FieldGloss</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>30</entity-height>
+		<entity-X-Coordinate>190</entity-X-Coordinate>
+		<entity-Y-Coordinate>479</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.WorkflowStep</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>30</entity-height>
+		<entity-X-Coordinate>10</entity-X-Coordinate>
+		<entity-Y-Coordinate>408</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.Workflow</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>30</entity-height>
+		<entity-X-Coordinate>10</entity-X-Coordinate>
+		<entity-Y-Coordinate>276</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.FieldProfile</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>30</entity-height>
+		<entity-X-Coordinate>354</entity-X-Coordinate>
+		<entity-Y-Coordinate>442</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.Organization</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>30</entity-height>
+		<entity-X-Coordinate>17</entity-X-Coordinate>
+		<entity-Y-Coordinate>127</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.ControlledVocabulary</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>30</entity-height>
+		<entity-X-Coordinate>354</entity-X-Coordinate>
+		<entity-Y-Coordinate>518</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.SubmissionState</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>30</entity-height>
+		<entity-X-Coordinate>490</entity-X-Coordinate>
+		<entity-Y-Coordinate>50</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.FieldPredicate</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>30</entity-height>
+		<entity-X-Coordinate>522</entity-X-Coordinate>
+		<entity-Y-Coordinate>442</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.BaseEntity</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>30</entity-height>
+		<entity-X-Coordinate>330</entity-X-Coordinate>
+		<entity-Y-Coordinate>248</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+</entities>
