@@ -2,9 +2,9 @@
 	<entity>
 		<entity-name>org.tdl.vireo.model.FieldValue</entity-name>
 		<entity-width>120</entity-width>
-		<entity-height>128</entity-height>
-		<entity-X-Coordinate>1260</entity-X-Coordinate>
-		<entity-Y-Coordinate>399</entity-Y-Coordinate>
+		<entity-height>108</entity-height>
+		<entity-X-Coordinate>1197</entity-X-Coordinate>
+		<entity-Y-Coordinate>476</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -24,7 +24,7 @@
 	<entity>
 		<entity-name>org.tdl.vireo.model.FieldGloss</entity-name>
 		<entity-width>120</entity-width>
-		<entity-height>70</entity-height>
+		<entity-height>90</entity-height>
 		<entity-X-Coordinate>1031</entity-X-Coordinate>
 		<entity-Y-Coordinate>659</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
@@ -57,9 +57,9 @@
 	<entity>
 		<entity-name>org.tdl.vireo.model.FieldProfile</entity-name>
 		<entity-width>120</entity-width>
-		<entity-height>208</entity-height>
-		<entity-X-Coordinate>671</entity-X-Coordinate>
-		<entity-Y-Coordinate>642</entity-Y-Coordinate>
+		<entity-height>188</entity-height>
+		<entity-X-Coordinate>598</entity-X-Coordinate>
+		<entity-Y-Coordinate>644</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -79,7 +79,7 @@
 	<entity>
 		<entity-name>org.tdl.vireo.model.ControlledVocabulary</entity-name>
 		<entity-width>120</entity-width>
-		<entity-height>70</entity-height>
+		<entity-height>90</entity-height>
 		<entity-X-Coordinate>961</entity-X-Coordinate>
 		<entity-Y-Coordinate>811</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>

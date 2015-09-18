@@ -7,15 +7,48 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OneToMany;
+import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.CascadeType.DETACH;
+import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.ALL;
 
 @Entity
 public class Submission extends BaseEntity {
-	@ManyToMany
-	Set<Organization> organizations = new HashSet<Organization>();
-	@OneToMany
-	Set<FieldValue> fieldvalues = new HashSet<FieldValue>();
-	@OneToOne
-	SubmissionState state;
+	
+	@OneToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false, orphanRemoval = false)
+	private SubmissionState state;
+	
+	@ManyToMany(fetch = EAGER, cascade = { DETACH, REFRESH, MERGE })
+	private Set<Organization> organizations;
+	
+	@OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
+	private Set<FieldValue> fieldValues;
+	
+	public Submission() {
+		setOrganizations(new HashSet<Organization>());
+		setFieldValues(new HashSet<FieldValue>());
+	}
+	
+	public Submission(SubmissionState state) {
+		this();
+		setState(state);
+	}
+	
+	/**
+	 * @return the state
+	 */
+	public SubmissionState getState() {
+		return state;
+	}
+
+	/**
+	 * @param state
+	 *            the state to set
+	 */
+	public void setState(SubmissionState state) {
+		this.state = state;
+	}
 
 	/**
 	 * @return the organizations
@@ -31,34 +64,64 @@ public class Submission extends BaseEntity {
 	public void setOrganizations(Set<Organization> organizations) {
 		this.organizations = organizations;
 	}
+	
+	/**
+	 * 
+	 * @param organization
+	 */
+	public void addOrganization(Organization organization) {
+		if(!getOrganizations().contains(organization)) {
+			getOrganizations().add(organization);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param organization
+	 */
+	public void removeOrganization(Organization organization) {
+		getOrganizations().remove(organization);
+	}
 
 	/**
 	 * @return the fieldvalues
 	 */
-	public Set<FieldValue> getFieldvalues() {
-		return fieldvalues;
+	public Set<FieldValue> getFieldValues() {
+		return fieldValues;
 	}
 
 	/**
 	 * @param fieldvalues
 	 *            the fieldvalues to set
 	 */
-	public void setFieldvalues(Set<FieldValue> fieldvalues) {
-		this.fieldvalues = fieldvalues;
+	public void setFieldValues(Set<FieldValue> fieldvalues) {
+		this.fieldValues = fieldvalues;
 	}
-
+	
 	/**
-	 * @return the state
+	 * 
+	 * @param fieldValue
 	 */
-	public SubmissionState getState() {
-		return state;
+	// TODO: THIS PROBABLY NEEDS A COMPARATOR INSTEAD ON FieldValue -- https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#findFirst--
+	public void addFieldValue(FieldValue fieldValue) {
+		boolean found = false;
+		for (FieldValue fv : fieldValues) {
+			if(fv.getFieldProfile().getFieldPredicate().equals(fieldValue.getFieldProfile().getFieldPredicate())) {
+				found = true;
+				fv.setValue(fieldValue.getValue());
+				break;
+			}
+		}
+		if(!found) {
+			getFieldValues().add(fieldValue);
+		}
 	}
-
+	
 	/**
-	 * @param state
-	 *            the state to set
+	 * 
+	 * @param fieldValue
 	 */
-	public void setState(SubmissionState state) {
-		this.state = state;
+	public void removeFieldValue(FieldValue fieldValue) {
+		getFieldValues().remove(fieldValue);
 	}
 }

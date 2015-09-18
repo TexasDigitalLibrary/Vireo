@@ -1,10 +1,41 @@
 package org.tdl.vireo.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+
+import org.tdl.vireo.enums.Language;
 
 @Entity
 public class FieldGloss extends BaseEntity {
-	String value;
+	
+	@Column(nullable = false, unique = true)
+	private String value;
+	
+	@Enumerated
+	@Column(nullable = false)
+	private Language language;
+	
+	public FieldGloss() {}
+	
+	/**
+	 * Create a FieldGloss with default ENGLISH
+	 * @param value
+	 */
+	public FieldGloss(String value) {
+		setValue(value);
+		setLanguage(Language.ENGLISH);
+	}
+	
+	/**
+	 * 
+	 * @param value
+	 * @param language
+	 */
+	public FieldGloss(String value, Language language) {
+		setValue(value);
+		setLanguage(language);
+	}
 
 	/**
 	 * @return the value
@@ -19,5 +50,21 @@ public class FieldGloss extends BaseEntity {
 	 */
 	public void setValue(String value) {
 		this.value = value;
+	}
+	
+	/**
+	 * 
+	 * @return the language
+	 */
+	public Language getLanguage() {
+		return language;
+	}
+	
+	/**
+	 * 
+	 * @param language
+	 */
+	public void setLanguage(Language language) {
+		this.language = language;
 	}
 }

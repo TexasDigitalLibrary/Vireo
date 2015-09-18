@@ -1,46 +1,60 @@
 package org.tdl.vireo.model;
 
-import java.util.HashMap;
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.CascadeType.DETACH;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.FetchType.EAGER;
+
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
+import org.tdl.vireo.enums.InputType;
+
 @Entity
 public class FieldProfile extends BaseEntity {
-	@ManyToMany
-	Set<WorkflowStep> workflowSteps = new HashSet<WorkflowStep>();
-	@ManyToMany
-	Map<String, FieldGloss> fieldGlosses = new HashMap<String, FieldGloss>();
-	@ManyToOne
-	FieldPredicate predicate;
-	@ManyToMany
-	Set<ControlledVocabulary> controlledVocab = new HashSet<ControlledVocabulary>();
-	Boolean repeatable, required;
-	String type;
 
-	/**
-	 * @return the workflowSteps
-	 */
-	public Set<WorkflowStep> getWorkflowSteps() {
-		return workflowSteps;
+	@ManyToMany(cascade = ALL, fetch = EAGER)
+	private Set<FieldGloss> fieldGlosses;
+
+	@ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
+	private FieldPredicate fieldPredicate;
+
+	@ManyToMany(cascade = { DETACH, REFRESH, MERGE })
+	private Set<ControlledVocabulary> controlledVocabularies;
+
+	@Column(nullable = false)
+	private Boolean repeatable;
+
+	@Column(nullable = false)
+	private Boolean required;
+
+	@Enumerated
+	@Column(nullable = false)
+	private InputType inputType;
+
+	public FieldProfile() {
+		setFieldGlosses(new HashSet<FieldGloss>());
+		setControlledVocabularies(new HashSet<ControlledVocabulary>());
 	}
 
-	/**
-	 * @param workflowSteps
-	 *            the workflowSteps to set
-	 */
-	public void setWorkflowSteps(Set<WorkflowStep> workflowSteps) {
-		this.workflowSteps = workflowSteps;
+	public FieldProfile(FieldPredicate fieldPredicate, Boolean repeatable, Boolean required) {
+		this();
+		setFieldPredicate(fieldPredicate);
+		setRepeatable(repeatable);
+		setRequired(required);
 	}
 
 	/**
 	 * @return the fieldGlosses
 	 */
-	public Map<String, FieldGloss> getFieldGlosses() {
+	public Set<FieldGloss> getFieldGlosses() {
 		return fieldGlosses;
 	}
 
@@ -48,38 +62,74 @@ public class FieldProfile extends BaseEntity {
 	 * @param fieldGlosses
 	 *            the fieldGlosses to set
 	 */
-	public void setFieldGlosses(Map<String, FieldGloss> fieldGlosses) {
+	public void setFieldGlosses(Set<FieldGloss> fieldGlosses) {
 		this.fieldGlosses = fieldGlosses;
 	}
 
 	/**
-	 * @return the predicate
+	 * 
+	 * @param fieldGloss
 	 */
-	public FieldPredicate getPredicate() {
-		return predicate;
+	public void addFieldGloss(FieldGloss fieldGloss) {
+		if (!getFieldGlosses().contains(fieldGloss)) {
+			getFieldGlosses().add(fieldGloss);
+		}
 	}
 
 	/**
-	 * @param predicate
-	 *            the predicate to set
+	 * 
+	 * @param fieldGloss
 	 */
-	public void setPredicate(FieldPredicate predicate) {
-		this.predicate = predicate;
+	public void removeFieldGloss(FieldGloss fieldGloss) {
+		getFieldGlosses().remove(fieldGloss);
 	}
 
 	/**
-	 * @return the controlledVocab
+	 * @return the fieldPredicate
 	 */
-	public Set<ControlledVocabulary> getControlledVocab() {
-		return controlledVocab;
+	public FieldPredicate getFieldPredicate() {
+		return fieldPredicate;
 	}
 
 	/**
-	 * @param controlledVocab
+	 * @param fieldPredicate
+	 *            the fieldPredicate to set
+	 */
+	public void setFieldPredicate(FieldPredicate fieldPredicate) {
+		this.fieldPredicate = fieldPredicate;
+	}
+
+	/**
+	 * @return the controlledVocabularies
+	 */
+	public Set<ControlledVocabulary> getControlledVocabularies() {
+		return controlledVocabularies;
+	}
+
+	/**
+	 * @param controlledVocabularies
 	 *            the controlledVocab to set
 	 */
-	public void setControlledVocab(Set<ControlledVocabulary> controlledVocab) {
-		this.controlledVocab = controlledVocab;
+	public void setControlledVocabularies(Set<ControlledVocabulary> controlledVocabularies) {
+		this.controlledVocabularies = controlledVocabularies;
+	}
+
+	/**
+	 * 
+	 * @param controlledVocabularies
+	 */
+	public void addControlledVocabulary(ControlledVocabulary controlledVocabulary) {
+		if (!getControlledVocabularies().contains(controlledVocabulary)) {
+			getControlledVocabularies().add(controlledVocabulary);
+		}
+	}
+
+	/**
+	 * 
+	 * @param controlledVocabulary
+	 */
+	public void removeControlledVocabulary(ControlledVocabulary controlledVocabulary) {
+		getControlledVocabularies().remove(controlledVocabulary);
 	}
 
 	/**
@@ -113,18 +163,18 @@ public class FieldProfile extends BaseEntity {
 	}
 
 	/**
-	 * @return the type
+	 * @return the inputType
 	 */
-	public String getType() {
-		return type;
+	public InputType getInputType() {
+		return inputType;
 	}
 
 	/**
-	 * @param type
-	 *            the type to set
+	 * @param inputType
+	 *            the inputType to set
 	 */
-	public void setType(String type) {
-		this.type = type;
+	public void setInputType(InputType inputType) {
+		this.inputType = inputType;
 	}
 
 }

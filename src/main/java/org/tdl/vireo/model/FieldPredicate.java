@@ -1,11 +1,20 @@
 package org.tdl.vireo.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 
 @Entity
 public class FieldPredicate extends BaseEntity {
-	String value;
+	
+	@Column(nullable = false, unique = true)
+	private String value;
+	
+	public FieldPredicate() {}
 
+	public FieldPredicate(String value) {
+		setValue(value);
+	}
+	
 	/**
 	 * @return the value
 	 */
