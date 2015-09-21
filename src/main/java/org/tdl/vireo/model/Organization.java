@@ -4,6 +4,7 @@ import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
 import java.util.HashSet;
@@ -14,12 +15,18 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
+@Table(uniqueConstraints={@UniqueConstraint(columnNames = {"name" , "category_id"})})
 public class Organization extends BaseEntity {
 
 	@Column(columnDefinition = "TEXT", nullable = false)
 	private String name;
+	
+	@ManyToOne(fetch = EAGER, optional = false)
+	private OrganizationCategory category;
 
 	@ManyToOne(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY, optional = false)
 	private Workflow workflow;
@@ -39,9 +46,10 @@ public class Organization extends BaseEntity {
 		setEmails(new HashSet<String>());
 	}
 
-	public Organization(String name, Workflow workflow) {
+	public Organization(String name, OrganizationCategory category, Workflow workflow) {
 		this();
 		setName(name);
+		setCategory(category);
 		setWorkflow(workflow);
 	}
 
@@ -58,6 +66,22 @@ public class Organization extends BaseEntity {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public OrganizationCategory getCategory() {
+		return category;
+	}
+
+	/**
+	 * 
+	 * @param catagory
+	 */
+	public void setCategory(OrganizationCategory category) {
+		this.category = category;
 	}
 
 	/**
@@ -95,9 +119,7 @@ public class Organization extends BaseEntity {
 	 * @param parentOrganization
 	 */
 	public void addParentOrganization(Organization parentOrganization) {
-		if(!getParentOrganizations().contains(parentOrganization)) {
-			getParentOrganizations().add(parentOrganization);
-		}
+		getParentOrganizations().add(parentOrganization);
 	}
 	
 	/**
@@ -128,9 +150,7 @@ public class Organization extends BaseEntity {
 	 * @param childOrganization
 	 */
 	public void addChildOrganization(Organization childOrganization) {
-		if(!getChildrenOrganizations().contains(childOrganization)) {
-			getChildrenOrganizations().add(childOrganization);
-		}
+		getChildrenOrganizations().add(childOrganization);
 	}
 	
 	/**
@@ -161,9 +181,7 @@ public class Organization extends BaseEntity {
 	 * @param email
 	 */
 	public void addEmail(String email) {
-		if(!getEmails().contains(email)) {
-			getEmails().add(email);
-		}
+		getEmails().add(email);
 	}
 	
 	/**
@@ -173,4 +191,5 @@ public class Organization extends BaseEntity {
 	public void removeEmail(String email) {
 		getEmails().remove(email);
 	}
+	
 }

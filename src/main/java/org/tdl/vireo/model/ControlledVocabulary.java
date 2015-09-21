@@ -14,7 +14,7 @@ public class ControlledVocabulary extends BaseEntity {
 	private String name;
 
 	@ElementCollection
-	@Column(columnDefinition = "TEXT", nullable = true)
+	@Column(columnDefinition = "TEXT", nullable = true, unique = true)
 	private Set<String> values;
 	
 	public ControlledVocabulary() {
@@ -61,9 +61,7 @@ public class ControlledVocabulary extends BaseEntity {
 	 * @param value
 	 */
 	public void addValue(String value) {
-		if(!getValues().contains(value)) {
-			getValues().add(value);
-		}
+		getValues().add(value);
 	}
 	
 	/**
@@ -73,4 +71,5 @@ public class ControlledVocabulary extends BaseEntity {
 	public void removeValue(String value) {
 		getValues().remove(value);
 	}
+	
 }

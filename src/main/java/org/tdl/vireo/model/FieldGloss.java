@@ -67,4 +67,5 @@ public class FieldGloss extends BaseEntity {
 	public void setLanguage(Language language) {
 		this.language = language;
 	}
+	
 }

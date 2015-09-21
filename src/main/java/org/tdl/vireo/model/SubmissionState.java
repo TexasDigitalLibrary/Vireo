@@ -188,9 +188,7 @@ public class SubmissionState extends BaseEntity {
 	 * @param transitionSubmissionState
 	 */
 	public void addTransitionSubmissionState(SubmissionState transitionSubmissionState) {
-		if(!getTransitionSubmissionStates().contains(transitionSubmissionState)) {
-			getTransitionSubmissionStates().add(transitionSubmissionState);
-		}
+		getTransitionSubmissionStates().add(transitionSubmissionState);
 	}
 	
 	/**
@@ -200,4 +198,5 @@ public class SubmissionState extends BaseEntity {
 	public void removeTransitionSubmissionState(SubmissionState transitionSubmissionState) {
 		getTransitionSubmissionStates().remove(transitionSubmissionState);
 	}
+	
 }

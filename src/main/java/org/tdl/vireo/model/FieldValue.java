@@ -52,4 +52,5 @@ public class FieldValue extends BaseEntity {
 	public void setValue(String value) {
 		this.value = value;
 	}
+	
 }

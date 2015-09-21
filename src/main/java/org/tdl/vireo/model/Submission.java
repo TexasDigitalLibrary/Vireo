@@ -70,9 +70,7 @@ public class Submission extends BaseEntity {
 	 * @param organization
 	 */
 	public void addOrganization(Organization organization) {
-		if(!getOrganizations().contains(organization)) {
-			getOrganizations().add(organization);
-		}
+		getOrganizations().add(organization);
 	}
 	
 	/**
@@ -102,19 +100,8 @@ public class Submission extends BaseEntity {
 	 * 
 	 * @param fieldValue
 	 */
-	// TODO: THIS PROBABLY NEEDS A COMPARATOR INSTEAD ON FieldValue -- https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#findFirst--
 	public void addFieldValue(FieldValue fieldValue) {
-		boolean found = false;
-		for (FieldValue fv : fieldValues) {
-			if(fv.getFieldProfile().getFieldPredicate().equals(fieldValue.getFieldProfile().getFieldPredicate())) {
-				found = true;
-				fv.setValue(fieldValue.getValue());
-				break;
-			}
-		}
-		if(!found) {
-			getFieldValues().add(fieldValue);
-		}
+		getFieldValues().add(fieldValue);
 	}
 	
 	/**
@@ -124,4 +111,5 @@ public class Submission extends BaseEntity {
 	public void removeFieldValue(FieldValue fieldValue) {
 		getFieldValues().remove(fieldValue);
 	}
+	
 }

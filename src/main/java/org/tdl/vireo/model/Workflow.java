@@ -64,9 +64,7 @@ public class Workflow extends BaseEntity {
 	 * @param workflowStep
 	 */
 	public void addWorkflowStep(WorkflowStep workflowStep) {
-		if(!getWorkflowSteps().contains(workflowStep)) {
-			getWorkflowSteps().add(workflowStep);
-		}
+		getWorkflowSteps().add(workflowStep);
 	}
 	
 	/**
@@ -91,4 +89,5 @@ public class Workflow extends BaseEntity {
 	public void setIsInheritable(Boolean isInheritable) {
 		this.isInheritable = isInheritable;
 	}
+	
 }

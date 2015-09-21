@@ -29,4 +29,5 @@ public class FieldPredicate extends BaseEntity {
 	public void setValue(String value) {
 		this.value = value;
 	}
+	
 }

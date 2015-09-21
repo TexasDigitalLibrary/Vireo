@@ -71,9 +71,7 @@ public class FieldProfile extends BaseEntity {
 	 * @param fieldGloss
 	 */
 	public void addFieldGloss(FieldGloss fieldGloss) {
-		if (!getFieldGlosses().contains(fieldGloss)) {
-			getFieldGlosses().add(fieldGloss);
-		}
+		getFieldGlosses().add(fieldGloss);
 	}
 
 	/**
@@ -119,9 +117,7 @@ public class FieldProfile extends BaseEntity {
 	 * @param controlledVocabularies
 	 */
 	public void addControlledVocabulary(ControlledVocabulary controlledVocabulary) {
-		if (!getControlledVocabularies().contains(controlledVocabulary)) {
-			getControlledVocabularies().add(controlledVocabulary);
-		}
+		getControlledVocabularies().add(controlledVocabulary);
 	}
 
 	/**

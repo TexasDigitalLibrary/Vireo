@@ -64,9 +64,7 @@ public class WorkflowStep extends BaseEntity {
 	 * @param fieldProfile
 	 */
 	public void addFieldProfile(FieldProfile fieldProfile) {
-		if(!getFieldProfiles().contains(fieldProfile)) {
-			getFieldProfiles().add(fieldProfile);
-		}
+		getFieldProfiles().add(fieldProfile);
 	}
 	
 	/**
@@ -76,4 +74,5 @@ public class WorkflowStep extends BaseEntity {
 	public void removeFieldProfile(FieldProfile fieldProfile) {
 		getFieldProfiles().remove(fieldProfile);
 	}
+	
 }
