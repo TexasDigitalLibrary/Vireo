@@ -25,8 +25,8 @@
 		<entity-name>org.tdl.vireo.model.FieldGloss</entity-name>
 		<entity-width>120</entity-width>
 		<entity-height>90</entity-height>
-		<entity-X-Coordinate>1031</entity-X-Coordinate>
-		<entity-Y-Coordinate>659</entity-Y-Coordinate>
+		<entity-X-Coordinate>1047</entity-X-Coordinate>
+		<entity-Y-Coordinate>642</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -68,7 +68,7 @@
 	<entity>
 		<entity-name>org.tdl.vireo.model.Organization</entity-name>
 		<entity-width>120</entity-width>
-		<entity-height>168</entity-height>
+		<entity-height>188</entity-height>
 		<entity-X-Coordinate>288</entity-X-Coordinate>
 		<entity-Y-Coordinate>78</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
@@ -115,6 +115,17 @@
 		<entity-height>70</entity-height>
 		<entity-X-Coordinate>671</entity-X-Coordinate>
 		<entity-Y-Coordinate>435</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.OrganizationCategory</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>128</entity-height>
+		<entity-X-Coordinate>500</entity-X-Coordinate>
+		<entity-Y-Coordinate>50</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
