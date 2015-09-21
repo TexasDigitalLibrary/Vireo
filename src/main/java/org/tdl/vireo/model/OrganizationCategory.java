@@ -26,7 +26,7 @@ public class OrganizationCategory extends BaseEntity {
 	@Column(nullable = true)
 	private int level;
 	
-	@OneToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY, mappedBy = "category")
+	@OneToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY, mappedBy = "organizationCategory")
 	private Set<Organization> organizations;
 	
 	public OrganizationCategory() {

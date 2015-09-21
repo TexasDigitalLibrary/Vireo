@@ -19,16 +19,16 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(uniqueConstraints={@UniqueConstraint(columnNames = {"name" , "category_id"})})
+@Table(uniqueConstraints={@UniqueConstraint(columnNames = {"name" , "organization_category_id"})})
 public class Organization extends BaseEntity {
 
 	@Column(columnDefinition = "TEXT", nullable = false)
 	private String name;
 	
 	@ManyToOne(fetch = EAGER, optional = false)
-	private OrganizationCategory category;
+	private OrganizationCategory organizationCategory;
 
-	@ManyToOne(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY, optional = false)
+	@ManyToOne(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY, optional = true)
 	private Workflow workflow;
 
 	@ManyToMany(cascade = { DETACH, REFRESH })
@@ -45,12 +45,10 @@ public class Organization extends BaseEntity {
 		setChildrenOrganizations(new HashSet<Organization>());
 		setEmails(new HashSet<String>());
 	}
-
-	public Organization(String name, OrganizationCategory category, Workflow workflow) {
+	
+	public Organization(String name, OrganizationCategory organizationCategory) {
 		this();
 		setName(name);
-		setCategory(category);
-		setWorkflow(workflow);
 	}
 
 	/**
@@ -72,16 +70,16 @@ public class Organization extends BaseEntity {
 	 * 
 	 * @return
 	 */
-	public OrganizationCategory getCategory() {
-		return category;
+	public OrganizationCategory getOrganizationCategory() {
+		return organizationCategory;
 	}
 
 	/**
 	 * 
 	 * @param catagory
 	 */
-	public void setCategory(OrganizationCategory category) {
-		this.category = category;
+	public void setOrganizationCategory(OrganizationCategory organizationCategory) {
+		this.organizationCategory = organizationCategory;
 	}
 
 	/**

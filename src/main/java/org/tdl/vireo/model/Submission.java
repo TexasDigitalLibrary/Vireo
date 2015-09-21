@@ -16,6 +16,8 @@ import static javax.persistence.CascadeType.ALL;
 @Entity
 public class Submission extends BaseEntity {
 	
+	//TODO: add person entity
+	
 	@OneToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false, orphanRemoval = false)
 	private SubmissionState state;
 	
