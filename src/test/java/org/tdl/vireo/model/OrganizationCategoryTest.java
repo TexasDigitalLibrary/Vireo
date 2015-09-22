@@ -107,14 +107,9 @@ public class OrganizationCategoryTest {
 		assertEquals("Organization category dit not have the correct Name!", TEST_CATEGORY_NAME, organization.getCategory().getName());
 		assertEquals("Organization category dit not have the correct Level!", TEST_CATEGORY_LEVEL, organization.getCategory().getLevel());
 		
-		
 		category = organizationCategoryRepo.findByNameAndLevel(TEST_CATEGORY_NAME, TEST_CATEGORY_LEVEL);
 		
 		Set<Organization> organizations = category.getOrganizations();
-		
-		// something wrong here
-		
-		System.out.println("\n\n\n" + organizations.size() + "\n\n\n");
 		
 		assertEquals("Category does not have the organization!", true, organizations.contains(organization));
 		
