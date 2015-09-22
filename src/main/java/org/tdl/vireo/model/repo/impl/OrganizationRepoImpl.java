@@ -16,14 +16,14 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
 		return organizationRepo.save(new Organization(name, category));
 	}
 	
-	@Override
-	public Organization update(Organization organization) {
-		return organizationRepo.update(organization);
-	}
-	
-	@Override
-	public void delete(Organization organization) {
-		organizationRepo.delete(organization);
-	}
+//	@Override
+//	public Organization update(Organization organization) {
+//		return organizationRepo.update(organization);
+//	}
+//	
+//	@Override
+//	public void delete(Organization organization) {
+//		organizationRepo.delete(organization);
+//	}
 	
 }

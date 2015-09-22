@@ -15,14 +15,14 @@ public class ControlledVocabularyRepoImpl implements ControlledVocabularyRepoCus
 		return controlledVocabularyRepo.save(new ControlledVocabulary(name));
 	}
 	
-	@Override
-	public ControlledVocabulary update(ControlledVocabulary controlledVocabulary) {
-		return controlledVocabularyRepo.update(controlledVocabulary);
-	}
-	
-	@Override
-	public void delete(ControlledVocabulary controlledVocabulary) {
-		controlledVocabularyRepo.delete(controlledVocabulary);
-	}
+//	@Override
+//	public ControlledVocabulary update(ControlledVocabulary controlledVocabulary) {
+//		return controlledVocabularyRepo.update(controlledVocabulary);
+//	}
+//	
+//	@Override
+//	public void delete(ControlledVocabulary controlledVocabulary) {
+//		controlledVocabularyRepo.delete(controlledVocabulary);
+//	}
 	
 }

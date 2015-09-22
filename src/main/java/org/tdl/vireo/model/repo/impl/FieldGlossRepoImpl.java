@@ -15,14 +15,14 @@ public class FieldGlossRepoImpl implements FieldGlossRepoCustom {
 		return fieldGlossRepo.save(new FieldGloss(value));
 	}
 	
-	@Override
-	public FieldGloss update(FieldGloss gloss) {		
-		return fieldGlossRepo.update(gloss);
-	}
-	
-	@Override
-	public void delete(FieldGloss gloss) {
-		fieldGlossRepo.delete(gloss);
-	}
+//	@Override
+//	public FieldGloss update(FieldGloss gloss) {		
+//		return fieldGlossRepo.update(gloss);
+//	}
+//	
+//	@Override
+//	public void delete(FieldGloss gloss) {
+//		fieldGlossRepo.delete(gloss);
+//	}
 	
 }

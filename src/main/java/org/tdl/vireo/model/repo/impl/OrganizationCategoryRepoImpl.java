@@ -15,14 +15,14 @@ public class OrganizationCategoryRepoImpl implements OrganizationCategoryRepoCus
 		return organizationCategoryRepo.save(new OrganizationCategory(name, level));
 	}
 	
-	@Override
-	public OrganizationCategory update(OrganizationCategory category) {		
-		return organizationCategoryRepo.update(category);
-	}
-	
-	@Override
-	public void delete(OrganizationCategory category) {
-		organizationCategoryRepo.delete(category);
-	}
+//	@Override
+//	public OrganizationCategory update(OrganizationCategory category) {		
+//		return organizationCategoryRepo.update(category);
+//	}
+//	
+//	@Override
+//	public void delete(OrganizationCategory category) {
+//		organizationCategoryRepo.delete(category);
+//	}
 	
 }

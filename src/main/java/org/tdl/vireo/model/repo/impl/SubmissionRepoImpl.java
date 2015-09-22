@@ -17,14 +17,14 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 		return submissionRepo.save(new Submission(state));
 	}
 	
-	@Override
-	public Submission update(Submission submission) {	
-		return submissionRepo.update(submission);
-	}
-	
-	@Override
-	public void delete(Submission submission) {
-		submissionRepo.delete(submission);
-	}
+//	@Override
+//	public Submission update(Submission submission) {	
+//		return submissionRepo.update(submission);
+//	}
+//	
+//	@Override
+//	public void delete(Submission submission) {
+//		submissionRepo.delete(submission);
+//	}
 	
 }
