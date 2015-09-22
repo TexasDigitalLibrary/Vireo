@@ -5,6 +5,6 @@ import org.tdl.vireo.model.OrganizationCategory;
 
 public interface OrganizationRepoCustom {
 
-	public Organization create(String name, OrganizationCategory organizationCategory);
+	public Organization create(String name, OrganizationCategory category);
 	
 }

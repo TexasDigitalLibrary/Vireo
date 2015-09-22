@@ -18,10 +18,10 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
 	private OrganizationRepo organizationRepo;
 	
 	@Override
-	public Organization create(String name, OrganizationCategory organizationCategory) {
-		Organization organization = organizationRepo.findByNameAndOrganizationCategory(name, organizationCategory);
+	public Organization create(String name, OrganizationCategory category) {
+		Organization organization = organizationRepo.findByNameAndCategory(name, category);
 		if(organization == null) {
-			return organizationRepo.save(new Organization(name, organizationCategory));
+			return organizationRepo.save(new Organization(name, category));
 		}
 		return organization;
 	}

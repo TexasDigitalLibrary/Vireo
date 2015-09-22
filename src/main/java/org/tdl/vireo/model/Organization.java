@@ -19,14 +19,14 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(uniqueConstraints={@UniqueConstraint(columnNames = {"name" , "organization_category_id"})})
+@Table(uniqueConstraints={@UniqueConstraint(columnNames = {"name" , "category_id"})})
 public class Organization extends BaseEntity {
 
 	@Column(columnDefinition = "TEXT", nullable = false)
 	private String name;
 	
 	@ManyToOne(fetch = EAGER, optional = false)
-	private OrganizationCategory organizationCategory;
+	private OrganizationCategory category;
 
 	@ManyToOne(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY, optional = true)
 	private Workflow workflow;
@@ -46,9 +46,10 @@ public class Organization extends BaseEntity {
 		setEmails(new HashSet<String>());
 	}
 	
-	public Organization(String name, OrganizationCategory organizationCategory) {
+	public Organization(String name, OrganizationCategory category) {
 		this();
 		setName(name);
+		setCategory(category);
 	}
 
 	/**
@@ -70,16 +71,16 @@ public class Organization extends BaseEntity {
 	 * 
 	 * @return
 	 */
-	public OrganizationCategory getOrganizationCategory() {
-		return organizationCategory;
+	public OrganizationCategory getCategory() {
+		return category;
 	}
 
 	/**
 	 * 
 	 * @param catagory
 	 */
-	public void setOrganizationCategory(OrganizationCategory organizationCategory) {
-		this.organizationCategory = organizationCategory;
+	public void setCategory(OrganizationCategory category) {
+		this.category = category;
 	}
 
 	/**
