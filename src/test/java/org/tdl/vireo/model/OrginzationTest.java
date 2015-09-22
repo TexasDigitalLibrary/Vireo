@@ -10,7 +10,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.Application;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
@@ -68,18 +67,17 @@ public class OrginzationTest {
 	}
 	
 	@Test
-	@Transactional
 	public void testFind() {
+		
+	}
+	
+	@Test
+	public void testDelete() {
 		Organization organization = organizationRepo.create(TEST_ORGANIZATION_NAME, category);
 		
 		organizationRepo.delete(organization);
 		
 		assertEquals("Entity did not delete!", 0, organizationRepo.count());	
-	}
-	
-	@Test
-	public void testDelete() {
-		
 	}
 	
 	@Test
