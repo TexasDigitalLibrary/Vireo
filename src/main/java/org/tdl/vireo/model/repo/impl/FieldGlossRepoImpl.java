@@ -18,11 +18,7 @@ public class FieldGlossRepoImpl implements FieldGlossRepoCustom {
 	
 	@Override
 	public FieldGloss create(String value) {
-		FieldGloss fieldGloss = fieldGlossRepo.findByValue(value);
-		if(fieldGloss == null) {
-			return fieldGlossRepo.save(new FieldGloss(value));
-		}
-		return fieldGloss;
+		return fieldGlossRepo.save(new FieldGloss(value));
 	}
 	
 }

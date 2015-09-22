@@ -20,11 +20,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 	@Override
 	//TODO: must be create with arguments state and person
 	public Submission create(SubmissionState state) {
-		Submission submission = submissionRepo.findByState(state);
-		if(submission == null) {
-			return submissionRepo.save(new Submission(state));
-		}
-		return submission;
+		return submissionRepo.save(new Submission(state));
 	}
 	
 }

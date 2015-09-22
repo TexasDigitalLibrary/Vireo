@@ -18,11 +18,7 @@ public class ControlledVocabularyRepoImpl implements ControlledVocabularyRepoCus
 	
 	@Override
 	public ControlledVocabulary create(String name) {
-		ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByName(name);
-		if(controlledVocabulary == null) {
-			return controlledVocabularyRepo.save(new ControlledVocabulary(name));
-		}
-		return controlledVocabulary;
+		return controlledVocabularyRepo.save(new ControlledVocabulary(name));
 	}
 	
 }

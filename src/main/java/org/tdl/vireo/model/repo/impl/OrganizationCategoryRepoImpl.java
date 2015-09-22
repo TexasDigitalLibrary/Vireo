@@ -18,11 +18,7 @@ public class OrganizationCategoryRepoImpl implements OrganizationCategoryRepoCus
 	
 	@Override
 	public OrganizationCategory create(String name, int level) {
-		OrganizationCategory organizationCategory = organizationCategoryRepo.findByNameAndLevel(name, level);
-		if(organizationCategory == null) {
-			return organizationCategoryRepo.save(new OrganizationCategory(name, level));
-		}
-		return organizationCategory;
+		return organizationCategoryRepo.save(new OrganizationCategory(name, level));
 	}
 	
 }
