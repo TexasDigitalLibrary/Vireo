@@ -1,7 +1,5 @@
 package org.tdl.vireo.model.repo.impl;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.OrganizationCategory;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
@@ -19,11 +17,10 @@ public class OrganizationCategoryRepoImpl implements OrganizationCategoryRepoCus
 	
 	@Override
 	public OrganizationCategory update(OrganizationCategory category) {		
-		return organizationCategoryRepo.save(category);
+		return organizationCategoryRepo.update(category);
 	}
 	
 	@Override
-	@Transactional
 	public void delete(OrganizationCategory category) {
 		organizationCategoryRepo.delete(category);
 	}

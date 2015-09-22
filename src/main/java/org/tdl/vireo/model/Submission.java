@@ -21,10 +21,10 @@ public class Submission extends BaseEntity {
 	@OneToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false, orphanRemoval = false)
 	private SubmissionState state;
 	
-	@ManyToMany(fetch = EAGER, cascade = { DETACH, REFRESH, MERGE })
+	@ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER)
 	private Set<Organization> organizations;
 	
-	@OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
+	@OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
 	private Set<FieldValue> fieldValues;
 	
 	public Submission() {
