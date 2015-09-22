@@ -36,7 +36,10 @@ public class OrginzationTest {
 	@Before
 	public void setUp() {
 		assertEquals("The repository was not empty!", 0, organizationRepo.count());
+		
 		category = organizationCategoryRepo.create("Test Category", 0);
+		
+		assertEquals("The category does not exist!", 1, organizationCategoryRepo.count());
 	}
 	
 	@Test
@@ -50,22 +53,14 @@ public class OrginzationTest {
 	
 	@Test
 	public void testDuplication() {
-		
-		assertEquals("The category does not exist!", 1, organizationCategoryRepo.count());
-		
 		organizationRepo.create(TEST_ORGANIZATION_NAME, category);
-		
+				
 		try {
 			organizationRepo.create(TEST_ORGANIZATION_NAME, category);
 		}
 		catch(Exception e) {
 			
 		}
-		
-		organizationRepo.findAll().forEach(org -> {
-			System.out.println("\n\n" + org.getName() + " " + org.getId() + " " + org.getCategory().getName() + " " + org.getCategory().getId() + "\n\n");
-		});
-		
 		
 		assertEquals("The repository duplicated Entity!", 1, organizationRepo.count());
 		

@@ -18,7 +18,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(uniqueConstraints={@UniqueConstraint(columnNames = {"name" , "category_id"})})
+@Table(uniqueConstraints={@UniqueConstraint(columnNames = "name"), @UniqueConstraint(columnNames = "category_id")})
 public class Organization extends BaseEntity {
 
 	@Column(columnDefinition = "TEXT", nullable = false)
