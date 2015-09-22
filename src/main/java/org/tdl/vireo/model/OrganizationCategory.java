@@ -4,9 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import org.tdl.vireo.model.Organization;
 
-import static javax.persistence.CascadeType.DETACH;
-import static javax.persistence.CascadeType.MERGE;
-import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
 
 import java.util.HashSet;
@@ -26,7 +24,7 @@ public class OrganizationCategory extends BaseEntity {
 	@Column(nullable = true)
 	private int level;
 	
-	@OneToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY, mappedBy = "category")
+	@OneToMany(cascade = ALL, fetch = LAZY, mappedBy = "category")
 	private Set<Organization> organizations;
 	
 	public OrganizationCategory() {
