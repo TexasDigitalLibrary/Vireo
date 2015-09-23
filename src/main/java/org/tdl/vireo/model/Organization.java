@@ -19,200 +19,207 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(uniqueConstraints={@UniqueConstraint(columnNames = "name"), @UniqueConstraint(columnNames = "category_id")})
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = "name"), @UniqueConstraint(columnNames = "category_id") })
 public class Organization extends BaseEntity {
 
-	@Column(columnDefinition = "TEXT", nullable = false)
-	private String name;
-	
-	@ManyToOne(fetch = EAGER, optional = false)
-	private OrganizationCategory category;
+    @Column(columnDefinition = "TEXT", nullable = false)
+    private String name;
 
-	@ManyToOne(cascade = ALL, fetch = LAZY, optional = true)
-	private Workflow workflow;
+    @ManyToOne(fetch = EAGER, optional = false)
+    private OrganizationCategory category;
 
-	@ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY)
-	private Set<Organization> parentOrganizations;
+    @ManyToOne(cascade = ALL, fetch = LAZY, optional = true)
+    private Workflow workflow;
 
-	@ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY)
-	private Set<Organization> childrenOrganizations;
+    @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY)
+    private Set<Organization> parentOrganizations;
 
-	@ElementCollection
-	private Set<String> emails;
+    @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY)
+    private Set<Organization> childrenOrganizations;
 
-	public Organization() {
-		setParentOrganizations(new HashSet<Organization>());
-		setChildrenOrganizations(new HashSet<Organization>());
-		setEmails(new HashSet<String>());
-	}
-	
-	public Organization(String name, OrganizationCategory category) {
-		this();
-		setName(name);
-		setCategory(category);
-	}
+    @ElementCollection
+    private Set<String> emails;
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+    public Organization() {
+        setParentOrganizations(new HashSet<Organization>());
+        setChildrenOrganizations(new HashSet<Organization>());
+        setEmails(new HashSet<String>());
+    }
 
-	/**
-	 * @param name
-	 *            the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public OrganizationCategory getCategory() {
-		return category;
-	}
+    public Organization(String name, OrganizationCategory category) {
+        this();
+        setName(name);
+        setCategory(category);
+    }
 
-	/**
-	 * 
-	 * @param catagory
-	 */
-	public void setCategory(OrganizationCategory category) {
-		this.category = category;
-	}
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
 
-	/**
-	 * @return the workflow
-	 */
-	public Workflow getWorkflow() {
-		return workflow;
-	}
+    /**
+     * @param name
+     *            the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	/**
-	 * @param workflow
-	 *            the workflow to set
-	 */
-	public void setWorkflow(Workflow workflow) {
-		this.workflow = workflow;
-	}
+    /**
+     * 
+     * @return
+     */
+    public OrganizationCategory getCategory() {
+        return category;
+    }
 
-	/**
-	 * @return the parentOrganizations
-	 */
-	public Set<Organization> getParentOrganizations() {
-		return parentOrganizations;
-	}
+    /**
+     * 
+     * @param catagory
+     */
+    public void setCategory(OrganizationCategory category) {
+        this.category = category;
+    }
 
-	/**
-	 * @param parentOrganizations
-	 *            the parentOrganizations to set
-	 */
-	public void setParentOrganizations(Set<Organization> parentOrganizations) {
-		this.parentOrganizations = parentOrganizations;
-	}
-	
-	/**
-	 * 
-	 * @param parentOrganization
-	 */
-	public void addParentOrganization(Organization parentOrganization) {
-		getParentOrganizations().add(parentOrganization);
-	}
-	
-	/**
-	 * 
-	 * @param parentOrganization
-	 */
-	public void removeParentOrganization(Organization parentOrganization) {
-		getParentOrganizations().remove(parentOrganization);
-	}
+    /**
+     * @return the workflow
+     */
+    public Workflow getWorkflow() {
+        return workflow;
+    }
 
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 */
-	public Organization getParentById(Long id) {
-		for(Organization organization : getParentOrganizations()) {
-			if(organization.getId() == id) return organization;
-		}
-		return null;
-	}
-	
-	/**
-	 * @return the childrenOrganizations
-	 */
-	public Set<Organization> getChildrenOrganizations() {
-		return childrenOrganizations;
-	}
+    /**
+     * @param workflow
+     *            the workflow to set
+     */
+    public void setWorkflow(Workflow workflow) {
+        this.workflow = workflow;
+    }
 
-	/**
-	 * @param childrenOrganizations
-	 *            the childrenOrganizations to set
-	 */
-	public void setChildrenOrganizations(Set<Organization> childrenOrganizations) {
-		this.childrenOrganizations = childrenOrganizations;
-	}
-	
-	/**
-	 * 
-	 * @param childOrganization
-	 */
-	public void addChildOrganization(Organization childOrganization) {
-		getChildrenOrganizations().add(childOrganization);
-	}
-	
-	/**
-	 * 
-	 * @param childOrganization
-	 */
-	public void removeChildOrganization(Organization childOrganization) {
-		getChildrenOrganizations().remove(childOrganization);
-	}
-	
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 */
-	public Organization getChildById(Long id) {
-		for(Organization organization : getChildrenOrganizations()) {
-			if(organization.getId() == id) return organization;
-		}
-		return null;
-	}
+    /**
+     * @return the parentOrganizations
+     */
+    public Set<Organization> getParentOrganizations() {
+        return parentOrganizations;
+    }
 
-	/**
-	 * @return the emails
-	 */
-	public Set<String> getEmails() {
-		return emails;
-	}
+    /**
+     * @param parentOrganizations
+     *            the parentOrganizations to set
+     */
+    private void setParentOrganizations(Set<Organization> parentOrganizations) {
+        this.parentOrganizations = parentOrganizations;
+    }
 
-	/**
-	 * @param emails
-	 *            the emails to set
-	 */
-	public void setEmails(Set<String> emails) {
-		this.emails = emails;
-	}
-	
-	/**
-	 * 
-	 * @param email
-	 */
-	public void addEmail(String email) {
-		getEmails().add(email);
-	}
-	
-	/**
-	 * 
-	 * @param email
-	 */
-	public void removeEmail(String email) {
-		getEmails().remove(email);
-	}
-	
+    /**
+     * 
+     * @param parentOrganization
+     */
+    private void addParentOrganization(Organization parentOrganization) {
+        getParentOrganizations().add(parentOrganization);
+    }
+
+    /**
+     * 
+     * @param parentOrganization
+     */
+    private void removeParentOrganization(Organization parentOrganization) {
+        getParentOrganizations().remove(parentOrganization);
+    }
+
+    /**
+     * 
+     * @param id
+     * @return
+     */
+    public Organization getParentById(Long id) {
+        for (Organization organization : getParentOrganizations()) {
+            if (organization.getId() == id)
+                return organization;
+        }
+        return null;
+    }
+
+    /**
+     * @return the childrenOrganizations
+     */
+    public Set<Organization> getChildrenOrganizations() {
+        return childrenOrganizations;
+    }
+
+    /**
+     * @param childrenOrganizations
+     *            the childrenOrganizations to set
+     */
+    public void setChildrenOrganizations(Set<Organization> childrenOrganizations) {
+        childrenOrganizations.stream().forEach(childOrganization -> {
+            childOrganization.addParentOrganization(this);
+        });
+        this.childrenOrganizations = childrenOrganizations;
+    }
+
+    /**
+     * 
+     * @param childOrganization
+     */
+    public void addChildOrganization(Organization childOrganization) {
+        childOrganization.addParentOrganization(this);
+        getChildrenOrganizations().add(childOrganization);
+    }
+
+    /**
+     * 
+     * @param childOrganization
+     */
+    public void removeChildOrganization(Organization childOrganization) {
+        childOrganization.removeParentOrganization(this);
+        getChildrenOrganizations().remove(childOrganization);
+    }
+
+    /**
+     * 
+     * @param id
+     * @return
+     */
+    public Organization getChildById(Long id) {
+        for (Organization organization : getChildrenOrganizations()) {
+            if (organization.getId() == id)
+                return organization;
+        }
+        return null;
+    }
+
+    /**
+     * @return the emails
+     */
+    public Set<String> getEmails() {
+        return emails;
+    }
+
+    /**
+     * @param emails
+     *            the emails to set
+     */
+    public void setEmails(Set<String> emails) {
+        this.emails = emails;
+    }
+
+    /**
+     * 
+     * @param email
+     */
+    public void addEmail(String email) {
+        getEmails().add(email);
+    }
+
+    /**
+     * 
+     * @param email
+     */
+    public void removeEmail(String email) {
+        getEmails().remove(email);
+    }
+
 }

@@ -66,22 +66,22 @@
 	</entity>
 
 	<entity>
-		<entity-name>org.tdl.vireo.model.Organization</entity-name>
+		<entity-name>org.tdl.vireo.model.OrganizationCategory</entity-name>
 		<entity-width>120</entity-width>
-		<entity-height>188</entity-height>
-		<entity-X-Coordinate>288</entity-X-Coordinate>
-		<entity-Y-Coordinate>78</entity-Y-Coordinate>
+		<entity-height>128</entity-height>
+		<entity-X-Coordinate>500</entity-X-Coordinate>
+		<entity-Y-Coordinate>50</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
 	</entity>
 
 	<entity>
-		<entity-name>org.tdl.vireo.model.ControlledVocabulary</entity-name>
+		<entity-name>org.tdl.vireo.model.Organization</entity-name>
 		<entity-width>120</entity-width>
-		<entity-height>90</entity-height>
-		<entity-X-Coordinate>961</entity-X-Coordinate>
-		<entity-Y-Coordinate>811</entity-Y-Coordinate>
+		<entity-height>188</entity-height>
+		<entity-X-Coordinate>288</entity-X-Coordinate>
+		<entity-Y-Coordinate>78</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -99,11 +99,11 @@
 	</entity>
 
 	<entity>
-		<entity-name>org.tdl.vireo.model.FieldPredicate</entity-name>
+		<entity-name>org.tdl.vireo.model.ControlledVocabulary</entity-name>
 		<entity-width>120</entity-width>
-		<entity-height>70</entity-height>
-		<entity-X-Coordinate>1016</entity-X-Coordinate>
-		<entity-Y-Coordinate>738</entity-Y-Coordinate>
+		<entity-height>90</entity-height>
+		<entity-X-Coordinate>961</entity-X-Coordinate>
+		<entity-Y-Coordinate>811</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -121,11 +121,11 @@
 	</entity>
 
 	<entity>
-		<entity-name>org.tdl.vireo.model.OrganizationCategory</entity-name>
+		<entity-name>org.tdl.vireo.model.FieldPredicate</entity-name>
 		<entity-width>120</entity-width>
-		<entity-height>128</entity-height>
-		<entity-X-Coordinate>500</entity-X-Coordinate>
-		<entity-Y-Coordinate>50</entity-Y-Coordinate>
+		<entity-height>70</entity-height>
+		<entity-X-Coordinate>1016</entity-X-Coordinate>
+		<entity-Y-Coordinate>738</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
