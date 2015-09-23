@@ -113,10 +113,8 @@ public class OrginzationTest {
 		OrganizationCategory parentCategory = organizationCategoryRepo.create("Test Parent Category", 0);
 		Organization parentOrganization = organizationRepo.create("Test Parent Organization", parentCategory);
 		
-		organization.addParentOrganization(parentOrganization);
-		
-		organization = organizationRepo.save(organization);
-		
+		organizationRepo.addParent(organization, parentOrganization);
+				
 		assertEquals("The organization category repository has incorrect count!", 2, organizationCategoryRepo.count());
 		assertEquals("The organization repository has incorrect count!", 2, organizationRepo.count());
 		
@@ -133,19 +131,17 @@ public class OrginzationTest {
 		
 		
 		// check the parent organizations children
-		
-		// something wrong here
-		
+				
 		Set<Organization> parentsChildrenOrganizations = parentOrganization.getChildrenOrganizations();
 		
 		assertEquals("The parent organization had incorrect number of children!", 1, parentsChildrenOrganizations.size());
 		
-//		Organization parentsChildOrganization = (Organization) parentsChildrenOrganizations.toArray()[0];
-//		
-//		assertEquals("The parent's child organization did not have the correct name!", TEST_ORGANIZATION_NAME, parentsChildOrganization.getName());
-//		
-//		assertEquals("The parent's child organization category did not have the correct Name!", TEST_CATEGORY_NAME, parentsChildOrganization.getCategory().getName());
-//		assertEquals("The parent's child organization category did not have the correct Level!", TEST_CATEGORY_LEVEL, parentsChildOrganization.getCategory().getLevel());
+		Organization parentsChildOrganization = (Organization) parentsChildrenOrganizations.toArray()[0];
+		
+		assertEquals("The parent's child organization did not have the correct name!", TEST_ORGANIZATION_NAME, parentsChildOrganization.getName());
+		
+		assertEquals("The parent's child organization category did not have the correct Name!", TEST_CATEGORY_NAME, parentsChildOrganization.getCategory().getName());
+		assertEquals("The parent's child organization category did not have the correct Level!", TEST_CATEGORY_LEVEL, parentsChildOrganization.getCategory().getLevel());
 		
 		
 		
@@ -154,9 +150,7 @@ public class OrginzationTest {
 		OrganizationCategory childCategory = organizationCategoryRepo.create("Test Child Category", 2);
 		Organization childOrganization = organizationRepo.create("Test Child Organization", childCategory);
 		
-		organization.addChildOrganization(childOrganization);
-		
-		organization = organizationRepo.save(organization);
+		organizationRepo.addChild(organization, childOrganization);
 		
 		assertEquals("The organization category repository has incorrect count!", 3, organizationCategoryRepo.count());
 		assertEquals("The organization repository has incorrect count!", 3, organizationRepo.count());
@@ -175,16 +169,16 @@ public class OrginzationTest {
 		
 //		// check the child organizations parent
 		
-//		Set<Organization> childrensParentOrganizations = childOrganization.getParentOrganizations();
-//		
-//		assertEquals("The child organization had incorrect number of parents!", 1, childrensParentOrganizations.size());
-//		
-//		Organization childrensParentOrganization = (Organization) childrensParentOrganizations.toArray()[0];
-//		
-//		assertEquals("The child's parent organization did not have the correct name!", TEST_ORGANIZATION_NAME, childrensParentOrganization.getName());
-//		
-//		assertEquals("The child's parent organization category did not have the correct Name!", TEST_CATEGORY_NAME, childrensParentOrganization.getCategory().getName());
-//		assertEquals("The child's parent organization category did not have the correct Level!", TEST_CATEGORY_LEVEL, childrensParentOrganization.getCategory().getLevel());
+		Set<Organization> childrensParentOrganizations = childOrganization.getParentOrganizations();
+		
+		assertEquals("The child organization had incorrect number of parents!", 1, childrensParentOrganizations.size());
+		
+		Organization childrensParentOrganization = (Organization) childrensParentOrganizations.toArray()[0];
+		
+		assertEquals("The child's parent organization did not have the correct name!", TEST_ORGANIZATION_NAME, childrensParentOrganization.getName());
+		
+		assertEquals("The child's parent organization category did not have the correct Name!", TEST_CATEGORY_NAME, childrensParentOrganization.getCategory().getName());
+		assertEquals("The child's parent organization category did not have the correct Level!", TEST_CATEGORY_LEVEL, childrensParentOrganization.getCategory().getLevel());
 		
 		
 	}
