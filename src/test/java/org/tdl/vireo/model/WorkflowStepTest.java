@@ -6,10 +6,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.tdl.vireo.Application;
+import org.tdl.vireo.annotations.Order;
+import org.tdl.vireo.runner.OrderedRunner;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(OrderedRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 public class WorkflowStepTest {
 	
@@ -24,26 +25,31 @@ public class WorkflowStepTest {
 	}
 	
 	@Test
+	@Order(value = 1)
 	public void testCreate() {
 		
 	}
 	
 	@Test
+	@Order(value = 2)
 	public void testDuplication() {
 		
 	}
 	
 	@Test
+	@Order(value = 3)
 	public void testFind() {
 		
 	}
 	
 	@Test
+	@Order(value = 4)
 	public void testDelete() {
 		
 	}
 	
 	@Test
+	@Order(value = 5)
 	public void testCascade() {
 		
 	}
