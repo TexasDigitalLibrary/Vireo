@@ -41,7 +41,6 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
 		OrganizationCategory category = organization.getCategory();
 		category.removeOrganization(organization);
 		organizationCategoryRepo.save(category);
-		organization.setCategory(null);
 		entityManager.remove(entityManager.contains(organization) ? organization : entityManager.merge(organization));
 	}
 	

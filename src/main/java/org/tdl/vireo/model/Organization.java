@@ -3,6 +3,7 @@ package org.tdl.vireo.model;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
@@ -30,10 +31,10 @@ public class Organization extends BaseEntity {
 	@ManyToOne(cascade = ALL, fetch = LAZY, optional = true)
 	private Workflow workflow;
 
-	@ManyToMany(cascade = { DETACH, REFRESH })
+	@ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY)
 	private Set<Organization> parentOrganizations;
 
-	@ManyToMany(cascade = ALL)
+	@ManyToMany(cascade = ALL, fetch = LAZY)
 	private Set<Organization> childrenOrganizations;
 
 	@ElementCollection
@@ -129,6 +130,18 @@ public class Organization extends BaseEntity {
 	}
 
 	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public Organization getParentById(Long id) {
+		for(Organization organization : getParentOrganizations()) {
+			if(organization.getId() == id) return organization;
+		}
+		return null;
+	}
+	
+	/**
 	 * @return the childrenOrganizations
 	 */
 	public Set<Organization> getChildrenOrganizations() {
@@ -157,6 +170,18 @@ public class Organization extends BaseEntity {
 	 */
 	public void removeChildOrganization(Organization childOrganization) {
 		getChildrenOrganizations().remove(childOrganization);
+	}
+	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public Organization getChildById(Long id) {
+		for(Organization organization : getChildrenOrganizations()) {
+			if(organization.getId() == id) return organization;
+		}
+		return null;
 	}
 
 	/**

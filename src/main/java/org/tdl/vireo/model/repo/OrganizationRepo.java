@@ -8,6 +8,8 @@ import org.tdl.vireo.model.repo.custom.OrganizationRepoCustom;
 
 @Repository
 public interface OrganizationRepo extends JpaRepository<Organization, Long>, OrganizationRepoCustom {
+	
+	public Organization findByNameAndCategory(String name, OrganizationCategory category);
 
 	public Organization create(String name, OrganizationCategory category);
 	
