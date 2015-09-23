@@ -34,7 +34,7 @@ public class Organization extends BaseEntity {
 	@ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY)
 	private Set<Organization> parentOrganizations;
 
-	@ManyToMany(cascade = ALL, fetch = LAZY)
+	@ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY)
 	private Set<Organization> childrenOrganizations;
 
 	@ElementCollection

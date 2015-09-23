@@ -113,8 +113,10 @@ public class OrginzationTest {
 		OrganizationCategory parentCategory = organizationCategoryRepo.create("Test Parent Category", 0);
 		Organization parentOrganization = organizationRepo.create("Test Parent Organization", parentCategory);
 		
-		organizationRepo.addParent(organization, parentOrganization);
-				
+		organization.addParentOrganization(parentOrganization);
+		
+		organization = organizationRepo.save(organization);
+		
 		assertEquals("The organization category repository has incorrect count!", 2, organizationCategoryRepo.count());
 		assertEquals("The organization repository has incorrect count!", 2, organizationRepo.count());
 		
@@ -131,7 +133,9 @@ public class OrginzationTest {
 		
 		
 		// check the parent organizations children
-				
+		
+		// something wrong here
+		
 		Set<Organization> parentsChildrenOrganizations = parentOrganization.getChildrenOrganizations();
 		
 		assertEquals("The parent organization had incorrect number of children!", 1, parentsChildrenOrganizations.size());
@@ -150,7 +154,9 @@ public class OrginzationTest {
 		OrganizationCategory childCategory = organizationCategoryRepo.create("Test Child Category", 2);
 		Organization childOrganization = organizationRepo.create("Test Child Organization", childCategory);
 		
-		organizationRepo.addChild(organization, childOrganization);
+		organization.addChildOrganization(childOrganization);
+		
+		organization = organizationRepo.save(organization);
 		
 		assertEquals("The organization category repository has incorrect count!", 3, organizationCategoryRepo.count());
 		assertEquals("The organization repository has incorrect count!", 3, organizationRepo.count());

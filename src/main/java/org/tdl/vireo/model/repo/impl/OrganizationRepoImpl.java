@@ -30,22 +30,6 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
 		return organization;
 	}
 	
-	@Override
-	public Organization addParent(Organization organization, Organization parentOrganization) {		
-		parentOrganization.addChildOrganization(organization);		
-		organizationRepo.save(parentOrganization);		
-		organization.addParentOrganization(parentOrganization);		
-		return organizationRepo.save(organization);
-	}
-	
-	@Override
-	public Organization addChild(Organization organization, Organization childOrganization) {		
-		childOrganization.addParentOrganization(organization);		
-		organizationRepo.save(childOrganization);		
-		organization.addChildOrganization(childOrganization);		
-		return organizationRepo.save(organization);
-	}
-	
 //	@Override
 //	public Organization update(Organization organization) {
 //		return organizationRepo.update(organization);
