@@ -1,5 +1,8 @@
 package org.tdl.vireo.model;
 
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.EAGER;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,20 +16,20 @@ public class Workflow extends BaseEntity {
 	@Column(columnDefinition = "TEXT", nullable = false)
 	private String name;
 	
-	@ManyToMany
+	@ManyToMany(cascade = ALL, fetch = EAGER)
 	private Set<WorkflowStep> workflowSteps;
 	
 	@Column(nullable = false)
-	private Boolean isInheritable;
+	private Boolean inheritable;
 	
 	public Workflow() {
 		setWorkflowSteps(new HashSet<WorkflowStep>());
 	}
 	
-	public Workflow(String name, Boolean isInheritable) {
+	public Workflow(String name, Boolean inheritable) {
 		this();
 		setName(name);
-		setIsInheritable(isInheritable);
+		setInheritability(inheritable);
 	}
 	
 	/**
@@ -76,18 +79,18 @@ public class Workflow extends BaseEntity {
 	}
 	
 	/**
-	 * @return the isInheritable
+	 * @return the inheritable
 	 */
-	public Boolean getIsInheritable() {
-		return isInheritable;
+	public Boolean isInheritable() {
+		return inheritable;
 	}
 
 	/**
-	 * @param isInheritable
-	 *            the isInheritable to set
+	 * @param inheritable
+	 *            the inheritable to set
 	 */
-	public void setIsInheritable(Boolean isInheritable) {
-		this.isInheritable = isInheritable;
+	public void setInheritability(Boolean inheritable) {
+		this.inheritable = inheritable;
 	}
 	
 }

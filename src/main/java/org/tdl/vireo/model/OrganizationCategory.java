@@ -15,7 +15,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(uniqueConstraints={@UniqueConstraint(columnNames = {"name" , "level"})})
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"name" , "level"}))
 public class OrganizationCategory extends BaseEntity {
 	
 	@Column(nullable = false)

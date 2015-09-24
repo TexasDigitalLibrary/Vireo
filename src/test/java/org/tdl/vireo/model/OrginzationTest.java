@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.transaction.annotation.Transactional;
+
 import org.tdl.vireo.Application;
 import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
@@ -22,13 +23,46 @@ import org.tdl.vireo.runner.OrderedRunner;
 @RunWith(OrderedRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 public class OrginzationTest {
-	
-    static final String TEST_CATEGORY_NAME = "Test Category";
-    static final int TEST_CATEGORY_LEVEL = 1;
-
-    static final String TEST_ORGANIZATION_NAME = "Test Organization";
-
-    OrganizationCategory category;
+		
+	static final int TEST_PARENT_CATEGORY_LEVEL      = 0;
+    static final int TEST_CHILD_CATEGORY_LEVEL       = 1;
+    static final int TEST_GRAND_CHILD_CATEGORY_LEVEL = 2;
+	    
+    static final String TEST_PARENT_CATEGORY_NAME      = "Test Parent Category";
+    static final String TEST_CHILD_CATEGORY_NAME       = "Test Child Category";
+    static final String TEST_GRAND_CHILD_CATEGORY_NAME = "Test Grand Child Category";
+    
+    static final String TEST_PARENT_ORGANIZATION_NAME            = "Test Parent Organization";
+    static final String TEST_CHILD_ORGANIZATION_NAME             = "Test Child Organization";
+    static final String TEST_GRAND_CHILD_ORGANIZATION_NAME       = "Test Grand Child Organization";    
+    static final String TEST_DETACHABLE_PARENT_ORGANIZATION_NAME = "Test Detachable Parent Organization";
+    static final String TEST_DETACHABLE_CHILD_ORGANIZATION_NAME  = "Test Detachable Child Organization";
+    
+    static final String TEST_PARENT_WORKFLOW_NAME            = "Test Parent Workflow";
+    static final String TEST_CHILD_WORKFLOW_NAME             = "Test Child Workflow";
+    static final String TEST_GRAND_CHILD_WORKFLOW_NAME       = "Test Grand Child Workflow";
+    static final String TEST_DETACHABLE_PARENT_WORKFLOW_NAME = "Test Detachable Parent Workflow";
+    static final String TEST_DETACHABLE_CHILD_WORKFLOW_NAME  = "Test Detachable Child Workflow";
+    
+    static final boolean TEST_PARENT_WORKFLOW_INHERITABILITY            = true;
+    static final boolean TEST_CHILD_WORKFLOW_INHERITABILITY             = true;
+    static final boolean TEST_GRAND_CHILD_WORKFLOW_INHERITABILITY       = true;
+    static final boolean TEST_DETACHABLE_PARENT_WORKFLOW_INHERITABILITY = true;
+    static final boolean TEST_DETACHABLE_CHILD_WORKFLOW_INHERITABILITY  = true;
+    
+    static final String TEST_PARENT_EMAIL            = "Test Parent Email";
+    static final String TEST_CHILD_EMAIL             = "Test Child Email";
+    static final String TEST_GRAND_CHILD_EMAIL       = "Test Grand Child Email";
+    static final String TEST_DETACHABLE_PARENT_EMAIL = "Test Detachable Parent Email";
+    static final String TEST_DETACHABLE_CHILD_EMAIL  = "Test Detachable Child Email";
+    
+    static final String TEST_PARENT_WORKFLOW_STEP_NAME            = "Test Parent Workflow Step";
+    static final String TEST_CHILD_WORKFLOW_STEP_NAME             = "Test Child Workflow Step";
+    static final String TEST_GRAND_CHILD_WORKFLOW_STEP_NAME       = "Test Grand Child Workflow Step";
+    static final String TEST_DETACHABLE_PARENT_WORKFLOW_STEP_NAME = "Test Detachable Parent Workflow Step";
+    static final String TEST_DETACHABLE_CHILD_WORKFLOW_STEP_NAME  = "Test Detachable Child Workflow Step";
+    
+    OrganizationCategory parentCategory;
 
     @Autowired
     private OrganizationCategoryRepo organizationCategoryRepo;
@@ -44,56 +78,51 @@ public class OrginzationTest {
     @Before
     public void setUp() {
         assertEquals("The repository was not empty!", 0, organizationRepo.count());
-
-        category = organizationCategoryRepo.create(TEST_CATEGORY_NAME, TEST_CATEGORY_LEVEL);
-
+        parentCategory = organizationCategoryRepo.create(TEST_PARENT_CATEGORY_NAME, TEST_PARENT_CATEGORY_LEVEL);
         assertEquals("The category does not exist!", 1, organizationCategoryRepo.count());
     }
 
     @Test
     @Order(value = 1)
     public void testCreate() {
-        Organization organization = organizationRepo.create(TEST_ORGANIZATION_NAME, category);
-
-        assertEquals("The repository did not save the Entity!", 1, organizationRepo.count());
-        assertEquals("Saved entity did not contain the correct Name!", TEST_ORGANIZATION_NAME, organization.getName());
-        assertEquals("Saved entity did not contain the correct Category!", category, organization.getCategory());
+        Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);        
+        Workflow parentWorkflow = new Workflow(TEST_PARENT_WORKFLOW_NAME, TEST_PARENT_WORKFLOW_INHERITABILITY);
+        WorkflowStep parentWorkflowStep = new WorkflowStep(TEST_PARENT_WORKFLOW_STEP_NAME);
+        parentWorkflow.addWorkflowStep(parentWorkflowStep);
+        parentOrganization.setWorkflow(parentWorkflow);
+        parentOrganization.addEmail(TEST_PARENT_EMAIL);
+        assertEquals("The repository did not save the entity!", 1, organizationRepo.count());
+        assertEquals("Saved entity did not contain the correct name!", TEST_PARENT_ORGANIZATION_NAME, parentOrganization.getName());
+        assertEquals("Saved entity did not contain the correct category!", parentCategory, parentOrganization.getCategory());
+        assertEquals("Saved entity did not have the correct workflow name!", TEST_PARENT_WORKFLOW_NAME, parentOrganization.getWorkflow().getName());
+        assertEquals("Saved entity did not have the correct workflow inheritability!", TEST_PARENT_WORKFLOW_INHERITABILITY, parentOrganization.getWorkflow().isInheritable());
+        assertEquals("Saved entity did not have the correct workflow step name!", TEST_PARENT_WORKFLOW_STEP_NAME, ((WorkflowStep) parentOrganization.getWorkflow().getWorkflowSteps().toArray()[0]).getName());
     }
 
     @Test
     @Order(value = 2)
     public void testDuplication() {
-        organizationRepo.create(TEST_ORGANIZATION_NAME, category);
-
+        organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
         try {
-            organizationRepo.create(TEST_ORGANIZATION_NAME, category);
-        } catch (Exception e) {
-
-        }
-
-        assertEquals("The repository duplicated Entity!", 1, organizationRepo.count());
-
+            organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
+        } catch (Exception e) { /* SUCCESS */ }
+        assertEquals("The repository duplicated entity!", 1, organizationRepo.count());
     }
 
     @Test
     @Order(value = 3)
     public void testFind() {
-        organizationRepo.create(TEST_ORGANIZATION_NAME, category);
-
-        Organization organization = organizationRepo.findByNameAndCategory(TEST_ORGANIZATION_NAME, category);
-
-        assertNotEquals("Did not find entity!", null, organization);
-
-        assertEquals("Found entity did not contain the correct Name!", TEST_ORGANIZATION_NAME, organization.getName());
+        organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
+        Organization parentOrganization = organizationRepo.findByNameAndCategory(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
+        assertNotEquals("Did not find entity!", null, parentOrganization);
+        assertEquals("Found entity did not contain the correct name!", TEST_PARENT_ORGANIZATION_NAME, parentOrganization.getName());
     }
 
     @Test
     @Order(value = 4)
     public void testDelete() {
-        Organization organization = organizationRepo.create(TEST_ORGANIZATION_NAME, category);
-
+        Organization organization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
         organizationRepo.delete(organization);
-
         assertEquals("Entity did not delete!", 0, organizationRepo.count());
     }
 
@@ -101,89 +130,177 @@ public class OrginzationTest {
     @Transactional
     @Order(value = 5)
     public void testCascade() {
-        Organization organization = organizationRepo.create(TEST_ORGANIZATION_NAME, category);
+    	
+    	// create categories    	
+    	OrganizationCategory childCategory      = organizationCategoryRepo.create(TEST_CHILD_CATEGORY_NAME, TEST_CHILD_CATEGORY_LEVEL);
+    	OrganizationCategory grandChildCategory = organizationCategoryRepo.create(TEST_GRAND_CHILD_CATEGORY_NAME, TEST_GRAND_CHILD_CATEGORY_LEVEL);
+    	
+    	// create organizations
+    	Organization parentOrganization           = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
+    	Organization childOrganization            = organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, childCategory);
+    	Organization grandChildOrganization       = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, grandChildCategory);
+    	Organization detachableParentOrganization = organizationRepo.create(TEST_DETACHABLE_PARENT_ORGANIZATION_NAME, parentCategory);
+    	Organization detachableChildOrganization  = organizationRepo.create(TEST_DETACHABLE_CHILD_ORGANIZATION_NAME, childCategory);
+    	
+    	// create workflows
+    	Workflow parentWorkflow           = new Workflow(TEST_PARENT_WORKFLOW_NAME, TEST_PARENT_WORKFLOW_INHERITABILITY);
+    	Workflow childWorkflow            = new Workflow(TEST_CHILD_WORKFLOW_NAME, TEST_CHILD_WORKFLOW_INHERITABILITY);
+    	Workflow grandChildWorkflow       = new Workflow(TEST_GRAND_CHILD_WORKFLOW_NAME, TEST_GRAND_CHILD_WORKFLOW_INHERITABILITY);
+    	Workflow detachableParentWorkflow = new Workflow(TEST_DETACHABLE_PARENT_WORKFLOW_NAME, TEST_DETACHABLE_PARENT_WORKFLOW_INHERITABILITY);
+    	Workflow detachableChildWorkflow  = new Workflow(TEST_DETACHABLE_CHILD_WORKFLOW_NAME, TEST_DETACHABLE_CHILD_WORKFLOW_INHERITABILITY);
+    	
+    	// create workflow steps
+    	WorkflowStep parentWorkflowStep           = new WorkflowStep(TEST_PARENT_WORKFLOW_STEP_NAME);
+    	WorkflowStep childWorkflowStep            = new WorkflowStep(TEST_CHILD_WORKFLOW_STEP_NAME);
+    	WorkflowStep grandChildWorkflowStep       = new WorkflowStep(TEST_GRAND_CHILD_WORKFLOW_STEP_NAME);
+    	WorkflowStep detachableParentWorkflowStep = new WorkflowStep(TEST_DETACHABLE_PARENT_WORKFLOW_STEP_NAME);
+    	WorkflowStep detachableChildWorkflowStep  = new WorkflowStep(TEST_DETACHABLE_CHILD_WORKFLOW_STEP_NAME);
+    	
+    	// add workflow steps to workflows
+    	parentWorkflow.addWorkflowStep(parentWorkflowStep);
+    	childWorkflow.addWorkflowStep(childWorkflowStep);
+    	grandChildWorkflow.addWorkflowStep(grandChildWorkflowStep);
+    	detachableParentWorkflow.addWorkflowStep(detachableParentWorkflowStep);
+    	detachableChildWorkflow.addWorkflowStep(detachableChildWorkflowStep);
+    	
+        // add workflows to organizations
+        parentOrganization.setWorkflow(parentWorkflow);
+        childOrganization.setWorkflow(childWorkflow);
+        grandChildOrganization.setWorkflow(grandChildWorkflow);
+        detachableParentOrganization.setWorkflow(detachableParentWorkflow);
+        detachableChildOrganization.setWorkflow(detachableChildWorkflow);
+        
+        // add emails to organizations
+        parentOrganization.addEmail(TEST_PARENT_EMAIL);
+        childOrganization.addEmail(TEST_CHILD_EMAIL);
+        grandChildOrganization.addEmail(TEST_GRAND_CHILD_EMAIL);
+        detachableParentOrganization.addEmail(TEST_DETACHABLE_PARENT_EMAIL);
+        detachableChildOrganization.addEmail(TEST_DETACHABLE_CHILD_EMAIL);
+    	
+    	
+    	// add children to parent organizations
+    	parentOrganization.addChildOrganization(childOrganization);
+    	parentOrganization.addChildOrganization(detachableChildOrganization);    	
+    	parentOrganization = organizationRepo.save(parentOrganization);
+    	
+    	detachableParentOrganization.addChildOrganization(childOrganization);         
+    	detachableParentOrganization = organizationRepo.save(detachableParentOrganization);
+            	
+    	// add children(grand children) to child organization
+        childOrganization.addChildOrganization(grandChildOrganization);        
+        childOrganization = organizationRepo.save(childOrganization);
+        
+        
+        // check number of parent organizations of child organization
+        Set<Organization> parentOrganizations = childOrganization.getParentOrganizations();
+        assertEquals("The organization had incorrect number of parents!", 2, parentOrganizations.size());
 
-        assertEquals("The organization category repository is empty!", 1, organizationCategoryRepo.count());
-        assertEquals("The organization repository is empty!", 1, organizationRepo.count());
+        // duck typing of parent organization
+        parentOrganization = childOrganization.getParentById(parentOrganization.getId());
+        assertEquals("The parent organization did not have the correct name!", TEST_PARENT_ORGANIZATION_NAME, parentOrganization.getName());
+        assertEquals("The parent organization category dit not have the correct name!", TEST_PARENT_CATEGORY_NAME, parentOrganization.getCategory().getName());
+        assertEquals("The parent organization category dit not have the correct level!", TEST_PARENT_CATEGORY_LEVEL, parentOrganization.getCategory().getLevel());
 
-        assertEquals("Saved entity did not contain the correct Name!", TEST_ORGANIZATION_NAME, organization.getName());
+        
+        // check number of child organizations of parent organization
+        Set<Organization> childOrganizations = parentOrganization.getChildrenOrganizations();
+        assertEquals("The parent organization had incorrect number of children!", 2, childOrganizations.size());
 
-        assertEquals("Organization category did not have the correct Name!", TEST_CATEGORY_NAME, organization.getCategory().getName());
-        assertEquals("Organization category did not have the correct Level!", TEST_CATEGORY_LEVEL, organization.getCategory().getLevel());
+        // duck typing of child organization
+        childOrganization = parentOrganization.getChildById(childOrganization.getId());
+        assertEquals("The parent's child organization did not have the correct name!", TEST_CHILD_ORGANIZATION_NAME, childOrganization.getName());
+        assertEquals("The parent's child organization category did not have the correct Name!", TEST_CHILD_CATEGORY_NAME, childOrganization.getCategory().getName());
+        assertEquals("The parent's child organization category did not have the correct Level!", TEST_CHILD_CATEGORY_LEVEL, childOrganization.getCategory().getLevel());
 
-        // create and add a parent organization with a parent category
+        
+        // check number of child(grand child) organizations of child organization
+        Set<Organization> grandChildOrganizations = childOrganization.getChildrenOrganizations();
+        assertEquals("The child organization had incorrect number of grand children!", 1, grandChildOrganizations.size());
 
-        OrganizationCategory parentCategory = organizationCategoryRepo.create("Test Parent Category", 0);
-        Organization parentOrganization = organizationRepo.create("Test Parent Organization", parentCategory);
+        // duck typing of grand child organization
+        grandChildOrganization = childOrganization.getChildById(grandChildOrganization.getId());
+        assertEquals("The grand child organization did not have the correct name!", TEST_GRAND_CHILD_ORGANIZATION_NAME, grandChildOrganization.getName());
+        assertEquals("The grand child organization category dit not have the correct Name!", TEST_GRAND_CHILD_CATEGORY_NAME, grandChildOrganization.getCategory().getName());
+        assertEquals("The grand child organization category dit not have the correct Level!", TEST_GRAND_CHILD_CATEGORY_LEVEL, grandChildOrganization.getCategory().getLevel());
 
-        parentOrganization.addChildOrganization(organization);
-        organizationRepo.save(parentOrganization);
+        
+        // check the number of parent organizations of the grand child organization
+        childOrganizations = grandChildOrganization.getParentOrganizations();
+        assertEquals("The grand child organization had incorrect number of parents!", 1, childOrganizations.size());
+        
+        
+        // test detach detachable child organization        
+        parentOrganization.removeChildOrganization(detachableChildOrganization);
+        detachableChildOrganization = organizationRepo.findOne(detachableChildOrganization.getId());
+        assertNotEquals("The detachable child organization was deleted!", null, detachableChildOrganization);
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        childOrganizations = parentOrganization.getChildrenOrganizations();
+        assertEquals("The parent organization had incorrect number of children!", 1, childOrganizations.size());
+        
+        // reatach detachable child organization
+        parentOrganization.addChildOrganization(detachableChildOrganization);    	
+    	parentOrganization = organizationRepo.save(parentOrganization);
+        childOrganizations = parentOrganization.getChildrenOrganizations();
+        assertEquals("The parent organization had incorrect number of children!", 2, childOrganizations.size());
+        
+        // test delete detachable child organization
+        organizationRepo.delete(detachableChildOrganization);
+        assertNotEquals("The parent organization was deleted!", null, parentOrganization);
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        childOrganizations = parentOrganization.getChildrenOrganizations();
+        assertEquals("The parent organization had incorrect number of children!", 1, childOrganizations.size());
+        assertEquals("An organization category was deleted!", 3, organizationCategoryRepo.count());
+        
+        
+        // test detach detachable parent organization
+        childOrganization.removeParentOrganization(detachableParentOrganization);
+        detachableParentOrganization = organizationRepo.findOne(detachableParentOrganization.getId());
+        assertNotEquals("The detachable parent organization was deleted!", null, detachableParentOrganization);        
+        childOrganization = organizationRepo.findOne(childOrganization.getId());
+        parentOrganizations = childOrganization.getParentOrganizations();
+        assertEquals("The child organization had incorrect number of parents!", 1, parentOrganizations.size());
+        
+        // reatach detachable parent organization
+        detachableParentOrganization.addChildOrganization(childOrganization);
+        detachableParentOrganization = organizationRepo.save(detachableParentOrganization);
+        childOrganization = organizationRepo.findOne(childOrganization.getId());
+        parentOrganizations = childOrganization.getParentOrganizations();
+        assertEquals("The child organization had incorrect number of parents!", 2, parentOrganizations.size());
+        
+        // test delete detachable parent organization
+        organizationRepo.delete(detachableParentOrganization);
+        assertNotEquals("The child organization was deleted!", null, childOrganization);
+        childOrganization = organizationRepo.findOne(childOrganization.getId());        
+        parentOrganizations = childOrganization.getParentOrganizations();
+        assertEquals("The child organization had incorrect number of parents!", 1, parentOrganizations.size());
+        assertEquals("An organization category was deleted!", 3, organizationCategoryRepo.count());
 
-        organization = organizationRepo.findOne(organization.getId());
-
-        assertEquals("The organization category repository has incorrect count!", 2, organizationCategoryRepo.count());
-        assertEquals("The organization repository has incorrect count!", 2, organizationRepo.count());
-
-        Set<Organization> parentOrganizations = organization.getParentOrganizations();
-
-        assertEquals("The organization had incorrect number of parents!", 1, parentOrganizations.size());
-
-        parentOrganization = organization.getParentById(parentOrganization.getId());
-
-        assertEquals("The parent organization did not have the correct name!", "Test Parent Organization", parentOrganization.getName());
-
-        assertEquals("The parent organization category dit not have the correct Name!", "Test Parent Category", parentOrganization.getCategory().getName());
-        assertEquals("The parent organization category dit not have the correct Level!", 0, parentOrganization.getCategory().getLevel());
-
-        // check the parent organizations children
-
-        Set<Organization> parentsChildrenOrganizations = parentOrganization.getChildrenOrganizations();
-
-        assertEquals("The parent organization had incorrect number of children!", 1, parentsChildrenOrganizations.size());
-
-        Organization parentsChildOrganization = (Organization) parentsChildrenOrganizations.toArray()[0];
-
-        assertEquals("The parent's child organization did not have the correct name!", TEST_ORGANIZATION_NAME, parentsChildOrganization.getName());
-
-        assertEquals("The parent's child organization category did not have the correct Name!", TEST_CATEGORY_NAME, parentsChildOrganization.getCategory().getName());
-        assertEquals("The parent's child organization category did not have the correct Level!", TEST_CATEGORY_LEVEL, parentsChildOrganization.getCategory().getLevel());
-
-        // create and add a child organization with a child category
-
-        OrganizationCategory childCategory = organizationCategoryRepo.create("Test Child Category", 2);
-        Organization childOrganization = organizationRepo.create("Test Child Organization", childCategory);
-
-        organization.addChildOrganization(childOrganization);
-
-        organization = organizationRepo.save(organization);
-
-        assertEquals("The organization category repository has incorrect count!", 3, organizationCategoryRepo.count());
-        assertEquals("The organization repository has incorrect count!", 3, organizationRepo.count());
-
-        Set<Organization> childOrganizations = organization.getChildrenOrganizations();
-
-        assertEquals("The organization had incorrect number of parents!", 1, childOrganizations.size());
-
-        childOrganization = organization.getChildById(childOrganization.getId());
-
-        assertEquals("The child organization did not have the correct name!", "Test Child Organization", childOrganization.getName());
-
-        assertEquals("The child organization category dit not have the correct Name!", "Test Child Category", childOrganization.getCategory().getName());
-        assertEquals("The child organization category dit not have the correct Level!", 2, childOrganization.getCategory().getLevel());
-
-        // check the child organizations parent
-
-        Set<Organization> childrensParentOrganizations = childOrganization.getParentOrganizations();
-
-        assertEquals("The child organization had incorrect number of parents!", 1, childrensParentOrganizations.size());
-
-        Organization childrensParentOrganization = (Organization) childrensParentOrganizations.toArray()[0];
-
-        assertEquals("The child's parent organization did not have the correct name!", TEST_ORGANIZATION_NAME, childrensParentOrganization.getName());
-
-        assertEquals("The child's parent organization category did not have the correct Name!", TEST_CATEGORY_NAME, childrensParentOrganization.getCategory().getName());
-        assertEquals("The child's parent organization category did not have the correct Level!", TEST_CATEGORY_LEVEL, childrensParentOrganization.getCategory().getLevel());
-
+        
+        // test delete parent organization
+        organizationRepo.delete(parentOrganization);
+        childOrganization = organizationRepo.findOne(childOrganization.getId());
+        assertNotEquals("The child organization was deleted!", null, childOrganization);
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        assertNotEquals("The grand child organization was deleted!", null, childOrganization);
+        parentOrganizations = childOrganization.getParentOrganizations();
+        assertEquals("The child organization had incorrect number of parents!", 0, parentOrganizations.size());
+        assertEquals("An organization category was deleted!", 3, organizationCategoryRepo.count());
+                
+        // test delete child organization
+        organizationRepo.delete(childOrganization);
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        assertNotEquals("The grand child organization was deleted!", null, grandChildOrganization);        
+        childOrganizations = grandChildOrganization.getParentOrganizations();
+        assertEquals("The grand child organization had incorrect number of parents!", 0, childOrganizations.size());
+        assertEquals("An organization category was deleted!", 3, organizationCategoryRepo.count());
+        
+        // test delete grand child organization
+        organizationRepo.delete(grandChildOrganization);
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        assertEquals("The grand child organization was deleted!", null, grandChildOrganization);
+        assertEquals("An organization category was deleted!", 3, organizationCategoryRepo.count());
+        
+        assertEquals("An organization was not deleted!", 0, organizationRepo.count());
     }
 
     @After

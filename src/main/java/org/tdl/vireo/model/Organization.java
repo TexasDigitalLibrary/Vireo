@@ -3,7 +3,7 @@ package org.tdl.vireo.model;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.REFRESH;
-import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
@@ -12,17 +12,17 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
+import javax.persistence.Entity; 
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(uniqueConstraints = { @UniqueConstraint(columnNames = "name"), @UniqueConstraint(columnNames = "category_id") })
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"name", "category_id"}))
 public class Organization extends BaseEntity {
 
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Column(columnDefinition = "VARCHAR(500)", nullable = false)
     private String name;
 
     @ManyToOne(fetch = EAGER, optional = false)
@@ -31,10 +31,10 @@ public class Organization extends BaseEntity {
     @ManyToOne(cascade = ALL, fetch = LAZY, optional = true)
     private Workflow workflow;
 
-    @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY)
+    @ManyToMany(cascade = { DETACH, REFRESH }, fetch = LAZY)
     private Set<Organization> parentOrganizations;
 
-    @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY)
+    @ManyToMany(cascade = { DETACH, REFRESH, PERSIST }, fetch = LAZY)
     private Set<Organization> childrenOrganizations;
 
     @ElementCollection
@@ -125,7 +125,7 @@ public class Organization extends BaseEntity {
      * 
      * @param parentOrganization
      */
-    private void removeParentOrganization(Organization parentOrganization) {
+    public void removeParentOrganization(Organization parentOrganization) {
         getParentOrganizations().remove(parentOrganization);
     }
 
