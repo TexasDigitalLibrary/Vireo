@@ -7,7 +7,6 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.Workflow;
 import org.tdl.vireo.model.repo.WorkflowRepo;
-import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.WorkflowRepoCustom;
 
 public class WorkflowRepoImpl implements WorkflowRepoCustom {
@@ -17,9 +16,6 @@ public class WorkflowRepoImpl implements WorkflowRepoCustom {
 	
 	@Autowired
 	private WorkflowRepo workflowRepo;
-	
-	@Autowired
-	private WorkflowStepRepo workflowStepRepo;
 	
 	@Override
 	public Workflow create(String name, Boolean inheritable) {
