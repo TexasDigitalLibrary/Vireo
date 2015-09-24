@@ -9,12 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.tdl.vireo.Application;
 import org.tdl.vireo.annotations.Order;
+import org.tdl.vireo.model.repo.WorkflowRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.runner.OrderedRunner;
 
 @RunWith(OrderedRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 public class WorkflowStepTest {
+	
+	@Autowired
+	private WorkflowRepo workflowRepo;
 	
 	@Autowired
 	private WorkflowStepRepo workflowStepRepo;
@@ -61,6 +65,7 @@ public class WorkflowStepTest {
 	
 	@After
 	public void cleanUp() {
+		workflowRepo.deleteAll();
 		workflowStepRepo.deleteAll();
 	}
 
