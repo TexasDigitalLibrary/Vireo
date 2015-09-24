@@ -27,9 +27,13 @@ public class Submission extends BaseEntity {
 	@OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
 	private Set<FieldValue> fieldValues;
 	
+	@ManyToMany(cascade = ALL, fetch = EAGER)
+    private Set<WorkflowStep> submissionWorkflowSteps;
+	
 	public Submission() {
 		setOrganizations(new HashSet<Organization>());
 		setFieldValues(new HashSet<FieldValue>());
+		setSubmissionWorkflowSteps(new HashSet<WorkflowStep>());
 	}
 	
 	public Submission(SubmissionState state) {
@@ -113,5 +117,34 @@ public class Submission extends BaseEntity {
 	public void removeFieldValue(FieldValue fieldValue) {
 		getFieldValues().remove(fieldValue);
 	}
-	
+
+    /**
+     * @return the submissionWorkflowSteps
+     */
+    public Set<WorkflowStep> getSubmissionWorkflowSteps() {
+        return submissionWorkflowSteps;
+    }
+
+    /**
+     * @param submissionWorkflowSteps the submissionWorkflowSteps to set
+     */
+    public void setSubmissionWorkflowSteps(Set<WorkflowStep> submissionWorkflowSteps) {
+        this.submissionWorkflowSteps = submissionWorkflowSteps;
+    }
+    
+    /**
+     * 
+     * @param submissionWorkflowStep
+     */
+    public void addSubmissionWorkflowStep(WorkflowStep submissionWorkflowStep) {
+        getSubmissionWorkflowSteps().add(submissionWorkflowStep);
+    }
+    
+    /**
+     * 
+     * @param submissionWorkflowStep
+     */
+    public void removeSubmissionWorkflowStep(WorkflowStep submissionWorkflowStep) {
+       getSubmissionWorkflowSteps().remove(submissionWorkflowStep);
+    }
 }

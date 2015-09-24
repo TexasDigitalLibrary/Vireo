@@ -13,7 +13,7 @@
 	<entity>
 		<entity-name>org.tdl.vireo.model.Submission</entity-name>
 		<entity-width>120</entity-width>
-		<entity-height>110</entity-height>
+		<entity-height>130</entity-height>
 		<entity-X-Coordinate>939</entity-X-Coordinate>
 		<entity-Y-Coordinate>330</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
@@ -36,8 +36,8 @@
 		<entity-name>org.tdl.vireo.model.WorkflowStep</entity-name>
 		<entity-width>120</entity-width>
 		<entity-height>108</entity-height>
-		<entity-X-Coordinate>288</entity-X-Coordinate>
-		<entity-Y-Coordinate>498</entity-Y-Coordinate>
+		<entity-X-Coordinate>334</entity-X-Coordinate>
+		<entity-Y-Coordinate>572</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -47,8 +47,8 @@
 		<entity-name>org.tdl.vireo.model.Workflow</entity-name>
 		<entity-width>120</entity-width>
 		<entity-height>128</entity-height>
-		<entity-X-Coordinate>288</entity-X-Coordinate>
-		<entity-Y-Coordinate>313</entity-Y-Coordinate>
+		<entity-X-Coordinate>334</entity-X-Coordinate>
+		<entity-Y-Coordinate>387</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -69,8 +69,8 @@
 		<entity-name>org.tdl.vireo.model.OrganizationCategory</entity-name>
 		<entity-width>120</entity-width>
 		<entity-height>128</entity-height>
-		<entity-X-Coordinate>500</entity-X-Coordinate>
-		<entity-Y-Coordinate>50</entity-Y-Coordinate>
+		<entity-X-Coordinate>546</entity-X-Coordinate>
+		<entity-Y-Coordinate>124</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -80,8 +80,8 @@
 		<entity-name>org.tdl.vireo.model.Organization</entity-name>
 		<entity-width>120</entity-width>
 		<entity-height>188</entity-height>
-		<entity-X-Coordinate>288</entity-X-Coordinate>
-		<entity-Y-Coordinate>78</entity-Y-Coordinate>
+		<entity-X-Coordinate>334</entity-X-Coordinate>
+		<entity-Y-Coordinate>152</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
