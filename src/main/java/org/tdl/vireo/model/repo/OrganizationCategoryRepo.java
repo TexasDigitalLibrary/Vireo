@@ -12,8 +12,6 @@ public interface OrganizationCategoryRepo extends JpaRepository<OrganizationCate
 
 	public OrganizationCategory create(String name, int level);
 
-//	public OrganizationCategory update(OrganizationCategory category);
-//	
-//	public void delete(OrganizationCategory category);
+	public void delete(OrganizationCategory organizationCategory);
 	
 }

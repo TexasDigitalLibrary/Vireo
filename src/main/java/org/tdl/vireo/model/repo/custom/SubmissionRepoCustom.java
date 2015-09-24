@@ -8,8 +8,6 @@ public interface SubmissionRepoCustom {
 	//TODO: must be create with arguments state and person
 	public Submission create(SubmissionState state);
 	
-//	public Submission update(Submission submission);
-//	
-//	public void delete(Submission submission);
+	public void delete(Submission submission);
 	
 }

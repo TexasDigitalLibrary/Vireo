@@ -10,11 +10,15 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.tdl.vireo.Application;
 import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.model.repo.SubmissionRepo;
+import org.tdl.vireo.model.repo.SubmissionStateRepo;
 import org.tdl.vireo.runner.OrderedRunner;
 
 @RunWith(OrderedRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 public class SubmissionStateTest {
+	
+	@Autowired
+	private SubmissionStateRepo submissionStateRepo;
 	
 	@Autowired
 	private SubmissionRepo submissionRepo;
@@ -61,6 +65,7 @@ public class SubmissionStateTest {
 	
 	@After
 	public void cleanUp() {
+		submissionStateRepo.deleteAll();
 		submissionRepo.deleteAll();
 	}
 

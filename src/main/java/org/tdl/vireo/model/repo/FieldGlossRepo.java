@@ -10,8 +10,6 @@ public interface FieldGlossRepo extends JpaRepository<FieldGloss, Long>, FieldGl
 
 	public FieldGloss create(String value);
 	
-//	public FieldGloss update(FieldGloss gloss);
-//	
-//	public void delete(FieldGloss gloss);
+	public void delete(FieldGloss fieldGloss);
 	
 }

@@ -29,12 +29,7 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
 		organizationCategoryRepo.save(category);
 		return organization;
 	}
-	
-//	@Override
-//	public Organization update(Organization organization) {
-//		return organizationRepo.update(organization);
-//	}
-	
+
 	@Override
 	@Transactional
 	public void delete(Organization organization) {

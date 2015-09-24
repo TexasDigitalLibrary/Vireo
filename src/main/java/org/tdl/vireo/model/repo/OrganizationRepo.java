@@ -13,8 +13,6 @@ public interface OrganizationRepo extends JpaRepository<Organization, Long>, Org
 
 	public Organization create(String name, OrganizationCategory category);
 	
-//	public Organization update(Organization organization);
-	
 	public void delete(Organization organization);
 	
 }

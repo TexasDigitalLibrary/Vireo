@@ -5,14 +5,19 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.tdl.vireo.Application;
 import org.tdl.vireo.annotations.Order;
+import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.runner.OrderedRunner;
 
 @RunWith(OrderedRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 public class WorkflowStepTest {
+	
+	@Autowired
+	private WorkflowStepRepo workflowStepRepo;
 	
 	@BeforeClass
     public static void init() {
@@ -56,7 +61,7 @@ public class WorkflowStepTest {
 	
 	@After
 	public void cleanUp() {
-		
+		workflowStepRepo.deleteAll();
 	}
 
 }

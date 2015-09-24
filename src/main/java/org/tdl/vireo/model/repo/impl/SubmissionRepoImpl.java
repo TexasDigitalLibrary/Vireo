@@ -1,5 +1,9 @@
 package org.tdl.vireo.model.repo.impl;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionState;
@@ -8,6 +12,9 @@ import org.tdl.vireo.model.repo.custom.SubmissionRepoCustom;
 
 public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
+	@PersistenceContext
+	private EntityManager entityManager;
+	
 	@Autowired
 	private SubmissionRepo submissionRepo;
 	
@@ -17,14 +24,10 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 		return submissionRepo.save(new Submission(state));
 	}
 	
-//	@Override
-//	public Submission update(Submission submission) {	
-//		return submissionRepo.update(submission);
-//	}
-//	
-//	@Override
-//	public void delete(Submission submission) {
-//		submissionRepo.delete(submission);
-//	}
+	@Override
+	@Transactional
+	public void delete(Submission submission) {
+		entityManager.remove(entityManager.contains(submission) ? submission : entityManager.merge(submission));
+	}
 	
 }
