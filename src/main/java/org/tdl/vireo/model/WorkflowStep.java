@@ -98,7 +98,7 @@ public class WorkflowStep extends BaseEntity {
 	 */
 	@Override
 	public int hashCode() {
-	    return id == null ? 0 : 29 * id.hashCode();
+	    return id == null ? 0 : 29 * id.hashCode() + 31 * name.hashCode();
 	}
 	
 }

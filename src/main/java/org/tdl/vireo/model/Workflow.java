@@ -19,7 +19,7 @@ public class Workflow extends BaseEntity {
 	@Column(nullable = false)
 	private Boolean inheritable;
 	
-	@OneToMany(cascade = ALL, fetch = EAGER)
+	@OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
 	private Set<WorkflowStep> workflowSteps;
 	
 	public Workflow() {

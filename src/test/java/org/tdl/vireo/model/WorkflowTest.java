@@ -83,7 +83,7 @@ public class WorkflowTest {
 		
 		// test detach detachable workflow step
 		workflow.removeWorkflowStep(detachableWorkflowStep);
-		workflow = workflowRepo.update(workflow);
+		workflow = workflowRepo.save(workflow);
 		assertEquals("The workflow step was not detached!", 1, workflow.getWorkflowSteps().size());	
 		assertEquals("The workflow step was orphaned!", 1, workflowStepRepo.count());
 		
