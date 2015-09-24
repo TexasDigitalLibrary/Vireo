@@ -8,19 +8,19 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Workflow extends BaseEntity {
 	
-	@Column(columnDefinition = "TEXT", nullable = false)
+	@Column(nullable = false)
 	private String name;
-	
-	@ManyToMany(cascade = ALL, fetch = EAGER)
-	private Set<WorkflowStep> workflowSteps;
 	
 	@Column(nullable = false)
 	private Boolean inheritable;
+	
+	@OneToMany(cascade = ALL, fetch = EAGER)
+	private Set<WorkflowStep> workflowSteps;
 	
 	public Workflow() {
 		setWorkflowSteps(new HashSet<WorkflowStep>());
@@ -47,6 +47,21 @@ public class Workflow extends BaseEntity {
 		this.name = name;
 	}
 
+	/**
+	 * @return the inheritable
+	 */
+	public Boolean isInheritable() {
+		return inheritable;
+	}
+
+	/**
+	 * @param inheritable
+	 *            the inheritable to set
+	 */
+	public void setInheritability(Boolean inheritable) {
+		this.inheritable = inheritable;
+	}
+	
 	/**
 	 * @return the workflowSteps
 	 */
@@ -79,18 +94,15 @@ public class Workflow extends BaseEntity {
 	}
 	
 	/**
-	 * @return the inheritable
+	 * 
+	 * @param id
+	 * @return
 	 */
-	public Boolean isInheritable() {
-		return inheritable;
-	}
-
-	/**
-	 * @param inheritable
-	 *            the inheritable to set
-	 */
-	public void setInheritability(Boolean inheritable) {
-		this.inheritable = inheritable;
+	public WorkflowStep getWorkflowStepById(Long id) {
+		for(WorkflowStep workflowStep : getWorkflowSteps()) {
+			if(workflowStep.getId() == id) return workflowStep;
+		}
+		return null;
 	}
 	
 }

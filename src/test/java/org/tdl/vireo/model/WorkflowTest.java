@@ -1,7 +1,6 @@
 package org.tdl.vireo.model;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 
 import org.junit.After;
 import org.junit.Before;
@@ -76,17 +75,22 @@ public class WorkflowTest {
 		
 		// check number of workflow steps
 		assertEquals("Saved entity did not contain the correct number of workflow steps!", 2, workflow.getWorkflowSteps().size());
+		assertEquals("WorkflowStep repo does not have the correct number of workflow steps", 2, workflowStepRepo.count());
 		
 		// duck typing of workflow steps
-		assertEquals("Saved entity did not contain the correct workflow step name!", TEST_WORKFLOW_STEP_NAME, ((WorkflowStep) workflow.getWorkflowSteps().toArray()[1]).getName());
-		assertEquals("Saved entity did not contain the correct workflow detachable step name!", TEST_DETACHABLE_WORKFLOW_STEP_NAME, ((WorkflowStep) workflow.getWorkflowSteps().toArray()[0]).getName());
+		assertEquals("Saved entity did not contain the correct workflow step name!", TEST_WORKFLOW_STEP_NAME, workflow.getWorkflowStepById(workflowStep.getId()).getName());
+		assertEquals("Saved entity did not contain the correct workflow detachable step name!", TEST_DETACHABLE_WORKFLOW_STEP_NAME, workflow.getWorkflowStepById(detachableWorkflowStep.getId()).getName());
 		
 		// test detach detachable workflow step
 		workflow.removeWorkflowStep(detachableWorkflowStep);
-		workflow = workflowRepo.save(workflow);
-		//detachableWorkflowStep = workflowStepRepo.findOne(detachableWorkflowStep.getId());
-		//assertEquals("The detachable workflow step was not deleted!", null, detachableWorkflowStep);
+		workflow = workflowRepo.update(workflow);
+		assertEquals("The workflow step was not detached!", 1, workflow.getWorkflowSteps().size());	
+		assertEquals("The workflow step was orphaned!", 1, workflowStepRepo.count());
 		
+		// test delete workflow
+		workflowRepo.delete(workflow);
+		assertEquals("The workflow was not deleted!", 0, workflowRepo.count());
+		assertEquals("The workflow step was orphaned!", 0, workflowStepRepo.count());		
 	}
 	
 	@After

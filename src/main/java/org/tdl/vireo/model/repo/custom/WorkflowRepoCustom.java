@@ -6,6 +6,8 @@ public interface WorkflowRepoCustom {
 
 	public Workflow create(String name, Boolean inheritable);
 	
+	public Workflow update(Workflow workflow);
+	
 	public void delete(Workflow workflow);
 	
 }
