@@ -75,7 +75,7 @@ public class OrginzationTest {
 
     @Before
     public void setUp() {
-        assertEquals("The repository was not empty!", 0, organizationRepo.count());
+        assertEquals("The organization repository was not empty!", 0, organizationRepo.count());
         parentCategory = organizationCategoryRepo.create(TEST_PARENT_CATEGORY_NAME, TEST_PARENT_CATEGORY_LEVEL);
         assertEquals("The category does not exist!", 1, organizationCategoryRepo.count());
     }

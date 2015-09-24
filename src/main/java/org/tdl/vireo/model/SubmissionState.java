@@ -35,7 +35,7 @@ public class SubmissionState extends BaseEntity {
 	@Column(nullable = false)
 	private Boolean active;
 	
-	@ManyToOne(targetEntity = org.tdl.vireo.model.SubmissionState.class, cascade = { DETACH, REFRESH, MERGE }, optional = true)
+	@ManyToOne(targetEntity = SubmissionState.class, cascade = { DETACH, REFRESH, MERGE }, optional = true)
 	private Set<SubmissionState> transitionSubmissionStates;
 
 	public SubmissionState() {
