@@ -167,7 +167,7 @@ public class OrginzationTest {
         // check number of parent organizations of child organization
         assertEquals("The organization had incorrect number of parents!", 2, childOrganization.getParentOrganizations().size());
 
-        // duck typing of parent organization
+        // verify parent organization
         parentOrganization = childOrganization.getParentById(parentOrganization.getId());
         assertEquals("The parent organization did not have the correct name!", TEST_PARENT_ORGANIZATION_NAME, parentOrganization.getName());
         assertEquals("The parent organization category dit not have the correct name!", TEST_PARENT_CATEGORY_NAME, parentOrganization.getCategory().getName());
@@ -177,7 +177,7 @@ public class OrginzationTest {
         // check number of child organizations of parent organization
         assertEquals("The parent organization had incorrect number of children!", 2, parentOrganization.getChildrenOrganizations().size());
 
-        // duck typing of child organization
+        // verify child organization
         childOrganization = parentOrganization.getChildById(childOrganization.getId());
         assertEquals("The parent's child organization did not have the correct name!", TEST_CHILD_ORGANIZATION_NAME, childOrganization.getName());
         assertEquals("The parent's child organization category did not have the correct Name!", TEST_CHILD_CATEGORY_NAME, childOrganization.getCategory().getName());
@@ -187,7 +187,7 @@ public class OrginzationTest {
         // check number of child(grand child) organizations of child organization
         assertEquals("The child organization had incorrect number of grand children!", 1, childOrganization.getChildrenOrganizations().size());
 
-        // duck typing of grand child organization
+        // verify grand child organization
         grandChildOrganization = childOrganization.getChildById(grandChildOrganization.getId());
         assertEquals("The grand child organization did not have the correct name!", TEST_GRAND_CHILD_ORGANIZATION_NAME, grandChildOrganization.getName());
         assertEquals("The grand child organization category dit not have the correct Name!", TEST_GRAND_CHILD_CATEGORY_NAME, grandChildOrganization.getCategory().getName());

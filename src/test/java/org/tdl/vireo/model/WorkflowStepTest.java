@@ -96,7 +96,7 @@ public class WorkflowStepTest {
 		// check number of field predicates
 		assertEquals("WorkflowStep repo does not have the correct number of field profiles", 2, fieldPredicateRepo.count());
 		
-		// duck typing of field profiles
+		// verify field profiles
 		assertEquals("Saved entity did not contain the field profile repeatable value!", TEST_FIELD_PROFILE_REPEATABLE, workflowStep.getFieldProfileById(fieldProfile.getId()).isRepeatable());
 		assertEquals("Saved entity did not contain the field profile required value!", TEST_FIELD_PROFILE_REQUIRED, workflowStep.getFieldProfileById(fieldProfile.getId()).isRequired());
 		assertEquals("Saved entity did not contain the field profile input type!", TEST_FIELD_PROFILE_INPUT_TYPE, workflowStep.getFieldProfileById(fieldProfile.getId()).getInputType());
@@ -104,7 +104,7 @@ public class WorkflowStepTest {
 		assertEquals("Saved entity did not contain the field profile required value!", TEST_DETACHABLE_FIELD_PROFILE_REQUIRED, workflowStep.getFieldProfileById(detachableFieldProfile.getId()).isRequired());
 		assertEquals("Saved entity did not contain the field profile input type!", TEST_DETACHABLE_FIELD_PROFILE_INPUT_TYPE, workflowStep.getFieldProfileById(detachableFieldProfile.getId()).getInputType());
 		
-		// duck typing of field predicates
+		// verify field predicates
 		assertEquals("Saved entity did not contain the field profile field predicate value!", TEST_FIELD_PREDICATE_VALUE, workflowStep.getFieldProfileById(fieldProfile.getId()).getFieldPredicate().getValue());
 		assertEquals("Saved entity did not contain the field profile field predicate value!", TEST_DETACHABLE_FIELD_PREDICATE_VALUE, workflowStep.getFieldProfileById(detachableFieldProfile.getId()).getFieldPredicate().getValue());
 				
