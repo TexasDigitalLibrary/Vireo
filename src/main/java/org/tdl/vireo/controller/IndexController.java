@@ -7,6 +7,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class IndexController {
+	
 	@RequestMapping("/")
 	public ModelAndView index(@RequestParam(value = "name", defaultValue = "World") String name) {
 	    ModelAndView view = new ModelAndView();
@@ -14,4 +15,5 @@ public class IndexController {
 		view.addObject("name", name);
 		return view;
 	}
+	
 }
