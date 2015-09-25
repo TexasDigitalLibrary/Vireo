@@ -2,7 +2,6 @@ package org.tdl.vireo.model.repo.impl;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.Workflow;
@@ -20,12 +19,6 @@ public class WorkflowRepoImpl implements WorkflowRepoCustom {
 	@Override
 	public Workflow create(String name, Boolean inheritable) {
 		return workflowRepo.save(new Workflow(name, inheritable));
-	}
-		
-	@Override
-	@Transactional
-	public void delete(Workflow workflow) {
-		entityManager.remove(entityManager.contains(workflow) ? workflow : entityManager.merge(workflow));
 	}
 	
 }

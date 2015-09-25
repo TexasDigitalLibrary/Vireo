@@ -2,7 +2,6 @@ package org.tdl.vireo.model.repo.impl;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.FieldPredicate;
@@ -20,12 +19,6 @@ public class FieldPredicateRepoImpl implements FieldPredicateRepoCustom {
 	@Override
 	public FieldPredicate create(String value) {
 		return fieldPredicateRepo.save(new FieldPredicate(value));
-	}
-	
-	@Override
-	@Transactional
-	public void delete(FieldPredicate fieldPredicate) {
-		entityManager.remove(entityManager.contains(fieldPredicate) ? fieldPredicate : entityManager.merge(fieldPredicate));
 	}
 	
 }

@@ -28,7 +28,7 @@ public class Submission extends BaseEntity {
     @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
     private Set<FieldValue> fieldValues;
 
-    @OneToMany(cascade = ALL, fetch = EAGER)
+    @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
     private Set<WorkflowStep> submissionWorkflowSteps;
 
     public Submission() {
@@ -149,4 +149,5 @@ public class Submission extends BaseEntity {
     public void removeSubmissionWorkflowStep(WorkflowStep submissionWorkflowStep) {
         getSubmissionWorkflowSteps().remove(submissionWorkflowStep);
     }
+    
 }

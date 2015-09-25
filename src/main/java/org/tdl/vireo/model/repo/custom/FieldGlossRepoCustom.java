@@ -6,6 +6,4 @@ public interface FieldGlossRepoCustom {
 
 	public FieldGloss create(String value);
 	
-	public void delete(FieldGloss fieldGloss);
-	
 }

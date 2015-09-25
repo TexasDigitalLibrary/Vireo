@@ -6,6 +6,4 @@ public interface FieldPredicateRepoCustom {
 
 	public FieldPredicate create(String value);
 	
-	public void delete(FieldPredicate fieldPredicate);
-	
 }

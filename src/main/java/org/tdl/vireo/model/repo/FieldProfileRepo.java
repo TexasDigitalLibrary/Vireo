@@ -12,6 +12,4 @@ public interface FieldProfileRepo extends JpaRepository<FieldProfile, Long>, Fie
 
 	public FieldProfile create(FieldPredicate fieldPredicate, InputType inputType, Boolean repeatable, Boolean required);
 	
-	public void delete(FieldProfile fieldProfile);
-	
 }

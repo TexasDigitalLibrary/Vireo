@@ -85,27 +85,4 @@ public class WorkflowStep extends BaseEntity {
 		return null;
 	}
 	
-	/**
-	 * 
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if(obj == null) {
-			return false;
-		}
-		if(!(obj instanceof WorkflowStep)) {
-			return false;
-		}
-		WorkflowStep other = (WorkflowStep) obj;
-		return id.equals(other.id);
-	}
-
-	/**
-	 * 
-	 */
-	@Override
-	public int hashCode() {
-	    return id == null ? 0 : 29 * id.hashCode() + 31 * name.hashCode();
-	}
-	
 }

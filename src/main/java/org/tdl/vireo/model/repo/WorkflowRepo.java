@@ -8,8 +8,4 @@ import org.tdl.vireo.model.repo.custom.WorkflowRepoCustom;
 @Repository
 public interface WorkflowRepo extends JpaRepository<Workflow, Long>, WorkflowRepoCustom {
 
-	public Workflow create(String name, Boolean inheritable);
-	
-	public void delete(Workflow workflow);
-	
 }

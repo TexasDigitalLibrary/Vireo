@@ -10,6 +10,4 @@ public interface ControlledVocabularyRepo extends JpaRepository<ControlledVocabu
 
 	public ControlledVocabulary create(String name);
 	
-	public void delete(ControlledVocabulary controlledVocabulary);
-	
 }

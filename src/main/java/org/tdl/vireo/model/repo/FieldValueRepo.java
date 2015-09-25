@@ -11,6 +11,4 @@ public interface FieldValueRepo extends JpaRepository<FieldValue, Long>, FieldVa
 
 	public FieldValue create(FieldPredicate fieldPredicate);
 	
-	public void delete(FieldValue fieldValue);
-	
 }

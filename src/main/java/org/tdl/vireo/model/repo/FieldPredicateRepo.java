@@ -10,6 +10,4 @@ public interface FieldPredicateRepo extends JpaRepository<FieldPredicate, Long>,
 
 	public FieldPredicate create(String value);
 	
-	public void delete(FieldPredicate fieldPredicate);
-	
 }

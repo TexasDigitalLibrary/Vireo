@@ -36,4 +36,13 @@ public abstract class BaseEntity {
 	    }
 	    return false;
 	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public int hashCode() {
+	    return id == null ? 0 : 29 * id.hashCode();
+	}
+	
 }

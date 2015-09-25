@@ -2,7 +2,6 @@ package org.tdl.vireo.model.repo.impl;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.FieldGloss;
@@ -20,12 +19,6 @@ public class FieldGlossRepoImpl implements FieldGlossRepoCustom {
 	@Override
 	public FieldGloss create(String value) {
 		return fieldGlossRepo.save(new FieldGloss(value));
-	}
-	
-	@Override
-	@Transactional
-	public void delete(FieldGloss fieldGloss) {
-		entityManager.remove(entityManager.contains(fieldGloss) ? fieldGloss : entityManager.merge(fieldGloss));
 	}
 	
 }

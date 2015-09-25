@@ -174,27 +174,4 @@ public class FieldProfile extends BaseEntity {
 		getControlledVocabularies().remove(controlledVocabulary);
 	}
 	
-	/**
-	 * 
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if(obj == null) {
-			return false;
-		}
-		if(!(obj instanceof FieldProfile)) {
-			return false;
-		}
-		FieldProfile other = (FieldProfile) obj;
-		return id.equals(other.id);
-	}
-
-	/**
-	 * 
-	 */
-	@Override
-	public int hashCode() {
-	    return id == null ? 0 : 29 * id.hashCode() + 31 * repeatable.hashCode() + 41 * required.hashCode() + 43 * inputType.hashCode();
-	}
-
 }

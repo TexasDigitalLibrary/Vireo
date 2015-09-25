@@ -10,8 +10,4 @@ public interface OrganizationCategoryRepo extends JpaRepository<OrganizationCate
 	
 	public OrganizationCategory findByNameAndLevel(String name, int level);
 
-	public OrganizationCategory create(String name, int level);
-
-	public void delete(OrganizationCategory organizationCategory);
-	
 }

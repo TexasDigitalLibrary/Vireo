@@ -12,7 +12,5 @@ import org.tdl.vireo.model.repo.custom.SubmissionRepoCustom;
 public interface SubmissionRepo extends JpaRepository<Submission, Long>, SubmissionRepoCustom {
 	
     public Set<Submission> findByState(SubmissionState submissionState);
-    
-	public void delete(Submission submission);
-	
+   
 }

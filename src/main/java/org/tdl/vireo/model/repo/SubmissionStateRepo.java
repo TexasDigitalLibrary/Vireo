@@ -8,8 +8,4 @@ import org.tdl.vireo.model.repo.custom.SubmissionStateRepoCustom;
 @Repository
 public interface SubmissionStateRepo extends JpaRepository<SubmissionState, Long>, SubmissionStateRepoCustom {
 
-	public SubmissionState create(String name, Boolean archived, Boolean publishable, Boolean deletable, Boolean editableByReviewer, Boolean editableByStudent, Boolean active);
-	
-	public void delete(SubmissionState submissionState);
-	
 }

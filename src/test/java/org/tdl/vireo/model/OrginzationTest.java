@@ -205,7 +205,7 @@ public class OrginzationTest {
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
         assertEquals("The parent organization had incorrect number of children!", 1, parentOrganization.getChildrenOrganizations().size());
         
-        // reatach detachable child organization
+        // reattach detachable child organization
         parentOrganization.addChildOrganization(detachableChildOrganization);    	
     	parentOrganization = organizationRepo.save(parentOrganization);
         assertEquals("The parent organization had incorrect number of children!", 2, parentOrganization.getChildrenOrganizations().size());
@@ -217,7 +217,7 @@ public class OrginzationTest {
         childOrganization = organizationRepo.findOne(childOrganization.getId());
         assertEquals("The child organization had incorrect number of parents!", 1, childOrganization.getParentOrganizations().size());
         
-        // reatach detachable parent organization
+        // reattach detachable parent organization
         detachableParentOrganization.addChildOrganization(childOrganization);
         detachableParentOrganization = organizationRepo.save(detachableParentOrganization);
         childOrganization = organizationRepo.findOne(childOrganization.getId());
