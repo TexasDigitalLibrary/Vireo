@@ -3,20 +3,17 @@ package org.tdl.vireo.model;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.tdl.vireo.Application;
 import org.tdl.vireo.annotations.Order;
+import org.tdl.vireo.enums.InputType;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.FieldProfileRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.runner.OrderedRunner;
-
-import org.tdl.vireo.enums.InputType;
 
 @RunWith(OrderedRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
@@ -42,16 +39,6 @@ public class WorkflowStepTest {
 	
 	@Autowired
 	private FieldPredicateRepo fieldPredicateRepo;
-	
-	@BeforeClass
-    public static void init() {
-		
-    }
-	
-	@Before
-	public void setUp() {
-
-	}
 	
 	@Test
 	@Order(value = 1)

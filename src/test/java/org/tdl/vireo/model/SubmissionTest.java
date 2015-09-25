@@ -5,7 +5,6 @@ import static org.junit.Assert.assertNotEquals;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,11 +75,6 @@ public class SubmissionTest {
 
     @Autowired
     private WorkflowStepRepo workflowStepRepo;
-
-    @BeforeClass
-    public static void init() {
-
-    }
 
     @Before
     public void setUp() {
