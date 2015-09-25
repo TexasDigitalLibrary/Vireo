@@ -27,4 +27,13 @@ public abstract class BaseEntity {
 		this.id = id;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+	    // if we're the same entity type
+	    if(obj.getClass() == this.getClass()) {
+	        // and we have the same Id
+	        return ((BaseEntity)obj).getId().equals(this.getId());
+	    }
+	    return false;
+	}
 }
