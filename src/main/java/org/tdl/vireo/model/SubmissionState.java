@@ -14,7 +14,7 @@ import javax.persistence.ManyToMany;
 @Entity
 public class SubmissionState extends BaseEntity {
 
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Column(columnDefinition = "VARCHAR(500)", nullable = false, unique = true)
     private String name;
 
     @Column(nullable = false)
