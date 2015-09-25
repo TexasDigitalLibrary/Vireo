@@ -90,7 +90,7 @@ public class WorkflowTest {
 		// test delete workflow
 		workflowRepo.delete(workflow);
 		assertEquals("The workflow was not deleted!", 0, workflowRepo.count());
-		assertEquals("The workflow step was orphaned!", 0, workflowStepRepo.count());		
+		assertEquals("The workflow step was orphaned!", 0, workflowStepRepo.count());
 	}
 	
 	@After

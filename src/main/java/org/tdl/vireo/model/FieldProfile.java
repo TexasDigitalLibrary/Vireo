@@ -20,6 +20,16 @@ import org.tdl.vireo.enums.InputType;
 @Entity
 public class FieldProfile extends BaseEntity {
 
+	@Enumerated
+	@Column(nullable = false)
+	private InputType inputType;
+	
+	@Column(nullable = false)
+	private Boolean repeatable;
+
+	@Column(nullable = false)
+	private Boolean required;
+	
 	@ManyToMany(cascade = ALL, fetch = EAGER)
 	private Set<FieldGloss> fieldGlosses;
 
@@ -28,29 +38,65 @@ public class FieldProfile extends BaseEntity {
 
 	@ManyToMany(cascade = { DETACH, REFRESH, MERGE })
 	private Set<ControlledVocabulary> controlledVocabularies;
-
-	@Column(nullable = false)
-	private Boolean repeatable;
-
-	@Column(nullable = false)
-	private Boolean required;
-
-	@Enumerated
-	@Column(nullable = false)
-	private InputType inputType;
-
+	
 	public FieldProfile() {
 		setFieldGlosses(new HashSet<FieldGloss>());
 		setControlledVocabularies(new HashSet<ControlledVocabulary>());
 	}
 
-	public FieldProfile(FieldPredicate fieldPredicate, Boolean repeatable, Boolean required) {
+	public FieldProfile(FieldPredicate fieldPredicate, InputType inputType, Boolean repeatable, Boolean required) {
 		this();
 		setFieldPredicate(fieldPredicate);
+		setInputType(inputType);
 		setRepeatable(repeatable);
-		setRequired(required);
+		setRequired(required);		
+	}
+	
+	/**
+	 * @return the inputType
+	 */
+	public InputType getInputType() {
+		return inputType;
 	}
 
+	/**
+	 * @param inputType
+	 *            the inputType to set
+	 */
+	public void setInputType(InputType inputType) {
+		this.inputType = inputType;
+	}	
+	
+	/**
+	 * @return the repeatable
+	 */
+	public Boolean isRepeatable() {
+		return repeatable;
+	}
+
+	/**
+	 * @param repeatable
+	 *            the repeatable to set
+	 */
+	public void setRepeatable(Boolean repeatable) {
+		this.repeatable = repeatable;
+	}
+
+	/**
+	 * @return the required
+	 */
+	public Boolean isRequired() {
+		return required;
+	}
+
+	/**
+	 * @param required
+	 *            the required to set
+	 */
+	public void setRequired(Boolean required) {
+		this.required = required;
+	}
+	
 	/**
 	 * @return the fieldGlosses
 	 */
@@ -127,50 +173,28 @@ public class FieldProfile extends BaseEntity {
 	public void removeControlledVocabulary(ControlledVocabulary controlledVocabulary) {
 		getControlledVocabularies().remove(controlledVocabulary);
 	}
-
+	
 	/**
-	 * @return the repeatable
+	 * 
 	 */
-	public Boolean getRepeatable() {
-		return repeatable;
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null) {
+			return false;
+		}
+		if(!(obj instanceof FieldProfile)) {
+			return false;
+		}
+		FieldProfile other = (FieldProfile) obj;
+		return id.equals(other.id);
 	}
 
 	/**
-	 * @param repeatable
-	 *            the repeatable to set
+	 * 
 	 */
-	public void setRepeatable(Boolean repeatable) {
-		this.repeatable = repeatable;
-	}
-
-	/**
-	 * @return the required
-	 */
-	public Boolean getRequired() {
-		return required;
-	}
-
-	/**
-	 * @param required
-	 *            the required to set
-	 */
-	public void setRequired(Boolean required) {
-		this.required = required;
-	}
-
-	/**
-	 * @return the inputType
-	 */
-	public InputType getInputType() {
-		return inputType;
-	}
-
-	/**
-	 * @param inputType
-	 *            the inputType to set
-	 */
-	public void setInputType(InputType inputType) {
-		this.inputType = inputType;
+	@Override
+	public int hashCode() {
+	    return id == null ? 0 : 29 * id.hashCode() + 31 * repeatable.hashCode() + 41 * required.hashCode() + 43 * inputType.hashCode();
 	}
 
 }
