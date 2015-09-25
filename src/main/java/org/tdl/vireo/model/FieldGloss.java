@@ -3,13 +3,16 @@ package org.tdl.vireo.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.enums.Language;
 
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"value" , "language"}))
 public class FieldGloss extends BaseEntity {
 	
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false)
 	private String value;
 	
 	@Enumerated
