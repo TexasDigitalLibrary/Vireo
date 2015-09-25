@@ -2,7 +2,6 @@ package org.tdl.vireo.model.repo.impl;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.ControlledVocabulary;
@@ -20,12 +19,6 @@ public class ControlledVocabularyRepoImpl implements ControlledVocabularyRepoCus
 	@Override
 	public ControlledVocabulary create(String name) {
 		return controlledVocabularyRepo.save(new ControlledVocabulary(name));
-	}
-	
-	@Override
-	@Transactional
-	public void delete(ControlledVocabulary controlledVocabulary) {
-		entityManager.remove(entityManager.contains(controlledVocabulary) ? controlledVocabulary : entityManager.merge(controlledVocabulary));
 	}
 	
 }

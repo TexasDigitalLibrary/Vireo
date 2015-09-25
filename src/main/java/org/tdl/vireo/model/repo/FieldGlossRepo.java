@@ -8,8 +8,6 @@ import org.tdl.vireo.model.repo.custom.FieldGlossRepoCustom;
 @Repository
 public interface FieldGlossRepo extends JpaRepository<FieldGloss, Long>, FieldGlossRepoCustom {
 
-	public FieldGloss create(String value);
-	
-	public void delete(FieldGloss fieldGloss);
+	public FieldGloss findByValue(String value);
 	
 }

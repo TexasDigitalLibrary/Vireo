@@ -6,6 +6,4 @@ public interface ControlledVocabularyRepoCustom {
 
 	public ControlledVocabulary create(String name);
 	
-	public void delete(ControlledVocabulary controlledVocabulary);
-	
 }

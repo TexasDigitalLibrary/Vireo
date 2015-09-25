@@ -27,4 +27,22 @@ public abstract class BaseEntity {
 		this.id = id;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+	    // if we're the same entity type
+	    if(obj.getClass().equals(this.getClass())) {
+	        // and we have the same Id
+	        return ((BaseEntity)obj).getId().equals(this.getId());
+	    }
+	    return false;
+	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public int hashCode() {
+	    return id == null ? 0 : 29 * id.hashCode();
+	}
+	
 }

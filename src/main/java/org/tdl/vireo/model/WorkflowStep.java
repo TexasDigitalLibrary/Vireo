@@ -16,7 +16,7 @@ import javax.persistence.ManyToMany;
 @Entity
 public class WorkflowStep extends BaseEntity {
 
-	@Column(columnDefinition = "TEXT", nullable = false)
+	@Column(nullable = false)
 	private String name;
 
 	@ManyToMany(cascade = { DETACH, REFRESH, MERGE, PERSIST }, fetch = EAGER)
@@ -58,8 +58,8 @@ public class WorkflowStep extends BaseEntity {
 	 * 
 	 * @param param
 	 */
-	public void setFieldProfiles(Set<FieldProfile> param) {
-		this.fieldProfiles = param;
+	public void setFieldProfiles(Set<FieldProfile> fieldProfiles) {
+		this.fieldProfiles = fieldProfiles;
 	}
 	
 	/**
@@ -76,6 +76,13 @@ public class WorkflowStep extends BaseEntity {
 	 */
 	public void removeFieldProfile(FieldProfile fieldProfile) {
 		getFieldProfiles().remove(fieldProfile);
+	}
+	
+	public FieldProfile getFieldProfileById(Long id) {
+		for(FieldProfile fieldProfile : getFieldProfiles()) {
+			if(fieldProfile.getId() == id) return fieldProfile;
+		}
+		return null;
 	}
 	
 }

@@ -2,7 +2,6 @@ package org.tdl.vireo.model.repo.impl;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.Submission;
@@ -22,12 +21,6 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 	//TODO: must be create with arguments state and person
 	public Submission create(SubmissionState state) {
 		return submissionRepo.save(new Submission(state));
-	}
-	
-	@Override
-	@Transactional
-	public void delete(Submission submission) {
-		entityManager.remove(entityManager.contains(submission) ? submission : entityManager.merge(submission));
 	}
 	
 }

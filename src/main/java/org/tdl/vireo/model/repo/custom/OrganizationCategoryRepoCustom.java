@@ -6,6 +6,4 @@ public interface OrganizationCategoryRepoCustom {
 
 	public OrganizationCategory create(String name, int level);
 	
-	public void delete(OrganizationCategory organizationCategory);
-	
 }

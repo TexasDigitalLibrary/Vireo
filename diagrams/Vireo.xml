@@ -3,8 +3,8 @@
 		<entity-name>org.tdl.vireo.model.FieldValue</entity-name>
 		<entity-width>120</entity-width>
 		<entity-height>108</entity-height>
-		<entity-X-Coordinate>1197</entity-X-Coordinate>
-		<entity-Y-Coordinate>476</entity-Y-Coordinate>
+		<entity-X-Coordinate>1188</entity-X-Coordinate>
+		<entity-Y-Coordinate>457</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -25,8 +25,8 @@
 		<entity-name>org.tdl.vireo.model.FieldGloss</entity-name>
 		<entity-width>120</entity-width>
 		<entity-height>90</entity-height>
-		<entity-X-Coordinate>1047</entity-X-Coordinate>
-		<entity-Y-Coordinate>642</entity-Y-Coordinate>
+		<entity-X-Coordinate>1030</entity-X-Coordinate>
+		<entity-Y-Coordinate>661</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -88,17 +88,6 @@
 	</entity>
 
 	<entity>
-		<entity-name>org.tdl.vireo.model.SubmissionState</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>228</entity-height>
-		<entity-X-Coordinate>939</entity-X-Coordinate>
-		<entity-Y-Coordinate>76</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
 		<entity-name>org.tdl.vireo.model.ControlledVocabulary</entity-name>
 		<entity-width>120</entity-width>
 		<entity-height>90</entity-height>
@@ -110,11 +99,11 @@
 	</entity>
 
 	<entity>
-		<entity-name>org.tdl.vireo.model.BaseEntity</entity-name>
+		<entity-name>org.tdl.vireo.model.SubmissionState</entity-name>
 		<entity-width>120</entity-width>
-		<entity-height>70</entity-height>
-		<entity-X-Coordinate>671</entity-X-Coordinate>
-		<entity-Y-Coordinate>435</entity-Y-Coordinate>
+		<entity-height>228</entity-height>
+		<entity-X-Coordinate>939</entity-X-Coordinate>
+		<entity-Y-Coordinate>76</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -124,8 +113,19 @@
 		<entity-name>org.tdl.vireo.model.FieldPredicate</entity-name>
 		<entity-width>120</entity-width>
 		<entity-height>70</entity-height>
-		<entity-X-Coordinate>1016</entity-X-Coordinate>
-		<entity-Y-Coordinate>738</entity-Y-Coordinate>
+		<entity-X-Coordinate>1188</entity-X-Coordinate>
+		<entity-Y-Coordinate>730</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.BaseEntity</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>70</entity-height>
+		<entity-X-Coordinate>760</entity-X-Coordinate>
+		<entity-Y-Coordinate>476</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>

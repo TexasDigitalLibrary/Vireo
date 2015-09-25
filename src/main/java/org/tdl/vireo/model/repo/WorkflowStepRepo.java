@@ -8,8 +8,4 @@ import org.tdl.vireo.model.repo.custom.WorkflowStepRepoCustom;
 @Repository
 public interface WorkflowStepRepo extends JpaRepository<WorkflowStep, Long>, WorkflowStepRepoCustom {
 
-	public WorkflowStep create(String name);
-	
-	public void delete(WorkflowStep workflowStep);
-	
 }

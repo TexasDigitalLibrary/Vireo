@@ -9,5 +9,4 @@ import org.tdl.vireo.model.repo.custom.FieldProfileRepoCustom;
 public interface FieldProfileRepo extends JpaRepository<FieldProfile, Long>, FieldProfileRepoCustom {
 	
 	public void delete(FieldProfile fieldProfile);
-	
 }

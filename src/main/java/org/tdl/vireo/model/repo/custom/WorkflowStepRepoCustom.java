@@ -6,6 +6,4 @@ public interface WorkflowStepRepoCustom {
 
 	public WorkflowStep create(String name);
 	
-	public void delete(WorkflowStep workflowStep);
-	
 }

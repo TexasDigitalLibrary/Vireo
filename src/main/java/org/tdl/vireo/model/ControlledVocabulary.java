@@ -102,4 +102,11 @@ public class ControlledVocabulary extends BaseEntity {
 		getValues().remove(value);
 	}
 	
+	public String getValueByValue(String value) {
+	    for(String v : getValues()) {
+	        if(v.equals(value)) return v;
+	    }
+	    return null;
+	}
+	
 }
