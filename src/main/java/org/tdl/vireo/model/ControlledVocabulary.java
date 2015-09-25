@@ -6,6 +6,9 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+
+import org.tdl.vireo.enums.Language;
 
 @Entity
 public class ControlledVocabulary extends BaseEntity {
@@ -17,6 +20,10 @@ public class ControlledVocabulary extends BaseEntity {
 	@Column(columnDefinition = "TEXT", nullable = true, unique = true)
 	private Set<String> values;
 	
+	@Enumerated
+	@Column(nullable = false)
+	private Language language;
+	
 	public ControlledVocabulary() {
 		setValues(new HashSet<String>());
 	}
@@ -24,6 +31,13 @@ public class ControlledVocabulary extends BaseEntity {
 	public ControlledVocabulary(String name) {
 		this();
 		setName(name);
+		setLanguage(Language.ENGLISH);
+	}
+	
+	public ControlledVocabulary(String name, Language language) {
+		this();
+		setName(name);
+		setLanguage(language);
 	}
 
 	/**
@@ -64,6 +78,22 @@ public class ControlledVocabulary extends BaseEntity {
 		getValues().add(value);
 	}
 	
+	/**
+	 * 
+	 * @return Language language
+	 */
+	public Language getLanguage() {
+		return language;
+	}
+	
+	/**
+	 * 
+	 * @param language
+	 */
+	public void setLanguage(Language language) {
+		this.language = language;
+	}
+
 	/**
 	 * 
 	 * @param value
