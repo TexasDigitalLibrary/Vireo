@@ -11,33 +11,18 @@ import javax.persistence.ManyToOne;
 @Entity
 public class FieldValue extends BaseEntity {
 	
-	@ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
-	private FieldProfile fieldProfile;
-	
 	@Column(columnDefinition = "TEXT", nullable = true)
 	private String value;
 	
+	@ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
+	private FieldPredicate fieldPredicate;
+	
 	public FieldValue() {}
 	
-	public FieldValue(FieldProfile fieldProfile) {
-		setFieldProfile(fieldProfile);
+	public FieldValue(FieldPredicate fieldPredicate) {
+		setFieldPredicate(fieldPredicate);
 	}
-
-	/**
-	 * @return the fieldProfile
-	 */
-	public FieldProfile getFieldProfile() {
-		return fieldProfile;
-	}
-
-	/**
-	 * @param fieldProfile
-	 *            the fieldProfile to set
-	 */
-	public void setFieldProfile(FieldProfile fieldProfile) {
-		this.fieldProfile = fieldProfile;
-	}
-
+		
 	/**
 	 * @return the value
 	 */
@@ -51,6 +36,21 @@ public class FieldValue extends BaseEntity {
 	 */
 	public void setValue(String value) {
 		this.value = value;
+	}
+
+	/**
+	 * @return the fieldProfile
+	 */
+	public FieldPredicate getFieldPredicate() {
+		return fieldPredicate;
+	}
+
+	/**
+	 * @param fieldProfile
+	 *            the fieldProfile to set
+	 */
+	public void setFieldPredicate(FieldPredicate fieldPredicate) {
+		this.fieldPredicate = fieldPredicate;
 	}
 	
 }
