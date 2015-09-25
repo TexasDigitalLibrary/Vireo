@@ -159,7 +159,7 @@ public class StudentTest extends AbstractVireoFunctionalTest {
 		assertEquals("/submit/", part1);
 		assertEquals("/personalInfo", part2);
 		response = GET(response.getHeader("Location"));
-		assertContentMatch("<title>Vireo Thesis and Dissertaion Submital System - Submission - Verify Your Information</title>",response);
+		assertContentMatch("<title>Vireo Thesis and Dissertation Submital System - Submission - Verify Your Information</title>",response);
 	}
 
 	/**
