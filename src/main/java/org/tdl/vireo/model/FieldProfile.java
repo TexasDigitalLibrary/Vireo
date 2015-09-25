@@ -1,10 +1,9 @@
 package org.tdl.vireo.model;
 
-import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
-import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.FetchType.LAZY;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,16 +15,21 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 import org.tdl.vireo.enums.InputType;
+import org.tdl.vireo.enums.Language;
 
 @Entity
 public class FieldProfile extends BaseEntity {
 
-	@ManyToMany(cascade = ALL, fetch = EAGER)
+	@ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY)
 	private Set<FieldGloss> fieldGlosses;
 
 	@ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
 	private FieldPredicate fieldPredicate;
 
+	@Enumerated
+	@Column(nullable = false)
+	private InputType inputType;
+	
 	@ManyToMany(cascade = { DETACH, REFRESH, MERGE })
 	private Set<ControlledVocabulary> controlledVocabularies;
 
@@ -35,18 +39,15 @@ public class FieldProfile extends BaseEntity {
 	@Column(nullable = false)
 	private Boolean required;
 
-	@Enumerated
-	@Column(nullable = false)
-	private InputType inputType;
-
 	public FieldProfile() {
 		setFieldGlosses(new HashSet<FieldGloss>());
 		setControlledVocabularies(new HashSet<ControlledVocabulary>());
 	}
 
-	public FieldProfile(FieldPredicate fieldPredicate, Boolean repeatable, Boolean required) {
+	public FieldProfile(FieldPredicate fieldPredicate, InputType inputType, Boolean repeatable, Boolean required) {
 		this();
 		setFieldPredicate(fieldPredicate);
+		setInputType(inputType);
 		setRepeatable(repeatable);
 		setRequired(required);
 	}
@@ -56,6 +57,31 @@ public class FieldProfile extends BaseEntity {
 	 */
 	public Set<FieldGloss> getFieldGlosses() {
 		return fieldGlosses;
+	}
+	
+	
+	/**
+	 * 
+	 * @param int id
+	 * @return The field gloss that matches the id, or null if not found
+	 */
+	public FieldGloss getFieldGlossById(long id) {
+		for (FieldGloss fieldGloss : fieldGlosses) {
+			if(fieldGloss.getId() == id) return fieldGloss;		
+		}
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @param Language language
+	 * @return The field gloss that matches the language, or null if not found
+	 */
+	public FieldGloss getFieldGlossByLanguage(Language language) {
+		for (FieldGloss fieldGloss : fieldGlosses) {
+			if(fieldGloss.getLanguage() == language) return fieldGloss;		
+		}
+		return null;
 	}
 
 	/**
@@ -102,6 +128,31 @@ public class FieldProfile extends BaseEntity {
 	 */
 	public Set<ControlledVocabulary> getControlledVocabularies() {
 		return controlledVocabularies;
+	}
+	
+	
+	/**
+	 * 
+	 * @param id
+	 * @return The controlled vocabulary that matches the id, or null if not found
+	 */
+	public ControlledVocabulary getControlledVocabularyById(long id) {
+		for (ControlledVocabulary controlledVocabulary : controlledVocabularies) {
+			if(controlledVocabulary.getId() == id) return controlledVocabulary;
+		}
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @param id
+	 * @return The controlled vocabulary that matches the name, or null if not found
+	 */
+	public ControlledVocabulary getControlledVocabularyByName(String name) {
+		for (ControlledVocabulary controlledVocabulary : controlledVocabularies) {
+			if(controlledVocabulary.getName() == name) return controlledVocabulary;
+		}
+		return null;
 	}
 
 	/**
