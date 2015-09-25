@@ -200,6 +200,7 @@ public class OrginzationTest {
         
         // test detach detachable child organization        
         parentOrganization.removeChildOrganization(detachableChildOrganization);
+        parentOrganization = organizationRepo.save(parentOrganization);
         detachableChildOrganization = organizationRepo.findOne(detachableChildOrganization.getId());
         assertNotEquals("The detachable child organization was deleted!", null, detachableChildOrganization);
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
@@ -212,6 +213,7 @@ public class OrginzationTest {
         
         // test detach detachable parent organization
         childOrganization.removeParentOrganization(detachableParentOrganization);
+        childOrganization = organizationRepo.save(childOrganization);
         detachableParentOrganization = organizationRepo.findOne(detachableParentOrganization.getId());
         assertNotEquals("The detachable parent organization was deleted!", null, detachableParentOrganization);        
         childOrganization = organizationRepo.findOne(childOrganization.getId());
