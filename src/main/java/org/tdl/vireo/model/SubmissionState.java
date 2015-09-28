@@ -14,7 +14,7 @@ import javax.persistence.ManyToMany;
 @Entity
 public class SubmissionState extends BaseEntity {
 
-    @Column(columnDefinition = "VARCHAR(500)", nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @Column(nullable = false)
@@ -197,5 +197,4 @@ public class SubmissionState extends BaseEntity {
     public void removeTransitionSubmissionState(SubmissionState transitionSubmissionState) {
         getTransitionSubmissionStates().remove(transitionSubmissionState);
     }
-
 }

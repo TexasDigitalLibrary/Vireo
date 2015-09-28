@@ -17,8 +17,6 @@ import javax.persistence.OneToMany;
 @Entity
 public class Submission extends BaseEntity {
 
-    // TODO: add person entity
-
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
     private SubmissionState state;
 
@@ -149,5 +147,5 @@ public class Submission extends BaseEntity {
     public void removeSubmissionWorkflowStep(WorkflowStep submissionWorkflowStep) {
         getSubmissionWorkflowSteps().remove(submissionWorkflowStep);
     }
-    
+
 }

@@ -115,7 +115,7 @@ public class FieldProfileTest {
 
         fieldGlossFromRepo.setValue(TEST_FIELD_GLOSS_VALUE);
         fieldGlossRepo.save(fieldGlossFromRepo);
-        fieldGlossFromProfile = fieldProfile.getFieldGlossById(fieldGlossFromRepo.getId());
+        fieldGlossFromProfile = fieldProfile.getFieldGlossByLanguage(Language.ENGLISH);
 
         assertEquals("The Gloss value did not persist child to parent!", TEST_FIELD_GLOSS_VALUE, fieldGlossFromProfile.getValue());
 
@@ -134,7 +134,7 @@ public class FieldProfileTest {
 
         // Add new entities to field profile
         fieldProfile.addFieldGloss(fieldGlossToMerge);
-        fieldProfile.setFieldPredicate(fieldPredicateToMerge);
+        fieldProfile.setPredicate(fieldPredicateToMerge);
         fieldProfile.addControlledVocabulary(controlledVocabularyToMerge);
 
         fieldProfileRepo.save(fieldProfile);
@@ -153,7 +153,7 @@ public class FieldProfileTest {
         FieldProfile fieldProfile = createPopulatedFieldProfile();
 
         FieldGloss fieldGlossFromProfile = fieldProfile.getFieldGlossByLanguage(Language.ENGLISH);
-        FieldPredicate fieldPredicateFromProfile = fieldProfile.getFieldPredicate();
+        FieldPredicate fieldPredicateFromProfile = fieldProfile.getPredicate();
         ControlledVocabulary controlledVocabularyFromProfile = fieldProfile.getControlledVocabularyByName(TEST_CONTROLLED_VOCABULARY_NAME);
 
         // Get children entities from db
@@ -173,7 +173,7 @@ public class FieldProfileTest {
 
         // Grab the entities through the parent again
         fieldGlossFromProfile = fieldProfile.getFieldGlossByLanguage(Language.ENGLISH);
-        fieldPredicateFromProfile = fieldProfile.getFieldPredicate();
+        fieldPredicateFromProfile = fieldProfile.getPredicate();
         controlledVocabularyFromProfile = fieldProfile.getControlledVocabularyByName(TEST_CONTROLLED_VOCABULARY_NAME);
 
         // Test REFRESH on fieldGloss, fieldPredicate and controlledVocabulary
@@ -198,7 +198,7 @@ public class FieldProfileTest {
         long fieldGlossFromProfileId = fieldGlossFromProfile.getId();
         long controlledVocabularyFromProfileId = controlledVocabularyFromProfile.getId();
 
-        fieldProfile.setFieldPredicate(replaceFieldPredicate);
+        fieldProfile.setPredicate(replaceFieldPredicate);
         fieldProfile.removeFieldGloss(fieldGlossFromProfile);
         fieldProfile.removeControlledVocabulary(controlledVocabularyFromProfile);
 
@@ -209,9 +209,9 @@ public class FieldProfileTest {
         assertEquals("The remove method deleted the field predicate!", 2, fieldPredicateRepo.count());
         assertEquals("The remove method deleted the controlled vocabulary!", 1, controlledVocabularyRepo.count());
 
-        FieldPredicate fieldPredicate = fieldProfile.getFieldPredicate();
+        FieldPredicate fieldPredicate = fieldProfile.getPredicate();
 
-        assertEquals("The detachment of the field gloss did not persist!!", null, fieldProfile.getFieldGlossById(fieldGlossFromProfileId));
+        assertEquals("The detachment of the field gloss did not persist!!", null, fieldProfile.getFieldGlossByLanguage(Language.ENGLISH));
         assertEquals("The detachment of the field predicate did not persist!", replaceFieldPredicateValue, fieldPredicate.getValue());
         assertEquals("The detachment of the controlled vocabulary did not persist!!", null, fieldProfile.getControlledVocabularyById(controlledVocabularyFromProfileId));
 
@@ -224,7 +224,7 @@ public class FieldProfileTest {
         FieldProfile fieldProfile = createPopulatedFieldProfile();
 
         FieldGloss fieldGlossFromProfile = fieldProfile.getFieldGlossByLanguage(Language.ENGLISH);
-        FieldPredicate fieldPredicateFromProfile = fieldProfile.getFieldPredicate();
+        FieldPredicate fieldPredicateFromProfile = fieldProfile.getPredicate();
         ControlledVocabulary controlledVocabularyFromProfile = fieldProfile.getControlledVocabularyByName(TEST_CONTROLLED_VOCABULARY_NAME);
 
         fieldProfileRepo.delete(fieldProfile);
@@ -266,7 +266,7 @@ public class FieldProfileTest {
 
     private void assertFieldProfileIdentity(FieldProfile fieldProfile) {
         // confirm the entity's identity
-        assertEquals("The field predicate did not contain the correct value!", TEST_FIELD_PREDICATE_VALUE, fieldProfile.getFieldPredicate().getValue());
+        assertEquals("The field predicate did not contain the correct value!", TEST_FIELD_PREDICATE_VALUE, fieldProfile.getPredicate().getValue());
         assertEquals("The field predicate did not contain the correct value!", TEST_FIELD_GLOSS_VALUE, fieldProfile.getFieldGlossByLanguage(Language.ENGLISH).getValue());
         assertEquals("The field predicate did not contain the correct value!", TEST_CONTROLLED_VOCABULARY_NAME, fieldProfile.getControlledVocabularyByName(TEST_CONTROLLED_VOCABULARY_NAME).getName());
         assertEquals("The field predicate did not contain the correct value!", false, fieldProfile.getRepeatable());

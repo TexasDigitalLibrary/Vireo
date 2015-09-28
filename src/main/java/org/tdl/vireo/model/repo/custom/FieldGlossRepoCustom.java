@@ -4,6 +4,5 @@ import org.tdl.vireo.model.FieldGloss;
 
 public interface FieldGlossRepoCustom {
 
-	public FieldGloss create(String value);
-	
+    public FieldGloss create(String value);
 }

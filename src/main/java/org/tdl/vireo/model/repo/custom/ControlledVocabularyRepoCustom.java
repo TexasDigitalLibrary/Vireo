@@ -4,6 +4,5 @@ import org.tdl.vireo.model.ControlledVocabulary;
 
 public interface ControlledVocabularyRepoCustom {
 
-	public ControlledVocabulary create(String name);
-	
+    public ControlledVocabulary create(String name);
 }

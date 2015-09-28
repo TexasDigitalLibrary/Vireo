@@ -4,6 +4,5 @@ import org.tdl.vireo.model.WorkflowStep;
 
 public interface WorkflowStepRepoCustom {
 
-	public WorkflowStep create(String name);
-	
+    public WorkflowStep create(String name);
 }

@@ -5,6 +5,5 @@ import org.tdl.vireo.model.FieldValue;
 
 public interface FieldValueRepoCustom {
 
-	public FieldValue create(FieldPredicate fieldPredicate);
-	
+    public FieldValue create(FieldPredicate fieldPredicate);
 }

@@ -2,8 +2,8 @@ package org.tdl.vireo.model;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.CascadeType.DETACH;
-import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
@@ -12,17 +12,17 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
-import javax.persistence.Entity; 
+import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"name", "category_id"}))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "category_id" }) )
 public class Organization extends BaseEntity {
 
-    @Column(columnDefinition = "VARCHAR(500)", nullable = false)
+    @Column(nullable = false)
     private String name;
 
     @ManyToOne(fetch = EAGER, optional = false)
@@ -130,19 +130,6 @@ public class Organization extends BaseEntity {
     }
 
     /**
-     * 
-     * @param id
-     * @return
-     */
-    public Organization getParentById(Long id) {
-        for (Organization organization : getParentOrganizations()) {
-            if (organization.getId() == id)
-                return organization;
-        }
-        return null;
-    }
-
-    /**
      * @return the childrenOrganizations
      */
     public Set<Organization> getChildrenOrganizations() {
@@ -179,19 +166,6 @@ public class Organization extends BaseEntity {
     }
 
     /**
-     * 
-     * @param id
-     * @return
-     */
-    public Organization getChildById(Long id) {
-        for (Organization organization : getChildrenOrganizations()) {
-            if (organization.getId() == id)
-                return organization;
-        }
-        return null;
-    }
-
-    /**
      * @return the emails
      */
     public Set<String> getEmails() {
@@ -221,5 +195,4 @@ public class Organization extends BaseEntity {
     public void removeEmail(String email) {
         getEmails().remove(email);
     }
-
 }

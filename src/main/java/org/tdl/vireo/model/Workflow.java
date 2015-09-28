@@ -92,17 +92,4 @@ public class Workflow extends BaseEntity {
 	public void removeWorkflowStep(WorkflowStep workflowStep) {
 		getWorkflowSteps().remove(workflowStep);
 	}
-	
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 */
-	public WorkflowStep getWorkflowStepById(Long id) {
-		for(WorkflowStep workflowStep : getWorkflowSteps()) {
-			if(workflowStep.getId() == id) return workflowStep;
-		}
-		return null;
-	}
-	
 }

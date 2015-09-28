@@ -7,5 +7,6 @@ import org.tdl.vireo.model.repo.custom.SubmissionStateRepoCustom;
 
 @Repository
 public interface SubmissionStateRepo extends JpaRepository<SubmissionState, Long>, SubmissionStateRepoCustom {
+
     public SubmissionState findByName(String name);
 }

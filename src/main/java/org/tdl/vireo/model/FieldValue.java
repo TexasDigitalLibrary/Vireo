@@ -10,47 +10,47 @@ import javax.persistence.ManyToOne;
 
 @Entity
 public class FieldValue extends BaseEntity {
-	
-	@Column(columnDefinition = "TEXT", nullable = true)
-	private String value;
-	
-	@ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
-	private FieldPredicate fieldPredicate;
-	
-	public FieldValue() {}
-	
-	public FieldValue(FieldPredicate fieldPredicate) {
-		setFieldPredicate(fieldPredicate);
-	}
-		
-	/**
-	 * @return the value
-	 */
-	public String getValue() {
-		return value;
-	}
 
-	/**
-	 * @param value
-	 *            the value to set
-	 */
-	public void setValue(String value) {
-		this.value = value;
-	}
+    @Column(columnDefinition = "TEXT", nullable = true)
+    private String value;
 
-	/**
-	 * @return the fieldProfile
-	 */
-	public FieldPredicate getFieldPredicate() {
-		return fieldPredicate;
-	}
+    @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
+    private FieldPredicate predicate;
 
-	/**
-	 * @param fieldProfile
-	 *            the fieldProfile to set
-	 */
-	public void setFieldPredicate(FieldPredicate fieldPredicate) {
-		this.fieldPredicate = fieldPredicate;
-	}
-	
+    public FieldValue() {
+    }
+
+    public FieldValue(FieldPredicate predicate) {
+        setPredicate(predicate);
+    }
+
+    /**
+     * @return the value
+     */
+    public String getValue() {
+        return value;
+    }
+
+    /**
+     * @param value
+     *            the value to set
+     */
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    /**
+     * @return the predicate
+     */
+    public FieldPredicate getPredicate() {
+        return predicate;
+    }
+
+    /**
+     * @param predicate
+     *            the predicate to set
+     */
+    public void setPredicate(FieldPredicate predicate) {
+        this.predicate = predicate;
+    }
 }

@@ -9,7 +9,4 @@ import org.tdl.vireo.model.repo.custom.FieldPredicateRepoCustom;
 public interface FieldPredicateRepo extends JpaRepository<FieldPredicate, Long>, FieldPredicateRepoCustom {
 
     public FieldPredicate findByValue(String value);
-    
-	public FieldPredicate create(String value);
-	
 }

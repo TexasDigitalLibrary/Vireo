@@ -13,215 +13,207 @@ import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.enums.InputType;
 import org.tdl.vireo.enums.Language;
 
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "predicate_id" }) )
 public class FieldProfile extends BaseEntity {
 
-	@ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY)
-	private Set<FieldGloss> fieldGlosses;
+    @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
+    private FieldPredicate predicate;
 
-	@ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
-	private FieldPredicate fieldPredicate;
+    @Enumerated
+    @Column(nullable = false)
+    private InputType inputType;
 
-	@Enumerated
-	@Column(nullable = false)
-	private InputType inputType;
-	
-	@ManyToMany(cascade = { DETACH, REFRESH, MERGE })
-	private Set<ControlledVocabulary> controlledVocabularies;
+    @Column(nullable = false)
+    private Boolean repeatable;
 
-	@Column(nullable = false)
-	private Boolean repeatable;
+    @Column(nullable = false)
+    private Boolean required;
 
-	@Column(nullable = false)
-	private Boolean required;
+    @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY)
+    private Set<FieldGloss> fieldGlosses;
 
-	public FieldProfile() {
-		setFieldGlosses(new HashSet<FieldGloss>());
-		setControlledVocabularies(new HashSet<ControlledVocabulary>());
-	}
+    @ManyToMany(cascade = { DETACH, REFRESH, MERGE })
+    private Set<ControlledVocabulary> controlledVocabularies;
 
-	public FieldProfile(FieldPredicate fieldPredicate, InputType inputType, Boolean repeatable, Boolean required) {
-		this();
-		setFieldPredicate(fieldPredicate);
-		setInputType(inputType);
-		setRepeatable(repeatable);
-		setRequired(required);
-	}
+    public FieldProfile() {
+        setFieldGlosses(new HashSet<FieldGloss>());
+        setControlledVocabularies(new HashSet<ControlledVocabulary>());
+    }
 
-	/**
-	 * @return the fieldGlosses
-	 */
-	public Set<FieldGloss> getFieldGlosses() {
-		return fieldGlosses;
-	}
-	
-	
-	/**
-	 * 
-	 * @param int id
-	 * @return The field gloss that matches the id, or null if not found
-	 */
-	public FieldGloss getFieldGlossById(long id) {
-		for (FieldGloss fieldGloss : fieldGlosses) {
-			if(fieldGloss.getId() == id) return fieldGloss;		
-		}
-		return null;
-	}
-	
-	/**
-	 * 
-	 * @param Language language
-	 * @return The field gloss that matches the language, or null if not found
-	 */
-	public FieldGloss getFieldGlossByLanguage(Language language) {
-		for (FieldGloss fieldGloss : fieldGlosses) {
-			if(fieldGloss.getLanguage() == language) return fieldGloss;		
-		}
-		return null;
-	}
+    public FieldProfile(FieldPredicate predicate, InputType inputType, Boolean repeatable, Boolean required) {
+        this();
+        setPredicate(predicate);
+        setInputType(inputType);
+        setRepeatable(repeatable);
+        setRequired(required);
+    }
 
-	/**
-	 * @param fieldGlosses
-	 *            the fieldGlosses to set
-	 */
-	public void setFieldGlosses(Set<FieldGloss> fieldGlosses) {
-		this.fieldGlosses = fieldGlosses;
-	}
+    /**
+     * @return the predicate
+     */
+    public FieldPredicate getPredicate() {
+        return predicate;
+    }
 
-	/**
-	 * 
-	 * @param fieldGloss
-	 */
-	public void addFieldGloss(FieldGloss fieldGloss) {
-		getFieldGlosses().add(fieldGloss);
-	}
+    /**
+     * @param predicate
+     *            the predicate to set
+     */
+    public void setPredicate(FieldPredicate predicate) {
+        this.predicate = predicate;
+    }
 
-	/**
-	 * 
-	 * @param fieldGloss
-	 */
-	public void removeFieldGloss(FieldGloss fieldGloss) {
-		getFieldGlosses().remove(fieldGloss);
-	}
+    /**
+     * @return the inputType
+     */
+    public InputType getInputType() {
+        return inputType;
+    }
 
-	/**
-	 * @return the fieldPredicate
-	 */
-	public FieldPredicate getFieldPredicate() {
-		return fieldPredicate;
-	}
+    /**
+     * @param inputType
+     *            the inputType to set
+     */
+    public void setInputType(InputType inputType) {
+        this.inputType = inputType;
+    }
 
-	/**
-	 * @param fieldPredicate
-	 *            the fieldPredicate to set
-	 */
-	public void setFieldPredicate(FieldPredicate fieldPredicate) {
-		this.fieldPredicate = fieldPredicate;
-	}
+    /**
+     * @return the repeatable
+     */
+    public Boolean getRepeatable() {
+        return repeatable;
+    }
 
-	/**
-	 * @return the controlledVocabularies
-	 */
-	public Set<ControlledVocabulary> getControlledVocabularies() {
-		return controlledVocabularies;
-	}
-	
-	
-	/**
-	 * 
-	 * @param id
-	 * @return The controlled vocabulary that matches the id, or null if not found
-	 */
-	public ControlledVocabulary getControlledVocabularyById(long id) {
-		for (ControlledVocabulary controlledVocabulary : controlledVocabularies) {
-			if(controlledVocabulary.getId() == id) return controlledVocabulary;
-		}
-		return null;
-	}
-	
-	/**
-	 * 
-	 * @param id
-	 * @return The controlled vocabulary that matches the name, or null if not found
-	 */
-	public ControlledVocabulary getControlledVocabularyByName(String name) {
-		for (ControlledVocabulary controlledVocabulary : controlledVocabularies) {
-			if(controlledVocabulary.getName() == name) return controlledVocabulary;
-		}
-		return null;
-	}
+    /**
+     * @param repeatable
+     *            the repeatable to set
+     */
+    public void setRepeatable(Boolean repeatable) {
+        this.repeatable = repeatable;
+    }
 
-	/**
-	 * @param controlledVocabularies
-	 *            the controlledVocab to set
-	 */
-	public void setControlledVocabularies(Set<ControlledVocabulary> controlledVocabularies) {
-		this.controlledVocabularies = controlledVocabularies;
-	}
+    /**
+     * @return the required
+     */
+    public Boolean getRequired() {
+        return required;
+    }
 
-	/**
-	 * 
-	 * @param controlledVocabularies
-	 */
-	public void addControlledVocabulary(ControlledVocabulary controlledVocabulary) {
-		getControlledVocabularies().add(controlledVocabulary);
-	}
+    /**
+     * @param required
+     *            the required to set
+     */
+    public void setRequired(Boolean required) {
+        this.required = required;
+    }
 
-	/**
-	 * 
-	 * @param controlledVocabulary
-	 */
-	public void removeControlledVocabulary(ControlledVocabulary controlledVocabulary) {
-		getControlledVocabularies().remove(controlledVocabulary);
-	}
+    /**
+     * @return the fieldGlosses
+     */
+    public Set<FieldGloss> getFieldGlosses() {
+        return fieldGlosses;
+    }
 
-	/**
-	 * @return the repeatable
-	 */
-	public Boolean getRepeatable() {
-		return repeatable;
-	}
+    /**
+     * 
+     * @param Language
+     *            language
+     * @return The field gloss that matches the language, or null if not found
+     */
+    public FieldGloss getFieldGlossByLanguage(Language language) {
+        for (FieldGloss fieldGloss : getFieldGlosses()) {
+            if (fieldGloss.getLanguage().equals(language))
+                return fieldGloss;
+        }
+        return null;
+    }
 
-	/**
-	 * @param repeatable
-	 *            the repeatable to set
-	 */
-	public void setRepeatable(Boolean repeatable) {
-		this.repeatable = repeatable;
-	}
+    /**
+     * @param fieldGlosses
+     *            the fieldGlosses to set
+     */
+    public void setFieldGlosses(Set<FieldGloss> fieldGlosses) {
+        this.fieldGlosses = fieldGlosses;
+    }
 
-	/**
-	 * @return the required
-	 */
-	public Boolean getRequired() {
-		return required;
-	}
+    /**
+     * 
+     * @param fieldGloss
+     */
+    public void addFieldGloss(FieldGloss fieldGloss) {
+        getFieldGlosses().add(fieldGloss);
+    }
 
-	/**
-	 * @param required
-	 *            the required to set
-	 */
-	public void setRequired(Boolean required) {
-		this.required = required;
-	}
+    /**
+     * 
+     * @param fieldGloss
+     */
+    public void removeFieldGloss(FieldGloss fieldGloss) {
+        getFieldGlosses().remove(fieldGloss);
+    }
 
-	/**
-	 * @return the inputType
-	 */
-	public InputType getInputType() {
-		return inputType;
-	}
+    /**
+     * @return the controlledVocabularies
+     */
+    public Set<ControlledVocabulary> getControlledVocabularies() {
+        return controlledVocabularies;
+    }
 
-	/**
-	 * @param inputType
-	 *            the inputType to set
-	 */
-	public void setInputType(InputType inputType) {
-		this.inputType = inputType;
-	}
+    /**
+     * 
+     * @param id
+     * @return The controlled vocabulary that matches the id, or null if not found
+     */
+    public ControlledVocabulary getControlledVocabularyById(long id) {
+        for (ControlledVocabulary controlledVocabulary : controlledVocabularies) {
+            if (controlledVocabulary.getId() == id)
+                return controlledVocabulary;
+        }
+        return null;
+    }
 
+    /**
+     * 
+     * @param id
+     * @return The controlled vocabulary that matches the name, or null if not found
+     */
+    public ControlledVocabulary getControlledVocabularyByName(String name) {
+        for (ControlledVocabulary controlledVocabulary : controlledVocabularies) {
+            if (controlledVocabulary.getName() == name)
+                return controlledVocabulary;
+        }
+        return null;
+    }
+
+    /**
+     * @param controlledVocabularies
+     *            the controlledVocab to set
+     */
+    public void setControlledVocabularies(Set<ControlledVocabulary> controlledVocabularies) {
+        this.controlledVocabularies = controlledVocabularies;
+    }
+
+    /**
+     * 
+     * @param controlledVocabularies
+     */
+    public void addControlledVocabulary(ControlledVocabulary controlledVocabulary) {
+        getControlledVocabularies().add(controlledVocabulary);
+    }
+
+    /**
+     * 
+     * @param controlledVocabulary
+     */
+    public void removeControlledVocabulary(ControlledVocabulary controlledVocabulary) {
+        getControlledVocabularies().remove(controlledVocabulary);
+    }
 }
