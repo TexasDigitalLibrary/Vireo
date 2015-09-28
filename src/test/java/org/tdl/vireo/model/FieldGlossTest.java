@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.tdl.vireo.Application;
 import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.enums.Language;
@@ -41,7 +42,7 @@ public class FieldGlossTest {
 		fieldGlossRepo.create(TEST_FIELD_GLOSS_VALUE);
         try {
         	fieldGlossRepo.create(TEST_FIELD_GLOSS_VALUE);
-        } catch (Exception e) { /* SUCCESS */ }
+        } catch (DataIntegrityViolationException e) { /* SUCCESS */ }
         assertEquals("The repository duplicated entity!", 1, fieldGlossRepo.count());
 	}
 	

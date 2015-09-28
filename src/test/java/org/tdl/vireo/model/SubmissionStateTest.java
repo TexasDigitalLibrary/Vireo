@@ -4,12 +4,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
 import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.Application;
 import org.tdl.vireo.annotations.Order;
@@ -39,16 +38,6 @@ public class SubmissionStateTest {
 
     @Autowired
     private SubmissionStateRepo submissionStateRepo;
-
-    @BeforeClass
-    public static void init() {
-
-    }
-
-    @Before
-    public void setUp() {
-        assertEquals("The submission state repository was not empty!", 0, submissionStateRepo.count());
-    }
 
     @Test
     @Order(value = 1)
@@ -85,7 +74,7 @@ public class SubmissionStateTest {
         submissionStateRepo.create(TEST_PARENT_SUBMISSION_STATE_NAME, TEST_PARENT_SUBMISSION_STATE_ARCHIVED, TEST_PARENT_SUBMISSION_STATE_PUBLISHABLE, TEST_PARENT_SUBMISSION_STATE_DELETABLE, TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_PARENT_SUBMISSION_STATE_ACTIVE);
         try {
             submissionStateRepo.create(TEST_PARENT_SUBMISSION_STATE_NAME, TEST_PARENT_SUBMISSION_STATE_ARCHIVED, TEST_PARENT_SUBMISSION_STATE_PUBLISHABLE, TEST_PARENT_SUBMISSION_STATE_DELETABLE, TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_PARENT_SUBMISSION_STATE_ACTIVE);
-        } catch (Exception e) {
+        } catch (DataIntegrityViolationException e) {
             /* SUCCESS */
         }
         assertEquals("The repository duplicated submission state!", 1, submissionStateRepo.count());

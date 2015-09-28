@@ -6,11 +6,11 @@ import static org.junit.Assert.assertNotEquals;
 import java.util.Set;
 
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.Application;
 import org.tdl.vireo.annotations.Order;
@@ -33,11 +33,6 @@ public class OrganizationCategoryTest {
 	@Autowired
 	private OrganizationRepo organizationRepo;
 
-	@Before
-	public void setUp() {
-		assertEquals("The repository was not empty!", 0, organizationCategoryRepo.count());
-	}
-
 	@Test
 	@Order(value = 1)
 	public void testCreate() {		
@@ -54,7 +49,7 @@ public class OrganizationCategoryTest {
 		try {
 			organizationCategoryRepo.create(TEST_CATEGORY_NAME, TEST_CATEGORY_LEVEL);
 		}
-		catch(Exception e) { /* SUCCESS */ }		
+		catch(DataIntegrityViolationException e) { /* SUCCESS */ }		
 		assertEquals("The repository duplicated Entity!", 1, organizationCategoryRepo.count());
 	}
 

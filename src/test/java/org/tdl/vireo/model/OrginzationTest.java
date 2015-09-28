@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.Application;
 import org.tdl.vireo.annotations.Order;
@@ -93,7 +94,7 @@ public class OrginzationTest {
         organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
         try {
             organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
-        } catch (Exception e) {
+        } catch (DataIntegrityViolationException e) {
             /* SUCCESS */ }
         assertEquals("The repository duplicated entity!", 1, organizationRepo.count());
     }

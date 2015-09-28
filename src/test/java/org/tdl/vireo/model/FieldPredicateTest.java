@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.tdl.vireo.Application;
 import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
@@ -36,7 +37,7 @@ public class FieldPredicateTest {
 	    fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE);
         try {
             fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE);
-        } catch (Exception e) { /* SUCCESS */ }
+        } catch (DataIntegrityViolationException e) { /* SUCCESS */ }
         assertEquals("The repository duplicated entity!", 1, fieldPredicateRepo.count());
 	}
 	

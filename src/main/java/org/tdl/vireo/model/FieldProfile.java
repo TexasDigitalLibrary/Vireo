@@ -39,7 +39,7 @@ public class FieldProfile extends BaseEntity {
     @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY)
     private Set<FieldGloss> fieldGlosses;
 
-    @ManyToMany(cascade = { DETACH, REFRESH, MERGE })
+    @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY)
     private Set<ControlledVocabulary> controlledVocabularies;
 
     public FieldProfile() {

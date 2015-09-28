@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.tdl.vireo.Application;
 import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
@@ -42,7 +43,7 @@ public class ControlledVocabularyTest {
         ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME);
         try {
             controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME);
-        } catch (Exception e) {
+        } catch (DataIntegrityViolationException e) {
             /* SUCCESS */ }
         assertEquals("The repository duplicated entity!", 1, controlledVocabularyRepo.count());
         controlledVocabulary.addValue(TEST_CONTROLLED_VOCABULARY_VALUE);
@@ -50,7 +51,7 @@ public class ControlledVocabularyTest {
         try {
             controlledVocabulary.addValue(TEST_CONTROLLED_VOCABULARY_VALUE);
             controlledVocabulary = controlledVocabularyRepo.save(controlledVocabulary);
-        } catch (Exception e) {
+        } catch (DataIntegrityViolationException e) {
             /* SUCCESS */ }
         assertEquals("Values duplicated on a controlled vocabulary!", 1, controlledVocabulary.getValues().size());
     }
