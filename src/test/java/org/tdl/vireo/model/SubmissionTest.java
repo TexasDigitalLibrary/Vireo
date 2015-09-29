@@ -25,29 +25,29 @@ import org.tdl.vireo.runner.OrderedRunner;
 @SpringApplicationConfiguration(classes = Application.class)
 public class SubmissionTest {
     
-	static final String TEST_PARENT_SUBMISSION_STATE_NAME = "Test Parent Submission State";
+    private static final String TEST_PARENT_SUBMISSION_STATE_NAME = "Test Parent Submission State";
 	
-    static final boolean TEST_PARENT_SUBMISSION_STATE_ARCHIVED             = true;
-    static final boolean TEST_PARENT_SUBMISSION_STATE_PUBLISHABLE          = true;
-    static final boolean TEST_PARENT_SUBMISSION_STATE_DELETABLE            = true;
-    static final boolean TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_REVIEWER = true;
-    static final boolean TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_STUDENT  = true;
-    static final boolean TEST_PARENT_SUBMISSION_STATE_ACTIVE               = true;
+	private static final boolean TEST_PARENT_SUBMISSION_STATE_ARCHIVED             = true;
+    private static final boolean TEST_PARENT_SUBMISSION_STATE_PUBLISHABLE          = true;
+    private static final boolean TEST_PARENT_SUBMISSION_STATE_DELETABLE            = true;
+    private static final boolean TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_REVIEWER = true;
+    private static final boolean TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_STUDENT  = true;
+    private static final boolean TEST_PARENT_SUBMISSION_STATE_ACTIVE               = true;
 
-    static final String TEST_PARENT_FIELD_PREDICATE_VALUE     = "dc.whatever";
-    static final String TEST_DETACHABLE_FIELD_PREDICATE_VALUE = "dc.detachable";
+    private static final String TEST_PARENT_FIELD_PREDICATE_VALUE     = "dc.whatever";
+    private static final String TEST_DETACHABLE_FIELD_PREDICATE_VALUE = "dc.detachable";
 
-    static final String TEST_PARENT_FIELD_VALUE = "Test Field Value";
+    private static final String TEST_PARENT_FIELD_VALUE = "Test Field Value";
 
-    static final String TEST_PARENT_CATEGORY_NAME = "Test Parent Category";
+    private static final String TEST_PARENT_CATEGORY_NAME = "Test Parent Category";
     
-    static final int TEST_PARENT_CATEGORY_LEVEL = 0;
+    private static final int TEST_PARENT_CATEGORY_LEVEL = 0;
 
-    static final String TEST_PARENT_ORGANIZATION_NAME     = "Test Parent Organization";
-    static final String TEST_DETACHABLE_ORGANIZATION_NAME = "Test Detachable Organization";
+    private static final String TEST_PARENT_ORGANIZATION_NAME     = "Test Parent Organization";
+    private static final String TEST_DETACHABLE_ORGANIZATION_NAME = "Test Detachable Organization";
 
-    static final String TEST_PARENT_WORKFLOW_STEP_NAME     = "Test Parent Workflow Step";
-    static final String TEST_DETACHABLE_WORKFLOW_STEP_NAME = "Test Detachable Workflow Step";
+    private static final String TEST_PARENT_WORKFLOW_STEP_NAME     = "Test Parent Workflow Step";
+    private static final String TEST_DETACHABLE_WORKFLOW_STEP_NAME = "Test Detachable Workflow Step";
     
     private static SubmissionState parentSubmissionState;
     private static FieldPredicate parentFieldPredicate;
@@ -80,7 +80,13 @@ public class SubmissionTest {
     public void setUp() {
         assertEquals("The submission repository was not empty!", 0, submissionRepo.count());
 
-        parentSubmissionState = submissionStateRepo.create(TEST_PARENT_SUBMISSION_STATE_NAME, TEST_PARENT_SUBMISSION_STATE_ARCHIVED, TEST_PARENT_SUBMISSION_STATE_PUBLISHABLE, TEST_PARENT_SUBMISSION_STATE_DELETABLE, TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_PARENT_SUBMISSION_STATE_ACTIVE);
+        parentSubmissionState = submissionStateRepo.create(TEST_PARENT_SUBMISSION_STATE_NAME, 
+                                                           TEST_PARENT_SUBMISSION_STATE_ARCHIVED, 
+                                                           TEST_PARENT_SUBMISSION_STATE_PUBLISHABLE, 
+                                                           TEST_PARENT_SUBMISSION_STATE_DELETABLE, 
+                                                           TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, 
+                                                           TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_STUDENT, 
+                                                           TEST_PARENT_SUBMISSION_STATE_ACTIVE);
         assertEquals("The submission state does not exist!", 1, submissionStateRepo.count());
 
         parentFieldPredicate = fieldPredicateRepo.create(TEST_PARENT_FIELD_PREDICATE_VALUE);

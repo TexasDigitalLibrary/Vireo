@@ -26,6 +26,10 @@ public class WorkflowStep extends BaseEntity {
         setFieldProfiles(new HashSet<FieldProfile>());
     }
 
+    /**
+     * 
+     * @param name
+     */
     public WorkflowStep(String name) {
         this();
         setName(name);

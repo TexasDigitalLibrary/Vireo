@@ -22,10 +22,10 @@ import org.tdl.vireo.runner.OrderedRunner;
 @SpringApplicationConfiguration(classes = Application.class)
 public class OrganizationCategoryTest {
 
-	static final String TEST_CATEGORY_NAME = "Test Category";
-	static final int TEST_CATEGORY_LEVEL = 0;
+    private static final String TEST_CATEGORY_NAME = "Test Category";
+    private static final int TEST_CATEGORY_LEVEL = 0;
 	
-	static final String TEST_ORGANIZATION_NAME = "Test Organization";
+    private static final String TEST_ORGANIZATION_NAME = "Test Organization";
 
 	@Autowired
 	private OrganizationCategoryRepo organizationCategoryRepo;

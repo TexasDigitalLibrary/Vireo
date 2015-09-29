@@ -18,7 +18,7 @@ import org.tdl.vireo.runner.OrderedRunner;
 @SpringApplicationConfiguration(classes = Application.class)
 public class FieldPredicateTest {
     
-    static final String TEST_FIELD_PREDICATE_VALUE = "test.predicate";
+    private static final String TEST_FIELD_PREDICATE_VALUE = "test.predicate";
 	
 	@Autowired
 	private FieldPredicateRepo fieldPredicateRepo;

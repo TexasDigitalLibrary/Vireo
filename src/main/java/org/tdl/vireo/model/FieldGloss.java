@@ -1,34 +1,26 @@
 package org.tdl.vireo.model;
 
+import static javax.persistence.CascadeType.DETACH;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.REFRESH;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Enumerated;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import org.tdl.vireo.enums.Language;
-
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"value" , "language"}))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"value" , "language_id"}))
 public class FieldGloss extends BaseEntity {
 	
 	@Column(nullable = false)
 	private String value;
 	
-	@Enumerated
-	@Column(nullable = false)
+	@ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
 	private Language language;
 	
 	public FieldGloss() {}
-	
-	/**
-	 * Create a FieldGloss with default ENGLISH
-	 * @param value
-	 */
-	public FieldGloss(String value) {
-		setValue(value);
-		setLanguage(Language.ENGLISH);
-	}
 	
 	/**
 	 * 

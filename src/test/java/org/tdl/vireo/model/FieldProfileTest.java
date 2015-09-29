@@ -14,32 +14,33 @@ import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.Application;
 import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.enums.InputType;
-import org.tdl.vireo.enums.Language;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.FieldGlossRepo;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.FieldProfileRepo;
+import org.tdl.vireo.model.repo.LanguageRepo;
 import org.tdl.vireo.runner.OrderedRunner;
 
 @RunWith(OrderedRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 public class FieldProfileTest {
 
-    static final boolean TEST_FIELD_PROFILE_REPEATABLE = true;
-    static final boolean TEST_FIELD_PROFILE_REQUIRED = true;
+    private static final boolean TEST_FIELD_PROFILE_REPEATABLE = true;
+    private static final boolean TEST_FIELD_PROFILE_REQUIRED   = true;
+    
+    private static final InputType TEST_FIELD_PROFILE_INPUT_TYPE = InputType.INPUT_TEXT;
 
-    static final InputType TEST_FIELD_PROFILE_INPUT_TYPE = InputType.INPUT_TEXT;
+    private static final String TEST_LANGUAGE = "English";
+    
+    private static final String TEST_FIELD_PREDICATE_VALUE = "dc.test.predicate";
+    
+    private static final String TEST_FIELD_GLOSS_VALUE          = "Test Gloss";
+    private static final String TEST_CONTROLLED_VOCABULARY_NAME = "Test Controlled Vocaublary";
 
-    static final String TEST_FIELD_GLOSS_VALUE = "Test Gloss";
-    static final String TEST_FIELD_GLOSS_NEW_VALUE = "New Gloss Value";
-    static final Language TEST_FIELD_GLOSS_LANGUAGE = Language.ENGLISH;
-    static final String TEST_FIELD_PREDICATE_VALUE = "dc.test.predicate";
-    static final String TEST_CONTROLLED_VOCABULARY_NAME = "Test Controlled Vocaublary";
-    static final String TEST_CONTROLLED_VOCABULARY_NEW_NAME = "Test New Controlled Vocaublary";
-
-    private static final String TEST_DETACHABLE_FIELD_GLOSS_VALUE = "Test Detachable Gloss";
+    private static final String TEST_DETACHABLE_FIELD_GLOSS_VALUE          = "Test Detachable Gloss";
     private static final String TEST_DETACHABLE_CONTROLLED_VOCABULARY_NAME = "Test Detachable Controlled Vocaublary";
 
+    private Language language;
     private FieldPredicate fieldPredicate;
 
     @Autowired
@@ -50,12 +51,16 @@ public class FieldProfileTest {
 
     @Autowired
     private FieldPredicateRepo fieldPredicateRepo;
+    
+    @Autowired
+    private LanguageRepo languageRepo;
 
     @Autowired
     private ControlledVocabularyRepo controlledVocabularyRepo;
 
     @Before
     public void setUp() {
+        language = languageRepo.create(TEST_LANGUAGE);
         fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE);
     }
 
@@ -63,7 +68,6 @@ public class FieldProfileTest {
     @Order(value = 1)
     public void testCreate() {
         FieldProfile fieldProfile = fieldProfileRepo.create(fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_REQUIRED);
-
         assertEquals("The repository did not save the entity!", 1, fieldProfileRepo.count());
         assertEquals("The field profile did not contain the correct perdicate value!", fieldPredicate, fieldProfile.getPredicate());
         assertEquals("The field predicate did not contain the correct value!", TEST_FIELD_PROFILE_REPEATABLE, fieldProfile.getRepeatable());
@@ -76,9 +80,7 @@ public class FieldProfileTest {
         fieldProfileRepo.create(fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_REQUIRED);
         try {
             fieldProfileRepo.create(fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_REQUIRED);
-        } catch (DataIntegrityViolationException e) {
-            /* SUCCESS */
-        }
+        } catch (DataIntegrityViolationException e) { /* SUCCESS */ }
         assertEquals("The repository duplicated entity!", 1, fieldProfileRepo.count());
     }
 
@@ -88,7 +90,6 @@ public class FieldProfileTest {
     public void testFind() {
         fieldProfileRepo.create(fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_REQUIRED);
         FieldProfile fieldProfile = fieldProfileRepo.findByPredicate(fieldPredicate);
-
         assertNotEquals("Did not find entity!", null, fieldProfile);
         assertEquals("The field profile did not contain the correct perdicate value!", fieldPredicate, fieldProfile.getPredicate());
         assertEquals("The field predicate did not contain the correct value!", TEST_FIELD_PROFILE_REPEATABLE, fieldProfile.getRepeatable());
@@ -111,10 +112,10 @@ public class FieldProfileTest {
         FieldProfile fieldProfile = fieldProfileRepo.create(fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_REQUIRED);
 
         // add glosses and controlled vocabularies
-        FieldGloss fieldGloss = fieldGlossRepo.create(TEST_FIELD_GLOSS_VALUE);
-        FieldGloss detachableFieldGloss = fieldGlossRepo.create(TEST_DETACHABLE_FIELD_GLOSS_VALUE);
-        ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME);
-        ControlledVocabulary detachablecontrolledVocabulary = controlledVocabularyRepo.create(TEST_DETACHABLE_CONTROLLED_VOCABULARY_NAME);
+        FieldGloss fieldGloss = fieldGlossRepo.create(TEST_FIELD_GLOSS_VALUE, language);
+        FieldGloss detachableFieldGloss = fieldGlossRepo.create(TEST_DETACHABLE_FIELD_GLOSS_VALUE, language);
+        ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME, language);
+        ControlledVocabulary detachablecontrolledVocabulary = controlledVocabularyRepo.create(TEST_DETACHABLE_CONTROLLED_VOCABULARY_NAME, language);
         fieldProfile.addFieldGloss(fieldGloss);
         fieldProfile.addControlledVocabulary(controlledVocabulary);
         fieldProfile.addFieldGloss(detachableFieldGloss);
@@ -140,6 +141,7 @@ public class FieldProfileTest {
         // test delete profile
         fieldProfileRepo.delete(fieldProfile);
         assertEquals("An field profile was not deleted!", 0, fieldProfileRepo.count());
+        assertEquals("The language was deleted!", 1, languageRepo.count());
         assertEquals("The field predicate was deleted!", 1, fieldPredicateRepo.count());
         assertEquals("The field glosses were deleted!", 2, fieldGlossRepo.count());
         assertEquals("The controlled vocabularies were deleted!", 2, controlledVocabularyRepo.count());
@@ -151,5 +153,6 @@ public class FieldProfileTest {
         fieldGlossRepo.deleteAll();
         fieldPredicateRepo.deleteAll();
         controlledVocabularyRepo.deleteAll();
+        languageRepo.deleteAll();
     }
 }

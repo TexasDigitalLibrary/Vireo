@@ -19,17 +19,17 @@ import org.tdl.vireo.runner.OrderedRunner;
 @SpringApplicationConfiguration(classes = Application.class)
 public class WorkflowStepTest {
 
-    static final String TEST_WORKFLOW_STEP_NAME = "Test Workflow Step";
+    private static final String TEST_WORKFLOW_STEP_NAME = "Test Workflow Step";
 
-    static final String TEST_FIELD_PREDICATE_VALUE = "test.predicate";
-    static final Boolean TEST_FIELD_PROFILE_REPEATABLE = true;
-    static final Boolean TEST_FIELD_PROFILE_REQUIRED = true;
-    static final InputType TEST_FIELD_PROFILE_INPUT_TYPE = InputType.INPUT_TEXT;
+    private static final String TEST_FIELD_PREDICATE_VALUE       = "test.predicate";
+    private static final Boolean TEST_FIELD_PROFILE_REPEATABLE   = true;
+    private static final Boolean TEST_FIELD_PROFILE_REQUIRED     = true;
+    private static final InputType TEST_FIELD_PROFILE_INPUT_TYPE = InputType.INPUT_TEXT;
 
-    static final String TEST_DETACHABLE_FIELD_PREDICATE_VALUE = "test.detachable.predicate";
-    static final Boolean TEST_DETACHABLE_FIELD_PROFILE_REPEATABLE = false;
-    static final Boolean TEST_DETACHABLE_FIELD_PROFILE_REQUIRED = false;
-    static final InputType TEST_DETACHABLE_FIELD_PROFILE_INPUT_TYPE = InputType.INPUT_TEXT;
+    private static final String TEST_DETACHABLE_FIELD_PREDICATE_VALUE       = "test.detachable.predicate";
+    private static final Boolean TEST_DETACHABLE_FIELD_PROFILE_REPEATABLE   = false;
+    private static final Boolean TEST_DETACHABLE_FIELD_PROFILE_REQUIRED     = false;
+    private static final InputType TEST_DETACHABLE_FIELD_PROFILE_INPUT_TYPE = InputType.INPUT_TEXT;
 
     @Autowired
     private WorkflowStepRepo workflowStepRepo;

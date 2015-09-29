@@ -35,6 +35,10 @@ public class Submission extends BaseEntity {
         setSubmissionWorkflowSteps(new HashSet<WorkflowStep>());
     }
 
+    /**
+     * 
+     * @param state
+     */
     public Submission(SubmissionState state) {
         this();
         setState(state);

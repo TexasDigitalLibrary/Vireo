@@ -22,39 +22,39 @@ import org.tdl.vireo.runner.OrderedRunner;
 @SpringApplicationConfiguration(classes = Application.class)
 public class OrginzationTest {
 
-    static final int TEST_PARENT_CATEGORY_LEVEL = 0;
-    static final int TEST_CHILD_CATEGORY_LEVEL = 1;
-    static final int TEST_GRAND_CHILD_CATEGORY_LEVEL = 2;
+    private static final int TEST_PARENT_CATEGORY_LEVEL      = 0;
+    private static final int TEST_CHILD_CATEGORY_LEVEL       = 1;
+    private static final int TEST_GRAND_CHILD_CATEGORY_LEVEL = 2;
 
-    static final String TEST_PARENT_CATEGORY_NAME = "Test Parent Category";
-    static final String TEST_CHILD_CATEGORY_NAME = "Test Child Category";
-    static final String TEST_GRAND_CHILD_CATEGORY_NAME = "Test Grand Child Category";
+    private static final String TEST_PARENT_CATEGORY_NAME      = "Test Parent Category";
+    private static final String TEST_CHILD_CATEGORY_NAME       = "Test Child Category";
+    private static final String TEST_GRAND_CHILD_CATEGORY_NAME = "Test Grand Child Category";
 
-    static final String TEST_PARENT_ORGANIZATION_NAME = "Test Parent Organization";
-    static final String TEST_CHILD_ORGANIZATION_NAME = "Test Child Organization";
-    static final String TEST_GRAND_CHILD_ORGANIZATION_NAME = "Test Grand Child Organization";
-    static final String TEST_DETACHABLE_PARENT_ORGANIZATION_NAME = "Test Detachable Parent Organization";
-    static final String TEST_DETACHABLE_CHILD_ORGANIZATION_NAME = "Test Detachable Child Organization";
+    private static final String TEST_PARENT_ORGANIZATION_NAME            = "Test Parent Organization";
+    private static final String TEST_CHILD_ORGANIZATION_NAME             = "Test Child Organization";
+    private static final String TEST_GRAND_CHILD_ORGANIZATION_NAME       = "Test Grand Child Organization";
+    private static final String TEST_DETACHABLE_PARENT_ORGANIZATION_NAME = "Test Detachable Parent Organization";
+    private static final String TEST_DETACHABLE_CHILD_ORGANIZATION_NAME  = "Test Detachable Child Organization";
 
-    static final String TEST_PARENT_WORKFLOW_NAME = "Test Parent Workflow";
-    static final String TEST_CHILD_WORKFLOW_NAME = "Test Child Workflow";
-    static final String TEST_GRAND_CHILD_WORKFLOW_NAME = "Test Grand Child Workflow";
-    static final String TEST_DETACHABLE_PARENT_WORKFLOW_NAME = "Test Detachable Parent Workflow";
-    static final String TEST_DETACHABLE_CHILD_WORKFLOW_NAME = "Test Detachable Child Workflow";
+    private static final String TEST_PARENT_WORKFLOW_NAME            = "Test Parent Workflow";
+    private static final String TEST_CHILD_WORKFLOW_NAME             = "Test Child Workflow";
+    private static final String TEST_GRAND_CHILD_WORKFLOW_NAME       = "Test Grand Child Workflow";
+    private static final String TEST_DETACHABLE_PARENT_WORKFLOW_NAME = "Test Detachable Parent Workflow";
+    private static final String TEST_DETACHABLE_CHILD_WORKFLOW_NAME  = "Test Detachable Child Workflow";
 
-    static final boolean TEST_PARENT_WORKFLOW_INHERITABILITY = true;
-    static final boolean TEST_CHILD_WORKFLOW_INHERITABILITY = true;
-    static final boolean TEST_GRAND_CHILD_WORKFLOW_INHERITABILITY = true;
-    static final boolean TEST_DETACHABLE_PARENT_WORKFLOW_INHERITABILITY = true;
-    static final boolean TEST_DETACHABLE_CHILD_WORKFLOW_INHERITABILITY = true;
+    private static final boolean TEST_PARENT_WORKFLOW_INHERITABILITY            = true;
+    private static final boolean TEST_CHILD_WORKFLOW_INHERITABILITY             = true;
+    private static final boolean TEST_GRAND_CHILD_WORKFLOW_INHERITABILITY       = true;
+    private static final boolean TEST_DETACHABLE_PARENT_WORKFLOW_INHERITABILITY = true;
+    private static final boolean TEST_DETACHABLE_CHILD_WORKFLOW_INHERITABILITY  = true;
 
-    static final String TEST_PARENT_EMAIL = "Test Parent Email";
-    static final String TEST_CHILD_EMAIL = "Test Child Email";
-    static final String TEST_GRAND_CHILD_EMAIL = "Test Grand Child Email";
-    static final String TEST_DETACHABLE_PARENT_EMAIL = "Test Detachable Parent Email";
-    static final String TEST_DETACHABLE_CHILD_EMAIL = "Test Detachable Child Email";
+    private static final String TEST_PARENT_EMAIL            = "Test Parent Email";
+    private static final String TEST_CHILD_EMAIL             = "Test Child Email";
+    private static final String TEST_GRAND_CHILD_EMAIL       = "Test Grand Child Email";
+    private static final String TEST_DETACHABLE_PARENT_EMAIL = "Test Detachable Parent Email";
+    private static final String TEST_DETACHABLE_CHILD_EMAIL  = "Test Detachable Child Email";
 
-    OrganizationCategory parentCategory;
+    private OrganizationCategory parentCategory;
 
     @Autowired
     private OrganizationCategoryRepo organizationCategoryRepo;
@@ -94,8 +94,7 @@ public class OrginzationTest {
         organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
         try {
             organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
-        } catch (DataIntegrityViolationException e) {
-            /* SUCCESS */ }
+        } catch (DataIntegrityViolationException e) { /* SUCCESS */ }
         assertEquals("The repository duplicated entity!", 1, organizationRepo.count());
     }
 
@@ -120,7 +119,6 @@ public class OrginzationTest {
     @Transactional
     @Order(value = 5)
     public void testCascade() {
-
         // create categories
         OrganizationCategory childCategory = organizationCategoryRepo.create(TEST_CHILD_CATEGORY_NAME, TEST_CHILD_CATEGORY_LEVEL);
         OrganizationCategory grandChildCategory = organizationCategoryRepo.create(TEST_GRAND_CHILD_CATEGORY_NAME, TEST_GRAND_CHILD_CATEGORY_LEVEL);

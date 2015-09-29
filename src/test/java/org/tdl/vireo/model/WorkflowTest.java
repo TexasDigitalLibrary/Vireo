@@ -17,12 +17,12 @@ import org.tdl.vireo.runner.OrderedRunner;
 @SpringApplicationConfiguration(classes = Application.class)
 public class WorkflowTest {
 
-    static final String TEST_WORKFLOW_NAME = "Test Workflow";
+    private static final String TEST_WORKFLOW_NAME = "Test Workflow";
 
-    static final boolean TEST_WORKFLOW_INHERITABILITY = true;
+    private static final boolean TEST_WORKFLOW_INHERITABILITY = true;
 
-    static final String TEST_WORKFLOW_STEP_NAME = "Test Workflow Step";
-    static final String TEST_DETACHABLE_WORKFLOW_STEP_NAME = "Test Detachable Workflow Step";
+    private static final String TEST_WORKFLOW_STEP_NAME            = "Test Workflow Step";
+    private static final String TEST_DETACHABLE_WORKFLOW_STEP_NAME = "Test Detachable Workflow Step";
 
     @Autowired
     private WorkflowRepo workflowRepo;

@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><entities>
 	<entity>
+		<entity-name>org.tdl.vireo.model.Language</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>70</entity-height>
+		<entity-X-Coordinate>939</entity-X-Coordinate>
+		<entity-Y-Coordinate>528</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
 		<entity-name>org.tdl.vireo.model.FieldValue</entity-name>
 		<entity-width>120</entity-width>
 		<entity-height>108</entity-height>
@@ -24,9 +35,9 @@
 	<entity>
 		<entity-name>org.tdl.vireo.model.FieldGloss</entity-name>
 		<entity-width>120</entity-width>
-		<entity-height>90</entity-height>
-		<entity-X-Coordinate>1030</entity-X-Coordinate>
-		<entity-Y-Coordinate>661</entity-Y-Coordinate>
+		<entity-height>108</entity-height>
+		<entity-X-Coordinate>1032</entity-X-Coordinate>
+		<entity-Y-Coordinate>670</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -90,9 +101,9 @@
 	<entity>
 		<entity-name>org.tdl.vireo.model.ControlledVocabulary</entity-name>
 		<entity-width>120</entity-width>
-		<entity-height>90</entity-height>
-		<entity-X-Coordinate>961</entity-X-Coordinate>
-		<entity-Y-Coordinate>811</entity-Y-Coordinate>
+		<entity-height>128</entity-height>
+		<entity-X-Coordinate>913</entity-X-Coordinate>
+		<entity-Y-Coordinate>820</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -114,7 +125,7 @@
 		<entity-width>120</entity-width>
 		<entity-height>70</entity-height>
 		<entity-X-Coordinate>1188</entity-X-Coordinate>
-		<entity-Y-Coordinate>730</entity-Y-Coordinate>
+		<entity-Y-Coordinate>764</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>

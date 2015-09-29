@@ -19,22 +19,22 @@ import org.tdl.vireo.runner.OrderedRunner;
 @SpringApplicationConfiguration(classes = Application.class)
 public class SubmissionStateTest {
 
-    static final String TEST_PARENT_SUBMISSION_STATE_NAME = "Test Parent Submission State";
-    static final boolean TEST_PARENT_SUBMISSION_STATE_ARCHIVED = true;
-    static final boolean TEST_PARENT_SUBMISSION_STATE_PUBLISHABLE = true;
-    static final boolean TEST_PARENT_SUBMISSION_STATE_DELETABLE = true;
-    static final boolean TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_REVIEWER = true;
-    static final boolean TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_STUDENT = true;
-    static final boolean TEST_PARENT_SUBMISSION_STATE_ACTIVE = true;
+    private static final String TEST_PARENT_SUBMISSION_STATE_NAME                  = "Test Parent Submission State";
+    private static final boolean TEST_PARENT_SUBMISSION_STATE_ARCHIVED             = true;
+    private static final boolean TEST_PARENT_SUBMISSION_STATE_PUBLISHABLE          = true;
+    private static final boolean TEST_PARENT_SUBMISSION_STATE_DELETABLE            = true;
+    private static final boolean TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_REVIEWER = true;
+    private static final boolean TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_STUDENT  = true;
+    private static final boolean TEST_PARENT_SUBMISSION_STATE_ACTIVE               = true;
 
-    static final String TEST_TRANSITION1_SUBMISSION_STATE_NAME = "Test Transition1 Submission State";
-    static final String TEST_TRANSITION2_SUBMISSION_STATE_NAME = "Test Transition2 Submission State";
-    static final boolean TEST_TRANSITION_SUBMISSION_STATE_ARCHIVED = true;
-    static final boolean TEST_TRANSITION_SUBMISSION_STATE_PUBLISHABLE = true;
-    static final boolean TEST_TRANSITION_SUBMISSION_STATE_DELETABLE = true;
-    static final boolean TEST_TRANSITION_SUBMISSION_STATE_EDITABLE_BY_REVIEWER = true;
-    static final boolean TEST_TRANSITION_SUBMISSION_STATE_EDITABLE_BY_STUDENT = true;
-    static final boolean TEST_TRANSITION_SUBMISSION_STATE_ACTIVE = true;
+    private static final String TEST_TRANSITION1_SUBMISSION_STATE_NAME                 = "Test Transition1 Submission State";
+    private static final String TEST_TRANSITION2_SUBMISSION_STATE_NAME                 = "Test Transition2 Submission State";
+    private static final boolean TEST_TRANSITION_SUBMISSION_STATE_ARCHIVED             = true;
+    private static final boolean TEST_TRANSITION_SUBMISSION_STATE_PUBLISHABLE          = true;
+    private static final boolean TEST_TRANSITION_SUBMISSION_STATE_DELETABLE            = true;
+    private static final boolean TEST_TRANSITION_SUBMISSION_STATE_EDITABLE_BY_REVIEWER = true;
+    private static final boolean TEST_TRANSITION_SUBMISSION_STATE_EDITABLE_BY_STUDENT  = true;
+    private static final boolean TEST_TRANSITION_SUBMISSION_STATE_ACTIVE               = true;
 
     @Autowired
     private SubmissionStateRepo submissionStateRepo;
@@ -42,8 +42,20 @@ public class SubmissionStateTest {
     @Test
     @Order(value = 1)
     public void testCreate() {
-        SubmissionState parentSubmissionState = submissionStateRepo.create(TEST_PARENT_SUBMISSION_STATE_NAME, TEST_PARENT_SUBMISSION_STATE_ARCHIVED, TEST_PARENT_SUBMISSION_STATE_PUBLISHABLE, TEST_PARENT_SUBMISSION_STATE_DELETABLE, TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_PARENT_SUBMISSION_STATE_ACTIVE);
-        SubmissionState transitionSubmissionState = submissionStateRepo.create(TEST_TRANSITION1_SUBMISSION_STATE_NAME, TEST_TRANSITION_SUBMISSION_STATE_ARCHIVED, TEST_TRANSITION_SUBMISSION_STATE_PUBLISHABLE, TEST_TRANSITION_SUBMISSION_STATE_DELETABLE, TEST_TRANSITION_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_TRANSITION_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_TRANSITION_SUBMISSION_STATE_ACTIVE);
+        SubmissionState parentSubmissionState = submissionStateRepo.create(TEST_PARENT_SUBMISSION_STATE_NAME, 
+                                                                           TEST_PARENT_SUBMISSION_STATE_ARCHIVED, 
+                                                                           TEST_PARENT_SUBMISSION_STATE_PUBLISHABLE, 
+                                                                           TEST_PARENT_SUBMISSION_STATE_DELETABLE, 
+                                                                           TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, 
+                                                                           TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_STUDENT, 
+                                                                           TEST_PARENT_SUBMISSION_STATE_ACTIVE);
+        SubmissionState transitionSubmissionState = submissionStateRepo.create(TEST_TRANSITION1_SUBMISSION_STATE_NAME, 
+                                                                               TEST_TRANSITION_SUBMISSION_STATE_ARCHIVED, 
+                                                                               TEST_TRANSITION_SUBMISSION_STATE_PUBLISHABLE, 
+                                                                               TEST_TRANSITION_SUBMISSION_STATE_DELETABLE, 
+                                                                               TEST_TRANSITION_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, 
+                                                                               TEST_TRANSITION_SUBMISSION_STATE_EDITABLE_BY_STUDENT, 
+                                                                               TEST_TRANSITION_SUBMISSION_STATE_ACTIVE);
         parentSubmissionState.addTransitionSubmissionState(transitionSubmissionState);
         submissionStateRepo.save(parentSubmissionState);
 
@@ -71,11 +83,22 @@ public class SubmissionStateTest {
     @Test
     @Order(value = 2)
     public void testDuplication() {
-        submissionStateRepo.create(TEST_PARENT_SUBMISSION_STATE_NAME, TEST_PARENT_SUBMISSION_STATE_ARCHIVED, TEST_PARENT_SUBMISSION_STATE_PUBLISHABLE, TEST_PARENT_SUBMISSION_STATE_DELETABLE, TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_PARENT_SUBMISSION_STATE_ACTIVE);
+        submissionStateRepo.create(TEST_PARENT_SUBMISSION_STATE_NAME, 
+                                   TEST_PARENT_SUBMISSION_STATE_ARCHIVED, 
+                                   TEST_PARENT_SUBMISSION_STATE_PUBLISHABLE, 
+                                   TEST_PARENT_SUBMISSION_STATE_DELETABLE, 
+                                   TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, 
+                                   TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_STUDENT, 
+                                   TEST_PARENT_SUBMISSION_STATE_ACTIVE);
         try {
-            submissionStateRepo.create(TEST_PARENT_SUBMISSION_STATE_NAME, TEST_PARENT_SUBMISSION_STATE_ARCHIVED, TEST_PARENT_SUBMISSION_STATE_PUBLISHABLE, TEST_PARENT_SUBMISSION_STATE_DELETABLE, TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_PARENT_SUBMISSION_STATE_ACTIVE);
-        } catch (DataIntegrityViolationException e) {
-            /* SUCCESS */
+            submissionStateRepo.create(TEST_PARENT_SUBMISSION_STATE_NAME, 
+                                       TEST_PARENT_SUBMISSION_STATE_ARCHIVED, 
+                                       TEST_PARENT_SUBMISSION_STATE_PUBLISHABLE, 
+                                       TEST_PARENT_SUBMISSION_STATE_DELETABLE, 
+                                       TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, 
+                                       TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_STUDENT, 
+                                       TEST_PARENT_SUBMISSION_STATE_ACTIVE);
+        } catch (DataIntegrityViolationException e) { /* SUCCESS */
         }
         assertEquals("The repository duplicated submission state!", 1, submissionStateRepo.count());
     }
@@ -83,7 +106,13 @@ public class SubmissionStateTest {
     @Test
     @Order(value = 3)
     public void testFind() {
-        submissionStateRepo.create(TEST_PARENT_SUBMISSION_STATE_NAME, TEST_PARENT_SUBMISSION_STATE_ARCHIVED, TEST_PARENT_SUBMISSION_STATE_PUBLISHABLE, TEST_PARENT_SUBMISSION_STATE_DELETABLE, TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_PARENT_SUBMISSION_STATE_ACTIVE);
+        submissionStateRepo.create(TEST_PARENT_SUBMISSION_STATE_NAME, 
+                                   TEST_PARENT_SUBMISSION_STATE_ARCHIVED, 
+                                   TEST_PARENT_SUBMISSION_STATE_PUBLISHABLE, 
+                                   TEST_PARENT_SUBMISSION_STATE_DELETABLE, 
+                                   TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, 
+                                   TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_STUDENT, 
+                                   TEST_PARENT_SUBMISSION_STATE_ACTIVE);
         SubmissionState parentSubmissionState = submissionStateRepo.findByName(TEST_PARENT_SUBMISSION_STATE_NAME);
         assertNotEquals("Did not find submission state!", null, parentSubmissionState);
         assertEquals("Found submission state did not contain the correct name!", TEST_PARENT_SUBMISSION_STATE_NAME, parentSubmissionState.getName());
@@ -92,7 +121,13 @@ public class SubmissionStateTest {
     @Test
     @Order(value = 4)
     public void testDelete() {
-        SubmissionState parentSubmissionState = submissionStateRepo.create(TEST_PARENT_SUBMISSION_STATE_NAME, TEST_PARENT_SUBMISSION_STATE_ARCHIVED, TEST_PARENT_SUBMISSION_STATE_PUBLISHABLE, TEST_PARENT_SUBMISSION_STATE_DELETABLE, TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_PARENT_SUBMISSION_STATE_ACTIVE);
+        SubmissionState parentSubmissionState = submissionStateRepo.create(TEST_PARENT_SUBMISSION_STATE_NAME, 
+                                                                           TEST_PARENT_SUBMISSION_STATE_ARCHIVED, 
+                                                                           TEST_PARENT_SUBMISSION_STATE_PUBLISHABLE, 
+                                                                           TEST_PARENT_SUBMISSION_STATE_DELETABLE, 
+                                                                           TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, 
+                                                                           TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_STUDENT, 
+                                                                           TEST_PARENT_SUBMISSION_STATE_ACTIVE);
         submissionStateRepo.delete(parentSubmissionState);
         assertEquals("Submission state did not delete!", 0, submissionStateRepo.count());
     }
@@ -102,9 +137,27 @@ public class SubmissionStateTest {
     @Transactional
     public void testCascade() {
         // create states
-        SubmissionState parentSubmissionState = submissionStateRepo.create(TEST_PARENT_SUBMISSION_STATE_NAME, TEST_PARENT_SUBMISSION_STATE_ARCHIVED, TEST_PARENT_SUBMISSION_STATE_PUBLISHABLE, TEST_PARENT_SUBMISSION_STATE_DELETABLE, TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_PARENT_SUBMISSION_STATE_ACTIVE);
-        SubmissionState transition1SubmissionState = submissionStateRepo.create(TEST_TRANSITION1_SUBMISSION_STATE_NAME, TEST_TRANSITION_SUBMISSION_STATE_ARCHIVED, TEST_TRANSITION_SUBMISSION_STATE_PUBLISHABLE, TEST_TRANSITION_SUBMISSION_STATE_DELETABLE, TEST_TRANSITION_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_TRANSITION_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_TRANSITION_SUBMISSION_STATE_ACTIVE);
-        SubmissionState transition2SubmissionState = submissionStateRepo.create(TEST_TRANSITION2_SUBMISSION_STATE_NAME, TEST_TRANSITION_SUBMISSION_STATE_ARCHIVED, TEST_TRANSITION_SUBMISSION_STATE_PUBLISHABLE, TEST_TRANSITION_SUBMISSION_STATE_DELETABLE, TEST_TRANSITION_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_TRANSITION_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_TRANSITION_SUBMISSION_STATE_ACTIVE);
+        SubmissionState parentSubmissionState = submissionStateRepo.create(TEST_PARENT_SUBMISSION_STATE_NAME, 
+                                                                           TEST_PARENT_SUBMISSION_STATE_ARCHIVED, 
+                                                                           TEST_PARENT_SUBMISSION_STATE_PUBLISHABLE, 
+                                                                           TEST_PARENT_SUBMISSION_STATE_DELETABLE, 
+                                                                           TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, 
+                                                                           TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_STUDENT, 
+                                                                           TEST_PARENT_SUBMISSION_STATE_ACTIVE);
+        SubmissionState transition1SubmissionState = submissionStateRepo.create(TEST_TRANSITION1_SUBMISSION_STATE_NAME, 
+                                                                                TEST_TRANSITION_SUBMISSION_STATE_ARCHIVED, 
+                                                                                TEST_TRANSITION_SUBMISSION_STATE_PUBLISHABLE, 
+                                                                                TEST_TRANSITION_SUBMISSION_STATE_DELETABLE, 
+                                                                                TEST_TRANSITION_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, 
+                                                                                TEST_TRANSITION_SUBMISSION_STATE_EDITABLE_BY_STUDENT, 
+                                                                                TEST_TRANSITION_SUBMISSION_STATE_ACTIVE);
+        SubmissionState transition2SubmissionState = submissionStateRepo.create(TEST_TRANSITION2_SUBMISSION_STATE_NAME, 
+                                                                                TEST_TRANSITION_SUBMISSION_STATE_ARCHIVED, 
+                                                                                TEST_TRANSITION_SUBMISSION_STATE_PUBLISHABLE, 
+                                                                                TEST_TRANSITION_SUBMISSION_STATE_DELETABLE, 
+                                                                                TEST_TRANSITION_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, 
+                                                                                TEST_TRANSITION_SUBMISSION_STATE_EDITABLE_BY_STUDENT, 
+                                                                                TEST_TRANSITION_SUBMISSION_STATE_ACTIVE);
 
         // add transitional2 submission state to transitional1 submission state
         transition1SubmissionState.addTransitionSubmissionState(transition2SubmissionState);

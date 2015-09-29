@@ -29,6 +29,11 @@ public class OrganizationCategory extends BaseEntity {
         setOrganizations(new HashSet<Organization>());
     }
 
+    /**
+     * 
+     * @param name
+     * @param level
+     */
     public OrganizationCategory(String name, int level) {
         this();
         setName(name);

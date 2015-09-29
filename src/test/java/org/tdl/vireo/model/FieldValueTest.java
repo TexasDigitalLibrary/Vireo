@@ -17,15 +17,14 @@ import org.tdl.vireo.runner.OrderedRunner;
 @SpringApplicationConfiguration(classes = Application.class)
 public class FieldValueTest {
 	
-	static final String TEST_FIELD_PREDICATE_VALUE = "test.predicate";
-	static final String TEST_FIELD_VALUE = "Test Field Value";
+    private static final String TEST_FIELD_PREDICATE_VALUE = "test.predicate";
+    private static final String TEST_FIELD_VALUE = "Test Field Value";
 	
 	@Autowired
 	private FieldValueRepo fieldValueRepo;
 	
 	@Autowired
 	private FieldPredicateRepo fieldPredicateRepo;
-	
 	
 	@Test
 	@Order(value = 1)

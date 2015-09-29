@@ -9,9 +9,12 @@ public class FieldPredicate extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String value;
 
-    public FieldPredicate() {
-    }
+    public FieldPredicate() {}
 
+    /**
+     * 
+     * @param value
+     */
     public FieldPredicate(String value) {
         setValue(value);
     }

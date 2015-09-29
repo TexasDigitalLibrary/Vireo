@@ -17,9 +17,12 @@ public class FieldValue extends BaseEntity {
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
     private FieldPredicate predicate;
 
-    public FieldValue() {
-    }
+    public FieldValue() {}
 
+    /**
+     * 
+     * @param predicate
+     */
     public FieldValue(FieldPredicate predicate) {
         setPredicate(predicate);
     }

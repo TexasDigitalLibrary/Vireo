@@ -17,7 +17,6 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.enums.InputType;
-import org.tdl.vireo.enums.Language;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "predicate_id" }) )
@@ -47,6 +46,13 @@ public class FieldProfile extends BaseEntity {
         setControlledVocabularies(new HashSet<ControlledVocabulary>());
     }
 
+    /**
+     * 
+     * @param predicate
+     * @param inputType
+     * @param repeatable
+     * @param required
+     */
     public FieldProfile(FieldPredicate predicate, InputType inputType, Boolean repeatable, Boolean required) {
         this();
         setPredicate(predicate);
@@ -143,6 +149,9 @@ public class FieldProfile extends BaseEntity {
     public void setFieldGlosses(Set<FieldGloss> fieldGlosses) {
         this.fieldGlosses = fieldGlosses;
     }
+    
+    // TODO : Restrict multiple field gloss with the same language
+    // Could a field gloss with different values and the same language be added to this set?
 
     /**
      * 
@@ -179,7 +188,7 @@ public class FieldProfile extends BaseEntity {
         }
         return null;
     }
-
+    
     /**
      * 
      * @param id
@@ -201,6 +210,9 @@ public class FieldProfile extends BaseEntity {
         this.controlledVocabularies = controlledVocabularies;
     }
 
+    // TODO : Restrict multiple controlled vocabulary with the same language
+    // Could a controlled vocabulary with different names and the same language be added to this set?
+    
     /**
      * 
      * @param controlledVocabularies

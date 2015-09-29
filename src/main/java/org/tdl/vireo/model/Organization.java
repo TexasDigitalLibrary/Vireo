@@ -46,6 +46,11 @@ public class Organization extends BaseEntity {
         setEmails(new HashSet<String>());
     }
 
+    /**
+     * 
+     * @param name
+     * @param category
+     */
     public Organization(String name, OrganizationCategory category) {
         this();
         setName(name);

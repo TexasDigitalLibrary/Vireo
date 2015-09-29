@@ -1,14 +1,16 @@
 package org.tdl.vireo.model;
 
+import static javax.persistence.CascadeType.DETACH;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.REFRESH;
+
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-
-import org.tdl.vireo.enums.Language;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class ControlledVocabulary extends BaseEntity {
@@ -16,8 +18,7 @@ public class ControlledVocabulary extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @Enumerated
-    @Column(nullable = false)
+    @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
     private Language language;
 
     @ElementCollection
@@ -28,12 +29,11 @@ public class ControlledVocabulary extends BaseEntity {
         setValues(new HashSet<String>());
     }
 
-    public ControlledVocabulary(String name) {
-        this();
-        setName(name);
-        setLanguage(Language.ENGLISH);
-    }
-
+    /**
+     * 
+     * @param name
+     * @param language
+     */
     public ControlledVocabulary(String name, Language language) {
         this();
         setName(name);

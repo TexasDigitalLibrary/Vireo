@@ -26,6 +26,11 @@ public class Workflow extends BaseEntity {
 		setWorkflowSteps(new HashSet<WorkflowStep>());
 	}
 	
+	/**
+	 * 
+	 * @param name
+	 * @param inheritable
+	 */
 	public Workflow(String name, Boolean inheritable) {
 		this();
 		setName(name);
