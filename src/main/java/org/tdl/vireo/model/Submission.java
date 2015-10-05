@@ -6,16 +6,27 @@ import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "submitter_id", "state_id" }) )
 public class Submission extends BaseEntity {
+    
+    @OneToOne(optional = false)
+    private User submitter;
 
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
     private SubmissionState state;
@@ -28,6 +39,10 @@ public class Submission extends BaseEntity {
 
     @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
     private Set<WorkflowStep> submissionWorkflowSteps;
+    
+    @Column(nullable = true)
+    @Temporal(TemporalType.DATE)
+    private Calendar dateOfGraduation;
 
     public Submission() {
         setOrganizations(new HashSet<Organization>());
@@ -36,12 +51,29 @@ public class Submission extends BaseEntity {
     }
 
     /**
-     * 
+     * @param submitter
      * @param state
      */
-    public Submission(SubmissionState state) {
+    public Submission(User submitter, SubmissionState state) {
         this();
+        setSubmitter(submitter);
         setState(state);
+    }
+    
+    /**
+     * 
+     * @return the submitter
+     */
+    public User getSubmitter() {
+        return submitter;
+    }
+    
+    /**
+     * 
+     * @param submitter
+     */
+    public void setSubmitter(User submitter) {
+        this.submitter = submitter;
     }
 
     /**
@@ -152,4 +184,17 @@ public class Submission extends BaseEntity {
         getSubmissionWorkflowSteps().remove(submissionWorkflowStep);
     }
 
+    /**
+     * @return the dateOfGraduation
+     */
+    public Calendar getDateOfGraduation() {
+        return dateOfGraduation;
+    }
+
+    /**
+     * @param dateOfGraduation the dateOfGraduation to set
+     */
+    public void setDateOfGraduation(Calendar dateOfGraduation) {
+        this.dateOfGraduation = dateOfGraduation;
+    }
 }

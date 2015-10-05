@@ -160,7 +160,7 @@ public class OrginzationTest {
         assertEquals("The organization had incorrect number of parents!", 2, childOrganization.getParentOrganizations().size());
 
         // verify parent organization
-        parentOrganization = (Organization) childOrganization.getParentOrganizations().toArray()[1];
+        parentOrganization = (Organization) childOrganization.getParentOrganizations().toArray()[0]; //TODO: this sometimes fails because array position is not always the same
         assertEquals("The parent organization did not have the correct name!", TEST_PARENT_ORGANIZATION_NAME, parentOrganization.getName());
         assertEquals("The parent organization category dit not have the correct name!", TEST_PARENT_CATEGORY_NAME, parentOrganization.getCategory().getName());
         assertEquals("The parent organization category dit not have the correct level!", TEST_PARENT_CATEGORY_LEVEL, parentOrganization.getCategory().getLevel());
@@ -260,8 +260,8 @@ public class OrginzationTest {
 
     @After
     public void cleanUp() {
-        organizationCategoryRepo.deleteAll();
         organizationRepo.deleteAll();
+        organizationCategoryRepo.deleteAll();
     }
 
 }

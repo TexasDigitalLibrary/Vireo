@@ -101,8 +101,7 @@ public class OrganizationCategoryTest {
 	
 	@After
 	public void cleanUp() {
+	    organizationRepo.deleteAll();
 		organizationCategoryRepo.deleteAll();
-		organizationRepo.deleteAll();
 	}
-
 }
