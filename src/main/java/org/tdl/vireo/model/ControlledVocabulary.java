@@ -4,8 +4,8 @@ import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 
-import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -26,7 +26,7 @@ public class ControlledVocabulary extends BaseEntity {
     private Set<String> values;
 
     public ControlledVocabulary() {
-        setValues(new HashSet<String>());
+        setValues(new TreeSet<String>());
     }
 
     /**

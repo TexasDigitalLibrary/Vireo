@@ -3,8 +3,8 @@ package org.tdl.vireo.model;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
 
-import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -26,7 +26,7 @@ public class OrganizationCategory extends BaseEntity {
     private Set<Organization> organizations;
 
     public OrganizationCategory() {
-        setOrganizations(new HashSet<Organization>());
+        setOrganizations(new TreeSet<Organization>());
     }
 
     /**

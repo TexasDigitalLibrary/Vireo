@@ -6,8 +6,8 @@ import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 
-import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,7 +23,7 @@ public class WorkflowStep extends BaseEntity {
     private Set<FieldProfile> fieldProfiles;
 
     public WorkflowStep() {
-        setFieldProfiles(new HashSet<FieldProfile>());
+        setFieldProfiles(new TreeSet<FieldProfile>());
     }
 
     /**

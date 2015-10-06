@@ -5,8 +5,8 @@ import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.LAZY;
 
-import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -42,8 +42,8 @@ public class FieldProfile extends BaseEntity {
     private Set<ControlledVocabulary> controlledVocabularies;
 
     public FieldProfile() {
-        setFieldGlosses(new HashSet<FieldGloss>());
-        setControlledVocabularies(new HashSet<ControlledVocabulary>());
+        setFieldGlosses(new TreeSet<FieldGloss>());
+        setControlledVocabularies(new TreeSet<ControlledVocabulary>());
     }
 
     /**

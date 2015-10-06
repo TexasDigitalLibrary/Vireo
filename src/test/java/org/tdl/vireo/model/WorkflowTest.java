@@ -66,8 +66,8 @@ public class WorkflowTest {
         assertEquals("WorkflowStep repo does not have the correct number of workflow steps", 2, workflowStepRepo.count());
 
         // verify workflow steps
-        assertEquals("Saved entity did not contain the correct workflow step name!", workflowStep, (WorkflowStep) workflow.getWorkflowSteps().toArray()[1]);
-        assertEquals("Saved entity did not contain the correct workflow detachable step name!", detachableWorkflowStep, (WorkflowStep) workflow.getWorkflowSteps().toArray()[0]);
+        assertEquals("Saved entity did not contain the correct workflow step name!", workflowStep, (WorkflowStep) workflow.getWorkflowSteps().toArray()[0]);
+        assertEquals("Saved entity did not contain the correct workflow detachable step name!", detachableWorkflowStep, (WorkflowStep) workflow.getWorkflowSteps().toArray()[1]);
 
         // test detach detachable workflow step
         workflow.removeWorkflowStep(detachableWorkflowStep);

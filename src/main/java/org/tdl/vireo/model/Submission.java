@@ -7,8 +7,8 @@ import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 
 import java.util.Calendar;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -45,9 +45,9 @@ public class Submission extends BaseEntity {
     private Calendar dateOfGraduation;
 
     public Submission() {
-        setOrganizations(new HashSet<Organization>());
-        setFieldValues(new HashSet<FieldValue>());
-        setSubmissionWorkflowSteps(new HashSet<WorkflowStep>());
+        setOrganizations(new TreeSet<Organization>());
+        setFieldValues(new TreeSet<FieldValue>());
+        setSubmissionWorkflowSteps(new TreeSet<WorkflowStep>());
     }
 
     /**

@@ -6,7 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
-public abstract class BaseEntity {
+public abstract class BaseEntity implements Comparable<BaseEntity> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,6 +42,18 @@ public abstract class BaseEntity {
      */
     @Override
     public int hashCode() {
-        return id == null ? 0 : 29 * id.hashCode();
+        int hashCode = 1;
+        hashCode = 31 * hashCode + (getId() == null ? 0 : getId().hashCode());
+        return hashCode;
+    }
+    
+    @Override
+    public int compareTo(BaseEntity o) {
+        if (this.getId() < o.getId()) {
+            return -1;
+        } else if (this.getId() > o.getId()) {
+            return 1;
+        }
+        return 0;
     }
 }

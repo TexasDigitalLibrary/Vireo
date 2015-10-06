@@ -7,8 +7,8 @@ import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
-import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -41,9 +41,9 @@ public class Organization extends BaseEntity {
     private Set<String> emails;
 
     public Organization() {
-        setParentOrganizations(new HashSet<Organization>());
-        setChildrenOrganizations(new HashSet<Organization>());
-        setEmails(new HashSet<String>());
+        setParentOrganizations(new TreeSet<Organization>());
+        setChildrenOrganizations(new TreeSet<Organization>());
+        setEmails(new TreeSet<String>());
     }
 
     /**

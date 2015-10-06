@@ -123,8 +123,8 @@ public class FieldProfileTest {
         fieldProfile = fieldProfileRepo.save(fieldProfile);
 
         // verify field glosses and controlled vocabularies
-        assertEquals("The field profile did not contain the correct field gloss!", fieldGloss, (FieldGloss) fieldProfile.getFieldGlosses().toArray()[1]);
-        assertEquals("The field profile did not contain the correct detachable field gloss!", detachableFieldGloss, (FieldGloss) fieldProfile.getFieldGlosses().toArray()[0]);
+        assertEquals("The field profile did not contain the correct field gloss!", fieldGloss, (FieldGloss) fieldProfile.getFieldGlosses().toArray()[0]);
+        assertEquals("The field profile did not contain the correct detachable field gloss!", detachableFieldGloss, (FieldGloss) fieldProfile.getFieldGlosses().toArray()[1]);
         assertEquals("The field profile did not contain the correct controlled vocabulary!", controlledVocabulary, fieldProfile.getControlledVocabularyByName(TEST_CONTROLLED_VOCABULARY_NAME));
         assertEquals("The field profile did not contain the correct detachable controlled vocabulary!", detachablecontrolledVocabulary, fieldProfile.getControlledVocabularyByName(TEST_DETACHABLE_CONTROLLED_VOCABULARY_NAME));
 

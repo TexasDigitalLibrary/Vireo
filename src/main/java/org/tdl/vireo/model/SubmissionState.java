@@ -4,8 +4,8 @@ import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 
-import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -39,7 +39,7 @@ public class SubmissionState extends BaseEntity {
     private Set<SubmissionState> transitionSubmissionStates;
 
     public SubmissionState() {
-        setTransitionSubmissionStates(new HashSet<SubmissionState>());
+        setTransitionSubmissionStates(new TreeSet<SubmissionState>());
     }
 
     /**

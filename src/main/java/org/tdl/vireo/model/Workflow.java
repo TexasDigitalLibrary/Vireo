@@ -3,8 +3,8 @@ package org.tdl.vireo.model;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 
-import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,7 +23,7 @@ public class Workflow extends BaseEntity {
 	private Set<WorkflowStep> workflowSteps;
 	
 	public Workflow() {
-		setWorkflowSteps(new HashSet<WorkflowStep>());
+		setWorkflowSteps(new TreeSet<WorkflowStep>());
 	}
 	
 	/**
