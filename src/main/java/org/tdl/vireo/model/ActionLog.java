@@ -1,4 +1,4 @@
-package org.tdl.vireo.model.jpa;
+package org.tdl.vireo.model;
 
 import java.util.Date;
 
@@ -10,43 +10,40 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.tdl.vireo.model.ActionLog;
-import org.tdl.vireo.model.Attachment;
-import org.tdl.vireo.model.Person;
+import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.Submission;
-import org.tdl.vireo.state.State;
-import org.tdl.vireo.state.StateManager;
-
-import play.modules.spring.Spring;
 
 /**
- * JPA specific implementation of Vireo's Action log.
  * 
- * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 @Entity
 @Table(name = "actionlog")
-public class JpaActionLogImpl extends JpaAbstractModel<JpaActionLogImpl> implements ActionLog {
+public class ActionLog extends BaseEntity {
 
-	@ManyToOne(targetEntity=JpaSubmissionImpl.class, optional = false)
-	public Submission submission;
+	@ManyToOne(optional = false)
+	private Submission submission;
 
 	@Column(nullable = false)
-	public String submissionState;
+	private String submissionState;
 
-	@ManyToOne(targetEntity=JpaPersonImpl.class)
-	public Person person;
+	@ManyToOne
+	private User user;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	public Date actionDate;
+	private Date actionDate;
 
-	@ManyToOne(targetEntity=JpaAttachmentImpl.class)
-	public Attachment attachment;
+	@ManyToOne
+	private Attachment attachment;
 
 	@Column(nullable = false, length=32768) // 2^15
-	public String entry;
+	private String entry;
 
 	@Column(nullable = false)
-	public boolean privateFlag;
+	private boolean privateFlag;
+	
+	public ActionLog(){
+		
+	}
 
 	/**
 	 * Create a new JpaActionLogImpl.
@@ -66,8 +63,8 @@ public class JpaActionLogImpl extends JpaAbstractModel<JpaActionLogImpl> impleme
 	 * @param privateFlag
 	 *            Weather the action should be published publicly viewable.
 	 */
-	protected JpaActionLogImpl(Submission submission, State submissionState,
-			Person person, Date actionDate, Attachment attachment, String entry,
+	public ActionLog(Submission submission, SubmissionState submissionState,
+			User user, Date actionDate, Attachment attachment, String entry,
 			boolean privateFlag) {
 
 		// TODO: Check that all the parameters are not null, good, etc...
@@ -76,13 +73,13 @@ public class JpaActionLogImpl extends JpaAbstractModel<JpaActionLogImpl> impleme
 		// If the person operating is not a persistant person, a mock or
 		// otherwise then don't record the link. The person's name might be in
 		// the entry text.
-		if (person != null && !person.getClass().isAnnotationPresent(Entity.class))
-			person = null;
+		if (user != null && !user.getClass().isAnnotationPresent(Entity.class))
+			user = null;
 		
 		
 		this.submission = submission;
 		this.submissionState = submissionState.getBeanName();
-		this.person = person;
+		this.user = user;
 		this.actionDate = actionDate;
 		this.attachment = attachment;
 		this.entry = entry;
