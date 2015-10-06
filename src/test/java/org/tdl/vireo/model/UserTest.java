@@ -147,8 +147,13 @@ public class UserTest {
         testUser = userRepo.save(testUser);
 
         //TODO test detach organization
+        testUser.removeOrganization(organization);
+        testUser = userRepo.save(testUser);
+        assertEquals("The organization was not detached from the user",0,testUser.getOrganizations().size());
         
         //TODO test delete user
+        userRepo.delete(testUser);
+        assertEquals("The testUser was not deleted!", 0, userRepo.count());
     }
 
     @After
