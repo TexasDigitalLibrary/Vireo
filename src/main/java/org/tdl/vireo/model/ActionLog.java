@@ -32,8 +32,8 @@ public class ActionLog extends BaseEntity {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date actionDate;
 
-	@ManyToOne
-	private Attachment attachment;
+	//@ManyToOne
+	//private Attachment attachment;
 
 	@Column(nullable = false, length=32768) // 2^15
 	private String entry;
@@ -63,7 +63,7 @@ public class ActionLog extends BaseEntity {
 	 * @param privateFlag
 	 *            Weather the action should be published publicly viewable.
 	 */
-	public ActionLog(Submission submission, SubmissionState submissionState,
+/*	public ActionLog(Submission submission, SubmissionState submissionState,
 			User user, Date actionDate, Attachment attachment, String entry,
 			boolean privateFlag) {
 
@@ -152,5 +152,5 @@ public class ActionLog extends BaseEntity {
 		
 		assertReviewerOrOwner(submission.getSubmitter());
 		this.privateFlag = privateFlag;
-	}
+	}*/
 }
