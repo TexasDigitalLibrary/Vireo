@@ -3,6 +3,8 @@ package org.tdl.vireo.model;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
+import java.util.Calendar;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.Application;
 import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.enums.Role;
+import org.tdl.vireo.model.repo.ActionLogRepo;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.FieldValueRepo;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
@@ -56,6 +59,10 @@ public class SubmissionTest {
 
     private static final String TEST_PARENT_WORKFLOW_STEP_NAME = "Test Parent Workflow Step";
     private static final String TEST_DETACHABLE_WORKFLOW_STEP_NAME = "Test Detachable Workflow Step";
+    
+    private static final String TEST_PARENT_SUBMISSION_STATE_ACTION_LOG_ENTRY = "Test ActionLog Entry";
+    private static final boolean TEST_PARENT_SUBMISSION_STATE_ACTION_LOG_FLAG = true;
+    private Calendar TEST_PARENT_SUBMISSION_STATE_ACTION_LOG_ACTION_DATE;
 
     private static User parentSubmissionSubmitter;
     private static SubmissionState parentSubmissionState;
@@ -87,6 +94,9 @@ public class SubmissionTest {
 
     @Autowired
     private WorkflowStepRepo workflowStepRepo;
+    
+    @Autowired
+    private ActionLogRepo actionLogRepo;
 
     @Before
     public void setUp() {
@@ -175,12 +185,16 @@ public class SubmissionTest {
         FieldValue detachableFieldValue = fieldValueRepo.create(detachableFieldPredicate);
 
         Submission parentSubmission = submissionRepo.create(parentSubmissionSubmitter, parentSubmissionState);
+        SubmissionState testSubmissionState = submissionStateRepo.create(TEST_PARENT_SUBMISSION_STATE_NAME, TEST_PARENT_SUBMISSION_STATE_ARCHIVED, TEST_PARENT_SUBMISSION_STATE_PUBLISHABLE, TEST_PARENT_SUBMISSION_STATE_DELETABLE, TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_PARENT_SUBMISSION_STATE_ACTIVE);
+        ActionLog testActionLog = actionLogRepo.create(parentSubmission, testSubmissionState, parentSubmissionSubmitter, TEST_PARENT_SUBMISSION_STATE_ACTION_LOG_ACTION_DATE, TEST_PARENT_SUBMISSION_STATE_ACTION_LOG_ENTRY, TEST_PARENT_SUBMISSION_STATE_ACTION_LOG_FLAG) ;
+        
         parentSubmission.addOrganization(parentOrganization);
         parentSubmission.addSubmissionWorkflowStep(parentSubmissionWorkflowStep);
         parentSubmission.addFieldValue(parentFieldValue);
         parentSubmission.addOrganization(detachableOrganization);
         parentSubmission.addSubmissionWorkflowStep(detachableWorkflowStep);
         parentSubmission.addFieldValue(detachableFieldValue);
+        parentSubmission.addActionLog(testActionLog);
         parentSubmission = submissionRepo.save(parentSubmission);
 
         // test detach organization
@@ -200,7 +214,13 @@ public class SubmissionTest {
         parentSubmission = submissionRepo.save(parentSubmission);
         assertEquals("The field value was not detached!", 1, parentSubmission.getFieldValues().size());
         assertEquals("The field value was orphaned!", 1, fieldValueRepo.count());
-
+        
+        // test detach actionLog
+        parentSubmission.removeActionLog(testActionLog);
+        parentSubmission = submissionRepo.save(parentSubmission);
+        assertEquals("The actionLog entry was not detached", 1, parentSubmission.getActionLog().size());
+        assertEquals("The actionLog entry was orphaned", 1, actionLogRepo.count());
+        
         // test delete submission
         submissionRepo.delete(parentSubmission);
         assertEquals("Submission was deleted!", 0, submissionRepo.count());
