@@ -1,4 +1,4 @@
-package org.tdl.vireo.model.jpa;
+package org.tdl.vireo.model;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -13,46 +13,49 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import static javax.persistence.CascadeType.DETACH;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.REFRESH;
 
-import org.apache.commons.io.FileUtils;
+/*import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.tdl.vireo.model.Attachment;
 import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.Person;
 import org.tdl.vireo.model.Submission;
-import org.tdl.vireo.security.SecurityContext;
+import org.tdl.vireo.security.SecurityContext;*/
 
-import play.libs.MimeTypes;
-import play.modules.spring.Spring;
 
 /**
- * Jpa specific implementation of Vireo's Attachment interface
  * 
- * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 @Entity
 @Table(name = "attachment",
 	uniqueConstraints = { @UniqueConstraint( columnNames = { "submission_id", "name" } ) } )
-public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> implements Attachment {
+public class Attachment extends BaseEntity {
 
-	@ManyToOne(targetEntity=JpaSubmissionImpl.class, optional=false)
-	public Submission submission;
+	@ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
+	private Submission submission;
 
 	@Column(nullable = false, length=255)
-	public String name;
+	private String name;
 
-	@Column(nullable = false)
-	public AttachmentType type;
+	//@Column(nullable = false)
+	//private AttachmentType type;
 	
-	@ManyToOne(targetEntity=JpaPersonImpl.class, optional=true)
-	public Person person;
+	//@ManyToOne(targetEntity=JpaPersonImpl.class, optional=true)
+	//private Person person;
 	
 	@Column(nullable = false)
-	public Date date;
-
-	public HashedBlob data;
+	private Date date;
+//TODO - revisit this
+	//private HashedBlob data;
 
 	public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	
+	public Attachment() {
+		
+	}
 	
 	/**
 	 * Private constructor to share code between the file and bytearray constructors.
@@ -60,7 +63,7 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 	 * @param submission The submission this attachment will be associated with.
 	 * @param type The type of the submission.
 	 */
-	private JpaAttachmentImpl(Submission submission, AttachmentType type) {
+	/*private JpaAttachmentImpl(Submission submission, AttachmentType type) {
 		if (submission == null)
 			throw new IllegalArgumentException("Submission is required");
 		
@@ -90,7 +93,7 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 	}
 	
 	
-	/**
+	*//**
 	 * Create a new JpaAttachmentImpl from a file.
 	 * 
 	 * @param submission
@@ -99,7 +102,7 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 	 *            The type of the attachment.
 	 * @param file
 	 *            The file.
-	 */
+	 *//*
 	protected JpaAttachmentImpl(Submission submission, AttachmentType type,
 			File file) throws IOException {
 
@@ -131,7 +134,7 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 	}
 	
 
-	/**
+	*//**
 	 * Create a new JpaAttachmentIpml from a byte array.
 	 * 
 	 * @param submission
@@ -142,7 +145,7 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 	 *            The filename of the attachment.
 	 * @param content
 	 *            The contents of the attachment.
-	 */
+	 *//*
 	protected JpaAttachmentImpl(Submission submission, AttachmentType type,
 			String filename, byte[] content) throws IOException {
 	
@@ -350,7 +353,7 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 		return this.date;
 	}	
 	
-	/**
+	*//**
 	 * Search for an available attachment name based upon the basename and
 	 * extension provided. If the name is already taken then a _1, _2, _3 will
 	 * be appended until a unique name can be reached. Once a unique name has
@@ -361,7 +364,7 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 	 * @param extension
 	 *            The file's extension (may be null or blank)
 	 * @return An unused filename in the form [basename][_1][.extension]
-	 */
+	 *//*
 	protected String rename(String basename, String extension) {
 		
 		// Check if the new filename exsits, if so add a copy number. Repeate until found.
@@ -386,7 +389,7 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 		}
 	}
 	
-	/**
+	*//**
 	 * Rename the primary document to follow the convention: [LAST]-[DOCUMENT
 	 * TYPE]-[YEAR].pdf. If those parameters are not available on the submission
 	 * then fall backs are used all the way back to "PRIMARY-DOCUMENT.pdf" is
@@ -397,7 +400,7 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 	 * precedence.
 	 * 
 	 * @return The attachment that was renamed, if any.
-	 */
+	 *//*
 	protected Attachment renamePrimaryDocument() {
 		
 		// We only enforce the nameing convention on primary documents.
@@ -460,5 +463,5 @@ public class JpaAttachmentImpl extends JpaAbstractModel<JpaAttachmentImpl> imple
 		
 		return exists;
 	}
-
+*/
 }
