@@ -1,6 +1,10 @@
 package org.tdl.vireo.model;
 
-import java.util.Date;
+import static javax.persistence.CascadeType.DETACH;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.REFRESH;
+
+import java.util.Calendar;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,7 +13,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.Submission;
 
@@ -20,19 +23,19 @@ import org.tdl.vireo.model.Submission;
 @Table(name = "actionlog")
 public class ActionLog extends BaseEntity {
 
-	@ManyToOne(optional = false)
+	@ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
 	private Submission submission;
 
 	@Column(nullable = false)
-	private String submissionState;
+	private SubmissionState submissionState;
 
-	@ManyToOne
+	@ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
 	private User user;
-
+	
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date actionDate;
+	private Calendar actionDate;
 
-	//@ManyToOne
+	//@ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
 	//private Attachment attachment;
 
 	@Column(nullable = false, length=32768) // 2^15
@@ -42,50 +45,114 @@ public class ActionLog extends BaseEntity {
 	private boolean privateFlag;
 	
 	public ActionLog(){
+		setSubmission(submission);
+		
+		setUser(user);
+		//setAttachment(attachment);
+		setActionDate(actionDate);
 		
 	}
-
-	/**
-	 * Create a new JpaActionLogImpl.
-	 * 
-	 * @param submission
-	 *            The submission this action log affects.
-	 * @param submissionState
-	 *            The state of the submission after the action log.
-	 * @param person
-	 *            The person who made the change.
-	 * @param actionDate
-	 *            Date the action occurred.
-	 * @param attachment
-	 *            The attachment affected, may be null.
-	 * @param entry
-	 *            An English description of the action.
-	 * @param privateFlag
-	 *            Weather the action should be published publicly viewable.
-	 */
-/*	public ActionLog(Submission submission, SubmissionState submissionState,
-			User user, Date actionDate, Attachment attachment, String entry,
-			boolean privateFlag) {
+	//TODO - revisit this constructor, Attachment
+	
+	public ActionLog(Submission submission, SubmissionState submissionState, User user, Calendar actionDate, String entry,boolean privateFlag) {
 
 		// TODO: Check that all the parameters are not null, good, etc...
-		assertReviewerOrOwner(submission.getSubmitter());
+		//assertReviewerOrOwner(submission.getSubmitter());
 		
 		// If the person operating is not a persistant person, a mock or
 		// otherwise then don't record the link. The person's name might be in
 		// the entry text.
-		if (user != null && !user.getClass().isAnnotationPresent(Entity.class))
-			user = null;
-		
-		
+		//if (user != null && !user.getClass().isAnnotationPresent(Entity.class))
+			//user = null;		
 		this.submission = submission;
-		this.submissionState = submissionState.getBeanName();
+		this.submissionState = submissionState;
 		this.user = user;
 		this.actionDate = actionDate;
-		this.attachment = attachment;
+		//this.attachment = attachment;
 		this.entry = entry;
 		this.privateFlag = privateFlag;
 	}
 
+	/**
+	 * @return the submission
+	 */
+	public Submission getSubmission() {
+		return submission;
+	}
+
+	/**
+	 * @param submission the submission to set
+	 */
+	public void setSubmission(Submission submission) {
+		this.submission = submission;
+	}
+
+	/**
+	 * @return the submissionState
+	 */
+	public SubmissionState getSubmissionState() {
+		return submissionState;
+	}
+	/**
+	 * @param submissionState the submissionState to set
+	 */
+	public void setSubmissionState(SubmissionState submissionState) {
+		this.submissionState = submissionState;
+	}
+	/**
+	 * @return the user
+	 */
+	public User getUser() {
+		return user;
+	}
+
+	/**
+	 * @param user the user to set
+	 */
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	/**
+	 * @return the actionDate
+	 */
+	public Calendar getActionDate() {
+		return actionDate;
+	}
+	/**
+	 * @param actionDate the actionDate to set
+	 */
+	public void setActionDate(Calendar actionDate) {
+		this.actionDate = actionDate;
+	}
+	/**
+	 * @return the entry
+	 */
+	public String getEntry() {
+		return entry;
+	}
+
+	/**
+	 * @param entry the entry to set
+	 */
+	public void setEntry(String entry) {
+		this.entry = entry;
+	}
+
+	/**
+	 * @return the privateFlag
+	 */
+	public boolean isPrivateFlag() {
+		return privateFlag;
+	}
+
+	/**
+	 * @param privateFlag the privateFlag to set
+	 */
+	public void setPrivateFlag(boolean privateFlag) {
+		this.privateFlag = privateFlag;
+	}
+/*	
 	@Override
 	public JpaActionLogImpl save() {
 
@@ -110,36 +177,6 @@ public class ActionLog extends BaseEntity {
 		if (attachment != null)
 			attachment.detach();
 		return super.detach();
-	}
-
-	@Override
-	public Submission getSubmission() {
-		return submission;
-	}
-
-	@Override
-	public State getSubmissionState() {
-		return Spring.getBeanOfType(StateManager.class).getState(submissionState);
-	}
-
-	@Override
-	public Person getPerson() {
-		return person;
-	}
-
-	@Override
-	public Date getActionDate() {
-		return actionDate;
-	}
-
-	@Override
-	public Attachment getAttachment() {
-		return attachment;
-	}
-
-	@Override
-	public String getEntry() {
-		return entry;
 	}
 
 	@Override
