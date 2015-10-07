@@ -64,11 +64,9 @@ public class ContactInfoTest {
     @Transactional
     public void testDuplication() {
 		Address testAddress = addressRepo.create(TEST_ADDRESS1, TEST_ADDRESS2, TEST_CITY, TEST_STATE, TEST_POSTAL_CODE, TEST_COUNTRY);
-		ContactInfo testContactInfo1 = contactInfoRepo.create(testAddress, TEST_PHONE, TEST_EMAIL);
-        try {
-        	ContactInfo testContactInfo2 = contactInfoRepo.create(testAddress, TEST_PHONE, TEST_EMAIL);
-        	assertNotSame(testContactInfo2.getId(),testContactInfo1.getId());
-        } catch (DataIntegrityViolationException e) { /* SUCCESS */ }        
+		contactInfoRepo.create(testAddress, TEST_PHONE, TEST_EMAIL);
+        contactInfoRepo.create(testAddress, TEST_PHONE, TEST_EMAIL);
+        assertEquals("Duplicate contact info entry is not saved", 2, contactInfoRepo.count());
 	}
   
 	/*@Test

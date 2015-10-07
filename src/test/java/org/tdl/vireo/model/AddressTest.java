@@ -54,12 +54,9 @@ public class AddressTest {
     @Order(value = 2)
     @Transactional
     public void testDuplication() {
-		Address testAddress1 = addressRepo.create(TEST_ADDRESS1, TEST_ADDRESS2, TEST_CITY, TEST_STATE, TEST_POSTAL_CODE, TEST_COUNTRY);
-		 try {
-			 Address testAddress2 = addressRepo.create(TEST_ADDRESS1, TEST_ADDRESS2, TEST_CITY, TEST_STATE, TEST_POSTAL_CODE, TEST_COUNTRY);
-	        	assertNotSame(testAddress1.getId(),testAddress2.getId());
-	        } catch (DataIntegrityViolationException e) { /* SUCCESS */ }
-		
+		addressRepo.create(TEST_ADDRESS1, TEST_ADDRESS2, TEST_CITY, TEST_STATE, TEST_POSTAL_CODE, TEST_COUNTRY);
+		addressRepo.create(TEST_ADDRESS1, TEST_ADDRESS2, TEST_CITY, TEST_STATE, TEST_POSTAL_CODE, TEST_COUNTRY);
+		assertEquals("Duplicate address entry is not saved", 2, addressRepo.count());
 	}
 	
 	@Test
