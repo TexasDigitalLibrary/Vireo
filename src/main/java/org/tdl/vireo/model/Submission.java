@@ -5,6 +5,7 @@ import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.FetchType.LAZY;
 
 import java.util.Calendar;
 import java.util.Set;
@@ -43,11 +44,15 @@ public class Submission extends BaseEntity {
     @Column(nullable = true)
     @Temporal(TemporalType.DATE)
     private Calendar dateOfGraduation;
+    
+    @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
+    private Set<ActionLog> actionLog;
 
     public Submission() {
         setOrganizations(new TreeSet<Organization>());
         setFieldValues(new TreeSet<FieldValue>());
         setSubmissionWorkflowSteps(new TreeSet<WorkflowStep>());
+        setActionLog(new TreeSet<ActionLog>());
     }
 
     /**
@@ -197,4 +202,36 @@ public class Submission extends BaseEntity {
     public void setDateOfGraduation(Calendar dateOfGraduation) {
         this.dateOfGraduation = dateOfGraduation;
     }
+
+	/**
+	 * @return the actionLog
+	 */
+	public Set<ActionLog> getActionLog() {
+		return actionLog;
+	}
+
+	/**
+	 * @param actionLog the actionLog to set
+	 */
+	public void setActionLog(Set<ActionLog> actionLog) {
+		this.actionLog = actionLog;
+	}
+	/**
+     * 
+     * @param actionLog
+     */
+    public void addActionLog(ActionLog actionLog) {
+        getActionLog().add(actionLog);
+    }
+
+    /**
+     * 
+     * @param actionLog
+     */
+    public void removeActionLog(ActionLog actionLog) {
+    	getActionLog().remove(actionLog);
+    }
+
+	
+	
 }
