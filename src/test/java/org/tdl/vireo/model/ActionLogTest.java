@@ -1,7 +1,6 @@
 package org.tdl.vireo.model;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
 
 import java.util.Calendar;
 
@@ -11,7 +10,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.Application;
 import org.tdl.vireo.annotations.Order;
@@ -43,7 +41,7 @@ public class ActionLogTest {
     
     private static final String TEST_ACTION_LOG_ENTRY = "Test ActionLog Entry";
     private static final boolean TEST_ACTION_LOG_FLAG                       = true;
-	//Type compatibility for TemporalType.TIMESTAMP
+    
     private Calendar TEST_ACTION_LOG_ACTION_DATE;
 	@Autowired
     private ActionLogRepo actionLogRepo;
@@ -125,13 +123,25 @@ public class ActionLogTest {
     @Order(value = 5)
     @Transactional
     public void testCascade() {
-		//TODO
 		
+		User testUser = userRepo.create(TEST_USER_EMAIL, TEST_USER_FIRSTNAME, TEST_USER_LASTNAME, TEST_USER_ROLE);
+		SubmissionState testSubmissionState = submissionStateRepo.create(TEST_SUBMISSION_STATE_NAME, TEST_SUBMISSION_STATE_ARCHIVED, TEST_SUBMISSION_STATE_PUBLISHABLE, TEST_SUBMISSION_STATE_DELETABLE, TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_SUBMISSION_STATE_ACTIVE);
+		Submission testsubmission  = submissionRepo.create(testUser, testSubmissionState);
+		ActionLog testActionLog = actionLogRepo.create(testsubmission, testSubmissionState, testUser, TEST_ACTION_LOG_ACTION_DATE, TEST_ACTION_LOG_ENTRY, TEST_ACTION_LOG_FLAG);
+		//test detach submission
+		actionLogRepo.delete(testActionLog);
+		assertEquals("The testActionLog is not deleted from the repo", 0, actionLogRepo.count());
+		assertEquals("Submission is not deleted", 1, submissionRepo.count());
+		assertEquals("Submission State is not deleted", 1, submissionStateRepo.count());
+		assertEquals("User is not deleted", 1, userRepo.count());
 	}
 	
 	@After
     public void cleanUp() {
 		actionLogRepo.deleteAll();
+		submissionRepo.deleteAll();
+		submissionStateRepo.deleteAll();
+		userRepo.deleteAll();
 	}
 	
 
