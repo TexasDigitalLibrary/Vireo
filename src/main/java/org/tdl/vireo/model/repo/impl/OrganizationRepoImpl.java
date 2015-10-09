@@ -1,7 +1,5 @@
 package org.tdl.vireo.model.repo.impl;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +10,6 @@ import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.custom.OrganizationRepoCustom;
 
 public class OrganizationRepoImpl implements OrganizationRepoCustom {
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     @Autowired
     private OrganizationRepo organizationRepo;
@@ -47,6 +42,6 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
             organizationRepo.save(parentOrganization);
         });
 
-        entityManager.remove(entityManager.contains(organization) ? organization : entityManager.merge(organization));
+        organizationRepo.delete(organization.getId());
     }
 }

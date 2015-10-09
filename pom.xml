@@ -75,6 +75,11 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-taglibs</artifactId>
 		</dependency>
+		<!-- Spring Boot Loader Tools (for FileUtils.sha1Hash())-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-loader-tools</artifactId>
+		</dependency>
 		<!-- JSP Templates -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
