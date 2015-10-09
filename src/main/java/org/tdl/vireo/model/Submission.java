@@ -47,12 +47,16 @@ public class Submission extends BaseEntity {
     
     @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
     private Set<ActionLog> actionLog;
-
+    
+    @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
+    private Set<Attachment> attachments;
+    
     public Submission() {
         setOrganizations(new TreeSet<Organization>());
         setFieldValues(new TreeSet<FieldValue>());
         setSubmissionWorkflowSteps(new TreeSet<WorkflowStep>());
         setActionLog(new TreeSet<ActionLog>());
+        setAttachments(new TreeSet<Attachment>());
     }
 
     /**
@@ -231,6 +235,37 @@ public class Submission extends BaseEntity {
     public void removeActionLog(ActionLog actionLog) {
     	getActionLog().remove(actionLog);
     }
+
+	/**
+	 * @return the attachments
+	 */
+	public Set<Attachment> getAttachments() {
+		return attachments;
+	}
+
+	/**
+	 * @param attachments the attachments to set
+	 */
+	public void setAttachments(Set<Attachment> attachments) {
+		this.attachments = attachments;
+	}
+	
+	/**
+     * 
+     * @param attachment
+     */
+    public void addAttachment(Attachment attachment) {
+        getAttachments().add(attachment);
+    }
+
+    /**
+     * 
+     * @param actionLog
+     */
+    public void removeAttachment(Attachment attachment) {
+    	getAttachments().remove(attachment);
+    }
+
 
 	
 	
