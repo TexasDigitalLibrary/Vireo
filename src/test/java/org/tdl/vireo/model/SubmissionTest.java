@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
 import java.util.Calendar;
+import java.util.UUID;
 
 import org.junit.After;
 import org.junit.Before;
@@ -17,6 +18,7 @@ import org.tdl.vireo.Application;
 import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.enums.Role;
 import org.tdl.vireo.model.repo.ActionLogRepo;
+import org.tdl.vireo.model.repo.AttachmentRepo;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.FieldValueRepo;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
@@ -63,6 +65,10 @@ public class SubmissionTest {
     private static final String TEST_PARENT_SUBMISSION_STATE_ACTION_LOG_ENTRY = "Test ActionLog Entry";
     private static final boolean TEST_PARENT_SUBMISSION_STATE_ACTION_LOG_FLAG = true;
     private Calendar TEST_PARENT_SUBMISSION_STATE_ACTION_LOG_ACTION_DATE;
+    
+    private static final String TEST_ATTACHMENT_NAME = "Test Attachment Name";
+    private UUID TEST_UUID = UUID.randomUUID();
+    private Calendar TEST_ATTACHMENT_DATE;
 
     private static User parentSubmissionSubmitter;
     private static SubmissionState parentSubmissionState;
@@ -70,6 +76,7 @@ public class SubmissionTest {
     private static FieldValue parentFieldValue;
     private static Organization parentOrganization;
     private static WorkflowStep parentSubmissionWorkflowStep;
+    private static Attachment testAttachment;
 
     @Autowired
     private SubmissionRepo submissionRepo;
@@ -97,6 +104,9 @@ public class SubmissionTest {
     
     @Autowired
     private ActionLogRepo actionLogRepo;
+    
+    @Autowired
+    private AttachmentRepo attachmentRepo;
 
     @Before
     public void setUp() {
@@ -125,6 +135,9 @@ public class SubmissionTest {
 
         parentSubmissionWorkflowStep = workflowStepRepo.create(TEST_PARENT_WORKFLOW_STEP_NAME);
         assertEquals("The workflow step does not exist!", 1, workflowStepRepo.count());
+        
+       // testAttachment = attachmentRepo.create();
+       // assertEquals("The attachment is created ",1,attachmentRepo.count());
     }
 
     @Test
@@ -186,18 +199,21 @@ public class SubmissionTest {
 
         Submission parentSubmission = submissionRepo.create(parentSubmissionSubmitter, parentSubmissionState);
         SubmissionState testSubmissionState = submissionStateRepo.create(TEST_PARENT_SUBMISSION_STATE_NAME, TEST_PARENT_SUBMISSION_STATE_ARCHIVED, TEST_PARENT_SUBMISSION_STATE_PUBLISHABLE, TEST_PARENT_SUBMISSION_STATE_DELETABLE, TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_PARENT_SUBMISSION_STATE_ACTIVE);
-        ActionLog testActionLog = actionLogRepo.create(parentSubmission, testSubmissionState, parentSubmissionSubmitter, TEST_PARENT_SUBMISSION_STATE_ACTION_LOG_ACTION_DATE, TEST_PARENT_SUBMISSION_STATE_ACTION_LOG_ENTRY, TEST_PARENT_SUBMISSION_STATE_ACTION_LOG_FLAG) ;
-        
+        //Attachment testAttachment = attachmentRepo.create();
+       // ActionLog testActionLog = actionLogRepo.create(parentSubmission, testSubmissionState, parentSubmissionSubmitter, TEST_PARENT_SUBMISSION_STATE_ACTION_LOG_ACTION_DATE,testAttachment, TEST_PARENT_SUBMISSION_STATE_ACTION_LOG_ENTRY, TEST_PARENT_SUBMISSION_STATE_ACTION_LOG_FLAG) ;
+        		
         parentSubmission.addOrganization(parentOrganization);
         parentSubmission.addSubmissionWorkflowStep(parentSubmissionWorkflowStep);
         parentSubmission.addFieldValue(parentFieldValue);
         parentSubmission.addOrganization(detachableOrganization);
         parentSubmission.addSubmissionWorkflowStep(detachableWorkflowStep);
         parentSubmission.addFieldValue(detachableFieldValue);
-        parentSubmission.addActionLog(testActionLog);
+       // parentSubmission.addActionLog(testActionLog);
+        //parentSubmission.addAttachment(testAttachment);
         parentSubmission = submissionRepo.save(parentSubmission);
 
-        // test detach organization
+        //TODO:  These are not JPA detachments from an EM!!!
+        // test detach organization in the sense of not being associated with that organization anymore
         parentSubmission.removeOrganization(detachableOrganization);
         parentSubmission = submissionRepo.save(parentSubmission);
         assertEquals("The organization was not detached!", 1, parentSubmission.getOrganizations().size());
@@ -216,10 +232,16 @@ public class SubmissionTest {
         assertEquals("The field value was orphaned!", 1, fieldValueRepo.count());
         
         // test detach actionLog
-        parentSubmission.removeActionLog(testActionLog);
+       // parentSubmission.removeActionLog(testActionLog);
+       // parentSubmission = submissionRepo.save(parentSubmission);
+        //assertEquals("The actionLog entry was not detached", 1, parentSubmission.getActionLog().size());
+        //assertEquals("The actionLog entry was orphaned", 1, actionLogRepo.count());
+        
+        //test detach Attachment
+        /*parentSubmission.removeAttachment(testAttachment);
         parentSubmission = submissionRepo.save(parentSubmission);
-        assertEquals("The actionLog entry was not detached", 1, parentSubmission.getActionLog().size());
-        assertEquals("The actionLog entry was orphaned", 1, actionLogRepo.count());
+        assertEquals("The attachment was not detached", 1, parentSubmission.getAttachments().size());
+        assertEquals("The attachment entry was orphaned", 1, attachmentRepo.count());*/
         
         // test delete submission
         submissionRepo.delete(parentSubmission);

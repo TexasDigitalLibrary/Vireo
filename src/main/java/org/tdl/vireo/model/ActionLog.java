@@ -8,9 +8,7 @@ import java.util.Calendar;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -34,8 +32,8 @@ public class ActionLog extends BaseEntity {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar actionDate;
 
-	//@ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
-	//private Attachment attachment;
+	@ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = true)
+	private Attachment attachment;
 
 	@Column(nullable = false, length=32768) // 2^15
 	private String entry;
@@ -45,29 +43,17 @@ public class ActionLog extends BaseEntity {
 	
 	public ActionLog(){
 		setSubmission(submission);
-		
+		setSubmissionState(submissionState);
 		setUser(user);
-		//setAttachment(attachment);
-		setActionDate(actionDate);
-		
+		setActionDate(actionDate);		
 	}
-	//TODO - revisit this constructor, Attachment
 	
-	public ActionLog(Submission submission, SubmissionState submissionState, User user, Calendar actionDate, String entry,boolean privateFlag) {
-
-		// TODO: Check that all the parameters are not null, good, etc...
-		//assertReviewerOrOwner(submission.getSubmitter());
-		
-		// If the person operating is not a persistant person, a mock or
-		// otherwise then don't record the link. The person's name might be in
-		// the entry text.
-		//if (user != null && !user.getClass().isAnnotationPresent(Entity.class))
-			//user = null;		
+	public ActionLog(Submission submission, SubmissionState submissionState, User user, Calendar actionDate, Attachment attachment, String entry,boolean privateFlag) {
 		this.submission = submission;
 		this.submissionState = submissionState;
 		this.user = user;
 		this.actionDate = actionDate;
-		//this.attachment = attachment;
+		this.attachment = attachment;
 		this.entry = entry;
 		this.privateFlag = privateFlag;
 	}
@@ -125,6 +111,20 @@ public class ActionLog extends BaseEntity {
 		this.actionDate = actionDate;
 	}
 	/**
+	 * @return the attachment
+	 */
+	public Attachment getAttachment() {
+		return attachment;
+	}
+
+	/**
+	 * @param attachment the attachment to set
+	 */
+	public void setAttachment(Attachment attachment) {
+		this.attachment = attachment;
+	}
+
+	/**
 	 * @return the entry
 	 */
 	public String getEntry() {
@@ -151,42 +151,5 @@ public class ActionLog extends BaseEntity {
 	public void setPrivateFlag(boolean privateFlag) {
 		this.privateFlag = privateFlag;
 	}
-/*	
-	@Override
-	public JpaActionLogImpl save() {
 
-		assertReviewerOrOwner(submission.getSubmitter());
-		
-		return super.save();
-	}
-
-	@Override
-	public JpaActionLogImpl delete() {
-		// You can not delete action logs... at least not right now.
-		throw new IllegalStateException("Action Logs may not be deleted.");
-		// return super.delete();
-	}
-	
-	@Override
-	public JpaActionLogImpl detach() {
-		
-		submission.detach();
-		if (person != null)
-			person.detach();
-		if (attachment != null)
-			attachment.detach();
-		return super.detach();
-	}
-
-	@Override
-	public boolean isPrivate() {
-		return privateFlag;
-	}
-
-	@Override
-	public void setPrivate(boolean privateFlag) {
-		
-		assertReviewerOrOwner(submission.getSubmitter());
-		this.privateFlag = privateFlag;
-	}*/
 }

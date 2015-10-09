@@ -5,33 +5,20 @@ import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Calendar;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-
-/*import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.tdl.vireo.model.Attachment;
-import org.tdl.vireo.model.AttachmentType;
-import org.tdl.vireo.model.Person;
-import org.tdl.vireo.model.Submission;
-import org.tdl.vireo.security.SecurityContext;*/
 
 
 /**
  * 
  */
 @Entity
-@Table(name = "attachment",
-	uniqueConstraints = { @UniqueConstraint( columnNames = { "submission_id", "name" } ) } )
+@Table(name = "attachment")
 public class Attachment extends BaseEntity {
-
-	@ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
-	private Submission submission;
 
 	@Column(nullable = false, length=255)
 	private String name;
@@ -39,18 +26,64 @@ public class Attachment extends BaseEntity {
 	//@Column(nullable = false)
 	//private AttachmentType type;
 	
-	//@ManyToOne(targetEntity=JpaPersonImpl.class, optional=true)
-	//private Person person;
-	
 	@Column(nullable = false)
-	private Date date;
-//TODO - revisit this
-	//private HashedBlob data;
+	private Calendar date;
+	
+	@Column(unique = true)
+	private UUID uuid;
 
 	public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	
 	public Attachment() {
-		
+	setDate(Calendar.getInstance());
+	}
+	
+ public Attachment(String name, UUID uuid ) {
+	 	this();
+		setName(name);	
+		setUuid(uuid);
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * @return the date
+	 */
+	public Calendar getDate() {
+		return date;
+	}
+
+	/**
+	 * @param date the date to set
+	 */
+	public void setDate(Calendar date) {
+		this.date = date;
+	}
+
+	/**
+	 * @return the uuid
+	 */
+	public UUID getUuid() {
+		return uuid;
+	}
+
+	/**
+	 * @param uuid the uuid to set
+	 */
+	public void setUuid(UUID uuid) {
+		this.uuid = uuid;
 	}
 	
 	/**
