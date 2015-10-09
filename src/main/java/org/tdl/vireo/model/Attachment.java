@@ -1,10 +1,9 @@
 package org.tdl.vireo.model;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.text.Normalizer;
+import static javax.persistence.CascadeType.DETACH;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.REFRESH;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -13,9 +12,6 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import static javax.persistence.CascadeType.DETACH;
-import static javax.persistence.CascadeType.MERGE;
-import static javax.persistence.CascadeType.REFRESH;
 
 /*import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;

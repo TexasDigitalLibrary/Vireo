@@ -29,6 +29,7 @@ public class Configuration extends BaseEntity {
      *            The value of the configuration parameter.
      */
     public Configuration(String name, String value) {
+        this();
         this.name = name;
         this.value = value;
     }

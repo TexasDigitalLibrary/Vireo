@@ -8,13 +8,12 @@ import java.util.Calendar;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import org.tdl.vireo.model.User;
-import org.tdl.vireo.model.Submission;
 
 /**
  * 
@@ -26,7 +25,7 @@ public class ActionLog extends BaseEntity {
 	@ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
 	private Submission submission;
 
-	@Column(nullable = false)
+	@ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
 	private SubmissionState submissionState;
 
 	@ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)

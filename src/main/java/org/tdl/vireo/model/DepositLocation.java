@@ -1,15 +1,9 @@
-package org.tdl.vireo.model.jpa;
+package org.tdl.vireo.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
-import org.tdl.vireo.export.Depositor;
-import org.tdl.vireo.export.Packager;
-import org.tdl.vireo.model.DepositLocation;
-
-import play.Logger;
-import play.modules.spring.Spring;
+import javax.persistence.Transient;
 
 /**
  * JPA specific implementation of the Deposit Location interface.
@@ -23,227 +17,193 @@ import play.modules.spring.Spring;
  */
 @Entity
 @Table(name = "deposit_location")
-public class JpaDepositLocationImpl extends JpaAbstractModel<JpaDepositLocationImpl> implements DepositLocation {
+public class DepositLocation extends BaseEntity {
+    
+    @Transient
+    public static final Integer DEFAULT_TIMEOUT = 60;
 
 	@Column(nullable = false)
-	public int displayOrder;
+	private int displayOrder;
 
 	@Column(nullable = false, unique = true, length=255)
-	public String name;
+	private String name;
 	
 	@Column(length=1024)
-	public String repository;
+	private String repository;
 	
 	@Column(length=1024)
-	public String collection;
+	private String collection;
 	
 	@Column(length=255)
-	public String username;
+	private String username;
 	
 	@Column(length=255)
-	public String password;
+	private String password;
 	
 	@Column(length=255)
-	public String onBehalfOf;
+	private String onBehalfOf;
 
 	@Column(length=255)
-	public String packager;
+	private String packager;
 	
 	@Column(length=255)
-	public String depositor;
+	private String depositor;
 	
 	@Column(columnDefinition="INTEGER DEFAULT '60'")
-	public Integer timeout;
+	private Integer timeout;
+	
+	public DepositLocation() {
+	    this.timeout = DEFAULT_TIMEOUT;
+    }
 	
 	/**
-	 * Construct a new JpaDepositLocation
+	 * Construct a new DepositLocation
 	 * 
 	 * @param name
 	 *            The name of the new deposit location.
 	 */
-	protected JpaDepositLocationImpl(String name) {
-
-		if (name == null || name.length() == 0)
-			throw new IllegalArgumentException("Name is required");
-
-		assertManager();
-		
-		this.displayOrder = 0;
-		this.name = name;
-		this.timeout = DEFAULT_TIMEOUT;
-	}
-	
-	@Override
-	public JpaDepositLocationImpl save() {
-		assertManager();
-
-		return super.save();
-	}
-	
-	@Override
-	public JpaDepositLocationImpl delete() {
-		assertManager();
-
-		return super.delete();
-	}
-
-	@Override
-	public int getDisplayOrder() {
-		return displayOrder;
-	}
-
-	@Override
-	public void setDisplayOrder(int displayOrder) {
-		
-		assertManager();
-		this.displayOrder = displayOrder;
-	}
-
-	@Override
-	public String getName() {
-		return this.name;
-	}
-
-	@Override
-	public void setName(String name) {
-		
-		if (name == null || name.length() == 0)
-			throw new IllegalArgumentException("Name is required");
-		assertManager();
-
+	public DepositLocation(String name) {
+	    this();
 		this.name = name;
 	}
-	
-	@Override
-	public String getRepository() {
-		
-		return repository;
-	}
 
-	@Override
-	public void setRepository(String repository) {
-		
-		assertManager();
-		
-		this.repository = repository;
-	}
-
-	@Override
-	public String getCollection() {
-		return collection;
-		
-	}
-
-	@Override
-	public void setCollection(String collection) {
-
-		assertManager();
-		
-		this.collection = collection;
-	}
-
-	@Override
-	public String getUsername() {
-		return username;
-	}
-
-	@Override
-	public void setUsername(String username) {
-		assertManager();
-		
-		this.username = username;
-	}
-
-	@Override
-	public String getPassword() {
-		
-		return password;
-	}
-
-	@Override
-	public void setPassword(String password) {
-		assertManager();
-		
-		this.password = password;
-	}
-
-	@Override
-	public String getOnBehalfOf() {
-		return onBehalfOf;
-	}
-
-	@Override
-	public void setOnBehalfOf(String onBehalfOf) {
-		assertManager();
-		
-		this.onBehalfOf = onBehalfOf;
-	}
-
-	@Override
-	public Packager getPackager() {
-		
-		if (packager == null)
-			return null;
-		
-		try {
-			Object bean = Spring.getBean(packager);
-			return (Packager) bean;
-		} catch (RuntimeException re) {
-			Logger.warn(re,"Unable to packager for deposit location "+id+" because of an exception");
-			return null;
-		}
-		
-	}
-
-	@Override
-	public void setPackager(Packager packager) {
-		assertManager();
-		
-		if (packager == null) 
-			this.packager = null;
-		else 
-			this.packager = packager.getBeanName();
-	}
-
-	@Override
-	public Depositor getDepositor() {
-		
-		if (depositor == null)
-			return null;
-		
-		try {
-			Object bean = Spring.getBean(depositor);
-			return (Depositor) bean;
-		} catch (RuntimeException re) {
-			Logger.warn(re,"Unable to depositor for deposit location "+id+" because of an exception");
-			return null;
-		}
-		
-	}
-
-	@Override
-	public void setDepositor(Depositor depositor) {
-		assertManager();
-		
-		if (depositor == null) 
-			this.depositor = null;
-		else 
-			this.depositor = depositor.getBeanName();
-	}
-
-	@Override
-    public void setTimeout(Integer seconds) {
-		assertManager();
-		
-		if(seconds == null) {
-			this.timeout = DEFAULT_TIMEOUT;
-		} else {
-			this.timeout = seconds;
-		}
+    /**
+     * @return the displayOrder
+     */
+    public int getDisplayOrder() {
+        return displayOrder;
     }
 
-	@Override
+    /**
+     * @param displayOrder the displayOrder to set
+     */
+    public void setDisplayOrder(int displayOrder) {
+        this.displayOrder = displayOrder;
+    }
+
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * @return the repository
+     */
+    public String getRepository() {
+        return repository;
+    }
+
+    /**
+     * @param repository the repository to set
+     */
+    public void setRepository(String repository) {
+        this.repository = repository;
+    }
+
+    /**
+     * @return the collection
+     */
+    public String getCollection() {
+        return collection;
+    }
+
+    /**
+     * @param collection the collection to set
+     */
+    public void setCollection(String collection) {
+        this.collection = collection;
+    }
+
+    /**
+     * @return the username
+     */
+    public String getUsername() {
+        return username;
+    }
+
+    /**
+     * @param username the username to set
+     */
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    /**
+     * @return the password
+     */
+    public String getPassword() {
+        return password;
+    }
+
+    /**
+     * @param password the password to set
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    /**
+     * @return the onBehalfOf
+     */
+    public String getOnBehalfOf() {
+        return onBehalfOf;
+    }
+
+    /**
+     * @param onBehalfOf the onBehalfOf to set
+     */
+    public void setOnBehalfOf(String onBehalfOf) {
+        this.onBehalfOf = onBehalfOf;
+    }
+
+    /**
+     * @return the packager
+     */
+    public String getPackager() {
+        return packager;
+    }
+
+    /**
+     * @param packager the packager to set
+     */
+    public void setPackager(String packager) {
+        this.packager = packager;
+    }
+
+    /**
+     * @return the depositor
+     */
+    public String getDepositor() {
+        return depositor;
+    }
+
+    /**
+     * @param depositor the depositor to set
+     */
+    public void setDepositor(String depositor) {
+        this.depositor = depositor;
+    }
+
+    /**
+     * @return the timeout
+     */
     public Integer getTimeout() {
-	    return (this.timeout == null ? DEFAULT_TIMEOUT : this.timeout);
+        return timeout;
+    }
+
+    /**
+     * @param timeout the timeout to set
+     */
+    public void setTimeout(Integer timeout) {
+        this.timeout = timeout;
     }	
 }
