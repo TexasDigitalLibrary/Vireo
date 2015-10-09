@@ -1,9 +1,9 @@
-package org.tdl.vireo.constant;
+package org.tdl.vireo.config.constant;
 
 /**
  * Common Application Configuration Names.
  * 
- * Stored in the SettingsRepository there are global configuration objects
+ * Stored in the ConfigurationRepository there are global configuration objects
  * consisting of name / value pairs. Different parts of the application are
  * coded to look up specific configuration parameters to determine how the
  * application should respond in specific circumstances. The static values
@@ -16,22 +16,7 @@ package org.tdl.vireo.constant;
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
-public class AppConfig {
-
-	// Submission Settings
-	/** If defined then the student's birth year will be requested. This field is no longer used, see FieldConfig */
-	@Deprecated
-	public final static String SUBMIT_REQUEST_BIRTH = "submit_request_birth";
-	
-	/** If defined then the college parameter will be requested. This field is no longer used, see FieldConfig */
-	@Deprecated
-	public final static String SUBMIT_REQUEST_COLLEGE = "submit_request_college";
-	
-	/** If defined then the UMI Release parameter will be requested. This field is no longer used, see FieldConfig */
-	@Deprecated
-	public final static String SUBMIT_REQUEST_UMI = "submit_request_umi";
-	
-	
+public class ConfigurationName {
 	
 	// Application Settings
 	/** If defined then submissions are open, otherwise they are closed. **/
@@ -108,22 +93,62 @@ public class AppConfig {
 	public final static String SUBMIT_DOCUMENT_INFO_STICKIES = "submit_document_info_stickyies";
 	public final static String SUBMIT_UPLOAD_FILES_STICKIES = "submit_upload_files_stickyies";
 	
+	// application.conf configuration options from Vireo 3 (Play Framework)
+	public final static String APPLICATION_BASE_URL = "application.baseUrl";
+	public final static String APPLICATION_ATTACHMENTS_PATH = "attachments.path";
+	public final static String APPLICATION_INDEX_PATH = "index.path";
+	public final static String APPLICATION_DEPOSITS_PATH = "deposits.path";
+	public final static String APPLICATION_MAIL_SMTP_HOST = "mail.smtp.host";
+	public final static String APPLICATION_MAIL_SMTP_USER = "mail.smtp.user";
+	public final static String APPLICATION_MAIL_SMTP_PASSWORD = "mail.smtp.pass";
+	public final static String APPLICATION_MAIL_SMTP_CHANNEL = "mail.smtp.channel";
+	public final static String APPLICATION_AUTH_FORCE_SSL = "auth.forceSSL"; 
+	public final static String APPLICATION_AUTH_PASS_ENABLED = "auth.pass.enabled";
+	public final static String APPLICATION_AUTH_PASS_VISIBLE = "auth.pass.visible";
+	public final static String APPLICATION_AUTH_PASS_NAME = "auth.pass.name";
+	public final static String APPLICATION_AUTH_PASS_DESCRIPTION = "auth.pass.description";
+	public final static String APPLICATION_AUTH_SHIB_ENABLED = "auth.shib.enabled";
+	public final static String APPLICATION_AUTH_SHIB_VISIBLE = "auth.shib.visible";
+	public final static String APPLICATION_AUTH_SHIB_NAME = "auth.shib.name";
+	public final static String APPLICATION_AUTH_SHIB_DESCRIPTION = "auth.shib.description";
+	public final static String APPLICATION_AUTH_SHIB_LOGIN_FORCE_SSL = "auth.shib.login.forceSSL";
+	public final static String APPLICATION_AUTH_SHIB_LOGIN_URL = "auth.shib.login.url";
+	public final static String APPLICATION_AUTH_SHIB_LOGOUT_URL = "auth.shib.logout.url";
+	public final static String APPLICATION_AUTH_SHIB_LOGOUT_ENABLED = "auth.shib.logout.enabled";
+	public final static String APPLICATION_AUTH_SHIB_PRIMARY_IDENTIFIER = "auth.shib.primaryIdentifier";
+	public final static String APPLICATION_AUTH_SHIB_MOCK = "auth.shib.mock";
+	public final static String APPLICATION_AUTH_SHIB_LOG = "auth.shib.log";
+	public final static String APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID = "auth.shib.attribute.netid";
+	public final static String APPLICATION_AUTH_SHIB_ATTRIBUTE_EMAIL = "auth.shib.attribute.email";
+	public final static String APPLICATION_AUTH_SHIB_ATTRIBUTE_FIRST_NAME = "auth.shib.attribute.firstName";
+	public final static String APPLICATION_AUTH_SHIB_ATTRIBUTE_LAST_NAME = "auth.shib.attribute.lastName";
+	public final static String APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER = "auth.shib.attribute.institutionalIdentifier";
+	public final static String APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME = "auth.shib.attribute.middleName";
+	public final static String APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR = "auth.shib.attribute.birthYear";
+	public final static String APPLICATION_AUTH_SHIB_ATTRIBUTE_AFFILIATIONS = "auth.shib.attribute.affiliations";
+	public final static String APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_PHONE_NUMBER = "auth.shib.attribute.currentPhoneNumber";
+	public final static String APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_POSTAL_ADDRESS = "auth.shib.attribute.currentPostalAddress";
+	public final static String APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_EMAIL_ADDRESS = "auth.shib.attribute.currentEmailAddress";
+	public final static String APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_PHONE_NUMBER = "auth.shib.attribute.permanentPhoneNumber";
+	public final static String APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_POSTAL_ADDRESS = "auth.shib.attribute.permanentPostalAddress";
+	public final static String APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_EMAIL_ADDRESS = "auth.shib.attribute.permanentEmailAddress";
+	public final static String APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_DEGREE = "auth.shib.attribute.currentDegree";
+	public final static String APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_DEPARTMENT = "auth.shib.attribute.currentDepartment";
+	public final static String APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_COLLEGE = "auth.shib.attribute.currentCollege";
+	public final static String APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_MAJOR = "auth.shib.attribute.currentMajor";
+	public final static String APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_GRADUATION_YEAR = "auth.shib.attribute.currentGraduationYear";
+	public final static String APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_GRADUATION_MONTH = "auth.shib.attribute.currentGraduationMonth";
+	public final static String APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID = "auth.shib.attribute.orcid";
+	public final static String APPLICATION_ADVISOR_AFFILIATION_RESTRICT = "advisor.affiliation.restrict";
+	public final static String APPLICATION_SUBMIT_FIELD_LOCK = "submit.field.lock";
+	public final static String APPLICATION_VIREO_VERSION = "vireo.version";
+	public final static String APPLICATION_NAME = "application.name";
+	public final static String APPLICATION_MODE = "application.mode";
+	public final static String APPLICATION_DATE_FORMAT = "date.format";
+	public final static String APPLICATION_FILESIZE_VALIDATE = "fileSize.validate";
+	public final static String APPLICATION_FILESIZE_MAXSIZE = "fileSize.maxFileSize";
+	public final static String APPLICATION_FILESIZE_MAXSIZETOTAL = "fileSize.maxFileSizeTotal";
 	
-	// Degree code mapping
-	/** The prefix underwhich all degree codes are stored under. Use the getDegreeCodeConfig() method to resolve the name for each degree */
-	public final static String DEGREE_CODE_PREFIX = "degree_code";
-	
-	/**
-	 * Return the configuration name which identifies the abbreviated degree code for a particular degree.
-	 * 
-	 * @param degree The full name of the degree (i.e. "Doctor of Philosophy")
-	 * @return The configuration name of the code.
-	 */
-	public final static String getDegreeCodeConfig(String degree) {
-		if (degree == null)
-			return null;
-		
-		return DEGREE_CODE_PREFIX + "_" + degree.replaceAll(" ", "_").toLowerCase();
-	}
-	
+	// Vireo 4 new Configuration Names
+	public final static String APPLICATION_INSTALL_DIRECTORY = "install.dir";
 }

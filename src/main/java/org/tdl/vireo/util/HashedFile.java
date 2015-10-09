@@ -1,194 +1,90 @@
-package org.tdl.vireo.model.jpa;
+package org.tdl.vireo.util;
 
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
+import java.io.OutputStream;
+import java.util.UUID;
 
-import org.hibernate.HibernateException;
-import org.hibernate.engine.spi.SessionImplementor;
-import org.hibernate.type.StringType;
-import org.hibernate.usertype.UserType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
+import org.tdl.vireo.config.constant.ConfigurationName;
+import org.tdl.vireo.model.repo.ConfigurationRepo;
 
-import play.Play;
-import play.db.Model.BinaryField;
-import play.exceptions.UnexpectedException;
-import play.libs.Codec;
-import play.libs.IO;
-
-/**
- * This is a slight update upon the default Play "blob" datatype. The HashedBlob
- * will hash the data files out into sub directories instead of leaving them all
- * in one directory.
- * 
- * 
- * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
- * @author <a href="mailto:gad.krumholz@austin.utexas.edu">Gad Krumholz</a>
- * 
- */
-public class HashedBlob implements BinaryField, UserType {
-
-    private String UUID;
-    private String type;
-    private File file;
-
-    public HashedBlob() {}
-
-    private HashedBlob(String UUID, String type) {
-        this.UUID = UUID;
-        this.type = type;
-    }
+@Service
+public class HashedFile {    
+    @Autowired
+    private ConfigurationRepo configurationRepo;
     
-    public InputStream get() {
-        if(exists()) {
-            try {
-                return new FileInputStream(getFile());
-            } catch(Exception e) {
-                throw new UnexpectedException(e);
-            }
-        }
-        return null;
-    }
-    
-    public void set(InputStream is, String type) {
-        this.UUID = Codec.UUID();
-        this.type = type;
-        
+    public HashedFile() { }
+
+    /**
+     * Writes an InputStream out to a new uuid-based filename in the attachments location configured in Vireo
+     * 
+     * @param is
+     *            the InputStream
+     * @throws IOException
+     */
+    public UUID write(InputStream is) throws IOException {
+        UUID uuid = UUID.randomUUID();
+
         // Make sure the hash directory exists.
-        getFile().getParentFile().mkdirs();        
-        IO.write(is, getFile());
+        File file = getFile(uuid);
+        file.getParentFile().mkdirs();
+        OutputStream os = new FileOutputStream(file);
+        FileCopyUtils.copy(is, os);
+        
+        return uuid;
     }
 
-    public long length() {
-        return getFile().length();
+    /**
+     * Returns pointer to a file in the Vireo attachments location from a given uuid
+     * 
+     * @param uuid
+     *            of file
+     * @return File pointer of file
+     */
+    public File getFile(UUID uuid) {
+        // Get the UUID as a string
+        String uuidString = uuid.toString();
+
+        // get subdirectory names
+        String subDir1 = uuidString.substring(0, 2);
+        String subDir2 = uuidString.substring(2, 4);
+        String subDir3 = uuidString.substring(4, 6);
+        String subDir4 = uuidString.substring(6, 8);
+
+        // Concatenate the subDirs with the Store location
+        File hashDir = new File(getStore(), subDir1 + File.separator + subDir2 + File.separator + subDir3 + File.separator + subDir4);
+
+        // get the file
+        File file = new File(hashDir, uuidString);
+
+        return file;
     }
 
-    public String type() {
-        return type;
-    }
-
-    public boolean exists() {
-        return UUID != null && getFile().exists();
-    }
-
-	/**
-	 * This is the one method that is different from the original Blob type.
-	 * 
-	 * A hash directory is calculated and set as the parent folder for the file.
-	 * 
-	 * @return A file pointer to the data.
-	 */
-	public File getFile() {
-	if (file == null) {
-			String UUID = getUUID();
-
-			String name1 = UUID.substring(0, 2);
-			String name2 = UUID.substring(2, 4);
-			String name3 = UUID.substring(4, 6);
-			String name4 = UUID.substring(6, 8);
-
-			File hashDir = new File(getStore(), name1 + File.separator + name2
-					+ File.separator + name3 + File.separator + name4);
-
-			file = new File(hashDir, UUID);
-		}
-		return file;
-	}
-    
-    public String getUUID()  {
-        return UUID;
-    }
-
-    //
-
-    public int[] sqlTypes() {
-        return new int[] {Types.VARCHAR};
-    }
-
-    public Class returnedClass() {
-        return HashedBlob.class;
-    }
-
-    private static boolean equal(Object a, Object b) {
-      return a == b || (a != null && a.equals(b));
-    }
-
-    public boolean equals(Object o, Object o1) throws HibernateException {
-        if(o instanceof HashedBlob && o1 instanceof HashedBlob) {
-            return equal(((HashedBlob)o).UUID, ((HashedBlob)o1).UUID) &&
-                    equal(((HashedBlob)o).type, ((HashedBlob)o1).type);
-        }
-        return equal(o, o1);
-    }
-
-    public int hashCode(Object o) throws HibernateException {
-        return o.hashCode();
-    }
-
-    @Override
-    public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException {
-        String val = (String) StringType.INSTANCE.get(rs, names[0], session);
-
-        if(val == null || val.length() == 0 || !val.contains("|")) {
-            return new HashedBlob();
-        }
-        return new HashedBlob(val.split("[|]")[0], val.split("[|]")[1]);
-    }
-    
-    @Override
-    public void nullSafeSet(PreparedStatement st, Object value, int index, SessionImplementor session) throws HibernateException, SQLException {
-        if(value != null) {
-            st.setString(index, ((HashedBlob)value).UUID + "|" + ((HashedBlob)value).type);
-        } else {
-            st.setNull(index, Types.VARCHAR);
-        }
-    }
-
-    public Object deepCopy(Object o) throws HibernateException {
-        if(o == null) {
-            return null;
-        }
-        return new HashedBlob(((HashedBlob)o).UUID, ((HashedBlob)o).type);
-    }
-
-    public boolean isMutable() {
-        return true;
-    }
-
-    public Serializable disassemble(Object o) throws HibernateException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public Object assemble(Serializable srlzbl, Object o) throws HibernateException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public Object replace(Object o, Object o1, Object o2) throws HibernateException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    //
-
-    public static String getUUID(String dbValue) {
-       return dbValue.split("[|]")[0];
-    }
-
-    public static File getStore() {
-        String name = Play.applicationPath + File.separator + Play.configuration.getProperty("attachments.path", "attachments");
+    /**
+     * Gets the attachment storage location from Vireo Configuration
+     * 
+     * @return File pointing to parent directory for attachments
+     */
+    public File getStore() {
+        String name = configurationRepo.getValue(ConfigurationName.APPLICATION_ATTACHMENTS_PATH, "attachments");
         File store = null;
-        if(new File(name).isAbsolute()) {
+
+        if (new File(name).isAbsolute()) {
             store = new File(name);
         } else {
-            store = Play.getFile(name);
+            // TODO: this probably needs to be better -- /var/lib/vireo is absolute and only for linux
+            String installationPath = configurationRepo.getValue(ConfigurationName.APPLICATION_INSTALL_DIRECTORY, "/var/lib/vireo");
+            store = new File(installationPath + File.separator + name);
         }
-        if(!store.exists()) {
+        if (!store.exists()) {
             store.mkdirs();
         }
         return store;
     }
-    
+
 }
