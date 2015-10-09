@@ -47,7 +47,7 @@ public class Submission extends BaseEntity {
     
     @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
     private Set<ActionLog> actionLog;
-    
+    //TODO - attachments to be added
     @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
     private Set<Attachment> attachments;
     
