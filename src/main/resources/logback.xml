@@ -2,9 +2,10 @@
 <configuration>
 
 	<include resource="org/springframework/boot/logging/logback/base.xml" />
+	<property name="LOG_PATH" value="${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}" />
 
 	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
-		<file>vireo.log</file>
+		<file>${LOG_PATH}/vireo.log</file>
 		<append>true</append>
 
 		<encoder>

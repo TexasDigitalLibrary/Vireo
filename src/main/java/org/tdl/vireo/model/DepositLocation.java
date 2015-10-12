@@ -2,21 +2,9 @@ package org.tdl.vireo.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.persistence.Transient;
 
-/**
- * JPA specific implementation of the Deposit Location interface.
- * 
- * This class will store all URL datatypes as strings in the database, and then
- * re-parse them when requested. Also in a similar manner when packagers and
- * depositors will be stored based upon their spring bean names. If those names
- * change then problems will occure.
- * 
- * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
- */
 @Entity
-@Table(name = "deposit_location")
 public class DepositLocation extends BaseEntity {
     
     @Transient
