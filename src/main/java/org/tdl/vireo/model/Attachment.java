@@ -1,9 +1,5 @@
 package org.tdl.vireo.model;
 
-import static javax.persistence.CascadeType.DETACH;
-import static javax.persistence.CascadeType.MERGE;
-import static javax.persistence.CascadeType.REFRESH;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.UUID;
@@ -11,7 +7,6 @@ import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
 
 /**
  * 
@@ -38,7 +33,7 @@ public class Attachment extends BaseEntity {
 	setDate(Calendar.getInstance());
 	}
 	
- public Attachment(String name, UUID uuid ) {
+	public Attachment(String name, UUID uuid ) {
 	 	this();
 		setName(name);	
 		setUuid(uuid);
@@ -87,83 +82,6 @@ public class Attachment extends BaseEntity {
 	}
 	
 	/**
-	 * Private constructor to share code between the file and bytearray constructors.
-	 * 
-	 * @param submission The submission this attachment will be associated with.
-	 * @param type The type of the submission.
-	 */
-	/*private JpaAttachmentImpl(Submission submission, AttachmentType type) {
-		if (submission == null)
-			throw new IllegalArgumentException("Submission is required");
-		
-		if (type == null)
-			throw new IllegalArgumentException("Attachment type is required");
-		
-		if (AttachmentType.PRIMARY == type) {
-			// Check that there is not already a primary document.	
-			if (submission.getPrimaryDocument() != null)
-				throw new IllegalArgumentException("There can only be one primary document associated with a submission. You must remove the current primary document before adding another.");
-		}
-
-		assertReviewerOrOwner(submission.getSubmitter());
-
-		// If the person operating is not a persistant person, a mock or
-		// otherwise then don't record the link.
-		SecurityContext context = Spring.getBeanOfType(SecurityContext.class);		
-		Person person = context.getPerson();
-		if (person != null && !person.getClass().isAnnotationPresent(Entity.class))
-			person = null;
-		
-		this.submission = submission;
-		this.type = type;
-		this.person = person;
-		this.date = new Date();
-		
-	}
-	
-	
-	*//**
-	 * Create a new JpaAttachmentImpl from a file.
-	 * 
-	 * @param submission
-	 *            The submission this attachment belongs too.
-	 * @param type
-	 *            The type of the attachment.
-	 * @param file
-	 *            The file.
-	 *//*
-	protected JpaAttachmentImpl(Submission submission, AttachmentType type,
-			File file) throws IOException {
-
-		this(submission,type);
-		
-		if (file == null)
-			throw new IllegalArgumentException("File is required");
-		
-		if (!file.exists())
-			throw new IllegalArgumentException("File does not exist");
-		
-		if (!file.canRead())
-			throw new IllegalArgumentException("File is not readable");
-		
-		setName(file.getName());
-		
-		String mimeType;
-		try {
-			mimeType = MimeTypes.getContentType(name);
-		} catch (RuntimeException re) {
-			mimeType = "application/octet-stream";
-		}
-		
-		this.data = new HashedBlob();
-		this.data.set(new FileInputStream(file), mimeType);
-		
-		if (AttachmentType.PRIMARY == type)
-			renamePrimaryDocument();
-	}
-	
-
-	*//**
 	 * Create a new JpaAttachmentIpml from a byte array.
 	 * 
 	 * @param submission
@@ -174,7 +92,8 @@ public class Attachment extends BaseEntity {
 	 *            The filename of the attachment.
 	 * @param content
 	 *            The contents of the attachment.
-	 *//*
+	 */
+	/*
 	protected JpaAttachmentImpl(Submission submission, AttachmentType type,
 			String filename, byte[] content) throws IOException {
 	
@@ -205,130 +124,7 @@ public class Attachment extends BaseEntity {
 			renamePrimaryDocument();
 	}
 
-	@Override
-	public JpaAttachmentImpl save() {
-
-		assertReviewerOrOwner(submission.getSubmitter());
-
-		if (AttachmentType.PRIMARY == type)
-			renamePrimaryDocument();
-		
-		boolean newObject = false;
-		if (id == null)
-			newObject = true;
-
-		super.save();
-
-		if (newObject) {
-			
-			// We're a new object so log the addition.
-			String entry = String.format(
-					"%s file '%s' (%s) uploaded", 
-					this.getType().name(), 
-					this.getName(), 
-					this.getDisplaySize()
-			);
-			((JpaSubmissionImpl) submission).logAction(entry,this);
-
-		} else {
-			
-			// We've been updated so log the change.
-			String entry = String.format(
-					"%s file '%s' modified",
-					this.getType().name(),
-					this.getName()
-			);
-			((JpaSubmissionImpl) submission).logAction(entry,this);
-		}
-
-		submission.save();
-		
-		return this;
-	}
 	
-	@Override
-	public JpaAttachmentImpl delete() {
-
-		assertReviewerOrOwner(submission.getSubmitter());
-		
-		((JpaSubmissionImpl) submission).removeAttachment(this);
-		
-		
-		String displaySize = this.getDisplaySize();
-		if (this.data.exists())
-			this.data.getFile().delete();
-		
-
-		// Scrub the actionlog of references to this file. The entries will
-		// still exist, but it won't have a foriegn key reference.
-		em().createQuery(
-				"UPDATE JpaActionLogImpl " +
-				"SET Attachment_Id = null " +
-				"WHERE Attachment_Id = ? " 
-				).setParameter(1, this.getId())
-				.executeUpdate();
-		
-		super.delete();
-		
-		String entry = String.format(
-				"%s file '%s' (%s) removed",
-				this.getType().name(),
-				this.getName(),
-				displaySize);
-		((JpaSubmissionImpl) submission).logAction(entry);
-		
-		submission.save();
-		
-		return this;
-	}
-	
-	@Override
-	public void archive() {
-		
-		if (type == AttachmentType.ARCHIVED)
-			throw new IllegalStateException("Unable to archive an already archived attachment.");
-		
-		type = AttachmentType.ARCHIVED;
-		
-		// Rename the file: [filename]-2012-08-14[#].extension
-		
-		String basename = FilenameUtils.getBaseName(name);
-		String date = dateFormat.format(new Date());
-		String extension = FilenameUtils.getExtension(name);
-		
-		String newName = rename(basename+"-archived-on-"+date,extension);
-		
-		this.setName(newName);
-	}	
-	
-	@Override
-	public Submission getSubmission() {
-		return this.submission;
-	}
-
-	@Override
-	public String getName() {
-		return this.name;
-	}
-
-	@Override
-	public void setName(String name) {
-		if (name == null || name.length() == 0)
-			throw new IllegalArgumentException("Attachment name may not be blank or null.");
-
-		assertReviewerOrOwner(submission.getSubmitter());
-		
-		// Check if this filename has already exists
-		if (submission.getId() != null && submission.findAttachmentByName(name) != null) {
-			// If so, we rename this attachment
-			String basename = FilenameUtils.getBaseName(name);
-			String extension = FilenameUtils.getExtension(name);
-			name = rename(basename,extension);
-		}
-		
-		this.name = name;
-	}
-
 	@Override
 	public AttachmentType getType() {
 		return this.type;
@@ -355,34 +151,8 @@ public class Attachment extends BaseEntity {
 	public String getMimeType() {
 		return this.data.type();
 	}
-
-	@Override
-	public long getSize() {
-		return this.data.getFile().length();
-	}
-
-	@Override
-	public String getDisplaySize() {
-
-		return FileUtils.byteCountToDisplaySize(this.data.getFile().length());
-	}
-
-	@Override
-	public File getFile() {
-		return this.data.getFile();
-	}
-
-	@Override
-	public Person getPerson() {
-		return this.person;
-	}
-
-	@Override
-	public Date getDate() {
-		return this.date;
-	}	
-	
-	*//**
+	*/
+	/**
 	 * Search for an available attachment name based upon the basename and
 	 * extension provided. If the name is already taken then a _1, _2, _3 will
 	 * be appended until a unique name can be reached. Once a unique name has
@@ -393,7 +163,8 @@ public class Attachment extends BaseEntity {
 	 * @param extension
 	 *            The file's extension (may be null or blank)
 	 * @return An unused filename in the form [basename][_1][.extension]
-	 *//*
+	 */
+	/*
 	protected String rename(String basename, String extension) {
 		
 		// Check if the new filename exsits, if so add a copy number. Repeate until found.
@@ -418,7 +189,8 @@ public class Attachment extends BaseEntity {
 		}
 	}
 	
-	*//**
+	*/
+	/**
 	 * Rename the primary document to follow the convention: [LAST]-[DOCUMENT
 	 * TYPE]-[YEAR].pdf. If those parameters are not available on the submission
 	 * then fall backs are used all the way back to "PRIMARY-DOCUMENT.pdf" is
