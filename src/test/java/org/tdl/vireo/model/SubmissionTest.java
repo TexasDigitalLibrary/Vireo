@@ -68,7 +68,6 @@ public class SubmissionTest {
     
     private static final String TEST_ATTACHMENT_NAME = "Test Attachment Name";
     private UUID TEST_UUID = UUID.randomUUID();
-    private Calendar TEST_ATTACHMENT_DATE;
 
     private static User parentSubmissionSubmitter;
     private static SubmissionState parentSubmissionState;
@@ -76,7 +75,7 @@ public class SubmissionTest {
     private static FieldValue parentFieldValue;
     private static Organization parentOrganization;
     private static WorkflowStep parentSubmissionWorkflowStep;
-    private static Attachment testAttachment;
+    private static Attachment parentAttachment;
 
     @Autowired
     private SubmissionRepo submissionRepo;
@@ -103,10 +102,12 @@ public class SubmissionTest {
     private WorkflowStepRepo workflowStepRepo;
     
     @Autowired
-    private ActionLogRepo actionLogRepo;
+    private AttachmentRepo attachmentRepo;
     
     @Autowired
-    private AttachmentRepo attachmentRepo;
+    private ActionLogRepo actionLogRepo;
+    
+    
 
     @Before
     public void setUp() {
@@ -136,8 +137,8 @@ public class SubmissionTest {
         parentSubmissionWorkflowStep = workflowStepRepo.create(TEST_PARENT_WORKFLOW_STEP_NAME);
         assertEquals("The workflow step does not exist!", 1, workflowStepRepo.count());
         
-       // testAttachment = attachmentRepo.create();
-       // assertEquals("The attachment is created ",1,attachmentRepo.count());
+        parentAttachment = attachmentRepo.create(TEST_ATTACHMENT_NAME, TEST_UUID);
+        assertEquals("The attachment does not exist!", 1, attachmentRepo.count());
     }
 
     @Test
@@ -148,6 +149,7 @@ public class SubmissionTest {
         parentSubmission.addOrganization(parentOrganization);
         parentSubmission.addSubmissionWorkflowStep(parentSubmissionWorkflowStep);
         parentSubmission.addFieldValue(parentFieldValue);
+        parentSubmission.addAttachment(parentAttachment);
         parentSubmission = submissionRepo.save(parentSubmission);
 
         assertEquals("The repository did not save the submission!", 1, submissionRepo.count());
@@ -156,6 +158,7 @@ public class SubmissionTest {
         assertEquals("Saved submission did not contain the correct organization!", true, parentSubmission.getOrganizations().contains(parentOrganization));
         assertEquals("Saved submission did not contain the correct submission workflow step!", true, parentSubmission.getSubmissionWorkflowSteps().contains(parentSubmissionWorkflowStep));
         assertEquals("Saved submission did not contain the correct field value!", true, parentSubmission.getFieldValues().contains(parentFieldValue));
+        assertEquals("Saved submission did not contain the correct attachment!", true, parentSubmission.getAttachments().contains(parentAttachment));
     }
 
     @Test
@@ -198,9 +201,8 @@ public class SubmissionTest {
         FieldValue detachableFieldValue = fieldValueRepo.create(detachableFieldPredicate);
 
         Submission parentSubmission = submissionRepo.create(parentSubmissionSubmitter, parentSubmissionState);
-        SubmissionState testSubmissionState = submissionStateRepo.create(TEST_PARENT_SUBMISSION_STATE_NAME, TEST_PARENT_SUBMISSION_STATE_ARCHIVED, TEST_PARENT_SUBMISSION_STATE_PUBLISHABLE, TEST_PARENT_SUBMISSION_STATE_DELETABLE, TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_PARENT_SUBMISSION_STATE_ACTIVE);
-        //Attachment testAttachment = attachmentRepo.create();
-       // ActionLog testActionLog = actionLogRepo.create(parentSubmission, testSubmissionState, parentSubmissionSubmitter, TEST_PARENT_SUBMISSION_STATE_ACTION_LOG_ACTION_DATE,testAttachment, TEST_PARENT_SUBMISSION_STATE_ACTION_LOG_ENTRY, TEST_PARENT_SUBMISSION_STATE_ACTION_LOG_FLAG) ;
+        
+        ActionLog detachableActionLog = actionLogRepo.create(parentSubmission, parentSubmissionState, parentSubmissionSubmitter, TEST_PARENT_SUBMISSION_STATE_ACTION_LOG_ACTION_DATE,parentAttachment, TEST_PARENT_SUBMISSION_STATE_ACTION_LOG_ENTRY, TEST_PARENT_SUBMISSION_STATE_ACTION_LOG_FLAG) ;
         		
         parentSubmission.addOrganization(parentOrganization);
         parentSubmission.addSubmissionWorkflowStep(parentSubmissionWorkflowStep);
@@ -208,8 +210,8 @@ public class SubmissionTest {
         parentSubmission.addOrganization(detachableOrganization);
         parentSubmission.addSubmissionWorkflowStep(detachableWorkflowStep);
         parentSubmission.addFieldValue(detachableFieldValue);
-       // parentSubmission.addActionLog(testActionLog);
-        //parentSubmission.addAttachment(testAttachment);
+        parentSubmission.addAttachment(parentAttachment);
+        parentSubmission.addActionLog(detachableActionLog);
         parentSubmission = submissionRepo.save(parentSubmission);
 
         //TODO:  These are not JPA detachments from an EM!!!
@@ -229,35 +231,28 @@ public class SubmissionTest {
         parentSubmission.removeFieldValue(detachableFieldValue);
         parentSubmission = submissionRepo.save(parentSubmission);
         assertEquals("The field value was not detached!", 1, parentSubmission.getFieldValues().size());
-        assertEquals("The field value was orphaned!", 1, fieldValueRepo.count());
-        
-        // test detach actionLog
-       // parentSubmission.removeActionLog(testActionLog);
-       // parentSubmission = submissionRepo.save(parentSubmission);
-        //assertEquals("The actionLog entry was not detached", 1, parentSubmission.getActionLog().size());
-        //assertEquals("The actionLog entry was orphaned", 1, actionLogRepo.count());
-        
-        //test detach Attachment
-        /*parentSubmission.removeAttachment(testAttachment);
-        parentSubmission = submissionRepo.save(parentSubmission);
-        assertEquals("The attachment was not detached", 1, parentSubmission.getAttachments().size());
-        assertEquals("The attachment entry was orphaned", 1, attachmentRepo.count());*/
+        assertEquals("The field value was orphaned!", 1, fieldValueRepo.count());       
         
         // test delete submission
         submissionRepo.delete(parentSubmission);
         assertEquals("Submission was deleted!", 0, submissionRepo.count());
+        assertEquals("The action log was  orphaned!", 0, actionLogRepo.count());
+        assertEquals("The attachment were orphaned",0,attachmentRepo.count());
         assertEquals("The submission state was deleted!", 1, submissionStateRepo.count());
         assertEquals("The organization was deleted!", 2, organizationRepo.count());
         assertEquals("The workflow steps were deleted!", 0, workflowStepRepo.count());
         assertEquals("The field values were orphaned!", 0, fieldValueRepo.count());
         assertEquals("The field predicates were orphaned!", 2, fieldPredicateRepo.count());
+        
     }
 
     @After
     public void cleanUp() {
+    	attachmentRepo.deleteAll();
         submissionRepo.deleteAll();
         submissionStateRepo.deleteAll();
         workflowStepRepo.deleteAll();
+        actionLogRepo.deleteAll();
         fieldValueRepo.deleteAll();
         fieldPredicateRepo.deleteAll();
         organizationRepo.deleteAll();
