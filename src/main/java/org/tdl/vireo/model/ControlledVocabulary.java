@@ -22,7 +22,7 @@ public class ControlledVocabulary extends BaseEntity {
     private Language language;
 
     @ElementCollection
-    @Column(columnDefinition = "TEXT", nullable = true, unique = true)
+    @Column(nullable = true, unique = true)
     private Set<String> values;
 
     public ControlledVocabulary() {
