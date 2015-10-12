@@ -1,31 +1,80 @@
 package org.tdl.vireo.model;
 
+import static javax.persistence.CascadeType.DETACH;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.REFRESH;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 /**
  * The value of a custom action associated with a particular submission.
  * 
- * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
-public interface CustomActionValue extends AbstractModel {
+@Entity
+@Table(name = "custom_action_value")
+public class CustomActionValue extends BaseEntity {
+	@ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
+	private Submission submission;
+
+	@ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
+	private CustomActionDefinition definition;
+
+	@Column(nullable = false)
+	private Boolean value;
+	
+	public CustomActionValue() {
+		//TODO - should we initialize any values
+	}
+	
+	public CustomActionValue(Submission submission,CustomActionDefinition definition,Boolean value) {
+		setSubmission(submission);
+		setDefinition(definition);
+		setValue(value);
+	}
 
 	/**
-	 * @return The submission this action value is associated with.
+	 * @return the submission
 	 */
-	public Submission getSubmission();
+	public Submission getSubmission() {
+		return submission;
+	}
 
 	/**
-	 * @return the definition of this custom action.
+	 * @param submission the submission to set
 	 */
-	public CustomActionDefinition getDefinition();
+	public void setSubmission(Submission submission) {
+		this.submission = submission;
+	}
 
 	/**
-	 * @return The boolean value of this action.
+	 * @return the definition
 	 */
-	public boolean getValue();
+	public CustomActionDefinition getDefinition() {
+		return definition;
+	}
 
 	/**
-	 * @param value
-	 *            The new value of this action.
+	 * @param definition the definition to set
 	 */
-	public void setValue(boolean value);
+	public void setDefinition(CustomActionDefinition definition) {
+		this.definition = definition;
+	}
+
+	/**
+	 * @return the value
+	 */
+	public Boolean getValue() {
+		return value;
+	}
+
+	/**
+	 * @param value the value to set
+	 */
+	public void setValue(Boolean value) {
+		this.value = value;
+	}
 
 }
