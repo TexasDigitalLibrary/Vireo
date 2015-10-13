@@ -21,7 +21,9 @@ public class EmailTemplate extends BaseEntity{
 	@Column(nullable = false)
 	private Boolean isSystemRequired;
 
-	public EmailTemplate() {}
+	public EmailTemplate() {
+	    isSystemRequired(false);
+	}
 	/**
 	 * Create a new EmailTemplate
 	 * 
@@ -37,7 +39,6 @@ public class EmailTemplate extends BaseEntity{
 		setName(name);
 		setSubject(subject);
 		setMessage(message);
-		isSystemRequired(false);
 	}
 	/**
 	 * @return the name
