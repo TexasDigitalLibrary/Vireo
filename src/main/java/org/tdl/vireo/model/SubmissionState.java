@@ -18,22 +18,22 @@ public class SubmissionState extends BaseEntity {
     private String name;
 
     @Column(nullable = false)
-    private Boolean archived;
+    private Boolean isArchived;
 
     @Column(nullable = false)
-    private Boolean publishable;
+    private Boolean isPublishable;
 
     @Column(nullable = false)
-    private Boolean deletable;
+    private Boolean isDeletable;
 
     @Column(nullable = false)
-    private Boolean editableByReviewer;
+    private Boolean isEditableByReviewer;
 
     @Column(nullable = false)
-    private Boolean editableByStudent;
+    private Boolean isEditableByStudent;
 
     @Column(nullable = false)
-    private Boolean active;
+    private Boolean isActive;
 
     @ManyToMany(cascade = { DETACH, REFRESH, MERGE })
     private Set<SubmissionState> transitionSubmissionStates;
@@ -44,22 +44,22 @@ public class SubmissionState extends BaseEntity {
 
     /**
      * @param name
-     * @param archived
-     * @param publishable
-     * @param deletable
-     * @param editableByReviewer
-     * @param editableByStudent
-     * @param active
+     * @param isArchived
+     * @param isPublishable
+     * @param isDeletable
+     * @param isEditableByReviewer
+     * @param isEditableByStudent
+     * @param isActive
      */
-    public SubmissionState(String name, Boolean archived, Boolean publishable, Boolean deletable, Boolean editableByReviewer, Boolean editableByStudent, Boolean active) {
+    public SubmissionState(String name, Boolean isArchived, Boolean isPublishable, Boolean isDeletable, Boolean isEditableByReviewer, Boolean isEditableByStudent, Boolean active) {
         this();
         setName(name);
-        setArchived(archived);
-        setPublishable(publishable);
-        setDeletable(deletable);
-        setEditableByReviewer(editableByReviewer);
-        setEditableByStudent(editableByStudent);
-        setActive(active);
+        isArchived(isArchived);
+        isPublishable(isPublishable);
+        isDeletable(isDeletable);
+        isEditableByReviewer(isEditableByReviewer);
+        isEditableByStudent(isEditableByStudent);
+        isActive(isActive);
     }
 
     /**
@@ -78,93 +78,93 @@ public class SubmissionState extends BaseEntity {
     }
 
     /**
-     * @return the archived
+     * @return isArchived
      */
-    public Boolean getArchived() {
-        return archived;
+    public Boolean isArchived() {
+        return isArchived;
     }
 
     /**
-     * @param archived
+     * @param isArchived
      *            the archived to set
      */
-    public void setArchived(Boolean archived) {
-        this.archived = archived;
+    public void isArchived(Boolean isArchived) {
+        this.isArchived = isArchived;
     }
 
     /**
-     * @return the publishable
+     * @return isPublishable
      */
-    public Boolean getPublishable() {
-        return publishable;
+    public Boolean isPublishable() {
+        return isPublishable;
     }
 
     /**
-     * @param publishable
+     * @param isPublishable
      *            the publishable to set
      */
-    public void setPublishable(Boolean publishable) {
-        this.publishable = publishable;
+    public void isPublishable(Boolean isPublishable) {
+        this.isPublishable = isPublishable;
     }
 
     /**
-     * @return the deletable
+     * @return isDeletable
      */
-    public Boolean getDeletable() {
-        return deletable;
+    public Boolean isDeletable() {
+        return isDeletable;
     }
 
     /**
-     * @param deletable
+     * @param isDeletable
      *            the deletable to set
      */
-    public void setDeletable(Boolean deletable) {
-        this.deletable = deletable;
+    public void isDeletable(Boolean isDeletable) {
+        this.isDeletable = isDeletable;
     }
 
     /**
-     * @return the editableByReviewer
+     * @return isEditableByReviewer
      */
-    public Boolean getEditableByReviewer() {
-        return editableByReviewer;
+    public Boolean isEditableByReviewer() {
+        return isEditableByReviewer;
     }
 
     /**
-     * @param editableByReviewer
+     * @param isEditableByReviewer
      *            the editableByReviewer to set
      */
-    public void setEditableByReviewer(Boolean editableByReviewer) {
-        this.editableByReviewer = editableByReviewer;
+    public void isEditableByReviewer(Boolean isEditableByReviewer) {
+        this.isEditableByReviewer = isEditableByReviewer;
     }
 
     /**
-     * @return the editableByStudent
+     * @return isEditableByStudent
      */
-    public Boolean getEditableByStudent() {
-        return editableByStudent;
+    public Boolean isEditableByStudent() {
+        return isEditableByStudent;
     }
 
     /**
-     * @param editableByStudent
+     * @param isEditableByStudent
      *            the editableByStudent to set
      */
-    public void setEditableByStudent(Boolean editableByStudent) {
-        this.editableByStudent = editableByStudent;
+    public void isEditableByStudent(Boolean isEditableByStudent) {
+        this.isEditableByStudent = isEditableByStudent;
     }
 
     /**
-     * @return the active
+     * @return isActive
      */
-    public Boolean getActive() {
-        return active;
+    public Boolean isActive() {
+        return isActive;
     }
 
     /**
-     * @param active
+     * @param isActive
      *            the active to set
      */
-    public void setActive(Boolean active) {
-        this.active = active;
+    public void isActive(Boolean isActive) {
+        this.isActive = isActive;
     }
 
     /**
