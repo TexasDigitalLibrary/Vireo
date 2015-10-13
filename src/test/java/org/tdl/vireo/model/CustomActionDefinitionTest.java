@@ -38,7 +38,7 @@ public class CustomActionDefinitionTest {
 		CustomActionDefinition testCustomActionDefinition = customActionDefinitionRepo.create(TEST_CUSTOM_ACTION_DEFINITION_LABEL, TEST_CUSTOM_ACTION_DEFINITION_VISIBLE_BY_STUDENT);
 		assertEquals("The custom action definition repository is not empty",1, customActionDefinitionRepo.count());
 		assertEquals("Saved Custom Action definition does not contain correct label", TEST_CUSTOM_ACTION_DEFINITION_LABEL, testCustomActionDefinition.getLabel());
-		assertEquals("Saved Custom Action definition does not contain correct studentVisibility flag",TEST_CUSTOM_ACTION_DEFINITION_VISIBLE_BY_STUDENT,testCustomActionDefinition.getIsStudentVisible());
+		assertEquals("Saved Custom Action definition does not contain correct studentVisibility flag",TEST_CUSTOM_ACTION_DEFINITION_VISIBLE_BY_STUDENT,testCustomActionDefinition.isStudentVisible());
 	}
 	
 	@Test
