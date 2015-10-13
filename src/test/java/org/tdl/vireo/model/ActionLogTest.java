@@ -100,12 +100,12 @@ public class ActionLogTest {
 		assertEquals("Saved action log does not have the correct submitter role",TEST_USER_ROLE, testActionLog.getUser().getRole());
 		
 		assertEquals("Saved action log does not have the correct submission state name",TEST_SUBMISSION_STATE_NAME, testActionLog.getSubmissionState().getName());
-		assertEquals("Saved action log does not have the correct submission archived state ",TEST_SUBMISSION_STATE_ARCHIVED, testActionLog.getSubmissionState().getArchived());
-		assertEquals("Saved action log does not have the correct submission publishable state ",TEST_SUBMISSION_STATE_PUBLISHABLE, testActionLog.getSubmissionState().getPublishable());
-		assertEquals("Saved action log does not have the correct submission deletable state ",TEST_SUBMISSION_STATE_DELETABLE, testActionLog.getSubmissionState().getDeletable());
-		assertEquals("Saved action log does not have the correct submission editable by reviewer",TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, testActionLog.getSubmissionState().getEditableByReviewer());
-		assertEquals("Saved action log does not have the correct submission editable by  student state ",TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT, testActionLog.getSubmissionState().getEditableByStudent());
-		assertEquals("Saved action log does not have the correct submission  active state ",TEST_SUBMISSION_STATE_ACTIVE, testActionLog.getSubmissionState().getActive());
+		assertEquals("Saved action log does not have the correct submission archived state ",TEST_SUBMISSION_STATE_ARCHIVED, testActionLog.getSubmissionState().isArchived());
+		assertEquals("Saved action log does not have the correct submission publishable state ",TEST_SUBMISSION_STATE_PUBLISHABLE, testActionLog.getSubmissionState().isPublishable());
+		assertEquals("Saved action log does not have the correct submission deletable state ",TEST_SUBMISSION_STATE_DELETABLE, testActionLog.getSubmissionState().isDeletable());
+		assertEquals("Saved action log does not have the correct submission editable by reviewer",TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, testActionLog.getSubmissionState().isEditableByReviewer());
+		assertEquals("Saved action log does not have the correct submission editable by  student state ",TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT, testActionLog.getSubmissionState().isEditableByStudent());
+		assertEquals("Saved action log does not have the correct submission  active state ",TEST_SUBMISSION_STATE_ACTIVE, testActionLog.getSubmissionState().isActive());
 		assertEquals("Saved action log does not have the correct attachment name ",TEST_ATTACHMENT_NAME, testActionLog.getAttachment().getName());
 		assertEquals("Saved action log does not have the correct log entry ",TEST_ACTION_LOG_ENTRY, testActionLog.getEntry());
 		assertEquals("Saved action log does not have the correct flag ",TEST_ACTION_LOG_FLAG, testActionLog.isPrivateFlag());	

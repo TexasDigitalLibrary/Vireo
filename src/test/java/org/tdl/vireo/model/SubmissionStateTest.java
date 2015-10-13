@@ -62,22 +62,22 @@ public class SubmissionStateTest {
         assertEquals("The submission state does not exist!", 2, submissionStateRepo.count());
 
         assertEquals("The submission state did not contain the correct name!", TEST_PARENT_SUBMISSION_STATE_NAME, parentSubmissionState.getName());
-        assertEquals("The submission state did not contain the correct archived!", TEST_PARENT_SUBMISSION_STATE_ARCHIVED, parentSubmissionState.getArchived());
-        assertEquals("The submission state did not contain the correct publishable!", TEST_PARENT_SUBMISSION_STATE_PUBLISHABLE, parentSubmissionState.getPublishable());
-        assertEquals("The submission state did not contain the correct deletable!", TEST_PARENT_SUBMISSION_STATE_DELETABLE, parentSubmissionState.getDeletable());
-        assertEquals("The submission state did not contain the correct editable by reviewer!", TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, parentSubmissionState.getEditableByReviewer());
-        assertEquals("The submission state did not contain the correct editable by student!", TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_STUDENT, parentSubmissionState.getEditableByStudent());
-        assertEquals("The submission state did not contain the correct active!", TEST_PARENT_SUBMISSION_STATE_ACTIVE, parentSubmissionState.getActive());
+        assertEquals("The submission state did not contain the correct archived!", TEST_PARENT_SUBMISSION_STATE_ARCHIVED, parentSubmissionState.isArchived());
+        assertEquals("The submission state did not contain the correct publishable!", TEST_PARENT_SUBMISSION_STATE_PUBLISHABLE, parentSubmissionState.isPublishable());
+        assertEquals("The submission state did not contain the correct deletable!", TEST_PARENT_SUBMISSION_STATE_DELETABLE, parentSubmissionState.isDeletable());
+        assertEquals("The submission state did not contain the correct editable by reviewer!", TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, parentSubmissionState.isEditableByReviewer());
+        assertEquals("The submission state did not contain the correct editable by student!", TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_STUDENT, parentSubmissionState.isEditableByStudent());
+        assertEquals("The submission state did not contain the correct active!", TEST_PARENT_SUBMISSION_STATE_ACTIVE, parentSubmissionState.isActive());
 
         assertEquals("The submission state did not contain the correct transition submission step!", transitionSubmissionState, (SubmissionState) (parentSubmissionState.getTransitionSubmissionStates().toArray()[0]));
 
         assertEquals("The submission state did not contain the correct name!", TEST_TRANSITION1_SUBMISSION_STATE_NAME, transitionSubmissionState.getName());
-        assertEquals("The submission state did not contain the correct archived!", TEST_TRANSITION_SUBMISSION_STATE_ARCHIVED, transitionSubmissionState.getArchived());
-        assertEquals("The submission state did not contain the correct publishable!", TEST_TRANSITION_SUBMISSION_STATE_PUBLISHABLE, transitionSubmissionState.getPublishable());
-        assertEquals("The submission state did not contain the correct deletable!", TEST_TRANSITION_SUBMISSION_STATE_DELETABLE, transitionSubmissionState.getDeletable());
-        assertEquals("The submission state did not contain the correct editable by reviewer!", TEST_TRANSITION_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, transitionSubmissionState.getEditableByReviewer());
-        assertEquals("The submission state did not contain the correct editable by student!", TEST_TRANSITION_SUBMISSION_STATE_EDITABLE_BY_STUDENT, transitionSubmissionState.getEditableByStudent());
-        assertEquals("The submission state did not contain the correct active!", TEST_TRANSITION_SUBMISSION_STATE_ACTIVE, transitionSubmissionState.getActive());
+        assertEquals("The submission state did not contain the correct archived!", TEST_TRANSITION_SUBMISSION_STATE_ARCHIVED, transitionSubmissionState.isArchived());
+        assertEquals("The submission state did not contain the correct publishable!", TEST_TRANSITION_SUBMISSION_STATE_PUBLISHABLE, transitionSubmissionState.isPublishable());
+        assertEquals("The submission state did not contain the correct deletable!", TEST_TRANSITION_SUBMISSION_STATE_DELETABLE, transitionSubmissionState.isDeletable());
+        assertEquals("The submission state did not contain the correct editable by reviewer!", TEST_TRANSITION_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, transitionSubmissionState.isEditableByReviewer());
+        assertEquals("The submission state did not contain the correct editable by student!", TEST_TRANSITION_SUBMISSION_STATE_EDITABLE_BY_STUDENT, transitionSubmissionState.isEditableByStudent());
+        assertEquals("The submission state did not contain the correct active!", TEST_TRANSITION_SUBMISSION_STATE_ACTIVE, transitionSubmissionState.isActive());
     }
 
     @Test

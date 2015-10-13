@@ -51,7 +51,7 @@ public class SubmissionState extends BaseEntity {
      * @param isEditableByStudent
      * @param isActive
      */
-    public SubmissionState(String name, Boolean isArchived, Boolean isPublishable, Boolean isDeletable, Boolean isEditableByReviewer, Boolean isEditableByStudent, Boolean active) {
+    public SubmissionState(String name, Boolean isArchived, Boolean isPublishable, Boolean isDeletable, Boolean isEditableByReviewer, Boolean isEditableByStudent, Boolean isActive) {
         this();
         setName(name);
         isArchived(isArchived);
