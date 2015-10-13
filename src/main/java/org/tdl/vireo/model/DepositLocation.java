@@ -10,34 +10,34 @@ public class DepositLocation extends BaseEntity {
     @Transient
     public static final Integer DEFAULT_TIMEOUT = 60;
 
-	@Column(nullable = false)
-	private int displayOrder;
-
-	@Column(nullable = false, unique = true, length=255)
+	@Column(nullable = false, unique = true)
 	private String name;
 	
-	@Column(length=1024)
+	// TODO: this is really a URL
+	@Column
 	private String repository;
 	
-	@Column(length=1024)
+	@Column
 	private String collection;
 	
-	@Column(length=255)
+	@Column
 	private String username;
 	
-	@Column(length=255)
+	@Column
 	private String password;
 	
-	@Column(length=255)
+	@Column
 	private String onBehalfOf;
 
-	@Column(length=255)
+	// TODO, this used to be a Bean name in Vireo 3. (Deposit Format -- DSPace METS)
+	@Column
 	private String packager;
 	
-	@Column(length=255)
+	// TODO, this used to be a Bean name in Vireo 3. (Deposit Protocol -- SWORDv1)
+	@Column
 	private String depositor;
 	
-	@Column(columnDefinition="INTEGER DEFAULT '60'")
+	@Column
 	private Integer timeout;
 	
 	public DepositLocation() {
@@ -54,20 +54,6 @@ public class DepositLocation extends BaseEntity {
 	    this();
 		this.name = name;
 	}
-
-    /**
-     * @return the displayOrder
-     */
-    public int getDisplayOrder() {
-        return displayOrder;
-    }
-
-    /**
-     * @param displayOrder the displayOrder to set
-     */
-    public void setDisplayOrder(int displayOrder) {
-        this.displayOrder = displayOrder;
-    }
 
     /**
      * @return the name
