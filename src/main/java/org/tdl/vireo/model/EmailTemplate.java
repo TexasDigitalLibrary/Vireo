@@ -5,9 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import org.tdl.vireo.model.EmailTemplate;
-
 @Entity
+@Table(uniqueConstraints={@UniqueConstraint(columnNames = { "name", "isSystemRequired" })})
 public class EmailTemplate extends BaseEntity{
 
 	@Column(nullable = false) 
