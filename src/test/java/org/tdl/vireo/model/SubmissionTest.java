@@ -33,49 +33,49 @@ import org.tdl.vireo.runner.OrderedRunner;
 @SpringApplicationConfiguration(classes = Application.class)
 public class SubmissionTest {
 
-    private static final String TEST_PARENT_SUBMISSION_SUBMITTER_EMAIL = "admin@tdl.org";
-    private static final String TEST_PARENT_SUBMISSION_SUBMITTER_FIRSTNAME = "TDL";
-    private static final String TEST_PARENT_SUBMISSION_SUBMITTER_LASTNAME = "Admin";
-    private static final Role TEST_PARENT_SUBMISSION_SUBMITTER_ROLE = Role.ADMINISTRATOR;
+    private static final String TEST_SUBMISSION_SUBMITTER_EMAIL = "admin@tdl.org";
+    private static final String TEST_SUBMISSION_SUBMITTER_FIRSTNAME = "TDL";
+    private static final String TEST_SUBMISSION_SUBMITTER_LASTNAME = "Admin";
+    private static final Role TEST_SUBMISSION_SUBMITTER_ROLE = Role.ADMINISTRATOR;
 
-    private static final String TEST_PARENT_SUBMISSION_STATE_NAME = "Test Parent Submission State";
+    private static final String TEST_SUBMISSION_STATE_NAME = "Test Parent Submission State";
 
-    private static final boolean TEST_PARENT_SUBMISSION_STATE_ARCHIVED = true;
-    private static final boolean TEST_PARENT_SUBMISSION_STATE_PUBLISHABLE = true;
-    private static final boolean TEST_PARENT_SUBMISSION_STATE_DELETABLE = true;
-    private static final boolean TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_REVIEWER = true;
-    private static final boolean TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_STUDENT = true;
-    private static final boolean TEST_PARENT_SUBMISSION_STATE_ACTIVE = true;
+    private static final boolean TEST_SUBMISSION_STATE_ARCHIVED = true;
+    private static final boolean TEST_SUBMISSION_STATE_PUBLISHABLE = true;
+    private static final boolean TEST_SUBMISSION_STATE_DELETABLE = true;
+    private static final boolean TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER = true;
+    private static final boolean TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT = true;
+    private static final boolean TEST_SUBMISSION_STATE_ACTIVE = true;
 
-    private static final String TEST_PARENT_FIELD_PREDICATE_VALUE = "dc.whatever";
+    private static final String TEST_FIELD_PREDICATE_VALUE = "dc.whatever";
     private static final String TEST_DETACHABLE_FIELD_PREDICATE_VALUE = "dc.detachable";
 
-    private static final String TEST_PARENT_FIELD_VALUE = "Test Field Value";
+    private static final String TEST_FIELD_VALUE = "Test Field Value";
 
-    private static final String TEST_PARENT_CATEGORY_NAME = "Test Parent Category";
+    private static final String TEST_CATEGORY_NAME = "Test Parent Category";
 
-    private static final int TEST_PARENT_CATEGORY_LEVEL = 0;
+    private static final int TEST_CATEGORY_LEVEL = 0;
 
-    private static final String TEST_PARENT_ORGANIZATION_NAME = "Test Parent Organization";
+    private static final String TEST_ORGANIZATION_NAME = "Test Parent Organization";
     private static final String TEST_DETACHABLE_ORGANIZATION_NAME = "Test Detachable Organization";
 
-    private static final String TEST_PARENT_WORKFLOW_STEP_NAME = "Test Parent Workflow Step";
+    private static final String TEST_WORKFLOW_STEP_NAME = "Test Parent Workflow Step";
     private static final String TEST_DETACHABLE_WORKFLOW_STEP_NAME = "Test Detachable Workflow Step";
     
-    private static final String TEST_PARENT_SUBMISSION_STATE_ACTION_LOG_ENTRY = "Test ActionLog Entry";
-    private static final boolean TEST_PARENT_SUBMISSION_STATE_ACTION_LOG_FLAG = true;
-    private Calendar TEST_PARENT_SUBMISSION_STATE_ACTION_LOG_ACTION_DATE;
+    private static final String TEST_SUBMISSION_STATE_ACTION_LOG_ENTRY = "Test ActionLog Entry";
+    private static final boolean TEST_SUBMISSION_STATE_ACTION_LOG_FLAG = true;
+    private Calendar TEST_SUBMISSION_STATE_ACTION_LOG_ACTION_DATE;
     
     private static final String TEST_ATTACHMENT_NAME = "Test Attachment Name";
     private UUID TEST_UUID = UUID.randomUUID();
 
-    private static User parentSubmissionSubmitter;
-    private static SubmissionState parentSubmissionState;
-    private static FieldPredicate parentFieldPredicate;
-    private static FieldValue parentFieldValue;
-    private static Organization parentOrganization;
-    private static WorkflowStep parentSubmissionWorkflowStep;
-    private static Attachment parentAttachment;
+    private static User submitter;
+    private static SubmissionState submissionState;
+    private static FieldPredicate fieldPredicate;
+    private static FieldValue fieldValue;
+    private static Organization organization;
+    private static WorkflowStep workflowStep;
+    private static Attachment attachment;
 
     @Autowired
     private SubmissionRepo submissionRepo;
@@ -113,31 +113,31 @@ public class SubmissionTest {
     public void setUp() {
         assertEquals("The submission repository was not empty!", 0, submissionRepo.count());
 
-        parentSubmissionSubmitter = userRepo.create(TEST_PARENT_SUBMISSION_SUBMITTER_EMAIL, TEST_PARENT_SUBMISSION_SUBMITTER_FIRSTNAME, TEST_PARENT_SUBMISSION_SUBMITTER_LASTNAME, TEST_PARENT_SUBMISSION_SUBMITTER_ROLE);
+        submitter = userRepo.create(TEST_SUBMISSION_SUBMITTER_EMAIL, TEST_SUBMISSION_SUBMITTER_FIRSTNAME, TEST_SUBMISSION_SUBMITTER_LASTNAME, TEST_SUBMISSION_SUBMITTER_ROLE);
         assertEquals("The user does not exist!", 1, userRepo.count());
 
-        parentSubmissionState = submissionStateRepo.create(TEST_PARENT_SUBMISSION_STATE_NAME, TEST_PARENT_SUBMISSION_STATE_ARCHIVED, TEST_PARENT_SUBMISSION_STATE_PUBLISHABLE, TEST_PARENT_SUBMISSION_STATE_DELETABLE, TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_PARENT_SUBMISSION_STATE_ACTIVE);
+        submissionState = submissionStateRepo.create(TEST_SUBMISSION_STATE_NAME, TEST_SUBMISSION_STATE_ARCHIVED, TEST_SUBMISSION_STATE_PUBLISHABLE, TEST_SUBMISSION_STATE_DELETABLE, TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_SUBMISSION_STATE_ACTIVE);
         assertEquals("The submission state does not exist!", 1, submissionStateRepo.count());
 
-        parentFieldPredicate = fieldPredicateRepo.create(TEST_PARENT_FIELD_PREDICATE_VALUE);
+        fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE);
         assertEquals("The field predicate does not exist!", 1, fieldPredicateRepo.count());
 
-        parentFieldValue = fieldValueRepo.create(parentFieldPredicate);
-        parentFieldValue.setValue(TEST_PARENT_FIELD_VALUE);
-        parentFieldValue = fieldValueRepo.save(parentFieldValue);
+        fieldValue = fieldValueRepo.create(fieldPredicate);
+        fieldValue.setValue(TEST_FIELD_VALUE);
+        fieldValue = fieldValueRepo.save(fieldValue);
         assertEquals("The field value does not exist!", 1, fieldValueRepo.count());
-        assertEquals("The field value did not have the correct value!", TEST_PARENT_FIELD_VALUE, parentFieldValue.getValue());
+        assertEquals("The field value did not have the correct value!", TEST_FIELD_VALUE, fieldValue.getValue());
 
-        OrganizationCategory parentCategory = organizationCategoryRepo.create(TEST_PARENT_CATEGORY_NAME, TEST_PARENT_CATEGORY_LEVEL);
+        OrganizationCategory parentCategory = organizationCategoryRepo.create(TEST_CATEGORY_NAME, TEST_CATEGORY_LEVEL);
         assertEquals("The category does not exist!", 1, organizationCategoryRepo.count());
 
-        parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
+        organization = organizationRepo.create(TEST_ORGANIZATION_NAME, parentCategory);
         assertEquals("The organization does not exist!", 1, organizationRepo.count());
 
-        parentSubmissionWorkflowStep = workflowStepRepo.create(TEST_PARENT_WORKFLOW_STEP_NAME);
+        workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME);
         assertEquals("The workflow step does not exist!", 1, workflowStepRepo.count());
         
-        parentAttachment = attachmentRepo.create(TEST_ATTACHMENT_NAME, TEST_UUID);
+        attachment = attachmentRepo.create(TEST_ATTACHMENT_NAME, TEST_UUID);
         assertEquals("The attachment does not exist!", 1, attachmentRepo.count());
     }
 
@@ -145,29 +145,29 @@ public class SubmissionTest {
     @Order(value = 1)
     @Transactional
     public void testCreate() {
-        Submission parentSubmission = submissionRepo.create(parentSubmissionSubmitter, parentSubmissionState);
-        parentSubmission.addOrganization(parentOrganization);
-        parentSubmission.addSubmissionWorkflowStep(parentSubmissionWorkflowStep);
-        parentSubmission.addFieldValue(parentFieldValue);
-        parentSubmission.addAttachment(parentAttachment);
-        parentSubmission = submissionRepo.save(parentSubmission);
+        Submission submission = submissionRepo.create(submitter, submissionState);
+        submission.addOrganization(organization);
+        submission.addSubmissionWorkflowStep(workflowStep);
+        submission.addFieldValue(fieldValue);
+        submission.addAttachment(attachment);
+        submission = submissionRepo.save(submission);
 
         assertEquals("The repository did not save the submission!", 1, submissionRepo.count());
-        assertEquals("Saved submission did not contain the correct state!", parentSubmissionState, parentSubmission.getState());
-        assertEquals("Saved submission did not contain the correct submitter!", parentSubmissionSubmitter, parentSubmission.getSubmitter());
-        assertEquals("Saved submission did not contain the correct organization!", true, parentSubmission.getOrganizations().contains(parentOrganization));
-        assertEquals("Saved submission did not contain the correct submission workflow step!", true, parentSubmission.getSubmissionWorkflowSteps().contains(parentSubmissionWorkflowStep));
-        assertEquals("Saved submission did not contain the correct field value!", true, parentSubmission.getFieldValues().contains(parentFieldValue));
-        assertEquals("Saved submission did not contain the correct attachment!", true, parentSubmission.getAttachments().contains(parentAttachment));
+        assertEquals("Saved submission did not contain the correct state!", submissionState, submission.getState());
+        assertEquals("Saved submission did not contain the correct submitter!", submitter, submission.getSubmitter());
+        assertEquals("Saved submission did not contain the correct organization!", true, submission.getOrganizations().contains(organization));
+        assertEquals("Saved submission did not contain the correct submission workflow step!", true, submission.getSubmissionWorkflowSteps().contains(workflowStep));
+        assertEquals("Saved submission did not contain the correct field value!", true, submission.getFieldValues().contains(fieldValue));
+        assertEquals("Saved submission did not contain the correct attachment!", true, submission.getAttachments().contains(attachment));
     }
 
     @Test
     @Order(value = 2)
     public void testDuplication() {
-        submissionRepo.create(parentSubmissionSubmitter, parentSubmissionState);
+        submissionRepo.create(submitter, submissionState);
         assertEquals("The repository didn't persist submission!", 1, submissionRepo.count());
         try {
-            submissionRepo.create(parentSubmissionSubmitter, parentSubmissionState);
+            submissionRepo.create(submitter, submissionState);
         } catch (DataIntegrityViolationException e) {
             /* SUCCESS */ }
         assertEquals("The repository duplicated the submission!", 1, submissionRepo.count());
@@ -176,72 +176,95 @@ public class SubmissionTest {
     @Test
     @Order(value = 3)
     public void testFind() {
-        submissionRepo.create(parentSubmissionSubmitter, parentSubmissionState);
-        Submission parentSubmission = submissionRepo.findBySubmitterAndState(parentSubmissionSubmitter, parentSubmissionState);
-        assertNotEquals("Did not find submission!", null, parentSubmission);
-        assertEquals("Found submission did not contain the correct state!", parentSubmissionState, parentSubmission.getState());
+        submissionRepo.create(submitter, submissionState);
+        Submission submission = submissionRepo.findBySubmitterAndState(submitter, submissionState);
+        assertNotEquals("Did not find submission!", null, submission);
+        assertEquals("Found submission did not contain the correct state!", submissionState, submission.getState());
     }
 
     @Test
     @Order(value = 4)
     public void testDelete() {
-        Submission parentSubmission = submissionRepo.create(parentSubmissionSubmitter, parentSubmissionState);
-        submissionRepo.delete(parentSubmission);
+        Submission submission = submissionRepo.create(submitter, submissionState);
+        submissionRepo.delete(submission);
         assertEquals("Submission did not delete!", 0, submissionRepo.count());
+    }
+    
+    @Test
+    @Order(value=5)
+    public void testRemovePointers() {
+    	//TODO:  move the tests of remove methods from the cascade method below into here.
+    	
+    
     }
 
     @Test
-    @Order(value = 5)
+    @Order(value = 6)
     public void testCascade() {
-        Organization detachableOrganization = organizationRepo.create(TEST_DETACHABLE_ORGANIZATION_NAME, parentOrganization.getCategory());
+        Organization detachableOrganization = organizationRepo.create(TEST_DETACHABLE_ORGANIZATION_NAME, organization.getCategory());
 
         WorkflowStep detachableWorkflowStep = workflowStepRepo.create(TEST_DETACHABLE_WORKFLOW_STEP_NAME);
 
         FieldPredicate detachableFieldPredicate = fieldPredicateRepo.create(TEST_DETACHABLE_FIELD_PREDICATE_VALUE);
         FieldValue detachableFieldValue = fieldValueRepo.create(detachableFieldPredicate);
 
-        Submission parentSubmission = submissionRepo.create(parentSubmissionSubmitter, parentSubmissionState);
+        Submission submission = submissionRepo.create(submitter, submissionState);
         
-        ActionLog detachableActionLog = actionLogRepo.create(parentSubmission, parentSubmissionState, parentSubmissionSubmitter, TEST_PARENT_SUBMISSION_STATE_ACTION_LOG_ACTION_DATE,parentAttachment, TEST_PARENT_SUBMISSION_STATE_ACTION_LOG_ENTRY, TEST_PARENT_SUBMISSION_STATE_ACTION_LOG_FLAG) ;
+        ActionLog detachableActionLog = actionLogRepo.create(submission, submissionState, submitter, TEST_SUBMISSION_STATE_ACTION_LOG_ACTION_DATE,attachment, TEST_SUBMISSION_STATE_ACTION_LOG_ENTRY, TEST_SUBMISSION_STATE_ACTION_LOG_FLAG) ;
         		
-        parentSubmission.addOrganization(parentOrganization);
-        parentSubmission.addSubmissionWorkflowStep(parentSubmissionWorkflowStep);
-        parentSubmission.addFieldValue(parentFieldValue);
-        parentSubmission.addOrganization(detachableOrganization);
-        parentSubmission.addSubmissionWorkflowStep(detachableWorkflowStep);
-        parentSubmission.addFieldValue(detachableFieldValue);
-        parentSubmission.addAttachment(parentAttachment);
-        parentSubmission.addActionLog(detachableActionLog);
-        parentSubmission = submissionRepo.save(parentSubmission);
+        submission.addOrganization(organization);
+        submission.addSubmissionWorkflowStep(workflowStep);
+        submission.addFieldValue(fieldValue);
+        submission.addOrganization(detachableOrganization);
+        submission.addSubmissionWorkflowStep(detachableWorkflowStep);
+        submission.addFieldValue(detachableFieldValue);
+        submission.addAttachment(attachment);
+        submission.addActionLog(detachableActionLog);
+        submission = submissionRepo.save(submission);
 
-        //TODO:  These are not JPA detachments from an EM!!!
-        // test detach organization in the sense of not being associated with that organization anymore
-        parentSubmission.removeOrganization(detachableOrganization);
-        parentSubmission = submissionRepo.save(parentSubmission);
-        assertEquals("The organization was not detached!", 1, parentSubmission.getOrganizations().size());
+        // test remove pointer to organization and make sure the organization is no longer associated but still exists
+        submission.removeOrganization(detachableOrganization);
+        submission = submissionRepo.save(submission);
+        assertEquals("The organization was not detached!", 1, submission.getOrganizations().size());
         assertEquals("The organization was deleted!", 2, organizationRepo.count());
 
-        // test detach workflow step
-        parentSubmission.removeSubmissionWorkflowStep(detachableWorkflowStep);
-        parentSubmission = submissionRepo.save(parentSubmission);
-        assertEquals("The workflow step was not detached!", 1, parentSubmission.getSubmissionWorkflowSteps().size());
+        // test remove pointer workflow step and make sure the workflow step is no longer associated but still exists
+        submission.removeSubmissionWorkflowStep(detachableWorkflowStep);
+        submission = submissionRepo.save(submission);
+        assertEquals("The workflow step was not detached!", 1, submission.getSubmissionWorkflowSteps().size());
         assertEquals("The workflow step was deleted!", 1, workflowStepRepo.count());
 
         // test detach field value
-        parentSubmission.removeFieldValue(detachableFieldValue);
-        parentSubmission = submissionRepo.save(parentSubmission);
-        assertEquals("The field value was not detached!", 1, parentSubmission.getFieldValues().size());
+        submission.removeFieldValue(detachableFieldValue);
+        submission = submissionRepo.save(submission);
+        assertEquals("The field value was not detached!", 1, submission.getFieldValues().size());
         assertEquals("The field value was orphaned!", 1, fieldValueRepo.count());       
         
-        // test delete submission
-        submissionRepo.delete(parentSubmission);
-        assertEquals("Submission was deleted!", 0, submissionRepo.count());
-        assertEquals("The action log was  orphaned!", 0, actionLogRepo.count());
-        assertEquals("The attachment were orphaned",0,attachmentRepo.count());
+        
+        //From here on we test the actual cascade:
+        
+        // test delete submission and make sure:
+        //the submission is deleted
+        submissionRepo.delete(submission);
+        assertEquals("Submission was not deleted!", 0, submissionRepo.count());
+        
+        //the submission state is not deleted
+        //the organization is not deleted
         assertEquals("The submission state was deleted!", 1, submissionStateRepo.count());
         assertEquals("The organization was deleted!", 2, organizationRepo.count());
-        assertEquals("The workflow steps were deleted!", 0, workflowStepRepo.count());
+        
+        
+        //the field values are deleted
+        //the workflow steps are deleted
+        //the actionlog is deleted
+        //the attachment is deleted
         assertEquals("The field values were orphaned!", 0, fieldValueRepo.count());
+        assertEquals("The workflow steps were deleted!", 0, workflowStepRepo.count());
+        assertEquals("The action log was  orphaned!", 0, actionLogRepo.count());
+        assertEquals("The attachment were orphaned",0,attachmentRepo.count());
+        
+        //and, going another level deep on the cascade from field values to their predicates,
+        //see that the field predicates were not deleted.
         assertEquals("The field predicates were orphaned!", 2, fieldPredicateRepo.count());
         
     }
