@@ -25,7 +25,7 @@ import javax.persistence.UniqueConstraint;
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "submitter_id", "state_id" }) )
 public class Submission extends BaseEntity {
-    
+
     @OneToOne(optional = false)
     private User submitter;
 
@@ -40,22 +40,26 @@ public class Submission extends BaseEntity {
 
     @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
     private Set<WorkflowStep> submissionWorkflowSteps;
-    
+
     @Column(nullable = true)
     @Temporal(TemporalType.DATE)
     private Calendar dateOfGraduation;
-    
+
     @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
     private Set<ActionLog> actionLog;
-   
+
+    @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY)
+    private Set<EmbargoType> embargoTypes;
+
     @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
     private Set<Attachment> attachments;
-    
+
     public Submission() {
         setOrganizations(new TreeSet<Organization>());
         setFieldValues(new TreeSet<FieldValue>());
         setSubmissionWorkflowSteps(new TreeSet<WorkflowStep>());
         setActionLog(new TreeSet<ActionLog>());
+        setEmbargoTypes(new TreeSet<EmbargoType>());
         setAttachments(new TreeSet<Attachment>());
     }
 
@@ -68,7 +72,7 @@ public class Submission extends BaseEntity {
         setSubmitter(submitter);
         setState(state);
     }
-    
+
     /**
      * 
      * @return the submitter
@@ -76,7 +80,7 @@ public class Submission extends BaseEntity {
     public User getSubmitter() {
         return submitter;
     }
-    
+
     /**
      * 
      * @param submitter
@@ -201,26 +205,29 @@ public class Submission extends BaseEntity {
     }
 
     /**
-     * @param dateOfGraduation the dateOfGraduation to set
+     * @param dateOfGraduation
+     *            the dateOfGraduation to set
      */
     public void setDateOfGraduation(Calendar dateOfGraduation) {
         this.dateOfGraduation = dateOfGraduation;
     }
 
-	/**
-	 * @return the actionLog
-	 */
-	public Set<ActionLog> getActionLog() {
-		return actionLog;
-	}
+    /**
+     * @return the actionLog
+     */
+    public Set<ActionLog> getActionLog() {
+        return actionLog;
+    }
 
-	/**
-	 * @param actionLog the actionLog to set
-	 */
-	public void setActionLog(Set<ActionLog> actionLog) {
-		this.actionLog = actionLog;
-	}
-	/**
+    /**
+     * @param actionLog
+     *            the actionLog to set
+     */
+    public void setActionLog(Set<ActionLog> actionLog) {
+        this.actionLog = actionLog;
+    }
+
+    /**
      * 
      * @param actionLog
      */
@@ -233,24 +240,56 @@ public class Submission extends BaseEntity {
      * @param actionLog
      */
     public void removeActionLog(ActionLog actionLog) {
-    	getActionLog().remove(actionLog);
+        getActionLog().remove(actionLog);
     }
 
-	/**
-	 * @return the attachments
-	 */
-	public Set<Attachment> getAttachments() {
-		return attachments;
-	}
+    /**
+     * @return the embargoTypes
+     */
+    public Set<EmbargoType> getEmbargoTypes() {
+        return embargoTypes;
+    }
 
-	/**
-	 * @param attachments the attachments to set
-	 */
-	public void setAttachments(Set<Attachment> attachments) {
-		this.attachments = attachments;
-	}
-	
-	/**
+    /**
+     * @param embargoTypes
+     *            the embargoTypes to set
+     */
+    public void setEmbargoTypes(Set<EmbargoType> embargoType) {
+        this.embargoTypes = embargoType;
+    }
+
+    /**
+     * 
+     * @param emabargoType
+     */
+    public void addEmbargoType(EmbargoType embargoType) {
+        getEmbargoTypes().add(embargoType);
+    }
+    
+    /**
+     * 
+     * @param embargoType
+     */
+    public void removeEmbargoType(EmbargoType embargoType) {
+        getEmbargoTypes().remove(embargoType);
+    }
+
+    /**
+     * @return the attachments
+     */
+    public Set<Attachment> getAttachments() {
+        return attachments;
+    }
+
+    /**
+     * @param attachments
+     *            the attachments to set
+     */
+    public void setAttachments(Set<Attachment> attachments) {
+        this.attachments = attachments;
+    }
+
+    /**
      * 
      * @param attachment
      */
@@ -263,10 +302,7 @@ public class Submission extends BaseEntity {
      * @param actionLog
      */
     public void removeAttachment(Attachment attachment) {
-    	getAttachments().remove(attachment);
+        getAttachments().remove(attachment);
     }
 
-
-	
-	
 }

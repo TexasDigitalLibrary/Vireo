@@ -8,7 +8,7 @@ import javax.persistence.UniqueConstraint;
 import org.tdl.vireo.enums.EmbargoGuarantor;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "guarantor", "systemRequired" }) )
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "guarantor", "isSystemRequired" }) )
 public class EmbargoType extends BaseEntity {
 
     @Column(nullable = false)
@@ -29,17 +29,27 @@ public class EmbargoType extends BaseEntity {
     @Column(nullable = false)
     private EmbargoGuarantor guarantor;
 
+    /**
+     * All new Embargo Types use these values as default
+     */
     public EmbargoType() {
         isSystemRequired(false);
+        isActive(false);
         setGuarantor(EmbargoGuarantor.DEFAULT);
     }
 
-    public EmbargoType(String name, String description, Integer duration, Boolean isActive) {
+    /**
+     * New Embargo Types just need a name, description and duration
+     * 
+     * @param name
+     * @param description
+     * @param duration
+     */
+    public EmbargoType(String name, String description, Integer duration) {
         this();
         setName(name);
         setDescription(description);
         setDuration(duration);
-        isActive(isActive);
     }
 
     /**

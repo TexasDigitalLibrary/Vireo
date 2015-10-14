@@ -19,6 +19,7 @@ import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.enums.Role;
 import org.tdl.vireo.model.repo.ActionLogRepo;
 import org.tdl.vireo.model.repo.AttachmentRepo;
+import org.tdl.vireo.model.repo.EmbargoTypeRepo;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.FieldValueRepo;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
@@ -61,13 +62,17 @@ public class SubmissionTest {
 
     private static final String TEST_WORKFLOW_STEP_NAME = "Test Parent Workflow Step";
     private static final String TEST_DETACHABLE_WORKFLOW_STEP_NAME = "Test Detachable Workflow Step";
-    
+
     private static final String TEST_SUBMISSION_STATE_ACTION_LOG_ENTRY = "Test ActionLog Entry";
     private static final boolean TEST_SUBMISSION_STATE_ACTION_LOG_FLAG = true;
-    private Calendar TEST_SUBMISSION_STATE_ACTION_LOG_ACTION_DATE;
-    
+    private static final Calendar TEST_SUBMISSION_STATE_ACTION_LOG_ACTION_DATE = Calendar.getInstance();
+
     private static final String TEST_ATTACHMENT_NAME = "Test Attachment Name";
-    private UUID TEST_UUID = UUID.randomUUID();
+    private static final UUID TEST_UUID = UUID.randomUUID();
+
+    private static final String TEST_EMBARGO_TYPE_NAME = "Test Embargo Type Name";
+    private static final String TEST_EMBARGO_TYPE_DESCRIPTION = "Test Embargo Type Description";
+    private static final int TEST_EMBARGO_TYPE_DURATION = 0;
 
     private static User submitter;
     private static SubmissionState submissionState;
@@ -76,6 +81,7 @@ public class SubmissionTest {
     private static Organization organization;
     private static WorkflowStep workflowStep;
     private static Attachment attachment;
+    private static EmbargoType embargoType;
 
     @Autowired
     private SubmissionRepo submissionRepo;
@@ -100,14 +106,15 @@ public class SubmissionTest {
 
     @Autowired
     private WorkflowStepRepo workflowStepRepo;
-    
+
     @Autowired
     private AttachmentRepo attachmentRepo;
-    
+
     @Autowired
     private ActionLogRepo actionLogRepo;
-    
-    
+
+    @Autowired
+    private EmbargoTypeRepo embargoTypeRepo;
 
     @Before
     public void setUp() {
@@ -136,9 +143,12 @@ public class SubmissionTest {
 
         workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME);
         assertEquals("The workflow step does not exist!", 1, workflowStepRepo.count());
-        
+
         attachment = attachmentRepo.create(TEST_ATTACHMENT_NAME, TEST_UUID);
         assertEquals("The attachment does not exist!", 1, attachmentRepo.count());
+
+        embargoType = embargoTypeRepo.create(TEST_EMBARGO_TYPE_NAME, TEST_EMBARGO_TYPE_DESCRIPTION, TEST_EMBARGO_TYPE_DURATION);
+        assertEquals("The embargo type does not exist!", 1, embargoTypeRepo.count());
     }
 
     @Test
@@ -150,6 +160,7 @@ public class SubmissionTest {
         submission.addSubmissionWorkflowStep(workflowStep);
         submission.addFieldValue(fieldValue);
         submission.addAttachment(attachment);
+        submission.addEmbargoType(embargoType);
         submission = submissionRepo.save(submission);
 
         assertEquals("The repository did not save the submission!", 1, submissionRepo.count());
@@ -159,6 +170,7 @@ public class SubmissionTest {
         assertEquals("Saved submission did not contain the correct submission workflow step!", true, submission.getSubmissionWorkflowSteps().contains(workflowStep));
         assertEquals("Saved submission did not contain the correct field value!", true, submission.getFieldValues().contains(fieldValue));
         assertEquals("Saved submission did not contain the correct attachment!", true, submission.getAttachments().contains(attachment));
+        assertEquals("Saved submission did not contain the correct embargo type!", true, submission.getEmbargoTypes().contains(embargoType));
     }
 
     @Test
@@ -189,13 +201,12 @@ public class SubmissionTest {
         submissionRepo.delete(submission);
         assertEquals("Submission did not delete!", 0, submissionRepo.count());
     }
-    
+
     @Test
-    @Order(value=5)
+    @Order(value = 5)
     public void testRemovePointers() {
-    	//TODO:  move the tests of remove methods from the cascade method below into here.
-    	
-    
+        // TODO: move the tests of remove methods from the cascade method below into here.
+
     }
 
     @Test
@@ -209,9 +220,9 @@ public class SubmissionTest {
         FieldValue detachableFieldValue = fieldValueRepo.create(detachableFieldPredicate);
 
         Submission submission = submissionRepo.create(submitter, submissionState);
-        
-        ActionLog detachableActionLog = actionLogRepo.create(submission, submissionState, submitter, TEST_SUBMISSION_STATE_ACTION_LOG_ACTION_DATE,attachment, TEST_SUBMISSION_STATE_ACTION_LOG_ENTRY, TEST_SUBMISSION_STATE_ACTION_LOG_FLAG) ;
-        		
+
+        ActionLog detachableActionLog = actionLogRepo.create(submission, submissionState, submitter, TEST_SUBMISSION_STATE_ACTION_LOG_ACTION_DATE, attachment, TEST_SUBMISSION_STATE_ACTION_LOG_ENTRY, TEST_SUBMISSION_STATE_ACTION_LOG_FLAG);
+
         submission.addOrganization(organization);
         submission.addSubmissionWorkflowStep(workflowStep);
         submission.addFieldValue(fieldValue);
@@ -219,6 +230,7 @@ public class SubmissionTest {
         submission.addSubmissionWorkflowStep(detachableWorkflowStep);
         submission.addFieldValue(detachableFieldValue);
         submission.addAttachment(attachment);
+        submission.addEmbargoType(embargoType);
         submission.addActionLog(detachableActionLog);
         submission = submissionRepo.save(submission);
 
@@ -238,40 +250,39 @@ public class SubmissionTest {
         submission.removeFieldValue(detachableFieldValue);
         submission = submissionRepo.save(submission);
         assertEquals("The field value was not detached!", 1, submission.getFieldValues().size());
-        assertEquals("The field value was orphaned!", 1, fieldValueRepo.count());       
-        
-        
-        //From here on we test the actual cascade:
-        
+        assertEquals("The field value was orphaned!", 1, fieldValueRepo.count());
+
+        // From here on we test the actual cascade:
+
         // test delete submission and make sure:
-        //the submission is deleted
+        // the submission is deleted
         submissionRepo.delete(submission);
         assertEquals("Submission was not deleted!", 0, submissionRepo.count());
-        
-        //the submission state is not deleted
-        //the organization is not deleted
+
+        // the submission state is not deleted
+        // the organization is not deleted
         assertEquals("The submission state was deleted!", 1, submissionStateRepo.count());
         assertEquals("The organization was deleted!", 2, organizationRepo.count());
-        
-        
-        //the field values are deleted
-        //the workflow steps are deleted
-        //the actionlog is deleted
-        //the attachment is deleted
+
+        // the field values are deleted
+        // the workflow steps are deleted
+        // the actionlog is deleted
+        // the attachment is deleted
         assertEquals("The field values were orphaned!", 0, fieldValueRepo.count());
         assertEquals("The workflow steps were deleted!", 0, workflowStepRepo.count());
         assertEquals("The action log was  orphaned!", 0, actionLogRepo.count());
-        assertEquals("The attachment were orphaned",0,attachmentRepo.count());
-        
-        //and, going another level deep on the cascade from field values to their predicates,
-        //see that the field predicates were not deleted.
+        assertEquals("The attachment were orphaned", 0, attachmentRepo.count());
+        assertEquals("The embargo type was deleted!", 1, embargoTypeRepo.count());
+
+        // and, going another level deep on the cascade from field values to their predicates,
+        // see that the field predicates were not deleted.
         assertEquals("The field predicates were orphaned!", 2, fieldPredicateRepo.count());
-        
+
     }
 
     @After
     public void cleanUp() {
-    	attachmentRepo.deleteAll();
+        attachmentRepo.deleteAll();
         submissionRepo.deleteAll();
         submissionStateRepo.deleteAll();
         workflowStepRepo.deleteAll();
@@ -280,6 +291,7 @@ public class SubmissionTest {
         fieldPredicateRepo.deleteAll();
         organizationRepo.deleteAll();
         organizationCategoryRepo.deleteAll();
+        embargoTypeRepo.deleteAll();
         userRepo.deleteAll();
     }
 }
