@@ -28,7 +28,7 @@ public class EmailWorkflowRule extends BaseEntity {
 	@ManyToOne
 	private SubmissionState submissionState;
 	
-	//TODO - 7 combinations here actually, of whether the organization, student, and advisor should or should not be recipients.
+	//TODO - Several combinations here actually, of whether the organization, student, assignee, and/or advisor should or should not be recipients.
 	@Column(nullable = true)
 	@Enumerated
 	private RecipientType recipientType;
