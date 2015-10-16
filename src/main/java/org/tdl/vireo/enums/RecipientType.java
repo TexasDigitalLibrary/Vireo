@@ -1,18 +1,22 @@
 package org.tdl.vireo.enums;
 
+//TODO - why do we need Condition Type
+//import org.tdl.vireo.model.ConditionType;
 //import org.tdl.vireo.services.EnumByStringComparator;
 
-
-public enum ConditionType {
+public enum RecipientType {	
 	// DO NOT CHANGE THIS ORDER!!! (or you'll corrupt the DB)
-	ALWAYS(1),
-	COLLEGE(2),
-	DEPARTMENT(3),
-	PROGRAM(4); 
+	STUDENT(1),
+	ADVISOR(2),
+	COLLEGE(3),
+	DEPARTMENT(4),
+	PROGRAM(5),
+	ADMINGROUP(6),
+	ASSIGNEE(7); 
 	
 	private int value;
 	
-	ConditionType(int num) {
+	RecipientType(int num) {
 		value = num;
 	}
 	
@@ -24,18 +28,24 @@ public enum ConditionType {
 	public String toString() {
 		return this.name();
 	}
-	
+	//TODO to be considered/deleted
 	/*@Override
 	public String toString() {
 		switch (this) {
-		case Always:
-			return "Always";
-		case College:
+		case ADMINGROUP:
+			return "Administrative Group";
+		case ADVISOR:
+			return "Advisor";
+		case COLLEGE:
 			return "College";
-		case Department:
+		case DEPARTMENT:
 			return "Department";
-		case Program:
+		case PROGRAM:
 			return "Program";
+		case STUDENT:
+			return "Student";
+		case ASSIGNEE:
+			return "Assignee";
 		default:
 			throw new InvalidParameterException();
 		}
@@ -44,10 +54,10 @@ public enum ConditionType {
 	/**
 	 * like {@link Enum}.values() but it returns them sorted by their toString() values
 	 * 
-	 * @return - {@link ConditionType}[] array sorted by toString() values
+	 * @return - {@link RecipientType}[] array sorted by toString() values
 	 */
-	/*public static ConditionType[] sortedValues() {
-		ConditionType[] myVals = values();
+	/*public static RecipientType[] sortedValues() {
+		RecipientType[] myVals = values();
 		Arrays.sort(myVals, EnumByStringComparator.INSTANCE);
 		return myVals;
 	}*/

@@ -1,66 +1,144 @@
-package org.tdl.vireo.model.jpa;
+package org.tdl.vireo.model;
 
-import java.security.InvalidParameterException;
-import java.util.List;
+import static javax.persistence.CascadeType.DETACH;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.FetchType.EAGER;
 
-import javax.persistence.CascadeType;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
 
-import org.tdl.vireo.email.RecipientType;
-import org.tdl.vireo.model.AbstractWorkflowRuleCondition;
-import org.tdl.vireo.model.AdministrativeGroup;
-import org.tdl.vireo.model.EmailTemplate;
-import org.tdl.vireo.model.EmailWorkflowRule;
-import org.tdl.vireo.model.Submission;
-import org.tdl.vireo.services.EmailByRecipientType;
-import org.tdl.vireo.state.State;
-import org.tdl.vireo.state.StateManager;
+import org.tdl.vireo.enums.RecipientType;
 
-import play.modules.spring.Spring;
-
-/**
- * Jpa specific implementation of Vireo's WorkflowEmailRule interface.
- * 
- * @author <a href="mailto:huff@library.tamu.edu">Jeremy Huff</a>
- * 
- */
 @Entity
-@Table(name = "email_workflow_rules")
-public class JpaEmailWorkflowRuleImpl extends JpaAbstractModel<JpaEmailWorkflowRuleImpl> implements EmailWorkflowRule {
-
-	@Column(nullable = false)
-	private int displayOrder;
+public class EmailWorkflowRule extends BaseEntity {
 
 	@Column
-	private boolean isSystem = false;
+	private Boolean isSystem;
 
 	@Column
-	private boolean isDisabled = true;
+	private Boolean isDisabled;
 
-	@Column
-	private String associatedState;
-
+	@ManyToOne
+	private SubmissionState submissionState;
+	
+	//TODO - 7 combinations here actually, of whether the organization, student, and advisor should or should not be recipients.
 	@Column(nullable = true)
 	@Enumerated
 	private RecipientType recipientType;
-
-	@ManyToOne
-	@JoinColumn(name = "adminGroupRecipientId")
-	private JpaAdministrativeGroupImpl adminGroupRecipient;
-
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "conditionID")
-	private JpaEmailWorkflowRuleConditionImpl condition;
+	
+	@ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER)
+    private Set<Organization> organizations;
 
 	@ManyToOne
 	@JoinColumn(name = "emailTemplateId")
-	private JpaEmailTemplateImpl emailTemplate;
+	private EmailTemplate emailTemplate;
+	
+	public EmailWorkflowRule() {
+		isSystem(false);
+		isDisabled(true);
+	}
+	
+	public EmailWorkflowRule(SubmissionState submissionState, Set<Organization> organizations, RecipientType recipientType, EmailTemplate emailTemplate) {
+		this();
+		setSubmissionState(submissionState);
+		setOrganizations(organizations);
+		setRecipientType(recipientType);
+		setEmailTemplate(emailTemplate);
+	}
+
+	/**
+	 * @return the isSystem
+	 */
+	public Boolean isSystem() {
+		return isSystem;
+	}
+
+	/**
+	 * @param isSystem the isSystem to set
+	 */
+	public void isSystem(Boolean isSystem) {
+		this.isSystem = isSystem;
+	}
+
+	/**
+	 * @return the isDisabled
+	 */
+	public Boolean isDisabled() {
+		return isDisabled;
+	}
+
+	/**
+	 * @param isDisabled the isDisabled to set
+	 */
+	public void isDisabled(Boolean isDisabled) {
+		this.isDisabled = isDisabled;
+	}
+
+	/**
+	 * @return the submissionState
+	 */
+	public SubmissionState getSubmissionState() {
+		return submissionState;
+	}
+
+	/**
+	 * @param submissionState the submissionState to set
+	 */
+	public void setSubmissionState(SubmissionState submissionState) {
+		this.submissionState = submissionState;
+	}
+
+	/**
+	 * @return the recipientType
+	 */
+	public RecipientType getRecipientType() {
+		return recipientType;
+	}
+
+	/**
+	 * @param recipientType the recipientType to set
+	 */
+	public void setRecipientType(RecipientType recipientType) {
+		this.recipientType = recipientType;
+	}
+
+	/**
+	 * @return the organizations
+	 */
+	public Set<Organization> getOrganizations() {
+		return organizations;
+	}
+
+	/**
+	 * @param organizations the organizations to set
+	 */
+	public void setOrganizations(Set<Organization> organizations) {
+		this.organizations = organizations;
+	}
+	
+	/**
+	 * @return the emailTemplate
+	 */
+	public EmailTemplate getEmailTemplate() {
+		return emailTemplate;
+	}
+
+	/**
+	 * @param emailTemplate the emailTemplate to set
+	 */
+	public void setEmailTemplate(EmailTemplate emailTemplate) {
+		this.emailTemplate = emailTemplate;
+	}
+	
+	
+	//TODO - delete the section below
 
 	/**
 	 * Create a new WorkflowEmailRule model.
@@ -74,7 +152,7 @@ public class JpaEmailWorkflowRuleImpl extends JpaAbstractModel<JpaEmailWorkflowR
 	 * @param emailTemplate
 	 *            Workflow Email Rule's email template
 	 */
-	protected JpaEmailWorkflowRuleImpl(State associatedState) {
+	/*protected JpaEmailWorkflowRuleImpl(State associatedState) {
 
 		assertManager();
 
@@ -158,7 +236,7 @@ public class JpaEmailWorkflowRuleImpl extends JpaAbstractModel<JpaEmailWorkflowR
 
 		this.adminGroupRecipient = (JpaAdministrativeGroupImpl) adminGroup;
 	}
-
+	//TODO - gets list of emails
 	@Override
 	public List<String> getRecipients(Submission submission) {
 		return EmailByRecipientType.getRecipients(submission, recipientType, this);
@@ -228,5 +306,5 @@ public class JpaEmailWorkflowRuleImpl extends JpaAbstractModel<JpaEmailWorkflowR
 
 		this.recipientType = recipientType;
 	}
-
+*/
 }
