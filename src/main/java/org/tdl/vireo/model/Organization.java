@@ -7,6 +7,8 @@ import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -15,6 +17,7 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -39,11 +42,17 @@ public class Organization extends BaseEntity {
 
     @ElementCollection
     private Set<String> emails;
+    
+    @OneToMany(cascade = ALL, fetch=EAGER, orphanRemoval=true)
+    private Set<EmailWorkflowRule> emailWorkflowRules;
+    
+    
 
     public Organization() {
         setParentOrganizations(new TreeSet<Organization>());
         setChildrenOrganizations(new TreeSet<Organization>());
         setEmails(new TreeSet<String>());
+        setEmailWorkflowRules(new TreeSet<EmailWorkflowRule>());
     }
 
     /**
@@ -200,4 +209,35 @@ public class Organization extends BaseEntity {
     public void removeEmail(String email) {
         getEmails().remove(email);
     }
+
+	/**
+	 * @return the emailWorkflowRules
+	 */
+	public Set<EmailWorkflowRule> getEmailWorkflowRules() {
+		return emailWorkflowRules;
+	}
+
+	/**
+	 * @param emailWorkflowRules the emailWorkflowRules to set
+	 */
+	public void setEmailWorkflowRules(Set<EmailWorkflowRule> emailWorkflowRules) {
+		this.emailWorkflowRules = emailWorkflowRules;
+	}
+	
+	/**
+     * 
+     * @param emailWorkflowRule
+     */
+    public void addEmailWorkflowRule(EmailWorkflowRule emailWorkflowRule) {
+        getEmailWorkflowRules().add(emailWorkflowRule);
+    }
+
+    /**
+     * 
+     * @param emailWorkflowRules
+     */
+    public void removeEmailWorkflowRule(EmailWorkflowRule emailWorkflowRule) {
+    	getEmailWorkflowRules().remove(emailWorkflowRule);
+    }
+
 }
