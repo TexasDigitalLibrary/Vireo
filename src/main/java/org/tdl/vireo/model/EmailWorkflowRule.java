@@ -1,17 +1,9 @@
 package org.tdl.vireo.model;
 
-import static javax.persistence.CascadeType.DETACH;
-import static javax.persistence.CascadeType.MERGE;
-import static javax.persistence.CascadeType.REFRESH;
-import static javax.persistence.FetchType.EAGER;
-
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 import org.tdl.vireo.enums.RecipientType;
@@ -32,9 +24,6 @@ public class EmailWorkflowRule extends BaseEntity {
 	@Column(nullable = true)
 	@Enumerated
 	private RecipientType recipientType;
-	
-	@ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER)
-    private Set<Organization> organizations;
 
 	@ManyToOne
 	@JoinColumn(name = "emailTemplateId")
@@ -45,10 +34,9 @@ public class EmailWorkflowRule extends BaseEntity {
 		isDisabled(true);
 	}
 	
-	public EmailWorkflowRule(SubmissionState submissionState, Set<Organization> organizations, RecipientType recipientType, EmailTemplate emailTemplate) {
+	public EmailWorkflowRule(SubmissionState submissionState, RecipientType recipientType, EmailTemplate emailTemplate) {
 		this();
 		setSubmissionState(submissionState);
-		setOrganizations(organizations);
 		setRecipientType(recipientType);
 		setEmailTemplate(emailTemplate);
 	}
@@ -110,20 +98,6 @@ public class EmailWorkflowRule extends BaseEntity {
 	}
 
 	/**
-	 * @return the organizations
-	 */
-	public Set<Organization> getOrganizations() {
-		return organizations;
-	}
-
-	/**
-	 * @param organizations the organizations to set
-	 */
-	public void setOrganizations(Set<Organization> organizations) {
-		this.organizations = organizations;
-	}
-	
-	/**
 	 * @return the emailTemplate
 	 */
 	public EmailTemplate getEmailTemplate() {
@@ -136,9 +110,6 @@ public class EmailWorkflowRule extends BaseEntity {
 	public void setEmailTemplate(EmailTemplate emailTemplate) {
 		this.emailTemplate = emailTemplate;
 	}
-	
-	
-	//TODO - delete the section below
 
 	/**
 	 * Create a new WorkflowEmailRule model.
@@ -163,79 +134,6 @@ public class EmailWorkflowRule extends BaseEntity {
 		this.associatedState = associatedState.getBeanName();
 	}
 
-	@Override
-	public void setIsSystem(boolean isSystem) {
-		assertManager();
-
-		this.isSystem = isSystem;
-	}
-
-	@Override
-	public boolean isSystem() {
-		return this.isSystem;
-	}
-
-	@Override
-	public void disable() {
-		assertManager();
-
-		this.isDisabled = true;
-	}
-
-	@Override
-	public void enable() {
-		assertManager();
-
-		this.isDisabled = false;
-	}
-
-	@Override
-	public boolean isDisabled() {
-		return this.isDisabled;
-	}
-
-	@Override
-	public JpaEmailWorkflowRuleImpl save() {
-		assertManager();
-
-		// make sure we have a display order in the order that we're created
-		JpaEmailWorkflowRuleImpl ret;
-		if (this.getId() == null) {
-			ret = super.save();
-			ret.setDisplayOrder(Integer.parseInt(String.valueOf(ret.getId())));
-		}
-		ret = super.save();
-
-		return ret;
-	}
-
-	@Override
-	public JpaEmailWorkflowRuleImpl delete() {
-		assertManager();
-
-		return super.delete();
-	}
-
-	@Override
-	public void setEmailTemplate(EmailTemplate emailTemplate) {
-
-		assertManager();
-
-		this.emailTemplate = (JpaEmailTemplateImpl) emailTemplate;
-	}
-
-	@Override
-	public AdministrativeGroup getAdminGroupRecipient() {
-		return this.adminGroupRecipient;
-	}
-
-	@Override
-	public void setAdminGroupRecipient(AdministrativeGroup adminGroup) {
-
-		assertManager();
-
-		this.adminGroupRecipient = (JpaAdministrativeGroupImpl) adminGroup;
-	}
 	//TODO - gets list of emails
 	@Override
 	public List<String> getRecipients(Submission submission) {
@@ -258,53 +156,5 @@ public class EmailWorkflowRule extends BaseEntity {
 		this.associatedState = state.getBeanName();
 	}
 
-	@Override
-	public AbstractWorkflowRuleCondition getCondition() {
-		return this.condition;
-	}
-
-	@Override
-	public void setCondition(AbstractWorkflowRuleCondition condition) {
-		if (condition == null)
-			throw new IllegalArgumentException("Condition is required");
-		assertManager();
-
-		if (condition instanceof JpaEmailWorkflowRuleConditionImpl) {
-			this.condition = (JpaEmailWorkflowRuleConditionImpl) condition;
-		} else {
-			throw new InvalidParameterException();
-		}
-	}
-
-	@Override
-	public EmailTemplate getEmailTemplate() {
-		return this.emailTemplate;
-	}
-
-	@Override
-	public int getDisplayOrder() {
-		return displayOrder;
-	}
-
-	@Override
-	public void setDisplayOrder(int displayOrder) {
-
-		assertManager();
-		this.displayOrder = displayOrder;
-	}
-
-	@Override
-	public RecipientType getRecipientType() {
-		return recipientType;
-	}
-
-	@Override
-	public void setRecipientType(RecipientType recipientType) {
-		if (recipientType == null)
-			throw new IllegalArgumentException("Recipient type is required");
-		assertManager();
-
-		this.recipientType = recipientType;
-	}
 */
 }
