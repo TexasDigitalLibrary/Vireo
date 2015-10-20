@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -70,7 +71,8 @@ public class NamedSearchFilter extends BaseEntity{
 	
 	private Set<ActionLog> includedActionLogs;
 
-	private Set<Long> excludedActionLogIds;
+	private Set<ActionLog> excludedActionLogIds;
+	
 	//TODO
 	/*@ElementCollection
 	@CollectionTable(name="search_filter_text", joinColumns=@JoinColumn(name="search_filter_id"))
@@ -100,6 +102,8 @@ public class NamedSearchFilter extends BaseEntity{
 	//@CollectionTable(name="search_filter_columns",joinColumns=@JoinColumn(name="search_filter_id"))
 	//TODO private Set<SearchOrder> columns;
 	
+	
+
 	//@ElementCollection
 	//@CollectionTable(name="search_filter_customactions",joinColumns=@JoinColumn(name="search_filter_id"))
 	//private Set<Long> customActionIds;
@@ -108,6 +112,44 @@ public class NamedSearchFilter extends BaseEntity{
 	
 	public NamedSearchFilter() {
 		isPublicFlag(false);
+		
+		
+		setName(new String());
+		
+		
+		isUmiRelease(false);
+		
+		setCreator(null);
+		
+		setRangeStart(Calendar.getInstance());
+		
+		setRangeEnd(Calendar.getInstance());
+		
+		setIncludedSubmissions(new TreeSet<Submission>());
+		
+		setExcludedSubmissions(new TreeSet<Submission>());
+		
+		setIncludedActionLogs(new TreeSet<ActionLog>());
+
+		setExcludedActionLogIds(new TreeSet<ActionLog>());
+		
+		setSubmissionStates(new TreeSet<SubmissionState>());
+		
+		setAssignees(new TreeSet<User>());
+		
+		setEmbargoTypes(new TreeSet<EmbargoType>());
+		
+		setSemesters(new TreeSet<Calendar>());
+		
+		setOrganizations(new TreeSet<Organization>());
+		
+		//TODO:  can this be handled better than just a set of Strings?
+		setDocumentTypes(new TreeSet<String>());
+		
+		setCustomActionValues(new TreeSet<CustomActionValue>());
+		
+		
+		
 	}
 	
 	/**
@@ -224,6 +266,96 @@ public class NamedSearchFilter extends BaseEntity{
 	 */
 	public void setRangeEnd(Calendar rangeEnd) {
 		this.rangeEnd = rangeEnd;
+	}
+
+	public Set<Submission> getIncludedSubmissions() {
+		return includedSubmissions;
+	}
+
+	public void setIncludedSubmissions(Set<Submission> includedSubmissions) {
+		this.includedSubmissions = includedSubmissions;
+	}
+
+	public Set<Submission> getExcludedSubmissions() {
+		return excludedSubmissions;
+	}
+
+	public void setExcludedSubmissions(Set<Submission> excludedSubmissions) {
+		this.excludedSubmissions = excludedSubmissions;
+	}
+
+	public Set<ActionLog> getIncludedActionLogs() {
+		return includedActionLogs;
+	}
+
+	public void setIncludedActionLogs(Set<ActionLog> includedActionLogs) {
+		this.includedActionLogs = includedActionLogs;
+	}
+
+	public Set<ActionLog> getExcludedActionLogIds() {
+		return excludedActionLogIds;
+	}
+
+	public void setExcludedActionLogIds(Set<ActionLog> excludedActionLogIds) {
+		this.excludedActionLogIds = excludedActionLogIds;
+	}
+
+	public Set<SubmissionState> getSubmissionStates() {
+		return submissionStates;
+	}
+
+	public void setSubmissionStates(Set<SubmissionState> submissionStates) {
+		this.submissionStates = submissionStates;
+	}
+
+	public Set<User> getAssignees() {
+		return assignees;
+	}
+
+	public void setAssignees(Set<User> assignees) {
+		this.assignees = assignees;
+	}
+
+	public Set<EmbargoType> getEmbargoTypes() {
+		return embargoTypes;
+	}
+
+	public void setEmbargoTypes(Set<EmbargoType> embargoTypes) {
+		this.embargoTypes = embargoTypes;
+	}
+
+	public Set<Calendar> getSemesters() {
+		return semesters;
+	}
+
+	public void setSemesters(Set<Calendar> semesters) {
+		this.semesters = semesters;
+	}
+
+	public Set<Organization> getOrganizations() {
+		return organizations;
+	}
+
+	public void setOrganizations(Set<Organization> organizations) {
+		this.organizations = organizations;
+	}
+
+	public Set<CustomActionValue> getCustomActionValues() {
+		return customActionValues;
+	}
+
+	public void setCustomActionValues(Set<CustomActionValue> customActionValues) {
+		this.customActionValues = customActionValues;
+	}
+	
+	
+	//TODO:  can the document types be represented more elegantly than with String?
+	public Set<String> getDocumentTypes() {
+		return documentTypes;
+	}
+
+	public void setDocumentTypes(Set<String> documentTypes) {
+		this.documentTypes = documentTypes;
 	}
 
 	
