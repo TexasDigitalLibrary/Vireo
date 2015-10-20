@@ -1,13 +1,18 @@
-package org.tdl.vireo.model.jpa;
+package org.tdl.vireo.model;
+
+import static javax.persistence.FetchType.LAZY;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PostLoad;
@@ -25,156 +30,85 @@ import javax.persistence.UniqueConstraint;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.EmbargoType;
-import org.tdl.vireo.model.NamedSearchFilter;
-import org.tdl.vireo.model.Person;
-import org.tdl.vireo.model.PersonRepository;
-import org.tdl.vireo.model.SettingsRepository;
 import org.tdl.vireo.model.Submission;
-import org.tdl.vireo.model.SubmissionRepository;
-import org.tdl.vireo.search.SearchOrder;
-import org.tdl.vireo.search.Semester;
-
-import play.modules.spring.Spring;
+//import org.tdl.vireo.search.SearchOrder;
+//import org.tdl.vireo.search.Semester;
 
 /**
- * Jpa specific implementation of Vireo's Named Search Filter interface.
- * 
- * Importantly, shortly after Vireo 2.0 this class was modified to remove all
- * external dependencies on other JPA objects. It was proved problematic to
- * preserve the foreign key constraints with @ElementCollections because they
- * can not be referenced by a JPA query so there was no good way to handle
- * deleting those elements.
+ * A named filter search is a set of parameters to search for a set of Vireo
+ * submission. The object is used by the SubmissionRepository to filter the set
+ * of all submissions by particular criteria. This interface builds upon the
+ * basic non persistable SearchFilter by adding a name, a creator, and a public
+ * flag. Named filters are persisted in the database while other implementation
+ * may only reside in memory.
  * 
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 @Entity
-@Table(name = "search_filter",
-uniqueConstraints = { @UniqueConstraint( columnNames = { "creator_id", "name" } ) } )
-public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFilterImpl> implements NamedSearchFilter{
+@Table(uniqueConstraints = { @UniqueConstraint( columnNames = { "creator_id", "name" } ) } )
+public class NamedSearchFilter extends BaseEntity{
 	
-	@ManyToOne(targetEntity=JpaPersonImpl.class, optional=false)
-	public Person creator;
+	@Column(nullable = false)
+	private String name;
 	
-	@Column(nullable = false, length=255)
-	public String name;
+	private Boolean isPublicFlag;
 	
-	public boolean publicFlag;
+	private Boolean isUmiRelease;
 	
-	// These @ElementCollections have "_" so their names don't 
-	// conflict with getIncludedSubmissions() and play's enhances.
-	@ElementCollection
-	@CollectionTable(
-			name="search_filter_included_submissions",
-			joinColumns=@JoinColumn(name="search_filter_id"))
-	public List<Long> includedSubmissionIds;
+	@ManyToOne(optional=false)
+	private User creator;
 	
-	@ElementCollection
-	@CollectionTable(
-			name="search_filter_excluded_submissions",
-			joinColumns=@JoinColumn(name="search_filter_id"))
-	public List<Long> excludedSubmissionIds;
+	@Temporal(TemporalType.DATE)
+	private Calendar rangeStart;
 	
-	@ElementCollection
-	@CollectionTable(
-			name="search_filter_included_actionlogs",
-			joinColumns=@JoinColumn(name="search_filter_id"))
-	public List<Long> includedActionLogIds;
+	@Temporal(TemporalType.DATE)
+	private Calendar rangeEnd;
+	
+	private Set<Submission> includedSubmissions;
+	
+	private Set<Submission> excludedSubmissions;
+	
+	private Set<ActionLog> includedActionLogs;
 
-	@ElementCollection
-	@CollectionTable(
-			name="search_filter_excluded_actionlogs",
-			joinColumns=@JoinColumn(name="search_filter_id"))
-	public List<Long> excludedActionLogIds;
+	private Set<Long> excludedActionLogIds;
+	//TODO
+	/*@ElementCollection
+	@CollectionTable(name="search_filter_text", joinColumns=@JoinColumn(name="search_filter_id"))
+	private Set<String> searchText;*/
 	
-	@ElementCollection
-	@CollectionTable(
-			name="search_filter_text",
-			joinColumns=@JoinColumn(name="search_filter_id"))
-	public List<String> searchText;
+	private Set<SubmissionState> submissionStates;
 	
-	@ElementCollection
-	@CollectionTable(
-			name="search_filter_states",
-			joinColumns=@JoinColumn(name="search_filter_id"))
-	public List<String> states;
+	private Set<User> assignees;
 	
-	// Note: -1 means unassigned
-	@ElementCollection
-	@CollectionTable(
-			name="search_filter_assignees",
-			joinColumns=@JoinColumn(name="search_filter_id"))
-	public List<Long> assigneeIds;
-
-	@ElementCollection
-	@CollectionTable(
-			name="search_filter_embargos",
-			joinColumns=@JoinColumn(name="search_filter_id"))
-	public List<Long> embargoIds;
+	private Set<EmbargoType> embargoTypes;
 	
-	@ElementCollection
-	@CollectionTable(
-			name="search_filter_semesters",
-			joinColumns=@JoinColumn(name="search_filter_id"))
-	public List<String> semesters;
+	private Set<Calendar> semesters;
 	
-	@Transient
-	public List<Semester> cachedSemesters;
+	//TODO
+	/*@Transient
+	private Set<Semester> cachedSemesters;*/
 	
-	@ElementCollection
-	@CollectionTable(
-			name="search_filter_degrees",
-			joinColumns=@JoinColumn(name="search_filter_id"))
-	public List<String> degrees;
-	
-	@ElementCollection
-	@CollectionTable(
-			name="search_filter_departments",
-			joinColumns=@JoinColumn(name="search_filter_id"))
-	public List<String> departments;
-
-	@ElementCollection
-	@CollectionTable(
-			name="search_filter_programs",
-			joinColumns=@JoinColumn(name="search_filter_id"))
-	public List<String> programs;
-	
-	@ElementCollection
-	@CollectionTable(
-			name="search_filter_colleges",
-			joinColumns=@JoinColumn(name="search_filter_id"))
-	public List<String> colleges;
+	private Set<Organization> organizations;
 		
+	//TODO: can we use a predicate with specific degree level values here instead of a string?
 	@ElementCollection
-	@CollectionTable(
-			name="search_filter_majors",
-			joinColumns=@JoinColumn(name="search_filter_id"))
-	public List<String> majors;
+	@CollectionTable(name="search_filter_documenttypes",joinColumns=@JoinColumn(name="search_filter_id"))
+	private Set<String> documentTypes;
 	
-	@ElementCollection
-	@CollectionTable(
-			name="search_filter_documenttypes",
-			joinColumns=@JoinColumn(name="search_filter_id"))
-	public List<String> documentTypes;
+	//TODO:  this is just subsumed by the order-by functionality of a table, although we 
+	//@ElementCollection
+	//@CollectionTable(name="search_filter_columns",joinColumns=@JoinColumn(name="search_filter_id"))
+	//TODO private Set<SearchOrder> columns;
 	
-	@ElementCollection
-	@CollectionTable(
-			name="search_filter_columns",
-			joinColumns=@JoinColumn(name="search_filter_id"))
-	public List<SearchOrder> columns;
-
-	public Boolean umiRelease;
-
-	@Temporal(TemporalType.DATE)
-	public Date rangeStart;
+	//@ElementCollection
+	//@CollectionTable(name="search_filter_customactions",joinColumns=@JoinColumn(name="search_filter_id"))
+	//private Set<Long> customActionIds;
+	private Set<CustomActionValue> customActionValues;
 	
-	@Temporal(TemporalType.DATE)
-	public Date rangeEnd;
 	
-	@ElementCollection
-	@CollectionTable(
-			name="search_filter_customactions",
-			joinColumns=@JoinColumn(name="search_filter_id"))
-	public List<Long> customActionIds;
+	public NamedSearchFilter() {
+		isPublicFlag(false);
+	}
 	
 	/**
 	 * Construct a new Named Search Filter
@@ -184,18 +118,11 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	 * @param name
 	 *            The unique name (amongst all other filters of this creator)
 	 */
-	protected JpaNamedSearchFilterImpl(Person creator, String name) {
-		
-		if (creator == null)
-			throw new IllegalArgumentException("Creator is required");
-		
-		if (name == null || name.length() == 0)
-			throw new IllegalArgumentException("Name is required");
-		
+	protected NamedSearchFilter(User creator, String name) {
+		this();
 		this.creator = creator;
 		this.name = name;
-		this.publicFlag = false;
-		this.includedSubmissionIds = new ArrayList<Long>();
+		/*this.includedSubmissionIds = new ArrayList<Long>();
 		this.excludedSubmissionIds = new ArrayList<Long>();
 		this.includedActionLogIds = new ArrayList<Long>();
 		this.excludedActionLogIds = new ArrayList<Long>();
@@ -212,8 +139,99 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 		this.majors = new ArrayList<String>();
 		this.documentTypes = new ArrayList<String>();
 		this.columns = new ArrayList<SearchOrder>();
-		this.customActionIds = new ArrayList<Long>();
+		this.customActionIds = new ArrayList<Long>();*/
 	}
+
+	/**
+	 * @return the isPublicFlag
+	 */
+	public Boolean isPublicFlag() {
+		return isPublicFlag;
+	}
+
+	/**
+	 * @param isPublicFlag the isPublicFlag to set
+	 */
+	public void isPublicFlag(Boolean isPublicFlag) {
+		this.isPublicFlag = isPublicFlag;
+	}
+
+	/**
+	 * @return the isUmiRelease
+	 */
+	public Boolean isUmiRelease() {
+		return isUmiRelease;
+	}
+
+	/**
+	 * @param isUmiRelease the isUmiRelease to set
+	 */
+	public void isUmiRelease(Boolean isUmiRelease) {
+		this.isUmiRelease = isUmiRelease;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * @return the creator
+	 */
+	public User getCreator() {
+		return creator;
+	}
+
+	/**
+	 * @param creator the creator to set
+	 */
+	public void setCreator(User creator) {
+		this.creator = creator;
+	}
+
+	/**
+	 * @return the rangeStart
+	 */
+	public Calendar getRangeStart() {
+		return rangeStart;
+	}
+
+	/**
+	 * @param rangeStart the rangeStart to set
+	 */
+	public void setRangeStart(Calendar rangeStart) {
+		this.rangeStart = rangeStart;
+	}
+
+	/**
+	 * @return the rangeEnd
+	 */
+	public Calendar getRangeEnd() {
+		return rangeEnd;
+	}
+
+	/**
+	 * @param rangeEnd the rangeEnd to set
+	 */
+	public void setRangeEnd(Calendar rangeEnd) {
+		this.rangeEnd = rangeEnd;
+	}
+
+	
+	
+	
+	
+	//TODO -to be considered
+	
 
 	/**
 	 * Just before data is written to the database update some fields for
@@ -225,7 +243,8 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	 * 
 	 * 2) Check if the unassigned user has been added to the list, aka (null).
 	 * If so remove it from the list and set the unassigned flag.
-	 */
+	 *//*
+	 
 	@PrePersist
 	@PreUpdate
 	@PreRemove
@@ -252,10 +271,10 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 		}
 	}
 	
-	/**
+	*//**
 	 * After being loaded from the database update our cached copy of the
 	 * semester data structure and unassigned assignees.
-	 */
+	 *//*
 	@PostPersist
 	@PostLoad
 	@PostUpdate
@@ -717,5 +736,5 @@ public class JpaNamedSearchFilterImpl extends JpaAbstractModel<JpaNamedSearchFil
 	@Override
     public void removeCustomAction(CustomActionDefinition customAction) {
 		this.customActionIds.remove(customAction.getId());
-    }
+    }*/
 }
