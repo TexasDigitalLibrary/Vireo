@@ -15,7 +15,9 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.PostLoad;
 import javax.persistence.PostPersist;
 import javax.persistence.PostUpdate;
@@ -65,12 +67,16 @@ public class NamedSearchFilter extends BaseEntity{
 	@Temporal(TemporalType.DATE)
 	private Calendar rangeEnd;
 	
+	@ManyToMany
 	private Set<Submission> includedSubmissions;
 	
+	@ManyToMany
 	private Set<Submission> excludedSubmissions;
 	
+	@ManyToMany
 	private Set<ActionLog> includedActionLogs;
 
+	@ManyToMany
 	private Set<ActionLog> excludedActionLogIds;
 	
 	//TODO
@@ -78,18 +84,23 @@ public class NamedSearchFilter extends BaseEntity{
 	@CollectionTable(name="search_filter_text", joinColumns=@JoinColumn(name="search_filter_id"))
 	private Set<String> searchText;*/
 	
+	@ManyToMany
 	private Set<SubmissionState> submissionStates;
 	
+	@ManyToMany
 	private Set<User> assignees;
 	
+	@ManyToMany
 	private Set<EmbargoType> embargoTypes;
 	
+	@ElementCollection
 	private Set<Calendar> semesters;
 	
 	//TODO
 	/*@Transient
 	private Set<Semester> cachedSemesters;*/
 	
+	@ManyToMany
 	private Set<Organization> organizations;
 		
 	//TODO: can we use a predicate with specific degree level values here instead of a string?
@@ -107,6 +118,8 @@ public class NamedSearchFilter extends BaseEntity{
 	//@ElementCollection
 	//@CollectionTable(name="search_filter_customactions",joinColumns=@JoinColumn(name="search_filter_id"))
 	//private Set<Long> customActionIds;
+	
+	@ManyToMany
 	private Set<CustomActionValue> customActionValues;
 	
 	
@@ -136,6 +149,7 @@ public class NamedSearchFilter extends BaseEntity{
 		setSubmissionStates(new TreeSet<SubmissionState>());
 		
 		setAssignees(new TreeSet<User>());
+		System.out.println("How about those awesome assignees!  There happen to be " + getAssignees().size() + " of them at the present time.");
 		
 		setEmbargoTypes(new TreeSet<EmbargoType>());
 		
