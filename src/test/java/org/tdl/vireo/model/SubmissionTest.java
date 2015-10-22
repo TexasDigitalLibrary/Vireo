@@ -38,6 +38,16 @@ public class SubmissionTest {
     private static final String TEST_SUBMISSION_SUBMITTER_FIRSTNAME = "TDL";
     private static final String TEST_SUBMISSION_SUBMITTER_LASTNAME = "Admin";
     private static final Role TEST_SUBMISSION_SUBMITTER_ROLE = Role.ADMINISTRATOR;
+    
+    private static final String TEST_SUBMISSION_REVIEWER1_EMAIL = "reviewer1@tdl.org";
+    private static final String TEST_SUBMISSION_REVIEWER1_FIRSTNAME = "Ronald";
+    private static final String TEST_SUBMISSION_REVIEWER1_LASTNAME = "Reviewer";
+    private static final Role TEST_SUBMISSION_REVIEWER1_ROLE = Role.ADMINISTRATOR;
+    
+    private static final String TEST_SUBMISSION_REVIEWER2_EMAIL = "reviewer2@tdl.org";
+    private static final String TEST_SUBMISSION_REVIEWER2_FIRSTNAME = "Roger";
+    private static final String TEST_SUBMISSION_REVIEWER2_LASTNAME = "Reviewer";
+    private static final Role TEST_SUBMISSION_REVIEWER2_ROLE = Role.ADMINISTRATOR;
 
     private static final String TEST_SUBMISSION_STATE_NAME = "Test Parent Submission State";
 
@@ -75,6 +85,8 @@ public class SubmissionTest {
     private static final int TEST_EMBARGO_TYPE_DURATION = 0;
 
     private static User submitter;
+    private static User graduateOfficeEmployee1;
+    private static User graduateOfficeEmployee2;
     private static SubmissionState submissionState;
     private static FieldPredicate fieldPredicate;
     private static FieldValue fieldValue;
@@ -123,6 +135,10 @@ public class SubmissionTest {
         submitter = userRepo.create(TEST_SUBMISSION_SUBMITTER_EMAIL, TEST_SUBMISSION_SUBMITTER_FIRSTNAME, TEST_SUBMISSION_SUBMITTER_LASTNAME, TEST_SUBMISSION_SUBMITTER_ROLE);
         assertEquals("The user does not exist!", 1, userRepo.count());
 
+        graduateOfficeEmployee1 = userRepo.create(TEST_SUBMISSION_REVIEWER1_EMAIL, TEST_SUBMISSION_REVIEWER1_FIRSTNAME, TEST_SUBMISSION_REVIEWER1_LASTNAME, TEST_SUBMISSION_REVIEWER1_ROLE);
+        
+        graduateOfficeEmployee1 = userRepo.create(TEST_SUBMISSION_REVIEWER1_EMAIL, TEST_SUBMISSION_REVIEWER1_FIRSTNAME, TEST_SUBMISSION_REVIEWER1_LASTNAME, TEST_SUBMISSION_REVIEWER1_ROLE);
+        
         submissionState = submissionStateRepo.create(TEST_SUBMISSION_STATE_NAME, TEST_SUBMISSION_STATE_ARCHIVED, TEST_SUBMISSION_STATE_PUBLISHABLE, TEST_SUBMISSION_STATE_DELETABLE, TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_SUBMISSION_STATE_ACTIVE);
         assertEquals("The submission state does not exist!", 1, submissionStateRepo.count());
 
