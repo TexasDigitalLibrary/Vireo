@@ -2,10 +2,17 @@ package org.tdl.vireo.model;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.UUID;
+
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.EAGER;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -29,6 +36,22 @@ public class Attachment extends BaseEntity {
 
 	public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	
+	//TODO:  do we want to make an action log not optional on the attachment?
+	@OneToMany(cascade=ALL, fetch = EAGER, orphanRemoval=true)
+	private Set<ActionLog> actionLogs;
+	
+	public Set<ActionLog> getActionLogs() {
+		return actionLogs;
+	}
+
+	public void addActionLog(ActionLog actionLog) {
+		this.actionLogs.add(actionLog);
+	}
+	
+	public void removeActionLog(ActionLog actionLog) {
+		this.actionLogs.remove(actionLog);
+	}
+
 	public Attachment() {
 	setDate(Calendar.getInstance());
 	}
@@ -37,6 +60,7 @@ public class Attachment extends BaseEntity {
 	 	this();
 		setName(name);	
 		setUuid(uuid);
+		actionLogs = new TreeSet<ActionLog>();
 	}
 
 	/**
