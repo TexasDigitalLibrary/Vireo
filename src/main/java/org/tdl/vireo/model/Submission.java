@@ -28,10 +28,14 @@ public class Submission extends BaseEntity {
 
     @OneToOne(optional = false)
     private User submitter;
+    
+    @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER)
+    private Set<User> assignees;
 
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
     private SubmissionState state;
 
+    //TODO:  should we simplify this to ManyToOne since organizations can now represent grant-able degrees?
     @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER)
     private Set<Organization> organizations;
 
