@@ -3,31 +3,16 @@ package org.tdl.vireo.model;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
-import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.tdl.vireo.Application;
-import org.tdl.vireo.annotations.Order;
-import org.tdl.vireo.model.repo.FieldPredicateRepo;
-import org.tdl.vireo.model.repo.FieldValueRepo;
 import org.tdl.vireo.runner.OrderedRunner;
 
 @RunWith(OrderedRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
-public class FieldValueTest {
-	
-    private static final String TEST_FIELD_PREDICATE_VALUE = "test.predicate";
-    private static final String TEST_FIELD_VALUE = "Test Field Value";
-	
-	@Autowired
-	private FieldValueRepo fieldValueRepo;
-	
-	@Autowired
-	private FieldPredicateRepo fieldPredicateRepo;
-	
-	@Test
-	@Order(value = 1)
+public class FieldValueTest extends AbstractEntityTest {
+
+	@Override
 	public void testCreate() {
 		FieldPredicate fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE);
 		FieldValue fieldValue = fieldValueRepo.create(fieldPredicate);
@@ -35,20 +20,25 @@ public class FieldValueTest {
 		fieldValue = fieldValueRepo.save(fieldValue);
 		assertEquals("The repository did not save the entity!", 1, fieldValueRepo.count());
 		assertEquals("Saved entity did not contain the value!", TEST_FIELD_VALUE, fieldValue.getValue());
-		assertEquals("Saved entity did not contain the predicate value!", TEST_FIELD_PREDICATE_VALUE, fieldValue.getPredicate().getValue());
+		assertEquals("Saved entity did not contain the predicate value!", TEST_FIELD_PREDICATE_VALUE,
+				fieldValue.getPredicate().getValue());
 	}
-		
-	@Test
-	@Order(value = 2)
+
+	@Override
 	public void testDelete() {
 		FieldPredicate fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE);
 		FieldValue fieldValue = fieldValueRepo.create(fieldPredicate);
 		fieldValueRepo.delete(fieldValue);
 		assertEquals("The entity was not deleted!", 0, fieldValueRepo.count());
 	}
-	
-	@Test
-	@Order(value = 3)
+
+	@Override
+	public void testDuplication() {	}
+
+	@Override
+	public void testFind() { }
+
+	@Override
 	public void testCascade() {
 		FieldPredicate fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE);
 		FieldValue fieldValue = fieldValueRepo.create(fieldPredicate);
@@ -56,7 +46,7 @@ public class FieldValueTest {
 		assertEquals("The entity was not deleted!", 0, fieldValueRepo.count());
 		assertEquals("The entity was deleted!", 1, fieldPredicateRepo.count());
 	}
-		
+
 	@After
 	public void cleanUp() {
 		fieldValueRepo.deleteAll();
@@ -64,4 +54,3 @@ public class FieldValueTest {
 	}
 
 }
-
