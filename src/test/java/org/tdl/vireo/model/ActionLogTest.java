@@ -20,24 +20,24 @@ public class ActionLogTest extends AbstractEntityTest {
 		testUser = userRepo.create(TEST_USER_EMAIL, TEST_USER_FIRSTNAME, TEST_USER_LASTNAME, TEST_USER_ROLE);
 		assertEquals("The user repository is not empty!", 1, userRepo.count());
 
-		testSubmissionState = submissionStateRepo.create(TEST_SUBMISSION_STATE_NAME, TEST_SUBMISSION_STATE_ARCHIVED,
+		submissionState = submissionStateRepo.create(TEST_SUBMISSION_STATE_NAME, TEST_SUBMISSION_STATE_ARCHIVED,
 				TEST_SUBMISSION_STATE_PUBLISHABLE, TEST_SUBMISSION_STATE_DELETABLE,
 				TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT,
 				TEST_SUBMISSION_STATE_ACTIVE);
 		assertEquals("The submissionState repository is not empty!", 1, submissionStateRepo.count());
 
-		testAttachment = attachmentRepo.create(TEST_ATTACHMENT_NAME, TEST_UUID);
+		attachment = attachmentRepo.create(TEST_ATTACHMENT_NAME, TEST_UUID);
 		assertEquals("The attachment repository is not empty!", 1, attachmentRepo.count());
 
-		testsubmission = submissionRepo.create(testUser, testSubmissionState);
+		testSubmission = submissionRepo.create(testUser, submissionState);
 		assertEquals("The submission repository is not empty!", 1, submissionRepo.count());
 
 	}
 
 	@Override
 	public void testCreate() {
-		ActionLog testActionLog = actionLogRepo.create(testsubmission, testSubmissionState, testUser,
-				TEST_ACTION_LOG_ACTION_DATE, testAttachment, TEST_ACTION_LOG_ENTRY, TEST_ACTION_LOG_FLAG);
+		ActionLog testActionLog = actionLogRepo.create(testSubmission, submissionState, testUser,
+				TEST_ACTION_LOG_ACTION_DATE, attachment, TEST_ACTION_LOG_ENTRY, TEST_ACTION_LOG_FLAG);
 		assertEquals("The actionLog repository is not empty!", 1, actionLogRepo.count());
 		assertEquals("The test Action log was not saved", 1, actionLogRepo.count());
 		assertEquals("Saved action log does not have the correct submitter email", TEST_USER_EMAIL,
@@ -73,9 +73,9 @@ public class ActionLogTest extends AbstractEntityTest {
 
 	@Override
 	public void testDuplication() {
-		actionLogRepo.create(testsubmission, testSubmissionState, testUser, TEST_ACTION_LOG_ACTION_DATE, testAttachment,
+		actionLogRepo.create(testSubmission, submissionState, testUser, TEST_ACTION_LOG_ACTION_DATE, attachment,
 				TEST_ACTION_LOG_ENTRY, TEST_ACTION_LOG_FLAG);
-		actionLogRepo.create(testsubmission, testSubmissionState, testUser, TEST_ACTION_LOG_ACTION_DATE, testAttachment,
+		actionLogRepo.create(testSubmission, submissionState, testUser, TEST_ACTION_LOG_ACTION_DATE, attachment,
 				TEST_ACTION_LOG_ENTRY, TEST_ACTION_LOG_FLAG);
 		assertEquals("The action log entry was not duplicated", 2, actionLogRepo.count());
 
@@ -83,9 +83,9 @@ public class ActionLogTest extends AbstractEntityTest {
 
 	@Override
 	public void testFind() {
-		actionLogRepo.create(testsubmission, testSubmissionState, testUser, TEST_ACTION_LOG_ACTION_DATE, testAttachment,
+		actionLogRepo.create(testSubmission, submissionState, testUser, TEST_ACTION_LOG_ACTION_DATE, attachment,
 				TEST_ACTION_LOG_ENTRY, TEST_ACTION_LOG_FLAG);
-		ActionLog testActionLog = actionLogRepo.findByUserAndSubmissionState(testUser, testSubmissionState);
+		ActionLog testActionLog = actionLogRepo.findByUserAndSubmissionState(testUser, submissionState);
 		assertEquals("Saved action log does not have the correct submitter email", TEST_USER_EMAIL,
 				testActionLog.getUser().getEmail());
 		assertEquals("Saved action log does not have the correct submitter first name", TEST_USER_FIRSTNAME,
@@ -98,16 +98,16 @@ public class ActionLogTest extends AbstractEntityTest {
 
 	@Override
 	public void testDelete() {
-		ActionLog testActionLog = actionLogRepo.create(testsubmission, testSubmissionState, testUser,
-				TEST_ACTION_LOG_ACTION_DATE, testAttachment, TEST_ACTION_LOG_ENTRY, TEST_ACTION_LOG_FLAG);
+		ActionLog testActionLog = actionLogRepo.create(testSubmission, submissionState, testUser,
+				TEST_ACTION_LOG_ACTION_DATE, attachment, TEST_ACTION_LOG_ENTRY, TEST_ACTION_LOG_FLAG);
 		actionLogRepo.delete(testActionLog);
 		assertEquals("The test action log was not deleted", 0, actionLogRepo.count());
 	}
 
 	@Override
 	public void testCascade() {
-		ActionLog testActionLog = actionLogRepo.create(testsubmission, testSubmissionState, testUser,
-				TEST_ACTION_LOG_ACTION_DATE, testAttachment, TEST_ACTION_LOG_ENTRY, TEST_ACTION_LOG_FLAG);
+		ActionLog testActionLog = actionLogRepo.create(testSubmission, submissionState, testUser,
+				TEST_ACTION_LOG_ACTION_DATE, attachment, TEST_ACTION_LOG_ENTRY, TEST_ACTION_LOG_FLAG);
 		actionLogRepo.delete(testActionLog);
 		assertEquals("The testActionLog is not deleted from the repo", 0, actionLogRepo.count());
 		assertEquals("Submission is not deleted", 1, submissionRepo.count());
