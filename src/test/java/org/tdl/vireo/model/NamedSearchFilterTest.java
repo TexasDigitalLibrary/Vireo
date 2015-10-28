@@ -34,120 +34,7 @@ import org.tdl.vireo.runner.OrderedRunner;
 
 @RunWith(OrderedRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
-public class NamedSearchFilterTest {
-	
-	private static final String TEST_USER_EMAIL = "admin@tdl.org";
-    private static final String TEST_USER_FIRSTNAME = "TDL";
-    private static final String TEST_USER_LASTNAME = "Admin";
-    private static final Role TEST_USER_ROLE = Role.ADMINISTRATOR;
-    
-    private static final String TEST_INCLUDED_SUBMITTER_EMAIL = "includedSubmitter@tdl.org";
-    private static final String TEST_INCLUDED_SUBMITTER_FIRSTNAME = "Included Submitter First Name";
-    private static final String TEST_INCLUDED_SUBMITTER_LASTNAME = "Included Submitter Last Name";
-   
-    
-    
-    private static final String TEST_EXCLUDED_SUBMITTER_EMAIL = "excludedSubmitter@tdl.org";
-    private static final String TEST_EXCLUDED_SUBMITTER_FIRSTNAME = "Included Submitter First Name";
-    private static final String TEST_EXCLUDED_SUBMITTER_LASTNAME = "Included Submitter Last Name";
-    private static final Role TEST_SUBMITTER_ROLE = Role.ADMINISTRATOR;  
-    
-    private static final String TEST_ASSIGNEE_EMAIL = "assignee@tdl.org";
-    private static final String TEST_ASSIGNEE_FIRSTNAME = "TDL";
-    private static final String TEST_ASSIGNEE_LASTNAME = "Admin";   
-    private static final Role TEST_ASSIGNEE_ROLE = Role.USER;
-    
-    private static final String TEST_EMBARGO_NAME = "Test Embargo Name";
-    private static final String TEST_EMBARGO_DESCRIPTION = "Test Embargo Description";
-    private static Integer TEST_EMBARGO_DURATION  = new Integer(3);
-    
-	
-    private static final String TEST_NAMED_SEARCH_FILTER_NAME = "Test Filter Name";
-    
-    private static final String TEST_INCLUDED_SUBMISSION_STATE_NAME = "Test Included Submission State Name";
-    private static final String TEST_EXCLUDED_SUBMISSION_STATE_NAME = "Test Excluded Submission State Name";
-    private static final String TEST_SUBMISSION_STATE_NAME = "Test Submission State Name";
-    
-    private static final boolean TEST_SUBMISSION_STATE_ARCHIVED = true;
-    private static final boolean TEST_SUBMISSION_STATE_PUBLISHABLE = true;
-    private static final boolean TEST_SUBMISSION_STATE_DELETABLE = true;
-    private static final boolean TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER = true;
-    private static final boolean TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT = true;
-    private static final boolean TEST_SUBMISSION_STATE_ACTIVE = true;
-    
-    private static final String TEST_ATTACHMENT_NAME = "Test Attachment Name";
-    private static Calendar TEST_ACTION_LOG_ACTION_DATE = Calendar.getInstance();
-    private static UUID TEST_UUID = UUID.randomUUID();
-    
-    private static final String TEST_ACTION_LOG_ENTRY = "Test ActionLog Entry";
-    private static final boolean TEST_ACTION_LOG_FLAG                       = true;  
-    
-    private static String TEST_CUSTOM_ACTION_DEFINITION_LABEL = "Test Custom Action Definition Label";
-	private static Boolean TEST_CUSTOM_ACTION_DEFINITION_VISIBLE_BY_STUDENT = true; 
-	
-	private static Boolean TEST_CUSTOM_ACTION_VALUE = true;
-	
-	private static final int TEST_ORGANIZATION_CATEGORY_LEVEL      = 0;
-	private static final String TEST_ORGANIZATION_CATEGORY_NAME      = "Test Organization Category";
-	
-	private static final String TEST_ORGANIZATION_NAME            = "Test Organization Name";
-    
-    private static EmbargoType embargoType;
-    
-    private static Organization organization;
-    private static OrganizationCategory organizationCategory;
-    
-    private static User creator;
-	private static User assignee;
-	private static User includedSubmitter;
-	private static User excludedSubmitter;
-	
-	private static Submission includedSubmission;
-	private static Submission excludedSubmission;
-	
-	private static SubmissionState submissionState;
-	private static SubmissionState includedSubmissionState;
-	private static SubmissionState excludedSubmissionState;
-	
-	private static Attachment attachment;
-	
-	private static ActionLog includedActionLog;
-	private static ActionLog excludedActionLog;
-	
-	private static CustomActionDefinition customActionDefinition;
-	private static CustomActionValue customActionValue;
-	
-	@Autowired
-	private NamedSearchFilterRepo namedSearchFilterRepo;
-	@Autowired
-    private	UserRepo userRepo;
-	
-	@Autowired
-    private EmbargoTypeRepo embargoTypeRepo;
-	
-	@Autowired
-    private SubmissionRepo submissionRepo;
-	
-	@Autowired
-    private SubmissionStateRepo submissionStateRepo;
-	
-	@Autowired
-    private ActionLogRepo actionLogRepo;
-	
-	@Autowired
-    private OrganizationRepo organizationRepo;
-	
-	@Autowired
-    private OrganizationCategoryRepo organizationCategoryRepo;
-	
-	@Autowired
-    private CustomActionDefinitionRepo customActionDefinitionRepo;
-	@Autowired
-    private CustomActionValueRepo customActionValueRepo;
-	
-	@Autowired
-    private AttachmentRepo attachmentRepo;
-	
+public class NamedSearchFilterTest extends AbstractEntityTest{
 	
 	
 	@Before
@@ -190,8 +77,7 @@ public class NamedSearchFilterTest {
 		assertEquals("The organization Repo is empty",1,organizationRepo.count());
 	}
 	
-	@Test
-    @Order(value = 1)
+	@Override
     @Transactional
     public void testCreate() {
 		NamedSearchFilter namedSearchFilter = namedSearchFilterRepo.create(creator, TEST_NAMED_SEARCH_FILTER_NAME);
@@ -224,7 +110,7 @@ public class NamedSearchFilterTest {
 		
 	}
 	
-	@Test
+	@Override
 	@Order(value = 2)
 	public void testDuplication() {
 		namedSearchFilterRepo.create(creator, TEST_NAMED_SEARCH_FILTER_NAME);
@@ -236,14 +122,12 @@ public class NamedSearchFilterTest {
 		assertEquals("SearchFilter was not created in the repo", 1,namedSearchFilterRepo.count());
 	}
 	
-	@Test
-    @Order(value = 3)
+	@Override
     public void testFind() {
 		// TODO
 	}
 	
-	@Test
-    @Order(value = 4)
+	@Override
     public void testDelete() { 
 		NamedSearchFilter namedSearchFilter = namedSearchFilterRepo.create(creator, TEST_NAMED_SEARCH_FILTER_NAME);
 		assertEquals("SearchFilter was not created in the repo", 1,namedSearchFilterRepo.count());
@@ -251,8 +135,7 @@ public class NamedSearchFilterTest {
 		assertEquals("SearchFilter was not deleted in the repo", 0,namedSearchFilterRepo.count());
 	}
 	
-	@Test
-    @Order(value = 5)
+	@Override
     @Transactional
     public void testCascade() {
 		NamedSearchFilter namedSearchFilter = namedSearchFilterRepo.create(creator, TEST_NAMED_SEARCH_FILTER_NAME);
