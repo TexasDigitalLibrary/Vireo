@@ -3,14 +3,8 @@ package org.tdl.vireo.model;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.tdl.vireo.Application;
-import org.tdl.vireo.runner.OrderedRunner;
 
-@RunWith(OrderedRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
 public class FieldPredicateTest extends AbstractEntityTest {
 
     @Override

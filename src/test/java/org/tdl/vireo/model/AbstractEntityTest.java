@@ -4,7 +4,10 @@ import java.util.Calendar;
 import java.util.UUID;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.tdl.vireo.Application;
 import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.config.constant.ConfigurationName;
 import org.tdl.vireo.enums.InputType;
@@ -34,7 +37,10 @@ import org.tdl.vireo.model.repo.SubmissionStateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.repo.WorkflowRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
+import org.tdl.vireo.runner.OrderedRunner;
 
+@RunWith(OrderedRunner.class)
+@SpringApplicationConfiguration(classes = Application.class)
 public abstract class AbstractEntityTest {
 
     protected static final boolean TEST_SUBMISSION_STATE_ARCHIVED = true;

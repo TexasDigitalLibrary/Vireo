@@ -5,16 +5,10 @@ import static org.junit.Assert.assertNotEquals;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
-import org.tdl.vireo.Application;
 import org.tdl.vireo.enums.RecipientType;
-import org.tdl.vireo.runner.OrderedRunner;
 
-@RunWith(OrderedRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
 public class OrganizationTest extends AbstractEntityTest {
 
     @Before
@@ -230,7 +224,6 @@ public class OrganizationTest extends AbstractEntityTest {
         emailWorkflowRuleRepo.deleteAll();
         submissionStateRepo.deleteAll();
         emailTemplateRepo.deleteAll();
-
     }
 
 }
