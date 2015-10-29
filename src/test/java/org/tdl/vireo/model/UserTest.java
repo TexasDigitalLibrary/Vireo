@@ -4,9 +4,14 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.Before;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.tdl.vireo.model.repo.EntityControlledVocabularyRepo;
 
 public class UserTest extends AbstractEntityTest {
+    
+    @Autowired
+    EntityControlledVocabularyRepo entityControlledVocabularyRepo;
 
     @Before
     public void setUp() {
@@ -15,6 +20,22 @@ public class UserTest extends AbstractEntityTest {
 
     @Override
     public void testCreate() {
+        
+        
+        
+        
+        entityControlledVocabularyRepo.getEntityNames().forEach(entityName -> {
+            System.out.println("\n" + entityName + "\n");
+        });
+        
+        
+        
+        
+        
+        
+        
+        
+        
         User testUser = userRepo.create(TEST_USER_EMAIL, TEST_USER_FIRSTNAME, TEST_USER_LASTNAME, TEST_USER_ROLE);
         assertEquals("The user repository did not save the user!", 1, userRepo.count());
         assertEquals("Saved user did not contain the correct email!", TEST_USER_EMAIL, testUser.getEmail());
@@ -30,6 +51,12 @@ public class UserTest extends AbstractEntityTest {
             userRepo.create(TEST_USER_EMAIL, TEST_USER_FIRSTNAME, TEST_USER_LASTNAME, TEST_USER_ROLE);
         } 
         catch (DataIntegrityViolationException e) { /* SUCCESS */ }
+        
+        
+        entityControlledVocabularyRepo.getControlledVocabulary(User.class, "email").forEach(property -> {
+            System.out.println("\n" + property + "\n");
+        });
+        
         assertEquals("The user repository duplicated the user!", 1, userRepo.count());
     }
 
@@ -52,6 +79,12 @@ public class UserTest extends AbstractEntityTest {
         ContactInfo permanentContactInfo = contactInfoRepo.create(permanentAddress, TEST_PERMANENT_PHONE, TEST_PERMANENT_EMAIL);
         assertEquals("The contact info does not exist!", 2, contactInfoRepo.count());
 
+        
+        entityControlledVocabularyRepo.getControlledVocabulary(Address.class, "address1").forEach(property -> {
+            System.out.println("\n" + property + "\n");
+        });
+        
+        
         OrganizationCategory parentCategory = organizationCategoryRepo.create(TEST_PARENT_CATEGORY_NAME, TEST_PARENT_CATEGORY_LEVEL);
         assertEquals("The category does not exist!", 1, organizationCategoryRepo.count());
 
