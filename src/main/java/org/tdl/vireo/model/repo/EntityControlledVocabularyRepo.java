@@ -29,9 +29,6 @@ public class EntityControlledVocabularyRepo implements EntityControlledVocabular
         Table t = entity.getAnnotation(Table.class);
 
         String tableName = (t == null) ? entityType.getName().toUpperCase() : t.name();
-                
-        System.out.println("\nTABLE: " + tableName + "\n");
-        System.out.println("\nCOLUMN: " + property + "\n");
         
         for(Field field : entity.getDeclaredFields()) {
             if(field.getName().equals(property)) {
@@ -41,6 +38,11 @@ public class EntityControlledVocabularyRepo implements EntityControlledVocabular
         
         // property not on entity
         return null;
+    }
+    
+    @Override
+    public List<?> getControlledVocabulary(String entityName, String property) throws ClassNotFoundException {
+        return getControlledVocabulary(Class.forName("org.tdl.vireo.model." + entityName), property);
     }
 
     @Override
@@ -76,6 +78,11 @@ public class EntityControlledVocabularyRepo implements EntityControlledVocabular
             propertyNames.add(field.getName());
         }
         return propertyNames;
+    }
+    
+    @Override
+    public List<String> getPropertyNames(String entityName) throws ClassNotFoundException {
+        return getPropertyNames(Class.forName("org.tdl.vireo.model." + entityName));
     }
     
 }

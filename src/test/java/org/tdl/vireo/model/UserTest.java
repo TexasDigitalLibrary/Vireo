@@ -39,10 +39,21 @@ public class UserTest extends AbstractEntityTest {
             });
         });
         
-        System.out.println("\n*************************************\nEmbargoType properties:\n");
+        System.out.println("\nGET BY ENTITY\n*************************************\nEmbargoType properties:\n");
         entityControlledVocabularyRepo.getPropertyNames(EmbargoType.class).forEach(property -> {
             System.out.println("    " + property + "\n");
         });
+        System.out.println("\n*************************************\n");
+        
+        
+        System.out.println("\nGET BY ENTITY NAME\n*************************************\nEmbargoType properties:\n");
+        try {
+            entityControlledVocabularyRepo.getPropertyNames("EmbargoType").forEach(property -> {
+                System.out.println("    " + property + "\n");
+            });
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         System.out.println("\n*************************************\n");
         
         User testUser = userRepo.create(TEST_USER_EMAIL, TEST_USER_FIRSTNAME, TEST_USER_LASTNAME, TEST_USER_ROLE);
@@ -92,6 +103,14 @@ public class UserTest extends AbstractEntityTest {
         entityControlledVocabularyRepo.getControlledVocabulary(Address.class, "address1").forEach(property -> {
             System.out.println("\n" + property + "\n");
         });
+        
+        try {
+            entityControlledVocabularyRepo.getControlledVocabulary("Address", "address1").forEach(property -> {
+                System.out.println("\n" + property + "\n");
+            });
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         
         
         OrganizationCategory parentCategory = organizationCategoryRepo.create(TEST_PARENT_CATEGORY_NAME, TEST_PARENT_CATEGORY_LEVEL);
