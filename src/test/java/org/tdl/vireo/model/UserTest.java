@@ -2,6 +2,9 @@ package org.tdl.vireo.model;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.List;
+import java.util.Map;
+
 import org.junit.After;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,18 +25,18 @@ public class UserTest extends AbstractEntityTest {
     public void testCreate() {
         
         
-        
-        
         entityControlledVocabularyRepo.getEntityNames().forEach(entityName -> {
             System.out.println("\n" + entityName + "\n");
         });
         
         
-        
-        
-        
-        
-        
+        Map<String, List<String>> entityPropertyMap = entityControlledVocabularyRepo.getPropertyNames();
+        entityPropertyMap.keySet().forEach(key -> {
+            System.out.println("\nENTITY " + key + ":\n");
+            entityPropertyMap.get(key).forEach(property -> {
+                System.out.println("   " + property + "\n");
+            });
+        });
         
         
         User testUser = userRepo.create(TEST_USER_EMAIL, TEST_USER_FIRSTNAME, TEST_USER_LASTNAME, TEST_USER_ROLE);
@@ -83,7 +86,6 @@ public class UserTest extends AbstractEntityTest {
         entityControlledVocabularyRepo.getControlledVocabulary(Address.class, "address1").forEach(property -> {
             System.out.println("\n" + property + "\n");
         });
-        
         
         OrganizationCategory parentCategory = organizationCategoryRepo.create(TEST_PARENT_CATEGORY_NAME, TEST_PARENT_CATEGORY_LEVEL);
         assertEquals("The category does not exist!", 1, organizationCategoryRepo.count());

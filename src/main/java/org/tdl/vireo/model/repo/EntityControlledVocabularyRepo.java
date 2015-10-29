@@ -2,7 +2,10 @@ package org.tdl.vireo.model.repo;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -44,10 +47,27 @@ public class EntityControlledVocabularyRepo implements EntityControlledVocabular
     @Override
     public List<String> getEntityNames() {
         List<String> entityNames = new ArrayList<String>();        
-        entityManager.getMetamodel().getEntities().parallelStream().forEach(et -> {
-            entityNames.add(et.getName()); 
+        entityManager.getMetamodel().getEntities().parallelStream().forEach(entity -> {
+            entityNames.add(entity.getName()); 
         });
         return entityNames;
+    }
+    
+    @Override
+    public Map<String, List<String>> getPropertyNames() {
+        
+        Map<String, List<String>> propertyMap = new HashMap<String, List<String>>();
+               
+        entityManager.getMetamodel().getEntities().parallelStream().forEach(entity -> {
+            List<String> propertyNames = new ArrayList<String>();            
+            entity.getAttributes().forEach(attribute -> {
+                propertyNames.add(attribute.getName());
+            });
+            propertyMap.put(entity.getName(), propertyNames);
+        });
+        
+        
+        return propertyMap;
     }
     
 }
