@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.config.constant.ConfigurationName;
 import org.tdl.vireo.enums.InputType;
@@ -38,15 +37,15 @@ import org.tdl.vireo.model.repo.WorkflowStepRepo;
 
 public abstract class AbstractEntityTest {
 
-    protected static final Boolean TEST_SUBMISSION_STATE_ARCHIVED = true;
-    protected static final Boolean TEST_SUBMISSION_STATE_PUBLISHABLE = true;
-    protected static final Boolean TEST_SUBMISSION_STATE_DELETABLE = true;
-    protected static final Boolean TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER = true;
-    protected static final Boolean TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT = true;
-    protected static final Boolean TEST_SUBMISSION_STATE_ACTIVE = true;
-    protected static final Boolean TEST_ACTION_LOG_FLAG = true;
-    protected static Boolean TEST_CUSTOM_ACTION_DEFINITION_VISIBLE_BY_STUDENT = true;
-    protected static Boolean TEST_CUSTOM_ACTION_VALUE = true;
+    protected static final boolean TEST_SUBMISSION_STATE_ARCHIVED = true;
+    protected static final boolean TEST_SUBMISSION_STATE_PUBLISHABLE = true;
+    protected static final boolean TEST_SUBMISSION_STATE_DELETABLE = true;
+    protected static final boolean TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER = true;
+    protected static final boolean TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT = true;
+    protected static final boolean TEST_SUBMISSION_STATE_ACTIVE = true;
+    protected static final boolean TEST_ACTION_LOG_FLAG = true;
+    protected static final boolean TEST_CUSTOM_ACTION_DEFINITION_VISIBLE_BY_STUDENT = true;
+    protected static final boolean TEST_CUSTOM_ACTION_VALUE = true;
     protected static final boolean TEST_FIELD_PROFILE_REPEATABLE = true;
     protected static final boolean TEST_FIELD_PROFILE_REQUIRED = true;
 
@@ -66,6 +65,9 @@ public abstract class AbstractEntityTest {
     protected static final String TEST_STATE = "Texas";
     protected static final String TEST_POSTAL_CODE = "78759";
     protected static final String TEST_COUNTRY = "USA";
+    
+    // LanguageTest
+    protected static final String TEST_LANGUAGE_NAME = "Test Language";
 
     // ConfigurationTest
     protected static final String TEST_VIREO_CONFIG_INSTALL_DIR_KEY = ConfigurationName.APPLICATION_INSTALL_DIRECTORY;
@@ -76,13 +78,13 @@ public abstract class AbstractEntityTest {
     protected static final String TEST_LANGUAGE = "English";
     protected static final String TEST_CONTROLLED_VOCABULARY_NAME = "Test Vocabulary";
     protected static final String TEST_CONTROLLED_VOCABULARY_VALUE = "Test Vocabulary Value";
-    protected static final String TEST_DETACHABLE_CONTROLLED_VOCABULARY_VALUE = "Test Detachable Vocabulary Value";
+    protected static final String TEST_SEVERABLE_CONTROLLED_VOCABULARY_VALUE = "Test Severable Vocabulary Value";
 
     // DepositLocation test
     protected static final String TEST_DEPOSIT_LOCATION_NAME = "Test Deposit Name";
 
     // CustomActionDefinition Test
-    protected static String TEST_CUSTOM_ACTION_DEFINITION_LABEL = "Test Custom Action Definition Label";
+    protected static final String TEST_CUSTOM_ACTION_DEFINITION_LABEL = "Test Custom Action Definition Label";
 
     // ContactInfo Test
     protected static final String TEST_PHONE = "512-495-4418";
@@ -97,15 +99,15 @@ public abstract class AbstractEntityTest {
     protected static final String TEST_FIELD_GLOSS_VALUE = "Test Field Gloss";
 
     // Organization Category test
-
     protected static final String TEST_CATEGORY_NAME = "Test Category";
     protected static final int TEST_CATEGORY_LEVEL = 0;
-
+    
     protected static final String TEST_ORGANIZATION_NAME = "Test Organization";
+    
     // Field Predicate Test
     protected static final String TEST_FIELD_PREDICATE_VALUE = "test.predicate";
-    protected static final String TEST_DETACHABLE_FIELD_GLOSS_VALUE = "Test Detachable Gloss";
-    protected static final String TEST_DETACHABLE_CONTROLLED_VOCABULARY_NAME = "Test Detachable Controlled Vocaublary";
+    protected static final String TEST_SEVERABLE_FIELD_GLOSS_VALUE = "Test Severable Gloss";
+    protected static final String TEST_SEVERABLE_CONTROLLED_VOCABULARY_NAME = "Test Severable Controlled Vocaublary";
 
     // Submission State Test
     protected static final String TEST_PARENT_SUBMISSION_STATE_NAME = "Test Parent Submission State";
@@ -119,8 +121,8 @@ public abstract class AbstractEntityTest {
     protected static final boolean TEST_PARENT_WORKFLOW_INHERITABILITY = true;
     protected static final boolean TEST_CHILD_WORKFLOW_INHERITABILITY = true;
     protected static final boolean TEST_GRAND_CHILD_WORKFLOW_INHERITABILITY = true;
-    protected static final boolean TEST_DETACHABLE_PARENT_WORKFLOW_INHERITABILITY = true;
-    protected static final boolean TEST_DETACHABLE_CHILD_WORKFLOW_INHERITABILITY = true;
+    protected static final boolean TEST_SEVERABLE_PARENT_WORKFLOW_INHERITABILITY = true;
+    protected static final boolean TEST_SEVERABLE_CHILD_WORKFLOW_INHERITABILITY = true;
 
     protected static final String TEST_TRANSITION1_SUBMISSION_STATE_NAME = "Test Transition1 Submission State";
     protected static final String TEST_TRANSITION2_SUBMISSION_STATE_NAME = "Test Transition2 Submission State";
@@ -131,8 +133,8 @@ public abstract class AbstractEntityTest {
     protected static final boolean TEST_TRANSITION_SUBMISSION_STATE_EDITABLE_BY_STUDENT = true;
     protected static final boolean TEST_TRANSITION_SUBMISSION_STATE_ACTIVE = true;
     protected static final boolean TEST_WORKFLOW_INHERITABILITY = true;
-    protected static final Boolean TEST_DETACHABLE_FIELD_PROFILE_REPEATABLE = false;
-    protected static final Boolean TEST_DETACHABLE_FIELD_PROFILE_REQUIRED = false;
+    protected static final boolean TEST_SEVERABLE_FIELD_PROFILE_REPEATABLE = false;
+    protected static final boolean TEST_SEVERABLE_FIELD_PROFILE_REQUIRED = false;
 
     // Submission Test
     protected static final String TEST_SUBMISSION_SUBMITTER_EMAIL = "admin@tdl.org";
@@ -150,12 +152,12 @@ public abstract class AbstractEntityTest {
     protected static final String TEST_SUBMISSION_REVIEWER2_LASTNAME = "Reviewer";
     protected static final Role TEST_SUBMISSION_REVIEWER2_ROLE = Role.ADMINISTRATOR;
 
-    protected static final String TEST_DETACHABLE_FIELD_PREDICATE_VALUE = "dc.detachable";
+    protected static final String TEST_SEVERABLE_FIELD_PREDICATE_VALUE = "dc.detachable";
 
-    protected static final String TEST_DETACHABLE_ORGANIZATION_NAME = "Test Detachable Organization";
+    protected static final String TEST_SEVERABLE_ORGANIZATION_NAME = "Test Severable Organization";
 
     protected static final String TEST_WORKFLOW_STEP_NAME = "Test Parent Workflow Step";
-    protected static final String TEST_DETACHABLE_WORKFLOW_STEP_NAME = "Test Detachable Workflow Step";
+    protected static final String TEST_SEVERABLE_WORKFLOW_STEP_NAME = "Test Severable Workflow Step";
 
     protected static final String TEST_SUBMISSION_STATE_ACTION_LOG_ENTRY = "Test ActionLog Entry";
     protected static final boolean TEST_SUBMISSION_STATE_ACTION_LOG_FLAG = true;
@@ -166,7 +168,6 @@ public abstract class AbstractEntityTest {
     protected static final int TEST_EMBARGO_TYPE_DURATION = 0;
 
     // User Test
-
     protected static final String TEST_SHIBBOLETH_AFFILIATION = "shib_affiliation";
 
     protected static final String TEST_PREFERENCE_KEY = "key";
@@ -191,7 +192,6 @@ public abstract class AbstractEntityTest {
     protected static final String TEST_PERMANENT_EMAIL = "admin@tdl.org <p>";
 
     // Organization Test
-
     protected static final int TEST_PARENT_CATEGORY_LEVEL = 0;
     protected static final int TEST_CHILD_CATEGORY_LEVEL = 1;
     protected static final int TEST_GRAND_CHILD_CATEGORY_LEVEL = 2;
@@ -203,24 +203,24 @@ public abstract class AbstractEntityTest {
     protected static final String TEST_PARENT_ORGANIZATION_NAME = "Test Parent Organization";
     protected static final String TEST_CHILD_ORGANIZATION_NAME = "Test Child Organization";
     protected static final String TEST_GRAND_CHILD_ORGANIZATION_NAME = "Test Grand Child Organization";
-    protected static final String TEST_DETACHABLE_PARENT_ORGANIZATION_NAME = "Test Detachable Parent Organization";
-    protected static final String TEST_DETACHABLE_CHILD_ORGANIZATION_NAME = "Test Detachable Child Organization";
+    protected static final String TEST_SEVERABLE_PARENT_ORGANIZATION_NAME = "Test Severable Parent Organization";
+    protected static final String TEST_SEVERABLE_CHILD_ORGANIZATION_NAME = "Test Severable Child Organization";
 
     protected static final String TEST_PARENT_WORKFLOW_NAME = "Test Parent Workflow";
     protected static final String TEST_CHILD_WORKFLOW_NAME = "Test Child Workflow";
     protected static final String TEST_GRAND_CHILD_WORKFLOW_NAME = "Test Grand Child Workflow";
-    protected static final String TEST_DETACHABLE_PARENT_WORKFLOW_NAME = "Test Detachable Parent Workflow";
-    protected static final String TEST_DETACHABLE_CHILD_WORKFLOW_NAME = "Test Detachable Child Workflow";
+    protected static final String TEST_SEVERABLE_PARENT_WORKFLOW_NAME = "Test Severable Parent Workflow";
+    protected static final String TEST_SEVERABLE_CHILD_WORKFLOW_NAME = "Test Severable Child Workflow";
 
     protected static final String TEST_PARENT_EMAIL = "Test Parent Email";
     protected static final String TEST_CHILD_EMAIL = "Test Child Email";
     protected static final String TEST_GRAND_CHILD_EMAIL = "Test Grand Child Email";
-    protected static final String TEST_DETACHABLE_PARENT_EMAIL = "Test Detachable Parent Email";
-    protected static final String TEST_DETACHABLE_CHILD_EMAIL = "Test Detachable Child Email";
+    protected static final String TEST_SEVERABLE_PARENT_EMAIL = "Test Severable Parent Email";
+    protected static final String TEST_SEVERABLE_CHILD_EMAIL = "Test Severable Child Email";
 
     protected static final String TEST_CHILD_SUBMISSION_STATE_NAME = "Test Child Submission State";
-    protected static final String TEST_DETACHABLE_PARENT_SUBMISSION_STATE_NAME = "Test Detachable Parent Submission State";
-    protected static final String TEST_DETACHABLE_CHILD_SUBMISSION_STATE_NAME = "Test Detachable Child Submission State";
+    protected static final String TEST_SEVERABLE_PARENT_SUBMISSION_STATE_NAME = "Test Severable Parent Submission State";
+    protected static final String TEST_SEVERABLE_CHILD_SUBMISSION_STATE_NAME = "Test Severable Child Submission State";
     protected static final String TEST_FIELD_VALUE = "Test Field Value";
 
     protected static final String TEST_INCLUDED_SUBMITTER_EMAIL = "includedSubmitter@tdl.org";
@@ -239,7 +239,7 @@ public abstract class AbstractEntityTest {
 
     protected static final String TEST_EMBARGO_NAME = "Test Embargo Name";
     protected static final String TEST_EMBARGO_DESCRIPTION = "Test Embargo Description";
-    protected static Integer TEST_EMBARGO_DURATION = new Integer(3);
+    protected static final int TEST_EMBARGO_DURATION = 3;
 
     protected static final String TEST_NAMED_SEARCH_FILTER_NAME = "Test Filter Name";
 
@@ -247,14 +247,14 @@ public abstract class AbstractEntityTest {
     protected static final String TEST_EXCLUDED_SUBMISSION_STATE_NAME = "Test Excluded Submission State Name";
 
     protected static final InputType TEST_FIELD_PROFILE_INPUT_TYPE = InputType.INPUT_TEXT;
-    protected static final InputType TEST_DETACHABLE_FIELD_PROFILE_INPUT_TYPE = InputType.INPUT_TEXT;
-    
+    protected static final InputType TEST_SEVERABLE_FIELD_PROFILE_INPUT_TYPE = InputType.INPUT_TEXT;
+
     protected static final int TEST_ORGANIZATION_CATEGORY_LEVEL = 0;
     protected static final String TEST_ORGANIZATION_CATEGORY_NAME = "Test Organization Category";
 
     protected static final Role TEST_USER_ROLE = Role.ADMINISTRATOR;
-    protected static Calendar TEST_ACTION_LOG_ACTION_DATE = Calendar.getInstance();
-    protected static UUID TEST_UUID = UUID.randomUUID();
+    protected static final Calendar TEST_ACTION_LOG_ACTION_DATE = Calendar.getInstance();
+    protected static final UUID TEST_UUID = UUID.randomUUID();
 
     @Autowired
     protected ActionLogRepo actionLogRepo;
@@ -329,53 +329,52 @@ public abstract class AbstractEntityTest {
 
     @Autowired
     protected WorkflowRepo workflowRepo;
-    
+
     @Autowired
     protected NamedSearchFilterRepo namedSearchFilterRepo;
     
-    
-    protected static ActionLog includedActionLog;
-    protected static ActionLog excludedActionLog;
-    
-    protected static Address testAddress;
-    
-    protected static Attachment attachment;
-    
-    protected static CustomActionDefinition testCustomActionDefinition;
-    protected static CustomActionDefinition customActionDefinition;
-    protected static CustomActionValue customActionValue;
-    
-    protected static EmailTemplate emailTemplate;
-    protected static EmailWorkflowRule emailWorkflowRule;
-    protected static EmbargoType embargoType;
-    protected static FieldValue fieldValue;
-    protected static Organization organization;
-    protected static Language language;
-    protected static OrganizationCategory parentCategory;
-    protected static OrganizationCategory organizationCategory;
-    
-    protected static SubmissionState submissionState;
-    protected static SubmissionState includedSubmissionState;
-    protected static SubmissionState excludedSubmissionState;
-    
-    protected static Submission testSubmission;
-    protected static Submission includedSubmission;
-    protected static Submission excludedSubmission;
-    
-    protected static User testUser;
-    protected static User submitter;
-    protected static User graduateOfficeEmployee1;
-    protected static User graduateOfficeEmployee2;
-    protected static User creator;
-    protected static User assignee;
-    protected static User includedSubmitter;
-    protected static User excludedSubmitter;
-    
-    protected static WorkflowStep workflowStep;
+
+    protected ActionLog includedActionLog;
+    protected ActionLog excludedActionLog;
+
+    protected Address testAddress;
+
+    protected Attachment attachment;
+
+    protected CustomActionDefinition testCustomActionDefinition;
+    protected CustomActionDefinition customActionDefinition;
+    protected CustomActionValue customActionValue;
+
+    protected EmailTemplate emailTemplate;
+    protected EmailWorkflowRule emailWorkflowRule;
+    protected EmbargoType embargoType;
+    protected FieldValue fieldValue;
+    protected Organization organization;
+    protected Language language;
+    protected OrganizationCategory parentCategory;
+    protected OrganizationCategory organizationCategory;
+
+    protected SubmissionState submissionState;
+    protected SubmissionState includedSubmissionState;
+    protected SubmissionState excludedSubmissionState;
+
+    protected Submission testSubmission;
+    protected Submission includedSubmission;
+    protected Submission excludedSubmission;
+
+    protected User testUser;
+    protected User submitter;
+    protected User graduateOfficeEmployee1;
+    protected User graduateOfficeEmployee2;
+    protected User creator;
+    protected User assignee;
+    protected User includedSubmitter;
+    protected User excludedSubmitter;
+
+    protected WorkflowStep workflowStep;
 
     @Test
     @Order(value = 1)
-    @Transactional
     public abstract void testCreate();
 
     @Test
@@ -384,15 +383,10 @@ public abstract class AbstractEntityTest {
 
     @Test
     @Order(value = 3)
-    public abstract void testFind();
-
-    @Test
-    @Order(value = 4)
     public abstract void testDelete();
 
     @Test
-    @Order(value = 5)
-    @Transactional
+    @Order(value = 4)
     public abstract void testCascade();
 
 }

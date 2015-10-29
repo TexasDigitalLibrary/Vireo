@@ -9,4 +9,5 @@ import org.tdl.vireo.model.repo.custom.ControlledVocabularyRepoCustom;
 public interface ControlledVocabularyRepo extends JpaRepository<ControlledVocabulary, Long>, ControlledVocabularyRepoCustom {
 
     public ControlledVocabulary findByName(String name);
+    
 }

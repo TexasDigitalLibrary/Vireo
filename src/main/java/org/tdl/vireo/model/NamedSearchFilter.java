@@ -4,10 +4,7 @@ import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.LAZY;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -15,30 +12,13 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.PostLoad;
-import javax.persistence.PostPersist;
-import javax.persistence.PostUpdate;
-import javax.persistence.PrePersist;
-import javax.persistence.PreRemove;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
-
-import org.neo4j.cypher.internal.compiler.v2_1.executionplan.addEagernessIfNecessary;
-import org.tdl.vireo.model.ActionLog;
-import org.tdl.vireo.model.CustomActionDefinition;
-import org.tdl.vireo.model.EmbargoType;
-import org.tdl.vireo.model.Submission;
-//import org.tdl.vireo.search.SearchOrder;
-//import org.tdl.vireo.search.Semester;
 
 /**
  * A named filter search is a set of parameters to search for a set of Vireo

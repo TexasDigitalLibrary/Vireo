@@ -12,45 +12,38 @@ import org.tdl.vireo.runner.OrderedRunner;
 @SpringApplicationConfiguration(classes = Application.class)
 public class ConfigurationTest extends AbstractEntityTest {
 
-	@Override
-	public void testCreate() {
-		// set vireo.install.dir
-		Configuration installPath = configurationRepo.create(TEST_VIREO_CONFIG_INSTALL_DIR_KEY, TEST_VIREO_INSTALL_DIR);
-		assertEquals("The install path configuration name was wrong!", TEST_VIREO_CONFIG_INSTALL_DIR_KEY,
-				installPath.getName());
-		assertEquals("The install path configuration value was wrong!", TEST_VIREO_INSTALL_DIR, installPath.getValue());
-		assertEquals("The configuration was not saved!", 1, configurationRepo.count());
-	}
+    @Override
+    public void testCreate() {
+        // set vireo.install.dir
+        Configuration installPath = configurationRepo.create(TEST_VIREO_CONFIG_INSTALL_DIR_KEY, TEST_VIREO_INSTALL_DIR);
+        assertEquals("The install path configuration name was wrong!", TEST_VIREO_CONFIG_INSTALL_DIR_KEY, installPath.getName());
+        assertEquals("The install path configuration value was wrong!", TEST_VIREO_INSTALL_DIR, installPath.getValue());
+        assertEquals("The configuration was not saved!", 1, configurationRepo.count());
+    }
 
-	@Override
-	public void testDuplication() {
-		// configurations should just override their values if attempted to be
-		// created again (a copy should not be made)
-		configurationRepo.create(TEST_VIREO_CONFIG_INSTALL_DIR_KEY, TEST_VIREO_INSTALL_DIR);
-		Configuration changedConfig = configurationRepo.create(TEST_VIREO_CONFIG_INSTALL_DIR_KEY,
-				TEST_VIREO_INSTALL_DIR_CHANGED);
-		assertEquals("The configuration was duplicated!", 1, configurationRepo.count());
-		assertEquals("The configuration was not changed!", TEST_VIREO_INSTALL_DIR_CHANGED, changedConfig.getValue());
-	}
+    @Override
+    public void testDuplication() {
+        // configurations should just override their values if attempted to be
+        // created again (a copy should not be made)
+        configurationRepo.create(TEST_VIREO_CONFIG_INSTALL_DIR_KEY, TEST_VIREO_INSTALL_DIR);
+        Configuration changedConfig = configurationRepo.create(TEST_VIREO_CONFIG_INSTALL_DIR_KEY, TEST_VIREO_INSTALL_DIR_CHANGED);
+        assertEquals("The configuration was duplicated!", 1, configurationRepo.count());
+        assertEquals("The configuration was not changed!", TEST_VIREO_INSTALL_DIR_CHANGED, changedConfig.getValue());
+    }
 
-	@Override
-	public void testDelete() {
-		Configuration configToDelete = configurationRepo.create(TEST_VIREO_CONFIG_INSTALL_DIR_KEY,
-				TEST_VIREO_INSTALL_DIR);
-		configurationRepo.delete(configToDelete);
-		assertEquals("The configuration was not deleted!", 0, configurationRepo.count());
-	}
+    @Override
+    public void testDelete() {
+        Configuration configToDelete = configurationRepo.create(TEST_VIREO_CONFIG_INSTALL_DIR_KEY, TEST_VIREO_INSTALL_DIR);
+        configurationRepo.delete(configToDelete);
+        assertEquals("The configuration was not deleted!", 0, configurationRepo.count());
+    }
 
-	@Override
-	public void testFind() {
-	}
+    @Override
+    public void testCascade() {
+    }
 
-	@Override
-	public void testCascade() {
-	}
-
-	@After
-	public void cleanUp() {
-		configurationRepo.deleteAll();
-	}
+    @After
+    public void cleanUp() {
+        configurationRepo.deleteAll();
+    }
 }

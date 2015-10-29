@@ -1,6 +1,9 @@
 package org.tdl.vireo.model;
 
-import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.CascadeType.DETACH;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.LAZY;
 
 import javax.persistence.Column;
@@ -10,7 +13,7 @@ import javax.persistence.OneToOne;
 @Entity
 public class ContactInfo extends BaseEntity {
 
-    @OneToOne(cascade = ALL, optional = true, orphanRemoval = true, fetch = LAZY)
+    @OneToOne(cascade = {DETACH, MERGE, REFRESH, REMOVE}, optional = true, orphanRemoval = true, fetch = LAZY)
     private Address address;
     
     @Column(nullable = true)
