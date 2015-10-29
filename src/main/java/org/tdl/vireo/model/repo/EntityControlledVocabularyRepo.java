@@ -26,9 +26,9 @@ public class EntityControlledVocabularyRepo implements EntityControlledVocabular
         Metamodel meta = entityManager.getMetamodel();
         EntityType<?> entityType = meta.entity(entity);
 
-        Table t = entity.getAnnotation(Table.class);
+        Table table = entity.getAnnotation(Table.class);
 
-        String tableName = (t == null) ? entityType.getName().toUpperCase() : t.name();
+        String tableName = (table == null) ? entityType.getName().toUpperCase() : table.name();
         
         for(Field field : entity.getDeclaredFields()) {
             if(field.getName().equals(property)) {
