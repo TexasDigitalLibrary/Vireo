@@ -30,7 +30,8 @@ public class UserTest extends AbstractEntityTest {
         });
         
         
-        Map<String, List<String>> entityPropertyMap = entityControlledVocabularyRepo.getPropertyNames();
+        Map<String, List<String>> entityPropertyMap = entityControlledVocabularyRepo.getAllEntityPropertyNames();
+        
         entityPropertyMap.keySet().forEach(key -> {
             System.out.println("\nENTITY " + key + ":\n");
             entityPropertyMap.get(key).forEach(property -> {
@@ -38,6 +39,11 @@ public class UserTest extends AbstractEntityTest {
             });
         });
         
+        System.out.println("\n*************************************\nEmbargoType properties:\n");
+        entityControlledVocabularyRepo.getPropertyNames(EmbargoType.class).forEach(property -> {
+            System.out.println("    " + property + "\n");
+        });
+        System.out.println("\n*************************************\n");
         
         User testUser = userRepo.create(TEST_USER_EMAIL, TEST_USER_FIRSTNAME, TEST_USER_LASTNAME, TEST_USER_ROLE);
         assertEquals("The user repository did not save the user!", 1, userRepo.count());
@@ -86,6 +92,7 @@ public class UserTest extends AbstractEntityTest {
         entityControlledVocabularyRepo.getControlledVocabulary(Address.class, "address1").forEach(property -> {
             System.out.println("\n" + property + "\n");
         });
+        
         
         OrganizationCategory parentCategory = organizationCategoryRepo.create(TEST_PARENT_CATEGORY_NAME, TEST_PARENT_CATEGORY_LEVEL);
         assertEquals("The category does not exist!", 1, organizationCategoryRepo.count());

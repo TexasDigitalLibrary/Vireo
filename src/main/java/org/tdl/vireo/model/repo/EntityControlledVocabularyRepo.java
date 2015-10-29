@@ -2,7 +2,6 @@ package org.tdl.vireo.model.repo;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +53,7 @@ public class EntityControlledVocabularyRepo implements EntityControlledVocabular
     }
     
     @Override
-    public Map<String, List<String>> getPropertyNames() {
+    public Map<String, List<String>> getAllEntityPropertyNames() {
         
         Map<String, List<String>> propertyMap = new HashMap<String, List<String>>();
                
@@ -68,6 +67,15 @@ public class EntityControlledVocabularyRepo implements EntityControlledVocabular
         
         
         return propertyMap;
+    }
+
+    @Override
+    public List<String> getPropertyNames(Class<?> entity) {
+        List<String> propertyNames = new ArrayList<String>();
+        for(Field field : entity.getDeclaredFields()) {
+            propertyNames.add(field.getName());
+        }
+        return propertyNames;
     }
     
 }

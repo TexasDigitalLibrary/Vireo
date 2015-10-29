@@ -9,6 +9,8 @@ public interface EntityControlledVocabularyInterface {
     
     List<String> getEntityNames();
     
-    Map<String, List<String>> getPropertyNames();
+    Map<String, List<String>> getAllEntityPropertyNames();
+    
+    List<String> getPropertyNames(Class<?> entity);
     
 }
