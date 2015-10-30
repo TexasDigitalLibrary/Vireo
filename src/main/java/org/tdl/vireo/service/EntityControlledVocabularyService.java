@@ -96,7 +96,7 @@ public class EntityControlledVocabularyService {
         }
     }
         
-    public List<?> getControlledVocabulary(Class<?> entity, String property) {
+    public List<Object> getControlledVocabulary(Class<?> entity, String property) {
         
         Metamodel meta = entityManager.getMetamodel();
         EntityType<?> entityType = meta.entity(entity);

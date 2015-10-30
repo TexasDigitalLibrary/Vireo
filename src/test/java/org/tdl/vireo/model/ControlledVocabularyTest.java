@@ -2,9 +2,13 @@ package org.tdl.vireo.model;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.List;
+import java.util.Set;
+
 import org.junit.After;
 import org.junit.Before;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.tdl.vireo.enums.EmbargoGuarantor;
 
 public class ControlledVocabularyTest extends AbstractEntityTest {
 
@@ -14,11 +18,44 @@ public class ControlledVocabularyTest extends AbstractEntityTest {
     }
 
     @Override
+    @SuppressWarnings("unchecked")    
     public void testCreate() {
         ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME, language);
         assertEquals("The repository did not save the entity!", 1, controlledVocabularyRepo.count());
         assertEquals("Saved entity did not contain the name!", TEST_CONTROLLED_VOCABULARY_NAME, controlledVocabulary.getName());
         assertEquals("Saved entity did not contain the language!", language, controlledVocabulary.getLanguage());
+        
+        
+        
+        
+        embargoRepo.create(TEST_EMBARGO_NAME, TEST_EMBARGO_DESCRIPTION, TEST_EMBARGO_DURATION);
+        Embargo embargo = embargoRepo.create(TEST_EMBARGO_NAME_2, TEST_EMBARGO_DESCRIPTION, TEST_EMBARGO_DURATION);
+        embargo.setGuarantor(EmbargoGuarantor.PROQUEST);
+        embargoRepo.save(embargo);
+        
+        
+        ControlledVocabulary entityControlledVocabulary = controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_EMBARGO_GUARANTOR, TEST_CONTROLLED_VOCABULARY_EMBARGO, language);
+        assertEquals("The repository did not save the entity!", 2, controlledVocabularyRepo.count());
+        assertEquals("Saved entity did not contain the name!", TEST_CONTROLLED_VOCABULARY_EMBARGO_GUARANTOR, entityControlledVocabulary.getName());
+        assertEquals("Saved entity did not contain the entity name!", TEST_CONTROLLED_VOCABULARY_EMBARGO, entityControlledVocabulary.getEntityName());
+        assertEquals("Saved entity did not contain the language!", language, entityControlledVocabulary.getLanguage());
+        assertEquals("Saved entity did not contain the is entity!", true, entityControlledVocabulary.isEntityProperty());
+        
+        List<EmbargoGuarantor> guarantors = null;
+        try {
+            guarantors = (List<EmbargoGuarantor>) entityControlledVocabularyService.getControlledVocabulary(TEST_CONTROLLED_VOCABULARY_EMBARGO, TEST_CONTROLLED_VOCABULARY_EMBARGO_GUARANTOR);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        
+        assertEquals("Number of guarantors does not match!", guarantors.size(), entityControlledVocabulary.getValues().size());
+        
+        Set<String> controlledVocabularyValues = entityControlledVocabulary.getValues();
+        
+        for(EmbargoGuarantor gaurantor : guarantors) {           
+            assertEquals("Guarantors does not contain entityControlledVocabulary value!", true, controlledVocabularyValues.contains(gaurantor.name()));
+        };
+        
     }
 
     @Override
@@ -72,6 +109,7 @@ public class ControlledVocabularyTest extends AbstractEntityTest {
     public void cleanUp() {
         controlledVocabularyRepo.deleteAll();
         languageRepo.deleteAll();
+        embargoRepo.deleteAll();
     }
 
 }

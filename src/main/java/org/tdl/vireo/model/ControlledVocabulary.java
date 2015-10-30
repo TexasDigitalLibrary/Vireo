@@ -4,6 +4,8 @@ import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 
+import org.tdl.vireo.config.SpringContext;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -14,19 +16,13 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.tdl.vireo.service.EntityControlledVocabularyService;
 
 @Entity
-@Component
+@Configurable
 public class ControlledVocabulary extends BaseEntity {
-    
-    @Transient
-    @Autowired    
-    private EntityControlledVocabularyService entityControlledVocabularyService;
     
     @Column(nullable = false, unique = true)
     private String name;
@@ -112,7 +108,13 @@ public class ControlledVocabulary extends BaseEntity {
         if(isEntityProperty()) {
             List<String> values = new ArrayList<String>();
             try {
-                values = entityControlledVocabularyService.getPropertyNames(entityName);
+                
+                EntityControlledVocabularyService entityControlledVocabularyService = SpringContext.bean(EntityControlledVocabularyService.class);
+                
+                entityControlledVocabularyService.getControlledVocabulary(entityName, name).parallelStream().forEach(property -> {
+                    values.add(property.toString());
+                });
+                
             }
             catch(ClassNotFoundException e) {
                 System.out.println("Entity " + entityName + " not found!\n");

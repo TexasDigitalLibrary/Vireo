@@ -15,5 +15,10 @@ public class ControlledVocabularyRepoImpl implements ControlledVocabularyRepoCus
     public ControlledVocabulary create(String name, Language language) {
         return controlledVocabularyRepo.save(new ControlledVocabulary(name, language));
     }
+    
+    @Override
+    public ControlledVocabulary create(String name, String entityName, Language language) {
+        return controlledVocabularyRepo.save(new ControlledVocabulary(name, entityName, language));
+    }
 
 }

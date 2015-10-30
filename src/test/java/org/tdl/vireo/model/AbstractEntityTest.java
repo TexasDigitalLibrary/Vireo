@@ -25,6 +25,7 @@ import org.tdl.vireo.model.repo.DepositLocationRepo;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.EmailWorkflowRuleRepo;
 import org.tdl.vireo.model.repo.EmbargoRepo;
+import org.tdl.vireo.model.repo.EntityCVWhitelistRepo;
 import org.tdl.vireo.model.repo.FieldGlossRepo;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.FieldProfileRepo;
@@ -44,7 +45,7 @@ import org.tdl.vireo.service.EntityControlledVocabularyService;
 @RunWith(OrderedRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 public abstract class AbstractEntityTest {
-    
+
     protected static final String TEST_ATTACHMENT_TYPE_NAME = "Primary";
 
     protected static final boolean TEST_SUBMISSION_STATE_ARCHIVED = true;
@@ -89,6 +90,10 @@ public abstract class AbstractEntityTest {
     protected static final String TEST_CONTROLLED_VOCABULARY_NAME = "Test Vocabulary";
     protected static final String TEST_CONTROLLED_VOCABULARY_VALUE = "Test Vocabulary Value";
     protected static final String TEST_SEVERABLE_CONTROLLED_VOCABULARY_VALUE = "Test Severable Vocabulary Value";
+    
+    // must be the name of the property on the entity
+    protected static final String TEST_CONTROLLED_VOCABULARY_EMBARGO_GUARANTOR = "guarantor";
+    protected static final String TEST_CONTROLLED_VOCABULARY_EMBARGO = "Embargo";
 
     // DepositLocation test
     protected static final String TEST_DEPOSIT_LOCATION_NAME = "Test Deposit Name";
@@ -248,6 +253,7 @@ public abstract class AbstractEntityTest {
     protected static final Role TEST_ASSIGNEE_ROLE = Role.USER;
 
     protected static final String TEST_EMBARGO_NAME = "Test Embargo Name";
+    protected static final String TEST_EMBARGO_NAME_2 = "Test Embargo 2 Name";
     protected static final String TEST_EMBARGO_DESCRIPTION = "Test Embargo Description";
     protected static final Integer TEST_EMBARGO_DURATION = 0;
 
@@ -350,6 +356,9 @@ public abstract class AbstractEntityTest {
     @Autowired
     protected NamedSearchFilterRepo namedSearchFilterRepo;
     
+    @Autowired
+    protected EntityCVWhitelistRepo entityCVWhitelistRepo;
+    
 
     protected ActionLog includedActionLog;
     protected ActionLog excludedActionLog;
@@ -391,6 +400,8 @@ public abstract class AbstractEntityTest {
     protected User excludedSubmitter;
 
     protected WorkflowStep workflowStep;
+    
+    protected EntityCVWhitelist entityCVWhitelist;
 
     @Test
     @Order(value = 1)
