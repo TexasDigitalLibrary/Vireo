@@ -38,6 +38,7 @@ import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.repo.WorkflowRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.runner.OrderedRunner;
+import org.tdl.vireo.service.EntityControlledVocabularyService;
 
 @RunWith(OrderedRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
@@ -245,7 +246,7 @@ public abstract class AbstractEntityTest {
 
     protected static final String TEST_EMBARGO_NAME = "Test Embargo Name";
     protected static final String TEST_EMBARGO_DESCRIPTION = "Test Embargo Description";
-    protected static final int TEST_EMBARGO_DURATION = 3;
+    protected static final Integer TEST_EMBARGO_DURATION = 0;
 
     protected static final String TEST_NAMED_SEARCH_FILTER_NAME = "Test Filter Name";
 
@@ -261,6 +262,7 @@ public abstract class AbstractEntityTest {
     protected static final Role TEST_USER_ROLE = Role.ADMINISTRATOR;
     protected static final Calendar TEST_ACTION_LOG_ACTION_DATE = Calendar.getInstance();
     protected static final UUID TEST_UUID = UUID.randomUUID();
+    
 
     @Autowired
     protected ActionLogRepo actionLogRepo;
@@ -294,6 +296,9 @@ public abstract class AbstractEntityTest {
 
     @Autowired
     protected EmailWorkflowRuleRepo emailWorkflowRuleRepo;
+    
+    @Autowired
+    EntityControlledVocabularyService entityControlledVocabularyRepo;
 
     @Autowired
     protected ConfigurationRepo configurationRepo;

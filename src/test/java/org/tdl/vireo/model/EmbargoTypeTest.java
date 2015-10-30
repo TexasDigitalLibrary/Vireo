@@ -4,17 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.Before;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.tdl.vireo.model.repo.EmbargoTypeRepo;
 
 public class EmbargoTypeTest extends AbstractEntityTest {
-    
-    private static final String TEST_EMBARGO_NAME = "Test Embargo Name";
-    private static final String TEST_EMBARGO_DESCRIPTION = "Test Embargo Description";
-    private static final Integer TEST_EMBARGO_DURATION = 0;
-
-    @Autowired
-    private EmbargoTypeRepo embargoTypeRepo;
 
     @Before
     public void setUp() {
@@ -29,8 +20,6 @@ public class EmbargoTypeTest extends AbstractEntityTest {
         assertEquals("Embargo Repo did not save the correct embargo description!", TEST_EMBARGO_DESCRIPTION, testEmbargo.getDescription());
         assertEquals("Embargo Repo did not save the correct embargo duration!", TEST_EMBARGO_DURATION, testEmbargo.getDuration());
     }
-
-
     @Override
     public void testDuplication() {
     
