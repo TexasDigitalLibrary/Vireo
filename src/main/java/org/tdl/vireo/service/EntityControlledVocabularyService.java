@@ -14,13 +14,22 @@ import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.tdl.vireo.model.EntityCVWhitelist;
+import org.tdl.vireo.model.repo.EntityCVWhitelistRepo;
 
 @Service
 public class EntityControlledVocabularyService {
+    
+    // TODO: set to false or remove condition and always have none by default
+    private static final Boolean allByDefault = true;
 
     @PersistenceContext
     private EntityManager entityManager;
+    
+    @Autowired
+    private EntityCVWhitelistRepo entityCVWhitelistRepo;
     
     private List<String> entityNames = null;
     
@@ -29,7 +38,14 @@ public class EntityControlledVocabularyService {
     public void addEntityToWhitelist(String entityName) throws ClassNotFoundException {
         if(entityNames.contains(entityName)) {
             if(whitelist.get(entityName) == null) {
-                whitelist.put(entityName, getPropertyNames(entityName));
+                
+                List<String> propertyNames = getPropertyNames(entityName);
+                
+                whitelist.put(entityName, propertyNames);
+                
+                if(entityCVWhitelistRepo.findByEntityName(entityName) != null) {
+                    entityCVWhitelistRepo.create(entityName, propertyNames);
+                }
             }
         }
         else {
@@ -39,29 +55,39 @@ public class EntityControlledVocabularyService {
     
     public void removeEntityFromWhitelist(String entityName) {
         whitelist.remove(entityName);
+        entityCVWhitelistRepo.deleteByEntityName(entityName);
     }
     
     public void addEntityPropertyToWhitelist(String entityName, String propertyName) throws ClassNotFoundException {
-        List<String> properties = new ArrayList<String>();        
+        List<String> propertyNames = new ArrayList<String>();        
         if(whitelist.get(entityName) == null) {
-            properties = getPropertyNames(entityName);
-            if(!properties.contains(propertyName)) {
-                properties.add(propertyName);
+            propertyNames = getPropertyNames(entityName);
+            if(!propertyNames.contains(propertyName)) {
+                propertyNames.add(propertyName);
             }
             else {
                 System.out.println("Property " + propertyName + " is not an available property on entity " + entityName + "!");
                 return;
             }
-            whitelist.put(entityName, properties);
+            whitelist.put(entityName, propertyNames);
+            if(entityCVWhitelistRepo.findByEntityName(entityName) != null) {
+                entityCVWhitelistRepo.create(entityName, propertyNames);
+            }
         }
     }
     
     public void removeEntityPropertyFromWhitelist(String entityName, String propertyName) {
-        List<String> properties = whitelist.get(entityName);
-        if(properties != null) {
-            properties.remove(propertyName);
+        List<String> propertyNames = whitelist.get(entityName);
+        if(propertyNames != null) {
+            propertyNames.remove(propertyName);
             // may not be needed! pointer?
-            whitelist.put(entityName, properties);
+            whitelist.put(entityName, propertyNames);
+            
+            EntityCVWhitelist entityCVWhitelist;
+            if((entityCVWhitelist = entityCVWhitelistRepo.findByEntityName(entityName)) != null) {
+                entityCVWhitelist.getPropertyNames().remove(propertyName);
+                entityCVWhitelistRepo.save(entityCVWhitelist);
+            }
         }
         else {
             System.out.println("Entity " + entityName + " is not an available entity!");
@@ -77,11 +103,24 @@ public class EntityControlledVocabularyService {
  
         if(whitelist == null) {
             
-            // none whitelisted by default
-            //whitelist = new HashMap<String, List<String>>();
+            whitelist = new HashMap<String, List<String>>();
             
-            // all whitelisted by default
-            whitelist = getAllEntityPropertyNames();
+            if(entityCVWhitelistRepo.count() > 0) {
+                entityCVWhitelistRepo.findAll().forEach(entityCVWhitelist -> {
+                    whitelist.put(entityCVWhitelist.getEntityName(), entityCVWhitelist.getPropertyNames());
+                });                
+            }
+            else {
+                if(allByDefault) {
+                    whitelist = getAllEntityPropertyNames();
+                    
+                    whitelist.keySet().parallelStream().forEach(en -> {
+                        entityCVWhitelistRepo.create(en, whitelist.get(en));
+                    });
+                    
+                }         
+            }            
+           
         }
         
         List<String> properties = whitelist.get(entityName);
