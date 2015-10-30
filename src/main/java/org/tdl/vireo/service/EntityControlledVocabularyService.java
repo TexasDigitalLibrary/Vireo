@@ -60,6 +60,8 @@ public class EntityControlledVocabularyService {
         List<String> properties = whitelist.get(entityName);
         if(properties != null) {
             properties.remove(propertyName);
+            // may not be needed! pointer?
+            whitelist.put(entityName, properties);
         }
         else {
             System.out.println("Entity " + entityName + " is not an available entity!");
@@ -87,10 +89,10 @@ public class EntityControlledVocabularyService {
         if(properties != null) {
             for(String field : properties) {
                 if(field.equals(property)) {
-                    CriteriaBuilder builder = entityManager.getCriteriaBuilder();                    
-                    CriteriaQuery<Object> query = builder.createQuery();                    
-                    Root<?> root = query.from(entity);                    
-                    query.multiselect(root.get(property)).distinct(true);                    
+                    CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+                    CriteriaQuery<Object> query = builder.createQuery();
+                    Root<?> root = query.from(entity);
+                    query.multiselect(root.get(property)).distinct(true);
                     return entityManager.createQuery(query).getResultList();
                 }
             }
