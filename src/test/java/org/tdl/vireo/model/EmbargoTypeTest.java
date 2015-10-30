@@ -4,22 +4,9 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.Before;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.enums.EmbargoGuarantor;
-import org.tdl.vireo.model.repo.EmbargoTypeRepo;
-import org.tdl.vireo.service.EntityControlledVocabularyService;
 
 public class EmbargoTypeTest extends AbstractEntityTest {
-    
-    @Autowired
-    EntityControlledVocabularyService entityControlledVocabularyRepo;
-
-    private static final String TEST_EMBARGO_NAME = "Test Embargo Name";
-    private static final String TEST_EMBARGO_DESCRIPTION = "Test Embargo Description";
-    private static final Integer TEST_EMBARGO_DURATION = 0;
-
-    @Autowired
-    private EmbargoTypeRepo embargoTypeRepo;
 
     @Before
     public void setUp() {
@@ -60,12 +47,7 @@ public class EmbargoTypeTest extends AbstractEntityTest {
         });
     
     }
-
-    @After
-    public void cleanUp() {
-        embargoTypeRepo.deleteAll();
-    }
-
+    
     @Override
     public void testDuplication() {
     }
@@ -77,4 +59,11 @@ public class EmbargoTypeTest extends AbstractEntityTest {
     @Override
     public void testCascade() {
     }
+
+    @After
+    public void cleanUp() {
+        embargoTypeRepo.deleteAll();
+    }
+
+
 }
