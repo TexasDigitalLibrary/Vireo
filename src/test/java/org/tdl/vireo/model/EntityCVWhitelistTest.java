@@ -10,6 +10,7 @@ public class EntityCVWhitelistTest extends AbstractEntityTest {
 
     @Before
     public void setUp() {
+        // delete the default initially added to whitelist
         entityCVWhitelistRepo.deleteAll();
         assertEquals("EntityCVWhitelist repo was not empty!", 0, entityCVWhitelistRepo.count());
     }

@@ -2,6 +2,7 @@ package org.tdl.vireo.service;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,8 +23,10 @@ import org.tdl.vireo.model.repo.EntityCVWhitelistRepo;
 @Service
 public class EntityControlledVocabularyService {
     
-    // TODO: set to false or remove condition and always have none by default
-    private static final Boolean allByDefault = true;
+    private static final EntityCVWhitelist[] defaultWhitelistedCV = new EntityCVWhitelist[] {
+            new EntityCVWhitelist("Embargo", Arrays.asList(new String[] {"guarantor"})), 
+            new EntityCVWhitelist("Attachment", Arrays.asList(new String[] {"type"}))
+    };
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -35,7 +38,7 @@ public class EntityControlledVocabularyService {
     
     private Map<String, List<String>> whitelist = null;
     
-    public EntityControlledVocabularyService() {}
+    public EntityControlledVocabularyService() { }
     
     public void addEntityToWhitelist(String entityName) throws ClassNotFoundException {
         if(entityNames.contains(entityName)) {
@@ -113,14 +116,12 @@ public class EntityControlledVocabularyService {
                 });                
             }
             else {
-                if(allByDefault) {
-                    whitelist = getAllEntityPropertyNames();
-                    
-                    whitelist.keySet().parallelStream().forEach(en -> {
-                        entityCVWhitelistRepo.create(en, whitelist.get(en));
-                    });
-                    
-                }         
+                for(EntityCVWhitelist ecvw : defaultWhitelistedCV) {
+                    whitelist.put(ecvw.getEntityName(), ecvw.getPropertyNames());                    
+                    entityCVWhitelistRepo.create(ecvw.getEntityName(), ecvw.getPropertyNames());
+                }
+                
+                System.out.println("\n\nDEFAULT WHITELIST:\n" + whitelist + "\n\n");
             }            
            
         }
