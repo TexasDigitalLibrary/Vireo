@@ -66,8 +66,7 @@ public class EntityControlledVocabularyService {
     public void addEntityPropertyToWhitelist(String entityName, String propertyName) throws ClassNotFoundException {
         List<String> propertyNames = new ArrayList<String>();        
         if(whitelist.get(entityName) == null) {
-            propertyNames = getPropertyNames(entityName);
-            if(!propertyNames.contains(propertyName)) {
+            if(getPropertyNames(entityName).contains(propertyName)) {
                 propertyNames.add(propertyName);
             }
             else {
