@@ -35,6 +35,8 @@ public class EntityControlledVocabularyService {
     
     private Map<String, List<String>> whitelist = null;
     
+    public EntityControlledVocabularyService() {}
+    
     public void addEntityToWhitelist(String entityName) throws ClassNotFoundException {
         if(entityNames.contains(entityName)) {
             if(whitelist.get(entityName) == null) {
@@ -49,7 +51,7 @@ public class EntityControlledVocabularyService {
             }
         }
         else {
-            System.out.println("Entity " + entityName + " is not an available entity!");
+            System.out.println("Entity " + entityName + " is not an available entity!\n");
         }
     }
     
@@ -66,7 +68,7 @@ public class EntityControlledVocabularyService {
                 propertyNames.add(propertyName);
             }
             else {
-                System.out.println("Property " + propertyName + " is not an available property on entity " + entityName + "!");
+                System.out.println("Property " + propertyName + " is not an available property on entity " + entityName + "!\n");
                 return;
             }
             whitelist.put(entityName, propertyNames);
@@ -90,7 +92,7 @@ public class EntityControlledVocabularyService {
             }
         }
         else {
-            System.out.println("Entity " + entityName + " is not an available entity!");
+            System.out.println("Entity " + entityName + " is not an available entity!\n");
         }
     }
         
@@ -137,7 +139,7 @@ public class EntityControlledVocabularyService {
             }
         }
         
-        System.out.println("Entity " + entityName + " with property " + property + " not allowed to be a controlled vocabulary!");
+        System.out.println("Entity " + entityName + " with property " + property + " not allowed to be a controlled vocabulary!\n");
 
         // return empty array list
         return new ArrayList<Object>();
