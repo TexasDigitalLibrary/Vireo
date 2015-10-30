@@ -14,4 +14,5 @@ public class DepositLocationRepoImpl implements DepositLocationRepoCustom {
     public DepositLocation create(String name) {
         return depositLocationRepo.save(new DepositLocation(name));
     }
+
 }

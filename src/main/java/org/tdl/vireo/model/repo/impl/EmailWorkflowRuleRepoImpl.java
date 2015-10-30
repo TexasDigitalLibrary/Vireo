@@ -8,12 +8,14 @@ import org.tdl.vireo.model.SubmissionState;
 import org.tdl.vireo.model.repo.EmailWorkflowRuleRepo;
 import org.tdl.vireo.model.repo.custom.EmailWorkflowRuleRepoCustom;
 
-public class EmailWorkflowRuleRepoImpl implements  EmailWorkflowRuleRepoCustom{
-	@Autowired
-	EmailWorkflowRuleRepo emailWorkflowRuleRepo;
+public class EmailWorkflowRuleRepoImpl implements EmailWorkflowRuleRepoCustom {
 
-	@Override
-	public EmailWorkflowRule create(SubmissionState submissionState,RecipientType recipientType, EmailTemplate emailTemplate) {
-		return emailWorkflowRuleRepo.save(new EmailWorkflowRule(submissionState,recipientType,emailTemplate));
-	}
+    @Autowired
+    EmailWorkflowRuleRepo emailWorkflowRuleRepo;
+
+    @Override
+    public EmailWorkflowRule create(SubmissionState submissionState, RecipientType recipientType, EmailTemplate emailTemplate) {
+        return emailWorkflowRuleRepo.save(new EmailWorkflowRule(submissionState, recipientType, emailTemplate));
+    }
+
 }

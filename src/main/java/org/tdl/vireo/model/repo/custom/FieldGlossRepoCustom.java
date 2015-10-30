@@ -6,4 +6,5 @@ import org.tdl.vireo.model.Language;
 public interface FieldGlossRepoCustom {
 
     public FieldGloss create(String value, Language language);
+
 }

@@ -7,6 +7,8 @@ import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.SubmissionState;
 import org.tdl.vireo.model.repo.custom.EmailWorkflowRuleRepoCustom;
 
-public interface EmailWorkflowRuleRepo extends JpaRepository<EmailWorkflowRule, Long>, EmailWorkflowRuleRepoCustom{
+public interface EmailWorkflowRuleRepo extends JpaRepository<EmailWorkflowRule, Long>, EmailWorkflowRuleRepoCustom {
+    
 	public EmailWorkflowRule findBySubmissionStateAndRecipientTypeAndEmailTemplate(SubmissionState submissionState, RecipientType recipientType, EmailTemplate emailTemplate);
+	
 }

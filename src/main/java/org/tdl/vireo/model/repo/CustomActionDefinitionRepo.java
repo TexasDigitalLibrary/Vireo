@@ -5,5 +5,7 @@ import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.repo.custom.CustomActionDefinitionRepoCustom;
 
 public interface CustomActionDefinitionRepo extends JpaRepository<CustomActionDefinition, Long>, CustomActionDefinitionRepoCustom {
-	public CustomActionDefinition findByLabel(String label);
+
+    public CustomActionDefinition findByLabel(String label);
+
 }

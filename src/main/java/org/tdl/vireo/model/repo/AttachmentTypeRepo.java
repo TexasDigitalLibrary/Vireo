@@ -5,5 +5,5 @@ import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.repo.custom.AttachmentTypeRepoCustom;
 
 public interface AttachmentTypeRepo extends JpaRepository<AttachmentType, Long>, AttachmentTypeRepoCustom {
-	
+
 }

@@ -7,5 +7,7 @@ import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.custom.ActionLogRepoCustom;
 
 public interface ActionLogRepo extends JpaRepository<ActionLog, Long>, ActionLogRepoCustom {
-	public ActionLog findByUserAndSubmissionState(User user, SubmissionState submissionState);
+
+    public ActionLog findByUserAndSubmissionState(User user, SubmissionState submissionState);
+
 }

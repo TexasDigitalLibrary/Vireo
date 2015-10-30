@@ -8,4 +8,5 @@ public interface OrganizationRepoCustom {
     public Organization create(String name, OrganizationCategory category);
 
     public void delete(Organization organization);
+
 }

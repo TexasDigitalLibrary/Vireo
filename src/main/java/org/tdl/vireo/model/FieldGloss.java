@@ -20,7 +20,7 @@ public class FieldGloss extends BaseEntity {
 	@ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
 	private Language language;
 	
-	public FieldGloss() {}
+	public FieldGloss() { }
 	
 	/**
 	 * 

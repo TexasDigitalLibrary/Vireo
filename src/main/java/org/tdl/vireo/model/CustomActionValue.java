@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
  */
 @Entity
 public class CustomActionValue extends BaseEntity {
+    
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
     private Submission submission;
 
@@ -23,8 +24,7 @@ public class CustomActionValue extends BaseEntity {
     @Column(nullable = false)
     private Boolean value;
 
-    public CustomActionValue() {
-    }
+    public CustomActionValue() {  }
 
     public CustomActionValue(Submission submission, CustomActionDefinition definition, Boolean value) {
         this();

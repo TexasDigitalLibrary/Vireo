@@ -14,4 +14,5 @@ public class WorkflowRepoImpl implements WorkflowRepoCustom {
     public Workflow create(String name, Boolean inheritable) {
         return workflowRepo.save(new Workflow(name, inheritable));
     }
+
 }

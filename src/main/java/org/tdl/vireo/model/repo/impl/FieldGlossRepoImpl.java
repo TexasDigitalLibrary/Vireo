@@ -15,4 +15,5 @@ public class FieldGlossRepoImpl implements FieldGlossRepoCustom {
     public FieldGloss create(String value, Language language) {
         return fieldGlossRepo.save(new FieldGloss(value, language));
     }
+
 }

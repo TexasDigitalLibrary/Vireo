@@ -14,4 +14,5 @@ public class SubmissionStateRepoImpl implements SubmissionStateRepoCustom {
     public SubmissionState create(String name, Boolean archived, Boolean publishable, Boolean deletable, Boolean editableByReviewer, Boolean editableByStudent, Boolean active) {
         return submissionStateRepo.save(new SubmissionState(name, archived, publishable, deletable, editableByReviewer, editableByStudent, active));
     }
+
 }

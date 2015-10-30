@@ -16,12 +16,16 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 /**
  * 
  */
 @Entity
 public class Attachment extends BaseEntity {
+    
+    @Transient
+    public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 	@Column(nullable = false, length=255)
 	private String name;
@@ -37,8 +41,6 @@ public class Attachment extends BaseEntity {
 	
 	@Column(unique = true)
 	private UUID uuid;
-
-	public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	
 	//TODO:  do we want to make an action log not optional on the attachment?
 	@OneToMany(cascade=ALL, fetch = EAGER, orphanRemoval=true)

@@ -14,4 +14,5 @@ public class OrganizationCategoryRepoImpl implements OrganizationCategoryRepoCus
     public OrganizationCategory create(String name, int level) {
         return organizationCategoryRepo.save(new OrganizationCategory(name, level));
     }
+
 }

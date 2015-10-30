@@ -6,7 +6,6 @@ import org.tdl.vireo.model.User;
 
 public interface SubmissionRepoCustom {
 
-    // TODO: must be create with arguments state and person
     public Submission create(User submitter, SubmissionState state);
 
 }

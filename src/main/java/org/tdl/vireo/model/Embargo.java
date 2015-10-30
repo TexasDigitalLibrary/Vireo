@@ -8,7 +8,7 @@ import javax.persistence.UniqueConstraint;
 import org.tdl.vireo.enums.EmbargoGuarantor;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "guarantor", "isSystemRequired" }) )
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "guarantor", "isSystemRequired" }))
 public class Embargo extends BaseEntity {
 
     @Column(nullable = false)

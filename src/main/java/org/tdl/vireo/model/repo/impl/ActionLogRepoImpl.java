@@ -11,14 +11,14 @@ import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.ActionLogRepo;
 import org.tdl.vireo.model.repo.custom.ActionLogRepoCustom;
 
-public class ActionLogRepoImpl implements ActionLogRepoCustom{
-	@Autowired 
-	ActionLogRepo actionLogRepo;
+public class ActionLogRepoImpl implements ActionLogRepoCustom {
 
-	@Override
-	public ActionLog create(Submission submission, SubmissionState submissionState, User user, Calendar actionDate,Attachment attachment, String entry, boolean privateFlag) {
-		return actionLogRepo.save(new ActionLog(submission, submissionState, user, actionDate, attachment,entry, privateFlag));
-	}
+    @Autowired
+    ActionLogRepo actionLogRepo;
+
+    @Override
+    public ActionLog create(Submission submission, SubmissionState submissionState, User user, Calendar actionDate, Attachment attachment, String entry, boolean privateFlag) {
+        return actionLogRepo.save(new ActionLog(submission, submissionState, user, actionDate, attachment, entry, privateFlag));
+    }
+
 }
-
-

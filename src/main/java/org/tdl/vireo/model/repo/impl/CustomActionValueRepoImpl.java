@@ -8,14 +8,13 @@ import org.tdl.vireo.model.repo.CustomActionValueRepo;
 import org.tdl.vireo.model.repo.custom.CustomActionValueRepoCustom;
 
 public class CustomActionValueRepoImpl implements CustomActionValueRepoCustom {
-	@Autowired
-	CustomActionValueRepo customActionValueRepo;
-	
 
-	@Override
-	public CustomActionValue create(Submission submission, CustomActionDefinition definition, Boolean value) {
-		
-		return customActionValueRepo.save(new CustomActionValue(submission, definition, value));
-	}
+    @Autowired
+    CustomActionValueRepo customActionValueRepo;
+
+    @Override
+    public CustomActionValue create(Submission submission, CustomActionDefinition definition, Boolean value) {
+        return customActionValueRepo.save(new CustomActionValue(submission, definition, value));
+    }
 
 }

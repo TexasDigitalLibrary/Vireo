@@ -7,7 +7,7 @@ import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(uniqueConstraints={@UniqueConstraint(columnNames = { "name", "isSystemRequired" })})
-public class EmailTemplate extends BaseEntity{
+public class EmailTemplate extends BaseEntity {
 
 	@Column(nullable = false) 
 	private String name;
@@ -24,6 +24,7 @@ public class EmailTemplate extends BaseEntity{
 	public EmailTemplate() {
 	    isSystemRequired(false);
 	}
+	
 	/**
 	 * Create a new EmailTemplate
 	 * 
@@ -40,48 +41,56 @@ public class EmailTemplate extends BaseEntity{
 		setSubject(subject);
 		setMessage(message);
 	}
+	
 	/**
 	 * @return the name
 	 */
 	public String getName() {
 		return name;
 	}
+	
 	/**
 	 * @param name the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
+	
 	/**
 	 * @return the subject
 	 */
 	public String getSubject() {
 		return subject;
 	}
+	
 	/**
 	 * @param subject the subject to set
 	 */
 	public void setSubject(String subject) {
 		this.subject = subject;
 	}
+	
 	/**
 	 * @return the message
 	 */
 	public String getMessage() {
 		return message;
 	}
+	
 	/**
 	 * @param message the message to set
 	 */
 	public void setMessage(String message) {
 		this.message = message;
 	}
+	
 	/**
 	 * @return the systemRequired
 	 */
 	public Boolean isSystemRequired() {
 		return isSystemRequired;
 	}
+	
 	/**
 	 * @param systemRequired the systemRequired to set
 	 */

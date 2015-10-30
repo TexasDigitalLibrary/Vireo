@@ -15,4 +15,5 @@ public class UserRepoImpl implements UserRepoCustom {
     public User create(String email, String firstName, String lastName, Role role) {
         return userRepo.save(new User(email, firstName, lastName, role));
     }
+
 }

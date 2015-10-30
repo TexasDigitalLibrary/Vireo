@@ -16,4 +16,5 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     public Submission create(User submitter, SubmissionState state) {
         return submissionRepo.save(new Submission(submitter, state));
     }
+
 }

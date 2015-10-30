@@ -43,8 +43,6 @@ public class Organization extends BaseEntity {
     
     @OneToMany(cascade = ALL, fetch=EAGER, orphanRemoval=true)
     private Set<EmailWorkflowRule> emailWorkflowRules;
-    
-    
 
     public Organization() {
         setParentOrganizations(new TreeSet<Organization>());

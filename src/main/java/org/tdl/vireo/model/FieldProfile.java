@@ -228,4 +228,5 @@ public class FieldProfile extends BaseEntity {
     public void removeControlledVocabulary(ControlledVocabulary controlledVocabulary) {
         getControlledVocabularies().remove(controlledVocabulary);
     }
+    
 }

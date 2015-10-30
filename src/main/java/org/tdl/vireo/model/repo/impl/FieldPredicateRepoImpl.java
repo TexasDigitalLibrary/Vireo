@@ -14,4 +14,5 @@ public class FieldPredicateRepoImpl implements FieldPredicateRepoCustom {
     public FieldPredicate create(String value) {
         return fieldPredicateRepo.save(new FieldPredicate(value));
     }
+
 }

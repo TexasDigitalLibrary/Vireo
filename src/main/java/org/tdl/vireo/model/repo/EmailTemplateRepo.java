@@ -1,10 +1,15 @@
 package org.tdl.vireo.model.repo;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.repo.custom.EmailTemplateRepoCustom;
 
-public interface EmailTemplateRepo extends JpaRepository<EmailTemplate, Long>, EmailTemplateRepoCustom{
-	//TODO - what attribute could be used to uniquely find EmailTemplatr
-	public EmailTemplate findByName(String name);
+public interface EmailTemplateRepo extends JpaRepository<EmailTemplate, Long>, EmailTemplateRepoCustom {
+
+    public List<EmailTemplate> findByName(String name);
+
+    public EmailTemplate findByNameAndIsSystemRequired(String name, Boolean isSystemRequired);
+
 }

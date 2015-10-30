@@ -22,8 +22,7 @@ public class ContactInfo extends BaseEntity {
     @Column(nullable = true)
     private String email;
 
-    public ContactInfo() {
-    }
+    public ContactInfo() { }
 
     public ContactInfo(Address address, String phone, String email) {
         setAddress(address);

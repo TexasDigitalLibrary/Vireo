@@ -9,7 +9,7 @@ public class FieldPredicate extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String value;
 
-    public FieldPredicate() {}
+    public FieldPredicate() { }
 
     /**
      * 

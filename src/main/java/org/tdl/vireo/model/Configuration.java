@@ -17,8 +17,7 @@ public class Configuration extends BaseEntity {
     @Column(nullable = false, length = 32768) // 2^15
     private String value;
 
-    public Configuration() {
-    }
+    public Configuration() { }
 
     /**
      * Construct a new JpaConfigurationImpl

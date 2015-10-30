@@ -24,8 +24,7 @@ public class Address extends BaseEntity {
     @Column(nullable = true)
     private String country;
 
-    public Address() {
-    }
+    public Address() { }
 
     public Address(String address1, String address2, String city, String state, String postalCode, String country) {
         setAddress1(address1);

@@ -9,13 +9,13 @@ import org.tdl.vireo.model.repo.AttachmentRepo;
 import org.tdl.vireo.model.repo.custom.AttachmentRepoCustom;
 
 public class AttachmentRepoImpl implements AttachmentRepoCustom {
-	
-	@Autowired 
-	AttachmentRepo attachmentRepo;
 
-	@Override
-	public Attachment create(String name, UUID uuid, AttachmentType type) {
-		return attachmentRepo.save(new Attachment(name, uuid, type));
-	}
+    @Autowired
+    AttachmentRepo attachmentRepo;
+
+    @Override
+    public Attachment create(String name, UUID uuid, AttachmentType type) {
+        return attachmentRepo.save(new Attachment(name, uuid, type));
+    }
 
 }

@@ -16,8 +16,8 @@ public enum RecipientType {
 	
 	private int value;
 	
-	RecipientType(int num) {
-		value = num;
+	RecipientType(int value) {
+		this.value = value;
 	}
 	
 	public int getValue() {

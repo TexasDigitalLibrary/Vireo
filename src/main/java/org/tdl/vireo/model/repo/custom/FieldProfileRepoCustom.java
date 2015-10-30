@@ -7,4 +7,5 @@ import org.tdl.vireo.model.FieldProfile;
 public interface FieldProfileRepoCustom {
 
     public FieldProfile create(FieldPredicate fieldPredicate, InputType inputType, Boolean repeatable, Boolean required);
+
 }

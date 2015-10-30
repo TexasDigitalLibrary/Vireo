@@ -8,8 +8,8 @@ public enum Role {
 
     private int value;
 
-    Role(int num) {
-        value = num;
+    Role(int value) {
+        this.value = value;
     }
 
     public int getValue() {

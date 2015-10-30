@@ -37,4 +37,5 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
         }
         return ret;
     }
+
 }

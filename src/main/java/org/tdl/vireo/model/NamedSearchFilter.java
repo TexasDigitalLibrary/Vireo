@@ -732,4 +732,5 @@ public class NamedSearchFilter extends BaseEntity {
 		 * @Override public void removeCustomAction(CustomActionDefinition
 		 * customAction) { this.customActionIds.remove(customAction.getId()); }
 		 */
+	
 }

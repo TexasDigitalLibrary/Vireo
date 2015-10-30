@@ -9,5 +9,7 @@ import org.tdl.vireo.model.SubmissionState;
 import org.tdl.vireo.model.User;
 
 public interface ActionLogRepoCustom {
-	public ActionLog create(Submission submission, SubmissionState submissionState, User user, Calendar actionDate, Attachment attachment, String entry,boolean privateFlag);
+
+    public ActionLog create(Submission submission, SubmissionState submissionState, User user, Calendar actionDate, Attachment attachment, String entry, boolean privateFlag);
+
 }

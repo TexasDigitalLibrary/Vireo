@@ -9,7 +9,7 @@ public class Language extends BaseEntity {
     @Column(unique = true, nullable = false)
     private String name;
     
-    public Language() {}
+    public Language() { }
     
     /**
      * 

@@ -5,14 +5,14 @@ import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.custom.EmailTemplateRepoCustom;
 
-public class EmailTemplateRepoImpl implements EmailTemplateRepoCustom{
-	
-	@Autowired
-	EmailTemplateRepo emailTemplateRepo;
+public class EmailTemplateRepoImpl implements EmailTemplateRepoCustom {
 
-	@Override
-	public EmailTemplate create(String name, String subject, String message) {
-		return emailTemplateRepo.save(new EmailTemplate(name, subject, message));
-	}
+    @Autowired
+    EmailTemplateRepo emailTemplateRepo;
+
+    @Override
+    public EmailTemplate create(String name, String subject, String message) {
+        return emailTemplateRepo.save(new EmailTemplate(name, subject, message));
+    }
 
 }

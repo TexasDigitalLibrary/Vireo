@@ -123,7 +123,8 @@ public class EmailWorkflowRule extends BaseEntity {
 	 * @param emailTemplate
 	 *            Workflow Email Rule's email template
 	 */
-	/*protected JpaEmailWorkflowRuleImpl(State associatedState) {
+	/*
+	protected JpaEmailWorkflowRuleImpl(State associatedState) {
 
 		assertManager();
 
@@ -155,6 +156,6 @@ public class EmailWorkflowRule extends BaseEntity {
 
 		this.associatedState = state.getBeanName();
 	}
-
-*/
+	*/
+	
 }

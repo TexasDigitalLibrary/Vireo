@@ -15,4 +15,5 @@ public class ControlledVocabularyRepoImpl implements ControlledVocabularyRepoCus
     public ControlledVocabulary create(String name, Language language) {
         return controlledVocabularyRepo.save(new ControlledVocabulary(name, language));
     }
+
 }

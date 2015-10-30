@@ -15,4 +15,5 @@ public class ContactInfoRepoImpl implements ContactInfoRepoCustom {
     public ContactInfo create(Address address, String phone, String email) {
         return contactInfoRepo.save(new ContactInfo(address, phone, email));
     }
+
 }

@@ -6,4 +6,5 @@ import org.tdl.vireo.model.Language;
 public interface ControlledVocabularyRepoCustom {
 
     public ControlledVocabulary create(String name, Language language);
+
 }
