@@ -45,9 +45,9 @@ public class ControlledVocabularyTest extends AbstractEntityTest {
             e.printStackTrace();
         }
         
-        assertEquals("Number of guarantors does not match!", guarantors.size(), entityControlledVocabulary.getEntityValues().size());
+        assertEquals("Number of guarantors does not match!", guarantors.size(), entityControlledVocabulary.getDictionary().size());
         
-        Set<Object> entityControlledVocabularyValues = entityControlledVocabulary.getEntityValues();
+        Set<Object> entityControlledVocabularyValues = entityControlledVocabulary.getDictionary();
         
         for(EmbargoGuarantor gaurantor : guarantors) {           
             assertEquals("Guarantors does not contain entityControlledVocabulary value!", true, entityControlledVocabularyValues.contains(gaurantor));
@@ -76,7 +76,7 @@ public class ControlledVocabularyTest extends AbstractEntityTest {
         } 
         catch (DataIntegrityViolationException e) { /* SUCCESS */ }
         
-        assertEquals("Values duplicated on a controlled vocabulary!", 1, controlledVocabulary.getValues().size());
+        assertEquals("Values duplicated on a controlled vocabulary!", 1, controlledVocabulary.getDictionary().size());
     }
 
     @Override
@@ -98,12 +98,12 @@ public class ControlledVocabularyTest extends AbstractEntityTest {
                 
         controlledVocabulary.addValue(severableVocabularyWord);
         controlledVocabulary = controlledVocabularyRepo.save(controlledVocabulary);
-        assertEquals("Saved entity did not have the correct number of values!", 2, controlledVocabulary.getValues().size());
+        assertEquals("Saved entity did not have the correct number of values!", 2, controlledVocabulary.getDictionary().size());
 
         // test detach value
         controlledVocabulary.removeValue(severableVocabularyWord);
         controlledVocabulary = controlledVocabularyRepo.save(controlledVocabulary);
-        assertEquals("Did not detach value!", 1, controlledVocabulary.getValues().size());
+        assertEquals("Did not detach value!", 1, controlledVocabulary.getDictionary().size());
 
         // test delete controlled vocabulary
         controlledVocabularyRepo.delete(controlledVocabulary);

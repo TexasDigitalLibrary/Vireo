@@ -35,14 +35,14 @@ public class ControlledVocabulary extends BaseEntity {
     private Language language;
     
     @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY)
-    private Set<VocabularyWord> values;
+    private Set<VocabularyWord> dictionary;
     
     @Column(nullable = false)
     private Boolean isEntityProperty;
 
     public ControlledVocabulary() {        
         setIsEntityProperty(false);
-        setValues(new TreeSet<VocabularyWord>());
+        setDictionary(new TreeSet<VocabularyWord>());
     }
 
     /**
@@ -104,32 +104,26 @@ public class ControlledVocabulary extends BaseEntity {
     /**
      * @return the values
      */
-    public Set<VocabularyWord> getValues() {
-        if(!isEntityProperty()) {
-            return this.values;
-        }
-        return values.isEmpty() ? new HashSet<>() : new HashSet<>(values);
-    }
-    
-    public Set<Object> getEntityValues() {
+    public Set<Object> getDictionary() {
         List<Object> values = new ArrayList<Object>();
-        if(isEntityProperty()) {            
-            try {
-                
+        if(!isEntityProperty()) {
+            values.addAll(dictionary);
+        }
+        else {
+            try {                
                 EntityControlledVocabularyService entityControlledVocabularyService = SpringContext.bean(EntityControlledVocabularyService.class);
                 
                 entityControlledVocabularyService.getControlledVocabulary(entityName, name).parallelStream().forEach(property -> {
                     values.add(property);
-                });
-                
+                });                
             }
             catch(ClassNotFoundException e) {
                 System.out.println("Entity " + entityName + " not found!\n");
             }
         }
-        return values.isEmpty() ? new HashSet<>() : new HashSet<>(values);        
+        return values.isEmpty() ? new HashSet<>() : new HashSet<>(values);
     }
-
+    
     /**
      * 
      * @return Language language
@@ -150,9 +144,9 @@ public class ControlledVocabulary extends BaseEntity {
      * @param values
      *            the values to set
      */
-    public void setValues(Set<VocabularyWord> values) {
+    public void setDictionary(Set<VocabularyWord> values) {
         if(!isEntityProperty()) {
-            this.values = values;
+            dictionary = values;
         }
     }
 
@@ -162,7 +156,7 @@ public class ControlledVocabulary extends BaseEntity {
      */
     public void addValue(VocabularyWord value) {
         if(!isEntityProperty()) {
-            getValues().add(value);
+            dictionary.add(value);
         }
     }
 
@@ -172,7 +166,7 @@ public class ControlledVocabulary extends BaseEntity {
      */
     public void removeValue(VocabularyWord value) {
         if(!isEntityProperty()) {
-            getValues().remove(value);
+            dictionary.remove(value);
         }
     }
 
