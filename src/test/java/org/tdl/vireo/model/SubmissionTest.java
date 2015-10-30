@@ -45,8 +45,8 @@ public class SubmissionTest extends AbstractEntityTest {
         attachment = attachmentRepo.create(TEST_ATTACHMENT_NAME, TEST_UUID);
         assertEquals("The attachment does not exist!", 1, attachmentRepo.count());
 
-        embargoType = embargoTypeRepo.create(TEST_EMBARGO_TYPE_NAME, TEST_EMBARGO_TYPE_DESCRIPTION, TEST_EMBARGO_TYPE_DURATION);
-        assertEquals("The embargo type does not exist!", 1, embargoTypeRepo.count());
+        embargoType = embargoRepo.create(TEST_EMBARGO_TYPE_NAME, TEST_EMBARGO_TYPE_DESCRIPTION, TEST_EMBARGO_TYPE_DURATION);
+        assertEquals("The embargo type does not exist!", 1, embargoRepo.count());
     }
 
     @Override
@@ -151,7 +151,7 @@ public class SubmissionTest extends AbstractEntityTest {
         assertEquals("The workflow steps were deleted!", 0, workflowStepRepo.count());
         assertEquals("The action log was  orphaned!", 0, actionLogRepo.count());
         assertEquals("The attachment were orphaned", 0, attachmentRepo.count());
-        assertEquals("The embargo type was deleted!", 1, embargoTypeRepo.count());
+        assertEquals("The embargo type was deleted!", 1, embargoRepo.count());
 
         // and, going another level deep on the cascade from field values to
         // their predicates,
@@ -169,7 +169,7 @@ public class SubmissionTest extends AbstractEntityTest {
         fieldPredicateRepo.deleteAll();
         organizationRepo.deleteAll();
         organizationCategoryRepo.deleteAll();
-        embargoTypeRepo.deleteAll();
+        embargoRepo.deleteAll();
         userRepo.deleteAll();
         attachmentRepo.deleteAll();
     }

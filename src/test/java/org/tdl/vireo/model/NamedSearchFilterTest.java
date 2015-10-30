@@ -32,8 +32,8 @@ public class NamedSearchFilterTest extends AbstractEntityTest {
 
         submissionState = submissionStateRepo.create(TEST_SUBMISSION_STATE_NAME, TEST_SUBMISSION_STATE_ARCHIVED, TEST_SUBMISSION_STATE_PUBLISHABLE, TEST_SUBMISSION_STATE_DELETABLE, TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_SUBMISSION_STATE_ACTIVE);
 
-        embargoType = embargoTypeRepo.create(TEST_EMBARGO_NAME, TEST_EMBARGO_DESCRIPTION, TEST_EMBARGO_DURATION);
-        assertEquals("The embargoType repository is not empty!", 1, embargoTypeRepo.count());
+        embargoType = embargoRepo.create(TEST_EMBARGO_NAME, TEST_EMBARGO_DESCRIPTION, TEST_EMBARGO_DURATION);
+        assertEquals("The embargoType repository is not empty!", 1, embargoRepo.count());
 
         assignee = userRepo.create(TEST_ASSIGNEE_EMAIL, TEST_ASSIGNEE_FIRSTNAME, TEST_ASSIGNEE_LASTNAME, TEST_ASSIGNEE_ROLE);
         assertEquals("The assignee is not in the user repo", 4, userRepo.count());
@@ -118,7 +118,7 @@ public class NamedSearchFilterTest extends AbstractEntityTest {
         assertEquals("The submissions were deleted", 2, submissionRepo.count());
         assertEquals("The action logs were deleted", 2, actionLogRepo.count());
         assertEquals("The submissionState was deleted", 3, submissionStateRepo.count());
-        assertEquals("The embargoType was deleted", 1, embargoTypeRepo.count());
+        assertEquals("The embargoType was deleted", 1, embargoRepo.count());
         assertEquals("The assignee was deleted", 4, userRepo.count());
         assertEquals("The organization was deleted", 1, organizationRepo.count());
     }
@@ -126,7 +126,7 @@ public class NamedSearchFilterTest extends AbstractEntityTest {
     @After
     public void cleanUp() {
         namedSearchFilterRepo.deleteAll();
-        embargoTypeRepo.deleteAll();
+        embargoRepo.deleteAll();
         organizationRepo.deleteAll();
         organizationCategoryRepo.deleteAll();
         actionLogRepo.deleteAll();

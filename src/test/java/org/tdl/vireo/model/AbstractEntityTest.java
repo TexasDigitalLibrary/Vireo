@@ -23,7 +23,7 @@ import org.tdl.vireo.model.repo.CustomActionValueRepo;
 import org.tdl.vireo.model.repo.DepositLocationRepo;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.EmailWorkflowRuleRepo;
-import org.tdl.vireo.model.repo.EmbargoTypeRepo;
+import org.tdl.vireo.model.repo.EmbargoRepo;
 import org.tdl.vireo.model.repo.FieldGlossRepo;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.FieldProfileRepo;
@@ -263,6 +263,9 @@ public abstract class AbstractEntityTest {
     protected static final Calendar TEST_ACTION_LOG_ACTION_DATE = Calendar.getInstance();
     protected static final UUID TEST_UUID = UUID.randomUUID();
     
+    
+    @Autowired
+    protected EntityControlledVocabularyService entityControlledVocabularyService;
 
     @Autowired
     protected ActionLogRepo actionLogRepo;
@@ -298,9 +301,6 @@ public abstract class AbstractEntityTest {
     protected EmailWorkflowRuleRepo emailWorkflowRuleRepo;
     
     @Autowired
-    EntityControlledVocabularyService entityControlledVocabularyRepo;
-
-    @Autowired
     protected ConfigurationRepo configurationRepo;
 
     @Autowired
@@ -322,7 +322,7 @@ public abstract class AbstractEntityTest {
     protected WorkflowStepRepo workflowStepRepo;
 
     @Autowired
-    protected EmbargoTypeRepo embargoTypeRepo;
+    protected EmbargoRepo embargoRepo;
 
     protected FieldPredicate fieldPredicate;
 
@@ -358,7 +358,7 @@ public abstract class AbstractEntityTest {
 
     protected EmailTemplate emailTemplate;
     protected EmailWorkflowRule emailWorkflowRule;
-    protected EmbargoType embargoType;
+    protected Embargo embargoType;
     protected FieldValue fieldValue;
     protected Organization organization;
     protected Language language;

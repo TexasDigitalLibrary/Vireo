@@ -53,7 +53,7 @@ public class Submission extends BaseEntity {
     private Set<ActionLog> actionLog;
 
     @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY)
-    private Set<EmbargoType> embargoTypes;
+    private Set<Embargo> embargoTypes;
 
     @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
     private Set<Attachment> attachments;
@@ -63,7 +63,7 @@ public class Submission extends BaseEntity {
         setFieldValues(new TreeSet<FieldValue>());
         setSubmissionWorkflowSteps(new TreeSet<WorkflowStep>());
         setActionLog(new TreeSet<ActionLog>());
-        setEmbargoTypes(new TreeSet<EmbargoType>());
+        setEmbargoTypes(new TreeSet<Embargo>());
         setAttachments(new TreeSet<Attachment>());
     }
 
@@ -250,7 +250,7 @@ public class Submission extends BaseEntity {
     /**
      * @return the embargoTypes
      */
-    public Set<EmbargoType> getEmbargoTypes() {
+    public Set<Embargo> getEmbargoTypes() {
         return embargoTypes;
     }
 
@@ -258,7 +258,7 @@ public class Submission extends BaseEntity {
      * @param embargoTypes
      *            the embargoTypes to set
      */
-    public void setEmbargoTypes(Set<EmbargoType> embargoType) {
+    public void setEmbargoTypes(Set<Embargo> embargoType) {
         this.embargoTypes = embargoType;
     }
 
@@ -266,7 +266,7 @@ public class Submission extends BaseEntity {
      * 
      * @param emabargoType
      */
-    public void addEmbargoType(EmbargoType embargoType) {
+    public void addEmbargoType(Embargo embargoType) {
         getEmbargoTypes().add(embargoType);
     }
     
@@ -274,7 +274,7 @@ public class Submission extends BaseEntity {
      * 
      * @param embargoType
      */
-    public void removeEmbargoType(EmbargoType embargoType) {
+    public void removeEmbargoType(Embargo embargoType) {
         getEmbargoTypes().remove(embargoType);
     }
 

@@ -78,7 +78,7 @@ public class NamedSearchFilter extends BaseEntity {
 	private Set<User> assignees;
 
 	@ManyToMany(cascade = { DETACH, REFRESH }, fetch = LAZY)
-	private Set<EmbargoType> embargoTypes;
+	private Set<Embargo> embargoTypes;
 
 	@ElementCollection
 	private Set<Calendar> semesters;
@@ -126,7 +126,7 @@ public class NamedSearchFilter extends BaseEntity {
 		setExcludedActionLogs(new TreeSet<ActionLog>());
 		setSubmissionStates(new TreeSet<SubmissionState>());
 		setAssignees(new TreeSet<User>());
-		setEmbargoTypes(new TreeSet<EmbargoType>());
+		setEmbargoTypes(new TreeSet<Embargo>());
 		setSemesters(new TreeSet<Calendar>());
 		setOrganizations(new TreeSet<Organization>());
 		
@@ -351,19 +351,19 @@ public class NamedSearchFilter extends BaseEntity {
 		getAssignees().remove(assignee);
 	}
 
-	public Set<EmbargoType> getEmbargoTypes() {
+	public Set<Embargo> getEmbargoTypes() {
 		return embargoTypes;
 	}
 
-	public void setEmbargoTypes(Set<EmbargoType> embargoTypes) {
+	public void setEmbargoTypes(Set<Embargo> embargoTypes) {
 		this.embargoTypes = embargoTypes;
 	}
 
-	public void addEmbargoType(EmbargoType embargoType) {
+	public void addEmbargoType(Embargo embargoType) {
 		getEmbargoTypes().add(embargoType);
 	}
 
-	public void removeEmbargoType(EmbargoType embargoType) {
+	public void removeEmbargoType(Embargo embargoType) {
 		getEmbargoTypes().remove(embargoType);
 	}
 
