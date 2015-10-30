@@ -1,14 +1,14 @@
 package org.tdl.vireo.enums;
 
 public enum EmbargoGuarantor {
-    // NEVER CHANGE THE INT VALUES OR YOU'LL RUIN THE DB
+    // NEVER CHANGE THE VALUES OR YOU'LL RUIN THE DB
     DEFAULT(0),
     PROQUEST(1);
 
     private int value;
 
-    EmbargoGuarantor(int num) {
-        value = num;
+    EmbargoGuarantor(int value) {
+        this.value = value;
     }
 
     public int getValue() {

@@ -9,12 +9,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.tdl.vireo.model.repo.EntityControlledVocabularyRepo;
+import org.tdl.vireo.service.EntityControlledVocabularyService;
 
 public class UserTest extends AbstractEntityTest {
     
     @Autowired
-    EntityControlledVocabularyRepo entityControlledVocabularyRepo;
+    EntityControlledVocabularyService entityControlledVocabularyRepo;
 
     @Before
     public void setUp() {
