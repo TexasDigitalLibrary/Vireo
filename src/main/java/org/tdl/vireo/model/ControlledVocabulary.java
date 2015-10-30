@@ -3,6 +3,7 @@ package org.tdl.vireo.model;
 import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.FetchType.LAZY;
 
 import org.tdl.vireo.config.SpringContext;
 
@@ -13,8 +14,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 import org.springframework.beans.factory.annotation.Configurable;
@@ -32,17 +33,16 @@ public class ControlledVocabulary extends BaseEntity {
 
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
     private Language language;
-
-    @ElementCollection
-    @Column(nullable = true, unique = true)
-    private Set<String> values;
+    
+    @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY)
+    private Set<VocabularyWord> values;
     
     @Column(nullable = false)
     private Boolean isEntityProperty;
 
     public ControlledVocabulary() {        
         setIsEntityProperty(false);
-        setValues(new TreeSet<String>());
+        setValues(new TreeSet<VocabularyWord>());
     }
 
     /**
@@ -104,24 +104,30 @@ public class ControlledVocabulary extends BaseEntity {
     /**
      * @return the values
      */
-    public Set<String> getValues() {        
-        if(isEntityProperty()) {
-            List<String> values = new ArrayList<String>();
+    public Set<VocabularyWord> getValues() {
+        if(!isEntityProperty()) {
+            return this.values;
+        }
+        return values.isEmpty() ? new HashSet<>() : new HashSet<>(values);
+    }
+    
+    public Set<Object> getEntityValues() {
+        List<Object> values = new ArrayList<Object>();
+        if(isEntityProperty()) {            
             try {
                 
                 EntityControlledVocabularyService entityControlledVocabularyService = SpringContext.bean(EntityControlledVocabularyService.class);
                 
                 entityControlledVocabularyService.getControlledVocabulary(entityName, name).parallelStream().forEach(property -> {
-                    values.add(property.toString());
+                    values.add(property);
                 });
                 
             }
             catch(ClassNotFoundException e) {
                 System.out.println("Entity " + entityName + " not found!\n");
             }
-            return values.isEmpty() ? new HashSet<>() : new HashSet<>(values);
         }
-        return this.values;
+        return values.isEmpty() ? new HashSet<>() : new HashSet<>(values);        
     }
 
     /**
@@ -144,7 +150,7 @@ public class ControlledVocabulary extends BaseEntity {
      * @param values
      *            the values to set
      */
-    public void setValues(Set<String> values) {
+    public void setValues(Set<VocabularyWord> values) {
         if(!isEntityProperty()) {
             this.values = values;
         }
@@ -154,7 +160,7 @@ public class ControlledVocabulary extends BaseEntity {
      * 
      * @param value
      */
-    public void addValue(String value) {
+    public void addValue(VocabularyWord value) {
         if(!isEntityProperty()) {
             getValues().add(value);
         }
@@ -164,23 +170,10 @@ public class ControlledVocabulary extends BaseEntity {
      * 
      * @param value
      */
-    public void removeValue(String value) {
+    public void removeValue(VocabularyWord value) {
         if(!isEntityProperty()) {
             getValues().remove(value);
         }
-    }
-
-    /**
-     * 
-     * @param value
-     * @return
-     */
-    public String getValueByValue(String value) {
-        for (String v : getValues()) {
-            if (v.equals(value))
-                return v;
-        }
-        return null;
     }
 
     /**

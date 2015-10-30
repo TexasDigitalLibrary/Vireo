@@ -37,6 +37,7 @@ import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionStateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
+import org.tdl.vireo.model.repo.VocabularyWordRepo;
 import org.tdl.vireo.model.repo.WorkflowRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.runner.OrderedRunner;
@@ -88,8 +89,12 @@ public abstract class AbstractEntityTest {
     // ControlledVocabulary Test
     protected static final String TEST_LANGUAGE = "English";
     protected static final String TEST_CONTROLLED_VOCABULARY_NAME = "Test Vocabulary";
-    protected static final String TEST_CONTROLLED_VOCABULARY_VALUE = "Test Vocabulary Value";
-    protected static final String TEST_SEVERABLE_CONTROLLED_VOCABULARY_VALUE = "Test Severable Vocabulary Value";
+    protected static final String TEST_CONTROLLED_VOCABULARY_WORD = "Test Vocabulary Word";
+    protected static final String TEST_CONTROLLED_VOCABULARY_DEFINITION = "This is an awesome word!";
+    protected static final String TEST_CONTROLLED_VOCABULARY_IDENTIFIER = "http://linked.to.data";
+    protected static final String TEST_SEVERABLE_CONTROLLED_VOCABULARY_WORD = "Test Severable Vocabulary Word";
+    protected static final String TEST_SEVERABLE_CONTROLLED_VOCABULARY_DEFINITION = "Test Severable Vocabulary Definition";
+    protected static final String TEST_SEVERABLE_CONTROLLED_VOCABULARY_IDENTIFIER = "Test Severable Vocabulary Identifier";
     
     // must be the name of the property on the entity
     protected static final String TEST_CONTROLLED_VOCABULARY_EMBARGO_GUARANTOR = "guarantor";
@@ -320,6 +325,9 @@ public abstract class AbstractEntityTest {
 
     @Autowired
     protected ControlledVocabularyRepo controlledVocabularyRepo;
+    
+    @Autowired
+    protected VocabularyWordRepo vocabularyWordRepo;
 
     @Autowired
     protected LanguageRepo languageRepo;
@@ -401,7 +409,11 @@ public abstract class AbstractEntityTest {
 
     protected WorkflowStep workflowStep;
     
+    protected VocabularyWord vocabularyWord;
+    
     protected EntityCVWhitelist entityCVWhitelist;
+    
+    protected ControlledVocabulary controlledVocabulary;
 
     @Test
     @Order(value = 1)

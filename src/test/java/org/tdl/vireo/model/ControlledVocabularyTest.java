@@ -18,21 +18,18 @@ public class ControlledVocabularyTest extends AbstractEntityTest {
     }
 
     @Override
-    @SuppressWarnings("unchecked")    
+    @SuppressWarnings("unchecked")
     public void testCreate() {
-        ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME, language);
+        controlledVocabulary = controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME, language);
         assertEquals("The repository did not save the entity!", 1, controlledVocabularyRepo.count());
         assertEquals("Saved entity did not contain the name!", TEST_CONTROLLED_VOCABULARY_NAME, controlledVocabulary.getName());
         assertEquals("Saved entity did not contain the language!", language, controlledVocabulary.getLanguage());
         
-        
-        
-        
+        // add some embargos to test create entity controlled vocabulary
         embargoRepo.create(TEST_EMBARGO_NAME, TEST_EMBARGO_DESCRIPTION, TEST_EMBARGO_DURATION);
         Embargo embargo = embargoRepo.create(TEST_EMBARGO_NAME_2, TEST_EMBARGO_DESCRIPTION, TEST_EMBARGO_DURATION);
         embargo.setGuarantor(EmbargoGuarantor.PROQUEST);
         embargoRepo.save(embargo);
-        
         
         ControlledVocabulary entityControlledVocabulary = controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_EMBARGO_GUARANTOR, TEST_CONTROLLED_VOCABULARY_EMBARGO, language);
         assertEquals("The repository did not save the entity!", 2, controlledVocabularyRepo.count());
@@ -48,30 +45,33 @@ public class ControlledVocabularyTest extends AbstractEntityTest {
             e.printStackTrace();
         }
         
-        assertEquals("Number of guarantors does not match!", guarantors.size(), entityControlledVocabulary.getValues().size());
+        assertEquals("Number of guarantors does not match!", guarantors.size(), entityControlledVocabulary.getEntityValues().size());
         
-        Set<String> controlledVocabularyValues = entityControlledVocabulary.getValues();
+        Set<Object> entityControlledVocabularyValues = entityControlledVocabulary.getEntityValues();
         
         for(EmbargoGuarantor gaurantor : guarantors) {           
-            assertEquals("Guarantors does not contain entityControlledVocabulary value!", true, controlledVocabularyValues.contains(gaurantor.name()));
+            assertEquals("Guarantors does not contain entityControlledVocabulary value!", true, entityControlledVocabularyValues.contains(gaurantor));
         };
         
     }
 
     @Override
     public void testDuplication() {
-        ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME, language);
+        controlledVocabulary = controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME, language);
         try {
             controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME, language);
         } 
         catch (DataIntegrityViolationException e) { /* SUCCESS */ }
         
         assertEquals("The repository duplicated entity!", 1, controlledVocabularyRepo.count());
-        controlledVocabulary.addValue(TEST_CONTROLLED_VOCABULARY_VALUE);
+        
+        vocabularyWord = vocabularyWordRepo.create(TEST_CONTROLLED_VOCABULARY_WORD, TEST_CONTROLLED_VOCABULARY_DEFINITION, TEST_CONTROLLED_VOCABULARY_IDENTIFIER);
+        
+        controlledVocabulary.addValue(vocabularyWord);
         controlledVocabulary = controlledVocabularyRepo.save(controlledVocabulary);
         
         try {
-            controlledVocabulary.addValue(TEST_CONTROLLED_VOCABULARY_VALUE);
+            controlledVocabulary.addValue(vocabularyWord);
             controlledVocabulary = controlledVocabularyRepo.save(controlledVocabulary);
         } 
         catch (DataIntegrityViolationException e) { /* SUCCESS */ }
@@ -81,21 +81,27 @@ public class ControlledVocabularyTest extends AbstractEntityTest {
 
     @Override
     public void testDelete() {
-        ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME, language);
+        controlledVocabulary = controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME, language);
         controlledVocabularyRepo.delete(controlledVocabulary);
         assertEquals("The entity was not deleted!", 0, controlledVocabularyRepo.count());
     }
 
     @Override
     public void testCascade() {
-        ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME, language);
-        controlledVocabulary.addValue(TEST_CONTROLLED_VOCABULARY_VALUE);
-        controlledVocabulary.addValue(TEST_SEVERABLE_CONTROLLED_VOCABULARY_VALUE);
+        controlledVocabulary = controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME, language);
+        
+        vocabularyWord = vocabularyWordRepo.create(TEST_CONTROLLED_VOCABULARY_WORD, TEST_CONTROLLED_VOCABULARY_DEFINITION, TEST_CONTROLLED_VOCABULARY_IDENTIFIER);
+        
+        controlledVocabulary.addValue(vocabularyWord);
+        
+        VocabularyWord severableVocabularyWord = vocabularyWordRepo.create(TEST_SEVERABLE_CONTROLLED_VOCABULARY_WORD, TEST_SEVERABLE_CONTROLLED_VOCABULARY_DEFINITION, TEST_SEVERABLE_CONTROLLED_VOCABULARY_IDENTIFIER);
+                
+        controlledVocabulary.addValue(severableVocabularyWord);
         controlledVocabulary = controlledVocabularyRepo.save(controlledVocabulary);
         assertEquals("Saved entity did not have the correct number of values!", 2, controlledVocabulary.getValues().size());
 
         // test detach value
-        controlledVocabulary.removeValue(TEST_SEVERABLE_CONTROLLED_VOCABULARY_VALUE);
+        controlledVocabulary.removeValue(severableVocabularyWord);
         controlledVocabulary = controlledVocabularyRepo.save(controlledVocabulary);
         assertEquals("Did not detach value!", 1, controlledVocabulary.getValues().size());
 
@@ -108,6 +114,7 @@ public class ControlledVocabularyTest extends AbstractEntityTest {
     @After
     public void cleanUp() {
         controlledVocabularyRepo.deleteAll();
+        vocabularyWordRepo.deleteAll();
         languageRepo.deleteAll();
         embargoRepo.deleteAll();
     }

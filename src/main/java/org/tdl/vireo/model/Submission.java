@@ -23,7 +23,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "submitter_id", "state_id" }) )
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "submitter_id", "state_id" }))
 public class Submission extends BaseEntity {
 
     @OneToOne(optional = false)
