@@ -42,7 +42,10 @@ public class SubmissionTest extends AbstractEntityTest {
         workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME);
         assertEquals("The workflow step does not exist!", 1, workflowStepRepo.count());
 
-        attachment = attachmentRepo.create(TEST_ATTACHMENT_NAME, TEST_UUID);
+        attachmentType = attachmentTypeRepo.create(TEST_ATTACHMENT_TYPE_NAME);
+        assertEquals("The attachmentType does not exist!", 1, attachmentTypeRepo.count());
+        
+        attachment = attachmentRepo.create(TEST_ATTACHMENT_NAME, TEST_UUID, attachmentType);
         assertEquals("The attachment does not exist!", 1, attachmentRepo.count());
 
         embargoType = embargoRepo.create(TEST_EMBARGO_TYPE_NAME, TEST_EMBARGO_TYPE_DESCRIPTION, TEST_EMBARGO_TYPE_DURATION);
@@ -170,8 +173,9 @@ public class SubmissionTest extends AbstractEntityTest {
         organizationRepo.deleteAll();
         organizationCategoryRepo.deleteAll();
         embargoRepo.deleteAll();
-        userRepo.deleteAll();
+        userRepo.deleteAll();        
         attachmentRepo.deleteAll();
+        attachmentTypeRepo.deleteAll();
     }
     
 }

@@ -1,6 +1,9 @@
 package org.tdl.vireo.model;
 
 import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.CascadeType.DETACH;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 
 import java.text.SimpleDateFormat;
@@ -11,21 +14,23 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 /**
  * 
  */
 @Entity
-@Table(name = "attachment")
 public class Attachment extends BaseEntity {
 
 	@Column(nullable = false, length=255)
 	private String name;
-
-	//@Column(nullable = false)
-	//private AttachmentType type;
+	
+	// allows normalization as relation. 
+	// may be over encapsulation however. 
+	// join column instead of column of strings.
+	@ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
+	private AttachmentType type;
 	
 	@Column(nullable = false)
 	private Calendar date;
@@ -39,25 +44,14 @@ public class Attachment extends BaseEntity {
 	@OneToMany(cascade=ALL, fetch = EAGER, orphanRemoval=true)
 	private Set<ActionLog> actionLogs;
 	
-	public Set<ActionLog> getActionLogs() {
-		return actionLogs;
-	}
-
-	public void addActionLog(ActionLog actionLog) {
-		this.actionLogs.add(actionLog);
-	}
-	
-	public void removeActionLog(ActionLog actionLog) {
-		this.actionLogs.remove(actionLog);
-	}
-
 	public Attachment() {
-	setDate(Calendar.getInstance());
+	    setDate(Calendar.getInstance());
 	}
 	
-	public Attachment(String name, UUID uuid ) {
+	public Attachment(String name, UUID uuid, AttachmentType attachmentType) {
 	 	this();
-		setName(name);	
+		setName(name);
+		setType(attachmentType);
 		setUuid(uuid);
 		actionLogs = new TreeSet<ActionLog>();
 	}
@@ -75,8 +69,24 @@ public class Attachment extends BaseEntity {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public AttachmentType getType() {
+        return type;
+    }
 
 	/**
+	 * 
+	 * @param type
+	 */
+    public void setType(AttachmentType type) {
+        this.type = type;
+    }
+
+    /**
 	 * @return the date
 	 */
 	public Calendar getDate() {
@@ -103,6 +113,46 @@ public class Attachment extends BaseEntity {
 	public void setUuid(UUID uuid) {
 		this.uuid = uuid;
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public static SimpleDateFormat getDateformat() {
+        return dateFormat;
+    }
+
+	/**
+	 * 
+	 * @param actionLogs
+	 */
+    public void setActionLogs(Set<ActionLog> actionLogs) {
+        this.actionLogs = actionLogs;
+    }
+	
+    /**
+     * 
+     * @return
+     */
+	public Set<ActionLog> getActionLogs() {
+        return actionLogs;
+    }
+
+	/**
+	 * 
+	 * @param actionLog
+	 */
+    public void addActionLog(ActionLog actionLog) {
+        this.actionLogs.add(actionLog);
+    }
+    
+    /**
+     * 
+     * @param actionLog
+     */
+    public void removeActionLog(ActionLog actionLog) {
+        this.actionLogs.remove(actionLog);
+    }
 	
 	/**
 	 * Create a new JpaAttachmentIpml from a byte array.

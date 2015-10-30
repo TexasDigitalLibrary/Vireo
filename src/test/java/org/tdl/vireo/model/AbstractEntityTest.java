@@ -15,6 +15,7 @@ import org.tdl.vireo.enums.Role;
 import org.tdl.vireo.model.repo.ActionLogRepo;
 import org.tdl.vireo.model.repo.AddressRepo;
 import org.tdl.vireo.model.repo.AttachmentRepo;
+import org.tdl.vireo.model.repo.AttachmentTypeRepo;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.ContactInfoRepo;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
@@ -43,6 +44,8 @@ import org.tdl.vireo.service.EntityControlledVocabularyService;
 @RunWith(OrderedRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 public abstract class AbstractEntityTest {
+    
+    protected static final String TEST_ATTACHMENT_TYPE_NAME = "Primary";
 
     protected static final boolean TEST_SUBMISSION_STATE_ARCHIVED = true;
     protected static final boolean TEST_SUBMISSION_STATE_PUBLISHABLE = true;
@@ -281,6 +284,9 @@ public abstract class AbstractEntityTest {
 
     @Autowired
     protected AttachmentRepo attachmentRepo;
+    
+    @Autowired
+    protected AttachmentTypeRepo attachmentTypeRepo;
 
     @Autowired
     protected AddressRepo addressRepo;
@@ -351,6 +357,8 @@ public abstract class AbstractEntityTest {
     protected Address testAddress;
 
     protected Attachment attachment;
+    
+    protected AttachmentType attachmentType;
 
     protected CustomActionDefinition testCustomActionDefinition;
     protected CustomActionDefinition customActionDefinition;

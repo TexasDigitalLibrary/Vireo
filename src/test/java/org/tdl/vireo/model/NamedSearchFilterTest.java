@@ -23,7 +23,10 @@ public class NamedSearchFilterTest extends AbstractEntityTest {
         excludedSubmission = submissionRepo.create(excludedSubmitter, excludedSubmissionState);
         assertEquals("The submission does not exist!", 2, submissionRepo.count());
 
-        attachment = attachmentRepo.create(TEST_ATTACHMENT_NAME, TEST_UUID);
+        attachmentType = attachmentTypeRepo.create(TEST_ATTACHMENT_TYPE_NAME);
+        assertEquals("The attachmentType repository is not empty!", 1, attachmentTypeRepo.count());
+        
+        attachment = attachmentRepo.create(TEST_ATTACHMENT_NAME, TEST_UUID, attachmentType);
         assertEquals("The attachment repository is not empty!", 1, attachmentRepo.count());
 
         includedActionLog = actionLogRepo.create(includedSubmission, includedSubmissionState, includedSubmitter, TEST_ACTION_LOG_ACTION_DATE, attachment, TEST_ACTION_LOG_ENTRY, TEST_ACTION_LOG_FLAG);
@@ -131,8 +134,8 @@ public class NamedSearchFilterTest extends AbstractEntityTest {
         organizationCategoryRepo.deleteAll();
         actionLogRepo.deleteAll();
         attachmentRepo.deleteAll();
+        attachmentTypeRepo.deleteAll();
         customActionValueRepo.deleteAll();
-
         submissionRepo.deleteAll();
         submissionStateRepo.deleteAll();
         userRepo.deleteAll();

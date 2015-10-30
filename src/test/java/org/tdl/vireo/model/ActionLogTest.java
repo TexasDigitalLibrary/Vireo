@@ -14,7 +14,9 @@ public class ActionLogTest extends AbstractEntityTest {
         assertEquals("The user repository is not empty!", 1, userRepo.count());
         submissionState = submissionStateRepo.create(TEST_SUBMISSION_STATE_NAME, TEST_SUBMISSION_STATE_ARCHIVED, TEST_SUBMISSION_STATE_PUBLISHABLE, TEST_SUBMISSION_STATE_DELETABLE, TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_SUBMISSION_STATE_ACTIVE);
         assertEquals("The submissionState repository is not empty!", 1, submissionStateRepo.count());
-        attachment = attachmentRepo.create(TEST_ATTACHMENT_NAME, TEST_UUID);
+        attachmentType = attachmentTypeRepo.create(TEST_ATTACHMENT_TYPE_NAME);
+        assertEquals("The attachmentType repository is not empty!", 1, attachmentTypeRepo.count());
+        attachment = attachmentRepo.create(TEST_ATTACHMENT_NAME, TEST_UUID, attachmentType);
         assertEquals("The attachment repository is not empty!", 1, attachmentRepo.count());
         testSubmission = submissionRepo.create(testUser, submissionState);
         assertEquals("The submission repository is not empty!", 1, submissionRepo.count());
@@ -71,8 +73,9 @@ public class ActionLogTest extends AbstractEntityTest {
         actionLogRepo.deleteAll();
         submissionRepo.deleteAll();
         submissionStateRepo.deleteAll();
-        userRepo.deleteAll();
+        userRepo.deleteAll();        
         attachmentRepo.deleteAll();
+        attachmentTypeRepo.deleteAll(); 
     }
 
 }
