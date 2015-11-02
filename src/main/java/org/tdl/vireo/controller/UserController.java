@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
 
@@ -47,6 +48,7 @@ public class UserController {
     
     @ApiMapping("/all")
     @Auth(role="ROLE_MANAGER")
+    @Transactional
     public ApiResponse allUsers() {            
         Map<String,List<User>> map = new HashMap<String,List<User>>();        
         map.put("list", userRepo.findAll());

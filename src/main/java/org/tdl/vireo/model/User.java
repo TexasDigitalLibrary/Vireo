@@ -24,7 +24,7 @@ import edu.tamu.framework.model.CoreUser;
 @Entity
 public class User extends BaseEntity implements CoreUser {
     
-    @Column(name="uin", nullable = true)
+    @Column(nullable = true)
     private Long uin;
 
     @Column(nullable = true)
