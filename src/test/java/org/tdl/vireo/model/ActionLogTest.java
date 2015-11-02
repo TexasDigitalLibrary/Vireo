@@ -4,7 +4,15 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.tdl.vireo.Application;
+import org.tdl.vireo.runner.OrderedRunner;
 
+@WebAppConfiguration
+@RunWith(OrderedRunner.class)
+@SpringApplicationConfiguration(classes = Application.class)
 public class ActionLogTest extends AbstractEntityTest {
 
     @Before
@@ -30,7 +38,7 @@ public class ActionLogTest extends AbstractEntityTest {
         assertEquals("Saved action log does not have the correct submitter email", TEST_USER_EMAIL, testActionLog.getUser().getEmail());
         assertEquals("Saved action log does not have the correct submitter first name", TEST_USER_FIRSTNAME, testActionLog.getUser().getFirstName());
         assertEquals("Saved action log does not have the correct submitter last name", TEST_USER_LASTNAME, testActionLog.getUser().getLastName());
-        assertEquals("Saved action log does not have the correct submitter role", TEST_USER_ROLE, testActionLog.getUser().getRole());
+        assertEquals("Saved action log does not have the correct submitter role", TEST_USER_ROLE_STRING, testActionLog.getUser().getRole());
         assertEquals("Saved action log does not have the correct submission state name", TEST_SUBMISSION_STATE_NAME, testActionLog.getSubmissionState().getName());
         assertEquals("Saved action log does not have the correct submission archived state ", TEST_SUBMISSION_STATE_ARCHIVED, testActionLog.getSubmissionState().isArchived());
         assertEquals("Saved action log does not have the correct submission publishable state ", TEST_SUBMISSION_STATE_PUBLISHABLE, testActionLog.getSubmissionState().isPublishable());

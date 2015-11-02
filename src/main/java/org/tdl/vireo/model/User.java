@@ -19,8 +19,13 @@ import javax.persistence.OneToOne;
 
 import org.tdl.vireo.enums.Role;
 
+import edu.tamu.framework.model.CoreUser;
+
 @Entity
-public class User extends BaseEntity {
+public class User extends BaseEntity implements CoreUser {
+    
+    @Column(name="uin", nullable = true)
+    private Long uin;
 
     @Column(nullable = true)
     private String netid;
@@ -358,8 +363,20 @@ public class User extends BaseEntity {
     /**
      * @return the role
      */
-    public Role getRole() {
-        return role;
+    //public Role getRole() {
+    //    return role;
+    //}
+    
+    /**
+     * @return the role
+     */
+    public String getRole() {
+        switch(role) {
+            case NONE: return "ROLE_NONE";
+            case USER: return "ROLE_USER";
+            case ADMINISTRATOR: return "ROLE_ADMIN";
+            default: return "ROLE_UNKNOWN";
+        }
     }
 
     /**
@@ -368,6 +385,18 @@ public class User extends BaseEntity {
      */
     public void setRole(Role role) {
         this.role = role;
+    }
+    
+    /**
+     * @param role
+     *            the role to set
+     */
+    public void setRole(String role) {
+        switch(role) {
+            case "ROLE_USER": this.role = Role.USER; break;
+            case "ROLE_ADMIN": this.role = Role.ADMINISTRATOR; break;
+            default: this.role = Role.NONE; break;
+        }
     }
 
     /**
@@ -383,6 +412,22 @@ public class User extends BaseEntity {
      */
     public void setOrcid(String orcid) {
         this.orcid = orcid;
+    }
+    
+    /**
+     * 
+     */
+    @Override
+    public void setUin(Long uin) {
+        this.uin = uin;
+    }
+    
+    /**
+     * 
+     */
+    @Override
+    public Long getUin() {
+        return uin;
     }
 
 }

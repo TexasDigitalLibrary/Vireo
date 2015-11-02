@@ -1,13 +1,16 @@
 package org.tdl.vireo.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+
+import edu.tamu.framework.config.CoreSecurityConfig;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+@Order(101)
+public class SecurityConfig extends CoreSecurityConfig {
 		
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {

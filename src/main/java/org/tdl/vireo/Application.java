@@ -12,8 +12,10 @@ import org.springframework.boot.ansi.AnsiOutput;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
 
+@ComponentScan(basePackages={"edu.tamu.framework", "org.tdl.vireo"})
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer implements Banner {
 

@@ -3,3 +3,4 @@ node_modules/
 src/main/resources/static/angular/app/
 vireo.log
 attachments/
+.factorypath
