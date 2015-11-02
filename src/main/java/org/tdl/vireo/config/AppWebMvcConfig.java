@@ -1,13 +1,13 @@
 package org.tdl.vireo.config;
 
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.web.DispatcherServletAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
-
-import edu.tamu.framework.config.CoreWebMvcConfig;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @Configuration
-@AutoConfigureAfter(DispatcherServletAutoConfiguration.class)
-public class AppWebMvcConfig extends CoreWebMvcConfig {
-
+public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/**").addResourceLocations("classpath:/static/ui/app/");
+    }
 }

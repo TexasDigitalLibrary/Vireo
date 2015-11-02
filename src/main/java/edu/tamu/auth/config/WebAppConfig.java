@@ -13,7 +13,6 @@ import java.util.List;
 
 import javax.xml.transform.Source;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -37,7 +36,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
  */
 @Configuration
 @ComponentScan(basePackages = "edu.tamu.auth.controller")
-@ConfigurationProperties(prefix="auth.controller")
 public class WebAppConfig extends WebMvcConfigurerAdapter {
 
 	/**

@@ -16,9 +16,6 @@ import org.springframework.web.servlet.HandlerMapping;
 public class ViewController {
     
     @Autowired
-    HttpServletRequest request;
-    
-    @Autowired
     private ResourceLoader resourceLoader;
     
     @RequestMapping("${app.ui.base}")
@@ -33,7 +30,7 @@ public class ViewController {
     private String uiPath;
      
     @RequestMapping("${app.ui.base}**")
-    public String ui() throws IOException {
+    public String ui(HttpServletRequest request) throws IOException {
         
         String reqPath = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
         String path = reqPath.substring(base.length(), reqPath.length());
