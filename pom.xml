@@ -185,7 +185,7 @@
 						</goals>
 						<configuration>
 							<karmaExecutable>${basedir}/node_modules/.bin/karma</karmaExecutable>
-							<configFile>src/main/resources/static/angular/test/karma.conf.js</configFile>
+							<configFile>src/main/resources/static/ui/tests/karma.conf.js</configFile>
 						</configuration>
 					</execution>
 				</executions>

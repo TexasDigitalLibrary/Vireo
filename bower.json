@@ -6,12 +6,6 @@
   "license": "BSD",
   "private": true,
   "dependencies": {
-    "angular": "latest",
-    "angular-mocks": "latest",
-    "jquery": "latest",
-    "bootstrap": "latest",
-    "angular-route": "latest",
-    "angular-resource": "latest",
-    "angular-animate": "latest"
+    "core": "git@framework.github.com:TAMULib/Angular-Framework.git#p1.2.4"
   }
 }

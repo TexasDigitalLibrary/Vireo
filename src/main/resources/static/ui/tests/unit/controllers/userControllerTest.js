@@ -4,7 +4,7 @@ describe('controller: UserController', function() {
 
 	beforeEach(module('core'));
 
-	beforeEach(module('seedApp'));
+	beforeEach(module('vireo'));
 	
 	beforeEach(module('mock.user'));
 	

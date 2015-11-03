@@ -1,20 +1,34 @@
 {
-  "version": "4.0.0",
-  "private": true,
   "name": "Vireo",
+  "private": true,
+  "version": "4.0.0",
   "description": "Vireo 4",
-  "repository": "https://github.com/TexasDigitalLibrary/Vireo",
+  "homepage": "https://github.com/TexasDigitalLibrary/Vireo",
   "license": "BSD",
   "devDependencies": {
+    "bower": "latest",
+    "grunt": "latest",
+    "grunt-cli": "latest",
+    "grunt-usemin": "latest",
+    "grunt-contrib-concat": "latest",
+    "grunt-contrib-jshint": "latest",
+    "grunt-contrib-uglify": "latest",
+    "grunt-contrib-compass": "latest",
+    "grunt-contrib-watch": "latest",
+    "http-server": "latest",
+    "jshint-stylish": "latest",
     "karma": "latest",
     "karma-chrome-launcher": "latest",
     "karma-firefox-launcher": "latest",
     "karma-jasmine": "latest",
+    "karma-junit-reporter": "latest",
+    "load-grunt-tasks": "latest",
     "protractor": "latest",
     "http-server": "latest",
     "tmp": "latest",
     "bower": "latest",
-    "shelljs": "latest"
+    "shelljs": "latest",
+    "time-grunt": "latest"   
   },
   "scripts": {
     "postinstall": "bower install",
@@ -23,15 +37,22 @@
     "start": "http-server -a 0.0.0.0 -p 8000",
 
     "pretest": "npm install",
-    "test": "node node_modules/karma/bin/karma start src/main/resources/static/angular/test/karma.conf.js",
-    "test-single-run": "node node_modules/karma/bin/karma start src/main/resources/static/angular/test/karma.conf.js  --single-run",
+    "test": "node node_modules/karma/bin/karma start src/main/resources/static/ui/tests/karma.conf.js",
+    "test-single-run": "node node_modules/karma/bin/karma start src/main/resources/static/ui/tests/karma.conf.js  --single-run",
 
     "preupdate-webdriver": "npm install",
     "update-webdriver": "webdriver-manager update",
 
     "preprotractor": "npm run update-webdriver",
-    "protractor": "protractor src/main/resources/static/angular/test/protractor-conf.js",
+    "protractor": "protractor src/main/resources/static/ui/tests/protractor-conf.js",
 
     "update-index-async": "node -e \"require('shelljs/global'); sed('-i', /\\/\\/@@NG_LOADER_START@@[\\s\\S]*\\/\\/@@NG_LOADER_END@@/, '//@@NG_LOADER_START@@\\n' + cat('bower_components/angular-loader/angular-loader.min.js') + '\\n//@@NG_LOADER_END@@', 'app/index-async.html');\""
+  },
+  "engines": {
+    "node": ">=0.10.33"
+  },
+  "dependencies": {
+    "grunt": "latest",
+    "grunt-ts": "latest"
   }
 }

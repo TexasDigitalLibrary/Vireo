@@ -4,3 +4,4 @@ src/main/resources/static/angular/app/
 vireo.log*
 attachments/
 .factorypath
+npm-debug.log

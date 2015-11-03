@@ -8,15 +8,15 @@
 				<table class="table table-hover table-condensed">
 					<thead>
 						<tr>
-							<th>UIN</th>
+							<th>Email</th>
 							<th>First Name</th>
 							<th>Last Name</th>
 							<th>Role</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="thisUser in userRepo.list track by thisUser.uin">
-							<td>{{thisUser.uin}}</td>
+						<tr ng-repeat="thisUser in userRepo.list track by thisUser.email">
+							<td>{{thisUser.email}}</td>
 							<td>{{thisUser.firstName}}</td>
 							<td>{{thisUser.lastName}}</td>
 							<td>

@@ -3,11 +3,11 @@ require 'compass/import-once/activate'
 
 # Set this to the root of your project when deployed:
 http_path = "/"
-css_dir = "app/resources/styles"
-sass_dir = "app/resources/styles/sass"
-images_dir = "app/resources/images"
-javascripts_dir = "app/resources/scripts"
-add_import_path "app/bower_components/core/app/resources/styles/"
+css_dir = "src/main/resources/static/ui/app/resources/styles"
+sass_dir = "src/main/resources/static/ui/app/resources/styles/sass"
+images_dir = "src/main/resources/static/ui/app/resources/images"
+javascripts_dir = "src/main/resources/static/ui/app/resources/scripts"
+add_import_path "src/main/resources/static/ui/app/bower_components/core/app/resources/styles/"
 
 # You can select your preferred output style here (can be overridden via the command line):
 # output_style = :expanded or :nested or :compact or :compressed
