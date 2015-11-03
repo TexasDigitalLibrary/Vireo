@@ -41,10 +41,6 @@
 			<div class="container">
 				<div class="col-md-12 appContent" ng-controller="AdminController">
 
-					<div>
-						<modal modal-id="assumeUserModal" modal-view="bower_components/core/app/views/modals/assumeUserModal.html" modal-header-class="modal-header-primary"></modal>
-					</div>	
-
 					<nav class="pull-right userMenu" ng-controller="AuthenticationController">
 						
 						<div class="dropdown">
@@ -66,11 +62,7 @@
 								</li>
 
 								<li ng-if="isAdmin() || isAssuming() == 'true'" role="presentation" class="divider"></li>
-								<li ng-if="isAdmin() || isAssuming() == 'true'" role="presentation" class="dropdown-header">Admin Actions</li>
-								<li ng-if="isAdmin() || isAssuming() == 'true'">
-									<a href ng-if="isAssuming() == 'false'" data-toggle="modal" data-target="#assumeUserModal">{{assumedControl.button}}</a>
-									<a href ng-if="isAssuming() == 'true'" ng-click="assumeUser(assume)">{{assumedControl.button}}</a>
-								</li>
+								<li ng-if="isAdmin() || isAssuming() == 'true'" role="presentation" class="dropdown-header">Admin Actions</li>								
 								
 							</ul>
 						</div>

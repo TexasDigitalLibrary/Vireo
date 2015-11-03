@@ -55,9 +55,9 @@ vireo.service("UserRepo", function($route, WsApi, AbstractModel, StorageService)
 	
 	};
 	
-	Users.updateRole = function(user, uin, role) {
+	Users.updateRole = function(user, email, role) {
 		var change = {
-			'uin': uin,
+			'email': email,
 			'role': role
 		};
 		
@@ -70,7 +70,7 @@ vireo.service("UserRepo", function($route, WsApi, AbstractModel, StorageService)
 
 		if(updateUserRolePromise.$$state) {
 			updateUserRolePromise.then(function(data) {				
-				if(user.uin == uin) {
+				if(user.email == email) {
 					StorageService.set("role", role);
 				}
 			});

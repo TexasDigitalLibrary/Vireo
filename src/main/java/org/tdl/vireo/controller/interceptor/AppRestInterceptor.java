@@ -17,6 +17,9 @@ public class AppRestInterceptor extends CoreRestInterceptor {
     @Value("${app.authority.admins}")
     private String[] admins;
     
+//    @Autowired @Lazy
+//    private SimpMessagingTemplate simpMessagingTemplate;
+    
     @Override
     public Credentials confirmCreateUser(Credentials shib) {
         User user = userRepo.findByEmail(shib.getEmail());
@@ -37,7 +40,12 @@ public class AppRestInterceptor extends CoreRestInterceptor {
             }
             
             userRepo.create(shib.getEmail(), shib.getFirstName(), shib.getLastName(), role);
-
+            
+//            Map<String, Object> userMap = new HashMap<String, Object>();
+//            
+//            userMap.put("list", userRepo.findAll());
+//            
+//            this.simpMessagingTemplate.convertAndSend("/channel/users", new ApiResponse(SUCCESS, userMap));
         }
         else {  
             shib.setRole(user.getRole());

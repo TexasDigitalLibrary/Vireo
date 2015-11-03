@@ -4,7 +4,8 @@ public enum Role {
     // NEVER CHANGE THE INT VALUES OR YOU'LL RUIN THE DB
     NONE(0),
     USER(1),
-    ADMINISTRATOR(2);
+    MANAGER(2),
+    ADMINISTRATOR(3);
 
     private int value;
 

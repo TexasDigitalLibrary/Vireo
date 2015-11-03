@@ -38,7 +38,8 @@ vireo.controller('UserRepoController', function ($controller, $location, $route,
     UserRepo.listen().then(null, null, function(data) {
 
     	if(typeof $scope.user != 'undefined') {
-    		if(JSON.parse(data.body).content.HashMap.changedUserUin == $scope.user.uin) {
+    		console.log(data);
+    		if(JSON.parse(data.body).payload.HashMap.changedUserEmail == $scope.user.email) {
 				$scope.user = User.refresh();
 				$route.reload();						
 			}	

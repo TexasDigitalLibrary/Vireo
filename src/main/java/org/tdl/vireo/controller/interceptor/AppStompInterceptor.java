@@ -2,8 +2,6 @@ package org.tdl.vireo.controller.interceptor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import org.tdl.vireo.enums.Role;
 import org.tdl.vireo.model.User;
@@ -21,8 +19,8 @@ public class AppStompInterceptor extends CoreStompInterceptor {
     @Value("${app.authority.admins}")
     private String[] admins;
     
-    @Autowired @Lazy
-    private SimpMessagingTemplate simpMessagingTemplate;
+//    @Autowired @Lazy
+//    private SimpMessagingTemplate simpMessagingTemplate;
     
     @Override
     public Credentials confirmCreateUser(Credentials shib) {
@@ -46,14 +44,11 @@ public class AppStompInterceptor extends CoreStompInterceptor {
             
             userRepo.create(shib.getEmail(), shib.getFirstName(), shib.getLastName(), role);
             
-            /* For broadcasting list of all users upon new user added
-            Map<String, Object> userMap = new HashMap<String, Object>();
-            
-            userMap.put("list", userRepo.findAll());
-            
-            this.simpMessagingTemplate.convertAndSend("/channel/users", new ApiResponse(SUCCESS, userMap));
-            */
-    
+//            Map<String, Object> userMap = new HashMap<String, Object>();
+//            
+//            userMap.put("list", userRepo.findAll());
+//            
+//            this.simpMessagingTemplate.convertAndSend("/channel/users", new ApiResponse(SUCCESS, userMap));
         }
         else {
             shib.setRole(user.getRole());
