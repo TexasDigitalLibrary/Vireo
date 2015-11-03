@@ -20,7 +20,7 @@ public class UserTest extends AbstractEntityTest {
         assertEquals("Saved user did not contain the correct email!", TEST_USER_EMAIL, testUser.getEmail());
         assertEquals("Saved user did not contain the correct first name!", TEST_USER_FIRSTNAME, testUser.getFirstName());
         assertEquals("Saved user did not contain the correct last name!", TEST_USER_LASTNAME, testUser.getLastName());
-        assertEquals("Saved user did not contain the correct role!", TEST_USER_ROLE, testUser.getRole());
+        assertEquals("Saved user did not contain the correct role!", TEST_USER_ROLE_STRING, testUser.getRole());
     }
 
     @Override

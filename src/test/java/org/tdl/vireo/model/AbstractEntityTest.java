@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.tdl.vireo.Application;
 import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.config.constant.ConfigurationName;
@@ -44,6 +45,7 @@ import org.tdl.vireo.runner.OrderedRunner;
 import org.tdl.vireo.service.EntityControlledVocabularyService;
 
 @RunWith(OrderedRunner.class)
+@WebAppConfiguration
 @SpringApplicationConfiguration(classes = Application.class)
 public abstract class AbstractEntityTest {
 
@@ -273,7 +275,9 @@ public abstract class AbstractEntityTest {
     protected static final int TEST_ORGANIZATION_CATEGORY_LEVEL = 0;
     protected static final String TEST_ORGANIZATION_CATEGORY_NAME = "Test Organization Category";
 
-    protected static final Role TEST_USER_ROLE = Role.ADMINISTRATOR;
+    protected static final Role TEST_USER_ROLE = Role.USER;
+    protected static final String TEST_USER_ROLE_STRING = "ROLE_USER";
+    
     protected static final Calendar TEST_ACTION_LOG_ACTION_DATE = Calendar.getInstance();
     protected static final UUID TEST_UUID = UUID.randomUUID();
     

@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	
 	<modelVersion>4.0.0</modelVersion>
+	
+	<!-- brought in through the tamu core framework
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>1.2.5.RELEASE</version>
-		<relativePath /> <!-- lookup parent from repository -->
+		<relativePath />
 	</parent>
-	<packaging>war</packaging>
+	-->
+	
 	<name>Vireo 4</name>
 	<description>Vireo 4</description>
 	<version>4.0.x-SNAPSHOT</version>
@@ -19,15 +24,38 @@
 		<name>TDL</name>
 		<url>http://www.tdl.org</url>
 	</organization>
+	
+	<parent>
+		<groupId>edu.tamu.framework</groupId>
+		<artifactId>webservice-framework-parent</artifactId>
+		<version>1.1.4</version>
+	</parent>
+	
 	<properties>
+		<start-class>org.tdl.vireo.Application</start-class>
 		<m2eclipse.wtp.contextRoot>/</m2eclipse.wtp.contextRoot>
 		<tomcat.version>7.0.59</tomcat.version>
 		<java.version>1.8</java.version>
 		<postgresql.version>9.4-1202-jdbc42</postgresql.version>
 	</properties>
+	
+	<packaging>war</packaging>
+	
+	<repositories>
+		<repository>
+			<id>tamu-releases</id>
+			<url>https://maven.library.tamu.edu/content/repositories/releases</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
-		<!-- Spring standalone JDK tools for JSP runtime compile (to avoid Embedded 
-			Jetty error on JSP compile at runtime) -->
+		<dependency>
+			<groupId>edu.tamu.framework</groupId>
+			<artifactId>webservice-framework-core</artifactId>
+			<version>1.1.4</version>
+		</dependency>
+	
+		<!-- Spring standalone JDK tools for JSP runtime compile (to avoid Embedded Jetty error on JSP compile at runtime) -->
 		<dependency>
 			<groupId>com.sun</groupId>
 			<artifactId>tools</artifactId>
@@ -35,38 +63,38 @@
 			<systemPath>${java.home}/../lib/tools.jar</systemPath>
 			<scope>system</scope>
 		</dependency>
-		<!-- Spring Boot Starter Web -->
+		<!-- Spring Boot Starter Web
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<!-- Spring Boot Starter Data JPA -->
+		</dependency> -->
+		<!-- Spring Boot Starter Data - brought in through the tamu core framework
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-		<!-- Spring Boot Data REST -->
+		</dependency> JPA -->
+		<!-- Spring Boot Data REST
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-rest</artifactId>
-		</dependency>
-		<!-- H2 in-memory SQL DB -->
+		</dependency> -->
+		<!-- H2 in-memory SQL DB - brought in through the tamu core framework
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-		</dependency>
-		<!-- PostgreSQL SQL DB -->
+		</dependency> -->
+		<!-- PostgreSQL SQL DB - brought in through the tamu core framework
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>${postgresql.version}</version>
-		</dependency>
+		</dependency> -->
 		<!-- MySQL SQL DB -->
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
-		<!-- Spring Boot Starter Security -->
+		<!-- Spring Boot Starter Security - brought in through the tamu core framework
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
@@ -74,24 +102,25 @@
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-taglibs</artifactId>
-		</dependency>
-		<!-- Spring Boot Loader Tools (for FileUtils.sha1Hash())-->
+		</dependency> -->
+		<!-- Spring Boot Loader Tools (for FileUtils.sha1Hash()) -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-loader-tools</artifactId>
 		</dependency>
-		<!-- JSP Templates -->
+		<!-- JSP Templates
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
-		</dependency>
-		<!-- Testing -->
+		</dependency> -->
+		<!-- Testing
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
-		</dependency>
+		</dependency> -->
 	</dependencies>
+	
 	<build>
 		<plugins>
 			<plugin>
@@ -156,7 +185,7 @@
 						</goals>
 						<configuration>
 							<karmaExecutable>${basedir}/node_modules/.bin/karma</karmaExecutable>
-							<configFile>src/main/resources/static/angular/test/karma.conf.js</configFile>
+							<configFile>src/main/resources/static/ui/tests/karma.conf.js</configFile>
 						</configuration>
 					</execution>
 				</executions>
@@ -198,5 +227,14 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
+		<resources>
+			<resource>
+			  	<directory>src/main/resources/</directory>
+			  	<excludes>
+			    	<exclude>static/**</exclude>
+			  	</excludes>
+			</resource>
+		</resources>			
 	</build>
+	
 </project>
