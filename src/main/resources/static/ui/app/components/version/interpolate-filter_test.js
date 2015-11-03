@@ -1,7 +1,7 @@
 'use strict';
 
-describe('seedApp.version module', function() {
-  beforeEach(module('seedApp.version'));
+describe('vireo.version module', function() {
+  beforeEach(module('vireo.version'));
 
   describe('interpolate filter', function() {
     beforeEach(module(function($provide) {

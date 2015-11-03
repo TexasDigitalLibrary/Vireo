@@ -1,7 +1,7 @@
-var seedApp = angular.module('seedApp', 
+var vireo = angular.module('vireo', 
 [
 	'ngRoute',
-	'seedApp.version'
+	'vireo.version'
 ]);
 
 //This method's callback is passed to stomp and executed on both successfull connection, as well as disconnect.
@@ -10,12 +10,12 @@ setUpApp(function(connected) {
 	//Indicates at app start if the app has successfully conenected to the service
 	appConfig.connected = connected;
 
-	seedApp.constant('appConfig', appConfig);
+	vireo.constant('appConfig', appConfig);
 
 	angular.element(document).ready(function() {	   	
 	   	try {
 	   		// If the app is already bootstrapped then an error will be thrown
-			angular.bootstrap(document, ['core', 'seedApp']);
+			angular.bootstrap(document, ['core', 'vireo']);
 		} catch (e) {
 			/*
 			 * If websockets dissconnect the app will attempt to re-bootstrap. Since the app is already running we will

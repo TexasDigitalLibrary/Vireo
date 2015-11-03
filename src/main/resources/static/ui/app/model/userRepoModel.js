@@ -1,4 +1,4 @@
-seedApp.service("UserRepo", function($route, WsApi, AbstractModel, StorageService) {
+vireo.service("UserRepo", function($route, WsApi, AbstractModel, StorageService) {
 
 	var self;
 	

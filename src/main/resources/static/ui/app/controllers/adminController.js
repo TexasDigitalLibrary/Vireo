@@ -1,4 +1,4 @@
-seedApp.controller('AdminController', function ($controller, $scope, $window, $route, AssumedControl, AuthServiceApi, StorageService, User, UserRepo, WsApi) {
+vireo.controller('AdminController', function ($controller, $scope, $window, $route, AssumedControl, AuthServiceApi, StorageService, User, UserRepo, WsApi) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 

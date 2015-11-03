@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('seedApp.version.version-directive', [])
+angular.module('vireo.version.version-directive', [])
 
 .directive('appVersion', ['version', function(version) {
   return function(scope, elm, attrs) {

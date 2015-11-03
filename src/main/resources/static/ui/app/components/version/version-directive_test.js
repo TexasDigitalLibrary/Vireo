@@ -1,7 +1,7 @@
 'use strict';
 
-describe('seedApp.version module', function() {
-  beforeEach(module('seedApp.version'));
+describe('vireo.version module', function() {
+  beforeEach(module('vireo.version'));
 
   describe('app-version directive', function() {
     it('should print current version', function() {

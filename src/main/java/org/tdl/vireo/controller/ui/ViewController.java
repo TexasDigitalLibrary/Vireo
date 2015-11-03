@@ -18,26 +18,26 @@ public class ViewController {
     @Autowired
     private ResourceLoader resourceLoader;
     
-    @RequestMapping("${app.ui.base}")
-    public String index() {
-        return "forward:/index.html";
-    }
-    
     @Value("${app.ui.base}")
     private String base;
     
     @Value("${app.ui.path}")
     private String uiPath;
-     
-    @RequestMapping("${app.ui.base}**")
+    
+    @RequestMapping("${app.ui.base}")
+    public String index() {
+        return "forward:/index.html";
+    }
+    
+    @RequestMapping("${app.ui.base}/**")
     public String ui(HttpServletRequest request) throws IOException {
         
-        String reqPath = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
-        String path = reqPath.substring(base.length(), reqPath.length());
+        String path = ((String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE)).replace(base, uiPath);
                         
-        Resource resource = resourceLoader.getResource("classpath:"+uiPath+"/"+path);
+        Resource resource = resourceLoader.getResource("classpath:" + path);
+        
         if(resource.exists()) {
-            return "forward:/"+path;
+            return "forward:/" + path;
         } 
         
         return "forward:/index.html";

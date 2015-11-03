@@ -1,6 +1,6 @@
 var appConfig = { 
 
-	'version': 'seedApp',
+	'version': '4.0.x',
 
 	'allowAnonymous': false,
 

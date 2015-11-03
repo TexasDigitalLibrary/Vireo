@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('seedApp.version.interpolate-filter', [])
+angular.module('vireo.version.interpolate-filter', [])
 
 .filter('interpolate', ['version', function(version) {
   return function(text) {

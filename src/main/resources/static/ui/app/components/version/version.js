@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('seedApp.version', [
-  'seedApp.version.interpolate-filter',
-  'seedApp.version.version-directive'
+angular.module('vireo.version', [
+  'vireo.version.interpolate-filter',
+  'vireo.version.version-directive'
 ])
 
 .value('version', appConfig.version);

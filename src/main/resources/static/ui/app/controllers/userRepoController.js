@@ -1,4 +1,4 @@
-seedApp.controller('UserRepoController', function ($controller, $location, $route, $scope, StorageService, User, UserRepo) {
+vireo.controller('UserRepoController', function ($controller, $location, $route, $scope, StorageService, User, UserRepo) {
 	
     angular.extend(this, $controller('AbstractController', {$scope: $scope}));
     

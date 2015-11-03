@@ -1,4 +1,4 @@
-seedApp.run(function($rootScope) {
+vireo.run(function($rootScope) {
 	
 	angular.element("body").fadeIn(1000);
 	
