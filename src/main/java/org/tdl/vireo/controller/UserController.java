@@ -78,15 +78,9 @@ public class UserController {
             e.printStackTrace();
         }       
         
-        System.out.println("\n\n" + map.get("email") + "\n\n");
-        
-        System.out.println("\n\n" + map.get("role") + "\n\n");
-        
         User user = userRepo.findByEmail(map.get("email"));      
         user.setRole(map.get("role"));      
-        user = userRepo.save(user);
-        
-        System.out.println("\n\n" + user.getFirstName() + "\n\n");
+        userRepo.save(user);
         
         Map<String, Object> userMap = new HashMap<String, Object>();
         userMap.put("list", userRepo.findAll());
