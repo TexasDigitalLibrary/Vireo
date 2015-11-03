@@ -17,7 +17,7 @@
     "grunt-contrib-watch": "latest",
     "http-server": "latest",
     "jshint-stylish": "latest",
-    "karma": "latest",
+    "karma": "~0.10",
     "karma-chrome-launcher": "latest",
     "karma-firefox-launcher": "latest",
     "karma-jasmine": "latest",
