@@ -44,11 +44,12 @@
 					<nav class="pull-right userMenu" ng-controller="AuthenticationController">
 						
 						<div class="dropdown">
-							<span class="glyphicon glyphicon-user"></span>
-
+							
 							<a ng-if="!isAnonymous()" class="dropdown-toggle toggle-href" data-toggle="dropdown" aria-expanded="false"><username></username> <span class="caret"></span></a>
 
 							<a href ng-if="isAnonymous()" ng-click="login()">Login</a>
+
+							| <a href ng-if="isAnonymous()" data-toggle="modal" data-target="#verifyEmailModal">Register</a>
 							
 							<ul class="dropdown-menu" role="menu">
 								<li role="presentation" class="dropdown-header">Profile</li>
@@ -68,6 +69,10 @@
 						</div>
 						
 					</nav>
+
+					<div ng-controller="RegistrationController">
+						<modal modal-id="verifyEmailModal" modal-view="views/modals/verifyEmailModal.html" modal-header-class="modal-header-primary"></modal>
+					</div>	
 				
 					<div ng-view class="view"></div>
 
@@ -177,6 +182,7 @@
 	    <!-- Controllers -->
 	    <script src="controllers/adminController.js"></script>
 	    <script src="controllers/userRepoController.js"></script>
+	    <script src="controllers/registrationController.js"></script>
     
 	    
 	<!-- endbuild -->

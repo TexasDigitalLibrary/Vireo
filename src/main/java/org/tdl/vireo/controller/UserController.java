@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.MessagingException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -21,9 +23,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.aspect.annotation.Data;
+import edu.tamu.framework.aspect.annotation.Parameters;
 import edu.tamu.framework.aspect.annotation.Shib;
 import edu.tamu.framework.model.ApiResponse;
 import edu.tamu.framework.model.Credentials;
+import edu.tamu.framework.util.EmailUtility;
 
 @Controller
 @ApiMapping("/user")
@@ -38,7 +42,47 @@ public class UserController {
     @Autowired 
     private SimpMessagingTemplate simpMessagingTemplate;
     
+    @Autowired
+    private EmailUtility emailUtility;
+    
     //private static final Logger logger = Logger.getLogger(UserController.class);
+    
+    @ApiMapping(value = "/register")
+    public ApiResponse registration() {
+        
+        System.out.println("\n\nHERE\n\n");
+        
+//        if(dataMap.get("action").equals("VERIFY_EMAIL")) {
+//            
+//            //TODO: use email template. create VireoEmail service to use template with parameters
+//            
+//            String subject = "Vireo 4 Registration";
+//            String content = "Email verification\n\n";
+//            try {
+//                emailUtility.sendEmail(dataMap.get("email"), subject, content);
+//            } catch (MessagingException e) {
+//                return new ApiResponse(ERROR, "Could not send email! " + dataMap.get("email"));
+//            }
+//        }
+        
+        
+        return new ApiResponse(SUCCESS);
+    }
+    
+    @ApiMapping("/login")
+    public ApiResponse login(@Data String data) {
+        
+        Map<String,String> map = new HashMap<String,String>();      
+        try {
+            map = objectMapper.readValue(data, new TypeReference<HashMap<String,String>>(){});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }  
+        
+        
+        
+        return new ApiResponse(SUCCESS);
+    }
     
     @ApiMapping("/credentials")
     @Auth
@@ -78,7 +122,7 @@ public class UserController {
             e.printStackTrace();
         }       
         
-        User user = userRepo.findByEmail(map.get("email"));      
+        User user = userRepo.findByEmail(map.get("email"));
         user.setRole(map.get("role"));      
         userRepo.save(user);
         

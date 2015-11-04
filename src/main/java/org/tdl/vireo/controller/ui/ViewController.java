@@ -33,13 +33,13 @@ public class ViewController {
     public String ui(HttpServletRequest request) throws IOException {
         
         String path = ((String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE)).replace(base, uiPath);
-                        
+
         Resource resource = resourceLoader.getResource("classpath:" + path);
-        
+
         if(resource.exists()) {
             return "forward:/" + path;
         } 
-        
+
         return "forward:/index.html";
     }
     

@@ -1,5 +1,5 @@
 /* 
- * ApplicationController.java 
+ * AuthenticationController.java 
  * 
  * Version: 
  *     $Id$ 
@@ -39,7 +39,7 @@ import edu.tamu.framework.aspect.annotation.SkipAop;
  */
 @RestController
 @RequestMapping("/auth")
-public class ApplicationController {
+public class AuthenticationController {
 	
 	@Autowired
 	private Environment env;

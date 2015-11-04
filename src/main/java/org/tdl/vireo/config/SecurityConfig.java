@@ -16,8 +16,8 @@ public class SecurityConfig extends CoreSecurityConfig {
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 			.csrf()
-				.disable()
-			.headers()
+				.disable();
+/*			.headers()
 				.frameOptions()
 				.disable()
 			.authorizeRequests()				
@@ -33,5 +33,6 @@ public class SecurityConfig extends CoreSecurityConfig {
 				.invalidateHttpSession(true)
 				.deleteCookies("JSESSIONID")
 				.permitAll();
+*/
 	}
 }

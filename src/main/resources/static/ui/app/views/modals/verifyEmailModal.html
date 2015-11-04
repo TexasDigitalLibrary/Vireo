@@ -1,0 +1,27 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		<span class="modal-close" aria-hidden="true">&times;</span>
+	</button>
+	<h3 class="modal-title">Verify Email</h3>
+</div>
+
+<div class="modal-body verifyEmailModal">
+	<div>
+		<form>
+			<div class="input-group">
+				<input id="email" type="netid" class="form-control" placeholder="Enter email" ng-model="email" ng-pattern="word" ng-trim="false" />
+			    <span class="input-group-btn">
+					<button class="btn btn-primary" type="submit" ng-click="verifyEmail(email)">Submit</button>
+			    </span>
+		    </div>
+		</form>
+	</div>
+</div>
+
+<div class="modal-footer">
+	<button type="button" class="btn btn-warning" data-dismiss="modal">cancel</button>
+</div>
+
+
+	
+

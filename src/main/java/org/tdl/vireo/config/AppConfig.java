@@ -1,5 +1,6 @@
 package org.tdl.vireo.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +12,9 @@ import edu.tamu.framework.config.CoreWebAppConfig;
 @Configuration
 @ComponentScan(basePackages = {"org.tdl.vireo.config", "org.tdl.vireo.controller"})
 public class AppConfig extends CoreWebAppConfig {
+    
+    @Value("${app.ui.base}")
+    private String base;
 
     /**
      * Rest interceptor bean.
@@ -31,7 +35,7 @@ public class AppConfig extends CoreWebAppConfig {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(restInterceptor()).addPathPatterns("/**");
+        registry.addInterceptor(restInterceptor()).addPathPatterns("/**").excludePathPatterns(base + "/**");
     }
     
 }
