@@ -22,6 +22,7 @@ public class AppRestInterceptor extends CoreRestInterceptor {
     
     @Override
     public Credentials confirmCreateUser(Credentials shib) {
+        
         User user = userRepo.findByEmail(shib.getEmail());
         
         if(user == null) {

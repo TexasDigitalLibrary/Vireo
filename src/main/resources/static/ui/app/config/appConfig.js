@@ -2,10 +2,8 @@ var appConfig = {
 
 	'version': '4.0.x',
 
-	'allowAnonymous': false,
+	'allowAnonymous': true,
 
-	// Set this to the webService if mocking AuthService and Voyager service
-//	'authService': 'http://labs.library.tamu.edu/authservice',
 	'authService': 'http://localhost:9000/mockauth',
 	'webService': 'http://localhost:9000', 
 

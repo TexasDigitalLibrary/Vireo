@@ -27,7 +27,7 @@ import edu.tamu.framework.model.jwt.JWTtoken;
  *
  */
 @RestController
-@RequestMapping("mockauth")
+@RequestMapping("/mockauth")
 public class MockAuthServiceController {
 
     @Autowired
