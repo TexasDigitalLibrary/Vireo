@@ -14,18 +14,22 @@ vireo.controller('LoginController', function ($controller, $scope, RestApi, Stor
 			data: $scope.account
 		}).then(function(data) {
 
-			StorageService.set("token", data.payload.JWTtoken.tokenAsString);
+			if(typeof data.payload.JWTtoken == 'undefined') {
+				console.log("User does not exist!");
+			}
+			else {
+				StorageService.set("token", data.payload.JWTtoken.tokenAsString);
 
-			delete sessionStorage.role;
+				delete sessionStorage.role;
 
-			User.login();
+				User.login();
 
-			var user = User.get();
+				var user = User.get();
 
-			User.ready().then(function() {
-				StorageService.set("role", user.role);
-			});
-
+				User.ready().then(function() {
+					StorageService.set("role", user.role);
+				});
+			}
 		});
 	};
 
