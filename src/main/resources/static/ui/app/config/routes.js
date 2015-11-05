@@ -7,6 +7,9 @@ vireo.config(['$routeProvider', '$locationProvider', function($routeProvider, $l
 		when('/users', {
 			templateUrl: 'views/users.html'
 		}).
+		when('/register', {
+			templateUrl: 'views/register.html'
+		}).
 		otherwise({
 			redirectTo: '/home',
 			templateUrl: 'views/home.html'

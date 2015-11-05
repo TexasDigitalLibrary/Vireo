@@ -1,15 +1,32 @@
-vireo.controller('RegistrationController', function ($controller, $scope, RestApi) {
+vireo.controller('RegistrationController', function ($controller, $location, $scope, RestApi) {
 	
     angular.extend(this, $controller('AbstractController', {$scope: $scope}));
     
-	$scope.verifyEmail = function(email) {
-		console.log(email);
+    $scope.registration = {
+    	email: '',
+    	token: ''
+    };
 
-		RestApi.get({
+	$scope.verifyEmail = function(email) {
+		RestApi.anonymousGet({
 			controller: 'user',
 			method: 'register?email=' + email
 		}).then(function(data) {
-			console.log(data);		
+			$scope.registration.email = '';
+		});
+	};
+
+	if(typeof $location.search().token != 'undefined') {
+		$scope.registration.token = $location.search().token;
+	}
+
+	$scope.register = function() {
+		RestApi.anonymousGet({
+			controller: 'user',
+			method: 'register',
+			data: $scope.registration
+		}).then(function(data) {
+			$location.path("/home");
 		});
 	};
 

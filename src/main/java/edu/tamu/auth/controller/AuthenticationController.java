@@ -12,7 +12,6 @@ package edu.tamu.auth.controller;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Date;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,37 +54,7 @@ public class AuthenticationController {
 	
 	@Value("${auth.security.jwt_expiration}")
 	private Long expiration;
-	
-	/**
-	 * Anonymous token endpoint. Returns anonymous token.
-	 *
-	 * @param       params    		@RequestParam() Map<String,String>
-	 * @param       headers    		@RequestHeader() Map<String,String>
-	 *
-	 * @return      ModelAndView
-	 *
-	 * @exception   InvalidKeyException
-	 * @exception   NoSuchAlgorithmException
-	 * @exception   IllegalStateException
-	 * @exception   UnsupportedEncodingException
-	 * @exception   JsonProcessingException
-	 * 
-	 */
-	@RequestMapping("/anonymous")
-	@SkipAop
-	@Auth
-	protected String anonymous(@RequestParam() Map<String,String> params, @RequestHeader() Map<String,String> headers) throws InvalidKeyException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException, JsonProcessingException {
-		JWTtoken token = new JWTtoken(secret_key, expiration);
-		token.makeClaim("lastName", "Anonymous");
-		token.makeClaim("firstName", "Role");
-		token.makeClaim("netid", "anonymous");
-		token.makeClaim("uin", "000000000");
-		token.makeClaim("email", "anonymous@tdl.org");
-		token.makeClaim("role", "ROLE_ANONYMOUS");
-		token.makeClaim("exp", String.valueOf(((new Date()).getTime() + 3155692597470L)));
-		return token.getTokenAsString();
-	}
-	
+		
 	/**
 	 * Root endpoint. Returns headers which contain all Shibboleth attributes.
 	 *

@@ -46,6 +46,10 @@
 			<id>tamu-releases</id>
 			<url>https://maven.library.tamu.edu/content/repositories/releases</url>
 		</repository>
+		<repository>
+			<id>tamu-snapshots</id>
+			<url>https://maven.library.tamu.edu/content/repositories/snapshots</url>
+		</repository>
 	</repositories>
 
 	<dependencies>

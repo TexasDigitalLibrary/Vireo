@@ -19,25 +19,28 @@ import javax.persistence.OneToOne;
 
 import org.tdl.vireo.enums.Role;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import edu.tamu.framework.model.CoreUser;
 
 @Entity
 public class User extends BaseEntity implements CoreUser {
     
+    // institutional identifier, brought in with framework
     @Column(nullable = true)
     private Long uin;
 
+    // brought in with framework
     @Column(nullable = true)
     private String netid;
 
     @Column(nullable = false, unique = true)
     private String email;
 
+    // encoded password
     @Column
-    private String passwordHash;
-
-    @Column
-    private String institutionalIdentifier;
+    @JsonIgnore
+    private String password;
 
     @Column(nullable = false)
     private String firstName;
@@ -132,33 +135,20 @@ public class User extends BaseEntity implements CoreUser {
     }
 
     /**
-     * @return the passwordHash
+     * @return the encoded password
      */
-    public String getPasswordHash() {
-        return passwordHash;
+    public String getPassword() {
+        return password;
     }
 
     /**
-     * @param passwordHash
-     *            the passwordHash to set
+     * Stores an encoded password
+     * 
+     * @param password
+     *            the password to set
      */
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
-    }
-
-    /**
-     * @return the institutionalIdentifier
-     */
-    public String getInstitutionalIdentifier() {
-        return institutionalIdentifier;
-    }
-
-    /**
-     * @param institutionalIdentifier
-     *            the institutionalIdentifier to set
-     */
-    public void setInstitutionalIdentifier(String institutionalIdentifier) {
-        this.institutionalIdentifier = institutionalIdentifier;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     /**

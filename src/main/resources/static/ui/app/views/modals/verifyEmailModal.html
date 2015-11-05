@@ -9,9 +9,9 @@
 	<div>
 		<form>
 			<div class="input-group">
-				<input id="email" type="netid" class="form-control" placeholder="Enter email" ng-model="email" ng-pattern="word" ng-trim="false" />
+				<input id="email" type="netid" class="form-control" placeholder="Enter email" ng-model="registration.email" ng-pattern="word" ng-trim="false" />
 			    <span class="input-group-btn">
-					<button class="btn btn-primary" type="submit" ng-click="verifyEmail(email)">Submit</button>
+					<button class="btn btn-primary" type="submit" data-dismiss="modal" ng-click="verifyEmail(registration.email)">Submit</button>
 			    </span>
 		    </div>
 		</form>
@@ -21,7 +21,3 @@
 <div class="modal-footer">
 	<button type="button" class="btn btn-warning" data-dismiss="modal">cancel</button>
 </div>
-
-
-	
-
