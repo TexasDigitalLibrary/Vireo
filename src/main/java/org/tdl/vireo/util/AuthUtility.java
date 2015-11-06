@@ -68,8 +68,8 @@ public class AuthUtility {
         JWTtoken token = new JWTtoken(secret_key, expiration);        
         token.makeClaim("lastName", user.getLastName());
         token.makeClaim("firstName", user.getFirstName());
-        token.makeClaim("netid", "NA");
-        token.makeClaim("uin", "NA");
+        token.makeClaim("netid", user.getNetid());
+        token.makeClaim("uin", String.valueOf(user.getUin()));
         token.makeClaim("email", user.getEmail());
         return token;       
     }

@@ -41,6 +41,8 @@ public class AppWebMvcConfig extends CoreWebMvcConfig {
           .resourceChain(useResourceCache)
           .addResolver(new VersionResourceResolver().addContentVersionStrategy("/**"))
           .addTransformer(new AppCacheManifestTransformer());
+       
+       registry.setOrder(Integer.MAX_VALUE - 2);
     }
     
 }

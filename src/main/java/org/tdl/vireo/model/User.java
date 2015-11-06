@@ -41,6 +41,10 @@ public class User extends BaseEntity implements CoreUser {
     @Column
     @JsonIgnore
     private String password;
+    
+    // lets use uin
+    //@Column
+    //private String institutionalIdentifier;
 
     @Column(nullable = false)
     private String firstName;
@@ -97,7 +101,7 @@ public class User extends BaseEntity implements CoreUser {
      * @param role
      */
     public User(String email, String firstName, String lastName, Role role) {
-        this();
+        this();       
         setEmail(email);
         setFirstName(firstName);
         setLastName(lastName);
@@ -150,6 +154,22 @@ public class User extends BaseEntity implements CoreUser {
     public void setPassword(String password) {
         this.password = password;
     }
+    
+    /**
+     * @return the institutionalIdentifier
+     */
+    //public String getInstitutionalIdentifier() {
+    //    return institutionalIdentifier;
+    //}
+
+    /**
+     * @param institutionalIdentifier
+     *            the institutionalIdentifier to set
+     */
+    //public void setInstitutionalIdentifier(String institutionalIdentifier) {
+    //    this.institutionalIdentifier = institutionalIdentifier;
+    //}
+
 
     /**
      * @return the firstName

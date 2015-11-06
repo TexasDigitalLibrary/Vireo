@@ -54,7 +54,23 @@ public class AuthenticationController {
 	
 	@Value("${auth.security.jwt_expiration}")
 	private Long expiration;
-		
+	
+	/*
+	@RequestMapping("/test-token")
+    @SkipAop
+    protected String anonymous() throws InvalidKeyException, JsonProcessingException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException {
+        JWTtoken token = new JWTtoken(secret_key, expiration);
+        token.makeClaim("lastName", "Jack");
+        token.makeClaim("firstName", "Daniels");
+        token.makeClaim("email", "aggieJack@tamu.edu");
+        token.makeClaim("uin", "123456789");
+        token.makeClaim("netid", "aggieJack");
+        token.makeClaim("role", "ROLE_ADMIN");
+        token.makeClaim("exp", String.valueOf(((new Date()).getTime() + 3155692597470L)));
+        return token.getTokenAsString();
+    }
+    */
+	
 	/**
 	 * Root endpoint. Returns headers which contain all Shibboleth attributes.
 	 *

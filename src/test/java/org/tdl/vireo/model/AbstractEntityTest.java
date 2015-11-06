@@ -44,8 +44,8 @@ import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.runner.OrderedRunner;
 import org.tdl.vireo.service.EntityControlledVocabularyService;
 
-@RunWith(OrderedRunner.class)
 @WebAppConfiguration
+@RunWith(OrderedRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 public abstract class AbstractEntityTest {
 
