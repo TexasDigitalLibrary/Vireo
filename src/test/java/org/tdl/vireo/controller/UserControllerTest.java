@@ -20,6 +20,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -40,7 +41,7 @@ import org.tdl.vireo.model.repo.UserRepo;
 import edu.tamu.framework.mapping.RestRequestMappingHandler;
 
 public class UserControllerTest extends AbstractControllerTest {
-    
+
     @Mock
     private UserRepo userRepo;
     
@@ -91,7 +92,7 @@ public class UserControllerTest extends AbstractControllerTest {
                    return updateAppUser(aggieJack);
                }}
         );
-        
+
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
                 
         brokerChannelInterceptor = new MockChannelInterceptor();
@@ -103,8 +104,7 @@ public class UserControllerTest extends AbstractControllerTest {
 
     @Test
     @Order(value = 1)
-    public void testUserCredentials() throws InterruptedException, IOException {
-        
+    public void testUserCredentialsOverStomp() throws InterruptedException, IOException {        
     	String responseJson = StompRequest("/user/credentials");
         
     	Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
@@ -119,7 +119,24 @@ public class UserControllerTest extends AbstractControllerTest {
         assertEquals("Jack", shib.getFirstName());
         assertEquals("aggieJack", shib.getNetid());
         assertEquals("123456789", shib.getUin());
-        assertEquals("aggieJack@tamu.edu", shib.getEmail());                
+        assertEquals("aggieJack@tamu.edu", shib.getEmail());
+        assertEquals("ROLE_USER", shib.getRole());
+    }
+    
+    @Test
+    @Order(value = 2)
+    public void testUserCredentialsOverRest() throws Exception {    	    	
+        mockMvc.perform(get("/user/credentials")
+        	   .contentType(MediaType.APPLICATION_JSON)
+        	   .header("jwt", jwtString))
+           .andDo(MockMvcResultHandlers.print())
+           .andExpect(status().isOk())           
+           .andExpect(jsonPath("$.payload.Credentials.firstName").value("Jack"))
+           .andExpect(jsonPath("$.payload.Credentials.lastName").value("Daniels"))
+           .andExpect(jsonPath("$.payload.Credentials.netid").value("aggieJack"))
+           .andExpect(jsonPath("$.payload.Credentials.uin").value("123456789"))
+           .andExpect(jsonPath("$.payload.Credentials.email").value("aggieJack@tamu.edu"))           
+           .andExpect(jsonPath("$.payload.Credentials.role").value("ROLE_USER"));
     }
 
 }

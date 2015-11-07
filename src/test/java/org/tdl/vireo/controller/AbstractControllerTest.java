@@ -4,10 +4,10 @@ import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
-
 import java.nio.charset.Charset;
-
 import java.util.HashMap;
 
 import org.junit.Before;
@@ -17,36 +17,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.messaging.support.AbstractSubscribableChannel;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.simp.stomp.StompCommand;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.mock.web.MockServletContext;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
-import org.springframework.messaging.Message;
-import org.springframework.messaging.simp.stomp.StompCommand;
-import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
-import org.springframework.messaging.support.MessageBuilder;
-
-
 import org.tdl.vireo.Application;
 import org.tdl.vireo.mock.interceptor.MockChannelInterceptor;
 import org.tdl.vireo.runner.OrderedRunner;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.framework.mapping.RestRequestMappingHandler;
 import edu.tamu.framework.mapping.WebSocketRequestMappingHandler;
 
 @WebAppConfiguration
 @RunWith(OrderedRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
+@SpringApplicationConfiguration(classes = Application.class) 
 public abstract class AbstractControllerTest {
-    
+	
     protected static final String jwtString = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKYWNrIiwibGFzdE5hbWUiOiJEYW5pZWxzIiwicm9sZSI6IlJPTEVfQURNSU4iLCJuZXRpZCI6ImFnZ2llSmFjayIsInVpbiI6IjEyMzQ1Njc4OSIsImV4cCI6IjQ2MDI1NTQ0NTQ3NDciLCJlbWFpbCI6ImFnZ2llSmFja0B0YW11LmVkdSJ9.4lAD4I7UwPJYzh7lqExU_vOlPs172JxzeML6sl5IMvk";
 
     protected static final byte[] payload = new byte[] {};
-    
+        
     @Autowired 
     protected AbstractSubscribableChannel clientInboundChannel;
 
@@ -57,12 +54,12 @@ public abstract class AbstractControllerTest {
     
     @Autowired
     protected WebApplicationContext context;
-    
+            
     @Autowired
     protected ObjectMapper objectMapper;
-    
+
     protected MockMvc mockMvc;
-    
+        
     @Before
     public abstract void setup();
     
