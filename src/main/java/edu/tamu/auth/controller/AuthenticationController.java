@@ -12,6 +12,7 @@ package edu.tamu.auth.controller;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,13 +56,12 @@ public class AuthenticationController {
 	@Value("${auth.security.jwt_expiration}")
 	private Long expiration;
 	
-	/*
 	@RequestMapping("/test-token")
     @SkipAop
     protected String anonymous() throws InvalidKeyException, JsonProcessingException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException {
         JWTtoken token = new JWTtoken(secret_key, expiration);
-        token.makeClaim("lastName", "Jack");
-        token.makeClaim("firstName", "Daniels");
+        token.makeClaim("firstName", "Jack");
+        token.makeClaim("lastName", "Daniels");        
         token.makeClaim("email", "aggieJack@tamu.edu");
         token.makeClaim("uin", "123456789");
         token.makeClaim("netid", "aggieJack");
@@ -69,7 +69,6 @@ public class AuthenticationController {
         token.makeClaim("exp", String.valueOf(((new Date()).getTime() + 3155692597470L)));
         return token.getTokenAsString();
     }
-    */
 	
 	/**
 	 * Root endpoint. Returns headers which contain all Shibboleth attributes.
