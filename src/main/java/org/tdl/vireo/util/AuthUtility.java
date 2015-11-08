@@ -41,7 +41,7 @@ public class AuthUtility {
     private Long expiration;
 
     public String generateToken(String content, String type) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {        
-        Date now =  new Date();
+    	Date now =  new Date();
         String rawToken = now.getTime() + RAW_DATA_DELIMETER + content + RAW_DATA_DELIMETER + type;
         SecretKeySpec skeySpec = new SecretKeySpec(secret.getBytes(), ENCRYPTION_ALGORITHM);
         Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM);
@@ -61,7 +61,7 @@ public class AuthUtility {
     }
     
     public boolean validatePassword(String password, String encodedPassword) {
-        return passwordEncoder.matches(password, encodedPassword);
+       return passwordEncoder.matches(password, encodedPassword);
     }
     
     public JWTtoken makeToken(User user) throws InvalidKeyException, JsonProcessingException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException {        

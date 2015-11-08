@@ -24,98 +24,55 @@ import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.mock.web.MockServletContext;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import org.tdl.vireo.Application;
-import org.tdl.vireo.mock.config.MockUserRepoConfig;
 import org.tdl.vireo.mock.interceptor.MockChannelInterceptor;
-import org.tdl.vireo.runner.OrderedRunner;
+import org.tdl.vireo.util.AuthUtility;
 
+import edu.tamu.framework.model.Credentials;
 import edu.tamu.framework.mapping.RestRequestMappingHandler;
 import edu.tamu.framework.mapping.WebSocketRequestMappingHandler;
+import edu.tamu.framework.util.EmailUtility;
 
-@WebAppConfiguration
-@RunWith(OrderedRunner.class)
-@SpringApplicationConfiguration(classes = { Application.class })
+@RunWith(MockitoJUnitRunner.class)
 public abstract class AbstractControllerTest {
 	
-    protected static final String jwtString = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKYWNrIiwibGFzdE5hbWUiOiJEYW5pZWxzIiwicm9sZSI6IlJPTEVfQURNSU4iLCJuZXRpZCI6ImFnZ2llSmFjayIsInVpbiI6IjEyMzQ1Njc4OSIsImV4cCI6IjQ2MDI1NTQ0NTQ3NDciLCJlbWFpbCI6ImFnZ2llSmFja0B0YW11LmVkdSJ9.4lAD4I7UwPJYzh7lqExU_vOlPs172JxzeML6sl5IMvk";
-
-    protected static final byte[] payload = new byte[] {};
-        
-    @Autowired 
-    protected AbstractSubscribableChannel clientInboundChannel;
-
-    @Autowired 
-    protected AbstractSubscribableChannel brokerChannel;
-
-    protected MockChannelInterceptor brokerChannelInterceptor;
-    
-    @Autowired
-    protected WebApplicationContext context;
-            
-    @Autowired
-    protected ObjectMapper objectMapper;
-
-    protected MockMvc mockMvc;
-        
-    @Before
-    public abstract void setup();
-    
-    protected void StompConnect() {
-    	StompHeaderAccessor headers = StompHeaderAccessor.create(StompCommand.CONNECT);
-        
-        headers.setSubscriptionId("0");
-        headers.setDestination("/connect");
-        
-        headers.setNativeHeader("id", "0");
-        headers.setNativeHeader("jwt", jwtString);
-                
-        Message<byte[]> message = MessageBuilder.createMessage(payload, headers.getMessageHeaders());
-        
-        clientInboundChannel.send(message);
-    }
-    
-    public String StompRequest(String destination, Map<String, String> data) throws InterruptedException {
+	protected static final String SECRET_PROPERTY_NAME = "secret";
+	protected static final String SECRET_VALUE = "verysecretsecret";
+	
+	protected static final String EXPIRATION_PROPERTY_NAME = "expiration";
+	protected static final Long EXPIRATION_VALUE = 120000L;
+	
+	protected static final String EMAIL_HOST_PROPERTY_NAME = "emailHost";
+	protected static final String EMAIL_HOST_VALUE = "relay.tamu.edu";
+	
+	@Spy
+	protected ObjectMapper objectMapper;
+	
+	@Spy
+	protected BCryptPasswordEncoder passwordEncoder;
+	
+	@Mock
+    private SimpMessagingTemplate simpMessagingTemplate;
+	
+	@Spy @InjectMocks
+	protected AuthUtility authUtility;
+	
+    @Spy
+    protected EmailUtility emailUtility;
     	
-    	String root = destination.split("/")[1];
-    	
-    	String sessionId = String.valueOf(Math.round(Math.random()*100000));
-    	String id = String.valueOf(Math.round(Math.random()*100000));
-
-    	StompHeaderAccessor headers = StompHeaderAccessor.create(StompCommand.SEND);
-        
-        headers.setDestination("/ws" + destination);
-        headers.setSessionId(sessionId);
-        
-        headers.setNativeHeader("id", id);
-        headers.setNativeHeader("jwt", jwtString);
-        
-        if(data != null) {
-        	headers.setNativeHeader("data", objectMapper.convertValue(data, JsonNode.class).toString());
-        }
-        
-        headers.setSessionAttributes(new HashMap<String, Object>());
-                
-        Message<byte[]> message = MessageBuilder.createMessage(payload, headers.getMessageHeaders());
-        
-        brokerChannelInterceptor.setIncludedDestinations("/queue/" + root + "/**");
-        
-        clientInboundChannel.send(message);
-
-        Message<?> reply = brokerChannelInterceptor.awaitMessage(5);
-        
-        assertNotNull(reply);
-                
-        StompHeaderAccessor replyHeaders = StompHeaderAccessor.wrap(reply);
-        
-        assertEquals("/queue" + destination + "-user" + sessionId, replyHeaders.getDestination());
-        
-        return new String((byte[]) reply.getPayload(), Charset.forName("UTF-8"));
-    }
+	protected Credentials TEST_CREDENTIALS = new Credentials();
     
 }

@@ -108,7 +108,7 @@ public class UserController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+                
         String token     = dataMap.get("token");
         String firstName = dataMap.get("firstName");
         String lastName  = dataMap.get("lastName");
@@ -142,7 +142,7 @@ public class UserController {
             logger.debug("Unable to validate token!");
             return new ApiResponse(ERROR, "Unable to generate token!");
         }
-        
+                
         String tokenCreateTime = content[0];
         String email = content[1];
         
@@ -236,7 +236,7 @@ public class UserController {
                 
         user.setRole(map.get("role"));
         
-        userRepo.save(user);
+        user = userRepo.save(user);
         
         Map<String, Object> userMap = new HashMap<String, Object>();
         userMap.put("list", userRepo.findAll());
@@ -244,7 +244,7 @@ public class UserController {
         
         this.simpMessagingTemplate.convertAndSend("/channel/users", new ApiResponse(SUCCESS, userMap));
         
-        return new ApiResponse(SUCCESS);
+        return new ApiResponse(SUCCESS, user);
     }
     
 }

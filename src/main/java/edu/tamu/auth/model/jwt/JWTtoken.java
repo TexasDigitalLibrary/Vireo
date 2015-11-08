@@ -79,9 +79,8 @@ public class JWTtoken {
 		this.header = new JWTheader(new HashMap<String, String>());;
 		this.claim = new JWTclaim(new HashMap<String, String>());
 		this.secret = secret;
-		
-		makeClaim("exp", Objects.toString(Calendar.getInstance().getTime().getTime()+expiration, null));
-	
+				
+		makeClaim("exp", Objects.toString(Calendar.getInstance().getTime().getTime()+expiration, null));	
 	}
 	
 	/**
