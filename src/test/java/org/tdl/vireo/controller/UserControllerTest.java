@@ -31,6 +31,9 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
+import org.junit.runner.RunWith;
+import org.mockito.runners.MockitoJUnitRunner;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
@@ -39,10 +42,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-
 import org.springframework.test.util.ReflectionTestUtils;
-
-import edu.tamu.framework.model.Credentials;
 
 import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.controller.UserController;
@@ -50,9 +50,6 @@ import org.tdl.vireo.enums.Role;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.util.AuthUtility;
-
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import edu.tamu.framework.model.ApiResponse;
 import edu.tamu.framework.model.Credentials;
@@ -67,33 +64,9 @@ public class UserControllerTest extends AbstractControllerTest {
 	
 	@InjectMocks
     private UserController userController;
-    
-    
-    private final static String EMAIL_VERIFICATION_TYPE = "EMAIL_VERIFICATION";
-    
-    private final static String TEST_EMAIL = "test@email.com";
-    
-    private final static String TEST_USER_EMAIL       = "testUser@email.com";
-    private final static String TEST_USER_FIRST_NAME  = "Test";
-    private final static String TEST_USER_LAST_NAME   = "User";
-    private final static String TEST_USER_PASSWORD    = "abc123";
-    private final static String TEST_USER_CONFIRM     = "abc123";
-    private final static String TEST_USER_ROLE        = "ROLE_USER";
-    private final static String TEST_USER_ROLE_UPDATE = "ROLE_ADMIN";
-   
-    private final static String aggieJackEmail = "aggieJack@tamu.edu";
-    private final static String aggieJillEmail = "aggieJill@tamu.edu";
-    private final static String jimInnyEmail = "jimInny@tdl.org";
-    
-    private static User TEST_USER = new User(TEST_USER_EMAIL, TEST_USER_FIRST_NAME, TEST_USER_LAST_NAME, Role.USER);
-    
-    private static User aggieJack = new User(aggieJackEmail, "Jack", "Daniels", Role.ADMINISTRATOR);
-    private static User aggieJill = new User(aggieJillEmail, "Jill", "Daniels", Role.MANAGER);
-    private static User jimInny = new User(jimInnyEmail, "Jim", "Inny", Role.USER);
-    
-    
+
+	
     private static List<User> mockUsers;
-    
     
     public User findByEmail(String email) {    	
         for(User user : mockUsers) {

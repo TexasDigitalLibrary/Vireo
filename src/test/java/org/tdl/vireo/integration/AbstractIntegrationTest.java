@@ -34,13 +34,15 @@ import org.tdl.vireo.Application;
 import org.tdl.vireo.mock.interceptor.MockChannelInterceptor;
 import org.tdl.vireo.runner.OrderedRunner;
 
+import org.tdl.vireo.mock.MockData;
+
 import edu.tamu.framework.mapping.RestRequestMappingHandler;
 import edu.tamu.framework.mapping.WebSocketRequestMappingHandler;
 
 @WebAppConfiguration
 @RunWith(OrderedRunner.class)
 @SpringApplicationConfiguration(classes = { Application.class })
-public abstract class AbstractIntegrationTest {
+public abstract class AbstractIntegrationTest extends MockData {
 	
     protected static final String jwtString = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKYWNrIiwibGFzdE5hbWUiOiJEYW5pZWxzIiwicm9sZSI6IlJPTEVfQURNSU4iLCJuZXRpZCI6ImFnZ2llSmFjayIsInVpbiI6IjEyMzQ1Njc4OSIsImV4cCI6IjQ2MDI1NTQ0NTQ3NDciLCJlbWFpbCI6ImFnZ2llSmFja0B0YW11LmVkdSJ9.4lAD4I7UwPJYzh7lqExU_vOlPs172JxzeML6sl5IMvk";
 

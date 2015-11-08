@@ -55,23 +55,6 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
 		
     @Autowired
     private AuthUtility authUtility;
-
-    
-    private final static String EMAIL_VERIFICATION_TYPE = "EMAIL_VERIFICATION";
-        
-    private final static String TEST_USER_EMAIL       = "testUser@email.com";
-    private final static String TEST_USER_FIRST_NAME  = "Test";
-    private final static String TEST_USER_LAST_NAME   = "User";
-    private final static String TEST_USER_PASSWORD    = "abc123";
-    private final static String TEST_USER_CONFIRM     = "abc123";
-    private final static String TEST_USER_ROLE        = "ROLE_USER";
-    private final static String TEST_USER_ROLE_UPDATE = "ROLE_ADMIN";
-    
-    private User TEST_USER = new User(TEST_USER_EMAIL, TEST_USER_FIRST_NAME, TEST_USER_LAST_NAME, Role.USER);    
-   
-    private final static String aggieJackEmail = "aggieJack@tamu.edu";
-    private final static String aggieJillEmail = "aggieJill@tamu.edu";
-    private final static String jimInnyEmail = "jimInny@tdl.org";
     
     @Before
     public void setup() {

@@ -37,6 +37,8 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import org.tdl.vireo.mock.MockData;
+
 import org.tdl.vireo.Application;
 import org.tdl.vireo.mock.interceptor.MockChannelInterceptor;
 import org.tdl.vireo.util.AuthUtility;
@@ -47,7 +49,7 @@ import edu.tamu.framework.mapping.WebSocketRequestMappingHandler;
 import edu.tamu.framework.util.EmailUtility;
 
 @RunWith(MockitoJUnitRunner.class)
-public abstract class AbstractControllerTest {
+public abstract class AbstractControllerTest extends MockData {
 	
 	protected static final String SECRET_PROPERTY_NAME = "secret";
 	protected static final String SECRET_VALUE = "verysecretsecret";
