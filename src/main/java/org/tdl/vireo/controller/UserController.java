@@ -115,22 +115,22 @@ public class UserController {
         String password  = dataMap.get("password");
         String confirm   = dataMap.get("confirm");
         
-        if ( (firstName == null || firstName.trim().length() == 0) && (lastName == null || lastName.trim().length() == 0) ) {
+        if((firstName == null || firstName.trim().length() == 0) && (lastName == null || lastName.trim().length() == 0)) {
             logger.debug("Either a first or last name is required!");
             return new ApiResponse(ERROR, "Either a first or last name is required!");
         }
         
-        if (password == null || password.trim().length() == 0) {
+        if(password == null || password.trim().length() == 0) {
             logger.debug("Registration requires a password!");
             return new ApiResponse(ERROR, "Registration requires a password!");
         }
         
-        if (password != null && !password.equals(confirm)) {
+        if(password != null && !password.equals(confirm)) {
             logger.debug("The passwords do not match!");
             return new ApiResponse(ERROR, "The passwords do not match!");
         }
         
-        if (password != null && password.trim().length() < 6) {
+        if(password != null && password.trim().length() < 6) {
             logger.debug("Password must be greater than 6 characters!");
             return new ApiResponse(ERROR, "Password must be greater than 6 characters!");
         }
@@ -233,7 +233,9 @@ public class UserController {
         }       
         
         User user = userRepo.findByEmail(map.get("email"));
-        user.setRole(map.get("role"));      
+                
+        user.setRole(map.get("role"));
+        
         userRepo.save(user);
         
         Map<String, Object> userMap = new HashMap<String, Object>();

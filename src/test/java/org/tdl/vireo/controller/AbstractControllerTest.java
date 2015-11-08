@@ -4,11 +4,13 @@ import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -29,6 +31,7 @@ import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
 import org.tdl.vireo.Application;
+import org.tdl.vireo.mock.config.MockUserRepoConfig;
 import org.tdl.vireo.mock.interceptor.MockChannelInterceptor;
 import org.tdl.vireo.runner.OrderedRunner;
 
@@ -37,7 +40,7 @@ import edu.tamu.framework.mapping.WebSocketRequestMappingHandler;
 
 @WebAppConfiguration
 @RunWith(OrderedRunner.class)
-@SpringApplicationConfiguration(classes = Application.class) 
+@SpringApplicationConfiguration(classes = { Application.class })
 public abstract class AbstractControllerTest {
 	
     protected static final String jwtString = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKYWNrIiwibGFzdE5hbWUiOiJEYW5pZWxzIiwicm9sZSI6IlJPTEVfQURNSU4iLCJuZXRpZCI6ImFnZ2llSmFjayIsInVpbiI6IjEyMzQ1Njc4OSIsImV4cCI6IjQ2MDI1NTQ0NTQ3NDciLCJlbWFpbCI6ImFnZ2llSmFja0B0YW11LmVkdSJ9.4lAD4I7UwPJYzh7lqExU_vOlPs172JxzeML6sl5IMvk";
@@ -77,7 +80,7 @@ public abstract class AbstractControllerTest {
         clientInboundChannel.send(message);
     }
     
-    public String StompRequest(String destination) throws InterruptedException {
+    public String StompRequest(String destination, Map<String, String> data) throws InterruptedException {
     	
     	String root = destination.split("/")[1];
     	
@@ -91,6 +94,10 @@ public abstract class AbstractControllerTest {
         
         headers.setNativeHeader("id", id);
         headers.setNativeHeader("jwt", jwtString);
+        
+        if(data != null) {
+        	headers.setNativeHeader("data", objectMapper.convertValue(data, JsonNode.class).toString());
+        }
         
         headers.setSessionAttributes(new HashMap<String, Object>());
                 
