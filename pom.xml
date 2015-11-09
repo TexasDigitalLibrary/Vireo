@@ -28,7 +28,7 @@
 	<parent>
 		<groupId>edu.tamu.framework</groupId>
 		<artifactId>webservice-framework-parent</artifactId>
-		<version>1.1.4</version>
+		<version>2.0.0-SNAPSHOT</version>
 	</parent>
 	
 	<properties>
@@ -46,13 +46,17 @@
 			<id>tamu-releases</id>
 			<url>https://maven.library.tamu.edu/content/repositories/releases</url>
 		</repository>
+		<repository>
+			<id>tamu-snapshots</id>
+			<url>https://maven.library.tamu.edu/content/repositories/snapshots</url>
+		</repository>
 	</repositories>
 
 	<dependencies>
 		<dependency>
 			<groupId>edu.tamu.framework</groupId>
 			<artifactId>webservice-framework-core</artifactId>
-			<version>1.1.4</version>
+			<version>2.0.0-SNAPSHOT</version>
 		</dependency>
 	
 		<!-- Spring standalone JDK tools for JSP runtime compile (to avoid Embedded Jetty error on JSP compile at runtime) -->

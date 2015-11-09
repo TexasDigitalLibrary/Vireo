@@ -8,8 +8,8 @@ import org.tdl.vireo.Application;
 import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.runner.OrderedRunner;
 
-@RunWith(OrderedRunner.class)
 @WebAppConfiguration
+@RunWith(OrderedRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 public class EntityCVServiceTest {
 

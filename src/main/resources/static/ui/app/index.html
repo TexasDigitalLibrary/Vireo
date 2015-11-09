@@ -17,7 +17,6 @@
 	
 	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
 
-	<link rel="stylesheet" href="resources/styles/main.css">
 	<link rel="stylesheet" href="resources/styles/app.css">	
 
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
@@ -33,42 +32,76 @@
 	<!-- Content placed here will appear on every page -->
 	<main>
 
-		<tamuheader title="Vireo"></tamuheader>
+		<header class="container-fluid global-nav">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">					
+						<nav class="global-nav pull-right hidden-xs">
+							<ul class="nav global-nav pull-right hidden-xs">
+					        	<li><a href="#">Link A</a></li>
+					          	<li><a href="#">Link B</a></li>
+					          	<li><a href="#">Link C</a></li>
+					        </ul>
+						</nav>
+					</div>
+				</div>
+			</div>
+		</header>
+
+		<header class="container-fluid site-title">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-5">
+						<img src="resources/images/logo.gif"></img>
+					</div>
+					<div class="col-lg-7">
+						<div class="site"><h3><a href="home">Vireo</a></h3></div>
+					</div>
+				</div>
+			</div>
+		</header>
+
 
 		<alerts types="WARNING, ERROR"></alerts>
 				
 		<div class="container-fluid">
 			<div class="container">
-				<div class="col-md-12 appContent" ng-controller="AdminController">
+				<div class="col-md-12 appContent">
 
-					<nav class="pull-right userMenu" ng-controller="AuthenticationController">
+					<nav class="pull-right userMenu" ng-controller="ModalController">
 						
-						<div class="dropdown">
-							<span class="glyphicon glyphicon-user"></span>
-
+						<div class="dropdown" ng-controller="AuthenticationController">
+							
+							<modal modal-id="verifyEmailModal" modal-view="views/modals/verifyEmailModal.html" modal-header-class="modal-header-primary"></modal>					
+							<modal modal-id="loginModal" modal-view="views/modals/loginModal.html" modal-header-class="modal-header-primary"></modal>
+							
 							<a ng-if="!isAnonymous()" class="dropdown-toggle toggle-href" data-toggle="dropdown" aria-expanded="false"><username></username> <span class="caret"></span></a>
-
-							<a href ng-if="isAnonymous()" ng-click="login()">Login</a>
+							
+							<span ng-if="isAnonymous()">
+								<a href ng-click="showModal('loginModal')">Login</a>
+								<span> | </span>
+								<a href ng-click="showModal('verifyEmailModal')">Register</a>
+							</span>
 							
 							<ul class="dropdown-menu" role="menu">
 								<li role="presentation" class="dropdown-header">Profile</li>
 								<li><a role="menuitem" href="myview">My View</a></li>
 								<li><a role="menuitem" href ng-click="logout()">Logout</a></li>
 
-								<li ng-if="isAdmin() || isManager() || isAssuming() == 'true'" role="presentation" class="divider"></li>
-								<li ng-if="isAdmin() || isManager() || isAssuming() == 'true'" role="presentation" class="dropdown-header">Manager Actions</li>
-								<li ng-if="(isAdmin() || isManager()) == true">
+								<li ng-if="isAdmin() || isManager()" role="presentation" class="divider"></li>
+								<li ng-if="isAdmin() || isManager()" role="presentation" class="dropdown-header">Manager Actions</li>
+								<li ng-if="isAdmin() || isManager()">
 									<a role="menuitem" href="users">Manage Users</a>
 								</li>
 
-								<li ng-if="isAdmin() || isAssuming() == 'true'" role="presentation" class="divider"></li>
-								<li ng-if="isAdmin() || isAssuming() == 'true'" role="presentation" class="dropdown-header">Admin Actions</li>								
+								<li ng-if="isAdmin()" role="presentation" class="divider"></li>
+								<li ng-if="isAdmin()" role="presentation" class="dropdown-header">Admin Actions</li>								
 								
 							</ul>
 						</div>
 						
 					</nav>
-				
+					
 					<div ng-view class="view"></div>
 
 					<footer>
@@ -81,7 +114,34 @@
 
 	</main>
 
-	<tamufooter></tamufooter>
+	
+
+	<footer class="container-fluid footer">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<ul class="inline-list">
+						<li>© Vireo</li>
+						<li>
+							<a href="http://www.tamu.edu">Texas A&amp;M University</a>
+						</li>
+						<li>
+							<a href="#">Webmaster</a>
+						</li>
+						<li>
+							<a href="#">Legal</a>
+						</li>
+						<li>
+							<a href="#">Comments</a>
+						</li>
+						<li>
+							<a href="#">Accessibility</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</footer>
 
 
 	<!-- In production use: <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script> -->
@@ -177,6 +237,9 @@
 	    <!-- Controllers -->
 	    <script src="controllers/adminController.js"></script>
 	    <script src="controllers/userRepoController.js"></script>
+	    <script src="controllers/registrationController.js"></script>
+	    <script src="controllers/loginController.js"></script>
+	    <script src="controllers/modalController.js"></script>
     
 	    
 	<!-- endbuild -->

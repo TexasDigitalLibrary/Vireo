@@ -9,15 +9,21 @@
  */
 package edu.tamu.auth.model.jwt;
 
+import static org.apache.commons.codec.binary.Base64.encodeBase64URLSafeString;
+
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import javax.crypto.Mac;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -79,9 +85,8 @@ public class JWTtoken {
 		this.header = new JWTheader(new HashMap<String, String>());;
 		this.claim = new JWTclaim(new HashMap<String, String>());
 		this.secret = secret;
-		
-		makeClaim("exp", Objects.toString(Calendar.getInstance().getTime().getTime()+expiration, null));
-	
+				
+		makeClaim("exp", Objects.toString(Calendar.getInstance().getTime().getTime()+expiration, null));	
 	}
 	
 	/**
@@ -96,30 +101,34 @@ public class JWTtoken {
 	}
 	
 	/**
-	 * Retrieve token as a String.
-	 *
-	 * @return      String
-	 *
-	 * @exception   InvalidKeyException
-	 * @exception   NoSuchAlgorithmException
-	 * @exception   IllegalStateException
-	 * @exception   UnsupportedEncodingException
-	 * @exception   JsonProcessingException
-	 * 
-	 */
-	public String getTokenAsString() throws InvalidKeyException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException, JsonProcessingException {
-		
-		Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
-		SecretKeySpec secret_key = new SecretKeySpec(secret.getBytes(), "HmacSHA256");
-		sha256_HMAC.init(secret_key);
-		
-		JWTservice jwtService = new JWTservice();
-		
-		String encodedHeader = jwtService.encodeJSON(header.getHeaderAsJSON());
-		String encodedClaim = jwtService.encodeJSON(claim.getClaimAsJSON());
-				
-		return encodedHeader+"."+encodedClaim+"."+jwtService.hashSignature(encodedHeader+"."+encodedClaim, secret);
-				
-	}
+     * Retrieve token as a String.
+     *
+     * @return      String
+     * @throws JsonProcessingException 
+     * @throws NoSuchAlgorithmException 
+     * @throws InvalidKeyException 
+     * @throws NoSuchPaddingException 
+     *
+     * @throws BadPaddingException 
+     * @throws IllegalBlockSizeException 
+     * 
+     */
+    public String getTokenAsString() throws JsonProcessingException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
+            
+        JWTservice jwtService = new JWTservice();
+        
+        String encodedHeader = jwtService.encodeJSON(header.getHeaderAsJSON());
+        String encodedClaim = jwtService.encodeJSON(claim.getClaimAsJSON());
+        
+        String jwt = encodedHeader+"."+encodedClaim+"."+jwtService.hashSignature(encodedHeader+"."+encodedClaim, secret);
+        
+        Key key = new SecretKeySpec(secret.getBytes(), "AES");
+        Cipher c = Cipher.getInstance("AES");
+        c.init(Cipher.ENCRYPT_MODE, key);
+
+        byte[] encVal = c.doFinal(jwt.getBytes());
+        
+        return encodeBase64URLSafeString(encVal);                
+    }
 	
 }
