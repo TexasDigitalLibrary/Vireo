@@ -33,8 +33,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SpringApplicationConfiguration(classes = { Application.class })
 public abstract class AbstractIntegrationTest extends MockData {
 	
-    protected static final String jwtString = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKYWNrIiwibGFzdE5hbWUiOiJEYW5pZWxzIiwicm9sZSI6IlJPTEVfQURNSU4iLCJuZXRpZCI6ImFnZ2llSmFjayIsInVpbiI6IjEyMzQ1Njc4OSIsImV4cCI6IjQ2MDI1NTQ0NTQ3NDciLCJlbWFpbCI6ImFnZ2llSmFja0B0YW11LmVkdSJ9.4lAD4I7UwPJYzh7lqExU_vOlPs172JxzeML6sl5IMvk";
-
+    protected static final String jwtString = "ToY1Y3O6o-iESvV_c3NR3XHvi1vqfYtLIB83HC-d80_qqS98EzfWfPxkP2faL-tEIu9b9wm-q0-T3aNzBWxphQ7ZVxnJSYvtBLzEAh7WVYbezyA3Dgj-nMbsUypCujnuEa0fDwnXXSDr2DRjw4JakMACdPZifN6hcz5-oYFqgWFOPvDE3Gr28ko4XpExXcRaZxYv0p4KW7ISquenB9clu6aKjoKrNwbXqHQvXyk_uFD7GmNuG7RB5Je3jrS0a4q5GSdRyegcoxbGGsNGTKx1f7-f6U4pAHD6fYUmoheZag975Py1Bk8PtUmI8rFWbh8YYPhnnOjGIdJ9qMBFC4-hmVi5hVGhqRdIX9VFeQjxP9gHGqQf5uihmJ8WUY9jh1IP";
+    
     protected static final byte[] payload = new byte[] {};
         
     @Autowired 

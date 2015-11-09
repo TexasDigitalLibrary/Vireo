@@ -12,8 +12,12 @@ package edu.tamu.auth.controller;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Date;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Map;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -56,9 +60,10 @@ public class AuthenticationController {
 	@Value("${auth.security.jwt_expiration}")
 	private Long expiration;
 	
+	/*
 	@RequestMapping("/test-token")
     @SkipAop
-    protected String anonymous() throws InvalidKeyException, JsonProcessingException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException {
+    protected String anonymous() throws InvalidKeyException, JsonProcessingException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
         JWTtoken token = new JWTtoken(secret_key, expiration);
         token.makeClaim("firstName", "Jack");
         token.makeClaim("lastName", "Daniels");        
@@ -69,6 +74,7 @@ public class AuthenticationController {
         token.makeClaim("exp", String.valueOf(((new Date()).getTime() + 3155692597470L)));
         return token.getTokenAsString();
     }
+    */
 	
 	/**
 	 * Root endpoint. Returns headers which contain all Shibboleth attributes.
@@ -86,28 +92,40 @@ public class AuthenticationController {
 	}
 	
 	/**
-	 * Token endpoint. Returns a token with credentials from Shibboleth in payload.
-	 *
-	 * @param       params    		@RequestParam() Map<String,String>
-	 * @param       headers    		@RequestHeader() Map<String,String>
-	 *
-	 * @return      ModelAndView
-	 *
-	 * @exception   InvalidKeyException
-	 * @exception   NoSuchAlgorithmException
-	 * @exception   IllegalStateException
-	 * @exception   UnsupportedEncodingException
-	 * @exception   JsonProcessingException
-	 * 
-	 */
-	@RequestMapping("/token")
-	@SkipAop
-	@Auth
-	public ModelAndView token(@RequestParam() Map<String,String> params, @RequestHeader() Map<String,String> headers) throws InvalidKeyException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException, JsonProcessingException {
-		String referer = params.get("referer");
-		if(referer == null) System.err.println("No referer in header!!");
-		return new ModelAndView("redirect:" + referer + "?jwt=" + makeToken(headers).getTokenAsString());
-	}
+     * Token endpoint. Returns a token with credentials from Shibboleth in payload.
+     *
+     * @param       params          @RequestParam() Map<String,String>
+     * @param       headers         @RequestHeader() Map<String,String>
+     *
+     * @return      ModelAndView
+     *
+     * @exception   InvalidKeyException
+     * @exception   NoSuchAlgorithmException
+     * @exception   IllegalStateException
+     * @exception   UnsupportedEncodingException
+     * @exception   JsonProcessingException
+     * @throws BadPaddingException 
+     * @throws IllegalBlockSizeException 
+     * @throws NoSuchPaddingException 
+     * @throws InvalidKeySpecException 
+     * 
+     */
+    @RequestMapping("/token")
+    public ModelAndView token(@RequestParam() Map<String,String> params, @RequestHeader() Map<String,String> headers) {
+        String referer = params.get("referer");
+        if(referer == null) System.err.println("No referer in header!!");
+        
+        ModelAndView tokenResponse = null;
+        try {
+            tokenResponse=  new ModelAndView("redirect:" + referer + "?jwt=" + makeToken(headers).getTokenAsString());
+        } catch (InvalidKeyException | JsonProcessingException | NoSuchAlgorithmException | NoSuchPaddingException
+                | IllegalBlockSizeException | BadPaddingException | IllegalStateException
+                | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        
+        return tokenResponse;
+    }
 	
 	/**
 	 * Refresh endpoint. Returns a new token with credentials from Shibboleth in payload.
@@ -150,7 +168,7 @@ public class AuthenticationController {
 		for(String k : shibKeys) {
 			String p = headers.get(env.getProperty("shib."+k, ""));
 			token.makeClaim(k, p);
-			System.out.println("Adding " + k +": " + p + " to JWT.");
+			//System.out.println("Adding " + k +": " + p + " to JWT.");
 		}
 		return token;		
 	}
