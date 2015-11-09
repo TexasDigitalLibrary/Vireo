@@ -16,7 +16,7 @@ public class AppConfig extends CoreWebAppConfig {
     
     @Value("${app.ui.base}")
     private String base;
-
+    
     /**
      * Rest interceptor bean.
      *
