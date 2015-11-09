@@ -51,30 +51,14 @@ public class AuthenticationController {
 	@Value("${auth.security.secret_key}")
     private String secret_key;
 	
+	@Value("${auth.security.jwt_expiration}")
+    private Long expiration;
+	
 	@Value("${auth.shib.keys}")
 	private String[] shibKeys;
 	
 	@Value("${auth.authority.admins}")
 	private String[] admins;
-	
-	@Value("${auth.security.jwt_expiration}")
-	private Long expiration;
-	
-	/*
-	@RequestMapping("/test-token")
-    @SkipAop
-    protected String anonymous() throws InvalidKeyException, JsonProcessingException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
-        JWTtoken token = new JWTtoken(secret_key, expiration);
-        token.makeClaim("firstName", "Jack");
-        token.makeClaim("lastName", "Daniels");        
-        token.makeClaim("email", "aggieJack@tamu.edu");
-        token.makeClaim("uin", "123456789");
-        token.makeClaim("netid", "aggieJack");
-        token.makeClaim("role", "ROLE_ADMIN");
-        token.makeClaim("exp", String.valueOf(((new Date()).getTime() + 3155692597470L)));
-        return token.getTokenAsString();
-    }
-    */
 	
 	/**
 	 * Root endpoint. Returns headers which contain all Shibboleth attributes.
@@ -118,9 +102,7 @@ public class AuthenticationController {
         ModelAndView tokenResponse = null;
         try {
             tokenResponse=  new ModelAndView("redirect:" + referer + "?jwt=" + makeToken(headers).getTokenAsString());
-        } catch (InvalidKeyException | JsonProcessingException | NoSuchAlgorithmException | NoSuchPaddingException
-                | IllegalBlockSizeException | BadPaddingException | IllegalStateException
-                | UnsupportedEncodingException e) {
+        } catch (InvalidKeyException | JsonProcessingException | NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException | IllegalStateException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         
@@ -172,5 +154,21 @@ public class AuthenticationController {
 		}
 		return token;		
 	}
+	
+	/*
+    @RequestMapping("/test-token")
+    @SkipAop
+    protected String anonymous() throws InvalidKeyException, JsonProcessingException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
+        JWTtoken token = new JWTtoken(secret_key, expiration);
+        token.makeClaim("firstName", "Jack");
+        token.makeClaim("lastName", "Daniels");        
+        token.makeClaim("email", "aggieJack@tamu.edu");
+        token.makeClaim("uin", "123456789");
+        token.makeClaim("netid", "aggieJack");
+        token.makeClaim("role", "ROLE_ADMIN");
+        token.makeClaim("exp", String.valueOf(((new Date()).getTime() + 3155692597470L)));
+        return token.getTokenAsString();
+    }
+    */
 	
 }

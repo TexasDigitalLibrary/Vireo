@@ -5,6 +5,10 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import edu.tamu.framework.aspect.annotation.SkipAop;
-import edu.tamu.framework.model.jwt.JWTtoken;
+import edu.tamu.auth.model.jwt.JWTtoken;
 
 /** 
  * 
@@ -35,6 +39,9 @@ public class MockAuthServiceController {
         
     @Value("${app.security.jwt.secret_key}")
     private String secret_key;
+    
+    @Value("${auth.security.jwt_expiration}")
+    private Long expiration;
     
     @Value("${shib.keys}")
     private String[] shibKeys;
@@ -57,14 +64,26 @@ public class MockAuthServiceController {
      * @exception   IllegalStateException
      * @exception   UnsupportedEncodingException
      * @exception   JsonProcessingException
+     * @throws BadPaddingException 
+     * @throws IllegalBlockSizeException 
+     * @throws NoSuchPaddingException 
      * 
      */
     @RequestMapping("/token")
     @SkipAop
-    public ModelAndView token(@RequestParam() Map<String,String> params, @RequestHeader() Map<String,String> headers) throws InvalidKeyException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException, JsonProcessingException {
+    public ModelAndView token(@RequestParam() Map<String,String> params, @RequestHeader() Map<String,String> headers) throws InvalidKeyException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException, JsonProcessingException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
+        
         String referer = params.get("referer");
-        if(referer == null) System.err.println("No referer in query string!!");
-        return new ModelAndView("redirect:" + referer + "?jwt=" + makeToken(params.get("mock"), headers).getTokenAsString());
+        if(referer == null) System.err.println("No referer in header!!");
+        
+        ModelAndView tokenResponse = null;
+        try {
+            tokenResponse=  new ModelAndView("redirect:" + referer + "?jwt=" + makeToken(params.get("mock"), headers).getTokenAsString());
+        } catch (InvalidKeyException | JsonProcessingException | NoSuchAlgorithmException | IllegalStateException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        
+        return tokenResponse;
     }
     
     /**
@@ -109,7 +128,7 @@ public class MockAuthServiceController {
         }
         logger.info("Creating token for mock " + mockUser);
         
-        JWTtoken token = new JWTtoken(secret_key);
+        JWTtoken token = new JWTtoken(secret_key, expiration);
         
         if(mockUser.equals("assumed")) {
             for(String k : shibKeys) {
