@@ -23,8 +23,8 @@ public abstract class MockData {
 	protected final static String aggieJillEmail = "aggieJill@tamu.edu";
 	protected final static String jimInnyEmail = "jimInny@tdl.org";
 	
-	protected static User aggieJack = new User(aggieJackEmail, "Jack", "Daniels", Role.ADMINISTRATOR);
-	protected static User aggieJill = new User(aggieJillEmail, "Jill", "Daniels", Role.MANAGER);
-	protected static User jimInny = new User(jimInnyEmail, "Jim", "Inny", Role.USER);
+	protected User aggieJack = new User(aggieJackEmail, "Jack", "Daniels", Role.ADMINISTRATOR);
+	protected User aggieJill = new User(aggieJillEmail, "Jill", "Daniels", Role.MANAGER);
+	protected User jimInny = new User(jimInnyEmail, "Jim", "Inny", Role.USER);
     
 }

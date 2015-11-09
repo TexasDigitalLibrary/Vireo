@@ -39,44 +39,42 @@
 				
 		<div class="container-fluid">
 			<div class="container">
-				<div class="col-md-12 appContent" ng-controller="AdminController">
+				<div class="col-md-12 appContent">
 
-					<nav class="pull-right userMenu" ng-controller="AuthenticationController">
+					<nav class="pull-right userMenu" >
 						
-						<div class="dropdown">
+						<div class="dropdown" ng-controller="AuthenticationController">
+							
+							<modal modal-id="verifyEmailModal" modal-view="views/modals/verifyEmailModal.html" modal-header-class="modal-header-primary"></modal>					
+							<modal modal-id="loginModal" modal-view="views/modals/loginModal.html" modal-header-class="modal-header-primary"></modal>
 							
 							<a ng-if="!isAnonymous()" class="dropdown-toggle toggle-href" data-toggle="dropdown" aria-expanded="false"><username></username> <span class="caret"></span></a>
-
-							<a href ng-if="isAnonymous()" data-toggle="modal" data-target="#loginModal">Login</a>
-							<span ng-if="isAnonymous()"> | </span>
-							<a href ng-if="isAnonymous()" data-toggle="modal" data-target="#verifyEmailModal">Register</a>
+							
+							<span ng-if="isAnonymous()">
+								<a href data-toggle="modal" data-target="#loginModal">Login</a>
+								<span> | </span>
+								<a href data-toggle="modal" data-target="#verifyEmailModal">Register</a>
+							</span>
 							
 							<ul class="dropdown-menu" role="menu">
 								<li role="presentation" class="dropdown-header">Profile</li>
 								<li><a role="menuitem" href="myview">My View</a></li>
 								<li><a role="menuitem" href ng-click="logout()">Logout</a></li>
 
-								<li ng-if="isAdmin() || isManager() || isAssuming() == 'true'" role="presentation" class="divider"></li>
-								<li ng-if="isAdmin() || isManager() || isAssuming() == 'true'" role="presentation" class="dropdown-header">Manager Actions</li>
-								<li ng-if="(isAdmin() || isManager()) == true">
+								<li ng-if="isAdmin() || isManager()" role="presentation" class="divider"></li>
+								<li ng-if="isAdmin() || isManager()" role="presentation" class="dropdown-header">Manager Actions</li>
+								<li ng-if="isAdmin() || isManager()">
 									<a role="menuitem" href="users">Manage Users</a>
 								</li>
 
-								<li ng-if="isAdmin() || isAssuming() == 'true'" role="presentation" class="divider"></li>
-								<li ng-if="isAdmin() || isAssuming() == 'true'" role="presentation" class="dropdown-header">Admin Actions</li>								
+								<li ng-if="isAdmin()" role="presentation" class="divider"></li>
+								<li ng-if="isAdmin()" role="presentation" class="dropdown-header">Admin Actions</li>								
 								
 							</ul>
 						</div>
 						
 					</nav>
-
-					<div ng-controller="RegistrationController">
-						<modal modal-id="verifyEmailModal" modal-view="views/modals/verifyEmailModal.html" modal-header-class="modal-header-primary"></modal>
-					</div>
-					<div ng-controller="LoginController">
-						<modal modal-id="loginModal" modal-view="views/modals/loginModal.html" modal-header-class="modal-header-primary"></modal>
-					</div>
-				
+					
 					<div ng-view class="view"></div>
 
 					<footer>

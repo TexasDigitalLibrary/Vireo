@@ -6,7 +6,7 @@
 </div>
 
 <div class="modal-body verifyEmailModal">
-	<div>
+	<div ng-controller="RegistrationController">
 		<form>
 			<div class="input-group">
 				<input id="email" type="netid" class="form-control" placeholder="Enter email" ng-model="registration.email" ng-pattern="word" ng-trim="false" />

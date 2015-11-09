@@ -1,4 +1,4 @@
-vireo.controller('LoginController', function ($controller, $scope, RestApi, StorageService, User) {
+vireo.controller('LoginController', function ($controller, $location, $scope, RestApi, StorageService, User) {
 	
     angular.extend(this, $controller('AbstractController', {$scope: $scope}));
     
