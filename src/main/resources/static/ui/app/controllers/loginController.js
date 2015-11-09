@@ -9,7 +9,7 @@ vireo.controller('LoginController', function ($controller, $location, $scope, Re
 
 	$scope.login = function() {
 		RestApi.anonymousGet({
-			controller: 'user',
+			controller: 'auth',
 			method: 'login',
 			data: $scope.account
 		}).then(function(data) {

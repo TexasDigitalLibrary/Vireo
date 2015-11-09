@@ -9,7 +9,7 @@ vireo.controller('RegistrationController', function ($controller, $location, $sc
 
 	$scope.verifyEmail = function(email) {
 		RestApi.anonymousGet({
-			controller: 'user',
+			controller: 'auth',
 			method: 'register?email=' + email
 		}).then(function(data) {
 			$scope.registration.email = '';
@@ -22,7 +22,7 @@ vireo.controller('RegistrationController', function ($controller, $location, $sc
 
 	$scope.register = function() {
 		RestApi.anonymousGet({
-			controller: 'user',
+			controller: 'auth',
 			method: 'register',
 			data: $scope.registration
 		}).then(function(data) {

@@ -25,15 +25,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import edu.tamu.framework.enums.ApiResponseType;
 import edu.tamu.framework.model.ApiResponse;
-import edu.tamu.framework.model.Credentials;
 
-public class UserControllerTest extends AbstractControllerTest {
+public class AuthControllerTest extends AbstractControllerTest {
 
 	@Mock
     private UserRepo userRepo;
 	
 	@InjectMocks
-    private UserController userController;
+    private AuthController authController;
 
 	
     private static List<User> mockUsers;
@@ -105,66 +104,34 @@ public class UserControllerTest extends AbstractControllerTest {
                }}
         );
     }
-
+   
     @Test
-    public void testUserCredentials() {        
-    	ApiResponse response = userController.credentials(TEST_CREDENTIALS);
+    @SuppressWarnings("unchecked")
+    public void testRegisterEmail() {    	
+    	Map<String, String[]> parameters = new HashMap<String, String[]>();
     	
-    	Credentials credentials = (Credentials) response.getPayload().get("Credentials");
+    	parameters.put("email", new String[] {TEST_EMAIL});
     	
-    	assertEquals(ApiResponseType.SUCCESS, response.getMeta().getType());
-    	assertEquals(TEST_USER_LAST_NAME, credentials.getLastName());
-        assertEquals(TEST_USER_FIRST_NAME, credentials.getFirstName());
-        assertEquals(TEST_USER_EMAIL, credentials.getEmail());
-        assertEquals(TEST_USER_ROLE, credentials.getRole());
-    }
-
-    @Test
-    public void testAllUser() {
-    	
-    	ApiResponse response = userController.allUsers();
-
-    	@SuppressWarnings("unchecked")
-        List<User> allUsers = (List<User>) ((Map<String, Object>) response.getPayload().get("HashMap")).get("list");
-    	
+    	ApiResponse response = authController.registration(null, parameters);
+    	 
     	assertEquals(ApiResponseType.SUCCESS, response.getMeta().getType());
     	
-    	assertEquals(4, allUsers.size());
-    	
-    	for(User user : allUsers) {
-    		switch(user.getEmail()) {
-	    		case TEST_USER_EMAIL: {
-					assertEquals(TEST_USER_FIRST_NAME, user.getFirstName());
-					assertEquals(TEST_USER_LAST_NAME, user.getLastName());					 
-					assertEquals(TEST_USER_ROLE, user.getRole());
-				}; break;
-    			case TEST_USER2_EMAIL: {
-    				assertEquals(TEST_USER2.getFirstName(), user.getFirstName());
-    				assertEquals(TEST_USER2.getLastName(), user.getLastName());
-    				assertEquals(TEST_USER2.getRole(), user.getRole());
-    			}; break;
-    			case TEST_USER3_EMAIL: {
-    				assertEquals(TEST_USER3.getFirstName(), user.getFirstName());
-    				assertEquals(TEST_USER3.getLastName(), user.getLastName());					 
-    				assertEquals(TEST_USER3.getRole(), user.getRole());
-    			}; break;
-    			case TEST_USER4_EMAIL: {
-    				assertEquals(TEST_USER4.getFirstName(), user.getFirstName());
-    				assertEquals(TEST_USER4.getLastName(), user.getLastName());
-    				assertEquals(TEST_USER4.getRole(), user.getRole());
-    			}; break;
-    		}
-    	}
+    	assertEquals(TEST_EMAIL, ((String[]) ((Map<String, String[]>) response.getPayload().get("HashMap")).get("email"))[0]);
     }
-	 
+    
     @Test
-    public void testUpdateRole() throws Exception {
-    	Map<String, String> data = new HashMap<String, String>();
+    public void testRegister() throws Exception {
+    	String token = authUtility.generateToken(TEST_USER_EMAIL, EMAIL_VERIFICATION_TYPE);    	
+    	Map<String, String> data = new HashMap<String, String>();    	
+    	data.put("token", token);
     	data.put("email", TEST_USER_EMAIL);
-    	data.put("role", TEST_USER_ROLE_UPDATE);
+    	data.put("firstName", TEST_USER_FIRST_NAME);
+    	data.put("lastName", TEST_USER_LAST_NAME);
+    	data.put("password", TEST_USER_PASSWORD);
+    	data.put("confirm", TEST_USER_CONFIRM);
     	
-    	ApiResponse response = userController.updateRole(objectMapper.convertValue(data, JsonNode.class).toString());
-    	
+    	ApiResponse response = authController.registration(objectMapper.convertValue(data, JsonNode.class).toString(), new HashMap<String, String[]>());
+   	 
     	User user = (User) response.getPayload().get("User");
     	
     	assertEquals(ApiResponseType.SUCCESS, response.getMeta().getType());
@@ -172,7 +139,21 @@ public class UserControllerTest extends AbstractControllerTest {
     	assertEquals(TEST_USER_FIRST_NAME, user.getFirstName());
     	assertEquals(TEST_USER_LAST_NAME, user.getLastName());
     	assertEquals(TEST_USER_EMAIL, user.getEmail());
-    	assertEquals(TEST_USER_ROLE_UPDATE, user.getRole());
+    	assertEquals(TEST_USER_ROLE, user.getRole());
     }
-	 	 
+    
+    @Test
+    public void testLogin() throws Exception {
+
+    	testRegister();
+    	
+    	Map<String, String> data = new HashMap<String, String>();
+    	data.put("email", TEST_USER_EMAIL);
+    	data.put("password", TEST_USER_PASSWORD);
+    	
+    	ApiResponse response = authController.login(objectMapper.convertValue(data, JsonNode.class).toString());
+    	
+    	assertEquals(ApiResponseType.SUCCESS, response.getMeta().getType());
+    }
+    	 	 
 }

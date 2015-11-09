@@ -32,7 +32,7 @@ import edu.tamu.auth.model.jwt.JWTtoken;
  */
 @RestController
 @RequestMapping("/mockauth")
-public class MockAuthServiceController {
+public class MockTokenController {
 
     @Autowired
     private Environment env;
@@ -49,7 +49,7 @@ public class MockAuthServiceController {
     @Value("${app.authority.admins}")
     private String[] admins;
 
-    private static final Logger logger = Logger.getLogger(MockAuthServiceController.class);
+    private static final Logger logger = Logger.getLogger(MockTokenController.class);
     
     /**
      * Token endpoint. Returns a token with credentials from Shibboleth in payload.

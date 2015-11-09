@@ -43,7 +43,7 @@ import edu.tamu.framework.aspect.annotation.SkipAop;
  */
 @RestController
 @RequestMapping("/auth")
-public class AuthenticationController {
+public class TokenController {
 	
 	@Autowired
 	private Environment env;
