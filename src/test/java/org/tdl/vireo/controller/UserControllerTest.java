@@ -1,61 +1,31 @@
 package org.tdl.vireo.controller;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*; 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
 
 import java.util.Arrays;
-import java.io.IOException;
-
-import java.nio.charset.Charset;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.Spy;
-import org.mockito.Mockito;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
 import org.springframework.test.util.ReflectionTestUtils;
-
-import org.tdl.vireo.annotations.Order;
-import org.tdl.vireo.controller.UserController;
 import org.tdl.vireo.enums.Role;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
-import org.tdl.vireo.util.AuthUtility;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
+import edu.tamu.framework.enums.ApiResponseType;
 import edu.tamu.framework.model.ApiResponse;
 import edu.tamu.framework.model.Credentials;
-import edu.tamu.framework.mapping.RestRequestMappingHandler;
-import edu.tamu.framework.enums.ApiResponseType;
-import edu.tamu.framework.util.EmailUtility;
 
 public class UserControllerTest extends AbstractControllerTest {
 
@@ -94,7 +64,7 @@ public class UserControllerTest extends AbstractControllerTest {
     @Before
     public void setup() {
     	
-    	mockUsers = Arrays.asList(new User[] {TEST_USER, aggieJack, aggieJill, jimInny});
+    	mockUsers = Arrays.asList(new User[] {TEST_USER, TEST_USER2, TEST_USER3, TEST_USER4});
     	
     	ReflectionTestUtils.setField(authUtility, SECRET_PROPERTY_NAME, SECRET_VALUE);
     	
@@ -148,8 +118,9 @@ public class UserControllerTest extends AbstractControllerTest {
         assertEquals(TEST_USER_EMAIL, credentials.getEmail());
         assertEquals(TEST_USER_ROLE, credentials.getRole());
     }
-        
+   
     @Test
+    @SuppressWarnings("unchecked")
     public void testRegisterEmail() {    	
     	Map<String, String[]> parameters = new HashMap<String, String[]>();
     	
@@ -159,7 +130,7 @@ public class UserControllerTest extends AbstractControllerTest {
     	 
     	assertEquals(ApiResponseType.SUCCESS, response.getMeta().getType());
     	
-    	assertEquals(TEST_EMAIL, ((String[]) ((Map) response.getPayload().get("HashMap")).get("email"))[0]);
+    	assertEquals(TEST_EMAIL, ((String[]) ((Map<String, String[]>) response.getPayload().get("HashMap")).get("email"))[0]);
     }
     
     @Test
@@ -204,7 +175,8 @@ public class UserControllerTest extends AbstractControllerTest {
     	
     	ApiResponse response = userController.allUsers();
 
-    	List<User> allUsers = (List<User>) ((Map) response.getPayload().get("HashMap")).get("list");
+    	@SuppressWarnings("unchecked")
+        List<User> allUsers = (List<User>) ((Map<String, Object>) response.getPayload().get("HashMap")).get("list");
     	
     	assertEquals(ApiResponseType.SUCCESS, response.getMeta().getType());
     	
@@ -217,20 +189,20 @@ public class UserControllerTest extends AbstractControllerTest {
 					assertEquals(TEST_USER_LAST_NAME, user.getLastName());					 
 					assertEquals(TEST_USER_ROLE, user.getRole());
 				}; break;
-    			case aggieJackEmail: {
-    				assertEquals("Jack", user.getFirstName());
-    				assertEquals("Daniels", user.getLastName());
-    				assertEquals("ROLE_ADMIN", user.getRole());
+    			case TEST_USER2_EMAIL: {
+    				assertEquals(TEST_USER2.getFirstName(), user.getFirstName());
+    				assertEquals(TEST_USER2.getLastName(), user.getLastName());
+    				assertEquals(TEST_USER2.getRole(), user.getRole());
     			}; break;
-    			case aggieJillEmail: {
-    				assertEquals("Jill", user.getFirstName());
-    				assertEquals("Daniels", user.getLastName());					 
-    				assertEquals("ROLE_MANAGER", user.getRole());
+    			case TEST_USER3_EMAIL: {
+    				assertEquals(TEST_USER3.getFirstName(), user.getFirstName());
+    				assertEquals(TEST_USER3.getLastName(), user.getLastName());					 
+    				assertEquals(TEST_USER3.getRole(), user.getRole());
     			}; break;
-    			case jimInnyEmail: {
-    				assertEquals("Jim", user.getFirstName());
-    				assertEquals("Inny", user.getLastName());
-    				assertEquals("ROLE_USER", user.getRole());
+    			case TEST_USER4_EMAIL: {
+    				assertEquals(TEST_USER4.getFirstName(), user.getFirstName());
+    				assertEquals(TEST_USER4.getLastName(), user.getLastName());
+    				assertEquals(TEST_USER4.getRole(), user.getRole());
     			}; break;
     		}
     	}

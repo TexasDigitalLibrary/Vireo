@@ -4,10 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.tdl.vireo.Application;
 
 public class AddressTest extends AbstractEntityTest {
 

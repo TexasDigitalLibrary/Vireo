@@ -19,12 +19,12 @@ public abstract class MockData {
     
 	protected User TEST_USER = new User(TEST_USER_EMAIL, TEST_USER_FIRST_NAME, TEST_USER_LAST_NAME, Role.USER);    
    
-	protected final static String aggieJackEmail = "aggieJack@tamu.edu";
-	protected final static String aggieJillEmail = "aggieJill@tamu.edu";
-	protected final static String jimInnyEmail = "jimInny@tdl.org";
+	protected final static String TEST_USER2_EMAIL = "aggieJack@tamu.edu";
+	protected final static String TEST_USER3_EMAIL = "aggieJill@tamu.edu";
+	protected final static String TEST_USER4_EMAIL = "jimInny@tdl.org";
 	
-	protected User aggieJack = new User(aggieJackEmail, "Jack", "Daniels", Role.ADMINISTRATOR);
-	protected User aggieJill = new User(aggieJillEmail, "Jill", "Daniels", Role.MANAGER);
-	protected User jimInny = new User(jimInnyEmail, "Jim", "Inny", Role.USER);
+	protected User TEST_USER2 = new User(TEST_USER2_EMAIL, "Jack", "Daniels", Role.ADMINISTRATOR);
+	protected User TEST_USER3 = new User(TEST_USER3_EMAIL, "Jill", "Daniels", Role.MANAGER);
+	protected User TEST_USER4 = new User(TEST_USER4_EMAIL, "Jim", "Inny", Role.USER);
     
 }

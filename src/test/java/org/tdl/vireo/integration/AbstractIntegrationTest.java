@@ -1,43 +1,32 @@
 package org.tdl.vireo.integration;
 
-import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.messaging.support.AbstractSubscribableChannel;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.messaging.support.AbstractSubscribableChannel;
 import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.mock.web.MockServletContext;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
-
 import org.tdl.vireo.Application;
+import org.tdl.vireo.mock.MockData;
 import org.tdl.vireo.mock.interceptor.MockChannelInterceptor;
 import org.tdl.vireo.runner.OrderedRunner;
 
-import org.tdl.vireo.mock.MockData;
-
-import edu.tamu.framework.mapping.RestRequestMappingHandler;
-import edu.tamu.framework.mapping.WebSocketRequestMappingHandler;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @WebAppConfiguration
 @RunWith(OrderedRunner.class)
@@ -66,6 +55,9 @@ public abstract class AbstractIntegrationTest extends MockData {
         
     @Before
     public abstract void setup();
+    
+    @After
+    public abstract void cleanup();
     
     protected void StompConnect() {
     	StompHeaderAccessor headers = StompHeaderAccessor.create(StompCommand.CONNECT);

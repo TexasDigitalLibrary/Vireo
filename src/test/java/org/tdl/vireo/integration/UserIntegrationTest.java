@@ -1,42 +1,22 @@
 package org.tdl.vireo.integration;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*; 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.IOException;
-
-import java.nio.charset.Charset;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import edu.tamu.framework.model.Credentials;
-
 import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.enums.Role;
 import org.tdl.vireo.mock.interceptor.MockChannelInterceptor;
@@ -44,9 +24,10 @@ import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.util.AuthUtility;
 
-import org.junit.runner.RunWith;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 
-import edu.tamu.framework.mapping.RestRequestMappingHandler;
+import edu.tamu.framework.model.Credentials;
 
 public class UserIntegrationTest extends AbstractIntegrationTest {
 
@@ -59,9 +40,9 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
     @Before
     public void setup() {
     			
-    	userRepo.create(aggieJackEmail, "Jack", "Daniels", Role.ADMINISTRATOR);
-    	userRepo.create(aggieJillEmail, "Jill", "Daniels", Role.MANAGER);
-    	userRepo.create(jimInnyEmail, "Jim", "Inny", Role.USER);
+    	userRepo.create(TEST_USER2_EMAIL, TEST_USER2.getFirstName(), TEST_USER2.getLastName(), Role.ADMINISTRATOR);
+    	userRepo.create(TEST_USER3_EMAIL, TEST_USER3.getFirstName(), TEST_USER3.getLastName(), Role.MANAGER);
+    	userRepo.create(TEST_USER4_EMAIL, TEST_USER4.getFirstName(), TEST_USER4.getLastName(), Role.USER);
         
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
                         
@@ -79,8 +60,10 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
         
     	Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
 
+        @SuppressWarnings("unchecked")
         Map<String, Object> payload = (Map<String, Object>) responseObject.get("payload");
 
+        @SuppressWarnings("unchecked")
         Credentials shib = new Credentials((Map<String, String>) payload.get("Credentials"));
         
         assertEquals("Daniels", shib.getLastName());
@@ -168,31 +151,34 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
     	 
     	Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
 		 
-    	Map<String, Object> contentObj = (Map<String, Object>) responseObject.get("payload");
+    	@SuppressWarnings("unchecked")
+        Map<String, Object> contentObj = (Map<String, Object>) responseObject.get("payload");
 		 
-    	Map<String, Object> mapObj = (Map<String, Object>) contentObj.get("HashMap");
+    	@SuppressWarnings("unchecked")
+        Map<String, Object> mapObj = (Map<String, Object>) contentObj.get("HashMap");
 		 
-    	List<Map<String, Object>> listMap =  (List<Map<String, Object>>) mapObj.get("list");
+    	@SuppressWarnings("unchecked")
+        List<Map<String, Object>> listMap =  (List<Map<String, Object>>) mapObj.get("list");
 
     	assertEquals(3, listMap.size());
     	
     	for(Map<String, Object> map : listMap) {
     		String email = (String) map.get("email");
     		switch(email) {	    		
-    			case aggieJackEmail: {
-    				assertEquals("Jack", (String) map.get("firstName"));
-    				assertEquals("Daniels", (String) map.get("lastName"));					 
-    				assertEquals("ROLE_ADMIN", (String) map.get("role"));
+    			case TEST_USER2_EMAIL: {
+    				assertEquals(TEST_USER2.getFirstName(), (String) map.get("firstName"));
+    				assertEquals(TEST_USER2.getLastName(), (String) map.get("lastName"));					 
+    				assertEquals(TEST_USER2.getRole(), (String) map.get("role"));
     			}; break;
-    			case aggieJillEmail: {
-    				assertEquals("Jill", (String) map.get("firstName"));
-    				assertEquals("Daniels", (String) map.get("lastName"));					 
-    				assertEquals("ROLE_MANAGER", (String) map.get("role"));
+    			case TEST_USER3_EMAIL: {
+    				assertEquals(TEST_USER3.getFirstName(), (String) map.get("firstName"));
+    				assertEquals(TEST_USER3.getLastName(), (String) map.get("lastName"));					 
+    				assertEquals(TEST_USER3.getRole(), (String) map.get("role"));
     			}; break;
-    			case jimInnyEmail: {
-    				assertEquals("Jim", (String) map.get("firstName"));
-    				assertEquals("Inny", (String) map.get("lastName"));
-    				assertEquals("ROLE_USER", (String) map.get("role"));
+    			case TEST_USER4_EMAIL: {
+    				assertEquals(TEST_USER4.getFirstName(), (String) map.get("firstName"));
+    				assertEquals(TEST_USER4.getLastName(), (String) map.get("lastName"));
+    				assertEquals(TEST_USER4.getRole(), (String) map.get("role"));
     			}; break;
     		}
     	}		 
@@ -208,7 +194,7 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
 		 data.put("email", TEST_USER_EMAIL);
 		 data.put("role", TEST_USER_ROLE_UPDATE);
 	    	
-		 String responseJson = StompRequest("/user/update-role", data);
+		 StompRequest("/user/update-role", data);
 		 		 
 		 User testUser = userRepo.findByEmail(TEST_USER_EMAIL);
 		 
@@ -219,6 +205,7 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
 	 }
 	 
 	 @After
+	 @Override
 	 public void cleanup() {
 		 userRepo.deleteAll();
 	 }

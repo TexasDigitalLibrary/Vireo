@@ -3,11 +3,7 @@ package org.tdl.vireo.model;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.tdl.vireo.Application;
 
 public class DepositLocationTest extends AbstractEntityTest {
 
