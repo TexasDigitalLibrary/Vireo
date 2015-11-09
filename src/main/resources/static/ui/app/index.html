@@ -41,7 +41,7 @@
 			<div class="container">
 				<div class="col-md-12 appContent">
 
-					<nav class="pull-right userMenu" >
+					<nav class="pull-right userMenu" ng-controller="ModalController">
 						
 						<div class="dropdown" ng-controller="AuthenticationController">
 							
@@ -51,9 +51,9 @@
 							<a ng-if="!isAnonymous()" class="dropdown-toggle toggle-href" data-toggle="dropdown" aria-expanded="false"><username></username> <span class="caret"></span></a>
 							
 							<span ng-if="isAnonymous()">
-								<a href data-toggle="modal" data-target="#loginModal">Login</a>
+								<a href ng-click="showModal('loginModal')">Login</a>
 								<span> | </span>
-								<a href data-toggle="modal" data-target="#verifyEmailModal">Register</a>
+								<a href ng-click="showModal('verifyEmailModal')">Register</a>
 							</span>
 							
 							<ul class="dropdown-menu" role="menu">
@@ -185,6 +185,7 @@
 	    <script src="controllers/userRepoController.js"></script>
 	    <script src="controllers/registrationController.js"></script>
 	    <script src="controllers/loginController.js"></script>
+	    <script src="controllers/modalController.js"></script>
     
 	    
 	<!-- endbuild -->
