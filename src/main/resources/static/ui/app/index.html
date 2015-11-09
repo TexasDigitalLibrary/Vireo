@@ -17,7 +17,6 @@
 	
 	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
 
-	<link rel="stylesheet" href="resources/styles/main.css">
 	<link rel="stylesheet" href="resources/styles/app.css">	
 
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
@@ -33,7 +32,35 @@
 	<!-- Content placed here will appear on every page -->
 	<main>
 
-		<tamuheader title="Vireo"></tamuheader>
+		<header class="container-fluid global-nav">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">					
+						<nav class="global-nav pull-right hidden-xs">
+							<ul class="nav global-nav pull-right hidden-xs">
+					        	<li><a href="#">Link A</a></li>
+					          	<li><a href="#">Link B</a></li>
+					          	<li><a href="#">Link C</a></li>
+					        </ul>
+						</nav>
+					</div>
+				</div>
+			</div>
+		</header>
+
+		<header class="container-fluid site-title">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-5">
+						<img src="resources/images/logo.gif"></img>
+					</div>
+					<div class="col-lg-7">
+						<div class="site"><h3><a href="home">Vireo</a></h3></div>
+					</div>
+				</div>
+			</div>
+		</header>
+
 
 		<alerts types="WARNING, ERROR"></alerts>
 				
@@ -87,7 +114,34 @@
 
 	</main>
 
-	<tamufooter></tamufooter>
+	
+
+	<footer class="container-fluid footer">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<ul class="inline-list">
+						<li>© Vireo</li>
+						<li>
+							<a href="http://www.tamu.edu">Texas A&amp;M University</a>
+						</li>
+						<li>
+							<a href="#">Webmaster</a>
+						</li>
+						<li>
+							<a href="#">Legal</a>
+						</li>
+						<li>
+							<a href="#">Comments</a>
+						</li>
+						<li>
+							<a href="#">Accessibility</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</footer>
 
 
 	<!-- In production use: <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script> -->
