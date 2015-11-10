@@ -6,6 +6,6 @@
   "license": "BSD",
   "private": true,
   "dependencies": {
-    "core": "git@framework.github.com:TAMULib/Angular-Framework.git#p1.2.4"
+    "core": "git@framework.github.com:TAMULib/Angular-Framework.git#1.2.x"
   }
 }

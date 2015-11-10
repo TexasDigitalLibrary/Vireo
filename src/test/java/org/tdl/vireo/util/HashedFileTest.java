@@ -24,8 +24,8 @@ import org.tdl.vireo.config.constant.ConfigurationName;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.runner.OrderedRunner;
 
-@RunWith(OrderedRunner.class)
 @WebAppConfiguration
+@RunWith(OrderedRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 public class HashedFileTest {
 

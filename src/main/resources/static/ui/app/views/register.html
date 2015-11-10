@@ -1,0 +1,24 @@
+<div class="view" ng-controller="RegistrationController">
+	<h3>Continue registration</h3>
+	<hr>
+	<form class="registration">
+        <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input type="name" ng-model="registration.firstName" class="form-control" id="firstName" placeholder="First Name">
+        </div>
+        <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input type="name" ng-model="registration.lastName" class="form-control" id="lastName" placeholder="Last Name">
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" ng-model="registration.password" class="form-control" id="password" placeholder="Password">
+        </div>
+        <div class="form-group">
+            <label for="confirm">Confirm Password</label>
+            <input type="password" ng-model="registration.confirm" class="form-control" id="confirm" placeholder="Confirm Password">
+        </div>
+        <button type="submit" class="btn btn-primary" ng-click="register()">Register</button>
+    </form>
+    <hr>
+</div>

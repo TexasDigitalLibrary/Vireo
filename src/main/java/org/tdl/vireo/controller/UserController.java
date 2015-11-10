@@ -1,13 +1,13 @@
 package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.ERROR;
-import static edu.tamu.framework.enums.ApiResponseType.REFRESH;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -28,7 +28,7 @@ import edu.tamu.framework.model.Credentials;
 @Controller
 @ApiMapping("/user")
 public class UserController {
-
+    
     @Autowired
     private UserRepo userRepo;
     
@@ -38,8 +38,8 @@ public class UserController {
     @Autowired 
     private SimpMessagingTemplate simpMessagingTemplate;
     
-    //private static final Logger logger = Logger.getLogger(UserController.class);
-    
+    private static final Logger logger = Logger.getLogger(UserController.class);
+        
     @ApiMapping("/credentials")
     @Auth
     public ApiResponse credentials(@Shib Object credentials) {
@@ -49,12 +49,13 @@ public class UserController {
         User user = userRepo.findByEmail(shib.getEmail());
         
         if(user == null) {
-            return new ApiResponse(ERROR, "user not registered");
+            logger.debug("User not registered!");
+            return new ApiResponse(ERROR, "User not registered!");
         }
 
         shib.setRole(user.getRole());
         
-        return shib != null ? new ApiResponse(SUCCESS, shib) : new ApiResponse(REFRESH, "EXPIRED_JWT");
+        return new ApiResponse(SUCCESS, shib);
     }
     
     @ApiMapping("/all")
@@ -69,7 +70,7 @@ public class UserController {
     @ApiMapping("/update-role")
     @Auth(role="ROLE_MANAGER")
     @Transactional
-    public ApiResponse updateRole(@Data String data) throws Exception {        
+    public ApiResponse updateRole(@Data String data) throws Exception {
         
         Map<String,String> map = new HashMap<String,String>();      
         try {
@@ -78,9 +79,11 @@ public class UserController {
             e.printStackTrace();
         }       
         
-        User user = userRepo.findByEmail(map.get("email"));      
-        user.setRole(map.get("role"));      
-        userRepo.save(user);
+        User user = userRepo.findByEmail(map.get("email"));
+                
+        user.setRole(map.get("role"));
+        
+        user = userRepo.save(user);
         
         Map<String, Object> userMap = new HashMap<String, Object>();
         userMap.put("list", userRepo.findAll());
@@ -88,7 +91,7 @@ public class UserController {
         
         this.simpMessagingTemplate.convertAndSend("/channel/users", new ApiResponse(SUCCESS, userMap));
         
-        return new ApiResponse(SUCCESS);
+        return new ApiResponse(SUCCESS, user);
     }
     
 }

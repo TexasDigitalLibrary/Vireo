@@ -15,8 +15,8 @@ import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
 
-@ComponentScan(basePackages={"edu.tamu.framework", "edu.tamu.auth", "org.tdl.vireo"})
 @SpringBootApplication
+@ComponentScan(basePackages={"edu.tamu.framework", "edu.tamu.auth", "org.tdl.vireo"})
 public class Application extends SpringBootServletInitializer implements Banner {
 
     private static final String[] BANNER = { "",

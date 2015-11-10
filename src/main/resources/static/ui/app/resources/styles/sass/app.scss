@@ -18,7 +18,7 @@ main footer {
 
 .view {
   margin: 25px 0px;
-  min-height: 250px;
+  min-height: 500px;
 }
 
 .userMenu {
@@ -164,4 +164,79 @@ main footer {
 
 .control {
   float: right;
+}
+
+
+.global-nav {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.global-nav, .global-nav .top-bar {
+  background: #43606e;
+}
+
+.global-nav li {
+  border-right: 1px solid #1b333f;
+  margin-left: 0;
+  display: inline-block;
+}
+
+.global-nav li:last-child {
+  border-right: 0 solid #1b333f;
+}
+
+.global-nav li a {
+  background: none;
+  color: #fff;
+  font-size: 1em;
+  font-family: "Open Sans","Helvetica Neue",Helvetica,Helvetica,Arial,sans-serif;
+  margin-left: -5px;
+}
+
+.global-nav li a:hover {
+  text-decoration: none;
+  background: #43606e;
+}
+
+.site-title {
+  background: #1b333f;
+  background: -moz-linear-gradient(top, #43606e 0%, #1b333f 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#43606e), color-stop(100%,#1b333f));
+  background: -webkit-linear-gradient(top, #43606e 0%,#1b333f 100%);
+  background: -o-linear-gradient(top, #43606e 0%,#1b333f 100%);
+  background: -ms-linear-gradient(top, #43606e 0%,#1b333f 100%);
+  background: linear-gradient(top, #43606e 0%,#1b333f 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#43606e', endColorstr='#1b333f');
+
+  border-top: 1px solid #8d8d8d;
+  
+  height: 55px;
+}
+
+.footer {
+  padding-top: 19px;
+  color: #777;
+  border-top: 1px solid #ccc;
+  background: #1b333f;
+  padding: 20px 0 0;
+  width: 100%;
+}
+
+footer a, footer li, footer p {
+  color: #fff;
+  font-size: .95em;
+}
+
+@media screen and (min-width: 768px) {
+  
+  .footer, .header, .marketing {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+}
+
+.registration {
+  max-width: 400px;
 }
