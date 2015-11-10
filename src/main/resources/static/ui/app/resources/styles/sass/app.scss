@@ -18,7 +18,7 @@ main footer {
 
 .view {
   margin: 25px 0px;
-  min-height: 250px;
+  min-height: 500px;
 }
 
 .userMenu {
@@ -199,8 +199,6 @@ main footer {
   background: #43606e;
 }
 
-
-
 .site-title {
   background: #1b333f;
   background: -moz-linear-gradient(top, #43606e 0%, #1b333f 100%);
@@ -212,11 +210,8 @@ main footer {
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#43606e', endColorstr='#1b333f');
 
   border-top: 1px solid #8d8d8d;
-  margin-right: auto;
-  margin-left: auto;
-  padding-left: 15px;
-  padding-right: 15px;
-  display: block;
+  
+  height: 55px;
 }
 
 .footer {
@@ -233,26 +228,8 @@ footer a, footer li, footer p {
   font-size: .95em;
 }
 
-.tamu-lib a {
-  background: url(http://library.tamu.edu/images/library-logo.png) left center no-repeat;
-  color: #fff;
-  display: block;
-  height: 45px;
-  text-indent: -9999px;
-}
-
 @media screen and (min-width: 768px) {
-  .tamu-lib {
-    margin: 15px 25px 15px 0;
-    width: 247px;
-    float: left;
-  } 
-
-  .site {
-    margin-top: 20px;
-    text-align: left;
-  }
-
+  
   .footer, .header, .marketing {
     padding-left: 0;
     padding-right: 0;
