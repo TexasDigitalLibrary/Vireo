@@ -3,6 +3,6 @@ node_modules/
 src/main/resources/static/angular/app/
 vireo.log*
 attachments/
-.sass-cache/*
+.sass-cache
 .factorypath
 npm-debug.log

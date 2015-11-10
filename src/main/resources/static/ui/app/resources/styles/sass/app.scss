@@ -211,7 +211,8 @@ main footer {
 
   border-top: 1px solid #8d8d8d;
   
-  height: 60px;
+  height: 65px;
+  padding-top: 7px;
 }
 
 .navbar {
@@ -239,17 +240,23 @@ main footer {
 }
 
 .footer {
-  padding-top: 19px;
-  color: #777;
-  border-top: 1px solid #ccc;
-  background: #1b333f;
-  padding: 20px 0 0;
-  width: 100%;
+    color: #777;
+    border-top: 1px solid #ccc;
+    background: #1b333f;
+    padding: 0px 0px 0px 0px;
+    width: 100%;
+    max-height: 40px;
+    bottom: 0px;
+    margin-top: 10px;
 }
 
 footer a, footer li, footer p {
   color: #fff;
   font-size: .95em;
+}
+
+.footer-list {
+  display: inline-block;
 }
 
 @media screen and (min-width: 768px) {
