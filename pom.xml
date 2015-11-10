@@ -169,7 +169,7 @@
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
 					<descriptor>assembly.xml</descriptor>
-					<finalName>${pom.name}-${pom.version}</finalName>
+					<finalName>${project.name}-${project.version}</finalName>
 				</configuration>
 				<executions>
 					<execution>
@@ -217,14 +217,6 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
-		<resources>
-			<resource>
-				<directory>src/main/resources/</directory>
-				<excludes>
-					<exclude>static/**</exclude>
-				</excludes>
-			</resource>
-		</resources>
 	</build>
 
 </project>
