@@ -1,1 +1,64 @@
-{"ide":{},"plugins":{"guess-types":{},"outline":{},"jasmine":{},"angular":{},"protractor":{},"bootstrap":{}},"libs":["ecma5","browser","jquery"]}
+{
+  "ecmaVersion": 5,
+  "ide": {
+    "scriptPaths": [
+      {
+        "type": "FOLDER",
+        "path": "src/main/resources/static/ui/app/components"
+      },
+      {
+        "type": "FOLDER",
+        "path": "src/main/resources/static/ui/app/config"
+      },
+      {
+        "type": "FOLDER",
+        "path": "src/main/resources/static/ui/app/controllers"
+      },
+      {
+        "type": "FOLDER",
+        "path": "src/main/resources/static/ui/app/model"
+      },
+      {
+        "type": "FOLDER",
+        "path": "src/main/resources/static/ui/app/resources"
+      },
+      {
+        "type": "FOLDER",
+        "path": "src/main/resources/static/ui/app/views"
+      },
+      {
+        "type": "FILE",
+        "path": "src/main/resources/static/ui/app/app.js"
+      },
+      {
+        "type": "FOLDER",
+        "path": "src/main/resources/static/ui/app/bower_components/core/app"
+      }
+    ]
+  },
+  "plugins": {
+    "guess-types": {
+      
+    },
+    "outline": {
+      
+    },
+    "jasmine": {
+      
+    },
+    "angular": {
+      
+    },
+    "protractor": {
+      
+    },
+    "bootstrap": {
+      
+    }
+  },
+  "libs": [
+    "ecma5",
+    "browser",
+    "jquery"
+  ]
+}
