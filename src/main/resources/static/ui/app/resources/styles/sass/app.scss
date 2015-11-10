@@ -211,7 +211,31 @@ main footer {
 
   border-top: 1px solid #8d8d8d;
   
-  height: 55px;
+  height: 60px;
+}
+
+.navbar {
+  position: relative;
+  min-height: 50px;
+  margin-bottom: 0px;
+  border: 1px solid transparent;
+}
+
+.navbar-default {
+  background-color: #43606e;
+}
+
+.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:focus, .navbar-default .navbar-nav>.active>a:hover {
+    color: #fff;
+    background-color: #43606e;
+}
+
+.navbar-default .navbar-nav>li>a {
+  color: #fff;
+}
+
+.navbar-default .navbar-brand {
+  color: #fff;
 }
 
 .footer {
@@ -233,6 +257,10 @@ footer a, footer li, footer p {
   .footer, .header, .marketing {
     padding-left: 0;
     padding-right: 0;
+  }
+
+  .navbar {
+    border-radius: 0px;
   }
 
 }
