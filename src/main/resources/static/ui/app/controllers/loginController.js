@@ -22,9 +22,7 @@ vireo.controller('LoginController', function ($controller, $location, $scope, Re
 
 				delete sessionStorage.role;
 
-				User.login();
-
-				var user = User.get();
+				var user = User.login();
 
 				User.ready().then(function() {
 					StorageService.set("role", user.role);

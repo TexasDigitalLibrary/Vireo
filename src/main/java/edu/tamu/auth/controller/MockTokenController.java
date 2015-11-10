@@ -139,14 +139,14 @@ public class MockTokenController {
             token.makeClaim("uin", "123456789");
             token.makeClaim("lastName", "Daniels");
             token.makeClaim("firstName", "Jack");
-            token.makeClaim("email", "aggieJack@library.tamu.edu");
+            token.makeClaim("email", "aggieJack@tamu.edu");
         }
         else {
             token.makeClaim("netid", "bobBoring");
             token.makeClaim("uin", "987654321");
             token.makeClaim("lastName", "Boring");
             token.makeClaim("firstName", "Bob");
-            token.makeClaim("email", "bobBoring@library.tamu.edu");
+            token.makeClaim("email", "bobBoring@tamu.edu");
         }
         
         return token;       
