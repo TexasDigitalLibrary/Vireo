@@ -48,17 +48,14 @@ public class TokenController {
 	@Autowired
 	private Environment env;
 	
-	@Value("${auth.security.secret_key}")
+	@Value("${auth.security.jwt.secret-key}")
     private String secret_key;
 	
-	@Value("${auth.security.jwt_expiration}")
+	@Value("${auth.security.jwt.expiration}")
     private Long expiration;
 	
-	@Value("${auth.shib.keys}")
+	@Value("${shib.keys}")
 	private String[] shibKeys;
-	
-	@Value("${auth.authority.admins}")
-	private String[] admins;
 	
 	/**
 	 * Root endpoint. Returns headers which contain all Shibboleth attributes.

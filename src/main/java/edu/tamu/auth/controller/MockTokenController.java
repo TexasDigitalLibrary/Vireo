@@ -37,18 +37,15 @@ public class MockTokenController {
     @Autowired
     private Environment env;
         
-    @Value("${app.security.jwt.secret_key}")
+    @Value("${auth.security.jwt.secret-key}")
     private String secret_key;
     
-    @Value("${auth.security.jwt_expiration}")
+    @Value("${auth.security.jwt.expiration}")
     private Long expiration;
     
     @Value("${shib.keys}")
     private String[] shibKeys;
     
-    @Value("${app.authority.admins}")
-    private String[] admins;
-
     private static final Logger logger = Logger.getLogger(MockTokenController.class);
     
     /**

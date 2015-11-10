@@ -20,7 +20,7 @@ import edu.tamu.framework.model.repo.SymlinkRepo;
 @EnableConfigurationProperties(SymlinkRepo.class)
 class AppContextInitializedHandler extends CoreContextInitializedHandler {
 
-    @Value("${app.show_beans}")
+    @Value("${app.show-beans}")
     private Boolean showBeans;
     
     @Autowired

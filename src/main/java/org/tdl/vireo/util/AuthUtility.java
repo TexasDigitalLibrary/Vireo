@@ -31,13 +31,13 @@ public class AuthUtility {
     private final static String ENCRYPTION_ALGORITHM = "AES";
     private final static String RAW_DATA_DELIMETER   = ":";
     
-    @Value("${app.security.secret_key}")
+    @Value("${app.security.secret}")
     private String secret;
     
-    @Value("${auth.security.secret_key}")
-    private String secret_key;
+    @Value("${auth.security.jwt.secret-key}")
+    private String secretKey;
         
-    @Value("${auth.security.jwt_expiration}")
+    @Value("${auth.security.jwt.expiration}")
     private Long expiration;
 
     public String generateToken(String content, String type) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {        
@@ -65,7 +65,7 @@ public class AuthUtility {
     }
     
     public JWTtoken makeToken(User user) throws InvalidKeyException, JsonProcessingException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException {        
-        JWTtoken token = new JWTtoken(secret_key, expiration);        
+        JWTtoken token = new JWTtoken(secretKey, expiration);        
         token.makeClaim("lastName", user.getLastName());
         token.makeClaim("firstName", user.getFirstName());
         token.makeClaim("netid", user.getNetid());
