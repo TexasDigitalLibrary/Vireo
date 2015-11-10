@@ -235,7 +235,7 @@
 			<resource>
 			  	<directory>src/main/resources/</directory>
 			  	<excludes>
-			    	<exclude>static/**</exclude>
+			    	<exclude>static/ui/node_modules/**</exclude>
 			  	</excludes>
 			</resource>
 		</resources>			
