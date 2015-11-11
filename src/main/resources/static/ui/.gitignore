@@ -10,5 +10,6 @@ tmp
 .idea
 npm-debug.log
 .sass-cache/
+app/resources/scripts/*
 app/resources/styles/*
 !app/resources/styles/sass/

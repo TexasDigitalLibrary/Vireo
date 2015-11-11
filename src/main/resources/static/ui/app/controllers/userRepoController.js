@@ -6,7 +6,7 @@ vireo.controller('UserRepoController', function ($controller, $location, $route,
 
     $scope.userRepo = UserRepo.get();
      
- 	if(!$scope.isAnonymous() && User.ready() != null) {
+ 	if(!$scope.isAnonymous() && User.ready() !== null) {
 	    User.ready().then(function() {
 			$scope.updateRole = function(uin, role) {
 				UserRepo.updateRole($scope.user, uin, role);
