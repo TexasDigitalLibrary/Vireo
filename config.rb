@@ -6,7 +6,7 @@ http_path = "/"
 css_dir = "src/main/resources/static/ui/app/resources/styles"
 sass_dir = "src/main/resources/static/ui/app/resources/styles/sass"
 images_dir = "src/main/resources/static/ui/app/resources/images"
-javascripts_dir = "src/main/resources/static/ui/app/resources/scripts"
+javascripts_dir = "resources/scripts"
 add_import_path "src/main/resources/static/ui/app/bower_components/core/app/resources/styles/"
 
 # You can select your preferred output style here (can be overridden via the command line):
