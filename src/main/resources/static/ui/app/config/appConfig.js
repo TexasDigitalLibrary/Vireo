@@ -4,8 +4,8 @@ var appConfig = {
 
 	'allowAnonymous': true,
 
-	'authService': 'http://localhost:9000/mockauth',
-	'webService': 'http://localhost:9000', 
+	'authService': window.location.protocol + '//' + window.location.host + '/mockauth',
+	'webService': window.location.protocol + '//' + window.location.host, 
 
 	'storageType': 'session',
 	
@@ -32,4 +32,3 @@ var appConfig = {
 	
 	'mockRole': 'admin'
 };
-

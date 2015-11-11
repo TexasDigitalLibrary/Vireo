@@ -1,5 +1,10 @@
 <div class="row" ng-controller="UserRepoController">
-	<div class="col-12">
+
+	<!-- ADMINS AND MANAGERS ONLY -->
+	<div ng-if="!isManager() && !isAdmin()" class="row" ng-include src="'views/restrictedAccess.html'" ></div>
+
+	
+	<div ng-if="isManager() || isAdmin()" class="col-12">
 		<div class="panel panel-default users-container">			
 			<div class="panel-heading">
 				<h3 class="panel-title">Users</h3>

@@ -84,7 +84,6 @@
 						
 					</ul>
 
-
 	    		</div><!-- /.navbar-collapse -->
 	  		</div><!-- /.container-fluid -->
 		</nav>
@@ -99,15 +98,12 @@
 
 
 		<alerts types="WARNING, ERROR"></alerts>
+		
 				
-		<div class="container-fluid">
-			<div class="container">
-				<div class="col-md-12 appContent">
-					
-					<div ng-view class="view"></div>
-					
-				</div>
-			</div>
+		<div class="container-fluid">			
+				<div class="container">					
+					<div ng-view class="view"></div>					
+				</div>			
 		</div>
 
 
@@ -160,7 +156,7 @@
 	
 	<!--  Core libraries -->
 	
-	<!-- build:js resources/scripts/core_concat.js -->
+	<!-- build:js src/main/resources/static/ui/app/resources/scripts/core_concat.js -->
 
 	<!-- TODO: concat core js -->
 	<!-- endbuild -->
@@ -216,7 +212,7 @@
 
 		
 
-	<!-- build:js resources/scripts/concat.js -->
+	<!-- build:js src/main/resources/static/ui/app/resources/scripts/app_concat.js -->
 
 	    <!-- Application Start -->
 	    <script src="app.js"></script>

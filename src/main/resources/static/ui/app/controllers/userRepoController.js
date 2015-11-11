@@ -6,34 +6,36 @@ vireo.controller('UserRepoController', function ($controller, $location, $route,
 
     $scope.userRepo = UserRepo.get();
      
-    User.ready().then(function() {    	
-		$scope.updateRole = function(uin, role) {	
-			UserRepo.updateRole($scope.user, uin, role);
-			if($scope.user.uin == uin) {
-				if(role == 'ROLE_USER') {
-					$location.path('/myview');
+ 	if(!$scope.isAnonymous() && User.ready() !== null) {
+	    User.ready().then(function() {
+			$scope.updateRole = function(uin, role) {
+				UserRepo.updateRole($scope.user, uin, role);
+				if($scope.user.uin == uin) {
+					if(role == 'ROLE_USER') {
+						$location.path('/myview');
+					}
+					else {
+						$route.reload();
+					}
+				}
+			};
+			$scope.allowableRoles = function(userRole) {
+				if(sessionStorage.role == 'ROLE_ADMIN') {				
+					return ['ROLE_ADMIN','ROLE_MANAGER','ROLE_USER'];
+				}
+				else if(sessionStorage.role == 'ROLE_MANAGER') {
+					if(userRole == 'ROLE_ADMIN') {
+						return ['ROLE_ADMIN'];
+					}
+					return ['ROLE_MANAGER','ROLE_USER'];
 				}
 				else {
-					$route.reload();
+					return [userRole];
 				}
-			}
-		};		
-		$scope.allowableRoles = function(userRole) {
-			if(sessionStorage.role == 'ROLE_ADMIN') {				
-				return ['ROLE_ADMIN','ROLE_MANAGER','ROLE_USER'];
-			}
-			else if(sessionStorage.role == 'ROLE_MANAGER') {
-				if(userRole == 'ROLE_ADMIN') {
-					return ['ROLE_ADMIN'];
-				}
-				return ['ROLE_MANAGER','ROLE_USER'];
-			}
-			else {
-				return [userRole];
-			}
-		};
+			};
 
-    });
+	    });
+	}
 
     UserRepo.listen().then(null, null, function(data) {
 

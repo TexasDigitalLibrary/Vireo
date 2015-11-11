@@ -2,8 +2,7 @@ module.exports = function(grunt) {
 
 	// Configurable paths
 	var build = {
-			app: 'app',
-			dist: 'dist'
+			app: 'src/main/resources/static/ui/app'
 	};
 
 
