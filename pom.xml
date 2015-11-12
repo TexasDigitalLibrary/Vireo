@@ -111,7 +111,7 @@
 					<!-- NPM Install -->
 					<execution>
 						<id>exec-npm-install</id>
-						<!-- <phase>generate-sources</phase> -->
+						<phase>generate-sources</phase>
 						<configuration>
 							<executable>npm</executable>
 							<arguments>
@@ -141,7 +141,7 @@
 					<!-- Grunt Deploy -->
 					<execution>
 						<id>exec-grunt-deploy</id>
-						<!-- <phase>generate-sources</phase> -->
+						<phase>generate-sources</phase>
 						<configuration>
 							<executable>grunt</executable>
 							<arguments>
