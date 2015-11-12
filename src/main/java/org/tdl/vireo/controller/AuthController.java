@@ -44,6 +44,9 @@ private final static String EMAIL_VERIFICATION_TYPE = "EMAIL_VERIFICATION";
     @Value("${app.host}")
     private String host;
     
+    @Value("${server.port}")
+    private String port;
+    
     @Autowired
     private UserRepo userRepo;
     
@@ -74,7 +77,7 @@ private final static String EMAIL_VERIFICATION_TYPE = "EMAIL_VERIFICATION";
             String content = "Verify email to continue registration.\n\n";
            
             try {
-                content += host + "/register?token=" + authUtility.generateToken(email, EMAIL_VERIFICATION_TYPE);
+                content += host + ":" + port + "/register?token=" + authUtility.generateToken(email, EMAIL_VERIFICATION_TYPE);
             } catch (InvalidKeyException | NoSuchPaddingException | NoSuchAlgorithmException | IllegalBlockSizeException | BadPaddingException e1) {
                 logger.debug("Unable to generate token! " + email);
                 return new ApiResponse(ERROR, "Unable to generate token! " + email);
