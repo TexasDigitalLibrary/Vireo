@@ -138,7 +138,21 @@
 							<goal>exec</goal>
 						</goals>
 					</execution>
-					<!-- Grunt Deploy -->
+					<!-- Compass Compile -->
+					<execution>
+						<id>exec-compass-compile</id>
+						<phase>generate-sources</phase>
+						<configuration>
+							<executable>compass</executable>
+							<arguments>
+								<argument>compile</argument>
+							</arguments>
+						</configuration>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+					</execution>
+					<!-- Grunt Deploy
 					<execution>
 						<id>exec-grunt-deploy</id>
 						<phase>generate-sources</phase>
@@ -151,7 +165,7 @@
 						<goals>
 							<goal>exec</goal>
 						</goals>
-					</execution>
+					</execution> -->
 				</executions>
 			</plugin>
 			<!-- Karma Testing for AngularJS -->
