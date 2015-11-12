@@ -34,9 +34,10 @@
 
 
 		<nav class="navbar navbar-default">
-  			<div class="container-fluid">
-    
-	    		<!-- Brand and toggle get grouped for better mobile display -->
+		
+		
+  			<div class="container-fluid" ng-controller="AuthenticationController">
+  			
 	    		<div class="navbar-header">
 	      			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
 				        <span class="sr-only">Toggle navigation</span>
@@ -45,26 +46,25 @@
 				        <span class="icon-bar"></span>
 			      	</button>
 			    </div>
+			    
+			    <modal modal-id="verifyEmailModal" modal-view="views/modals/verifyEmailModal.html" modal-header-class="modal-header-primary"></modal>					
+				<modal modal-id="loginModal" modal-view="views/modals/loginModal.html" modal-header-class="modal-header-primary"></modal>
 
-	    		<!-- Collect the nav links, forms, and other content for toggling -->
-	    		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1"  ng-controller="ModalController">
-			      	
-			      	<ul class="nav navbar-nav navbar-right" ng-controller="AuthenticationController">
-
+	    		<div ng-if="isAnonymous()" class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">	    					      	
+			      	<ul class="nav navbar-nav navbar-right">
 			      		<li class="dropdown">
-			      			<a href ng-if="isAnonymous()" ng-click="showModal('loginModal')">Login</a>							
+			      			<a href data-toggle="modal" data-target="#loginModal">Login</a>
 			      		</li>
 						<li class="dropdown">
-			      			<a href ng-if="isAnonymous()" ng-click="showModal('verifyEmailModal')">Register</a>
-			      		</li>
-						
+			      			<a href data-toggle="modal" data-target="#verifyEmailModal">Register</a>
+			      		</li>						
+					</ul>
+	    		</div>
+	    			    		
+	    		<div ng-if="!isAnonymous()" class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			      	<ul class="nav navbar-nav navbar-right">
 						<li class="dropdown">
-							
-							<modal modal-id="verifyEmailModal" modal-view="views/modals/verifyEmailModal.html" modal-header-class="modal-header-primary"></modal>					
-							<modal modal-id="loginModal" modal-view="views/modals/loginModal.html" modal-header-class="modal-header-primary"></modal>
-							
-							<a ng-if="!isAnonymous()" class="dropdown-toggle toggle-href" data-toggle="dropdown" aria-expanded="false"><username></username> <span class="caret"></span></a>
-
+							<a class="dropdown-toggle toggle-href" data-toggle="dropdown" aria-expanded="false"><username></username> <span class="caret"></span></a>
 							<ul class="dropdown-menu" role="menu">
 								<li role="presentation" class="dropdown-header">Profile</li>
 								<li><a role="menuitem" href="myview">My View</a></li>
@@ -78,14 +78,13 @@
 
 								<li ng-if="isAdmin()" role="presentation" class="divider"></li>
 								<li ng-if="isAdmin()" role="presentation" class="dropdown-header">Admin Actions</li>								
-								
 							</ul>
 						</li>
-						
 					</ul>
-
-	    		</div><!-- /.navbar-collapse -->
-	  		</div><!-- /.container-fluid -->
+	    		</div>
+	    		
+	    		
+	  		</div>
 		</nav>
 		
 		<header class="container-fluid site-title">
@@ -101,9 +100,9 @@
 		
 				
 		<div class="container-fluid">			
-				<div class="container">					
-					<div ng-view class="view"></div>					
-				</div>			
+			<div class="container">					
+				<div ng-view class="view"></div>					
+			</div>
 		</div>
 
 
@@ -131,12 +130,6 @@
 		</p>
       </div>
     </footer>
-	
-
-	<!-- <footer>
-		
-	</footer> -->
-
 
 	<!-- In production use: <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script> -->
 
@@ -233,7 +226,6 @@
 	    <script src="controllers/userRepoController.js"></script>
 	    <script src="controllers/registrationController.js"></script>
 	    <script src="controllers/loginController.js"></script>
-	    <script src="controllers/modalController.js"></script>
     
 	    
 	<!-- endbuild -->

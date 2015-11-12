@@ -4,10 +4,6 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<!-- brought in through the tamu core framework <parent> <groupId>org.springframework.boot</groupId> 
-		<artifactId>spring-boot-starter-parent</artifactId> <version>1.2.5.RELEASE</version> 
-		<relativePath /> </parent> -->
-
 	<name>Vireo</name>
 	<description>Vireo Thesis and Dissertation Submission System</description>
 	<version>4.0.x-SNAPSHOT</version>
@@ -231,6 +227,14 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
+		<resources>
+			<resource>
+			  	<directory>src/main/resources/</directory>
+			  	<excludes>
+			    	<exclude>static/ui/node_modules/**</exclude>
+			  	</excludes>
+			</resource>
+		</resources>
 	</build>
 
 </project>

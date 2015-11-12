@@ -22,7 +22,7 @@ import org.springframework.core.env.Environment;
 
 @SpringBootApplication
 @ComponentScan(basePackages={"edu.tamu.framework", "edu.tamu.auth", "org.tdl.vireo"})
-public class Application extends SpringBootServletInitializer implements Banner, CommandLineRunner {
+public class Application extends SpringBootServletInitializer implements Banner , CommandLineRunner {
     
     final static Logger logger = LoggerFactory.getLogger(Application.class);
 
@@ -113,4 +113,5 @@ public class Application extends SpringBootServletInitializer implements Banner,
         logger.info("Classpath root is: " + Application.class.getResource("/").getPath());
         logger.info("RUNNING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! [" + env.getProperty("security.user.password") + "]");
     }
+    
 }
