@@ -7,6 +7,13 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.core.env.Environment;
+
 import edu.tamu.framework.CoreContextInitializedHandler;
 import edu.tamu.framework.model.repo.SymlinkRepo;
 
@@ -24,11 +31,37 @@ class AppContextInitializedHandler extends CoreContextInitializedHandler {
     private Boolean showBeans;
     
     @Autowired
+    private Environment env;
+    
+    @Autowired
     ApplicationContext applicationContext;
+    
+    final static Logger logger = LoggerFactory.getLogger(AppContextInitializedHandler.class);
     
     @Override
     protected void before(ContextRefreshedEvent event) {
 
+    	// Why not configure context here?
+    	// Seems more logical than static class code with CommandLineRunner
+    	/*
+    	String applicationClassPathRoot = Application.class.getResource("/").getPath();
+        File applicationClassPath = new File(applicationClassPathRoot);
+                
+        // if we're running in an expanded war
+        if(applicationClassPath.exists() && applicationClassPath.isDirectory()) {
+            File customProps = new File(applicationClassPathRoot + "../../../conf/application.properties");
+            if(customProps.exists() && customProps.isFile()) {
+                System.setProperty("spring.config.location", "file://" + customProps.getAbsolutePath());
+            }
+        }
+        // if we're a jar or a war
+        else if(applicationClassPath.exists() && applicationClassPath.isFile() && (applicationClassPathRoot.endsWith(".jar") || applicationClassPathRoot.endsWith(".war"))) {
+            File customProps = new File(applicationClassPath.getParent() + "/conf/application.properties");
+            if(customProps.exists() && customProps.isFile()) {
+                System.setProperty("spring.config.location", "file://" + customProps.getAbsolutePath());
+            }
+        }
+        */
     }
 
     @Override
@@ -39,6 +72,10 @@ class AppContextInitializedHandler extends CoreContextInitializedHandler {
                 System.out.println(beanName);
             }
         }
+        /*
+        logger.info("Classpath root is: " + Application.class.getResource("/").getPath());
+        logger.info("RUNNING! [" + env.getProperty("security.user.password") + "]");
+        */
     }
     
 }

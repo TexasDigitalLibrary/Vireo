@@ -111,7 +111,6 @@ public class Application extends SpringBootServletInitializer implements Banner,
     @Override
     public void run(String... arg0) throws Exception {
         logger.info("Classpath root is: " + Application.class.getResource("/").getPath());
-        logger.info("RUNNING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! [" + env.getProperty("security.user.password") + "]");
+        logger.info("RUNNING! [" + env.getProperty("security.user.password") + "]");
     }
-    
 }

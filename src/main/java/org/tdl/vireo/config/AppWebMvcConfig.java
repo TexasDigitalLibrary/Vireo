@@ -28,7 +28,7 @@ public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
 
 	@Value("${app.ui.path}")
 	private String path;
-	
+		
 	@Override
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
         configurer.enable();
