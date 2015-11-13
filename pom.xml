@@ -4,10 +4,6 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<!-- brought in through the tamu core framework <parent> <groupId>org.springframework.boot</groupId> 
-		<artifactId>spring-boot-starter-parent</artifactId> <version>1.2.5.RELEASE</version> 
-		<relativePath /> </parent> -->
-
 	<name>Vireo</name>
 	<description>Vireo Thesis and Dissertation Submission System</description>
 	<version>4.0.x-SNAPSHOT</version>
@@ -79,19 +75,23 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
-		<!-- Spring Boot Starter Security - brought in through the tamu core framework 
-			<dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-security</artifactId> 
-			</dependency> <dependency> <groupId>org.springframework.security</groupId> 
-			<artifactId>spring-security-taglibs</artifactId> </dependency> -->
 		<!-- Spring Boot Loader Tools (for FileUtils.sha1Hash()) -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-loader-tools</artifactId>
 		</dependency>
-		<!-- JSP Templates <dependency> <groupId>javax.servlet</groupId> <artifactId>jstl</artifactId> 
-			</dependency> -->
-		<!-- Testing <dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-test</artifactId> 
-			<scope>test</scope> </dependency> -->
+		
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-jasper</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -115,7 +115,7 @@
 					<!-- NPM Install -->
 					<execution>
 						<id>exec-npm-install</id>
-						<!-- <phase>generate-sources</phase> -->
+						<phase>generate-sources</phase>
 						<configuration>
 							<executable>npm</executable>
 							<arguments>
@@ -142,10 +142,24 @@
 							<goal>exec</goal>
 						</goals>
 					</execution>
-					<!-- Grunt Deploy -->
+					<!-- Compass Compile -->
+					<execution>
+						<id>exec-compass-compile</id>
+						<phase>generate-sources</phase>
+						<configuration>
+							<executable>compass</executable>
+							<arguments>
+								<argument>compile</argument>
+							</arguments>
+						</configuration>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+					</execution>
+					<!-- Grunt Deploy
 					<execution>
 						<id>exec-grunt-deploy</id>
-						<!-- <phase>generate-sources</phase> -->
+						<phase>generate-sources</phase>
 						<configuration>
 							<executable>grunt</executable>
 							<arguments>
@@ -155,7 +169,7 @@
 						<goals>
 							<goal>exec</goal>
 						</goals>
-					</execution>
+					</execution> -->
 				</executions>
 			</plugin>
 			<!-- Karma Testing for AngularJS -->
@@ -231,6 +245,14 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
+		<resources>
+			<resource>
+			  	<directory>src/main/resources/</directory>
+			  	<excludes>
+			    	<exclude>static/ui/node_modules/**</exclude>
+			  	</excludes>
+			</resource>
+		</resources>
 	</build>
 
 </project>
