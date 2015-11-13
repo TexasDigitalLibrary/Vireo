@@ -4,7 +4,12 @@
 <!--[if IE 8]>         <html lang="en" class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
 <head>
-	<base href="/">
+	
+	<script type="text/javascript">
+		window.location.base = "${base}";
+	</script>
+	
+	<base href="${base}/">
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>Vireo :: Texas Digital Libraries</title>
@@ -101,7 +106,7 @@
 				
 		<div class="container-fluid">			
 			<div class="container">	
-				<h2>${variable}</h2>				
+				<h2>JSP: ${message}</h2>				
 				<div ng-view class="view"></div>					
 			</div>
 		</div>

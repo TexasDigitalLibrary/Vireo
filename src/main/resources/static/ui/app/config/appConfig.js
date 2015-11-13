@@ -4,8 +4,8 @@ var appConfig = {
 
 	'allowAnonymous': true,
 
-	'authService': window.location.protocol + '//' + window.location.host + '/mockauth',
-	'webService': window.location.protocol + '//' + window.location.host, 
+	'authService': window.location.protocol + '//' + window.location.host + window.location.base + '/mockauth',
+	'webService': window.location.protocol + '//' + window.location.host + window.location.base, 
 
 	'storageType': 'session',
 	
