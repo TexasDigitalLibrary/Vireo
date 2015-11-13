@@ -119,7 +119,7 @@
       <div class="container">
         <p class="text-muted">
 	        <ul class="inline-list">
-				<li>Â© Vireo <span app-version></span></li>
+				<li>© Vireo <span app-version></span></li>
 				<li>
 					<a href="#">Webmaster</a>
 				</li>
