@@ -1,6 +1,5 @@
 package org.tdl.vireo.config;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +20,7 @@ public class AppConfig extends CoreWebAppConfig {
     
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(restInterceptor()).addPathPatterns("/**");
+        registry.addInterceptor(restInterceptor()).addPathPatterns("/**").excludePathPatterns("/");
     }
     
     @Bean
