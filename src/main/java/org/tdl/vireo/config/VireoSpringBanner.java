@@ -1,7 +1,8 @@
 package org.tdl.vireo.config;
 
-import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
+import java.net.URL;
 import java.util.jar.Manifest;
 
 import org.springframework.boot.Banner;
@@ -22,7 +23,6 @@ public class VireoSpringBanner implements Banner {
             "    \\|__|/        \\|__| \\|__|\\|__| \\|_______| \\|_______|",
             "                                                        "
     };
-                                    
     
     private static final String VIREO_BOOT = " :: 01010110 01101001 01110010 01100101 01101111 :: ";
 
@@ -33,17 +33,14 @@ public class VireoSpringBanner implements Banner {
         for (String line : BANNER) {
             out.println(line);
         }
-        String version = environment.getProperty("info.build.version");
         
-        if (version == null) {
-           
-            Manifest manifest = null;
-            
-            try {
-                manifest = new Manifest(this.getClass().getResourceAsStream("/META-INF/manifest.mf"));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        String version = this.getClass().getPackage().getImplementationVersion();
+        
+        version = environment.getProperty("info.build.version");
+        
+        // shouldn't ever be null, but just in case get it from the manifest
+        if (version == null) {           
+            Manifest manifest = getManifest(this.getClass());            
             version = manifest.getMainAttributes().getValue("Implementation-Version");
         }
         
@@ -55,5 +52,21 @@ public class VireoSpringBanner implements Banner {
         out.println(AnsiOutput.toString(AnsiElement.GREEN, VIREO_BOOT, AnsiElement.DEFAULT, padding, AnsiElement.FAINT, version));
         out.println();
     }
+    
+    private static Manifest getManifest(Class<?> clz) {
+        String resource = "/" + clz.getName().replace(".", "/") + ".class";
+        String fullPath = clz.getResource(resource).toString();
+        String archivePath = fullPath.substring(0, fullPath.length() - resource.length());
+        if (archivePath.endsWith("\\WEB-INF\\classes") || archivePath.endsWith("/WEB-INF/classes")) {
+            archivePath = archivePath.substring(0, archivePath.length() - "/WEB-INF/classes".length()); // Required for war/jar files
+        }
+
+        try (InputStream input = new URL(archivePath + "/META-INF/MANIFEST.MF").openStream()) {
+            return new Manifest(input);
+        } catch (Exception e) {
+            throw new RuntimeException("Loading MANIFEST for class " + clz + " failed!", e);
+        }
+    }
+    
    
 }

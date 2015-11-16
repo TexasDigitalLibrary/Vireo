@@ -24,6 +24,7 @@
 				<include>application.properties</include>
 				<include>logback.xml</include>
 			</includes>
+			<filtered>true</filtered>
 		</fileSet>
 	</fileSets>
 	<dependencySets>
