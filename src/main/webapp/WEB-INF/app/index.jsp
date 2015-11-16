@@ -10,21 +10,25 @@
 	</script>
 	
 	<base href="${base}/">
+	
+	<title>Vireo :: Texas Digital Libraries</title>
+	
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Vireo :: Texas Digital Libraries</title>
-	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<meta name="description" content="Electronic Thesis &amp; Dissertation Submission Workflow Tool">
+	
 	<link rel="shortcut icon" href="resources/images/favicon.ico" type="image/x-icon" />
 
-	<link rel="stylesheet" href="bower_components/html5-boilerplate/css/normalize.css">
-	<link rel="stylesheet" href="bower_components/html5-boilerplate/css/main.css">
+	<link rel="stylesheet" href="bower_components/html5-boilerplate/css/normalize.css" />
+	<link rel="stylesheet" href="bower_components/html5-boilerplate/css/main.css" />
 	
-	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
 
-	<link rel="stylesheet" href="resources/styles/app.css">	
+	<link rel="stylesheet" href="resources/styles/app.css" />	
 
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
+	<!-- <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'> -->
 
 	<script src="bower_components/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js"></script>
 	
@@ -119,7 +123,7 @@
       <div class="container">
         <p class="text-muted">
 	        <ul class="inline-list">
-				<li>© Vireo <span app-version></span></li>
+				<li>&copy; Vireo <span app-version></span></li>
 				<li>
 					<a href="#">Webmaster</a>
 				</li>
@@ -157,7 +161,8 @@
 	
 	<!-- build:js src/main/resources/static/ui/app/resources/scripts/core_concat.js -->
 
-	<!-- TODO: concat core js -->
+		<!-- TODO: concat core js -->
+	
 	<!-- endbuild -->
 
 		<!-- Core Configuration -->

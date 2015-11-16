@@ -2,7 +2,7 @@ module.exports = function(grunt) {
 
 	// Configurable paths
 	var build = {
-			app: 'src/main/resources/static/ui/app'
+			app: 'src/main/webapp/WEB-INF/app'
 	};
 
 
@@ -12,7 +12,7 @@ module.exports = function(grunt) {
 		build: build,
 
 		useminPrepare: {
-			html: '<%= build.app %>/index.html',
+			html: '<%= build.app %>/index.jsp',
 			options: {
 		        dest: '<%= build.app %>'
 		    }
