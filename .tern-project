@@ -4,61 +4,26 @@
     "scriptPaths": [
       {
         "type": "FOLDER",
-        "path": "src/main/webapp/WEB-INF/app/components"
-      },
-      {
-        "type": "FOLDER",
-        "path": "src/main/webapp/WEB-INF/app/config"
-      },
-      {
-        "type": "FOLDER",
-        "path": "src/main/webapp/WEB-INF/app/controllers"
-      },
-      {
-        "type": "FOLDER",
-        "path": "src/main/webapp/WEB-INF/app/model"
-      },
-      {
-        "type": "FOLDER",
-        "path": "src/main/webapp/WEB-INF/app/resources"
-      },
-      {
-        "type": "FOLDER",
-        "path": "src/main/webapp/WEB-INF/app/views"
-      },
-      {
-        "type": "FILE",
-        "path": "src/main/webapp/WEB-INF/ui/app/app.js"
-      },
-      {
-        "type": "FOLDER",
         "path": "src/main/webapp/WEB-INF/app/bower_components/core/app"
+      },
+      {
+        "type": "FOLDER",
+        "path": "src/main/webapp/WEB-INF/app"
+      },
+      {
+        "type": "FOLDER",
+        "path": "src/main/webapp/WEB-INF/tests"
       }
     ]
-  },
-  "plugins": {
-    "guess-types": {
-      
-    },
-    "outline": {
-      
-    },
-    "jasmine": {
-      
-    },
-    "angular": {
-      
-    },
-    "protractor": {
-      
-    },
-    "bootstrap": {
-      
-    }
   },
   "libs": [
     "ecma5",
     "browser",
     "jquery"
-  ]
+  ],
+  "plugins": {
+    "angular": {
+      
+    }
+  }
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
@@ -58,23 +59,44 @@
 			<systemPath>${java.home}/../lib/tools.jar</systemPath>
 			<scope>system</scope>
 		</dependency>
-		<!-- Spring Boot Starter Web <dependency> <groupId>org.springframework.boot</groupId> 
-			<artifactId>spring-boot-starter-web</artifactId> </dependency> -->
+		
+		<!-- Spring Boot Starter Web 
+		<dependency> 
+			<groupId>org.springframework.boot</groupId> 
+			<artifactId>spring-boot-starter-web</artifactId> 
+		</dependency> -->
+		
 		<!-- Spring Boot Starter Data - brought in through the tamu core framework 
-			<dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-data-jpa</artifactId> 
-			</dependency> JPA -->
-		<!-- Spring Boot Data REST <dependency> <groupId>org.springframework.boot</groupId> 
-			<artifactId>spring-boot-starter-data-rest</artifactId> </dependency> -->
-		<!-- H2 in-memory SQL DB - brought in through the tamu core framework <dependency> 
-			<groupId>com.h2database</groupId> <artifactId>h2</artifactId> </dependency> -->
-		<!-- PostgreSQL SQL DB - brought in through the tamu core framework <dependency> 
-			<groupId>org.postgresql</groupId> <artifactId>postgresql</artifactId> <version>${postgresql.version}</version> 
-			</dependency> -->
-		<!-- MySQL SQL DB -->
+		<dependency> 
+			<groupId>org.springframework.boot</groupId> 
+			<artifactId>spring-boot-starter-data-jpa</artifactId> 
+		</dependency> JPA -->
+		
+		<!-- Spring Boot Data REST 
+		<dependency> 
+			<groupId>org.springframework.boot</groupId> 
+			<artifactId>spring-boot-starter-data-rest</artifactId> 
+		</dependency> -->
+		
+		<!-- H2 in-memory SQL DB - brought in through the tamu core framework 
+		<dependency> 
+			<groupId>com.h2database</groupId> 
+			<artifactId>h2</artifactId> 
+		</dependency> -->
+		
+		<!-- PostgreSQL SQL DB - brought in through the tamu core framework 
+		<dependency> 
+			<groupId>org.postgresql</groupId> 
+			<artifactId>postgresql</artifactId> 
+			<version>${postgresql.version}</version> 
+		</dependency> -->
+		
+		<!-- MySQL SQL DB -->		
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
+		
 		<!-- Spring Boot Loader Tools (for FileUtils.sha1Hash()) -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -221,6 +243,7 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
 				<executions>
+				
 					<!-- NPM Install -->
 					<execution>
 						<id>exec-npm-install</id>
@@ -234,7 +257,8 @@
 						<goals>
 							<goal>exec</goal>
 						</goals>
-					</execution>					
+					</execution>	
+									
 					<!-- Protractor Testing for AngularJS -->
 					<execution>
 						<id>exec-npm-run-protractor</id>
@@ -251,6 +275,22 @@
 							<goal>exec</goal>
 						</goals>
 					</execution>
+					
+					<!-- Grunt Deploy 
+					<execution>
+						<id>exec-grunt-deploy</id>
+						<phase>generate-sources</phase>
+						<configuration>
+							<executable>grunt</executable>
+							<arguments>
+								<argument>deploy</argument>
+							</arguments>
+						</configuration>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+					</execution> -->
+					
 					<!-- Compass Compile -->
 					<execution>
 						<id>exec-compass-compile</id>
@@ -265,22 +305,10 @@
 							<goal>exec</goal>
 						</goals>
 					</execution>
-					<!-- Grunt Deploy
-					<execution>
-						<id>exec-grunt-deploy</id>
-						<phase>generate-sources</phase>
-						<configuration>
-							<executable>grunt</executable>
-							<arguments>
-								<argument>deploy</argument>
-							</arguments>
-						</configuration>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-					</execution> -->
+					
 				</executions>
 			</plugin>
+			
 			<!-- Karma Testing for AngularJS -->
 			<plugin>
 				<groupId>com.kelveden</groupId>
@@ -300,6 +328,7 @@
 					</execution>
 				</executions>
 			</plugin>
+			
 			<!-- Assembly Plugin to generate Release zip file -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
