@@ -26,7 +26,7 @@ public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
 	
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/**").addResourceLocations("classpath:" + path + "/");
+        registry.addResourceHandler("/**").addResourceLocations("WEB-INF" + path + "/");
         registry.setOrder(Integer.MAX_VALUE - 2);
     }
     
