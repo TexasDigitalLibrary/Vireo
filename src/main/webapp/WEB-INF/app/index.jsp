@@ -86,7 +86,11 @@
 								</li>
 
 								<li ng-if="isAdmin()" role="presentation" class="divider"></li>
-								<li ng-if="isAdmin()" role="presentation" class="dropdown-header">Admin Actions</li>								
+								<li ng-if="isAdmin()" role="presentation" class="dropdown-header">Admin Actions</li>
+								<li ng-if="isAdmin()">
+									<a role="menuitem" href="settings">Settings</a>
+								</li>
+
 							</ul>
 						</li>
 					</ul>
@@ -109,8 +113,7 @@
 		
 				
 		<div class="container-fluid">			
-			<div class="container">	
-				<h2>JSP: ${message}</h2>				
+			<div class="main container">	
 				<div ng-view class="view"></div>					
 			</div>
 		</div>
@@ -224,6 +227,7 @@
 	    <script src="config/routes.js"></script>
 
 	    <!-- Directives -->
+	    <script src="directives/tabsDirective.js"></script>
 
 	    <!-- Services -->
 
@@ -234,9 +238,11 @@
 
 	    <!-- Controllers -->
 	    <script src="controllers/adminController.js"></script>
-	    <script src="controllers/userRepoController.js"></script>
+	   	<script src="controllers/loginController.js"></script>
 	    <script src="controllers/registrationController.js"></script>
-	    <script src="controllers/loginController.js"></script>
+	    <script src="controllers/settingsController.js"></script>
+	    <script src="controllers/userRepoController.js"></script>
+	   
     
 	    
 	<!-- endbuild -->

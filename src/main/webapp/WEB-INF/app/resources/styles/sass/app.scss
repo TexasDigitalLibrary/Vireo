@@ -1,5 +1,9 @@
 @import "sass/main";
 
+body {
+  font-family: "Trebuchet MS", Verdana, Geneva, Arial, Helvetica, sans-serif;
+}
+
 main {
   display: block;
   height: auto;
@@ -210,6 +214,10 @@ main footer {
   padding-top: 7px;
 }
 
+.container.main {
+	width: 100%;
+}
+
 .navbar {
   position: relative;
   min-height: 50px;
@@ -234,6 +242,30 @@ main footer {
   color: #fff;
 }
 
+.tabs {
+  width: 100%;
+  border-bottom: solid thin #ddd;
+}
+
+
+.tab {
+  display: inline-block;
+  padding: 8px;
+  font-weight: 400;
+  font-size: .9em;
+  color: #666666;
+  cursor: pointer;
+}
+
+.tab.active {
+  border: solid thin  #ddd;
+  border-bottom: none;
+  box-shadow: 0px 1px 0px 0px #fff, 1px -1px 8px -4px #43606E;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  cursor: default; 
+}
+
 .footer {
   color: #777;
   border-top: 1px solid #ccc;
@@ -246,7 +278,7 @@ main footer {
 
 footer a, footer li, footer p {
   color: #fff;
-  font-size: .95em;
+  font-size: .9em;
 }
 
 .footer-list {
