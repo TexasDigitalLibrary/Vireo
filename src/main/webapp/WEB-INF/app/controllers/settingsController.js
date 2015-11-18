@@ -1,3 +1,5 @@
-vireo.controller('SettingsController', function ($controller, $scope, $location, $routeParams, TabService) {
+vireo.controller('SettingsController', function ($controller, $scope, $location, $routeParams, TabService, User) {
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
+	$scope.user  = User.get();
+	
 });
