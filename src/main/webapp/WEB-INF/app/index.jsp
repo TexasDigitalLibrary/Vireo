@@ -43,8 +43,6 @@
 
 
 		<nav class="navbar navbar-default">
-		
-		
   			<div class="container-fluid" ng-controller="AuthenticationController">
   			
 	    		<div class="navbar-header">
@@ -88,7 +86,7 @@
 								<li ng-if="isAdmin()" role="presentation" class="divider"></li>
 								<li ng-if="isAdmin()" role="presentation" class="dropdown-header">Admin Actions</li>
 								<li ng-if="isAdmin()">
-									<a role="menuitem" href="settings">Settings</a>
+									<a role="menuitem" href="admin/settings">Settings</a>
 								</li>
 
 							</ul>
@@ -104,6 +102,20 @@
 			<div class="container">
 				<div class="row">
 					<a href="home"><img src="resources/images/logo-sm.png"></img></a>
+					<ul class="tab-nav nav navbar-nav navbar-right">
+			      		<li>
+			      			<a href="admin/list">List</a>
+			      		</li>
+						<li>
+			      			<a href="admin/view">View</a>
+			      		</li>
+			      		<li>
+			      			<a href="admin/log">Log</a>
+			      		</li>
+			      		<li class="settings-tab">
+			      			<a href="admin/settings">Settings</a>
+			      		</li>						
+					</ul>
 				</div>
 			</div>
 		</header>

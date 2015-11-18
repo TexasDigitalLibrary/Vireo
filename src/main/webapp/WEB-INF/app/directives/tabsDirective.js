@@ -13,7 +13,7 @@ vireo.directive("tabs", function() {
 			}
 
 			this.setActive = function(tab, html) {
-				$location.url("/settings/"+tab);
+				$location.url("/admin/settings/"+tab);
 				TabService.setTab($scope.target, html);
 			}
 

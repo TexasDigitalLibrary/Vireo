@@ -13,7 +13,59 @@ main {
 
 main footer {
   display: block;
-  margin-bottom: 75px;
+  margin-bottom: 65px;
+}
+
+.tab-nav {
+  margin-top: 12px;
+}
+
+.tab-nav li {
+  background: #92aa9c;
+  padding: 0px 10px;
+  margin-right: 15px;
+  min-width: 75px;
+  text-align: center;
+  color: #1D3541;
+  font-size: 1.75em;
+  font-weight: bolder;
+  display: inline-block;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  text-shadow: 0px 0px 10px #EFEBD7;
+}
+
+.tab-nav li.settings-tab {
+  font-size: 1.25em;
+  padding: 0px 5px;
+  margin-top: 15px;
+}
+
+.tab-nav li:hover,
+.tab-nav li.active {
+  cursor: pointer;
+  background: #FFFFFF;
+  text-shadow: 0px 0px 0px #FFFFFF;
+}
+
+.tab-nav li.active:hover {
+  cursor: default;
+}
+
+.tab-nav li a {
+  height: 45px;
+  color: inherit;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.tab-nav li.settings-tab a {
+  height: 30px;
+  padding-top: 8px;
+}
+
+.tab-nav li a:hover {
+  background: inherit;
 }
 
 .view {
