@@ -323,6 +323,7 @@ main footer {
   border-radius:5px;
   border: 1px solid #CFCFCF;
   margin: 0 0 20px 0;
+  font-family: "Trebuchet MS", Verdana, Geneva, Arial, Helvetica, sans-serif;
 }
 
 .myProfile .expand, .myPreferences .expand {
@@ -332,7 +333,7 @@ main footer {
 }
 
 .myProfileHeading , .myPreferencesHeading{
-  padding-top:5px;
+  padding-top:5px 0 2 0;
   text-align:center;
   font-weight:bold;
   font-size: 1.2em;
@@ -355,9 +356,14 @@ main footer {
 ul.myProfile-ul {
   list-style:none;
 }
-
+.myProfile-ul li {
+  padding: 3px;
+}
 .myProfile-ul input {
       border: 1px solid #cccccc;
+      padding: 2px 0 2px 0px;
+      background-color: #ffffff;
+
 }
 
 .footer {
