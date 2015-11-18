@@ -2,6 +2,7 @@
 
 body {
   font-family: "Trebuchet MS", Verdana, Geneva, Arial, Helvetica, sans-serif;
+  color: #70706f;
 }
 
 main {
@@ -32,13 +33,15 @@ main footer {
   display: inline-block;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  text-shadow: 0px 0px 10px #EFEBD7;
+  box-shadow: inset 0px -5px 7px -5px rgba(0, 0, 0, 0.75);
+  text-shadow: 0px 0px 10px rgba(255, 255, 245, 1), -1px -1px 0px rgba(250, 250, 235, 0.25), 1px 1px 0px rgba(250, 250, 235, 0.5);
 }
 
 .tab-nav li.settings-tab {
   font-size: 1.25em;
   padding: 0px 5px;
   margin-top: 15px;
+  box-shadow: inset 0px -3px 5px -3px rgba(0, 0, 0, 0.75);
 }
 
 .tab-nav li:hover,
@@ -46,6 +49,7 @@ main footer {
   cursor: pointer;
   background: #FFFFFF;
   text-shadow: 0px 0px 0px #FFFFFF;
+  box-shadow: inset 0px 0px 0px #FFFFFF;
 }
 
 .tab-nav li.active:hover {
@@ -70,6 +74,11 @@ main footer {
 
 .view {
   margin: 25px 0px;
+}
+
+.settings-view h2 {
+  font-weight: bold;
+  text-rendering: optimizelegibility;
 }
 
 .userMenu {
@@ -266,10 +275,6 @@ main footer {
   padding-top: 7px;
 }
 
-.container.main {
-	width: 100%;
-}
-
 .navbar {
   position: relative;
   min-height: 50px;
@@ -296,9 +301,14 @@ main footer {
 
 .tabs {
   width: 100%;
-  border-bottom: solid thin #ddd;
 }
 
+.tabs hr {
+  border: 0;
+  height: 1px;
+  background-image: linear-gradient(to right, rgba(112, 112, 111, 0.4), rgba(50, 50, 50, 0));
+  margin-top: 0px;
+}
 
 .tab {
   display: inline-block;
@@ -307,14 +317,22 @@ main footer {
   font-size: .9em;
   color: #666666;
   cursor: pointer;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.tab:hover {
+  background: #EFEFEF;
+}
+
+.tab.active:hover {
+  background: #FFFFFF;
 }
 
 .tab.active {
-  border: solid thin  #ddd;
+  border: solid thin  #DDDDDD;
   border-bottom: none;
-  box-shadow: 0px 1px 0px 0px #fff, 1px -1px 8px -4px #43606E;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
+  box-shadow: 3px -2px 8px -6px #43606E, 0px 2px 0px 0px #FFFFFF;
   cursor: default; 
 }
 
@@ -333,6 +351,18 @@ footer a, footer li, footer p {
   font-size: .9em;
 }
 
+.admin-page h1 {
+  font-weight: bold;
+  text-rendering: optimizelegibility;
+}
+
+.admin-page h1 + hr {
+  border: 0;
+  height: 1px;
+  background-image: linear-gradient(to right, rgba(112, 112, 111, 0.4), rgba(50, 50, 50, 0));
+  margin-top: -10px;
+}
+
 .footer-list {
   display: inline-block;
 }
@@ -346,6 +376,17 @@ footer a, footer li, footer p {
 
   .navbar {
     border-radius: 0px;
+  }
+
+}
+
+@media (min-width: 767px) and (max-width: 991px) { 
+
+  .tab-nav li {
+    padding: 0px 10px;
+    margin-right: 10px;
+    min-width: 50px;
+    font-size: 1.25em;
   }
 
 }

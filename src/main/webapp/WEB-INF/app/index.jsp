@@ -86,6 +86,12 @@
 								<li ng-if="isAdmin()" role="presentation" class="divider"></li>
 								<li ng-if="isAdmin()" role="presentation" class="dropdown-header">Admin Actions</li>
 								<li ng-if="isAdmin()">
+									<a role="menuitem" href="admin/list">List</a>
+								</li>
+								<li ng-if="isAdmin()">
+									<a role="menuitem" href="admin/log">Log</a>
+								</li>
+								<li ng-if="isAdmin()">
 									<a role="menuitem" href="admin/settings">Settings</a>
 								</li>
 
@@ -98,21 +104,21 @@
 	  		</div>
 		</nav>
 		
-		<header class="container-fluid site-title">
+		<header class="container-fluid site-title" ng-controller="HeaderController">
 			<div class="container">
 				<div class="row">
-					<a href="home"><img src="resources/images/logo-sm.png"></img></a>
-					<ul class="tab-nav nav navbar-nav navbar-right">
-			      		<li>
+					<a class="pull-left" href="home"><img style="max-height: 57px;" ng-src="{{logoImage()}}"></img></a>
+					<ul ng-if="activeAdminSection()" class="tab-nav nav navbar-nav navbar-right hidden-xs">
+			      		<li ng-class="{'active': activeTab('list')}">
 			      			<a href="admin/list">List</a>
 			      		</li>
-						<li>
+						<li ng-class="{'active': activeTab('view')}">
 			      			<a href="admin/view">View</a>
 			      		</li>
-			      		<li>
+			      		<li ng-class="{'active': activeTab('log')}">
 			      			<a href="admin/log">Log</a>
 			      		</li>
-			      		<li class="settings-tab">
+			      		<li ng-class="{'active': activeTab('settings')}" class="settings-tab">
 			      			<a href="admin/settings">Settings</a>
 			      		</li>						
 					</ul>
@@ -124,10 +130,8 @@
 		<alerts types="WARNING, ERROR"></alerts>
 		
 				
-		<div class="container-fluid">			
-			<div class="main container">	
-				<div ng-view class="view"></div>					
-			</div>
+		<div class="container-fluid main">			
+			<div ng-view class="view"></div>					
 		</div>
 
 
@@ -250,6 +254,7 @@
 
 	    <!-- Controllers -->
 	    <script src="controllers/adminController.js"></script>
+	    <script src="controllers/headerController.js"></script>
 	   	<script src="controllers/loginController.js"></script>
 	    <script src="controllers/registrationController.js"></script>
 	    <script src="controllers/settingsController.js"></script>

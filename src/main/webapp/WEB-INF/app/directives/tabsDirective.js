@@ -1,6 +1,6 @@
 vireo.directive("tabs", function() {
 	return {
-		template: '<div class="tabs"><span ng-transclude></span></div>',
+		template: '<div class="tabs"><span ng-transclude></span><hr></div>',
 		restrict: 'E',
 		replace: false,
 		transclude: true,
@@ -68,12 +68,10 @@ vireo.service("TabService", function($q) {
 	var tabs = {};
 
 	TabService.getTab = function(target){
-		console.log(tabs);
 		return tabs[target];
 	};
 
 	TabService.setTab = function(target, html){
-		console.log(target);
 		tabs[target] = html;
 	};	
 
