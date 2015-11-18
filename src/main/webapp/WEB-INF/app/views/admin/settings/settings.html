@@ -1,5 +1,54 @@
 <div class="row">
-	<div class="col-sm-2"></div>
+	<div class="col-sm-2">
+		
+			<div class="myProfile">				
+				<div class="myProfileHeading">My Profile
+					<span  class="expand" data-toggle="collapse" data-target="#myProfileDropDown">[+]</span>
+				</div>
+  				<div id="myProfileDropDown" class="collapse in">
+    				<div class="myProfile-body">
+    					<div class="myProfile-sub-heading">NAME</div>
+    						<ul class="myProfile-ul">
+    							<li>Test Name</li>
+    						</ul>
+    					<div class="myProfile-sub-heading">EMAIL</div>
+    						<ul class="myProfile-ul">
+    							<li>Test Email</li>
+    						</ul>
+    						
+    				</div>
+  				</div>
+				
+			</div>
+
+			<div class="myPreferences">				
+				<div class="myPreferencesHeading">My Preferences
+				<span  class="expand" data-toggle="collapse" data-target="#myPreferenceDropDown">[+]</span>
+  				</div>
+  				<div id="myPreferenceDropDown" class="collapse in">
+    				<div class="myProfile-body">
+    					<div class="myProfile-sub-heading">DISPLAY NAME</div>
+    						<ul class="myProfile-ul">
+    							<li>
+    								<input id="displayName" type="text" name="displayName"  value="Test Name"/></li>
+    						</ul>
+    					<div class="myProfile-sub-heading">PREFERRED EMAIL</div>
+    						<ul class="myProfile-ul">
+    							<li><input id="currentEmail" name="currentEmail" type="text" value="Test Email" /></li>
+    							<li><input id="ccEmail" name="ccEmail" type="checkbox"/> I want to recieve copy of all emails sent by the system on my behalf.</li>
+    						</ul>
+    						
+    				</div>
+  				</div>
+				
+			</div>
+
+
+			
+			
+		
+	</div>
+
 	<div class="col-sm-10">
 		
 		<tabs target="settingsView">
