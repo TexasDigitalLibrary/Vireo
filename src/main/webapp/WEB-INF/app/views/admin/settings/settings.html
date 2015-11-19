@@ -2,8 +2,8 @@
 	<div class="col-sm-2">
 		
 			<div class="myProfile">				
-				<div class="myProfileHeading">My Profile
-					<span  class="expand" data-toggle="collapse" data-target="#myProfileDropDown">[+]</span>
+				<div class="myProfileHeading" ng-click="changeSymbol()">My Profile
+					<span  class="expand">[{{clicked}}]</span>
 				</div>
   				<div id="myProfileDropDown" class="collapse in">
     				<div class="myProfile-body">
