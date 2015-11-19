@@ -338,6 +338,7 @@ sidebox .heading {
   text-align:center;
   font-weight:bold;
   font-size: 1.2em;
+  cursor:pointer;
 }
 
 .sidebox-body {
@@ -345,6 +346,13 @@ sidebox .heading {
   background-color: #ECECEC;
   padding: 8px 0 1px;
   overflow-y:hidden;
+  max-height: 0;
+  transition: max-height 0.35s ease-out;
+}
+
+.sidebox-body.expanded {
+  max-height: 500px;
+  transition: max-height 0.35s ease-out;
 }
 
 .sidebox-sub-heading {
@@ -352,6 +360,10 @@ sidebox .heading {
   background-color:#CCCCCC;
   font-weight:bold;
   margin:10px 0 0 0;
+}
+
+sidebox ul {
+  list-style-type:none;
 }
 
 sidebox ul li {

@@ -1,27 +1,28 @@
 <div class="row">
 	<div class="col-sm-2">
+		
 		<sidebox heading="My Profile">
-			<div class="sidebox-sub-heading">NAME</div>
+			<sideboxsub>NAME</sideboxsub>
 			<ul class="myProfile-ul">
 				<li><username></username></li>
 			</ul>
-			<div class="sidebox-sub-heading">EMAIL</div>
+			<sideboxsub>EMAIL</sideboxsub>
 			<ul class="myProfile-ul">
 				<li><useremail></useremail></li>
 			</ul>
 		</sidebox>
 
 		<sidebox heading="My Preferences">
-			<div class="sidebox-sub-heading">DISPLAY NAME</div>
+			<sideboxsub>DISPLAY NAME</sideboxsub>
 			<ul>
 				<li>
-					<input id="displayName" type="text" name="displayName"  value="Test Name"/>
+					<input id="displayName" type="text" name="displayName"  ng-model="user.displayName" ng-change="update('displayName')"/>
 				</li>
 			</ul>
-			<div class="sidebox-sub-heading">PREFERRED EMAIL</div>
+			<sideboxsub>PREFERRED EMAIL</sideboxsub>
 			<ul>
 				<li>
-					<input id="currentEmail" name="currentEmail" type="text" value="Test Email" />
+					<input id="currentEmail" name="currentEmail" type="text" ng-model="user.email" />
 				</li>
 				<li>
 					<input id="ccEmail" name="ccEmail" type="checkbox"/> I want to recieve copy of all emails sent by the system on my behalf.
