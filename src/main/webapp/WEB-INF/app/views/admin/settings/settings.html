@@ -1,5 +1,37 @@
-<div class="row admin-page">
-	<div class="col-sm-2"></div>
+<div class="row">
+	<div class="col-sm-2">
+		
+		<sidebox heading="My Profile">
+			<sideboxsub>NAME</sideboxsub>
+			<ul class="myProfile-ul">
+				<li><username></username></li>
+			</ul>
+			<sideboxsub>EMAIL</sideboxsub>
+			<ul class="myProfile-ul">
+				<li><useremail></useremail></li>
+			</ul>
+		</sidebox>
+
+		<sidebox heading="My Preferences">
+			<sideboxsub>DISPLAY NAME</sideboxsub>
+			<ul>
+				<li>
+					<input id="displayName" type="text" name="displayName"  ng-model="user.displayName" ng-change="update('displayName')"/>
+				</li>
+			</ul>
+			<sideboxsub>PREFERRED EMAIL</sideboxsub>
+			<ul>
+				<li>
+					<input id="currentEmail" name="currentEmail" type="text" ng-model="user.email" />
+				</li>
+				<li>
+					<input id="ccEmail" name="ccEmail" type="checkbox"/> I want to recieve copy of all emails sent by the system on my behalf.
+				</li>
+			</ul>
+		</sidebox>	
+			
+		
+	</div>
 	<div class="col-sm-10">
 		
 		<tabs target="settingsView">
