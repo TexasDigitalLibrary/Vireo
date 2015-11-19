@@ -240,6 +240,7 @@
 
 	    <!-- Directives -->
 	    <script src="directives/tabsDirective.js"></script>
+	    <script src="directives/sideBoxDirective.js"></script>
 
 	    <!-- Services -->
 

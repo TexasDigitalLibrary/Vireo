@@ -1,50 +1,33 @@
 <div class="row">
 	<div class="col-sm-2">
-		
-			<div class="myProfile">				
-				<div class="myProfileHeading" ng-click="changeSymbol()">My Profile
-					<span  class="expand">[{{clicked}}]</span>
-				</div>
-  				<div id="myProfileDropDown" class="collapse in">
-    				<div class="myProfile-body">
-    					<div class="myProfile-sub-heading">NAME</div>
-    						<ul class="myProfile-ul">
-    							<li><username></username></li>
-    						</ul>
-    					<div class="myProfile-sub-heading">EMAIL</div>
-    						<ul class="myProfile-ul">
-    							<li><useremail></useremail></li>
-    						</ul>
-    						
-    				</div>
-  				</div>
-				
-			</div>
+		<sidebox heading="My Profile">
+			<div class="sidebox-sub-heading">NAME</div>
+			<ul class="myProfile-ul">
+				<li><username></username></li>
+			</ul>
+			<div class="sidebox-sub-heading">EMAIL</div>
+			<ul class="myProfile-ul">
+				<li><useremail></useremail></li>
+			</ul>
+		</sidebox>
 
-			<div class="myPreferences">				
-				<div class="myPreferencesHeading">My Preferences
-				<span  class="expand" data-toggle="collapse" data-target="#myPreferenceDropDown">[+]</span>
-  				</div>
-  				<div id="myPreferenceDropDown" class="collapse in">
-    				<div class="myProfile-body">
-    					<div class="myProfile-sub-heading">DISPLAY NAME</div>
-    						<ul class="myProfile-ul">
-    							<li>
-    								<input id="displayName" type="text" name="displayName"  value="Test Name"/></li>
-    						</ul>
-    					<div class="myProfile-sub-heading">PREFERRED EMAIL</div>
-    						<ul class="myProfile-ul">
-    							<li><input id="currentEmail" name="currentEmail" type="text" value="Test Email" /></li>
-    							<li><input id="ccEmail" name="ccEmail" type="checkbox"/> I want to recieve copy of all emails sent by the system on my behalf.</li>
-    						</ul>
-    						
-    				</div>
-  				</div>
-				
-			</div>
-
-
-			
+		<sidebox heading="My Preferences">
+			<div class="sidebox-sub-heading">DISPLAY NAME</div>
+			<ul>
+				<li>
+					<input id="displayName" type="text" name="displayName"  value="Test Name"/>
+				</li>
+			</ul>
+			<div class="sidebox-sub-heading">PREFERRED EMAIL</div>
+			<ul>
+				<li>
+					<input id="currentEmail" name="currentEmail" type="text" value="Test Email" />
+				</li>
+				<li>
+					<input id="ccEmail" name="ccEmail" type="checkbox"/> I want to recieve copy of all emails sent by the system on my behalf.
+				</li>
+			</ul>
+		</sidebox>	
 			
 		
 	</div>

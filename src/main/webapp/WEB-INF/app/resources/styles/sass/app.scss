@@ -318,7 +318,8 @@ main footer {
   cursor: default; 
 }
 
-.myProfile, .myPreferences{
+sidebox{
+  display: block;
   background-color:#ECECEC;
   border-radius:5px;
   border: 1px solid #CFCFCF;
@@ -326,40 +327,37 @@ main footer {
   font-family: "Trebuchet MS", Verdana, Geneva, Arial, Helvetica, sans-serif;
 }
 
-.myProfile .expand, .myPreferences .expand {
+sidebox .expand {
   position:absolute;
   right:35px;
   color: #cccccc;
 }
 
-.myProfileHeading , .myPreferencesHeading{
+sidebox .heading {
   padding-top:5px 0 2 0;
   text-align:center;
   font-weight:bold;
   font-size: 1.2em;
 }
 
-.myProfile-body {
+.sidebox-body {
   display:block;
   background-color: #ECECEC;
   padding: 8px 0 1px;
   overflow-y:hidden;
 }
 
-.myProfile-sub-heading {
+.sidebox-sub-heading {
   padding:2px 10px;
   background-color:#CCCCCC;
   font-weight:bold;
   margin:10px 0 0 0;
 }
 
-ul.myProfile-ul {
-  list-style:none;
-}
-.myProfile-ul li {
+sidebox ul li {
   padding: 3px;
 }
-.myProfile-ul input {
+sidebox ul input {
       border: 1px solid #cccccc;
       padding: 2px 0 2px 3px;
       background-color: #ffffff;
