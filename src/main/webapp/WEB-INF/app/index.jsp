@@ -245,6 +245,8 @@
 	    <!-- Directives -->
 	    <script src="directives/tabsDirective.js"></script>
 	    <script src="directives/sideBoxDirective.js"></script>
+	    <script src="directives/legendDirective.js"></script>
+	    <script src="directives/checkBoxDirective.js"></script>	
 
 	    <!-- Services -->
 
@@ -259,8 +261,7 @@
 	   	<script src="controllers/loginController.js"></script>
 	    <script src="controllers/registrationController.js"></script>
 	    <script src="controllers/settingsController.js"></script>
-	    <script src="controllers/userRepoController.js"></script>
-	   
+	    <script src="controllers/userRepoController.js"></script>  
     
 	    
 	<!-- endbuild -->
