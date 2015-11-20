@@ -13,21 +13,18 @@
 		</sidebox>
 
 		<sidebox heading="My Preferences">
-			<sideboxsub>DISPLAY NAME</sideboxsub>
-			<ul>
-				<li>
-					<input id="displayName" type="text" name="displayName"  ng-model="user.displayName" ng-change="update('displayName')"/>
-				</li>
-			</ul>
+			
+			<sideboxsub>DISPLAY NAME</sideboxsub>			
+			<div class="form-group">
+				<input id="displayName" type="text" name="displayName"  class="form-control" ng-model="user.displayName" ng-change="update('displayName')"/>
+			</div>
+
 			<sideboxsub>PREFERRED EMAIL</sideboxsub>
-			<ul>
-				<li>
-					<input id="currentEmail" name="currentEmail" type="text" ng-model="user.email" />
-				</li>
-				<li>
-					<input id="ccEmail" name="ccEmail" type="checkbox"/> I want to recieve copy of all emails sent by the system on my behalf.
-				</li>
-			</ul>
+			<div class="form-group">
+				<input id="currentEmail" name="currentEmail" class="form-control" type="text" ng-model="user.email" />
+				<input id="ccEmail" name="ccEmail" type="checkbox"/> I want to recieve copy of all emails sent by the system on my behalf.
+			</div>
+		
 		</sidebox>	
 			
 		

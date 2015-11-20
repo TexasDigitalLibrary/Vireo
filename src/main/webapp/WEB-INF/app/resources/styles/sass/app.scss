@@ -336,23 +336,33 @@ main footer {
   cursor: default; 
 }
 
-sidebox{
+sidebox {
   display: block;
+  color: #444444;
   background-color:#ECECEC;
   border-radius:5px;
   border: 1px solid #CFCFCF;
   margin: 0 0 20px 0;
-  font-family: "Trebuchet MS", Verdana, Geneva, Arial, Helvetica, sans-serif;
+  font-family: "Lucida Grande", "Bitstream Vera Sans";
+  font-size: 13px;
 }
 
-sidebox .expand {
-  position:absolute;
-  right:35px;
+sidebox .sidebox-heading {
   color: #cccccc;
+  font-family: "Trebuchet MS", Verdana, Geneva, Arial, Helvetica, sans-serif;
+  width: 100%;
+  cursor:pointer;
+  padding: 6px 5px 0 5px;;
 }
 
-sidebox .heading {
-  padding-top:5px 0 2 0;
+sidebox .form-group {
+  text-align: center;
+  padding: 5px;
+}
+
+sidebox .heading-text {
+  color: #444444;
+  width: 100%;
   text-align:center;
   font-weight:bold;
   font-size: 1.2em;
