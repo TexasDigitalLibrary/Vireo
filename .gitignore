@@ -7,3 +7,4 @@ attachments/
 .factorypath
 .tmp
 npm-debug.log
+.externalToolBuilders
