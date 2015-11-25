@@ -104,11 +104,8 @@ public class UserController {
         Credentials shib = (Credentials) credentials;
         
         User user = userRepo.findByEmail(shib.getEmail());
-        
-        Map<String, Map<String, String>> settingsMap = new HashMap<String, Map<String,String>>();
-        settingsMap.put("settings", user.getSettings());
            
-        return new ApiResponse(SUCCESS, settingsMap);
+        return new ApiResponse(SUCCESS, user.getSettings());
     }
     
     @ApiMapping("/settings/{key}")

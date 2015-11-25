@@ -48,16 +48,15 @@ vireo.service("UserSettings", function(AbstractModel, WsApi) {
    	};
 
 	UserSettings.update = function(setting, value) {
-
-		// WsApi.fetch({
-		// 		endpoint: '/private/queue', 
-		// 		controller: 'user', 
-		// 		method: 'settings',
-		// 		data: 
-		// }).then(function(data) {
-		// 	UserSettings.data.settings = JSON.parse(data.body).payload.PersistentMap;
-		// });
-
+		WsApi.fetch({
+				endpoint: '/private/queue', 
+				controller: 'user', 
+				method: 'settings/'+setting,
+				data: {"settingValue": value}
+		}).then(function(data) {
+			UserSettings.data[setting] = JSON.parse(data.body).payload.PersistentMap[setting];
+			console.log(UserSettings.data);
+		});
 	}
 
 	return UserSettings;

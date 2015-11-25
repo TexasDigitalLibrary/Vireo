@@ -423,8 +423,8 @@ legend.legendborder {
   border-bottom:none;
 }
 
-checkbox {
-  float: left;
+.checkbox {
+  display: inline-block;
   width: 170px;
   font-size: .9em;
   padding: 0 7px;
