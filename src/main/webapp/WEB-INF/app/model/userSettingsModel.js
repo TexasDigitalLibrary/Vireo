@@ -54,8 +54,10 @@ vireo.service("UserSettings", function(AbstractModel, WsApi) {
 				method: 'settings/'+setting,
 				data: {"settingValue": value}
 		}).then(function(data) {
+
+			//should confirm that response was not in error first
+
 			UserSettings.data[setting] = JSON.parse(data.body).payload.PersistentMap[setting];
-			console.log(UserSettings.data);
 		});
 	}
 
