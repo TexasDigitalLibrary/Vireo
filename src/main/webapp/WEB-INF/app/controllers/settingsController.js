@@ -1,8 +1,9 @@
-vireo.controller('SettingsController', function ($controller, $scope, $location, $routeParams, TabService, User) {
+vireo.controller('SettingsController', function ($controller, $scope, $location, $routeParams, UserSettings) {
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
-	$scope.user  = User.get();
-	User.ready().then(function(){
-		$scope.user.displayName = $scope.user.firstName+ ' ' +$scope.user.lastName;
+	$scope.userSettings  = UserSettings.get();
+
+	UserSettings.ready().then(function() {
+		console.log($scope.userSettings);
 	});
-console.log($scope.user);
+
 });

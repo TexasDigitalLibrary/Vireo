@@ -40,8 +40,6 @@
 
 	<!-- Content placed here will appear on every page -->
 	<main>
-
-
 		<nav class="navbar navbar-default">
   			<div class="container-fluid" ng-controller="AuthenticationController">
   			
@@ -71,7 +69,7 @@
 	    		<div ng-if="!isAnonymous()" class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			      	<ul class="nav navbar-nav navbar-right">
 						<li class="dropdown">
-							<a class="dropdown-toggle toggle-href" data-toggle="dropdown" aria-expanded="false"><username></username> <span class="caret"></span></a>
+							<a class="dropdown-toggle toggle-href" data-toggle="dropdown" aria-expanded="false"><displayname></displayname> <span class="caret"></span></a>
 							<ul class="dropdown-menu" role="menu">
 								<li role="presentation" class="dropdown-header">Profile</li>
 								<li><a role="menuitem" href="myview">My View</a></li>
@@ -125,7 +123,6 @@
 				</div>
 			</div>
 		</header>
-
 
 		<alerts types="WARNING, ERROR"></alerts>
 		
@@ -245,13 +242,15 @@
 	    <!-- Directives -->
 	    <script src="directives/tabsDirective.js"></script>
 	    <script src="directives/sideBoxDirective.js"></script>
+	    <script src="directives/vireoUserDirective.js"></script>
 
 	    <!-- Services -->
 
 	    <!-- Factories -->
 
 	    <!-- Models -->
-	    <script src="model/userRepoModel.js"></script>    
+	    <script src="model/userSettingsModel.js"></script>
+	    <script src="model/userRepoModel.js"></script>
 
 	    <!-- Controllers -->
 	    <script src="controllers/adminController.js"></script>

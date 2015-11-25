@@ -5,6 +5,7 @@ import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.LAZY;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -14,8 +15,11 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.JoinColumn;
 
 import org.tdl.vireo.enums.Role;
 
@@ -55,13 +59,15 @@ public class User extends BaseEntity implements CoreUser {
     @Column
     private String middleName;
 
-    @Column
-    private String displayName;
+    @ElementCollection(fetch=FetchType.EAGER)
+    @MapKeyColumn(name="setting")
+    @Column(name="value")
+    Map<String, String> settings = new HashMap<String, String>();
 
     @Column
     private Integer birthYear;
 
-    @ElementCollection
+    @ElementCollection(fetch=FetchType.EAGER)
     @CollectionTable(name = "shibboleth_affiliations")
     private Set<String> shibbolethAffiliations;
 
@@ -74,7 +80,7 @@ public class User extends BaseEntity implements CoreUser {
     @ManyToMany(cascade = { DETACH, REFRESH }, fetch = LAZY)
     private Set<Organization> organizations;
 
-    @ElementCollection
+    @ElementCollection(fetch=FetchType.EAGER)
     @CollectionTable(name = "user_preferences")
     private Map<String, String> preferences;
 
@@ -217,18 +223,26 @@ public class User extends BaseEntity implements CoreUser {
     }
 
     /**
-     * @return the displayName
+     * @param Key
+     *           return the setting by key 
      */
-    public String getDisplayName() {
-        return displayName;
+    public String getSetting(String key) {
+        return settings.get(key);
     }
-
+    
     /**
-     * @param displayName
-     *            the displayName to set
+     *   returns the settings map 
      */
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
+    public Map<String,String> getSettings() {
+        return settings;
+    }
+    
+    /**
+     * @param Key
+     *           return the setting by key 
+     */
+    public void setSetting(String key, String value) {
+        settings.put(key, value);
     }
 
     /**
