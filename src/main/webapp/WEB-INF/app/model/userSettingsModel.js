@@ -47,19 +47,27 @@ vireo.service("UserSettings", function(AbstractModel, WsApi) {
        UserSettings.get();
    	};
 
-	UserSettings.update = function(setting, value) {
+	UserSettings.update = function(setting, newValue, oldValue) {
 		WsApi.fetch({
 				endpoint: '/private/queue', 
 				controller: 'user', 
-				method: 'settings/'+setting,
-				data: {"settingValue": value}
+				method: 'settings/' + setting,
+				data: { "settingValue": newValue }
 		}).then(function(data) {
+			
+			var responseObject = JSON.parse(data.body);
 
-			//should confirm that response was not in error first
-
-			UserSettings.data[setting] = JSON.parse(data.body).payload.PersistentMap[setting];
+			if(responseObject.meta.type == 'ERROR') {
+				UserSettings.data[setting] = oldValue;
+			}
+			else {
+				UserSettings.data[setting] = responseObject.payload.PersistentMap[setting];
+			}
+			
+		}, function(data) {
+			UserSettings.data[setting] = oldValue;
 		});
-	}
+	};
 
 	return UserSettings;
 	
