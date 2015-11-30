@@ -4,5 +4,12 @@ vireo.controller('SettingsController', function ($controller, $scope, $location,
 	User.ready().then(function(){
 		$scope.user.displayName = $scope.user.firstName+ ' ' +$scope.user.lastName;
 	});
-console.log($scope.user);
+	
+	// console.log($scope.user);
+
+	$scope.clicked = false;
+    $scope.toggle = function() {
+        $scope.clicked = !$scope.clicked;
+    };
+
 });
