@@ -458,16 +458,16 @@ h4 {
 
 .lock-control {
   font-size:0.95em;
-  margin: 0 0 9px; 
+  margin: 0 0 10px; 
 }
 .lock-control a {
   color: #666666;
   text-decoration:none;
-
 }
 
 textarea
-{   width: 584px;
+{   width:100%;
+    margin-top:10px;
     height: 400px;
     outline: none;
     white-space: nowrap;
@@ -480,6 +480,13 @@ textarea:hover {
 textarea:focus {
   cursor:pointer;
 }
+
+.degreeCodes label {
+  margin-top:3px;
+  font-size: 1.2em;
+  font-weight:lighter;
+}
+
 
 .footer {
   color: #777;
