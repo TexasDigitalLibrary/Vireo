@@ -61,7 +61,7 @@ vireo.service("UserSettings", function(AbstractModel, WsApi) {
 				UserSettings.data[setting] = oldValue;
 			}
 			else {
-				UserSettings.data[setting] = responseObject.payload.PersistentMap[setting];
+				UserSettings.data['_' + setting] = UserSettings.data[setting] = responseObject.payload.PersistentMap[setting];
 			}
 			
 		}, function(data) {

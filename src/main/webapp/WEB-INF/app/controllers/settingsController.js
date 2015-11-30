@@ -22,9 +22,7 @@ vireo.controller('SettingsController', function ($controller, $scope, $location,
 			$scope.typingTimer = setTimeout(function() {
 				
 				UserSettings.update(setting, $scope.settings.user[setting], $scope.settings.user['_'+setting]);
-				
-				console.log($scope);
-				
+			
 			}, timer);
 			
 		};
