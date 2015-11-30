@@ -405,6 +405,82 @@ sidebox ul input {
 
 }
 
+.hint {
+  color: #999999;
+  font-size: 0.8em;
+  margin: 13px 0 -4px 0;
+}
+
+.toggle-button-heading {
+  font-size:1em;
+}
+
+.toggle-button .btn {
+  font-size:1em;
+}
+
+.toggle-button .btn:hover {
+   background-color: #ffffff;
+   cursor:default;
+}
+
+.toggle-button .btn.active {
+  background-color: #a2ccb5;
+  color: #FFFFFF;
+  border: 1px solid #70706f;
+  outline:none;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
+a.tooltip-icon {
+    float: left;
+    margin-top: 1px;
+    color: #666666;
+    text-decoration: none;
+}
+
+a.tooltip-icon:hover {
+}
+
+a[title]:hover:after {
+  position: absolute;
+}
+
+.glyphicon-info-sign{
+      line-height: 2;
+      margin-left: 10px;
+      opacity: .5;
+}
+
+h4 {
+    line-height: 22px;
+}
+
+.lock-control {
+  font-size:0.95em;
+  margin: 0 0 9px; 
+}
+.lock-control a {
+  color: #666666;
+  text-decoration:none;
+
+}
+
+textarea
+{   width: 584px;
+    height: 400px;
+    outline: none;
+    white-space: nowrap;
+    word-wrap: normal;
+}
+textarea:hover {
+    cursor:not-allowed;
+}
+
+textarea:focus {
+  cursor:pointer;
+}
+
 .footer {
   color: #777;
   border-top: 1px solid #ccc;
