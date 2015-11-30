@@ -5,7 +5,6 @@ import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.LAZY;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -19,7 +18,6 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.JoinColumn;
 
 import org.tdl.vireo.enums.Role;
 
@@ -62,7 +60,7 @@ public class User extends BaseEntity implements CoreUser {
     @ElementCollection(fetch=FetchType.EAGER)
     @MapKeyColumn(name="setting")
     @Column(name="value")
-    Map<String, String> settings = new HashMap<String, String>();
+    Map<String, String> settings;
 
     @Column
     private Integer birthYear;
@@ -80,10 +78,6 @@ public class User extends BaseEntity implements CoreUser {
     @ManyToMany(cascade = { DETACH, REFRESH }, fetch = LAZY)
     private Set<Organization> organizations;
 
-    @ElementCollection(fetch=FetchType.EAGER)
-    @CollectionTable(name = "user_preferences")
-    private Map<String, String> preferences;
-
     @Column(nullable = false)
     private Role role;
 
@@ -94,7 +88,7 @@ public class User extends BaseEntity implements CoreUser {
      * 
      */
     public User() {
-        setPreferences(new TreeMap<String, String>());
+        setSettings(new TreeMap<String, String>());
         setOrganizations(new TreeSet<Organization>());
         setShibbolethAffiliations(new TreeSet<String>());
     }
@@ -231,6 +225,14 @@ public class User extends BaseEntity implements CoreUser {
     }
     
     /**
+     * @param Key
+     *           return the setting by key 
+     */
+    public void putSetting(String key, String value) {
+        settings.put(key, value);
+    }
+    
+    /**
      *   returns the settings map 
      */
     public Map<String,String> getSettings() {
@@ -238,13 +240,12 @@ public class User extends BaseEntity implements CoreUser {
     }
     
     /**
-     * @param Key
-     *           return the setting by key 
+     *   sets the settings map 
      */
-    public void setSetting(String key, String value) {
-        settings.put(key, value);
+    public void setSettings(Map<String, String> settings) {
+        this.settings = settings;
     }
-
+    
     /**
      * @return the birthYear
      */
@@ -350,38 +351,6 @@ public class User extends BaseEntity implements CoreUser {
      */
     public void removeOrganization(Organization organization) {
         getOrganizations().remove(organization);
-    }
-
-    /**
-     * @return the preferences
-     */
-    public Map<String, String> getPreferences() {
-        return preferences;
-    }
-
-    /**
-     * @param preferences
-     *            the preferences to set
-     */
-    public void setPreferences(Map<String, String> preferences) {
-        this.preferences = preferences;
-    }
-
-    /**
-     * 
-     * @param key
-     * @param value
-     */
-    public void addPreference(String key, String value) {
-        getPreferences().put(key, value);
-    }
-
-    /**
-     * 
-     * @param key
-     */
-    public void removePreference(String key) {
-        getPreferences().remove(key);
     }
 
     /**

@@ -15,8 +15,8 @@ public class UserRepoImpl implements UserRepoCustom {
     public User create(String email, String firstName, String lastName, Role role) {
         
         User newUser = new User(email, firstName, lastName, role);
-        newUser.setSetting("displayName", firstName +" "+lastName);
-        newUser.setSetting("preferedEmail", email);
+        newUser.putSetting("displayName", firstName +" "+lastName);
+        newUser.putSetting("preferedEmail", email);
         
         return userRepo.save(newUser);
     }

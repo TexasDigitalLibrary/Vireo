@@ -126,7 +126,7 @@ public class UserController {
             return new ApiResponse(ERROR, "Could not parse the data object.");
         }
         
-        user.setSetting(key, dataNode.get("settingValue").asText());        
+        user.putSetting(key, dataNode.get("settingValue").asText());        
         
         return new ApiResponse(SUCCESS, userRepo.save(user).getSettings());
     }

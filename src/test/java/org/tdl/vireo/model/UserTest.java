@@ -60,7 +60,7 @@ public class UserTest extends AbstractEntityTest {
 
         User testUser = userRepo.create(TEST_USER_EMAIL, TEST_USER_FIRSTNAME, TEST_USER_LASTNAME, TEST_USER_ROLE);
         testUser.addOrganization(organization);
-        testUser.addPreference(TEST_PREFERENCE_KEY, TEST_PREFERENCE_VALUE);
+        testUser.putSetting(TEST_SETTING_KEY, TEST_SETTING_VALUE);
         testUser.addShibbolethAffiliation(TEST_SHIBBOLETH_AFFILIATION);
         testUser.setPermanentContactInfo(permanentContactInfo);
         testUser.setCurrentContactInfo(currentContactInfo);
