@@ -74,7 +74,7 @@
 							<a class="dropdown-toggle toggle-href" data-toggle="dropdown" aria-expanded="false"><username></username> <span class="caret"></span></a>
 							<ul class="dropdown-menu" role="menu">
 								<li role="presentation" class="dropdown-header">Profile</li>
-								<li><a role="menuitem" href="myview">My View</a></li>
+								<li><a role="menuitem" href="myprofile">Profile</a></li>
 								<li><a role="menuitem" href ng-click="logout()">Logout</a></li>
 
 								<li ng-if="isAdmin() || isManager()" role="presentation" class="divider"></li>
