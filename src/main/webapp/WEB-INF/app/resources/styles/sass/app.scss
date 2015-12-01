@@ -405,6 +405,64 @@ sidebox ul input {
 
 }
 
+.tooltip-wrapper {
+  position: relative;
+}
+
+.tooltip-handle:hover {
+  cursor: help;
+}
+
+.tip {
+  position: absolute;
+  top: 999999px;
+  width: 250px;
+  padding: 15px;
+  border-radius: 10px;
+  border: solid 2px #CCC;
+  background: linear-gradient(to bottom, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
+  opacity: 0;
+  transition: opacity 0.5s linear;
+}
+
+.tip.tip-visible {
+  opacity: 1;
+  z-index: 100;
+}
+
+.tip-point {
+    position: absolute;
+    top: -10px;
+    left: 12px;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid #CCC;
+}
+.tip-point:after{
+    content:'';
+    position:absolute;
+    top:4px;
+    left:-8px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid rgba(41, 68, 81, 1);
+}
+
+.tip-message {
+  width: 100%;
+  margin: auto;
+  color: #EFEFEF;
+  font-size: .85em;
+}
+
+.tip.tip-visible .tip-message {
+  z-index: 102 !important;
+}
+
 fieldset.fieldset-border {
   border: 1px solid #999999 !important;
   padding: 0 1.4em 1.4em 1.4em !important;

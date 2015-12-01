@@ -28,5 +28,7 @@ vireo.controller('SettingsController', function ($controller, $scope, $location,
 		};
 		
 	});
+
+	$scope.test = "foo";
 	
 });
