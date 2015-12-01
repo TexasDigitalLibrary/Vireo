@@ -105,4 +105,5 @@ public class OrganizationCategory extends BaseEntity {
     public boolean removeOrganization(Organization organization) {
         return getOrganizations().remove(organization);
     }
+    
 }

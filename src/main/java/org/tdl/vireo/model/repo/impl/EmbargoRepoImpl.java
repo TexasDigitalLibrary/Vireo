@@ -14,5 +14,10 @@ public class EmbargoRepoImpl implements EmbargoRepoCustom {
     public Embargo create(String name, String description, Integer duration) {
         return embargoRepo.save(new Embargo(name, description, duration));
     }
+    
+    @Override
+    public Embargo create(String name, String description, Integer duration, boolean isActive) {
+        return embargoRepo.save(new Embargo(name, description, duration, isActive));
+    }
 
 }

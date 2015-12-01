@@ -3,8 +3,8 @@ package org.tdl.vireo.model;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,10 +20,10 @@ public class Workflow extends BaseEntity {
 	private Boolean inheritable;
 	
 	@OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
-	private Set<WorkflowStep> workflowSteps;
+	private List<WorkflowStep> workflowSteps;
 	
 	public Workflow() {
-		setWorkflowSteps(new TreeSet<WorkflowStep>());
+		setWorkflowSteps(new ArrayList<WorkflowStep>());
 	}
 	
 	/**
@@ -70,7 +70,7 @@ public class Workflow extends BaseEntity {
 	/**
 	 * @return the workflowSteps
 	 */
-	public Set<WorkflowStep> getWorkflowSteps() {
+	public List<WorkflowStep> getWorkflowSteps() {
 		return workflowSteps;
 	}
 
@@ -78,7 +78,7 @@ public class Workflow extends BaseEntity {
 	 * @param workflowSteps
 	 *            the workflowSteps to set
 	 */
-	public void setWorkflowSteps(Set<WorkflowStep> workflowSteps) {
+	public void setWorkflowSteps(List<WorkflowStep> workflowSteps) {
 		this.workflowSteps = workflowSteps;
 	}
 	

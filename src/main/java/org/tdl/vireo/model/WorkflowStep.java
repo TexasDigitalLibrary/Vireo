@@ -2,7 +2,6 @@ package org.tdl.vireo.model;
 
 import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.MERGE;
-import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 
@@ -19,7 +18,7 @@ public class WorkflowStep extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
-    @ManyToMany(cascade = { DETACH, REFRESH, MERGE, PERSIST }, fetch = EAGER)
+    @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER)
     private Set<FieldProfile> fieldProfiles;
 
     public WorkflowStep() {

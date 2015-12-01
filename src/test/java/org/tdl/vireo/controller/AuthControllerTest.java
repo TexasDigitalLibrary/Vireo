@@ -18,7 +18,9 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.tdl.vireo.enums.Role;
+import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.User;
+import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -27,13 +29,17 @@ import edu.tamu.framework.enums.ApiResponseType;
 import edu.tamu.framework.model.ApiResponse;
 
 public class AuthControllerTest extends AbstractControllerTest {
+    
+    public static final String REGISTRATION_TEMPLATE = "SYSTEM New User Registration";
 
 	@Mock
     private UserRepo userRepo;
 	
+	@Mock
+    private EmailTemplateRepo emailTemplateRepo;
+	
 	@InjectMocks
     private AuthController authController;
-
 	
     private static List<User> mockUsers;
     
@@ -98,11 +104,19 @@ public class AuthControllerTest extends AbstractControllerTest {
         );
         
         Mockito.when(userRepo.save(any(User.class))).then(new Answer<Object>() {
-               @Override
-               public Object answer(InvocationOnMock invocation) throws Throwable {
-                   return updateUser((User) invocation.getArguments()[0]);
-               }}
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                return updateUser((User) invocation.getArguments()[0]);
+            }}
         );
+        
+        Mockito.when(emailTemplateRepo.findByNameOverride(REGISTRATION_TEMPLATE)).then(new Answer<Object>() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                return new EmailTemplate(TEST_EMAIL_TEMPLATE_NAME, TEST_EMAIL_TEMPLATE_SUBJECT, TEST_EMAIL_TEMPLATE_MESSAGE);
+            }}
+        );
+        
     }
    
     @Test

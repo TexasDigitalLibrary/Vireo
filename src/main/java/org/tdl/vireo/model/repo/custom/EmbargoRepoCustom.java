@@ -5,5 +5,7 @@ import org.tdl.vireo.model.Embargo;
 public interface EmbargoRepoCustom {
 
     public Embargo create(String name, String description, Integer duration);
+    
+    public Embargo create(String name, String description, Integer duration, boolean isActive);
 
 }

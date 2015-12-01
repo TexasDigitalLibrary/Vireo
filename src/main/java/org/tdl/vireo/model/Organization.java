@@ -2,6 +2,7 @@ package org.tdl.vireo.model;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.CascadeType.DETACH;
+import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
@@ -26,7 +27,7 @@ public class Organization extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne(fetch = EAGER, optional = false)
+    @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER, optional = false)
     private OrganizationCategory category;
 
     @ManyToOne(cascade = ALL, fetch = LAZY, optional = true)
@@ -151,9 +152,9 @@ public class Organization extends BaseEntity {
      *            the childrenOrganizations to set
      */
     public void setChildrenOrganizations(Set<Organization> childrenOrganizations) {
-        childrenOrganizations.stream().forEach(childOrganization -> {
-            childOrganization.addParentOrganization(this);
-        });
+//        childrenOrganizations.stream().forEach(childOrganization -> {
+//            childOrganization.addParentOrganization(this);
+//        });
         this.childrenOrganizations = childrenOrganizations;
     }
 

@@ -1,0 +1,333 @@
+{
+	"name": "Institution",
+	"category": {
+		"name": "System",
+		"level": 0
+	},
+	"workflow": {
+		"name": "System",
+		"inheritable": true,
+		"workflowSteps": [
+			{
+				"name": "Verify Your Information",
+				"fieldProfiles": [
+					{
+						"predicate": {
+							"value": "test"
+						},
+						"inputType": 0,
+						"repeatable": false,
+						"required": true,
+						"fieldGlosses": [
+							{
+								"value": "Test",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": [
+							{
+								"name": "test",
+								"entityName": null,
+								"language": {
+									"name": "English"
+								},
+								"dictionary": [
+									{
+										"name": "test",
+										"definition": "test",
+										"identifier": "test",
+										"controlledVocabulary": null
+									}
+								],
+								"isEntityProperty": true
+							}
+						]
+					}
+				]
+			},
+			{
+				"name": "License Agreement",
+				"fieldProfiles": [
+					{
+						"predicate": {
+							"value": "test"
+						},
+						"inputType": 0,
+						"repeatable": false,
+						"required": true,
+						"fieldGlosses": [
+							{
+								"value": "Test",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": [
+							{
+								"name": "test",
+								"entityName": null,
+								"language": {
+									"name": "English"
+								},
+								"dictionary": [
+									{
+										"name": "test",
+										"definition": "test",
+										"identifier": "test",
+										"controlledVocabulary": null
+									}
+								],
+								"isEntityProperty": true
+							}
+						]
+					}
+				]
+			},
+			{
+				"name": "Document Information",
+				"fieldProfiles": [
+					{
+						"predicate": {
+							"value": "test"
+						},
+						"inputType": 0,
+						"repeatable": false,
+						"required": true,
+						"fieldGlosses": [
+							{
+								"value": "Test",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": [
+							{
+								"name": "test",
+								"entityName": null,
+								"language": {
+									"name": "English"
+								},
+								"dictionary": [
+									{
+										"name": "test",
+										"definition": "test",
+										"identifier": "test",
+										"controlledVocabulary": null
+									}
+								],
+								"isEntityProperty": true
+							}
+						]
+					}
+				]
+			},
+			{
+				"name": "File Upload",
+				"fieldProfiles": [
+					{
+						"predicate": {
+							"value": "test"
+						},
+						"inputType": 0,
+						"repeatable": false,
+						"required": true,
+						"fieldGlosses": [
+							{
+								"value": "Test",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": [
+							{
+								"name": "test",
+								"entityName": null,
+								"language": {
+									"name": "English"
+								},
+								"dictionary": [
+									{
+										"name": "test",
+										"definition": "test",
+										"identifier": "test",
+										"controlledVocabulary": null
+									}
+								],
+								"isEntityProperty": true
+							}
+						]
+					}
+				]
+			}
+		]
+	},
+	"parentOrganizations": null,
+	"childrenOrganizations": null,
+	"emails": null,
+	"emailWorkflowRules": [
+		{
+			"isSystem": true,
+			"isDisabled": false,
+			"submissionState": {
+				"name": "In Progress",
+				"isArchived": false,
+				"isPublishable": false,
+				"isDeletable": false,
+				"isEditableByReviewer": false,
+				"isEditableByStudent": false,
+				"isActive": false,
+				"transitionSubmissionStates": [
+					{
+						"name": "Submitted",
+						"isArchived": false,
+						"isPublishable": false,
+						"isDeletable": false,
+						"isEditableByReviewer": true,
+						"isEditableByStudent": false,
+						"isActive": false,
+						"transitionSubmissionStates": [
+							{
+								"name": "Under Review",
+								"isArchived": false,
+								"isPublishable": false,
+								"isDeletable": false,
+								"isEditableByReviewer": true,
+								"isEditableByStudent": false,
+								"isActive": true,
+								"transitionSubmissionStates": [
+									{
+										"name": "Needs Correction",
+										"isArchived": false,
+										"isPublishable": false,
+										"isDeletable": false,
+										"isEditableByReviewer": true,
+										"isEditableByStudent": true,
+										"isActive": true,
+										"transitionSubmissionStates": [
+											{
+												"name": "Corrections Received",
+												"isArchived": false,
+												"isPublishable": false,
+												"isDeletable": false,
+												"isEditableByReviewer": true,
+												"isEditableByStudent": false,
+												"isActive": true,
+												"transitionSubmissionStates": [
+													{
+														"name": "Under Review"
+													},
+													{
+														"name": "Waiting On Requirements"
+													},
+													{
+														"name": "Approved"
+													}
+												]
+											}
+										]
+									},
+									{
+										"name": "Waiting On Requirements",
+										"isArchived": false,
+										"isPublishable": false,
+										"isDeletable": false,
+										"isEditableByReviewer": true,
+										"isEditableByStudent": false,
+										"isActive": true,
+										"transitionSubmissionStates": [
+											{
+												"name": "Under Review"
+											},
+											{
+												"name": "Approved"
+											}
+										]
+									},
+									{
+										"name": "Approved",
+										"isArchived": false,
+										"isPublishable": false,
+										"isDeletable": false,
+										"isEditableByReviewer": true,
+										"isEditableByStudent": false,
+										"isActive": true,
+										"transitionSubmissionStates": [
+											{
+												"name": "Pending Publication",
+												"isArchived": true,
+												"isPublishable": false,
+												"isDeletable": false,
+												"isEditableByReviewer": true,
+												"isEditableByStudent": false,
+												"isActive": false,
+												"transitionSubmissionStates": [
+													{
+														"name": "Published",
+														"isArchived": true,
+														"isPublishable": false,
+														"isDeletable": false,
+														"isEditableByReviewer": true,
+														"isEditableByStudent": false,
+														"isActive": false,
+														"transitionSubmissionStates": [
+															{
+																"name": "Pending Publication"
+															}
+														]
+													}
+												]
+											}
+										]
+									}
+								]
+							}
+						]
+					},
+					{
+						"name": "On Hold",
+						"isArchived": false,
+						"isPublishable": false,
+						"isDeletable": false,
+						"isEditableByReviewer": true,
+						"isEditableByStudent": false,
+						"isActive": true,
+						"transitionSubmissionStates": []
+					},
+					{
+						"name": "Withdrawn",
+						"isArchived": true,
+						"isPublishable": false,
+						"isDeletable": false,
+						"isEditableByReviewer": true,
+						"isEditableByStudent": false,
+						"isActive": false,
+						"transitionSubmissionStates": []
+					},
+					{
+						"name": "Cancelled",
+						"isArchived": true,
+						"isPublishable": false,
+						"isDeletable": true,
+						"isEditableByReviewer": true,
+						"isEditableByStudent": false,
+						"isActive": false,
+						"transitionSubmissionStates": []
+					}
+				]
+			},
+			"recipientType": 0,
+			"emailTemplate": {
+				"name": "test",
+				"subject": "test",
+				"message": "test",
+				"isSystemRequired": true
+			}
+		}
+	]
+
+}

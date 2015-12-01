@@ -31,7 +31,7 @@ public class ControlledVocabulary extends BaseEntity {
     @Column(nullable = true, unique = true)
     private String entityName;
 
-    @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
+    @ManyToOne(cascade = { DETACH, REFRESH }, optional = false)
     private Language language;
     
     @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY)
