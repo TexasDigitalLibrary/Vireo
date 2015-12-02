@@ -27,20 +27,30 @@ vireo.directive("pane", function($location, $timeout, $anchorScroll) {
 		link: function ($scope, element, attr, parent) {
 
 			angular.extend($scope, parent);
-			angular.extend($scope, attr);
+			
+			$scope.hash = attr.hash;
 
 			$timeout(function() {
-				$scope.expanded = $location.hash() == $scope.hash ? true : false;
+				$location.hash() == $scope.hash ? $scope.open() : $scope.close();
 				$anchorScroll();
 			});
 
 			$scope.toggleExpanded = function() {
 				$scope.closeAll($scope.$id);
-				$scope.expanded = $scope.expanded ? false : true;
+				$scope.expanded ? $scope.close() : $scope.open();
+			}
+
+			$scope.open = function() {
+				$scope.html = attr.html;
+				$scope.expanded = true;
+			}
+
+			$scope.close = function() {
+				$scope.expanded = false;
 			}
 
 			$scope.$on('close', function(event, id) {
-				if(id != $scope.$id) $scope.expanded = false;
+				if(id != $scope.$id) $scope.expanded = $scope.close();
 			});
 
 	    }
