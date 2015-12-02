@@ -192,8 +192,8 @@ public abstract class AbstractEntityTest {
     // User Test
     protected static final String TEST_SHIBBOLETH_AFFILIATION = "shib_affiliation";
 
-    protected static final String TEST_PREFERENCE_KEY = "key";
-    protected static final String TEST_PREFERENCE_VALUE = "value";
+    protected static final String TEST_SETTING_KEY = "key";
+    protected static final String TEST_SETTING_VALUE = "value";
 
     protected static final String TEST_CURRENT_ADDRESS1 = "101. E. 21st St.";
     protected static final String TEST_CURRENT_ADDRESS2 = "PCL 1.333";

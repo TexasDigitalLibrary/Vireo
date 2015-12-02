@@ -4,38 +4,39 @@
     "scriptPaths": [
       {
         "type": "FOLDER",
-        "path": "src/main/resources/static/ui/app/components"
+        "path": "src/main/webapp/WEB-INF/app/components"
       },
       {
         "type": "FOLDER",
-        "path": "src/main/resources/static/ui/app/config"
+        "path": "src/main/webapp/WEB-INF/app/config"
       },
       {
         "type": "FOLDER",
-        "path": "src/main/resources/static/ui/app/controllers"
+        "path": "src/main/webapp/WEB-INF/app/controllers"
       },
       {
         "type": "FOLDER",
-        "path": "src/main/resources/static/ui/app/model"
+        "path": "src/main/webapp/WEB-INF/app/model"
       },
       {
         "type": "FOLDER",
-        "path": "src/main/resources/static/ui/app/resources"
+        "path": "src/main/webapp/WEB-INF/app/resources"
       },
       {
         "type": "FOLDER",
-        "path": "src/main/resources/static/ui/app/views"
-      },
-      {
-        "type": "FILE",
-        "path": "src/main/resources/static/ui/app/app.js"
+        "path": "src/main/webapp/WEB-INF/app/views"
       },
       {
         "type": "FOLDER",
-        "path": "src/main/resources/static/ui/app/bower_components/core/app"
+        "path": "src/main/webapp/WEB-INF/app/bower_components/core/app"
       }
     ]
   },
+  "libs": [
+    "ecma5",
+    "browser",
+    "jquery"
+  ],
   "plugins": {
     "guess-types": {
       
@@ -55,10 +56,5 @@
     "bootstrap": {
       
     }
-  },
-  "libs": [
-    "ecma5",
-    "browser",
-    "jquery"
-  ]
+  }
 }

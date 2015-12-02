@@ -4,10 +4,6 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<!-- brought in through the tamu core framework <parent> <groupId>org.springframework.boot</groupId> 
-		<artifactId>spring-boot-starter-parent</artifactId> <version>1.2.5.RELEASE</version> 
-		<relativePath /> </parent> -->
-
 	<name>Vireo</name>
 	<description>Vireo Thesis and Dissertation Submission System</description>
 	<version>4.0.x-SNAPSHOT</version>
@@ -52,7 +48,7 @@
 			<artifactId>webservice-framework-core</artifactId>
 			<version>2.0.0-SNAPSHOT</version>
 		</dependency>
-
+		
 		<!-- Spring standalone JDK tools for JSP runtime compile (to avoid Embedded 
 			Jetty error on JSP compile at runtime) -->
 		<dependency>
@@ -79,27 +75,56 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
-		<!-- Spring Boot Starter Security - brought in through the tamu core framework 
-			<dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-security</artifactId> 
-			</dependency> <dependency> <groupId>org.springframework.security</groupId> 
-			<artifactId>spring-security-taglibs</artifactId> </dependency> -->
 		<!-- Spring Boot Loader Tools (for FileUtils.sha1Hash()) -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-loader-tools</artifactId>
 		</dependency>
-		<!-- JSP Templates <dependency> <groupId>javax.servlet</groupId> <artifactId>jstl</artifactId> 
-			</dependency> -->
-		<!-- Testing <dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-test</artifactId> 
-			<scope>test</scope> </dependency> -->
+		
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-jasper</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		
+		<!-- 
+		<dependency>
+			<groupId>org.codehaus.mojo</groupId>
+			<artifactId>properties-maven-plugin</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		-->
+
 	</dependencies>
+	  
 
 	<build>
+	 
 		<plugins>
+				
 			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
+		      	<groupId>org.springframework.boot</groupId>
+		      	<artifactId>spring-boot-maven-plugin</artifactId>
+		      	<configuration>
+			    	<addResources>false</addResources>
+			  	</configuration>
+		    </plugin>
+		    
+		    <plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-resources-plugin</artifactId>
+			    <configuration>
+			        <delimiters>
+			            <delimiter>@</delimiter>
+			        </delimiters>
+			    </configuration>
 			</plugin>
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -107,6 +132,90 @@
 					<useSystemClassLoader>false</useSystemClassLoader>
 				</configuration>
 			</plugin>
+			
+			<plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-jar-plugin</artifactId>
+			    <dependencies>
+		            <dependency>
+		                <groupId>org.apache.maven.shared</groupId>
+		                <artifactId>maven-filtering</artifactId>
+		                <version>1.3</version>
+		            </dependency>
+	          	</dependencies>
+			    <configuration>
+			        <archive>                   
+			            <manifest>
+			                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+			                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+			            </manifest>			            
+			        </archive>
+			        <webResources>
+	                    <resource>
+	                        <filtering>true</filtering>
+	                        <directory>src/main/resources</directory>
+	                        <targetPath>WEB-INF</targetPath>
+		                    <includes>
+		                        <include>application.properties</include>
+		                     </includes>
+	                    </resource>
+	                </webResources>
+			    </configuration>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-war-plugin</artifactId>
+			    <dependencies>
+		            <dependency>
+		                <groupId>org.apache.maven.shared</groupId>
+		                <artifactId>maven-filtering</artifactId>
+		                <version>1.3</version>
+		            </dependency>
+	          	</dependencies>
+			    <configuration>
+		        	<archive>                   
+			            <manifest>
+			                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+			                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+			            </manifest>
+			        </archive>
+			        <archiveClasses>true</archiveClasses>
+			        <webResources>
+	                    <resource>
+	                        <filtering>true</filtering>
+	                        <directory>src/main/resources</directory>
+	                        <targetPath>WEB-INF</targetPath>
+		                    <includes>
+		                        <include>application.properties</include>
+		                     </includes>
+	                    </resource>
+	                </webResources>
+			    </configuration>
+			</plugin>
+			
+			<!-- Read application.properties -->
+			<!-- 
+			<plugin>
+        		<groupId>org.codehaus.mojo</groupId>
+        		<artifactId>properties-maven-plugin</artifactId>
+        		<version>1.0.0</version>
+        		<executions>
+          			<execution>
+            			<phase>initialize</phase>
+            			<goals>
+              				<goal>read-project-properties</goal>
+           				</goals>
+          			</execution>
+        		</executions>
+        		<configuration>
+          			<files>
+           				<file>src/main/resources/application.properties</file>
+          			</files>
+        		</configuration>
+      		</plugin>
+      	 	-->
+      	 	
 			<!-- General Maven Execution Plugin -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -115,7 +224,7 @@
 					<!-- NPM Install -->
 					<execution>
 						<id>exec-npm-install</id>
-						<!-- <phase>generate-sources</phase> -->
+						<phase>generate-sources</phase>
 						<configuration>
 							<executable>npm</executable>
 							<arguments>
@@ -142,10 +251,24 @@
 							<goal>exec</goal>
 						</goals>
 					</execution>
-					<!-- Grunt Deploy -->
+					<!-- Compass Compile -->
+					<execution>
+						<id>exec-compass-compile</id>
+						<phase>generate-sources</phase>
+						<configuration>
+							<executable>compass</executable>
+							<arguments>
+								<argument>compile</argument>
+							</arguments>
+						</configuration>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+					</execution>
+					<!-- Grunt Deploy
 					<execution>
 						<id>exec-grunt-deploy</id>
-						<!-- <phase>generate-sources</phase> -->
+						<phase>generate-sources</phase>
 						<configuration>
 							<executable>grunt</executable>
 							<arguments>
@@ -155,7 +278,7 @@
 						<goals>
 							<goal>exec</goal>
 						</goals>
-					</execution>
+					</execution> -->
 				</executions>
 			</plugin>
 			<!-- Karma Testing for AngularJS -->
@@ -172,7 +295,7 @@
 						</goals>
 						<configuration>
 							<karmaExecutable>${basedir}/node_modules/.bin/karma</karmaExecutable>
-							<configFile>src/main/resources/static/ui/tests/karma.conf.js</configFile>
+							<configFile>src/main/webapp/WEB-INF/tests/karma.conf.js</configFile>
 						</configuration>
 					</execution>
 				</executions>
@@ -208,15 +331,9 @@
 							<pluginExecutions>
 								<pluginExecution>
 									<pluginExecutionFilter>
-										<groupId>
-											org.codehaus.mojo
-										</groupId>
-										<artifactId>
-											exec-maven-plugin
-										</artifactId>
-										<versionRange>
-											[1.3.2,)
-										</versionRange>
+										<groupId>org.codehaus.mojo</groupId>
+										<artifactId>exec-maven-plugin</artifactId>
+										<versionRange>[1.3.2,)</versionRange>
 										<goals>
 											<goal>exec</goal>
 										</goals>
@@ -231,6 +348,27 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
+		
+		<resources>
+			<resource>
+    			<directory>src/main/resources</directory>
+	    		<filtering>true</filtering>
+	  		</resource>
+	  	</resources>
+	  	
+		<!-- 
+		<resources>
+			<resource>
+			  	<directory>src/main/webapp/</directory>
+			  	<excludes>
+			    	<exclude>app/node_modules/**</exclude>
+			  	</excludes>
+			</resource>
+		</resources>
+		-->
+		 
 	</build>
+	
+	
 
 </project>

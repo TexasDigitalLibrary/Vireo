@@ -4,22 +4,31 @@
 <!--[if IE 8]>         <html lang="en" class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
 <head>
-	<base href="/vireo/">
+	
+	<script type="text/javascript">
+		window.location.base = "${base}";
+	</script>
+	
+	<base href="${base}/">
+	
+	<title>Vireo :: Texas Digital Libraries</title>
+	
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Vireo :: Texas Digital Libraries</title>
-	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<meta name="description" content="Electronic Thesis &amp; Dissertation Submission Workflow Tool">
+	
 	<link rel="shortcut icon" href="resources/images/favicon.ico" type="image/x-icon" />
 
-	<link rel="stylesheet" href="bower_components/html5-boilerplate/css/normalize.css">
-	<link rel="stylesheet" href="bower_components/html5-boilerplate/css/main.css">
+	<link rel="stylesheet" href="bower_components/html5-boilerplate/css/normalize.css" />
+	<link rel="stylesheet" href="bower_components/html5-boilerplate/css/main.css" />
 	
-	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
 
-	<link rel="stylesheet" href="resources/styles/app.css">	
+	<link rel="stylesheet" href="resources/styles/app.css" />	
 
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
+	<!-- <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'> -->
 
 	<script src="bower_components/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js"></script>
 	
@@ -31,12 +40,9 @@
 
 	<!-- Content placed here will appear on every page -->
 	<main>
-
-
 		<nav class="navbar navbar-default">
-  			<div class="container-fluid">
-    
-	    		<!-- Brand and toggle get grouped for better mobile display -->
+  			<div class="container-fluid" ng-controller="AuthenticationController">
+  			
 	    		<div class="navbar-header">
 	      			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
 				        <span class="sr-only">Toggle navigation</span>
@@ -45,26 +51,25 @@
 				        <span class="icon-bar"></span>
 			      	</button>
 			    </div>
+			    
+			    <modal modal-id="verifyEmailModal" modal-view="views/modals/verifyEmailModal.html" modal-header-class="modal-header-primary"></modal>					
+				<modal modal-id="loginModal" modal-view="views/modals/loginModal.html" modal-header-class="modal-header-primary"></modal>
 
-	    		<!-- Collect the nav links, forms, and other content for toggling -->
-	    		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1"  ng-controller="ModalController">
-			      	
-			      	<ul class="nav navbar-nav navbar-right" ng-controller="AuthenticationController">
-
+	    		<div ng-if="isAnonymous()" class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">	    					      	
+			      	<ul class="nav navbar-nav navbar-right">
 			      		<li class="dropdown">
-			      			<a href ng-if="isAnonymous()" ng-click="showModal('loginModal')">Login</a>							
+			      			<a href data-toggle="modal" data-target="#loginModal">Login</a>
 			      		</li>
 						<li class="dropdown">
-			      			<a href ng-if="isAnonymous()" ng-click="showModal('verifyEmailModal')">Register</a>
-			      		</li>
-						
+			      			<a href data-toggle="modal" data-target="#verifyEmailModal">Register</a>
+			      		</li>						
+					</ul>
+	    		</div>
+	    			    		
+	    		<div ng-if="!isAnonymous()" class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			      	<ul class="nav navbar-nav navbar-right">
 						<li class="dropdown">
-							
-							<modal modal-id="verifyEmailModal" modal-view="views/modals/verifyEmailModal.html" modal-header-class="modal-header-primary"></modal>					
-							<modal modal-id="loginModal" modal-view="views/modals/loginModal.html" modal-header-class="modal-header-primary"></modal>
-							
-							<a ng-if="!isAnonymous()" class="dropdown-toggle toggle-href" data-toggle="dropdown" aria-expanded="false"><username></username> <span class="caret"></span></a>
-
+							<a class="dropdown-toggle toggle-href" data-toggle="dropdown" aria-expanded="false"><displayname></displayname> <span class="caret"></span></a>
 							<ul class="dropdown-menu" role="menu">
 								<li role="presentation" class="dropdown-header">Profile</li>
 								<li><a role="menuitem" href="myview">My View</a></li>
@@ -77,33 +82,53 @@
 								</li>
 
 								<li ng-if="isAdmin()" role="presentation" class="divider"></li>
-								<li ng-if="isAdmin()" role="presentation" class="dropdown-header">Admin Actions</li>								
-								
+								<li ng-if="isAdmin()" role="presentation" class="dropdown-header">Admin Actions</li>
+								<li ng-if="isAdmin()">
+									<a role="menuitem" href="admin/list">List</a>
+								</li>
+								<li ng-if="isAdmin()">
+									<a role="menuitem" href="admin/log">Log</a>
+								</li>
+								<li ng-if="isAdmin()">
+									<a role="menuitem" href="admin/settings">Settings</a>
+								</li>
+
 							</ul>
 						</li>
-						
 					</ul>
-
-	    		</div><!-- /.navbar-collapse -->
-	  		</div><!-- /.container-fluid -->
+	    		</div>
+	    		
+	    		
+	  		</div>
 		</nav>
 		
-		<header class="container-fluid site-title">
+		<header class="container-fluid site-title" ng-controller="HeaderController">
 			<div class="container">
 				<div class="row">
-					<a href="home"><img src="resources/images/logo-sm.png"></img></a>
+					<a class="pull-left" href="home"><img style="max-height: 57px;" ng-src="{{logoImage()}}"></img></a>
+					<ul ng-if="activeAdminSection()" class="tab-nav nav navbar-nav navbar-right hidden-xs">
+			      		<li ng-class="{'active': activeTab('list')}">
+			      			<a href="admin/list">List</a>
+			      		</li>
+						<li ng-class="{'active': activeTab('view')}">
+			      			<a href="admin/view">View</a>
+			      		</li>
+			      		<li ng-class="{'active': activeTab('log')}">
+			      			<a href="admin/log">Log</a>
+			      		</li>
+			      		<li ng-class="{'active': activeTab('settings')}" class="settings-tab">
+			      			<a href="admin/settings">Settings</a>
+			      		</li>						
+					</ul>
 				</div>
 			</div>
 		</header>
 
-
 		<alerts types="WARNING, ERROR"></alerts>
 		
 				
-		<div class="container-fluid">			
-				<div class="container">					
-					<div ng-view class="view"></div>					
-				</div>			
+		<div class="container-fluid main">			
+			<div ng-view class="view"></div>					
 		</div>
 
 
@@ -114,7 +139,7 @@
       <div class="container">
         <p class="text-muted">
 	        <ul class="inline-list">
-				<li>© Vireo <span app-version></span></li>
+				<li>&copy; Vireo <span app-version></span></li>
 				<li>
 					<a href="#">Webmaster</a>
 				</li>
@@ -131,12 +156,6 @@
 		</p>
       </div>
     </footer>
-	
-
-	<!-- <footer>
-		
-	</footer> -->
-
 
 	<!-- In production use: <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script> -->
 
@@ -158,7 +177,8 @@
 	
 	<!-- build:js src/main/resources/static/ui/app/resources/scripts/core_concat.js -->
 
-	<!-- TODO: concat core js -->
+		<!-- TODO: concat core js -->
+	
 	<!-- endbuild -->
 
 		<!-- Core Configuration -->
@@ -220,20 +240,29 @@
 	    <script src="config/routes.js"></script>
 
 	    <!-- Directives -->
+	    <script src="directives/tabsDirective.js"></script>
+	    <script src="directives/sideBoxDirective.js"></script>
+	    <script src="directives/userSettingsDirective.js"></script>
+	    <script src="directives/legendDirective.js"></script>
+	    <script src="directives/checkBoxDirective.js"></script>	
+	    <script src="directives/shadowDirective.js"></script>
+	    <script src="directives/tooltipDirective.js"></script>	
 
 	    <!-- Services -->
 
 	    <!-- Factories -->
 
 	    <!-- Models -->
-	    <script src="model/userRepoModel.js"></script>    
+	    <script src="model/userSettingsModel.js"></script>
+	    <script src="model/userRepoModel.js"></script>
 
 	    <!-- Controllers -->
 	    <script src="controllers/adminController.js"></script>
-	    <script src="controllers/userRepoController.js"></script>
+	    <script src="controllers/headerController.js"></script>
+	   	<script src="controllers/loginController.js"></script>
 	    <script src="controllers/registrationController.js"></script>
-	    <script src="controllers/loginController.js"></script>
-	    <script src="controllers/modalController.js"></script>
+	    <script src="controllers/settingsController.js"></script>
+	    <script src="controllers/userRepoController.js"></script>  
     
 	    
 	<!-- endbuild -->
