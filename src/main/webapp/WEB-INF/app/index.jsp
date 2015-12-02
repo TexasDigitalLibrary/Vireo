@@ -43,8 +43,6 @@
 
 
 		<nav class="navbar navbar-default">
-		
-		
   			<div class="container-fluid" ng-controller="AuthenticationController">
   			
 	    		<div class="navbar-header">
@@ -76,7 +74,7 @@
 							<a class="dropdown-toggle toggle-href" data-toggle="dropdown" aria-expanded="false"><username></username> <span class="caret"></span></a>
 							<ul class="dropdown-menu" role="menu">
 								<li role="presentation" class="dropdown-header">Profile</li>
-								<li><a role="menuitem" href="myview">My View</a></li>
+								<li><a role="menuitem" href="myprofile">Profile</a></li>
 								<li><a role="menuitem" href ng-click="logout()">Logout</a></li>
 
 								<li ng-if="isAdmin() || isManager()" role="presentation" class="divider"></li>
@@ -86,7 +84,17 @@
 								</li>
 
 								<li ng-if="isAdmin()" role="presentation" class="divider"></li>
-								<li ng-if="isAdmin()" role="presentation" class="dropdown-header">Admin Actions</li>								
+								<li ng-if="isAdmin()" role="presentation" class="dropdown-header">Admin Actions</li>
+								<li ng-if="isAdmin()">
+									<a role="menuitem" href="admin/list">List</a>
+								</li>
+								<li ng-if="isAdmin()">
+									<a role="menuitem" href="admin/log">Log</a>
+								</li>
+								<li ng-if="isAdmin()">
+									<a role="menuitem" href="admin/settings">Settings</a>
+								</li>
+
 							</ul>
 						</li>
 					</ul>
@@ -96,10 +104,24 @@
 	  		</div>
 		</nav>
 		
-		<header class="container-fluid site-title">
+		<header class="container-fluid site-title" ng-controller="HeaderController">
 			<div class="container">
 				<div class="row">
-					<a href="home"><img src="resources/images/logo-sm.png"></img></a>
+					<a class="pull-left" href="home"><img style="max-height: 57px;" ng-src="{{logoImage()}}"></img></a>
+					<ul ng-if="activeAdminSection()" class="tab-nav nav navbar-nav navbar-right hidden-xs">
+			      		<li ng-class="{'active': activeTab('list')}">
+			      			<a href="admin/list">List</a>
+			      		</li>
+						<li ng-class="{'active': activeTab('view')}">
+			      			<a href="admin/view">View</a>
+			      		</li>
+			      		<li ng-class="{'active': activeTab('log')}">
+			      			<a href="admin/log">Log</a>
+			      		</li>
+			      		<li ng-class="{'active': activeTab('settings')}" class="settings-tab">
+			      			<a href="admin/settings">Settings</a>
+			      		</li>						
+					</ul>
 				</div>
 			</div>
 		</header>
@@ -108,11 +130,8 @@
 		<alerts types="WARNING, ERROR"></alerts>
 		
 				
-		<div class="container-fluid">			
-			<div class="container">	
-				<h2>JSP: ${message}</h2>				
-				<div ng-view class="view"></div>					
-			</div>
+		<div class="container-fluid main">			
+			<div ng-view class="view"></div>					
 		</div>
 
 
@@ -224,6 +243,8 @@
 	    <script src="config/routes.js"></script>
 
 	    <!-- Directives -->
+	    <script src="directives/tabsDirective.js"></script>
+	    <script src="directives/sideBoxDirective.js"></script>
 
 	    <!-- Services -->
 
@@ -234,9 +255,12 @@
 
 	    <!-- Controllers -->
 	    <script src="controllers/adminController.js"></script>
-	    <script src="controllers/userRepoController.js"></script>
+	    <script src="controllers/headerController.js"></script>
+	   	<script src="controllers/loginController.js"></script>
 	    <script src="controllers/registrationController.js"></script>
-	    <script src="controllers/loginController.js"></script>
+	    <script src="controllers/settingsController.js"></script>
+	    <script src="controllers/userRepoController.js"></script>
+	   
     
 	    
 	<!-- endbuild -->
