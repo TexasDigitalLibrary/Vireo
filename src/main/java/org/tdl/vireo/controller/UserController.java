@@ -3,6 +3,7 @@ package org.tdl.vireo.controller;
 import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,9 +17,11 @@ import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
+import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.aspect.annotation.Data;
 import edu.tamu.framework.aspect.annotation.Shib;
@@ -92,6 +95,40 @@ public class UserController {
         this.simpMessagingTemplate.convertAndSend("/channel/users", new ApiResponse(SUCCESS, userMap));
         
         return new ApiResponse(SUCCESS, user);
+    }
+    
+    @ApiMapping("/settings")
+    @Auth(role="ROLE_USER")
+    @Transactional
+    public ApiResponse getSettings(@Shib Object credentials) {
+        Credentials shib = (Credentials) credentials;
+        
+        User user = userRepo.findByEmail(shib.getEmail());
+           
+        return new ApiResponse(SUCCESS, user.getSettings());
+    }
+    
+    @ApiMapping("/settings/{key}")
+    @Auth(role="ROLE_USER")
+    @Transactional
+    public ApiResponse setSetting(@ApiVariable String key, @Data String data, @Shib Object credentials) {
+        
+        Credentials shib = (Credentials) credentials;
+        
+        // This will only work to change your own user settings
+        // Email would need to be obtained off of the dataNode to change anothers settings
+        User user = userRepo.findByEmail(shib.getEmail());
+        
+        JsonNode dataNode = null;
+        try {
+            dataNode = objectMapper.readTree(data);
+        } catch (IOException e) {
+            return new ApiResponse(ERROR, "Could not parse the data object.");
+        }
+        
+        user.putSetting(key, dataNode.get("settingValue").asText());        
+        
+        return new ApiResponse(SUCCESS, userRepo.save(user).getSettings());
     }
     
 }

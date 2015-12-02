@@ -27,15 +27,16 @@
         "path": "src/main/webapp/WEB-INF/app/views"
       },
       {
-        "type": "FILE",
-        "path": "src/main/webapp/WEB-INF/ui/app/app.js"
-      },
-      {
         "type": "FOLDER",
         "path": "src/main/webapp/WEB-INF/app/bower_components/core/app"
       }
     ]
   },
+  "libs": [
+    "ecma5",
+    "browser",
+    "jquery"
+  ],
   "plugins": {
     "guess-types": {
       
@@ -55,10 +56,5 @@
     "bootstrap": {
       
     }
-  },
-  "libs": [
-    "ecma5",
-    "browser",
-    "jquery"
-  ]
+  }
 }
