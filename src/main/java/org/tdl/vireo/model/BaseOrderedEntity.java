@@ -4,9 +4,9 @@ import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
-public abstract class OrderedBaseEntity extends BaseEntity {
+public abstract class BaseOrderedEntity extends BaseEntity {
 
-    @Column(nullable = true)
+    @Column(name = "`order`", nullable = true)
     protected Integer order = null;
 
     public Integer getOrder() {

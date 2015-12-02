@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "guarantor", "isSystemRequired" }))
-public class Embargo extends BaseEntity {
+public class Embargo extends BaseOrderedEntity {
 
     @Column(nullable = false)
     private String name;
