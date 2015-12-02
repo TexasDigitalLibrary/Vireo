@@ -2,7 +2,7 @@ vireo.directive("tabs", function() {
 	return {
 		template: '<div class="tabs"><span ng-transclude></span><hr></div>',
 		restrict: 'E',
-		replace: true,
+		replace: false,
 		transclude: true,
 		scope: {
 			target: "@target"
