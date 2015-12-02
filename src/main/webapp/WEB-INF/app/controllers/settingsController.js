@@ -4,5 +4,4 @@ vireo.controller('SettingsController', function ($controller, $scope, $location,
 	User.ready().then(function(){
 		$scope.user.displayName = $scope.user.firstName+ ' ' +$scope.user.lastName;
 	});
-console.log($scope.user);
 });

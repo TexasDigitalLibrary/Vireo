@@ -1,152 +1,161 @@
 <div class="row my-profile">
 	<div class="col-sm-12">
+
 		<h1>Profile for <username></username></h1>
 		<hr>
 
 		<div class="row my-profile-section">
+
 			<h2>Personal Information</h2>
 
 			<div class="row control-group">
 				<div class="col-sm-3">
-				<span class="pull-right">Email Address:</span>
+					<span class="pull-right">Email Address:</span>
 				</div>
-
-				<div class="col-sm-3">											
-				<useremail></useremail>
+				<div class="col-sm-3">
+					<useremail></useremail>
 				</div>	
 			</div>
 
 			<div class="row control-group required">
 				<div class="col-sm-3">
-				<span class="pull-right control-label">First Name:</span>
-				</div>
-				
-				<div class="col-sm-3">											
-				{{user.firstName}}
+					<span class="pull-right control-label">First Name:</span>
 				</div>	
+				<div class="col-sm-3">
+					{{user.firstName}}
+				</div>
 			</div>
 
 			<div class="row control-group">
 				<div class="col-sm-3">
-				<span class="pull-right">Middle Name:</span>
+					<span class="pull-right">Middle Name:</span>
 				</div>
-				
-				<div class="col-sm-3">											
-				{{user.firstName}}
+				<div class="col-sm-3">
 				</div>	
 			</div>
 
 			<div class="row control-group required">
 				<div class="col-sm-3">
-				<span class="pull-right control-label">Last Name:</span>
-				</div>
-				
-				<div class="col-sm-3">											
-				{{user.lastName}}
+					<span class="pull-right control-label">Last Name:</span>
 				</div>	
+				<div class="col-sm-3">
+					{{user.lastName}}
+				</div>
+			</div>
+
+			<div class="row control-group" ng-if="(isAdmin() || isManager())">
+				<div class="col-sm-3">
+					<span class="pull-right">Display Name:</span>
+				</div>
+				<div class="col-sm-3">
+					{{user.displayName}}
+				</div>
 			</div>
 
 			<div class="row control-group">
 				<div class="col-sm-3">
-				<span class="pull-right">Birth Year:</span>
+					<span class="pull-right">Birth Year:</span>
 				</div>
-				
-				<div class="col-sm-3">											
-				
-				</div>	
+				<div class="col-sm-3">
+				</div>
 			</div>
 
 			<div class="row control-group">
 				<div class="col-sm-3">
-				<span class="pull-right">ORCID:</span>
+					<span class="pull-right">ORCID:</span>
 				</div>
-				
-				<div class="col-sm-3">											
-				{{user.uin}}
-				</div>	
+				<div class="col-sm-3">
+					{{user.uin}}
+				</div>
 			</div>
-
 
 		</div>
 
 
 		<div class="row my-profile-section">
+
 			<h2>Phone &amp; Address</h2>
 
 			<div class="row control-group">
 				<div class="col-sm-3">
-				<span class="pull-right">Permanent Phone:</span>
+					<span class="pull-right">Permanent Phone:</span>
 				</div>
+				<div class="col-sm-3">
+				</div>
+			</div>
 
-				<div class="col-sm-3">											
-				<useremail></useremail>
-				</div>	
+			<div class="row control-group" ng-if="(isAdmin() || isManager())">
+				<div class="col-sm-3">
+					<span class="pull-right">Permanent Email:</span>
+				</div>
+				<div class="col-sm-3">
+					<useremail></useremail>
+				</div>
 			</div>
 
 			<div class="row control-group">
 				<div class="col-sm-3">
-				<span class="pull-right">Permanent Email:</span>
+					<span class="pull-right">Preferred Email:</span>
 				</div>
-				
-				<div class="col-sm-3">											
-				{{user.firstName}}
-				</div>	
+				<div class="col-sm-3">
+					<useremail></useremail>
+				</div>
 			</div>
 
 			<div class="row control-group">
 				<div class="col-sm-3">
-				<span class="pull-right">Permanent Address:</span>
+					<span class="pull-right">Permanent Address:</span>
 				</div>
-				
-				<div class="col-sm-3">											
-				{{user.firstName}}
-				</div>	
+				<div class="col-sm-3">
+				</div>
 			</div>
 
 			<div class="row control-group">
 				<div class="col-sm-3">
-				<span class="pull-right">Current Phone:</span>
+					<span class="pull-right">Current Phone:</span>
 				</div>
-				
-				<div class="col-sm-3">											
-				{{user.lastName}}
-				</div>	
+				<div class="col-sm-3">
+				</div>
 			</div>
 
 			<div class="row control-group">
 				<div class="col-sm-3">
-				<span class="pull-right">Current Address:</span>
+					<span class="pull-right">Current Address:</span>
 				</div>
-				
 				<div class="col-sm-3">
-				</div>	
+				</div>
 			</div>		
 
 		</div>
 
-		<div class="row my-profile-section">
+		<div class="row my-profile-section" ng-if="(isAdmin() || isManager())">
 			<h2>Preferences</h2>
 
 			<div class="row control-group">
-				<form class="form-inline ">
+				<form class="form-inline">
 					<fieldset class="fieldset-border">
 						<legend class="legendborder">When adding notes, which options should be checked by default?</legend>
+
 						<div class="form-group checkbox">
 							<input name="notes_email_student_by_default" type="checkbox"/>
 							<span>Email the student</span>
 						</div>
+
 						<div class="form-group checkbox">
 							<input name="notes_cc_student_advisor_by_default" type="checkbox"/>
 							<span>CC student's advisor</span>
 						</div>
+
 						<div class="form-group checkbox">
 							<input name="notes_flag_submission_as_needs_corrections_by_default" type="checkbox"/>
 							<span>Flag submission as Needs Corrections</span>
 						</div>
+
 						<div class="form-group checkbox">
 							<input name="notes_mark_comment_as_private_by_default" type="checkbox"/>
 							<span>Mark comment as private</span>
 						</div>
+
 					</fieldset>	
 
 					<fieldset class="fieldset-border">
@@ -156,10 +165,12 @@
 							<input name="attachment_email_student_by_default" type="checkbox"/>
 							<span>Email the student</span>
 						</div>
+
 						<div class="form-group checkbox">
 							<input name="attachment_cc_student_advisor_by_default" type="checkbox"/>
 							<span>CC student's advisor</span>
 						</div>
+
 						<div class="form-group checkbox">
 							<input name="attachment_flag_submission_as_needs_corrections_by_default" type="checkbox"/>
 							<span>Flag submission as Needs Corrections</span>
@@ -171,9 +182,6 @@
 
 
 		</div>
-
-
-
 
 	</div>
 </div>
