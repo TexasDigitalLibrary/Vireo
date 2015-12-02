@@ -9,8 +9,6 @@ vireo.directive("accordion", function() {
 		},
 		controller: function($scope)  {
 
-			console.log($scope.singleExpand);
-
 			this.closeAll = function(id) {
 				if($scope.singleExpand == "true") $scope.$broadcast("close", id);
 			}
@@ -51,12 +49,19 @@ vireo.directive("pane", function($location, $timeout, $anchorScroll) {
 			}
 
 			$scope.open = function() {
-				if(typeof $scope.html == "undefined") $scope.html = attr.html;
+				if(typeof $scope.html == "undefined") {
+					$scope.loading = true;
+					$scope.html = attr.html;
+				}
 				$scope.expanded = true;
 			}
 
 			$scope.close = function() {
 				$scope.expanded = false;
+			}
+
+			$scope.loaded = function() {
+				$scope.loading = false;
 			}
 
 			$scope.$on('close', function(event, id) {

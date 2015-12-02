@@ -658,7 +658,7 @@ footer a, footer li, footer p {
 }
 
 .accordion .panel-heading.expanded {
-  padding-left: 35px;
+  padding-left: 50px;
   -webkit-transition: padding-left 0.5s ease-out;
   transition: padding-left 0.5s ease-out;
 }
@@ -669,6 +669,7 @@ footer a, footer li, footer p {
   bottom: 0;
   left: 0;
   width: 0px;
+  overflow: hidden;
   background: rgb(31, 58, 71);
   background: -moz-linear-gradient linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
   background: -webkit-linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
@@ -680,7 +681,7 @@ footer a, footer li, footer p {
 }
 
 .accordion .panel-heading.expanded .panel-selection {
-  width: 25px;
+  width: 40px;
   -webkit-transition: width 0.5s ease-out;
   transition: width 0.5s ease-out;
 }
@@ -697,6 +698,11 @@ footer a, footer li, footer p {
   max-height: 500px;
   -webkit-transition: max-height 0.5s ease-out;
   transition: max-height 0.5s ease-out;
+}
+
+.accordion .loader {
+  margin-left: 4.5px;
+  margin-top: 4.5px;
 }
 
 .panel-content-wrapper {
