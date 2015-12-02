@@ -1,12 +1,39 @@
-vireo.directive("tooltip", function() {
+vireo.directive('tooltip', function ($timeout) {
+
 	return {
-		template: '<a href="#" class="tooltip-icon glyphicon glyphicon-info-sign" title="{{title}}" data-toggle="tooltip" data-placement="right" rel="tooltip" ng-transclude></a>',
-		restrict: 'E',
-		replace: false,
+		templateUrl: "views/directives/tooltip.html",
+		replace: true,
 		transclude: true,
-		scope: true,
-		link: function ($scope, element, attr) {	    	
-			$scope.title = attr.title;
-	    }
+		restrict: 'A',
+		scope:true,
+		link: function($scope, elem, attr) {
+
+			$scope.tip = attr.tooltip;
+
+			$scope.tipVisible = false;
+			$scope.showTimer = {};
+			$scope.tipStyles = {};
+
+			$scope.showTip = function() {
+				$scope.showTimer = $timeout(function() {
+					$scope.tipVisible = true;
+				}, 500);
+			}
+
+			$scope.hideTip = function() {
+				$timeout.cancel($scope.showTimer);
+				$scope.tipVisible = false;
+			}
+
+			$scope.toggleVisible = function() {
+				$timeout.cancel($scope.showTimer);
+				$scope.tipVisible = $scope.tipVisible ? false : true;
+			}
+
+			$scope.positionTip = function($event) {
+				$scope.tipStyles["top"] = $event.offsetY + 20;
+				$scope.tipStyles["left"] = $event.offsetX -	25;
+			}
+		}
 	};
 });

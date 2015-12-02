@@ -72,7 +72,7 @@
 							<a class="dropdown-toggle toggle-href" data-toggle="dropdown" aria-expanded="false"><displayname></displayname> <span class="caret"></span></a>
 							<ul class="dropdown-menu" role="menu">
 								<li role="presentation" class="dropdown-header">Profile</li>
-								<li><a role="menuitem" href="myview">My View</a></li>
+								<li><a role="menuitem" href="myprofile">Profile</a></li>
 								<li><a role="menuitem" href ng-click="logout()">Logout</a></li>
 
 								<li ng-if="isAdmin() || isManager()" role="presentation" class="divider"></li>
@@ -240,6 +240,7 @@
 	    <script src="config/routes.js"></script>
 
 	    <!-- Directives -->
+	    <script src="directives/accordionDirective.js"></script>
 	    <script src="directives/tabsDirective.js"></script>
 	    <script src="directives/sideBoxDirective.js"></script>
  		<script src="directives/togglebuttonDirective.js"></script>
@@ -247,7 +248,10 @@
 	    <script src="directives/userSettingsDirective.js"></script>
 	    <script src="directives/legendDirective.js"></script>
 	    <script src="directives/shadowDirective.js"></script>	
-	    
+	    <script src="directives/checkBoxDirective.js"></script>	
+	    <script src="directives/shadowDirective.js"></script>
+	    <script src="directives/tooltipDirective.js"></script>	
+
 	    <!-- Services -->
 
 	    <!-- Factories -->

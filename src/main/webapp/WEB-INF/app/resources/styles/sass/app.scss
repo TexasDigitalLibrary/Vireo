@@ -17,6 +17,7 @@ main footer {
   margin-bottom: 65px;
 }
 
+
 .tab-nav {
   margin-top: 12px;
 }
@@ -516,7 +517,6 @@ legend.legendborder {
   color: #70706f;
 }
 
-
 .footer {
   color: #777;
   border-top: 1px solid #ccc;
@@ -532,17 +532,80 @@ footer a, footer li, footer p {
   font-size: .9em;
 }
 
-.admin-page h1 {
+.admin-page h1,
+.my-profile h1 {
   font-weight: bold;
   text-rendering: optimizelegibility;
 }
 
-.admin-page h1 + hr {
+.admin-page h1 + hr,
+.my-profile h1 + hr {
   border: 0;
   height: 1px;
   background-image: linear-gradient(to right, rgba(112, 112, 111, 0.4), rgba(50, 50, 50, 0));
   margin-top: -10px;
 }
+
+.my-profile h1 {
+  font-size: 2.2em;
+  font-weight: normal;
+  margin: 0;
+  line-height: 80px;
+}
+
+.my-profile-section {
+  padding: 10px 0px 0 0px;
+  margin: 1px;
+}
+
+
+.my-profile-section h2 {
+  color: #666666;
+  font-size: 19.5px;
+  line-height: 35px;
+  padding: 0 0 0 20px;
+  border: none;
+  margin: 0;
+  height: 30px;
+  background: -webkit-linear-gradient(#FBFBFB, #E9EAEC);
+}
+
+.control-group {  
+  margin: 18px 0 18px 0;
+  font-size: 13px;
+  font-weight: normal;
+  line-height: 22px;
+}
+
+.fieldset-border {
+  border: 1px solid #999999;
+  padding: 0 1.4em 1.4em 1.4em;
+  margin: 0 0 1.5em 0;
+}
+
+.legendborder {
+  color:#70706f;
+  font-size: 1.1em;
+  text-align: left;
+  width:auto;
+  padding:0 10px;
+  border-bottom:none;
+}
+
+.checkbox {
+  float: left;
+  font-size: .9em;
+  padding: 0 19px;
+  margin: 5px 0;
+  line-height: normal;
+  color: #70706f;
+}
+
+.control-group.required .control-label:before { 
+   content:"*";
+   color:#70706f;
+}
+
 
 .footer-list {
   display: inline-block;
@@ -574,4 +637,133 @@ footer a, footer li, footer p {
 
 .registration {
   max-width: 400px;
+}
+
+/*************
+* DIRECTIVES *
+**************/
+
+/*Accordion*/
+
+.accordion .panel {
+  cursor: pointer;
+  margin-bottom: 3px;
+}
+
+.accordion .panel-heading {
+  position: relative;
+  padding-left: 10px;
+  -webkit-transition: padding-left 0.5s ease-out;
+  transition: padding-left 0.5s ease-out;
+}
+
+.accordion .panel-heading.expanded {
+  padding-left: 35px;
+  -webkit-transition: padding-left 0.5s ease-out;
+  transition: padding-left 0.5s ease-out;
+}
+
+.accordion .panel-selection {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 0px;
+  background: rgb(31, 58, 71);
+  background: -moz-linear-gradient linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
+  background: -webkit-linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
+  background: -ms-linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
+  background: linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
+  border-top-left-radius:3px;
+  -webkit-transition: width 0.5s ease-out;
+  transition: width 0.5s ease-out;
+}
+
+.accordion .panel-heading.expanded .panel-selection {
+  width: 25px;
+  -webkit-transition: width 0.5s ease-out;
+  transition: width 0.5s ease-out;
+}
+
+.accordion .panel-body {
+  max-height: 0px;
+  overflow: hidden;
+  padding: 0px;
+  -webkit-transition: max-height 0.5s ease-out;
+  transition: max-height 0.5s ease-out;
+}
+
+.accordion .panel-body.expanded {
+  max-height: 500px;
+  -webkit-transition: max-height 0.5s ease-out;
+  transition: max-height 0.5s ease-out;
+}
+
+.panel-content-wrapper {
+  padding: 25px;
+}
+
+/* Tooltip */
+
+.tooltip-wrapper {
+  position: relative;
+}
+
+.tooltip-handle:hover {
+  cursor: help;
+}
+
+.tip {
+  position: absolute;
+  top: 999999px;
+  width: 250px;
+  padding: 15px;
+  border-radius: 10px;
+  border: solid 2px #CCC;
+  background: rgba(31, 58, 71, 0.95);
+  background: -moz-linear-gradient(to bottom, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
+  background: -webkit-linear-gradient(to bottom, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
+  background: -ms-linear-gradient(to bottom, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
+  background: linear-gradient(to bottom, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
+  opacity: 0;
+  -webkit-transition: opacity 0.5s linear;
+  transition: opacity 0.5s linear;
+}
+
+.tip.tip-visible {
+  opacity: 1;
+  z-index: 100;
+}
+
+.tip-point {
+    position: absolute;
+    top: -10px;
+    left: 12px;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid #CCC;
+}
+.tip-point:after{
+    content:'';
+    position:absolute;
+    top:4px;
+    left:-8px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid rgba(41, 68, 81, 1);
+}
+
+.tip-message {
+  width: 100%;
+  margin: auto;
+  color: #EFEFEF;
+  font-size: .85em;
+}
+
+.tip.tip-visible .tip-message {
+  z-index: 102 !important;
 }
