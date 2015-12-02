@@ -240,6 +240,7 @@
 	    <script src="config/routes.js"></script>
 
 	    <!-- Directives -->
+	    <script src="directives/accordionDirective.js"></script>
 	    <script src="directives/tabsDirective.js"></script>
 	    <script src="directives/sideBoxDirective.js"></script>
 	    <script src="directives/userSettingsDirective.js"></script>
