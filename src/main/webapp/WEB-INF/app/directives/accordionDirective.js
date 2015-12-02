@@ -41,7 +41,7 @@ vireo.directive("pane", function($location, $timeout, $anchorScroll) {
 			}
 
 			$scope.open = function() {
-				$scope.html = attr.html;
+				if(typeof $scope.html == "undefined") $scope.html = attr.html;
 				$scope.expanded = true;
 			}
 
