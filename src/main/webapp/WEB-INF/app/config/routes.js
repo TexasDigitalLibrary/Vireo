@@ -1,8 +1,9 @@
 vireo.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
 	$locationProvider.html5Mode(true);
 	$routeProvider.
-		when('/myview', {
-			templateUrl: 'views/myview.html'
+		when('/myprofile', {
+			templateUrl: 'views/myprofile.html',
+			controller: 'SettingsController'
 		}).
 		when('/users', {
 			templateUrl: 'views/users.html'

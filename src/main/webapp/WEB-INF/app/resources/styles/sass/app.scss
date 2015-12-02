@@ -17,6 +17,7 @@ main footer {
   margin-bottom: 65px;
 }
 
+
 .tab-nav {
   margin-top: 12px;
 }
@@ -449,17 +450,80 @@ footer a, footer li, footer p {
   font-size: .9em;
 }
 
-.admin-page h1 {
+.admin-page h1,
+.my-profile h1 {
   font-weight: bold;
   text-rendering: optimizelegibility;
 }
 
-.admin-page h1 + hr {
+.admin-page h1 + hr,
+.my-profile h1 + hr {
   border: 0;
   height: 1px;
   background-image: linear-gradient(to right, rgba(112, 112, 111, 0.4), rgba(50, 50, 50, 0));
   margin-top: -10px;
 }
+
+.my-profile h1 {
+  font-size: 2.2em;
+  font-weight: normal;
+  margin: 0;
+  line-height: 80px;
+}
+
+.my-profile-section {
+  padding: 10px 0px 0 0px;
+  margin: 1px;
+}
+
+
+.my-profile-section h2 {
+  color: #666666;
+  font-size: 19.5px;
+  line-height: 35px;
+  padding: 0 0 0 20px;
+  border: none;
+  margin: 0;
+  height: 30px;
+  background: -webkit-linear-gradient(#FBFBFB, #E9EAEC);
+}
+
+.control-group {  
+  margin: 18px 0 18px 0;
+  font-size: 13px;
+  font-weight: normal;
+  line-height: 22px;
+}
+
+.fieldset-border {
+  border: 1px solid #999999;
+  padding: 0 1.4em 1.4em 1.4em;
+  margin: 0 0 1.5em 0;
+}
+
+.legendborder {
+  color:#70706f;
+  font-size: 1.1em;
+  text-align: left;
+  width:auto;
+  padding:0 10px;
+  border-bottom:none;
+}
+
+.checkbox {
+  float: left;
+  font-size: .9em;
+  padding: 0 19px;
+  margin: 5px 0;
+  line-height: normal;
+  color: #70706f;
+}
+
+.control-group.required .control-label:before { 
+   content:"*";
+   color:#70706f;
+}
+
 
 .footer-list {
   display: inline-block;
