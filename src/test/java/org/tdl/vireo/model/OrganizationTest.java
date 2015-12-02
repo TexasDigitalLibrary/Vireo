@@ -27,7 +27,7 @@ public class OrganizationTest extends AbstractEntityTest {
     @Override
     public void testCreate() {
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
-        Workflow parentWorkflow = workflowRepo.create(TEST_PARENT_WORKFLOW_NAME, TEST_PARENT_WORKFLOW_INHERITABILITY);
+        Workflow parentWorkflow = workflowRepo.create(TEST_PARENT_WORKFLOW_NAME, TEST_PARENT_WORKFLOW_INHERITABILITY, parentOrganization);
         parentOrganization.setWorkflow(parentWorkflow);
         parentOrganization.addEmail(TEST_PARENT_EMAIL);
         parentOrganization.addEmailWorkflowRule(emailWorkflowRule);
@@ -73,11 +73,11 @@ public class OrganizationTest extends AbstractEntityTest {
         Organization severableChildOrganization = organizationRepo.create(TEST_SEVERABLE_CHILD_ORGANIZATION_NAME, childCategory);
 
         // create and add workflows to organizations
-        parentOrganization.setWorkflow(workflowRepo.create(TEST_PARENT_WORKFLOW_NAME, TEST_PARENT_WORKFLOW_INHERITABILITY));
-        childOrganization.setWorkflow(workflowRepo.create(TEST_CHILD_WORKFLOW_NAME, TEST_CHILD_WORKFLOW_INHERITABILITY));
-        grandChildOrganization.setWorkflow(workflowRepo.create(TEST_GRAND_CHILD_WORKFLOW_NAME, TEST_GRAND_CHILD_WORKFLOW_INHERITABILITY));
-        severableParentOrganization.setWorkflow(workflowRepo.create(TEST_SEVERABLE_PARENT_WORKFLOW_NAME, TEST_SEVERABLE_PARENT_WORKFLOW_INHERITABILITY));
-        severableChildOrganization.setWorkflow(workflowRepo.create(TEST_SEVERABLE_CHILD_WORKFLOW_NAME, TEST_SEVERABLE_CHILD_WORKFLOW_INHERITABILITY));
+        parentOrganization.setWorkflow(workflowRepo.create(TEST_PARENT_WORKFLOW_NAME, TEST_PARENT_WORKFLOW_INHERITABILITY, parentOrganization));
+        childOrganization.setWorkflow(workflowRepo.create(TEST_CHILD_WORKFLOW_NAME, TEST_CHILD_WORKFLOW_INHERITABILITY, childOrganization));
+        grandChildOrganization.setWorkflow(workflowRepo.create(TEST_GRAND_CHILD_WORKFLOW_NAME, TEST_GRAND_CHILD_WORKFLOW_INHERITABILITY, grandChildOrganization));
+        severableParentOrganization.setWorkflow(workflowRepo.create(TEST_SEVERABLE_PARENT_WORKFLOW_NAME, TEST_SEVERABLE_PARENT_WORKFLOW_INHERITABILITY, severableParentOrganization));
+        severableChildOrganization.setWorkflow(workflowRepo.create(TEST_SEVERABLE_CHILD_WORKFLOW_NAME, TEST_SEVERABLE_CHILD_WORKFLOW_INHERITABILITY, severableChildOrganization));
 
         // add emails to organizations
         parentOrganization.addEmail(TEST_PARENT_EMAIL);
@@ -218,9 +218,10 @@ public class OrganizationTest extends AbstractEntityTest {
 
     @After
     public void cleanUp() {
+        workflowRepo.deleteAll();
+        assertEquals("The workflow orphans were not removed!", 0, workflowRepo.count());
         organizationRepo.deleteAll();
         organizationCategoryRepo.deleteAll();
-        workflowRepo.deleteAll();
         emailWorkflowRuleRepo.deleteAll();
         submissionStateRepo.deleteAll();
         emailTemplateRepo.deleteAll();

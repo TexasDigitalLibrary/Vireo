@@ -11,12 +11,16 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class WorkflowStep extends BaseEntity {
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String name;
+    
+    @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER, optional = false)
+    private Workflow workflow;
 
     @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER)
     private List<FieldProfile> fieldProfiles;
@@ -28,14 +32,15 @@ public class WorkflowStep extends BaseEntity {
         setFieldProfiles(new ArrayList<FieldProfile>());
         setNotes(new ArrayList<Note>());
     }
-
+    
     /**
      * 
      * @param name
      */
-    public WorkflowStep(String name) {
+    public WorkflowStep(String name, Workflow workflow) {
         this();
         setName(name);
+        setWorkflow(workflow);
     }
 
     /**
@@ -43,6 +48,22 @@ public class WorkflowStep extends BaseEntity {
      */
     public String getName() {
         return name;
+    }
+    
+    /**
+     * 
+     * @return
+     */
+    public Workflow getWorkflow() {
+        return workflow;
+    }
+
+    /**
+     * 
+     * @param workflow
+     */
+    public void setWorkflow(Workflow workflow) {
+        this.workflow = workflow;
     }
 
     /**

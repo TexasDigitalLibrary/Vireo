@@ -425,6 +425,8 @@ public abstract class AbstractEntityTest {
     protected User includedSubmitter;
     protected User excludedSubmitter;
 
+    protected Workflow workflow;
+    
     protected WorkflowStep workflowStep;
     
     protected VocabularyWord vocabularyWord;

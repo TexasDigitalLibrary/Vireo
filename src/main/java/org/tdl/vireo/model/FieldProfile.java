@@ -40,7 +40,7 @@ public class FieldProfile extends BaseEntity {
     private Boolean optional;
     
     @Lob
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String usage;
     
     @Lob
@@ -54,6 +54,9 @@ public class FieldProfile extends BaseEntity {
     private List<ControlledVocabulary> controlledVocabularies;
     
     public FieldProfile() {
+        setRepeatable(false);
+        setEnabled(false);
+        setOptional(true);
         setFieldGlosses(new ArrayList<FieldGloss>());
         setControlledVocabularies(new ArrayList<ControlledVocabulary>());
     }

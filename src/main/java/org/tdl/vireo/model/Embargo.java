@@ -16,7 +16,7 @@ public class Embargo extends BaseEntity {
 
     @Column(nullable = false)
     private String name;
-
+    
     @Lob
     @Column(nullable = false)
     private String description;

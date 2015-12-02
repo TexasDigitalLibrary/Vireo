@@ -141,7 +141,7 @@ public class SystemDataLoader {
             
             // create workflow if not already exists else update properties in case changed in json
             if(workflow == null) {
-                workflow = workflowRepo.create(systemOrganization.getWorkflow().getName(), systemOrganization.getWorkflow().isInheritable());
+                workflow = workflowRepo.create(systemOrganization.getWorkflow().getName(), systemOrganization.getWorkflow().isInheritable(), organization);
             }
             else {
                 workflow.setInheritability(systemOrganization.getWorkflow().isInheritable());
@@ -149,13 +149,13 @@ public class SystemDataLoader {
             
             // temporary list of workflow steps
             List<WorkflowStep> workflowSteps = new ArrayList<WorkflowStep>();
-                    
-            systemOrganization.getWorkflow().getWorkflowSteps().forEach(workflowStep -> {
+                                    
+            for(WorkflowStep workflowStep : systemOrganization.getWorkflow().getWorkflowSteps()) {
                 
                 WorkflowStep newWorkflowStep = workflowStepRepo.findByName(workflowStep.getName());
                 
                 if(newWorkflowStep == null) {
-                    newWorkflowStep = workflowStepRepo.create(workflowStep.getName());
+                    newWorkflowStep = workflowStepRepo.create(workflowStep.getName(), workflow);
                 }
                                 
                 List<FieldProfile> fieldProfiles = new ArrayList<FieldProfile>();
@@ -248,7 +248,7 @@ public class SystemDataLoader {
                 
                 workflowSteps.add(newWorkflowStep);
                 
-            });
+            }
             
             workflow.setWorkflowSteps(workflowSteps);
             

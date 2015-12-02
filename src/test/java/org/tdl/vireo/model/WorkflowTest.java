@@ -3,13 +3,20 @@ package org.tdl.vireo.model;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
+import org.junit.Before;
 
 public class WorkflowTest extends AbstractEntityTest {
 
+    @Before
+    public void setup() {
+        parentCategory = organizationCategoryRepo.create(TEST_CATEGORY_NAME, TEST_CATEGORY_LEVEL);
+        organization = organizationRepo.create(TEST_ORGANIZATION_NAME, parentCategory);
+    }
+    
     @Override
     public void testCreate() {
-        Workflow workflow = workflowRepo.create(TEST_WORKFLOW_NAME, TEST_WORKFLOW_INHERITABILITY);
-        WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME);
+        Workflow workflow = workflowRepo.create(TEST_WORKFLOW_NAME, TEST_WORKFLOW_INHERITABILITY, organization);
+        WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, workflow);
         workflow.addWorkflowStep(workflowStep);
         workflow = workflowRepo.save(workflow);
         assertEquals("The repository did not save the entity!", 1, workflowRepo.count());
@@ -20,7 +27,7 @@ public class WorkflowTest extends AbstractEntityTest {
 
     @Override
     public void testDelete() {
-        Workflow workflow = workflowRepo.create(TEST_WORKFLOW_NAME, TEST_WORKFLOW_INHERITABILITY);
+        Workflow workflow = workflowRepo.create(TEST_WORKFLOW_NAME, TEST_WORKFLOW_INHERITABILITY, organization);
         workflowRepo.delete(workflow);
         assertEquals("Entity did not delete!", 0, workflowRepo.count());
     }
@@ -32,9 +39,9 @@ public class WorkflowTest extends AbstractEntityTest {
 
     @Override
     public void testCascade() {
-        Workflow workflow = workflowRepo.create(TEST_WORKFLOW_NAME, TEST_WORKFLOW_INHERITABILITY);
-        WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME);
-        WorkflowStep severableWorkflowStep = workflowStepRepo.create(TEST_SEVERABLE_WORKFLOW_STEP_NAME);
+        Workflow workflow = workflowRepo.create(TEST_WORKFLOW_NAME, TEST_WORKFLOW_INHERITABILITY, organization);
+        WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, workflow);
+        WorkflowStep severableWorkflowStep = workflowStepRepo.create(TEST_SEVERABLE_WORKFLOW_STEP_NAME, workflow);
         workflow.addWorkflowStep(workflowStep);
         workflow.addWorkflowStep(severableWorkflowStep);
         workflow = workflowRepo.save(workflow);
@@ -54,10 +61,11 @@ public class WorkflowTest extends AbstractEntityTest {
 
         assertEquals("The workflow step was orphaned!", 1, workflowStepRepo.count());
 
-        // reattach severable workflow step
+        // create and reattach severable workflow step
+        severableWorkflowStep = workflowStepRepo.create(TEST_SEVERABLE_WORKFLOW_STEP_NAME, workflow);
         workflow.addWorkflowStep(severableWorkflowStep);
         workflow = workflowRepo.save(workflow);
-        assertEquals("The workflow step was not reattached!", 2, workflowStepRepo.count());
+        assertEquals("The workflow step was not reattached!", 2, workflow.getWorkflowSteps().size());
 
         // test delete workflow
         workflowRepo.delete(workflow);

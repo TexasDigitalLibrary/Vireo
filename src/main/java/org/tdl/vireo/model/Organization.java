@@ -17,6 +17,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -30,7 +31,7 @@ public class Organization extends BaseEntity {
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER, optional = false)
     private OrganizationCategory category;
 
-    @ManyToOne(cascade = ALL, fetch = LAZY, optional = true)
+    @OneToOne(cascade = ALL, fetch = EAGER, optional = true, orphanRemoval = true)
     private Workflow workflow;
 
     @ManyToMany(cascade = { DETACH, REFRESH }, fetch = LAZY)
