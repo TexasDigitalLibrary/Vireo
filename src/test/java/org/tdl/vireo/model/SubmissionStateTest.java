@@ -77,14 +77,14 @@ public class SubmissionStateTest extends AbstractEntityTest {
         assertEquals("Transition 1 submission state does not contain correct transition2 submission state!", transition2SubmissionState, (SubmissionState) (transition1SubmissionState.getTransitionSubmissionStates().toArray()[0]));
         assertEquals("Transition 2 submission state does not contain correct count of transition submission states!", 0, transition2SubmissionState.getTransitionSubmissionStates().size());
 
-        // test detach detachable child transition submission state
+        // test remove severable child transition submission state
         parentSubmissionState.removeTransitionSubmissionState(transition1SubmissionState);
         transition1SubmissionState = submissionStateRepo.findOne(transition1SubmissionState.getId());
-        assertNotEquals("The detachable transition1 submission state was deleted!", null, transition1SubmissionState);
+        assertNotEquals("The severable transition1 submission state was deleted!", null, transition1SubmissionState);
         parentSubmissionState = submissionStateRepo.findOne(parentSubmissionState.getId());
         assertEquals("The parent submission state had incorrect number of transition submission states (after detatch)!", 0, parentSubmissionState.getTransitionSubmissionStates().size());
 
-        // test re-attach detachable child transition submission state
+        // test re-attach severable child transition submission state
         parentSubmissionState.addTransitionSubmissionState(transition1SubmissionState);
         parentSubmissionState = submissionStateRepo.findOne(parentSubmissionState.getId());
         assertEquals("The parent submission state had incorrect number of transition submission states (after re-attach)!", 1, parentSubmissionState.getTransitionSubmissionStates().size());

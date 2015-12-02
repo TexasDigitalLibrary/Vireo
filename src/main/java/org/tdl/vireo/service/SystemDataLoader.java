@@ -25,6 +25,7 @@ import org.tdl.vireo.model.FieldGloss;
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.Language;
+import org.tdl.vireo.model.Note;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.OrganizationCategory;
 import org.tdl.vireo.model.SubmissionState;
@@ -38,6 +39,7 @@ import org.tdl.vireo.model.repo.FieldGlossRepo;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.FieldProfileRepo;
 import org.tdl.vireo.model.repo.LanguageRepo;
+import org.tdl.vireo.model.repo.NoteRepo;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionStateRepo;
@@ -74,6 +76,9 @@ public class SystemDataLoader {
     private WorkflowStepRepo workflowStepRepo;
     
     @Autowired
+    private NoteRepo noteRepo;
+    
+    @Autowired
     private FieldProfileRepo fieldProfileRepo;
     
     @Autowired
@@ -98,38 +103,62 @@ public class SystemDataLoader {
     @Autowired
     private ObjectMapper objectMapper;
     
+    
     final static Logger logger = LoggerFactory.getLogger(SystemDataLoader.class);
+    
     
     public String resourceToString(Resource resource) throws IOException {
         return new String(Files.readAllBytes(Paths.get(resource.getFile().getAbsolutePath())));
     }
     
+    /**
+     * Loads default system organization.
+     */
     public void loadSystemOrganization() {
         
         try {
+            // read and map json to Organization
             Organization systemOrganization = objectMapper.readValue(applicationContext.getResource("classpath:/organization/SYSTEM_Organization_Definition.json").getFile(), Organization.class);
 
+            // check to see if organization category exists
             OrganizationCategory category = organizationCategoryRepo.findByNameAndLevel(systemOrganization.getCategory().getName(), systemOrganization.getCategory().getLevel());
             
+            // create organization category if does not already exists
             if(category == null) {
                 category = organizationCategoryRepo.create(systemOrganization.getCategory().getName(), systemOrganization.getCategory().getLevel());
             }
             
+            // check to see if organization with organization category exists
             Organization organization = organizationRepo.findByNameAndCategory(systemOrganization.getName(), category);
             
+            // create new organization if not already exists
             if(organization == null) {
                 organization = organizationRepo.create(systemOrganization.getName(), category);
             }
             
-            Workflow workflow = workflowRepo.create(systemOrganization.getWorkflow().getName(), systemOrganization.getWorkflow().isInheritable());
+            // check to see if workflow exists
+            Workflow workflow = workflowRepo.findByName(systemOrganization.getWorkflow().getName());
             
+            // create workflow if not already exists else update properties in case changed in json
+            if(workflow == null) {
+                workflow = workflowRepo.create(systemOrganization.getWorkflow().getName(), systemOrganization.getWorkflow().isInheritable());
+            }
+            else {
+                workflow.setInheritability(systemOrganization.getWorkflow().isInheritable());
+            }
+            
+            // temporary list of workflow steps
             List<WorkflowStep> workflowSteps = new ArrayList<WorkflowStep>();
                     
             systemOrganization.getWorkflow().getWorkflowSteps().forEach(workflowStep -> {
                 
-                WorkflowStep newWorkflowStep = workflowStepRepo.create(workflowStep.getName());
+                WorkflowStep newWorkflowStep = workflowStepRepo.findByName(workflowStep.getName());
+                
+                if(newWorkflowStep == null) {
+                    newWorkflowStep = workflowStepRepo.create(workflowStep.getName());
+                }
                                 
-                Set<FieldProfile> fieldProfiles = new TreeSet<FieldProfile>();
+                List<FieldProfile> fieldProfiles = new ArrayList<FieldProfile>();
                 
                 workflowStep.getFieldProfiles().forEach(fieldProfile -> {
                     
@@ -142,10 +171,10 @@ public class SystemDataLoader {
                     FieldProfile newFieldProfile = fieldProfileRepo.findByPredicate(fieldPredicate);
                     
                     if(newFieldProfile == null) {
-                        newFieldProfile = fieldProfileRepo.create(fieldPredicate, fieldProfile.getInputType(), fieldProfile.getRepeatable(), fieldProfile.getRequired());
+                        newFieldProfile = fieldProfileRepo.create(fieldPredicate, fieldProfile.getInputType(), fieldProfile.getUsage(), fieldProfile.getRepeatable(), fieldProfile.getEnabled(), fieldProfile.getOptional());
                     }
                     
-                    Set<FieldGloss> fieldGlosses = new TreeSet<FieldGloss>();
+                    List<FieldGloss> fieldGlosses = new ArrayList<FieldGloss>();
                     
                     fieldProfile.getFieldGlosses().forEach(fieldGloss -> {
                         
@@ -167,7 +196,7 @@ public class SystemDataLoader {
                     
                     newFieldProfile.setFieldGlosses(fieldGlosses);
                     
-                    Set<ControlledVocabulary> controlledVocabularies = new TreeSet<ControlledVocabulary>();
+                    List<ControlledVocabulary> controlledVocabularies = new ArrayList<ControlledVocabulary>();
                     
                     fieldProfile.getControlledVocabularies().forEach(controlledVocabulary -> {
                         
@@ -196,6 +225,24 @@ public class SystemDataLoader {
                 });
                 
                 newWorkflowStep.setFieldProfiles(fieldProfiles);
+                
+                
+                List<Note> notes = new ArrayList<Note>();
+                
+                workflowStep.getNotes().forEach(note -> {
+                    
+                    Note newNote = noteRepo.findByName(note.getName());
+                    
+                    if(newNote == null) {
+                        newNote = noteRepo.create(note.getName(), note.getText());
+                    }
+                    
+                    notes.add(newNote);
+                    
+                });
+                
+                newWorkflowStep.setNotes(notes);
+                
                 
                 workflowStepRepo.save(newWorkflowStep);
                 
@@ -252,6 +299,9 @@ public class SystemDataLoader {
         }
     }
     
+    /**
+     * Recursively map transition submission states from json.
+     */
     public SubmissionState recursivelyFindOurCreateSubmissionState(SubmissionState submissionState) {
         
         SubmissionState newSubmissionState = submissionStateRepo.findByName(submissionState.getName());

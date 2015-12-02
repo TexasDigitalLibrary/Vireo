@@ -6,4 +6,6 @@ import org.tdl.vireo.model.repo.custom.WorkflowRepoCustom;
 
 public interface WorkflowRepo extends JpaRepository<Workflow, Long>, WorkflowRepoCustom {
 
+    public Workflow findByName(String name);
+    
 }

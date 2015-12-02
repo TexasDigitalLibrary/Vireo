@@ -69,7 +69,7 @@ public class UserTest extends AbstractEntityTest {
         // test sever organization
         testUser.removeOrganization(organization);
         testUser = userRepo.save(testUser);
-        assertEquals("The organization was not detached from the user", 0, testUser.getOrganizations().size());
+        assertEquals("The organization was not removed from the user", 0, testUser.getOrganizations().size());
 
         // test delete user
         userRepo.delete(testUser);

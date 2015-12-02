@@ -2,6 +2,7 @@ package org.tdl.vireo.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -16,7 +17,8 @@ public class Embargo extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, length = 32768) // 2^15
+    @Lob
+    @Column(nullable = false)
     private String description;
 
     @Column

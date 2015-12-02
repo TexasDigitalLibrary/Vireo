@@ -37,9 +37,6 @@ public abstract class BaseEntity implements Comparable<BaseEntity> {
         return false;
     }
 
-    /**
-     * 
-     */
     @Override
     public int hashCode() {
         int hashCode = 1;

@@ -11,10 +11,15 @@ public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
 
     @Autowired
     private FieldProfileRepo fieldProfileRepo;
+    
+    @Override
+    public FieldProfile create(FieldPredicate fieldPredicate, InputType inputType, Boolean repeatable, Boolean enabled, Boolean optional) {
+        return fieldProfileRepo.save(new FieldProfile(fieldPredicate, inputType, repeatable, enabled, optional));
+    }
 
     @Override
-    public FieldProfile create(FieldPredicate fieldPredicate, InputType inputType, Boolean repeatable, Boolean required) {
-        return fieldProfileRepo.save(new FieldProfile(fieldPredicate, inputType, repeatable, required));
+    public FieldProfile create(FieldPredicate fieldPredicate, InputType inputType, String usage, Boolean repeatable, Boolean enabled, Boolean optional) {
+        return fieldProfileRepo.save(new FieldProfile(fieldPredicate, inputType, usage, repeatable, enabled, optional));
     }
 
 }

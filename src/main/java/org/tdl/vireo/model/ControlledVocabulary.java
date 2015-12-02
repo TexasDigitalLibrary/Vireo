@@ -5,13 +5,8 @@ import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.LAZY;
 
-import org.tdl.vireo.config.SpringContext;
-
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,6 +14,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 import org.springframework.beans.factory.annotation.Configurable;
+import org.tdl.vireo.config.SpringContext;
 import org.tdl.vireo.service.EntityControlledVocabularyService;
 
 @Entity
@@ -35,14 +31,14 @@ public class ControlledVocabulary extends BaseEntity {
     private Language language;
     
     @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY)
-    private Set<VocabularyWord> dictionary;
+    private List<VocabularyWord> dictionary;
     
     @Column(nullable = false)
     private Boolean isEntityProperty;
 
     public ControlledVocabulary() {        
         setIsEntityProperty(false);
-        setDictionary(new TreeSet<VocabularyWord>());
+        setDictionary(new ArrayList<VocabularyWord>());
     }
 
     /**
@@ -109,7 +105,7 @@ public class ControlledVocabulary extends BaseEntity {
      * 
      * @return the values
      */
-    public Set<Object> getDictionary() {
+    public List<Object> getDictionary() {
         List<Object> values = new ArrayList<Object>();
         if(!isEntityProperty()) {
             values.addAll(dictionary);
@@ -126,7 +122,7 @@ public class ControlledVocabulary extends BaseEntity {
                 System.out.println("Entity " + entityName + " not found!\n");
             }
         }
-        return values.isEmpty() ? new HashSet<>() : new HashSet<>(values);
+        return values;
     }
     
     /**
@@ -149,7 +145,7 @@ public class ControlledVocabulary extends BaseEntity {
      * @param values
      *            the values to set
      */
-    public void setDictionary(Set<VocabularyWord> values) {
+    public void setDictionary(List<VocabularyWord> values) {
         if(!isEntityProperty()) {
             dictionary = values;
         }
@@ -160,7 +156,7 @@ public class ControlledVocabulary extends BaseEntity {
      * @param value
      */
     public void addValue(VocabularyWord value) {
-        if(!isEntityProperty()) {
+        if(!isEntityProperty() && !dictionary.contains(value)) {
             dictionary.add(value);
         }
     }

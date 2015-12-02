@@ -47,10 +47,10 @@ public class WorkflowTest extends AbstractEntityTest {
         assertEquals("Saved entity did not contain the correct workflow step name!", workflowStep, (WorkflowStep) workflow.getWorkflowSteps().toArray()[0]);
         assertEquals("Saved entity did not contain the correct workflow severable step name!", severableWorkflowStep, (WorkflowStep) workflow.getWorkflowSteps().toArray()[1]);
 
-        // test detach severable workflow step
+        // test remove severable workflow step
         workflow.removeWorkflowStep(severableWorkflowStep);
         workflow = workflowRepo.save(workflow);
-        assertEquals("The workflow step was not detached!", 1, workflow.getWorkflowSteps().size());
+        assertEquals("The workflow step was not removed!", 1, workflow.getWorkflowSteps().size());
 
         assertEquals("The workflow step was orphaned!", 1, workflowStepRepo.count());
 

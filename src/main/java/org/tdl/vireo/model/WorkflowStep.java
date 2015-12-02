@@ -5,8 +5,8 @@ import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,14 +15,18 @@ import javax.persistence.ManyToMany;
 @Entity
 public class WorkflowStep extends BaseEntity {
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String name;
 
     @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER)
-    private Set<FieldProfile> fieldProfiles;
+    private List<FieldProfile> fieldProfiles;
+    
+    @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER)
+    private List<Note> notes;
 
     public WorkflowStep() {
-        setFieldProfiles(new TreeSet<FieldProfile>());
+        setFieldProfiles(new ArrayList<FieldProfile>());
+        setNotes(new ArrayList<Note>());
     }
 
     /**
@@ -53,7 +57,7 @@ public class WorkflowStep extends BaseEntity {
      * 
      * @return
      */
-    public Set<FieldProfile> getFieldProfiles() {
+    public List<FieldProfile> getFieldProfiles() {
         return fieldProfiles;
     }
 
@@ -61,7 +65,7 @@ public class WorkflowStep extends BaseEntity {
      * 
      * @param param
      */
-    public void setFieldProfiles(Set<FieldProfile> fieldProfiles) {
+    public void setFieldProfiles(List<FieldProfile> fieldProfiles) {
         this.fieldProfiles = fieldProfiles;
     }
 
@@ -93,4 +97,25 @@ public class WorkflowStep extends BaseEntity {
         }
         return null;
     }
+
+    public List<Note> getNotes() {
+        return notes;
+    }
+
+    public void setNotes(List<Note> notes) {
+        this.notes = notes;
+    }
+    
+    public void addNote(Note note) {
+        notes.add(note);
+    }
+    
+    public void removeNote(Note note) {
+        notes.remove(note);
+    }
+    
+    public void clearAllNotes() {
+        notes.clear();
+    }
+    
 }

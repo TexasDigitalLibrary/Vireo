@@ -9,7 +9,17 @@
 		"inheritable": true,
 		"workflowSteps": [
 			{
-				"name": "Verify Your Information",
+				"name": "Verify Personal Information",
+				"notes": [
+					{
+						"name": "test",
+						"text": "This is a test"
+					},
+					{
+						"name": "test2",
+						"text": "This is a test2"
+					}
+				],
 				"fieldProfiles": [
 					{
 						"predicate": {
@@ -17,7 +27,47 @@
 						},
 						"inputType": 0,
 						"repeatable": false,
-						"required": true,
+						"enabled": true,
+						"optional": false,
+						"usage": "",
+						"help": "",
+						"fieldGlosses": [
+							{
+								"value": "Test",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": [
+							{
+								"name": "test",
+								"entityName": null,
+								"language": {
+									"name": "English"
+								},
+								"dictionary": [
+									{
+										"name": "test",
+										"definition": "test",
+										"identifier": "test",
+										"controlledVocabulary": null
+									}
+								],
+								"isEntityProperty": true
+							}
+						]
+					},
+					{
+						"predicate": {
+							"value": "test2"
+						},
+						"inputType": 0,
+						"repeatable": false,
+						"enabled": true,
+						"optional": false,
+						"usage": "",
+						"help": "",
 						"fieldGlosses": [
 							{
 								"value": "Test",
@@ -49,6 +99,7 @@
 			},
 			{
 				"name": "License Agreement",
+				"notes": [],
 				"fieldProfiles": [
 					{
 						"predicate": {
@@ -56,7 +107,10 @@
 						},
 						"inputType": 0,
 						"repeatable": false,
-						"required": true,
+						"enabled": true,
+						"optional": false,
+						"usage": "",
+						"help": "",
 						"fieldGlosses": [
 							{
 								"value": "Test",
@@ -65,29 +119,13 @@
 								}
 							}
 						],
-						"controlledVocabularies": [
-							{
-								"name": "test",
-								"entityName": null,
-								"language": {
-									"name": "English"
-								},
-								"dictionary": [
-									{
-										"name": "test",
-										"definition": "test",
-										"identifier": "test",
-										"controlledVocabulary": null
-									}
-								],
-								"isEntityProperty": true
-							}
-						]
+						"controlledVocabularies": []
 					}
 				]
 			},
 			{
 				"name": "Document Information",
+				"notes": [],
 				"fieldProfiles": [
 					{
 						"predicate": {
@@ -95,7 +133,10 @@
 						},
 						"inputType": 0,
 						"repeatable": false,
-						"required": true,
+						"enabled": true,
+						"optional": false,
+						"usage": "",
+						"help": "",
 						"fieldGlosses": [
 							{
 								"value": "Test",
@@ -104,29 +145,13 @@
 								}
 							}
 						],
-						"controlledVocabularies": [
-							{
-								"name": "test",
-								"entityName": null,
-								"language": {
-									"name": "English"
-								},
-								"dictionary": [
-									{
-										"name": "test",
-										"definition": "test",
-										"identifier": "test",
-										"controlledVocabulary": null
-									}
-								],
-								"isEntityProperty": true
-							}
-						]
+						"controlledVocabularies": []
 					}
 				]
 			},
 			{
 				"name": "File Upload",
+				"notes": [],
 				"fieldProfiles": [
 					{
 						"predicate": {
@@ -134,7 +159,10 @@
 						},
 						"inputType": 0,
 						"repeatable": false,
-						"required": true,
+						"enabled": true,
+						"optional": false,
+						"usage": "",
+						"help": "",
 						"fieldGlosses": [
 							{
 								"value": "Test",
@@ -143,24 +171,7 @@
 								}
 							}
 						],
-						"controlledVocabularies": [
-							{
-								"name": "test",
-								"entityName": null,
-								"language": {
-									"name": "English"
-								},
-								"dictionary": [
-									{
-										"name": "test",
-										"definition": "test",
-										"identifier": "test",
-										"controlledVocabulary": null
-									}
-								],
-								"isEntityProperty": true
-							}
-						]
+						"controlledVocabularies": []
 					}
 				]
 			}
