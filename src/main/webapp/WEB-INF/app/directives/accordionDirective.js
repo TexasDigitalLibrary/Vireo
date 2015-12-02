@@ -4,13 +4,23 @@ vireo.directive("accordion", function() {
 		restrict: 'E',
 		replace: true,
 		transclude: true,
-		scope: {},
+		scope: {
+			singleExpand: "@singleExpand"
+		},
 		controller: function($scope)  {
 
+			console.log($scope.singleExpand);
+
 			this.closeAll = function(id) {
-				$scope.$broadcast("close", id);
+				if($scope.singleExpand == "true") $scope.$broadcast("close", id);
 			}
 
+		},
+		link: function($scope, element, attr) {
+			
+			$scope.singleExpand = typeof attr.singleExpand != "undefined" ? attr.singleExpand.toLowerCase() == "true" : false;	
+			
+				
 		}
 	};
 });
