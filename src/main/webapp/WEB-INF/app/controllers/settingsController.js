@@ -29,10 +29,4 @@ vireo.controller('SettingsController', function ($controller, $scope, $location,
 		
 	});
 
-	$scope.clicked = false;
-    $scope.toggle = function() {
-        $scope.clicked = !$scope.clicked;
-    };
-
-
 });
