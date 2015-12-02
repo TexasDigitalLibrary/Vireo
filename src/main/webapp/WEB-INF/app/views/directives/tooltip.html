@@ -1,0 +1,8 @@
+<div class="tooltip-wrapper">
+	<span class="tooltip-handle" ng-mousemove="positionTip($event)" ng-mouseover="showTip()" ng-mouseout="hideTip()" ng-click="toggleVisible()" ng-transclude></span>
+	
+	<div ng-style="tipStyles" class="tip" ng-class="{'tip-visible': tipVisible}">
+		<div class="tip-point"></div>
+		<div class="tip-message">{{tip}}</div>
+	</div>
+</div>

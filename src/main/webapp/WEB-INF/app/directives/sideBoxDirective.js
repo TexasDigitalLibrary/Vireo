@@ -1,6 +1,6 @@
 vireo.directive("sidebox", function() {
 	return {
-		templateUrl: 'views/sidebox.html',
+		templateUrl: 'views/directives/sidebox.html',
 		restrict: 'E',
 		replace: false,
 		transclude: true,

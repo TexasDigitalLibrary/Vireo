@@ -54,7 +54,7 @@ vireo.directive("tabview", function(TabService) {
 		template: '<span ng-include="path"></span>',
 		restrict: 'E',
 		replace: false,
-		scope: {},
+		scope: false,
 		link: function ($scope, element, attr) { 	
 			$scope.path = TabService.getTab(attr.for);
 	    }

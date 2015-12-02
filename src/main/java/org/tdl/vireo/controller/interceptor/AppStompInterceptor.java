@@ -42,8 +42,8 @@ public class AppStompInterceptor extends CoreStompInterceptor {
                 }
             }
             
-            userRepo.create(shib.getEmail(), shib.getFirstName(), shib.getLastName(), role);
-            
+            User newUser = userRepo.create(shib.getEmail(), shib.getFirstName(), shib.getLastName(), role);
+       
 //            Map<String, Object> userMap = new HashMap<String, Object>();
 //            
 //            userMap.put("list", userRepo.findAll());

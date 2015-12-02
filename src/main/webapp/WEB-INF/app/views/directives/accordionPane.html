@@ -1,0 +1,11 @@
+<div id="{{::hash}}" class="panel panel-default">
+	<div ng-click="toggleExpanded()" class="panel-heading" ng-class="{'expanded': expanded}">
+		<div class="panel-selection"></div>
+		<span ng-transclude></span>
+		<span class="glyphicon glyphicon-menu-down pull-right" ng-show="!expanded"></span>
+		<span class="glyphicon glyphicon-menu-up  pull-right" ng-show="expanded"></span>
+	</div>
+	<div class="panel-body" ng-class="{'expanded': expanded}">
+		<div ng-include="html" class="panel-content-wrapper"></div>
+	</div>
+</div>

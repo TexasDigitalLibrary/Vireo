@@ -13,7 +13,12 @@ public class UserRepoImpl implements UserRepoCustom {
 
     @Override
     public User create(String email, String firstName, String lastName, Role role) {
-        return userRepo.save(new User(email, firstName, lastName, role));
+        
+        User newUser = new User(email, firstName, lastName, role);
+        newUser.putSetting("displayName", firstName +" "+lastName);
+        newUser.putSetting("preferedEmail", email);
+        
+        return userRepo.save(newUser);
     }
 
 }
