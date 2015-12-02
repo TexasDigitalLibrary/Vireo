@@ -434,55 +434,6 @@ legend.legendborder {
   color: #70706f;
 }
 
-.accordion .panel {
-  cursor: pointer;
-  margin-bottom: 3px;
-}
-
-.accordion .panel-heading {
-  position: relative;
-  padding-left: 10px;
-  transition: padding-left 0.5s ease-out;
-}
-
-.accordion .panel-heading.expanded {
-  transition: padding-left 0.5s ease-out;
-  padding-left: 35px;
-}
-
-.accordion .panel-selection {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 0px;
-  background-image: linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
-  border-top-left-radius:3px;
-  transition: width 0.5s ease-out;
-}
-
-.accordion .panel-heading.expanded .panel-selection {
-  width: 25px;
-  transition: width 0.5s ease-out;
-}
-
-.accordion .panel-body {
-  max-height: 0px;
-  transition: max-height 0.5s ease-out;
-  overflow: hidden;
-  padding: 0px;
-  
-}
-
-.accordion .panel-body.expanded {
-  max-height: 500px;
-  transition: max-height 0.5s ease-out;
-}
-
-.panel-content-wrapper {
-  padding: 25px;
-}
-
 .footer {
   color: #777;
   border-top: 1px solid #ccc;
@@ -540,4 +491,68 @@ footer a, footer li, footer p {
 
 .registration {
   max-width: 400px;
+}
+
+/*************
+* DIRECTIVES *
+**************/
+
+/*Accordion*/
+
+.accordion .panel {
+  cursor: pointer;
+  margin-bottom: 3px;
+}
+
+.accordion .panel-heading {
+  position: relative;
+  padding-left: 10px;
+  -webkit-transition: padding-left 0.5s ease-out;
+  transition: padding-left 0.5s ease-out;
+}
+
+.accordion .panel-heading.expanded {
+  padding-left: 35px;
+  -webkit-transition: padding-left 0.5s ease-out;
+  transition: padding-left 0.5s ease-out;
+}
+
+.accordion .panel-selection {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 0px;
+  background: rgb(31, 58, 71);
+  background: -moz-linear-gradient linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
+  background: -webkit-linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
+  background: -ms-linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
+  background: linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
+  border-top-left-radius:3px;
+  -webkit-transition: width 0.5s ease-out;
+  transition: width 0.5s ease-out;
+}
+
+.accordion .panel-heading.expanded .panel-selection {
+  width: 25px;
+  -webkit-transition: width 0.5s ease-out;
+  transition: width 0.5s ease-out;
+}
+
+.accordion .panel-body {
+  max-height: 0px;
+  overflow: hidden;
+  padding: 0px;
+  -webkit-transition: max-height 0.5s ease-out;
+  transition: max-height 0.5s ease-out;
+}
+
+.accordion .panel-body.expanded {
+  max-height: 500px;
+  -webkit-transition: max-height 0.5s ease-out;
+  transition: max-height 0.5s ease-out;
+}
+
+.panel-content-wrapper {
+  padding: 25px;
 }
