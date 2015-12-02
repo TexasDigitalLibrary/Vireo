@@ -1,0 +1,35 @@
+<form name="submission-availability">
+		
+	<h2>SUBMISSION AVAILABILITY</h2>
+	
+	<togglebutton label="Submissions are currently :">
+        <toggleoption>Open</toggleoption>
+        <toggleoption>Closed</toggleoption>
+    </togglebutton>
+   
+    <togglebutton label="Allow multiple submissions :">
+        <toggleoption>Yes</toggleoption>
+        <toggleoption>No</toggleoption>
+    </togglebutton>
+
+    <div class="row form-group">
+    	<div class="col-sm-6">
+			<span class="pull-right">Current submission semester :</span>	
+		</div>
+		<div class="col-sm-6">													
+			<input id="currentSemester" type="text" class="form-control"/>
+			<div class="hint">'Month Year' (i.e. May 2015)</div>
+		</div>
+	</div>
+
+	<div class="row form-group">
+		<div class="col-sm-6">
+			<span class="pull-right">Degree Granting School :</span>
+		</div>
+		<div class="col-sm-6">											
+     		<input name="grantor" type="text" value="Texas A &amp; M University" class="form-control" />
+			<div class="hint">The full name of the institution awarding degrees.</div>
+		</div>	
+	</div>
+
+</form>
