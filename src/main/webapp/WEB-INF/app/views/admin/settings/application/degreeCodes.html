@@ -1,23 +1,28 @@
-<form name="degreeCodes" class="degreeCodes">
-	<h2>DEGREE CODES</h2>
+<div class="row">
+	<div class="col-sm-6">
+		<form name="degreeCodes" class="degreeCodes">
 
-	<p>Degree codes are used by some export formats (i.e. ProQuest) to translate degrees into abbreviated codes.</p>
+			<p>Degree codes are used by some export formats (i.e. ProQuest) to translate degrees into abbreviated codes.</p>
 
-	<div class="row form-group">
-		<div class="col-sm-6">
-			<label class="pull-right">Doctor of Philosophy:</label>
-		</div>
-		<div class="col-sm-3">											
-     		<input name="degree_code_doctor_of_philosophy" type="text" class="form-control" data-provide="typeahead"/>
-		</div>	
+			<div class="row form-group">
+				<div class="col-sm-6">
+					<label class="pull-right">Doctor of Philosophy:</label>
+				</div>
+				<div class="col-sm-6">								
+		     		<input name="degree_code_doctor_of_philosophy" type="text" class="form-control" data-provide="typeahead"/>
+				</div>	
+			</div>
+
+			<div class="row form-group">
+				<div class="col-sm-6">
+					<label class="pull-right">Doctor of Education:</label>
+				</div>
+				<div class="col-sm-6">											
+		     		<input name="degree_code_doctor_of_education" type="text" class="form-control" data-provide="typeahead"/>
+				</div>	
+			</div>
+
+		</form>
 	</div>
+</div>
 
-	<div class="row form-group">
-		<div class="col-sm-6">
-			<label class="pull-right">Doctor of Education:</label>
-		</div>
-		<div class="col-sm-3">											
-     		<input name="degree_code_doctor_of_education" type="text" class="form-control" data-provide="typeahead"/>
-		</div>	
-	</div>
-</form>
