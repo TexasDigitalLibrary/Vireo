@@ -31,7 +31,7 @@ public class Organization extends BaseEntity {
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER, optional = false)
     private OrganizationCategory category;
 
-    @OneToOne(cascade = ALL, fetch = EAGER, optional = true, orphanRemoval = true)
+    @OneToOne(cascade = ALL, orphanRemoval = true)
     private Workflow workflow;
 
     @ManyToMany(cascade = { DETACH, REFRESH }, fetch = LAZY)

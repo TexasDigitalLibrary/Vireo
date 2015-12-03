@@ -10,10 +10,10 @@ public class WorkflowRepoImpl implements WorkflowRepoCustom {
 
     @Autowired
     private WorkflowRepo workflowRepo;
-
+    
     @Override
     public Workflow create(String name, Boolean inheritable, Organization organization) {
         return workflowRepo.save(new Workflow(name, inheritable, organization));
     }
-
+    
 }

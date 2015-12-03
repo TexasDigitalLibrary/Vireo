@@ -75,8 +75,10 @@ public class WorkflowTest extends AbstractEntityTest {
 
     @After
     public void cleanUp() {
-        workflowRepo.deleteAll();
         workflowStepRepo.deleteAll();
+        workflowRepo.deleteAll();        
+        organizationRepo.deleteAll();
+        organizationCategoryRepo.deleteAll();
     }
 
 }

@@ -107,6 +107,8 @@ public class WorkflowStepTest extends AbstractEntityTest {
     public void cleanUp() {
         workflowStepRepo.deleteAll();
         workflowRepo.deleteAll();
+        organizationRepo.deleteAll();
+        organizationCategoryRepo.deleteAll();
         noteRepo.deleteAll();
         fieldProfileRepo.deleteAll();
         fieldPredicateRepo.deleteAll();

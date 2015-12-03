@@ -23,7 +23,7 @@ public class Workflow extends BaseEntity {
 	@Column(nullable = false)
 	private Boolean inheritable;
 	
-	@OneToOne(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER, optional = false)
+	@OneToOne(cascade = { DETACH, REFRESH, MERGE })
 	private Organization organization;
 	
 	@OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)

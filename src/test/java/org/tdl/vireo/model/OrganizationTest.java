@@ -219,7 +219,6 @@ public class OrganizationTest extends AbstractEntityTest {
     @After
     public void cleanUp() {
         workflowRepo.deleteAll();
-        assertEquals("The workflow orphans were not removed!", 0, workflowRepo.count());
         organizationRepo.deleteAll();
         organizationCategoryRepo.deleteAll();
         emailWorkflowRuleRepo.deleteAll();
