@@ -43,12 +43,20 @@
 				</div>
 			</div>
 
-			<div class="row control-group" ng-if="(isAdmin() || isManager())">
+			<div class="row control-group">
 				<div class="col-sm-3">
 					<span class="pull-right">Display Name:</span>
 				</div>
-				<div class="col-sm-3">
-					{{user.displayName}}
+				<div class="col-sm-2">
+					<input id="displayName" 
+							type="text" 
+							name="displayName"
+							class="form-control"
+							ng-if="(isAdmin() || isManager())" 
+							ng-model="settings.user.displayName" 
+							ng-change="updateUserSetting('displayName', 500)" 
+							shadow />
+					<span ng-if="isUser()">{{settings.user.displayName}}</span>
 				</div>
 			</div>
 
@@ -93,12 +101,20 @@
 				</div>
 			</div>
 
-			<div class="row control-group">
+			<div class="row control-group" ng-if="(isAdmin() || isManager())">
 				<div class="col-sm-3">
 					<span class="pull-right">Preferred Email:</span>
 				</div>
-				<div class="col-sm-3">
-					<useremail></useremail>
+				<div class="col-sm-2">
+					<input id="preferedEmail" 
+							type="text" 
+							name="preferedEmail"
+							class="form-control"
+							ng-if="(isAdmin() || isManager())" 
+							ng-model="settings.user.preferedEmail" 
+							ng-change="updateUserSetting('preferedEmail', 500)" 
+							shadow />
+					<span ng-if="isUser()">{{settings.user.preferedEmail}}</span>
 				</div>
 			</div>
 
@@ -137,23 +153,43 @@
 						<legend class="legendborder">When adding notes, which options should be checked by default?</legend>
 
 						<div class="form-group checkbox">
-							<input name="notes_email_student_by_default" type="checkbox"/>
-							<span>Email the student</span>
+							<label ng-click="updateUserSetting('notes_email_student_by_default')">
+								<input  type="checkbox"
+										name="notes_email_student_by_default" 
+										ng-true-value="'true'" 
+										ng-model="settings.user.notes_email_student_by_default" />
+								<span>Email the student</span>
+							</label>
 						</div>
 
 						<div class="form-group checkbox">
-							<input name="notes_cc_student_advisor_by_default" type="checkbox"/>
-							<span>CC student's advisor</span>
+							<label ng-click="updateUserSetting('notes_cc_student_advisor_by_default')">
+								<input  name="notes_cc_student_advisor_by_default" 
+										type="checkbox" 
+										ng-true-value="'true'" 
+										ng-model="settings.user.notes_cc_student_advisor_by_default" />
+								<span>CC student's advisor</span>
+							</label>	
 						</div>
 
 						<div class="form-group checkbox">
-							<input name="notes_flag_submission_as_needs_corrections_by_default" type="checkbox"/>
-							<span>Flag submission as Needs Corrections</span>
+							<label ng-click="updateUserSetting('notes_flag_submission_as_needs_corrections_by_default')">
+								<input  name="notes_flag_submission_as_needs_corrections_by_default" 
+										type="checkbox" 
+										ng-true-value="'true'" 
+										ng-model="settings.user.notes_flag_submission_as_needs_corrections_by_default" />
+								<span>Flag submission as Needs Corrections</span>
+							</label>
 						</div>
 
 						<div class="form-group checkbox">
-							<input name="notes_mark_comment_as_private_by_default" type="checkbox"/>
-							<span>Mark comment as private</span>
+							<label ng-click="updateUserSetting('notes_mark_comment_as_private_by_default')">
+								<input name="notes_mark_comment_as_private_by_default" 
+										type="checkbox"
+										ng-true-value="'true'" 
+										ng-model="settings.user.notes_mark_comment_as_private_by_default" />
+								<span>Mark comment as private</span>
+							</label>
 						</div>
 
 					</fieldset>	
@@ -162,18 +198,33 @@
 						<legend class="legendborder">When attaching files, which options should be checked by default?</legend>
 
 						<div class="form-group checkbox">
-							<input name="attachment_email_student_by_default" type="checkbox"/>
+							<label ng-click="updateUserSetting('attachment_email_student_by_default')">
+								<input  name="attachment_email_student_by_default" 
+										type="checkbox" 
+										ng-true-value="'true'" 
+										ng-model="settings.user.attachment_email_student_by_default" />
 							<span>Email the student</span>
+							</label>	
 						</div>
 
 						<div class="form-group checkbox">
-							<input name="attachment_cc_student_advisor_by_default" type="checkbox"/>
+							<label ng-click="updateUserSetting('attachment_cc_student_advisor_by_default')">
+								<input  name="attachment_cc_student_advisor_by_default" 
+										type="checkbox" 
+										ng-true-value="'true'" 
+										ng-model="settings.user.attachment_cc_student_advisor_by_default" />
 							<span>CC student's advisor</span>
+							</label>
 						</div>
 
 						<div class="form-group checkbox">
-							<input name="attachment_flag_submission_as_needs_corrections_by_default" type="checkbox"/>
-							<span>Flag submission as Needs Corrections</span>
+						<label ng-click="updateUserSetting('attachment_flag_submission_as_needs_corrections_by_default')">
+							<input  name="attachment_flag_submission_as_needs_corrections_by_default" 
+									type="checkbox" 
+									ng-true-value="'true'" 
+									ng-model="settings.user.attachment_flag_submission_as_needs_corrections_by_default" />
+						<span>Flag submission as Needs Corrections</span>
+						</label>
 						</div>
 
 					</fieldset>

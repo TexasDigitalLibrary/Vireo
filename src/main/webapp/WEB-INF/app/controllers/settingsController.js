@@ -4,7 +4,7 @@ vireo.controller('SettingsController', function ($controller, $scope, $location,
 	$scope.getTest = function() {
 		console.log("foo");
 	};
-	
+
 	$scope.settings = {};
 
 	$scope.settings.user  = UserSettings.get();
@@ -13,7 +13,6 @@ vireo.controller('SettingsController', function ($controller, $scope, $location,
 	
 
 	UserSettings.ready().then(function() {
-		
 		$scope.updateUserSetting = function(setting, timer) {
 
 			timer = typeof timer == "undefined" ? 0 : timer;
@@ -28,5 +27,4 @@ vireo.controller('SettingsController', function ($controller, $scope, $location,
 		};
 		
 	});
-
 });
