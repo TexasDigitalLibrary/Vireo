@@ -12,8 +12,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "workflow_id" }) )
 public class WorkflowStep extends BaseEntity {
 
     @Column(nullable = false)

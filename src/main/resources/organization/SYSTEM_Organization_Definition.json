@@ -10,16 +10,7 @@
 		"workflowSteps": [
 			{
 				"name": "Verify Personal Information",
-				"notes": [
-					{
-						"name": "test",
-						"text": "This is a test"
-					},
-					{
-						"name": "test2",
-						"text": "This is a test2"
-					}
-				],
+				"notes": [],
 				"fieldProfiles": [
 					{
 						"predicate": {
@@ -39,24 +30,7 @@
 								}
 							}
 						],
-						"controlledVocabularies": [
-							{
-								"name": "test",
-								"entityName": null,
-								"language": {
-									"name": "English"
-								},
-								"dictionary": [
-									{
-										"name": "test",
-										"definition": "test",
-										"identifier": "test",
-										"controlledVocabulary": null
-									}
-								],
-								"isEntityProperty": true
-							}
-						]
+						"controlledVocabularies": []
 					},
 					{
 						"predicate": {
@@ -76,24 +50,7 @@
 								}
 							}
 						],
-						"controlledVocabularies": [
-							{
-								"name": "test",
-								"entityName": null,
-								"language": {
-									"name": "English"
-								},
-								"dictionary": [
-									{
-										"name": "test",
-										"definition": "test",
-										"identifier": "test",
-										"controlledVocabulary": null
-									}
-								],
-								"isEntityProperty": true
-							}
-						]
+						"controlledVocabularies": []
 					}
 				]
 			},
