@@ -148,6 +148,17 @@
 			<h2>Preferences</h2>
 
 			<div class="row control-group">
+				<span ng-click="updateUserSetting('ccEmail')">
+					<input  id="ccEmail"
+							type="checkbox"
+							name="ccEmail" 
+							ng-true-value="'true'" 
+							ng-model="settings.user.ccEmail" />
+					<span>I want to receive a copy of all emails sent by the system on my behalf.</span>
+				</span>
+			</div>
+
+			<div class="row control-group">
 				<form class="form-inline">
 					<fieldset class="fieldset-border">
 						<legend class="legendborder">When adding notes, which options should be checked by default?</legend>
