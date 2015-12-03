@@ -646,13 +646,13 @@ footer a, footer li, footer p {
 /*Accordion*/
 
 .accordion .panel {
-  cursor: pointer;
   margin-bottom: 3px;
 }
 
 .accordion .panel-heading {
   position: relative;
   padding-left: 10px;
+  cursor: pointer;
   -webkit-transition: padding-left 0.5s ease-out;
   transition: padding-left 0.5s ease-out;
 }

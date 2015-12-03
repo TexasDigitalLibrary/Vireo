@@ -39,7 +39,7 @@ vireo.directive("pane", function($location, $timeout, $anchorScroll) {
 			$scope.hash = attr.hash;
 
 			$timeout(function() {
-				$location.hash() == $scope.hash ? $scope.open() : $scope.close();
+				$location.hash() == $scope.hash ? $scope.open(true) : $scope.close();
 				$anchorScroll();
 			});
 
@@ -48,12 +48,16 @@ vireo.directive("pane", function($location, $timeout, $anchorScroll) {
 				$scope.expanded ? $scope.close() : $scope.open();
 			}
 
-			$scope.open = function() {
+			$scope.open = function(pageLoad) {
 				if(typeof $scope.html == "undefined") {
 					$scope.loading = true;
 					$scope.html = attr.html;
 				}
 				$scope.expanded = true;
+				if(!pageLoad) {
+					$location.hash($scope.hash, false);
+					$anchorScroll();	
+				}
 			}
 
 			$scope.close = function() {
@@ -61,7 +65,9 @@ vireo.directive("pane", function($location, $timeout, $anchorScroll) {
 			}
 
 			$scope.loaded = function() {
-				$scope.loading = false;
+				$timeout(function(){
+					$scope.loading = false;	
+				}, 500);
 			}
 
 			$scope.$on('close', function(event, id) {
