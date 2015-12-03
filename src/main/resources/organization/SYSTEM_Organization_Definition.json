@@ -14,17 +14,17 @@
 				"fieldProfiles": [
 					{
 						"predicate": {
-							"value": "test"
+							"value": "firstName"
 						},
 						"inputType": 0,
 						"repeatable": false,
 						"enabled": true,
 						"optional": false,
 						"usage": "",
-						"help": "",
+						"help": "Enter your first name.",
 						"fieldGlosses": [
 							{
-								"value": "Test",
+								"value": "First Name",
 								"language": {
 									"name": "English"
 								}
@@ -34,17 +34,317 @@
 					},
 					{
 						"predicate": {
-							"value": "test2"
+							"value": "middleName"
+						},
+						"inputType": 0,
+						"repeatable": false,
+						"enabled": true,
+						"optional": true,
+						"usage": "",
+						"help": "Enter your middle name or initial.",
+						"fieldGlosses": [
+							{
+								"value": "Middle Name",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "lastName"
 						},
 						"inputType": 0,
 						"repeatable": false,
 						"enabled": true,
 						"optional": false,
 						"usage": "",
-						"help": "",
+						"help": "Enter your last name.",
 						"fieldGlosses": [
 							{
-								"value": "Test",
+								"value": "Last Name",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "email"
+						},
+						"inputType": 1,
+						"repeatable": false,
+						"enabled": true,
+						"optional": false,
+						"usage": "",
+						"help": "Enter your email.",
+						"fieldGlosses": [
+							{
+								"value": "Email",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "orcidId"
+						},
+						"inputType": 0,
+						"repeatable": false,
+						"enabled": true,
+						"optional": true,
+						"usage": "",
+						"help": "Enter your ORCID author identifier. If you do not have an ORCID iD, get one at <a href='https://orcid.org/register' target='_blank'>orcid.org</a>.",
+						"fieldGlosses": [
+							{
+								"value": "ORCID id",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "birthYear"
+						},
+						"inputType": 0,
+						"repeatable": false,
+						"enabled": false,
+						"optional": true,
+						"usage": "",
+						"help": "Enter the full year in which you were born. For example 1985.",
+						"fieldGlosses": [
+							{
+								"value": "Year of Birth",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "school"
+						},
+						"inputType": 0,
+						"repeatable": false,
+						"enabled": true,
+						"optional": true,
+						"usage": "",
+						"help": "Your degree granting institution.",
+						"fieldGlosses": [
+							{
+								"value": "School",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "college"
+						},
+						"inputType": 0,
+						"repeatable": false,
+						"enabled": false,
+						"optional": false,
+						"usage": "",
+						"help": "Enter the college you belong to.",
+						"fieldGlosses": [
+							{
+								"value": "College",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "program"
+						},
+						"inputType": 0,
+						"repeatable": false,
+						"enabled": true,
+						"optional": true,
+						"usage": "",
+						"help": "Enter the program you belong to.",
+						"fieldGlosses": [
+							{
+								"value": "Program",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "department"
+						},
+						"inputType": 0,
+						"repeatable": false,
+						"enabled": true,
+						"optional": false,
+						"usage": "",
+						"help": "Enter the department you belong to.",
+						"fieldGlosses": [
+							{
+								"value": "Department",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "degree"
+						},
+						"inputType": 10,
+						"repeatable": false,
+						"enabled": true,
+						"optional": false,
+						"usage": "",
+						"help": "Choose the type of degree you are seeking.",
+						"fieldGlosses": [
+							{
+								"value": "Degree",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "major"
+						},
+						"inputType": 0,
+						"repeatable": false,
+						"enabled": true,
+						"optional": false,
+						"usage": "",
+						"help": "Enter the discipline you specialized in.",
+						"fieldGlosses": [
+							{
+								"value": "Major",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "permanentPhone"
+						},
+						"inputType": 0,
+						"repeatable": false,
+						"enabled": true,
+						"optional": false,
+						"usage": "",
+						"help": "Enter a phone number where you can be reached even after you have left school",
+						"fieldGlosses": [
+							{
+								"value": "Permanent Phone",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "permanentAddress"
+						},
+						"inputType": 0,
+						"repeatable": false,
+						"enabled": true,
+						"optional": false,
+						"usage": "",
+						"help": "Enter an address where you can be reached even after you complete and leave school.",
+						"fieldGlosses": [
+							{
+								"value": "Permanent Address",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "permanentEmail"
+						},
+						"inputType": 1,
+						"repeatable": false,
+						"enabled": true,
+						"optional": false,
+						"usage": "",
+						"help": "Enter an email address you will always have.",
+						"fieldGlosses": [
+							{
+								"value": "Permanent Email",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "currentPhone"
+						},
+						"inputType": 0,
+						"repeatable": false,
+						"enabled": true,
+						"optional": true,
+						"usage": "",
+						"help": "Enter a phone number where you can be reached.",
+						"fieldGlosses": [
+							{
+								"value": "Current Phone",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "currentAddress"
+						},
+						"inputType": 9,
+						"repeatable": false,
+						"enabled": true,
+						"optional": true,
+						"usage": "",
+						"help": "Enter an address where you can be reached.",
+						"fieldGlosses": [
+							{
+								"value": "Current Address",
 								"language": {
 									"name": "English"
 								}
