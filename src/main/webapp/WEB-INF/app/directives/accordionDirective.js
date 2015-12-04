@@ -9,8 +9,8 @@ vireo.directive("accordion", function(AccordionService) {
 		},
 		controller: function($scope)  {
 
-			this.closeAll = function() {
-				if($scope.singleExpand == "true") AccordionService.closeAll();
+			this.closeAll = function(id) {
+				if($scope.singleExpand == "true") AccordionService.closeAll(id);
 			}
 
 		},
@@ -23,7 +23,7 @@ vireo.directive("accordion", function(AccordionService) {
 });
 
 vireo.directive("pane", function($location, $timeout, $anchorScroll, AccordionService) {
-	var paneID = 0;
+	var count = 0;
 	return {
 		templateUrl: 'views/directives/accordionPane.html',
 		restrict: 'E',
@@ -33,11 +33,10 @@ vireo.directive("pane", function($location, $timeout, $anchorScroll, AccordionSe
 		scope: true,
 		link: function ($scope, element, attr, parent) {
 
+			var paneID = count++;
 
 			$anchorScroll.yOffset = 55;
-
-			paneID++;
-
+			
 			angular.extend($scope, parent);
 			
 			$scope.query = typeof attr.query != "undefined" ? attr.query : "pane"+paneID;
@@ -45,13 +44,13 @@ vireo.directive("pane", function($location, $timeout, $anchorScroll, AccordionSe
 			
 			$timeout(function() {
 				var panelSearch = $location.search()["panel"];
-				panelSearch == $scope.query ? $scope.open() : $scope.close();
+				if(panelSearch == $scope.query) $scope.open();
 				$location.hash(panelSearch).replace()
 				$anchorScroll();
 			});
 
 			$scope.toggleExpanded = function() {
-				$scope.closeAll();
+				$scope.closeAll(paneID);
 				$scope.expanded ? $scope.close() : $scope.open();
 			}
 
@@ -68,6 +67,8 @@ vireo.directive("pane", function($location, $timeout, $anchorScroll, AccordionSe
 
 			$scope.close = function() {
 				$scope.expanded = false;
+				//AccordionService.remove(paneID)
+				console.log(paneID + " is closed");
 			}
 
 			$scope.loaded = function() {
@@ -88,11 +89,19 @@ vireo.service("AccordionService", function() {
 
 	AccordionService.add = function(id, close) {
 		openPanes[id] = close;
+		console.log(openPanes);
 	};
 
-	AccordionService.closeAll = function() {
+	AccordionService.remove = function(id) {
+		if(openPanes[id]) delete openPanes[id];
+	}
+
+	AccordionService.closeAll = function(id) {
 		for(var i in openPanes) {
-			openPanes[i]();
+			if(id != i)  {
+				console.log("closing " + id);
+				openPanes[i]();
+			}
 		}
 	};
 
