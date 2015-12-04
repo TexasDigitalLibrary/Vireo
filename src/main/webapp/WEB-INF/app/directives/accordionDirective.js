@@ -1,4 +1,4 @@
-vireo.directive("accordion", function() {
+vireo.directive("accordion", function(AccordionService) {
 	return {
 		template: '<div class="accordion" ng-transclude></div>',
 		restrict: 'E',
@@ -9,8 +9,8 @@ vireo.directive("accordion", function() {
 		},
 		controller: function($scope)  {
 
-			this.closeAll = function(id) {
-				if($scope.singleExpand == "true") $scope.$broadcast("close", id);
+			this.closeAll = function() {
+				if($scope.singleExpand == "true") AccordionService.closeAll();
 			}
 
 		},
@@ -18,13 +18,12 @@ vireo.directive("accordion", function() {
 			
 			$scope.singleExpand = typeof attr.singleExpand != "undefined" ? attr.singleExpand.toLowerCase() == "true" : false;	
 			
-				
 		}
 	};
 });
 
-vireo.directive("pane", function($location, $timeout, $anchorScroll) {
-
+vireo.directive("pane", function($location, $timeout, $anchorScroll, AccordionService) {
+	var paneID = 0;
 	return {
 		templateUrl: 'views/directives/accordionPane.html',
 		restrict: 'E',
@@ -34,17 +33,25 @@ vireo.directive("pane", function($location, $timeout, $anchorScroll) {
 		scope: true,
 		link: function ($scope, element, attr, parent) {
 
+
+			$anchorScroll.yOffset = 55;
+
+			paneID++;
+
 			angular.extend($scope, parent);
 			
-			$scope.hash = attr.hash;
+			$scope.query = typeof attr.query != "undefined" ? attr.query : "pane"+paneID;
 
+			
 			$timeout(function() {
-				$location.hash() == $scope.hash ? $scope.open(true) : $scope.close();
+				var panelSearch = $location.search()["panel"];
+				panelSearch == $scope.query ? $scope.open() : $scope.close();
+				$location.hash(panelSearch).replace()
 				$anchorScroll();
 			});
 
 			$scope.toggleExpanded = function() {
-				$scope.closeAll($scope.$id);
+				$scope.closeAll();
 				$scope.expanded ? $scope.close() : $scope.open();
 			}
 
@@ -54,10 +61,9 @@ vireo.directive("pane", function($location, $timeout, $anchorScroll) {
 					$scope.html = attr.html;
 				}
 				$scope.expanded = true;
-				if(!pageLoad) {
-					$location.hash($scope.hash, false);
-					$anchorScroll();	
-				}
+				AccordionService.add(paneID, $scope.close);
+				$location.search("panel", $scope.query, false).replace();	
+				
 			}
 
 			$scope.close = function() {
@@ -70,10 +76,26 @@ vireo.directive("pane", function($location, $timeout, $anchorScroll) {
 				}, 500);
 			}
 
-			$scope.$on('close', function(event, id) {
-				if(id != $scope.$id) $scope.expanded = $scope.close();
-			});
-
 	    }
 	};
+});
+
+vireo.service("AccordionService", function() {
+
+	var AccordionService = this;
+
+	var openPanes = {};
+
+	AccordionService.add = function(id, close) {
+		openPanes[id] = close;
+	};
+
+	AccordionService.closeAll = function() {
+		for(var i in openPanes) {
+			openPanes[i]();
+		}
+	};
+
+	return AccordionService;
+
 });

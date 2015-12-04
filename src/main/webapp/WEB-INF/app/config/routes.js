@@ -1,5 +1,7 @@
-vireo.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
+vireo.config(['$routeProvider', '$locationProvider', '$anchorScrollProvider', function($routeProvider, $locationProvider) {
+	
 	$locationProvider.html5Mode(true);
+	
 	$routeProvider.
 		when('/myprofile', {
 			templateUrl: 'views/myprofile.html',
@@ -28,7 +30,8 @@ vireo.config(['$routeProvider', '$locationProvider', function($routeProvider, $l
 		}).
 		when('/admin/settings/:tab', {
 			templateUrl: 'views/admin/settings/settings.html',
-			controller: 'SettingsController'
+			controller: 'SettingsController',
+			reloadOnSearch: false
 		}).
 		otherwise({
 			redirectTo: '/home',
