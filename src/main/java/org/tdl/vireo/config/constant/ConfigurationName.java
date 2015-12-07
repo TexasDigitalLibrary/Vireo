@@ -98,10 +98,12 @@ public class ConfigurationName {
 	public final static String APPLICATION_ATTACHMENTS_PATH = "attachments.path";
 	public final static String APPLICATION_INDEX_PATH = "index.path";
 	public final static String APPLICATION_DEPOSITS_PATH = "deposits.path";
-	public final static String APPLICATION_MAIL_SMTP_HOST = "mail.smtp.host";
-	public final static String APPLICATION_MAIL_SMTP_USER = "mail.smtp.user";
-	public final static String APPLICATION_MAIL_SMTP_PASSWORD = "mail.smtp.pass";
-	public final static String APPLICATION_MAIL_SMTP_CHANNEL = "mail.smtp.channel";
+	public final static String APPLICATION_MAIL_HOST = "mail.host";
+	public final static String APPLICATION_MAIL_PORT = "mail.port";
+	public final static String APPLICATION_MAIL_USER = "mail.user";
+	public final static String APPLICATION_MAIL_PASSWORD = "mail.pass";
+	public final static String APPLICATION_MAIL_CHANNEL = "mail.channel";
+	public final static String APPLICATION_MAIL_PROTOCOL = "mail.protocol";
 	public final static String APPLICATION_AUTH_FORCE_SSL = "auth.forceSSL"; 
 	public final static String APPLICATION_AUTH_PASS_ENABLED = "auth.pass.enabled";
 	public final static String APPLICATION_AUTH_PASS_VISIBLE = "auth.pass.visible";
@@ -151,4 +153,6 @@ public class ConfigurationName {
 	
 	// Vireo 4 new Configuration Names
 	public final static String APPLICATION_INSTALL_DIRECTORY = "install.dir";
+	public final static String APPLICATION_MAIL_FROM = "mail.from";
+	public final static String APPLICATION_MAIL_REPLYTO = "mail.replyto";
 }

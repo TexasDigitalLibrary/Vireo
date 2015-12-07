@@ -16,7 +16,9 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.enums.Role;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
@@ -26,14 +28,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import edu.tamu.framework.enums.ApiResponseType;
 import edu.tamu.framework.model.ApiResponse;
 
+@ActiveProfiles({"test"})
 public class AuthControllerTest extends AbstractControllerTest {
 
 	@Mock
     private UserRepo userRepo;
-	
+		
 	@InjectMocks
     private AuthController authController;
-
 	
     private static List<User> mockUsers;
     
@@ -62,6 +64,7 @@ public class AuthControllerTest extends AbstractControllerTest {
     
     @Before
     public void setup() {
+        MockitoAnnotations.initMocks(this);
     	
     	mockUsers = Arrays.asList(new User[] {TEST_USER, TEST_USER2, TEST_USER3, TEST_USER4});
     	
@@ -69,14 +72,12 @@ public class AuthControllerTest extends AbstractControllerTest {
     	
     	ReflectionTestUtils.setField(authUtility, EXPIRATION_PROPERTY_NAME, EXPIRATION_VALUE);
     	
-    	ReflectionTestUtils.setField(emailUtility, EMAIL_HOST_PROPERTY_NAME, EMAIL_HOST_VALUE);
+    	//ReflectionTestUtils.setField(emailService, EMAIL_HOST_PROPERTY_NAME, EMAIL_HOST_VALUE);
 
     	TEST_CREDENTIALS.setFirstName(TEST_USER_FIRST_NAME);
     	TEST_CREDENTIALS.setLastName(TEST_USER_LAST_NAME);
     	TEST_CREDENTIALS.setEmail(TEST_USER_EMAIL);
     	TEST_CREDENTIALS.setRole(TEST_USER_ROLE);
-    	        
-        MockitoAnnotations.initMocks(this);
         
         Mockito.when(userRepo.findAll()).thenReturn(mockUsers);
         
@@ -104,8 +105,9 @@ public class AuthControllerTest extends AbstractControllerTest {
                }}
         );
     }
-   
+    
     @Test
+    @Order(value = 1)
     @SuppressWarnings("unchecked")
     public void testRegisterEmail() {    	
     	Map<String, String[]> parameters = new HashMap<String, String[]>();
@@ -120,6 +122,7 @@ public class AuthControllerTest extends AbstractControllerTest {
     }
     
     @Test
+    @Order(value = 2)
     public void testRegister() throws Exception {
     	String token = authUtility.generateToken(TEST_USER_EMAIL, EMAIL_VERIFICATION_TYPE);    	
     	Map<String, String> data = new HashMap<String, String>();    	
@@ -143,6 +146,7 @@ public class AuthControllerTest extends AbstractControllerTest {
     }
     
     @Test
+    @Order(value = 3)
     public void testLogin() throws Exception {
 
     	testRegister();

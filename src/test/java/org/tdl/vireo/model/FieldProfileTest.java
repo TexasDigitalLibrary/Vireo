@@ -5,16 +5,20 @@ import static org.junit.Assert.assertEquals;
 import org.junit.After;
 import org.junit.Before;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.tdl.vireo.annotations.Order;
 
 public class FieldProfileTest extends AbstractEntityTest {
 
     @Before
     public void setUp() {
+        assertEquals("The repository was not empty!", 0, languageRepo.count());
+        assertEquals("The repository was not empty!", 0, fieldPredicateRepo.count());
         language = languageRepo.create(TEST_LANGUAGE);
         fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE);
     }
 
     @Override
+    @Order(value = 1)
     public void testCreate() {
         FieldProfile fieldProfile = fieldProfileRepo.create(fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_REQUIRED);
         assertEquals("The repository did not save the entity!", 1, fieldProfileRepo.count());
@@ -24,6 +28,7 @@ public class FieldProfileTest extends AbstractEntityTest {
     }
 
     @Override
+    @Order(value = 2)
     public void testDuplication() {
         fieldProfileRepo.create(fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_REQUIRED);
         try {
@@ -34,6 +39,7 @@ public class FieldProfileTest extends AbstractEntityTest {
     }
 
     @Override
+    @Order(value = 3)
     public void testDelete() {
         FieldProfile fieldProfile = fieldProfileRepo.create(fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_REQUIRED);
         fieldProfileRepo.delete(fieldProfile);
@@ -41,6 +47,7 @@ public class FieldProfileTest extends AbstractEntityTest {
     }
 
     @Override
+    @Order(value = 4)
     public void testCascade() {
         // create field profile
         FieldProfile fieldProfile = fieldProfileRepo.create(fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_REQUIRED);

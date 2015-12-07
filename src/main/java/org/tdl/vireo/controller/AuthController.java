@@ -23,6 +23,7 @@ import org.springframework.stereotype.Controller;
 import org.tdl.vireo.enums.Role;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
+import org.tdl.vireo.service.EmailService;
 import org.tdl.vireo.util.AuthUtility;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -33,7 +34,6 @@ import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.Data;
 import edu.tamu.framework.aspect.annotation.Parameters;
 import edu.tamu.framework.model.ApiResponse;
-import edu.tamu.framework.util.EmailUtility;
 
 @Controller
 @ApiMapping("/auth")
@@ -57,7 +57,7 @@ private final static String EMAIL_VERIFICATION_TYPE = "EMAIL_VERIFICATION";
     private AuthUtility authUtility;
     
     @Autowired
-    private EmailUtility emailUtility;
+    private EmailService emailService;
     
     private static final Logger logger = Logger.getLogger(AuthController.class);
     
@@ -84,7 +84,7 @@ private final static String EMAIL_VERIFICATION_TYPE = "EMAIL_VERIFICATION";
             }
             
             try {
-                emailUtility.sendEmail(email, subject, content);
+                emailService.sendEmail(email, subject, content);
             } catch (MessagingException e) {                
                 logger.debug("Unable to send email! " + email);                
                 return new ApiResponse(ERROR, "Unable to send email! " + email);
