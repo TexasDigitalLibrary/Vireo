@@ -9,6 +9,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+import org.tdl.vireo.service.EmailServiceImpl;
 
 import edu.tamu.framework.CoreContextInitializedHandler;
 import edu.tamu.framework.model.repo.SymlinkRepo;
@@ -31,6 +32,9 @@ class AppContextInitializedHandler extends CoreContextInitializedHandler {
 
     @Autowired
     ApplicationContext applicationContext;
+    
+    @Autowired
+    EmailServiceImpl emailServiceImpl;
 
     final static Logger logger = LoggerFactory.getLogger(AppContextInitializedHandler.class);
 
@@ -49,5 +53,7 @@ class AppContextInitializedHandler extends CoreContextInitializedHandler {
         }
         logger.info("Classpath root is: " + Application.class.getResource("/").getPath());
         logger.info("RUNNING! [" + env.getProperty("security.user.password") + "]");
+        
+        emailServiceImpl.init();
     }
 }

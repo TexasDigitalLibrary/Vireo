@@ -8,6 +8,7 @@ import javax.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Service;
 import org.tdl.vireo.config.constant.ConfigurationName;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 
@@ -16,12 +17,17 @@ import org.tdl.vireo.model.repo.ConfigurationRepo;
  * 
  * @author gad
  */
+@Service
 public class EmailServiceImpl extends JavaMailSenderImpl implements EmailService {
     
     @Autowired
     private ConfigurationRepo configurationRepo;
 
     public EmailServiceImpl() {
+        
+    }
+    
+    public void init() {
         String host = configurationRepo.getValue(ConfigurationName.APPLICATION_MAIL_HOST, "localhost");
         int port = configurationRepo.getValue(ConfigurationName.APPLICATION_MAIL_PORT, 25);
         String protocol = configurationRepo.getValue(ConfigurationName.APPLICATION_MAIL_PROTOCOL, "smtp"); // smtp or smtps

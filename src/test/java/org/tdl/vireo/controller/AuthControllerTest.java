@@ -22,6 +22,7 @@ import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.enums.Role;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
+import org.tdl.vireo.service.MockEmailServiceImpl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -33,9 +34,12 @@ public class AuthControllerTest extends AbstractControllerTest {
 
 	@Mock
     private UserRepo userRepo;
-		
+	
 	@InjectMocks
     private AuthController authController;
+	
+	@Mock
+    private MockEmailServiceImpl mockEmailServiceImpl;
 	
     private static List<User> mockUsers;
     
@@ -48,7 +52,7 @@ public class AuthControllerTest extends AbstractControllerTest {
         return null;
     }
     
-    public User updateUser(User updatedUser) {    	
+    public User updateUser(User updatedUser) {
         for(User user : mockUsers) {
             if(user.getEmail().equals(updatedUser.getEmail())) {
             	user.setEmail(updatedUser.getEmail());

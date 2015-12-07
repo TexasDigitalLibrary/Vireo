@@ -4,6 +4,7 @@ import javax.mail.internet.MimeMessage;
 
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.stereotype.Service;
 
 /**
  * The same as {@link EmailServiceImpl} but @Override doSend from {@link JavaMailSenderImpl}
@@ -11,6 +12,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
  * @author gad
  *
  */
+@Service
 public class MockEmailServiceImpl extends EmailServiceImpl {
         
     public MockEmailServiceImpl() {
