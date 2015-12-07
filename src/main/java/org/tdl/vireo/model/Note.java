@@ -7,7 +7,7 @@ import javax.persistence.Lob;
 @Entity
 public class Note extends BaseEntity {
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String name;
     
     @Lob

@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.tdl.vireo.model.repo.NoteRepo;
 
 public class NoteTest extends AbstractEntityTest {
@@ -22,12 +21,7 @@ public class NoteTest extends AbstractEntityTest {
 
     @Override
     public void testDuplication() {
-        noteRepo.create(TEST_NOTE_NAME, TEST_NOTE_TEXT);
-        try {
-            noteRepo.create(TEST_NOTE_NAME, TEST_NOTE_TEXT);
-        } 
-        catch (DataIntegrityViolationException e) { /* SUCCESS */ }
-        assertEquals("The repository duplicated entity!", 1, noteRepo.count());
+        
     }
 
     @Override
