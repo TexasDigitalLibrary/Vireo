@@ -22,7 +22,6 @@ import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.enums.Role;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
-import org.tdl.vireo.service.MockEmailServiceImpl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -37,9 +36,6 @@ public class AuthControllerTest extends AbstractControllerTest {
 	
 	@InjectMocks
     private AuthController authController;
-	
-	@Mock
-    private MockEmailServiceImpl mockEmailServiceImpl;
 	
     private static List<User> mockUsers;
     

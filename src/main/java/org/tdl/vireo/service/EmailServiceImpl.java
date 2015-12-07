@@ -27,6 +27,7 @@ public class EmailServiceImpl extends JavaMailSenderImpl implements EmailService
         
     }
     
+    @Override
     public void init() {
         String host = configurationRepo.getValue(ConfigurationName.APPLICATION_MAIL_HOST, "localhost");
         int port = configurationRepo.getValue(ConfigurationName.APPLICATION_MAIL_PORT, 25);

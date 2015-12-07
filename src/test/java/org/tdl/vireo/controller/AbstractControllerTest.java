@@ -4,6 +4,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -12,6 +13,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.tdl.vireo.Application;
 import org.tdl.vireo.mock.MockData;
 import org.tdl.vireo.runner.OrderedRunner;
+import org.tdl.vireo.service.MockEmailServiceImpl;
 import org.tdl.vireo.util.AuthUtility;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,6 +46,9 @@ public abstract class AbstractControllerTest extends MockData {
 	
 	@Spy @InjectMocks
 	protected AuthUtility authUtility;
+	
+	@Autowired @Spy
+    protected MockEmailServiceImpl emailService;
     	
 	protected Credentials TEST_CREDENTIALS = new Credentials();
     
