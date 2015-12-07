@@ -91,6 +91,20 @@ public class FieldProfile extends BaseEntity {
         this(predicate, inputType, repeatable, enabled, optional);
         setUsage(usage);
     }
+    
+    /**
+     * 
+     * @param predicate
+     * @param inputType
+     * @param usage
+     * @param repeatable
+     * @param enabled
+     * @param optional
+     */
+    public FieldProfile(FieldPredicate predicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean enabled, Boolean optional) {
+        this(predicate, inputType, usage, repeatable, enabled, optional);
+        setHelp(help);
+    }
 
     /**
      * @return the predicate

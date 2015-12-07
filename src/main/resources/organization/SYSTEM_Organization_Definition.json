@@ -16,7 +16,7 @@
 						"text":"Your name should appear as it does on your title page. You can use Unicode characters, if your computer supports them"
 					},
 					{
-						"name": "degreeNadMajor",
+						"name": "degreeAndMajor",
 						"text":"Select the degree and major that are listed on your title page."
 					},
 					{

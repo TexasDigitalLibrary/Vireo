@@ -148,12 +148,12 @@ public class SystemDataLoader {
                 workflow = workflowRepo.save(workflow);
             }
             
-            // temporary list of workflow steps
+            // temporary list of WorkflowStep
             List<WorkflowStep> workflowSteps = new ArrayList<WorkflowStep>();
                                     
             for(WorkflowStep workflowStep : systemOrganization.getWorkflow().getWorkflowSteps()) {
                 
-                // check to see if the workflow step exists
+                // check to see if the WorkflowStep exists
                 WorkflowStep newWorkflowStep = workflowStepRepo.findByNameAndWorkflow(workflowStep.getName(), workflow);
                 
                 // create new workflow step if not already exists
@@ -161,34 +161,53 @@ public class SystemDataLoader {
                     newWorkflowStep = workflowStepRepo.create(workflowStep.getName(), workflow);
                 }
 
+                // temporary list of FieldProfile
                 List<FieldProfile> fieldProfiles = new ArrayList<FieldProfile>();
                 
                 workflowStep.getFieldProfiles().forEach(fieldProfile -> {
                     
+                    // check to see if the FieldPredicate exists
                     FieldPredicate fieldPredicate = fieldPredicateRepo.findByValue(fieldProfile.getPredicate().getValue());
                     
+                    // create new FieldPredicate if not already exists
                     if(fieldPredicate == null) {
                         fieldPredicate = fieldPredicateRepo.create(fieldProfile.getPredicate().getValue());
                     }
                     
+                    // check to see if the FieldProfile exists
                     FieldProfile newFieldProfile = fieldProfileRepo.findByPredicate(fieldPredicate);
                     
+                    // create new FieldProfile if not already exists
                     if(newFieldProfile == null) {
-                        newFieldProfile = fieldProfileRepo.create(fieldPredicate, fieldProfile.getInputType(), fieldProfile.getUsage(), fieldProfile.getRepeatable(), fieldProfile.getEnabled(), fieldProfile.getOptional());
+                        newFieldProfile = fieldProfileRepo.create(fieldPredicate, fieldProfile.getInputType(), fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getRepeatable(), fieldProfile.getEnabled(), fieldProfile.getOptional());
+                    }
+                    else {
+                        newFieldProfile.setInputType(fieldProfile.getInputType());
+                        newFieldProfile.setUsage(fieldProfile.getUsage());
+                        newFieldProfile.setHelp(fieldProfile.getHelp());
+                        newFieldProfile.setRepeatable(fieldProfile.getRepeatable());
+                        newFieldProfile.setEnabled(fieldProfile.getEnabled());
+                        newFieldProfile.setOptional(fieldProfile.getOptional());
+                        newFieldProfile = fieldProfileRepo.save(newFieldProfile);
                     }
                     
+                    // temporary list of FieldGloss
                     List<FieldGloss> fieldGlosses = new ArrayList<FieldGloss>();
                     
                     fieldProfile.getFieldGlosses().forEach(fieldGloss -> {
                         
+                        // check to see if the Language exists
                         Language language = languageRepo.findByName(fieldGloss.getLanguage().getName());
                         
+                        // create new Language if not already exists
                         if(language == null) {
                             language = languageRepo.create(fieldGloss.getLanguage().getName());
                         }
                         
+                        // check to see if the FieldGloss exists
                         FieldGloss newFieldGloss = fieldGlossRepo.findByValueAndLanguage(fieldGloss.getValue(), language);
                         
+                        // create new FieldGloss if not already exists
                         if(newFieldGloss == null) {
                             newFieldGloss = fieldGlossRepo.create(fieldGloss.getValue(), language);
                         }
@@ -199,18 +218,23 @@ public class SystemDataLoader {
                     
                     newFieldProfile.setFieldGlosses(fieldGlosses);
                     
+                    // temporary list of ControlledVocabulary
                     List<ControlledVocabulary> controlledVocabularies = new ArrayList<ControlledVocabulary>();
                     
                     fieldProfile.getControlledVocabularies().forEach(controlledVocabulary -> {
                         
+                        // check to see if the Language exists
                         Language language = languageRepo.findByName(controlledVocabulary.getLanguage().getName());
                         
+                        // create new Language if not already exists
                         if(language == null) {
                             language = languageRepo.create(controlledVocabulary.getLanguage().getName());
                         }
                         
+                        // check to see if the ControlledVocabulary exists
                         ControlledVocabulary newControlledVocabulary = controlledVocabularyRepo.findByNameAndLanguage(controlledVocabulary.getName(), language);
                         
+                        // create new ControlledVocabulary if not already exists
                         if(newControlledVocabulary == null) {
                             newControlledVocabulary = controlledVocabularyRepo.create(controlledVocabulary.getName(), language);
                         }
@@ -230,14 +254,21 @@ public class SystemDataLoader {
                 newWorkflowStep.setFieldProfiles(fieldProfiles);
                 
                 
+                // temporary list of Note
                 List<Note> notes = new ArrayList<Note>();
                 
                 workflowStep.getNotes().forEach(note -> {
                     
+                    // check to see if the Note exists
                     Note newNote = noteRepo.findByName(note.getName());
                     
+                    // create new Note if not already exists
                     if(newNote == null) {
                         newNote = noteRepo.create(note.getName(), note.getText());
+                    }
+                    else {
+                        newNote.setText(note.getText());
+                        newNote = noteRepo.save(newNote);
                     }
                     
                     notes.add(newNote);
@@ -259,26 +290,45 @@ public class SystemDataLoader {
             
             organization.setWorkflow(workflow);
             
+            // temporary set of EmailWorkflowRule
             Set<EmailWorkflowRule> emailWorkflowRules = new TreeSet<EmailWorkflowRule>();
             
             systemOrganization.getEmailWorkflowRules().forEach(emailWorkflowRule -> {
                 
+                // check to see if the SubmissionState exists
                 SubmissionState newSubmissionState = submissionStateRepo.findByName(emailWorkflowRule.getSubmissionState().getName());
                 
+                // create new SubmissionState if not already exists
                 if(newSubmissionState == null) {
                     newSubmissionState = submissionStateRepo.create(emailWorkflowRule.getSubmissionState().getName(), emailWorkflowRule.getSubmissionState().isArchived(), emailWorkflowRule.getSubmissionState().isPublishable(), emailWorkflowRule.getSubmissionState().isDeletable(), emailWorkflowRule.getSubmissionState().isEditableByReviewer(), emailWorkflowRule.getSubmissionState().isEditableByStudent(), emailWorkflowRule.getSubmissionState().isActive());
                 }
-                
-                
+                else {
+                    SubmissionState tempSubmissionState = emailWorkflowRule.getSubmissionState();
+                    newSubmissionState.isArchived(tempSubmissionState.isArchived());
+                    newSubmissionState.isPublishable(tempSubmissionState.isPublishable());
+                    newSubmissionState.isDeletable(tempSubmissionState.isDeletable());
+                    newSubmissionState.isEditableByReviewer(tempSubmissionState.isEditableByReviewer());
+                    newSubmissionState.isEditableByStudent(tempSubmissionState.isEditableByStudent());
+                    newSubmissionState.isActive(tempSubmissionState.isActive());
+                    newSubmissionState = submissionStateRepo.save(newSubmissionState);
+                }
+                                
                 newSubmissionState = submissionStateRepo.save(recursivelyFindOurCreateSubmissionState(newSubmissionState));
-                
-                
+                         
+                // check to see if the EmailTemplate exists
                 EmailTemplate newEmailTemplate = emailTemplateRepo.findByNameAndIsSystemRequired(emailWorkflowRule.getEmailTemplate().getName(), emailWorkflowRule.getEmailTemplate().isSystemRequired());
                 
+                // create new EmailTemplate if not already exists
                 if(newEmailTemplate == null) {
                     newEmailTemplate = emailTemplateRepo.create(emailWorkflowRule.getEmailTemplate().getName(), emailWorkflowRule.getEmailTemplate().getSubject(), emailWorkflowRule.getEmailTemplate().getMessage());
                 }
+                else {
+                    newEmailTemplate.setSubject(emailWorkflowRule.getEmailTemplate().getSubject());
+                    newEmailTemplate.setMessage(emailWorkflowRule.getEmailTemplate().getMessage());
+                    newEmailTemplate = emailTemplateRepo.save(newEmailTemplate);
+                }
                 
+                // check to see if the EmailWorkflowRule exists
                 EmailWorkflowRule newEmailWorkflowRule = emailWorkflowRuleRepo.findBySubmissionStateAndRecipientTypeAndEmailTemplate(newSubmissionState, emailWorkflowRule.getRecipientType(), newEmailTemplate);
                 
                 if(newEmailWorkflowRule == null) {
@@ -307,20 +357,43 @@ public class SystemDataLoader {
      */
     public SubmissionState recursivelyFindOurCreateSubmissionState(SubmissionState submissionState) {
         
+        // check to see if the SubmissionState exists
         SubmissionState newSubmissionState = submissionStateRepo.findByName(submissionState.getName());
         
+        // create new SubmissionState if not already exists
         if(newSubmissionState == null) {
             newSubmissionState = submissionStateRepo.create(submissionState.getName(), submissionState.isArchived(), submissionState.isPublishable(), submissionState.isDeletable(), submissionState.isEditableByReviewer(), submissionState.isEditableByStudent(), submissionState.isActive());
         }
+        else {
+            newSubmissionState.isArchived(submissionState.isArchived());
+            newSubmissionState.isPublishable(submissionState.isPublishable());
+            newSubmissionState.isDeletable(submissionState.isDeletable());
+            newSubmissionState.isEditableByReviewer(submissionState.isEditableByReviewer());
+            newSubmissionState.isEditableByStudent(submissionState.isEditableByStudent());
+            newSubmissionState.isActive(submissionState.isActive());
+            newSubmissionState = submissionStateRepo.save(newSubmissionState);
+        }
         
+        // temporary list of SubmissionState
         List<SubmissionState> transitionStates = new ArrayList<SubmissionState>();
         
         submissionState.getTransitionSubmissionStates().forEach(transitionState -> {
             
+            // check to see if the Transistion SubmissionState exists
             SubmissionState newTransitionState = submissionStateRepo.findByName(transitionState.getName());
             
+            // create new Transistion SubmissionState if not already exists
             if(newTransitionState == null) {
                 newTransitionState = submissionStateRepo.create(transitionState.getName(), transitionState.isArchived(), transitionState.isPublishable(), transitionState.isDeletable(), transitionState.isEditableByReviewer(), transitionState.isEditableByStudent(), transitionState.isActive());
+            }
+            else {
+                newTransitionState.isArchived(transitionState.isArchived());
+                newTransitionState.isPublishable(transitionState.isPublishable());
+                newTransitionState.isDeletable(transitionState.isDeletable());
+                newTransitionState.isEditableByReviewer(transitionState.isEditableByReviewer());
+                newTransitionState.isEditableByStudent(transitionState.isEditableByStudent());
+                newTransitionState.isActive(transitionState.isActive());
+                newTransitionState = submissionStateRepo.save(newTransitionState);
             }
             
             newTransitionState = recursivelyFindOurCreateSubmissionState(newTransitionState);
