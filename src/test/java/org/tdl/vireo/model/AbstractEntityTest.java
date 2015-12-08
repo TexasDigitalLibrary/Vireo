@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.tdl.vireo.Application;
 import org.tdl.vireo.annotations.Order;
@@ -48,6 +49,7 @@ import org.tdl.vireo.service.EntityControlledVocabularyService;
 @WebAppConfiguration
 @RunWith(OrderedRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
+@ActiveProfiles({"test"})
 public abstract class AbstractEntityTest {
 
     protected static final String TEST_ATTACHMENT_TYPE_NAME = "Primary";

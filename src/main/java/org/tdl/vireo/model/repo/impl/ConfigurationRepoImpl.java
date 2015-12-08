@@ -37,5 +37,18 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
         }
         return ret;
     }
-
+    
+    @Override
+    public Integer getValue(String name, Integer fallback) {
+        Integer ret = fallback;
+        Configuration configuration = configurationRepo.findByName(name);
+        if (configuration != null) {
+            try {
+                return Integer.parseInt(configuration.getValue());
+            } catch (NumberFormatException e) {
+                // do nothing, ret will use fallback
+            }
+        }
+        return ret;
+    }
 }

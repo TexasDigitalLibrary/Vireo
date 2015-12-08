@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import static javax.persistence.FetchType.EAGER;
 
 @Entity
 public class EntityCVWhitelist  extends BaseEntity {
@@ -13,7 +14,7 @@ public class EntityCVWhitelist  extends BaseEntity {
     @Column(unique = true)
     private String entityName;
     
-    @ElementCollection
+    @ElementCollection(fetch = EAGER)
     private List<String> propertyNames;
     
     public EntityCVWhitelist() { }

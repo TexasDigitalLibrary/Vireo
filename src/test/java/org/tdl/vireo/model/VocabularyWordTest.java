@@ -54,6 +54,7 @@ public class VocabularyWordTest extends AbstractEntityTest {
     public void cleanUp() {
         controlledVocabularyRepo.deleteAll();
         vocabularyWordRepo.deleteAll();
+        languageRepo.deleteAll();
     }
     
 }

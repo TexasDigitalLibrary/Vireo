@@ -25,6 +25,7 @@ import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
+import org.tdl.vireo.service.EmailService;
 import org.tdl.vireo.util.AuthUtility;
 import org.tdl.vireo.util.TemplateUtility;
 
@@ -36,7 +37,6 @@ import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.Data;
 import edu.tamu.framework.aspect.annotation.Parameters;
 import edu.tamu.framework.model.ApiResponse;
-import edu.tamu.framework.util.EmailUtility;
 
 @Controller
 @ApiMapping("/auth")
@@ -62,7 +62,7 @@ public class AuthController {
     private AuthUtility authUtility;
     
     @Autowired
-    private EmailUtility emailUtility;
+    private EmailService emailService;
     
     @Autowired 
     private TemplateUtility templateUtility;
@@ -96,7 +96,7 @@ public class AuthController {
             }
             
             try {
-                emailUtility.sendEmail(email, emailTemplate.getSubject(), content);
+                emailService.sendEmail(email, emailTemplate.getSubject(), content);
             } catch (MessagingException e) {                
                 logger.debug("Unable to send email! " + email);                
                 return new ApiResponse(ERROR, "Unable to send email! " + email);
