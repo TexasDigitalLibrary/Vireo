@@ -1,19 +1,11 @@
-<div class="row add-member">
-    <button id="add-action-link" 
-            href 
-            class="btn btn-default" 
+<div class="row">
+
+    <button class="btn btn-default modal-add-btn" 
             data-toggle="modal" 
             data-target="#addMemberModal">
         Add Member
     </button>
 
-    <modal modal-id="addMemberModal" 
-            modal-view="views/modals/addMemberModal.html" 
-            modal-header-class="modal-header-primary">
-    </modal>
-</div> 
-
-<div class="row">
     <div class="row resultHeading">
 
         <div class="col-sm-4"> ROLE     
@@ -28,6 +20,7 @@
 
 
     </div>
+
     <div class="row resultRow">
 
         <div class="col-sm-4"> <span class="glyphicon glyphicon-pencil"></span> Role Value     
@@ -41,4 +34,10 @@
         </div>
 
     </div>
+
 </div>
+
+<modal modal-id="addMemberModal" 
+        modal-view="views/modals/addMemberModal.html" 
+        modal-header-class="modal-header-primary">
+</modal>

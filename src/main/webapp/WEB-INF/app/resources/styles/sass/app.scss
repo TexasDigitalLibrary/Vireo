@@ -466,31 +466,39 @@ h4 {
   text-decoration:none;
 }
 
-.modal-button {
-  float:right;
-  margin: 0 50px;  
+.modal-add-btn {
+  margin-bottom: 25px;
 }
 
-.modal-button button:focus {
-  outline:none;
-}
-
-.trash {
-  border:2px solid #FFFFFF;
-  color: #999999;
-  font-size: 0.8em;
+.trash-drop-zone {
   text-align: center;
-  width: 10%;
-  padding: 10px 4px 0px 4px;
-}
-.trash:hover {
-  border:2px solid #999999;
-  border-style: dashed;
-  border-radius:5px;
+  background: #efefef;
+  border: dashed thick #fefefe;
+  padding-top: 35px;
+  width: 250px;
+  height: 150px;
+  color: #a6a6a6;
+  border-radius: 5px;
+  transition: all 0.35s ease-in;
 }
 
-.glyphicon.glyphicon-trash {
-    font-size: 70px;
+.trash-drop-zone:hover {
+  transition: all 0.35s ease-in;
+  border-color: #a6a6a6;
+}
+
+.trash-drop-zone .glyphicon-trash {
+  transition: all 0.35s ease-in;
+  color: #fefefe;
+  text-shadow: 1px 0 5px #a6a6a6;
+  font-size: 70px;
+}
+
+.trash-drop-zone:hover .glyphicon-trash {
+  transition: all 0.35s ease-in;
+  color: #a6a6a6;
+  text-shadow: 1px 0 5px #fefefe;
+  font-size: 70px;
 }
 
 textarea
