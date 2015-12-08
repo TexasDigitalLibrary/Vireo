@@ -243,8 +243,10 @@
 	    <script src="directives/accordionDirective.js"></script>
 	    <script src="directives/tabsDirective.js"></script>
 	    <script src="directives/sideBoxDirective.js"></script>
+ 		<script src="directives/togglebuttonDirective.js"></script>
 	    <script src="directives/userSettingsDirective.js"></script>
 	    <script src="directives/legendDirective.js"></script>
+	    <script src="directives/shadowDirective.js"></script>	
 	    <script src="directives/checkBoxDirective.js"></script>	
 	    <script src="directives/shadowDirective.js"></script>
 	    <script src="directives/tamuFocusDirective.js"></script>

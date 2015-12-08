@@ -90,7 +90,7 @@ main footer {
   cursor: pointer;
 }
 
-.app-menu a {
+.app-menu a, .pager a {
   color: inherit;
   text-decoration: none !important;
 }
@@ -406,6 +406,125 @@ sidebox ul input {
 
 }
 
+.hint {
+  color: #999999;
+  font-size: 0.8em;
+  margin: 13px 0 -4px 0;
+}
+
+.toggle-button-heading {
+  font-size:1em;
+}
+
+.toggle-button .btn {
+  font-size:1em;
+}
+
+.toggle-button .btn:hover {
+   background-color: #ffffff;
+   cursor:default;
+}
+
+.toggle-button .btn.active {
+  background-color: #a2ccb5;
+  color: #FFFFFF;
+  border: 1px solid #70706f;
+  outline:none;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
+a.tooltip-icon {
+    float: left;
+    margin-top: 1px;
+    color: #666666;
+    text-decoration: none;
+}
+
+a.tooltip-icon:hover {
+}
+
+a[title]:hover:after {
+  position: absolute;
+}
+
+.glyphicon-info-sign{
+      line-height: 2;
+      margin-left: 10px;
+      opacity: .5;
+}
+
+h4 {
+    line-height: 22px;
+}
+
+.lock-control {
+  font-size:0.95em;
+  margin: 0 0 10px; 
+}
+.lock-control a {
+  color: #666666;
+  text-decoration:none;
+}
+
+.modal-add-btn {
+  margin-bottom: 25px;
+}
+
+.trash-drop-zone {
+  text-align: center;
+  background: #efefef;
+  border: dashed thick #fefefe;
+  padding-top: 35px;
+  width: 250px;
+  height: 150px;
+  color: #a6a6a6;
+  border-radius: 5px;
+  transition: all 0.35s ease-in;
+}
+
+.trash-drop-zone:hover {
+  transition: all 0.35s ease-in;
+  border-color: #a6a6a6;
+}
+
+.trash-drop-zone .glyphicon-trash {
+  transition: all 0.35s ease-in;
+  color: #fefefe;
+  text-shadow: 1px 0 5px #a6a6a6;
+  font-size: 70px;
+}
+
+.trash-drop-zone:hover .glyphicon-trash {
+  transition: all 0.35s ease-in;
+  color: #a6a6a6;
+  text-shadow: 1px 0 5px #fefefe;
+  font-size: 70px;
+}
+
+textarea
+{   width:100%;
+    margin-top:10px;
+    height: 400px;
+    outline: none;
+    white-space: nowrap;
+    word-wrap: normal;
+}
+textarea:hover {
+    cursor:not-allowed;
+}
+
+textarea:focus {
+  cursor:pointer;
+}
+
+.degreeCodes label {
+  margin-top:3px;
+  font-weight:lighter;
+}
+.degreeCodes p {
+  margin-bottom:15px;
+}
+
 fieldset.fieldset-border {
   border: 1px solid #999999 !important;
   padding: 0 1.4em 1.4em 1.4em !important;
@@ -476,8 +595,8 @@ footer a, footer li, footer p {
   margin: 1px;
 }
 
-
-.my-profile-section h2 {
+/*****************My Profile heading, SETTINGS ACCESS TABLE HEADING*********************/
+.my-profile-section h2, .resultHeading {
   color: #666666;
   font-size: 19.5px;
   line-height: 35px;
@@ -528,6 +647,22 @@ footer a, footer li, footer p {
    color:#70706f;
 }
 
+.pager {
+    display: inline-block;
+    padding: 5px 14px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+  }
+
+  .add-member {
+    padding-bottom: 12px;
+  }
+
+  .btn:focus {
+ 
+  outline:none;
+  }
 
 .footer-list {
   display: inline-block;
@@ -576,19 +711,19 @@ footer a, footer li, footer p {
 /*Accordion*/
 
 .accordion .panel {
-  cursor: pointer;
   margin-bottom: 3px;
 }
 
 .accordion .panel-heading {
   position: relative;
   padding-left: 10px;
+  cursor: pointer;
   -webkit-transition: padding-left 0.5s ease-out;
   transition: padding-left 0.5s ease-out;
 }
 
 .accordion .panel-heading.expanded {
-  padding-left: 35px;
+  padding-left: 50px;
   -webkit-transition: padding-left 0.5s ease-out;
   transition: padding-left 0.5s ease-out;
 }
@@ -599,6 +734,7 @@ footer a, footer li, footer p {
   bottom: 0;
   left: 0;
   width: 0px;
+  overflow: hidden;
   background: rgb(31, 58, 71);
   background: -moz-linear-gradient linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
   background: -webkit-linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
@@ -610,23 +746,28 @@ footer a, footer li, footer p {
 }
 
 .accordion .panel-heading.expanded .panel-selection {
-  width: 25px;
+  width: 40px;
   -webkit-transition: width 0.5s ease-out;
   transition: width 0.5s ease-out;
 }
 
 .accordion .panel-body {
   max-height: 0px;
-  overflow: hidden;
+  overflow-y: auto; /* degree codes need scroll  overflow: hidden;*/
   padding: 0px;
   -webkit-transition: max-height 0.5s ease-out;
   transition: max-height 0.5s ease-out;
 }
 
 .accordion .panel-body.expanded {
-  max-height: 500px;
+  max-height: 700px;
   -webkit-transition: max-height 0.5s ease-out;
   transition: max-height 0.5s ease-out;
+}
+
+.accordion .loader {
+  margin-left: 4.5px;
+  margin-top: 4.5px;
 }
 
 .panel-content-wrapper {
@@ -643,8 +784,12 @@ footer a, footer li, footer p {
   cursor: help;
 }
 
+.tip.hidden {
+  z-index: -100;
+}
+
 .tip {
-  position: absolute;
+  position: fixed;
   top: 999999px;
   width: 250px;
   padding: 15px;
@@ -675,6 +820,7 @@ footer a, footer li, footer p {
     border-right: 10px solid transparent;
     border-bottom: 10px solid #CCC;
 }
+
 .tip-point:after{
     content:'';
     position:absolute;

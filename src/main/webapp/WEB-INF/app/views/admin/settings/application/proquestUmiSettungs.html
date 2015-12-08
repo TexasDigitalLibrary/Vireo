@@ -1,0 +1,83 @@
+<div class="row">
+	<div class="col-sm-6">
+		<form name="proquest">
+			<div class="row form-group">
+				<div class="col-sm-6">
+					<span class="pull-right">ProQuest Institution Code:</span>
+				</div>
+				<div class="col-sm-5">																					
+		     			<input name="proquest_institution_code" type="text" value="0803" class="form-control" />
+		     	</div>		
+				<tooltip title="The code assigned by ProQuest/UMI to identify the institution associated with all submissions when submitting to their catalogue.">
+				</tooltip>	
+			</div>
+
+	        <div class="row">
+				<togglebutton class="form-group" label="Indexed by Search Engines:">
+	                    <toggleoption>Yes</toggleoption>
+	                    <toggleoption>No</toggleoption>
+	                    <tooltip title="If enabled then all submissions to the ProQuest/UMI catalogue will be have their citations indexed 	by third parties (i.e. google, yahoo).">
+		        	</tooltip>
+		        </togglebutton>      
+		        	
+		    </div>	
+
+			<div class="row">		    	
+				<h4>ProQuest License Agreement</h4>
+		    	<div class="lock-control">
+				    	<a href="#proquest_license" ng-click="toggle()" ng-hide="clicked">
+		    				<span class="glyphicon glyphicon-lock"> </span> This field is locked to prevent accidental editing, click to unlock.
+				    	</a>
+				    	
+						<p ng-show="clicked">
+							<span class="glyphicon glyphicon-pencil"></span> This field is unlocked and may be edited. Leaving the page will re-lock the field.
+						</p>
+						
+						<textarea class="form-control" id="proquest_license" name="proquest_license" readonly="clicked">
+							&lt;h4&gt;PhD and Master’s Dissertations and Theses Dissemination Agreement&lt;/h4&gt;
+
+							This Agreement is between the author (Author) and ProQuest LLC, through its ProQuest dissertation business (ProQuest). Under this Agreement, the Author grants ProQuest certain rights to preserve, archive and disseminate the dissertation or thesis, abstract, and index terms (the Work) provided by Author to ProQuest.
+
+							&lt;h4&gt;License for Inclusion of the Work in the ProQuest Program. &lt;/h4&gt;
+
+							&lt;b&gt;Grant of Rights&lt;/b&gt;. Author hereby grants to ProQuest the &lt;b&gt;non-exclusive&lt;/b&gt;, worldwide right to reproduce, distribute, display and transmit the Work (in whole or in part) in such tangible and electronic formats as may be in existence now or developed in the future.  Author further grants to ProQuest the right to include the abstract, bibliography and other metadata in the &lt;i&gt;ProQuest Dissertations and Theses Global &lt;/i&gt;database (PQDT) and in ProQuest's &lt;i&gt;Dissertation Abstracts International &lt;/i&gt;and any successor or related index and/or finding products or services.
+
+							&lt;b&gt;ProQuest Dissemination Program – Election and Elements.&lt;/b&gt; The rights granted shall be subject to the following additional requirements:
+
+							&lt;u&gt;Redistribution of the Work&lt;/u&gt;. Except as restricted by the Author, the rights granted by the Author automatically include (1) the right to allow sale and distribution of the Work, in whole or in part, by agents and distributors, and (2) the right to make the Abstract, bibliographic data and any metadata associated with the Work available to search engines and harvesters.
+
+							&lt;u&gt;Restrictions.&lt;/u&gt;
+
+							ProQuest will use commercially reasonable efforts to restrict the distribution of the Work as provided under the publishing option selected by Author or as later elected by Author through direct contact with ProQuest. Such election is subject to Author's Degree Granting Institution Directives (see below). With respect to restrictions requested after submission of the Work, Author acknowledges that ProQuest cannot recall or amend previously distributed versions of the Work.
+
+							&lt;u&gt;Removal of Work from the Program.&lt;/u&gt;
+
+							ProQuest may elect not to distribute the Work if it believes that all necessary rights of third parties have not been secured. If Author's degree is rescinded, and the degree granting institution so directs, ProQuest will expunge the Work from its publishing program in accordance with its then current publishing policies.
+
+							The Author will retain the right to remove the work from the ProQuest program.  ProQuest will remove the Work upon written request from the Author.
+
+							&lt;u&gt;Degree Granting Institution Directives.&lt;/u&gt;
+
+							Author is solely responsible for any conflict between policies and directions of Author's degree-granting institution, Author's choice of publishing model, and/or any restriction Author places on the use of the Work. For the avoidance of doubt, ProQuest is not responsible for access to the Work that is provided by Author's degree-granting institution through its library or institutional repository. Author must work directly with Author's degree granting institution to ensure application of any restrictions to access relating to the Work by Author's degree granting institution.
+
+							&lt;b&gt;Rights Verification.&lt;/b&gt;
+
+							Author represents and warrants that Author is the copyright holder of the Work and has obtained all necessary rights to permit ProQuest to reproduce and distribute third party materials contained in any part of the Work, including all necessary licenses for any nonpublic, third party software necessary to access, display, and run or print the Work.  Author is solely responsible and will indemnify ProQuest for any third party claims related to the Work as submitted for publication.
+
+							&lt;b&gt;Publishing Fees and Royalties.&lt;/b&gt;
+							Under this agreement no publishing fee is charged by ProQuest to the author or author’s institution.
+							ProQuest will pay royalties of 10% of its net revenue from sales of the Work to the Author, conditioned on Author maintaining a current address on record with ProQuest by contacting disspub@proquest.com.  Royalties will be paid when accrued earned royalties reach $25.00 USD.If, after 25 years, earned royalties do not accrue to at least $25.00 USD, ProQuest's royalty payment obligation will cease.
+
+							&lt;b&gt;Acknowledgement:&lt;/b&gt; I have read, understand and agree to this ProQuest Agreement, including all rights and restrictions.						
+						</textarea>
+
+						<div class="hint">
+							Students may be required to accept this license as part of their submission. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically.
+						</div>				
+				</div>
+			</div> 
+		
+		</form>
+	</div>
+</div>
+
