@@ -247,8 +247,8 @@
 	    <script src="directives/legendDirective.js"></script>
 	    <script src="directives/checkBoxDirective.js"></script>	
 	    <script src="directives/shadowDirective.js"></script>
-	    <script src="directives/tooltipDirective.js"></script>	
-
+	    <script src="directives/tamuFocusDirective.js"></script>
+	    <script src="directives/tooltipDirective.js"></script>
 	    <!-- Services -->
 
 	    <!-- Factories -->
@@ -256,6 +256,7 @@
 	    <!-- Models -->
 	    <script src="model/userSettingsModel.js"></script>
 	    <script src="model/userRepoModel.js"></script>
+
 
 	    <!-- Controllers -->
 	    <script src="controllers/adminController.js"></script>

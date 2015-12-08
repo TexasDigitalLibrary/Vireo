@@ -488,7 +488,11 @@ footer a, footer li, footer p {
   background: -webkit-linear-gradient(#FBFBFB, #E9EAEC);
 }
 
-.control-group {  
+.edit-handle:hover {
+  cursor: pointer;
+}
+
+.form-group {  
   margin: 18px 0 18px 0;
   font-size: 13px;
   font-weight: normal;
@@ -538,6 +542,14 @@ footer a, footer li, footer p {
 
   .navbar {
     border-radius: 0px;
+  }
+
+  .pull-right-lg {
+    float: right;
+  }
+
+  .pull-left-lg {
+    float: left;
   }
 
 }
