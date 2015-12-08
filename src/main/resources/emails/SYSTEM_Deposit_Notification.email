@@ -1,0 +1,14 @@
+# Email sent to Vireo users to verify deposit into the IR
+#
+# Parameters: {DEPOSIT_URI}
+#
+Subject: Deposit Notification
+
+{DOCUMENT_TITLE}, authored by {FULL_NAME} has been deposited.
+
+It can be found at the following URI:
+
+  {DEPOSIT_URI}
+
+The Vireo Team
+

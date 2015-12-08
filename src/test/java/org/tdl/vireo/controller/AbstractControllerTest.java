@@ -9,6 +9,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.tdl.vireo.mock.MockData;
 import org.tdl.vireo.util.AuthUtility;
+import org.tdl.vireo.util.TemplateUtility;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -38,6 +39,9 @@ public abstract class AbstractControllerTest extends MockData {
 	
 	@Spy @InjectMocks
 	protected AuthUtility authUtility;
+	
+	@Spy @InjectMocks
+    protected TemplateUtility templateUtility;
 	
     @Spy
     protected EmailUtility emailUtility;

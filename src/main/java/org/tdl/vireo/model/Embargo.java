@@ -2,28 +2,34 @@ package org.tdl.vireo.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.enums.EmbargoGuarantor;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "guarantor", "isSystemRequired" }))
-public class Embargo extends BaseEntity {
+public class Embargo extends BaseOrderedEntity {
 
     @Column(nullable = false)
     private String name;
-
-    @Column(nullable = false, length = 32768) // 2^15
+    
+    @Lob
+    @Column(nullable = false)
     private String description;
 
-    @Column(nullable = false)
+    @Column
     private Integer duration;
 
     @Column(nullable = false)
+    @JsonProperty("isActive")
     private Boolean isActive;
 
     @Column(nullable = false)
+    @JsonProperty("isSystemRequired")
     private Boolean isSystemRequired;
 
     @Column(nullable = false)
@@ -45,11 +51,12 @@ public class Embargo extends BaseEntity {
      * @param description
      * @param duration
      */
-    public Embargo(String name, String description, Integer duration) {
+    public Embargo(String name, String description, Integer duration, boolean isActive) {
         this();
         setName(name);
         setDescription(description);
         setDuration(duration);
+        isActive(isActive);
     }
 
     /**
