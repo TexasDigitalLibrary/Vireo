@@ -1,4 +1,4 @@
-vireo.run(function($rootScope, $http, AuthServiceApi) {
+vireo.run(function($rootScope) {
 	
 	angular.element("body").fadeIn(1000);
 
