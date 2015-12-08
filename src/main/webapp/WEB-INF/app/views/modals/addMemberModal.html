@@ -1,0 +1,104 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		<span class="modal-close" aria-hidden="true">&times;</span>
+	</button>
+	<h3 class="modal-title">Add Member</h3>
+</div>
+
+<div class="modal-body">
+	<div ng-controller="SettingsController">
+		<form action="/admin/settings/members/search">
+			<div class="col-sm-6">
+				
+				<div class="row input-group">
+					<input id="members-search-query" type="text" class="form-control" >
+					<span class="input-group-addon" id="basic-addon2">Search</span>
+				</div>
+
+			</div>
+
+			<div class="col-sm-6">
+			</div>
+
+
+			<div class="row my-profile">
+				<div class="col-sm-12">
+					<div class="row">
+						<div class="col-sm-6">
+							<span class="pull-left pager">
+								<a href="/admin/settings/members/search?query=&amp;offset=0">← Previous</a>
+							</span>
+						</div>
+						<div class="col-sm-6">
+							<span class="pull-right pager">
+								<a href="/admin/settings/members/search?query=&amp;offset=10">Next →</a>
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-sm-12">
+					<div class="row control-group resultHeading">
+						<div class="col-sm-4">ADD</div>
+						<div class="col-sm-4">NAME</div>
+						<div class="col-sm-4">EMAIL</div>
+					</div>
+
+					<div class="row control-group">
+						<div class="col-sm-4">Add value</div>
+						<div class="col-sm-4">Name value</div>
+						<div class="col-sm-4">Email value</div>
+					</div>
+				</div>
+			</div>
+
+
+		</form>
+	</div>
+</div>
+
+
+<div class="modal-footer">
+	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+</div>
+
+			
+				
+
+
+<!-- 
+<span class="input-group-btn">
+<input id="members-search-query" type="text">  
+<button class="btn btn-default" id="members-search-button" type="submit">
+<span class="glyphicon glyphicon glyphicon-search">
+</button>
+</span>
+
+</form>
+
+
+<div class="input-group">
+  <input type="text" class="form-control" placeholder="Recipient's username" aria-describedby="basic-addon2">
+  <span class="input-group-addon" id="basic-addon2">@example.com</span>
+</div>
+
+    		
+
+
+    		<div class="row control-group">
+				<div class="col-sm-3">
+					Add
+				</div>
+				<div class="col-sm-3">
+					Name
+				</div>
+				<div class="col-sm-3">
+					Email
+				</div>
+			</div>
+
+			</form> -->
+
+			
+			
+			

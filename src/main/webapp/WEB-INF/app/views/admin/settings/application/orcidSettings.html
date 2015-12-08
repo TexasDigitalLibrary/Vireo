@@ -1,23 +1,20 @@
 <div class="row">
-    <div class="col-sm-6">
-        <form name="orcid">
-
+    <form name="orcid">
+        <div class="col-sm-5">
             <togglebutton label="Validate ORCID ID :">
-                        <toggleoption>Yes</toggleoption>
-                        <toggleoption>No</toggleoption>
-                        <tooltip title="This will validate the given ORCID ID with ORCID's API."></tooltip>
-             </togglebutton>                
-                
-            
+                <toggleoption>Yes</toggleoption>
+                <toggleoption>No</toggleoption>
+                <tooltip title="This will validate the given ORCID ID with ORCID's API."></tooltip>
+            </togglebutton>
+        </div>
 
-            
-                <togglebutton label="Authenticate ORCID ID :">
-                        <toggleoption>Yes</toggleoption>
-                        <toggleoption>No</toggleoption>
-                        <tooltip title="This will compare the user information obtained from ORCID with the Student's first and last name."></tooltip>
-                </togglebutton>            
-
-        </form>
-    </div>
+        <div class="col-sm-6">
+            <togglebutton label="Authenticate ORCID ID :">
+                <toggleoption>Yes</toggleoption>
+                <toggleoption>No</toggleoption>
+                <tooltip title="This will compare the user information obtained from ORCID with the Student's first and last name."></tooltip>
+            </togglebutton>
+        </div>
+    </form>
 </div>
 

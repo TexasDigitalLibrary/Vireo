@@ -1,0 +1,51 @@
+<div class="row">
+	<form name="proquest">
+		<div class="col-sm-5">		
+			<div class="row form-group">
+				<div class="col-sm-6">
+					<span class="pull-right">ProQuest Institution Code:</span>
+				</div>
+				<div class="col-sm-5">																					
+		     		<input name="proquest_institution_code" type="text" value="0803" class="form-control" />
+		     	</div>		
+				<tooltip title="The code assigned by ProQuest/UMI to identify the institution associated with all submissions when submitting to their catalogue.">
+				</tooltip>
+				
+			</div>
+
+	        <div class="row">
+				<togglebutton class="form-group" label="Indexed by Search Engines:">
+	                    <toggleoption>Yes</toggleoption>
+	                    <toggleoption>No</toggleoption>
+	                    <tooltip title="If enabled then all submissions to the ProQuest/UMI catalogue will be have their citations indexed 	by third parties (i.e. google, yahoo).">
+		        	</tooltip>
+		        </togglebutton>	        	
+		    </div>
+		</div>
+
+		<div class="col-sm-6">    	
+
+			<div class="row">		    	
+				<h4>ProQuest License Agreement</h4>
+		    	<div class="lock-control">
+				    	<a href="#proquest_license" ng-click="toggle()" ng-hide="clicked">
+		    				<span class="glyphicon glyphicon-lock"> </span> This field is locked to prevent accidental editing, click to unlock.
+				    	</a>
+				    	
+						<p ng-show="clicked">
+							<span class="glyphicon glyphicon-pencil"></span> This field is unlocked and may be edited. Leaving the page will re-lock the field.
+						</p>
+						
+						<textarea class="form-control" id="proquest_license" name="proquest_license" readonly="clicked">TEST TEXTAREA
+						</textarea>
+
+						<div class="hint">
+							Students may be required to accept this license as part of their submission. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically.
+						</div>				
+				</div>
+			</div>		
+			
+		</div>
+	</form>
+</div>
+

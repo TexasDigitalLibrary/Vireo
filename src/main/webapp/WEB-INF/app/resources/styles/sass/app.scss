@@ -90,7 +90,7 @@ main footer {
   cursor: pointer;
 }
 
-.app-menu a {
+.app-menu a, .pager a {
   color: inherit;
   text-decoration: none !important;
 }
@@ -466,6 +466,41 @@ h4 {
   text-decoration:none;
 }
 
+.modal-add-btn {
+  margin-bottom: 25px;
+}
+
+.trash-drop-zone {
+  text-align: center;
+  background: #efefef;
+  border: dashed thick #fefefe;
+  padding-top: 35px;
+  width: 250px;
+  height: 150px;
+  color: #a6a6a6;
+  border-radius: 5px;
+  transition: all 0.35s ease-in;
+}
+
+.trash-drop-zone:hover {
+  transition: all 0.35s ease-in;
+  border-color: #a6a6a6;
+}
+
+.trash-drop-zone .glyphicon-trash {
+  transition: all 0.35s ease-in;
+  color: #fefefe;
+  text-shadow: 1px 0 5px #a6a6a6;
+  font-size: 70px;
+}
+
+.trash-drop-zone:hover .glyphicon-trash {
+  transition: all 0.35s ease-in;
+  color: #a6a6a6;
+  text-shadow: 1px 0 5px #fefefe;
+  font-size: 70px;
+}
+
 textarea
 {   width:100%;
     margin-top:10px;
@@ -484,8 +519,10 @@ textarea:focus {
 
 .degreeCodes label {
   margin-top:3px;
-  font-size: 1.2em;
   font-weight:lighter;
+}
+.degreeCodes p {
+  margin-bottom:15px;
 }
 
 fieldset.fieldset-border {
@@ -558,8 +595,8 @@ footer a, footer li, footer p {
   margin: 1px;
 }
 
-
-.my-profile-section h2 {
+/*****************My Profile heading, SETTINGS ACCESS TABLE HEADING*********************/
+.my-profile-section h2, .resultHeading {
   color: #666666;
   font-size: 19.5px;
   line-height: 35px;
@@ -606,6 +643,22 @@ footer a, footer li, footer p {
    color:#70706f;
 }
 
+.pager {
+    display: inline-block;
+    padding: 5px 14px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+  }
+
+  .add-member {
+    padding-bottom: 12px;
+  }
+
+  .btn:focus {
+ 
+  outline:none;
+  }
 
 .footer-list {
   display: inline-block;
@@ -688,14 +741,14 @@ footer a, footer li, footer p {
 
 .accordion .panel-body {
   max-height: 0px;
-  overflow: hidden;
+  overflow-y: auto; /* degree codes need scroll  overflow: hidden;*/
   padding: 0px;
   -webkit-transition: max-height 0.5s ease-out;
   transition: max-height 0.5s ease-out;
 }
 
 .accordion .panel-body.expanded {
-  max-height: 500px;
+  max-height: 700px;
   -webkit-transition: max-height 0.5s ease-out;
   transition: max-height 0.5s ease-out;
 }
