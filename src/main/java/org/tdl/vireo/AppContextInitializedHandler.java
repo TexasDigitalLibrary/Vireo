@@ -36,7 +36,8 @@ class AppContextInitializedHandler extends CoreContextInitializedHandler {
     @Autowired
     private EmailService emailService;
 
-    SystemDataLoader systemDataLoader;
+    @Autowired
+    private SystemDataLoader systemDataLoader;
 
     final static Logger logger = LoggerFactory.getLogger(AppContextInitializedHandler.class);
 
