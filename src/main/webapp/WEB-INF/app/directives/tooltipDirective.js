@@ -9,7 +9,7 @@ vireo.directive('tooltip', function ($timeout, $compile) {
 		link: function($scope, elem, attr) {
 			
 			var tipTemplate = 	'<div class="tooltip-wrapper">'+
-									'<div ng-style="tipStyles" class="tip" ng-class="{\'tip-visible\': tipVisible}">'+
+									'<div ng-style="tipStyles" class="tip" ng-class="{\'tip-visible\': tipVisible, \'hidden\': hidden}">'+
 										'<div class="tip-point"></div>' +
 										'<div class="tip-message">{{::tip}}</div>' +
 									'</div>' +
@@ -20,10 +20,12 @@ vireo.directive('tooltip', function ($timeout, $compile) {
 			$scope.tip = attr.tooltip;
 
 			$scope.tipVisible = false;
+			$scope.hidden = true;
 			$scope.showTimer = {};
 			$scope.tipStyles = {};
 
 			$scope.showTip = function() {
+				$scope.hidden = false;
 				$scope.showTimer = $timeout(function() {
 					$scope.tipVisible = true;
 				}, 500);
@@ -32,11 +34,23 @@ vireo.directive('tooltip', function ($timeout, $compile) {
 			$scope.hideTip = function() {
 				$timeout.cancel($scope.showTimer);
 				$scope.tipVisible = false;
+
+				$timeout(function() {
+					$scope.hidden = true;
+				}, 500);
+
 			}
 
 			$scope.toggleVisible = function() {
 				$timeout.cancel($scope.showTimer);
 				$scope.tipVisible = $scope.tipVisible ? false : true;
+
+				if(!$scope.tipVisible) {
+					$timeout(function() {
+						$scope.hidden = $scope.hidden ? false : true;
+					}, 500);
+				} 
+
 			}
 
 			$scope.positionTip = function($event) {

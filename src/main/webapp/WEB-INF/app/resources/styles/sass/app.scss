@@ -772,6 +772,10 @@ footer a, footer li, footer p {
   cursor: help;
 }
 
+.tip.hidden {
+  z-index: -100;
+}
+
 .tip {
   position: fixed;
   top: 999999px;
@@ -804,6 +808,7 @@ footer a, footer li, footer p {
     border-right: 10px solid transparent;
     border-bottom: 10px solid #CCC;
 }
+
 .tip-point:after{
     content:'';
     position:absolute;
