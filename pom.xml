@@ -94,7 +94,6 @@
 
 		<!-- <dependency> <groupId>org.codehaus.mojo</groupId> <artifactId>properties-maven-plugin</artifactId> 
 			<version>1.0.0</version> </dependency> -->
-
 	</dependencies>
 
 
@@ -157,7 +156,7 @@
 							</resource>
 						</webResource>
 						<webResource>
-							<filtering>true</filtering>
+							<filtering>false</filtering>
 							<directory>src/main/resources</directory>
 							<targetPath>WEB-INF/classes</targetPath>
 							<includes>
@@ -197,7 +196,7 @@
 							</includes>
 						</webResource>
 						<webResource>
-							<filtering>true</filtering>
+							<filtering>false</filtering>
 							<directory>src/main/resources</directory>
 							<targetPath>WEB-INF/classes</targetPath>
 							<includes>

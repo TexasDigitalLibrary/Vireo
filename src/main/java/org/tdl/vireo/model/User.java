@@ -19,6 +19,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.tdl.vireo.enums.Role;
 
@@ -27,8 +28,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.tamu.framework.model.CoreUser;
 
 @Entity
-@Table(name = "account")
+@Table(name = User.TABLENAME)
 public class User extends BaseEntity implements CoreUser {
+    
+    @Transient
+    public static final String TABLENAME = "user";
     
     // institutional identifier, brought in with framework
     @Column(nullable = true)

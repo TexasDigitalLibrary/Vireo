@@ -193,6 +193,7 @@ public abstract class AbstractEntityTest {
     protected static final String TEST_EMBARGO_TYPE_NAME = "Test Embargo Type Name";
     protected static final String TEST_EMBARGO_TYPE_DESCRIPTION = "Test Embargo Type Description";
     protected static final int TEST_EMBARGO_TYPE_DURATION = 0;
+    protected static final boolean TEST_EMBARGO_IS_ACTIVE = true;
 
     // User Test
     protected static final String TEST_SHIBBOLETH_AFFILIATION = "shib_affiliation";

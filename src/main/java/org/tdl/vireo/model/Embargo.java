@@ -51,22 +51,11 @@ public class Embargo extends BaseOrderedEntity {
      * @param description
      * @param duration
      */
-    public Embargo(String name, String description, Integer duration) {
+    public Embargo(String name, String description, Integer duration, boolean isActive) {
         this();
         setName(name);
         setDescription(description);
         setDuration(duration);
-    }
-    
-    /**
-     * New Embargo Types just need a name, description, duration, and is active
-     * 
-     * @param name
-     * @param description
-     * @param duration
-     */
-    public Embargo(String name, String description, Integer duration, boolean isActive) {
-        this(name, description, duration);
         isActive(isActive);
     }
 
