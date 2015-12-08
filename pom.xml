@@ -48,7 +48,7 @@
 			<artifactId>webservice-framework-core</artifactId>
 			<version>2.0.0-SNAPSHOT</version>
 		</dependency>
-		
+
 		<!-- Spring standalone JDK tools for JSP runtime compile (to avoid Embedded 
 			Jetty error on JSP compile at runtime) -->
 		<dependency>
@@ -80,7 +80,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-loader-tools</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>
 			<artifactId>tomcat-embed-jasper</artifactId>
@@ -91,40 +91,35 @@
 			<artifactId>jstl</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		
-		<!-- 
-		<dependency>
-			<groupId>org.codehaus.mojo</groupId>
-			<artifactId>properties-maven-plugin</artifactId>
-			<version>1.0.0</version>
-		</dependency>
-		-->
+
+		<!-- <dependency> <groupId>org.codehaus.mojo</groupId> <artifactId>properties-maven-plugin</artifactId> 
+			<version>1.0.0</version> </dependency> -->
 
 	</dependencies>
-	  
+
 
 	<build>
-	 
+
 		<plugins>
-				
+
 			<plugin>
-		      	<groupId>org.springframework.boot</groupId>
-		      	<artifactId>spring-boot-maven-plugin</artifactId>
-		      	<configuration>
-			    	<addResources>false</addResources>
-			  	</configuration>
-		    </plugin>
-		    
-		    <plugin>
-			    <groupId>org.apache.maven.plugins</groupId>
-			    <artifactId>maven-resources-plugin</artifactId>
-			    <configuration>
-			        <delimiters>
-			            <delimiter>@</delimiter>
-			        </delimiters>
-			    </configuration>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<addResources>false</addResources>
+				</configuration>
 			</plugin>
-			
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<configuration>
+					<delimiters>
+						<delimiter>@</delimiter>
+					</delimiters>
+				</configuration>
+			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -132,90 +127,95 @@
 					<useSystemClassLoader>false</useSystemClassLoader>
 				</configuration>
 			</plugin>
-			
-			<plugin>
-			    <groupId>org.apache.maven.plugins</groupId>
-			    <artifactId>maven-jar-plugin</artifactId>
-			    <dependencies>
-		            <dependency>
-		                <groupId>org.apache.maven.shared</groupId>
-		                <artifactId>maven-filtering</artifactId>
-		                <version>1.3</version>
-		            </dependency>
-	          	</dependencies>
-			    <configuration>
-			        <archive>                   
-			            <manifest>
-			                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-			                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-			            </manifest>			            
-			        </archive>
-			        <webResources>
-	                    <resource>
-	                        <filtering>true</filtering>
-	                        <directory>src/main/resources</directory>
-	                        <targetPath>WEB-INF</targetPath>
-		                    <includes>
-		                        <include>application.properties</include>
-		                     </includes>
-	                    </resource>
-	                </webResources>
-			    </configuration>
-			</plugin>
-			
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-			    <artifactId>maven-war-plugin</artifactId>
-			    <dependencies>
-		            <dependency>
-		                <groupId>org.apache.maven.shared</groupId>
-		                <artifactId>maven-filtering</artifactId>
-		                <version>1.3</version>
-		            </dependency>
-	          	</dependencies>
-			    <configuration>
-		        	<archive>                   
-			            <manifest>
-			                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-			                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-			            </manifest>
-			        </archive>
-			        <archiveClasses>true</archiveClasses>
-			        <webResources>
-	                    <resource>
-	                        <filtering>true</filtering>
-	                        <directory>src/main/resources</directory>
-	                        <targetPath>WEB-INF</targetPath>
-		                    <includes>
-		                        <include>application.properties</include>
-		                     </includes>
-	                    </resource>
-	                </webResources>
-			    </configuration>
+				<artifactId>maven-jar-plugin</artifactId>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.maven.shared</groupId>
+						<artifactId>maven-filtering</artifactId>
+						<version>1.3</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<archive>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+						</manifest>
+					</archive>
+					<webResources>
+						<webResource>
+							<resource>
+								<filtering>true</filtering>
+								<directory>src/main/resources</directory>
+								<targetPath>WEB-INF</targetPath>
+								<includes>
+									<include>application.properties</include>
+								</includes>
+							</resource>
+						</webResource>
+						<webResource>
+							<filtering>true</filtering>
+							<directory>src/main/resources</directory>
+							<targetPath>WEB-INF/classes</targetPath>
+							<includes>
+								<include>*/**</include>
+							</includes>
+							<exclude>application.properties</exclude>
+						</webResource>
+					</webResources>
+				</configuration>
 			</plugin>
-			
-			<!-- Read application.properties -->
-			<!-- 
+
 			<plugin>
-        		<groupId>org.codehaus.mojo</groupId>
-        		<artifactId>properties-maven-plugin</artifactId>
-        		<version>1.0.0</version>
-        		<executions>
-          			<execution>
-            			<phase>initialize</phase>
-            			<goals>
-              				<goal>read-project-properties</goal>
-           				</goals>
-          			</execution>
-        		</executions>
-        		<configuration>
-          			<files>
-           				<file>src/main/resources/application.properties</file>
-          			</files>
-        		</configuration>
-      		</plugin>
-      	 	-->
-      	 	
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.maven.shared</groupId>
+						<artifactId>maven-filtering</artifactId>
+						<version>1.3</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<archive>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+						</manifest>
+					</archive>
+					<archiveClasses>true</archiveClasses>
+					<webResources>
+						<webResource>
+							<filtering>true</filtering>
+							<directory>src/main/resources</directory>
+							<targetPath>WEB-INF</targetPath>
+							<includes>
+								<include>application.properties</include>
+							</includes>
+						</webResource>
+						<webResource>
+							<filtering>true</filtering>
+							<directory>src/main/resources</directory>
+							<targetPath>WEB-INF/classes</targetPath>
+							<includes>
+								<include>*/**</include>
+							</includes>
+							<exclude>application.properties</exclude>
+						</webResource>
+					</webResources>
+				</configuration>
+			</plugin>
+
+			<!-- Read application.properties -->
+			<!-- <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>properties-maven-plugin</artifactId> 
+				<version>1.0.0</version> <executions> <execution> <phase>initialize</phase> 
+				<goals> <goal>read-project-properties</goal> </goals> </execution> </executions> 
+				<configuration> <files> <file>src/main/resources/application.properties</file> 
+				</files> </configuration> </plugin> -->
+
 			<!-- General Maven Execution Plugin -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -234,7 +234,7 @@
 						<goals>
 							<goal>exec</goal>
 						</goals>
-					</execution>					
+					</execution>
 					<!-- Protractor Testing for AngularJS -->
 					<execution>
 						<id>exec-npm-run-protractor</id>
@@ -265,20 +265,9 @@
 							<goal>exec</goal>
 						</goals>
 					</execution>
-					<!-- Grunt Deploy
-					<execution>
-						<id>exec-grunt-deploy</id>
-						<phase>generate-sources</phase>
-						<configuration>
-							<executable>grunt</executable>
-							<arguments>
-								<argument>deploy</argument>
-							</arguments>
-						</configuration>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-					</execution> -->
+					<!-- Grunt Deploy <execution> <id>exec-grunt-deploy</id> <phase>generate-sources</phase> 
+						<configuration> <executable>grunt</executable> <arguments> <argument>deploy</argument> 
+						</arguments> </configuration> <goals> <goal>exec</goal> </goals> </execution> -->
 				</executions>
 			</plugin>
 			<!-- Karma Testing for AngularJS -->
@@ -348,27 +337,19 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
-		
+
 		<resources>
 			<resource>
-    			<directory>src/main/resources</directory>
-	    		<filtering>true</filtering>
-	  		</resource>
-	  	</resources>
-	  	
-		<!-- 
-		<resources>
-			<resource>
-			  	<directory>src/main/webapp/</directory>
-			  	<excludes>
-			    	<exclude>app/node_modules/**</exclude>
-			  	</excludes>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
 			</resource>
 		</resources>
-		-->
-		 
+
+		<!-- <resources> <resource> <directory>src/main/webapp/</directory> <excludes> 
+			<exclude>app/node_modules/**</exclude> </excludes> </resource> </resources> -->
+
 	</build>
-	
-	
+
+
 
 </project>
