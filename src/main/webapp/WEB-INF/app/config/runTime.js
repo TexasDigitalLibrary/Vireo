@@ -1,4 +1,4 @@
-vireo.run(function($route, $rootScope, $location) {
+vireo.run(function() {
 	
 	angular.element("body").fadeIn(1000);
 
