@@ -44,7 +44,7 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
         Configuration configuration = configurationRepo.findByName(name);
         if (configuration != null) {
             try {
-                ret = Integer.parseInt(configuration.getValue());
+                return Integer.parseInt(configuration.getValue());
             } catch (NumberFormatException e) {
                 // do nothing, ret will use fallback
             }

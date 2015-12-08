@@ -78,8 +78,6 @@ public class AuthControllerTest extends AbstractControllerTest {
     	ReflectionTestUtils.setField(authUtility, SECRET_PROPERTY_NAME, SECRET_VALUE);
     	
     	ReflectionTestUtils.setField(authUtility, EXPIRATION_PROPERTY_NAME, EXPIRATION_VALUE);
-    	
-    	//ReflectionTestUtils.setField(emailService, EMAIL_HOST_PROPERTY_NAME, EMAIL_HOST_VALUE);
 
     	TEST_CREDENTIALS.setFirstName(TEST_USER_FIRST_NAME);
     	TEST_CREDENTIALS.setLastName(TEST_USER_LAST_NAME);
