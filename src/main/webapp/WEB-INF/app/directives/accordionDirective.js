@@ -67,7 +67,6 @@ vireo.directive("pane", function($location, $timeout, $anchorScroll, AccordionSe
 
 			$scope.close = function() {
 				$scope.expanded = false;
-				//AccordionService.remove(paneID)
 				console.log(paneID + " is closed");
 			}
 
