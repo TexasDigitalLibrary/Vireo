@@ -90,7 +90,7 @@ main footer {
   cursor: pointer;
 }
 
-.app-menu a {
+.app-menu a, .pager a {
   color: inherit;
   text-decoration: none !important;
 }
@@ -493,10 +493,6 @@ h4 {
     font-size: 70px;
 }
 
-.resultHeading {
-  border:1px solid red;
-}
-
 textarea
 {   width:100%;
     margin-top:10px;
@@ -639,6 +635,22 @@ footer a, footer li, footer p {
    color:#70706f;
 }
 
+.pager {
+    display: inline-block;
+    padding: 5px 14px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+  }
+
+  .add-member {
+    padding-bottom: 12px;
+  }
+
+  .btn:focus {
+ 
+  outline:none;
+  }
 
 .footer-list {
   display: inline-block;
