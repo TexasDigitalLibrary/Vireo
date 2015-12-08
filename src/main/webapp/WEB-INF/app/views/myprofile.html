@@ -1,259 +1,300 @@
-<div class="row my-profile">
-	<div class="col-sm-12">
+<!--<div class="container">-->
+	<div class="row my-profile">
 
-		<h1>Profile for <username></username></h1>
-		<hr>
+		<form name="userSettingsForm">
 
-		<div class="row my-profile-section">
+			<div class="col-sm-12">
 
-			<h2>Personal Information</h2>
+				<h1>Profile for <username></username></h1>
+				<hr>
 
-			<div class="row control-group">
-				<div class="col-sm-3">
-					<span class="pull-right">Email Address:</span>
-				</div>
-				<div class="col-sm-3">
-					<useremail></useremail>
-				</div>	
-			</div>
+				<div class="row my-profile-section">
 
-			<div class="row control-group required">
-				<div class="col-sm-3">
-					<span class="pull-right control-label">First Name:</span>
-				</div>	
-				<div class="col-sm-3">
-					{{user.firstName}}
-				</div>
-			</div>
-
-			<div class="row control-group">
-				<div class="col-sm-3">
-					<span class="pull-right">Middle Name:</span>
-				</div>
-				<div class="col-sm-3">
-				</div>	
-			</div>
-
-			<div class="row control-group required">
-				<div class="col-sm-3">
-					<span class="pull-right control-label">Last Name:</span>
-				</div>	
-				<div class="col-sm-3">
-					{{user.lastName}}
-				</div>
-			</div>
-
-			<div class="row control-group">
-				<div class="col-sm-3">
-					<span class="pull-right">Display Name:</span>
-				</div>
-				<div class="col-sm-2">
-					<input id="displayName" 
-							type="text" 
-							name="displayName"
-							class="form-control"
-							ng-if="(isAdmin() || isManager())" 
-							ng-model="settings.user.displayName" 
-							ng-change="updateUserSetting('displayName', 500)" 
-							shadow />
-					<span ng-if="isUser()">{{settings.user.displayName}}</span>
-				</div>
-			</div>
-
-			<div class="row control-group">
-				<div class="col-sm-3">
-					<span class="pull-right">Birth Year:</span>
-				</div>
-				<div class="col-sm-3">
-				</div>
-			</div>
-
-			<div class="row control-group">
-				<div class="col-sm-3">
-					<span class="pull-right">ORCID:</span>
-				</div>
-				<div class="col-sm-3">
-					{{user.uin}}
-				</div>
-			</div>
-
-		</div>
+					<h2>Personal Information</h2>
 
 
-		<div class="row my-profile-section">
-
-			<h2>Phone &amp; Address</h2>
-
-			<div class="row control-group">
-				<div class="col-sm-3">
-					<span class="pull-right">Permanent Phone:</span>
-				</div>
-				<div class="col-sm-3">
-				</div>
-			</div>
-
-			<div class="row control-group" ng-if="(isAdmin() || isManager())">
-				<div class="col-sm-3">
-					<span class="pull-right">Permanent Email:</span>
-				</div>
-				<div class="col-sm-3">
-					<useremail></useremail>
-				</div>
-			</div>
-
-			<div class="row control-group" ng-if="(isAdmin() || isManager())">
-				<div class="col-sm-3">
-					<span class="pull-right">Preferred Email:</span>
-				</div>
-				<div class="col-sm-2">
-					<input id="preferedEmail" 
-							type="text" 
-							name="preferedEmail"
-							class="form-control"
-							ng-if="(isAdmin() || isManager())" 
-							ng-model="settings.user.preferedEmail" 
-							ng-change="updateUserSetting('preferedEmail', 500)" 
-							shadow />
-					<span ng-if="isUser()">{{settings.user.preferedEmail}}</span>
-				</div>
-			</div>
-
-			<div class="row control-group">
-				<div class="col-sm-3">
-					<span class="pull-right">Permanent Address:</span>
-				</div>
-				<div class="col-sm-3">
-				</div>
-			</div>
-
-			<div class="row control-group">
-				<div class="col-sm-3">
-					<span class="pull-right">Current Phone:</span>
-				</div>
-				<div class="col-sm-3">
-				</div>
-			</div>
-
-			<div class="row control-group">
-				<div class="col-sm-3">
-					<span class="pull-right">Current Address:</span>
-				</div>
-				<div class="col-sm-3">
-				</div>
-			</div>		
-
-		</div>
-
-		<div class="row my-profile-section" ng-if="(isAdmin() || isManager())">
-			<h2>Preferences</h2>
-
-			<div class="row control-group">
-				<span ng-click="updateUserSetting('ccEmail')">
-					<input  id="ccEmail"
-							type="checkbox"
-							name="ccEmail" 
-							ng-true-value="'true'" 
-							ng-model="settings.user.ccEmail" />
-					<span>I want to receive a copy of all emails sent by the system on my behalf.</span>
-				</span>
-			</div>
-
-			<div class="row control-group">
-				<form class="form-inline">
-					<fieldset class="fieldset-border">
-						<legend class="legendborder">When adding notes, which options should be checked by default?</legend>
-
-						<div class="form-group checkbox">
-							<label ng-click="updateUserSetting('notes_email_student_by_default')">
-								<input  type="checkbox"
-										name="notes_email_student_by_default" 
-										ng-true-value="'true'" 
-										ng-model="settings.user.notes_email_student_by_default" />
-								<span>Email the student</span>
-							</label>
+					<div class="col-sm-6">
+						<div class="row form-group">
+							<div class="col-sm-6">
+								<label class="pull-right-lg control-label">Email Address:</label>
+							</div>
+							<div class="col-sm-6">
+								<span class="profile-value"><useremail></useremail></span>
+							</div>	
 						</div>
 
-						<div class="form-group checkbox">
-							<label ng-click="updateUserSetting('notes_cc_student_advisor_by_default')">
-								<input  name="notes_cc_student_advisor_by_default" 
-										type="checkbox" 
-										ng-true-value="'true'" 
-										ng-model="settings.user.notes_cc_student_advisor_by_default" />
-								<span>CC student's advisor</span>
-							</label>	
+						<div class="row form-group required">
+							<div class="col-sm-6">
+								<label class="pull-right-lg control-label">First Name:</label>
+							</div>	
+							<div class="col-sm-6">
+								<span class="profile-value">{{::user.firstName}}</span>
+							</div>
 						</div>
 
-						<div class="form-group checkbox">
-							<label ng-click="updateUserSetting('notes_flag_submission_as_needs_corrections_by_default')">
-								<input  name="notes_flag_submission_as_needs_corrections_by_default" 
-										type="checkbox" 
-										ng-true-value="'true'" 
-										ng-model="settings.user.notes_flag_submission_as_needs_corrections_by_default" />
-								<span>Flag submission as Needs Corrections</span>
-							</label>
+						<div class="row form-group">
+							<div class="col-sm-6">
+								<label class="pull-right-lg control-label">Middle Name:</label>
+							</div>
+							<div class="col-sm-6">
+								<span class="profile-value">{{::user.middleName}}</span>
+							</div>	
 						</div>
 
-						<div class="form-group checkbox">
-							<label ng-click="updateUserSetting('notes_mark_comment_as_private_by_default')">
-								<input name="notes_mark_comment_as_private_by_default" 
+
+						<div class="row form-group">
+							<div class="col-sm-6">
+								<label class="pull-right-lg control-label">Last Name:</label>
+							</div>	
+							<div class="col-sm-6">
+								<span class="profile-value">{{::user.lastName}}</span>
+							</div>
+						</div>
+
+						<div class="row form-group" ng-class="{'has-error': hasError(userSettingsForm.displayName.$error)}">
+							<div class="col-sm-6">
+								<label class="pull-right-lg control-label">Display Name:</label>
+							</div>
+							<div class="col-sm-6">
+								<span ng-if="(isAdmin() || isManager())" ng-hide="editdisplayName">
+									<span class="edit-handle glyphicon glyphicon-pencil" ng-click="editMode('displayName')"></span>
+									<span class="profile-value" ng-Dblclick="editMode('displayName')">{{settings.user.displayName}}</span>
+								</span>
+								<input  id="displayName" 
+										type="text" 
+										name="displayName"
+										class="form-control"
+										ng-show="editdisplayName"
+										ng-if="(isAdmin() || isManager())" 
+										ng-model="settings.user.displayName" 
+										ng-change="updateUserSetting('displayName', 500)"
+										ng-blur="viewMode('displayName')"
+										ng-keyup="confirmEdit($event, 'displayName')"
+										tamu-force-focus="editdisplayName"
+										required 
+										shadow />
+								<span ng-if="isUser()">{{settings.user.displayName}}</span>
+							</div>
+						</div>
+
+						<div class="row form-group">
+							<div class="col-sm-6">
+								<label class="pull-right-lg control-label">Birth Year:</label>
+							</div>
+							<div class="col-sm-6">
+								<span class="profile-value">{{::user.birthYear}}</span>
+							</div>
+						</div>
+
+						<div class="row form-group">
+							<div class="col-sm-6">
+								<label class="pull-right-lg control-label">ORCID:</label>
+							</div>
+							<div class="col-sm-6">
+								<span class="profile-value">{{::user.orcid}}</span>
+							</div>
+						</div>
+
+					</div>
+
+
+					<div class="col-sm-6">
+					</div>				
+
+				</div>
+
+
+
+
+				<div class="row my-profile-section">
+
+					<h2>Phone &amp; Address</h2>
+
+					<div class="col-sm-6">
+						<div class="row form-group">
+						<div class="col-sm-6">
+							<label class="pull-right-lg control-label">Permanent Phone:</label>
+						</div>
+						<div class="col-sm-6">
+							<span class="profile-value">{{::user.permanentPhone}}</span>
+						</div>
+					</div>
+
+					<div class="row form-group" ng-if="(isAdmin() || isManager())">
+						<div class="col-sm-6">
+							<label class="pull-right-lg control-label">Permanent Email:</label>
+						</div>
+						<div class="col-sm-6">
+							<span class="profile-value"><useremail></useremail></span>
+						</div>
+					</div>
+
+					<div class="row form-group" ng-if="(isAdmin() || isManager())" ng-class="{'has-error': hasError(userSettingsForm.preferedEmail.$error)}">
+						<div class="col-sm-6">
+							<label class="pull-right-lg control-label">Preferred Email:</label>
+						</div>
+						<div class="col-sm-6">
+							<span ng-if="(isAdmin() || isManager())" ng-hide="editpreferedEmail">
+								<span class="edit-handle glyphicon glyphicon-pencil" ng-click="editMode('preferedEmail')"></span>
+								<span class="profile-value" ng-Dblclick="editMode('preferedEmail')">{{settings.user.preferedEmail}}</span>
+							</span>
+							<input  id="preferedEmail" 
+									type="email" 
+									name="preferedEmail"
+									class="form-control"
+									ng-show="editpreferedEmail"
+									ng-if="(isAdmin() || isManager())" 
+									ng-model="settings.user.preferedEmail" 
+									ng-change="updateUserSetting('preferedEmail', 500)"
+									ng-blur="viewMode('preferedEmail')"
+									ng-keyup="confirmEdit($event, 'preferedEmail')"
+									tamu-force-focus="editpreferedEmail"
+									required 
+									shadow />
+							<span ng-if="isUser()">{{settings.user.preferedEmail}}</span>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-sm-6">
+							<label class="pull-right-lg control-label">Permanent Address:</label>
+						</div>
+						<div class="col-sm-6">
+							<label class="profile-value control-label">{{::user.permanentAddress}}</label>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-sm-6">
+							<label class="pull-right-lg control-label">Current Phone:</label>
+						</div>
+						<div class="col-sm-6">
+							<span class="profile-value">{{::user.currentPhone}}</span>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-sm-6">
+							<label class="pull-right-lg control-label">Current Address:</label>
+						</div>
+						<div class="col-sm-6">
+							<span class="profile-value">{{::user.currentAddress}}</span>
+						</div>
+					</div>
+
+					</div>		
+					<div class="col-sm-6">
+					</div>		
+
+							
+
+				</div>
+
+				<div class="row my-profile-section" ng-if="(isAdmin() || isManager())">
+					<h2>Preferences</h2>
+
+					<div class="container">
+						<div class="row form-group">
+							<span ng-click="updateUserSetting('ccEmail')">
+								<input  id="ccEmail"
 										type="checkbox"
+										name="ccEmail" 
 										ng-true-value="'true'" 
-										ng-model="settings.user.notes_mark_comment_as_private_by_default" />
-								<span>Mark comment as private</span>
-							</label>
+										ng-model="settings.user.ccEmail" />
+								<span>I want to receive a copy of all emails sent by the system on my behalf.</span>
+							</span>
 						</div>
 
-					</fieldset>	
+						<div class="row form-group">
+							<fieldset class="fieldset-border">
+								<legend class="legendborder">When adding notes, which options should be checked by default?</legend>
 
-					<fieldset class="fieldset-border">
-						<legend class="legendborder">When attaching files, which options should be checked by default?</legend>
+								<div class="form-group checkbox">
+									<label ng-click="updateUserSetting('notes_email_student_by_default')">
+										<input  type="checkbox"
+												name="notes_email_student_by_default" 
+												ng-true-value="'true'" 
+												ng-model="settings.user.notes_email_student_by_default" />
+										<span>Email the student</span>
+									</label>
+								</div>
 
-						<div class="form-group checkbox">
-							<label ng-click="updateUserSetting('attachment_email_student_by_default')">
-								<input  name="attachment_email_student_by_default" 
-										type="checkbox" 
-										ng-true-value="'true'" 
-										ng-model="settings.user.attachment_email_student_by_default" />
-							<span>Email the student</span>
-							</label>	
+								<div class="form-group checkbox">
+									<label ng-click="updateUserSetting('notes_cc_student_advisor_by_default')">
+										<input  name="notes_cc_student_advisor_by_default" 
+												type="checkbox" 
+												ng-true-value="'true'" 
+												ng-model="settings.user.notes_cc_student_advisor_by_default" />
+										<span>CC student's advisor</span>
+									</label>	
+								</div>
+
+								<div class="form-group checkbox">
+									<label ng-click="updateUserSetting('notes_flag_submission_as_needs_corrections_by_default')">
+										<input  name="notes_flag_submission_as_needs_corrections_by_default" 
+												type="checkbox" 
+												ng-true-value="'true'" 
+												ng-model="settings.user.notes_flag_submission_as_needs_corrections_by_default" />
+										<span>Flag submission as Needs Corrections</span>
+									</label>
+								</div>
+
+								<div class="form-group checkbox">
+									<label ng-click="updateUserSetting('notes_mark_comment_as_private_by_default')">
+										<input name="notes_mark_comment_as_private_by_default" 
+												type="checkbox"
+												ng-true-value="'true'" 
+												ng-model="settings.user.notes_mark_comment_as_private_by_default" />
+										<span>Mark comment as private</span>
+									</label>
+								</div>
+
+							</fieldset>	
+
+							<fieldset class="fieldset-border">
+								<legend class="legendborder">When attaching files, which options should be checked by default?</legend>
+
+								<div class="form-group checkbox">
+									<label ng-click="updateUserSetting('attachment_email_student_by_default')">
+										<input  name="attachment_email_student_by_default" 
+												type="checkbox" 
+												ng-true-value="'true'" 
+												ng-model="settings.user.attachment_email_student_by_default" />
+									<span>Email the student</span>
+									</label>	
+								</div>
+
+								<div class="form-group checkbox">
+									<label ng-click="updateUserSetting('attachment_cc_student_advisor_by_default')">
+										<input  name="attachment_cc_student_advisor_by_default" 
+												type="checkbox" 
+												ng-true-value="'true'" 
+												ng-model="settings.user.attachment_cc_student_advisor_by_default" />
+									<span>CC student's advisor</span>
+									</label>
+								</div>
+
+								<div class="form-group checkbox">
+								<label ng-click="updateUserSetting('attachment_flag_submission_as_needs_corrections_by_default')">
+									<input  name="attachment_flag_submission_as_needs_corrections_by_default" 
+											type="checkbox" 
+											ng-true-value="'true'" 
+											ng-model="settings.user.attachment_flag_submission_as_needs_corrections_by_default" />
+								<span>Flag submission as Needs Corrections</span>
+								</label>
+								</div>
+
+							</fieldset>
 						</div>
-
-						<div class="form-group checkbox">
-							<label ng-click="updateUserSetting('attachment_cc_student_advisor_by_default')">
-								<input  name="attachment_cc_student_advisor_by_default" 
-										type="checkbox" 
-										ng-true-value="'true'" 
-										ng-model="settings.user.attachment_cc_student_advisor_by_default" />
-							<span>CC student's advisor</span>
-							</label>
-						</div>
-
-						<div class="form-group checkbox">
-						<label ng-click="updateUserSetting('attachment_flag_submission_as_needs_corrections_by_default')">
-							<input  name="attachment_flag_submission_as_needs_corrections_by_default" 
-									type="checkbox" 
-									ng-true-value="'true'" 
-									ng-model="settings.user.attachment_flag_submission_as_needs_corrections_by_default" />
-						<span>Flag submission as Needs Corrections</span>
-						</label>
-						</div>
-
-					</fieldset>
-				</form>
-			</div>
-
-
-		</div>
-
-	</div>
-</div>
+					</div>
 
 					
 
-				
 
+				</div>
 
+			</div>
 
-
-
-
+		</form>
+	</div>
+<!--</div>-->
