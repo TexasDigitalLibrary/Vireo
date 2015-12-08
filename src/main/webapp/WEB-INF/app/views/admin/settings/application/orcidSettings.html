@@ -1,10 +1,12 @@
 <div class="row">
     <form name="orcid">
-        <div class="col-sm-5">
+        <div class="col-sm-6">
             <togglebutton label="Validate ORCID ID :">
                 <toggleoption>Yes</toggleoption>
                 <toggleoption>No</toggleoption>
-                <tooltip title="This will validate the given ORCID ID with ORCID's API."></tooltip>
+                <div tooltip="This will validate the given ORCID ID with ORCID's API.">
+                    <span class="glyphicon glyphicon-info-sign"></span>
+                </div>
             </togglebutton>
         </div>
 
@@ -12,7 +14,9 @@
             <togglebutton label="Authenticate ORCID ID :">
                 <toggleoption>Yes</toggleoption>
                 <toggleoption>No</toggleoption>
-                <tooltip title="This will compare the user information obtained from ORCID with the Student's first and last name."></tooltip>
+                <div tooltip="This will compare the user information obtained from ORCID with the Student's first and last name.">
+                    <span class="glyphicon glyphicon-info-sign" ></span>
+                </div>
             </togglebutton>
         </div>
     </form>
