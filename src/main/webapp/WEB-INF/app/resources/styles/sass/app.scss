@@ -466,6 +466,37 @@ h4 {
   text-decoration:none;
 }
 
+.modal-button {
+  float:right;
+  margin: 0 50px;  
+}
+
+.modal-button button:focus {
+  outline:none;
+}
+
+.trash {
+  border:2px solid #FFFFFF;
+  color: #999999;
+  font-size: 0.8em;
+  text-align: center;
+  width: 10%;
+  padding: 10px 4px 0px 4px;
+}
+.trash:hover {
+  border:2px solid #999999;
+  border-style: dashed;
+  border-radius:5px;
+}
+
+.glyphicon.glyphicon-trash {
+    font-size: 70px;
+}
+
+.resultHeading {
+  border:1px solid red;
+}
+
 textarea
 {   width:100%;
     margin-top:10px;
@@ -484,8 +515,10 @@ textarea:focus {
 
 .degreeCodes label {
   margin-top:3px;
-  font-size: 1.2em;
   font-weight:lighter;
+}
+.degreeCodes p {
+  margin-bottom:15px;
 }
 
 fieldset.fieldset-border {
@@ -558,8 +591,8 @@ footer a, footer li, footer p {
   margin: 1px;
 }
 
-
-.my-profile-section h2 {
+/*****************My Profile heading, SETTINGS ACCESS TABLE HEADING*********************/
+.my-profile-section h2, .resultHeading {
   color: #666666;
   font-size: 19.5px;
   line-height: 35px;
@@ -688,14 +721,14 @@ footer a, footer li, footer p {
 
 .accordion .panel-body {
   max-height: 0px;
-  overflow: hidden;
+  overflow-y: auto; /* degree codes need scroll  overflow: hidden;*/
   padding: 0px;
   -webkit-transition: max-height 0.5s ease-out;
   transition: max-height 0.5s ease-out;
 }
 
 .accordion .panel-body.expanded {
-  max-height: 500px;
+  max-height: 700px;
   -webkit-transition: max-height 0.5s ease-out;
   transition: max-height 0.5s ease-out;
 }
