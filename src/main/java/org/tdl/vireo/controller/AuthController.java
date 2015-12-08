@@ -21,9 +21,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.tdl.vireo.enums.Role;
+import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.User;
+import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
+import org.tdl.vireo.service.EmailService;
 import org.tdl.vireo.util.AuthUtility;
+import org.tdl.vireo.util.TemplateUtility;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -33,13 +37,14 @@ import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.Data;
 import edu.tamu.framework.aspect.annotation.Parameters;
 import edu.tamu.framework.model.ApiResponse;
-import edu.tamu.framework.util.EmailUtility;
 
 @Controller
 @ApiMapping("/auth")
 public class AuthController {
 
-private final static String EMAIL_VERIFICATION_TYPE = "EMAIL_VERIFICATION";
+    private final static String EMAIL_VERIFICATION_TYPE = "EMAIL_VERIFICATION";
+    
+    public static final String REGISTRATION_TEMPLATE = "SYSTEM New User Registration";
     
     @Value("${app.host}")
     private String host;
@@ -57,7 +62,13 @@ private final static String EMAIL_VERIFICATION_TYPE = "EMAIL_VERIFICATION";
     private AuthUtility authUtility;
     
     @Autowired
-    private EmailUtility emailUtility;
+    private EmailService emailService;
+    
+    @Autowired 
+    private TemplateUtility templateUtility;
+    
+    @Autowired
+    private EmailTemplateRepo emailTemplateRepo;
     
     private static final Logger logger = Logger.getLogger(AuthController.class);
     
@@ -72,19 +83,20 @@ private final static String EMAIL_VERIFICATION_TYPE = "EMAIL_VERIFICATION";
                 logger.debug("Account with email " + email + " already exists!");                
                 return new ApiResponse(ERROR, "Account with email " + email + " already exists!");
             }
+
+            EmailTemplate emailTemplate = emailTemplateRepo.findByNameOverride(REGISTRATION_TEMPLATE);
             
-            String subject = "Vireo 4 Registration";
-            String content = "Verify email to continue registration.\n\n";
-           
+            String content = "";
+            
             try {
-                content += host + ":" + port + "/register?token=" + authUtility.generateToken(email, EMAIL_VERIFICATION_TYPE);
+                content = templateUtility.templateParameters(emailTemplate.getMessage(), new String[][] { { "REGISTRATION_URL", host + ":" + port + "/register?token=" + authUtility.generateToken(email, EMAIL_VERIFICATION_TYPE) } });
             } catch (InvalidKeyException | NoSuchPaddingException | NoSuchAlgorithmException | IllegalBlockSizeException | BadPaddingException e1) {
                 logger.debug("Unable to generate token! " + email);
                 return new ApiResponse(ERROR, "Unable to generate token! " + email);
             }
             
             try {
-                emailUtility.sendEmail(email, subject, content);
+                emailService.sendEmail(email, emailTemplate.getSubject(), content);
             } catch (MessagingException e) {                
                 logger.debug("Unable to send email! " + email);                
                 return new ApiResponse(ERROR, "Unable to send email! " + email);

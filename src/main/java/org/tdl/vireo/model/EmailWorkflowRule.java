@@ -1,5 +1,10 @@
 package org.tdl.vireo.model;
 
+import static javax.persistence.CascadeType.DETACH;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.FetchType.EAGER;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
@@ -8,24 +13,29 @@ import javax.persistence.ManyToOne;
 
 import org.tdl.vireo.enums.RecipientType;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
 public class EmailWorkflowRule extends BaseEntity {
 
 	@Column
+	@JsonProperty("isSystem")
 	private Boolean isSystem;
 
 	@Column
+	@JsonProperty("isDisabled")
 	private Boolean isDisabled;
+	
+	//TODO - Several combinations here actually, of whether the organization, 
+	//       student, assignee, and/or advisor should or should not be recipients.
+    @Column(nullable = true)
+    @Enumerated
+    private RecipientType recipientType;
 
-	@ManyToOne
+	@ManyToOne(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER, optional = false)
 	private SubmissionState submissionState;
 	
-	//TODO - Several combinations here actually, of whether the organization, student, assignee, and/or advisor should or should not be recipients.
-	@Column(nullable = true)
-	@Enumerated
-	private RecipientType recipientType;
-
-	@ManyToOne
+	@ManyToOne(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER, optional = false)
 	@JoinColumn(name = "emailTemplateId")
 	private EmailTemplate emailTemplate;
 	

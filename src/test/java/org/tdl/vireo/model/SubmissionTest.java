@@ -39,7 +39,10 @@ public class SubmissionTest extends AbstractEntityTest {
         organization = organizationRepo.create(TEST_ORGANIZATION_NAME, parentCategory);
         assertEquals("The organization does not exist!", 1, organizationRepo.count());
 
-        workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME);
+        workflow = workflowRepo.create(TEST_WORKFLOW_NAME, TEST_WORKFLOW_INHERITABILITY, organization);
+        assertEquals("The workflow does not exist!", 1, workflowRepo.count());
+        
+        workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, workflow);
         assertEquals("The workflow step does not exist!", 1, workflowStepRepo.count());
 
         attachmentType = attachmentTypeRepo.create(TEST_ATTACHMENT_TYPE_NAME);
@@ -48,7 +51,7 @@ public class SubmissionTest extends AbstractEntityTest {
         attachment = attachmentRepo.create(TEST_ATTACHMENT_NAME, TEST_UUID, attachmentType);
         assertEquals("The attachment does not exist!", 1, attachmentRepo.count());
 
-        embargoType = embargoRepo.create(TEST_EMBARGO_TYPE_NAME, TEST_EMBARGO_TYPE_DESCRIPTION, TEST_EMBARGO_TYPE_DURATION);
+        embargoType = embargoRepo.create(TEST_EMBARGO_TYPE_NAME, TEST_EMBARGO_TYPE_DESCRIPTION, TEST_EMBARGO_TYPE_DURATION, TEST_EMBARGO_IS_ACTIVE);
         assertEquals("The embargo type does not exist!", 1, embargoRepo.count());
     }
 
@@ -92,46 +95,46 @@ public class SubmissionTest extends AbstractEntityTest {
 
     @Override
     public void testCascade() {
-        Organization detachableOrganization = organizationRepo.create(TEST_SEVERABLE_ORGANIZATION_NAME, organization.getCategory());
+        Organization severableOrganization = organizationRepo.create(TEST_SEVERABLE_ORGANIZATION_NAME, organization.getCategory());
 
-        WorkflowStep detachableWorkflowStep = workflowStepRepo.create(TEST_SEVERABLE_WORKFLOW_STEP_NAME);
+        WorkflowStep severableWorkflowStep = workflowStepRepo.create(TEST_SEVERABLE_WORKFLOW_STEP_NAME, workflow);
 
-        FieldPredicate detachableFieldPredicate = fieldPredicateRepo.create(TEST_SEVERABLE_FIELD_PREDICATE_VALUE);
-        FieldValue detachableFieldValue = fieldValueRepo.create(detachableFieldPredicate);
+        FieldPredicate severableFieldPredicate = fieldPredicateRepo.create(TEST_SEVERABLE_FIELD_PREDICATE_VALUE);
+        FieldValue severableFieldValue = fieldValueRepo.create(severableFieldPredicate);
 
         Submission submission = submissionRepo.create(submitter, submissionState);
 
-        ActionLog detachableActionLog = actionLogRepo.create(submission, submissionState, submitter, TEST_SUBMISSION_STATE_ACTION_LOG_ACTION_DATE, attachment, TEST_SUBMISSION_STATE_ACTION_LOG_ENTRY, TEST_SUBMISSION_STATE_ACTION_LOG_FLAG);
+        ActionLog severableActionLog = actionLogRepo.create(submission, submissionState, submitter, TEST_SUBMISSION_STATE_ACTION_LOG_ACTION_DATE, attachment, TEST_SUBMISSION_STATE_ACTION_LOG_ENTRY, TEST_SUBMISSION_STATE_ACTION_LOG_FLAG);
 
         submission.addOrganization(organization);
         submission.addSubmissionWorkflowStep(workflowStep);
         submission.addFieldValue(fieldValue);
-        submission.addOrganization(detachableOrganization);
-        submission.addSubmissionWorkflowStep(detachableWorkflowStep);
-        submission.addFieldValue(detachableFieldValue);
+        submission.addOrganization(severableOrganization);
+        submission.addSubmissionWorkflowStep(severableWorkflowStep);
+        submission.addFieldValue(severableFieldValue);
         submission.addAttachment(attachment);
         submission.addEmbargoType(embargoType);
-        submission.addActionLog(detachableActionLog);
+        submission.addActionLog(severableActionLog);
         submission = submissionRepo.save(submission);
 
         // test remove pointer to organization and make sure the organization is
         // no longer associated but still exists
-        submission.removeOrganization(detachableOrganization);
+        submission.removeOrganization(severableOrganization);
         submission = submissionRepo.save(submission);
-        assertEquals("The organization was not detached!", 1, submission.getOrganizations().size());
+        assertEquals("The organization was not removed!", 1, submission.getOrganizations().size());
         assertEquals("The organization was deleted!", 2, organizationRepo.count());
 
         // test remove pointer workflow step and make sure the workflow step is
         // no longer associated but still exists
-        submission.removeSubmissionWorkflowStep(detachableWorkflowStep);
+        submission.removeSubmissionWorkflowStep(severableWorkflowStep);
         submission = submissionRepo.save(submission);
-        assertEquals("The workflow step was not detached!", 1, submission.getSubmissionWorkflowSteps().size());
+        assertEquals("The workflow step was not removed!", 1, submission.getSubmissionWorkflowSteps().size());
         assertEquals("The workflow step was deleted!", 1, workflowStepRepo.count());
 
-        // test detach field value
-        submission.removeFieldValue(detachableFieldValue);
+        // test remove field value
+        submission.removeFieldValue(severableFieldValue);
         submission = submissionRepo.save(submission);
-        assertEquals("The field value was not detached!", 1, submission.getFieldValues().size());
+        assertEquals("The field value was not removed!", 1, submission.getFieldValues().size());
         assertEquals("The field value was orphaned!", 1, fieldValueRepo.count());
 
         // From here on we test the actual cascade:
@@ -151,9 +154,10 @@ public class SubmissionTest extends AbstractEntityTest {
         // the actionlog is deleted
         // the attachment is deleted
         assertEquals("The field values were orphaned!", 0, fieldValueRepo.count());
-        assertEquals("The workflow steps were deleted!", 0, workflowStepRepo.count());
+        assertEquals("The workflow steps were orphaned!", 0, workflowStepRepo.count());
         assertEquals("The action log was  orphaned!", 0, actionLogRepo.count());
         assertEquals("The attachment were orphaned", 0, attachmentRepo.count());
+        assertEquals("The workflow was deleted!", 1, workflowRepo.count());
         assertEquals("The embargo type was deleted!", 1, embargoRepo.count());
 
         // and, going another level deep on the cascade from field values to
@@ -165,8 +169,9 @@ public class SubmissionTest extends AbstractEntityTest {
     @After
     public void cleanUp() {        
         submissionRepo.deleteAll();
-        submissionStateRepo.deleteAll();
+        submissionStateRepo.deleteAll();        
         workflowStepRepo.deleteAll();
+        workflowRepo.deleteAll();
         actionLogRepo.deleteAll();
         fieldValueRepo.deleteAll();
         fieldPredicateRepo.deleteAll();

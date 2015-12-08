@@ -14,5 +14,14 @@ public class EmailTemplateRepoImpl implements EmailTemplateRepoCustom {
     public EmailTemplate create(String name, String subject, String message) {
         return emailTemplateRepo.save(new EmailTemplate(name, subject, message));
     }
+    
+    @Override
+    public EmailTemplate findByNameOverride(String name) {
+        EmailTemplate emailTemplate = emailTemplateRepo.findByNameAndIsSystemRequired(name, false);        
+        if(emailTemplate == null) {
+            emailTemplate = emailTemplateRepo.findByNameAndIsSystemRequired(name, true);
+        }        
+        return emailTemplate;
+    }
 
 }

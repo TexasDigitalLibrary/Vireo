@@ -17,6 +17,7 @@ import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.AbstractSubscribableChannel;
 import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
@@ -31,6 +32,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @WebAppConfiguration
 @RunWith(OrderedRunner.class)
 @SpringApplicationConfiguration(classes = { Application.class })
+@ActiveProfiles({"test"})
 public abstract class AbstractIntegrationTest extends MockData {
 	
     protected static final String jwtString = "ToY1Y3O6o-iESvV_c3NR3XHvi1vqfYtLIB83HC-d80_qqS98EzfWfPxkP2faL-tEIu9b9wm-q0-T3aNzBWxphQ7ZVxnJSYvtBLzEAh7WVYbezyA3Dgj-nMbsUypCujnuEa0fDwnXXSDr2DRjw4JakMACdPZifN6hcz5-oYFqgWFOPvDE3Gr28ko4XpExXcRaZxYv0p4KW7ISquenB9clu6aKjoKrNwbXqHQvXyk_uFD7GmNuG7RB5Je3jrS0a4q5GSdRyegcoxbGGsNGTKx1f7-f6U4pAHD6fYUmoheZag975Py1Bk8PtUmI8rFWbh8YYPhnnOjGIdJ9qMBFC4-hmVi5hVGhqRdIX9VFeQjxP9gHGqQf5uihmJ8WUY9jh1IP";

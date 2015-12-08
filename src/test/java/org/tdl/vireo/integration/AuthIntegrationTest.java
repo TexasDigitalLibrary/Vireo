@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.enums.Role;
 import org.tdl.vireo.mock.interceptor.MockChannelInterceptor;
+import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.util.AuthUtility;
 
@@ -24,16 +25,20 @@ public class AuthIntegrationTest extends AbstractIntegrationTest {
 
 	@Autowired
     private UserRepo userRepo;
+	
+	@Autowired
+    private EmailTemplateRepo emailTemplateRepo;
 		
     @Autowired
     private AuthUtility authUtility;
     
     @Override
-    public void setup() {
-    			
+    public void setup() {    			
     	userRepo.create(TEST_USER2_EMAIL, TEST_USER2.getFirstName(), TEST_USER2.getLastName(), Role.ADMINISTRATOR);
     	userRepo.create(TEST_USER3_EMAIL, TEST_USER3.getFirstName(), TEST_USER3.getLastName(), Role.MANAGER);
     	userRepo.create(TEST_USER4_EMAIL, TEST_USER4.getFirstName(), TEST_USER4.getLastName(), Role.USER);
+    	
+    	emailTemplateRepo.create(TEST_REGISTRATION_EMAIL_TEMPLATE_NAME, TEST_EMAIL_TEMPLATE_SUBJECT, TEST_EMAIL_TEMPLATE_MESSAGE);
         
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
                         
@@ -99,6 +104,7 @@ public class AuthIntegrationTest extends AbstractIntegrationTest {
     @Override
     public void cleanup() {
         userRepo.deleteAll();
+        emailTemplateRepo.deleteAll();
     }
 	 
 }

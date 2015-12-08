@@ -1,0 +1,964 @@
+{
+	"name": "Institution",
+	"category": {
+		"name": "System",
+		"level": 0
+	},
+	"workflow": {
+		"name": "System",
+		"inheritable": true,
+		"workflowSteps": [
+			{
+				"name": "Verify Personal Information",
+				"notes": [
+					{
+						"name": "name",
+						"text":"Your name should appear as it does on your title page. You can use Unicode characters, if your computer supports them"
+					},
+					{
+						"name": "degreeAndMajor",
+						"text":"Select the degree and major that are listed on your title page."
+					},
+					{
+						"name": "permanentAddress",
+						"text":"You must enter a permanent, long-term address. If your present address is different, use the Current Address field."
+					}
+				],
+				"fieldProfiles": [
+					{
+						"predicate": {
+							"value": "firstName"
+						},
+						"inputType": 0,
+						"repeatable": false,
+						"enabled": true,
+						"optional": false,
+						"usage": "",
+						"help": "Enter your first name.",
+						"fieldGlosses": [
+							{
+								"value": "First Name",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "middleName"
+						},
+						"inputType": 0,
+						"repeatable": false,
+						"enabled": true,
+						"optional": true,
+						"usage": "",
+						"help": "Enter your middle name or initial.",
+						"fieldGlosses": [
+							{
+								"value": "Middle Name",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "lastName"
+						},
+						"inputType": 0,
+						"repeatable": false,
+						"enabled": true,
+						"optional": false,
+						"usage": "",
+						"help": "Enter your last name.",
+						"fieldGlosses": [
+							{
+								"value": "Last Name",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "email"
+						},
+						"inputType": 1,
+						"repeatable": false,
+						"enabled": true,
+						"optional": false,
+						"usage": "",
+						"help": "Enter your email.",
+						"fieldGlosses": [
+							{
+								"value": "Email",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "orcidId"
+						},
+						"inputType": 0,
+						"repeatable": false,
+						"enabled": true,
+						"optional": true,
+						"usage": "",
+						"help": "Enter your ORCID author identifier. If you do not have an ORCID iD, get one at <a href='https://orcid.org/register' target='_blank'>orcid.org</a>.",
+						"fieldGlosses": [
+							{
+								"value": "ORCID id",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "birthYear"
+						},
+						"inputType": 0,
+						"repeatable": false,
+						"enabled": false,
+						"optional": true,
+						"usage": "",
+						"help": "Enter the full year in which you were born. For example 1985.",
+						"fieldGlosses": [
+							{
+								"value": "Year of Birth",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "school"
+						},
+						"inputType": 0,
+						"repeatable": false,
+						"enabled": true,
+						"optional": true,
+						"usage": "",
+						"help": "Your degree granting institution.",
+						"fieldGlosses": [
+							{
+								"value": "School",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "college"
+						},
+						"inputType": 0,
+						"repeatable": false,
+						"enabled": false,
+						"optional": false,
+						"usage": "",
+						"help": "Enter the college you belong to.",
+						"fieldGlosses": [
+							{
+								"value": "College",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "program"
+						},
+						"inputType": 0,
+						"repeatable": false,
+						"enabled": true,
+						"optional": true,
+						"usage": "",
+						"help": "Enter the program you belong to.",
+						"fieldGlosses": [
+							{
+								"value": "Program",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "department"
+						},
+						"inputType": 0,
+						"repeatable": false,
+						"enabled": true,
+						"optional": false,
+						"usage": "",
+						"help": "Enter the department you belong to.",
+						"fieldGlosses": [
+							{
+								"value": "Department",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "degree"
+						},
+						"inputType": 10,
+						"repeatable": false,
+						"enabled": true,
+						"optional": false,
+						"usage": "",
+						"help": "Choose the type of degree you are seeking.",
+						"fieldGlosses": [
+							{
+								"value": "Degree",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "major"
+						},
+						"inputType": 0,
+						"repeatable": false,
+						"enabled": true,
+						"optional": false,
+						"usage": "",
+						"help": "Enter the discipline you specialized in.",
+						"fieldGlosses": [
+							{
+								"value": "Major",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "permanentPhone"
+						},
+						"inputType": 0,
+						"repeatable": false,
+						"enabled": true,
+						"optional": false,
+						"usage": "",
+						"help": "Enter a phone number where you can be reached even after you have left school",
+						"fieldGlosses": [
+							{
+								"value": "Permanent Phone",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "permanentAddress"
+						},
+						"inputType": 0,
+						"repeatable": false,
+						"enabled": true,
+						"optional": false,
+						"usage": "",
+						"help": "Enter an address where you can be reached even after you complete and leave school.",
+						"fieldGlosses": [
+							{
+								"value": "Permanent Address",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "permanentEmail"
+						},
+						"inputType": 1,
+						"repeatable": false,
+						"enabled": true,
+						"optional": false,
+						"usage": "",
+						"help": "Enter an email address you will always have.",
+						"fieldGlosses": [
+							{
+								"value": "Permanent Email",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "currentPhone"
+						},
+						"inputType": 0,
+						"repeatable": false,
+						"enabled": true,
+						"optional": true,
+						"usage": "",
+						"help": "Enter a phone number where you can be reached.",
+						"fieldGlosses": [
+							{
+								"value": "Current Phone",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "currentAddress"
+						},
+						"inputType": 9,
+						"repeatable": false,
+						"enabled": true,
+						"optional": true,
+						"usage": "",
+						"help": "Enter an address where you can be reached.",
+						"fieldGlosses": [
+							{
+								"value": "Current Address",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					}
+				]
+			},
+			{
+				"name": "License Agreement",
+				"notes": [],
+				"fieldProfiles": [
+					{
+						"predicate": {
+							"value": "licenseAgreement"
+						},
+						"inputType": 0,
+						"repeatable": false,
+						"enabled": true,
+						"optional": false,
+						"usage": "",
+						"help": "By checking here you agree to the above license in its entirety.",
+						"fieldGlosses": [
+							{
+								"value": "License Agreement",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "umiPublication"
+						},
+						"inputType": 0,
+						"repeatable": false,
+						"enabled": false,
+						"optional": false,
+						"usage": "",
+						"help": "I am requesting that ProQuest provide additional free non-exclusive distribution via the ProQuest Dissertation & Theses Database (PQDT), which reaches 3,000 universities with over 200 million searches annually, and supports discovery through major subject and discipline indexes (SciFinder, MLA, MathSciNet, PsycINFO, etc).  I also will be eligible for a royalty based upon sales of my full-text work. More information is available <a target='_blank' href='http://www.proquest.com/en-US/products/dissertations/authors.shtml'>here</a>.",
+						"fieldGlosses": [
+							{
+								"value": "UMI Publication",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					}
+				]
+			},
+			{
+				"name": "Document Information",
+				"notes": [
+					{
+						"name": "degreeDate",
+						"text":"For the degree date, enter the semester in which your degree will be conferred (typically your graduation semester)."
+					},
+					{
+						"name": "multipleKeywords",
+						"text":"You can enter multiple keywords. Use semi-colons ( ; ) to separate the entries."
+					},
+					{
+						"name": "committeeMembers",
+						"text":"Please supply the names of your committee members, and a single email address to reach the chair or either co-chair."
+					},
+					{
+						"name": "embargoCheckAdvisor",
+						"text":"If you don't know if you need an embargo, then you should check with your advisor. This option is typically only used for situations like patent holds or a request by a publisher if content from the document is pending publication."
+					}
+				],
+				"fieldProfiles": [
+					{
+						"predicate": {
+							"value": "title"
+						},
+						"inputType": 0,
+						"repeatable": false,
+						"enabled": true,
+						"optional": false,
+						"usage": "",
+						"help": "Enter the title of your document.",
+						"fieldGlosses": [
+							{
+								"value": "Title",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "degreeDate"
+						},
+						"inputType": 4,
+						"repeatable": false,
+						"enabled": true,
+						"optional": false,
+						"usage": "",
+						"help": "Example: May 2008",
+						"fieldGlosses": [
+							{
+								"value": "Degree Date",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "defenseDate"
+						},
+						"inputType": 4,
+						"repeatable": false,
+						"enabled": true,
+						"optional": true,
+						"usage": "",
+						"help": "Format: mm/dd/yyyy",
+						"fieldGlosses": [
+							{
+								"value": "Defense Date",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "documentType"
+						},
+						"inputType": 10,
+						"repeatable": false,
+						"enabled": true,
+						"optional": false,
+						"usage": "",
+						"help": "Choose the type of document you are submitting.",
+						"fieldGlosses": [
+							{
+								"value": "Document Type",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "abstract"
+						},
+						"inputType": 9,
+						"repeatable": false,
+						"enabled": true,
+						"optional": false,
+						"usage": "",
+						"help": "Provide the abstract of your document.",
+						"fieldGlosses": [
+							{
+								"value": "Abstract",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "keywords"
+						},
+						"inputType": 9,
+						"repeatable": false,
+						"enabled": true,
+						"optional": false,
+						"usage": "",
+						"help": "You can enter multiple keywords. Use semi-colons ( ; ) to separate the entries.",
+						"fieldGlosses": [
+							{
+								"value": "Keywords",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "subjects"
+						},
+						"inputType": 9,
+						"repeatable": false,
+						"enabled": true,
+						"optional": false,
+						"usage": "",
+						"help": "Provide a primary subject, and up to two additional subjects.",
+						"fieldGlosses": [
+							{
+								"value": "Subjects",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "language"
+						},
+						"inputType": 0,
+						"repeatable": false,
+						"enabled": true,
+						"optional": true,
+						"usage": "",
+						"help": "Provide the primary language of your document.",
+						"fieldGlosses": [
+							{
+								"value": "Language",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "yourCommittee"
+						},
+						"inputType": 0,
+						"repeatable": false,
+						"enabled": true,
+						"optional": false,
+						"usage": "",
+						"help": "Committee members.",
+						"fieldGlosses": [
+							{
+								"value": "Your Committee",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "chairsContactEmail"
+						},
+						"inputType": 1,
+						"repeatable": false,
+						"enabled": true,
+						"optional": false,
+						"usage": "",
+						"help": "Enter an email address for your committee chair.",
+						"fieldGlosses": [
+							{
+								"value": "Chair's Contact Email",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "previouslyPublishedMaterial"
+						},
+						"inputType": 0,
+						"repeatable": false,
+						"enabled": true,
+						"optional": true,
+						"usage": "",
+						"help": "Has any part of the material being submitted been previously published (i.e. book chapters or journal articles)? If so you will be asked identify the section where these materials are used in whole or in part.",
+						"fieldGlosses": [
+							{
+								"value": "Previously Published Material",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "defaultEmbargos"
+						},
+						"inputType": 10,
+						"repeatable": false,
+						"enabled": true,
+						"optional": false,
+						"usage": "",
+						"help": "With your advisor's approval you may request a delay in the publication (embargo) of your work.",
+						"fieldGlosses": [
+							{
+								"value": "Default Embargos",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "proQuestEmbargos"
+						},
+						"inputType": 10,
+						"repeatable": false,
+						"enabled": true,
+						"optional": true,
+						"usage": "",
+						"help": " With your advisor's approval you may request a delay in the publication (embargo) of your work.",
+						"fieldGlosses": [
+							{
+								"value": "ProQuest Embargos",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					}
+				]
+			},
+			{
+				"name": "File Upload",
+				"notes": [
+					{
+						"name": "onePdfFile",
+						"text": "Your thesis or dissertation can only be one file, and the only allowable file format is PDF. Please contact your school for help or information related to creating a PDF file."
+					},
+					{
+						"name": "noLimit",
+						"text": "There is no limit on the number or formats of supplementary files you may upload."
+					},
+					{
+						"name": "sizeQuota",
+						"text": "SIZE QUOTA: no individual file may exceed 512 MB, and the total of all files must not exceed 4 GB."
+					}
+				],
+				"fieldProfiles": [
+					{
+						"predicate": {
+							"value": "manuscriptInPdf"
+						},
+						"inputType": 5,
+						"repeatable": false,
+						"enabled": true,
+						"optional": false,
+						"usage": "",
+						"help": "",
+						"fieldGlosses": [
+							{
+								"value": "Manuscript in PDF",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "supplementalFiles"
+						},
+						"inputType": 5,
+						"repeatable": false,
+						"enabled": true,
+						"optional": true,
+						"usage": "",
+						"help": "Upload only supplemental files such as audio, video or data sets. These files must be listed in the appendix of your thesis or dissertation.",
+						"fieldGlosses": [
+							{
+								"value": "Supplemental Files",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "sourceFiles"
+						},
+						"inputType": 5,
+						"repeatable": false,
+						"enabled": true,
+						"optional": true,
+						"usage": "",
+						"help": "Upload the source files used to create your manuscript such as a Word Document, LaTeX Source file, etc. These files will be used to improve the digital preservation potential of your document.",
+						"fieldGlosses": [
+							{
+								"value": "Source Files",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					},
+					{
+						"predicate": {
+							"value": "administrativeFiles"
+						},
+						"inputType": 5,
+						"repeatable": false,
+						"enabled": true,
+						"optional": true,
+						"usage": "",
+						"help": "Upload additional administrative files such as a signed graduation release form or other local administrative requirement.",
+						"fieldGlosses": [
+							{
+								"value": "Administrative Files",
+								"language": {
+									"name": "English"
+								}
+							}
+						],
+						"controlledVocabularies": []
+					}
+				]
+			}
+		]
+	},
+	"parentOrganizations": null,
+	"childrenOrganizations": null,
+	"emails": null,
+	"emailWorkflowRules": [
+		{
+			"isSystem": true,
+			"isDisabled": false,
+			"submissionState": {
+				"name": "In Progress",
+				"isArchived": false,
+				"isPublishable": false,
+				"isDeletable": false,
+				"isEditableByReviewer": false,
+				"isEditableByStudent": false,
+				"isActive": false,
+				"transitionSubmissionStates": [
+					{
+						"name": "Submitted",
+						"isArchived": false,
+						"isPublishable": false,
+						"isDeletable": false,
+						"isEditableByReviewer": true,
+						"isEditableByStudent": false,
+						"isActive": false,
+						"transitionSubmissionStates": [
+							{
+								"name": "Under Review",
+								"isArchived": false,
+								"isPublishable": false,
+								"isDeletable": false,
+								"isEditableByReviewer": true,
+								"isEditableByStudent": false,
+								"isActive": true,
+								"transitionSubmissionStates": [
+									{
+										"name": "Needs Correction",
+										"isArchived": false,
+										"isPublishable": false,
+										"isDeletable": false,
+										"isEditableByReviewer": true,
+										"isEditableByStudent": true,
+										"isActive": true,
+										"transitionSubmissionStates": [
+											{
+												"name": "Corrections Received",
+												"isArchived": false,
+												"isPublishable": false,
+												"isDeletable": false,
+												"isEditableByReviewer": true,
+												"isEditableByStudent": false,
+												"isActive": true,
+												"transitionSubmissionStates": [
+													{
+														"name": "Under Review"
+													},
+													{
+														"name": "Waiting On Requirements"
+													},
+													{
+														"name": "Approved"
+													}
+												]
+											}
+										]
+									},
+									{
+										"name": "Waiting On Requirements",
+										"isArchived": false,
+										"isPublishable": false,
+										"isDeletable": false,
+										"isEditableByReviewer": true,
+										"isEditableByStudent": false,
+										"isActive": true,
+										"transitionSubmissionStates": [
+											{
+												"name": "Under Review"
+											},
+											{
+												"name": "Approved"
+											}
+										]
+									},
+									{
+										"name": "Approved",
+										"isArchived": false,
+										"isPublishable": false,
+										"isDeletable": false,
+										"isEditableByReviewer": true,
+										"isEditableByStudent": false,
+										"isActive": true,
+										"transitionSubmissionStates": [
+											{
+												"name": "Pending Publication",
+												"isArchived": true,
+												"isPublishable": false,
+												"isDeletable": false,
+												"isEditableByReviewer": true,
+												"isEditableByStudent": false,
+												"isActive": false,
+												"transitionSubmissionStates": [
+													{
+														"name": "Published",
+														"isArchived": true,
+														"isPublishable": false,
+														"isDeletable": false,
+														"isEditableByReviewer": true,
+														"isEditableByStudent": false,
+														"isActive": false,
+														"transitionSubmissionStates": [
+															{
+																"name": "Pending Publication"
+															}
+														]
+													}
+												]
+											}
+										]
+									}
+								]
+							}
+						]
+					},
+					{
+						"name": "On Hold",
+						"isArchived": false,
+						"isPublishable": false,
+						"isDeletable": false,
+						"isEditableByReviewer": true,
+						"isEditableByStudent": false,
+						"isActive": true,
+						"transitionSubmissionStates": []
+					},
+					{
+						"name": "Withdrawn",
+						"isArchived": true,
+						"isPublishable": false,
+						"isDeletable": false,
+						"isEditableByReviewer": true,
+						"isEditableByStudent": false,
+						"isActive": false,
+						"transitionSubmissionStates": []
+					},
+					{
+						"name": "Cancelled",
+						"isArchived": true,
+						"isPublishable": false,
+						"isDeletable": true,
+						"isEditableByReviewer": true,
+						"isEditableByStudent": false,
+						"isActive": false,
+						"transitionSubmissionStates": []
+					}
+				]
+			},
+			"recipientType": 0,
+			"emailTemplate": {
+				"name": "Test",
+				"subject": "Test",
+				"message": "This is only a test.",
+				"isSystemRequired": false
+			}
+		}
+	]
+
+}

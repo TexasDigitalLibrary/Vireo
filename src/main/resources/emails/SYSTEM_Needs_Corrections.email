@@ -1,0 +1,27 @@
+# Email sent to students when corrections need to be made to their submission
+#
+# Paramaters:
+#   {FULL_NAME}: The student's full, official name
+#   {SUBMISSION_URL}: A URL they student may visit to review their submission.
+#   {DOCUMENT_TITLE}: The title of  the thesis or dissertation as supplied by the student.
+#   {DOCUMENT_TYPE}: The document type, typically 'Thesis' or 'Dissertation'
+#   {SUBMISSION_STATUS}: The current status of the submissions, e.g. 'Approved' or 'Needs Corrections'
+#
+Subject: Received {DOCUMENT_TYPE} submission needs corrections
+Dear {FULL_NAME}: 
+
+You are receiving this message to inform you that the submission of your {DOCUMENT_TYPE} to the Thesis Office needs corrections.
+
+The submission is available for you to make corrections at:
+
+    {SUBMISSION_URL}
+
+The following information is included for your convenience: 
+
+Title: {DOCUMENT_TITLE}
+Type: {DOCUMENT_TYPE}
+Status: {SUBMISSION_STATUS}
+
+You do not need to reply to this message. The status of your submission, along with any necessary comments or information, is available at the web address listed above. If you have any questions about your submission, feel free to contact our office. 
+
+The Vireo Team

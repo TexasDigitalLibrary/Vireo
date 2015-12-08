@@ -47,7 +47,11 @@ vireo.service("UserSettings", function(AbstractModel, WsApi) {
        UserSettings.get();
    	};
 
-	UserSettings.update = function(setting, newValue, oldValue) {
+   	UserSettings.reset = function(setting) {
+   		UserSettings.data[setting] = UserSettings.data['_' + setting];
+   	};
+
+	UserSettings.update = function(setting, newValue) {
 		WsApi.fetch({
 				endpoint: '/private/queue', 
 				controller: 'user', 
@@ -58,14 +62,14 @@ vireo.service("UserSettings", function(AbstractModel, WsApi) {
 			var responseObject = JSON.parse(data.body);
 
 			if(responseObject.meta.type == 'ERROR') {
-				UserSettings.data[setting] = oldValue;
+				UserSettings.reset(setting);
 			}
 			else {
 				UserSettings.data['_' + setting] = UserSettings.data[setting] = responseObject.payload.PersistentMap[setting];
 			}
 			
 		}, function(data) {
-			UserSettings.data[setting] = oldValue;
+			UserSettings.reset(setting);
 		});
 	};
 

@@ -52,7 +52,6 @@ public class OrganizationCategoryTest extends AbstractEntityTest {
         category = organizationCategoryRepo.findByNameAndLevel(TEST_CATEGORY_NAME, TEST_CATEGORY_LEVEL);
 
         Set<Organization> organizations = category.getOrganizations();
-
         assertEquals("Category does not have the organization!", true, organizations.contains(organization));
 
         organizationCategoryRepo.delete(category);

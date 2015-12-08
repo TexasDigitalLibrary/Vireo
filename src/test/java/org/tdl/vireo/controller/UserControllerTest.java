@@ -17,6 +17,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.enums.Role;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
@@ -34,7 +35,6 @@ public class UserControllerTest extends AbstractControllerTest {
 	
 	@InjectMocks
     private UserController userController;
-
 	
     private static List<User> mockUsers;
     
@@ -63,21 +63,18 @@ public class UserControllerTest extends AbstractControllerTest {
     
     @Before
     public void setup() {
+        MockitoAnnotations.initMocks(this);
     	
     	mockUsers = Arrays.asList(new User[] {TEST_USER, TEST_USER2, TEST_USER3, TEST_USER4});
     	
     	ReflectionTestUtils.setField(authUtility, SECRET_PROPERTY_NAME, SECRET_VALUE);
     	
     	ReflectionTestUtils.setField(authUtility, EXPIRATION_PROPERTY_NAME, EXPIRATION_VALUE);
-    	
-    	ReflectionTestUtils.setField(emailUtility, EMAIL_HOST_PROPERTY_NAME, EMAIL_HOST_VALUE);
 
     	TEST_CREDENTIALS.setFirstName(TEST_USER_FIRST_NAME);
     	TEST_CREDENTIALS.setLastName(TEST_USER_LAST_NAME);
     	TEST_CREDENTIALS.setEmail(TEST_USER_EMAIL);
     	TEST_CREDENTIALS.setRole(TEST_USER_ROLE);
-    	        
-        MockitoAnnotations.initMocks(this);
         
         Mockito.when(userRepo.findAll()).thenReturn(mockUsers);
         
@@ -107,6 +104,7 @@ public class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @Order(value = 1)
     public void testUserCredentials() {        
     	ApiResponse response = userController.credentials(TEST_CREDENTIALS);
     	
@@ -120,6 +118,7 @@ public class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @Order(value = 2)
     public void testAllUser() {
     	
     	ApiResponse response = userController.allUsers();
@@ -158,6 +157,7 @@ public class UserControllerTest extends AbstractControllerTest {
     }
 	 
     @Test
+    @Order(value = 3)
     public void testUpdateRole() throws Exception {
     	Map<String, String> data = new HashMap<String, String>();
     	data.put("email", TEST_USER_EMAIL);

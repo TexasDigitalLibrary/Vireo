@@ -4,12 +4,14 @@ import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 public class SubmissionState extends BaseEntity {
@@ -18,28 +20,34 @@ public class SubmissionState extends BaseEntity {
     private String name;
 
     @Column(nullable = false)
+    @JsonProperty("isArchived")
     private Boolean isArchived;
 
     @Column(nullable = false)
+    @JsonProperty("isPublishable")
     private Boolean isPublishable;
 
     @Column(nullable = false)
+    @JsonProperty("isDeletable")
     private Boolean isDeletable;
 
     @Column(nullable = false)
+    @JsonProperty("isEditableByReviewer")
     private Boolean isEditableByReviewer;
 
     @Column(nullable = false)
+    @JsonProperty("isEditableByStudent")
     private Boolean isEditableByStudent;
 
     @Column(nullable = false)
+    @JsonProperty("isActive")
     private Boolean isActive;
 
     @ManyToMany(cascade = { DETACH, REFRESH, MERGE })
-    private Set<SubmissionState> transitionSubmissionStates;
+    private List<SubmissionState> transitionSubmissionStates;
 
     public SubmissionState() {
-        setTransitionSubmissionStates(new TreeSet<SubmissionState>());
+        setTransitionSubmissionStates(new ArrayList<SubmissionState>());
     }
 
     /**
@@ -170,7 +178,7 @@ public class SubmissionState extends BaseEntity {
     /**
      * @return the transitionSubmissionStates
      */
-    public Set<SubmissionState> getTransitionSubmissionStates() {
+    public List<SubmissionState> getTransitionSubmissionStates() {
         return transitionSubmissionStates;
     }
 
@@ -178,7 +186,7 @@ public class SubmissionState extends BaseEntity {
      * @param transitionSubmissionStates
      *            the transitionSubmissionStates to set
      */
-    public void setTransitionSubmissionStates(Set<SubmissionState> transitionSubmissionStates) {
+    public void setTransitionSubmissionStates(List<SubmissionState> transitionSubmissionStates) {
         this.transitionSubmissionStates = transitionSubmissionStates;
     }
 

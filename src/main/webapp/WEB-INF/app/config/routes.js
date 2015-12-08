@@ -26,7 +26,7 @@ vireo.config(['$routeProvider', '$locationProvider', '$anchorScrollProvider', fu
 			templateUrl: 'views/admin/log.html',
 		}).
 		when('/admin/settings', {
-			redirectTo: '/admin/settings/user',
+			redirectTo: '/admin/settings/application',
 		}).
 		when('/admin/settings/:tab', {
 			templateUrl: 'views/admin/settings/settings.html',

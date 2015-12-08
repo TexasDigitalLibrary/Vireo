@@ -2,6 +2,7 @@ package org.tdl.vireo.model;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.CascadeType.DETACH;
+import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
@@ -16,6 +17,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -26,10 +28,10 @@ public class Organization extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne(fetch = EAGER, optional = false)
+    @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER, optional = false)
     private OrganizationCategory category;
 
-    @ManyToOne(cascade = ALL, fetch = LAZY, optional = true)
+    @OneToOne(cascade = ALL, orphanRemoval = true)
     private Workflow workflow;
 
     @ManyToMany(cascade = { DETACH, REFRESH }, fetch = LAZY)
