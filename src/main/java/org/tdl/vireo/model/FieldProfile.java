@@ -5,12 +5,13 @@ import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.LAZY;
 
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -33,17 +34,31 @@ public class FieldProfile extends BaseEntity {
     private Boolean repeatable;
 
     @Column(nullable = false)
-    private Boolean required;
+    private Boolean enabled;
+    
+    @Column(nullable = false)
+    private Boolean optional;
+    
+    @Lob
+    @Column(nullable = true)
+    private String usage;
+    
+    @Lob
+    @Column(nullable = true)
+    private String help;
 
     @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY)
-    private Set<FieldGloss> fieldGlosses;
+    private List<FieldGloss> fieldGlosses;
 
     @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY)
-    private Set<ControlledVocabulary> controlledVocabularies;
+    private List<ControlledVocabulary> controlledVocabularies;
     
     public FieldProfile() {
-        setFieldGlosses(new TreeSet<FieldGloss>());
-        setControlledVocabularies(new TreeSet<ControlledVocabulary>());
+        setRepeatable(false);
+        setEnabled(false);
+        setOptional(true);
+        setFieldGlosses(new ArrayList<FieldGloss>());
+        setControlledVocabularies(new ArrayList<ControlledVocabulary>());
     }
 
     /**
@@ -51,14 +66,44 @@ public class FieldProfile extends BaseEntity {
      * @param predicate
      * @param inputType
      * @param repeatable
-     * @param required
+     * @param enabled
+     * @param optional
      */
-    public FieldProfile(FieldPredicate predicate, InputType inputType, Boolean repeatable, Boolean required) {
+    public FieldProfile(FieldPredicate predicate, InputType inputType, Boolean repeatable, Boolean enabled, Boolean optional) {
         this();
         setPredicate(predicate);
         setInputType(inputType);
         setRepeatable(repeatable);
-        setRequired(required);
+        setEnabled(enabled);
+        setOptional(optional);
+    }
+    
+    /**
+     * 
+     * @param predicate
+     * @param inputType
+     * @param usage
+     * @param repeatable
+     * @param enabled
+     * @param optional
+     */
+    public FieldProfile(FieldPredicate predicate, InputType inputType, String usage, Boolean repeatable, Boolean enabled, Boolean optional) {
+        this(predicate, inputType, repeatable, enabled, optional);
+        setUsage(usage);
+    }
+    
+    /**
+     * 
+     * @param predicate
+     * @param inputType
+     * @param usage
+     * @param repeatable
+     * @param enabled
+     * @param optional
+     */
+    public FieldProfile(FieldPredicate predicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean enabled, Boolean optional) {
+        this(predicate, inputType, usage, repeatable, enabled, optional);
+        setHelp(help);
     }
 
     /**
@@ -106,25 +151,42 @@ public class FieldProfile extends BaseEntity {
         this.repeatable = repeatable;
     }
 
-    /**
-     * @return the required
-     */
-    public Boolean getRequired() {
-        return required;
+    public Boolean getEnabled() {
+        return enabled;
     }
 
-    /**
-     * @param required
-     *            the required to set
-     */
-    public void setRequired(Boolean required) {
-        this.required = required;
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public Boolean getOptional() {
+        return optional;
+    }
+
+    public void setOptional(Boolean optional) {
+        this.optional = optional;
+    }
+    
+    public String getUsage() {
+        return usage;
+    }
+
+    public void setUsage(String usage) {
+        this.usage = usage;
+    }
+
+    public String getHelp() {
+        return help;
+    }
+
+    public void setHelp(String help) {
+        this.help = help;
     }
 
     /**
      * @return the fieldGlosses
      */
-    public Set<FieldGloss> getFieldGlosses() {
+    public List<FieldGloss> getFieldGlosses() {
         return fieldGlosses;
     }
 
@@ -146,7 +208,7 @@ public class FieldProfile extends BaseEntity {
      * @param fieldGlosses
      *            the fieldGlosses to set
      */
-    public void setFieldGlosses(Set<FieldGloss> fieldGlosses) {
+    public void setFieldGlosses(List<FieldGloss> fieldGlosses) {
         this.fieldGlosses = fieldGlosses;
     }
     
@@ -172,7 +234,7 @@ public class FieldProfile extends BaseEntity {
     /**
      * @return the controlledVocabularies
      */
-    public Set<ControlledVocabulary> getControlledVocabularies() {
+    public List<ControlledVocabulary> getControlledVocabularies() {
         return controlledVocabularies;
     }
 
@@ -206,7 +268,7 @@ public class FieldProfile extends BaseEntity {
      * @param controlledVocabularies
      *            the controlledVocab to set
      */
-    public void setControlledVocabularies(Set<ControlledVocabulary> controlledVocabularies) {
+    public void setControlledVocabularies(List<ControlledVocabulary> controlledVocabularies) {
         this.controlledVocabularies = controlledVocabularies;
     }
 

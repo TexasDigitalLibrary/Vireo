@@ -34,6 +34,7 @@ import org.tdl.vireo.model.repo.FieldProfileRepo;
 import org.tdl.vireo.model.repo.FieldValueRepo;
 import org.tdl.vireo.model.repo.LanguageRepo;
 import org.tdl.vireo.model.repo.NamedSearchFilterRepo;
+import org.tdl.vireo.model.repo.NoteRepo;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
@@ -63,8 +64,10 @@ public abstract class AbstractEntityTest {
     protected static final boolean TEST_CUSTOM_ACTION_DEFINITION_VISIBLE_BY_STUDENT = true;
     protected static final boolean TEST_CUSTOM_ACTION_VALUE = true;
     protected static final boolean TEST_FIELD_PROFILE_REPEATABLE = true;
-    protected static final boolean TEST_FIELD_PROFILE_REQUIRED = true;
-
+    protected static final boolean TEST_FIELD_PROFILE_ENABLED = true;
+    protected static final boolean TEST_FIELD_PROFILE_OPTIONAL = false;
+    protected static final String  TEST_FIELD_PROFILE_USAGE = "Test Field Profile Usage";
+    
     protected static final String TEST_USER_EMAIL = "admin@tdl.org";
     protected static final String TEST_USER_FIRSTNAME = "TDL";
     protected static final String TEST_USER_LASTNAME = "Admin";
@@ -157,8 +160,10 @@ public abstract class AbstractEntityTest {
     protected static final boolean TEST_TRANSITION_SUBMISSION_STATE_EDITABLE_BY_STUDENT = true;
     protected static final boolean TEST_TRANSITION_SUBMISSION_STATE_ACTIVE = true;
     protected static final boolean TEST_WORKFLOW_INHERITABILITY = true;
+    protected static final String TEST_SEVERABLE_FIELD_PROFILE_USAGE = "Test Severable Field Profile Usage";
     protected static final boolean TEST_SEVERABLE_FIELD_PROFILE_REPEATABLE = false;
-    protected static final boolean TEST_SEVERABLE_FIELD_PROFILE_REQUIRED = false;
+    protected static final boolean TEST_SEVERABLE_FIELD_PROFILE_ENABLED = false;    
+    protected static final boolean TEST_SEVERABLE_FIELD_PROFILE_OPTIONAL = false;
 
     // Submission Test
     protected static final String TEST_SUBMISSION_SUBMITTER_EMAIL = "admin@tdl.org";
@@ -190,6 +195,7 @@ public abstract class AbstractEntityTest {
     protected static final String TEST_EMBARGO_TYPE_NAME = "Test Embargo Type Name";
     protected static final String TEST_EMBARGO_TYPE_DESCRIPTION = "Test Embargo Type Description";
     protected static final int TEST_EMBARGO_TYPE_DURATION = 0;
+    protected static final boolean TEST_EMBARGO_IS_ACTIVE = true;
 
     // User Test
     protected static final String TEST_SHIBBOLETH_AFFILIATION = "shib_affiliation";
@@ -276,6 +282,12 @@ public abstract class AbstractEntityTest {
 
     protected static final int TEST_ORGANIZATION_CATEGORY_LEVEL = 0;
     protected static final String TEST_ORGANIZATION_CATEGORY_NAME = "Test Organization Category";
+    
+    protected static final String TEST_NOTE_NAME = "Test Note Name";
+    protected static final String TEST_NOTE_TEXT = "Test Note Text";
+    
+    protected static final String TEST_SEVERABLE_NOTE_NAME = "Test Severable Note Name";
+    protected static final String TEST_SEVERABLE_NOTE_TEXT = "Test Severable Note Text";
 
     protected static final Role TEST_USER_ROLE = Role.USER;
     protected static final String TEST_USER_ROLE_STRING = "ROLE_USER";
@@ -337,6 +349,9 @@ public abstract class AbstractEntityTest {
 
     @Autowired
     protected LanguageRepo languageRepo;
+    
+    @Autowired
+    protected NoteRepo noteRepo;
 
     @Autowired
     protected FieldGlossRepo fieldGlossRepo;
@@ -413,6 +428,8 @@ public abstract class AbstractEntityTest {
     protected User includedSubmitter;
     protected User excludedSubmitter;
 
+    protected Workflow workflow;
+    
     protected WorkflowStep workflowStep;
     
     protected VocabularyWord vocabularyWord;

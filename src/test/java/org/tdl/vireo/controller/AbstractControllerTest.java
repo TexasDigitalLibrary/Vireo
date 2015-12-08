@@ -15,6 +15,7 @@ import org.tdl.vireo.mock.MockData;
 import org.tdl.vireo.runner.OrderedRunner;
 import org.tdl.vireo.service.MockEmailServiceImpl;
 import org.tdl.vireo.util.AuthUtility;
+import org.tdl.vireo.util.TemplateUtility;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -49,6 +50,9 @@ public abstract class AbstractControllerTest extends MockData {
 	
 	@Autowired @Spy
     protected MockEmailServiceImpl emailService;
+
+	@Spy @InjectMocks
+    protected TemplateUtility templateUtility;
     	
 	protected Credentials TEST_CREDENTIALS = new Credentials();
     

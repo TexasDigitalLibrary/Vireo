@@ -11,7 +11,7 @@ public abstract class BaseEntity implements Comparable<BaseEntity> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
-
+    
     /**
      * @return the id
      */
@@ -37,9 +37,6 @@ public abstract class BaseEntity implements Comparable<BaseEntity> {
         return false;
     }
 
-    /**
-     * 
-     */
     @Override
     public int hashCode() {
         int hashCode = 1;
@@ -56,4 +53,5 @@ public abstract class BaseEntity implements Comparable<BaseEntity> {
         }
         return 0;
     }
+    
 }

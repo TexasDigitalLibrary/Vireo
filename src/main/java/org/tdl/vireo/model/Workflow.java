@@ -1,16 +1,23 @@
 package org.tdl.vireo.model;
 
 import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.CascadeType.DETACH;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "organization_id" }) )
 public class Workflow extends BaseEntity {
 	
 	@Column(nullable = false)
@@ -19,11 +26,14 @@ public class Workflow extends BaseEntity {
 	@Column(nullable = false)
 	private Boolean inheritable;
 	
+	@OneToOne(cascade = { DETACH, REFRESH, MERGE })
+	private Organization organization;
+	
 	@OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
-	private Set<WorkflowStep> workflowSteps;
+	private List<WorkflowStep> workflowSteps;
 	
 	public Workflow() {
-		setWorkflowSteps(new TreeSet<WorkflowStep>());
+		setWorkflowSteps(new ArrayList<WorkflowStep>());
 	}
 	
 	/**
@@ -31,10 +41,11 @@ public class Workflow extends BaseEntity {
 	 * @param name
 	 * @param inheritable
 	 */
-	public Workflow(String name, Boolean inheritable) {
+	public Workflow(String name, Boolean inheritable, Organization organization) {
 		this();
 		setName(name);
 		setInheritability(inheritable);
+		setOrganization(organization);
 	}
 	
 	/**
@@ -66,11 +77,27 @@ public class Workflow extends BaseEntity {
 	public void setInheritability(Boolean inheritable) {
 		this.inheritable = inheritable;
 	}
-	
+
 	/**
+	 * 
+	 * @return
+	 */
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    /**
+     * 
+     * @param organization
+     */
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
+    }
+
+    /**
 	 * @return the workflowSteps
 	 */
-	public Set<WorkflowStep> getWorkflowSteps() {
+	public List<WorkflowStep> getWorkflowSteps() {
 		return workflowSteps;
 	}
 
@@ -78,7 +105,7 @@ public class Workflow extends BaseEntity {
 	 * @param workflowSteps
 	 *            the workflowSteps to set
 	 */
-	public void setWorkflowSteps(Set<WorkflowStep> workflowSteps) {
+	public void setWorkflowSteps(List<WorkflowStep> workflowSteps) {
 		this.workflowSteps = workflowSteps;
 	}
 	

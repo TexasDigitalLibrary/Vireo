@@ -6,10 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+import org.tdl.vireo.condition.NotRunningTests;
 import org.tdl.vireo.service.EmailService;
+import org.tdl.vireo.service.SystemDataLoader;
 
 import edu.tamu.framework.CoreContextInitializedHandler;
 import edu.tamu.framework.model.repo.SymlinkRepo;
@@ -21,6 +23,7 @@ import edu.tamu.framework.model.repo.SymlinkRepo;
  *
  */
 @Component
+@Conditional(NotRunningTests.class)
 @EnableConfigurationProperties(SymlinkRepo.class)
 class AppContextInitializedHandler extends CoreContextInitializedHandler {
 
@@ -28,13 +31,12 @@ class AppContextInitializedHandler extends CoreContextInitializedHandler {
     private Boolean showBeans;
 
     @Autowired
-    private Environment env;
-
-    @Autowired
     ApplicationContext applicationContext;
     
     @Autowired
     private EmailService emailService;
+
+    SystemDataLoader systemDataLoader;
 
     final static Logger logger = LoggerFactory.getLogger(AppContextInitializedHandler.class);
 
@@ -51,9 +53,16 @@ class AppContextInitializedHandler extends CoreContextInitializedHandler {
                 logger.info(beanName);
             }
         }
-        logger.info("Classpath root is: " + Application.class.getResource("/").getPath());
-        logger.info("RUNNING! [" + env.getProperty("security.user.password") + "]");
         
         emailService.init();
+        
+        logger.info("Generating all system email templates");
+        systemDataLoader.generateAllSystemEmailTemplates();
+        
+        logger.info("Generating all system embargos");
+        systemDataLoader.generateAllSystemEmbargos();
+        
+        logger.info("Generating system organization");
+        systemDataLoader.loadSystemOrganization();
     }
 }

@@ -18,6 +18,7 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 import org.tdl.vireo.enums.Role;
 
@@ -26,6 +27,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.tamu.framework.model.CoreUser;
 
 @Entity
+@Table(name = "users")
 public class User extends BaseEntity implements CoreUser {
     
     // institutional identifier, brought in with framework

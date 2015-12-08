@@ -3,7 +3,6 @@ package org.tdl.vireo.model;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
-import java.util.Set;
 
 import org.junit.After;
 import org.junit.Before;
@@ -26,8 +25,8 @@ public class ControlledVocabularyTest extends AbstractEntityTest {
         assertEquals("Saved entity did not contain the language!", language, controlledVocabulary.getLanguage());
         
         // add some embargos to test create entity controlled vocabulary
-        embargoRepo.create(TEST_EMBARGO_NAME, TEST_EMBARGO_DESCRIPTION, TEST_EMBARGO_DURATION);
-        Embargo embargo = embargoRepo.create(TEST_EMBARGO_NAME_2, TEST_EMBARGO_DESCRIPTION, TEST_EMBARGO_DURATION);
+        embargoRepo.create(TEST_EMBARGO_NAME, TEST_EMBARGO_DESCRIPTION, TEST_EMBARGO_DURATION, TEST_EMBARGO_IS_ACTIVE);
+        Embargo embargo = embargoRepo.create(TEST_EMBARGO_NAME_2, TEST_EMBARGO_DESCRIPTION, TEST_EMBARGO_DURATION, TEST_EMBARGO_IS_ACTIVE);
         embargo.setGuarantor(EmbargoGuarantor.PROQUEST);
         embargoRepo.save(embargo);
         
@@ -47,7 +46,7 @@ public class ControlledVocabularyTest extends AbstractEntityTest {
         
         assertEquals("Number of guarantors does not match!", guarantors.size(), entityControlledVocabulary.getDictionary().size());
         
-        Set<Object> entityControlledVocabularyValues = entityControlledVocabulary.getDictionary();
+        List<Object> entityControlledVocabularyValues = entityControlledVocabulary.getDictionary();
         
         for(EmbargoGuarantor gaurantor : guarantors) {           
             assertEquals("Guarantors does not contain entityControlledVocabulary value!", true, entityControlledVocabularyValues.contains(gaurantor));
@@ -100,10 +99,10 @@ public class ControlledVocabularyTest extends AbstractEntityTest {
         controlledVocabulary = controlledVocabularyRepo.save(controlledVocabulary);
         assertEquals("Saved entity did not have the correct number of values!", 2, controlledVocabulary.getDictionary().size());
 
-        // test detach value
+        // test remove value
         controlledVocabulary.removeValue(severableVocabularyWord);
         controlledVocabulary = controlledVocabularyRepo.save(controlledVocabulary);
-        assertEquals("Did not detach value!", 1, controlledVocabulary.getDictionary().size());
+        assertEquals("Did not remove value!", 1, controlledVocabulary.getDictionary().size());
 
         // test delete controlled vocabulary
         controlledVocabularyRepo.delete(controlledVocabulary);

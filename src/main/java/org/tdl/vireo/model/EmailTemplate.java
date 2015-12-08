@@ -2,8 +2,11 @@ package org.tdl.vireo.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(uniqueConstraints={@UniqueConstraint(columnNames = { "name", "isSystemRequired" })})
@@ -15,10 +18,12 @@ public class EmailTemplate extends BaseEntity {
 	@Column(nullable = false)
 	private String subject;
 
+	@Lob
 	@Column(nullable = false)
 	private String message;
 	
 	@Column(nullable = false)
+	@JsonProperty("isSystemRequired")
 	private Boolean isSystemRequired;
 
 	public EmailTemplate() {
