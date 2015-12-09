@@ -40,7 +40,7 @@ public class FieldProfile extends BaseEntity {
     private Boolean optional;
     
     @Lob
-    @Column(nullable = true)
+    @Column(nullable = true, name = "`usage`") // "usage" is a keyword in mysql
     private String usage;
     
     @Lob

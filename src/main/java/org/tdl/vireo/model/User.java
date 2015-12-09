@@ -27,7 +27,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.tamu.framework.model.CoreUser;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users") // "user" is a keyword in postgresql
 public class User extends BaseEntity implements CoreUser {
     
     // institutional identifier, brought in with framework
