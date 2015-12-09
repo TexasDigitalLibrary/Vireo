@@ -2,6 +2,7 @@ package org.tdl.vireo.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 
 /**
  * Jpa specific implementation of Vireo's Configuration interface
@@ -14,7 +15,8 @@ public class Configuration extends BaseEntity {
     @Column(nullable = false, unique = true, length = 255)
     private String name;
 
-    @Column(nullable = false, length = 32768) // 2^15
+    @Lob
+    @Column(nullable = false)
     private String value;
 
     public Configuration() { }
