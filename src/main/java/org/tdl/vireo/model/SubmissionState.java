@@ -44,6 +44,7 @@ public class SubmissionState extends BaseEntity {
     private Boolean isActive;
 
     @ManyToMany(cascade = { DETACH, REFRESH, MERGE })
+    @JsonProperty("transitionSubmissionStates")
     private List<SubmissionState> transitionSubmissionStates;
 
     public SubmissionState() {
