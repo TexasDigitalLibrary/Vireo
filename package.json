@@ -16,7 +16,7 @@
     "grunt-contrib-watch": "latest",
     "grunt-usemin": "latest",
     "http-server": "latest",
-    "jasmine-core": "latest",
+    "jasmine-core": "2.3.0",
     "jshint-stylish": "latest",
     "karma": "latest",
     "karma-chrome-launcher": "latest",
