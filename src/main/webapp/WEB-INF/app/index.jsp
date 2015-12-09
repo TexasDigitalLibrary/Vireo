@@ -73,8 +73,6 @@
 							<ul class="dropdown-menu" role="menu">
 								<li role="presentation" class="dropdown-header">Profile</li>
 								<li><a role="menuitem" href="myprofile">Profile</a></li>
-								<li><a role="menuitem" href ng-click="logout()">Logout</a></li>
-
 								<li ng-if="isAdmin() || isManager()" role="presentation" class="divider"></li>
 								<li ng-if="isAdmin() || isManager()" role="presentation" class="dropdown-header">Manager Actions</li>
 								<li ng-if="isAdmin() || isManager()">
@@ -92,7 +90,8 @@
 								<li ng-if="isAdmin()">
 									<a role="menuitem" href="admin/settings">Settings</a>
 								</li>
-
+								<li role="presentation" class="divider"></li>
+								<li><a role="menuitem" href ng-click="logout()">Logout</a></li>
 							</ul>
 						</li>
 					</ul>
