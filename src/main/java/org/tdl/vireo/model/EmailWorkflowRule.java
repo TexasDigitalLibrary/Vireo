@@ -50,6 +50,11 @@ public class EmailWorkflowRule extends BaseEntity {
 		setRecipientType(recipientType);
 		setEmailTemplate(emailTemplate);
 	}
+	
+	public EmailWorkflowRule(SubmissionState submissionState, RecipientType recipientType, EmailTemplate emailTemplate, Boolean isSystem) {
+        this(submissionState, recipientType, emailTemplate);
+        isSystem(isSystem);
+    }
 
 	/**
 	 * @return the isSystem

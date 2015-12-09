@@ -63,6 +63,9 @@ class AppContextInitializedHandler extends CoreContextInitializedHandler {
         logger.info("Generating all system embargos");
         systemDataLoader.generateAllSystemEmbargos();
         
+        logger.info("Generating system submission states");
+        systemDataLoader.loadSystemSubmissionStates();
+        
         logger.info("Generating system organization");
         systemDataLoader.loadSystemOrganization();
     }

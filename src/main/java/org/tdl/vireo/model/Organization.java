@@ -8,6 +8,8 @@ import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -44,13 +46,13 @@ public class Organization extends BaseEntity {
     private Set<String> emails;
     
     @OneToMany(cascade = ALL, fetch=EAGER, orphanRemoval=true)
-    private Set<EmailWorkflowRule> emailWorkflowRules;
+    private List<EmailWorkflowRule> emailWorkflowRules;
 
     public Organization() {
         setParentOrganizations(new TreeSet<Organization>());
         setChildrenOrganizations(new TreeSet<Organization>());
         setEmails(new TreeSet<String>());
-        setEmailWorkflowRules(new TreeSet<EmailWorkflowRule>());
+        setEmailWorkflowRules(new ArrayList<EmailWorkflowRule>());
     }
 
     /**
@@ -213,14 +215,14 @@ public class Organization extends BaseEntity {
 	/**
 	 * @return the emailWorkflowRules
 	 */
-	public Set<EmailWorkflowRule> getEmailWorkflowRules() {
+	public List<EmailWorkflowRule> getEmailWorkflowRules() {
 		return emailWorkflowRules;
 	}
 
 	/**
 	 * @param emailWorkflowRules the emailWorkflowRules to set
 	 */
-	public void setEmailWorkflowRules(Set<EmailWorkflowRule> emailWorkflowRules) {
+	public void setEmailWorkflowRules(List<EmailWorkflowRule> emailWorkflowRules) {
 		this.emailWorkflowRules = emailWorkflowRules;
 	}
 	
