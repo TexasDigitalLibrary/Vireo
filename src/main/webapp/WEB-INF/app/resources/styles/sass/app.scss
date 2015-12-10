@@ -668,6 +668,16 @@ footer a, footer li, footer p {
   outline:none;
   }
 
+    .lookandfeel .color-reset {
+      text-indent: 0em;
+      font-size: 0.85em;
+      cursor: pointer;
+    }
+
+    .lookandfeel input {
+      border-width:thin;
+      border-radius: 5px;
+    }
 .footer-list {
   display: inline-block;
 }

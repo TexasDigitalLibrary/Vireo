@@ -7,6 +7,23 @@ vireo.controller('SettingsController', function ($controller, $scope, $location,
 		console.log("foo");
 	};
 
+	$scope.hexcolor = { background_main_color:'#1b333f',
+					background_highlight_color:'#43606e',
+					submissionStepButonOn_main_color:'#1b333f',
+					submissionStepButonOn_highlight_color:'#43606e',
+					submissionStepButonOff_main_color:'#a6a18c',
+					submissionStepButonOff_highlight_color:'#c7c2a9'
+					};
+
+	$scope.resetHexColor = { 	
+				background_main_color:'#1b333f',
+				background_highlight_color:'#43606e',
+				submissionStepButonOn_main_color:'#1b333f',
+				submissionStepButonOn_highlight_color:'#43606e',
+				submissionStepButonOff_main_color:'#a6a18c',
+				submissionStepButonOff_highlight_color:'#c7c2a9'
+							};
+
 	$scope.settings = {};
 
 	$scope.settings.user  = UserSettings.get();
@@ -49,5 +66,15 @@ vireo.controller('SettingsController', function ($controller, $scope, $location,
 
 		return Object.keys(field).length > 0;
 	}
+
+	$scope.change = function(hexcolor) {
+		// $scope.hexcolor=hexcolor;
+		console.log("IN change = "+$scope.hexcolor.background_main_color);
+	};
+
+	$scope.reset = function() { 
+		$scope.hexcolor = angular.copy($scope.resetHexColor);
+		console.log("IN RESET"+$scope.hexcolor);
+	};
 
 });
