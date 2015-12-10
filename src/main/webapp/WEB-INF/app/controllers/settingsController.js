@@ -1,4 +1,4 @@
-vireo.controller('SettingsController', function ($controller, $scope, $location, $routeParams, User, UserSettings) {
+vireo.controller('SettingsController', function ($controller, $scope, $location, $routeParams, User, UserSettings, SidebarService) {
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
 	$scope.user = User.get();
