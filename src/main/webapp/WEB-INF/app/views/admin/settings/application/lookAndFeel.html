@@ -1,159 +1,258 @@
-<div class="row lookandfeel">
-	<div class="col-sm-6">
-		<form name="look-and-feel">
-			<div class="row">
-				<h4>Background
-				   <div tooltip="Use hex color values to change the background on the student side. The main color (default #1B333F) fades into the highlight color (default #43606E).">
-				   	<span class="glyphicon glyphicon-info-sign color-reset"></span>
-				   </div>
-				</h4>
-			</div>
+<div class="lookandfeel ">
+	<form name="look-and-feel">
+		<div class="row">
+			<div class="col-sm-6">
+				
+				<div class="row">
+					<h4>Background
+					   <div tooltip="Use hex color values to change the background on the student side. The main color (default #1B333F) fades into the highlight color (default #43606E).">
+					   	<span class="glyphicon glyphicon-info-sign color-reset"></span>
+					   </div>
+					</h4>
+				</div>
 
-			<div class="row">
-				<div class="col-sm-6">
-					<div class="row">
-						<span>Main Color 
-							<span  class="glyphicon glyphicon-refresh color-reset" 
-									ng-click="reset(hexcolor.background_main_color)">
+				<div class="row">
+					<div class="col-sm-4">
+						<div class="row">
+							<span>Main Color 
+								<span  class="glyphicon glyphicon-refresh color-reset" 
+										ng-click="reset(hexcolor.background.main)">
+								</span>
 							</span>
-						</span>
+						</div>
+						<span class="row form-control">
+								{{hexcolor.background.main}}
+								<input  type="color" 
+										class="pull-right"
+										name="background_main_color" 
+										ng-model="hexcolor.background.main" 
+										ng-change="change(hexcolor.background.main)" />
+						</span>	
+
 					</div>
-					<div class="row">	
-						<input type="text" ng-value="hexcolor.background_main_color" />
-							<input  type="color"
+
+
+					<div class="col-sm-4">
+						<div class="row">
+							<span>Highlight Color
+								<span 	class="glyphicon glyphicon-refresh color-reset" 
+										ng-click="reset(hexcolor.background.highlight)">
+								</span>
+							</span>
+						</div>
+						<span class="row form-control">	
+							{{hexcolor.background.highlight}}
+							<input  type="color" 
+									class="pull-right"
+									name="background_highlight_color" 
+									ng-model="hexcolor.background.highlight" 
+									ng-change="change(hexcolor.background.highlight)" />
+
+						</span>						
+					</div>
+					<div class="col-sm-4"></div>
+
+				</div>
+				
+
+
+				<div class="row">
+					<h4>Submission Step Button (On)
+					   <div tooltip="Use hex color values to change the look of the submission step buttons when on the current step or on hover. The main color (default #1B333F) fades into the highlight color (default #43606E) and then back to the main color.">
+					   		<span class="glyphicon glyphicon-info-sign color-reset"></span>
+					   </div>
+					</h4>
+				</div>
+				<div class="row">
+					<div class="col-sm-4">
+						<div class="row">
+							<span>Main Color
+								<span 	class="glyphicon glyphicon-refresh color-reset" 
+										ng-click="reset(hexcolor.submissionStepButonOn.main)">
+								</span>
+							</span>
+						</div>
+						<div class="row form-control">
+							{{hexcolor.submissionStepButonOn.main}}
+							<input  type="color" 
+									class="pull-right"
 									name="background_main_color" 
-									ng-model="hexcolor.background_main_color" 
-									ng-change="change(hexcolor.background_main_color)" />
+									ng-model="hexcolor.submissionStepButonOn.main" 
+									ng-change="change(hexcolor.submissionStepButonOn.main)" />
+						</div>	
 
-					</div>	
-					
+					</div>
+
+
+					<div class="col-sm-4">
+						<div class="row">
+							<span>Highlight Color 
+								<span 	class="glyphicon glyphicon-refresh color-reset" 
+										ng-click="reset(hexcolor.submissionStepButonOn.highlight)">
+								</span>
+							</span>
+						</div>
+						<div class="row form-control">
+							{{hexcolor.submissionStepButonOn.highlight}}
+							<input  type="color" 
+									class="pull-right"
+									name="submissionStepButonOn.highlight" 
+									ng-model="hexcolor.submissionStepButonOn.highlight" 
+									ng-change="change(hexcolor.submissionStepButonOn.highlight)" />
+						</div>	
+
+					</div>
+
+					<div class="col-sm-4"></div>
+				</div>
+				
+
+
+				<div class="row">
+					<h4>Submission Step Button (Off)
+			   			<div 
+			   				tooltip="Use hex color values to change the look of the submission step buttons when in a default state. The main color (default #A6A18C) fades into the highlight color (default #C7C2A9) and then back to the main color.">
+			   				<span class="glyphicon glyphicon-info-sign color-reset"></span>
+			   			</div>
+					</h4>
 				</div>
 
-
-				<div class="col-sm-6">
-					<div class="row">
-						<span>Highlight Color 
-							<span 	class="glyphicon glyphicon-refresh color-reset" 
-									ng-click="reset(hexcolor.background_highlight_color)">
+				<div class="row">
+					<div class="col-sm-4">
+						<div class="row">
+							<span>Main Color
+								<span 	class="glyphicon glyphicon-refresh color-reset" 
+										ng-click="reset(hexcolor.submissionStepButonOff.main)">
+								</span>
 							</span>
-						</span>
+						</div>
+						<div class="row form-control">	
+							{{hexcolor.submissionStepButonOff.main}}
+							<input  type="color" 
+									class="pull-right"
+									name="submissionStepButonOff_main_color" 
+									ng-model="hexcolor.submissionStepButonOff.main" 
+									ng-change="change(hexcolor.submissionStepButonOff.main)" />
+						</div>	
+
 					</div>
-					<div class="row">	
-						<input type="text" ng-value="hexcolor.background_highlight_color"></input>
-						<input  type="color"
-								name="background_highlight_color" 
-								ng-model="hexcolor.background_highlight_color" 
-								ng-change="change(hexcolor.background_highlight_color)">
-					</div>	
-					
-				</div>
-			</div>
 
 
-
-			<div class="row">
-				<h4>Submission Step Button (On)
-				   <div tooltip="Use hex color values to change the look of the submission step buttons when on the current step or on hover. The main color (default #1B333F) fades into the highlight color (default #43606E) and then back to the main color.">
-				   		<span class="glyphicon glyphicon-info-sign color-reset"></span>
-				   </div>
-				</h4>
-			</div>
-
-		
-			<div class="row">
-				<div class="col-sm-6">
-					<div class="row">
-						<span>Main Color
-							<span 	class="glyphicon glyphicon-refresh color-reset" 
-									ng-click="reset(hexcolor.submissionStepButonOn_main_color)">
+					<div class="col-sm-4">
+						<div class="row">
+							<span>Highlight Color 
+								<span 	class="glyphicon glyphicon-refresh color-reset" 
+										ng-click="reset(hexcolor.submissionStepButonOff_highlight_color)">
+								</span>
 							</span>
-						</span>
-					</div>
-					<div class="row">
-						<input type="text" ng-value="hexcolor.submissionStepButonOn_main_color"></input>
-						<input  type="color"
-								name="background_main_color" 
-								ng-model="hexcolor.submissionStepButonOn_main_color" 
-								ng-change="change(hexcolor.submissionStepButonOn_main_color)">
-					</div>	
-					
-				</div>
-
-
-				<div class="col-sm-6">
-					<div class="row">
-						<span>Highlight Color 
-							<span 	class="glyphicon glyphicon-refresh color-reset" 
-									ng-click="reset(hexcolor.submissionStepButonOn_highlight_color)">
-							</span>
-						</span>
-					</div>
-					<div class="row">
-							<input type="text" ng-value="hexcolor.submissionStepButonOn_highlight_color"></input>
-							<input  type="color"
-									name="submissionStepButonOn_highlight_color" 
-									ng-model="hexcolor.submissionStepButonOn_highlight_color" 
-									ng-change="change(hexcolor.submissionStepButonOn_highlight_color)">
-					</div>	
-					
-				</div>
-			</div>
-
-
-
-			<div class="row">
-				<h4>Submission Step Button (Off)
-		   			<div 
-		   				tooltip="Use hex color values to change the look of the submission step buttons when in a default state. The main color (default #A6A18C) fades into the highlight color (default #C7C2A9) and then back to the main color.">
-		   				<span class="glyphicon glyphicon-info-sign color-reset"></span>
-		   			</div>
-				</h4>
-			</div>
-
-		
-			<div class="row">
-				<div class="col-sm-6">
-					<div class="row">
-						<span>Main Color
-							<span 	class="glyphicon glyphicon-refresh color-reset" 
-									ng-click="reset(hexcolor.submissionStepButonOff_main_color)">
-							</span>
-						</span>
-					</div>
-					<div class="row">	
-						<input type="text" ng-value="hexcolor.submissionStepButonOff_main_color"></input>
-						<input  type="color"
-								name="submissionStepButonOff_main_color" 
-								ng-model="hexcolor.submissionStepButonOff_main_color" 
-								ng-change="change(hexcolor.submissionStepButonOff_main_color)">
-					</div>	
-					
-				</div>
-
-
-				<div class="col-sm-6">
-					<div class="row">
-						<span>Highlight Color 
-							<span 	class="glyphicon glyphicon-refresh color-reset" 
-									ng-click="reset(hexcolor.submissionStepButonOff_highlight_color)">
-							</span>
-						</span>
-					</div>
-					<div class="row">	
-						<input type="text" ng-value="hexcolor.submissionStepButonOff_highlight_color"></input>
-						<input  type="color"
+						</div>
+					<div class="row form-control">	
+						{{hexcolor.submissionStepButonOff.highlight}}
+						<input  type="color" 
+								class="pull-right"
 								name="submissionStepButonOff_highlight_color" 
-								ng-model="hexcolor.submissionStepButonOff_highlight_color" 
-								ng-change="change(hexcolor.submissionStepButonOff_highlight_color)">
+								ng-model="hexcolor.submissionStepButonOff.highlight" 
+								ng-change="change(hexcolor.submissionStepButonOff.highlight)" />
 					</div>	
-					
+
+					</div>
+
+					<div class="col-sm-4"></div>
 				</div>
+
+			</div>		
+			
+
+
+			<div class="col-sm-6">
+			</div>
+		</div>
+
+	<!-- LOGOS -->
+		<div class="row logos">			
+				
+			<h4>Logos
+				<div tooltip="Change the logos located on the student side in the top left and top right corners. The recommended size is 50 x 150 pixels.">
+		   			<span class="glyphicon glyphicon-info-sign color-reset"></span>
+		   		</div>	
+			</h4>
+
+			<div class="row">
+				<div class="col-sm-6">
+					
+					<div class="row">
+						<div class="col-sm-6">
+							<p>Left Logo </p>
+							<input type="file" name="leftLogo" class="form-control">
+						</div>
+						<div class="col-sm-6">
+							<img ng-src="resources/images/logo-sm.png">
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-sm-6">
+							<p>Right Logo </p>
+							<input type="file" name="leftLogo" class="form-control">
+						</div>
+						<div class="col-sm-6">
+							<img ng-src="resources/images/vireo-right.gif">
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-sm-6">
+						<button type="submit" class="btn btn-default" name="submit_upload">Upload</button>
+						</div>
+						<div class="col-sm-6"></div>
+					</div>
+
+
+				</div>
+
+				<div class="col-sm-6">
+				</div>
+			</div>				
+
+		
+		</div>
+	<!-- CUSTOM CSS -->
+		<div class="row">
+			<h4>Custom CSS
+				<div tooltip="Customize any styling on the student side using CSS.">
+		   			<span class="glyphicon glyphicon-info-sign color-reset"></span>
+		   		</div>	
+			</h4>
+			<div class="row">
+				<div class="col-sm-6 lock-control">
+
+					<a href="#custom_css" ng-click="toggle(clicked)" ng-hide="clicked" ng-model="clicked">
+						<span class="glyphicon glyphicon-lock"> </span>
+						This field is locked to prevent accidental editing, click to unlock.
+					</a>
+
+					<p ng-show="clicked">
+						<span class="glyphicon glyphicon-pencil"></span>
+						This field is unlocked and may be edited. Leaving the page will re-lock the field.
+					</p>
+
+					<textarea id="custom_css" name="custom_css" class="form-control"  readonly="clicked">
+						TEST CUSTOM CSS TEXTAREA
+					</textarea>					
+
+				</div>
+
+				<div class="col-sm-6"></div>
 			</div>
 
+		</div>
 
-		</form>
-	</div>
+
+
+	</form>
+
 </div>
+
 
 
 

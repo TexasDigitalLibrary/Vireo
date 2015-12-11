@@ -1,28 +1,40 @@
-vireo.controller('SettingsController', function ($controller, $scope, $location, $routeParams, User, UserSettings) {
-	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
-
+vireo.controller("SettingsController", function ($controller, $scope, $location, $routeParams, User, UserSettings) {
+	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
+	$scope.clicked=false;
 	$scope.user = User.get();
 	
 	$scope.getTest = function() {
 		console.log("foo");
 	};
 
-	$scope.hexcolor = { background_main_color:'#1b333f',
-					background_highlight_color:'#43606e',
-					submissionStepButonOn_main_color:'#1b333f',
-					submissionStepButonOn_highlight_color:'#43606e',
-					submissionStepButonOff_main_color:'#a6a18c',
-					submissionStepButonOff_highlight_color:'#c7c2a9'
-					};
+	$scope.hexcolor = { 'background': {'main':'#1b333f', 'highlight':'#43606e'},
+						'submissionStepButonOn': {'main':'#1b333f', 'highlight':'#43606e'},
+						'submissionStepButonOff': {'main':'#a6a18c', 'highlight':'#c7c2a9'}
 
-	$scope.resetHexColor = { 	
-				background_main_color:'#1b333f',
-				background_highlight_color:'#43606e',
-				submissionStepButonOn_main_color:'#1b333f',
-				submissionStepButonOn_highlight_color:'#43606e',
-				submissionStepButonOff_main_color:'#a6a18c',
-				submissionStepButonOff_highlight_color:'#c7c2a9'
-							};
+	};
+	$scope.resetHexColor = {
+							'background': {'main':'#1b333f', 'highlight':'#43606e'},
+							'submissionStepButonOn': {'main':'#1b333f', 'highlight':'#43606e'},
+							'submissionStepButonOff': {'main':'#a6a18c', 'highlight':'#c7c2a9'}
+	};
+
+
+	// $scope.hexcolor = { background_main_color:"#1b333f",
+	// 				background_highlight_color:"#43606e",
+	// 				submissionStepButonOn_main_color:"#1b333f",
+	// 				submissionStepButonOn_highlight_color:"#43606e",
+	// 				submissionStepButonOff_main_color:"#a6a18c",
+	// 				submissionStepButonOff_highlight_color:"#c7c2a9"
+	// 				};
+
+	// $scope.resetHexColor = { 	
+	// 			background_main_color:"#1b333f",
+	// 			background_highlight_color:"#43606e",
+	// 			submissionStepButonOn_main_color:"#1b333f",
+	// 			submissionStepButonOn_highlight_color:"#43606e",
+	// 			submissionStepButonOff_main_color:"#a6a18c",
+	// 			submissionStepButonOff_highlight_color:"#c7c2a9"
+	// 						};
 
 	$scope.settings = {};
 
@@ -44,8 +56,14 @@ vireo.controller('SettingsController', function ($controller, $scope, $location,
 			}, timer);
 			
 		};
+
+
 		
 	});
+
+	$scope.toggle = function(clicked) {
+		$scope.clicked=!clicked;
+	};
 
 	$scope.editMode = function(prop) {
 		$scope["edit"+prop] = true;
@@ -69,12 +87,12 @@ vireo.controller('SettingsController', function ($controller, $scope, $location,
 
 	$scope.change = function(hexcolor) {
 		// $scope.hexcolor=hexcolor;
-		console.log("IN change = "+$scope.hexcolor.background_main_color);
+		console.log("IN change = "+hexcolor);
 	};
 
 	$scope.reset = function() { 
-		$scope.hexcolor = angular.copy($scope.resetHexColor);
-		console.log("IN RESET"+$scope.hexcolor);
+		// $scope.hexcolor = angular.copy($scope.resetHexColor);
+		console.log("IN RESET");
 	};
 
 });
