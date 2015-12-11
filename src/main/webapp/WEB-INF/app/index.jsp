@@ -255,6 +255,7 @@
 	    <!-- Factories -->
 
 	    <!-- Models -->
+	    <script src="model/organizationRepoModel.js"></script>
 	    <script src="model/userSettingsModel.js"></script>
 	    <script src="model/userRepoModel.js"></script>
 
