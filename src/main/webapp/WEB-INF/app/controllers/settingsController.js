@@ -1,4 +1,4 @@
-vireo.controller("SettingsController", function ($controller, $scope, $location, $routeParams, User, UserSettings) {
+vireo.controller("SettingsController", function ($controller, $scope, $location, $routeParams, User, UserSettings, ApplicationSettings) {
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 	$scope.clicked=false;
 	$scope.user = User.get();
@@ -39,11 +39,14 @@ vireo.controller("SettingsController", function ($controller, $scope, $location,
 	$scope.settings = {};
 
 	$scope.settings.user  = UserSettings.get();
+
+	$scope.settings.application = ApplicationSettings.get();
 	
 	$scope.ready = UserSettings.ready;
 	
 
 	UserSettings.ready().then(function() {
+
 		$scope.updateUserSetting = function(setting, timer) {
 
 			if(Object.keys($scope.userSettingsForm.$error).length) return;
@@ -56,6 +59,10 @@ vireo.controller("SettingsController", function ($controller, $scope, $location,
 			}, timer);
 			
 		};
+
+		$scope.updateApplicationSettings = function(type, setting) {	
+			ApplicationSettings.update(type, setting, $scope.settings.application[type][setting]);
+		}
 
 
 		
@@ -90,7 +97,10 @@ vireo.controller("SettingsController", function ($controller, $scope, $location,
 		//console.log($scope.hexcolor);
 	};
 
-	$scope.reset = function(data) { 
+	$scope.reset = function(data) {
+
+		ApplicationSettings.reset()
+
 		$scope.hexcolor = angular.copy($scope.resetHexColor);
 		console.log("IN RESET"+data);
 		//console.log($scope.hexcolor);
