@@ -8,7 +8,7 @@
 					   <div tooltip="Use hex color values to change the background on the student side. The main color (default #1B333F) fades into the highlight color (default #43606E).">
 					   	<span class="glyphicon glyphicon-info-sign color-reset"></span>
 					   </div>
-					</h4>
+					</h4> 
 				</div>
 
 				<div class="row">
@@ -239,6 +239,114 @@
 					<textarea id="custom_css" name="custom_css" class="form-control"  readonly="clicked">
 						TEST CUSTOM CSS TEXTAREA
 					</textarea>					
+
+				</div>
+
+				<div class="col-sm-6"></div>
+			</div>
+
+		</div>
+
+
+
+		<!-- FRONT PAGE INSTRUCTIONS -->
+		<div class="row">
+			<h4>Front Page Instructions
+				<div tooltip="Customize any styling on the student side using CSS.">
+		   			<span class="glyphicon glyphicon-info-sign color-reset"></span>
+		   		</div>	
+			</h4>
+			<div class="row">
+				<div class="col-sm-6 lock-control">
+
+					<a href="#front_page_instructions" ng-click="toggle(clicked)" ng-hide="clicked" ng-model="clicked">
+						<span class="glyphicon glyphicon-lock"> </span>
+						This field is locked to prevent accidental editing, click to unlock.
+					</a>
+
+					<p ng-show="clicked">
+						<span class="glyphicon glyphicon-pencil"></span>
+						This field is unlocked and may be edited. Leaving the page will re-lock the field.
+					</p>
+
+					<textarea id="front_page_instructions" name="front_page_instructions" class="form-control"  readonly="clicked">
+						TEST FRONT PAGE INSTRUCTIONS TEXTAREA
+					</textarea>	
+
+					<div class="hint">							
+					These instructions are show on the front page of Vireo to all users. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically.	
+					</div>			
+
+				</div>
+
+				<div class="col-sm-6"></div>
+			</div>
+
+		</div>
+
+
+		<!-- POST SUBMISSION INSTRUCTIONS -->
+		<div class="row">
+			<h4>Post Submission Instructions
+				<div tooltip="Customize any styling on the student side using CSS.">
+		   			<span class="glyphicon glyphicon-info-sign color-reset"></span>
+		   		</div>	
+			</h4>
+			<div class="row">
+				<div class="col-sm-6 lock-control">
+
+					<a href="#post_submission_instructions" ng-click="toggle(clicked)" ng-hide="clicked" ng-model="clicked">
+						<span class="glyphicon glyphicon-lock"> </span>
+						This field is locked to prevent accidental editing, click to unlock.
+					</a>
+
+					<p ng-show="clicked">
+						<span class="glyphicon glyphicon-pencil"></span>
+						This field is unlocked and may be edited. Leaving the page will re-lock the field.
+					</p>
+
+					<textarea id="post_submission_instructions" name="post_submission_instructions" class="form-control"  readonly="clicked">
+						TEST POST SUBMISSION INSTRUCTIONS TEXTAREA
+					</textarea>	
+
+					<div class="hint">
+						These instructions will be shown on the confirmation page after a student has completed their submission. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically.
+					</div>				
+
+				</div>
+
+				<div class="col-sm-6"></div>
+			</div>
+
+		</div>
+
+		<!-- POST CORRECTION INSTRUCTIONS-->
+		<div class="row">
+			<h4>Post Correction Instructions
+				<div tooltip="Customize any styling on the student side using CSS.">
+		   			<span class="glyphicon glyphicon-info-sign color-reset"></span>
+		   		</div>	
+			</h4>
+			<div class="row">
+				<div class="col-sm-6 lock-control">
+
+					<a href="#post_correction_instructions" ng-click="toggle(clicked)" ng-hide="clicked" ng-model="clicked">
+						<span class="glyphicon glyphicon-lock"> </span>
+						This field is locked to prevent accidental editing, click to unlock.
+					</a>
+
+					<p ng-show="clicked">
+						<span class="glyphicon glyphicon-pencil"></span>
+						This field is unlocked and may be edited. Leaving the page will re-lock the field.
+					</p>
+
+					<textarea id="post_correction_instructions" name="post_correction_instructions" class="form-control"  readonly="clicked">
+						TEST POST CORRECTION INSTRUCTIONS TEXTAREA
+					</textarea>	
+
+					<div class="hint">
+						 These instructions are shown on the confirmation page after a student has submitted corrections for their submission. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically.
+					</div>				
 
 				</div>
 

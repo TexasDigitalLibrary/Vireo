@@ -85,14 +85,15 @@ vireo.controller("SettingsController", function ($controller, $scope, $location,
 		return Object.keys(field).length > 0;
 	}
 
-	$scope.change = function(hexcolor) {
-		// $scope.hexcolor=hexcolor;
-		console.log("IN change = "+hexcolor);
+	$scope.change = function(data) {
+		$scope.hexcolor=hexcolor;
+		//console.log($scope.hexcolor);
 	};
 
-	$scope.reset = function() { 
-		// $scope.hexcolor = angular.copy($scope.resetHexColor);
-		console.log("IN RESET");
+	$scope.reset = function(data) { 
+		$scope.hexcolor = angular.copy($scope.resetHexColor);
+		console.log("IN RESET"+data);
+		//console.log($scope.hexcolor);
 	};
 
 });
