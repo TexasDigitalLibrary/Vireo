@@ -7,40 +7,13 @@ vireo.controller("SettingsController", function ($controller, $scope, $location,
 		console.log("foo");
 	};
 
-	$scope.hexcolor = { 'background': {'main':'#1b333f', 'highlight':'#43606e'},
-						'submissionStepButonOn': {'main':'#1b333f', 'highlight':'#43606e'},
-						'submissionStepButonOff': {'main':'#a6a18c', 'highlight':'#c7c2a9'}
-
-	};
-	$scope.resetHexColor = {
-							'background': {'main':'#1b333f', 'highlight':'#43606e'},
-							'submissionStepButonOn': {'main':'#1b333f', 'highlight':'#43606e'},
-							'submissionStepButonOff': {'main':'#a6a18c', 'highlight':'#c7c2a9'}
-	};
-
-
-	// $scope.hexcolor = { background_main_color:"#1b333f",
-	// 				background_highlight_color:"#43606e",
-	// 				submissionStepButonOn_main_color:"#1b333f",
-	// 				submissionStepButonOn_highlight_color:"#43606e",
-	// 				submissionStepButonOff_main_color:"#a6a18c",
-	// 				submissionStepButonOff_highlight_color:"#c7c2a9"
-	// 				};
-
-	// $scope.resetHexColor = { 	
-	// 			background_main_color:"#1b333f",
-	// 			background_highlight_color:"#43606e",
-	// 			submissionStepButonOn_main_color:"#1b333f",
-	// 			submissionStepButonOn_highlight_color:"#43606e",
-	// 			submissionStepButonOff_main_color:"#a6a18c",
-	// 			submissionStepButonOff_highlight_color:"#c7c2a9"
-	// 						};
-
 	$scope.settings = {};
 
 	$scope.settings.user  = UserSettings.get();
 
 	$scope.settings.application = ApplicationSettings.get();
+
+	console.log($scope.settings.application);
 	
 	$scope.ready = UserSettings.ready;
 	
@@ -60,9 +33,9 @@ vireo.controller("SettingsController", function ($controller, $scope, $location,
 			
 		};
 
-		$scope.updateApplicationSettings = function(type, setting) {	
-			ApplicationSettings.update(type, setting, $scope.settings.application[type][setting]);
-		}
+		// $scope.updateApplicationSettings = function(type, setting) {	
+		// 	ApplicationSettings.update(type, setting, $scope.settings.application[type][setting]);
+		// }
 
 
 		
@@ -92,18 +65,18 @@ vireo.controller("SettingsController", function ($controller, $scope, $location,
 		return Object.keys(field).length > 0;
 	}
 
-	$scope.change = function(data) {
-		$scope.hexcolor=hexcolor;
-		//console.log($scope.hexcolor);
-	};
+	// $scope.change = function(data) {
+	// 	$scope.hexcolor=hexcolor;
+	// 	//console.log($scope.hexcolor);
+	// };
 
-	$scope.reset = function(data) {
+	// $scope.reset = function(data) {
 
-		ApplicationSettings.reset()
+	// 	ApplicationSettings.reset()
 
-		$scope.hexcolor = angular.copy($scope.resetHexColor);
-		console.log("IN RESET"+data);
-		//console.log($scope.hexcolor);
-	};
+	// 	$scope.hexcolor = angular.copy($scope.resetHexColor);
+	// 	console.log("IN RESET"+data);
+	// 	//console.log($scope.hexcolor);
+	// };
 
 });
