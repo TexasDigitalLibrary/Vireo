@@ -28,7 +28,7 @@ vireo.service("OrganizationRepo", function($route, WsApi, AbstractModel) {
 
 		var newAllOrganizationsPromise = WsApi.fetch({
 				endpoint: '/private/queue', 
-				controller: 'organizations', 
+				controller: 'organization', 
 				method: 'all',
 		});
 
@@ -40,12 +40,12 @@ vireo.service("OrganizationRepo", function($route, WsApi, AbstractModel) {
 			});
 		}
 		else {
-			OrganizationRepo.data = new Organizations(newAllOrganizationsPromise);	
+			OrganizationRepo.data = new OrganizationRepo(newAllOrganizationsPromise);	
 		}
 		
 		OrganizationRepo.listener = WsApi.listen({
 			endpoint: '/channel', 
-			controller: 'organizations', 
+			controller: 'organization', 
 			method: '',
 		});
 				
@@ -60,10 +60,9 @@ vireo.service("OrganizationRepo", function($route, WsApi, AbstractModel) {
 				'endpoint': '/private/queue', 
 				'controller': 'organization', 
 				'method': 'create',
-				'data': {"newOrganization":organization}
+				'data': {"name":organization.name}
 		}).then(function(response) {
-console.log(response);
-//			OrganizationRepo.data.list.push(JSON.parse(response.body).payload.Organization);
+			OrganizationRepo.data.list.push(JSON.parse(response.body).payload.Organization);
 		});
 	};
 	
