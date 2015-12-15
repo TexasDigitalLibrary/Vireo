@@ -7,8 +7,8 @@
 	<tr>
 		<th>Name</th>
 	</tr>
-	<tr>
-		<td ng-repeat="organization in organizations">{{organization.name}}</td>
+	<tr ng-repeat="organization in organizations">
+		<td>{{organization.name}}</td>
 	</tr>
 </table>
 <modal modal-id="createOrganizationModal" 
