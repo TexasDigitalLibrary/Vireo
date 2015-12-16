@@ -6,7 +6,7 @@ vireo.service("ApplicationSettings", function(AbstractModel, WsApi) {
 		angular.extend(self, AbstractModel);		
 		self.unwrap(self, futureData, "PersistentMap");		
 	};
-
+	
 	ApplicationSettings.data = null;
 
 	ApplicationSettings.promise = null;
@@ -14,25 +14,33 @@ vireo.service("ApplicationSettings", function(AbstractModel, WsApi) {
 	ApplicationSettings.set = function(data) {
 		self.unwrap(self, data, "PersistentMap");
 	};
+	var themeColors = {		background_main_color:'#1b333f',
+							background_highlight_color:'#43606e',
+							button_main_color_on:'#1b333f',
+							button_highlight_color_on:'#43606e',
+							button_main_color_off:'#a6a18c',
+							button_highlight_color_off:'#c7c2a9'
+						};
+	var resetThemeColors = {background_main_color:'#1b333f',
+							background_highlight_color:'#43606e',
+							button_main_color_on:'#1b333f',
+							button_highlight_color_on:'#43606e',
+							button_main_color_off:'#a6a18c',
+							button_highlight_color_off:'#c7c2a9'
+						};
 
 	ApplicationSettings.get = function() {
-		// if(ApplicationSettings.promise) return ApplicationSettings.data;
-		var themecolors = {	background_main_color:'#1b333f',
-							background_highlight_color:'#43606e',
-							submissionStepButonOn_main_color:'#1b333f',
-							submissionStepButonOn_highlight_color:'#43606e',
-							submissionStepButonOff_main_color:'#a6a18c',
-							submissionStepButonOff_highlight_color:'#c7c2a9'
-						};
-		return themecolors;
+		return themeColors;
 	};
 
-	ApplicationSettings.update = function(type, setting) {
-		console.log("IN MODEL"+type+"  and setting =  "+setting);
-		var responseObject = JSON.parse(data.body);
-		ApplicationSettings.data[setting] = responseObject.payload.PersistentMap[setting];
+	ApplicationSettings.update = function(type, value) {
+		
+		themeColors[type] = value;
+	};
+
+	ApplicationSettings.reset = function(setting) {
+		themeColors[setting] = resetThemeColors[setting];
 	};
 
 	return ApplicationSettings;
 });
-

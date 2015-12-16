@@ -11,17 +11,15 @@ vireo.controller("SettingsController", function ($controller, $scope, $location,
 
 	$scope.settings.user  = UserSettings.get();
 
-	$scope.settings.application = ApplicationSettings.get();
+	$scope.settings.application = {};
 
-	console.log($scope.settings.application);
-	
+	$scope.settings.application.theme = ApplicationSettings.get();
+
 	$scope.ready = UserSettings.ready;
 	
-
 	UserSettings.ready().then(function() {
-
+		
 		$scope.updateUserSetting = function(setting, timer) {
-
 			if(Object.keys($scope.userSettingsForm.$error).length) return;
 
 			timer = typeof timer == "undefined" ? 0 : timer;
@@ -32,14 +30,12 @@ vireo.controller("SettingsController", function ($controller, $scope, $location,
 			}, timer);
 			
 		};
+			// $scope.updateApplicationSettings = function(type, setting) {
 
-		// $scope.updateApplicationSettings = function(type, setting) {	
-		// 	ApplicationSettings.update(type, setting, $scope.settings.application[type][setting]);
-		// }
-
-
-		
+			// 	ApplicationSettings.update(type, $scope.settings.application[type][setting]);
+			// }
 	});
+
 
 	$scope.toggle = function(clicked) {
 		$scope.clicked=!clicked;
@@ -65,18 +61,13 @@ vireo.controller("SettingsController", function ($controller, $scope, $location,
 		return Object.keys(field).length > 0;
 	}
 
-	// $scope.change = function(data) {
-	// 	$scope.hexcolor=hexcolor;
-	// 	//console.log($scope.hexcolor);
-	// };
+	$scope.updateApplicationSettings = function(type,setting,value) {
+		$scope.settings.application[type][setting] =value;
+		ApplicationSettings.update(type,setting,$scope.settings.application[type][setting]);
+	};
 
-	// $scope.reset = function(data) {
-
-	// 	ApplicationSettings.reset()
-
-	// 	$scope.hexcolor = angular.copy($scope.resetHexColor);
-	// 	console.log("IN RESET"+data);
-	// 	//console.log($scope.hexcolor);
-	// };
+	$scope.resetApplicationSettings = function(setting) {
+		ApplicationSettings.reset(type,setting);
+	};
 
 });
