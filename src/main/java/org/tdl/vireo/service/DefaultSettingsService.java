@@ -1,22 +1,30 @@
 package org.tdl.vireo.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import org.tdl.vireo.model.DefaultPreference;
+import org.tdl.vireo.model.DefaultPreferences;
 
 public class DefaultSettingsService {
-    private Map<String,Map<String,DefaultPreference>> defaultSettings;
+    private List<DefaultPreferences> defaultSettings;
     
     public DefaultSettingsService() {
-        Map<String,DefaultPreference> dummyPreferences = new HashMap<String,DefaultPreference>();
-        dummyPreferences.put("headerColor", new DefaultPreference("headerColor","#500000","global"));
-        
-        
-        defaultSettings.put(dummyPreferences.get(0).getType(),dummyPreferences);
+        Map<String,String> temp = new HashMap<String,String>();
+        temp.put("headerColor","#500000");
+        DefaultPreferences dummyPreferences = new DefaultPreferences("global",temp);
+          
+        defaultSettings.add(dummyPreferences);
     }
     
-    public DefaultPreference getSetting(String field,String type) {
-        return defaultSettings.get(type).get(field);
+    public String getSetting(String field,String type) {
+        Map<String,String> preferencesOfType = getSettingsByType(type);
+        return preferencesOfType.get(field);
     }
+    
+    public Map<String,String> getSettingsByType(String type) {
+        DefaultPreferences preferencesOfType = defaultSettings.stream().filter(preferences -> preferences.getType() == type).findFirst().orElse(null);
+        return preferencesOfType.getPreferences();
+    }
+
 }
