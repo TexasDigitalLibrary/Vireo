@@ -1,8 +1,11 @@
 <div class="row admin-settings" ng-controller="OrganizationSettingsController">
 	<div class="col-xs-12">
-		<h1>ORGANIZATION</h1>
+		<h1>ORGANIZATIONS</h1>
 		<accordion single-expand="true">
 			<pane query="organizationList" html="views/admin/settings/organizations/list.html">Organizations</pane>
+		</accordion>
+		<accordion single-expand="true">
+			<pane query="organizationCategoriesList" html="views/admin/settings/organizations/categoriesList.html">Organization Categories</pane>
 		</accordion>
 	</div>
 </div>
