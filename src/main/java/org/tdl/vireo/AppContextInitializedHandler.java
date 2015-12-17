@@ -68,5 +68,8 @@ class AppContextInitializedHandler extends CoreContextInitializedHandler {
         
         logger.info("Generating system organization");
         systemDataLoader.loadSystemOrganization();
+        
+        logger.info("Generating system defaults");
+        systemDataLoader.generateSystemDefaults();
     }
 }
