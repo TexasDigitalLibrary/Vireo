@@ -1,3 +1,35 @@
-{"application":[{"submissions_open":true},{"current_semester":"Spring 2016"}],
-"theme":[{"background_main_color":"#500000"},{"background_highlight_color":"#dfdfdf"}]}
- 
+{
+	"application":[
+				{"submissions_open":true},
+				{"current_semester":"Spring 2016"},
+				{"grantor":"Texas A&M University"},
+				{"email_from":"noreply@tdl.org"},
+				{"email_reply_to":"dev@tdl.org"}
+				],
+	"theme":[
+			{"background_main_color":"#1b333f  "},
+			{"background_highlight_color":"#43606e "},
+			{"button_main_color_on":"#1b333f "},
+			{"button_highlight_color_on":"#43606e "},
+			{"button_main_color_off":"#a6a18c "},
+			{"button_highlight_color_off":"#c7c2a9 "}
+			],
+	"orcid":[
+			{"orcid_validation":"true"},
+			{"orcid_authentication":"false"}
+			],
+	"submission_sticky_notes":[
+			{
+				"submit_personal_info_stickyies":
+					"Your name should appear as it does on your title page. You can use Unicode characters, if your computer supports them.","Select the degree and major that are listed on your title page.","You must enter a permanent, long-term address. If your present address is different, use the Current Address field."
+			},
+			{
+				"submit_document_info_stickyies":
+					"For the degree date, enter the semester in which your degree will be conferred (typically your graduation semester).","You can enter multiple keywords. Use semi-colons ( ; ) to separate the entries.","Please supply the names of your committee members, and a single email address to reach the chair or either co-chair.","If you don't know if you need an embargo, then you should check with your advisor. This option is typically only used for situations like patent holds or a request by a publisher if content from the document is pending publication."
+			},
+			{
+				"submit_upload_files_stickyies":
+				"Your thesis or dissertation can only be one file, and the only allowable file format is PDF. Please contact your school for help or information related to creating a PDF file.","There is no limit on the number or formats of supplementary files you may upload.","SIZE QUOTA: no individual file may exceed 512 MB, and the total of all files must not exceed 4 GB."
+			}
+		],
+}
