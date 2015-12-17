@@ -5,7 +5,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,7 +49,10 @@ import org.tdl.vireo.model.repo.SubmissionStateRepo;
 import org.tdl.vireo.model.repo.WorkflowRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -97,6 +104,9 @@ public class SystemDataLoader {
 
     @Autowired
     private SubmissionStateRepo submissionStateRepo;
+    
+    @Autowired
+    private DefaultSettingsService defaultSettingsService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -591,6 +601,41 @@ public class SystemDataLoader {
             System.out.println("\n\nERROR Generating System Embargos\n\n");
             e.printStackTrace();
             logger.debug("Unable to initialize default embargos. ", e);
+        }
+    }
+    
+    public void generateSystemDefaults() {
+        try {
+            JsonNode systemDefaults = objectMapper.readTree(getFileFromResource("classpath:/SYSTEM_Defaults.json"));
+            Iterator<Entry<String,JsonNode>> it = systemDefaults.fields();
+
+            while (it.hasNext()) {
+                Map.Entry<String, JsonNode> entry = (Map.Entry<String, JsonNode>) it.next();
+                Map<String,String> tempPreferences = new HashMap<String,String>();
+                if (entry.getValue().isArray()) {
+                    for (JsonNode objNode : entry.getValue()) {
+                        objNode.fieldNames().forEachRemaining(n -> {
+                            tempPreferences.put(n,objNode.get(n).asText());
+                        });
+                    }
+                }
+                defaultSettingsService.addSettings(entry.getKey(),tempPreferences);
+            }
+            defaultSettingsService.getTypes().forEach(t -> {
+                logger.info("Stored preferences for type: "+t);
+                defaultSettingsService.getSettingsByType(t).forEach((k,v) -> {
+                    logger.info(k+": "+v);
+                });
+            });
+        } catch (JsonParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (JsonMappingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
     }
 
