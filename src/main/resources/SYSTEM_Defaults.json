@@ -7,12 +7,12 @@
 				{"email_reply_to":"dev@tdl.org"}
 				],
 	"theme":[
-			{"background_main_color":"#1b333f  "},
-			{"background_highlight_color":"#43606e "},
-			{"button_main_color_on":"#1b333f "},
-			{"button_highlight_color_on":"#43606e "},
-			{"button_main_color_off":"#a6a18c "},
-			{"button_highlight_color_off":"#c7c2a9 "}
+			{"background_main_color":"#1b333f"},
+			{"background_highlight_color":"#43606e"},
+			{"button_main_color_on":"#1b333f"},
+			{"button_highlight_color_on":"#43606e"},
+			{"button_main_color_off":"#a6a18c"},
+			{"button_highlight_color_off":"#c7c2a9"}
 			],
 	"orcid":[
 			{"orcid_validation":"true"},
