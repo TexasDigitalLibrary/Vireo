@@ -26,7 +26,6 @@ vireo.service("ApplicationSettings", function(AbstractModel, WsApi) {
 		});
 		ApplicationSettings.promise = newAllApplicationSettingsPromise;
 		ApplicationSettings.data = new ApplicationSettings(newAllApplicationSettingsPromise);
-		console.log(ApplicationSettings.data);
 		return ApplicationSettings.data;
 
 	};
