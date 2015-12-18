@@ -663,7 +663,7 @@ footer a, footer li, footer p {
     padding-bottom: 12px;
   }
 
-  .btn:focus {
+  .btn:focus , input[type=color]:focus{
  
   outline:none;
   }

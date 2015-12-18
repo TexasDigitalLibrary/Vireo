@@ -57,13 +57,17 @@ vireo.controller("SettingsController", function ($controller, $scope, $location,
 		return Object.keys(field).length > 0;
 	}
 
-	$scope.updateApplicationSettings = function(type,setting,value) {
-		// $scope.settings.application[type][setting] =value;
-		// ApplicationSettings.update(type,setting,$scope.settings.application[type][setting]);
+	$scope.updateApplicationSettings = function(type,setting,value) {	
+		// console.log(type);
+		// console.log(setting);
+		// console.log(value);	
+		$scope.settings.application[type][setting] =value;
+		console.log($scope.settings.application);
+		ApplicationSettings.update(type,setting,$scope.settings.application[type][setting]);
 	};
 
 	$scope.resetApplicationSettings = function(setting) {
-		// ApplicationSettings.reset(type,setting);
+		console.log(setting);
 	};
 
 });
