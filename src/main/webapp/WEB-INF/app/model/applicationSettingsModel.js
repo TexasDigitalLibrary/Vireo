@@ -4,7 +4,7 @@ vireo.service("ApplicationSettings", function(AbstractModel, WsApi) {
 	var ApplicationSettings = function(futureData) {
 		self = this;
 		angular.extend(self, AbstractModel);		
-		self.unwrap(self, futureData, "PersistentMap");		
+		self.unwrap(self, futureData,"PersistentMap");			
 	};
 	
 	ApplicationSettings.data = null;
@@ -12,34 +12,31 @@ vireo.service("ApplicationSettings", function(AbstractModel, WsApi) {
 	ApplicationSettings.promise = null;
 
 	ApplicationSettings.set = function(data) {
-		self.unwrap(self, data, "PersistentMap");
+		self.unwrap(self, data, "PersistentMap");		
 	};
-	var themeColors = {		background_main_color:'#1b333f',
-							background_highlight_color:'#43606e',
-							button_main_color_on:'#1b333f',
-							button_highlight_color_on:'#43606e',
-							button_main_color_off:'#a6a18c',
-							button_highlight_color_off:'#c7c2a9'
-						};
-	var resetThemeColors = {background_main_color:'#1b333f',
-							background_highlight_color:'#43606e',
-							button_main_color_on:'#1b333f',
-							button_highlight_color_on:'#43606e',
-							button_main_color_off:'#a6a18c',
-							button_highlight_color_off:'#c7c2a9'
-						};
+	
 
 	ApplicationSettings.get = function() {
-		return themeColors;
+		if(ApplicationSettings.promise) return ApplicationSettings.data;
+		
+		var newAllApplicationSettingsPromise = WsApi.fetch({
+								endpoint: '/private/queue', 
+								controller: 'settings', 
+								method: 'all'
+		});
+		ApplicationSettings.promise = newAllApplicationSettingsPromise;
+		ApplicationSettings.data = new ApplicationSettings(newAllApplicationSettingsPromise);
+		console.log(ApplicationSettings.data);
+		return ApplicationSettings.data;
+
 	};
 
-	ApplicationSettings.update = function(type, value) {
-		
-		themeColors[type] = value;
+	ApplicationSettings.update = function(type, value) {		
+		console.log("update type and value");
 	};
 
 	ApplicationSettings.reset = function(setting) {
-		themeColors[setting] = resetThemeColors[setting];
+		console.log("reset type and value");
 	};
 
 	return ApplicationSettings;

@@ -8,12 +8,8 @@ vireo.controller("SettingsController", function ($controller, $scope, $location,
 	};
 
 	$scope.settings = {};
-
-	$scope.settings.user  = UserSettings.get();
-
-	$scope.settings.application = {};
-
-	$scope.settings.application.theme = ApplicationSettings.get();
+	$scope.settings.application = ApplicationSettings.get();
+	$scope.settings.user  = UserSettings.get();	
 
 	$scope.ready = UserSettings.ready;
 	
@@ -62,12 +58,12 @@ vireo.controller("SettingsController", function ($controller, $scope, $location,
 	}
 
 	$scope.updateApplicationSettings = function(type,setting,value) {
-		$scope.settings.application[type][setting] =value;
-		ApplicationSettings.update(type,setting,$scope.settings.application[type][setting]);
+		// $scope.settings.application[type][setting] =value;
+		// ApplicationSettings.update(type,setting,$scope.settings.application[type][setting]);
 	};
 
 	$scope.resetApplicationSettings = function(setting) {
-		ApplicationSettings.reset(type,setting);
+		// ApplicationSettings.reset(type,setting);
 	};
 
 });
