@@ -668,10 +668,20 @@ footer a, footer li, footer p {
   outline:none;
   }
 
+/**************************
+* LOOK AND FEEL ACCORDION *
+***************************/
+
   .lookandfeel .color-reset {
     text-indent: 0em;
     font-size: 0.85em;
     cursor: pointer;
+  }
+
+  .lookandfeel input[type=color] {
+    margin: -22px -5px 0px 0px;
+    border-radius: 5px;
+    width: 40%;
   }
 
   .lookandfeel .logos {
