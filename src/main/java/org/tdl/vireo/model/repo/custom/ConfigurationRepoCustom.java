@@ -26,4 +26,14 @@ public interface ConfigurationRepoCustom {
      * @return config value or fallback
      */
     public Integer getValue(String name, Integer fallback);
+    
+    /**
+     * Gets a String value from the configuration repo.
+     * 
+     * 
+     * @param name
+     * @param type
+     * @return config value
+     */
+    public String getValueByNameAndType(String name,String type);
 }

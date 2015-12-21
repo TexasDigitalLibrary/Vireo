@@ -19,6 +19,9 @@ public class Configuration extends BaseEntity {
     @Column(nullable = false)
     private String value;
 
+    @Column(nullable = true, unique = false, length = 255)
+    private String type;
+
     public Configuration() { }
 
     /**
@@ -33,7 +36,16 @@ public class Configuration extends BaseEntity {
         this();
         this.name = name;
         this.value = value;
+        this.type = null;
     }
+    
+    public Configuration(String name, String value, String type) {
+        this();
+        this.name = name;
+        this.value = value;
+        this.type = type;
+    }
+
 
     /**
      * @return the name

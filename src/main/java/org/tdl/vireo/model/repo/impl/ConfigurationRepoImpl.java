@@ -5,11 +5,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.custom.ConfigurationRepoCustom;
+import org.tdl.vireo.service.DefaultSettingsService;
 
 public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
 
     @Autowired
     ConfigurationRepo configurationRepo;
+    
+    @Autowired
+    DefaultSettingsService defaultSettingsService;
 
     /**
      * Creates or updates existing configuration
@@ -50,5 +54,22 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
             }
         }
         return ret;
+    }
+    
+    /**
+     * Gets a config value from the DB by name and type.
+     * If no value is found, it checks the DefaultSettingsService, which returns the default for that name and type if it exists, null otherwise.
+     * 
+     * @param name
+     * @param type
+     * @return String
+     */
+    @Override
+    public String getValueByNameAndType(String name, String type) {
+        String overrideValue = configurationRepo.getValueByNameAndType(name,type);
+        if (overrideValue != null) {
+            return overrideValue;
+        }
+        return defaultSettingsService.getSetting(name, type);
     }
 }
