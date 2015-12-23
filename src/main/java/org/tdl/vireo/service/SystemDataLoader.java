@@ -612,10 +612,12 @@ public class SystemDataLoader {
             while (it.hasNext()) {
                 Map.Entry<String, JsonNode> entry = (Map.Entry<String, JsonNode>) it.next();
                 Map<String,String> tempPreferences = new HashMap<String,String>();
+                List<String> tempAllowedKeys = new ArrayList<String>();
                 if (entry.getValue().isArray()) {
                     for (JsonNode objNode : entry.getValue()) {
                         objNode.fieldNames().forEachRemaining(n -> {
                             tempPreferences.put(n,objNode.get(n).asText());
+                            tempAllowedKeys.add(n);
                         });
                     }
                 }
@@ -625,6 +627,10 @@ public class SystemDataLoader {
                 logger.info("Stored preferences for type: "+t);
                 defaultSettingsService.getSettingsByType(t).forEach((k,v) -> {
                     logger.info(k+": "+v);
+                });
+                logger.info("Allowed Keys for type: "+t);
+                defaultSettingsService.getAllowedKeysByType(t).forEach(k -> {
+                    logger.info(k);
                 });
             });
         } catch (JsonParseException e) {
