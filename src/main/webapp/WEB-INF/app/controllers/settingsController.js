@@ -1,6 +1,6 @@
-vireo.controller('SettingsController', function ($controller, $scope, $location, $routeParams, User, UserSettings) {
-	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
-
+vireo.controller("SettingsController", function ($controller, $scope, $location, $routeParams, User, UserSettings, ApplicationSettings) {
+	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
+	$scope.clicked=false;
 	$scope.user = User.get();
 	
 	$scope.getTest = function() {
@@ -8,15 +8,14 @@ vireo.controller('SettingsController', function ($controller, $scope, $location,
 	};
 
 	$scope.settings = {};
+	$scope.settings.application = ApplicationSettings.get();
+	$scope.settings.user  = UserSettings.get();	
 
-	$scope.settings.user  = UserSettings.get();
-	
 	$scope.ready = UserSettings.ready;
 	
-
 	UserSettings.ready().then(function() {
+		
 		$scope.updateUserSetting = function(setting, timer) {
-
 			if(Object.keys($scope.userSettingsForm.$error).length) return;
 
 			timer = typeof timer == "undefined" ? 0 : timer;
@@ -27,8 +26,16 @@ vireo.controller('SettingsController', function ($controller, $scope, $location,
 			}, timer);
 			
 		};
-		
+			// $scope.updateApplicationSettings = function(type, setting) {
+
+			// 	ApplicationSettings.update(type, $scope.settings.application[type][setting]);
+			// }
 	});
+
+
+	$scope.toggle = function(clicked) {
+		$scope.clicked=!clicked;
+	};
 
 	$scope.editMode = function(prop) {
 		$scope["edit"+prop] = true;
@@ -49,5 +56,18 @@ vireo.controller('SettingsController', function ($controller, $scope, $location,
 
 		return Object.keys(field).length > 0;
 	}
+
+	$scope.updateApplicationSettings = function(type,setting,value) {	
+		// console.log(type);
+		// console.log(setting);
+		// console.log(value);	
+		$scope.settings.application[type][setting] =value;
+		console.log($scope.settings.application);
+		ApplicationSettings.update(type,setting,$scope.settings.application[type][setting]);
+	};
+
+	$scope.resetApplicationSettings = function(setting) {
+		console.log(setting);
+	};
 
 });
