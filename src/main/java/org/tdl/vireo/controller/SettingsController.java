@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.service.DefaultSettingsService;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
@@ -41,8 +42,14 @@ public class SettingsController {
     }
     
     @ApiMapping("/update")
-    public ApiResponse updateSetting(@Data Object updateSettings) {
-
+    public ApiResponse updateSetting(@Data String data) {
+        Map<String,String> map = new HashMap<String,String>();      
+        try {
+            map = objectMapper.readValue(data, new TypeReference<HashMap<String,String>>(){});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }       
+        configurationRepo.create(map.get("setting"),map.get("value"),map.get("test"));
         return new ApiResponse(SUCCESS);
     }
 

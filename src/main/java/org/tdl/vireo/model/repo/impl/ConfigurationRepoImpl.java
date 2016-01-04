@@ -37,12 +37,17 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
     
     @Override
     public Configuration create(String name, String value, String type) {
-        Configuration configuration = configurationRepo.findByNameAndType(name,type);
-        if (configuration != null) {
-            configuration.setValue(value);
-            return configurationRepo.save(configuration);
+        System.out.println("type: "+type);
+        if (type == null) {
+            return create(name, value);
+        } else {
+            Configuration configuration = configurationRepo.findByNameAndType(name,type);
+            if (configuration != null) {
+                configuration.setValue(value);
+                return configurationRepo.save(configuration);
+            }
+            return configurationRepo.save(new Configuration(name, value, type));
         }
-        return configurationRepo.save(new Configuration(name, value, type));
     }
 
     @Override
