@@ -49,7 +49,7 @@ public class SettingsController {
         } catch (Exception e) {
             e.printStackTrace();
         }       
-        configurationRepo.create(map.get("setting"),map.get("value"),map.get("test"));
+        configurationRepo.create(map.get("setting"),map.get("value"),map.get("type"));
         return new ApiResponse(SUCCESS);
     }
 
