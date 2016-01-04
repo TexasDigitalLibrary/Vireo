@@ -74,4 +74,18 @@ public class Configuration extends BaseEntity {
     public void setValue(String value) {
         this.value = value;
     }
+    
+    /**
+     * @return the type
+     */
+    public String getType() {
+        return this.type;
+    }
+
+    /**
+     * @param type - the type to set
+     */
+    public void setType(String type) {
+        this.type = type;
+    }
 }

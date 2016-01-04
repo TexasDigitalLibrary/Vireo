@@ -1,10 +1,14 @@
 package org.tdl.vireo.model.repo.custom;
 
+import java.util.Map;
+
 import org.tdl.vireo.model.Configuration;
 
 public interface ConfigurationRepoCustom {
     public Configuration create(String name, String value);
 
+    public Configuration create(String name, String value, String type);
+    
     /**
      * Gets a String value from the configuration repo.
      * 
@@ -36,4 +40,6 @@ public interface ConfigurationRepoCustom {
      * @return config value
      */
     public String getValueByNameAndType(String name,String type);
+    
+    public Map<String,String> getAllByType(String type);
 }

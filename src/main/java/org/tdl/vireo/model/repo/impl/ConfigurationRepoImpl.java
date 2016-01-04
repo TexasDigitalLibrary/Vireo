@@ -1,6 +1,9 @@
 
 package org.tdl.vireo.model.repo.impl;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
@@ -30,6 +33,16 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
             return configurationRepo.save(configuration);
         }
         return configurationRepo.save(new Configuration(name, value));
+    }
+    
+    @Override
+    public Configuration create(String name, String value, String type) {
+        Configuration configuration = configurationRepo.findByNameAndType(name,type);
+        if (configuration != null) {
+            configuration.setValue(value);
+            return configurationRepo.save(configuration);
+        }
+        return configurationRepo.save(new Configuration(name, value, type));
     }
 
     @Override
@@ -72,4 +85,14 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
         }
         return defaultSettingsService.getSetting(name, type);
     }
+    
+    public Map<String,String> getAllByType(String type) {
+        List<Configuration> overrideConfigs = configurationRepo.findByType(type);
+        Map<String,String> settings = defaultSettingsService.getSettingsByType(type);
+        overrideConfigs.forEach(c -> {
+            settings.put(c.getName(), c.getValue());
+        });
+        return settings;
+    }
+    
 }
