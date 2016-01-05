@@ -26,6 +26,15 @@ vireo.service("ApplicationSettings", function(AbstractModel, WsApi) {
 		});
 		ApplicationSettings.promise = newAllApplicationSettingsPromise;
 		ApplicationSettings.data = new ApplicationSettings(newAllApplicationSettingsPromise);
+
+		ApplicationSettings.listener = WsApi.listen({
+			endpoint: '/channel', 
+			controller: 'settings', 
+			method: '',
+		});
+				
+		ApplicationSettings.set(ApplicationSettings.listener);
+
 		return ApplicationSettings.data;
 
 	};
@@ -52,6 +61,10 @@ vireo.service("ApplicationSettings", function(AbstractModel, WsApi) {
 			method:'reset',
 			data: {'type':type, 'setting':setting}
 		});
+	};
+
+	ApplicationSettings.listen = function() {
+		return ApplicationSettings.listener;
 	};
 
 	return ApplicationSettings;
