@@ -98,24 +98,10 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
         
         Map<String,String> settings = new HashMap<String,String>(); 
         settings = defaultSettingsService.getSettingsByType(type);
-        System.out.println("default settings:");
-        settings.forEach((f2,v2) -> {
-           System.out.println(f2+": "+v2); 
-        });
 
         for (Configuration config:overrideConfigs) {
             settings.put(config.getName(), config.getValue());
         }
-        /*
-        overrideConfigs.forEach(c -> {
-            settings.put(c.getName(), c.getValue());
-        });
-        
-        System.out.println("final settings:");
-        settings.forEach((f,v) -> {
-           System.out.println(f+": "+v); 
-        });
-        */
         return settings;
     }
     
