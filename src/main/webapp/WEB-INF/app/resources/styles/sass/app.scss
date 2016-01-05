@@ -672,34 +672,40 @@ footer a, footer li, footer p {
 * LOOK AND FEEL ACCORDION *
 ***************************/
 
-  .lookandfeel .color-reset {
-    text-indent: 0em;
-    font-size: 0.85em;
-    cursor: pointer;
-  }
+.lookandfeel .color-reset {
+  text-indent: 0em;
+  font-size: 0.85em;
+  cursor: pointer;
+}
 
-  .lookandfeel input[type=color] {
-    margin: -22px -5px 0px 0px;
-    border-radius: 5px;
-    width: 40%;
-  }
+.lookandfeel .form-control {
+  min-height: 40px;
+}
 
-  .lookandfeel .logos {
-    margin-top:10px;
-    background: #efefef;
-    border-radius: 5px;
-    padding:5px;
-  }
+.lookandfeel input[type=color] {
+  border-radius: 5px;
+  width: 40%;
+  padding-bottom: 2px;
+  min-height: 20px;
+}
 
-  .lookandfeel .logos p {
-    margin: 0px 0 3px 4px;
-    }
+.lookandfeel .logos {
+  margin-top:10px;
+  background: #efefef;
+  border-radius: 5px;
+  padding:5px;
+}
 
-  .lookandfeel .logos img {
+.lookandfeel .logos p {
+  margin: 0px 0 3px 4px;
+}
+
+.lookandfeel .logos img {
   border: 1px solid black;
-    background: #FFF;
-    margin:15px 0;
-  }
+  background: #FFF;
+  margin:15px 0;
+}
+
 .footer-list {
   display: inline-block;
 }
