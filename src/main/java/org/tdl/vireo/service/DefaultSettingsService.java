@@ -36,7 +36,7 @@ public class DefaultSettingsService {
     
     public List<String> getAllowedKeysByType(String type) {
         DefaultPreferences allowedKeysOfType = defaultSettings.stream().filter(preferences -> preferences.getType() == type).findFirst().orElse(null);
-        return allowedKeysOfType.getAllowedKeys();
+        return new ArrayList<String>(allowedKeysOfType.getAllowedKeys());
     }
     
     public void addSettings(String type, Map<String,String> preferences) {
