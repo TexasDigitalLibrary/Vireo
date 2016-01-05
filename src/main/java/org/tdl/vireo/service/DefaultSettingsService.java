@@ -30,7 +30,7 @@ public class DefaultSettingsService {
     }
     
     public Map<String,String> getSettingsByType(String type) {
-        DefaultPreferences preferencesOfType = defaultSettings.stream().filter(preferences -> preferences.getType() == type).findFirst().orElse(null);
+        DefaultPreferences preferencesOfType = defaultSettings.stream().filter(preferences -> preferences.getType().equals(type)).findFirst().orElse(null);
         return new HashMap<String,String>(preferencesOfType.getPreferences());
     }
     
