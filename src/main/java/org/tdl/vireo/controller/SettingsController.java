@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.service.DefaultSettingsService;
 
@@ -50,6 +51,23 @@ public class SettingsController {
             e.printStackTrace();
         }       
         configurationRepo.create(map.get("setting"),map.get("value"),map.get("type"));
+        return new ApiResponse(SUCCESS);
+    }
+    
+    @ApiMapping("/reset")
+    public ApiResponse resetSetting(@Data String data) {
+        Map<String,String> map = new HashMap<String,String>();      
+        try {
+            map = objectMapper.readValue(data, new TypeReference<HashMap<String,String>>(){});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Configuration deletableOverride = configurationRepo.findByNameAndType(map.get("setting"),map.get("type"));
+        if (deletableOverride != null) {
+            System.out.println(deletableOverride.getName());
+            configurationRepo.delete(deletableOverride);
+        }
+        
         return new ApiResponse(SUCCESS);
     }
 

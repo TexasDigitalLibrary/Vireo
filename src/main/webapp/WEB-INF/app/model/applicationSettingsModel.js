@@ -45,8 +45,13 @@ vireo.service("ApplicationSettings", function(AbstractModel, WsApi) {
 		console.log("update type and value ENDS");
 	};
 
-	ApplicationSettings.reset = function(setting) {
-		console.log("reset type and value");
+	ApplicationSettings.reset = function(type,setting) {
+		WsApi.fetch({
+			endpoint:'/private/queue',
+			controller:'settings',
+			method:'reset',
+			data: {'type':type, 'setting':setting}
+		});
 	};
 
 	return ApplicationSettings;

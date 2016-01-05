@@ -1,6 +1,8 @@
 
 package org.tdl.vireo.model.repo.impl;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -93,10 +95,27 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
     
     public Map<String,String> getAllByType(String type) {
         List<Configuration> overrideConfigs = configurationRepo.findByType(type);
-        Map<String,String> settings = defaultSettingsService.getSettingsByType(type);
+        
+        Map<String,String> settings = new HashMap<String,String>(); 
+        settings = defaultSettingsService.getSettingsByType(type);
+        System.out.println("default settings:");
+        settings.forEach((f2,v2) -> {
+           System.out.println(f2+": "+v2); 
+        });
+
+        for (Configuration config:overrideConfigs) {
+            settings.put(config.getName(), config.getValue());
+        }
+        /*
         overrideConfigs.forEach(c -> {
             settings.put(c.getName(), c.getValue());
         });
+        
+        System.out.println("final settings:");
+        settings.forEach((f,v) -> {
+           System.out.println(f+": "+v); 
+        });
+        */
         return settings;
     }
     

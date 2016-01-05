@@ -1,6 +1,7 @@
 package org.tdl.vireo.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +31,7 @@ public class DefaultSettingsService {
     
     public Map<String,String> getSettingsByType(String type) {
         DefaultPreferences preferencesOfType = defaultSettings.stream().filter(preferences -> preferences.getType() == type).findFirst().orElse(null);
-        return preferencesOfType.getPreferences();
+        return new HashMap<String,String>(preferencesOfType.getPreferences());
     }
     
     public List<String> getAllowedKeysByType(String type) {
