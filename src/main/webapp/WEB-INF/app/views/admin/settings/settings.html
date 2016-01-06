@@ -10,36 +10,9 @@
 		<tabview class="settings-view" for="settingsView">
 		</tabview>
 	</div>
-	<div class="col-sm-2 col-sm-pull-10">
-		
-		<sidebox heading="My Profile">
-			<sideboxsub>NAME</sideboxsub>
-			<ul>
-				<li><username></username></li>
-			</ul>
-			<sideboxsub>EMAIL</sideboxsub>
-			<ul>
-				<li><useremail></useremail></li>
-			</ul>
+	<div class="col-sm-2 col-sm-pull-10" ng-controller="SidebarController">
+		<sidebox heading="{{box.title}}" ng-repeat="box in sidebarBoxes">
+			<div ng-include="box.viewUrl"></div>
 		</sidebox>
-
-		<sidebox heading="My Preferences">
-			<form name="myPreferences">
-				<sideboxsub>DISPLAY NAME</sideboxsub>			
-				<div class="form-group">
-					<input id="displayName" type="text" name="displayName"  class="form-control" ng-model="settings.user.displayName" ng-change="updateUserSetting('displayName', 500)" shadow/>
-				</div>
-
-				<sideboxsub>PREFERRED EMAIL</sideboxsub>
-				<div class="form-group">
-					<input id="preferedEmail" name="preferedEmail" class="form-control" type="text" ng-model="settings.user.preferedEmail" ng-change="updateUserSetting('preferedEmail', 500)" />
-					<br/>
-					<input id="ccEmail" name="ccEmail" type="checkbox" ng-click="updateUserSetting('ccEmail')" ng-true-value="'true'" ng-model="settings.user.ccEmail" /> I want to recieve copy of all emails sent by the system on my behalf.
-				</div>
-			</form>
-		</sidebox>	
-			
-		
 	</div>
-
 </div>

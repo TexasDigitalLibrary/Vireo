@@ -1,0 +1,13 @@
+<form name="myPreferences">
+	<sideboxsub>DISPLAY NAME</sideboxsub>			
+	<div class="form-group">
+		<input id="displayName" type="text" name="displayName"  class="form-control" ng-model="settings.user.displayName" ng-change="updateUserSetting('displayName', 500)" shadow/>
+	</div>
+
+	<sideboxsub>PREFERRED EMAIL</sideboxsub>
+	<div class="form-group">
+		<input id="preferedEmail" name="preferedEmail" class="form-control" type="text" ng-model="settings.user.preferedEmail" ng-change="updateUserSetting('preferedEmail', 500)" />
+		<br/>
+		<input id="ccEmail" name="ccEmail" type="checkbox" ng-click="updateUserSetting('ccEmail')" ng-true-value="'true'" ng-model="settings.user.ccEmail" /> I want to recieve copy of all emails sent by the system on my behalf.
+	</div>
+</form>
