@@ -256,6 +256,7 @@
 
 	    <!-- Models -->
 	    <script src="model/applicationSettingsModel.js"></script>
+	    <script src="model/organizationRepoModel.js"></script>
 	    <script src="model/userSettingsModel.js"></script>
 	    <script src="model/userRepoModel.js"></script>
 
@@ -264,6 +265,7 @@
 	    <script src="controllers/adminController.js"></script>
 	    <script src="controllers/headerController.js"></script>
 	   	<script src="controllers/loginController.js"></script>
+	   	<script src="controllers/organizationSettingsController.js"></script>
 	    <script src="controllers/registrationController.js"></script>
 	    <script src="controllers/settingsController.js"></script>
 	    <script src="controllers/userRepoController.js"></script>  

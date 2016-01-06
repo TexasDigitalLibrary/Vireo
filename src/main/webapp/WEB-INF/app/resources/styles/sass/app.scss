@@ -587,6 +587,10 @@ footer a, footer li, footer p {
   margin-top: -10px;
 }
 
+.admin-settings .panel-heading span, .admin-settings .action {
+  text-transform: uppercase;
+}
+
 .my-profile h1 {
   font-size: 2.2em;
   font-weight: normal;
