@@ -22,7 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import edu.tamu.framework.aspect.annotation.SkipAop;
-import edu.tamu.auth.model.jwt.JWTtoken;
+import edu.tamu.framework.model.jwt.JWT;
 
 /** 
  * 
@@ -40,7 +40,7 @@ public class MockTokenController {
     @Value("${auth.security.jwt.secret-key}")
     private String secret_key;
     
-    @Value("${auth.security.jwt.expiration}")
+    @Value("${auth.security.jwt-expiration}")
     private Long expiration;
     
     @Value("${shib.keys}")
@@ -75,7 +75,7 @@ public class MockTokenController {
         
         ModelAndView tokenResponse = null;
         try {
-            tokenResponse=  new ModelAndView("redirect:" + referer + "?jwt=" + makeToken(params.get("mock"), headers).getTokenAsString());
+            tokenResponse = new ModelAndView("redirect:" + referer + "?jwt=" + makeToken(params.get("mock"), headers).getTokenAsString());
         } catch (InvalidKeyException | JsonProcessingException | NoSuchAlgorithmException | IllegalStateException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -89,7 +89,7 @@ public class MockTokenController {
      * @param       params          @RequestParam() Map<String,String>
      * @param       headers         @RequestHeader() Map<String,String>
      *
-     * @return      JWTtoken
+     * @return      JWT
      *
      * @exception   InvalidKeyException
      * @exception   NoSuchAlgorithmException
@@ -100,7 +100,7 @@ public class MockTokenController {
      */
     @RequestMapping("/refresh")
     @SkipAop
-    public JWTtoken refresh(@RequestParam() Map<String,String> params, @RequestHeader() Map<String,String> headers) throws InvalidKeyException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException, JsonProcessingException {
+    public JWT refresh(@RequestParam() Map<String,String> params, @RequestHeader() Map<String,String> headers) throws InvalidKeyException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException, JsonProcessingException {
         return makeToken(params.get("mock"), headers);
     }
     
@@ -109,7 +109,7 @@ public class MockTokenController {
      *
      * @param       headers         Map<String, String>
      *
-     * @return      JWTtoken
+     * @return      JWT
      *
      * @exception   InvalidKeyException
      * @exception   NoSuchAlgorithmException
@@ -119,13 +119,13 @@ public class MockTokenController {
      * 
      */
     @SkipAop
-    private JWTtoken makeToken(String mockUser, Map<String, String> headers) throws InvalidKeyException, JsonProcessingException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException {       
+    private JWT makeToken(String mockUser, Map<String, String> headers) throws InvalidKeyException, JsonProcessingException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException {       
         if (mockUser == null) {
             mockUser = "justesting";
         }
         logger.info("Creating token for mock " + mockUser);
         
-        JWTtoken token = new JWTtoken(secret_key, expiration);
+        JWT token = new JWT(secret_key, expiration);
         
         if(mockUser.equals("assumed")) {
             for(String k : shibKeys) {

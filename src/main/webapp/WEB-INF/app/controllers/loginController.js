@@ -14,11 +14,11 @@ vireo.controller('LoginController', function ($controller, $location, $scope, Re
 			data: $scope.account
 		}).then(function(data) {
 
-			if(typeof data.payload.JWTtoken == 'undefined') {
+			if(typeof data.payload.JWT == 'undefined') {
 				console.log("User does not exist!");
 			}
 			else {
-				StorageService.set("token", data.payload.JWTtoken.tokenAsString);
+				StorageService.set("token", data.payload.JWT.tokenAsString);
 
 				delete sessionStorage.role;
 

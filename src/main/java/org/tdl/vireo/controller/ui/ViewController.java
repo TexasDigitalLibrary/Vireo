@@ -11,13 +11,10 @@ import org.springframework.web.servlet.ModelAndView;
 public class ViewController {
 
     // to avoid client side 404 errors and redirect put all AngularJs views in value
-    @RequestMapping(value = { "", "/", "/home/**", "/admin/**" })
+    @RequestMapping(value = { "", "/", "/register", "/home/**", "/admin/**" })
     public ModelAndView view(HttpServletRequest request, HttpServletResponse response) {
-        ModelAndView view = new ModelAndView("index");
-        view.addObject("base", request.getServletContext().getContextPath());
-        
-        view.addObject("message", "Hello, World!");
-        
+        ModelAndView view = new ModelAndView("WEB-INF/app/index.jsp");
+        view.addObject("base", request.getServletContext().getContextPath());        
         return view;
     }
        

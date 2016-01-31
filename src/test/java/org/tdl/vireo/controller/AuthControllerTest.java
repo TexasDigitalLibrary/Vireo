@@ -42,7 +42,7 @@ public class AuthControllerTest extends AbstractControllerTest {
     private EmailTemplateRepo emailTemplateRepo;
 	
 	@InjectMocks
-    private AuthController authController;
+    private AppAuthController authController;
 	
     private static List<User> mockUsers;
     
@@ -77,7 +77,9 @@ public class AuthControllerTest extends AbstractControllerTest {
     	
     	ReflectionTestUtils.setField(authUtility, SECRET_PROPERTY_NAME, SECRET_VALUE);
     	
-    	ReflectionTestUtils.setField(authUtility, EXPIRATION_PROPERTY_NAME, EXPIRATION_VALUE);
+    	ReflectionTestUtils.setField(jwtUtility, JWT_SECRET_KEY_PROPERTY_NAME, JWT_SECRET_KEY_VALUE);
+    	    	
+    	ReflectionTestUtils.setField(jwtUtility, JWT_EXPIRATION_PROPERTY_NAME, JWT_EXPIRATION_VALUE);
 
     	TEST_CREDENTIALS.setFirstName(TEST_USER_FIRST_NAME);
     	TEST_CREDENTIALS.setLastName(TEST_USER_LAST_NAME);

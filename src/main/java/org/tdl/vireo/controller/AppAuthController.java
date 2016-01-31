@@ -25,8 +25,6 @@ import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
-import org.tdl.vireo.service.EmailService;
-import org.tdl.vireo.util.AuthUtility;
 import org.tdl.vireo.util.TemplateUtility;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -37,10 +35,11 @@ import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.Data;
 import edu.tamu.framework.aspect.annotation.Parameters;
 import edu.tamu.framework.model.ApiResponse;
+import edu.tamu.framework.controller.CoreAuthController;
 
 @Controller
 @ApiMapping("/auth")
-public class AuthController {
+public class AppAuthController extends CoreAuthController {
 
     private final static String EMAIL_VERIFICATION_TYPE = "EMAIL_VERIFICATION";
     
@@ -54,23 +53,14 @@ public class AuthController {
     
     @Autowired
     private UserRepo userRepo;
-    
-    @Autowired
-    private ObjectMapper objectMapper;
-    
-    @Autowired
-    private AuthUtility authUtility;
-    
-    @Autowired
-    private EmailService emailService;
-    
+        
     @Autowired 
     private TemplateUtility templateUtility;
     
     @Autowired
     private EmailTemplateRepo emailTemplateRepo;
     
-    private static final Logger logger = Logger.getLogger(AuthController.class);
+    private static final Logger logger = Logger.getLogger(AppAuthController.class);
     
     @ApiMapping(value = "/register")
     public ApiResponse registration(@Data String data, @Parameters Map<String, String[]> parameters) {
@@ -96,7 +86,7 @@ public class AuthController {
             }
             
             try {
-                emailService.sendEmail(email, emailTemplate.getSubject(), content);
+            	emailSender.sendEmail(email, emailTemplate.getSubject(), content);
             } catch (MessagingException e) {                
                 logger.debug("Unable to send email! " + email);                
                 return new ApiResponse(ERROR, "Unable to send email! " + email);
@@ -189,7 +179,13 @@ public class AuthController {
         }
         
         try {
-            return new ApiResponse(SUCCESS, authUtility.makeToken(user));
+        	Map<String, String> userMap = new HashMap<String, String>();
+        	userMap.put("lastName", user.getLastName());
+        	userMap.put("firstName", user.getFirstName());
+        	userMap.put("netid", user.getNetid());
+        	userMap.put("uin", String.valueOf(user.getUin()));
+        	userMap.put("email", user.getEmail());
+            return new ApiResponse(SUCCESS, jwtUtility.makeToken(userMap));
         } catch (InvalidKeyException | JsonProcessingException | NoSuchAlgorithmException | IllegalStateException | UnsupportedEncodingException e) {
             logger.debug("Unable to generate token!");
             return new ApiResponse(ERROR, "Unable to generate token!");

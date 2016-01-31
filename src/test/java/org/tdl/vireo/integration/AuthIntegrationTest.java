@@ -17,7 +17,8 @@ import org.tdl.vireo.enums.Role;
 import org.tdl.vireo.mock.interceptor.MockChannelInterceptor;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
-import org.tdl.vireo.util.AuthUtility;
+
+import edu.tamu.framework.util.AuthUtility;
 
 import com.fasterxml.jackson.databind.JsonNode;
 

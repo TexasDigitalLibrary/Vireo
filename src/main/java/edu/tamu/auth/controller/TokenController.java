@@ -30,7 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import edu.tamu.auth.model.jwt.JWTtoken;
+import edu.tamu.framework.model.jwt.JWT;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.aspect.annotation.SkipAop;
 
@@ -51,7 +51,7 @@ public class TokenController {
 	@Value("${auth.security.jwt.secret-key}")
     private String secret_key;
 	
-	@Value("${auth.security.jwt.expiration}")
+	@Value("${auth.security.jwt-expiration}")
     private Long expiration;
 	
 	@Value("${shib.keys}")
@@ -112,7 +112,7 @@ public class TokenController {
 	 * @param       params    		@RequestParam() Map<String,String>
 	 * @param       headers    		@RequestHeader() Map<String,String>
 	 *
-	 * @return      JWTtoken
+	 * @return      JWT
 	 *
 	 * @exception   InvalidKeyException
 	 * @exception   NoSuchAlgorithmException
@@ -124,7 +124,7 @@ public class TokenController {
 	@RequestMapping("/refresh")
 	@SkipAop
 	@Auth
-	public JWTtoken refresh(@RequestParam() Map<String,String> params, @RequestHeader() Map<String,String> headers) throws InvalidKeyException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException, JsonProcessingException {
+	public JWT refresh(@RequestParam() Map<String,String> params, @RequestHeader() Map<String,String> headers) throws InvalidKeyException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException, JsonProcessingException {
 		return makeToken(headers);
 	}
 	
@@ -133,7 +133,7 @@ public class TokenController {
 	 *
 	 * @param       headers    		Map<String, String>
 	 *
-	 * @return      JWTtoken
+	 * @return      JWT
 	 *
 	 * @exception   InvalidKeyException
 	 * @exception   NoSuchAlgorithmException
@@ -142,8 +142,8 @@ public class TokenController {
 	 * @exception   JsonProcessingException
 	 * 
 	 */
-	private JWTtoken makeToken(Map<String, String> headers) throws InvalidKeyException, JsonProcessingException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException {		
-		JWTtoken token = new JWTtoken(secret_key, expiration);		
+	private JWT makeToken(Map<String, String> headers) throws InvalidKeyException, JsonProcessingException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException {		
+		JWT token = new JWT(secret_key, expiration);		
 		for(String k : shibKeys) {
 			String p = headers.get(env.getProperty("shib."+k, ""));
 			token.makeClaim(k, p);
@@ -156,7 +156,7 @@ public class TokenController {
     @RequestMapping("/test-token")
     @SkipAop
     protected String anonymous() throws InvalidKeyException, JsonProcessingException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
-        JWTtoken token = new JWTtoken(secret_key, expiration);
+        JWT token = new JWT(secret_key, expiration);
         token.makeClaim("firstName", "Jack");
         token.makeClaim("lastName", "Daniels");        
         token.makeClaim("email", "aggieJack@tamu.edu");
