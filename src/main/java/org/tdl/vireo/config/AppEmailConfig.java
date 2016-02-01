@@ -32,9 +32,14 @@ public class AppEmailConfig extends CoreEmailConfig {
 	@Bean
     public EmailSender emailSender() {
     	CoreEmailUtility emailUtility = new CoreEmailUtility();
+    	
+    	emailUtility.setDefaultEncoding("UTF-8");
+    	
         emailUtility.setFrom(configurationRepo.getValue(ConfigurationName.APPLICATION_MAIL_FROM, defaultFrom));
         emailUtility.setReplyTo(configurationRepo.getValue(ConfigurationName.APPLICATION_MAIL_REPLYTO, defaultReplyTo));
+        
     	emailUtility.setHost(configurationRepo.getValue(ConfigurationName.APPLICATION_MAIL_HOST, defaultHost));
+    	
     	// some hardcoded defaults
     	emailUtility.setPort(configurationRepo.getValue(ConfigurationName.APPLICATION_MAIL_PORT, 25));
     	emailUtility.setProtocol(configurationRepo.getValue(ConfigurationName.APPLICATION_MAIL_PROTOCOL, "smtp"));
