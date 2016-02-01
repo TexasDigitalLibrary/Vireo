@@ -29,13 +29,12 @@ import org.tdl.vireo.util.TemplateUtility;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.Data;
 import edu.tamu.framework.aspect.annotation.Parameters;
-import edu.tamu.framework.model.ApiResponse;
 import edu.tamu.framework.controller.CoreAuthController;
+import edu.tamu.framework.model.ApiResponse;
 
 @Controller
 @ApiMapping("/auth")
@@ -92,7 +91,7 @@ public class AppAuthController extends CoreAuthController {
                 return new ApiResponse(ERROR, "Unable to send email! " + email);
             }
             
-            return new ApiResponse(SUCCESS, parameters);
+            return new ApiResponse(SUCCESS, "An email has been sent to " + email + ". Please confirm email to continue registration.", parameters);
         }
         
         Map<String, String> dataMap = new HashMap<String, String>();      
@@ -150,7 +149,7 @@ public class AppAuthController extends CoreAuthController {
         user.setPassword(authUtility.encodePassword(password));
         user = userRepo.save(user);
         
-        return new ApiResponse(SUCCESS, user);
+        return new ApiResponse(SUCCESS, "Registration was successfull. Please login.", user);
     }
     
     @ApiMapping("/login")

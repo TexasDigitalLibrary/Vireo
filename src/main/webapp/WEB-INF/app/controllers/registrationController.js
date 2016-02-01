@@ -1,4 +1,4 @@
-vireo.controller('RegistrationController', function ($controller, $location, $scope, RestApi) {
+vireo.controller('RegistrationController', function ($controller, $location, $scope, $timeout, AlertService, RestApi) {
 	
     angular.extend(this, $controller('AbstractController', {$scope: $scope}));
     
@@ -12,6 +12,7 @@ vireo.controller('RegistrationController', function ($controller, $location, $sc
 			controller: 'auth',
 			method: 'register?email=' + email
 		}).then(function(data) {
+			AlertService.add(data.meta, 'auth/register')
 			$scope.registration.email = '';
 		});
 	};
@@ -25,8 +26,11 @@ vireo.controller('RegistrationController', function ($controller, $location, $sc
 			controller: 'auth',
 			method: 'register',
 			data: $scope.registration
-		}).then(function(data) {
+		}).then(function(data) {			
 			$location.path("/home");
+			$timeout(function() {
+				AlertService.add(data.meta, 'auth/register');
+			}, 500);			
 		});
 	};
 

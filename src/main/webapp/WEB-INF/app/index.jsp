@@ -124,7 +124,7 @@
 		</header>
 
 		<alerts types="WARNING, ERROR"></alerts>
-		
+		<alerts seconds="45" channels="auth/register" types="SUCCESS"></alerts>
 				
 		<div class="container-fluid main">			
 			<div ng-view class="view"></div>					
