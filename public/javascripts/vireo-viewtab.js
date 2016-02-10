@@ -127,7 +127,8 @@ function emabrgoAJAX(subID, embargoID, action) {
 						var embargoType = this;
 						if(embargoID == embargoType.id) {
 							var guarantor = embargoType.guarantor != "DEFAULT" ? "("+embargoType.guarantor+")": "";
-							jQuery("#embargos ul").prepend('<li class="embargo" data-id="'+embargoType.id+'">'+embargoType.name+' '+guarantor+'</li>');
+							var isSystemIcon = embargoType.systemRequired ? "<em class=\"icon-globe\"></em>" : "<em class=\"icon-user\"></em>";
+							jQuery("#embargos ul").prepend('<li class="embargo" data-id="'+embargoType.id+'">'+embargoType.name+' '+guarantor+ ' ' + isSystemIcon + '</li>');
 						}
 					});
 				});
