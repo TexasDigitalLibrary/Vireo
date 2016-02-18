@@ -6,6 +6,6 @@
   "license": "BSD",
   "private": true,
   "dependencies": {
-    "core": "https://github.com/TAMULib/TAMU-UI-Core.git"
+    "core": "git@github.com:TAMULib/Weaver-UI-Core.git#master"
   }
 }
