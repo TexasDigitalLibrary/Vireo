@@ -5,7 +5,7 @@
 	<property name="LOG_PATH" value="${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}" />
 
 	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
-		<file>${LOG_PATH}/vireo.log</file>
+		<file>${catalina.home}/logs/vireo.log</file>
 		<append>true</append>
 
 		<encoder>

@@ -30,7 +30,7 @@ vireo.controller('RegistrationController', function ($controller, $location, $sc
 			$location.path("/home");
 			$timeout(function() {
 				AlertService.add(data.meta, 'auth/register');
-			}, 500);			
+			}, 500);
 		});
 	};
 

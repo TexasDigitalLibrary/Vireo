@@ -28,6 +28,7 @@ public class VireoSpringBanner implements Banner {
 
     private static final int STRAP_LINE_SIZE = 42;
     
+    @SuppressWarnings("deprecation")
     @Override
     public void printBanner(Environment environment, Class<?> sourceClass, PrintStream out) {
         for (String line : BANNER) {
