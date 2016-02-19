@@ -12,11 +12,6 @@ vireo.directive("textfield", function() {
 		},
 		controller: function($scope) {
 			$scope.id = 'label-' + new Date().getTime();
-
-			console.log($scope)
-		},
-		link: function($scope, element, attr) {
-
 		}
 	};
 });
