@@ -1,7 +1,9 @@
 package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
+import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +16,7 @@ import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.service.DefaultSettingsService;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
@@ -48,16 +51,18 @@ public class SettingsController {
     
     @ApiMapping("/update")
     public ApiResponse updateSetting(@Data String data) {
-        Map<String,String> map = new HashMap<String,String>();      
+        
+        JsonNode dataNode;
         try {
-            map = objectMapper.readValue(data, new TypeReference<HashMap<String,String>>(){});
-        } catch (Exception e) {
-            e.printStackTrace();
-        }       
-        configurationRepo.create(map.get("setting"),map.get("value"),map.get("type"));
+            dataNode = objectMapper.readTree(data);
+        } catch (IOException e) {
+            return new ApiResponse(ERROR, "Unable to parse update json ["+e.getMessage()+"]");
+        }
+        
+        configurationRepo.create(dataNode.get("setting").asText(),dataNode.get("value").asText(),dataNode.get("type").asText());
         
         Map<String, Map<String,String>> typeToConfigPair = new HashMap<String, Map<String,String>>();
-        typeToConfigPair.put(map.get("type"),configurationRepo.getAllByType(map.get("type")));
+        typeToConfigPair.put(dataNode.get("type").asText(),configurationRepo.getAllByType(dataNode.get("type").asText()));
         this.simpMessagingTemplate.convertAndSend("/channel/settings", new ApiResponse(SUCCESS, typeToConfigPair));
 
         return new ApiResponse(SUCCESS);
