@@ -1,12 +1,9 @@
 <div class="form-group toggle-button">
-	<div class="col-sm-6">
-		<span class="toggle-button-heading pull-right">{{label}}</span>
-	</div>
-	<div class="col-sm-6">
-		<div class="btn-group">
-
-			<button ng-repeat="option in options track by $index" class="btn btn-sm btn-default" ng-click="setActive(option.evaluation)" ng-class="{'active': scopeValue == option.evaluation}">{{option.gloss}}</button>
-
-		</div>
-	</div>
+  <ul class="inline-list">
+    <li><span class="toggle-button-heading">{{label}}</span></li>
+    <li><div class="btn-group">
+      <button ng-repeat="option in options track by $index" class="btn btn-sm btn-default" ng-click="setActive(option.evaluation)" ng-class="{'active': scopeValue == option.evaluation}">{{option.gloss}}</button>
+    </div></li>
+    <li> <span ng-if="toolTip" class="glyphicon glyphicon-info-sign" tooltip="{{ toolTip }}"></span></li>
+  </ul>
 </div>
