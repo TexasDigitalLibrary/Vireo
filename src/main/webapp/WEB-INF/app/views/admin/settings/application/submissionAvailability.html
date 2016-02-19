@@ -2,16 +2,22 @@
 	<form name="submission-availability">
 
 		<div class="col-sm-5">
-			<togglebutton label="Submissions are currently :">
-		        <toggleoption>Open</toggleoption>
-		        <toggleoption>Closed</toggleoption>
-		    </togglebutton>
-		   
-		    <togglebutton label="Allow multiple submissions :">
-		        <toggleoption>Yes</toggleoption>
-		        <toggleoption>No</toggleoption>
-		    </togglebutton>
-		</div>
+
+			<toggleButton 
+				ng-click="updateConfigurableSettings('application', 'submissions_open')"
+				label="Submissions are currently:"
+				scope-value="settings.configurable.application.submissions_open"
+				toggle-options="{{submissionsOpenOptions}}"
+			></toggleButton>
+
+			<toggleButton 
+				ng-click="updateConfigurableSettings('application', 'allow_multiple_submissions')"
+				label="Multiple Submissions:"
+				scope-value="settings.configurable.application.allow_multiple_submissions"
+				toggle-options="{{allowMultipleSubmissionsOptions}}"
+			></toggleButton>
+
+		</div>		
 
 		<div class="col-sm-6">
 		    <div class="row form-group">
@@ -19,7 +25,7 @@
 					<span class="pull-right">Current submission semester :</span>	
 				</div>
 				<div class="col-sm-6">													
-					<input id="currentSemester" type="text" class="form-control"/>
+					<input id="currentSemester" type="text" class="form-control" ng-keydown="confirmEdit($event)" ng-blur="updateConfigurableSettings('application', 'current_semester')" ng-model="settings.configurable.application.current_semester"/>
 					<div class="hint">'Month Year' (i.e. May 2015)</div>
 				</div>
 			</div>
@@ -28,7 +34,7 @@
 					<span class="pull-right">Degree Granting School :</span>
 				</div>
 				<div class="col-sm-6">											
-		     		<input name="grantor" type="text" value="Texas A &amp; M University" class="form-control" />
+		     		<input name="grantor" type="text" ng-keydown="confirmEdit($event)" ng-blur="updateConfigurableSettings('application', 'grantor')" ng-model="settings.configurable.application.grantor" class="form-control" />
 					<div class="hint">The full name of the institution awarding degrees.</div>
 				</div>
 			</div>
