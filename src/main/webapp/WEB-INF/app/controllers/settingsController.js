@@ -74,4 +74,15 @@ vireo.controller("SettingsController", function ($controller, $scope, $q, $locat
 		{"false": "No"}
 	];
 
+	//Orcid settings pane
+	$scope.orcidValidationOptions = [
+		{"true": "Yes"},
+		{"false": "No"}
+	];
+
+	$scope.orcidAuthenticationOptions = [
+		{"true": "Yes"},
+		{"false": "No"}
+	];
+
 });
