@@ -5,8 +5,8 @@ vireo.directive("togglebutton", function() {
 		scope: {
 			"label": "@",
 			"scopeValue": "=",
-                        "toggleOptions": "@",
-                        "toolTip": "@"
+            "toggleOptions": "@",
+            "toolTip": "@"
 		},
 		controller: function($scope) {
 			$scope.setActive = function(scopeValue) {

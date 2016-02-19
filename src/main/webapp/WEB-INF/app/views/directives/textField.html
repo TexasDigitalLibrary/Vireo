@@ -1,2 +1,16 @@
 <div class="form-group textField">
+	<ul class="inline-list">		
+		<li>
+			<label for="{{ id }}">{{ label }}</label>
+		</li>
+		<li>
+			<div class="withHint">
+				<input id="{{ id }}" class="form-control" type="text" ng-model="scopeValue" ng-keydown="keyDown({event: $event, prop: prop})" ng-blur="onBlur()"></input>
+				<span ng-if="hint" class="hint">{{ hint }}</span>
+			</div>
+		</li>
+		<li>
+			<span ng-if="toolTip" class="glyphicon glyphicon-info-sign" tooltip="{{ toolTip }}"></span>
+		</li>		
+	</ul>
 </div>

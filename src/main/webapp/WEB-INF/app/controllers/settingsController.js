@@ -42,12 +42,9 @@ vireo.controller("SettingsController", function ($controller, $scope, $q, $locat
 	}
 
 	$scope.confirmEdit = function($event, prop) {
-		if($event.which == 13) {
-			
+		if($event.which == 13) {			
 			if(prop) $scope["edit"+prop] = false;
-			
 			$event.target.blur();
-
 		}
 	}
 

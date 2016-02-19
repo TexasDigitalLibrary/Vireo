@@ -5,10 +5,15 @@ vireo.directive("textfield", function() {
 		scope: {
 			"label": "@",
 			"scopeValue": "=",
-                        "toolTip": "@"
+            "toolTip": "@",
+            "hint": "@",
+            "onBlur": "&",
+            "keyDown": "&"
 		},
 		controller: function($scope) {
+			$scope.id = 'label-' + new Date().getTime();
 
+			console.log($scope)
 		},
 		link: function($scope, element, attr) {
 
