@@ -8,10 +8,11 @@
 		</button>
 
 		<ol>
-			<li>		
+			<li ng-repeat="customAction in settings.customAction.list">		
 				<span class="glyphicon glyphicon-pencil edit-setting-icon"></span>
-				Apply for Graduation 
-				<span class="glyphicon glyphicon glyphicon-user"></span>
+				{{customAction.label}}
+				<span ng-show="customAction.studentVisible" class="glyphicon glyphicon glyphicon-user"></span>
+				<span ng-show="!customAction.studentVisible" class="glyphicon glyphicon glyphicon-globe"></span>
 			</li>
 		</ol>
 
@@ -34,5 +35,6 @@
 
 <modal modal-id="customActionModal" 
 		modal-view="views/modals/customActionModal.html" 
-		modal-header-class="modal-header-primary">
+		modal-header-class="modal-header-primary"
+		modal-controller="SettingsController">
 </modal>

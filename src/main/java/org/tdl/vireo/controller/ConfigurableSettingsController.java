@@ -24,8 +24,8 @@ import edu.tamu.framework.aspect.annotation.Data;
 import edu.tamu.framework.model.ApiResponse;
 
 @Controller
-@ApiMapping("/settings")
-public class SettingsController {
+@ApiMapping("/settings/configurable")
+public class ConfigurableSettingsController {
     @Autowired
     ConfigurationRepo configurationRepo;
 
@@ -87,5 +87,4 @@ public class SettingsController {
         
         return new ApiResponse(SUCCESS);
     }
-
 }

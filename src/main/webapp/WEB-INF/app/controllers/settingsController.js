@@ -1,14 +1,15 @@
-vireo.controller("SettingsController", function ($controller, $scope, $q, $location, $routeParams, User, UserSettings, ConfigurableSettings, SidebarService) {
+vireo.controller("SettingsController", function ($controller, $scope, $q, $location, $routeParams, User, UserSettings, ConfigurableSettings, CustomActionSettings, SidebarService) {
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
 	$scope.user = User.get();
 
 	$scope.settings = {};
 	
-	$scope.ready = $q.all([UserSettings.ready(), ConfigurableSettings.ready()]);
+	$scope.ready = $q.all([UserSettings.ready(), ConfigurableSettings.ready(), CustomActionSettings.ready()]);
 		
 	$scope.settings.user  = UserSettings.get();
 	$scope.settings.configurable = ConfigurableSettings.get();
+	$scope.settings.customAction = CustomActionSettings.get();
 
 	$scope.ready.then(function() {
 
@@ -29,6 +30,10 @@ vireo.controller("SettingsController", function ($controller, $scope, $q, $locat
 
 		$scope.resetConfigurableSettings = function(type,setting) {
 			ConfigurableSettings.reset(type,setting);
+		};
+		
+		$scope.createCustomActionSettings = function(label,isStudentVisible) {	
+			CustomActionSettings.create(label,isStudentVisible,$scope.settings.customAction[label][isStudentVisible]);
 		};
 
 	});	
