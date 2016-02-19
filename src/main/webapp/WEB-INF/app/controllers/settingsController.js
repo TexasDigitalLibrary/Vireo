@@ -33,7 +33,6 @@ vireo.controller("SettingsController", function ($controller, $scope, $location,
 			// }
 	});
 
-
 	$scope.toggle = function(clicked) {
 		$scope.clicked=!clicked;
 	};
@@ -43,12 +42,17 @@ vireo.controller("SettingsController", function ($controller, $scope, $location,
 	};
 
 	$scope.viewMode = function(prop) {
-
 		$scope["edit"+prop] = false;
 	}
 
 	$scope.confirmEdit = function($event, prop) {
 		if($event.keyCode == 13) $scope["edit"+prop] = false;
+	}
+
+	$scope.confirmUpdate = function($event) {
+		if($event.which == 13) {
+			$event.target.blur();
+		}
 	}
 
 	$scope.hasError = function(field) {
@@ -58,12 +62,22 @@ vireo.controller("SettingsController", function ($controller, $scope, $location,
 		return Object.keys(field).length > 0;
 	}
 
-	$scope.updateApplicationSettings = function(type,setting,value) {	
+	$scope.updateApplicationSettings = function(type,setting) {	
 		ApplicationSettings.update(type,setting,$scope.settings.application[type][setting]);
 	};
 
 	$scope.resetApplicationSettings = function(type,setting) {
 		ApplicationSettings.reset(type,setting);
 	};
+
+	$scope.submissionsOpenOptions = [
+		{"true": "Open"}, 
+		{"false": "Closed"}
+	];
+
+	$scope.allowMultipleSubmissionsOptions = [
+		{"true": "Yes"}, 
+		{"false": "No"}
+	];
 
 });

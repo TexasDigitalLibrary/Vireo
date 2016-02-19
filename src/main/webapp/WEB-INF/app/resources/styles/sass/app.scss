@@ -17,6 +17,12 @@ main footer {
   margin-bottom: 65px;
 }
 
+.form-group {  
+  margin: 18px 0 18px 0;
+  font-size: 13px;
+  font-weight: normal;
+  line-height: 22px;
+}
 
 .main {
   padding-bottom: 35px;
@@ -416,6 +422,12 @@ sidebox ul input {
   margin: 13px 0 -4px 0;
 }
 
+togglebutton {
+  display: block;
+  min-height: 15px;
+  margin-bottom: 35px;
+}
+
 .toggle-button-heading {
   font-size:1em;
 }
@@ -617,13 +629,6 @@ footer a, footer li, footer p {
 
 .edit-handle:hover {
   cursor: pointer;
-}
-
-.form-group {  
-  margin: 18px 0 18px 0;
-  font-size: 13px;
-  font-weight: normal;
-  line-height: 22px;
 }
 
 .fieldset-border {

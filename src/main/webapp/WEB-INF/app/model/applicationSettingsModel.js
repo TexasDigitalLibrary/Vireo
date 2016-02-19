@@ -39,8 +39,7 @@ vireo.service("ApplicationSettings", function(AbstractModel, WsApi) {
 
 	};
 
-	ApplicationSettings.update = function(type, setting,value) {		
-		console.log("update type and value STARTS");
+	ApplicationSettings.update = function(type, setting, value) {		
 		WsApi.fetch({
 			endpoint:'/private/queue',
 			controller:'settings',
@@ -61,6 +60,10 @@ vireo.service("ApplicationSettings", function(AbstractModel, WsApi) {
 			method:'reset',
 			data: {'type':type, 'setting':setting}
 		});
+	};
+
+	ApplicationSettings.ready = function() {
+		return ApplicationSettings.promise;
 	};
 
 	ApplicationSettings.listen = function() {
