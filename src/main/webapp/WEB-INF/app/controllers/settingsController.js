@@ -1,21 +1,17 @@
-vireo.controller("SettingsController", function ($controller, $scope, $location, $routeParams, User, UserSettings, ConfigurableSettings, SidebarService) {
+vireo.controller("SettingsController", function ($controller, $scope, $q, $location, $routeParams, User, UserSettings, ConfigurableSettings, SidebarService) {
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
-	$scope.clicked=false;
 	$scope.user = User.get();
-	
-	$scope.getTest = function() {
-		console.log("foo");
-	};
 
 	$scope.settings = {};
-	$scope.settings.configurable = ConfigurableSettings.get();
-	$scope.settings.user  = UserSettings.get();	
-
-	$scope.ready = UserSettings.ready;
 	
-	UserSettings.ready().then(function() {
+	$scope.ready = $q.all([UserSettings.ready(), ConfigurableSettings.ready()]);
 		
+	$scope.settings.user  = UserSettings.get();
+	$scope.settings.configurable = ConfigurableSettings.get();
+
+	$scope.ready.then(function() {
+
 		$scope.updateUserSetting = function(setting, timer) {
 			if(Object.keys($scope.userSettingsForm.$error).length) return;
 
@@ -27,10 +23,6 @@ vireo.controller("SettingsController", function ($controller, $scope, $location,
 			}, timer);
 		};
 
-	});
-
-	ConfigurableSettings.ready().then(function() {
-
 		$scope.updateConfigurableSettings = function(type,setting) {	
 			ConfigurableSettings.update(type,setting,$scope.settings.configurable[type][setting]);
 		};
@@ -39,7 +31,7 @@ vireo.controller("SettingsController", function ($controller, $scope, $location,
 			ConfigurableSettings.reset(type,setting);
 		};
 
-	});
+	});	
 
 	$scope.editMode = function(prop) {
 		$scope["edit"+prop] = true;
@@ -51,8 +43,11 @@ vireo.controller("SettingsController", function ($controller, $scope, $location,
 
 	$scope.confirmEdit = function($event, prop) {
 		if($event.which == 13) {
-			$scope["edit"+prop] = false;
+			
+			if(prop) $scope["edit"+prop] = false;
+			
 			$event.target.blur();
+
 		}
 	}
 
@@ -60,5 +55,23 @@ vireo.controller("SettingsController", function ($controller, $scope, $location,
 		if(!field) field = {};
 		return Object.keys(field).length > 0;
 	}
+
+	/**
+	 * Toggle options
+	 * 
+	 * {evaluation: gloss}
+	 * 
+	 */
+	
+	//Submission Availability pane
+	$scope.submissionsOpenOptions = [
+		{"true": "Open"}, 
+		{"false": "Closed"}
+	];
+
+	$scope.allowMultipleSubmissionsOptions = [
+		{"true": "Yes"}, 
+		{"false": "No"}
+	];
 
 });

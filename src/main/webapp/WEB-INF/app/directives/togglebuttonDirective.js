@@ -2,39 +2,32 @@ vireo.directive("togglebutton", function() {
 	return {
 		templateUrl: 'views/directives/toggleButton.html',
 		restrict: 'E',
-		replace: false,
-		transclude: true,
-		scope: {},
+		scope: {
+			"label": "@",
+			"scopeValue": "=",
+			"toggleOptions": "@"
+		},
 		controller: function($scope) {
 			
-			this.setActive = function(option) {
-				$scope.activeButton = option;
-			}
+			$scope.setActive = function(scopeValue) {
+				$scope.scopeValue = scopeValue;
+			}	
 
-			this.optionActive = function(option) { 
-				return $scope.activeButton == option;
-			}
 		}, 
-		link: function ($scope, element, attr) {	    	
-			$scope.label = attr.label;			
-	    }
-	};
-});
+		link: function($scope, element, attr) {
+	        
+			var optionsObj = angular.fromJson($scope.toggleOptions)
+			
+			$scope.options = {};
 
-vireo.directive("toggleoption", function() {
-	return {
-		template: '<button class="btn btn-sm btn-default" ng-click="setActive(option)" ng-class="{\'active\': optionActive(option)}" ng-transclude></button>',
-		restrict: 'E',
-		replace: true,
-		require: '^togglebutton',
-		transclude: true,
-		scope: true, 
-		link: function ($scope, element, attr, parent) {
-			$scope.option = element.children('span').html();
-			angular.extend($scope, parent);
-			angular.extend($scope, attr);
-
+			for(var index in optionsObj) {
+				var option = optionsObj[index];
+				$scope.options["option"+ index] = { 
+					gloss: option[Object.keys(option)[0]],
+					evaluation: Object.keys(option)[0]
+				}
+			}
 		}
-	}
+	};
 });
 
