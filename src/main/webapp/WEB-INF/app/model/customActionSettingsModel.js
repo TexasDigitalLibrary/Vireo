@@ -17,20 +17,26 @@ vireo.service("CustomActionSettings", function(AbstractModel, WsApi) {
 	
 
 	CustomActionSettings.get = function() {
+
 		if(CustomActionSettings.promise) return CustomActionSettings.data;
 		
 		var newAllCustomActionSettingsPromise = WsApi.fetch({
-								endpoint: '/private/queue', 
-								controller: 'settings/custom-action', 
-								method: 'all'
+			endpoint: '/private/queue', 
+			controller: 'settings/custom-action', 
+			method: 'all'
 		});
+
 		CustomActionSettings.promise = newAllCustomActionSettingsPromise;
 		CustomActionSettings.data = new CustomActionSettings(newAllCustomActionSettingsPromise);
 
 		CustomActionSettings.listener = WsApi.listen({
 			endpoint: '/channel', 
-			controller: 'settings/custom-action', 
+			controller: 'settings/custom-actions', 
 			method: '',
+		});
+
+		CustomActionSettings.listener.then(function(data) {
+			console.log(data);
 		});
 				
 		CustomActionSettings.set(CustomActionSettings.listener);
@@ -39,7 +45,10 @@ vireo.service("CustomActionSettings", function(AbstractModel, WsApi) {
 
 	};
 
-	CustomActionSettings.create = function(label, isStudentVisible) {		
+	CustomActionSettings.create = function(label, isStudentVisible) {
+
+		console.log(isStudentVisible);
+
 		WsApi.fetch({
 			endpoint:'/private/queue',
 			controller:'settings/custom-action',
