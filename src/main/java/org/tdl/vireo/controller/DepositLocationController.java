@@ -4,6 +4,7 @@ import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaUpdate;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.apache.log4j.Logger;
@@ -51,7 +54,7 @@ public class DepositLocationController {
     
     private Map<String, List<DepositLocation>> getAll() {
         Map<String, List<DepositLocation>> map = new HashMap<String, List<DepositLocation>>();
-        map.put("list", depositLocationRepo.findAll());
+        map.put("list", depositLocationRepo.findAllByOrderByOrderAsc());
         return map;
     }
     
@@ -81,17 +84,23 @@ public class DepositLocationController {
 
         JsonNode depositor = dataNode.get("depositor");
         if(depositor != null) {
-            newDepositLocation.setDepositor(depositor.asText());
+            String depositorString = depositor.asText();
+            if(depositorString.length() > 0) 
+                newDepositLocation.setDepositor(depositorString);
         }
         
         JsonNode packager = dataNode.get("packager");
         if(packager != null) {
-            newDepositLocation.setPackager(packager.asText());
+            String packagerString = packager.asText();
+            if(packagerString.length() > 0) 
+                newDepositLocation.setPackager(packagerString);
         }
         
         JsonNode repository = dataNode.get("repository");
         if(repository != null) {
-            newDepositLocation.setRepository(repository.asText());
+            String repositoryString = repository.asText();
+            if(repositoryString.length() > 0) 
+                newDepositLocation.setRepository(repositoryString);
         }
         
         JsonNode timeout = dataNode.get("timeout");
@@ -101,22 +110,30 @@ public class DepositLocationController {
         
         JsonNode username = dataNode.get("username");
         if(username != null) {
-            newDepositLocation.setUsername(username.asText());
+            String usernameString = username.asText();
+            if(usernameString.length() > 0) 
+                newDepositLocation.setUsername(usernameString);
         }
         
         JsonNode password = dataNode.get("password");
         if(password != null) {
-            newDepositLocation.setPassword(packager.asText());
+            String passwordString = password.asText();
+            if(passwordString.length() > 0) 
+                newDepositLocation.setPassword(passwordString);
         }
         
         JsonNode onBehalfOf = dataNode.get("onBehalfOf");
         if(onBehalfOf != null) {
-            newDepositLocation.setOnBehalfOf(onBehalfOf.asText());
+            String onBehalfOfString = onBehalfOf.asText();
+            if(onBehalfOfString.length() > 0) 
+                newDepositLocation.setOnBehalfOf(onBehalfOfString);
         }
         
         JsonNode collection = dataNode.get("collection");
         if(collection != null) {
-            newDepositLocation.setCollection(collection.asText());
+            String collectionString = collection.asText();
+            if(collectionString.length() > 0) 
+                newDepositLocation.setCollection(collectionString);
         }
         
         
@@ -136,17 +153,14 @@ public class DepositLocationController {
     @Transactional
     public ApiResponse reorderDepositLocations(@ApiVariable String from, @ApiVariable String to) { 
         
-        
-        
         Integer intFrom = Integer.parseInt(from);
         Integer intTo = Integer.parseInt(to);
         Integer one =  new Integer(1);
-        
-        System.out.println("\n\nFORM: " + intFrom + "\n\n");
-        System.out.println("\n\nTO: " + intTo + "\n\n");
-        
+          
         
         DepositLocation depositLocation = depositLocationRepo.findByOrder(intFrom);
+        
+        depositLocationRepo.delete(depositLocation);
         
         
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
@@ -154,19 +168,50 @@ public class DepositLocationController {
         CriteriaUpdate<DepositLocation> update = builder.createCriteriaUpdate(DepositLocation.class);
         
         Root<DepositLocation> root = update.from(DepositLocation.class);
-                
-        update.set("order", builder.sum(root.<Integer>get("order"), one));
         
-        update.where(builder.greaterThanOrEqualTo(root.<Integer>get("order"), intTo));
-        
-        entityManager.createQuery(update).executeUpdate();
+        Path<Integer> path = root.<Integer>get("order");
         
         
+        if(intFrom > intTo) {
+            
+            update.set(path, builder.sum(path, one));
+            
+            List<Predicate> predicates = new ArrayList<Predicate>();
+            
+            predicates.add(builder.greaterThanOrEqualTo(path, intTo));
+            predicates.add(builder.lessThan(path, intFrom));
+            
+            update.where(predicates.toArray(new Predicate[]{}));
+            
+            entityManager.createQuery(update).executeUpdate();
+            
+        }
+        else if(intFrom < intTo) {
+           
+            update.set(path, builder.sum(path, -one));
+            
+            List<Predicate> predicates = new ArrayList<Predicate>();
+            
+            predicates.add(builder.greaterThan(path, intFrom));
+            predicates.add(builder.lessThanOrEqualTo(path, intTo));
+            
+            update.where(predicates.toArray(new Predicate[]{}));
+            
+            entityManager.createQuery(update).executeUpdate();            
+        }
+        else {
+            // do nothing
+        }
+        
+       
         depositLocation.setOrder(intTo);
         
         depositLocationRepo.save(depositLocation);
         
-        return new ApiResponse(SUCCESS, getAll());
+        
+        simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(SUCCESS, getAll()));
+        
+        return new ApiResponse(SUCCESS);
     }
 
 }
