@@ -13,25 +13,23 @@
 					<span class="pull-right">New Action</span>
 				</div>
 				<div class="col-sm-6">								
-		     		<input ng-model="newCustomActionLabel" type="text" class="form-control" placeholder="Label of the new custom action"/>
+		     		<input ng-model="newCustomActions.label" type="text" class="form-control" placeholder="Label of the new custom action"/>
 				</div>	
 			</div>
-
 			<div class="row form-group">
 				<div class="col-sm-3">
 					<span class="pull-right">Is Student Visible</span>
 				</div>
-				<div class="col-sm-6" ng-init="newCustomActionVisiblity = false">
-					<input ng-model="newCustomActionVisiblity" type="checkbox"/>
+				<div class="col-sm-6">
+					<input ng-model="newCustomActions.visiblity" type="checkbox"/>
 					<span>Is this action visible to the student?</span>
 				</div>
 			</div>
-			
 		</form>
 	</div>
 </div>
 
 <div class="modal-footer">
-	<button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="createCustomActionSettings(newCustomActionLabel, newCustomActionVisiblity)">Add  Action</button>
+	<button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="createCustomActionSettings(newCustomActions.label, newCustomActions.visiblity)">Add  Action</button>
 	<button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
 </div>

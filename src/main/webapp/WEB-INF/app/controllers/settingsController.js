@@ -9,7 +9,12 @@ vireo.controller("SettingsController", function ($controller, $scope, $q, $locat
 		
 	$scope.settings.user  = UserSettings.get();
 	$scope.settings.configurable = ConfigurableSettings.get();
+
 	$scope.settings.customAction = CustomActionSettings.get();
+	$scope.newCustomActions = {
+		label: "",
+		visiblity: false
+	};
 
 	$scope.ready.then(function() {
 
@@ -32,7 +37,11 @@ vireo.controller("SettingsController", function ($controller, $scope, $q, $locat
 			ConfigurableSettings.reset(type,setting);
 		};
 		
-		$scope.createCustomActionSettings = function(label,isStudentVisible) {	
+		$scope.createCustomActionSettings = function(label,isStudentVisible) {
+			
+			$scope.newCustomActions.label = "";
+			$scope.newCustomActions.visiblity = false;
+			
 			CustomActionSettings.create(label,isStudentVisible);
 		};
 
