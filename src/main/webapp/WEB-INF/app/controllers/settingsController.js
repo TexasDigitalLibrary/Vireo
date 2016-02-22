@@ -33,7 +33,7 @@ vireo.controller("SettingsController", function ($controller, $scope, $q, $locat
 		};
 		
 		$scope.createCustomActionSettings = function(label,isStudentVisible) {	
-			CustomActionSettings.create(label,isStudentVisible,$scope.settings.customAction[label][isStudentVisible]);
+			CustomActionSettings.create(label,isStudentVisible);
 		};
 
 	});	

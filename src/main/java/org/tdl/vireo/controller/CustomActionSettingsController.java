@@ -59,7 +59,7 @@ public class CustomActionSettingsController {
         }
         
         customActionDefinitionRepo.create(dataNode.get("label").asText(), dataNode.get("isStudentVisible").asBoolean());
-        this.simpMessagingTemplate.convertAndSend("/channel/settings", new ApiResponse(SUCCESS, getAll()));
+        this.simpMessagingTemplate.convertAndSend("/channel/settings/custom-actions", new ApiResponse(SUCCESS, getAll()));
         return new ApiResponse(SUCCESS);
     }
     

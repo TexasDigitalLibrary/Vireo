@@ -20,10 +20,11 @@ vireo.service("ConfigurableSettings", function(AbstractModel, WsApi) {
 		if(ConfigurableSettings.promise) return ConfigurableSettings.data;
 		
 		var newAllConfigurableSettingsPromise = WsApi.fetch({
-								endpoint: '/private/queue', 
-								controller: 'settings/configurable', 
-								method: 'all'
+			endpoint: '/private/queue', 
+			controller: 'settings/configurable', 
+			method: 'all'
 		});
+		
 		ConfigurableSettings.promise = newAllConfigurableSettingsPromise;
 		ConfigurableSettings.data = new ConfigurableSettings(newAllConfigurableSettingsPromise);
 
