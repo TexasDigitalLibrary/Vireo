@@ -1,14 +1,14 @@
 <div class="form-group text-field">
-	<div class="col-sm-5">
+	<div class="col-sm-6">
 		<span class="text-field-heading">{{ label }}</span>
 	</div>
 	<div class="col-sm-6">
-		<div class="with-hint">
-			<input class="form-control" type="text" ng-model="scopeValue" ng-keydown="keyDown({event: $event, prop: prop})" ng-blur="onBlur()"></input>
-			<span ng-if="hint" class="hint">{{ hint }}</span>
+		<div class="with-tool-tip">
+			<div class="with-hint">
+				<input class="form-control" type="text" ng-model="scopeValue" ng-keydown="keyDown({event: $event, prop: prop})" ng-blur="onBlur()"></input>
+				<span ng-if="hint" class="hint">{{ hint }}</span>
+			</div>
+			<span ng-if="toolTip" class="glyphicon glyphicon-info-sign tooltip-span" tooltip="{{ toolTip }}"></span>
 		</div>
 	</div>
-	<div class="col-sm-1">
-    	<span ng-if="toolTip" class="glyphicon glyphicon-info-sign" tooltip="{{ toolTip }}"></span>
-    </div>
 </div>

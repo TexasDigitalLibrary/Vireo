@@ -7,14 +7,16 @@
 				ng-click="updateConfigurableSettings('application', 'submissions_open')"
 				label="Submissions are currently:"
 				scope-value="settings.configurable.application.submissions_open"
-				toggle-options="{{submissionsOpenOptions}}">
+				toggle-options="{{submissionsOpenOptions}}"
+				tool-tip="This is a test!">
 			</toggleButton>
 
 			<toggleButton 
 				ng-click="updateConfigurableSettings('application', 'allow_multiple_submissions')"
 				label="Multiple Submissions:"
 				scope-value="settings.configurable.application.allow_multiple_submissions"
-				toggle-options="{{allowMultipleSubmissionsOptions}}">
+				toggle-options="{{allowMultipleSubmissionsOptions}}"
+				tool-tip="This is a test!">
 			</toggleButton>
 
 		</div>		
@@ -26,7 +28,8 @@
 				scope-value="settings.configurable.application.current_semester"
 				hint="'Month Year' (i.e. May 2015)"
 				on-blur="updateConfigurableSettings('application', 'current_semester')"
-				key-down="confirmEdit(event, prop)">
+				key-down="confirmEdit(event, prop)"
+				tool-tip="This is a test!">
 			</textField>
 
 			<textField 
@@ -34,7 +37,8 @@
 				scope-value="settings.configurable.application.grantor"
 				hint="The full name of the institution awarding degrees."
 				on-blur="updateConfigurableSettings('application', 'grantor')"
-				key-down="confirmEdit(event, prop)">
+				key-down="confirmEdit(event, prop)"
+				tool-tip="This is a test!">
 			</textField>
 
 		</div>

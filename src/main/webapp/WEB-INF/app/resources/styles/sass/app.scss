@@ -424,8 +424,8 @@ sidebox ul input {
 
 togglebutton {
   display: block;
-  min-height: 15px;
-  margin-bottom: 35px;
+  min-height: 20px;
+  margin-bottom: 45px;
 }
 
 .toggle-button-heading {
@@ -455,8 +455,8 @@ togglebutton {
 
 textfield {
   display: block;
-  min-height: 15px;  
-  margin-bottom: 35px;
+  min-height: 20px;  
+  margin-bottom: 45px;
 }
 
 .text-field-heading {
@@ -466,8 +466,16 @@ textfield {
   position: relative;
 }
 
-.text-field .with-hint {
-  display: inline-table;
+.with-hint {
+  display: inline-block;
+}
+
+.with-tool-tip {
+  display: inline-flex;
+}
+
+.tooltip-span {
+  margin-top: 4px;
 }
 
 a.tooltip-icon {
