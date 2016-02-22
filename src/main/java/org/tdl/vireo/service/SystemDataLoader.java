@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
+import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmailWorkflowRule;
@@ -34,6 +34,7 @@ import org.tdl.vireo.model.OrganizationCategory;
 import org.tdl.vireo.model.SubmissionState;
 import org.tdl.vireo.model.Workflow;
 import org.tdl.vireo.model.WorkflowStep;
+import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.EmailWorkflowRuleRepo;
@@ -106,10 +107,10 @@ public class SystemDataLoader {
     private SubmissionStateRepo submissionStateRepo;
     
     @Autowired
-    private DefaultSettingsService defaultSettingsService;
-
-    @Autowired
     private ObjectMapper objectMapper;
+    
+    @Autowired
+    private ConfigurationRepo configurationRepo;
 
     final static Logger logger = LoggerFactory.getLogger(SystemDataLoader.class);
 
@@ -611,28 +612,26 @@ public class SystemDataLoader {
 
             while (it.hasNext()) {
                 Map.Entry<String, JsonNode> entry = (Map.Entry<String, JsonNode>) it.next();
-                Map<String,String> tempPreferences = new HashMap<String,String>();
-                List<String> tempAllowedKeys = new ArrayList<String>();
                 if (entry.getValue().isArray()) {
                     for (JsonNode objNode : entry.getValue()) {
-                        objNode.fieldNames().forEachRemaining(n -> {
-                            tempPreferences.put(n,objNode.get(n).asText());
-                            tempAllowedKeys.add(n);
-                        });
+                        Iterator<String> fieldNames = objNode.fieldNames();
+                        while(fieldNames.hasNext()) {
+                            String name = fieldNames.next();
+                            // only load system configurations
+                            Configuration configuration = configurationRepo.findByNameAndIsSystemRequired(name, true);
+                            // if one didn't already exist, create it
+                            if(configuration == null) {
+                                configuration = configurationRepo.createOrUpdate(name, objNode.get(name).asText(), entry.getKey());
+                                configuration.isSystemRequired(true);
+                            } else {
+                                configuration.setType(entry.getKey());
+                                configuration.setValue(objNode.get(name).asText());
+                            }
+                            configurationRepo.save(configuration);
+                        }
                     }
                 }
-                defaultSettingsService.addSettings(entry.getKey(),tempPreferences);
             }
-            defaultSettingsService.getTypes().forEach(t -> {
-                logger.info("Stored preferences for type: "+t);
-                defaultSettingsService.getSettingsByType(t).forEach((k,v) -> {
-                    logger.info(k+": "+v);
-                });
-                logger.info("Allowed Keys for type: "+t);
-                defaultSettingsService.getAllowedKeysByType(t).forEach(k -> {
-                    logger.info(k);
-                });
-            });
         } catch (JsonParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
