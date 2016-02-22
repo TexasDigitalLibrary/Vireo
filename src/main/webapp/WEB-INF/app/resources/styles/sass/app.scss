@@ -429,7 +429,8 @@ togglebutton {
 }
 
 .toggle-button-heading {
-  font-size:1em;
+  font-size: 1em;
+  margin-top: 5px;
 }
 
 .toggle-button .btn {
@@ -438,7 +439,7 @@ togglebutton {
 
 .toggle-button .btn:hover {
    background-color: #ffffff;
-   cursor:default;
+   cursor: pointer;
 }
 
 .toggle-button .btn.active {
@@ -450,22 +451,30 @@ togglebutton {
 }
 
 
-.textField {
-  
+textfield {
+  display: block;
+  min-height: 15px;  
+  margin-bottom: 35px;
 }
 
-.textField .withHint {
+text-field-heading {
+  font-size: 1em;
+  margin-top: 5px;
+}
+
+.text-field .with-hint {
   display: inline-table;
 }
 
 a.tooltip-icon {
-    float: left;
-    margin-top: 1px;
-    color: #666666;
-    text-decoration: none;
+  float: left;
+  margin-top: 1px;
+  color: #666666;
+  text-decoration: none;
 }
 
 a.tooltip-icon:hover {
+
 }
 
 a[title]:hover:after {
@@ -473,13 +482,13 @@ a[title]:hover:after {
 }
 
 .glyphicon-info-sign{
-      line-height: 2;
-      margin-left: 10px;
-      opacity: .5;
+  line-height: 2;
+  margin-left: 10px;
+  opacity: .5;
 }
 
 h4 {
-    line-height: 22px;
+  line-height: 22px;
 }
 
 .lock-control {
