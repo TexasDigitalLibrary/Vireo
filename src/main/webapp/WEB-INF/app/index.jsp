@@ -251,6 +251,7 @@
 	    <script src="directives/shadowDirective.js"></script>
 	    <script src="directives/tamuFocusDirective.js"></script>
 	    <script src="directives/tooltipDirective.js"></script>
+	    <script src="directives/lockingTextAreaDirective.js"></script>
 
 	    <!-- Services -->
 	    <script src="services/sidebarService.js"></script>  
