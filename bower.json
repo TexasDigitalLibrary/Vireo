@@ -6,6 +6,7 @@
   "license": "BSD",
   "private": true,
   "dependencies": {
+  	"ng-sortable": "1.3.2",
     "core": "git@github.com:TAMULib/Weaver-UI-Core.git#master"
   }
 }

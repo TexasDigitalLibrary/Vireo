@@ -7,13 +7,12 @@
 				data-target="#depositLocationModal">
 			Add Location
 		</button>
-	
-		<ol>
-			<li>		
-				<span class="glyphicon glyphicon-pencil"></span>
-				TAMU REPOSITORY
-			</li>
-		</ol>
+			
+		<draganddroplist
+			scope-value="settings.depositLocations"
+			properties='["name", "repository"]'
+			reorder='reorderDepositLocation(from, to)'
+		></draganddroplist>
 		
 	</div>
 
@@ -23,6 +22,6 @@
 </div>
 
 <modal modal-id="depositLocationModal" 
-		modal-view="views/modals/depositLocationModal.html" 
-		modal-header-class="modal-header-primary">
+	   modal-view="views/modals/depositLocationModal.html" 
+	   modal-header-class="modal-header-primary">
 </modal>

@@ -1,0 +1,9 @@
+<ol data-as-sortable="dragControlListeners" data-ng-model="scopeValue.list">
+   <li data-ng-repeat="item in scopeValue.list" data-as-sortable-item>
+      	<div data-as-sortable-item-handle>
+      		<span>{{ item.order }}. </span>
+			<span class="glyphicon glyphicon-pencil"> </span>
+      		<span ng-repeat="property in properties"> {{item[property]}}  </span>
+      	</div>
+   </li>
+</ol>
