@@ -1,60 +1,37 @@
 
 package org.tdl.vireo.model.repo.impl;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.custom.ConfigurationRepoCustom;
-import org.tdl.vireo.service.DefaultSettingsService;
 
 public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
 
     @Autowired
     ConfigurationRepo configurationRepo;
     
-    @Autowired
-    DefaultSettingsService defaultSettingsService;
-
-    /**
-     * Creates or updates existing configuration
-     * 
-     * @param name
-     * @param value
-     * @return
-     */
     @Override
-    public Configuration create(String name, String value) {
-        Configuration configuration = configurationRepo.findByName(name);
+    public Configuration createOrUpdate(String name, String value, String type) {
+        Configuration configuration = configurationRepo.getByName(name);
+        // if we only found the system required one, create a custom non-system one instead of updating an already existing one.
+        if(configuration != null && configuration.isSystemRequired()) {
+            configuration = null;
+        }
         if (configuration != null) {
             configuration.setValue(value);
+            configuration.setType(type);
             return configurationRepo.save(configuration);
         }
-        return configurationRepo.save(new Configuration(name, value));
-    }
-    
-    @Override
-    public Configuration create(String name, String value, String type) {
-        System.out.println("type: "+type);
-        if (type == null) {
-            return create(name, value);
-        } else {
-            Configuration configuration = configurationRepo.findByNameAndType(name,type);
-            if (configuration != null) {
-                configuration.setValue(value);
-                return configurationRepo.save(configuration);
-            }
-            return configurationRepo.save(new Configuration(name, value, type));
-        }
+        return configurationRepo.save(new Configuration(name, value, type));
     }
 
     @Override
     public String getValue(String name, String fallback) {
         String ret = fallback;
-        Configuration configuration = configurationRepo.findByName(name);
+        Configuration configuration = configurationRepo.getByName(name);
         if (configuration != null) {
             ret = configuration.getValue();
         }
@@ -64,7 +41,7 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
     @Override
     public Integer getValue(String name, Integer fallback) {
         Integer ret = fallback;
-        Configuration configuration = configurationRepo.findByName(name);
+        Configuration configuration = configurationRepo.getByName(name);
         if (configuration != null) {
             try {
                 return Integer.parseInt(configuration.getValue());
@@ -75,33 +52,17 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
         return ret;
     }
     
-    /**
-     * Gets a config value from the DB by name and type.
-     * If no value is found, it checks the DefaultSettingsService, which returns the default for that name and type if it exists, null otherwise.
-     * 
-     * @param name
-     * @param type
-     * @return String
-     */
     @Override
-    public String getValueByNameAndType(String name, String type) {
-        String overrideValue = configurationRepo.getValueByNameAndType(name,type);
-        if (overrideValue != null) {
-            return overrideValue;
+    public Configuration getByName(String name) {
+        List<Configuration> configurations = configurationRepo.findByName(name);
+        Configuration ret = null;
+        for(Configuration configuration: configurations) {
+            if(configuration.isSystemRequired() && ret == null) {
+                ret = configuration;
+            } else if (!configuration.isSystemRequired()) {
+                ret = configuration;
+            }
         }
-        return defaultSettingsService.getSetting(name, type);
+        return ret;
     }
-    
-    public Map<String,String> getAllByType(String type) {
-        List<Configuration> overrideConfigs = configurationRepo.findByType(type);
-        
-        Map<String,String> settings = new HashMap<String,String>(); 
-        settings = defaultSettingsService.getSettingsByType(type);
-
-        for (Configuration config:overrideConfigs) {
-            settings.put(config.getName(), config.getValue());
-        }
-        return settings;
-    }
-    
 }

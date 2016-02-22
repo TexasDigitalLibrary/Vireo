@@ -13,7 +13,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
-import org.tdl.vireo.service.DefaultSettingsService;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -30,23 +29,14 @@ public class SettingsController {
     ConfigurationRepo configurationRepo;
 
     @Autowired
-    DefaultSettingsService defaultSettingsService;
-
-    @Autowired
     private ObjectMapper objectMapper;
     
     @Autowired 
     private SimpMessagingTemplate simpMessagingTemplate;
     
     @ApiMapping("/all")
-    public ApiResponse getSettings() {   
-       //a map of the type names to the full configurations for each type
-       Map<String, Map<String,String>> typesToConfigPairs = new HashMap<String, Map<String,String>>();
-       List<String> allTypes = defaultSettingsService.getTypes();
-       for(String type:allTypes) {
-           typesToConfigPairs.put(type,configurationRepo.getAllByType(type));
-       }
-       return new ApiResponse(SUCCESS,typesToConfigPairs);
+    public ApiResponse getSettings() {
+       return new ApiResponse(SUCCESS,toConfigPairsMap(configurationRepo.findAll()));
     }
     
     @ApiMapping("/update")
@@ -59,11 +49,9 @@ public class SettingsController {
             return new ApiResponse(ERROR, "Unable to parse update json ["+e.getMessage()+"]");
         }
         
-        configurationRepo.create(dataNode.get("setting").asText(),dataNode.get("value").asText(),dataNode.get("type").asText());
+        configurationRepo.createOrUpdate(dataNode.get("setting").asText(),dataNode.get("value").asText(),dataNode.get("type").asText());
         
-        Map<String, Map<String,String>> typeToConfigPair = new HashMap<String, Map<String,String>>();
-        typeToConfigPair.put(dataNode.get("type").asText(),configurationRepo.getAllByType(dataNode.get("type").asText()));
-        this.simpMessagingTemplate.convertAndSend("/channel/settings", new ApiResponse(SUCCESS, typeToConfigPair));
+        this.simpMessagingTemplate.convertAndSend("/channel/settings", new ApiResponse(SUCCESS, toConfigPairsMap(configurationRepo.findAllByType(dataNode.get("type").asText()))));
 
         return new ApiResponse(SUCCESS);
     }
@@ -76,16 +64,38 @@ public class SettingsController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Configuration deletableOverride = configurationRepo.findByNameAndType(map.get("setting"),map.get("type"));
+        Configuration deletableOverride = configurationRepo.getByName(map.get("setting"));
+        
         if (deletableOverride != null) {
             System.out.println(deletableOverride.getName());
             configurationRepo.delete(deletableOverride);
         }
-        Map<String, Map<String,String>> typeToConfigPair = new HashMap<String, Map<String,String>>();
-        typeToConfigPair.put(map.get("type"),configurationRepo.getAllByType(map.get("type")));
-        this.simpMessagingTemplate.convertAndSend("/channel/settings", new ApiResponse(SUCCESS, typeToConfigPair));
+        
+        this.simpMessagingTemplate.convertAndSend("/channel/settings", new ApiResponse(SUCCESS, toConfigPairsMap(configurationRepo.findAllByType(map.get("type")))));
         
         return new ApiResponse(SUCCESS);
     }
-
+    
+    /**
+     * Turns a List&lt;Configuration&gt; into a Map&lt;Configuration.type(), Map&lt;Configuration.name(), Configuration.value()&gt;&gt;
+     * 
+     * Assumes that the List&lt;Configuration&gt; that is passed in is pre-sorted by configuration.type
+     * 
+     * @param configurations
+     * @return
+     */
+    private Map<String, Map<String, String>> toConfigPairsMap(List<Configuration> configurations) {
+        Map<String, Map<String,String>> typesToConfigPairs = new HashMap<String, Map<String,String>>();
+        Map<String,String> items = new HashMap<String, String>();
+        String lastType = "";
+        for(Configuration configuration : configurations) {
+            if(!lastType.equals(configuration.getType())) {
+                typesToConfigPairs.put(lastType, items);
+                items = new HashMap<String, String>();
+                lastType = configuration.getType();
+            }
+            items.put(configuration.getName(), configuration.getValue());
+        }
+        return typesToConfigPairs;
+    }
 }
