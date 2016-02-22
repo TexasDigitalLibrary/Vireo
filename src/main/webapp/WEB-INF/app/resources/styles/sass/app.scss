@@ -431,6 +431,8 @@ togglebutton {
 .toggle-button-heading {
   font-size: 1em;
   margin-top: 5px;
+  display: block;
+  position: relative;
 }
 
 .toggle-button .btn {
@@ -460,6 +462,8 @@ textfield {
 .text-field-heading {
   font-size: 1em;
   margin-top: 5px;
+  display: block;
+  position: relative;
 }
 
 .text-field .with-hint {

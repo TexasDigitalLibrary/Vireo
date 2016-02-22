@@ -9,9 +9,6 @@ vireo.directive("textfield", function() {
             "hint": "@",
             "onBlur": "&",
             "keyDown": "&"
-		},
-		controller: function($scope) {
-			$scope.id = 'label-' + new Date().getTime();
 		}
 	};
 });

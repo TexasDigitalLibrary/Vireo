@@ -1,10 +1,10 @@
 <div class="form-group text-field">
 	<div class="col-sm-5">
-		<span class="text-field-heading" for="{{ id }}">{{ label }}</span>
+		<span class="text-field-heading">{{ label }}</span>
 	</div>
 	<div class="col-sm-6">
 		<div class="with-hint">
-			<input id="{{ id }}" class="form-control" type="text" ng-model="scopeValue" ng-keydown="keyDown({event: $event, prop: prop})" ng-blur="onBlur()"></input>
+			<input class="form-control" type="text" ng-model="scopeValue" ng-keydown="keyDown({event: $event, prop: prop})" ng-blur="onBlur()"></input>
 			<span ng-if="hint" class="hint">{{ hint }}</span>
 		</div>
 	</div>
