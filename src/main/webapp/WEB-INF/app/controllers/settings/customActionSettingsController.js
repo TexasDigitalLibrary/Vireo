@@ -4,10 +4,15 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 
 
 	$scope.settings.customAction = CustomActionSettings.get();
-	$scope.newCustomActions = {
+	$scope.newCustomAction = {
 		label: "",
 		visiblity: false
 	};
+	
+	$scope.editCustomAction = {
+			label: "",
+			studentVisible: false
+		};
 
 	$scope.ready = CustomActionSettings.ready();
 
@@ -15,12 +20,14 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 
 		$scope.createCustomActionSettings = function(label,isStudentVisible) {
 			
-			$scope.newCustomActions.label = "";
-			$scope.newCustomActions.visiblity = false;
+			$scope.newCustomAction.label = "";
+			$scope.newCustomAction.visiblity = false;
 
 			CustomActionSettings.create(label,isStudentVisible);
 		};
-
+		
+		$scope.loadEditModal = function(customAction) {
+			$scope.editCustomAction = customAction;
+		};
 	});
-
 });

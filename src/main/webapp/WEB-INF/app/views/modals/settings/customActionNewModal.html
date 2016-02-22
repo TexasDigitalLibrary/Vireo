@@ -1,0 +1,35 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		<span class="modal-close" aria-hidden="true">&times;</span>
+	</button>
+	<h3 class="modal-title">Add Custom Action Checklist</h3>
+</div>
+
+<div class="modal-body">
+	<div>
+		<form>
+			<div class="row form-group">
+				<div class="col-sm-3">
+					<span class="pull-right">Custom Action</span>
+				</div>
+				<div class="col-sm-6">								
+		     		<input ng-model="newCustomAction.label" type="text" class="form-control" placeholder="Label of the new custom action"/>
+				</div>	
+			</div>
+			<div class="row form-group">
+				<div class="col-sm-3">
+					<span class="pull-right">Is Student Visible</span>
+				</div>
+				<div class="col-sm-6">
+					<input ng-model="newCustomAction.visiblity" type="checkbox"/>
+					<span>Is this action visible to the student?</span>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<div class="modal-footer">
+	<button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="createCustomActionSettings(newCustomAction.label, newCustomAction.visiblity)">Add  Action</button>
+	<button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
+</div>
