@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" ng-controller="CustomActionSettingsController">
 	<div class="col-sm-6">
 
 		<button class="btn btn-default modal-add-btn" 
@@ -13,8 +13,8 @@
 			<li ng-repeat="customAction in settings.customAction.list">		
 				<span class="glyphicon glyphicon-pencil edit-setting-icon"></span>
 				{{customAction.label}}
-				<span ng-show="customAction.studentVisible" class="glyphicon glyphicon glyphicon-user"></span>
-				<span ng-show="!customAction.studentVisible" class="glyphicon glyphicon glyphicon-globe"></span>
+				<span ng-show="!customAction.studentVisible" class="glyphicon glyphicon glyphicon-user"></span>
+				<span ng-show="customAction.studentVisible" class="glyphicon glyphicon glyphicon-globe"></span>
 			</li>
 		</ol>
 
@@ -31,12 +31,13 @@
 			</div>
 		</div>
 	</div>
+	
+	<modal modal-id="customActionModal" 
+			modal-view="views/modals/customActionModal.html" 
+			modal-header-class="modal-header-primary"
+			modal-controller="CustomActionSettingsController">
+	</modal>
 
 </div>
 
 
-<modal modal-id="customActionModal" 
-		modal-view="views/modals/customActionModal.html" 
-		modal-header-class="modal-header-primary"
-		modal-controller="SettingsController">
-</modal>
