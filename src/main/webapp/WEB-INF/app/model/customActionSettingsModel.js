@@ -58,6 +58,22 @@ vireo.service("CustomActionSettings", function(AbstractModel, WsApi) {
 
 	};
 
+	CustomActionSettings.edit = function(customAction) {
+
+		console.log(customAction);
+
+		WsApi.fetch({
+			endpoint:'/private/queue',
+			controller:'settings/custom-action',
+			method:'update',
+			data: customAction
+		}).then(function(response) {
+			console.log(response);
+			console.log(JSON.parse(response.body).payload);
+		});		
+
+	};
+
 //	CustomActionSettings.reset = function(type,setting) {
 //		WsApi.fetch({
 //			endpoint:'/private/queue',

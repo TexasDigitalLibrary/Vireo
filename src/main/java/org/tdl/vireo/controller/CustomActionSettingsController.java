@@ -40,12 +40,12 @@ public class CustomActionSettingsController {
     }
     
     @ApiMapping("/all")
-    public ApiResponse getSettings() {
+    public ApiResponse getCustomActions() {
        return new ApiResponse(SUCCESS,getAll());
     }
     
     @ApiMapping("/create")
-    public ApiResponse updateSetting(@Data String data) {
+    public ApiResponse createCustomAction(@Data String data) {
         
         JsonNode dataNode;
         try {
@@ -57,6 +57,27 @@ public class CustomActionSettingsController {
         customActionDefinitionRepo.create(dataNode.get("label").asText(), dataNode.get("isStudentVisible").asBoolean());
         this.simpMessagingTemplate.convertAndSend("/channel/settings/custom-actions", new ApiResponse(SUCCESS, getAll()));
         return new ApiResponse(SUCCESS);
+    }
+    
+    @ApiMapping("/update")
+    public ApiResponse updateCustomAction(@Data String data) {
+               
+        JsonNode dataNode;
+        try {
+            dataNode = objectMapper.readTree(data);
+        } catch (IOException e) {
+            return new ApiResponse(ERROR, "Unable to parse update json ["+e.getMessage()+"]");
+        }
+       
+        CustomActionDefinition customActionToUpdate = customActionDefinitionRepo.findOne(dataNode.get("id").asLong());
+        
+        if(dataNode.get("label") != null) customActionToUpdate.setLabel(dataNode.get("label").asText());
+        if(dataNode.get("isStudentVisible") != null) customActionToUpdate.isStudentVisible(dataNode.get("isStudentVisible").asBoolean());
+        
+        customActionDefinitionRepo.save(customActionToUpdate);
+        this.simpMessagingTemplate.convertAndSend("/channel/settings/custom-actions", new ApiResponse(SUCCESS, getAll()));
+        return new ApiResponse(SUCCESS);
+        
     }
     
 //    @ApiMapping("/reset")

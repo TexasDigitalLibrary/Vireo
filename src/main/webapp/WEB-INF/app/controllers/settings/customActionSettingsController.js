@@ -20,9 +20,17 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 				isStudentVisible: false
 			};
 		};
-		
+
+		$scope.editCustomActionSettings = function(customAction) {
+
+			console.log(customAction);
+
+			CustomActionSettings.edit(customAction);
+		};
+
 		$scope.loadEditModal = function(customAction) {
 			$scope.modalData.editCustomAction = customAction;
 		};
+
 	});
 });
