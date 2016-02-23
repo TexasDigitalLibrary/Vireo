@@ -16,10 +16,12 @@
 			{"button_highlight_color_off":"#c7c2a9"}
 	],
 	"orcid":[
-			{"orcid_validation":"true"},
-			{"orcid_authentication":"false"}
+			{"orcid_validation":true},
+			{"orcid_authentication":false}
 	],
-	"proquest": [
-			{"proquest_license":"This is default proquest licence text."}
+	"proquest_umi_degree": [
+                        {"proquest_license":"This is default proquest licence text."},
+                        {"proquest_institution_code":"8303"},
+			{"proquest_indexing":false}
 	]
 }

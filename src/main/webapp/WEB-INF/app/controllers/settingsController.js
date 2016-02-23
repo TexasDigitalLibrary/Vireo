@@ -88,4 +88,10 @@ console.info($scope.settings.configurable);
 		{"false": "No"}
 	];
 
+        //PROQUEST / UMI SETTINGS / DEGREE CODE
+	$scope.proquestIndexingOptions = [
+		{"true": "Yes"}, 
+		{"false": "No"}
+	];
+
 });

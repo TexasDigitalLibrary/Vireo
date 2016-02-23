@@ -1,27 +1,23 @@
 <div class="row" ng-controller="SettingsController">
   <form name="proquest">
     <div class="col-sm-5">		
-      <div class="row form-group">
-        <div class="col-sm-6">
-          <span class="pull-right">ProQuest Institution Code:</span>
-        </div>
-        <div class="col-sm-5">																					
-          <input name="proquest_institution_code" type="text" ng-model="settings.configurable.proquest_umi_degree.proquest_institution_code" class="form-control" />
-        </div>		
-        <tooltip title="The code assigned by ProQuest/UMI to identify the institution associated with all submissions when submitting to their catalogue.">
-        </tooltip>
-        
-      </div>
 
-      <div class="row">
+      <textField 
+          label="ProQuest Institution Code:" 
+          scope-value="settings.configurable.proquest_umi_degree.proquest_institution_code"
+          on-blur="updateConfigurableSettings('proquest_umi_degree', 'proquest_institution_code')"
+          key-down="confirmEdit(event, prop)"
+          tool-tip="The code assigned by ProQuest/UMI to identify the institution associated with all submissions when submitting to their catalogue.">
+      </textField>
 
-        <togglebutton
-        ng-click="updateConfigurableSettings('proquest_umi_degree', 'proquest_indexing')"
-        label="Indexed by Search Engines"
-        scope-value="settings.configurable.proquest_umi_degree.proquest_indexing"
-        toggle-options="{{proquestIndexingOptions}}"
-        tool-tip="TODO">
-        </toggle-button>
+
+      <togglebutton
+          ng-click="updateConfigurableSettings('proquest_umi_degree', 'proquest_indexing')"
+          label="Indexed by Search Engines:"
+          scope-value="settings.configurable.proquest_umi_degree.proquest_indexing"
+          toggle-options="{{proquestIndexingOptions}}"
+          tool-tip="TODO: add some content">
+      </togglebutton>
 
         <!-- <togglebutton class="form-group" label="Indexed by Search Engines:"> -->
         <!-- <toggleoption>Yes</toggleoption> -->
@@ -29,7 +25,6 @@
         <!-- <tooltip title="If enabled then all submissions to the ProQuest/UMI catalogue will be have their citations indexed 	by third parties (i.e. google, yahoo)."> -->
         <!-- </tooltip> -->
         <!-- </togglebutton>	        	 -->
-      </div>
 
     </div>
 
