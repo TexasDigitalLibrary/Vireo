@@ -15,7 +15,8 @@ setUpApp(function(connected) {
 	angular.element(document).ready(function() {	   	
 	   	try {
 	   		// If the app is already bootstrapped then an error will be thrown
-			angular.bootstrap(document, ['core', 'vireo']);
+	   		// caution: if module is not found app will result in blank page with no stack trace!!!
+			angular.bootstrap(document, ['core', 'vireo', 'as.sortable']);
 		} catch (e) {
 			/*
 			 * If websockets dissconnect the app will attempt to re-bootstrap. Since the app is already running we will
