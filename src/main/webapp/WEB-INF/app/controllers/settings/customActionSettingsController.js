@@ -5,10 +5,7 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 
 	$scope.customAction = CustomActionSettings.get();
 
-	$scope.modalData = {
-		newCustomAction: {},
-		editCustomAction: {}
-	};
+	$scope.modalData = {};
 
 	$scope.ready = CustomActionSettings.ready();
 
@@ -21,7 +18,7 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 		};
 		
 		$scope.loadEditModal = function(customAction) {
-			angular.extend($scope.modalData.editCustomAction, customAction);
+			$scope.modalData.editCustomAction = customAction;
 		};
 	});
 });

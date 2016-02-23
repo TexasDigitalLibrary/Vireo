@@ -17,8 +17,8 @@
 				ng-mouseleave="isMouseHover=false"
 				data-toggle="modal" 
 				data-target="#customActionEditModal">
-					<span ng-show="!customAction.studentVisible" class="glyphicon glyphicon glyphicon-user"></span>
-					<span ng-show="customAction.studentVisible" class="glyphicon glyphicon glyphicon-globe"></span>
+					<span ng-show="!customAction.isStudentVisible" class="glyphicon glyphicon glyphicon-user"></span>
+					<span ng-show="customAction.isStudentVisible" class="glyphicon glyphicon glyphicon-globe"></span>
 					{{customAction.label}}
 				</span>
 				<span ng-show="isMouseHover" class="glyphicon glyphicon-pencil edit-setting-icon"></span>
