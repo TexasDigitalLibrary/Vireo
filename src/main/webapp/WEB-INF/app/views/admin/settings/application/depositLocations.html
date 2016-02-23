@@ -1,5 +1,5 @@
 <div class="row">
-
+	<alerts channels="/settings/deposit-location" types="SUCCESS, ERROR, WARNING"></alerts>
 	<div class="col-sm-6">
 		
 		<button class="btn btn-default modal-add-btn" 
@@ -7,13 +7,13 @@
 				data-target="#depositLocationModal">
 			Add Location
 		</button>
-	
-		<ol>
-			<li>		
-				<span class="glyphicon glyphicon-pencil"></span>
-				TAMU REPOSITORY
-			</li>
-		</ol>
+			
+		<draganddroplist
+			scope-value="settings.depositLocations"
+			properties='["name", "repository"]'
+			reorder='reorderDepositLocation(from, to)'
+			item-view='views/directives/dragAndDropItem.html'>
+		</draganddroplist>
 		
 	</div>
 
@@ -23,6 +23,6 @@
 </div>
 
 <modal modal-id="depositLocationModal" 
-		modal-view="views/modals/depositLocationModal.html" 
-		modal-header-class="modal-header-primary">
+	   modal-view="views/modals/depositLocationModal.html" 
+	   modal-header-class="modal-header-primary">
 </modal>

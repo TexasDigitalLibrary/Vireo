@@ -6,7 +6,7 @@
 </div>
 
 <div class="modal-body">
-	<div ng-controller="SettingsController">
+	<div>
 		<form>
 			<div id="deposit-location-errors">
             </div>
@@ -16,7 +16,7 @@
 					<span class="pull-right" for="depositLocation-name">Location Name</span>
 				</div>
 				<div class="col-sm-6">								
-		     		<input id="depositLocation-name" name="depositLocation-name" type="text" class="form-control" />
+		     		<input id="depositLocation-name" name="depositLocation-name" type="text" class="form-control" ng-model="depositLocation.name"/>
 				</div>	
 			</div>
 
@@ -25,7 +25,7 @@
 					<span class="pull-right" for="depositLocation-depositor">Protocol</span>
 				</div>
 				<div class="col-sm-6">
-					<select id="depositLocation-depositor" name="depositLocation-depositor">
+					<select id="depositLocation-depositor" name="depositLocation-depositor"  ng-model="depositLocation.depositor">
                         <option value="Sword1Deposit">SWORD Version 1</option>
                         <option value="FileDeposit">File Deposit</option>
                     </select>
@@ -37,7 +37,7 @@
 					<span class="pull-right" for="depositLocation-packager">Format</span>
 				</div>
 				<div class="col-sm-6">
-					<select id="depositLocation-packager" name="depositLocation-packager">
+					<select id="depositLocation-packager" name="depositLocation-packager" ng-model="depositLocation.packager">
                         <option value="VireoExport">Vireo Export</option>
                 	</select>					
 				</div>
@@ -48,7 +48,7 @@
 					<span class="pull-right" for="dpositLocation-repository">Repository Location</span>
 				</div>
 				<div class="col-sm-6">
-					<input id="depositLocation-repository" type="text" name="depositLocation-repository" class="form-control">			
+					<input id="depositLocation-repository" type="text" name="depositLocation-repository" class="form-control" ng-model="depositLocation.repository">			
 				</div>
 			</div>
 
@@ -57,7 +57,7 @@
 					<span class="pull-right" for="dpositLocation-repository">Repository Timeout</span>
 				</div>
 				<div class="col-sm-6">
-					<input id="depositLocation-timeout" type="text" name="depositLocation-timeout" class="form-control">			
+					<input id="depositLocation-timeout" type="text" name="depositLocation-timeout" class="form-control" ng-model="depositLocation.timeout">			
 				</div>
 			</div>
 
@@ -66,7 +66,7 @@
 					<span class="pull-right" for="dpositLocation-username">Username</span>
 				</div>
 				<div class="col-sm-6">
-					<input type="text" name="depositLocation-username" id="depositLocation-username" class="form-control">			
+					<input type="text" name="depositLocation-username" id="depositLocation-username" class="form-control" ng-model="depositLocation.username">			
 				</div>
 			</div>
 
@@ -75,7 +75,7 @@
 					<span class="pull-right" for="depositLocation-password">Password</span>
 				</div>
 				<div class="col-sm-6">
-					<input type="password" name="depositLocation-password" id="depositLocation-password" class="form-control">			
+					<input type="password" name="depositLocation-password" id="depositLocation-password" class="form-control" ng-model="depositLocation.password">			
 				</div>
 			</div>
 
@@ -84,7 +84,7 @@
 					<span class="pull-right" for="depositLocation-password">On Behalf Of</span>
 				</div>
 				<div class="col-sm-6">
-					<input type="text" name="depositLocation-onBehalfOf" id="depositLocation-onBehalfOf" class="form-control">			
+					<input type="text" name="depositLocation-onBehalfOf" id="depositLocation-onBehalfOf" class="form-control" ng-model="depositLocation.onBehalfOf">			
 				</div>
 			</div>
 
@@ -104,7 +104,7 @@
 					<span class="pull-right" for="depositLocation-collection">Collection</span>
 				</div>
 				<div class="col-sm-6">
-					  <select id="depositLocation-collection" name="depositLocation-collection" >
+					  <select id="depositLocation-collection" name="depositLocation-collection" ng-model="depositLocation.collection">
                       	<option>Please select a collection...</option>                                                                   
                     </select>			
 				</div>
@@ -117,6 +117,6 @@
 </div>
 
 <div class="modal-footer">
-	<button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
-	<button  id="depositLocation-save" type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+	<button type="button" class="btn btn-warning" ng-click="depositLocation = {}" data-dismiss="modal">Close</button>
+	<button id="depositLocation-save" type="button" class="btn btn-primary" data-dismiss="modal" ng-click="createDepositLocation()">Save</button>
 </div>
