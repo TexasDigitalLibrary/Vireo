@@ -14,7 +14,7 @@ angular.module('mock.wsApi', []).
 
         				}; break;
         			}
-        		}
+        		} break;
         		case 'user': {
         			switch(apiReq.method) {
         				case 'credentials': defer.resolve({'content':mockUser1}); break;
@@ -29,6 +29,14 @@ angular.module('mock.wsApi', []).
         				}; break;
         			}
         		}; break;
+                case 'settings/deposit-location': {
+                    switch(apiReq.method) {
+                        case 'all': defer.resolve({'content':mockDepositLocationRepo1}); break;
+                        default: {
+                            
+                        }; break;
+                    }
+                } break;
         		default: {
         			switch(apiReq.method) {
         				default: {

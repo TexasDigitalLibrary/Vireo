@@ -15,7 +15,7 @@ import org.tdl.vireo.runner.OrderedRunner;
 @RunWith(OrderedRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @ActiveProfiles({"test"})
-public class EntityCVServiceTest {
+public class OrderedEntityServiceTest {
 
 	@Before
 	public void setup() {
@@ -24,55 +24,31 @@ public class EntityCVServiceTest {
 	
     @Test
     @Order(value = 1)
-    public void testAddEntityToWhitelist() {
+    public void testFindByOrder() {
         
     }
     
     @Test
     @Order(value = 2)
-    public void testRemoveEntityFromWhitelist() {
+    public void testSwap() {
         
     }
     
     @Test
     @Order(value = 3)
-    public void testAddEntityPropertyToWhitelist() {
+    public void testDelete() {
         
     }
     
     @Test
     @Order(value = 4)
-    public void testRemoveEntityPropertyFromWhitelist() {
+    public void testReorder() {
         
     }
     
     @Test
     @Order(value = 5)
-    public void testGetControlledVocabulary() {
-        
-    }
-    
-    @Test
-    @Order(value = 6)
-    public void testGetEntityNames() {
-        
-    }
-    
-    @Test
-    @Order(value = 7)
-    public void testGetAllEntityPropertyNames() {
-        
-    }
-    
-    @Test
-    @Order(value = 8)
-    public void testGetPropertyNames() {
-        
-    }
-    
-    @Test
-    @Order(value = 9)
-    public void testGetWhitelist() {
+    public void testRemove() {
         
     }
     

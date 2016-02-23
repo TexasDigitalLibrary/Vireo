@@ -12,7 +12,6 @@ vireo.directive("togglebutton", function() {
 			$scope.setActive = function(scopeValue) {
 				$scope.scopeValue = scopeValue;
 			}
-
 		},
 		link: function($scope, element, attr) {
 
@@ -29,4 +28,3 @@ vireo.directive("togglebutton", function() {
 		}
 	};
 });
-

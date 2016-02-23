@@ -5,7 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Transient;
 
 @Entity
-public class DepositLocation extends BaseEntity {
+public class DepositLocation extends BaseOrderedEntity {
     
     @Transient
     public static final Integer DEFAULT_TIMEOUT = 60;
