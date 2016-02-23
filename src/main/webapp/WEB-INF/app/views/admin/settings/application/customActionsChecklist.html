@@ -7,16 +7,16 @@
 				Add New
 		</button>
 
-		<p ng-if="settings.customAction.list">Add new Custom actions</p>
+		<p ng-if="!customAction.list.length">Add new Custom actions</p>
 
 		<ol>
-			<li ng-repeat="customAction in settings.customAction.list">
+			<li ng-repeat="customAction in customAction.list">
 				<span class="mouse-hover-pointer"
 				ng-click="loadEditModal(customAction)"
 				ng-mouseenter="isMouseHover=true"
 				ng-mouseleave="isMouseHover=false"
 				data-toggle="modal" 
-				data-target="#customActionEditModal">		
+				data-target="#customActionEditModal">
 					<span ng-show="!customAction.studentVisible" class="glyphicon glyphicon glyphicon-user"></span>
 					<span ng-show="customAction.studentVisible" class="glyphicon glyphicon glyphicon-globe"></span>
 					{{customAction.label}}
@@ -38,18 +38,22 @@
 			</div>
 		</div>
 	</div>
+
+	<modalscopeless 	modal-id="customActionNewModal" 
+			modal-view="views/modals/settings/customActionNewModal.html" 
+			modal-header-class="modal-header-primary"
+			modal-controller="CustomActionSettingsController"
+			modal-data="modalData">
+	</modalscopeless>
+
+	<modalscopeless  modal-id="customActionEditModal" 
+			modal-view="views/modals/settings/customActionEditModal.html" 
+			modal-header-class="modal-header-primary"
+			modal-controller="CustomActionSettingsController"
+			modal-data="modalData">
+	</modalscopeless>
+
+
 </div>
-
-<modal modal-id="customActionNewModal" 
-		modal-view="views/modals/settings/customActionNewModal.html" 
-		modal-header-class="modal-header-primary"
-		modal-controller="CustomActionSettingsController">
-</modal>
-
-<modal modal-id="customActionEditModal" 
-		modal-view="views/modals/settings/customActionEditModal.html" 
-		modal-header-class="modal-header-primary"
-		modal-controller="CustomActionSettingsController">
-</modal>
 
 

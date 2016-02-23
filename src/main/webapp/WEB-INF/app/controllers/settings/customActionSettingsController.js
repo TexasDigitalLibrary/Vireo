@@ -3,31 +3,29 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
 
-	$scope.settings.customAction = CustomActionSettings.get();
-	$scope.newCustomAction = {
-		label: "",
-		visiblity: false
-	};
+	$scope.customAction = CustomActionSettings.get();
 	
-	$scope.editCustomAction = {
-			label: "",
-			studentVisible: false
-		};
+	$scope.modalData = {
+		newCustomAction: {},
+		editCustomAction: {}
+	};
 
 	$scope.ready = CustomActionSettings.ready();
 
 	$scope.ready.then(function() {
 
-		$scope.createCustomActionSettings = function(label,isStudentVisible) {
-			
-			$scope.newCustomAction.label = "";
-			$scope.newCustomAction.visiblity = false;
+		$scope.createCustomActionSettings = function(newCustomAction) {
 
-			CustomActionSettings.create(label,isStudentVisible);
+			CustomActionSettings.create(newCustomAction);
+
+			$scope.modalData.newCustomAction.label = "";
+			$scope.modalData.newCustomAction.studentVisible = false;
+			
 		};
 		
 		$scope.loadEditModal = function(customAction) {
-			$scope.editCustomAction = customAction;
+			$scope.modalData.editCustomAction.label = customAction.label;
+			$scope.modalData.editCustomAction.studentVisible = customAction.studentVisible;
 		};
 	});
 });
