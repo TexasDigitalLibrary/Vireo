@@ -1,43 +1,139 @@
 var mockDepositLocationRepo1 = {
 	'HashMap':{
-		'0':{
-			
-		},
-		'1':{
-			
-		},
-		'2':{
-			
-		}
+		'list':[
+            {
+                "id": 1,
+                "order": 1,
+                "name": "Test0",
+                "repository": "Dspace",
+                "collection": null,
+                "username": "test@tdl.org",
+                "password": "abc123",
+                "onBehalfOf": "TDL",
+                "packager": "VireoExport",
+                "depositor": "Sword1Deposit",
+                "timeout": 100
+            },
+            {
+                "id": 2,
+                "order": 2,
+                "name": "Test1",
+                "repository": "Fedora",
+                "collection": null,
+                "username": "test@tdl.org",
+                "password": "abc123",
+                "onBehalfOf": "Texas A&M",
+                "packager": "VireoExport",
+                "depositor": "Sword1Deposit",
+                "timeout": 200
+            },
+            {
+                "id": 3,
+                "order": 3,
+                "name": "Test2",
+                "repository": "Nuxio",
+                "collection": null,
+                "username": "test@tdl.org",
+                "password": "abc123",
+                "onBehalfOf": "Texas A&M",
+                "packager": "VireoExport",
+                "depositor": "FileDeposit",
+                "timeout": 300
+            }
+        ]
 	}
 };
 
 var mockDepositLocationRepo2 = {
-	'HashMap':{
-		'0':{
-			
-		},
-		'1':{
-			
-		},
-		'2':{
-			
-		}
-	}
+    'HashMap':{
+        'list':[
+            {
+                "id": 1,
+                "order": 1,
+                "name": "Test3",
+                "repository": "Dspace",
+                "collection": null,
+                "username": "test@tdl.org",
+                "password": "abc123",
+                "onBehalfOf": "TDL",
+                "packager": "VireoExport",
+                "depositor": "Sword1Deposit",
+                "timeout": 100
+            },
+            {
+                "id": 2,
+                "order": 2,
+                "name": "Test4",
+                "repository": "Fedora",
+                "collection": null,
+                "username": "test@tdl.org",
+                "password": "abc123",
+                "onBehalfOf": "Texas A&M",
+                "packager": "VireoExport",
+                "depositor": "Sword1Deposit",
+                "timeout": 200
+            },
+            {
+                "id": 3,
+                "order": 3,
+                "name": "Test5",
+                "repository": "Nuxio",
+                "collection": null,
+                "username": "test@tdl.org",
+                "password": "abc123",
+                "onBehalfOf": "Texas A&M",
+                "packager": "VireoExport",
+                "depositor": "FileDeposit",
+                "timeout": 300
+            }
+        ]
+    }
 };
 
 var mockDepositLocationRepo3 = {
-	'HashMap':{
-		'0':{
-			
-		},
-		'1':{
-			
-		},
-		'2':{
-			
-		}
-	}
+    'HashMap':{
+        'list':[
+            {
+                "id": 1,
+                "order": 1,
+                "name": "Test3",
+                "repository": "Dspace",
+                "collection": null,
+                "username": "test@tdl.org",
+                "password": "abc123",
+                "onBehalfOf": "TDL",
+                "packager": "VireoExport",
+                "depositor": "Sword1Deposit",
+                "timeout": 100
+            },
+            {
+                "id": 2,
+                "order": 2,
+                "name": "Test2",
+                "repository": "Fedora",
+                "collection": null,
+                "username": "test@tdl.org",
+                "password": "abc123",
+                "onBehalfOf": "Texas A&M",
+                "packager": "VireoExport",
+                "depositor": "Sword1Deposit",
+                "timeout": 200
+            },
+            {
+                "id": 3,
+                "order": 3,
+                "name": "Test1",
+                "repository": "Nuxio",
+                "collection": null,
+                "username": "test@tdl.org",
+                "password": "abc123",
+                "onBehalfOf": "Texas A&M",
+                "packager": "VireoExport",
+                "depositor": "FileDeposit",
+                "timeout": 300
+            }
+        ]
+    }
 };
 
 
@@ -61,11 +157,11 @@ angular.module('mock.depositLocationRepo', []).
     	};
     	
     	DepositLocationRepo.add = function() {
-            return new DepositLocationRepo(mockDepositLocationRepo1);
+            
         };
         
         DepositLocationRepo.reorder = function() {
-            return new DepositLocationRepo(mockDepositLocationRepo1);
+            
         };
     	
     	DepositLocationRepo.get = function() {

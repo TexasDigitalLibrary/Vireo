@@ -23,13 +23,18 @@ describe('model: DepositLocationRepo', function() {
 	
 	describe('get method should return a DepositLocationRepo', function() {
 		it('the DepositLocationRepo was returned', function() {
-			
+			var depositLocationRepo = DepositLocationRepo.get();
+			$scope.$apply();
+			expect(depositLocationRepo.content).toEqual(mockDepositLocationRepo1);
 		});
 	});
 
 	describe('set method should set a DepositLocationRepo', function() {
 		it('the DepositLocationRepo was set', function() {
-			
+			var depositLocationRepo = DepositLocationRepo.get();
+			$scope.$apply();
+			DepositLocationRepo.set({"unwrap":function(){}, "content":mockDepositLocationRepo2});
+			expect(depositLocationRepo.content).toEqual(mockDepositLocationRepo2);
 		});
 	});
 	
