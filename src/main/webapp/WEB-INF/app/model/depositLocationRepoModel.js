@@ -1,4 +1,4 @@
-vireo.service("DepositLocationRepo", function(WsApi, AbstractModel) {
+vireo.service("DepositLocationRepo", function(WsApi, AbstractModel, AlertService) {
 
 	var self;
 	
@@ -60,7 +60,11 @@ vireo.service("DepositLocationRepo", function(WsApi, AbstractModel) {
 			'method': 'create',
 			'data': depositLocation
 		}).then(function(response) {
-			console.log(response);
+			var responseType = angular.fromJson(response.body).meta.type;
+			var responseMessage = angular.fromJson(response.body).meta.message;
+			if(responseType != 'SUCCESS') {
+				AlertService.add({type: responseType, message: responseMessage}, "/settings/deposit-location");  
+			}
 		});
 	};
 
@@ -70,7 +74,11 @@ vireo.service("DepositLocationRepo", function(WsApi, AbstractModel) {
 			'controller': 'settings/deposit-location', 
 			'method': 'reorder/' + from + '/' + to
 		}).then(function(response) {
-			console.log(response);
+			var responseType = angular.fromJson(response.body).meta.type;
+			var responseMessage = angular.fromJson(response.body).meta.message;
+			if(responseType != 'SUCCESS') {
+				AlertService.add({type: responseType, message: responseMessage}, "/settings/deposit-location");  
+			}
 		});
 	};
 	
