@@ -1,14 +1,19 @@
-vireo.controller("SettingsController", function ($controller, $scope, $q, $location, $routeParams, User, UserSettings, ConfigurableSettings, SidebarService) {
+vireo.controller("SettingsController", function ($controller, $scope, $q, $location, $routeParams, User, UserSettings, ConfigurableSettings, SidebarService, DepositLocationRepo) {
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
 	$scope.user = User.get();
 
 	$scope.settings = {};
 	
-	$scope.ready = $q.all([UserSettings.ready(), ConfigurableSettings.ready()]);
+	$scope.ready = $q.all([UserSettings.ready(), ConfigurableSettings.ready(), DepositLocationRepo.ready()]);
 		
 	$scope.settings.user  = UserSettings.get();
+
 	$scope.settings.configurable = ConfigurableSettings.get();
+
+	$scope.settings.depositLocations = DepositLocationRepo.get();
+
+	$scope.depositLocation = {};
 
 	$scope.ready.then(function() {
 console.info($scope.settings.configurable);
@@ -31,6 +36,14 @@ console.info($scope.settings.configurable);
 			ConfigurableSettings.reset(type,setting);
 		};
 
+		$scope.createDepositLocation = function() {
+			DepositLocationRepo.add($scope.depositLocation);
+		};
+
+		$scope.reorderDepositLocation = function(from, to) {
+	    	DepositLocationRepo.reorder(from, to);
+		};
+
 	});	
 
 	$scope.editMode = function(prop) {
@@ -42,12 +55,9 @@ console.info($scope.settings.configurable);
 	}
 
 	$scope.confirmEdit = function($event, prop) {
-		if($event.which == 13) {
-			
+		if($event.which == 13) {			
 			if(prop) $scope["edit"+prop] = false;
-			
 			$event.target.blur();
-
 		}
 	}
 
@@ -55,6 +65,10 @@ console.info($scope.settings.configurable);
 		if(!field) field = {};
 		return Object.keys(field).length > 0;
 	}
+
+
+	
+	
 
 	/**
 	 * Toggle options

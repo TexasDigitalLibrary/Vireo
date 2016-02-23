@@ -19,9 +19,7 @@
 			{"orcid_validation":"true"},
 			{"orcid_authentication":"false"}
 	],
-        "proquest_umi_degree":[
-                        {"proquest_institution_code":"0803"},
-                        {"proquest_indexing":"google"},
-                        {"proquest_license":"foobar"}
-        ]
+	"proquest": [
+			{"proquest_license":"This is default proquest licence text."}
+	]
 }
