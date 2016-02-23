@@ -416,6 +416,15 @@ sidebox ul input {
 
 }
 
+.as-sortable-dragging { 
+  border: 1px dotted #000 !important; 
+}
+
+.repeated-span {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
 .hint {
   color: #999999;
   font-size: 0.8em;
@@ -424,12 +433,15 @@ sidebox ul input {
 
 togglebutton {
   display: block;
-  min-height: 15px;
-  margin-bottom: 35px;
+  min-height: 20px;
+  margin-bottom: 45px;
 }
 
 .toggle-button-heading {
-  font-size:1em;
+  font-size: 1em;
+  margin-top: 5px;
+  display: block;
+  position: relative;
 }
 
 .toggle-button .btn {
@@ -438,7 +450,7 @@ togglebutton {
 
 .toggle-button .btn:hover {
    background-color: #ffffff;
-   cursor:default;
+   cursor: pointer;
 }
 
 .toggle-button .btn.active {
@@ -449,14 +461,41 @@ togglebutton {
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
 
+
+textfield {
+  display: block;
+  min-height: 20px;  
+  margin-bottom: 45px;
+}
+
+.text-field-heading {
+  font-size: 1em;
+  margin-top: 5px;
+  display: block;
+  position: relative;
+}
+
+.with-hint {
+  display: inline-block;
+}
+
+.with-tool-tip {
+  display: inline-flex;
+}
+
+.tooltip-span {
+  margin-top: 4px;
+}
+
 a.tooltip-icon {
-    float: left;
-    margin-top: 1px;
-    color: #666666;
-    text-decoration: none;
+  float: left;
+  margin-top: 1px;
+  color: #666666;
+  text-decoration: none;
 }
 
 a.tooltip-icon:hover {
+
 }
 
 a[title]:hover:after {
@@ -464,13 +503,13 @@ a[title]:hover:after {
 }
 
 .glyphicon-info-sign{
-      line-height: 2;
-      margin-left: 10px;
-      opacity: .5;
+  line-height: 2;
+  margin-left: 10px;
+  opacity: .5;
 }
 
 h4 {
-    line-height: 22px;
+  line-height: 22px;
 }
 
 .lock-control {

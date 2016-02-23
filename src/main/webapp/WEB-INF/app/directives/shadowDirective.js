@@ -2,8 +2,9 @@ vireo.directive("shadow", function() {
 	return {
 		scope: true,
 		link: function ($scope, element, attr) {
-			if($scope.ready !== undefined) {
-				$scope.ready.then(function() {
+
+			if($scope.ready && $scope.ready.$$) {
+				$scope.ready().then(function() {
 					
 					var index = attr.ngModel.lastIndexOf(".");
 					
@@ -14,9 +15,9 @@ vireo.directive("shadow", function() {
 					var model = eval('$scope.' + parentObject);
 					
 					model['_' + targetObject] = angular.copy(model[targetObject]);
-	
+					
 				});
-			}
+			}			
 	    }
 	};
 });

@@ -40,7 +40,10 @@ vireo.service("ConfigurableSettings", function(AbstractModel, WsApi) {
 
 	};
 
-	ConfigurableSettings.update = function(type, setting, value) {		
+	ConfigurableSettings.update = function(type, setting, value) {	
+		console.log(type);
+		console.log(setting);
+		console.log(value);	
 		WsApi.fetch({
 			endpoint:'/private/queue',
 			controller:'settings/configurable',
@@ -50,8 +53,6 @@ vireo.service("ConfigurableSettings", function(AbstractModel, WsApi) {
 			console.log(response);
 			console.log(JSON.parse(response.body).payload);
 		});
-
-		console.log("update type and value ENDS");
 	};
 
 	ConfigurableSettings.reset = function(type,setting) {
