@@ -8,3 +8,4 @@ attachments/
 .tmp
 npm-debug.log
 .externalToolBuilders
+/.apt_generated/

@@ -58,6 +58,7 @@ vireo.service("CustomActionSettings", function(AbstractModel, WsApi) {
 			console.log(response);
 			console.log(JSON.parse(response.body).payload);
 		});		
+
 	};
 
 //	CustomActionSettings.reset = function(type,setting) {

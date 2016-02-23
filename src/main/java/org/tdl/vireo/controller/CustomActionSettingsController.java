@@ -53,7 +53,7 @@ public class CustomActionSettingsController {
         } catch (IOException e) {
             return new ApiResponse(ERROR, "Unable to parse update json ["+e.getMessage()+"]");
         }
-        
+               
         customActionDefinitionRepo.create(dataNode.get("label").asText(), dataNode.get("isStudentVisible").asBoolean());
         this.simpMessagingTemplate.convertAndSend("/channel/settings/custom-actions", new ApiResponse(SUCCESS, getAll()));
         return new ApiResponse(SUCCESS);
