@@ -46,14 +46,12 @@ vireo.service("CustomActionSettings", function(AbstractModel, WsApi) {
 	};
 
 	CustomActionSettings.create = function(customAction) {
-
 		WsApi.fetch({
 			endpoint:'/private/queue',
 			controller:'settings/custom-action',
 			method:'create',
 			data: customAction
 		}).then(function(response) {
-			debugger;
 			console.log(response);
 			console.log(JSON.parse(response.body).payload);
 		});		
