@@ -4,9 +4,13 @@ vireo.directive("draganddroplist", function() {
 		restrict: 'E',
 		scope: {
 			'scopeValue': '=',
-			'reorder': '&'
+			'reorder': '&',
+			'itemView': '@'
 		},
 		controller: function($scope) {
+			if(typeof $scope.itemView == 'undefined') {
+				$scope.itemView = 'views/directives/dragAndDropItem.html'
+			}
 			$scope.dragControlListeners = {
 			    accept: function (sourceItemHandleScope, destSortableScope) {
 			     	return sourceItemHandleScope.itemScope.sortableScope.$id === destSortableScope.$id;
@@ -23,6 +27,6 @@ vireo.directive("draganddroplist", function() {
 		},
 		link: function($scope, elem, attr) {
 			$scope.properties = angular.fromJson(attr.properties);
-		}
+		}	
 	};
 });
