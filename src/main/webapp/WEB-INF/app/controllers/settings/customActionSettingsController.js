@@ -12,9 +12,13 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 	$scope.ready.then(function() {
 
 		$scope.createCustomActionSettings = function(customAction) {
-			
-			$scope.modalData.newCustomAction = {};
 			CustomActionSettings.create(customAction);
+		};
+
+		$scope.loadCreateModal = function() {
+			$scope.modalData.newCustomAction = {
+				isStudentVisible: false
+			};
 		};
 		
 		$scope.loadEditModal = function(customAction) {
