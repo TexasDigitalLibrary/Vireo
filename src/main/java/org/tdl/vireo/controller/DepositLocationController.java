@@ -46,9 +46,6 @@ public class DepositLocationController {
     @Autowired
     private ObjectMapper objectMapper;
     
-    @PersistenceContext
-    private EntityManager entityManager;
-    
     @Autowired 
     private SimpMessagingTemplate simpMessagingTemplate;
     
@@ -151,66 +148,11 @@ public class DepositLocationController {
     @ApiMapping("/reorder/{from}/{to}")
     @Auth(role = "ROLE_MANAGER")
     @Transactional
-    public ApiResponse reorderDepositLocations(@ApiVariable String from, @ApiVariable String to) { 
-        
+    public ApiResponse reorderDepositLocations(@ApiVariable String from, @ApiVariable String to) {
         Integer intFrom = Integer.parseInt(from);
         Integer intTo = Integer.parseInt(to);
-        Integer one =  new Integer(1);
-          
-        
-        DepositLocation depositLocation = depositLocationRepo.findByOrder(intFrom);
-        
-        depositLocationRepo.delete(depositLocation);
-        
-        
-        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        
-        CriteriaUpdate<DepositLocation> update = builder.createCriteriaUpdate(DepositLocation.class);
-        
-        Root<DepositLocation> root = update.from(DepositLocation.class);
-        
-        Path<Integer> path = root.<Integer>get("order");
-        
-        
-        if(intFrom > intTo) {
-            
-            update.set(path, builder.sum(path, one));
-            
-            List<Predicate> predicates = new ArrayList<Predicate>();
-            
-            predicates.add(builder.greaterThanOrEqualTo(path, intTo));
-            predicates.add(builder.lessThan(path, intFrom));
-            
-            update.where(predicates.toArray(new Predicate[]{}));
-            
-            entityManager.createQuery(update).executeUpdate();
-            
-        }
-        else if(intFrom < intTo) {
-           
-            update.set(path, builder.sum(path, -one));
-            
-            List<Predicate> predicates = new ArrayList<Predicate>();
-            
-            predicates.add(builder.greaterThan(path, intFrom));
-            predicates.add(builder.lessThanOrEqualTo(path, intTo));
-            
-            update.where(predicates.toArray(new Predicate[]{}));
-            
-            entityManager.createQuery(update).executeUpdate();            
-        }
-        else {
-            // do nothing
-        }
-        
-       
-        depositLocation.setOrder(intTo);
-        
-        depositLocationRepo.save(depositLocation);
-        
-        
-        simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(SUCCESS, getAll()));
-        
+        depositLocationRepo.reorder(intFrom, intTo);        
+        simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(SUCCESS, getAll()));        
         return new ApiResponse(SUCCESS);
     }
 
