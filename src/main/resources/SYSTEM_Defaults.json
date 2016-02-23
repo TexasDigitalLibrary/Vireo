@@ -18,5 +18,8 @@
 	"orcid":[
 			{"orcid_validation":"true"},
 			{"orcid_authentication":"false"}
+	],
+	"proquest": [
+			{"proquest_license":"This is default proquest licence text."}
 	]
 }
