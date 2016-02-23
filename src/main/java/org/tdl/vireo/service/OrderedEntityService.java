@@ -53,7 +53,7 @@ public class OrderedEntityService {
 	}
 
 	public void reorder(Class<?> clazz, Integer from, Integer to) {		
-		swap(clazz, from, 999999);
+		swap(clazz, from, Integer.MAX_VALUE);
 		// increment/decrement order as necessary
 		{
 			CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -78,7 +78,7 @@ public class OrderedEntityService {
 				// do nothing
 			}
 		}
-		swap(clazz, 999999, to);
+		swap(clazz, Integer.MAX_VALUE, to);
 	}
 
 	public void remove(Class<?> clazz, Integer order) {
