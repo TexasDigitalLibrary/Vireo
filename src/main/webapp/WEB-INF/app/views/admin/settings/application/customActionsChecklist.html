@@ -7,10 +7,10 @@
 				Add New
 		</button>
 
-		<p ng-if="settings.customAction.list">Add new Custom actions</p>
+		<p ng-if="customAction.list.length == 0">Add new Custom actions</p>
 
 		<ol>
-			<li ng-repeat="customAction in settings.customAction.list">
+			<li ng-repeat="customAction in customAction.list">
 				<span class="mouse-hover-pointer"
 				ng-click="loadEditModal(customAction)"
 				ng-mouseenter="isMouseHover=true"
@@ -38,18 +38,22 @@
 			</div>
 		</div>
 	</div>
+
+	<vireomodal modal-id="customActionNewModal" 
+		   modal-view="views/modals/settings/customActionNewModal.html" 
+		   modal-header-class="modal-header-primary"
+		   modal-controller="CustomActionSettingsController"
+		   modal-data="modalData">
+	</vireomodal>
+
+	<vireomodal modal-id="customActionEditModal" 
+		   modal-view="views/modals/settings/customActionEditModal.html" 
+		   modal-header-class="modal-header-primary"
+		   modal-controller="CustomActionSettingsController"
+		   modal-data="modalData">
+	</vireomodal>
+
 </div>
 
-<modal modal-id="customActionNewModal" 
-		modal-view="views/modals/settings/customActionNewModal.html" 
-		modal-header-class="modal-header-primary"
-		modal-controller="CustomActionSettingsController">
-</modal>
-
-<modal modal-id="customActionEditModal" 
-		modal-view="views/modals/settings/customActionEditModal.html" 
-		modal-header-class="modal-header-primary"
-		modal-controller="CustomActionSettingsController">
-</modal>
 
 

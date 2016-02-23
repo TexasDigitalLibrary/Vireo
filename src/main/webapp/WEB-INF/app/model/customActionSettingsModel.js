@@ -45,15 +45,15 @@ vireo.service("CustomActionSettings", function(AbstractModel, WsApi) {
 
 	};
 
-	CustomActionSettings.create = function(label, isStudentVisible) {
+	CustomActionSettings.create = function(customAction) {
 
-		console.log(isStudentVisible);
+		if(!customAction.isStudentVisible) customAction.isStudentVisible = false;
 
 		WsApi.fetch({
 			endpoint:'/private/queue',
 			controller:'settings/custom-action',
 			method:'create',
-			data: {'label':label, 'isStudentVisible':isStudentVisible}
+			data: customAction
 		}).then(function(response) {
 			console.log(response);
 			console.log(JSON.parse(response.body).payload);

@@ -11,10 +11,9 @@
 			<div class="row form-group">
 				<div class="col-sm-3">
 					<span class="pull-right">Custom Action</span>
-					{{editCustomAction}}
 				</div>
 				<div class="col-sm-6">								
-		     		<input ng-model="editCustomAction.label" type="text" class="form-control" placeholder="Label of the editable custom action"/>
+		     		<input ng-model="modalData.editCustomAction.label" type="text" class="form-control" placeholder="Label of the editable custom action"/>
 				</div>	
 			</div>
 			<div class="row form-group">
@@ -22,7 +21,7 @@
 					<span class="pull-right">Is Student Visible</span>
 				</div>
 				<div class="col-sm-6">
-					<input ng-model="editCustomAction.studentVisible" type="checkbox"/>
+					<input ng-model="modalData.editCustomAction.studentVisible" type="checkbox"/>
 					<span>Is this action visible to the student?</span>
 				</div>
 			</div>
@@ -31,6 +30,6 @@
 </div>
 
 <div class="modal-footer">
-	<button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="editCustomActionSettings(editCustomAction)">Save Custom Action</button>
+	<button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="modalData.editCustomActionSettings(modalData.editCustomAction)">Save Custom Action</button>
 	<button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
 </div>
