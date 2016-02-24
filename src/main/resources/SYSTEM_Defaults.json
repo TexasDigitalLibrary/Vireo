@@ -21,5 +21,8 @@
 	],
 	"proquest": [
 			{"proquest_license":"This is default proquest licence text."}
+	],
+	"submission": [
+			{"license":"This is default submission license text."}
 	]
 }
