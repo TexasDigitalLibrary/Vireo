@@ -173,7 +173,7 @@
 	<script src="bower_components/angular-loader/angular-loader.js"></script>
 	<script src="bower_components/angular-mocks/angular-mocks.js"></script>
 
-	<script src="bower_components/ng-sortable/dist/ng-sortable.min.js"></script>
+	<script src="bower_components/ng-sortable/dist/ng-sortable.js"></script>
 	
 	<!--  Core libraries -->
 	

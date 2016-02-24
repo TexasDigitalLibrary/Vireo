@@ -11,16 +11,6 @@ vireo.directive("draganddroplist", function() {
 		},
 		controller: function($scope) {
 
-			// var trashCan = angular.element('.trash-drop-zone');
-
-			// var trashCanOffset = trashCan.offset();
-
-			// var trashCanOffsetHeight = trashCan[0].offsetHeight;
-
-			// var trashCanOffsetWidth = trashCan[0].offsetWidth;
-
-			// var overTrash = false;
-
 			$scope.dragging = false;
 
 			if(typeof $scope.itemView == 'undefined') {
@@ -32,20 +22,10 @@ vireo.directive("draganddroplist", function() {
 					$scope.dragging = true;
 				},
 				dragMove: function(event) {
-					// if(event.nowX > trashCanOffset.left && event.nowX < (trashCanOffset.left + trashCanOffsetWidth) &&
-					//    event.nowY > trashCanOffset.top && event.nowY < (trashCanOffset.top + trashCanOffsetHeight)) {
-					//    	overTrash = true;
-					// }
-					// else {
-					// 	overTrash = false;
-					// }
+					
 				},
 				dragEnd: function(event) {
-					$scope.dragging = false;
-					// if(overTrash) {
-					//    	var index = event.source.index + 1;
-					//    	$scope.remove({'index': index});
-					// }
+					$scope.dragging = false;					
 				},
 				dragCancel: function(event) {
 					$scope.dragging = false;
