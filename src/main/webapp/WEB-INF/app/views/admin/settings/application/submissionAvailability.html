@@ -1,43 +1,42 @@
 <div class="row">
 	<form name="submission-availability">
 
-		<div class="col-sm-5">
+		<div class="col-sm-6">
 
 			<toggleButton 
 				ng-click="updateConfigurableSettings('application', 'submissions_open')"
 				label="Submissions are currently:"
 				scope-value="settings.configurable.application.submissions_open"
-				toggle-options="{{submissionsOpenOptions}}"
-			></toggleButton>
+				toggle-options="{{submissionsOpenOptions}}">
+			</toggleButton>
 
 			<toggleButton 
 				ng-click="updateConfigurableSettings('application', 'allow_multiple_submissions')"
 				label="Multiple Submissions:"
 				scope-value="settings.configurable.application.allow_multiple_submissions"
-				toggle-options="{{allowMultipleSubmissionsOptions}}"
-			></toggleButton>
+				toggle-options="{{allowMultipleSubmissionsOptions}}">
+			</toggleButton>
 
 		</div>		
 
 		<div class="col-sm-6">
-		    <div class="row form-group">
-		    	<div class="col-sm-6">
-					<span class="pull-right">Current submission semester :</span>	
-				</div>
-				<div class="col-sm-6">													
-					<input id="currentSemester" type="text" class="form-control" ng-keydown="confirmEdit($event)" ng-blur="updateConfigurableSettings('application', 'current_semester')" ng-model="settings.configurable.application.current_semester"/>
-					<div class="hint">'Month Year' (i.e. May 2015)</div>
-				</div>
-			</div>
-			<div class="row form-group">
-				<div class="col-sm-6">
-					<span class="pull-right">Degree Granting School :</span>
-				</div>
-				<div class="col-sm-6">											
-		     		<input name="grantor" type="text" ng-keydown="confirmEdit($event)" ng-blur="updateConfigurableSettings('application', 'grantor')" ng-model="settings.configurable.application.grantor" class="form-control" />
-					<div class="hint">The full name of the institution awarding degrees.</div>
-				</div>
-			</div>
+			
+			<textField 
+				label="Current submission semester:" 
+				scope-value="settings.configurable.application.current_semester"
+				hint="'Month Year' (i.e. May 2015)"
+				on-blur="updateConfigurableSettings('application', 'current_semester')"
+				key-down="confirmEdit(event, prop)">
+			</textField>
+
+			<textField 
+				label="Degree Granting School:" 
+				scope-value="settings.configurable.application.grantor"
+				hint="The full name of the institution awarding degrees."
+				on-blur="updateConfigurableSettings('application', 'grantor')"
+				key-down="confirmEdit(event, prop)">
+			</textField>
+
 		</div>
 
 	</form>
