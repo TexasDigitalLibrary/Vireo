@@ -9,8 +9,6 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 
 	$scope.ready.then(function() {
 
-		console.log($scope.depositLocations)
-
 		$scope.createDepositLocation = function() {
 			DepositLocationRepo.add($scope.depositLocation);
 			$scope.depositLocation = {};
