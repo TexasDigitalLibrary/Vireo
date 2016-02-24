@@ -16,7 +16,7 @@ vireo.controller("SettingsController", function ($controller, $scope, $q, $locat
 	$scope.depositLocation = {};
 
 	$scope.ready.then(function() {
-console.info($scope.settings.configurable);
+		
 		$scope.updateUserSetting = function(setting, timer) {
 			if(Object.keys($scope.userSettingsForm.$error).length) return;
 
@@ -77,7 +77,7 @@ console.info($scope.settings.configurable);
 	 * 
 	 */
 	
-	//Submission Availability pane
+	//SUBMISSION AVAILABILITY
 	$scope.submissionsOpenOptions = [
 		{"true": "Open"}, 
 		{"false": "Closed"}
@@ -88,7 +88,7 @@ console.info($scope.settings.configurable);
 		{"false": "No"}
 	];
 
-        //PROQUEST / UMI SETTINGS / DEGREE CODE
+    //PROQUEST / UMI SETTINGS / DEGREE CODE
 	$scope.proquestIndexingOptions = [
 		{"true": "Yes"}, 
 		{"false": "No"}
