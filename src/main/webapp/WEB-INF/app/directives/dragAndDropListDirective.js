@@ -3,15 +3,53 @@ vireo.directive("draganddroplist", function() {
 		templateUrl: 'views/directives/dragAndDropList.html',
 		restrict: 'E',
 		scope: {
+			'dragging': '=',
 			'scopeValue': '=',
 			'reorder': '&',
+			'remove': '&',
 			'itemView': '@'
 		},
 		controller: function($scope) {
+
+			// var trashCan = angular.element('.trash-drop-zone');
+
+			// var trashCanOffset = trashCan.offset();
+
+			// var trashCanOffsetHeight = trashCan[0].offsetHeight;
+
+			// var trashCanOffsetWidth = trashCan[0].offsetWidth;
+
+			// var overTrash = false;
+
+			$scope.dragging = false;
+
 			if(typeof $scope.itemView == 'undefined') {
 				$scope.itemView = 'views/directives/dragAndDropItem.html'
 			}
+
 			$scope.dragControlListeners = {
+				dragStart: function(event) {
+					$scope.dragging = true;
+				},
+				dragMove: function(event) {
+					// if(event.nowX > trashCanOffset.left && event.nowX < (trashCanOffset.left + trashCanOffsetWidth) &&
+					//    event.nowY > trashCanOffset.top && event.nowY < (trashCanOffset.top + trashCanOffsetHeight)) {
+					//    	overTrash = true;
+					// }
+					// else {
+					// 	overTrash = false;
+					// }
+				},
+				dragEnd: function(event) {
+					$scope.dragging = false;
+					// if(overTrash) {
+					//    	var index = event.source.index + 1;
+					//    	$scope.remove({'index': index});
+					// }
+				},
+				dragCancel: function(event) {
+					$scope.dragging = false;
+				},
 			    accept: function (sourceItemHandleScope, destSortableScope) {
 			     	return sourceItemHandleScope.itemScope.sortableScope.$id === destSortableScope.$id;
 			    },
@@ -19,9 +57,9 @@ vireo.directive("draganddroplist", function() {
 
 			    },
 			    orderChanged: function(event) {
-			    	var from = event.source.index + 1;
-			    	var to = event.dest.index + 1;
-			    	$scope.reorder({'from': from, 'to': to});
+			    	var src = event.source.index + 1;
+			    	var dest = event.dest.index + 1;
+			    	$scope.reorder({'src': src, 'dest': dest});
 			    }
 			};
 		},

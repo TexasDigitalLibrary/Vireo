@@ -21,8 +21,13 @@ public class DepositLocationRepoImpl implements DepositLocationRepoCustom {
     }
     
     @Override
-    public void reorder(Integer from, Integer to) {
-    	orderedEntityService.reorder(DepositLocation.class, from, to);
+    public void reorder(Integer src, Integer dest) {
+    	orderedEntityService.reorder(DepositLocation.class, src, dest);
+    }
+    
+    @Override
+    public void remove(Integer index) {
+        orderedEntityService.remove(DepositLocation.class, index);
     }
 
 }

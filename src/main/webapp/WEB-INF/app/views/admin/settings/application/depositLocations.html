@@ -1,5 +1,5 @@
 <div class="row" ng-controller="DepositLocationRepoController">
-	<alerts channels="/settings/deposit-location" types="SUCCESS, ERROR, WARNING"></alerts>
+	<alerts channels="/settings/deposit-location" types="SUCCESS, ERROR, WARNING" exclusive></alerts>
 	<div class="col-sm-6">
 		
 		<button class="btn btn-default modal-add-btn" 
@@ -7,18 +7,20 @@
 				data-target="#depositLocationModal">
 			Add Location
 		</button>
-			
+
 		<draganddroplist
+			dragging="dragging"
 			scope-value="depositLocations"
 			properties='["name", "repository"]'
-			reorder='reorderDepositLocation(from, to)'
+			reorder='reorderDepositLocation(src, dest)'
+			remove='removeDepositLocation(index)'
 			item-view='views/directives/dragAndDropDepositLocation.html'>
 		</draganddroplist>
 		
 	</div>
 
 	<div class="col-sm-6">
-
+		<trashcan></trashcan>
 	</div>
 
 	<modal modal-id="depositLocationModal" 

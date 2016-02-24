@@ -561,14 +561,15 @@ h4 {
   font-size: 70px;
 }
 
-textarea
-{   width:100%;
-    margin-top:10px;
-    height: 400px;
-    outline: none;
-    white-space: nowrap;
-    word-wrap: normal;
+textarea {   
+  width:100%;
+  margin-top:10px;
+  height: 400px;
+  outline: none;
+  white-space: nowrap;
+  word-wrap: normal;
 }
+
 textarea:hover {
     cursor:not-allowed;
 }

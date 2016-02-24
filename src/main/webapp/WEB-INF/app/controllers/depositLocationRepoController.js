@@ -7,6 +7,8 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 
 	$scope.depositLocation = {};
 
+	$scope.dragging = false;
+
 	$scope.ready.then(function() {
 
 		$scope.createDepositLocation = function() {
@@ -14,8 +16,12 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 			$scope.depositLocation = {};
 		};
 
-		$scope.reorderDepositLocation = function(from, to) {
-	    	DepositLocationRepo.reorder(from, to);
+		$scope.reorderDepositLocation = function(src, dest) {
+	    	DepositLocationRepo.reorder(src, dest);
+		};
+
+		$scope.removeDepositLocation = function(index) {
+	    	DepositLocationRepo.remove(index);
 		};
 
 	});	

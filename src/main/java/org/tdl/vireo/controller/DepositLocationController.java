@@ -152,37 +152,42 @@ public class DepositLocationController {
         return new ApiResponse(SUCCESS);
     }
 
-    @ApiMapping("/delete/{id}")
+    @ApiMapping("/remove/{indexString}")
     @Auth(role = "ROLE_MANAGER")
-    public ApiResponse deleteDepositLocation(@ApiVariable String idString) {        
-        Long id = -1L;
+    @Transactional
+    public ApiResponse removeDepositLocation(@ApiVariable String indexString) {        
+        Integer index = -1;
         
         try {
-            id = Long.parseLong(idString);
+            index = Integer.parseInt(indexString);
         }
         catch(NumberFormatException nfe) {
-            return new ApiResponse(ERROR, "Id is not a valid deposit location id!");
+            logger.info("\n\nNOT A NUMBER " + indexString + "\n\n");
+            return new ApiResponse(ERROR, "Id is not a valid deposit location order!");
         }
         
-        if(id > 0) {               
-            depositLocationRepo.delete(id);
+        if(index >= 0) {               
+            depositLocationRepo.remove(index);
         }
         else {
-            return new ApiResponse(ERROR, "Id is not a valid deposit location id!");
+            logger.info("\n\nINDEX" + index + "\n\n");
+            return new ApiResponse(ERROR, "Id is not a valid deposit location order!");
         }
         
-        logger.info("Deleted deposit location with id " + id);
+        logger.info("Deleted deposit location with order " + index);
+        
+        simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(SUCCESS, getAll()));
         
         return new ApiResponse(SUCCESS);
     }
     
-    @ApiMapping("/reorder/{from}/{to}")
+    @ApiMapping("/reorder/{src}/{dest}")
     @Auth(role = "ROLE_MANAGER")
     @Transactional
-    public ApiResponse reorderDepositLocations(@ApiVariable String from, @ApiVariable String to) {
-        Integer intFrom = Integer.parseInt(from);
-        Integer intTo = Integer.parseInt(to);
-        depositLocationRepo.reorder(intFrom, intTo);        
+    public ApiResponse reorderDepositLocations(@ApiVariable String src, @ApiVariable String dest) {
+        Integer intSrc = Integer.parseInt(src);
+        Integer intDest = Integer.parseInt(dest);
+        depositLocationRepo.reorder(intSrc, intDest);
         simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(SUCCESS, getAll()));        
         return new ApiResponse(SUCCESS);
     }
