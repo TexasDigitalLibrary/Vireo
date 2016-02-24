@@ -12,15 +12,17 @@
 			dragging="dragging"
 			scope-value="depositLocations"
 			properties='["name", "repository"]'
-			reorder='reorderDepositLocation(src, dest)'
-			remove='removeDepositLocation(index)'
-			item-view='views/directives/dragAndDropDepositLocation.html'>
+			item-view='views/directives/dragAndDropDepositLocation.html'
+			listeners='dragControlListeners'>
 		</draganddroplist>
 		
 	</div>
 
 	<div class="col-sm-6">
-		<trashcan></trashcan>
+		<trashcan 
+			id="{{trashCan}}" 
+			listeners='dragControlListeners'>
+		</trashcan>
 	</div>
 
 	<modal modal-id="depositLocationModal" 
