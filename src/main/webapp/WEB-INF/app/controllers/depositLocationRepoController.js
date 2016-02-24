@@ -1,4 +1,4 @@
-vireo.controller("DepositLocationController", function ($controller, $scope, $q, DepositLocationRepo) {
+vireo.controller("DepositLocationRepoController", function ($controller, $scope, $q, DepositLocationRepo) {
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
 	$scope.ready = $q.all([DepositLocationRepo.ready()]);
