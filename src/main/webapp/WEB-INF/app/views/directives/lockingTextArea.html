@@ -2,11 +2,11 @@
 	<h4>{{ label }}</h4>
 	<div class="lock-control">
     	<a ng-if="locked" ng-click="toggleLock()" class="hover-pointer">
-			<span class="glyphicon glyphicon-pencil"> </span> This field is locked to prevent accidental editing, click to unlock.
+			<span class="glyphicon glyphicon-lock"> </span> This field is locked to prevent accidental editing, click to unlock.
     	</a>
     	
 		<p ng-if="!locked" ng-click="toggleLock()" class="hover-pointer">
-			<span class="glyphicon glyphicon-lock"></span> This field is unlocked and may be edited. Leaving the page will re-lock the field.
+			<span class="glyphicon glyphicon-pencil"></span> This field is unlocked and may be edited. Leaving the page will re-lock the field.
 		</p>
 		
 		<textarea class="form-control locking-text-area" ng-readonly="locked" type="text" ng-model="scopeValue" ng-keydown="keyDown({event: $event, prop: prop})" ng-blur="onBlur()">
