@@ -25,6 +25,7 @@
 	<link rel="stylesheet" href="bower_components/html5-boilerplate/css/main.css" />
 	
 	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="bower_components/ng-sortable/dist/ng-sortable.min.css">
 
 	<link rel="stylesheet" href="resources/styles/app.css" />	
 
@@ -171,6 +172,8 @@
 	<script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
 	<script src="bower_components/angular-loader/angular-loader.js"></script>
 	<script src="bower_components/angular-mocks/angular-mocks.js"></script>
+
+	<script src="bower_components/ng-sortable/dist/ng-sortable.min.js"></script>
 	
 	<!--  Core libraries -->
 	
@@ -251,6 +254,7 @@
 	    <script src="directives/shadowDirective.js"></script>
 	    <script src="directives/tamuFocusDirective.js"></script>
 	    <script src="directives/tooltipDirective.js"></script>
+	    <script src="directives/dragAndDropListDirective.js"></script>
 	    <script src="directives/lockingTextAreaDirective.js"></script>
 
 	    <!-- Services -->
@@ -263,6 +267,7 @@
 	    <script src="model/organizationRepoModel.js"></script>
 	    <script src="model/userSettingsModel.js"></script>
 	    <script src="model/userRepoModel.js"></script>
+	    <script src="model/depositLocationRepoModel.js"></script>
 
 
 	    <!-- Controllers -->

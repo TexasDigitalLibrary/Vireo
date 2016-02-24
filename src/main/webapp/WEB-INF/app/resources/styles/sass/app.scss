@@ -423,6 +423,14 @@ sidebox ul input {
 
 .locking-text-area:hover {
   cursor: default;
+
+.as-sortable-dragging { 
+  border: 1px dotted #000 !important; 
+}
+
+.repeated-span {
+  margin-left: 5px;
+  margin-right: 5px;
 }
 
 .hint {
