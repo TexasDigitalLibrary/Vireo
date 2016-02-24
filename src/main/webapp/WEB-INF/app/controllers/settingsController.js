@@ -1,4 +1,5 @@
 vireo.controller("SettingsController", function ($controller, $scope, $q, UserSettings, ConfigurableSettings) {
+
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
 	$scope.settings = {};

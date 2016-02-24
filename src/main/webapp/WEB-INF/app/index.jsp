@@ -254,6 +254,7 @@
 	    <script src="directives/shadowDirective.js"></script>
 	    <script src="directives/tamuFocusDirective.js"></script>
 	    <script src="directives/tooltipDirective.js"></script>
+	    <script src="directives/vireoModalDirective.js"></script>
 	    <script src="directives/dragAndDropListDirective.js"></script>
 	    <script src="directives/lockingTextAreaDirective.js"></script>
 
@@ -264,6 +265,7 @@
 
 	    <!-- Models -->
 	    <script src="model/configurableSettingsModel.js"></script>
+	    <script src="model/customActionSettingsModel.js"></script>
 	    <script src="model/organizationRepoModel.js"></script>
 	    <script src="model/userSettingsModel.js"></script>
 	    <script src="model/userRepoModel.js"></script>
@@ -272,7 +274,8 @@
 
 	    <!-- Controllers -->
 	    <script src="controllers/adminController.js"></script>
-	    <script src="controllers/applicationSettingsController.js"></script>  
+	    <script src="controllers/applicationSettingsController.js"></script>
+	    <script src="controllers/settings/customActionSettingsController.js"></script>
 	    <script src="controllers/headerController.js"></script>
 	   	<script src="controllers/loginController.js"></script>
 	    <script src="controllers/organizationSettingsController.js"></script>  

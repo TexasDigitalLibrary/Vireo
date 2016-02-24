@@ -1,25 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-
-	<include resource="org/springframework/boot/logging/logback/base.xml" />
-	<property name="LOG_PATH" value="${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}" />
-
-	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
-		<file>${catalina.home}/logs/vireo.log</file>
-		<append>true</append>
-
-		<encoder>
-			<!-- only log 2 lines of stack trace per cause of an exception -->
-			<pattern>%d{YYYY-MM-dd HH:mm:ss,SSS} [%thread] %-5level %logger{36} - %m %throwable{2}%n</pattern>
-		</encoder>
-	</appender>
-
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+    <property name="LOG_FILE" value="${catalina.home}/logs/vireo.log"/>
+    <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
+    
     <logger name="org.tdl.vireo" level="INFO" />
     <logger name="org.springframework" level="INFO" />
-	
-
-	<root level="INFO">
-		<appender-ref ref="FILE" />
-	</root>
-
+    
+    <root level="INFO">
+        <appender-ref ref="FILE" />
+    </root>
 </configuration>

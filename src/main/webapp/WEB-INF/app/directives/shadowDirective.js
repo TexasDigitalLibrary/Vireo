@@ -2,7 +2,7 @@ vireo.directive("shadow", function() {
 	return {
 		scope: true,
 		link: function ($scope, element, attr) {
-			
+
 			if($scope.ready && $scope.ready.$$) {
 				$scope.ready().then(function() {
 					
@@ -15,10 +15,9 @@ vireo.directive("shadow", function() {
 					var model = eval('$scope.' + parentObject);
 					
 					model['_' + targetObject] = angular.copy(model[targetObject]);
-
+					
 				});
-			}
-			
+			}			
 	    }
 	};
 });
