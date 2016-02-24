@@ -67,7 +67,6 @@ vireo.directive("pane", function($location, $timeout, $anchorScroll, AccordionSe
 
 			$scope.close = function() {
 				$scope.expanded = false;
-				console.log(paneID + " is closed");
 			}
 
 			$scope.loaded = function() {
@@ -88,7 +87,6 @@ vireo.service("AccordionService", function() {
 
 	AccordionService.add = function(id, close) {
 		openPanes[id] = close;
-		console.log(openPanes);
 	};
 
 	AccordionService.remove = function(id) {
@@ -98,7 +96,6 @@ vireo.service("AccordionService", function() {
 	AccordionService.closeAll = function(id) {
 		for(var i in openPanes) {
 			if(id != i)  {
-				console.log("closing " + id);
 				openPanes[i]();
 			}
 		}

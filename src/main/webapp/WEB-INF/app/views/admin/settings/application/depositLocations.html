@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" ng-controller="DepositLocationController">
 	<alerts channels="/settings/deposit-location" types="SUCCESS, ERROR, WARNING"></alerts>
 	<div class="col-sm-6">
 		
@@ -9,7 +9,7 @@
 		</button>
 			
 		<draganddroplist
-			scope-value="settings.depositLocations"
+			scope-value="depositLocations"
 			properties='["name", "repository"]'
 			reorder='reorderDepositLocation(from, to)'
 			item-view='views/directives/dragAndDropDepositLocation.html'>
@@ -21,9 +21,11 @@
 
 	</div>
 
+	<modal modal-id="depositLocationModal" 
+		   modal-view="views/modals/depositLocationModal.html" 
+		   modal-header-class="modal-header-primary">
+	</modal>
+
 </div>
 
-<modal modal-id="depositLocationModal" 
-	   modal-view="views/modals/depositLocationModal.html" 
-	   modal-header-class="modal-header-primary">
-</modal>
+

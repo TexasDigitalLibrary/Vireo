@@ -281,6 +281,7 @@
 	    <script src="controllers/sidebarController.js"></script>  
 	    <script src="controllers/userRepoController.js"></script>  
 	    <script src="controllers/workflowSettingsController.js"></script>  
+	    <script src="controllers/depositLocationController.js"></script> 
 	    
 	<!-- endbuild -->
 

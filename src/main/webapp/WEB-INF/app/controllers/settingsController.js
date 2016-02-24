@@ -1,19 +1,13 @@
-vireo.controller("SettingsController", function ($controller, $scope, $q, $location, $routeParams, User, UserSettings, ConfigurableSettings, SidebarService, DepositLocationRepo) {
+vireo.controller("SettingsController", function ($controller, $scope, $q, UserSettings, ConfigurableSettings) {
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
-
-	$scope.user = User.get();
 
 	$scope.settings = {};
 	
-	$scope.ready = $q.all([UserSettings.ready(), ConfigurableSettings.ready(), DepositLocationRepo.ready()]);
+	$scope.ready = $q.all([UserSettings.ready(), ConfigurableSettings.ready()]);
 		
 	$scope.settings.user  = UserSettings.get();
 
 	$scope.settings.configurable = ConfigurableSettings.get();
-
-	$scope.settings.depositLocations = DepositLocationRepo.get();
-
-	$scope.depositLocation = {};
 
 	$scope.ready.then(function() {
 
@@ -34,15 +28,6 @@ vireo.controller("SettingsController", function ($controller, $scope, $q, $locat
 
 		$scope.resetConfigurableSettings = function(type,setting) {
 			ConfigurableSettings.reset(type,setting);
-		};
-
-		$scope.createDepositLocation = function() {
-			DepositLocationRepo.add($scope.depositLocation);
-			$scope.depositLocation = {};
-		};
-
-		$scope.reorderDepositLocation = function(from, to) {
-	    	DepositLocationRepo.reorder(from, to);
 		};
 
 	});	
