@@ -4,18 +4,9 @@ import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaUpdate;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,8 +68,22 @@ public class DepositLocationController {
         
         //TODO: proper validation and response
         
-        DepositLocation newDepositLocation = depositLocationRepo.create(dataNode.get("name").asText());
-
+        DepositLocation newDepositLocation = null;
+                
+        JsonNode name = dataNode.get("name");
+        if(name != null) {
+            String nameString = name.asText();
+            if(nameString.length() > 0) {
+                newDepositLocation = depositLocationRepo.create(nameString);
+            }
+            else {
+                return new ApiResponse(ERROR, "Name required to create deposit location!");
+            }
+        }
+        else {
+            return new ApiResponse(ERROR, "Name required to create deposit location!");
+        }
+        
         JsonNode depositor = dataNode.get("depositor");
         if(depositor != null) {
             String depositorString = depositor.asText();
@@ -140,7 +145,33 @@ public class DepositLocationController {
         
         //TODO: logging
         
+        logger.info("Created deposit location with name " + newDepositLocation.getName());
+        
         simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(SUCCESS, getAll()));
+        
+        return new ApiResponse(SUCCESS);
+    }
+
+    @ApiMapping("/delete/{id}")
+    @Auth(role = "ROLE_MANAGER")
+    public ApiResponse deleteDepositLocation(@ApiVariable String idString) {        
+        Long id = -1L;
+        
+        try {
+            id = Long.parseLong(idString);
+        }
+        catch(NumberFormatException nfe) {
+            return new ApiResponse(ERROR, "Id is not a valid deposit location id!");
+        }
+        
+        if(id > 0) {               
+            depositLocationRepo.delete(id);
+        }
+        else {
+            return new ApiResponse(ERROR, "Id is not a valid deposit location id!");
+        }
+        
+        logger.info("Deleted deposit location with id " + id);
         
         return new ApiResponse(SUCCESS);
     }
