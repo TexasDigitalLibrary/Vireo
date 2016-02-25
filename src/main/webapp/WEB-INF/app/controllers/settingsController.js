@@ -88,9 +88,20 @@ vireo.controller("SettingsController", function ($controller, $scope, $q, $locat
 		{"false": "No"}
 	];
 
-    //PROQUEST / UMI SETTINGS / DEGREE CODE
+        //PROQUEST / UMI SETTINGS / DEGREE CODE
 	$scope.proquestIndexingOptions = [
 		{"true": "Yes"}, 
+                {"false": "No"}
+        ];
+
+	//Orcid settings pane
+	$scope.orcidValidationOptions = [
+		{"true": "Yes"},
+		{"false": "No"}
+	];
+
+	$scope.orcidAuthenticationOptions = [
+		{"true": "Yes"},
 		{"false": "No"}
 	];
 

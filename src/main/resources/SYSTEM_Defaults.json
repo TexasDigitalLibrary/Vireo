@@ -43,5 +43,8 @@
 			{"master_of_public_health":""},
 			{"psychology":""},
 			{"transportation":""}
+	],
+	"submission": [
+			{"license":"This is default submission license text."}
 	]
 }
