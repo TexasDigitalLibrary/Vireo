@@ -38,7 +38,7 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 			dragEnd: function(event) {
 				$scope.dragging = false;
 				if(trash.hover) {
-					var index = event.source.index + 1;					
+					var index = event.source.index + 1;
 					$scope.modalData = $scope.depositLocations.list[index - 1];
 					angular.element('#confirmRemoveDepositLocationModal').modal('show');
 					trash.element.removeClass('dragging');
@@ -51,7 +51,7 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 		    		trash.element = currentElement;
 	     			trash.element.addClass('dragging');
 	     		}
-	     		else {	     			
+	     		else {
 	     			trash.hover = false;
 	     		}
 		     	return sourceItemHandleScope.itemScope.sortableScope.$id === destSortableScope.$id;
