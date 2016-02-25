@@ -1,7 +1,7 @@
 <div class="custom-action" draggable="true">
 	<span>{{ item.order }}.</span>
 	<span class="mouse-hover-pointer"
-				ng-click="loadEditModal(item)"
+				ng-click="sortableSelect({index:item.order})"
 				ng-mouseenter="isMouseHover=true"
 				ng-mouseleave="isMouseHover=false"
 				data-toggle="modal" 

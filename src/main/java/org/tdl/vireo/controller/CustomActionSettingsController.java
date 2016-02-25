@@ -126,7 +126,7 @@ public class CustomActionSettingsController {
         Integer intSrc = Integer.parseInt(src);
         Integer intDest = Integer.parseInt(dest);
         customActionDefinitionRepo.reorder(intSrc, intDest);
-        simpMessagingTemplate.convertAndSend("/channel/settings/custom-action", new ApiResponse(SUCCESS, getAll()));        
+        simpMessagingTemplate.convertAndSend("/channel/settings/custom-actions", new ApiResponse(SUCCESS, getAll()));        
         return new ApiResponse(SUCCESS);
     }
     

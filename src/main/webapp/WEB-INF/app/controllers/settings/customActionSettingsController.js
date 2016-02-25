@@ -2,11 +2,14 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
 	$scope.ready = $q.all([CustomActionSettings.ready()]);
-
-	$scope.customActions = CustomActionSettings.get();
-
-	$scope.customAction = { isStudentVisible: false };
 	
+	$scope.modalData = {};
+
+	$scope.modalData.customActions = CustomActionSettings.get();
+
+	$scope.modalData.customAction = { isStudentVisible: false };
+
+		
 	$scope.dragging = false;
 
 	$scope.trashCan = 'custom-action-trash';
@@ -14,8 +17,8 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 	$scope.ready.then(function() {
 
 		$scope.createCustomActionSettings = function() {
-			CustomActionSettings.create($scope.customAction);
-			$scope.customAction = { isStudentVisible: false };
+			CustomActionSettings.create($scope.modalData.customAction);
+			$scope.modalData.customAction = { isStudentVisible: false };
 		};
 		
 		$scope.reorderCustomActionSettings = function(src, dest) {
@@ -26,12 +29,12 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 			CustomActionSettings.remove(index);
 		};
 		
-		$scope.loadEditModal = function(item) {
-			$scope.customAction = item;
+		$scope.sortableSelect = function(item) {
+			$scope.modalData.customAction = item;
 		};
 
 		$scope.editCustomActionSettings = function() {
-			CustomActionSettings.edit($scope.customAction);
+			CustomActionSettings.edit($scope.modalData.customAction);
 		};
 		
 		
