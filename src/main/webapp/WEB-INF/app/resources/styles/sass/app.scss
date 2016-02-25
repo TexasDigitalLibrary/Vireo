@@ -414,7 +414,14 @@ sidebox ul input {
   padding: 2px 0 2px 3px;
   background-color: #ffffff;
   height:24px;
+}
 
+.hover-pointer:hover {
+  cursor: pointer;
+}
+
+.locking-text-area:hover {
+  cursor: default;
 }
 
 .hover-pointer:hover {
