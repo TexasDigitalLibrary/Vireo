@@ -7,7 +7,7 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 	
 	$scope.dragging = false;
 
-	$scope.trashCan = 'custom-action-trash';
+	$scope.trashCanId = 'custom-action-trash';
 	
 	$scope.resetCustomAction = function() {
 		$scope.modalData = { isStudentVisible: false };
@@ -77,8 +77,6 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 		
 		$scope.selectCustomAction = function(index) {
 			$scope.modalData = $scope.customActions.list[index - 1];
-			angular.element('#customActionEditModal').modal('show');
-			console.log($scope.modalData);
 		};
 
 		$scope.editCustomActionSettings = function() {
