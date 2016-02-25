@@ -15,7 +15,8 @@
 			scope-value="depositLocations"
 			properties='["name", "repository"]'
 			item-view='views/directives/dragAndDropDepositLocation.html'
-			listeners='dragControlListeners'>
+			listeners='dragControlListeners'
+			sortable-select='selectDepositLocation(index)'>
 		</draganddroplist>
 		
 	</div>
@@ -32,21 +33,21 @@
 		   modal-view="views/modals/settings/addDepositLocationModal.html" 
 		   modal-header-class="modal-header-primary"
 		   modal-controller="DepositLocationRepoController"
-		   modal-data="depositLocation">
+		   modal-data="modalData">
 	</vireomodal>
 
 	<vireomodal modal-id="editDepositLocationModal" 
 		   modal-view="views/modals/settings/editDepositLocationModal.html" 
 		   modal-header-class="modal-header-primary"
 		   modal-controller="DepositLocationRepoController"
-		   modal-data="depositLocation">
+		   modal-data="modalData">
 	</vireomodal>
 
 	<vireomodal modal-id="confirmRemoveDepositLocationModal" 
 		   modal-view="views/modals/settings/confirmRemoveDepositLocationModal.html" 
 		   modal-header-class="modal-header-primary"
 		   modal-controller="DepositLocationRepoController"
-		   modal-data="depositLocation">
+		   modal-data="modalData">
 	</vireomodal>
 	
 </div>

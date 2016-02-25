@@ -1,4 +1,5 @@
-<div class="deposit-location" draggable="true">
+<div class="deposit-location" ng-mouseenter="isMouseHover=true" ng-mouseleave="isMouseHover=false">
 	<span>{{ item.order }}.</span>
 	<span ng-repeat="property in properties" class="repeated-span">{{item[property]}}</span>
+	<span ng-show="isMouseHover" class="glyphicon glyphicon-pencil edit-setting-icon" ng-click="sortableSelect({index:item.order})"></span>
 </div>

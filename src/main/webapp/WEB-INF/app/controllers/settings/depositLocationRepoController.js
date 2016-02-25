@@ -5,13 +5,15 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 
 	$scope.depositLocations = DepositLocationRepo.get();
 
-	$scope.depositLocation = {};
-
 	$scope.dragging = false;
 
 	$scope.trashCanId = 'deposit-location-trash';
 	
-	
+	$scope.resetDepositLocation = function() {
+		$scope.modalData = {};
+	}
+
+	$scope.resetDepositLocation();
 	
 	$scope.ready.then(function() {
 
@@ -34,7 +36,7 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 				$scope.dragging = false;
 				if(trash.hover) {
 					var index = event.source.index + 1;					
-					$scope.depositLocation = $scope.depositLocations.list[index - 1];
+					$scope.modalData = $scope.depositLocations.list[index - 1];
 					angular.element('#confirmRemoveDepositLocationModal').modal('show');
 					trash.element.removeClass('dragging');
 				}
@@ -60,14 +62,21 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 		    }
 		};
 
+		$scope.selectDepositLocation = function(index) {
+			$scope.modalData = $scope.depositLocations.list[index - 1];
+			angular.element('#editDepositLocationModal').modal('show');
+			console.log($scope.modalData);
+		};
+
 		$scope.createDepositLocation = function() {
-			DepositLocationRepo.add($scope.depositLocation);
-			$scope.depositLocation = {};
+			console.log($scope.modalData)
+			DepositLocationRepo.add($scope.modalData);
+			$scope.resetDepositLocation();
 		};
 
 		$scope.updateDepositLocation = function() {
-			DepositLocationRepo.update($scope.depositLocation);
-			$scope.depositLocation = {};
+			DepositLocationRepo.update($scope.modalData);
+			$scope.resetDepositLocation();
 		};
 
 		$scope.reorderDepositLocation = function(src, dest) {
@@ -76,7 +85,7 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 
 		$scope.removeDepositLocation = function(index) {
 	    	DepositLocationRepo.remove(index);
-	    	$scope.depositLocation = {};
+	    	$scope.resetDepositLocation();
 		};
 		
 	});	

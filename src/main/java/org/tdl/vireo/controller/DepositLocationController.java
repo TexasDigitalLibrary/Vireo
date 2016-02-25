@@ -148,6 +148,105 @@ public class DepositLocationController {
         
         return new ApiResponse(SUCCESS);
     }
+    
+    @ApiMapping("/update")
+    @Auth(role = "ROLE_MANAGER")
+    public ApiResponse updateDepositLocation(@Data String data) {
+        
+        JsonNode dataNode;
+        try {
+            dataNode = objectMapper.readTree(data);
+        } catch (IOException e) {
+            return new ApiResponse(ERROR, "Unable to parse update json ["+e.getMessage()+"]");
+        }
+        
+        //TODO: proper validation and response
+        
+        DepositLocation depositLocation = null;
+                
+        JsonNode name = dataNode.get("name");
+        if(name != null) {
+            String nameString = name.asText();
+            if(nameString.length() > 0) {
+                System.out.println("\n\n" + nameString + "\n\n");
+                depositLocation = depositLocationRepo.findByName(nameString);
+                System.out.println("\n\n" + depositLocation.getName() + "\n\n");
+            }
+            else {
+                return new ApiResponse(ERROR, "Name required to update deposit location!");
+            }
+        }
+        else {
+            return new ApiResponse(ERROR, "Name required to update deposit location!");
+        }
+        
+        JsonNode depositor = dataNode.get("depositor");
+        if(depositor != null) {
+            String depositorString = depositor.asText();
+            if(depositorString != null && depositorString.length() > 0) 
+                depositLocation.setDepositor(depositorString);
+        }
+        
+        JsonNode packager = dataNode.get("packager");
+        if(packager != null) {
+            String packagerString = packager.asText();
+            if(packagerString != null && packagerString.length() > 0) 
+                depositLocation.setPackager(packagerString);
+        }
+        
+        JsonNode repository = dataNode.get("repository");
+        if(repository != null) {
+            String repositoryString = repository.asText();
+            if(repositoryString != null && repositoryString.length() > 0) 
+                depositLocation.setRepository(repositoryString);
+        }
+        
+        JsonNode timeout = dataNode.get("timeout");
+        if(timeout != null) {
+            depositLocation.setTimeout(timeout.asInt());
+        }
+        
+        JsonNode username = dataNode.get("username");
+        if(username != null) {
+            String usernameString = username.asText();
+            if(usernameString != null && usernameString.length() > 0) 
+                depositLocation.setUsername(usernameString);
+        }
+        
+        JsonNode password = dataNode.get("password");
+        if(password != null) {
+            String passwordString = password.asText();
+            if(passwordString != null && passwordString.length() > 0) 
+                depositLocation.setPassword(passwordString);
+        }
+        
+        JsonNode onBehalfOf = dataNode.get("onBehalfOf");
+        if(onBehalfOf != null) {
+            String onBehalfOfString = onBehalfOf.asText();
+            if(onBehalfOfString != null && onBehalfOfString.length() > 0) 
+                depositLocation.setOnBehalfOf(onBehalfOfString);
+        }
+        
+        JsonNode collection = dataNode.get("collection");
+        if(collection != null) {
+            String collectionString = collection.asText();
+            if(collectionString != null && collectionString.length() > 0) 
+                depositLocation.setCollection(collectionString);
+        }
+        
+        
+        depositLocation.setOrder((int) depositLocationRepo.count());
+        
+        depositLocation = depositLocationRepo.save(depositLocation);
+        
+        //TODO: logging
+        
+        logger.info("Created deposit location with name " + depositLocation.getName());
+        
+        simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(SUCCESS, getAll()));
+        
+        return new ApiResponse(SUCCESS);
+    }
 
     @ApiMapping("/remove/{indexString}")
     @Auth(role = "ROLE_MANAGER")

@@ -6,117 +6,55 @@
 </div>
 
 <div class="modal-body">
-	<div>
-		<form>
-			<div id="deposit-location-errors">
-            </div>
-
-			<div class="row form-group">
-				<div class="col-sm-4">
-					<span class="pull-right" for="depositLocation-name">Location Name</span>
-				</div>
-				<div class="col-sm-6">								
-		     		<input id="depositLocation-name" name="depositLocation-name" type="text" class="form-control" ng-model="depositLocation.name"/>
-				</div>	
-			</div>
-
-			<div class="row form-group">
-				<div class="col-sm-4">
-					<span class="pull-right" for="depositLocation-depositor">Protocol</span>
-				</div>
-				<div class="col-sm-6">
-					<select id="depositLocation-depositor" name="depositLocation-depositor"  ng-model="depositLocation.depositor">
-                        <option value="Sword1Deposit">SWORD Version 1</option>
-                        <option value="FileDeposit">File Deposit</option>
-                    </select>
-				</div>
-			</div>
-
-			<div class="row form-group">
-				<div class="col-sm-4">
-					<span class="pull-right" for="depositLocation-packager">Format</span>
-				</div>
-				<div class="col-sm-6">
-					<select id="depositLocation-packager" name="depositLocation-packager" ng-model="depositLocation.packager">
-                        <option value="VireoExport">Vireo Export</option>
-                	</select>					
-				</div>
-			</div>
-
-			<div class="row form-group">
-				<div class="col-sm-4">
-					<span class="pull-right" for="dpositLocation-repository">Repository Location</span>
-				</div>
-				<div class="col-sm-6">
-					<input id="depositLocation-repository" type="text" name="depositLocation-repository" class="form-control" ng-model="depositLocation.repository">			
-				</div>
-			</div>
-
-			<div class="row form-group">
-				<div class="col-sm-4">
-					<span class="pull-right" for="dpositLocation-repository">Repository Timeout</span>
-				</div>
-				<div class="col-sm-6">
-					<input id="depositLocation-timeout" type="text" name="depositLocation-timeout" class="form-control" ng-model="depositLocation.timeout">			
-				</div>
-			</div>
-
-			<div class="row form-group">
-				<div class="col-sm-4">
-					<span class="pull-right" for="dpositLocation-username">Username</span>
-				</div>
-				<div class="col-sm-6">
-					<input type="text" name="depositLocation-username" id="depositLocation-username" class="form-control" ng-model="depositLocation.username">			
-				</div>
-			</div>
-
-			<div class="row form-group">
-				<div class="col-sm-4">
-					<span class="pull-right" for="depositLocation-password">Password</span>
-				</div>
-				<div class="col-sm-6">
-					<input type="password" name="depositLocation-password" id="depositLocation-password" class="form-control" ng-model="depositLocation.password">			
-				</div>
-			</div>
-
-			<div class="row form-group">
-				<div class="col-sm-4">
-					<span class="pull-right" for="depositLocation-password">On Behalf Of</span>
-				</div>
-				<div class="col-sm-6">
-					<input type="text" name="depositLocation-onBehalfOf" id="depositLocation-onBehalfOf" class="form-control" ng-model="depositLocation.onBehalfOf">			
-				</div>
-			</div>
-
-			<div class="row form-group">
-				<div class="col-sm-4">
-					
-				</div>
-				<div class="col-sm-6">
-					<button id="depositLocation-test" type="button" class="btn btn-default">
-						Test connection &amp; find available collections
-					</button>			
-				</div>
-			</div>
-
-			<div class="row form-group">
-				<div class="col-sm-4">
-					<span class="pull-right" for="depositLocation-collection">Collection</span>
-				</div>
-				<div class="col-sm-6">
-					  <select id="depositLocation-collection" name="depositLocation-collection" ng-model="depositLocation.collection">
-                      	<option>Please select a collection...</option>                                                                   
-                    </select>			
-				</div>
-			</div>
-
-
-
-		</form>
-	</div>
+	<form>
+    	<div class="form-group">
+        	<label for="depositLocation-name">Location Name</label>
+        	<input ng-model="modalData.name" type="text" class="form-control" id="depositLocation-name" placeholder="Location Name">
+    	</div>
+    	<div class="form-group">
+       	 	<label for="depositLocation-depositor">Protocol</label>
+        	<select ng-model="modalData.depositor" class="form-control" id="depositLocation-depositor" name="depositLocation-depositor" ng-init="modalData.depositor='Sword1Deposit'">
+                <option value="Sword1Deposit">SWORD Version 1</option>
+                <option value="FileDeposit">File Deposit</option>
+            </select>
+    	</div>
+    	<div class="form-group">
+       	 	<label for="depositLocation-packager">Format</label>
+        	<select ng-model="modalData.packager" class="form-control" id="depositLocation-packager" name="depositLocation-packager" ng-init="modalData.depositor='VireoExport'">
+                <option value="VireoExport">Vireo Export</option>
+            </select>
+    	</div>
+    	<div class="form-group">
+        	<label for="depositLocation-repository">Repository Location</label>
+        	<input ng-model="modalData.repository" type="text" class="form-control" id="depositLocation-repository" placeholder="Repository Location">
+    	</div>
+    	<div class="form-group">
+        	<label for="depositLocation-collection">Collection</label>
+        	<input ng-model="modalData.collection" type="text" class="form-control" id="depositLocation-collection" placeholder="Collection">
+    	</div>
+    	<div class="form-group">
+        	<label for="depositLocation-timeout">Repository Timeout</label>
+        	<input ng-model="modalData.timeout" type="text" class="form-control" id="depositLocation-timeout" placeholder="Repository Timeout">
+    	</div>
+    	<div class="form-group">
+        	<label for="depositLocation-username">Username</label>
+        	<input ng-model="modalData.username" type="text" class="form-control" id="depositLocation-username" placeholder="Username">
+    	</div>
+    	<div class="form-group">
+        	<label for="depositLocation-password">Password</label>
+        	<input ng-model="modalData.password" type="password" class="form-control" id="depositLocation-password" placeholder="Password">
+    	</div>
+    	<div class="form-group">
+        	<label for="depositLocation-onBehalfOf">On Behalf Of</label>
+        	<input ng-model="modalData.onBehalfOf" type="text" class="form-control" id="depositLocation-onBehalfOf" placeholder="On Behalf Of">
+    	</div>
+    	<div class="form-group">
+        	<button id="depositLocation-test" type="button" class="btn btn-default">Test connection &amp; find available collections</button>
+    	</div>
+	</form>
 </div>
 
 <div class="modal-footer">
-	<button type="button" class="btn btn-warning" ng-click="depositLocation = {}" data-dismiss="modal">Close</button>
-	<button id="depositLocation-save" type="button" class="btn btn-primary" data-dismiss="modal" ng-click="createDepositLocation()">Save</button>
+	<button type="button" class="btn btn-warning" ng-click="resetDepositLocation()" data-dismiss="modal">Cancel</button>
+	<button id="depositLocation-save" type="button" class="btn btn-primary" data-dismiss="modal" ng-click="createDepositLocation()">Create</button>
 </div>
