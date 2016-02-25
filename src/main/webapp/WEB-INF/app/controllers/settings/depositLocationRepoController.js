@@ -10,7 +10,10 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 	$scope.trashCanId = 'deposit-location-trash';
 	
 	$scope.resetDepositLocation = function() {
-		$scope.modalData = {};
+		$scope.modalData = {
+			depositor: 'Sword1Deposit',
+			packager: 'VireoExport'
+		};
 	}
 
 	$scope.resetDepositLocation();
