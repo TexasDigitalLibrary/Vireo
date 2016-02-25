@@ -11,7 +11,7 @@ vireo.controller("SettingsController", function ($controller, $scope, $q, UserSe
 	$scope.settings.configurable = ConfigurableSettings.get();
 
 	$scope.ready.then(function() {
-
+		
 		$scope.updateUserSetting = function(setting, timer) {
 			if(Object.keys($scope.userSettingsForm.$error).length) return;
 
@@ -64,7 +64,7 @@ vireo.controller("SettingsController", function ($controller, $scope, $q, UserSe
 	 * 
 	 */
 	
-	//Submission Availability pane
+	//SUBMISSION AVAILABILITY
 	$scope.submissionsOpenOptions = [
 		{"true": "Open"}, 
 		{"false": "Closed"}
@@ -72,6 +72,23 @@ vireo.controller("SettingsController", function ($controller, $scope, $q, UserSe
 
 	$scope.allowMultipleSubmissionsOptions = [
 		{"true": "Yes"}, 
+		{"false": "No"}
+	];
+
+        //PROQUEST / UMI SETTINGS / DEGREE CODE
+	$scope.proquestIndexingOptions = [
+		{"true": "Yes"}, 
+                {"false": "No"}
+        ];
+
+	//Orcid settings pane
+	$scope.orcidValidationOptions = [
+		{"true": "Yes"},
+		{"false": "No"}
+	];
+
+	$scope.orcidAuthenticationOptions = [
+		{"true": "Yes"},
 		{"false": "No"}
 	];
 

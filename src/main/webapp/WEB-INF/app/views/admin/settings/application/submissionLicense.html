@@ -1,25 +1,13 @@
 <div class="row">
 	<div class="col-sm-6">
 
-		<div class="lock-control">
-			<a href="#submit_license" ng-click="toggle()" ng-hide="clicked">
-		    	<span class="glyphicon glyphicon-lock"> </span>
-		    	This field is locked to prevent accidental editing, click to unlock.
-			</a>
-				    	
-			<p ng-show="clicked">
-				<span class="glyphicon glyphicon-pencil"></span>
-				This field is unlocked and may be edited. Leaving the page will re-lock the field.
-			</p>
-
-			<textarea id="submit_license" name="submit_license" class="form-control"  readonly="clicked">TEST TEXTAREA
-
-			</textarea>
-
-			<div class="hint">
-				Students may be required to accept this license as part of their submission. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically.
-			</div>		
-		</div>
+		<lockingtextarea
+		  	label="ProQuest License Agreement:"
+			hint="Students may be required to accept this license as part of their submission. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically."
+			scope-value="settings.configurable.submission.license"
+			on-blur="updateConfigurableSettings('submission', 'license')"
+          	key-down="confirmEdit(event, prop)">
+		</lockingtextarea>
 		
 	</div>
 </div>
