@@ -3,20 +3,18 @@
 	<div class="col-sm-6">
 
 		<button class="btn btn-default modal-add-btn"
-				ng-click="loadCreateModal()" 
 				data-toggle="modal" 
 				data-target="#customActionNewModal">
 				Add New
 		</button>
 
-		<p ng-if="customAction.list.length == 0">Add new Custom actions</p>
+		<p ng-if="customActions.list.length == 0">Add new Custom actions</p>
 		
 		<draganddroplist
 			dragging="dragging"
-			scope-value="customAction"
+			scope-value="customActions"
 			properties='["label", "isStudentVisible"]'
 			item-view='views/directives/dragAndDropCustomAction.html'
-			loadEditModal='loadEditModal'
 			listeners='dragControlListeners'>
 		</draganddroplist>
 	</div>
@@ -32,14 +30,14 @@
 		   modal-view="views/modals/settings/customActionNewModal.html" 
 		   modal-header-class="modal-header-primary"
 		   modal-controller="CustomActionSettingsController"
-		   modal-data="modalData">
+		   modal-data="customAction">
 	</vireomodal>
 
 	<vireomodal modal-id="customActionEditModal" 
 		   modal-view="views/modals/settings/customActionEditModal.html" 
 		   modal-header-class="modal-header-primary"
 		   modal-controller="CustomActionSettingsController"
-		   modal-data="modalData">
+		   modal-data="customAction">
 	</vireomodal>
 
 </div>
