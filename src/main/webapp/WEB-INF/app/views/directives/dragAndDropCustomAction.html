@@ -1,0 +1,14 @@
+<div class="custom-action" draggable="true">
+	<span>{{ item.order }}.</span>
+	<span class="mouse-hover-pointer"
+				ng-click="sortableSelect({index:item.order})"
+				ng-mouseenter="isMouseHover=true"
+				ng-mouseleave="isMouseHover=false"
+				data-toggle="modal" 
+				data-target="#customActionEditModal">
+		<span ng-show="!item.isStudentVisible" class="glyphicon glyphicon glyphicon-user"></span>
+		<span ng-show="item.isStudentVisible" class="glyphicon glyphicon glyphicon-globe"></span>
+		{{item.label}}
+	</span>
+	<span ng-show="isMouseHover" class="glyphicon glyphicon-pencil edit-setting-icon"></span>
+</div>

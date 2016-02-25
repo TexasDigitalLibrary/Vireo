@@ -1,43 +1,30 @@
 <div class="row" ng-controller="CustomActionSettingsController">
+	<alerts channels="/settings/custom-action" types="SUCCESS, ERROR, WARNING" exclusive></alerts>
 	<div class="col-sm-6">
 
 		<button class="btn btn-default modal-add-btn"
-				ng-click="loadCreateModal()" 
 				data-toggle="modal" 
 				data-target="#customActionNewModal">
 				Add New
 		</button>
 
-		<p ng-if="customAction.list.length == 0">Add new Custom actions</p>
-
-		<ol>
-			<li ng-repeat="customAction in customAction.list">
-				<span class="mouse-hover-pointer"
-				ng-click="loadEditModal(customAction)"
-				ng-mouseenter="isMouseHover=true"
-				ng-mouseleave="isMouseHover=false"
-				data-toggle="modal" 
-				data-target="#customActionEditModal">
-					<span ng-show="!customAction.isStudentVisible" class="glyphicon glyphicon glyphicon-user"></span>
-					<span ng-show="customAction.isStudentVisible" class="glyphicon glyphicon glyphicon-globe"></span>
-					{{customAction.label}}
-				</span>
-				<span ng-show="isMouseHover" class="glyphicon glyphicon-pencil edit-setting-icon"></span>
-			</li>
-		</ol>
-
+		<p ng-if="customActions.list.length == 0">Add new Custom actions</p>
+		
+		<draganddroplist
+			dragging="dragging"
+			scope-value="customActions"
+			properties='["label", "isStudentVisible"]'
+			item-view='views/directives/dragAndDropCustomAction.html'
+			listeners='dragControlListeners'
+			sortable-select='selectCustomAction(index)'>
+		</draganddroplist>
 	</div>
 	
 	<div class="col-sm-6">
-
-		<div class="trash-drop-zone">
-			<div class="col-sm-6">
-				<span class="glyphicon glyphicon-trash"></span>	
-			</div>
-			<div class="col-sm-6">
-				<p>Remove items by dragging them to trash can</p>
-			</div>
-		</div>
+		<trashcan 
+			id="{{trashCanId}}" 
+			listeners='dragControlListeners'>
+		</trashcan>
 	</div>
 
 	<vireomodal modal-id="customActionNewModal" 
@@ -49,6 +36,13 @@
 
 	<vireomodal modal-id="customActionEditModal" 
 		   modal-view="views/modals/settings/customActionEditModal.html" 
+		   modal-header-class="modal-header-primary"
+		   modal-controller="CustomActionSettingsController"
+		   modal-data="modalData">
+	</vireomodal>
+	
+	<vireomodal modal-id="confirmRemoveCustomActionModal" 
+		   modal-view="views/modals/settings/customActionConfirmModal.html" 
 		   modal-header-class="modal-header-primary"
 		   modal-controller="CustomActionSettingsController"
 		   modal-data="modalData">
