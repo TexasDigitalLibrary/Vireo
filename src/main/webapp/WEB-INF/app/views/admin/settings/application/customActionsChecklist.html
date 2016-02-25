@@ -12,10 +12,11 @@
 		
 		<draganddroplist
 			dragging="dragging"
-			scope-value="modalData.customActions"
+			scope-value="customActions"
 			properties='["label", "isStudentVisible"]'
 			item-view='views/directives/dragAndDropCustomAction.html'
-			listeners='dragControlListeners'>
+			listeners='dragControlListeners'
+			sortable-select='selectCustomAction(index)'>
 		</draganddroplist>
 	</div>
 	
@@ -30,14 +31,14 @@
 		   modal-view="views/modals/settings/customActionNewModal.html" 
 		   modal-header-class="modal-header-primary"
 		   modal-controller="CustomActionSettingsController"
-		   modal-data="customAction">
+		   modal-data="modalData">
 	</vireomodal>
 
 	<vireomodal modal-id="customActionEditModal" 
 		   modal-view="views/modals/settings/customActionEditModal.html" 
 		   modal-header-class="modal-header-primary"
 		   modal-controller="CustomActionSettingsController"
-		   modal-data="customAction">
+		   modal-data="modalData">
 	</vireomodal>
 
 </div>

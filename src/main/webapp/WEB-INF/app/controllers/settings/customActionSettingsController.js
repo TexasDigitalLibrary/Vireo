@@ -3,22 +3,68 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 
 	$scope.ready = $q.all([CustomActionSettings.ready()]);
 	
-	$scope.modalData = {};
-
-	$scope.modalData.customActions = CustomActionSettings.get();
-
-	$scope.modalData.customAction = { isStudentVisible: false };
-
-		
+	$scope.customActions = CustomActionSettings.get();
+	
 	$scope.dragging = false;
 
 	$scope.trashCan = 'custom-action-trash';
+	
+	$scope.resetCustomAction = function() {
+		$scope.modalData = { isStudentVisible: false };
+	}
 
-	$scope.ready.then(function() {
+	$scope.resetCustomAction();
 
+	$scope.ready.then(function() {		
+		
+		var trash = {
+			hover: false,
+			element: null
+		};
+
+		$scope.dragControlListeners = {
+			dragStart: function(event) {
+				$scope.dragging = true;
+			},
+			dragMove: function(event) {
+				if(trash.hover) {
+					trash.hover = false;
+					trash.element.removeClass('dragging');
+				}
+			},
+			dragEnd: function(event) {
+				$scope.dragging = false;
+				if(trash.hover) {
+					var index = event.source.index + 1;					
+					$scope.modalData = $scope.customActions.list[index - 1];
+					angular.element('#confirmRemoveCustomActionModal').modal('show');
+					trash.element.removeClass('dragging');
+				}
+			},
+		    accept: function (sourceItemHandleScope, destSortableScope) {
+		    	var currentElement = destSortableScope.element;
+		    	if(currentElement[0].id == $scope.trashCanId) {
+		    		trash.hover = true;
+		    		trash.element = currentElement;
+	     			trash.element.addClass('dragging');
+	     		}
+	     		else {	     			
+	     			trash.hover = false;
+	     		}
+		     	return sourceItemHandleScope.itemScope.sortableScope.$id === destSortableScope.$id;
+		    },
+		    orderChanged: function(event) {
+		    	if(!trash.hover) {
+		    		var src = event.source.index + 1;
+		    		var dest = event.dest.index + 1;
+		    		$scope.reorderCustomActionSettings(src, dest);
+		    	}
+		    }
+		};
+		
 		$scope.createCustomActionSettings = function() {
-			CustomActionSettings.create($scope.modalData.customAction);
-			$scope.modalData.customAction = { isStudentVisible: false };
+			CustomActionSettings.create($scope.modalData);
+			$scope.resetCustomAction();
 		};
 		
 		$scope.reorderCustomActionSettings = function(src, dest) {
@@ -29,47 +75,14 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 			CustomActionSettings.remove(index);
 		};
 		
-		$scope.sortableSelect = function(item) {
-			$scope.modalData.customAction = item;
+		$scope.selectCustomAction = function(index) {
+			$scope.modalData = $scope.customActions.list[index - 1];
+			angular.element('#customActionEditModal').modal('show');
+			console.log($scope.modalData);
 		};
 
 		$scope.editCustomActionSettings = function() {
-			CustomActionSettings.edit($scope.modalData.customAction);
+			CustomActionSettings.edit($scope.modalData);
 		};
-		
-		
-		var overTrash = false;
-
-		$scope.dragControlListeners = {
-			dragStart: function(event) {
-				$scope.dragging = true;
-			},
-			dragEnd: function(event) {
-				$scope.dragging = false;
-				if(overTrash) {
-					console.log('trash it!');
-					var index = event.source.index + 1;
-					$scope.removeCustomActionSettings(index);
-				}
-			},
-		    accept: function (sourceItemHandleScope, destSortableScope) {
-		    	var id = destSortableScope.element[0].id;
-	     		if(id == $scope.trashCan) {
-	     			overTrash = true;
-	     		}
-	     		else {
-	     			overTrash = false;
-	     		}
-		     	return sourceItemHandleScope.itemScope.sortableScope.$id === destSortableScope.$id;
-		    },
-		    orderChanged: function(event) {
-		    	if(!overTrash) {
-		    		var src = event.source.index + 1;
-		    		var dest = event.dest.index + 1;
-		    		$scope.reorderCustomActionSettings(src, dest);
-		    	}
-		    }
-		};
-
 	});
 });
