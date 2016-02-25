@@ -173,7 +173,7 @@
 	<script src="bower_components/angular-loader/angular-loader.js"></script>
 	<script src="bower_components/angular-mocks/angular-mocks.js"></script>
 
-	<script src="bower_components/ng-sortable/dist/ng-sortable.min.js"></script>
+	<script src="bower_components/ng-sortable/dist/ng-sortable.js"></script>
 	
 	<!--  Core libraries -->
 	
@@ -254,8 +254,10 @@
 	    <script src="directives/shadowDirective.js"></script>
 	    <script src="directives/tamuFocusDirective.js"></script>
 	    <script src="directives/tooltipDirective.js"></script>
+	    <script src="directives/vireoModalDirective.js"></script>
 	    <script src="directives/dragAndDropListDirective.js"></script>
 	    <script src="directives/lockingTextAreaDirective.js"></script>
+	    <script src="directives/trashCanDirective.js"></script>
 
 	    <!-- Services -->
 	    <script src="services/sidebarService.js"></script>
@@ -264,6 +266,7 @@
 
 	    <!-- Models -->
 	    <script src="model/configurableSettingsModel.js"></script>
+	    <script src="model/customActionSettingsModel.js"></script>
 	    <script src="model/organizationRepoModel.js"></script>
 	    <script src="model/userSettingsModel.js"></script>
 	    <script src="model/userRepoModel.js"></script>
@@ -272,15 +275,18 @@
 
 	    <!-- Controllers -->
 	    <script src="controllers/adminController.js"></script>
-	    <script src="controllers/applicationSettingsController.js"></script>
+	    <script src="controllers/applicationSettingsController.js"></script>	    
 	    <script src="controllers/headerController.js"></script>
-            <script src="controllers/loginController.js"></script>
-            <script src="controllers/organizationSettingsController.js"></script>
+        <script src="controllers/loginController.js"></script>
+        <script src="controllers/organizationSettingsController.js"></script>
 	    <script src="controllers/registrationController.js"></script>
 	    <script src="controllers/settingsController.js"></script>
-	    <script src="controllers/sidebarController.js"></script>
-	    <script src="controllers/userRepoController.js"></script>
-	    <script src="controllers/workflowSettingsController.js"></script>
+	    <script src="controllers/sidebarController.js"></script>  
+	    <script src="controllers/userRepoController.js"></script>  
+	    <script src="controllers/workflowSettingsController.js"></script>  
+	    <script src="controllers/settings/customActionSettingsController.js"></script>
+	    <script src="controllers/settings/depositLocationRepoController.js"></script> 
+	    
 	<!-- endbuild -->
 
 	<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->

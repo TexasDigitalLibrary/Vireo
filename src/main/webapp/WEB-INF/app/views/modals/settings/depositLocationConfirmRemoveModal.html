@@ -1,0 +1,17 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		<span class="modal-close" aria-hidden="true">&times;</span>
+	</button>
+	<h3 class="modal-title">Are You Sure?</h3>
+</div>
+
+<div class="modal-body">
+	<h4>Click confirm to remove the Deposit Location:</h4>
+	<h4>Name: {{modalData.name}}</h4>
+	<h4>Repository: {{modalData.repository}}</h4>
+</div>
+
+<div class="modal-footer">
+	<button type="button" class="btn btn-warning" ng-click="resetDepositLocation()" data-dismiss="modal">Cancel</button>
+	<button id="depositLocation-confirm" type="button" class="btn btn-primary" data-dismiss="modal" ng-click="removeDepositLocation(modalData.order)">Confirm</button>
+</div>

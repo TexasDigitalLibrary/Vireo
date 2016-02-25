@@ -2,36 +2,35 @@
 	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 		<span class="modal-close" aria-hidden="true">&times;</span>
 	</button>
-	<h3 class="modal-title">Add Action Checklist</h3>
+	<h3 class="modal-title">Edit Custom Action Checklist</h3>
 </div>
 
 <div class="modal-body">
-	<div ng-controller="SettingsController">
+	<div>
 		<form>
 			<div class="row form-group">
 				<div class="col-sm-3">
-					<span class="pull-right">New Action</span>
+					<span class="pull-right">Custom Action</span>
 				</div>
-				<div class="col-sm-6">								
-		     		<input name="degree_code_doctor_of_philosophy" type="text" class="form-control" placeholder="Label of the new custom action"/>
+
+				<div class="col-sm-6">				
+		     		<input ng-model="modalData.editCustomAction.label" type="text" class="form-control" placeholder="Label of the editable custom action"/>
 				</div>	
 			</div>
-
 			<div class="row form-group">
 				<div class="col-sm-3">
 					<span class="pull-right">Is Student Visible</span>
 				</div>
 				<div class="col-sm-6">
-						<input name="notes_email_student_by_default" type="checkbox"/>
-						<span>Is this action visible to the student?</span>
+					<input ng-model="modalData.editCustomAction.isStudentVisible" type="checkbox"/>
+					<span>Is this action visible to the student?</span>
 				</div>
 			</div>
-			
 		</form>
 	</div>
 </div>
 
 <div class="modal-footer">
-	<button type="button" class="btn btn-primary" data-dismiss="modal">Add  Action</button>
+	<button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="editCustomActionSettings(modalData.editCustomAction)">Save Custom Action</button>
 	<button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
 </div>

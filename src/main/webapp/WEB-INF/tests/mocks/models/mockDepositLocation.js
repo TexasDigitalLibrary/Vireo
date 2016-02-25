@@ -183,6 +183,12 @@ angular.module('mock.depositLocationRepo', []).
             	resolve(mockDepositLocationRepo3);
             });
         }; 
+
+        DepositLocationRepo.ready = function() {
+            return $q(function(resolve) {               
+                resolve(mockDepositLocationRepo3);
+            });
+        };
         
         return DepositLocationRepo;
 });

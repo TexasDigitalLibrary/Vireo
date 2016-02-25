@@ -1,17 +1,28 @@
-<div class="row">
+<div class="row" ng-controller="CustomActionSettingsController">
 	<div class="col-sm-6">
 
-		<button class="btn btn-default modal-add-btn" 
+		<button class="btn btn-default modal-add-btn"
+				ng-click="loadCreateModal()" 
 				data-toggle="modal" 
-				data-target="#customActionModal">
+				data-target="#customActionNewModal">
 				Add New
 		</button>
 
+		<p ng-if="customAction.list.length == 0">Add new Custom actions</p>
+
 		<ol>
-			<li>		
-				<span class="glyphicon glyphicon-pencil edit-setting-icon"></span>
-				Apply for Graduation 
-				<span class="glyphicon glyphicon glyphicon-user"></span>
+			<li ng-repeat="customAction in customAction.list">
+				<span class="mouse-hover-pointer"
+				ng-click="loadEditModal(customAction)"
+				ng-mouseenter="isMouseHover=true"
+				ng-mouseleave="isMouseHover=false"
+				data-toggle="modal" 
+				data-target="#customActionEditModal">
+					<span ng-show="!customAction.isStudentVisible" class="glyphicon glyphicon glyphicon-user"></span>
+					<span ng-show="customAction.isStudentVisible" class="glyphicon glyphicon glyphicon-globe"></span>
+					{{customAction.label}}
+				</span>
+				<span ng-show="isMouseHover" class="glyphicon glyphicon-pencil edit-setting-icon"></span>
 			</li>
 		</ol>
 
@@ -29,10 +40,20 @@
 		</div>
 	</div>
 
+	<vireomodal modal-id="customActionNewModal" 
+		   modal-view="views/modals/settings/customActionNewModal.html" 
+		   modal-header-class="modal-header-primary"
+		   modal-controller="CustomActionSettingsController"
+		   modal-data="modalData">
+	</vireomodal>
+
+	<vireomodal modal-id="customActionEditModal" 
+		   modal-view="views/modals/settings/customActionEditModal.html" 
+		   modal-header-class="modal-header-primary"
+		   modal-controller="CustomActionSettingsController"
+		   modal-data="modalData">
+	</vireomodal>
+
 </div>
 
 
-<modal modal-id="customActionModal" 
-		modal-view="views/modals/customActionModal.html" 
-		modal-header-class="modal-header-primary">
-</modal>
