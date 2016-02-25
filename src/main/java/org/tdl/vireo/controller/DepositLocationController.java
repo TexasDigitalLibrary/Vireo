@@ -62,9 +62,6 @@ public class DepositLocationController {
         } catch (IOException e) {
             return new ApiResponse(ERROR, "Unable to parse update json ["+e.getMessage()+"]");
         }
-
-        System.out.println("\n\n" + dataNode + "\n\n");
-        
         
         //TODO: proper validation and response
         

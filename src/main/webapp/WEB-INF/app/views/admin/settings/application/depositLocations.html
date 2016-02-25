@@ -6,7 +6,7 @@
 		
 		<button class="btn btn-default modal-add-btn" 
 				data-toggle="modal" 
-				data-target="#depositLocationModal">
+				data-target="#addDepositLocationModal">
 			Add Location
 		</button>
 
@@ -27,11 +27,27 @@
 			listeners='dragControlListeners'>
 		</trashcan>
 	</div>
-	
-	<modal modal-id="depositLocationModal" 
-		   modal-view="views/modals/settings/depositLocationModal.html" 
-		   modal-header-class="modal-header-primary">
-	</modal>
+
+	<vireomodal modal-id="addDepositLocationModal" 
+		   modal-view="views/modals/settings/addDepositLocationModal.html" 
+		   modal-header-class="modal-header-primary"
+		   modal-controller="DepositLocationRepoController"
+		   modal-data="depositLocation">
+	</vireomodal>
+
+	<vireomodal modal-id="editDepositLocationModal" 
+		   modal-view="views/modals/settings/editDepositLocationModal.html" 
+		   modal-header-class="modal-header-primary"
+		   modal-controller="DepositLocationRepoController"
+		   modal-data="depositLocation">
+	</vireomodal>
+
+	<vireomodal modal-id="confirmRemoveDepositLocationModal" 
+		   modal-view="views/modals/settings/confirmRemoveDepositLocationModal.html" 
+		   modal-header-class="modal-header-primary"
+		   modal-controller="DepositLocationRepoController"
+		   modal-data="depositLocation">
+	</vireomodal>
 	
 </div>
 
