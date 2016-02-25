@@ -114,7 +114,7 @@ public class CustomActionSettingsController {
         
         logger.info("Custom Action with order " + index);
         
-        simpMessagingTemplate.convertAndSend("/channel/settings/custom-action", new ApiResponse(SUCCESS, getAll()));
+        simpMessagingTemplate.convertAndSend("/channel/settings/custom-actions", new ApiResponse(SUCCESS, getAll()));
         
         return new ApiResponse(SUCCESS);
     }
