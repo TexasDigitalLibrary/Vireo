@@ -237,7 +237,6 @@ main footer {
   float: right;
 }
 
-
 .global-nav {
   margin: 0 auto;
   text-align: center;
@@ -418,14 +417,7 @@ sidebox ul input {
 }
 
 .as-sortable-dragging { 
-  border: 1px dotted #000 !important; 
-}
-
-.as-sortable-drag {
-    position: absolute;
-    pointer-events: none;
-    opacity: .8;
-    z-index: 9999;
+  
 }
 
 .repeated-span {
