@@ -1,5 +1,7 @@
 <div class="row" ng-controller="DepositLocationRepoController">
-	<alerts channels="/settings/deposit-location" types="SUCCESS, ERROR, WARNING" exclusive></alerts>
+	
+	<alerts channels="/settings/deposit-location" types="ERROR, WARNING" exclusive></alerts>
+	
 	<div class="col-sm-6">
 		
 		<button class="btn btn-default modal-add-btn" 
@@ -17,19 +19,20 @@
 		</draganddroplist>
 		
 	</div>
-
+	
 	<div class="col-sm-6">
 		<trashcan 
-			id="{{trashCan}}" 
+			id="{{trashCanId}}"
+			dragging="dragging"
 			listeners='dragControlListeners'>
 		</trashcan>
 	</div>
-
+	
 	<modal modal-id="depositLocationModal" 
-		   modal-view="views/modals/depositLocationModal.html" 
+		   modal-view="views/modals/settings/depositLocationModal.html" 
 		   modal-header-class="modal-header-primary">
 	</modal>
-
+	
 </div>
 
 
