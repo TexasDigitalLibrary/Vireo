@@ -68,6 +68,21 @@ vireo.service("DepositLocationRepo", function(WsApi, AbstractModel, AlertService
 		});
 	};
 
+	DepositLocationRepo.update = function(depositLocation) {
+		WsApi.fetch({
+			'endpoint': '/private/queue', 
+			'controller': 'settings/deposit-location', 
+			'method': 'update',
+			'data': depositLocation
+		}).then(function(response) {
+			var responseType = angular.fromJson(response.body).meta.type;
+			var responseMessage = angular.fromJson(response.body).meta.message;
+			if(responseType != 'SUCCESS') {
+				AlertService.add({type: responseType, message: responseMessage}, "/settings/deposit-location");  
+			}
+		});
+	};
+
 	DepositLocationRepo.reorder = function(src, dest) {
 		WsApi.fetch({
 			'endpoint': '/private/queue', 

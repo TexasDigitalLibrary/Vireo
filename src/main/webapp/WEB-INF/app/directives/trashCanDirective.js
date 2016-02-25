@@ -4,6 +4,7 @@ vireo.directive("trashcan", function() {
 		restrict: 'E',
 		scope: {
 			'id': '@',
+			'dragging': '=',
 			'listeners': '='
 		}
 	};

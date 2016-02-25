@@ -1,10 +1,12 @@
 <div class="row" ng-controller="DepositLocationRepoController">
-	<alerts channels="/settings/deposit-location" types="SUCCESS, ERROR, WARNING" exclusive></alerts>
+	
+	<alerts channels="/settings/deposit-location" types="ERROR, WARNING" exclusive></alerts>
+	
 	<div class="col-sm-6">
 		
 		<button class="btn btn-default modal-add-btn" 
 				data-toggle="modal" 
-				data-target="#depositLocationModal">
+				data-target="#addDepositLocationModal">
 			Add Location
 		</button>
 
@@ -13,23 +15,41 @@
 			scope-value="depositLocations"
 			properties='["name", "repository"]'
 			item-view='views/directives/dragAndDropDepositLocation.html'
-			listeners='dragControlListeners'>
+			listeners='dragControlListeners'
+			sortable-select='selectDepositLocation(index)'>
 		</draganddroplist>
 		
 	</div>
-
+	
 	<div class="col-sm-6">
 		<trashcan 
-			id="{{trashCan}}" 
+			id="{{trashCanId}}"
+			dragging="dragging"
 			listeners='dragControlListeners'>
 		</trashcan>
 	</div>
 
-	<modal modal-id="depositLocationModal" 
-		   modal-view="views/modals/depositLocationModal.html" 
-		   modal-header-class="modal-header-primary">
-	</modal>
+	<vireomodal modal-id="addDepositLocationModal" 
+		   modal-view="views/modals/settings/addDepositLocationModal.html" 
+		   modal-header-class="modal-header-primary"
+		   modal-controller="DepositLocationRepoController"
+		   modal-data="modalData">
+	</vireomodal>
 
+	<vireomodal modal-id="editDepositLocationModal" 
+		   modal-view="views/modals/settings/editDepositLocationModal.html" 
+		   modal-header-class="modal-header-primary"
+		   modal-controller="DepositLocationRepoController"
+		   modal-data="modalData">
+	</vireomodal>
+
+	<vireomodal modal-id="confirmRemoveDepositLocationModal" 
+		   modal-view="views/modals/settings/confirmRemoveDepositLocationModal.html" 
+		   modal-header-class="modal-header-primary"
+		   modal-controller="DepositLocationRepoController"
+		   modal-data="modalData">
+	</vireomodal>
+	
 </div>
 
 
