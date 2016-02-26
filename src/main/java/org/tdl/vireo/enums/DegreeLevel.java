@@ -1,4 +1,4 @@
-package org.tdl.vireo.model;
+package org.tdl.vireo.enums;
 
 
 /**
@@ -12,8 +12,8 @@ public enum DegreeLevel {
 	MASTERS(3),
 	DOCTORAL(4);
 	
-	// The id for this degree level.
-	private int id;
+	// The value for this degree level.
+	private int value;
 
 	/**
 	 * Private constructor for the defined degree levels listed above.
@@ -21,31 +21,16 @@ public enum DegreeLevel {
 	 * @param id
 	 *            The id of the degree level.
 	 */
-	private DegreeLevel(int id) {
-		this.id = id;
+	private DegreeLevel(int value) {
+		this.value = value;
 	}
 
-	/**
-	 * @return The id of this level.
-	 */
-	public int getId() {
-		return id;
-	}
+	public int getValue() {
+        return value;
+    }
 
-	/**
-	 * Locate a degree level based upon it's id.
-	 * 
-	 * @param id
-	 *            The id of the desired level.
-	 * @return The level, or null if not found.
-	 */
-	public static DegreeLevel find(int id) {
-
-		for (DegreeLevel level : DegreeLevel.values()) {
-			if (level.id == id)
-				return level;
-		}
-
-		return null;
-	}
+    @Override
+    public String toString() {
+        return this.name();
+    }
 }

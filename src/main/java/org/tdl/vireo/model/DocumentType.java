@@ -1,111 +1,72 @@
-package org.tdl.vireo.model.jpa;
+package org.tdl.vireo.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import org.tdl.vireo.model.DegreeLevel;
+import org.tdl.vireo.enums.DegreeLevel;
 import org.tdl.vireo.model.DocumentType;
 
 /**
- * Jpa specefic implementation of Vireo's Document Type interface
  * 
- * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
+ * @author gad
  */
 @Entity
-@Table(name = "document_type",
-       uniqueConstraints = { @UniqueConstraint( columnNames = { "name", "level" } ) } )
-public class JpaDocumentTypeImpl extends JpaAbstractModel<JpaDocumentTypeImpl> implements DocumentType {
-
-	@Column(nullable = false)
-	public int displayOrder;
+@Table(uniqueConstraints = { @UniqueConstraint( columnNames = { "name", "degreeLevel" } ) } )
+public class DocumentType extends BaseOrderedEntity {
 
 	@Column(nullable = false, length=255) 
-	public String name;
+	private String name;
 
 	@Column(nullable = false)
-	public DegreeLevel level;
+	private DegreeLevel degreeLevel;
+	
+	/**
+	 * 
+	 */
+	public DocumentType() {
+        // TODO Auto-generated constructor stub
+    }
 
 	/**
 	 * Create a new JpaDocumentTypeImpl
 	 * 
 	 * @param name
 	 *            The name of the new document type.
-	 * @param level
-	 *            The level of the new document type.
+	 * @param degreeLevel
+	 *            The degreeLevel of the new document type.
 	 */
-	protected JpaDocumentTypeImpl(String name, DegreeLevel level) {
-
-		if (name == null || name.length() == 0)
-			throw new IllegalArgumentException("Name is required");
-		
-		if (level == null)
-			throw new IllegalArgumentException("Degree level is required");
-		
-		assertManager();
-		
-	    this.displayOrder = 0;
+	public DocumentType(String name, DegreeLevel degreeLevel) {
 		this.name = name;
-		this.level = level;
+		this.degreeLevel = degreeLevel;
 	}
 
-	@Override
-	public JpaDocumentTypeImpl save() {
-		assertManager();
-
-		return super.save();
-	}
-	
-	@Override
-	public JpaDocumentTypeImpl delete() {
-		assertManager();
-
-		return super.delete();
-	}
-	
-    @Override
-    public int getDisplayOrder() {
-        return displayOrder;
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
     }
 
-    @Override
-    public void setDisplayOrder(int displayOrder) {
-    	
-    	assertManager();
-        this.displayOrder = displayOrder;
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 
-	@Override
-	public String getName() {
-		return name;
-	}
+    /**
+     * @return the degreeLevel
+     */
+    public DegreeLevel getDegreeLevel() {
+        return degreeLevel;
+    }
 
-	@Override
-	public void setName(String name) {
-		
-		if (name == null || name.length() == 0)
-			throw new IllegalArgumentException("Name is required");
-		
-		assertManager();
-		
-		this.name = name;
-	}
-
-	@Override
-	public DegreeLevel getLevel() {
-		return level;
-	}
-
-	@Override
-	public void setLevel(DegreeLevel level) {
-		
-		if (level == null)
-			throw new IllegalArgumentException("Degree level is required");
-		
-		assertManager();
-		
-		this.level = level;
-	}
-
+    /**
+     * @param degreeLevel the level to set
+     */
+    public void setLevel(DegreeLevel degreeLevel) {
+        this.degreeLevel = degreeLevel;
+    }
 }

@@ -1,27 +1,23 @@
-package org.tdl.vireo.model.jpa;
-
-import java.text.DateFormatSymbols;
+package org.tdl.vireo.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Table;
-
-import org.tdl.vireo.model.GraduationMonth;
 
 /**
- * Jpa specific implementation of Vireo's Graduation Month.
  * 
- * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
+ * @author gad
  */
 @Entity
-@Table(name = "graduation_month")
-public class JpaGraduationMonthImpl extends JpaAbstractModel<JpaGraduationMonthImpl> implements GraduationMonth {
-
-	@Column(nullable = false)
-	public int displayOrder;
+public class GraduationMonth extends BaseOrderedEntity {
 
 	@Column(nullable = false, unique = true)
-	public int month;
+	private int month;
+	
+	/**
+	 * 
+	 */
+	public GraduationMonth() {
+    }
 
 	/**
 	 * Create a new JpaGraduationMonthImpl
@@ -29,61 +25,21 @@ public class JpaGraduationMonthImpl extends JpaAbstractModel<JpaGraduationMonthI
 	 * @param month
 	 *            The integer of the month, starting with 0 = january.
 	 */
-	protected JpaGraduationMonthImpl(int month) {
-
-		if (month < 0 || month > 11)
-			throw new IllegalArgumentException("Month value is out of range");
-
-		assertManager();
-		
-		this.displayOrder = 0;
+	public GraduationMonth(int month) {
 		this.month = month;
 	}
 
-	@Override
-	public JpaGraduationMonthImpl save() {
-		assertManager();
-
-		return super.save();
-	}
-	
-	@Override
-	public JpaGraduationMonthImpl delete() {
-		assertManager();
-
-		return super.delete();
-	}
-	
-    @Override
-    public int getDisplayOrder() {
-        return displayOrder;
+    /**
+     * @return the month
+     */
+    public int getMonth() {
+        return month;
     }
 
-    @Override
-    public void setDisplayOrder(int displayOrder) {
-    	
-    	assertManager();
-        this.displayOrder = displayOrder;
+    /**
+     * @param month the month to set
+     */
+    public void setMonth(int month) {
+        this.month = month;
     }
-
-	@Override
-	public int getMonth() {
-		return month;
-	}
-
-	@Override
-	public String getMonthName() {
-		return new DateFormatSymbols().getMonths()[month];
-	}
-
-	@Override
-	public void setMonth(int month) {
-		
-		if (month < 0 || month > 11)
-			throw new IllegalArgumentException("Month value is out of range");
-		
-		assertManager();
-		this.month = month;
-	}
-
 }
