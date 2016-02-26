@@ -4,7 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 
 @Entity
-public class Language extends BaseEntity {
+public class Language extends BaseOrderedEntity {
 
     @Column(unique = true, nullable = false)
     private String name;
