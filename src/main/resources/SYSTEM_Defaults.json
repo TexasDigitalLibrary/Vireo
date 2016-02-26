@@ -24,7 +24,7 @@
             {"proquest_institution_code":"8303"},
 			{"proquest_indexing":false},
 			
-			{"doctor_of_philosophy":"Ph.D."},			
+			{"doctor_of_philosophy":"Ph.D."},
 			{"doctor_of_education":"Ed.D."},
 			{"doctor_of_engineering":"D.Eng."},
 			{"doctor_of_public_health":""},
@@ -45,6 +45,6 @@
 			{"transportation":""}
 	],
 	"submission": [
-			{"license":"This is default submission license text."}
+			{"submit_license":"This is default submission license text."}
 	]
 }
