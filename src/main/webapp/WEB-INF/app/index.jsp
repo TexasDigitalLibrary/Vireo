@@ -263,7 +263,8 @@
 	    <script src="services/sidebarService.js"></script>
 
 	    <!-- Factories -->
-
+		<script src="factories/dragAndDropListenerFactory.js"></script>
+		
 	    <!-- Models -->
 	    <script src="model/configurableSettingsModel.js"></script>
 	    <script src="model/customActionSettingsModel.js"></script>
