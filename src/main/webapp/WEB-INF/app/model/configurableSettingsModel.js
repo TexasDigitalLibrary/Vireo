@@ -52,6 +52,7 @@ vireo.service("ConfigurableSettings", function(AbstractModel, WsApi) {
 		}).then(function(response) {
 			console.log(response);
 			console.log(JSON.parse(response.body).payload);
+			return response; //TODO: validation of response
 		});
 	};
 

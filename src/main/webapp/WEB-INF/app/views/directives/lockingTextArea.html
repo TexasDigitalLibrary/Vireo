@@ -1,5 +1,5 @@
 <div class="row">		    	
-	<h4>{{ label }}</h4>
+	<h4>{{ label }}<div tooltip="{{hint}}"><span class="glyphicon glyphicon-info-sign color-reset"></span></div></h4>
 	<div class="lock-control">
     	<a ng-if="locked" ng-click="toggleLock()" class="hover-pointer">
 			<span class="glyphicon glyphicon-lock"> </span> This field is locked to prevent accidental editing, click to unlock.
