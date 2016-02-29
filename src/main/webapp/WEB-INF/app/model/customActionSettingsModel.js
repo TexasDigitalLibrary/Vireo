@@ -67,10 +67,7 @@ vireo.service("CustomActionSettings", function(AbstractModel, WsApi, AlertServic
 
 	};
 
-	CustomActionSettings.edit = function(customAction) {
-
-		console.log(customAction);
-
+	CustomActionSettings.update = function(customAction) {
 		WsApi.fetch({
 			endpoint:'/private/queue',
 			controller:'settings/custom-action',
@@ -80,8 +77,7 @@ vireo.service("CustomActionSettings", function(AbstractModel, WsApi, AlertServic
 			console.log(response);
 			console.log(JSON.parse(response.body).payload);
 			return response;
-		});		
-
+		});
 	};
 	
 	CustomActionSettings.reorder = function(src, dest) {

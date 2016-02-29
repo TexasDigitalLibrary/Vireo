@@ -1,20 +1,23 @@
 describe('controller: DepositLocationRepoController', function() {
 	
-	var controller, scope, DepositLocationRepo;
+	var controller, scope, DepositLocationRepo, DragAndDropListenerFactory;
 
 	beforeEach(module('core'));
 
 	beforeEach(module('vireo'));
 	
 	beforeEach(module('mock.depositLocationRepo'));
+	beforeEach(module('mock.dragAndDropListenerFactory'));
 	
-	beforeEach(inject(function($controller, $rootScope, _DepositLocationRepo_) {
+	beforeEach(inject(function($controller, $rootScope, _DepositLocationRepo_, _DragAndDropListenerFactory_) {
         scope = $rootScope.$new(); 
         controller = $controller('DepositLocationRepoController', {
             $scope: scope,
-            DepositLocationRepo: _DepositLocationRepo_
+            DepositLocationRepo: _DepositLocationRepo_,
+            DragAndDropListenerFactory: _DragAndDropListenerFactory_
         });
         DepositLocationRepo = _DepositLocationRepo_; 
+        DragAndDropListenerFactory = _DragAndDropListenerFactory_;
     }));
 
 	describe('Is the controller defined', function() {
