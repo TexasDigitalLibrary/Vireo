@@ -1,6 +1,7 @@
 var vireo = angular.module('vireo', 
 [
 	'ngRoute',
+	'ngSanitize',
 	'vireo.version'
 ]);
 

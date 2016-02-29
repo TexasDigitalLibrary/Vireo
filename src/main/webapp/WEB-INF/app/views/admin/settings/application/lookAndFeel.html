@@ -1,4 +1,4 @@
-<div class="lookandfeel ">
+<div class="lookandfeel" ng-controller="SettingsController">
 	<form name="look-and-feel">
 		<div class="row">
 			<div class="col-sm-6">
@@ -246,117 +246,42 @@
 			</div>
 
 		</div>
-
-
-
-		<!-- FRONT PAGE INSTRUCTIONS -->
-		<div class="row">
-			<h4>Front Page Instructions
-				<div tooltip="Customize any styling on the student side using CSS.">
-		   			<span class="glyphicon glyphicon-info-sign color-reset"></span>
-		   		</div>	
-			</h4>
-			<div class="row">
-				<div class="col-sm-6 lock-control">
-
-					<a href="#front_page_instructions">
-						<span class="glyphicon glyphicon-lock"> </span>
-						This field is locked to prevent accidental editing, click to unlock.
-					</a>
-
-					<p ng-show="clicked">
-						<span class="glyphicon glyphicon-pencil"></span>
-						This field is unlocked and may be edited. Leaving the page will re-lock the field.
-					</p>
-
-					<textarea id="front_page_instructions" name="front_page_instructions" class="form-control"  readonly="clicked">
-						TEST FRONT PAGE INSTRUCTIONS TEXTAREA
-					</textarea>	
-
-					<div class="hint">							
-					These instructions are show on the front page of Vireo to all users. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically.	
-					</div>			
-
-				</div>
-
-				<div class="col-sm-6"></div>
-			</div>
-
-		</div>
-
-
-		<!-- POST SUBMISSION INSTRUCTIONS -->
-		<div class="row">
-			<h4>Post Submission Instructions
-				<div tooltip="Customize any styling on the student side using CSS.">
-		   			<span class="glyphicon glyphicon-info-sign color-reset"></span>
-		   		</div>	
-			</h4>
-			<div class="row">
-				<div class="col-sm-6 lock-control">
-
-					<a href="#post_submission_instructions" ng-click="toggle(clicked)" ng-hide="clicked" ng-model="clicked">
-						<span class="glyphicon glyphicon-lock"> </span>
-						This field is locked to prevent accidental editing, click to unlock.
-					</a>
-
-					<p ng-show="clicked">
-						<span class="glyphicon glyphicon-pencil"></span>
-						This field is unlocked and may be edited. Leaving the page will re-lock the field.
-					</p>
-
-					<textarea id="post_submission_instructions" name="post_submission_instructions" class="form-control"  readonly="clicked">
-						TEST POST SUBMISSION INSTRUCTIONS TEXTAREA
-					</textarea>	
-
-					<div class="hint">
-						These instructions will be shown on the confirmation page after a student has completed their submission. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically.
-					</div>				
-
-				</div>
-
-				<div class="col-sm-6"></div>
-			</div>
-
-		</div>
+		
+		<!-- FRONT PAGE INSTRUCTIONS BEFORE BUTTON -->
+		<lockingtextarea
+    		  label="Front Page Instructions (before) button)"
+    			hint="These instructions are show on the front page of Vireo to all users. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically."
+    			scope-value="settings.configurable.lookAndFeel.front_page_instructions_before"
+    			on-blur="updateConfigurableSettings('lookAndFeel', 'front_page_instructions_before')"
+              	key-down="confirmEdit(event, prop)">
+   		</lockingtextarea>
+   		
+   		<!-- FRONT PAGE INSTRUCTIONS AFTER BUTTON -->
+		<lockingtextarea
+    		  label="Front Page Instructions (after button)"
+    			hint="These instructions are show on the front page of Vireo to all users. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically."
+    			scope-value="settings.configurable.lookAndFeel.front_page_instructions_after"
+    			on-blur="updateConfigurableSettings('lookAndFeel', 'front_page_instructions_after')"
+              	key-down="confirmEdit(event, prop)">
+   		</lockingtextarea>
+   		
+   		<!-- POST SUBMISSION INSTRUCTIONS -->
+		<lockingtextarea
+    		  label="Post Submission Instructions"
+    			hint="These instructions will be shown on the confirmation page after a student has completed their submission. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically."
+    			scope-value="settings.configurable.lookAndFeel.post_submission_instructions"
+    			on-blur="updateConfigurableSettings('lookAndFeel', 'post_submission_instructions')"
+              	key-down="confirmEdit(event, prop)">
+   		</lockingtextarea>
 
 		<!-- POST CORRECTION INSTRUCTIONS-->
-		<div class="row">
-			<h4>Post Correction Instructions
-				<div tooltip="Customize any styling on the student side using CSS.">
-		   			<span class="glyphicon glyphicon-info-sign color-reset"></span>
-		   		</div>	
-			</h4>
-			<div class="row">
-				<div class="col-sm-6 lock-control">
-
-					<a href="#post_correction_instructions" ng-click="toggle(clicked)" ng-hide="clicked" ng-model="clicked">
-						<span class="glyphicon glyphicon-lock"> </span>
-						This field is locked to prevent accidental editing, click to unlock.
-					</a>
-
-					<p ng-show="clicked">
-						<span class="glyphicon glyphicon-pencil"></span>
-						This field is unlocked and may be edited. Leaving the page will re-lock the field.
-					</p>
-
-					<textarea id="post_correction_instructions" name="post_correction_instructions" class="form-control"  readonly="clicked">
-						TEST POST CORRECTION INSTRUCTIONS TEXTAREA
-					</textarea>	
-
-					<div class="hint">
-						 These instructions are shown on the confirmation page after a student has submitted corrections for their submission. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically.
-					</div>				
-
-				</div>
-
-				<div class="col-sm-6"></div>
-			</div>
-
-		</div>
-
-
-
+		<lockingtextarea
+    		  label="Post Correction Instructions"
+    			hint="These instructions are shown on the confirmation page after a student has submitted corrections for their submission. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically."
+    			scope-value="settings.configurable.lookAndFeel.post_correction_instructions"
+    			on-blur="updateConfigurableSettings('lookAndFeel', 'post_correction_instructions')"
+              	key-down="confirmEdit(event, prop)">
+   		</lockingtextarea>
 	</form>
 
 </div>
