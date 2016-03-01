@@ -3,9 +3,10 @@ package org.tdl.vireo.enums;
 public enum Role {
     // NEVER CHANGE THE INT VALUES OR YOU'LL RUIN THE DB
     NONE(0),
-    USER(1),
-    MANAGER(2),
-    ADMINISTRATOR(3);
+    STUDENT(1),
+    REVIEWER(2),
+    MANAGER(3),
+    ADMINISTRATOR(4);
 
     private int value;
 

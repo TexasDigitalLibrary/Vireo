@@ -89,6 +89,26 @@ vireo.service("UserRepo", function($route, WsApi, AbstractModel, StorageService)
 	Users.listen = function() {
 		return Users.listener;
 	};
+
+        Users.addAccess = function(user) {
+            var addAccessPromise = WsApi.fetch({
+                endpoint: '/private/queue',
+                controller: 'admin',
+                method: 'add-access',
+                data: user
+            });
+            return addAccessPromise;
+        }
+
+        Users.setAccess = function(user) {
+            var addAccessPromise = WsApi.fetch({
+                endpoint: '/private/queue',
+                controller: 'admin',
+                method: 'set-access',
+                data: user
+            });
+            return addAccessPromise;
+        }
 	
 	return Users;
 	

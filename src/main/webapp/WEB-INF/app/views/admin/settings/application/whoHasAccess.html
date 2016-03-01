@@ -1,3 +1,4 @@
+<div ng-controller="WhoHasAccessController">
 <div class="row">
 
     <button class="btn btn-default modal-add-btn" 
@@ -6,38 +7,34 @@
         Add Member
     </button>
 
-    <div class="row resultHeading">
+    <table  class="table">
+      <thead>
+        <tr>
+          <th>Role</th>
+          <th>Name</th>
+          <th>Email</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="user in userRepo.list" ng-if="user.role == 'ROLE_ADMIN' || user.role == 'ROLE_REVIEWER' || user.role == 'ROLE_MANAGER'">
+          <td>{{user.firstName}} {{user.lastName}}</td>
+          <td>{{user.email}}</td>
+          <td>
+            <select class="form-control" ng-model="user.role">
+              <option ng-repeat="(key, value) in roles" value="{{key}}" ng-click="setUserPermissions(user.email, key)">{{value}}</option>
+            </select>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
-        <div class="col-sm-4"> ROLE     
-        </div>
-
-
-        <div class="col-sm-4"> NAME    
-        </div>
-
-         <div class="col-sm-4"> EMAIL     
-        </div>
-
-
-    </div>
-
-    <div class="row resultRow">
-
-        <div class="col-sm-4"> <span class="glyphicon glyphicon-pencil"></span> Role Value     
-        </div>
-
-
-        <div class="col-sm-4"> Student1  
-        </div>
-
-         <div class="col-sm-4"> student@tdl.com    
-        </div>
-
-    </div>
+    <vireomodal modal-id="addMemberModal"
+                modal-view="views/modals/whoHasAccessModal.html" 
+                modal-header-class="modal-header-primary"
+                modal-data="modalData"
+                modal-controller="WhoHasAccessController">
+    </vireomodal>
 
 </div>
 
-<modal modal-id="addMemberModal" 
-        modal-view="views/modals/addMemberModal.html" 
-        modal-header-class="modal-header-primary">
-</modal>
+</div>

@@ -35,7 +35,7 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
     			
     	userRepo.create(TEST_USER2_EMAIL, TEST_USER2.getFirstName(), TEST_USER2.getLastName(), Role.ADMINISTRATOR);
     	userRepo.create(TEST_USER3_EMAIL, TEST_USER3.getFirstName(), TEST_USER3.getLastName(), Role.MANAGER);
-    	userRepo.create(TEST_USER4_EMAIL, TEST_USER4.getFirstName(), TEST_USER4.getLastName(), Role.USER);
+    	userRepo.create(TEST_USER4_EMAIL, TEST_USER4.getFirstName(), TEST_USER4.getLastName(), Role.STUDENT);
         
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
                         
@@ -129,7 +129,7 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
 	 @Order(value = 4)
 	 public void testUpdateRole() throws Exception {
 		 
-	     userRepo.create(TEST_USER_EMAIL, TEST_USER.getFirstName(), TEST_USER.getLastName(), Role.USER);
+	     userRepo.create(TEST_USER_EMAIL, TEST_USER.getFirstName(), TEST_USER.getLastName(), Role.STUDENT);
 		 
 		 Map<String, String> data = new HashMap<String, String>();
 		 data.put("email", TEST_USER_EMAIL);
