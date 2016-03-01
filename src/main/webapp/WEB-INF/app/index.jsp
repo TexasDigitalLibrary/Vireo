@@ -247,9 +247,8 @@
 	    <script src="directives/accordionDirective.js"></script>
 	    <script src="directives/tabsDirective.js"></script>
 	    <script src="directives/sideBoxDirective.js"></script>
-            <script src="directives/toggleButtonDirective.js"></script>
-            <script src="directives/textFieldDirective.js"></script>
-
+        <script src="directives/toggleButtonDirective.js"></script>
+        <script src="directives/textFieldDirective.js"></script>
 	    <script src="directives/userSettingsDirective.js"></script>
 	    <script src="directives/legendDirective.js"></script>
 	    <script src="directives/shadowDirective.js"></script>
@@ -275,6 +274,7 @@
 	    <script src="model/userSettingsModel.js"></script>
 	    <script src="model/userRepoModel.js"></script>
 	    <script src="model/depositLocationRepoModel.js"></script>
+	    <script src="model/graduationMonthRepoModel.js"></script>
 
 
 	    <!-- Controllers -->
@@ -290,6 +290,7 @@
 	    <script src="controllers/workflowSettingsController.js"></script>  
 	    <script src="controllers/settings/customActionSettingsController.js"></script>
 	    <script src="controllers/settings/depositLocationRepoController.js"></script> 
+	    <script src="controllers/settings/graduationMonthRepoController.js"></script> 
 	    
 	<!-- endbuild -->
 
