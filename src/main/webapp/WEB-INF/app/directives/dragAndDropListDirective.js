@@ -7,6 +7,7 @@ vireo.directive("draganddroplist", function() {
 			'scopeValue': '=',			
 			'listeners': '=',
 			'sortableSelect': '&',
+			'toString': '&',
 			'itemView': '@'
 		},
 		controller: function($scope) {

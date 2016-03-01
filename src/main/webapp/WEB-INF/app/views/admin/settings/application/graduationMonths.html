@@ -1,1 +1,58 @@
-graduationMonths.html
+<div class="row" ng-controller="GraduationMonthRepoController">
+	
+	<alerts channels="/settings/graduation-month" types="ERROR, WARNING" exclusive></alerts>
+	
+	<div class="col-sm-6">
+		
+		<button class="btn btn-default modal-add-btn" 
+				data-toggle="modal" 
+				data-target="#graduationMonthNewModal">
+			Add Location
+		</button>
+		
+		<p ng-if="graduationMonths.list.length == 0">Add new Graduation Month</p>
+
+		<draganddroplist
+			dragging="dragging"
+			scope-value="graduationMonths"
+			properties='["month"]'
+			item-view='views/directives/dragAndDropGraduationMonth.html'
+			listeners='dragControlListeners'
+			sortable-select='editGraduationMonth(index)'
+			to-string='toMonthString(month)'>
+		</draganddroplist>
+		
+	</div>
+	
+	<div class="col-sm-6">
+		<trashcan 
+			id="{{trashCanId}}"
+			dragging="dragging"
+			listeners='dragControlListeners'>
+		</trashcan>
+	</div>
+
+	<vireomodal modal-id="graduationMonthNewModal" 
+		   modal-view="views/modals/settings/graduationMonthNewModal.html" 
+		   modal-header-class="modal-header-primary"
+		   modal-controller="GraduationMonthRepoController"
+		   modal-data="modalData">
+	</vireomodal>
+
+	<vireomodal modal-id="graduationMonthEditModal" 
+		   modal-view="views/modals/settings/graduationMonthEditModal.html" 
+		   modal-header-class="modal-header-primary"
+		   modal-controller="GraduationMonthRepoController"
+		   modal-data="modalData">
+	</vireomodal>
+
+	<vireomodal modal-id="graduationMonthConfirmRemoveModal" 
+		   modal-view="views/modals/settings/graduationMonthConfirmRemoveModal.html" 
+		   modal-header-class="modal-header-primary"
+		   modal-controller="GraduationMonthRepoController"
+		   modal-data="modalData">
+	</vireomodal>
+	
+</div>
+
+

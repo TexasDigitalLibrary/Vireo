@@ -4,14 +4,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.repo.GraduationMonthRepo;
 import org.tdl.vireo.model.repo.custom.GraduationMonthRepoCustom;
+import org.tdl.vireo.service.OrderedEntityService;
 
 public class GraduationMonthRepoImpl implements GraduationMonthRepoCustom {
 
     @Autowired
-    GraduationMonthRepo graduationMonthRepo;
+    private OrderedEntityService orderedEntityService;
+    
+    @Autowired
+    private GraduationMonthRepo graduationMonthRepo;
 
     @Override
     public GraduationMonth create(int month) {
-        return graduationMonthRepo.save(new GraduationMonth(month)); 
+        return graduationMonthRepo.save(new GraduationMonth(month));
     }
+    
+    @Override
+    public void reorder(Integer src, Integer dest) {
+        orderedEntityService.reorder(GraduationMonth.class, src, dest);
+    }
+    
+    @Override
+    public void remove(Integer index) {
+        orderedEntityService.remove(GraduationMonth.class, index);
+    }
+    
 }
