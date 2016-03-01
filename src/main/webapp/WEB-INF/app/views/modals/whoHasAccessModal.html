@@ -29,7 +29,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr ng-class="{'active': userToAdd.id == modalData.id}" ng-repeat="userToAdd in userRepo.list | filter:search" ng-click="setSelectedUser(userToAdd)">
+              <tr ng-class="{'active': userToAdd.id == modalData.id}" ng-repeat="userToAdd in userRepo.list | filter:search" ng-if="userToAdd.role == 'ROLE_STUDENT'" ng-click="setSelectedUser(userToAdd)">
                 <td>{{userToAdd.firstName}} {{userToAdd.lastName}}</td>
                 <td>{{userToAdd.email}}</td>
               </tr>
