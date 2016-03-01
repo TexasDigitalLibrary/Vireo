@@ -419,20 +419,17 @@ sidebox ul input {
   cursor: pointer;
 }
 
+.locking-text-area {
+  border: solid;
+  border-width: 1px;
+  background-color: #f5f5f5;
+  padding: 10px;
+  min-height: 200px;
+  width: 100%;
+}
+
 .locking-text-area:hover {
-  cursor: default;
-}
-
-.hover-pointer:hover {
-  cursor: pointer;
-}
-
-.locking-text-area:hover {
-  cursor: default;
-}
-
-.as-sortable-dragging { 
-  
+  cursor: not-allowed;
 }
 
 .repeated-span {
@@ -582,23 +579,6 @@ h4 {
   color: #a6a6a6;
   text-shadow: 1px 0 5px #fefefe;
   font-size: 70px;
-}
-
-textarea {   
-  width:100%;
-  margin-top:10px;
-  height: 400px;
-  outline: none;
-  white-space: nowrap;
-  word-wrap: normal;
-}
-
-textarea:hover {
-  cursor: not-allowed;
-}
-
-textarea:focus {
-  cursor: pointer;
 }
 
 .degreeCodes label {

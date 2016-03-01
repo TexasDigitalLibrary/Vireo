@@ -6,11 +6,14 @@
     	</a>
     	
 		<p ng-if="!locked" ng-click="toggleLock()" class="hover-pointer">
-			<span class="glyphicon glyphicon-pencil"></span> This field is unlocked and may be edited. Leaving the page will re-lock the field.
+			<span class="glyphicon glyphicon-pencil"></span> This field is unlocked and may be edited. Leaving the editable area will save and re-lock the field. Save and re-lock will occur after 5 seconds of inactivity after editing.
 		</p>
-		
-		<textarea class="form-control locking-text-area" ng-readonly="locked" type="text" ng-model="scopeValue" ng-keydown="keyDown({event: $event, prop: prop})" ng-blur="onBlur()">
-		</textarea>
+
+
+		<div ng-show="!locked">
+			<textarea ui-tinymce="tinymceOptions" ng-model="scopeValue"></textarea>
+		</div>
+		<div ng-show="locked" class="locking-text-area" ng-bind-html="scopeValue"disabled></div>
 
 		<div class="hint">{{ hint }}</div>
 	</div>
