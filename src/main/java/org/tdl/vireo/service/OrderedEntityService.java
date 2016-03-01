@@ -59,7 +59,7 @@ public class OrderedEntityService {
     }
 
 	@SuppressWarnings("unchecked")
-	public void reorder(Class<?> clazz, Integer src, Integer dest) {
+	public synchronized void reorder(Class<?> clazz, Integer src, Integer dest) {
 		swap(clazz, src, Integer.MAX_VALUE);
 		// increment/decrement order as necessary
 		{
@@ -89,7 +89,7 @@ public class OrderedEntityService {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void remove(Class<?> clazz, Integer order) {
+	public synchronized void remove(Class<?> clazz, Integer order) {
 		delete(clazz, order);
 		{
 			CriteriaBuilder cb = entityManager.getCriteriaBuilder();

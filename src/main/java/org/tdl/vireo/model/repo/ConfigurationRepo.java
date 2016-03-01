@@ -12,6 +12,7 @@ public interface ConfigurationRepo extends JpaRepository<Configuration, Long>, C
 
     public List<Configuration> findByName(String name); // should always be 1 or 2 elements, never more -- should only be called by ConfigurationRepoCustomImpl
     public Configuration findByNameAndIsSystemRequired(String name, Boolean isSystemRequired); // used by SystemDataLoader
-
-    public List<Configuration> findAllByType(String type);
+    
+    public List<Configuration> findAllByIsSystemRequired(Boolean isSystemRequired); //should only be used by ConfigurationRepoImpl
+    public List<Configuration> findAllByTypeAndIsSystemRequired(String type, Boolean isSystemRequired); //should only be used by ConfigurationRepoImpl
 }

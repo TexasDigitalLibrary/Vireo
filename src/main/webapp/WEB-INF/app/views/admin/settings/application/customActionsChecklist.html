@@ -1,5 +1,7 @@
 <div class="row" ng-controller="CustomActionSettingsController">
-	<alerts channels="/settings/custom-action" types="SUCCESS, ERROR, WARNING" exclusive></alerts>
+	
+	<alerts channels="/settings/custom-action" types="ERROR, WARNING" exclusive></alerts>
+	
 	<div class="col-sm-6">
 
 		<button class="btn btn-default modal-add-btn"
@@ -16,13 +18,14 @@
 			properties='["label", "isStudentVisible"]'
 			item-view='views/directives/dragAndDropCustomAction.html'
 			listeners='dragControlListeners'
-			sortable-select='selectCustomAction(index)'>
+			sortable-select='editCustomAction(index)'>
 		</draganddroplist>
 	</div>
 	
 	<div class="col-sm-6">
 		<trashcan 
-			id="{{trashCanId}}" 
+			id="{{trashCanId}}"
+			dragging="dragging"
 			listeners='dragControlListeners'>
 		</trashcan>
 	</div>
@@ -41,7 +44,7 @@
 		   modal-data="modalData">
 	</vireomodal>
 	
-	<vireomodal modal-id="confirmRemoveCustomActionModal" 
+	<vireomodal modal-id="customActionConfirmRemoveModal" 
 		   modal-view="views/modals/settings/customActionConfirmModal.html" 
 		   modal-header-class="modal-header-primary"
 		   modal-controller="CustomActionSettingsController"

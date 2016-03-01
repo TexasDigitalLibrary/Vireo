@@ -168,11 +168,14 @@
 	<script src="bower_components/stomp-websocket/lib/stomp.min.js"></script>
 	
 	<script src="bower_components/angular/angular.js"></script>
+	<script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
 	<script src="bower_components/angular-route/angular-route.js"></script>
 	<script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
 	<script src="bower_components/angular-loader/angular-loader.js"></script>
 	<script src="bower_components/angular-mocks/angular-mocks.js"></script>
 
+	<script src="bower_components/tinymce-dist/tinymce.min.js"></script>
+	<script src="bower_components/angular-ui-tinymce/dist/tinymce.min.js"></script>
 	<script src="bower_components/ng-sortable/dist/ng-sortable.js"></script>
 	
 	<!--  Core libraries -->
@@ -263,7 +266,8 @@
 	    <script src="services/sidebarService.js"></script>
 
 	    <!-- Factories -->
-
+		<script src="factories/dragAndDropListenerFactory.js"></script>
+		
 	    <!-- Models -->
 	    <script src="model/configurableSettingsModel.js"></script>
 	    <script src="model/customActionSettingsModel.js"></script>

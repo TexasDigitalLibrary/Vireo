@@ -1,25 +1,13 @@
 <div class="col-lg-8 col-lg-offset-2" ng-controller="UserController">
 	<div id="body">
 		<div class="row">
-			<p>
-			<h1>
-				Welcome to the Thesis<br />& Dissertation Submission System
-			</h1>
-			</p>
-			<p>Once you have passed the final defense and satisfied the requirements of the committee, you are ready to submit your manuscript to the Thesis Office for review. This submission process is fully electronic, and is made through an online application developed and maintained by the Texas Digital Library, in conjunction with the Texas A&M, MIT, and UIUC.</p>
-			<p>To get started with your submission, click the link below. You will be asked to authenticate using your NetID:</p>
-			<p>
+			<div ng-controller="SettingsController" ng-bind-html="settings.configurable.lookAndFeel.front_page_instructions_before"></div>
 		</div>
 		<div class="form-actions row center" style="text-align: center;">
 			<a href="/submit" class="btn btn-primary">Manage/View your submission(s)</a>
 		</div>
 		<div class="row">
-			</p>
-			<p>
-			<h3>Your help can make things better</h3>
-			</p>
-			<p>You feedback is very important to us; it allows us to continue to improve the system. Please feel free to notify us directly at dev@tdl.org if you have any suggestions to increase the usability or effectiveness of this application. You can talk to the your Thesis Office regarding any issues that may arise during the submission process.</p>
-			<p>Hooray for ETDs!!!</p>
+			<div ng-controller="SettingsController" ng-bind-html="settings.configurable.lookAndFeel.front_page_instructions_after"></div>
 		</div>
 	</div>
 </div>

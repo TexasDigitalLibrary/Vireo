@@ -1,6 +1,7 @@
 
 package org.tdl.vireo.model.repo.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,48 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
             return configurationRepo.save(configuration);
         }
         return configurationRepo.save(new Configuration(name, value, type));
+    }
+    
+    @Override
+    public List<Configuration> getAll() {
+        List<Configuration> ret = new ArrayList<Configuration>();
+        List<Configuration> system = configurationRepo.findAllByIsSystemRequired(true);
+        List<Configuration> user = configurationRepo.findAllByIsSystemRequired(false);
+        for (Configuration sysConfig : system) {
+            Boolean found = false;
+            for(Configuration userConfig: user) {
+                if(sysConfig.getName().equals(userConfig.getName())) {
+                    ret.add(userConfig);
+                    found = true;
+                    break;
+                }
+            }
+            if(!found) {
+                ret.add(sysConfig);
+            }
+        }
+        return ret;
+    }
+    
+    @Override
+    public List<Configuration> getAllByType(String type) {
+        List<Configuration> ret = new ArrayList<Configuration>();
+        List<Configuration> system = configurationRepo.findAllByTypeAndIsSystemRequired(type, true);
+        List<Configuration> user = configurationRepo.findAllByTypeAndIsSystemRequired(type, false);
+        for (Configuration sysConfig : system) {
+            Boolean found = false;
+            for(Configuration userConfig: user) {
+                if(sysConfig.getName().equals(userConfig.getName())) {
+                    ret.add(userConfig);
+                    found = true;
+                    break;
+                }
+            }
+            if(!found) {
+                ret.add(sysConfig);
+            }
+        }
+        return ret;
     }
 
     @Override

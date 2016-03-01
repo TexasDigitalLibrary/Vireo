@@ -1,5 +1,7 @@
 package org.tdl.vireo.model.repo.custom;
 
+import java.util.List;
+
 import org.tdl.vireo.model.Configuration;
 
 public interface ConfigurationRepoCustom {
@@ -15,6 +17,25 @@ public interface ConfigurationRepoCustom {
      * @return
      */
     public Configuration createOrUpdate(String name, String value, String type);
+    
+    /**
+     * Get a list of all configurations
+     * 
+     * Will always pick a non-isSystemRequired if it exists
+     * 
+     * @return
+     */
+    public List<Configuration> getAll();
+    
+    /**
+     * Gets a list of all the configurations by type
+     * 
+     * Will always pick a non-isSystemRequired if it exists
+     * 
+     * @param type
+     * @return
+     */
+    public List<Configuration> getAllByType(String type);
     
     /**
      * Gets a Configuration from the repo

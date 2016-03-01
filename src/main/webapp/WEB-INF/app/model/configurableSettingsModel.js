@@ -1,4 +1,4 @@
-vireo.service("ConfigurableSettings", function(AbstractModel, WsApi) {
+vireo.service("ConfigurableSettings", function($sanitize, AbstractModel, WsApi) {
 	var self;
 
 	var ConfigurableSettings = function(futureData) {
@@ -41,17 +41,13 @@ vireo.service("ConfigurableSettings", function(AbstractModel, WsApi) {
 	};
 
 	ConfigurableSettings.update = function(type, setting, value) {	
-		console.log(type);
-		console.log(setting);
-		console.log(value);	
 		WsApi.fetch({
 			endpoint:'/private/queue',
 			controller:'settings/configurable',
 			method:'update',
-			data: {'type':type, 'setting':setting,'value':value}
+			data: {'type':type, 'setting':setting,'value': $sanitize(value)}
 		}).then(function(response) {
-			console.log(response);
-			console.log(JSON.parse(response.body).payload);
+			// TODO: validation of response
 		});
 	};
 
