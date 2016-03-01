@@ -1,6 +1,0 @@
-vireo.controller("WhoHasAccessController", function ($controller, $q, $scope, User, UserRepo) {
-	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
-
-	$scope.user = User.get();
-	$scope.userRepo = UserRepo.get();
-});
