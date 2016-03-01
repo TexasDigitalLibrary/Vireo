@@ -258,7 +258,6 @@
 	    <script src="directives/vireoModalDirective.js"></script>
 	    <script src="directives/dragAndDropListDirective.js"></script>
 	    <script src="directives/lockingTextAreaDirective.js"></script>
-	    <script src="directives/vireoModalDirective.js"></script>  
 	    <script src="directives/trashCanDirective.js"></script>
 
 	    <!-- Services -->
