@@ -25,7 +25,7 @@ var appConfig = {
 				htmlfile, iframe-htmlfile, xhr-polling, xdr-polling, iframe-xhr-polling,
 				jsonp-polling
 	*/
-	'sockJsConnectionType': ['xhr-polling'],
+	'sockJsConnectionType': ['websocket', 'xhr-polling'],
 	
 	// Set this to 'admin' or 'user' if using mock AuthService
 	// otherwise set to null or false
