@@ -265,7 +265,7 @@ public abstract class AbstractEntityTest {
     protected static final String TEST_ASSIGNEE_EMAIL = "assignee@tdl.org";
     protected static final String TEST_ASSIGNEE_FIRSTNAME = "TDL";
     protected static final String TEST_ASSIGNEE_LASTNAME = "Admin";
-    protected static final Role TEST_ASSIGNEE_ROLE = Role.USER;
+    protected static final Role TEST_ASSIGNEE_ROLE = Role.STUDENT;
 
     protected static final String TEST_EMBARGO_NAME = "Test Embargo Name";
     protected static final String TEST_EMBARGO_NAME_2 = "Test Embargo 2 Name";
@@ -289,8 +289,8 @@ public abstract class AbstractEntityTest {
     protected static final String TEST_SEVERABLE_NOTE_NAME = "Test Severable Note Name";
     protected static final String TEST_SEVERABLE_NOTE_TEXT = "Test Severable Note Text";
 
-    protected static final Role TEST_USER_ROLE = Role.USER;
-    protected static final String TEST_USER_ROLE_STRING = "ROLE_USER";
+    protected static final Role TEST_USER_ROLE = Role.STUDENT;
+    protected static final String TEST_USER_ROLE_STRING = "ROLE_STUDENT";
     
     protected static final Calendar TEST_ACTION_LOG_ACTION_DATE = Calendar.getInstance();
     protected static final UUID TEST_UUID = UUID.randomUUID();

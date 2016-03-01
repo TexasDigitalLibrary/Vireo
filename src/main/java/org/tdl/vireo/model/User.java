@@ -368,7 +368,8 @@ public class User extends BaseEntity implements CoreUser {
     public String getRole() {
         switch(role) {
             case NONE: return "ROLE_NONE";
-            case USER: return "ROLE_USER";
+            case STUDENT: return "ROLE_STUDENT";
+            case REVIEWER: return "ROLE_REVIEWER";
             case MANAGER: return "ROLE_MANAGER";
             case ADMINISTRATOR: return "ROLE_ADMIN";
             default: return "ROLE_UNKNOWN";
@@ -389,7 +390,8 @@ public class User extends BaseEntity implements CoreUser {
      */
     public void setRole(String role) {
         switch(role) {
-            case "ROLE_USER": this.role = Role.USER; break;
+            case "ROLE_STUDENT": this.role = Role.STUDENT; break;
+            case "ROLE_REVIEWER": this.role = Role.REVIEWER; break;
             case "ROLE_MANAGER": this.role = Role.MANAGER; break;
             case "ROLE_ADMIN": this.role = Role.ADMINISTRATOR; break;
             default: this.role = Role.NONE; break;

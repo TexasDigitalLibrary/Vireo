@@ -27,7 +27,7 @@ public class AppRestInterceptor extends CoreRestInterceptor {
         
         if(user == null) {
             
-            Role role = Role.USER;
+            Role role = Role.STUDENT;
             
             if(shib.getRole() == null) {
                 shib.setRole("ROLE_USER");

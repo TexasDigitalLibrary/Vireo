@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <!--[if lt IE 7]>      <html lang="en" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html lang="en" class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html lang="en" class="no-js lt-ie9"> <![endif]-->
@@ -288,6 +289,7 @@
 	    <script src="controllers/sidebarController.js"></script>  
 	    <script src="controllers/userRepoController.js"></script>  
 	    <script src="controllers/workflowSettingsController.js"></script>  
+	    <script src="controllers/whoHasAccessController.js"></script>  
 	    <script src="controllers/settings/customActionSettingsController.js"></script>
 	    <script src="controllers/settings/depositLocationRepoController.js"></script> 
 	    <script src="controllers/settings/graduationMonthRepoController.js"></script> 

@@ -14,7 +14,7 @@ public abstract class MockData {
 	protected final static String TEST_USER_LAST_NAME   = "User";
 	protected final static String TEST_USER_PASSWORD    = "abc123";
 	protected final static String TEST_USER_CONFIRM     = "abc123";
-	protected final static String TEST_USER_ROLE        = "ROLE_USER";
+	protected final static String TEST_USER_ROLE        = "ROLE_STUDENT";
 	protected final static String TEST_USER_ROLE_UPDATE = "ROLE_ADMIN";
 	
 	protected final static String TEST_REGISTRATION_EMAIL_TEMPLATE_NAME = "SYSTEM New User Registration";
@@ -22,7 +22,7 @@ public abstract class MockData {
 	protected final static String TEST_EMAIL_TEMPLATE_SUBJECT = "Test Email Template Subject";
 	protected final static String TEST_EMAIL_TEMPLATE_MESSAGE = "Test Email Template Message";
     
-	protected User TEST_USER = new User(TEST_USER_EMAIL, TEST_USER_FIRST_NAME, TEST_USER_LAST_NAME, Role.USER);    
+	protected User TEST_USER = new User(TEST_USER_EMAIL, TEST_USER_FIRST_NAME, TEST_USER_LAST_NAME, Role.STUDENT);    
    
 	protected final static String TEST_USER2_EMAIL = "aggieJack@tamu.edu";
 	protected final static String TEST_USER3_EMAIL = "aggieJill@tamu.edu";
@@ -30,6 +30,6 @@ public abstract class MockData {
 	
 	protected User TEST_USER2 = new User(TEST_USER2_EMAIL, "Jack", "Daniels", Role.ADMINISTRATOR);
 	protected User TEST_USER3 = new User(TEST_USER3_EMAIL, "Jill", "Daniels", Role.MANAGER);
-	protected User TEST_USER4 = new User(TEST_USER4_EMAIL, "Jim", "Inny", Role.USER);
+	protected User TEST_USER4 = new User(TEST_USER4_EMAIL, "Jim", "Inny", Role.STUDENT);
     
 }
