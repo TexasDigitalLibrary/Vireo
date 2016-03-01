@@ -185,7 +185,7 @@ public class GraduationMonthController {
         Integer intSrc = Integer.parseInt(src);
         Integer intDest = Integer.parseInt(dest);
         graduationMonthRepo.reorder(intSrc, intDest);
-        simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(SUCCESS, getAll()));        
+        simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(SUCCESS, getAll()));        
         return new ApiResponse(SUCCESS);
     }
 
