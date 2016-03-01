@@ -68,11 +68,40 @@ vireo.service("DepositLocationRepo", function(WsApi, AbstractModel, AlertService
 		});
 	};
 
-	DepositLocationRepo.reorder = function(from, to) {
+	DepositLocationRepo.update = function(depositLocation) {
 		WsApi.fetch({
 			'endpoint': '/private/queue', 
 			'controller': 'settings/deposit-location', 
-			'method': 'reorder/' + from + '/' + to
+			'method': 'update',
+			'data': depositLocation
+		}).then(function(response) {
+			var responseType = angular.fromJson(response.body).meta.type;
+			var responseMessage = angular.fromJson(response.body).meta.message;
+			if(responseType != 'SUCCESS') {
+				AlertService.add({type: responseType, message: responseMessage}, "/settings/deposit-location");  
+			}
+		});
+	};
+
+	DepositLocationRepo.reorder = function(src, dest) {
+		WsApi.fetch({
+			'endpoint': '/private/queue', 
+			'controller': 'settings/deposit-location', 
+			'method': 'reorder/' + src + '/' + dest
+		}).then(function(response) {
+			var responseType = angular.fromJson(response.body).meta.type;
+			var responseMessage = angular.fromJson(response.body).meta.message;
+			if(responseType != 'SUCCESS') {
+				AlertService.add({type: responseType, message: responseMessage}, "/settings/deposit-location");  
+			}
+		});
+	};
+
+	DepositLocationRepo.remove = function(index) {
+		WsApi.fetch({
+			'endpoint': '/private/queue', 
+			'controller': 'settings/deposit-location', 
+			'method': 'remove/' + index
 		}).then(function(response) {
 			var responseType = angular.fromJson(response.body).meta.type;
 			var responseMessage = angular.fromJson(response.body).meta.message;

@@ -14,5 +14,4 @@ public interface DepositLocationRepo extends JpaRepository<DepositLocation, Long
     
     public List<DepositLocation> findAllByOrderByOrderAsc();
     
-    
 }

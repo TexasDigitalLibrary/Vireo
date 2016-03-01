@@ -1,22 +1,17 @@
-vireo.controller("SettingsController", function ($controller, $scope, $q, $location, $routeParams, User, UserSettings, ConfigurableSettings, SidebarService, DepositLocationRepo) {
-	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
+vireo.controller("SettingsController", function ($controller, $scope, $q, UserSettings, ConfigurableSettings) {
 
-	$scope.user = User.get();
+	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
 	$scope.settings = {};
 	
-	$scope.ready = $q.all([UserSettings.ready(), ConfigurableSettings.ready(), DepositLocationRepo.ready()]);
+	$scope.ready = $q.all([UserSettings.ready(), ConfigurableSettings.ready()]);
 		
 	$scope.settings.user  = UserSettings.get();
 
 	$scope.settings.configurable = ConfigurableSettings.get();
 
-	$scope.settings.depositLocations = DepositLocationRepo.get();
-
-	$scope.depositLocation = {};
-
 	$scope.ready.then(function() {
-
+		
 		$scope.updateUserSetting = function(setting, timer) {
 			if(Object.keys($scope.userSettingsForm.$error).length) return;
 
@@ -34,14 +29,6 @@ vireo.controller("SettingsController", function ($controller, $scope, $q, $locat
 
 		$scope.resetConfigurableSettings = function(type,setting) {
 			ConfigurableSettings.reset(type,setting);
-		};
-
-		$scope.createDepositLocation = function() {
-			DepositLocationRepo.add($scope.depositLocation);
-		};
-
-		$scope.reorderDepositLocation = function(from, to) {
-	    	DepositLocationRepo.reorder(from, to);
 		};
 
 	});	
@@ -77,7 +64,7 @@ vireo.controller("SettingsController", function ($controller, $scope, $q, $locat
 	 * 
 	 */
 	
-	//Submission Availability pane
+	//SUBMISSION AVAILABILITY
 	$scope.submissionsOpenOptions = [
 		{"true": "Open"}, 
 		{"false": "Closed"}
@@ -85,6 +72,23 @@ vireo.controller("SettingsController", function ($controller, $scope, $q, $locat
 
 	$scope.allowMultipleSubmissionsOptions = [
 		{"true": "Yes"}, 
+		{"false": "No"}
+	];
+
+        //PROQUEST / UMI SETTINGS / DEGREE CODE
+	$scope.proquestIndexingOptions = [
+		{"true": "Yes"}, 
+                {"false": "No"}
+        ];
+
+	//Orcid settings pane
+	$scope.orcidValidationOptions = [
+		{"true": "Yes"},
+		{"false": "No"}
+	];
+
+	$scope.orcidAuthenticationOptions = [
+		{"true": "Yes"},
 		{"false": "No"}
 	];
 

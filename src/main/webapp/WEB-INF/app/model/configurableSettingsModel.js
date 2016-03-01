@@ -20,16 +20,17 @@ vireo.service("ConfigurableSettings", function(AbstractModel, WsApi) {
 		if(ConfigurableSettings.promise) return ConfigurableSettings.data;
 		
 		var newAllConfigurableSettingsPromise = WsApi.fetch({
-								endpoint: '/private/queue', 
-								controller: 'settings', 
-								method: 'all'
+			endpoint: '/private/queue', 
+			controller: 'settings/configurable', 
+			method: 'all'
 		});
+		
 		ConfigurableSettings.promise = newAllConfigurableSettingsPromise;
 		ConfigurableSettings.data = new ConfigurableSettings(newAllConfigurableSettingsPromise);
 
 		ConfigurableSettings.listener = WsApi.listen({
 			endpoint: '/channel', 
-			controller: 'settings', 
+			controller: 'settings/configurable', 
 			method: '',
 		});
 				
@@ -45,7 +46,7 @@ vireo.service("ConfigurableSettings", function(AbstractModel, WsApi) {
 		console.log(value);	
 		WsApi.fetch({
 			endpoint:'/private/queue',
-			controller:'settings',
+			controller:'settings/configurable',
 			method:'update',
 			data: {'type':type, 'setting':setting,'value':value}
 		}).then(function(response) {
@@ -57,7 +58,7 @@ vireo.service("ConfigurableSettings", function(AbstractModel, WsApi) {
 	ConfigurableSettings.reset = function(type,setting) {
 		WsApi.fetch({
 			endpoint:'/private/queue',
-			controller:'settings',
+			controller:'settings/configurable',
 			method:'reset',
 			data: {'type':type, 'setting':setting}
 		});

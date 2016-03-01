@@ -3,13 +3,16 @@ package org.tdl.vireo.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
-public class CustomActionDefinition extends BaseEntity {
+public class CustomActionDefinition extends BaseOrderedEntity {
 	
 	@Column(nullable = false, unique = true, length = 255)
 	private String label;
-
+	
 	@Column(nullable = false)
+	@JsonProperty("isStudentVisible")
 	private Boolean isStudentVisible;
 	
 	public CustomActionDefinition() { }

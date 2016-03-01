@@ -237,7 +237,6 @@ main footer {
   float: right;
 }
 
-
 .global-nav {
   margin: 0 auto;
   text-align: center;
@@ -408,16 +407,32 @@ sidebox ul {
 sidebox ul li {
   padding: 3px;
 }
+
 sidebox ul input {
   border: 1px solid #cccccc;
   padding: 2px 0 2px 3px;
   background-color: #ffffff;
   height:24px;
+}
 
+.hover-pointer:hover {
+  cursor: pointer;
+}
+
+.locking-text-area:hover {
+  cursor: default;
+}
+
+.hover-pointer:hover {
+  cursor: pointer;
+}
+
+.locking-text-area:hover {
+  cursor: default;
 }
 
 .as-sortable-dragging { 
-  border: 1px dotted #000 !important; 
+  
 }
 
 .repeated-span {
@@ -516,6 +531,7 @@ h4 {
   font-size:0.95em;
   margin: 0 0 10px; 
 }
+
 .lock-control a {
   color: #666666;
   text-decoration:none;
@@ -523,6 +539,18 @@ h4 {
 
 .modal-add-btn {
   margin-bottom: 25px;
+}
+
+.deposit-location {
+  
+}
+
+.edit-setting-icon {
+
+}
+
+.edit-setting-icon:hover {
+  cursor: pointer;
 }
 
 .trash-drop-zone {
@@ -537,7 +565,7 @@ h4 {
   transition: all 0.35s ease-in;
 }
 
-.trash-drop-zone:hover {
+.trash-drop-zone.dragging {
   transition: all 0.35s ease-in;
   border-color: #a6a6a6;
 }
@@ -549,35 +577,36 @@ h4 {
   font-size: 70px;
 }
 
-.trash-drop-zone:hover .glyphicon-trash {
+.trash-drop-zone.dragging .glyphicon-trash {
   transition: all 0.35s ease-in;
   color: #a6a6a6;
   text-shadow: 1px 0 5px #fefefe;
   font-size: 70px;
 }
 
-textarea
-{   width:100%;
-    margin-top:10px;
-    height: 400px;
-    outline: none;
-    white-space: nowrap;
-    word-wrap: normal;
+textarea {   
+  width:100%;
+  margin-top:10px;
+  height: 400px;
+  outline: none;
+  white-space: nowrap;
+  word-wrap: normal;
 }
+
 textarea:hover {
-    cursor:not-allowed;
+  cursor: not-allowed;
 }
 
 textarea:focus {
-  cursor:pointer;
+  cursor: pointer;
 }
 
 .degreeCodes label {
-  margin-top:3px;
-  font-weight:lighter;
+  margin-top: 3px;
+  font-weight: lighter;
 }
 .degreeCodes p {
-  margin-bottom:15px;
+  margin-bottom: 15px;
 }
 
 fieldset.fieldset-border {
@@ -934,7 +963,6 @@ footer a, footer li, footer p {
   z-index: 102 !important;
 }
 
-.test{
-    background-color: red !important;
-    color:blue;
+.mouse-hover-pointer:hover {
+  cursor:pointer;
 }

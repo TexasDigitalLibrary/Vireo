@@ -13,30 +13,24 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.tdl.vireo.model.BaseOrderedEntity;
 
 @Service
 public class OrderedEntityService {
+    
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	private static final Integer one = new Integer(1);
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	private Object findByOrder(Class<?> clazz, Integer order) {
-		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-		CriteriaQuery<Object> query = cb.createQuery();
-		Root<?> e = query.from((Class<Object>) clazz);
-		Path<Integer> path = e.get("order");
-		query.select(path).distinct(true);
-		query.where(cb.equal(path, order));
-		return entityManager.createQuery(query).getSingleResult();
-	}
-
+	@SuppressWarnings("unchecked")
 	private void swap(Class<?> clazz, Integer here, Integer there) {
-		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-		CriteriaUpdate<Object> update = (CriteriaUpdate<Object>) cb.createCriteriaUpdate(clazz);
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();		
+        CriteriaUpdate<Object> update = (CriteriaUpdate<Object>) cb.createCriteriaUpdate(clazz);
 		Root<?> e = update.from((Class<Object>) clazz);
 		Path<Integer> path = e.<Integer> get("order");
 		update.set(path, there);
@@ -44,6 +38,7 @@ public class OrderedEntityService {
 		entityManager.createQuery(update).executeUpdate();
 	}
 
+	@SuppressWarnings("unchecked")
 	private void delete(Class<?> clazz, Integer order) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaDelete<Object> delete = (CriteriaDelete<Object>) cb.createCriteriaDelete(clazz);
@@ -51,45 +46,56 @@ public class OrderedEntityService {
 		delete.where(cb.equal(e.get("order"), order));
 		entityManager.createQuery(delete).executeUpdate();
 	}
+	
+	@SuppressWarnings("unchecked")
+	public Object findByOrder(Class<?> clazz, Integer order) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Object> query = cb.createQuery();
+        Root<?> e = query.from((Class<Object>) clazz);
+        Path<Integer> path = e.get("order");
+        query.select(path).distinct(true);
+        query.where(cb.equal(path, order));
+        return entityManager.createQuery(query).getSingleResult();
+    }
 
-	public void reorder(Class<?> clazz, Integer from, Integer to) {		
-		swap(clazz, from, Integer.MAX_VALUE);
+	@SuppressWarnings("unchecked")
+	public void reorder(Class<?> clazz, Integer src, Integer dest) {
+		swap(clazz, src, Integer.MAX_VALUE);
 		// increment/decrement order as necessary
 		{
 			CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 			CriteriaUpdate<Object> update = (CriteriaUpdate<Object>) cb.createCriteriaUpdate(clazz);
 			Root<?> e = update.from((Class<Object>) clazz);
-			Path<Integer> path = e.<Integer> get("order");
-			if (from > to) {
+			Path<Integer> path = e.get("order");
+			if (src > dest) {
 				update.set(path, cb.sum(path, one));
 				List<Predicate> predicates = new ArrayList<Predicate>();
-				predicates.add(cb.greaterThanOrEqualTo(path, to));
-				predicates.add(cb.lessThan(path, from));
+				predicates.add(cb.greaterThanOrEqualTo(path, dest));
+				predicates.add(cb.lessThan(path, src));
 				update.where(predicates.toArray(new Predicate[] {}));
 				entityManager.createQuery(update).executeUpdate();
-			} else if (from < to) {
+			} else if (src < dest) {
 				update.set(path, cb.sum(path, -one));
 				List<Predicate> predicates = new ArrayList<Predicate>();
-				predicates.add(cb.greaterThan(path, from));
-				predicates.add(cb.lessThanOrEqualTo(path, to));
+				predicates.add(cb.greaterThan(path, src));
+				predicates.add(cb.lessThanOrEqualTo(path, dest));
 				update.where(predicates.toArray(new Predicate[] {}));
 				entityManager.createQuery(update).executeUpdate();
 			} else {
 				// do nothing
 			}
 		}
-		swap(clazz, Integer.MAX_VALUE, to);
+		swap(clazz, Integer.MAX_VALUE, dest);
 	}
 
+	@SuppressWarnings("unchecked")
 	public void remove(Class<?> clazz, Integer order) {
 		delete(clazz, order);
-		// decrement order after order...doh!
-		//TODO: refactor to remove ambiguity between intended value order and column order
 		{
 			CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 			CriteriaUpdate<Object> update = (CriteriaUpdate<Object>) cb.createCriteriaUpdate(clazz);
 			Root<?> e = update.from((Class<Object>) clazz);
-			Path<Integer> path = e.<Integer> get("order");
+			Path<Integer> path = e.get("order");
 			update.set(path, cb.sum(path, -one));
 			update.where(cb.greaterThan(path, order));
 			entityManager.createQuery(update).executeUpdate();
