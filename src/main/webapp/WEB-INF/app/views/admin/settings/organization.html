@@ -2,17 +2,48 @@
 	<div class="col-xs-12">
 		<h1>ORGANIZATIONS AND WORKFLOWS</h1>
 		<div class="row">
+			<div class="col-xs-3" style="padding-right: 0px; padding-left: 0px;">
+				<div class="col-xs-11">
+					<ol class="breadcrumb">
+						<li><a href="#">Vireo Institution</a></li>
+						<li><a href="#">College of Engineering</a></li>
+					</ol>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-3">
+				<div style="padding-bottom: 10px; padding-top: 0px; padding-left: 40%; padding-right: 0px;">
+						<span class="glyphicon glyphicon-arrow-down"></span>
+				</div>
+			</div>
+		</div>
+		<div class="row">
 			<div class="col-xs-4" style="padding-right: 0px; padding-left: 0px;">
 				<div class="col-xs-11">
 					<div class="panel panel-default">
 						<div class="panel-heading">
-							<h3 class="panel-title">Institution</h3>
+							<h3 class="panel-title">Degree</h3>
 						</div>
 						<div class="panel-body">
 							<div class="list-group">
-								<a href="#" class="list-group-item active" style="background-color:#43606E;">
-									<h4 class="list-group-item-heading">Vireo Institution</h4>
-									<p class="list-group-item-text"><span class="label label-info">Institution</span></p>
+								<a href="#" class="list-group-item active" style="background-color: #92aa9c; border-color: #43606E;">
+									<h4 class="list-group-item-heading">Bachelor of Science</h4>
+									<p class="list-group-item-text">
+										<span class="label label-warning">Degree</span>
+									</p>
+								</a>
+								<a href="#" class="list-group-item">
+									<h4 class="list-group-item-heading">Master of Science</h4>
+									<p class="list-group-item-text">
+										<span class="label label-warning">Degree</span>
+									</p>
+								</a>
+								<a href="#" class="list-group-item">
+									<h4 class="list-group-item-heading">Ph.D. of Science</h4>
+									<p class="list-group-item-text">
+										<span class="label label-warning">Degree</span>
+									</p>
 								</a>
 							</div>
 						</div>
@@ -26,21 +57,21 @@
 				<div class="col-xs-11">
 					<div class="panel panel-default">
 						<div class="panel-heading">
-							<h3 class="panel-title">College/Degree</h3>
+							<h3 class="panel-title">Major</h3>
 						</div>
 						<div class="panel-body">
 							<div class="list-group">
 								<a href="#" class="list-group-item">
-									<h4 class="list-group-item-heading">College of Engineering</h4>
-									<p class="list-group-item-text"><span class="label label-success">College</span></p>
-								</a> 
-								<a href="#" class="list-group-item active" style="background-color:#43606E;">
-									<h4 class="list-group-item-heading">College of Fine Arts</h4>
-									<p class="list-group-item-text"><span class="label label-success">College</span></p>
+									<h4 class="list-group-item-heading">Aeronautics</h4>
+									<p class="list-group-item-text">
+										<span class="label label-info">Major</span>
+									</p>
 								</a>
-								<a href="#" class="list-group-item">
-									<h4 class="list-group-item-heading">Bachelor of Science</h4>
-									<p class="list-group-item-text"><span class="label label-warning">Degree</span></p>
+								<a href="#" class="list-group-item active" style="background-color: #92aa9c; border-color: #43606E;">
+									<h4 class="list-group-item-heading">Computer Science</h4>
+									<p class="list-group-item-text">
+										<span class="label label-info">Major</span>
+									</p>
 								</a>
 							</div>
 						</div>
@@ -57,10 +88,18 @@
 					</div>
 					<div class="panel-body">
 						<div class="list-group">
-							<a href="#" class="list-group-item active" style="background-color:#43606E;">
-								<h4 class="list-group-item-heading">TDL Department</h4>
-								<p class="list-group-item-text"><span class="label label-danger">Department</span></p>
-							</a>
+							<a href="#" class="list-group-item active" style="background-color: #43606E; border-color: #43606E;" >
+									<h4 class="list-group-item-heading">Information Security</h4>
+									<p class="list-group-item-text">
+										<span class="label label-primary">Department</span>
+									</p>
+								</a>
+								<a href="#" class="list-group-item">
+									<h4 class="list-group-item-heading">Software Engineering</h4>
+									<p class="list-group-item-text">
+										<span class="label label-primary">Department</span>
+									</p>
+								</a>
 						</div>
 					</div>
 				</div>
@@ -69,20 +108,21 @@
 		<div class="row">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h3 class="panel-title">Bachelor of Science Settings</h3>
+					<h3 class="panel-title">Information Security Settings</h3>
 				</div>
 				<div class="panel-body">
 					<div class="row">
 						<div class="col-xs-6">
 							<form class="form-signin">
 								<label for="inputName">Name</label>
-								<input type="text" id="inputName" class="form-control" placeholder="Name" value="Bachelor of Science" required="" autofocus="" style="margin-bottom: 20px;">
-								<label for="inputCategory">Organization Category</label>
-								<select id="inputCategory" class="form-control">
-									<option>Institution</option>
-									<option>College</option>
-									<option selected="selected">Degree</option>
-									<option>Department</option>
+								<input type="text" id="inputName" class="form-control" placeholder="Name" value="Information Security" required="" autofocus="" style="margin-bottom: 20px;">
+								<label for="inputCategory">Category</label>
+								<select id="inputCategory" class="form-control label label-primary">
+									<option class="label-success">Institution</option>
+									<option class="label-danger">College</option>
+									<option class="label-warning">Degree</option>
+									<option class="label-info">Major</option>
+									<option class="label-primary" selected="selected">Department</option>
 								</select>
 								<div class="modal-footer">
 									<button type="button" class="btn btn-warning">Cancel</button>
@@ -93,16 +133,43 @@
 						<div class="col-xs-6">
 							<div class="panel panel-default">
 								<div class="panel-heading">
-									<button type="button" class="btn-xs btn-primary pull-right" style="padding-bottom: 4px;"><span class="glyphicon glyphicon-plus pull-right"></span></button>
-									<h3 class="panel-title">Bachelor of Science Workflow</h3>									
+									<button type="button" class="btn-xs btn-primary pull-right" style="padding-bottom: 4px;">
+										<span class="glyphicon glyphicon-plus pull-right"></span>
+									</button>
+									<h3 class="panel-title">Information Security Workflow</h3>
 								</div>
 								<div class="panel-body">
 									<ul class="list-group">
-										<li class="list-group-item">Step 1<ul class="inline-list pull-right"><li><span class="glyphicon glyphicon-pencil pull-right"></span></li><li><span class="glyphicon glyphicon-trash pull-right"></span></li></ul></li>
-										<li class="list-group-item">Step 2<ul class="inline-list pull-right"><li><span class="glyphicon glyphicon-pencil pull-right"></span></li><li><span class="glyphicon glyphicon-trash pull-right"></span></li></ul></li>
-										<li class="list-group-item">Step 3<ul class="inline-list pull-right"><li><span class="glyphicon glyphicon-pencil pull-right"></span></li><li><span class="glyphicon glyphicon-trash pull-right"></span></li></ul></li>
-										<li class="list-group-item">Step 4<ul class="inline-list pull-right"><li><span class="glyphicon glyphicon-pencil pull-right"></span></li><li><span class="glyphicon glyphicon-trash pull-right"></span></li></ul></li>
-										<li class="list-group-item">Step 5<ul class="inline-list pull-right"><li><span class="glyphicon glyphicon-pencil pull-right"></span></li><li><span class="glyphicon glyphicon-trash pull-right"></span></li></ul></li>
+										<li class="list-group-item">Step 1
+											<ul class="inline-list pull-right">
+												<li><span class="glyphicon glyphicon-pencil pull-right"></span></li>
+												<li><span class="glyphicon glyphicon-trash pull-right"></span></li>
+											</ul>
+										</li>
+										<li class="list-group-item">Step 2
+											<ul class="inline-list pull-right">
+												<li><span class="glyphicon glyphicon-pencil pull-right"></span></li>
+												<li><span class="glyphicon glyphicon-trash pull-right"></span></li>
+											</ul>
+										</li>
+										<li class="list-group-item">Step 3
+											<ul class="inline-list pull-right">
+												<li><span class="glyphicon glyphicon-pencil pull-right"></span></li>
+												<li><span class="glyphicon glyphicon-trash pull-right"></span></li>
+											</ul>
+										</li>
+										<li class="list-group-item">Step 4
+											<ul class="inline-list pull-right">
+												<li><span class="glyphicon glyphicon-pencil pull-right"></span></li>
+												<li><span class="glyphicon glyphicon-trash pull-right"></span></li>
+											</ul>
+										</li>
+										<li class="list-group-item">Step 5
+											<ul class="inline-list pull-right">
+												<li><span class="glyphicon glyphicon-pencil pull-right"></span></li>
+												<li><span class="glyphicon glyphicon-trash pull-right"></span></li>
+											</ul>
+										</li>
 									</ul>
 								</div>
 							</div>
