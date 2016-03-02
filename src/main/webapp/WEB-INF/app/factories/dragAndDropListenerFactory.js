@@ -1,4 +1,4 @@
-vireo.factory('DragAndDropListenerFactory', function($window) {
+vireo.factory('DragAndDropListenerFactory', function() {
 
 	this.buildDragControls = function(drag) {
 
@@ -75,7 +75,7 @@ vireo.factory('DragAndDropListenerFactory', function($window) {
 	     		}
 	     		else {
 	     			listener.trash.hover = false;
-	     		}	     		
+	     		}
 		     	return sourceItemHandleScope.itemScope.sortableScope.$id === destSortableScope.$id;
 		    },
 		    orderChanged: function(event) {
