@@ -1,60 +1,37 @@
 vireo.factory('DragAndDropListenerFactory', function() {
 	
-	var listener = {
-		
-		'trash': {
-			hover: false,
-			element: null,
-			id: ''
-		},
-		
-		'select': null,
-		
-		'dragging': null,
-				
-		'list': [],
-		
-		'confirm': {
-			'remove': {
-				'modal': ''
-			}
-		},
-		
-		'reorder': function(src, dest) {}
-	};
-	
-	listener.setScopeTrashId = function(id) {
-		listener.trash.id = id;
-	};
-	
-	listener.setScopeDragging = function(dragging) {
-		listener.dragging = dragging;
-	};
-	
-	listener.setScopeSelect = function(select) {
-		listener.select = select;
-	};
-		
-	listener.setScopeList = function(list) {
-		listener.list = list;
-	};
-	
-	listener.setConfirmRemoveModal = function(confirmRemoveModal) {		
-		listener.confirm.remove.modal = confirmRemoveModal;
-	};
-	
-	listener.setScopeReorderFunction = function(reorder) {
-		listener.reorder = reorder;
-	};
-		
-	listener.buildDragControls = function(drag) {
+	this.buildDragControls = function(drag) {
+
+		var listener = {
+			
+			'trash': {
+				hover: false,
+				element: null,
+				id: ''
+			},
+			
+			'select': null,
+			
+			'dragging': null,
+					
+			'list': [],
+			
+			'confirm': {
+				'remove': {
+					'modal': ''
+				}
+			},
+			
+			'reorder': function(src, dest) {}
+		};
+
 		if(typeof drag == 'object') {
-			listener.setScopeTrashId(drag.trashId);
-			listener.setScopeDragging(drag.dragging);
-			listener.setScopeSelect(drag.select);
-			listener.setScopeList(drag.list);
-			listener.setConfirmRemoveModal(drag.confirm);
-			listener.setScopeReorderFunction(drag.reorder);
+			listener.trash.id = drag.trashId;
+			listener.dragging = drag.dragging;
+			listener.select = drag.select;
+			listener.list = drag.list;
+			listener.confirm.remove.modal = drag.confirm;
+			listener.reorder = drag.reorder;
 		}
 		else {
 			console.log('ensure configured')
@@ -73,7 +50,7 @@ vireo.factory('DragAndDropListenerFactory', function() {
 			},
 			dragEnd: function(event) {
 				if(listener.dragging) {
-					if(listener.trash.hover) {						
+					if(listener.trash.hover) {			
 						angular.element(listener.confirm.remove.modal).modal('show');
 						listener.trash.element.removeClass('dragging');
 					}
@@ -109,5 +86,5 @@ vireo.factory('DragAndDropListenerFactory', function() {
 		return dragControls;
 	}
 	
-	return listener;
+	return this;
 });
