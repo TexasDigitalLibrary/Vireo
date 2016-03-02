@@ -542,8 +542,12 @@ h4 {
   
 }
 
-.edit-setting-icon {
+.custom-action {
+  
+}
 
+.graduation-month {
+  
 }
 
 .edit-setting-icon:hover {
@@ -553,6 +557,15 @@ h4 {
 .sort-div {
   margin-top: -5px;
   margin-bottom: 10px;
+}
+
+.as-sortable-drag {
+  position: fixed;
+  opacity: .8; 
+}
+
+.as-sortable-placeholder {
+  border: 1px solid #dcdcdc;
 }
 
 .trash-drop-zone {

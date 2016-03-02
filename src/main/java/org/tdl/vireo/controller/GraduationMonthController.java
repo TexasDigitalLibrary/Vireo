@@ -189,11 +189,11 @@ public class GraduationMonthController {
         return new ApiResponse(SUCCESS);
     }
     
-    @ApiMapping("/sort")
+    @ApiMapping("/sort/{column}")
     @Auth(role = "ROLE_MANAGER")
     @Transactional
-    public ApiResponse sortGraduationMonths() {
-        graduationMonthRepo.sort();
+    public ApiResponse sortGraduationMonths(@ApiVariable String column) {
+        graduationMonthRepo.sort(column);
         simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(SUCCESS, getAll()));        
         return new ApiResponse(SUCCESS);
     }

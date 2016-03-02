@@ -23,9 +23,10 @@ public class GraduationMonthRepoImpl implements GraduationMonthRepoCustom {
     public void reorder(Integer src, Integer dest) {
         orderedEntityService.reorder(GraduationMonth.class, src, dest);
     }
+    
     @Override
-    public void sort() {
-        orderedEntityService.sort(GraduationMonth.class, "month");
+    public void sort(String column) {
+        orderedEntityService.sort(GraduationMonth.class, column);
     }
     
     @Override

@@ -8,7 +8,7 @@ public interface GraduationMonthRepoCustom {
     
     public void reorder(Integer src, Integer dest);
     
-    public void sort();
+    public void sort(String column);
     
     public void remove(Integer index);
     

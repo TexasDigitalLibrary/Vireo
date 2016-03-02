@@ -1,4 +1,4 @@
-<div class="row" ng-controller="CustomActionSettingsController">
+<div id="custom-action" class="row" ng-controller="CustomActionSettingsController">
 	
 	<alerts channels="/settings/custom-action" types="ERROR, WARNING" exclusive></alerts>
 	
@@ -18,7 +18,7 @@
 			properties='["label", "isStudentVisible"]'
 			item-view='views/directives/dragAndDropCustomAction.html'
 			listeners='dragControlListeners'
-			sortable-select='editCustomAction(index)'>
+			edit='editCustomAction(index)'>
 		</draganddroplist>
 	</div>
 	

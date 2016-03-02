@@ -54,7 +54,8 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 			select: $scope.selectCustomAction,			
 			list: $scope.customActions.list,
 			confirm: '#customActionConfirmRemoveModal',
-			reorder: $scope.reorderCustomAction
+			reorder: $scope.reorderCustomAction,
+			container: '#custom-action'
 		});
 		
 	});

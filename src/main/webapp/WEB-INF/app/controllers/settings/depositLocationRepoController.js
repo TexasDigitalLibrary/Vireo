@@ -19,7 +19,7 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 
 	$scope.resetDepositLocation();
 	
-	$scope.ready.then(function() {		
+	$scope.ready.then(function() {
 		
 		$scope.createDepositLocation = function() {
 			DepositLocationRepo.add($scope.modalData);
@@ -55,7 +55,8 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 			select: $scope.selectDepositLocation,			
 			list: $scope.depositLocations.list,
 			confirm: '#depositLocationConfirmRemoveModal',
-			reorder: $scope.reorderDepositLocation
+			reorder: $scope.reorderDepositLocation,
+			container: '#deposit-location'
 		});
 		
 	});	
