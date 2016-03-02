@@ -1,3 +1,12 @@
+
+<div ng-if="sortColumn && scopeValue.list.length > 0" class="sort-div">
+	<a href="" ng-click="sortMethod({column:sortColumn})">
+		<span class="glyphicon glyphicon-refresh"></span> 
+		<span ng-if="sortAction=='confirm'"> Sort graduation months</span>
+		<span ng-if="sortAction=='sort'"> Are you sure you want to sort all graduation months?</span>
+	</a>
+</div>
+
 <ol data-as-sortable="listeners" data-ng-model="scopeValue.list">
    <li data-ng-repeat="item in scopeValue.list" data-as-sortable-item>
       	<div data-as-sortable-item-handle>

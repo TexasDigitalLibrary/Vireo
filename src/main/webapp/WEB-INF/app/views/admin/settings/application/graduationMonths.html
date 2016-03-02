@@ -1,34 +1,25 @@
-<div class="row" ng-controller="GraduationMonthRepoController">
+<div id="graduation-month" class="row" ng-controller="GraduationMonthRepoController">
 	
 	<alerts channels="/settings/graduation-month" types="ERROR, WARNING" exclusive></alerts>
 	
-	<div class="col-sm-6">
-		
-		<div>
-			<button class="btn btn-default modal-add-btn" 
-					data-toggle="modal" 
-					data-target="#graduationMonthNewModal">
-				Add Graduation Month
-			</button>
-		</div>
-		<div class="sort-div" ng-if="graduationMonths.list.length > 0">
-			<a href="" ng-click="sortGraduationMonths()">
-				<span class="glyphicon glyphicon-refresh"></span> 
-				<span ng-if="sortAction=='confirm'"> Sort graduation months</span>
-				<span ng-if="sortAction=='sort'"> Are you sure you want to sort all graduation months?</span>
-			</a>
-		</div>
-		<div>
-			<p ng-if="graduationMonths.list.length == 0">Add new Graduation Month</p>
-			<draganddroplist dragging="dragging"
-							 scope-value="graduationMonths"
-							 properties='["month"]'
-							 item-view='views/directives/dragAndDropGraduationMonth.html'
-							 listeners='dragControlListeners'
-							 sortable-select='editGraduationMonth(index)'
-							 to-string='toMonthString(month)'>
-			</draganddroplist>
-		</div>
+	<div class="col-sm-6">		
+		<button class="btn btn-default modal-add-btn" 
+				data-toggle="modal" 
+				data-target="#graduationMonthNewModal">
+			Add Graduation Month
+		</button>
+		<p ng-if="graduationMonths.list.length == 0">Add new Graduation Month</p>
+		<draganddroplist dragging="dragging"
+						 scope-value="graduationMonths"
+						 properties='["month"]'
+						 item-view='views/directives/dragAndDropGraduationMonth.html'
+						 listeners='dragControlListeners'
+						 edit='editGraduationMonth(index)'
+						 to-string='toMonthString(month)'
+						 sort-column='month',
+						 sort-action='sortAction'
+						 sort-method='sortGraduationMonths(column)'>
+		</draganddroplist>
 	</div>
 	
 	<div class="col-sm-6">

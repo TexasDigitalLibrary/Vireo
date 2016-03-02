@@ -97,12 +97,11 @@ vireo.service("GraduationMonthRepo", function(WsApi, AbstractModel, AlertService
 		});
 	};
 
-	GraduationMonthRepo.sort = function() {
-		console.log('sorting');
+	GraduationMonthRepo.sort = function(column) {
 		return WsApi.fetch({
 			'endpoint': '/private/queue', 
 			'controller': 'settings/graduation-month', 
-			'method': 'sort'
+			'method': 'sort/' + column
 		}).then(function(response) {
 			var responseType = angular.fromJson(response.body).meta.type;
 			var responseMessage = angular.fromJson(response.body).meta.message;

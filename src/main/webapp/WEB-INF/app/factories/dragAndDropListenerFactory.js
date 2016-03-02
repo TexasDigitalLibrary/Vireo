@@ -48,7 +48,6 @@ vireo.factory('DragAndDropListenerFactory', function() {
 	};
 		
 	listener.buildDragControls = function(drag) {
-		
 		if(typeof drag == 'object') {
 			listener.setScopeTrashId(drag.trashId);
 			listener.setScopeDragging(drag.dragging);
@@ -102,7 +101,9 @@ vireo.factory('DragAndDropListenerFactory', function() {
 		    		var dest = event.dest.index + 1;
 		    		listener.reorder(src, dest);
 		    	}
-		    }
+		    },
+		    containment: drag.container,
+		    containerPositioning: 'absolute'
 		};
 		
 		return dragControls;

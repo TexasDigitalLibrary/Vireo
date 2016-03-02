@@ -4,11 +4,14 @@ vireo.directive("draganddroplist", function() {
 		restrict: 'E',
 		scope: {
 			'dragging': '=',
-			'scopeValue': '=',			
+			'scopeValue': '=',
 			'listeners': '=',
-			'sortableSelect': '&',
+			'edit': '&',
 			'toString': '&',
-			'itemView': '@'
+			'itemView': '@',
+			'sortColumn': '@',
+			'sortAction': '=',
+			'sortMethod': '&'
 		},
 		controller: function($scope) {
 			if(typeof $scope.itemView == 'undefined') {

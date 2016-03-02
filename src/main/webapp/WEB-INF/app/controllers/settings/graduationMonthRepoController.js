@@ -67,12 +67,12 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 	    	GraduationMonthRepo.reorder(src, dest);
 		};
 
-		$scope.sortGraduationMonths = function() {
+		$scope.sortGraduationMonths = function(column) {
 			if($scope.sortAction == 'confirm') {
 				$scope.sortAction = 'sort';
 			}
 			else if($scope.sortAction == 'sort') {
-				GraduationMonthRepo.sort();
+				GraduationMonthRepo.sort(column);
 				$scope.sortAction = 'confirm';
 			}
 	    	
@@ -90,7 +90,8 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 			select: $scope.selectGraduationMonth,			
 			list: $scope.graduationMonths.list,
 			confirm: '#graduationMonthConfirmRemoveModal',
-			reorder: $scope.reorderGraduationMonth
+			reorder: $scope.reorderGraduationMonth,
+			container: '#graduation-month'
 		});
 		
 	});	
