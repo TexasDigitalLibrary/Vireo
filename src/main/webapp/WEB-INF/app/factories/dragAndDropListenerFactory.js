@@ -47,10 +47,9 @@ vireo.factory('DragAndDropListenerFactory', function($window) {
 
 				var dragging = angular.element('.as-sortable-drag');
 				dragging.css('margin-top', -angular.element('body').scrollTop());
-
-				angular.element('.as-sortable-drag').css('display', 'block');
+				dragging.css('display', 'block');
 				
-				if(listener.trash.hover) {					
+				if(listener.trash.hover) {
 					listener.trash.hover = false;					
 					listener.trash.element.removeClass('dragging');
 				}
