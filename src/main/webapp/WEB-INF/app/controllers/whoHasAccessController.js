@@ -1,40 +1,40 @@
 vireo.controller("WhoHasAccessController", function ($controller, $q, $scope, User, UserRepo) {
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
-        $scope.modalData = {};
+    $scope.modalData = {};
 
-        $scope.currentUser = User.get();
-	$scope.userRepo = UserRepo.get();
-        $scope.ready = $q.all([UserRepo.ready()]);
-	$scope.ready.then(function() {
-          console.info($scope.userRepo);
-        });
+    $scope.user = User.get();
+    
+    $scope.userRepo = UserRepo.get();
+    
+    $scope.ready = $q.all([User.ready(), UserRepo.ready()]);
 
-        $scope.search = function(user){
-            if (!$scope.multiFilter
-                || (user.firstName.toLowerCase().indexOf($scope.multiFilter.toLowerCase()) != -1)
-                || (user.lastName.toLowerCase().indexOf($scope.multiFilter.toLowerCase()) != -1)
-                || (user.email.toLowerCase().indexOf($scope.multiFilter.toLowerCase()) != -1) ){
-                return true;
-            }
-            return false;
+
+    //To be deprecated. We should get arbitrary/dynamic roles from the service.
+    $scope.roles = [
+      {value: 'ROLE_ADMIN', label: 'Admin'},
+      {value: 'ROLE_MANAGER', label: 'Manager'},
+      {value: 'ROLE_REVIEWER', label: 'Reviewer'},
+      {value: 'ROLE_STUDENT', label: 'Student'}
+    ];
+
+    $scope.selectedRole = $scope.roles[0];
+    
+    $scope.ready.then(function() {
+      $scope.search = function(user){
+        if (!$scope.multiFilter
+            || (user.firstName.toLowerCase().indexOf($scope.multiFilter.toLowerCase()) != -1)
+            || (user.lastName.toLowerCase().indexOf($scope.multiFilter.toLowerCase()) != -1)
+            || (user.email.toLowerCase().indexOf($scope.multiFilter.toLowerCase()) != -1) ){
+            return true;
+          }
+          return false;
         };
+    
+        $scope.updateRole = function(selectedUser, selectedRole) {
+          UserRepo.updateRole($scope.user, selectedUser.email, selectedRole.value);
+        };
+   
+    });
 
-  //To be deprecated. We should get arbitrary/dynamic roles from the service.
-  $scope.roles = {'ROLE_ADMIN': 'Admin',
-                  'ROLE_MANAGER': 'Manager',
-                  'ROLE_REVIEWER': 'Reviewer',
-                  'ROLE_STUDENT': 'Student'};
-
-        $scope.addSelectedUser = function () {
-            UserRepo.addAccess($scope.modalData);
-        }
-
-        $scope.setSelectedUser = function (selectedUser) {
-            $scope.modalData = selectedUser;
-        }
-
-        $scope.setUserPermissions = function (targetUserEmail, newRole) {
-            UserRepo.updateRole($scope.currentUser, targetUserEmail, newRole);
-        }
 });

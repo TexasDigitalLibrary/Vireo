@@ -20,8 +20,8 @@
           <td>{{user.firstName}} {{user.lastName}}</td>
           <td>{{user.email}}</td>
           <td>
-            <select class="form-control" ng-model="user.role">
-              <option ng-repeat="(key, value) in roles" value="{{key}}" ng-click="setUserPermissions(user.email, key)">{{value}}</option>
+            <select ng-options="role as role.label for role in roles" class="form-control" ng-model="selectedRole" ng-change="updateRole(user, selectedRole)">
+              <!-- <option ng-repeat="(key, value) in roles" value="{{key}}" ng-click="setUserPermissions(user.email, key)">{{value}}</option> -->
             </select>
           </td>
         </tr>
