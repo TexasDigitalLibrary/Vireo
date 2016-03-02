@@ -97,6 +97,21 @@ vireo.service("GraduationMonthRepo", function(WsApi, AbstractModel, AlertService
 		});
 	};
 
+	GraduationMonthRepo.sort = function() {
+		console.log('sorting');
+		return WsApi.fetch({
+			'endpoint': '/private/queue', 
+			'controller': 'settings/graduation-month', 
+			'method': 'sort'
+		}).then(function(response) {
+			var responseType = angular.fromJson(response.body).meta.type;
+			var responseMessage = angular.fromJson(response.body).meta.message;
+			if(responseType != 'SUCCESS') {
+				AlertService.add({type: responseType, message: responseMessage}, "/settings/graduation-month");  
+			}
+		});
+	};
+
 	GraduationMonthRepo.remove = function(index) {
 		return WsApi.fetch({
 			'endpoint': '/private/queue', 

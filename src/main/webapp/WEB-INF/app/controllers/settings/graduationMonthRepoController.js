@@ -10,6 +10,8 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 	$scope.trashCanId = 'graduation-month-trash';
 	
 	$scope.monthOptions = {};
+
+	$scope.sortAction = "confirm";
 	
 	var months = [
 		'January', 'February', 'March', 'April', 'May', 'June',
@@ -63,6 +65,17 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 
 		$scope.reorderGraduationMonth = function(src, dest) {
 	    	GraduationMonthRepo.reorder(src, dest);
+		};
+
+		$scope.sortGraduationMonths = function() {
+			if($scope.sortAction == 'confirm') {
+				$scope.sortAction = 'sort';
+			}
+			else if($scope.sortAction == 'sort') {
+				GraduationMonthRepo.sort();
+				$scope.sortAction = 'confirm';
+			}
+	    	
 		};
 
 		$scope.removeGraduationMonth = function(index) {

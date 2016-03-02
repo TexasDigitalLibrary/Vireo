@@ -48,7 +48,7 @@ public class GraduationMonthController {
     
     @ApiMapping("/all")
     @Auth(role = "ROLE_MANAGER")
-    public ApiResponse allDepositLocations() {       
+    public ApiResponse allGraduationMonths() {       
         return new ApiResponse(SUCCESS, getAll());
     }
     
@@ -59,7 +59,7 @@ public class GraduationMonthController {
     
     @ApiMapping("/create")
     @Auth(role = "ROLE_MANAGER")
-    public ApiResponse createDepositLocation(@Data String data) {
+    public ApiResponse createGraduationMonth(@Data String data) {
         
         JsonNode dataNode;
         try {
@@ -98,7 +98,7 @@ public class GraduationMonthController {
     
     @ApiMapping("/update")
     @Auth(role = "ROLE_MANAGER")
-    public ApiResponse updateDepositLocation(@Data String data) {
+    public ApiResponse updateGraduationMonth(@Data String data) {
         
         JsonNode dataNode;
         try {
@@ -152,7 +152,7 @@ public class GraduationMonthController {
     @ApiMapping("/remove/{indexString}")
     @Auth(role = "ROLE_MANAGER")
     @Transactional
-    public ApiResponse removeDepositLocation(@ApiVariable String indexString) {        
+    public ApiResponse removeGraduationMonth(@ApiVariable String indexString) {        
         Integer index = -1;
         
         try {
@@ -181,10 +181,19 @@ public class GraduationMonthController {
     @ApiMapping("/reorder/{src}/{dest}")
     @Auth(role = "ROLE_MANAGER")
     @Transactional
-    public ApiResponse reorderDepositLocations(@ApiVariable String src, @ApiVariable String dest) {
+    public ApiResponse reorderGraduationMonths(@ApiVariable String src, @ApiVariable String dest) {
         Integer intSrc = Integer.parseInt(src);
         Integer intDest = Integer.parseInt(dest);
         graduationMonthRepo.reorder(intSrc, intDest);
+        simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(SUCCESS, getAll()));        
+        return new ApiResponse(SUCCESS);
+    }
+    
+    @ApiMapping("/sort")
+    @Auth(role = "ROLE_MANAGER")
+    @Transactional
+    public ApiResponse sortGraduationMonths() {
+        graduationMonthRepo.sort();
         simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(SUCCESS, getAll()));        
         return new ApiResponse(SUCCESS);
     }
