@@ -10,9 +10,9 @@
     <table  class="table">
       <thead>
         <tr>
-          <th>Role</th>
           <th>Name</th>
           <th>Email</th>
+          <th>Role</th>
         </tr>
       </thead>
       <tbody>
@@ -20,7 +20,7 @@
           <td>{{user.firstName}} {{user.lastName}}</td>
           <td>{{user.email}}</td>
           <td>
-            <select ng-options="role as role.label for role in roles" class="form-control" ng-model="selectedRole" ng-change="updateRole(user, selectedRole)">
+            <select ng-options="role as role.label for role in roles" class="form-control" ng-model="selectedRole[user.email]" ng-change="updateRole(user, selectedRole[user.email])">
               <!-- <option ng-repeat="(key, value) in roles" value="{{key}}" ng-click="setUserPermissions(user.email, key)">{{value}}</option> -->
             </select>
           </td>

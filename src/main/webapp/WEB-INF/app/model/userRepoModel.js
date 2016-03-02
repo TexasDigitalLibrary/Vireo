@@ -61,8 +61,6 @@ vireo.service("UserRepo", function($route, WsApi, AbstractModel, StorageService)
 			'email': email,
 			'role': role
 		};
-
-		console.log(change)
 		
 		var updateUserRolePromise = WsApi.fetch({
 			endpoint: '/private/queue', 
@@ -77,7 +75,9 @@ vireo.service("UserRepo", function($route, WsApi, AbstractModel, StorageService)
 					StorageService.set("role", role);
 				}
 			});
-		}		
+		}
+
+		return updateUserRolePromise;	
 	};
 
 	Users.ready = function() {

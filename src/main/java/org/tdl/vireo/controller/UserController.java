@@ -83,11 +83,11 @@ public class UserController {
         }       
         
         User user = userRepo.findByEmail(map.get("email"));
-
+        
         user.setRole(map.get("role"));
         
         user = userRepo.save(user);
-  
+        
         Map<String, Object> userMap = new HashMap<String, Object>();
         userMap.put("list", userRepo.findAll());
         userMap.put("changedUserEmail", map.get("email"));
