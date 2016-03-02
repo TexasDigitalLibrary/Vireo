@@ -539,7 +539,7 @@ h4 {
 }
 
 .deposit-location {
-  
+
 }
 
 .custom-action {
@@ -559,10 +559,8 @@ h4 {
   margin-bottom: 10px;
 }
 
-.as-sortable-drag {
-  margin-top: -192px;
-  margin-left: -235px;
-  position: absolute;
+.as-sortable-dragging {
+  position: fixed;
   opacity: .8;
 }
 
