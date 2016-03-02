@@ -1,9 +1,9 @@
 vireo.controller("DepositLocationRepoController", function ($controller, $scope, $q, DepositLocationRepo, DragAndDropListenerFactory) {
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
-	$scope.ready = $q.all([DepositLocationRepo.ready()]);
-
 	$scope.depositLocations = DepositLocationRepo.get();
+	
+	$scope.ready = $q.all([DepositLocationRepo.ready()]);
 
 	$scope.dragging = false;
 

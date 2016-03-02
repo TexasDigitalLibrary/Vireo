@@ -54,7 +54,7 @@ vireo.service("GraduationMonthRepo", function(WsApi, AbstractModel, AlertService
 	};
 
 	GraduationMonthRepo.add = function(depositLocation) {
-		WsApi.fetch({
+		return WsApi.fetch({
 			'endpoint': '/private/queue', 
 			'controller': 'settings/graduation-month', 
 			'method': 'create',
@@ -69,7 +69,7 @@ vireo.service("GraduationMonthRepo", function(WsApi, AbstractModel, AlertService
 	};
 
 	GraduationMonthRepo.update = function(depositLocation) {
-		WsApi.fetch({
+		return WsApi.fetch({
 			'endpoint': '/private/queue', 
 			'controller': 'settings/graduation-month', 
 			'method': 'update',
@@ -84,7 +84,7 @@ vireo.service("GraduationMonthRepo", function(WsApi, AbstractModel, AlertService
 	};
 
 	GraduationMonthRepo.reorder = function(src, dest) {
-		WsApi.fetch({
+		return WsApi.fetch({
 			'endpoint': '/private/queue', 
 			'controller': 'settings/graduation-month', 
 			'method': 'reorder/' + src + '/' + dest
@@ -97,8 +97,23 @@ vireo.service("GraduationMonthRepo", function(WsApi, AbstractModel, AlertService
 		});
 	};
 
+	GraduationMonthRepo.sort = function() {
+		console.log('sorting');
+		return WsApi.fetch({
+			'endpoint': '/private/queue', 
+			'controller': 'settings/graduation-month', 
+			'method': 'sort'
+		}).then(function(response) {
+			var responseType = angular.fromJson(response.body).meta.type;
+			var responseMessage = angular.fromJson(response.body).meta.message;
+			if(responseType != 'SUCCESS') {
+				AlertService.add({type: responseType, message: responseMessage}, "/settings/graduation-month");  
+			}
+		});
+	};
+
 	GraduationMonthRepo.remove = function(index) {
-		WsApi.fetch({
+		return WsApi.fetch({
 			'endpoint': '/private/queue', 
 			'controller': 'settings/graduation-month', 
 			'method': 'remove/' + index

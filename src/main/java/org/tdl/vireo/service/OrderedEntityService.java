@@ -87,6 +87,29 @@ public class OrderedEntityService {
 		}
 		swap(clazz, Integer.MAX_VALUE, dest);
 	}
+	
+	@SuppressWarnings("unchecked")
+	private void setOrder(Class<?> clazz, String property, Object propValue, Integer newOrder) {
+	    CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaUpdate<Object> update = (CriteriaUpdate<Object>) cb.createCriteriaUpdate(clazz);
+        Root<?> e = update.from((Class<Object>) clazz);
+        update.set(e.get("order"), newOrder);
+        update.where(cb.equal(e.get(property), propValue));
+        entityManager.createQuery(update).executeUpdate();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public synchronized void sort(Class<?> clazz, String property) {
+	    CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Object> query = cb.createQuery();
+        Root<?> e = query.from((Class<Object>) clazz);
+        query.multiselect(e.get(property));
+        query.orderBy(cb.asc(e.get(property)));
+        List<Object> orderedResults = entityManager.createQuery(query).getResultList();
+        for(int i = 0; i < orderedResults.size(); i++) {
+            setOrder(clazz, property, orderedResults.get(i), i + 1);            
+        }
+	}
 
 	@SuppressWarnings("unchecked")
 	public synchronized void remove(Class<?> clazz, Integer order) {

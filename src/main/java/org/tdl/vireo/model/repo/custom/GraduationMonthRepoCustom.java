@@ -8,6 +8,8 @@ public interface GraduationMonthRepoCustom {
     
     public void reorder(Integer src, Integer dest);
     
+    public void sort();
+    
     public void remove(Integer index);
     
 }

@@ -1,9 +1,9 @@
 vireo.controller("CustomActionSettingsController", function($controller, $scope, $q, CustomActionSettings, DragAndDropListenerFactory) {
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
-	$scope.ready = $q.all([CustomActionSettings.ready()]);
-	
 	$scope.customActions = CustomActionSettings.get();
+	
+	$scope.ready = $q.all([CustomActionSettings.ready()]);
 	
 	$scope.dragging = false;
 

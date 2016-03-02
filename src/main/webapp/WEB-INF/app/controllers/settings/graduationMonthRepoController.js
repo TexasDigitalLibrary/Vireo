@@ -1,73 +1,87 @@
 vireo.controller("GraduationMonthRepoController", function ($controller, $scope, $q, GraduationMonthRepo, DragAndDropListenerFactory) {
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
-	$scope.ready = $q.all([GraduationMonthRepo.ready()]);
-
 	$scope.graduationMonths = GraduationMonthRepo.get();
+	
+	$scope.ready = $q.all([GraduationMonthRepo.ready()]);
 
 	$scope.dragging = false;
 
 	$scope.trashCanId = 'graduation-month-trash';
 	
-	// defaults
+	$scope.monthOptions = {};
+
+	$scope.sortAction = "confirm";
+	
+	var months = [
+		'January', 'February', 'March', 'April', 'May', 'June',
+	    'July', 'August', 'September', 'October', 'November', 'December'
+	];
+	
+	$scope.toMonthString = function(month) {
+		return months[month];
+	};	
+	
+	$scope.resetMonthOptions = function() {
+		for(var i in months) {
+			$scope.monthOptions[i] = months[i];
+		}
+		for(var i in $scope.graduationMonths.list) {
+			delete $scope.monthOptions[$scope.graduationMonths.list[i].month];
+		}
+	};
+	
 	$scope.resetGraduationMonth = function() {
-		$scope.modalData = {
-			month: '0'
-		};
-	}
-
-	$scope.resetGraduationMonth();
-
-	$scope.ready.then(function() {	
-
-		$scope.monthOptions = {
-		    "0": "January",
-		    "1": "February",
-		    "2": "March",
-		    "3": "April",
-		    "4": "May",
-		    "5": "June",
-		    "6": "July",
-		    "7": "August",
-		    "8": "September",
-		    "9": "October",
-		    "10": "November",
-		    "11": "December"
-		};
-
-		$scope.toMonthString = function(month) {
-			return $scope.monthOptions[month];
-		};	
+		$scope.modalData = {};
+		$scope.resetMonthOptions();
+	};
+	
+	$scope.ready.then(function() {
+		
+		$scope.resetGraduationMonth();
 		
 		$scope.createGraduationMonth = function() {
-			GraduationMonthRepo.add($scope.modalData);
-			$scope.resetGraduationMonth();
+			GraduationMonthRepo.add($scope.modalData).then(function() {
+				$scope.resetGraduationMonth();
+			});
 		};
 		
 		$scope.selectGraduationMonth = function(index) {
+			$scope.resetMonthOptions();
 			$scope.modalData = $scope.graduationMonths.list[index];
 			$scope.modalData.month = $scope.modalData.month.toString();
 		};
 		
 		$scope.editGraduationMonth = function(index) {
-			console.log(index)
 			$scope.selectGraduationMonth(index - 1);
-			console.log($scope.modalData.month)
 			angular.element('#graduationMonthEditModal').modal('show');
 		};
 		
 		$scope.updateGraduationMonth = function() {
-			GraduationMonthRepo.update($scope.modalData);
-			$scope.resetGraduationMonth();
+			GraduationMonthRepo.update($scope.modalData).then(function() {
+				$scope.resetGraduationMonth();
+			});
 		};
 
 		$scope.reorderGraduationMonth = function(src, dest) {
 	    	GraduationMonthRepo.reorder(src, dest);
 		};
 
+		$scope.sortGraduationMonths = function() {
+			if($scope.sortAction == 'confirm') {
+				$scope.sortAction = 'sort';
+			}
+			else if($scope.sortAction == 'sort') {
+				GraduationMonthRepo.sort();
+				$scope.sortAction = 'confirm';
+			}
+	    	
+		};
+
 		$scope.removeGraduationMonth = function(index) {
-	    	GraduationMonthRepo.remove(index);
-	    	$scope.resetGraduationMonth();	    	
+	    	GraduationMonthRepo.remove(index).then(function() {
+	    		$scope.resetGraduationMonth();
+	    	});
 		};
 		
 		$scope.dragControlListeners = DragAndDropListenerFactory.buildDragControls({
