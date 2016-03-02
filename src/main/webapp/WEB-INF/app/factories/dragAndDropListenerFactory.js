@@ -44,11 +44,9 @@ vireo.factory('DragAndDropListenerFactory', function() {
 				angular.element('.as-sortable-drag').css('display', 'none');
 			},
 			dragMove: function(event) {
-
 				var dragging = angular.element('.as-sortable-drag');
 				dragging.css('margin-top', -angular.element('body').scrollTop());
 				dragging.css('display', 'block');
-				
 				if(listener.trash.hover) {
 					listener.trash.hover = false;					
 					listener.trash.element.removeClass('dragging');
@@ -68,7 +66,7 @@ vireo.factory('DragAndDropListenerFactory', function() {
 			},
 		    accept: function (sourceItemHandleScope, destSortableScope) {
 		    	var currentElement = destSortableScope.element;
-		    	if(currentElement[0].id == listener.trash.id) {		    		
+		    	if(listener.dragging && currentElement[0].id == listener.trash.id) {		
 		    		listener.trash.hover = true;		    		
 		    		listener.trash.element = currentElement;		    		
 		    		listener.trash.element.addClass('dragging');
