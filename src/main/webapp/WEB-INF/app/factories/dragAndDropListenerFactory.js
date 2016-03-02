@@ -1,5 +1,5 @@
-vireo.factory('DragAndDropListenerFactory', function() {
-	
+vireo.factory('DragAndDropListenerFactory', function($window) {
+
 	this.buildDragControls = function(drag) {
 
 		var listener = {
@@ -40,9 +40,16 @@ vireo.factory('DragAndDropListenerFactory', function() {
 		var dragControls = {
 			dragStart: function(event) {
 				listener.dragging = true;								
-				listener.select(event.source.index);				
+				listener.select(event.source.index);
+				angular.element('.as-sortable-drag').css('display', 'none');
 			},
 			dragMove: function(event) {
+
+				var dragging = angular.element('.as-sortable-drag');
+				dragging.css('margin-top', -angular.element('body').scrollTop());
+
+				angular.element('.as-sortable-drag').css('display', 'block');
+				
 				if(listener.trash.hover) {					
 					listener.trash.hover = false;					
 					listener.trash.element.removeClass('dragging');
@@ -69,7 +76,7 @@ vireo.factory('DragAndDropListenerFactory', function() {
 	     		}
 	     		else {
 	     			listener.trash.hover = false;
-	     		}
+	     		}	     		
 		     	return sourceItemHandleScope.itemScope.sortableScope.$id === destSortableScope.$id;
 		    },
 		    orderChanged: function(event) {
@@ -79,8 +86,7 @@ vireo.factory('DragAndDropListenerFactory', function() {
 		    		listener.reorder(src, dest);
 		    	}
 		    },
-		    containment: drag.container,
-		    containerPositioning: 'absolute'
+		    containment: drag.container
 		};
 		
 		return dragControls;
