@@ -9,31 +9,13 @@ vireo.controller("WhoHasAccessController", function ($controller, $q, $scope, Us
     
     $scope.ready = $q.all([User.ready(), UserRepo.ready()]);
 
-    //To be deprecated. We should get arbitrary/dynamic roles from the service.
-    $scope.roles = [
-      {value: 'ROLE_ADMIN', label: 'Admin'},
-      {value: 'ROLE_MANAGER', label: 'Manager'},
-      {value: 'ROLE_REVIEWER', label: 'Reviewer'},
-      {value: 'ROLE_STUDENT', label: 'Student'}
-    ];
+    $scope.roles = {'ROLE_ADMIN'   : 'Admin'   ,
+                    'ROLE_MANAGER' : 'Manager' ,
+                    'ROLE_REVIEWER': 'Reviewer',
+                    'ROLE_STUDENT' : 'Student'};
 
-    var getRole = function(role) {
-      for(var i in $scope.roles) {
-        if($scope.roles[i].value == role) {
-          return $scope.roles[i];
-        }
-      }
-    }
-
-    $scope.selectedRole = {};
-    
     $scope.ready.then(function() {
 
-      for(var i in $scope.userRepo.list) {
-        var userObj = $scope.userRepo.list[i];
-        $scope.selectedRole[userObj.email] = getRole(userObj.role);
-      }
-      
       $scope.search = function(user){
         if (!$scope.multiFilter
             || (user.firstName.toLowerCase().indexOf($scope.multiFilter.toLowerCase()) != -1)
@@ -44,8 +26,8 @@ vireo.controller("WhoHasAccessController", function ($controller, $q, $scope, Us
           return false;
         };
     
-        $scope.updateRole = function(selectedUser, selectedRole) {
-          UserRepo.updateRole($scope.user, selectedUser.email, selectedRole.value);
+        $scope.updateRole = function(userToEdit, newRole) {
+            UserRepo.updateRole($scope.user, userToEdit.email, newRole);
         };
 
 

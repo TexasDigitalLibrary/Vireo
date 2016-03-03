@@ -16,13 +16,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="user in userRepo.list" ng-if="user.role == 'ROLE_ADMIN' || user.role == 'ROLE_REVIEWER' || user.role == 'ROLE_MANAGER'">
+        <tr ng-repeat="user in userRepo.list | filter:{role: '!ROLE_STUDENT'}" ng-init="selectedRole = user.role">
           <td>{{user.firstName}} {{user.lastName}}</td>
           <td>{{user.email}}</td>
           <td>
-            <select ng-options="role as role.label for role in roles" class="form-control" ng-model="selectedRole[user.email]" ng-change="updateRole(user, selectedRole[user.email])">
-              <!-- <option ng-repeat="(key, value) in roles" value="{{key}}" ng-click="setUserPermissions(user.email, key)">{{value}}</option> -->
-            </select>
+            <select ng-options="key as value for (key, value) in roles" class="form-control" ng-model="selectedRole" ng-change="updateRole(user, selectedRole)"></select>
           </td>
         </tr>
       </tbody>
