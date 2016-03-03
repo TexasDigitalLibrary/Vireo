@@ -56,6 +56,7 @@ vireo.service("UserRepo", function($route, WsApi, AbstractModel, StorageService)
 	};
 	
 	Users.updateRole = function(user, email, role) {
+
 		var change = {
 			'email': email,
 			'role': role
@@ -74,7 +75,9 @@ vireo.service("UserRepo", function($route, WsApi, AbstractModel, StorageService)
 					StorageService.set("role", role);
 				}
 			});
-		}		
+		}
+
+		return updateUserRolePromise;	
 	};
 
 	Users.ready = function() {
