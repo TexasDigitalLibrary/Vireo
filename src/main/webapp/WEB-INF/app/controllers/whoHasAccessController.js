@@ -16,16 +16,6 @@ vireo.controller("WhoHasAccessController", function ($controller, $q, $scope, Us
 
     $scope.ready.then(function() {
 
-      // $scope.search = function(user){
-      //   if (!$scope.multiFilter
-      //       || (user.firstName.toLowerCase().indexOf($scope.multiFilter.toLowerCase()) != -1)
-      //       || (user.lastName.toLowerCase().indexOf($scope.multiFilter.toLowerCase()) != -1)
-      //       || (user.email.toLowerCase().indexOf($scope.multiFilter.toLowerCase()) != -1) ){
-      //       return true;
-      //     }
-      //     return false;
-      //   };
-    
         $scope.updateRole = function(userToEdit, newRole) {
             UserRepo.updateRole($scope.user, userToEdit.email, newRole);
         };
