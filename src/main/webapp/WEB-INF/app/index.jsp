@@ -206,6 +206,7 @@
 
 		<!-- Application Start -->
 	    <script src="bower_components/core/app/core.js"></script>
+	    <script src="bower_components/core/app/config/coreRuntime.js"></script>
 	    <script src="bower_components/core/app/setup.js"></script>
 	    <script src="bower_components/core/app/config/logging.js"></script>
 
@@ -217,6 +218,7 @@
 	    <script src="bower_components/core/app/directives/alertDirective.js"></script>
 
 	    <!-- Services -->
+	    <script src="bower_components/core/app/services/accesscontrollservice.js"></script>
 	    <script src="bower_components/core/app/services/wsservice.js"></script>
 	    <script src="bower_components/core/app/services/wsapi.js"></script>
 	    <script src="bower_components/core/app/services/restapi.js"></script>
@@ -234,7 +236,7 @@
 	    <script src="bower_components/core/app/controllers/abstractController.js"></script>
 	    <script src="bower_components/core/app/controllers/userController.js"></script>
 	    <script src="bower_components/core/app/controllers/authenticationController.js"></script>
-
+	    <script src="bower_components/core/app/controllers/errorpagecontroller.js"></script>
 
 
 	<!-- build:js src/main/resources/static/ui/app/resources/scripts/app_concat.js -->
