@@ -5,7 +5,7 @@ vireo.service("UserSettings", function(AbstractModel, WsApi) {
 	var UserSettings = function(futureData) {
 		self = this;
 		angular.extend(self, AbstractModel);		
-		self.unwrap(self, futureData, "PersistentMap");		
+		self.unwrap(self, futureData);		
 	};
 	
 	UserSettings.data = null;
@@ -13,7 +13,7 @@ vireo.service("UserSettings", function(AbstractModel, WsApi) {
 	UserSettings.promise = null;
 	
 	UserSettings.set = function(data) {
-		self.unwrap(self, data, "PersistentMap");
+		self.unwrap(self, data);
 	};
 
 	UserSettings.get = function() {
