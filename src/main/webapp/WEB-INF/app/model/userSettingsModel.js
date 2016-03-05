@@ -8,6 +8,8 @@ vireo.service("UserSettings", function(AbstractModel, WsApi, User) {
 		self.unwrap(self, futureData);		
 	};
 	
+	User.get();
+	
 	User.ready().then(function() {
 		UserSettings.get();
 	})
