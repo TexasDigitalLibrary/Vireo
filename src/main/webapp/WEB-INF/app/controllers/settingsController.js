@@ -54,9 +54,6 @@ vireo.controller("SettingsController", function ($controller, $scope, $q, UserSe
 	}
 
 
-	
-	
-
 	/**
 	 * Toggle options
 	 * 
@@ -64,7 +61,7 @@ vireo.controller("SettingsController", function ($controller, $scope, $q, UserSe
 	 * 
 	 */
 	
-	//SUBMISSION AVAILABILITY
+	// SUBMISSION AVAILABILITY
 	$scope.submissionsOpenOptions = [
 		{"true": "Open"}, 
 		{"false": "Closed"}
@@ -75,13 +72,13 @@ vireo.controller("SettingsController", function ($controller, $scope, $q, UserSe
 		{"false": "No"}
 	];
 
-        //PROQUEST / UMI SETTINGS / DEGREE CODE
+    // PROQUEST / UMI SETTINGS / DEGREE CODE
 	$scope.proquestIndexingOptions = [
 		{"true": "Yes"}, 
-                {"false": "No"}
-        ];
+        {"false": "No"}
+    ];
 
-	//Orcid settings pane
+	// ORCID
 	$scope.orcidValidationOptions = [
 		{"true": "Yes"},
 		{"false": "No"}

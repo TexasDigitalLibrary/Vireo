@@ -1,5 +1,5 @@
-vireo.service("UserSettings", function(AbstractModel, WsApi) {
-
+vireo.service("UserSettings", function(AbstractModel, WsApi, User) {
+	
 	var self;
 
 	var UserSettings = function(futureData) {
@@ -7,6 +7,10 @@ vireo.service("UserSettings", function(AbstractModel, WsApi) {
 		angular.extend(self, AbstractModel);		
 		self.unwrap(self, futureData);		
 	};
+	
+	User.ready().then(function() {
+		UserSettings.get();
+	})
 	
 	UserSettings.data = null;
 
