@@ -1,17 +1,17 @@
-vireo.controller("SettingsController", function ($controller, $scope, $q, UserSettings, ConfigurableSettings) {
+vireo.controller("SettingsController", function ($controller, $q, $scope, UserSettings, ConfigurableSettings) {
 
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
 	$scope.settings = {};
 	
 	$scope.ready = $q.all([UserSettings.ready(), ConfigurableSettings.ready()]);
-		
+	
 	$scope.settings.user  = UserSettings.get();
 
 	$scope.settings.configurable = ConfigurableSettings.get();
 
 	$scope.ready.then(function() {
-		
+				
 		$scope.updateUserSetting = function(setting, timer) {
 			if(Object.keys($scope.userSettingsForm.$error).length) return;
 

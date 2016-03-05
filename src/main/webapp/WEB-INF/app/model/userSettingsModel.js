@@ -1,4 +1,4 @@
-vireo.service("UserSettings", function(AbstractModel, WsApi, User) {
+vireo.service("UserSettings", function(AbstractModel, WsApi) {
 	
 	var self;
 
@@ -7,12 +7,6 @@ vireo.service("UserSettings", function(AbstractModel, WsApi, User) {
 		angular.extend(self, AbstractModel);		
 		self.unwrap(self, futureData);		
 	};
-	
-	User.get();
-	
-	User.ready().then(function() {
-		UserSettings.get();
-	})
 	
 	UserSettings.data = null;
 
@@ -23,8 +17,13 @@ vireo.service("UserSettings", function(AbstractModel, WsApi, User) {
 	};
 
 	UserSettings.get = function() {
-
-		if(UserSettings.promise) return UserSettings.data;
+		
+		// UserSettings.promise is made whether logged in or not!
+		// Causing logging in to return the the cached data and not
+		// getting the logged in users settings.
+		if(UserSettings.promise && UserSettings.data.length > 2) {
+			return UserSettings.data;
+		}
 
 		UserSettings.promise = WsApi.fetch({
 				endpoint: '/private/queue', 
