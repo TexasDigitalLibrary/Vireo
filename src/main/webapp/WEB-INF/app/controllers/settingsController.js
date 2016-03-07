@@ -1,30 +1,33 @@
-vireo.controller("SettingsController", function ($controller, $scope, $q, UserSettings, ConfigurableSettings) {
+
+vireo.controller("SettingsController", function ($controller, $scope, UserSettings, ConfigurableSettings) {
 
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
 	$scope.settings = {};
-	
-	$scope.ready = $q.all([UserSettings.ready(), ConfigurableSettings.ready()]);
 		
-	$scope.settings.user  = UserSettings.get();
-
 	$scope.settings.configurable = ConfigurableSettings.get();
 
-	$scope.ready.then(function() {
 
-		console.log($scope.settings);
+	if(!$scope.isAnonymous()) {
+
+		$scope.settings.user  = UserSettings.get();
+
+		UserSettings.ready().then(function() {
+			$scope.updateUserSetting = function(setting, timer) {
+				if(Object.keys($scope.userSettingsForm.$error).length) return;
+
+				timer = typeof timer == "undefined" ? 0 : timer;
+
+				if($scope.typingTimer) clearTimeout($scope.typingTimer);
+				$scope.typingTimer = setTimeout(function() {
+					UserSettings.update(setting, $scope.settings.user[setting]);
+				}, timer);
+			};
+		});
+	}
+
+	ConfigurableSettings.ready().then(function() {
 		
-		$scope.updateUserSetting = function(setting, timer) {
-			if(Object.keys($scope.userSettingsForm.$error).length) return;
-
-			timer = typeof timer == "undefined" ? 0 : timer;
-
-			if($scope.typingTimer) clearTimeout($scope.typingTimer);
-			$scope.typingTimer = setTimeout(function() {
-				UserSettings.update(setting, $scope.settings.user[setting]);
-			}, timer);
-		};
-
 		$scope.updateConfigurableSettings = function(type,setting) {	
 			ConfigurableSettings.update(type,setting,$scope.settings.configurable[type][setting]);
 		};
@@ -56,9 +59,6 @@ vireo.controller("SettingsController", function ($controller, $scope, $q, UserSe
 	}
 
 
-	
-	
-
 	/**
 	 * Toggle options
 	 * 
@@ -66,7 +66,7 @@ vireo.controller("SettingsController", function ($controller, $scope, $q, UserSe
 	 * 
 	 */
 	
-	//SUBMISSION AVAILABILITY
+	// SUBMISSION AVAILABILITY
 	$scope.submissionsOpenOptions = [
 		{"true": "Open"}, 
 		{"false": "Closed"}
@@ -77,13 +77,13 @@ vireo.controller("SettingsController", function ($controller, $scope, $q, UserSe
 		{"false": "No"}
 	];
 
-        //PROQUEST / UMI SETTINGS / DEGREE CODE
+    // PROQUEST / UMI SETTINGS / DEGREE CODE
 	$scope.proquestIndexingOptions = [
 		{"true": "Yes"}, 
-                {"false": "No"}
-        ];
+        {"false": "No"}
+    ];
 
-	//Orcid settings pane
+	// ORCID
 	$scope.orcidValidationOptions = [
 		{"true": "Yes"},
 		{"false": "No"}
