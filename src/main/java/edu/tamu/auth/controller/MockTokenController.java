@@ -1,7 +1,5 @@
 package edu.tamu.auth.controller;
 
-import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
-
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -23,14 +21,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import edu.tamu.framework.aspect.annotation.ApiMapping;
-import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.aspect.annotation.SkipAop;
-import edu.tamu.framework.aspect.annotation.Shib;
-import edu.tamu.framework.model.Credentials;
 import edu.tamu.framework.model.jwt.JWT;
-import edu.tamu.framework.model.ApiResponse;
-
 import edu.tamu.framework.util.JwtUtility;
 
 /** 
