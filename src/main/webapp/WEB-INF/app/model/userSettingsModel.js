@@ -1,11 +1,11 @@
-vireo.service("UserSettings", function(AbstractModel, WsApi) {
-
+vireo.service("UserSettings", function($q, AbstractModel, User, WsApi) {
+	
 	var self;
 
 	var UserSettings = function(futureData) {
 		self = this;
 		angular.extend(self, AbstractModel);		
-		self.unwrap(self, futureData, "PersistentMap");		
+		self.unwrap(self, futureData);		
 	};
 	
 	UserSettings.data = null;
@@ -13,26 +13,44 @@ vireo.service("UserSettings", function(AbstractModel, WsApi) {
 	UserSettings.promise = null;
 	
 	UserSettings.set = function(data) {
-		self.unwrap(self, data, "PersistentMap");
+		self.unwrap(self, data);
 	};
 
 	UserSettings.get = function() {
+		
+		// UserSettings.promise is made whether logged in or not!
+		// Causing logging in to return the the cached data and not
+		// getting the logged in users settings.
+		if(UserSettings.promise && UserSettings.data.length > 2) {
+			return UserSettings.data;
+		}
 
-		if(UserSettings.promise) return UserSettings.data;
+		var user = User.get();
 
-		UserSettings.promise = WsApi.fetch({
+		if(user.role != "ROLE_ANONYMOUS") {
+
+			UserSettings.promise = WsApi.fetch({
 				endpoint: '/private/queue', 
 				controller: 'user', 
 				method: 'settings',
-		});
-
-		if(UserSettings.data) {
-			UserSettings.promise.then(function(data) {
-				UserSettings.set(JSON.parse(data.body).payload.PersistentMap);
 			});
+
+			if(UserSettings.data) {
+				UserSettings.promise.then(function(data) {
+					UserSettings.set(JSON.parse(data.body).payload.PersistentMap);
+				});
+			}
+			else {
+				UserSettings.data = new UserSettings(UserSettings.promise);	
+			}
+
 		}
 		else {
-			UserSettings.data = new UserSettings(UserSettings.promise);	
+			User.authDefer.promise.then(function() {
+				UserSettings.refresh();
+			});
+
+			UserSettings.data = new UserSettings($q.defer().promise);
 		}
 
 		return UserSettings.data;
@@ -53,10 +71,10 @@ vireo.service("UserSettings", function(AbstractModel, WsApi) {
 
 	UserSettings.update = function(setting, newValue) {
 		WsApi.fetch({
-				endpoint: '/private/queue', 
-				controller: 'user', 
-				method: 'settings/' + setting,
-				data: { "settingValue": newValue }
+			endpoint: '/private/queue', 
+			controller: 'user', 
+			method: 'settings/' + setting,
+			data: { "settingValue": newValue }
 		}).then(function(data) {
 			
 			var responseObject = JSON.parse(data.body);

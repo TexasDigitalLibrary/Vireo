@@ -13,8 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.tdl.vireo.model.User;
-import org.tdl.vireo.model.repo.UserRepo;
+
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -27,6 +26,9 @@ import edu.tamu.framework.aspect.annotation.Data;
 import edu.tamu.framework.aspect.annotation.Shib;
 import edu.tamu.framework.model.ApiResponse;
 import edu.tamu.framework.model.Credentials;
+
+import org.tdl.vireo.model.User;
+import org.tdl.vireo.model.repo.UserRepo;
 
 @Controller
 @ApiMapping("/user")
