@@ -20,13 +20,6 @@ vireo.controller("WhoHasAccessController", function ($controller, $q, $scope, Us
             UserRepo.updateRole($scope.user, userToEdit.email, newRole);
         };
 
-
-        $scope.addSelectedUser = function () {
-          UserRepo.addAccess($scope.modalData).then(function() {
-            //TODO: ensure list of users is being updated from broadcast
-          });
-        }
-
         $scope.setSelectedUser = function (selectedUser) {
             $scope.modalData = selectedUser;
         }
