@@ -25,10 +25,6 @@
       {
         "type": "FOLDER",
         "path": "src/main/webapp/WEB-INF/app/views"
-      },
-      {
-        "type": "FOLDER",
-        "path": "src/main/webapp/WEB-INF/app/bower_components/core/app"
       }
     ]
   },

@@ -1,28 +1,38 @@
-vireo.controller("SettingsController", function ($controller, $q, $scope, UserSettings, ConfigurableSettings) {
+
+vireo.controller("SettingsController", function ($controller, $scope, $q, User, UserSettings, ConfigurableSettings) {
 
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
 	$scope.settings = {};
-	
-	$scope.ready = $q.all([UserSettings.ready(), ConfigurableSettings.ready()]);
-	
-	$scope.settings.user  = UserSettings.get();
-
+		
 	$scope.settings.configurable = ConfigurableSettings.get();
 
-	$scope.ready.then(function() {
-				
-		$scope.updateUserSetting = function(setting, timer) {
-			if(Object.keys($scope.userSettingsForm.$error).length) return;
+	$scope.user  = User.get();
 
-			timer = typeof timer == "undefined" ? 0 : timer;
+	if(!$scope.isAnonymous()) {
 
-			if($scope.typingTimer) clearTimeout($scope.typingTimer);
-			$scope.typingTimer = setTimeout(function() {
-				UserSettings.update(setting, $scope.settings.user[setting]);
-			}, timer);
-		};
+		User.ready().then(function() {
 
+			$scope.settings.user  = UserSettings.get();
+
+			UserSettings.ready().then(function() {
+				$scope.updateUserSetting = function(setting, timer) {
+					if(Object.keys($scope.userSettingsForm.$error).length) return;
+
+					timer = typeof timer == "undefined" ? 0 : timer;
+
+					if($scope.typingTimer) clearTimeout($scope.typingTimer);
+					$scope.typingTimer = setTimeout(function() {
+						UserSettings.update(setting, $scope.settings.user[setting]);
+					}, timer);
+				};
+			});
+
+		});
+	}
+
+	ConfigurableSettings.ready().then(function() {
+		
 		$scope.updateConfigurableSettings = function(type,setting) {	
 			ConfigurableSettings.update(type,setting,$scope.settings.configurable[type][setting]);
 		};
