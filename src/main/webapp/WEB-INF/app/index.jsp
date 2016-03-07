@@ -286,9 +286,7 @@
 	    <script src="controllers/adminController.js"></script>
 	    <script src="controllers/applicationSettingsController.js"></script>	    
 	    <script src="controllers/headerController.js"></script>
-        <!--<script src="controllers/loginController.js"></script>-->
         <script src="controllers/organizationSettingsController.js"></script>
-	    <!--<script src="controllers/registrationController.js"></script>-->
 	    <script src="controllers/settingsController.js"></script>
 	    <script src="controllers/sidebarController.js"></script>  
 	    <script src="controllers/userRepoController.js"></script>  
