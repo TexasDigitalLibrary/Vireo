@@ -1,5 +1,5 @@
 
-vireo.controller("SettingsController", function ($controller, $scope, $q, User, UserSettings, ConfigurableSettings) {
+vireo.controller("SettingsController", function ($controller, $scope, UserSettings, ConfigurableSettings) {
 
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
@@ -7,27 +7,21 @@ vireo.controller("SettingsController", function ($controller, $scope, $q, User, 
 		
 	$scope.settings.configurable = ConfigurableSettings.get();
 
-	$scope.user  = User.get();
-
 	if(!$scope.isAnonymous()) {
 
-		User.ready().then(function() {
+		$scope.settings.user  = UserSettings.get();
 
-			$scope.settings.user  = UserSettings.get();
+		UserSettings.ready().then(function() {
+			$scope.updateUserSetting = function(setting, timer) {
+				if(Object.keys($scope.userSettingsForm.$error).length) return;
 
-			UserSettings.ready().then(function() {
-				$scope.updateUserSetting = function(setting, timer) {
-					if(Object.keys($scope.userSettingsForm.$error).length) return;
+				timer = typeof timer == "undefined" ? 0 : timer;
 
-					timer = typeof timer == "undefined" ? 0 : timer;
-
-					if($scope.typingTimer) clearTimeout($scope.typingTimer);
-					$scope.typingTimer = setTimeout(function() {
-						UserSettings.update(setting, $scope.settings.user[setting]);
-					}, timer);
-				};
-			});
-
+				if($scope.typingTimer) clearTimeout($scope.typingTimer);
+				$scope.typingTimer = setTimeout(function() {
+					UserSettings.update(setting, $scope.settings.user[setting]);
+				}, timer);
+			};
 		});
 	}
 

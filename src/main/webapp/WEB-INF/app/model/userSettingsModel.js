@@ -1,4 +1,4 @@
-vireo.service("UserSettings", function(AbstractModel, WsApi) {
+vireo.service("UserSettings", function($q, AbstractModel, User, WsApi) {
 	
 	var self;
 
@@ -25,19 +25,32 @@ vireo.service("UserSettings", function(AbstractModel, WsApi) {
 			return UserSettings.data;
 		}
 
-		UserSettings.promise = WsApi.fetch({
+		var user = User.get();
+
+		if(user.role != "ROLE_ANONYMOUS") {
+
+			UserSettings.promise = WsApi.fetch({
 				endpoint: '/private/queue', 
 				controller: 'user', 
 				method: 'settings',
-		});
-
-		if(UserSettings.data) {
-			UserSettings.promise.then(function(data) {
-				UserSettings.set(JSON.parse(data.body).payload.PersistentMap);
 			});
+
+			if(UserSettings.data) {
+				UserSettings.promise.then(function(data) {
+					UserSettings.set(JSON.parse(data.body).payload.PersistentMap);
+				});
+			}
+			else {
+				UserSettings.data = new UserSettings(UserSettings.promise);	
+			}
+
 		}
 		else {
-			UserSettings.data = new UserSettings(UserSettings.promise);	
+			User.authDefer.promise.then(function() {
+				UserSettings.refresh();
+			});
+
+			UserSettings.data = new UserSettings($q.defer().promise);
 		}
 
 		return UserSettings.data;
@@ -58,10 +71,10 @@ vireo.service("UserSettings", function(AbstractModel, WsApi) {
 
 	UserSettings.update = function(setting, newValue) {
 		WsApi.fetch({
-				endpoint: '/private/queue', 
-				controller: 'user', 
-				method: 'settings/' + setting,
-				data: { "settingValue": newValue }
+			endpoint: '/private/queue', 
+			controller: 'user', 
+			method: 'settings/' + setting,
+			data: { "settingValue": newValue }
 		}).then(function(data) {
 			
 			var responseObject = JSON.parse(data.body);
