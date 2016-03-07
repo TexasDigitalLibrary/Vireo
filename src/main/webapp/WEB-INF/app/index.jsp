@@ -280,6 +280,7 @@
 	    <script src="model/userRepoModel.js"></script>
 	    <script src="model/depositLocationRepoModel.js"></script>
 	    <script src="model/graduationMonthRepoModel.js"></script>
+	    <script src="model/embargoRepoModel.js"></script>
 
 
 	    <!-- Controllers -->
@@ -294,7 +295,8 @@
 	    <script src="controllers/whoHasAccessController.js"></script>
 	    <script src="controllers/settings/customActionSettingsController.js"></script>
 	    <script src="controllers/settings/depositLocationRepoController.js"></script> 
-	    <script src="controllers/settings/graduationMonthRepoController.js"></script> 
+	    <script src="controllers/settings/graduationMonthRepoController.js"></script>
+	    <script src="controllers/settings/embargoRepoController.js"></script>
 	    
 	<!-- endbuild -->
 

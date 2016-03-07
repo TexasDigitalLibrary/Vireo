@@ -1,4 +1,4 @@
-<div class="accordion-inner">
+<div class="accordion-inner" ng-controller="EmbargoRepoController">
 	<h2>AVAILABLE EMBARGO TYPES</h2>
 	<p>
 		<a class="confirm" href="@{settings.ConfigurableSettingsTab.removeAllEmbargoTypes}" data-confirm="<em class='icon-trash'></em> (Are you sure you want to <strong>remove all</strong> embargo types?)"> <em class="icon-trash"></em> Remove all embargo types
@@ -22,17 +22,23 @@
 			</tr>
 		</thead>
 		<tbody id="embargoType-DEFAULT-list" class="embargoType-sortable">
-			#{list items:embargos, as:'embargo'} #{if embargo.getGuarantor() == org.tdl.vireo.model.EmbargoGuarantor.DEFAULT}
-			<tr id="embargoType_${embargo.getId()}">
-				<td class="td-icon embargoType-system-cell">#{if embargo.isSystemRequired()}<em class="icon-globe"></em>#{/if}#{else}<em class="icon-user"></em>#{/else}
+			<tr id="embargoType_{{embargo.id}}" ng-repeat="embargo in embargoes.list | filter: {guarantor: 'DEFAULT'}">
+				<td class="td-icon embargoType-system-cell">
+					<span ng-if="embargo.systemRequired" class="glyphicon glyphicon-globe"></span>
+					<span ng-if="!embargo.systemRequired" class="glyphicon glyphicon-user"></span>
 				</td>
-				<td class="embargoType-name-cell">${embargo.getName()}</td>
-				<td class="embargoType-description-cell">${embargo.getDescription()}</td>
-				<td class="embargoType-active-cell">#{if embargo.isActive()}Yes#{/if}#{else}No#{/else}</td>
-				<td class="embargoType-duration-cell">#{if embargo.getDuration() == null}Indefinite#{/if}#{else}${embargo.getDuration()}#{/else}</td>
+				<td class="embargoType-name-cell">{{embargo.name}}</td>
+				<td class="embargoType-description-cell">{{embargo.description}}</td>
+				<td class="embargoType-active-cell">
+					<span ng-if="embargo.active">Yes</span>
+					<span ng-if="!embargo.active">No</span>
+				</td>
+				<td class="embargoType-duration-cell">
+					<span ng-if="embargo.duration == null">Indefinite</span>
+					<span ng-if="embargo.duration != null">{{embargo.duration}}</span>
+				</td>
 				<td class="embargoType-edit-cell"><a data-id="${embargo.getId()}" href="javascript:void(0);">Edit</a></td>
 			</tr>
-			#{/if} #{/list}
 		</tbody>
 	</table>
 
@@ -53,17 +59,23 @@
 			</tr>
 		</thead>
 		<tbody id="embargoType-PROQUEST-list" class="embargoType-sortable">
-			#{list items:embargos, as:'embargo'} #{if embargo.getGuarantor() == org.tdl.vireo.model.EmbargoGuarantor.PROQUEST}
-			<tr id="embargoType_${embargo.getId()}">
-				<td class="td-icon embargoType-system-cell">#{if embargo.isSystemRequired()}<em class="icon-globe"></em>#{/if}#{else}<em class="icon-user"></em>#{/else}
+			<tr id="embargoType_{{embargo.id}}" ng-repeat="embargo in embargoes.list | filter: {guarantor: 'PROQUEST'}">
+				<td class="td-icon embargoType-system-cell">
+					<span ng-if="embargo.systemRequired" class="glyphicon glyphicon-globe"></span>
+					<span ng-if="!embargo.systemRequired" class="glyphicon glyphicon-user"></span>
 				</td>
-				<td class="embargoType-name-cell">${embargo.getName()}</td>
-				<td class="embargoType-description-cell">${embargo.getDescription()}</td>
-				<td class="embargoType-active-cell">#{if embargo.isActive()}Yes#{/if}#{else}No#{/else}</td>
-				<td class="embargoType-duration-cell">#{if embargo.getDuration() == null}Indefinite#{/if}#{else}${embargo.getDuration()}#{/else}</td>
+				<td class="embargoType-name-cell">{{embargo.name}}</td>
+				<td class="embargoType-description-cell">{{embargo.description}}</td>
+				<td class="embargoType-active-cell">
+					<span ng-if="embargo.active">Yes</span>
+					<span ng-if="!embargo.active">No</span>
+				</td>
+				<td class="embargoType-duration-cell">
+					<span ng-if="embargo.duration == null">Indefinite</span>
+					<span ng-if="embargo.duration != null">{{embargo.duration}}</span>
+				</td>
 				<td class="embargoType-edit-cell"><a data-id="${embargo.getId()}" href="javascript:void(0);">Edit</a></td>
 			</tr>
-			#{/if} #{/list}
 		</tbody>
 	</table>
 
