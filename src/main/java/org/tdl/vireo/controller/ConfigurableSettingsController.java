@@ -51,7 +51,7 @@ public class ConfigurableSettingsController {
         
         configurationRepo.createOrUpdate(dataNode.get("setting").asText(),dataNode.get("value").asText(),dataNode.get("type").asText());
         
-        this.simpMessagingTemplate.convertAndSend("/channel/settings", new ApiResponse(SUCCESS, toConfigPairsMap(configurationRepo.getAllByType(dataNode.get("type").asText()))));
+        this.simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, toConfigPairsMap(configurationRepo.getAllByType(dataNode.get("type").asText()))));
 
         return new ApiResponse(SUCCESS);
     }
@@ -71,7 +71,7 @@ public class ConfigurableSettingsController {
             configurationRepo.delete(deletableOverride);
         }
         
-        this.simpMessagingTemplate.convertAndSend("/channel/settings", new ApiResponse(SUCCESS, toConfigPairsMap(configurationRepo.getAllByType(map.get("type")))));
+        this.simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, toConfigPairsMap(configurationRepo.getAllByType(map.get("type")))));
         
         return new ApiResponse(SUCCESS);
     }

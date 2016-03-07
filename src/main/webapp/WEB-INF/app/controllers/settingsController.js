@@ -1,12 +1,11 @@
 
-vireo.controller("SettingsController", function ($controller, $scope, UserSettings, ConfigurableSettings) {
+vireo.controller("SettingsController", function ($controller, $scope, $timeout, UserSettings, ConfigurableSettings) {
 
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
 	$scope.settings = {};
 		
 	$scope.settings.configurable = ConfigurableSettings.get();
-
 
 	if(!$scope.isAnonymous()) {
 
@@ -27,7 +26,20 @@ vireo.controller("SettingsController", function ($controller, $scope, UserSettin
 	}
 
 	ConfigurableSettings.ready().then(function() {
-		
+
+		$scope.delayedUpdateConfigurableSettings = function(type,setting) {
+
+			if($scope.pendingUpdate) $timeout.cancel($scope.updateTimeout);
+
+			$scope.pendingUpdate = true;
+
+			$scope.updateTimeout = $timeout(function() {
+				$scope.updateConfigurableSettings(type,setting,$scope.settings.configurable[type][setting]);
+				$scope.pendingUpdate = false;
+			}, 500);
+
+		};
+
 		$scope.updateConfigurableSettings = function(type,setting) {	
 			ConfigurableSettings.update(type,setting,$scope.settings.configurable[type][setting]);
 		};
