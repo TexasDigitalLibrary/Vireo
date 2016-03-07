@@ -7,14 +7,6 @@
 			{"email_from":"noreply@tdl.org"},
 			{"email_reply_to":"dev@tdl.org"}
 	],
-	"theme":[
-			{"background_main_color":"#1b333f"},
-			{"background_highlight_color":"#43606e"},
-			{"button_main_color_on":"#1b333f"},
-			{"button_highlight_color_on":"#43606e"},
-			{"button_main_color_off":"#a6a18c"},
-			{"button_highlight_color_off":"#c7c2a9"}
-	],
 	"orcid":[
 			{"orcid_validation":true},
 			{"orcid_authentication":false}
@@ -45,6 +37,12 @@
 			{"transportation":""}
 	],
 	"lookAndFeel": [
+			{"background_main_color":"#1b333f"},
+			{"background_highlight_color":"#43606e"},
+			{"button_main_color_on":"#1b333f"},
+			{"button_highlight_color_on":"#43606e"},
+			{"button_main_color_off":"#a6a18c"},
+			{"button_highlight_color_off":"#c7c2a9"},
 			{"front_page_instructions_before":"<h1>Welcome to the Thesis<br/>&amp; Dissertation Submission System</h1>&#10;<p>Once you have passed the final defense and satisfied the requirements of the committee, you are ready to submit your manuscript to the Thesis Office for review. This submission process is fully electronic, and is made through an online application developed and maintained by the Texas Digital Library, in conjunction with the Texas A&amp;M, MIT, and UIUC.</p>&#10;<p>To get started with your submission, click the link below. You will be asked to authenticate using your NetID:</p>"},
 			{"front_page_instructions_after":"<h2>Your help can make things better</h2>&#10;<p>You feedback is very important to us; it allows us to continue to improve the system. Please feel free to notify us directly at dev@tdl.org if you have any suggestions to increase the usability or effectiveness of this application. You can talk to the your Thesis Office regarding any issues that may arise during the submission process.</p>"},
 			{"post_submission_instructions":"<p>The Thesis Office has received your electronic submittal. You will also receive an email confirmation. We will check your records as soon as possible to determine whether or not we have the signed Approval Form on file. Please be aware that your file is not complete and cannot be reviewed until we have both the electronic manuscript and the signed Approval Form.</p>&#10;<p>As soon as both items have been received, your manuscript will be placed in the queue and will be processed along with all other submissions for the semester in the order in which your completed file (manuscript and Approval Form) was received.</p>&#10;<p>The following are approximate turn-around times after the manuscript and the signed approval form have been submitted to the Thesis Office.&#160;Manuscripts are reviewed in the order received.</p>&#10;<p>&#160;</p>&#10;<p>Early in semester &#8211; 5 working days</p>&#10;<p>Week before Deadline Day &#8211; 10 working days</p>&#10;<p>Deadline Day &#8211; 15 working days</p>&#10;<p>&#160;</p>&#10;<p>If you have any questions about your submittal, feel free to contact our office.</p>&#10;<p>&#160;</p>&#10;<p>Thank you, Thesis Office</p>"},

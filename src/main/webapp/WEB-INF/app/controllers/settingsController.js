@@ -11,6 +11,8 @@ vireo.controller("SettingsController", function ($controller, $scope, $q, UserSe
 	$scope.settings.configurable = ConfigurableSettings.get();
 
 	$scope.ready.then(function() {
+
+		console.log($scope.settings);
 		
 		$scope.updateUserSetting = function(setting, timer) {
 			if(Object.keys($scope.userSettingsForm.$error).length) return;

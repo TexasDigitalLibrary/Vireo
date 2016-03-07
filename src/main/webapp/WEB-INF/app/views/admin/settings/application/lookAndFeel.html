@@ -21,12 +21,12 @@
 							</span>
 						</div>
 						<span class="row form-control">
-								{{settings.application.theme.background_main_color}}
+								{{settings.configurable.lookAndFeel.background_main_color}}
 								<input type="color" 
 										class="pull-right"
 										name="background_main_color" 
-										ng-model="settings.application.theme.background_main_color" 
-										ng-change="updateApplicationSettings('theme','background_main_color',settings.application.theme.background_main_color)" />
+										ng-model="settings.configurable.lookAndFeel.background_main_color" 
+										ng-change="updateApplicationSettings('theme','background_main_color',settings.configurable.lookAndFeel.background_main_color)" />
 						</span>	
 
 					</div>
@@ -41,12 +41,12 @@
 							</span>
 						</div>
 						<span class="row form-control">	
-							{{settings.application.theme.background_highlight_color}}
+							{{settings.configurable.lookAndFeel.background_highlight_color}}
 							<input  type="color" 
 									class="pull-right"
 									name="background_highlight_color" 
-									ng-model="settings.application.theme.background_highlight_color" 
-									ng-change="updateApplicationSettings('theme','background_highlight_color',settings.application.theme.background_highlight_color)" />
+									ng-model="settings.configurable.lookAndFeel.background_highlight_color" 
+									ng-change="updateApplicationSettings('theme','background_highlight_color',settings.configurable.lookAndFeel.background_highlight_color)" />
 
 						</span>						
 					</div>
@@ -73,12 +73,12 @@
 							</span>
 						</div>
 						<div class="row form-control">
-							{{settings.application.theme.button_main_color_on}}
+							{{settings.configurable.lookAndFeel.button_main_color_on}}
 							<input  type="color" 
 									class="pull-right"
 									name="button_main_color_on" 
-									ng-model="settings.application.theme.button_main_color_on" 
-									ng-change="updateApplicationSettings('theme','button_main_color_on',settings.application.theme.button_main_color_on)" />
+									ng-model="settings.configurable.lookAndFeel.button_main_color_on" 
+									ng-change="updateApplicationSettings('theme','button_main_color_on',settings.configurable.lookAndFeel.button_main_color_on)" />
 						</div>	
 
 					</div>
@@ -93,12 +93,12 @@
 							</span>
 						</div>
 						<div class="row form-control">
-							{{settings.application.theme.button_highlight_color_on}}
+							{{settings.configurable.lookAndFeel.button_highlight_color_on}}
 							<input  type="color" 
 									class="pull-right"
 									name="button_highlight_color_on" 
-									ng-model="settings.application.theme.button_highlight_color_on" 
-									ng-change="updateApplicationSettings('theme','button_highlight_color_on',settings.application.theme.button_highlight_color_on)" />
+									ng-model="settings.configurable.lookAndFeel.button_highlight_color_on" 
+									ng-change="updateApplicationSettings('theme','button_highlight_color_on',settings.configurable.lookAndFeel.button_highlight_color_on)" />
 						</div>	
 
 					</div>
@@ -127,12 +127,12 @@
 							</span>
 						</div>
 						<div class="row form-control">	
-							{{settings.application.theme.button_main_color_off}}
+							{{settings.configurable.lookAndFeel.button_main_color_off}}
 							<input  type="color" 
 									class="pull-right"
 									name="button_main_color_off" 
-									ng-model="settings.application.theme.button_main_color_off" 
-									ng-change="updateApplicationSettings('theme','button_main_color_off',settings.application.theme.button_main_color_off)" />
+									ng-model="settings.configurable.lookAndFeel.button_main_color_off" 
+									ng-change="updateApplicationSettings('theme','button_main_color_off',settings.configurable.lookAndFeel.button_main_color_off)" />
 						</div>	
 
 					</div>
@@ -147,12 +147,12 @@
 							</span>
 						</div>
 					<div class="row form-control">	
-						{{settings.application.theme.button_highlight_color_off}}
+						{{settings.configurable.lookAndFeel.button_highlight_color_off}}
 						<input  type="color" 
 								class="pull-right"
 								name="button_highlight_color_off" 
-								ng-model="settings.application.theme.button_highlight_color_off" 
-								ng-change="updateApplicationSettings('theme','button_highlight_color_off',settings.application.theme.button_highlight_color_off)" />
+								ng-model="settings.configurable.lookAndFeel.button_highlight_color_off" 
+								ng-change="updateApplicationSettings('theme','button_highlight_color_off',settings.configurable.lookAndFeel.button_highlight_color_off)" />
 					</div>	
 
 					</div>
@@ -252,7 +252,7 @@
     		  label="Front Page Instructions (before button)"
     			hint="These instructions are show on the front page of Vireo to all users. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically."
     			scope-value="settings.configurable.lookAndFeel.front_page_instructions_before"
-    			on-blur="updateConfigurableSettings('lookAndFeel', 'front_page_instructions_before')"
+    			on-blur="updateConfigurableSettings('configurable.lookAndFeel', 'front_page_instructions_before')"
               	key-down="confirmEdit(event, prop)">
    		</lockingtextarea>
    		
@@ -261,7 +261,7 @@
     		  label="Front Page Instructions (after button)"
     			hint="These instructions are show on the front page of Vireo to all users. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically."
     			scope-value="settings.configurable.lookAndFeel.front_page_instructions_after"
-    			on-blur="updateConfigurableSettings('lookAndFeel', 'front_page_instructions_after')"
+    			on-blur="updateConfigurableSettings('configurable.lookAndFeel', 'front_page_instructions_after')"
               	key-down="confirmEdit(event, prop)">
    		</lockingtextarea>
    		
@@ -270,7 +270,7 @@
     		  label="Post Submission Instructions"
     			hint="These instructions will be shown on the confirmation page after a student has completed their submission. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically."
     			scope-value="settings.configurable.lookAndFeel.post_submission_instructions"
-    			on-blur="updateConfigurableSettings('lookAndFeel', 'post_submission_instructions')"
+    			on-blur="updateConfigurableSettings('configurable.lookAndFeel', 'post_submission_instructions')"
               	key-down="confirmEdit(event, prop)">
    		</lockingtextarea>
 
@@ -279,7 +279,7 @@
     		  label="Post Correction Instructions"
     			hint="These instructions are shown on the confirmation page after a student has submitted corrections for their submission. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically."
     			scope-value="settings.configurable.lookAndFeel.post_correction_instructions"
-    			on-blur="updateConfigurableSettings('lookAndFeel', 'post_correction_instructions')"
+    			on-blur="updateConfigurableSettings('configurable.lookAndFeel', 'post_correction_instructions')"
               	key-down="confirmEdit(event, prop)">
    		</lockingtextarea>
 	</form>
