@@ -58,20 +58,17 @@ public class ConfigurableSettingsController {
     
     @ApiMapping("/reset")
     public ApiResponse resetSetting(@Data String data) {
-        Map<String,String> map = new HashMap<String,String>();      
+        
+        JsonNode dataNode;
         try {
-            map = objectMapper.readValue(data, new TypeReference<HashMap<String,String>>(){});
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        Configuration deletableOverride = configurationRepo.getByName(map.get("setting"));
+            dataNode = objectMapper.readTree(data);
+        } catch (IOException e) {
+            return new ApiResponse(ERROR, "Unable to parse update json ["+e.getMessage()+"]");
+        }     
         
-        if (deletableOverride != null) {
-            System.out.println(deletableOverride.getName());
-            configurationRepo.delete(deletableOverride);
-        }
+        configurationRepo.reset(dataNode.get("setting").asText());
         
-        this.simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, toConfigPairsMap(configurationRepo.getAllByType(map.get("type")))));
+        this.simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, toConfigPairsMap(configurationRepo.getAllByType(dataNode.get("type").asText()))));
         
         return new ApiResponse(SUCCESS);
     }

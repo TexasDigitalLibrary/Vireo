@@ -19,6 +19,17 @@ public interface ConfigurationRepoCustom {
     public Configuration createOrUpdate(String name, String value, String type);
     
     /**
+     * Resets existing configuration to its system value
+     * 
+     * 
+     * @param name
+     * @param value
+     * @param type
+     * @return
+     */
+    public Configuration reset(String name);
+    
+    /**
      * Get a list of all configurations
      * 
      * Will always pick a non-isSystemRequired if it exists
