@@ -758,10 +758,12 @@ footer a, footer li, footer p {
 }
 
 .lookandfeel input[type=color] {
-  border-radius: 5px;
-  width: 40%;
-  padding-bottom: 2px;
-  min-height: 20px;
+  visibility:hidden;
+}
+
+.lookandfeel label.color-selector {
+  display: inherit;
+  max-width: 23px;
 }
 
 .lookandfeel .logos {

@@ -12,7 +12,7 @@
 				</div>
 
 				<div class="row">
-					<div class="col-sm-4">
+					<div class="col-sm-5">
 						<div class="row">
 							<span>Main Color 
 								<span  class="glyphicon glyphicon-refresh color-reset"
@@ -20,19 +20,26 @@
 								</span>
 							</span>
 						</div>
-						<span class="row form-control">
-								{{settings.configurable.lookAndFeel.background_main_color}}
-								<input type="color" 
-										class="pull-right"
+
+						<div class="input-group">
+							<span class="input-group-addon">#</span>
+						  	<input class="form-control" contenteditable ng-change="delayedUpdateConfigurableSettings('lookAndFeel','background_main_color')" ng-model="settings.configurable.lookAndFeel.background_main_color" dehashcolor>
+						  	
+							<span class="input-group-addon">
+								<label class="color-selector" ng-style="{background: settings.configurable.lookAndFeel.background_main_color}">
+									<input  type="color" 
 										name="background_main_color" 
-										ng-model="settings.configurable.lookAndFeel.background_main_color" 
-										ng-change="delayedUpdateConfigurableSettings('lookAndFeel','background_main_color', 500)" />
-						</span>	
+										ng-model="settings.configurable.lookAndFeel.background_main_color"
+										ng-change="delayedUpdateConfigurableSettings('lookAndFeel','background_main_color')" ng-model="settings.configurable.lookAndFeel.background_main_color" />
+								</label>
+							</span>
+
+						</div>
 
 					</div>
 
 
-					<div class="col-sm-4">
+					<div class="col-sm-5 col-sm-offset-1">
 						<div class="row">
 							<span>Highlight Color
 								<span 	class="glyphicon glyphicon-refresh color-reset" 
@@ -40,17 +47,25 @@
 								</span>
 							</span>
 						</div>
-						<span class="row form-control">	
-							{{settings.configurable.lookAndFeel.background_highlight_color}}
-							<input  type="color" 
-									class="pull-right"
-									name="background_highlight_color" 
-									ng-model="settings.configurable.lookAndFeel.background_highlight_color" 
-									ng-change="delayedUpdateConfigurableSettings('lookAndFeel','background_highlight_color')" />
 
-						</span>						
+
+						<div class="input-group">
+							<span class="input-group-addon">#</span>
+						  	<input class="form-control" contenteditable ng-change="delayedUpdateConfigurableSettings('lookAndFeel','background_highlight_color')" ng-model="settings.configurable.lookAndFeel.background_highlight_color" dehashcolor>
+						  	
+							<span class="input-group-addon">
+								<label class="color-selector" ng-style="{background: settings.configurable.lookAndFeel.background_highlight_color}">
+									<input  type="color" 
+										name="background_highlight_color" 
+										ng-model="settings.configurable.lookAndFeel.background_highlight_color"
+										ng-change="delayedUpdateConfigurableSettings('lookAndFeel','background_highlight_color')" ng-model="settings.configurable.lookAndFeel.background_highlight_color" />
+								</label>
+							</span>
+
+						</div>
+
 					</div>
-					<div class="col-sm-4"></div>
+					<div class="col-sm-1"></div>
 
 				</div>
 				
@@ -63,8 +78,9 @@
 					   </div>
 					</h4>
 				</div>
+				
 				<div class="row">
-					<div class="col-sm-4">
+					<div class="col-sm-5">
 						<div class="row">
 							<span>Main Color
 								<span 	class="glyphicon glyphicon-refresh color-reset" 
@@ -72,19 +88,27 @@
 								</span>
 							</span>
 						</div>
-						<div class="row form-control">
-							{{settings.configurable.lookAndFeel.button_main_color_on}}
-							<input  type="color" 
-									class="pull-right"
-									name="button_main_color_on" 
-									ng-model="settings.configurable.lookAndFeel.button_main_color_on" 
-									ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_main_color_on')" />
-						</div>	
+
+
+						<div class="input-group">
+							<span class="input-group-addon">#</span>
+						  	<input class="form-control" contenteditable ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_main_color_on')" ng-model="settings.configurable.lookAndFeel.button_main_color_on" dehashcolor>
+						  	
+							<span class="input-group-addon">
+								<label class="color-selector" ng-style="{background: settings.configurable.lookAndFeel.button_main_color_on}">
+									<input  type="color" 
+										name="button_main_color_on" 
+										ng-model="settings.configurable.lookAndFeel.button_main_color_on"
+										ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_main_color_on')" ng-model="settings.configurable.lookAndFeel.button_main_color_on" />
+								</label>
+							</span>
+
+						</div>
 
 					</div>
 
 
-					<div class="col-sm-4">
+					<div class="col-sm-5 col-sm-offset-1">
 						<div class="row">
 							<span>Highlight Color 
 								<span 	class="glyphicon glyphicon-refresh color-reset" 
@@ -92,18 +116,26 @@
 								</span>
 							</span>
 						</div>
-						<div class="row form-control">
-							{{settings.configurable.lookAndFeel.button_highlight_color_on}}
-							<input  type="color" 
-									class="pull-right"
-									name="button_highlight_color_on" 
-									ng-model="settings.configurable.lookAndFeel.button_highlight_color_on" 
-									ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_highlight_color_on')" />
-						</div>	
+
+
+						<div class="input-group">
+							<span class="input-group-addon">#</span>
+						  	<input class="form-control" contenteditable ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_highlight_color_on')" ng-model="settings.configurable.lookAndFeel.button_highlight_color_on" dehashcolor>
+						  	
+							<span class="input-group-addon">
+								<label class="color-selector" ng-style="{background: settings.configurable.lookAndFeel.button_highlight_color_on}">
+									<input  type="color" 
+										name="button_highlight_color_on" 
+										ng-model="settings.configurable.lookAndFeel.button_highlight_color_on"
+										ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_highlight_color_on')" ng-model="settings.configurable.lookAndFeel.button_highlight_color_on" />
+								</label>
+							</span>
+
+						</div>
 
 					</div>
 
-					<div class="col-sm-4"></div>
+					<div class="col-sm-1"></div>
 				</div>
 				
 
@@ -118,7 +150,7 @@
 				</div>
 
 				<div class="row">
-					<div class="col-sm-4">
+					<div class="col-sm-5">
 						<div class="row">
 							<span>Main Color
 								<span 	class="glyphicon glyphicon-refresh color-reset" 
@@ -126,19 +158,26 @@
 								</span>
 							</span>
 						</div>
-						<div class="row form-control">	
-							{{settings.configurable.lookAndFeel.button_main_color_off}}
-							<input  type="color" 
-									class="pull-right"
-									name="button_main_color_off" 
-									ng-model="settings.configurable.lookAndFeel.button_main_color_off" 
-									ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_main_color_off')" />
-						</div>	
+
+						<div class="input-group">
+							<span class="input-group-addon">#</span>
+						  	<input class="form-control" contenteditable ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_main_color_off')" ng-model="settings.configurable.lookAndFeel.button_main_color_off" dehashcolor>
+						  	
+							<span class="input-group-addon">
+								<label class="color-selector" ng-style="{background: settings.configurable.lookAndFeel.button_main_color_off}">
+									<input  type="color" 
+										name="button_main_color_off" 
+										ng-model="settings.configurable.lookAndFeel.button_main_color_off"
+										ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_main_color_off')" ng-model="settings.configurable.lookAndFeel.button_main_color_off" />
+								</label>
+							</span>
+
+						</div>
 
 					</div>
 
 
-					<div class="col-sm-4">
+					<div class="col-sm-5 col-sm-offset-1">
 						<div class="row">
 							<span>Highlight Color 
 								<span 	class="glyphicon glyphicon-refresh color-reset" 
@@ -146,18 +185,26 @@
 								</span>
 							</span>
 						</div>
-					<div class="row form-control">	
-						{{settings.configurable.lookAndFeel.button_highlight_color_off}}
-						<input  type="color" 
-								class="pull-right"
-								name="button_highlight_color_off" 
-								ng-model="settings.configurable.lookAndFeel.button_highlight_color_off" 
-								ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_highlight_color_off')" />
-					</div>	
+
+
+						<div class="input-group">
+							<span class="input-group-addon">#</span>
+						  	<input class="form-control" contenteditable ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_highlight_color_off')" ng-model="settings.configurable.lookAndFeel.button_highlight_color_off" dehashcolor>
+						  	
+							<span class="input-group-addon">
+								<label class="color-selector" ng-style="{background: settings.configurable.lookAndFeel.button_highlight_color_off}">
+									<input  type="color" 
+										name="button_highlight_color_off" 
+										ng-model="settings.configurable.lookAndFeel.button_highlight_color_off"
+										ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_highlight_color_off')" ng-model="settings.configurable.lookAndFeel.button_highlight_color_off" />
+								</label>
+							</span>
+
+						</div>
 
 					</div>
 
-					<div class="col-sm-4"></div>
+					<div class="col-sm-1"></div>
 				</div>
 
 			</div>		
