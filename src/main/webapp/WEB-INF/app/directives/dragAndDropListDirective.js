@@ -1,6 +1,12 @@
 vireo.directive("draganddroplist", function() {
 	return {
-		templateUrl: 'views/directives/dragAndDropList.html',
+		templateUrl: function(elem, attr) {
+			if(attr.listView !== undefined) {
+				return attr.listView;
+			} else {
+				return 'views/directives/dragAndDropList.html';
+			}
+		},
 		restrict: 'E',
 		scope: {
 			'dragging': '=',
@@ -15,7 +21,7 @@ vireo.directive("draganddroplist", function() {
 		},
 		controller: function($scope) {
 			if(typeof $scope.itemView == 'undefined') {
-				$scope.itemView = 'views/directives/dragAndDropItem.html'
+				$scope.itemView = 'views/directives/dragAndDropItem.html';
 			}
 		},
 		link: function($scope, elem, attr) {

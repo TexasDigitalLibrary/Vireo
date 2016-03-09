@@ -1,4 +1,4 @@
-vireo.controller("EmbargoRepoController", function($controller, $scope, $q, EmbargoRepo, DragAndDropListenerFactory) {
+vireo.controller("EmbargoRepoController", function($controller, $scope, $q, EmbargoRepo, DragAndDropListenerFactory, $filter) {
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
 	$scope.embargoes = EmbargoRepo.get();
@@ -18,7 +18,9 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 
 	$scope.resetEmbargo();
 
-	$scope.ready.then(function() {		
+	$scope.ready.then(function() {
+		$scope.proquestEmbargoes = $filter('filter')($scope.embargoes.list, {guarantor: "PROQUEST"});
+		$scope.defaultEmbargoes = $filter('filter')($scope.embargoes.list, {guarantor: "DEFAULT"});
 		
 		$scope.createEmbargo = function() {
 			EmbargoRepo.create($scope.modalData);

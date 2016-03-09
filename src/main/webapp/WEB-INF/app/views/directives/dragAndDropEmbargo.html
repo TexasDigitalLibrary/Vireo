@@ -1,0 +1,17 @@
+<td class="td-icon embargoType-system-cell">
+	<span ng-if="item.systemRequired" class="glyphicon glyphicon-globe"></span>
+	<span ng-if="!item.systemRequired" class="glyphicon glyphicon-user"></span>
+</td>
+<td class="embargoType-name-cell">{{item.name}}</td>
+<td class="embargoType-description-cell">{{item.description}}</td>
+<td class="embargoType-active-cell">
+	<span ng-if="item.active">Yes</span>
+	<span ng-if="!item.active">No</span>
+</td>
+<td class="embargoType-duration-cell">
+	<span ng-if="item.duration == null">Indefinite</span>
+	<span ng-if="item.duration != null">{{item.duration}}</span>
+</td>
+<td class="embargoType-edit-cell">
+	<button class="btn btn-default" data-toggle="modal" data-target="#embargoEditModal">Edit</button>
+</td>

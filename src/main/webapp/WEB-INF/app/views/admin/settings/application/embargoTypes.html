@@ -1,86 +1,57 @@
-<div class="accordion-inner" ng-controller="EmbargoRepoController">
-	<h2>AVAILABLE EMBARGO TYPES</h2>
-	<p>
-		<a class="confirm" href="@{settings.ConfigurableSettingsTab.removeAllEmbargoTypes}" data-confirm="<em class='icon-trash'></em> (Are you sure you want to <strong>remove all</strong> embargo types?)"> <em class="icon-trash"></em> Remove all embargo types
-		</a>
-	</p>
-	<p>
-		<a class="confirm" href="@{settings.ConfigurableSettingsTab.alphabetizeAllEmbargoTypes}" data-confirm="<em class='icon-refresh'></em> (Are you sure you want to sort all embargo types by their duration?)"> <em class="icon-refresh"></em> Sort embargo types by duration
-		</a>
-	</p>
+<div id="embargo" class="row" ng-controller="EmbargoRepoController">
 
-	<h3>Default Embargos</h3>
-	<table class="table table-striped table-bordered table-condensed">
-		<thead>
-			<tr>
-				<td>System</td>
-				<td>Name</td>
-				<td>Description</td>
-				<td>Display</td>
-				<td># of Months</td>
-				<td>Edit</td>
-			</tr>
-		</thead>
-		<tbody id="embargoType-DEFAULT-list" class="embargoType-sortable">
-			<tr id="embargoType_{{embargo.id}}" ng-repeat="embargo in embargoes.list | filter: {guarantor: 'DEFAULT'}">
-				<td class="td-icon embargoType-system-cell">
-					<span ng-if="embargo.systemRequired" class="glyphicon glyphicon-globe"></span>
-					<span ng-if="!embargo.systemRequired" class="glyphicon glyphicon-user"></span>
-				</td>
-				<td class="embargoType-name-cell">{{embargo.name}}</td>
-				<td class="embargoType-description-cell">{{embargo.description}}</td>
-				<td class="embargoType-active-cell">
-					<span ng-if="embargo.active">Yes</span>
-					<span ng-if="!embargo.active">No</span>
-				</td>
-				<td class="embargoType-duration-cell">
-					<span ng-if="embargo.duration == null">Indefinite</span>
-					<span ng-if="embargo.duration != null">{{embargo.duration}}</span>
-				</td>
-				<td class="embargoType-edit-cell"><a data-id="${embargo.getId()}" href="javascript:void(0);">Edit</a></td>
-			</tr>
-		</tbody>
-	</table>
+	<alerts channels="/settings/custom-action" types="ERROR, WARNING" exclusive></alerts>
+	<div class="row">
+		<div class="col-sm-6">
+			<p>
+				<a class="confirm" href="@{settings.ConfigurableSettingsTab.removeAllEmbargoTypes}" data-confirm="<em class='icon-trash'></em> (Are you sure you want to <strong>remove all</strong> embargo types?)"> <em class="icon-trash"></em> Remove all embargo types
+				</a>
+			</p>
+			<p>
+				<a class="confirm" href="@{settings.ConfigurableSettingsTab.alphabetizeAllEmbargoTypes}" data-confirm="<em class='icon-refresh'></em> (Are you sure you want to sort all embargo types by their duration?)"> <em class="icon-refresh"></em> Sort embargo types by duration
+				</a>
+			</p>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-sm-12">
+			<h3>Default Embargoes</h3>
+	        <draganddroplist
+				dragging="dragging"
+				scope-value="defaultEmbargoes"
+				properties='["System", "Name", "Description", "Display", "# of Months", "Edit"]'
+				list-view='views/directives/dragAndDropTable.html'
+				item-view='views/directives/dragAndDropEmbargo.html'
+				listeners='dragControlListeners'
+				edit='editEmbargo(index)'>
+			</draganddroplist>
+			<button class="btn btn-default modal-add-btn"
+				data-toggle="modal" 
+				data-target="#embargoNewModal">
+				Add New
+			</button>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-sm-12">
+			<h3>ProQuest Embargoes</h3>
+	        <draganddroplist
+				dragging="dragging"
+				scope-value="proquestEmbargoes"
+				properties='["System", "Name", "Description", "Display", "# of Months", "Edit"]'
+				list-view='views/directives/dragAndDropTable.html'
+				item-view='views/directives/dragAndDropEmbargo.html'
+				listeners='dragControlListeners'
+				edit='editEmbargo(index)'>
+			</draganddroplist>
+			<button class="btn btn-default modal-add-btn"
+				data-toggle="modal" 
+				data-target="#embargoNewModal">
+				Add New
+			</button>
+		</div>
+	</div>
 
-	<p>
-		<a id="add-embargoType-link" class="add_new_embargo_btn" data-embargoType="DEFAULT" href="javascript:void(0);">[ADD NEW]</a>
-	</p>
-
-	<h3>ProQuest Embargos</h3>
-	<table class="table table-striped table-bordered table-condensed">
-		<thead>
-			<tr>
-				<td>System</td>
-				<td>Name</td>
-				<td>Description</td>
-				<td>Display</td>
-				<td># of Months</td>
-				<td>Edit</td>
-			</tr>
-		</thead>
-		<tbody id="embargoType-PROQUEST-list" class="embargoType-sortable">
-			<tr id="embargoType_{{embargo.id}}" ng-repeat="embargo in embargoes.list | filter: {guarantor: 'PROQUEST'}">
-				<td class="td-icon embargoType-system-cell">
-					<span ng-if="embargo.systemRequired" class="glyphicon glyphicon-globe"></span>
-					<span ng-if="!embargo.systemRequired" class="glyphicon glyphicon-user"></span>
-				</td>
-				<td class="embargoType-name-cell">{{embargo.name}}</td>
-				<td class="embargoType-description-cell">{{embargo.description}}</td>
-				<td class="embargoType-active-cell">
-					<span ng-if="embargo.active">Yes</span>
-					<span ng-if="!embargo.active">No</span>
-				</td>
-				<td class="embargoType-duration-cell">
-					<span ng-if="embargo.duration == null">Indefinite</span>
-					<span ng-if="embargo.duration != null">{{embargo.duration}}</span>
-				</td>
-				<td class="embargoType-edit-cell"><a data-id="${embargo.getId()}" href="javascript:void(0);">Edit</a></td>
-			</tr>
-		</tbody>
-	</table>
-
-
-	<p>
-		<a id="add-embargoType-link" class="add_new_embargo_btn" data-embargoType="PROQUEST" href="javascript:void(0);">[ADD NEW]</a>
-	</p>
 </div>
