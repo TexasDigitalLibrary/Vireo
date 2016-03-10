@@ -13,15 +13,11 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
 public class OrderedEntityService {
     
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-	
 	private static final Integer one = new Integer(1);
 
 	@PersistenceContext

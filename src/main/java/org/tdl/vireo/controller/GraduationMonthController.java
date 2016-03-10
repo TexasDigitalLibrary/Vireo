@@ -142,7 +142,7 @@ public class GraduationMonthController {
         
         //TODO: logging
         
-        logger.info("Created graduation month with month " + graduationMonth.getMonth());
+        logger.info("Updated graduation month with month " + graduationMonth.getMonth());
         
         simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(SUCCESS, getAll()));
         

@@ -109,8 +109,13 @@ main footer {
   min-height: 600px
 }
 
-.modal {
-  display: none;
+.modal-add-btn {
+  margin-bottom: 25px;
+}
+
+.modal-scroll {
+  max-height: 600px;
+  overflow-x: auto;
 }
 
 .notesWarning {
@@ -534,8 +539,9 @@ h4 {
   text-decoration:none;
 }
 
-.modal-add-btn {
-  margin-bottom: 25px;
+.move-up {
+  margin-top: 2px;
+  position: absolute;
 }
 
 .deposit-location {
@@ -598,6 +604,70 @@ h4 {
   text-shadow: 1px 0 5px #fefefe;
   font-size: 70px;
 }
+
+
+/* TODO: combine with above to remove redundency */
+
+.upload-drop-zone {
+  text-align: center;
+  background: #efefef;
+  border: dashed thick #fefefe;
+  padding-top: 35px;
+  width: 250px;
+  height: 150px;
+  color: #a6a6a6;
+  border-radius: 5px;
+  transition: all 0.35s ease-in;
+}
+
+.upload-drop-zone.dragging {
+  transition: all 0.35s ease-in;
+  border-color: #a6a6a6;
+}
+
+.upload-drop-zone.drag-reject {
+  transition: all 0.35s ease-in;
+  border-color: #0000ff;
+}
+
+.upload-drop-zone .glyphicon-upload {
+  transition: all 0.35s ease-in;
+  color: #fefefe;
+  text-shadow: 1px 0 5px #a6a6a6;
+  font-size: 70px;
+}
+
+.upload-drop-zone.dragging .glyphicon-upload {
+  transition: all 0.35s ease-in;
+  color: #a6a6a6;
+  text-shadow: 1px 0 5px #fefefe;
+  font-size: 70px;
+}
+
+
+
+/* FILE UPLOAD BUTTON */
+
+.btn-file {
+  position: relative;
+  overflow: hidden;
+}
+.btn-file input[type=file] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100%;
+  min-height: 100%;
+  font-size: 100px;
+  text-align: right;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  outline: none;
+  background: white;
+  cursor: inherit;
+  display: block;
+}
+
 
 .degreeCodes label {
   margin-top: 3px;
@@ -734,14 +804,13 @@ footer a, footer li, footer p {
     border-radius: 15px;
   }
 
-  .add-member {
-    padding-bottom: 12px;
-  }
+.add-member {
+  padding-bottom: 12px;
+}
 
-  .btn:focus , input[type=color]:focus{
- 
+.btn:focus , input[type=color]:focus { 
   outline:none;
-  }
+}
 
 /**************************
 * LOOK AND FEEL ACCORDION *

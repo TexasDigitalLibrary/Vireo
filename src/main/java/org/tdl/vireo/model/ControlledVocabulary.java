@@ -19,12 +19,12 @@ import org.tdl.vireo.service.EntityControlledVocabularyService;
 
 @Entity
 @Configurable
-public class ControlledVocabulary extends BaseEntity {
+public class ControlledVocabulary extends BaseOrderedEntity {
     
     @Column(nullable = false, unique = true)
     private String name;
     
-    @Column(nullable = true, unique = true)
+    @Column(nullable = true, unique = false)
     private String entityName;
 
     @ManyToOne(cascade = { DETACH, REFRESH }, optional = false)
@@ -35,8 +35,12 @@ public class ControlledVocabulary extends BaseEntity {
     
     @Column(nullable = false)
     private Boolean isEntityProperty;
+    
+    @Column(nullable = false)
+    private Boolean isEnum;
 
-    public ControlledVocabulary() {        
+    public ControlledVocabulary() {
+        setIsEnum(false);
         setIsEntityProperty(false);
         setDictionary(new ArrayList<VocabularyWord>());
     }
@@ -45,11 +49,13 @@ public class ControlledVocabulary extends BaseEntity {
      * 
      * @param name
      * @param language
+     * @param order
      */
-    public ControlledVocabulary(String name, Language language) {
+    public ControlledVocabulary(String name, Language language, Integer order) {
         this();
         setName(name);
         setLanguage(language);
+        super.setOrder(order);
     }
     
     /**
@@ -57,13 +63,15 @@ public class ControlledVocabulary extends BaseEntity {
      * @param name
      * @param entityName
      * @param language
+     * @param order
      */
-    public ControlledVocabulary(String name, String entityName, Language language) {
+    public ControlledVocabulary(String name, String entityName, Language language, Integer order) {
         this();
         setName(name);
         setEntityName(entityName);
         setLanguage(language);
         setIsEntityProperty(true);
+        super.setOrder(order);
     }
 
     /**
@@ -185,6 +193,20 @@ public class ControlledVocabulary extends BaseEntity {
      */
     public void setIsEntityProperty(Boolean isEntityProperty) {
         this.isEntityProperty = isEntityProperty;
+    }
+
+    /**
+     * @return the isEnum
+     */
+    public Boolean isEnum() {
+        return isEnum;
+    }
+
+    /**
+     * @param isEnum the isEnum to set
+     */
+    public void setIsEnum(Boolean isEnum) {
+        this.isEnum = isEnum;
     }
     
 }
