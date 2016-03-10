@@ -568,6 +568,10 @@ h4 {
   border: 1px solid #dcdcdc;
 }
 
+.draggable-table-row.as-sortable-item, .as-sortable-placeholder {
+  display: table-row;
+}
+
 .trash-drop-zone {
   text-align: center;
   background: #efefef;

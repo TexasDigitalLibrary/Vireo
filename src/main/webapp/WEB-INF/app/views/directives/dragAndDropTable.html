@@ -5,7 +5,7 @@
 		</tr>
 	</thead>
 	<tbody data-as-sortable="listeners" data-ng-model="scopeValue">
-		<tr data-ng-repeat="item in scopeValue" ng-include src="itemView" draggable="true">
+		<tr class="draggable-table-row" data-ng-repeat="item in scopeValue" ng-include src="itemView" draggable="true" data-as-sortable-item >
 		</tr>
 	</tbody>
 </table>

@@ -1,17 +1,17 @@
-<td class="td-icon embargoType-system-cell">
+<td class="td-icon embargoType-system-cell" data-as-sortable-item-handle>
 	<span ng-if="item.systemRequired" class="glyphicon glyphicon-globe"></span>
 	<span ng-if="!item.systemRequired" class="glyphicon glyphicon-user"></span>
 </td>
-<td class="embargoType-name-cell">{{item.name}}</td>
-<td class="embargoType-description-cell">{{item.description}}</td>
-<td class="embargoType-active-cell">
+<td class="embargoType-name-cell" data-as-sortable-item-handle>{{item.name}}</td>
+<td class="embargoType-description-cell" data-as-sortable-item-handle>{{item.description}}</td>
+<td class="embargoType-active-cell" data-as-sortable-item-handle>
 	<span ng-if="item.active">Yes</span>
 	<span ng-if="!item.active">No</span>
 </td>
-<td class="embargoType-duration-cell">
+<td class="embargoType-duration-cell" data-as-sortable-item-handle>
 	<span ng-if="item.duration == null">Indefinite</span>
 	<span ng-if="item.duration != null">{{item.duration}}</span>
 </td>
-<td class="embargoType-edit-cell">
+<td class="embargoType-edit-cell" data-as-sortable-item-handle>
 	<button class="btn btn-default" data-toggle="modal" data-target="#embargoEditModal">Edit</button>
 </td>
