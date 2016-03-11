@@ -40,4 +40,24 @@ vireo.controller("AvailableDocumentTypesController", function ($controller, $sco
             AvailableDocumentTypesRepo.update($scope.modalData);
             $scope.clearModalData();
         }
+
+        $scope.reorderDocumentTypes = function(src, dest) {
+            AvailableDocumentTypesRepo.reorder(src, dest);
+        };
+
+        $scope.selectDocumentType = function(index) {
+                // $scope.resetMonthOptions();
+                $scope.modalData = $scope.documentTypes.list[index];
+        };
+
+        $scope.dragControlListeners = DragAndDropListenerFactory.buildDragControls({
+                trashId: $scope.trashCanId,
+                dragging: $scope.dragging,
+                select: $scope.selectDocumentType,			
+                list: $scope.documentTypes.list,
+                confirm: '#availableDocumentTypesConfirmRemoveModal',
+                reorder: $scope.reorderDocumentTypes,
+                container: '#available-document-types'
+        });
+
 });

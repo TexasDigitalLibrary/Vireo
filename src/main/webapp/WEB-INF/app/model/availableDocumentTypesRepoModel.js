@@ -65,12 +65,6 @@ vireo.service("AvailableDocumentTypesRepo", function(WsApi, AbstractModel, Alert
 			'controller': 'settings/document-types', 
 			'method': 'create',
 			'data': documentType
-		}).then(function(response) {
-			var responseType = angular.fromJson(response.body).meta.type;
-			var responseMessage = angular.fromJson(response.body).meta.message;
-			if(responseType != 'SUCCESS') {
-				AlertService.add({type: responseType, message: responseMessage}, "/settings/document-types");  
-			}
 		});
 	};
 
@@ -80,26 +74,15 @@ vireo.service("AvailableDocumentTypesRepo", function(WsApi, AbstractModel, Alert
 			'controller': 'settings/document-types', 
 			'method': 'update',
 			'data': documentType
-		}).then(function(response) {
-			var responseType = angular.fromJson(response.body).meta.type;
-			var responseMessage = angular.fromJson(response.body).meta.message;
-			if(responseType != 'SUCCESS') {
-				AlertService.add({type: responseType, message: responseMessage}, "/settings/document-types");  
-			}
 		});
 	};
 
 	AvailableDocumentTypesRepo.reorder = function(src, dest) {
+          console.info('calling reorder on server');
 		return WsApi.fetch({
 			'endpoint': '/private/queue', 
 			'controller': 'settings/document-types', 
 			'method': 'reorder/' + src + '/' + dest
-		}).then(function(response) {
-			var responseType = angular.fromJson(response.body).meta.type;
-			var responseMessage = angular.fromJson(response.body).meta.message;
-			if(responseType != 'SUCCESS') {
-				AlertService.add({type: responseType, message: responseMessage}, "/settings/document-types");  
-			}
 		});
 	};
 
@@ -108,12 +91,6 @@ vireo.service("AvailableDocumentTypesRepo", function(WsApi, AbstractModel, Alert
 			'endpoint': '/private/queue', 
 			'controller': 'settings/document-types', 
 			'method': 'sort/' + column
-		}).then(function(response) {
-			var responseType = angular.fromJson(response.body).meta.type;
-			var responseMessage = angular.fromJson(response.body).meta.message;
-			if(responseType != 'SUCCESS') {
-				AlertService.add({type: responseType, message: responseMessage}, "/settings/document-types");  
-			}
 		});
 	};
 
@@ -122,12 +99,6 @@ vireo.service("AvailableDocumentTypesRepo", function(WsApi, AbstractModel, Alert
 			'endpoint': '/private/queue', 
 			'controller': 'settings/document-types', 
 			'method': 'remove/' + index
-		}).then(function(response) {
-			var responseType = angular.fromJson(response.body).meta.type;
-			var responseMessage = angular.fromJson(response.body).meta.message;
-			if(responseType != 'SUCCESS') {
-				AlertService.add({type: responseType, message: responseMessage}, "/settings/document-types");  
-			}
 		});
 	};
 	

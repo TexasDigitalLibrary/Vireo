@@ -200,7 +200,7 @@ public class DocumentTypesController {
         Integer intSrc = Integer.parseInt(src);
         Integer intDest = Integer.parseInt(dest);
         documentTypeRepo.reorder(intSrc, intDest);
-        simpMessagingTemplate.convertAndSend("/channel/settings/document-type", new ApiResponse(SUCCESS, getAll()));        
+        simpMessagingTemplate.convertAndSend("/channel/settings/document-types", new ApiResponse(SUCCESS, getAll()));        
         return new ApiResponse(SUCCESS);
     }
     

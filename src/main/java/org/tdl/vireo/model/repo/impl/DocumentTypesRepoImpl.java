@@ -32,7 +32,7 @@ public class DocumentTypesRepoImpl implements DocumentTypesRepoCustom {
 
     @Override
     public DocumentType create(String name, DegreeLevel degreeLevel) {
-        return documentTypesRepo.save(new DocumentType(name, degreeLevel, (int)documentTypesRepo.count()));
+        return documentTypesRepo.save(new DocumentType(name, degreeLevel, (int)documentTypesRepo.count() + 1));
     }
     
 }
