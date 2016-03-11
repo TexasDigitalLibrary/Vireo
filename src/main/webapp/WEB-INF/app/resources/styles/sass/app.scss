@@ -432,6 +432,10 @@ sidebox ul input {
   cursor: not-allowed;
 }
 
+textarea.locking-text-area-not-wysiwyg {
+  min-height: 200px;
+}
+
 .repeated-span {
   margin-left: 5px;
   margin-right: 5px;
@@ -751,10 +755,6 @@ footer a, footer li, footer p {
   text-indent: 0em;
   font-size: 0.85em;
   cursor: pointer;
-}
-
-.lookandfeel .form-control {
-  min-height: 40px;
 }
 
 .lookandfeel input[type=color] {
