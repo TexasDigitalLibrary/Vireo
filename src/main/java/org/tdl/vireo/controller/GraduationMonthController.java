@@ -52,11 +52,6 @@ public class GraduationMonthController {
         return new ApiResponse(SUCCESS, getAll());
     }
     
-    private GraduationMonth validateAndPopulateGraduationMonth(GraduationMonth graduationMonth, JsonNode dataNode) {
-       
-        return graduationMonth;
-    }
-    
     @ApiMapping("/create")
     @Auth(role = "ROLE_MANAGER")
     public ApiResponse createGraduationMonth(@Data String data) {
@@ -79,13 +74,6 @@ public class GraduationMonthController {
         else {
             return new ApiResponse(ERROR, "Month required to create graduation month!");
         }
-        
-        newGraduationMonth = validateAndPopulateGraduationMonth(newGraduationMonth, dataNode);
-        
-        
-        newGraduationMonth.setOrder((int) graduationMonthRepo.count());
-        
-        newGraduationMonth = graduationMonthRepo.save(newGraduationMonth);
         
         //TODO: logging
         
@@ -136,8 +124,6 @@ public class GraduationMonthController {
             return new ApiResponse(ERROR, "Month required to create graduation month!");
         }
         
-        graduationMonth = validateAndPopulateGraduationMonth(graduationMonth, dataNode);
-                
         graduationMonth = graduationMonthRepo.save(graduationMonth);
         
         //TODO: logging

@@ -484,24 +484,30 @@ public class ControlledVocabularyController {
         ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByName(name);
 
         ControlledVocabularyCache cvCache = controlledVocabularyCachingService.getControlledVocabularyCache(controlledVocabulary.getName());
-
-        cvCache.getNewVocabularyWords().parallelStream().forEach(newVocabularyWord -> {
-            newVocabularyWord = vocabularyWordRepo.create(controlledVocabulary, newVocabularyWord.getName(), newVocabularyWord.getDefinition(), newVocabularyWord.getIdentifier());
-            controlledVocabulary.addValue(newVocabularyWord);
-        });
-
-        cvCache.getUpdatingVocabularyWords().parallelStream().forEach(updatingVocabularyWord -> {
-            VocabularyWord updatedVocabularyWord = vocabularyWordRepo.findByNameAndControlledVocabulary(updatingVocabularyWord[1].getName(), controlledVocabulary);
-            updatedVocabularyWord.setDefinition(updatingVocabularyWord[1].getDefinition());
-            updatedVocabularyWord.setIdentifier(updatingVocabularyWord[1].getIdentifier());
-            updatedVocabularyWord = vocabularyWordRepo.save(updatedVocabularyWord);
-        });
-
-        controlledVocabularyRepo.save(controlledVocabulary);
-
-        controlledVocabularyCachingService.removeControlledVocabularyCache(controlledVocabulary.getName());
-
-        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
+        
+        if(cvCache != null) {
+            cvCache.getNewVocabularyWords().parallelStream().forEach(newVocabularyWord -> {
+                newVocabularyWord = vocabularyWordRepo.create(controlledVocabulary, newVocabularyWord.getName(), newVocabularyWord.getDefinition(), newVocabularyWord.getIdentifier());
+                controlledVocabulary.addValue(newVocabularyWord);
+            });
+    
+            cvCache.getUpdatingVocabularyWords().parallelStream().forEach(updatingVocabularyWord -> {
+                VocabularyWord updatedVocabularyWord = vocabularyWordRepo.findByNameAndControlledVocabulary(updatingVocabularyWord[1].getName(), controlledVocabulary);
+                updatedVocabularyWord.setDefinition(updatingVocabularyWord[1].getDefinition());
+                updatedVocabularyWord.setIdentifier(updatingVocabularyWord[1].getIdentifier());
+                updatedVocabularyWord = vocabularyWordRepo.save(updatedVocabularyWord);
+            });
+    
+            controlledVocabularyRepo.save(controlledVocabulary);
+    
+            controlledVocabularyCachingService.removeControlledVocabularyCache(controlledVocabulary.getName());
+    
+            simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
+        }
+        else {
+            return new ApiResponse(ERROR, "Controlled vocabulary " + name + " is not cached for import.");
+        }
+        
         return new ApiResponse(SUCCESS);
     }
 
