@@ -143,6 +143,7 @@ public class ControlledVocabularyController {
         } else {
             return new ApiResponse(ERROR, "Language required to create controlled vocabulary!");
         }
+        
         JsonNode nameNode = dataNode.get("name");
         if (nameNode != null) {
             name = nameNode.asText();
@@ -151,17 +152,14 @@ public class ControlledVocabularyController {
         }
 
         if (name != null && language != null) {
-            newControlledVocabulary = controlledVocabularyRepo.create(name, language);
+            if(controlledVocabularyRepo.findByName(name) != null) {
+                return new ApiResponse(ERROR, name + " is already a controlled vocabulary!");
+            }
+            else {
+                newControlledVocabulary = controlledVocabularyRepo.create(name, language);
+            }
         } else {
             return new ApiResponse(ERROR, "Name and language could not be determined from input!");
-        }
-
-        newControlledVocabulary.setOrder((int) controlledVocabularyRepo.count());
-
-        try {
-            newControlledVocabulary = controlledVocabularyRepo.save(newControlledVocabulary);
-        } catch (DataIntegrityViolationException dive) {
-            return new ApiResponse(ERROR, name + " is already a controlled vocabulary!");
         }
 
         // TODO: logging
@@ -183,6 +181,7 @@ public class ControlledVocabularyController {
      */
     @ApiMapping("/update")
     @Auth(role = "ROLE_MANAGER")
+    @Transactional
     public ApiResponse updateControlledVocabulary(@Data String data) {
 
         JsonNode dataNode;

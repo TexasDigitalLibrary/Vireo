@@ -167,10 +167,31 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 	    };
 
 	    $scope.filterWordArray = function (words) {
+
+	    	var definition = "";
+
+	    	if(words[0].definition.length > 0) {
+	    		definition += '<span class="red">' + words[0].definition + '</span>';
+	    	}
+
+	    	if(definition.length > 0 && words[1].definition.length > 0) {
+	    		definition += '<span class="glyphicon glyphicon-arrow-right cv-change"></span><span>' + words[1].definition + '</span>'
+	    	}
+
+	    	var identifier = "";
+
+	    	if(words[0].identifier.length > 0) {
+	    		identifier += '<span class="red">' + words[0].identifier + '</span>';
+	    	}
+
+	    	if(identifier.length > 0 && words[1].identifier.length > 0) {
+	    		identifier += '<span class="glyphicon glyphicon-arrow-right cv-change"></span><span>' + words[1].identifier + '</span>'
+	    	}
+
 			return {
 				name: words[0].name,
-				definition: '<span>' + words[0].definition + '</span><span> -> </span><span>' + words[1].definition + '</span>',
-				identifier: '<span>' + words[0].identifier + '</span><span> -> </span><span>' + words[1].identifier + '</span>'
+				definition: definition,
+				identifier: identifier
 			};
 	    };
 
