@@ -280,6 +280,7 @@
 	    <script src="model/userRepoModel.js"></script>
 	    <script src="model/depositLocationRepoModel.js"></script>
 	    <script src="model/graduationMonthRepoModel.js"></script>
+	    <script src="model/availableDocumentTypesRepoModel.js"></script>
 
 
 	    <!-- Controllers -->
@@ -295,6 +296,7 @@
 	    <script src="controllers/settings/customActionSettingsController.js"></script>
 	    <script src="controllers/settings/depositLocationRepoController.js"></script> 
 	    <script src="controllers/settings/graduationMonthRepoController.js"></script> 
+	    <script src="controllers/settings/availableDocumentTypesController.js"></script> 
 	    
 	<!-- endbuild -->
 
