@@ -5,12 +5,6 @@ vireo.controller("AvailableDocumentTypesController", function ($controller, $sco
 	
 	$scope.ready = AvailableDocumentTypesRepo.ready();
 
-        $scope.ready.then(function (){
-            console.info('then doctypes V');
-            console.info($scope.documentTypes.list);
-            console.info('then doctypes ^');
-        });
-
 	$scope.dragging = false;
 
 	$scope.trashCanId = 'available-document-types-trash';
@@ -23,11 +17,20 @@ vireo.controller("AvailableDocumentTypesController", function ($controller, $sco
                                 'MASTERS'       : 'Masters'      ,
                                 'DOCTORAL'      : 'Doctoral'     };
 
+        $scope.modalData = {};
+        $scope.modalData.name = '';
         $scope.modalData.degreeLevel = 'UNDERGRADUATE';
 
-        // $scope.createNewDocumentType = function(name, degreeLevel) {
         $scope.createNewDocumentType = function(documentType) {
-            console.info('calling ctrl creation');
             AvailableDocumentTypesRepo.add(documentType);
 	};	
+
+        $scope.launchEditModal = function(index) {
+            $scope.modalData = $scope.documentTypes.list[index];
+            angular.element('#availableDocumentTypesEditModal').modal('show');
+	};	
+
+        $scope.updateDocumentType = function(){
+            AvailableDocumentTypesRepo.update($scope.modalData);
+        }
 });
