@@ -316,7 +316,7 @@ public class ControlledVocabularyController {
         List<Object> words = controlledVocabulary.getDictionary();
         
         for(String row : rows) {
-            String[] cols = new String[3];            
+            String[] cols = new String[] {"","",""};            
             String[] temp = row.split(",");            
             for(int i = 0; i < temp.length; i++) {
                 cols[i] = temp[i] != null ? temp[i] : "";
@@ -349,7 +349,20 @@ public class ControlledVocabularyController {
                     VocabularyWord vocabularyWord = (VocabularyWord) word;
                     if(cols[0].equals(vocabularyWord.getName())) {
                         
-                        if(!cols[1].equals(vocabularyWord.getDefinition()) || !cols[2].equals(vocabularyWord.getIdentifier())) {
+                        String definition = vocabularyWord.getDefinition();
+                        String identifier = vocabularyWord.getIdentifier();
+                        
+                        boolean change = false;
+                        
+                        if (definition != null && !cols[1].equals(definition)) {
+                            change = true;
+                        }
+                                
+                        if (identifier != null && !cols[2].equals(identifier)) {
+                            change = true;
+                        }
+                        
+                        if(change) {
                             updatingWords.add(new VocabularyWord[]{ vocabularyWord, currentVocabularyWord });
                         }
                         
