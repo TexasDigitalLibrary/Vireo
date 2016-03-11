@@ -761,13 +761,22 @@ footer a, footer li, footer p {
   visibility:hidden;
 }
 
-.lookandfeel label.color-selector {
+.lookandfeel lockingtextarea {
+  display: block;
+  margin-top: 25px;
+}
+
+.lookandfeel .color-selector {
+  max-width: 200px;
+}
+
+.lookandfeel label.color-selector-swatch {
   display: inherit;
   max-width: 23px;
 }
 
 .lookandfeel .logos {
-  margin-top:10px;
+  margin-top:  25px;
   background: #efefef;
   border-radius: 5px;
   padding:5px;

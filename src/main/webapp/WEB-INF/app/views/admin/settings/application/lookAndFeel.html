@@ -1,7 +1,7 @@
 <div class="lookandfeel">
 	<form name="look-and-feel">
 		<div class="row">
-			<div class="col-sm-6">
+			<div class="col-sm-6 col-lg-9">
 
 				<div class="row">
 					<h4>Background
@@ -12,7 +12,7 @@
 				</div>
 
 				<div class="row">
-					<div class="col-sm-5">
+					<div class="col-md-5 col-lg-3">
 						<div class="row">
 							<span>Main Color 
 								<span  class="glyphicon glyphicon-refresh color-reset"
@@ -21,12 +21,12 @@
 							</span>
 						</div>
 
-						<div class="input-group">
+						<div class="input-group color-selector">
 							<span class="input-group-addon">#</span>
 						  	<input class="form-control" contenteditable ng-change="delayedUpdateConfigurableSettings('lookAndFeel','background_main_color')" ng-model="settings.configurable.lookAndFeel.background_main_color" dehashcolor>
 						  	
 							<span class="input-group-addon">
-								<label class="color-selector" ng-style="{background: settings.configurable.lookAndFeel.background_main_color}">
+								<label class="color-selector-swatch" ng-style="{background: settings.configurable.lookAndFeel.background_main_color}">
 									<input  type="color" 
 										name="background_main_color" 
 										ng-model="settings.configurable.lookAndFeel.background_main_color"
@@ -39,7 +39,7 @@
 					</div>
 
 
-					<div class="col-sm-5 col-sm-offset-1">
+					<div class="col-md-5 col-lg-3 col-md-offset-1 col-lg-offset-0">
 						<div class="row">
 							<span>Highlight Color
 								<span 	class="glyphicon glyphicon-refresh color-reset" 
@@ -49,12 +49,12 @@
 						</div>
 
 
-						<div class="input-group">
+						<div class="input-group color-selector">
 							<span class="input-group-addon">#</span>
 						  	<input class="form-control" contenteditable ng-change="delayedUpdateConfigurableSettings('lookAndFeel','background_highlight_color')" ng-model="settings.configurable.lookAndFeel.background_highlight_color" dehashcolor>
 						  	
 							<span class="input-group-addon">
-								<label class="color-selector" ng-style="{background: settings.configurable.lookAndFeel.background_highlight_color}">
+								<label class="color-selector-swatch" ng-style="{background: settings.configurable.lookAndFeel.background_highlight_color}">
 									<input  type="color" 
 										name="background_highlight_color" 
 										ng-model="settings.configurable.lookAndFeel.background_highlight_color"
@@ -65,7 +65,7 @@
 						</div>
 
 					</div>
-					<div class="col-sm-1"></div>
+					<div class="col-md-1 col-lg-5"></div>
 
 				</div>
 				
@@ -80,7 +80,7 @@
 				</div>
 				
 				<div class="row">
-					<div class="col-sm-5">
+					<div class="col-md-5 col-lg-3">
 						<div class="row">
 							<span>Main Color
 								<span 	class="glyphicon glyphicon-refresh color-reset" 
@@ -90,12 +90,12 @@
 						</div>
 
 
-						<div class="input-group">
+						<div class="input-group color-selector">
 							<span class="input-group-addon">#</span>
 						  	<input class="form-control" contenteditable ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_main_color_on')" ng-model="settings.configurable.lookAndFeel.button_main_color_on" dehashcolor>
 						  	
 							<span class="input-group-addon">
-								<label class="color-selector" ng-style="{background: settings.configurable.lookAndFeel.button_main_color_on}">
+								<label class="color-selector-swatch" ng-style="{background: settings.configurable.lookAndFeel.button_main_color_on}">
 									<input  type="color" 
 										name="button_main_color_on" 
 										ng-model="settings.configurable.lookAndFeel.button_main_color_on"
@@ -108,7 +108,7 @@
 					</div>
 
 
-					<div class="col-sm-5 col-sm-offset-1">
+					<div class="col-md-5 col-lg-3 col-md-offset-1 col-lg-offset-0">
 						<div class="row">
 							<span>Highlight Color 
 								<span 	class="glyphicon glyphicon-refresh color-reset" 
@@ -118,12 +118,12 @@
 						</div>
 
 
-						<div class="input-group">
+						<div class="input-group color-selector">
 							<span class="input-group-addon">#</span>
 						  	<input class="form-control" contenteditable ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_highlight_color_on')" ng-model="settings.configurable.lookAndFeel.button_highlight_color_on" dehashcolor>
 						  	
 							<span class="input-group-addon">
-								<label class="color-selector" ng-style="{background: settings.configurable.lookAndFeel.button_highlight_color_on}">
+								<label class="color-selector-swatch" ng-style="{background: settings.configurable.lookAndFeel.button_highlight_color_on}">
 									<input  type="color" 
 										name="button_highlight_color_on" 
 										ng-model="settings.configurable.lookAndFeel.button_highlight_color_on"
@@ -135,7 +135,7 @@
 
 					</div>
 
-					<div class="col-sm-1"></div>
+					<div class="col-md-1 col-lg-5"></div>
 				</div>
 				
 
@@ -150,7 +150,7 @@
 				</div>
 
 				<div class="row">
-					<div class="col-sm-5">
+					<div class="col-md-5 col-lg-3">
 						<div class="row">
 							<span>Main Color
 								<span 	class="glyphicon glyphicon-refresh color-reset" 
@@ -159,12 +159,12 @@
 							</span>
 						</div>
 
-						<div class="input-group">
+						<div class="input-group color-selector">
 							<span class="input-group-addon">#</span>
 						  	<input class="form-control" contenteditable ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_main_color_off')" ng-model="settings.configurable.lookAndFeel.button_main_color_off" dehashcolor>
 						  	
 							<span class="input-group-addon">
-								<label class="color-selector" ng-style="{background: settings.configurable.lookAndFeel.button_main_color_off}">
+								<label class="color-selector-swatch" ng-style="{background: settings.configurable.lookAndFeel.button_main_color_off}">
 									<input  type="color" 
 										name="button_main_color_off" 
 										ng-model="settings.configurable.lookAndFeel.button_main_color_off"
@@ -177,7 +177,7 @@
 					</div>
 
 
-					<div class="col-sm-5 col-sm-offset-1">
+					<div class="col-md-5 col-lg-3 col-md-offset-1 col-lg-offset-0">
 						<div class="row">
 							<span>Highlight Color 
 								<span 	class="glyphicon glyphicon-refresh color-reset" 
@@ -187,12 +187,12 @@
 						</div>
 
 
-						<div class="input-group">
+						<div class="input-group color-selector">
 							<span class="input-group-addon">#</span>
 						  	<input class="form-control" contenteditable ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_highlight_color_off')" ng-model="settings.configurable.lookAndFeel.button_highlight_color_off" dehashcolor>
 						  	
 							<span class="input-group-addon">
-								<label class="color-selector" ng-style="{background: settings.configurable.lookAndFeel.button_highlight_color_off}">
+								<label class="color-selector-swatch" ng-style="{background: settings.configurable.lookAndFeel.button_highlight_color_off}">
 									<input  type="color" 
 										name="button_highlight_color_off" 
 										ng-model="settings.configurable.lookAndFeel.button_highlight_color_off"
@@ -204,18 +204,18 @@
 
 					</div>
 
-					<div class="col-sm-1"></div>
+					<div class="col-md-1 col-lg-5"></div>
 				</div>
 
 			</div>		
 			
 
 
-			<div class="col-sm-6">
+			<div class="col-sm-6 col-lg-3">
 			</div>
 		</div>
 
-	<!-- LOGOS -->
+		<!-- LOGOS -->
 		<div class="row logos">			
 				
 			<h4>Logos
@@ -263,36 +263,15 @@
 
 		
 		</div>
-	<!-- CUSTOM CSS -->
-		<div class="row">
-			<h4>Custom CSS
-				<div tooltip="Customize any styling on the student side using CSS.">
-		   			<span class="glyphicon glyphicon-info-sign color-reset"></span>
-		   		</div>	
-			</h4>
-			<div class="row">
-				<div class="col-sm-6 lock-control">
-
-					<a href="#custom_css">
-						<span class="glyphicon glyphicon-lock"> </span>
-						This field is locked to prevent accidental editing, click to unlock.
-					</a>
-
-					<p ng-show="clicked">
-						<span class="glyphicon glyphicon-pencil"></span>
-						This field is unlocked and may be edited. Leaving the page will re-lock the field.
-					</p>
-
-					<textarea id="custom_css" name="custom_css" class="form-control"  readonly="clicked">
-						TEST CUSTOM CSS TEXTAREA
-					</textarea>					
-
-				</div>
-
-				<div class="col-sm-6"></div>
-			</div>
-
-		</div>
+		
+		<!-- CUSTOM CSS -->
+		<lockingtextarea
+    		    label="Custom CSS"
+    			hint="Customize any styling on the student side using CSS."
+    			scope-value="settings.configurable.lookAndFeel.custom_css"
+    			on-blur="updateConfigurableSettings('configurable.lookAndFeel', 'custom_css')"
+              	key-down="confirmEdit(event, prop)">
+   		</lockingtextarea>
 		
 		<!-- FRONT PAGE INSTRUCTIONS BEFORE BUTTON -->
 		<lockingtextarea
