@@ -50,6 +50,15 @@ vireo.controller("AvailableDocumentTypesController", function ($controller, $sco
                 $scope.modalData = $scope.documentTypes.list[index];
         };
 
+        $scope.sortDocumentTypes = function(column) {
+        if($scope.sortAction == 'confirm') {
+                $scope.sortAction = 'sort';
+        }
+        else if($scope.sortAction == 'sort') {
+                AvailableDocumentTypesRepo.sort(column);
+                $scope.sortAction = 'confirm';
+        }};
+
         $scope.dragControlListeners = DragAndDropListenerFactory.buildDragControls({
                 trashId: $scope.trashCanId,
                 dragging: $scope.dragging,
