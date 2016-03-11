@@ -21,6 +21,12 @@ vireo.controller("AvailableDocumentTypesController", function ($controller, $sco
         $scope.modalData.name = '';
         $scope.modalData.degreeLevel = 'UNDERGRADUATE';
 
+        $scope.clearModalData = function(){
+            $scope.modalData = {};
+            $scope.modalData.name = '';
+            $scope.modalData.degreeLevel = 'UNDERGRADUATE';
+        }
+
         $scope.createNewDocumentType = function(documentType) {
             AvailableDocumentTypesRepo.add(documentType);
 	};	
@@ -32,5 +38,6 @@ vireo.controller("AvailableDocumentTypesController", function ($controller, $sco
 
         $scope.updateDocumentType = function(){
             AvailableDocumentTypesRepo.update($scope.modalData);
+            $scope.clearModalData();
         }
 });
