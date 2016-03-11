@@ -61,12 +61,11 @@ vireo.service("ControlledVocabularyRepo", function(AbstractModel, AlertService, 
 		});
 	};
 
-	ControlledVocabularyRepo.uploadCSV = function(file, controlledVocabulary) {
-		return RestApi.post({
-			'endpoint': '', 
+	ControlledVocabularyRepo.uploadCSV = function(controlledVocabulary) {
+		return WsApi.fetch({
+			'endpoint': '/private/queue', 
 			'controller': 'settings/controlled-vocabulary', 
-			'method': 'import/' + controlledVocabulary,
-			'file': file
+			'method': 'import/' + controlledVocabulary
 		});
 	};
 

@@ -108,7 +108,6 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 		};
 
 
-		// TODO: remove redundancy
 		$scope.uploadControlledVocabulary = function() {
 			if($scope.uploadAction == 'confirm') {
 				var reader = new FileReader();
@@ -117,24 +116,20 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 		        	console.log($scope.uploadModalData.cv.name)
 		            ControlledVocabularyRepo.confirmCSV(reader.result, $scope.uploadModalData.cv.name).then(function(response) {
 		            	$scope.uploadWordMap = response.payload.HashMap;
-
 		            });
 		        };	        
 		        reader.readAsDataURL($scope.uploadModalData.file);
 				$scope.uploadAction = 'process';
 			}
 			else if($scope.uploadAction == 'process') {	
-				var reader = new FileReader();
-		        reader.onload = function() {
-		            ControlledVocabularyRepo.uploadCSV(reader.result, $scope.uploadModalData.cv.name);
-		        	$scope.resetControlledVocabulary();
-		        };	        
-		        reader.readAsDataURL($scope.uploadModalData.file);
+				ControlledVocabularyRepo.uploadCSV($scope.uploadModalData.cv.name);
+				$scope.resetControlledVocabulary();
 				angular.element('#controlledVocabularyUploadModal').modal('hide');
 				$scope.uploadAction = 'confirm';
 			}	
 			
 		};
+
 
 		$scope.exportControlledVocabulary = function() {
 			$scope.headers = [];
@@ -152,16 +147,12 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 			var match = false;
 			for(var i in $scope.controlledVocabulary.list) {
 				var cv = $scope.controlledVocabulary.list[i];
-				console.log($scope.modalData.name)
-				console.log(cv.name)
 				if(cv.name == $scope.modalData.name) {
-					console.log('in use')
 					$scope.modalData.inUse = match = true;
 					break;
 				}
 			}
 			if(!match) {
-				console.log('not in use')
 				$scope.modalData.inUse = false;
 			}
 		};

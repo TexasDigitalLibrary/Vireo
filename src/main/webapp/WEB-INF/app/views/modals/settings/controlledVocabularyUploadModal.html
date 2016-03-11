@@ -43,7 +43,7 @@
                 <input ng-model="uploadModalData.file.name" type="text" class="form-control" readonly>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group" ng-if="uploadWordMap.new.length > 0">
             <h4>New Vocabulary Words</h4>
             <div class="table-responsive">          
                 <table class="table">
@@ -62,7 +62,7 @@
                 </table>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group" ng-if="uploadWordMap.updating.length > 0">
             <h4>Updating Vocabulary Words</h4>
             <div class="table-responsive">          
                 <table class="table">
@@ -76,6 +76,25 @@
                     <tbody>
                         <tr ng-repeat="word in uploadWordMap.updating">
                             <td ng-repeat="value in filterWordArray(word)">{{value}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="form-group" ng-if="uploadWordMap.repeats.length > 0">
+            <h4>Duplicate Vocabulary Words</h4>
+            <div class="table-responsive">          
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Word</th>
+                            <th>Definition</th>
+                            <th>Identifier</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="word in uploadWordMap.repeats">
+                            <td ng-repeat="value in filterWord(word)">{{value}}</td>
                         </tr>
                     </tbody>
                 </table>
