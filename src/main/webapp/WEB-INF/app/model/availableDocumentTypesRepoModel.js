@@ -30,10 +30,6 @@ vireo.service("AvailableDocumentTypesRepo", function(WsApi, AbstractModel, Alert
 			controller: 'settings/document-types', 
 			method: 'all',
 		});
-          newAvailableDocumentTypesRepoPromise.then(function(res){
-            console.info('model promise');
-            console.info(res);
-          })
 
 		AvailableDocumentTypesRepo.promise = newAvailableDocumentTypesRepoPromise;
 
