@@ -39,9 +39,8 @@ vireo.controller("SettingsController", function ($controller, $scope, UserSettin
 		$scope.updateConfigurableSettingsPlainText = function(type,setting) {
 			ConfigurableSettings.update(type,setting,filterHtml($scope.settings.configurable[type][setting]));
 		};
-		
+
 		$scope.updateConfigurableSettings = function(type,setting) {
-			console.log(filterHtml($scope.settings.configurable[type][setting]))	
 			ConfigurableSettings.update(type,setting,$scope.settings.configurable[type][setting]);
 		};
 
