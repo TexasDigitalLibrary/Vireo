@@ -167,9 +167,6 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 	    };
 
 	    $scope.filterWordArray = function (words) {
-
-	    	var definition = 
-
 			return {
 				name: words[0].name,
 				definition: '<span>' + words[0].definition + '</span><span> -> </span><span>' + words[1].definition + '</span>',
