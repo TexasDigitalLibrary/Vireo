@@ -20,10 +20,10 @@
                 </span>
                 <input ng-model="uploadModalData.file.name" type="text" class="form-control" readonly>
             </div>
-            <span ng-if="!uploadModalData.cv.inProgress" class="help-block">
+            <span class="help-block">
                 Please select a file and click Upload to continue with import.
             </span>
-            <span ng-if="uploadModalData.cv.inProgress" class="help-block">
+            <span ng-if="uploadModalData.cv.inProgress" class="help-block pull-right">
                 This controlled vocabulary is current waiting confirmation of import.
             </span>
             <span ng-if="uploadModalData.cv.entityProperty" class="help-block pull-right">

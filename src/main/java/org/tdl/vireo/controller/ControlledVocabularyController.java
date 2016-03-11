@@ -146,7 +146,7 @@ public class ControlledVocabularyController {
         logger.info("Created controlled vocabulary " + newControlledVocabulary.getName());
         
         simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, getAll()));
-        
+        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
         return new ApiResponse(SUCCESS);
     }
     
@@ -349,7 +349,7 @@ public class ControlledVocabularyController {
                     VocabularyWord vocabularyWord = (VocabularyWord) word;
                     if(cols[0].equals(vocabularyWord.getName())) {
                         
-                        if(!cols[1].equals(vocabularyWord.getDefinition()) && !cols[2].equals(vocabularyWord.getIdentifier())) {
+                        if(!cols[1].equals(vocabularyWord.getDefinition()) || !cols[2].equals(vocabularyWord.getIdentifier())) {
                             updatingWords.add(new VocabularyWord[]{ vocabularyWord, currentVocabularyWord });
                         }
                         
