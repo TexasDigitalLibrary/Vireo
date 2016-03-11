@@ -98,7 +98,7 @@ public class DocumentTypesController {
         
         logger.info("Created document type with name " + newDocumentName + " and degree level " + newDocumentDegreeLevel.toString());
         
-        simpMessagingTemplate.convertAndSend("/channel/settings/document-type", new ApiResponse(SUCCESS, getAll()));
+        simpMessagingTemplate.convertAndSend("/channel/settings/document-types", new ApiResponse(SUCCESS, getAll()));
         
         return new ApiResponse(SUCCESS);
     }
@@ -159,7 +159,7 @@ public class DocumentTypesController {
         
         logger.info("Updated document type " + documentType.toString());
         
-        simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(SUCCESS, getAll()));
+        simpMessagingTemplate.convertAndSend("/channel/settings/document-types", new ApiResponse(SUCCESS, getAll()));
         
         return new ApiResponse(SUCCESS);
     }
@@ -188,7 +188,7 @@ public class DocumentTypesController {
         
         logger.info("Deleted document type with order " + index);
         
-        simpMessagingTemplate.convertAndSend("/channel/settings/document-type", new ApiResponse(SUCCESS, getAll()));
+        simpMessagingTemplate.convertAndSend("/channel/settings/document-types", new ApiResponse(SUCCESS, getAll()));
         
         return new ApiResponse(SUCCESS);
     }
@@ -209,7 +209,7 @@ public class DocumentTypesController {
     @Transactional
     public ApiResponse sortDocumentTypes(@ApiVariable String column) {
         documentTypeRepo.sort(column);
-        simpMessagingTemplate.convertAndSend("/channel/settings/document-type", new ApiResponse(SUCCESS, getAll()));        
+        simpMessagingTemplate.convertAndSend("/channel/settings/document-types", new ApiResponse(SUCCESS, getAll()));        
         return new ApiResponse(SUCCESS);
     }
 }
