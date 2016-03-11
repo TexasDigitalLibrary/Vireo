@@ -30,8 +30,8 @@ public class ControlledVocabulary extends BaseOrderedEntity {
     @ManyToOne(cascade = { DETACH, REFRESH }, optional = false)
     private Language language;
     
-    @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY)
-    private List<VocabularyWord> dictionary;
+    @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY)    
+    private List<VocabularyWord> dictionary = new ArrayList<VocabularyWord>();
     
     @Column(nullable = false)
     private Boolean isEntityProperty;
@@ -42,7 +42,6 @@ public class ControlledVocabulary extends BaseOrderedEntity {
     public ControlledVocabulary() {
         setIsEnum(false);
         setIsEntityProperty(false);
-        setDictionary(new ArrayList<VocabularyWord>());
     }
 
     /**
@@ -66,14 +65,11 @@ public class ControlledVocabulary extends BaseOrderedEntity {
      * @param order
      */
     public ControlledVocabulary(String name, String entityName, Language language, Integer order) {
-        this();
-        setName(name);
+        this(name, language, order);
         setEntityName(entityName);
-        setLanguage(language);
         setIsEntityProperty(true);
-        super.setOrder(order);
     }
-
+    
     /**
      * @return the name
      */

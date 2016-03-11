@@ -20,20 +20,20 @@ public class ControlledVocabularyCachingService {
     
     private Map<String, ControlledVocabularyCache> cvCacheMap = new HashMap<String, ControlledVocabularyCache>();
     
-    private String generateCacheKey(String requestEmail, Long controlledVocabularyId) {
-        return requestEmail + "-" + controlledVocabularyId;
-    }
-    
     public void addControlledVocabularyCache(ControlledVocabularyCache cvCache) {
-        cvCacheMap.put(generateCacheKey(cvCache.getRequestEmail(), cvCache.getControlledVocabularyId()), cvCache);
+        cvCacheMap.put(cvCache.getControlledVocabularyName(), cvCache);
     }
     
-    public void removeControlledVocabularyCache(String requestEmail, Long controlledVocabularyId) { 
-        cvCacheMap.remove(generateCacheKey(requestEmail, controlledVocabularyId));
+    public void removeControlledVocabularyCache(String controlledVocabularyName) { 
+        cvCacheMap.remove(controlledVocabularyName);
     }
     
-    public ControlledVocabularyCache getControlledVocabularyCache(String requestEmail, Long controlledVocabularyId) { 
-        return cvCacheMap.get(generateCacheKey(requestEmail, controlledVocabularyId));
+    public ControlledVocabularyCache getControlledVocabularyCache(String controlledVocabularyName) { 
+        return cvCacheMap.get(controlledVocabularyName);
+    }
+    
+    public boolean isControlledVocabularyBeingImported(String controlledVocabularyName) {
+        return cvCacheMap.get(controlledVocabularyName) != null;
     }
     
     @Scheduled(fixedDelay = 1800000)
@@ -43,7 +43,7 @@ public class ControlledVocabularyCachingService {
         cvCacheMap.values().parallelStream().forEach(cvCache -> {            
             Long expiration = cvCache.getTimestamp() + duration;
             if(expiration >= now) {
-                expired.add(generateCacheKey(cvCache.getRequestEmail(), cvCache.getControlledVocabularyId()));
+                expired.add(cvCache.getControlledVocabularyName());
             }
         });        
         expired.parallelStream().forEach(cvCacheKey -> {

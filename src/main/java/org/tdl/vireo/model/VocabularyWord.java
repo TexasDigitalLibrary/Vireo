@@ -10,6 +10,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "controlled_vocabulary_id" }) )
 public class VocabularyWord extends BaseEntity {
@@ -24,6 +31,9 @@ public class VocabularyWord extends BaseEntity {
     private String identifier;
     
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE })
+    @Fetch(FetchMode.SELECT)
+    @JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, scope=VocabularyWord.class, property="id")
+    @JsonIdentityReference(alwaysAsId=true)
     private ControlledVocabulary controlledVocabulary;
     
     public VocabularyWord() { }
@@ -40,6 +50,11 @@ public class VocabularyWord extends BaseEntity {
     public VocabularyWord(String name, String definition, String identifier) {
         this(name, definition);
         setIdentifier(identifier);
+    }
+    
+    public VocabularyWord(ControlledVocabulary controlledVocabulary, String name, String definition, String identifier) {
+        this(name, definition, identifier);
+        setControlledVocabulary(controlledVocabulary);
     }
 
     public String getName() {

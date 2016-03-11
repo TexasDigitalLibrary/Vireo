@@ -39,9 +39,7 @@ import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.aspect.annotation.Data;
 import edu.tamu.framework.aspect.annotation.InputStream;
-import edu.tamu.framework.aspect.annotation.Shib;
 import edu.tamu.framework.model.ApiResponse;
-import edu.tamu.framework.model.Credentials;
 
 @RestController
 @ApiMapping("/settings/controlled-vocabulary")
@@ -216,16 +214,14 @@ public class ControlledVocabularyController {
             index = Integer.parseInt(indexString);
         }
         catch(NumberFormatException nfe) {
-            logger.info("\n\nNOT A NUMBER " + indexString + "\n\n");
-            return new ApiResponse(ERROR, "Id is not a valid controlled vocabular order!");
+            return new ApiResponse(ERROR, "Id is not a valid controlled vocabulary order!");
         }
         
         if(index >= 0) {               
             controlledVocabularyRepo.remove(index);
         }
         else {
-            logger.info("\n\nINDEX" + index + "\n\n");
-            return new ApiResponse(ERROR, "Id is not a valid controlled vocabular order!");
+            return new ApiResponse(ERROR, "Id is not a valid controlled vocabulary order!");
         }
         
         logger.info("Deleted controlled vocabulary with order " + index);
@@ -286,23 +282,36 @@ public class ControlledVocabularyController {
         return new ApiResponse(SUCCESS, map);
     }
     
+    @ApiMapping(value = "/status/{name}", method = RequestMethod.POST)
+    @Auth(role = "ROLE_MANAGER")
+    public ApiResponse importControlledVocabularyStatus(@ApiVariable String name) {
+        return new ApiResponse(SUCCESS, controlledVocabularyCachingService.isControlledVocabularyBeingImported(name));
+    }
+    
+    @ApiMapping(value = "/cancel/{name}", method = RequestMethod.POST)
+    @Auth(role = "ROLE_MANAGER")
+    public ApiResponse cancelImportControlledVocabulary(@ApiVariable String name) {
+        controlledVocabularyCachingService.removeControlledVocabularyCache(name);
+        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
+        return new ApiResponse(SUCCESS);
+    }
+    
     @ApiMapping(value = "/compare/{name}", method = RequestMethod.POST)
     @Auth(role = "ROLE_MANAGER")
     @Transactional
-    public ApiResponse compareControlledVocabulary(@Shib Object shib, @ApiVariable String name, @InputStream Object inputStream) {
-        
-        Credentials credentials = (Credentials) shib;
+    public ApiResponse compareControlledVocabulary(@ApiVariable String name, @InputStream Object inputStream) {
         
         String[] rows;
         try {
             rows = inputStreamToRows(inputStream);
         } catch (IOException e) {
             return new ApiResponse(ERROR, "Invalid input.");
-        }        
+        }
+        
         List<VocabularyWord> newWords = new ArrayList<VocabularyWord>();
         List<VocabularyWord> repeatedWords = new ArrayList<VocabularyWord>();
         List<VocabularyWord[]> updatingWords = new ArrayList<VocabularyWord[]>();
-             
+        
         ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByName(name);
         List<Object> words = controlledVocabulary.getDictionary();
         
@@ -310,48 +319,47 @@ public class ControlledVocabularyController {
             String[] cols = new String[3];            
             String[] temp = row.split(",");            
             for(int i = 0; i < temp.length; i++) {
-                cols[i] = temp[i];
+                cols[i] = temp[i] != null ? temp[i] : "";
             }
+            
+            VocabularyWord currentVocabularyWord = new VocabularyWord(cols[0], cols[1], cols[2]);
             
             boolean isRepeat = false;
             for(VocabularyWord newWord : newWords) {
                 if(newWord.getName().equals(cols[0])) {
-                    VocabularyWord repeatedVocabularyWord = new VocabularyWord(cols[0]);                    
-                    repeatedVocabularyWord.setDefinition(cols[1] != null ? cols[1] : "");
-                    repeatedVocabularyWord.setIdentifier(cols[2] != null ? cols[2] : "");
-                    repeatedWords.add(repeatedVocabularyWord);
+                    repeatedWords.add(currentVocabularyWord);
                     isRepeat = true;
                     break;
                 }
             }
-            if(isRepeat) break;
             
-            for(VocabularyWord[] updatingWord : updatingWords) {
-                if(updatingWord[0].getName().equals(cols[0])) {
-                    VocabularyWord updatingVocabularyWord = new VocabularyWord(cols[0]);                    
-                    updatingVocabularyWord.setDefinition(cols[1] != null ? cols[1] : "");
-                    updatingVocabularyWord.setIdentifier(cols[2] != null ? cols[2] : "");
-                    repeatedWords.add(updatingVocabularyWord);
-                    isRepeat = true;
-                    break;
+            if(!isRepeat) {
+                for(VocabularyWord[] updatingWord : updatingWords) {
+                    if(updatingWord[0].getName().equals(cols[0])) {
+                        repeatedWords.add(currentVocabularyWord);
+                        isRepeat = true;
+                        break;
+                    }
                 }
             }
-            if(isRepeat) break;
             
-            boolean isNew = true;
-            for(Object word : words) {
-                VocabularyWord vocabularyWord = (VocabularyWord) word;
-                if(cols[0].equals(vocabularyWord.getName())) {                   
-                    VocabularyWord newVocabularyWord = new VocabularyWord(cols[0]);                    
-                    newVocabularyWord.setDefinition(cols[1] != null ? cols[1] : "");
-                    newVocabularyWord.setIdentifier(cols[2] != null ? cols[2] : "");
-                    updatingWords.add(new VocabularyWord[]{ vocabularyWord, newVocabularyWord});
-                    isNew = false;
-                    break;
+            if(!isRepeat) {
+                boolean isNew = true;
+                for(Object word : words) {
+                    VocabularyWord vocabularyWord = (VocabularyWord) word;
+                    if(cols[0].equals(vocabularyWord.getName())) {
+                        
+                        if(!cols[1].equals(vocabularyWord.getDefinition()) && !cols[2].equals(vocabularyWord.getIdentifier())) {
+                            updatingWords.add(new VocabularyWord[]{ vocabularyWord, currentVocabularyWord });
+                        }
+                        
+                        isNew = false;
+                        break;
+                    }
                 }
-            }
-            if(isNew) {
-                newWords.add(new VocabularyWord(cols[0], cols[1] != null ? cols[1] : "", cols[2] != null ? cols[2] : ""));
+                if(isNew) {
+                    newWords.add(currentVocabularyWord);
+                }
             }
         }
         Map<String, Object> wordsMap = new HashMap<String, Object>();
@@ -359,28 +367,27 @@ public class ControlledVocabularyController {
         wordsMap.put("repeats", repeatedWords);
         wordsMap.put("updating", updatingWords);
         
-        ControlledVocabularyCache cvCache = new ControlledVocabularyCache(new Date().getTime(), controlledVocabulary.getId(), credentials.getEmail());
+        ControlledVocabularyCache cvCache = new ControlledVocabularyCache(new Date().getTime(), controlledVocabulary.getName());
         cvCache.setNewVocabularyWords(newWords);
         cvCache.setDuplicateVocabularyWords(repeatedWords);
         cvCache.setUpdatingVocabularyWords(updatingWords);        
-        controlledVocabularyCachingService.addControlledVocabularyCache(cvCache);        
+        controlledVocabularyCachingService.addControlledVocabularyCache(cvCache);
         
+        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
         return new ApiResponse(SUCCESS, wordsMap);
     }
     
     @ApiMapping(value = "/import/{name}", method = RequestMethod.POST)
     @Auth(role = "ROLE_MANAGER")
     @Transactional
-    public ApiResponse importControlledVocabulary(@Shib Object shib, @ApiVariable String name) {        
-        
-        Credentials credentials = (Credentials) shib;
+    public ApiResponse importControlledVocabulary(@ApiVariable String name) {        
         
         ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByName(name);
         
-        ControlledVocabularyCache cvCache = controlledVocabularyCachingService.getControlledVocabularyCache(credentials.getEmail(), controlledVocabulary.getId());
+        ControlledVocabularyCache cvCache = controlledVocabularyCachingService.getControlledVocabularyCache(controlledVocabulary.getName());
         
         cvCache.getNewVocabularyWords().parallelStream().forEach(newVocabularyWord -> {
-            newVocabularyWord = vocabularyWordRepo.create(newVocabularyWord.getName(), newVocabularyWord.getDefinition(), newVocabularyWord.getIdentifier());
+            newVocabularyWord = vocabularyWordRepo.create(controlledVocabulary, newVocabularyWord.getName(), newVocabularyWord.getDefinition(), newVocabularyWord.getIdentifier());
             controlledVocabulary.addValue(newVocabularyWord);
         });
         
@@ -393,8 +400,9 @@ public class ControlledVocabularyController {
         
         controlledVocabularyRepo.save(controlledVocabulary);
         
-        controlledVocabularyCachingService.removeControlledVocabularyCache(credentials.getEmail(), controlledVocabulary.getId());
+        controlledVocabularyCachingService.removeControlledVocabularyCache(controlledVocabulary.getName());
                       
+        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
         return new ApiResponse(SUCCESS);
     }
     

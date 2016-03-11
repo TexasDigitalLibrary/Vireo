@@ -9,7 +9,7 @@
 	<form ng-if="uploadAction == 'confirm'">
     	<div class="form-group">
        	 	<label for="controlledVocabulary-cv">Upload to:</label>
-        	<select ng-model="uploadModalData.cv" class="form-control" id="controlledVocabulary-cv" name="controlledVocabulary-cv" ng-options="cv.name for cv in controlledVocabulary.list"></select>
+        	<select ng-model="uploadModalData.cv" class="form-control" id="controlledVocabulary-cv" name="controlledVocabulary-cv" ng-options="cv.name for cv in controlledVocabulary.list" ng-change="uploadStatus()" ng-init="uploadStatus()"></select>
     	</div>
     	<div class="form-group">
     		<div class="input-group">
@@ -20,11 +20,14 @@
                 </span>
                 <input ng-model="uploadModalData.file.name" type="text" class="form-control" readonly>
             </div>
-            <span class="help-block">
-                When uploading controlled vocabulary existing vocabulary words will be overwritten as well as their definitions and identifiers. Please export current controlled vocabulary to append addition vocabulary words.
+            <span ng-if="!uploadModalData.cv.inProgress" class="help-block">
+                Please select a file and click Upload to continue with import.
+            </span>
+            <span ng-if="uploadModalData.cv.inProgress" class="help-block">
+                This controlled vocabulary is current waiting confirmation of import.
             </span>
             <span ng-if="uploadModalData.cv.entityProperty" class="help-block pull-right">
-                Cannot upload to entity controlled vocabulary
+                Cannot upload to entity controlled vocabulary.
             </span>
     	</div>
 	</form>
@@ -75,7 +78,7 @@
                     </thead>
                     <tbody>
                         <tr ng-repeat="word in uploadWordMap.updating">
-                            <td ng-repeat="value in filterWordArray(word)">{{value}}</td>
+                            <td ng-repeat="value in filterWordArray(word)" ng-bind-html="value"></td>
                         </tr>
                     </tbody>
                 </table>
@@ -100,13 +103,17 @@
                 </table>
             </div>
         </div>
+        <div class="form-group" ng-if="uploadWordMap.new.length == 0 && uploadWordMap.updating.length == 0 && uploadWordMap.repeats.length == 0">
+            <h4>No changes.</h4>
+        </div>
     </form>
 </div>
 
 <div class="modal-footer">
 	<button type="button" class="btn btn-primary pull-left" ng-csv="exportControlledVocabulary()" csv-header='headers' filename='{{uploadModalData.cv.name}}.csv' ng-disabled="!uploadModalData.cv || uploadAction == 'process'" data-dismiss="modal">Export CSV</button>
 	<button type="button" class="btn btn-warning" ng-click="resetControlledVocabulary()" data-dismiss="modal">Cancel</button>
-	<button id="controlledVocabulary-upload" type="button" class="btn btn-primary" ng-disabled="!uploadModalData.file || uploadModalData.cv.entityProperty" ng-click="uploadControlledVocabulary()">
+    <button ng-if="uploadModalData.cv.inProgress" class="btn btn-danger" ng-click="uploadModalData.cv.inProgress = false">Override</button>
+	<button id="controlledVocabulary-upload" type="button" class="btn btn-primary" ng-disabled="!uploadModalData.file || uploadModalData.cv.entityProperty || uploadModalData.cv.inProgress" ng-click="uploadControlledVocabulary()">
         <span ng-if="uploadAction == 'confirm'">Upload</span>
         <span ng-if="uploadAction == 'process'">Confirm Upload</span>
     </button>

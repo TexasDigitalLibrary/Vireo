@@ -7,9 +7,7 @@ public class ControlledVocabularyCache {
     
     private Long timestamp;
     
-    private Long controlledVocabularyId;
-    
-    private String requestEmail;
+    private String controlledVocabularyName;
     
     private List<VocabularyWord> newVocabularyWords;
     
@@ -23,11 +21,10 @@ public class ControlledVocabularyCache {
         setDuplicateVocabularyWords(new ArrayList<VocabularyWord>());
     }
     
-    public ControlledVocabularyCache(Long timestamp, Long controlledVocabularyId, String requestEmail) {
+    public ControlledVocabularyCache(Long timestamp, String controlledVocabularyName) {
         this();
         setTimestamp(timestamp);
-        setControlledVocabularyId(controlledVocabularyId);
-        setRequestEmail(requestEmail);        
+        setControlledVocabularyName(controlledVocabularyName);
     }
     
     /**
@@ -47,29 +44,15 @@ public class ControlledVocabularyCache {
     /**
      * @return the controlledVocabularyId
      */
-    public Long getControlledVocabularyId() {
-        return controlledVocabularyId;
+    public String getControlledVocabularyName() {
+        return controlledVocabularyName;
     }
 
     /**
      * @param controlledVocabularyId the controlledVocabularyId to set
      */
-    public void setControlledVocabularyId(Long controlledVocabularyId) {
-        this.controlledVocabularyId = controlledVocabularyId;
-    }
-
-    /**
-     * @return the requestEmail
-     */
-    public String getRequestEmail() {
-        return requestEmail;
-    }
-
-    /**
-     * @param requestEmail the requestEmail to set
-     */
-    public void setRequestEmail(String requestEmail) {
-        this.requestEmail = requestEmail;
+    public void setControlledVocabularyName(String controlledVocabularyName) {
+        this.controlledVocabularyName = controlledVocabularyName;
     }
 
     /**

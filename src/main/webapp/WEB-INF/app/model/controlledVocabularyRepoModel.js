@@ -16,6 +16,8 @@ vireo.service("ControlledVocabularyRepo", function(AbstractModel, AlertService, 
 	ControlledVocabularyRepo.listener = null;
 
 	ControlledVocabularyRepo.promise = null;
+
+	ControlledVocabularyRepo.change = null;
 	
 	ControlledVocabularyRepo.set = function(data) {
 		self.unwrap(self, data);
@@ -28,7 +30,7 @@ vireo.service("ControlledVocabularyRepo", function(AbstractModel, AlertService, 
 		var newControlledVocabularyRepoPromise = WsApi.fetch({
 			endpoint: '/private/queue', 
 			controller: 'settings/controlled-vocabulary', 
-			method: 'all',
+			method: 'all'
 		});
 
 		ControlledVocabularyRepo.promise = newControlledVocabularyRepoPromise;
@@ -45,7 +47,13 @@ vireo.service("ControlledVocabularyRepo", function(AbstractModel, AlertService, 
 		ControlledVocabularyRepo.listener = WsApi.listen({
 			endpoint: '/channel', 
 			controller: 'settings/controlled-vocabulary', 
-			method: '',
+			method: ''
+		});
+
+		ControlledVocabularyRepo.change = WsApi.listen({
+			endpoint: '/channel', 
+			controller: 'settings/controlled-vocabulary', 
+			method: 'change'
 		});
 				
 		ControlledVocabularyRepo.set(ControlledVocabularyRepo.listener);
@@ -75,6 +83,22 @@ vireo.service("ControlledVocabularyRepo", function(AbstractModel, AlertService, 
 			'controller': 'settings/controlled-vocabulary', 
 			'method': 'compare/' + controlledVocabulary,
 			'file': file
+		});
+	};
+
+	ControlledVocabularyRepo.cancel = function(controlledVocabulary) {
+		return WsApi.fetch({
+			'endpoint': '/private/queue', 
+			'controller': 'settings/controlled-vocabulary', 
+			'method': 'cancel/' + controlledVocabulary
+		});
+	};
+
+	ControlledVocabularyRepo.status = function(controlledVocabulary) {
+		return WsApi.fetch({
+			'endpoint': '/private/queue', 
+			'controller': 'settings/controlled-vocabulary', 
+			'method': 'status/' + controlledVocabulary
 		});
 	};
 
@@ -126,6 +150,10 @@ vireo.service("ControlledVocabularyRepo", function(AbstractModel, AlertService, 
 
 	ControlledVocabularyRepo.listen = function() {
 		return ControlledVocabularyRepo.listener;
+	};
+
+	ControlledVocabularyRepo.listenForChange = function() {
+		return ControlledVocabularyRepo.change;
 	};
 	
 	return ControlledVocabularyRepo;
