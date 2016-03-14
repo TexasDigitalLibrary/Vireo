@@ -41,6 +41,11 @@ vireo.controller("AvailableDocumentTypesController", function ($controller, $sco
             $scope.clearModalData();
         }
 
+        $scope.removeDocumentType = function(index){
+            console.info('idx to remove: ' + index);
+            AvailableDocumentTypesRepo.remove(index);
+        }
+
         $scope.reorderDocumentTypes = function(src, dest) {
             AvailableDocumentTypesRepo.reorder(src, dest);
         };
