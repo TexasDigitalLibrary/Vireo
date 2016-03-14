@@ -20,6 +20,6 @@
 </div>
 
 <div class="modal-footer">
-	<button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
-	<button id="graduationMonth-save" type="button" class="btn btn-primary" data-dismiss="modal" ng-click="createNewDocumentType(modalData)">Create</button>
+	<button type="button" class="btn btn-warning" data-dismiss="modal" ng-click="clearModalData()">Cancel</button>
+	<button id="graduationMonth-save" type="button" class="btn btn-primary" data-dismiss="modal" ng-click="createNewDocumentType(modalData); clearModalData()">Create</button>
 </div>
