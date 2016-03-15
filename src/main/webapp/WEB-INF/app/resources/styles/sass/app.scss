@@ -603,6 +603,44 @@ h4 {
   font-size: 70px;
 }
 
+/* TODO: combine with above to remove redundency */
+
+.upload-drop-zone {
+  text-align: center;
+  background: #efefef;
+  border: dashed thick #fefefe;
+  padding-top: 35px;
+  width: 250px;
+  height: 150px;
+  color: #a6a6a6;
+  border-radius: 5px;
+  transition: all 0.35s ease-in;
+}
+
+.upload-drop-zone.dragging {
+  transition: all 0.35s ease-in;
+  border-color: #a6a6a6;
+}
+
+.upload-drop-zone.drag-reject {
+  transition: all 0.35s ease-in;
+  border-color: #0000ff;
+}
+
+.upload-drop-zone .glyphicon-upload {
+  transition: all 0.35s ease-in;
+  color: #fefefe;
+  text-shadow: 1px 0 5px #a6a6a6;
+  font-size: 70px;
+}
+
+.upload-drop-zone.dragging .glyphicon-upload {
+  transition: all 0.35s ease-in;
+  color: #a6a6a6;
+  text-shadow: 1px 0 5px #fefefe;
+  font-size: 70px;
+}
+
 .degreeCodes label {
   margin-top: 3px;
   font-weight: lighter;
@@ -766,6 +804,10 @@ footer a, footer li, footer p {
   margin-top: 25px;
 }
 
+.lookandfeel .color-input {
+  height: 37px;
+}
+
 .lookandfeel .color-selector {
   max-width: 200px;
 }
@@ -775,11 +817,17 @@ footer a, footer li, footer p {
   max-width: 23px;
 }
 
-.lookandfeel .logos {
-  margin-top:  25px;
-  background: #efefef;
-  border-radius: 5px;
-  padding:5px;
+.lookandfeel .logo-wraper {
+    margin-left: 25px;
+}
+
+.lookandfeel .logo-preview {
+    text-align: center;
+    min-width: 200px;
+    max-width: 200px;
+    margin-bottom: 25px;
+    border: solid thin #efefef;
+    padding: 10px;
 }
 
 .lookandfeel .logos p {

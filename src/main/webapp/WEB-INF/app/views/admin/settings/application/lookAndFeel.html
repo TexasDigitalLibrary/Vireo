@@ -1,4 +1,4 @@
-<div class="lookandfeel">
+<div class="lookandfeel" ng-controller="LookAndFeelController">
 	<form name="look-and-feel">
 		<div class="row">
 			<div class="col-sm-6 col-lg-9">
@@ -23,7 +23,7 @@
 
 						<div class="input-group color-selector">
 							<span class="input-group-addon">#</span>
-						  	<input class="form-control" contenteditable ng-change="delayedUpdateConfigurableSettings('lookAndFeel','background_main_color')" ng-model="settings.configurable.lookAndFeel.background_main_color" dehashcolor>
+						  	<input class="form-control color-input" ng-change="delayedUpdateConfigurableSettings('lookAndFeel','background_main_color')" ng-model="settings.configurable.lookAndFeel.background_main_color" dehashcolor>
 						  	
 							<span class="input-group-addon">
 								<label class="color-selector-swatch" ng-style="{background: settings.configurable.lookAndFeel.background_main_color}">
@@ -51,7 +51,7 @@
 
 						<div class="input-group color-selector">
 							<span class="input-group-addon">#</span>
-						  	<input class="form-control" contenteditable ng-change="delayedUpdateConfigurableSettings('lookAndFeel','background_highlight_color')" ng-model="settings.configurable.lookAndFeel.background_highlight_color" dehashcolor>
+						  	<input class="form-control color-input" ng-change="delayedUpdateConfigurableSettings('lookAndFeel','background_highlight_color')" ng-model="settings.configurable.lookAndFeel.background_highlight_color" dehashcolor>
 						  	
 							<span class="input-group-addon">
 								<label class="color-selector-swatch" ng-style="{background: settings.configurable.lookAndFeel.background_highlight_color}">
@@ -92,7 +92,7 @@
 
 						<div class="input-group color-selector">
 							<span class="input-group-addon">#</span>
-						  	<input class="form-control" contenteditable ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_main_color_on')" ng-model="settings.configurable.lookAndFeel.button_main_color_on" dehashcolor>
+						  	<input class="form-control color-input" ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_main_color_on')" ng-model="settings.configurable.lookAndFeel.button_main_color_on" dehashcolor>
 						  	
 							<span class="input-group-addon">
 								<label class="color-selector-swatch" ng-style="{background: settings.configurable.lookAndFeel.button_main_color_on}">
@@ -120,7 +120,7 @@
 
 						<div class="input-group color-selector">
 							<span class="input-group-addon">#</span>
-						  	<input class="form-control" contenteditable ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_highlight_color_on')" ng-model="settings.configurable.lookAndFeel.button_highlight_color_on" dehashcolor>
+						  	<input class="form-control color-input" ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_highlight_color_on')" ng-model="settings.configurable.lookAndFeel.button_highlight_color_on" dehashcolor>
 						  	
 							<span class="input-group-addon">
 								<label class="color-selector-swatch" ng-style="{background: settings.configurable.lookAndFeel.button_highlight_color_on}">
@@ -161,7 +161,7 @@
 
 						<div class="input-group color-selector">
 							<span class="input-group-addon">#</span>
-						  	<input class="form-control" contenteditable ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_main_color_off')" ng-model="settings.configurable.lookAndFeel.button_main_color_off" dehashcolor>
+						  	<input class="form-control color-input" ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_main_color_off')" ng-model="settings.configurable.lookAndFeel.button_main_color_off" dehashcolor>
 						  	
 							<span class="input-group-addon">
 								<label class="color-selector-swatch" ng-style="{background: settings.configurable.lookAndFeel.button_main_color_off}">
@@ -189,7 +189,7 @@
 
 						<div class="input-group color-selector">
 							<span class="input-group-addon">#</span>
-						  	<input class="form-control" contenteditable ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_highlight_color_off')" ng-model="settings.configurable.lookAndFeel.button_highlight_color_off" dehashcolor>
+						  	<input class="form-control color-input" ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_highlight_color_off')" ng-model="settings.configurable.lookAndFeel.button_highlight_color_off" dehashcolor>
 						  	
 							<span class="input-group-addon">
 								<label class="color-selector-swatch" ng-style="{background: settings.configurable.lookAndFeel.button_highlight_color_off}">
@@ -216,7 +216,7 @@
 		</div>
 
 		<!-- LOGOS -->
-		<div class="row logos">			
+		<div class="row">			
 				
 			<h4>Logos
 				<div tooltip="Change the logos located on the student side in the top left and top right corners. The recommended size is 50 x 150 pixels.">
@@ -225,39 +225,42 @@
 			</h4>
 
 			<div class="row">
-				<div class="col-sm-6">
-					
+				<div class="col-sm-6">		
 					<div class="row">
-						<div class="col-sm-6">
-							<p>Left Logo </p>
-							<input type="file" name="leftLogo" class="form-control">
+						<div class="col-xs-12 col-lg-6"> 
+							<div class="logo-wraper">
+								<p>Left Logo </p>
+								<img ng-src="{{logoSml}}" class="logo-preview">
+							</div>
 						</div>
-						<div class="col-sm-6">
-							<img ng-src="resources/images/logo-sm.png">
+						<div class="col-xs-12 col-lg-6"> 
+							<dropzone id="leftLogoDrop"
+									  text="Set Left Logo by dropping image into drop zone",
+									  patterns=".jpeg"
+									  drop-method="dropMethod(file)">
+							</dropzone>
 						</div>
 					</div>
-
-					<div class="row">
-						<div class="col-sm-6">
-							<p>Right Logo </p>
-							<input type="file" name="leftLogo" class="form-control">
-						</div>
-						<div class="col-sm-6">
-							<img ng-src="resources/images/vireo-right.gif">
-						</div>
-					</div>
-
-					<div class="row">
-						<div class="col-sm-6">
-						<button type="submit" class="btn btn-default" name="submit_upload">Upload</button>
-						</div>
-						<div class="col-sm-6"></div>
-					</div>
-
-
 				</div>
 
+				<hr class="hidden-sm hidden-md hidden-lg"> 
+
 				<div class="col-sm-6">
+					<div class="row">
+						<div class="col-xs-12 col-lg-6">
+							<div class="logo-wraper">
+								<p>Right Logo </p>
+								<img ng-src="{{logoRight}}" class="logo-preview">
+							</div>
+						</div> 
+						<div class="col-xs-12 col-md-6">
+							<dropzone id="rightLogoDrop"
+									  text="Set Right Logo by dropping image into drop zone",
+									  patterns=".jpg,.jpeg,.gif,.GIF,.JPEG,.png"
+									  drop-method="dropMethod(file)">
+							</dropzone>
+						</div> 
+					</div>
 				</div>
 			</div>				
 
