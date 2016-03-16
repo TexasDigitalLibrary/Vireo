@@ -1,4 +1,4 @@
-<div class="lookandfeel" ng-controller="LookAndFeelController">
+<div class="look-and-feel" ng-controller="LookAndFeelController">
 	<form name="look-and-feel">
 		<div class="row">
 			<div class="col-sm-6 col-lg-9">
@@ -230,14 +230,14 @@
 						<div class="col-xs-12 col-lg-6"> 
 							<div class="logo-wraper">
 								<p>Left Logo </p>
-								<img ng-src="{{logoSml}}" class="logo-preview">
+								<img ng-src="{{logoLeft}}" class="logo-preview">
 							</div>
 						</div>
 						<div class="col-xs-12 col-lg-6"> 
 							<dropzone id="leftLogoDrop"
-									  text="Set Left Logo by dropping image into drop zone",
-									  patterns=".jpeg"
-									  drop-method="dropMethod(file)">
+									  text="Drop image on the drop zone to set Left Logo",
+									  patterns=".jpg,.jpeg,.gif,.GIF,.JPEG,.png"
+									  drop-method="previewLeftLogoUpload(file)">
 							</dropzone>
 						</div>
 					</div>
@@ -255,9 +255,9 @@
 						</div> 
 						<div class="col-xs-12 col-md-6">
 							<dropzone id="rightLogoDrop"
-									  text="Set Right Logo by dropping image into drop zone",
+									  text="Drop image on the drop zone to set Right Logo",
 									  patterns=".jpg,.jpeg,.gif,.GIF,.JPEG,.png"
-									  drop-method="dropMethod(file)">
+									  drop-method="previewRightLogoUpload(file)">
 							</dropzone>
 						</div> 
 					</div>
@@ -266,6 +266,13 @@
 
 		
 		</div>
+
+		<vireomodal modal-id="newLogoConfirmUploadModal" 
+			   		modal-view="views/modals/settings/newLogoConfirmUploadModal.html" 
+		   			modal-header-class="modal-header-primary"
+		   			modal-controller="LookAndFeelController"
+			   		modal-data="modalData">
+		</vireomodal>
 		
 		<!-- CUSTOM CSS -->
 		<lockingtextarea

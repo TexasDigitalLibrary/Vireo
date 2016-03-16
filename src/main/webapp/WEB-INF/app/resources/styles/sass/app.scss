@@ -789,52 +789,52 @@ footer a, footer li, footer p {
 * LOOK AND FEEL ACCORDION *
 ***************************/
 
-.lookandfeel .color-reset {
+.look-and-feel .color-reset {
   text-indent: 0em;
   font-size: 0.85em;
   cursor: pointer;
 }
 
-.lookandfeel input[type=color] {
+.look-and-feel input[type=color] {
   visibility:hidden;
 }
 
-.lookandfeel lockingtextarea {
+.look-and-feel lockingtextarea {
   display: block;
   margin-top: 25px;
 }
 
-.lookandfeel .color-input {
+.look-and-feel .color-input {
   height: 37px;
 }
 
-.lookandfeel .color-selector {
+.look-and-feel .color-selector {
   max-width: 200px;
 }
 
-.lookandfeel label.color-selector-swatch {
+.look-and-feel label.color-selector-swatch {
   display: inherit;
   max-width: 23px;
 }
 
-.lookandfeel .logo-wraper {
+.look-and-feel .logo-wraper {
     margin-left: 25px;
 }
 
-.lookandfeel .logo-preview {
+.look-and-feel .logo-preview {
     text-align: center;
-    min-width: 200px;
     max-width: 200px;
+    max-height: 150px;
     margin-bottom: 25px;
     border: solid thin #efefef;
     padding: 10px;
 }
 
-.lookandfeel .logos p {
+.look-and-feel .logos p {
   margin: 0px 0 3px 4px;
 }
 
-.lookandfeel .logos img {
+.look-and-feel .logos img {
   border: 1px solid black;
   background: #FFF;
   margin:15px 0;

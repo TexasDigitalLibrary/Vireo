@@ -178,6 +178,8 @@
 	<script src="bower_components/tinymce-dist/tinymce.min.js"></script>
 	<script src="bower_components/angular-ui-tinymce/dist/tinymce.min.js"></script>
 	<script src="bower_components/ng-sortable/dist/ng-sortable.js"></script>
+    <script src="bower_components/ng-file-upload/ng-file-upload-shim.min.js"></script>
+    <script src="bower_components/ng-file-upload/ng-file-upload.min.js"></script>
 	
 	<!--  Core libraries -->
 	
