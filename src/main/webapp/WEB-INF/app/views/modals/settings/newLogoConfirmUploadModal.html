@@ -1,0 +1,15 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		<span class="modal-close" aria-hidden="true">&times;</span>
+	</button>
+	<h3 class="modal-title">Confirm New {{modalData.newLogo.gloss}}</h3>
+</div>
+
+<div class="modal-body">
+	<img ng-src="{{modalData.newLogo.file}}">
+</div>
+
+<div class="modal-footer">
+	<button type="button" class="btn btn-warning" ng-click="cancelLogoUpload()" data-dismiss="modal">Cancel</button>
+	<button id="graduationMonth-save" type="button" class="btn btn-primary" data-dismiss="modal" ng-click="confirmLogoUpload()">Confirm</button>
+</div>
