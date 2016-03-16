@@ -1,15 +1,21 @@
 vireo.controller("LookAndFeelController", function($scope, $controller, $q, RestApi) {
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
-	$scope.logoLeft = "resources/images/left-logo.png";
-	$scope.logoRight = "resources/images/right-logo.gif";
-	$scope.uploadState = "LOADED";
-	
 	$scope.modalData = {
 		newLogo: {}
 	};
 
+	$scope.logoLeftPath = "resources/images/left-logo.png";
+	$scope.logoRightPath = "resources/images/right-logo.gif";
+	$scope.logoLoading = "resources/images/ajax-loader.gif"
+	
+	$scope.modalData.logoLeft = $scope.logoLeftPath; 
+	$scope.modalData.logoRight = $scope.logoRightPath;
+	
+	
+
 	$scope.previewLeftLogoUpload = function(file) {
+		$scope.modalData.logoLeft = $scope.logoLoading;
 		previewLogo(file).then(function(result) {
 			$scope.modalData.newLogo = {
 				file: result,
@@ -21,6 +27,7 @@ vireo.controller("LookAndFeelController", function($scope, $controller, $q, Rest
 	}
 
 	$scope.previewRightLogoUpload = function(file) {
+		$scope.modalData.logoRight = $scope.logoLoading;
 		previewLogo(file).then(function(result) {
 			$scope.modalData.newLogo = {
 				file: result,
@@ -33,28 +40,37 @@ vireo.controller("LookAndFeelController", function($scope, $controller, $q, Rest
 
 	$scope.confirmLogoUpload = function() {
 
-		$scope.uploadState = "LOADING"
 
 		var uploadPromise = RestApi.post({
 			'endpoint': '', 
 			'controller': 'settings/look-and-feel', 
-			'method': 'logo/upload/',
-			'data': {"path": $scope.modalData.newLogo.path},
-			'file': $scope.modalData.newLogo.file
+			'method': 'logo/upload'
+			// ,
+			// 'data': {"path": $scope.modalData.newLogo.path},
+			// 'file': $scope.modalData.newLogo.file
 		});
 
-		uploadPromise.then(function(result) {
-			$scope.logoLeft = $scope.logoLeft;
-			$scope.logoRight = $scope.logoRight;
-			$scope.uploadState = "LOADED";
-			$scope.modalData.newLogo = {};
-		});
+		uploadPromise.then(
+			function(result) {
+				resetLogos();
+			}, 
+			function(result) {
+				resetLogos();
+			}
+		);
 
 		return uploadPromise;
 
 	}
 
 	$scope.cancelLogoUpload = function() {
+		resetLogos();
+		angular.element('#newLogoConfirmUploadModal').modal('hide');
+	}
+
+	var resetLogos = function() {
+		$scope.modalData.logoLeft = $scope.logoLeftPath; 
+		$scope.modalData.logoRight = $scope.logoRightPath;
 		$scope.modalData.newLogo = {};
 	}
 
