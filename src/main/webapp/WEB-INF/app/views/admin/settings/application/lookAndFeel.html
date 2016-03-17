@@ -225,52 +225,48 @@
 			</h4>
 
 			<div class="row">
-				<div class="col-sm-6">		
-					<div class="row">
-						<div class="col-xs-12 col-lg-6"> 
-							<div class="logo-wraper">
-								<p>Left Logo </p>
-								<img ng-src="{{modalData.logoLeft}}" class="logo-preview">
-							</div>
-						</div>
-						<div class="col-xs-12 col-lg-6"> 
-							<dropzone id="leftLogoDrop"
-									  text="Drop image on the drop zone to set Left Logo",
-									  patterns=".jpg,.jpeg,.gif,.GIF,.JPEG,.png"
-									  drop-method="previewLeftLogoUpload(file)">
-							</dropzone>
-						</div>
+
+				<div class="col-sm-4">
+					<div class="logo-wraper">
+						<p>
+							Left Logo 
+							<span 	class="glyphicon glyphicon-refresh color-reset" 
+									ng-click="resetLogo('left_logo')">
+							</span>
+						</p>
+
+						<img ng-src="{{modalData.logoLeft}}" class="logo-preview">
+					</div>
+				</div>
+				
+				<div class="col-sm-4">
+					<div class="logo-wraper">
+						<p>
+							Right Logo 
+							<span 	class="glyphicon glyphicon-refresh color-reset" 
+									ng-click="resetLogo('right_logo')">
+							</span>
+						</p>
+						<img ng-src="{{modalData.logoRight}}" class="logo-preview">
 					</div>
 				</div>
 
-				<hr class="hidden-sm hidden-md hidden-lg"> 
 
-				<div class="col-sm-6">
-					<div class="row">
-						<div class="col-xs-12 col-lg-6">
-							<div class="logo-wraper">
-								<p>Right Logo </p>
-								<img ng-src="{{modalData.logoRight}}" class="logo-preview">
-							</div>
-						</div> 
-						<div class="col-xs-12 col-md-6">
-							<dropzone id="rightLogoDrop"
-									  text="Drop image on the drop zone to set Right Logo",
-									  patterns=".jpg,.jpeg,.gif,.GIF,.JPEG,.png"
-									  drop-method="previewRightLogoUpload(file)">
-							</dropzone>
-						</div> 
-					</div>
+				<div class="col-sm-4">
+					<dropzone id="rightLogoDrop"
+							  text="Drop image on the drop zone to set Right Logo",
+							  patterns=".jpg,.jpeg,.gif,.GIF,.JPEG,.png"
+							  drop-method="previewLogo(file)">
+					</dropzone>
 				</div>
+
 			</div>				
 
-		
 		</div>
 
 		<vireomodal modal-id="newLogoConfirmUploadModal" 
 			   		modal-view="views/modals/settings/newLogoConfirmUploadModal.html" 
 		   			modal-header-class="modal-header-primary"
-		   			modal-controller="LookAndFeelController"
 			   		modal-data="modalData">
 		</vireomodal>
 		

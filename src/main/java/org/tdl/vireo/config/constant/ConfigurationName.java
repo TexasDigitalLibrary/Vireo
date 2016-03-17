@@ -60,6 +60,12 @@ public class ConfigurationName {
 	public final static String BUTTON_HIGHLIGHT_COLOR_OFF = "button_highlight_color_off";
 	
 	/** Custom CSS */
+    public final static String LEFT_LOGO = "left_logo";
+    
+    /** Custom CSS */
+    public final static String RIGTH_LOGO = "right_logo";
+	
+	/** Custom CSS */
 	public final static String CUSTOM_CSS = "custom_css";
 	
 	/** Instructions to show on the front page of Vireo. */
@@ -95,7 +101,7 @@ public class ConfigurationName {
 	
 	// application.conf configuration options from Vireo 3 (Play Framework)
 	public final static String APPLICATION_BASE_URL = "application.baseUrl";
-	public final static String APPLICATION_ATTACHMENTS_PATH = "attachments.path";
+	public final static String APPLICATION_ATTACHMENTS_PATH = "attachments_path";
 	public final static String APPLICATION_INDEX_PATH = "index.path";
 	public final static String APPLICATION_DEPOSITS_PATH = "deposits.path";
 	public final static String APPLICATION_MAIL_HOST = "mail.host";
