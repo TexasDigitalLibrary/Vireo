@@ -309,14 +309,11 @@ public class ControlledVocabularyController {
     @Auth(role = "ROLE_MANAGER")
     @Transactional
     public ApiResponse exportControlledVocabulary(@ApiVariable String name) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        ControlledVocabulary cv = controlledVocabularyRepo.findByName(name);
+        Map<String, Object> map = new HashMap<String, Object>();        
+        ControlledVocabulary cv = controlledVocabularyRepo.findByName(name);        
         map.put("headers", Arrays.asList(new String[] { "name", "definition", "identifier" }));
-
         List<List<Object>> rows = new ArrayList<List<Object>>();
-
         cv.getDictionary().forEach(vocabularyWord -> {
-
             List<Object> row = new ArrayList<Object>();
             if (vocabularyWord.getClass().equals(VocabularyWord.class)) {
                 VocabularyWord actualVocabularyWord = (VocabularyWord) vocabularyWord;
@@ -326,12 +323,9 @@ public class ControlledVocabularyController {
             } else {
                 row.add(vocabularyWord);
             }
-
             rows.add(row);
         });
-
         map.put("rows", rows);
-
         return new ApiResponse(SUCCESS, map);
     }
 

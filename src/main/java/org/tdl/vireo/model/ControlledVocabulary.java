@@ -3,7 +3,7 @@ package org.tdl.vireo.model;
 import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
-import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.FetchType.EAGER;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ public class ControlledVocabulary extends BaseOrderedEntity {
     @ManyToOne(cascade = { DETACH, REFRESH }, optional = false)
     private Language language;
     
-    @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY)    
+    @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER)    
     private List<VocabularyWord> dictionary = new ArrayList<VocabularyWord>();
     
     @JsonProperty("entityProperty")

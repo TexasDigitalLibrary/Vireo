@@ -26,9 +26,21 @@ public abstract class MockData {
 	protected final static String TEST_LANGUAGE_NAME2 = "Spanish";
 	protected final static String TEST_LANGUAGE_NAME3 = "French";
 	
-	protected final static String TEST_CONTROLLED_VOCABULARY_NAME1 = "CVTest1";
-    protected final static String TEST_CONTROLLED_VOCABULARY_NAME2 = "CVTest2";
-    protected final static String TEST_CONTROLLED_VOCABULARY_NAME3 = "CVTest3";
+	protected final static String TEST_CONTROLLED_VOCABULARY_NAME1 = "CCVTest1";
+    protected final static String TEST_CONTROLLED_VOCABULARY_NAME2 = "BCVTest2";
+    protected final static String TEST_CONTROLLED_VOCABULARY_NAME3 = "ACVTest3";
+    
+    protected final static String TEST_VOCABULARY_WORD_NAME1 = "Hello";
+    protected final static String TEST_VOCABULARY_WORD_NAME2 = "World";
+    protected final static String TEST_VOCABULARY_WORD_NAME3 = "TAMU";
+    
+    protected final static String TEST_VOCABULARY_WORD_DEFINITION1 = "A greeting.";
+    protected final static String TEST_VOCABULARY_WORD_DEFINITION2 = "The earth.";
+    protected final static String TEST_VOCABULARY_WORD_DEFINITION3 = "Awesome!";
+    
+    protected final static String TEST_VOCABULARY_WORD_IDENTIFIER1 = "http://google.com/Hello";
+    protected final static String TEST_VOCABULARY_WORD_IDENTIFIER2 = "http://nasa.gov";
+    protected final static String TEST_VOCABULARY_WORD_IDENTIFIER3 = "http://library.tamu.edu";
     
 	protected User TEST_USER = new User(TEST_USER_EMAIL, TEST_USER_FIRST_NAME, TEST_USER_LAST_NAME, Role.STUDENT);    
    

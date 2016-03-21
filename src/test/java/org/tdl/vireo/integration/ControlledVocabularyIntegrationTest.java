@@ -11,9 +11,11 @@ import java.util.Map;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.mock.interceptor.MockChannelInterceptor;
 import org.tdl.vireo.model.ControlledVocabulary;
+import org.tdl.vireo.model.VocabularyWord;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.LanguageRepo;
 import org.tdl.vireo.model.repo.VocabularyWordRepo;
@@ -51,6 +53,27 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
         brokerChannel.addInterceptor(brokerChannelInterceptor);
         
         StompConnect();
+    }
+   
+    public void addVocabularyWords() {
+        ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME1);
+        
+        VocabularyWord word1 = vocabularyWordRepo.create(TEST_VOCABULARY_WORD_NAME1, TEST_VOCABULARY_WORD_DEFINITION1, TEST_VOCABULARY_WORD_DEFINITION1);
+        VocabularyWord word2 = vocabularyWordRepo.create(TEST_VOCABULARY_WORD_NAME2, TEST_VOCABULARY_WORD_DEFINITION2, TEST_VOCABULARY_WORD_DEFINITION2);
+        VocabularyWord word3 = vocabularyWordRepo.create(TEST_VOCABULARY_WORD_NAME3, TEST_VOCABULARY_WORD_DEFINITION3, TEST_VOCABULARY_WORD_DEFINITION3);
+        
+        word1.setControlledVocabulary(controlledVocabulary);
+        vocabularyWordRepo.save(word1);
+        word2.setControlledVocabulary(controlledVocabulary);
+        vocabularyWordRepo.save(word2);
+        word3.setControlledVocabulary(controlledVocabulary);
+        vocabularyWordRepo.save(word3);
+        
+        controlledVocabulary.addValue(word1);
+        controlledVocabulary.addValue(word2);
+        controlledVocabulary.addValue(word3);
+        
+        controlledVocabularyRepo.save(controlledVocabulary);
     }
 
     @Test
@@ -172,20 +195,64 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
 
     @Test
     @Order(value = 6)
-    public void testReorderControlledVocabulary() {
+    public void testReorderControlledVocabulary() throws InterruptedException, JsonParseException, JsonMappingException, IOException {
 
+        ControlledVocabulary controlledVocabulary1 = controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME1);
+        ControlledVocabulary controlledVocabulary2 = controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME2);
+        
+        Integer order1 = controlledVocabulary1.getOrder();
+        Integer order2 = controlledVocabulary2.getOrder();
+        
+        String responseJson = StompRequest("/settings/controlled-vocabulary/reorder/" + order1 + "/" + order2, null);
+        
+        Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
+
+        @SuppressWarnings("unchecked")
+        Map<String, String> meta = (Map<String, String>) responseObject.get("meta");
+        
+        assertEquals("SUCCESS", meta.get("type"));
+        
+        assertEquals(order1, controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME2).getOrder());
+        assertEquals(order2, controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME1).getOrder());
     }
 
     @Test
     @Order(value = 7)
-    public void testSortControlledVocabulary() {
+    public void testSortControlledVocabulary() throws InterruptedException, JsonParseException, JsonMappingException, IOException {
+        String responseJson = StompRequest("/settings/controlled-vocabulary/sort/name", null);
+        
+        Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
 
+        @SuppressWarnings("unchecked")
+        Map<String, String> meta = (Map<String, String>) responseObject.get("meta");
+        
+        assertEquals("SUCCESS", meta.get("type"));
+        
+        assertEquals(Integer.valueOf(1), controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME3).getOrder());
+        assertEquals(Integer.valueOf(2), controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME2).getOrder());
+        assertEquals(Integer.valueOf(3), controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME1).getOrder());
     }
 
     @Test
     @Order(value = 8)
-    public void testExportControlledVocabulary() {
+    public void testExportControlledVocabulary() throws InterruptedException, JsonParseException, JsonMappingException, IOException {
+        
+        addVocabularyWords();
+        
+        String responseJson = StompRequest("/settings/controlled-vocabulary/export/" + TEST_CONTROLLED_VOCABULARY_NAME1, null);
+        
+        Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
 
+        @SuppressWarnings("unchecked")
+        Map<String, String> meta = (Map<String, String>) responseObject.get("meta");
+        
+        assertEquals("SUCCESS", meta.get("type"));        
+        
+        @SuppressWarnings("unchecked")
+        Map<String, Object> payload = (Map<String, Object>) responseObject.get("payload");
+        
+        System.out.println(payload);
+        //TODO: compare against expected values
     }
 
     @Test
@@ -219,8 +286,16 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
     }
 
     @Override
-    public void cleanup() {
-        controlledVocabularyRepo.deleteAll();
+    public void cleanup() {        
+        vocabularyWordRepo.findAll().forEach(word -> {
+            ControlledVocabulary cv = word.getControlledVocabulary();
+            cv.removeValue(word);
+            controlledVocabularyRepo.save(cv);
+            word.setControlledVocabulary(null);
+            vocabularyWordRepo.save(word);
+        });        
+        vocabularyWordRepo.deleteAll();
+        controlledVocabularyRepo.deleteAll();        
         languageRepo.deleteAll();       
     }
 
