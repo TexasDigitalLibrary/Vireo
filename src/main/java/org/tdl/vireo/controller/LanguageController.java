@@ -16,6 +16,10 @@ import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.model.ApiResponse;
 
+/**
+ * Controller in which to manage langauges.
+ * 
+ */
 @Controller
 @ApiMapping("/settings/language")
 public class LanguageController {
@@ -23,12 +27,20 @@ public class LanguageController {
     @Autowired
     private LanguageRepo languageRepo;
     
+    /**
+     * 
+     * @return
+     */
     private Map<String, List<Language>> getAll() {
         Map<String, List<Language>> map = new HashMap<String, List<Language>>();
         map.put("list", languageRepo.findAll());
         return map;
     }
     
+    /**
+     * 
+     * @return
+     */
     @ApiMapping("/all")
     @Auth(role = "ROLE_MANAGER")
     @Transactional

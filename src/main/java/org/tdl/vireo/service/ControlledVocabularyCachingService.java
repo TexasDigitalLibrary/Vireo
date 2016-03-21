@@ -11,31 +11,55 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.tdl.vireo.model.ControlledVocabularyCache;
 
+/**
+ * Service to cache and synchronize cache of controlled vocabulary.
+ * 
+ */
 @Service
 public class ControlledVocabularyCachingService {
     
     @Value("${app.cvcache.duration}")
     private Long duration;
-
     
     private Map<String, ControlledVocabularyCache> cvCacheMap = new HashMap<String, ControlledVocabularyCache>();
-    
+
+    /**
+     * 
+     * @param cvCache
+     */
     public void addControlledVocabularyCache(ControlledVocabularyCache cvCache) {
         cvCacheMap.put(cvCache.getControlledVocabularyName(), cvCache);
     }
     
+    /**
+     * 
+     * @param controlledVocabularyName
+     */
     public void removeControlledVocabularyCache(String controlledVocabularyName) { 
         cvCacheMap.remove(controlledVocabularyName);
     }
     
+    /**
+     * 
+     * @param controlledVocabularyName
+     * @return
+     */
     public ControlledVocabularyCache getControlledVocabularyCache(String controlledVocabularyName) { 
         return cvCacheMap.get(controlledVocabularyName);
     }
     
+    /**
+     * 
+     * @param controlledVocabularyName
+     * @return
+     */
     public boolean isControlledVocabularyBeingImported(String controlledVocabularyName) {
         return cvCacheMap.get(controlledVocabularyName) != null;
     }
     
+    /**
+     * 
+     */
     @Scheduled(fixedDelay = 1800000)
     public void cleanCache() {
         List<String> expired = new ArrayList<String>();        

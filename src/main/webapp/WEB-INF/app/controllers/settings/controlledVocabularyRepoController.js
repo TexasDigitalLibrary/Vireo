@@ -18,6 +18,8 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 
 	$scope.ready.then(function() {
 
+		console.log(JSON.stringify($scope.controlledVocabulary, null, 4))
+
 		var getDefaultIndex = function() {
 	    	var defaultIndex = 0;
 			for(var i in $scope.controlledVocabulary.list) {
