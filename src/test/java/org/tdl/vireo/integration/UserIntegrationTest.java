@@ -32,6 +32,8 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
 	
     @Override
     public void setup() {
+        
+        userRepo.deleteAll();
     			
     	userRepo.create(TEST_USER2_EMAIL, TEST_USER2.getFirstName(), TEST_USER2.getLastName(), Role.ADMINISTRATOR);
     	userRepo.create(TEST_USER3_EMAIL, TEST_USER3.getFirstName(), TEST_USER3.getLastName(), Role.MANAGER);
