@@ -19,10 +19,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 public class LanguageIntegrationTest extends AbstractIntegrationTest {
-    
-    private final static String TEST_LANGUAGE_NAME1 = "English";
-    private final static String TEST_LANGUAGE_NAME2 = "Spanish";
-    private final static String TEST_LANGUAGE_NAME3 = "French";
 
     @Autowired
     private LanguageRepo languageRepo;

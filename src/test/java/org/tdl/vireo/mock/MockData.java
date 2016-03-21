@@ -21,6 +21,10 @@ public abstract class MockData {
 	protected final static String TEST_EMAIL_TEMPLATE_NAME = "Test Email Template Name";
 	protected final static String TEST_EMAIL_TEMPLATE_SUBJECT = "Test Email Template Subject";
 	protected final static String TEST_EMAIL_TEMPLATE_MESSAGE = "Test Email Template Message";
+	
+	protected final static String TEST_LANGUAGE_NAME1 = "English";
+	protected final static String TEST_LANGUAGE_NAME2 = "Spanish";
+	protected final static String TEST_LANGUAGE_NAME3 = "French";
     
 	protected User TEST_USER = new User(TEST_USER_EMAIL, TEST_USER_FIRST_NAME, TEST_USER_LAST_NAME, Role.STUDENT);    
    
