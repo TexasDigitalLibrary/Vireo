@@ -53,8 +53,15 @@ public class ControlledVocabularyCachingService {
      * @param controlledVocabularyName
      * @return
      */
-    public boolean isControlledVocabularyBeingImported(String controlledVocabularyName) {
+    public boolean doesControlledVocabularyExist(String controlledVocabularyName) {
         return cvCacheMap.get(controlledVocabularyName) != null;
+    }
+    
+    /**
+     * 
+     */
+    public void clearCache() {
+        cvCacheMap = new HashMap<String, ControlledVocabularyCache>();
     }
     
     /**

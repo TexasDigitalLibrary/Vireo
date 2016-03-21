@@ -345,7 +345,7 @@ public class ControlledVocabularyController {
     @ApiMapping(value = "/status/{name}", method = RequestMethod.POST)
     @Auth(role = "ROLE_MANAGER")
     public ApiResponse importControlledVocabularyStatus(@ApiVariable String name) {
-        return new ApiResponse(SUCCESS, controlledVocabularyCachingService.isControlledVocabularyBeingImported(name));
+        return new ApiResponse(SUCCESS, controlledVocabularyCachingService.doesControlledVocabularyExist(name));
     }
 
     /**
