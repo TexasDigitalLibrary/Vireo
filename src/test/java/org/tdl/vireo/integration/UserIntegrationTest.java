@@ -133,7 +133,7 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
 		 
 	     userRepo.create(TEST_USER_EMAIL, TEST_USER.getFirstName(), TEST_USER.getLastName(), Role.STUDENT);
 		 
-		 Map<String, String> data = new HashMap<String, String>();
+		 Map<String, Object> data = new HashMap<String, Object>();
 		 data.put("email", TEST_USER_EMAIL);
 		 data.put("role", TEST_USER_ROLE_UPDATE);
 	    	

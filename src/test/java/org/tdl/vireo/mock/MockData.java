@@ -25,6 +25,10 @@ public abstract class MockData {
 	protected final static String TEST_LANGUAGE_NAME1 = "English";
 	protected final static String TEST_LANGUAGE_NAME2 = "Spanish";
 	protected final static String TEST_LANGUAGE_NAME3 = "French";
+	
+	protected final static String TEST_CONTROLLED_VOCABULARY_NAME1 = "CVTest1";
+    protected final static String TEST_CONTROLLED_VOCABULARY_NAME2 = "CVTest2";
+    protected final static String TEST_CONTROLLED_VOCABULARY_NAME3 = "CVTest3";
     
 	protected User TEST_USER = new User(TEST_USER_EMAIL, TEST_USER_FIRST_NAME, TEST_USER_LAST_NAME, Role.STUDENT);    
    

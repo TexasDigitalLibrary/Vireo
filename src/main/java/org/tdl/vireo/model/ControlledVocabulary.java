@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.tdl.vireo.config.SpringContext;
 import org.tdl.vireo.service.EntityControlledVocabularyService;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
 @Configurable
 public class ControlledVocabulary extends BaseOrderedEntity {
@@ -33,9 +35,11 @@ public class ControlledVocabulary extends BaseOrderedEntity {
     @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY)    
     private List<VocabularyWord> dictionary = new ArrayList<VocabularyWord>();
     
+    @JsonProperty("entityProperty")
     @Column(nullable = false)
     private Boolean isEntityProperty;
     
+    @JsonProperty("enum")
     @Column(nullable = false)
     private Boolean isEnum;
 
