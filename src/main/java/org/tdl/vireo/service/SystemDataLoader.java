@@ -16,6 +16,8 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
@@ -113,12 +115,16 @@ public class SystemDataLoader {
     private ConfigurationRepo configurationRepo;
 
     final static Logger logger = LoggerFactory.getLogger(SystemDataLoader.class);
+    
+    public SystemDataLoader() {
+        //generateSystemDefaults();
+    }
 
     /**
      * Loads default system organization.
      */
     public void loadSystemOrganization() {
-
+        
         try {
             // read and map json to Organization
             Organization systemOrganization = objectMapper.readValue(getFileFromResource("classpath:/organization/SYSTEM_Organization_Definition.json"), Organization.class);

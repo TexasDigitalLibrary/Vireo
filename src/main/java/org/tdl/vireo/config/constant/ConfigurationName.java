@@ -19,6 +19,9 @@ package org.tdl.vireo.config.constant;
 public class ConfigurationName {
 	
 	// Application Settings
+    /** The absolute path on disk where Vireo's dynamic content is writen **/
+    public final static String INSTALL_PATH = "install_path";
+    
 	/** If defined then submissions are open, otherwise they are closed. **/
 	public final static String SUBMISSIONS_OPEN = "submissions_open";
 	
@@ -41,6 +44,9 @@ public class ConfigurationName {
 	public final static String EMAIL_REPLY_TO = "email_reply_to";
 	
 	// Theme settings
+	/** Background main color */
+    public final static String THEME_PATH = "theme_path";
+    
 	/** Background main color */
 	public final static String BACKGROUND_MAIN_COLOR = "background_main_color";
 	

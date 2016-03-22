@@ -6,7 +6,7 @@
 			{"grantor":"Texas A&M University"},
 			{"email_from":"noreply@tdl.org"},
 			{"email_reply_to":"dev@tdl.org"},
-			{"attachments_path", "resources/attachments"}
+			{"install.dir": "/var/lib/vireo/"}
 	],
 	"orcid":[
 			{"orcid_validation":true},
@@ -38,6 +38,7 @@
 			{"transportation":""}
 	],
 	"lookAndFeel": [
+			{"theme_path":"configuration/theme/"},
 			{"background_main_color":"#1b333f"},
 			{"background_highlight_color":"#43606e"},
 			{"button_main_color_on":"#1b333f"},

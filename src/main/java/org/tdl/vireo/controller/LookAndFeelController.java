@@ -66,14 +66,18 @@ public class LookAndFeelController {
             return new ApiResponse(ERROR, "Unable to buffer image data. ["+e.getMessage()+"]");
         }
         
-        File outputfile = new File(hashedFile.getStore().getAbsolutePath()+"/"+newPath);
+        //File outputfile = new File(hashedFile.getStore().getAbsolutePath()+"/"+newPath);
+        String installationPath = configurationRepo.getByName(ConfigurationName.APPLICATION_INSTALL_DIRECTORY).getValue();
+        String themePath = configurationRepo.getByName(ConfigurationName.THEME_PATH).getValue();
+        File outputfile = new File(installationPath+newPath);
         try {
             ImageIO.write(imageBuffer, type, outputfile);
         } catch (IOException e) {
             return new ApiResponse(ERROR, "Unable to write image file. ["+e.getMessage()+"]");
         }
         
-        Configuration newLogoConfig = configurationRepo.createOrUpdate(setting,configurationRepo.getByName(ConfigurationName.APPLICATION_ATTACHMENTS_PATH)+newPath,"lookAndFeel");
+        Configuration newLogoConfig = configurationRepo.createOrUpdate(setting,themePath+newPath,"lookAndFeel");
+        //Configuration newLogoConfig = configurationRepo.createOrUpdate(setting,"configuration/theme/"+newPath,"lookAndFeel");
         
         return new ApiResponse(SUCCESS, newLogoConfig);
         
