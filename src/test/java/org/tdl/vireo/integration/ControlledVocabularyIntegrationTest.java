@@ -58,9 +58,9 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
     public void addVocabularyWords() {
         ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME1);
         
-        VocabularyWord word1 = vocabularyWordRepo.create(TEST_VOCABULARY_WORD_NAME1, TEST_VOCABULARY_WORD_DEFINITION1, TEST_VOCABULARY_WORD_DEFINITION1);
-        VocabularyWord word2 = vocabularyWordRepo.create(TEST_VOCABULARY_WORD_NAME2, TEST_VOCABULARY_WORD_DEFINITION2, TEST_VOCABULARY_WORD_DEFINITION2);
-        VocabularyWord word3 = vocabularyWordRepo.create(TEST_VOCABULARY_WORD_NAME3, TEST_VOCABULARY_WORD_DEFINITION3, TEST_VOCABULARY_WORD_DEFINITION3);
+        VocabularyWord word1 = vocabularyWordRepo.create(TEST_VOCABULARY_WORD_NAME1, TEST_VOCABULARY_WORD_DEFINITION1, TEST_VOCABULARY_WORD_IDENTIFIER1);
+        VocabularyWord word2 = vocabularyWordRepo.create(TEST_VOCABULARY_WORD_NAME2, TEST_VOCABULARY_WORD_DEFINITION2, TEST_VOCABULARY_WORD_IDENTIFIER2);
+        VocabularyWord word3 = vocabularyWordRepo.create(TEST_VOCABULARY_WORD_NAME3, TEST_VOCABULARY_WORD_DEFINITION3, TEST_VOCABULARY_WORD_IDENTIFIER3);
         
         word1.setControlledVocabulary(controlledVocabulary);
         vocabularyWordRepo.save(word1);
@@ -252,7 +252,23 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
         Map<String, Object> payload = (Map<String, Object>) responseObject.get("payload");
         
         System.out.println(payload);
-        //TODO: compare against expected values
+
+        @SuppressWarnings("unchecked")
+        List<List<String>> rows = (List<List<String>>) ((Map<String, Object>) payload.get("HashMap")).get("rows");
+        
+        System.out.println(rows.get(0).get(0));
+        
+        assertEquals(rows.get(0).get(0), TEST_VOCABULARY_WORD_NAME1);
+        assertEquals(rows.get(0).get(1), TEST_VOCABULARY_WORD_DEFINITION1);
+        assertEquals(rows.get(0).get(2), TEST_VOCABULARY_WORD_IDENTIFIER1);
+        
+        assertEquals(rows.get(1).get(0), TEST_VOCABULARY_WORD_NAME2);
+        assertEquals(rows.get(1).get(1), TEST_VOCABULARY_WORD_DEFINITION2);
+        assertEquals(rows.get(1).get(2), TEST_VOCABULARY_WORD_IDENTIFIER2);
+        
+        assertEquals(rows.get(2).get(0), TEST_VOCABULARY_WORD_NAME3);
+        assertEquals(rows.get(2).get(1), TEST_VOCABULARY_WORD_DEFINITION3);
+        assertEquals(rows.get(2).get(2), TEST_VOCABULARY_WORD_IDENTIFIER3);
     }
 
     @Test
