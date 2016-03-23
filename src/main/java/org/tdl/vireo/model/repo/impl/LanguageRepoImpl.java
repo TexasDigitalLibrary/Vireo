@@ -16,14 +16,9 @@ public class LanguageRepoImpl implements LanguageRepoCustom {
 
     @Override
     public Language create(String name) {
-        return languageRepo.save(new Language(name));
-    }
-    
-    @Override
-    public Language create(String name, Integer order) {
         return languageRepo.save(new Language(name, (int) languageRepo.count() + 1));
     }
-    
+        
     @Override
     public void reorder(Integer src, Integer dest) {
         orderedEntityService.reorder(Language.class, src, dest);

@@ -303,7 +303,8 @@
 	    <script src="controllers/settings/customActionSettingsController.js"></script>
 	    <script src="controllers/settings/depositLocationRepoController.js"></script> 
 	    <script src="controllers/settings/graduationMonthRepoController.js"></script> 
-	    <script src="controllers/settings/controlledVocabularyRepoController.js"></script> 
+	    <script src="controllers/settings/controlledVocabularyRepoController.js"></script>
+	    <script src="controllers/settings/languageRepoController.js"></script> 
 	    
 	<!-- endbuild -->
 

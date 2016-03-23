@@ -27,7 +27,7 @@ vireo.service("LanguageRepo", function(WsApi, AbstractModel, AlertService) {
 
 		var newLanguageRepoPromise = WsApi.fetch({
 			endpoint: '/private/queue', 
-			controller: 'settings/language', 
+			controller: 'settings/languages', 
 			method: 'all',
 		});
 
@@ -44,13 +44,56 @@ vireo.service("LanguageRepo", function(WsApi, AbstractModel, AlertService) {
 
 		LanguageRepo.listener = WsApi.listen({
 			endpoint: '/channel', 
-			controller: 'settings/language', 
+			controller: 'settings/languages', 
 			method: '',
 		});
 				
 		LanguageRepo.set(LanguageRepo.listener);
 
 		return LanguageRepo.data;
+	};
+
+	LanguageRepo.add = function(language) {
+		return WsApi.fetch({
+			'endpoint': '/private/queue', 
+			'controller': 'settings/languages', 
+			'method': 'create',
+			'data': language
+		});
+	};
+
+	LanguageRepo.update = function(language) {
+		return WsApi.fetch({
+			'endpoint': '/private/queue', 
+			'controller': 'settings/languages', 
+			'method': 'update',
+			'data': language
+		});
+	};
+
+	LanguageRepo.reorder = function(src, dest) {
+		return WsApi.fetch({
+			'endpoint': '/private/queue', 
+			'controller': 'settings/languages', 
+			'method': 'reorder/' + src + '/' + dest
+		});
+	};
+
+	LanguageRepo.sort = function(column) {
+		return WsApi.fetch({
+			'endpoint': '/private/queue', 
+			'controller': 'settings/languages', 
+			'method': 'sort/' + column
+		});
+	};
+
+	LanguageRepo.remove = function(index) {
+		console.log(index);
+		return WsApi.fetch({
+			'endpoint': '/private/queue', 
+			'controller': 'settings/languages', 
+			'method': 'remove/' + index
+		});
 	};
 
 	LanguageRepo.ready = function() {

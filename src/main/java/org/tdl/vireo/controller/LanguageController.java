@@ -31,7 +31,7 @@ import edu.tamu.framework.model.ApiResponse;
  * 
  */
 @Controller
-@ApiMapping("/settings/language")
+@ApiMapping("/settings/languages")
 public class LanguageController {
     
     private final Logger logger = Logger.getLogger(this.getClass());
@@ -51,7 +51,7 @@ public class LanguageController {
      */
     private Map<String, List<Language>> getAll() {
         Map<String, List<Language>> map = new HashMap<String, List<Language>>();
-        map.put("list", languageRepo.findAll());
+        map.put("list", languageRepo.findAllByOrderByOrderAsc());
         return map;
     }
     
@@ -111,7 +111,7 @@ public class LanguageController {
 
         logger.info("Created language " + newLanguage.getName());
 
-        simpMessagingTemplate.convertAndSend("/channel/settings/language", new ApiResponse(SUCCESS, getAll()));
+        simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(SUCCESS, getAll()));
 
         return new ApiResponse(SUCCESS);
     }
@@ -167,7 +167,39 @@ public class LanguageController {
 
         logger.info("Updated language with name " + language.getName());
 
-        simpMessagingTemplate.convertAndSend("/channel/settings/language", new ApiResponse(SUCCESS, getAll()));
+        simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(SUCCESS, getAll()));
+
+        return new ApiResponse(SUCCESS);
+    }
+    
+    /**
+     * Endpoint to remove language by provided index
+     * 
+     * @param indexString
+     *            index of language to remove
+     * @return ApiResponse indicating success or error
+     */
+    @ApiMapping("/remove/{indexString}")
+    @Auth(role = "ROLE_MANAGER")
+    @Transactional
+    public ApiResponse removeLanguage(@ApiVariable String indexString) {
+        Integer index = -1;
+
+        try {
+            index = Integer.parseInt(indexString);
+        } catch (NumberFormatException nfe) {
+            return new ApiResponse(ERROR, "Id is not a valid language order!");
+        }
+
+        if (index >= 0) {
+            languageRepo.remove(index);
+        } else {
+            return new ApiResponse(ERROR, "Id is not a valid language order!");
+        }
+
+        logger.info("Deleted language with order " + index);
+
+        simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(SUCCESS, getAll()));
 
         return new ApiResponse(SUCCESS);
     }
@@ -188,7 +220,7 @@ public class LanguageController {
         Integer intSrc = Integer.parseInt(src);
         Integer intDest = Integer.parseInt(dest);
         languageRepo.reorder(intSrc, intDest);
-        simpMessagingTemplate.convertAndSend("/channel/settings/language", new ApiResponse(SUCCESS, getAll()));
+        simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(SUCCESS, getAll()));
         return new ApiResponse(SUCCESS);
     }
 
@@ -204,7 +236,7 @@ public class LanguageController {
     @Transactional
     public ApiResponse sortControlledVocabulary(@ApiVariable String column) {
         languageRepo.sort(column);
-        simpMessagingTemplate.convertAndSend("/channel/settings/language", new ApiResponse(SUCCESS, getAll()));
+        simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(SUCCESS, getAll()));
         return new ApiResponse(SUCCESS);
     }
 
