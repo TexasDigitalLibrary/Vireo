@@ -18,6 +18,15 @@ public class Language extends BaseOrderedEntity {
     public Language(String name) {
         this.name = name;
     }
+    
+    /**
+     * 
+     * @param name
+     */
+    public Language(String name, Integer order) {
+        setName(name);
+        super.setOrder(order);
+    }
 
     /**
      * 

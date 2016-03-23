@@ -225,7 +225,7 @@ public class ControlledVocabularyController {
 
         logger.info("Updated controlled vocabulary with name " + controlledVocabulary.getName());
 
-        simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(SUCCESS, getAll()));
+        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, getAll()));
 
         return new ApiResponse(SUCCESS);
     }
