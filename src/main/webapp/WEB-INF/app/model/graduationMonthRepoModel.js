@@ -46,9 +46,15 @@ vireo.service("GraduationMonthRepo", function(WsApi, AbstractModel, AlertService
 			endpoint: '/channel', 
 			controller: 'settings/graduation-month', 
 			method: '',
+		}).then(function(data) {
+			debugger;
 		});
 				
 		GraduationMonthRepo.set(GraduationMonthRepo.listener);
+		
+		GraduationMonthRepo.listener.then(function(data) {
+			debugger;
+		});
 
 		return GraduationMonthRepo.data;	
 	};

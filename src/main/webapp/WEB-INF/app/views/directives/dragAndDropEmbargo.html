@@ -1,6 +1,7 @@
 <td class="td-icon embargoType-system-cell" data-as-sortable-item-handle>
 	<span ng-if="item.systemRequired" class="glyphicon glyphicon-globe"></span>
 	<span ng-if="!item.systemRequired" class="glyphicon glyphicon-user"></span>
+	{{item.order}}
 </td>
 <td class="embargoType-name-cell" data-as-sortable-item-handle>{{item.name}}</td>
 <td class="embargoType-description-cell" data-as-sortable-item-handle>{{item.description}}</td>

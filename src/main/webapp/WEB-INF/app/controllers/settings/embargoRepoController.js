@@ -9,6 +9,10 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 
 	$scope.trashCanId = 'embargo-trash';
 	
+	$scope.sortAction = "confirm";
+	
+	$scope.itemTypeString = "";
+		
 	// defaults
 	$scope.resetEmbargo = function() {
 		$scope.modalData = { 
@@ -45,6 +49,16 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 			EmbargoRepo.reorder(src, dest);
 		};
 		
+		$scope.sortEmbargoes = function(column, where) {
+			if($scope.sortAction == 'confirm') {
+				$scope.sortAction = 'sort';
+			}
+			else if($scope.sortAction == 'sort') {
+				EmbargoRepo.sort(column, where);
+				$scope.sortAction = 'confirm';
+			}
+		};
+		
 		$scope.removeEmbargo = function(index) {
 			EmbargoRepo.remove(index);
 			$scope.resetEmbargo();
@@ -57,6 +71,7 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 			list: $scope.embargoes.list,
 			confirm: '#embargoConfirmRemoveModal',
 			reorder: $scope.reorderEmbargo,
+			itemTypeString: $scope.itemTypeString,
 			container: '#embargo'
 		});
 		

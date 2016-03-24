@@ -1,14 +1,10 @@
 <div id="embargo" class="row" ng-controller="EmbargoRepoController">
 
-	<alerts channels="/settings/custom-action" types="ERROR, WARNING" exclusive></alerts>
+	<alerts channels="/settings/embargo" types="ERROR, WARNING" exclusive></alerts>
 	<div class="row">
 		<div class="col-sm-6">
 			<p>
 				<a class="confirm" href="@{settings.ConfigurableSettingsTab.removeAllEmbargoTypes}" data-confirm="<em class='icon-trash'></em> (Are you sure you want to <strong>remove all</strong> embargo types?)"> <em class="icon-trash"></em> Remove all embargo types
-				</a>
-			</p>
-			<p>
-				<a class="confirm" href="@{settings.ConfigurableSettingsTab.alphabetizeAllEmbargoTypes}" data-confirm="<em class='icon-refresh'></em> (Are you sure you want to sort all embargo types by their duration?)"> <em class="icon-refresh"></em> Sort embargo types by duration
 				</a>
 			</p>
 		</div>
@@ -23,8 +19,12 @@
 				properties='["System", "Name", "Description", "Display", "# of Months", "Edit"]'
 				list-view='views/directives/dragAndDropTable.html'
 				item-view='views/directives/dragAndDropEmbargo.html'
+				item-type-string="default"
 				listeners='dragControlListeners'
-				edit='editEmbargo(index)'>
+				edit='editEmbargo(index)'
+				sort-column='duration',
+				sort-action='sortAction'
+				sort-method='sortEmbargoes(column, where)'>
 			</draganddroplist>
 			<button class="btn btn-default modal-add-btn"
 				data-toggle="modal" 
@@ -43,8 +43,12 @@
 				properties='["System", "Name", "Description", "Display", "# of Months", "Edit"]'
 				list-view='views/directives/dragAndDropTable.html'
 				item-view='views/directives/dragAndDropEmbargo.html'
+				item-type-string="proquest"
 				listeners='dragControlListeners'
-				edit='editEmbargo(index)'>
+				edit='editEmbargo(index)'
+				sort-column='duration',
+				sort-action='sortAction'
+				sort-method='sortEmbargoes(column)'>
 			</draganddroplist>
 			<button class="btn btn-default modal-add-btn"
 				data-toggle="modal" 
@@ -53,5 +57,23 @@
 			</button>
 		</div>
 	</div>
+	
+	<modal modal-id="embargoNewModal" 
+		   modal-view="views/modals/settings/embargoNewModal.html" 
+		   modal-header-class="modal-header-primary"		   
+		   modal-data="modalData">
+	</modal>
+
+	<modal modal-id="embargoEditModal" 
+		   modal-view="views/modals/settings/embargoEditModal.html" 
+		   modal-header-class="modal-header-primary"		   
+		   modal-data="modalData">
+	</modal>
+
+	<modal modal-id="embargoConfirmRemoveModal" 
+		   modal-view="views/modals/settings/embargoConfirmRemoveModal.html" 
+		   modal-header-class="modal-header-primary"		   
+		   modal-data="modalData">
+	</modal>
 
 </div>

@@ -98,12 +98,20 @@ public class OrderedEntityService {
         entityManager.createQuery(update).executeUpdate();
 	}
 	
+    public synchronized void sort(Class<?> clazz, String property){
+	    this.sort(clazz, property, null, null);
+	}
+	
 	@SuppressWarnings("unchecked")
-	public synchronized void sort(Class<?> clazz, String property) {
+	public synchronized void sort(Class<?> clazz, String property, String whereProp, String whereVal) {
 	    CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Object> query = cb.createQuery();
         Root<?> e = query.from((Class<Object>) clazz);
         query.multiselect(e.get(property));
+        if(whereProp != null && whereVal != null) {
+            Path<Integer> path = e.get(whereProp);
+            query.where(cb.equal(path, whereVal));
+        }
         query.orderBy(cb.asc(e.get(property)));
         List<Object> orderedResults = entityManager.createQuery(query).getResultList();
         for(int i = 0; i < orderedResults.size(); i++) {

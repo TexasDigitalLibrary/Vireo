@@ -1,9 +1,13 @@
 vireo.service("EmbargoRepo", function(AbstractModel, WsApi, AlertService) {
+	
 	var self;
 
 	var EmbargoRepo = function(futureData) {
 		self = this;
-		angular.extend(self, AbstractModel);		
+		
+		//This causes our model to extend AbstractModel
+		angular.extend(self, AbstractModel);
+		
 		self.unwrap(self, futureData,"PersistentMap");			
 	};
 	
@@ -16,7 +20,6 @@ vireo.service("EmbargoRepo", function(AbstractModel, WsApi, AlertService) {
 	EmbargoRepo.set = function(data) {
 		self.unwrap(self, data, "PersistentMap");		
 	};
-	
 
 	EmbargoRepo.get = function() {
 
@@ -25,7 +28,7 @@ vireo.service("EmbargoRepo", function(AbstractModel, WsApi, AlertService) {
 		var newAllEmbargoRepoPromise = WsApi.fetch({
 			endpoint: '/private/queue', 
 			controller: 'settings/embargo', 
-			method: 'all'
+			method: 'all',
 		});
 
 		EmbargoRepo.promise = newAllEmbargoRepoPromise;
@@ -44,7 +47,7 @@ vireo.service("EmbargoRepo", function(AbstractModel, WsApi, AlertService) {
 		});
 
 		EmbargoRepo.listener.then(function(data) {
-			console.log(data);
+			debugger;
 		});
 				
 		EmbargoRepo.set(EmbargoRepo.listener);
@@ -85,6 +88,20 @@ vireo.service("EmbargoRepo", function(AbstractModel, WsApi, AlertService) {
 			'endpoint': '/private/queue', 
 			'controller': 'settings/embargo', 
 			'method': 'reorder/' + src + '/' + dest
+		}).then(function(response) {
+			var responseType = angular.fromJson(response.body).meta.type;
+			var responseMessage = angular.fromJson(response.body).meta.message;
+			if(responseType != 'SUCCESS') {
+				AlertService.add({type: responseType, message: responseMessage}, "/settings/embargo");  
+			}
+		});
+	};
+	
+	EmbargoRepo.sort = function(column, where) {
+		return WsApi.fetch({
+			'endpoint': '/private/queue', 
+			'controller': 'settings/embargo', 
+			'method': 'sort/' + column + '/' + where
 		}).then(function(response) {
 			var responseType = angular.fromJson(response.body).meta.type;
 			var responseMessage = angular.fromJson(response.body).meta.message;

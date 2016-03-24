@@ -15,6 +15,7 @@ vireo.directive("draganddroplist", function() {
 			'edit': '&',
 			'toString': '&',
 			'itemView': '@',
+			'itemTypeString': '@',
 			'sortColumn': '@',
 			'sortAction': '=',
 			'sortMethod': '&'
