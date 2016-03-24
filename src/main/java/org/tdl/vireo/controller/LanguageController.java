@@ -16,7 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.repo.LanguageRepo;
-import org.tdl.vireo.service.ProquestLanguageCodes;
+import org.tdl.vireo.service.ProquestLanguageCodesService;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,7 +47,7 @@ public class LanguageController {
     private ObjectMapper objectMapper;
     
     @Autowired
-    private ProquestLanguageCodes proquestLanguageCodes;
+    private ProquestLanguageCodesService proquestLanguageCodes;
     
     /**
      * 

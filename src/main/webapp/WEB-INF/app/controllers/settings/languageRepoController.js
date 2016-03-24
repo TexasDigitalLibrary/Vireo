@@ -80,8 +80,10 @@ vireo.controller("LanguageRepoController", function ($controller, $q, $scope, La
 				$scope.sortAction = 'sort';
 			}
 			else if($scope.sortAction == 'sort') {
-				LanguageRepo.sort(column);
-				$scope.sortAction = 'confirm';
+				LanguageRepo.sort(column).then(function() {
+					$scope.resetLanguages();
+					$scope.sortAction = 'confirm';
+				});
 			}	    	
 		};
 

@@ -6,11 +6,11 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ProquestLanguageCodes {
+public class ProquestLanguageCodesService {
 
     private Map<String, String> languageCodes;
     
-    public ProquestLanguageCodes() {
+    public ProquestLanguageCodesService() {
         languageCodes = new HashMap<String, String>();
     }
     

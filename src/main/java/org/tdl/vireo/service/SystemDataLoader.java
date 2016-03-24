@@ -118,7 +118,7 @@ public class SystemDataLoader {
     private ConfigurationRepo configurationRepo;
     
     @Autowired
-    private ProquestLanguageCodes proquestLanguageCodes;
+    private ProquestLanguageCodesService proquestLanguageCodes;
 
     final static Logger logger = LoggerFactory.getLogger(SystemDataLoader.class);
 
