@@ -4,7 +4,11 @@ vireo.controller("LanguageRepoController", function ($controller, $q, $scope, La
 
 	$scope.languages = LanguageRepo.get();
 
-	$scope.ready = $q.all([LanguageRepo.ready()]);
+	LanguageRepo.getProquestLanguageCodes().then(function(data) {
+		$scope.proquestLanguageCodes = angular.fromJson(data.body).payload.HashMap;
+	});
+
+	$scope.ready = $q.all([LanguageRepo.ready(), LanguageRepo.getProquestLanguageCodes()]);
 
 	$scope.dragging = false;
 
@@ -22,9 +26,14 @@ vireo.controller("LanguageRepoController", function ($controller, $q, $scope, La
 				$scope.uploadStatus();
 			}
 
+			for(var i in $scope.languages.list) {
+				var language = $scope.languages.list[i];
+				language.proquestCode = $scope.proquestLanguageCodes[language.name]
+			}
+
 			$scope.modalData = { 
 				languages: $scope.languages.list[0] 
-			};
+			};			
 		};
 
 		$scope.resetLanguages();
@@ -61,7 +70,9 @@ vireo.controller("LanguageRepoController", function ($controller, $q, $scope, La
 		};
 
 		$scope.reorderLanguages = function(src, dest) {
-	    	LanguageRepo.reorder(src, dest);
+	    	LanguageRepo.reorder(src, dest).then(function() {
+	    		$scope.resetLanguages();
+	    	});
 		};
 
 		$scope.sortLanguages = function(column) {

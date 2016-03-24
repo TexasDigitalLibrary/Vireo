@@ -69,10 +69,12 @@ class AppContextInitializedHandler extends CoreContextInitializedHandler {
         
         logger.info("Generating system defaults");
         systemDataLoader.generateSystemDefaults();
-        
-        
+               
         
         logger.info("Initializing default entity controlled vocabulary");
         entityControlledVocabularyService.init();
+        
+        logger.info("Loading Proquest language codes");
+        systemDataLoader.loadProquestLanguageCodes();
     }
 }

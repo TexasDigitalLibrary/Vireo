@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.repo.LanguageRepo;
+import org.tdl.vireo.service.ProquestLanguageCodes;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,6 +45,9 @@ public class LanguageController {
 
     @Autowired
     private ObjectMapper objectMapper;
+    
+    @Autowired
+    private ProquestLanguageCodes proquestLanguageCodes;
     
     /**
      * 
@@ -238,6 +242,16 @@ public class LanguageController {
         languageRepo.sort(column);
         simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(SUCCESS, getAll()));
         return new ApiResponse(SUCCESS);
+    }
+    
+    /**
+     * 
+     * @return
+     */
+    @ApiMapping("/proquest")
+    @Auth(role = "ROLE_MANAGER")
+    public ApiResponse getProquestLanguageCodes() {        
+        return new ApiResponse(SUCCESS, proquestLanguageCodes.getLanguageCodes());
     }
 
 }

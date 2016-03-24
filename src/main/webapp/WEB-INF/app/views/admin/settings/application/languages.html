@@ -16,17 +16,24 @@
 		
 		<draganddroplist dragging="dragging"
 						 scope-value="languages"
-						 properties='["name"]'
+						 properties='["name", "proquestCode"]'
 						 item-view='views/directives/dragAndDropLanguage.html'
 						 listeners='dragControlListeners'
 						 edit='editLanguage(index)'
-						 model='Language'
+						 model='Languages'
 						 sort-column='name',
 						 sort-action='sortAction'
 						 sort-method='sortLanguages(column)'>
 		</draganddroplist>
 
+		<br/>
+		<span class="glyphicon glyphicon-tag">
+			<span> Denotes a ProQuest / UMI compatable Language</span>
+		</span>
+
 	</div>
+
+
 	
 	<div class="col-sm-6">
 		<trashcan id="{{trashCanId}}"

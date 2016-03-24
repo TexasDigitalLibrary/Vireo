@@ -53,6 +53,14 @@ vireo.service("LanguageRepo", function(WsApi, AbstractModel, AlertService) {
 		return LanguageRepo.data;
 	};
 
+	LanguageRepo.getProquestLanguageCodes = function() {
+		return WsApi.fetch({
+			'endpoint': '/private/queue', 
+			'controller': 'settings/languages', 
+			'method': 'proquest'
+		});
+	};
+
 	LanguageRepo.add = function(language) {
 		return WsApi.fetch({
 			'endpoint': '/private/queue', 
