@@ -56,16 +56,18 @@ vireo.service("EmbargoRepo", function(AbstractModel, WsApi, AlertService) {
 
 	};
 
-	EmbargoRepo.create = function(customAction) {
+	EmbargoRepo.create = function(embargo) {
 		WsApi.fetch({
 			endpoint:'/private/queue',
 			controller:'settings/embargo',
 			method:'create',
-			data: customAction
+			data: embargo
 		}).then(function(response) {
-			console.log(response);
-			console.log(JSON.parse(response.body).payload);
-			return response;
+		    var responseType = angular.fromJson(response.body).meta.type;
+            var responseMessage = angular.fromJson(response.body).meta.message;
+            if(responseType != 'SUCCESS') {
+                AlertService.add({type: responseType, message: responseMessage}, "/settings/embargo");  
+            }
 		});		
 
 	};
@@ -77,9 +79,11 @@ vireo.service("EmbargoRepo", function(AbstractModel, WsApi, AlertService) {
 			method:'update',
 			data: customAction
 		}).then(function(response) {
-			console.log(response);
-			console.log(JSON.parse(response.body).payload);
-			return response;
+		    var responseType = angular.fromJson(response.body).meta.type;
+            var responseMessage = angular.fromJson(response.body).meta.message;
+            if(responseType != 'SUCCESS') {
+                AlertService.add({type: responseType, message: responseMessage}, "/settings/embargo");  
+            }
 		});
 	};
 	

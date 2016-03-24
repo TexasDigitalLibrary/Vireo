@@ -29,7 +29,7 @@ public class EmbargoRepoImpl implements EmbargoRepoCustom {
     
     @Override
     public void sort(String column, EmbargoGuarantor guarantor) {
-        orderedEntityService.sort(Embargo.class, column, "guarantor", String.valueOf(guarantor.getValue()));
+        orderedEntityService.sort(Embargo.class, column, "guarantor", guarantor);
     }
     
     @Override

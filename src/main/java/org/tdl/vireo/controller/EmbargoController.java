@@ -54,6 +54,7 @@ public class EmbargoController {
     }
 
     @ApiMapping("/create")
+    @Auth(role = "ROLE_MANAGER")
     public ApiResponse createEmbargo(@Data String data) {
 
         JsonNode dataNode;
@@ -79,11 +80,12 @@ public class EmbargoController {
         newEmbargo.setOrder((int) embargoRepo.count());
         embargoRepo.save(newEmbargo);
 
-        this.simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, getAll()));
+        simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, getAll()));
         return new ApiResponse(SUCCESS);
     }
 
     @ApiMapping("/update")
+    @Auth(role = "ROLE_MANAGER")
     public ApiResponse updateEmbargo(@Data String data) {
 
         JsonNode dataNode;
@@ -105,7 +107,7 @@ public class EmbargoController {
             embargoToUpdate.setDuration(dataNode.get("duration").asInt());
 
         embargoRepo.save(embargoToUpdate);
-        this.simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, getAll()));
+        simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, getAll()));
         return new ApiResponse(SUCCESS);
 
     }
