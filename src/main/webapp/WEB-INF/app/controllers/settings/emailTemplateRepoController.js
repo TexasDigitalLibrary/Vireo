@@ -9,72 +9,62 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
 
   $scope.trashCanId = 'email-template-trash';
   
-  $scope.monthOptions = {};
-
   $scope.sortAction = "confirm";
+
+  $scope.modalData = {'name':'', 'subject':'', 'messageBody':''};
   
-  // $scope.resetGraduationMonth = function() {
-  //   $scope.modalData = {};
-  //   $scope.resetMonthOptions();
-  // };
-  
+  $scope.resetModalData = function() {
+    $scope.modalData = {'name':'', 'subject':'', 'messageBody':''};
+  };
+
   $scope.ready.then(function() {
-    
-    $scope.resetGraduationMonth();
-    
-    $scope.createGraduationMonth = function() {
-      GraduationMonthRepo.add($scope.modalData).then(function() {
-        $scope.resetGraduationMonth();
-      });
-    };
-    
-    $scope.selectGraduationMonth = function(index) {
-      $scope.resetMonthOptions();
-      $scope.modalData = $scope.graduationMonths.list[index];
-      $scope.modalData.month = $scope.modalData.month.toString();
-    };
-    
-    $scope.editGraduationMonth = function(index) {
-      $scope.selectGraduationMonth(index - 1);
-      angular.element('#graduationMonthEditModal').modal('show');
-    };
-    
-    $scope.updateGraduationMonth = function() {
-      GraduationMonthRepo.update($scope.modalData).then(function() {
-        $scope.resetGraduationMonth();
+
+    $scope.createEmailTemplate = function() {
+      EmailTemplateRepo.add($scope.modalData).then(function() {
+        $scope.resetModalData();
       });
     };
 
-    $scope.reorderGraduationMonth = function(src, dest) {
-      GraduationMonthRepo.reorder(src, dest);
-    };
-
-    $scope.sortGraduationMonths = function(column) {
-      if($scope.sortAction == 'confirm') {
-        $scope.sortAction = 'sort';
-      }
-      else if($scope.sortAction == 'sort') {
-        GraduationMonthRepo.sort(column);
-        $scope.sortAction = 'confirm';
-      }
-      
-    };
-
-    $scope.removeGraduationMonth = function(index) {
-      GraduationMonthRepo.remove(index).then(function() {
-        $scope.resetGraduationMonth();
-      });
-    };
+    // $scope.editGraduationMonth = function(index) {
+    //   $scope.selectGraduationMonth(index - 1);
+    //   angular.element('#graduationMonthEditModal').modal('show');
+    // };
     
-    $scope.dragControlListeners = DragAndDropListenerFactory.buildDragControls({
-      trashId: $scope.trashCanId,
-      dragging: $scope.dragging,
-      select: $scope.selectGraduationMonth,			
-      list: $scope.graduationMonths.list,
-      confirm: '#graduationMonthConfirmRemoveModal',
-      reorder: $scope.reorderGraduationMonth,
-      container: '#graduation-month'
-    });
+    // $scope.updateGraduationMonth = function() {
+    //   GraduationMonthRepo.update($scope.modalData).then(function() {
+    //     $scope.resetGraduationMonth();
+    //   });
+    // };
+
+    // $scope.reorderGraduationMonth = function(src, dest) {
+    //   GraduationMonthRepo.reorder(src, dest);
+    // };
+
+    // $scope.sortGraduationMonths = function(column) {
+    //   if($scope.sortAction == 'confirm') {
+    //     $scope.sortAction = 'sort';
+    //   }
+    //   else if($scope.sortAction == 'sort') {
+    //     GraduationMonthRepo.sort(column);
+    //     $scope.sortAction = 'confirm';
+    //   }
+    // };
+
+    // $scope.removeGraduationMonth = function(index) {
+    //   GraduationMonthRepo.remove(index).then(function() {
+    //     $scope.resetGraduationMonth();
+    //   });
+    // };
+    
+    // $scope.dragControlListeners = DragAndDropListenerFactory.buildDragControls({
+    //   trashId: $scope.trashCanId,
+    //   dragging: $scope.dragging,
+    //   select: $scope.selectGraduationMonth,			
+    //   list: $scope.graduationMonths.list,
+    //   confirm: '#graduationMonthConfirmRemoveModal',
+    //   reorder: $scope.reorderGraduationMonth,
+    //   container: '#graduation-month'
+    // });
     
   });	
 
