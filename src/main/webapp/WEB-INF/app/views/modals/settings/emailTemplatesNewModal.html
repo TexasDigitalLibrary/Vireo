@@ -1,0 +1,60 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span class="modal-close" aria-hidden="true">&times;</span>
+  </button>
+  <h3 class="modal-title">Create a new email template</h3>
+</div>
+
+<div class="modal-body">
+  <form>
+    <div class="form-group">
+      <label for="email-template-new-modal-name-field">Name:</label>
+      <input type="text" class="form-control" id="email-template-new-modal-name-field" placeholder="Enter name">
+    </div>
+    <div class="form-group">
+      <label for="email-template-new-modal-subject-field">Subject:</label>
+      <input type="text" class="form-control" id="email-template-new-modal-subject-field" placeholder="Enter subject">
+    </div>
+
+
+    <div class="row">
+      <div class="col-md-9">
+
+        <div class="form-group">
+          <label for="email-template-new-modal-message-field">Message Body:</label>
+          <textarea class="form-control" id="email-template-new-modal-message-field" rows="25"></textarea>
+        </div>
+
+      </div>
+      
+      <div class="col-md-3">
+        <div id="email-template-modal-instructions-label">Fields:</div>
+        <ul  class="list-group">
+          <li class="list-group-item"><b>FLIL_NAME</b></li>
+          <li class="list-group-item"><b>FIRST_NAME</b></li>
+          <li class="list-group-item"><b>LAST_NAME</b></li>
+          <li class="list-group-item"><b>DOCUMENT_TITLE</b></li>
+          <li class="list-group-item"><b>DOCUMENT_TYPE</b></li>
+          <li class="list-group-item"><b>DEPOSIT_URI</b></li>
+          <li class="list-group-item"><b>GRAD_SEMESTER</b></li>
+          <li class="list-group-item"><b>STUDENT_URL</b></li>
+          <li class="list-group-item"><b>SUBMISSION_URL</b></li>
+          <li class="list-group-item"><b>ADVISOR_URL</b></li>
+          <li class="list-group-item"><b>SUBMISSION_STATUS</b></li>
+          <li class="list-group-item"><b>SUBMISSION_ASSIGNED_TO</b></li>
+          <li class="list-group-item"><b>REGISTRATION_URL</b></li>
+        </ul>
+      </div>
+
+    </div> <!-- end row -->
+
+</div>
+
+
+  </form>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-warning" ng-click="" data-dismiss="modal">Cancel</button>
+  <button id="emailTemplate-save" type="button" class="btn btn-primary" data-dismiss="modal" ng-click="">Create</button>
+</div>
