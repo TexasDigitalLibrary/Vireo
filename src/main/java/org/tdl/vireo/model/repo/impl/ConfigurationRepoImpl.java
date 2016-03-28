@@ -30,6 +30,19 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
     }
     
     @Override
+    public Configuration reset(String name) {
+        
+        Configuration deletableOverride = configurationRepo.findByNameAndIsSystemRequired(name, false);
+        if (deletableOverride != null) {
+            System.out.println(deletableOverride.getName());
+            configurationRepo.delete(deletableOverride);
+        }
+        
+        return configurationRepo.findByNameAndIsSystemRequired(name, true);
+        
+    } 
+    
+    @Override
     public List<Configuration> getAll() {
         List<Configuration> ret = new ArrayList<Configuration>();
         List<Configuration> system = configurationRepo.findAllByIsSystemRequired(true);

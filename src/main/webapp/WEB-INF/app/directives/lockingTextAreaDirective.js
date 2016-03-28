@@ -1,61 +1,79 @@
-vireo.directive("lockingtextarea", function($timeout) {
+vireo.directive("lockingtextarea", function($timeout, $sce) {
 	return {
 		templateUrl: 'views/directives/lockingTextArea.html',
 		restrict: 'E',
 		scope: {
 			"label": "@",
 			"scopeValue": "=",
-            "toolTip": "@",
-            "hint": "@",
-            "onBlur": "&",
-            "keyDown": "&",
-            "name": "@",
-            "timer": "@"
+            "toolTip": "@",
+            "hint": "@",
+            "onBlur": "&",
+            "keyDown": "&",
+            "name": "@",
+            "timer": "@",
+			"wysiwyg": "@"
 		},
 		controller: function($scope) {
 
 			$scope.locked = true;
 
 			$scope.toggleLock = function() {
+				if($scope.locked) {
+					reset();
+				}
 				$scope.locked = !$scope.locked;
 			};
 			
 			if($scope.timer == undefined) {
-				$scope.timer = 5;
+				$scope.timer = 100;
 			}
 
 			var timer;
 
+			var reset = function() {
+				if(timer != undefined) {
+            		$timeout.cancel(timer);
+            	}
+        		timer = $timeout(function() {
+                    save();
+                }, $scope.timer * 1000);
+			};
+
 			var save = function() {
 				$scope.onBlur();
-    			$scope.toggleLock();
-    			delete timer;
+    			$scope.toggleLock();
+                $timeout.cancel(timer);
 			};
 
 			$scope.tinymceOptions = {
 				name: $scope.name,
 				setup: function(editor) {
-                    editor.on('KeyUp', function(e) {
-                    	if(timer == undefined) {
-                    		timer = $timeout(function() {
-	                            save();
-	                        }, $scope.timer * 1000);
-                    	}
-                    });
-                    editor.on('Blur', function(e) {
-                    	save();
-                    });			        
-                },
-                toolbar1 : "formatselect,bold,italic,separator,bullist,numlist,undo,redo",
-		        theme: "modern",
-		        plugins: $scope.plugins,
-		        menubar: false,
-		        statusbar: false,
-		        image_advtab: true,
-		        height: "100%",
-		        width: "100%"
-		    };
+                    editor.on('KeyUp', function(e) {
+                    	reset();
+                    });
+                    editor.on('Blur', function(e) {
+                    	save();
+                    });			        
+                },
+                toolbar1 : "formatselect,bold,italic,separator,bullist,numlist,undo,redo",
+		        theme: "modern",
+		        plugins: $scope.plugins,
+		        menubar: false,
+		        statusbar: false,
+		        image_advtab: true,
+		        height: "100%",
+		        width: "100%"
+		    };
 
-		},
+			$scope.nonWysiwygTyping = function($event) {
+				reset();
+			}
+
+			$scope.nonWysiwygBlur = function($event) {
+				save();
+			}
+
+		}
 	};
 });
+

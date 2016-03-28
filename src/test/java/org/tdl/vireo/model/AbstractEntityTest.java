@@ -89,7 +89,7 @@ public abstract class AbstractEntityTest {
     protected static final String TEST_LANGUAGE_NAME = "Test Language";
 
     // ConfigurationTest
-    protected static final String TEST_VIREO_CONFIG_INSTALL_DIR_KEY = ConfigurationName.APPLICATION_INSTALL_DIRECTORY;
+    protected static final String TEST_VIREO_CONFIG_SUBMISSIONS_OPEN_KEY = ConfigurationName.SUBMISSIONS_OPEN;
     protected static final String TEST_VIREO_INSTALL_DIR = "./";
     protected static final String TEST_VIREO_INSTALL_DIR_CHANGED = TEST_VIREO_INSTALL_DIR + "changed/";
 
@@ -294,7 +294,6 @@ public abstract class AbstractEntityTest {
     
     protected static final Calendar TEST_ACTION_LOG_ACTION_DATE = Calendar.getInstance();
     protected static final UUID TEST_UUID = UUID.randomUUID();
-    
     
     @Autowired
     protected EntityControlledVocabularyService entityControlledVocabularyService;

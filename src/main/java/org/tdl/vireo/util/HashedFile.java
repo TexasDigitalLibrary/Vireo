@@ -8,13 +8,17 @@ import java.io.OutputStream;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
+import org.tdl.vireo.Application;
 import org.tdl.vireo.config.constant.ConfigurationName;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 
 @Service
+@DependsOn("systemDataLoader")
 public class HashedFile {    
+    
     @Autowired
     private ConfigurationRepo configurationRepo;
     
@@ -71,15 +75,13 @@ public class HashedFile {
      * @return File pointing to parent directory for attachments
      */
     public File getStore() {
-        String name = configurationRepo.getValue(ConfigurationName.APPLICATION_ATTACHMENTS_PATH, "attachments");
+        String name = configurationRepo.getByName(ConfigurationName.APPLICATION_ATTACHMENTS_PATH).getValue();
         File store = null;
-
+        
         if (new File(name).isAbsolute()) {
             store = new File(name);
         } else {
-            // TODO: this probably needs to be better -- /var/lib/vireo is absolute and only for linux
-            String installationPath = configurationRepo.getValue(ConfigurationName.APPLICATION_INSTALL_DIRECTORY, "/var/lib/vireo");
-            store = new File(installationPath + File.separator + name);
+            store = new File(Application.BASE_PATH + File.separator + name);
         }
         if (!store.exists()) {
             store.mkdirs();

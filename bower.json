@@ -6,9 +6,13 @@
   "license": "BSD",
   "private": true,
   "dependencies": {
+    "angular": "1.4.9",
     "angular-sanitize": "1.4.9",
     "angular-ui-tinymce": "latest",
     "ng-sortable": "1.3.2",
     "core": "git@github.com:TAMULib/Weaver-UI-Core.git#login"
+  },
+  "resolutions": {
+    "angular": "1.4.9"
   }
 }

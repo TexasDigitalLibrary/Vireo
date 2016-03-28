@@ -178,6 +178,8 @@
 	<script src="bower_components/tinymce-dist/tinymce.min.js"></script>
 	<script src="bower_components/angular-ui-tinymce/dist/tinymce.min.js"></script>
 	<script src="bower_components/ng-sortable/dist/ng-sortable.js"></script>
+    <script src="bower_components/ng-file-upload/ng-file-upload-shim.min.js"></script>
+    <script src="bower_components/ng-file-upload/ng-file-upload.min.js"></script>
 	
 	<!--  Core libraries -->
 	
@@ -250,6 +252,7 @@
 
 	    <!-- Directives -->
 	    <script src="directives/accordionDirective.js"></script>
+	    <script src="directives/deHashColorDirective.js"></script>
 	    <script src="directives/tabsDirective.js"></script>
 	    <script src="directives/sideBoxDirective.js"></script>
         <script src="directives/toggleButtonDirective.js"></script>
@@ -265,6 +268,7 @@
 	    <script src="directives/dragAndDropListDirective.js"></script>
 	    <script src="directives/lockingTextAreaDirective.js"></script>
 	    <script src="directives/trashCanDirective.js"></script>
+	    <script src="directives/dropZoneDirective.js"></script>
 
 	    <!-- Services -->
 	    <script src="services/sidebarService.js"></script>
@@ -286,6 +290,7 @@
 	    <script src="controllers/adminController.js"></script>
 	    <script src="controllers/applicationSettingsController.js"></script>	    
 	    <script src="controllers/headerController.js"></script>
+	    <script src="controllers/settings/lookAndFeelController.js"></script>
         <script src="controllers/organizationSettingsController.js"></script>
 	    <script src="controllers/settingsController.js"></script>
 	    <script src="controllers/sidebarController.js"></script>  

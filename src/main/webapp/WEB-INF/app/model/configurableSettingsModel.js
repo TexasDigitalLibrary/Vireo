@@ -42,10 +42,11 @@ vireo.service("ConfigurableSettings", function($sanitize, AbstractModel, WsApi) 
 
 	ConfigurableSettings.update = function(type, setting, value) {	
 		WsApi.fetch({
-			endpoint:'/private/queue',
-			controller:'settings/configurable',
-			method:'update',
-			data: {'type':type, 'setting':setting,'value': $sanitize(value)}
+				endpoint:'/private/queue',
+				controller:'settings/configurable',
+				method:'update',
+				data: {'type':type, 'setting':setting,'value': $sanitize(value).replace(new RegExp("&#10;", 'g'), "")
+			}
 		}).then(function(response) {
 			// TODO: validation of response
 		});

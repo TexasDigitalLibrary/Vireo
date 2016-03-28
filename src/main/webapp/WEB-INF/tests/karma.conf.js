@@ -12,6 +12,12 @@ module.exports = function(config){
             'app/bower_components/angular-mocks/angular-mocks.js',
             'app/bower_components/angular-route/angular-route.js',
 
+            'app/bower_components/tinymce-dist/tinymce.min.js',
+            'app/bower_components/angular-ui-tinymce/dist/tinymce.min.js',
+            'app/bower_components/ng-sortable/dist/ng-sortable.js',
+            'app/bower_components/ng-file-upload/ng-file-upload-shim.min.js',
+            'app/bower_components/ng-file-upload/ng-file-upload.min.js',
+
 
             'app/bower_components/core/app/config/coreConfig.js',
 
