@@ -45,7 +45,7 @@ describe('controller: UserController', function() {
 	
 	describe('Should be able to set a User', function() {
 		it('should have set the User', function() {			
-			User.set(mockUser2)			
+			User.set(mockUser2)
 			var userOnScope = angular.toJson(scope.user);
 			var mockUser = angular.toJson(mockUser2);
 			expect(userOnScope).toEqual(mockUser);

@@ -10,13 +10,13 @@
 		</button>
 		<p ng-if="graduationMonths.list.length == 0">Add new Document Type</p>
 		<draganddroplist dragging="dragging"
-			scope-value="documentTypes"
-			properties='["name", "gradeLevel"]'
-			item-view='views/directives/dragAndDropDocumentType.html'
-			listeners='dragControlListeners'
-			edit='launchEditModal(index)'
-			sort-column='name',
-			sort-action='sortAction'
+						scope-value="documentTypes"
+						properties='["name", "gradeLevel"]'
+						item-view='views/directives/dragAndDropDocumentType.html'
+						listeners='dragControlListeners'
+						edit='launchEditModal(index)'
+						sort-column='name',
+						sort-action='sortAction'
                         sort-method='sortDocumentTypes(column)'
                         sort-model='Document Types'>
                 </draganddroplist>

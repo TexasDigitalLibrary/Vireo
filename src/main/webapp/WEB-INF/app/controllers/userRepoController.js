@@ -11,7 +11,7 @@ vireo.controller('UserRepoController', function ($controller, $location, $route,
 			$scope.updateRole = function(uin, role) {
 				UserRepo.updateRole($scope.user, uin, role);
 				if($scope.user.uin == uin) {
-					if(role == 'ROLE_USER') {
+					if(role == 'ROLE_STUDENT' || role == 'ROLE_REVIEWER') {
 						$location.path('/myview');
 					}
 					else {
@@ -21,13 +21,19 @@ vireo.controller('UserRepoController', function ($controller, $location, $route,
 			};
 			$scope.allowableRoles = function(userRole) {
 				if(sessionStorage.role == 'ROLE_ADMIN') {				
-					return ['ROLE_ADMIN','ROLE_MANAGER','ROLE_USER'];
+					return ['ROLE_ADMIN','ROLE_MANAGER', 'ROLE_REVIEWER', 'ROLE_STUDENT'];
 				}
 				else if(sessionStorage.role == 'ROLE_MANAGER') {
 					if(userRole == 'ROLE_ADMIN') {
 						return ['ROLE_ADMIN'];
 					}
-					return ['ROLE_MANAGER','ROLE_USER'];
+					return ['ROLE_MANAGER', 'ROLE_REVIEWER', 'ROLE_STUDENT'];
+				}
+				else if(sessionStorage.role == 'ROLE_REVIEWER') {
+					if(userRole == 'ROLE_ADMIN') {
+						return ['ROLE_ADMIN'];
+					}
+					return ['ROLE_REVIEWER', 'ROLE_STUDENT'];
 				}
 				else {
 					return [userRole];

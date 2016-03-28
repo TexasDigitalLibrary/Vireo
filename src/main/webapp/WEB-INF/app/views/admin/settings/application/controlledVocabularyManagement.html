@@ -1,0 +1,101 @@
+<div id="controlled-vocabulary" class="container-fluid" ng-controller="ControlledVocabularyRepoController">
+	
+	<alerts channels="/settings/controlled-vocabulary" types="ERROR, WARNING" exclusive></alerts>
+
+	<div class="row">
+
+		<div class="col-sm-6">		
+			
+			<button class="btn btn-default modal-add-btn" 
+					data-toggle="modal" 
+					data-target="#controlledVocabularyNewModal">
+				Add Controlled Vocabulary
+			</button>
+			
+			<div class="glyphicon glyphicon-info-sign tooltip-span move-up" tooltip="Dialog in which allows to create new controlled vocabulary."></div>
+
+			<p ng-if="controlledVocabulary.list.length == 0">Add new Controlled Vocabulary</p>
+			
+			<draganddroplist dragging="dragging"
+							 scope-value="controlledVocabulary"
+							 properties='["name"]'
+							 item-view='views/directives/dragAndDropControlledVocabulary.html'
+							 listeners='dragControlListeners'
+							 edit='editControlledVocabulary(index)'
+							 sort-model='Controlled Vocabulary'
+							 sort-column='name',
+							 sort-action='sortAction'
+							 sort-method='sortControlledVocabulary(column)'>
+			</draganddroplist>
+
+		</div>
+		
+		<div class="col-sm-6">
+			<trashcan id="{{trashCanId}}"
+					  dragging="dragging"
+					  listeners='dragControlListeners'>
+			</trashcan>
+		</div>
+
+	</div>
+
+	<hr/>
+
+	<div class="row">
+
+		<div class="col-sm-6">		
+			
+			<button class="btn btn-default modal-add-btn" 
+					data-toggle="modal" 
+					data-target="#controlledVocabularyUploadModal" ng-click="status()">
+				Upload Controlled Vocabulary
+			</button>
+			
+			<div class="glyphicon glyphicon-info-sign tooltip-span move-up" tooltip="Dialog in which to upload new or append to existing controlled vocabulary. Additionally, able to export existing from here."></div>
+
+		</div>
+		
+		<div class="col-sm-6">
+
+			<dropzone id="{{dropZoneId}}"
+					  text="Begin import by dropping csv into drop zone",
+					  patterns=".csv"
+					  drop-method="beginImport(file)">
+			</dropzone>
+			
+		</div>
+
+	</div>
+
+	<modal modal-id="controlledVocabularyNewModal" 
+		   modal-view="views/modals/settings/controlledVocabularyNewModal.html" 
+		   modal-header-class="modal-header-primary"
+		   modal-keyboard="false"
+		   modal-backdrop="static">
+	</modal>
+
+	<modal modal-id="controlledVocabularyEditModal" 
+		   modal-view="views/modals/settings/controlledVocabularyEditModal.html" 
+		   modal-header-class="modal-header-primary"
+		   modal-keyboard="false"
+		   modal-backdrop="static">
+	</modal>
+
+	<modal modal-id="controlledVocabularyConfirmRemoveModal" 
+		   modal-view="views/modals/settings/controlledVocabularyConfirmRemoveModal.html" 
+		   modal-header-class="modal-header-primary"
+		   modal-keyboard="false"
+		   modal-backdrop="static">
+	</modal>
+
+	<modal modal-id="controlledVocabularyUploadModal" 
+		   modal-view="views/modals/settings/controlledVocabularyUploadModal.html" 
+		   modal-header-class="modal-header-primary"
+		   modal-keyboard="false"
+		   modal-backdrop="static"
+		   modal-fullscreen="true">
+	</modal>
+
+</div>
+
+
