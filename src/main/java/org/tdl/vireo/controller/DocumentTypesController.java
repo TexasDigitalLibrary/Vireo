@@ -20,7 +20,6 @@ import org.tdl.vireo.model.repo.DocumentTypesRepo;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
@@ -145,7 +144,7 @@ public class DocumentTypesController {
         
         JsonNode degreeLevel = dataNode.get("degreeLevel");
         if(degreeLevel != null) {
-            documentType.setLevel(DegreeLevel.valueOf(degreeLevel.asText()));  
+            documentType.setDegreeLevel(DegreeLevel.valueOf(degreeLevel.asText()));  
         }
         else {
             return new ApiResponse(ERROR, "Name required to update a documentType!");
