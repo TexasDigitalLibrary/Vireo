@@ -574,6 +574,15 @@ h4 {
   border: 1px solid #dcdcdc;
 }
 
+.td-center-middle {
+	text-align: center;
+	vertical-align: middle;
+}
+
+.draggable-table-row.as-sortable-item, .as-sortable-placeholder {
+  display: table-row;
+}
+
 .trash-drop-zone {
   text-align: center;
   background: #efefef;

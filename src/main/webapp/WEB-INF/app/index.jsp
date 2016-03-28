@@ -286,6 +286,7 @@
 	    <script src="model/userRepoModel.js"></script>
 	    <script src="model/depositLocationRepoModel.js"></script>
 	    <script src="model/graduationMonthRepoModel.js"></script>
+	    <script src="model/embargoRepoModel.js"></script>
 	    <script src="model/languageRepoModel.js"></script>
 	    <script src="model/controlledVocabularyRepoModel.js"></script>
 	    <script src="model/availableDocumentTypesRepoModel.js"></script>
@@ -303,6 +304,7 @@
 	    <script src="controllers/whoHasAccessController.js"></script>
 	    <script src="controllers/settings/customActionSettingsController.js"></script>
 	    <script src="controllers/settings/depositLocationRepoController.js"></script> 
+	    <script src="controllers/settings/embargoRepoController.js"></script>
 	    <script src="controllers/settings/graduationMonthRepoController.js"></script> 
 	    <script src="controllers/settings/controlledVocabularyRepoController.js"></script>
 	    <script src="controllers/settings/languageRepoController.js"></script> 

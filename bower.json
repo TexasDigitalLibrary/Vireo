@@ -6,11 +6,15 @@
   "license": "BSD",
   "private": true,
   "dependencies": {
+    "angular": "1.4.9",
     "angular-sanitize": "1.4.9",
     "angular-ui-tinymce": "0.0.14",
     "ng-sortable": "1.3.2",
     "ng-csv": "0.3.2",
-    "core": "git@github.com:TAMULib/Weaver-UI-Core.git#vireo-work",
-    "ng-file-upload": "^12.0.1"
+    "ng-file-upload": "^12.0.1",
+    "core": "git@github.com:TAMULib/Weaver-UI-Core.git#vireo-work"
+  },
+  "resolutions": {
+    "angular": "1.4.9"
   }
 }
