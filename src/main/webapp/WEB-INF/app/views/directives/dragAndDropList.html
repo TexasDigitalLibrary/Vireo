@@ -1,9 +1,9 @@
 
 <div ng-if="sortColumn && scopeValue.list.length > 0" class="sort-div">
 	<a href="" ng-click="sortMethod({column:sortColumn})">
-		<span class="glyphicon glyphicon-refresh"></span> 
-		<span ng-if="sortAction=='confirm'"> Sort {{model}}</span>
-		<span ng-if="sortAction=='sort'"> Are you sure you want to sort all {{model}}?</span>
+		<span class="glyphicon glyphicon-refresh"></span>
+		<span ng-if="sortAction=='confirm'"> Sort {{sortModel}}</span>
+		<span ng-if="sortAction=='sort'"> Are you sure you want to sort all {{sortModel}}?</span>
 	</a>
 </div>
 

@@ -288,6 +288,7 @@
 	    <script src="model/graduationMonthRepoModel.js"></script>
 	    <script src="model/languageRepoModel.js"></script>
 	    <script src="model/controlledVocabularyRepoModel.js"></script>
+	    <script src="model/availableDocumentTypesRepoModel.js"></script>
 
 
 	    <!-- Controllers -->
@@ -305,6 +306,8 @@
 	    <script src="controllers/settings/graduationMonthRepoController.js"></script> 
 	    <script src="controllers/settings/controlledVocabularyRepoController.js"></script>
 	    <script src="controllers/settings/languageRepoController.js"></script> 
+
+	    <script src="controllers/settings/availableDocumentTypesController.js"></script>
 	    
 	<!-- endbuild -->
 

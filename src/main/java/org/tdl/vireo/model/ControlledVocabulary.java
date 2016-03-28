@@ -58,7 +58,7 @@ public class ControlledVocabulary extends BaseOrderedEntity {
         this();
         setName(name);
         setLanguage(language);
-        super.setOrder(order);
+        setOrder(order);
     }
     
     /**
