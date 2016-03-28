@@ -43,7 +43,7 @@ public class Attachment extends BaseEntity {
 	private UUID uuid;
 	
 	//TODO:  do we want to make an action log not optional on the attachment?
-	@OneToMany(cascade=ALL, fetch = EAGER, orphanRemoval=true)
+	@OneToMany(cascade=ALL, fetch = EAGER, orphanRemoval = true)
 	private Set<ActionLog> actionLogs;
 	
 	public Attachment() {

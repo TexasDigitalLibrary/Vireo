@@ -14,7 +14,7 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 	$scope.sortDefault = "sortDefaultEmbargoes";
 	$scope.sortProquest = "sortProquestEmbargoes";
 	
-	$scope.itemTypeString = "";
+	$scope.sortLabel = "";
 		
 	// defaults
 	$scope.resetEmbargo = function() {
@@ -88,7 +88,7 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 			list: $scope.embargoes.list,
 			confirm: '#embargoConfirmRemoveModal',
 			reorder: $scope.reorderEmbargo,
-			itemTypeString: $scope.itemTypeString,
+			sortLabel: $scope.sortLabel,
 			container: '#embargo'
 		});
 	});

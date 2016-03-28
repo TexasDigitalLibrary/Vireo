@@ -8,6 +8,7 @@ vireo.directive("draganddroplist", function() {
 			}
 		},
 		restrict: 'E',
+		//TODO: sortModel and sortLabel will change to sortLabel
 		scope: {
 			'dragging': '=',
 			'scopeValue': '=',
@@ -15,7 +16,7 @@ vireo.directive("draganddroplist", function() {
 			'edit': '&',
 			'toString': '&',
 			'itemView': '@',
-			'itemTypeString': '@',
+			'sortLabel': '@',
 			'sortColumn': '@',
 			'sortAction': '=',
 			'sortActionSort': '=',

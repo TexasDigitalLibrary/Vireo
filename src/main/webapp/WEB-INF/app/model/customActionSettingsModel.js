@@ -60,8 +60,7 @@ vireo.service("CustomActionSettings", function(AbstractModel, WsApi, AlertServic
 			method:'create',
 			data: customAction
 		}).then(function(response) {
-			console.log(response);
-			console.log(JSON.parse(response.body).payload);
+			// TODO: error handling
 			return response;
 		});		
 
@@ -74,8 +73,7 @@ vireo.service("CustomActionSettings", function(AbstractModel, WsApi, AlertServic
 			method:'update',
 			data: customAction
 		}).then(function(response) {
-			console.log(response);
-			console.log(JSON.parse(response.body).payload);
+			// TODO: error handling
 			return response;
 		});
 	};
@@ -107,15 +105,6 @@ vireo.service("CustomActionSettings", function(AbstractModel, WsApi, AlertServic
 			}
 		});
 	};
-
-//	CustomActionSettings.reset = function(type,setting) {
-//		WsApi.fetch({
-//			endpoint:'/private/queue',
-//			controller:'settings/configurable',
-//			method:'reset',
-//			data: {'type':type, 'setting':setting}
-//		});
-//	};
 
 	CustomActionSettings.ready = function() {
 		return CustomActionSettings.promise;
