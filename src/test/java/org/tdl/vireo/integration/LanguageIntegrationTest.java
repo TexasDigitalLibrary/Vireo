@@ -43,7 +43,7 @@ public class LanguageIntegrationTest extends AbstractIntegrationTest {
     @Test
     @Order(value = 1)
     public void testGetAllLanguages() throws InterruptedException, JsonParseException, JsonMappingException, IOException {
-        String responseJson = StompRequest("/settings/language/all", null);
+        String responseJson = StompRequest("/settings/languages/all", null);
         
         Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
 

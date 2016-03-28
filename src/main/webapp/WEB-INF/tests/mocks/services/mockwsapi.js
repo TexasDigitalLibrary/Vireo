@@ -29,7 +29,7 @@ angular.module('mock.wsApi', []).
         				}; break;
         			}
         		}; break;
-                case 'settings/language': {
+                case 'settings/languages': {
                     switch(apiReq.method) {
                         case 'all': defer.resolve({'content':mockLanguageRepo1}); break;
                         default: {

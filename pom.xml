@@ -116,6 +116,13 @@
 
 		<!-- <dependency> <groupId>org.codehaus.mojo</groupId> <artifactId>properties-maven-plugin</artifactId> 
 			<version>1.0.0</version> </dependency> -->
+			
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.8</version>
+		</dependency>
+			
 
 	</dependencies>
 
@@ -176,6 +183,9 @@
 								<includes>
 									<include>application.properties</include>
 								</includes>
+								<excludes>
+					                <exclude>**/*.xls</exclude>
+				              	</excludes>
 							</resource>
 						</webResource>
 						<webResource>
@@ -217,6 +227,9 @@
 							<includes>
 								<include>application.properties</include>
 							</includes>
+							<excludes>
+				                <exclude>**/*.xls</exclude>
+			              	</excludes>
 						</webResource>
 						<webResource>
 							<filtering>false</filtering>
@@ -363,7 +376,7 @@
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
+				<filtering>false</filtering>
 			</resource>
 		</resources>
 
