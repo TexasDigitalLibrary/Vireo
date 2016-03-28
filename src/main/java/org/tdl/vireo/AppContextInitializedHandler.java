@@ -6,10 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Conditional;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
-import org.tdl.vireo.condition.NotRunningTests;
 
 import edu.tamu.framework.CoreContextInitializedHandler;
 import edu.tamu.framework.model.repo.SymlinkRepo;
@@ -21,7 +19,6 @@ import edu.tamu.framework.model.repo.SymlinkRepo;
  *
  */
 @Component
-@Conditional(NotRunningTests.class)
 @EnableConfigurationProperties(SymlinkRepo.class)
 public class AppContextInitializedHandler extends CoreContextInitializedHandler {
 

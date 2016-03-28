@@ -295,7 +295,6 @@ public abstract class AbstractEntityTest {
     protected static final Calendar TEST_ACTION_LOG_ACTION_DATE = Calendar.getInstance();
     protected static final UUID TEST_UUID = UUID.randomUUID();
     
-    
     @Autowired
     protected EntityControlledVocabularyService entityControlledVocabularyService;
 
