@@ -2,15 +2,15 @@
 
 	<form name="userSettingsForm">
 
-		<div class="col-sm-12">
+		<div class="col-sm-12"  ng-controller="UserController">
 
 			<h1>Profile for <username></username></h1>
+			
 			<hr>
 
 			<div class="row my-profile-section">
 
 				<h2>Personal Information</h2>
-
 
 				<div class="col-sm-6">
 					<div class="row form-group">
@@ -27,7 +27,7 @@
 							<label class="pull-right-lg control-label">First Name:</label>
 						</div>	
 						<div class="col-sm-6">
-							<span class="profile-value">{{::user.firstName}}</span>
+							<span class="profile-value">{{user.firstName}}</span>
 						</div>
 					</div>
 
@@ -36,7 +36,7 @@
 							<label class="pull-right-lg control-label">Middle Name:</label>
 						</div>
 						<div class="col-sm-6">
-							<span class="profile-value">{{::user.middleName}}</span>
+							<span class="profile-value">{{user.middleName}}</span>
 						</div>	
 					</div>
 
@@ -46,7 +46,7 @@
 							<label class="pull-right-lg control-label">Last Name:</label>
 						</div>	
 						<div class="col-sm-6">
-							<span class="profile-value">{{::user.lastName}}</span>
+							<span class="profile-value">{{user.lastName}}</span>
 						</div>
 					</div>
 
@@ -81,7 +81,7 @@
 							<label class="pull-right-lg control-label">Birth Year:</label>
 						</div>
 						<div class="col-sm-6">
-							<span class="profile-value">{{::user.birthYear}}</span>
+							<span class="profile-value">{{user.birthYear}}</span>
 						</div>
 					</div>
 
@@ -90,7 +90,7 @@
 							<label class="pull-right-lg control-label">ORCID:</label>
 						</div>
 						<div class="col-sm-6">
-							<span class="profile-value">{{::user.orcid}}</span>
+							<span class="profile-value">{{user.orcid}}</span>
 						</div>
 					</div>
 
@@ -115,7 +115,7 @@
 						<label class="pull-right-lg control-label">Permanent Phone:</label>
 					</div>
 					<div class="col-sm-6">
-						<span class="profile-value">{{::user.permanentPhone}}</span>
+						<span class="profile-value">{{user.permanentPhone}}</span>
 					</div>
 				</div>
 
@@ -159,7 +159,7 @@
 						<label class="pull-right-lg control-label">Permanent Address:</label>
 					</div>
 					<div class="col-sm-6">
-						<label class="profile-value control-label">{{::user.permanentAddress}}</label>
+						<label class="profile-value control-label">{{user.permanentAddress}}</label>
 					</div>
 				</div>
 
@@ -168,7 +168,7 @@
 						<label class="pull-right-lg control-label">Current Phone:</label>
 					</div>
 					<div class="col-sm-6">
-						<span class="profile-value">{{::user.currentPhone}}</span>
+						<span class="profile-value">{{user.currentPhone}}</span>
 					</div>
 				</div>
 
@@ -177,7 +177,7 @@
 						<label class="pull-right-lg control-label">Current Address:</label>
 					</div>
 					<div class="col-sm-6">
-						<span class="profile-value">{{::user.currentAddress}}</span>
+						<span class="profile-value">{{user.currentAddress}}</span>
 					</div>
 				</div>
 

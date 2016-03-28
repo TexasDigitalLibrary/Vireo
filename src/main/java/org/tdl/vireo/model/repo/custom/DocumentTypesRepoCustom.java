@@ -3,7 +3,13 @@ package org.tdl.vireo.model.repo.custom;
 import org.tdl.vireo.enums.DegreeLevel;
 import org.tdl.vireo.model.DocumentType;
 
-public interface DocumentTypeRepoCustom {
+public interface DocumentTypesRepoCustom {
 
     public DocumentType create(String name, DegreeLevel degreeLevel);
+    
+    public void reorder(Integer src, Integer dest);
+    
+    public void sort(String column);
+
+    public void remove(Integer index);
 }

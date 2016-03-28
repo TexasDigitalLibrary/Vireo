@@ -1,0 +1,52 @@
+<div id="available-document-types" class="row" ng-controller="AvailableDocumentTypesController">
+	
+  <!-- <alerts channels="/settings/graduation-month" types="ERROR, WARNING" exclusive></alerts> -->
+	
+	<div class="col-sm-6">		
+		<button class="btn btn-default modal-add-btn" 
+				data-toggle="modal" 
+				data-target="#availableDocumentTypesNewModal">
+			Add Document Type
+		</button>
+		<p ng-if="graduationMonths.list.length == 0">Add new Document Type</p>
+		<draganddroplist dragging="dragging"
+			scope-value="documentTypes"
+			properties='["name", "gradeLevel"]'
+			item-view='views/directives/dragAndDropDocumentType.html'
+			listeners='dragControlListeners'
+			edit='launchEditModal(index)'
+			sort-column='name',
+			sort-action='sortAction'
+                        sort-method='sortDocumentTypes(column)'
+                        sort-model='Document Types'>
+                </draganddroplist>
+	</div>
+	
+	<div class="col-sm-6">
+		<trashcan id="{{trashCanId}}"
+				  dragging="dragging"
+				  listeners='dragControlListeners'>
+		</trashcan>
+	</div>
+
+	<modal modal-id="availableDocumentTypesNewModal" 
+		   modal-view="views/modals/settings/availableDocumentTypesNewModal.html" 
+		   modal-header-class="modal-header-primary"		   
+		   modal-data="modalData">
+	</modal>
+
+	<modal modal-id="availableDocumentTypesEditModal" 
+		   modal-view="views/modals/settings/availableDocumentTypesEditModal.html" 
+		   modal-header-class="modal-header-primary"		   
+		   modal-data="modalData">
+	</modal>
+
+	<modal modal-id="availableDocumentTypesConfirmRemoveModal" 
+		   modal-view="views/modals/settings/availableDocumentTypesConfirmRemoveModal.html" 
+		   modal-header-class="modal-header-primary"		   
+		   modal-data="modalData">
+	</modal>
+	
+</div>
+
+

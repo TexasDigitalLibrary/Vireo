@@ -23,6 +23,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import edu.tamu.framework.aspect.annotation.SkipAop;
 import edu.tamu.framework.model.jwt.JWT;
+import edu.tamu.framework.util.JwtUtility;
 
 /** 
  * 
@@ -36,6 +37,9 @@ public class MockTokenController {
 
     @Autowired
     private Environment env;
+    
+    @Autowired
+    private JwtUtility jwtUtility;
         
     @Value("${auth.security.jwt.secret-key}")
     private String secret_key;
@@ -69,13 +73,15 @@ public class MockTokenController {
     @RequestMapping("/token")
     @SkipAop
     public ModelAndView token(@RequestParam() Map<String,String> params, @RequestHeader() Map<String,String> headers) throws InvalidKeyException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException, JsonProcessingException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
-        
+            	
         String referer = params.get("referer");
-        if(referer == null) System.err.println("No referer in header!!");
+        if(referer == null) {
+        	System.err.println("No referer in header!!");        	
+        }
         
         ModelAndView tokenResponse = null;
         try {
-            tokenResponse = new ModelAndView("redirect:" + referer + "?jwt=" + makeToken(params.get("mock"), headers).getTokenAsString());
+            tokenResponse = new ModelAndView("redirect:" + referer + "?jwt=" + makeToken(params, headers).getTokenAsString());
         } catch (InvalidKeyException | JsonProcessingException | NoSuchAlgorithmException | IllegalStateException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -100,8 +106,8 @@ public class MockTokenController {
      */
     @RequestMapping("/refresh")
     @SkipAop
-    public JWT refresh(@RequestParam() Map<String,String> params, @RequestHeader() Map<String,String> headers) throws InvalidKeyException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException, JsonProcessingException {
-        return makeToken(params.get("mock"), headers);
+    public JWT refresh(@RequestParam() Map<String,String> params, @RequestHeader() Map<String,String> headers) throws InvalidKeyException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException, JsonProcessingException {            	    	    	
+    	return makeToken(params, headers);
     }
     
     /**
@@ -117,39 +123,43 @@ public class MockTokenController {
      * @exception   UnsupportedEncodingException
      * @exception   JsonProcessingException
      * 
-     */
-    @SkipAop
-    private JWT makeToken(String mockUser, Map<String, String> headers) throws InvalidKeyException, JsonProcessingException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException {       
-        if (mockUser == null) {
-            mockUser = "justesting";
-        }
-        logger.info("Creating token for mock " + mockUser);
-        
-        JWT token = new JWT(secret_key, expiration);
-        
-        if(mockUser.equals("assumed")) {
-            for(String k : shibKeys) {
-                String p = headers.get(env.getProperty("shib."+k, ""));
-                token.makeClaim(k, p);
-                logger.info("Adding " + k +": " + p + " to JWT.");
-            }
-        }
-        else if(mockUser.equals("admin")) {
-            token.makeClaim("netid", "aggieJack");
-            token.makeClaim("uin", "123456789");
-            token.makeClaim("lastName", "Daniels");
-            token.makeClaim("firstName", "Jack");
-            token.makeClaim("email", "aggieJack@tamu.edu");
-        }
-        else {
-            token.makeClaim("netid", "bobBoring");
-            token.makeClaim("uin", "987654321");
-            token.makeClaim("lastName", "Boring");
-            token.makeClaim("firstName", "Bob");
-            token.makeClaim("email", "bobBoring@tamu.edu");
-        }
-        
-        return token;       
+     */    
+    private JWT makeToken(@RequestParam() Map<String,String> params, Map<String, String> headers) throws InvalidKeyException, JsonProcessingException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException {       
+
+    	String token = params.get("token");
+    	if(token != null) {    		
+    		return jwtUtility.makeToken(jwtUtility.validateJWT(token));
+    	}
+    	
+    	JWT newToken = new JWT(secret_key, expiration);
+    	
+    	String mockUser = params.get("mock");
+    	    	
+    	if(mockUser != null) {
+    		 if(mockUser.equals("assumed")) {
+	            for(String k : shibKeys) {
+	                String p = headers.get(env.getProperty("shib."+k, ""));
+	                newToken.makeClaim(k, p);
+	                logger.info("Adding " + k +": " + p + " to JWT.");
+	            }
+	        }
+	        else if(mockUser.equals("admin")) {        	
+	        	newToken.makeClaim("netid", "aggieJack");
+	        	newToken.makeClaim("uin", "123456789");
+	        	newToken.makeClaim("lastName", "Daniels");
+	        	newToken.makeClaim("firstName", "Jack");
+	        	newToken.makeClaim("email", "aggieJack@tamu.edu");
+	        }
+	        else {
+	        	newToken.makeClaim("netid", "bobBoring");
+	        	newToken.makeClaim("uin", "987654321");
+	        	newToken.makeClaim("lastName", "Boring");
+	        	newToken.makeClaim("firstName", "Bob");
+	        	newToken.makeClaim("email", "bobBoring@tamu.edu");
+	        }
+    	}
+         
+        return newToken;       
     }
 
 }

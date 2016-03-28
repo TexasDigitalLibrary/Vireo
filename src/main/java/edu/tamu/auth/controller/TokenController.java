@@ -30,9 +30,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import edu.tamu.framework.model.jwt.JWT;
-import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.aspect.annotation.SkipAop;
+import edu.tamu.framework.model.jwt.JWT;
 
 
 /** 
@@ -67,7 +66,6 @@ public class TokenController {
 	 */
 	@RequestMapping("/")
 	@SkipAop
-	@Auth
 	public Map<String, String> index(@RequestHeader() Map<String,String> headers) {
 		return headers;
 	}
@@ -92,6 +90,7 @@ public class TokenController {
      * 
      */
     @RequestMapping("/token")
+    @SkipAop
     public ModelAndView token(@RequestParam() Map<String,String> params, @RequestHeader() Map<String,String> headers) {
         String referer = params.get("referer");
         if(referer == null) System.err.println("No referer in header!!");
@@ -123,7 +122,6 @@ public class TokenController {
 	 */
 	@RequestMapping("/refresh")
 	@SkipAop
-	@Auth
 	public JWT refresh(@RequestParam() Map<String,String> params, @RequestHeader() Map<String,String> headers) throws InvalidKeyException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException, JsonProcessingException {
 		return makeToken(headers);
 	}
