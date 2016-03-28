@@ -1,27 +1,27 @@
 <div id="email-templates" class="row" ng-controller="EmailTemplateRepoController">
-  
+
   <alerts channels="/settings/email-templates" types="ERROR, WARNING" exclusive></alerts>
-  
-  <div class="col-sm-6">		
-    <button class="btn btn-default modal-add-btn" 
-data-toggle="modal" 
-data-target="#emailTemplatesNewModal">
+
+  <div class="col-sm-6">
+    <button class="btn btn-default modal-add-btn"
+            data-toggle="modal"
+            data-target="#emailTemplatesNewModal">
       Add New Email Template
     </button>
 
     <draganddroplist dragging="dragging"
                      scope-value="emailTemplates"
-                     properties='["month"]'
+                     properties='["name"]'
                      item-view='views/directives/dragAndDropEmailTemplates.html'
                      listeners='dragControlListeners'
-                     edit='editEmailTemplate(index)'
-                     to-string='toMonthString(month)'
+                     edit='launchEditModal(index)'
                      sort-column='name',
                      sort-action='sortAction'
                      sort-method='sortEmailTemplates(column)'>
     </draganddroplist>
+
   </div>
-  
+
   <div class="col-sm-6">
     <trashcan id="{{trashCanId}}"
               dragging="dragging"
@@ -29,30 +29,28 @@ data-target="#emailTemplatesNewModal">
     </trashcan>
   </div>
 
-  <modal modal-id="emailTemplatesNewModal" 
-         modal-view="views/modals/settings/emailTemplatesNewModal.html" 
-         modal-header-class="modal-header-primary"		   
+  <modal modal-id="emailTemplatesNewModal"
+         modal-view="views/modals/settings/emailTemplatesNewModal.html"
+         modal-header-class="modal-header-primary"
          modal-data="modalData"
          modal-backdrop="static"
          modal-fullscreen="true">
   </modal>
 
-  <modal modal-id="emailTemplatesEditModal" 
-         modal-view="views/modals/settings/emailTemplatesEditModal.html" 
-         modal-header-class="modal-header-primary"		   
+  <modal modal-id="emailTemplatesEditModal"
+         modal-view="views/modals/settings/emailTemplatesEditModal.html"
+         modal-header-class="modal-header-primary"
          modal-data="modalData"
          modal-backdrop="static"
          modal-fullscreen="true">
   </modal>
 
-  <modal modal-id="emailTemplatesConfirmRemoveModal" 
-         modal-view="views/modals/settings/emailTemplatesConfirmRemoveModal.html" 
-         modal-header-class="modal-header-primary"		   
+  <modal modal-id="emailTemplatesConfirmRemoveModal"
+         modal-view="views/modals/settings/emailTemplatesConfirmRemoveModal.html"
+         modal-header-class="modal-header-primary"
          modal-data="modalData"
          modal-backdrop="static"
          modal-fullscreen="true">
   </modal>
-  
+
 </div>
-
-

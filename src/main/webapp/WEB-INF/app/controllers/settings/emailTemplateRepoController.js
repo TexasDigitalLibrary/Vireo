@@ -11,13 +11,28 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
   
   $scope.sortAction = "confirm";
 
-  $scope.modalData = {'name':'', 'subject':'', 'messageBody':''};
+  $scope.modalData = {'name':'', 'subject':'', 'message':''};
   
   $scope.resetModalData = function() {
-    $scope.modalData = {'name':'', 'subject':'', 'messageBody':''};
+    $scope.modalData = {'name':'', 'subject':'', 'message':''};
   };
 
+  $scope.templateToString = function(template) {
+    console.info('tostring');
+    console.info(template);
+    console.info(template.name);
+    return template.name;
+  }
+
   $scope.ready.then(function() {
+
+    $scope.selectEmailTemplate = function(index){
+      $scope.modalData = $scope.emailTemplates.list[index];
+    }
+
+    $scope.reorderEmailTemplates = function(src, dest){
+      EmailTemplateRepo.reorder(src, dest);
+    }
 
     $scope.createEmailTemplate = function() {
       EmailTemplateRepo.add($scope.modalData).then(function() {
@@ -25,20 +40,29 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
       });
     };
 
-    // $scope.editGraduationMonth = function(index) {
-    //   $scope.selectGraduationMonth(index - 1);
-    //   angular.element('#graduationMonthEditModal').modal('show');
-    // };
-    
-    // $scope.updateGraduationMonth = function() {
-    //   GraduationMonthRepo.update($scope.modalData).then(function() {
-    //     $scope.resetGraduationMonth();
-    //   });
-    // };
+    $scope.launchEditModal = function(index) {
+      console.info('launching edit modal with index' + index);
+      $scope.modalData = $scope.emailTemplates.list[index];
+      angular.element('#emailTemplatesEditModal').modal('show');
+    };
 
-    // $scope.reorderGraduationMonth = function(src, dest) {
-    //   GraduationMonthRepo.reorder(src, dest);
-    // };
+    $scope.dragControlListeners = DragAndDropListenerFactory.buildDragControls({
+      trashId: $scope.trashCanId,
+      dragging: $scope.dragging,
+      select: $scope.selectEmailTemplate,			
+      list: $scope.emailTemplates.list,
+      confirm: '#emailTemplatesConfirmRemoveModal',
+      reorder: $scope.reorderEmailTemplates,
+      container: '#email-templates'
+    });
+
+    $scope.updateEmailTemplate = function() {
+      console.info('attempting update...');
+      EmailTemplateRepo.update($scope.modalData).then(function() {
+        console.info('done; resetting');
+        $scope.resetModalData();
+      });
+    };
 
     // $scope.sortGraduationMonths = function(column) {
     //   if($scope.sortAction == 'confirm') {
@@ -50,21 +74,12 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
     //   }
     // };
 
-    // $scope.removeGraduationMonth = function(index) {
-    //   GraduationMonthRepo.remove(index).then(function() {
-    //     $scope.resetGraduationMonth();
-    //   });
-    // };
-    
-    // $scope.dragControlListeners = DragAndDropListenerFactory.buildDragControls({
-    //   trashId: $scope.trashCanId,
-    //   dragging: $scope.dragging,
-    //   select: $scope.selectGraduationMonth,			
-    //   list: $scope.graduationMonths.list,
-    //   confirm: '#graduationMonthConfirmRemoveModal',
-    //   reorder: $scope.reorderGraduationMonth,
-    //   container: '#graduation-month'
-    // });
+    $scope.removeEmailTemplate = function(index) {
+      console.info('trying to remove: ' + index);
+      EmailTemplateRepo.remove(index).then(function() {
+        $scope.resetModalData();
+      });
+    };
     
   });	
 

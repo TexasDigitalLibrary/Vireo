@@ -84,6 +84,7 @@ vireo.service("EmailTemplateRepo", function(WsApi, AbstractModel, AlertService) 
   };
 
   EmailTemplatesRepo.reorder = function(src, dest) {
+    console.info('reorder!! ' + src + ' ' + dest);
     return WsApi.fetch({
       'endpoint': '/private/queue', 
       'controller': 'settings/email-template', 

@@ -40,8 +40,9 @@ public class EmailTemplate extends BaseOrderedEntity {
 	 * @param message
 	 *            The new template's message
 	 */
-	public EmailTemplate(String name, String subject, String message) {
+	public EmailTemplate(String name, String subject, String message, int order) {
 		this();
+		super.setOrder(order);
 		setName(name);
 		setSubject(subject);
 		setMessage(message);
