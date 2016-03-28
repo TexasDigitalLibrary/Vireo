@@ -1,11 +1,21 @@
-vireo.controller("HeaderController", function($scope, $controller, $location) {
+vireo.controller("HeaderController", function($scope, $controller, $location, ConfigurableSettings) {
 
 	angular.extend($scope, $controller("AbstractController", {$scope: $scope}));
+		
+	$scope.configurable = ConfigurableSettings.get();
 
-	$scope.logoImage = function() {
-		var logoPath = 	"resources/images/logo-sm.png";
-		if($scope.activeAdminSection()) logoPath = "resources/images/logo.gif";
-		return logoPath;
+	$scope.logoPath = "";
+
+	ConfigurableSettings.ready().then(function() {
+		$scope.logoPath = $scope.configurable.lookAndFeel.left_logo;
+	});
+
+	$scope.logoImage = function() {	
+		
+		if($scope.configurable.lookAndFeel) $scope.logoPath = $scope.configurable.lookAndFeel.left_logo
+	
+		if($scope.activeAdminSection()) $scope.logoPath = "resources/images/logo.gif";	
+		return $scope.logoPath;
 	}
 
 	$scope.activeTab = function(tab) {

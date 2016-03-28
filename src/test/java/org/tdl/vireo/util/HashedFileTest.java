@@ -31,11 +31,9 @@ import org.tdl.vireo.runner.OrderedRunner;
 @ActiveProfiles({"test"})
 public class HashedFileTest {
 
-    private static final String TEST_VIREO_CONFIG_INSTALL_DIR_KEY = ConfigurationName.APPLICATION_INSTALL_DIRECTORY;
     private static final String TEST_VIREO_CONFIG_ATTACHMENTS_PATH_KEY = ConfigurationName.APPLICATION_ATTACHMENTS_PATH;
-    private static final String TEST_VIREO_INSTALL_DIR = "./";
     private static final String TEST_VIREO_ATTACHMENTS_PATH = "attachments";
-    private static final File TEST_ATTACHMENT_STORE_PATH = new File(TEST_VIREO_INSTALL_DIR + TEST_VIREO_ATTACHMENTS_PATH);
+    private static final File TEST_ATTACHMENT_STORE_PATH = new File(Application.BASE_PATH + TEST_VIREO_ATTACHMENTS_PATH);
     private static final File TEST_FILE_TO_WRITE = new File("pom.xml");
 
     @Autowired
@@ -46,8 +44,6 @@ public class HashedFileTest {
 
     @Before
     public void setUp() {
-        // set vireo.install.dir
-        configurationRepo.createOrUpdate(TEST_VIREO_CONFIG_INSTALL_DIR_KEY, TEST_VIREO_INSTALL_DIR,"application");
         // set attachments.path
         configurationRepo.createOrUpdate(TEST_VIREO_CONFIG_ATTACHMENTS_PATH_KEY, TEST_VIREO_ATTACHMENTS_PATH,"application");
     }

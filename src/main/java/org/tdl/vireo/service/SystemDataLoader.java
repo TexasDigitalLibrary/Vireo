@@ -16,8 +16,6 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
@@ -60,71 +58,104 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class SystemDataLoader {
+    
+    final static Logger logger = LoggerFactory.getLogger(SystemDataLoader.class);
 
     private static final Pattern SUBJECT_PATTERN = Pattern.compile("\\s*Subject:(.*)[\\n\\r]{1}");
 
-    @Autowired
-    private ResourcePatternResolver resourcePatternResolver;
-
-    @Autowired
-    private EmailTemplateRepo emailTemplateRepo;
-
-    @Autowired
-    private EmbargoRepo embargoRepo;
-
-    @Autowired
-    private OrganizationRepo organizationRepo;
-
-    @Autowired
-    private OrganizationCategoryRepo organizationCategoryRepo;
-
-    @Autowired
-    private WorkflowRepo workflowRepo;
-
-    @Autowired
-    private WorkflowStepRepo workflowStepRepo;
-
-    @Autowired
-    private NoteRepo noteRepo;
-
-    @Autowired
-    private FieldProfileRepo fieldProfileRepo;
-
-    @Autowired
-    private FieldPredicateRepo fieldPredicateRepo;
-
-    @Autowired
-    private FieldGlossRepo fieldGlossRepo;
-
-    @Autowired
-    private ControlledVocabularyRepo controlledVocabularyRepo;
-
-    @Autowired
-    private LanguageRepo languageRepo;
-
-    @Autowired
-    private EmailWorkflowRuleRepo emailWorkflowRuleRepo;
-
-    @Autowired
-    private SubmissionStateRepo submissionStateRepo;
-    
-    @Autowired
     private ObjectMapper objectMapper;
-    
-    @Autowired
+
     private ConfigurationRepo configurationRepo;
 
-    final static Logger logger = LoggerFactory.getLogger(SystemDataLoader.class);
-    
-    public SystemDataLoader() {
-        //generateSystemDefaults();
+    private ResourcePatternResolver resourcePatternResolver;
+
+    private EmailTemplateRepo emailTemplateRepo;
+
+    private EmbargoRepo embargoRepo;
+
+    private OrganizationRepo organizationRepo;
+
+    private OrganizationCategoryRepo organizationCategoryRepo;
+
+    private WorkflowRepo workflowRepo;
+
+    private WorkflowStepRepo workflowStepRepo;
+
+    private NoteRepo noteRepo;
+
+    private FieldProfileRepo fieldProfileRepo;
+
+    private FieldPredicateRepo fieldPredicateRepo;
+
+    private FieldGlossRepo fieldGlossRepo;
+
+    private ControlledVocabularyRepo controlledVocabularyRepo;
+
+    private LanguageRepo languageRepo;
+
+    private EmailWorkflowRuleRepo emailWorkflowRuleRepo;
+
+    private SubmissionStateRepo submissionStateRepo;
+
+    @Autowired
+    public SystemDataLoader(ObjectMapper objectMapper,
+                            ConfigurationRepo configurationRepo,
+                            ResourcePatternResolver resourcePatternResolver, 
+                            EmailTemplateRepo emailTemplateRepo,
+                            EmbargoRepo embargoRepo,
+                            OrganizationRepo organizationRepo,
+                            OrganizationCategoryRepo organizationCategoryRepo,
+                            WorkflowRepo workflowRepo,
+                            WorkflowStepRepo workflowStepRepo,
+                            NoteRepo noteRepo,
+                            FieldProfileRepo fieldProfileRepo,
+                            FieldPredicateRepo fieldPredicateRepo,
+                            FieldGlossRepo fieldGlossRepo,
+                            ControlledVocabularyRepo controlledVocabularyRepo,
+                            LanguageRepo languageRepo,
+                            EmailWorkflowRuleRepo emailWorkflowRuleRepo,
+                            SubmissionStateRepo submissionStateRepo) {
+        
+        this.objectMapper = objectMapper;        
+        this.configurationRepo = configurationRepo;
+        this.resourcePatternResolver = resourcePatternResolver;        
+        this.emailTemplateRepo = emailTemplateRepo;
+        this.embargoRepo = embargoRepo;
+        this.organizationRepo = organizationRepo;
+        this.organizationCategoryRepo = organizationCategoryRepo;
+        this.workflowRepo = workflowRepo;
+        this.workflowStepRepo = workflowStepRepo;
+        this.noteRepo = noteRepo;
+        this.fieldProfileRepo = fieldProfileRepo;
+        this.fieldPredicateRepo = fieldPredicateRepo;
+        this.fieldGlossRepo = fieldGlossRepo;
+        this.controlledVocabularyRepo = controlledVocabularyRepo;
+        this.languageRepo = languageRepo;
+        this.emailWorkflowRuleRepo = emailWorkflowRuleRepo;
+        this.submissionStateRepo = submissionStateRepo;
+        
+
+        logger.info("Generating all system email templates");
+        generateAllSystemEmailTemplates();
+        
+        logger.info("Generating all system embargos");
+        generateAllSystemEmbargos();
+        
+        logger.info("Generating system submission states");
+        loadSystemSubmissionStates();
+        
+        logger.info("Generating system organization");
+        loadSystemOrganization();
+        
+        logger.info("Generating system defaults");
+        generateSystemDefaults();
     }
 
     /**
      * Loads default system organization.
      */
     public void loadSystemOrganization() {
-        
+
         try {
             // read and map json to Organization
             Organization systemOrganization = objectMapper.readValue(getFileFromResource("classpath:/organization/SYSTEM_Organization_Definition.json"), Organization.class);
@@ -301,11 +332,11 @@ public class SystemDataLoader {
 
                 // check to see if the SubmissionState exists
                 SubmissionState newSubmissionState = submissionStateRepo.findByName(emailWorkflowRule.getSubmissionState().getName());
-                
+
                 // create new SubmissionState if not already exists
                 if (newSubmissionState == null) {
                     newSubmissionState = submissionStateRepo.create(emailWorkflowRule.getSubmissionState().getName(), emailWorkflowRule.getSubmissionState().isArchived(), emailWorkflowRule.getSubmissionState().isPublishable(), emailWorkflowRule.getSubmissionState().isDeletable(), emailWorkflowRule.getSubmissionState().isEditableByReviewer(), emailWorkflowRule.getSubmissionState().isEditableByStudent(), emailWorkflowRule.getSubmissionState().isActive());
-                    
+
                     newSubmissionState = submissionStateRepo.save(recursivelyFindOrCreateSubmissionState(emailWorkflowRule.getSubmissionState()));
                 } else {
                     SubmissionState tempSubmissionState = emailWorkflowRule.getSubmissionState();
@@ -316,10 +347,9 @@ public class SystemDataLoader {
                     newSubmissionState.isEditableByStudent(tempSubmissionState.isEditableByStudent() != null ? tempSubmissionState.isEditableByStudent() : newSubmissionState.isEditableByStudent());
                     newSubmissionState.isActive(tempSubmissionState.isActive() != null ? tempSubmissionState.isActive() : newSubmissionState.isActive());
                     newSubmissionState.setTransitionSubmissionStates(tempSubmissionState.getTransitionSubmissionStates() != null ? tempSubmissionState.getTransitionSubmissionStates() : newSubmissionState.getTransitionSubmissionStates());
-                    
+
                     newSubmissionState = submissionStateRepo.save(recursivelyFindOrCreateSubmissionState(newSubmissionState));
                 }
-               
 
                 // check to see if the EmailTemplate exists
                 EmailTemplate newEmailTemplate = emailTemplateRepo.findByNameAndIsSystemRequired(emailWorkflowRule.getEmailTemplate().getName(), emailWorkflowRule.getEmailTemplate().isSystemRequired());
@@ -332,7 +362,7 @@ public class SystemDataLoader {
                     newEmailTemplate.setMessage(emailWorkflowRule.getEmailTemplate().getMessage() != null ? emailWorkflowRule.getEmailTemplate().getMessage() : newEmailTemplate.getMessage());
                     newEmailTemplate = emailTemplateRepo.save(newEmailTemplate);
                 }
-                
+
                 // check to see if the EmailWorkflowRule exists
                 EmailWorkflowRule newEmailWorkflowRule = emailWorkflowRuleRepo.findBySubmissionStateAndRecipientTypeAndEmailTemplate(newSubmissionState, emailWorkflowRule.getRecipientType(), newEmailTemplate);
 
@@ -356,7 +386,7 @@ public class SystemDataLoader {
             throw new IllegalStateException("Unable to generate system organization", e);
         }
     }
-    
+
     /**
      * Loads default system submission states.
      */
@@ -365,14 +395,14 @@ public class SystemDataLoader {
         try {
             // read and map json to SubmissionState
             SubmissionState systemSubmissionState = objectMapper.readValue(getFileFromResource("classpath:/submission_states/SYSTEM_Submission_States.json"), SubmissionState.class);
-        
+
             // check to see if the SubmissionState exists
             SubmissionState newSubmissionState = submissionStateRepo.findByName(systemSubmissionState.getName());
-            
+
             // create new SubmissionState if not already exists
             if (newSubmissionState == null) {
                 newSubmissionState = submissionStateRepo.create(systemSubmissionState.getName(), systemSubmissionState.isArchived(), systemSubmissionState.isPublishable(), systemSubmissionState.isDeletable(), systemSubmissionState.isEditableByReviewer(), systemSubmissionState.isEditableByStudent(), systemSubmissionState.isActive());
-                
+
                 newSubmissionState = submissionStateRepo.save(recursivelyFindOrCreateSubmissionState(systemSubmissionState));
             } else {
                 newSubmissionState.isArchived(newSubmissionState.isArchived() != null ? newSubmissionState.isArchived() : newSubmissionState.isArchived());
@@ -382,10 +412,10 @@ public class SystemDataLoader {
                 newSubmissionState.isEditableByStudent(newSubmissionState.isEditableByStudent() != null ? newSubmissionState.isEditableByStudent() : newSubmissionState.isEditableByStudent());
                 newSubmissionState.isActive(newSubmissionState.isActive() != null ? newSubmissionState.isActive() : newSubmissionState.isActive());
                 newSubmissionState.setTransitionSubmissionStates(newSubmissionState.getTransitionSubmissionStates() != null ? newSubmissionState.getTransitionSubmissionStates() : newSubmissionState.getTransitionSubmissionStates());
-                
+
                 newSubmissionState = submissionStateRepo.save(recursivelyFindOrCreateSubmissionState(newSubmissionState));
             }
-        
+
         } catch (IOException e) {
             throw new IllegalStateException("Unable to generate system organization", e);
         }
@@ -409,23 +439,23 @@ public class SystemDataLoader {
             newSubmissionState.isEditableByReviewer(submissionState.isEditableByReviewer() != null ? submissionState.isEditableByReviewer() : newSubmissionState.isEditableByReviewer());
             newSubmissionState.isEditableByStudent(submissionState.isEditableByStudent() != null ? submissionState.isEditableByStudent() : newSubmissionState.isEditableByStudent());
             newSubmissionState.isActive(submissionState.isActive() != null ? submissionState.isActive() : newSubmissionState.isActive());
-            
+
             newSubmissionState = submissionStateRepo.save(newSubmissionState);
         }
-        
+
         // temporary list of SubmissionState
         List<SubmissionState> transitionStates = new ArrayList<SubmissionState>();
-        
+
         submissionState.getTransitionSubmissionStates().forEach(transitionState -> {
 
             // check to see if the Transistion SubmissionState exists
             SubmissionState newTransitionState = submissionStateRepo.findByName(transitionState.getName());
-            
+
             // create new Transistion SubmissionState if not already exists
             if (newTransitionState == null) {
                 newTransitionState = submissionStateRepo.create(transitionState.getName(), transitionState.isArchived(), transitionState.isPublishable(), transitionState.isDeletable(), transitionState.isEditableByReviewer(), transitionState.isEditableByStudent(), transitionState.isActive());
-                newTransitionState = submissionStateRepo.save(recursivelyFindOrCreateSubmissionState(transitionState));                
-            } else {                
+                newTransitionState = submissionStateRepo.save(recursivelyFindOrCreateSubmissionState(transitionState));
+            } else {
                 newTransitionState.isArchived(transitionState.isArchived() != null ? transitionState.isArchived() : newTransitionState.isArchived());
                 newTransitionState.isPublishable(transitionState.isPublishable() != null ? transitionState.isPublishable() : newTransitionState.isPublishable());
                 newTransitionState.isDeletable(transitionState.isDeletable() != null ? transitionState.isDeletable() : newTransitionState.isDeletable());
@@ -433,10 +463,10 @@ public class SystemDataLoader {
                 newTransitionState.isEditableByStudent(transitionState.isEditableByStudent() != null ? transitionState.isEditableByStudent() : newTransitionState.isEditableByStudent());
                 newTransitionState.isActive(transitionState.isActive() != null ? transitionState.isActive() : newTransitionState.isActive());
                 newTransitionState.setTransitionSubmissionStates(transitionState.getTransitionSubmissionStates() != null ? transitionState.getTransitionSubmissionStates() : newTransitionState.getTransitionSubmissionStates());
-                
+
                 newTransitionState = submissionStateRepo.save(recursivelyFindOrCreateSubmissionState(newTransitionState));
             }
-            
+
             transitionStates.add(newTransitionState);
 
         });
@@ -610,23 +640,23 @@ public class SystemDataLoader {
             logger.debug("Unable to initialize default embargos. ", e);
         }
     }
-    
+
     public void generateSystemDefaults() {
         try {
             JsonNode systemDefaults = objectMapper.readTree(getFileFromResource("classpath:/SYSTEM_Defaults.json"));
-            Iterator<Entry<String,JsonNode>> it = systemDefaults.fields();
+            Iterator<Entry<String, JsonNode>> it = systemDefaults.fields();
 
             while (it.hasNext()) {
                 Map.Entry<String, JsonNode> entry = (Map.Entry<String, JsonNode>) it.next();
                 if (entry.getValue().isArray()) {
                     for (JsonNode objNode : entry.getValue()) {
                         Iterator<String> fieldNames = objNode.fieldNames();
-                        while(fieldNames.hasNext()) {
+                        while (fieldNames.hasNext()) {
                             String name = fieldNames.next();
                             // only load system configurations
                             Configuration configuration = configurationRepo.findByNameAndIsSystemRequired(name, true);
                             // if one didn't already exist, create it
-                            if(configuration == null) {
+                            if (configuration == null) {
                                 configuration = configurationRepo.createOrUpdate(name, objNode.get(name).asText(), entry.getKey());
                                 configuration.isSystemRequired(true);
                             } else {

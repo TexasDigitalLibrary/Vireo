@@ -13,23 +13,17 @@ import org.springframework.web.servlet.config.annotation.DefaultServletHandlerCo
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.tdl.vireo.Application;
 import org.tdl.vireo.config.constant.ConfigurationName;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
-import org.tdl.vireo.util.HashedFile;
 
 @Configuration
 @EnableWebMvc
-@DependsOn({"delegatingApplicationListener"})
+@DependsOn("systemDataLoader")
 public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
 
     @Value("${app.ui.path}")
     private String path;
-
-    @Autowired
-    private HashedFile hashedFile;
-
-    @Autowired
-    private ConfigurationRepo configurationRepo;
 
     @Override
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
@@ -39,13 +33,9 @@ public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
-        System.out.println(configurationRepo);
-        System.out.println(ConfigurationName.APPLICATION_ATTACHMENTS_PATH);
-        System.out.println(configurationRepo.getByName(ConfigurationName.APPLICATION_ATTACHMENTS_PATH).getValue() + "/**");
-        System.out.println("file:" + hashedFile.getStore().getAbsolutePath() + "/");
-
         registry.addResourceHandler("/**").addResourceLocations("WEB-INF" + path + "/");
-        //registry.addResourceHandler(configurationRepo.getByName(ConfigurationName.APPLICATION_ATTACHMENTS_PATH).getValue() + "/**").addResourceLocations("file:" + hashedFile.getStore().getAbsolutePath() + "/");
+        registry.addResourceHandler("/public/**").addResourceLocations("file:" + Application.BASE_PATH + "public/");
+
         registry.setOrder(Integer.MAX_VALUE - 2);
     }
 

@@ -1,18 +1,18 @@
-vireo.controller("LookAndFeelController", function($scope, $controller, $q, WsApi) {
+vireo.controller("LookAndFeelController", function($scope, $controller, $q, WsApi, RestApi) {
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
 	$scope.modalData = {
 		newLogo: {}
 	};
 
-	$scope.logoLoading = "resources/images/ajax-loader.gif"
 	$scope.modalData.logoLeft = $scope.settings.configurable.lookAndFeel.left_logo; 
 	$scope.modalData.logoRight = $scope.settings.configurable.lookAndFeel.right_logo;
 
 	$scope.previewLogo = function(file) {
 		previewLogo(file).then(function(result) {
 			
-			var fileType = result.substring(result.indexOf("/")+1,result.indexOf(";")) 
+			var fileType = result.substring(result.indexOf("/")+1,result.indexOf(";"));
+			console.log(fileType);
 			
 			$scope.modalData.newLogo.type = fileType;
 			$scope.modalData.newLogo.file = result;
@@ -24,16 +24,18 @@ vireo.controller("LookAndFeelController", function($scope, $controller, $q, WsAp
 
 	$scope.modalData.confirmLogoUpload = function() {
 
-		var uploadPromise = WsApi.fetch({
-			'endpoint': '/private/queue', 
-			'controller': 'settings/look-and-feel', 
+		//TODO: This may be better if removed to a service
+		var uploadPromise = RestApi.post({
+			'endpoint': '', 
+			'controller': 'settings/look-and-feel',  
 			'method': 'logo/upload',
 			'data': $scope.modalData.newLogo,
+			'file': $scope.modalData.newLogo.file
 		});
 
 		uploadPromise.then(
 			function(data) {
-				revertPreviewLogos(data);
+				updateLogos(data);
 			}, 
 			function(data) {
 				console.log("Error");
@@ -45,42 +47,48 @@ vireo.controller("LookAndFeelController", function($scope, $controller, $q, WsAp
 	}
 
 	$scope.modalData.cancelLogoUpload = function() {
-		revertPreviewLogos();
+		updateLogos();
 		angular.element('#newLogoConfirmUploadModal').modal('hide');
 	}
 
 	$scope.resetLogo = function(setting) {
-		var uploadPromise = WsApi.fetch({
+
+		//TODO: This may be better if removed to a service
+		var resetPromise = WsApi.fetch({
 			'endpoint': '/private/queue', 
 			'controller': 'settings/look-and-feel', 
 			'method': 'logo/reset',
 			'data': {setting: setting},
 		});
 
-		uploadPromise.then(
+		resetPromise.then(
 			function(data) {
-				revertPreviewLogos(data);
+				updateLogos(data);
 			}, 
 			function(data) {
 				console.log("error");
 			}
 		);
 
-		return uploadPromise;
+		return resetPromise;
 	};
 
-	var revertPreviewLogos = function(data) {
+	var updateLogos = function(data) {
 
-		var newLogoConfiguration = JSON.parse(data.body).payload.Configuration;
+		var newLogoConfiguration = typeof data.body === "string" ? JSON.parse(data.body).payload.Configuration : data.payload.Configuration;
 
-		console.log(newLogoConfiguration.name);
-
-		if(newLogoConfiguration.name == "left_logo") $scope.modalData.logoLeft = newLogoConfiguration.value;
-		
-		if(newLogoConfiguration.name == "right_logo") $scope.modalData.logoRight = newLogoConfiguration.value;
+		if(newLogoConfiguration.name == "left_logo") {
+			$scope.modalData.logoLeft = newLogoConfiguration.value;
+			$scope.settings.configurable.lookAndFeel.left_logo = newLogoConfiguration.value
+		}
+		if(newLogoConfiguration.name == "right_logo") {
+			$scope.modalData.logoRight = newLogoConfiguration.value;
+			$scope.settings.configurable.lookAndFeel.right_logo = newLogoConfiguration.value
+		}
 		
 		$scope.modalData.newLogo = {};
 		$scope.modalData.newLogo.setting = "left_logo";
+
 	}
 
 	var previewLogo = function(file) {

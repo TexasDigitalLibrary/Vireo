@@ -18,10 +18,7 @@ package org.tdl.vireo.config.constant;
  */
 public class ConfigurationName {
 	
-	// Application Settings
-    /** The absolute path on disk where Vireo's dynamic content is writen **/
-    public final static String INSTALL_PATH = "install_path";
-    
+	// Application Settings    
 	/** If defined then submissions are open, otherwise they are closed. **/
 	public final static String SUBMISSIONS_OPEN = "submissions_open";
 	
@@ -107,7 +104,7 @@ public class ConfigurationName {
 	
 	// application.conf configuration options from Vireo 3 (Play Framework)
 	public final static String APPLICATION_BASE_URL = "application.baseUrl";
-	public final static String APPLICATION_ATTACHMENTS_PATH = "attachments_path";
+	public final static String APPLICATION_ATTACHMENTS_PATH = "attachments.path";
 	public final static String APPLICATION_INDEX_PATH = "index.path";
 	public final static String APPLICATION_DEPOSITS_PATH = "deposits.path";
 	public final static String APPLICATION_MAIL_HOST = "mail.host";
@@ -164,7 +161,6 @@ public class ConfigurationName {
 	public final static String APPLICATION_FILESIZE_MAXSIZETOTAL = "fileSize.maxFileSizeTotal";
 	
 	// Vireo 4 new Configuration Names
-	public final static String APPLICATION_INSTALL_DIRECTORY = "install.dir";
 	public final static String APPLICATION_MAIL_FROM = "mail.from";
 	public final static String APPLICATION_MAIL_REPLYTO = "mail.replyto";
 }

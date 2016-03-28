@@ -15,6 +15,7 @@ import org.tdl.vireo.config.VireoSpringBanner;
 @ComponentScan(basePackages = { "edu.tamu.framework", "edu.tamu.auth", "org.tdl.vireo" })
 public class Application extends SpringBootServletInitializer {
 
+    public static String BASE_PATH = "/var/lib/vireo/";
     final static Logger logger = LoggerFactory.getLogger(Application.class);
 
     /**
@@ -50,7 +51,8 @@ public class Application extends SpringBootServletInitializer {
         File applicationClassPath = new File(applicationClassPathRoot);
         // if we're running in an expanded war
         if (applicationClassPath.exists() && applicationClassPath.isDirectory()) {
-            File customProps = new File(applicationClassPathRoot + "../../../conf/application.properties");
+            BASE_PATH = applicationClassPathRoot + "../../../";
+            File customProps = new File(BASE_PATH+"conf/application.properties");
             if (customProps.exists() && customProps.isFile()) {
                 logger.info("Loading application.properties from ../../../conf directory relative to our classpath");
                 System.setProperty("spring.config.location", "file://" + customProps.getAbsolutePath());
@@ -58,9 +60,11 @@ public class Application extends SpringBootServletInitializer {
         }
         // if we're a jar or a war
         else if (applicationClassPath.exists() && applicationClassPath.isFile() && (applicationClassPathRoot.endsWith(".jar") || applicationClassPathRoot.endsWith(".war"))) {
-            File customProps = new File(applicationClassPath.getParent() + "/conf/application.properties");
+            BASE_PATH = applicationClassPath.getParent();
+            File customProps = new File(BASE_PATH + "/conf/application.properties");
             if (customProps.exists() && customProps.isFile()) {
                 logger.info("Loading application.properties from /conf directory in same parent directory as our .jar/.war");
+                
                 System.setProperty("spring.config.location", "file://" + customProps.getAbsolutePath());
             }
         }

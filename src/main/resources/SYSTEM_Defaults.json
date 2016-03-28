@@ -6,7 +6,7 @@
 			{"grantor":"Texas A&M University"},
 			{"email_from":"noreply@tdl.org"},
 			{"email_reply_to":"dev@tdl.org"},
-			{"install.dir": "/var/lib/vireo/"}
+			{"attachments.path": "attachments/"}
 	],
 	"orcid":[
 			{"orcid_validation":true},
