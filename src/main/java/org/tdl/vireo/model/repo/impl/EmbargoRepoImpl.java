@@ -16,9 +16,9 @@ public class EmbargoRepoImpl implements EmbargoRepoCustom {
     private EmbargoRepo embargoRepo;
     
     @Override
-    public Embargo create(String name, String description, Integer duration, boolean isActive) {
-        Embargo embargo = new Embargo(name, description, duration, isActive);
-        embargo.setOrder((int) embargoRepo.count());
+    public Embargo create(String name, String description, Integer duration, EmbargoGuarantor guarantor, boolean isActive) {
+        Embargo embargo = new Embargo(name, description, duration, guarantor, isActive);
+        embargo.setOrder((int)embargoRepo.count() + 1);
         return embargoRepo.save(embargo);
     }
     

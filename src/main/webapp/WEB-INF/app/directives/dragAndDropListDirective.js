@@ -18,6 +18,7 @@ vireo.directive("draganddroplist", function() {
 			'itemTypeString': '@',
 			'sortColumn': '@',
 			'sortAction': '=',
+			'sortActionSort': '=',
 			'sortMethod': '&'
 		},
 		controller: function($scope) {

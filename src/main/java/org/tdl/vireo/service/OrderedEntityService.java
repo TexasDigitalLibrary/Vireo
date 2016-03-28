@@ -61,6 +61,12 @@ public class OrderedEntityService {
         return entityManager.createQuery(query).getSingleResult();
     }
 
+    /**
+     * TODO: THIS NEEDS TO findbyid not findbyorder!
+     * @param clazz
+     * @param src
+     * @param dest
+     */
     @SuppressWarnings("unchecked")
     public synchronized void reorder(Class<?> clazz, Integer src, Integer dest) {
         swap(clazz, src, Integer.MAX_VALUE);

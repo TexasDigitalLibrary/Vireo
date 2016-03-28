@@ -8,7 +8,7 @@ vireo.service("EmbargoRepo", function(AbstractModel, WsApi, AlertService) {
 		//This causes our model to extend AbstractModel
 		angular.extend(self, AbstractModel);
 		
-		self.unwrap(self, futureData,"PersistentMap");			
+		self.unwrap(self, futureData);			
 	};
 	
 	EmbargoRepo.data = null;
@@ -18,7 +18,7 @@ vireo.service("EmbargoRepo", function(AbstractModel, WsApi, AlertService) {
 	EmbargoRepo.promise = null;
 
 	EmbargoRepo.set = function(data) {
-		self.unwrap(self, data, "PersistentMap");		
+		self.unwrap(self, data);		
 	};
 
 	EmbargoRepo.get = function() {
@@ -57,47 +57,37 @@ vireo.service("EmbargoRepo", function(AbstractModel, WsApi, AlertService) {
 	};
 
 	EmbargoRepo.create = function(embargo) {
-		WsApi.fetch({
+		return WsApi.fetch({
 			endpoint:'/private/queue',
 			controller:'settings/embargo',
 			method:'create',
 			data: embargo
-		}).then(function(response) {
-		    var responseType = angular.fromJson(response.body).meta.type;
-            var responseMessage = angular.fromJson(response.body).meta.message;
-            if(responseType != 'SUCCESS') {
-                AlertService.add({type: responseType, message: responseMessage}, "/settings/embargo");  
-            }
 		});		
 
 	};
 
-	EmbargoRepo.update = function(customAction) {
-		WsApi.fetch({
+	EmbargoRepo.update = function(embargo) {
+		return WsApi.fetch({
 			endpoint:'/private/queue',
 			controller:'settings/embargo',
 			method:'update',
-			data: customAction
-		}).then(function(response) {
-		    var responseType = angular.fromJson(response.body).meta.type;
-            var responseMessage = angular.fromJson(response.body).meta.message;
-            if(responseType != 'SUCCESS') {
-                AlertService.add({type: responseType, message: responseMessage}, "/settings/embargo");  
-            }
+			data: embargo
 		});
 	};
 	
+	EmbargoRepo.remove = function(id) {
+        return WsApi.fetch({
+            'endpoint': '/private/queue', 
+            'controller': 'settings/embargo', 
+            'method': 'remove/' + id
+        });
+    };
+	
 	EmbargoRepo.reorder = function(src, dest) {
-		WsApi.fetch({
+		return WsApi.fetch({
 			'endpoint': '/private/queue', 
 			'controller': 'settings/embargo', 
 			'method': 'reorder/' + src + '/' + dest
-		}).then(function(response) {
-			var responseType = angular.fromJson(response.body).meta.type;
-			var responseMessage = angular.fromJson(response.body).meta.message;
-			if(responseType != 'SUCCESS') {
-				AlertService.add({type: responseType, message: responseMessage}, "/settings/embargo");  
-			}
 		});
 	};
 	
@@ -106,37 +96,8 @@ vireo.service("EmbargoRepo", function(AbstractModel, WsApi, AlertService) {
 			'endpoint': '/private/queue', 
 			'controller': 'settings/embargo', 
 			'method': 'sort/' + column + '/' + where
-		}).then(function(response) {
-			var responseType = angular.fromJson(response.body).meta.type;
-			var responseMessage = angular.fromJson(response.body).meta.message;
-			if(responseType != 'SUCCESS') {
-				AlertService.add({type: responseType, message: responseMessage}, "/settings/embargo");  
-			}
 		});
 	};
-	
-	EmbargoRepo.remove = function(index) {
-		WsApi.fetch({
-			'endpoint': '/private/queue', 
-			'controller': 'settings/embargo', 
-			'method': 'remove/' + index
-		}).then(function(response) {
-			var responseType = angular.fromJson(response.body).meta.type;
-			var responseMessage = angular.fromJson(response.body).meta.message;
-			if(responseType != 'SUCCESS') {
-				AlertService.add({type: responseType, message: responseMessage}, "/settings/embargo");  
-			}
-		});
-	};
-
-//	EmbargoRepo.reset = function(type,setting) {
-//		WsApi.fetch({
-//			endpoint:'/private/queue',
-//			controller:'settings/configurable',
-//			method:'reset',
-//			data: {'type':type, 'setting':setting}
-//		});
-//	};
 
 	EmbargoRepo.ready = function() {
 		return EmbargoRepo.promise;

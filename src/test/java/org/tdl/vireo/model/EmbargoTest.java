@@ -15,7 +15,7 @@ public class EmbargoTest extends AbstractEntityTest {
 
     @Override
     public void testCreate() {
-        Embargo testEmbargo = embargoRepo.create(TEST_EMBARGO_NAME, TEST_EMBARGO_DESCRIPTION, TEST_EMBARGO_DURATION, TEST_EMBARGO_IS_ACTIVE);
+        Embargo testEmbargo = embargoRepo.create(TEST_EMBARGO_NAME, TEST_EMBARGO_DESCRIPTION, TEST_EMBARGO_DURATION, TEST_EMBARGO_TYPE_GUARANTOR, TEST_EMBARGO_IS_ACTIVE);
         assertEquals("Embargo Repo did not save the embargo!", 1, embargoRepo.count());
         assertEquals("Embargo Repo did not save the correct embargo name!", TEST_EMBARGO_NAME, testEmbargo.getName());
         assertEquals("Embargo Repo did not save the correct embargo description!", TEST_EMBARGO_DESCRIPTION, testEmbargo.getDescription());
@@ -24,10 +24,10 @@ public class EmbargoTest extends AbstractEntityTest {
     
     @Override
     public void testDuplication() {
-        embargoRepo.create(TEST_EMBARGO_NAME, TEST_EMBARGO_DESCRIPTION, TEST_EMBARGO_DURATION, TEST_EMBARGO_IS_ACTIVE);
+        embargoRepo.create(TEST_EMBARGO_NAME, TEST_EMBARGO_DESCRIPTION, TEST_EMBARGO_DURATION, TEST_EMBARGO_TYPE_GUARANTOR, TEST_EMBARGO_IS_ACTIVE);
         assertEquals("The repository didn't persist embargo!", 1, embargoRepo.count());
         try {
-            embargoRepo.create(TEST_EMBARGO_NAME, TEST_EMBARGO_DESCRIPTION, TEST_EMBARGO_DURATION, TEST_EMBARGO_IS_ACTIVE);
+            embargoRepo.create(TEST_EMBARGO_NAME, TEST_EMBARGO_DESCRIPTION, TEST_EMBARGO_DURATION, TEST_EMBARGO_TYPE_GUARANTOR, TEST_EMBARGO_IS_ACTIVE);
         }
         catch (DataIntegrityViolationException e) { /* SUCCESS */ }
         assertEquals("The repository didn't persist embargo!", 1, embargoRepo.count());
@@ -35,7 +35,7 @@ public class EmbargoTest extends AbstractEntityTest {
 
     @Override
     public void testDelete() {
-        Embargo testEmbargo = embargoRepo.create(TEST_EMBARGO_NAME, TEST_EMBARGO_DESCRIPTION, TEST_EMBARGO_DURATION, TEST_EMBARGO_IS_ACTIVE);
+        Embargo testEmbargo = embargoRepo.create(TEST_EMBARGO_NAME, TEST_EMBARGO_DESCRIPTION, TEST_EMBARGO_DURATION, TEST_EMBARGO_TYPE_GUARANTOR, TEST_EMBARGO_IS_ACTIVE);
         embargoRepo.delete(testEmbargo);
         assertEquals("Embargo did not delete!", 0, embargoRepo.count());
     }

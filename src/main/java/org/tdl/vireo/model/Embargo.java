@@ -8,6 +8,7 @@ import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.enums.EmbargoGuarantor;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
@@ -21,7 +22,7 @@ public class Embargo extends BaseOrderedEntity {
     @Column(nullable = false)
     private String description;
 
-    @Column
+    @Column(nullable = true)
     private Integer duration;
 
     @Column(nullable = false)
@@ -40,8 +41,6 @@ public class Embargo extends BaseOrderedEntity {
      */
     public Embargo() {
         isSystemRequired(false);
-        isActive(false);
-        setGuarantor(EmbargoGuarantor.DEFAULT);
     }
 
     /**
@@ -51,11 +50,12 @@ public class Embargo extends BaseOrderedEntity {
      * @param description
      * @param duration
      */
-    public Embargo(String name, String description, Integer duration, boolean isActive) {
+    public Embargo(String name, String description, Integer duration, EmbargoGuarantor guarantor, boolean isActive) {
         this();
         setName(name);
         setDescription(description);
         setDuration(duration);
+        setGuarantor(guarantor);
         isActive(isActive);
     }
 
@@ -107,6 +107,7 @@ public class Embargo extends BaseOrderedEntity {
     /**
      * @return the isActive
      */
+    @JsonIgnore
     public Boolean isActive() {
         return isActive;
     }
@@ -115,6 +116,7 @@ public class Embargo extends BaseOrderedEntity {
      * @param isActive
      *            the isActive to set
      */
+    @JsonIgnore
     public void isActive(Boolean isActive) {
         this.isActive = isActive;
     }
@@ -122,6 +124,7 @@ public class Embargo extends BaseOrderedEntity {
     /**
      * @return the isSystemRequired
      */
+    @JsonIgnore
     public Boolean isSystemRequired() {
         return isSystemRequired;
     }
@@ -130,6 +133,7 @@ public class Embargo extends BaseOrderedEntity {
      * @param isSystemRequired
      *            the isSystemRequired to set
      */
+    @JsonIgnore
     public void isSystemRequired(Boolean isSystemRequired) {
         this.isSystemRequired = isSystemRequired;
     }
@@ -148,5 +152,4 @@ public class Embargo extends BaseOrderedEntity {
     public void setGuarantor(EmbargoGuarantor guarantor) {
         this.guarantor = guarantor;
     }
-
 }

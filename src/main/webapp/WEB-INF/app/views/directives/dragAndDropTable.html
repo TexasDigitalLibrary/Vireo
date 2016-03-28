@@ -1,9 +1,9 @@
 
 <div ng-if="sortColumn && scopeValue.length > 0" class="sort-div">
 	<a href="" ng-click="sortMethod({column:sortColumn, where:itemTypeString})">
-		<span class="glyphicon glyphicon-refresh"></span> 
-		<span ng-if="sortAction=='confirm'"> Sort {{itemTypeString}} by {{sortColumn}}</span>
-		<span ng-if="sortAction=='sort'"> Are you sure you want to sort all {{itemTypeString}} by {{sortColumn}}?</span>
+		<span class="glyphicon glyphicon-refresh"></span>
+		<span ng-if="sortAction!=sortActionSort"> Sort {{itemTypeString}} by {{sortColumn}}</span>
+		<span ng-if="sortAction==sortActionSort"> Are you sure you want to sort all {{itemTypeString}} by {{sortColumn}}?</span>
 	</a>
 </div>
 
@@ -14,7 +14,7 @@
 		</tr>
 	</thead>
 	<tbody data-as-sortable="listeners" data-ng-model="scopeValue">
-		<tr class="draggable-table-row" data-ng-repeat="item in scopeValue" ng-include src="itemView" draggable="true" data-as-sortable-item >
+		<tr class="draggable-table-row" data-ng-repeat="item in scopeValue" ng-mouseenter="isMouseHover=true" ng-mouseleave="isMouseHover=false" ng-include src="itemView" draggable="true" data-as-sortable-item >
 		</tr>
 	</tbody>
 </table>

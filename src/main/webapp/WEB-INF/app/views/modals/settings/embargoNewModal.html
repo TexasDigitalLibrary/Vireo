@@ -2,19 +2,31 @@
 	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 		<span class="modal-close" aria-hidden="true">&times;</span>
 	</button>
-	<h3 class="modal-title">Add Graduation Month</h3>
+	<h3 class="modal-title">New {{modalData.guarantor}} Embargo</h3>
 </div>
-
 <div class="modal-body">
 	<form>
     	<div class="form-group">
-       	 	<label for="graduationMonth-month">Graduation Month</label>
-        	<select ng-model="modalData.month" class="form-control" id="graduationMonth-month" name="depositLocation-depositor" ng-options="key as value for (key, value) in monthOptions"></select>
+        	<label for="embargo-name">Name</label>
+        	<input ng-model="modalData.name" type="text" class="form-control" id="embargo-name" placeholder="Embargo Name" />
+    	</div>
+    	<div class="form-group">
+        	<label for="embargo-description">Description</label>
+        	<input ng-model="modalData.description" type="text" class="form-control" id="embargo-description" placeholder="Embargo Description" />
+    	</div>
+    	<div class="form-group">
+            <label for="embargo-active">Display:</label>
+            <input ng-model="modalData.isActive" type="checkbox" name="embargo-active" id="embargo-active" /> This embargo option will be available for new submissions.
+        </div>
+    	<div class="form-group">
+        	<label for="embargo-duration">Duration:</label>
+			<input ng-false-value="" ng-true-value="null" ng-model="modalData.duration" type="checkbox" /> Indefinite
+        	<input ng-if="modalData.duration !== null" ng-model="modalData.duration" type="text" class="form-control" id="embargo-duration" placeholder="Embargo Duration">
     	</div>
 	</form>
 </div>
 
 <div class="modal-footer">
-	<button type="button" class="btn btn-warning" ng-click="resetGraduationMonth()" data-dismiss="modal">Cancel</button>
-	<button id="graduationMonth-save" type="button" class="btn btn-primary" data-dismiss="modal" ng-click="createGraduationMonth()">Create</button>
+	<button type="button" class="btn btn-warning" ng-click="resetEmbargo()" data-dismiss="modal">Cancel</button>
+	<button id="embargo-save" type="button" class="btn btn-primary" data-dismiss="modal" ng-click="createEmbargo()">Create</button>
 </div>

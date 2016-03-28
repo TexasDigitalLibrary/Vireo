@@ -556,8 +556,7 @@ public class SystemDataLoader {
                 if (dbEmbargo == null) {
                     Embargo possibleCustomEmbargo = embargoRepo.findByNameAndGuarantorAndIsSystemRequired(embargoDefinition.getName(), embargoDefinition.getGuarantor(), false);
 
-                    dbEmbargo = embargoRepo.create(embargoDefinition.getName(), embargoDefinition.getDescription(), embargoDefinition.getDuration(), embargoDefinition.isActive());
-                    dbEmbargo.setGuarantor(embargoDefinition.getGuarantor());
+                    dbEmbargo = embargoRepo.create(embargoDefinition.getName(), embargoDefinition.getDescription(), embargoDefinition.getDuration(), embargoDefinition.getGuarantor(), embargoDefinition.isActive());
                     dbEmbargo.isSystemRequired(true);
                     // if we have a custom one that's named the same, make sure this new one is not active by default
                     if (possibleCustomEmbargo != null) {
@@ -566,8 +565,7 @@ public class SystemDataLoader {
                     logger.info("New System Embargo Type being installed [" + dbEmbargo.getName() + "]@[" + dbEmbargo.getGuarantor().name() + "]");
                     embargoRepo.save(dbEmbargo);
                 } else {
-                    Embargo loadedEmbargo = embargoRepo.create(embargoDefinition.getName(), embargoDefinition.getDescription(), embargoDefinition.getDuration(), embargoDefinition.isActive());
-                    loadedEmbargo.setGuarantor(embargoDefinition.getGuarantor());
+                    Embargo loadedEmbargo = embargoRepo.create(embargoDefinition.getName(), embargoDefinition.getDescription(), embargoDefinition.getDuration(), embargoDefinition.getGuarantor(), embargoDefinition.isActive());
                     loadedEmbargo.isSystemRequired(true);
 
                     // if the embargo in the DB doesn't match in content with the one loaded from array

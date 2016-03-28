@@ -1,14 +1,6 @@
 <div id="embargo" class="row" ng-controller="EmbargoRepoController">
 
 	<alerts channels="/settings/embargo" types="ERROR, WARNING" exclusive></alerts>
-	<div class="row">
-		<div class="col-sm-6">
-			<p>
-				<a class="confirm" href="@{settings.ConfigurableSettingsTab.removeAllEmbargoTypes}" data-confirm="<em class='icon-trash'></em> (Are you sure you want to <strong>remove all</strong> embargo types?)"> <em class="icon-trash"></em> Remove all embargo types
-				</a>
-			</p>
-		</div>
-	</div>
 	
 	<div class="row">
 		<div class="col-sm-12">
@@ -24,10 +16,12 @@
 				edit='editEmbargo(index)'
 				sort-column='duration',
 				sort-action='sortAction'
+				sort-action-sort='sortDefault'
 				sort-method='sortEmbargoes(column, where)'>
 			</draganddroplist>
 			<button class="btn btn-default modal-add-btn"
-				data-toggle="modal" 
+				data-toggle="modal"
+				ng-click="modalData.guarantor='DEFAULT'"
 				data-target="#embargoNewModal">
 				Add New
 			</button>
@@ -48,6 +42,7 @@
 				edit='editEmbargo(index)'
 				sort-column='duration',
 				sort-action='sortAction'
+				sort-action-sort='sortProquest'
 				sort-method='sortEmbargoes(column, where)'>
 			</draganddroplist>
 			<button class="btn btn-default modal-add-btn"
