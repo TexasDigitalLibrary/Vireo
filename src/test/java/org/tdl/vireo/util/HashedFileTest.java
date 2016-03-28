@@ -33,7 +33,7 @@ public class HashedFileTest {
 
     private static final String TEST_VIREO_CONFIG_ATTACHMENTS_PATH_KEY = ConfigurationName.APPLICATION_ATTACHMENTS_PATH;
     private static final String TEST_VIREO_ATTACHMENTS_PATH = "attachments";
-    private static final File TEST_ATTACHMENT_STORE_PATH = new File(Application.BASE_PATH + TEST_VIREO_ATTACHMENTS_PATH);
+    private static File TEST_ATTACHMENT_STORE_PATH;
     private static final File TEST_FILE_TO_WRITE = new File("pom.xml");
 
     @Autowired
@@ -46,6 +46,8 @@ public class HashedFileTest {
     public void setUp() {
         // set attachments.path
         configurationRepo.createOrUpdate(TEST_VIREO_CONFIG_ATTACHMENTS_PATH_KEY, TEST_VIREO_ATTACHMENTS_PATH,"application");
+        Application.init(true);
+        TEST_ATTACHMENT_STORE_PATH = new File(Application.BASE_PATH + TEST_VIREO_ATTACHMENTS_PATH);
     }
 
     @Test

@@ -46,7 +46,7 @@ public class Application extends SpringBootServletInitializer {
     /**
      * Shared init() method for when starting as either stand-alone Spring Boot app or as a Tomcat/Jetty webapp
      */
-    private static void init(boolean isSpringBoot) {
+    public static void init(boolean isSpringBoot) {
         String applicationClassPathRoot = Application.class.getResource("/").getPath();
         File applicationClassPath = new File(applicationClassPathRoot);
         // if we're running in an expanded war
