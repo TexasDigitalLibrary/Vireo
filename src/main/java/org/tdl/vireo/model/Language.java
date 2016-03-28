@@ -25,7 +25,7 @@ public class Language extends BaseOrderedEntity {
      */
     public Language(String name, Integer order) {
         setName(name);
-        super.setOrder(order);
+        setOrder(order);
     }
 
     /**
