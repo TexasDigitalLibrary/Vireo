@@ -25,7 +25,7 @@ public class Application extends SpringBootServletInitializer {
      */
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        init();
+        init(false);
         application.banner(new VireoSpringBanner());
         return application.sources(Application.class);
     }
@@ -37,7 +37,7 @@ public class Application extends SpringBootServletInitializer {
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
-        init();
+        init(true);
         SpringApplication application = new SpringApplication(Application.class);
         application.setBanner(new VireoSpringBanner());
         application.run(args);
@@ -46,12 +46,12 @@ public class Application extends SpringBootServletInitializer {
     /**
      * Shared init() method for when starting as either stand-alone Spring Boot app or as a Tomcat/Jetty webapp
      */
-    private static void init() {
+    private static void init(boolean isSpringBoot) {
         String applicationClassPathRoot = Application.class.getResource("/").getPath();
         File applicationClassPath = new File(applicationClassPathRoot);
         // if we're running in an expanded war
         if (applicationClassPath.exists() && applicationClassPath.isDirectory()) {
-            BASE_PATH = applicationClassPathRoot + "../../../";
+            BASE_PATH = applicationClassPathRoot + (isSpringBoot ? "../../" : "../../../");
             File customProps = new File(BASE_PATH+"conf/application.properties");
             if (customProps.exists() && customProps.isFile()) {
                 logger.info("Loading application.properties from ../../../conf directory relative to our classpath");
