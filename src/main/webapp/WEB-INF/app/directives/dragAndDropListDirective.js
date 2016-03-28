@@ -3,16 +3,16 @@ vireo.directive("draganddroplist", function() {
 		templateUrl: 'views/directives/dragAndDropList.html',
 		restrict: 'E',
 		scope: {
-			'dragging': '=',
-			'scopeValue': '=',
-			'listeners': '=',
-			'edit': '&',
-			'toString': '&',
-			'itemView': '@',
-			'sortColumn': '@',
-			'sortAction': '=',
-			'sortMethod': '&',
-			'model': '@'
+			'dragging'   : '=',
+			'scopeValue' : '=',
+			'listeners'  : '=',
+			'edit'       : '&',
+			'toString'   : '&',
+			'itemView'   : '@',
+			'sortColumn' : '@',
+			'sortAction' : '=',
+            'sortMethod' : '&',
+            'sortModel'  : '@'
 		},
 		controller: function($scope) {
 			if(typeof $scope.itemView == 'undefined') {
