@@ -38,8 +38,6 @@ public class FileIOUtility {
         String[] encodedData = imageData[1].split(",");
         String[] mimeData = imageData[0].split(":");
         String fileExtension = mimeData[1].split("/")[1];
-
-        System.out.println(Application.BASE_PATH + filePath);
         
         BufferedImage image = ImageIO.read(new ByteArrayInputStream(Base64.getDecoder().decode(encodedData[1])));
         ImageIO.write(image, fileExtension, Files.newOutputStream(Paths.get(Application.BASE_PATH + filePath)));
