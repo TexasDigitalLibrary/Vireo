@@ -24,12 +24,16 @@ vireo.controller("LookAndFeelController", function($scope, $controller, $q, WsAp
 
 	$scope.modalData.confirmLogoUpload = function() {
 
+		var uplaodLogo = {};
+		angular.copy($scope.modalData.newLogo, uplaodLogo);
+		delete uplaodLogo.file;
+
 		//TODO: This may be better if removed to a service
 		var uploadPromise = RestApi.post({
 			'endpoint': '', 
 			'controller': 'settings/look-and-feel',  
 			'method': 'logo/upload',
-			'data': $scope.modalData.newLogo,
+			'data': uplaodLogo,
 			'file': $scope.modalData.newLogo.file
 		});
 
@@ -47,7 +51,7 @@ vireo.controller("LookAndFeelController", function($scope, $controller, $q, WsAp
 	}
 
 	$scope.modalData.cancelLogoUpload = function() {
-		updateLogos();
+		$scope.resetModalData();
 		angular.element('#newLogoConfirmUploadModal').modal('hide');
 	}
 
@@ -85,10 +89,14 @@ vireo.controller("LookAndFeelController", function($scope, $controller, $q, WsAp
 			$scope.modalData.logoRight = newLogoConfiguration.value;
 			$scope.settings.configurable.lookAndFeel.right_logo = newLogoConfiguration.value
 		}
-		
+
+		$scope.resetModalData();$scope.resetModalData
+
+	}
+
+	$scope.resetModalData = function() {
 		$scope.modalData.newLogo = {};
 		$scope.modalData.newLogo.setting = "left_logo";
-
 	}
 
 	var previewLogo = function(file) {

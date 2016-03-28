@@ -1,6 +1,5 @@
 package org.tdl.vireo.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
@@ -14,8 +13,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.tdl.vireo.Application;
-import org.tdl.vireo.config.constant.ConfigurationName;
-import org.tdl.vireo.model.repo.ConfigurationRepo;
 
 @Configuration
 @EnableWebMvc
