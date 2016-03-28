@@ -64,15 +64,15 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
       });
     };
 
-    // $scope.sortGraduationMonths = function(column) {
-    //   if($scope.sortAction == 'confirm') {
-    //     $scope.sortAction = 'sort';
-    //   }
-    //   else if($scope.sortAction == 'sort') {
-    //     GraduationMonthRepo.sort(column);
-    //     $scope.sortAction = 'confirm';
-    //   }
-    // };
+    $scope.sortEmailTemplates = function(column) {
+      if($scope.sortAction == 'confirm') {
+        $scope.sortAction = 'sort';
+      }
+      else if($scope.sortAction == 'sort') {
+        EmailTemplateRepo.sort(column);
+        $scope.sortAction = 'confirm';
+      }
+    };
 
     $scope.removeEmailTemplate = function(index) {
       console.info('trying to remove: ' + index);
