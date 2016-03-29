@@ -1053,3 +1053,14 @@ footer a, footer li, footer p {
 .mouse-hover-pointer:hover {
   cursor:pointer;
 }
+
+#email-template-modal-instructions-label{
+  margin-top:20px;
+  margin-bottom:5px;
+  font-weight:700;
+  font-size: 13px;
+}
+
+#email-template-modal-instructions-list{
+  cursor:help;
+}
