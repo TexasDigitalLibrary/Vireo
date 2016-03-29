@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class PersistenceBeans {
+    
 	@Bean
 	public ServletRegistrationBean h2servletRegistration() {
 		ServletRegistrationBean registrationBean = new ServletRegistrationBean(new WebServlet());
@@ -14,4 +15,5 @@ public class PersistenceBeans {
 		registrationBean.addInitParameter("-webAllowOthers", "true");
 		return registrationBean;
 	}
+	
 }

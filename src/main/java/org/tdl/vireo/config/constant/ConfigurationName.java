@@ -18,7 +18,7 @@ package org.tdl.vireo.config.constant;
  */
 public class ConfigurationName {
 	
-	// Application Settings
+	// Application Settings    
 	/** If defined then submissions are open, otherwise they are closed. **/
 	public final static String SUBMISSIONS_OPEN = "submissions_open";
 	
@@ -42,6 +42,9 @@ public class ConfigurationName {
 	
 	// Theme settings
 	/** Background main color */
+    public final static String THEME_PATH = "theme_path";
+    
+	/** Background main color */
 	public final static String BACKGROUND_MAIN_COLOR = "background_main_color";
 	
 	/** Background highlight color */
@@ -58,6 +61,12 @@ public class ConfigurationName {
 	
 	/** Submission Step Button highlight color when in "off" state */
 	public final static String BUTTON_HIGHLIGHT_COLOR_OFF = "button_highlight_color_off";
+	
+	/** Custom CSS */
+    public final static String LEFT_LOGO = "left_logo";
+    
+    /** Custom CSS */
+    public final static String RIGTH_LOGO = "right_logo";
 	
 	/** Custom CSS */
 	public final static String CUSTOM_CSS = "custom_css";
@@ -152,7 +161,6 @@ public class ConfigurationName {
 	public final static String APPLICATION_FILESIZE_MAXSIZETOTAL = "fileSize.maxFileSizeTotal";
 	
 	// Vireo 4 new Configuration Names
-	public final static String APPLICATION_INSTALL_DIRECTORY = "install.dir";
 	public final static String APPLICATION_MAIL_FROM = "mail.from";
 	public final static String APPLICATION_MAIL_REPLYTO = "mail.replyto";
 }

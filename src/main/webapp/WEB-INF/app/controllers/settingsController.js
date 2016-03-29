@@ -1,5 +1,5 @@
 
-vireo.controller("SettingsController", function ($controller, $scope, UserSettings, ConfigurableSettings) {
+vireo.controller("SettingsController", function ($controller, $scope, $timeout, UserSettings, ConfigurableSettings) {
 
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
@@ -35,6 +35,20 @@ vireo.controller("SettingsController", function ($controller, $scope, UserSettin
   	};
 
 	ConfigurableSettings.ready().then(function() {
+
+		//TODO:  check these update config settings methods for redundancy and clean up.
+		$scope.delayedUpdateConfigurableSettings = function(type,setting) {
+
+			if($scope.pendingUpdate) $timeout.cancel($scope.updateTimeout);
+
+			$scope.pendingUpdate = true;
+
+			$scope.updateTimeout = $timeout(function() {
+				$scope.updateConfigurableSettings(type,setting,$scope.settings.configurable[type][setting]);
+				$scope.pendingUpdate = false;
+			}, 500);
+
+		};
 
 		$scope.updateConfigurableSettingsPlainText = function(type,setting) {
 			ConfigurableSettings.update(type,setting,filterHtml($scope.settings.configurable[type][setting]));

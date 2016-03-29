@@ -10,7 +10,8 @@ vireo.directive("lockingtextarea", function($timeout) {
             "onBlur": "&",
             "keyDown": "&",
             "name": "@",
-            "timer": "@"
+            "timer": "@",
+			"wysiwyg": "@"
 		},
 		controller: function($scope) {
 
@@ -24,7 +25,7 @@ vireo.directive("lockingtextarea", function($timeout) {
 			};
 			
 			if($scope.timer == undefined) {
-				$scope.timer = 5;
+				$scope.timer = 100;
 			}
 
 			var timer;
@@ -64,6 +65,15 @@ vireo.directive("lockingtextarea", function($timeout) {
 		        width: "100%"
 		    };
 
-		},
+			$scope.nonWysiwygTyping = function($event) {
+				reset();
+			}
+
+			$scope.nonWysiwygBlur = function($event) {
+				save();
+			}
+
+		}
 	};
 });
+

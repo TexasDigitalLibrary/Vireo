@@ -437,6 +437,10 @@ sidebox ul input {
   cursor: not-allowed;
 }
 
+textarea.locking-text-area-not-wysiwyg {
+  min-height: 200px;
+}
+
 .repeated-span {
   margin-left: 5px;
   margin-right: 5px;
@@ -654,7 +658,6 @@ h4 {
 }
 
 
-
 .red {
   color: red;
 }
@@ -836,35 +839,52 @@ footer a, footer li, footer p {
 * LOOK AND FEEL ACCORDION *
 ***************************/
 
-.lookandfeel .color-reset {
+.look-and-feel .color-reset {
   text-indent: 0em;
   font-size: 0.85em;
   cursor: pointer;
 }
 
-.lookandfeel .form-control {
-  min-height: 40px;
+.look-and-feel input[type=color] {
+  visibility:hidden;
 }
 
-.lookandfeel input[type=color] {
-  border-radius: 5px;
-  width: 40%;
-  padding-bottom: 2px;
-  min-height: 20px;
+.look-and-feel lockingtextarea {
+  display: block;
+  margin-top: 25px;
 }
 
-.lookandfeel .logos {
-  margin-top:10px;
-  background: #efefef;
-  border-radius: 5px;
-  padding:5px;
+.look-and-feel .color-input {
+  height: 37px;
 }
 
-.lookandfeel .logos p {
+.look-and-feel .color-selector {
+  max-width: 200px;
+}
+
+.look-and-feel label.color-selector-swatch {
+  display: inherit;
+  max-width: 23px;
+}
+
+.look-and-feel .logo-wraper {
+    margin-left: 25px;
+}
+
+.look-and-feel .logo-preview {
+    text-align: center;
+    max-width: 200px;
+    max-height: 150px;
+    margin-bottom: 25px;
+    border: solid thin #efefef;
+    padding: 10px;
+}
+
+.look-and-feel .logos p {
   margin: 0px 0 3px 4px;
 }
 
-.lookandfeel .logos img {
+.look-and-feel .logos img {
   border: 1px solid black;
   background: #FFF;
   margin:15px 0;
