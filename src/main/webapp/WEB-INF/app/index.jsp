@@ -178,6 +178,10 @@
 	<script src="bower_components/tinymce-dist/tinymce.min.js"></script>
 	<script src="bower_components/angular-ui-tinymce/dist/tinymce.min.js"></script>
 	<script src="bower_components/ng-sortable/dist/ng-sortable.js"></script>
+	<script src="bower_components/ng-csv/build/ng-csv.min.js"></script>
+
+	<script src="bower_components/ng-file-upload/ng-file-upload-shim.min.js"></script>
+	<script src="bower_components/ng-file-upload/ng-file-upload.min.js"></script>
 	
 	<!--  Core libraries -->
 	
@@ -265,6 +269,8 @@
 	    <script src="directives/dragAndDropListDirective.js"></script>
 	    <script src="directives/lockingTextAreaDirective.js"></script>
 	    <script src="directives/trashCanDirective.js"></script>
+	    <script src="directives/selectedDirective.js"></script>
+	    <script src="directives/dropZoneDirective.js"></script>
 
 	    <!-- Services -->
 	    <script src="services/sidebarService.js"></script>
@@ -281,6 +287,10 @@
 	    <script src="model/depositLocationRepoModel.js"></script>
 	    <script src="model/graduationMonthRepoModel.js"></script>
 	    <script src="model/emailTemplateRepo.js"></script>
+	    <script src="model/embargoRepoModel.js"></script>
+	    <script src="model/languageRepoModel.js"></script>
+	    <script src="model/controlledVocabularyRepoModel.js"></script>
+	    <script src="model/availableDocumentTypesRepoModel.js"></script>
 
 
 	    <!-- Controllers -->
@@ -295,8 +305,12 @@
 	    <script src="controllers/whoHasAccessController.js"></script>
 	    <script src="controllers/settings/customActionSettingsController.js"></script>
 	    <script src="controllers/settings/depositLocationRepoController.js"></script> 
+	    <script src="controllers/settings/embargoRepoController.js"></script>
 	    <script src="controllers/settings/graduationMonthRepoController.js"></script> 
 	    <script src="controllers/settings/emailTemplateRepoController.js"></script> 
+	    <script src="controllers/settings/controlledVocabularyRepoController.js"></script>
+	    <script src="controllers/settings/languageRepoController.js"></script> 
+	    <script src="controllers/settings/availableDocumentTypesController.js"></script>
 	    
 	<!-- endbuild -->
 

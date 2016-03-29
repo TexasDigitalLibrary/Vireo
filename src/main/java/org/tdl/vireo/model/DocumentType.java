@@ -21,13 +21,8 @@ public class DocumentType extends BaseOrderedEntity {
 
 	@Column(nullable = false)
 	private DegreeLevel degreeLevel;
-	
-	/**
-	 * 
-	 */
-	public DocumentType() {
-        // TODO Auto-generated constructor stub
-    }
+
+	public DocumentType() {}
 
 	/**
 	 * Create a new JpaDocumentTypeImpl
@@ -37,9 +32,10 @@ public class DocumentType extends BaseOrderedEntity {
 	 * @param degreeLevel
 	 *            The degreeLevel of the new document type.
 	 */
-	public DocumentType(String name, DegreeLevel degreeLevel) {
-		this.name = name;
-		this.degreeLevel = degreeLevel;
+	public DocumentType(String name, DegreeLevel degreeLevel, int order) {
+		setName(name);
+		setDegreeLevel(degreeLevel);
+		setOrder(order);
 	}
 
     /**
@@ -66,7 +62,8 @@ public class DocumentType extends BaseOrderedEntity {
     /**
      * @param degreeLevel the level to set
      */
-    public void setLevel(DegreeLevel degreeLevel) {
+    public void setDegreeLevel(DegreeLevel degreeLevel) {
         this.degreeLevel = degreeLevel;
     }
+    
 }

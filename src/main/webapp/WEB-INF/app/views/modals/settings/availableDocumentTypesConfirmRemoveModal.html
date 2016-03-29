@@ -1,0 +1,15 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		<span class="modal-close" aria-hidden="true">&times;</span>
+	</button>
+	<h3 class="modal-title">Are You Sure?</h3>
+</div>
+
+<div class="modal-body">
+	<h4><b>Click confirm to remove the Document Type: {{modalData.name}}</b></h4>
+</div>
+
+<div class="modal-footer">
+	<button type="button" class="btn btn-warning" ng-click="clearModalData()" data-dismiss="modal">Cancel</button>
+	<button id="documentType-confirm" type="button" class="btn btn-primary" data-dismiss="modal" ng-click="removeDocumentType(modalData.order); clearModalData()">Confirm</button>
+</div>

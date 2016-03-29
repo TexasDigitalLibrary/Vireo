@@ -1,6 +1,7 @@
 package org.tdl.vireo.service;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -17,8 +18,11 @@ import javax.persistence.metamodel.Metamodel;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.EntityCVWhitelist;
+import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.EntityCVWhitelistRepo;
+import org.tdl.vireo.model.repo.LanguageRepo;
 
 /**
  * Service in which provides management and selection of controlled vocabulary from 
@@ -35,13 +39,19 @@ public class EntityControlledVocabularyService {
             new EntityCVWhitelist("Embargo", Arrays.asList(new String[] {"guarantor"})), 
             new EntityCVWhitelist("Attachment", Arrays.asList(new String[] {"type"}))
     };
-
+    
     @PersistenceContext
     private EntityManager entityManager;
     
     @Autowired
     private EntityCVWhitelistRepo entityCVWhitelistRepo;
     
+    @Autowired
+    private ControlledVocabularyRepo controlledVocabularyRepo;
+    
+    @Autowired
+    private LanguageRepo languageRepo;
+        
     // cached entity names
     private List<String> entityNames = null;
     
@@ -51,7 +61,56 @@ public class EntityControlledVocabularyService {
     /**
      * default contructor
      */
-    public EntityControlledVocabularyService() { }
+    public EntityControlledVocabularyService() { 
+        whitelist = new HashMap<String, List<String>>();
+    }
+    
+    public void init() {
+        for(EntityCVWhitelist ecvw : defaultWhitelistedCV) {
+            
+            String ecvwName = ecvw.getEntityName();
+            List<String> ecvwPropertyNames = ecvw.getPropertyNames();
+            
+            whitelist.put(ecvwName, ecvwPropertyNames);                    
+            entityCVWhitelistRepo.create(ecvwName, ecvwPropertyNames);
+            
+            ecvwPropertyNames.forEach(propertyName -> {
+                // TODO: manage default language accordingly
+                //       and handle duplicate controlled vocabulary names on different entities
+                ControlledVocabulary cv = controlledVocabularyRepo.create(propertyName, ecvwName, languageRepo.findByName("English"));
+                
+                if(isPropertyEnum(ecvwName, propertyName)) {
+                    cv.setIsEnum(true);
+                    controlledVocabularyRepo.save(cv);
+                }
+            });
+            
+            
+        }
+        
+        System.out.println("\n\nDEFAULT WHITELIST:\n" + whitelist + "\n\n");
+    }
+    
+    private boolean isPropertyEnum(String entityName, String propertyName) {
+        boolean isEnum = false;
+        
+        try {
+            Class<?> clazz = Class.forName("org.tdl.vireo.model." + entityName);            
+            Field[] fields = clazz.getDeclaredFields();            
+            for (Field field : fields) {
+                if(field.getName().equals(propertyName)) {
+                    Type type = field.getGenericType();
+                    if(type instanceof Class && ((Class<?>)type).isEnum()) {
+                        isEnum = true;
+                    }
+                }
+            }
+            
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return isEnum;
+    }
     
     /**
      * Method to add all properties of an entity to be selectable as controlled vocabulary.
@@ -176,24 +235,13 @@ public class EntityControlledVocabularyService {
         
         String entityName = entityType.getName();
  
-        if(whitelist == null) {
-            
-            whitelist = new HashMap<String, List<String>>();
-            
-            if(entityCVWhitelistRepo.count() > 0) {
-                entityCVWhitelistRepo.findAll().forEach(entityCVWhitelist -> {
-                    whitelist.put(entityCVWhitelist.getEntityName(), entityCVWhitelist.getPropertyNames());
-                });                
-            }
-            else {
-                for(EntityCVWhitelist ecvw : defaultWhitelistedCV) {
-                    whitelist.put(ecvw.getEntityName(), ecvw.getPropertyNames());                    
-                    entityCVWhitelistRepo.create(ecvw.getEntityName(), ecvw.getPropertyNames());
-                }
-                
-                System.out.println("\n\nDEFAULT WHITELIST:\n" + whitelist + "\n\n");
-            }            
-           
+        if(entityCVWhitelistRepo.count() > 0) {
+            entityCVWhitelistRepo.findAll().forEach(entityCVWhitelist -> {
+                whitelist.put(entityCVWhitelist.getEntityName(), entityCVWhitelist.getPropertyNames());
+            });                
+        }
+        else {
+            System.out.println("\nThere are no entity controlled vocabularies!\n");
         }
         
         List<String> properties = whitelist.get(entityName);
@@ -210,7 +258,7 @@ public class EntityControlledVocabularyService {
             }
         }
         
-        System.out.println("Entity " + entityName + " with property " + property + " not allowed to be a controlled vocabulary!\n");
+        System.out.println("\nEntity " + entityName + " with property " + property + " not allowed to be a controlled vocabulary!\n");
 
         // return empty array list
         return new ArrayList<Object>();

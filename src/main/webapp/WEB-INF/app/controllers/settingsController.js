@@ -25,9 +25,22 @@ vireo.controller("SettingsController", function ($controller, $scope, UserSettin
 		});
 	}
 
+	var filterHtml = function(html) {
+		var temp = document.createElement("div");
+    	if (!html) {
+      		return "";
+    	}
+    	temp.innerHTML = html;
+		return temp.textContent || temp.innerText || "";
+  	};
+
 	ConfigurableSettings.ready().then(function() {
-		
-		$scope.updateConfigurableSettings = function(type,setting) {	
+
+		$scope.updateConfigurableSettingsPlainText = function(type,setting) {
+			ConfigurableSettings.update(type,setting,filterHtml($scope.settings.configurable[type][setting]));
+		};
+
+		$scope.updateConfigurableSettings = function(type,setting) {
 			ConfigurableSettings.update(type,setting,$scope.settings.configurable[type][setting]);
 		};
 

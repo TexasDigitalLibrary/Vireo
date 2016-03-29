@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.tdl.vireo.condition.NotRunningTests;
+import org.tdl.vireo.service.EntityControlledVocabularyService;
 import org.tdl.vireo.service.SystemDataLoader;
 
 import edu.tamu.framework.CoreContextInitializedHandler;
@@ -30,10 +31,13 @@ class AppContextInitializedHandler extends CoreContextInitializedHandler {
     private Boolean showBeans;
 
     @Autowired
-    ApplicationContext applicationContext;
+    private ApplicationContext applicationContext;
     
     @Autowired
     private SystemDataLoader systemDataLoader;
+    
+    @Autowired
+    private EntityControlledVocabularyService entityControlledVocabularyService;
 
     final static Logger logger = LoggerFactory.getLogger(AppContextInitializedHandler.class);
 
@@ -65,5 +69,12 @@ class AppContextInitializedHandler extends CoreContextInitializedHandler {
         
         logger.info("Generating system defaults");
         systemDataLoader.generateSystemDefaults();
+               
+        
+        logger.info("Initializing default entity controlled vocabulary");
+        entityControlledVocabularyService.init();
+        
+        logger.info("Loading Proquest language codes");
+        systemDataLoader.loadProquestLanguageCodes();
     }
 }

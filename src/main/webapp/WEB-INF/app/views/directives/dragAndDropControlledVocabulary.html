@@ -1,0 +1,7 @@
+<div class="controlled-vocabulary" ng-mouseenter="isMouseHover=true" ng-mouseleave="isMouseHover=false">
+	<span>{{ item.order }}. </span>
+	<span ng-repeat="property in properties" class="repeated-span">
+		<span ng-show="!item.entityProperty" class="glyphicon glyphicon-user"></span>
+		<span ng-show="item.entityProperty" class="glyphicon glyphicon-globe"></span> {{ item[property] }}</span>
+	<span ng-if="!item.entityProperty" ng-show="isMouseHover" class="glyphicon glyphicon-pencil edit-setting-icon" ng-click="edit({index:item.order})"></span>
+</div>

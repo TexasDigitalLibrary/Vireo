@@ -25,8 +25,8 @@ public class ControlledVocabularyTest extends AbstractEntityTest {
         assertEquals("Saved entity did not contain the language!", language, controlledVocabulary.getLanguage());
         
         // add some embargos to test create entity controlled vocabulary
-        embargoRepo.create(TEST_EMBARGO_NAME, TEST_EMBARGO_DESCRIPTION, TEST_EMBARGO_DURATION, TEST_EMBARGO_IS_ACTIVE);
-        Embargo embargo = embargoRepo.create(TEST_EMBARGO_NAME_2, TEST_EMBARGO_DESCRIPTION, TEST_EMBARGO_DURATION, TEST_EMBARGO_IS_ACTIVE);
+        embargoRepo.create(TEST_EMBARGO_NAME, TEST_EMBARGO_DESCRIPTION, TEST_EMBARGO_DURATION, TEST_EMBARGO_TYPE_GUARANTOR, TEST_EMBARGO_IS_ACTIVE);
+        Embargo embargo = embargoRepo.create(TEST_EMBARGO_NAME_2, TEST_EMBARGO_DESCRIPTION, TEST_EMBARGO_DURATION, TEST_EMBARGO_TYPE_GUARANTOR, TEST_EMBARGO_IS_ACTIVE);
         embargo.setGuarantor(EmbargoGuarantor.PROQUEST);
         embargoRepo.save(embargo);
         

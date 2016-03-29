@@ -1,1 +1,66 @@
-languages.html
+<div id="languages" class="container-fluid" ng-controller="LanguageRepoController">
+	
+	<alerts channels="/settings/languages" types="ERROR, WARNING" exclusive></alerts>
+
+	<div class="col-sm-6">		
+		
+		<button class="btn btn-default modal-add-btn" 
+				data-toggle="modal" 
+				data-target="#languagesNewModal">
+			Add Language
+		</button>
+		
+		<div class="glyphicon glyphicon-info-sign tooltip-span move-up" tooltip="Dialog in which allows to create new language."></div>
+
+		<p ng-if="languages.list.length == 0">Add New Language</p>
+		
+		<draganddroplist dragging="dragging"
+						 scope-value="languages"
+						 properties='["name", "proquestCode"]'
+						 item-view='views/directives/dragAndDropLanguage.html'
+						 listeners='dragControlListeners'
+						 edit='editLanguage(index)'
+						 model='Languages'
+						 sort-column='name',
+						 sort-action='sortAction'
+						 sort-method='sortLanguages(column)'>
+		</draganddroplist>
+
+		<br/>
+		<span class="glyphicon glyphicon-tag">
+			<span> Denotes a ProQuest / UMI compatable Language</span>
+		</span>
+
+	</div>
+
+
+	
+	<div class="col-sm-6">
+		<trashcan id="{{trashCanId}}"
+				  dragging="dragging"
+				  listeners='dragControlListeners'>
+		</trashcan>
+	</div>
+
+	<modal modal-id="languagesNewModal" 
+		   modal-view="views/modals/settings/languagesNewModal.html" 
+		   modal-header-class="modal-header-primary"
+		   modal-keyboard="false"
+		   modal-backdrop="static">
+	</modal>
+
+	<modal modal-id="languagesEditModal" 
+		   modal-view="views/modals/settings/languagesEditModal.html" 
+		   modal-header-class="modal-header-primary"
+		   modal-keyboard="false"
+		   modal-backdrop="static">
+	</modal>
+
+	<modal modal-id="languagesConfirmRemoveModal" 
+		   modal-view="views/modals/settings/languagesConfirmRemoveModal.html" 
+		   modal-header-class="modal-header-primary"
+		   modal-keyboard="false"
+		   modal-backdrop="static">
+	</modal>
+
+</div>

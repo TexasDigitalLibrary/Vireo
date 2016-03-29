@@ -16,7 +16,7 @@ public class GraduationMonthRepoImpl implements GraduationMonthRepoCustom {
 
     @Override
     public GraduationMonth create(int month) {
-        return graduationMonthRepo.save(new GraduationMonth(month));
+        return graduationMonthRepo.save(new GraduationMonth(month, (int) graduationMonthRepo.count() + 1));
     }
     
     @Override

@@ -17,6 +17,9 @@ vireo.directive("lockingtextarea", function($timeout) {
 			$scope.locked = true;
 
 			$scope.toggleLock = function() {
+				if($scope.locked) {
+					reset();
+				}
 				$scope.locked = !$scope.locked;
 			};
 			
@@ -26,21 +29,26 @@ vireo.directive("lockingtextarea", function($timeout) {
 
 			var timer;
 
+			var reset = function() {
+				if(timer != undefined) {
+            		$timeout.cancel(timer);
+            	}
+        		timer = $timeout(function() {
+                    save();
+                }, $scope.timer * 1000);
+			};
+
 			var save = function() {
 				$scope.onBlur();
     			$scope.toggleLock();
-    			delete timer;
+                $timeout.cancel(timer);
 			};
 
 			$scope.tinymceOptions = {
 				name: $scope.name,
 				setup: function(editor) {
                     editor.on('KeyUp', function(e) {
-                    	if(timer == undefined) {
-                    		timer = $timeout(function() {
-	                            save();
-	                        }, $scope.timer * 1000);
-                    	}
+                    	reset();
                     });
                     editor.on('Blur', function(e) {
                     	save();

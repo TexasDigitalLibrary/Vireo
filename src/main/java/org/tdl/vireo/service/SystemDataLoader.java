@@ -3,6 +3,7 @@ package org.tdl.vireo.service;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -13,6 +14,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,6 +116,9 @@ public class SystemDataLoader {
     
     @Autowired
     private ConfigurationRepo configurationRepo;
+    
+    @Autowired
+    private ProquestLanguageCodesService proquestLanguageCodes;
 
     final static Logger logger = LoggerFactory.getLogger(SystemDataLoader.class);
 
@@ -556,8 +564,7 @@ public class SystemDataLoader {
                 if (dbEmbargo == null) {
                     Embargo possibleCustomEmbargo = embargoRepo.findByNameAndGuarantorAndIsSystemRequired(embargoDefinition.getName(), embargoDefinition.getGuarantor(), false);
 
-                    dbEmbargo = embargoRepo.create(embargoDefinition.getName(), embargoDefinition.getDescription(), embargoDefinition.getDuration(), embargoDefinition.isActive());
-                    dbEmbargo.setGuarantor(embargoDefinition.getGuarantor());
+                    dbEmbargo = embargoRepo.create(embargoDefinition.getName(), embargoDefinition.getDescription(), embargoDefinition.getDuration(), embargoDefinition.getGuarantor(), embargoDefinition.isActive());
                     dbEmbargo.isSystemRequired(true);
                     // if we have a custom one that's named the same, make sure this new one is not active by default
                     if (possibleCustomEmbargo != null) {
@@ -566,8 +573,7 @@ public class SystemDataLoader {
                     logger.info("New System Embargo Type being installed [" + dbEmbargo.getName() + "]@[" + dbEmbargo.getGuarantor().name() + "]");
                     embargoRepo.save(dbEmbargo);
                 } else {
-                    Embargo loadedEmbargo = embargoRepo.create(embargoDefinition.getName(), embargoDefinition.getDescription(), embargoDefinition.getDuration(), embargoDefinition.isActive());
-                    loadedEmbargo.setGuarantor(embargoDefinition.getGuarantor());
+                    Embargo loadedEmbargo = embargoRepo.create(embargoDefinition.getName(), embargoDefinition.getDescription(), embargoDefinition.getDuration(), embargoDefinition.getGuarantor(), embargoDefinition.isActive());
                     loadedEmbargo.isSystemRequired(true);
 
                     // if the embargo in the DB doesn't match in content with the one loaded from array
@@ -642,6 +648,71 @@ public class SystemDataLoader {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+    
+    public void loadProquestLanguageCodes() {
+        Resource resource = resourcePatternResolver.getResource("classpath:/proquest/language_codes.xls");
+                    
+            InputStream file = null;
+            try {
+                file = resource.getInputStream();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+             
+            if(file != null) {
+                
+            
+                HSSFWorkbook workbook = null;
+                try {
+                    workbook = new HSSFWorkbook(file);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if(workbook != null) {
+                    
+                    HSSFSheet sheet = workbook.getSheetAt(0);
+                     
+                    Iterator<Row> rowIterator = sheet.iterator();
+                    while(rowIterator.hasNext()) {
+                        Row row = rowIterator.next();
+                         
+                        String language = null, code = null;
+                        
+                        Iterator<Cell> cellIterator = row.cellIterator();
+                        while(cellIterator.hasNext()) {
+                             
+                            Cell cell = cellIterator.next();
+                            
+                            if(cell.getCellType() == Cell.CELL_TYPE_STRING) {
+                                
+                                String cellValue = cell.getStringCellValue();
+                                if(code == null) {
+                                    code = cellValue;
+                                }
+                                else {
+                                    language = cellValue;
+                                }
+                            }
+                            else {
+                                throw new RuntimeException("Proquest language codes xls is not valid");
+                            }
+                        }
+                        
+                        proquestLanguageCodes.addLanguageCode(language, code);
+                        
+                    }
+                }
+                
+                try {
+                    file.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            
+            }
+             
+        
     }
 
     /**

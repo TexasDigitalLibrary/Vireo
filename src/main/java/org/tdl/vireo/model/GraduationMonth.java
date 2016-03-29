@@ -26,8 +26,13 @@ public class GraduationMonth extends BaseOrderedEntity {
 	 *            The integer of the month, starting with 0 = january.
 	 */
 	public GraduationMonth(int month) {
-		this.month = month;
+	    setMonth(month);
 	}
+	
+	public GraduationMonth(int month, int order) {
+        this(month);
+        setOrder(order);
+    }
 
     /**
      * @return the month

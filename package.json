@@ -6,33 +6,33 @@
   "homepage": "https://github.com/TexasDigitalLibrary/Vireo",
   "license": "BSD",
   "devDependencies": {
-    "bower": "latest",
-    "grunt": "latest",
-    "grunt-cli": "latest",
-    "grunt-contrib-compass": "latest",
-    "grunt-contrib-concat": "latest",
-    "grunt-contrib-jshint": "latest",
-    "grunt-contrib-uglify": "latest",
-    "grunt-contrib-watch": "latest",
-    "grunt-usemin": "latest",
-    "http-server": "latest",
+    "bower": "1.7.7",
+    "grunt": "0.4.5",
+    "grunt-cli": "0.1.13",
+    "grunt-contrib-compass": "1.1.1",
+    "grunt-contrib-concat": "1.0.0",
+    "grunt-contrib-jshint": "1.0.0",
+    "grunt-contrib-uglify": "1.0.0",
+    "grunt-contrib-watch": "0.6.1",
+    "grunt-usemin": "3.1.1",
+    "http-server": "0.9.0",
     "jasmine-core": "2.4.1",
-    "jshint-stylish": "latest",
-    "karma": "latest",
-    "karma-chrome-launcher": "latest",
-    "karma-firefox-launcher": "latest",
+    "jshint-stylish": "2.1.0",
+    "karma": "0.13.22",
+    "karma-chrome-launcher": "0.2.2",
+    "karma-firefox-launcher": "0.1.7",
     "karma-jasmine": "~0.3.7",
-    "karma-junit-reporter": "latest",
-    "load-grunt-tasks": "latest",
-    "protractor": "latest",
-    "shelljs": "latest",
-    "time-grunt": "latest",
-    "tmp": "latest"
+    "karma-junit-reporter": "0.3.8",
+    "load-grunt-tasks": "3.4.1",
+    "protractor": "3.1.1",
+    "shelljs": "0.6.0",
+    "time-grunt": "1.3.0",
+    "tmp": "0.0.28"
   },
   "scripts": {
     "postinstall": "bower install",
     "prestart": "npm install",    
-    "start": "http-server -a 0.0.0.0 -p 8000",
+    "start": "http-server -a 0.0.0.0.0.0 -p 8000",
     "pretest": "npm install",
     "test": "node node_modules/karma/bin/karma start src/main/webapp/WEB-INF/tests/karma.conf.js",
     "test-single-run": "node node_modules/karma/bin/karma start src/main/webapp/WEB-INF/tests/karma.conf.js  --single-run",
@@ -40,13 +40,12 @@
     "update-webdriver": "webdriver-manager update",
     "preprotractor": "npm run update-webdriver",
     "protractor": "protractor src/main/webapp/WEB-INF/tests/protractor-conf.js",
-    "update-index-async": "node -e \"require('shelljs/global'); sed('-i', /\\/\\/@@NG_LOADER_START@@[\\s\\S]*\\/\\/@@NG_LOADER_END@@/, '//@@NG_LOADER_START@@\\n' + cat('bower_components/angular-loader/angular-loader.min.js') + '\\n//@@NG_LOADER_END@@', 'app/index-async.html');\""
+    "update-index-async": "node -e \"require('shelljs/global'); sed('-i', /\\/\\/@@NG_LOADER_START@@[\\s\\S]0.0.0\\/\\/@@NG_LOADER_END@@/, '//@@NG_LOADER_START@@\\n' + cat('bower_components/angular-loader/angular-loader.min.js') + '\\n//@@NG_LOADER_END@@', 'app/index-async.html');\""
   },
   "engines": {
     "node": ">=0.10.33"
   },
   "dependencies": {
-    "grunt": "latest",
-    "grunt-ts": "latest"
+    
   }
 }
