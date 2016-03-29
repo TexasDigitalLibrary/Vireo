@@ -52,9 +52,9 @@ public class Application extends SpringBootServletInitializer {
         // if we're running in an expanded war
         if (applicationClassPath.exists() && applicationClassPath.isDirectory()) {
             BASE_PATH = applicationClassPathRoot + (isSpringBoot ? "../../" : "../../../");
-            File customProps = new File(BASE_PATH+"conf/application.properties");
+            File customProps = new File(BASE_PATH + "conf/application.properties");
             if (customProps.exists() && customProps.isFile()) {
-                logger.info("Loading application.properties from ../../../conf directory relative to our classpath");
+                logger.info("Loading application.properties from " + BASE_PATH + "conf directory relative to our classpath");
                 System.setProperty("spring.config.location", "file://" + customProps.getAbsolutePath());
             }
         }
@@ -63,12 +63,11 @@ public class Application extends SpringBootServletInitializer {
             BASE_PATH = applicationClassPath.getParent();
             File customProps = new File(BASE_PATH + "/conf/application.properties");
             if (customProps.exists() && customProps.isFile()) {
-                logger.info("Loading application.properties from /conf directory in same parent directory as our .jar/.war");
-                
+                logger.info("Loading application.properties from  " + BASE_PATH + "conf directory in same parent directory as our .jar/.war");
+
                 System.setProperty("spring.config.location", "file://" + customProps.getAbsolutePath());
             }
-        }
-        else {
+        } else {
             logger.info("Couldn't discern how we're running to be able to load an external application.properties file!");
         }
     }

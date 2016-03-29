@@ -15,7 +15,7 @@
     		<div class="input-group">
                 <span class="input-group-btn">
                     <span class="btn btn-primary btn-file" ng-disabled="uploadModalData.cv.entityProperty">
-                        Browse<input ng-model="uploadModalData.file" id="csv-upload" type="file" accept=".csv" selected>
+                        Browse<input ng-model="uploadModalData.file" id="csv-upload" type="file" accept=".csv" file-selected>
                     </span>
                 </span>
                 <input ng-model="uploadModalData.file.name" type="text" class="form-control" readonly>
@@ -40,7 +40,7 @@
             <div class="input-group">
                 <span class="input-group-btn">
                     <span class="btn btn-primary btn-file" disabled>
-                        Browse<input ng-model="uploadModalData.file" id="csv-upload" type="file" accept=".csv" selected disabled>
+                        Browse<input ng-model="uploadModalData.file" id="csv-upload" type="file" accept=".csv" file-selected disabled>
                     </span>
                 </span>
                 <input ng-model="uploadModalData.file.name" type="text" class="form-control" readonly>

@@ -11,6 +11,13 @@
 	<includeBaseDirectory>false</includeBaseDirectory>
 	<fileSets>
 		<fileSet>
+                        <directory>./</directory>
+                        <outputDirectory>public</outputDirectory>
+                        <excludes>
+                                <exclude>*/**</exclude>
+                        </excludes>
+                </fileSet>
+		<fileSet>
 			<directory>./</directory>
 			<outputDirectory>attachments</outputDirectory>
 			<excludes>

@@ -1,4 +1,4 @@
-vireo.directive('selected', function() {
+vireo.directive('fileSelected', function() {
     return {
         require:"ngModel",
         restrict: 'A',
