@@ -40,6 +40,8 @@ vireo.service("ConfigurableSettings", function($sanitize, AbstractModel, WsApi) 
 
 	};
 
+	// TODO: test typing for windows control characters
+	// TODO: investigate way to maintain css format
 	ConfigurableSettings.update = function(type, setting, value) {	
 		WsApi.fetch({
 				endpoint:'/private/queue',
