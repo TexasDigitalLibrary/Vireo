@@ -1,9 +1,7 @@
 package org.tdl.vireo.model.repo.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.EmailTemplate;
-import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.custom.EmailTemplateRepoCustom;
 import org.tdl.vireo.service.OrderedEntityService;
@@ -33,6 +31,11 @@ public class EmailTemplateRepoImpl implements EmailTemplateRepoCustom {
     @Override
     public void reorder(Integer src, Integer dest) {
         orderedEntityService.reorder(EmailTemplate.class, src, dest);
+    }
+    
+    @Override
+    public void sort(String column) {
+        orderedEntityService.sort(EmailTemplate.class, column);
     }
 
     @Override

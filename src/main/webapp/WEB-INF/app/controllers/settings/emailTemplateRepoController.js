@@ -11,27 +11,20 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
   
   $scope.sortAction = "confirm";
 
-  $scope.modalData = {'name':'', 'subject':'', 'message':''};
-  
   $scope.resetModalData = function() {
     $scope.modalData = {'name':'', 'subject':'', 'message':''};
   };
 
   $scope.templateToString = function(template) {
-    console.info('tostring');
-    console.info(template);
-    console.info(template.name);
     return template.name;
   }
 
   $scope.ready.then(function() {
 
+    $scope.resetModalData();
+
     $scope.selectEmailTemplate = function(index){
       $scope.modalData = $scope.emailTemplates.list[index];
-    }
-
-    $scope.reorderEmailTemplates = function(src, dest){
-      EmailTemplateRepo.reorder(src, dest);
     }
 
     $scope.createEmailTemplate = function() {
@@ -41,45 +34,51 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
     };
 
     $scope.launchEditModal = function(index) {
-      console.info('launching edit modal with index' + index);
       $scope.modalData = $scope.emailTemplates.list[index];
       angular.element('#emailTemplatesEditModal').modal('show');
     };
 
-    $scope.dragControlListeners = DragAndDropListenerFactory.buildDragControls({
-      trashId: $scope.trashCanId,
-      dragging: $scope.dragging,
-      select: $scope.selectEmailTemplate,			
-      list: $scope.emailTemplates.list,
-      confirm: '#emailTemplatesConfirmRemoveModal',
-      reorder: $scope.reorderEmailTemplates,
-      container: '#email-templates'
-    });
-
     $scope.updateEmailTemplate = function() {
-      console.info('attempting update...');
       EmailTemplateRepo.update($scope.modalData).then(function() {
-        console.info('done; resetting');
         $scope.resetModalData();
       });
     };
+
+    $scope.removeEmailTemplate = function(index) {
+      EmailTemplateRepo.remove(index).then(function() {
+        $scope.resetModalData();
+      });
+    };
+
+    $scope.reorderEmailTemplates = function(src, dest){
+      EmailTemplateRepo.reorder(src, dest).then(function() {
+        $scope.resetModalData();
+      });
+    }
 
     $scope.sortEmailTemplates = function(column) {
       if($scope.sortAction == 'confirm') {
         $scope.sortAction = 'sort';
       }
       else if($scope.sortAction == 'sort') {
-        EmailTemplateRepo.sort(column);
+        EmailTemplateRepo.sort(column).then(function() {
+          $scope.resetModalData();
+        });
         $scope.sortAction = 'confirm';
       }
     };
 
-    $scope.removeEmailTemplate = function(index) {
-      console.info('trying to remove: ' + index);
-      EmailTemplateRepo.remove(index).then(function() {
-        $scope.resetModalData();
-      });
-    };
+    
+
+    $scope.dragControlListeners = DragAndDropListenerFactory.buildDragControls({
+      trashId: $scope.trashCanId,
+      dragging: $scope.dragging,
+      select: $scope.selectEmailTemplate,     
+      list: $scope.emailTemplates.list,
+      confirm: '#emailTemplatesConfirmRemoveModal',
+      reorder: $scope.reorderEmailTemplates,
+      container: '#email-templates'
+    });
     
   });	
 

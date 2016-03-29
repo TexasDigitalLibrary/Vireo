@@ -53,48 +53,29 @@ vireo.service("EmailTemplateRepo", function(WsApi, AbstractModel, AlertService) 
     return EmailTemplatesRepo.data;	
   };
 
-  EmailTemplatesRepo.add = function(depositLocation) {
+  EmailTemplatesRepo.add = function(emailTemplate) {
     return WsApi.fetch({
       'endpoint': '/private/queue', 
       'controller': 'settings/email-template', 
       'method': 'create',
-      'data': depositLocation
-    }).then(function(response) {
-      var responseType = angular.fromJson(response.body).meta.type;
-      var responseMessage = angular.fromJson(response.body).meta.message;
-      if(responseType != 'SUCCESS') {
-        AlertService.add({type: responseType, message: responseMessage}, "/settings/email-template");  
-      }
+      'data': emailTemplate
     });
   };
 
-  EmailTemplatesRepo.update = function(depositLocation) {
+  EmailTemplatesRepo.update = function(emailTemplate) {
     return WsApi.fetch({
       'endpoint': '/private/queue', 
       'controller': 'settings/email-template', 
       'method': 'update',
-      'data': depositLocation
-    }).then(function(response) {
-      var responseType = angular.fromJson(response.body).meta.type;
-      var responseMessage = angular.fromJson(response.body).meta.message;
-      if(responseType != 'SUCCESS') {
-        AlertService.add({type: responseType, message: responseMessage}, "/settings/email-template");  
-      }
+      'data': emailTemplate
     });
   };
 
   EmailTemplatesRepo.reorder = function(src, dest) {
-    console.info('reorder!! ' + src + ' ' + dest);
     return WsApi.fetch({
       'endpoint': '/private/queue', 
       'controller': 'settings/email-template', 
       'method': 'reorder/' + src + '/' + dest
-    }).then(function(response) {
-      var responseType = angular.fromJson(response.body).meta.type;
-      var responseMessage = angular.fromJson(response.body).meta.message;
-      if(responseType != 'SUCCESS') {
-        AlertService.add({type: responseType, message: responseMessage}, "/settings/email-template");  
-      }
     });
   };
 
@@ -103,12 +84,6 @@ vireo.service("EmailTemplateRepo", function(WsApi, AbstractModel, AlertService) 
       'endpoint': '/private/queue', 
       'controller': 'settings/email-template', 
       'method': 'sort/' + column
-    }).then(function(response) {
-      var responseType = angular.fromJson(response.body).meta.type;
-      var responseMessage = angular.fromJson(response.body).meta.message;
-      if(responseType != 'SUCCESS') {
-        AlertService.add({type: responseType, message: responseMessage}, "/settings/email-template");  
-      }
     });
   };
 
@@ -117,12 +92,6 @@ vireo.service("EmailTemplateRepo", function(WsApi, AbstractModel, AlertService) 
       'endpoint': '/private/queue', 
       'controller': 'settings/email-template', 
       'method': 'remove/' + index
-    }).then(function(response) {
-      var responseType = angular.fromJson(response.body).meta.type;
-      var responseMessage = angular.fromJson(response.body).meta.message;
-      if(responseType != 'SUCCESS') {
-        AlertService.add({type: responseType, message: responseMessage}, "/settings/email-template");  
-      }
     });
   };
   

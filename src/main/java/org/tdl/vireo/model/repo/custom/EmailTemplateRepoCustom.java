@@ -10,5 +10,7 @@ public interface EmailTemplateRepoCustom {
 
     public void reorder(Integer src, Integer dest);
     
+    public void sort(String column);
+    
     public void remove(Integer index);
 }

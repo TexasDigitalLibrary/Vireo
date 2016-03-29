@@ -198,5 +198,14 @@ public class EmailTemplateController {
         simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(SUCCESS, getAll()));        
         return new ApiResponse(SUCCESS);
     }
+    
+    @ApiMapping("/sort/{column}")
+    @Auth(role = "ROLE_MANAGER")
+    @Transactional
+    public ApiResponse sortEmailTemplates(@ApiVariable String column) {
+        emailTemplateRepo.sort(column);
+        simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(SUCCESS, getAll()));        
+        return new ApiResponse(SUCCESS);
+    }
 
 }

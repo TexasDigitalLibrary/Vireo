@@ -42,7 +42,7 @@ public class EmailTemplate extends BaseOrderedEntity {
 	 */
 	public EmailTemplate(String name, String subject, String message, int order) {
 		this();
-		super.setOrder(order);
+		setOrder(order);
 		setName(name);
 		setSubject(subject);
 		setMessage(message);

@@ -9,6 +9,7 @@ vireo.directive("draganddroplist", function() {
 			'edit': '&',
 			'toString': '&',
 			'itemView': '@',
+			'sortLabel': '@',
 			'sortColumn': '@',
 			'sortAction': '=',
 			'sortMethod': '&'
