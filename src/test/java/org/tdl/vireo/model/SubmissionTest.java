@@ -51,7 +51,7 @@ public class SubmissionTest extends AbstractEntityTest {
         attachment = attachmentRepo.create(TEST_ATTACHMENT_NAME, TEST_UUID, attachmentType);
         assertEquals("The attachment does not exist!", 1, attachmentRepo.count());
 
-        embargoType = embargoRepo.create(TEST_EMBARGO_TYPE_NAME, TEST_EMBARGO_TYPE_DESCRIPTION, TEST_EMBARGO_TYPE_DURATION, TEST_EMBARGO_IS_ACTIVE);
+        embargoType = embargoRepo.create(TEST_EMBARGO_TYPE_NAME, TEST_EMBARGO_TYPE_DESCRIPTION, TEST_EMBARGO_TYPE_DURATION, TEST_EMBARGO_TYPE_GUARANTOR, TEST_EMBARGO_IS_ACTIVE);
         assertEquals("The embargo type does not exist!", 1, embargoRepo.count());
     }
 

@@ -34,6 +34,8 @@ import edu.tamu.framework.model.ApiResponse;
 public class AuthControllerTest extends AbstractControllerTest {
     
     public static final String REGISTRATION_TEMPLATE = "SYSTEM New User Registration";
+    
+    public static int emailTemplateOrder = 0;
 
 	@Mock
     private UserRepo userRepo;
@@ -115,7 +117,7 @@ public class AuthControllerTest extends AbstractControllerTest {
         Mockito.when(emailTemplateRepo.findByNameOverride(REGISTRATION_TEMPLATE)).then(new Answer<Object>() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                return new EmailTemplate(TEST_EMAIL_TEMPLATE_NAME, TEST_EMAIL_TEMPLATE_SUBJECT, TEST_EMAIL_TEMPLATE_MESSAGE);
+                return new EmailTemplate(TEST_EMAIL_TEMPLATE_NAME, TEST_EMAIL_TEMPLATE_SUBJECT, TEST_EMAIL_TEMPLATE_MESSAGE, emailTemplateOrder++);
             }}
         );
         

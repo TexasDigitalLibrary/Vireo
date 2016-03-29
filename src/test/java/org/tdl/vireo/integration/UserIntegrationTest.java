@@ -32,6 +32,8 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
 	
     @Override
     public void setup() {
+        
+        userRepo.deleteAll();
     			
     	userRepo.create(TEST_USER2_EMAIL, TEST_USER2.getFirstName(), TEST_USER2.getLastName(), Role.ADMINISTRATOR);
     	userRepo.create(TEST_USER3_EMAIL, TEST_USER3.getFirstName(), TEST_USER3.getLastName(), Role.MANAGER);
@@ -131,7 +133,7 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
 		 
 	     userRepo.create(TEST_USER_EMAIL, TEST_USER.getFirstName(), TEST_USER.getLastName(), Role.STUDENT);
 		 
-		 Map<String, String> data = new HashMap<String, String>();
+		 Map<String, Object> data = new HashMap<String, Object>();
 		 data.put("email", TEST_USER_EMAIL);
 		 data.put("role", TEST_USER_ROLE_UPDATE);
 	    	

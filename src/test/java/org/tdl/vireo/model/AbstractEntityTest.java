@@ -12,6 +12,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.tdl.vireo.Application;
 import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.config.constant.ConfigurationName;
+import org.tdl.vireo.enums.EmbargoGuarantor;
 import org.tdl.vireo.enums.InputType;
 import org.tdl.vireo.enums.Role;
 import org.tdl.vireo.model.repo.ActionLogRepo;
@@ -195,6 +196,7 @@ public abstract class AbstractEntityTest {
     protected static final String TEST_EMBARGO_TYPE_NAME = "Test Embargo Type Name";
     protected static final String TEST_EMBARGO_TYPE_DESCRIPTION = "Test Embargo Type Description";
     protected static final int TEST_EMBARGO_TYPE_DURATION = 0;
+    protected static final EmbargoGuarantor TEST_EMBARGO_TYPE_GUARANTOR = EmbargoGuarantor.DEFAULT;
     protected static final boolean TEST_EMBARGO_IS_ACTIVE = true;
 
     // User Test

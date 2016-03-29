@@ -25,8 +25,18 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 		});
 	}
 
+	var filterHtml = function(html) {
+		var temp = document.createElement("div");
+    	if (!html) {
+      		return "";
+    	}
+    	temp.innerHTML = html;
+		return temp.textContent || temp.innerText || "";
+  	};
+
 	ConfigurableSettings.ready().then(function() {
 
+		//TODO:  check these update config settings methods for redundancy and clean up.
 		$scope.delayedUpdateConfigurableSettings = function(type,setting) {
 
 			if($scope.pendingUpdate) $timeout.cancel($scope.updateTimeout);
@@ -40,7 +50,11 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 
 		};
 
-		$scope.updateConfigurableSettings = function(type,setting) {	
+		$scope.updateConfigurableSettingsPlainText = function(type,setting) {
+			ConfigurableSettings.update(type,setting,filterHtml($scope.settings.configurable[type][setting]));
+		};
+
+		$scope.updateConfigurableSettings = function(type,setting) {
 			ConfigurableSettings.update(type,setting,$scope.settings.configurable[type][setting]);
 		};
 

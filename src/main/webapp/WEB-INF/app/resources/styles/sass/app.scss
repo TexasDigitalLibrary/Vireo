@@ -109,8 +109,13 @@ main footer {
   min-height: 600px
 }
 
-.modal {
-  display: none;
+.modal-add-btn {
+  margin-bottom: 25px;
+}
+
+.modal-scroll {
+  max-height: 600px;
+  overflow-x: auto;
 }
 
 .notesWarning {
@@ -538,8 +543,9 @@ h4 {
   text-decoration:none;
 }
 
-.modal-add-btn {
-  margin-bottom: 25px;
+.move-up {
+  margin-top: 2px;
+  position: absolute;
 }
 
 .deposit-location {
@@ -572,6 +578,15 @@ h4 {
   border: 1px solid #dcdcdc;
 }
 
+.td-center-middle {
+	text-align: center;
+	vertical-align: middle;
+}
+
+.draggable-table-row.as-sortable-item, .as-sortable-placeholder {
+  display: table-row;
+}
+
 .trash-drop-zone {
   text-align: center;
   background: #efefef;
@@ -602,6 +617,7 @@ h4 {
   text-shadow: 1px 0 5px #fefefe;
   font-size: 70px;
 }
+
 
 /* TODO: combine with above to remove redundency */
 
@@ -640,6 +656,41 @@ h4 {
   text-shadow: 1px 0 5px #fefefe;
   font-size: 70px;
 }
+
+
+.red {
+  color: red;
+}
+
+.cv-change {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+
+
+/* FILE UPLOAD BUTTON */
+
+.btn-file {
+  position: relative;
+  overflow: hidden;
+}
+.btn-file input[type=file] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100%;
+  min-height: 100%;
+  font-size: 100px;
+  text-align: right;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  outline: none;
+  background: white;
+  cursor: inherit;
+  display: block;
+}
+
 
 .degreeCodes label {
   margin-top: 3px;
@@ -776,14 +827,13 @@ footer a, footer li, footer p {
     border-radius: 15px;
   }
 
-  .add-member {
-    padding-bottom: 12px;
-  }
+.add-member {
+  padding-bottom: 12px;
+}
 
-  .btn:focus , input[type=color]:focus{
- 
+.btn:focus , input[type=color]:focus { 
   outline:none;
-  }
+}
 
 /**************************
 * LOOK AND FEEL ACCORDION *
@@ -1022,4 +1072,15 @@ footer a, footer li, footer p {
 
 .mouse-hover-pointer:hover {
   cursor:pointer;
+}
+
+#email-template-modal-instructions-label{
+  margin-top:20px;
+  margin-bottom:5px;
+  font-weight:700;
+  font-size: 13px;
+}
+
+#email-template-modal-instructions-list{
+  cursor:help;
 }

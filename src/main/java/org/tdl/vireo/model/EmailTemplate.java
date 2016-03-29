@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(uniqueConstraints={@UniqueConstraint(columnNames = { "name", "isSystemRequired" })})
-public class EmailTemplate extends BaseEntity {
+public class EmailTemplate extends BaseOrderedEntity {
 
 	@Column(nullable = false) 
 	private String name;
@@ -40,8 +40,9 @@ public class EmailTemplate extends BaseEntity {
 	 * @param message
 	 *            The new template's message
 	 */
-	public EmailTemplate(String name, String subject, String message) {
+	public EmailTemplate(String name, String subject, String message, int order) {
 		this();
+		setOrder(order);
 		setName(name);
 		setSubject(subject);
 		setMessage(message);

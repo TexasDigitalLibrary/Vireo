@@ -75,7 +75,7 @@ public abstract class AbstractIntegrationTest extends MockData {
         clientInboundChannel.send(message);
     }
     
-    public String StompRequest(String destination, Map<String, String> data) throws InterruptedException {
+    public String StompRequest(String destination, Map<String, Object> data) throws InterruptedException {
     	
     	String root = destination.split("/")[1];
     	

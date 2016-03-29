@@ -15,9 +15,9 @@ module.exports = function(config){
             'app/bower_components/tinymce-dist/tinymce.min.js',
             'app/bower_components/angular-ui-tinymce/dist/tinymce.min.js',
             'app/bower_components/ng-sortable/dist/ng-sortable.js',
+            'app/bower_components/ng-csv/build/ng-csv.min.js',
             'app/bower_components/ng-file-upload/ng-file-upload-shim.min.js',
             'app/bower_components/ng-file-upload/ng-file-upload.min.js',
-
 
             'app/bower_components/core/app/config/coreConfig.js',
 

@@ -29,6 +29,22 @@ angular.module('mock.wsApi', []).
         				}; break;
         			}
         		}; break;
+                case 'settings/languages': {
+                    switch(apiReq.method) {
+                        case 'all': defer.resolve({'content':mockLanguageRepo1}); break;
+                        default: {
+                            
+                        }; break;
+                    }
+                }; break;
+                case 'settings/controlled-vocabulary': {
+                    switch(apiReq.method) {
+                        case 'all': defer.resolve({'content':mockControlledVocabularyRepo1}); break;
+                        default: {
+                            
+                        }; break;
+                    }
+                }; break;
                 case 'settings/deposit-location': {
                     switch(apiReq.method) {
                         case 'all': defer.resolve({'content':mockDepositLocationRepo1}); break;

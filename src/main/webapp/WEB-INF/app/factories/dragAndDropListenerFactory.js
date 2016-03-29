@@ -78,8 +78,8 @@ vireo.factory('DragAndDropListenerFactory', function() {
 		    },
 		    orderChanged: function(event) {
 		    	if(!listener.trash.hover) {
-		    		var src = event.source.index + 1;
-		    		var dest = event.dest.index + 1;
+		    		var src = event.source.itemScope.modelValue.order;
+		    		var dest = event.dest.sortableScope.modelValue[event.dest.index + 1].order;
 		    		listener.reorder(src, dest);
 		    	}
 		    },

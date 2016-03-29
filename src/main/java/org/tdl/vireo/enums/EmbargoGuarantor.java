@@ -19,4 +19,19 @@ public enum EmbargoGuarantor {
     public String toString() {
         return this.name();
     }
+    
+    /**
+     * Takes a string, makes it uppercase and sees if we have a matching enum value for it.
+     * 
+     * @param from
+     * @return
+     */
+    public static EmbargoGuarantor fromString(String from) {
+        for(EmbargoGuarantor val : EmbargoGuarantor.values()) {
+            if(val.toString().equals(from.toUpperCase())){
+                return val;
+            }
+        }
+        return null;
+    }
 }

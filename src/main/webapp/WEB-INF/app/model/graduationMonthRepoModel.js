@@ -53,12 +53,12 @@ vireo.service("GraduationMonthRepo", function(WsApi, AbstractModel, AlertService
 		return GraduationMonthRepo.data;	
 	};
 
-	GraduationMonthRepo.add = function(depositLocation) {
+	GraduationMonthRepo.add = function(graduationMonth) {
 		return WsApi.fetch({
 			'endpoint': '/private/queue', 
 			'controller': 'settings/graduation-month', 
 			'method': 'create',
-			'data': depositLocation
+			'data': graduationMonth
 		}).then(function(response) {
 			var responseType = angular.fromJson(response.body).meta.type;
 			var responseMessage = angular.fromJson(response.body).meta.message;
@@ -68,12 +68,12 @@ vireo.service("GraduationMonthRepo", function(WsApi, AbstractModel, AlertService
 		});
 	};
 
-	GraduationMonthRepo.update = function(depositLocation) {
+	GraduationMonthRepo.update = function(graduationMonth) {
 		return WsApi.fetch({
 			'endpoint': '/private/queue', 
 			'controller': 'settings/graduation-month', 
 			'method': 'update',
-			'data': depositLocation
+			'data': graduationMonth
 		}).then(function(response) {
 			var responseType = angular.fromJson(response.body).meta.type;
 			var responseMessage = angular.fromJson(response.body).meta.message;

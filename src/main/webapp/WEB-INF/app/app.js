@@ -2,7 +2,8 @@ var vireo = angular.module('vireo',
 [
 	'ngRoute',
 	'ngSanitize',
-    'ngFileUpload',
+	'ngCsv',
+	'ngFileUpload',
 	'vireo.version'
 ]);
 
