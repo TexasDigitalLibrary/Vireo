@@ -223,9 +223,9 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
         
         assertEquals("SUCCESS", meta.get("type"));
         
-        assertEquals(Integer.valueOf(1), controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME3).getPosition());
-        assertEquals(Integer.valueOf(2), controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME2).getPosition());
-        assertEquals(Integer.valueOf(3), controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME1).getPosition());
+        assertEquals(Long.valueOf(1), controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME3).getPosition());
+        assertEquals(Long.valueOf(2), controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME2).getPosition());
+        assertEquals(Long.valueOf(3), controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME1).getPosition());
     }
 
     @Test
