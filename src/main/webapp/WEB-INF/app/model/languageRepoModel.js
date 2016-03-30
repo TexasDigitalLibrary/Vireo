@@ -88,7 +88,6 @@ vireo.service("LanguageRepo", function(WsApi, AbstractModel, AlertService) {
 	};
 
 	LanguageRepo.sort = function(column) {
-		console.log('going to sort now')
 		return WsApi.fetch({
 			'endpoint': '/private/queue', 
 			'controller': 'settings/languages', 
