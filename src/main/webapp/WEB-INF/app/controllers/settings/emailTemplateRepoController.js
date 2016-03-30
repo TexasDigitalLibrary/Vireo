@@ -17,6 +17,12 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
 
   $scope.ready.then(function() {
 
+    $scope.resetEmailTemplates = function() {
+      $scope.modalData = {'name':'', 'subject':'', 'message':''};
+    }
+
+    $scope.resetEmailTemplates();
+
     $scope.selectEmailTemplate = function(index){
       $scope.modalData = $scope.emailTemplates.list[index];
     }
@@ -71,12 +77,6 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
       reorder: $scope.reorderEmailTemplates,
       container: '#email-templates'
     });
-
-    $scope.resetEmailTemplates = function() {
-      $scope.modalData = {'name':'', 'subject':'', 'message':''};
-    }
-
-    $scope.resetEmailTemplates();
     
   });	
 

@@ -17,6 +17,50 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 	$scope.uploadAction = "confirm";
 
 	$scope.ready.then(function() {
+
+		var getDefaultIndex = function() {
+	    	var defaultIndex = 0;
+			for(var i in $scope.controlledVocabulary.list) {
+				var cv = $scope.controlledVocabulary.list[i];
+				if(cv.entityProperty == false) {
+					defaultIndex = i;
+					break;
+				}
+			}
+			return defaultIndex;
+	    }
+
+		$scope.resetControlledVocabulary = function() {
+
+			if($scope.uploadAction == 'process') {
+				ControlledVocabularyRepo.cancel($scope.uploadModalData.cv.name)
+				$scope.uploadAction = 'confirm';
+				$scope.uploadStatus();
+			}
+
+			$scope.uploadModalData = {
+				cv: $scope.controlledVocabulary.list[getDefaultIndex()]
+			};
+
+			$scope.columnHeaders = "";
+
+			$scope.uploadWordMap = {};
+
+			$scope.modalData = { 
+				language: $scope.languages.list[0] 
+			};
+		};
+
+		$scope.resetControlledVocabulary();
+
+		ControlledVocabularyRepo.listenForChange().then(null, null, function() {
+			if($scope.uploadAction != "process") {
+				$scope.uploadStatus();
+				$scope.uploadModalData = {
+					cv: $scope.controlledVocabulary.list[getDefaultIndex()]
+				};
+			}
+		});
 		
 		$scope.createControlledVocabulary = function() {
 			ControlledVocabularyRepo.add($scope.modalData).then(function() {
@@ -156,50 +200,6 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 			reorder: $scope.reorderControlledVocabulary,
 			container: '#controlled-vocabulary'
 		});
-
-		var getDefaultIndex = function() {
-	    	var defaultIndex = 0;
-			for(var i in $scope.controlledVocabulary.list) {
-				var cv = $scope.controlledVocabulary.list[i];
-				if(cv.entityProperty == false) {
-					defaultIndex = i;
-					break;
-				}
-			}
-			return defaultIndex;
-	    }
-
-		ControlledVocabularyRepo.listenForChange().then(null, null, function() {
-			if($scope.uploadAction != "process") {
-				$scope.uploadStatus();
-				$scope.uploadModalData = {
-					cv: $scope.controlledVocabulary.list[getDefaultIndex()]
-				};
-			}
-		});
-
-		$scope.resetControlledVocabulary = function() {
-
-			if($scope.uploadAction == 'process') {
-				ControlledVocabularyRepo.cancel($scope.uploadModalData.cv.name)
-				$scope.uploadAction = 'confirm';
-				$scope.uploadStatus();
-			}
-
-			$scope.uploadModalData = {
-				cv: $scope.controlledVocabulary.list[getDefaultIndex()]
-			};
-
-			$scope.columnHeaders = "";
-
-			$scope.uploadWordMap = {};
-
-			$scope.modalData = { 
-				language: $scope.languages.list[0] 
-			};
-		};
-
-		$scope.resetControlledVocabulary();
 		
 	});
 

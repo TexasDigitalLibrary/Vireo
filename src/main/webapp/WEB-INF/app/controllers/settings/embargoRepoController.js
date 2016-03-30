@@ -17,6 +17,16 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 	$scope.sortLabel = "";
 
 	$scope.ready.then(function() {
+
+		$scope.resetEmbargo = function() {
+			$scope.modalData = {};
+
+			$scope.proquestEmbargoes = $filter('filter')($scope.embargoes.list, {guarantor: "PROQUEST"});
+			$scope.defaultEmbargoes = $filter('filter')($scope.embargoes.list, {guarantor: "DEFAULT"});
+			
+		};
+		
+		$scope.resetEmbargo();
 		
 		$scope.createEmbargo = function() {
 			EmbargoRepo.create($scope.modalData).then(function(){
@@ -76,16 +86,6 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 			sortLabel: $scope.sortLabel,
 			container: '#embargo'
 		});
-		
-		$scope.resetEmbargo = function() {
-			$scope.modalData = {};
-
-			$scope.proquestEmbargoes = $filter('filter')($scope.embargoes.list, {guarantor: "PROQUEST"});
-			$scope.defaultEmbargoes = $filter('filter')($scope.embargoes.list, {guarantor: "DEFAULT"});
-			
-		};
-		
-		$scope.resetEmbargo();
 		
 	});
 });

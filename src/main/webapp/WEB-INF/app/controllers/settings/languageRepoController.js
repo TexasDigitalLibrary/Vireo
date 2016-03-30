@@ -19,6 +19,24 @@ vireo.controller("LanguageRepoController", function ($controller, $q, $scope, La
 	$scope.uploadAction = "confirm";
 
 	$scope.ready.then(function() {
+
+		$scope.resetLanguages = function() {
+			if($scope.uploadAction == 'process') {
+				$scope.uploadAction = 'confirm';
+				$scope.uploadStatus();
+			}
+
+			for(var i in $scope.languages.list) {
+				var language = $scope.languages.list[i];
+				language.proquestCode = $scope.proquestLanguageCodes[language.name]
+			}
+
+			$scope.modalData = { 
+				languages: $scope.languages.list[0] 
+			};
+		};
+
+		$scope.resetLanguages();
 		
 		$scope.createLanguage = function() {
 			LanguageRepo.add($scope.modalData).then(function() {
@@ -75,24 +93,6 @@ vireo.controller("LanguageRepoController", function ($controller, $q, $scope, La
 			reorder: $scope.reorderLanguages,
 			container: '#languages'
 		});
-
-		$scope.resetLanguages = function() {
-			if($scope.uploadAction == 'process') {
-				$scope.uploadAction = 'confirm';
-				$scope.uploadStatus();
-			}
-
-			for(var i in $scope.languages.list) {
-				var language = $scope.languages.list[i];
-				language.proquestCode = $scope.proquestLanguageCodes[language.name]
-			}
-
-			$scope.modalData = { 
-				languages: $scope.languages.list[0] 
-			};
-		};
-
-		$scope.resetLanguages();
 
 	});	
 

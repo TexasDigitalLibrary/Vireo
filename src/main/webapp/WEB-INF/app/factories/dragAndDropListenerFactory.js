@@ -41,9 +41,7 @@ vireo.factory('DragAndDropListenerFactory', function() {
 
 		var dragControls = {
 			dragStart: function(event) {
-
 				startingObj = event.source.sortableScope.modelValue[0];
-
 				listener.dragging = true;								
 				listener.select(event.source.index);
 				angular.element('.as-sortable-drag').css('display', 'none');
@@ -81,36 +79,23 @@ vireo.factory('DragAndDropListenerFactory', function() {
 	     		}
 		     	return sourceItemHandleScope.itemScope.sortableScope.$id === destSortableScope.$id;
 		    },
-		    orderChanged: function(event) {	
-
+		    orderChanged: function(event) {
 		    	if(!listener.trash.hover) {
-
-		    		console.log(listener.model.list.length)
-		    		console.log(event.source.sortableScope.modelValue.length)
-		    		
 		    		var isSingleSorted = (listener.model.list.length == event.source.sortableScope.modelValue.length);
-
 		    		var src = event.source.index + 1;
 		    		var dest = event.dest.index + 1;
-
-		    		if(!isSingleSorted) {
-		    		
+		    		if(!isSingleSorted) {		    		
 		    			var offset = 0;
-
 			    		for(var i in listener.model.list) {
 			    			if(listener.model.list[i].id == startingObj.id) {
 			    				offset = i;
 			    				break;
 			    			}
 			    		}
-
 			    		src = listener.model.list[parseInt(event.source.index) + parseInt(offset)].position;
 			    		dest = listener.model.list[parseInt(event.dest.index) + parseInt(offset)].position;
-
 		    		}
-
 		    		listener.reorder(src, dest);
-		    		
 		    	}
 		    },
 		    containment: drag.container

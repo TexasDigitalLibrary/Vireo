@@ -11,6 +11,15 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 		
 	$scope.ready.then(function() {
 
+		$scope.resetDepositLocation = function() {
+			$scope.modalData = {
+				depositor: 'Sword1Deposit',
+				packager: 'VireoExport'
+			};
+		}
+
+		$scope.resetDepositLocation();
+
 		$scope.createDepositLocation = function() {
 			DepositLocationRepo.add($scope.modalData).then(function() {
 				$scope.resetDepositLocation();
@@ -53,15 +62,6 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 			reorder: $scope.reorderDepositLocation,
 			container: '#deposit-location'
 		});
-
-		$scope.resetDepositLocation = function() {
-			$scope.modalData = {
-				depositor: 'Sword1Deposit',
-				packager: 'VireoExport'
-			};
-		}
-
-		$scope.resetDepositLocation();
 
 	});	
 

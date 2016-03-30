@@ -11,6 +11,14 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 	
 	$scope.ready.then(function() {
 
+		$scope.resetCustomAction = function() {
+			$scope.modalData = { 
+				isStudentVisible: false 
+			};
+		}
+
+		$scope.resetCustomAction();
+
 		$scope.createCustomAction = function() {
 			CustomActionSettings.create($scope.modalData).then(function() {
 				$scope.resetCustomAction();
@@ -19,6 +27,7 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 		
 		$scope.selectCustomAction = function(index) {
 			$scope.modalData = $scope.customActions.list[index];
+			console.log($scope.modalData)
 		};
 		
 		$scope.editCustomAction = function(index) {
@@ -53,14 +62,6 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 			reorder: $scope.reorderCustomAction,
 			container: '#custom-action'
 		});
-
-		$scope.resetCustomAction = function() {
-			$scope.modalData = { 
-				isStudentVisible: false 
-			};
-		}
-
-		$scope.resetCustomAction();
 		
 	});
 });

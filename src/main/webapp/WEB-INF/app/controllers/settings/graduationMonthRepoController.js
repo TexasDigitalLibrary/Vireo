@@ -33,6 +33,13 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 		
 	$scope.ready.then(function() {
 
+		$scope.resetGraduationMonth = function() {
+			$scope.modalData = {'name':'', 'subject':'', 'message':''};
+			$scope.resetMonthOptions();
+		};
+		
+		$scope.resetGraduationMonth();
+
 		$scope.createGraduationMonth = function() {
 			GraduationMonthRepo.add($scope.modalData).then(function() {
 				$scope.resetGraduationMonth();
@@ -90,13 +97,6 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 			reorder: $scope.reorderGraduationMonth,
 			container: '#graduation-month'
 		});
-
-		$scope.resetGraduationMonth = function() {
-			$scope.modalData = {'name':'', 'subject':'', 'message':''};
-			$scope.resetMonthOptions();
-		};
-		
-		$scope.resetGraduationMonth();
 
 	});	
 
