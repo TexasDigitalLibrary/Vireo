@@ -27,7 +27,6 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 		
 		$scope.selectCustomAction = function(index) {
 			$scope.modalData = $scope.customActions.list[index];
-			console.log($scope.modalData)
 		};
 		
 		$scope.editCustomAction = function(index) {

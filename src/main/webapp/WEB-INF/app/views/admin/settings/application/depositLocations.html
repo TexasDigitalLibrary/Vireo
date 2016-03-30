@@ -12,29 +12,26 @@
 		
 		<p ng-if="depositLocations.list.length == 0">Add new Deposit Location</p>
 
-		<draganddroplist
-			dragging="dragging"
-			scope-value="depositLocations"
-			properties='["name", "repository"]'
-			item-view='views/directives/dragAndDropDepositLocation.html'
-			listeners='dragControlListeners'
-			edit='editDepositLocation(index)'>
+		<draganddroplist dragging="dragging"
+						 scope-value="depositLocations"
+						 properties='["name", "repository"]'
+						 item-view='views/directives/dragAndDropDepositLocation.html'
+						 listeners='dragControlListeners'
+						 edit='editDepositLocation(index)'>
 		</draganddroplist>
 		
 	</div>
 	
 	<div class="col-sm-6">
-		<trashcan 
-			id="{{trashCanId}}"
-			dragging="dragging"
-			listeners='dragControlListeners'>
+		<trashcan id="{{trashCanId}}"
+			 	  dragging="dragging"
+				  listeners='dragControlListeners'>
 		</trashcan>
 	</div>
 
 	<modal modal-id="depositLocationNewModal" 
 		   modal-view="views/modals/settings/depositLocationNewModal.html" 
 		   modal-header-class="modal-header-primary"
-		   modal-data="modalData"
 		   modal-keyboard="false"
 		   modal-backdrop="static">
 	</modal>
@@ -42,7 +39,6 @@
 	<modal modal-id="depositLocationEditModal" 
 		   modal-view="views/modals/settings/depositLocationEditModal.html" 
 		   modal-header-class="modal-header-primary"
-		   modal-data="modalData"
 		   modal-keyboard="false"
 		   modal-backdrop="static">
 	</modal>
@@ -50,7 +46,6 @@
 	<modal modal-id="depositLocationConfirmRemoveModal" 
 		   modal-view="views/modals/settings/depositLocationConfirmRemoveModal.html" 
 		   modal-header-class="modal-header-primary"
-		   modal-data="modalData"
 		   modal-keyboard="false"
 		   modal-backdrop="static">
 	</modal>

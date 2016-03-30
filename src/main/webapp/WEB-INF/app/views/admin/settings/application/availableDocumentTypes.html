@@ -10,16 +10,16 @@
 		</button>
 		<p ng-if="graduationMonths.list.length == 0">Add new Document Type</p>
 		<draganddroplist dragging="dragging"
-						scope-value="documentTypes"
-						properties='["name", "gradeLevel"]'
-						item-view='views/directives/dragAndDropDocumentType.html'
-						listeners='dragControlListeners'
-						edit='launchEditModal(index)'
-						sort-column='name',
-						sort-action='sortAction'
-                        sort-method='sortDocumentTypes(column)'
-                        sort-label='Document Types'>
-                </draganddroplist>
+						 scope-value="documentTypes"
+						 properties='["name", "gradeLevel"]'
+						 item-view='views/directives/dragAndDropDocumentType.html'
+						 listeners='dragControlListeners'
+						 edit='launchEditModal(index)'
+						 sort-column='name',
+						 sort-action='sortAction'
+                         sort-method='sortDocumentTypes(column)'
+                         sort-label='Document Types'>
+        </draganddroplist>
 	</div>
 	
 	<div class="col-sm-6">
@@ -32,7 +32,6 @@
 	<modal modal-id="availableDocumentTypesNewModal" 
 		   modal-view="views/modals/settings/availableDocumentTypesNewModal.html" 
 		   modal-header-class="modal-header-primary"		   
-		   modal-data="modalData"
 		   modal-keyboard="false"
 		   modal-backdrop="static">
 	</modal>
@@ -40,7 +39,6 @@
 	<modal modal-id="availableDocumentTypesEditModal" 
 		   modal-view="views/modals/settings/availableDocumentTypesEditModal.html" 
 		   modal-header-class="modal-header-primary"		   
-		   modal-data="modalData"
 		   modal-keyboard="false"
 		   modal-backdrop="static">
 	</modal>
@@ -48,7 +46,6 @@
 	<modal modal-id="availableDocumentTypesConfirmRemoveModal" 
 		   modal-view="views/modals/settings/availableDocumentTypesConfirmRemoveModal.html" 
 		   modal-header-class="modal-header-primary"		   
-		   modal-data="modalData"
 		   modal-keyboard="false"
 		   modal-backdrop="static">
 	</modal>
