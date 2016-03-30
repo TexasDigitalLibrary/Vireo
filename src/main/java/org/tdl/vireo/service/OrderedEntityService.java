@@ -22,60 +22,62 @@ import org.tdl.vireo.model.Embargo;
 
 @Service
 public class OrderedEntityService {
+    
+    private static final String POSITION_COLUMN_NAME = "position";
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private static final Integer one = new Integer(1);
+    private static final Long one = new Long(1);
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @SuppressWarnings("unchecked")
-    private void swap(Class<?> clazz, Integer here, Integer there) {
+    private void swap(Class<?> clazz, Long here, Long there) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaUpdate<Object> update = (CriteriaUpdate<Object>) cb.createCriteriaUpdate(clazz);
         Root<?> e = update.from((Class<Object>) clazz);
-        Path<Integer> path = e.<Integer> get("order");
+        Path<Long> path = e.get(POSITION_COLUMN_NAME);
         update.set(path, there);
-        update.where(cb.equal(e.get("order"), here));
+        update.where(cb.equal(e.get(POSITION_COLUMN_NAME), here));
         entityManager.createQuery(update).executeUpdate();
     }
 
     @SuppressWarnings("unchecked")
-    private void delete(Class<?> clazz, Integer order) {
+    private void delete(Class<?> clazz, Long position) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaDelete<Object> delete = (CriteriaDelete<Object>) cb.createCriteriaDelete(clazz);
         Root<?> e = delete.from((Class<Object>) clazz);
-        delete.where(cb.equal(e.get("order"), order));
+        delete.where(cb.equal(e.get(POSITION_COLUMN_NAME), position));
         entityManager.createQuery(delete).executeUpdate();
     }
 
     @SuppressWarnings("unchecked")
-    public Object findByOrder(Class<?> clazz, Integer order) {
+    public Object findByOrder(Class<?> clazz, Long position) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Object> query = cb.createQuery();
         Root<?> e = query.from((Class<Object>) clazz);
-        Path<Integer> path = e.get("order");
+        Path<Long> path = e.get(POSITION_COLUMN_NAME);
         query.select(path).distinct(true);
-        query.where(cb.equal(path, order));
+        query.where(cb.equal(path, position));
         return entityManager.createQuery(query).getSingleResult();
     }
 
     /**
-     * TODO: THIS NEEDS TO findbyid not findbyorder!
+     * TODO: THIS NEEDS TO findbyid not findbyposition!
      * @param clazz
      * @param src
      * @param dest
      */
     @SuppressWarnings("unchecked")
-    public synchronized void reorder(Class<?> clazz, Integer src, Integer dest) {
-        swap(clazz, src, Integer.MAX_VALUE);
-        // increment/decrement order as necessary
+    public synchronized void reorder(Class<?> clazz, Long src, Long dest) {
+        swap(clazz, src, Long.MAX_VALUE);
+        // increment/decrement position as necessary
         {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaUpdate<Object> update = (CriteriaUpdate<Object>) cb.createCriteriaUpdate(clazz);
             Root<?> e = update.from((Class<Object>) clazz);
-            Path<Integer> path = e.get("order");
+            Path<Long> path = e.get(POSITION_COLUMN_NAME);
             if (src > dest) {
                 update.set(path, cb.sum(path, one));
                 List<Predicate> predicates = new ArrayList<Predicate>();
@@ -94,7 +96,7 @@ public class OrderedEntityService {
                 // do nothing
             }
         }
-        swap(clazz, Integer.MAX_VALUE, dest);
+        swap(clazz, Long.MAX_VALUE, dest);
     }
 
     public synchronized void sort(Class<?> clazz, String property) {
@@ -131,7 +133,7 @@ public class OrderedEntityService {
         for (int i = 0; i < orderedResults.size(); i++) {
             if (orderedResults.get(i) instanceof BaseOrderedEntity) {
                 BaseOrderedEntity boe = (BaseOrderedEntity) orderedResults.get(i); //cast it safely
-                boe.setOrder(i + 1); // i+1 because i starts at 0, order positions start at 1
+                boe.setPosition((long) i + 1); // i+1 because i starts at 0, order positions start at 1
                 entityManager.persist(boe); // persist the new order
             } else {
                 String err = "Could not sort [" + clazz.getName() + "]! It doesn't extend " + BaseOrderedEntity.class.getName() + "!";
@@ -140,17 +142,17 @@ public class OrderedEntityService {
             }
         }
     }
-
+    
     @SuppressWarnings("unchecked")
-    public synchronized void remove(Class<?> clazz, Integer order) {
-        delete(clazz, order);
+    public synchronized void remove(Class<?> clazz, Long position) {
+        delete(clazz, position);
         {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaUpdate<Object> update = (CriteriaUpdate<Object>) cb.createCriteriaUpdate(clazz);
             Root<?> e = update.from((Class<Object>) clazz);
-            Path<Integer> path = e.get("order");
+            Path<Long> path = e.get(POSITION_COLUMN_NAME);
             update.set(path, cb.sum(path, -one));
-            update.where(cb.greaterThan(path, order));
+            update.where(cb.greaterThan(path, position));
             entityManager.createQuery(update).executeUpdate();
         }
     }

@@ -96,7 +96,6 @@ vireo.service("LanguageRepo", function(WsApi, AbstractModel, AlertService) {
 	};
 
 	LanguageRepo.remove = function(index) {
-		console.log(index);
 		return WsApi.fetch({
 			'endpoint': '/private/queue', 
 			'controller': 'settings/languages', 

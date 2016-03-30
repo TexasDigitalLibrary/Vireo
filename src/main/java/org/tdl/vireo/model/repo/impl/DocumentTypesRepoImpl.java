@@ -16,7 +16,7 @@ public class DocumentTypesRepoImpl implements DocumentTypesRepoCustom {
     private DocumentTypesRepo documentTypesRepo;
     
     @Override
-    public void reorder(Integer src, Integer dest) {
+    public void reorder(Long src, Long dest) {
         orderedEntityService.reorder(DocumentType.class, src, dest);
     }
     
@@ -26,13 +26,15 @@ public class DocumentTypesRepoImpl implements DocumentTypesRepoCustom {
     }
     
     @Override
-    public void remove(Integer index) {
+    public void remove(Long index) {
         orderedEntityService.remove(DocumentType.class, index);
     }
 
     @Override
     public DocumentType create(String name, DegreeLevel degreeLevel) {
-        return documentTypesRepo.save(new DocumentType(name, degreeLevel, (int)documentTypesRepo.count() + 1));
+        DocumentType documentType = new DocumentType(name, degreeLevel);
+        documentType.setPosition(documentTypesRepo.count() + 1);
+        return documentTypesRepo.save(documentType);
     }
     
 }

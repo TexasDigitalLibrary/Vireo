@@ -11,7 +11,6 @@ import java.util.Map;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.mock.interceptor.MockChannelInterceptor;
 import org.tdl.vireo.model.ControlledVocabulary;
@@ -19,16 +18,12 @@ import org.tdl.vireo.model.VocabularyWord;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.LanguageRepo;
 import org.tdl.vireo.model.repo.VocabularyWordRepo;
-import org.tdl.vireo.service.ControlledVocabularyCachingService;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest {
-
-    @Autowired
-    private ControlledVocabularyCachingService controlledVocabularyCachingService;
 
     @Autowired
     private ControlledVocabularyRepo controlledVocabularyRepo;
@@ -181,7 +176,7 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
         
         ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME1);
         
-        String responseJson = StompRequest("/settings/controlled-vocabulary/remove/" + controlledVocabulary.getOrder(), null);
+        String responseJson = StompRequest("/settings/controlled-vocabulary/remove/" + controlledVocabulary.getPosition(), null);
         
         Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
 
@@ -200,8 +195,8 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
         ControlledVocabulary controlledVocabulary1 = controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME1);
         ControlledVocabulary controlledVocabulary2 = controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME2);
         
-        Integer order1 = controlledVocabulary1.getOrder();
-        Integer order2 = controlledVocabulary2.getOrder();
+        Long order1 = controlledVocabulary1.getPosition();
+        Long order2 = controlledVocabulary2.getPosition();
         
         String responseJson = StompRequest("/settings/controlled-vocabulary/reorder/" + order1 + "/" + order2, null);
         
@@ -212,8 +207,8 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
         
         assertEquals("SUCCESS", meta.get("type"));
         
-        assertEquals(order1, controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME2).getOrder());
-        assertEquals(order2, controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME1).getOrder());
+        assertEquals(order1, controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME2).getPosition());
+        assertEquals(order2, controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME1).getPosition());
     }
 
     @Test
@@ -228,9 +223,9 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
         
         assertEquals("SUCCESS", meta.get("type"));
         
-        assertEquals(Integer.valueOf(1), controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME3).getOrder());
-        assertEquals(Integer.valueOf(2), controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME2).getOrder());
-        assertEquals(Integer.valueOf(3), controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME1).getOrder());
+        assertEquals(Long.valueOf(1), controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME3).getPosition());
+        assertEquals(Long.valueOf(2), controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME2).getPosition());
+        assertEquals(Long.valueOf(3), controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME1).getPosition());
     }
 
     @Test

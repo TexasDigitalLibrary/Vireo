@@ -15,27 +15,20 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 	$scope.sortProquest = "sortProquestEmbargoes";
 	
 	$scope.sortLabel = "";
-		
-	// defaults
-	$scope.resetEmbargo = function() {
-		$scope.modalData = {};
-	}
-
-	$scope.resetEmbargo();
 
 	$scope.ready.then(function() {
-		
-		$scope.refresh = function() {
+
+		$scope.resetEmbargo = function() {
+			$scope.modalData = {};
 			$scope.proquestEmbargoes = $filter('filter')($scope.embargoes.list, {guarantor: "PROQUEST"});
-			$scope.defaultEmbargoes = $filter('filter')($scope.embargoes.list, {guarantor: "DEFAULT"});
-			$scope.resetEmbargo();
-		}
+			$scope.defaultEmbargoes = $filter('filter')($scope.embargoes.list, {guarantor: "DEFAULT"});	
+		};
 		
-		$scope.refresh();
+		$scope.resetEmbargo();
 		
 		$scope.createEmbargo = function() {
 			EmbargoRepo.create($scope.modalData).then(function(){
-			    $scope.refresh();
+			    $scope.resetEmbargo();
 			});
 		};
 		
@@ -50,19 +43,19 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 		
 		$scope.updateEmbargo = function() {
 			EmbargoRepo.update($scope.modalData).then(function(){
-				$scope.refresh();
+				$scope.resetEmbargo();
 			});
 		};
 		
 		$scope.removeEmbargo = function(id) {
             EmbargoRepo.remove(id).then(function(){
-                $scope.refresh();
+                $scope.resetEmbargo();
             });
         };
 		
 		$scope.reorderEmbargo = function(src, dest) {
 			EmbargoRepo.reorder(src, dest).then(function(){
-				$scope.refresh();
+				$scope.resetEmbargo();
 			});
 		};
 		
@@ -75,21 +68,22 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 				}
 			} else if($scope.sortAction == $scope.sortDefault || $scope.sortAction == $scope.sortProquest) {
 				EmbargoRepo.sort(column, where).then(function(){
-					$scope.refresh();
+					$scope.resetEmbargo();
 					$scope.sortAction = 'confirm';
 				});
 			}
 		};
-		
+
 		$scope.dragControlListeners = DragAndDropListenerFactory.buildDragControls({
 			trashId: $scope.trashCanId,
 			dragging: $scope.dragging,
 			select: $scope.selectEmbargo,			
-			list: $scope.embargoes.list,
+			model: $scope.embargoes,
 			confirm: '#embargoConfirmRemoveModal',
 			reorder: $scope.reorderEmbargo,
 			sortLabel: $scope.sortLabel,
 			container: '#embargo'
 		});
+		
 	});
 });

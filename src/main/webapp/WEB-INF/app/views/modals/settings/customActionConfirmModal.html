@@ -1,5 +1,5 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	<button type="button" class="close" ng-click="resetCustomAction()" data-dismiss="modal" aria-label="Close">
 		<span class="modal-close" aria-hidden="true">&times;</span>
 	</button>
 	<h3 class="modal-title">Are You Sure?</h3>
@@ -14,5 +14,5 @@
 
 <div class="modal-footer">
 	<button type="button" class="btn btn-warning" ng-click="resetCustomAction" data-dismiss="modal">Cancel</button>
-	<button id="customAction-confirm" type="button" class="btn btn-primary" data-dismiss="modal" ng-click="removeCustomAction(modalData.order)">Confirm</button>
+	<button id="customAction-confirm" type="button" class="btn btn-primary" data-dismiss="modal" ng-click="removeCustomAction(modalData.position)">Confirm</button>
 </div>

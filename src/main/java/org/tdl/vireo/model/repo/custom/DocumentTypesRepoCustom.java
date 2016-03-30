@@ -7,9 +7,9 @@ public interface DocumentTypesRepoCustom {
 
     public DocumentType create(String name, DegreeLevel degreeLevel);
     
-    public void reorder(Integer src, Integer dest);
+    public void reorder(Long src, Long dest);
     
     public void sort(String column);
 
-    public void remove(Integer index);
+    public void remove(Long index);
 }

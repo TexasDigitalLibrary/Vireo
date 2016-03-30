@@ -13,6 +13,6 @@ public interface ControlledVocabularyRepo extends JpaRepository<ControlledVocabu
     
     public ControlledVocabulary findByNameAndLanguage(String name, Language language);
     
-    public List<ControlledVocabulary> findAllByOrderByOrderAsc();
+    public List<ControlledVocabulary> findAllByOrderByPositionAsc();
 
 }

@@ -16,7 +16,9 @@ public class EmailTemplateRepoImpl implements EmailTemplateRepoCustom {
 
     @Override
     public EmailTemplate create(String name, String subject, String message) {
-        return emailTemplateRepo.save(new EmailTemplate(name, subject, message, (int)emailTemplateRepo.count()+1));
+        EmailTemplate emailTemplate = new EmailTemplate(name, subject, message);
+        emailTemplate.setPosition(emailTemplateRepo.count()+1);
+        return emailTemplateRepo.save(emailTemplate);
     }
     
     @Override
@@ -29,7 +31,7 @@ public class EmailTemplateRepoImpl implements EmailTemplateRepoCustom {
     }
     
     @Override
-    public void reorder(Integer src, Integer dest) {
+    public void reorder(Long src, Long dest) {
         orderedEntityService.reorder(EmailTemplate.class, src, dest);
     }
     
@@ -39,7 +41,7 @@ public class EmailTemplateRepoImpl implements EmailTemplateRepoCustom {
     }
 
     @Override
-    public void remove(Integer index) {
+    public void remove(Long index) {
         orderedEntityService.remove(EmailTemplate.class, index);
     }
     

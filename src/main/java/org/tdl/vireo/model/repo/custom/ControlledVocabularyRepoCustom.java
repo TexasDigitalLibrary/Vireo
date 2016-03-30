@@ -9,10 +9,10 @@ public interface ControlledVocabularyRepoCustom {
     
     public ControlledVocabulary create(String name, String entityName, Language language);
     
-    public void reorder(Integer src, Integer dest);
+    public void reorder(Long src, Long dest);
     
     public void sort(String column);
     
-    public void remove(Integer index);
+    public void remove(Long index);
 
 }

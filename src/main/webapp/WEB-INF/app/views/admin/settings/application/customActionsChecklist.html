@@ -12,44 +12,42 @@
 
 		<p ng-if="customActions.list.length == 0">Add new Custom actions</p>
 		
-		<draganddroplist
-			dragging="dragging"
-			scope-value="customActions"
-			properties='["label", "isStudentVisible"]'
-			item-view='views/directives/dragAndDropCustomAction.html'
-			listeners='dragControlListeners'
-			edit='editCustomAction(index)'>
+		<draganddroplist dragging="dragging"
+						 scope-value="customActions"
+						 properties='["label", "isStudentVisible"]'
+						 item-view='views/directives/dragAndDropCustomAction.html'
+						 listeners='dragControlListeners'
+						 edit='editCustomAction(index)'>
 		</draganddroplist>
 	</div>
 	
 	<div class="col-sm-6">
-		<trashcan 
-			id="{{trashCanId}}"
-			dragging="dragging"
-			listeners='dragControlListeners'>
+		<trashcan id="{{trashCanId}}"
+				  dragging="dragging"
+				  listeners='dragControlListeners'>
 		</trashcan>
 	</div>
 
-	<vireomodal modal-id="customActionNewModal" 
+	<modal modal-id="customActionNewModal" 
 		   modal-view="views/modals/settings/customActionNewModal.html" 
 		   modal-header-class="modal-header-primary"
-		   modal-controller="CustomActionSettingsController"
-		   modal-data="modalData">
-	</vireomodal>
+		   modal-keyboard="false"
+		   modal-backdrop="static">
+	</modal>
 
-	<vireomodal modal-id="customActionEditModal" 
+	<modal modal-id="customActionEditModal" 
 		   modal-view="views/modals/settings/customActionEditModal.html" 
 		   modal-header-class="modal-header-primary"
-		   modal-controller="CustomActionSettingsController"
-		   modal-data="modalData">
-	</vireomodal>
+		   modal-keyboard="false"
+		   modal-backdrop="static">
+	</modal>
 	
-	<vireomodal modal-id="customActionConfirmRemoveModal" 
+	<modal modal-id="customActionConfirmRemoveModal" 
 		   modal-view="views/modals/settings/customActionConfirmModal.html" 
 		   modal-header-class="modal-header-primary"
-		   modal-controller="CustomActionSettingsController"
-		   modal-data="modalData">
-	</vireomodal>
+		   modal-keyboard="false"
+		   modal-backdrop="static">
+	</modal>
 
 </div>
 

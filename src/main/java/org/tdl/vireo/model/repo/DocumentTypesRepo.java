@@ -19,7 +19,7 @@ public interface DocumentTypesRepo extends JpaRepository<DocumentType, Long>, Do
     
     public DocumentType findByName(String name);
     
-    public List<DocumentType> findAllByOrderByOrderAsc();
+    public List<DocumentType> findAllByOrderByPositionAsc();
         
         
 }

@@ -76,7 +76,7 @@ public class ControlledVocabularyController {
      */
     private Map<String, List<ControlledVocabulary>> getAll() {
         Map<String, List<ControlledVocabulary>> map = new HashMap<String, List<ControlledVocabulary>>();
-        map.put("list", controlledVocabularyRepo.findAllByOrderByOrderAsc());
+        map.put("list", controlledVocabularyRepo.findAllByOrderByPositionAsc());
         return map;
     }
 
@@ -242,10 +242,10 @@ public class ControlledVocabularyController {
     @Auth(role = "ROLE_MANAGER")
     @Transactional
     public ApiResponse removeControlledVocabulary(@ApiVariable String indexString) {
-        Integer index = -1;
+        Long index = -1L;
 
         try {
-            index = Integer.parseInt(indexString);
+            index = Long.parseLong(indexString);
         } catch (NumberFormatException nfe) {
             return new ApiResponse(ERROR, "Id is not a valid controlled vocabulary order!");
         }
@@ -276,8 +276,8 @@ public class ControlledVocabularyController {
     @Auth(role = "ROLE_MANAGER")
     @Transactional
     public ApiResponse reorderControlledVocabulary(@ApiVariable String src, @ApiVariable String dest) {
-        Integer intSrc = Integer.parseInt(src);
-        Integer intDest = Integer.parseInt(dest);
+        Long intSrc = Long.parseLong(src);
+        Long intDest = Long.parseLong(dest);
         controlledVocabularyRepo.reorder(intSrc, intDest);
         simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, getAll()));
         return new ApiResponse(SUCCESS);

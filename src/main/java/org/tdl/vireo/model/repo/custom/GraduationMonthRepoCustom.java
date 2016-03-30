@@ -6,10 +6,10 @@ public interface GraduationMonthRepoCustom {
 
     public GraduationMonth create(int month);
     
-    public void reorder(Integer src, Integer dest);
+    public void reorder(Long src, Long dest);
     
     public void sort(String column);
     
-    public void remove(Integer index);
+    public void remove(Long index);
     
 }

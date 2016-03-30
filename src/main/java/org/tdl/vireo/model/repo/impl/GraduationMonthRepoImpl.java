@@ -16,11 +16,13 @@ public class GraduationMonthRepoImpl implements GraduationMonthRepoCustom {
 
     @Override
     public GraduationMonth create(int month) {
-        return graduationMonthRepo.save(new GraduationMonth(month, (int) graduationMonthRepo.count() + 1));
+        GraduationMonth graduationMonth = new GraduationMonth(month);
+        graduationMonth.setPosition(graduationMonthRepo.count() + 1);
+        return graduationMonthRepo.save(graduationMonth);
     }
     
     @Override
-    public void reorder(Integer src, Integer dest) {
+    public void reorder(Long src, Long dest) {
         orderedEntityService.reorder(GraduationMonth.class, src, dest);
     }
     
@@ -30,7 +32,7 @@ public class GraduationMonthRepoImpl implements GraduationMonthRepoCustom {
     }
     
     @Override
-    public void remove(Integer index) {
+    public void remove(Long index) {
         orderedEntityService.remove(GraduationMonth.class, index);
     }
     

@@ -44,7 +44,7 @@ public class EmbargoController {
 
     private Map<String, List<Embargo>> getAll() {
         Map<String, List<Embargo>> allRet = new HashMap<String, List<Embargo>>();
-        allRet.put("list", embargoRepo.findAllByOrderByOrderAsc());
+        allRet.put("list", embargoRepo.findAllByOrderByGuarantorAscPositionAsc());
         return allRet;
     }
 
@@ -79,7 +79,8 @@ public class EmbargoController {
         } else {
             return new ApiResponse(ERROR, "Missing required field to create embargo!");
         }
-        newEmbargo.setOrder((int) embargoRepo.count());
+        newEmbargo.setPosition(embargoRepo.count());
+        
         embargoRepo.save(newEmbargo);
 
         simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, getAll()));
@@ -176,8 +177,8 @@ public class EmbargoController {
     @Auth(role = "ROLE_MANAGER")
     @Transactional
     public ApiResponse reorderEmbargoes(@ApiVariable String src, @ApiVariable String dest) {
-        Integer intSrc = Integer.parseInt(src);
-        Integer intDest = Integer.parseInt(dest);
+        Long intSrc = Long.parseLong(src);
+        Long intDest = Long.parseLong(dest);
         embargoRepo.reorder(intSrc, intDest);
         simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, getAll()));
         return new ApiResponse(SUCCESS);

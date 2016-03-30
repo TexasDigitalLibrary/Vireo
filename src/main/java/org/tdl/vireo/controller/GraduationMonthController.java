@@ -42,7 +42,7 @@ public class GraduationMonthController {
     
     private Map<String, List<GraduationMonth>> getAll() {
         Map<String, List<GraduationMonth>> map = new HashMap<String, List<GraduationMonth>>();
-        map.put("list", graduationMonthRepo.findAllByOrderByOrderAsc());
+        map.put("list", graduationMonthRepo.findAllByOrderByPositionAsc());
         return map;
     }
     
@@ -139,10 +139,10 @@ public class GraduationMonthController {
     @Auth(role = "ROLE_MANAGER")
     @Transactional
     public ApiResponse removeGraduationMonth(@ApiVariable String indexString) {        
-        Integer index = -1;
+        Long index = -1L;
         
         try {
-            index = Integer.parseInt(indexString);
+            index = Long.parseLong(indexString);
         }
         catch(NumberFormatException nfe) {
             logger.info("\n\nNOT A NUMBER " + indexString + "\n\n");
@@ -168,8 +168,8 @@ public class GraduationMonthController {
     @Auth(role = "ROLE_MANAGER")
     @Transactional
     public ApiResponse reorderGraduationMonths(@ApiVariable String src, @ApiVariable String dest) {
-        Integer intSrc = Integer.parseInt(src);
-        Integer intDest = Integer.parseInt(dest);
+        Long intSrc = Long.parseLong(src);
+        Long intDest = Long.parseLong(dest);
         graduationMonthRepo.reorder(intSrc, intDest);
         simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(SUCCESS, getAll()));        
         return new ApiResponse(SUCCESS);

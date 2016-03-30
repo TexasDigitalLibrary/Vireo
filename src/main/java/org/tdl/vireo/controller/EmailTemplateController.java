@@ -42,7 +42,7 @@ public class EmailTemplateController {
     
     private Map<String, List<EmailTemplate>> getAll() {
         Map<String, List<EmailTemplate>> map = new HashMap<String, List<EmailTemplate>>();
-        map.put("list", emailTemplateRepo.findAllByOrderByOrderAsc());
+        map.put("list", emailTemplateRepo.findAllByOrderByPositionAsc());
         return map;
     }
     
@@ -89,7 +89,7 @@ public class EmailTemplateController {
 
         newEmailTemplate = emailTemplateRepo.create(newEmailTemplateName, newEmailTemplateSubject, newEmailTemplateMessageBody); //With parameters checked, it is now safe to create the new email template.
 
-        newEmailTemplate.setOrder((int) emailTemplateRepo.count());
+        newEmailTemplate.setPosition(emailTemplateRepo.count());
 
         newEmailTemplate = emailTemplateRepo.save(newEmailTemplate);
 
@@ -164,10 +164,10 @@ public class EmailTemplateController {
     @Auth(role = "ROLE_MANAGER")
     @Transactional
     public ApiResponse removeEmailTemplate(@ApiVariable String indexString) {        
-        Integer index = -1;
+        Long index = -1L;
         
         try {
-            index = Integer.parseInt(indexString);
+            index = Long.parseLong(indexString);
         }
         catch(NumberFormatException nfe) {
             logger.info("\n\nNOT A NUMBER " + indexString + "\n\n");
@@ -192,8 +192,8 @@ public class EmailTemplateController {
     @Auth(role = "ROLE_MANAGER")
     @Transactional
     public ApiResponse reorderEmailTemplates(@ApiVariable String src, @ApiVariable String dest) {
-        Integer intSrc = Integer.parseInt(src);
-        Integer intDest = Integer.parseInt(dest);
+        Long intSrc = Long.parseLong(src);
+        Long intDest = Long.parseLong(dest);
         emailTemplateRepo.reorder(intSrc, intDest);
         simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(SUCCESS, getAll()));        
         return new ApiResponse(SUCCESS);

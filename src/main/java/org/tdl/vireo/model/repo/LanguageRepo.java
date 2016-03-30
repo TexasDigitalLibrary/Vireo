@@ -10,6 +10,6 @@ public interface LanguageRepo extends JpaRepository<Language, Long>, LanguageRep
 
     public Language findByName(String name);
     
-    public List<Language> findAllByOrderByOrderAsc();
+    public List<Language> findAllByOrderByPositionAsc();
 
 }

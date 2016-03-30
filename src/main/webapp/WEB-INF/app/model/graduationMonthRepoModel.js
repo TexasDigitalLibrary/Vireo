@@ -59,12 +59,6 @@ vireo.service("GraduationMonthRepo", function(WsApi, AbstractModel, AlertService
 			'controller': 'settings/graduation-month', 
 			'method': 'create',
 			'data': graduationMonth
-		}).then(function(response) {
-			var responseType = angular.fromJson(response.body).meta.type;
-			var responseMessage = angular.fromJson(response.body).meta.message;
-			if(responseType != 'SUCCESS') {
-				AlertService.add({type: responseType, message: responseMessage}, "/settings/graduation-month");  
-			}
 		});
 	};
 
@@ -74,12 +68,6 @@ vireo.service("GraduationMonthRepo", function(WsApi, AbstractModel, AlertService
 			'controller': 'settings/graduation-month', 
 			'method': 'update',
 			'data': graduationMonth
-		}).then(function(response) {
-			var responseType = angular.fromJson(response.body).meta.type;
-			var responseMessage = angular.fromJson(response.body).meta.message;
-			if(responseType != 'SUCCESS') {
-				AlertService.add({type: responseType, message: responseMessage}, "/settings/graduation-month");  
-			}
 		});
 	};
 
@@ -88,12 +76,6 @@ vireo.service("GraduationMonthRepo", function(WsApi, AbstractModel, AlertService
 			'endpoint': '/private/queue', 
 			'controller': 'settings/graduation-month', 
 			'method': 'reorder/' + src + '/' + dest
-		}).then(function(response) {
-			var responseType = angular.fromJson(response.body).meta.type;
-			var responseMessage = angular.fromJson(response.body).meta.message;
-			if(responseType != 'SUCCESS') {
-				AlertService.add({type: responseType, message: responseMessage}, "/settings/graduation-month");  
-			}
 		});
 	};
 
@@ -102,12 +84,6 @@ vireo.service("GraduationMonthRepo", function(WsApi, AbstractModel, AlertService
 			'endpoint': '/private/queue', 
 			'controller': 'settings/graduation-month', 
 			'method': 'sort/' + column
-		}).then(function(response) {
-			var responseType = angular.fromJson(response.body).meta.type;
-			var responseMessage = angular.fromJson(response.body).meta.message;
-			if(responseType != 'SUCCESS') {
-				AlertService.add({type: responseType, message: responseMessage}, "/settings/graduation-month");  
-			}
 		});
 	};
 
@@ -116,12 +92,6 @@ vireo.service("GraduationMonthRepo", function(WsApi, AbstractModel, AlertService
 			'endpoint': '/private/queue', 
 			'controller': 'settings/graduation-month', 
 			'method': 'remove/' + index
-		}).then(function(response) {
-			var responseType = angular.fromJson(response.body).meta.type;
-			var responseMessage = angular.fromJson(response.body).meta.message;
-			if(responseType != 'SUCCESS') {
-				AlertService.add({type: responseType, message: responseMessage}, "/settings/graduation-month");  
-			}
 		});
 	};
 	

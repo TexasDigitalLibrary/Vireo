@@ -10,5 +10,5 @@ public interface CustomActionDefinitionRepo extends JpaRepository<CustomActionDe
 
     public CustomActionDefinition findByLabel(String label);
     
-    public List<CustomActionDefinition> findAllByOrderByOrderAsc();
+    public List<CustomActionDefinition> findAllByOrderByPositionAsc();
 }

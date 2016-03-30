@@ -54,11 +54,10 @@ public class ControlledVocabulary extends BaseOrderedEntity {
      * @param language
      * @param order
      */
-    public ControlledVocabulary(String name, Language language, Integer order) {
+    public ControlledVocabulary(String name, Language language) {
         this();
         setName(name);
         setLanguage(language);
-        setOrder(order);
     }
     
     /**
@@ -68,8 +67,8 @@ public class ControlledVocabulary extends BaseOrderedEntity {
      * @param language
      * @param order
      */
-    public ControlledVocabulary(String name, String entityName, Language language, Integer order) {
-        this(name, language, order);
+    public ControlledVocabulary(String name, String entityName, Language language) {
+        this(name, language);
         setEntityName(entityName);
         setIsEntityProperty(true);
     }

@@ -2,17 +2,17 @@ var mockLanguageRepo1 = {
     "list": [
         {
             "id": 1,
-            "order": null,
+            "position": null,
             "name": "English"
         },
         {
         	"id": 2,
-        	"order": null,
+        	"position": null,
         	"name": "Spanish"
         },
         {
         	"id": 3,
-        	"order": null,
+        	"position": null,
         	"name": "French"
         }
     ]
@@ -22,17 +22,17 @@ var mockLanguageRepo2 = {
     "list": [
         {
             "id": 1,
-            "order": null,
+            "position": null,
             "name": "English"
         },
         {
         	"id": 2,
-        	"order": null,
+        	"position": null,
         	"name": "Chinese"
         },
         {
         	"id": 3,
-        	"order": null,
+        	"position": null,
         	"name": "French"
         }
     ]
@@ -42,17 +42,17 @@ var mockLanguageRepo3 = {
     "list": [
         {
             "id": 1,
-            "order": null,
+            "position": null,
             "name": "English"
         },
         {
         	"id": 2,
-        	"order": null,
+        	"position": null,
         	"name": "Spanish"
         },
         {
         	"id": 3,
-        	"order": null,
+        	"position": null,
         	"name": "German"
         }
     ]

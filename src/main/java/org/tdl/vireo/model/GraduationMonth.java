@@ -29,11 +29,6 @@ public class GraduationMonth extends BaseOrderedEntity {
 	    setMonth(month);
 	}
 	
-	public GraduationMonth(int month, int order) {
-        this(month);
-        setOrder(order);
-    }
-
     /**
      * @return the month
      */

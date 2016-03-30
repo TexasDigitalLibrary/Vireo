@@ -2,12 +2,12 @@ var mockControlledVocabularyRepo1 = {
     "list": [
         {
             "id": 1,
-            "order": 1,
+            "position": 1,
             "name": "guarantor",
             "entityName": "Embargo",
             "language": {
                 "id": 1,
-                "order": null,
+                "position": null,
                 "name": "English"
             },
             "dictionary": [
@@ -19,12 +19,12 @@ var mockControlledVocabularyRepo1 = {
         },
         {
             "id": 2,
-            "order": 2,
+            "position": 2,
             "name": "type",
             "entityName": "Attachment",
             "language": {
                 "id": 1,
-                "order": null,
+                "position": null,
                 "name": "English"
             },
             "dictionary": [],
@@ -33,12 +33,12 @@ var mockControlledVocabularyRepo1 = {
         },
         {
             "id": 3,
-            "order": 3,
+            "position": 3,
             "name": "test",
             "entityName": null,
             "language": {
                 "id": 1,
-                "order": null,
+                "position": null,
                 "name": "English"
             },
             "dictionary": [],
@@ -52,12 +52,12 @@ var mockControlledVocabularyRepo2 = {
     "list": [
         {
             "id": 1,
-            "order": 1,
+            "position": 1,
             "name": "reviewer",
             "entityName": null,
             "language": {
                 "id": 1,
-                "order": null,
+                "position": null,
                 "name": "English"
             },
             "dictionary": [],
@@ -66,12 +66,12 @@ var mockControlledVocabularyRepo2 = {
         },
         {
             "id": 2,
-            "order": 2,
+            "position": 2,
             "name": "type",
             "entityName": "Attachment",
             "language": {
                 "id": 1,
-                "order": null,
+                "position": null,
                 "name": "English"
             },
             "dictionary": [],
@@ -80,12 +80,12 @@ var mockControlledVocabularyRepo2 = {
         },
         {
             "id": 3,
-            "order": 3,
+            "position": 3,
             "name": "test",
             "entityName": null,
             "language": {
                 "id": 1,
-                "order": null,
+                "position": null,
                 "name": "English"
             },
             "dictionary": [],
@@ -99,12 +99,12 @@ var mockControlledVocabularyRepo3 = {
     "list": [
         {
             "id": 1,
-            "order": 1,
+            "position": 1,
             "name": "guarantor",
             "entityName": "Embargo",
             "language": {
                 "id": 1,
-                "order": null,
+                "position": null,
                 "name": "English"
             },
             "dictionary": [
@@ -116,12 +116,12 @@ var mockControlledVocabularyRepo3 = {
         },
         {
             "id": 2,
-            "order": 2,
+            "position": 2,
             "name": "type",
             "entityName": "Attachment",
             "language": {
                 "id": 1,
-                "order": null,
+                "position": null,
                 "name": "English"
             },
             "dictionary": [],
@@ -130,12 +130,12 @@ var mockControlledVocabularyRepo3 = {
         },
         {
             "id": 3,
-            "order": 3,
+            "position": 3,
             "name": "subjects",
             "entityName": null,
             "language": {
                 "id": 1,
-                "order": null,
+                "position": null,
                 "name": "English"
             },
             "dictionary": [],

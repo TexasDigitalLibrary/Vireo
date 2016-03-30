@@ -6,15 +6,15 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 public abstract class BaseOrderedEntity extends BaseEntity {
 
-    @Column(name = "`order`", nullable = true) // "order" is a keyword in SQL
-    protected Integer order = null;
+    @Column(nullable = true)
+    protected Long position = null;
 
-    public Integer getOrder() {
-        return order;
+    public Long getPosition() {
+        return position;
     }
 
-    public void setOrder(Integer order) {
-        this.order = order;
+    public void setPosition(Long position) {
+        this.position = position;
     }
     
 }

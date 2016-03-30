@@ -18,12 +18,12 @@ public class EmbargoRepoImpl implements EmbargoRepoCustom {
     @Override
     public Embargo create(String name, String description, Integer duration, EmbargoGuarantor guarantor, boolean isActive) {
         Embargo embargo = new Embargo(name, description, duration, guarantor, isActive);
-        embargo.setOrder((int)embargoRepo.count() + 1);
+        embargo.setPosition(embargoRepo.count() + 1);
         return embargoRepo.save(embargo);
     }
     
     @Override
-    public void reorder(Integer src, Integer dest) {
+    public void reorder(Long src, Long dest) {
         orderedEntityService.reorder(Embargo.class, src, dest);
     }
     
@@ -33,7 +33,7 @@ public class EmbargoRepoImpl implements EmbargoRepoCustom {
     }
     
     @Override
-    public void remove(Integer index) {
+    public void remove(Long index) {
         orderedEntityService.remove(Embargo.class, index);
     }
 }

@@ -53,9 +53,7 @@ vireo.service("AvailableDocumentTypesRepo", function(WsApi, AbstractModel, Alert
 		return AvailableDocumentTypesRepo.data;	
 	};
 
-        AvailableDocumentTypesRepo.add = function(documentType) {
-          console.info('calling model creator');
-          console.info(documentType);
+    AvailableDocumentTypesRepo.add = function(documentType) {
 		return WsApi.fetch({
 			'endpoint': '/private/queue', 
 			'controller': 'settings/document-types', 
@@ -74,7 +72,6 @@ vireo.service("AvailableDocumentTypesRepo", function(WsApi, AbstractModel, Alert
 	};
 
 	AvailableDocumentTypesRepo.reorder = function(src, dest) {
-          console.info('calling reorder on server');
 		return WsApi.fetch({
 			'endpoint': '/private/queue', 
 			'controller': 'settings/document-types', 

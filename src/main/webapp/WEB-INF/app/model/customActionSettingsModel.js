@@ -42,10 +42,6 @@ vireo.service("CustomActionSettings", function(AbstractModel, WsApi, AlertServic
 			controller: 'settings/custom-actions', 
 			method: '',
 		});
-
-		CustomActionSettings.listener.then(function(data) {
-			console.log(data);
-		});
 				
 		CustomActionSettings.set(CustomActionSettings.listener);
 
@@ -54,55 +50,37 @@ vireo.service("CustomActionSettings", function(AbstractModel, WsApi, AlertServic
 	};
 
 	CustomActionSettings.create = function(customAction) {
-		WsApi.fetch({
+		return WsApi.fetch({
 			endpoint:'/private/queue',
 			controller:'settings/custom-action',
 			method:'create',
 			data: customAction
-		}).then(function(response) {
-			// TODO: error handling
-			return response;
 		});		
 
 	};
 
 	CustomActionSettings.update = function(customAction) {
-		WsApi.fetch({
+		return WsApi.fetch({
 			endpoint:'/private/queue',
 			controller:'settings/custom-action',
 			method:'update',
 			data: customAction
-		}).then(function(response) {
-			// TODO: error handling
-			return response;
 		});
 	};
 	
 	CustomActionSettings.reorder = function(src, dest) {
-		WsApi.fetch({
+		return WsApi.fetch({
 			'endpoint': '/private/queue', 
 			'controller': 'settings/custom-action', 
 			'method': 'reorder/' + src + '/' + dest
-		}).then(function(response) {
-			var responseType = angular.fromJson(response.body).meta.type;
-			var responseMessage = angular.fromJson(response.body).meta.message;
-			if(responseType != 'SUCCESS') {
-				AlertService.add({type: responseType, message: responseMessage}, "/settings/custom-action");  
-			}
 		});
 	};
 	
 	CustomActionSettings.remove = function(index) {
-		WsApi.fetch({
+		return WsApi.fetch({
 			'endpoint': '/private/queue', 
 			'controller': 'settings/custom-action', 
 			'method': 'remove/' + index
-		}).then(function(response) {
-			var responseType = angular.fromJson(response.body).meta.type;
-			var responseMessage = angular.fromJson(response.body).meta.message;
-			if(responseType != 'SUCCESS') {
-				AlertService.add({type: responseType, message: responseMessage}, "/settings/custom-action");  
-			}
 		});
 	};
 

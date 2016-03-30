@@ -42,7 +42,7 @@ public class DepositLocationController {
     
     private Map<String, List<DepositLocation>> getAll() {
         Map<String, List<DepositLocation>> map = new HashMap<String, List<DepositLocation>>();
-        map.put("list", depositLocationRepo.findAllByOrderByOrderAsc());
+        map.put("list", depositLocationRepo.findAllByOrderByPositionAsc());
         return map;
     }
     
@@ -141,7 +141,7 @@ public class DepositLocationController {
         newDepositLocation = validateAndPopulateDepositLocation(newDepositLocation, dataNode);
         
         
-        newDepositLocation.setOrder((int) depositLocationRepo.count());
+        newDepositLocation.setPosition(depositLocationRepo.count());
         
         newDepositLocation = depositLocationRepo.save(newDepositLocation);
         
@@ -210,10 +210,10 @@ public class DepositLocationController {
     @Auth(role = "ROLE_MANAGER")
     @Transactional
     public ApiResponse removeDepositLocation(@ApiVariable String indexString) {        
-        Integer index = -1;
+        Long index = -1L;
         
         try {
-            index = Integer.parseInt(indexString);
+            index = Long.parseLong(indexString);
         }
         catch(NumberFormatException nfe) {
             logger.info("\n\nNOT A NUMBER " + indexString + "\n\n");
@@ -239,8 +239,8 @@ public class DepositLocationController {
     @Auth(role = "ROLE_MANAGER")
     @Transactional
     public ApiResponse reorderDepositLocations(@ApiVariable String src, @ApiVariable String dest) {
-        Integer intSrc = Integer.parseInt(src);
-        Integer intDest = Integer.parseInt(dest);
+        Long intSrc = Long.parseLong(src);
+        Long intDest = Long.parseLong(dest);
         depositLocationRepo.reorder(intSrc, intDest);
         simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(SUCCESS, getAll()));        
         return new ApiResponse(SUCCESS);
