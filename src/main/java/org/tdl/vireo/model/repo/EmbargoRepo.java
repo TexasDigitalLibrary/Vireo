@@ -11,5 +11,5 @@ public interface EmbargoRepo extends JpaRepository<Embargo, Long>, EmbargoRepoCu
 
     public Embargo findByNameAndGuarantorAndIsSystemRequired(String name, EmbargoGuarantor guarantor, Boolean isSystemRequired);
     
-    public List<Embargo> findAllByOrderByOrderAsc(); // find all by nothing, order by 'order'
+    public List<Embargo> findAllByOrderByGuarantorAscPositionAsc();
 }

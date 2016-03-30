@@ -43,7 +43,7 @@ public class DocumentTypesController {
     
     private Map<String, List<DocumentType>> getAll() {
         Map<String, List<DocumentType>> map = new HashMap<String, List<DocumentType>>();
-        map.put("list", documentTypeRepo.findAllByOrderByOrderAsc());
+        map.put("list", documentTypeRepo.findAllByOrderByPositionAsc());
         return map;
     }
     
@@ -93,7 +93,7 @@ public class DocumentTypesController {
             return new ApiResponse(ERROR, "Name required to create document type!");
         }
         
-        DocumentType newDocumentType = documentTypeRepo.create(newDocumentName, newDocumentDegreeLevel);
+        documentTypeRepo.create(newDocumentName, newDocumentDegreeLevel);
         
         logger.info("Created document type with name " + newDocumentName + " and degree level " + newDocumentDegreeLevel.toString());
         
@@ -167,10 +167,10 @@ public class DocumentTypesController {
     @Auth(role = "ROLE_MANAGER")
     @Transactional
     public ApiResponse removeDocumentType(@ApiVariable String indexString) {        
-        Integer index = -1;
+        Long index = -1L;
         
         try {
-            index = Integer.parseInt(indexString);
+            index = Long.parseLong(indexString);
         }
         catch(NumberFormatException nfe) {
             logger.info("\n\nNOT A NUMBER " + indexString + "\n\n");
@@ -196,8 +196,8 @@ public class DocumentTypesController {
     @Auth(role = "ROLE_MANAGER")
     @Transactional
     public ApiResponse reorderDocumentTypes(@ApiVariable String src, @ApiVariable String dest) {
-        Integer intSrc = Integer.parseInt(src);
-        Integer intDest = Integer.parseInt(dest);
+        Long intSrc = Long.parseLong(src);
+        Long intDest = Long.parseLong(dest);
         documentTypeRepo.reorder(intSrc, intDest);
         simpMessagingTemplate.convertAndSend("/channel/settings/document-types", new ApiResponse(SUCCESS, getAll()));        
         return new ApiResponse(SUCCESS);

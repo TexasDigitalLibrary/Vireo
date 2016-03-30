@@ -19,32 +19,9 @@ vireo.controller("LanguageRepoController", function ($controller, $q, $scope, La
 	$scope.uploadAction = "confirm";
 
 	$scope.ready.then(function() {
-
-		$scope.resetLanguages = function() {
-			if($scope.uploadAction == 'process') {
-				$scope.uploadAction = 'confirm';
-				$scope.uploadStatus();
-			}
-
-			for(var i in $scope.languages.list) {
-				var language = $scope.languages.list[i];
-				language.proquestCode = $scope.proquestLanguageCodes[language.name]
-			}
-
-			$scope.modalData = { 
-				languages: $scope.languages.list[0] 
-			};			
-		};
-
-		$scope.resetLanguages();
 		
 		$scope.createLanguage = function() {
-			LanguageRepo.add($scope.modalData).then(function(response) {
-				var responseType = angular.fromJson(response.body).meta.type;
-				var responseMessage = angular.fromJson(response.body).meta.message;
-				if(responseType != 'SUCCESS') {
-					console.log(responseMessage);
-				}
+			LanguageRepo.add($scope.modalData).then(function() {
 				$scope.resetLanguages();
 			});
 		};
@@ -59,12 +36,7 @@ vireo.controller("LanguageRepoController", function ($controller, $q, $scope, La
 		};
 		
 		$scope.updateLanguage = function() {
-			LanguageRepo.update($scope.modalData).then(function(response) {
-				var responseType = angular.fromJson(response.body).meta.type;
-				var responseMessage = angular.fromJson(response.body).meta.message;
-				if(responseType != 'SUCCESS') {
-					console.log(responseMessage);
-				}
+			LanguageRepo.update($scope.modalData).then(function() {
 				$scope.resetLanguages();
 			});
 		};
@@ -76,6 +48,7 @@ vireo.controller("LanguageRepoController", function ($controller, $q, $scope, La
 		};
 
 		$scope.sortLanguages = function(column) {
+			console.log('sorting ' + column)
 			if($scope.sortAction == 'confirm') {
 				$scope.sortAction = 'sort';
 			}
@@ -84,30 +57,43 @@ vireo.controller("LanguageRepoController", function ($controller, $q, $scope, La
 					$scope.resetLanguages();
 					$scope.sortAction = 'confirm';
 				});
-			}	    	
+			}
 		};
 
 		$scope.removeLanguage = function(index) {
-	    	LanguageRepo.remove(index).then(function(response) {
-	    		var responseType = angular.fromJson(response.body).meta.type;
-				var responseMessage = angular.fromJson(response.body).meta.message;
-				if(responseType != 'SUCCESS') {
-					console.log(responseMessage);
-				}
+	    	LanguageRepo.remove(index).then(function() {
 	    		$scope.resetLanguages();
 	    	});
 		};
-		
+
 		$scope.dragControlListeners = DragAndDropListenerFactory.buildDragControls({
 			trashId: $scope.trashCanId,
 			dragging: $scope.dragging,
-			select: $scope.selectLanguage,			
-			list: $scope.languages.list,
+			select: $scope.selectLanguage,
+			model: $scope.languages,
 			confirm: '#languagesConfirmRemoveModal',
 			reorder: $scope.reorderLanguages,
 			container: '#languages'
 		});
-		
+
+		$scope.resetLanguages = function() {
+			if($scope.uploadAction == 'process') {
+				$scope.uploadAction = 'confirm';
+				$scope.uploadStatus();
+			}
+
+			for(var i in $scope.languages.list) {
+				var language = $scope.languages.list[i];
+				language.proquestCode = $scope.proquestLanguageCodes[language.name]
+			}
+
+			$scope.modalData = { 
+				languages: $scope.languages.list[0] 
+			};
+		};
+
+		$scope.resetLanguages();
+
 	});	
 
 

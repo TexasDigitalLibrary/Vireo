@@ -10,8 +10,8 @@ public interface DepositLocationRepo extends JpaRepository<DepositLocation, Long
 
     public DepositLocation findByName(String name);
     
-    public DepositLocation findByOrder(Integer order);
+    public DepositLocation findByPosition(Long position);
     
-    public List<DepositLocation> findAllByOrderByOrderAsc();
+    public List<DepositLocation> findAllByOrderByPositionAsc();
     
 }

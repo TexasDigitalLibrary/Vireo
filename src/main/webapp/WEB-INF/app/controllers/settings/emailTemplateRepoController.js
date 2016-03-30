@@ -11,17 +11,11 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
   
   $scope.sortAction = "confirm";
 
-  $scope.resetModalData = function() {
-    $scope.modalData = {'name':'', 'subject':'', 'message':''};
-  };
-
   $scope.templateToString = function(template) {
     return template.name;
   }
 
   $scope.ready.then(function() {
-
-    $scope.resetModalData();
 
     $scope.selectEmailTemplate = function(index){
       $scope.modalData = $scope.emailTemplates.list[index];
@@ -29,7 +23,7 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
 
     $scope.createEmailTemplate = function() {
       EmailTemplateRepo.add($scope.modalData).then(function() {
-        $scope.resetModalData();
+        $scope.resetEmailTemplates();
       });
     };
 
@@ -40,19 +34,19 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
 
     $scope.updateEmailTemplate = function() {
       EmailTemplateRepo.update($scope.modalData).then(function() {
-        $scope.resetModalData();
+        $scope.resetEmailTemplates();
       });
     };
 
     $scope.removeEmailTemplate = function(index) {
       EmailTemplateRepo.remove(index).then(function() {
-        $scope.resetModalData();
+        $scope.resetEmailTemplates();
       });
     };
 
     $scope.reorderEmailTemplates = function(src, dest){
       EmailTemplateRepo.reorder(src, dest).then(function() {
-        $scope.resetModalData();
+        $scope.resetEmailTemplates();
       });
     }
 
@@ -62,23 +56,27 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
       }
       else if($scope.sortAction == 'sort') {
         EmailTemplateRepo.sort(column).then(function() {
-          $scope.resetModalData();
+          $scope.resetEmailTemplates();
         });
         $scope.sortAction = 'confirm';
       }
     };
 
-    
-
     $scope.dragControlListeners = DragAndDropListenerFactory.buildDragControls({
       trashId: $scope.trashCanId,
       dragging: $scope.dragging,
       select: $scope.selectEmailTemplate,     
-      list: $scope.emailTemplates.list,
+      model: $scope.emailTemplates,
       confirm: '#emailTemplatesConfirmRemoveModal',
       reorder: $scope.reorderEmailTemplates,
       container: '#email-templates'
     });
+
+    $scope.resetEmailTemplates = function() {
+      $scope.modalData = {'name':'', 'subject':'', 'message':''};
+    }
+
+    $scope.resetEmailTemplates();
     
   });	
 

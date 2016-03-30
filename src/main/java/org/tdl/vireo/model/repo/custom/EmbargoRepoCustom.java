@@ -7,9 +7,9 @@ public interface EmbargoRepoCustom {
     
     public Embargo create(String name, String description, Integer duration, EmbargoGuarantor guarantor, boolean isActive);
     
-    public void reorder(Integer src, Integer dest);
+    public void reorder(Long src, Long dest);
     
     public void sort(String column, EmbargoGuarantor guarantor);
     
-    public void remove(Integer index);    
+    public void remove(Long index);    
 }

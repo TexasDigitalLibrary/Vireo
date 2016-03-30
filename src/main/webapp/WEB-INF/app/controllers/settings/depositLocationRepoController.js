@@ -8,22 +8,13 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 	$scope.dragging = false;
 
 	$scope.trashCanId = 'deposit-location-trash';
-	
-	// defaults
-	$scope.resetDepositLocation = function() {
-		$scope.modalData = {
-			depositor: 'Sword1Deposit',
-			packager: 'VireoExport'
-		};
-	}
-
-	$scope.resetDepositLocation();
-	
-	$scope.ready.then(function() {
 		
+	$scope.ready.then(function() {
+
 		$scope.createDepositLocation = function() {
-			DepositLocationRepo.add($scope.modalData);
-			$scope.resetDepositLocation();
+			DepositLocationRepo.add($scope.modalData).then(function() {
+				$scope.resetDepositLocation();
+			});
 		};
 		
 		$scope.selectDepositLocation = function(index) {
@@ -36,29 +27,42 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 		};
 		
 		$scope.updateDepositLocation = function() {
-			DepositLocationRepo.update($scope.modalData);
-			$scope.resetDepositLocation();
+			DepositLocationRepo.update($scope.modalData).then(function() {
+				$scope.resetDepositLocation();
+			});
 		};
 
 		$scope.reorderDepositLocation = function(src, dest) {
-	    	DepositLocationRepo.reorder(src, dest);
+	    	DepositLocationRepo.reorder(src, dest).then(function() {
+				$scope.resetDepositLocation();
+			});
 		};
 
 		$scope.removeDepositLocation = function(index) {
-	    	DepositLocationRepo.remove(index);
-	    	$scope.resetDepositLocation();	    	
+	    	DepositLocationRepo.remove(index).then(function() {
+				$scope.resetDepositLocation();
+			});
 		};
-		
+
 		$scope.dragControlListeners = DragAndDropListenerFactory.buildDragControls({
 			trashId: $scope.trashCanId,
 			dragging: $scope.dragging,
 			select: $scope.selectDepositLocation,			
-			list: $scope.depositLocations.list,
+			model: $scope.depositLocations,
 			confirm: '#depositLocationConfirmRemoveModal',
 			reorder: $scope.reorderDepositLocation,
 			container: '#deposit-location'
 		});
-		
+
+		$scope.resetDepositLocation = function() {
+			$scope.modalData = {
+				depositor: 'Sword1Deposit',
+				packager: 'VireoExport'
+			};
+		}
+
+		$scope.resetDepositLocation();
+
 	});	
 
 });

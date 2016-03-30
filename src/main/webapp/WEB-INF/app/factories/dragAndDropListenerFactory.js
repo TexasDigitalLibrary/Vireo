@@ -29,7 +29,7 @@ vireo.factory('DragAndDropListenerFactory', function() {
 			listener.trash.id = drag.trashId;
 			listener.dragging = drag.dragging;
 			listener.select = drag.select;
-			listener.list = drag.list;
+			listener.model = drag.model;
 			listener.confirm.remove.modal = drag.confirm;
 			listener.reorder = drag.reorder;
 		}
@@ -37,8 +37,13 @@ vireo.factory('DragAndDropListenerFactory', function() {
 			console.log('ensure configured')
 		}
 		
+		var startingObj;
+
 		var dragControls = {
 			dragStart: function(event) {
+
+				startingObj = event.source.sortableScope.modelValue[0];
+
 				listener.dragging = true;								
 				listener.select(event.source.index);
 				angular.element('.as-sortable-drag').css('display', 'none');
@@ -76,11 +81,36 @@ vireo.factory('DragAndDropListenerFactory', function() {
 	     		}
 		     	return sourceItemHandleScope.itemScope.sortableScope.$id === destSortableScope.$id;
 		    },
-		    orderChanged: function(event) {
+		    orderChanged: function(event) {	
+
 		    	if(!listener.trash.hover) {
-		    		var src = event.source.itemScope.modelValue.order;
-		    		var dest = event.dest.sortableScope.modelValue[event.dest.index + 1].order;
+
+		    		console.log(listener.model.list.length)
+		    		console.log(event.source.sortableScope.modelValue.length)
+		    		
+		    		var isSingleSorted = (listener.model.list.length == event.source.sortableScope.modelValue.length);
+
+		    		var src = event.source.index + 1;
+		    		var dest = event.dest.index + 1;
+
+		    		if(!isSingleSorted) {
+		    		
+		    			var offset = 0;
+
+			    		for(var i in listener.model.list) {
+			    			if(listener.model.list[i].id == startingObj.id) {
+			    				offset = i;
+			    				break;
+			    			}
+			    		}
+
+			    		src = listener.model.list[parseInt(event.source.index) + parseInt(offset)].position;
+			    		dest = listener.model.list[parseInt(event.dest.index) + parseInt(offset)].position;
+
+		    		}
+
 		    		listener.reorder(src, dest);
+		    		
 		    	}
 		    },
 		    containment: drag.container

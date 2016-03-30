@@ -32,10 +32,9 @@ public class DocumentType extends BaseOrderedEntity {
 	 * @param degreeLevel
 	 *            The degreeLevel of the new document type.
 	 */
-	public DocumentType(String name, DegreeLevel degreeLevel, int order) {
+	public DocumentType(String name, DegreeLevel degreeLevel) {
 		setName(name);
 		setDegreeLevel(degreeLevel);
-		setOrder(order);
 	}
 
     /**

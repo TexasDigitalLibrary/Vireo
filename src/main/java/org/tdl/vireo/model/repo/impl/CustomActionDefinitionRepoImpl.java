@@ -20,12 +20,12 @@ public class CustomActionDefinitionRepoImpl implements CustomActionDefinitionRep
     }
     
     @Override
-    public void reorder(Integer src, Integer dest) {
+    public void reorder(Long src, Long dest) {
         orderedEntityService.reorder(CustomActionDefinition.class, src, dest);
     }
     
     @Override
-    public void remove(Integer index) {
+    public void remove(Long index) {
         orderedEntityService.remove(CustomActionDefinition.class, index);
     }
 }

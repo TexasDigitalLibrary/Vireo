@@ -42,7 +42,7 @@ public class CustomActionSettingsController {
     
     private Map<String, List<CustomActionDefinition>> getAll() {
         Map<String, List<CustomActionDefinition>> allRet = new HashMap<String, List<CustomActionDefinition>>();
-        allRet.put("list", customActionDefinitionRepo.findAllByOrderByOrderAsc());
+        allRet.put("list", customActionDefinitionRepo.findAllByOrderByPositionAsc());
         return allRet;
     }
     
@@ -62,7 +62,7 @@ public class CustomActionSettingsController {
         }
                
         CustomActionDefinition newCustomAction = customActionDefinitionRepo.create(dataNode.get("label").asText(), dataNode.get("isStudentVisible").asBoolean());
-        newCustomAction.setOrder((int) customActionDefinitionRepo.count());
+        newCustomAction.setPosition(customActionDefinitionRepo.count());
         customActionDefinitionRepo.save(newCustomAction);
         
         this.simpMessagingTemplate.convertAndSend("/channel/settings/custom-actions", new ApiResponse(SUCCESS, getAll()));
@@ -94,10 +94,10 @@ public class CustomActionSettingsController {
     @Auth(role = "ROLE_MANAGER")
     @Transactional
     public ApiResponse removeCustomAction(@ApiVariable String indexString) {        
-        Integer index = -1;
+        Long index = -1L;
         
         try {
-            index = Integer.parseInt(indexString);
+            index = Long.parseLong(indexString);
         }
         catch(NumberFormatException nfe) {
             logger.info("\n\nNOT A NUMBER " + indexString + "\n\n");
@@ -123,8 +123,8 @@ public class CustomActionSettingsController {
     @Auth(role = "ROLE_MANAGER")
     @Transactional
     public ApiResponse reorderCustomActions(@ApiVariable String src, @ApiVariable String dest) {
-        Integer intSrc = Integer.parseInt(src);
-        Integer intDest = Integer.parseInt(dest);
+        Long intSrc = Long.parseLong(src);
+        Long intDest = Long.parseLong(dest);
         customActionDefinitionRepo.reorder(intSrc, intDest);
         simpMessagingTemplate.convertAndSend("/channel/settings/custom-actions", new ApiResponse(SUCCESS, getAll()));        
         return new ApiResponse(SUCCESS);

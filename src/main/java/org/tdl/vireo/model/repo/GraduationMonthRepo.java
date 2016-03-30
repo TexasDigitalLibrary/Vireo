@@ -10,8 +10,8 @@ public interface GraduationMonthRepo extends JpaRepository<GraduationMonth, Long
 
     public GraduationMonth findByMonth(int month);
     
-    public GraduationMonth findByOrder(Integer order);
+    public GraduationMonth findByPosition(Long position);
     
-    public List<GraduationMonth> findAllByOrderByOrderAsc();
+    public List<GraduationMonth> findAllByOrderByPositionAsc();
         
 }

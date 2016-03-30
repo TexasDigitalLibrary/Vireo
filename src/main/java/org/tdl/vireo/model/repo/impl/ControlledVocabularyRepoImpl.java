@@ -17,16 +17,20 @@ public class ControlledVocabularyRepoImpl implements ControlledVocabularyRepoCus
 
     @Override
     public ControlledVocabulary create(String name, Language language) {
-        return controlledVocabularyRepo.save(new ControlledVocabulary(name, language, (int) controlledVocabularyRepo.count() + 1));
+        ControlledVocabulary controlledVocabulary = new ControlledVocabulary(name, language);
+        controlledVocabulary.setPosition(controlledVocabularyRepo.count() + 1);
+        return controlledVocabularyRepo.save(controlledVocabulary);
     }
     
     @Override
     public ControlledVocabulary create(String name, String entityName, Language language) {
-        return controlledVocabularyRepo.save(new ControlledVocabulary(name, entityName, language, (int) controlledVocabularyRepo.count() + 1));
+        ControlledVocabulary controlledVocabulary = new ControlledVocabulary(name, entityName, language);
+        controlledVocabulary.setPosition(controlledVocabularyRepo.count() + 1);
+        return controlledVocabularyRepo.save(controlledVocabulary);
     }
     
     @Override
-    public void reorder(Integer src, Integer dest) {
+    public void reorder(Long src, Long dest) {
         orderedEntityService.reorder(ControlledVocabulary.class, src, dest);
     }
     
@@ -36,7 +40,7 @@ public class ControlledVocabularyRepoImpl implements ControlledVocabularyRepoCus
     }
     
     @Override
-    public void remove(Integer index) {
+    public void remove(Long index) {
         orderedEntityService.remove(ControlledVocabulary.class, index);
     }
 

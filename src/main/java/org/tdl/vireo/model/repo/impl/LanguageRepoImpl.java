@@ -16,11 +16,13 @@ public class LanguageRepoImpl implements LanguageRepoCustom {
 
     @Override
     public Language create(String name) {
-        return languageRepo.save(new Language(name, (int) languageRepo.count() + 1));
+        Language language = new Language(name);
+        language.setPosition(languageRepo.count() + 1);
+        return languageRepo.save(language);
     }
         
     @Override
-    public void reorder(Integer src, Integer dest) {
+    public void reorder(Long src, Long dest) {
         orderedEntityService.reorder(Language.class, src, dest);
     }
     
@@ -30,7 +32,7 @@ public class LanguageRepoImpl implements LanguageRepoCustom {
     }
     
     @Override
-    public void remove(Integer index) {
+    public void remove(Long index) {
         orderedEntityService.remove(Language.class, index);
     }
 

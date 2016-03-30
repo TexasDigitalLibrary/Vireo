@@ -1,5 +1,5 @@
 <div class="deposit-location" ng-mouseenter="isMouseHover=true" ng-mouseleave="isMouseHover=false">
-	<span>{{ item.order }}.</span>
+	<span>{{ item.position }}.</span>
 	<span ng-repeat="property in properties" class="repeated-span">{{item[property]}}</span>
-	<span ng-show="isMouseHover" class="glyphicon glyphicon-pencil edit-setting-icon" ng-click="edit({index:item.order})"></span>
+	<span ng-show="isMouseHover" class="glyphicon glyphicon-pencil edit-setting-icon" ng-click="edit({index:item.position})"></span>
 </div>

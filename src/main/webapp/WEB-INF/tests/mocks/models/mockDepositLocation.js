@@ -3,7 +3,7 @@ var mockDepositLocationRepo1 = {
 		'list':[
             {
                 "id": 1,
-                "order": 1,
+                "position": 1,
                 "name": "Test0",
                 "repository": "Dspace",
                 "collection": null,
@@ -16,7 +16,7 @@ var mockDepositLocationRepo1 = {
             },
             {
                 "id": 2,
-                "order": 2,
+                "position": 2,
                 "name": "Test1",
                 "repository": "Fedora",
                 "collection": null,
@@ -29,7 +29,7 @@ var mockDepositLocationRepo1 = {
             },
             {
                 "id": 3,
-                "order": 3,
+                "position": 3,
                 "name": "Test2",
                 "repository": "Nuxio",
                 "collection": null,
@@ -49,7 +49,7 @@ var mockDepositLocationRepo2 = {
         'list':[
             {
                 "id": 1,
-                "order": 1,
+                "position": 1,
                 "name": "Test3",
                 "repository": "Dspace",
                 "collection": null,
@@ -62,7 +62,7 @@ var mockDepositLocationRepo2 = {
             },
             {
                 "id": 2,
-                "order": 2,
+                "position": 2,
                 "name": "Test4",
                 "repository": "Fedora",
                 "collection": null,
@@ -75,7 +75,7 @@ var mockDepositLocationRepo2 = {
             },
             {
                 "id": 3,
-                "order": 3,
+                "position": 3,
                 "name": "Test5",
                 "repository": "Nuxio",
                 "collection": null,
@@ -95,7 +95,7 @@ var mockDepositLocationRepo3 = {
         'list':[
             {
                 "id": 1,
-                "order": 1,
+                "position": 1,
                 "name": "Test3",
                 "repository": "Dspace",
                 "collection": null,
@@ -108,7 +108,7 @@ var mockDepositLocationRepo3 = {
             },
             {
                 "id": 2,
-                "order": 2,
+                "position": 2,
                 "name": "Test2",
                 "repository": "Fedora",
                 "collection": null,
@@ -121,7 +121,7 @@ var mockDepositLocationRepo3 = {
             },
             {
                 "id": 3,
-                "order": 3,
+                "position": 3,
                 "name": "Test1",
                 "repository": "Nuxio",
                 "collection": null,

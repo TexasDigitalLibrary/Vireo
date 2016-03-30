@@ -1,4 +1,4 @@
-vireo.controller("CustomActionSettingsController", function($controller, $scope, $q, CustomActionSettings, DragAndDropListenerFactory) {
+vireo.controller("CustomActionSettingsController", function($controller, $scope, $q, $timeout, CustomActionSettings, DragAndDropListenerFactory) {
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
 	$scope.customActions = CustomActionSettings.get();
@@ -9,20 +9,12 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 
 	$scope.trashCanId = 'custom-action-trash';
 	
-	// defaults
-	$scope.resetCustomAction = function() {
-		$scope.modalData = { 
-			isStudentVisible: false 
-		};
-	}
+	$scope.ready.then(function() {
 
-	$scope.resetCustomAction();
-
-	$scope.ready.then(function() {		
-		
 		$scope.createCustomAction = function() {
-			CustomActionSettings.create($scope.modalData);
-			$scope.resetCustomAction();
+			CustomActionSettings.create($scope.modalData).then(function() {
+				$scope.resetCustomAction();
+			});
 		};
 		
 		$scope.selectCustomAction = function(index) {
@@ -35,28 +27,40 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 		};
 		
 		$scope.updateCustomAction = function() {
-			CustomActionSettings.update($scope.modalData);
-			$scope.resetCustomAction();
+			CustomActionSettings.update($scope.modalData).then(function() {
+				$scope.resetCustomAction();
+			});
 		};
 		
 		$scope.reorderCustomAction = function(src, dest) {
-			CustomActionSettings.reorder(src, dest);
+			CustomActionSettings.reorder(src, dest).then(function() {
+				$scope.resetCustomAction();
+			});
 		};
 		
 		$scope.removeCustomAction = function(index) {
-			CustomActionSettings.remove(index);
-			$scope.resetCustomAction();
+			CustomActionSettings.remove(index).then(function() {
+				$scope.resetCustomAction();
+			});
 		};
-		
+
 		$scope.dragControlListeners = DragAndDropListenerFactory.buildDragControls({
 			trashId: $scope.trashCanId,
 			dragging: $scope.dragging,
 			select: $scope.selectCustomAction,			
-			list: $scope.customActions.list,
+			model: $scope.customActions,
 			confirm: '#customActionConfirmRemoveModal',
 			reorder: $scope.reorderCustomAction,
 			container: '#custom-action'
 		});
+
+		$scope.resetCustomAction = function() {
+			$scope.modalData = { 
+				isStudentVisible: false 
+			};
+		}
+
+		$scope.resetCustomAction();
 		
 	});
 });

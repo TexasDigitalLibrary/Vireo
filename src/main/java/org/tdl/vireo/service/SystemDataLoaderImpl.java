@@ -147,7 +147,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
         generateSystemDefaults();
 
         logger.info("Initializing default entity controlled vocabulary");
-        entityControlledVocabularyService.init();
+        this.entityControlledVocabularyService.init();
 
         logger.info("Loading Proquest language codes");
         loadProquestLanguageCodes();

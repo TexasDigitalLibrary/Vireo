@@ -55,7 +55,7 @@ public class LanguageController {
      */
     private Map<String, List<Language>> getAll() {
         Map<String, List<Language>> map = new HashMap<String, List<Language>>();
-        map.put("list", languageRepo.findAllByOrderByOrderAsc());
+        map.put("list", languageRepo.findAllByOrderByPositionAsc());
         return map;
     }
     
@@ -187,18 +187,18 @@ public class LanguageController {
     @Auth(role = "ROLE_MANAGER")
     @Transactional
     public ApiResponse removeLanguage(@ApiVariable String indexString) {
-        Integer index = -1;
+        Long index = -1L;
 
         try {
-            index = Integer.parseInt(indexString);
+            index = Long.parseLong(indexString);
         } catch (NumberFormatException nfe) {
-            return new ApiResponse(ERROR, "Id is not a valid language order!");
+            return new ApiResponse(ERROR, "Id is not a valid language position!");
         }
 
         if (index >= 0) {
             languageRepo.remove(index);
         } else {
-            return new ApiResponse(ERROR, "Id is not a valid language order!");
+            return new ApiResponse(ERROR, "Id is not a valid language position!");
         }
 
         logger.info("Deleted language with order " + index);
@@ -221,8 +221,8 @@ public class LanguageController {
     @Auth(role = "ROLE_MANAGER")
     @Transactional
     public ApiResponse reorderLanguage(@ApiVariable String src, @ApiVariable String dest) {
-        Integer intSrc = Integer.parseInt(src);
-        Integer intDest = Integer.parseInt(dest);
+        Long intSrc = Long.parseLong(src);
+        Long intDest = Long.parseLong(dest);
         languageRepo.reorder(intSrc, intDest);
         simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(SUCCESS, getAll()));
         return new ApiResponse(SUCCESS);

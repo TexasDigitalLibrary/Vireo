@@ -30,16 +30,9 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 			delete $scope.monthOptions[$scope.graduationMonths.list[i].month];
 		}
 	};
-	
-	$scope.resetGraduationMonth = function() {
-		$scope.modalData = {};
-		$scope.resetMonthOptions();
-	};
-	
+		
 	$scope.ready.then(function() {
-		
-		$scope.resetGraduationMonth();
-		
+
 		$scope.createGraduationMonth = function() {
 			GraduationMonthRepo.add($scope.modalData).then(function() {
 				$scope.resetGraduationMonth();
@@ -64,7 +57,9 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 		};
 
 		$scope.reorderGraduationMonth = function(src, dest) {
-	    	GraduationMonthRepo.reorder(src, dest);
+	    	GraduationMonthRepo.reorder(src, dest).then(function() {
+				$scope.resetGraduationMonth();
+			});
 		};
 
 		$scope.sortGraduationMonths = function(column) {
@@ -72,7 +67,9 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 				$scope.sortAction = 'sort';
 			}
 			else if($scope.sortAction == 'sort') {
-				GraduationMonthRepo.sort(column);
+				GraduationMonthRepo.sort(column).then(function() {
+					$scope.resetGraduationMonth();
+				});
 				$scope.sortAction = 'confirm';
 			}
 	    	
@@ -83,17 +80,24 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 	    		$scope.resetGraduationMonth();
 	    	});
 		};
-		
+
 		$scope.dragControlListeners = DragAndDropListenerFactory.buildDragControls({
 			trashId: $scope.trashCanId,
 			dragging: $scope.dragging,
 			select: $scope.selectGraduationMonth,			
-			list: $scope.graduationMonths.list,
+			model: $scope.graduationMonths,
 			confirm: '#graduationMonthConfirmRemoveModal',
 			reorder: $scope.reorderGraduationMonth,
 			container: '#graduation-month'
 		});
+
+		$scope.resetGraduationMonth = function() {
+			$scope.modalData = {'name':'', 'subject':'', 'message':''};
+			$scope.resetMonthOptions();
+		};
 		
+		$scope.resetGraduationMonth();
+
 	});	
 
 });
