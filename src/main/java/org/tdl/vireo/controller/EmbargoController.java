@@ -173,22 +173,26 @@ public class EmbargoController {
         }
     }
 
-    @ApiMapping("/reorder/{src}/{dest}")
+    @ApiMapping("/reorder/{guarantorString}/{src}/{dest}")
     @Auth(role = "ROLE_MANAGER")
     @Transactional
-    public ApiResponse reorderEmbargoes(@ApiVariable String src, @ApiVariable String dest) {
-        Long intSrc = Long.parseLong(src);
-        Long intDest = Long.parseLong(dest);
-        embargoRepo.reorder(intSrc, intDest);
-        simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, getAll()));
-        return new ApiResponse(SUCCESS);
+    public ApiResponse reorderEmbargoes(@ApiVariable String guarantorString, @ApiVariable String src, @ApiVariable String dest) {
+        EmbargoGuarantor guarantor = EmbargoGuarantor.fromString(guarantorString);
+        if (guarantor != null) {
+            Long intSrc = Long.parseLong(src);
+            Long intDest = Long.parseLong(dest);
+            embargoRepo.reorder(intSrc, intDest, guarantor);
+            simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, getAll()));
+            return new ApiResponse(SUCCESS);
+        }
+        return new ApiResponse(ERROR);
     }
 
-    @ApiMapping("/sort/{column}/{where}")
+    @ApiMapping("/sort/{guarantorString}/{column}")
     @Auth(role = "ROLE_MANAGER")
     @Transactional
-    public ApiResponse sortEmbargoes(@ApiVariable String column, @ApiVariable String where) {
-        EmbargoGuarantor guarantor = EmbargoGuarantor.fromString(where);
+    public ApiResponse sortEmbargoes(@ApiVariable String guarantorString, @ApiVariable String column) {
+        EmbargoGuarantor guarantor = EmbargoGuarantor.fromString(guarantorString);
         if (guarantor != null) {
             embargoRepo.sort(column, guarantor);
             simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, getAll()));

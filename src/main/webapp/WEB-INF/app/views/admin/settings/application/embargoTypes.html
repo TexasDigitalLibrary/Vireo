@@ -12,12 +12,12 @@
 				list-view='views/directives/dragAndDropTable.html'
 				item-view='views/directives/dragAndDropEmbargo.html'
 				sort-label="default"
-				listeners='dragControlListeners'
+				listeners='dragControlListenersDefault'
 				edit='editEmbargo(index)'
 				sort-column='duration',
 				sort-action='sortAction'
 				sort-action-sort='sortDefault'
-				sort-method='sortEmbargoes(column, where)'>
+				sort-method='sortEmbargoesDefault(column)'>
 			</draganddroplist>
 			<button class="btn btn-default modal-add-btn"
 				data-toggle="modal"
@@ -38,12 +38,12 @@
 				list-view='views/directives/dragAndDropTable.html'
 				item-view='views/directives/dragAndDropEmbargo.html'
 				sort-label="proquest"
-				listeners='dragControlListeners'
+				listeners='dragControlListenersProquest'
 				edit='editEmbargo(index)'
 				sort-column='duration',
 				sort-action='sortAction'
 				sort-action-sort='sortProquest'
-				sort-method='sortEmbargoes(column, where)'>
+				sort-method='sortEmbargoesProquest(column)'>
 			</draganddroplist>
 			<button class="btn btn-default modal-add-btn"
 				data-toggle="modal" 

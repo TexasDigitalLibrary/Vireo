@@ -83,19 +83,19 @@ vireo.service("EmbargoRepo", function(AbstractModel, WsApi, AlertService) {
         });
     };
 	
-	EmbargoRepo.reorder = function(src, dest) {
+	EmbargoRepo.reorder = function(guarantor, src, dest) {
 		return WsApi.fetch({
 			'endpoint': '/private/queue', 
 			'controller': 'settings/embargo', 
-			'method': 'reorder/' + src + '/' + dest
+			'method': 'reorder/' + guarantor + '/' + src + '/' + dest
 		});
 	};
 	
-	EmbargoRepo.sort = function(column, where) {
+	EmbargoRepo.sort = function(guarantor, column) {
 		return WsApi.fetch({
 			'endpoint': '/private/queue', 
 			'controller': 'settings/embargo', 
-			'method': 'sort/' + column + '/' + where
+			'method': 'sort/' + guarantor + '/' + column
 		});
 	};
 

@@ -1,6 +1,6 @@
 
 <div ng-if="sortColumn && scopeValue.length > 0" class="sort-div">
-	<a href="" ng-click="sortMethod({column:sortColumn, where:sortLabel})">
+	<a href="" ng-click="sortMethod({column:sortColumn})">
 		<span class="glyphicon glyphicon-refresh"></span>
 		<span ng-if="sortAction!=sortActionSort"> Sort {{sortLabel}} by {{sortColumn}}</span>
 		<span ng-if="sortAction==sortActionSort"> Are you sure you want to sort all {{sortLabel}} by {{sortColumn}}?</span>

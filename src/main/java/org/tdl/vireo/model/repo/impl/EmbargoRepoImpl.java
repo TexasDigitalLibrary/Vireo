@@ -23,8 +23,8 @@ public class EmbargoRepoImpl implements EmbargoRepoCustom {
     }
     
     @Override
-    public void reorder(Long src, Long dest) {
-        orderedEntityService.reorder(Embargo.class, src, dest);
+    public void reorder(Long src, Long dest, EmbargoGuarantor guarantor) {
+        orderedEntityService.reorder(Embargo.class, src, dest, "guarantor", guarantor);
     }
     
     @Override

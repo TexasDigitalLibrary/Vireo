@@ -27,9 +27,11 @@ public enum EmbargoGuarantor {
      * @return
      */
     public static EmbargoGuarantor fromString(String from) {
-        for(EmbargoGuarantor val : EmbargoGuarantor.values()) {
-            if(val.toString().equals(from.toUpperCase())){
-                return val;
+        if(from != null) {
+            for(EmbargoGuarantor val : EmbargoGuarantor.values()) {
+                if(val.toString().equals(from.toUpperCase())){
+                    return val;
+                }
             }
         }
         return null;

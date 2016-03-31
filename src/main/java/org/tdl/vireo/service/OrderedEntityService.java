@@ -31,15 +31,20 @@ public class OrderedEntityService {
 
     @PersistenceContext
     private EntityManager entityManager;
-
+    
     @SuppressWarnings("unchecked")
-    private void swap(Class<?> clazz, Long here, Long there) {
+    private void swap(Class<?> clazz, Long here, Long there, String whereProp, Object whereVal) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaUpdate<Object> update = (CriteriaUpdate<Object>) cb.createCriteriaUpdate(clazz);
         Root<?> e = update.from((Class<Object>) clazz);
         Path<Long> path = e.get(POSITION_COLUMN_NAME);
         update.set(path, there);
-        update.where(cb.equal(e.get(POSITION_COLUMN_NAME), here));
+        List<Predicate> predicates = new ArrayList<Predicate>();
+        predicates.add(cb.equal(e.get(POSITION_COLUMN_NAME), here));
+        if (whereProp != null && whereVal != null) {
+            predicates.add(cb.equal(e.get(whereProp), whereVal));
+        }
+        update.where(predicates.toArray(new Predicate[] {}));
         entityManager.createQuery(update).executeUpdate();
     }
 
@@ -63,15 +68,19 @@ public class OrderedEntityService {
         return entityManager.createQuery(query).getSingleResult();
     }
 
+    public synchronized void reorder(Class<?> clazz, Long src, Long dest) {
+        this.reorder(clazz, src, dest, null, null);
+    }
+    
     /**
-     * TODO: THIS NEEDS TO findbyid not findbyposition!
+     * 
      * @param clazz
      * @param src
      * @param dest
      */
     @SuppressWarnings("unchecked")
-    public synchronized void reorder(Class<?> clazz, Long src, Long dest) {
-        swap(clazz, src, Long.MAX_VALUE);
+    public synchronized void reorder(Class<?> clazz, Long src, Long dest, String whereProp, Object whereVal) {
+        swap(clazz, src, Long.MAX_VALUE, whereProp, whereVal);
         // increment/decrement position as necessary
         {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -83,6 +92,9 @@ public class OrderedEntityService {
                 List<Predicate> predicates = new ArrayList<Predicate>();
                 predicates.add(cb.greaterThanOrEqualTo(path, dest));
                 predicates.add(cb.lessThan(path, src));
+                if (whereProp != null && whereVal != null) {
+                    predicates.add(cb.equal(e.get(whereProp), whereVal));
+                }
                 update.where(predicates.toArray(new Predicate[] {}));
                 entityManager.createQuery(update).executeUpdate();
             } else if (src < dest) {
@@ -90,13 +102,16 @@ public class OrderedEntityService {
                 List<Predicate> predicates = new ArrayList<Predicate>();
                 predicates.add(cb.greaterThan(path, src));
                 predicates.add(cb.lessThanOrEqualTo(path, dest));
+                if (whereProp != null && whereVal != null) {
+                    predicates.add(cb.equal(e.get(whereProp), whereVal));
+                }
                 update.where(predicates.toArray(new Predicate[] {}));
                 entityManager.createQuery(update).executeUpdate();
             } else {
                 // do nothing
             }
         }
-        swap(clazz, Long.MAX_VALUE, dest);
+        swap(clazz, Long.MAX_VALUE, dest, whereProp, whereVal);
     }
 
     public synchronized void sort(Class<?> clazz, String property) {
