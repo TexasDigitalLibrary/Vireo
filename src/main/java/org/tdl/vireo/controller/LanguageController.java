@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
+import edu.tamu.framework.aspect.annotation.ApiModel;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.aspect.annotation.Data;
@@ -79,43 +80,14 @@ public class LanguageController {
     @ApiMapping("/create")
     @Auth(role = "ROLE_MANAGER")
     @Transactional
-    public ApiResponse createLanguage(@Data String data) {
+    public ApiResponse createLanguage(@ApiModel Language language) {
         
-        JsonNode dataNode;
-        try {
-            dataNode = objectMapper.readTree(data);
-        } catch (IOException e) {
-            return new ApiResponse(ERROR, "Unable to parse update json [" + e.getMessage() + "]");
-        }
-        
-        // TODO: proper validation and response
-
-        Language newLanguage = null;
-
-        String name = null;
-        
-        JsonNode nameNode = dataNode.get("name");
-        if (nameNode != null) {
-            name = nameNode.asText();
-        } else {
-            return new ApiResponse(ERROR, "Name required to create language!");
-        }
-
-        if (name != null) {
-            if(languageRepo.findByName(name) != null) {
-                return new ApiResponse(ERROR, name + " is already a language!");
-            }
-            else {
-                newLanguage = languageRepo.create(name);
-            }
-        } else {
-            return new ApiResponse(ERROR, "Name and language could not be determined from input!");
-        }
+        language = languageRepo.create(language);
 
         // TODO: logging
 
-        logger.info("Created language " + newLanguage.getName());
-
+        logger.info("Creating language " + language.getName());
+        
         simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(SUCCESS, getAll()));
 
         return new ApiResponse(SUCCESS);
