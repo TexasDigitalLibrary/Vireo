@@ -16,6 +16,8 @@ import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.tdl.vireo.model.ControlledVocabulary;
@@ -33,6 +35,8 @@ import org.tdl.vireo.model.repo.LanguageRepo;
  */
 @Service
 public class EntityControlledVocabularyService {
+    
+    private Logger logger = LoggerFactory.getLogger(this.getClass()); 
     
     // default whitelist, Embargo guarantor and Attatchment type
     private static final EntityCVWhitelist[] defaultWhitelistedCV = new EntityCVWhitelist[] {

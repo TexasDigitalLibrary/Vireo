@@ -6,7 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -27,6 +28,8 @@ import edu.tamu.framework.model.ApiResponse;
 @ApiMapping("/organization")
 public class OrganizationController {
     
+    private Logger logger = LoggerFactory.getLogger(this.getClass()); 
+    
     @Autowired
     private OrganizationRepo organizationRepo;
 
@@ -38,8 +41,6 @@ public class OrganizationController {
     
     @Autowired 
     private SimpMessagingTemplate simpMessagingTemplate;
-    
-    private static final Logger logger = Logger.getLogger(OrganizationController.class);
         
     //TODO: Resolve model issues: infinite recursion due to org category relationship. JsonIdentityInfo annotation seems to help
     @ApiMapping("/all")

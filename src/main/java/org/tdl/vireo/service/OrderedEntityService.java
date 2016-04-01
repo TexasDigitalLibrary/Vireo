@@ -23,9 +23,9 @@ import org.tdl.vireo.model.Embargo;
 @Service
 public class OrderedEntityService {
     
+    private Logger logger = LoggerFactory.getLogger(this.getClass()); 
+    
     private static final String POSITION_COLUMN_NAME = "position";
-
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private static final Long one = new Long(1);
 

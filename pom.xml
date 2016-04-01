@@ -18,7 +18,7 @@
 	<parent>
 		<groupId>edu.tamu.weaverframework</groupId>
 		<artifactId>weaver-webservice-parent</artifactId>
-		<version>1.0-SNAPSHOT</version>
+		<version>1.1.0-RC1-SNAPSHOT</version>
 	</parent>
 
 	<properties>
@@ -68,7 +68,7 @@
 		<dependency>
 			<groupId>edu.tamu.weaverframework</groupId>
 			<artifactId>weaver-webservice-core</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>1.1.0-RC1-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Spring standalone JDK tools for JSP runtime compile (to avoid Embedded 
@@ -98,6 +98,7 @@
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
 		<!-- Spring Boot Loader Tools (for FileUtils.sha1Hash()) -->
+		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-loader-tools</artifactId>
@@ -108,6 +109,7 @@
 			<artifactId>tomcat-embed-jasper</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>

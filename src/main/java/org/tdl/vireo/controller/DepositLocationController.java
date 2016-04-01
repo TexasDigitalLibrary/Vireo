@@ -8,7 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -29,7 +30,7 @@ import edu.tamu.framework.model.ApiResponse;
 @ApiMapping("/settings/deposit-location")
 public class DepositLocationController {
 
-    private final Logger logger = Logger.getLogger(this.getClass());
+    private Logger logger = LoggerFactory.getLogger(this.getClass()); 
 
     @Autowired
     private DepositLocationRepo depositLocationRepo;

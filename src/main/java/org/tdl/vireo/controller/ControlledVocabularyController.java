@@ -15,7 +15,8 @@ import java.util.Map;
 import javax.servlet.ServletInputStream;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -49,7 +50,7 @@ import edu.tamu.framework.model.ApiResponse;
 @ApiMapping("/settings/controlled-vocabulary")
 public class ControlledVocabularyController {
 
-    private final Logger logger = Logger.getLogger(this.getClass());
+    private Logger logger = LoggerFactory.getLogger(this.getClass()); 
 
     @Autowired
     private ControlledVocabularyCachingService controlledVocabularyCachingService;

@@ -5,6 +5,8 @@ import org.tdl.vireo.model.Language;
 public interface LanguageRepoCustom {
 
     public Language create(String name);
+    
+    public Language create(Language language);
         
     public void reorder(Long src, Long dest);
     
