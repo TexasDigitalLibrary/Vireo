@@ -8,12 +8,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.tdl.vireo.model.User;
+import org.tdl.vireo.model.repo.UserRepo;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -27,12 +29,11 @@ import edu.tamu.framework.aspect.annotation.Shib;
 import edu.tamu.framework.model.ApiResponse;
 import edu.tamu.framework.model.Credentials;
 
-import org.tdl.vireo.model.User;
-import org.tdl.vireo.model.repo.UserRepo;
-
 @Controller
 @ApiMapping("/user")
 public class UserController {
+    
+    private Logger logger = LoggerFactory.getLogger(this.getClass()); 
     
     @Autowired
     private UserRepo userRepo;
@@ -42,15 +43,10 @@ public class UserController {
     
     @Autowired 
     private SimpMessagingTemplate simpMessagingTemplate;
-    
-    private static final Logger logger = Logger.getLogger(UserController.class);
         
     @ApiMapping("/credentials")
     @Auth
-    public ApiResponse credentials(@Shib Object credentials) {
-        
-        Credentials shib = (Credentials) credentials;
-        
+    public ApiResponse credentials(@Shib Credentials shib) {        
         User user = userRepo.findByEmail(shib.getEmail());
         
         if(user == null) {
@@ -102,20 +98,15 @@ public class UserController {
     @ApiMapping("/settings")
     @Auth(role="ROLE_USER")
     @Transactional
-    public ApiResponse getSettings(@Shib Object credentials) {
-        Credentials shib = (Credentials) credentials;
-        
+    public ApiResponse getSettings(@Shib Credentials shib) {
         User user = userRepo.findByEmail(shib.getEmail());
-           
         return new ApiResponse(SUCCESS, user.getSettings());
     }
     
     @ApiMapping("/settings/{key}")
     @Auth(role="ROLE_USER")
     @Transactional
-    public ApiResponse setSetting(@ApiVariable String key, @Data String data, @Shib Object credentials) {
-        
-        Credentials shib = (Credentials) credentials;
+    public ApiResponse setSetting(@Shib Credentials shib, @ApiVariable String key, @Data String data) {
         
         // This will only work to change your own user settings
         // Email would need to be obtained off of the dataNode to change anothers settings

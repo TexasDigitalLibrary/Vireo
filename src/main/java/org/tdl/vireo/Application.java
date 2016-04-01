@@ -14,9 +14,11 @@ import org.tdl.vireo.config.VireoSpringBanner;
 @SpringBootApplication
 @ComponentScan(basePackages = { "edu.tamu.framework", "edu.tamu.auth", "org.tdl.vireo" })
 public class Application extends SpringBootServletInitializer {
+    
+    private final static Logger logger = LoggerFactory.getLogger(Application.class);
 
     public static String BASE_PATH = "/var/lib/vireo/";
-    final static Logger logger = LoggerFactory.getLogger(Application.class);
+    
 
     /**
      * {@inheritDoc}

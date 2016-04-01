@@ -66,7 +66,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Profile(value = { "!test" })
 public class SystemDataLoaderImpl implements SystemDataLoader {
 
-    final static Logger logger = LoggerFactory.getLogger(SystemDataLoaderImpl.class);
+    private Logger logger = LoggerFactory.getLogger(this.getClass()); 
 
     private static final Pattern SUBJECT_PATTERN = Pattern.compile("\\s*Subject:(.*)[\\n\\r]{1}");
 

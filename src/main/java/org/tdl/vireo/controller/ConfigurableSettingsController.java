@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -24,6 +26,9 @@ import edu.tamu.framework.model.ApiResponse;
 @Controller
 @ApiMapping("/settings/configurable")
 public class ConfigurableSettingsController {
+    
+    private Logger logger = LoggerFactory.getLogger(this.getClass()); 
+    
     @Autowired
     ConfigurationRepo configurationRepo;
 

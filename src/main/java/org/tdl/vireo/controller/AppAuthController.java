@@ -16,7 +16,8 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.mail.MessagingException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -39,6 +40,8 @@ import edu.tamu.framework.model.ApiResponse;
 @Controller
 @ApiMapping("/auth")
 public class AppAuthController extends CoreAuthController {
+    
+    private Logger logger = LoggerFactory.getLogger(this.getClass()); 
 
     private final static String EMAIL_VERIFICATION_TYPE = "EMAIL_VERIFICATION";
     
@@ -58,8 +61,6 @@ public class AppAuthController extends CoreAuthController {
     
     @Autowired
     private EmailTemplateRepo emailTemplateRepo;
-    
-    private static final Logger logger = Logger.getLogger(AppAuthController.class);
     
     @ApiMapping(value = "/register")
     public ApiResponse registration(@Data String data, @Parameters Map<String, String[]> parameters) {
