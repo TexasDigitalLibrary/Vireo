@@ -9,12 +9,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
 import org.tdl.vireo.enums.EmbargoGuarantor;
 import org.tdl.vireo.model.Embargo;
 import org.tdl.vireo.model.repo.EmbargoRepo;
@@ -23,6 +28,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
+import edu.tamu.framework.aspect.annotation.ApiModel;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.aspect.annotation.Data;
@@ -42,7 +48,7 @@ public class EmbargoController {
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
-
+    
     private Map<String, List<Embargo>> getAll() {
         Map<String, List<Embargo>> allRet = new HashMap<String, List<Embargo>>();
         allRet.put("list", embargoRepo.findAllByOrderByGuarantorAscPositionAsc());
@@ -57,26 +63,26 @@ public class EmbargoController {
 
     @ApiMapping("/create")
     @Auth(role = "ROLE_MANAGER")
-    public ApiResponse createEmbargo(@Data String data) {
-
-        JsonNode dataNode;
-        try {
-            dataNode = objectMapper.readTree(data);
-        } catch (IOException e) {
-            return new ApiResponse(ERROR, "Unable to parse update json [" + e.getMessage() + "]");
-        }
+    public ApiResponse createEmbargo(@ApiModel @Valid Embargo embargo, BindingResult result) {
+        
+//        JsonNode dataNode;
+//        try {
+//            dataNode = objectMapper.readTree(data);
+//        } catch (IOException e) {
+//            return new ApiResponse(ERROR, "Unable to parse update json [" + e.getMessage() + "]");
+//        }
 
         // TODO: proper validation and response
-        Embargo incoming = deserializeEmbargo(dataNode);
+//        Embargo incoming = deserializeEmbargo(dataNode);
         
         Embargo newEmbargo;
-        if (incoming.getName() != null && incoming.getDescription() != null && incoming.getGuarantor() != null && incoming.isActive() != null) {
+        if (embargo.getName() != null && embargo.getDescription() != null && embargo.getGuarantor() != null && embargo.isActive() != null) {
             // make sure we won't get a unique constraint violation from the DB
-            Embargo existing = embargoRepo.findByNameAndGuarantorAndIsSystemRequired(incoming.getName(), incoming.getGuarantor(), false);
+            Embargo existing = embargoRepo.findByNameAndGuarantorAndIsSystemRequired(embargo.getName(), embargo.getGuarantor(), false);
             if (existing != null) {
                 return new ApiResponse(ERROR, "Embargo already exists!");
             }
-            newEmbargo = embargoRepo.create(incoming.getName(), incoming.getDescription(), incoming.getDuration(), incoming.getGuarantor(), incoming.isActive());
+            newEmbargo = embargoRepo.create(embargo.getName(), embargo.getDescription(), embargo.getDuration(), embargo.getGuarantor(), embargo.isActive());
         } else {
             return new ApiResponse(ERROR, "Missing required field to create embargo!");
         }
@@ -268,5 +274,21 @@ public class EmbargoController {
         }
         // could end up here if tempNode != null but isNull()
         return null;
-    }   
+    }
+    
+    private class EmbargoValidator implements Validator {
+
+        @Override
+        public boolean supports(Class<?> arg0) {
+            return arg0.equals(Embargo.class);
+        }
+
+        @Override
+        public void validate(Object arg0, Errors arg1) {
+            Embargo embargo = (Embargo)arg0;
+            
+            if (embargo.getName() == null)
+                arg1.reject("name", embargo.getName());
+        }
+    }
 }

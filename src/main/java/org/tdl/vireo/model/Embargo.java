@@ -5,7 +5,9 @@ import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.tdl.vireo.enums.EmbargoGuarantor;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -14,12 +16,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "guarantor", "isSystemRequired" }))
 public class Embargo extends BaseOrderedEntity {
-
+    
     @Column(nullable = false)
+    @NotNull
+    @NotEmpty
     private String name;
     
     @Lob
     @Column(nullable = false)
+    @NotNull
+    @NotEmpty
     private String description;
 
     @Column(nullable = true)
@@ -27,13 +33,16 @@ public class Embargo extends BaseOrderedEntity {
 
     @Column(nullable = false)
     @JsonProperty("isActive")
+    @NotNull
     private Boolean isActive;
 
     @Column(nullable = false)
     @JsonProperty("isSystemRequired")
+    @NotNull
     private Boolean isSystemRequired;
 
     @Column(nullable = false)
+    @NotNull
     private EmbargoGuarantor guarantor;
 
     /**
