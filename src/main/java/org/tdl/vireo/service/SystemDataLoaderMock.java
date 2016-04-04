@@ -59,4 +59,10 @@ public class SystemDataLoaderMock implements SystemDataLoader {
         
     }
 
+    @Override
+    public void generateAllOrganizationCatagories() {
+        // TODO Auto-generated method stub
+        
+    }
+
 }

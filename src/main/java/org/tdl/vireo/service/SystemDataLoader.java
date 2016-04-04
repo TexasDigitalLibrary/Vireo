@@ -17,10 +17,14 @@ public interface SystemDataLoader {
     
     public void generateAllSystemEmailTemplates();
     
+    public void generateAllOrganizationCatagories();
+    
     public List<String> getAllSystemEmailTemplateNames();
     
     public void generateAllSystemEmbargos();
     
     public void generateSystemDefaults();
+
+    void generateAllOrganizationCategories();
         
 }
