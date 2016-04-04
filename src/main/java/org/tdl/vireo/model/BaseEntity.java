@@ -30,9 +30,12 @@ public abstract class BaseEntity implements Comparable<BaseEntity> {
     @Override
     public boolean equals(Object obj) {
         // if we're the same entity type
-        if (obj.getClass().equals(this.getClass())) {
+        if (obj != null && obj.getClass().equals(this.getClass())) {
             // and we have the same Id
-            return ((BaseEntity) obj).getId().equals(this.getId());
+            Long objId = ((BaseEntity) obj).getId();
+            if(objId != null) {
+                return objId.equals(this.getId());
+            }
         }
         return false;
     }
