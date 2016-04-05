@@ -11,7 +11,7 @@ public abstract class BaseEntity implements Comparable<BaseEntity> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
-    
+
     /**
      * @return the id
      */
@@ -33,8 +33,10 @@ public abstract class BaseEntity implements Comparable<BaseEntity> {
         if (obj != null && obj.getClass().equals(this.getClass())) {
             // and we have the same Id
             Long objId = ((BaseEntity) obj).getId();
-            if(objId != null) {
+            if (objId != null) {
                 return objId.equals(this.getId());
+            } else {
+                return objId == this.getId();
             }
         }
         return false;
@@ -46,7 +48,7 @@ public abstract class BaseEntity implements Comparable<BaseEntity> {
         hashCode = 31 * hashCode + (getId() == null ? 0 : getId().hashCode());
         return hashCode;
     }
-    
+
     @Override
     public int compareTo(BaseEntity o) {
         if (this.getId() < o.getId()) {
@@ -56,5 +58,5 @@ public abstract class BaseEntity implements Comparable<BaseEntity> {
         }
         return 0;
     }
-    
+
 }
