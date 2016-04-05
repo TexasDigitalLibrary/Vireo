@@ -4,12 +4,13 @@ import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import static edu.tamu.framework.enums.ApiResponseType.WARNING;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import javax.validation.Valid;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,37 +19,34 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.DataBinder;
 import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
+import org.springframework.validation.ObjectError;
 import org.tdl.vireo.enums.EmbargoGuarantor;
 import org.tdl.vireo.model.Embargo;
 import org.tdl.vireo.model.repo.EmbargoRepo;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiModel;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
-import edu.tamu.framework.aspect.annotation.Data;
 import edu.tamu.framework.model.ApiResponse;
 
 @Controller
 @ApiMapping("/settings/embargo")
 public class EmbargoController {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass()); 
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private EmbargoRepo embargoRepo;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    private SimpMessagingTemplate simpMessagingTemplate;
 
     @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
-    
+    private Validator validator;
+
     private Map<String, List<Embargo>> getAll() {
         Map<String, List<Embargo>> allRet = new HashMap<String, List<Embargo>>();
         allRet.put("list", embargoRepo.findAllByOrderByGuarantorAscPositionAsc());
@@ -63,31 +61,31 @@ public class EmbargoController {
 
     @ApiMapping("/create")
     @Auth(role = "ROLE_MANAGER")
-    public ApiResponse createEmbargo(@ApiModel @Valid Embargo embargo, BindingResult result) {
-        
-//        JsonNode dataNode;
-//        try {
-//            dataNode = objectMapper.readTree(data);
-//        } catch (IOException e) {
-//            return new ApiResponse(ERROR, "Unable to parse update json [" + e.getMessage() + "]");
-//        }
-
-        // TODO: proper validation and response
-//        Embargo incoming = deserializeEmbargo(dataNode);
-        
-        Embargo newEmbargo;
-        if (embargo.getName() != null && embargo.getDescription() != null && embargo.getGuarantor() != null && embargo.isActive() != null) {
-            // make sure we won't get a unique constraint violation from the DB
-            Embargo existing = embargoRepo.findByNameAndGuarantorAndIsSystemRequired(embargo.getName(), embargo.getGuarantor(), false);
-            if (existing != null) {
-                return new ApiResponse(ERROR, "Embargo already exists!");
+    public ApiResponse createEmbargo(@ApiModel Embargo embargo) {
+        // build a DataBinder to be able to get a BindingResult
+        DataBinder binder = new DataBinder(embargo);
+        binder.setValidator(new EmbargoValidator());
+        // validate
+        binder.validate();
+        // get result
+        BindingResult result = binder.getBindingResult();
+        if (result.hasErrors()) {
+            String errorMessage = "";
+            for (ObjectError error : result.getAllErrors()) {
+                errorMessage += error + "\n";
             }
-            newEmbargo = embargoRepo.create(embargo.getName(), embargo.getDescription(), embargo.getDuration(), embargo.getGuarantor(), embargo.isActive());
-        } else {
-            return new ApiResponse(ERROR, "Missing required field to create embargo!");
+            return new ApiResponse(ERROR, "Missing required field(s) to create embargo!::\n" + errorMessage);
         }
+
+        // make sure we won't get a unique constraint violation from the DB
+        Embargo existing = embargoRepo.findByNameAndGuarantorAndIsSystemRequired(embargo.getName(), embargo.getGuarantor(), false);
+        if (existing != null) {
+            return new ApiResponse(ERROR, "Embargo already exists!");
+        }
+        Embargo newEmbargo = embargoRepo.create(embargo.getName(), embargo.getDescription(), embargo.getDuration(), embargo.getGuarantor(), embargo.isActive());
+
         newEmbargo.setPosition(embargoRepo.count());
-        
+
         embargoRepo.save(newEmbargo);
 
         simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, getAll()));
@@ -96,27 +94,32 @@ public class EmbargoController {
 
     @ApiMapping("/update")
     @Auth(role = "ROLE_MANAGER")
-    public ApiResponse updateEmbargo(@Data String data) {
-
-        JsonNode dataNode;
-        try {
-            dataNode = objectMapper.readTree(data);
-        } catch (IOException e) {
-            return new ApiResponse(ERROR, "Unable to parse update json [" + e.getMessage() + "]");
+    public ApiResponse updateEmbargo(@ApiModel Embargo embargo) {
+        // build a DataBinder to be able to get a BindingResult
+        DataBinder binder = new DataBinder(embargo);
+        binder.setValidator(new EmbargoValidator());
+        // validate
+        binder.validate();
+        // get result
+        BindingResult result = binder.getBindingResult();
+        if (result.hasErrors()) {
+            String errorMessage = "";
+            for (ObjectError error : result.getAllErrors()) {
+                errorMessage += error + "\n";
+            }
+            return new ApiResponse(ERROR, "Missing required field(s) to update embargo!::\n" + errorMessage);
         }
 
-        Embargo incoming = deserializeEmbargo(dataNode);
-
         // TODO: proper validation and response
-        if (incoming.getId() != null) {
-            Embargo embargoToUpdate = embargoRepo.findOne(incoming.getId());
-            if(embargoToUpdate != null) {
+        if (embargo.getId() != null) {
+            Embargo embargoToUpdate = embargoRepo.findOne(embargo.getId());
+            if (embargoToUpdate != null) {
                 // make sure we're not editing a system required one
                 if (embargoToUpdate.isSystemRequired()) {
                     Embargo customEmbargo = embargoRepo.findByNameAndGuarantorAndIsSystemRequired(embargoToUpdate.getName(), embargoToUpdate.getGuarantor(), false);
                     // if we're editing a system required one and a custom one with the same name doesn't exist, create it with the incoming parameters
                     if (customEmbargo == null) {
-                        embargoRepo.create(incoming.getName(), incoming.getDescription(), incoming.getDuration(), incoming.getGuarantor(), incoming.isActive());
+                        embargoRepo.create(embargo.getName(), embargo.getDescription(), embargo.getDuration(), embargo.getGuarantor(), embargo.isActive());
                         // TODO: deserialize the JSON before this so we can return a warning to the front-end!
                         simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(WARNING, getAll()));
                         return new ApiResponse(WARNING, "System Embargo cannot be edited, a custom user-copy has been made!");
@@ -126,18 +129,11 @@ public class EmbargoController {
                 }
                 // we're allowed to edit!
                 else {
-                    if(incoming.getName() != null) {
-                        embargoToUpdate.setName(incoming.getName());
-                    }
-                    if (incoming.getDescription() != null) {
-                        embargoToUpdate.setDescription(incoming.getDescription());
-                    }
-                    if (incoming.isActive() != null) {
-                        embargoToUpdate.isActive(incoming.isActive());
-                    }
-                    // duration can be null
-                    embargoToUpdate.setDuration(incoming.getDuration());
-                    
+                    embargoToUpdate.setName(embargo.getName());
+                    embargoToUpdate.setDescription(embargo.getDescription());
+                    embargoToUpdate.isActive(embargo.isActive());
+                    embargoToUpdate.setDuration(embargo.getDuration());
+
                     embargoRepo.save(embargoToUpdate);
                     simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, getAll()));
                     return new ApiResponse(SUCCESS);
@@ -164,8 +160,8 @@ public class EmbargoController {
 
         if (id >= 0) {
             Embargo toRemove = embargoRepo.findOne(id);
-            if(toRemove != null) {
-                if(toRemove.isSystemRequired()) {
+            if (toRemove != null) {
+                if (toRemove.isSystemRequired()) {
                     return new ApiResponse(ERROR, "Cannot remove a System Embargo!");
                 }
                 embargoRepo.delete(toRemove);
@@ -207,76 +203,8 @@ public class EmbargoController {
         }
         return new ApiResponse(ERROR);
     }
-    
-    /**
-     * This can deserialize even partial objects. Missing parameters are defaults for a new Embargo();
-     * 
-     * @param parent
-     * @return
-     */
-    private static Embargo deserializeEmbargo(JsonNode parent) {
-        Embargo ret = new Embargo();
 
-        // check to see if "name" was defined in the data
-        JsonNode tempNode = popNullSafeJsonNode(parent, "id");
-        if (tempNode != null) {
-            // set the name
-            ret.setId(tempNode.asLong());
-        }
-        // check to see if "name" was defined in the data
-        tempNode = popNullSafeJsonNode(parent, "name");
-        if (tempNode != null) {
-            // set the name
-            ret.setName(tempNode.asText());
-        }
-        // check to see if "description" was defined in the data
-        tempNode = popNullSafeJsonNode(parent, "description");
-        if (tempNode != null) {
-            // set the description
-            ret.setDescription(tempNode.asText());
-        }
-        // check to see if "isActive" was defined in the data
-        tempNode = popNullSafeJsonNode(parent, "isActive");
-        if (tempNode != null) {
-            // set the isActive
-            ret.isActive(tempNode.asBoolean());
-        }
-        // check to see if "duration" was defined in the data
-        tempNode = popNullSafeJsonNode(parent, "duration");
-        if (tempNode != null) {
-            // set the duration
-            ret.setDuration(tempNode.asInt());
-        }
-        // check to see if "guarantor" was defined in the data
-        tempNode = popNullSafeJsonNode(parent, "guarantor");
-        if (tempNode != null) {
-            // set the guarantor
-            ret.setGuarantor(EmbargoGuarantor.fromString(tempNode.asText()));
-        }
-
-        return ret;
-    }
-
-    /**
-     * Will make sure that if ${key} exists and its value is null, the entire JsonNode object will be null 
-     * @param parent
-     * @param key
-     * @return
-     */
-    private static JsonNode popNullSafeJsonNode(JsonNode parent, String key) {
-        JsonNode tempNode = parent.get(key);
-        // check to see if ${key} was defined in the data
-        if (tempNode != null) {
-            // check to see if ${key} doesn't have a null value
-            if (!tempNode.isNull()) {
-                return tempNode;
-            }
-        }
-        // could end up here if tempNode != null but isNull()
-        return null;
-    }
-    
-    private class EmbargoValidator implements Validator {
+    private class EmbargoValidator implements org.springframework.validation.Validator {
 
         @Override
         public boolean supports(Class<?> arg0) {
@@ -284,11 +212,12 @@ public class EmbargoController {
         }
 
         @Override
-        public void validate(Object arg0, Errors arg1) {
-            Embargo embargo = (Embargo)arg0;
-            
-            if (embargo.getName() == null)
-                arg1.reject("name", embargo.getName());
+        public void validate(Object target, Errors errors) {
+            Set<ConstraintViolation<Embargo>> constraintViolations = validator.validate((Embargo) target);
+            for (ConstraintViolation<Embargo> violation : constraintViolations) {
+                errors.reject(violation.getPropertyPath().toString(), violation.getMessage());
+                // errors.reject(violation.getConstraintDescriptor().getAnnotation().annotationType().getSimpleName(), violation.getConstraintDescriptor().getAttributes().values().toArray(), violation.getMessage());
+            }
         }
     }
 }
