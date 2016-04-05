@@ -53,26 +53,12 @@ public class EmbargoController {
     @Auth(role = "ROLE_MANAGER")
     public ApiResponse createEmbargo(@ApiValidatedModel Embargo embargo) {
         
+        // if isActive is null this will return errors
         BeanPropertyBindingResult result = embargo.getBindingResult();
         
         if(result.getAllErrors().size() > 0) {
             return new ApiResponse(ERROR, result.getAllErrors());
         }
-        
-//        // build a DataBinder to be able to get a BindingResult
-//        DataBinder binder = new DataBinder(embargo);
-//        binder.setValidator(new EmbargoValidator());
-//        // validate
-//        binder.validate();
-//        // get result
-//        BindingResult result = binder.getBindingResult();
-//        if (result.hasErrors()) {
-//            String errorMessage = "";
-//            for (ObjectError error : result.getAllErrors()) {
-//                errorMessage += error + "\n";
-//            }
-//            return new ApiResponse(ERROR, "Missing required field(s) to create embargo!::\n" + errorMessage);
-//        }
 
         // make sure we won't get a unique constraint violation from the DB
         Embargo existing = embargoRepo.findByNameAndGuarantorAndIsSystemRequired(embargo.getName(), embargo.getGuarantor(), false);
