@@ -52,7 +52,7 @@ public class UserTest extends AbstractEntityTest {
         ContactInfo permanentContactInfo = contactInfoRepo.create(permanentAddress, TEST_PERMANENT_PHONE, TEST_PERMANENT_EMAIL);
         assertEquals("The contact info does not exist!", 2, contactInfoRepo.count());
         
-        OrganizationCategory parentCategory = organizationCategoryRepo.create(TEST_PARENT_CATEGORY_NAME, TEST_PARENT_CATEGORY_LEVEL);
+        OrganizationCategory parentCategory = organizationCategoryRepo.create(TEST_PARENT_CATEGORY_NAME);
         assertEquals("The category does not exist!", 1, organizationCategoryRepo.count());
 
         Organization organization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);

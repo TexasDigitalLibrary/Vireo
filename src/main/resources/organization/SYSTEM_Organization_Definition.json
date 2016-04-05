@@ -1,8 +1,7 @@
 {
 	"name": "Institution",
 	"category": {
-		"name": "System",
-		"level": 0
+		"name": "System"
 	},
 	"workflow": {
 		"name": "System",

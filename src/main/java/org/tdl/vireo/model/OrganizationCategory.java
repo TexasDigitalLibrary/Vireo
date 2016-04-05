@@ -13,14 +13,11 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "level" }) )
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"name"}) )
 public class OrganizationCategory extends BaseEntity {
 
     @Column(nullable = false)
     private String name;
-
-    @Column(nullable = true)
-    private int level;
 
     @OneToMany(cascade = ALL, fetch = LAZY, mappedBy = "category")
     private Set<Organization> organizations;
@@ -34,10 +31,9 @@ public class OrganizationCategory extends BaseEntity {
      * @param name
      * @param level
      */
-    public OrganizationCategory(String name, int level) {
+    public OrganizationCategory(String name) {
         this();
         setName(name);
-        setLevel(level);
     }
 
     /**
@@ -54,22 +50,6 @@ public class OrganizationCategory extends BaseEntity {
      */
     public void setName(String name) {
         this.name = name;
-    }
-
-    /**
-     * 
-     * @return
-     */
-    public int getLevel() {
-        return level;
-    }
-
-    /**
-     * 
-     * @param level
-     */
-    public void setLevel(int level) {
-        this.level = level;
     }
 
     /**

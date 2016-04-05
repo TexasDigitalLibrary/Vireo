@@ -17,6 +17,8 @@ public interface SystemDataLoader {
     
     public void generateAllSystemEmailTemplates();
     
+    public void generateAllOrganizationCategories();
+    
     public List<String> getAllSystemEmailTemplateNames();
     
     public void generateAllSystemEmbargos();

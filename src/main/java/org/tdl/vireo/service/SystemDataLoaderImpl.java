@@ -141,6 +141,9 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
         logger.info("Generating system submission states");
         loadSystemSubmissionStates();
 
+        logger.info("Generating system organization catagories");
+        generateAllOrganizationCategories();
+        
         logger.info("Generating system organization");
         loadSystemOrganization();
 
@@ -153,6 +156,18 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
         logger.info("Loading Proquest language codes");
         loadProquestLanguageCodes();
     }
+    
+    @Override
+    public void generateAllOrganizationCategories() {
+        
+        organizationCategoryRepo.create("College");
+        organizationCategoryRepo.create("Degree");
+        organizationCategoryRepo.create("Department");
+        organizationCategoryRepo.create("Major");
+        organizationCategoryRepo.create("Program");
+        organizationCategoryRepo.create("Administrative Group");
+        
+    }
 
     /**
      * Loads default system organization.
@@ -164,11 +179,11 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
             Organization systemOrganization = objectMapper.readValue(getFileFromResource("classpath:/organization/SYSTEM_Organization_Definition.json"), Organization.class);
 
             // check to see if organization category exists
-            OrganizationCategory category = organizationCategoryRepo.findByNameAndLevel(systemOrganization.getCategory().getName(), systemOrganization.getCategory().getLevel());
+            OrganizationCategory category = organizationCategoryRepo.findByName(systemOrganization.getCategory().getName());
 
             // create organization category if does not already exists
             if (category == null) {
-                category = organizationCategoryRepo.create(systemOrganization.getCategory().getName(), systemOrganization.getCategory().getLevel());
+                category = organizationCategoryRepo.create(systemOrganization.getCategory().getName());
             }
 
             // check to see if organization with organization category exists
@@ -777,4 +792,5 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
         IOUtils.copy(resource.getInputStream(), new FileOutputStream(resourceFile));
         return resourceFile;
     }
+
 }
