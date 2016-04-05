@@ -4,6 +4,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
+
+import org.springframework.validation.BeanPropertyBindingResult;
 
 @MappedSuperclass
 public abstract class BaseEntity implements Comparable<BaseEntity> {
@@ -12,13 +15,16 @@ public abstract class BaseEntity implements Comparable<BaseEntity> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
 
+    @Transient
+    protected BeanPropertyBindingResult bindingResult;
+    
     /**
      * @return the id
      */
     public Long getId() {
         return id;
     }
-
+    
     /**
      * @param id
      *            the id to set
@@ -59,4 +65,18 @@ public abstract class BaseEntity implements Comparable<BaseEntity> {
         return 0;
     }
 
+    /**
+     * @return the bindingResult
+     */
+    public BeanPropertyBindingResult getBindingResult() {
+        return bindingResult;
+    }
+
+    /**
+     * @param bindingResult the bindingResult to set
+     */
+    public void setBindingResult(BeanPropertyBindingResult bindingResult) {
+        this.bindingResult = bindingResult;
+    }
+    
 }

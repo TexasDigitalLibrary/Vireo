@@ -7,10 +7,6 @@ import static edu.tamu.framework.enums.ApiResponseType.WARNING;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,16 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.DataBinder;
-import org.springframework.validation.Errors;
-import org.springframework.validation.ObjectError;
+import org.springframework.validation.BeanPropertyBindingResult;
 import org.tdl.vireo.enums.EmbargoGuarantor;
 import org.tdl.vireo.model.Embargo;
 import org.tdl.vireo.model.repo.EmbargoRepo;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
-import edu.tamu.framework.aspect.annotation.ApiModel;
+import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.model.ApiResponse;
@@ -44,9 +37,6 @@ public class EmbargoController {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
-    @Autowired
-    private Validator validator;
-
     private Map<String, List<Embargo>> getAll() {
         Map<String, List<Embargo>> allRet = new HashMap<String, List<Embargo>>();
         allRet.put("list", embargoRepo.findAllByOrderByGuarantorAscPositionAsc());
@@ -61,21 +51,28 @@ public class EmbargoController {
 
     @ApiMapping("/create")
     @Auth(role = "ROLE_MANAGER")
-    public ApiResponse createEmbargo(@ApiModel Embargo embargo) {
-        // build a DataBinder to be able to get a BindingResult
-        DataBinder binder = new DataBinder(embargo);
-        binder.setValidator(new EmbargoValidator());
-        // validate
-        binder.validate();
-        // get result
-        BindingResult result = binder.getBindingResult();
-        if (result.hasErrors()) {
-            String errorMessage = "";
-            for (ObjectError error : result.getAllErrors()) {
-                errorMessage += error + "\n";
-            }
-            return new ApiResponse(ERROR, "Missing required field(s) to create embargo!::\n" + errorMessage);
+    public ApiResponse createEmbargo(@ApiValidatedModel Embargo embargo) {
+        
+        BeanPropertyBindingResult result = embargo.getBindingResult();
+        
+        if(result.getAllErrors().size() > 0) {
+            return new ApiResponse(ERROR, result.getAllErrors());
         }
+        
+//        // build a DataBinder to be able to get a BindingResult
+//        DataBinder binder = new DataBinder(embargo);
+//        binder.setValidator(new EmbargoValidator());
+//        // validate
+//        binder.validate();
+//        // get result
+//        BindingResult result = binder.getBindingResult();
+//        if (result.hasErrors()) {
+//            String errorMessage = "";
+//            for (ObjectError error : result.getAllErrors()) {
+//                errorMessage += error + "\n";
+//            }
+//            return new ApiResponse(ERROR, "Missing required field(s) to create embargo!::\n" + errorMessage);
+//        }
 
         // make sure we won't get a unique constraint violation from the DB
         Embargo existing = embargoRepo.findByNameAndGuarantorAndIsSystemRequired(embargo.getName(), embargo.getGuarantor(), false);
@@ -94,20 +91,12 @@ public class EmbargoController {
 
     @ApiMapping("/update")
     @Auth(role = "ROLE_MANAGER")
-    public ApiResponse updateEmbargo(@ApiModel Embargo embargo) {
-        // build a DataBinder to be able to get a BindingResult
-        DataBinder binder = new DataBinder(embargo);
-        binder.setValidator(new EmbargoValidator());
-        // validate
-        binder.validate();
-        // get result
-        BindingResult result = binder.getBindingResult();
-        if (result.hasErrors()) {
-            String errorMessage = "";
-            for (ObjectError error : result.getAllErrors()) {
-                errorMessage += error + "\n";
-            }
-            return new ApiResponse(ERROR, "Missing required field(s) to update embargo!::\n" + errorMessage);
+    public ApiResponse updateEmbargo(@ApiValidatedModel Embargo embargo) {
+        
+        BeanPropertyBindingResult result = embargo.getBindingResult();
+        
+        if(result.getAllErrors().size() > 0) {
+            return new ApiResponse(ERROR, result.getAllErrors());
         }
 
         // TODO: proper validation and response
@@ -203,21 +192,5 @@ public class EmbargoController {
         }
         return new ApiResponse(ERROR);
     }
-
-    private class EmbargoValidator implements org.springframework.validation.Validator {
-
-        @Override
-        public boolean supports(Class<?> arg0) {
-            return arg0.equals(Embargo.class);
-        }
-
-        @Override
-        public void validate(Object target, Errors errors) {
-            Set<ConstraintViolation<Embargo>> constraintViolations = validator.validate((Embargo) target);
-            for (ConstraintViolation<Embargo> violation : constraintViolations) {
-                errors.reject(violation.getPropertyPath().toString(), violation.getMessage());
-                // errors.reject(violation.getConstraintDescriptor().getAnnotation().annotationType().getSimpleName(), violation.getConstraintDescriptor().getAttributes().values().toArray(), violation.getMessage());
-            }
-        }
-    }
+    
 }
