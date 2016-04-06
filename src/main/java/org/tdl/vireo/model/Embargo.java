@@ -170,7 +170,8 @@ public class Embargo extends BaseOrderedEntity {
     @Override
     public boolean equals(Object obj) {
         // if we're the same entity and we have the same ID
-        if (super.equals(obj)) {
+        Boolean equalsFromBase = super.equals(obj); 
+        if (equalsFromBase) {
             Embargo embargo = (Embargo) obj;
             // if we are valid and we have the same name, description, duration and guarantor
             if (embargo.getBindingResult() != null && !embargo.getBindingResult().hasErrors() && embargo.getName().equals(this.getName()) && embargo.getDescription().equals(this.getDescription()) && embargo.getGuarantor().equals(this.getGuarantor())) {
@@ -181,6 +182,12 @@ public class Embargo extends BaseOrderedEntity {
                 } else {
                     return tempDuration == this.getDuration();
                 }
+            }
+            // if we're here, incoming embargo didn't contain a binding result! We can't tell if we're a valid embargo or not!
+            // INFO: this is only happening during automated testing
+            else {
+                // let BaseEntity take care of it.
+                return equalsFromBase;
             }
         }
         return false;
