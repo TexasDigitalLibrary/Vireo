@@ -2,6 +2,7 @@ package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
+import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_ERROR;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -20,6 +21,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
+import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
 import edu.tamu.framework.aspect.annotation.Data;
 import edu.tamu.framework.model.ApiResponse;
 
@@ -44,18 +46,15 @@ public class ConfigurableSettingsController {
     }
     
     @ApiMapping("/update")
-    public ApiResponse updateSetting(@Data String data) {
+    public ApiResponse updateSetting(@ApiValidatedModel Configuration configuration) {
         
-        JsonNode dataNode;
-        try {
-            dataNode = objectMapper.readTree(data);
-        } catch (IOException e) {
-            return new ApiResponse(ERROR, "Unable to parse update json ["+e.getMessage()+"]");
+        if(configuration.getBindingResult().hasErrors()) {
+            return new ApiResponse(VALIDATION_ERROR, configuration.getBindingResult().getAll());
         }
         
-        configurationRepo.createOrUpdate(dataNode.get("setting").asText(),dataNode.get("value").asText(),dataNode.get("type").asText());
+        configurationRepo.createOrUpdate(configuration.getName(),configuration.getValue(),configuration.getType());
         
-        this.simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, toConfigPairsMap(configurationRepo.getAllByType(dataNode.get("type").asText()))));
+        this.simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, toConfigPairsMap(configurationRepo.getAllByType(configuration.getType()))));
 
         return new ApiResponse(SUCCESS);
     }

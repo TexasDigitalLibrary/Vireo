@@ -12,14 +12,14 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 		$scope.settings.user  = UserSettings.get();
 
 		UserSettings.ready().then(function() {
-			$scope.updateUserSetting = function(setting, timer) {
+			$scope.updateUserSetting = function(name, timer) {
 				if(Object.keys($scope.userSettingsForm.$error).length) return;
 
 				timer = typeof timer == "undefined" ? 0 : timer;
 
 				if($scope.typingTimer) clearTimeout($scope.typingTimer);
 				$scope.typingTimer = setTimeout(function() {
-					UserSettings.update(setting, $scope.settings.user[setting]);
+					UserSettings.update(name, $scope.settings.user[name]);
 				}, timer);
 			};
 		});
@@ -37,29 +37,29 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 	ConfigurableSettings.ready().then(function() {
 
 		//TODO:  check these update config settings methods for redundancy and clean up.
-		$scope.delayedUpdateConfigurableSettings = function(type,setting) {
+		$scope.delayedUpdateConfigurableSettings = function(type,name) {
 
 			if($scope.pendingUpdate) $timeout.cancel($scope.updateTimeout);
 
 			$scope.pendingUpdate = true;
 
 			$scope.updateTimeout = $timeout(function() {
-				$scope.updateConfigurableSettings(type,setting,$scope.settings.configurable[type][setting]);
+				$scope.updateConfigurableSettings(type,name,$scope.settings.configurable[type][name]);
 				$scope.pendingUpdate = false;
 			}, 500);
 
 		};
 
-		$scope.updateConfigurableSettingsPlainText = function(type,setting) {
-			ConfigurableSettings.update(type,setting,filterHtml($scope.settings.configurable[type][setting]));
+		$scope.updateConfigurableSettingsPlainText = function(type,name) {
+			ConfigurableSettings.update(type,name,filterHtml($scope.settings.configurable[type][name]));
 		};
 
-		$scope.updateConfigurableSettings = function(type,setting) {
-			ConfigurableSettings.update(type,setting,$scope.settings.configurable[type][setting]);
+		$scope.updateConfigurableSettings = function(type,name) {
+			ConfigurableSettings.update(type,name,$scope.settings.configurable[type][name]);
 		};
 
-		$scope.resetConfigurableSettings = function(type,setting) {
-			ConfigurableSettings.reset(type,setting);
+		$scope.resetConfigurableSettings = function(type,name) {
+			ConfigurableSettings.reset(type,name);
 		};
 
 	});	

@@ -5,6 +5,10 @@ import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -18,17 +22,25 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Configuration extends BaseEntity {
 
     @Column(nullable = false, length = 255)
+    @NotNull
+    @Size(max=255)
+    @NotEmpty
     private String name;
 
     @Lob
     @Column(nullable = false)
+    @NotNull
     private String value;
 
     @Column(nullable = false, length = 255)
+    @NotNull
+    @Size(max=255)
+    @NotEmpty
     private String type;
     
     @Column(nullable = false)
     @JsonProperty("isSystemRequired")
+    @NotNull
     private Boolean isSystemRequired;
 
     /**
