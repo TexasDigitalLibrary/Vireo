@@ -52,12 +52,13 @@ vireo.service("ConfigurableSettings", function($sanitize, AbstractModel, WsApi) 
 		});
 	};
 
-	ConfigurableSettings.reset = function(type,name) {
+	ConfigurableSettings.reset = function(type,name, value) {
 		return WsApi.fetch({
-			endpoint:'/private/queue',
-			controller:'settings/configurable',
-			method:'reset',
-			data: {'type':type, 'name':name}
+				endpoint:'/private/queue',
+				controller:'settings/configurable',
+				method:'reset',
+				data: {'type':type, 'name':name,'value': $sanitize(value).replace(new RegExp("&#10;", 'g'), "")
+			}
 		});
 	};
 

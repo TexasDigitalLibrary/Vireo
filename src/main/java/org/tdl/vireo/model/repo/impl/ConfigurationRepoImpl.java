@@ -34,7 +34,6 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
         
         Configuration deletableOverride = configurationRepo.findByNameAndIsSystemRequired(name, false);
         if (deletableOverride != null) {
-            System.out.println(deletableOverride.getName());
             configurationRepo.delete(deletableOverride);
         }
         

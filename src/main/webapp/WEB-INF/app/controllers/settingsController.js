@@ -51,15 +51,24 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 		};
 
 		$scope.updateConfigurableSettingsPlainText = function(type,name) {
-			ConfigurableSettings.update(type,name,filterHtml($scope.settings.configurable[type][name]));
+			ConfigurableSettings.update(type,name,filterHtml($scope.settings.configurable[type][name])).then(function(data) {
+				var errors = angular.fromJson(data.body).payload;
+				console.log(errors)
+			});
 		};
 
 		$scope.updateConfigurableSettings = function(type,name) {
-			ConfigurableSettings.update(type,name,$scope.settings.configurable[type][name]);
+			ConfigurableSettings.update(type,name,$scope.settings.configurable[type][name]).then(function(data) {
+				var errors = angular.fromJson(data.body).payload;
+				console.log(errors)
+			});
 		};
 
 		$scope.resetConfigurableSettings = function(type,name) {
-			ConfigurableSettings.reset(type,name);
+			ConfigurableSettings.reset(type,name,$scope.settings.configurable[type][name]).then(function(data) {
+				var errors = angular.fromJson(data.body).payload;
+				console.log(errors)
+			});
 		};
 
 	});	

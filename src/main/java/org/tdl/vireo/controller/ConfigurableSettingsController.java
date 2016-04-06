@@ -1,10 +1,8 @@
 package org.tdl.vireo.controller;
 
-import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_ERROR;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,12 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
-import edu.tamu.framework.aspect.annotation.Data;
 import edu.tamu.framework.model.ApiResponse;
 
 @Controller
@@ -33,9 +27,6 @@ public class ConfigurableSettingsController {
     
     @Autowired
     ConfigurationRepo configurationRepo;
-
-    @Autowired
-    private ObjectMapper objectMapper;
     
     @Autowired 
     private SimpMessagingTemplate simpMessagingTemplate;
@@ -60,18 +51,15 @@ public class ConfigurableSettingsController {
     }
     
     @ApiMapping("/reset")
-    public ApiResponse resetSetting(@Data String data) {
+    public ApiResponse resetSetting(@ApiValidatedModel Configuration configuration) {
         
-        JsonNode dataNode;
-        try {
-            dataNode = objectMapper.readTree(data);
-        } catch (IOException e) {
-            return new ApiResponse(ERROR, "Unable to parse update json ["+e.getMessage()+"]");
+        if(configuration.getBindingResult().hasErrors()) {
+            return new ApiResponse(VALIDATION_ERROR, configuration.getBindingResult().getAll());
         }     
         
-        configurationRepo.reset(dataNode.get("setting").asText());
+        configurationRepo.reset(configuration.getName());
         
-        this.simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, toConfigPairsMap(configurationRepo.getAllByType(dataNode.get("type").asText()))));
+        this.simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, toConfigPairsMap(configurationRepo.getAllByType(configuration.getType()))));
         
         return new ApiResponse(SUCCESS);
     }
