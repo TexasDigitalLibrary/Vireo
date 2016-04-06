@@ -5,16 +5,22 @@ import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.FetchType.LAZY;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "organization_id" }) )
@@ -27,9 +33,13 @@ public class Workflow extends BaseEntity {
 	private Boolean inheritable;
 	
 	@OneToOne(cascade = { DETACH, REFRESH, MERGE })
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
 	private Organization organization;
 	
 	@OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = false)
 	private List<WorkflowStep> workflowSteps;
 	
 	public Workflow() {

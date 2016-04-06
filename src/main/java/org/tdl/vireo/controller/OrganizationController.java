@@ -1,7 +1,9 @@
 package org.tdl.vireo.controller;
 
+import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,11 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.Organization;
+import org.tdl.vireo.model.OrganizationCategory;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
@@ -41,29 +45,45 @@ public class OrganizationController {
     
     @Autowired 
     private SimpMessagingTemplate simpMessagingTemplate;
+    
+    private Map<String, List<Organization>> getAll() {
+        Map<String, List<Organization>> map = new HashMap<String, List<Organization>>();
+        map.put("list", organizationRepo.findAll());
+        return map;
+    }
         
-    //TODO: Resolve model issues: infinite recursion due to org category relationship. JsonIdentityInfo annotation seems to help
     @ApiMapping("/all")
     @Auth(role="ROLE_MANAGER")
     @Transactional
     public ApiResponse allOrganizations() {
         Map<String,List<Organization>> map = new HashMap<String,List<Organization>>();        
         map.put("list", organizationRepo.findAll());
-        return new ApiResponse(SUCCESS, map);
+        return new ApiResponse(SUCCESS, getAll());
     }
 
     //TODO: Resolve model issues: lazy initialization error when trying to get an Org Cat from the repo
     @ApiMapping("/create")
     @Auth(role="ROLE_MANAGER")
+    @Transactional
     public ApiResponse createOrganization(@Data String data) {
-        Map<String,String> map = new HashMap<String,String>();      
+        
+        JsonNode dataNode = null;
         try {
-            map = objectMapper.readValue(data, new TypeReference<HashMap<String,String>>(){});
-//            System.out.println("cat name: "+organizationCategoryRepo.getOne(1L).getName());
-//            organizationRepo.create(map.get("name").toString(),organizationCategoryRepo.getOne(1L));
-        } catch (Exception e) {
-            e.printStackTrace();
-        } 
-        return new ApiResponse(SUCCESS, map);
+            dataNode = objectMapper.readTree(data);
+        } catch (IOException e) {
+            return new ApiResponse(ERROR, "Unable to parse data json ["+e.getMessage()+"]");
+        }
+        
+        OrganizationCategory newOrganizationCategory = organizationCategoryRepo.findOne(dataNode.get("categoryId").asLong());
+        Organization newOrganizationParent = organizationRepo.findOne(dataNode.get("parentOrganizationId").asLong());
+        
+        Organization newOrganization = organizationRepo.create(dataNode.get("name").asText(), newOrganizationCategory);
+        newOrganizationParent.addChildOrganization(newOrganization);
+        organizationRepo.save(newOrganizationParent);
+        
+        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, getAll()));
+        
+        return new ApiResponse(SUCCESS);
+        
     }
 }

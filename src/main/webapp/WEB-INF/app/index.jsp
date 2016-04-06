@@ -283,6 +283,7 @@
 	    <script src="model/configurableSettingsModel.js"></script>
 	    <script src="model/customActionSettingsModel.js"></script>
 	    <script src="model/organizationRepoModel.js"></script>
+	    <script src="model/organizationCategoryRepo.js"></script>
 	    <script src="model/userSettingsModel.js"></script>
 	    <script src="model/userRepoModel.js"></script>
 	    <script src="model/depositLocationRepoModel.js"></script>
@@ -313,6 +314,7 @@
 	    <script src="controllers/settings/controlledVocabularyRepoController.js"></script>
 	    <script src="controllers/settings/languageRepoController.js"></script> 
 	    <script src="controllers/settings/availableDocumentTypesController.js"></script>
+	    <script src="controllers/sideBars/organizationSideBarController.js"></script>
 	    
 	<!-- endbuild -->
 
