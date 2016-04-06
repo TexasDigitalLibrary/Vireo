@@ -6,7 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 
-import org.springframework.validation.BeanPropertyBindingResult;
+import edu.tamu.framework.validation.ModelBindingResult;
 
 @MappedSuperclass
 public abstract class BaseEntity implements Comparable<BaseEntity> {
@@ -16,7 +16,7 @@ public abstract class BaseEntity implements Comparable<BaseEntity> {
     protected Long id;
 
     @Transient
-    protected BeanPropertyBindingResult bindingResult;
+    protected ModelBindingResult bindingResult;
     
     /**
      * @return the id
@@ -68,14 +68,14 @@ public abstract class BaseEntity implements Comparable<BaseEntity> {
     /**
      * @return the bindingResult
      */
-    public BeanPropertyBindingResult getBindingResult() {
+    public ModelBindingResult getBindingResult() {
         return bindingResult;
     }
 
     /**
      * @param bindingResult the bindingResult to set
      */
-    public void setBindingResult(BeanPropertyBindingResult bindingResult) {
+    public void setBindingResult(ModelBindingResult bindingResult) {
         this.bindingResult = bindingResult;
     }
     

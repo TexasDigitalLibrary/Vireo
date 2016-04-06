@@ -12,13 +12,13 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
-import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.SmartValidator;
 import org.springframework.validation.Validator;
 import org.tdl.vireo.model.BaseEntity;
 
 import edu.tamu.framework.aspect.CoreControllerAspect;
+import edu.tamu.framework.validation.ModelBindingResult;
 
 @Component
 @Aspect
@@ -62,7 +62,7 @@ public class AppControllerAspect extends CoreControllerAspect {
     }
     
     public Object validate(Object object, Annotation ann, String typeName) {
-        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(object, typeName);
+        ModelBindingResult bindingResult = new ModelBindingResult(object, typeName);
         
         Object hints = AnnotationUtils.getValue(ann);
         Object[] validationHints = (hints instanceof Object[] ? (Object[]) hints : new Object[] {hints});

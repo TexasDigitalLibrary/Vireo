@@ -1,10 +1,13 @@
 package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.ERROR;
+import static edu.tamu.framework.enums.ApiResponseType.INFO;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import static edu.tamu.framework.enums.ApiResponseType.WARNING;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.ObjectError;
 import org.tdl.vireo.enums.EmbargoGuarantor;
 import org.tdl.vireo.model.Embargo;
 import org.tdl.vireo.model.repo.EmbargoRepo;
@@ -53,71 +56,71 @@ public class EmbargoController {
     @Auth(role = "ROLE_MANAGER")
     public ApiResponse createEmbargo(@ApiValidatedModel Embargo embargo) {
         
-        // if isActive is null this will return errors
-        BeanPropertyBindingResult result = embargo.getBindingResult();
-        
-        if(result.getAllErrors().size() > 0) {
-            return new ApiResponse(ERROR, result.getAllErrors());
+        // will attach any errors to the BindingResult when validating the incoming embargo
+        embargoRepo.validateCreate(embargo);
+
+        // if errors, with no warnings
+        if (embargo.getBindingResult().hasErrors()) {
+            List<ObjectError> ret = new LinkedList<ObjectError>();
+            ret.addAll(embargo.getBindingResult().getAllErrors());
+            ret.addAll(embargo.getBindingResult().getAllWarnings());
+            ret.addAll(embargo.getBindingResult().getAllInfos());
+            return new ApiResponse(ERROR, Collections.unmodifiableList(ret));
         }
-
-        // make sure we won't get a unique constraint violation from the DB
-        Embargo existing = embargoRepo.findByNameAndGuarantorAndIsSystemRequired(embargo.getName(), embargo.getGuarantor(), false);
-        if (existing != null) {
-            return new ApiResponse(ERROR, "Embargo already exists!");
+        // else if no errors, with warnings
+        else if (!embargo.getBindingResult().hasErrors() && embargo.getBindingResult().hasWarning()) {
+            List<ObjectError> ret = new LinkedList<ObjectError>();
+            ret.addAll(embargo.getBindingResult().getAllWarnings());
+            ret.addAll(embargo.getBindingResult().getAllInfos());
+            simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(WARNING, getAll()));
+            return new ApiResponse(WARNING, Collections.unmodifiableList(ret));
         }
-        Embargo newEmbargo = embargoRepo.create(embargo.getName(), embargo.getDescription(), embargo.getDuration(), embargo.getGuarantor(), embargo.isActive());
-
-        newEmbargo.setPosition(embargoRepo.count());
-
-        embargoRepo.save(newEmbargo);
-
-        simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, getAll()));
-        return new ApiResponse(SUCCESS);
+        // else if no errors, no warnings, maybe infos
+        else {
+            embargoRepo.create(embargo.getName(), embargo.getDescription(), embargo.getDuration(), embargo.getGuarantor(), embargo.isActive());
+            simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, getAll()));
+            // deal with infos being set
+            if(embargo.getBindingResult().hasInfo()){
+                return new ApiResponse(INFO, embargo.getBindingResult().getAllInfos());
+            } else {
+                return new ApiResponse(SUCCESS);
+            }
+        }
     }
 
     @ApiMapping("/update")
     @Auth(role = "ROLE_MANAGER")
     public ApiResponse updateEmbargo(@ApiValidatedModel Embargo embargo) {
+
+        // will attach any errors to the BindingResult when validating the incoming embargo
+        embargoRepo.validateUpdate(embargo);
         
-        BeanPropertyBindingResult result = embargo.getBindingResult();
-        
-        if(result.getAllErrors().size() > 0) {
-            return new ApiResponse(ERROR, result.getAllErrors());
+        // if errors, with no warnings
+        if (embargo.getBindingResult().hasErrors()) {
+            List<ObjectError> ret = new LinkedList<ObjectError>();
+            ret.addAll(embargo.getBindingResult().getAllErrors());
+            ret.addAll(embargo.getBindingResult().getAllWarnings());
+            ret.addAll(embargo.getBindingResult().getAllInfos());
+            return new ApiResponse(ERROR, Collections.unmodifiableList(ret));
         }
-
-        // TODO: proper validation and response
-        if (embargo.getId() != null) {
-            Embargo embargoToUpdate = embargoRepo.findOne(embargo.getId());
-            if (embargoToUpdate != null) {
-                // make sure we're not editing a system required one
-                if (embargoToUpdate.isSystemRequired()) {
-                    Embargo customEmbargo = embargoRepo.findByNameAndGuarantorAndIsSystemRequired(embargoToUpdate.getName(), embargoToUpdate.getGuarantor(), false);
-                    // if we're editing a system required one and a custom one with the same name doesn't exist, create it with the incoming parameters
-                    if (customEmbargo == null) {
-                        embargoRepo.create(embargo.getName(), embargo.getDescription(), embargo.getDuration(), embargo.getGuarantor(), embargo.isActive());
-                        // TODO: deserialize the JSON before this so we can return a warning to the front-end!
-                        simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(WARNING, getAll()));
-                        return new ApiResponse(WARNING, "System Embargo cannot be edited, a custom user-copy has been made!");
-                    } else {
-                        return new ApiResponse(ERROR, "System Embargo cannot be edited and a custom one with this name already exists!");
-                    }
-                }
-                // we're allowed to edit!
-                else {
-                    embargoToUpdate.setName(embargo.getName());
-                    embargoToUpdate.setDescription(embargo.getDescription());
-                    embargoToUpdate.isActive(embargo.isActive());
-                    embargoToUpdate.setDuration(embargo.getDuration());
-
-                    embargoRepo.save(embargoToUpdate);
-                    simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, getAll()));
-                    return new ApiResponse(SUCCESS);
-                }
+        // else if no errors, with warnings
+        else if (!embargo.getBindingResult().hasErrors() && embargo.getBindingResult().hasWarning()) {
+            List<ObjectError> ret = new LinkedList<ObjectError>();
+            ret.addAll(embargo.getBindingResult().getAllWarnings());
+            ret.addAll(embargo.getBindingResult().getAllInfos());
+            simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(WARNING, getAll()));
+            return new ApiResponse(WARNING, Collections.unmodifiableList(ret));
+        }
+        // else if no errors, no warnings, maybe infos
+        else {
+            embargoRepo.save(embargo);
+            simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, getAll()));
+            // deal with infos being set
+            if(embargo.getBindingResult().hasInfo()){
+                return new ApiResponse(INFO, embargo.getBindingResult().getAllInfos());
             } else {
-                return new ApiResponse(ERROR, "Cannot edit Embargo that doesn't exist!");
+                return new ApiResponse(SUCCESS);
             }
-        } else {
-            return new ApiResponse(ERROR, "Cannot edit Embargo, no id was passed in!");
         }
     }
 
@@ -178,5 +181,4 @@ public class EmbargoController {
         }
         return new ApiResponse(ERROR);
     }
-    
 }

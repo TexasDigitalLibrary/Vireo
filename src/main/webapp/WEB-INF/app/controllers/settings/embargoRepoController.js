@@ -44,13 +44,17 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 		};
 		
 		$scope.updateEmbargo = function() {
-			EmbargoRepo.update($scope.modalData).then(function(){
+			EmbargoRepo.update($scope.modalData).then(function(data){
+				var errors = angular.fromJson(data.body).payload;
+				console.log(errors)
 				$scope.resetEmbargo();
 			});
 		};
 		
 		$scope.removeEmbargo = function(id) {
-            EmbargoRepo.remove(id).then(function(){
+            EmbargoRepo.remove(id).then(function(data){
+            	var errors = angular.fromJson(data.body).payload;
+				console.log(errors)
                 $scope.resetEmbargo();
             });
         };
