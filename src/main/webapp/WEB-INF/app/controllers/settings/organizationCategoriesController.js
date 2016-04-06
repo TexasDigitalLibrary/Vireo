@@ -21,9 +21,10 @@ vireo.controller("OrganizationCategoriesController", function ($controller, $sco
     // }
 
     $scope.updateOrganizationCategory = function() {
-      OrganizationCategoryRepo.add($scope.modalData).then(function() {
-        $scope.resetOrganizationCategories();
+      OrganizationCategoryRepoModel.update($scope.modalData).then(function() {
+        console.info('about to reset');
       });
+        $scope.resetOrganizationCategories();
     };
 
     $scope.launchEditModal = function(organizationCategory) {

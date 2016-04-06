@@ -1,7 +1,9 @@
 package org.tdl.vireo.controller;
 
+import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,10 +15,12 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.OrganizationCategory;
+import org.tdl.vireo.model.OrganizationCategory;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
@@ -45,12 +49,58 @@ public class OrganizationCategoryController {
     @ApiMapping("/all")
     @Auth(role="ROLE_MANAGER")
     @Transactional
-    
-    public ApiResponse allOrganizationCategories() {
+    public ApiResponse getAll() {
         Map<String,List<OrganizationCategory>> map = new HashMap<String,List<OrganizationCategory>>();        
         map.put("list", organizationCategoryRepo.findAll());
         return new ApiResponse(SUCCESS, map);
     }
+    
+    @ApiMapping("/update")
+    @Auth(role = "ROLE_MANAGER")
+    @Transactional
+    public ApiResponse updateOrganizationCategory(@Data String data) {
+        
+        JsonNode dataNode;
+        try {
+            dataNode = objectMapper.readTree(data);
+        } catch (IOException e) {
+            return new ApiResponse(ERROR, "Unable to parse update json ["+e.getMessage()+"]");
+        }
+        
+        OrganizationCategory organizationCategory = null;
+                
+        JsonNode id = dataNode.get("id");
+        if(id != null) {
+            Long idLong = -1L;
+            try {
+                idLong = id.asLong();
+            }
+            catch(NumberFormatException nfe) {
+                return new ApiResponse(ERROR, "Id required to update organization category!");
+            }
+            organizationCategory = organizationCategoryRepo.findOne(idLong);           
+        }
+        else {
+            return new ApiResponse(ERROR, "Id required to update organization category!");
+        }
+        
+        JsonNode name = dataNode.get("name");
+        if(name != null) {
+            organizationCategory.setName(name.asText());           
+        }
+        else {
+            return new ApiResponse(ERROR, "Name required to create organization category!");
+        }
+        
+        organizationCategory = organizationCategoryRepo.save(organizationCategory);
+        
+        logger.info("Updated organization category with name " + organizationCategory.getName());
+        
+        simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(SUCCESS, getAll()));
+        
+        return new ApiResponse(SUCCESS);
+    }
+
 
     //TODO: Resolve model issues: lazy initialization error when trying to get an Org Cat from the repo
     // @ApiMapping("/create")
