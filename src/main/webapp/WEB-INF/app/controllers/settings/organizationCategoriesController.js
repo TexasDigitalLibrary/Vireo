@@ -7,6 +7,7 @@ vireo.controller("OrganizationCategoriesController", function ($controller, $sco
 
   console.info('before ready');
   console.info($scope.organizationCategories);
+  console.info('after ready');
   $scope.ready.then(function() {
 
     $scope.resetOrganizationCategories = function() {
@@ -16,27 +17,24 @@ vireo.controller("OrganizationCategoriesController", function ($controller, $sco
     $scope.resetOrganizationCategories();
     console.info($scope);
 
-    // $scope.selectOrganizationCategory = function(index){
-    //   $scope.modalData = $scope.organizationCategories.list[index];
-    // }
-
-    $scope.updateOrganizationCategory = function() {
-      OrganizationCategoryRepoModel.update($scope.modalData).then(function() {
-        console.info('about to reset');
+    $scope.createOrganizationCategory = function() {
+      OrganizationCategoryRepoModel.add($scope.modalData).then(function(){
+        console.info('AAAAA');
+        console.info($scope.organizationCategories);
+        console.info('BBBBB');
       });
         $scope.resetOrganizationCategories();
     };
 
-    $scope.launchEditModal = function(organizationCategory) {
-      $scope.modalData = organizationCategory;
-      angular.element('#organizationCategoryEditModal').modal('show');
+    $scope.updateOrganizationCategory = function() {
+        OrganizationCategoryRepoModel.update($scope.modalData);
+        $scope.resetOrganizationCategories();
     };
 
-    // $scope.updateOrganizationCategory = function() {
-    //   OrganizationCategoryRepo.update($scope.modalData).then(function() {
-    //     $scope.resetOrganizationCategories();
-    //   });
-    // };
+    $scope.launchEditModal = function(organizationCategory) {
+        $scope.modalData = organizationCategory;
+        angular.element('#organizationCategoryEditModal').modal('show');
+    };
 
     // $scope.removeOrganizationCategory = function(index) {
     //   OrganizationCategoryRepo.remove(index).then(function() {

@@ -15,11 +15,9 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.OrganizationCategory;
-import org.tdl.vireo.model.OrganizationCategory;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -53,6 +51,35 @@ public class OrganizationCategoryController {
         Map<String,List<OrganizationCategory>> map = new HashMap<String,List<OrganizationCategory>>();        
         map.put("list", organizationCategoryRepo.findAll());
         return new ApiResponse(SUCCESS, map);
+    }
+    
+    @ApiMapping("/create")
+    @Auth(role = "ROLE_MANAGER")
+    @Transactional
+    public ApiResponse createOrganizationCategory(@Data String data) {
+        
+        JsonNode dataNode;
+        try {
+            dataNode = objectMapper.readTree(data);
+        } catch (IOException e) {
+            return new ApiResponse(ERROR, "Unable to parse update json ["+e.getMessage()+"]");
+        }
+        
+        OrganizationCategory newOrganizationCategory = null;
+                
+        JsonNode name = dataNode.get("name");
+        if(name != null) {
+            newOrganizationCategory = organizationCategoryRepo.create(name.asText());           
+        }
+        else {
+            return new ApiResponse(ERROR, "Name required to create organization category!");
+        }
+        
+        logger.info("Created organization category with name " + newOrganizationCategory.getName());
+        
+        simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(SUCCESS, getAll()));
+        
+        return new ApiResponse(SUCCESS);
     }
     
     @ApiMapping("/update")
