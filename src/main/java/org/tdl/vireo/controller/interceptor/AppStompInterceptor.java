@@ -65,19 +65,19 @@ public class AppStompInterceptor extends CoreStompInterceptor {
             
         } else {
             shib.setRole(user.getRole());
-            if (!user.getNetid().equals(shib.getAllCredentials().get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID))) {
+            if (user.getNetid() != null && !user.getNetid().equals(shib.getAllCredentials().get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID))) {
                 user.setNetid(shib.getAllCredentials().get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID));
             }
-            if (!user.getBirthYear().equals(shib.getAllCredentials().get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR))) {
+            if (user.getBirthYear() != null && !user.getBirthYear().equals(shib.getAllCredentials().get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR))) {
                 user.setBirthYear(Integer.parseInt(shib.getAllCredentials().get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR)));
             }
-            if (!user.getMiddleName().equals(shib.getAllCredentials().get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME))) {
+            if (user.getMiddleName() != null && !user.getMiddleName().equals(shib.getAllCredentials().get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME))) {
                 user.setMiddleName(shib.getAllCredentials().get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME));
             }
-            if (!user.getOrcid().equals(shib.getAllCredentials().get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID))) {
+            if (user.getOrcid() != null && !user.getOrcid().equals(shib.getAllCredentials().get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID))) {
                 user.setOrcid(shib.getAllCredentials().get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID));
             }           
-            if (!user.getUin().equals(shib.getAllCredentials().get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER))) {
+            if (user.getUin() != null && !user.getUin().equals(shib.getAllCredentials().get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER))) {
                 user.setUin(Long.parseLong(shib.getAllCredentials().get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER)));
             }            
             userRepo.save(user);
