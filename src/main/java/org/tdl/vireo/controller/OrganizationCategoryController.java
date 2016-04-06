@@ -47,10 +47,10 @@ public class OrganizationCategoryController {
     @ApiMapping("/all")
     @Auth(role="ROLE_MANAGER")
     @Transactional
-    public ApiResponse getAll() {
+    public Map<String,List<OrganizationCategory>> getAll() {
         Map<String,List<OrganizationCategory>> map = new HashMap<String,List<OrganizationCategory>>();        
         map.put("list", organizationCategoryRepo.findAll());
-        return new ApiResponse(SUCCESS, map);
+        return map;
     }
     
     @ApiMapping("/create")
