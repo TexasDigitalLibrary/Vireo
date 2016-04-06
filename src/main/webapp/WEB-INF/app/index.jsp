@@ -126,6 +126,7 @@
 		</header>
 
 		<alerts types="WARNING, ERROR"></alerts>
+		<alerts second="60" types="VALIDATION_WARNING, VALIDATION_ERROR"></alerts>
 		<alerts seconds="45" channels="auth/register" types="SUCCESS"></alerts>
 				
 		<div class="container-fluid main">			

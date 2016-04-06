@@ -60,12 +60,26 @@ public class EmbargoRepoImpl implements EmbargoRepoCustom {
                     // if we're editing a system required one and a custom one with the same name doesn't exist, create it with the incoming parameters
                     if (customEmbargo == null) {
                         // if we didn't have any pre-existing errors with the incoming embargo (missing properties)
-                        if(!embargo.getBindingResult().hasErrors()) {
-                            // make sure we copy the binding result to the new embargo... for the controller to use if it needs it
-                            ModelBindingResult bindingResult = embargo.getBindingResult();
-                            embargo = embargoRepo.create(embargo.getName(), embargo.getDescription(), embargo.getDuration(), embargo.getGuarantor(), embargo.isActive());
-                            bindingResult.addWarning(new ObjectError("embargo", "System Embargo cannot be edited, a custom user-copy has been made!"));
-                            embargo.setBindingResult(bindingResult);
+                        if (!embargo.getBindingResult().hasErrors()) {
+                            // make sure we're not just trying to disable a system embargo
+                            if (embargoToUpdate.equals(embargo)) {
+                                // if our persisted embargo doesn't have the same isActive() as the one coming in from the front-end
+                                if (!embargo.isActive().equals(embargoToUpdate.isActive())) {
+                                    ModelBindingResult bindingResult = embargo.getBindingResult();
+                                    embargoToUpdate.isActive(embargo.isActive());
+                                    embargo = embargoToUpdate;
+                                    bindingResult.addInfo(new ObjectError("embargo", "System Embargo " + (embargo.isActive() ? "Enabled" : "Disabled") + "!"));
+                                    embargo.setBindingResult(bindingResult);
+                                }
+                            }
+                            // make a copy of the system embargo since we're trying to change it (!equals)
+                            else {
+                                // make sure we copy the binding result to the new embargo... for the controller to use if it needs it
+                                ModelBindingResult bindingResult = embargo.getBindingResult();
+                                embargo = embargoRepo.create(embargo.getName(), embargo.getDescription(), embargo.getDuration(), embargo.getGuarantor(), embargo.isActive());
+                                bindingResult.addWarning(new ObjectError("embargo", "System Embargo cannot be edited, a custom user-copy has been made!"));
+                                embargo.setBindingResult(bindingResult);
+                            }
                         }
                     } else {
                         embargo.getBindingResult().addError(new ObjectError("embargo", "System Embargo cannot be edited and a custom one with this name already exists!"));
@@ -80,7 +94,7 @@ public class EmbargoRepoImpl implements EmbargoRepoCustom {
                     // make sure we copy the binding result to the updated embargo... for the controller to use if it needs it
                     embargoToUpdate.setBindingResult(embargo.getBindingResult());
                     embargo = embargoToUpdate;
-                    
+
                 }
             } else {
                 embargo.getBindingResult().addError(new ObjectError("embargo", "Cannot edit Embargo that doesn't exist!"));

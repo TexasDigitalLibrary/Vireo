@@ -14,14 +14,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "guarantor", "isSystemRequired" }))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "guarantor", "isSystemRequired" }) )
 public class Embargo extends BaseOrderedEntity {
-    
+
     @Column(nullable = false)
     @NotNull
     @NotEmpty
     private String name;
-    
+
     @Lob
     @Column(nullable = false)
     @NotNull
@@ -160,5 +160,29 @@ public class Embargo extends BaseOrderedEntity {
      */
     public void setGuarantor(EmbargoGuarantor guarantor) {
         this.guarantor = guarantor;
+    }
+
+    /**
+     * Assumes that the incoming Object embargo is @Valid
+     * @param obj
+     * @return
+     */
+    @Override
+    public boolean equals(Object obj) {
+        // if we're the same entity and we have the same ID
+        if (super.equals(obj)) {
+            Embargo embargo = (Embargo) obj;
+            // if we are valid and we have the same name, description, duration and guarantor
+            if (embargo.getBindingResult() != null && !embargo.getBindingResult().hasErrors() && embargo.getName().equals(this.getName()) && embargo.getDescription().equals(this.getDescription()) && embargo.getGuarantor().equals(this.getGuarantor())) {
+                // duration is valid as null
+                Integer tempDuration = embargo.getDuration();
+                if(tempDuration != null) {
+                    return tempDuration.equals(this.getDuration());
+                } else {
+                    return tempDuration == this.getDuration();
+                }
+            }
+        }
+        return false;
     }
 }
