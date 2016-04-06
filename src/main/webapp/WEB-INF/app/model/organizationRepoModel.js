@@ -55,6 +55,18 @@ vireo.service("OrganizationRepo", function($route, WsApi, AbstractModel) {
 	
 	};
 
+	OrganizationRepo.getChildren = function(id) {
+
+		var childOrganizationsPromise = WsApi.fetch({
+				endpoint: '/private/queue', 
+				controller: 'organization', 
+				method: 'get-children/' + id,
+		});
+
+		return childOrganizationsPromise;
+	
+	};
+
 	OrganizationRepo.add = function(organization) {
 
 		console.log(organization);

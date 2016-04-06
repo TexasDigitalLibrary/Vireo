@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.OrganizationCategory;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
+import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.aspect.annotation.Data;
 import edu.tamu.framework.model.ApiResponse;
@@ -58,6 +59,17 @@ public class OrganizationController {
     public ApiResponse allOrganizations() {
         Map<String,List<Organization>> map = new HashMap<String,List<Organization>>();        
         map.put("list", organizationRepo.findAll());
+        return new ApiResponse(SUCCESS, getAll());
+    }
+    
+    @ApiMapping("/{parentId}/children")
+    @Auth(role="ROLE_MANAGER")
+    @Transactional
+    public ApiResponse childOrganizations(@ApiVariable String parentId) {
+        
+        Organization parentOrg = organizationRepo.findOne(Long.parseLong(parentId));     
+        Map<String,Set<Organization>> map = new HashMap<String,Set<Organization>>();        
+        map.put("list", parentOrg.getChildrenOrganizations());
         return new ApiResponse(SUCCESS, getAll());
     }
 

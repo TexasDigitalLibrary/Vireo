@@ -17,6 +17,10 @@ vireo.controller("OrganizationSideBarController", function($controller, $scope, 
 			});
 		}
 
+		$scope.findOrganizationCategoryById = function(id) {
+			return OrganizationCategoryRepo.findById(id);
+		}
+
 		setForm = function() {
 			$scope.newOrganization.parentId = "";
 			$scope.newOrganization.categoryId = "";
@@ -24,9 +28,6 @@ vireo.controller("OrganizationSideBarController", function($controller, $scope, 
 		}
 
 		setForm();
-
-		console.log($scope.organizations);
-		console.log($scope.organizationCategories);
 
 	});
 

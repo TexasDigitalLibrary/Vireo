@@ -17,7 +17,7 @@
 	<div class="form-group">
 		<select class="form-control" ng-model="newOrganization.parentId" required>
 			<option value="">Choose Parent</option>
-	    	<option ng-repeat="organization in organizations.list" value="{{organization.id}}">{{organization.name}} ({{organization.category.name}})</option>
+	    	<option ng-repeat="organization in organizations.list" value="{{organization.id}}">{{organization.name}} ({{findOrganizationCategoryById(organization.category).name}})</option>
 	    </select>
 	</div>
 

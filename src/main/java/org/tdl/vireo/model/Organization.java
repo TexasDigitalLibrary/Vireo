@@ -36,12 +36,12 @@ public class Organization extends BaseEntity {
 
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER, optional = false)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = OrganizationCategory.class, property = "id")
-    @JsonIdentityReference(alwaysAsId = false)
+    @JsonIdentityReference(alwaysAsId = true)
     private OrganizationCategory category;
 
     @OneToOne(cascade = ALL, orphanRemoval = true)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = OrganizationCategory.class, property = "id")
-    @JsonIdentityReference(alwaysAsId = false)
+    @JsonIdentityReference(alwaysAsId = true)
     private Workflow workflow;
 
     @ManyToMany(cascade = { DETACH, REFRESH }, fetch = LAZY)
