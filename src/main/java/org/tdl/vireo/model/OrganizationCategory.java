@@ -12,6 +12,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"name"}) )
 public class OrganizationCategory extends BaseEntity {
@@ -20,6 +24,8 @@ public class OrganizationCategory extends BaseEntity {
     private String name;
 
     @OneToMany(cascade = ALL, fetch = LAZY, mappedBy = "category")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     private Set<Organization> organizations;
 
     public OrganizationCategory() {

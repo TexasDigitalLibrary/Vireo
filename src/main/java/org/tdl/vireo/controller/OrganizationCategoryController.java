@@ -45,7 +45,8 @@ public class OrganizationCategoryController {
     @ApiMapping("/all")
     @Auth(role="ROLE_MANAGER")
     @Transactional
-    public ApiResponse allOrganizationCategorys() {
+    
+    public ApiResponse allOrganizationCategories() {
         Map<String,List<OrganizationCategory>> map = new HashMap<String,List<OrganizationCategory>>();        
         map.put("list", organizationCategoryRepo.findAll());
         return new ApiResponse(SUCCESS, map);
