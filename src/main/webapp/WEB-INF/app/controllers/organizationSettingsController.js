@@ -5,26 +5,33 @@ vireo.controller('OrganizationSettingsController', function ($controller, $scope
 
     $scope.organizations = OrganizationRepo.get();
 
-    $scope.panes = [1];
+    $scope.previouseOrganizations = [];
+    $scope.openPanes = [1];
 
     $scope.shiftPanes = function(updatePaneIndex, organization) {
-        
-        $scope.panes[updatePaneIndex] = organization.id;
+
+        $scope.openPanes[updatePaneIndex] = organization.id;
 
         console.log(updatePaneIndex);
 
-        if(updatePaneIndex-1 == 0 && organization.parentOrganizations.length > 0) {               
-            $scope.panes.unshift(organization.parentOrganizations[0].id);
-            $scope.panes.splice(updatePaneIndex+2,1); 
+        if(updatePaneIndex-1 == 0 && organization.parentOrganizations.indexOf(1) == -1 && organization.parentOrganizations.length > 0) {               
+            $scope.openPanes.unshift($scope.previouseOrganizations[0]);
+            $scope.openPanes.splice(updatePaneIndex+2,1);
         }
 
         if(updatePaneIndex-3 >= 0 && organization.childrenOrganizations.length > 0) {
-            $scope.panes.shift();
+            $scope.previouseOrganizations.unshift($scope.openPanes[0]);
+            $scope.openPanes.shift();
         }
+
+        console.log(organization);
+        console.log($scope.previouseOrganizations);
+        console.log($scope.openPanes);
+
     }
 
     $scope.filterByParent = function(parentPaneIndex, organization) {
-    	return organization.parentOrganizations.indexOf($scope.panes[parentPaneIndex]) != -1;
+    	return organization.parentOrganizations.indexOf($scope.openPanes[parentPaneIndex]) != -1;
     }
 
 });
