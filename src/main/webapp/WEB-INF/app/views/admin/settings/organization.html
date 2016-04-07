@@ -22,19 +22,19 @@
 
 			<div class="col-xs-4">
 				<ul>
-					<li ng-repeat="organization in organizations.list" ng-if="filterByParent(organization, panes[0])" ng-click="setNextPanesParent(1, organization.id)">{{organization.name}}</li>
+					<li ng-repeat="organization in organizations.list" ng-if="filterByParent(0, organization)" ng-click="shiftPanes(1, organization)">{{organization.name}}</li>
 				</ul>
 			</div>
 
 			<div class="col-xs-4">
 				<ul>
-					<li ng-repeat="organization in organizations.list" ng-if="filterByParent(organization, panes[1])" ng-click="setNextPanesParent(2, organization.id)">{{organization.name}}</li>
+					<li ng-repeat="organization in organizations.list" ng-if="filterByParent(1, organization)" ng-click="shiftPanes(2, organization)">{{organization.name}}</li>
 				</ul>
 			</div>
 
 			<div class="col-xs-4">
 				<ul>
-					<li ng-repeat="organization in organizations.list" ng-if="filterByParent(organization, panes[2])">{{organization.name}}</li>
+					<li ng-repeat="organization in organizations.list" ng-if="filterByParent(2, organization)" ng-click="shiftPanes(3, organization)">{{organization.name}}</li>
 				</ul>
 			</div>
 
