@@ -44,13 +44,20 @@ public class OrganizationCategoryController {
     @Autowired 
     private SimpMessagingTemplate simpMessagingTemplate;
         
+
+    private Map<String,List<OrganizationCategory>> getAllhelper() {
+        Map<String,List<OrganizationCategory>> map = new HashMap<String,List<OrganizationCategory>>();
+        map.put("list", organizationCategoryRepo.findAll());
+        return map;
+    }
+
     @ApiMapping("/all")
     @Auth(role="ROLE_MANAGER")
     @Transactional
     public ApiResponse getAll() {
         Map<String,List<OrganizationCategory>> map = new HashMap<String,List<OrganizationCategory>>();        
         map.put("list", organizationCategoryRepo.findAll());
-        return new ApiResponse(SUCCESS, map);
+        return new ApiResponse(SUCCESS, getAllhelper());
     }
     
     @ApiMapping("/create")
