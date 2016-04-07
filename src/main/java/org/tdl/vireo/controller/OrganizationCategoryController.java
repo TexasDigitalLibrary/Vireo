@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
+import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.aspect.annotation.Data;
 import edu.tamu.framework.model.ApiResponse;
@@ -45,7 +46,7 @@ public class OrganizationCategoryController {
     private SimpMessagingTemplate simpMessagingTemplate;
         
 
-    private Map<String,List<OrganizationCategory>> getAllhelper() {
+    private Map<String,List<OrganizationCategory>> getAllHelper() {
         Map<String,List<OrganizationCategory>> map = new HashMap<String,List<OrganizationCategory>>();
         map.put("list", organizationCategoryRepo.findAll());
         return map;
@@ -55,10 +56,8 @@ public class OrganizationCategoryController {
     @Auth(role="ROLE_MANAGER")
     @Transactional
     public ApiResponse getAll() {
-        Map<String,List<OrganizationCategory>> map = new HashMap<String,List<OrganizationCategory>>();        
-        map.put("list", organizationCategoryRepo.findAll());
-        return new ApiResponse(SUCCESS, getAllhelper());
-   }
+        return new ApiResponse(SUCCESS, getAllHelper());
+    }
     
     @ApiMapping("/create")
     @Auth(role = "ROLE_MANAGER")
@@ -84,7 +83,7 @@ public class OrganizationCategoryController {
         
         logger.info("Created organization category with name " + newOrganizationCategory.getName());
         
-        simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", getAll());
+        simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(SUCCESS, getAllHelper()));
         
         return new ApiResponse(SUCCESS);
     }
@@ -130,27 +129,35 @@ public class OrganizationCategoryController {
         
         logger.info("Updated organization category with name " + organizationCategory.getName());
         
-        simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(SUCCESS, getAll()));
+        simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(SUCCESS, getAllHelper()) );
         
         return new ApiResponse(SUCCESS);
     }
 
+    @ApiMapping("/remove/{idString}")
+    @Auth(role = "ROLE_MANAGER")
+    @Transactional
+    public ApiResponse removeOrganizationCategory(@ApiVariable String idString) {
+        Long id = -1L;
 
-    //TODO: Resolve model issues: lazy initialization error when trying to get an Org Cat from the repo
-    // @ApiMapping("/create")
-//     @Auth(role="ROLE_MANAGER")
-//     public ApiResponse createOrganization(@Data String data) {
-//         Map<String,String> map = new HashMap<String,String>();      
-//         try {
-//             map = objectMapper.readValue(data, new TypeReference<HashMap<String,String>>(){});
-// //            System.out.println("cat name: "+organizationCategoryRepo.getOne(1L).getName());
-// //            organizationRepo.create(map.get("name").toString(),organizationCategoryRepo.getOne(1L));
-//         } catch (Exception e) {
-//             e.printStackTrace();
-//         } 
-//         return new ApiResponse(SUCCESS, map);
-//     }
+        try {
+            id = Long.parseLong(idString);
+        } catch (NumberFormatException nfe) {
+            return new ApiResponse(ERROR, "Id is not a valid organization category id!");
+        }
 
-
-
+        if (id >= 0) {
+            OrganizationCategory toRemove = organizationCategoryRepo.findOne(id);
+            if(toRemove != null) {
+                organizationCategoryRepo.delete(toRemove);
+                logger.info("Deleted organization category with id " + id);
+                simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(SUCCESS, getAllHelper()));
+                return new ApiResponse(SUCCESS);
+            } else {
+                return new ApiResponse(ERROR, "Id for organization category not found!");
+            }
+        } else {
+            return new ApiResponse(ERROR, "Id is not a valid organization category id!");
+        }
+    }
 }

@@ -78,11 +78,11 @@ vireo.service("OrganizationCategoryRepoModel", function(WsApi, AbstractModel, Al
     });
   };
 
-  OrganizationCategoryRepo.remove = function(index) {
+  OrganizationCategoryRepo.remove = function(organizationCategory) {
     return WsApi.fetch({
       'endpoint': '/private/queue', 
       'controller': 'settings/organization-category', 
-      'method': 'remove/' + index
+      'method': 'remove/' + organizationCategory.id
     });
   };
   

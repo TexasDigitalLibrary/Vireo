@@ -40,11 +40,12 @@ vireo.controller("OrganizationCategoriesController", function ($controller, $sco
         angular.element('#organizationCategoryEditModal').modal('show');
     };
 
-    // $scope.removeOrganizationCategory = function(index) {
-    //   OrganizationCategoryRepo.remove(index).then(function() {
-    //     $scope.resetOrganizationCategories();
-    //   });
-    // };
+    $scope.removeOrganizationCategory = function(index) {
+      OrganizationCategoryRepoModel.remove($scope.modalData).then(function(){
+        $scope.resetOrganizationCategories();
+        console.info($scope.organizationCategories);
+      });
+    };
 
     $scope.dragControlListeners = DragAndDropListenerFactory.buildDragControls({
       trashId: $scope.trashCanId,
