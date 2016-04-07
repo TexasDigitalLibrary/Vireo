@@ -61,17 +61,6 @@ public class OrganizationController {
         map.put("list", organizationRepo.findAll());
         return new ApiResponse(SUCCESS, getAll());
     }
-    
-    @ApiMapping("/{parentId}/children")
-    @Auth(role="ROLE_MANAGER")
-    @Transactional
-    public ApiResponse childOrganizations(@ApiVariable String parentId) {
-        
-        Organization parentOrg = organizationRepo.findOne(Long.parseLong(parentId));     
-        Map<String,Set<Organization>> map = new HashMap<String,Set<Organization>>();        
-        map.put("list", parentOrg.getChildrenOrganizations());
-        return new ApiResponse(SUCCESS, getAll());
-    }
 
     //TODO: Resolve model issues: lazy initialization error when trying to get an Org Cat from the repo
     @ApiMapping("/create")
