@@ -55,7 +55,9 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 		};
 
 		$scope.updateConfigurableSettings = function(type,setting) {
-			ConfigurableSettings.update(type,setting,$scope.settings.configurable[type][setting]);
+			if (typeof $scope.settings.configurable[type] !== undefined && $scope.settings.configurable[type][setting]) {
+				ConfigurableSettings.update(type,setting,$scope.settings.configurable[type][setting]);
+			}
 		};
 
 		$scope.resetConfigurableSettings = function(type,setting) {
