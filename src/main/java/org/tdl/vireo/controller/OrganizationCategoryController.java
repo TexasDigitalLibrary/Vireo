@@ -58,7 +58,7 @@ public class OrganizationCategoryController {
         Map<String,List<OrganizationCategory>> map = new HashMap<String,List<OrganizationCategory>>();        
         map.put("list", organizationCategoryRepo.findAll());
         return new ApiResponse(SUCCESS, getAllhelper());
-    }
+   }
     
     @ApiMapping("/create")
     @Auth(role = "ROLE_MANAGER")
