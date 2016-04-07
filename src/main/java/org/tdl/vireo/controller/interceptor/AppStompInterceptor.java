@@ -49,7 +49,6 @@ public class AppStompInterceptor extends CoreStompInterceptor {
             }
 
             // User newUser =
-            
             user = userRepo.create(shib.getEmail(), shib.getFirstName(), shib.getLastName(), role);
             user.setNetid(shib.getAllCredentials().get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID));
             user.setBirthYear(Integer.parseInt(shib.getAllCredentials().get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR)));
