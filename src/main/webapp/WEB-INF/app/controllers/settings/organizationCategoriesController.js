@@ -5,9 +5,6 @@ vireo.controller("OrganizationCategoriesController", function ($controller, $sco
 
   $scope.ready = $q.all([OrganizationCategoryRepoModel.ready()]);
 
-  console.info('before ready');
-  console.info($scope.organizationCategories);
-  console.info('after ready');
   $scope.ready.then(function() {
 
     $scope.resetOrganizationCategories = function() {
@@ -19,9 +16,6 @@ vireo.controller("OrganizationCategoriesController", function ($controller, $sco
 
     $scope.createOrganizationCategory = function() {
       OrganizationCategoryRepoModel.add($scope.modalData).then(function(){
-        console.info('AAAAA');
-        console.info($scope.organizationCategories);
-        console.info('BBBBB');
       });
         $scope.resetOrganizationCategories();
     };

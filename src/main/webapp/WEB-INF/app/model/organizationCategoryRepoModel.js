@@ -1,89 +1,99 @@
 vireo.service("OrganizationCategoryRepoModel", function(WsApi, AbstractModel, AlertService) {
 
   var self;
-
-  var OrganizationCagtegoryRepo = function(futureData) {
+  
+  var OrganizationCategoryRepo = function(futureData) {
     self = this;
+
     angular.extend(self, AbstractModel);
-    self.unwrap(self, futureData);
+
+    self.unwrap(self, futureData);		
   };
+  
+  OrganizationCategoryRepo.data = null;
+  
+  OrganizationCategoryRepo.listener = null;
 
-  OrganizationCagtegoryRepo.data = null;
-
-  OrganizationCagtegoryRepo.listener = null;
-
-  OrganizationCagtegoryRepo.promise = null;
-
-  OrganizationCagtegoryRepo.set = function(data) {
+  OrganizationCategoryRepo.promise = null;
+  
+  OrganizationCategoryRepo.set = function(data) {
     self.unwrap(self, data);
   };
 
-  OrganizationCagtegoryRepo.get = function() {
+  OrganizationCategoryRepo.get = function() {
 
-    if(OrganizationCagtegoryRepo.promise) return OrganizationCagtegoryRepo.data;
+    if(OrganizationCategoryRepo.promise) return OrganizationCategoryRepo.data;
 
-    var newOrganizationCagtegoryRepoPromise = WsApi.fetch({
-      endpoint: '/private/queue',
-      controller: 'settings/organization-category',
+    var newOrganizationCategoryRepoPromise = WsApi.fetch({
+      endpoint: '/private/queue', 
+      controller: 'settings/organization-category', 
       method: 'all',
     });
 
-    OrganizationCagtegoryRepo.promise = newOrganizationCagtegoryRepoPromise;
+    OrganizationCategoryRepo.promise = newOrganizationCategoryRepoPromise;
 
-    if(OrganizationCagtegoryRepo.data) {
-      newOrganizationCagtegoryRepoPromise.then(function(data) {
-        OrganizationCagtegoryRepo.set(JSON.parse(data.body).payload.HashMap);
+    if(OrganizationCategoryRepo.data) {
+      newOrganizationCategoryRepoPromise.then(function(data) {
+        OrganizationCategoryRepo.set(JSON.parse(data.body).payload.HashMap);
       });
     }
     else {
-      OrganizationCagtegoryRepo.data = new OrganizationCagtegoryRepo(newOrganizationCagtegoryRepoPromise);
+      OrganizationCategoryRepo.data = new OrganizationCategoryRepo(newOrganizationCategoryRepoPromise);	
     }
 
-    OrganizationCagtegoryRepo.listener = WsApi.listen({
-      endpoint: '/channel',
-      controller: 'settings/organization-category',
+    OrganizationCategoryRepo.listener = WsApi.listen({
+      endpoint: '/channel', 
+      controller: 'settings/organization-category', 
       method: '',
     });
+    
+    OrganizationCategoryRepo.set(OrganizationCategoryRepo.listener);
 
-    OrganizationCagtegoryRepo.set(OrganizationCagtegoryRepo.listener);
-
-    return OrganizationCagtegoryRepo.data;
+    return OrganizationCategoryRepo.data;	
   };
 
-  OrganizationCagtegoryRepo.add = function(organizationCategory) {
+  OrganizationCategoryRepo.add = function(organizationCategory) {
     return WsApi.fetch({
-      'endpoint': '/private/queue',
-      'controller': 'settings/organization-category',
+      'endpoint': '/private/queue', 
+      'controller': 'settings/organization-category', 
       'method': 'create',
       'data': organizationCategory
     });
   };
 
-  OrganizationCagtegoryRepo.update = function(organizationCategory) {
+  OrganizationCategoryRepo.update = function(organizationCategory) {
     return WsApi.fetch({
-      'endpoint': '/private/queue',
-      'controller': 'settings/organization-category',
+      'endpoint': '/private/queue', 
+      'controller': 'settings/organization-category', 
       'method': 'update',
       'data': organizationCategory
     });
   };
 
-  OrganizationCagtegoryRepo.remove = function(index) {
+  OrganizationCategoryRepo.reorder = function(src, dest) {
     return WsApi.fetch({
-      'endpoint': '/private/queue',
-      'controller': 'settings/organization-category',
-      'method': 'remove/' + index
+      'endpoint': '/private/queue', 
+      'controller': 'settings/organization-category', 
+      'method': 'reorder/' + src + '/' + dest
     });
   };
 
-  OrganizationCagtegoryRepo.ready = function() {
-    return OrganizationCagtegoryRepo.promise;
+  OrganizationCategoryRepo.remove = function(index) {
+    return WsApi.fetch({
+      'endpoint': '/private/queue', 
+      'controller': 'settings/organization-category', 
+      'method': 'remove/' + index
+    });
+  };
+  
+  OrganizationCategoryRepo.ready = function() {
+    return OrganizationCategoryRepo.promise;
   };
 
-  OrganizationCagtegoryRepo.listen = function() {
-    return OrganizationCagtegoryRepo.listener;
+  OrganizationCategoryRepo.listen = function() {
+    return OrganizationCategoryRepo.listener;
   };
-
-  return OrganizationCagtegoryRepo;
-
+  
+  return OrganizationCategoryRepo;
+  
 });

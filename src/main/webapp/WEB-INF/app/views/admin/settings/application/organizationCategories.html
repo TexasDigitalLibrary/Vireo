@@ -7,7 +7,6 @@
       Add Organization Category
     </button>
 
-    {{organizationCategories.list}}
     <ol>
       <li ng-repeat="organizationCategory in organizationCategories.list" ng-mouseenter="isMouseHover=true" ng-mouseleave="isMouseHover=false">
         <span>{{organizationCategory.name}}</span>

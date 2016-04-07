@@ -77,7 +77,7 @@ public class OrganizationCategoryController {
         
         logger.info("Created organization category with name " + newOrganizationCategory.getName());
         
-        simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(SUCCESS, getAll()));
+        simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", getAll());
         
         return new ApiResponse(SUCCESS);
     }
