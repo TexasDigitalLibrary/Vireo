@@ -48,13 +48,13 @@ public class CustomActionSettingsController {
     
     @ApiMapping("/create")
     public ApiResponse createCustomAction(@ApiValidatedModel CustomActionDefinition customActionDefinition) {
-        if(customActionDefinition.getBindingResult().hasErrors()){
-            return new ApiResponse(VALIDATION_ERROR, customActionDefinition.getBindingResult().getAll());
+        //TODO: this needs to go in repo.validateCreate() -- VIR-201
+        if(!customActionDefinition.getBindingResult().hasErrors() && customActionDefinitionRepo.findByLabel(customActionDefinition.getLabel()) != null){
+            customActionDefinition.getBindingResult().addError(new ObjectError("customActionDefinition", customActionDefinition.getLabel() + " is already a custom action!"));
         }
         
-        //TODO: this needs to go in repo.validateCreate() -- VIR-201
-        if(customActionDefinitionRepo.findByLabel(customActionDefinition.getLabel()) != null) {
-            return new ApiResponse(VALIDATION_ERROR, customActionDefinition.getLabel() + " is already a custom action!");
+        if(customActionDefinition.getBindingResult().hasErrors()){
+            return new ApiResponse(VALIDATION_ERROR, customActionDefinition.getBindingResult().getAll());
         }
         
         customActionDefinitionRepo.create(customActionDefinition.getLabel(), customActionDefinition.isStudentVisible());
