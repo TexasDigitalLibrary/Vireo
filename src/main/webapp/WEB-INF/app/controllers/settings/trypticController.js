@@ -6,7 +6,6 @@ vireo.controller("TrypticController", function ($controller, $scope, $q, Organiz
 	$scope.ready.then(function() {
       
 		$scope.resetPanels = function() {
-			$scope.selectedOrganization;
         	$scope.activePanel;
 	        $scope.panelHistory = [];
 	        $scope.openPanels = [new PanelEntry($scope.organizations.list[0])];
@@ -20,7 +19,8 @@ vireo.controller("TrypticController", function ($controller, $scope, $q, Organiz
             var isFirstPanel = panelIndex == 0;
             var isLastPanel = panelIndex == 2;
 
-            $scope.selectedOrganization = organization;
+            $scope.setSelectedOrganization(organization);
+  
             $scope.openPanels[panelIndex].selectedOrganization = organization;
 
             if(orgHasChildren || !isLastPanel) {

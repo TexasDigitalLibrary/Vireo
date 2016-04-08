@@ -930,6 +930,32 @@ footer a, footer li, footer p {
   max-width: 400px;
 }
 
+/************************
+* ORGANIZARION/WORKFLOW *
+*************************/
+
+.tryptic {}
+
+.tryptic-navigation {}
+
+.tryptic-navigation .breadcrumb {
+  width: auto;
+}
+
+.tryptic-navigation .down-arrow {
+  display: none;
+  width: 1px;
+  margin: auto;
+}
+
+.tryptic-navigation breadcrumb {}
+
+.tryptic-panels {}
+
+.tryptic-panel {}
+
+.tryptic-panel-entry {}
+
 /*************
 * DIRECTIVES *
 **************/

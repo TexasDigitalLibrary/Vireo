@@ -1,8 +1,8 @@
 <div class="row admin-settings" ng-controller="OrganizationSettingsController">
-	<div class="col-xs-12" ng-controller="TrypticController">
+	<div class="col-xs-12 tryptic" ng-controller="TrypticController">
 		<h1>ORGANIZATIONS AND WORKFLOWS</h1>
-		<div class="row">
-			<div class="col-xs-3" style="padding-right: 0px; padding-left: 0px;">
+		<div class="row tryptic-navigation">
+			<div class="row">
 				<div class="col-xs-11">
 					<ul class="breadcrumb">
 						<li ng-click="resetPanels()"><a href="#">Vireo Institution</a></li>
@@ -12,15 +12,16 @@
 					</ul>
 				</div>
 			</div>
-		</div>
-		<div class="row">
-			<div class="col-xs-3">
-				<div style="padding-bottom: 10px; padding-top: 0px; padding-left: 40%; padding-right: 0px;">
+			<div class="row">
+				<div class="col-xs-3">
+					<div class="down-arrow">
 						<span class="glyphicon glyphicon-arrow-down"></span>
+					</div>
 				</div>
 			</div>
 		</div>
-		<div class="row" class="tryptic">
+
+		<div class="row tryptic-panels">
 			<div class="col-xs-4" ng-repeat="panel in [0,1,2]">
 				<ul ng-click="setActivePanel(panel)" ng-class="{'active': panelIsActive(panel)}" class="tryptic-panel">
 					<li ng-repeat="organization in organizations.list" 
@@ -34,6 +35,7 @@
 			</div>
 		</div>
 	</div>
+
 </div>
 
 
