@@ -20,7 +20,7 @@ vireo.controller("TrypticController", function ($controller, $scope, $q, Organiz
             var isFirstPanel = panelIndex == 0;
             var isLastPanel = panelIndex == 2;
 
-            $scope.selectedOrganization; = organization;
+            $scope.selectedOrganization = organization;
             $scope.openPanels[panelIndex].selectedOrganization = organization;
 
             if(orgHasChildren || !isLastPanel) {
