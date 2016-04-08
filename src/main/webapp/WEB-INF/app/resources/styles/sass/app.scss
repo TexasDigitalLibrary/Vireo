@@ -936,23 +936,66 @@ footer a, footer li, footer p {
 
 .tryptic {}
 
+.tryptic .panel-heading span {
+  text-transform: none;
+}
+
+.tryptic .panel-heading
+
 .tryptic-navigation {}
 
 .tryptic-navigation .breadcrumb {
-  width: auto;
+  display: inline-block;
+  margin-left: 15px;
 }
 
-.tryptic-navigation .down-arrow {
-  display: none;
-  width: 1px;
-  margin: auto;
+.tryptic-navigation .breadcrumb>li:last-child {
+  font-weight: bolder;
+  display: block;
+}
+
+.tryptic-navigation .breadcrumb .glyphicon-arrow-down {
+  tvertical-align: middle;
 }
 
 .tryptic-navigation breadcrumb {}
 
 .tryptic-panels {}
 
+.tryptic-panels .glyphicon-arrow-right {
+  display: none;
+}
+
+.tryptic-panel.active .glyphicon-arrow-right,
+.tryptic-panel.previously-active .glyphicon-arrow-right {
+  display: inline-block;
+}
+
 .tryptic-panel {}
+
+.tryptic-panel.active .panel-heading {
+  color: white;
+  background: rgb(31, 58, 71);
+  background: -moz-linear-gradient linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
+  background: -webkit-linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
+  background: -ms-linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
+  background: linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
+}
+
+.tryptic-panel.previously-active .panel-heading {
+  color: white;
+  background: rgb(31, 58, 71);
+  background: -moz-linear-gradient linear-gradient(to right, rgba(146, 170, 156, 0.95), rgba(173, 189, 170, 0.95));
+  background: -webkit-linear-gradient(to right, rgba(146, 170, 156, 0.95), rgba(173, 189, 170, 0.95));
+  background: -ms-linear-gradient(to right, rgba(146, 170, 156, 0.95), rgba(173, 189, 170, 0.95));
+  background: linear-gradient(to right, rgba(146, 170, 156, 0.95), rgba(173, 189, 170, 0.95));
+}
+
+.tryptic .down-arrow {
+  width: 1px;
+  height: 25px;
+  margin: auto;
+}
 
 .tryptic-panel-entry {}
 

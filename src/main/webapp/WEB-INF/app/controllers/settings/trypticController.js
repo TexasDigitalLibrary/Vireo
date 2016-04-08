@@ -1,4 +1,4 @@
-vireo.controller("TrypticController", function ($controller, $scope, $q, OrganizationRepo) {
+vireo.controller("TrypticController", function ($controller, $scope, $q, OrganizationRepo, OrganizationCategoryRepo) {
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
 	$scope.ready = $q.all([OrganizationRepo.ready()]);
@@ -20,8 +20,16 @@ vireo.controller("TrypticController", function ($controller, $scope, $q, Organiz
             var isLastPanel = panelIndex == 2;
 
             $scope.setSelectedOrganization(organization);
-  
+
             $scope.openPanels[panelIndex].selectedOrganization = organization;
+
+    		for(var i in $scope.openPanels) {
+    			if($scope.openPanels[i].active) $scope.openPanels[i].previouslyActive = true;
+    			$scope.openPanels[i].active = false;
+    		}
+
+    		$scope.openPanels[panelIndex].previouslyActive = false;
+            $scope.openPanels[panelIndex].active = true;
 
             if(orgHasChildren || !isLastPanel) {
             	$scope.openPanels[nextPanelIndex] = new PanelEntry(organization);  
@@ -60,17 +68,52 @@ vireo.controller("TrypticController", function ($controller, $scope, $q, Organiz
         	
         }
 
+        $scope.panelHasChildren = function(panel) {
+
+        	if(!$scope.openPanels[panel]) return false;
+
+            var parentOrganization = $scope.openPanels[panel].parentOrganization;
+            for(var i in $scope.organizations.list) {
+            	var organization = $scope.organizations.list[i];
+            	if(organization.id ==  parentOrganization.id) {
+            		if(organization.childrenOrganizations.length > 0) {
+	            		return true;
+	            	}
+	            	return false;
+            	} 
+            }
+        	return false;
+        }
+
+        $scope.getPanel = function(panel) {
+        	return  $scope.openPanels[panel];
+        }
+
+        $scope.getPanelCatagories = function(panel) {
+        	return  $scope.getPanel(panel).organizationCatagories.filter(function(item, pos) {
+			    return $scope.openPanels[panel].organizationCatagories.indexOf(item) == pos;
+			});
+        }
+
         $scope.filterPanelByParent = function(parentPanelIndex, organization) {
-            if(!$scope.openPanels[parentPanelIndex]) return false;
-            return organization.parentOrganizations.indexOf($scope.openPanels[parentPanelIndex].parentOrganization.id) != -1;
+
+        	var panel = $scope.openPanels[parentPanelIndex];
+
+            if(!panel) return false;
+
+            var panelParentOrganization = $scope.openPanels[parentPanelIndex].parentOrganization
+
+            if(organization.parentOrganizations.indexOf(panelParentOrganization.id) != -1) {
+            	panel.organizationCatagories.push(OrganizationCategoryRepo.findById(organization.category))
+            	return true;
+            } 
+            
+            return false;
+            
         }
 
-        $scope.setActivePanel = function(panel) {
-        	$scope.activePanel = panel;
-        }
-
-        $scope.panelIsActive = function(panel) {
-        	return panel == $scope.activePanel;
+        $scope.getCatagoryById = function(id) {
+        	return OrganizationCategoryRepo.findById(id);
         }
 
         $scope.entryIsisSelected = function(parentPanelIndex, organization) {
@@ -88,6 +131,7 @@ var PanelEntry = function(parentOrganization) {
     this.parentOrganization = parentOrganization;
     this.organizationCatagories = [];
     this.selectedOrganization;
+    this.previouslyActive = false;
     this.active = false;
     return this;
 }

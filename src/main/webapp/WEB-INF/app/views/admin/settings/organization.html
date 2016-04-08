@@ -5,37 +5,52 @@
 			<div class="row">
 				<div class="col-xs-11">
 					<ul class="breadcrumb">
-						<li ng-click="resetPanels()"><a href="#">Vireo Institution</a></li>
+						<li ng-click="resetPanels()"><a href="#">Vireo Institution</a> <span ng-if="panelHistory.length < 1" class="glyphicon glyphicon-arrow-down"></span></li>
 						<li ng-repeat="panelEntry in panelHistory" ng-click="rewindPanels(panelEntry)">
-							<a href="#">{{panelEntry.selectedOrganization.name}}</a>
+							<a href="#">{{panelEntry.selectedOrganization.name}} ({{getCatagoryById(panelEntry.selectedOrganization.category).name}})</a>
+							<span ng-if="$last" class="glyphicon glyphicon-arrow-down"></span>
 						</li>
 					</ul>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col-xs-3">
-					<div class="down-arrow">
-						<span class="glyphicon glyphicon-arrow-down"></span>
-					</div>
-				</div>
-			</div>
+		</div>
+
+		<div class="row">
+			
 		</div>
 
 		<div class="row tryptic-panels">
-			<div class="col-xs-4" ng-repeat="panel in [0,1,2]">
-				<ul ng-click="setActivePanel(panel)" ng-class="{'active': panelIsActive(panel)}" class="tryptic-panel">
-					<li ng-repeat="organization in organizations.list" 
-						ng-if="filterPanelByParent(panel, organization)" 
-						ng-click="shiftPanels(panel, organization);"
-						ng-class="{'selected': entryIsSelected(panel, organization)}"
-						class="tryptic-panel-entry">
-						{{organization.name}}
-					</li>
-				</ul>
+
+			<div class="col-xs-4" ng-repeat="panel in [0,1,2]" ng-if="panelHasChildren(panel)">
+
+				<div class="panel panel-default tryptic-panel"
+					 ng-class="{'active': getPanel(panel).active, 'previously-active': getPanel(panel).previouslyActive,}"
+					 ng-click="setActivePanel(panel)">
+
+					<div class="panel-heading"> 
+						<span ng-repeat="catagory in getPanelCatagories(panel)">{{catagory.name}} <span ng-if="!$last"> / </span> </span>
+						<span 	class="glyphicon glyphicon-arrow-right pull-right"
+								ng-if="selectedOrganization.childrenOrganizations.length > 0 || getPanel(panel).previouslyActive">
+						</span> 
+					</div>
+
+					<div class="panel-body">
+						<ul class="list-unstyled">
+							<li ng-repeat="organization in organizations.list" 
+								ng-if="filterPanelByParent(panel, organization)" 
+								ng-click="shiftPanels(panel, organization);"
+								ng-class="{'selected': entryIsSelected(panel, organization)}"
+								class="tryptic-panel-entry">
+								{{organization.name}}
+							</li>
+						</ul>
+					</div>
+
+				</div>
+				
 			</div>
 		</div>
 	</div>
-
 </div>
 
 
