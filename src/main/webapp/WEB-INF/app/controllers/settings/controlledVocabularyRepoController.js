@@ -22,7 +22,7 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 	    	var defaultIndex = 0;
 			for(var i in $scope.controlledVocabulary.list) {
 				var cv = $scope.controlledVocabulary.list[i];
-				if(cv.entityProperty == false) {
+				if(cv.isEntityProperty == false) {
 					defaultIndex = i;
 					break;
 				}
@@ -33,7 +33,10 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 		$scope.resetControlledVocabulary = function() {
 
 			if($scope.uploadAction == 'process') {
-				ControlledVocabularyRepo.cancel($scope.uploadModalData.cv.name)
+				ControlledVocabularyRepo.cancel($scope.uploadModalData.cv.name).then(function(data){
+				    var errors = angular.fromJson(data.body).payload;
+	                console.log(errors);
+				});
 				$scope.uploadAction = 'confirm';
 				$scope.uploadStatus();
 			}
@@ -53,7 +56,9 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 
 		$scope.resetControlledVocabulary();
 
-		ControlledVocabularyRepo.listenForChange().then(null, null, function() {
+		ControlledVocabularyRepo.listenForChange().then(null, null, function(data) {
+		    var errors = angular.fromJson(data.body).payload;
+            console.log(errors);
 			if($scope.uploadAction != "process") {
 				$scope.uploadStatus();
 				$scope.uploadModalData = {
@@ -63,7 +68,9 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 		});
 		
 		$scope.createControlledVocabulary = function() {
-			ControlledVocabularyRepo.add($scope.modalData).then(function() {
+			ControlledVocabularyRepo.add($scope.modalData).then(function(data) {
+			    var errors = angular.fromJson(data.body).payload;
+                console.log(errors);
 				$scope.resetControlledVocabulary();
 			});
 		};
@@ -71,6 +78,7 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 		$scope.uploadStatus = function() {
 			if($scope.uploadModalData.cv != undefined) {
 				ControlledVocabularyRepo.status($scope.uploadModalData.cv.name).then(function(response) {
+				    //TODO: validation response?
 					$scope.uploadModalData.cv.inProgress = angular.fromJson(response.body).payload.Boolean;
 				});
 			}
@@ -86,13 +94,17 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 		};
 		
 		$scope.updateControlledVocabulary = function() {
-			ControlledVocabularyRepo.update($scope.modalData).then(function() {
+			ControlledVocabularyRepo.update($scope.modalData).then(function(data) {
+			    var errors = angular.fromJson(data.body).payload;
+                console.log(errors);
 				$scope.resetControlledVocabulary();
 			});
 		};
 
 		$scope.reorderControlledVocabulary = function(src, dest) {
-	    	ControlledVocabularyRepo.reorder(src, dest).then(function() {
+	    	ControlledVocabularyRepo.reorder(src, dest).then(function(data) {
+	    	    var errors = angular.fromJson(data.body).payload;
+                console.log(errors);
 				$scope.resetControlledVocabulary();
 			});
 		};
@@ -102,15 +114,19 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 				$scope.sortAction = 'sort';
 			}
 			else if($scope.sortAction == 'sort') {
-				ControlledVocabularyRepo.sort(column).then(function() {
-				$scope.resetControlledVocabulary();
+				ControlledVocabularyRepo.sort(column).then(function(data) {
+				    var errors = angular.fromJson(data.body).payload;
+	                console.log(errors);
+	                $scope.resetControlledVocabulary();
 			});
 				$scope.sortAction = 'confirm';
 			}	    	
 		};
 
 		$scope.removeControlledVocabulary = function(index) {
-	    	ControlledVocabularyRepo.remove(index).then(function() {
+	    	ControlledVocabularyRepo.remove(index).then(function(data) {
+	    	    var errors = angular.fromJson(data.body).payload;
+                console.log(errors);
 				$scope.resetControlledVocabulary();
 			});
 		};
@@ -120,6 +136,7 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 				var reader = new FileReader();
 		        reader.onload = function() {
 		            ControlledVocabularyRepo.confirmCSV(reader.result, $scope.uploadModalData.cv.name).then(function(response) {
+		                //TODO: validation response?
 		            	$scope.uploadWordMap = response.payload.HashMap;		            	
 		            });
 		        };
@@ -127,7 +144,11 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 				$scope.uploadAction = 'process';
 			}
 			else if($scope.uploadAction == 'process') {	
-				ControlledVocabularyRepo.uploadCSV($scope.uploadModalData.cv.name);
+				ControlledVocabularyRepo.uploadCSV($scope.uploadModalData.cv.name).then(function(data){
+				    var errors = angular.fromJson(data.body).payload;
+	                console.log(errors);
+	                $scope.resetControlledVocabulary();
+				});
 				$scope.resetControlledVocabulary();
 				$scope.uploadAction = 'confirm';
 				angular.element('#controlledVocabularyUploadModal').modal('hide');
@@ -138,6 +159,7 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 		$scope.exportControlledVocabulary = function() {
 			$scope.headers = [];
 			return ControlledVocabularyRepo.downloadCSV($scope.uploadModalData.cv.name).then(function(response) {
+                //TODO: validation response?
 				var csvMap = angular.fromJson(response.body).payload.HashMap;
 				for(var key in csvMap.headers) {
 					$scope.headers.push(csvMap.headers[key]);
