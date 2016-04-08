@@ -110,6 +110,13 @@ public abstract class AbstractEntityTest {
 
     // DepositLocation test
     protected static final String TEST_DEPOSIT_LOCATION_NAME = "Test Deposit Name";
+    protected static final String TEST_DEPOSIT_REPOSITORY = "Test Deposit Repository";
+    protected static final String TEST_DEPOSIT_COLLECTION = "Test Deposit Collection";
+    protected static final String TEST_DEPOSIT_USERNAME = "Test Deposit Username";
+    protected static final String TEST_DEPOSIT_PASSWORD = "Test Deposit Password";
+    protected static final String TEST_DEPOSIT_ONBEHALFOF = "Test Deposit OnBehalfOf";
+    protected static final String TEST_DEPOSIT_PACKAGER = "Test Deposit Packager";
+    protected static final String TEST_DEPOSIT_DEPOSITOR = "Test Deposit Depositor";
 
     // CustomActionDefinition Test
     protected static final String TEST_CUSTOM_ACTION_DEFINITION_LABEL = "Test Custom Action Definition Label";
