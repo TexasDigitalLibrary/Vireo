@@ -10,6 +10,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -114,6 +115,7 @@ public class Configuration extends BaseEntity {
     /**
      * @return the isSystemRequired
      */
+    @JsonIgnore
     public Boolean isSystemRequired() {
         return isSystemRequired;
     }
@@ -121,6 +123,7 @@ public class Configuration extends BaseEntity {
     /**
      * @param isSystemRequired the isSystemRequired to set
      */
+    @JsonIgnore
     public void isSystemRequired(Boolean isSystemRequired) {
         this.isSystemRequired = isSystemRequired;
     }

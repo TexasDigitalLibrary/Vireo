@@ -6,6 +6,8 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import edu.tamu.framework.validation.ModelBindingResult;
 
 @MappedSuperclass
@@ -16,6 +18,7 @@ public abstract class BaseEntity implements Comparable<BaseEntity> {
     protected Long id;
 
     @Transient
+    @JsonIgnore
     protected ModelBindingResult bindingResult;
     
     /**
@@ -68,6 +71,7 @@ public abstract class BaseEntity implements Comparable<BaseEntity> {
     /**
      * @return the bindingResult
      */
+    @JsonIgnore
     public ModelBindingResult getBindingResult() {
         return bindingResult;
     }
@@ -75,6 +79,7 @@ public abstract class BaseEntity implements Comparable<BaseEntity> {
     /**
      * @param bindingResult the bindingResult to set
      */
+    @JsonIgnore
     public void setBindingResult(ModelBindingResult bindingResult) {
         this.bindingResult = bindingResult;
     }
