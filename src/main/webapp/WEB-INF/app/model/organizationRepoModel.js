@@ -69,8 +69,6 @@ vireo.service("OrganizationRepo", function($route, WsApi, AbstractModel) {
 
 	OrganizationRepo.add = function(organization) {
 
-		console.log(organization);
-
 		var addOrganizationPromise = WsApi.fetch({
 				'endpoint': '/private/queue', 
 				'controller': 'organization', 

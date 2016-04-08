@@ -5,7 +5,7 @@
 			<div class="col-xs-3" style="padding-right: 0px; padding-left: 0px;">
 				<div class="col-xs-11">
 					<ul class="breadcrumb">
-						<li><a href="#">Vireo Institution</a></li>
+						<li ng-click="resetPanels()"><a href="#">Vireo Institution</a></li>
 						<li ng-repeat="panelEntry in panelHistory" ng-click="rewindPanels(panelEntry)">
 							<a href="#">{{panelEntry.selectedOrganization.name}}</a>
 						</li>
@@ -20,13 +20,14 @@
 				</div>
 			</div>
 		</div>
-		<div class="row">
+		<div class="row" class="tryptic">
 			<div class="col-xs-4" ng-repeat="panel in [0,1,2]">
-				<ul>
+				<ul ng-click="setActivePanel(panel)" ng-class="{'active': panelIsActive(panel)}" class="tryptic-panel">
 					<li ng-repeat="organization in organizations.list" 
-						ng-if="filterByParent(panel, organization)" 
+						ng-if="filterPanelByParent(panel, organization)" 
 						ng-click="shiftPanels(panel, organization);"
-						ng-class="{'selected': isSelected(panel, organization)}">
+						ng-class="{'selected': entryIsSelected(panel, organization)}"
+						class="tryptic-panel-entry">
 						{{organization.name}}
 					</li>
 				</ul>

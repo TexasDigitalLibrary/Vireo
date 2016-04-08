@@ -4,10 +4,13 @@ vireo.controller("TrypticController", function ($controller, $scope, $q, Organiz
 	$scope.ready = $q.all([OrganizationRepo.ready()]);
 
 	$scope.ready.then(function() {
-        
-        $scope.panelHistory = [];
-        $scope.openPanels = [new PanelEntry($scope.organizations.list[0])];
-
+      
+		$scope.resetPanels = function() {
+        	$scope.activePanel;
+	        $scope.panelHistory = [];
+	        $scope.openPanels = [new PanelEntry($scope.organizations.list[0])];
+        }
+      
         $scope.shiftPanels = function(panelIndex, organization) {
 
             var nextPanelIndex = panelIndex+1;
@@ -40,17 +43,40 @@ vireo.controller("TrypticController", function ($controller, $scope, $q, Organiz
 
         $scope.rewindPanels = function(panelEntry) {
         	//todo: rewind the histroy to the selected panel
+        	console.log($scope.panelHistory);
+        	console.log($scope.panelHistory.indexOf(panelEntry));
+        	
+        	var indexOfPanelEntry = $scope.panelHistory.indexOf(panelEntry);
+        	var numberToRemove = $scope.panelHistory.length - indexOfPanelEntry;
+        	var removedEntries = $scope.panelHistory.splice(indexOfPanelEntry, numberToRemove);
+
+        	for(var i in removedEntries.reverse()) {
+        		var entryToAdd = removedEntries[i];
+        		$scope.openPanels.unshift(entryToAdd);
+        		$scope.openPanels.pop();
+        	} 
+        	
         }
 
-        $scope.filterByParent = function(parentPanelIndex, organization) {
+        $scope.filterPanelByParent = function(parentPanelIndex, organization) {
             if(!$scope.openPanels[parentPanelIndex]) return false;
             return organization.parentOrganizations.indexOf($scope.openPanels[parentPanelIndex].parentOrganization.id) != -1;
         }
 
-        $scope.isSelected = function(parentPanelIndex, organization) {
+        $scope.setActivePanel = function(panel) {
+        	$scope.activePanel = panel;
+        }
+
+        $scope.panelIsActive = function(panel) {
+        	return panel == $scope.activePanel;
+        }
+
+        $scope.entryIsisSelected = function(parentPanelIndex, organization) {
             if(!$scope.openPanels[parentPanelIndex].selectedOrganization) return false;
             return $scope.openPanels[parentPanelIndex].selectedOrganization.id == organization.id;
         }
+
+        $scope.resetPanels();
 
     });
 
@@ -60,5 +86,6 @@ var PanelEntry = function(parentOrganization) {
     this.parentOrganization = parentOrganization;
     this.organizationCatagories = [];
     this.selectedOrganization;
+    this.active = false;
     return this;
 }
