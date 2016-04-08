@@ -1,9 +1,8 @@
 package org.tdl.vireo.controller;
 
-import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
+import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_ERROR;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,16 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.ObjectError;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import edu.tamu.framework.aspect.annotation.ApiMapping;
+import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
-import edu.tamu.framework.aspect.annotation.Data;
 import edu.tamu.framework.model.ApiResponse;
 
 @Controller
@@ -34,9 +31,6 @@ public class CustomActionSettingsController {
     
     @Autowired
     CustomActionDefinitionRepo customActionDefinitionRepo;
-
-    @Autowired
-    private ObjectMapper objectMapper;
     
     @Autowired 
     private SimpMessagingTemplate simpMessagingTemplate;
@@ -53,37 +47,37 @@ public class CustomActionSettingsController {
     }
     
     @ApiMapping("/create")
-    public ApiResponse createCustomAction(@Data String data) {
-        
-        JsonNode dataNode;
-        try {
-            dataNode = objectMapper.readTree(data);
-        } catch (IOException e) {
-            return new ApiResponse(ERROR, "Unable to parse update json ["+e.getMessage()+"]");
+    public ApiResponse createCustomAction(@ApiValidatedModel CustomActionDefinition customActionDefinition) {
+        if(customActionDefinition.getBindingResult().hasErrors()){
+            return new ApiResponse(VALIDATION_ERROR, customActionDefinition.getBindingResult().getAll());
         }
-               
-        CustomActionDefinition newCustomAction = customActionDefinitionRepo.create(dataNode.get("label").asText(), dataNode.get("isStudentVisible").asBoolean());
-        newCustomAction.setPosition(customActionDefinitionRepo.count());
-        customActionDefinitionRepo.save(newCustomAction);
+        
+        //TODO: this needs to go in repo.validateCreate() -- VIR-201
+        if(customActionDefinitionRepo.findByLabel(customActionDefinition.getLabel()) != null) {
+            return new ApiResponse(VALIDATION_ERROR, customActionDefinition.getLabel() + " is already a custom action!");
+        }
+        
+        customActionDefinitionRepo.create(customActionDefinition.getLabel(), customActionDefinition.isStudentVisible());
         
         this.simpMessagingTemplate.convertAndSend("/channel/settings/custom-actions", new ApiResponse(SUCCESS, getAll()));
         return new ApiResponse(SUCCESS);
     }
     
     @ApiMapping("/update")
-    public ApiResponse updateCustomAction(@Data String data) {
-               
-        JsonNode dataNode;
-        try {
-            dataNode = objectMapper.readTree(data);
-        } catch (IOException e) {
-            return new ApiResponse(ERROR, "Unable to parse update json ["+e.getMessage()+"]");
+    public ApiResponse updateCustomAction(@ApiValidatedModel CustomActionDefinition customActionDefinition) {
+        //TODO: this needs to go in repo.validateUpdate() -- VIR-201
+        if(customActionDefinition.getId() == null) {
+            customActionDefinition.getBindingResult().addError(new ObjectError("customActionDefinition", "Cannot update a CustomActionDefinition without an id!"));
         }
-       
-        CustomActionDefinition customActionToUpdate = customActionDefinitionRepo.findOne(dataNode.get("id").asLong());
         
-        if(dataNode.get("label") != null) customActionToUpdate.setLabel(dataNode.get("label").asText());
-        if(dataNode.get("isStudentVisible") != null) customActionToUpdate.isStudentVisible(dataNode.get("isStudentVisible").asBoolean());
+        if(customActionDefinition.getBindingResult().hasErrors()){
+            return new ApiResponse(VALIDATION_ERROR, customActionDefinition.getBindingResult().getAll());
+        } 
+        
+        CustomActionDefinition customActionToUpdate = customActionDefinitionRepo.findOne(customActionDefinition.getId());
+        
+        customActionToUpdate.setLabel(customActionDefinition.getLabel());
+        customActionToUpdate.isStudentVisible(customActionDefinition.isStudentVisible());
         
         customActionDefinitionRepo.save(customActionToUpdate);
         this.simpMessagingTemplate.convertAndSend("/channel/settings/custom-actions", new ApiResponse(SUCCESS, getAll()));
@@ -102,7 +96,7 @@ public class CustomActionSettingsController {
         }
         catch(NumberFormatException nfe) {
             logger.info("\n\nNOT A NUMBER " + indexString + "\n\n");
-            return new ApiResponse(ERROR, "Id is not a valid custom action order!");
+            return new ApiResponse(VALIDATION_ERROR, "Id is not a valid custom action order!");
         }
         
         if(index >= 0) {               
@@ -110,7 +104,7 @@ public class CustomActionSettingsController {
         }
         else {
             logger.info("\n\nINDEX" + index + "\n\n");
-            return new ApiResponse(ERROR, "Id is not a valid custom action order!");
+            return new ApiResponse(VALIDATION_ERROR, "Id is not a valid custom action order!");
         }
         
         logger.info("Custom Action with order " + index);

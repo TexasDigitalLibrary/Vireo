@@ -20,7 +20,9 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 		$scope.resetCustomAction();
 
 		$scope.createCustomAction = function() {
-			CustomActionSettings.create($scope.modalData).then(function() {
+			CustomActionSettings.create($scope.modalData).then(function(data) {
+				var errors = angular.fromJson(data.body).payload;
+				console.log(errors)
 				$scope.resetCustomAction();
 			});
 		};
@@ -35,19 +37,25 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 		};
 		
 		$scope.updateCustomAction = function() {
-			CustomActionSettings.update($scope.modalData).then(function() {
+			CustomActionSettings.update($scope.modalData).then(function(data) {
+				var errors = angular.fromJson(data.body).payload;
+				console.log(errors)
 				$scope.resetCustomAction();
 			});
 		};
 		
 		$scope.reorderCustomAction = function(src, dest) {
-			CustomActionSettings.reorder(src, dest).then(function() {
+			CustomActionSettings.reorder(src, dest).then(function(data) {
+				var errors = angular.fromJson(data.body).payload;
+				console.log(errors)
 				$scope.resetCustomAction();
 			});
 		};
 		
 		$scope.removeCustomAction = function(index) {
-			CustomActionSettings.remove(index).then(function() {
+			CustomActionSettings.remove(index).then(function(data) {
+				var errors = angular.fromJson(data.body).payload;
+				console.log(errors)
 				$scope.resetCustomAction();
 			});
 		};
