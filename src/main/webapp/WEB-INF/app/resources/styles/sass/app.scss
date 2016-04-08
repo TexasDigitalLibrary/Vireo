@@ -504,6 +504,10 @@ textfield {
   display: inline-flex;
 }
 
+.text-field .expanded .with-tool-tip, .text-field .expanded .with-hint {
+  width: 100%;
+}
+
 .tooltip-span {
   margin-top: 4px;
 }

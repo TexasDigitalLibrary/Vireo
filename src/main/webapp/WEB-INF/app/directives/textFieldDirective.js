@@ -8,7 +8,10 @@ vireo.directive("textfield", function() {
             "toolTip": "@",
             "hint": "@",
             "onBlur": "&",
-            "keyDown": "&"
+            "keyDown": "&",
+			"labelWidth": "@",
+			"fieldWidth": "@",
+			"expanded": "="
 		}
 	};
 });
