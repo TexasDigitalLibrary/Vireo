@@ -1,6 +1,5 @@
 package org.tdl.vireo.controller;
 
-import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_ERROR;
 
@@ -21,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.model.ControlledVocabulary;
@@ -112,6 +112,7 @@ public class ControlledVocabularyController {
             return new ApiResponse(VALIDATION_ERROR, controlledVocabulary.getBindingResult().getAll());
         }
         
+        //TODO: this needs to go in repo.validateCreate() -- VIR-201
         if(controlledVocabularyRepo.findByName(controlledVocabulary.getName()) != null) {
             return new ApiResponse(VALIDATION_ERROR, controlledVocabulary.getName() + " is already a controlled vocabulary!");
         }
@@ -140,14 +141,15 @@ public class ControlledVocabularyController {
     @Auth(role = "ROLE_MANAGER")
     @Transactional
     public ApiResponse updateControlledVocabulary(@ApiValidatedModel ControlledVocabulary controlledVocabulary) {
+        //TODO: this needs to go in repo.validateUpdate() -- VIR-201
+        //make sure we're receiving an Id from the front-end
+        if (controlledVocabulary.getId() == null) {
+            controlledVocabulary.getBindingResult().addError(new ObjectError("customActionDefinition", "Cannot update a ControlledVocabulary without an id!"));
+        }
+        
         // make sure we don't have any deserialization errors
         if(controlledVocabulary.getBindingResult().hasErrors()){
             return new ApiResponse(VALIDATION_ERROR, controlledVocabulary.getBindingResult().getAll());
-        }
-        
-        //make sure we're receiving an Id from the front-end
-        if (controlledVocabulary.getId() == null) {
-                return new ApiResponse(VALIDATION_ERROR, "Id required to update graduation month!");
         }
         
         ControlledVocabulary controlledVocabularyToUpdate = controlledVocabularyRepo.findOne(controlledVocabulary.getId());
@@ -193,13 +195,13 @@ public class ControlledVocabularyController {
         try {
             index = Long.parseLong(indexString);
         } catch (NumberFormatException nfe) {
-            return new ApiResponse(ERROR, "Id is not a valid controlled vocabulary order!");
+            return new ApiResponse(VALIDATION_ERROR, "Id is not a valid controlled vocabulary order!");
         }
 
         if (index >= 0) {
             controlledVocabularyRepo.remove(index);
         } else {
-            return new ApiResponse(ERROR, "Id is not a valid controlled vocabulary order!");
+            return new ApiResponse(VALIDATION_ERROR, "Id is not a valid controlled vocabulary order!");
         }
 
         logger.info("Deleted controlled vocabulary with order " + index);
@@ -322,7 +324,7 @@ public class ControlledVocabularyController {
         try {
             rows = inputStreamToRows(inputStream);
         } catch (IOException e) {
-            return new ApiResponse(ERROR, "Invalid input.");
+            return new ApiResponse(VALIDATION_ERROR, "Invalid input.");
         }
 
         List<VocabularyWord> newWords = new ArrayList<VocabularyWord>();
@@ -446,7 +448,7 @@ public class ControlledVocabularyController {
             simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
         }
         else {
-            return new ApiResponse(ERROR, "Controlled vocabulary " + name + " is not cached for import.");
+            return new ApiResponse(VALIDATION_ERROR, "Controlled vocabulary " + name + " is not cached for import.");
         }
         
         return new ApiResponse(SUCCESS);
