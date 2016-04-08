@@ -966,12 +966,42 @@ footer a, footer li, footer p {
   display: none;
 }
 
+.tryptic-panel {
+  min-height: 250px;
+  max-height: 250px;
+  min-width: 200px;
+}
+
 .tryptic-panel.active .glyphicon-arrow-right,
 .tryptic-panel.previously-active .glyphicon-arrow-right {
   display: inline-block;
 }
 
-.tryptic-panel {}
+.tryptic-panel .list-group {
+    padding-left: 0;
+    margin-bottom: 0px;
+}
+
+.tryptic-panel .list-group-item:hover {
+    cursor: pointer;
+    color: #70706f;
+    background: #efefef;
+}
+
+.tryptic-panel.previously-active .list-group-item.selected {
+    color: #70706f;
+    background: #efefef;
+}   
+
+.tryptic-panel .list-group-item.selected {
+    color: #fff;
+    background: #92AA9C;
+} 
+
+.tryptic-panel .panel-body {
+  padding: 7px;
+  overflow-y:scroll;
+}
 
 .tryptic-panel.active .panel-heading {
   color: white;

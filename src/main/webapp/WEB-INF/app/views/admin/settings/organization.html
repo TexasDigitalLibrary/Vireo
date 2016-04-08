@@ -21,7 +21,7 @@
 
 		<div class="row tryptic-panels">
 
-			<div class="col-xs-4" ng-repeat="panel in [0,1,2]" ng-if="panelHasChildren(panel)">
+			<div class="col-xs-12 col-sm-4" ng-repeat="panel in [0,1,2]" ng-if="panelHasChildren(panel)">
 
 				<div class="panel panel-default tryptic-panel"
 					 ng-class="{'active': getPanel(panel).active, 'previously-active': getPanel(panel).previouslyActive,}"
@@ -35,13 +35,18 @@
 					</div>
 
 					<div class="panel-body">
-						<ul class="list-unstyled">
-							<li ng-repeat="organization in organizations.list" 
+						<ul class="list-group">
+							<li class="list-group-item"
+								ng-repeat="organization in organizations.list" 
 								ng-if="filterPanelByParent(panel, organization)" 
 								ng-click="shiftPanels(panel, organization);"
-								ng-class="{'selected': entryIsSelected(panel, organization)}"
+								ng-class="{'selected': getPanel(panel).selectedOrganization.id == organization.id}"
 								class="tryptic-panel-entry">
 								{{organization.name}}
+								<ul class="inline-list pull-right">
+									<li><span class="glyphicon glyphicon-pencil pull-right"></span></li>
+									<li><span class="glyphicon glyphicon-trash pull-right"></span></li>
+								</ul>
 							</li>
 						</ul>
 					</div>
