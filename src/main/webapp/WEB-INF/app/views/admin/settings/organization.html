@@ -21,26 +21,28 @@
 
 		<div class="row tryptic-panels">
 
-			<div class="col-xs-12 col-sm-4" ng-repeat="panel in [0,1,2]" ng-if="panelHasChildren(panel)">
+			<div class="col-xs-6 col-sm-4 panel-wraper"
+				 ng-class="{'closing': panel.close, 'opening': panel.open}" 
+				 ng-repeat="panel in openPanels" 
+				 ng-if="panel.parentOrganization.childrenOrganizations.length>0">
 
 				<div class="panel panel-default tryptic-panel"
-					 ng-class="{'active': getPanel(panel).active, 'previously-active': getPanel(panel).previouslyActive,}"
+					 ng-class="{'active': panel.active, 'previously-active': panel.previouslyActive}"
 					 ng-click="setActivePanel(panel)">
 
 					<div class="panel-heading"> 
 						<span ng-repeat="catagory in getPanelCatagories(panel)">{{catagory.name}} <span ng-if="!$last"> / </span> </span>
 						<span 	class="glyphicon glyphicon-arrow-right pull-right"
-								ng-if="selectedOrganization.childrenOrganizations.length > 0 || getPanel(panel).previouslyActive">
+								ng-if="selectedOrganization.childrenOrganizations.length > 0 || panel.previouslyActive">
 						</span> 
 					</div>
-
 					<div class="panel-body">
 						<ul class="list-group">
 							<li class="list-group-item"
 								ng-repeat="organization in organizations.list" 
 								ng-if="filterPanelByParent(panel, organization)" 
 								ng-click="shiftPanels(panel, organization);"
-								ng-class="{'selected': getPanel(panel).selectedOrganization.id == organization.id}"
+								ng-class="{'selected': panel.selectedOrganization.id == organization.id}"
 								class="tryptic-panel-entry">
 								{{organization.name}}
 								<ul class="inline-list pull-right">

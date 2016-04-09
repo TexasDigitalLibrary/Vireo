@@ -936,6 +936,24 @@ footer a, footer li, footer p {
 
 .tryptic {}
 
+.tryptic .panel-wraper {
+  float: left;
+  overflow: hidden;
+  max-width: 100%;
+  -webkit-transition: max-width 0.25s ease-in-out;
+  -moz-transition: max-width 0.25s ease-in-out;
+  -o-transition: max-width 0.25s ease-in-out;
+  transition: max-width 0.25s ease-in-out;
+}
+
+.tryptic .panel-wraper.closing {
+  max-width: 0%;
+} 
+
+.tryptic .panel-wraper.opening {
+  max-width: 100%;
+} 
+
 .tryptic .panel-heading span {
   text-transform: none;
 }
@@ -945,6 +963,7 @@ footer a, footer li, footer p {
 .tryptic-navigation {}
 
 .tryptic-navigation .breadcrumb {
+  min-height: 60px;
   display: inline-block;
   margin-left: 15px;
 }
