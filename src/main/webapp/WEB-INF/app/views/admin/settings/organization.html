@@ -6,8 +6,8 @@
 				<div class="col-xs-11">
 					<ul class="breadcrumb">
 						<li ng-click="triptych.resetPanels()"><a href="#">Vireo Institution</a> <span ng-if="triptych.panelHistory.length < 1" class="glyphicon glyphicon-arrow-down"></span></li>
-						<li ng-repeat="panelEntry in triptych.panelHistory" ng-click="rewindPanels(panelEntry)">
-							<a href="#">{{panelEntry.selectedOrganization.name}} ({{getCatagoryById(panelEntry.selectedOrganization.category).name}})</a>
+						<li ng-repeat="panel in triptych.panelHistory" ng-click="triptych.rewindPanels(panel)">
+							<a href="#">{{panel.selectedOrganization.name}} ({{getCatagoryById(panel.selectedOrganization.category).name}})</a>
 							<span ng-if="$last" class="glyphicon glyphicon-arrow-down"></span>
 						</li>
 					</ul>
@@ -21,7 +21,7 @@
 
 		<div class="row triptych-panels">
 
-			<div class="col-xs-6 col-sm-4 panel-wraper"
+			<div class="col-xs-12 col-sm-6 col-md-4 panel-wraper"
 				 ng-class="{'closing': panel.closing, 'opening': panel.opening, 'shown': panel.visible}" 
 				 ng-repeat="panel in triptych.openPanels" 
 				 ng-if="panel.parentOrganization.childrenOrganizations.length>0">
@@ -31,7 +31,7 @@
 					 ng-click="setActivePanel(panel)">
 
 					<div class="panel-heading"> 
-						<span ng-repeat="catagory in getPanelCatagories(panel)">{{catagory.name}} <span ng-if="!$last"> / </span> </span>
+						<span ng-repeat="catagory in panel.getPanelCatagories()">{{catagory.name}} <span ng-if="!$last"> / </span> </span>
 						<span 	class="glyphicon glyphicon-arrow-right pull-right"
 								ng-if="selectedOrganization.childrenOrganizations.length > 0 || panel.previouslyActive">
 						</span> 
@@ -44,11 +44,11 @@
 								ng-click="shiftPanels(panel, organization);"
 								ng-class="{'selected': panel.selectedOrganization.id == organization.id}"
 								class="triptych-panel-entry">
-								{{organization.name}}
 								<ul class="inline-list pull-right">
 									<li><span class="glyphicon glyphicon-pencil pull-right"></span></li>
 									<li><span class="glyphicon glyphicon-trash pull-right"></span></li>
 								</ul>
+								{{organization.name}}
 							</li>
 						</ul>
 					</div>
