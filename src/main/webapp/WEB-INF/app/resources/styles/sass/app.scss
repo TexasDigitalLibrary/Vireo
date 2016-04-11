@@ -1006,6 +1006,19 @@ footer a, footer li, footer p {
     margin-bottom: 0px;
 }
 
+.triptych-panel .list-group-item {
+    position: relative;
+    min-height: 50px;
+}
+
+.triptych-panel .list-group-item .category-label {
+    position: absolute;
+    bottom: 3px;
+    left: 15px;
+    font-size: 0.75em;
+    font-style: italic;
+}
+
 .triptych-panel .list-group-item:hover {
     cursor: pointer;
     color: #70706f;

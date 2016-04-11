@@ -9,16 +9,12 @@
 	<div class="form-group">
 		<select class="form-control" ng-model="newOrganization.categoryId" required>
 		<option value="">Choose Category</option>
-		<option ng-repeat="category in organizationCategories.list" value="{{category.id}}">{{category.name}}</option>
+		<option ng-repeat="category in organizationCategories.list | orderBy:'name'" value="{{category.id}}" ng-if="category.name!='System'">{{category.name}}</option>
 	    </select>
 	</div>
 	
 	<sideboxsub>Parent</sideboxsub>			
-	<div class="form-group">
-		<!-- <select class="form-control" ng-model="newOrganization.parentId" required>
-			<option value="">Choose Parent</option>
-	    	<option ng-repeat="organization in organizations.list | orderBy:'name'" value="{{organization.id}}">{{organization.name}} ({{findOrganizationCategoryById(organization.category).name}})</option>
-	    </select> -->	   	
+	<div class="form-group">   	
 	    <input class="form-control" placeholder="Parent Organization..." type="text"  uib-typeahead="organization as organization.name for organization in organizations.list | filter:$viewValue | limitTo:8" typeahead-editable="false" ng-model="newOrganization.parent" typeahead-select-on-blur="true" required />
 	</div>
 
