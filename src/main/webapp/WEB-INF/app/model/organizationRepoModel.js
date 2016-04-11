@@ -83,6 +83,21 @@ vireo.service("OrganizationRepo", function($route, WsApi, AbstractModel) {
 		return addOrganizationPromise;
 
 	};
+
+	OrganizationRepo.update = function(organization) {
+
+		var updateOrganizationPromise = WsApi.fetch({
+				'endpoint': '/private/queue', 
+				'controller': 'organization', 
+				'method': 'update',
+				'data': {
+					"organization": organization
+				}
+		});
+
+		return updateOrganizationPromise;
+
+	};
 	
 	OrganizationRepo.ready = function() {
 		return OrganizationRepo.promise;
