@@ -1,9 +1,8 @@
 package org.tdl.vireo.controller;
 
-import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
+import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_ERROR;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,16 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.ObjectError;
 import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.repo.GraduationMonthRepo;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import edu.tamu.framework.aspect.annotation.ApiMapping;
+import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
-import edu.tamu.framework.aspect.annotation.Data;
 import edu.tamu.framework.model.ApiResponse;
 
 @Controller
@@ -34,9 +31,6 @@ public class GraduationMonthController {
 
     @Autowired
     private GraduationMonthRepo graduationMonthRepo;
-
-    @Autowired
-    private ObjectMapper objectMapper;
     
     @Autowired 
     private SimpMessagingTemplate simpMessagingTemplate;
@@ -55,26 +49,17 @@ public class GraduationMonthController {
     
     @ApiMapping("/create")
     @Auth(role = "ROLE_MANAGER")
-    public ApiResponse createGraduationMonth(@Data String data) {
-        
-        JsonNode dataNode;
-        try {
-            dataNode = objectMapper.readTree(data);
-        } catch (IOException e) {
-            return new ApiResponse(ERROR, "Unable to parse update json ["+e.getMessage()+"]");
+    public ApiResponse createGraduationMonth(@ApiValidatedModel GraduationMonth graduationMonth) {
+        // TODO: this needs to go in repo.validateCreate() -- VIR-201
+        if(!graduationMonth.getBindingResult().hasErrors() && graduationMonthRepo.findByMonth(graduationMonth.getMonth()) != null){
+            graduationMonth.getBindingResult().addError(new ObjectError("graduationMonth", graduationMonth.getMonth() + " is already a graduation month!"));
         }
         
-        //TODO: proper validation and response
+        if(graduationMonth.getBindingResult().hasErrors()) {
+            return new ApiResponse(VALIDATION_ERROR, graduationMonth.getBindingResult().getAll());
+        }
         
-        GraduationMonth newGraduationMonth = null;
-                
-        JsonNode month = dataNode.get("month");
-        if(month != null) {
-            newGraduationMonth = graduationMonthRepo.create(month.asInt());           
-        }
-        else {
-            return new ApiResponse(ERROR, "Month required to create graduation month!");
-        }
+        GraduationMonth newGraduationMonth = graduationMonthRepo.create(graduationMonth.getMonth());
         
         //TODO: logging
         
@@ -87,49 +72,30 @@ public class GraduationMonthController {
     
     @ApiMapping("/update")
     @Auth(role = "ROLE_MANAGER")
-    public ApiResponse updateGraduationMonth(@Data String data) {
+    public ApiResponse updateGraduationMonth(@ApiValidatedModel GraduationMonth graduationMonth) {
+        // TODO: this needs to go in repo.validateUpdate() -- VIR-201
+        GraduationMonth graduationMonthToUpdate = null;
+        if(graduationMonth.getId() == null) {
+            graduationMonth.getBindingResult().addError(new ObjectError("graduationMonth", "Cannot update a GraduationMonth without an id!"));
+        } else {
+            graduationMonthToUpdate = graduationMonthRepo.findOne(graduationMonth.getId());
+            if(graduationMonthToUpdate == null) {
+                graduationMonth.getBindingResult().addError(new ObjectError("graduationMonth", "Cannot update a GraduationMonth with an invalid id!"));
+            }
+        }
         
-        JsonNode dataNode;
-        try {
-            dataNode = objectMapper.readTree(data);
-        } catch (IOException e) {
-            return new ApiResponse(ERROR, "Unable to parse update json ["+e.getMessage()+"]");
+        if(graduationMonth.getBindingResult().hasErrors()) {
+            return new ApiResponse(VALIDATION_ERROR, graduationMonth.getBindingResult().getAll());
         }
         
         //TODO: proper validation and response
         
-        //System.out.println("\n\n" + dataNode + "\n\n");
-        
-        GraduationMonth graduationMonth = null;
-                
-        JsonNode id = dataNode.get("id");
-        if(id != null) {
-            Long idLong = -1L;
-            try {
-                idLong = id.asLong();
-            }
-            catch(NumberFormatException nfe) {
-                return new ApiResponse(ERROR, "Id required to update graduation month!");
-            }
-            graduationMonth = graduationMonthRepo.findOne(idLong);           
-        }
-        else {
-            return new ApiResponse(ERROR, "Id required to update graduation month!");
-        }
-        
-        JsonNode month = dataNode.get("month");
-        if(month != null) {
-            graduationMonth.setMonth(month.asInt());           
-        }
-        else {
-            return new ApiResponse(ERROR, "Month required to create graduation month!");
-        }
-        
-        graduationMonth = graduationMonthRepo.save(graduationMonth);
+        graduationMonthToUpdate.setMonth(graduationMonth.getMonth());
+        graduationMonthToUpdate = graduationMonthRepo.save(graduationMonthToUpdate);
         
         //TODO: logging
         
-        logger.info("Updated graduation month with month " + graduationMonth.getMonth());
+        logger.info("Updated graduation month with month " + graduationMonthToUpdate.getMonth());
         
         simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(SUCCESS, getAll()));
         
@@ -147,15 +113,15 @@ public class GraduationMonthController {
         }
         catch(NumberFormatException nfe) {
             logger.info("\n\nNOT A NUMBER " + indexString + "\n\n");
-            return new ApiResponse(ERROR, "Id is not a valid deposit location order!");
+            return new ApiResponse(VALIDATION_ERROR, "Id is not a valid deposit location order!");
         }
         
-        if(index >= 0) {               
+        if(index >= 0) {
             graduationMonthRepo.remove(index);
         }
         else {
             logger.info("\n\nINDEX" + index + "\n\n");
-            return new ApiResponse(ERROR, "Id is not a valid deposit location order!");
+            return new ApiResponse(VALIDATION_ERROR, "Id is not a valid deposit location order!");
         }
         
         logger.info("Deleted deposit location with order " + index);

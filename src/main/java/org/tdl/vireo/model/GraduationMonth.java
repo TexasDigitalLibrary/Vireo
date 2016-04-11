@@ -3,6 +3,8 @@ package org.tdl.vireo.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
+import org.hibernate.validator.constraints.Range;
+
 /**
  * 
  * @author gad
@@ -11,6 +13,7 @@ import javax.persistence.Entity;
 public class GraduationMonth extends BaseOrderedEntity {
 
 	@Column(nullable = false, unique = true)
+	@Range(min=0, max=11)
 	private int month;
 	
 	/**
