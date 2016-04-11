@@ -79,10 +79,12 @@ public class UserController {
     @Transactional
     public ApiResponse updateRole(@ApiValidatedModel User user) {      
         
+        //TODO this check should be moved to repo.validateCreate() for VIR-201
         User possiblyExistingUser = userRepo.findByEmail(user.getEmail());
         if (possiblyExistingUser == null) {
             user.getBindingResult().addError(new ObjectError("user", "cannot update a role on a nonexistant user!"));
         }
+
         if (user.getBindingResult().hasErrors()) {
             return new ApiResponse(ApiResponseType.VALIDATION_ERROR, user.getBindingResult().getAll());
         }
@@ -108,11 +110,14 @@ public class UserController {
     public ApiResponse setSetting(@Shib Credentials shib, @ApiVariable String key, @ApiValidatedModel UserSettingModel userSetting) {
         
         User user = userRepo.findByEmail(shib.getEmail());
-        
+        if (user == null) {
+            userSetting.getBindingResult().addError(new ObjectError("user", "can change settings on a nonexistant user!"));
+        }
+
         if(userSetting.getBindingResult().hasErrors()) {
             return new ApiResponse(VALIDATION_ERROR, userSetting.getBindingResult().getAll());
         }
-        
+
         user.putSetting(key, userSetting.getSettingValue());        
         
         return new ApiResponse(SUCCESS, userRepo.save(user).getSettings());
