@@ -66,15 +66,19 @@ public class CustomActionSettingsController {
     @ApiMapping("/update")
     public ApiResponse updateCustomAction(@ApiValidatedModel CustomActionDefinition customActionDefinition) {
         //TODO: this needs to go in repo.validateUpdate() -- VIR-201
+        CustomActionDefinition customActionToUpdate = null;
         if(customActionDefinition.getId() == null) {
             customActionDefinition.getBindingResult().addError(new ObjectError("customActionDefinition", "Cannot update a CustomActionDefinition without an id!"));
+        } else {
+            customActionToUpdate = customActionDefinitionRepo.findOne(customActionDefinition.getId());
+            if(customActionToUpdate == null) {
+                customActionDefinition.getBindingResult().addError(new ObjectError("customActionDefinition", "Cannot update a CustomActionDefinition with invalid id!"));
+            }
         }
         
         if(customActionDefinition.getBindingResult().hasErrors()){
             return new ApiResponse(VALIDATION_ERROR, customActionDefinition.getBindingResult().getAll());
-        } 
-        
-        CustomActionDefinition customActionToUpdate = customActionDefinitionRepo.findOne(customActionDefinition.getId());
+        }
         
         customActionToUpdate.setLabel(customActionDefinition.getLabel());
         customActionToUpdate.isStudentVisible(customActionDefinition.isStudentVisible());

@@ -108,13 +108,13 @@ public class ControlledVocabularyController {
     @Transactional
     public ApiResponse createControlledVocabulary(@ApiValidatedModel ControlledVocabulary controlledVocabulary) {
         
-        if(controlledVocabulary.getBindingResult().hasErrors()){
-            return new ApiResponse(VALIDATION_ERROR, controlledVocabulary.getBindingResult().getAll());
-        }
-        
         //TODO: this needs to go in repo.validateCreate() -- VIR-201
         if(controlledVocabularyRepo.findByName(controlledVocabulary.getName()) != null) {
-            return new ApiResponse(VALIDATION_ERROR, controlledVocabulary.getName() + " is already a controlled vocabulary!");
+            controlledVocabulary.getBindingResult().addError(new ObjectError("controlledVocabulary", controlledVocabulary.getName() + " is already a controlled vocabulary!"));
+        }
+        
+        if(controlledVocabulary.getBindingResult().hasErrors()){
+            return new ApiResponse(VALIDATION_ERROR, controlledVocabulary.getBindingResult().getAll());
         }
         
         ControlledVocabulary newControlledVocabulary = controlledVocabularyRepo.create(controlledVocabulary.getName(), controlledVocabulary.getLanguage());
@@ -143,26 +143,27 @@ public class ControlledVocabularyController {
     public ApiResponse updateControlledVocabulary(@ApiValidatedModel ControlledVocabulary controlledVocabulary) {
         //TODO: this needs to go in repo.validateUpdate() -- VIR-201
         //make sure we're receiving an Id from the front-end
+        ControlledVocabulary controlledVocabularyToUpdate = null;
         if (controlledVocabulary.getId() == null) {
-            controlledVocabulary.getBindingResult().addError(new ObjectError("customActionDefinition", "Cannot update a ControlledVocabulary without an id!"));
+            controlledVocabulary.getBindingResult().addError(new ObjectError("controlledVocabulary", "Cannot update a ControlledVocabulary without an id!"));
+        } else {
+            controlledVocabularyToUpdate = controlledVocabularyRepo.findOne(controlledVocabulary.getId());
+            ControlledVocabulary controlledVocabularyExistingName = controlledVocabularyRepo.findByName(controlledVocabulary.getName());
+
+            // make sure we won't have any unique constraint violations
+            if(controlledVocabularyExistingName != null) {
+                controlledVocabulary.getBindingResult().addError(new ObjectError("controlledVocabulary", controlledVocabulary.getName() + " is already a controlled vocabulary!"));
+            }
+            
+            // make sure we're updating an existing controlled vocabulary
+            if(controlledVocabularyToUpdate == null) {
+                controlledVocabulary.getBindingResult().addError(new ObjectError("controlledVocabulary", controlledVocabulary.getName() + " can't be updated, it doesn't exist!"));
+            }
         }
         
-        // make sure we don't have any deserialization errors
+        // make sure we don't have any errors
         if(controlledVocabulary.getBindingResult().hasErrors()){
             return new ApiResponse(VALIDATION_ERROR, controlledVocabulary.getBindingResult().getAll());
-        }
-        
-        ControlledVocabulary controlledVocabularyToUpdate = controlledVocabularyRepo.findOne(controlledVocabulary.getId());
-        ControlledVocabulary controlledVocabularyExistingName = controlledVocabularyRepo.findByName(controlledVocabulary.getName());
-
-        // make sure we won't have any unique constraint violations
-        if(controlledVocabularyExistingName != null) {
-            return new ApiResponse(VALIDATION_ERROR, controlledVocabulary.getName() + " is already a controlled vocabulary!");
-        }
-        
-        // make sure we're updating an existing controlled vocabulary
-        if(controlledVocabularyToUpdate == null) {
-            return new ApiResponse(VALIDATION_ERROR, controlledVocabulary.getName() + " can't be updated, it doesn't exist!");
         }
         
         // save!

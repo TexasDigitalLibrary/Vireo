@@ -77,15 +77,18 @@ public class DepositLocationController {
     public ApiResponse updateDepositLocation(@ApiValidatedModel DepositLocation depositLocation) {
         
         //TODO: this needs to go in repo.validateUpdate() -- VIR-201
+        DepositLocation depositLocationtoUpdate = null;
         if(depositLocation.getId() == null) {
             depositLocation.getBindingResult().addError(new ObjectError("depositLocation", "Cannot update a DepositLocation without an id!"));
+        } else {
+            depositLocationtoUpdate = depositLocationRepo.findOne(depositLocation.getId());
+            if(depositLocationtoUpdate == null) {
+                depositLocation.getBindingResult().addError(new ObjectError("depositLocation", "Cannot update a DepositLocation that doesn't exist!"));
+            }
         }
-        
         if(depositLocation.getBindingResult().hasErrors()){
             return new ApiResponse(VALIDATION_ERROR, depositLocation.getBindingResult().getAll());
         }
-                
-        DepositLocation depositLocationtoUpdate = depositLocationRepo.findOne(depositLocation.getId());           
          
         depositLocationtoUpdate.setName(depositLocation.getName());
         depositLocationtoUpdate.setRepository(depositLocation.getRepository());
