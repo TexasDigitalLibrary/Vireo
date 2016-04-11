@@ -18,13 +18,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Embargo extends BaseOrderedEntity {
 
     @Column(nullable = false)
-    @NotNull
     @NotEmpty
     private String name;
 
     @Lob
     @Column(nullable = false)
-    @NotNull
     @NotEmpty
     private String description;
 
