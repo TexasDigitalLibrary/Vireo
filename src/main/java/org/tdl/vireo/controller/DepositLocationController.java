@@ -1,6 +1,5 @@
 package org.tdl.vireo.controller;
 
-import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_ERROR;
 
@@ -122,7 +121,7 @@ public class DepositLocationController {
         }
         catch(NumberFormatException nfe) {
             logger.info("\n\nNOT A NUMBER " + indexString + "\n\n");
-            return new ApiResponse(ERROR, "Id is not a valid deposit location order!");
+            return new ApiResponse(VALIDATION_ERROR, "Id is not a valid deposit location order!");
         }
         
         if(index >= 0) {               
@@ -130,7 +129,7 @@ public class DepositLocationController {
         }
         else {
             logger.info("\n\nINDEX" + index + "\n\n");
-            return new ApiResponse(ERROR, "Id is not a valid deposit location order!");
+            return new ApiResponse(VALIDATION_ERROR, "Id is not a valid deposit location order!");
         }
         
         logger.info("Deleted deposit location with order " + index);

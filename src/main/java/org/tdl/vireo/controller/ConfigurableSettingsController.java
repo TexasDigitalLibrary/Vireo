@@ -45,6 +45,8 @@ public class ConfigurableSettingsController {
         
         configurationRepo.createOrUpdate(configuration.getName(),configuration.getValue(),configuration.getType());
         
+        logger.info("Created or updated configuration with name " + configuration.getName() + " and value " + configuration.getValue());
+        
         this.simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, toConfigPairsMap(configurationRepo.getAllByType(configuration.getType()))));
 
         return new ApiResponse(SUCCESS);
@@ -58,6 +60,8 @@ public class ConfigurableSettingsController {
         }     
         
         configurationRepo.reset(configuration.getName());
+        
+        logger.info("reset configuration with name " + configuration.getName() + " and value " + configuration.getValue());
         
         this.simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, toConfigPairsMap(configurationRepo.getAllByType(configuration.getType()))));
         
