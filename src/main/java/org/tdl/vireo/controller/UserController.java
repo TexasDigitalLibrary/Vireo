@@ -28,6 +28,7 @@ import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.aspect.annotation.Data;
 import edu.tamu.framework.aspect.annotation.Shib;
+import edu.tamu.framework.enums.ApiResponseType;
 import edu.tamu.framework.model.ApiResponse;
 import edu.tamu.framework.model.Credentials;
 
@@ -82,6 +83,9 @@ public class UserController {
         User possiblyExistingUser = userRepo.findByEmail(user.getEmail());
         if (possiblyExistingUser == null) {
             user.getBindingResult().addError(new ObjectError("user", "cannot update a role on a nonexistant user!"));
+        }
+        if (user.getBindingResult().hasErrors()) {
+            return new ApiResponse(ApiResponseType.VALIDATION_ERROR, user.getBindingResult().getAll());
         }
         
         possiblyExistingUser.setRole(user.getRole());
