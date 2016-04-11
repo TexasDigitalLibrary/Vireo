@@ -22,7 +22,7 @@
 		<div class="row tryptic-panels">
 
 			<div class="col-xs-6 col-sm-4 panel-wraper"
-				 ng-class="{'closing': panel.close, 'opening': panel.open}" 
+				 ng-class="{'closing': panel.close, 'opening': panel.open, 'shown': panel.visible}" 
 				 ng-repeat="panel in openPanels" 
 				 ng-if="panel.parentOrganization.childrenOrganizations.length>0">
 

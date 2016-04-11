@@ -940,10 +940,11 @@ footer a, footer li, footer p {
   float: left;
   overflow: hidden;
   max-width: 100%;
+  opacity: 0;
   -webkit-transition: max-width 0.25s ease-in-out;
   -moz-transition: max-width 0.25s ease-in-out;
   -o-transition: max-width 0.25s ease-in-out;
-  transition: max-width 0.25s ease-in-out;
+  transition: max-width 0.25s ease-in-out, opacity 0.25s ease-in-out;
 }
 
 .tryptic .panel-wraper.closing {
@@ -952,7 +953,11 @@ footer a, footer li, footer p {
 
 .tryptic .panel-wraper.opening {
   max-width: 100%;
-} 
+}
+
+.tryptic .panel-wraper.shown {
+  opacity: 1;
+}
 
 .tryptic .panel-heading span {
   text-transform: none;

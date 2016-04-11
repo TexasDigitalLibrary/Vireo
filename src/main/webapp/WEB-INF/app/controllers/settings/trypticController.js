@@ -8,7 +8,7 @@ vireo.controller("TrypticController", function ($controller, $scope, $q, $timeou
 		$scope.resetPanels = function() {
         	$scope.activePanel;
 	        $scope.panelHistory = [];
-	        $scope.openPanels = [new PanelEntry($scope.organizations.list[0])];
+	        $scope.openPanels = [new Panel($scope.organizations.list[0])];
         }
 
         $scope.shiftPanels = function(panel, organization) {
@@ -33,13 +33,17 @@ vireo.controller("TrypticController", function ($controller, $scope, $q, $timeou
             panel.active = true;
 
             if(orgHasChildren || !isLastPanel) {
-            	$scope.openPanels[nextPanelIndex] = new PanelEntry(organization);  
+            	$scope.openPanels[nextPanelIndex] = new Panel(organization);  
             } 
 
             if(orgHasChildren && isLastPanel) {
 
+                var panelToAdd = new Panel(organization);
+                panelToAdd.visible = false;
+                $scope.openPanels[nextPanelIndex] = panelToAdd; 
+
                 animatePanelClose($scope.openPanels[0]).then(function() {
-                    $scope.openPanels[nextPanelIndex] = new PanelEntry(organization); 
+                    panelToAdd.visible = true;
                     $scope.panelHistory.push($scope.openPanels[0]);
                     $scope.openPanels.shift();
                 });
@@ -66,13 +70,13 @@ vireo.controller("TrypticController", function ($controller, $scope, $q, $timeou
 
         $scope.rewindPanels = function(panelEntry) {
         	
-        	var indexOfPanelEntry = $scope.panelHistory.indexOf(panelEntry);
-        	var numberToRemove = $scope.panelHistory.length - indexOfPanelEntry;
-        	var removedEntries = $scope.panelHistory.splice(indexOfPanelEntry, numberToRemove);
+        	var indexOfPanel = $scope.panelHistory.indexOf(panelEntry);
+        	var numberToRemove = $scope.panelHistory.length - indexOfPanel;
+        	var removedEntries = $scope.panelHistory.splice(indexOfPanel, numberToRemove);
 
         	for(var i in removedEntries.reverse()) {
-        		var entryToAdd = removedEntries[i];
-        		$scope.openPanels.unshift(entryToAdd);
+        		var panelToAdd = removedEntries[i];
+        		$scope.openPanels.unshift(panelToAdd);
         		$scope.openPanels.pop();
         	} 
         	
@@ -144,7 +148,7 @@ vireo.controller("TrypticController", function ($controller, $scope, $q, $timeou
         setTimeout(function() {
             panel.close = false;
             defer.resolve();
-        }, 250);
+        }, 255);
         
         return defer.promise;
     }
@@ -158,14 +162,14 @@ vireo.controller("TrypticController", function ($controller, $scope, $q, $timeou
         setTimeout(function() {
             panel.open = false;
             defer.resolve();
-        }, 250);
+        }, 255);
         
         return defer.promise;
     }
 
 });
 
-var PanelEntry = function(parentOrganization) {
+var Panel = function(parentOrganization) {
     this.parentOrganization = parentOrganization;
     this.organizationCatagories = [];
     this.selectedOrganization;
@@ -173,5 +177,6 @@ var PanelEntry = function(parentOrganization) {
     this.active = false;
     this.close = false;
     this.open = false;
+    this.visible = true;
     return this;
 }
