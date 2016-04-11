@@ -27,7 +27,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ControlledVocabulary extends BaseOrderedEntity {
     
     @Column(nullable = false, unique = true)
-    @NotNull
     @NotEmpty
     private String name;
     

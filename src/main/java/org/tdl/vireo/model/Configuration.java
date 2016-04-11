@@ -23,20 +23,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Configuration extends BaseEntity {
 
     @Column(nullable = false, length = 255)
-    @NotNull
-    @Size(max=255)
-    @NotEmpty
+    @Size(min=1, max=255)
     private String name;
 
     @Lob
     @Column(nullable = false)
-    @NotNull
+    @NotEmpty
     private String value;
 
     @Column(nullable = false, length = 255)
-    @NotNull
-    @Size(max=255)
-    @NotEmpty
+    @Size(min=1, max=255)
     private String type;
     
     @Column(nullable = false)
