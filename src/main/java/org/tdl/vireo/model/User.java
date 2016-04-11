@@ -48,7 +48,7 @@ public class User extends BaseEntity implements CoreUser {
     // encoded password
     @Column
     @JsonIgnore
-    @NotBlank
+//    @NotBlank
     private String password;
     
     @Column(nullable = false)
