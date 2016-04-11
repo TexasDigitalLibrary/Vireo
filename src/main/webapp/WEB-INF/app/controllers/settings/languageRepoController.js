@@ -39,7 +39,9 @@ vireo.controller("LanguageRepoController", function ($controller, $q, $scope, La
 		$scope.resetLanguages();
 		
 		$scope.createLanguage = function() {
-			LanguageRepo.add($scope.modalData).then(function() {
+			LanguageRepo.add($scope.modalData).then(function(data) {
+				var errors = angular.fromJson(data.body).payload;
+				console.log(errors);
 				$scope.resetLanguages();
 			});
 		};
@@ -54,13 +56,17 @@ vireo.controller("LanguageRepoController", function ($controller, $q, $scope, La
 		};
 		
 		$scope.updateLanguage = function() {
-			LanguageRepo.update($scope.modalData).then(function() {
+			LanguageRepo.update($scope.modalData).then(function(data) {
+				var errors = angular.fromJson(data.body).payload;
+				console.log(errors);
 				$scope.resetLanguages();
 			});
 		};
 
 		$scope.reorderLanguages = function(src, dest) {
-	    	LanguageRepo.reorder(src, dest).then(function() {
+	    	LanguageRepo.reorder(src, dest).then(function(data) {
+	    		var errors = angular.fromJson(data.body).payload;
+				console.log(errors);
 	    		$scope.resetLanguages();
 	    	});
 		};
@@ -71,7 +77,9 @@ vireo.controller("LanguageRepoController", function ($controller, $q, $scope, La
 				$scope.sortAction = 'sort';
 			}
 			else if($scope.sortAction == 'sort') {
-				LanguageRepo.sort(column).then(function() {
+				LanguageRepo.sort(column).then(function(data) {
+					var errors = angular.fromJson(data.body).payload;
+					console.log(errors);
 					$scope.resetLanguages();
 					$scope.sortAction = 'confirm';
 				});
@@ -79,7 +87,9 @@ vireo.controller("LanguageRepoController", function ($controller, $q, $scope, La
 		};
 
 		$scope.removeLanguage = function(index) {
-	    	LanguageRepo.remove(index).then(function() {
+	    	LanguageRepo.remove(index).then(function(data) {
+	    		var errors = angular.fromJson(data.body).payload;
+				console.log(errors);
 	    		$scope.resetLanguages();
 	    	});
 		};

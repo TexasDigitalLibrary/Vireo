@@ -1,9 +1,8 @@
 package org.tdl.vireo.controller;
 
-import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
+import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_ERROR;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,22 +10,18 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.ObjectError;
 import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.repo.LanguageRepo;
 import org.tdl.vireo.service.ProquestLanguageCodesService;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import edu.tamu.framework.aspect.annotation.ApiMapping;
-import edu.tamu.framework.aspect.annotation.ApiModel;
+import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
-import edu.tamu.framework.aspect.annotation.Data;
 import edu.tamu.framework.model.ApiResponse;
 
 /**
@@ -44,9 +39,6 @@ public class LanguageController {
     
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
-
-    @Autowired
-    private ObjectMapper objectMapper;
     
     @Autowired
     private ProquestLanguageCodesService proquestLanguageCodes;
@@ -80,13 +72,21 @@ public class LanguageController {
     @ApiMapping("/create")
     @Auth(role = "ROLE_MANAGER")
     @Transactional
-    public ApiResponse createLanguage(@ApiModel Language language) {
+    public ApiResponse createLanguage(@ApiValidatedModel Language language) {
+        // TODO: this needs to go in repo.validateCreate() -- VIR-201
+        if(!language.getBindingResult().hasErrors() && languageRepo.findByName(language.getName()) != null){
+            language.getBindingResult().addError(new ObjectError("language", language.getName() + " is already a language!"));
+        }
         
-        language = languageRepo.create(language);
+        if(language.getBindingResult().hasErrors()) {
+            return new ApiResponse(VALIDATION_ERROR, language.getBindingResult().getAll());
+        }
+        
+        Language newLanguage = languageRepo.create(language.getName());
 
         // TODO: logging
 
-        logger.info("Creating language " + language.getName());
+        logger.info("Creating language " + newLanguage.getName());
         
         simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(SUCCESS, getAll()));
 
@@ -101,48 +101,32 @@ public class LanguageController {
     @ApiMapping("/update")
     @Auth(role = "ROLE_MANAGER")
     @Transactional
-    public ApiResponse updateLanguage(@Data String data) {
-
-        JsonNode dataNode;
-        try {
-            dataNode = objectMapper.readTree(data);
-        } catch (IOException e) {
-            return new ApiResponse(ERROR, "Unable to parse update json [" + e.getMessage() + "]");
-        }
-
-        // TODO: proper validation and response
-
-        Language language = null;
-
-        JsonNode id = dataNode.get("id");
-        if (id != null) {
-            Long idLong = -1L;
-            try {
-                idLong = id.asLong();
-            } catch (NumberFormatException nfe) {
-                return new ApiResponse(ERROR, "Id required to update graduation month!");
+    public ApiResponse updateLanguage(@ApiValidatedModel Language language) {
+        // TODO: this needs to go in repo.validateUpdate() -- VIR-201
+        Language languageToUpdate = null;
+        if(language.getId() == null) {
+            language.getBindingResult().addError(new ObjectError("language", "Cannot update a language without an id!"));
+        } else {
+            languageToUpdate = languageRepo.findOne(language.getId());
+            if(languageToUpdate == null) {
+                language.getBindingResult().addError(new ObjectError("language", "Cannot update a language with an invalid id!"));
             }
-            language = languageRepo.findOne(idLong);
-        } else {
-            return new ApiResponse(ERROR, "Id required to update language!");
+            if(languageRepo.findByName(language.getName()) != null){
+                language.getBindingResult().addError(new ObjectError("language", language.getName() + " is already a language!"));
+            }
+        }
+        
+        if(language.getBindingResult().hasErrors()) {
+            return new ApiResponse(VALIDATION_ERROR, language.getBindingResult().getAll());
         }
 
-        JsonNode nameNode = dataNode.get("name");
-        if (nameNode != null) {
-            language.setName(nameNode.asText());
-        } else {
-            return new ApiResponse(ERROR, "Name required to update language!");
-        }
-
-        try {
-            language = languageRepo.save(language);
-        } catch (DataIntegrityViolationException dive) {
-            return new ApiResponse(ERROR, nameNode.asText() + " is already a language!");
-        }
+        languageToUpdate.setName(language.getName());
+        
+        languageToUpdate = languageRepo.save(languageToUpdate);
 
         // TODO: logging
 
-        logger.info("Updated language with name " + language.getName());
+        logger.info("Updated language with name " + languageToUpdate.getName());
 
         simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(SUCCESS, getAll()));
 
@@ -165,13 +149,13 @@ public class LanguageController {
         try {
             index = Long.parseLong(indexString);
         } catch (NumberFormatException nfe) {
-            return new ApiResponse(ERROR, "Id is not a valid language position!");
+            return new ApiResponse(VALIDATION_ERROR, "Id is not a valid language position!");
         }
 
         if (index >= 0) {
             languageRepo.remove(index);
         } else {
-            return new ApiResponse(ERROR, "Id is not a valid language position!");
+            return new ApiResponse(VALIDATION_ERROR, "Id is not a valid language position!");
         }
 
         logger.info("Deleted language with order " + index);

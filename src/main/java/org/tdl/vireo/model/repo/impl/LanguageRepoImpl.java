@@ -20,12 +20,6 @@ public class LanguageRepoImpl implements LanguageRepoCustom {
         language.setPosition(languageRepo.count() + 1);
         return languageRepo.save(language);
     }
-    
-    @Override
-    public Language create(Language language) {
-        language.setPosition(languageRepo.count() + 1);
-        return languageRepo.save(language);
-    }
         
     @Override
     public void reorder(Long src, Long dest) {
