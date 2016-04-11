@@ -15,10 +15,11 @@
 	
 	<sideboxsub>Parent</sideboxsub>			
 	<div class="form-group">
-		<select class="form-control" ng-model="newOrganization.parentId" required>
+		<!-- <select class="form-control" ng-model="newOrganization.parentId" required>
 			<option value="">Choose Parent</option>
-	    	<option ng-repeat="organization in organizations.list" value="{{organization.id}}">{{organization.name}} ({{findOrganizationCategoryById(organization.category).name}})</option>
-	    </select>
+	    	<option ng-repeat="organization in organizations.list | orderBy:'name'" value="{{organization.id}}">{{organization.name}} ({{findOrganizationCategoryById(organization.category).name}})</option>
+	    </select> -->	   	
+	    <input class="form-control" placeholder="Parent Organization..." type="text"  uib-typeahead="organization as organization.name for organization in organizations.list | filter:$viewValue | limitTo:8" typeahead-editable="false" ng-model="newOrganization.parent" typeahead-select-on-blur="true" required />
 	</div>
 
 	<div class="form-group">

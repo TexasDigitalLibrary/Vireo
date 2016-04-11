@@ -22,7 +22,7 @@ vireo.controller("OrganizationSideBarController", function($controller, $scope, 
 		}
 
 		setForm = function() {
-			$scope.newOrganization.parentId = "";
+			$scope.newOrganization.parent = "";
 			$scope.newOrganization.categoryId = "";
 			$scope.newOrganization.name = "";
 		}

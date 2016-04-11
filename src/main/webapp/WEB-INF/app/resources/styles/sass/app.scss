@@ -1023,8 +1023,10 @@ footer a, footer li, footer p {
 } 
 
 .triptych-panel .panel-body {
+  max-height: 200px;
   padding: 7px;
-  overflow-y:scroll;
+  overflow: hidden;
+  overflow-y: scroll;
 }
 
 .triptych-panel.active .panel-heading {
