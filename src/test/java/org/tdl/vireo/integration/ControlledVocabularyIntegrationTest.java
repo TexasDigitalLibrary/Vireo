@@ -38,6 +38,8 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
     @Override
     public void setup() {
         
+        controlledVocabularyRepo.deleteAll();
+        
         controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME1, languageRepo.create(TEST_LANGUAGE_NAME1));
         controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME2, languageRepo.create(TEST_LANGUAGE_NAME2));
         controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME3, languageRepo.create(TEST_LANGUAGE_NAME3));
@@ -309,7 +311,7 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
             vocabularyWordRepo.save(word);
         });        
         vocabularyWordRepo.deleteAll();
-        controlledVocabularyRepo.deleteAll();        
+        controlledVocabularyRepo.deleteAll();
         languageRepo.deleteAll();       
     }
 
