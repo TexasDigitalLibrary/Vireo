@@ -23,7 +23,7 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 		$scope.createDepositLocation = function() {
 			DepositLocationRepo.add($scope.modalData).then(function(data) {
 				var errors = angular.fromJson(data.body).payload;
-				console.log(errors)
+				console.log(errors);
 				$scope.resetDepositLocation();
 			});
 		};
@@ -40,7 +40,7 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 		$scope.updateDepositLocation = function() {
 			DepositLocationRepo.update($scope.modalData).then(function(data) {
 				var errors = angular.fromJson(data.body).payload;
-				console.log(errors)
+				console.log(errors);
 				$scope.resetDepositLocation();
 			});
 		};
@@ -48,7 +48,7 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 		$scope.reorderDepositLocation = function(src, dest) {
 	    	DepositLocationRepo.reorder(src, dest).then(function(data) {
 				var errors = angular.fromJson(data.body).payload;
-				console.log(errors)
+				console.log(errors);
 				$scope.resetDepositLocation();
 			});
 		};
@@ -56,7 +56,7 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 		$scope.removeDepositLocation = function(index) {
 	    	DepositLocationRepo.remove(index).then(function(data) {
 				var errors = angular.fromJson(data.body).payload;
-				console.log(errors)
+				console.log(errors);
 				$scope.resetDepositLocation();
 			});
 		};

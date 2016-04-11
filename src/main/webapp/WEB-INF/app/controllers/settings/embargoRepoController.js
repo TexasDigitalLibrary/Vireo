@@ -29,7 +29,7 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 		$scope.createEmbargo = function() {
 			EmbargoRepo.create($scope.modalData).then(function(data) {
 				var errors = angular.fromJson(data.body).payload;
-				console.log(errors)
+				console.log(errors);
 			    $scope.resetEmbargo();
 			});
 		};
@@ -46,7 +46,7 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 		$scope.updateEmbargo = function() {
 			EmbargoRepo.update($scope.modalData).then(function(data){
 				var errors = angular.fromJson(data.body).payload;
-				console.log(errors)
+				console.log(errors);
 				$scope.resetEmbargo();
 			});
 		};
@@ -54,7 +54,7 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 		$scope.removeEmbargo = function(id) {
             EmbargoRepo.remove(id).then(function(data){
             	var errors = angular.fromJson(data.body).payload;
-				console.log(errors)
+				console.log(errors);
                 $scope.resetEmbargo();
             });
         };
