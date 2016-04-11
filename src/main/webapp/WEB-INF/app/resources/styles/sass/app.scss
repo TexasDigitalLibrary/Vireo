@@ -960,6 +960,20 @@ footer a, footer li, footer p {
 
 .tryptic-panel-entry {}
 
+#organizationManagement .panel-wrap {
+  display: none;
+}
+
+#organizationManagement .panel-wrap.active {
+  display: block;
+}
+
+#organizationManagement .panel-title span.active {
+  color: #337ab7;
+  cursor: pointer;
+}
+
+
 /*************
 * DIRECTIVES *
 **************/
