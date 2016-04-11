@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.ObjectError;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
 
@@ -22,6 +23,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
+import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.aspect.annotation.Data;
@@ -59,38 +61,32 @@ public class UserController {
         return new ApiResponse(SUCCESS, shib);
     }
     
+    private Map<String,List<User>> allUsersHelper() {
+        Map<String,List<User>> map = new HashMap<String,List<User>>();        
+        map.put("list", userRepo.findAll());
+        return map;
+    }
+    
     @ApiMapping("/all")
     @Auth(role="ROLE_MANAGER")
     @Transactional
     public ApiResponse allUsers() {            
-        Map<String,List<User>> map = new HashMap<String,List<User>>();        
-        map.put("list", userRepo.findAll());
-        return new ApiResponse(SUCCESS, map);
+        return new ApiResponse(SUCCESS, allUsersHelper());
     }
     
     @ApiMapping("/update-role")
     @Auth(role="ROLE_MANAGER")
     @Transactional
-    public ApiResponse updateRole(@Data String data) throws Exception {
+    public ApiResponse updateRole(@ApiValidatedModel User user) {      
         
-        Map<String,String> map = new HashMap<String,String>();      
-        try {
-            map = objectMapper.readValue(data, new TypeReference<HashMap<String,String>>(){});
-        } catch (Exception e) {
-            e.printStackTrace();
-        }       
+        User possiblyExistingUser = userRepo.findByEmail(user.getEmail());
+        if (possiblyExistingUser == null) {
+            user.getBindingResult().addError(new ObjectError("user", "cannot update a role on a nonexistant user!"));
+        }
         
-        User user = userRepo.findByEmail(map.get("email"));
-        
-        user.setRole(map.get("role"));
-        
-        user = userRepo.save(user);
-        
-        Map<String, Object> userMap = new HashMap<String, Object>();
-        userMap.put("list", userRepo.findAll());
-        userMap.put("changedUserEmail", map.get("email"));
-        
-        this.simpMessagingTemplate.convertAndSend("/channel/users", new ApiResponse(SUCCESS, userMap));
+        possiblyExistingUser.setRole(user.getRole());
+
+        this.simpMessagingTemplate.convertAndSend("/channel/users", new ApiResponse(SUCCESS, allUsersHelper()));
         
         return new ApiResponse(SUCCESS, user);
     }
