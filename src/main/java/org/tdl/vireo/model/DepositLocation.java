@@ -20,22 +20,18 @@ public class DepositLocation extends BaseOrderedEntity {
 	
 	// TODO: this is really a URL
 	@Column(nullable = false)
-	@NotNull
     @NotEmpty
 	private String repository;
 	
 	@Column(nullable = false)
-	@NotNull
     @NotEmpty
 	private String collection;
 	
 	@Column(nullable = false)
-	@NotNull
     @NotEmpty
 	private String username;
 	
 	@Column(nullable = false)
-	@NotNull
     @NotEmpty
 	private String password;
 	
@@ -44,13 +40,11 @@ public class DepositLocation extends BaseOrderedEntity {
 
 	// TODO, this used to be a Bean name in Vireo 3. (Deposit Format -- DSPace METS)
 	@Column(nullable = false)
-	@NotNull
     @NotEmpty
 	private String packager;
 	
 	// TODO, this used to be a Bean name in Vireo 3. (Deposit Protocol -- SWORDv1)
 	@Column(nullable = false)
-	@NotNull
     @NotEmpty
 	private String depositor;
 	
