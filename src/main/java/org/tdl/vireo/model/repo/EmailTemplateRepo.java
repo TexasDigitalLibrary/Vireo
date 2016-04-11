@@ -12,6 +12,8 @@ public interface EmailTemplateRepo extends JpaRepository<EmailTemplate, Long>, E
 
     public EmailTemplate findByNameAndIsSystemRequired(String name, Boolean isSystemRequired);
     
+    public EmailTemplate findByPosition(Long position);
+    
     public List<EmailTemplate> findAllByOrderByPositionAsc();
 
 }

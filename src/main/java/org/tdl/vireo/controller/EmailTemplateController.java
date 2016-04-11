@@ -1,9 +1,8 @@
 package org.tdl.vireo.controller;
 
-import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
+import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_ERROR;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,16 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.ObjectError;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import edu.tamu.framework.aspect.annotation.ApiMapping;
+import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
-import edu.tamu.framework.aspect.annotation.Data;
 import edu.tamu.framework.model.ApiResponse;
 
 @Controller
@@ -34,9 +31,6 @@ public class EmailTemplateController {
 
     @Autowired
     private EmailTemplateRepo emailTemplateRepo;
-
-    @Autowired
-    private ObjectMapper objectMapper;
     
     @Autowired 
     private SimpMessagingTemplate simpMessagingTemplate;
@@ -55,44 +49,17 @@ public class EmailTemplateController {
 
     @ApiMapping("/create")
     @Auth(role = "ROLE_MANAGER")
-    public ApiResponse createEmailTemplate(@Data String data) {
-        
-        JsonNode dataNode;
-        try {
-            dataNode = objectMapper.readTree(data);
-        } catch (IOException e) {
-            return new ApiResponse(ERROR, "Unable to parse update json ["+e.getMessage()+"]");
+    public ApiResponse createEmailTemplate(@ApiValidatedModel EmailTemplate emailTemplate) {
+        // TODO: this needs to go in repo.validateCreate() -- VIR-201
+        if(!emailTemplate.getBindingResult().hasErrors() && emailTemplateRepo.findByNameAndIsSystemRequired(emailTemplate.getName(), emailTemplate.isSystemRequired()) != null){
+            emailTemplate.getBindingResult().addError(new ObjectError("emailTemplate", emailTemplate.getName() + " is already an email template!"));
         }
         
-        EmailTemplate newEmailTemplate = null;
-        String newEmailTemplateName = null;
-        String newEmailTemplateSubject = null;
-        String newEmailTemplateMessageBody = null;
-                
-        JsonNode pontentialName = dataNode.get("name");
-        if(pontentialName == null || pontentialName.asText().length() <= 0) { // Because of short circuit testing, pontentialName will be nonnull whenever pontentialName.asText() is called.
-           return new ApiResponse(ERROR, "Name required to create an email template!");
-        }else{
-            newEmailTemplateName = pontentialName.asText();
-        }
-        JsonNode potentialSubject = dataNode.get("subject");
-        if(potentialSubject == null || potentialSubject.asText().length() <= 0) { // Because of short circuit testing, potentialSubject will be nonnull whenever potentialSubject.asText() is called.
-           return new ApiResponse(ERROR, "Subject required to create an email template!");
-        }else{
-            newEmailTemplateSubject = potentialSubject.asText();
-        }
-        JsonNode potentialMessageBody = dataNode.get("messageBody");
-        if(potentialMessageBody == null || potentialMessageBody.asText().length() <= 0) { // Because of short circuit testing, potentialMessageBody will be nonnull whenever potentialMessageBody.asText() is called.
-           return new ApiResponse(ERROR, "MessageBody required to create an email template!");
-        }else{
-            newEmailTemplateMessageBody = potentialMessageBody.asText();
+        if(emailTemplate.getBindingResult().hasErrors()) {
+            return new ApiResponse(VALIDATION_ERROR, emailTemplate.getBindingResult().getAll());
         }
 
-        newEmailTemplate = emailTemplateRepo.create(newEmailTemplateName, newEmailTemplateSubject, newEmailTemplateMessageBody); //With parameters checked, it is now safe to create the new email template.
-
-        newEmailTemplate.setPosition(emailTemplateRepo.count());
-
-        newEmailTemplate = emailTemplateRepo.save(newEmailTemplate);
+        EmailTemplate newEmailTemplate = emailTemplateRepo.create(emailTemplate.getName(), emailTemplate.getSubject(), emailTemplate.getMessage());
 
         logger.info("Created email template with name " + newEmailTemplate.getName());
         
@@ -103,58 +70,32 @@ public class EmailTemplateController {
     
     @ApiMapping("/update")
     @Auth(role = "ROLE_MANAGER")
-    public ApiResponse updateEmailTemplate(@Data String data) {
-        
-        JsonNode dataNode;
-        try {
-            dataNode = objectMapper.readTree(data);
-        } catch (IOException e) {
-            return new ApiResponse(ERROR, "Unable to parse update json ["+e.getMessage()+"]");
-        }
-        
-        EmailTemplate oldEmailTemplate = null;
-                
-        JsonNode potentiallyExistingId = dataNode.get("id");
-        if(potentiallyExistingId != null) {
-            Long potentiallyExistingIdLong = -1L;
-            try {
-                potentiallyExistingIdLong = potentiallyExistingId.asLong();
+    public ApiResponse updateEmailTemplate(@ApiValidatedModel EmailTemplate emailTemplate) {
+        // TODO: this needs to go in repo.validateUpdate() -- VIR-201
+        EmailTemplate emailTemplateToUpdate = null;
+        if(emailTemplate.getId() == null) {
+            emailTemplate.getBindingResult().addError(new ObjectError("emailTemplate", "Cannot update a EmailTemplate without an id!"));
+        } else {
+            emailTemplateToUpdate = emailTemplateRepo.findOne(emailTemplate.getId());
+            if(emailTemplateToUpdate == null) {
+                emailTemplate.getBindingResult().addError(new ObjectError("emailTemplate", "Cannot update a EmailTemplate with an invalid id!"));
+            } else if (emailTemplate.isSystemRequired()) {
+                emailTemplate.getBindingResult().addError(new ObjectError("emailTemplate", "Cannot update a system required EmailTemplate!"));
             }
-            catch(NumberFormatException nfe) {
-                return new ApiResponse(ERROR, "id required to update email template!");
-            }
-            oldEmailTemplate = emailTemplateRepo.findOne(potentiallyExistingIdLong);
-        }
-        else {
-            return new ApiResponse(ERROR, "id of existing email template required to update!");
         }
         
-        JsonNode name = dataNode.get("name");
-        if(name != null) {
-            String nameString = name.asText();
-            if(nameString != null && nameString.length() > 0) 
-                oldEmailTemplate.setName(nameString);
+        if(emailTemplate.getBindingResult().hasErrors()) {
+            return new ApiResponse(VALIDATION_ERROR, emailTemplate.getBindingResult().getAll());
         }
-        
-        JsonNode subject = dataNode.get("subject");
-        if(subject != null) {
-            String subjectString = subject.asText();
-            if(subjectString != null && subjectString.length() > 0) 
-                oldEmailTemplate.setSubject(subjectString);
-        }
-        
-        JsonNode messageBody = dataNode.get("message");
-        if(messageBody != null) {
-            String messageBodyString = messageBody.asText();
-            if(messageBodyString != null && messageBodyString.length() > 0) 
-                oldEmailTemplate.setMessage(messageBodyString);
-        }
-        
-        oldEmailTemplate = emailTemplateRepo.save(oldEmailTemplate);
+         
+        emailTemplateToUpdate.setName(emailTemplate.getName());
+        emailTemplateToUpdate.setSubject(emailTemplate.getSubject());
+        emailTemplateToUpdate.setMessage(emailTemplate.getMessage());
+        emailTemplateToUpdate = emailTemplateRepo.save(emailTemplateToUpdate);
         
         //TODO: logging
         
-        logger.info("Created deposit location with name " + oldEmailTemplate.getName());
+        logger.info("Created deposit location with name " + emailTemplateToUpdate.getName());
         
         simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(SUCCESS, getAll()));
         
@@ -172,15 +113,22 @@ public class EmailTemplateController {
         }
         catch(NumberFormatException nfe) {
             logger.info("\n\nNOT A NUMBER " + indexString + "\n\n");
-            return new ApiResponse(ERROR, "Id is not a valid deposit location order!");
+            return new ApiResponse(VALIDATION_ERROR, "Id is not a valid email template order!");
         }
         
-        if(index >= 0) {               
-            emailTemplateRepo.remove(index);
+        if(index >= 0) {
+            EmailTemplate emailTemplateToRemove = emailTemplateRepo.findByPosition(index);
+            if(emailTemplateToRemove != null && !emailTemplateToRemove.isSystemRequired()) {
+                emailTemplateRepo.remove(emailTemplateToRemove.getPosition());
+            } else if(emailTemplateToRemove == null) {
+                return new ApiResponse(VALIDATION_ERROR, "Cannot remove email template that doesn't exist!");
+            } else {
+                return new ApiResponse(VALIDATION_ERROR, "Cannot remove system required email template!");
+            }
         }
         else {
             logger.info("\n\nINDEX" + index + "\n\n");
-            return new ApiResponse(ERROR, "Id is not a valid deposit location order!");
+            return new ApiResponse(VALIDATION_ERROR, "Id is not a valid deposit location order!");
         }
         
         logger.info("Deleted email template with order " + index);
