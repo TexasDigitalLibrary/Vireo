@@ -1,15 +1,33 @@
-vireo.controller("OrganizationManagementController", function ($controller, $scope, $q, OrganizationRepo) {
+vireo.controller("OrganizationManagementController", function ($controller, $scope, $q, OrganizationRepo, OrganizationCategoryRepo) {
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
-	$scope.ready = $q.all([OrganizationRepo.ready()]);
+	$scope.organizationCategories = OrganizationCategoryRepo.get();
+	$scope.ready = $q.all([OrganizationRepo.ready(),OrganizationCategoryRepo.ready()]);
+
+	$scope.managedOrganization = null;
 
 	$scope.ready.then(function() {
-/*      
-		$scope.resetPanels = function() {
-        	$scope.activePanel;
-	        $scope.panelHistory = [];
-	        $scope.openPanels = [new PanelEntry($scope.organizations.list[0])];
+
+		$scope.updateOrganization = function(organization) {
+			OrganizationRepo.update(organization).then(function() {
+				//update the parent scoped selected organization
+				$scope.setSelectedOrganization(organization);
+			});
         }
-*/
+
+		$scope.getManagedOrganization = function() {
+			var currentOrganization = $scope.getSelectedOrganization();
+			if (typeof currentOrganization != undefined) {
+				if (!$scope.managedOrganization || $scope.managedOrganization.id != currentOrganization.id) {
+					$scope.managedOrganization = angular.copy(currentOrganization);
+				}
+			}
+			return $scope.managedOrganization;
+		}
+
+		$scope.resetManagedOrganization = function() {
+			$scope.managedOrganization = angular.copy($scope.getSelectedOrganization());
+		}
+
 	});
 });

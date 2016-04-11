@@ -35,8 +35,8 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-xs-12" ng-controller="OrganizationManagementController">
-		<div class="row">
+	<div class="col-xs-11" ng-controller="OrganizationManagementController">
+		<div class="row" ng-hide="!getSelectedOrganization()">
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<h3 class="panel-title">Manage Organization</h3>
@@ -44,20 +44,31 @@
 				<div class="panel-body">
 					<div class="row">
 						<div class="col-xs-6">
-							<form class="form-signin">
-								<label for="inputName">Name</label>
-								<input type="text" id="inputName" class="form-control" placeholder="Name" value="{{getSelectedOrganization().name}}" required="" autofocus="" style="margin-bottom: 20px;">
-								<label for="inputCategory">Category</label>
-								<select id="inputCategory" class="form-control label label-primary">
-									<option class="label-success">Institution</option>
-									<option class="label-danger">College</option>
-									<option class="label-warning">Degree</option>
-									<option class="label-info">Major</option>
-									<option class="label-primary" selected="selected">Department</option>
-								</select>
+							<form id="updateOrganization" ng-submit="updateOrganization(managedOrganization)">
+								<textField 
+									label="Name" 
+									scope-value="getManagedOrganization().name"
+									label-width="12"
+									field-width="12"
+									expanded="true">
+								</textField>
+								<div class="form-group text-field clearfix">
+									<div class="col-sm-12">
+										<span class="text-field-heading">Category</span>
+									</div>
+									<div class="col-sm-12 expanded">
+										<div class="with-tool-tip">
+											<div class="with-hint">
+												<select name="organizationCategory" id="organizationCategory" class="form-control" ng-model="getManagedOrganization().category" ng-options="category.id as category.name for category in organizationCategories.list">
+												</select>
+											</div>
+										</div>
+									</div>
+								</div>
+
 								<div class="modal-footer">
-									<button type="button" class="btn btn-warning">Cancel</button>
-									<button type="button" class="btn btn-primary">Save</button>
+									<button type="button" class="btn btn-warning" ng-click="resetManagedOrganization()">Cancel</button>
+									<input type="submit" class="btn btn-primary" value="Save" />
 								</div>
 							</form>
 						</div>
