@@ -934,100 +934,100 @@ footer a, footer li, footer p {
 * ORGANIZARION/WORKFLOW *
 *************************/
 
-.tryptic {}
+.triptych {}
 
-.tryptic .panel-wraper {
+.triptych .panel-wraper {
   float: left;
   overflow: hidden;
   max-width: 100%;
   opacity: 0;
-  -webkit-transition: max-width 0.25s ease-in-out;
-  -moz-transition: max-width 0.25s ease-in-out;
-  -o-transition: max-width 0.25s ease-in-out;
-  transition: max-width 0.25s ease-in-out, opacity 0.25s ease-in-out;
+  -webkit-transition: max-width 0.35s ease-in-out;
+  -moz-transition: max-width 0.35s ease-in-out;
+  -o-transition: max-width 0.35s ease-in-out;
+  transition: max-width 0.35s ease-in-out, opacity 0.35s ease-in-out;
 }
 
-.tryptic .panel-wraper.closing {
+.triptych .panel-wraper.closing {
   max-width: 0%;
 } 
 
-.tryptic .panel-wraper.opening {
+.triptych .panel-wraper.opening {
   max-width: 100%;
 }
 
-.tryptic .panel-wraper.shown {
+.triptych .panel-wraper.shown {
   opacity: 1;
 }
 
-.tryptic .panel-heading span {
+.triptych .panel-heading span {
   text-transform: none;
 }
 
-.tryptic .panel-heading
+.triptych .panel-heading
 
-.tryptic-navigation {}
+.triptych-navigation {}
 
-.tryptic-navigation .breadcrumb {
+.triptych-navigation .breadcrumb {
   min-height: 60px;
   display: inline-block;
   margin-left: 15px;
 }
 
-.tryptic-navigation .breadcrumb>li:last-child {
+.triptych-navigation .breadcrumb>li:last-child {
   font-weight: bolder;
   display: block;
 }
 
-.tryptic-navigation .breadcrumb .glyphicon-arrow-down {
+.triptych-navigation .breadcrumb .glyphicon-arrow-down {
   tvertical-align: middle;
 }
 
-.tryptic-navigation breadcrumb {}
+.triptych-navigation breadcrumb {}
 
-.tryptic-panels {}
+.triptych-panels {}
 
-.tryptic-panels .glyphicon-arrow-right {
+.triptych-panels .glyphicon-arrow-right {
   display: none;
 }
 
-.tryptic-panel {
+.triptych-panel {
   min-height: 250px;
   max-height: 250px;
   min-width: 200px;
 }
 
-.tryptic-panel.active .glyphicon-arrow-right,
-.tryptic-panel.previously-active .glyphicon-arrow-right {
+.triptych-panel.active .glyphicon-arrow-right,
+.triptych-panel.previously-active .glyphicon-arrow-right {
   display: inline-block;
 }
 
-.tryptic-panel .list-group {
+.triptych-panel .list-group {
     padding-left: 0;
     margin-bottom: 0px;
 }
 
-.tryptic-panel .list-group-item:hover {
+.triptych-panel .list-group-item:hover {
     cursor: pointer;
     color: #70706f;
     background: #efefef;
 }
 
-.tryptic-panel.previously-active .list-group-item.selected {
+.triptych-panel.previously-active .list-group-item.selected {
     color: #70706f;
     background: #efefef;
 }   
 
-.tryptic-panel .list-group-item.selected {
+.triptych-panel .list-group-item.selected {
     color: #fff;
     background: #92AA9C;
 } 
 
-.tryptic-panel .panel-body {
+.triptych-panel .panel-body {
   padding: 7px;
   overflow-y:scroll;
 }
 
-.tryptic-panel.active .panel-heading {
+.triptych-panel.active .panel-heading {
   color: white;
   background: rgb(31, 58, 71);
   background: -moz-linear-gradient linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
@@ -1036,7 +1036,7 @@ footer a, footer li, footer p {
   background: linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
 }
 
-.tryptic-panel.previously-active .panel-heading {
+.triptych-panel.previously-active .panel-heading {
   color: white;
   background: rgb(31, 58, 71);
   background: -moz-linear-gradient linear-gradient(to right, rgba(146, 170, 156, 0.95), rgba(173, 189, 170, 0.95));
@@ -1045,13 +1045,13 @@ footer a, footer li, footer p {
   background: linear-gradient(to right, rgba(146, 170, 156, 0.95), rgba(173, 189, 170, 0.95));
 }
 
-.tryptic .down-arrow {
+.triptych .down-arrow {
   width: 1px;
   height: 25px;
   margin: auto;
 }
 
-.tryptic-panel-entry {}
+.triptych-panel-entry {}
 
 /*************
 * DIRECTIVES *
