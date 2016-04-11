@@ -49,10 +49,21 @@
 								ng-class="{'selected': panel.selectedOrganization.id == organization.id}"
 								class="triptych-panel-entry">
 								<ul class="inline-list pull-right">
-									<li><span class="glyphicon glyphicon-pencil pull-right"></span></li>
-									<li><span class="glyphicon glyphicon-trash pull-right"></span></li>
+									<li>
+										<span class="glyphicon glyphicon-cog pull-right"></span>
+									</li>
+									<li>
+										<span class="glyphicon glyphicon-list-alt pull-right"></span>
+									</li>
+									<li>
+										<span class="glyphicon glyphicon-envelope pull-right"></span>
+									</li>
+									
 								</ul>
-								{{organization.name}}<span ng-if="organization.childrenOrganizations.length" class="badge">{{organization.childrenOrganizations.length}}</span>
+								<span>
+									{{organization.name}}
+									<span ng-if="organization.childrenOrganizations.length" class="badge">{{organization.childrenOrganizations.length}}</span>
+								</span>
 							</li>
 						</ul>
 					</div>
