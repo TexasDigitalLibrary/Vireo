@@ -67,6 +67,11 @@ vireo.controller("TriptychController", function ($controller, $scope, $q, $timeo
         	return OrganizationCategoryRepo.findById(id);
         }
 
+        $scope.resetPanels = function() {
+            $scope.triptych.resetPanels();
+            $scope.newOrganization.parent = $scope.organizations.list[0];
+        }
+
     });
 
     var Triptych = function(organization) {
