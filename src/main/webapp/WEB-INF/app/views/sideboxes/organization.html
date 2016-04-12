@@ -12,14 +12,9 @@
 		<option ng-repeat="category in organizationCategories.list | orderBy:'name'" value="{{category.id}}" ng-if="category.name!='System'">{{category.name}}</option>
 	    </select>
 	</div>
-	
-	<sideboxsub>Parent</sideboxsub>			
-	<div class="form-group">   	
-	    <input class="form-control" placeholder="Parent Organization..." type="text"  uib-typeahead="organization as organization.name for organization in organizations.list | filter:$viewValue | limitTo:8" typeahead-editable="false" ng-model="newOrganization.parent" typeahead-select-on-blur="true" required />
-	</div>
 
 	<div class="form-group">
-		<button class="btn btn-default" type="submit" ng-disabled="newOrganizationForm.$invalid">Add</button>
+		<button class="btn btn-default" type="submit" ng-disabled="newOrganizationForm.$invalid">Add <span ng-if="newOrganization.parent">to</span> {{newOrganization.parent.name}}</button>
 	</div>
 
 	<alerts seconds="20" channels="/organization" types="SUCCESS, ERROR, WARNING, INFO" exclusive></alerts>

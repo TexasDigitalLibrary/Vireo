@@ -225,6 +225,19 @@ vireo.controller("TriptychController", function ($controller, $scope, $q, $timeo
         toggleFilter: function(category) {
             var Panel = this;
             Panel.filterOn =  Panel.filterOn == category.id ? "" : category.id;
+        },
+        getUniqueCategories: function() {
+            var Panel = this;
+            var uniqueCategories = [];
+
+            for(var key in Panel.organizationCategories) {
+                var category = Panel.organizationCategories[key];
+                if(uniqueCategories.indexOf(category) === -1) {
+                    uniqueCategories.push(category);
+                }
+            }
+
+            return uniqueCategories;
         }
     }
 

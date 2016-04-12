@@ -938,19 +938,20 @@ footer a, footer li, footer p {
 * ORGANIZARION/WORKFLOW *
 *************************/
 
-.triptych .divider-wraper {
-  text-align:center
+.triptych .divider-wrapper {
+  text-align:center;
+  margin: 20px 0px;
 }
 
 .triptych .divider {
   margin: 0px;
 }
 
-.triptych .collapse-btn:hover {
+.triptych .divider-wrapper:hover {
   cursor: pointer;
 }
 
-.triptych-wraper {
+.triptych-wrapper {
   display: block;
   overflow: hidden;
   max-height: 1000px;
@@ -960,11 +961,13 @@ footer a, footer li, footer p {
   transition: max-height 0.5s ease-in-out;
 }
 
-.triptych-wraper.collapse {
+
+
+.triptych-wrapper.collapse {
   max-height: 122px;
 }
 
-.triptych .panel-wraper {
+.triptych .panel-wrapper {
   float: left;
   overflow: hidden;
   max-width: 100%;
@@ -976,15 +979,15 @@ footer a, footer li, footer p {
   transition: max-width 0.35s ease-in-out, opacity 0.35s ease-in-out;
 }
 
-.triptych .panel-wraper.closing {
+.triptych .panel-wrapper.closing {
   max-width: 0%;
 } 
 
-.triptych .panel-wraper.opening {
+.triptych .panel-wrapper.opening {
   max-width: 100%;
 }
 
-.triptych .panel-wraper.shown {
+.triptych .panel-wrapper.shown {
   max-height: 500px;
   opacity: 1;
 }

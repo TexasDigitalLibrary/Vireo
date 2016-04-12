@@ -18,6 +18,12 @@ vireo.service("OrganizationRepo", function($route, WsApi, AbstractModel) {
 
 	OrganizationRepo.promise = null;
 
+	OrganizationRepo.newOrganization = {};
+
+	OrganizationRepo.getNewOrganization = function() {
+		return OrganizationRepo.newOrganization;
+	}
+
 	OrganizationRepo.set = function(data) {
 		self.unwrap(self, data);
 	};

@@ -9,7 +9,7 @@ vireo.controller("OrganizationSideBarController", function($controller, $scope, 
 		OrganizationCategoryRepo.ready()
 	]).then(function() {
 
-		$scope.newOrganization = {};
+		$scope.newOrganization = OrganizationRepo.getNewOrganization();
 
 		$scope.createNewOrganization = function() {
 			OrganizationRepo.add($scope.newOrganization).then(function() {

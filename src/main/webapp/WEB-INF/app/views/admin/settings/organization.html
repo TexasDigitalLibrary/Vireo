@@ -1,7 +1,7 @@
 <div class="row admin-settings" ng-controller="OrganizationSettingsController">
 	<div class="col-xs-12 triptych" ng-controller="TriptychController">
 		<h1>ORGANIZATIONS AND WORKFLOWS</h1>
-		<div class="triptych-wraper" ng-class="{'collapse': !triptych.expanded}">
+		<div class="triptych-wrapper" ng-class="{'collapse': !triptych.expanded}">
 			<div class="row triptych-navigation">
 				<div class="row">
 					<div class="col-xs-12">
@@ -24,7 +24,7 @@
 				</div>
 			</div>
 			<div class="row triptych-panels">
-				<div class="col-xs-12 col-sm-6 col-md-4 panel-wraper"
+				<div class="col-xs-12 col-sm-6 col-md-4 panel-wrapper"
 					 ng-class="{'closing': panel.closing, 'opening': panel.opening, 'shown': panel.visible}" 
 					 ng-repeat="panel in triptych.openPanels" 
 					 ng-if="panel.parentOrganization.childrenOrganizations.length>0">
@@ -34,10 +34,10 @@
 
 						<div class="panel-heading" 
 							 ng-click="triptych.expanded = true"> 
-							<span 	ng-repeat="(orgId, category) in panel.organizationCategories" 
+							<span 	ng-repeat="(orgId, category) in panel.getUniqueCategories()" 
 									ng-click="panel.toggleFilter(category)">
 								<span 	class="category-heading" 
-										ng-class="{'active': category.id == panel.filterOn, 'multiple': Object.keys(panel.organizationCategories).length}">{{category.name}}</span> 
+										ng-class="{'active': category.id == panel.filterOn, 'multiple': panel.getUniqueCategories().length}">{{category.name}}</span> 
 								<span ng-if="!$last"> / </span> 
 							</span>
 							<span 	class="glyphicon glyphicon-arrow-right pull-right"
@@ -67,7 +67,7 @@
 										{{organization.name}}
 										<span class="badge" ng-if="organization.childrenOrganizations.length">{{organization.childrenOrganizations.length}}</span>
 									</span>
-									<span class="category-label" ng-if="Object.keys(panel.organizationCategories).length > 1">{{getCategoryById(organization.category).name}}</span>
+									<span class="category-label" ng-if="panel.getUniqueCategories().length > 1">{{getCategoryById(organization.category).name}}</span>
 								</li>
 							</ul>
 						</div>
@@ -78,11 +78,11 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="divider-wraper col-xs-12">
-				<span class="collapse-btn glyphicon glyphicon-chevron-up" ng-if="triptych.expanded" ng-click="triptych.expanded = false"></span>
+			<div class="divider-wrapper col-xs-12" ng-click="triptych.expanded = !triptych.expanded">
+				<span class="collapse-btn glyphicon glyphicon-chevron-up" ng-if="triptych.expanded"></span>
 				<span ng-if="!triptych.expanded">EXPAND NAVIGATION</span>
 				<hr class="divider">
-				<span class="collapse-btn glyphicon glyphicon-chevron-down" ng-if="!triptych.expanded" ng-click="triptych.expanded = true"></span>
+				<span class="collapse-btn glyphicon glyphicon-chevron-down" ng-if="!triptych.expanded"></span>
 			</div>
 		</div>
 	</div>
@@ -107,12 +107,12 @@
 									<textField 
 										label="Name" 
 										scope-value="getManagedOrganization().name"
-										label-width="3"
+										label-width="2"
 										field-width="4"
 										expanded="true">
 									</textField>
 									<div class="form-group text-field clearfix">
-										<div class="col-sm-3">
+										<div class="col-sm-2">
 											<span class="text-field-heading">Category</span>
 										</div>
 										<div class="col-sm-4 expanded">
@@ -124,7 +124,18 @@
 											</div>
 										</div>
 									</div>
-
+									<div class="form-group">
+										<div class="col-sm-2">
+											<span class="text-field-heading">Parent Organization</span>
+										</div>
+										<div class="col-sm-4 expanded">
+											<div class="with-tool-tip">
+												<div class="with-hint">
+													<input class="form-control" placeholder="Parent Organization..." type="text"  uib-typeahead="organization as organization.name for organization in organizations.list | filter:$viewValue | limitTo:8" typeahead-editable="false" ng-model="getManagedOrganization().parent" typeahead-select-on-blur="true" required />
+												</div>
+											</div>
+										</div>   	
+									</div>
 									<div class="modal-footer">
 										<button type="button" class="btn btn-warning" ng-click="resetManagedOrganization()">Cancel</button>
 										<input type="submit" class="btn btn-primary" value="Save" />
