@@ -1,0 +1,49 @@
+<div id="organization-categories" class="row" ng-controller="OrganizationCategoriesController">
+  
+  <div class="col-sm-6">    
+    <button class="btn btn-default modal-add-btn" 
+        data-toggle="modal" 
+        data-target="#organizationCategoryNewModal">
+      Add Organization Category
+    </button>
+    <p ng-if="organizationCategories.list.length == 0">Add new Organization Category</p>
+    <draganddroplist dragging="dragging"
+             scope-value="organizationCategories"
+             properties='["name"]'
+             item-view='views/directives/dragAndDropOrganizationCategory.html'
+             listeners='dragControlListeners'
+             edit='launchEditModal(index)'
+             sort-label='Organization Category'>
+    </draganddroplist>
+  </div>
+  
+  <div class="col-sm-6">
+    <trashcan id="{{trashCanId}}"
+          dragging="dragging"
+          listeners='dragControlListeners'>
+    </trashcan>
+  </div>
+
+
+  <modal modal-id="organizationCategoryNewModal" 
+         modal-view="views/modals/settings/organizationCategoryNewModal.html" 
+         modal-header-class="modal-header-primary"		   
+         modal-keyboard="false"
+         modal-backdrop="static">
+  </modal>
+
+  <modal modal-id="organizationCategoryEditModal" 
+         modal-view="views/modals/settings/organizationCategoryEditModal.html" 
+         modal-header-class="modal-header-primary"		   
+         modal-keyboard="false"
+         modal-backdrop="static">
+  </modal>
+
+  <modal modal-id="organizationCategoryConfirmRemoveModal" 
+         modal-view="views/modals/settings/organizationCategoryConfirmRemoveModal.html" 
+         modal-header-class="modal-header-primary"		   
+         modal-keyboard="false"
+         modal-backdrop="static">
+  </modal>
+  
+</div>

@@ -1,4 +1,4 @@
-vireo.service("OrganizationCategoryRepo", function($route, WsApi, AbstractModel) {
+vireo.service("OrganizationCategoryRepoModel", function($route, WsApi, AbstractModel) {
 
 	var self;
 	
