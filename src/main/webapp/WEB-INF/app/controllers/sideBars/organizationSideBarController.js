@@ -21,13 +21,9 @@ vireo.controller("OrganizationSideBarController", function($controller, $scope, 
 			return OrganizationCategoryRepo.findById(id);
 		}
 
-		setForm = function() {
-			$scope.newOrganization.parent = "";
-			$scope.newOrganization.categoryId = "";
-			$scope.newOrganization.name = "";
+		var setForm = function() {
+			$scope.newOrganization = null;
 		}
-
-		setForm();
 
 	});
 
