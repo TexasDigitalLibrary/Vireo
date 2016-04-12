@@ -5,7 +5,7 @@ vireo.controller('UserRepoController', function ($controller, $location, $route,
 
     $scope.userRepo = UserRepo.get();
     
-    $scope.ready = $q.all([User.ready(), UserRepo.ready()]);
+    $scope.ready = $q.all([User.ready()]);
     
     $scope.ready.then(function() {
 
