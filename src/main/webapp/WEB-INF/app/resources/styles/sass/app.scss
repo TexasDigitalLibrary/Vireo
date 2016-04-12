@@ -934,16 +934,40 @@ footer a, footer li, footer p {
 * ORGANIZARION/WORKFLOW *
 *************************/
 
-.triptych {}
+.triptych .divider-wraper {
+  text-align:center
+}
+
+.triptych .divider {
+  margin: 0px;
+}
+
+.triptych .collapse-btn:hover {
+  cursor: pointer;
+}
+
+.triptych-wraper {
+  display: block;
+  overflow: hidden;
+  max-height: 1000px;
+  -webkit-transition: max-height 0.5s ease-in-out;
+  -moz-transition: max-height 0.5s ease-in-out;
+  -o-transition: max-height 0.5s ease-in-out;
+  transition: max-height 0.5s ease-in-out;
+}
+
+.triptych-wraper.collapse {
+  max-height: 122px;
+}
 
 .triptych .panel-wraper {
   float: left;
   overflow: hidden;
   max-width: 100%;
   opacity: 0;
-  -webkit-transition: max-width 0.35s ease-in-out;
-  -moz-transition: max-width 0.35s ease-in-out;
-  -o-transition: max-width 0.35s ease-in-out;
+  -webkit-transition: max-width 0.35s ease-in-out, opacity 0.35s ease-in-out;
+  -moz-transition: max-width 0.35s ease-in-out, opacity 0.35s ease-in-out;
+  -o-transition: max-width 0.35s ease-in-out, opacity 0.35s ease-in-out;
   transition: max-width 0.35s ease-in-out, opacity 0.35s ease-in-out;
 }
 
@@ -963,7 +987,14 @@ footer a, footer li, footer p {
   text-transform: none;
 }
 
-.triptych .panel-heading
+.triptych .panel-heading .category-heading.multiple.active,
+.triptych .panel-heading .category-heading.multiple:hover {
+  text-decoration: underline;
+}
+
+.triptych .panel-heading .category-heading.multiple:hover {
+  cursor: pointer;
+}
 
 .triptych-navigation {}
 
@@ -1009,6 +1040,20 @@ footer a, footer li, footer p {
 .triptych-panel .list-group-item {
     position: relative;
     min-height: 50px;
+}
+
+.triptych-panel .list-group-item .inline-list > li {
+  margin-left: 0.5em;
+}
+
+.triptych-panel .list-group-item .context-icons {
+  font-size: 1.25em;
+  line-height: 1.25;
+}
+
+.triptych-panel .list-group-item .context-icons.selected,
+.triptych-panel .list-group-item .context-icons:hover {
+  color: rgba(31, 58, 71, 0.95);
 }
 
 .triptych-panel .list-group-item .category-label {
