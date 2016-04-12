@@ -16,7 +16,8 @@ vireo.controller("WhoHasAccessController", function ($controller, $q, $scope, Us
 
     $scope.ready.then(function() {
 
-        $scope.updateRole = function(userToEdit) {
+        $scope.updateRole = function(userToEdit, selectedRole) {
+        	userToEdit.role = selectedRole;
             UserRepo.updateRole($scope.user, userToEdit);
         };
 

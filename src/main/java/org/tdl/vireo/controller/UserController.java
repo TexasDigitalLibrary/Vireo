@@ -83,8 +83,14 @@ public class UserController {
         }
         
         possiblyExistingUser.setUserRole(user.getUserRole());
+        
+        userRepo.save(possiblyExistingUser);
+        
+        Map<String, Object> retMap = new HashMap<String, Object>();
+        retMap.put("list", userRepo.findAll());
+        retMap.put("changedUserEmail", possiblyExistingUser.getEmail());
 
-        this.simpMessagingTemplate.convertAndSend("/channel/users", new ApiResponse(SUCCESS, allUsersHelper()));
+        this.simpMessagingTemplate.convertAndSend("/channel/users", new ApiResponse(SUCCESS, retMap));
         
         return new ApiResponse(SUCCESS, user);
     }
