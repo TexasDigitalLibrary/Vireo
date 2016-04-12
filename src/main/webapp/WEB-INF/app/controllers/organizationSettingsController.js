@@ -5,7 +5,10 @@ vireo.controller('OrganizationSettingsController', function ($controller, $scope
 
     $scope.organizations = OrganizationRepo.get();
     $scope.selectedOrganization;
+    $scope.activeManagementPane = 'edit';
+    $scope.organizationEditMode;
     $scope.newOrganization = OrganizationRepo.getNewOrganization();
+
 
     $scope.setSelectedOrganization = function(organization) {
     	$scope.selectedOrganization = organization;
@@ -14,7 +17,15 @@ vireo.controller('OrganizationSettingsController', function ($controller, $scope
 
     $scope.getSelectedOrganization = function() {
     	return $scope.selectedOrganization;
-    }; 
+    };
+
+    $scope.activateManagementPane = function(pane) {
+        $scope.activeManagementPane = pane;
+    }
+
+    $scope.managementPaneIsActive = function(pane) {
+            return ($scope.activeManagementPane === pane);
+        } 
 
     $scope.ready = $q.all([OrganizationRepo.ready()]);
 

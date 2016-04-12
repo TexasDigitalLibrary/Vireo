@@ -6,8 +6,6 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 
 	$scope.managedOrganization = null;
 
-	$scope.activeManagementPane = 'edit';
-
 	$scope.ready.then(function() {
 
 		$scope.updateOrganization = function(organization) {
@@ -29,14 +27,6 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 
 		$scope.resetManagedOrganization = function() {
 			$scope.managedOrganization = angular.copy($scope.getSelectedOrganization());
-		}
-
-		$scope.activateManagementPane = function(pane) {
-			$scope.activeManagementPane = pane;
-		}
-
-		$scope.managementPaneIsActive = function(pane) {
-			return ($scope.activeManagementPane === pane);
 		}
 
 	});

@@ -53,14 +53,14 @@
 									ng-class="{'selected': panel.selectedOrganization.id == organization.id}"
 									class="triptych-panel-entry">
 									<ul class="inline-list pull-right">
-										<li>
-											<span class="context-icons glyphicon glyphicon-cog pull-right"></span>
+										<li ng-click="activateManagementPane('edit')">
+											<span class="context-icons glyphicon glyphicon-cog pull-right" ng-class="{'active': managementPaneIsActive('edit')}"></span>
 										</li>
-										<li>
-											<span class="context-icons glyphicon glyphicon-list-alt pull-right"></span>
+										<li ng-click="activateManagementPane('workflow')">
+											<span class="context-icons glyphicon glyphicon-list-alt pull-right" ng-class="{'active': managementPaneIsActive('workflow')}"></span>
 										</li>
-										<li>
-											<span class="context-icons glyphicon glyphicon-envelope pull-right"></span>
+										<li ng-click="activateManagementPane('email')">
+											<span class="context-icons glyphicon glyphicon-envelope pull-right" ng-class="{'active': managementPaneIsActive('email')}"></span>
 										</li>
 									</ul>
 									<span>
@@ -90,9 +90,21 @@
 		<div class="row" ng-hide="!getSelectedOrganization()">
 			<div class="panel-heading">
 				<h3 class="panel-title">
-					<span ng-click="activateManagementPane('edit')" ng-class="{active: managementPaneIsActive('edit')}">Manage Organization</span> | 
-					<span ng-click="activateManagementPane('workflow')" ng-class="{active: managementPaneIsActive('workflow')}">Manage Workflow</span> |
-					<span ng-click="activateManagementPane('email')" ng-class="{active: managementPaneIsActive('email')}">Email Workflow Rules</span>
+					<span 	class="management-pane-selector" 
+							ng-class="{active: managementPaneIsActive('edit')}"
+							ng-click="activateManagementPane('edit')" >
+							Manage Organization
+					</span> | 
+					<span 	class="management-pane-selector"
+							ng-click="activateManagementPane('workflow')" 
+							ng-class="{active: managementPaneIsActive('workflow')}">
+							Manage Workflow
+					</span> |
+					<span 	class="management-pane-selector"
+							ng-click="activateManagementPane('email')" 
+							ng-class="{active: managementPaneIsActive('email')}">
+							Email Workflow Rules
+					</span>
 				</h3>
 			</div>
 			<div class="panel panel-default">
@@ -118,24 +130,24 @@
 										<div class="col-sm-4 expanded">
 											<div class="with-tool-tip">
 												<div class="with-hint">
-													<select name="organizationCategory" id="organizationCategory" class="form-control" ng-model="getManagedOrganization().category" ng-options="category.id as category.name for category in organizationCategories.list">
+													<select name="organizationCategory" id="organizationCategory" class="form-control" ng-model="getManagedOrganization().category" ng-options="category.id as category.name for category in organizationCategories.list | filter:{ name : '!system' }">
 													</select>
 												</div>
 											</div>
 										</div>
 									</div>
-									<div class="form-group">
+									<!--<div class="form-group clearfix">
 										<div class="col-sm-2">
 											<span class="text-field-heading">Parent Organization</span>
 										</div>
 										<div class="col-sm-4 expanded">
 											<div class="with-tool-tip">
 												<div class="with-hint">
-													<input class="form-control" placeholder="Parent Organization..." type="text"  uib-typeahead="organization as organization.name for organization in organizations.list | filter:$viewValue | limitTo:8" typeahead-editable="false" ng-model="getManagedOrganization().parent" typeahead-select-on-blur="true" required />
+													<input class="form-control" placeholder="Parent Organization..." type="text"  uib-typeahead="organization as organization.name for organization in organizations.list | filter:$viewValue | limitTo:8" typeahead-editable="false" ng-model="getManagedOrganization().parentOrganizations[0]" typeahead-select-on-blur="true" required />
 												</div>
 											</div>
 										</div>   	
-									</div>
+									</div>-->
 									<div class="modal-footer">
 										<button type="button" class="btn btn-warning" ng-click="resetManagedOrganization()">Cancel</button>
 										<input type="submit" class="btn btn-primary" value="Save" />

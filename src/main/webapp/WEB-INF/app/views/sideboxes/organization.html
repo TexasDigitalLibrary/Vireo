@@ -7,9 +7,8 @@
 	
 	<sideboxsub>Category</sideboxsub>			
 	<div class="form-group">
-		<select class="form-control" ng-model="newOrganization.categoryId" required>
-		<option value="">Choose Category</option>
-		<option ng-repeat="category in organizationCategories.list | orderBy:'name'" value="{{category.id}}" ng-if="category.name!='System'">{{category.name}}</option>
+	    <select name="organizationCategory" id="organizationCategory" class="form-control" ng-model="newOrganization.categoryId" ng-options="category.id as category.name for category in organizationCategories.list | filter:{ name : '!system' }">
+	    	<option value="">Choose Category</option>
 	    </select>
 	</div>
 

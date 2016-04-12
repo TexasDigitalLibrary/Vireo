@@ -20,7 +20,6 @@ vireo.controller("TriptychController", function ($controller, $scope, $q, $timeo
             var isFirstPanel = panelIndex == 0;
             var isLastPanel = panelIndex == 2;
 
-            //TODO: this should be done on lcick of the edit button only?
             $scope.setSelectedOrganization(organization);
 
             panel.selectedOrganization = organization;

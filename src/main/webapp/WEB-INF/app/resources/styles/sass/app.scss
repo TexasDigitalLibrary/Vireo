@@ -1060,7 +1060,7 @@ footer a, footer li, footer p {
   line-height: 1.25;
 }
 
-.triptych-panel .list-group-item .context-icons.selected,
+.triptych-panel.active .list-group-item.selected .context-icons.active,
 .triptych-panel .list-group-item .context-icons:hover {
   color: rgba(31, 58, 71, 0.95);
 }
@@ -1132,6 +1132,10 @@ footer a, footer li, footer p {
 
 #organizationManagement .panel-title span.active {
   color: #337ab7;
+  cursor: pointer;
+}
+
+#organizationManagement .management-pane-selector:hover {
   cursor: pointer;
 }
 
