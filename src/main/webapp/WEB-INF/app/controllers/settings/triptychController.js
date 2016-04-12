@@ -89,7 +89,10 @@ vireo.controller("TriptychController", function ($controller, $scope, $q, $timeo
             var Triptych = this;
             Triptych.activePanel;
             Triptych.panelHistory = [];
-            Triptych.openPanels = [Triptych.rootPanel];
+            Triptych.openPanels = [];
+            Triptych.openPanels.unshift(Triptych.rootPanel); 
+            Triptych.rootPanel.show();
+            Triptych.expanded = true;
         },
         addPanel: function(organization, index) {
             var Triptych = this;
