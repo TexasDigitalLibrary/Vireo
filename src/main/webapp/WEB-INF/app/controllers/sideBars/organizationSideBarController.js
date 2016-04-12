@@ -12,17 +12,11 @@ vireo.controller("OrganizationSideBarController", function($controller, $scope, 
 		$scope.newOrganization = OrganizationRepo.getNewOrganization();
 
 		$scope.createNewOrganization = function() {
-			OrganizationRepo.add($scope.newOrganization).then(function() {
-				setForm();
-			});
+			OrganizationRepo.add();
 		}
 
 		$scope.findOrganizationCategoryById = function(id) {
 			return OrganizationCategoryRepo.findById(id);
-		}
-
-		var setForm = function() {
-			$scope.newOrganization = null;
 		}
 
 	});

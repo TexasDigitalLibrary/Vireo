@@ -20,6 +20,12 @@ vireo.service("OrganizationRepo", function($route, WsApi, AbstractModel) {
 
 	OrganizationRepo.newOrganization = {};
 
+	OrganizationRepo.resetNewOrganization = function() {
+		for(var key in OrganizationRepo.newOrganization) {
+			delete OrganizationRepo.newOrganization[key];
+		}
+	};
+
 	OrganizationRepo.getNewOrganization = function() {
 		return OrganizationRepo.newOrganization;
 	}
@@ -73,18 +79,20 @@ vireo.service("OrganizationRepo", function($route, WsApi, AbstractModel) {
 	
 	};
 
-	OrganizationRepo.add = function(organization) {
+	OrganizationRepo.add = function() {
 
 		var addOrganizationPromise = WsApi.fetch({
 				'endpoint': '/private/queue', 
 				'controller': 'organization', 
 				'method': 'create',
 				'data': {
-					"name": organization.name, 
-					"categoryId": organization.categoryId,
-					"parentOrganizationId": organization.parent.id,
+					"name": OrganizationRepo.newOrganization.name, 
+					"categoryId": OrganizationRepo.newOrganization.categoryId,
+					"parentOrganizationId": OrganizationRepo.newOrganization.parent.id,
 				}
 		});
+
+		OrganizationRepo.resetNewOrganization();
 
 		return addOrganizationPromise;
 
