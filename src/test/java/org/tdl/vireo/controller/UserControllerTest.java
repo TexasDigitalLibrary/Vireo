@@ -179,7 +179,7 @@ public class UserControllerTest extends AbstractControllerTest {
     	assertEquals(TEST_USER_FIRST_NAME, user.getFirstName());
     	assertEquals(TEST_USER_LAST_NAME, user.getLastName());
     	assertEquals(TEST_USER_EMAIL, user.getEmail());
-    	assertEquals(TEST_USER_ROLE_UPDATE, user.getRole());
+    	assertEquals(TEST_USER_ROLE_UPDATE, user.getUserRole());
     }
 	 	 
 }

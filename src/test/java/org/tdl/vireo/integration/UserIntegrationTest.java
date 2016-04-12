@@ -110,17 +110,17 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
     			case TEST_USER2_EMAIL: {
     				assertEquals(TEST_USER2.getFirstName(), (String) map.get("firstName"));
     				assertEquals(TEST_USER2.getLastName(), (String) map.get("lastName"));					 
-    				assertEquals(TEST_USER2.getUserRole(), Role.fromString((String) map.get("role")));
+    				assertEquals(TEST_USER2.getRole(), (String) map.get("role"));
     			}; break;
     			case TEST_USER3_EMAIL: {
     				assertEquals(TEST_USER3.getFirstName(), (String) map.get("firstName"));
     				assertEquals(TEST_USER3.getLastName(), (String) map.get("lastName"));					 
-    				assertEquals(TEST_USER3.getUserRole(), Role.fromString((String) map.get("role")));
+    				assertEquals(TEST_USER3.getRole(), (String) map.get("role"));
     			}; break;
     			case TEST_USER4_EMAIL: {
     				assertEquals(TEST_USER4.getFirstName(), (String) map.get("firstName"));
     				assertEquals(TEST_USER4.getLastName(), (String) map.get("lastName"));
-    				assertEquals(TEST_USER4.getUserRole(), Role.fromString((String) map.get("role")));
+    				assertEquals(TEST_USER4.getRole(), (String) map.get("role"));
     			}; break;
     		}
     	}		 

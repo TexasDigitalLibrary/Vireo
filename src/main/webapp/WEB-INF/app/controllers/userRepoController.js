@@ -8,11 +8,12 @@ vireo.controller('UserRepoController', function ($controller, $location, $route,
      
  	if(!$scope.isAnonymous() && User.ready() !== null) {
 	    User.ready().then(function() {
-			$scope.updateRole = function(uin, role) {
-				UserRepo.updateRole($scope.user, uin, role);
-				if($scope.user.uin == uin) {
-					if(role == 'ROLE_STUDENT' || role == 'ROLE_REVIEWER') {
-						$location.path('/myview');
+			$scope.updateRole = function(userToEdit) {
+				UserRepo.updateRole($scope.user, userToEdit);
+				if($scope.user.email == userToEdit.email) {
+					StorageService.set("role", userToEdit.role);
+					if(userToEdit.role == 'ROLE_STUDENT' || userToEdit.role == 'ROLE_REVIEWER') {
+						$location.path('/myprofile');
 					}
 					else {
 						$route.reload();

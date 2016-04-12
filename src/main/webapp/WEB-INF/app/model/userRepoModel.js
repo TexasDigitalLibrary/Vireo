@@ -55,24 +55,25 @@ vireo.service("UserRepo", function($route, WsApi, AbstractModel, StorageService)
 	
 	};
 	
-	Users.updateRole = function(user, email, role) {
-
-		var change = {
-			'email': email,
-			'role': role
-		};
+	Users.updateRole = function(user, userToEdit) {
 		
 		var updateUserRolePromise = WsApi.fetch({
 			endpoint: '/private/queue', 
 			controller: 'user', 
 			method: 'update-role',
-			data: change
+			data: userToEdit
 		});
 
 		if(updateUserRolePromise.$$state) {
 			updateUserRolePromise.then(function(data) {				
-				if(user.email == email) {
-					StorageService.set("role", role);
+				if(user.email == userToEdit.email) {
+					StorageService.set("role", userToEdit.role);
+					if(userToEdit.role == 'ROLE_STUDENT' || userToEdit.role == 'ROLE_REVIEWER') {
+						$location.path('/myprofile');
+					}
+					else {
+						$route.reload();
+					}
 				}
 			});
 		}

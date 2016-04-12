@@ -82,7 +82,7 @@ public class UserController {
             return new ApiResponse(ApiResponseType.VALIDATION_ERROR, user.getBindingResult().getAll());
         }
         
-        possiblyExistingUser.setRole(user.getRole());
+        possiblyExistingUser.setUserRole(user.getUserRole());
 
         this.simpMessagingTemplate.convertAndSend("/channel/users", new ApiResponse(SUCCESS, allUsersHelper()));
         

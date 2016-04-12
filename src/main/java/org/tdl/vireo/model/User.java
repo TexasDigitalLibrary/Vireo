@@ -26,7 +26,6 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.tdl.vireo.enums.Role;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import edu.tamu.framework.model.CoreUser;
 
@@ -84,9 +83,12 @@ public class User extends BaseEntity implements CoreUser {
     private Set<Organization> organizations;
 
     @Column(nullable = false)
-    @JsonProperty(value="role")
     @NotNull
     private Role userRole;
+    
+    @Column(nullable = false)
+    @NotNull
+    private String role;
 
     @Column
     private String orcid;
@@ -368,37 +370,44 @@ public class User extends BaseEntity implements CoreUser {
     }
     
     /**
-     * @return the role
-     */
-    @Override
-    @JsonIgnore
-    public String getRole() {
-        switch(userRole) {
-            case NONE: return "ROLE_NONE";
-            case STUDENT: return "ROLE_STUDENT";
-            case REVIEWER: return "ROLE_REVIEWER";
-            case MANAGER: return "ROLE_MANAGER";
-            case ADMINISTRATOR: return "ROLE_ADMIN";
-            default: return "ROLE_UNKNOWN";
-        }
-    }
-
-    /**
      * @param role
      *            the role to set
      */
     public void setUserRole(Role userRole) {
         this.userRole = userRole;
+        switch(this.userRole) {
+            case NONE: this.role = "ROLE_NONE"; break;
+            case STUDENT: this.role = "ROLE_STUDENT"; break;
+            case REVIEWER: this.role = "ROLE_REVIEWER"; break;
+            case MANAGER: this.role = "ROLE_MANAGER"; break;
+            case ADMINISTRATOR: this.role = "ROLE_ADMIN"; break;
+            default: this.role = "ROLE_UNKNOWN"; break;
+        }
     }
+    
+    /**
+     * @return the role
+     */
+    @Override
+    public String getRole() {
+        return this.role;
+    }    
     
     /**
      * @param role
      *            the role to set
      */
     @Override
-    @JsonIgnore
     public void setRole(String role) {
-        this.userRole = Role.fromString(role);
+        this.role = role;
+        switch(this.role) {
+            case "ROLE_NONE": this.setUserRole(Role.NONE); break;
+            case "ROLE_STUDENT": this.setUserRole(Role.STUDENT); break;
+            case "ROLE_REVIEWER": this.setUserRole(Role.REVIEWER); break;
+            case "ROLE_MANAGER": this.setUserRole(Role.MANAGER); break;
+            case "ROLE_ADMIN": this.setUserRole(Role.ADMINISTRATOR); break;
+            default: this.setUserRole(Role.NONE); break;
+        }
     }
 
     /**
