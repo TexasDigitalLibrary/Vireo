@@ -151,9 +151,10 @@ vireo.controller("TriptychController", function ($controller, $scope, $q, $timeo
 
         },
         setActivePanel: function(panel) {
+            var Triptych = this;
             for(var i in $scope.triptych.openPanels) {
-                if($scope.triptych.openPanels[i].active) $scope.triptych.openPanels[i].previouslyActive = true;
-                $scope.triptych.openPanels[i].active = false;
+                if(Triptych.openPanels[i].active) Triptych.openPanels[i].previouslyActive = true;
+                Triptych.openPanels[i].active = false;
             }
 
             panel.previouslyActive = false;
@@ -203,7 +204,7 @@ vireo.controller("TriptychController", function ($controller, $scope, $q, $timeo
             }, 355);
 
             defer.promise.then(function() {
-                Panel.triptych.storePanel($scope.triptych.openPanels[0]);
+                Panel.triptych.storePanel(Panel.triptych.openPanels[0]);
                 Panel.triptych.openPanels.shift();
             });
             

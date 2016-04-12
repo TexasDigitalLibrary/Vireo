@@ -32,7 +32,8 @@
 					<div class="panel panel-default triptych-panel"
 						 ng-class="{'active': panel.active, 'previously-active': panel.previouslyActive}">
 
-						<div class="panel-heading"> 
+						<div class="panel-heading" 
+							 ng-click="triptych.expanded = true"> 
 							<span 	ng-repeat="category in panel.getPanelCategories()" 
 									ng-click="panel.toggleFilter(category)">
 								<span 	class="category-heading" 
