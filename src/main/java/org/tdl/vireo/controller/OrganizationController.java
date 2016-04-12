@@ -87,4 +87,31 @@ public class OrganizationController {
         return new ApiResponse(SUCCESS);
         
     }
+    
+    @ApiMapping("/update")
+    @Auth(role="ROLE_MANAGER")
+    @Transactional
+    public ApiResponse updateOrganization(@Data String data) {
+        
+        JsonNode dataNode = null;
+        try {
+            dataNode = objectMapper.readTree(data);
+        } catch (IOException e) {
+            return new ApiResponse(ERROR, "Unable to parse data json ["+e.getMessage()+"]");
+        }
+        
+        JsonNode organizationNode = dataNode.get("organization");
+        Organization organization = organizationRepo.findOne(organizationNode.get("id").asLong());
+
+        organization.setName(dataNode.get("organization").get("name").asText());
+        OrganizationCategory organizationCategory = organizationCategoryRepo.findOne(organizationNode.get("category").asLong());
+        
+        organization.setCategory(organizationCategory);
+        organizationRepo.save(organization);
+
+        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, getAll()));
+        
+        return new ApiResponse(SUCCESS);
+        
+    }
 }

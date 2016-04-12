@@ -56,7 +56,7 @@ vireo.controller("TriptychController", function ($controller, $scope, $q, $timeo
             var panelParentOrganization = panel.parentOrganization
 
             if(organization.parentOrganizations.indexOf(panelParentOrganization.id) != -1) {
-            	panel.organizationCategories.push($scope.getCategoryById(organization.category))
+            	panel.organizationCategories[organization.id] = $scope.getCategoryById(organization.category);
             	return true;
             } 
             
@@ -166,7 +166,7 @@ vireo.controller("TriptychController", function ($controller, $scope, $q, $timeo
         var Panel = this;
         Panel.triptych;
         Panel.parentOrganization = parentOrganization;
-        Panel.organizationCategories = [];
+        Panel.organizationCategories = {};
         Panel.selectedOrganization;
         Panel.filterOn;
         Panel.previouslyActive = false;
@@ -221,12 +221,6 @@ vireo.controller("TriptychController", function ($controller, $scope, $q, $timeo
         hide: function() {
             var Panel = this;
             Panel.visible = false;
-        },
-        getPanelCategories: function() {
-            var Panel = this;
-            return  Panel.organizationCategories.filter(function(item, pos) {
-                return Panel.organizationCategories.indexOf(item) == pos;
-            });
         },
         toggleFilter: function(category) {
             var Panel = this;
