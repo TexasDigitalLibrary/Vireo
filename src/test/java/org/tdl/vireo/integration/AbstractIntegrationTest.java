@@ -75,14 +75,21 @@ public abstract class AbstractIntegrationTest extends MockData {
         clientInboundChannel.send(message);
     }
     
+    public String StompRequest(String destination, Object data) throws InterruptedException {
+        return StompRequest(destination, objectMapper.convertValue(data, JsonNode.class).toString());
+    }
+    
     public String StompRequest(String destination, Map<String, Object> data) throws InterruptedException {
-    	
-    	String root = destination.split("/")[1];
-    	
-    	String sessionId = String.valueOf(Math.round(Math.random()*100000));
-    	String id = String.valueOf(Math.round(Math.random()*100000));
+        return StompRequest(destination, objectMapper.convertValue(data, JsonNode.class).toString());
+    }
+    
+    public String StompRequest(String destination, String jsonNodeString) throws InterruptedException {
+        String root = destination.split("/")[1];
+        
+        String sessionId = String.valueOf(Math.round(Math.random()*100000));
+        String id = String.valueOf(Math.round(Math.random()*100000));
 
-    	StompHeaderAccessor headers = StompHeaderAccessor.create(StompCommand.SEND);
+        StompHeaderAccessor headers = StompHeaderAccessor.create(StompCommand.SEND);
         
         headers.setDestination("/ws" + destination);
         headers.setSessionId(sessionId);
@@ -90,8 +97,8 @@ public abstract class AbstractIntegrationTest extends MockData {
         headers.setNativeHeader("id", id);
         headers.setNativeHeader("jwt", jwtString);
         
-        if(data != null) {
-        	headers.setNativeHeader("data", objectMapper.convertValue(data, JsonNode.class).toString());
+        if(jsonNodeString != null && !jsonNodeString.isEmpty()) {
+            headers.setNativeHeader("data", jsonNodeString);
         }
         
         headers.setSessionAttributes(new HashMap<String, Object>());
@@ -112,5 +119,4 @@ public abstract class AbstractIntegrationTest extends MockData {
         
         return new String((byte[]) reply.getPayload(), Charset.forName("UTF-8"));
     }
-    
 }

@@ -77,7 +77,7 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
     @Test
     @Order(value = 1)
     public void testGetAllControlledVocabulary() throws InterruptedException, JsonParseException, JsonMappingException, IOException {
-        String responseJson = StompRequest("/settings/controlled-vocabulary/all", null);
+        String responseJson = StompRequest("/settings/controlled-vocabulary/all", "");
         
         Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
 
@@ -97,7 +97,7 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
     @Test
     @Order(value = 2)
     public void testGetControlledVocabularyByName() throws InterruptedException, JsonParseException, JsonMappingException, IOException {
-        String responseJson = StompRequest("/settings/controlled-vocabulary/" + TEST_CONTROLLED_VOCABULARY_NAME1, null);
+        String responseJson = StompRequest("/settings/controlled-vocabulary/" + TEST_CONTROLLED_VOCABULARY_NAME1, "");
         
         Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
 
@@ -181,7 +181,7 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
         
         ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME1);
         
-        String responseJson = StompRequest("/settings/controlled-vocabulary/remove/" + controlledVocabulary.getPosition(), null);
+        String responseJson = StompRequest("/settings/controlled-vocabulary/remove/" + controlledVocabulary.getPosition(), "");
         
         Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
 
@@ -203,7 +203,7 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
         Long order1 = controlledVocabulary1.getPosition();
         Long order2 = controlledVocabulary2.getPosition();
         
-        String responseJson = StompRequest("/settings/controlled-vocabulary/reorder/" + order1 + "/" + order2, null);
+        String responseJson = StompRequest("/settings/controlled-vocabulary/reorder/" + order1 + "/" + order2, "");
         
         Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
 
@@ -219,7 +219,7 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
     @Test
     @Order(value = 7)
     public void testSortControlledVocabulary() throws InterruptedException, JsonParseException, JsonMappingException, IOException {
-        String responseJson = StompRequest("/settings/controlled-vocabulary/sort/name", null);
+        String responseJson = StompRequest("/settings/controlled-vocabulary/sort/name", "");
         
         Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
 
@@ -239,7 +239,7 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
         
         addVocabularyWords();
         
-        String responseJson = StompRequest("/settings/controlled-vocabulary/export/" + TEST_CONTROLLED_VOCABULARY_NAME1, null);
+        String responseJson = StompRequest("/settings/controlled-vocabulary/export/" + TEST_CONTROLLED_VOCABULARY_NAME1, "");
         
         Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
 

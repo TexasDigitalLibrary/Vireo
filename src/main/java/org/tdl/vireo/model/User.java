@@ -26,6 +26,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.tdl.vireo.enums.Role;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import edu.tamu.framework.model.CoreUser;
 
@@ -48,7 +49,6 @@ public class User extends BaseEntity implements CoreUser {
     // encoded password
     @Column
     @JsonIgnore
-//    @NotBlank
     private String password;
     
     @Column(nullable = false)
@@ -84,8 +84,9 @@ public class User extends BaseEntity implements CoreUser {
     private Set<Organization> organizations;
 
     @Column(nullable = false)
+    @JsonProperty(value="role")
     @NotNull
-    private Role role;
+    private Role userRole;
 
     @Column
     private String orcid;
@@ -111,7 +112,7 @@ public class User extends BaseEntity implements CoreUser {
         setEmail(email);
         setFirstName(firstName);
         setLastName(lastName);
-        setRole(role);
+        setUserRole(role);
     }
 
     /**
@@ -362,15 +363,17 @@ public class User extends BaseEntity implements CoreUser {
     /**
      * @return the role
      */
-    //public Role getRole() {
-    //    return role;
-    //}
+    public Role getUserRole() {
+        return this.userRole;
+    }
     
     /**
      * @return the role
      */
+    @Override
+    @JsonIgnore
     public String getRole() {
-        switch(role) {
+        switch(userRole) {
             case NONE: return "ROLE_NONE";
             case STUDENT: return "ROLE_STUDENT";
             case REVIEWER: return "ROLE_REVIEWER";
@@ -384,22 +387,18 @@ public class User extends BaseEntity implements CoreUser {
      * @param role
      *            the role to set
      */
-    public void setRole(Role role) {
-        this.role = role;
+    public void setUserRole(Role userRole) {
+        this.userRole = userRole;
     }
     
     /**
      * @param role
      *            the role to set
      */
+    @Override
+    @JsonIgnore
     public void setRole(String role) {
-        switch(role) {
-            case "ROLE_STUDENT": this.role = Role.STUDENT; break;
-            case "ROLE_REVIEWER": this.role = Role.REVIEWER; break;
-            case "ROLE_MANAGER": this.role = Role.MANAGER; break;
-            case "ROLE_ADMIN": this.role = Role.ADMINISTRATOR; break;
-            default: this.role = Role.NONE; break;
-        }
+        this.userRole = Role.fromString(role);
     }
 
     /**

@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,7 +50,7 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
     @Test
     @Order(value = 1)
     public void testUserCredentialsOverStomp() throws InterruptedException, IOException {        
-    	String responseJson = StompRequest("/user/credentials", null);
+    	String responseJson = StompRequest("/user/credentials", "");
         
     	Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
 
@@ -90,7 +89,7 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
     @Order(value = 3)
     public void testAllUser() throws Exception {
 		 	
-    	String responseJson = StompRequest("/user/all", null);
+    	String responseJson = StompRequest("/user/all", "");
     	 
     	Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
 		 
@@ -111,17 +110,17 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
     			case TEST_USER2_EMAIL: {
     				assertEquals(TEST_USER2.getFirstName(), (String) map.get("firstName"));
     				assertEquals(TEST_USER2.getLastName(), (String) map.get("lastName"));					 
-    				assertEquals(TEST_USER2.getRole(), (String) map.get("role"));
+    				assertEquals(TEST_USER2.getUserRole(), Role.fromString((String) map.get("role")));
     			}; break;
     			case TEST_USER3_EMAIL: {
     				assertEquals(TEST_USER3.getFirstName(), (String) map.get("firstName"));
     				assertEquals(TEST_USER3.getLastName(), (String) map.get("lastName"));					 
-    				assertEquals(TEST_USER3.getRole(), (String) map.get("role"));
+    				assertEquals(TEST_USER3.getUserRole(), Role.fromString((String) map.get("role")));
     			}; break;
     			case TEST_USER4_EMAIL: {
     				assertEquals(TEST_USER4.getFirstName(), (String) map.get("firstName"));
     				assertEquals(TEST_USER4.getLastName(), (String) map.get("lastName"));
-    				assertEquals(TEST_USER4.getRole(), (String) map.get("role"));
+    				assertEquals(TEST_USER4.getUserRole(), Role.fromString((String) map.get("role")));
     			}; break;
     		}
     	}		 
@@ -131,20 +130,17 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
 	 @Order(value = 4)
 	 public void testUpdateRole() throws Exception {
 		 
-	     userRepo.create(TEST_USER_EMAIL, TEST_USER.getFirstName(), TEST_USER.getLastName(), Role.STUDENT);
-		 
-		 Map<String, Object> data = new HashMap<String, Object>();
-		 data.put("email", TEST_USER_EMAIL);
-		 data.put("role", TEST_USER_ROLE_UPDATE);
+	     User userToUpdate = userRepo.create(TEST_USER_EMAIL, TEST_USER.getFirstName(), TEST_USER.getLastName(), Role.STUDENT);
+		 userToUpdate.setUserRole(TEST_USER_ROLE_UPDATE);
 	    	
-		 StompRequest("/user/update-role", data);
+		 StompRequest("/user/update-role", userToUpdate);
 		 		 
 		 User testUser = userRepo.findByEmail(TEST_USER_EMAIL);
 		 
 		 assertEquals(TEST_USER_FIRST_NAME, testUser.getFirstName());
 		 assertEquals(TEST_USER_LAST_NAME, testUser.getLastName());
 		 assertEquals(TEST_USER_EMAIL, testUser.getEmail());
-		 assertEquals(TEST_USER_ROLE_UPDATE, testUser.getRole());
+		 assertEquals(TEST_USER_ROLE_UPDATE, testUser.getUserRole());
 	 }
 	 
 	 @Override

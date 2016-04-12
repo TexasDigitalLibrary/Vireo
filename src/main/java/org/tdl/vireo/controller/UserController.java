@@ -1,6 +1,5 @@
 package org.tdl.vireo.controller;
 
-import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_ERROR;
 
@@ -8,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +14,9 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.ObjectError;
+import org.tdl.vireo.controller.model.UserControllerModel;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
@@ -29,7 +26,6 @@ import edu.tamu.framework.aspect.annotation.Shib;
 import edu.tamu.framework.enums.ApiResponseType;
 import edu.tamu.framework.model.ApiResponse;
 import edu.tamu.framework.model.Credentials;
-import edu.tamu.framework.validation.ModelBindingResult;
 
 @Controller
 @ApiMapping("/user")
@@ -39,10 +35,7 @@ public class UserController {
     
     @Autowired
     private UserRepo userRepo;
-    
-    @Autowired
-    private ObjectMapper objectMapper;
-    
+        
     @Autowired 
     private SimpMessagingTemplate simpMessagingTemplate;
         
@@ -53,7 +46,7 @@ public class UserController {
         
         if(user == null) {
             logger.debug("User not registered!");
-            return new ApiResponse(ERROR, "User not registered!");
+            return new ApiResponse(VALIDATION_ERROR, "User not registered!");
         }
 
         shib.setRole(user.getRole());
@@ -107,7 +100,7 @@ public class UserController {
     @ApiMapping("/settings/{key}")
     @Auth(role="ROLE_USER")
     @Transactional
-    public ApiResponse setSetting(@Shib Credentials shib, @ApiVariable String key, @ApiValidatedModel UserSettingModel userSetting) {
+    public ApiResponse setSetting(@Shib Credentials shib, @ApiVariable String key, @ApiValidatedModel UserControllerModel userSetting) {
         
         User user = userRepo.findByEmail(shib.getEmail());
         if (user == null) {
@@ -121,42 +114,5 @@ public class UserController {
         user.putSetting(key, userSetting.getSettingValue());        
         
         return new ApiResponse(SUCCESS, userRepo.save(user).getSettings());
-    }
-    
-    public class UserSettingModel {
-        private ModelBindingResult bindingResult;
-        
-        @NotEmpty
-        private String settingValue;
-        
-        public UserSettingModel() { }
-
-        /**
-         * @return the settingValue
-         */
-        public String getSettingValue() {
-            return settingValue;
-        }
-
-        /**
-         * @param settingValue the settingValue to set
-         */
-        public void setSettingValue(String settingValue) {
-            this.settingValue = settingValue;
-        }
-
-        /**
-         * @return the bindingResult
-         */
-        public ModelBindingResult getBindingResult() {
-            return bindingResult;
-        }
-
-        /**
-         * @param bindingResult the bindingResult to set
-         */
-        public void setBindingResult(ModelBindingResult bindingResult) {
-            this.bindingResult = bindingResult;
-        }
     }    
 }
