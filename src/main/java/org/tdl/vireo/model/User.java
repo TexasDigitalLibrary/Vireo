@@ -19,7 +19,10 @@ import javax.persistence.ManyToMany;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
 import org.tdl.vireo.enums.Role;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -39,21 +42,21 @@ public class User extends BaseEntity implements CoreUser {
     private String netid;
 
     @Column(nullable = false, unique = true)
+    @Email
     private String email;
 
     // encoded password
     @Column
     @JsonIgnore
+//    @NotBlank
     private String password;
     
-    // lets use uin
-    //@Column
-    //private String institutionalIdentifier;
-
     @Column(nullable = false)
+    @NotBlank
     private String firstName;
 
     @Column(nullable = false)
+    @NotBlank
     private String lastName;
 
     @Column
@@ -81,6 +84,7 @@ public class User extends BaseEntity implements CoreUser {
     private Set<Organization> organizations;
 
     @Column(nullable = false)
+    @NotNull
     private Role role;
 
     @Column
