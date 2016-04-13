@@ -403,6 +403,7 @@ sidebox .heading-text {
   background-color:#CCCCCC;
   font-weight:bold;
   margin:10px 0 0 0;
+  text-transform: uppercase;
 }
 
 sidebox ul {
@@ -486,7 +487,6 @@ togglebutton {
 textfield {
   display: block;
   min-height: 20px;  
-  margin-bottom: 45px;
 }
 
 .text-field-heading {
@@ -502,6 +502,10 @@ textfield {
 
 .with-tool-tip {
   display: inline-flex;
+}
+
+.text-field .expanded .with-tool-tip, .text-field .expanded .with-hint {
+  width: 100%;
 }
 
 .tooltip-span {
@@ -929,6 +933,212 @@ footer a, footer li, footer p {
 .registration {
   max-width: 400px;
 }
+
+/************************
+* ORGANIZARION/WORKFLOW *
+*************************/
+
+.triptych .divider-wrapper {
+  text-align:center;
+  margin: 20px 0px;
+}
+
+.triptych .divider {
+  margin: 0px;
+}
+
+.triptych .divider-wrapper:hover {
+  cursor: pointer;
+}
+
+.triptych-wrapper {
+  display: block;
+  overflow: hidden;
+  max-height: 1000px;
+  -webkit-transition: max-height 0.5s ease-in-out;
+  -moz-transition: max-height 0.5s ease-in-out;
+  -o-transition: max-height 0.5s ease-in-out;
+  transition: max-height 0.5s ease-in-out;
+}
+
+
+
+.triptych-wrapper.collapse {
+  max-height: 122px;
+}
+
+.triptych .panel-wrapper {
+  float: left;
+  overflow: hidden;
+  max-width: 100%;
+  max-height: 0;
+  opacity: 0;
+  -webkit-transition: max-width 0.35s ease-in-out, opacity 0.35s ease-in-out;
+  -moz-transition: max-width 0.35s ease-in-out, opacity 0.35s ease-in-out;
+  -o-transition: max-width 0.35s ease-in-out, opacity 0.35s ease-in-out;
+  transition: max-width 0.35s ease-in-out, opacity 0.35s ease-in-out;
+}
+
+.triptych .panel-wrapper.closing {
+  max-width: 0%;
+} 
+
+.triptych .panel-wrapper.opening {
+  max-width: 100%;
+}
+
+.triptych .panel-wrapper.shown {
+  max-height: 500px;
+  opacity: 1;
+}
+
+.triptych .panel-heading span {
+  text-transform: none;
+}
+
+.triptych .panel-heading .category-heading.multiple.active,
+.triptych .panel-heading .category-heading.multiple:hover {
+  text-decoration: underline;
+}
+
+.triptych .panel-heading .category-heading.multiple:hover {
+  cursor: pointer;
+}
+
+.triptych-navigation {}
+
+.triptych-navigation .breadcrumb {
+  min-height: 60px;
+  display: inline-block;
+  margin-left: 15px;
+}
+
+.triptych-navigation .breadcrumb>li:last-child {
+  font-weight: bolder;
+  display: block;
+}
+
+.triptych-navigation .breadcrumb .glyphicon-arrow-down {
+  vertical-align: middle;
+}
+
+.triptych-navigation breadcrumb {}
+
+.triptych-panels {}
+
+.triptych-panels .glyphicon-arrow-right {
+  display: none;
+}
+
+.triptych-panel {
+  min-height: 250px;
+  max-height: 250px;
+  min-width: 215px;
+}
+
+.triptych-panel.active .glyphicon-arrow-right,
+.triptych-panel.previously-active .glyphicon-arrow-right {
+  display: inline-block;
+}
+
+.triptych-panel .list-group {
+    padding-left: 0;
+    margin-bottom: 0px;
+}
+
+.triptych-panel .list-group-item {
+    position: relative;
+    min-height: 50px;
+}
+
+.triptych-panel .list-group-item .inline-list > li {
+  margin-left: 0.5em;
+}
+
+.triptych-panel .list-group-item .context-icons {
+  font-size: 1.25em;
+  line-height: 1.25;
+}
+
+.triptych-panel.active .list-group-item.selected .context-icons.active,
+.triptych-panel .list-group-item .context-icons:hover {
+  color: rgba(31, 58, 71, 0.95);
+}
+
+.triptych-panel .list-group-item .category-label {
+    position: absolute;
+    bottom: 3px;
+    left: 15px;
+    font-size: 0.75em;
+    font-style: italic;
+}
+
+.triptych-panel .list-group-item:hover {
+    cursor: pointer;
+    color: #70706f;
+    background: #efefef;
+}
+
+.triptych-panel.previously-active .list-group-item.selected {
+    color: #70706f;
+    background: #E6ECE8;
+}   
+
+.triptych-panel .list-group-item.selected {
+    color: #fff;
+    background: #92AA9C;
+} 
+
+.triptych-panel .panel-body {
+  max-height: 200px;
+  padding: 7px;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+
+.triptych-panel.active .panel-heading {
+  color: white;
+  background: rgb(31, 58, 71);
+  background: -moz-linear-gradient linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
+  background: -webkit-linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
+  background: -ms-linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
+  background: linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
+}
+
+.triptych-panel.previously-active .panel-heading {
+  color: white;
+  background: rgb(31, 58, 71);
+  background: -moz-linear-gradient linear-gradient(to right, rgba(146, 170, 156, 0.95), rgba(173, 189, 170, 0.95));
+  background: -webkit-linear-gradient(to right, rgba(146, 170, 156, 0.95), rgba(173, 189, 170, 0.95));
+  background: -ms-linear-gradient(to right, rgba(146, 170, 156, 0.95), rgba(173, 189, 170, 0.95));
+  background: linear-gradient(to right, rgba(146, 170, 156, 0.95), rgba(173, 189, 170, 0.95));
+}
+
+.triptych .down-arrow {
+  width: 1px;
+  height: 25px;
+  margin: auto;
+}
+
+.triptych-panel-entry {}
+
+#organizationManagement .panel-wrap {
+  display: none;
+}
+
+#organizationManagement .panel-wrap.active {
+  display: block;
+}
+
+#organizationManagement .panel-title span.active {
+  color: #337ab7;
+  cursor: pointer;
+}
+
+#organizationManagement .management-pane-selector:hover {
+  cursor: pointer;
+}
+
 
 /*************
 * DIRECTIVES *

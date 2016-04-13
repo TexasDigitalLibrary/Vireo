@@ -40,6 +40,9 @@ vireo.factory('DragAndDropListenerFactory', function() {
 		var startingObj;
 
 		var dragControls = {
+			getListener: function () {
+				return listener;
+			},
 			dragStart: function(event) {
 				startingObj = event.source.sortableScope.modelValue[0];
 				listener.dragging = true;								
@@ -57,7 +60,7 @@ vireo.factory('DragAndDropListenerFactory', function() {
 			},
 			dragEnd: function(event) {
 				if(listener.dragging) {
-					if(listener.trash.hover) {			
+					if(listener.trash.hover) {
 						angular.element(listener.confirm.remove.modal).modal('show');
 						listener.trash.element.removeClass('dragging');
 					}

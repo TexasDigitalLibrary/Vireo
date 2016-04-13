@@ -14,7 +14,7 @@ public class OrganizationTest extends AbstractEntityTest {
     @Before
     public void setUp() {
         assertEquals("The organization repository was not empty!", 0, organizationRepo.count());
-        parentCategory = organizationCategoryRepo.create(TEST_PARENT_CATEGORY_NAME, TEST_PARENT_CATEGORY_LEVEL);
+        parentCategory = organizationCategoryRepo.create(TEST_PARENT_CATEGORY_NAME);
         assertEquals("The category does not exist!", 1, organizationCategoryRepo.count());
         submissionState = submissionStateRepo.create(TEST_SUBMISSION_STATE_NAME, TEST_SUBMISSION_STATE_ARCHIVED, TEST_SUBMISSION_STATE_PUBLISHABLE, TEST_SUBMISSION_STATE_DELETABLE, TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_SUBMISSION_STATE_ACTIVE);
         assertEquals("The submissionState does not exist!", 1, submissionStateRepo.count());
@@ -35,7 +35,6 @@ public class OrganizationTest extends AbstractEntityTest {
         assertEquals("The repository did not save the entity!", 1, organizationRepo.count());
         assertEquals("Saved entity did not contain the correct name!", TEST_PARENT_ORGANIZATION_NAME, parentOrganization.getName());
         assertEquals("Saved entity did not contain the correct category name!", parentCategory.getName(), parentOrganization.getCategory().getName());
-        assertEquals("Saved entity did not contain the correct category level!", parentCategory.getLevel(), parentOrganization.getCategory().getLevel());
         assertEquals("Saved entity did not have the correct workflow name!", TEST_PARENT_WORKFLOW_NAME, parentOrganization.getWorkflow().getName());
         assertEquals("Saved entity did not have the correct workflow inheritability!", TEST_PARENT_WORKFLOW_INHERITABILITY, parentOrganization.getWorkflow().isInheritable());
         assertEquals("Saved entity did not have the emailWorkflow rule!", true, parentOrganization.getEmailWorkflowRules().contains(emailWorkflowRule));
@@ -62,8 +61,8 @@ public class OrganizationTest extends AbstractEntityTest {
     @Transactional
     public void testCascade() {
         // create categories
-        OrganizationCategory childCategory = organizationCategoryRepo.create(TEST_CHILD_CATEGORY_NAME, TEST_CHILD_CATEGORY_LEVEL);
-        OrganizationCategory grandChildCategory = organizationCategoryRepo.create(TEST_GRAND_CHILD_CATEGORY_NAME, TEST_GRAND_CHILD_CATEGORY_LEVEL);
+        OrganizationCategory childCategory = organizationCategoryRepo.create(TEST_CHILD_CATEGORY_NAME);
+        OrganizationCategory grandChildCategory = organizationCategoryRepo.create(TEST_GRAND_CHILD_CATEGORY_NAME);
 
         // create organizations
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
@@ -111,7 +110,6 @@ public class OrganizationTest extends AbstractEntityTest {
         
         assertEquals("The parent organization did not have the correct name!", TEST_PARENT_ORGANIZATION_NAME, parentOrganization.getName());
         assertEquals("The parent organization category dit not have the correct name!", TEST_PARENT_CATEGORY_NAME, parentOrganization.getCategory().getName());
-        assertEquals("The parent organization category dit not have the correct level!", TEST_PARENT_CATEGORY_LEVEL, parentOrganization.getCategory().getLevel());
         assertEquals("The parent organization has the wrong email workflow rule", true, parentOrganization.getEmailWorkflowRules().contains(emailWorkflowRule));
 
         // check number of child organizations of parent organization
@@ -121,7 +119,6 @@ public class OrganizationTest extends AbstractEntityTest {
         childOrganization = (Organization) parentOrganization.getChildrenOrganizations().toArray()[0];
         assertEquals("The parent's child organization did not have the correct name!", TEST_CHILD_ORGANIZATION_NAME, childOrganization.getName());
         assertEquals("The parent's child organization category did not have the correct Name!", TEST_CHILD_CATEGORY_NAME, childOrganization.getCategory().getName());
-        assertEquals("The parent's child organization category did not have the correct Level!", TEST_CHILD_CATEGORY_LEVEL, childOrganization.getCategory().getLevel());
 
         // check number of child(grand child) organizations of child
         // organization
@@ -131,7 +128,6 @@ public class OrganizationTest extends AbstractEntityTest {
         grandChildOrganization = (Organization) childOrganization.getChildrenOrganizations().toArray()[0];
         assertEquals("The grand child organization did not have the correct name!", TEST_GRAND_CHILD_ORGANIZATION_NAME, grandChildOrganization.getName());
         assertEquals("The grand child organization category dit not have the correct Name!", TEST_GRAND_CHILD_CATEGORY_NAME, grandChildOrganization.getCategory().getName());
-        assertEquals("The grand child organization category dit not have the correct Level!", TEST_GRAND_CHILD_CATEGORY_LEVEL, grandChildOrganization.getCategory().getLevel());
 
         // check the number of parent organizations of the grand child
         // organization

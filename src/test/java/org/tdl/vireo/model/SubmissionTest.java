@@ -33,7 +33,7 @@ public class SubmissionTest extends AbstractEntityTest {
         assertEquals("The field value does not exist!", 1, fieldValueRepo.count());
         assertEquals("The field value did not have the correct value!", TEST_FIELD_VALUE, fieldValue.getValue());
 
-        OrganizationCategory parentCategory = organizationCategoryRepo.create(TEST_CATEGORY_NAME, TEST_CATEGORY_LEVEL);
+        OrganizationCategory parentCategory = organizationCategoryRepo.create(TEST_CATEGORY_NAME);
         assertEquals("The category does not exist!", 1, organizationCategoryRepo.count());
 
         organization = organizationRepo.create(TEST_ORGANIZATION_NAME, parentCategory);

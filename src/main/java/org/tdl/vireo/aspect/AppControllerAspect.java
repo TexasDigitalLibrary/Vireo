@@ -78,5 +78,4 @@ public class AppControllerAspect extends CoreControllerAspect {
         
         return object;
     }
-
 }

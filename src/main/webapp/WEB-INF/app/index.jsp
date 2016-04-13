@@ -172,7 +172,7 @@
 	<script src="bower_components/angular/angular.js"></script>
 	<script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
 	<script src="bower_components/angular-route/angular-route.js"></script>
-	<script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+	<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
 	<script src="bower_components/angular-loader/angular-loader.js"></script>
 	<script src="bower_components/angular-mocks/angular-mocks.js"></script>
 
@@ -284,6 +284,7 @@
 	    <script src="model/configurableSettingsModel.js"></script>
 	    <script src="model/customActionSettingsModel.js"></script>
 	    <script src="model/organizationRepoModel.js"></script>
+	    <script src="model/organizationCategoryRepo.js"></script>
 	    <script src="model/userSettingsModel.js"></script>
 	    <script src="model/userRepoModel.js"></script>
 	    <script src="model/depositLocationRepoModel.js"></script>
@@ -293,6 +294,7 @@
 	    <script src="model/languageRepoModel.js"></script>
 	    <script src="model/controlledVocabularyRepoModel.js"></script>
 	    <script src="model/availableDocumentTypesRepoModel.js"></script>
+	    <script src="model/organizationCategoryRepoModel.js"></script>
 
 
 	    <!-- Controllers -->
@@ -301,6 +303,8 @@
 	    <script src="controllers/headerController.js"></script>
 	    <script src="controllers/settings/lookAndFeelController.js"></script>
         <script src="controllers/organizationSettingsController.js"></script>
+        <script src="controllers/settings/triptychController.js"></script>
+        <script src="controllers/settings/organizationManagementController.js"></script>
 	    <script src="controllers/settingsController.js"></script>
 	    <script src="controllers/sidebarController.js"></script>  
 	    <script src="controllers/userRepoController.js"></script>  
@@ -314,6 +318,8 @@
 	    <script src="controllers/settings/controlledVocabularyRepoController.js"></script>
 	    <script src="controllers/settings/languageRepoController.js"></script> 
 	    <script src="controllers/settings/availableDocumentTypesController.js"></script>
+	    <script src="controllers/sideBars/organizationSideBarController.js"></script>
+	    <script src="controllers/settings/organizationCategoriesController.js"></script>
 	    
 	<!-- endbuild -->
 

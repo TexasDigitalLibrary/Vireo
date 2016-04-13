@@ -1,0 +1,22 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span class="modal-close" aria-hidden="true">&times;</span>
+  </button>
+  <h3 class="modal-title">Add Organization Category</h3>
+</div>
+
+<div class="modal-body">
+
+  <form>
+    <div class="form-group">
+      <label for="organization-catgegory-name">Name:</label>
+      <input id="organization-catgegory-name" ng-model="modalData.name" type="text" class="form-control" placeholder="Name of the new category"/>
+    </div>
+  </form>
+
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-warning" ng-click="resetOrganizationCategory()" data-dismiss="modal">Cancel</button>
+  <button id="organizationCategory-save" type="button" class="btn btn-primary" data-dismiss="modal" ng-click="createOrganizationCategory()">Create</button>
+</div>

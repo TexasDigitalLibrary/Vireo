@@ -44,7 +44,7 @@ public class NamedSearchFilterTest extends AbstractEntityTest {
         customActionDefinition = customActionDefinitionRepo.create(TEST_CUSTOM_ACTION_DEFINITION_LABEL, TEST_CUSTOM_ACTION_DEFINITION_VISIBLE_BY_STUDENT);
         customActionValue = customActionValueRepo.create(includedSubmission, customActionDefinition, TEST_CUSTOM_ACTION_VALUE);
         assertEquals("The customActionValue Repo is empty", 1, customActionValueRepo.count());
-        organizationCategory = organizationCategoryRepo.create(TEST_ORGANIZATION_CATEGORY_NAME, TEST_ORGANIZATION_CATEGORY_LEVEL);
+        organizationCategory = organizationCategoryRepo.create(TEST_ORGANIZATION_CATEGORY_NAME);
         assertEquals("The category does not exist!", 1, organizationCategoryRepo.count());
         organization = organizationRepo.create(TEST_ORGANIZATION_NAME, organizationCategory);
         assertEquals("The organization Repo is empty", 1, organizationRepo.count());

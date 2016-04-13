@@ -1,27 +1,35 @@
-vireo.controller('OrganizationSettingsController', function ($controller, $scope, $location, $routeParams, User, UserSettings, OrganizationRepo, SidebarService) {
+vireo.controller('OrganizationSettingsController', function ($controller, $scope, $q, OrganizationRepo, SidebarService) {
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
 	SidebarService.addBox({"title":"Create Organization","viewUrl":"views/sideboxes/organization.html"});
 
-	$scope.newOrganization = {};
-	$scope.newCategory = {};
+    $scope.organizations = OrganizationRepo.get();
+    $scope.selectedOrganization;
+    $scope.activeManagementPane = 'edit';
+    $scope.organizationEditMode;
+    $scope.newOrganization = OrganizationRepo.getNewOrganization();
 
-//	$scope.organizations = OrganizationRepo.get();
+    $scope.setSelectedOrganization = function(organization) {
+    	$scope.selectedOrganization = organization;
+        $scope.newOrganization.parent = organization;
+    };
 
-	$scope.organizations = [{"name":"Organization 1"},{"name":"Organization 2"}];
-	$scope.organizationCategories = [{"name":"Category 1","level":1},{"name":"Category 2","level":2}];
+    $scope.getSelectedOrganization = function() {
+    	return $scope.selectedOrganization;
+    };
 
-	$scope.createOrganization = function(organization) {
-//		OrganizationRepo.add(organization);
-		angular.extend($scope.organizations,[organization]);
-		console.log("the org:");
-		console.log(organization);
-	};
+    $scope.activateManagementPane = function(pane) {
+        $scope.activeManagementPane = pane;
+    }
 
-	$scope.createOrganizationCategory = function(category) {
-//		OrganizationCategoryRepo.add(category);
-		console.log("the org category:");
-		console.log(category);
-		angular.extend($scope.categories,[category]);
-	};
+    $scope.managementPaneIsActive = function(pane) {
+            return ($scope.activeManagementPane === pane);
+        } 
+
+    $scope.ready = $q.all([OrganizationRepo.ready()]);
+
+    $scope.ready.then(function() {
+        $scope.newOrganization.parent = $scope.organizations.list[0];
+    });
+
 });

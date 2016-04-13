@@ -135,8 +135,6 @@ public abstract class AbstractEntityTest {
 
     // Organization Category test
     protected static final String TEST_CATEGORY_NAME = "Test Category";
-    protected static final int TEST_CATEGORY_LEVEL = 0;
-    
     protected static final String TEST_ORGANIZATION_NAME = "Test Organization";
     
     // Field Predicate Test
@@ -231,10 +229,6 @@ public abstract class AbstractEntityTest {
     protected static final String TEST_PERMANENT_EMAIL = "admin@tdl.org <p>";
 
     // Organization Test
-    protected static final int TEST_PARENT_CATEGORY_LEVEL = 0;
-    protected static final int TEST_CHILD_CATEGORY_LEVEL = 1;
-    protected static final int TEST_GRAND_CHILD_CATEGORY_LEVEL = 2;
-
     protected static final String TEST_PARENT_CATEGORY_NAME = "Test Parent Category";
     protected static final String TEST_CHILD_CATEGORY_NAME = "Test Child Category";
     protected static final String TEST_GRAND_CHILD_CATEGORY_NAME = "Test Grand Child Category";
@@ -289,7 +283,6 @@ public abstract class AbstractEntityTest {
     protected static final InputType TEST_FIELD_PROFILE_INPUT_TYPE = InputType.INPUT_TEXT;
     protected static final InputType TEST_SEVERABLE_FIELD_PROFILE_INPUT_TYPE = InputType.INPUT_TEXT;
 
-    protected static final int TEST_ORGANIZATION_CATEGORY_LEVEL = 0;
     protected static final String TEST_ORGANIZATION_CATEGORY_NAME = "Test Organization Category";
     
     protected static final String TEST_NOTE_NAME = "Test Note Name";

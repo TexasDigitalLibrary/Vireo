@@ -1,9 +1,22 @@
-<form name="newOrganization">
+<form name="newOrganizationForm" ng-controller="OrganizationSideBarController"  ng-submit="createNewOrganization()" novalidate>
+
 	<sideboxsub>NAME</sideboxsub>			
 	<div class="form-group">
-		<input id="displayName" type="text" name="displayName"  class="form-control" shadow/>
+		<input id="displayName" type="text" class="form-control" ng-model="newOrganization.name" required shadow/>
 	</div>
+	
+	<sideboxsub>Category</sideboxsub>			
 	<div class="form-group">
-		<button class="btn btn-default">Add</button>
+	    <select name="organizationCategory" id="organizationCategory" class="form-control" ng-model="newOrganization.categoryId" ng-options="category.id as category.name for category in organizationCategories.list | filter:{ name : '!system' }">
+	    	<option value="">Choose Category</option>
+	    </select>
 	</div>
+
+	<div class="form-group">
+		<button class="btn btn-default" type="submit" ng-disabled="newOrganizationForm.$invalid">Add <span ng-if="newOrganization.parent">to</span> {{newOrganization.parent.name}}</button>
+	</div>
+
+	<alerts seconds="20" channels="/organization" types="SUCCESS, ERROR, WARNING, INFO" exclusive></alerts>
+
+
 </form>

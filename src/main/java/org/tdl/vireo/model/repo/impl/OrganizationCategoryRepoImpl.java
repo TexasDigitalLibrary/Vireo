@@ -11,8 +11,8 @@ public class OrganizationCategoryRepoImpl implements OrganizationCategoryRepoCus
     private OrganizationCategoryRepo organizationCategoryRepo;
 
     @Override
-    public OrganizationCategory create(String name, int level) {
-        return organizationCategoryRepo.save(new OrganizationCategory(name, level));
+    public OrganizationCategory create(String name) {
+        return organizationCategoryRepo.save(new OrganizationCategory(name));
     }
 
 }
