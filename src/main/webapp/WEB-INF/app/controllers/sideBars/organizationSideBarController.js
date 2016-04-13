@@ -4,10 +4,12 @@ vireo.controller("OrganizationSideBarController", function($controller, $scope, 
 	$scope.organizations = OrganizationRepo.get();
 	$scope.organizationCategories = OrganizationCategoryRepo.get();
 
-	$q.all([
+	$scope.ready = $q.all([
 		OrganizationRepo.ready(),
 		OrganizationCategoryRepo.ready()
-	]).then(function() {
+	]);
+	
+	$scope.ready.then(function() {
 
 		$scope.newOrganization = OrganizationRepo.getNewOrganization();
 
