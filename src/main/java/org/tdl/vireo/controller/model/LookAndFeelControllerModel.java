@@ -56,19 +56,4 @@ public class LookAndFeelControllerModel extends BaseEntity {
     public void setFileType(String fileType) {
         this.fileType = fileType;
     }
-
-    /**
-     * @return the bindingResult
-     */
-    public ModelBindingResult getBindingResult() {
-        return bindingResult;
-    }
-
-    /**
-     * @param bindingResult
-     *            the bindingResult to set
-     */
-    public void setBindingResult(ModelBindingResult bindingResult) {
-        this.bindingResult = bindingResult;
-    }
 }
