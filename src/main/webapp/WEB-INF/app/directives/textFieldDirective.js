@@ -5,10 +5,10 @@ vireo.directive("textfield", function() {
 		scope: {
 			"label": "@",
 			"scopeValue": "=",
-            "toolTip": "@",
-            "hint": "@",
-            "onBlur": "&",
-            "keyDown": "&",
+            		"toolTip": "@",
+            		"hint": "@",
+            		"onBlur": "&",
+            		"keyDown": "&",
 			"labelWidth": "@",
 			"fieldWidth": "@",
 			"expanded": "="
