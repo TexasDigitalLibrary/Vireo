@@ -54,5 +54,28 @@
 	],
 	"submission": [
 			{"submit_license":"This is default submission license text."}
+	],
+	"shibboleth": [
+			{"APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID":"auth.shib.attribute.netid"},
+			{"APPLICATION_AUTH_SHIB_ATTRIBUTE_EMAIL":"auth.shib.attribute.email"},
+			{"APPLICATION_AUTH_SHIB_ATTRIBUTE_FIRST_NAME":"auth.shib.attribute.firstName"},
+			{"APPLICATION_AUTH_SHIB_ATTRIBUTE_LAST_NAME":"auth.shib.attribute.lastName"},
+			{"APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER":"auth.shib.attribute.institutionalIdentifier"},
+			{"APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME":"auth.shib.attribute.middleName"},
+			{"APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR":"auth.shib.attribute.birthYear"},
+			{"APPLICATION_AUTH_SHIB_ATTRIBUTE_AFFILIATIONS":"auth.shib.attribute.affiliations"},
+			{"APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_PHONE_NUMBER":"auth.shib.attribute.currentPhoneNumber"},
+			{"APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_POSTAL_ADDRESS":"auth.shib.attribute.currentPostalAddress"},
+			{"APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_EMAIL_ADDRESS":"auth.shib.attribute.currentEmailAddress"},
+			{"APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_PHONE_NUMBER":"auth.shib.attribute.permanentPhoneNumber"},
+			{"APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_POSTAL_ADDRESS":"auth.shib.attribute.permanentPostalAddress"},
+			{"APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_EMAIL_ADDRESS":"auth.shib.attribute.permanentEmailAddress"},
+			{"APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_DEGREE":"auth.shib.attribute.currentDegree"},
+			{"APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_DEPARTMENT":"auth.shib.attribute.currentDepartment"},
+			{"APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_COLLEGE":"auth.shib.attribute.currentCollege"},
+			{"APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_MAJOR":"auth.shib.attribute.currentMajor"},
+			{"APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_GRADUATION_YEAR":"auth.shib.attribute.currentGraduationYear"},
+			{"APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_GRADUATION_MONTH":"auth.shib.attribute.currentGraduationMonth"},
+			{"APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID":"auth.shib.attribute.orcid"}
 	]
 }
