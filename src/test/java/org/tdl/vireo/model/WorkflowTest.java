@@ -9,7 +9,7 @@ public class WorkflowTest extends AbstractEntityTest {
 
     @Before
     public void setup() {
-        parentCategory = organizationCategoryRepo.create(TEST_CATEGORY_NAME, TEST_CATEGORY_LEVEL);
+        parentCategory = organizationCategoryRepo.create(TEST_CATEGORY_NAME);
         organization = organizationRepo.create(TEST_ORGANIZATION_NAME, parentCategory);
     }
     

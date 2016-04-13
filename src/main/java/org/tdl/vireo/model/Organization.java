@@ -23,6 +23,10 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "category_id" }) )
 public class Organization extends BaseEntity {
@@ -31,15 +35,23 @@ public class Organization extends BaseEntity {
     private String name;
 
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER, optional = false)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = OrganizationCategory.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     private OrganizationCategory category;
 
     @OneToOne(cascade = ALL, orphanRemoval = true)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = OrganizationCategory.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     private Workflow workflow;
 
     @ManyToMany(cascade = { DETACH, REFRESH }, fetch = LAZY)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     private Set<Organization> parentOrganizations;
 
     @ManyToMany(cascade = { DETACH, REFRESH, PERSIST }, fetch = LAZY)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     private Set<Organization> childrenOrganizations;
 
     @ElementCollection

@@ -17,7 +17,19 @@ vireo.service("OrganizationRepo", function($route, WsApi, AbstractModel) {
 	OrganizationRepo.listener = null;
 
 	OrganizationRepo.promise = null;
-	
+
+	OrganizationRepo.newOrganization = {};
+
+	OrganizationRepo.resetNewOrganization = function() {
+		for(var key in OrganizationRepo.newOrganization) {
+			delete OrganizationRepo.newOrganization[key];
+		}
+	};
+
+	OrganizationRepo.getNewOrganization = function() {
+		return OrganizationRepo.newOrganization;
+	}
+
 	OrganizationRepo.set = function(data) {
 		self.unwrap(self, data);
 	};
@@ -55,15 +67,50 @@ vireo.service("OrganizationRepo", function($route, WsApi, AbstractModel) {
 	
 	};
 
-	OrganizationRepo.add = function(organization) {
-		WsApi.fetch({
+	OrganizationRepo.getChildren = function(id) {
+
+		var childOrganizationsPromise = WsApi.fetch({
+				endpoint: '/private/queue', 
+				controller: 'organization', 
+				method: 'get-children/' + id,
+		});
+
+		return childOrganizationsPromise;
+	
+	};
+
+	OrganizationRepo.add = function() {
+
+		var addOrganizationPromise = WsApi.fetch({
 				'endpoint': '/private/queue', 
 				'controller': 'organization', 
 				'method': 'create',
-				'data': {"name":organization.name}
-		}).then(function(response) {
-			OrganizationRepo.data.list.push(JSON.parse(response.body).payload.Organization);
+				'data': {
+					"name": OrganizationRepo.newOrganization.name, 
+					"categoryId": OrganizationRepo.newOrganization.categoryId,
+					"parentOrganizationId": OrganizationRepo.newOrganization.parent.id,
+				}
 		});
+
+		OrganizationRepo.resetNewOrganization();
+
+		return addOrganizationPromise;
+
+	};
+
+	OrganizationRepo.update = function(organization) {
+
+		var updateOrganizationPromise = WsApi.fetch({
+				'endpoint': '/private/queue', 
+				'controller': 'organization', 
+				'method': 'update',
+				'data': {
+					"organization": organization
+				}
+		});
+
+		return updateOrganizationPromise;
+
 	};
 	
 	OrganizationRepo.ready = function() {
