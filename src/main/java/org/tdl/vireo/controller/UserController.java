@@ -1,9 +1,8 @@
 package org.tdl.vireo.controller;
 
-import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
+import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_ERROR;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,18 +13,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.ObjectError;
+import org.tdl.vireo.controller.model.UserControllerModel;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import edu.tamu.framework.aspect.annotation.ApiMapping;
+import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
-import edu.tamu.framework.aspect.annotation.Data;
 import edu.tamu.framework.aspect.annotation.Shib;
+import edu.tamu.framework.enums.ApiResponseType;
 import edu.tamu.framework.model.ApiResponse;
 import edu.tamu.framework.model.Credentials;
 
@@ -37,10 +35,7 @@ public class UserController {
     
     @Autowired
     private UserRepo userRepo;
-    
-    @Autowired
-    private ObjectMapper objectMapper;
-    
+        
     @Autowired 
     private SimpMessagingTemplate simpMessagingTemplate;
         
@@ -51,7 +46,7 @@ public class UserController {
         
         if(user == null) {
             logger.debug("User not registered!");
-            return new ApiResponse(ERROR, "User not registered!");
+            return new ApiResponse(VALIDATION_ERROR, "User not registered!");
         }
 
         shib.setRole(user.getRole());
@@ -59,38 +54,43 @@ public class UserController {
         return new ApiResponse(SUCCESS, shib);
     }
     
+    private Map<String,List<User>> allUsersHelper() {
+        Map<String,List<User>> map = new HashMap<String,List<User>>();        
+        map.put("list", userRepo.findAll());
+        return map;
+    }
+    
     @ApiMapping("/all")
     @Auth(role="ROLE_MANAGER")
     @Transactional
     public ApiResponse allUsers() {            
-        Map<String,List<User>> map = new HashMap<String,List<User>>();        
-        map.put("list", userRepo.findAll());
-        return new ApiResponse(SUCCESS, map);
+        return new ApiResponse(SUCCESS, allUsersHelper());
     }
     
     @ApiMapping("/update-role")
     @Auth(role="ROLE_MANAGER")
     @Transactional
-    public ApiResponse updateRole(@Data String data) throws Exception {
+    public ApiResponse updateRole(@ApiValidatedModel User user) {      
         
-        Map<String,String> map = new HashMap<String,String>();      
-        try {
-            map = objectMapper.readValue(data, new TypeReference<HashMap<String,String>>(){});
-        } catch (Exception e) {
-            e.printStackTrace();
-        }       
+        //TODO this check should be moved to repo.validateCreate() for VIR-201
+        User possiblyExistingUser = userRepo.findByEmail(user.getEmail());
+        if (possiblyExistingUser == null) {
+            user.getBindingResult().addError(new ObjectError("user", "cannot update a role on a nonexistant user!"));
+        }
+
+        if (user.getBindingResult().hasErrors()) {
+            return new ApiResponse(ApiResponseType.VALIDATION_ERROR, user.getBindingResult().getAll());
+        }
         
-        User user = userRepo.findByEmail(map.get("email"));
+        possiblyExistingUser.setUserRole(user.getUserRole());
         
-        user.setRole(map.get("role"));
+        userRepo.save(possiblyExistingUser);
         
-        user = userRepo.save(user);
-        
-        Map<String, Object> userMap = new HashMap<String, Object>();
-        userMap.put("list", userRepo.findAll());
-        userMap.put("changedUserEmail", map.get("email"));
-        
-        this.simpMessagingTemplate.convertAndSend("/channel/users", new ApiResponse(SUCCESS, userMap));
+        Map<String, Object> retMap = new HashMap<String, Object>();
+        retMap.put("list", userRepo.findAll());
+        retMap.put("changedUserEmail", possiblyExistingUser.getEmail());
+
+        this.simpMessagingTemplate.convertAndSend("/channel/users", new ApiResponse(SUCCESS, retMap));
         
         return new ApiResponse(SUCCESS, user);
     }
@@ -106,22 +106,19 @@ public class UserController {
     @ApiMapping("/settings/{key}")
     @Auth(role="ROLE_USER")
     @Transactional
-    public ApiResponse setSetting(@Shib Credentials shib, @ApiVariable String key, @Data String data) {
+    public ApiResponse setSetting(@Shib Credentials shib, @ApiVariable String key, @ApiValidatedModel UserControllerModel userSetting) {
         
-        // This will only work to change your own user settings
-        // Email would need to be obtained off of the dataNode to change anothers settings
         User user = userRepo.findByEmail(shib.getEmail());
-        
-        JsonNode dataNode = null;
-        try {
-            dataNode = objectMapper.readTree(data);
-        } catch (IOException e) {
-            return new ApiResponse(ERROR, "Could not parse the data object.");
+        if (user == null) {
+            userSetting.getBindingResult().addError(new ObjectError("user", "can change settings on a nonexistant user!"));
         }
-        
-        user.putSetting(key, dataNode.get("settingValue").asText());        
+
+        if(userSetting.getBindingResult().hasErrors()) {
+            return new ApiResponse(VALIDATION_ERROR, userSetting.getBindingResult().getAll());
+        }
+
+        user.putSetting(key, userSetting.getSettingValue());        
         
         return new ApiResponse(SUCCESS, userRepo.save(user).getSettings());
-    }
-    
+    }    
 }

@@ -42,22 +42,23 @@ vireo.service("ConfigurableSettings", function($sanitize, AbstractModel, WsApi) 
 
 	// TODO: test typing for windows control characters
 	// TODO: investigate way to maintain css format
-	ConfigurableSettings.update = function(type, setting, value) {	
+	ConfigurableSettings.update = function(type, name, value) {	
 		return WsApi.fetch({
 				endpoint:'/private/queue',
 				controller:'settings/configurable',
 				method:'update',
-				data: {'type':type, 'setting':setting,'value': $sanitize(value).replace(new RegExp("&#10;", 'g'), "")
+				data: {'type':type, 'name':name,'value': $sanitize(value).replace(new RegExp("&#10;", 'g'), "")
 			}
 		});
 	};
 
-	ConfigurableSettings.reset = function(type,setting) {
+	ConfigurableSettings.reset = function(type,name, value) {
 		return WsApi.fetch({
-			endpoint:'/private/queue',
-			controller:'settings/configurable',
-			method:'reset',
-			data: {'type':type, 'setting':setting}
+				endpoint:'/private/queue',
+				controller:'settings/configurable',
+				method:'reset',
+				data: {'type':type, 'name':name,'value': $sanitize(value).replace(new RegExp("&#10;", 'g'), "")
+			}
 		});
 	};
 

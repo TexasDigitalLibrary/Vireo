@@ -1,9 +1,8 @@
 package org.tdl.vireo.controller;
 
-import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
+import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_ERROR;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,16 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.ObjectError;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.repo.DepositLocationRepo;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import edu.tamu.framework.aspect.annotation.ApiMapping;
+import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
-import edu.tamu.framework.aspect.annotation.Data;
 import edu.tamu.framework.model.ApiResponse;
 
 @Controller
@@ -34,9 +31,6 @@ public class DepositLocationController {
 
     @Autowired
     private DepositLocationRepo depositLocationRepo;
-
-    @Autowired
-    private ObjectMapper objectMapper;
     
     @Autowired 
     private SimpMessagingTemplate simpMessagingTemplate;
@@ -53,98 +47,20 @@ public class DepositLocationController {
         return new ApiResponse(SUCCESS, getAll());
     }
     
-    private DepositLocation validateAndPopulateDepositLocation(DepositLocation depositLocation, JsonNode dataNode) {
-        JsonNode depositor = dataNode.get("depositor");
-        if(depositor != null) {
-            String depositorString = depositor.asText();
-            if(depositorString.length() > 0) 
-                depositLocation.setDepositor(depositorString);
-        }
-        
-        JsonNode packager = dataNode.get("packager");
-        if(packager != null) {
-            String packagerString = packager.asText();
-            if(packagerString.length() > 0) 
-                depositLocation.setPackager(packagerString);
-        }
-        
-        JsonNode repository = dataNode.get("repository");
-        if(repository != null) {
-            String repositoryString = repository.asText();
-            if(repositoryString.length() > 0) 
-                depositLocation.setRepository(repositoryString);
-        }
-        
-        JsonNode timeout = dataNode.get("timeout");
-        if(timeout != null) {
-            depositLocation.setTimeout(timeout.asInt());
-        }
-        
-        JsonNode username = dataNode.get("username");
-        if(username != null) {
-            String usernameString = username.asText();
-            if(usernameString.length() > 0) 
-                depositLocation.setUsername(usernameString);
-        }
-        
-        JsonNode password = dataNode.get("password");
-        if(password != null) {
-            String passwordString = password.asText();
-            if(passwordString.length() > 0) 
-                depositLocation.setPassword(passwordString);
-        }
-        
-        JsonNode onBehalfOf = dataNode.get("onBehalfOf");
-        if(onBehalfOf != null) {
-            String onBehalfOfString = onBehalfOf.asText();
-            if(onBehalfOfString.length() > 0) 
-                depositLocation.setOnBehalfOf(onBehalfOfString);
-        }
-        
-        JsonNode collection = dataNode.get("collection");
-        if(collection != null) {
-            String collectionString = collection.asText();
-            if(collectionString.length() > 0) 
-                depositLocation.setCollection(collectionString);
-        }
-        return depositLocation;
-    }
-    
     @ApiMapping("/create")
     @Auth(role = "ROLE_MANAGER")
-    public ApiResponse createDepositLocation(@Data String data) {
+    public ApiResponse createDepositLocation(@ApiValidatedModel DepositLocation depositLocation) {
         
-        JsonNode dataNode;
-        try {
-            dataNode = objectMapper.readTree(data);
-        } catch (IOException e) {
-            return new ApiResponse(ERROR, "Unable to parse update json ["+e.getMessage()+"]");
+        // TODO: this needs to go in repo.validateCreate() -- VIR-201
+        if(!depositLocation.getBindingResult().hasErrors() && depositLocationRepo.findByName(depositLocation.getName()) != null){
+            depositLocation.getBindingResult().addError(new ObjectError("depositLocation", depositLocation.getName() + " is already a deposit location!"));
         }
         
-        //TODO: proper validation and response
-        
-        DepositLocation newDepositLocation = null;
-                
-        JsonNode name = dataNode.get("name");
-        if(name != null) {
-            String nameString = name.asText();
-            if(nameString.length() > 0) {
-                newDepositLocation = depositLocationRepo.create(nameString);
-            }
-            else {
-                return new ApiResponse(ERROR, "Name required to create deposit location!");
-            }
-        }
-        else {
-            return new ApiResponse(ERROR, "Name required to create deposit location!");
+        if(depositLocation.getBindingResult().hasErrors()){
+            return new ApiResponse(VALIDATION_ERROR, depositLocation.getBindingResult().getAll());
         }
         
-        newDepositLocation = validateAndPopulateDepositLocation(newDepositLocation, dataNode);
-        
-        
-        newDepositLocation.setPosition(depositLocationRepo.count());
-        
-        newDepositLocation = depositLocationRepo.save(newDepositLocation);
+        DepositLocation newDepositLocation = depositLocationRepo.create(depositLocation.getName(), depositLocation.getRepository(), depositLocation.getCollection(), depositLocation.getUsername(), depositLocation.getPassword(), depositLocation.getOnBehalfOf(), depositLocation.getPackager(), depositLocation.getDepositor());
         
         //TODO: logging
         
@@ -157,50 +73,37 @@ public class DepositLocationController {
     
     @ApiMapping("/update")
     @Auth(role = "ROLE_MANAGER")
-    public ApiResponse updateDepositLocation(@Data String data) {
+    public ApiResponse updateDepositLocation(@ApiValidatedModel DepositLocation depositLocation) {
         
-        JsonNode dataNode;
-        try {
-            dataNode = objectMapper.readTree(data);
-        } catch (IOException e) {
-            return new ApiResponse(ERROR, "Unable to parse update json ["+e.getMessage()+"]");
-        }
-        
-        //TODO: proper validation and response
-        
-        //System.out.println("\n\n" + dataNode + "\n\n");
-        
-        DepositLocation depositLocation = null;
-                
-        JsonNode id = dataNode.get("id");
-        if(id != null) {
-            Long idLong = -1L;
-            try {
-                idLong = id.asLong();
+        //TODO: this needs to go in repo.validateUpdate() -- VIR-201
+        DepositLocation depositLocationtoUpdate = null;
+        if(depositLocation.getId() == null) {
+            depositLocation.getBindingResult().addError(new ObjectError("depositLocation", "Cannot update a DepositLocation without an id!"));
+        } else {
+            depositLocationtoUpdate = depositLocationRepo.findOne(depositLocation.getId());
+            if(depositLocationtoUpdate == null) {
+                depositLocation.getBindingResult().addError(new ObjectError("depositLocation", "Cannot update a DepositLocation that doesn't exist!"));
             }
-            catch(NumberFormatException nfe) {
-                return new ApiResponse(ERROR, "Id required to update deposit location!");
-            }
-            depositLocation = depositLocationRepo.findOne(idLong);           
         }
-        else {
-            return new ApiResponse(ERROR, "Id required to update deposit location!");
+        if(depositLocation.getBindingResult().hasErrors()){
+            return new ApiResponse(VALIDATION_ERROR, depositLocation.getBindingResult().getAll());
         }
-        
-        JsonNode name = dataNode.get("name");
-        if(name != null) {
-            String nameString = name.asText();
-            if(nameString != null && nameString.length() > 0) 
-                depositLocation.setName(nameString);
-        }
-        
-        depositLocation = validateAndPopulateDepositLocation(depositLocation, dataNode);
+         
+        depositLocationtoUpdate.setName(depositLocation.getName());
+        depositLocationtoUpdate.setRepository(depositLocation.getRepository());
+        depositLocationtoUpdate.setCollection(depositLocation.getCollection());
+        depositLocationtoUpdate.setUsername(depositLocation.getUsername());
+        depositLocationtoUpdate.setPassword(depositLocation.getPassword());
+        depositLocationtoUpdate.setOnBehalfOf(depositLocation.getOnBehalfOf());
+        depositLocationtoUpdate.setPackager(depositLocation.getPackager());
+        depositLocationtoUpdate.setDepositor(depositLocation.getDepositor());
+        depositLocationtoUpdate.setTimeout(depositLocation.getTimeout());
                 
-        depositLocation = depositLocationRepo.save(depositLocation);
+        depositLocationtoUpdate = depositLocationRepo.save(depositLocation);
         
         //TODO: logging
         
-        logger.info("Created deposit location with name " + depositLocation.getName());
+        logger.info("Created deposit location with name " + depositLocationtoUpdate.getName());
         
         simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(SUCCESS, getAll()));
         
@@ -218,7 +121,7 @@ public class DepositLocationController {
         }
         catch(NumberFormatException nfe) {
             logger.info("\n\nNOT A NUMBER " + indexString + "\n\n");
-            return new ApiResponse(ERROR, "Id is not a valid deposit location order!");
+            return new ApiResponse(VALIDATION_ERROR, "Id is not a valid deposit location order!");
         }
         
         if(index >= 0) {               
@@ -226,7 +129,7 @@ public class DepositLocationController {
         }
         else {
             logger.info("\n\nINDEX" + index + "\n\n");
-            return new ApiResponse(ERROR, "Id is not a valid deposit location order!");
+            return new ApiResponse(VALIDATION_ERROR, "Id is not a valid deposit location order!");
         }
         
         logger.info("Deleted deposit location with order " + index);

@@ -16,8 +16,10 @@ public class DepositLocationRepoImpl implements DepositLocationRepoCustom {
     private DepositLocationRepo depositLocationRepo;
 
     @Override
-    public DepositLocation create(String name) {
-        return depositLocationRepo.save(new DepositLocation(name));
+    public DepositLocation create(String name, String repository, String collection, String username, String password, String onBehalfOf, String packager, String depositor) {
+        DepositLocation depositLocation = new DepositLocation(name, repository, collection, username, password, onBehalfOf, packager, depositor);
+        depositLocation.setPosition(depositLocationRepo.count() + 1);
+        return depositLocationRepo.save(depositLocation);                
     }
     
     @Override

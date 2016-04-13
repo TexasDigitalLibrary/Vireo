@@ -1,7 +1,7 @@
 package org.tdl.vireo.controller;
 
-import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
+import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_ERROR;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,27 +18,22 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.ControlledVocabularyCache;
-import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.VocabularyWord;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
-import org.tdl.vireo.model.repo.LanguageRepo;
 import org.tdl.vireo.model.repo.VocabularyWordRepo;
 import org.tdl.vireo.service.ControlledVocabularyCachingService;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import edu.tamu.framework.aspect.annotation.ApiMapping;
+import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
-import edu.tamu.framework.aspect.annotation.Data;
 import edu.tamu.framework.aspect.annotation.InputStream;
 import edu.tamu.framework.model.ApiResponse;
 
@@ -62,13 +57,7 @@ public class ControlledVocabularyController {
     private VocabularyWordRepo vocabularyWordRepo;
 
     @Autowired
-    private LanguageRepo languageRepo;
-
-    @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     /**
      * Get all controlled vocabulary from repo.
@@ -117,51 +106,19 @@ public class ControlledVocabularyController {
     @ApiMapping("/create")
     @Auth(role = "ROLE_MANAGER")
     @Transactional
-    public ApiResponse createControlledVocabulary(@Data String data) {
-
-        JsonNode dataNode;
-        try {
-            dataNode = objectMapper.readTree(data);
-        } catch (IOException e) {
-            return new ApiResponse(ERROR, "Unable to parse update json [" + e.getMessage() + "]");
-        }
-
-        // TODO: proper validation and response
-
-        ControlledVocabulary newControlledVocabulary = null;
-
-        String name = null;
-        Language language = null;
-
-        JsonNode languageNode = dataNode.get("language");
-        if (languageNode != null) {
-            JsonNode languageNameNode = languageNode.get("name");
-            if (languageNameNode != null) {
-                language = languageRepo.findByName(languageNameNode.asText());
-            } else {
-                return new ApiResponse(ERROR, "Language name required to create controlled vocabulary!");
-            }
-        } else {
-            return new ApiResponse(ERROR, "Language required to create controlled vocabulary!");
+    public ApiResponse createControlledVocabulary(@ApiValidatedModel ControlledVocabulary controlledVocabulary) {
+        
+        //TODO: this needs to go in repo.validateCreate() -- VIR-201
+        if(controlledVocabularyRepo.findByName(controlledVocabulary.getName()) != null) {
+            controlledVocabulary.getBindingResult().addError(new ObjectError("controlledVocabulary", controlledVocabulary.getName() + " is already a controlled vocabulary!"));
         }
         
-        JsonNode nameNode = dataNode.get("name");
-        if (nameNode != null) {
-            name = nameNode.asText();
-        } else {
-            return new ApiResponse(ERROR, "Name required to create controlled vocabulary!");
+        if(controlledVocabulary.getBindingResult().hasErrors()){
+            return new ApiResponse(VALIDATION_ERROR, controlledVocabulary.getBindingResult().getAll());
         }
-
-        if (name != null && language != null) {
-            if(controlledVocabularyRepo.findByName(name) != null) {
-                return new ApiResponse(ERROR, name + " is already a controlled vocabulary!");
-            }
-            else {
-                newControlledVocabulary = controlledVocabularyRepo.create(name, language);
-            }
-        } else {
-            return new ApiResponse(ERROR, "Name and language could not be determined from input!");
-        }
+        
+        ControlledVocabulary newControlledVocabulary = controlledVocabularyRepo.create(controlledVocabulary.getName(), controlledVocabulary.getLanguage());
+        
 
         // TODO: logging
 
@@ -183,44 +140,35 @@ public class ControlledVocabularyController {
     @ApiMapping("/update")
     @Auth(role = "ROLE_MANAGER")
     @Transactional
-    public ApiResponse updateControlledVocabulary(@Data String data) {
+    public ApiResponse updateControlledVocabulary(@ApiValidatedModel ControlledVocabulary controlledVocabulary) {
+        //TODO: this needs to go in repo.validateUpdate() -- VIR-201
+        //make sure we're receiving an Id from the front-end
+        ControlledVocabulary controlledVocabularyToUpdate = null;
+        if (controlledVocabulary.getId() == null) {
+            controlledVocabulary.getBindingResult().addError(new ObjectError("controlledVocabulary", "Cannot update a ControlledVocabulary without an id!"));
+        } else {
+            controlledVocabularyToUpdate = controlledVocabularyRepo.findOne(controlledVocabulary.getId());
+            ControlledVocabulary controlledVocabularyExistingName = controlledVocabularyRepo.findByName(controlledVocabulary.getName());
 
-        JsonNode dataNode;
-        try {
-            dataNode = objectMapper.readTree(data);
-        } catch (IOException e) {
-            return new ApiResponse(ERROR, "Unable to parse update json [" + e.getMessage() + "]");
-        }
-
-        // TODO: proper validation and response
-
-        ControlledVocabulary controlledVocabulary = null;
-
-        JsonNode id = dataNode.get("id");
-        if (id != null) {
-            Long idLong = -1L;
-            try {
-                idLong = id.asLong();
-            } catch (NumberFormatException nfe) {
-                return new ApiResponse(ERROR, "Id required to update graduation month!");
+            // make sure we won't have any unique constraint violations
+            if(controlledVocabularyExistingName != null) {
+                controlledVocabulary.getBindingResult().addError(new ObjectError("controlledVocabulary", controlledVocabulary.getName() + " is already a controlled vocabulary!"));
             }
-            controlledVocabulary = controlledVocabularyRepo.findOne(idLong);
-        } else {
-            return new ApiResponse(ERROR, "Id required to update controlled vocabulary!");
+            
+            // make sure we're updating an existing controlled vocabulary
+            if(controlledVocabularyToUpdate == null) {
+                controlledVocabulary.getBindingResult().addError(new ObjectError("controlledVocabulary", controlledVocabulary.getName() + " can't be updated, it doesn't exist!"));
+            }
         }
-
-        JsonNode nameNode = dataNode.get("name");
-        if (nameNode != null) {
-            controlledVocabulary.setName(nameNode.asText());
-        } else {
-            return new ApiResponse(ERROR, "Name required to update controlled vocabulary!");
+        
+        // make sure we don't have any errors
+        if(controlledVocabulary.getBindingResult().hasErrors()){
+            return new ApiResponse(VALIDATION_ERROR, controlledVocabulary.getBindingResult().getAll());
         }
-
-        try {
-            controlledVocabulary = controlledVocabularyRepo.save(controlledVocabulary);
-        } catch (DataIntegrityViolationException dive) {
-            return new ApiResponse(ERROR, nameNode.asText() + " is already a controlled vocabulary!");
-        }
+        
+        // save!
+        controlledVocabularyToUpdate.setName(controlledVocabulary.getName());
+        controlledVocabulary = controlledVocabularyRepo.save(controlledVocabularyToUpdate);
 
         // TODO: logging
 
@@ -248,13 +196,13 @@ public class ControlledVocabularyController {
         try {
             index = Long.parseLong(indexString);
         } catch (NumberFormatException nfe) {
-            return new ApiResponse(ERROR, "Id is not a valid controlled vocabulary order!");
+            return new ApiResponse(VALIDATION_ERROR, "Id is not a valid controlled vocabulary order!");
         }
 
         if (index >= 0) {
             controlledVocabularyRepo.remove(index);
         } else {
-            return new ApiResponse(ERROR, "Id is not a valid controlled vocabulary order!");
+            return new ApiResponse(VALIDATION_ERROR, "Id is not a valid controlled vocabulary order!");
         }
 
         logger.info("Deleted controlled vocabulary with order " + index);
@@ -377,7 +325,7 @@ public class ControlledVocabularyController {
         try {
             rows = inputStreamToRows(inputStream);
         } catch (IOException e) {
-            return new ApiResponse(ERROR, "Invalid input.");
+            return new ApiResponse(VALIDATION_ERROR, "Invalid input.");
         }
 
         List<VocabularyWord> newWords = new ArrayList<VocabularyWord>();
@@ -501,7 +449,7 @@ public class ControlledVocabularyController {
             simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
         }
         else {
-            return new ApiResponse(ERROR, "Controlled vocabulary " + name + " is not cached for import.");
+            return new ApiResponse(VALIDATION_ERROR, "Controlled vocabulary " + name + " is not cached for import.");
         }
         
         return new ApiResponse(SUCCESS);

@@ -14,7 +14,7 @@ vireo.controller("LookAndFeelController", function($scope, $controller, $q, WsAp
 			var fileType = result.substring(result.indexOf("/")+1,result.indexOf(";"));
 			console.log(fileType);
 			
-			$scope.modalData.newLogo.type = fileType;
+			$scope.modalData.newLogo.fileType = fileType;
 			$scope.modalData.newLogo.file = result;
 
 			angular.element('#newLogoConfirmUploadModal').modal('show');
@@ -90,7 +90,7 @@ vireo.controller("LookAndFeelController", function($scope, $controller, $q, WsAp
 			$scope.settings.configurable.lookAndFeel.right_logo = newLogoConfiguration.value
 		}
 
-		$scope.resetModalData();$scope.resetModalData
+		$scope.resetModalData();
 
 	}
 

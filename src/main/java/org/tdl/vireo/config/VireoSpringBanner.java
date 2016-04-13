@@ -40,7 +40,7 @@ public class VireoSpringBanner implements Banner {
         version = environment.getProperty("info.build.version");
         
         // shouldn't ever be null, but just in case get it from the manifest
-        if (version == null) {           
+        if (version == null || version.equals("@project.version@")) {           
             Manifest manifest = getManifest(this.getClass());            
             version = manifest.getMainAttributes().getValue("Implementation-Version");
         }

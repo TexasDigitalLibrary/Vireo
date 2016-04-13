@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,11 +21,10 @@ import org.tdl.vireo.enums.Role;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
 import edu.tamu.framework.enums.ApiResponseType;
 import edu.tamu.framework.model.ApiResponse;
 import edu.tamu.framework.model.Credentials;
+import edu.tamu.framework.validation.ModelBindingResult;
 
 public class UserControllerTest extends AbstractControllerTest {
 
@@ -64,6 +62,15 @@ public class UserControllerTest extends AbstractControllerTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
+        
+        TEST_USER.setId(0L);
+        TEST_USER.setBindingResult(new ModelBindingResult(TEST_USER, User.class.getName()));
+        TEST_USER2.setId(1L);
+        TEST_USER.setBindingResult(new ModelBindingResult(TEST_USER2, User.class.getName()));
+        TEST_USER3.setId(2L);
+        TEST_USER.setBindingResult(new ModelBindingResult(TEST_USER3, User.class.getName()));
+        TEST_USER4.setId(3L);
+        TEST_USER.setBindingResult(new ModelBindingResult(TEST_USER4, User.class.getName()));
     	
     	mockUsers = Arrays.asList(new User[] {TEST_USER, TEST_USER2, TEST_USER3, TEST_USER4});
     	
@@ -161,11 +168,9 @@ public class UserControllerTest extends AbstractControllerTest {
     @Test
     @Order(value = 3)
     public void testUpdateRole() throws Exception {
-    	Map<String, String> data = new HashMap<String, String>();
-    	data.put("email", TEST_USER_EMAIL);
-    	data.put("role", TEST_USER_ROLE_UPDATE);
+        TEST_USER.setUserRole(TEST_USER_ROLE_UPDATE);
     	
-    	ApiResponse response = userController.updateRole(objectMapper.convertValue(data, JsonNode.class).toString());
+    	ApiResponse response = userController.updateRole(TEST_USER);
     	
     	User user = (User) response.getPayload().get("User");
     	
@@ -174,7 +179,7 @@ public class UserControllerTest extends AbstractControllerTest {
     	assertEquals(TEST_USER_FIRST_NAME, user.getFirstName());
     	assertEquals(TEST_USER_LAST_NAME, user.getLastName());
     	assertEquals(TEST_USER_EMAIL, user.getEmail());
-    	assertEquals(TEST_USER_ROLE_UPDATE, user.getRole());
+    	assertEquals(TEST_USER_ROLE_UPDATE, user.getUserRole());
     }
 	 	 
 }

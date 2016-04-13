@@ -25,7 +25,7 @@
 							<td>{{thisUser.firstName}}</td>
 							<td>{{thisUser.lastName}}</td>
 							<td>
-								<select ng-if="(isAdmin() || isManager())" ng-model="thisUser.role" ng-change="updateRole(thisUser.email, thisUser.role)" class="form-control">
+								<select ng-if="(isAdmin() || isManager())" ng-model="thisUser.role" ng-change="updateRole(thisUser)" class="form-control">
 									<option ng-repeat="role in allowableRoles(thisUser.role)">{{role}}</option>
 								</select>
 							</td>							

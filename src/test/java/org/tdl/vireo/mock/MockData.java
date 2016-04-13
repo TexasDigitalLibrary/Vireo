@@ -15,7 +15,7 @@ public abstract class MockData {
 	protected final static String TEST_USER_PASSWORD    = "abc123";
 	protected final static String TEST_USER_CONFIRM     = "abc123";
 	protected final static String TEST_USER_ROLE        = "ROLE_STUDENT";
-	protected final static String TEST_USER_ROLE_UPDATE = "ROLE_ADMIN";
+	protected final static Role TEST_USER_ROLE_UPDATE = Role.fromString("ADMINISTRATOR");
 	
 	protected final static String TEST_REGISTRATION_EMAIL_TEMPLATE_NAME = "SYSTEM New User Registration";
 	protected final static String TEST_EMAIL_TEMPLATE_NAME = "Test Email Template Name";

@@ -19,7 +19,7 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 	$scope.ready.then(function() {
 
 		$scope.resetEmbargo = function() {
-			$scope.modalData = {};
+			$scope.modalData = { isActive: false };
 			$scope.proquestEmbargoes = $filter('filter')($scope.embargoes.list, {guarantor: "PROQUEST"});
 			$scope.defaultEmbargoes = $filter('filter')($scope.embargoes.list, {guarantor: "DEFAULT"});	
 		};
@@ -27,7 +27,9 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 		$scope.resetEmbargo();
 		
 		$scope.createEmbargo = function() {
-			EmbargoRepo.create($scope.modalData).then(function(){
+			EmbargoRepo.create($scope.modalData).then(function(data) {
+				var errors = angular.fromJson(data.body).payload;
+				console.log(errors);
 			    $scope.resetEmbargo();
 			});
 		};
@@ -42,13 +44,17 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 		};
 		
 		$scope.updateEmbargo = function() {
-			EmbargoRepo.update($scope.modalData).then(function(){
+			EmbargoRepo.update($scope.modalData).then(function(data){
+				var errors = angular.fromJson(data.body).payload;
+				console.log(errors);
 				$scope.resetEmbargo();
 			});
 		};
 		
 		$scope.removeEmbargo = function(id) {
-            EmbargoRepo.remove(id).then(function(){
+            EmbargoRepo.remove(id).then(function(data){
+            	var errors = angular.fromJson(data.body).payload;
+				console.log(errors);
                 $scope.resetEmbargo();
             });
         };

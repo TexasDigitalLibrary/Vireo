@@ -1,5 +1,7 @@
 <div class="email-templates" ng-mouseenter="isMouseHover=true" ng-mouseleave="isMouseHover=false">
 	<span>{{ item.position }}.</span>
 	<span ng-repeat="property in properties" class="repeated-span">{{item[property]}}</span>
+	<span ng-show="!item.isSystemRequired" class="glyphicon glyphicon glyphicon-user"></span>
+	<span ng-show="item.isSystemRequired" class="glyphicon glyphicon glyphicon-globe"></span>
 	<span ng-show="isMouseHover" class="glyphicon glyphicon-pencil edit-setting-icon" ng-click="edit({index:item.position})"></span>
 </div>

@@ -11,5 +11,9 @@ public interface EmbargoRepoCustom {
     
     public void sort(String column, EmbargoGuarantor guarantor);
     
-    public void remove(Long index);    
+    public void remove(Long index);
+    
+    public void validateCreate(Embargo embargo);
+    
+    public void validateUpdate(Embargo embargo);
 }

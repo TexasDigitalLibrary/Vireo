@@ -16,7 +16,9 @@ public class CustomActionDefinitionRepoImpl implements CustomActionDefinitionRep
 
     @Override
     public CustomActionDefinition create(String label, Boolean isStudentVisible) {
-        return customActionDefinitionRepo.save(new CustomActionDefinition(label, isStudentVisible));
+        CustomActionDefinition customActionDefinition = new CustomActionDefinition(label, isStudentVisible);
+        customActionDefinition.setPosition(customActionDefinitionRepo.count() + 1);
+        return customActionDefinitionRepo.save(customActionDefinition);
     }
     
     @Override

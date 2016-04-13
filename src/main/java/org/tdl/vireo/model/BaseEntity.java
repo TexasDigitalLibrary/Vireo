@@ -4,6 +4,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import edu.tamu.framework.validation.ModelBindingResult;
 
 @MappedSuperclass
 public abstract class BaseEntity implements Comparable<BaseEntity> {
@@ -11,6 +16,10 @@ public abstract class BaseEntity implements Comparable<BaseEntity> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
+
+    @Transient
+    @JsonIgnore
+    protected ModelBindingResult bindingResult;
     
     /**
      * @return the id
@@ -18,7 +27,7 @@ public abstract class BaseEntity implements Comparable<BaseEntity> {
     public Long getId() {
         return id;
     }
-
+    
     /**
      * @param id
      *            the id to set
@@ -30,9 +39,14 @@ public abstract class BaseEntity implements Comparable<BaseEntity> {
     @Override
     public boolean equals(Object obj) {
         // if we're the same entity type
-        if (obj.getClass().equals(this.getClass())) {
+        if (obj != null && obj.getClass().equals(this.getClass())) {
             // and we have the same Id
-            return ((BaseEntity) obj).getId().equals(this.getId());
+            Long objId = ((BaseEntity) obj).getId();
+            if (objId != null) {
+                return objId.equals(this.getId());
+            } else {
+                return objId == this.getId();
+            }
         }
         return false;
     }
@@ -43,7 +57,7 @@ public abstract class BaseEntity implements Comparable<BaseEntity> {
         hashCode = 31 * hashCode + (getId() == null ? 0 : getId().hashCode());
         return hashCode;
     }
-    
+
     @Override
     public int compareTo(BaseEntity o) {
         if (this.getId() < o.getId()) {
@@ -52,6 +66,22 @@ public abstract class BaseEntity implements Comparable<BaseEntity> {
             return 1;
         }
         return 0;
+    }
+
+    /**
+     * @return the bindingResult
+     */
+    @JsonIgnore
+    public ModelBindingResult getBindingResult() {
+        return bindingResult;
+    }
+
+    /**
+     * @param bindingResult the bindingResult to set
+     */
+    @JsonIgnore
+    public void setBindingResult(ModelBindingResult bindingResult) {
+        this.bindingResult = bindingResult;
     }
     
 }

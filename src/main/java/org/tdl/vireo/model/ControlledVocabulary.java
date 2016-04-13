@@ -1,8 +1,8 @@
 package org.tdl.vireo.model;
 
 import static javax.persistence.CascadeType.DETACH;
-import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 
 import java.util.ArrayList;
@@ -12,11 +12,14 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.tdl.vireo.config.SpringContext;
 import org.tdl.vireo.service.EntityControlledVocabularyService;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
@@ -24,23 +27,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ControlledVocabulary extends BaseOrderedEntity {
     
     @Column(nullable = false, unique = true)
+    @NotEmpty
     private String name;
     
     @Column(nullable = true, unique = false)
     private String entityName;
 
     @ManyToOne(cascade = { DETACH, REFRESH }, optional = false)
+    @NotNull
     private Language language;
     
-    @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER)    
+    @ManyToMany(cascade = { ALL }, fetch = EAGER)    
     private List<VocabularyWord> dictionary = new ArrayList<VocabularyWord>();
     
-    @JsonProperty("entityProperty")
+    @JsonProperty("isEntityProperty")
     @Column(nullable = false)
+    @NotNull
     private Boolean isEntityProperty;
     
-    @JsonProperty("enum")
+    @JsonProperty("isEnum")
     @Column(nullable = false)
+    @NotNull
     private Boolean isEnum;
 
     public ControlledVocabulary() {
@@ -182,6 +189,7 @@ public class ControlledVocabulary extends BaseOrderedEntity {
      * 
      * @return
      */
+    @JsonIgnore
     public Boolean isEntityProperty() {
         return isEntityProperty;
     }
@@ -190,6 +198,7 @@ public class ControlledVocabulary extends BaseOrderedEntity {
      * 
      * @param isEntityProperty
      */
+    @JsonIgnore
     public void setIsEntityProperty(Boolean isEntityProperty) {
         this.isEntityProperty = isEntityProperty;
     }
@@ -197,6 +206,7 @@ public class ControlledVocabulary extends BaseOrderedEntity {
     /**
      * @return the isEnum
      */
+    @JsonIgnore
     public Boolean isEnum() {
         return isEnum;
     }
@@ -204,6 +214,7 @@ public class ControlledVocabulary extends BaseOrderedEntity {
     /**
      * @param isEnum the isEnum to set
      */
+    @JsonIgnore
     public void setIsEnum(Boolean isEnum) {
         this.isEnum = isEnum;
     }

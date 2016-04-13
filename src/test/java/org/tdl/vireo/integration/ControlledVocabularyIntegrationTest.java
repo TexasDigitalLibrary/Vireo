@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.mock.interceptor.MockChannelInterceptor;
 import org.tdl.vireo.model.ControlledVocabulary;
+import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.VocabularyWord;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.LanguageRepo;
@@ -36,6 +37,8 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
     
     @Override
     public void setup() {
+        
+        controlledVocabularyRepo.deleteAll();
         
         controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME1, languageRepo.create(TEST_LANGUAGE_NAME1));
         controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME2, languageRepo.create(TEST_LANGUAGE_NAME2));
@@ -74,7 +77,7 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
     @Test
     @Order(value = 1)
     public void testGetAllControlledVocabulary() throws InterruptedException, JsonParseException, JsonMappingException, IOException {
-        String responseJson = StompRequest("/settings/controlled-vocabulary/all", null);
+        String responseJson = StompRequest("/settings/controlled-vocabulary/all", "");
         
         Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
 
@@ -94,7 +97,7 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
     @Test
     @Order(value = 2)
     public void testGetControlledVocabularyByName() throws InterruptedException, JsonParseException, JsonMappingException, IOException {
-        String responseJson = StompRequest("/settings/controlled-vocabulary/" + TEST_CONTROLLED_VOCABULARY_NAME1, null);
+        String responseJson = StompRequest("/settings/controlled-vocabulary/" + TEST_CONTROLLED_VOCABULARY_NAME1, "");
         
         Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
 
@@ -114,15 +117,15 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
         String TEST_CONTROLLED_VOCABULARY_NAME4 = "TestCV4";
         String TEST_LANGUAGE_NAME4 = "German";
         
-        languageRepo.create(TEST_LANGUAGE_NAME4);
+        Language language = languageRepo.create(TEST_LANGUAGE_NAME4);
         
         Map<String, Object> dataMap = new HashMap<String, Object>();
         
         dataMap.put("name", TEST_CONTROLLED_VOCABULARY_NAME4);
         
-        Map<String, String> langaugeMap = new HashMap<String, String>();
+        Map<String, Object> langaugeMap = new HashMap<String, Object>();
         
-        langaugeMap.put("name", TEST_LANGUAGE_NAME4);
+        langaugeMap.put("id", language.getId());
         
         dataMap.put("language", langaugeMap);
         
@@ -151,10 +154,12 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
         
         Map<String, Object> dataMap = new HashMap<String, Object>();
         
-        dataMap.put("id", controlledVocabulary.getId().toString());
+        dataMap.put("id", controlledVocabulary.getId());
         
         dataMap.put("name", TEST_CONTROLLED_VOCABULARY_NAME4);
-                
+        
+        dataMap.put("language", controlledVocabulary.getLanguage());
+                        
         String responseJson = StompRequest("/settings/controlled-vocabulary/update", dataMap);
         
         Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
@@ -176,7 +181,7 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
         
         ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME1);
         
-        String responseJson = StompRequest("/settings/controlled-vocabulary/remove/" + controlledVocabulary.getPosition(), null);
+        String responseJson = StompRequest("/settings/controlled-vocabulary/remove/" + controlledVocabulary.getPosition(), "");
         
         Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
 
@@ -198,7 +203,7 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
         Long order1 = controlledVocabulary1.getPosition();
         Long order2 = controlledVocabulary2.getPosition();
         
-        String responseJson = StompRequest("/settings/controlled-vocabulary/reorder/" + order1 + "/" + order2, null);
+        String responseJson = StompRequest("/settings/controlled-vocabulary/reorder/" + order1 + "/" + order2, "");
         
         Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
 
@@ -214,7 +219,7 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
     @Test
     @Order(value = 7)
     public void testSortControlledVocabulary() throws InterruptedException, JsonParseException, JsonMappingException, IOException {
-        String responseJson = StompRequest("/settings/controlled-vocabulary/sort/name", null);
+        String responseJson = StompRequest("/settings/controlled-vocabulary/sort/name", "");
         
         Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
 
@@ -234,7 +239,7 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
         
         addVocabularyWords();
         
-        String responseJson = StompRequest("/settings/controlled-vocabulary/export/" + TEST_CONTROLLED_VOCABULARY_NAME1, null);
+        String responseJson = StompRequest("/settings/controlled-vocabulary/export/" + TEST_CONTROLLED_VOCABULARY_NAME1, "");
         
         Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
 
@@ -306,7 +311,7 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
             vocabularyWordRepo.save(word);
         });        
         vocabularyWordRepo.deleteAll();
-        controlledVocabularyRepo.deleteAll();        
+        controlledVocabularyRepo.deleteAll();
         languageRepo.deleteAll();       
     }
 

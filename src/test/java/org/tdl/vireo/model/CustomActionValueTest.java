@@ -10,6 +10,7 @@ public class CustomActionValueTest extends AbstractEntityTest {
     @Before
     public void setUp() {
         assertEquals("The CustomActionValue repository is not empty!", 0, customActionValueRepo.count());
+        userRepo.deleteAll();
 
         testUser = userRepo.create(TEST_USER_EMAIL, TEST_USER_FIRSTNAME, TEST_USER_LASTNAME, TEST_USER_ROLE);
         assertEquals("The user repository is not empty!", 1, userRepo.count());
