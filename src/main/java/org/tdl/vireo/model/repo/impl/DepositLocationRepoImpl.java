@@ -29,7 +29,7 @@ public class DepositLocationRepoImpl implements DepositLocationRepoCustom {
     
     @Override
     public void remove(Long index) {
-        orderedEntityService.remove(DepositLocation.class, index);
+        orderedEntityService.remove(depositLocationRepo, DepositLocation.class, index);
     }
 
 }

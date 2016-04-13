@@ -37,7 +37,7 @@ public class EmbargoRepoImpl implements EmbargoRepoCustom {
 
     @Override
     public void remove(Long index) {
-        orderedEntityService.remove(Embargo.class, index);
+        orderedEntityService.remove(embargoRepo, Embargo.class, index);
     }
 
     @Override

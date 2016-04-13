@@ -41,7 +41,7 @@ public class ControlledVocabularyRepoImpl implements ControlledVocabularyRepoCus
     
     @Override
     public void remove(Long index) {
-        orderedEntityService.remove(ControlledVocabulary.class, index);
+        orderedEntityService.remove(controlledVocabularyRepo, ControlledVocabulary.class, index);
     }
 
 }
