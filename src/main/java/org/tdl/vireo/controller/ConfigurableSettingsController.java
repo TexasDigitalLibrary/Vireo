@@ -2,6 +2,8 @@ package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_ERROR;
+import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_INFO;
+import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_WARNING;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +28,7 @@ public class ConfigurableSettingsController {
     private Logger logger = LoggerFactory.getLogger(this.getClass()); 
     
     @Autowired
-    ConfigurationRepo configurationRepo;
+    private ConfigurationRepo configurationRepo;
     
     @Autowired 
     private SimpMessagingTemplate simpMessagingTemplate;
@@ -38,34 +40,50 @@ public class ConfigurableSettingsController {
     
     @ApiMapping("/update")
     public ApiResponse updateSetting(@ApiValidatedModel Configuration configuration) {
+        // will attach any errors to the BindingResult when validating the incoming configuration
+        configurationRepo.validateUpdate(configuration);
         
-        if(configuration.getBindingResult().hasErrors()) {
-            return new ApiResponse(VALIDATION_ERROR, configuration.getBindingResult().getAll());
-        }
-        
-        configurationRepo.createOrUpdate(configuration.getName(),configuration.getValue(),configuration.getType());
-        
-        logger.info("Created or updated configuration with name " + configuration.getName() + " and value " + configuration.getValue());
-        
-        this.simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, toConfigPairsMap(configurationRepo.getAllByType(configuration.getType()))));
+        logger.info("Creating or updating configuration with name " + configuration.getName() + " and value " + configuration.getValue());
 
-        return new ApiResponse(SUCCESS);
+        return updateOrReset(configuration, true);
     }
     
     @ApiMapping("/reset")
     public ApiResponse resetSetting(@ApiValidatedModel Configuration configuration) {
         
-        if(configuration.getBindingResult().hasErrors()) {
+        logger.info("Resetting configuration with name " + configuration.getName() + " and value " + configuration.getValue());
+        
+        return updateOrReset(configuration, false);
+    }
+    
+    private ApiResponse updateOrReset(Configuration configuration, Boolean update){
+        // if errors, with no warnings
+        if (configuration.getBindingResult().hasErrors()) {
             return new ApiResponse(VALIDATION_ERROR, configuration.getBindingResult().getAll());
-        }     
-        
-        configurationRepo.reset(configuration.getName());
-        
-        logger.info("reset configuration with name " + configuration.getName() + " and value " + configuration.getValue());
-        
-        this.simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, toConfigPairsMap(configurationRepo.getAllByType(configuration.getType()))));
-        
-        return new ApiResponse(SUCCESS);
+        }
+        // else if no errors, with warnings
+        else if (!configuration.getBindingResult().hasErrors() && configuration.getBindingResult().hasWarnings()) {
+            simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(VALIDATION_WARNING, toConfigPairsMap(configurationRepo.getAllByType(configuration.getType()))));
+            return new ApiResponse(VALIDATION_WARNING, configuration.getBindingResult().getAllWarningsAndInfos());
+        }
+        // else if no errors, no warnings, maybe infos
+        else {
+            // if we're updating
+            if(update) {
+                configurationRepo.save(configuration);
+            }
+            // if we're resetting
+            else {
+                configurationRepo.reset(configuration.getName());
+            }
+            simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, toConfigPairsMap(configurationRepo.getAllByType(configuration.getType()))));
+            // deal with infos being set
+            if (configuration.getBindingResult().hasInfos()) {
+                return new ApiResponse(VALIDATION_INFO, configuration.getBindingResult().getAllInfos());
+            } else {
+                return new ApiResponse(SUCCESS);
+            }
+        }
     }
     
     /**

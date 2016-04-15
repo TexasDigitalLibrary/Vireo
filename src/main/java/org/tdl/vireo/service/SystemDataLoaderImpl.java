@@ -674,7 +674,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                             Configuration configuration = configurationRepo.findByNameAndIsSystemRequired(name, true);
                             // if one didn't already exist, create it
                             if (configuration == null) {
-                                configuration = configurationRepo.createOrUpdate(name, objNode.get(name).asText(), entry.getKey());
+                                configuration = configurationRepo.create(name, objNode.get(name).asText(), entry.getKey());
                                 configuration.isSystemRequired(true);
                             } else {
                                 configuration.setType(entry.getKey());

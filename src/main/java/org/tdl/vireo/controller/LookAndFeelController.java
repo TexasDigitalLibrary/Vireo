@@ -56,7 +56,7 @@ public class LookAndFeelController {
             return new ApiResponse(VALIDATION_ERROR, "Unable to write image file. [" + e.getMessage() + "]");
         }
 
-        Configuration newLogoConfig = configurationRepo.createOrUpdate(logoName, path, "lookAndFeel");
+        Configuration newLogoConfig = configurationRepo.create(logoName, path, "lookAndFeel");
 
         logger.info("Changing logo " + newLogoConfig.getName());
 

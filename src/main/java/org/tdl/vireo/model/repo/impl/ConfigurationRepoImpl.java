@@ -5,9 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.ObjectError;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.custom.ConfigurationRepoCustom;
+
+import edu.tamu.framework.validation.ModelBindingResult;
 
 public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
 
@@ -15,17 +18,7 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
     ConfigurationRepo configurationRepo;
     
     @Override
-    public Configuration createOrUpdate(String name, String value, String type) {
-        Configuration configuration = configurationRepo.getByName(name);
-        // if we only found the system required one, create a custom non-system one instead of updating an already existing one.
-        if(configuration != null && configuration.isSystemRequired()) {
-            configuration = null;
-        }
-        if (configuration != null) {
-            configuration.setValue(value);
-            configuration.setType(type);
-            return configurationRepo.save(configuration);
-        }
+    public Configuration create(String name, String value, String type) {
         return configurationRepo.save(new Configuration(name, value, type));
     }
     
@@ -119,5 +112,33 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
             }
         }
         return ret;
+    }
+    
+    @Override
+    public void validateUpdate(Configuration configuration) {
+        Configuration existing = configurationRepo.getByName(configuration.getName());
+        // if we only found the system required one, create a custom non-system
+        if(existing != null && existing.isSystemRequired()) {
+            // make sure we copy the binding result to the new configuration... for the controller to use if it needs it
+            ModelBindingResult bindingResult = configuration.getBindingResult();
+            configuration = configurationRepo.create(configuration.getName(), configuration.getValue(), configuration.getType());
+            configuration.setBindingResult(bindingResult);
+        }
+        // otherwise if we found a non-system required one, update it
+        else if (existing != null && !existing.isSystemRequired()) {
+            existing.setValue(configuration.getValue());
+            existing.setBindingResult(configuration.getBindingResult());
+            configuration = existing;
+        }
+        // otherwise we didn't even find a system required one!
+        else {
+            configuration.getBindingResult().addError(new ObjectError("configuration", "Cannot create or update configuration that doesn't have a system-required copy in the database!"));
+        }
+    }
+    
+    @Override
+    public void validateReset(Configuration configuration) {
+        // TODO Auto-generated method stub
+        
     }
 }

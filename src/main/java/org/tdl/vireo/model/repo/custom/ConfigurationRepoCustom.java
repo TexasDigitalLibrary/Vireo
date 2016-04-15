@@ -7,16 +7,16 @@ import org.tdl.vireo.model.Configuration;
 public interface ConfigurationRepoCustom {
     
     /**
-     * Creates or updates existing configuration
+     * Creates a configuration
      * 
-     * Will create a non-isSystemRequired if it didn't already exist.
+     * Will create a non-isSystemRequired
      * 
      * @param name
      * @param value
      * @param type
      * @return
      */
-    public Configuration createOrUpdate(String name, String value, String type);
+    public Configuration create(String name, String value, String type);
     
     /**
      * Resets existing configuration to its system value
@@ -78,4 +78,18 @@ public interface ConfigurationRepoCustom {
      * @return config value or fallback
      */
     public Integer getValue(String name, Integer fallback);
+    
+    /**
+     * Validates all the business logic for an incoming configuration
+     * 
+     * @param configuration
+     */
+    public void validateUpdate(Configuration configuration);
+    
+    /**
+     * Validates all the business logic for an incoming configuration
+     * 
+     * @param configuration
+     */
+    public void validateReset(Configuration configuration);
 }
