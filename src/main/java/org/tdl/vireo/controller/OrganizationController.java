@@ -73,7 +73,7 @@ public class OrganizationController {
             return new ApiResponse(ERROR, "Unable to parse data json ["+e.getMessage()+"]");
         }
         
-        OrganizationCategory newOrganizationCategory = organizationCategoryRepo.findOne(dataNode.get("categoryId").asLong());
+        OrganizationCategory newOrganizationCategory = organizationCategoryRepo.findOne(dataNode.get("category").get("id").asLong());
         Organization newOrganizationParent = organizationRepo.findOne(dataNode.get("parentOrganizationId").asLong());
         
         Organization newOrganization = organizationRepo.create(dataNode.get("name").asText(), newOrganizationCategory);

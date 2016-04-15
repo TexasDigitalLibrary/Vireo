@@ -39,7 +39,7 @@ public class Workflow extends BaseEntity {
 	
 	@OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
-    @JsonIdentityReference(alwaysAsId = false)
+    @JsonIdentityReference(alwaysAsId = true)
 	private List<WorkflowStep> workflowSteps;
 	
 	public Workflow() {
