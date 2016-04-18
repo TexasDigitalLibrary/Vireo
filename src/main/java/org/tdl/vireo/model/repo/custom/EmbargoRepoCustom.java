@@ -13,7 +13,7 @@ public interface EmbargoRepoCustom {
     
     public void remove(Long index);
     
-    public void validateCreate(Embargo embargo);
+    public Embargo validateCreate(Embargo embargo);
     
-    public void validateUpdate(Embargo embargo);
+    public Embargo validateUpdate(Embargo embargo);
 }

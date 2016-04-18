@@ -41,16 +41,17 @@ public class EmbargoRepoImpl implements EmbargoRepoCustom {
     }
 
     @Override
-    public void validateCreate(Embargo embargo) {
+    public Embargo validateCreate(Embargo embargo) {
         // make sure we won't get a unique constraint violation from the DB
         Embargo existing = embargoRepo.findByNameAndGuarantorAndIsSystemRequired(embargo.getName(), embargo.getGuarantor(), false);
         if (existing != null) {
             embargo.getBindingResult().addError(new ObjectError("embargo", "Cannot create embargo that already exists!"));
         }
+        return embargo;
     }
 
     @Override
-    public void validateUpdate(Embargo embargo) {
+    public Embargo validateUpdate(Embargo embargo) {
         if (embargo.getId() != null) {
             Embargo embargoToUpdate = embargoRepo.findOne(embargo.getId());
             if (embargoToUpdate != null) {
@@ -102,5 +103,6 @@ public class EmbargoRepoImpl implements EmbargoRepoCustom {
         } else {
             embargo.getBindingResult().addError(new ObjectError("embargo", "Cannot edit Embargo, no id was passed in!"));
         }
+        return embargo;
     }
 }

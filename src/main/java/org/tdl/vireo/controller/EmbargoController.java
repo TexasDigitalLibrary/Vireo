@@ -36,43 +36,7 @@ public class EmbargoController {
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
-
-    private Map<String, List<Embargo>> getAll() {
-        Map<String, List<Embargo>> allRet = new HashMap<String, List<Embargo>>();
-        allRet.put("list", embargoRepo.findAllByOrderByGuarantorAscPositionAsc());
-        return allRet;
-    }
-
-    private ApiResponse createOrUpdate(Embargo embargo, Boolean create) {
-        // if errors, with no warnings
-        if (embargo.getBindingResult().hasErrors()) {
-            return new ApiResponse(VALIDATION_ERROR, embargo.getBindingResult().getAll());
-        }
-        // else if no errors, with warnings
-        else if (!embargo.getBindingResult().hasErrors() && embargo.getBindingResult().hasWarnings()) {
-            simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(VALIDATION_WARNING, getAll()));
-            return new ApiResponse(VALIDATION_WARNING, embargo.getBindingResult().getAllWarningsAndInfos());
-        }
-        // else if no errors, no warnings, maybe infos
-        else {
-            // if we're creating
-            if (create) {
-                embargoRepo.create(embargo.getName(), embargo.getDescription(), embargo.getDuration(), embargo.getGuarantor(), embargo.isActive());
-            }
-            // else, were updating
-            else {
-                embargoRepo.save(embargo);
-            }
-            simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, getAll()));
-            // deal with infos being set
-            if (embargo.getBindingResult().hasInfos()) {
-                return new ApiResponse(VALIDATION_INFO, embargo.getBindingResult().getAllInfos());
-            } else {
-                return new ApiResponse(SUCCESS);
-            }
-        }
-    }
-
+    
     @ApiMapping("/all")
     @Auth(role = "ROLE_MANAGER")
     public ApiResponse getEmbargoes() {
@@ -84,7 +48,7 @@ public class EmbargoController {
     public ApiResponse createEmbargo(@ApiValidatedModel Embargo embargo) {
 
         // will attach any errors to the BindingResult when validating the incoming embargo
-        embargoRepo.validateCreate(embargo);
+        embargo = embargoRepo.validateCreate(embargo);
 
         return createOrUpdate(embargo, true);
     }
@@ -94,7 +58,7 @@ public class EmbargoController {
     public ApiResponse updateEmbargo(@ApiValidatedModel Embargo embargo) {
 
         // will attach any errors to the BindingResult when validating the incoming embargo
-        embargoRepo.validateUpdate(embargo);
+        embargo = embargoRepo.validateUpdate(embargo);
 
         return createOrUpdate(embargo, false);
     }
@@ -155,5 +119,41 @@ public class EmbargoController {
             return new ApiResponse(SUCCESS);
         }
         return new ApiResponse(VALIDATION_ERROR);
+    }
+    
+    private ApiResponse createOrUpdate(Embargo embargo, Boolean create) {
+        // if errors, with no warnings
+        if (embargo.getBindingResult().hasErrors()) {
+            return new ApiResponse(VALIDATION_ERROR, embargo.getBindingResult().getAll());
+        }
+        // else if no errors, with warnings
+        else if (!embargo.getBindingResult().hasErrors() && embargo.getBindingResult().hasWarnings()) {
+            simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(VALIDATION_WARNING, getAll()));
+            return new ApiResponse(VALIDATION_WARNING, embargo.getBindingResult().getAllWarningsAndInfos());
+        }
+        // else if no errors, no warnings, maybe infos
+        else {
+            // if we're creating
+            if (create) {
+                embargoRepo.create(embargo.getName(), embargo.getDescription(), embargo.getDuration(), embargo.getGuarantor(), embargo.isActive());
+            }
+            // else, were updating
+            else {
+                embargoRepo.save(embargo);
+            }
+            simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, getAll()));
+            // deal with infos being set
+            if (embargo.getBindingResult().hasInfos()) {
+                return new ApiResponse(VALIDATION_INFO, embargo.getBindingResult().getAllInfos());
+            } else {
+                return new ApiResponse(SUCCESS);
+            }
+        }
+    }
+    
+    private Map<String, List<Embargo>> getAll() {
+        Map<String, List<Embargo>> allRet = new HashMap<String, List<Embargo>>();
+        allRet.put("list", embargoRepo.findAllByOrderByGuarantorAscPositionAsc());
+        return allRet;
     }
 }
