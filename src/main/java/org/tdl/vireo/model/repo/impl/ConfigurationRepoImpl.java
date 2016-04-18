@@ -16,24 +16,24 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
 
     @Autowired
     ConfigurationRepo configurationRepo;
-    
+
     @Override
     public Configuration create(String name, String value, String type) {
         return configurationRepo.save(new Configuration(name, value, type));
     }
-    
+
     @Override
     public Configuration reset(String name) {
-        
+
         Configuration deletableOverride = configurationRepo.findByNameAndIsSystemRequired(name, false);
         if (deletableOverride != null) {
             configurationRepo.delete(deletableOverride);
         }
-        
+
         return configurationRepo.findByNameAndIsSystemRequired(name, true);
-        
-    } 
-    
+
+    }
+
     @Override
     public List<Configuration> getAll() {
         List<Configuration> ret = new ArrayList<Configuration>();
@@ -41,20 +41,20 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
         List<Configuration> user = configurationRepo.findAllByIsSystemRequired(false);
         for (Configuration sysConfig : system) {
             Boolean found = false;
-            for(Configuration userConfig: user) {
-                if(sysConfig.getName().equals(userConfig.getName())) {
+            for (Configuration userConfig : user) {
+                if (sysConfig.getName().equals(userConfig.getName())) {
                     ret.add(userConfig);
                     found = true;
                     break;
                 }
             }
-            if(!found) {
+            if (!found) {
                 ret.add(sysConfig);
             }
         }
         return ret;
     }
-    
+
     @Override
     public List<Configuration> getAllByType(String type) {
         List<Configuration> ret = new ArrayList<Configuration>();
@@ -62,14 +62,14 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
         List<Configuration> user = configurationRepo.findAllByTypeAndIsSystemRequired(type, false);
         for (Configuration sysConfig : system) {
             Boolean found = false;
-            for(Configuration userConfig: user) {
-                if(sysConfig.getName().equals(userConfig.getName())) {
+            for (Configuration userConfig : user) {
+                if (sysConfig.getName().equals(userConfig.getName())) {
                     ret.add(userConfig);
                     found = true;
                     break;
                 }
             }
-            if(!found) {
+            if (!found) {
                 ret.add(sysConfig);
             }
         }
@@ -85,7 +85,7 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
         }
         return ret;
     }
-    
+
     @Override
     public Integer getValue(String name, Integer fallback) {
         Integer ret = fallback;
@@ -99,13 +99,13 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
         }
         return ret;
     }
-    
+
     @Override
     public Configuration getByName(String name) {
         List<Configuration> configurations = configurationRepo.findByName(name);
         Configuration ret = null;
-        for(Configuration configuration: configurations) {
-            if(configuration.isSystemRequired() && ret == null) {
+        for (Configuration configuration : configurations) {
+            if (configuration.isSystemRequired() && ret == null) {
                 ret = configuration;
             } else if (!configuration.isSystemRequired()) {
                 ret = configuration;
@@ -113,32 +113,41 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
         }
         return ret;
     }
-    
+
     @Override
-    public void validateUpdate(Configuration configuration) {
-        Configuration existing = configurationRepo.getByName(configuration.getName());
+    public Configuration validateUpdate(Configuration configuration) {
+        Configuration configurationToUpdate = configurationRepo.getByName(configuration.getName());
         // if we only found the system required one, create a custom non-system
-        if(existing != null && existing.isSystemRequired()) {
+        if (configurationToUpdate != null && configurationToUpdate.isSystemRequired()) {
             // make sure we copy the binding result to the new configuration... for the controller to use if it needs it
             ModelBindingResult bindingResult = configuration.getBindingResult();
             configuration = configurationRepo.create(configuration.getName(), configuration.getValue(), configuration.getType());
             configuration.setBindingResult(bindingResult);
         }
         // otherwise if we found a non-system required one, update it
-        else if (existing != null && !existing.isSystemRequired()) {
-            existing.setValue(configuration.getValue());
-            existing.setBindingResult(configuration.getBindingResult());
-            configuration = existing;
+        else if (configurationToUpdate != null && !configurationToUpdate.isSystemRequired()) {
+            configurationToUpdate.setValue(configuration.getValue());
+            configurationToUpdate.setBindingResult(configuration.getBindingResult());
+            configuration = configurationToUpdate;
         }
         // otherwise we didn't even find a system required one!
         else {
-            configuration.getBindingResult().addError(new ObjectError("configuration", "Cannot create or update configuration that doesn't have a system-required copy in the database!"));
+            configuration.getBindingResult().addError(new ObjectError("configuration", "Cannot update configuration that doesn't have a system-required copy in the database!"));
         }
+        return configuration;
     }
-    
+
     @Override
-    public void validateReset(Configuration configuration) {
-        // TODO Auto-generated method stub
-        
+    public Configuration validateReset(Configuration configuration) {
+        Configuration configurationToUpdate = configurationRepo.getByName(configuration.getName());
+        // if it doesn't exist
+        if (configurationToUpdate == null) {
+            configuration.getBindingResult().addError(new ObjectError("configuration", "Cannot reset configuration that doesn't have a system-required copy in the database!"));
+        }
+        // it exists, but we don't have a custom override for it: nothing to reset!
+        else if (configurationToUpdate.isSystemRequired()) {
+            configuration.getBindingResult().addWarning(new ObjectError("configuration", "No custom value was set for " + configuration.getName() + ". Nothing to reset!"));
+        }
+        return configuration;
     }
 }

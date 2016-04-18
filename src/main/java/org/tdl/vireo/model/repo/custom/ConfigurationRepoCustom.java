@@ -82,14 +82,16 @@ public interface ConfigurationRepoCustom {
     /**
      * Validates all the business logic for an incoming configuration
      * 
-     * @param configuration
+     * @param unvalidated {@link Configuration} for updating
+     * @return validated {@link Configuration}
      */
-    public void validateUpdate(Configuration configuration);
+    public Configuration validateUpdate(Configuration configuration);
     
     /**
      * Validates all the business logic for an incoming configuration
      * 
-     * @param configuration
+     * @param unvalidated {@link Configuration} for resetting
+     * @return validated {@link Configuration}
      */
-    public void validateReset(Configuration configuration);
+    public Configuration validateReset(Configuration configuration);
 }

@@ -41,15 +41,17 @@ public class ConfigurableSettingsController {
     @ApiMapping("/update")
     public ApiResponse updateSetting(@ApiValidatedModel Configuration configuration) {
         // will attach any errors to the BindingResult when validating the incoming configuration
-        configurationRepo.validateUpdate(configuration);
+        configuration = configurationRepo.validateUpdate(configuration);
         
-        logger.info("Creating or updating configuration with name " + configuration.getName() + " and value " + configuration.getValue());
+        logger.info("Updating configuration with name " + configuration.getName() + " and value " + configuration.getValue());
 
         return updateOrReset(configuration, true);
     }
     
     @ApiMapping("/reset")
     public ApiResponse resetSetting(@ApiValidatedModel Configuration configuration) {
+        // will attach any errors to the BindingResult when validating the incoming configuration
+        configuration = configurationRepo.validateReset(configuration);
         
         logger.info("Resetting configuration with name " + configuration.getName() + " and value " + configuration.getValue());
         
