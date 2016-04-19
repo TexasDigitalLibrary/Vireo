@@ -133,7 +133,14 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
 	     User userToUpdate = userRepo.create(TEST_USER_EMAIL, TEST_USER.getFirstName(), TEST_USER.getLastName(), Role.STUDENT);
 		 userToUpdate.setUserRole(TEST_USER_ROLE_UPDATE);
 	    	
-		 StompRequest("/user/update-role", userToUpdate);
+		 String responseJson = StompRequest("/user/update-role", userToUpdate);
+		 
+		 Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
+		 
+		 @SuppressWarnings("unchecked")
+		 Map<String, String> meta = (Map<String, String>) responseObject.get("meta");
+	        
+		 assertEquals("SUCCESS", meta.get("type"));
 		 		 
 		 User testUser = userRepo.findByEmail(TEST_USER_EMAIL);
 		 
