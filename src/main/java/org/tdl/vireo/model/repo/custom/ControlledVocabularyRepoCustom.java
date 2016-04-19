@@ -14,5 +14,8 @@ public interface ControlledVocabularyRepoCustom {
     public void sort(String column);
     
     public void remove(Long index);
-
+    
+    public ControlledVocabulary validateCreate(ControlledVocabulary controlledVocabulary);
+    
+    public ControlledVocabulary validateUpdate(ControlledVocabulary controlledVocabulary);
 }

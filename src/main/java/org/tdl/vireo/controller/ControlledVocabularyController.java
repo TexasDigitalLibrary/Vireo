@@ -2,6 +2,8 @@ package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_ERROR;
+import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_INFO;
+import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_WARNING;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,7 +22,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.model.ControlledVocabulary;
@@ -57,18 +58,7 @@ public class ControlledVocabularyController {
     private VocabularyWordRepo vocabularyWordRepo;
 
     @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
-
-    /**
-     * Get all controlled vocabulary from repo.
-     * 
-     * @return map with list of all controlled vocabulary
-     */
-    private Map<String, List<ControlledVocabulary>> getAll() {
-        Map<String, List<ControlledVocabulary>> map = new HashMap<String, List<ControlledVocabulary>>();
-        map.put("list", controlledVocabularyRepo.findAllByOrderByPositionAsc());
-        return map;
-    }
+    private SimpMessagingTemplate simpMessagingTemplate;    
 
     /**
      * Endpoint to request all controlled vocabulary.
@@ -107,27 +97,13 @@ public class ControlledVocabularyController {
     @Auth(role = "ROLE_MANAGER")
     @Transactional
     public ApiResponse createControlledVocabulary(@ApiValidatedModel ControlledVocabulary controlledVocabulary) {
-        
-        //TODO: this needs to go in repo.validateCreate() -- VIR-201
-        if(controlledVocabularyRepo.findByName(controlledVocabulary.getName()) != null) {
-            controlledVocabulary.getBindingResult().addError(new ObjectError("controlledVocabulary", controlledVocabulary.getName() + " is already a controlled vocabulary!"));
-        }
-        
-        if(controlledVocabulary.getBindingResult().hasErrors()){
-            return new ApiResponse(VALIDATION_ERROR, controlledVocabulary.getBindingResult().getAll());
-        }
-        
-        ControlledVocabulary newControlledVocabulary = controlledVocabularyRepo.create(controlledVocabulary.getName(), controlledVocabulary.getLanguage());
-        
+        // will attach any errors to the BindingResult when validating the incoming controlledVocabulary
+        controlledVocabulary = controlledVocabularyRepo.validateCreate(controlledVocabulary);
 
         // TODO: logging
-
-        logger.info("Created controlled vocabulary " + newControlledVocabulary.getName());
-
-        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, getAll()));
-        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
-
-        return new ApiResponse(SUCCESS);
+        logger.info("Creating controlled vocabulary " + controlledVocabulary.getName());
+        
+        return createOrUpdate(controlledVocabulary, true);
     }
 
     /**
@@ -141,43 +117,13 @@ public class ControlledVocabularyController {
     @Auth(role = "ROLE_MANAGER")
     @Transactional
     public ApiResponse updateControlledVocabulary(@ApiValidatedModel ControlledVocabulary controlledVocabulary) {
-        //TODO: this needs to go in repo.validateUpdate() -- VIR-201
-        //make sure we're receiving an Id from the front-end
-        ControlledVocabulary controlledVocabularyToUpdate = null;
-        if (controlledVocabulary.getId() == null) {
-            controlledVocabulary.getBindingResult().addError(new ObjectError("controlledVocabulary", "Cannot update a ControlledVocabulary without an id!"));
-        } else {
-            controlledVocabularyToUpdate = controlledVocabularyRepo.findOne(controlledVocabulary.getId());
-            ControlledVocabulary controlledVocabularyExistingName = controlledVocabularyRepo.findByName(controlledVocabulary.getName());
-
-            // make sure we won't have any unique constraint violations
-            if(controlledVocabularyExistingName != null) {
-                controlledVocabulary.getBindingResult().addError(new ObjectError("controlledVocabulary", controlledVocabulary.getName() + " is already a controlled vocabulary!"));
-            }
-            
-            // make sure we're updating an existing controlled vocabulary
-            if(controlledVocabularyToUpdate == null) {
-                controlledVocabulary.getBindingResult().addError(new ObjectError("controlledVocabulary", controlledVocabulary.getName() + " can't be updated, it doesn't exist!"));
-            }
-        }
-        
-        // make sure we don't have any errors
-        if(controlledVocabulary.getBindingResult().hasErrors()){
-            return new ApiResponse(VALIDATION_ERROR, controlledVocabulary.getBindingResult().getAll());
-        }
-        
-        // save!
-        controlledVocabularyToUpdate.setName(controlledVocabulary.getName());
-        controlledVocabulary = controlledVocabularyRepo.save(controlledVocabularyToUpdate);
+        // will attach any errors to the BindingResult when validating the incoming controlledVocabulary
+        controlledVocabulary = controlledVocabularyRepo.validateUpdate(controlledVocabulary);
 
         // TODO: logging
-
-        logger.info("Updated controlled vocabulary with name " + controlledVocabulary.getName());
-
-        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, getAll()));
-        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
-
-        return new ApiResponse(SUCCESS);
+        logger.info("Updating controlled vocabulary " + controlledVocabulary.getName());
+        
+        return createOrUpdate(controlledVocabulary, false);
     }
 
     /**
@@ -453,6 +399,49 @@ public class ControlledVocabularyController {
         }
         
         return new ApiResponse(SUCCESS);
+    }
+    
+    private ApiResponse createOrUpdate(ControlledVocabulary controlledVocabulary, Boolean create){
+        // if errors, with no warnings
+        if (controlledVocabulary.getBindingResult().hasErrors()) {
+            return new ApiResponse(VALIDATION_ERROR, controlledVocabulary.getBindingResult().getAll());
+        }
+        // else if no errors, with warnings
+        else if (!controlledVocabulary.getBindingResult().hasErrors() && controlledVocabulary.getBindingResult().hasWarnings()) {
+            simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(VALIDATION_WARNING, getAll()));
+            simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(VALIDATION_WARNING));
+            return new ApiResponse(VALIDATION_WARNING, controlledVocabulary.getBindingResult().getAllWarningsAndInfos());
+        }
+        // else if no errors, no warnings, maybe infos
+        else {
+            // if we're creating
+            if(create) {
+                controlledVocabularyRepo.create(controlledVocabulary.getName(), controlledVocabulary.getLanguage());
+            }
+            // if we're updating
+            else {
+                controlledVocabularyRepo.save(controlledVocabulary);
+            }
+            simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, getAll()));
+            simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
+            // deal with infos being set
+            if (controlledVocabulary.getBindingResult().hasInfos()) {
+                return new ApiResponse(VALIDATION_INFO, controlledVocabulary.getBindingResult().getAllInfos());
+            } else {
+                return new ApiResponse(SUCCESS);
+            }
+        }
+    }
+    
+    /**
+     * Get all controlled vocabulary from repo.
+     * 
+     * @return map with list of all controlled vocabulary
+     */
+    private Map<String, List<ControlledVocabulary>> getAll() {
+        Map<String, List<ControlledVocabulary>> map = new HashMap<String, List<ControlledVocabulary>>();
+        map.put("list", controlledVocabularyRepo.findAllByOrderByPositionAsc());
+        return map;
     }
 
     /**

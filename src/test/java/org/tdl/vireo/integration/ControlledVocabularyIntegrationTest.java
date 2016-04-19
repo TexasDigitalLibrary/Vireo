@@ -118,18 +118,9 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
         String TEST_LANGUAGE_NAME4 = "German";
         
         Language language = languageRepo.create(TEST_LANGUAGE_NAME4);
+        ControlledVocabulary testCV4 = new ControlledVocabulary(TEST_CONTROLLED_VOCABULARY_NAME4, language);
         
-        Map<String, Object> dataMap = new HashMap<String, Object>();
-        
-        dataMap.put("name", TEST_CONTROLLED_VOCABULARY_NAME4);
-        
-        Map<String, Object> langaugeMap = new HashMap<String, Object>();
-        
-        langaugeMap.put("id", language.getId());
-        
-        dataMap.put("language", langaugeMap);
-        
-        String responseJson = StompRequest("/settings/controlled-vocabulary/create", dataMap);
+        String responseJson = StompRequest("/settings/controlled-vocabulary/create", testCV4);
         
         Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
 
