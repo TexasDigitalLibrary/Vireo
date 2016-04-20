@@ -36,13 +36,13 @@ public class AppStompInterceptor extends CoreStompInterceptor {
             AppRole role = AppRole.STUDENT;
 
             if (shib.getRole() == null) {
-                shib.setRole("ROLE_STUDENT");
+                shib.setRole(role.toString());
             }
             String shibEmail = shib.getEmail();
             for (String email : admins) {
                 if (email.equals(shibEmail)) {
-                    shib.setRole("ROLE_ADMIN");
                     role = AppRole.ADMINISTRATOR;
+                    shib.setRole(role.toString());
                 }
             }
 
