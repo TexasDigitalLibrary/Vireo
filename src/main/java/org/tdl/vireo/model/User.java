@@ -27,6 +27,7 @@ import org.tdl.vireo.enums.Role;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import edu.tamu.framework.model.BaseEntity;
 import edu.tamu.framework.model.CoreUser;
 
 @Entity

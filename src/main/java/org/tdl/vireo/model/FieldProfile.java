@@ -19,6 +19,8 @@ import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.enums.InputType;
 
+import edu.tamu.framework.model.BaseEntity;
+
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "predicate_id" }) )
 public class FieldProfile extends BaseEntity {

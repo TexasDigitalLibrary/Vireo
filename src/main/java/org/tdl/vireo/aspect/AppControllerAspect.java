@@ -15,9 +15,9 @@ import org.springframework.util.ClassUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.SmartValidator;
 import org.springframework.validation.Validator;
-import org.tdl.vireo.model.BaseEntity;
 
 import edu.tamu.framework.aspect.CoreControllerAspect;
+import edu.tamu.framework.model.BaseEntity;
 import edu.tamu.framework.validation.ModelBindingResult;
 
 @Component

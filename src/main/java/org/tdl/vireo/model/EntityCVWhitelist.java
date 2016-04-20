@@ -1,12 +1,15 @@
 package org.tdl.vireo.model;
 
+import static javax.persistence.FetchType.EAGER;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import static javax.persistence.FetchType.EAGER;
+
+import edu.tamu.framework.model.BaseEntity;
 
 @Entity
 public class EntityCVWhitelist  extends BaseEntity {
