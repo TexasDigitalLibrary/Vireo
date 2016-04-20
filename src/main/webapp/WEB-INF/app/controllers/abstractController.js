@@ -23,10 +23,6 @@ vireo.controller('AbstractController', function ($scope, $window, StorageService
 		return (sessionStorage.role == "MANAGER");
 	};
 
-	$scope.isManager = function() {
-		return (sessionStorage.role == "MANAGER");
-	};
-
 	$scope.isAdmin = function() {
 		return (sessionStorage.role == "ADMINISTRATOR");
 	};
