@@ -1,6 +1,9 @@
 package org.tdl.vireo.enums;
 
-public enum Role {
+import edu.tamu.framework.model.IRole;
+
+public enum AppRole implements IRole {
+    
     // NEVER CHANGE THE INT VALUES OR YOU'LL RUIN THE DB
     NONE(0),
     STUDENT(1),
@@ -10,7 +13,7 @@ public enum Role {
 
     private int value;
 
-    Role(int value) {
+    AppRole(int value) {
         this.value = value;
     }
 
@@ -23,20 +26,4 @@ public enum Role {
         return this.name();
     }
     
-    /**
-     * Takes a string, makes it uppercase and sees if we have a matching enum value for it.
-     * 
-     * @param from
-     * @return
-     */
-    public static Role fromString(String from) {
-        if(from != null) {
-            for(Role val : Role.values()) {
-                if(val.toString().equals(from.toUpperCase())){
-                    return val;
-                }
-            }
-        }
-        return null;
-    }
 }

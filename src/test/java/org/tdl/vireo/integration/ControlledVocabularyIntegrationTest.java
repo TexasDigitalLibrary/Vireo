@@ -251,13 +251,9 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
         @SuppressWarnings("unchecked")
         Map<String, Object> payload = (Map<String, Object>) responseObject.get("payload");
         
-        System.out.println(payload);
-
         @SuppressWarnings("unchecked")
         List<List<String>> rows = (List<List<String>>) ((Map<String, Object>) payload.get("HashMap")).get("rows");
-        
-        System.out.println(rows.get(0).get(0));
-        
+
         assertEquals(rows.get(0).get(0), TEST_VOCABULARY_WORD_NAME1);
         assertEquals(rows.get(0).get(1), TEST_VOCABULARY_WORD_DEFINITION1);
         assertEquals(rows.get(0).get(2), TEST_VOCABULARY_WORD_IDENTIFIER1);

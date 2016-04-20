@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.tdl.vireo.enums.Role;
+import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
 
@@ -33,7 +33,7 @@ public class AppStompInterceptor extends CoreStompInterceptor {
 
         if (user == null) {
 
-            Role role = Role.STUDENT;
+            AppRole role = AppRole.STUDENT;
 
             if (shib.getRole() == null) {
                 shib.setRole("ROLE_STUDENT");
@@ -42,7 +42,7 @@ public class AppStompInterceptor extends CoreStompInterceptor {
             for (String email : admins) {
                 if (email.equals(shibEmail)) {
                     shib.setRole("ROLE_ADMIN");
-                    role = Role.ADMINISTRATOR;
+                    role = AppRole.ADMINISTRATOR;
                 }
             }
 
@@ -57,7 +57,7 @@ public class AppStompInterceptor extends CoreStompInterceptor {
             // this.simpMessagingTemplate.convertAndSend("/channel/users", new ApiResponse(SUCCESS, userMap));
             
         } else {
-            shib.setRole(user.getRole());
+            shib.setRole(user.getRole().toString());
         }
 
         return shib;

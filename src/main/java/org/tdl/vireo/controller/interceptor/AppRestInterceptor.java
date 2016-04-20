@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.tdl.vireo.enums.Role;
+import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
 
@@ -31,7 +31,7 @@ public class AppRestInterceptor extends CoreRestInterceptor {
         
         if(user == null) {
             
-            Role role = Role.STUDENT;
+            AppRole role = AppRole.STUDENT;
             
             if(shib.getRole() == null) {
                 shib.setRole("ROLE_USER");
@@ -40,7 +40,7 @@ public class AppRestInterceptor extends CoreRestInterceptor {
             for(String email : admins) {
                 if(email.equals(shibEmail)) {
                     shib.setRole("ROLE_ADMIN");
-                    role = Role.ADMINISTRATOR;
+                    role = AppRole.ADMINISTRATOR;
                 }
             }
             
@@ -53,7 +53,7 @@ public class AppRestInterceptor extends CoreRestInterceptor {
 //            this.simpMessagingTemplate.convertAndSend("/channel/users", new ApiResponse(SUCCESS, userMap));
         }
         else {  
-            shib.setRole(user.getRole());
+            shib.setRole(user.getRole().toString());
         }
         
         return shib;

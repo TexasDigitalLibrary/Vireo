@@ -37,4 +37,5 @@ public class UserControllerModel extends BaseEntity {
     public void setSettingValue(String settingValue) {
         this.settingValue = settingValue;
     }
+    
 }

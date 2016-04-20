@@ -23,16 +23,19 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
-import org.tdl.vireo.enums.Role;
+import org.tdl.vireo.enums.AppRole;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import edu.tamu.framework.model.CoreUser;
+import edu.tamu.framework.model.IRole;
 
 @Entity
 @Table(name = "users") // "user" is a keyword in sql
 public class User extends BaseEntity implements CoreUser {
-    
+
     // institutional identifier, brought in with framework
     @Column(nullable = true)
     private Long uin;
@@ -84,12 +87,8 @@ public class User extends BaseEntity implements CoreUser {
 
     @Column(nullable = false)
     @NotNull
-    private Role userRole;
+    private AppRole role;
     
-    @Column(nullable = false)
-    @NotNull
-    private String role;
-
     @Column
     private String orcid;
 
@@ -109,12 +108,12 @@ public class User extends BaseEntity implements CoreUser {
      * @param lastName
      * @param role
      */
-    public User(String email, String firstName, String lastName, Role role) {
+    public User(String email, String firstName, String lastName, AppRole role) {
         this();       
         setEmail(email);
         setFirstName(firstName);
         setLastName(lastName);
-        setUserRole(role);
+        setRole(role);
     }
 
     /**
@@ -363,54 +362,6 @@ public class User extends BaseEntity implements CoreUser {
     }
 
     /**
-     * @return the role
-     */
-    public Role getUserRole() {
-        return this.userRole;
-    }
-    
-    /**
-     * @param role
-     *            the role to set
-     */
-    public void setUserRole(Role userRole) {
-        this.userRole = userRole;
-        switch(this.userRole) {
-            case NONE: this.role = "ROLE_NONE"; break;
-            case STUDENT: this.role = "ROLE_STUDENT"; break;
-            case REVIEWER: this.role = "ROLE_REVIEWER"; break;
-            case MANAGER: this.role = "ROLE_MANAGER"; break;
-            case ADMINISTRATOR: this.role = "ROLE_ADMIN"; break;
-            default: this.role = "ROLE_UNKNOWN"; break;
-        }
-    }
-    
-    /**
-     * @return the role
-     */
-    @Override
-    public String getRole() {
-        return this.role;
-    }    
-    
-    /**
-     * @param role
-     *            the role to set
-     */
-    @Override
-    public void setRole(String role) {
-        this.role = role;
-        switch(this.role) {
-            case "ROLE_NONE": this.setUserRole(Role.NONE); break;
-            case "ROLE_STUDENT": this.setUserRole(Role.STUDENT); break;
-            case "ROLE_REVIEWER": this.setUserRole(Role.REVIEWER); break;
-            case "ROLE_MANAGER": this.setUserRole(Role.MANAGER); break;
-            case "ROLE_ADMIN": this.setUserRole(Role.ADMINISTRATOR); break;
-            default: this.setUserRole(Role.NONE); break;
-        }
-    }
-
-    /**
      * @return the orcid
      */
     public String getOrcid() {
@@ -439,6 +390,18 @@ public class User extends BaseEntity implements CoreUser {
     @Override
     public Long getUin() {
         return uin;
+    }
+
+    @Override
+    @JsonDeserialize(as = AppRole.class)
+    public void setRole(IRole role) {
+        this.role = (AppRole) role;
+    }
+        
+    @Override
+    @JsonSerialize(as = AppRole.class)
+    public IRole getRole() {
+        return role;
     }
 
 }

@@ -14,7 +14,7 @@ import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.config.constant.ConfigurationName;
 import org.tdl.vireo.enums.EmbargoGuarantor;
 import org.tdl.vireo.enums.InputType;
-import org.tdl.vireo.enums.Role;
+import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.model.repo.ActionLogRepo;
 import org.tdl.vireo.model.repo.AddressRepo;
 import org.tdl.vireo.model.repo.AttachmentRepo;
@@ -175,17 +175,17 @@ public abstract class AbstractEntityTest {
     protected static final String TEST_SUBMISSION_SUBMITTER_EMAIL = "admin@tdl.org";
     protected static final String TEST_SUBMISSION_SUBMITTER_FIRSTNAME = "TDL";
     protected static final String TEST_SUBMISSION_SUBMITTER_LASTNAME = "Admin";
-    protected static final Role TEST_SUBMISSION_SUBMITTER_ROLE = Role.ADMINISTRATOR;
+    protected static final AppRole TEST_SUBMISSION_SUBMITTER_ROLE = AppRole.ADMINISTRATOR;
 
     protected static final String TEST_SUBMISSION_REVIEWER1_EMAIL = "reviewer1@tdl.org";
     protected static final String TEST_SUBMISSION_REVIEWER1_FIRSTNAME = "Ronald";
     protected static final String TEST_SUBMISSION_REVIEWER1_LASTNAME = "Reviewer";
-    protected static final Role TEST_SUBMISSION_REVIEWER1_ROLE = Role.ADMINISTRATOR;
+    protected static final AppRole TEST_SUBMISSION_REVIEWER1_ROLE = AppRole.ADMINISTRATOR;
 
     protected static final String TEST_SUBMISSION_REVIEWER2_EMAIL = "reviewer2@tdl.org";
     protected static final String TEST_SUBMISSION_REVIEWER2_FIRSTNAME = "Roger";
     protected static final String TEST_SUBMISSION_REVIEWER2_LASTNAME = "Reviewer";
-    protected static final Role TEST_SUBMISSION_REVIEWER2_ROLE = Role.ADMINISTRATOR;
+    protected static final AppRole TEST_SUBMISSION_REVIEWER2_ROLE = AppRole.ADMINISTRATOR;
 
     protected static final String TEST_SEVERABLE_FIELD_PREDICATE_VALUE = "dc.detachable";
 
@@ -263,12 +263,12 @@ public abstract class AbstractEntityTest {
     protected static final String TEST_EXCLUDED_SUBMITTER_EMAIL = "excludedSubmitter@tdl.org";
     protected static final String TEST_EXCLUDED_SUBMITTER_FIRSTNAME = "Included Submitter First Name";
     protected static final String TEST_EXCLUDED_SUBMITTER_LASTNAME = "Included Submitter Last Name";
-    protected static final Role TEST_SUBMITTER_ROLE = Role.ADMINISTRATOR;
+    protected static final AppRole TEST_SUBMITTER_ROLE = AppRole.ADMINISTRATOR;
 
     protected static final String TEST_ASSIGNEE_EMAIL = "assignee@tdl.org";
     protected static final String TEST_ASSIGNEE_FIRSTNAME = "TDL";
     protected static final String TEST_ASSIGNEE_LASTNAME = "Admin";
-    protected static final Role TEST_ASSIGNEE_ROLE = Role.STUDENT;
+    protected static final AppRole TEST_ASSIGNEE_ROLE = AppRole.STUDENT;
 
     protected static final String TEST_EMBARGO_NAME = "Test Embargo Name";
     protected static final String TEST_EMBARGO_NAME_2 = "Test Embargo 2 Name";
@@ -291,8 +291,7 @@ public abstract class AbstractEntityTest {
     protected static final String TEST_SEVERABLE_NOTE_NAME = "Test Severable Note Name";
     protected static final String TEST_SEVERABLE_NOTE_TEXT = "Test Severable Note Text";
 
-    protected static final Role TEST_USER_ROLE = Role.STUDENT;
-    protected static final String TEST_USER_ROLE_STRING = "ROLE_STUDENT";
+    protected static final AppRole TEST_USER_ROLE = AppRole.STUDENT;
     
     protected static final Calendar TEST_ACTION_LOG_ACTION_DATE = Calendar.getInstance();
     protected static final UUID TEST_UUID = UUID.randomUUID();

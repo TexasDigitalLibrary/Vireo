@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.tdl.vireo.enums.Role;
+import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
@@ -146,7 +146,7 @@ public class AppAuthController extends CoreAuthController {
             return new ApiResponse(ERROR, "Token has expired! Please begin registration again.");
         }
         
-        User user = userRepo.create(email, firstName, lastName, Role.STUDENT);
+        User user = userRepo.create(email, firstName, lastName, AppRole.STUDENT);
         user.setPassword(authUtility.encodePassword(password));
         user = userRepo.save(user);
         

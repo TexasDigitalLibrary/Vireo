@@ -55,7 +55,7 @@ public class AppControllerAspect extends CoreControllerAspect {
                 }
                 @Override
                 public void validate(Object target, Errors errors) {
-                    System.out.println("\n\nDOH!!!\n\n");
+                    logger.debug("No validator in context!! This validate call did nothing!");
                 }
             };
         }
@@ -78,4 +78,5 @@ public class AppControllerAspect extends CoreControllerAspect {
         
         return object;
     }
+    
 }
