@@ -15,7 +15,11 @@ import edu.tamu.framework.validation.ModelBindingResult;
 public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
 
     @Autowired
-    ConfigurationRepo configurationRepo;
+    private ConfigurationRepo configurationRepo;
+    
+//    private Configuration newConfiguration(String name, String value, String type){
+//        return new Configuration(name, value, type);
+//    }
 
     @Override
     public Configuration create(String name, String value, String type) {
@@ -116,23 +120,26 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
 
     @Override
     public Configuration validateUpdate(Configuration configuration) {
-        Configuration configurationToUpdate = configurationRepo.getByName(configuration.getName());
-        // if we only found the system required one, create a custom non-system
-        if (configurationToUpdate != null && configurationToUpdate.isSystemRequired()) {
-            // make sure we copy the binding result to the new configuration... for the controller to use if it needs it
-            ModelBindingResult bindingResult = configuration.getBindingResult();
-            configuration = configurationRepo.create(configuration.getName(), configuration.getValue(), configuration.getType());
-            configuration.setBindingResult(bindingResult);
-        }
-        // otherwise if we found a non-system required one, update it
-        else if (configurationToUpdate != null && !configurationToUpdate.isSystemRequired()) {
-            configurationToUpdate.setValue(configuration.getValue());
-            configurationToUpdate.setBindingResult(configuration.getBindingResult());
-            configuration = configurationToUpdate;
-        }
-        // otherwise we didn't even find a system required one!
-        else {
-            configuration.getBindingResult().addError(new ObjectError("configuration", "Cannot update configuration that doesn't have a system-required copy in the database!"));
+        if(!configuration.getBindingResult().hasErrors()) {
+            Configuration configurationToUpdate = configurationRepo.getByName(configuration.getName());
+            // if we only found the system required one, create a custom non-system
+            if (configurationToUpdate != null && configurationToUpdate.isSystemRequired()) {
+                // make sure we copy the binding result to the new configuration... for the controller to use if it needs it
+                ModelBindingResult bindingResult = configuration.getBindingResult();
+                // we copy values over to new instance of Configuration in case the incoming configuration had isSystemRequired() set to true
+                configuration = configurationRepo.create(configuration.getName(), configuration.getValue(), configuration.getType());
+                configuration.setBindingResult(bindingResult);
+            }
+            // otherwise if we found a non-system required one, update it
+            else if (configurationToUpdate != null && !configurationToUpdate.isSystemRequired()) {
+                configurationToUpdate.setValue(configuration.getValue());
+                configurationToUpdate.setBindingResult(configuration.getBindingResult());
+                configuration = configurationToUpdate;
+            }
+            // otherwise we didn't even find a system required one!
+            else {
+                configuration.getBindingResult().addError(new ObjectError("configuration", "Cannot update configuration that doesn't have a system-required copy in the database!"));
+            }
         }
         return configuration;
     }
@@ -150,4 +157,6 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
         }
         return configuration;
     }
+    
+    
 }

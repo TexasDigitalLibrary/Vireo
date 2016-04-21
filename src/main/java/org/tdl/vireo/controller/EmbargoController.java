@@ -2,7 +2,6 @@ package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_ERROR;
-import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_INFO;
 import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_WARNING;
 
 import java.util.HashMap;
@@ -18,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.enums.EmbargoGuarantor;
 import org.tdl.vireo.model.Embargo;
 import org.tdl.vireo.model.repo.EmbargoRepo;
+import org.tdl.vireo.service.BuildResponseService;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
@@ -37,6 +37,9 @@ public class EmbargoController {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
     
+    @Autowired
+    private BuildResponseService buildResponseService;
+    
     @ApiMapping("/all")
     @Auth(role = "ROLE_MANAGER")
     public ApiResponse getEmbargoes() {
@@ -49,8 +52,26 @@ public class EmbargoController {
 
         // will attach any errors to the BindingResult when validating the incoming embargo
         embargo = embargoRepo.validateCreate(embargo);
+        
+        // build a response based on the BindingResult state in the configuration
+        ApiResponse response = buildResponseService.buildResponse(embargo);
+        
+        switch(response.getMeta().getType()){
+            case SUCCESS:
+            case VALIDATION_INFO:
+                logger.info("Creating embargo with name " + embargo.getName());
+                embargoRepo.create(embargo.getName(), embargo.getDescription(), embargo.getDuration(), embargo.getGuarantor(), embargo.isActive());
+                simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, getAll()));
+                break;
+            case VALIDATION_WARNING:
+                simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(VALIDATION_WARNING, getAll()));
+                break;
+            default:
+                logger.warn("Couldn't create embargo with name " + embargo.getName() + " because: " + response.getMeta().getType());
+                break;
+        }
 
-        return createOrUpdate(embargo, true);
+        return response;
     }
 
     @ApiMapping("/update")
@@ -59,8 +80,26 @@ public class EmbargoController {
 
         // will attach any errors to the BindingResult when validating the incoming embargo
         embargo = embargoRepo.validateUpdate(embargo);
+        
+        // build a response based on the BindingResult state in the configuration
+        ApiResponse response = buildResponseService.buildResponse(embargo);
+        
+        switch(response.getMeta().getType()){
+            case SUCCESS:
+            case VALIDATION_INFO:
+                logger.info("Updating embargo with name " + embargo.getName());
+                embargoRepo.save(embargo);
+                simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, getAll()));
+                break;
+            case VALIDATION_WARNING:
+                simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(VALIDATION_WARNING, getAll()));
+                break;
+            default:
+                logger.warn("Couldn't update embargo with name " + embargo.getName() + " because: " + response.getMeta().getType());
+                break;
+        }
 
-        return createOrUpdate(embargo, false);
+        return response;
     }
 
     @ApiMapping("/remove/{idString}")
@@ -119,36 +158,6 @@ public class EmbargoController {
             return new ApiResponse(SUCCESS);
         }
         return new ApiResponse(VALIDATION_ERROR);
-    }
-    
-    private ApiResponse createOrUpdate(Embargo embargo, Boolean create) {
-        // if errors, with no warnings
-        if (embargo.getBindingResult().hasErrors()) {
-            return new ApiResponse(VALIDATION_ERROR, embargo.getBindingResult().getAll());
-        }
-        // else if no errors, with warnings
-        else if (!embargo.getBindingResult().hasErrors() && embargo.getBindingResult().hasWarnings()) {
-            simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(VALIDATION_WARNING, getAll()));
-            return new ApiResponse(VALIDATION_WARNING, embargo.getBindingResult().getAllWarningsAndInfos());
-        }
-        // else if no errors, no warnings, maybe infos
-        else {
-            // if we're creating
-            if (create) {
-                embargoRepo.create(embargo.getName(), embargo.getDescription(), embargo.getDuration(), embargo.getGuarantor(), embargo.isActive());
-            }
-            // else, were updating
-            else {
-                embargoRepo.save(embargo);
-            }
-            simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, getAll()));
-            // deal with infos being set
-            if (embargo.getBindingResult().hasInfos()) {
-                return new ApiResponse(VALIDATION_INFO, embargo.getBindingResult().getAllInfos());
-            } else {
-                return new ApiResponse(SUCCESS);
-            }
-        }
     }
     
     private Map<String, List<Embargo>> getAll() {

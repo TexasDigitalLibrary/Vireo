@@ -1,8 +1,6 @@
 package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
-import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_ERROR;
-import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_INFO;
 import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_WARNING;
 
 import java.util.HashMap;
@@ -16,6 +14,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
+import org.tdl.vireo.service.BuildResponseService;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
@@ -33,6 +32,9 @@ public class ConfigurableSettingsController {
     @Autowired 
     private SimpMessagingTemplate simpMessagingTemplate;
     
+    @Autowired
+    private BuildResponseService buildResponseService;
+    
     @ApiMapping("/all")
     public ApiResponse getSettings() {
        return new ApiResponse(SUCCESS,toConfigPairsMap(configurationRepo.getAll()));
@@ -43,9 +45,25 @@ public class ConfigurableSettingsController {
         // will attach any errors to the BindingResult when validating the incoming configuration
         configuration = configurationRepo.validateUpdate(configuration);
         
-        logger.info("Updating configuration with name " + configuration.getName() + " and value " + configuration.getValue());
+        // build a response based on the BindingResult state in the configuration
+        ApiResponse response = buildResponseService.buildResponse(configuration);
+        
+        switch(response.getMeta().getType()){
+            case SUCCESS:
+            case VALIDATION_INFO:
+                logger.info("Updating configuration with name " + configuration.getName() + " and value " + configuration.getValue());
+                configurationRepo.save(configuration);
+                simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, toConfigPairsMap(configurationRepo.getAllByType(configuration.getType()))));
+                break;
+            case VALIDATION_WARNING:
+                simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(VALIDATION_WARNING, toConfigPairsMap(configurationRepo.getAllByType(configuration.getType()))));
+                break;
+            default:
+                logger.warn("Couldn't update configuration with name " + configuration.getName() + " and value " + configuration.getValue() + " because: " + response.getMeta().getType());
+                break;
+        }
 
-        return updateOrReset(configuration, true);
+        return response;
     }
     
     @ApiMapping("/reset")
@@ -53,39 +71,25 @@ public class ConfigurableSettingsController {
         // will attach any errors to the BindingResult when validating the incoming configuration
         configuration = configurationRepo.validateReset(configuration);
         
-        logger.info("Resetting configuration with name " + configuration.getName() + " and value " + configuration.getValue());
+        // build a response based on the BindingResult state in the configuration
+        ApiResponse response = buildResponseService.buildResponse(configuration);
         
-        return updateOrReset(configuration, false);
-    }
-    
-    private ApiResponse updateOrReset(Configuration configuration, Boolean update){
-        // if errors, with no warnings
-        if (configuration.getBindingResult().hasErrors()) {
-            return new ApiResponse(VALIDATION_ERROR, configuration.getBindingResult().getAll());
-        }
-        // else if no errors, with warnings
-        else if (!configuration.getBindingResult().hasErrors() && configuration.getBindingResult().hasWarnings()) {
-            simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(VALIDATION_WARNING, toConfigPairsMap(configurationRepo.getAllByType(configuration.getType()))));
-            return new ApiResponse(VALIDATION_WARNING, configuration.getBindingResult().getAllWarningsAndInfos());
-        }
-        // else if no errors, no warnings, maybe infos
-        else {
-            // if we're updating
-            if(update) {
-                configurationRepo.save(configuration);
-            }
-            // if we're resetting
-            else {
+        switch(response.getMeta().getType()){
+            case SUCCESS:
+            case VALIDATION_INFO:
+                logger.info("Resetting configuration with name " + configuration.getName() + " and value " + configuration.getValue());
                 configurationRepo.reset(configuration.getName());
-            }
-            simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, toConfigPairsMap(configurationRepo.getAllByType(configuration.getType()))));
-            // deal with infos being set
-            if (configuration.getBindingResult().hasInfos()) {
-                return new ApiResponse(VALIDATION_INFO, configuration.getBindingResult().getAllInfos());
-            } else {
-                return new ApiResponse(SUCCESS);
-            }
+                simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, toConfigPairsMap(configurationRepo.getAllByType(configuration.getType()))));
+                break;
+            case VALIDATION_WARNING:
+                simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(VALIDATION_WARNING, toConfigPairsMap(configurationRepo.getAllByType(configuration.getType()))));
+                break;
+            default:
+                logger.warn("Couldn't update configuration with name " + configuration.getName() + " and value " + configuration.getValue());
+                break;
         }
+        
+        return response;
     }
     
     /**

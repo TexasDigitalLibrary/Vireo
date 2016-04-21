@@ -61,6 +61,7 @@ public class AppControllerAspect extends CoreControllerAspect {
         }
     }
     
+    @Override
     public Object validate(Object object, Annotation ann, String typeName) {
         ModelBindingResult bindingResult = new ModelBindingResult(object, typeName);
         
