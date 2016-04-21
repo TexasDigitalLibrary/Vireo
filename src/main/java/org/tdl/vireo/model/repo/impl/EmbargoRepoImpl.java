@@ -105,4 +105,31 @@ public class EmbargoRepoImpl implements EmbargoRepoCustom {
         }
         return embargo;
     }
+    
+    @Override
+    public Embargo validateRemove(String idString, ModelBindingResult modelBindingResult) {
+        Embargo toRemove = null;
+        // make sure we can convert from String to Long
+        Long id = -1L;
+        try {
+            id = Long.parseLong(idString);
+        } catch (NumberFormatException nfe) {
+            modelBindingResult.addError(new ObjectError("embargo", "Cannot remove Embargo, id was invalid!"));
+        }
+
+        // make sure we can find an existing embargo to remove
+        if (id >= 0) {
+            toRemove = embargoRepo.findOne(id);
+            if (toRemove != null) {
+                if (toRemove.isSystemRequired()) {
+                    modelBindingResult.addError(new ObjectError("embargo", "Cannot remove a System Embargo!"));
+                }
+            } else {
+                modelBindingResult.addError(new ObjectError("embargo", "Cannot remove Embargo, id did not exist!"));
+            }
+        } else {
+            modelBindingResult.addError(new ObjectError("embargo", "Cannot remove Embargo, id did not exist!"));
+        }
+        return toRemove;
+    }
 }

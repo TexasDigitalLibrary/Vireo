@@ -24,6 +24,7 @@ import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.model.ApiResponse;
+import edu.tamu.framework.validation.ModelBindingResult;
 
 @Controller
 @ApiMapping("/settings/embargo")
@@ -53,7 +54,7 @@ public class EmbargoController {
         // will attach any errors to the BindingResult when validating the incoming embargo
         embargo = embargoRepo.validateCreate(embargo);
         
-        // build a response based on the BindingResult state in the configuration
+        // build a response based on the BindingResult state
         ApiResponse response = buildResponseService.buildResponse(embargo);
         
         switch(response.getMeta().getType()){
@@ -81,7 +82,7 @@ public class EmbargoController {
         // will attach any errors to the BindingResult when validating the incoming embargo
         embargo = embargoRepo.validateUpdate(embargo);
         
-        // build a response based on the BindingResult state in the configuration
+        // build a response based on the BindingResult state
         ApiResponse response = buildResponseService.buildResponse(embargo);
         
         switch(response.getMeta().getType()){
@@ -106,30 +107,29 @@ public class EmbargoController {
     @Auth(role = "ROLE_MANAGER")
     @Transactional
     public ApiResponse removeEmbargo(@ApiVariable String idString) {
-        Long id = -1L;
-
-        try {
-            id = Long.parseLong(idString);
-        } catch (NumberFormatException nfe) {
-            return new ApiResponse(VALIDATION_ERROR, "Id is not a valid embargo id!");
-        }
-
-        if (id >= 0) {
-            Embargo toRemove = embargoRepo.findOne(id);
-            if (toRemove != null) {
-                if (toRemove.isSystemRequired()) {
-                    return new ApiResponse(VALIDATION_ERROR, "Cannot remove a System Embargo!");
-                }
-                embargoRepo.delete(toRemove);
-                logger.info("Embargo with id " + id);
+        ModelBindingResult modelBindingResult = new ModelBindingResult(idString, "embargo_id");
+        
+        Embargo embargo = embargoRepo.validateRemove(idString, modelBindingResult);
+        
+        // build a response based on the BindingResult state
+        ApiResponse response = buildResponseService.buildResponse(modelBindingResult);
+        
+        switch(response.getMeta().getType()){
+            case SUCCESS:
+            case VALIDATION_INFO:
+                logger.info("Removing Embargo with id " + idString);
+                embargoRepo.delete(embargo);
                 simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, getAll()));
-                return new ApiResponse(SUCCESS);
-            } else {
-                return new ApiResponse(VALIDATION_ERROR, "Id for embargo not found!");
-            }
-        } else {
-            return new ApiResponse(VALIDATION_ERROR, "Id is not a valid embargo id!");
+                break;
+            case VALIDATION_WARNING:
+                simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(VALIDATION_WARNING, getAll()));
+                break;
+            default:
+                logger.warn("Couldn't remove embargo with id " + idString + " because: " + response.getMeta().getType());
+                break;
         }
+        
+        return response;
     }
 
     @ApiMapping("/reorder/{guarantorString}/{src}/{dest}")
