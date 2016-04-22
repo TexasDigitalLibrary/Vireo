@@ -120,7 +120,7 @@ public class EmbargoController {
             case SUCCESS:
             case VALIDATION_INFO:
                 logger.info("Removing Embargo with id " + idString);
-                embargoRepo.delete(embargo);
+                embargoRepo.remove(embargo);
                 simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, getAll()));
                 break;
             case VALIDATION_WARNING:

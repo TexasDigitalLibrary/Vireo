@@ -40,8 +40,8 @@ public class EmbargoRepoImpl implements EmbargoRepoCustom {
     }
 
     @Override
-    public void remove(Long index) {
-        orderedEntityService.remove(embargoRepo, Embargo.class, index);
+    public void remove(Embargo embargo) {
+        orderedEntityService.remove(embargoRepo, Embargo.class, embargo.getPosition(), "guarantor", embargo.getGuarantor());
     }
 
     @Override

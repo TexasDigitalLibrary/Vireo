@@ -9,11 +9,11 @@ public interface EmbargoRepoCustom {
     
     public Embargo create(String name, String description, Integer duration, EmbargoGuarantor guarantor, boolean isActive);
     
-    public void reorder(Long src, Long dest, EmbargoGuarantor guarantor);
+    public void reorder(Long srcPosition, Long destPosition, EmbargoGuarantor guarantor);
     
     public void sort(String column, EmbargoGuarantor guarantor);
     
-    public void remove(Long index);
+    public void remove(Embargo embargo);
     
     public Embargo validateCreate(Embargo embargo);
     
