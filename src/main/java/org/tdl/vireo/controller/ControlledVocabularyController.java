@@ -217,11 +217,33 @@ public class ControlledVocabularyController {
     @Auth(role = "ROLE_MANAGER")
     @Transactional
     public ApiResponse reorderControlledVocabulary(@ApiVariable String src, @ApiVariable String dest) {
-        Long intSrc = Long.parseLong(src);
-        Long intDest = Long.parseLong(dest);
-        controlledVocabularyRepo.reorder(intSrc, intDest);
-        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, getAll()));
-        return new ApiResponse(SUCCESS);
+        
+        // create a ModelBindingResult since we have an @ApiVariable coming in (and not a @ApiValidatedModel)
+        ModelBindingResult modelBindingResult = new ModelBindingResult(src, "controlled-vocabulary");
+        
+        // will attach any errors to the BindingResult when validating the incoming src and dest
+        Long longSrc = validationService.validateLong(src, "position", modelBindingResult);
+        Long longDest = validationService.validateLong(dest, "position", modelBindingResult);
+        
+        // build a response based on the BindingResult state
+        ApiResponse response = validationService.buildResponse(modelBindingResult);
+        
+        switch(response.getMeta().getType()){
+            case SUCCESS:
+            case VALIDATION_INFO:
+                logger.info("Reordering controlled vocabularies");
+                controlledVocabularyRepo.reorder(longSrc, longDest);
+                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, getAll()));
+                break;
+            case VALIDATION_WARNING:
+                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(VALIDATION_WARNING, getAll()));
+                break;
+            default:
+                logger.warn("Couldn't reorder controlled vocabularies because: " + response.getMeta().getType());
+                break;
+        }
+        
+        return response;
     }
 
     /**
@@ -235,9 +257,32 @@ public class ControlledVocabularyController {
     @Auth(role = "ROLE_MANAGER")
     @Transactional
     public ApiResponse sortControlledVocabulary(@ApiVariable String column) {
-        controlledVocabularyRepo.sort(column);
-        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, getAll()));
-        return new ApiResponse(SUCCESS);
+        
+        // create a ModelBindingResult since we have an @ApiVariable coming in (and not a @ApiValidatedModel)
+        ModelBindingResult modelBindingResult = new ModelBindingResult(column, "controlled-vocabulary");
+        
+        // will attach any errors to the BindingResult when validating the incoming column
+        validationService.validateColumn(ControlledVocabulary.class, column, modelBindingResult);
+        
+        // build a response based on the BindingResult state
+        ApiResponse response = validationService.buildResponse(modelBindingResult);
+        
+        switch(response.getMeta().getType()){
+            case SUCCESS:
+            case VALIDATION_INFO:
+                logger.info("Sorting controlled vocabularies by " + column);
+                controlledVocabularyRepo.sort(column);
+                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, getAll()));
+                break;
+            case VALIDATION_WARNING:
+                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(VALIDATION_WARNING, getAll()));
+                break;
+            default:
+                logger.warn("Couldn't sort controlled vocabularies because: " + response.getMeta().getType());
+                break;
+        }
+    
+        return response;
     }
 
     /**

@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -142,16 +141,9 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
         String TEST_CONTROLLED_VOCABULARY_NAME4 = "TestCV4";
 
         ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME1);
-        
-        Map<String, Object> dataMap = new HashMap<String, Object>();
-        
-        dataMap.put("id", controlledVocabulary.getId());
-        
-        dataMap.put("name", TEST_CONTROLLED_VOCABULARY_NAME4);
-        
-        dataMap.put("language", controlledVocabulary.getLanguage());
+        controlledVocabulary.setName(TEST_CONTROLLED_VOCABULARY_NAME4);
                         
-        String responseJson = StompRequest("/settings/controlled-vocabulary/update", dataMap);
+        String responseJson = StompRequest("/settings/controlled-vocabulary/update", controlledVocabulary);
         
         Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
 
