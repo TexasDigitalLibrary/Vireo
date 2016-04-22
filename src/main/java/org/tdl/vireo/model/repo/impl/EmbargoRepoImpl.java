@@ -7,6 +7,7 @@ import org.tdl.vireo.model.Embargo;
 import org.tdl.vireo.model.repo.EmbargoRepo;
 import org.tdl.vireo.model.repo.custom.EmbargoRepoCustom;
 import org.tdl.vireo.service.OrderedEntityService;
+import org.tdl.vireo.service.ValidationService;
 
 import edu.tamu.framework.validation.ModelBindingResult;
 
@@ -17,6 +18,9 @@ public class EmbargoRepoImpl implements EmbargoRepoCustom {
 
     @Autowired
     private EmbargoRepo embargoRepo;
+    
+    @Autowired
+    private ValidationService validationService;
 
     @Override
     public Embargo create(String name, String description, Integer duration, EmbargoGuarantor guarantor, boolean isActive) {
@@ -109,16 +113,9 @@ public class EmbargoRepoImpl implements EmbargoRepoCustom {
     @Override
     public Embargo validateRemove(String idString, ModelBindingResult modelBindingResult) {
         Embargo toRemove = null;
-        // make sure we can convert from String to Long
-        Long id = -1L;
-        try {
-            id = Long.parseLong(idString);
-        } catch (NumberFormatException nfe) {
-            modelBindingResult.addError(new ObjectError("embargo", "Cannot remove Embargo, id was invalid!"));
-        }
-
-        // make sure we can find an existing embargo to remove
-        if (id >= 0) {
+        Long id = validationService.validateLong(idString, "embargo", modelBindingResult);
+        
+        if(!modelBindingResult.hasErrors()){
             toRemove = embargoRepo.findOne(id);
             if (toRemove != null) {
                 if (toRemove.isSystemRequired()) {
@@ -127,9 +124,17 @@ public class EmbargoRepoImpl implements EmbargoRepoCustom {
             } else {
                 modelBindingResult.addError(new ObjectError("embargo", "Cannot remove Embargo, id did not exist!"));
             }
-        } else {
-            modelBindingResult.addError(new ObjectError("embargo", "Cannot remove Embargo, id did not exist!"));
         }
+        
         return toRemove;
+    }
+    
+    @Override
+    public EmbargoGuarantor validateGuarantor(String guarantorString, ModelBindingResult modelBindingResult) {
+        EmbargoGuarantor guarantor = EmbargoGuarantor.fromString(guarantorString);
+        if (guarantor == null) {
+            modelBindingResult.addError(new ObjectError("guarantor", "Guarantor doesn't exist!"));
+        }
+        return guarantor;
     }
 }

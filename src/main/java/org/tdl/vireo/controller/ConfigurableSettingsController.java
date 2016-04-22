@@ -14,7 +14,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
-import org.tdl.vireo.service.BuildResponseService;
+import org.tdl.vireo.service.ValidationService;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
@@ -33,7 +33,7 @@ public class ConfigurableSettingsController {
     private SimpMessagingTemplate simpMessagingTemplate;
     
     @Autowired
-    private BuildResponseService buildResponseService;
+    private ValidationService validationService;
     
     @ApiMapping("/all")
     public ApiResponse getSettings() {
@@ -46,7 +46,7 @@ public class ConfigurableSettingsController {
         configuration = configurationRepo.validateUpdate(configuration);
         
         // build a response based on the BindingResult state in the configuration
-        ApiResponse response = buildResponseService.buildResponse(configuration);
+        ApiResponse response = validationService.buildResponse(configuration);
         
         switch(response.getMeta().getType()){
             case SUCCESS:
@@ -72,7 +72,7 @@ public class ConfigurableSettingsController {
         configuration = configurationRepo.validateReset(configuration);
         
         // build a response based on the BindingResult state in the configuration
-        ApiResponse response = buildResponseService.buildResponse(configuration);
+        ApiResponse response = validationService.buildResponse(configuration);
         
         switch(response.getMeta().getType()){
             case SUCCESS:
