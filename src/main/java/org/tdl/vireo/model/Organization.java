@@ -20,7 +20,12 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.tdl.vireo.config.SpringContext;
+import org.tdl.vireo.service.WorkflowManagementService;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
@@ -29,7 +34,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "category_id" }) )
 public class Organization extends BaseEntity {
-
+    
     @Column(nullable = false)
     private String name;
 
@@ -123,10 +128,14 @@ public class Organization extends BaseEntity {
     
     public void addWorkflowStep(WorkflowStep workflowStep) {
         this.workflowSteps.add(workflowStep);
+        WorkflowManagementService workflowManagementService = SpringContext.bean(WorkflowManagementService.class);
+        workflowManagementService.recursiveAddStep(this, workflowStep);
     }
 
     public void removeWorkflowStep(WorkflowStep workflowStep) {
         this.workflowSteps.remove(workflowStep);
+        WorkflowManagementService workflowManagementService = SpringContext.bean(WorkflowManagementService.class);
+        workflowManagementService.recursiveRemoveStep(this, workflowStep);
     }
     
     /**
@@ -219,6 +228,7 @@ public class Organization extends BaseEntity {
                 childOrganization.addWorkflowStepOrder(workflowStepId);
             });
         }
+       
     }
 
     /**
