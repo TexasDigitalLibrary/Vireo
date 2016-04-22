@@ -42,7 +42,6 @@ import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionStateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.repo.VocabularyWordRepo;
-import org.tdl.vireo.model.repo.WorkflowRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.runner.OrderedRunner;
 import org.tdl.vireo.service.EntityControlledVocabularyService;
@@ -381,9 +380,6 @@ public abstract class AbstractEntityTest {
     protected OrganizationRepo organizationRepo;
 
     @Autowired
-    protected WorkflowRepo workflowRepo;
-
-    @Autowired
     protected NamedSearchFilterRepo namedSearchFilterRepo;
     
     @Autowired
@@ -429,8 +425,6 @@ public abstract class AbstractEntityTest {
     protected User includedSubmitter;
     protected User excludedSubmitter;
 
-    protected Workflow workflow;
-    
     protected WorkflowStep workflowStep;
     
     protected VocabularyWord vocabularyWord;

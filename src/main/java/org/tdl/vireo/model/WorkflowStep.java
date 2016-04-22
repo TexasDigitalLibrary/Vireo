@@ -12,7 +12,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -21,16 +20,21 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "workflow_id" }) )
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "owning_organization_id" }) )
 public class WorkflowStep extends BaseEntity {
 
     @Column(nullable = false)
     private String name;
     
-    @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER, optional = false)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Workflow.class, property = "id")
+    @ManyToOne(cascade = { DETACH, REFRESH, MERGE })
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
-    private Workflow workflow;
+    private Organization originatingOrganization;
+    
+    @ManyToOne(cascade = { DETACH, REFRESH, MERGE })
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    private Organization owningOrganization;
 
     @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER)
     private List<FieldProfile> fieldProfiles;
@@ -43,14 +47,15 @@ public class WorkflowStep extends BaseEntity {
         setNotes(new ArrayList<Note>());
     }
     
-    /**
-     * 
-     * @param name
-     */
-    public WorkflowStep(String name, Workflow workflow) {
+    public WorkflowStep(String name, Organization owningOrganization) {
+        this(name, owningOrganization, owningOrganization);
+    }
+    
+    public WorkflowStep(String name, Organization owningOrganization, Organization originatingOrganization) {
         this();
         setName(name);
-        setWorkflow(workflow);
+        setOwningOrganization(owningOrganization);
+        setOriginatingOrganization(originatingOrganization);
     }
 
     /**
@@ -60,21 +65,6 @@ public class WorkflowStep extends BaseEntity {
         return name;
     }
     
-    /**
-     * 
-     * @return
-     */
-    public Workflow getWorkflow() {
-        return workflow;
-    }
-
-    /**
-     * 
-     * @param workflow
-     */
-    public void setWorkflow(Workflow workflow) {
-        this.workflow = workflow;
-    }
 
     /**
      * @param name
@@ -82,6 +72,34 @@ public class WorkflowStep extends BaseEntity {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * @return the originatingOrganization
+     */
+    public Organization getOriginatingOrganization() {
+        return originatingOrganization;
+    }
+
+    /**
+     * @param originatingOrganization the originatingOrganization to set
+     */
+    public void setOriginatingOrganization(Organization originatingOrganization) {
+        this.originatingOrganization = originatingOrganization;
+    }
+
+    /**
+     * @return the owningOrganization
+     */
+    public Organization getOwningOrganization() {
+        return owningOrganization;
+    }
+
+    /**
+     * @param owningOrganization the owningOrganization to set
+     */
+    public void setOwningOrganization(Organization owningOrganization) {
+        this.owningOrganization = owningOrganization;
     }
 
     /**
