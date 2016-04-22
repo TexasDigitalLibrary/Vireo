@@ -11,12 +11,11 @@ public class WorkflowStepTest extends AbstractEntityTest {
     public void setup() {
         parentCategory = organizationCategoryRepo.create(TEST_CATEGORY_NAME);
         organization = organizationRepo.create(TEST_ORGANIZATION_NAME, parentCategory);
-        workflow = workflowRepo.create(TEST_WORKFLOW_NAME, TEST_WORKFLOW_INHERITABILITY, organization);
     }
     
     @Override
     public void testCreate() {
-        WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, workflow);
+        WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, organization);
         FieldPredicate fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE);
         FieldProfile fieldProfile = fieldProfileRepo.create(fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
         workflowStep.addFieldProfile(fieldProfile);
@@ -33,7 +32,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
 
     @Override
     public void testDelete() {
-        WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, workflow);
+        WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, organization);
         workflowStepRepo.delete(workflowStep);
         assertEquals("Entity did not delete!", 0, workflowStepRepo.count());
     }
@@ -45,7 +44,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
 
     @Override
     public void testCascade() {
-        WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, workflow);
+        WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, organization);
         Note note = noteRepo.create(TEST_NOTE_NAME, TEST_NOTE_TEXT);
         Note severableNote = noteRepo.create(TEST_SEVERABLE_NOTE_NAME, TEST_SEVERABLE_NOTE_TEXT);
         FieldPredicate fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE);
@@ -106,7 +105,6 @@ public class WorkflowStepTest extends AbstractEntityTest {
     @After
     public void cleanUp() {
         workflowStepRepo.deleteAll();
-        workflowRepo.deleteAll();
         organizationRepo.deleteAll();
         organizationCategoryRepo.deleteAll();
         noteRepo.deleteAll();

@@ -27,16 +27,12 @@ public class OrganizationTest extends AbstractEntityTest {
     @Override
     public void testCreate() {
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
-        Workflow parentWorkflow = workflowRepo.create(TEST_PARENT_WORKFLOW_NAME, TEST_PARENT_WORKFLOW_INHERITABILITY, parentOrganization);
-        parentOrganization.setWorkflow(parentWorkflow);
         parentOrganization.addEmail(TEST_PARENT_EMAIL);
         parentOrganization.addEmailWorkflowRule(emailWorkflowRule);
         parentOrganization = organizationRepo.save(parentOrganization);
         assertEquals("The repository did not save the entity!", 1, organizationRepo.count());
         assertEquals("Saved entity did not contain the correct name!", TEST_PARENT_ORGANIZATION_NAME, parentOrganization.getName());
         assertEquals("Saved entity did not contain the correct category name!", parentCategory.getName(), parentOrganization.getCategory().getName());
-        assertEquals("Saved entity did not have the correct workflow name!", TEST_PARENT_WORKFLOW_NAME, parentOrganization.getWorkflow().getName());
-        assertEquals("Saved entity did not have the correct workflow inheritability!", TEST_PARENT_WORKFLOW_INHERITABILITY, parentOrganization.getWorkflow().isInheritable());
         assertEquals("Saved entity did not have the emailWorkflow rule!", true, parentOrganization.getEmailWorkflowRules().contains(emailWorkflowRule));
     }
 
@@ -71,13 +67,20 @@ public class OrganizationTest extends AbstractEntityTest {
         Organization severableParentOrganization = organizationRepo.create(TEST_SEVERABLE_PARENT_ORGANIZATION_NAME, parentCategory);
         Organization severableChildOrganization = organizationRepo.create(TEST_SEVERABLE_CHILD_ORGANIZATION_NAME, childCategory);
 
-        // create and add workflows to organizations
-        parentOrganization.setWorkflow(workflowRepo.create(TEST_PARENT_WORKFLOW_NAME, TEST_PARENT_WORKFLOW_INHERITABILITY, parentOrganization));
-        childOrganization.setWorkflow(workflowRepo.create(TEST_CHILD_WORKFLOW_NAME, TEST_CHILD_WORKFLOW_INHERITABILITY, childOrganization));
-        grandChildOrganization.setWorkflow(workflowRepo.create(TEST_GRAND_CHILD_WORKFLOW_NAME, TEST_GRAND_CHILD_WORKFLOW_INHERITABILITY, grandChildOrganization));
-        severableParentOrganization.setWorkflow(workflowRepo.create(TEST_SEVERABLE_PARENT_WORKFLOW_NAME, TEST_SEVERABLE_PARENT_WORKFLOW_INHERITABILITY, severableParentOrganization));
-        severableChildOrganization.setWorkflow(workflowRepo.create(TEST_SEVERABLE_CHILD_WORKFLOW_NAME, TEST_SEVERABLE_CHILD_WORKFLOW_INHERITABILITY, severableChildOrganization));
-
+        // create organization workflow steps
+        WorkflowStep parentWorkflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
+        WorkflowStep childWorkflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, childOrganization);
+        WorkflowStep grandChildWorkflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, grandChildOrganization);
+        WorkflowStep severableParentWorkflowStep = workflowStepRepo.create(TEST_SEVERABLE_WORKFLOW_STEP_NAME, parentOrganization);
+        WorkflowStep severableChildWorkflowStep = workflowStepRepo.create(TEST_SEVERABLE_WORKFLOW_STEP_NAME, childOrganization);
+        
+        // add workflow steps to organizations
+        parentOrganization.addWorkflowStep(parentWorkflowStep);
+        childOrganization.addWorkflowStep(childWorkflowStep);
+        grandChildOrganization.addWorkflowStep(grandChildWorkflowStep);
+        parentOrganization.addWorkflowStep(severableParentWorkflowStep);
+        childOrganization.addWorkflowStep(severableChildWorkflowStep);
+        
         // add emails to organizations
         parentOrganization.addEmail(TEST_PARENT_EMAIL);
         childOrganization.addEmail(TEST_CHILD_EMAIL);
@@ -133,6 +136,27 @@ public class OrganizationTest extends AbstractEntityTest {
         // organization
         assertEquals("The grand child organization had incorrect number of parents!", 1, grandChildOrganization.getParentOrganizations().size());
 
+        
+        // test remove severable workflow steps
+        parentOrganization.removeWorkflowStep(severableParentWorkflowStep);
+        parentOrganization = organizationRepo.save(parentOrganization);
+        assertEquals("The severable workflow step was not removed!", 1, parentOrganization.getWorkflowSteps().size());
+        assertNotEquals("The sererable workflow step was not deleted!", null, workflowStepRepo.findByName(severableParentWorkflowStep.getName()));
+        childOrganization.removeWorkflowStep(severableChildWorkflowStep);
+        childOrganization = organizationRepo.save(childOrganization);
+        assertEquals("The severable workflow step was not removed!", 1, childOrganization.getWorkflowSteps().size());
+        assertNotEquals("The sererable workflow step was not deleted!", null, workflowStepRepo.findByName(severableChildWorkflowStep.getName()));
+        
+        
+        // reattach severable workflow steps
+        parentOrganization.addWorkflowStep(severableParentWorkflowStep);
+        parentOrganization = organizationRepo.save(parentOrganization);
+        assertEquals("The parent organization had incorrect number of workflow steps!", 2, parentOrganization.getWorkflowSteps().size());
+        childOrganization.addWorkflowStep(severableChildWorkflowStep);
+        childOrganization = organizationRepo.save(childOrganization);
+        assertEquals("The child organization had incorrect number of workflow steps!", 2, childOrganization.getWorkflowSteps().size());
+        
+        
         // test remove severable child organization
         parentOrganization.removeChildOrganization(severableChildOrganization);
         parentOrganization = organizationRepo.save(parentOrganization);
@@ -169,7 +193,6 @@ public class OrganizationTest extends AbstractEntityTest {
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
         assertEquals("The parent organization had incorrect number of children!", 1, parentOrganization.getChildrenOrganizations().size());
         assertEquals("An organization category was deleted!", 3, organizationCategoryRepo.count());
-        assertEquals("The workflow orphans were not removed!", 4, workflowRepo.count());
 
         // test delete severable parent organization
         organizationRepo.delete(severableParentOrganization);
@@ -177,7 +200,6 @@ public class OrganizationTest extends AbstractEntityTest {
         childOrganization = organizationRepo.findOne(childOrganization.getId());
         assertEquals("The child organization had incorrect number of parents!", 1, childOrganization.getParentOrganizations().size());
         assertEquals("An organization category was deleted!", 3, organizationCategoryRepo.count());
-        assertEquals("The workflow orphans were not removed!", 3, workflowRepo.count());
 
         // to test the orphan removal of the email workflow rule
         parentOrganization.addEmailWorkflowRule(emailWorkflowRule);
@@ -190,32 +212,30 @@ public class OrganizationTest extends AbstractEntityTest {
         assertNotEquals("The grand child organization was deleted!", null, childOrganization);
         assertEquals("The child organization had incorrect number of parents!", 0, childOrganization.getParentOrganizations().size());
         assertEquals("An organization category was deleted!", 3, organizationCategoryRepo.count());
-        assertEquals("The workflow orphans were not removed!", 2, workflowRepo.count());
         assertEquals("The email workflow rule was orphaned!", 0, emailWorkflowRuleRepo.count());
-
+        assertEquals("The workflow steps were orphaned!", 3, workflowStepRepo.count());
+        
+        
         // test delete child organization
         organizationRepo.delete(childOrganization);
         grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
         assertNotEquals("The grand child organization was deleted!", null, grandChildOrganization);
         assertEquals("The grand child organization had incorrect number of parents!", 0, grandChildOrganization.getParentOrganizations().size());
         assertEquals("An organization category was deleted!", 3, organizationCategoryRepo.count());
-        assertEquals("The workflow orphans were not removed!", 1, workflowRepo.count());
+        assertEquals("The workflow steps were orphaned!", 1, workflowStepRepo.count());
 
         // test delete grand child organization
         organizationRepo.delete(grandChildOrganization);
         grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
         assertEquals("The grand child organization was deleted!", null, grandChildOrganization);
         assertEquals("An organization category was deleted!", 3, organizationCategoryRepo.count());
-        assertEquals("The workflow orphans were not removed!", 0, workflowRepo.count());
-
-        // test to make sure all organizations are gone
-        assertEquals("An organization was not deleted!", 0, organizationRepo.count());
+        assertEquals("The workflow steps were orphaned!", 0, workflowStepRepo.count());
     }
 
     @After
     public void cleanUp() {
-        workflowRepo.deleteAll();
         organizationRepo.deleteAll();
+        workflowStepRepo.deleteAll();
         organizationCategoryRepo.deleteAll();
         emailWorkflowRuleRepo.deleteAll();
         submissionStateRepo.deleteAll();

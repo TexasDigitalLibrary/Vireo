@@ -16,7 +16,7 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
 
     @Autowired
     private OrganizationCategoryRepo organizationCategoryRepo;
-
+    
     @Override
     public Organization create(String name, OrganizationCategory category) {       
         Organization organization = organizationRepo.save(new Organization(name, category));

@@ -6,10 +6,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,7 +40,6 @@ import org.tdl.vireo.model.Note;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.OrganizationCategory;
 import org.tdl.vireo.model.SubmissionState;
-import org.tdl.vireo.model.Workflow;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
@@ -53,7 +54,6 @@ import org.tdl.vireo.model.repo.NoteRepo;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionStateRepo;
-import org.tdl.vireo.model.repo.WorkflowRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -84,8 +84,6 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
     private OrganizationCategoryRepo organizationCategoryRepo;
 
-    private WorkflowRepo workflowRepo;
-
     private WorkflowStepRepo workflowStepRepo;
 
     private NoteRepo noteRepo;
@@ -110,7 +108,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
     //TODO: decompose service with orderable/dependent loading
     @Autowired
-    public SystemDataLoaderImpl(ObjectMapper objectMapper, ConfigurationRepo configurationRepo, ResourcePatternResolver resourcePatternResolver, EmailTemplateRepo emailTemplateRepo, EmbargoRepo embargoRepo, OrganizationRepo organizationRepo, OrganizationCategoryRepo organizationCategoryRepo, WorkflowRepo workflowRepo, WorkflowStepRepo workflowStepRepo, NoteRepo noteRepo, FieldProfileRepo fieldProfileRepo, FieldPredicateRepo fieldPredicateRepo, FieldGlossRepo fieldGlossRepo, ControlledVocabularyRepo controlledVocabularyRepo, LanguageRepo languageRepo, EmailWorkflowRuleRepo emailWorkflowRuleRepo, SubmissionStateRepo submissionStateRepo, EntityControlledVocabularyService entityControlledVocabularyService, ProquestLanguageCodesService proquestLanguageCodesService) {
+    public SystemDataLoaderImpl(ObjectMapper objectMapper, ConfigurationRepo configurationRepo, ResourcePatternResolver resourcePatternResolver, EmailTemplateRepo emailTemplateRepo, EmbargoRepo embargoRepo, OrganizationRepo organizationRepo, OrganizationCategoryRepo organizationCategoryRepo, WorkflowStepRepo workflowStepRepo, NoteRepo noteRepo, FieldProfileRepo fieldProfileRepo, FieldPredicateRepo fieldPredicateRepo, FieldGlossRepo fieldGlossRepo, ControlledVocabularyRepo controlledVocabularyRepo, LanguageRepo languageRepo, EmailWorkflowRuleRepo emailWorkflowRuleRepo, SubmissionStateRepo submissionStateRepo, EntityControlledVocabularyService entityControlledVocabularyService, ProquestLanguageCodesService proquestLanguageCodesService) {
 
         this.objectMapper = objectMapper;
         this.configurationRepo = configurationRepo;
@@ -119,7 +117,6 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
         this.embargoRepo = embargoRepo;
         this.organizationRepo = organizationRepo;
         this.organizationCategoryRepo = organizationCategoryRepo;
-        this.workflowRepo = workflowRepo;
         this.workflowStepRepo = workflowStepRepo;
         this.noteRepo = noteRepo;
         this.fieldProfileRepo = fieldProfileRepo;
@@ -177,7 +174,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
         try {
             // read and map json to Organization
             Organization systemOrganization = objectMapper.readValue(getFileFromResource("classpath:/organization/SYSTEM_Organization_Definition.json"), Organization.class);
-
+            
             // check to see if organization category exists
             OrganizationCategory category = organizationCategoryRepo.findByName(systemOrganization.getCategory().getName());
 
@@ -193,29 +190,22 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
             if (organization == null) {
                 organization = organizationRepo.create(systemOrganization.getName(), category);
             }
-
-            // check to see if workflow exists
-            Workflow workflow = workflowRepo.findByNameAndOrganization(systemOrganization.getWorkflow().getName(), organization);
-
-            // create workflow if not already exists else update properties in case changed in json
-            if (workflow == null) {
-                workflow = workflowRepo.create(systemOrganization.getWorkflow().getName(), systemOrganization.getWorkflow().isInheritable(), organization);
-            } else {
-                workflow.setInheritability(systemOrganization.getWorkflow().isInheritable());
-                workflow = workflowRepo.save(workflow);
+            // else set systemOrganization to existing organization
+            else {
+                systemOrganization = organization;
             }
 
             // temporary list of WorkflowStep
-            List<WorkflowStep> workflowSteps = new ArrayList<WorkflowStep>();
-
-            for (WorkflowStep workflowStep : systemOrganization.getWorkflow().getWorkflowSteps()) {
+            Set<WorkflowStep> workflowSteps = new HashSet<WorkflowStep>();
+            
+            for (WorkflowStep workflowStep : systemOrganization.getWorkflowSteps()) {
 
                 // check to see if the WorkflowStep exists
-                WorkflowStep newWorkflowStep = workflowStepRepo.findByNameAndWorkflow(workflowStep.getName(), workflow);
+                WorkflowStep newWorkflowStep = workflowStepRepo.findByNameAndOwningOrganization(workflowStep.getName(), organization);
 
                 // create new workflow step if not already exists
                 if (newWorkflowStep == null) {
-                    newWorkflowStep = workflowStepRepo.create(workflowStep.getName(), workflow);
+                    newWorkflowStep = workflowStepRepo.create(workflowStep.getName(), organization);
                 }
 
                 // temporary list of FieldProfile
@@ -331,17 +321,16 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
                 newWorkflowStep.setNotes(notes);
 
-                workflowStepRepo.save(newWorkflowStep);
+                newWorkflowStep = workflowStepRepo.save(newWorkflowStep);
 
                 workflowSteps.add(newWorkflowStep);
 
             }
 
-            workflow.setWorkflowSteps(workflowSteps);
-
-            workflowRepo.save(workflow);
-
-            organization.setWorkflow(workflow);
+            organization.setWorkflowSteps(workflowSteps);
+            
+            organization = organizationRepo.save(organization);
+            
 
             // temporary set of EmailWorkflowRule
             List<EmailWorkflowRule> emailWorkflowRules = new ArrayList<EmailWorkflowRule>();
@@ -394,7 +383,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
             organization.setEmailWorkflowRules(emailWorkflowRules);
 
-            organizationRepo.save(organization);
+            organization = organizationRepo.save(organization);
 
             category.addOrganization(organization);
 

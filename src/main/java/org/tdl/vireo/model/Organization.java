@@ -19,7 +19,6 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -37,8 +36,12 @@ public class Organization extends BaseEntity {
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER, optional = false)
     private OrganizationCategory category;
 
-    @OneToOne(cascade = ALL, orphanRemoval = true)
-    private Workflow workflow;
+
+    @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = false)
+    private Set<WorkflowStep> workflowSteps;
+    
+    @ElementCollection
+    private Set<Long> workflowStepOrder;
 
     @ManyToMany(cascade = { DETACH, REFRESH }, fetch = LAZY)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
@@ -55,6 +58,8 @@ public class Organization extends BaseEntity {
     private List<EmailWorkflowRule> emailWorkflowRules;
 
     public Organization() {
+        setWorkflowSteps(new TreeSet<WorkflowStep>());
+        setWorkflowStepOrder(new TreeSet<Long>());
         setParentOrganizations(new TreeSet<Organization>());
         setChildrenOrganizations(new TreeSet<Organization>());
         setEmails(new TreeSet<String>());
@@ -102,20 +107,41 @@ public class Organization extends BaseEntity {
     public void setCategory(OrganizationCategory category) {
         this.category = category;
     }
-
+    
     /**
-     * @return the workflow
+     * @return the workflowSteps
      */
-    public Workflow getWorkflow() {
-        return workflow;
+    public Set<WorkflowStep> getWorkflowSteps() {
+        return workflowSteps;
     }
 
     /**
-     * @param workflow
-     *            the workflow to set
+     * @param workflowSteps the workflowSteps to set
      */
-    public void setWorkflow(Workflow workflow) {
-        this.workflow = workflow;
+    public void setWorkflowSteps(Set<WorkflowStep> workflowSteps) {
+        this.workflowSteps = workflowSteps;
+    }
+    
+    public void addWorkflowStep(WorkflowStep workflowStep) {
+        this.workflowSteps.add(workflowStep);
+    }
+
+    public void removeWorkflowStep(WorkflowStep workflowStep) {
+        this.workflowSteps.remove(workflowStep);
+    }
+    
+    /**
+     * @return the workflowStepOrder
+     */
+    public Set<Long> getWorkflowStepOrder() {
+        return workflowStepOrder;
+    }
+
+    /**
+     * @param workflowStepOrder the workflowStepOrder to set
+     */
+    public void setWorkflowStepOrder(Set<Long> workflowStepOrder) {
+        this.workflowStepOrder = workflowStepOrder;
     }
 
     /**
