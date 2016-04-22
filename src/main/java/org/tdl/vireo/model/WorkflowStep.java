@@ -7,6 +7,8 @@ import static javax.persistence.FetchType.EAGER;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "owning_organization_id" }) )
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "originating_organization_id" }) )
 public class WorkflowStep extends BaseEntity {
 
     @Column(nullable = false)
@@ -31,10 +33,13 @@ public class WorkflowStep extends BaseEntity {
     @JsonIdentityReference(alwaysAsId = true)
     private Organization originatingOrganization;
     
-    @ManyToOne(cascade = { DETACH, REFRESH, MERGE })
+    @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, mappedBy="workflowSteps")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
-    private Organization owningOrganization;
+    private Set<Organization> owningOrganizations;
+    
+    @Column(nullable = false)
+    private Boolean optional;
 
     @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER)
     private List<FieldProfile> fieldProfiles;
@@ -45,6 +50,7 @@ public class WorkflowStep extends BaseEntity {
     public WorkflowStep() {
         setFieldProfiles(new ArrayList<FieldProfile>());
         setNotes(new ArrayList<Note>());
+        setOwningOrganizations(new TreeSet<Organization>());
     }
     
     public WorkflowStep(String name, Organization owningOrganization) {
@@ -54,7 +60,8 @@ public class WorkflowStep extends BaseEntity {
     public WorkflowStep(String name, Organization owningOrganization, Organization originatingOrganization) {
         this();
         setName(name);
-        setOwningOrganization(owningOrganization);
+        setOptional(true);
+        addOwningOrganization(owningOrganization);
         setOriginatingOrganization(originatingOrganization);
     }
 
@@ -64,7 +71,6 @@ public class WorkflowStep extends BaseEntity {
     public String getName() {
         return name;
     }
-    
 
     /**
      * @param name
@@ -91,15 +97,31 @@ public class WorkflowStep extends BaseEntity {
     /**
      * @return the owningOrganization
      */
-    public Organization getOwningOrganization() {
-        return owningOrganization;
+    public Set<Organization> getOwningOrganizations() {
+        return owningOrganizations;
     }
 
     /**
      * @param owningOrganization the owningOrganization to set
      */
-    public void setOwningOrganization(Organization owningOrganization) {
-        this.owningOrganization = owningOrganization;
+    public void setOwningOrganizations(Set<Organization> owningOrganizations) {
+        this.owningOrganizations = owningOrganizations;
+    }
+    
+    public void addOwningOrganization(Organization owningOrganization) {
+        this.owningOrganizations.add(owningOrganization);
+    }
+    
+    public void removeOwningOrganization(Organization owningOrganization) {
+        this.owningOrganizations.remove(owningOrganization);
+    }
+
+    public Boolean getOptional() {
+        return optional;
+    }
+
+    public void setOptional(Boolean optional) {
+        this.optional = optional;
     }
 
     /**

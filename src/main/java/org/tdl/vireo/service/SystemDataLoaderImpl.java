@@ -201,7 +201,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
             for (WorkflowStep workflowStep : systemOrganization.getWorkflowSteps()) {
 
                 // check to see if the WorkflowStep exists
-                WorkflowStep newWorkflowStep = workflowStepRepo.findByNameAndOwningOrganization(workflowStep.getName(), organization);
+                WorkflowStep newWorkflowStep = workflowStepRepo.findByNameAndOriginatingOrganization(workflowStep.getName(), organization);
 
                 // create new workflow step if not already exists
                 if (newWorkflowStep == null) {

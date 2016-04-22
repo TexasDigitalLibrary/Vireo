@@ -406,6 +406,7 @@ public abstract class AbstractEntityTest {
     protected Organization organization;
     protected Language language;
     protected OrganizationCategory parentCategory;
+    protected OrganizationCategory childCategory;
     protected OrganizationCategory organizationCategory;
 
     protected SubmissionState submissionState;

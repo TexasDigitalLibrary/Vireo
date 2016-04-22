@@ -36,12 +36,11 @@ public class Organization extends BaseEntity {
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER, optional = false)
     private OrganizationCategory category;
 
-
-    @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = false)
+    @ManyToMany(cascade = ALL, fetch = EAGER)
     private Set<WorkflowStep> workflowSteps;
     
     @ElementCollection
-    private Set<Long> workflowStepOrder;
+    private List<Long> workflowStepOrder;
 
     @ManyToMany(cascade = { DETACH, REFRESH }, fetch = LAZY)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
@@ -59,7 +58,7 @@ public class Organization extends BaseEntity {
 
     public Organization() {
         setWorkflowSteps(new TreeSet<WorkflowStep>());
-        setWorkflowStepOrder(new TreeSet<Long>());
+        setWorkflowStepOrder(new ArrayList<Long>());
         setParentOrganizations(new TreeSet<Organization>());
         setChildrenOrganizations(new TreeSet<Organization>());
         setEmails(new TreeSet<String>());
@@ -133,17 +132,25 @@ public class Organization extends BaseEntity {
     /**
      * @return the workflowStepOrder
      */
-    public Set<Long> getWorkflowStepOrder() {
+    public List<Long> getWorkflowStepOrder() {
         return workflowStepOrder;
     }
 
     /**
      * @param workflowStepOrder the workflowStepOrder to set
      */
-    public void setWorkflowStepOrder(Set<Long> workflowStepOrder) {
+    public void setWorkflowStepOrder(List<Long> workflowStepOrder) {
         this.workflowStepOrder = workflowStepOrder;
     }
 
+    public void addWorkflowStepOrder(Long workflowStepId) {
+        this.workflowStepOrder.add(workflowStepId);
+    }
+    
+    public void removeWorkflowStepOrder(Long workflowStepId) {
+        this.workflowStepOrder.remove(workflowStepId);
+    }
+    
     /**
      * @return the parentOrganizations
      */
@@ -201,7 +208,17 @@ public class Organization extends BaseEntity {
      */
     public void addChildOrganization(Organization childOrganization) {
         childOrganization.addParentOrganization(this);
+        
         getChildrenOrganizations().add(childOrganization);
+        
+        if(childOrganization.getWorkflowSteps().isEmpty()) {
+            workflowSteps.parallelStream().forEach(workflowStep -> {
+                childOrganization.addWorkflowStep(workflowStep);
+            });
+            workflowStepOrder.forEach(workflowStepId -> {
+                childOrganization.addWorkflowStepOrder(workflowStepId);
+            });
+        }
     }
 
     /**

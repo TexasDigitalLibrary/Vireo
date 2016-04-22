@@ -34,6 +34,13 @@ public class OrganizationTest extends AbstractEntityTest {
         assertEquals("Saved entity did not contain the correct name!", TEST_PARENT_ORGANIZATION_NAME, parentOrganization.getName());
         assertEquals("Saved entity did not contain the correct category name!", parentCategory.getName(), parentOrganization.getCategory().getName());
         assertEquals("Saved entity did not have the emailWorkflow rule!", true, parentOrganization.getEmailWorkflowRules().contains(emailWorkflowRule));
+        
+        childCategory = organizationCategoryRepo.create(TEST_CHILD_CATEGORY_NAME);
+        Organization childOrganization = organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, parentOrganization, childCategory);
+        assertEquals("The parent organization was not atached to the child!", 1, childOrganization.getParentOrganizations().size());
+        assertEquals("The child organization was not atached to the parent!", 1, parentOrganization.getChildrenOrganizations().size());
+        assertEquals("The child organization's id was incorrect!", childOrganization.getId(), ((Organization)parentOrganization.getChildrenOrganizations().toArray()[0]).getId());
+        assertEquals("The parent's organization's id was incorrect!", parentOrganization.getId(), ((Organization)childOrganization.getParentOrganizations().toArray()[0]).getId());
     }
 
     @Override
