@@ -172,7 +172,7 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
         
         ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME1);
         
-        String responseJson = StompRequest("/settings/controlled-vocabulary/remove/" + controlledVocabulary.getPosition(), "");
+        String responseJson = StompRequest("/settings/controlled-vocabulary/remove/" + controlledVocabulary.getId(), "");
         
         Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
 

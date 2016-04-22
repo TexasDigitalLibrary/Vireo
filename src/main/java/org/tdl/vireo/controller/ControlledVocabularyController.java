@@ -2,7 +2,6 @@ package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_ERROR;
-import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_INFO;
 import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_WARNING;
 
 import java.io.IOException;
@@ -30,6 +29,7 @@ import org.tdl.vireo.model.VocabularyWord;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.VocabularyWordRepo;
 import org.tdl.vireo.service.ControlledVocabularyCachingService;
+import org.tdl.vireo.service.ValidationService;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
@@ -37,6 +37,7 @@ import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.aspect.annotation.InputStream;
 import edu.tamu.framework.model.ApiResponse;
+import edu.tamu.framework.validation.ModelBindingResult;
 
 /**
  * Controller in which to manage controlled vocabulary.
@@ -58,7 +59,10 @@ public class ControlledVocabularyController {
     private VocabularyWordRepo vocabularyWordRepo;
 
     @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;    
+    private SimpMessagingTemplate simpMessagingTemplate;
+    
+    @Autowired
+    private ValidationService validationService;
 
     /**
      * Endpoint to request all controlled vocabulary.
@@ -97,13 +101,31 @@ public class ControlledVocabularyController {
     @Auth(role = "ROLE_MANAGER")
     @Transactional
     public ApiResponse createControlledVocabulary(@ApiValidatedModel ControlledVocabulary controlledVocabulary) {
+        
         // will attach any errors to the BindingResult when validating the incoming controlledVocabulary
         controlledVocabulary = controlledVocabularyRepo.validateCreate(controlledVocabulary);
-
-        // TODO: logging
-        logger.info("Creating controlled vocabulary " + controlledVocabulary.getName());
         
-        return createOrUpdate(controlledVocabulary, true);
+        // build a response based on the BindingResult state
+        ApiResponse response = validationService.buildResponse(controlledVocabulary);
+        
+        switch(response.getMeta().getType()){
+            case SUCCESS:
+            case VALIDATION_INFO:
+                logger.info("Creating controlled vocabulary with name " + controlledVocabulary.getName());
+                controlledVocabularyRepo.create(controlledVocabulary.getName(), controlledVocabulary.getLanguage());
+                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
+                break;
+            case VALIDATION_WARNING:
+                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(VALIDATION_WARNING));
+                break;
+            default:
+                logger.warn("Couldn't create controlled vocabulary with name " + controlledVocabulary.getName() + " because: " + response.getMeta().getType());
+                break;
+        }
+
+        return response;
     }
 
     /**
@@ -119,43 +141,67 @@ public class ControlledVocabularyController {
     public ApiResponse updateControlledVocabulary(@ApiValidatedModel ControlledVocabulary controlledVocabulary) {
         // will attach any errors to the BindingResult when validating the incoming controlledVocabulary
         controlledVocabulary = controlledVocabularyRepo.validateUpdate(controlledVocabulary);
-
-        // TODO: logging
-        logger.info("Updating controlled vocabulary " + controlledVocabulary.getName());
         
-        return createOrUpdate(controlledVocabulary, false);
+        // build a response based on the BindingResult state
+        ApiResponse response = validationService.buildResponse(controlledVocabulary);
+        
+        switch(response.getMeta().getType()){
+            case SUCCESS:
+            case VALIDATION_INFO:
+                logger.info("Updating controlled vocabulary with name " + controlledVocabulary.getName());
+                controlledVocabularyRepo.save(controlledVocabulary);
+                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
+                break;
+            case VALIDATION_WARNING:
+                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(VALIDATION_WARNING));
+                break;
+            default:
+                logger.warn("Couldn't update controlled vocabulary with name " + controlledVocabulary.getName() + " because: " + response.getMeta().getType());
+                break;
+        }
+
+        return response;
     }
 
     /**
      * Endpoint to remove controlled vocabulary by provided index
      * 
-     * @param indexString
+     * @param idString
      *            index of controlled vocabulary to remove
      * @return ApiResponse indicating success or error
      */
-    @ApiMapping("/remove/{indexString}")
+    @ApiMapping("/remove/{idString}")
     @Auth(role = "ROLE_MANAGER")
     @Transactional
-    public ApiResponse removeControlledVocabulary(@ApiVariable String indexString) {
-        Long index = -1L;
-
-        try {
-            index = Long.parseLong(indexString);
-        } catch (NumberFormatException nfe) {
-            return new ApiResponse(VALIDATION_ERROR, "Id is not a valid controlled vocabulary order!");
+    public ApiResponse removeControlledVocabulary(@ApiVariable String idString) {
+        
+        // create a ModelBindingResult since we have an @ApiVariable coming in (and not a @ApiValidatedModel)
+        ModelBindingResult modelBindingResult = new ModelBindingResult(idString, "controlled_vocabulary_id");
+        
+        // will attach any errors to the BindingResult when validating the incoming idString
+        ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.validateRemove(idString, modelBindingResult);
+        
+        // build a response based on the BindingResult state
+        ApiResponse response = validationService.buildResponse(modelBindingResult);
+        
+        switch(response.getMeta().getType()){
+            case SUCCESS:
+            case VALIDATION_INFO:
+                logger.info("Removing Controlled Vocabulary with id " + idString);
+                controlledVocabularyRepo.remove(controlledVocabulary);
+                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, getAll()));
+                break;
+            case VALIDATION_WARNING:
+                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(VALIDATION_WARNING, getAll()));
+                break;
+            default:
+                logger.warn("Couldn't remove Controlled Vocabulary with id " + idString + " because: " + response.getMeta().getType());
+                break;
         }
-
-        if (index >= 0) {
-            controlledVocabularyRepo.remove(index);
-        } else {
-            return new ApiResponse(VALIDATION_ERROR, "Id is not a valid controlled vocabulary order!");
-        }
-
-        logger.info("Deleted controlled vocabulary with order " + index);
-
-        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, getAll()));
-
-        return new ApiResponse(SUCCESS);
+    
+        return response;
     }
 
     /**
@@ -399,38 +445,6 @@ public class ControlledVocabularyController {
         }
         
         return new ApiResponse(SUCCESS);
-    }
-    
-    private ApiResponse createOrUpdate(ControlledVocabulary controlledVocabulary, Boolean create){
-        // if errors, with no warnings
-        if (controlledVocabulary.getBindingResult().hasErrors()) {
-            return new ApiResponse(VALIDATION_ERROR, controlledVocabulary.getBindingResult().getAll());
-        }
-        // else if no errors, with warnings
-        else if (!controlledVocabulary.getBindingResult().hasErrors() && controlledVocabulary.getBindingResult().hasWarnings()) {
-            simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(VALIDATION_WARNING, getAll()));
-            simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(VALIDATION_WARNING));
-            return new ApiResponse(VALIDATION_WARNING, controlledVocabulary.getBindingResult().getAllWarningsAndInfos());
-        }
-        // else if no errors, no warnings, maybe infos
-        else {
-            // if we're creating
-            if(create) {
-                controlledVocabularyRepo.create(controlledVocabulary.getName(), controlledVocabulary.getLanguage());
-            }
-            // if we're updating
-            else {
-                controlledVocabularyRepo.save(controlledVocabulary);
-            }
-            simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, getAll()));
-            simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
-            // deal with infos being set
-            if (controlledVocabulary.getBindingResult().hasInfos()) {
-                return new ApiResponse(VALIDATION_INFO, controlledVocabulary.getBindingResult().getAllInfos());
-            } else {
-                return new ApiResponse(SUCCESS);
-            }
-        }
     }
     
     /**

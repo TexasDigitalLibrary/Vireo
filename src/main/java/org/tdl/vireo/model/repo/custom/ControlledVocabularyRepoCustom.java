@@ -3,6 +3,8 @@ package org.tdl.vireo.model.repo.custom;
 import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.Language;
 
+import edu.tamu.framework.validation.ModelBindingResult;
+
 public interface ControlledVocabularyRepoCustom {
 
     public ControlledVocabulary create(String name, Language language);
@@ -13,9 +15,11 @@ public interface ControlledVocabularyRepoCustom {
     
     public void sort(String column);
     
-    public void remove(Long index);
+    public void remove(ControlledVocabulary controlledVocabulary);
     
     public ControlledVocabulary validateCreate(ControlledVocabulary controlledVocabulary);
     
     public ControlledVocabulary validateUpdate(ControlledVocabulary controlledVocabulary);
+    
+    public ControlledVocabulary validateRemove(String idString, ModelBindingResult modelBindingResult);
 }

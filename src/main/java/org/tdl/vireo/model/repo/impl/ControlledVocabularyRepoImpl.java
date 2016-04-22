@@ -7,6 +7,9 @@ import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.custom.ControlledVocabularyRepoCustom;
 import org.tdl.vireo.service.OrderedEntityService;
+import org.tdl.vireo.service.ValidationService;
+
+import edu.tamu.framework.validation.ModelBindingResult;
 
 public class ControlledVocabularyRepoImpl implements ControlledVocabularyRepoCustom {
 
@@ -15,6 +18,9 @@ public class ControlledVocabularyRepoImpl implements ControlledVocabularyRepoCus
     
     @Autowired
     private ControlledVocabularyRepo controlledVocabularyRepo;
+    
+    @Autowired
+    private ValidationService validationService;
 
     @Override
     public ControlledVocabulary create(String name, Language language) {
@@ -41,8 +47,8 @@ public class ControlledVocabularyRepoImpl implements ControlledVocabularyRepoCus
     }
     
     @Override
-    public void remove(Long index) {
-        orderedEntityService.remove(controlledVocabularyRepo, ControlledVocabulary.class, index);
+    public void remove(ControlledVocabulary controlledVocabulary) {
+        orderedEntityService.remove(controlledVocabularyRepo, ControlledVocabulary.class, controlledVocabulary.getPosition());
     }
 
     @Override
@@ -83,5 +89,19 @@ public class ControlledVocabularyRepoImpl implements ControlledVocabularyRepoCus
         }
         
         return controlledVocabulary;
+    }
+    
+    @Override
+    public ControlledVocabulary validateRemove(String idString, ModelBindingResult modelBindingResult) {
+        ControlledVocabulary toRemove = null;
+        Long id = validationService.validateLong(idString, "controlledVocabulary", modelBindingResult);
+        
+        if(!modelBindingResult.hasErrors()){
+            toRemove = controlledVocabularyRepo.findOne(id);
+            if (toRemove == null) {
+                modelBindingResult.addError(new ObjectError("controlledVocabulary", "Cannot remove Controlled Vocabulary, id did not exist!"));
+            }
+        }
+        return toRemove;
     }
 }
