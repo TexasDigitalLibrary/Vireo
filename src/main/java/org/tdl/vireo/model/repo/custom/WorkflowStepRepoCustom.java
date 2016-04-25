@@ -7,4 +7,6 @@ public interface WorkflowStepRepoCustom {
 
     public WorkflowStep create(String name, Organization owningOrganization);
 
+    void delete(WorkflowStep workflowStep);
+
 }

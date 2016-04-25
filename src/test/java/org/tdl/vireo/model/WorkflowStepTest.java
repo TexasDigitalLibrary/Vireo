@@ -4,6 +4,9 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
+import org.springframework.transaction.annotation.Transactional;
+import org.tdl.vireo.annotations.Order;
 
 public class WorkflowStepTest extends AbstractEntityTest {
 
@@ -100,6 +103,49 @@ public class WorkflowStepTest extends AbstractEntityTest {
         assertEquals("The field profiles were deleted!", 2, fieldProfileRepo.count());
         assertEquals("The notes were deleted!", 2, noteRepo.count());
         assertEquals("The field predicates were deleted!", 2, fieldPredicateRepo.count());
+    }
+    
+    @Test
+    @Order(value = 5)
+    @Transactional
+    public void testCascadeThroughOrganization() {
+        
+        Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
+        parentOrganization.addChildOrganization(organization);
+        parentOrganization = organizationRepo.save(parentOrganization);
+        Organization grandChildOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, organization, parentCategory);
+       
+        // Check that workflowstep is passed from parent through children
+        assertEquals("The Parent Organization had workflow steps", 0, parentOrganization.getWorkflowSteps().size());
+        assertEquals("The Organization had workflow steps", 0, organization.getWorkflowSteps().size());
+        assertEquals("The Grand Child Organization had workflow steps", 0, grandChildOrganization.getWorkflowSteps().size());
+        
+        WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
+        
+        parentOrganization.addWorkflowStep(workflowStep);
+        
+        parentOrganization = organizationRepo.save(parentOrganization);
+        
+        //parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        organization = organizationRepo.findOne(organization.getId());
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+       
+        assertEquals("The Parent Organization did not add workflow steps", 1, parentOrganization.getWorkflowSteps().size());
+        assertEquals("The Organization did not inherit workflow steps", 1, organization.getWorkflowSteps().size());
+        assertEquals("The Grand Child Organization did not inherit workflow steps", 1, grandChildOrganization.getWorkflowSteps().size());
+       
+       
+        // Check that removal of middle organization does not disturb the grandchild's and Parent's workflow.
+       
+        organizationRepo.delete(organization);
+       
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+       
+        assertEquals("The worflowstep repo was empty", 1, workflowStepRepo.count());
+        //assertEquals("The Parent Organization did not add workflow steps", 1, parentOrganization.getWorkflowSteps().size());
+        //assertEquals("The Grand Child Organization did not inherit workflow steps", 1, grandChildOrganization.getWorkflowSteps().size());
+        
     }
 
     @After

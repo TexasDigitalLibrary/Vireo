@@ -50,7 +50,7 @@ public class WorkflowStep extends BaseEntity {
     public WorkflowStep() {
         setFieldProfiles(new ArrayList<FieldProfile>());
         setNotes(new ArrayList<Note>());
-        setOwningOrganizations(new TreeSet<Organization>());
+        setContainedByOrganizations(new TreeSet<Organization>());
     }
     
     public WorkflowStep(String name, Organization owningOrganization) {
@@ -61,7 +61,7 @@ public class WorkflowStep extends BaseEntity {
         this();
         setName(name);
         setOptional(true);
-        addOwningOrganization(owningOrganization);
+        addContainedByOrganization(owningOrganization);
         setOriginatingOrganization(originatingOrganization);
     }
 
@@ -97,22 +97,22 @@ public class WorkflowStep extends BaseEntity {
     /**
      * @return the owningOrganization
      */
-    public Set<Organization> getOwningOrganizations() {
+    public Set<Organization> getContainedByOrganizations() {
         return containedByOrganizations;
     }
 
     /**
      * @param owningOrganization the owningOrganization to set
      */
-    public void setOwningOrganizations(Set<Organization> owningOrganizations) {
+    public void setContainedByOrganizations(Set<Organization> owningOrganizations) {
         this.containedByOrganizations = owningOrganizations;
     }
     
-    public void addOwningOrganization(Organization owningOrganization) {
+    public void addContainedByOrganization(Organization owningOrganization) {
         this.containedByOrganizations.add(owningOrganization);
     }
     
-    public void removeOwningOrganization(Organization owningOrganization) {
+    public void removeContainedByOrganization(Organization owningOrganization) {
         this.containedByOrganizations.remove(owningOrganization);
     }
 
