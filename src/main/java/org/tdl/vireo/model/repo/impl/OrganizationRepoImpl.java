@@ -1,6 +1,6 @@
 package org.tdl.vireo.model.repo.impl;
 
-import javax.transaction.Transactional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.Organization;
@@ -10,7 +10,7 @@ import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.custom.OrganizationRepoCustom;
 
 public class OrganizationRepoImpl implements OrganizationRepoCustom {
-
+	
     @Autowired
     private OrganizationRepo organizationRepo;
 
@@ -34,24 +34,29 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
     }
 
     @Override
-    @Transactional
     public void delete(Organization organization) {
         OrganizationCategory category = organization.getCategory();
         category.removeOrganization(organization);
         organizationCategoryRepo.save(category);
         
+        Set<Organization> parentOrganizations = organization.getParentOrganizations();
         
-
-        organization.getChildrenOrganizations().stream().forEach(childOrganization -> {
+        organization.getChildrenOrganizations().parallelStream().forEach(childOrganization -> {
             childOrganization.removeParentOrganization(organization);
+            
+            parentOrganizations.parallelStream().forEach(parentOrganization -> {
+                parentOrganization.addChildOrganization(childOrganization);
+                organizationRepo.save(parentOrganization);
+            });
+            
             organizationRepo.save(childOrganization);
         });
 
-        organization.getParentOrganizations().stream().forEach(parentOrganization -> {
+        organization.getParentOrganizations().parallelStream().forEach(parentOrganization -> {
             parentOrganization.removeChildOrganization(organization);
             organizationRepo.save(parentOrganization);
         });
-
+        
         organizationRepo.delete(organization.getId());
     }
 

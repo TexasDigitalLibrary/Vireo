@@ -3,8 +3,9 @@ package org.tdl.vireo.model;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.MERGE;
-import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.CascadeType.REMOVE;
+import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
@@ -20,12 +21,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.tdl.vireo.config.SpringContext;
-import org.tdl.vireo.service.WorkflowManagementService;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
@@ -38,10 +34,10 @@ public class Organization extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER, optional = false)
+    @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER, optional=false)
     private OrganizationCategory category;
 
-    @ManyToMany(cascade = ALL, fetch = EAGER)
+    @ManyToMany(cascade = { DETACH, REFRESH, REMOVE, PERSIST }, fetch = EAGER)
     private Set<WorkflowStep> workflowSteps;
     
     @ElementCollection
@@ -52,13 +48,13 @@ public class Organization extends BaseEntity {
     @JsonIdentityReference(alwaysAsId = true)
     private Set<Organization> parentOrganizations;
 
-    @ManyToMany(cascade = { DETACH, REFRESH, PERSIST }, fetch = LAZY)
+    @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY)
     private Set<Organization> childrenOrganizations;
 
     @ElementCollection
     private Set<String> emails;
     
-    @OneToMany(cascade = ALL, fetch=EAGER, orphanRemoval=true)
+    @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
     private List<EmailWorkflowRule> emailWorkflowRules;
 
     public Organization() {
@@ -128,14 +124,22 @@ public class Organization extends BaseEntity {
     
     public void addWorkflowStep(WorkflowStep workflowStep) {
         this.workflowSteps.add(workflowStep);
-        WorkflowManagementService workflowManagementService = SpringContext.bean(WorkflowManagementService.class);
-        workflowManagementService.recursiveAddStep(this, workflowStep);
+        Set<Organization> children = getChildrenOrganizations();
+        if(!children.isEmpty()) {
+            children.parallelStream().forEach(child -> {
+                child.addWorkflowStep(workflowStep);
+            });
+        }
     }
 
     public void removeWorkflowStep(WorkflowStep workflowStep) {
         this.workflowSteps.remove(workflowStep);
-        WorkflowManagementService workflowManagementService = SpringContext.bean(WorkflowManagementService.class);
-        workflowManagementService.recursiveRemoveStep(this, workflowStep);
+        Set<Organization> children = getChildrenOrganizations();
+        if(!children.isEmpty()) {
+            children.parallelStream().forEach(child -> {
+                child.removeWorkflowStep(workflowStep);
+            });
+        }
     }
     
     /**
@@ -260,7 +264,7 @@ public class Organization extends BaseEntity {
      * @param email
      */
     public void addEmail(String email) {
-        getEmails().add(email);
+    	this.emails.add(email);
     }
 
     /**
@@ -268,7 +272,7 @@ public class Organization extends BaseEntity {
      * @param email
      */
     public void removeEmail(String email) {
-        getEmails().remove(email);
+    	this.emails.remove(email);
     }
 
 	/**
@@ -290,7 +294,7 @@ public class Organization extends BaseEntity {
      * @param emailWorkflowRule
      */
     public void addEmailWorkflowRule(EmailWorkflowRule emailWorkflowRule) {
-        getEmailWorkflowRules().add(emailWorkflowRule);
+    	this.emailWorkflowRules.add(emailWorkflowRule);
     }
 
     /**
@@ -298,7 +302,7 @@ public class Organization extends BaseEntity {
      * @param emailWorkflowRules
      */
     public void removeEmailWorkflowRule(EmailWorkflowRule emailWorkflowRule) {
-    	getEmailWorkflowRules().remove(emailWorkflowRule);
+    	this.emailWorkflowRules.remove(emailWorkflowRule);
     }
 
 }

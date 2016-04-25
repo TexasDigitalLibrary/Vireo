@@ -93,7 +93,7 @@ public class WorkflowStep extends BaseEntity {
     public void setOriginatingOrganization(Organization originatingOrganization) {
         this.originatingOrganization = originatingOrganization;
     }
-
+    
     /**
      * @return the owningOrganization
      */
