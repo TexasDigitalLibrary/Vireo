@@ -5,8 +5,10 @@ import static org.junit.Assert.assertNotEquals;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
+import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.enums.RecipientType;
 
 public class OrganizationTest extends AbstractEntityTest {
@@ -60,6 +62,20 @@ public class OrganizationTest extends AbstractEntityTest {
         Organization organization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
         organizationRepo.delete(organization);
         assertEquals("Entity did not delete!", 0, organizationRepo.count());
+    }
+    
+    @Test
+    @Order(value=5)
+    @Transactional
+    public void testDeleteInterior() {
+        Organization topOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
+        Organization middleOrganization = organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, topOrganization, parentCategory);
+        Organization leafOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, middleOrganization, parentCategory);
+        
+        organizationRepo.delete(middleOrganization);
+        assertEquals("Middle organization did not delete!", 2, organizationRepo.count());
+        
+        assertEquals("Hierarchy was not preserved when middle was deleted.  Leaf node didn't get it's grandparent as new parent.", topOrganization.getId(), ((Organization)leafOrganization.getParentOrganizations().toArray()[0]).getId() );
     }
 
     @Override
