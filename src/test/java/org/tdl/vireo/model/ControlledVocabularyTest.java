@@ -37,18 +37,18 @@ public class ControlledVocabularyTest extends AbstractEntityTest {
         assertEquals("Saved entity did not contain the language!", language, entityControlledVocabulary.getLanguage());
         assertEquals("Saved entity did not contain the is entity!", true, entityControlledVocabulary.isEntityProperty());
         
-        List<EmbargoGuarantor> guarantors = null;
+        List<VocabularyWord> guarantors = null;
         try {
-            guarantors = (List<EmbargoGuarantor>) entityControlledVocabularyService.getControlledVocabulary(TEST_CONTROLLED_VOCABULARY_EMBARGO, TEST_CONTROLLED_VOCABULARY_EMBARGO_GUARANTOR);
+            guarantors = entityControlledVocabularyService.getControlledVocabulary(TEST_CONTROLLED_VOCABULARY_EMBARGO, TEST_CONTROLLED_VOCABULARY_EMBARGO_GUARANTOR);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
         
         assertEquals("Number of guarantors does not match!", guarantors.size(), entityControlledVocabulary.getDictionary().size());
         
-        List<Object> entityControlledVocabularyValues = entityControlledVocabulary.getDictionary();
+        List<VocabularyWord> entityControlledVocabularyValues = entityControlledVocabulary.getDictionary();
         
-        for(EmbargoGuarantor gaurantor : guarantors) {           
+        for(VocabularyWord gaurantor : guarantors) {           
             assertEquals("Guarantors does not contain entityControlledVocabulary value!", true, entityControlledVocabularyValues.contains(gaurantor));
         };
         

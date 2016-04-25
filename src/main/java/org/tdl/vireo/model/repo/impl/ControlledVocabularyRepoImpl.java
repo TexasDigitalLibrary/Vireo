@@ -104,4 +104,17 @@ public class ControlledVocabularyRepoImpl implements ControlledVocabularyRepoCus
         }
         return toRemove;
     }
+    
+    @Override
+    public ControlledVocabulary validateExport(String name, ModelBindingResult modelBindingResult) {
+        ControlledVocabulary toExport = null;
+        
+        if(!modelBindingResult.hasErrors()){
+            toExport = controlledVocabularyRepo.findByName(name);
+            if (toExport == null) {
+                modelBindingResult.addError(new ObjectError("controlledVocabulary", "Cannot export Controlled Vocabulary, name did not exist!"));
+            }
+        }
+        return toExport;
+    }
 }

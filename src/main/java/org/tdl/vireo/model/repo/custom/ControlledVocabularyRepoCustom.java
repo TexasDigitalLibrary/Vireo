@@ -22,4 +22,6 @@ public interface ControlledVocabularyRepoCustom {
     public ControlledVocabulary validateUpdate(ControlledVocabulary controlledVocabulary);
     
     public ControlledVocabulary validateRemove(String idString, ModelBindingResult modelBindingResult);
+    
+    public ControlledVocabulary validateExport(String name, ModelBindingResult modelBindingResult);
 }

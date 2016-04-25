@@ -218,6 +218,7 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
 
     @Test
     @Order(value = 8)
+    @SuppressWarnings("unchecked")
     public void testExportControlledVocabulary() throws InterruptedException, JsonParseException, JsonMappingException, IOException {
         
         addVocabularyWords();
@@ -225,33 +226,36 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
         String responseJson = StompRequest("/settings/controlled-vocabulary/export/" + TEST_CONTROLLED_VOCABULARY_NAME1, "");
         
         Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
-
-        @SuppressWarnings("unchecked")
+        
         Map<String, String> meta = (Map<String, String>) responseObject.get("meta");
         
         assertEquals("SUCCESS", meta.get("type"));        
         
-        @SuppressWarnings("unchecked")
         Map<String, Object> payload = (Map<String, Object>) responseObject.get("payload");
         
         System.out.println(payload);
-
-        @SuppressWarnings("unchecked")
+        
         List<List<String>> rows = (List<List<String>>) ((Map<String, Object>) payload.get("HashMap")).get("rows");
         
-        System.out.println(rows.get(0).get(0));
+        List<String> row = rows.get(0);
         
-        assertEquals(rows.get(0).get(0), TEST_VOCABULARY_WORD_NAME1);
-        assertEquals(rows.get(0).get(1), TEST_VOCABULARY_WORD_DEFINITION1);
-        assertEquals(rows.get(0).get(2), TEST_VOCABULARY_WORD_IDENTIFIER1);
+        System.out.println(row.get(0));
         
-        assertEquals(rows.get(1).get(0), TEST_VOCABULARY_WORD_NAME2);
-        assertEquals(rows.get(1).get(1), TEST_VOCABULARY_WORD_DEFINITION2);
-        assertEquals(rows.get(1).get(2), TEST_VOCABULARY_WORD_IDENTIFIER2);
+        assertEquals(row.get(0), TEST_VOCABULARY_WORD_NAME1);
+        assertEquals(row.get(1), TEST_VOCABULARY_WORD_DEFINITION1);
+        assertEquals(row.get(2), TEST_VOCABULARY_WORD_IDENTIFIER1);
         
-        assertEquals(rows.get(2).get(0), TEST_VOCABULARY_WORD_NAME3);
-        assertEquals(rows.get(2).get(1), TEST_VOCABULARY_WORD_DEFINITION3);
-        assertEquals(rows.get(2).get(2), TEST_VOCABULARY_WORD_IDENTIFIER3);
+        row = rows.get(1);
+        
+        assertEquals(row.get(0), TEST_VOCABULARY_WORD_NAME2);
+        assertEquals(row.get(1), TEST_VOCABULARY_WORD_DEFINITION2);
+        assertEquals(row.get(2), TEST_VOCABULARY_WORD_IDENTIFIER2);
+        
+        row = rows.get(2);
+        
+        assertEquals(row.get(0), TEST_VOCABULARY_WORD_NAME3);
+        assertEquals(row.get(1), TEST_VOCABULARY_WORD_DEFINITION3);
+        assertEquals(row.get(2), TEST_VOCABULARY_WORD_IDENTIFIER3);
     }
 
     @Test

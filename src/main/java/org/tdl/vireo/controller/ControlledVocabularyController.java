@@ -286,7 +286,7 @@ public class ControlledVocabularyController {
     }
 
     /**
-     * Endoing to export controlled vocabulary to populate csv
+     * Endpoint to export controlled vocabulary to populate csv
      * 
      * @param name
      *            name of controlled vocabulary to export
@@ -296,24 +296,42 @@ public class ControlledVocabularyController {
     @Auth(role = "ROLE_MANAGER")
     @Transactional
     public ApiResponse exportControlledVocabulary(@ApiVariable String name) {
-        Map<String, Object> map = new HashMap<String, Object>();        
-        ControlledVocabulary cv = controlledVocabularyRepo.findByName(name);        
-        map.put("headers", Arrays.asList(new String[] { "name", "definition", "identifier" }));
-        List<List<Object>> rows = new ArrayList<List<Object>>();
-        cv.getDictionary().forEach(vocabularyWord -> {
-            List<Object> row = new ArrayList<Object>();
-            if (vocabularyWord.getClass().equals(VocabularyWord.class)) {
-                VocabularyWord actualVocabularyWord = (VocabularyWord) vocabularyWord;
-                row.add(actualVocabularyWord.getName());
-                row.add(actualVocabularyWord.getDefinition());
-                row.add(actualVocabularyWord.getIdentifier());
-            } else {
-                row.add(vocabularyWord);
-            }
-            rows.add(row);
-        });
-        map.put("rows", rows);
-        return new ApiResponse(SUCCESS, map);
+        // create a ModelBindingResult since we have an @ApiVariable coming in (and not a @ApiValidatedModel)
+        ModelBindingResult modelBindingResult = new ModelBindingResult(name, "controlled-vocabulary");
+        
+        // will attach any errors to the BindingResult when validating the incoming cv name
+        ControlledVocabulary cv = controlledVocabularyRepo.validateExport(name, modelBindingResult);
+        
+        // build a response based on the BindingResult state
+        ApiResponse response = validationService.buildResponse(modelBindingResult);
+        
+        switch(response.getMeta().getType()){
+            case SUCCESS:
+            case VALIDATION_INFO:
+                logger.info("Exporting controlled vocabulary for " + name);
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("headers", Arrays.asList(new String[] { "name", "definition", "identifier" }));
+                List<List<Object>> rows = new ArrayList<List<Object>>();
+                cv.getDictionary().forEach(vocabularyWord -> {
+                    List<Object> row = new ArrayList<Object>();
+                    VocabularyWord actualVocabularyWord = (VocabularyWord) vocabularyWord;
+                    row.add(actualVocabularyWord.getName());
+                    row.add(actualVocabularyWord.getDefinition());
+                    row.add(actualVocabularyWord.getIdentifier());
+                    rows.add(row);
+                });
+                map.put("rows", rows);
+                response.getPayload().put(map.getClass().getSimpleName(), map);
+                break;
+            case VALIDATION_WARNING:
+                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(VALIDATION_WARNING, getAll()));
+                break;
+            default:
+                logger.warn("Couldn't export controlled vocabulary because: " + response.getMeta().getType());
+                break;
+        }
+    
+        return response;
     }
 
     /**
@@ -370,7 +388,7 @@ public class ControlledVocabularyController {
         List<VocabularyWord[]> updatingWords = new ArrayList<VocabularyWord[]>();
 
         ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByName(name);
-        List<Object> words = controlledVocabulary.getDictionary();
+        List<VocabularyWord> words = controlledVocabulary.getDictionary();
 
         for (String row : rows) {
 
@@ -404,12 +422,11 @@ public class ControlledVocabularyController {
 
             if (!isRepeat) {
                 boolean isNew = true;
-                for (Object word : words) {
-                    VocabularyWord vocabularyWord = (VocabularyWord) word;
-                    if (cols[0].equals(vocabularyWord.getName())) {
+                for (VocabularyWord word : words) {
+                    if (cols[0].equals(word.getName())) {
 
-                        String definition = vocabularyWord.getDefinition();
-                        String identifier = vocabularyWord.getIdentifier();
+                        String definition = word.getDefinition();
+                        String identifier = word.getIdentifier();
 
                         boolean change = false;
 
@@ -422,7 +439,7 @@ public class ControlledVocabularyController {
                         }
 
                         if (change) {
-                            updatingWords.add(new VocabularyWord[] { vocabularyWord, currentVocabularyWord });
+                            updatingWords.add(new VocabularyWord[] { word, currentVocabularyWord });
                         }
 
                         isNew = false;
