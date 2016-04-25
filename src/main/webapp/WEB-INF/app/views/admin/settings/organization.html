@@ -31,27 +31,26 @@
 
           <div class="panel panel-default triptych-panel"
                ng-class="{'active': panel.active, 'previously-active': panel.previouslyActive}">
-
             <div class="panel-heading" 
                  ng-click="triptych.expanded = true"> 
               <span 	ng-repeat="(orgId, category) in panel.getUniqueCategories()" 
-ng-click="panel.toggleFilter(category)">
+                    ng-click="panel.toggleFilter(category)">
                 <span 	class="category-heading" 
-ng-class="{'active': category.id == panel.filterOn, 'multiple': panel.getUniqueCategories().length}">{{category.name}}</span> 
+                      ng-class="{'active': category.id == panel.filterOn, 'multiple': panel.getUniqueCategories().length}">{{category.name}}</span> 
                 <span ng-if="!$last"> / </span> 
               </span>
               <span 	class="glyphicon glyphicon-arrow-right pull-right"
-ng-if="selectedOrganization.childrenOrganizations.length > 0 || panel.previouslyActive">
+                    ng-if="selectedOrganization.childrenOrganizations.length > 0 || panel.previouslyActive">
               </span> 
             </div>
             <div class="panel-body">
               <ul class="list-group">
                 <li class="list-group-item"
-ng-repeat="organization in organizations.list | filter:{category:panel.filterOn} | orderBy:'name'" 
-ng-if="filterPanelByParent(panel, organization)" 
-ng-click="shiftPanels(panel, organization);"
-ng-class="{'selected': panel.selectedOrganization.id == organization.id}"
-class="triptych-panel-entry">
+                    ng-repeat="organization in organizations.list | filter:{category:panel.filterOn} | orderBy:'name'" 
+                    ng-if="filterPanelByParent(panel, organization)" 
+                    ng-click="shiftPanels(panel, organization);"
+                    ng-class="{'selected': panel.selectedOrganization.id == organization.id}"
+                    class="triptych-panel-entry">
                   <ul class="inline-list pull-right">
                     <li ng-click="activateManagementPane('edit')">
                       <span class="context-icons glyphicon glyphicon-cog pull-right" ng-class="{'active': managementPaneIsActive('edit')}"></span>
@@ -71,9 +70,7 @@ class="triptych-panel-entry">
                 </li>
               </ul>
             </div>
-
           </div>
-          
         </div>
       </div>
     </div>
@@ -94,22 +91,22 @@ class="triptych-panel-entry">
           <ul class="inline-list">
             <li ng-click="activateManagementPane('edit')">
               <span 	class="management-pane-selector" 
-ng-class="{active: managementPaneIsActive('edit')}"
-ng-click="activateManagementPane('edit')" >
+                    ng-class="{active: managementPaneIsActive('edit')}"
+                    ng-click="activateManagementPane('edit')" >
                 <span class="context-icons glyphicon glyphicon-cog" ng-class="{'active': managementPaneIsActive('edit')}"></span> Manage Organization
               </span>  
             </li>
             <li ng-click="activateManagementPane('workflow')">
               <span 	class="management-pane-selector"
-ng-click="activateManagementPane('workflow')" 
-ng-class="{active: managementPaneIsActive('workflow')}">
+                    ng-click="activateManagementPane('workflow')" 
+                    ng-class="{active: managementPaneIsActive('workflow')}">
                 <span class="context-icons glyphicon glyphicon-list-alt" ng-class="{'active': managementPaneIsActive('workflow')}"></span> Manage Workflow
               </span> 
             </li>
             <li ng-click="activateManagementPane('email')">
               <span 	class="management-pane-selector"
-ng-click="activateManagementPane('email')" 
-ng-class="{active: managementPaneIsActive('email')}">
+                    ng-click="activateManagementPane('email')" 
+                    ng-class="{active: managementPaneIsActive('email')}">
                 <span class="context-icons glyphicon glyphicon-envelope" ng-class="{'active': managementPaneIsActive('email')}"></span> Email Workflow Rules
               </span>
             </li>
@@ -126,11 +123,11 @@ ng-class="{active: managementPaneIsActive('email')}">
                 </div>
                 <form id="updateOrganization" ng-submit="updateOrganization(managedOrganization)">
                   <textField 
-label="Name" 
-scope-value="getManagedOrganization().name"
-label-width="2"
-field-width="4"
-expanded="true">
+                      label="Name" 
+                      scope-value="getManagedOrganization().name"
+                      label-width="2"
+                      field-width="4"
+                      expanded="true">
                   </textField>
                   <div class="form-group text-field clearfix">
                     <div class="col-sm-2">
@@ -174,11 +171,9 @@ expanded="true">
                   <h3 class="panel-title">Manage {{getManagedOrganization().name}} Workflow</h3>
                 </div>
                 <div class="panel-body">
-
                   <accordion single-expand="false" >
 		    <pane ng-repeat="step in steps" bar-view="views/directives/workflowStep.html" query="" html="">{{step}}</pane>
 		  </accordion>
-                  
                 </div>
 
               </div>

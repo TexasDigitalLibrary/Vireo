@@ -6,6 +6,7 @@ vireo.controller("OrganizationStepsController", function ($controller, $scope, $
   // $scope.organizationSteps = OrganizationStepsRepo.get();
   // $scope.ready = $q.all([OrganizationStepsRepo.ready()]);
   // Mock for now:
+
   $scope.steps = ['foo', 'bar', 'qux'];
 
   $scope.ready.then(function() {
@@ -43,6 +44,11 @@ vireo.controller("OrganizationStepsController", function ($controller, $scope, $
         console.info($scope.organizationSteps);
       });
     };
+
+    $scope.printState = function() {
+      console.info('the parent org is V');
+      console.info($scope.selectedOrganization);
+    }
 
   });
 });
