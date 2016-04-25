@@ -1,8 +1,5 @@
 package org.tdl.vireo.model.repo.impl;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.WorkflowStep;
@@ -12,9 +9,6 @@ import org.tdl.vireo.model.repo.custom.WorkflowStepRepoCustom;
 
 public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
     
-    @PersistenceContext
-    private EntityManager entityManager;
-
     @Autowired
     private WorkflowStepRepo workflowStepRepo;
     
@@ -24,9 +18,9 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
     @Override
     public WorkflowStep create(String name, Organization originatingOrganization) {
         WorkflowStep workflowStep = workflowStepRepo.save(new WorkflowStep(name, originatingOrganization));
-//        originatingOrganization.addWorkflowStep(workflowStep);
-//        organizationRepo.save(originatingOrganization);
-        return workflowStep;
+        originatingOrganization.addWorkflowStep(workflowStep);
+        organizationRepo.save(originatingOrganization);
+        return workflowStepRepo.findOne(workflowStep.getId());
     }
     
     @Override
@@ -43,8 +37,6 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         organizationRepo.save(originatingOrganization);
         
         workflowStepRepo.delete(workflowStep.getId());
-        
-        //entityManager.remove(entityManager.contains(workflowStep) ? workflowStep : entityManager.merge(workflowStep));
     }
 
 }

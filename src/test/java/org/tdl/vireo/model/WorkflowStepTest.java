@@ -34,6 +34,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
     }
 
     @Override
+    @Transactional
     public void testDelete() {
         WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, organization);
         workflowStepRepo.delete(workflowStep);
@@ -46,6 +47,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
     }
 
     @Override
+    @Transactional
     public void testCascade() {
         WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, organization);
         Note note = noteRepo.create(TEST_NOTE_NAME, TEST_NOTE_TEXT);

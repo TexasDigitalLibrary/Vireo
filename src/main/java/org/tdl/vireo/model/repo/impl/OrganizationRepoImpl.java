@@ -29,7 +29,7 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
         Organization organization = organizationRepo.save(new Organization(name, category));
         category.addOrganization(organization);
         organizationCategoryRepo.save(category);
-        return organization;
+        return organizationRepo.findOne(organization.getId());
     }
     
     @Override
@@ -37,7 +37,7 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
         Organization organization = create(name, category);
         parent.addChildOrganization(organization);
         organizationRepo.save(parent);
-        return organization;
+        return organizationRepo.findOne(organization.getId());
     }
 
     @Override

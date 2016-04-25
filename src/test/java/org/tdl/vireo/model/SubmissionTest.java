@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.After;
 import org.junit.Before;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.transaction.annotation.Transactional;
 
 public class SubmissionTest extends AbstractEntityTest {
 
@@ -91,6 +92,7 @@ public class SubmissionTest extends AbstractEntityTest {
     }
 
     @Override
+    @Transactional
     public void testCascade() {
         Organization severableOrganization = organizationRepo.create(TEST_SEVERABLE_ORGANIZATION_NAME, organization.getCategory());
 

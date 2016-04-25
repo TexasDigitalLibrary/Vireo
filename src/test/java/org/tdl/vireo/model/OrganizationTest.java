@@ -25,6 +25,7 @@ public class OrganizationTest extends AbstractEntityTest {
     }
 
     @Override
+    @Transactional
     public void testCreate() {
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
         parentOrganization.addEmail(TEST_PARENT_EMAIL);
@@ -54,6 +55,7 @@ public class OrganizationTest extends AbstractEntityTest {
     }
 
     @Override
+    @Transactional
     public void testDelete() {
         Organization organization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
         organizationRepo.delete(organization);

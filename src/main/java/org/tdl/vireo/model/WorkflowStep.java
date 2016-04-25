@@ -4,6 +4,7 @@ import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.FetchType.LAZY;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +29,12 @@ public class WorkflowStep extends BaseEntity {
     @Column(nullable = false)
     private String name;
     
-    @ManyToOne( cascade = { DETACH, REFRESH, MERGE } )
+    @ManyToOne(cascade = { DETACH, REFRESH, MERGE })
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private Organization originatingOrganization;
     
-    @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, mappedBy="workflowSteps")
+    @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, mappedBy = "workflowSteps", fetch = LAZY)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private Set<Organization> containedByOrganizations;

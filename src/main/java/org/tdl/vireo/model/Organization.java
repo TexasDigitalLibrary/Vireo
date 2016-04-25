@@ -3,11 +3,10 @@ package org.tdl.vireo.model;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.CascadeType.REMOVE;
-import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.FetchType.EAGER;
-import static javax.persistence.FetchType.LAZY;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,27 +33,27 @@ public class Organization extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER, optional=false)
+    @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER, optional = false)
     private OrganizationCategory category;
 
     @ManyToMany(cascade = { DETACH, REFRESH, REMOVE, PERSIST }, fetch = EAGER)
     private Set<WorkflowStep> workflowSteps;
     
-    @ElementCollection
+    @ElementCollection(fetch = EAGER)
     private List<Long> workflowStepOrder;
 
-    @ManyToMany(cascade = { DETACH, REFRESH }, fetch = LAZY)
+    @ManyToMany(cascade = { DETACH, REFRESH }, fetch = EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private Set<Organization> parentOrganizations;
 
-    @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY)
+    @ManyToMany(cascade = { DETACH, REFRESH, MERGE, PERSIST }, fetch = EAGER)
     private Set<Organization> childrenOrganizations;
 
-    @ElementCollection
+    @ElementCollection(fetch = EAGER)
     private Set<String> emails;
     
-    @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
+    @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
     private List<EmailWorkflowRule> emailWorkflowRules;
 
     public Organization() {
@@ -64,6 +63,16 @@ public class Organization extends BaseEntity {
         setChildrenOrganizations(new TreeSet<Organization>());
         setEmails(new TreeSet<String>());
         setEmailWorkflowRules(new ArrayList<EmailWorkflowRule>());
+    }
+    
+    /**
+     * 
+     * @param name
+     */
+    public Organization(String name) {
+        this();
+        setName(name);
+        setCategory(category);
     }
 
     /**
