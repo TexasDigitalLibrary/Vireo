@@ -145,8 +145,8 @@ public class WorkflowStepTest extends AbstractEntityTest {
         grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
        
         assertEquals("The worflowstep repo was empty", 1, workflowStepRepo.count());
-        //assertEquals("The Parent Organization did not add workflow steps", 1, parentOrganization.getWorkflowSteps().size());
-        //assertEquals("The Grand Child Organization did not inherit workflow steps", 1, grandChildOrganization.getWorkflowSteps().size());
+        assertEquals("The Parent Organization did not add workflow steps", 1, parentOrganization.getWorkflowSteps().size());
+        assertEquals("The Grand Child Organization did not inherit workflow steps", 1, grandChildOrganization.getWorkflowSteps().size());
         
     }
 
