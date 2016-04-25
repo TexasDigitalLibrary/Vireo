@@ -1,6 +1,7 @@
 package org.tdl.vireo.model;
 
 import static javax.persistence.CascadeType.DETACH;
+import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
@@ -28,7 +29,8 @@ public class WorkflowStep extends BaseEntity {
     @Column(nullable = false)
     private String name;
     
-    @ManyToOne(cascade = { DETACH, REFRESH, MERGE })
+    //@ManyToOne(cascade = {PERSIST})
+    @ManyToOne( cascade = { DETACH, REFRESH, MERGE } )
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private Organization originatingOrganization;
