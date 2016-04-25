@@ -25,7 +25,11 @@ vireo.directive("accordion", function(AccordionService) {
 vireo.directive("pane", function($location, $timeout, $anchorScroll, AccordionService) {
 	var count = 0;
 	return {
-		templateUrl: 'views/directives/accordionPane.html',
+                templateUrl:function(element, attr){
+                  console.info('elem, attr VV');
+                  console.info(element);
+			return attr.barView? attr.barView : 'views/directives/accordionPane.html';
+                },
 		restrict: 'E',
 		replace: false,
 		transclude: true,
@@ -40,7 +44,6 @@ vireo.directive("pane", function($location, $timeout, $anchorScroll, AccordionSe
 			angular.extend($scope, parent);
 			
 			$scope.query = typeof attr.query != "undefined" ? attr.query : "pane"+paneID;
-
 			
 			$timeout(function() {
 				var panelSearch = $location.search()["panel"];

@@ -1,216 +1,193 @@
 <div class="row admin-settings" ng-controller="OrganizationSettingsController">
-	<div class="col-xs-12 triptych" ng-controller="TriptychController">
-		<h1>ORGANIZATIONS AND WORKFLOWS</h1>
-		<div class="triptych-wrapper" ng-class="{'collapse': !triptych.expanded}">
-			<div class="row triptych-navigation">
-				<div class="row">
-					<div class="col-xs-12">
-						<ul class="breadcrumb">
-							<li ng-click="resetPanels()">
-								<a href="#">Vireo Institution</a>
-								<span ng-if="triptych.panelHistory.length < 1" class="glyphicon glyphicon-arrow-down"></span>
-							</li>
-							<li ng-repeat="panel in triptych.panelHistory" ng-click="triptych.rewindPanels(panel)">
-								<a href="#">{{panel.selectedOrganization.name}} ({{getCategoryById(panel.selectedOrganization.category).name}})</a>
-								<span ng-if="$last" class="glyphicon glyphicon-arrow-down"></span>
-							</li>
-						</ul>
-					</div>
-				</div>
-			</div>
-			<div class="row" ng-if="organizations.list.length < 2">
-				<div class="col-xs-12"> 
-					<p>Your Institution has no child organizations. Use the 'Create Organization' side module to create your first organization.</p>
-				</div>
-			</div>
-			<div class="row triptych-panels">
-				<div class="col-xs-12 col-sm-6 col-md-4 panel-wrapper"
-					 ng-class="{'closing': panel.closing, 'opening': panel.opening, 'shown': panel.visible}" 
-					 ng-repeat="panel in triptych.openPanels" 
-					 ng-if="panel.parentOrganization.childrenOrganizations.length>0">
+  <div class="col-xs-12 triptych" ng-controller="TriptychController">
+    <h1>ORGANIZATIONS AND WORKFLOWS</h1>
+    <div class="triptych-wrapper" ng-class="{'collapse': !triptych.expanded}">
+      <div class="row triptych-navigation">
+        <div class="row">
+          <div class="col-xs-12">
+            <ul class="breadcrumb">
+              <li ng-click="resetPanels()">
+                <a href="#">Vireo Institution</a>
+                <span ng-if="triptych.panelHistory.length < 1" class="glyphicon glyphicon-arrow-down"></span>
+              </li>
+              <li ng-repeat="panel in triptych.panelHistory" ng-click="triptych.rewindPanels(panel)">
+                <a href="#">{{panel.selectedOrganization.name}} ({{getCategoryById(panel.selectedOrganization.category).name}})</a>
+                <span ng-if="$last" class="glyphicon glyphicon-arrow-down"></span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="row" ng-if="organizations.list.length < 2">
+        <div class="col-xs-12"> 
+          <p>Your Institution has no child organizations. Use the 'Create Organization' side module to create your first organization.</p>
+        </div>
+      </div>
+      <div class="row triptych-panels">
+        <div class="col-xs-12 col-sm-6 col-md-4 panel-wrapper"
+             ng-class="{'closing': panel.closing, 'opening': panel.opening, 'shown': panel.visible}" 
+             ng-repeat="panel in triptych.openPanels" 
+             ng-if="panel.parentOrganization.childrenOrganizations.length>0">
 
-					<div class="panel panel-default triptych-panel"
-						 ng-class="{'active': panel.active, 'previously-active': panel.previouslyActive}">
+          <div class="panel panel-default triptych-panel"
+               ng-class="{'active': panel.active, 'previously-active': panel.previouslyActive}">
 
-						<div class="panel-heading" 
-							 ng-click="triptych.expanded = true"> 
-							<span 	ng-repeat="(orgId, category) in panel.getUniqueCategories()" 
-									ng-click="panel.toggleFilter(category)">
-								<span 	class="category-heading" 
-										ng-class="{'active': category.id == panel.filterOn, 'multiple': panel.getUniqueCategories().length}">{{category.name}}</span> 
-								<span ng-if="!$last"> / </span> 
-							</span>
-							<span 	class="glyphicon glyphicon-arrow-right pull-right"
-									ng-if="selectedOrganization.childrenOrganizations.length > 0 || panel.previouslyActive">
-							</span> 
-						</div>
-						<div class="panel-body">
-							<ul class="list-group">
-								<li class="list-group-item"
-									ng-repeat="organization in organizations.list | filter:{category:panel.filterOn} | orderBy:'name'" 
-									ng-if="filterPanelByParent(panel, organization)" 
-									ng-click="shiftPanels(panel, organization);"
-									ng-class="{'selected': panel.selectedOrganization.id == organization.id}"
-									class="triptych-panel-entry">
-									<ul class="inline-list pull-right">
-										<li ng-click="activateManagementPane('edit')">
-											<span class="context-icons glyphicon glyphicon-cog pull-right" ng-class="{'active': managementPaneIsActive('edit')}"></span>
-										</li>
-										<li ng-click="activateManagementPane('workflow')">
-											<span class="context-icons glyphicon glyphicon-list-alt pull-right" ng-class="{'active': managementPaneIsActive('workflow')}"></span>
-										</li>
-										<li ng-click="activateManagementPane('email')">
-											<span class="context-icons glyphicon glyphicon-envelope pull-right" ng-class="{'active': managementPaneIsActive('email')}"></span>
-										</li>
-									</ul>
-									<span>
-										{{organization.name}}
-										<span class="badge" ng-if="organization.childrenOrganizations.length">{{organization.childrenOrganizations.length}}</span>
-									</span>
-									<span class="category-label" ng-if="panel.getUniqueCategories().length > 1">{{getCategoryById(organization.category).name}}</span>
-								</li>
-							</ul>
-						</div>
+            <div class="panel-heading" 
+                 ng-click="triptych.expanded = true"> 
+              <span 	ng-repeat="(orgId, category) in panel.getUniqueCategories()" 
+ng-click="panel.toggleFilter(category)">
+                <span 	class="category-heading" 
+ng-class="{'active': category.id == panel.filterOn, 'multiple': panel.getUniqueCategories().length}">{{category.name}}</span> 
+                <span ng-if="!$last"> / </span> 
+              </span>
+              <span 	class="glyphicon glyphicon-arrow-right pull-right"
+ng-if="selectedOrganization.childrenOrganizations.length > 0 || panel.previouslyActive">
+              </span> 
+            </div>
+            <div class="panel-body">
+              <ul class="list-group">
+                <li class="list-group-item"
+ng-repeat="organization in organizations.list | filter:{category:panel.filterOn} | orderBy:'name'" 
+ng-if="filterPanelByParent(panel, organization)" 
+ng-click="shiftPanels(panel, organization);"
+ng-class="{'selected': panel.selectedOrganization.id == organization.id}"
+class="triptych-panel-entry">
+                  <ul class="inline-list pull-right">
+                    <li ng-click="activateManagementPane('edit')">
+                      <span class="context-icons glyphicon glyphicon-cog pull-right" ng-class="{'active': managementPaneIsActive('edit')}"></span>
+                    </li>
+                    <li ng-click="activateManagementPane('workflow')">
+                      <span class="context-icons glyphicon glyphicon-list-alt pull-right" ng-class="{'active': managementPaneIsActive('workflow')}"></span>
+                    </li>
+                    <li ng-click="activateManagementPane('email')">
+                      <span class="context-icons glyphicon glyphicon-envelope pull-right" ng-class="{'active': managementPaneIsActive('email')}"></span>
+                    </li>
+                  </ul>
+                  <span>
+                    {{organization.name}}
+                    <span class="badge" ng-if="organization.childrenOrganizations.length">{{organization.childrenOrganizations.length}}</span>
+                  </span>
+                  <span class="category-label" ng-if="panel.getUniqueCategories().length > 1">{{getCategoryById(organization.category).name}}</span>
+                </li>
+              </ul>
+            </div>
 
-					</div>
-					
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="divider-wrapper col-xs-12" ng-click="triptych.expanded = !triptych.expanded">
-				<span class="collapse-btn glyphicon glyphicon-chevron-up" ng-if="triptych.expanded"></span>
-				<span ng-if="!triptych.expanded">EXPAND NAVIGATION</span>
-				<hr class="divider">
-				<span class="collapse-btn glyphicon glyphicon-chevron-down" ng-if="!triptych.expanded"></span>
-			</div>
-		</div>
-	</div>
-	<div id="organizationManagement" class="col-xs-12" ng-controller="OrganizationManagementController">
-		<div class="row" ng-hide="!getSelectedOrganization()">
-			<div class="panel-heading">
-				<h3 class="panel-title">
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="divider-wrapper col-xs-12" ng-click="triptych.expanded = !triptych.expanded">
+        <span class="collapse-btn glyphicon glyphicon-chevron-up" ng-if="triptych.expanded"></span>
+        <span ng-if="!triptych.expanded">EXPAND NAVIGATION</span>
+        <hr class="divider">
+        <span class="collapse-btn glyphicon glyphicon-chevron-down" ng-if="!triptych.expanded"></span>
+      </div>
+    </div>
+  </div>
+  <div id="organizationManagement" class="col-xs-12" ng-controller="OrganizationManagementController">
+    <div class="row" ng-hide="!getSelectedOrganization()">
+      <div class="panel-heading">
+        <h3 class="panel-title">
 
-					<ul class="inline-list">
-						<li ng-click="activateManagementPane('edit')">
-							<span 	class="management-pane-selector" 
-									ng-class="{active: managementPaneIsActive('edit')}"
-									ng-click="activateManagementPane('edit')" >
-									<span class="context-icons glyphicon glyphicon-cog" ng-class="{'active': managementPaneIsActive('edit')}"></span> Manage Organization
-							</span>  
-						</li>
-						<li ng-click="activateManagementPane('workflow')">
-							<span 	class="management-pane-selector"
-									ng-click="activateManagementPane('workflow')" 
-									ng-class="{active: managementPaneIsActive('workflow')}">
-									<span class="context-icons glyphicon glyphicon-list-alt" ng-class="{'active': managementPaneIsActive('workflow')}"></span> Manage Workflow
-							</span> 
-						</li>
-						<li ng-click="activateManagementPane('email')">
-							<span 	class="management-pane-selector"
-									ng-click="activateManagementPane('email')" 
-									ng-class="{active: managementPaneIsActive('email')}">
-									<span class="context-icons glyphicon glyphicon-envelope" ng-class="{'active': managementPaneIsActive('email')}"></span> Email Workflow Rules
-							</span>
-						</li>
-					</ul>
-				</h3>
-			</div>
-			<div class="panel panel-default">
-				<div class="panel-body">
-					<div class="row">
-						<div class="col-xs-12 panel-wrap" ng-class="{active: managementPaneIsActive('edit')}">
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<h3 class="panel-title">Manage {{getManagedOrganization().name}}</h3>
-								</div>
-								<form id="updateOrganization" ng-submit="updateOrganization(managedOrganization)">
-									<textField 
-										label="Name" 
-										scope-value="getManagedOrganization().name"
-										label-width="2"
-										field-width="4"
-										expanded="true">
-									</textField>
-									<div class="form-group text-field clearfix">
-										<div class="col-sm-2">
-											<span class="text-field-heading">Category</span>
-										</div>
-										<div class="col-sm-4 expanded">
-											<div class="with-tool-tip">
-												<div class="with-hint">
-													<select name="organizationCategory" id="organizationCategory" class="form-control" ng-model="getManagedOrganization().category" ng-options="category.id as category.name for category in organizationCategories.list | filter:{ name : '!system' }">
-													</select>
-												</div>
-											</div>
-										</div>
-									</div>
-									<!--<div class="form-group clearfix">
-										<div class="col-sm-2">
-											<span class="text-field-heading">Parent Organization</span>
-										</div>
-										<div class="col-sm-4 expanded">
-											<div class="with-tool-tip">
-												<div class="with-hint">
-													<input class="form-control" placeholder="Parent Organization..." type="text"  uib-typeahead="organization as organization.name for organization in organizations.list | filter:$viewValue | limitTo:8" typeahead-editable="false" ng-model="getManagedOrganization().parentOrganizations[0]" typeahead-select-on-blur="true" required />
-												</div>
-											</div>
-										</div>   	
-									</div>-->
-									<div class="modal-footer">
-										<button type="button" class="btn btn-warning" ng-click="resetManagedOrganization()">Cancel</button>
-										<input type="submit" class="btn btn-primary" value="Save" />
-									</div>
-								</form>
-							</div>
-						</div>
-						<div class="col-xs-12 panel-wrap" ng-class="{active: managementPaneIsActive('workflow')}">
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<button type="button" class="btn-xs btn-primary pull-right">
-										<span class="glyphicon glyphicon-plus pull-right"></span>
-									</button>
-									<h3 class="panel-title">Manage {{getManagedOrganization().name}} Workflow</h3>
-								</div>
-								<div class="panel-body">
-									<ul class="list-group">
-										<li class="list-group-item">Step 1
-											<ul class="inline-list pull-right">
-												<li><span class="glyphicon glyphicon-pencil pull-right"></span></li>
-												<li><span class="glyphicon glyphicon-trash pull-right"></span></li>
-											</ul>
-										</li>
-										<li class="list-group-item">Step 2
-											<ul class="inline-list pull-right">
-												<li><span class="glyphicon glyphicon-pencil pull-right"></span></li>
-												<li><span class="glyphicon glyphicon-trash pull-right"></span></li>
-											</ul>
-										</li>
-										<li class="list-group-item">Step 3
-											<ul class="inline-list pull-right">
-												<li><span class="glyphicon glyphicon-pencil pull-right"></span></li>
-												<li><span class="glyphicon glyphicon-trash pull-right"></span></li>
-											</ul>
-										</li>
-										<li class="list-group-item">Step 4
-											<ul class="inline-list pull-right">
-												<li><span class="glyphicon glyphicon-pencil pull-right"></span></li>
-												<li><span class="glyphicon glyphicon-trash pull-right"></span></li>
-											</ul>
-										</li>
-										<li class="list-group-item">Step 5
-											<ul class="inline-list pull-right">
-												<li><span class="glyphicon glyphicon-pencil pull-right"></span></li>
-												<li><span class="glyphicon glyphicon-trash pull-right"></span></li>
-											</ul>
-										</li>
-									</ul>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+          <ul class="inline-list">
+            <li ng-click="activateManagementPane('edit')">
+              <span 	class="management-pane-selector" 
+ng-class="{active: managementPaneIsActive('edit')}"
+ng-click="activateManagementPane('edit')" >
+                <span class="context-icons glyphicon glyphicon-cog" ng-class="{'active': managementPaneIsActive('edit')}"></span> Manage Organization
+              </span>  
+            </li>
+            <li ng-click="activateManagementPane('workflow')">
+              <span 	class="management-pane-selector"
+ng-click="activateManagementPane('workflow')" 
+ng-class="{active: managementPaneIsActive('workflow')}">
+                <span class="context-icons glyphicon glyphicon-list-alt" ng-class="{'active': managementPaneIsActive('workflow')}"></span> Manage Workflow
+              </span> 
+            </li>
+            <li ng-click="activateManagementPane('email')">
+              <span 	class="management-pane-selector"
+ng-click="activateManagementPane('email')" 
+ng-class="{active: managementPaneIsActive('email')}">
+                <span class="context-icons glyphicon glyphicon-envelope" ng-class="{'active': managementPaneIsActive('email')}"></span> Email Workflow Rules
+              </span>
+            </li>
+          </ul>
+        </h3>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-12 panel-wrap" ng-class="{active: managementPaneIsActive('edit')}">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Manage {{getManagedOrganization().name}}</h3>
+                </div>
+                <form id="updateOrganization" ng-submit="updateOrganization(managedOrganization)">
+                  <textField 
+label="Name" 
+scope-value="getManagedOrganization().name"
+label-width="2"
+field-width="4"
+expanded="true">
+                  </textField>
+                  <div class="form-group text-field clearfix">
+                    <div class="col-sm-2">
+                      <span class="text-field-heading">Category</span>
+                    </div>
+                    <div class="col-sm-4 expanded">
+                      <div class="with-tool-tip">
+                        <div class="with-hint">
+                          <select name="organizationCategory" id="organizationCategory" class="form-control" ng-model="getManagedOrganization().category" ng-options="category.id as category.name for category in organizationCategories.list | filter:{ name : '!system' }">
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!--<div class="form-group clearfix">
+                       <div class="col-sm-2">
+                       <span class="text-field-heading">Parent Organization</span>
+                       </div>
+                       <div class="col-sm-4 expanded">
+                       <div class="with-tool-tip">
+                       <div class="with-hint">
+                       <input class="form-control" placeholder="Parent Organization..." type="text"  uib-typeahead="organization as organization.name for organization in organizations.list | filter:$viewValue | limitTo:8" typeahead-editable="false" ng-model="getManagedOrganization().parentOrganizations[0]" typeahead-select-on-blur="true" required />
+                       </div>
+                       </div>
+                       </div>   	
+                       </div>-->
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" ng-click="resetManagedOrganization()">Cancel</button>
+                    <input type="submit" class="btn btn-primary" value="Save" />
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div ng-controller="OrganizationStepsController" class="col-xs-12 panel-wrap" ng-class="{active: managementPaneIsActive('workflow')}">
+
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <button type="button" class="btn-xs btn-primary pull-right">
+                    <span class="glyphicon glyphicon-plus pull-right"></span>
+                  </button>
+                  <h3 class="panel-title">Manage {{getManagedOrganization().name}} Workflow</h3>
+                </div>
+                <div class="panel-body">
+
+                  <accordion single-expand="false" >
+		    <pane ng-repeat="step in steps" bar-view="views/directives/workflowStep.html" query="" html="">{{step}}</pane>
+		  </accordion>
+                  
+                </div>
+
+              </div>
+
+            </div> <!-- End of steps pane -->
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

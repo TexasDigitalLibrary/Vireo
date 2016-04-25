@@ -320,6 +320,7 @@
 	    <script src="controllers/settings/availableDocumentTypesController.js"></script>
 	    <script src="controllers/sideBars/organizationSideBarController.js"></script>
 	    <script src="controllers/settings/organizationCategoriesController.js"></script>
+	    <script src="controllers/settings/organization/organizationStepsController.js"></script>
 	    
 	<!-- endbuild -->
 

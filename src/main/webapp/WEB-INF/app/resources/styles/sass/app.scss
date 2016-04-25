@@ -1294,3 +1294,19 @@ footer a, footer li, footer p {
 #email-template-modal-instructions-list{
   cursor:help;
 }
+
+.orderable-panel-bar {
+    @extend .panel-heading;
+    display:inline-block;
+    padding:10px 15px;
+}
+
+.accordion-order-box {
+    display:inline-block;
+    float:right;
+    margin-right:12px;
+    margin-top:1px;
+    &>a{
+        display:block;
+    }
+}
