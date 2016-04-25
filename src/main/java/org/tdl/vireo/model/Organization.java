@@ -37,7 +37,7 @@ public class Organization extends BaseEntity {
     private OrganizationCategory category;
 
     @ManyToMany(cascade = { DETACH, REFRESH, REMOVE, PERSIST }, fetch = EAGER)
-    private Set<WorkflowStep> workflowSteps;
+    private List<WorkflowStep> workflowSteps;
     
     @ElementCollection(fetch = EAGER)
     private List<Long> workflowStepOrder;
@@ -57,7 +57,7 @@ public class Organization extends BaseEntity {
     private List<EmailWorkflowRule> emailWorkflowRules;
 
     public Organization() {
-        setWorkflowSteps(new TreeSet<WorkflowStep>());
+        setWorkflowSteps(new ArrayList<WorkflowStep>());
         setWorkflowStepOrder(new ArrayList<Long>());
         setParentOrganizations(new TreeSet<Organization>());
         setChildrenOrganizations(new TreeSet<Organization>());
@@ -120,35 +120,43 @@ public class Organization extends BaseEntity {
     /**
      * @return the workflowSteps
      */
-    public Set<WorkflowStep> getWorkflowSteps() {
+    public List<WorkflowStep> getWorkflowSteps() {
         return workflowSteps;
     }
 
     /**
      * @param workflowSteps the workflowSteps to set
      */
-    public void setWorkflowSteps(Set<WorkflowStep> workflowSteps) {
+    public void setWorkflowSteps(List<WorkflowStep> workflowSteps) {
         this.workflowSteps = workflowSteps;
     }
     
     public void addWorkflowStep(WorkflowStep workflowStep) {
-        this.workflowSteps.add(workflowStep);
-        Set<Organization> children = getChildrenOrganizations();
-        if(!children.isEmpty()) {
-            children.parallelStream().forEach(child -> {
-                child.addWorkflowStep(workflowStep);
-            });
-        }
+    	if(!this.workflowSteps.contains(workflowStep)) {
+	        this.workflowSteps.add(workflowStep);
+	        // add workflowstep id to workflowstep order
+	        addWorkflowStepOrder(workflowStep.getId());
+	        Set<Organization> children = getChildrenOrganizations();
+	        if(!children.isEmpty()) {
+	            children.parallelStream().forEach(child -> {
+	                child.addWorkflowStep(workflowStep);
+	            });
+	        }
+    	}
     }
 
     public void removeWorkflowStep(WorkflowStep workflowStep) {
-        this.workflowSteps.remove(workflowStep);
-        Set<Organization> children = getChildrenOrganizations();
-        if(!children.isEmpty()) {
-            children.parallelStream().forEach(child -> {
-                child.removeWorkflowStep(workflowStep);
-            });
-        }
+    	if(this.workflowSteps.contains(workflowStep)) {
+	        this.workflowSteps.remove(workflowStep);
+	        // remove workflowstep id to workflowstep order
+	        removeWorkflowStepOrder(workflowStep.getId());
+	        Set<Organization> children = getChildrenOrganizations();
+	        if(!children.isEmpty()) {
+	            children.parallelStream().forEach(child -> {
+	                child.removeWorkflowStep(workflowStep);
+	            });
+	        }
+    	}
     }
     
     /**

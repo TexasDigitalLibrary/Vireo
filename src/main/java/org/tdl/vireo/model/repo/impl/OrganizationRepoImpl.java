@@ -45,18 +45,18 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
         OrganizationCategory category = organization.getCategory();
         category.removeOrganization(organization);
         organizationCategoryRepo.save(category);
-        
-        
+
         // need to recursively delete workflow step originating from organization being deleted
         List<WorkflowStep> workFlowStepsToRemove = new ArrayList<WorkflowStep>();
+
         organization.getWorkflowSteps().parallelStream().forEach(workflowStep -> {
             if(workflowStep.getOriginatingOrganization().getId().equals(organization.getId())) {
-                organization.removeWorkflowStep(workflowStep);
                 workFlowStepsToRemove.add(workflowStep);
             }
         });
         
         for(WorkflowStep workflowStep : workFlowStepsToRemove) {
+        	organization.removeWorkflowStep(workflowStep);
             workflowStepRepo.delete(workflowStep);
         }
         

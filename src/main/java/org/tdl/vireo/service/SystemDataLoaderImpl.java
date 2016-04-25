@@ -156,16 +156,14 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
     
     @Override
     public void generateAllOrganizationCategories() {
-        
         organizationCategoryRepo.create("College");
         organizationCategoryRepo.create("Degree");
         organizationCategoryRepo.create("Department");
         organizationCategoryRepo.create("Major");
         organizationCategoryRepo.create("Program");
         organizationCategoryRepo.create("Administrative Group");
-        
     }
-
+    
     /**
      * Loads default system organization.
      */
@@ -192,142 +190,12 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
             }
             // else set systemOrganization to existing organization
             else {
-                systemOrganization = organization;
+                //systemOrganization = organization;
             }
 
-            // temporary list of WorkflowStep
-            Set<WorkflowStep> workflowSteps = new HashSet<WorkflowStep>();
+
+            organization.setWorkflowSteps(processWorkflowSteps(organization, systemOrganization.getWorkflowSteps()));
             
-            for (WorkflowStep workflowStep : systemOrganization.getWorkflowSteps()) {
-
-                // check to see if the WorkflowStep exists
-                WorkflowStep newWorkflowStep = workflowStepRepo.findByNameAndOriginatingOrganization(workflowStep.getName(), organization);
-
-                // create new workflow step if not already exists
-                if (newWorkflowStep == null) {
-                    newWorkflowStep = workflowStepRepo.create(workflowStep.getName(), organization);
-                }
-
-                // temporary list of FieldProfile
-                List<FieldProfile> fieldProfiles = new ArrayList<FieldProfile>();
-
-                workflowStep.getFieldProfiles().forEach(fieldProfile -> {
-
-                    // check to see if the FieldPredicate exists
-                    FieldPredicate fieldPredicate = fieldPredicateRepo.findByValue(fieldProfile.getPredicate().getValue());
-
-                    // create new FieldPredicate if not already exists
-                    if (fieldPredicate == null) {
-                        fieldPredicate = fieldPredicateRepo.create(fieldProfile.getPredicate().getValue());
-                    }
-
-                    // check to see if the FieldProfile exists
-                    FieldProfile newFieldProfile = fieldProfileRepo.findByPredicate(fieldPredicate);
-
-                    // create new FieldProfile if not already exists
-                    if (newFieldProfile == null) {
-                        newFieldProfile = fieldProfileRepo.create(fieldPredicate, fieldProfile.getInputType(), fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getRepeatable(), fieldProfile.getEnabled(), fieldProfile.getOptional());
-                    } else {
-                        newFieldProfile.setInputType(fieldProfile.getInputType() != null ? fieldProfile.getInputType() : newFieldProfile.getInputType());
-                        newFieldProfile.setUsage(fieldProfile.getUsage() != null ? fieldProfile.getUsage() : newFieldProfile.getUsage());
-                        newFieldProfile.setHelp(fieldProfile.getHelp() != null ? fieldProfile.getHelp() : newFieldProfile.getHelp());
-                        newFieldProfile.setRepeatable(fieldProfile.getRepeatable() != null ? fieldProfile.getRepeatable() : newFieldProfile.getRepeatable());
-                        newFieldProfile.setEnabled(fieldProfile.getEnabled() != null ? fieldProfile.getEnabled() : newFieldProfile.getEnabled());
-                        newFieldProfile.setOptional(fieldProfile.getOptional() != null ? fieldProfile.getOptional() : newFieldProfile.getOptional());
-                        newFieldProfile = fieldProfileRepo.save(newFieldProfile);
-                    }
-
-                    // temporary list of FieldGloss
-                    List<FieldGloss> fieldGlosses = new ArrayList<FieldGloss>();
-
-                    fieldProfile.getFieldGlosses().forEach(fieldGloss -> {
-
-                        // check to see if the Language exists
-                        Language language = languageRepo.findByName(fieldGloss.getLanguage().getName());
-
-                        // create new Language if not already exists
-                        if (language == null) {
-                            language = languageRepo.create(fieldGloss.getLanguage().getName());
-                        }
-
-                        // check to see if the FieldGloss exists
-                        FieldGloss newFieldGloss = fieldGlossRepo.findByValueAndLanguage(fieldGloss.getValue(), language);
-
-                        // create new FieldGloss if not already exists
-                        if (newFieldGloss == null) {
-                            newFieldGloss = fieldGlossRepo.create(fieldGloss.getValue(), language);
-                        }
-
-                        fieldGlosses.add(newFieldGloss);
-
-                    });
-
-                    newFieldProfile.setFieldGlosses(fieldGlosses);
-
-                    // temporary list of ControlledVocabulary
-                    List<ControlledVocabulary> controlledVocabularies = new ArrayList<ControlledVocabulary>();
-
-                    fieldProfile.getControlledVocabularies().forEach(controlledVocabulary -> {
-
-                        // check to see if the Language exists
-                        Language language = languageRepo.findByName(controlledVocabulary.getLanguage().getName());
-
-                        // create new Language if not already exists
-                        if (language == null) {
-                            language = languageRepo.create(controlledVocabulary.getLanguage().getName());
-                        }
-
-                        // check to see if the ControlledVocabulary exists
-                        ControlledVocabulary newControlledVocabulary = controlledVocabularyRepo.findByNameAndLanguage(controlledVocabulary.getName(), language);
-
-                        // create new ControlledVocabulary if not already exists
-                        if (newControlledVocabulary == null) {
-                            newControlledVocabulary = controlledVocabularyRepo.create(controlledVocabulary.getName(), language);
-                        }
-
-                        controlledVocabularies.add(newControlledVocabulary);
-
-                    });
-
-                    newFieldProfile.setControlledVocabularies(controlledVocabularies);
-
-                    fieldProfileRepo.save(newFieldProfile);
-
-                    fieldProfiles.add(newFieldProfile);
-
-                });
-
-                newWorkflowStep.setFieldProfiles(fieldProfiles);
-
-                // temporary list of Note
-                List<Note> notes = new ArrayList<Note>();
-
-                workflowStep.getNotes().forEach(note -> {
-
-                    // check to see if the Note exists
-                    Note newNote = noteRepo.findByName(note.getName());
-
-                    // create new Note if not already exists
-                    if (newNote == null) {
-                        newNote = noteRepo.create(note.getName(), note.getText());
-                    } else {
-                        newNote.setText(note.getText());
-                        newNote = noteRepo.save(newNote);
-                    }
-
-                    notes.add(newNote);
-
-                });
-
-                newWorkflowStep.setNotes(notes);
-
-                newWorkflowStep = workflowStepRepo.save(newWorkflowStep);
-
-                workflowSteps.add(newWorkflowStep);
-
-            }
-
-            organization.setWorkflowSteps(workflowSteps);
             
             organization = organizationRepo.save(organization);
             
@@ -392,6 +260,140 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
         } catch (IOException e) {
             throw new IllegalStateException("Unable to generate system organization", e);
         }
+    }
+    
+    private List<WorkflowStep> processWorkflowSteps(Organization organization, List<WorkflowStep> systemOrganizationWorkflowSteps) {
+    	
+    	List<WorkflowStep> workflowSteps = new ArrayList<WorkflowStep>();
+    	
+    	for (WorkflowStep workflowStep : systemOrganizationWorkflowSteps) {
+            
+            // check to see if the WorkflowStep exists
+            WorkflowStep newWorkflowStep = workflowStepRepo.findByNameAndOriginatingOrganization(workflowStep.getName(), organization);
+
+            // create new workflow step if not already exists
+            if (newWorkflowStep == null) {
+                newWorkflowStep = workflowStepRepo.create(workflowStep.getName(), organization);
+            }
+
+            // temporary list of FieldProfile
+            List<FieldProfile> fieldProfiles = new ArrayList<FieldProfile>();
+
+            workflowStep.getFieldProfiles().forEach(fieldProfile -> {
+
+                // check to see if the FieldPredicate exists
+                FieldPredicate fieldPredicate = fieldPredicateRepo.findByValue(fieldProfile.getPredicate().getValue());
+
+                // create new FieldPredicate if not already exists
+                if (fieldPredicate == null) {
+                    fieldPredicate = fieldPredicateRepo.create(fieldProfile.getPredicate().getValue());
+                }
+
+                // check to see if the FieldProfile exists
+                FieldProfile newFieldProfile = fieldProfileRepo.findByPredicate(fieldPredicate);
+
+                // create new FieldProfile if not already exists
+                if (newFieldProfile == null) {
+                    newFieldProfile = fieldProfileRepo.create(fieldPredicate, fieldProfile.getInputType(), fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getRepeatable(), fieldProfile.getEnabled(), fieldProfile.getOptional());
+                } else {
+                    newFieldProfile.setInputType(fieldProfile.getInputType() != null ? fieldProfile.getInputType() : newFieldProfile.getInputType());
+                    newFieldProfile.setUsage(fieldProfile.getUsage() != null ? fieldProfile.getUsage() : newFieldProfile.getUsage());
+                    newFieldProfile.setHelp(fieldProfile.getHelp() != null ? fieldProfile.getHelp() : newFieldProfile.getHelp());
+                    newFieldProfile.setRepeatable(fieldProfile.getRepeatable() != null ? fieldProfile.getRepeatable() : newFieldProfile.getRepeatable());
+                    newFieldProfile.setEnabled(fieldProfile.getEnabled() != null ? fieldProfile.getEnabled() : newFieldProfile.getEnabled());
+                    newFieldProfile.setOptional(fieldProfile.getOptional() != null ? fieldProfile.getOptional() : newFieldProfile.getOptional());
+                    newFieldProfile = fieldProfileRepo.save(newFieldProfile);
+                }
+
+                // temporary list of FieldGloss
+                List<FieldGloss> fieldGlosses = new ArrayList<FieldGloss>();
+
+                fieldProfile.getFieldGlosses().forEach(fieldGloss -> {
+
+                    // check to see if the Language exists
+                    Language language = languageRepo.findByName(fieldGloss.getLanguage().getName());
+
+                    // create new Language if not already exists
+                    if (language == null) {
+                        language = languageRepo.create(fieldGloss.getLanguage().getName());
+                    }
+
+                    // check to see if the FieldGloss exists
+                    FieldGloss newFieldGloss = fieldGlossRepo.findByValueAndLanguage(fieldGloss.getValue(), language);
+
+                    // create new FieldGloss if not already exists
+                    if (newFieldGloss == null) {
+                        newFieldGloss = fieldGlossRepo.create(fieldGloss.getValue(), language);
+                    }
+
+                    fieldGlosses.add(newFieldGloss);
+
+                });
+
+                newFieldProfile.setFieldGlosses(fieldGlosses);
+
+                // temporary list of ControlledVocabulary
+                List<ControlledVocabulary> controlledVocabularies = new ArrayList<ControlledVocabulary>();
+
+                fieldProfile.getControlledVocabularies().forEach(controlledVocabulary -> {
+
+                    // check to see if the Language exists
+                    Language language = languageRepo.findByName(controlledVocabulary.getLanguage().getName());
+
+                    // create new Language if not already exists
+                    if (language == null) {
+                        language = languageRepo.create(controlledVocabulary.getLanguage().getName());
+                    }
+
+                    // check to see if the ControlledVocabulary exists
+                    ControlledVocabulary newControlledVocabulary = controlledVocabularyRepo.findByNameAndLanguage(controlledVocabulary.getName(), language);
+
+                    // create new ControlledVocabulary if not already exists
+                    if (newControlledVocabulary == null) {
+                        newControlledVocabulary = controlledVocabularyRepo.create(controlledVocabulary.getName(), language);
+                    }
+
+                    controlledVocabularies.add(newControlledVocabulary);
+
+                });
+
+                newFieldProfile.setControlledVocabularies(controlledVocabularies);
+
+                fieldProfileRepo.save(newFieldProfile);
+
+                fieldProfiles.add(newFieldProfile);
+
+            });
+
+            newWorkflowStep.setFieldProfiles(fieldProfiles);
+
+            // temporary list of Note
+            List<Note> notes = new ArrayList<Note>();
+
+            workflowStep.getNotes().forEach(note -> {
+
+                // check to see if the Note exists
+                Note newNote = noteRepo.findByName(note.getName());
+
+                // create new Note if not already exists
+                if (newNote == null) {
+                    newNote = noteRepo.create(note.getName(), note.getText());
+                } else {
+                    newNote.setText(note.getText());
+                    newNote = noteRepo.save(newNote);
+                }
+
+                notes.add(newNote);
+
+            });
+
+            newWorkflowStep.setNotes(notes);
+
+            newWorkflowStep = workflowStepRepo.save(newWorkflowStep);
+
+            workflowSteps.add(newWorkflowStep);
+        }
+    	return workflowSteps;
     }
 
     /**
