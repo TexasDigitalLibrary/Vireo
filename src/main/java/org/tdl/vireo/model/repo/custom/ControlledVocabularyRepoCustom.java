@@ -24,4 +24,10 @@ public interface ControlledVocabularyRepoCustom {
     public ControlledVocabulary validateRemove(String idString, ModelBindingResult modelBindingResult);
     
     public ControlledVocabulary validateExport(String name, ModelBindingResult modelBindingResult);
+    
+    public ControlledVocabulary validateCompareCV(String name, ModelBindingResult modelBindingResult);
+    
+    public String[] validateCompareRows(Object inputStream, ModelBindingResult modelBindingResult);
+    
+    public ControlledVocabulary validateImport(String name, ModelBindingResult modelBindingResult);
 }

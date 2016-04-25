@@ -1,5 +1,12 @@
 package org.tdl.vireo.model.repo.impl;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Base64;
+
+import javax.servlet.ServletInputStream;
+
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.ObjectError;
 import org.tdl.vireo.model.ControlledVocabulary;
@@ -116,5 +123,61 @@ public class ControlledVocabularyRepoImpl implements ControlledVocabularyRepoCus
             }
         }
         return toExport;
+    }
+    
+    @Override
+    public ControlledVocabulary validateCompareCV(String name, ModelBindingResult modelBindingResult) {
+        ControlledVocabulary toCompare = null;
+        
+        if(!modelBindingResult.hasErrors()){
+            toCompare = controlledVocabularyRepo.findByName(name);
+            if (toCompare == null) {
+                modelBindingResult.addError(new ObjectError("controlledVocabulary", "Cannot compare Controlled Vocabulary, name did not exist!"));
+            }
+        }
+        return toCompare;
+    }
+    
+    @Override
+    public String[] validateCompareRows(Object inputStream, ModelBindingResult modelBindingResult) {
+        String[] rows = null;
+        
+        try {
+            rows = inputStreamToRows(inputStream);
+        } catch (IOException e) {
+            modelBindingResult.addError(new ObjectError("controlledVocabulary", "Invalid input!"));
+        }
+        
+        return rows;
+    }
+    
+    @Override
+    public ControlledVocabulary validateImport(String name, ModelBindingResult modelBindingResult) {
+        ControlledVocabulary toImport = null;
+        
+        if(!modelBindingResult.hasErrors()){
+            toImport = controlledVocabularyRepo.findByName(name);
+            if (toImport == null) {
+                modelBindingResult.addError(new ObjectError("controlledVocabulary", "Cannot import Controlled Vocabulary, name did not exist!"));
+            }
+        }
+        return toImport;
+    }
+    
+    /**
+     * Converts input stream to array of strings which represent the rows
+     * 
+     * @param inputStream
+     *            csv bitstream
+     * @return string array of the csv rows
+     * @throws IOException
+     */
+    private String[] inputStreamToRows(Object inputStream) throws IOException {
+        String csvString = null;
+        String[] imageData = IOUtils.toString((ServletInputStream) inputStream, "UTF-8").split(";");
+        String[] encodedData = imageData[1].split(",");
+        csvString = new String(Base64.getDecoder().decode(encodedData[1]));
+        String[] rows = csvString.split("\\R");
+        return Arrays.copyOfRange(rows, 1, rows.length);
     }
 }
