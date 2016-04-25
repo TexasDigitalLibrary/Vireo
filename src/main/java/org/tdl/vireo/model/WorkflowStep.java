@@ -1,7 +1,6 @@
 package org.tdl.vireo.model;
 
 import static javax.persistence.CascadeType.DETACH;
-import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
@@ -29,7 +28,6 @@ public class WorkflowStep extends BaseEntity {
     @Column(nullable = false)
     private String name;
     
-    //@ManyToOne(cascade = {PERSIST})
     @ManyToOne( cascade = { DETACH, REFRESH, MERGE } )
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
@@ -38,7 +36,7 @@ public class WorkflowStep extends BaseEntity {
     @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, mappedBy="workflowSteps")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
-    private Set<Organization> owningOrganizations;
+    private Set<Organization> containedByOrganizations;
     
     @Column(nullable = false)
     private Boolean optional;
@@ -100,22 +98,22 @@ public class WorkflowStep extends BaseEntity {
      * @return the owningOrganization
      */
     public Set<Organization> getOwningOrganizations() {
-        return owningOrganizations;
+        return containedByOrganizations;
     }
 
     /**
      * @param owningOrganization the owningOrganization to set
      */
     public void setOwningOrganizations(Set<Organization> owningOrganizations) {
-        this.owningOrganizations = owningOrganizations;
+        this.containedByOrganizations = owningOrganizations;
     }
     
     public void addOwningOrganization(Organization owningOrganization) {
-        this.owningOrganizations.add(owningOrganization);
+        this.containedByOrganizations.add(owningOrganization);
     }
     
     public void removeOwningOrganization(Organization owningOrganization) {
-        this.owningOrganizations.remove(owningOrganization);
+        this.containedByOrganizations.remove(owningOrganization);
     }
 
     public Boolean getOptional() {

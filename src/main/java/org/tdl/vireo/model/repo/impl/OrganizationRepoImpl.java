@@ -1,12 +1,16 @@
 package org.tdl.vireo.model.repo.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.OrganizationCategory;
+import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
+import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.OrganizationRepoCustom;
 
 public class OrganizationRepoImpl implements OrganizationRepoCustom {
@@ -16,6 +20,9 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
 
     @Autowired
     private OrganizationCategoryRepo organizationCategoryRepo;
+    
+    @Autowired
+    private WorkflowStepRepo workflowStepRepo;
     
     @Override
     public Organization create(String name, OrganizationCategory category) {
@@ -39,8 +46,24 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
         category.removeOrganization(organization);
         organizationCategoryRepo.save(category);
         
+        
+        // need to recursively delete workflow step originating from organization being deleted
+        List<WorkflowStep> workFlowStepsToRemove = new ArrayList<WorkflowStep>();
+        organization.getWorkflowSteps().parallelStream().forEach(workflowStep -> {
+            if(workflowStep.getOriginatingOrganization().getId().equals(organization.getId())) {
+                organization.removeWorkflowStep(workflowStep);
+                workFlowStepsToRemove.add(workflowStep);
+            }
+        });
+        
+        for(WorkflowStep workflowStep : workFlowStepsToRemove) {
+            workflowStepRepo.delete(workflowStep);
+        }
+        
         Set<Organization> parentOrganizations = organization.getParentOrganizations();
         
+        // reconstructing tree when intermediate organization removed
+        // i.e. grandparent becomes new parent of children
         organization.getChildrenOrganizations().parallelStream().forEach(childOrganization -> {
             childOrganization.removeParentOrganization(organization);
             

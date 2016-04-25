@@ -216,6 +216,7 @@ public class OrganizationTest extends AbstractEntityTest {
         
         // test delete parent organization
         assertNotEquals("The organization does not exist!", null, organizationRepo.findOne(parentOrganization.getId()));
+        
         organizationRepo.delete(parentOrganization);
         assertEquals("The organization was not deleted!", null, organizationRepo.findOne(parentOrganization.getId()));
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
@@ -226,6 +227,10 @@ public class OrganizationTest extends AbstractEntityTest {
         assertNotEquals("The grand child organization was deleted!", null, grandChildOrganization);
         assertEquals("The child organization had incorrect number of parents!", 0, childOrganization.getParentOrganizations().size());
         
+        assertEquals("The parent workflowstep should have been deleted!", null, workflowStepRepo.findOne(parentWorkflowStep.getId()));
+        assertEquals("The child contained workflowsteps with a detached originatingOrganization!", false, childOrganization.getWorkflowSteps().contains(parentWorkflowStep));
+        
+        
         // test delete child organization
         assertNotEquals("The organization does not exist!", null, organizationRepo.findOne(childOrganization.getId()));
         organizationRepo.delete(childOrganization);
@@ -234,6 +239,9 @@ public class OrganizationTest extends AbstractEntityTest {
         assertNotEquals("The grand child organization was deleted!", null, grandChildOrganization);
         assertEquals("The grand child organization had incorrect number of parents!", 0, grandChildOrganization.getParentOrganizations().size());
 
+        assertEquals("The grand child contained workflowsteps with a detached originatingOrganization!", false, grandChildOrganization.getWorkflowSteps().contains(parentWorkflowStep));
+        
+        
         // test delete grand child organization
         assertNotEquals("The organization does not exist!", null, organizationRepo.findOne(grandChildOrganization.getId()));
         organizationRepo.delete(grandChildOrganization);
@@ -242,11 +250,8 @@ public class OrganizationTest extends AbstractEntityTest {
         assertEquals("The grand child organization was deleted!", null, grandChildOrganization);
         
         assertEquals("All organizations were not deleted!", 0, organizationRepo.count());
-        
         assertEquals("The workflow steps were orphaned!", 0, workflowStepRepo.count());
-        
         assertEquals("The email workflow rule was orphaned!", 0, emailWorkflowRuleRepo.count());
-        
         assertEquals("An organization category was deleted!", 3, organizationCategoryRepo.count());
 
     }
