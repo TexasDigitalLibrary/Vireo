@@ -124,11 +124,8 @@ public class WorkflowStepTest extends AbstractEntityTest {
         
         WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
         
-        parentOrganization.addWorkflowStep(workflowStep);
         
-        parentOrganization = organizationRepo.save(parentOrganization);
-        
-        //parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
         organization = organizationRepo.findOne(organization.getId());
         grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
        
