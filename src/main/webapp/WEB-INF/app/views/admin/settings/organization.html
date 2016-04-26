@@ -168,11 +168,12 @@
                   <button type="button" class="btn-xs btn-primary pull-right">
                     <span class="glyphicon glyphicon-plus pull-right"></span>
                   </button>
-                  <h3 class="panel-title">Manage {{getManagedOrganization().name}} Workflow</h3>
+                  <h3 ng-click="printState()" class="panel-title">Manage {{getManagedOrganization().name}} Workflow</h3>
                 </div>
+
                 <div class="panel-body">
                   <accordion single-expand="false" >
-		    <pane ng-repeat="step in steps" bar-view="views/directives/workflowStep.html" query="" html="">{{step}}</pane>
+		    <pane ng-repeat="step in steps" bar-view="views/directives/workflowStep.html" query="" html="">{{step.name}}</pane>
 		  </accordion>
                 </div>
 
