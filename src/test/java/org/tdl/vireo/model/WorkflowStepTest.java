@@ -108,6 +108,19 @@ public class WorkflowStepTest extends AbstractEntityTest {
     }
     
     @Test
+    @Order(value=6)
+    public void testWorkflowStepChangeAtChild()
+    {
+        Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
+        parentOrganization.addChildOrganization(organization);
+        parentOrganization = organizationRepo.save(parentOrganization);
+
+        //when updating the workflow step at organization, test that
+        // a new workflow step is made at the organization
+        // the new workflow step remembers from whence it was derived (the parent's workflow step)
+    }
+    
+    @Test
     @Order(value = 5)
     @Transactional
     public void testCascadeThroughOrganization() {
